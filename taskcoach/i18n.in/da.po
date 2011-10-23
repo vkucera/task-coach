@@ -9,15 +9,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: da\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-09-12 01:51+0000\n"
-"PO-Revision-Date: 2011-05-21 10:49+0000\n"
-"Last-Translator: Frank Niessink <frank@niessink.com>\n"
+"POT-Creation-Date: 2011-09-24 23:02+0000\n"
+"PO-Revision-Date: 2011-10-04 12:34+0000\n"
+"Last-Translator: peso <peer.sommerlund@gmail.com>\n"
 "Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-24 18:56+0000\n"
-"X-Generator: Launchpad (build 14012)\n"
+"X-Launchpad-Export-Date: 2011-10-23 13:56+0000\n"
+"X-Generator: Launchpad (build 14170)\n"
 
 #: taskcoachlib/application/application.py:243
 msgid ""
@@ -118,19 +118,19 @@ msgstr "Træk og slip"
 msgid "Drag and drop \"%s\""
 msgstr "Træk og slip \"%s\""
 
-#: taskcoachlib/command/base.py:341
+#: taskcoachlib/command/base.py:338
 msgid "Edit subjects"
 msgstr "Rediger emner"
 
-#: taskcoachlib/command/base.py:342
+#: taskcoachlib/command/base.py:339
 msgid "Edit subject \"%s\""
 msgstr "Rediger emne \"%s\""
 
-#: taskcoachlib/command/base.py:362
+#: taskcoachlib/command/base.py:359
 msgid "Edit descriptions"
 msgstr "Rediger beskrivelser"
 
-#: taskcoachlib/command/base.py:363
+#: taskcoachlib/command/base.py:360
 msgid "Edit description \"%s\""
 msgstr "Rediger beskrivelse \"%s\""
 
@@ -394,28 +394,28 @@ msgstr "Skift budgetter"
 msgid "Change budget of \"%s\""
 msgstr "Skift budget for \"%s\""
 
-#: taskcoachlib/config/settings.py:221
+#: taskcoachlib/config/settings.py:225
 msgid "Error while reading the %s-%s setting from %s.ini."
 msgstr ""
 
-#: taskcoachlib/config/settings.py:222
+#: taskcoachlib/config/settings.py:226
 msgid "The value is: %s"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:223
+#: taskcoachlib/config/settings.py:227
 msgid "The error is: %s"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:224
+#: taskcoachlib/config/settings.py:228
 msgid ""
 "%s will use the default value for the setting and should proceed normally."
 msgstr ""
 
-#: taskcoachlib/config/settings.py:225
+#: taskcoachlib/config/settings.py:229
 msgid "Settings error"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:245
+#: taskcoachlib/config/settings.py:249
 msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
@@ -423,7 +423,7 @@ msgstr ""
 "Fejl under skrivning til %s.ini:\n"
 "%s\n"
 
-#: taskcoachlib/config/settings.py:246
+#: taskcoachlib/config/settings.py:250
 msgid "Save error"
 msgstr "Fejl ved skrivning"
 
@@ -1004,10 +1004,9 @@ msgstr "Forfaldsdato"
 #: taskcoachlib/persistence/csv/reader.py:93
 #: taskcoachlib/widgets/conflict.py:203
 msgid "Completion date"
-msgstr "Færdiggørelses dato"
+msgstr "Fuldførelsesdato"
 
 #: taskcoachlib/gui/dialog/editor.py:396
-#: taskcoachlib/gui/dialog/reminder.py:28
 #: taskcoachlib/gui/dialog/templates.py:121
 #: taskcoachlib/gui/viewer/task.py:763
 msgid "Reminder"
@@ -1176,7 +1175,7 @@ msgid "Prerequisites"
 msgstr "Forudsætninger"
 
 #: taskcoachlib/gui/dialog/editor.py:1124
-#: taskcoachlib/gui/dialog/reminder.py:51
+#: taskcoachlib/gui/dialog/reminder.py:52
 #: taskcoachlib/gui/viewer/effort.py:166
 msgid "Task"
 msgstr "Opgave"
@@ -1408,7 +1407,7 @@ msgstr "Minimér hovedvindue ved lukning"
 
 #: taskcoachlib/gui/dialog/preferences.py:296
 msgid "Make clock in the task bar tick when tracking effort"
-msgstr "Få uret i systembakken til at tikke ved indsats"
+msgstr "Animer ikon i systembakken ved indsats"
 
 #: taskcoachlib/gui/dialog/preferences.py:298
 msgid ""
@@ -1509,7 +1508,8 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:448
 msgid "Mark parent task completed when all children are completed"
-msgstr "Marker hovedopgave som fuldført når alle underopgaver er fuldført"
+msgstr ""
+"Marker overordnet opgave som fuldført når alle underopgaver er fuldført"
 
 #: taskcoachlib/gui/dialog/preferences.py:450
 msgid "Number of hours that tasks are considered to be 'due soon'"
@@ -1643,20 +1643,24 @@ msgstr "Redigering"
 msgid "Check spelling in editors"
 msgstr "Tjek stavning i redigeringen"
 
-#: taskcoachlib/gui/dialog/reminder.py:65
+#: taskcoachlib/gui/dialog/reminder.py:28
+msgid "%(name)s reminder - %(task)s"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/reminder.py:66
 msgid "Reminder date/time"
 msgstr "Påmindelse dato/tid"
 
-#: taskcoachlib/gui/dialog/reminder.py:66
+#: taskcoachlib/gui/dialog/reminder.py:67
 msgid "Snooze"
 msgstr "Udsæt"
 
-#: taskcoachlib/gui/dialog/reminder.py:84
+#: taskcoachlib/gui/dialog/reminder.py:85
 msgid ""
 "Also use the selected snooze time as default snooze time for future reminders"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/reminder.py:88
+#: taskcoachlib/gui/dialog/reminder.py:89
 msgid "Mark task completed"
 msgstr "Marker opgave som færdig"
 
@@ -1738,7 +1742,7 @@ msgstr "Adgang"
 
 #: taskcoachlib/gui/dialog/templates.py:221
 msgid "New task template"
-msgstr ""
+msgstr "Ny opgaveskabelon"
 
 #: taskcoachlib/gui/dialog/version.py:39
 msgid "Notify me of new versions."
@@ -5073,6 +5077,11 @@ msgid ""
 "\n"
 "current date."
 msgstr ""
+"Skabeloner er blåkopier for nye opgaver. Indtil videre er den eneste \n"
+"opgave-egenskab der kan parameteriseres, datoerne. Når man instantierer \n"
+"en skabelon, så får den nye opgave sine datoer udskiftet med datoer relativt "
+"til \n"
+"den nuværende dato."
 
 #: taskcoachlib/help/__init__.py:634
 msgid ""
@@ -5897,12 +5906,12 @@ msgid "No subject"
 msgstr "Intet emne"
 
 #: taskcoachlib/persistence/xml/templates.py:8
-msgid "New task due tomorrow"
-msgstr "Ny opgave forfalder i morgen"
-
-#: taskcoachlib/persistence/xml/templates.py:10
 msgid "New task due today"
 msgstr "Ny opgave forfalder i dag"
+
+#: taskcoachlib/persistence/xml/templates.py:10
+msgid "New task due tomorrow"
+msgstr "Ny opgave forfalder i morgen"
 
 #: taskcoachlib/render.py:38
 msgid "Infinite"
@@ -6425,35 +6434,3 @@ msgstr "Fejl under åbning af URL"
 
 #~ msgid "Multiple efforts"
 #~ msgstr "Flere indsatser"
-
-#~ msgid ""
-#~ "Actually delete deleted tasks and notes (see the SyncML chapter in Help"
-#~ msgstr ""
-#~ "Slet rent faktisk de slettede opgaver og noter (se SyncML kapitlet i Hjælp"
-
-#~ msgid "Please enter your password:"
-#~ msgstr "Skriv venligst dit kodeord:"
-
-#~ msgid "Task Coach SyncML password"
-#~ msgstr "Task Coach SyncML kodeord"
-
-#~ msgid "Start and due date"
-#~ msgstr "Start og forfalds dato"
-
-#~ msgid "All"
-#~ msgstr "Alle"
-
-#~ msgid "Orientation"
-#~ msgstr "Retning"
-
-#~ msgid "Span"
-#~ msgstr "Spænd"
-
-#~ msgid "Font size"
-#~ msgstr "Skriftstørrelse"
-
-#~ msgid "Highlight"
-#~ msgstr "Fremhæv"
-
-#~ msgid "Show now"
-#~ msgstr "Vis nu"

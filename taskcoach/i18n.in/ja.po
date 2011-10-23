@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TaskCoach\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-12 01:51+0000\n"
-"PO-Revision-Date: 2011-06-25 20:20+0000\n"
+"POT-Creation-Date: 2011-09-24 23:02+0000\n"
+"PO-Revision-Date: 2011-09-24 23:37+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Japanese <yutakau@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-24 18:57+0000\n"
-"X-Generator: Launchpad (build 14012)\n"
+"X-Launchpad-Export-Date: 2011-10-23 13:56+0000\n"
+"X-Generator: Launchpad (build 14170)\n"
 "X-Poedit-Country: JAPAN\n"
 "X-Poedit-Language: Japanese\n"
 "Generated-By: pygettext.py 1.5\n"
@@ -118,19 +118,19 @@ msgstr "ドラッグ＆ドロップ"
 msgid "Drag and drop \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/base.py:341
+#: taskcoachlib/command/base.py:338
 msgid "Edit subjects"
 msgstr ""
 
-#: taskcoachlib/command/base.py:342
+#: taskcoachlib/command/base.py:339
 msgid "Edit subject \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/base.py:362
+#: taskcoachlib/command/base.py:359
 msgid "Edit descriptions"
 msgstr ""
 
-#: taskcoachlib/command/base.py:363
+#: taskcoachlib/command/base.py:360
 msgid "Edit description \"%s\""
 msgstr ""
 
@@ -394,28 +394,28 @@ msgstr ""
 msgid "Change budget of \"%s\""
 msgstr ""
 
-#: taskcoachlib/config/settings.py:221
+#: taskcoachlib/config/settings.py:225
 msgid "Error while reading the %s-%s setting from %s.ini."
 msgstr ""
 
-#: taskcoachlib/config/settings.py:222
+#: taskcoachlib/config/settings.py:226
 msgid "The value is: %s"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:223
+#: taskcoachlib/config/settings.py:227
 msgid "The error is: %s"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:224
+#: taskcoachlib/config/settings.py:228
 msgid ""
 "%s will use the default value for the setting and should proceed normally."
 msgstr ""
 
-#: taskcoachlib/config/settings.py:225
+#: taskcoachlib/config/settings.py:229
 msgid "Settings error"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:245
+#: taskcoachlib/config/settings.py:249
 msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
@@ -423,7 +423,7 @@ msgstr ""
 "%s.ini:　保存エラー\n"
 "%s\n"
 
-#: taskcoachlib/config/settings.py:246
+#: taskcoachlib/config/settings.py:250
 msgid "Save error"
 msgstr "保存エラー"
 
@@ -1007,7 +1007,6 @@ msgid "Completion date"
 msgstr "完了日"
 
 #: taskcoachlib/gui/dialog/editor.py:396
-#: taskcoachlib/gui/dialog/reminder.py:28
 #: taskcoachlib/gui/dialog/templates.py:121
 #: taskcoachlib/gui/viewer/task.py:763
 msgid "Reminder"
@@ -1176,7 +1175,7 @@ msgid "Prerequisites"
 msgstr "前提条件"
 
 #: taskcoachlib/gui/dialog/editor.py:1124
-#: taskcoachlib/gui/dialog/reminder.py:51
+#: taskcoachlib/gui/dialog/reminder.py:52
 #: taskcoachlib/gui/viewer/effort.py:166
 msgid "Task"
 msgstr "タスク"
@@ -1637,20 +1636,24 @@ msgstr "エディタ"
 msgid "Check spelling in editors"
 msgstr "スペルチェックを有効にする"
 
-#: taskcoachlib/gui/dialog/reminder.py:65
+#: taskcoachlib/gui/dialog/reminder.py:28
+msgid "%(name)s reminder - %(task)s"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/reminder.py:66
 msgid "Reminder date/time"
 msgstr "リマインダー日時"
 
-#: taskcoachlib/gui/dialog/reminder.py:66
+#: taskcoachlib/gui/dialog/reminder.py:67
 msgid "Snooze"
 msgstr "スヌーズ"
 
-#: taskcoachlib/gui/dialog/reminder.py:84
+#: taskcoachlib/gui/dialog/reminder.py:85
 msgid ""
 "Also use the selected snooze time as default snooze time for future reminders"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/reminder.py:88
+#: taskcoachlib/gui/dialog/reminder.py:89
 msgid "Mark task completed"
 msgstr "完了にする"
 
@@ -5664,12 +5667,12 @@ msgid "No subject"
 msgstr "無題"
 
 #: taskcoachlib/persistence/xml/templates.py:8
-msgid "New task due tomorrow"
-msgstr "明日が期限の新規タスク"
-
-#: taskcoachlib/persistence/xml/templates.py:10
 msgid "New task due today"
 msgstr "今日が期限の新規タスク"
+
+#: taskcoachlib/persistence/xml/templates.py:10
+msgid "New task due tomorrow"
+msgstr "明日が期限の新規タスク"
 
 #: taskcoachlib/render.py:38
 msgid "Infinite"
@@ -6023,39 +6026,3 @@ msgstr "URLを開けませんでした"
 
 #~ msgid "Add note to attachments"
 #~ msgstr "添付ファイルにメモを追加"
-
-#~ msgid "Please enter your password:"
-#~ msgstr "パスワードを入力して下さい:"
-
-#~ msgid "Task Coach SyncML password"
-#~ msgstr "Task Coach SyncML パスワード"
-
-#~ msgid "All"
-#~ msgstr "全て"
-
-#~ msgid "Start and due date"
-#~ msgstr "開始日と完了予定日"
-
-#~ msgid "Orientation"
-#~ msgstr "方向"
-
-#~ msgid "All but unplanned"
-#~ msgstr "未計画以外"
-
-#~ msgid "Span"
-#~ msgstr "期間"
-
-#~ msgid "Size of the font used to draw the task subject"
-#~ msgstr "タスクのタイトルに使うフォントの大きさ"
-
-#~ msgid "Font size"
-#~ msgstr "フォントサイズ"
-
-#~ msgid "Highlight"
-#~ msgstr "ハイライト色"
-
-#~ msgid "Show now"
-#~ msgstr "現時刻表示"
-
-#~ msgid "Mandatory attributes of displayed tasks"
-#~ msgstr "表示するタスクの必須属性"

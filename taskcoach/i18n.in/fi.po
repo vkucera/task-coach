@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-09-12 01:51+0000\n"
-"PO-Revision-Date: 2011-08-29 12:41+0000\n"
-"Last-Translator: Ari Voutilainen <Unknown>\n"
+"POT-Creation-Date: 2011-09-24 23:02+0000\n"
+"PO-Revision-Date: 2011-09-24 23:42+0000\n"
+"Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-24 18:56+0000\n"
-"X-Generator: Launchpad (build 14012)\n"
+"X-Launchpad-Export-Date: 2011-10-23 13:56+0000\n"
+"X-Generator: Launchpad (build 14170)\n"
 
 #: taskcoachlib/application/application.py:243
 msgid ""
@@ -117,19 +117,19 @@ msgstr "Raahaa ja pudota"
 msgid "Drag and drop \"%s\""
 msgstr "Raahaa ja pudota \"%s\""
 
-#: taskcoachlib/command/base.py:341
+#: taskcoachlib/command/base.py:338
 msgid "Edit subjects"
 msgstr "Muokkaa otsikkoa"
 
-#: taskcoachlib/command/base.py:342
+#: taskcoachlib/command/base.py:339
 msgid "Edit subject \"%s\""
 msgstr "Muokkaa otsikkoa \"%s\""
 
-#: taskcoachlib/command/base.py:362
+#: taskcoachlib/command/base.py:359
 msgid "Edit descriptions"
 msgstr "Muokkaa selitteitä"
 
-#: taskcoachlib/command/base.py:363
+#: taskcoachlib/command/base.py:360
 msgid "Edit description \"%s\""
 msgstr "Muokkaa selitettä \"%s\""
 
@@ -393,30 +393,30 @@ msgstr "Vaihda arvioitu aika"
 msgid "Change budget of \"%s\""
 msgstr "Vaihda  \"%s\":n arvioitu aika"
 
-#: taskcoachlib/config/settings.py:221
+#: taskcoachlib/config/settings.py:225
 msgid "Error while reading the %s-%s setting from %s.ini."
 msgstr "Virhe luettaessa %s-%s asetusta tiedostosta %s.ini."
 
-#: taskcoachlib/config/settings.py:222
+#: taskcoachlib/config/settings.py:226
 msgid "The value is: %s"
 msgstr "Arvo on: %s"
 
-#: taskcoachlib/config/settings.py:223
+#: taskcoachlib/config/settings.py:227
 msgid "The error is: %s"
 msgstr "Virhe on: %s"
 
-#: taskcoachlib/config/settings.py:224
+#: taskcoachlib/config/settings.py:228
 msgid ""
 "%s will use the default value for the setting and should proceed normally."
 msgstr ""
 "%s:lle käytetään asetuksen oletusarvoa ja käsittelyn pitäisi edetä "
 "normaalisti."
 
-#: taskcoachlib/config/settings.py:225
+#: taskcoachlib/config/settings.py:229
 msgid "Settings error"
 msgstr "Asetusvirhe"
 
-#: taskcoachlib/config/settings.py:245
+#: taskcoachlib/config/settings.py:249
 msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
@@ -424,7 +424,7 @@ msgstr ""
 "Virhe tallennettaessa tiedostoon %s.ini\n"
 "%s\n"
 
-#: taskcoachlib/config/settings.py:246
+#: taskcoachlib/config/settings.py:250
 msgid "Save error"
 msgstr "Virhe tallentaessa"
 
@@ -1008,7 +1008,6 @@ msgid "Completion date"
 msgstr "Valmistumispäivä"
 
 #: taskcoachlib/gui/dialog/editor.py:396
-#: taskcoachlib/gui/dialog/reminder.py:28
 #: taskcoachlib/gui/dialog/templates.py:121
 #: taskcoachlib/gui/viewer/task.py:763
 msgid "Reminder"
@@ -1177,7 +1176,7 @@ msgid "Prerequisites"
 msgstr "Vaatimukset"
 
 #: taskcoachlib/gui/dialog/editor.py:1124
-#: taskcoachlib/gui/dialog/reminder.py:51
+#: taskcoachlib/gui/dialog/reminder.py:52
 #: taskcoachlib/gui/viewer/effort.py:166
 msgid "Task"
 msgstr "Tehtävä"
@@ -1646,21 +1645,25 @@ msgstr "Editori"
 msgid "Check spelling in editors"
 msgstr "Tarkista kieliasu editoreissa"
 
-#: taskcoachlib/gui/dialog/reminder.py:65
+#: taskcoachlib/gui/dialog/reminder.py:28
+msgid "%(name)s reminder - %(task)s"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/reminder.py:66
 msgid "Reminder date/time"
 msgstr "Muistuttajan päiväys/aika"
 
-#: taskcoachlib/gui/dialog/reminder.py:66
+#: taskcoachlib/gui/dialog/reminder.py:67
 msgid "Snooze"
 msgstr "Torkku"
 
-#: taskcoachlib/gui/dialog/reminder.py:84
+#: taskcoachlib/gui/dialog/reminder.py:85
 msgid ""
 "Also use the selected snooze time as default snooze time for future reminders"
 msgstr ""
 "Käytä valittua torkkuaikaa oletustorkkuaikana myös jatkossa muistuttajille"
 
-#: taskcoachlib/gui/dialog/reminder.py:88
+#: taskcoachlib/gui/dialog/reminder.py:89
 msgid "Mark task completed"
 msgstr "Merkitse tehtävä valmiiksi"
 
@@ -6084,12 +6087,12 @@ msgid "No subject"
 msgstr "Ei otsikkoa"
 
 #: taskcoachlib/persistence/xml/templates.py:8
-msgid "New task due tomorrow"
-msgstr "Uusi huomenna päättyvä tehtävä"
-
-#: taskcoachlib/persistence/xml/templates.py:10
 msgid "New task due today"
 msgstr "Uusi tänään päättyvä tehtävä"
+
+#: taskcoachlib/persistence/xml/templates.py:10
+msgid "New task due tomorrow"
+msgstr "Uusi huomenna päättyvä tehtävä"
 
 #: taskcoachlib/render.py:38
 msgid "Infinite"
@@ -6626,45 +6629,3 @@ msgstr "Virhe avattaessa URL-osoitetta"
 
 #~ msgid "%s (effort)"
 #~ msgstr "%s (työmäärä)"
-
-#~ msgid ""
-#~ "Actually delete deleted tasks and notes (see the SyncML chapter in Help"
-#~ msgstr ""
-#~ "Poista lopullisesti poistetut tehtävät ja huomautukset (katso SyncML-"
-#~ "kappaletta ohjeessa)"
-
-#~ msgid "Please enter your password:"
-#~ msgstr "Anna salasana:"
-
-#~ msgid "Task Coach SyncML password"
-#~ msgstr "Task Coach SyncML salasana"
-
-#~ msgid "All"
-#~ msgstr "Kaikki"
-
-#~ msgid "All but unplanned"
-#~ msgstr "Kaikki paitsi suunnittelemattomat"
-
-#~ msgid "Start and due date"
-#~ msgstr "Aloitus- ja päättymispäivä"
-
-#~ msgid "Span"
-#~ msgstr "Laajenna"
-
-#~ msgid "Orientation"
-#~ msgstr "Suunta"
-
-#~ msgid "Mandatory attributes of displayed tasks"
-#~ msgstr "Näytettävien tehtävien pakolliset attribuutit"
-
-#~ msgid "Show now"
-#~ msgstr "Näytä nyt"
-
-#~ msgid "Highlight"
-#~ msgstr "Korosta"
-
-#~ msgid "Font size"
-#~ msgstr "Kirjasinkoko"
-
-#~ msgid "Size of the font used to draw the task subject"
-#~ msgstr "Tehtävän otsikon kirjasimen koko"

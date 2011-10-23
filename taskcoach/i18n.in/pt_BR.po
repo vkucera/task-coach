@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-09-12 01:51+0000\n"
-"PO-Revision-Date: 2011-09-23 22:50+0000\n"
-"Last-Translator: Rafael Neri <Unknown>\n"
+"POT-Creation-Date: 2011-09-24 23:02+0000\n"
+"PO-Revision-Date: 2011-10-23 13:53+0000\n"
+"Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-24 18:56+0000\n"
-"X-Generator: Launchpad (build 14012)\n"
+"X-Launchpad-Export-Date: 2011-10-23 13:56+0000\n"
+"X-Generator: Launchpad (build 14170)\n"
 
 #: taskcoachlib/application/application.py:243
 msgid ""
@@ -116,21 +116,21 @@ msgstr "Arrastar e soltar"
 msgid "Drag and drop \"%s\""
 msgstr "Arrastar e soltar  \"%s\""
 
-#: taskcoachlib/command/base.py:341
+#: taskcoachlib/command/base.py:338
 msgid "Edit subjects"
 msgstr "Editar assuntos"
 
-#: taskcoachlib/command/base.py:342
+#: taskcoachlib/command/base.py:339
 msgid "Edit subject \"%s\""
-msgstr "Editar assuntos  \"%s\""
+msgstr "Editar assunto \"%s\""
 
-#: taskcoachlib/command/base.py:362
+#: taskcoachlib/command/base.py:359
 msgid "Edit descriptions"
 msgstr "Editar descrições"
 
-#: taskcoachlib/command/base.py:363
+#: taskcoachlib/command/base.py:360
 msgid "Edit description \"%s\""
-msgstr "Editar descrições \"%s\""
+msgstr "Editar descrição \"%s\""
 
 #: taskcoachlib/command/categorizableCommands.py:25
 msgid "Toggle category"
@@ -233,7 +233,7 @@ msgstr "Excluir notas"
 
 #: taskcoachlib/command/noteCommands.py:67
 msgid "Delete note \"%s\""
-msgstr "Excluir notas  \"%s\""
+msgstr "Excluir nota  \"%s\""
 
 #: taskcoachlib/command/noteCommands.py:71
 msgid "Drag and drop notes"
@@ -241,7 +241,7 @@ msgstr "Arrastar e soltar notas"
 
 #: taskcoachlib/command/noteCommands.py:72
 msgid "Drag and drop note \"%s\""
-msgstr "Arrastar e soltar notas  \"%s\""
+msgstr "Arrastar e soltar nota  \"%s\""
 
 #: taskcoachlib/command/noteCommands.py:76
 msgid "Add note"
@@ -249,7 +249,7 @@ msgstr "Adicionar nota"
 
 #: taskcoachlib/command/noteCommands.py:77
 msgid "Add note to \"%s\""
-msgstr "Adicionar nota para  \"%s\""
+msgstr "Adicionar nota em  \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:59
 msgid "Drag and drop tasks"
@@ -392,29 +392,29 @@ msgstr "Alterar orçamentos"
 msgid "Change budget of \"%s\""
 msgstr "Alterar orçamentos de \"%s\""
 
-#: taskcoachlib/config/settings.py:221
+#: taskcoachlib/config/settings.py:225
 msgid "Error while reading the %s-%s setting from %s.ini."
-msgstr "Erro ao ler as %s-%s configuradas do %s.ini."
+msgstr "Erro ao ler a configuração  %s-%s do  arquivo %s.ini."
 
-#: taskcoachlib/config/settings.py:222
+#: taskcoachlib/config/settings.py:226
 msgid "The value is: %s"
 msgstr "O valor é: %s"
 
-#: taskcoachlib/config/settings.py:223
+#: taskcoachlib/config/settings.py:227
 msgid "The error is: %s"
 msgstr "O erro é: %s"
 
-#: taskcoachlib/config/settings.py:224
+#: taskcoachlib/config/settings.py:228
 msgid ""
 "%s will use the default value for the setting and should proceed normally."
 msgstr ""
-"%s usará os valores padrão de configuração e deverá proceder normalmente."
+"%s usará o valor padrão para a configuração e deverá continuar normalmente."
 
-#: taskcoachlib/config/settings.py:225
+#: taskcoachlib/config/settings.py:229
 msgid "Settings error"
 msgstr "Erro de configuração"
 
-#: taskcoachlib/config/settings.py:245
+#: taskcoachlib/config/settings.py:249
 msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
@@ -422,7 +422,7 @@ msgstr ""
 "Erro ao salvar %s.ini\n"
 "%s\n"
 
-#: taskcoachlib/config/settings.py:246
+#: taskcoachlib/config/settings.py:250
 msgid "Save error"
 msgstr "Erro ao salvar"
 
@@ -1006,7 +1006,6 @@ msgid "Completion date"
 msgstr "Data de conclusão"
 
 #: taskcoachlib/gui/dialog/editor.py:396
-#: taskcoachlib/gui/dialog/reminder.py:28
 #: taskcoachlib/gui/dialog/templates.py:121
 #: taskcoachlib/gui/viewer/task.py:763
 msgid "Reminder"
@@ -1176,7 +1175,7 @@ msgid "Prerequisites"
 msgstr "Pré-requisitos"
 
 #: taskcoachlib/gui/dialog/editor.py:1124
-#: taskcoachlib/gui/dialog/reminder.py:51
+#: taskcoachlib/gui/dialog/reminder.py:52
 #: taskcoachlib/gui/viewer/effort.py:166
 msgid "Task"
 msgstr "Tarefa"
@@ -1648,20 +1647,24 @@ msgstr "Editor"
 msgid "Check spelling in editors"
 msgstr "Verificar ortografia em editores"
 
-#: taskcoachlib/gui/dialog/reminder.py:65
+#: taskcoachlib/gui/dialog/reminder.py:28
+msgid "%(name)s reminder - %(task)s"
+msgstr "lembrete %(name)s  - %(task)s"
+
+#: taskcoachlib/gui/dialog/reminder.py:66
 msgid "Reminder date/time"
 msgstr "Lembrete data/hora"
 
-#: taskcoachlib/gui/dialog/reminder.py:66
+#: taskcoachlib/gui/dialog/reminder.py:67
 msgid "Snooze"
 msgstr "Pausa"
 
-#: taskcoachlib/gui/dialog/reminder.py:84
+#: taskcoachlib/gui/dialog/reminder.py:85
 msgid ""
 "Also use the selected snooze time as default snooze time for future reminders"
 msgstr "Também utilize o tempo de soneca selecionado para lembretes futuros"
 
-#: taskcoachlib/gui/dialog/reminder.py:88
+#: taskcoachlib/gui/dialog/reminder.py:89
 msgid "Mark task completed"
 msgstr "Marcar tarefa como finalizada"
 
@@ -1791,7 +1794,7 @@ msgstr "A última versão estável de %(name)s é %(version)s."
 
 #: taskcoachlib/gui/iocontroller.py:49
 msgid "%s files (*.tsk)|*.tsk|All files (*.*)|*"
-msgstr ""
+msgstr "%s arquivos (*.tsk)|*.tsk|Todoso os  arquivos (*.*)|*"
 
 #: taskcoachlib/gui/iocontroller.py:52
 msgid ""
@@ -2904,13 +2907,11 @@ msgstr "Verificar a existência de nova versão de %s"
 msgid ""
 "Cannot open URL:\n"
 "%s"
-msgstr ""
-"Não foi possível abrir URL:\n"
-"%s"
+msgstr "Não foi possível abrir URL %s"
 
 #: taskcoachlib/gui/uicommand.py:2282
 msgid "%s URL error"
-msgstr ""
+msgstr "%s erro de URL"
 
 #: taskcoachlib/gui/uicommand.py:2288
 msgid "&Frequently asked questions"
@@ -5164,6 +5165,9 @@ msgid ""
 "dates, so the time part of start, due, and completion date/times is not\n"
 "exported."
 msgstr ""
+"%(name)s suporta datas e horários, mas Todo.txt somente suporta \n"
+"datas, então os tempos de início, vencimento e conclusão data/hora não\n"
+"serão exportados."
 
 #: taskcoachlib/help/__init__.py:606
 msgid ""
@@ -6070,11 +6074,11 @@ msgstr "Modificar tarefa %s"
 
 #: taskcoachlib/iphone/protocol.py:1242
 msgid "End of task synchronization."
-msgstr ""
+msgstr "Término da sincronização de tarefas"
 
 #: taskcoachlib/iphone/protocol.py:1259
 msgid "Could not find task %s for effort."
-msgstr ""
+msgstr "Não foi possível encontrar a tarefa %s para monitorar."
 
 #: taskcoachlib/iphone/protocol.py:1262
 msgid "New effort %s"
@@ -6163,12 +6167,12 @@ msgid "No subject"
 msgstr "Sem assunto"
 
 #: taskcoachlib/persistence/xml/templates.py:8
-msgid "New task due tomorrow"
-msgstr "Nova tarefa para amanhã"
-
-#: taskcoachlib/persistence/xml/templates.py:10
 msgid "New task due today"
 msgstr "Nova tarefa para hoje"
+
+#: taskcoachlib/persistence/xml/templates.py:10
+msgid "New task due tomorrow"
+msgstr "Nova tarefa para amanhã"
 
 #: taskcoachlib/render.py:38
 msgid "Infinite"
@@ -6538,47 +6542,6 @@ msgstr "Erro ao abrir URL"
 
 #~ msgid "Add note to tasks"
 #~ msgstr "Adicionar nota às tarefas"
-
-#~ msgid "Task Coach SyncML password"
-#~ msgstr "Senha SyncML para Task Coach"
-
-#~ msgid "All"
-#~ msgstr "Todos"
-
-#~ msgid "Start and due date"
-#~ msgstr "Data de começo e fim"
-
-#~ msgid "All but unplanned"
-#~ msgstr "Todos exceto não planejados"
-
-#~ msgid "Span"
-#~ msgstr "Juntar"
-
-#~ msgid "Size of the font used to draw the task subject"
-#~ msgstr "Tamanho da fonte usada para desenhar o assunto da tarefa"
-
-#~ msgid "Font size"
-#~ msgstr "Tamanho da fonte"
-
-#~ msgid "Highlight"
-#~ msgstr "Realçar"
-
-#~ msgid "Show now"
-#~ msgstr "Mostrar agora"
-
-#~ msgid "Orientation"
-#~ msgstr "Orientação"
-
-#~ msgid "Mandatory attributes of displayed tasks"
-#~ msgstr "Atributos obrigatórios das tarefas mostradas"
-
-#~ msgid ""
-#~ "Actually delete deleted tasks and notes (see the SyncML chapter in Help"
-#~ msgstr ""
-#~ "Excluir realmente as tarefas excluídas (veja o capítulo de ajuda do SyncML"
-
-#~ msgid "Please enter your password:"
-#~ msgstr "Por favor, digite sua senha:"
 
 #~ msgid "Add subnote to \"%s\""
 #~ msgstr "Adicionar subnota para \"%s\""

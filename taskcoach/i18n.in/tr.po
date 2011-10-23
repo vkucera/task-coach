@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-09-12 01:51+0000\n"
-"PO-Revision-Date: 2011-08-17 00:29+0000\n"
+"POT-Creation-Date: 2011-09-24 23:02+0000\n"
+"PO-Revision-Date: 2011-09-24 23:40+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-24 18:56+0000\n"
-"X-Generator: Launchpad (build 14012)\n"
+"X-Launchpad-Export-Date: 2011-10-23 13:56+0000\n"
+"X-Generator: Launchpad (build 14170)\n"
 
 #: taskcoachlib/application/application.py:243
 msgid ""
@@ -116,19 +116,19 @@ msgstr "Sürükle ve bırak"
 msgid "Drag and drop \"%s\""
 msgstr "\"%s\" sürükle ve bırak"
 
-#: taskcoachlib/command/base.py:341
+#: taskcoachlib/command/base.py:338
 msgid "Edit subjects"
 msgstr "Konuları düzenle"
 
-#: taskcoachlib/command/base.py:342
+#: taskcoachlib/command/base.py:339
 msgid "Edit subject \"%s\""
 msgstr "\"%s\" konusunu düzenler"
 
-#: taskcoachlib/command/base.py:362
+#: taskcoachlib/command/base.py:359
 msgid "Edit descriptions"
 msgstr "Tanımları düzenle"
 
-#: taskcoachlib/command/base.py:363
+#: taskcoachlib/command/base.py:360
 msgid "Edit description \"%s\""
 msgstr "\"%s\" açıklamasını düzenler"
 
@@ -392,28 +392,28 @@ msgstr "Bütçeleri değiştir"
 msgid "Change budget of \"%s\""
 msgstr "\"%s\" için bütçeyi değiştirir"
 
-#: taskcoachlib/config/settings.py:221
+#: taskcoachlib/config/settings.py:225
 msgid "Error while reading the %s-%s setting from %s.ini."
 msgstr "%s-%s ayarları %s.ini dosyasından okunurken hata oldu."
 
-#: taskcoachlib/config/settings.py:222
+#: taskcoachlib/config/settings.py:226
 msgid "The value is: %s"
 msgstr "Değer: %s"
 
-#: taskcoachlib/config/settings.py:223
+#: taskcoachlib/config/settings.py:227
 msgid "The error is: %s"
 msgstr "Hata: %s"
 
-#: taskcoachlib/config/settings.py:224
+#: taskcoachlib/config/settings.py:228
 msgid ""
 "%s will use the default value for the setting and should proceed normally."
 msgstr "%s varsayılan ayarları kullanarak normal şekilde çalışacak."
 
-#: taskcoachlib/config/settings.py:225
+#: taskcoachlib/config/settings.py:229
 msgid "Settings error"
 msgstr "Ayar hatası"
 
-#: taskcoachlib/config/settings.py:245
+#: taskcoachlib/config/settings.py:249
 msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
@@ -421,7 +421,7 @@ msgstr ""
 "%s.ini kaydedilirken hata oluştu:\n"
 "%s\n"
 
-#: taskcoachlib/config/settings.py:246
+#: taskcoachlib/config/settings.py:250
 msgid "Save error"
 msgstr "Kaydetme hatası"
 
@@ -1005,7 +1005,6 @@ msgid "Completion date"
 msgstr "Tamamlanma tarihi"
 
 #: taskcoachlib/gui/dialog/editor.py:396
-#: taskcoachlib/gui/dialog/reminder.py:28
 #: taskcoachlib/gui/dialog/templates.py:121
 #: taskcoachlib/gui/viewer/task.py:763
 msgid "Reminder"
@@ -1174,7 +1173,7 @@ msgid "Prerequisites"
 msgstr "Ön koşullar"
 
 #: taskcoachlib/gui/dialog/editor.py:1124
-#: taskcoachlib/gui/dialog/reminder.py:51
+#: taskcoachlib/gui/dialog/reminder.py:52
 #: taskcoachlib/gui/viewer/effort.py:166
 msgid "Task"
 msgstr "İş"
@@ -1227,7 +1226,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/export.py:145 taskcoachlib/gui/iocontroller.py:322
 msgid "Export as Todo.txt"
-msgstr ""
+msgstr "Todo.txt olarak ver"
 
 #: taskcoachlib/gui/dialog/iphone.py:32
 msgid ""
@@ -1360,11 +1359,11 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:265
 msgid "Before saving, automatically import from"
-msgstr ""
+msgstr "Kaydetmeden önce kendiliğinden şuradan al"
 
 #: taskcoachlib/gui/dialog/preferences.py:268
 msgid "When saving, automatically export to"
-msgstr ""
+msgstr "Kaydederken kendiliğinden şuraya ver"
 
 #: taskcoachlib/gui/dialog/preferences.py:275
 msgid "Window behavior"
@@ -1643,20 +1642,26 @@ msgstr "Düzenleyici"
 msgid "Check spelling in editors"
 msgstr "Düzenyicilerde yazım denetim yap"
 
-#: taskcoachlib/gui/dialog/reminder.py:65
+#: taskcoachlib/gui/dialog/reminder.py:28
+msgid "%(name)s reminder - %(task)s"
+msgstr "%(name)s anımsatıcı - %(task)s"
+
+#: taskcoachlib/gui/dialog/reminder.py:66
 msgid "Reminder date/time"
 msgstr "Anımsatıcı tarih/saati"
 
-#: taskcoachlib/gui/dialog/reminder.py:66
+#: taskcoachlib/gui/dialog/reminder.py:67
 msgid "Snooze"
 msgstr "Sustur"
 
-#: taskcoachlib/gui/dialog/reminder.py:84
+#: taskcoachlib/gui/dialog/reminder.py:85
 msgid ""
 "Also use the selected snooze time as default snooze time for future reminders"
 msgstr ""
+"Seçili erteleme zamanını bundan sonraki anımsatıcılar için varsayılan olarak "
+"kullan"
 
-#: taskcoachlib/gui/dialog/reminder.py:88
+#: taskcoachlib/gui/dialog/reminder.py:89
 msgid "Mark task completed"
 msgstr "İşi tamamlanmış olarak işaretle"
 
@@ -1691,7 +1696,7 @@ msgstr "İşler veritabanının adı"
 #: taskcoachlib/gui/dialog/syncpreferences.py:93
 #: taskcoachlib/gui/dialog/syncpreferences.py:106
 msgid "Preferred synchronization mode"
-msgstr ""
+msgstr "Yeğlenen eşleştirme kipi"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:94
 #: taskcoachlib/gui/dialog/syncpreferences.py:107
@@ -1786,7 +1791,7 @@ msgstr "Son yayınlanan %(name)s sürümü %(version)s."
 
 #: taskcoachlib/gui/iocontroller.py:49
 msgid "%s files (*.tsk)|*.tsk|All files (*.*)|*"
-msgstr ""
+msgstr "%s dosyaları (*.tsk)|*.tsk|Tüm dosyalar (*.*)|*"
 
 #: taskcoachlib/gui/iocontroller.py:52
 msgid ""
@@ -1811,7 +1816,7 @@ msgstr ""
 
 #: taskcoachlib/gui/iocontroller.py:64
 msgid "Todo.txt files (*.txt)|*.txt|All files (*.*)|*"
-msgstr ""
+msgstr "Todo.txt dosyaları (*.txt)|*.txt|Tüm dosyalar (*.*)|*"
 
 #: taskcoachlib/gui/iocontroller.py:103
 msgid "Open"
@@ -2056,7 +2061,7 @@ msgstr "&Yardım"
 
 #: taskcoachlib/gui/menu.py:213
 msgid "&Import"
-msgstr ""
+msgstr "&Al"
 
 #: taskcoachlib/gui/menu.py:215
 msgid "&Export"
@@ -2341,6 +2346,7 @@ msgstr "&Silinmiş ögeleri yoket"
 msgid ""
 "Actually delete deleted tasks and notes (see the SyncML chapter in Help)"
 msgstr ""
+"Silinmiş iş ve notları gerçekten sil (Yardımdan SyncML bölümüne bakın)"
 
 #: taskcoachlib/gui/uicommand.py:602
 msgid ""
@@ -2407,11 +2413,12 @@ msgstr "Bir görüntüleyicideki ögeleri iCalendar biçiminde verir"
 
 #: taskcoachlib/gui/uicommand.py:735
 msgid "Export as &Todo.txt..."
-msgstr ""
+msgstr "&Todo.txt olarak ver..."
 
 #: taskcoachlib/gui/uicommand.py:736
 msgid "Export items from a viewer in Todo.txt format (see todotxt.com)"
 msgstr ""
+"Bir görünümdeki ögeleri Todo.txt biçiminde verir (todotxt.com'a bakın)"
 
 #: taskcoachlib/gui/uicommand.py:751
 msgid "&Import CSV..."
@@ -2427,15 +2434,15 @@ msgstr "CSV Al"
 
 #: taskcoachlib/gui/uicommand.py:765
 msgid "&Import Todo.txt..."
-msgstr ""
+msgstr "Todo.txt olarak a&l..."
 
 #: taskcoachlib/gui/uicommand.py:766
 msgid "Import tasks from a Todo.txt (see todotxt.com) file"
-msgstr ""
+msgstr "Todo.txt dosyasyından işleri alır (todotxt.com'a bakın)"
 
 #: taskcoachlib/gui/uicommand.py:770
 msgid "Import Todo.txt"
-msgstr ""
+msgstr "Todo.txt al"
 
 #: taskcoachlib/gui/uicommand.py:777
 msgid "S&yncML synchronization..."
@@ -2888,10 +2895,12 @@ msgid ""
 "Cannot open URL:\n"
 "%s"
 msgstr ""
+"Şu adres açılamıyor:\n"
+"%s"
 
 #: taskcoachlib/gui/uicommand.py:2282
 msgid "%s URL error"
-msgstr ""
+msgstr "%s adres hatası"
 
 #: taskcoachlib/gui/uicommand.py:2288
 msgid "&Frequently asked questions"
@@ -3804,11 +3813,11 @@ msgstr "Noktalı virgül"
 
 #: taskcoachlib/gui/wizard/csvimport.py:54
 msgid "DD/MM (day first)"
-msgstr ""
+msgstr "GG/AA (önce gün)"
 
 #: taskcoachlib/gui/wizard/csvimport.py:55
 msgid "MM/DD (month first)"
-msgstr ""
+msgstr "AA/GG (önce ay)"
 
 #: taskcoachlib/gui/wizard/csvimport.py:59
 msgid "Simple quote"
@@ -3840,7 +3849,7 @@ msgstr "Ayraç"
 
 #: taskcoachlib/gui/wizard/csvimport.py:96
 msgid "Date format"
-msgstr ""
+msgstr "Tarih biçimi"
 
 #: taskcoachlib/gui/wizard/csvimport.py:99
 msgid "Quote character"
@@ -3955,7 +3964,7 @@ msgstr "Verileri verme"
 
 #: taskcoachlib/help/__init__.py:97 taskcoachlib/help/__init__.py:335
 msgid "E-mail integration"
-msgstr ""
+msgstr "E-posta bütünlüğü"
 
 #: taskcoachlib/help/__init__.py:99 taskcoachlib/help/__init__.py:337
 msgid "About e-mail integration"
@@ -4008,23 +4017,23 @@ msgstr "Yapılandırma"
 
 #: taskcoachlib/help/__init__.py:117 taskcoachlib/help/__init__.py:558
 msgid "Android"
-msgstr ""
+msgstr "Android"
 
 #: taskcoachlib/help/__init__.py:119 taskcoachlib/help/__init__.py:560
 msgid "%(name)s on Android?"
-msgstr ""
+msgstr "Android üzerinde %(name)s?"
 
 #: taskcoachlib/help/__init__.py:120 taskcoachlib/help/__init__.py:568
 msgid "Todo.txt and Todo.txt Touch"
-msgstr ""
+msgstr "Todo.txt ve Todo.txt Touch"
 
 #: taskcoachlib/help/__init__.py:121 taskcoachlib/help/__init__.py:583
 msgid "Importing todo.txt"
-msgstr ""
+msgstr "Todo.txt alınıyor"
 
 #: taskcoachlib/help/__init__.py:122 taskcoachlib/help/__init__.py:596
 msgid "Exporting todo.txt"
-msgstr ""
+msgstr "Todo.txt veriliyor"
 
 #: taskcoachlib/help/__init__.py:124 taskcoachlib/help/__init__.py:623
 msgid "Task templates"
@@ -4502,26 +4511,33 @@ msgid ""
 "e-mail attachments on a system which is different from the one you\n"
 "created it first."
 msgstr ""
+"%(name)s ile bir kaç e-posta programına \n"
+"sürükle bırak yapabilirsiniz. Bazı sınırlamalar şunlardır; e-postalar \n"
+"%(name)s dosyasının olduğu klasöre .eml dosyaları olarak kopyalanır \n"
+"ve daha sonra bu dosya tipi sisteminizde hangi program ile \n"
+"ilişkilendirilmiş ise onunla açılır. Diğer yandan bu sayede e-posta \n"
+"eklerini oluşturduğunuz sistemden başka bir yerde de \n"
+"açabilirsiniz."
 
 #: taskcoachlib/help/__init__.py:347
 msgid "Mail user agents supported include:"
-msgstr ""
+msgstr "Desteklenen e-posta programları:"
 
 #: taskcoachlib/help/__init__.py:349
 msgid "Mozilla Thunderbird"
-msgstr ""
+msgstr "Mozilla Thunderbird"
 
 #: taskcoachlib/help/__init__.py:350
 msgid "Microsoft Outlook"
-msgstr ""
+msgstr "Microsoft Outlook"
 
 #: taskcoachlib/help/__init__.py:351
 msgid "Claws Mail"
-msgstr ""
+msgstr "Claws Mail"
 
 #: taskcoachlib/help/__init__.py:352
 msgid "Apple Mail"
-msgstr ""
+msgstr "Apple Mail"
 
 #: taskcoachlib/help/__init__.py:354
 msgid ""
@@ -5028,6 +5044,12 @@ msgid ""
 "Format\">Todo.txt \n"
 "format</a> and then edit your tasks on your Android device."
 msgstr ""
+"Hayır, %(name)s henüz Android platformu için yayınlanmadı. Ancak,\n"
+"<a target=\"_blank\" href=\"http://todotxt.com\">Todo.txt Touch</a> \n"
+"kullanılabilir. %(name)s işlerinizi <a target=\"_blank\" \n"
+"href=\"https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-"
+"Format\">\n"
+"Todo.txt biçiminde</a> verebilir ve Android aygıtınızdan düzenleyebilirsiniz"
 
 #: taskcoachlib/help/__init__.py:570
 msgid ""
@@ -5041,6 +5063,17 @@ msgid ""
 "Dropbox folder. %(name)s can import from and export to that todo.txt \n"
 "file."
 msgstr ""
+"Todo.txt, Gina Trapani tarafından oluşturulmuş, düz metin dosyaları ile "
+"çalışan\n"
+"açık kaynak kodlu bir yapılacak işler yöneticisidir. Todo.txt komut-satırı "
+"arayüzüne\n"
+"sahiptir. Dosya biçimi düz metin olduğundan, işlerinizi herhangi bir metin "
+"düzenleyici\n"
+"ile düzenleyeiblirsiniz. Todo.txt Touch, Tıdı.txt programının Android "
+"sürümüdür.\n"
+"Todo.txt Touch dropbox klasörünüzdeki todo.txt dosyasını kullanır.  "
+"%(name)s\n"
+"bu todo.txt dosyasından veri alıp verebilir."
 
 #: taskcoachlib/help/__init__.py:578
 msgid ""
@@ -5050,6 +5083,11 @@ msgid ""
 "exporting of Todo.txt, %(name)s will keep the task file and the \n"
 "todo.txt file in sync."
 msgstr ""
+"İpucu: İş dosyanızı Todo.txt Touch tarafından Dropbox \n"
+"klasörünüzde oluşturulan klasöre kaydeder ve\n"
+"Todo.txt kendiliğinden al ve ver özelliğini etkinleştirirseniz,\n"
+"%(name)s iş dosyası ve todo.txt dosyasını \n"
+"kendiliğinden eşitler."
 
 #: taskcoachlib/help/__init__.py:585
 msgid ""
@@ -5060,6 +5098,11 @@ msgid ""
 "parent tasks because Todo.txt allows tasks to belong to multiple projects, \n"
 "while %(name)s only allows one parent task per task."
 msgstr ""
+"%(name)s iş açıklaması, başlangıç tarihi, bitiş tarihi, tamamlanma \n"
+"tarihi, öncelik, bağlam ve projeleri alır. Bağlam ve projeler \n"
+"%(name)s gruplarına dönüştürülür. Projeler üst ögelere dönüştürülmez \n"
+"çünkü %(name)s her iş için bir üst ögeye izin verirken \n"
+"Todo.txt işlerin birden fazla projeye ait olmasına izin verir."
 
 #: taskcoachlib/help/__init__.py:591
 msgid ""
@@ -5070,6 +5113,10 @@ msgid ""
 "parent\n"
 "item if any."
 msgstr ""
+"Alırken %(name)s birbirine uyan işleri ve grupları bulmaya\n"
+"ve bunları yeniden oluşturmak yerine güncellemeye çalışır.\n"
+"Bunu yaparken işlerin (ya da proje ya da bağlamın) açıklamasına\n"
+"ve varsa üst ögesine bakar."
 
 #: taskcoachlib/help/__init__.py:598
 msgid ""
@@ -5078,6 +5125,9 @@ msgid ""
 "not\n"
 "exported."
 msgstr ""
+"%(name)s iş açıklaması, başlangıç tarihi, bitiş tarihi, tamamlanma tarihi,\n"
+"öncelik ve grupları Todo.txt biçiminde verir. Diğer öznitelikler\n"
+"verilmez."
 
 #: taskcoachlib/help/__init__.py:602
 msgid ""
@@ -5085,6 +5135,10 @@ msgid ""
 "dates, so the time part of start, due, and completion date/times is not\n"
 "exported."
 msgstr ""
+"%(name)s tarih ve saatleri desteklerken, Todo.txt yalnızca\n"
+"tarihleri destekler. Yani bilgiler verilirken, başlangıç, bitiş ve "
+"tamamlanma\n"
+"tarihlerinin saatleri aktarılmaz."
 
 #: taskcoachlib/help/__init__.py:606
 msgid ""
@@ -5095,6 +5149,11 @@ msgid ""
 "the\n"
 "todo.txt file."
 msgstr ""
+"Varsayılan Todo.txt biçimi yalnızca başlangıç ve \n"
+"tamamlanma tarihlerini destekler, bitiş tarihi bulunmaz. \n"
+"Bu yüzden %(name)s işlerin bitiş tarihlerini vermek için \n"
+",bir eklenti kullanır. Bitiş tarihleri todo.txt dosyasında \n"
+"\"bitiş: YYYY-AA-GG\" şeklinde gösterilir."
 
 #: taskcoachlib/help/__init__.py:611
 msgid ""
@@ -5105,6 +5164,12 @@ msgid ""
 "26\n"
 "are not exported."
 msgstr ""
+"Todo.txt öncelikleri harf sırasıyla belirler ('A'-'Z'). \n"
+"%(name)s öncelikler için rakamları kullanır. %(name)s içindeki 1 numaralı "
+"öncelik 'A', \n"
+"2 numaralı öncelik 'B' ve 26 numaralı öncelik 'Z' olacak şekilde  "
+"dönüştürülür. \n"
+"%(name)s içindeki 1'den küçük ve 26'dan büyük öncelikler dosyaya verilmez."
 
 #: taskcoachlib/help/__init__.py:616
 msgid ""
@@ -5113,6 +5178,10 @@ msgid ""
 "Categories whose subject doesn't start with '+' or '@' are not exported. \n"
 "Subcategories are exported if their parent category is."
 msgstr ""
+"Açıklaması '+' ile başlayan gruplar projeler olarak verilir.\n"
+"Açıklaması '@' ile başlayan gruplar bağlam olarak verilir. \n"
+"Açıklaması '+' ya da '@' ile başlamayan gruplar verilmez\n"
+"Altgruplar, üstgrupları veriliyorsa aktarılır."
 
 #: taskcoachlib/help/__init__.py:627
 msgid ""
@@ -5964,11 +6033,11 @@ msgstr "Güncellenen iş %s"
 
 #: taskcoachlib/iphone/protocol.py:1242
 msgid "End of task synchronization."
-msgstr ""
+msgstr "İş eşleştirmesi tamamlandı."
 
 #: taskcoachlib/iphone/protocol.py:1259
 msgid "Could not find task %s for effort."
-msgstr ""
+msgstr "Çalışma için %s işi bulunamadı."
 
 #: taskcoachlib/iphone/protocol.py:1262
 msgid "New effort %s"
@@ -6058,12 +6127,12 @@ msgid "No subject"
 msgstr "Başlık yok"
 
 #: taskcoachlib/persistence/xml/templates.py:8
-msgid "New task due tomorrow"
-msgstr "Yarın bitecek yeni iş"
-
-#: taskcoachlib/persistence/xml/templates.py:10
 msgid "New task due today"
 msgstr "Bugün bitecek yeni iş"
+
+#: taskcoachlib/persistence/xml/templates.py:10
+msgid "New task due tomorrow"
+msgstr "Yarın bitecek yeni iş"
 
 #: taskcoachlib/render.py:38
 msgid "Infinite"
@@ -6288,27 +6357,27 @@ msgstr "Dikey"
 
 #: taskcoachlib/widgets/calendarconfig.py:78
 msgid "Which tasks to display"
-msgstr ""
+msgstr "Gösterilecek iş"
 
 #: taskcoachlib/widgets/calendarconfig.py:80
 msgid "Tasks with a start date and a due date"
-msgstr ""
+msgstr "Başlangıç ve bitiş tarihi olan işler"
 
 #: taskcoachlib/widgets/calendarconfig.py:81
 msgid "Tasks with a due date"
-msgstr ""
+msgstr "Bitiş tarih olan işler"
 
 #: taskcoachlib/widgets/calendarconfig.py:81
 msgid "Tasks with a start date"
-msgstr ""
+msgstr "Başlangıç tarihi olan işler"
 
 #: taskcoachlib/widgets/calendarconfig.py:82
 msgid "All tasks"
-msgstr ""
+msgstr "Tüm işler"
 
 #: taskcoachlib/widgets/calendarconfig.py:82
 msgid "All tasks, except unplanned tasks"
-msgstr ""
+msgstr "Planlanmamış işler dışındaki tüm işler"
 
 #: taskcoachlib/widgets/calendarconfig.py:91
 msgid "Draw a line showing the current time"
@@ -6348,19 +6417,19 @@ msgstr ""
 
 #: taskcoachlib/widgets/password.py:32
 msgid "Password:"
-msgstr ""
+msgstr "Parola:"
 
 #: taskcoachlib/widgets/password.py:42
 msgid "Store in keychain"
-msgstr ""
+msgstr "Anahtarlıkta sakla"
 
 #: taskcoachlib/widgets/password.py:83
 msgid "Please enter your password."
-msgstr ""
+msgstr "Lütfen parolanızı yazın."
 
 #: taskcoachlib/widgets/password.py:88
 msgid "Please enter your password"
-msgstr ""
+msgstr "Lütfen parolanızı yazın"
 
 #: taskcoachlib/widgets/searchctrl.py:58
 msgid "&Match case"
@@ -6600,45 +6669,3 @@ msgstr "İnternet adresi açılırken hata"
 
 #~ msgid "%s (effort)"
 #~ msgstr "%s (çalışma)"
-
-#~ msgid ""
-#~ "Actually delete deleted tasks and notes (see the SyncML chapter in Help"
-#~ msgstr ""
-#~ "Silinmiş iş ve notları tümüyle siler (Yardım konularında SyncML bölümüne "
-#~ "bakın)"
-
-#~ msgid "Please enter your password:"
-#~ msgstr "Lütfen parolanızı yazın:"
-
-#~ msgid "Task Coach SyncML password"
-#~ msgstr "Task Coach SyncML parolası"
-
-#~ msgid "All"
-#~ msgstr "Tümü"
-
-#~ msgid "All but unplanned"
-#~ msgstr "Planlanmışlar hariç tümü"
-
-#~ msgid "Start and due date"
-#~ msgstr "Başlangıç ve bitiş tarihi"
-
-#~ msgid "Font size"
-#~ msgstr "Yazı tipi boyutu"
-
-#~ msgid "Highlight"
-#~ msgstr "Vurgula"
-
-#~ msgid "Size of the font used to draw the task subject"
-#~ msgstr "İş başlığı için kullanılacak yazı tipi boyutu"
-
-#~ msgid "Show now"
-#~ msgstr "Şimdi göster"
-
-#~ msgid "Orientation"
-#~ msgstr "Yönelim"
-
-#~ msgid "Mandatory attributes of displayed tasks"
-#~ msgstr "Gösterilen işlerin zorunlu özellikleri"
-
-#~ msgid "Span"
-#~ msgstr "Yayılma Aralığı"

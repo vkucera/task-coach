@@ -8,21 +8,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Task Coach català 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-12 01:51+0000\n"
-"PO-Revision-Date: 2010-11-28 14:52+0000\n"
+"POT-Creation-Date: 2011-09-24 23:02+0000\n"
+"PO-Revision-Date: 2011-10-23 13:49+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-24 18:57+0000\n"
-"X-Generator: Launchpad (build 14012)\n"
+"X-Launchpad-Export-Date: 2011-10-23 13:56+0000\n"
+"X-Generator: Launchpad (build 14170)\n"
 
 #: taskcoachlib/application/application.py:243
 msgid ""
 "Couldn't load settings from TaskCoach.ini:\n"
 "%s"
 msgstr ""
+"No es pot carregar la configuració des de TaskCoach.ini:\n"
+"%s"
 
 #: taskcoachlib/application/application.py:244
 #: taskcoachlib/gui/iocontroller.py:65
@@ -32,32 +34,32 @@ msgstr "%s arxiu d'error"
 #: taskcoachlib/command/attachmentCommands.py:27
 #: taskcoachlib/command/attachmentCommands.py:30
 msgid "New attachment"
-msgstr ""
+msgstr "Nou adjunt"
 
 #: taskcoachlib/command/attachmentCommands.py:42
 msgid "Edit attachments"
-msgstr ""
+msgstr "Edita adjunt"
 
 #: taskcoachlib/command/attachmentCommands.py:43
 msgid "Edit attachment \"%s\""
-msgstr ""
+msgstr "Edita adjunts \"%s\""
 
 #: taskcoachlib/command/attachmentCommands.py:54
 msgid "Delete attachments"
-msgstr ""
+msgstr "Elimina adjunts"
 
 #: taskcoachlib/command/attachmentCommands.py:55
 msgid "Delete attachment \"%s\""
-msgstr ""
+msgstr "Elimina adjunt \"%s\""
 
 #: taskcoachlib/command/attachmentCommands.py:59
 #: taskcoachlib/widgets/dialog.py:155
 msgid "Add attachment"
-msgstr "Afegeix adjunció"
+msgstr "Afegeix fitxer adjunt"
 
 #: taskcoachlib/command/attachmentCommands.py:60
 msgid "Add attachment to \"%s\""
-msgstr ""
+msgstr "Afegeix fitxer adjunt a \"%s\""
 
 #: taskcoachlib/command/base.py:161
 msgid "Copy"
@@ -65,23 +67,23 @@ msgstr "Copia"
 
 #: taskcoachlib/command/base.py:162
 msgid "Copy \"%s\""
-msgstr ""
+msgstr "Copia \"%s\""
 
 #: taskcoachlib/command/base.py:176
 msgid "Delete"
-msgstr "Suprimeix"
+msgstr "Elimina"
 
 #: taskcoachlib/command/base.py:177
 msgid "Delete \"%s\""
-msgstr ""
+msgstr "Elimina \"%s\""
 
 #: taskcoachlib/command/base.py:206
 msgid "Cut"
-msgstr "Retalla"
+msgstr "Talla"
 
 #: taskcoachlib/command/base.py:207
 msgid "Cut \"%s\""
-msgstr ""
+msgstr "Talla \"%s\""
 
 #: taskcoachlib/command/base.py:232
 msgid "Paste"
@@ -89,23 +91,23 @@ msgstr "Enganxa"
 
 #: taskcoachlib/command/base.py:233
 msgid "Paste \"%s\""
-msgstr ""
+msgstr "Enganxa \"%s\""
 
 #: taskcoachlib/command/base.py:268
 msgid "Paste as subitem"
-msgstr ""
+msgstr "Enganxa com a subelement"
 
 #: taskcoachlib/command/base.py:269
 msgid "Paste as subitem of \"%s\""
-msgstr ""
+msgstr "Enganxa com a subelement de \"%s\""
 
 #: taskcoachlib/command/base.py:281
 msgid "Edit"
-msgstr ""
+msgstr "Edita"
 
 #: taskcoachlib/command/base.py:282
 msgid "Edit \"%s\""
-msgstr ""
+msgstr "Edita \"%s\""
 
 #: taskcoachlib/command/base.py:301
 msgid "Drag and drop"
@@ -113,68 +115,68 @@ msgstr "Arrossega i deixa"
 
 #: taskcoachlib/command/base.py:302
 msgid "Drag and drop \"%s\""
-msgstr ""
+msgstr "Arrossega \"%s\""
 
-#: taskcoachlib/command/base.py:341
+#: taskcoachlib/command/base.py:338
 msgid "Edit subjects"
-msgstr ""
+msgstr "Edita temes"
 
-#: taskcoachlib/command/base.py:342
+#: taskcoachlib/command/base.py:339
 msgid "Edit subject \"%s\""
-msgstr ""
+msgstr "Edita tema \"%s\""
 
-#: taskcoachlib/command/base.py:362
+#: taskcoachlib/command/base.py:359
 msgid "Edit descriptions"
-msgstr ""
+msgstr "Edita descripcions"
 
-#: taskcoachlib/command/base.py:363
+#: taskcoachlib/command/base.py:360
 msgid "Edit description \"%s\""
-msgstr ""
+msgstr "Edita descriptió \"%s\""
 
 #: taskcoachlib/command/categorizableCommands.py:25
 msgid "Toggle category"
-msgstr ""
+msgstr "Commuta categoria"
 
 #: taskcoachlib/command/categorizableCommands.py:26
 msgid "Toggle category of \"%s\""
-msgstr ""
+msgstr "Commuta categoria de \"%s\""
 
 #: taskcoachlib/command/categoryCommands.py:25
 #: taskcoachlib/command/categoryCommands.py:28
 msgid "New category"
-msgstr "Categoria nova"
+msgstr "Nova categoria"
 
 #: taskcoachlib/command/categoryCommands.py:40
 msgid "New subcategories"
-msgstr ""
+msgstr "Noves subcategories"
 
 #: taskcoachlib/command/categoryCommands.py:41
 msgid "New subcategory of \"%s\""
-msgstr ""
+msgstr "Subcategoria de \"%s\""
 
 #: taskcoachlib/command/categoryCommands.py:44
 msgid "New subcategory"
-msgstr "Subcategoria nova"
+msgstr "Nova subcategoria"
 
 #: taskcoachlib/command/categoryCommands.py:56
 msgid "Edit categories"
-msgstr ""
+msgstr "Edita les categories"
 
 #: taskcoachlib/command/categoryCommands.py:57
 msgid "Edit category \"%s\""
-msgstr ""
+msgstr "Edita categoria  \"%s\""
 
 #: taskcoachlib/command/categoryCommands.py:64
 msgid "Delete categories"
-msgstr ""
+msgstr "Elimina categories"
 
 #: taskcoachlib/command/categoryCommands.py:65
 msgid "Delete category \"%s\""
-msgstr ""
+msgstr "Elimina categoria \"%s\""
 
 #: taskcoachlib/command/categoryCommands.py:69
 msgid "Drag and drop categories"
-msgstr ""
+msgstr "Arrossega categories"
 
 #: taskcoachlib/command/effortCommands.py:25
 msgid "New efforts"
@@ -204,112 +206,112 @@ msgstr ""
 #: taskcoachlib/command/noteCommands.py:28
 #: taskcoachlib/command/noteCommands.py:82
 msgid "New note"
-msgstr "Nota nova"
+msgstr "Nova nota"
 
 #: taskcoachlib/command/noteCommands.py:39
 msgid "New subnotes"
-msgstr ""
+msgstr "Noves subnotes"
 
 #: taskcoachlib/command/noteCommands.py:40
 msgid "New subnote of \"%s\""
-msgstr ""
+msgstr "Nova subnota de \"%s\""
 
 #: taskcoachlib/command/noteCommands.py:43
 msgid "New subnote"
-msgstr "Subnota nova"
+msgstr "Nova subnota"
 
 #: taskcoachlib/command/noteCommands.py:54
 msgid "Edit notes"
-msgstr ""
+msgstr "Edita notes"
 
 #: taskcoachlib/command/noteCommands.py:55
 msgid "Edit note \"%s\""
-msgstr ""
+msgstr "Edita nota \"%s\""
 
 #: taskcoachlib/command/noteCommands.py:66
 msgid "Delete notes"
-msgstr ""
+msgstr "Elimina notes"
 
 #: taskcoachlib/command/noteCommands.py:67
 msgid "Delete note \"%s\""
-msgstr ""
+msgstr "Elimina nota \"%s\""
 
 #: taskcoachlib/command/noteCommands.py:71
 msgid "Drag and drop notes"
-msgstr ""
+msgstr "Arrossega notes"
 
 #: taskcoachlib/command/noteCommands.py:72
 msgid "Drag and drop note \"%s\""
-msgstr ""
+msgstr "Arrossega notes \"%s\""
 
 #: taskcoachlib/command/noteCommands.py:76
 msgid "Add note"
-msgstr ""
+msgstr "Afegeix nota"
 
 #: taskcoachlib/command/noteCommands.py:77
 msgid "Add note to \"%s\""
-msgstr ""
+msgstr "Afegeix nota a \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:59
 msgid "Drag and drop tasks"
-msgstr ""
+msgstr "Arrossega tasques"
 
 #: taskcoachlib/command/taskCommands.py:63
 msgid "Delete tasks"
-msgstr ""
+msgstr "Elimina tasques"
 
 #: taskcoachlib/command/taskCommands.py:64
 msgid "Delete task \"%s\""
-msgstr ""
+msgstr "Elimina tasca \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:106
 #: taskcoachlib/command/taskCommands.py:109
 msgid "New task"
-msgstr "Tasca nova"
+msgstr "Nova tasca"
 
 #: taskcoachlib/command/taskCommands.py:143
 msgid "New subtasks"
-msgstr ""
+msgstr "Nova subtasca"
 
 #: taskcoachlib/command/taskCommands.py:144
 msgid "New subtask of \"%s\""
-msgstr ""
+msgstr "Nova subtasca a \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:149
 msgid "New subtask"
-msgstr "subtasca nova"
+msgstr "Nova subtasca"
 
 #: taskcoachlib/command/taskCommands.py:168
 msgid "Edit tasks"
-msgstr ""
+msgstr "Edita tasca"
 
 #: taskcoachlib/command/taskCommands.py:169
 msgid "Edit task \"%s\""
-msgstr ""
+msgstr "Edita tasca \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:227
 msgid "Mark tasks completed"
-msgstr ""
+msgstr "Marca la tasca com a enllestida"
 
 #: taskcoachlib/command/taskCommands.py:228
 msgid "Mark \"%s\" completed"
-msgstr ""
+msgstr "Marca \"%s\" com a enllestida"
 
 #: taskcoachlib/command/taskCommands.py:242
 msgid "Edit task dates"
-msgstr ""
+msgstr "Edita les dates de la tasca"
 
 #: taskcoachlib/command/taskCommands.py:243
 msgid "Edit \"%s\" dates"
-msgstr ""
+msgstr "Edita dates de \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:264
 msgid "Edit start date and time"
-msgstr ""
+msgstr "Editala data d'inici i el temps"
 
 #: taskcoachlib/command/taskCommands.py:265
 msgid "Edit \"%s\" start date and time"
-msgstr ""
+msgstr "Edita data d'inici i temps de \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:279
 msgid "Edit due date and time"
@@ -341,7 +343,7 @@ msgstr "Inicia seguiment"
 
 #: taskcoachlib/command/taskCommands.py:325
 msgid "Start tracking \"%s\""
-msgstr ""
+msgstr "Inicia segiment \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:359
 msgid "Stop tracking"
@@ -349,7 +351,7 @@ msgstr "Atura seguiment"
 
 #: taskcoachlib/command/taskCommands.py:360
 msgid "Stop tracking \"%s\""
-msgstr ""
+msgstr "Atura segiment \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:404
 msgid "Maximize priority"
@@ -357,7 +359,7 @@ msgstr "Maximitza prioritat"
 
 #: taskcoachlib/command/taskCommands.py:405
 msgid "Maximize priority of \"%s\""
-msgstr ""
+msgstr "Maximitza prioritat de \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:414
 msgid "Minimize priority"
@@ -389,30 +391,30 @@ msgstr ""
 
 #: taskcoachlib/command/taskCommands.py:477
 msgid "Change budget of \"%s\""
-msgstr ""
+msgstr "Canvia pressupost de \"%s\""
 
-#: taskcoachlib/config/settings.py:221
+#: taskcoachlib/config/settings.py:225
 msgid "Error while reading the %s-%s setting from %s.ini."
 msgstr ""
 
-#: taskcoachlib/config/settings.py:222
+#: taskcoachlib/config/settings.py:226
 msgid "The value is: %s"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:223
+#: taskcoachlib/config/settings.py:227
 msgid "The error is: %s"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:224
+#: taskcoachlib/config/settings.py:228
 msgid ""
 "%s will use the default value for the setting and should proceed normally."
 msgstr ""
 
-#: taskcoachlib/config/settings.py:225
+#: taskcoachlib/config/settings.py:229
 msgid "Settings error"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:245
+#: taskcoachlib/config/settings.py:249
 msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
@@ -420,7 +422,7 @@ msgstr ""
 "Errada mentre es desava %s.ini:\n"
 "%s\n"
 
-#: taskcoachlib/config/settings.py:246
+#: taskcoachlib/config/settings.py:250
 msgid "Save error"
 msgstr "Error al desar"
 
@@ -1004,7 +1006,6 @@ msgid "Completion date"
 msgstr "Data final"
 
 #: taskcoachlib/gui/dialog/editor.py:396
-#: taskcoachlib/gui/dialog/reminder.py:28
 #: taskcoachlib/gui/dialog/templates.py:121
 #: taskcoachlib/gui/viewer/task.py:763
 msgid "Reminder"
@@ -1173,7 +1174,7 @@ msgid "Prerequisites"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:1124
-#: taskcoachlib/gui/dialog/reminder.py:51
+#: taskcoachlib/gui/dialog/reminder.py:52
 #: taskcoachlib/gui/viewer/effort.py:166
 msgid "Task"
 msgstr "Tasca"
@@ -1625,20 +1626,24 @@ msgstr "Editor"
 msgid "Check spelling in editors"
 msgstr "Comprova ortografia"
 
-#: taskcoachlib/gui/dialog/reminder.py:65
+#: taskcoachlib/gui/dialog/reminder.py:28
+msgid "%(name)s reminder - %(task)s"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/reminder.py:66
 msgid "Reminder date/time"
 msgstr "Recordatori data/hora"
 
-#: taskcoachlib/gui/dialog/reminder.py:66
+#: taskcoachlib/gui/dialog/reminder.py:67
 msgid "Snooze"
 msgstr "Adorm"
 
-#: taskcoachlib/gui/dialog/reminder.py:84
+#: taskcoachlib/gui/dialog/reminder.py:85
 msgid ""
 "Also use the selected snooze time as default snooze time for future reminders"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/reminder.py:88
+#: taskcoachlib/gui/dialog/reminder.py:89
 msgid "Mark task completed"
 msgstr ""
 
@@ -5643,11 +5648,11 @@ msgid "No subject"
 msgstr ""
 
 #: taskcoachlib/persistence/xml/templates.py:8
-msgid "New task due tomorrow"
+msgid "New task due today"
 msgstr ""
 
 #: taskcoachlib/persistence/xml/templates.py:10
-msgid "New task due today"
+msgid "New task due tomorrow"
 msgstr ""
 
 #: taskcoachlib/render.py:38
@@ -5991,4 +5996,4 @@ msgstr ""
 
 #: taskcoachlib/widgets/textctrl.py:77
 msgid "Error opening URL"
-msgstr ""
+msgstr "Error en obrir l'URL"

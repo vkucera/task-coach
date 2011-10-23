@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Task Coach\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-12 01:51+0000\n"
-"PO-Revision-Date: 2011-09-16 19:12+0000\n"
+"POT-Creation-Date: 2011-09-24 23:02+0000\n"
+"PO-Revision-Date: 2011-10-23 13:35+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Dutch <frank@niessink.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-24 18:57+0000\n"
-"X-Generator: Launchpad (build 14012)\n"
+"X-Launchpad-Export-Date: 2011-10-23 13:56+0000\n"
+"X-Generator: Launchpad (build 14170)\n"
 "X-Poedit-Country: NETHERLANDS\n"
 "X-Poedit-Language: dutch\n"
 "Generated-By: pygettext.py 1.5\n"
@@ -118,19 +118,19 @@ msgstr "Slepen en neerzetten"
 msgid "Drag and drop \"%s\""
 msgstr "\"%s\" slepen en plaatsen"
 
-#: taskcoachlib/command/base.py:341
+#: taskcoachlib/command/base.py:338
 msgid "Edit subjects"
 msgstr "Onderwerpen bewerken"
 
-#: taskcoachlib/command/base.py:342
+#: taskcoachlib/command/base.py:339
 msgid "Edit subject \"%s\""
 msgstr "Onderwerp \"%s\" bewerken"
 
-#: taskcoachlib/command/base.py:362
+#: taskcoachlib/command/base.py:359
 msgid "Edit descriptions"
 msgstr "Bewerk beschrijvingen"
 
-#: taskcoachlib/command/base.py:363
+#: taskcoachlib/command/base.py:360
 msgid "Edit description \"%s\""
 msgstr "Bewerk beschrijving \"%s\""
 
@@ -394,30 +394,30 @@ msgstr "Verander budgetten"
 msgid "Change budget of \"%s\""
 msgstr "Verander het budget van \"%s\""
 
-#: taskcoachlib/config/settings.py:221
+#: taskcoachlib/config/settings.py:225
 msgid "Error while reading the %s-%s setting from %s.ini."
 msgstr "Fout bij het lezen van de %s-%s instelling uit %s.ini."
 
-#: taskcoachlib/config/settings.py:222
+#: taskcoachlib/config/settings.py:226
 msgid "The value is: %s"
 msgstr "De waarde is: %s"
 
-#: taskcoachlib/config/settings.py:223
+#: taskcoachlib/config/settings.py:227
 msgid "The error is: %s"
 msgstr "De fout is: %s"
 
-#: taskcoachlib/config/settings.py:224
+#: taskcoachlib/config/settings.py:228
 msgid ""
 "%s will use the default value for the setting and should proceed normally."
 msgstr ""
 "%s zal de standaard waarde voor de instelling gebruiken en zou verder "
 "normaal moeten functioneren."
 
-#: taskcoachlib/config/settings.py:225
+#: taskcoachlib/config/settings.py:229
 msgid "Settings error"
 msgstr "Instellingsfout"
 
-#: taskcoachlib/config/settings.py:245
+#: taskcoachlib/config/settings.py:249
 msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
@@ -425,7 +425,7 @@ msgstr ""
 "Fout bij het opslaan van %s.ini:\n"
 "%s\n"
 
-#: taskcoachlib/config/settings.py:246
+#: taskcoachlib/config/settings.py:250
 msgid "Save error"
 msgstr "Fout bij het opslaan"
 
@@ -1009,7 +1009,6 @@ msgid "Completion date"
 msgstr "Werkelijke einddatum"
 
 #: taskcoachlib/gui/dialog/editor.py:396
-#: taskcoachlib/gui/dialog/reminder.py:28
 #: taskcoachlib/gui/dialog/templates.py:121
 #: taskcoachlib/gui/viewer/task.py:763
 msgid "Reminder"
@@ -1178,7 +1177,7 @@ msgid "Prerequisites"
 msgstr "Voorwaardelijke taken"
 
 #: taskcoachlib/gui/dialog/editor.py:1124
-#: taskcoachlib/gui/dialog/reminder.py:51
+#: taskcoachlib/gui/dialog/reminder.py:52
 #: taskcoachlib/gui/viewer/effort.py:166
 msgid "Task"
 msgstr "Taak"
@@ -1651,22 +1650,26 @@ msgstr "Editor"
 msgid "Check spelling in editors"
 msgstr "Controleer spelling in editors"
 
-#: taskcoachlib/gui/dialog/reminder.py:65
+#: taskcoachlib/gui/dialog/reminder.py:28
+msgid "%(name)s reminder - %(task)s"
+msgstr "%(name)s herinnering - %(task)s"
+
+#: taskcoachlib/gui/dialog/reminder.py:66
 msgid "Reminder date/time"
 msgstr "Datum en tijd van de herinnering"
 
-#: taskcoachlib/gui/dialog/reminder.py:66
+#: taskcoachlib/gui/dialog/reminder.py:67
 msgid "Snooze"
 msgstr "Sluimer"
 
-#: taskcoachlib/gui/dialog/reminder.py:84
+#: taskcoachlib/gui/dialog/reminder.py:85
 msgid ""
 "Also use the selected snooze time as default snooze time for future reminders"
 msgstr ""
 "Gebruik de geselecteerde sluimertijd ook als standaard sluimertijd voor "
 "toekomstige herinneringen"
 
-#: taskcoachlib/gui/dialog/reminder.py:88
+#: taskcoachlib/gui/dialog/reminder.py:89
 msgid "Mark task completed"
 msgstr "Taak als afgerond markeren"
 
@@ -6162,12 +6165,12 @@ msgid "No subject"
 msgstr "Geen onderwerp"
 
 #: taskcoachlib/persistence/xml/templates.py:8
-msgid "New task due tomorrow"
-msgstr "Nieuwe taak die morgen af moet"
-
-#: taskcoachlib/persistence/xml/templates.py:10
 msgid "New task due today"
 msgstr "Nieuwe taak die vandaag af moet"
+
+#: taskcoachlib/persistence/xml/templates.py:10
+msgid "New task due tomorrow"
+msgstr "Nieuwe taak die morgen af moet"
 
 #: taskcoachlib/render.py:38
 msgid "Infinite"
@@ -6704,46 +6707,3 @@ msgstr "Fout bij openen van URL"
 
 #~ msgid "%s (effort)"
 #~ msgstr "%s (tijdsbesteding)"
-
-#~ msgid ""
-#~ "Actually delete deleted tasks and notes (see the SyncML chapter in Help"
-#~ msgstr ""
-#~ "Verwijder eerder verwijderde taken en notities definitief (zie de SyncML "
-#~ "sectie in de Help)"
-
-#~ msgid "Please enter your password:"
-#~ msgstr "Geef alstublieft uw wachtwoord:"
-
-#~ msgid "Task Coach SyncML password"
-#~ msgstr "Task Coach SyncML wachtwoord"
-
-#~ msgid "All"
-#~ msgstr "Alle"
-
-#~ msgid "All but unplanned"
-#~ msgstr "Alle behalve ongeplande"
-
-#~ msgid "Start and due date"
-#~ msgstr "Start- en geplande einddatum"
-
-#~ msgid "Font size"
-#~ msgstr "Fontgrootte"
-
-#~ msgid "Highlight"
-#~ msgstr "Markeer"
-
-#~ msgid "Show now"
-#~ msgstr "Toon nu"
-
-#~ msgid "Orientation"
-#~ msgstr "Oriëntatie"
-
-#~ msgid "Mandatory attributes of displayed tasks"
-#~ msgstr "Verplichte attributen van getoonde taken"
-
-#~ msgid "Span"
-#~ msgstr "Periode"
-
-#~ msgid "Size of the font used to draw the task subject"
-#~ msgstr ""
-#~ "Grootte van het font dat gebruikt wordt voor het onderwerp van de taak"

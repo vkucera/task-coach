@@ -2,15 +2,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Task Coach 0.45\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-12 01:51+0000\n"
-"PO-Revision-Date: 2011-08-17 00:28+0000\n"
-"Last-Translator: Frank Niessink <frank@niessink.com>\n"
+"POT-Creation-Date: 2011-09-24 23:02+0000\n"
+"PO-Revision-Date: 2011-10-07 20:43+0000\n"
+"Last-Translator: JAL <Unknown>\n"
 "Language-Team: jjramos <jjramos@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-24 18:56+0000\n"
-"X-Generator: Launchpad (build 14012)\n"
+"X-Launchpad-Export-Date: 2011-10-23 13:56+0000\n"
+"X-Generator: Launchpad (build 14170)\n"
 "X-Poedit-Country: SPAIN\n"
 "X-Poedit-Language: Spanish\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -20,7 +20,7 @@ msgid ""
 "Couldn't load settings from TaskCoach.ini:\n"
 "%s"
 msgstr ""
-"No se pudo cargar la configuración de TaskCoach.ini:\n"
+"No se puede cargar la configuración de TaskCoach.ini:\n"
 "%s"
 
 #: taskcoachlib/application/application.py:244
@@ -114,19 +114,19 @@ msgstr "Arrastrar y soltar"
 msgid "Drag and drop \"%s\""
 msgstr "Arrastre y suelte \"%s\""
 
-#: taskcoachlib/command/base.py:341
+#: taskcoachlib/command/base.py:338
 msgid "Edit subjects"
 msgstr "Editar los sujetos"
 
-#: taskcoachlib/command/base.py:342
+#: taskcoachlib/command/base.py:339
 msgid "Edit subject \"%s\""
 msgstr "Editar los sujetos \"%s\""
 
-#: taskcoachlib/command/base.py:362
+#: taskcoachlib/command/base.py:359
 msgid "Edit descriptions"
 msgstr "Editar las descripciones"
 
-#: taskcoachlib/command/base.py:363
+#: taskcoachlib/command/base.py:360
 msgid "Edit description \"%s\""
 msgstr "Editar descripcion \"%s\""
 
@@ -390,29 +390,29 @@ msgstr "Cambiar los presupuestos"
 msgid "Change budget of \"%s\""
 msgstr "Cambiar el presupuesto de \"%s\""
 
-#: taskcoachlib/config/settings.py:221
+#: taskcoachlib/config/settings.py:225
 msgid "Error while reading the %s-%s setting from %s.ini."
 msgstr "Error mientras se leia la configuración %s-%s de %s.ini."
 
-#: taskcoachlib/config/settings.py:222
+#: taskcoachlib/config/settings.py:226
 msgid "The value is: %s"
 msgstr "El valor es: %s"
 
-#: taskcoachlib/config/settings.py:223
+#: taskcoachlib/config/settings.py:227
 msgid "The error is: %s"
 msgstr "El error es: %s"
 
-#: taskcoachlib/config/settings.py:224
+#: taskcoachlib/config/settings.py:228
 msgid ""
 "%s will use the default value for the setting and should proceed normally."
 msgstr ""
 "%s usara el valor por defecto para la configuración y continuara normalmente."
 
-#: taskcoachlib/config/settings.py:225
+#: taskcoachlib/config/settings.py:229
 msgid "Settings error"
 msgstr "Error de configuración"
 
-#: taskcoachlib/config/settings.py:245
+#: taskcoachlib/config/settings.py:249
 msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
@@ -420,7 +420,7 @@ msgstr ""
 "Error al guardar %s.ini:\n"
 "%s\n"
 
-#: taskcoachlib/config/settings.py:246
+#: taskcoachlib/config/settings.py:250
 msgid "Save error"
 msgstr "Error al guardar"
 
@@ -1004,7 +1004,6 @@ msgid "Completion date"
 msgstr "Fecha de finalización"
 
 #: taskcoachlib/gui/dialog/editor.py:396
-#: taskcoachlib/gui/dialog/reminder.py:28
 #: taskcoachlib/gui/dialog/templates.py:121
 #: taskcoachlib/gui/viewer/task.py:763
 msgid "Reminder"
@@ -1046,19 +1045,19 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:452
 msgid "previous start and/or due date and time"
-msgstr ""
+msgstr "fecha y hora de inicio y/o de límite anterior"
 
 #: taskcoachlib/gui/dialog/editor.py:453
 msgid "last completion date and time"
-msgstr ""
+msgstr "última fecha y hora de finalización"
 
 #: taskcoachlib/gui/dialog/editor.py:461 taskcoachlib/gui/viewer/task.py:755
 msgid "Recurrence"
-msgstr "Repetir"
+msgstr "Repetición"
 
 #: taskcoachlib/gui/dialog/editor.py:469
 msgid "Schedule"
-msgstr ""
+msgstr "Programación"
 
 #: taskcoachlib/gui/dialog/editor.py:470
 msgid ""
@@ -1070,7 +1069,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:598
 msgid "day(s),"
-msgstr "días,"
+msgstr "día(s),"
 
 #: taskcoachlib/gui/dialog/editor.py:598
 msgid "period,"
@@ -1173,7 +1172,7 @@ msgid "Prerequisites"
 msgstr "Requisitos"
 
 #: taskcoachlib/gui/dialog/editor.py:1124
-#: taskcoachlib/gui/dialog/reminder.py:51
+#: taskcoachlib/gui/dialog/reminder.py:52
 #: taskcoachlib/gui/viewer/effort.py:166
 msgid "Task"
 msgstr "Tarea"
@@ -1226,7 +1225,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/export.py:145 taskcoachlib/gui/iocontroller.py:322
 msgid "Export as Todo.txt"
-msgstr ""
+msgstr "Exportar como Todo.txt"
 
 #: taskcoachlib/gui/dialog/iphone.py:32
 msgid ""
@@ -1359,11 +1358,11 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:265
 msgid "Before saving, automatically import from"
-msgstr ""
+msgstr "Antes de guardar, importar automáticamente desde"
 
 #: taskcoachlib/gui/dialog/preferences.py:268
 msgid "When saving, automatically export to"
-msgstr ""
+msgstr "Cuando se guarde, exportar automáticamente a"
 
 #: taskcoachlib/gui/dialog/preferences.py:275
 msgid "Window behavior"
@@ -1442,7 +1441,7 @@ msgstr "¿El idioma no se encuentra?"
 
 #: taskcoachlib/gui/dialog/preferences.py:387
 msgid "Task appearance"
-msgstr ""
+msgstr "Apariencia de tarea"
 
 #: taskcoachlib/gui/dialog/preferences.py:394
 msgid "Active tasks"
@@ -1506,7 +1505,7 @@ msgstr "Minutos entre hora de inicio y fin de la tarea"
 
 #: taskcoachlib/gui/dialog/preferences.py:442
 msgid "Task dates"
-msgstr ""
+msgstr "Fechas de tarea"
 
 #: taskcoachlib/gui/dialog/preferences.py:448
 msgid "Mark parent task completed when all children are completed"
@@ -1537,31 +1536,31 @@ msgstr "Qué hacer con la fecha de inicio y vencimiento si la otra cambia"
 
 #: taskcoachlib/gui/dialog/preferences.py:459
 msgid "Preset"
-msgstr ""
+msgstr "Predeterminado"
 
 #: taskcoachlib/gui/dialog/preferences.py:460
 msgid "Propose"
-msgstr ""
+msgstr "Proponer"
 
 #: taskcoachlib/gui/dialog/preferences.py:461
 msgid "Today"
-msgstr ""
+msgstr "Hoy"
 
 #: taskcoachlib/gui/dialog/preferences.py:462
 msgid "Tomorrow"
-msgstr ""
+msgstr "Mañana"
 
 #: taskcoachlib/gui/dialog/preferences.py:463
 msgid "Day after tomorrow"
-msgstr ""
+msgstr "Pasado mañana"
 
 #: taskcoachlib/gui/dialog/preferences.py:464
 msgid "Next Friday"
-msgstr ""
+msgstr "Próximo Viernes"
 
 #: taskcoachlib/gui/dialog/preferences.py:465
 msgid "Next Monday"
-msgstr ""
+msgstr "Próximo Lunes"
 
 #: taskcoachlib/gui/dialog/preferences.py:466
 msgid "Start of day"
@@ -1573,19 +1572,19 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:468
 msgid "Current time"
-msgstr ""
+msgstr "Hora actual"
 
 #: taskcoachlib/gui/dialog/preferences.py:469
 msgid "End of working day"
-msgstr ""
+msgstr "Final de día laborable"
 
 #: taskcoachlib/gui/dialog/preferences.py:470
 msgid "End of day"
-msgstr ""
+msgstr "Final del día"
 
 #: taskcoachlib/gui/dialog/preferences.py:472
 msgid "Default start date and time"
-msgstr ""
+msgstr "Fecha y hora de inicio por defecto"
 
 #: taskcoachlib/gui/dialog/preferences.py:475
 msgid "Default due date and time"
@@ -1648,34 +1647,38 @@ msgstr "Editor"
 msgid "Check spelling in editors"
 msgstr "Comprobar la ortografía en los editores"
 
-#: taskcoachlib/gui/dialog/reminder.py:65
+#: taskcoachlib/gui/dialog/reminder.py:28
+msgid "%(name)s reminder - %(task)s"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/reminder.py:66
 msgid "Reminder date/time"
 msgstr "Recordatorio de fecha y hora"
 
-#: taskcoachlib/gui/dialog/reminder.py:66
+#: taskcoachlib/gui/dialog/reminder.py:67
 msgid "Snooze"
 msgstr "Permitir postoner"
 
-#: taskcoachlib/gui/dialog/reminder.py:84
+#: taskcoachlib/gui/dialog/reminder.py:85
 msgid ""
 "Also use the selected snooze time as default snooze time for future reminders"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/reminder.py:88
+#: taskcoachlib/gui/dialog/reminder.py:89
 msgid "Mark task completed"
 msgstr "Marcar tarea como completada"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:81
 msgid "SyncML server"
-msgstr ""
+msgstr "Servidor SyncML"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:82
 msgid "Custom"
-msgstr ""
+msgstr "Personalizar"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:84
 msgid "MemoToo (http://www.memotoo.com/)"
-msgstr ""
+msgstr "MemoToo (http://www.memotoo.com/)"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:87
 msgid "SyncML server URL"
@@ -2053,7 +2056,7 @@ msgstr "&Ayuda"
 
 #: taskcoachlib/gui/menu.py:213
 msgid "&Import"
-msgstr ""
+msgstr "&Importar"
 
 #: taskcoachlib/gui/menu.py:215
 msgid "&Export"
@@ -2861,7 +2864,7 @@ msgstr "Consejos acerca del programa"
 
 #: taskcoachlib/gui/uicommand.py:2236
 msgid "Anonymize"
-msgstr ""
+msgstr "Anonimizar"
 
 #: taskcoachlib/gui/uicommand.py:2237
 msgid "Anonymize a task file to attach it to a bug report"
@@ -2900,10 +2903,12 @@ msgid ""
 "Cannot open URL:\n"
 "%s"
 msgstr ""
+"No se ha podido abrir la URL:\n"
+"%s"
 
 #: taskcoachlib/gui/uicommand.py:2282
 msgid "%s URL error"
-msgstr ""
+msgstr "%s error de URL"
 
 #: taskcoachlib/gui/uicommand.py:2288
 msgid "&Frequently asked questions"
@@ -2932,7 +2937,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:2309
 msgid "Request &support..."
-msgstr "Solicitar &soporte..."
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:2310
 msgid "Request user support from the developers"
@@ -3661,7 +3666,7 @@ msgstr "Tareas: %d seleccionadas, %d visibles, %d totales"
 
 #: taskcoachlib/gui/viewer/task.py:35
 msgid "Status: %d overdue, %d inactive, %d completed"
-msgstr ""
+msgstr "Estatus: %d vencidas, %d inactivas, %d completadas"
 
 #: taskcoachlib/gui/viewer/task.py:54 taskcoachlib/help/__init__.py:68
 #: taskcoachlib/help/__init__.py:136
@@ -6048,12 +6053,12 @@ msgid "No subject"
 msgstr "Sin asunto"
 
 #: taskcoachlib/persistence/xml/templates.py:8
-msgid "New task due tomorrow"
-msgstr "Nueva tarea para mañana"
-
-#: taskcoachlib/persistence/xml/templates.py:10
 msgid "New task due today"
 msgstr "Nueva tarea para hoy"
+
+#: taskcoachlib/persistence/xml/templates.py:10
+msgid "New task due tomorrow"
+msgstr "Nueva tarea para mañana"
 
 #: taskcoachlib/render.py:38
 msgid "Infinite"
@@ -6580,24 +6585,6 @@ msgstr "Error al abrir la URL"
 #~ msgid "%s (effort)"
 #~ msgstr "%s (esfuerzo)"
 
-#~ msgid ""
-#~ "Actually delete deleted tasks and notes (see the SyncML chapter in Help"
-#~ msgstr ""
-#~ "Eliminar de verdad las tareas y notas borradas (ver el capítulo de la ayuda "
-#~ "sobre SyncML)"
-
-#~ msgid "Please enter your password:"
-#~ msgstr "Introduzca su contraseña:"
-
-#~ msgid "Task Coach SyncML password"
-#~ msgstr "Contraseña SyncML para Task Coach"
-
-#~ msgid "All"
-#~ msgstr "Todos"
-
-#~ msgid "Start and due date"
-#~ msgstr "Inicio y fecha de vencimiento"
-
 #~ msgid "Change effort start date and time"
 #~ msgstr "Cambiar la fecha y hora de inicio de la actividad"
 
@@ -6609,27 +6596,3 @@ msgstr "Error al abrir la URL"
 
 #~ msgid "Change effort stop date and time of \"%s\""
 #~ msgstr "Cambiar la fecha y hora de final de la actividad de \"%s\""
-
-#~ msgid "All but unplanned"
-#~ msgstr "Todo excepto no planeadas"
-
-#~ msgid "Font size"
-#~ msgstr "Tamaño de la tipografía"
-
-#~ msgid "Highlight"
-#~ msgstr "Resalte"
-
-#~ msgid "Show now"
-#~ msgstr "Mostrar ahora"
-
-#~ msgid "Orientation"
-#~ msgstr "Orientación"
-
-#~ msgid "Mandatory attributes of displayed tasks"
-#~ msgstr "Atributos obligatorios de las tareas mostradas"
-
-#~ msgid "Span"
-#~ msgstr "Periodo"
-
-#~ msgid "Size of the font used to draw the task subject"
-#~ msgstr "Tamaño de la fuente usada para mostrar el asunto de la tarea"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-09-12 01:51+0000\n"
-"PO-Revision-Date: 2011-09-14 13:42+0000\n"
+"POT-Creation-Date: 2011-09-24 23:02+0000\n"
+"PO-Revision-Date: 2011-09-24 23:47+0000\n"
 "Last-Translator: Anthony Harrington <untaintableangel@hotmail.co.uk>\n"
 "Language-Team: English (United Kingdom) <en_GB@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-24 18:56+0000\n"
-"X-Generator: Launchpad (build 14012)\n"
+"X-Launchpad-Export-Date: 2011-10-23 13:56+0000\n"
+"X-Generator: Launchpad (build 14170)\n"
 
 #: taskcoachlib/application/application.py:243
 msgid ""
@@ -116,19 +116,19 @@ msgstr "Drag and drop"
 msgid "Drag and drop \"%s\""
 msgstr "Drag and drop \"%s\""
 
-#: taskcoachlib/command/base.py:341
+#: taskcoachlib/command/base.py:338
 msgid "Edit subjects"
 msgstr "Edit subjects"
 
-#: taskcoachlib/command/base.py:342
+#: taskcoachlib/command/base.py:339
 msgid "Edit subject \"%s\""
 msgstr "Edit subject \"%s\""
 
-#: taskcoachlib/command/base.py:362
+#: taskcoachlib/command/base.py:359
 msgid "Edit descriptions"
 msgstr "Edit descriptions"
 
-#: taskcoachlib/command/base.py:363
+#: taskcoachlib/command/base.py:360
 msgid "Edit description \"%s\""
 msgstr "Edit description \"%s\""
 
@@ -392,29 +392,29 @@ msgstr "Change budgets"
 msgid "Change budget of \"%s\""
 msgstr "Change budget of \"%s\""
 
-#: taskcoachlib/config/settings.py:221
+#: taskcoachlib/config/settings.py:225
 msgid "Error while reading the %s-%s setting from %s.ini."
 msgstr "Error while reading the %s-%s setting from %s.ini."
 
-#: taskcoachlib/config/settings.py:222
+#: taskcoachlib/config/settings.py:226
 msgid "The value is: %s"
 msgstr "The value is: %s"
 
-#: taskcoachlib/config/settings.py:223
+#: taskcoachlib/config/settings.py:227
 msgid "The error is: %s"
 msgstr "The error is: %s"
 
-#: taskcoachlib/config/settings.py:224
+#: taskcoachlib/config/settings.py:228
 msgid ""
 "%s will use the default value for the setting and should proceed normally."
 msgstr ""
 "%s will use the default value for the setting and should proceed normally."
 
-#: taskcoachlib/config/settings.py:225
+#: taskcoachlib/config/settings.py:229
 msgid "Settings error"
 msgstr "Settings error"
 
-#: taskcoachlib/config/settings.py:245
+#: taskcoachlib/config/settings.py:249
 msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
@@ -422,7 +422,7 @@ msgstr ""
 "Error while saving %s.ini:\n"
 "%s\n"
 
-#: taskcoachlib/config/settings.py:246
+#: taskcoachlib/config/settings.py:250
 msgid "Save error"
 msgstr "Save error"
 
@@ -1006,7 +1006,6 @@ msgid "Completion date"
 msgstr "Completion date"
 
 #: taskcoachlib/gui/dialog/editor.py:396
-#: taskcoachlib/gui/dialog/reminder.py:28
 #: taskcoachlib/gui/dialog/templates.py:121
 #: taskcoachlib/gui/viewer/task.py:763
 msgid "Reminder"
@@ -1175,7 +1174,7 @@ msgid "Prerequisites"
 msgstr "Prerequisites"
 
 #: taskcoachlib/gui/dialog/editor.py:1124
-#: taskcoachlib/gui/dialog/reminder.py:51
+#: taskcoachlib/gui/dialog/reminder.py:52
 #: taskcoachlib/gui/viewer/effort.py:166
 msgid "Task"
 msgstr "Task"
@@ -1643,21 +1642,25 @@ msgstr "Editor"
 msgid "Check spelling in editors"
 msgstr "Check spelling in editors"
 
-#: taskcoachlib/gui/dialog/reminder.py:65
+#: taskcoachlib/gui/dialog/reminder.py:28
+msgid "%(name)s reminder - %(task)s"
+msgstr "%(name)s reminder - %(task)s"
+
+#: taskcoachlib/gui/dialog/reminder.py:66
 msgid "Reminder date/time"
 msgstr "Reminder date/time"
 
-#: taskcoachlib/gui/dialog/reminder.py:66
+#: taskcoachlib/gui/dialog/reminder.py:67
 msgid "Snooze"
 msgstr "Snooze"
 
-#: taskcoachlib/gui/dialog/reminder.py:84
+#: taskcoachlib/gui/dialog/reminder.py:85
 msgid ""
 "Also use the selected snooze time as default snooze time for future reminders"
 msgstr ""
 "Also use the selected snooze time as default snooze time for future reminders"
 
-#: taskcoachlib/gui/dialog/reminder.py:88
+#: taskcoachlib/gui/dialog/reminder.py:89
 msgid "Mark task completed"
 msgstr "Mark task completed"
 
@@ -6073,12 +6076,12 @@ msgid "No subject"
 msgstr "No subject"
 
 #: taskcoachlib/persistence/xml/templates.py:8
-msgid "New task due tomorrow"
-msgstr "New task due tomorrow"
-
-#: taskcoachlib/persistence/xml/templates.py:10
 msgid "New task due today"
 msgstr "New task due today"
+
+#: taskcoachlib/persistence/xml/templates.py:10
+msgid "New task due tomorrow"
+msgstr "New task due tomorrow"
 
 #: taskcoachlib/render.py:38
 msgid "Infinite"
@@ -6442,17 +6445,6 @@ msgstr "Never show this dialogue again"
 msgid "Error opening URL"
 msgstr "Error opening URL"
 
-#~ msgid ""
-#~ "Actually delete deleted tasks and notes (see the SyncML chapter in Help"
-#~ msgstr ""
-#~ "Actually delete deleted tasks and notes (see the SyncML chapter in Help"
-
-#~ msgid "Please enter your password:"
-#~ msgstr "Please enter your password:"
-
-#~ msgid "Task Coach SyncML password"
-#~ msgstr "Task Coach SyncML password"
-
 #~ msgid "Add note to attachments"
 #~ msgstr "Add note to attachments"
 
@@ -6482,36 +6474,6 @@ msgstr "Error opening URL"
 
 #~ msgid "Change fonts"
 #~ msgstr "Change fonts"
-
-#~ msgid "Size of the font used to draw the task subject"
-#~ msgstr "Size of the font used to draw the task subject"
-
-#~ msgid "Font size"
-#~ msgstr "Font size"
-
-#~ msgid "Highlight"
-#~ msgstr "Highlight"
-
-#~ msgid "Show now"
-#~ msgstr "Show now"
-
-#~ msgid "Start and due date"
-#~ msgstr "Start and due date"
-
-#~ msgid "All but unplanned"
-#~ msgstr "All but unplanned"
-
-#~ msgid "All"
-#~ msgstr "All"
-
-#~ msgid "Orientation"
-#~ msgstr "Orientation"
-
-#~ msgid "Span"
-#~ msgstr "Span"
-
-#~ msgid "Mandatory attributes of displayed tasks"
-#~ msgstr "Mandatory attributes of displayed tasks"
 
 #~ msgid "Edit exclusive subcategories of \"%s\""
 #~ msgstr "Edit exclusive subcategories of \"%s\""

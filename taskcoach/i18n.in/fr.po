@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TaskCoach\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-12 01:51+0000\n"
-"PO-Revision-Date: 2011-08-17 00:57+0000\n"
+"POT-Creation-Date: 2011-09-24 23:02+0000\n"
+"PO-Revision-Date: 2011-10-23 13:52+0000\n"
 "Last-Translator: Pierre Slamich <pierre.slamich@gmail.com>\n"
 "Language-Team: Français <fraca7@free.fr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-24 18:57+0000\n"
-"X-Generator: Launchpad (build 14012)\n"
+"X-Launchpad-Export-Date: 2011-10-23 13:56+0000\n"
+"X-Generator: Launchpad (build 14170)\n"
 "X-Poedit-Country: France\n"
 "X-Poedit-Language: fr_FR\n"
 "Generated-By: pygettext.py 1.5\n"
@@ -118,19 +118,19 @@ msgstr "Glisser/déposer"
 msgid "Drag and drop \"%s\""
 msgstr "Glisser et déposer \"%s\""
 
-#: taskcoachlib/command/base.py:341
+#: taskcoachlib/command/base.py:338
 msgid "Edit subjects"
 msgstr "Éditer les sujets"
 
-#: taskcoachlib/command/base.py:342
+#: taskcoachlib/command/base.py:339
 msgid "Edit subject \"%s\""
 msgstr "Éditer le sujet \"%s\""
 
-#: taskcoachlib/command/base.py:362
+#: taskcoachlib/command/base.py:359
 msgid "Edit descriptions"
 msgstr "Editer les descriptions"
 
-#: taskcoachlib/command/base.py:363
+#: taskcoachlib/command/base.py:360
 msgid "Edit description \"%s\""
 msgstr "Editer la description de \"%s\""
 
@@ -312,31 +312,31 @@ msgstr "Modifier la date et l'heure de début"
 
 #: taskcoachlib/command/taskCommands.py:265
 msgid "Edit \"%s\" start date and time"
-msgstr ""
+msgstr "Editer la date et l'heure de début \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:279
 msgid "Edit due date and time"
-msgstr ""
+msgstr "Editer la date et l'heure d'échéance"
 
 #: taskcoachlib/command/taskCommands.py:280
 msgid "Edit \"%s\" due date and time"
-msgstr ""
+msgstr "Editer la date et l'heure d'échéance \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:294
 msgid "Edit completion date and time"
-msgstr ""
+msgstr "Editer la date et l'heure d'achèvement"
 
 #: taskcoachlib/command/taskCommands.py:295
 msgid "Edit \"%s\" completion date and time"
-msgstr ""
+msgstr "Editer la date et l'heure d'achèvement \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:309
 msgid "Edit reminder date and time"
-msgstr ""
+msgstr "Editer la date et l'heure de rappel"
 
 #: taskcoachlib/command/taskCommands.py:310
 msgid "Edit \"%s\" reminder date and time"
-msgstr ""
+msgstr "Editer la date et l'heure de rappel \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:324
 msgid "Start tracking"
@@ -394,29 +394,29 @@ msgstr "Modifier les budgets"
 msgid "Change budget of \"%s\""
 msgstr "Modifier le budget de \"%s\""
 
-#: taskcoachlib/config/settings.py:221
+#: taskcoachlib/config/settings.py:225
 msgid "Error while reading the %s-%s setting from %s.ini."
 msgstr "Erreur lors de la lecture du paramètre %s-%s depuis %s.ini."
 
-#: taskcoachlib/config/settings.py:222
+#: taskcoachlib/config/settings.py:226
 msgid "The value is: %s"
 msgstr "La valeur est: %s"
 
-#: taskcoachlib/config/settings.py:223
+#: taskcoachlib/config/settings.py:227
 msgid "The error is: %s"
 msgstr "L'erreur est: %s"
 
-#: taskcoachlib/config/settings.py:224
+#: taskcoachlib/config/settings.py:228
 msgid ""
 "%s will use the default value for the setting and should proceed normally."
 msgstr ""
 "%s utilisera la valeur par défaut et devrait fonctionner normalement."
 
-#: taskcoachlib/config/settings.py:225
+#: taskcoachlib/config/settings.py:229
 msgid "Settings error"
 msgstr "Erreur de paramètre"
 
-#: taskcoachlib/config/settings.py:245
+#: taskcoachlib/config/settings.py:249
 msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
@@ -424,7 +424,7 @@ msgstr ""
 "Erreur lors de la sauvegarde de %s.ini:\n"
 "%s\n"
 
-#: taskcoachlib/config/settings.py:246
+#: taskcoachlib/config/settings.py:250
 msgid "Save error"
 msgstr "Erreur de sauvegarde"
 
@@ -1008,7 +1008,6 @@ msgid "Completion date"
 msgstr "Date de complétion"
 
 #: taskcoachlib/gui/dialog/editor.py:396
-#: taskcoachlib/gui/dialog/reminder.py:28
 #: taskcoachlib/gui/dialog/templates.py:121
 #: taskcoachlib/gui/viewer/task.py:763
 msgid "Reminder"
@@ -1050,11 +1049,11 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:452
 msgid "previous start and/or due date and time"
-msgstr ""
+msgstr "Début précédent et/ou date et heure d'échéance"
 
 #: taskcoachlib/gui/dialog/editor.py:453
 msgid "last completion date and time"
-msgstr ""
+msgstr "Dernière date et heure d'achèvement"
 
 #: taskcoachlib/gui/dialog/editor.py:461 taskcoachlib/gui/viewer/task.py:755
 msgid "Recurrence"
@@ -1177,7 +1176,7 @@ msgid "Prerequisites"
 msgstr "Prérequis"
 
 #: taskcoachlib/gui/dialog/editor.py:1124
-#: taskcoachlib/gui/dialog/reminder.py:51
+#: taskcoachlib/gui/dialog/reminder.py:52
 #: taskcoachlib/gui/viewer/effort.py:166
 msgid "Task"
 msgstr "Tâche"
@@ -1230,7 +1229,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/export.py:145 taskcoachlib/gui/iocontroller.py:322
 msgid "Export as Todo.txt"
-msgstr ""
+msgstr "Exporter en tant que Todo.txt"
 
 #: taskcoachlib/gui/dialog/iphone.py:32
 msgid ""
@@ -1361,11 +1360,11 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:265
 msgid "Before saving, automatically import from"
-msgstr ""
+msgstr "Avant la sauvegarde, importer automatiquement à partir de"
 
 #: taskcoachlib/gui/dialog/preferences.py:268
 msgid "When saving, automatically export to"
-msgstr ""
+msgstr "Lors de l'enregistrement, exporte automatiquement vers"
 
 #: taskcoachlib/gui/dialog/preferences.py:275
 msgid "Window behavior"
@@ -1442,7 +1441,7 @@ msgstr "Langue non trouvée?"
 
 #: taskcoachlib/gui/dialog/preferences.py:387
 msgid "Task appearance"
-msgstr ""
+msgstr "Apparance de la tâche"
 
 #: taskcoachlib/gui/dialog/preferences.py:394
 msgid "Active tasks"
@@ -1506,7 +1505,7 @@ msgstr "Minutes entre les dates de commencement/fin d'une tâche"
 
 #: taskcoachlib/gui/dialog/preferences.py:442
 msgid "Task dates"
-msgstr ""
+msgstr "Dates de la tâche"
 
 #: taskcoachlib/gui/dialog/preferences.py:448
 msgid "Mark parent task completed when all children are completed"
@@ -1541,75 +1540,75 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:460
 msgid "Propose"
-msgstr ""
+msgstr "Proposer"
 
 #: taskcoachlib/gui/dialog/preferences.py:461
 msgid "Today"
-msgstr ""
+msgstr "Aujourd'hui"
 
 #: taskcoachlib/gui/dialog/preferences.py:462
 msgid "Tomorrow"
-msgstr ""
+msgstr "Demain"
 
 #: taskcoachlib/gui/dialog/preferences.py:463
 msgid "Day after tomorrow"
-msgstr ""
+msgstr "Après-demain"
 
 #: taskcoachlib/gui/dialog/preferences.py:464
 msgid "Next Friday"
-msgstr ""
+msgstr "Vendredi prochain"
 
 #: taskcoachlib/gui/dialog/preferences.py:465
 msgid "Next Monday"
-msgstr ""
+msgstr "Lundi prochain"
 
 #: taskcoachlib/gui/dialog/preferences.py:466
 msgid "Start of day"
-msgstr ""
+msgstr "Début du jour"
 
 #: taskcoachlib/gui/dialog/preferences.py:467
 msgid "Start of working day"
-msgstr ""
+msgstr "Début du jour de travail"
 
 #: taskcoachlib/gui/dialog/preferences.py:468
 msgid "Current time"
-msgstr ""
+msgstr "Heure actuelle"
 
 #: taskcoachlib/gui/dialog/preferences.py:469
 msgid "End of working day"
-msgstr ""
+msgstr "Fin du jour de travail"
 
 #: taskcoachlib/gui/dialog/preferences.py:470
 msgid "End of day"
-msgstr ""
+msgstr "Fin du jour"
 
 #: taskcoachlib/gui/dialog/preferences.py:472
 msgid "Default start date and time"
-msgstr ""
+msgstr "Date et heure de début par défaut"
 
 #: taskcoachlib/gui/dialog/preferences.py:475
 msgid "Default due date and time"
-msgstr ""
+msgstr "Date et heure d'échéance par défaut"
 
 #: taskcoachlib/gui/dialog/preferences.py:478
 msgid "Default completion date and time"
-msgstr ""
+msgstr "Date et heure d'achèvement par défaut"
 
 #: taskcoachlib/gui/dialog/preferences.py:481
 msgid "Default reminder date and time"
-msgstr ""
+msgstr "Date et heure de rappel par défaut"
 
 #: taskcoachlib/gui/dialog/preferences.py:488
 msgid "Task reminders"
-msgstr ""
+msgstr "Rappels des tâches"
 
 #: taskcoachlib/gui/dialog/preferences.py:497
 msgid "Notification system to use for reminders"
-msgstr ""
+msgstr "Notification système pour les rappels"
 
 #: taskcoachlib/gui/dialog/preferences.py:501
 msgid "Default snooze time to use after reminder"
-msgstr ""
+msgstr "Délai par défaut pour effectuer le rappel"
 
 #: taskcoachlib/gui/dialog/preferences.py:504
 msgid "Snooze times to offer in task reminder dialog"
@@ -1647,26 +1646,30 @@ msgstr "Editeur"
 msgid "Check spelling in editors"
 msgstr "Vérifier l'orthographe dans les champs de saisie"
 
-#: taskcoachlib/gui/dialog/reminder.py:65
+#: taskcoachlib/gui/dialog/reminder.py:28
+msgid "%(name)s reminder - %(task)s"
+msgstr "%(name)s rappel - %(task)s"
+
+#: taskcoachlib/gui/dialog/reminder.py:66
 msgid "Reminder date/time"
 msgstr "Rappel de la date/heure"
 
-#: taskcoachlib/gui/dialog/reminder.py:66
+#: taskcoachlib/gui/dialog/reminder.py:67
 msgid "Snooze"
 msgstr "Veille"
 
-#: taskcoachlib/gui/dialog/reminder.py:84
+#: taskcoachlib/gui/dialog/reminder.py:85
 msgid ""
 "Also use the selected snooze time as default snooze time for future reminders"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/reminder.py:88
+#: taskcoachlib/gui/dialog/reminder.py:89
 msgid "Mark task completed"
 msgstr "Marquer la tâche terminée"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:81
 msgid "SyncML server"
-msgstr ""
+msgstr "Serveur SyncML"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:82
 msgid "Custom"
@@ -1674,7 +1677,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:84
 msgid "MemoToo (http://www.memotoo.com/)"
-msgstr ""
+msgstr "MemoToo (http://www.memotoo.com/)"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:87
 msgid "SyncML server URL"
@@ -1695,7 +1698,7 @@ msgstr "Nom de la base de données des tâches"
 #: taskcoachlib/gui/dialog/syncpreferences.py:93
 #: taskcoachlib/gui/dialog/syncpreferences.py:106
 msgid "Preferred synchronization mode"
-msgstr ""
+msgstr "Mode de synchronisation préféré"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:94
 #: taskcoachlib/gui/dialog/syncpreferences.py:107
@@ -1791,7 +1794,7 @@ msgstr "La dernière version de distribution de %(name)s est %(version)s."
 
 #: taskcoachlib/gui/iocontroller.py:49
 msgid "%s files (*.tsk)|*.tsk|All files (*.*)|*"
-msgstr ""
+msgstr "Fichiers %s (*.tsk)|*.tsk|Tous les fichiers (*.*)|*"
 
 #: taskcoachlib/gui/iocontroller.py:52
 msgid ""
@@ -1816,7 +1819,7 @@ msgstr ""
 
 #: taskcoachlib/gui/iocontroller.py:64
 msgid "Todo.txt files (*.txt)|*.txt|All files (*.*)|*"
-msgstr ""
+msgstr "Fichiers Todo.txt (*.txt)|*.txt|Tous les fichiers (*.*)|*"
 
 #: taskcoachlib/gui/iocontroller.py:103
 msgid "Open"
@@ -2062,7 +2065,7 @@ msgstr "A&ide"
 
 #: taskcoachlib/gui/menu.py:213
 msgid "&Import"
-msgstr ""
+msgstr "&Importer"
 
 #: taskcoachlib/gui/menu.py:215
 msgid "&Export"
@@ -2267,7 +2270,7 @@ msgstr "%d tâches dûes bientôt"
 
 #: taskcoachlib/gui/taskbaricon.py:137
 msgid "one task due soon"
-msgstr "Une tâche dûe bientôt"
+msgstr "une tâche arrivant bientôt à échéance"
 
 #: taskcoachlib/gui/taskbaricon.py:148
 msgid "tracking \"%s\""
@@ -2415,11 +2418,12 @@ msgstr "Exporter les objets d'une vue au format iCalendar"
 
 #: taskcoachlib/gui/uicommand.py:735
 msgid "Export as &Todo.txt..."
-msgstr ""
+msgstr "Exporter en tant que &Todo.txt ..."
 
 #: taskcoachlib/gui/uicommand.py:736
 msgid "Export items from a viewer in Todo.txt format (see todotxt.com)"
 msgstr ""
+"Exporter les objets visualisés dans un format Todo.txt (Voir todotxt.com)"
 
 #: taskcoachlib/gui/uicommand.py:751
 msgid "&Import CSV..."
@@ -2435,15 +2439,15 @@ msgstr "Importation CSV"
 
 #: taskcoachlib/gui/uicommand.py:765
 msgid "&Import Todo.txt..."
-msgstr ""
+msgstr "&Importer Todo.txt ..."
 
 #: taskcoachlib/gui/uicommand.py:766
 msgid "Import tasks from a Todo.txt (see todotxt.com) file"
-msgstr ""
+msgstr "Importer des tâches depuis un fichier Todo.txt (Voir todotxt.com)"
 
 #: taskcoachlib/gui/uicommand.py:770
 msgid "Import Todo.txt"
-msgstr ""
+msgstr "Importer Todo.txt"
 
 #: taskcoachlib/gui/uicommand.py:777
 msgid "S&yncML synchronization..."
@@ -2860,7 +2864,7 @@ msgstr "Astuces du programme"
 
 #: taskcoachlib/gui/uicommand.py:2236
 msgid "Anonymize"
-msgstr ""
+msgstr "Anonymiser"
 
 #: taskcoachlib/gui/uicommand.py:2237
 msgid "Anonymize a task file to attach it to a bug report"
@@ -2899,10 +2903,12 @@ msgid ""
 "Cannot open URL:\n"
 "%s"
 msgstr ""
+"Impossible d'ouvrir l'adresse URL:\n"
+"%s"
 
 #: taskcoachlib/gui/uicommand.py:2282
 msgid "%s URL error"
-msgstr ""
+msgstr "Erreur d'adresse URL %s"
 
 #: taskcoachlib/gui/uicommand.py:2288
 msgid "&Frequently asked questions"
@@ -3198,11 +3204,11 @@ msgstr "Etat: suivi de %d"
 
 #: taskcoachlib/gui/viewer/mixin.py:211
 msgid "&Due tasks"
-msgstr "Tâches &dues"
+msgstr "&Tâches échues"
 
 #: taskcoachlib/gui/viewer/mixin.py:212
 msgid "&Show all due tasks"
-msgstr "&Montrer toutes les tâches dues"
+msgstr "&Montrer toutes les tâches échues"
 
 #: taskcoachlib/gui/viewer/mixin.py:212
 msgid "Show all due tasks"
@@ -3210,88 +3216,101 @@ msgstr "Montrer toutes les tâches dues"
 
 #: taskcoachlib/gui/viewer/mixin.py:214
 msgid "&Hide all due tasks"
-msgstr "Cac&her toutes les tâches dues"
+msgstr "Cac&her toutes les tâches échues"
 
 #: taskcoachlib/gui/viewer/mixin.py:214
 msgid "Hide all due tasks"
-msgstr "Cacher toutes les tâches dues"
+msgstr "Cacher toutes les tâches échues"
 
 #: taskcoachlib/gui/viewer/mixin.py:216
 msgid "Only show tasks due &today"
-msgstr "Ne mon&trer que les tâches dues aujourd'hui"
+msgstr "Ne mon&trer que les tâches arrivant à échéance aujourd'hui"
 
 #: taskcoachlib/gui/viewer/mixin.py:217
 msgid "Only show tasks due today and hide later ones"
-msgstr "Ne montrer que les tâches dues aujourd'hui et cacher les autres"
+msgstr ""
+"Ne montrer que les tâches arrivant à échéance aujourd'hui et cacher les "
+"autres"
 
 #: taskcoachlib/gui/viewer/mixin.py:219
 msgid "Only show tasks due today or t&omorrow"
-msgstr "Ne m&ontrer que les tâches dues demain ou aujourd'hui"
+msgstr "Ne m&ontrer que les tâches arrivant à échéance aujourd'hui ou demain"
 
 #: taskcoachlib/gui/viewer/mixin.py:220
 msgid "Only show tasks due today or tomorrow and hide later ones"
 msgstr ""
-"Ne montrer que les tâches dues demain au aujourd'hui et cacher les autres"
+"Ne montrer que les tâches arrivant à échéance aujourd'hui ou demain et "
+"cacher les autres"
 
 #: taskcoachlib/gui/viewer/mixin.py:222
 msgid "Only show tasks due this wo&rkweek"
-msgstr "Ne montrer que les tâches dues cette semaine ouv&rée"
+msgstr "Ne montrer que les tâches arrivant à échéance cette semaine ouvrée"
 
 #: taskcoachlib/gui/viewer/mixin.py:223
 msgid "Only show tasks due this workweek and hide later ones"
 msgstr ""
-"Ne montrer que les tâches dues cette semaine ouvrée et cacher les autres"
+"Ne montrer que les tâches arrivant à échéance cette semaine ouvrée et cacher "
+"les autres"
 
 #: taskcoachlib/gui/viewer/mixin.py:225
 msgid "Only show tasks due this &week"
-msgstr "Ne montrer que les tâches dues cette &semaine"
+msgstr "Ne montrer que les tâches arrivant à échéance cette semaine"
 
 #: taskcoachlib/gui/viewer/mixin.py:226
 msgid "Only show tasks due this week and hide later ones"
-msgstr "Ne montrer que les tâches dues cette semaine et cacher les autres"
+msgstr ""
+"Ne montrer que les tâches arrivant à échéance cette semaine et cacher les "
+"autres"
 
 #: taskcoachlib/gui/viewer/mixin.py:228
 msgid "Only show tasks due within &7 days"
-msgstr "Ne montrer que les tâches dues dans moins de 7 jours"
+msgstr "Ne montrer que les tâches arrivant à échéance dans moins de 7 jours"
 
 #: taskcoachlib/gui/viewer/mixin.py:229
 msgid "Only show tasks due within 7 days and hide later ones"
 msgstr ""
-"Ne montrer que les tâches dues dans moins de 7 jours et cacher les autres"
+"Ne montrer que les tâches arrivant à échéance dans moins de 7 jours et "
+"cacher les autres"
 
 #: taskcoachlib/gui/viewer/mixin.py:231
 msgid "Only show tasks due within &14 days"
-msgstr "Ne montrer que les tâches dues dans moins de 14 jours"
+msgstr "Ne montrer que les tâches arrivant à échéance dans moins de 14 jours"
 
 #: taskcoachlib/gui/viewer/mixin.py:232
 msgid "Only show tasks due within 14 days and hide later ones"
 msgstr ""
-"Ne montrer que les tâches dues dans moins de 14 jours et cacher les autres"
+"Ne montrer que les tâches arrivant à échéance dans moins de 14 jours et "
+"cacher les autres"
 
 #: taskcoachlib/gui/viewer/mixin.py:234
 msgid "Only show tasks due this &month"
-msgstr "Ne montrer que les tâches dues ce mois"
+msgstr "Ne montrer que les tâches arrivant à échéance dans le mois"
 
 #: taskcoachlib/gui/viewer/mixin.py:235
 msgid "Only show tasks due this month and hide later ones"
-msgstr "Ne montrer que les tâches dues ce mois et cacher les autres"
+msgstr ""
+"Ne montrer que les tâches arrivant à échéance dans le mois et cacher les "
+"autres"
 
 #: taskcoachlib/gui/viewer/mixin.py:237
 msgid "Only show tasks due within &30 days"
-msgstr "Ne montrer que les tâches dues dans moins de 30 jours"
+msgstr "Ne montrer que les tâches arrivant à échéance dans moins de 30 jours"
 
 #: taskcoachlib/gui/viewer/mixin.py:238
 msgid "Only show tasks due within 30 days and hide later ones"
 msgstr ""
-"Ne montrer que les tâches dues dans moins de 30 jours et cacher les autres"
+"Ne montrer que les tâches arrivant à échéance dans moins de 30 jours et "
+"cacher les autres"
 
 #: taskcoachlib/gui/viewer/mixin.py:240
 msgid "Only show tasks due this &year"
-msgstr "Ne montrer que les tâches dues cette année"
+msgstr "Ne montrer que les tâches arrivant à échéance dans l'année"
 
 #: taskcoachlib/gui/viewer/mixin.py:241
 msgid "Only show tasks due this year and hide later ones"
-msgstr "Ne montrer que les tâches dues cette année et cacher les autres"
+msgstr ""
+"Ne montrer que les tâches arrivant à échéance dans l'année et cacher les "
+"autres"
 
 #: taskcoachlib/gui/viewer/mixin.py:243
 msgid "&Completed tasks"
@@ -3558,11 +3577,11 @@ msgstr "Date de &démarrage"
 
 #: taskcoachlib/gui/viewer/mixin.py:503
 msgid "Sort tasks by due date"
-msgstr "Trier par date dûe"
+msgstr "Trier par date d'échéance"
 
 #: taskcoachlib/gui/viewer/mixin.py:503 taskcoachlib/gui/viewer/task.py:788
 msgid "&Due date"
-msgstr "Date &due"
+msgstr "&Date d'échéance"
 
 #: taskcoachlib/gui/viewer/mixin.py:504
 msgid "Sort tasks by completion date"
@@ -3740,7 +3759,7 @@ msgstr "Montrer/cacher la colonne date de démarrage"
 
 #: taskcoachlib/gui/viewer/task.py:789
 msgid "Show/hide due date column"
-msgstr "Montrer/cacher la colonne date dûe"
+msgstr "Montrer/cacher la colonne date d'échéance"
 
 #: taskcoachlib/gui/viewer/task.py:792
 msgid "Show/hide completion date column"
@@ -3876,7 +3895,7 @@ msgstr "Séparateur"
 
 #: taskcoachlib/gui/wizard/csvimport.py:96
 msgid "Date format"
-msgstr ""
+msgstr "Format de la date"
 
 #: taskcoachlib/gui/wizard/csvimport.py:99
 msgid "Quote character"
@@ -3991,7 +4010,7 @@ msgstr "Export"
 
 #: taskcoachlib/help/__init__.py:97 taskcoachlib/help/__init__.py:335
 msgid "E-mail integration"
-msgstr ""
+msgstr "Intégration d'Email"
 
 #: taskcoachlib/help/__init__.py:99 taskcoachlib/help/__init__.py:337
 msgid "About e-mail integration"
@@ -4036,7 +4055,7 @@ msgstr "iPhone et iPod Touch"
 
 #: taskcoachlib/help/__init__.py:113
 msgid "%(name)s on the iPhone"
-msgstr ""
+msgstr "%(name)s sur l'iPhone"
 
 #: taskcoachlib/help/__init__.py:114 taskcoachlib/help/__init__.py:483
 msgid "Configuration"
@@ -4044,23 +4063,23 @@ msgstr "Configuration"
 
 #: taskcoachlib/help/__init__.py:117 taskcoachlib/help/__init__.py:558
 msgid "Android"
-msgstr ""
+msgstr "Android"
 
 #: taskcoachlib/help/__init__.py:119 taskcoachlib/help/__init__.py:560
 msgid "%(name)s on Android?"
-msgstr ""
+msgstr "%(name)s sur Android"
 
 #: taskcoachlib/help/__init__.py:120 taskcoachlib/help/__init__.py:568
 msgid "Todo.txt and Todo.txt Touch"
-msgstr ""
+msgstr "Todo.txt et Todo.txt Touch"
 
 #: taskcoachlib/help/__init__.py:121 taskcoachlib/help/__init__.py:583
 msgid "Importing todo.txt"
-msgstr ""
+msgstr "Import Todo.txt en cours"
 
 #: taskcoachlib/help/__init__.py:122 taskcoachlib/help/__init__.py:596
 msgid "Exporting todo.txt"
-msgstr ""
+msgstr "Export Todo.txt en cours"
 
 #: taskcoachlib/help/__init__.py:124 taskcoachlib/help/__init__.py:623
 msgid "Task templates"
@@ -4110,8 +4129,9 @@ msgid ""
 "Due date: the date the task should be finished. \n"
 "This can be 'None' indicating that this task has no fixed due date."
 msgstr ""
-"Date due: la date à laquelle la tâche devrait être terminée.\n"
-"Cela peut valoir 'Aucune', signifiant que la tâche n'a pas de date due fixe."
+"Date d'échéance: la date à laquelle la tâche devrait être terminée.\n"
+"Cela peut valoir 'Aucune', signifiant que la tâche n'a pas de date "
+"d'échéance fixe."
 
 #: taskcoachlib/help/__init__.py:152
 msgid ""
@@ -4182,7 +4202,8 @@ msgstr "Les propriétés suivantes sont calculées depuis celles ci-dessus:"
 
 #: taskcoachlib/help/__init__.py:171
 msgid "Days left: the number of days left until the due date."
-msgstr "Jours restant: le nombre de jours restant jusqu'à la date due."
+msgstr ""
+"Jours restant: le nombre de jours restant jusqu'à la date d'échéance."
 
 #: taskcoachlib/help/__init__.py:172
 msgid ""
@@ -4211,7 +4232,8 @@ msgstr "Une tâche est toujours dans un seul de ces états:"
 #: taskcoachlib/help/__init__.py:182
 msgid "Active: the start date is in the past and the due date in the future;"
 msgstr ""
-"Active: la date de démarrage est dans le passé et la date due dans l'avenir;"
+"Active: la date de démarrage est dans le passé et la date d'échéance dans "
+"l'avenir;"
 
 #: taskcoachlib/help/__init__.py:183
 msgid ""
@@ -4231,14 +4253,15 @@ msgstr "De plus, une tâche peut être qualifiée de:"
 
 #: taskcoachlib/help/__init__.py:189
 msgid "Overdue: the due date is in the past;"
-msgstr "En dépassement: la date due est dans le passé;"
+msgstr "En dépassement: la date d'échéance est dans le passé;"
 
 #: taskcoachlib/help/__init__.py:190
 msgid ""
 "Due soon: the due date is soon (what 'soon' is, can be \n"
 "changed in the preferences);"
 msgstr ""
-"Due bientôt: la date due est bientôt (la signification de 'bientôt'\n"
+"Echéance proche : la date d'échéance est proche (la signification de "
+"'proche'\n"
 "peut être modifiée dans les préférences)."
 
 #: taskcoachlib/help/__init__.py:192
@@ -4540,19 +4563,19 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:349
 msgid "Mozilla Thunderbird"
-msgstr ""
+msgstr "Mozilla Thunderbird"
 
 #: taskcoachlib/help/__init__.py:350
 msgid "Microsoft Outlook"
-msgstr ""
+msgstr "Microsoft Outlook"
 
 #: taskcoachlib/help/__init__.py:351
 msgid "Claws Mail"
-msgstr ""
+msgstr "Messagerie Claws"
 
 #: taskcoachlib/help/__init__.py:352
 msgid "Apple Mail"
-msgstr ""
+msgstr "Apple Mail"
 
 #: taskcoachlib/help/__init__.py:354
 msgid ""
@@ -4902,8 +4925,8 @@ msgid ""
 "# days due soon: How many days in the future is \n"
 "considered \"soon\"."
 msgstr ""
-"# jours bientôt: combien de jours dans l'avenir est considéré comme "
-"\"bientôt\"."
+"# jours d'échéance proche : combien de jours dans l'avenir est considéré "
+"comme \"proche\"."
 
 #: taskcoachlib/help/__init__.py:502
 msgid "Configuration on the desktop, all platforms"
@@ -5046,6 +5069,12 @@ msgid ""
 "Format\">Todo.txt \n"
 "format</a> and then edit your tasks on your Android device."
 msgstr ""
+"Non, %(name)s n'est pas disponible sur la plateforme Android. Mais,\n"
+"<a target=\"_blank\" href=\"http://todotxt.com\">Todo.txt Touch</a> l'est.\n"
+"Vous pouvez exporter vos tâches de %(name)s vers <a target=\"_blank\"\n"
+"href=\"https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-"
+"Format\">Todo.txt\n"
+"format</a> et les éditer sur votre appareil Android."
 
 #: taskcoachlib/help/__init__.py:570
 msgid ""
@@ -5059,6 +5088,16 @@ msgid ""
 "Dropbox folder. %(name)s can import from and export to that todo.txt \n"
 "file."
 msgstr ""
+"Todo.txt est un gestionnaire open source de tâches, créé par Gina\n"
+"Trapani, qui fonctionne avec des fichiers text. Todo.txt a une interface en "
+"ligne de commande. \n"
+"Cependant, tant que le format de fichier est de type text, vous pouvez "
+"éditer vos \n"
+"tâches avec un éditeur de text. Todo.txt Touch est une version de Todo.txt "
+"pour\n"
+"la plateforme Android. Todo.txt Touch utilise un fichier todo.txt qui est "
+"présent dans\n"
+"le dossier Dropbox. %(name)s peut importer et exporter ce fichier todo.txt."
 
 #: taskcoachlib/help/__init__.py:578
 msgid ""
@@ -5068,6 +5107,11 @@ msgid ""
 "exporting of Todo.txt, %(name)s will keep the task file and the \n"
 "todo.txt file in sync."
 msgstr ""
+"Astuce : si vous sauvez votre fichier de tâche dans le répertoire todo\n"
+"que Todo Touch a créé dans votre dossier Dropbox, et que vous activez "
+"l'import et l'export automatique\n"
+"de Todo.txt, %(name)s va synchroniser le fichier de tâche et le fichier "
+"Todo.txt."
 
 #: taskcoachlib/help/__init__.py:585
 msgid ""
@@ -5088,6 +5132,11 @@ msgid ""
 "parent\n"
 "item if any."
 msgstr ""
+"Lors de l'import, %(name)s essaye de trouver les tâches et \n"
+"catégories correspondantes et les met à jour  au lieu d'en créer de "
+"nouvelles. La correspondance est faite\n"
+"grâce au sujet (ou projet, ou contexte) de la tâche et du parent\n"
+"s'il y en a un."
 
 #: taskcoachlib/help/__init__.py:598
 msgid ""
@@ -5103,6 +5152,9 @@ msgid ""
 "dates, so the time part of start, due, and completion date/times is not\n"
 "exported."
 msgstr ""
+"%(name)s accepte les dates et les heures, mais Todo.txt n'accepte que les "
+"dates, donc la partie heure des dates de début, déchéance et d'achèvement ne "
+"seront pas exportées."
 
 #: taskcoachlib/help/__init__.py:606
 msgid ""
@@ -5113,6 +5165,13 @@ msgid ""
 "the\n"
 "todo.txt file."
 msgstr ""
+"Le format par défaut de Todo.txt accepte les dates de début et d'achèvement "
+"uniquement et \n"
+"pas les dates d'échéances. En conséquence, %(name)s utilise une extension "
+"pour \n"
+"exporter la date d'échéance des tâches. Les dates d'échéance sont affichées "
+"sous le format \"due:YYYY-MM-DD\" dans le\n"
+"fichier Todo.txt."
 
 #: taskcoachlib/help/__init__.py:611
 msgid ""
@@ -5123,6 +5182,12 @@ msgid ""
 "26\n"
 "are not exported."
 msgstr ""
+"Todo.txt gère les priorités avec les lettres ('A'-'Z'). \n"
+"%(name)s a des priorités numériques. La priorité 1 de %(name)s est changée "
+"en 'A',\n"
+"é devient 'B',etc., et 26 est changée en 'Z'. Les priorités de %(name)s "
+"inférieure à 1 \n"
+"et supérieures à 26 ne sont pas exportées."
 
 #: taskcoachlib/help/__init__.py:616
 msgid ""
@@ -5498,11 +5563,11 @@ msgstr "Afficher le menu popup ou la liste déroulante"
 
 #: taskcoachlib/help/__init__.py:745
 msgid "Edit the subject of the selected item in a viewer"
-msgstr ""
+msgstr "Editer le sujet de l'objet sélectionné dans un éditeur"
 
 #: taskcoachlib/help/__init__.py:745
 msgid "F2"
-msgstr ""
+msgstr "F2"
 
 #: taskcoachlib/help/__init__.py:754
 msgid ""
@@ -5974,11 +6039,11 @@ msgstr "Modification de la tâche %s"
 
 #: taskcoachlib/iphone/protocol.py:1242
 msgid "End of task synchronization."
-msgstr ""
+msgstr "Synchronisation terminée"
 
 #: taskcoachlib/iphone/protocol.py:1259
 msgid "Could not find task %s for effort."
-msgstr ""
+msgstr "Impossible de trouver la tâche %s pour l'effort."
 
 #: taskcoachlib/iphone/protocol.py:1262
 msgid "New effort %s"
@@ -5998,21 +6063,23 @@ msgstr "Message Mail.app"
 
 #: taskcoachlib/mailer/thunderbird.py:84
 msgid "Could not find Thunderbird data dir"
-msgstr ""
+msgstr "Impossible de trouver le répertoire de Thunderbird"
 
 #: taskcoachlib/mailer/thunderbird.py:113
 msgid "Could not find Thunderbird profile."
-msgstr ""
+msgstr "Impossible de trouver le profil Thunderbird"
 
 #: taskcoachlib/mailer/thunderbird.py:132
 msgid "No default section in profiles.ini"
-msgstr ""
+msgstr "Pas de section par défaut dans le fichier profiles.ini"
 
 #: taskcoachlib/mailer/thunderbird.py:145
 msgid ""
 "Malformed Thunderbird internal ID:\n"
 "%s. Please file a bug report."
 msgstr ""
+"Anomalie sur l'ID interne de Thunderbird :\n"
+"%s. Merci de faire un rapport d'anomalie."
 
 #: taskcoachlib/mailer/thunderbird.py:177
 msgid ""
@@ -6020,11 +6087,13 @@ msgid ""
 "%s.\n"
 "Please file a bug report."
 msgstr ""
+"Impossible de trouver le répertoire pour l'ID\n"
+"%s."
 
 #: taskcoachlib/mailer/thunderbird.py:238
 #: taskcoachlib/mailer/thunderbird.py:351
 msgid "Unrecognized URL scheme: \"%s\""
-msgstr ""
+msgstr "Adresse URL inconnue : \"%s\""
 
 #: taskcoachlib/mailer/thunderbird.py:291
 msgid ""
@@ -6048,22 +6117,24 @@ msgid ""
 "Could not select inbox \"%s\"\n"
 "(%s)"
 msgstr ""
+"Impossible de sélectionner la boîte de réception \"%s\"\n"
+"(%s)"
 
 #: taskcoachlib/mailer/thunderbird.py:335
 msgid "No such mail: %d"
-msgstr ""
+msgstr "Aucun mail correspondant: %d"
 
 #: taskcoachlib/persistence/csv/reader.py:55
 msgid "No subject"
 msgstr "Pas de sujet"
 
 #: taskcoachlib/persistence/xml/templates.py:8
-msgid "New task due tomorrow"
-msgstr "Nouvelle tâche dûe demain"
+msgid "New task due today"
+msgstr "Nouvelle tâche arrivant à échéance aujourd'hui"
 
 #: taskcoachlib/persistence/xml/templates.py:10
-msgid "New task due today"
-msgstr "Nouvelle tâche dûe aujourd'hui"
+msgid "New task due tomorrow"
+msgstr "Nouvelle tâche arrivant à échéance demain"
 
 #: taskcoachlib/render.py:38
 msgid "Infinite"
@@ -6257,7 +6328,7 @@ msgstr ""
 
 #: taskcoachlib/tools/anonymize.py:57
 msgid "Finished"
-msgstr ""
+msgstr "Terminé"
 
 #: taskcoachlib/widgets/calendarconfig.py:52
 msgid "Kind of period displayed and its count"
@@ -6289,27 +6360,27 @@ msgstr "Vertical"
 
 #: taskcoachlib/widgets/calendarconfig.py:78
 msgid "Which tasks to display"
-msgstr ""
+msgstr "Les tâches à afficher"
 
 #: taskcoachlib/widgets/calendarconfig.py:80
 msgid "Tasks with a start date and a due date"
-msgstr ""
+msgstr "Tâches avec une date de début et une date d'échéance"
 
 #: taskcoachlib/widgets/calendarconfig.py:81
 msgid "Tasks with a due date"
-msgstr ""
+msgstr "Tâches avec une date d'échéance"
 
 #: taskcoachlib/widgets/calendarconfig.py:81
 msgid "Tasks with a start date"
-msgstr ""
+msgstr "Tâches avec une date de début"
 
 #: taskcoachlib/widgets/calendarconfig.py:82
 msgid "All tasks"
-msgstr ""
+msgstr "Toutes les tâches"
 
 #: taskcoachlib/widgets/calendarconfig.py:82
 msgid "All tasks, except unplanned tasks"
-msgstr ""
+msgstr "Toutes les tâches, à l'exception des tâches non datées"
 
 #: taskcoachlib/widgets/calendarconfig.py:91
 msgid "Draw a line showing the current time"
@@ -6349,19 +6420,19 @@ msgstr ""
 
 #: taskcoachlib/widgets/password.py:32
 msgid "Password:"
-msgstr ""
+msgstr "Mot de passe:"
 
 #: taskcoachlib/widgets/password.py:42
 msgid "Store in keychain"
-msgstr ""
+msgstr "Stocker dans le trousseau de clés"
 
 #: taskcoachlib/widgets/password.py:83
 msgid "Please enter your password."
-msgstr ""
+msgstr "Veuillez saisir votre mot de passe."
 
 #: taskcoachlib/widgets/password.py:88
 msgid "Please enter your password"
-msgstr ""
+msgstr "Veuillez saisir votre mot de passe"
 
 #: taskcoachlib/widgets/searchctrl.py:58
 msgid "&Match case"
@@ -6558,27 +6629,6 @@ msgstr "Erreur lors de l'ouverture de l'URL"
 #~ msgid "Multiple attachments"
 #~ msgstr "Pièces jointes multiples"
 
-#~ msgid ""
-#~ "Actually delete deleted tasks and notes (see the SyncML chapter in Help"
-#~ msgstr ""
-#~ "Supprimer réellement les tâches et notes qui ont été supprimées (voir le "
-#~ "chapitre SyncML dans l'aide)"
-
-#~ msgid "Please enter your password:"
-#~ msgstr "Veuillez saisir votre mot de passe:"
-
-#~ msgid "Task Coach SyncML password"
-#~ msgstr "Mot de passe SyncML pour Task Coach"
-
-#~ msgid "All"
-#~ msgstr "Tout"
-
-#~ msgid "All but unplanned"
-#~ msgstr "Toutes sauf non planifiées"
-
-#~ msgid "Start and due date"
-#~ msgstr "Date de démarrage et de fin"
-
 #~ msgid "Add note to attachments"
 #~ msgstr "Ajouter une note aux pièces jointes"
 
@@ -6626,24 +6676,3 @@ msgstr "Erreur lors de l'ouverture de l'URL"
 
 #~ msgid "%s (effort)"
 #~ msgstr "%s (effort)"
-
-#~ msgid "Span"
-#~ msgstr "Intervalle"
-
-#~ msgid "Orientation"
-#~ msgstr "Orientation"
-
-#~ msgid "Mandatory attributes of displayed tasks"
-#~ msgstr "Attributs obligatoires des tâches affichées"
-
-#~ msgid "Show now"
-#~ msgstr "Montrer maintenant"
-
-#~ msgid "Highlight"
-#~ msgstr "Mise en valeur"
-
-#~ msgid "Font size"
-#~ msgstr "Taille de la police"
-
-#~ msgid "Size of the font used to draw the task subject"
-#~ msgstr "Taille de la police utilisée pour afficher le sujet de la tâche"

@@ -38,15 +38,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TaskCoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-09-12 01:51+0000\n"
-"PO-Revision-Date: 2011-09-18 19:40+0000\n"
+"POT-Creation-Date: 2011-09-24 23:02+0000\n"
+"PO-Revision-Date: 2011-09-24 23:39+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Romanian <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-24 18:56+0000\n"
-"X-Generator: Launchpad (build 14012)\n"
+"X-Launchpad-Export-Date: 2011-10-23 13:56+0000\n"
+"X-Generator: Launchpad (build 14170)\n"
 "X-Poedit-Country: ROMANIA\n"
 "X-Poedit-Language: Romanian\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -150,19 +150,19 @@ msgstr "Trage și pune"
 msgid "Drag and drop \"%s\""
 msgstr "Trage și pune „%s”"
 
-#: taskcoachlib/command/base.py:341
+#: taskcoachlib/command/base.py:338
 msgid "Edit subjects"
 msgstr "Editează subiectele"
 
-#: taskcoachlib/command/base.py:342
+#: taskcoachlib/command/base.py:339
 msgid "Edit subject \"%s\""
 msgstr "Editează subiecturl „%s”"
 
-#: taskcoachlib/command/base.py:362
+#: taskcoachlib/command/base.py:359
 msgid "Edit descriptions"
 msgstr "Editează descrierile"
 
-#: taskcoachlib/command/base.py:363
+#: taskcoachlib/command/base.py:360
 msgid "Edit description \"%s\""
 msgstr "Editează descrierea „%s”"
 
@@ -426,30 +426,30 @@ msgstr "Schimbă bugetele"
 msgid "Change budget of \"%s\""
 msgstr "Schimbă bugetul lui „%s”"
 
-#: taskcoachlib/config/settings.py:221
+#: taskcoachlib/config/settings.py:225
 msgid "Error while reading the %s-%s setting from %s.ini."
 msgstr "Eroare la citirea setărilor%s-%s de la %s.ini."
 
-#: taskcoachlib/config/settings.py:222
+#: taskcoachlib/config/settings.py:226
 msgid "The value is: %s"
 msgstr "Valoarea este: %s"
 
-#: taskcoachlib/config/settings.py:223
+#: taskcoachlib/config/settings.py:227
 msgid "The error is: %s"
 msgstr "Valoarea este: %s"
 
-#: taskcoachlib/config/settings.py:224
+#: taskcoachlib/config/settings.py:228
 msgid ""
 "%s will use the default value for the setting and should proceed normally."
 msgstr ""
 "%s va utiliza valoarea implicită pentru setare și ar trebui să se desfășoare "
 "normal."
 
-#: taskcoachlib/config/settings.py:225
+#: taskcoachlib/config/settings.py:229
 msgid "Settings error"
 msgstr "Eroare de setări"
 
-#: taskcoachlib/config/settings.py:245
+#: taskcoachlib/config/settings.py:249
 msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
@@ -457,7 +457,7 @@ msgstr ""
 "Eroare la salvarea %s.ini:\n"
 "%s\n"
 
-#: taskcoachlib/config/settings.py:246
+#: taskcoachlib/config/settings.py:250
 msgid "Save error"
 msgstr "Eroare la salvare"
 
@@ -615,7 +615,7 @@ msgstr "Cărți"
 
 #: taskcoachlib/gui/artprovider.py:103
 msgid "Box"
-msgstr ""
+msgstr "Căsuță"
 
 #: taskcoachlib/gui/artprovider.py:104
 msgid "Ladybug"
@@ -1041,7 +1041,6 @@ msgid "Completion date"
 msgstr "Data de terminare"
 
 #: taskcoachlib/gui/dialog/editor.py:396
-#: taskcoachlib/gui/dialog/reminder.py:28
 #: taskcoachlib/gui/dialog/templates.py:121
 #: taskcoachlib/gui/viewer/task.py:763
 msgid "Reminder"
@@ -1211,7 +1210,7 @@ msgid "Prerequisites"
 msgstr "Precerințe"
 
 #: taskcoachlib/gui/dialog/editor.py:1124
-#: taskcoachlib/gui/dialog/reminder.py:51
+#: taskcoachlib/gui/dialog/reminder.py:52
 #: taskcoachlib/gui/viewer/effort.py:166
 msgid "Task"
 msgstr "Sarcină"
@@ -1555,7 +1554,7 @@ msgstr "Numărul de ore în care sarcinile sînt considerate „scadente curînd
 
 #: taskcoachlib/gui/dialog/preferences.py:452
 msgid "Nothing"
-msgstr ""
+msgstr "Nimic"
 
 #: taskcoachlib/gui/dialog/preferences.py:453
 msgid "Changing the start date changes the due date"
@@ -1573,23 +1572,23 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:459
 msgid "Preset"
-msgstr ""
+msgstr "Prestabilit"
 
 #: taskcoachlib/gui/dialog/preferences.py:460
 msgid "Propose"
-msgstr ""
+msgstr "Scop"
 
 #: taskcoachlib/gui/dialog/preferences.py:461
 msgid "Today"
-msgstr ""
+msgstr "Astăzi"
 
 #: taskcoachlib/gui/dialog/preferences.py:462
 msgid "Tomorrow"
-msgstr ""
+msgstr "Mâine"
 
 #: taskcoachlib/gui/dialog/preferences.py:463
 msgid "Day after tomorrow"
-msgstr ""
+msgstr "Poimâine"
 
 #: taskcoachlib/gui/dialog/preferences.py:464
 msgid "Next Friday"
@@ -1609,7 +1608,7 @@ msgstr "Începutul zilei de lucru"
 
 #: taskcoachlib/gui/dialog/preferences.py:468
 msgid "Current time"
-msgstr ""
+msgstr "Ora curentă"
 
 #: taskcoachlib/gui/dialog/preferences.py:469
 msgid "End of working day"
@@ -1683,22 +1682,26 @@ msgstr "Editor"
 msgid "Check spelling in editors"
 msgstr "Verificare ortografică în editoare"
 
-#: taskcoachlib/gui/dialog/reminder.py:65
+#: taskcoachlib/gui/dialog/reminder.py:28
+msgid "%(name)s reminder - %(task)s"
+msgstr "%(name)s memento - %(task)s"
+
+#: taskcoachlib/gui/dialog/reminder.py:66
 msgid "Reminder date/time"
 msgstr "Dată/oră rapel"
 
-#: taskcoachlib/gui/dialog/reminder.py:66
+#: taskcoachlib/gui/dialog/reminder.py:67
 msgid "Snooze"
 msgstr "Ațipește"
 
-#: taskcoachlib/gui/dialog/reminder.py:84
+#: taskcoachlib/gui/dialog/reminder.py:85
 msgid ""
 "Also use the selected snooze time as default snooze time for future reminders"
 msgstr ""
 "De asemenea utilizați timpul de amânare selectat ca și timp de amânare "
 "implicit pentru memento-uri viitoare"
 
-#: taskcoachlib/gui/dialog/reminder.py:88
+#: taskcoachlib/gui/dialog/reminder.py:89
 msgid "Mark task completed"
 msgstr "Marchează sarcina terminată"
 
@@ -1828,7 +1831,7 @@ msgstr "Ultima veriune lansată a %(name)s este %(version)s."
 
 #: taskcoachlib/gui/iocontroller.py:49
 msgid "%s files (*.tsk)|*.tsk|All files (*.*)|*"
-msgstr ""
+msgstr "%s fișiere (*.tsk)|*.tsk|Toate fișierele (*.*)|*"
 
 #: taskcoachlib/gui/iocontroller.py:52
 msgid ""
@@ -3921,7 +3924,7 @@ msgstr "Delimitator"
 
 #: taskcoachlib/gui/wizard/csvimport.py:96
 msgid "Date format"
-msgstr ""
+msgstr "Format dată"
 
 #: taskcoachlib/gui/wizard/csvimport.py:99
 msgid "Quote character"
@@ -3952,7 +3955,7 @@ msgstr "Categorie"
 #: taskcoachlib/gui/wizard/csvimport.py:233
 #: taskcoachlib/persistence/csv/reader.py:119
 msgid "Percent complete"
-msgstr ""
+msgstr "Procente încheiat"
 
 #: taskcoachlib/gui/wizard/csvimport.py:256
 msgid "Column header in CSV file"
@@ -4081,7 +4084,7 @@ msgstr "iPhone și iPod Touch"
 
 #: taskcoachlib/help/__init__.py:113
 msgid "%(name)s on the iPhone"
-msgstr ""
+msgstr "%(name)s pe iPhone"
 
 #: taskcoachlib/help/__init__.py:114 taskcoachlib/help/__init__.py:483
 msgid "Configuration"
@@ -4089,7 +4092,7 @@ msgstr "Configurare"
 
 #: taskcoachlib/help/__init__.py:117 taskcoachlib/help/__init__.py:558
 msgid "Android"
-msgstr ""
+msgstr "Android"
 
 #: taskcoachlib/help/__init__.py:119 taskcoachlib/help/__init__.py:560
 msgid "%(name)s on Android?"
@@ -5340,6 +5343,8 @@ msgid ""
 "Please note that this system is not localized; you must enter\n"
 "the dates in english."
 msgstr ""
+"Nu uitați că sistemul nu este localizat; trebuie să introduceți\n"
+"datele în engleză."
 
 #: taskcoachlib/help/__init__.py:669
 msgid ""
@@ -5623,7 +5628,7 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:745
 msgid "F2"
-msgstr ""
+msgstr "F2"
 
 #: taskcoachlib/help/__init__.py:754
 msgid ""
@@ -5634,6 +5639,12 @@ msgid ""
 "<p>%(copyright)s</p>\n"
 "<p>%(license_notice_html)s</p>\n"
 msgstr ""
+"<h4>%(name)s - %(description)s</h4>\n"
+"<h5>Versiune %(version)s, %(date)s</h5>\n"
+"<p>De %(author)s &lt;%(author_email)s&gt;<p>\n"
+"<p><a href=\"%(url)s\" destinație=\"_blank\">%(url)s</a></p>\n"
+"<p>%(copyright)s</p>\n"
+"<p>%(license_notice_html)s</p>\n"
 
 #: taskcoachlib/help/__init__.py:766
 msgid ""
@@ -5648,6 +5659,16 @@ msgid ""
 "%(license)s\n"
 "\n"
 msgstr ""
+"\n"
+"Versiune %(version)s, %(date)s\n"
+"\n"
+"De %(author)s <%(author_email)s>\n"
+"\n"
+"%(url)s\n"
+"\n"
+"%(copyright)s\n"
+"%(license)s\n"
+"\n"
 
 #: taskcoachlib/help/tips.py:25
 msgid ""
@@ -6096,11 +6117,11 @@ msgstr "Mesaj Mail.app"
 
 #: taskcoachlib/mailer/thunderbird.py:84
 msgid "Could not find Thunderbird data dir"
-msgstr ""
+msgstr "Dosarul de date al Thunderbird nu a fost găsit"
 
 #: taskcoachlib/mailer/thunderbird.py:113
 msgid "Could not find Thunderbird profile."
-msgstr ""
+msgstr "Profilul Thunderbird nu a fost găsit."
 
 #: taskcoachlib/mailer/thunderbird.py:132
 msgid "No default section in profiles.ini"
@@ -6145,6 +6166,8 @@ msgid ""
 "Could not select inbox \"%s\"\n"
 "(%s)"
 msgstr ""
+"Căsuța de recepție nu a putut fi selectată „%s” \n"
+"(%s)"
 
 #: taskcoachlib/mailer/thunderbird.py:335
 msgid "No such mail: %d"
@@ -6155,12 +6178,12 @@ msgid "No subject"
 msgstr "Fără subiect"
 
 #: taskcoachlib/persistence/xml/templates.py:8
-msgid "New task due tomorrow"
-msgstr "Sarcină nouă scadentă mîine"
-
-#: taskcoachlib/persistence/xml/templates.py:10
 msgid "New task due today"
 msgstr "Sarcină nouă scadentă astăzi"
+
+#: taskcoachlib/persistence/xml/templates.py:10
+msgid "New task due tomorrow"
+msgstr "Sarcină nouă scadentă mîine"
 
 #: taskcoachlib/render.py:38
 msgid "Infinite"
@@ -6349,11 +6372,11 @@ msgstr "&Fereastră"
 
 #: taskcoachlib/tools/anonymize.py:56
 msgid "Your task file has been anonymized and saved to:"
-msgstr ""
+msgstr "Fișierul de sarcini a fost anonimizat și salvat în:"
 
 #: taskcoachlib/tools/anonymize.py:57
 msgid "Finished"
-msgstr ""
+msgstr "Terminat"
 
 #: taskcoachlib/widgets/calendarconfig.py:52
 msgid "Kind of period displayed and its count"
@@ -6401,7 +6424,7 @@ msgstr ""
 
 #: taskcoachlib/widgets/calendarconfig.py:82
 msgid "All tasks"
-msgstr ""
+msgstr "Toate sarcinile"
 
 #: taskcoachlib/widgets/calendarconfig.py:82
 msgid "All tasks, except unplanned tasks"
@@ -6445,19 +6468,19 @@ msgstr ""
 
 #: taskcoachlib/widgets/password.py:32
 msgid "Password:"
-msgstr ""
+msgstr "Parolă:"
 
 #: taskcoachlib/widgets/password.py:42
 msgid "Store in keychain"
-msgstr ""
+msgstr "Păstrează în inelul de chei"
 
 #: taskcoachlib/widgets/password.py:83
 msgid "Please enter your password."
-msgstr ""
+msgstr "Introduceți parola."
 
 #: taskcoachlib/widgets/password.py:88
 msgid "Please enter your password"
-msgstr ""
+msgstr "Introduceți parola"
 
 #: taskcoachlib/widgets/searchctrl.py:58
 msgid "&Match case"
@@ -6699,45 +6722,3 @@ msgstr "Eroare la deschiderea URL"
 
 #~ msgid "%s (effort)"
 #~ msgstr "%s (efort)"
-
-#~ msgid ""
-#~ "Actually delete deleted tasks and notes (see the SyncML chapter in Help"
-#~ msgstr ""
-#~ "Șterge realmente sarcinile și notițele șterse (vedeți capitoul SyncML din "
-#~ "ajutor)"
-
-#~ msgid "Please enter your password:"
-#~ msgstr "Introduceți-vă parola:"
-
-#~ msgid "Task Coach SyncML password"
-#~ msgstr "Parola SyncML Task Coach"
-
-#~ msgid "All"
-#~ msgstr "Toate"
-
-#~ msgid "All but unplanned"
-#~ msgstr "Toate, dar neplanificate"
-
-#~ msgid "Start and due date"
-#~ msgstr "Data scadentă și de început"
-
-#~ msgid "Orientation"
-#~ msgstr "Orientare"
-
-#~ msgid "Mandatory attributes of displayed tasks"
-#~ msgstr "Atributele obligatorii ale sarcinilor afișate"
-
-#~ msgid "Span"
-#~ msgstr "Întindere"
-
-#~ msgid "Font size"
-#~ msgstr "Mărimea fontului"
-
-#~ msgid "Highlight"
-#~ msgstr "Evidențiază"
-
-#~ msgid "Size of the font used to draw the task subject"
-#~ msgstr "Mărimea fontului utilizat pentru desenarea subiectului sarcinii"
-
-#~ msgid "Show now"
-#~ msgstr "Afișează acum"
