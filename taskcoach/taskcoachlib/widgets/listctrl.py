@@ -69,6 +69,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
         # Send a child focus event to let the AuiManager know we received focus
         # so it will activate our pane
         wx.PostEvent(self, wx.ChildFocusEvent(self))
+        event.Skip()
             
     def getItemWithIndex(self, rowIndex):
         return self.__parent.getItemWithIndex(rowIndex)
