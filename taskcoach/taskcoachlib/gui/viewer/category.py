@@ -156,7 +156,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
     def onCheck(self, event):
         categoryToFilter = self.widget.GetItemPyData(event.GetItem())
         categoryToFilter.setFiltered(event.GetItem().IsChecked())
-        self.onSelect(event) # Notify status bar
+        self.sendViewerStatusEvent() # Notify status observers like the status bar
         
     def getIsItemChecked(self, item):
         if isinstance(item, category.Category):
