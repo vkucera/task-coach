@@ -62,8 +62,17 @@ class BaseTaskViewer(mixin.SearchableViewerMixin, # pylint: disable-msg=W0223
                                                              task.Task.trackStartEventType(),
                                                              task.Task.trackStopEventType())
             self.minuteRefresher = refresher.MinuteRefresher(self)
+        else:
+            self.secondRefresher = self.minuteRefresher = None
         self.statusMessages = TaskViewerStatusMessages(self)
         self.__registerForAppearanceChanges()
+        
+    def detach(self):
+        super(BaseTaskViewer, self).detach()
+        if self.secondRefresher:
+            self.secondRefresher.removeInstance()
+        if self.minuteRefresher:
+            self.minuteRefresher.removeInstance()
         
     def domainObjectsToView(self):
         return self.taskFile.tasks()

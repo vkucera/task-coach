@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.0', 'October 15, 2011',
+Release('1.3.0', 'October 23, 2011',
     summary='''This release makes all edits done in dialogs immediate.''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -43,8 +43,8 @@ an item.''', '3424138'),
         ]
     ),
 
-Release('1.2.30', 'October 14, 2011',
-    summary='''This is a bugfix release.''',
+Release('1.2.30', 'October 22, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Better explanation of the automatic import and export of
 Todo.txt format in the preferences dialog.''', '3418906'),
@@ -55,6 +55,7 @@ dependencies are taken into account when sorting by categories, prerequisites or
 dependencies.''', '3414914'),
         Bug('''Don't reset the percentage complete to 0 when the user changes
 it from 100 to some other percentage less than 100.'''),
+        Bug('''Fix a memory leak when opening edit dialogs.''')
         ],
     featuresAdded=[
         Feature('''The task viewer in list mode now also shows the  

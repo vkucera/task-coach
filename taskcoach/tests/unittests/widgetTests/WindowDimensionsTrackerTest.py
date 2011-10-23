@@ -46,6 +46,7 @@ class WindowTest(test.wxTestCase):
             self.frame.IsIconized())
             
     def testChangeSize(self):
+        self.frame.Show()
         self.frame.ProcessEvent(wx.SizeEvent((100, 200)))
         self.assertEqual((100, 200), 
             eval(self.settings.get(self.section, 'size')))
