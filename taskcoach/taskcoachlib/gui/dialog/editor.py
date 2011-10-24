@@ -103,6 +103,7 @@ class SubjectPage(Page):
         
     @patterns.eventSource
     def ok(self, event=None): # pylint: disable-msg=W0221
+        super(SubjectPage, self).ok(event=event)
         for item in self.items:
             if len(self.items) == 1 or self._subjectLabel.IsChecked(): 
                 item.setSubject(self._subjectEntry.GetValue(), event=event)
@@ -759,15 +760,19 @@ class PageWithViewer(Page):
         raise NotImplementedError
         
     def onClose(self, event):
+        self.viewer.detach()
         # Don't notify the viewer about any changes anymore, it's about
         # to be deleted, but don't delete it too soon.
-        wx.CallAfter(self.detachAndDeleteViewer)
+        wx.CallAfter(self.deleteViewer)
         event.Skip()        
         
-    def detachAndDeleteViewer(self):
+    def deleteViewer(self):
         if hasattr(self, 'viewer'):
-            self.viewer.detach()
             del self.viewer
+    
+    def ok(self, *args, **kwargs):
+        self.viewer.detach()
+        super(PageWithViewer, self).ok(*args, **kwargs)
 
 
 class EffortPage(PageWithViewer):
@@ -840,6 +845,7 @@ class CategoriesPage(PageWithViewer):
 
     @patterns.eventSource
     def ok(self, event=None): # pylint: disable-msg=W0221
+        super(CategoriesPage, self).ok(event=event)
         for eachCategory, checked in self.viewer.checkedItems().items():
             if checked:
                 for item in self.items:
@@ -868,6 +874,7 @@ class AttachmentsPage(PageWithViewer):
 
     @patterns.eventSource
     def ok(self, event=None): # pylint: disable-msg=W0221
+        super(AttachmentsPage, self).ok(event=event)
         self.items[0].setAttachments(self.attachmentsList, event=event)
 
 
@@ -888,6 +895,7 @@ class NotesPage(PageWithViewer):
     
     @patterns.eventSource        
     def ok(self, event=None): # pylint: disable-msg=W0221
+        super(NotesPage, self).ok(event=event)
         self.items[0].setNotes(list(self.notes.rootItems()), event=event)
 
 
@@ -922,6 +930,7 @@ class PrerequisitesPage(PageWithViewer):
 
     @patterns.eventSource
     def ok(self, event=None): # pylint: disable-msg=W0221
+        super(PrerequisitesPage, self).ok(event=event)
         treeCtrl = self.viewer.widget
         prerequisites = set(self.items[0].prerequisites())
         for taskNode in treeCtrl.GetItemChildren(recursively=True):

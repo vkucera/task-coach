@@ -27,6 +27,8 @@ Release('1.2.31', 'October 23, 2011',
     bugsFixed=[
         Bug('''Immediately update the number of tasks completed in the status
 bar of the task viewer when the user marks a task completed.''', '3185805'),
+        Bug('''When adding new tasks, Task Coach would first show them briefly 
+as inactive before showing them as active.''', '3085362'),
         ]
     ),
             
