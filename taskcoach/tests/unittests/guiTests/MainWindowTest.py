@@ -27,7 +27,7 @@ class MockViewer(wx.Frame):
     def settingsSection(self):
         return 'taskviewer'
     
-    def selectEventType(self):
+    def viewerStatusEventType(self):
         return ''
 
 

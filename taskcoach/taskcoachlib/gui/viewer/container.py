@@ -69,8 +69,8 @@ class ViewerContainer(object):
         self.viewers.append(viewer)
         if len(self.viewers) == 1:
             self.activateViewer(viewer)
-        patterns.Publisher().registerObserver(self.onSelect, 
-            eventType=viewer.selectEventType(), eventSource=viewer)
+        patterns.Publisher().registerObserver(self.onStatusChanged, 
+            eventType=viewer.viewerStatusEventType(), eventSource=viewer)
         
     def closeViewer(self, viewer):
         if viewer == self.activeViewer():
@@ -79,16 +79,11 @@ class ViewerContainer(object):
         self.containerWidget.manager.ClosePane(pane)
 
     @classmethod
-    def selectEventType(class_):
+    def viewerStatusEventType(class_):
         ''' Events of this type are fired by the viewer container whenever the
-            current selection of the active viewer changes. '''
-        return '%s.select'%class_
-    
-    @classmethod
-    def viewerChangeEventType(class_):
-        ''' Events of this type are fired by the viewer container whenever the
-            active viewer changes. '''
-        return '%s.viewerChange'%class_
+            current status (selection, filter, ...) of the active viewer changes,
+            which may also be caused by the active viewer being changed. '''
+        return '%s.status'%class_
     
     def __getattr__(self, attribute):
         ''' Forward unknown attributes to the active viewer or the first
@@ -118,13 +113,17 @@ class ViewerContainer(object):
     def __del__(self):
         pass # Don't forward del to one of the viewers.
     
-    def onSelect(self, event):
-        patterns.Event(self.selectEventType(), self, *event.values()).send()
+    def onStatusChanged(self, event):
+        if self.activeViewer() in event.sources():
+            self.sendViewerStatusEvent()
 
     def onPageChanged(self, event):
-        patterns.Event(self.viewerChangeEventType(), self).send()
         self._ensureActiveViewerHasFocus()
-        event.Skip()            
+        self.sendViewerStatusEvent()
+        event.Skip()
+    
+    def sendViewerStatusEvent(self):
+        patterns.Event(self.viewerStatusEventType(), self).send()
         
     def _ensureActiveViewerHasFocus(self):
         if not self.activeViewer():
