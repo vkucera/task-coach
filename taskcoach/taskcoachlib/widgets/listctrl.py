@@ -62,7 +62,14 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
             self.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.onSelect)
         if editCommand:
             self.editCommand = editCommand
-            self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.onItemActivated)  
+            self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.onItemActivated)
+        self.Bind(wx.EVT_SET_FOCUS, self.onSetFocus)
+        
+    def onSetFocus(self, event): # pylint: disable-msg=W0613
+        # Send a child focus event to let the AuiManager know we received focus
+        # so it will activate our pane
+        wx.PostEvent(self, wx.ChildFocusEvent(self))
+        event.Skip()
             
     def getItemWithIndex(self, rowIndex):
         return self.__parent.getItemWithIndex(rowIndex)
