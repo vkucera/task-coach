@@ -1286,11 +1286,11 @@ class EditorWithCommand(widgets.Dialog):
         self.newEffortCommand.bind(self._interior, newEffortId)
                         
     def cancel(self, *args, **kwargs): # pylint: disable-msg=W0221
-        patterns.Publisher().removeObserver(self.onItemRemoved)
+        patterns.Publisher().removeInstance(self)
         super(EditorWithCommand, self).cancel(*args, **kwargs)
         
     def ok(self, *args, **kwargs):
-        patterns.Publisher().removeObserver(self.onItemRemoved)
+        patterns.Publisher().removeInstance(self)
         self.okInterior()
         self._command.do()
         super(EditorWithCommand, self).ok(*args, **kwargs)
