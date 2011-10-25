@@ -1362,9 +1362,8 @@ class EditTrackedTasks(TaskListCommand, SettingsCommand):
         
     def doCommand(self, event, show=True):
         editTaskDialog = dialog.editor.TaskEditor(self.mainWindow(), 
-            command.EditTaskCommand(self.taskList, self.taskList.tasksBeingTracked()), 
-            self.settings, self.taskList, self.mainWindow().taskFile, 
-            bitmap=self.bitmap)
+            self.taskList.tasksBeingTracked(), self.settings, self.taskList, 
+            self.mainWindow().taskFile, bitmap=self.bitmap)
         editTaskDialog.Show(show)
         return editTaskDialog # for testing purposes
         
@@ -1422,7 +1421,7 @@ class TaskNew(TaskListCommand, SettingsCommand):
         newTaskCommand.do() 
         newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(),
             newTaskCommand.items, self.settings, self.taskList, 
-            self.mainWindow().taskFile, bitmap=self.bitmap)
+            self.mainWindow().taskFile, bitmap=self.bitmap, itemsAreNew=True)
         newTaskDialog.Show(show)
         return newTaskDialog # for testing purposes
 
@@ -1459,7 +1458,7 @@ class TaskNewFromTemplate(TaskNew):
         # pylint: disable-msg=W0142
         newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(), 
             newTaskCommand.items, self.settings, self.taskList, 
-            self.mainWindow().taskFile, bitmap=self.bitmap)
+            self.mainWindow().taskFile, bitmap=self.bitmap, itemsAreNew=True)
         newTaskDialog.Show(show)
         return newTaskDialog # for testing purposes
    

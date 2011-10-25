@@ -238,9 +238,10 @@ class DatesPage(Page):
     pageTitle = _('Dates') 
     pageIcon = 'calendar_icon'
     
-    def __init__(self, theTask, parent, settings, *args, **kwargs):
+    def __init__(self, theTask, parent, settings, itemsAreNew, *args, **kwargs):
         self.__settings = settings
         self._duration = None
+        self.__itemsAreNew = itemsAreNew
         super(DatesPage, self).__init__(theTask, parent, *args, **kwargs)
         
     def addEntries(self):
@@ -265,7 +266,7 @@ class DatesPage(Page):
         setattr(self, '_current%s'%TaskMethodName, dateTime)
         suggestedDateTimeMethodName = 'suggested' + TaskMethodName
         suggestedDateTime = getattr(self.items[0], suggestedDateTimeMethodName)()
-        if self.__settings.get('view', 'default%s'%taskMethodName.lower()).startswith('preset') and dateTime == date.DateTime():
+        if self.__shouldPresetDateTime(taskMethodName):
             dateTime = suggestedDateTime
         dateTimeEntry = entry.DateTimeEntry(self, self.__settings, dateTime,
                                             suggestedDateTime=suggestedDateTime)
@@ -286,6 +287,10 @@ class DatesPage(Page):
         setattr(self, '_%sSync'%taskMethodName, datetimeSync) 
         self.addEntry(label, dateTimeEntry)
 
+    def __shouldPresetDateTime(self, taskMethodName):
+        return self.__itemsAreNew and \
+            self.__settings.get('view', 'default%s'%taskMethodName.lower()).startswith('preset')
+        
     def addReminderEntry(self):
         # pylint: disable-msg=W0201
         reminderDateTime = self.items[0].reminder() if len(self.items) == 1 else date.DateTime()
@@ -529,14 +534,14 @@ class PageWithViewer(Page):
         raise NotImplementedError
         
     def onClose(self, event):
+        self.viewer.detach()
         # Don't notify the viewer about any changes anymore, it's about
         # to be deleted, but don't delete it too soon.
-        wx.CallAfter(self.detachAndDeleteViewer)
+        wx.CallAfter(self.deleteViewer)
         event.Skip()        
         
-    def detachAndDeleteViewer(self):
+    def deleteViewer(self):
         if hasattr(self, 'viewer'):
-            self.viewer.detach()
             del self.viewer
 
 
@@ -719,19 +724,19 @@ class EditBook(widgets.Notebook):
     allPageNames = ['subclass responsibility']
     object = 'subclass responsibility'
     
-    def __init__(self, parent, items, taskFile, settings):
+    def __init__(self, parent, items, taskFile, settings, itemsAreNew):
         self.items = items
         self.settings = settings
         super(EditBook, self).__init__(parent)
         self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
-        pageNames = self.addPages(taskFile)
+        pageNames = self.addPages(taskFile, itemsAreNew)
         self.loadPerspective(pageNames)
         
-    def addPages(self, taskFile):
+    def addPages(self, taskFile, itemsAreNew):
         pageNames = []
         for pageName in self.allPageNamesInUserOrder():
             if self.shouldCreatePage(pageName):
-                page = self.createPage(pageName, taskFile)
+                page = self.createPage(pageName, taskFile, itemsAreNew)
                 self.AddPage(page, page.pageTitle, page.pageIcon)
                 pageNames.append(pageName)
         return pageNames
@@ -770,11 +775,11 @@ class EditBook(widgets.Notebook):
     def pageSupportsMassEditing(self, pageName):
         return pageName in ('subject', 'dates', 'progress', 'budget', 'appearance')
 
-    def createPage(self, pageName, taskFile):
+    def createPage(self, pageName, taskFile, itemsAreNew):
         if pageName == 'subject':
             return self.createSubjectPage()
         elif pageName == 'dates':
-            return DatesPage(self.items, self, self.settings) 
+            return DatesPage(self.items, self, self.settings, itemsAreNew) 
         elif pageName == 'prerequisites':
             return PrerequisitesPage(self.items, self, taskFile, self.settings,
                                      settingsSection='prerequisiteviewerin%seditor' % self.object)
@@ -884,7 +889,7 @@ class EffortEditBook(Page):
     object = 'effort'
     columns = 3
     
-    def __init__(self, parent, efforts, taskFile, settings, *args, **kwargs):
+    def __init__(self, parent, efforts, taskFile, settings, itemsAreNew, *args, **kwargs): # pylint: disable-msg=W0613
         self._effortList = taskFile.efforts()
         taskList = taskFile.tasks()
         self._taskList = task.TaskList(taskList)
@@ -1033,6 +1038,7 @@ class Editor(widgets.Dialog):
         self._items = items
         self._settings = settings
         self._taskFile = taskFile
+        self.__itemsAreNew = kwargs.get('itemsAreNew', False)
         self._callAfter = kwargs.get('callAfter', wx.CallAfter)
         super(Editor, self).__init__(parent, self.title(), buttonTypes=wx.ID_CLOSE, *args, **kwargs)
         columnName = kwargs.get('columnName', '')
@@ -1080,10 +1086,10 @@ class Editor(widgets.Dialog):
         self.undoCommand.bind(self._interior, wx.ID_UNDO)
         self.redoCommand.bind(self._interior, wx.ID_REDO)
         self.newEffortCommand.bind(self._interior, newEffortId)
-                        
+
     def createInterior(self):
         return self.EditBookClass(self._panel, self._items, 
-                                  self._taskFile, self._settings)
+                                  self._taskFile, self._settings, self.__itemsAreNew)
 
     def onClose(self, event):
         event.Skip()

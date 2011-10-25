@@ -88,13 +88,15 @@ class BaseTaskViewer(mixin.SearchableViewerMixin, # pylint: disable-msg=W0223
         kwargs['categories'] = self.taskFile.categories().filteredCategories()
         return super(BaseTaskViewer, self).newItemDialog(*args, **kwargs)
     
-    def editItemDialog(self, items, bitmap, columnName=''):
+    def editItemDialog(self, items, bitmap, columnName='', itemsAreNew=False):
         if isinstance(items[0], task.Task):
-            return super(BaseTaskViewer, self).editItemDialog(items, bitmap, columnName)
+            return super(BaseTaskViewer, self).editItemDialog(items, bitmap, 
+                                                              columnName=columnName, 
+                                                              itemsAreNew=itemsAreNew)
         else:
             return dialog.editor.EffortEditor(wx.GetTopLevelParent(self),
                 items, self.settings, self.taskFile.efforts(), self.taskFile,  
-                bitmap=bitmap)
+                bitmap=bitmap, itemsAreNew=itemsAreNew)
             
     def itemEditorClass(self):
         return dialog.editor.TaskEditor
