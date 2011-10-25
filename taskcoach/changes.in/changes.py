@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.0', 'October 24, 2011',
+Release('1.3.0', 'October 25, 2011',
     summary='''This release makes all edits done in dialogs immediate.''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -43,11 +43,14 @@ an item.''', '3424138'),
         ]
     ),
 
-Release('1.2.31', 'October 23, 2011',
+Release('1.2.31', 'October 25, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Immediately update the number of tasks completed in the status
 bar of the task viewer when the user marks a task completed.''', '3185805'),
+        Bug('''When adding new tasks, Task Coach would first show them briefly 
+as inactive before showing them as active.''', '3085362'),
+        Bug('''Only "preset" dates on new tasks.'''),
         ]
     ),
             
