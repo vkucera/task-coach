@@ -1230,12 +1230,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         elif defaultTime == 'endofworkingday':
             endHour = cls.settings.getint('view', 'efforthourend')
             if endHour >= 24:
-                endHour = 23
-                minute = 59
-                second = 59
+                endHour, minute, second = 23, 59, 59
             else:
-                minute = 0
-                second = 0
+                minute, second = 0, 0
             return dateTime.replace(hour=endHour, minute=minute,
                                     second=second, microsecond=0)
         elif defaultTime == 'endofday':

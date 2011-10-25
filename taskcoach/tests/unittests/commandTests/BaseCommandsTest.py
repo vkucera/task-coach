@@ -41,6 +41,8 @@ class DeleteCommandTest(CommandTestCase):
         self.assertDoUndoRedo(lambda: self.assertEqual([], self.items),
                               lambda: self.assertEqual([self.item], self.items))
 
+    def testItemsAreNotNew(self):
+        self.failIf(command.DeleteCommand(self.items, []).itemsAreNew())
 
 
 class EditSubjectTestCase(CommandTestCase):
@@ -70,3 +72,8 @@ class EditSubjectTestCase(CommandTestCase):
                                       self.item1.subject() + self.item2.subject()),
                               lambda: self.assertEqual('item1item2', 
                                       self.item1.subject() + self.item2.subject()))
+
+    def testItemsAreNotNew(self):
+        self.failIf(command.EditSubjectCommand(self.container, [], 
+                                               newValue='New subject').itemsAreNew())
+

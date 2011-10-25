@@ -349,9 +349,10 @@ class DatesPage(Page):
     pageTitle = _('Dates') 
     pageIcon = 'calendar_icon'
     
-    def __init__(self, theTask, parent, settings, *args, **kwargs):
+    def __init__(self, theTask, parent, settings, itemsAreNew, *args, **kwargs):
         self.__settings = settings
         self._duration = None
+        self.__itemsAreNew = itemsAreNew
         super(DatesPage, self).__init__(theTask, parent, *args, **kwargs)
         
     def addEntries(self):
@@ -376,7 +377,7 @@ class DatesPage(Page):
 
             suggestedDateTimeMethodName = 'suggested' + taskMethodName[0].capitalize() + taskMethodName[1:]
             suggestedDateTime = getattr(self.items[0], suggestedDateTimeMethodName)()
-            if self.__settings.get('view', 'default%s'%taskMethodName.lower()).startswith('preset') and dateTime == date.DateTime():
+            if self.__shouldPresetDateTime(taskMethodName):
                 dateTime = suggestedDateTime
    
             dateTimeEntry = entry.DateTimeEntry(self, self.__settings, dateTime,
@@ -392,6 +393,10 @@ class DatesPage(Page):
                 if dueDateTime != date.DateTime() and startDateTime != date.DateTime():
                     self._duration = dueDateTime - startDateTime
 
+    def __shouldPresetDateTime(self, taskMethodName):
+        return self.__itemsAreNew and \
+            self.__settings.get('view', 'default%s'%taskMethodName.lower()).startswith('preset')
+        
     def addReminderEntry(self):
         # pylint: disable-msg=W0201
         self._reminderDateTimeLabel = self.label(_('Reminder'))
@@ -946,19 +951,19 @@ class EditBook(widgets.Notebook):
     allPageNames = ['subclass responsibility']
     object = 'subclass responsibility'
     
-    def __init__(self, parent, items, taskFile, settings):
+    def __init__(self, parent, items, taskFile, settings, itemsAreNew):
         self.items = items
         self.settings = settings
         super(EditBook, self).__init__(parent)
         self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
-        pageNames = self.addPages(taskFile)
+        pageNames = self.addPages(taskFile, itemsAreNew)
         self.loadPerspective(pageNames)
         
-    def addPages(self, taskFile):
+    def addPages(self, taskFile, itemsAreNew):
         pageNames = []
         for pageName in self.allPageNamesInUserOrder():
             if self.shouldCreatePage(pageName):
-                page = self.createPage(pageName, taskFile)
+                page = self.createPage(pageName, taskFile, itemsAreNew)
                 self.AddPage(page, page.pageTitle, page.pageIcon)
                 pageNames.append(pageName)
         return pageNames
@@ -997,11 +1002,11 @@ class EditBook(widgets.Notebook):
     def pageSupportsMassEditing(self, pageName):
         return pageName in ('subject', 'dates', 'progress', 'budget', 'appearance')
 
-    def createPage(self, pageName, taskFile):
+    def createPage(self, pageName, taskFile, itemsAreNew):
         if pageName == 'subject':
             return self.createSubjectPage()
         elif pageName == 'dates':
-            return DatesPage(self.items, self, self.settings) 
+            return DatesPage(self.items, self, self.settings, itemsAreNew) 
         elif pageName == 'prerequisites':
             return PrerequisitesPage(self.items, self, taskFile, self.settings,
                                      settingsSection='prerequisiteviewerin%seditor' % self.object)
@@ -1105,7 +1110,7 @@ class EffortEditBook(Page):
     object = 'effort'
     columns = 3
     
-    def __init__(self, parent, efforts, taskFile, settings, *args, **kwargs):
+    def __init__(self, parent, efforts, taskFile, settings, itemsAreNew, *args, **kwargs): # pylint: disable-msg=W0613
         self._effortList = taskFile.efforts()
         taskList = taskFile.tasks()
         self._taskList = task.TaskList(taskList)
@@ -1306,7 +1311,7 @@ class EditorWithCommand(widgets.Dialog):
         
     def createInterior(self):
         return self.EditBookClass(self._panel, self._command.items,
-                                  self._taskFile, self._settings)
+                                  self._taskFile, self._settings, self._command.itemsAreNew())
         
     def okInterior(self, event=None):
         self._interior.ok(event=event)

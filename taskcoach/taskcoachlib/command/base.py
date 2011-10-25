@@ -41,6 +41,9 @@ class BaseCommand(patterns.Command):
     def name_subject(self, item):
         return item.subject()
     
+    def itemsAreNew(self):
+        return False
+    
     def getItems(self):
         ''' The items this command operates on. '''
         return self.items
@@ -129,6 +132,9 @@ class NewItemCommand(BaseCommand):
         # Override to always return the singular name without a subject. The
         # subject would be something like "New task", so not very interesting.
         return self.singular_name
+    
+    def itemsAreNew(self):
+        return True
 
     def do_command(self):
         self.list.extend(self.items)
@@ -146,6 +152,9 @@ class NewSubItemCommand(BaseCommand):
         # of the subject of the new subitem itself, which wouldn't be very
         # interesting because it's something like 'New subitem'.
         return subitem.parent().subject()
+    
+    def itemsAreNew(self):
+        return True
 
     def do_command(self):
         self.list.extend(self.items)
