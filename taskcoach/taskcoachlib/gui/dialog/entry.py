@@ -18,8 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, locale
-from taskcoachlib import widgets
+import wx
+from taskcoachlib import widgets, operating_system
 from taskcoachlib.domain import date
 from taskcoachlib.thirdparty import combotreebox
  
@@ -105,23 +105,24 @@ class PercentageEntry(widgets.PanelWithBoxSizer):
     def __init__(self, parent, percentage=0, callback=None, *args, **kwargs):
         kwargs['orientation'] = wx.HORIZONTAL
         super(PercentageEntry, self).__init__(parent, *args, **kwargs)
-        self._slider = self._createSlider(percentage)
-        self._entry = self._createSpinCtrl(percentage)
         self._callback = callback
-        self.add(self._slider, flag=wx.ALL, proportion=0)
+        self._entry = self._createSpinCtrl(percentage)
+        self._slider = self._createSlider(percentage)
         self.add(self._entry, flag=wx.ALL, proportion=0)
+        self.add((5, -1), flag=wx.ALL, proportion=0)
+        self.add(self._slider, flag=wx.ALL, proportion=1)
         self.fit()
         
     def _createSlider(self, percentage):
         slider = wx.Slider(self, value=percentage, style=wx.SL_AUTOTICKS,
                           minValue=0, maxValue=100, size=(150,-1))
-        slider.SetTickFreq(25, 1)
+        slider.SetTickFreq(25)
         slider.Bind(wx.EVT_SCROLL, self.onSliderScroll)
         return slider
         
     def _createSpinCtrl(self, percentage):
         entry = widgets.SpinCtrl(self, value=percentage,
-            min=0, max=100, size=(60 if '__WXMAC__' == wx.Platform else 50, -1))
+            min=0, max=100, size=(60 if operating_system.isMac() else 50, -1))
         for eventType in wx.EVT_SPINCTRL, wx.EVT_KILL_FOCUS:
             entry.Bind(eventType, self.onSpin)
         return entry
