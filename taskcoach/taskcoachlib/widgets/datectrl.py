@@ -232,10 +232,14 @@ class DateTimeCtrl(wx.Panel):
     def _timeCtrlCallback(self, *args, **kwargs):
         self._callback(*args, **kwargs)
         
-    def _dateCtrlCallback(self, *args, **kwargs):
+    def _dateCtrlCallback(self, event, *args, **kwargs):
         # If user disables dateCtrl, disable timeCtrl too and vice versa:
         self._timeCtrl.Enable(self._isDateCtrlEnabled())
-        self._callback(*args, **kwargs)
+        # The datepicker sends an event with the new value before its own
+        # value is changed. Silly. Fix that:
+        if event.GetDate() != self._dateCtrl.GetValue():
+            self._dateCtrl.SetValue(event.GetDate())
+        self._callback(event, *args, **kwargs)
 
     def _isDateCtrlEnabled(self):
         return self._dateCtrl.GetValue().IsValid()
