@@ -600,8 +600,7 @@ class wxBaseDrawer(BackgroundDrawerDCMixin, HeaderDrawerDCMixin, HeaderDrawerMix
 		hourW, hourH = self.context.GetTextExtent( " 24" )
 
 		if direction == wxSCHEDULER_VERTICAL:
-			if h > len(self.displayedHours) * hourH:
-				hourH = 1.0 * h / len(self.displayedHours)
+			hourH = 1.0 * h / len(self.displayedHours)
 		else:
 			hourW = 1.0 * w / len(self.displayedHours)
 
@@ -670,8 +669,7 @@ class wxFancyDrawer(BackgroundDrawerGCMixin, HeaderDrawerGCMixin, HeaderDrawerMi
 			self.context.SetPen(FOREGROUND_PEN)
 
 			if direction == wxSCHEDULER_VERTICAL:
-				if h > len(self.displayedHours) * hourH:
-					hourH = 1.0 * h / len(self.displayedHours)
+				hourH = 1.0 * h / len(self.displayedHours)
 			else:
 				hourW = 1.0 * w / len(self.displayedHours)
 

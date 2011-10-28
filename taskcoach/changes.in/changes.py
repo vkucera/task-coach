@@ -27,6 +27,8 @@ Release('1.2.32', 'November ??, 2011',
     bugsFixed=[
         Bug('''Using drag and drop to change dates in the calendar view would
 produce erroneous results in some configurations.''', '3428525'),
+        Bug('''In some configurations, some hours would not be drawn in
+the calendar view in vertical mode.''', '3428524'),
         ]
     ),
             
