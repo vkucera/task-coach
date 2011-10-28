@@ -22,6 +22,14 @@ from changetypes import *
 
 releases = [
             
+Release('1.2.32', 'November ??, 2011',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Using drag and drop to change dates in the calendar view would
+produce erroneous results in some configurations.''', '3428525'),
+        ]
+    ),
+            
 Release('1.2.31', 'October 27, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
