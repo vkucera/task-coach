@@ -21,18 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
-            
-Release('1.2.32', 'November ??, 2011',
-    summary='''This is a bugfix release.''',
-    bugsFixed=[
-        Bug('''Using drag and drop to change dates in the calendar view would
-produce erroneous results in some configurations.''', '3428525'),
-        Bug('''In some configurations, some hours would not be drawn in
-the calendar view in vertical mode.''', '3428524'),
-        ]
-    ),
-            
-Release('1.2.31', 'October 27, 2011',
+
+Release('1.2.31', 'October 28, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Immediately update the number of tasks completed in the status
@@ -43,6 +33,10 @@ as inactive before showing them as active.''', '3085362'),
         Bug('''When changing a date/time inline, hitting enter in the date part
 of the control would close the inline control, but not change the date.''', 
         '3428503'),
+        Bug('''Using drag and drop to change dates in the calendar view would
+produce erroneous results in some configurations.''', '3428525'),
+        Bug('''In some configurations, some hours would not be drawn in
+the calendar view in vertical mode.''', '3428524'),
         ]
     ),
             
