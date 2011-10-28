@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import meta, widgets, notify
+from taskcoachlib import meta, widgets, notify, operating_system
 from taskcoachlib.gui import artprovider
 from taskcoachlib.domain import date
 from taskcoachlib.i18n import _
@@ -561,7 +561,7 @@ class Preferences(widgets.NotebookDialog):
         self.settings = settings
         super(Preferences, self).__init__(bitmap='wrench_icon', *args, **kwargs)
         self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)        
-        if '__WXMAC__' in wx.PlatformInfo:
+        if operating_system.isMac():
             self.CentreOnParent()
 
     def addPages(self):
@@ -585,7 +585,7 @@ class Preferences(widgets.NotebookDialog):
         if pageName == 'iphone':
             return self.settings.getboolean('feature', 'iphone')
         elif pageName == 'editor':
-            return '__WXMAC__' in wx.PlatformInfo
+            return operating_system.isMac()
         else:
             return True
 

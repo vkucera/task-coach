@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os, stat, re, imaplib, ConfigParser, wx, socket, mailbox
 from taskcoachlib.i18n import _
-from taskcoachlib import persistence
+from taskcoachlib import persistence, operating_system
 
 
 _RX_MAILBOX_MESSAGE = re.compile(r'mailbox-message://(.*)@(.*)/(.*)#((?:-)?\d+)')
@@ -66,7 +66,7 @@ def loadPreferences():
 def getThunderbirdDir():
     path = None
 
-    if '__WXMAC__' in wx.PlatformInfo:
+    if operating_system.isMac():
         path = os.path.join(os.environ['HOME'], 'Library', 'Thunderbird')
     elif os.name == 'posix':
         path = os.path.join(os.environ['HOME'], '.thunderbird')

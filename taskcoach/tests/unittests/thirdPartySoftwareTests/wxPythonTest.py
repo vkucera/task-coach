@@ -22,6 +22,7 @@ inconsistencies or surprising behaviour. ''' # pylint: disable-msg=W0105
 
 import wx
 import test
+from taskcoachlib import operating_system
 
 
 class TextCtrlTest(test.wxTestCase):
@@ -30,7 +31,7 @@ class TextCtrlTest(test.wxTestCase):
         textCtrl = wx.TextCtrl(self.frame)
         textCtrl.Bind(wx.EVT_TEXT, self.onTextChanged)
         textCtrl.Clear()
-        if '__WXMAC__' in wx.PlatformInfo: # pragma: no cover
+        if operating_system.isMac(): # pragma: no cover
             self.failIf(self.clearTextCausesEvent)
         else: # pragma: no cover
             self.failUnless(self.clearTextCausesEvent)

@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, textwrap
+from taskcoachlib import operating_system
 
 
 class ToolTipMixin(object):
@@ -115,7 +116,7 @@ class ToolTipMixin(object):
         self.ShowTip(*self.GetMainWindow().ClientToScreenXY(*self.__position))
 
 
-if '__WXMSW__' in wx.PlatformInfo:
+if operating_system.isWindows():
     class ToolTipBase(wx.MiniFrame):
         def __init__(self, parent):
             style = wx.FRAME_NO_TASKBAR | wx.FRAME_FLOAT_ON_PARENT | wx.NO_BORDER
@@ -126,7 +127,7 @@ if '__WXMSW__' in wx.PlatformInfo:
             self.SetDimensions(x, y, w, h)
             super(ToolTipBase, self).Show()
 
-elif '__WXMAC__' in wx.PlatformInfo:
+elif operating_system.isMac():
     class ToolTipBase(wx.Frame):
         def __init__(self, parent): # pylint: disable-msg=E1003
             style = wx.FRAME_NO_TASKBAR | wx.FRAME_FLOAT_ON_PARENT | wx.NO_BORDER

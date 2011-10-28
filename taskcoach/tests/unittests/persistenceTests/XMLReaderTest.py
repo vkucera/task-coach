@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import xml.parsers.expat, wx, StringIO, os, tempfile
 import test
-from taskcoachlib import persistence, config
+from taskcoachlib import persistence, config, operating_system
 from taskcoachlib.domain import date, task
 
 
@@ -1374,7 +1374,7 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
             <task font="0;11;70;90;90;0;Helvetica Neue Light;0"/>
         </tasks>\n''')
         size = tasks[0].font().GetPointSize()
-        if '__WXMAC__' == wx.Platform: # pragma: no cover
+        if operating_system.isMac(): # pragma: no cover
             self.assertEqual(11, size)
         else: # pragma: no cover
             self.failUnless(size > 0)
@@ -1384,10 +1384,10 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
         <tasks>
             <task font="Sans 9"/>
         </tasks>\n''')
-        if '__WXMAC__' == wx.Platform: # pragma: no cover
+        if operating_system.isMac(): # pragma: no cover
             self.assertEqual(None, tasks[0].font())
         else: # pragma: no cover
-            expectedFontSize = 9 if '__WXGTK__' == wx.Platform else 8
+            expectedFontSize = 9 if operating_system.isGTK() else 8
             self.assertEqual(expectedFontSize, tasks[0].font().GetPointSize())
 
 

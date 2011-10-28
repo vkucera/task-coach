@@ -181,26 +181,19 @@ class wxSchedulerPaint( object ):
 			self._drawDragging( point, self._computeAllCoords )
 
 	def _computeCoords( self, point, dx, dy ):
-		if self._style == wxSCHEDULER_VERTICAL:
-			pp = wx.Point( point.x, point.y + dy )
-			if pp.y < 0:
-				pp.y = 0
-			if pp.y >= self._bitmap.GetHeight():
-				pp.y = self._bitmap.GetHeight() - 1
-		else:
-			pp = wx.Point( point.x + dx, point.y )
-			if pp.x < 0:
-				pp.x = 0
-			if pp.x >= self._bitmap.GetWidth():
-				pp.x = self._bitmap.GetWidth() - 1
+		pp = wx.Point(point.x + dx, point.y + dy)
+		if pp.y < 0:
+			pp.y = 0
+		if pp.y >= self._bitmap.GetHeight():
+			pp.y = self._bitmap.GetHeight() - 1
+		if pp.x < 0:
+			pp.x = 0
+		if pp.x >= self._bitmap.GetWidth():
+			pp.x = self._bitmap.GetWidth() - 1
 
 		for idx, (dt, pointMin, pointMax) in enumerate(self._datetimeCoords):
-			if self._style == wxSCHEDULER_VERTICAL:
-				if pp.y >= pointMin.y and pp.y <= pointMax.y:
-					break
-			else:
-				if pp.x >= pointMin.x and pp.x <= pointMax.x:
-					break
+			if pp.y >= pointMin.y and pp.y <= pointMax.y and pp.x >= pointMin.x and pp.x <= pointMax.x:
+				break
 		else:
 			idx = -1
 
@@ -242,8 +235,20 @@ class wxSchedulerPaint( object ):
  		dx = point.x - self._scheduleDraggingOrigin[0].x
  		dy = point.y - self._scheduleDraggingOrigin[0].y
 
-		rMin, theTime = self._computeCoords( pMin, dx, dy )
+		if self._style == wxSCHEDULER_VERTICAL:
+			x = self._scheduleDraggingOrigin[0].x
+			y = pMin.y
+		else:
+			x = pMin.x
+			y = self._scheduleDraggingOrigin[0].y
+
+		rMin, theTime = self._computeCoords( wx.Point(x, y), dx, dy )
 		rMax = pMax
+
+		if self._style == wxSCHEDULER_VERTICAL:
+			rMin.x = pMin.x
+		else:
+			rMin.y = pMin.y
 
 		return rMin, rMax, theTime
 

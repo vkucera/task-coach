@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import workarounds # pylint: disable-msg=W0611
 
 import wx, os, locale, sys
-from taskcoachlib import patterns
+from taskcoachlib import patterns, operating_system
 
 # pylint: disable-msg=W0404
 
@@ -32,11 +32,11 @@ class wxApp(wx.App):
         super(wxApp, self).__init__(*args, **kwargs)
 
     def OnInit(self):
-        if wx.Platform == '__WXMSW__':
+        if operating_system.isWindows():
             self.Bind(wx.EVT_QUERY_END_SESSION, self.onQueryEndSession)
-        elif wx.Platform == '__WXMAC__':
+        elif operating_system.isMac():
             pass # TODO
-        elif wx.Platform == '__WXGTK__':
+        elif operating_system.isGTK():
             from taskcoachlib.powermgt import xsm
             class LinuxSessionMonitor(xsm.SessionMonitor):
                 def __init__(self, callback):
@@ -68,7 +68,7 @@ class wxApp(wx.App):
             event.Skip()
 
     def onQuit(self):
-        if wx.Platform == '__WXGTK__':
+        if operating_system.isGTK():
             self.sessionMonitor.stop()
 
 
@@ -174,7 +174,7 @@ class Application(object):
     def initPrinting(self):
         ''' Prepare for printing. '''
         # On Jolicloud, printing crashes unless we do this:
-        if '__WXGTK__' == wx.Platform:
+        if operating_system.isGTK():
             try:
                 import gtk # pylint: disable-msg=F0401
                 gtk.remove_log_handlers()
@@ -193,7 +193,7 @@ class Application(object):
                 
     def registerSignalHandlers(self):
         quitAdapter = lambda *args: self.quit()
-        if '__WXMSW__' == wx.Platform:
+        if operating_system.isWindows():
             import win32api # pylint: disable-msg=F0401
             win32api.SetConsoleCtrlHandler(quitAdapter, True)
         else:
@@ -206,7 +206,7 @@ class Application(object):
     def createMutex(self):
         ''' On Windows, create a mutex so that InnoSetup can check whether the
             application is running. '''
-        if '__WXMSW__' == wx.Platform:
+        if operating_system.isWindows():
             import ctypes
             from taskcoachlib import meta
             ctypes.windll.kernel32.CreateMutexA(None, False, meta.filename)
