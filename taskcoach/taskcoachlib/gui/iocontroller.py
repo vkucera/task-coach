@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, os, sys, codecs, traceback
-from taskcoachlib import meta, persistence, patterns
+from taskcoachlib import meta, persistence, patterns, operating_system
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty import lockfile
 from taskcoachlib.widgets import GetPassword
@@ -152,7 +152,7 @@ class IOController(object):
         else:
             errorMessage = _("Cannot open %s because it doesn't exist")%filename
             # Use CallAfter on Mac OS X because otherwise the app will hang:
-            if '__WXMAC__' in wx.PlatformInfo:
+            if operating_system.isMac():
                 wx.CallAfter(showerror, errorMessage, **self.__errorMessageOptions)
             else:
                 showerror(errorMessage, **self.__errorMessageOptions)

@@ -19,8 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 import wx.lib.hyperlink as hl
 
-from taskcoachlib.gui.threads import DeferredCallMixin, synchronized, synchronizednb
 from taskcoachlib.i18n import _
+from taskcoachlib import operating_system
 
 
 class IPhoneSyncTypeDialog(wx.Dialog):
@@ -74,7 +74,7 @@ class IPhoneBonjourDialog(wx.Dialog):
                                  _('You have enabled the iPhone synchronization feature, which\n'
                                    'needs Bonjour. Bonjour does not seem to be installed on\n'
                                    'your system.')), 0, wx.ALL, 3)
-        if '__WXMSW__' in wx.PlatformInfo: # pragma: no cover
+        if operating_system.isWindows(): # pragma: no cover
             vsizer.Add(wx.StaticText(self, wx.ID_ANY,
                                      _('Please download and install Bonjour for Windows from\n')), 0, wx.ALL, 3)
             vsizer.Add(hl.HyperLinkCtrl(self, wx.ID_ANY,

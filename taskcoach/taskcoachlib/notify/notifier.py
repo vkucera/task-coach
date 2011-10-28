@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
+from taskcoachlib import operating_system
 
 
 class AbstractNotifier(object):
@@ -53,9 +53,9 @@ class AbstractNotifier(object):
         availability.
         """
 
-        if '__WXMAC__' in wx.PlatformInfo:
+        if operating_system.isMac():
             return klass.get('Growl') or klass.get('Task Coach')
-        elif '__WXMSW__' in wx.PlatformInfo:
+        elif operating_system.isWindows():
             return klass.get('Snarl') or klass.get('Task Coach')
         else:
             return klass.get('libnotify') or klass.get('Task Coach')

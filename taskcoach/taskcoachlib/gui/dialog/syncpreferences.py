@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 from taskcoachlib.gui.dialog.preferences import SettingsPageBase
-from taskcoachlib import widgets
+from taskcoachlib import widgets, operating_system
 from taskcoachlib.i18n import _
 
 
@@ -139,7 +139,7 @@ class SyncMLPreferences(widgets.NotebookDialog):
         self.iocontroller = iocontroller
         super(SyncMLPreferences, self).__init__(bitmap='wrench_icon', *args,
                                                 **kwargs)
-        if '__WXMAC__' in wx.PlatformInfo:
+        if operating_system.isMac():
             self.CentreOnParent()
 
     def addPages(self):

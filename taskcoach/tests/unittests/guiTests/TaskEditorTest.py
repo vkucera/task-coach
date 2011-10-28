@@ -18,9 +18,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, sys
+import wx
 import test
-from taskcoachlib import gui, config, persistence
+from taskcoachlib import gui, config, persistence, operating_system
 from taskcoachlib.domain import task, effort, date, note, attachment
 from taskcoachlib.gui import uicommand
 from unittests import dummy
@@ -66,14 +66,14 @@ class TaskEditorSetterBase(object):
 class TaskEditorBySettingFocusMixin(TaskEditorSetterBase):
     def setSubject(self, newSubject):
         page = super(TaskEditorBySettingFocusMixin, self).setSubject(newSubject)
-        if '__WXGTK__' == wx.Platform: 
+        if operating_system.isGTK(): 
             page._subjectSync.onAttributeEdited(dummy.Event()) # pragma: no cover
         else:
             page._descriptionEntry.SetFocus() # pragma: no cover
         
     def setDescription(self, newDescription):
         page = super(TaskEditorBySettingFocusMixin, self).setDescription(newDescription)
-        if '__WXGTK__' == wx.Platform:
+        if operating_system.isGTK(): 
             page._descriptionSync.onAttributeEdited(dummy.Event()) # pragma: no cover
         else:
             page._subjectEntry.SetFocus() # pragma: no cover
@@ -100,7 +100,7 @@ class TaskEditorTestCase(test.wxTestCase):
     def tearDown(self):
         # TaskEditor uses CallAfter for setting the focus, make sure those 
         # calls are dealt with, otherwise they'll turn up in other tests
-        if '__WXMAC__' not in wx.PlatformInfo and ('__WXMSW__' not in wx.PlatformInfo or sys.version_info < (2, 5)):
+        if operating_system.isGTK():
             wx.Yield() # pragma: no cover 
         super(TaskEditorTestCase, self).tearDown()
         self.taskFile.close()
@@ -253,30 +253,17 @@ class EditTaskTestBase(object):
         self.editor._interior[8].viewer.deleteItemCommand().do()
         self.assertEqual([], self.task.attachments()) # pylint: disable-msg=E1101
 
-    def testOpenAttachmentWithNonAsciiFileNameThrowsException(self): # pragma: no cover
-        ''' os.startfile() does not accept unicode filenames. This will be 
-            fixed in Python 2.5. This test will fail if the bug is fixed. '''
+    def testOpenAttachmentWithNonAsciiFileName(self):
         self.errorMessage = ''  # pylint: disable-msg=W0201
         def onError(*args, **kwargs): # pylint: disable-msg=W0613
-            self.errorMessage = args[0]
+            self.errorMessage = args[0]  # pragma: no cover
         att = attachment.FileAttachment(u'tÃƒÂ©st.ÃƒÂ©')
         openAttachment = uicommand.AttachmentOpen(\
             viewer=self.editor._interior[6].viewer,
             attachments=attachment.AttachmentList([att]),
             settings=self.settings)
         openAttachment.doCommand(None, showerror=onError)
-        if '__WXMSW__' in wx.PlatformInfo: # pragma: no cover
-            if sys.version_info < (2,5):
-                errorMessageStart = "'ascii' codec can't encode character"
-            else:
-                errorMessageStart = ''
-        elif '__WXMAC__' in wx.PlatformInfo and sys.version_info >= (2,5):
-            errorMessageStart = '' # pragma: no cover
-        elif '__WXGTK__' in wx.PlatformInfo: # pragma: no cover
-            errorMessageStart = ''
-        else:
-            errorMessageStart = '[Error 2] '
-        self.failUnless(self.errorMessage.startswith(errorMessageStart))
+        self.failIf(self.errorMessage)
 
     def testAddNote(self):
         viewer = self.editor._interior[7].viewer
@@ -355,7 +342,7 @@ class FocusTest(TaskEditorTestCase):
         return [self.task]
 
     def testFocus(self):
-        if '__WXMAC__' not in wx.PlatformInfo and ('__WXMSW__' not in wx.PlatformInfo or sys.version_info < (2, 5)):
+        if operating_system.isGTK():
             wx.Yield() # pragma: no cover
         # pylint: disable-msg=W0212
         self.assertEqual(self.editor._interior[0]._subjectEntry, wx.Window_FindFocus())

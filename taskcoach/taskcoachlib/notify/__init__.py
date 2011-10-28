@@ -16,12 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
+from taskcoachlib import operating_system
 
 
-if '__WXMSW__' in wx.PlatformInfo:
+if operating_system.isWindows():
     from notifier_windows import *
-elif '__WXMAC__' in wx.PlatformInfo:
+elif operating_system.isMac():
     from notifier_macos import *
 else:
     from notifier_libnotify import *

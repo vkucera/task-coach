@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, icons
-from taskcoachlib import patterns
+from taskcoachlib import patterns, operating_system
 from taskcoachlib.i18n import _
 
 
@@ -44,7 +44,7 @@ class IconProvider(object):
 
     def __init__(self):
         self.__iconCache = dict()
-        self.__iconSizeOnCurrentPlatform = 128 if '__WXMAC__' == wx.Platform else 16
+        self.__iconSizeOnCurrentPlatform = 128 if operating_system.isMac() else 16
         
     def getIcon(self, iconTitle): 
         ''' Return the icon. Use a cache to prevent leakage of GDI object 
@@ -82,7 +82,7 @@ def getIcon(iconTitle):
 
 
 def init():
-    if ('__WXMSW__' in wx.PlatformInfo) and (wx.DisplayDepth() >= 32):
+    if operating_system.isWindows() and wx.DisplayDepth() >= 32:
         wx.SystemOptions_SetOption("msw.remap", "0") # pragma: no cover
     try:
         wx.ArtProvider_PushProvider(ArtProvider()) # pylint: disable-msg=E1101

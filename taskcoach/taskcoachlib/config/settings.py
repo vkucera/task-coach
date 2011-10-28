@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import ConfigParser, os, sys, wx
-from taskcoachlib import meta, patterns
+from taskcoachlib import meta, patterns, operating_system
 from taskcoachlib.i18n import _
 import defaults
 
@@ -285,7 +285,7 @@ class Settings(patterns.Observer, CachingConfigParser):
     def pathToTemplatesDir(self):
         path = os.path.join(self.path(), 'taskcoach-templates')
 
-        if '__WXMSW__' in wx.PlatformInfo:
+        if operating_system.isWindows():
             # Under Windows, check for a shortcut and follow it if it
             # exists.
 

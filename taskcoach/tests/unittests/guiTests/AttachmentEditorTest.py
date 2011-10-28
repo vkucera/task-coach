@@ -16,8 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, wx
-from taskcoachlib import gui, config, persistence
+import test
+from taskcoachlib import gui, config, persistence, operating_system
 from taskcoachlib.domain import attachment
 
 
@@ -47,7 +47,7 @@ class AttachmentEditorTest(test.wxTestCase):
         page = self.editor._interior[0]
         page._subjectEntry.SetFocus()
         page._subjectEntry.SetValue(newSubject)
-        if '__WXGTK__' == wx.Platform:
+        if operating_system.isGTK():
             page._subjectSync.onAttributeEdited(DummyEvent())
         else:
             page._descriptionEntry.SetFocus()
@@ -56,7 +56,7 @@ class AttachmentEditorTest(test.wxTestCase):
         page = self.editor._interior[0]
         page._descriptionEntry.SetFocus()
         page._descriptionEntry.SetValue(newDescription)
-        if '__WXGTK__' == wx.Platform:
+        if operating_system.isGTK():
             page._descriptionSync.onAttributeEdited(DummyEvent())
         else:
             page._subjectEntry.SetFocus()

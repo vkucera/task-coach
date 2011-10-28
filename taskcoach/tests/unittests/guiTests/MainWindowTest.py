@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, test
-from taskcoachlib import gui, config, persistence, meta
+from taskcoachlib import gui, config, persistence, meta, operating_system
 
 
 class MockViewer(wx.Frame):
@@ -60,7 +60,7 @@ class MainWindowTestCase(test.wxTestCase):
         pass
 
     def tearDown(self):
-        if '__WXMAC__' == wx.Platform:
+        if operating_system.isMac():
             self.mainwindow.OnQuit() # Stop power monitoring thread
         # Also stop idle time thread
         self.mainwindow._idleController.stop()
@@ -128,7 +128,7 @@ class MainWindowMaximizedTest(MainWindowMaximizeTestCase):
 class MainWindowIconizedTest(MainWindowTestCase):
     def setUp(self):
         super(MainWindowIconizedTest, self).setUp()        
-        if '__WXGTK__' == wx.Platform:
+        if operating_system.isGTK():
             wx.SafeYield() # pragma: no cover
             
     def setSettings(self):
@@ -136,7 +136,7 @@ class MainWindowIconizedTest(MainWindowTestCase):
         
     def expectedHeight(self):
         height = 500
-        if '__WXMAC__' == wx.Platform:
+        if operating_system.isMac():
             height -= 40 # pragma: no cover
         return height
     
@@ -151,7 +151,7 @@ class MainWindowIconizedTest(MainWindowTestCase):
     def testWindowSizeShouldnotChangeWhenReceivingChangeSizeEvent(self):
         event = wx.SizeEvent((100, 20))
         process = self.mainwindow.ProcessEvent
-        if '__WXMSW__' == wx.Platform:
+        if operating_system.isWindows():
             process(event) # pragma: no cover
         else:
             wx.CallAfter(process, event) # pragma: no cover

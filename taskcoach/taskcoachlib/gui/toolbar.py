@@ -17,10 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, uicommand
+from taskcoachlib import operating_system
 from taskcoachlib.thirdparty import aui
 
 
-if '__WXMSW__' in wx.PlatformInfo:
+if operating_system.isWindows():
     # Use a non-native toolbar on Windows to work around a bug where toolbar
     # buttons in dialogs stop working after a while. See:
     # http://sourceforge.net/tracker/?func=detail&aid=2560895&group_id=130831&atid=719134
@@ -66,7 +67,7 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
         self.__window = window
         super(ToolBar, self).__init__(window, style=wx.TB_FLAT|wx.TB_NODIVIDER)
         self.SetToolBitmapSize(size) 
-        if '__WXMAC__' in wx.PlatformInfo:
+        if operating_system.isMac():
             # Extra margin needed because the search control is too high
             self.SetMargins((0, 7)) 
         self.appendUICommands(*self.uiCommands())

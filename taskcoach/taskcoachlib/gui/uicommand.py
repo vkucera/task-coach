@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import patterns, meta, command, help, widgets, persistence, thirdparty, render # pylint: disable-msg=W0622
+from taskcoachlib import patterns, meta, command, help, widgets, persistence, thirdparty, render, operating_system # pylint: disable-msg=W0622
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import base, task, note, category, attachment, effort
 from taskcoachlib.mailer import sendMail
@@ -97,7 +97,7 @@ class UICommand(object):
         return self.id
     
     def addBitmapToMenuItem(self, menuItem):
-        if self.bitmap2 and self.kind == wx.ITEM_CHECK and '__WXGTK__' != wx.Platform:
+        if self.bitmap2 and self.kind == wx.ITEM_CHECK and not operating_system.isGTK():
             bitmap1 = self.__getBitmap(self.bitmap) 
             bitmap2 = self.__getBitmap(self.bitmap2)
             menuItem.SetBitmaps(bitmap1, bitmap2)
@@ -169,7 +169,7 @@ class UICommand(object):
             
     def updateMenuText(self, menuText):
         self.menuText = menuText
-        if '__WXMSW__' == wx.Platform:
+        if operating_system.isWindows():
             for menuItem in self.menuItems[:]:
                 menu = menuItem.GetMenu()
                 pos = menu.GetMenuItems().index(menuItem)
@@ -1341,7 +1341,7 @@ class Edit(NeedsSelectionMixin, ViewerCommand):
         windowWithFocus = wx.Window.FindFocus()
         if self.findEditCtrl(windowWithFocus):
             return True
-        elif '__WXMAC__' == wx.Platform and isinstance(windowWithFocus, wx.TextCtrl):
+        elif operating_system.isMac() and isinstance(windowWithFocus, wx.TextCtrl):
             return False
         else:
             return super(Edit, self).enabled(event)        
@@ -1512,7 +1512,7 @@ class NewTaskWithSelectedTasksAsDependencies(NeedsSelectedTasksMixin, TaskNew,
     
 
 class NewSubItem(NeedsOneSelectedCompositeItemMixin, ViewerCommand):
-    shortcut = ('\tCtrl+INS' if '__WXMSW__' == wx.Platform else '\tShift+Ctrl+N')
+    shortcut = ('\tCtrl+INS' if operating_system.isWindows() else '\tShift+Ctrl+N')
     defaultMenuText = _('New &subitem...') + shortcut   
     labels = {task.Task: _('New &subtask...'),
               note.Note: _('New &subnote...'),
@@ -2228,7 +2228,7 @@ class DialogCommand(UICommand):
         
 class Help(DialogCommand):
     def __init__(self, *args, **kwargs):
-        if '__WXMAC__' in wx.PlatformInfo:
+        if operating_system.isMac():
             # Use default keyboard shortcut for Mac OS X:
             menuText = _('&Help contents\tCtrl+?') 
         else:
