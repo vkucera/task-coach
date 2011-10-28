@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 from taskcoachlib.thirdparty import hypertreelist
+from taskcoachlib import operating_system
 
 
 class AutoColumnWidthMixin(object):
@@ -65,7 +66,7 @@ class AutoColumnWidthMixin(object):
             self.__oldResizeColumnWidth = self.GetColumnWidth(self.ResizeColumn)
         # Temporarily unbind the EVT_SIZE to prevent resizing during dragging
         self.Unbind(wx.EVT_SIZE)
-        if '__WXMAC__' != wx.Platform:
+        if not operating_system.isMac():
             event.Skip()
         
     def OnEndColumnDrag(self, event):
@@ -79,7 +80,7 @@ class AutoColumnWidthMixin(object):
         
     def OnResize(self, event):
         event.Skip()
-        if '__WXMSW__' == wx.Platform:
+        if operating_system.isWindows():
             wx.CallAfter(self.DoResize)
         else:
             self.DoResize()
@@ -178,7 +179,7 @@ class AutoColumnWidthMixin(object):
     def __isScrollbarIncludedInClientSize(self):
         # NOTE: on GTK, the scrollbar is included in the client size, but on
         # Windows it is not included
-        if wx.Platform == '__WXMSW__':
+        if operating_system.isWindows():
             return isinstance(self, hypertreelist.HyperTreeList)
         else:
             return True

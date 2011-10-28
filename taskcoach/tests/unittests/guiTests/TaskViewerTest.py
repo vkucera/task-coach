@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, os, locale
 import test
-from taskcoachlib import gui, config, persistence, command, patterns, render
+from taskcoachlib import gui, config, persistence, command, patterns, render, operating_system
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, date, effort, category, attachment
 
@@ -53,7 +53,7 @@ class TaskViewerTestCase(test.wxTestCase):
         self.newColor = (100, 200, 100, 255)
         attachment.Attachment.attdir = os.getcwd()
         self.originalLocale = locale.getlocale(locale.LC_ALL)
-        tmpLocale = os.environ['LC_ALL'] if 'LC_ALL' in os.environ else ('en_US' if '__WXMAC__' == wx.Platform else '')
+        tmpLocale = os.environ['LC_ALL'] if 'LC_ALL' in os.environ else ('en_US' if operating_system.isMac() else '')
         locale.setlocale(locale.LC_ALL, tmpLocale)
 
     def tearDown(self):

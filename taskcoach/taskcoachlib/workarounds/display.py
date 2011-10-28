@@ -17,9 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
+from taskcoachlib import operating_system
 
-if '__WXMSW__' in wx.PlatformInfo:
-    import win32api
+
+if operating_system.isWindows():
+    import win32api # pylint: disable-msg=F0401
 
     class Display(object):
         """

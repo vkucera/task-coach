@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, sys
 import test
-from taskcoachlib import gui, command, config, persistence
+from taskcoachlib import gui, command, config, persistence, operating_system
 from taskcoachlib.domain import category, note, attachment
 
 
@@ -38,7 +38,7 @@ class CategoryEditorTestCase(test.wxTestCase):
     def tearDown(self):
         # CategoryEditor uses CallAfter for setting the focus, make sure those 
         # calls are dealt with, otherwise they'll turn up in other tests
-        if '__WXMAC__' not in wx.PlatformInfo and ('__WXMSW__' not in wx.PlatformInfo or sys.version_info < (2, 5)):
+        if operating_system.isGTK():
             wx.Yield() # pragma: no cover 
         super(CategoryEditorTestCase, self).tearDown()
         
