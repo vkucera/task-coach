@@ -43,7 +43,7 @@ an item.''', '3424138'),
         ]
     ),
 
-Release('1.2.31', 'October 28, 2011',
+Release('1.2.31', 'October 29, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Immediately update the number of tasks completed in the status
@@ -54,6 +54,8 @@ as inactive before showing them as active.''', '3085362'),
         Bug('''When changing a date/time inline, hitting enter in the date part
 of the control would close the inline control, but not change the date.''', 
         '3428503'),
+        Bug('''The inline edit controls for dates/times didn't use the
+preferences for start and end of working day.'''),
         Bug('''Using drag and drop to change dates in the calendar view would
 produce erroneous results in some configurations.''', '3428525'),
         Bug('''In some configurations, some hours would not be drawn in
