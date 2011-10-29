@@ -759,13 +759,22 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
             ##     renderCallback=lambda task: '',
             ##     width=self.getColumnWidth('ordering'))] + \
 
-        effortOn = self.settings.getboolean('feature', 'effort')
-        dependsOnEffortFeature = ['budget',  'timeSpent', 'budgetLeft',
-                                  'hourlyFee', 'fixedFee', 'revenue']
         for name, columnHeader, editCtrl, editCallback, eventTypes in [
             ('startDateTime', _('Start date'), inplace_editor.DateTimeCtrl, self.onEditStartDateTime, []),
             ('dueDateTime', _('Due date'), inplace_editor.DateTimeCtrl, self.onEditDueDateTime, [task.Task.expansionChangedEventType()]),
-            ('completionDateTime', _('Completion date'), inplace_editor.DateTimeCtrl, self.onEditCompletionDateTime, [task.Task.expansionChangedEventType()]),
+            ('completionDateTime', _('Completion date'), inplace_editor.DateTimeCtrl, self.onEditCompletionDateTime, [task.Task.expansionChangedEventType()])]:
+            renderCallback = getattr(self, 'render%s'%(name[0].capitalize()+name[1:]))
+            columns.append(widgets.Column(name, columnHeader,  
+                sortCallback=uicommand.ViewerSortByCommand(viewer=self, value=name),
+                renderCallback=renderCallback, width=self.getColumnWidth(name),
+                alignment=wx.LIST_FORMAT_RIGHT, editControl=editCtrl, 
+                editCallback=editCallback, settings=self.settings, *eventTypes, **kwargs))
+
+        effortOn = self.settings.getboolean('feature', 'effort')
+        dependsOnEffortFeature = ['budget',  'timeSpent', 'budgetLeft',
+                                  'hourlyFee', 'fixedFee', 'revenue']
+            
+        for name, columnHeader, editCtrl, editCallback, eventTypes in [        
             ('percentageComplete', _('% complete'), inplace_editor.PercentageCtrl, self.onEditPercentageComplete, [task.Task.expansionChangedEventType(), 'task.percentageComplete']),
             ('timeLeft', _('Time left'), None, None, [task.Task.expansionChangedEventType(), 'task.timeLeft']),
             ('recurrence', _('Recurrence'), None, None, [task.Task.expansionChangedEventType(), 'task.recurrence']),
@@ -775,8 +784,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
             ('priority', _('Priority'), inplace_editor.PriorityCtrl, self.onEditPriority, [task.Task.expansionChangedEventType(), 'task.priority']),
             ('hourlyFee', _('Hourly fee'), inplace_editor.AmountCtrl, self.onEditHourlyFee, [task.Task.hourlyFeeChangedEventType()]),
             ('fixedFee', _('Fixed fee'), inplace_editor.AmountCtrl, self.onEditFixedFee, [task.Task.expansionChangedEventType(), 'task.fixedFee']),            
-            ('revenue', _('Revenue'), None, None, [task.Task.expansionChangedEventType(), 'task.revenue']),
-            ('reminder', _('Reminder'), inplace_editor.DateTimeCtrl, self.onEditReminderDateTime, [task.Task.expansionChangedEventType(), 'task.reminder'])]:
+            ('revenue', _('Revenue'), None, None, [task.Task.expansionChangedEventType(), 'task.revenue'])]:
             if (name in dependsOnEffortFeature and effortOn) or name not in dependsOnEffortFeature:
                 renderCallback = getattr(self, 'render%s'%(name[0].capitalize()+name[1:]))
                 columns.append(widgets.Column(name, columnHeader,  
@@ -784,6 +792,13 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
                     renderCallback=renderCallback, width=self.getColumnWidth(name),
                     alignment=wx.LIST_FORMAT_RIGHT, editControl=editCtrl, 
                     editCallback=editCallback, *eventTypes, **kwargs))
+                
+        columns.append(widgets.Column('reminder', _('Reminder'), 
+            sortCallback=uicommand.ViewerSortByCommand(viewer=self, value='reminder'),
+            renderCallback=self.renderReminder, width=self.getColumnWidth('reminder'),
+            alignment=wx.LIST_FORMAT_RIGHT, editControl=inplace_editor.DateTimeCtrl,
+            editCallback=self.onEditReminderDateTime, settings=self.settings,
+            *[task.Task.expansionChangedEventType(), 'task.reminder'], **kwargs))
         return columns
     
     def createColumnUICommands(self):
