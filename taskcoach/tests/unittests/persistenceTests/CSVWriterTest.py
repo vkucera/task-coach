@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import StringIO
 import test
-from taskcoachlib import persistence, gui, config
+from taskcoachlib import persistence, gui, config, render
 from taskcoachlib.domain import task, effort, date
 
 
@@ -41,17 +41,18 @@ class CSVWriterTestCase(test.wxTestCase):
         self.viewer = gui.viewer.TaskViewer(self.frame, self.taskFile,
             self.settings)
 
-    def __writeAndRead(self, selectionOnly):
-        self.writer.write(self.viewer, self.settings, selectionOnly)
+    def __writeAndRead(self, selectionOnly, separateDateAndTimeColumns):
+        self.writer.write(self.viewer, self.settings, selectionOnly, 
+                          separateDateAndTimeColumns=separateDateAndTimeColumns)
         return self.fd.getvalue()
     
-    def expectInCSV(self, csvFragment, selectionOnly=False):
-        csv = self.__writeAndRead(selectionOnly)
+    def expectInCSV(self, csvFragment, selectionOnly=False, separateDateAndTimeColumns=False):
+        csv = self.__writeAndRead(selectionOnly, separateDateAndTimeColumns)
         self.failUnless(csvFragment in csv, 
                         '%s not in %s'%(csvFragment, csv))
     
-    def expectNotInCSV(self, csvFragment, selectionOnly=False):
-        csv = self.__writeAndRead(selectionOnly)
+    def expectNotInCSV(self, csvFragment, selectionOnly=False, separateDateAndTimeColumns=False):
+        csv = self.__writeAndRead(selectionOnly, separateDateAndTimeColumns)
         self.failIf(csvFragment in csv, '%s in %s'%(csvFragment, csv))
 
     def selectItem(self, items):
@@ -77,6 +78,18 @@ class TaskTestsMixin(object):
         self.taskFile.tasks().append(child)
         self.selectItem([self.task])
         self.expectNotInCSV('Child', selectionOnly=True)
+        
+    def testWriteSeparateDateAndTimeColumns(self):
+        startDateTime = date.Now()
+        self.task.setStartDateTime(startDateTime)
+        self.expectInCSV(','.join((render.date(startDateTime), render.time(startDateTime))),
+                         separateDateAndTimeColumns=True)
+                
+    def testDontWriteSeparateDateAndTimeColumns(self):
+        startDateTime = date.Now()
+        self.task.setStartDateTime(startDateTime)
+        self.expectInCSV(' '.join((render.date(startDateTime), render.time(startDateTime))),
+                         separateDateAndTimeColumns=False)
                 
         
 class CSVListWriterTest(TaskTestsMixin, CSVWriterTestCase):
