@@ -43,8 +43,8 @@ an item.''', '3424138'),
         ]
     ),
 
-Release('1.2.31', 'October 29, 2011',
-    summary='''This is a bugfix release.''',
+Release('1.2.31', 'November 2, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Immediately update the number of tasks completed in the status
 bar of the task viewer when the user marks a task completed.''', '3185805'),
@@ -60,7 +60,11 @@ preferences for start and end of working day.'''),
 produce erroneous results in some configurations.''', '3428525'),
         Bug('''In some configurations, some hours would not be drawn in
 the calendar view in vertical mode.''', '3428524'),
-        ]
+        ],
+    featuresAdded=[
+        Feature('''When exporting to CSV, dates and times can optionally be 
+put in separate columns.'''),
+        ],
     ),
             
 Release('1.2.30', 'October 23, 2011',
