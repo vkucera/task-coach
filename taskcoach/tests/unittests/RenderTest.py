@@ -81,6 +81,12 @@ class RenderDateTime(test.TestCase):
     def testDateBefore1900(self):
         self.failUnless('1800' in render.dateTime(date.DateTime(1800, 4, 5, 23, 0, 0)))
                          
+                         
+class RenderDate(test.TestCase):
+    def testRenderDateWithDateTime(self):
+        self.assertEqual(render.date(date.Date(2000, 1, 1)), 
+                         render.date(date.DateTime(2000, 1, 1, 10, 11, 12)))
+        
 
 class RenderTimeLeftTest(test.TestCase):
     def testNoTimeLeftWhenActive(self):

@@ -46,7 +46,9 @@ class CSVWriter(object):
     def __init__(self, fd, filename=None):
         self.__fd = fd
 
-    def write(self, viewer, settings, selectionOnly=False): # pylint: disable-msg=W0613
-        csvRows = generator.viewer2csv(viewer, selectionOnly)
+    def write(self, viewer, settings, selectionOnly=False, 
+              separateDateAndTimeColumns=False): # pylint: disable-msg=W0613
+        csvRows = generator.viewer2csv(viewer, selectionOnly, 
+                                       separateDateAndTimeColumns)
         UnicodeCSVWriter(self.__fd).writerows(csvRows)
         return len(csvRows) - 1 # Don't count header row

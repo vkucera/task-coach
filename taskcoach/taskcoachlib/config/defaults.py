@@ -438,6 +438,7 @@ defaults = { \
     'html_selectiononly': 'False',
     'html_separatecss': 'False',
     'csv_selectiononly': 'False',
+    'csv_separatedateandtimecolumns': 'False',
     'ical_selectiononly': 'False',
     'todotxt_selectiononly': 'False' }
 }
