@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.0', 'June 31, 2011',
+Release('1.3.0', 'October 28, 2011',
     summary='''This release makes all edits done in dialogs immediate.''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -37,11 +37,114 @@ item. With earlier releases of Task Coach, the last edit dialog closed would
 overwrite changes made with edit dialogs that were closed earlier. With the new 
 edit dialog functionality introduced in this release, changes are propagated 
 immediately to all open dialogs. This will prevent overwriting
-changes made in other dialogs.''', '1152561')
+changes made in other dialogs.''', '1152561'),
+        Bug('''Don't close the edit dialog when dragging and dropping 
+an item.''', '3424138'),
         ]
     ),
 
-Release('1.2.27', 'August 25, 2011',
+Release('1.2.31', 'November 2, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
+    bugsFixed=[
+        Bug('''Immediately update the number of tasks completed in the status
+bar of the task viewer when the user marks a task completed.''', '3185805'),
+        Bug('''When adding new tasks, Task Coach would first show them briefly 
+as inactive before showing them as active.''', '3085362'),
+        Bug('''Only "preset" dates on new tasks.'''),
+        Bug('''When changing a date/time inline, hitting enter in the date part
+of the control would close the inline control, but not change the date.''', 
+        '3428503'),
+        Bug('''The inline edit controls for dates/times didn't use the
+preferences for start and end of working day.'''),
+        Bug('''Using drag and drop to change dates in the calendar view would
+produce erroneous results in some configurations.''', '3428525'),
+        Bug('''In some configurations, some hours would not be drawn in
+the calendar view in vertical mode.''', '3428524'),
+        ],
+    featuresAdded=[
+        Feature('''When exporting to CSV, dates and times can optionally be 
+put in separate columns.'''),
+        ],
+    ),
+            
+Release('1.2.30', 'October 23, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
+    bugsFixed=[
+        Bug('''Better explanation of the automatic import and export of
+Todo.txt format in the preferences dialog.''', '3418906'),
+        Bug('''The task viewer in list mode now also shows the  
+categories, prerequisites and dependencies inherited from parent tasks, between 
+parentheses. In addition, the inherited categories, prerequisites or 
+dependencies are taken into account when sorting by categories, prerequisites or
+dependencies.''', '3414914'),
+        Bug('''Don't reset the percentage complete to 0 when the user changes
+it from 100 to some other percentage less than 100.'''),
+        Bug('''Fix a memory leak when opening edit dialogs.''')
+        ],
+    featuresAdded=[
+        Feature('''The task viewer in list mode now also shows the  
+categories, prerequisites and dependencies inherited from parent tasks, between 
+parentheses. In addition, the inherited categories, prerequisites or 
+dependencies are taken into account when sorting by categories, prerequisites or
+dependencies.''', 'http://uservoice.com/a/ksD1q'),
+        Feature('''Percentage complete, hourly fee and fixed fee of tasks can 
+be edited in place.'''),
+        ],
+    ),
+            
+Release('1.2.29', 'October 3, 2011',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''If auto importing of Todo.txt files was turned on, but
+there was no Todo.txt file available for importing, saving would fail.''', 
+        '3410648'),
+        Bug('''When the priority field gets focus, select all priority digits
+so the user can simply type a new number to overwrite the previous one.''', 
+        '3411384'),
+        Bug('''When showing effort in detail mode, Task Coach would only 
+consider the start of a period to decide whether to hide the period as a
+repeated period. Now it considers both the start and the end date and time.'''),
+        Bug('''When editing multiple tasks at the same time, changing the
+priority would not automatically check the priority checkbox.''', '3414423'),
+        Bug('''Don't reorder the contents of the task file randomly when saving
+the task file. This makes it possible to easily see the differences between 
+versions of a task file using diff.''', '3412300'),
+        ],
+    ),
+            
+Release('1.2.28', 'September 18, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
+    bugsFixed=[
+        Bug('''Task Coach would not work correctly with dates before 1900.'''),
+        Bug('''When recovering from an error in the TaskCoach.ini file, get
+the default settings from the right section.''', '3404024'),
+        Bug('''When opening a URL fails, show an error message dialog.'''),
+        Bug('''Task Coach would crash when editing a task/category/etc on
+some versions of wxPython.'''),
+        Bug('''Adding a subtask without a due date would reset its parent's
+due date.''', '3405053'),
+        Bug('''Using the Delete key when editing the priority inline would 
+delete the task on Windows.''', '3400086'),
+        Bug('''On Windows, SyncML couldn't be turned on.''', '3406653'),
+        Bug('''When adding a new (recurring) subtask to a parent task,
+push back the start date of the parent if necessary.''', '3409716'),
+        Bug('''On Mac OS X Tiger, whenever trying to give focus to the
+search control focus would return to the viewer immediately, making
+searching impossible.''', '3410268'),
+        ],
+    featuresAdded=[
+        Feature('''The SyncML password is now stored encrypted in the
+system keychain, if available.'''),
+        Feature('''Add task subject to the reminder dialog window title so that
+it's easier to find a particular reminder when cycling through windows with
+Alt-Tab.''', 'http://uservoice.com/a/au6wa'),
+        Feature('''Allow for dragging and dropping multiple items (tasks,
+notes, etc.) at once. Patch provided by Kirill Müller.''', 
+        'http://uservoice.com/a/hledQ'),
+        ]
+    ),
+
+Release('1.2.27', 'August 28, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''When importing a CVS file, Task Coach would not always guess
@@ -53,9 +156,10 @@ would uncheck it, but not change the filtering.''', '3377145'),
         Bug('''Saving could fail after a reminder was first snoozed and then
 later the reminder dialog was closed without snoozing.''', '3397920'),
         Bug('''Using the Delete key when editing the priority inline would 
-delete the task.'''),
+delete the task.''', '3400086'),
         Bug('''Using the Enter key when editing the priority inline would not
 accept the changes on Mac OS X.'''),
+        Bug('''Fix issues in Italian translation.''', '3398600'),
         ],
     ),
 

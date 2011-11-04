@@ -315,6 +315,9 @@ class NewTaskCommandTest(TaskCommandTestCase):
         dateTime = date.DateTime(2042, 2, 3)
         newTask = self.new(startDateTime=dateTime)
         self.assertEqual(dateTime, newTask.startDateTime())
+        
+    def testItemsAreNew(self):
+        self.failUnless(command.NewTaskCommand(self.taskList).itemsAreNew())
 
 
 class NewSubTaskCommandTest(TaskCommandTestCase):
@@ -349,6 +352,15 @@ class NewSubTaskCommandTest(TaskCommandTestCase):
         self.newSubTask([self.task1], markCompleted=True)
         self.assertDoUndoRedo(lambda: self.failUnless(self.task1.completed()),
             lambda: self.failIf(self.task1.completed()))
+        
+    def testNewSubTaskWithoutDueDateDoesntResetParentsDueDate(self):
+        dueDateTime = date.Now() + date.TimeDelta(hours=2)
+        self.task1.setDueDateTime(dueDateTime)
+        self.newSubTask([self.task1])
+        self.assertDoUndoRedo(lambda: self.assertEqual(dueDateTime, self.task1.dueDateTime()))
+
+    def testItemsAreNew(self):
+        self.failUnless(command.NewSubTaskCommand(self.taskList, []).itemsAreNew())
 
 
 class MarkCompletedCommandTest(CommandWithChildrenTestCase):

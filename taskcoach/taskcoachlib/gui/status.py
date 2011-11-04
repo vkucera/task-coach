@@ -22,19 +22,14 @@ from taskcoachlib import patterns
 
 class StatusBar(wx.StatusBar):
     def __init__(self, parent, viewer):
-        super(StatusBar, self).__init__(parent, -1)
+        super(StatusBar, self).__init__(parent)
         self.SetFieldsCount(2)
         self.parent = parent
         self.viewer = viewer
-        self.__numberOfSelectedItems = 0
-        self.__viewerName = ''
-        self.viewerEventTypes = (viewer.selectEventType(), 
-                                 viewer.viewerChangeEventType())
-        register = patterns.Publisher().registerObserver
-        for eventType in self.viewerEventTypes:
-            register(self.onSelect, eventType=eventType, eventSource=viewer)
+        patterns.Publisher().registerObserver(self.onViewerStatusChanged, 
+            eventType=viewer.viewerStatusEventType(), eventSource=viewer)
         self.scheduledStatusDisplay = None
-        self.onSelect(None)
+        self.onViewerStatusChanged(None)
         self.wxEventTypes = (wx.EVT_MENU_HIGHLIGHT_ALL, wx.EVT_TOOL_ENTER)
         for eventType in self.wxEventTypes:
             parent.Bind(eventType, self.resetStatusBar)
@@ -51,17 +46,9 @@ class StatusBar(wx.StatusBar):
             self._displayStatus()
         event.Skip()
 
-    def onSelect(self, event): # pylint: disable-msg=W0613
-        try:
-            numberOfSelectedItems = len(self.viewer.curselection())
-            viewerName = self.viewer.settingsSection()
-        except AttributeError:
-            return # Viewer container contains no viewers
-        if numberOfSelectedItems != self.__numberOfSelectedItems or viewerName != self.__viewerName:
-            self.__numberOfSelectedItems = numberOfSelectedItems
-            self.__viewerName = viewerName
-            # Give viewer a chance to update first:
-            wx.CallAfter(self._displayStatus)
+    def onViewerStatusChanged(self, event): # pylint: disable-msg=W0613
+        # Give viewer a chance to update first:
+        wx.CallAfter(self._displayStatus)
 
     def _displayStatus(self):
         try:
@@ -78,9 +65,7 @@ class StatusBar(wx.StatusBar):
         self.scheduledStatusDisplay = wx.FutureCall(delay, self._displayStatus)
 
     def Destroy(self): # pylint: disable-msg=W0221
-        remove = patterns.Publisher().removeObserver
-        for eventType in self.viewerEventTypes:
-            remove(self.onSelect, eventType=eventType)
+        patterns.Publisher().removeInstance(self)
         for eventType in self.wxEventTypes:
             self.parent.Unbind(eventType)
         if self.scheduledStatusDisplay:

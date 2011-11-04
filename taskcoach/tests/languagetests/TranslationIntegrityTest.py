@@ -26,12 +26,24 @@ from taskcoachlib import meta
 class TranslationIntegrityTestsMixin(object):
     ''' Unittests for translations. This class is subclassed below for each
         translated string in each language. '''
-        
+    
+    conversionSpecificationRE = re.compile('%\(w+\)[sd]')
+    
+    @staticmethod
+    def countMatches(regex, searchString):
+        matches = dict()
+        for match in re.findall(regex, searchString):
+            matches[match] = matches.get(match, 0) + 1
+        return matches
+            
+    def testMatchingConversionSpecifications(self):
+        regex = self.conversionSpecificationRE
+        matches_english = self.countMatches(regex, self.englishString)
+        matches_translation = self.countMatches(regex, self.translatedString)
+        self.assertEqual(matches_english, matches_translation)
+            
     def testMatchingNonLiterals(self):
-        for symbol in '\t', '|', '%s', '%d', '%.2f', '%(name)s', '%(version)s',\
-            '%(filename)s', '%(nrtasks)d', '%(url)s', '%(description)s',\
-            '%(copyright)s', '%(author)s', '%(author_email)s', '%(license)s',\
-            '%(date)s':
+        for symbol in '\t', '|', '%s', '%d', '%.2f':
             self.assertEqual(self.englishString.count(symbol), 
                 self.translatedString.count(symbol),
                 "Symbol ('%s') doesn't match for '%s' and '%s'"%(symbol,

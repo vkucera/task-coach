@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 from notifier import AbstractNotifier
+from taskcoachlib import operating_system
 
 
 #==============================================================================
@@ -100,10 +101,10 @@ class AnimatedMove(wx.Timer):
 #==============================================================================
 # Notifications
 
-if '__WXMSW__' in wx.PlatformInfo:
+if operating_system.isWindows():
     class _NotifyBase(wx.MiniFrame):
         pass
-elif '__WXGTK__' in wx.PlatformInfo:
+elif operating_system.isGTK():
     class _NotifyBase(wx.PopupWindow):
         def __init__(self, parent, id_, title, style=0): # pylint: disable-msg=W0613,E1003
             super(_NotifyBase, self).__init__(parent, id_) # No style
@@ -200,7 +201,7 @@ class NotificationFrameBase(_NotifyBase):
 
         style = wx.FRAME_NO_TASKBAR|wx.TAB_TRAVERSAL
 
-        if '__WXMAC__' in wx.PlatformInfo:
+        if operating_system.isMac():
             # style |= wx.NO_BORDER|wx.POPUP_WINDOW
 
             # XXXFIXME: without the POPUP_WINDOW style, the frame

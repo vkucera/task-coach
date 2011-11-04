@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import meta, widgets, notify
+from taskcoachlib import meta, widgets, notify, operating_system
 from taskcoachlib.gui import artprovider
 from taskcoachlib.domain import date
 from taskcoachlib.i18n import _
@@ -110,7 +110,7 @@ class SettingsPageBase(widgets.BookPage):
             helpText='', flags=None):
         intValue = self.getint(section, setting)
         spin = widgets.SpinCtrl(self, min=minimum, max=maximum, size=(65, -1),
-            initial=intValue, value=str(intValue))
+            value=intValue)
         self.addEntry(text, spin, helpText=helpText, flags=flags)
         self._integerSettings.append((section, setting, spin))
 
@@ -135,7 +135,8 @@ class SettingsPageBase(widgets.BookPage):
         for imageName in imageNames:
             label = artprovider.chooseableItemImages[imageName]
             bitmap = wx.ArtProvider_GetBitmap(imageName, wx.ART_MENU, (16, 16))
-            iconEntry.Append(label, bitmap, clientData=imageName)
+            item = iconEntry.Append(label, bitmap)
+            iconEntry.SetClientData(item, imageName)
         currentIcon = self.get(iconSection, iconSetting)
         currentSelectionIndex = imageNames.index(currentIcon)
         iconEntry.SetSelection(currentSelectionIndex) # pylint: disable-msg=E1101
@@ -262,15 +263,21 @@ class SavePage(SettingsPage):
         self.addBooleanSetting('file', 'saveinifileinprogramdir',
             _('Save settings (%s.ini) in the same\ndirectory as the program') \
               %meta.filename, 
-            _('(For running %s\nfrom a removable medium)')%meta.name)
+            _('For running %s from a removable medium')%meta.name)
         self.addPathSetting('file', 'attachmentbase', _('Attachment base directory'),
                             _('When adding an attachment, try to make\nits path relative to this one.'))
         self.addMultipleChoiceSettings('file', 'autoimport', 
                                        _('Before saving, automatically import from'), 
-                                       [('Todo.txt', 'Todo.txt')])
+                                       [('Todo.txt', _('Todo.txt format'))],
+                                       helpText=_('Before saving, %s automatically imports tasks\n'
+                                                  'from a Todo.txt file with the same name as the task file,\n'
+                                                  'but with extension .txt')%meta.name)
         self.addMultipleChoiceSettings('file', 'autoexport', 
                                        _('When saving, automatically export to'), 
-                                       [('Todo.txt', 'Todo.txt')])
+                                       [('Todo.txt', _('Todo.txt format'))],
+                                       helpText=_('When saving, %s automatically exports tasks\n'
+                                                  'to a Todo.txt file with the same name as the task file,\n'
+                                                  'but with extension .txt')%meta.name)
         self.fit()
             
                
@@ -559,7 +566,7 @@ class Preferences(widgets.NotebookDialog):
         self.settings = settings
         super(Preferences, self).__init__(bitmap='wrench_icon', *args, **kwargs)
         self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)        
-        if '__WXMAC__' in wx.PlatformInfo:
+        if operating_system.isMac():
             self.CentreOnParent()
 
     def addPages(self):
@@ -583,7 +590,7 @@ class Preferences(widgets.NotebookDialog):
         if pageName == 'iphone':
             return self.settings.getboolean('feature', 'iphone')
         elif pageName == 'editor':
-            return '__WXMAC__' in wx.PlatformInfo
+            return operating_system.isMac()
         else:
             return True
 

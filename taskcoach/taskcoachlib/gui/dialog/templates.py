@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 from taskcoachlib.domain.task import Task
-from taskcoachlib import persistence, platform
+from taskcoachlib import persistence, operating_system
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty.deltaTime import nlTimeExpression
 from taskcoachlib.thirdparty import sized_controls
@@ -80,7 +80,7 @@ class TemplatesDialog(sized_controls.SizedDialog):
         self._root = self._templateList.AddRoot('Root')
         for task in self._templates.tasks():
             item = self.appendTemplate(self._root, task)
-            if platform.isMac():
+            if operating_system.isMac():
                 # See http://trac.wxwidgets.org/ticket/10085
                 self._templateList.SetItemText(item, task.subject())
         self.createTemplateListButtons(panel)

@@ -213,8 +213,10 @@ class Column(object):
         # image cannot be combined with a sortable column
         self.__headerImageIndex = kwargs.pop('headerImageIndex', -1)
         self.__editCommand = kwargs.get('editCommand', None)
+        self.__editCallback = kwargs.get('editCallback', None)
         self.__editControlClass = kwargs.get('editControl', None)
         self.__parse = kwargs.get('parse', lambda value: value)
+        self.__settings = kwargs.get('settings', None)
         
     def name(self):
         return self.__name
@@ -262,13 +264,20 @@ class Column(object):
         return self.__hasImages
     
     def isEditable(self):
-        return self.__editCommand != None
+        return self.__editCommand != None or self.__editCallback != None
     
-    def editCommand(self):
-        return self.__editCommand
+    def onEndEdit(self, item, newValue):
+        if self.__editCallback:
+            self.__editCallback(item, newValue)
+        else:
+            self.__editCommand(items=[item], newValue=newValue).do()
     
-    def editControl(self):
-        return self.__editControlClass
+    def editControl(self, parent, item, columnIndex, domainObject):
+        value = self.value(domainObject)
+        kwargs = dict(settings=self.__settings) if self.__settings else dict()
+        # pylint: disable-msg=W0142
+        return self.__editControlClass(parent, wx.ID_ANY, item, columnIndex,
+                                       parent, value, **kwargs)
     
     def parse(self, value):
         return self.__parse(value)

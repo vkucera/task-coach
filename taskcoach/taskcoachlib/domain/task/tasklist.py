@@ -19,17 +19,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import categorizable
-from taskcoachlib import help # pylint: disable-msg=W0622
+from taskcoachlib import help, operating_system # pylint: disable-msg=W0622
 import task
 
 
 class TaskList(categorizable.CategorizableContainer):
     # FIXME: TaskList should be called TaskCollection or TaskSet
 
-    newItemMenuText = _('&New task...') + ('\tINSERT' if '__WXMAC__' != wx.Platform else '\tCtrl+N')
+    newItemMenuText = _('&New task...') + ('\tINSERT' if not operating_system.isMac() else '\tCtrl+N')
     newItemHelpText = help.taskNew
     
     def _nrInterestingTasks(self, isInteresting):

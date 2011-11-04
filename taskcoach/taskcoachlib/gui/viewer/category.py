@@ -83,7 +83,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
                            value='subject'),
                        imageIndicesCallback=self.subjectImageIndices,
                        width=self.getColumnWidth('subject'),
-                       editCommand=command.EditSubjectCommand, 
+                       editCallback=self.onEditSubject, 
                        editControl=inplace_editor.SubjectCtrl, **kwargs),
                    widgets.Column('description', _('Description'), 
                        category.Category.descriptionChangedEventType(), 
@@ -91,8 +91,14 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
                            value='description'),
                        renderCallback=lambda category: category.description(), 
                        width=self.getColumnWidth('description'), 
-                       editCommand=command.EditDescriptionCommand,
+                       editCallback=self.onEditDescription,
                        editControl=inplace_editor.DescriptionCtrl, **kwargs),
+                   ## widgets.Column('ordering', _('Manual ordering'),
+                   ##     category.Category.orderingChangedEventType(),
+                   ##     sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                   ##         value='ordering'),
+                   ##     renderCallback=lambda category: '',
+                   ##     width=self.getColumnWidth('ordering')),
                    widgets.Column('attachments', '', 
                        category.Category.attachmentsChangedEventType(), # pylint: disable-msg=E1101
                        width=self.getColumnWidth('attachments'),
@@ -123,6 +129,9 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
             uicommand.ViewColumn(menuText=_('&Description'),
                 helpText=_('Show/hide description column'),
                 setting='description', viewer=self),
+            ## uicommand.ViewColumn(menuText=_('&Manual ordering'),
+            ##     helpText=_('Show/hide manual ordering column'),
+            ##     setting='ordering', viewer=self),
             uicommand.ViewColumn(menuText=_('&Attachments'),
                 helpText=_('Show/hide attachments column'),
                 setting='attachments', viewer=self)]
@@ -147,7 +156,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
     def onCheck(self, event):
         categoryToFilter = self.widget.GetItemPyData(event.GetItem())
         categoryToFilter.setFiltered(event.GetItem().IsChecked())
-        self.onSelect(event) # Notify status bar
+        self.sendViewerStatusEvent() # Notify status observers like the status bar
         
     def getIsItemChecked(self, item):
         if isinstance(item, category.Category):

@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 import test
-from taskcoachlib import gui, config
+from taskcoachlib import gui, config, operating_system
 
 
 class WindowTest(test.wxTestCase):
@@ -36,7 +36,7 @@ class WindowTest(test.wxTestCase):
     def testInitialSize(self):
         # See MainWindowTest...
         w, h = self.frame.GetSizeTuple()
-        if wx.Platform == '__WXMAC__':
+        if operating_system.isMac():
             h += 40 # pragma: no cover
         self.assertEqual(eval(self.settings.get(self.section, 'size')),
             (w, h))
@@ -46,6 +46,7 @@ class WindowTest(test.wxTestCase):
             self.frame.IsIconized())
             
     def testChangeSize(self):
+        self.frame.Show()
         self.frame.ProcessEvent(wx.SizeEvent((100, 200)))
         self.assertEqual((100, 200), 
             eval(self.settings.get(self.section, 'size')))

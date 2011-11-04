@@ -17,19 +17,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import ConfigParser, os, sys, wx
-from taskcoachlib import meta, patterns
+from taskcoachlib import meta, patterns, operating_system
 from taskcoachlib.i18n import _
 import defaults
 
 
-class UnicodeAwareConfigParser(ConfigParser.SafeConfigParser):
+class UnicodeAwareConfigParser(ConfigParser.RawConfigParser):
     def set(self, section, setting, value): # pylint: disable-msg=W0222
         if type(value) == type(u''):
             value = value.encode('utf-8')
-        ConfigParser.SafeConfigParser.set(self, section, setting, value)
+        ConfigParser.RawConfigParser.set(self, section, setting, value)
 
     def get(self, section, setting): # pylint: disable-msg=W0221
-        value = ConfigParser.SafeConfigParser.get(self, section, setting)
+        value = ConfigParser.RawConfigParser.get(self, section, setting)
         return value.decode('utf-8') # pylint: disable-msg=E1103
 
 
@@ -45,7 +45,6 @@ class CachingConfigParser(UnicodeAwareConfigParser):
 
     def set(self, section, setting, value):
         self.__cachedValues[(section, setting)] = value
-        value = self.__escapePercentage(value)
         UnicodeAwareConfigParser.set(self, section, setting, value)
         
     def get(self, section, setting):
@@ -53,11 +52,6 @@ class CachingConfigParser(UnicodeAwareConfigParser):
         if key not in cache:
             cache[key] = UnicodeAwareConfigParser.get(self, *key) # pylint: disable-msg=W0142
         return cache[key]
-
-    @staticmethod
-    def __escapePercentage(value):
-        # Prevent ValueError: invalid interpolation syntax in '%' at position 0
-        return value.replace('%', '%%')
         
         
 class Settings(patterns.Observer, CachingConfigParser):
@@ -66,7 +60,7 @@ class Settings(patterns.Observer, CachingConfigParser):
         # have to call the superclass __init__ explicitly:
         super(Settings, self).__init__(*args, **kwargs)
         CachingConfigParser.__init__(self, *args, **kwargs) 
-        self.loadDefaults()
+        self.initializeWithDefaults()
         self.__loadAndSave = load
         self.__iniFileSpecifiedOnCommandLine = iniFile
         if load:
@@ -74,13 +68,13 @@ class Settings(patterns.Observer, CachingConfigParser):
             # if that fails, load the settings file from the settings directory
             try:
                 if not self.read(self.filename(forceProgramDir=True)):
-                    self.read(self.filename()) 
-            except ConfigParser.ParsingError, reason:
+                    self.read(self.filename())
+                errorMessage = ''
+            except ConfigParser.ParsingError, errorMessage:
                 # Ignore exceptions and simply use default values. 
                 # Also record the failure in the settings:
-                self.loadDefaults()
-                self.set('file', 'inifileloaded', 'False') 
-                self.set('file', 'inifileloaderror', str(reason))
+                self.initializeWithDefaults()
+            self.setLoadStatus(unicode(errorMessage))
         else:
             # Assume that if the settings are not to be loaded, we also 
             # should be quiet (i.e. we are probably in test mode):
@@ -96,21 +90,25 @@ class Settings(patterns.Observer, CachingConfigParser):
             except: 
                 return # pylint: disable-msg=W0702
             
-    def loadDefaults(self):
+    def initializeWithDefaults(self):
+        for section in self.sections():
+            self.remove_section(section)
         for section, settings in defaults.defaults.items():
-            self.remove_section(section) # Make sure add_section can't fail
             self.add_section(section)
             for key, value in settings.items():
                 # Don't notify observers while we are initializing
                 super(Settings, self).set(section, key, value)
                 
-    def getDefault(self, section, option):
-        return defaults.defaults[section][option]
+    def setLoadStatus(self, message):
+        self.set('file', 'inifileloaded', 'False' if message else 'True')
+        self.set('file', 'inifileloaderror', message)
 
     def __beQuiet(self):
-        noisySettings = [('window', 'splash'), ('window', 'tips')]
-        for section, setting in noisySettings:
-            self.set(section, setting, 'False')
+        noisySettings = [('window', 'splash', 'False'), 
+                         ('window', 'tips', 'False'), 
+                         ('window', 'starticonized', 'True')]
+        for section, setting, value in noisySettings:
+            self.set(section, setting, value)
             
     def add_section(self, section, copyFromSection=None):  # pylint: disable-msg=W0221
         result = super(Settings, self).add_section(section)
@@ -118,31 +116,30 @@ class Settings(patterns.Observer, CachingConfigParser):
             for name, value in self.items(copyFromSection):
                 super(Settings, self).set(section, name, value)
         return result
+    
+    def getRawValue(self, section, option):
+        return super(Settings, self).get(section, option)
 
     def get(self, section, option):
         try:
             result = super(Settings, self).get(section, option)
         except (ConfigParser.NoOptionError, ConfigParser.NoSectionError):
-            if section[-1].isdigit(): 
-                # Find a section that has this setting. Normally, if the 
-                # section exists, the setting should exist also. But, changes 
-                # in the .ini format may cause sections not to have all 
-                # settings yet.
-                import re # pylint: disable-msg=W0404
-                sectionName, sectionNumber = re.match('(\w+)(\d+)', 
-                                                      section).groups()
-                sectionNumber = int(sectionNumber) 
-                if sectionNumber > 1:
-                    section = sectionName + str(sectionNumber - 1)
-                else:
-                    section = sectionName 
-                result = self.get(section, option) # recursive call
-            else:
-                raise
+            return self.getDefault(section, option)
         result = self._fixValuesFromOldIniFiles(section, option, result)
         result = self._ensureMinimum(section, option, result)
         return result
-    
+
+    def getDefault(self, section, option):
+        defaultSectionKey = section.strip('0123456789')
+        try:
+            defaultSection = defaults.defaults[defaultSectionKey]
+        except KeyError:
+            raise ConfigParser.NoSectionError, defaultSectionKey
+        try:
+            return defaultSection[option]
+        except KeyError:
+            raise ConfigParser.NoOptionError, (defaultSection, option)
+            
     def _ensureMinimum(self, section, option, result):
         # Some settings may have a minimum value, make sure we return at 
         # least that minimum value:
@@ -153,6 +150,7 @@ class Settings(patterns.Observer, CachingConfigParser):
     def _fixValuesFromOldIniFiles(self, section, option, result):
         ''' Try to fix settings from old TaskCoach.ini files that are no longer 
             valid. '''
+        original = result
         # Starting with release 1.1.0, the date properties of tasks (startDate,
         # dueDate and completionDate) are datetimes: 
         taskDateColumns = ('startDate', 'dueDate', 'completionDate')
@@ -163,7 +161,11 @@ class Settings(patterns.Observer, CachingConfigParser):
             result = str(columns)
         elif option == 'columnwidths':
             widths = dict()
-            for column, width in eval(result).items():
+            try:
+                columnWidthMap = eval(result)
+            except SyntaxError:
+                columnWidthMap = dict()
+            for column, width in columnWidthMap.items():
                 if column in taskDateColumns:
                     column += 'Time'
                 widths[column] = width
@@ -172,6 +174,8 @@ class Settings(patterns.Observer, CachingConfigParser):
             result = 'Task Coach'
         elif section == 'editor' and option == 'preferencespages':
             result = result.replace('colors', 'appearance')
+        if result != original:
+            super(Settings, self).set(section, option, result)
         return result
 
     def set(self, section, option, value, new=False): # pylint: disable-msg=W0221
@@ -270,7 +274,7 @@ class Settings(patterns.Observer, CachingConfigParser):
     def pathToConfigDir(self, environ):
         try:
             path = os.path.join(environ['APPDATA'], meta.filename)
-        except:
+        except Exception:
             path = os.path.expanduser("~") # pylint: disable-msg=W0702
             if path == "~":
                 # path not expanded: apparently, there is no home dir
@@ -281,7 +285,7 @@ class Settings(patterns.Observer, CachingConfigParser):
     def pathToTemplatesDir(self):
         path = os.path.join(self.path(), 'taskcoach-templates')
 
-        if '__WXMSW__' in wx.PlatformInfo:
+        if operating_system.isWindows():
             # Under Windows, check for a shortcut and follow it if it
             # exists.
 
@@ -303,5 +307,3 @@ class Settings(patterns.Observer, CachingConfigParser):
     
     def generatedIniFilename(self, forceProgramDir):
         return os.path.join(self.path(forceProgramDir), '%s.ini'%meta.filename)
-
- 

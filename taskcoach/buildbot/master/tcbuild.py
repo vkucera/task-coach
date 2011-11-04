@@ -260,7 +260,7 @@ class UploadDMG(UploadBase):
 # Windows
 
 class BuildEXE(DistCompile):
-    filename_rx = re.compile(r'(dist\\.*-win32.exe)')
+    filename_rx = re.compile(r'(dist\\.*-win32\.exe)')
     sep = '\\'
 
     ignoreWarnings = True
@@ -270,6 +270,33 @@ class BuildEXE(DistCompile):
 
 
 class UploadEXE(UploadBase):
+    pass
+
+
+class BuildWinPenPack(DistCompile):
+    filename_rx = re.compile(r'^Generated (dist\\.*\.zip)')
+    sep = '\\'
+
+    name = 'winpenpack'
+    description = ['Generating', 'WinPenPack', 'binary']
+    descriptionDone = ['WinPenPack', 'binary']
+
+
+class UploadWinPenPack(UploadBase):
+    pass
+
+
+class BuildPortableApps(DistCompile):
+    filename_rx = re.compile(r'^mv build/(.*\.paf\.exe) dist')
+    fileprefix = 'dist\\'
+    sep = '\\'
+
+    name = 'portableapps'
+    description = ['Generating', 'PortableApps', 'binary']
+    descriptionDone = ['PortableApps', 'binary']
+
+
+class UploadPortableApps(UploadBase):
     pass
 
 # Source

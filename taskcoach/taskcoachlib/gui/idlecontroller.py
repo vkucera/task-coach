@@ -90,7 +90,8 @@ class IdleController(Observer, IdleNotifier):
     
     @staticmethod
     def __filterTrackedEfforts(efforts):
-        return [effort for effort in efforts if effort.isBeingTracked()]
+        return [anEffort for anEffort in efforts if anEffort.isBeingTracked() \
+                and not isinstance(anEffort, effort.BaseCompositeEffort)]
                 
     def onEffortAdded(self, event):
         self.__trackedEfforts.extend(self.__filterTrackedEfforts(event.values()))
@@ -101,7 +102,7 @@ class IdleController(Observer, IdleNotifier):
                 self.__trackedEfforts.remove(effort)
         
     def onStartTracking(self, event):
-        self.__trackedEfforts.extend(event.sources())
+        self.__trackedEfforts.extend(self.__filterTrackedEfforts(event.sources()))
         
     def onStopTracking(self, event):
         for effort in event.sources():

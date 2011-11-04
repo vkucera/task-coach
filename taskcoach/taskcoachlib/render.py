@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ''' render.py - functions to render various objects, like date, time, 
 etc. ''' # pylint: disable-msg=W0105
 
-import locale, codecs
+import locale, codecs, re
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import date as datemodule
 
@@ -68,7 +68,7 @@ def recurrence(recurrence):
     else:
         labels = [_('Daily'), _('Weekly'), _('Monthly'), _('Yearly')] 
     mapping = dict(zip(['daily', 'weekly', 'monthly', 'yearly'], labels))
-    return mapping.get(recurrence.unit, recurrence.amount)%dict(frequency=recurrence.amount)
+    return mapping.get(recurrence.unit)%dict(frequency=recurrence.amount)
 
 def budget(aBudget):
     ''' render budget (of type date.TimeDelta) as
@@ -87,12 +87,17 @@ def date(date):
     ''' Render a date (of type date.Date) '''
     return '' if str(date) == '' else date.strftime(dateFormat)   
         
-def dateTime(dateTime):
-    if not dateTime or dateTime == datemodule.DateTime():
+def dateTime(aDateTime):
+    if not aDateTime or aDateTime == datemodule.DateTime():
         return ''
-    timeIsMidnight = (dateTime.hour, dateTime.minute) in ((0, 0), (23, 59))
-    return dateTime.strftime(dateFormat if timeIsMidnight else dateTimeFormat)
-
+    timeIsMidnight = (aDateTime.hour, aDateTime.minute) in ((0, 0), (23, 59))
+    year = aDateTime.year
+    if year >= 1900:
+        return aDateTime.strftime(dateFormat if timeIsMidnight else dateTimeFormat)
+    else:
+        result = dateTime(aDateTime.replace(year=year+1900))
+        return re.sub(str(year+1900), str(year), result)
+        
 def dateTimePeriod(start, stop):
     if stop is None:
         return '%s - %s'%(dateTime(start), _('now'))

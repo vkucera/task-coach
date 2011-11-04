@@ -59,6 +59,12 @@ class PIElementTree(ET.ElementTree):
         ET.ElementTree.write(self, file, encoding, *args, **kwargs)
 
 
+def sortedById(objects):
+    s = [(obj.id(), obj) for obj in objects]
+    s.sort()
+    return [obj for dummy_id, obj in s]
+
+
 class XMLWriter(object):
     maxDateTime = date.DateTime()
     
@@ -70,11 +76,11 @@ class XMLWriter(object):
               noteContainer, syncMLConfig, guid):
         root = ET.Element('tasks')
 
-        for rootTask in taskList.rootItems():
+        for rootTask in sortedById(taskList.rootItems()):
             self.taskNode(root, rootTask)
-        for rootCategory in categoryContainer.rootItems():
+        for rootCategory in sortedById(categoryContainer.rootItems()):
             self.categoryNode(root, rootCategory, taskList, noteContainer)
-        for rootNote in noteContainer.rootItems():
+        for rootNote in sortedById(noteContainer.rootItems()):
             self.noteNode(root, rootNote)
         if syncMLConfig:
             self.syncMLNode(root, syncMLConfig)
@@ -83,8 +89,8 @@ class XMLWriter(object):
 
         flatten(root)
         PIElementTree('<?taskcoach release="%s" tskversion="%d"?>\n' % (meta.data.version,
-                                                                        self.__versionnr),
-                      root).write(self.__fd, 'utf-8')
+                                                                         self.__versionnr),
+                                                root).write(self.__fd, 'utf-8')
 
     def taskNode(self, parentNode, task): # pylint: disable-msg=W0621
         maxDateTime = self.maxDateTime
@@ -115,17 +121,17 @@ class XMLWriter(object):
             if reminderBeforeSnooze != None and reminderBeforeSnooze < task.reminder():
                 node.attrib['reminderBeforeSnooze'] = str(reminderBeforeSnooze)
         prerequisiteIds = ' '.join([prerequisite.id() for prerequisite in \
-            task.prerequisites()])
+            sortedById(task.prerequisites())])
         if prerequisiteIds:            
             node.attrib['prerequisites'] = prerequisiteIds
         if task.shouldMarkCompletedWhenAllChildrenCompleted() != None:
             node.attrib['shouldMarkCompletedWhenAllChildrenCompleted'] = \
                               str(task.shouldMarkCompletedWhenAllChildrenCompleted())
-        for effort in task.efforts():
+        for effort in sortedById(task.efforts()):
             self.effortNode(node, effort)
-        for eachNote in task.notes():
+        for eachNote in sortedById(task.notes()):
             self.noteNode(node, eachNote)
-        for attachment in task.attachments():
+        for attachment in sortedById(task.attachments()):
             self.attachmentNode(node, attachment)
         return node
 
@@ -170,21 +176,21 @@ class XMLWriter(object):
             node.attrib['filtered'] = str(category.isFiltered())
         if category.hasExclusiveSubcategories():
             node.attrib['exclusiveSubcategories'] = str(category.hasExclusiveSubcategories())
-        for eachNote in category.notes():
+        for eachNote in sortedById(category.notes()):
             self.noteNode(node, eachNote)
-        for attachment in category.attachments():
+        for attachment in sortedById(category.attachments()):
             self.attachmentNode(node, attachment)
         # Make sure the categorizables referenced are actually in the 
         # categorizableContainer, i.e. they are not deleted
         categorizableIds = ' '.join([categorizable.id() for categorizable in \
-            category.categorizables() if inCategorizableContainer(categorizable)])
+            sortedById(category.categorizables()) if inCategorizableContainer(categorizable)])
         if categorizableIds:            
             node.attrib['categorizables'] = categorizableIds
         return node
     
     def noteNode(self, parentNode, note): # pylint: disable-msg=W0621
         node = self.baseCompositeNode(parentNode, note, 'note', self.noteNode)
-        for attachment in note.attachments():
+        for attachment in sortedById(note.attachments()):
             self.attachmentNode(node, attachment)
         return node
 
@@ -211,6 +217,8 @@ class XMLWriter(object):
             node.attrib['icon'] = str(item.icon())
         if item.selectedIcon():
             node.attrib['selectedIcon'] = str(item.selectedIcon())
+        if item.ordering():
+            node.attrib['ordering'] = str(item.ordering())
         return node
 
     def baseCompositeNode(self, parentNode, item, nodeName, childNodeFactory, childNodeFactoryArgs=()):
@@ -227,10 +235,12 @@ class XMLWriter(object):
             node.attrib['icon'] = str(item.icon())
         if item.selectedIcon():
             node.attrib['selectedIcon'] = str(item.selectedIcon())
+        if item.ordering():
+            node.attrib['ordering'] = str(item.ordering())
         if item.expandedContexts():
             node.attrib['expandedContexts'] = \
                      str(tuple(sorted(item.expandedContexts())))
-        for child in item.children():
+        for child in sortedById(item.children()):
             childNodeFactory(node, child, *childNodeFactoryArgs) # pylint: disable-msg=W0142
         return node
 
@@ -243,7 +253,7 @@ class XMLWriter(object):
         else:
             ET.SubElement(node, 'data', dict(extension=os.path.splitext(attachment.location())[-1])).text = \
                                 data.encode('base64')
-        for eachNote in attachment.notes():
+        for eachNote in sortedById(attachment.notes()):
             self.noteNode(node, eachNote)
         return node
 

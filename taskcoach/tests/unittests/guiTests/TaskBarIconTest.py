@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 import test
-from taskcoachlib import meta, config, gui
+from taskcoachlib import meta, config, gui, operating_system
 from taskcoachlib.domain import task, effort, date
 
 
@@ -41,7 +41,7 @@ class TaskBarIconTestCase(test.TestCase):
             self.settings)
 
     def tearDown(self): # pragma: no cover
-        if wx.Platform == '__WXMSW__':
+        if operating_system.isWindows():
             self.icon.Destroy()
         else:
             self.icon.RemoveIcon()

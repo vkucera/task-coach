@@ -85,6 +85,9 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W022
             uicommand.ViewColumn(menuText=_('&Description'),
                 helpText=_('Show/hide description column'),
                 setting='description', viewer=self),
+            ## uicommand.ViewColumn(menuText=_('&Manual ordering'),
+            ##     helpText=_('Show/hide the manual ordering column'),
+            ##     setting='ordering', viewer=self),
             uicommand.ViewColumn(menuText=_('&Attachments'),
                 helpText=_('Show/hide attachments column'),
                 setting='attachments', viewer=self),
@@ -101,8 +104,16 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W022
                 value='subject', menuText=_('&Subject'), 
                 helpText=_('Sort notes by subject')),
             imageIndicesCallback=self.subjectImageIndices,
-            editCommand=command.EditSubjectCommand,
+            editCallback=self.onEditSubject,
             editControl=inplace_editor.SubjectCtrl)
+        ## orderingColumn = widgets.Column('ordering', _('Manual ordering'),
+        ##     note.Note.orderingChangedEventType(),
+        ##     width=self.getColumnWidth('ordering'),
+        ##     resizeCallback=self.onResizeColumn,
+        ##     renderCallback=lambda note: '',
+        ##     sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+        ##         value='ordering', menuText=_('&Ordering'),
+        ##         helpText=_('Sort notes manually')))
         descriptionColumn = widgets.Column('description', _('Description'),
             note.Note.descriptionChangedEventType(),
             width=self.getColumnWidth('description'), 
@@ -111,7 +122,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W022
             sortCallback=uicommand.ViewerSortByCommand(viewer=self, 
                 value='description', menuText=_('&Description'), 
                 helpText=_('Sort notes by description')),
-            editCommand=command.EditDescriptionCommand,
+            editCallback=self.onEditDescription,
             editControl=inplace_editor.DescriptionCtrl)
         attachmentsColumn = widgets.Column('attachments', '', 
             note.Note.attachmentsChangedEventType(), # pylint: disable-msg=E1101
@@ -131,6 +142,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W022
             sortCallback=uicommand.ViewerSortByCommand(viewer=self, 
                 value='categories', menuText=_('&Categories'), 
                 helpText=_('Sort notes by categories')))
+        ## return [subjectColumn, descriptionColumn, orderingColumn, attachmentsColumn, categoriesColumn]
         return [subjectColumn, descriptionColumn, attachmentsColumn, categoriesColumn]
 
     def getItemTooltipData(self, item, column=0):

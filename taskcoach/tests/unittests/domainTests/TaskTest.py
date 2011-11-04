@@ -459,10 +459,25 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.task.addChild(child)
         self.assertEqual(child.dueDateTime(), self.task.dueDateTime())
         
+    def testAddChildWithoutDueDateTimeDoesNotResetParentDueDateTime(self):
+        dueDateTime = date.Now() + date.oneHour
+        self.task.setDueDateTime(dueDateTime)
+        child = task.Task()
+        self.task.addChild(child)
+        self.assertEqual(dueDateTime, self.task.dueDateTime())
+        
     def testAddChildWithEarlierStartDateTimeMakesParentStartDateTimeEarlier(self):
         child = task.Task(startDateTime=self.yesterday)
         self.task.addChild(child)
-        self.assertEqual(child.startDateTime(), self.task.startDateTime())
+        self.assertEqual(self.yesterday, self.task.startDateTime())
+        self.assertEqual(self.yesterday, child.startDateTime())
+        
+    def testAddActiveRecurringChildWithEarlierStartDateTimeMakesParentStartDateTimeEarlier(self):
+        child = task.Task(startDateTime=self.yesterday)
+        child.setRecurrence(date.Recurrence('monthly'))
+        self.task.addChild(child)
+        self.assertEqual(self.yesterday, self.task.startDateTime())
+        self.assertEqual(self.yesterday, child.startDateTime())
         
     def testAddChildWithBudgetCausesBudgetNotification(self):
         child = task.Task()
@@ -706,6 +721,12 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.task.__setstate__(state)
         self.assertEqual(previousDependencies, self.task.dependencies())                    
 
+    def testTaskStateIncludesOrdering(self):
+        state = self.task.__getstate__()
+        self.task.setOrdering(42)
+        self.task.__setstate__(state)
+        self.assertEqual(0L, self.task.ordering())
+        
 
 class TaskDueTodayTest(TaskTestCase, CommonTaskTestsMixin):
     def taskCreationKeywordArguments(self):
@@ -871,6 +892,7 @@ class CompletedTaskTest(TaskTestCase, CommonTaskTestsMixin):
     def testSettingTheCompletionDateTimeToInfiniteMakesTheTaskUncompleted(self):
         self.task.setCompletionDateTime(date.DateTime())
         self.failIf(self.task.completed())
+        self.assertEqual(0, self.task.percentageComplete())
 
     def testSettingTheCompletionDateTimeToAnotherDateTimeLeavesTheTaskCompleted(self):
         self.task.setCompletionDateTime(self.yesterday)
@@ -882,6 +904,7 @@ class CompletedTaskTest(TaskTestCase, CommonTaskTestsMixin):
     def testSetPercentageCompleteToLessThan100MakesTaskUncompleted(self):
         self.task.setPercentageComplete(99)
         self.assertEqual(date.DateTime(), self.task.completionDateTime())
+        self.assertEqual(99, self.task.percentageComplete())
         
     def testPercentageCompleteNotification(self):
         self.registerObserver(task.Task.percentageCompleteChangedEventType())

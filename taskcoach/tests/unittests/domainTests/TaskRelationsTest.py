@@ -192,7 +192,7 @@ class CommonTaskRelationshipManagerTestsMixin(object):
     def testAddChildWithoutDueDateToParentWithDueDate(self):
         self.parent.setDueDateTime(self.tomorrow)
         self.parent.addChild(self.child2)
-        self.assertEqual(date.DateTime(), self.parent.dueDateTime())
+        self.assertEqual(self.tomorrow, self.parent.dueDateTime())
         
     def testAddChildWithDueDateSmallerThanParentDueDate(self):
         self.parent.setDueDateTime(self.tomorrow)

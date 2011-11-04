@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, sys
 import test
-from taskcoachlib import gui, command, config, persistence
+from taskcoachlib import gui, command, config, persistence, operating_system
 from taskcoachlib.domain import category, attachment
 
 
@@ -41,7 +41,7 @@ class CategoryEditorTest(test.wxTestCase):
     def tearDown(self):
         # CategoryEditor uses CallAfter for setting the focus, make sure those 
         # calls are dealt with, otherwise they'll turn up in other tests
-        if '__WXMAC__' not in wx.PlatformInfo and ('__WXMSW__' not in wx.PlatformInfo or sys.version_info < (2, 5)):
+        if operating_system.isGTK():
             wx.Yield() # pragma: no cover 
         super(CategoryEditorTest, self).tearDown()
         self.taskFile.close()
@@ -65,7 +65,7 @@ class CategoryEditorTest(test.wxTestCase):
         page = self.editor._interior[0]
         page._subjectEntry.SetFocus()
         page._subjectEntry.SetValue(newSubject)
-        if '__WXGTK__' == wx.Platform:
+        if operating_system.isGTK():
             page._subjectSync.onAttributeEdited(DummyEvent())
         else:
             page._descriptionEntry.SetFocus()
@@ -74,7 +74,7 @@ class CategoryEditorTest(test.wxTestCase):
         page = self.editor._interior[0]
         page._descriptionEntry.SetFocus()
         page._descriptionEntry.SetValue(newDescription)
-        if '__WXGTK__' == wx.Platform:
+        if operating_system.isGTK():
             page._descriptionSync.onAttributeEdited(DummyEvent())
         else: 
             page._subjectEntry.SetFocus()

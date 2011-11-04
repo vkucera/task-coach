@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test
-from taskcoachlib import gui, config, persistence
+from taskcoachlib import gui, command, config, persistence
 from taskcoachlib.domain import task, effort, date
 from unittests import dummy
 
@@ -39,7 +39,11 @@ class EffortEditorTest(test.wxTestCase):
         self.taskFile = persistence.TaskFile()
         self.taskList = self.taskFile.tasks()
         self.effortList = self.taskFile.efforts()
-        self.taskList.extend(self.createTasks())
+        self.task = task.Task('task')
+        self.effort = effort.Effort(self.task)
+        self.task.addEffort(self.effort)
+        self.task2 = task.Task('task2')
+        self.taskFile.tasks().extend([self.task, self.task2])
         self.editor = EditorUnderTest(self.frame, 
             list(self.effortList), self.settings, self.taskFile.efforts(), 
             self.taskFile, raiseDialog=False)
@@ -49,16 +53,16 @@ class EffortEditorTest(test.wxTestCase):
         self.taskFile.close()
         self.taskFile.stop()
 
+    def createEditor(self):
+        return EditorUnderTest(self.frame,
+            list(self.taskFile.efforts()), self.settings, 
+            self.taskFile.efforts(), self.taskFile,  
+            raiseDialog=False)        
+
     # pylint: disable-msg=W0201,W0212
-    
-    def createTasks(self):
-        self.task1 = task.Task('task1')
-        self.effort = effort.Effort(self.task1)
-        self.task1.addEffort(self.effort)
-        self.task2 = task.Task('task2')
-        return [self.task1, self.task2]
         
     def testCreate(self):
+        self.assertEqual(self.task, self.editor._interior._taskEntry.GetValue())
         self.assertEqual(self.effort.getStart().date(), 
             self.editor._interior._startDateTimeEntry.GetValue().date())
         self.assertEqual(self.effort.task(), 
@@ -73,7 +77,7 @@ class EffortEditorTest(test.wxTestCase):
         self.editor._interior._taskEntry.SetValue(self.task2)
         self.editor._interior._taskSync.onAttributeEdited(dummy.Event())
         self.assertEqual(self.task2, self.effort.task())
-        self.failIf(self.effort in self.task1.efforts())
+        self.failIf(self.effort in self.task.efforts())
         
     def testChangeTaskDoesNotCloseEditor(self):
         self.editor._interior._taskEntry.SetValue(self.task2)

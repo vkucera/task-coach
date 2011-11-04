@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, os
-from taskcoachlib import meta, patterns
+from taskcoachlib import meta, patterns, operating_system
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import date, task
 import artprovider
@@ -49,7 +49,7 @@ class TaskBarIcon(date.ClockSecondObserver, wx.TaskBarIcon):
             eventType=task.Task.trackStopEventType())
         registerObserver(self.onChangeDueDateTime,
             eventType=task.Task.dueDateTimeChangedEventType())
-        event = wx.EVT_TASKBAR_LEFT_DOWN if '__WXGTK__' == wx.Platform else wx.EVT_TASKBAR_LEFT_DCLICK    
+        event = wx.EVT_TASKBAR_LEFT_DOWN if operating_system.isGTK() else wx.EVT_TASKBAR_LEFT_DCLICK    
         self.Bind(event, self.onTaskbarClick)
         self.__setTooltipText()
         self.__setIcon()

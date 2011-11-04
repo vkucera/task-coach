@@ -144,6 +144,8 @@ class Object(SynchronizedObject):
                                 self.appearanceChangedEvent)
         self.__selectedIcon = Attribute(kwargs.pop('selectedIcon', ''), self,
                                         self.appearanceChangedEvent)
+        self.__ordering = Attribute(kwargs.pop('ordering', 0L), self,
+                                    self.orderingChangedEvent)
         self.__id = kwargs.pop('id', None) or str(uuid.uuid1())
         super(Object, self).__init__(*args, **kwargs)
         
@@ -161,6 +163,7 @@ class Object(SynchronizedObject):
                           bgColor=self.__bgColor.get(),
                           font=self.__font.get(),
                           icon=self.__icon.get(),
+                          ordering=self.__ordering.get(),
                           selectedIcon=self.__selectedIcon.get()))
         return state
     
@@ -178,6 +181,7 @@ class Object(SynchronizedObject):
         self.setFont(state['font'], event=event)
         self.setIcon(state['icon'], event=event)
         self.setSelectedIcon(state['selectedIcon'], event=event)
+        self.setOrdering(state['ordering'])
 
     def __getcopystate__(self):
         ''' Return a dictionary that can be passed to __init__ when creating
@@ -194,7 +198,8 @@ class Object(SynchronizedObject):
             subject=self.__subject.get(), description=self.__description.get(),
             fgColor=self.__fgColor.get(), bgColor=self.__bgColor.get(),
             font=self.__font.get(), icon=self.__icon.get(),
-            selectedIcon=self.__selectedIcon.get()))
+            selectedIcon=self.__selectedIcon.get()),
+            ordering=self.__ordering.get())
         return state
     
     def copy(self):
@@ -239,7 +244,30 @@ class Object(SynchronizedObject):
     def subjectSortEventTypes(class_):
         ''' The event types that influence the subject sort order. '''
         return (class_.subjectChangedEventType(),)
-    
+
+    # Ordering:
+
+    def ordering(self):
+        return self.__ordering.get()
+
+    def setOrdering(self, ordering, event=None):
+        self.__ordering.set(ordering, event=event)
+
+    def orderingChangedEvent(self, event):
+        event.addSource(self, self.ordering(), type=self.orderingChangedEventType())
+
+    @classmethod
+    def orderingChangedEventType(class_):
+        return '%s.ordering'%class_
+
+    @staticmethod
+    def orderingSortFunction(**kwargs):
+        return lambda item: item.ordering()
+
+    @classmethod
+    def orderingSortEventTypes(class_):
+        return (class_.orderingChangedEventType(),)
+
     # Description:
     
     def description(self):
@@ -330,7 +358,7 @@ class Object(SynchronizedObject):
         except AttributeError:
             eventTypes = []
         return eventTypes + [class_.subjectChangedEventType(),
-                             class_.descriptionChangedEventType(), 
+                             class_.descriptionChangedEventType(),
                              class_.appearanceChangedEventType()]
 
 

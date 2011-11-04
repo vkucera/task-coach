@@ -26,7 +26,6 @@ class ExportDialog(sized_controls.SizedDialog):
     title = 'Override in subclass'
     section = 'export'
     selectionOnlySetting = 'Override in subclass'
-
     
     def __init__(self, *args, **kwargs):
         self.window = args[0]
@@ -39,6 +38,7 @@ class ExportDialog(sized_controls.SizedDialog):
         self.SetButtonSizer(buttonSizer)
         self.Fit()
         buttonSizer.GetAffirmativeButton().Bind(wx.EVT_BUTTON, self.onOK)
+        self.CentreOnParent()
 
     def createInterior(self, pane):
         self.createViewerChooser(pane)
@@ -61,7 +61,6 @@ class ExportDialog(sized_controls.SizedDialog):
         if selectedViewer not in self.exportableViewers():
             selectedViewer = self.exportableViewers()[0]
         self.viewerComboBox.SetValue(selectedViewer.title())
-        panel.Fit()
         
     def exportableViewers(self):
         return self.window.viewer
@@ -91,12 +90,37 @@ class ExportDialog(sized_controls.SizedDialog):
 class ExportAsCSVDialog(ExportDialog):
     title = _('Export as CSV')
     selectionOnlySetting = 'csv_selectiononly'
+    separateDateAndTimeColumnsSetting = 'csv_separatedateandtimecolumns'
 
+    def createInterior(self, pane):
+        super(ExportAsCSVDialog, self).createInterior(pane)
+        self.createSeparateDateAndTimeColumnsCheckBox(pane)
+        
+    def createSeparateDateAndTimeColumnsCheckBox(self, pane):
+        self.separateDateAndTimeColumnsCheckBox = wx.CheckBox(pane, # pylint: disable-msg=W0201
+            label=_('Put dates and times in separate columns'))
+        separateDateAndTimeColumns = self.settings.getboolean(self.section,
+            self.separateDateAndTimeColumnsSetting)
+        self.separateDateAndTimeColumnsCheckBox.SetValue(separateDateAndTimeColumns)
+    
+    def separateDateAndTimeColumns(self):
+        return self.separateDateAndTimeColumnsCheckBox.GetValue()
+    
+    def options(self):
+        options = super(ExportAsCSVDialog, self).options()
+        options['separateDateAndTimeColumns'] = self.separateDateAndTimeColumns()
+        return options
+
+    def onOK(self, event):
+        super(ExportAsCSVDialog, self).onOK(event)
+        self.settings.setboolean(self.section, self.separateDateAndTimeColumnsSetting, 
+                                 self.separateDateAndTimeColumns())
+          
 
 class ExportAsICalendarDialog(ExportDialog):
     title = _('Export as iCalendar')
     selectionOnlySetting = 'ical_selectiononly'
-    
+
     def exportableViewers(self):
         viewers = super(ExportAsICalendarDialog, self).exportableViewers()
         return [viewer for viewer in viewers if

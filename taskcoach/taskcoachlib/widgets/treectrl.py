@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, itemctrl, draganddrop
 from taskcoachlib.thirdparty import hypertreelist
 from taskcoachlib.thirdparty import customtreectrl as customtree
+from taskcoachlib import operating_system
 
 # pylint: disable-msg=E1101,E1103
 
@@ -29,7 +30,7 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
 
     def __init__(self, *args, **kwargs):
         super(HyperTreeList, self).__init__(*args, **kwargs)
-        if '__WXGTK__' == wx.Platform:
+        if operating_system.isGTK():
             self.Bind(wx.EVT_TREE_ITEM_COLLAPSED, self.onItemCollapsed)
 
     def onItemCollapsed(self, event):
@@ -303,11 +304,11 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         else:
             event.Skip()
          
-    def OnDrop(self, dropItem, dragItem):
+    def OnDrop(self, dropItem, dragItems, part):
         dropItem = None if dropItem == self.GetRootItem() else \
                    self.GetItemPyData(dropItem)
-        dragItem = self.GetItemPyData(dragItem)
-        self.dragAndDropCommand(dropItem, dragItem)
+        dragItems = list(self.GetItemPyData(dragItem) for dragItem in dragItems)
+        wx.CallAfter(self.dragAndDropCommand, dropItem, dragItems, part)
         
     def onItemExpanding(self, event):
         event.Skip()
@@ -362,17 +363,13 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         event.Veto() # Let us update the tree
         domainObject = self.GetItemPyData(event.GetItem())
         newValue = event.GetLabel()
-        command = self._getColumn(event.GetInt()).editCommand()
-        command(items=[domainObject], newValue=newValue).do()
+        column = self._getColumn(event.GetInt())
+        column.onEndEdit(domainObject, newValue)
         
     def CreateEditCtrl(self, item, columnIndex):
         column = self._getColumn(columnIndex)
-        editControlClass = column.editControl()
-        parent = owner = self.GetMainWindow()
         domainObject = self.GetItemPyData(item)
-        value = column.value(domainObject)
-        return editControlClass(parent, wx.ID_ANY, item, columnIndex, 
-                                owner, value)
+        return column.editControl(self.GetMainWindow(), item, columnIndex, domainObject)
             
     # Override CtrlWithColumnsMixin with TreeListCtrl specific behaviour:
         
@@ -391,7 +388,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         agwStyle = wx.TR_DEFAULT_STYLE | wx.TR_HIDE_ROOT | wx.TR_MULTIPLE \
             | wx.TR_EDIT_LABELS | wx.TR_HAS_BUTTONS | wx.TR_FULL_ROW_HIGHLIGHT \
             | customtree.TR_HAS_VARIABLE_ROW_HEIGHT
-        if wx.Platform == '__WXMAC__':
+        if operating_system.isMac():
             agwStyle |= wx.TR_NO_LINES
         agwStyle &= ~hypertreelist.TR_NO_HEADER
         return agwStyle

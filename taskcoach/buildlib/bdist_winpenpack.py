@@ -93,3 +93,5 @@ class bdist_winpenpack(bdist_portable_base.bdist_portable_base):
                 arcname = filepath[len(self.bdist_base_wpp):]
                 archive.write(filepath, arcname)
         archive.close()
+        # For the buildbot
+        print 'Generated %s' % archive_filename

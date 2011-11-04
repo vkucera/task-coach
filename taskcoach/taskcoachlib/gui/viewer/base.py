@@ -98,10 +98,16 @@ class Viewer(wx.Panel):
                 popupMenu.Destroy()
             except wx.PyDeadObjectError:
                 pass
-
+    
     @classmethod
-    def selectEventType(class_):
-        return '%s.select'%class_
+    def viewerStatusEventType(class_):
+        return '%s.status'%class_
+    
+    def sendViewerStatusEvent(self):
+        patterns.Event(self.viewerStatusEventType(), self).send()
+    
+    def statusMessages(self):
+        return '', ''
     
     def title(self):
         return self.settings.get(self.settingsSection(), 'title') or self.defaultTitle
@@ -164,7 +170,8 @@ class Viewer(wx.Panel):
             self.selectNewItems(event.values())
         elif event.type() == self.presentation().removeItemEventType():
             self.selectNextItemsAfterRemoval(event.values())
-        self.updateSelection()
+        self.updateSelection(sendViewerStatusEvent=False)
+        self.sendViewerStatusEvent()
         
     def selectNewItems(self, newItems):
         nrNewItems = len(newItems)
@@ -185,11 +192,12 @@ class Viewer(wx.Panel):
         # cache and notify our observers:
         wx.CallAfter(self.updateSelection)
 
-    def updateSelection(self):
+    def updateSelection(self, sendViewerStatusEvent=True):
         newSelection = self.widget.curselection()
         if newSelection != self.__curselection:
             self.__curselection = newSelection
-            patterns.Event(self.selectEventType(), self, *newSelection).send() # pylint: disable-msg=W0142
+            if sendViewerStatusEvent:
+                self.sendViewerStatusEvent()
 
     def freeze(self):
         self.widget.Freeze()
@@ -380,21 +388,20 @@ class Viewer(wx.Panel):
         bitmap = kwargs.pop('bitmap')
         newItemCommand = self.newItemCommand(*args, **kwargs)
         newItemCommand.do()
-        return self.editItemDialog(newItemCommand.items, bitmap)
+        return self.editItemDialog(newItemCommand.items, bitmap, itemsAreNew=True)
 
     def newSubItemDialog(self, bitmap):
         newSubItemCommand = self.newSubItemCommand()
         newSubItemCommand.do()
         for item in newSubItemCommand.items:
             item.parent().expand(True, context=self.settingsSection())
-        return self.editItemDialog(newSubItemCommand.items, bitmap)
-                
+        return self.editItemDialog(newSubItemCommand.items, bitmap, itemsAreNew=True)   
     
-    def editItemDialog(self, items, bitmap, columnName=''):
+    def editItemDialog(self, items, bitmap, columnName='', itemsAreNew=False):
         Editor = self.itemEditorClass()
         return Editor(wx.GetTopLevelParent(self), items, 
                       self.settings, self.presentation(), self.taskFile, 
-                      bitmap=bitmap, columnName=columnName)
+                      bitmap=bitmap, columnName=columnName, itemsAreNew=itemsAreNew)
         
     def itemEditorClass(self):
         raise NotImplementedError
@@ -417,6 +424,12 @@ class Viewer(wx.Panel):
 
     def deleteItemCommandClass(self):
         return command.DeleteCommand
+    
+    def onEditSubject(self, item, newValue):
+        command.EditSubjectCommand(items=[item], newValue=newValue).do()
+        
+    def onEditDescription(self, item, newValue):
+        command.EditDescriptionCommand(items=[item], newValue=newValue).do()
     
 
 class ListViewer(Viewer): # pylint: disable-msg=W0223
@@ -705,8 +718,9 @@ class ViewerWithColumns(Viewer): # pylint: disable-msg=W0223
         ownItems = getItems(recursive=False)
         if ownItems:
             subjects.append(self.renderSubjects(ownItems))
-        if self.isItemCollapsed(item):
-            childItems = getItems(recursive=True) - ownItems
+        isListViewer = not self.isTreeViewer() # pylint: disable-msg=E1101
+        if isListViewer or self.isItemCollapsed(item):
+            childItems = [theItem for theItem in getItems(recursive=True, upwards=isListViewer) if theItem not in ownItems]
             if childItems:
                 subjects.append('(%s)'%self.renderSubjects(childItems))
         return ' '.join(subjects)

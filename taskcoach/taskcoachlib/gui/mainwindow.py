@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import application, meta, patterns, widgets, platform # pylint: disable-msg=W0622
+from taskcoachlib import application, meta, patterns, widgets, operating_system # pylint: disable-msg=W0622
 from taskcoachlib.i18n import _
 from taskcoachlib.gui.threads import DeferredCallMixin, synchronized
 from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog
@@ -41,7 +41,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
     def __init__(self, iocontroller, taskFile, settings, *args, **kwargs):
         super(MainWindow, self).__init__(None, -1, '', *args, **kwargs)
         # This prevents the viewers from flickering on Windows 7 when refreshed:
-        if platform.isWindows7_OrNewer():
+        if operating_system.isWindows7_OrNewer():
             turnOnDoubleBufferingOnWindows(self)
         self.dimensionsTracker = windowdimensionstracker.WindowDimensionsTracker(self, settings)
         self.iocontroller = iocontroller
@@ -261,7 +261,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         # controls. Immediately after you click on a text control the focus
         # is removed. We work around it by not having AUI manage the toolbar
         # on Mac OS X:
-        if platform.isMac():
+        if operating_system.isMac():
             if self.GetToolBar():
                 self.GetToolBar().Destroy()
             if size is not None:

@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 from taskcoachlib.gui.dialog.preferences import SettingsPageBase
-from taskcoachlib import widgets
+from taskcoachlib import widgets, operating_system
 from taskcoachlib.i18n import _
 
 
@@ -116,11 +116,11 @@ class SyncMLAccessPage(SyncMLBasePage):
         self.fit()
 
     def OnPresetChanged(self, event):
+        ## if event.GetInt() == 1:
+        ##     self.setTextSetting('access', 'syncUrl', 'http://my.funambol.com/sync')
+        ##     self.setTextSetting('task', 'uri', 'task')
+        ##     self.setTextSetting('note', 'uri', 'note')
         if event.GetInt() == 1:
-            self.setTextSetting('access', 'syncUrl', 'http://my.funambol.com/sync')
-            self.setTextSetting('task', 'uri', 'task')
-            self.setTextSetting('note', 'uri', 'note')
-        elif event.GetInt() == 2:
             self.setTextSetting('access', 'syncUrl', 'http://sync.memotoo.com/syncml')
             self.setTextSetting('task', 'uri', 'task')
             self.setTextSetting('note', 'uri', 'note')
@@ -139,7 +139,7 @@ class SyncMLPreferences(widgets.NotebookDialog):
         self.iocontroller = iocontroller
         super(SyncMLPreferences, self).__init__(bitmap='wrench_icon', *args,
                                                 **kwargs)
-        if '__WXMAC__' in wx.PlatformInfo:
+        if operating_system.isMac():
             self.CentreOnParent()
 
     def addPages(self):

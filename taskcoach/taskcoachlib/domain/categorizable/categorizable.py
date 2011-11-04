@@ -114,15 +114,17 @@ class CategorizableCompositeObject(base.CompositeObject):
             can have multiple categories we first sort the categories by their
             subjects. If the sorter is in tree mode, we also take the categories
             of the children of the categorizable into account, after the 
-            categories of the categorizable itself. '''
+            categories of the categorizable itself. If the sorter is in list
+            mode we also take the categories of the parent (recursively) into
+            account, again after the categories of the categorizable itself. '''
         def sortKeyFunction(categorizable):
             def sortedSubjects(items):
                 return sorted([item.subject(recursive=True) for item in items])
             categories = categorizable.categories()
             sortedCategorySubjects = sortedSubjects(categories)
-            if kwargs.get('treeMode', False):
-                childCategories = categorizable.categories(recursive=True) - categories
-                sortedCategorySubjects.extend(sortedSubjects(childCategories)) 
+            isListMode = not kwargs.get('treeMode', False)
+            childCategories = categorizable.categories(recursive=True, upwards=isListMode) - categories
+            sortedCategorySubjects.extend(sortedSubjects(childCategories)) 
             return sortedCategorySubjects
         return sortKeyFunction
 

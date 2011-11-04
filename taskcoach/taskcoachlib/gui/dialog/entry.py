@@ -18,9 +18,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, wx.combo, locale
+import wx, wx.combo
 from wx.lib import newevent
-from taskcoachlib import widgets
+from taskcoachlib import widgets, operating_system
 from taskcoachlib.gui import artprovider
 from taskcoachlib.domain import date
 from taskcoachlib.thirdparty import combotreebox
@@ -100,7 +100,6 @@ class TimeDeltaEntry(widgets.PanelWithBoxSizer):
 
 class AmountEntry(widgets.PanelWithBoxSizer):
     def __init__(self, parent, amount=0.0, readonly=False, *args, **kwargs):
-        self.local_conventions = kwargs.pop('localeconv', locale.localeconv())
         super(AmountEntry, self).__init__(parent, *args, **kwargs)
         self._entry = self.createEntry(amount)
         if readonly:
@@ -109,22 +108,7 @@ class AmountEntry(widgets.PanelWithBoxSizer):
         self.fit()
 
     def createEntry(self, amount):
-        decimalChar = self.local_conventions['decimal_point'] or '.'
-        groupChar = self.local_conventions['thousands_sep'] or ','
-        groupDigits = len(self.local_conventions['grouping']) > 1
-        # The thousands separator may come up as ISO-8859-1 character
-        # 0xa0, which looks like a space but isn't ASCII, which
-        # confuses NumCtrl... Play it safe and avoid any non-ASCII
-        # character here, or groupChars that consist of multiple characters.
-        if len(groupChar) > 1 or ord(groupChar) >= 128:
-            groupChar = ' '
-        # Prevent decimalChar and groupChar from being the same:
-        if groupChar == decimalChar:
-            groupChar = ' ' # Space is not allowed as decimal point
-        return widgets.masked.NumCtrl(self, fractionWidth=2,
-            decimalChar=decimalChar, groupChar=groupChar,
-            groupDigits=groupDigits, 
-            selectOnEntry=True, allowNegative=False, value=amount)
+        return widgets.masked.AmountCtrl(self, amount)
   
     def GetValue(self):
         return self._entry.GetValue()
@@ -142,23 +126,23 @@ class PercentageEntry(widgets.PanelWithBoxSizer):
     def __init__(self, parent, percentage=0, *args, **kwargs):
         kwargs['orientation'] = wx.HORIZONTAL
         super(PercentageEntry, self).__init__(parent, *args, **kwargs)
-        self._slider = self._createSlider(percentage)
         self._entry = self._createSpinCtrl(percentage)
-        self.add(self._slider, flag=wx.ALL, proportion=0)
+        self._slider = self._createSlider(percentage)
         self.add(self._entry, flag=wx.ALL, proportion=0)
+        self.add((5, -1), flag=wx.ALL, proportion=0)
+        self.add(self._slider, flag=wx.ALL, proportion=1)
         self.fit()
         
     def _createSlider(self, percentage):
         slider = wx.Slider(self, value=percentage, style=wx.SL_AUTOTICKS,
                           minValue=0, maxValue=100, size=(150,-1))
-        slider.SetTickFreq(25, 1)
+        slider.SetTickFreq(25)
         slider.Bind(wx.EVT_SCROLL, self.onSliderScroll)
         return slider
         
     def _createSpinCtrl(self, percentage):
-        entry = widgets.SpinCtrl(self, value=str(percentage),
-            initial=percentage, min=0, max=100,
-            size=(60 if '__WXMAC__' == wx.Platform else 50, -1))
+        entry = widgets.SpinCtrl(self, value=percentage,
+            min=0, max=100, size=(60 if operating_system.isMac() else 50, -1))
         for eventType in wx.EVT_SPINCTRL, wx.EVT_KILL_FOCUS:
             entry.Bind(eventType, self.onSpin)
         return entry
@@ -293,7 +277,8 @@ class IconEntry(wx.combo.BitmapComboBox):
         for imageName in imageNames:
             label = artprovider.chooseableItemImages[imageName]
             bitmap = wx.ArtProvider_GetBitmap(imageName, wx.ART_MENU, size)
-            self.Append(label, bitmap, clientData=imageName)
+            item = self.Append(label, bitmap)
+            self.SetClientData(item, imageName)
         self.SetSelection(imageNames.index(currentIcon))
         self.Bind(wx.EVT_COMBOBOX, self.onIconPicked)
         
@@ -380,8 +365,8 @@ class TaskEntry(wx.Panel):
         ''' Add a task to the ComboTreeBox and then recursively add its
             subtasks. '''
         if not task.isDeleted():
-            item = self._comboTreeBox.Append(task.subject(), parent=parentItem,
-                                             clientData=task)
+            item = self._comboTreeBox.Append(task.subject(), parent=parentItem)
+            self._comboTreeBox.SetClientData(item, task)
             self._addTasksRecursively(task.children(), item)
 
     def onTaskSelected(self, event):
@@ -411,7 +396,7 @@ class RecurrenceEntry(wx.Panel):
         self._recurrencePeriodEntry.Bind(wx.EVT_CHOICE, self.onRecurrencePeriodEdited)
         self._recurrenceFrequencyEntry = widgets.SpinCtrl(recurrenceFrequencyPanel, 
                                                           size=(50,-1), 
-                                                          initial=1, min=1)
+                                                          value=1, min=1)
         self._recurrenceFrequencyEntry.Bind(wx.EVT_SPINCTRL, self.onRecurrenceEdited)
         self._recurrenceStaticText = wx.StaticText(recurrenceFrequencyPanel, 
                                                    label='reserve some space')
@@ -439,7 +424,7 @@ class RecurrenceEntry(wx.Panel):
         self._maxRecurrenceCheckBox = wx.CheckBox(maxPanel)
         self._maxRecurrenceCheckBox.Bind(wx.EVT_CHECKBOX, self.onMaxRecurrenceChecked)
         self._maxRecurrenceCountEntry = widgets.SpinCtrl(maxPanel, size=(50,-1), 
-                                                         initial=1, min=1)
+                                                         value=1, min=1)
         self._maxRecurrenceCountEntry.Bind(wx.EVT_SPINCTRL, self.onRecurrenceEdited)
         panelSizer.Add(self._maxRecurrenceCheckBox, flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add(self.horizontalSpace)
@@ -462,7 +447,7 @@ class RecurrenceEntry(wx.Panel):
             choices=[_('previous start and/or due date and time'),
                      _('last completion date and time')])
         self._scheduleChoice.Bind(wx.EVT_CHOICE, self.onRecurrenceEdited)
-        if '__WXMAC__' == wx.Platform:
+        if operating_system.isMac():
             # On Mac OS X, the wx.Choice gets too little vertical space by default
             size = self._scheduleChoice.GetSizeTuple()
             self._scheduleChoice.SetMinSize((size[0], size[1]+1))

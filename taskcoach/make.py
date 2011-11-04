@@ -104,7 +104,7 @@ if sys.argv[1] == 'py2exe':
             'optimize' : 2, 
             # We need to explicitly include these packages because they 
             # are imported implicitly:
-            'packages' : ['taskcoachlib.i18n', 'xml.dom.minidom'], 
+            'packages' : ['taskcoachlib.i18n'], 
             'dist_dir' : os.path.join(builddir, py2exeDistdir),
             'dll_excludes': ['MSVCR80.dll', 'UxTheme.dll']}},
         'data_files': dll_files + mo_files})

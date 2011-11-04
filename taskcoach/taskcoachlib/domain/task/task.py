@@ -171,10 +171,6 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return all(child.completed() for child in children) if children \
             else False        
 
-    def newChild(self, subject='New subtask'): # pylint: disable-msg=W0221
-        ''' Subtask constructor '''
-        return super(Task, self).newChild(subject=subject, parent=self)
-
     @patterns.eventSource
     def addChild(self, child, event=None):
         if child in self.children():
@@ -185,10 +181,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             self.setCompletionDateTime(child.completionDateTime(), event=event)
         elif self.completed() and not child.completed():
             self.setCompletionDateTime(self.maxDateTime, event=event)
-        if child.dueDateTime() > self.dueDateTime():
+        if self.maxDateTime > child.dueDateTime() > self.dueDateTime():
             self.setDueDateTime(child.dueDateTime(), event=event)           
         if child.startDateTime() < self.startDateTime():
             self.setStartDateTime(child.startDateTime(), event=event)
+        self.recomputeAppearance(recursive=False, event=event)
         child.recomputeAppearance(recursive=True, event=event)
 
     @patterns.eventSource
@@ -200,6 +197,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if self.shouldBeMarkedCompleted(): 
             # The removed child was the last uncompleted child
             self.setCompletionDateTime(date.Now(), event=event)
+        self.recomputeAppearance(recursive=False, event=event)
         child.recomputeAppearance(recursive=True, event=event)
                     
     def childChangeEvent(self, child, event):
@@ -315,9 +313,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             for child in self.children():
                 if startDateTime > child.startDateTime():
                     child.setStartDateTime(startDateTime, event=event)
-            parent = self.parent()
-            if parent and startDateTime < parent.startDateTime():
-                parent.setStartDateTime(startDateTime, event=event)
+        parent = self.parent()
+        if parent and startDateTime < parent.startDateTime():
+            parent.setStartDateTime(startDateTime, event=event)
         self.recomputeAppearance(event=event)
 
     @classmethod
@@ -375,9 +373,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             if parent and parent.priority(recursive=True) != oldParentPriority:
                 self.priorityEvent(event)              
             if completionDateTime != self.maxDateTime:
-                self.setReminder(None, event)
-            self.setPercentageComplete(100 if completionDateTime != self.maxDateTime else 0, 
-                                       event=event)
+                self.setReminder(None, event=event)
+                self.setPercentageComplete(100, event=event)
+            elif self.percentageComplete() == 100:
+                self.setPercentageComplete(0, event=event)
             if parent:
                 if self.completed():
                     if parent.shouldBeMarkedCompleted():
@@ -1092,11 +1091,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     # Prerequisites
     
-    def prerequisites(self, recursive=False):
+    def prerequisites(self, recursive=False, upwards=False):
         prerequisites = self.__prerequisites.get() 
-        if recursive:
-            for child in self.children():
-                prerequisites |= child.prerequisites(recursive)
+        if recursive and upwards and self.parent() is not None:
+            prerequisites |= self.parent().prerequisites(recursive=True, upwards=True)
+        elif recursive and not upwards:
+            for child in self.children(recursive=True):
+                prerequisites |= child.prerequisites()
         return prerequisites
     
     @patterns.eventSource
@@ -1133,15 +1134,17 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             have multiple prerequisites we first sort the prerequisites by their
             subjects. If the sorter is in tree mode, we also take the 
             prerequisites of the children of the task into account, after the 
-            prerequisites of the task itself. '''
+            prerequisites of the task itself. If the sorter is in list
+            mode we also take the prerequisites of the parent (recursively) into
+            account, again after the prerequisites of the categorizable itself.'''
         def sortKeyFunction(task):
             def sortedSubjects(items):
                 return sorted([item.subject(recursive=True) for item in items])
             prerequisites = task.prerequisites()
             sortedPrerequisiteSubjects = sortedSubjects(prerequisites)
-            if kwargs.get('treeMode', False):
-                childPrerequisites = task.prerequisites(recursive=True) - prerequisites
-                sortedPrerequisiteSubjects.extend(sortedSubjects(childPrerequisites)) 
+            isListMode = not kwargs.get('treeMode', False)
+            childPrerequisites = task.prerequisites(recursive=True, upwards=isListMode) - prerequisites
+            sortedPrerequisiteSubjects.extend(sortedSubjects(childPrerequisites)) 
             return sortedPrerequisiteSubjects
         return sortKeyFunction
 
@@ -1152,11 +1155,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     # Dependencies
     
-    def dependencies(self, recursive=False):
+    def dependencies(self, recursive=False, upwards=False):
         dependencies = self.__dependencies.get()
-        if recursive:
-            for child in self.children():
-                dependencies |= child.dependencies(recursive)
+        if recursive and upwards and self.parent() is not None:
+            dependencies |= self.parent().dependencies(recursive=True, upwards=True)
+        elif recursive and not upwards:
+            for child in self.children(recursive=True):
+                dependencies |= child.dependencies()
         return dependencies
 
     def setDependencies(self, dependencies, event=None):
@@ -1187,15 +1192,17 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             have multiple dependencies we first sort the dependencies by their
             subjects. If the sorter is in tree mode, we also take the 
             dependencies of the children of the task into account, after the 
-            dependencies of the task itself. '''
+            dependencies of the task itself. If the sorter is in list
+            mode we also take the dependencies of the parent (recursively) into
+            account, again after the dependencies of the categorizable itself.'''
         def sortKeyFunction(task):
             def sortedSubjects(items):
                 return sorted([item.subject(recursive=True) for item in items])
             dependencies = task.dependencies()
             sortedDependencySubjects = sortedSubjects(dependencies)
-            if kwargs.get('treeMode', False):
-                childDependencies = task.dependencies(recursive=True) - dependencies
-                sortedDependencySubjects.extend(sortedSubjects(childDependencies)) 
+            isListMode = not kwargs.get('treeMode', False)
+            childDependencies = task.dependencies(recursive=True, upwards=isListMode) - dependencies
+            sortedDependencySubjects.extend(sortedSubjects(childDependencies)) 
             return sortedDependencySubjects
         return sortKeyFunction
 
@@ -1267,12 +1274,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         elif defaultTime == 'endofworkingday':
             endHour = cls.settings.getint('view', 'efforthourend')
             if endHour >= 24:
-                endHour = 23
-                minute = 59
-                second = 59
+                endHour, minute, second = 23, 59, 59
             else:
-                minute = 0
-                second = 0
+                minute, second = 0, 0
             return dateTime.replace(hour=endHour, minute=minute,
                                     second=second, microsecond=0)
         elif defaultTime == 'endofday':

@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import patterns, meta, command, help, widgets, persistence, thirdparty, render # pylint: disable-msg=W0622
+from taskcoachlib import patterns, meta, command, help, widgets, persistence, thirdparty, render, operating_system # pylint: disable-msg=W0622
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import base, task, note, category, attachment, effort
 from taskcoachlib.mailer import sendMail
@@ -97,7 +97,7 @@ class UICommand(object):
         return self.id
     
     def addBitmapToMenuItem(self, menuItem):
-        if self.bitmap2 and self.kind == wx.ITEM_CHECK and '__WXGTK__' != wx.Platform:
+        if self.bitmap2 and self.kind == wx.ITEM_CHECK and not operating_system.isGTK():
             bitmap1 = self.__getBitmap(self.bitmap) 
             bitmap2 = self.__getBitmap(self.bitmap2)
             menuItem.SetBitmaps(bitmap1, bitmap2)
@@ -169,7 +169,7 @@ class UICommand(object):
             
     def updateMenuText(self, menuText):
         self.menuText = menuText
-        if '__WXMSW__' == wx.Platform:
+        if operating_system.isWindows():
             for menuItem in self.menuItems[:]:
                 menu = menuItem.GetMenu()
                 pos = menu.GetMenuItems().index(menuItem)
@@ -608,7 +608,7 @@ class FilePurgeDeletedItems(NeedsDeletedItemsMixin, IOCommand):
     def __init__(self, *args, **kwargs):
         super(FilePurgeDeletedItems, self).__init__(\
             menuText=_('&Purge deleted items'),
-            helpText=_('Actually delete deleted tasks and notes (see the SyncML chapter in Help'),
+            helpText=_('Actually delete deleted tasks and notes (see the SyncML chapter in Help)'),
             bitmap='delete', *args, **kwargs)
 
     def doCommand(self, event):
@@ -792,10 +792,7 @@ class FileSynchronize(IOCommand, SettingsCommand):
             bitmap='arrows_looped_icon', *args, **kwargs)
 
     def doCommand(self, event):
-        password = wx.GetPasswordFromUser(_('Please enter your password:'), 
-                                          _('Task Coach SyncML password'))
-        if password:
-            self.iocontroller.synchronize(password)
+        self.iocontroller.synchronize()
 
 
 class FileQuit(UICommand):
@@ -1344,7 +1341,7 @@ class Edit(NeedsSelectionMixin, ViewerCommand):
         windowWithFocus = wx.Window.FindFocus()
         if self.findEditCtrl(windowWithFocus):
             return True
-        elif '__WXMAC__' == wx.Platform and isinstance(windowWithFocus, wx.TextCtrl):
+        elif operating_system.isMac() and isinstance(windowWithFocus, wx.TextCtrl):
             return False
         else:
             return super(Edit, self).enabled(event)        
@@ -1365,9 +1362,8 @@ class EditTrackedTasks(TaskListCommand, SettingsCommand):
         
     def doCommand(self, event, show=True):
         editTaskDialog = dialog.editor.TaskEditor(self.mainWindow(), 
-            command.EditTaskCommand(self.taskList, self.taskList.tasksBeingTracked()), 
-            self.settings, self.taskList, self.mainWindow().taskFile, 
-            bitmap=self.bitmap)
+            self.taskList.tasksBeingTracked(), self.settings, self.taskList, 
+            self.mainWindow().taskFile, bitmap=self.bitmap)
         editTaskDialog.Show(show)
         return editTaskDialog # for testing purposes
         
@@ -1425,7 +1421,7 @@ class TaskNew(TaskListCommand, SettingsCommand):
         newTaskCommand.do() 
         newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(),
             newTaskCommand.items, self.settings, self.taskList, 
-            self.mainWindow().taskFile, bitmap=self.bitmap)
+            self.mainWindow().taskFile, bitmap=self.bitmap, itemsAreNew=True)
         newTaskDialog.Show(show)
         return newTaskDialog # for testing purposes
 
@@ -1462,7 +1458,7 @@ class TaskNewFromTemplate(TaskNew):
         # pylint: disable-msg=W0142
         newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(), 
             newTaskCommand.items, self.settings, self.taskList, 
-            self.mainWindow().taskFile, bitmap=self.bitmap)
+            self.mainWindow().taskFile, bitmap=self.bitmap, itemsAreNew=True)
         newTaskDialog.Show(show)
         return newTaskDialog # for testing purposes
    
@@ -1516,7 +1512,7 @@ class NewTaskWithSelectedTasksAsDependencies(NeedsSelectedTasksMixin, TaskNew,
     
 
 class NewSubItem(NeedsOneSelectedCompositeItemMixin, ViewerCommand):
-    shortcut = ('\tCtrl+INS' if '__WXMSW__' == wx.Platform else '\tShift+Ctrl+N')
+    shortcut = ('\tCtrl+INS' if operating_system.isWindows() else '\tShift+Ctrl+N')
     defaultMenuText = _('New &subitem...') + shortcut   
     labels = {task.Task: _('New &subtask...'),
               note.Note: _('New &subnote...'),
@@ -1671,24 +1667,24 @@ class TaskDecPriority(NeedsSelectedTasksMixin, TaskListCommand, ViewerCommand):
 
 
 class DragAndDropCommand(ViewerCommand):
-    def onCommandActivate(self, dropItem, dragItem): # pylint: disable-msg=W0221
+    def onCommandActivate(self, dropItem, dragItems, part): # pylint: disable-msg=W0221
         ''' Override onCommandActivate to be able to accept two items instead
             of one event. '''
-        self.doCommand(dropItem, dragItem)
+        self.doCommand(dropItem, dragItems, part)
 
-    def doCommand(self, dropItem, dragItem): # pylint: disable-msg=W0221
-        dragAndDropCommand = self.createCommand(dragItem, dropItem)
+    def doCommand(self, dropItem, dragItems, part): # pylint: disable-msg=W0221
+        dragAndDropCommand = self.createCommand(dropItem=dropItem, dragItems=dragItems, part=part)
         if dragAndDropCommand.canDo():
             dragAndDropCommand.do()
             
-    def createCommand(self, dragItem, dropItem):
+    def createCommand(self, dropItem, dragItems, part):
         raise NotImplementedError # pragma: no cover
     
 
 class TaskDragAndDrop(DragAndDropCommand, TaskListCommand):
-    def createCommand(self, dragItem, dropItem):
-        return command.DragAndDropTaskCommand(self.taskList, [dragItem], 
-                                              drop=[dropItem])
+    def createCommand(self, dropItem, dragItems, part):
+        return command.DragAndDropTaskCommand(self.taskList, dragItems, 
+                                              drop=[dropItem], part=part)
         
 
 class ToggleCategory(NeedsSelectedCategorizableMixin, ViewerCommand):
@@ -2089,9 +2085,9 @@ class CategoryNew(CategoriesCommand, SettingsCommand):
 
 
 class CategoryDragAndDrop(DragAndDropCommand, CategoriesCommand):
-    def createCommand(self, dragItem, dropItem):
-        return command.DragAndDropCategoryCommand(self.categories, [dragItem], 
-                                                  drop=[dropItem])
+    def createCommand(self, dropItem, dragItems, part):
+        return command.DragAndDropCategoryCommand(self.categories, dragItems, 
+                                                  drop=[dropItem], part=part)
 
 
 class NoteNew(NotesCommand, SettingsCommand, ViewerCommand):
@@ -2128,9 +2124,9 @@ class NewNoteWithSelectedCategories(NoteNew, ViewerCommand):
 
 
 class NoteDragAndDrop(DragAndDropCommand, NotesCommand):
-    def createCommand(self, dragItem, dropItem):
-        return command.DragAndDropNoteCommand(self.notes, [dragItem], 
-                                              drop=[dropItem])
+    def createCommand(self, dropItem, dragItems, part):
+        return command.DragAndDropNoteCommand(self.notes, dragItems, 
+                                              drop=[dropItem], part=part)
  
                                                         
 class AttachmentNew(AttachmentsCommand, ViewerCommand, SettingsCommand):
@@ -2232,7 +2228,7 @@ class DialogCommand(UICommand):
         
 class Help(DialogCommand):
     def __init__(self, *args, **kwargs):
-        if '__WXMAC__' in wx.PlatformInfo:
+        if operating_system.isMac():
             # Use default keyboard shortcut for Mac OS X:
             menuText = _('&Help contents\tCtrl+?') 
         else:
@@ -2297,7 +2293,12 @@ class URLCommand(UICommand):
         super(URLCommand, self).__init__(*args, **kwargs)
          
     def doCommand(self, event):
-        desktop.open(self.url)
+        try:
+            desktop.open(self.url)
+        except Exception, reason:
+            wx.MessageBox(_('Cannot open URL:\n%s')%reason, 
+                      caption=_('%s URL error')%meta.name, 
+                      style=wx.ICON_ERROR)
 
 
 class FAQ(URLCommand):

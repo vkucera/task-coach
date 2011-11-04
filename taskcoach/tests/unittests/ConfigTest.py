@@ -68,41 +68,37 @@ class SettingsTest(SettingsTestCase):
         self.assertEqual(recentfiles, 
                          self.settings.getlist('file', 'recentfiles'))
         
-    def testGetNonExistingSettingFromSection1DefaultsToBaseSection(self):
+    def testGetNonExistingSettingFromSection1ReturnsDefault(self):
         self.settings.add_section('effortviewer1')
         self.settings.set('effortviewer', 'columnwidths', 'dict(subject=10)')
-        self.assertEqual(dict(subject=10), 
-            self.settings.getlist('effortviewer1', 'columnwidths'))
+        self.assertEqual(eval(config.defaults.defaults['effortviewer']['columnwidths']), 
+            self.settings.getdict('effortviewer1', 'columnwidths'))
 
-    def testGetNonExistingSettingFromSection2DefaultsToSection1(self):
+    def testGetNonExistingSettingFromSection2ReturnsDefault(self):
         self.settings.add_section('effortviewer1')
         self.settings.add_section('effortviewer2')
         self.settings.set('effortviewer1', 'columnwidths', 'dict(subject=10)')
-        self.assertEqual(dict(subject=10), 
-            self.settings.getlist('effortviewer2', 'columnwidths'))
-
-    def testGetNonExistingSettingFromSection2DefaultsToBaseSection(self):
-        self.settings.add_section('effortviewer1')
-        self.settings.add_section('effortviewer2')
-        self.settings.set('effortviewer', 'columnwidths', 'dict(subject=10)')
-        self.assertEqual(dict(subject=10), 
-            self.settings.getlist('effortviewer2', 'columnwidths'))
+        self.assertEqual(eval(config.defaults.defaults['effortviewer']['columnwidths']), 
+            self.settings.getdict('effortviewer2', 'columnwidths'))
         
     def testGetNonExistingSettingFromSection2RaisesException(self):
         self.settings.add_section('effortviewer1')
         self.settings.add_section('effortviewer2')
         self.assertRaises(ConfigParser.NoOptionError,
-            self.settings.getlist, 'effortviewer2', 'nonexisting')
+            self.settings.get, 'effortviewer2', 'nonexisting')
+        
+    def testGetNonExistingSectionRaisesException(self):
+        self.assertRaises(ConfigParser.NoSectionError, self.settings.get, 'bla', 'bla')
 
     def testAddSectionAndSkipOne(self):
         self.settings.set('effortviewer', 'columnwidths', 'dict(subject=10)')
         self.settings.add_section('effortviewer2', 
             copyFromSection='effortviewer')
         self.assertEqual(dict(subject=10), 
-            self.settings.getlist('effortviewer2', 'columnwidths'))
+            self.settings.getdict('effortviewer2', 'columnwidths'))
 
-    # Prevent ValueError: invalid interpolation syntax in '%' at position 0:
     def testSinglePercentage(self):
+        # Prevent ValueError: invalid interpolation syntax in '%' at position 0:
         self.settings.set('effortviewer', 'searchfilterstring', '%')
         self.assertEqual('%', self.settings.get('effortviewer', 'searchfilterstring'))
 
@@ -115,6 +111,11 @@ class SettingsTest(SettingsTestCase):
         # Prevent ValueError: invalid interpolation syntax in '%' at position 0
         self.settings.set('effortviewer', 'searchfilterstring', '%%')
         self.assertEqual('%%', self.settings.get('effortviewer', 'searchfilterstring'))
+        
+    def testFixInvalidValuesFromOldIniFile(self):
+        self.settings.set('feature', 'notifier', 'Native')
+        self.assertEqual('Task Coach', self.settings.get('feature', 'notifier'))
+        self.assertEqual('Task Coach', self.settings.getRawValue('feature', 'notifier'))
         
 
 class SettingsIOTest(SettingsTestCase):
@@ -149,6 +150,16 @@ class SettingsIOTest(SettingsTestCase):
                 self.remove_section('file')
                 raise ConfigParser.ParsingError, 'Testing'
         self.failIf(SettingsThatThrowsParsingError().getboolean('file', 'inifileloaded'))
+        
+    def testFixOldColumnValues(self):
+        section = 'prerequisiteviewerintaskeditor1'
+        self.fakeFile.write("[%s]\ncolumns = ['dueDate']\ncolumnwidths = {'dueDate': 40}\n"%section)
+        self.fakeFile.seek(0)
+        self.settings.readfp(self.fakeFile)
+        self.failUnless(['dueDateTime'], 
+                        self.settings.getlist(section, 'columns'))
+        self.assertEqual(dict(dueDateTime=40), self.settings.getdict(section, 'columnwidths'))
+
 
 class SettingsObservableTest(SettingsTestCase):
     def setUp(self):
