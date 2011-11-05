@@ -307,11 +307,12 @@ class IOController(object):
             filename, fileExists, separateCSS=separateCSS)
 
     def exportAsCSV(self, viewer, selectionOnly=False, 
-                    separateDateAndTimeColumns=False, fileExists=os.path.exists):
+                    separateDateAndTimeColumns=False, columns=None,
+                    fileExists=os.path.exists):
         return self.export(_('Export as CSV'), self.__csvFileDialogOpts, 
             persistence.CSVWriter, viewer, selectionOnly, 
             separateDateAndTimeColumns=separateDateAndTimeColumns, 
-            fileExists=fileExists)
+            columns=columns, fileExists=fileExists)
         
     def exportAsICalendar(self, viewer, selectionOnly=False, 
                           fileExists=os.path.exists):
