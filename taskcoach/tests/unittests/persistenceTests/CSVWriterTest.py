@@ -46,18 +46,21 @@ class CSVWriterTestCase(test.wxTestCase):
         self.viewer = gui.viewer.TaskViewer(self.frame, self.taskFile,
             self.settings)
 
-    def __writeAndRead(self, selectionOnly, separateDateAndTimeColumns):
+    def __writeAndRead(self, selectionOnly, separateDateAndTimeColumns, columns):
         self.writer.write(self.viewer, self.settings, selectionOnly, 
-                          separateDateAndTimeColumns=separateDateAndTimeColumns)
+                          separateDateAndTimeColumns=separateDateAndTimeColumns,
+                          columns=columns)
         return self.fd.getvalue()
-    
-    def expectInCSV(self, csvFragment, selectionOnly=False, separateDateAndTimeColumns=False):
-        csv = self.__writeAndRead(selectionOnly, separateDateAndTimeColumns)
+
+    def expectInCSV(self, csvFragment, selectionOnly=False, separateDateAndTimeColumns=False,
+                    columns=None):
+        csv = self.__writeAndRead(selectionOnly, separateDateAndTimeColumns, columns)
         self.failUnless(csvFragment in csv, 
                         '%s not in %s'%(csvFragment, csv))
     
-    def expectNotInCSV(self, csvFragment, selectionOnly=False, separateDateAndTimeColumns=False):
-        csv = self.__writeAndRead(selectionOnly, separateDateAndTimeColumns)
+    def expectNotInCSV(self, csvFragment, selectionOnly=False, separateDateAndTimeColumns=False,
+                       columns=None):
+        csv = self.__writeAndRead(selectionOnly, separateDateAndTimeColumns, columns)
         self.failIf(csvFragment in csv, '%s in %s'%(csvFragment, csv))
 
     def selectItem(self, items):
@@ -95,6 +98,10 @@ class TaskTestsMixin(object):
         self.task.setStartDateTime(startDateTime)
         self.expectInCSV(' '.join((render.date(startDateTime), render.time(startDateTime))),
                          separateDateAndTimeColumns=False)
+        
+    def testSpecifyColumns(self):
+        self.task.setPriority(999)
+        self.expectInCSV('999', columns=self.viewer.columns())
                 
         
 class CSVListWriterTest(TaskTestsMixin, CSVWriterTestCase):

@@ -35,8 +35,8 @@ class RowBuilder(object):
                                     completionDateTime=[_('Completion date'), _('Completion time')],
                                     reminder=[_('Reminder date'), _('Reminder time')])
     
-    def __init__(self, visibleColumns, isTree, separateDateAndTimeColumns):
-        self.__visibleColumns = visibleColumns
+    def __init__(self, columns, isTree, separateDateAndTimeColumns):
+        self.__columns = columns
         self.__separateDateAndTimeColumns = separateDateAndTimeColumns
         if isTree:
             self.indent = lambda item: ' ' * len(item.ancestors())
@@ -45,7 +45,7 @@ class RowBuilder(object):
         
     def headerRow(self):
         headers = []
-        for column in self.__visibleColumns:
+        for column in self.__columns:
             if self.shouldSplitDateAndTime(column):
                 headers.extend(self.dateAndTimeColumnHeaders[column.name()])
             else:
@@ -54,7 +54,7 @@ class RowBuilder(object):
     
     def itemRow(self, item):
         row = []
-        for column in self.__visibleColumns:
+        for column in self.__columns:
             if self.shouldSplitDateAndTime(column):
                 row.extend(self.splitDateAndTime(column, item))
             else:
@@ -76,14 +76,16 @@ class RowBuilder(object):
         return [self.headerRow()] + self.itemRows(items)
     
 
-def viewer2csv(viewer, selectionOnly=False, separateDateAndTimeColumns=False):
+def viewer2csv(viewer, selectionOnly=False, separateDateAndTimeColumns=False,
+               columns=None):
     ''' Convert the items displayed by a viewer into a list of rows, where
         each row consists of a list of values. If the viewer is in tree mode, 
         indent the first value (typically the subject of the item) to 
         indicate the depth of the item in the tree. '''
     
     isTree = viewer.isTreeViewer()    
-    rowBuilder = RowBuilder(viewer.visibleColumns(), isTree, separateDateAndTimeColumns)
+    columns = columns or viewer.visibleColumns()
+    rowBuilder = RowBuilder(columns, isTree, separateDateAndTimeColumns)
     items = viewer.visibleItems()
     if selectionOnly:
         items = [item for item in items if viewer.isselected(item)]
