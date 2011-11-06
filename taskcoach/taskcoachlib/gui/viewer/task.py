@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
+import wx, wx.lib.agw.piectrl, math
 from taskcoachlib import patterns, command, widgets, domain, render
 from taskcoachlib.domain import task, date
 from taskcoachlib.i18n import _
@@ -1063,3 +1063,76 @@ class CheckableTaskViewer(TaskViewer): # pylint: disable-msg=W0223
     
     def getItemParentHasExclusiveChildren(self, task): # pylint: disable-msg=W0613,W0621
         return False
+    
+    
+class TaskStatsViewer(BaseTaskViewer):
+    defaultTitle = _('Task statistics')
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('settingsSection', 'taskstatsviewer')
+        super(TaskStatsViewer, self).__init__(*args, **kwargs)
+        
+    def createWidget(self):
+        widget = wx.lib.agw.piectrl.PieCtrl(self)
+        widget.SetShowEdges(False)
+        widget.SetAngle(30/180.*math.pi)
+        widget.SetHeight(20)
+        self.initLegend(widget)
+        for dummy in range(5):
+            widget._series.append(wx.lib.agw.piectrl.PiePart())
+        widget._series[-1].SetValue(1)
+        return widget
+    
+    def initLegend(self, widget):
+        legend = widget.GetLegend()
+        legend.SetTransparent(False)
+        legend.SetBackColour(wx.WHITE)
+        legend.SetLabelFont(wx.SystemSettings.GetFont(wx.SYS_SYSTEM_FONT))
+        legend.Show()
+    
+    def refresh(self):
+        self.refreshCounts()
+        self.refreshColors()
+        self.widget.Refresh()
+        
+    def refreshCounts(self):
+        series = self.widget._series
+        presentation = self.presentation()
+        total = len(presentation)
+        def percentage(number):
+            return round(100.*number/total) if total else 0
+        nrOverdue = presentation.nrOverdue()
+        series[0].SetLabel(_('Overdue tasks: %d (%d%%)')%(nrOverdue, percentage(nrOverdue)))
+        series[0].SetValue(nrOverdue)
+        nrDueSoon = presentation.nrDueSoon()
+        series[1].SetLabel(_('Due soon tasks: %d (%d%%)')%(nrDueSoon, percentage(nrDueSoon)))
+        series[1].SetValue(nrDueSoon)
+        nrActive = len([task for task in presentation if task.active() and not task.overdue() and not task.dueSoon()])
+        series[2].SetLabel(_('Active tasks: %d (%d%%)')%(nrActive, percentage(nrActive)))
+        series[2].SetValue(nrActive)
+        nrInactive = len([task for task in presentation if task.inactive() and not task.overdue() and not task.dueSoon()])
+        series[3].SetLabel(_('Inactive tasks: %d (%d%%)')%(nrInactive, percentage(nrInactive)))
+        series[3].SetValue(1 if len(presentation) == 0 else nrInactive)
+        nrCompleted = presentation.nrCompleted()
+        series[4].SetLabel(_('Completed tasks: %d (%d%%)')%(nrCompleted, percentage(nrCompleted)))
+        series[4].SetValue(nrCompleted)
+        
+    def refreshColors(self):
+        series = self.widget._series
+        series[0].SetColour(wx.Colour(*eval(self.settings.get('fgcolor', 'overduetasks'))))
+        series[1].SetColour(wx.Colour(*eval(self.settings.get('fgcolor', 'duesoontasks'))))
+        activeColor = wx.Colour(*eval(self.settings.get('fgcolor', 'activetasks')))
+        if activeColor == wx.BLACK:
+            activeColor = wx.BLUE
+        series[2].SetColour(activeColor)
+        series[3].SetColour(wx.Colour(*eval(self.settings.get('fgcolor', 'inactivetasks'))))    
+        series[4].SetColour(wx.Colour(*eval(self.settings.get('fgcolor', 'completedtasks'))))
+        
+    def refreshItems(self, *args, **kwargs):
+        self.refresh()
+    
+    def select(self, *args):
+        pass
+    
+    def updateSelection(self, *args, **kwargs):
+        pass
