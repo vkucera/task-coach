@@ -1067,6 +1067,9 @@ class CheckableTaskViewer(TaskViewer): # pylint: disable-msg=W0223
     
 class TaskStatsViewer(BaseTaskViewer):
     defaultTitle = _('Task statistics')
+    labels = [_('Overdue tasks: %d (%d%%)'), _('Due soon tasks: %d (%d%%)'), 
+              _('Active tasks: %d (%d%%)'), _('Inactive tasks: %d (%d%%)'), 
+              _('Completed tasks: %d (%d%%)')]
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'taskstatsviewer')
@@ -1080,7 +1083,6 @@ class TaskStatsViewer(BaseTaskViewer):
         self.initLegend(widget)
         for dummy in range(5):
             widget._series.append(wx.lib.agw.piectrl.PiePart())
-        widget._series[-1].SetValue(1)
         return widget
     
     def initLegend(self, widget):
@@ -1097,36 +1099,50 @@ class TaskStatsViewer(BaseTaskViewer):
         
     def refreshCounts(self):
         series = self.widget._series
-        presentation = self.presentation()
-        total = len(presentation)
-        def percentage(number):
-            return round(100.*number/total) if total else 0
-        nrOverdue = presentation.nrOverdue()
-        series[0].SetLabel(_('Overdue tasks: %d (%d%%)')%(nrOverdue, percentage(nrOverdue)))
-        series[0].SetValue(nrOverdue)
-        nrDueSoon = presentation.nrDueSoon()
-        series[1].SetLabel(_('Due soon tasks: %d (%d%%)')%(nrDueSoon, percentage(nrDueSoon)))
-        series[1].SetValue(nrDueSoon)
-        nrActive = len([task for task in presentation if task.active() and not task.overdue() and not task.dueSoon()])
-        series[2].SetLabel(_('Active tasks: %d (%d%%)')%(nrActive, percentage(nrActive)))
-        series[2].SetValue(nrActive)
-        nrInactive = len([task for task in presentation if task.inactive() and not task.overdue() and not task.dueSoon()])
-        series[3].SetLabel(_('Inactive tasks: %d (%d%%)')%(nrInactive, percentage(nrInactive)))
-        series[3].SetValue(1 if len(presentation) == 0 else nrInactive)
-        nrCompleted = presentation.nrCompleted()
-        series[4].SetLabel(_('Completed tasks: %d (%d%%)')%(nrCompleted, percentage(nrCompleted)))
-        series[4].SetValue(nrCompleted)
+        tasks = self.presentation()
+        total = len(tasks)
+        overdue, dueSoon, active, inactive, completed = range(5)
+        
+        def refreshPart(part, label, nrTasks):
+            percentage = round(100.*nrTasks/total) if total else 0
+            part.SetLabel(label%(nrTasks, percentage))
+            part.SetValue(nrTasks)
+        
+        def countTasksPerStatus(tasks):
+            counts = [0] * 5
+            for task in tasks:
+                if task.completed():
+                    status = completed
+                elif task.overdue():
+                    status = overdue
+                elif task.dueSoon():
+                    status = dueSoon
+                elif task.active():
+                    status = active
+                else:
+                    status = inactive
+                counts[status] += 1
+            return counts
+        
+        for part, label, nrTasks in zip(series, self.labels, countTasksPerStatus(tasks)):
+            refreshPart(part, label, nrTasks)
+        # PietCtrl can't handle empty pie charts:    
+        if total == 0:
+            series[inactive].SetValue(1)
         
     def refreshColors(self):
         series = self.widget._series
-        series[0].SetColour(wx.Colour(*eval(self.settings.get('fgcolor', 'overduetasks'))))
-        series[1].SetColour(wx.Colour(*eval(self.settings.get('fgcolor', 'duesoontasks'))))
-        activeColor = wx.Colour(*eval(self.settings.get('fgcolor', 'activetasks')))
+        series[0].SetColour(self.getFgColor('overduetasks'))
+        series[1].SetColour(self.getFgColor('duesoontasks'))
+        activeColor = self.getFgColor('activetasks')
         if activeColor == wx.BLACK:
             activeColor = wx.BLUE
         series[2].SetColour(activeColor)
-        series[3].SetColour(wx.Colour(*eval(self.settings.get('fgcolor', 'inactivetasks'))))    
-        series[4].SetColour(wx.Colour(*eval(self.settings.get('fgcolor', 'completedtasks'))))
+        series[3].SetColour(self.getFgColor('inactivetasks'))
+        series[4].SetColour(self.getFgColor('completedtasks'))
+        
+    def getFgColor(self, setting):
+        return wx.Colour(*eval(self.settings.get('fgcolor', setting)))
         
     def refreshItems(self, *args, **kwargs):
         self.refresh()
