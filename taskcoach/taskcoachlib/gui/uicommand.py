@@ -2366,8 +2366,12 @@ class Search(ViewerCommand, SettingsCommand):
     def bindKeyDownInViewer(self):
         ''' Bind wx.EVT_KEY_DOWN to self.onViewerKeyDown so we can catch
             Ctrl-F. '''
-        self.viewer.getWidget().GetMainWindow().Bind(wx.EVT_KEY_DOWN, 
-                                                     self.onViewerKeyDown)
+        widget = self.viewer.getWidget()
+        try:
+            window = widget.GetMainWindow()
+        except AttributeError:
+            window = widget
+        widget.Bind(wx.EVT_KEY_DOWN, self.onViewerKeyDown)
         
     def bindKeyDownInSearchCtrl(self):
         ''' Bind wx.EVT_KEY_DOWN to self.onSearchCtrlKeyDown so we can catch 

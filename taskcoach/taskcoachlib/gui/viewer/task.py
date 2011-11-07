@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
+import wx, wx.lib.agw.piectrl, math
 from taskcoachlib import patterns, command, widgets, domain, render
 from taskcoachlib.domain import task, date
 from taskcoachlib.i18n import _
@@ -1063,3 +1063,92 @@ class CheckableTaskViewer(TaskViewer): # pylint: disable-msg=W0223
     
     def getItemParentHasExclusiveChildren(self, task): # pylint: disable-msg=W0613,W0621
         return False
+    
+    
+class TaskStatsViewer(BaseTaskViewer):
+    defaultTitle = _('Task statistics')
+    labels = [_('Overdue tasks: %d (%d%%)'), _('Due soon tasks: %d (%d%%)'), 
+              _('Active tasks: %d (%d%%)'), _('Inactive tasks: %d (%d%%)'), 
+              _('Completed tasks: %d (%d%%)')]
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('settingsSection', 'taskstatsviewer')
+        super(TaskStatsViewer, self).__init__(*args, **kwargs)
+        
+    def createWidget(self):
+        widget = wx.lib.agw.piectrl.PieCtrl(self)
+        widget.SetShowEdges(False)
+        widget.SetAngle(30/180.*math.pi)
+        widget.SetHeight(20)
+        self.initLegend(widget)
+        for dummy in range(5):
+            widget._series.append(wx.lib.agw.piectrl.PiePart())
+        return widget
+    
+    def initLegend(self, widget):
+        legend = widget.GetLegend()
+        legend.SetTransparent(False)
+        legend.SetBackColour(wx.WHITE)
+        legend.SetLabelFont(wx.SystemSettings.GetFont(wx.SYS_SYSTEM_FONT))
+        legend.Show()
+    
+    def refresh(self):
+        self.refreshCounts()
+        self.refreshColors()
+        self.widget.Refresh()
+        
+    def refreshCounts(self):
+        series = self.widget._series
+        tasks = self.presentation()
+        total = len(tasks)
+        overdue, dueSoon, active, inactive, completed = range(5)
+        
+        def refreshPart(part, label, nrTasks):
+            percentage = round(100.*nrTasks/total) if total else 0
+            part.SetLabel(label%(nrTasks, percentage))
+            part.SetValue(nrTasks)
+        
+        def countTasksPerStatus(tasks):
+            counts = [0] * 5
+            for task in tasks:
+                if task.completed():
+                    status = completed
+                elif task.overdue():
+                    status = overdue
+                elif task.dueSoon():
+                    status = dueSoon
+                elif task.active():
+                    status = active
+                else:
+                    status = inactive
+                counts[status] += 1
+            return counts
+        
+        for part, label, nrTasks in zip(series, self.labels, countTasksPerStatus(tasks)):
+            refreshPart(part, label, nrTasks)
+        # PietCtrl can't handle empty pie charts:    
+        if total == 0:
+            series[inactive].SetValue(1)
+        
+    def refreshColors(self):
+        series = self.widget._series
+        series[0].SetColour(self.getFgColor('overduetasks'))
+        series[1].SetColour(self.getFgColor('duesoontasks'))
+        activeColor = self.getFgColor('activetasks')
+        if activeColor == wx.BLACK:
+            activeColor = wx.BLUE
+        series[2].SetColour(activeColor)
+        series[3].SetColour(self.getFgColor('inactivetasks'))
+        series[4].SetColour(self.getFgColor('completedtasks'))
+        
+    def getFgColor(self, setting):
+        return wx.Colour(*eval(self.settings.get('fgcolor', setting)))
+        
+    def refreshItems(self, *args, **kwargs):
+        self.refresh()
+    
+    def select(self, *args):
+        pass
+    
+    def updateSelection(self, *args, **kwargs):
+        pass
