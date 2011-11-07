@@ -33,6 +33,7 @@ defaults = { \
     'squaretaskviewercount': '0',
     'timelineviewercount': '0',
     'calendarviewercount': '0',
+    'taskstatsviewercount': '0',
     'language': '',                  # Language and locale, maybe set externally (e.g. by PortableApps)
     'language_set_by_user': '',      # Language and locale as set by user via preferences, overrides language
     'categoryfiltermatchall': 'False',
@@ -74,6 +75,18 @@ defaults = { \
     'hideactivetasks': 'False',
     'hidecompositetasks': 'False',
 },              
+'taskstatsviewer': { \
+    'title': '',
+    'searchfilterstring': '',
+    'searchfiltermatchcase': 'False',
+    'searchfilterincludesubitems': 'False',
+    'searchdescription': 'False',
+    'tasksdue': 'Never',             # Show tasks when they're due today, tomorrow, etc.
+    'taskscompleted': 'Never',       # Show tasks completed today, yesterday, etc.
+    'tasksinactive': 'Never',        # Show tasks when they'll be active today, tomorrow, etc.   
+    'hideactivetasks': 'False',
+    'hidecompositetasks': 'False',
+},
 'prerequisiteviewerintaskeditor': { \
     'title': '',                     # User supplied viewer title 
     'treemode': 'True',              # True = tree mode, False = list mode

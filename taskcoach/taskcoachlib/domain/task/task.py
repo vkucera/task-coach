@@ -430,12 +430,19 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     # Task state
     
     def completed(self):
+        ''' A task is completed if it has a completion date/time. '''
         return self.completionDateTime() != self.maxDateTime
 
     def overdue(self):
+        ''' A task is over due if its due date/time is in the past and it is
+            not completed. Note that an over due task is also either active 
+            or inactive. '''
         return self.dueDateTime() < date.Now() and not self.completed()
 
     def inactive(self):
+        ''' A task is inactive if it is not completed and either has no start
+            date/time or a start date/time in the future, and/or its 
+            prerequisites are not completed. '''
         if self.completed():
             return False # Completed tasks are never inactive
         if date.Now() < self.startDateTime() < self.maxDateTime:
@@ -450,9 +457,16 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             return self.startDateTime() == self.maxDateTime
         
     def active(self):
+        ''' A task is active if it has a start date/time in the past and it is
+            not completed. Note that over due and due soon tasks are also 
+            considered to be active. So the statuses active, inactive and 
+            completed are disjunct, but the statuses active, due soon and over 
+            due are not. '''
         return not self.inactive() and not self.completed()
 
     def dueSoon(self):
+        ''' A task is due soon if it is not completed and there is still time 
+            left (i.e. it is not over due). '''
         return (0 <= self.timeLeft().hours() < self.__dueSoonHours and not self.completed())
     
     def onDueSoonHoursChanged(self, event):
