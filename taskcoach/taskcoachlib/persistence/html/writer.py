@@ -51,10 +51,10 @@ class HTMLWriter(object):
         self.__filename = filename
         self.__cssFilename = os.path.splitext(filename)[0] + '.css' if filename else ''
 
-    def write(self, viewer, settings, selectionOnly=False, separateCSS=False):
+    def write(self, viewer, settings, selectionOnly=False, separateCSS=False, columns=None):
         cssFilename = os.path.basename(self.__cssFilename) if separateCSS else ''
         htmlText, count = generator.viewer2html(viewer, settings, cssFilename, 
-                                                selectionOnly)
+                                                selectionOnly, columns)
         self.__fd.write(htmlText)
         if separateCSS:
             self._writeCSS()

@@ -686,8 +686,8 @@ class FileExportCommand(IOCommand, SettingsCommand):
     def doCommand(self, event):
         exportDialog = self.ExportDialogClass(self.mainWindow(), settings=self.settings) # pylint: disable-msg=E1101
         if wx.ID_OK == exportDialog.ShowModal():
-            selectedViewer = exportDialog.selectedViewer()
             exportOptions = exportDialog.options()
+            selectedViewer = exportOptions.pop('selectedViewer')
             self.exportFunction()(selectedViewer, **exportOptions) # pylint: disable-msg=W0142
         exportDialog.Destroy()
     
