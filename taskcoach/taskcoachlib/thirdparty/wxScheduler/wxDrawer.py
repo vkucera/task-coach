@@ -419,7 +419,10 @@ class HeaderDrawerDCMixin(object):
 			totalHeight = 0
 
 			for schedule in schedules:
-				description = '%s %s' % (schedule.start.Format('%H:%M'), schedule.description)
+				if schedule.start.Format('%H%M') != '0000':
+					description = '%s %s' % (schedule.start.Format('%H:%M'), schedule.description)
+				else:
+					description = schedule.description
 				description = self._shrinkText(self.context, description, width - 2 * SCHEDULE_INSIDE_MARGIN, headerH)[0]
 
 				textW, textH = self.context.GetTextExtent(description)
@@ -538,7 +541,10 @@ class HeaderDrawerGCMixin(object):
 				totalHeight = 0
 
 				for schedule in schedules:
-					description = '%s %s' % (schedule.start.Format('%H:%M'), schedule.description)
+					if schedule.start.Format('%H%M') != '0000':
+						description = '%s %s' % (schedule.start.Format('%H:%M'), schedule.description)
+					else:
+						description = schedule.description
 					description = self._shrinkText(self.context, description, width - 2 * SCHEDULE_INSIDE_MARGIN, headerH)[0]
 
 					textW, textH = self.context.GetTextExtent(description)
