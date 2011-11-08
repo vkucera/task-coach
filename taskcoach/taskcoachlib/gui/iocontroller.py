@@ -300,11 +300,11 @@ class IOController(object):
             return False
 
     def exportAsHTML(self, viewer, selectionOnly=False, separateCSS=False,
-                     openfile=codecs.open, showerror=wx.MessageBox, 
+                     columns=None, openfile=codecs.open, showerror=wx.MessageBox, 
                      filename=None, fileExists=os.path.exists):
         return self.export(_('Export as HTML'), self.__htmlFileDialogOpts, 
             persistence.HTMLWriter, viewer, selectionOnly, openfile, showerror, 
-            filename, fileExists, separateCSS=separateCSS)
+            filename, fileExists, separateCSS=separateCSS, columns=columns)
 
     def exportAsCSV(self, viewer, selectionOnly=False, 
                     separateDateAndTimeColumns=False, columns=None,

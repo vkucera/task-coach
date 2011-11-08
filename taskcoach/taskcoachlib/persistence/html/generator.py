@@ -74,9 +74,10 @@ th {
 }
 '''
 
-def viewer2html(viewer, settings, cssFilename=None, selectionOnly=False):
+def viewer2html(viewer, settings, cssFilename=None, selectionOnly=False, columns=None):
     converter = Viewer2HTMLConverter(viewer, settings)
-    return converter(cssFilename, selectionOnly) 
+    columns = columns or viewer.visibleColumns()
+    return converter(cssFilename, columns, selectionOnly) 
 
 
 class Viewer2HTMLConverter(object):
@@ -92,16 +93,16 @@ class Viewer2HTMLConverter(object):
         self.settings = settings
         self.count = 0
         
-    def __call__(self, cssFilename, selectionOnly):
+    def __call__(self, cssFilename, columns, selectionOnly):
         ''' Create an HTML document. '''
-        lines = [self.docType] + self.html(cssFilename, selectionOnly) + ['']
+        lines = [self.docType] + self.html(cssFilename, columns, selectionOnly) + ['']
         return '\n'.join(lines), self.count
     
-    def html(self, cssFilename, selectionOnly, level=0):
+    def html(self, cssFilename, columns, selectionOnly, level=0):
         ''' Returns all HTML, consisting of header and body. '''
         printing = not cssFilename
         htmlContent = self.htmlHeader(cssFilename, level+1) + \
-                      self.htmlBody(selectionOnly, printing, level+1)
+                      self.htmlBody(columns, selectionOnly, printing, level+1)
         return self.wrap(htmlContent, 'html', level)
     
     def htmlHeader(self, cssFilename, level):
@@ -142,23 +143,22 @@ class Viewer2HTMLConverter(object):
             styleContent.extend([self.indent(line, level+1) for line in css.split('\n')])
         return self.wrap(styleContent, 'style', level, type='text/css')
     
-    def htmlBody(self, selectionOnly, printing, level):
+    def htmlBody(self, columns, selectionOnly, printing, level):
         ''' Returns the HTML body section, containing one table with all 
             visible data. '''
         htmlBodyContent = []
         if printing:
             htmlBodyContent.append(self.wrap(self.viewer.title(), 'h1', level, 
                                              oneLine=True))
-        htmlBodyContent.extend(self.table(selectionOnly, printing, level+1))
+        htmlBodyContent.extend(self.table(columns, selectionOnly, printing, level+1))
         return self.wrap(htmlBodyContent, 'body', level)
     
-    def table(self, selectionOnly, printing, level):
+    def table(self, columns, selectionOnly, printing, level):
         ''' Returns the table, consisting of caption, table header and table 
             body. '''
-        visibleColumns = self.viewer.visibleColumns()
         tableContent = [] if printing else [self.tableCaption(level+1)]
-        tableContent.extend(self.tableHeader(visibleColumns, printing, level+1) + \
-                            self.tableBody(visibleColumns, selectionOnly, 
+        tableContent.extend(self.tableHeader(columns, printing, level+1) + \
+                            self.tableBody(columns, selectionOnly, 
                                            printing, level+1))
         attributes = dict(id='table')
         if printing: 
@@ -169,16 +169,16 @@ class Viewer2HTMLConverter(object):
         ''' Returns the table caption, based on the viewer title. '''
         return self.wrap(self.viewer.title(), 'caption', level, oneLine=True)
     
-    def tableHeader(self, visibleColumns, printing, level):
+    def tableHeader(self, columns, printing, level):
         ''' Returns the table header section <thead> containing the header
             row with the column headers. '''
-        tableHeaderContent = self.headerRow(visibleColumns, printing, level+1)
+        tableHeaderContent = self.headerRow(columns, printing, level+1)
         return self.wrap(tableHeaderContent, 'thead', level)
         
-    def headerRow(self, visibleColumns, printing, level):
+    def headerRow(self, columns, printing, level):
         ''' Returns the header row <tr> for the table. '''
         headerRowContent = []
-        for column in visibleColumns:
+        for column in columns:
             headerRowContent.append(self.headerCell(column, printing, level+1))
         return self.wrap(headerRowContent, 'tr', level, **{'class': 'header'})
         
@@ -193,7 +193,7 @@ class Viewer2HTMLConverter(object):
                 header = self.wrap(header, 'u', level+1, oneLine=True) 
         return self.wrap(header, 'th', level, oneLine=True, **attributes)
     
-    def tableBody(self, visibleColumns, selectionOnly, printing, level):
+    def tableBody(self, columns, selectionOnly, printing, level):
         ''' Returns the table body <tbody>. '''
         tree = self.viewer.isTreeViewer()
         self.count = 0
@@ -202,16 +202,16 @@ class Viewer2HTMLConverter(object):
             if selectionOnly and not self.viewer.isselected(item):
                 continue
             self.count += 1
-            tableBodyContent.extend(self.bodyRow(item, visibleColumns, tree, 
+            tableBodyContent.extend(self.bodyRow(item, columns, tree, 
                                                  printing, level+1))
         return self.wrap(tableBodyContent, 'tbody', level)
     
-    def bodyRow(self, item, visibleColumns, tree, printing, level):
+    def bodyRow(self, item, columns, tree, printing, level):
         ''' Returns a <tr> containing the values of item for the 
             visibleColumns. '''
         bodyRowContent = []
         attributes = dict()
-        for column in visibleColumns:
+        for column in columns:
             renderedItem = self.render(item, column, indent=not bodyRowContent and tree)
             if printing:
                 itemColor = item.foregroundColor(recursive=True)

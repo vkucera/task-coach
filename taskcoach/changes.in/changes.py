@@ -43,7 +43,7 @@ the calendar view in vertical mode.''', '3428524'),
     featuresAdded=[
         Feature('''When exporting to CSV, dates and times can optionally be 
 put in separate columns.'''),
-        Feature('''When exporting to CSV, the columns to be exported
+        Feature('''When exporting to CSV and HTML, the columns to be exported
 can be changed in the export dialog.'''),
         Feature('''Simple task statistics viewer added 
 (contains only a pie chart at the moment).'''),

@@ -277,9 +277,15 @@ class ExportAsHTMLDialog(ExportDialog):
     
     def createInterior(self, pane):
         viewerPicker = ViewerPicker(pane, self.exportableViewers(), self.activeViewer())
+        viewerPicker.Bind(EVT_VIEWERPICKED, self.onViewerChanged)
+        self.columnPicker = ColumnPicker(pane, viewerPicker.selectedViewer()) # pylint: disable-msg=W0201
         selectionOnlyCheckBox = SelectionOnlyCheckBox(pane, self.settings, self.section, 'html_selectiononly')
         separateCSSChooser = SeparateCSSCheckBox(pane, self.settings, self.section, 'html_separatecss')
-        return viewerPicker, selectionOnlyCheckBox, separateCSSChooser
+        return viewerPicker, self.columnPicker, selectionOnlyCheckBox, separateCSSChooser
+
+    def onViewerChanged(self, event):
+        event.Skip()
+        self.columnPicker.populateColumnPicker(event.viewer)
 
 
 class ExportAsTodoTxtDialog(ExportDialog):
