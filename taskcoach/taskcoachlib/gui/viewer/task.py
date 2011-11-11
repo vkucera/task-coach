@@ -1067,6 +1067,8 @@ class CheckableTaskViewer(TaskViewer): # pylint: disable-msg=W0223
     
 class TaskStatsViewer(BaseTaskViewer):
     defaultTitle = _('Task statistics')
+    defaultBitmap = 'charts_icon'
+
     labels = [_('Overdue tasks: %d (%d%%)'), _('Due soon tasks: %d (%d%%)'), 
               _('Active tasks: %d (%d%%)'), _('Inactive tasks: %d (%d%%)'), 
               _('Completed tasks: %d (%d%%)')]

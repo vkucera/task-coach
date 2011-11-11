@@ -107,6 +107,7 @@ chooseableItemImages = dict( \
     calendar_icon=_('Calendar'),
     cat_icon=_('Cat'),
     cd_icon=_('Compact disc (CD)'),
+    charts_icon=_('Charts'),
     chat_icon=_('Chatting'),
     checkmark_green_icon=_('Check mark'),
     clock_icon=_('Clock'),
