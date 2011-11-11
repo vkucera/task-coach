@@ -82,6 +82,7 @@ iconlist = [
 ('calendar_icon', 'apps', 'date', [16, 22, 32]),
 ('cat_icon', 'apps', 'package_toys', [16]),
 ('cd_icon', 'actions', 'cd', [16]),
+('charts_icon', 'apps', 'kchart', [16]),
 ('chat_icon', 'apps', 'chat', [16]),
 ('checkmark_green_icon', 'actions', 'apply', [16]),
 ('clock_icon', 'apps', 'clock', [16, 22, 32, 128]),
