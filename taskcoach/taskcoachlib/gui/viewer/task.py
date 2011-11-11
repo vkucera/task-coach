@@ -46,33 +46,40 @@ class TaskViewerStatusMessages(patterns.Observer):
                self.template2%(self.__presentation.nrOverdue(), 
                                self.__presentation.nrInactive(), 
                                self.__presentation.nrCompleted())
-        
+
 
 class BaseTaskViewer(mixin.SearchableViewerMixin, # pylint: disable-msg=W0223
                      mixin.FilterableViewerForTasksMixin,
-                     base.TreeViewer, patterns.Observer): 
-    defaultTitle = _('Tasks')
-    defaultBitmap = 'led_blue_icon'
-    
+                     base.TreeViewer, patterns.Observer):        
     def __init__(self, *args, **kwargs):
         super(BaseTaskViewer, self).__init__(*args, **kwargs)
-        if kwargs.get('doRefresh', True):
-            self.secondRefresher = refresher.SecondRefresher(self,
-                                                             task.Task.trackStartEventType(),
-                                                             task.Task.trackStopEventType())
-            self.minuteRefresher = refresher.MinuteRefresher(self)
-        else:
-            self.secondRefresher = self.minuteRefresher = None
         self.statusMessages = TaskViewerStatusMessages(self)
         self.__registerForAppearanceChanges()
+
+    def __registerForAppearanceChanges(self):
+        for appearance in ('font', 'fgcolor', 'bgcolor', 'icon'):
+            appearanceSettings = ['%s.%s'%(appearance, setting) for setting in 'activetasks',\
+                                  'inactivetasks', 'completedtasks', 'duesoontasks', 'overduetasks'] 
+            for appearanceSetting in appearanceSettings:
+                patterns.Publisher().registerObserver(self.onAppearanceSettingChange, 
+                                                      eventType=appearanceSetting)
+        for eventType in (task.Task.appearanceChangedEventType(), task.Task.percentageCompleteChangedEventType()):
+            patterns.Publisher().registerObserver(self.onAttributeChanged,
+                                                  eventType=eventType)
+        patterns.Publisher().registerObserver(self.atMidnight,
+            eventType='clock.day')
+        patterns.Publisher().registerObserver(self.onWake,
+            eventType='powermgt.on')
+
+    def atMidnight(self, event): # pylint: disable-msg=W0613
+        pass
+
+    def onWake(self, event): # pylint: disable-msg=W0613
+        self.refresh()
         
-    def detach(self):
-        super(BaseTaskViewer, self).detach()
-        if self.secondRefresher:
-            self.secondRefresher.removeInstance()
-        if self.minuteRefresher:
-            self.minuteRefresher.removeInstance()
-        
+    def onAppearanceSettingChange(self, event): # pylint: disable-msg=W0613
+        wx.CallAfter(self.refresh) # Let domain objects update appearance first
+
     def domainObjectsToView(self):
         return self.taskFile.tasks()
 
@@ -83,13 +90,40 @@ class BaseTaskViewer(mixin.SearchableViewerMixin, # pylint: disable-msg=W0223
         tasks = domain.base.DeletedFilter(taskList)
         return super(BaseTaskViewer, self).createFilter(tasks)
 
+    def nrOfVisibleTasks(self):
+        # Make this overridable for viewers where the widget does not show all
+        # items in the presentation, i.e. the widget does filtering on its own.
+        return len(self.presentation())
+
+
+class BaseTaskTreeViewer(BaseTaskViewer): 
+    defaultTitle = _('Tasks')
+    defaultBitmap = 'led_blue_icon'
+    
+    def __init__(self, *args, **kwargs):
+        super(BaseTaskTreeViewer, self).__init__(*args, **kwargs)
+        if kwargs.get('doRefresh', True):
+            self.secondRefresher = refresher.SecondRefresher(self,
+                                                             task.Task.trackStartEventType(),
+                                                             task.Task.trackStopEventType())
+            self.minuteRefresher = refresher.MinuteRefresher(self)
+        else:
+            self.secondRefresher = self.minuteRefresher = None
+        
+    def detach(self):
+        super(BaseTaskTreeViewer, self).detach()
+        if self.secondRefresher:
+            self.secondRefresher.removeInstance()
+        if self.minuteRefresher:
+            self.minuteRefresher.removeInstance()
+        
     def newItemDialog(self, *args, **kwargs):
         kwargs['categories'] = self.taskFile.categories().filteredCategories()
-        return super(BaseTaskViewer, self).newItemDialog(*args, **kwargs)
+        return super(BaseTaskTreeViewer, self).newItemDialog(*args, **kwargs)
     
     def editItemDialog(self, items, bitmap, columnName=''):
         if isinstance(items[0], task.Task):
-            return super(BaseTaskViewer, self).editItemDialog(items, bitmap, columnName)
+            return super(BaseTaskTreeViewer, self).editItemDialog(items, bitmap, columnName)
         else:
             return dialog.editor.EffortEditor(wx.GetTopLevelParent(self),
                 command.EditEffortCommand(self.taskFile.efforts(), items),
@@ -124,7 +158,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin, # pylint: disable-msg=W0223
                 uicommand.TaskNewFromTemplateButton(taskList=self.presentation(),
                                                     settings=self.settings,
                                                     bitmap='newtmpl')] + \
-            super(BaseTaskViewer, self).createCreationToolBarUICommands()
+            super(BaseTaskTreeViewer, self).createCreationToolBarUICommands()
     
     def createActionToolBarUICommands(self):
         uiCommands = [uicommand.TaskToggleCompletion(viewer=self),
@@ -144,36 +178,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin, # pylint: disable-msg=W0223
                                       taskList=self.taskFile.tasks()),
                 uicommand.EffortStop(effortList=self.taskFile.efforts(),
                                      taskList=self.taskFile.tasks())])
-        return uiCommands + super(BaseTaskViewer, self).createActionToolBarUICommands()
-        
-    def nrOfVisibleTasks(self):
-        # Make this overridable for viewers where the widget does not show all
-        # items in the presentation, i.e. the widget does filtering on its own.
-        return len(self.presentation())
-
-    def __registerForAppearanceChanges(self):
-        for appearance in ('font', 'fgcolor', 'bgcolor', 'icon'):
-            appearanceSettings = ['%s.%s'%(appearance, setting) for setting in 'activetasks',\
-                                  'inactivetasks', 'completedtasks', 'duesoontasks', 'overduetasks'] 
-            for appearanceSetting in appearanceSettings:
-                patterns.Publisher().registerObserver(self.onAppearanceSettingChange, 
-                                                      eventType=appearanceSetting)
-        for eventType in (task.Task.appearanceChangedEventType(), task.Task.percentageCompleteChangedEventType()):
-            patterns.Publisher().registerObserver(self.onAttributeChanged,
-                                                  eventType=eventType)
-        patterns.Publisher().registerObserver(self.atMidnight,
-            eventType='clock.day')
-        patterns.Publisher().registerObserver(self.onWake,
-            eventType='powermgt.on')
-
-    def atMidnight(self, event): # pylint: disable-msg=W0613
-        pass
-
-    def onWake(self, event): # pylint: disable-msg=W0613
-        self.refresh()
-        
-    def onAppearanceSettingChange(self, event): # pylint: disable-msg=W0613
-        wx.CallAfter(self.refresh) # Let domain objects update appearance first
+        return uiCommands + super(BaseTaskTreeViewer, self).createActionToolBarUICommands()
 
     def iconName(self, item, isSelected):
         return item.selectedIcon(recursive=True) if isSelected else item.icon(recursive=True)
@@ -267,7 +272,7 @@ class TimelineRootNode(RootNode):
         return max(dueDateTimes)
     
 
-class TimelineViewer(BaseTaskViewer):
+class TimelineViewer(BaseTaskTreeViewer):
     defaultTitle = _('Timeline')
     defaultBitmap = 'timelineviewer'
 
@@ -373,7 +378,7 @@ class TimelineViewer(BaseTaskViewer):
         return result
 
 
-class SquareTaskViewer(BaseTaskViewer):
+class SquareTaskViewer(BaseTaskTreeViewer):
     defaultTitle = _('Task square map')
     defaultBitmap = 'squaremapviewer'
 
@@ -482,7 +487,7 @@ class SquareTaskViewer(BaseTaskViewer):
 
 class CalendarViewer(mixin.AttachmentDropTargetMixin,
                      mixin.SortableViewerForTasksMixin,
-                     BaseTaskViewer):
+                     BaseTaskTreeViewer):
     defaultTitle = _('Calendar')
     defaultBitmap = 'calendar_icon'
 
@@ -579,7 +584,7 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
             toSave = dt.Format()
         self.settings.set(self.settingsSection(), 'viewdate', toSave)
 
-    # We need to override these because BaseTaskViewer is a tree viewer, but
+    # We need to override these because BaseTaskTreeViewer is a tree viewer, but
     # CalendarViewer is not. There is probably a better solution...
 
     def isAnyItemExpandable(self):
@@ -617,7 +622,7 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
 class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
                  mixin.SortableViewerForTasksMixin, 
                  mixin.NoteColumnMixin, mixin.AttachmentColumnMixin,
-                 base.SortableViewerWithColumns, BaseTaskViewer):
+                 base.SortableViewerWithColumns, BaseTaskTreeViewer):
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'taskviewer')
@@ -1086,7 +1091,20 @@ class TaskStatsViewer(BaseTaskViewer):
         for dummy in range(5):
             widget._series.append(wx.lib.agw.piectrl.PiePart())
         return widget
-    
+
+    def createCreationToolBarUICommands(self):
+        return [uicommand.TaskNew(taskList=self.presentation(),
+                                  settings=self.settings),
+                uicommand.TaskNewFromTemplateButton(taskList=self.presentation(),
+                                                    settings=self.settings,
+                                                    bitmap='newtmpl')]
+        
+    def createActionToolBarUICommands(self):
+        return [uicommand.ViewerHideCompletedTasks(viewer=self,
+                                                   bitmap='filtercompletedtasks'),
+                uicommand.ViewerHideInactiveTasks(viewer=self,
+                                                  bitmap='filterinactivetasks')]            
+        
     def initLegend(self, widget):
         legend = widget.GetLegend()
         legend.SetTransparent(False)
