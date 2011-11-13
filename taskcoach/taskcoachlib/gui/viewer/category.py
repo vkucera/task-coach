@@ -117,9 +117,9 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
         return columns
     
     def createCreationToolBarUICommands(self):
-        return [uicommand.CategoryNew(categories=self.presentation(),
+        return (uicommand.CategoryNew(categories=self.presentation(),
                                       settings=self.settings),
-                uicommand.NewSubItem(viewer=self)]
+                uicommand.NewSubItem(viewer=self))
 
     def createColumnUICommands(self):
         commands = [\
@@ -201,4 +201,4 @@ class CategoryViewer(BaseCategoryViewer):
         self.filterUICommand = \
             uicommand.CategoryViewerFilterChoice(settings=self.settings)
         return super(CategoryViewer, self).createModeToolBarUICommands() + \
-            [self.filterUICommand]
+            (self.filterUICommand,)

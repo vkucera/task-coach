@@ -68,7 +68,7 @@ class SearchableViewerMixin(object):
         ''' UI commands to put on the toolbar of this viewer. '''
         searchUICommand = uicommand.Search(viewer=self, settings=self.settings)
         return super(SearchableViewerMixin, self).createToolBarUICommands() + \
-            [None, searchUICommand]
+            (None, searchUICommand)
             
 
 class FilterableViewerMixin(object):

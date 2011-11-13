@@ -152,33 +152,36 @@ class BaseTaskTreeViewer(BaseTaskViewer):
                                   self.taskFile.categories(), self)
 
     def createCreationToolBarUICommands(self):
-        return [uicommand.TaskNew(taskList=self.presentation(),
+        return (uicommand.TaskNew(taskList=self.presentation(),
                                   settings=self.settings),
                 uicommand.NewSubItem(viewer=self),
                 uicommand.TaskNewFromTemplateButton(taskList=self.presentation(),
                                                     settings=self.settings,
-                                                    bitmap='newtmpl')] + \
+                                                    bitmap='newtmpl')) + \
             super(BaseTaskTreeViewer, self).createCreationToolBarUICommands()
     
     def createActionToolBarUICommands(self):
-        uiCommands = [uicommand.TaskToggleCompletion(viewer=self),
-                      None,
-                      uicommand.ViewerHideCompletedTasks(viewer=self,
-                          bitmap='filtercompletedtasks'),
-                      uicommand.ViewerHideInactiveTasks(viewer=self,
-                          bitmap='filterinactivetasks')]
+        uiCommands = (uicommand.TaskToggleCompletion(viewer=self),)
         if self.settings.getboolean('feature', 'effort'):
-            uiCommands.extend([
+            uiCommands += (
                 # EffortStart needs a reference to the original (task) list to
                 # be able to stop tracking effort for tasks that are already 
                 # being tracked, but that might be filtered in the viewer's 
                 # presentation.
-                None,
                 uicommand.EffortStart(viewer=self, 
                                       taskList=self.taskFile.tasks()),
                 uicommand.EffortStop(effortList=self.taskFile.efforts(),
-                                     taskList=self.taskFile.tasks())])
+                                     taskList=self.taskFile.tasks()))
         return uiCommands + super(BaseTaskTreeViewer, self).createActionToolBarUICommands()
+    
+    def createModeToolBarUICommands(self):
+        hideUICommands = (uicommand.ViewerHideCompletedTasks(viewer=self,
+                                                             bitmap='filtercompletedtasks'),
+                          uicommand.ViewerHideInactiveTasks(viewer=self,
+                                                            bitmap='filterinactivetasks'))
+        otherModeUICommands = super(BaseTaskTreeViewer, self).createModeToolBarUICommands()
+        separator = (None,) if otherModeUICommands else ()
+        return hideUICommands + separator + otherModeUICommands
 
     def iconName(self, item, isSelected):
         return item.selectedIcon(recursive=True) if isSelected else item.icon(recursive=True)
@@ -410,7 +413,7 @@ class SquareTaskViewer(BaseTaskTreeViewer):
     def createModeToolBarUICommands(self):
         self.orderUICommand = uicommand.SquareTaskViewerOrderChoice(viewer=self) # pylint: disable-msg=W0201
         return super(SquareTaskViewer, self).createModeToolBarUICommands() + \
-            [self.orderUICommand]
+            (self.orderUICommand,)
         
     def orderBy(self, choice):
         if choice == self.__orderBy:
@@ -575,10 +578,10 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
 
     def createModeToolBarUICommands(self):
         return super(CalendarViewer, self).createModeToolBarUICommands() + \
-            [uicommand.CalendarViewerConfigure(viewer=self),
+            (None, uicommand.CalendarViewerConfigure(viewer=self),
              uicommand.CalendarViewerPreviousPeriod(viewer=self),
              uicommand.CalendarViewerToday(viewer=self),
-             uicommand.CalendarViewerNextPeriod(viewer=self)]
+             uicommand.CalendarViewerNextPeriod(viewer=self))
 
     def SetViewType(self, type_):
         self.widget.SetViewType(type_)
@@ -912,7 +915,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
     def createModeToolBarUICommands(self):
         self.treeOrListUICommand = uicommand.TaskViewerTreeOrListChoice(viewer=self) # pylint: disable-msg=W0201 
         return super(TaskViewer, self).createModeToolBarUICommands() + \
-            [self.treeOrListUICommand]
+            (self.treeOrListUICommand,)
 
     def createColumnPopupMenu(self):
         return menu.ColumnPopupMenu(self)
@@ -1099,18 +1102,24 @@ class TaskStatsViewer(BaseTaskViewer):
             widget._series.append(wx.lib.agw.piectrl.PiePart())
         return widget
 
+    def createClipboardToolBarUICommands(self):
+        return ()
+    
+    def createEditToolBarUICommands(self):
+        return ()
+    
     def createCreationToolBarUICommands(self):
-        return [uicommand.TaskNew(taskList=self.presentation(),
+        return (uicommand.TaskNew(taskList=self.presentation(),
                                   settings=self.settings),
                 uicommand.TaskNewFromTemplateButton(taskList=self.presentation(),
                                                     settings=self.settings,
-                                                    bitmap='newtmpl')]
+                                                    bitmap='newtmpl'))
         
     def createActionToolBarUICommands(self):
-        return [uicommand.ViewerHideCompletedTasks(viewer=self,
+        return (uicommand.ViewerHideCompletedTasks(viewer=self,
                                                    bitmap='filtercompletedtasks'),
                 uicommand.ViewerHideInactiveTasks(viewer=self,
-                                                  bitmap='filterinactivetasks')]            
+                                                  bitmap='filterinactivetasks'))            
         
     def initLegend(self, widget):
         legend = widget.GetLegend()
