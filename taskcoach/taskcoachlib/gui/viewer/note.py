@@ -72,9 +72,9 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W022
         return domain.base.DeletedFilter(notes)
     
     def createCreationToolBarUICommands(self):
-        return [uicommand.NoteNew(notes=self.presentation(),
+        return (uicommand.NoteNew(notes=self.presentation(),
                                   settings=self.settings),
-                uicommand.NewSubItem(viewer=self)] + \
+                uicommand.NewSubItem(viewer=self),) + \
             super(BaseNoteViewer, self).createCreationToolBarUICommands()
         
     def createColumnUICommands(self):

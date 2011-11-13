@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.31', 'November 11, 2011',
+Release('1.2.31', 'November 13, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Immediately update the number of tasks completed in the status
@@ -45,8 +45,8 @@ the calendar view in vertical mode.''', '3428524'),
 put in separate columns.'''),
         Feature('''When exporting to CSV and HTML, the columns to be exported
 can be changed in the export dialog.'''),
-        Feature('''Simple task statistics viewer added 
-(contains only a pie chart at the moment).'''),
+        Feature('''Simple task statistics viewer added that shows a pie chart
+of the distribution of task states.'''),
         ],
     ),
             
