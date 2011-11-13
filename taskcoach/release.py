@@ -45,7 +45,7 @@ Release steps:
   - Run 'python release.py release' to download the distributions from
     Sourceforge, generate MD5 digests, generate the website, upload the 
     website to the Dreamhost and Hostland websites, announce the release on 
-    Twitter, Identi.ca, Freshmeat and PyPI (Python Package Index), send the 
+    Twitter, Identi.ca, Freecode and PyPI (Python Package Index), send the 
     announcement email, and to tag the release in Subversion.
   - Create branch if feature release.
   - Merge recent changes to the trunk.
@@ -89,7 +89,7 @@ class Settings(ConfigParser.SafeConfigParser, object):
                         twitter=['consumer_key', 'consumer_secret',
                                  'oauth_token', 'oauth_token_secret'],
                         identica=['username', 'password'],
-                        freshmeat=['auth_code'])
+                        freecode=['auth_code'])
         for section in defaults:
             self.add_section(section)
             for option in defaults[section]:
@@ -271,8 +271,8 @@ def httpPostRequest(host, api_call, body, contentType, ok=200, **headers):
 
 
 @progress
-def announcing_on_Freshmeat(settings, options):
-    auth_code = settings.get('freshmeat', 'auth_code')
+def announcing_on_Freecode(settings, options):
+    auth_code = settings.get('freecode', 'auth_code')
     metadata = taskcoachlib.meta.data.metaDict
     version = '%(version)s'%metadata
     changelog = latest_release(metadata, summaryOnly=True)
@@ -281,7 +281,7 @@ def announcing_on_Freshmeat(settings, options):
     body = codecs.encode(simplejson.dumps(dict(auth_code=auth_code, 
                                                release=release)))
     path = '/projects/taskcoach/releases.json'
-    host = 'freshmeat.net'
+    host = 'freecode.com'
     if options.dry_run:
         print 'Skipping announcing "%s" on %s.'%(release, host)
     else:
@@ -347,7 +347,7 @@ def announcing(settings, options):
     registering_with_PyPI(settings, options)
     announcing_on_Twitter(settings, options)
     announcing_on_Identica(settings, options)
-    announcing_on_Freshmeat(settings, options)
+    announcing_on_Freecode(settings, options)
     mailing_announcement(settings, options)
 
 
@@ -464,7 +464,7 @@ commands = dict(release=releasing,
                 websiteHL=uploading_website_to_Hostland,
                 twitter=announcing_on_Twitter,
                 identica=announcing_on_Identica,
-                freshmeat=announcing_on_Freshmeat,
+                freecode=announcing_on_Freecode,
                 pypi=registering_with_PyPI, 
                 mail=mailing_announcement,
                 announce=announcing,
