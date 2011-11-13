@@ -38,10 +38,8 @@ class ExportDialog(sized_controls.SizedDialog):
         self.components = self.createInterior(pane)
         buttonSizer = self.CreateStdDialogButtonSizer(wx.OK|wx.CANCEL)
         self.SetButtonSizer(buttonSizer)
+        buttonSizer.GetAffirmativeButton().Bind(wx.EVT_BUTTON, self.onOk)
         self.Fit()
-        okButton = buttonSizer.GetAffirmativeButton()
-        for component in self.components:
-            okButton.Bind(wx.EVT_BUTTON, component.onOK)
         self.CentreOnParent()
 
     def createInterior(self, pane):
@@ -58,6 +56,11 @@ class ExportDialog(sized_controls.SizedDialog):
         for component in self.components:
             result.update(component.options())
         return result
+    
+    def onOk(self, event):
+        event.Skip()
+        for component in self.components:
+            component.saveSettings()
 
 
 # Controls for adding behavior to the base export dialog:
@@ -102,8 +105,8 @@ class ViewerPicker(sized_controls.SizedPanel):
         event.Skip()
         wx.PostEvent(self, ViewerPickedEvent(viewer=self.selectedViewer()))   
         
-    def onOK(self, event):
-        event.Skip() # Nothing to do on OK
+    def saveSettings(self):
+        pass # No settings to remember
             
 
 class SelectionOnlyCheckBox(wx.CheckBox):  
@@ -125,8 +128,7 @@ class SelectionOnlyCheckBox(wx.CheckBox):
     def options(self):
         return dict(selectionOnly=self.GetValue())
 
-    def onOK(self, event):
-        event.Skip()
+    def saveSettings(self):
         self.settings.set(self.section, self.setting, # pylint: disable-msg=E1101
                           str(self.GetValue()))    
 
@@ -172,8 +174,8 @@ class ColumnPicker(sized_controls.SizedPanel):
     def options(self):
         return dict(columns=self.selectedColumns())
     
-    def onOK(self, event):
-        event.Skip() # Nothing to do on OK
+    def saveSettings(self):
+        pass # No settings to save
 
 
 class SeparateDateAndTimeColumnsCheckBox(wx.CheckBox):
@@ -196,8 +198,7 @@ class SeparateDateAndTimeColumnsCheckBox(wx.CheckBox):
     def options(self):
         return dict(separateDateAndTimeColumns=self.GetValue())
 
-    def onOK(self, event):
-        event.Skip()
+    def saveSettings(self):
         self.settings.setboolean(self.section, self.setting, self.GetValue())
         
 
@@ -229,8 +230,7 @@ class SeparateCSSCheckBox(sized_controls.SizedPanel):
     def options(self):
         return dict(separateCSS=self.separateCSSCheckBox.GetValue())
         
-    def onOK(self, event):
-        event.Skip()
+    def saveSettings(self):
         self.settings.set(self.section, self.setting, 
                           str(self.separateCSSCheckBox.GetValue()))
         

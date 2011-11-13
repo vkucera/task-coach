@@ -117,14 +117,14 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0
                 setting='notes', viewer=self)]
     
     def createCreationToolBarUICommands(self):
-        return [uicommand.AttachmentNew(attachments=self.presentation(),
+        return (uicommand.AttachmentNew(attachments=self.presentation(),
                                         settings=self.settings,
-                                        viewer=self)] + \
+                                        viewer=self),) + \
             super(AttachmentViewer, self).createCreationToolBarUICommands()
         
     def createActionToolBarUICommands(self):
-        return [uicommand.AttachmentOpen(attachments=attachment.AttachmentList(),
-                                         viewer=self, settings=self.settings)] + \
+        return (uicommand.AttachmentOpen(attachments=attachment.AttachmentList(),
+                                         viewer=self, settings=self.settings),) + \
            super(AttachmentViewer, self).createActionToolBarUICommands()
     
     def typeImageIndices(self, anAttachment, exists=os.path.exists): # pylint: disable-msg=W0613

@@ -263,22 +263,22 @@ class EffortViewer(base.ListViewer,
         return columnUICommands
     
     def createCreationToolBarUICommands(self):
-        return [uicommand.EffortNew(viewer=self, effortList=self.presentation(),
+        return (uicommand.EffortNew(viewer=self, effortList=self.presentation(),
                                     taskList=self.taskFile.tasks(), 
-                                    settings=self.settings)]
+                                    settings=self.settings),)
         
     def createActionToolBarUICommands(self):
         tasks = self.taskFile.tasks()
-        return [uicommand.EffortStartForEffort(viewer=self, taskList=tasks),
+        return (uicommand.EffortStartForEffort(viewer=self, taskList=tasks),
                 uicommand.EffortStop(effortList=self.taskFile.efforts(), 
-                                     taskList=tasks)]
+                                     taskList=tasks))
                 
     def createModeToolBarUICommands(self):
         # This is an instance variable so that the choice can be changed 
         # programmatically
         self.aggregationUICommand = \
             uicommand.EffortViewerAggregationChoice(viewer=self)
-        return [self.aggregationUICommand]
+        return (self.aggregationUICommand,)
 
     def getItemImages(self, index, column=0): # pylint: disable-msg=W0613
         return {wx.TreeItemIcon_Normal: -1}

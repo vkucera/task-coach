@@ -351,38 +351,60 @@ class Viewer(wx.Panel):
                                      (wx.ACCEL_NORMAL, wx.WXK_RETURN, wx.ID_EDIT),
                                      (wx.ACCEL_NORMAL, wx.WXK_DELETE, wx.ID_DELETE)])
         self.SetAcceleratorTable(table)
+        
+        clipboardToolBarUICommands = self.createClipboardToolBarUICommands()
+        creationToolBarUICommands = self.createCreationToolBarUICommands()
+        editToolBarUICommands = self.createEditToolBarUICommands() 
+        actionToolBarUICommands = self.createActionToolBarUICommands()
+        modeToolBarUICommands = self.createModeToolBarUICommands()
+        
+        def separator(uiCommands, *otherUICommands):
+            return (None,) if (uiCommands and any(otherUICommands)) else ()
+        
+        clipboardSeparator = separator(clipboardToolBarUICommands, creationToolBarUICommands,
+                                       editToolBarUICommands, actionToolBarUICommands,
+                                       modeToolBarUICommands)
+        creationSeparator = separator(creationToolBarUICommands, editToolBarUICommands,
+                                      actionToolBarUICommands, modeToolBarUICommands)
+        editSeparator = separator(editToolBarUICommands, actionToolBarUICommands,
+                                  modeToolBarUICommands)
+        actionSeparator = separator(actionToolBarUICommands, modeToolBarUICommands)
+        
+        return clipboardToolBarUICommands + clipboardSeparator + \
+            creationToolBarUICommands + creationSeparator + \
+            editToolBarUICommands + editSeparator + \
+            actionToolBarUICommands + actionSeparator + \
+            modeToolBarUICommands
+        
+    def createClipboardToolBarUICommands(self):
+        ''' UI commands for manipulating the clipboard (cut, copy, paste). '''
         cutCommand = uicommand.EditCut(viewer=self)
         copyCommand = uicommand.EditCopy(viewer=self)
         pasteCommand = uicommand.EditPaste()
-        editCommand = uicommand.Edit(viewer=self)
-        self.deleteUICommand = uicommand.Delete(viewer=self) # For unittests pylint: disable-msg=W0201
         cutCommand.bind(self, wx.ID_CUT)
         copyCommand.bind(self, wx.ID_COPY)
         pasteCommand.bind(self, wx.ID_PASTE)
-        editCommand.bind(self, wx.ID_EDIT)
-        self.deleteUICommand.bind(self, wx.ID_DELETE)
-        actionToolBarUICommands = self.createActionToolBarUICommands()
-        modeToolBarUICommands = self.createModeToolBarUICommands()
-        if actionToolBarUICommands:
-            actionToolBarUICommands.insert(0, None) # Separator 
-        if modeToolBarUICommands:
-            modeToolBarUICommands.insert(0, None) # Separator
-        return [cutCommand, copyCommand, pasteCommand, None] + \
-            self.createCreationToolBarUICommands() + \
-            [editCommand, self.deleteUICommand] + actionToolBarUICommands + \
-            modeToolBarUICommands
+        return cutCommand, copyCommand, pasteCommand
     
     def createCreationToolBarUICommands(self):
         ''' UI commands for creating new items. '''
-        return []
-
+        return ()
+    
+    def createEditToolBarUICommands(self):
+        ''' UI commands for editing items. '''
+        editCommand = uicommand.Edit(viewer=self)
+        self.deleteUICommand = uicommand.Delete(viewer=self) # For unittests pylint: disable-msg=W0201
+        editCommand.bind(self, wx.ID_EDIT)
+        self.deleteUICommand.bind(self, wx.ID_DELETE)
+        return editCommand, self.deleteUICommand
+    
     def createActionToolBarUICommands(self):
         ''' UI commands for actions. '''
-        return []
+        return ()
     
     def createModeToolBarUICommands(self):
         ''' UI commands for mode switches (e.g. list versus tree mode). '''
-        return []
+        return ()
     
     def newItemDialog(self, *args, **kwargs):
         bitmap = kwargs.pop('bitmap')
