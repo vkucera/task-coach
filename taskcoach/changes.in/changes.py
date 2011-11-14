@@ -22,6 +22,14 @@ from changetypes import *
 
 releases = [
 
+Release('1.2.32', 'November ??, 2011',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Prevent an exception when opening the View menu when the
+task statistics viewer is selected.'''),
+        ],
+    ),
+
 Release('1.2.31', 'November 13, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
