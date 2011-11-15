@@ -22,11 +22,12 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.32', 'November ??, 2011',
+Release('1.2.32', 'November 15, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Prevent an exception when opening the View menu when the
 task statistics viewer is selected.'''),
+        Bug('''The Ctrl-F shortcut didn't work in most viewers.''', '3438256'),
         ],
     ),
 
