@@ -1181,3 +1181,6 @@ class TaskStatsViewer(BaseTaskViewer):
     
     def updateSelection(self, *args, **kwargs):
         pass
+
+    def isTreeViewer(self):
+        return False
