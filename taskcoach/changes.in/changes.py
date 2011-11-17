@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.0', 'November 8, 2011',
+Release('1.3.0', 'November 17, 2011',
     summary='''This release makes all edits done in dialogs immediate.''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -41,6 +41,15 @@ changes made in other dialogs.''', '1152561'),
         Bug('''Don't close the edit dialog when dragging and dropping 
 an item.''', '3424138'),
         ]
+    ),
+
+Release('1.2.32', 'November 15, 2011',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Prevent an exception when opening the View menu when the
+task statistics viewer is selected.'''),
+        Bug('''The Ctrl-F shortcut didn't work in most viewers.''', '3438256'),
+        ],
     ),
 
 Release('1.2.31', 'November 13, 2011',

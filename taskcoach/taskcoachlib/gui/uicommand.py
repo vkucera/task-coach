@@ -2384,7 +2384,7 @@ class Search(ViewerCommand, SettingsCommand):
             window = widget.GetMainWindow()
         except AttributeError:
             window = widget
-        widget.Bind(wx.EVT_KEY_DOWN, self.onViewerKeyDown)
+        window.Bind(wx.EVT_KEY_DOWN, self.onViewerKeyDown)
         
     def bindKeyDownInSearchCtrl(self):
         ''' Bind wx.EVT_KEY_DOWN to self.onSearchCtrlKeyDown so we can catch 

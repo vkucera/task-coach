@@ -381,6 +381,7 @@ def mailing_announcement(settings, options):
         metadata[sender_info] = settings.get('smtp', sender_info)
     metadata['release'] = latest_release(metadata)
     msg = '''To: %(announcement_addresses)s
+BCC: %(bcc_announcement_addresses)s
 From: %(sender_name)s <%(sender_email_address)s>
 Reply-To: %(author_email)s
 Subject: [ANN] Release %(version)s of %(name)s
