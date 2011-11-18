@@ -271,23 +271,24 @@ class DatesPage(Page):
         dateTimeEntry = entry.DateTimeEntry(self, self.__settings, dateTime,
                                             suggestedDateTime=suggestedDateTime)
         setattr(self, '_%sEntry'%taskMethodName, dateTimeEntry)
-        if self.__settings.get('view', 'datestied') == 'startdue' and taskMethodName == 'startDateTime':
-            commandClass = command.EditStartDateTimeSyncCommand
-        elif self.__settings.get('view', 'datestied') == 'duestart' and taskMethodName == 'dueDateTime':
-            commandClass = command.EditDueDateTimeSyncCommand
-        else:
-            commandClass = getattr(command, 'Edit%sCommand'%TaskMethodName)
+        commandClass = getattr(command, 'Edit%sCommand'%TaskMethodName)
         eventType = 'task.%s'%taskMethodName
+        keep_delta = self.__keep_delta(taskMethodName)
         datetimeSync = attributesync.AttributeSync('datetime', dateTimeEntry, 
             dateTime, self.items, commandClass, entry.EVT_DATETIMEENTRY, 
-            eventType, taskMethodName)
+            eventType, taskMethodName, keep_delta=keep_delta)
         setattr(self, '_%sSync'%taskMethodName, datetimeSync) 
         self.addEntry(label, dateTimeEntry)
 
     def __shouldPresetDateTime(self, taskMethodName):
         return self.__itemsAreNew and \
             self.__settings.get('view', 'default%s'%taskMethodName.lower()).startswith('preset')
-        
+            
+    def __keep_delta(self, taskMethodName):
+        datesTied = self.__settings.get('view', 'datestied')
+        return (datesTied == 'startdue' and taskMethodName == 'startDateTime') or \
+               (datesTied == 'duestart' and taskMethodName == 'dueDateTime')
+               
     def addReminderEntry(self):
         # pylint: disable-msg=W0201
         reminderDateTime = self.items[0].reminder() if len(self.items) == 1 else date.DateTime()

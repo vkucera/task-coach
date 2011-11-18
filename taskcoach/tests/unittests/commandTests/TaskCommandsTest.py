@@ -68,21 +68,15 @@ class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
         command.DragAndDropTaskCommand(self.taskList, tasks or [], 
                                        drop=dropTarget).do()
         
-    def editStart(self, newStartDateTime, tasks=[]):
+    def editStart(self, newStartDateTime, tasks=None, keep_delta=False):
         command.EditStartDateTimeCommand(self.taskList, tasks or [],
-                                         datetime=newStartDateTime).do()
-        
-    def editStartSync(self, newStartDateTime, tasks=[]):
-        command.EditStartDateTimeSyncCommand(self.taskList, tasks or [],
-                                             datetime=newStartDateTime).do()
+                                         datetime=newStartDateTime,
+                                         keep_delta=keep_delta).do()
 
-    def editDue(self, newDueDateTime, tasks=[]):
+    def editDue(self, newDueDateTime, tasks=None, keep_delta=False):
         command.EditDueDateTimeCommand(self.taskList, tasks or [],
-                                       datetime=newDueDateTime).do()
+                                       datetime=newDueDateTime, keep_delta=keep_delta).do()
 
-    def editDueSync(self, newDueDateTime, tasks=[]):
-        command.EditDueDateTimeSyncCommand(self.taskList, tasks or [],
-                                           datetime=newDueDateTime).do()
 
 class CommandWithChildrenTestCase(TaskCommandTestCase):
     def setUp(self):
@@ -625,7 +619,7 @@ class EditDueStartDateCommandTest(TaskCommandTestCase):
         pushBack = date.TimeDelta(hours=1)
         newStart = previousStart + pushBack
         expectedDue = previousDue + pushBack
-        self.editStartSync(newStart, [self.task1])
+        self.editStart(newStart, [self.task1], keep_delta=True)
         self.assertDoUndoRedo(\
             lambda: self.assertEqual(expectedDue, self.task1.dueDateTime()),
             lambda: self.assertEqual(previousDue, self.task1.dueDateTime()))
@@ -637,7 +631,7 @@ class EditDueStartDateCommandTest(TaskCommandTestCase):
         pushBack = date.TimeDelta(hours=1)
         newDue = previousDue + pushBack
         expectedStart = previousStart + pushBack
-        self.editDueSync(newDue, [self.task1])
+        self.editDue(newDue, [self.task1], keep_delta=True)
         self.assertDoUndoRedo(\
             lambda: self.assertEqual(expectedStart, self.task1.startDateTime()),
             lambda: self.assertEqual(previousStart, self.task1.startDateTime()))
@@ -671,7 +665,7 @@ class EditDueStartDateCommandTest(TaskCommandTestCase):
         pushBack = date.TimeDelta(hours=1)
         newStart = previousStart + pushBack
         expectedDue = date.DateTime()
-        self.editStartSync(newStart, [self.task1])
+        self.editStart(newStart, [self.task1], keep_delta=True)
         self.assertDoUndoRedo(\
             lambda: self.assertEqual(expectedDue, self.task1.dueDateTime()))
 
@@ -682,7 +676,7 @@ class EditDueStartDateCommandTest(TaskCommandTestCase):
         pushBack = date.TimeDelta(hours=1)
         newDue = previousDue + pushBack
         expectedStart = date.DateTime()
-        self.editDueSync(newDue, [self.task1])
+        self.editDue(newDue, [self.task1], keep_delta=True)
         self.assertDoUndoRedo(\
             lambda: self.assertEqual(expectedStart, self.task1.startDateTime()))
 
@@ -692,7 +686,7 @@ class EditDueStartDateCommandTest(TaskCommandTestCase):
         pushBack = date.TimeDelta(hours=1)
         newStart = date.Now() + pushBack
         expectedDue = self.task1.dueDateTime()
-        self.editStartSync(newStart, [self.task1])
+        self.editStart(newStart, [self.task1], keep_delta=True)
         self.assertDoUndoRedo(\
             lambda: self.assertEqual(expectedDue, self.task1.dueDateTime()))
 
@@ -700,6 +694,6 @@ class EditDueStartDateCommandTest(TaskCommandTestCase):
         pushBack = date.TimeDelta(hours=1)
         newDue = date.Now() + pushBack
         expectedStart = self.task1.startDateTime()
-        self.editDueSync(newDue, [self.task1])
+        self.editDue(newDue, [self.task1], keep_delta=True)
         self.assertDoUndoRedo(\
             lambda: self.assertEqual(expectedStart, self.task1.startDateTime()))

@@ -1000,10 +1000,14 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
         return template%renderValue(value, *extraRenderArgs)
     
     def onEditStartDateTime(self, item, newValue):
-        command.EditStartDateTimeCommand(items=[item], newValue=newValue).do()
+        keep_delta = self.settings.get('view', 'datestied') == 'startdue'
+        command.EditStartDateTimeCommand(items=[item], newValue=newValue, 
+                                         keep_delta=keep_delta).do()
         
-    def onEditDueDateTime(self, item, newValue):
-        command.EditDueDateTimeCommand(items=[item], newValue=newValue).do()
+    def onEditDueDateTime(self, item, newValue):       
+        keep_delta = self.settings.get('view', 'datestied') == 'duestart'
+        command.EditDueDateTimeCommand(items=[item], newValue=newValue,
+                                       keep_delta=keep_delta).do()
         
     def onEditCompletionDateTime(self, item, newValue):
         command.EditCompletionDateTimeCommand(items=[item], newValue=newValue).do()

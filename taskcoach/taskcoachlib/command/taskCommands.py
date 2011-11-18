@@ -394,9 +394,13 @@ class EditDateTimeCommand(base.BaseCommand):
         self.do_command()
 
     
-class _EditStartDateTimeCommandBase(EditDateTimeCommand):
+class EditStartDateTimeCommand(EditDateTimeCommand):
     plural_name = _('Change start date')
     singular_name = _('Change start date of "%s"')
+    
+    def __init__(self, *args, **kwargs):
+        self.keep_delta = kwargs.pop('keep_delta', False)
+        super(EditStartDateTimeCommand, self).__init__(*args, **kwargs)
 
     @staticmethod
     def getDateTime(item):
@@ -412,29 +416,24 @@ class _EditStartDateTimeCommandBase(EditDateTimeCommand):
             if self.keep_delta and date.DateTime() not in [item.startDateTime(), item.dueDateTime()]:
                 delta = self._newDateTime - item.startDateTime()
                 item.setDueDateTime(item.dueDateTime() + delta, event=event)
-        super(_EditStartDateTimeCommandBase, self).do_command(event=event)
+        super(EditStartDateTimeCommand, self).do_command(event=event)
                 
     @patterns.eventSource
     def undo_command(self, event=None):
-        super(_EditStartDateTimeCommandBase, self).undo_command(event=event)
+        super(EditStartDateTimeCommand, self).undo_command(event=event)
         for item in self.items:
             if self.keep_delta and date.DateTime() not in [item.startDateTime(), item.dueDateTime()]:
                 delta = self._newDateTime - item.startDateTime()
                 item.setDueDateTime(item.dueDateTime() - delta, event=event)
 
 
-class EditStartDateTimeCommand(_EditStartDateTimeCommandBase):
-    keep_delta = False
-
-
-class EditStartDateTimeSyncCommand(_EditStartDateTimeCommandBase):
-    keep_delta = True
-
-
-class _EditDueDateTimeCommandBase(EditDateTimeCommand):
+class EditDueDateTimeCommand(EditDateTimeCommand):
     plural_name = _('Change due date')
     singular_name = _('Change due date of "%s"')
-    keep_delta = False
+
+    def __init__(self, *args, **kwargs):
+        self.keep_delta = kwargs.pop('keep_delta', False)
+        super(EditDueDateTimeCommand, self).__init__(*args, **kwargs)
     
     @staticmethod
     def getDateTime(item):
@@ -450,23 +449,15 @@ class _EditDueDateTimeCommandBase(EditDateTimeCommand):
             if self.keep_delta and date.DateTime() not in [item.startDateTime(), item.dueDateTime()]:
                 delta = self._newDateTime - item.dueDateTime()
                 item.setStartDateTime(item.startDateTime() + delta, event=event)
-        super(_EditDueDateTimeCommandBase, self).do_command(event=event)
+        super(EditDueDateTimeCommand, self).do_command(event=event)
                 
     @patterns.eventSource
     def undo_command(self, event=None):
-        super(_EditDueDateTimeCommandBase, self).undo_command(event=event)
+        super(EditDueDateTimeCommand, self).undo_command(event=event)
         for item in self.items:
             if self.keep_delta and date.DateTime() not in [item.startDateTime(), item.dueDateTime()]:
                 delta = self._newDateTime - item.dueDateTime()
                 item.setStartDateTime(item.startDateTime() - delta, event=event)
-
-
-class EditDueDateTimeCommand(_EditDueDateTimeCommandBase):
-    keep_delta = False
-
-
-class EditDueDateTimeSyncCommand(_EditDueDateTimeCommandBase):
-    keep_delta = True
 
 
 class EditCompletionDateTimeCommand(EditDateTimeCommand, EffortCommand):
