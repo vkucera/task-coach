@@ -27,13 +27,14 @@ class AttributeSync(object):
         value of the control is updated. '''
         
     def __init__(self, attributeName, entry, currentValue, items, commandClass, 
-                 editedEventType, changedEventType, getter=None):
+                 editedEventType, changedEventType, getter=None, **kwargs):
         self._attributeName = attributeName
         self._getter = getter or attributeName
         self._entry = entry
         self._currentValue = currentValue
         self._items = items
         self._commandClass = commandClass
+        self.__commandKwArgs = kwargs
         entry.Bind(editedEventType, self.onAttributeEdited)
         if len(items) == 1:
             self.startObservingAttribute(changedEventType, items[0])
@@ -44,7 +45,7 @@ class AttributeSync(object):
         if newValue != self._currentValue:
             self._currentValue = newValue
             commandKwArgs = self.commandKwArgs(newValue)
-            self._commandClass(None, self._items, **commandKwArgs).do()
+            self._commandClass(None, self._items, **commandKwArgs).do() # pylint: disable-msg=W0142
             
     def onAttributeChanged(self, event):
         if self._entry: 
@@ -56,7 +57,8 @@ class AttributeSync(object):
             self.stopObservingAttribute()
             
     def commandKwArgs(self, newValue):
-        return {self._attributeName: newValue}
+        self.__commandKwArgs[self._attributeName] = newValue
+        return self.__commandKwArgs
     
     def setValue(self, newValue):
         self._entry.SetValue(newValue)

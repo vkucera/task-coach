@@ -392,12 +392,56 @@ class EditDateTimeCommand(base.BaseCommand):
     
     def redo_command(self):
         self.do_command()
-
     
-class _EditStartDateTimeCommandBase(EditDateTimeCommand):
+
+class EditPeriodDateTimeCommand(EditDateTimeCommand):
+    ''' Base for date/time commands that also may have to adjust the other
+        end of the period. E.g., where changing the start date should also 
+        change the due date to keep the period the same length. '''
+    
+    def __init__(self, *args, **kwargs):            
+        self.__keep_delta = kwargs.pop('keep_delta', False)
+        super(EditPeriodDateTimeCommand, self).__init__(*args, **kwargs)
+
+    @patterns.eventSource
+    def do_command(self, event=None):
+        self.__adjustOtherDateTime(direction=1, event=event)
+        super(EditPeriodDateTimeCommand, self).do_command(event=event)
+
+    @patterns.eventSource
+    def undo_command(self, event=None):
+        super(EditPeriodDateTimeCommand, self).undo_command(event=event)
+        self.__adjustOtherDateTime(direction=-1, event=event)
+
+    def __adjustOtherDateTime(self, direction, event):
+        for item in self.items:
+            if self.__shouldAdjustItem(item):
+                delta = direction * (self._newDateTime - self.getDateTime(item))
+                newOtherDateTime = self.getOtherDateTime(item) + delta
+                self.setOtherDateTime(item, newOtherDateTime, event=event)
+
+    def __shouldAdjustItem(self, item):
+        ''' Determine whether the other date/time of the item should be
+            adjusted. '''
+        return self.__keep_delta and date.DateTime() not in (self._newDateTime, 
+                                                             item.startDateTime(),
+                                                             item.dueDateTime())
+
+    @staticmethod
+    def getOtherDateTime(item):
+        ''' Gets the date/time that represents the other end of the period. '''
+        raise NotImplementedError # pragma: no cover
+    
+    @staticmethod
+    def setOtherDateTime(item, newDateTime, event):
+        ''' Set the date/time that represents the other end of the period. '''
+        raise NotImplementedError # pragma: no cover
+    
+    
+class EditStartDateTimeCommand(EditPeriodDateTimeCommand):
     plural_name = _('Change start date')
     singular_name = _('Change start date of "%s"')
-
+    
     @staticmethod
     def getDateTime(item):
         return item.startDateTime()
@@ -406,35 +450,18 @@ class _EditStartDateTimeCommandBase(EditDateTimeCommand):
     def setDateTime(item, dateTime, event):
         item.setStartDateTime(dateTime, event=event)
         
-    @patterns.eventSource
-    def do_command(self, event=None):
-        for item in self.items:
-            if self.keep_delta and date.DateTime() not in [item.startDateTime(), item.dueDateTime()]:
-                delta = self._newDateTime - item.startDateTime()
-                item.setDueDateTime(item.dueDateTime() + delta, event=event)
-        super(_EditStartDateTimeCommandBase, self).do_command(event=event)
-                
-    @patterns.eventSource
-    def undo_command(self, event=None):
-        super(_EditStartDateTimeCommandBase, self).undo_command(event=event)
-        for item in self.items:
-            if self.keep_delta and date.DateTime() not in [item.startDateTime(), item.dueDateTime()]:
-                delta = self._newDateTime - item.startDateTime()
-                item.setDueDateTime(item.dueDateTime() - delta, event=event)
+    @staticmethod
+    def getOtherDateTime(item):
+        return item.dueDateTime()
+    
+    @staticmethod
+    def setOtherDateTime(item, dateTime, event):
+        item.setDueDateTime(dateTime, event=event)
 
 
-class EditStartDateTimeCommand(_EditStartDateTimeCommandBase):
-    keep_delta = False
-
-
-class EditStartDateTimeSyncCommand(_EditStartDateTimeCommandBase):
-    keep_delta = True
-
-
-class _EditDueDateTimeCommandBase(EditDateTimeCommand):
+class EditDueDateTimeCommand(EditPeriodDateTimeCommand):
     plural_name = _('Change due date')
     singular_name = _('Change due date of "%s"')
-    keep_delta = False
     
     @staticmethod
     def getDateTime(item):
@@ -443,31 +470,15 @@ class _EditDueDateTimeCommandBase(EditDateTimeCommand):
     @staticmethod
     def setDateTime(item, dateTime, event):
         item.setDueDateTime(dateTime, event=event)
+        
+    @staticmethod
+    def getOtherDateTime(item):
+        return item.startDateTime()
 
-    @patterns.eventSource
-    def do_command(self, event=None):
-        for item in self.items:
-            if self.keep_delta and date.DateTime() not in [item.startDateTime(), item.dueDateTime()]:
-                delta = self._newDateTime - item.dueDateTime()
-                item.setStartDateTime(item.startDateTime() + delta, event=event)
-        super(_EditDueDateTimeCommandBase, self).do_command(event=event)
+    @staticmethod
+    def setOtherDateTime(item, dateTime, event):
+        item.setStartDateTime(dateTime, event=event)
                 
-    @patterns.eventSource
-    def undo_command(self, event=None):
-        super(_EditDueDateTimeCommandBase, self).undo_command(event=event)
-        for item in self.items:
-            if self.keep_delta and date.DateTime() not in [item.startDateTime(), item.dueDateTime()]:
-                delta = self._newDateTime - item.dueDateTime()
-                item.setStartDateTime(item.startDateTime() - delta, event=event)
-
-
-class EditDueDateTimeCommand(_EditDueDateTimeCommandBase):
-    keep_delta = False
-
-
-class EditDueDateTimeSyncCommand(_EditDueDateTimeCommandBase):
-    keep_delta = True
-
 
 class EditCompletionDateTimeCommand(EditDateTimeCommand, EffortCommand):
     plural_name = _('Change completion date')
