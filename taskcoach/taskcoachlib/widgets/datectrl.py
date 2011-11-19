@@ -188,7 +188,7 @@ class DateTimeCtrl(wx.Panel):
         if self._noneAllowed:
             options['style'] |= wx.DP_ALLOWNONE
         if operating_system.isWindows():
-            options['size'] = (100, -1)
+            options['size'] = (self._adjustForDPI(100), -1) 
         elif operating_system.isGTK():
             options['size'] = (115, -1)
         return options
@@ -204,11 +204,15 @@ class DateTimeCtrl(wx.Panel):
     
     def _timeSize(self):
         if operating_system.isWindows():
-            return (90 if self._showSeconds else 60, -1) 
+            return (self._adjustForDPI(90 if self._showSeconds else 60), -1)
         elif operating_system.isGTK():
             return (105 if self._showSeconds else 80, -1)
         else:
             return (95 if self._showSeconds else 70, self._dateCtrl.GetSize()[1])
+    
+    @staticmethod
+    def _adjustForDPI(size):
+        return round(size * wx.ScreenDC().GetPPI()[0] / 96.)
 
     def _formatTime(self, time):
         formattedTime = '%02d:%02d'%(time.hour, time.minute)
