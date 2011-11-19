@@ -10,13 +10,13 @@ msgstr ""
 "Project-Id-Version: da\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-11-17 21:12+0000\n"
-"PO-Revision-Date: 2011-05-01 18:34+0000\n"
-"Last-Translator: Kris Hansen <Unknown>\n"
+"PO-Revision-Date: 2011-11-19 05:39+0000\n"
+"Last-Translator: peso <peer.sommerlund@gmail.com>\n"
 "Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-18 21:37+0000\n"
+"X-Launchpad-Export-Date: 2011-11-19 22:42+0000\n"
 "X-Generator: Launchpad (build 14299)\n"
 
 #: taskcoachlib/application/application.py:244
@@ -1500,7 +1500,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:261
 msgid "For running %s from a removable medium"
-msgstr ""
+msgstr "Gør det muligt at køre %s fra et flytbart drev"
 
 #: taskcoachlib/gui/dialog/preferences.py:262
 msgid "Attachment base directory"
@@ -1529,13 +1529,13 @@ msgid ""
 "from a Todo.txt file with the same name as the task file,\n"
 "but with extension .txt"
 msgstr ""
-"Før gem, %s importerer automatisk opgaver\n"
+"Før gem, vil %s automatisk importere opgaver\n"
 "fra en Todo.txt fil med samme navn som opgavefilen,\n"
 "men med fil-endelse \".txt\""
 
 #: taskcoachlib/gui/dialog/preferences.py:271
 msgid "When saving, automatically export to"
-msgstr ""
+msgstr "Efter gem, eksporter automatisk til"
 
 #: taskcoachlib/gui/dialog/preferences.py:273
 msgid ""
@@ -1543,6 +1543,9 @@ msgid ""
 "to a Todo.txt file with the same name as the task file,\n"
 "but with extension .txt"
 msgstr ""
+"Når en fil gemmes vil %s automatisk eksportere opgaver\n"
+"til en Todo.txt fil med samme navn som opgave filen,\n"
+"men med fil-endelse \".txt\""
 
 #: taskcoachlib/gui/dialog/preferences.py:281
 msgid "Window behavior"
@@ -1984,8 +1987,8 @@ msgid ""
 "No user input since %s. The following task was\n"
 "being tracked:"
 msgstr ""
-"Intet brugerinput siden %s. Den følgende opgave blev\n"
-"monitoreret:"
+"Intet brugerinput siden %s. Den følgende opgave\n"
+"var i gang:"
 
 #: taskcoachlib/gui/idlecontroller.py:41
 msgid "Do nothing"
@@ -2851,11 +2854,11 @@ msgstr "Rediger de valgte element(er)"
 
 #: taskcoachlib/gui/uicommand.py:1346
 msgid "Edit &tracked task...\tShift-Alt-T"
-msgstr ""
+msgstr "Rediger igangværende opgave...\tShift-Alt-T"
 
 #: taskcoachlib/gui/uicommand.py:1347
 msgid "Edit the currently tracked task(s)"
-msgstr ""
+msgstr "Rediger de(n) igangværende opgave(r)"
 
 #: taskcoachlib/gui/uicommand.py:1363
 msgid "&Delete\tDEL"
@@ -3023,8 +3026,7 @@ msgstr "&Fortsæt registrering %s\tShift+Ctrl+T"
 
 #: taskcoachlib/gui/uicommand.py:1921
 msgid "Resume tracking effort for the last tracked task"
-msgstr ""
-"Fortsæt registrering af indsats for den opgave der sidst blev registreret på"
+msgstr "Fortsæt registrering af indsats for den opgave der sidst var i gang"
 
 #: taskcoachlib/gui/uicommand.py:2026
 msgid "multiple tasks"
