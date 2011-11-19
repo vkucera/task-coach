@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 from taskcoachlib.i18n import _
 from taskcoachlib.widgets import sized_controls
-from taskcoachlib import meta
+from taskcoachlib import meta, widgets
 
 
 class ExportDialog(sized_controls.SizedDialog):
@@ -147,16 +147,12 @@ class ColumnPicker(sized_controls.SizedPanel):
     def createColumnPicker(self):
         label = wx.StaticText(self, label=_('Columns to export:'))
         label.SetSizerProps(valign='top')
-        self.columnPicker = wx.CheckListBox(self) # pylint: disable-msg=W0201
+        self.columnPicker = widgets.CheckListBox(self) # pylint: disable-msg=W0201
         self.columnPicker.SetSizerProps(expand=True, proportion=1)
         
     def populateColumnPicker(self, viewer):
-        self.emptyColumnPicker()
+        self.columnPicker.Clear()
         self.fillColumnPicker(viewer)
-
-    def emptyColumnPicker(self):
-        while not self.columnPicker.IsEmpty():
-            self.columnPicker.Delete(0)
                     
     def fillColumnPicker(self, viewer):
         if not viewer.hasHideableColumns():

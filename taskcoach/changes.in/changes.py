@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.0', 'November 18, 2011',
+Release('1.3.0', 'November 19, 2011',
     summary='''This release makes all edits done in dialogs immediate.''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -45,6 +45,7 @@ the preference for keeping the time between the two dates constant.''', ''),
         Bug('''Prevent an exception when opening the View menu when the
 task statistics viewer is selected.'''),
         Bug('''The Ctrl-F shortcut didn't work in most viewers.''', '3438256'),
+        Bug('''The export to HTML and CSV dialog didn't work on Windows XP.'''),
         ],
     ),
 

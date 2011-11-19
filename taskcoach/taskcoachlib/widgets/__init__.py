@@ -21,6 +21,7 @@ from frame import AuiManagedFrameWithDynamicCenterPane
 from dialog import Dialog, NotebookDialog, HTMLDialog, AttachmentSelector
 from itemctrl import Column
 from listctrl import ListCtrl
+from checklistbox import CheckListBox
 from treectrl import CheckTreeCtrl, TreeListCtrl
 from squaremap import SquareMap
 from timeline import Timeline
