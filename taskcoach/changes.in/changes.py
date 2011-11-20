@@ -45,7 +45,8 @@ the preference for keeping the time between the two dates constant.''', ''),
         Bug('''Prevent an exception when opening the View menu when the
 task statistics viewer is selected.'''),
         Bug('''The Ctrl-F shortcut didn't work in most viewers.''', '3438256'),
-        Bug('''The export to HTML and CSV dialog didn't work on Windows XP.'''),
+        Bug('''The export to HTML and CSV dialog didn't work on Windows XP.''',
+            '3440438'),
         Bug('''On Windows, use wider date and time controls when the user 
 is running the display with a higher DPI-setting.''', '3439774'),
         ],
