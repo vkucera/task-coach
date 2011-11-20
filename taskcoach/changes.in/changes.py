@@ -22,6 +22,13 @@ from changetypes import *
 
 releases = [
             
+Release('1.3.1', 'November 20, 2011',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug(''' ... '''),
+        ],
+    ),
+            
 Release('1.3.0', 'November 20, 2011',
     summary='''This release makes all edits done in dialogs immediate.''',
     featuresAdded=[
@@ -41,7 +48,7 @@ changes made in other dialogs.''', '1152561'),
         Bug('''Don't close the edit dialog when dragging and dropping 
 an item.''', '3424138'),
         Bug('''When editing start or due date inline, Task Coach would ignore 
-the preference for keeping the time between the two dates constant.''', ''),
+the preference for keeping the time between the two dates constant.'''),
         Bug('''Prevent an exception when opening the View menu when the
 task statistics viewer is selected.'''),
         Bug('''The Ctrl-F shortcut didn't work in most viewers.''', '3438256'),
