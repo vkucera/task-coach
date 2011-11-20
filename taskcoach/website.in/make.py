@@ -177,7 +177,7 @@ macDMG = download_table(image='mac',
                         download_url='%(dist_download_prefix)s/%(filename)s-%(version)s.dmg',
                         package_type='Disk image (dmg)',
                         platform='Mac OS X', platform_lower='macosx',
-                        platform_versions_supported='Mac OS X Tiger/10.4 (Universal) and later',
+                        platform_versions_supported='Mac OS X Tiger/10.4 (Universal) and newer',
                         prerequisites='none',
                         installation='double click the package and drop the %(name)s application in your programs folder')
 
@@ -190,7 +190,7 @@ debian = download_table(image='debian',
                         download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1.deb',
                         package_type='Debian package (deb)',
                         platform='Debian', platform_lower='debian',
-                        platform_versions_supported='Debian GNU/Linux 6.0 ("squeeze") and later',
+                        platform_versions_supported='Debian GNU/Linux 6.0 ("squeeze") and newer',
                         prerequisites=prerequisites26 + '''. If your Debian 
               installation does not have the minimally required wxPython version 
               you will need to install it yourself following 
@@ -211,7 +211,7 @@ gentoo = download_table(image='gentoo',
                         download_url='http://packages.gentoo.org/package/app-office/taskcoach',
                         package_type='Ebuild',
                         platform='Gentoo', platform_lower='gentoo',
-                        platform_versions_supported='Gentoo 2008.0 and later',
+                        platform_versions_supported='Gentoo 2008.0 and newer',
                         prerequisites=prerequisites,
                         installation='%(name)s is included in Gentoo Portage. Install with emerge: <tt>$ emerge taskcoach</tt>')
 
@@ -219,7 +219,7 @@ opensuse = download_table(image='opensuse',
                           download_url='%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.opensuse.i386.rpm',
                           package_type='RPM package',
                           platform='OpenSuse', platform_lower='opensuse',
-                          platform_versions_supported='OpenSuse 11.2',
+                          platform_versions_supported='OpenSuse 11.4 and newer',
                           prerequisites=prerequisites,
                           installation='double click the package to start the installer')
 
@@ -227,7 +227,7 @@ fedora14 = download_table(image='fedora',
                           download_url='%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.fc14.noarch.rpm',
                           package_type='RPM package',
                           platform='Fedora', platform_lower='fedora',
-                          platform_versions_supported='Fedora 14 and later',
+                          platform_versions_supported='Fedora 14 and newer',
                           prerequisites=prerequisites27,
                           installation='<tt>$ sudo yum install --nogpgcheck %(filename_lower)s-%(version)s-1.fc*.noarch.rpm</tt>')
 
@@ -259,7 +259,7 @@ freeBSD = download_table(image='freebsd',
                         download_url='http://www.freebsd.org/cgi/cvsweb.cgi/ports/deskutils/taskcoach/',
                         package_type='Port',
                         platform='FreeBSD', platform_lower='freebsd',
-                        platform_versions_supported='FreeBSD 8.2 and later',
+                        platform_versions_supported='FreeBSD 8.2 and newer',
                         prerequisites='none',
                         installation='Update your ports collection and then run:<br><tt>cd /usr/ports/deskutils/taskcoach &amp;&amp; make install clean</tt>')
 
@@ -272,7 +272,7 @@ iphone = download_table(image='appstore',
                         download_url='http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=311403563&mt=8',
                         package_type='%(name)s App',
                         platform='iPhone and iPod Touch', platform_lower='appstore',
-                        platform_versions_supported='iPhone or iPod Touch with iPhone OS 2.2.1 or later',
+                        platform_versions_supported='iPhone or iPod Touch with iPhone OS 2.2.1 or newer',
                         prerequisites='none',
                         installation='buy %(name)s from the AppStore via iTunes or your iPhone or iPod Touch')
                         
