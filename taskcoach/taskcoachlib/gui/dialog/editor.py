@@ -933,7 +933,7 @@ class EffortEditBook(Page):
     def addStartAndStopEntries(self):
         # pylint: disable-msg=W0201,W0142
         dateTimeEntryKwArgs = dict(showSeconds=True)
-        flags = [None, wx.ALIGN_RIGHT | wx.ALL, wx.ALIGN_LEFT | wx.ALL, None]
+        flags = [None, wx.ALIGN_RIGHT | wx.ALL, wx.ALIGN_LEFT | wx.ALL | wx.ALIGN_CENTER_VERTICAL, None]
         
         currentStartDateTime = self.items[0].getStart()
         self._startDateTimeEntry = entry.DateTimeEntry(self, self._settings,
