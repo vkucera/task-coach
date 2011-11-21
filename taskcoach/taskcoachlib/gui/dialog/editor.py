@@ -974,8 +974,11 @@ class EffortEditBook(Page):
         return text
 
     def onStartFromLastEffort(self, event): # pylint: disable-msg=W0613
-        event.Skip()
-        self._startDateTimeEntry.SetValue(self._effortList.maxDateTime())
+        maxDateTime = self._effortList.maxDateTime()
+        if self._startDateTimeEntry.GetValue() != maxDateTime:
+            self._startDateTimeEntry.SetValue(self._effortList.maxDateTime())
+            self._startDateTimeSync.onAttributeEdited(event)
+        self.onDateTimeChanged(event)
 
     def onStopDateTimeChanged(self, *args, **kwargs):
         # When the user checks the stop datetime, enter the current datetime

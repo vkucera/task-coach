@@ -26,7 +26,10 @@ Release('1.3.1', 'November 21, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Don't turn off the start date on new tasks when the user
-has indicated in the preferences that she wants a default start date.'''),
+has indicated in the preferences that she wants a default start date.''', 
+            '3440634'),
+        Bug('''The "Start tracking from last effort" button in the effort
+dialog didn't work.''', '3440794'),
         ],
     ),
             
