@@ -259,14 +259,12 @@ class DatesPage(Page):
 
     def addDateEntry(self, label, taskMethodName):
         TaskMethodName = taskMethodName[0].capitalize() + taskMethodName[1:]
-        if len(self.items) == 1:
-            dateTime = getattr(self.items[0], taskMethodName)()
-        else:
-            dateTime = date.DateTime()
+        dateTime = getattr(self.items[0], taskMethodName)() if len(self.items) == 1 else date.DateTime()
         setattr(self, '_current%s'%TaskMethodName, dateTime)
         suggestedDateTimeMethodName = 'suggested' + TaskMethodName
         suggestedDateTime = getattr(self.items[0], suggestedDateTimeMethodName)()
-        if self.__shouldPresetDateTime(taskMethodName):
+        if self.__shouldPresetDateTime(taskMethodName, dateTime):
+            self.__presetDateTime(TaskMethodName, suggestedDateTime)
             dateTime = suggestedDateTime
         dateTimeEntry = entry.DateTimeEntry(self, self.__settings, dateTime,
                                             suggestedDateTime=suggestedDateTime)
@@ -283,9 +281,14 @@ class DatesPage(Page):
         setattr(self, '_%sSync'%taskMethodName, datetimeSync) 
         self.addEntry(label, dateTimeEntry)
 
-    def __shouldPresetDateTime(self, taskMethodName):
-        return self.__itemsAreNew and \
+    def __shouldPresetDateTime(self, taskMethodName, dateTime):
+        return self.__itemsAreNew and dateTime == date.DateTime() and \
             self.__settings.get('view', 'default%s'%taskMethodName.lower()).startswith('preset')
+            
+    @patterns.eventSource
+    def __presetDateTime(self, TaskMethodName, dateTime, event=None):
+        for item in self.items:
+            getattr(item, 'set%s'%TaskMethodName)(dateTime, event=event)
             
     def __keep_delta(self, taskMethodName):
         datesTied = self.__settings.get('view', 'datestied')
@@ -296,7 +299,8 @@ class DatesPage(Page):
         # pylint: disable-msg=W0201
         reminderDateTime = self.items[0].reminder() if len(self.items) == 1 else date.DateTime()
         suggestedDateTime = self.items[0].suggestedReminderDateTime()
-        if self.__settings.get('view', 'defaultreminderdatetime').startswith('preset') and reminderDateTime == date.DateTime():
+        if self.__shouldPresetDateTime('reminderdatetime', reminderDateTime):
+            self.__presetDateTime('Reminder', suggestedDateTime)
             reminderDateTime = suggestedDateTime
         self._reminderDateTimeEntry = entry.DateTimeEntry(self, self.__settings,
                                                           reminderDateTime, 
@@ -932,7 +936,7 @@ class EffortEditBook(Page):
     def addStartAndStopEntries(self):
         # pylint: disable-msg=W0201,W0142
         dateTimeEntryKwArgs = dict(showSeconds=True)
-        flags = [None, wx.ALIGN_RIGHT | wx.ALL, wx.ALIGN_LEFT | wx.ALL, None]
+        flags = [None, wx.ALIGN_RIGHT | wx.ALL, wx.ALIGN_LEFT | wx.ALL | wx.ALIGN_CENTER_VERTICAL, None]
         
         currentStartDateTime = self.items[0].getStart()
         self._startDateTimeEntry = entry.DateTimeEntry(self, self._settings,
@@ -973,8 +977,11 @@ class EffortEditBook(Page):
         return text
 
     def onStartFromLastEffort(self, event): # pylint: disable-msg=W0613
-        event.Skip()
-        self._startDateTimeEntry.SetValue(self._effortList.maxDateTime())
+        maxDateTime = self._effortList.maxDateTime()
+        if self._startDateTimeEntry.GetValue() != maxDateTime:
+            self._startDateTimeEntry.SetValue(self._effortList.maxDateTime())
+            self._startDateTimeSync.onAttributeEdited(event)
+        self.onDateTimeChanged(event)
 
     def onStopDateTimeChanged(self, *args, **kwargs):
         # When the user checks the stop datetime, enter the current datetime
