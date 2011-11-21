@@ -22,10 +22,11 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.1', 'November 20, 2011',
+Release('1.3.1', 'November 21, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug(''' ... '''),
+        Bug('''Don't turn off the start date on new tasks when the user
+has indicated in the preferences that she wants a default start date.'''),
         ],
     ),
             
