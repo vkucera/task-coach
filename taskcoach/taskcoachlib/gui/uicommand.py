@@ -1400,11 +1400,20 @@ class TaskNew(TaskListCommand, SettingsCommand):
         super(TaskNew, self).__init__(bitmap='new', *args, **kwargs)
 
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
+        kwargs = self.taskKeywords.copy()
+        if self.__shouldPresetStartDateTime():
+            kwargs['startDateTime'] = task.Task.suggestedStartDateTime()
+        if self.__shouldPresetDueDateTime():
+            kwargs['dueDateTime'] = task.Task.suggestedDueDateTime()
+        if self.__shouldPresetCompletionDateTime():
+            kwargs['completionDateTime'] = task.Task.suggestedCompletionDateTime()
+        if self.__shouldPresetReminderDateTime():
+            kwargs['reminder'] = task.Task.suggestedReminderDateTime()
         newTaskCommand = command.NewTaskCommand(self.taskList, 
             categories=self.categoriesForTheNewTask(), 
             prerequisites=self.prerequisitesForTheNewTask(),
             dependencies=self.dependenciesForTheNewTask(), 
-            **self.taskKeywords)
+            **kwargs)
         newTaskCommand.do() 
         newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(),
             newTaskCommand.items, self.settings, self.taskList, 
@@ -1420,6 +1429,22 @@ class TaskNew(TaskListCommand, SettingsCommand):
 
     def dependenciesForTheNewTask(self):
         return []
+    
+    def __shouldPresetStartDateTime(self):
+        return 'startDateTime' not in self.taskKeywords and \
+            self.settings.get('view', 'defaultStartDateTime').startswith('preset')
+            
+    def __shouldPresetDueDateTime(self):
+        return 'dueDateTime' not in self.taskKeywords and \
+            self.settings.get('view', 'defaultDueDateTime').startswith('preset')
+    
+    def __shouldPresetCompletionDateTime(self):
+        return 'completionDateTime' not in self.taskKeywords and \
+            self.settings.get('view', 'defaultCompletionDateTime').startswith('preset')
+            
+    def __shouldPresetReminderDateTime(self):
+        return 'reminder' not in self.taskKeywords and \
+            self.settings.get('view', 'defaultReminderDateTime').startswith('preset')
     
 
 class TaskNewFromTemplate(TaskNew):
