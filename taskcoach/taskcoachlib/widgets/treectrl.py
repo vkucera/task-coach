@@ -27,7 +27,6 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
                     hypertreelist.HyperTreeList):
     # pylint: disable-msg=W0223
 
-
     def __init__(self, *args, **kwargs):
         super(HyperTreeList, self).__init__(*args, **kwargs)
         if operating_system.isGTK():
@@ -82,10 +81,6 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
         flags = self.HitTest(event.GetPosition())[1]
         return flags & customtree.TREE_HITTEST_ONITEMCHECKICON
 
-    def collapseAllItems(self):
-        for item in self.GetItemChildren():
-            self.Collapse(item)
-            
     def select(self, selection):
         for item in self.GetItemChildren(recursively=True):
             self.SelectItem(item, self.GetItemPyData(item) in selection)

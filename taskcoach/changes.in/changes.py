@@ -30,6 +30,8 @@ has indicated in the preferences that she wants a default start date.''',
             '3440634'),
         Bug('''The "Start tracking from last effort" button in the effort
 dialog didn't work.''', '3440794'),
+        Bug('''"View->Tree options->Collapse all items" did only collapse top
+level items.''', '3441180'),
         ],
     featuresAdded=[
         Feature('''The effort dialog now has a button to set the stop date and
