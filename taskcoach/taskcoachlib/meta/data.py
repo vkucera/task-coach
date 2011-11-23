@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 version = '1.3.1' # Current version number of the application
 tskversion = 33 # Current version number of the task file format, changed to 33 for release 1.2.24.
-release_day = '22' # Day number of the release, 1-31, as string
+release_day = '23' # Day number of the release, 1-31, as string
 release_month = 'November' # Month of the release in plain English
 release_year = '2011' # Year of the release as string
 release_status = 'stable' # One of 'alpha', 'beta', 'stable'
@@ -92,6 +92,7 @@ feature_request_url = 'http://taskcoach.uservoice.com'
 support_request_url = 'https://sourceforge.net/tracker/?group_id=130831&atid=719135'
 translations_url = 'https://translations.launchpad.net/taskcoach'
 donate_url = url + 'donations.html' 
+i18n_url = url + 'i18n.html'
 
 announcement_addresses = 'taskcoach@yahoogroups.com, python-announce-list@python.org'
 bcc_announcement_addresses = 'johnhaller@portableapps.com'

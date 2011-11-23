@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.1', 'November 22, 2011',
+Release('1.3.1', 'November 23, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Don't turn off the start date on new tasks when the user
@@ -32,6 +32,9 @@ has indicated in the preferences that she wants a default start date.''',
 dialog didn't work.''', '3440794'),
         Bug('''"View->Tree options->Collapse all items" did only collapse top
 level items.''', '3441180'),
+        Bug('''The language choice control in the preferences dialog would 
+always show "Let the system determine the language", no matter what language 
+the user had picked before.''' , '3441456'),
         ],
     featuresAdded=[
         Feature('''The effort dialog now has a button to set the stop date and
