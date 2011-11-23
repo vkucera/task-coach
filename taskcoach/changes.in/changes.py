@@ -35,10 +35,14 @@ level items.''', '3441180'),
         Bug('''The language choice control in the preferences dialog would 
 always show "Let the system determine the language", no matter what language 
 the user had picked before.''' , '3441456'),
+        Bug('''Allow for flat pie charts, because reading data from flat pie
+charts is easier than from 3D pie charts.''', '3441469'),
         ],
     featuresAdded=[
         Feature('''The effort dialog now has a button to set the stop date and
 time of the effort to the current date and time.'''),
+        Feature('''Allow for changing the angle of the pie charts via a slider
+in the toolbar of the task statistics viewer.'''),
         ],
     ),
             

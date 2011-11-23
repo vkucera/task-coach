@@ -2558,3 +2558,30 @@ class ToggleAutoColumnResizing(UICheckCommand, ViewerCommand, SettingsCommand):
         self.settings.set(self.viewer.settingsSection(), 'columnautoresizing',
                           str(self._isMenuItemChecked(event)))
         self.updateWidget()
+
+
+class ViewerPieChartAngle(ViewerCommand, SettingsCommand):        
+    def appendToToolBar(self, toolbar):
+        ''' Add our slider control to the toolbar. '''
+        # pylint: disable-msg=W0201
+        self.sliderCtrl = wx.Slider(toolbar, minValue=0, maxValue=90,
+                                    value=self.getCurrentAngle())
+        self.sliderCtrl.Bind(wx.EVT_SLIDER, self.onSlider)
+        toolbar.AddControl(self.sliderCtrl)
+        
+    def onSlider(self, event):
+        ''' The user picked a new angle. '''
+        event.Skip()
+        self.setCurrentAngle()
+   
+    def doCommand(self, event):
+        pass # Not used
+        
+    def getCurrentAngle(self):
+        return self.settings.getint(self.viewer.settingsSection(),
+                                    'piechartangle')
+
+    def setCurrentAngle(self):
+        self.settings.set(self.viewer.settingsSection(), 'piechartangle', 
+                          str(self.sliderCtrl.GetValue()))
+   

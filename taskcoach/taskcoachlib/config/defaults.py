@@ -86,6 +86,7 @@ defaults = { \
     'tasksinactive': 'Never',        # Show tasks when they'll be active today, tomorrow, etc.   
     'hideactivetasks': 'False',
     'hidecompositetasks': 'False',
+    'piechartangle': '30',
 },
 'prerequisiteviewerintaskeditor': { \
     'title': '',                     # User supplied viewer title 
