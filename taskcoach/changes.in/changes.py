@@ -34,9 +34,11 @@ dialog didn't work.''', '3440794'),
 level items.''', '3441180'),
         Bug('''The language choice control in the preferences dialog would 
 always show "Let the system determine the language", no matter what language 
-the user had picked before.''' , '3441456'),
+the user had picked before.''', '3441456'),
         Bug('''Allow for flat pie charts, because reading data from flat pie
 charts is easier than from 3D pie charts.''', '3441469'),
+        Bug('''On Windows, the Edit menu could become very wide if the user
+would edit a long subject.''', ' 3441474'),
         ],
     featuresAdded=[
         Feature('''The effort dialog now has a button to set the stop date and
