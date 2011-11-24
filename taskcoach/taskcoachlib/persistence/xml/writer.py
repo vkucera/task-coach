@@ -101,17 +101,17 @@ class XMLWriter(object):
             node.attrib['duedate'] = str(task.dueDateTime())
         if task.completionDateTime() != maxDateTime:
             node.attrib['completiondate'] = str(task.completionDateTime())
-        if task.percentageComplete() != 0:
+        if task.percentageComplete():
             node.attrib['percentageComplete'] = str(task.percentageComplete())
         if task.recurrence():
             self.recurrenceNode(node, task.recurrence())
         if task.budget() != date.TimeDelta():
             node.attrib['budget'] = self.budgetAsAttribute(task.budget())
-        if task.priority() != 0:
+        if task.priority():
             node.attrib['priority'] = str(task.priority())
-        if task.hourlyFee() != 0:
+        if task.hourlyFee():
             node.attrib['hourlyFee'] = str(task.hourlyFee())
-        if task.fixedFee() != 0:
+        if task.fixedFee():
             node.attrib['fixedFee'] = str(task.fixedFee())
         reminder = task.reminder() 
         if reminder != maxDateTime and reminder != None:
