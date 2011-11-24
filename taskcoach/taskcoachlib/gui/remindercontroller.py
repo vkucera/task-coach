@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import patterns, command, meta, notify
+from taskcoachlib import patterns, meta, notify
 from taskcoachlib.domain import date
 from taskcoachlib.gui.dialog import reminder, editor
 from taskcoachlib.i18n import _
@@ -144,8 +144,9 @@ class ReminderController(object):
 
     def __registerReminder(self, task):
         reminderDateTime = task.reminder()
-        if reminderDateTime < date.DateTime.now():
-            reminderDateTime = date.DateTime.now() + date.TimeDelta(seconds=2)
+        now = date.DateTime.now()
+        if reminderDateTime < now:
+            reminderDateTime = now + date.TimeDelta(seconds=60)
         if reminderDateTime not in self.__tasksWithReminders.values():
             self.__changeDateTimeObservation(reminderDateTime, 
                                              'registerObserver')

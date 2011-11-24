@@ -39,6 +39,10 @@ the user had picked before.''', '3441456'),
 charts is easier than from 3D pie charts.''', '3441469'),
         Bug('''On Windows, the Edit menu could become very wide if the user
 would edit a long subject.''', ' 3441474'),
+        Bug('''When the user edits the reminder date and time and it is
+in the past, don't fire the reminder immediately, but wait a minute to give 
+the user a change to finish changing the reminder date and time into a 
+future date and time.''','3441442'),
         ],
     featuresAdded=[
         Feature('''The effort dialog now has a button to set the stop date and
