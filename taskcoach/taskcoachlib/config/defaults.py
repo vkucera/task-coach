@@ -337,30 +337,30 @@ defaults = { \
     'tipsindex': '0', # Start at the first tip
     'blinktaskbariconwhentrackingeffort': 'True' },
 'taskdialog': { \
-    'size': '(600, 400)',   # Default size of the dialogs
+    'size': '(-1, -1)',     # Size of the dialogs, calculated by default
     'position': '(-1, -1)', # Position of the dialog, undefined by default
     'maximized': 'False',   # Don't open the dialog maximized by default
     'perspectives': '{}'    # The layout of the tabs in the dialog
     },
 'categorydialog': { \
-    'size': '(500, 300)',   # Default size of the dialogs
+    'size': '(-1, -1)',     # Size of the dialogs, calculated by default
     'position': '(-1, -1)', # Position of the dialog, undefined by default
     'maximized': 'False',   # Don't open the dialog maximized by default
     'perspectives': '{}'    # The layout of the tabs in the dialog
     },
 'effortdialog': { \
-    'size': '(500, 300)',   # Default size of the dialogs
+    'size': '(-1, -1)',     # Size of the dialogs, calculated by default
     'position': '(-1, -1)', # Position of the dialog, undefined by default
     'maximized': 'False'    # Don't open the dialog maximized by default
     },
 'notedialog': { \
-    'size': '(500, 300)',   # Default size of the dialogs
+    'size': '(-1, -1)',     # Size of the dialogs, calculated by default
     'position': '(-1, -1)', # Position of the dialog, undefined by default
     'maximized': 'False',   # Don't open the dialog maximized by default
     'perspectives': '{}'    # The layout of the tabs in the dialog
     },
 'attachmentdialog': { \
-    'size': '(500, 300)',   # Default size of the dialogs
+    'size': '(-1, -1)',     # Size of the dialogs, calculated by default
     'position': '(-1, -1)', # Position of the dialog, undefined by default
     'maximized': 'False',   # Don't open the dialog maximized by default
     'perspectives': '{}'    # The layout of the tabs in the dialog

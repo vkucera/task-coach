@@ -294,6 +294,7 @@ class DatesPage(Page):
         self.addEntry(_('Reminder'), self._reminderDateTimeEntry)
         
     def addRecurrenceEntry(self):
+        # pylint: disable-msg=W0201
         currentRecurrence = self.items[0].recurrence() if len(self.items) == 1 else date.Recurrence()
         self._recurrenceEntry = entry.RecurrenceEntry(self, currentRecurrence)
         self._recurrenceSync = attributesync.AttributeSync('recurrence',
@@ -726,6 +727,8 @@ class EditBook(widgets.Notebook):
                 page = self.createPage(pageName, taskFile, itemsAreNew)
                 self.AddPage(page, page.pageTitle, page.pageIcon)
                 pageNames.append(pageName)
+        width, height = self.getMinPageSize()
+        self.SetMinSize((width, self.GetHeightForPageHeight(height)))
         return pageNames
 
     def getPage(self, pageName):
@@ -733,6 +736,14 @@ class EditBook(widgets.Notebook):
             if pageName == self[index].pageName:
                 return self[index]
         return None
+    
+    def getMinPageSize(self):
+        minWidths, minHeights = [], []
+        for page in self:
+            minWidth, minHeight = page.GetMinSize()
+            minWidths.append(minWidth)
+            minHeights.append(minHeight)
+        return max(minWidths), max(minHeights) 
         
     def allPageNamesInUserOrder(self):
         ''' Return all pages names in the order stored in the settings. The
