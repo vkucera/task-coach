@@ -1432,19 +1432,19 @@ class TaskNew(TaskListCommand, SettingsCommand):
     
     def __shouldPresetStartDateTime(self):
         return 'startDateTime' not in self.taskKeywords and \
-            self.settings.get('view', 'defaultStartDateTime').startswith('preset')
+            self.settings.get('view', 'defaultstartdatetime').startswith('preset')
             
     def __shouldPresetDueDateTime(self):
         return 'dueDateTime' not in self.taskKeywords and \
-            self.settings.get('view', 'defaultDueDateTime').startswith('preset')
+            self.settings.get('view', 'defaultduedatetime').startswith('preset')
     
     def __shouldPresetCompletionDateTime(self):
         return 'completionDateTime' not in self.taskKeywords and \
-            self.settings.get('view', 'defaultCompletionDateTime').startswith('preset')
+            self.settings.get('view', 'defaultcompletiondatetime').startswith('preset')
             
     def __shouldPresetReminderDateTime(self):
         return 'reminder' not in self.taskKeywords and \
-            self.settings.get('view', 'defaultReminderDateTime').startswith('preset')
+            self.settings.get('view', 'defaultreminderdatetime').startswith('preset')
     
 
 class TaskNewFromTemplate(TaskNew):
