@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-11-17 21:12+0000\n"
-"PO-Revision-Date: 2011-02-13 11:40+0000\n"
-"Last-Translator: Emmanuel Simond <emanwebdev@gmail.com>\n"
+"POT-Creation-Date: 2011-11-20 21:30+0000\n"
+"PO-Revision-Date: 2011-11-25 22:59+0000\n"
+"Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Indonesian <id@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-19 22:41+0000\n"
-"X-Generator: Launchpad (build 14299)\n"
+"X-Launchpad-Export-Date: 2011-11-25 23:04+0000\n"
+"X-Generator: Launchpad (build 14381)\n"
 
 #: taskcoachlib/application/application.py:244
 msgid ""
@@ -38,23 +38,23 @@ msgstr "Lampiran baru"
 
 #: taskcoachlib/command/attachmentCommands.py:43
 msgid "Delete attachments"
-msgstr ""
+msgstr "Hapus lampiran"
 
 #: taskcoachlib/command/attachmentCommands.py:44
 msgid "Delete attachment \"%s\""
-msgstr ""
+msgstr "Hapus lampiran \"%s\""
 
 #: taskcoachlib/command/attachmentCommands.py:48
 msgid "Add note to attachments"
-msgstr ""
+msgstr "Tambah catatan ke lampiran"
 
 #: taskcoachlib/command/attachmentCommands.py:52
 msgid "Edit location of attachments"
-msgstr ""
+msgstr "Sunting lokasi lampiran"
 
 #: taskcoachlib/command/attachmentCommands.py:53
 msgid "Edit attachment \"%s\" location"
-msgstr ""
+msgstr "Sunting lokasi lampiran \"%s\""
 
 #: taskcoachlib/command/attachmentCommands.py:75
 #: taskcoachlib/widgets/dialog.py:155
@@ -63,15 +63,15 @@ msgstr "Tambah lampiran"
 
 #: taskcoachlib/command/attachmentCommands.py:76
 msgid "Add attachment to \"%s\""
-msgstr ""
+msgstr "Tambah lampiran ke \"%s\""
 
 #: taskcoachlib/command/attachmentCommands.py:108
 msgid "Remove attachment"
-msgstr ""
+msgstr "Hapus lampiran"
 
 #: taskcoachlib/command/attachmentCommands.py:109
 msgid "Remove attachment to \"%s\""
-msgstr ""
+msgstr "Hapus lampiran ke \"%s\""
 
 #: taskcoachlib/command/base.py:170
 msgid "Copy"
@@ -79,7 +79,7 @@ msgstr "Copy"
 
 #: taskcoachlib/command/base.py:171
 msgid "Copy \"%s\""
-msgstr ""
+msgstr "Salin \"%s\""
 
 #: taskcoachlib/command/base.py:185
 msgid "Delete"
@@ -87,7 +87,7 @@ msgstr "Hapus"
 
 #: taskcoachlib/command/base.py:186
 msgid "Delete \"%s\""
-msgstr ""
+msgstr "Hapus \"%s\""
 
 #: taskcoachlib/command/base.py:215
 msgid "Cut"
@@ -95,7 +95,7 @@ msgstr "Potong"
 
 #: taskcoachlib/command/base.py:216
 msgid "Cut \"%s\""
-msgstr ""
+msgstr "Potong \"%s\""
 
 #: taskcoachlib/command/base.py:241
 msgid "Paste"
@@ -103,15 +103,15 @@ msgstr "Tempel"
 
 #: taskcoachlib/command/base.py:242
 msgid "Paste \"%s\""
-msgstr ""
+msgstr "Tempel \"%s\""
 
 #: taskcoachlib/command/base.py:277
 msgid "Paste as subitem"
-msgstr ""
+msgstr "Tempel sebagai subitem"
 
 #: taskcoachlib/command/base.py:278
 msgid "Paste as subitem of \"%s\""
-msgstr ""
+msgstr "Tempel sebagai subitem \"%s\""
 
 #: taskcoachlib/command/base.py:290
 msgid "Drag and drop"
@@ -119,63 +119,63 @@ msgstr "Tarik dan lepas"
 
 #: taskcoachlib/command/base.py:291
 msgid "Drag and drop \"%s\""
-msgstr ""
+msgstr "Angkat dan taruh \"%s\""
 
 #: taskcoachlib/command/base.py:376
 msgid "Edit subjects"
-msgstr ""
+msgstr "Sunting subyek"
 
 #: taskcoachlib/command/base.py:377
 msgid "Edit subject \"%s\""
-msgstr ""
+msgstr "Sunting subyek \"%s\""
 
 #: taskcoachlib/command/base.py:399
 msgid "Edit descriptions"
-msgstr ""
+msgstr "Sunting keterangan"
 
 #: taskcoachlib/command/base.py:400
 msgid "Edit description \"%s\""
-msgstr ""
+msgstr "Sunting keterangan \"%s\""
 
 #: taskcoachlib/command/base.py:422
 msgid "Change icons"
-msgstr ""
+msgstr "Ganti ikon"
 
 #: taskcoachlib/command/base.py:423
 msgid "Change icon \"%s\""
-msgstr ""
+msgstr "Ganti ikon \"%s\""
 
 #: taskcoachlib/command/base.py:450
 msgid "Change fonts"
-msgstr ""
+msgstr "Ganti fonta"
 
 #: taskcoachlib/command/base.py:451
 msgid "Change font \"%s\""
-msgstr ""
+msgstr "Ganti fonta \"%s\""
 
 #: taskcoachlib/command/base.py:501
 msgid "Change foreground colors"
-msgstr ""
+msgstr "Ganti warna"
 
 #: taskcoachlib/command/base.py:502
 msgid "Change foreground color \"%s\""
-msgstr ""
+msgstr "Ganti warna \"%s\""
 
 #: taskcoachlib/command/base.py:514
 msgid "Change background colors"
-msgstr ""
+msgstr "Ganti warna latar"
 
 #: taskcoachlib/command/base.py:515
 msgid "Change background color \"%s\""
-msgstr ""
+msgstr "Ganti warna latar \"%s\""
 
 #: taskcoachlib/command/categorizableCommands.py:25
 msgid "Toggle category"
-msgstr ""
+msgstr "Beralih kategori"
 
 #: taskcoachlib/command/categorizableCommands.py:26
 msgid "Toggle category of \"%s\""
-msgstr ""
+msgstr "Beralih kategori \"%s\""
 
 #: taskcoachlib/command/categoryCommands.py:26
 #: taskcoachlib/command/categoryCommands.py:29
@@ -184,11 +184,11 @@ msgstr "Kategori baru"
 
 #: taskcoachlib/command/categoryCommands.py:41
 msgid "New subcategories"
-msgstr ""
+msgstr "Sub kategori baru"
 
 #: taskcoachlib/command/categoryCommands.py:42
 msgid "New subcategory of \"%s\""
-msgstr ""
+msgstr "Sub kategori \"%s\""
 
 #: taskcoachlib/command/categoryCommands.py:45
 msgid "New subcategory"
@@ -196,63 +196,63 @@ msgstr "Subkategori baru"
 
 #: taskcoachlib/command/categoryCommands.py:57
 msgid "Edit exclusive subcategories"
-msgstr ""
+msgstr "Sunting subkategori eksklusif"
 
 #: taskcoachlib/command/categoryCommands.py:58
 msgid "Edit exclusive subcategories of \"%s\""
-msgstr ""
+msgstr "Sunting subkategori eksklusif \"%s\""
 
 #: taskcoachlib/command/categoryCommands.py:80
 msgid "Delete categories"
-msgstr ""
+msgstr "Hapus kategori"
 
 #: taskcoachlib/command/categoryCommands.py:81
 msgid "Delete category \"%s\""
-msgstr ""
+msgstr "Hapus kategori \"%s\""
 
 #: taskcoachlib/command/categoryCommands.py:85
 msgid "Drag and drop categories"
-msgstr ""
+msgstr "Ambil dan taruh kategori"
 
 #: taskcoachlib/command/effortCommands.py:26
 msgid "New efforts"
-msgstr ""
+msgstr "Upaya baru"
 
 #: taskcoachlib/command/effortCommands.py:27
 msgid "New effort of \"%s\""
-msgstr ""
+msgstr "Upaya baru \"%s\""
 
 #: taskcoachlib/command/effortCommands.py:48
 msgid "Delete efforts"
-msgstr ""
+msgstr "Hapus upaya"
 
 #: taskcoachlib/command/effortCommands.py:49
 msgid "Delete effort \"%s\""
-msgstr ""
+msgstr "Hapus upaya \"%s\""
 
 #: taskcoachlib/command/effortCommands.py:53
 msgid "Change task of effort"
-msgstr ""
+msgstr "Ubah tugas upaya"
 
 #: taskcoachlib/command/effortCommands.py:54
 msgid "Change task of \"%s\" effort"
-msgstr ""
+msgstr "Ubah tugas upaya \"%s\""
 
 #: taskcoachlib/command/effortCommands.py:76
 msgid "Change effort start date and time"
-msgstr ""
+msgstr "Ubah tanggal dan waktu mulai upaya"
 
 #: taskcoachlib/command/effortCommands.py:77
 msgid "Change effort start date and time of \"%s\""
-msgstr ""
+msgstr "Ubah tanggal dan aktu mulai upaya \"%s\""
 
 #: taskcoachlib/command/effortCommands.py:104
 msgid "Change effort stop date and time"
-msgstr ""
+msgstr "Ubah tanggal dan waktu pemberhentian upaya"
 
 #: taskcoachlib/command/effortCommands.py:105
 msgid "Change effort stop date and time of \"%s\""
-msgstr ""
+msgstr "Ubah tanggal dan jam upaya \"%s\""
 
 #: taskcoachlib/command/noteCommands.py:26
 #: taskcoachlib/command/noteCommands.py:29
@@ -262,11 +262,11 @@ msgstr "Catatan baru"
 
 #: taskcoachlib/command/noteCommands.py:40
 msgid "New subnotes"
-msgstr ""
+msgstr "Sub catatan baru"
 
 #: taskcoachlib/command/noteCommands.py:41
 msgid "New subnote of \"%s\""
-msgstr ""
+msgstr "Sub catatan baru \"%s\""
 
 #: taskcoachlib/command/noteCommands.py:44
 #: taskcoachlib/command/noteCommands.py:108
@@ -275,19 +275,19 @@ msgstr "Subcatatan baru"
 
 #: taskcoachlib/command/noteCommands.py:55
 msgid "Delete notes"
-msgstr ""
+msgstr "Hapus catatan-catatan"
 
 #: taskcoachlib/command/noteCommands.py:56
 msgid "Delete note \"%s\""
-msgstr ""
+msgstr "Hapus catatan \"%s\""
 
 #: taskcoachlib/command/noteCommands.py:60
 msgid "Drag and drop notes"
-msgstr ""
+msgstr "Ambil dan taruh catatan-catatan"
 
 #: taskcoachlib/command/noteCommands.py:61
 msgid "Drag and drop note \"%s\""
-msgstr ""
+msgstr "Ambil dan taruh catatan \"%s\""
 
 #: taskcoachlib/command/noteCommands.py:65
 msgid "Add note"
@@ -295,35 +295,35 @@ msgstr "Tambah catatan"
 
 #: taskcoachlib/command/noteCommands.py:66
 msgid "Add note to \"%s\""
-msgstr ""
+msgstr "Tambah catatan ke \"%s\""
 
 #: taskcoachlib/command/noteCommands.py:101
 msgid "Add subnote"
-msgstr ""
+msgstr "Tambah sub catatan"
 
 #: taskcoachlib/command/noteCommands.py:102
 msgid "Add subnote to \"%s\""
-msgstr ""
+msgstr "Tambah sub catatan ke \"%s\""
 
 #: taskcoachlib/command/noteCommands.py:136
 msgid "Remove note"
-msgstr ""
+msgstr "Pindahkan catatan"
 
 #: taskcoachlib/command/noteCommands.py:137
 msgid "Remove note from \"%s\""
-msgstr ""
+msgstr "Pindahkan catatan dari \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:59
 msgid "Drag and drop tasks"
-msgstr ""
+msgstr "Ambil dan taruh tugas-tugas"
 
 #: taskcoachlib/command/taskCommands.py:63
 msgid "Delete tasks"
-msgstr ""
+msgstr "Hapus tugas-tugas"
 
 #: taskcoachlib/command/taskCommands.py:64
 msgid "Delete task \"%s\""
-msgstr ""
+msgstr "Hapus tugas \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:106
 #: taskcoachlib/command/taskCommands.py:109
@@ -332,11 +332,11 @@ msgstr "Tugas baru"
 
 #: taskcoachlib/command/taskCommands.py:143
 msgid "New subtasks"
-msgstr ""
+msgstr "Sub tugas baru"
 
 #: taskcoachlib/command/taskCommands.py:144
 msgid "New subtask of \"%s\""
-msgstr ""
+msgstr "Sub tugas baru \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:149
 msgid "New subtask"
@@ -344,11 +344,11 @@ msgstr "Subtugas baru"
 
 #: taskcoachlib/command/taskCommands.py:168
 msgid "Mark tasks completed"
-msgstr ""
+msgstr "Tandai tugas yang selesai"
 
 #: taskcoachlib/command/taskCommands.py:169
 msgid "Mark \"%s\" completed"
-msgstr ""
+msgstr "Tandai \"%s\" yang selesai"
 
 #: taskcoachlib/command/taskCommands.py:196
 msgid "Start tracking"
@@ -356,7 +356,7 @@ msgstr "Mulai melacak"
 
 #: taskcoachlib/command/taskCommands.py:197
 msgid "Start tracking \"%s\""
-msgstr ""
+msgstr "Mulai melacak \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:233
 msgid "Stop tracking"
@@ -364,7 +364,7 @@ msgstr "Berhenti melacak"
 
 #: taskcoachlib/command/taskCommands.py:234
 msgid "Stop tracking \"%s\""
-msgstr ""
+msgstr "Berhenti melacak \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:280
 msgid "Maximize priority"
@@ -372,7 +372,7 @@ msgstr "Maksimalkan prioritas"
 
 #: taskcoachlib/command/taskCommands.py:281
 msgid "Maximize priority of \"%s\""
-msgstr ""
+msgstr "Maksimalkan prioritas \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:290
 msgid "Minimize priority"
@@ -380,7 +380,7 @@ msgstr "Minimalkan prioritas"
 
 #: taskcoachlib/command/taskCommands.py:291
 msgid "Minimize priority of \"%s\""
-msgstr ""
+msgstr "Minimalkan prioritas \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:321
 msgid "Increase priority"
@@ -388,7 +388,7 @@ msgstr "Naikkan prioritas"
 
 #: taskcoachlib/command/taskCommands.py:322
 msgid "Increase priority of \"%s\""
-msgstr ""
+msgstr "Naikkan prioritas \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:327
 msgid "Decrease priority"
@@ -396,7 +396,7 @@ msgstr "Turunkan prioritas"
 
 #: taskcoachlib/command/taskCommands.py:328
 msgid "Decrease priority of \"%s\""
-msgstr ""
+msgstr "Turunkan prioritas \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:333
 msgid "Change priority"
@@ -410,87 +410,87 @@ msgstr ""
 msgid "Add note to tasks"
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:398
+#: taskcoachlib/command/taskCommands.py:442
 msgid "Change start date"
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:399
+#: taskcoachlib/command/taskCommands.py:443
 msgid "Change start date of \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:435
+#: taskcoachlib/command/taskCommands.py:463
 msgid "Change due date"
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:436
+#: taskcoachlib/command/taskCommands.py:464
 msgid "Change due date of \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:473
+#: taskcoachlib/command/taskCommands.py:484
 msgid "Change completion date"
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:474
+#: taskcoachlib/command/taskCommands.py:485
 msgid "Change completion date of \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:489
+#: taskcoachlib/command/taskCommands.py:500
 msgid "Change reminder dates/times"
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:490
+#: taskcoachlib/command/taskCommands.py:501
 msgid "Change reminder date/time of \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:502
+#: taskcoachlib/command/taskCommands.py:513
 msgid "Change recurrences"
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:503
+#: taskcoachlib/command/taskCommands.py:514
 msgid "Change recurrence of \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:526
+#: taskcoachlib/command/taskCommands.py:537
 msgid "Change percentage complete of \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:554
+#: taskcoachlib/command/taskCommands.py:565
 msgid "Change when tasks are marked completed"
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:555
+#: taskcoachlib/command/taskCommands.py:566
 msgid "Change when \"%s\" is marked completed"
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:577
+#: taskcoachlib/command/taskCommands.py:588
 msgid "Change budgets"
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:578
+#: taskcoachlib/command/taskCommands.py:589
 msgid "Change budget of \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:600
+#: taskcoachlib/command/taskCommands.py:611
 msgid "Change hourly fees"
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:601
+#: taskcoachlib/command/taskCommands.py:612
 msgid "Change hourly fee of \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:623
+#: taskcoachlib/command/taskCommands.py:634
 msgid "Change fixed fees"
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:624
+#: taskcoachlib/command/taskCommands.py:635
 msgid "Change fixed fee of \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:646
+#: taskcoachlib/command/taskCommands.py:657
 msgid "Toggle prerequisite"
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:647
+#: taskcoachlib/command/taskCommands.py:658
 msgid "Toggle prerequisite of \"%s\""
 msgstr ""
 
@@ -989,7 +989,7 @@ msgid "No icon"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:61 taskcoachlib/gui/dialog/editor.py:86
-#: taskcoachlib/gui/dialog/editor.py:1010
+#: taskcoachlib/gui/dialog/editor.py:1011
 #: taskcoachlib/gui/viewer/attachment.py:85
 #: taskcoachlib/gui/viewer/category.py:88
 #: taskcoachlib/gui/viewer/effort.py:168 taskcoachlib/gui/viewer/note.py:117
@@ -1015,7 +1015,7 @@ msgstr ""
 msgid "Subject"
 msgstr "Subyek"
 
-#: taskcoachlib/gui/dialog/editor.py:80 taskcoachlib/gui/dialog/editor.py:1003
+#: taskcoachlib/gui/dialog/editor.py:80 taskcoachlib/gui/dialog/editor.py:1004
 msgid "Edit to change all descriptions"
 msgstr ""
 
@@ -1105,80 +1105,80 @@ msgstr "Tanggal harus selesai"
 msgid "Completion date"
 msgstr "Tanggal penyelesaian"
 
-#: taskcoachlib/gui/dialog/editor.py:304
+#: taskcoachlib/gui/dialog/editor.py:305
 #: taskcoachlib/gui/dialog/templates.py:121
 #: taskcoachlib/gui/viewer/task.py:804
 msgid "Reminder"
 msgstr "Pengingat"
 
-#: taskcoachlib/gui/dialog/editor.py:313 taskcoachlib/gui/viewer/task.py:788
+#: taskcoachlib/gui/dialog/editor.py:314 taskcoachlib/gui/viewer/task.py:788
 msgid "Recurrence"
 msgstr "Pengulangan"
 
-#: taskcoachlib/gui/dialog/editor.py:328
+#: taskcoachlib/gui/dialog/editor.py:329
 msgid "Progress"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:346
+#: taskcoachlib/gui/dialog/editor.py:347
 msgid "Percentage complete"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:355
+#: taskcoachlib/gui/dialog/editor.py:356
 msgid "Use application-wide setting"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:356
+#: taskcoachlib/gui/dialog/editor.py:357
 msgid "No"
 msgstr "Tidak"
 
-#: taskcoachlib/gui/dialog/editor.py:356
+#: taskcoachlib/gui/dialog/editor.py:357
 msgid "Yes"
 msgstr "Ya"
 
-#: taskcoachlib/gui/dialog/editor.py:367
+#: taskcoachlib/gui/dialog/editor.py:368
 msgid "Mark task completed when all children are completed?"
 msgstr "Tandai tugas selesai saat semua anak tugas terselesaikan?"
 
-#: taskcoachlib/gui/dialog/editor.py:377 taskcoachlib/gui/dialog/editor.py:399
+#: taskcoachlib/gui/dialog/editor.py:378 taskcoachlib/gui/dialog/editor.py:400
 #: taskcoachlib/gui/uicommand.py:2460 taskcoachlib/gui/viewer/task.py:789
 #: taskcoachlib/gui/wizard/csvimport.py:230
 #: taskcoachlib/persistence/csv/reader.py:95
 msgid "Budget"
 msgstr "Anggaran"
 
-#: taskcoachlib/gui/dialog/editor.py:407 taskcoachlib/gui/uicommand.py:2460
+#: taskcoachlib/gui/dialog/editor.py:408 taskcoachlib/gui/uicommand.py:2460
 #: taskcoachlib/gui/viewer/effort.py:177 taskcoachlib/gui/viewer/task.py:790
 msgid "Time spent"
 msgstr "Waktu terpakai"
 
-#: taskcoachlib/gui/dialog/editor.py:424 taskcoachlib/gui/viewer/task.py:791
+#: taskcoachlib/gui/dialog/editor.py:425 taskcoachlib/gui/viewer/task.py:791
 msgid "Budget left"
 msgstr "Anggaran tersisa"
 
-#: taskcoachlib/gui/dialog/editor.py:449 taskcoachlib/gui/viewer/task.py:793
+#: taskcoachlib/gui/dialog/editor.py:450 taskcoachlib/gui/viewer/task.py:793
 #: taskcoachlib/gui/wizard/csvimport.py:232
 #: taskcoachlib/persistence/csv/reader.py:114
 msgid "Hourly fee"
 msgstr "Tarif perjam"
 
-#: taskcoachlib/gui/dialog/editor.py:458 taskcoachlib/gui/uicommand.py:2460
+#: taskcoachlib/gui/dialog/editor.py:459 taskcoachlib/gui/uicommand.py:2460
 #: taskcoachlib/gui/viewer/task.py:794
 #: taskcoachlib/gui/wizard/csvimport.py:231
 #: taskcoachlib/persistence/csv/reader.py:109
 msgid "Fixed fee"
 msgstr "Tarif tetap"
 
-#: taskcoachlib/gui/dialog/editor.py:464 taskcoachlib/gui/uicommand.py:2460
+#: taskcoachlib/gui/dialog/editor.py:465 taskcoachlib/gui/uicommand.py:2460
 #: taskcoachlib/gui/viewer/effort.py:181 taskcoachlib/gui/viewer/task.py:795
 msgid "Revenue"
 msgstr "Penerimaan"
 
-#: taskcoachlib/gui/dialog/editor.py:547 taskcoachlib/gui/viewer/effort.py:36
+#: taskcoachlib/gui/dialog/editor.py:548 taskcoachlib/gui/viewer/effort.py:36
 #: taskcoachlib/help/__init__.py:75 taskcoachlib/help/__init__.py:214
 msgid "Effort"
 msgstr "Usaha"
 
-#: taskcoachlib/gui/dialog/editor.py:585
+#: taskcoachlib/gui/dialog/editor.py:586
 #: taskcoachlib/gui/viewer/category.py:38
 #: taskcoachlib/gui/viewer/effort.py:169 taskcoachlib/gui/viewer/note.py:134
 #: taskcoachlib/gui/viewer/task.py:739 taskcoachlib/help/__init__.py:80
@@ -1186,82 +1186,82 @@ msgstr "Usaha"
 msgid "Categories"
 msgstr "Kategori-kategori"
 
-#: taskcoachlib/gui/dialog/editor.py:621
+#: taskcoachlib/gui/dialog/editor.py:622
 msgid "Attachments"
 msgstr "Lampiran"
 
-#: taskcoachlib/gui/dialog/editor.py:659 taskcoachlib/gui/viewer/note.py:37
+#: taskcoachlib/gui/dialog/editor.py:660 taskcoachlib/gui/viewer/note.py:37
 #: taskcoachlib/help/__init__.py:85 taskcoachlib/help/__init__.py:275
 msgid "Notes"
 msgstr "Catatan"
 
-#: taskcoachlib/gui/dialog/editor.py:701 taskcoachlib/gui/viewer/task.py:748
+#: taskcoachlib/gui/dialog/editor.py:702 taskcoachlib/gui/viewer/task.py:748
 msgid "Prerequisites"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:917
+#: taskcoachlib/gui/dialog/editor.py:918
 msgid "Edit task"
 msgstr "Ubah tugas"
 
-#: taskcoachlib/gui/dialog/editor.py:926
+#: taskcoachlib/gui/dialog/editor.py:927
 #: taskcoachlib/gui/dialog/reminder.py:52
 #: taskcoachlib/gui/viewer/effort.py:167
 msgid "Task"
 msgstr "Tugas"
 
-#: taskcoachlib/gui/dialog/editor.py:942
+#: taskcoachlib/gui/dialog/editor.py:943
 msgid "Start"
 msgstr "Mulai"
 
-#: taskcoachlib/gui/dialog/editor.py:954
+#: taskcoachlib/gui/dialog/editor.py:955
 msgid "Stop"
 msgstr "Berhenti"
 
-#: taskcoachlib/gui/dialog/editor.py:958
+#: taskcoachlib/gui/dialog/editor.py:959
 msgid "Start tracking from last stop time"
 msgstr "Mulai melacak dari waktu berhenti terakhir"
 
-#: taskcoachlib/gui/dialog/editor.py:987
+#: taskcoachlib/gui/dialog/editor.py:988
 msgid "Warning: start must be earlier than stop"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1122
+#: taskcoachlib/gui/dialog/editor.py:1123
 msgid "Multiple tasks"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1123
+#: taskcoachlib/gui/dialog/editor.py:1124
 msgid "%s (task)"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1128
+#: taskcoachlib/gui/dialog/editor.py:1129
 msgid "Multiple categories"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1129
+#: taskcoachlib/gui/dialog/editor.py:1130
 msgid "%s (category)"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1134
+#: taskcoachlib/gui/dialog/editor.py:1135
 msgid "Multiple notes"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1135
+#: taskcoachlib/gui/dialog/editor.py:1136
 msgid "%s (note)"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1140
+#: taskcoachlib/gui/dialog/editor.py:1141
 msgid "Multiple attachments"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1141
+#: taskcoachlib/gui/dialog/editor.py:1142
 msgid "%s (attachment)"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1146
+#: taskcoachlib/gui/dialog/editor.py:1147
 msgid "Multiple efforts"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1147
+#: taskcoachlib/gui/dialog/editor.py:1148
 msgid "%s (effort)"
 msgstr ""
 
@@ -1355,34 +1355,34 @@ msgstr ""
 msgid "Columns to export:"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/export.py:187
+#: taskcoachlib/gui/dialog/export.py:183
 msgid "Put dates and times in separate columns"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/export.py:219
+#: taskcoachlib/gui/dialog/export.py:215
 msgid "Write style information to a separate CSS file"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/export.py:226
+#: taskcoachlib/gui/dialog/export.py:222
 msgid ""
 "If a CSS file exists for the exported file, %(name)s will not overwrite it. "
 "This allows you to change the style information without losing your changes "
 "on the next export."
 msgstr ""
 
-#: taskcoachlib/gui/dialog/export.py:241 taskcoachlib/gui/iocontroller.py:312
+#: taskcoachlib/gui/dialog/export.py:237 taskcoachlib/gui/iocontroller.py:312
 msgid "Export as CSV"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/export.py:260 taskcoachlib/gui/iocontroller.py:319
+#: taskcoachlib/gui/dialog/export.py:256 taskcoachlib/gui/iocontroller.py:319
 msgid "Export as iCalendar"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/export.py:276 taskcoachlib/gui/iocontroller.py:305
+#: taskcoachlib/gui/dialog/export.py:272 taskcoachlib/gui/iocontroller.py:305
 msgid "Export as HTML"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/export.py:292 taskcoachlib/gui/iocontroller.py:325
+#: taskcoachlib/gui/dialog/export.py:288 taskcoachlib/gui/iocontroller.py:325
 msgid "Export as Todo.txt"
 msgstr ""
 
@@ -3937,27 +3937,27 @@ msgstr ""
 msgid "Show/hide reminder column"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1077
+#: taskcoachlib/gui/viewer/task.py:1081
 msgid "Task statistics"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1080
+#: taskcoachlib/gui/viewer/task.py:1084
 msgid "Due soon tasks: %d (%d%%)"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1080
+#: taskcoachlib/gui/viewer/task.py:1084
 msgid "Overdue tasks: %d (%d%%)"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1081
+#: taskcoachlib/gui/viewer/task.py:1085
 msgid "Active tasks: %d (%d%%)"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1081
+#: taskcoachlib/gui/viewer/task.py:1085
 msgid "Inactive tasks: %d (%d%%)"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1082
+#: taskcoachlib/gui/viewer/task.py:1086
 msgid "Completed tasks: %d (%d%%)"
 msgstr ""
 
