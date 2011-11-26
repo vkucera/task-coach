@@ -253,8 +253,8 @@ class DatesPage(Page):
 
     def addDateEntries(self):
         for label, taskMethodName in [(_('Start date'), 'startDateTime'),
-                                                (_('Due date'), 'dueDateTime'),
-                                                (_('Completion date'), 'completionDateTime')]:
+                                      (_('Due date'), 'dueDateTime'),
+                                      (_('Completion date'), 'completionDateTime')]:
             self.addDateEntry(label, taskMethodName)
 
     def addDateEntry(self, label, taskMethodName):
@@ -263,9 +263,6 @@ class DatesPage(Page):
         setattr(self, '_current%s'%TaskMethodName, dateTime)
         suggestedDateTimeMethodName = 'suggested' + TaskMethodName
         suggestedDateTime = getattr(self.items[0], suggestedDateTimeMethodName)()
-        if self.__shouldPresetDateTime(taskMethodName, dateTime):
-            self.__presetDateTime(TaskMethodName, suggestedDateTime)
-            dateTime = suggestedDateTime
         dateTimeEntry = entry.DateTimeEntry(self, self.__settings, dateTime,
                                             suggestedDateTime=suggestedDateTime)
         setattr(self, '_%sEntry'%taskMethodName, dateTimeEntry)
@@ -280,15 +277,6 @@ class DatesPage(Page):
             eventType, taskMethodName, keep_delta=keep_delta)
         setattr(self, '_%sSync'%taskMethodName, datetimeSync) 
         self.addEntry(label, dateTimeEntry)
-
-    def __shouldPresetDateTime(self, taskMethodName, dateTime):
-        return self.__itemsAreNew and dateTime == date.DateTime() and \
-            self.__settings.get('view', 'default%s'%taskMethodName.lower()).startswith('preset')
-            
-    @patterns.eventSource
-    def __presetDateTime(self, TaskMethodName, dateTime, event=None):
-        for item in self.items:
-            getattr(item, 'set%s'%TaskMethodName)(dateTime, event=event)
             
     def __keep_delta(self, taskMethodName):
         datesTied = self.__settings.get('view', 'datestied')
@@ -299,9 +287,6 @@ class DatesPage(Page):
         # pylint: disable-msg=W0201
         reminderDateTime = self.items[0].reminder() if len(self.items) == 1 else date.DateTime()
         suggestedDateTime = self.items[0].suggestedReminderDateTime()
-        if self.__shouldPresetDateTime('reminderdatetime', reminderDateTime):
-            self.__presetDateTime('Reminder', suggestedDateTime)
-            reminderDateTime = suggestedDateTime
         self._reminderDateTimeEntry = entry.DateTimeEntry(self, self.__settings,
                                                           reminderDateTime, 
                                                           suggestedDateTime=suggestedDateTime)
@@ -312,6 +297,7 @@ class DatesPage(Page):
         self.addEntry(_('Reminder'), self._reminderDateTimeEntry)
         
     def addRecurrenceEntry(self):
+        # pylint: disable-msg=W0201
         currentRecurrence = self.items[0].recurrence() if len(self.items) == 1 else date.Recurrence()
         self._recurrenceEntry = entry.RecurrenceEntry(self, currentRecurrence)
         self._recurrenceSync = attributesync.AttributeSync('recurrence',
@@ -744,6 +730,8 @@ class EditBook(widgets.Notebook):
                 page = self.createPage(pageName, taskFile, itemsAreNew)
                 self.AddPage(page, page.pageTitle, page.pageIcon)
                 pageNames.append(pageName)
+        width, height = self.getMinPageSize()
+        self.SetMinSize((width, self.GetHeightForPageHeight(height)))
         return pageNames
 
     def getPage(self, pageName):
@@ -751,6 +739,14 @@ class EditBook(widgets.Notebook):
             if pageName == self[index].pageName:
                 return self[index]
         return None
+    
+    def getMinPageSize(self):
+        minWidths, minHeights = [], []
+        for page in self:
+            minWidth, minHeight = page.GetMinSize()
+            minWidths.append(minWidth)
+            minHeights.append(minHeight)
+        return max(minWidths), max(minHeights) 
         
     def allPageNamesInUserOrder(self):
         ''' Return all pages names in the order stored in the settings. The
@@ -950,7 +946,7 @@ class EffortEditBook(Page):
         self.addEntry(_('Start'), self._startDateTimeEntry,
             startFromLastEffortButton, flags=flags)
 
-        self._previousStopDateTime = currentStopDateTime = self.items[0].getStop()
+        currentStopDateTime = self.items[0].getStop()
         self._stopDateTimeEntry = entry.DateTimeEntry(self, self._settings, 
             currentStopDateTime, noneAllowed=True, **dateTimeEntryKwArgs)
         self._stopDateTimeSync = attributesync.AttributeSync('datetime',
@@ -958,9 +954,12 @@ class EffortEditBook(Page):
             command.ChangeEffortStopDateTimeCommand, entry.EVT_DATETIMEENTRY,
             'effort.stop', 'getStop')
         self._stopDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onStopDateTimeChanged)
+        stopNowButton = self._createStopNowButton()
         self._invalidPeriodMessage = self._createInvalidPeriodMessage()
         self.addEntry(_('Stop'), self._stopDateTimeEntry, 
-                      self._invalidPeriodMessage, flags=flags)
+                      stopNowButton, flags=flags)
+        
+        self.addEntry('', self._invalidPeriodMessage)
             
     def _createStartFromLastEffortButton(self):
         button = wx.Button(self, label=_('Start tracking from last stop time'))
@@ -968,7 +967,12 @@ class EffortEditBook(Page):
         if self._effortList.maxDateTime() is None:
             button.Disable()
         return button
-            
+    
+    def _createStopNowButton(self):
+        button = wx.Button(self, label=_('Stop tracking now'))
+        self.Bind(wx.EVT_BUTTON, self.onStopNow, button)
+        return button
+    
     def _createInvalidPeriodMessage(self):
         text = wx.StaticText(self, label='')
         font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
@@ -982,12 +986,13 @@ class EffortEditBook(Page):
             self._startDateTimeEntry.SetValue(self._effortList.maxDateTime())
             self._startDateTimeSync.onAttributeEdited(event)
         self.onDateTimeChanged(event)
-
+        
+    def onStopNow(self, event):
+        self._stopDateTimeEntry.SetValue(date.Now())
+        self._stopDateTimeSync.onAttributeEdited(event)
+        self.onDateTimeChanged(event)
+        
     def onStopDateTimeChanged(self, *args, **kwargs):
-        # When the user checks the stop datetime, enter the current datetime
-        if self._stopDateTimeEntry.GetValue() != date.DateTime() and self._previousStopDateTime == date.DateTime():
-            self._stopDateTimeEntry.SetValue(date.Now())
-        self._previousStopDateTime = self._stopDateTimeEntry.GetValue() # pylint: disable-msg=W0201
         self.onDateTimeChanged(*args, **kwargs)
 
     def onDateTimeChanged(self, event):

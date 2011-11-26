@@ -1413,11 +1413,20 @@ class TaskNew(TaskListCommand, SettingsCommand):
         super(TaskNew, self).__init__(bitmap='new', *args, **kwargs)
 
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
+        kwargs = self.taskKeywords.copy()
+        if self.__shouldPresetStartDateTime():
+            kwargs['startDateTime'] = task.Task.suggestedStartDateTime()
+        if self.__shouldPresetDueDateTime():
+            kwargs['dueDateTime'] = task.Task.suggestedDueDateTime()
+        if self.__shouldPresetCompletionDateTime():
+            kwargs['completionDateTime'] = task.Task.suggestedCompletionDateTime()
+        if self.__shouldPresetReminderDateTime():
+            kwargs['reminder'] = task.Task.suggestedReminderDateTime()
         newTaskCommand = command.NewTaskCommand(self.taskList, 
             categories=self.categoriesForTheNewTask(), 
             prerequisites=self.prerequisitesForTheNewTask(),
             dependencies=self.dependenciesForTheNewTask(), 
-            **self.taskKeywords)
+            **kwargs)
         newTaskCommand.do() 
         newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(),
             newTaskCommand.items, self.settings, self.taskList, 
@@ -1433,6 +1442,22 @@ class TaskNew(TaskListCommand, SettingsCommand):
 
     def dependenciesForTheNewTask(self):
         return []
+    
+    def __shouldPresetStartDateTime(self):
+        return 'startDateTime' not in self.taskKeywords and \
+            self.settings.get('view', 'defaultstartdatetime').startswith('preset')
+            
+    def __shouldPresetDueDateTime(self):
+        return 'dueDateTime' not in self.taskKeywords and \
+            self.settings.get('view', 'defaultduedatetime').startswith('preset')
+    
+    def __shouldPresetCompletionDateTime(self):
+        return 'completionDateTime' not in self.taskKeywords and \
+            self.settings.get('view', 'defaultcompletiondatetime').startswith('preset')
+            
+    def __shouldPresetReminderDateTime(self):
+        return 'reminder' not in self.taskKeywords and \
+            self.settings.get('view', 'defaultreminderdatetime').startswith('preset')
     
 
 class TaskNewFromTemplate(TaskNew):
@@ -2546,3 +2571,30 @@ class ToggleAutoColumnResizing(UICheckCommand, ViewerCommand, SettingsCommand):
         self.settings.set(self.viewer.settingsSection(), 'columnautoresizing',
                           str(self._isMenuItemChecked(event)))
         self.updateWidget()
+
+
+class ViewerPieChartAngle(ViewerCommand, SettingsCommand):        
+    def appendToToolBar(self, toolbar):
+        ''' Add our slider control to the toolbar. '''
+        # pylint: disable-msg=W0201
+        self.sliderCtrl = wx.Slider(toolbar, minValue=0, maxValue=90,
+                                    value=self.getCurrentAngle())
+        self.sliderCtrl.Bind(wx.EVT_SLIDER, self.onSlider)
+        toolbar.AddControl(self.sliderCtrl)
+        
+    def onSlider(self, event):
+        ''' The user picked a new angle. '''
+        event.Skip()
+        self.setCurrentAngle()
+   
+    def doCommand(self, event):
+        pass # Not used
+        
+    def getCurrentAngle(self):
+        return self.settings.getint(self.viewer.settingsSection(),
+                                    'piechartangle')
+
+    def setCurrentAngle(self):
+        self.settings.set(self.viewer.settingsSection(), 'piechartangle', 
+                          str(self.sliderCtrl.GetValue()))
+   

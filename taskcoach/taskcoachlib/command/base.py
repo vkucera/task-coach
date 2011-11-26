@@ -39,7 +39,8 @@ class BaseCommand(patterns.Command):
         return self.singular_name%self.name_subject(self.items[0]) if len(self.items) == 1 else self.plural_name
 
     def name_subject(self, item):
-        return item.subject()
+        subject = item.subject()
+        return subject if len(subject) < 60 else subject[:57] + '...'
     
     def itemsAreNew(self):
         return False

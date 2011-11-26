@@ -505,7 +505,10 @@ class TreeViewer(Viewer): # pylint: disable-msg=W0223
         # Don't send the event, since the viewer has already been updated. 
 
     def collapseAll(self):
-        self.widget.collapseAllItems()
+        event = patterns.Event()
+        for item in self.visibleItems():
+            item.expand(False, context=self.settingsSection(), event=event)
+        self.refresh()
                 
     def isAnyItemExpandable(self):
         return self.widget.isAnyItemExpandable()

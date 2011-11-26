@@ -257,8 +257,7 @@ class DateTimeCtrl(wx.Panel):
         wxDate = date2wxDateTime(datePart)
         if wxDate.IsValid() or self._noneAllowed:
             self._dateCtrl.SetValue(wxDate)
-        if timePart is not None:
-            self._timeCtrl.SetValue(self._formatTime(timePart))
+        self._timeCtrl.SetValue(self._formatTime(date.Now().time() if timePart is None else timePart))
         self._timeCtrl.Enable(self._isDateCtrlEnabled())
         
     def SetNone(self):

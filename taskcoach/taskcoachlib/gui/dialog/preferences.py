@@ -73,8 +73,9 @@ class SettingsPageBase(widgets.BookPage):
     def addChoiceSetting(self, section, setting, text, helpText, *listsOfChoices, **kwargs):
         choiceCtrls = []
         currentValue = self.get(section, setting)
-        for choices, currentValuePart in zip(listsOfChoices, currentValue.split('_')):
-            choiceCtrl = wx.Choice(self, -1)
+        sep = kwargs.pop('sep', '_')
+        for choices, currentValuePart in zip(listsOfChoices, currentValue.split(sep)):
+            choiceCtrl = wx.Choice(self)
             choiceCtrls.append(choiceCtrl)
             for choiceValue, choiceText in choices:
                 choiceCtrl.Append(choiceText, choiceValue)
@@ -372,8 +373,12 @@ class LanguagePage(SettingsPage):
              ('tr_TR', u'Türkçe (Turkish)'),
              ('uk_UA', u'украї́нська мо́ва (Ukranian)'),
              ('vi_VI', u'tiếng Việt (Vietnamese)')]
+        # Don't use '_' as separator since we don't have different choice 
+        # controls for language and country (but maybe we should?)
         self.addChoiceSetting('view', 'language_set_by_user', _('Language'), 
-                              'restart', choices)
+                              'restart', choices, 
+                              flags=(None, wx.ALL|wx.ALIGN_CENTER_VERTICAL,
+                                     wx.ALL|wx.ALIGN_CENTER_VERTICAL), sep='-') 
         
         panel = wx.Panel(self)
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -381,7 +386,7 @@ class LanguagePage(SettingsPage):
             label=_('''If your language is not available, or the translation needs 
 improving, please consider helping. See:'''))
         sizer.Add(text)
-        url = meta.url + 'i18n.html'
+        url = meta.i18n_url
         urlCtrl = wx.HyperlinkCtrl(panel, -1, label=url, url=url)
         sizer.Add(urlCtrl)
         panel.SetSizerAndFit(sizer)

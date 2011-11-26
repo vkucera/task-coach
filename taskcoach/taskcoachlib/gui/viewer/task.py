@@ -1095,11 +1095,13 @@ class TaskStatsViewer(BaseTaskViewer):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'taskstatsviewer')
         super(TaskStatsViewer, self).__init__(*args, **kwargs)
+        patterns.Publisher().registerObserver(self.onPieChartAngleChanged,
+                                              eventType='.'.join((self.settingsSection(),
+                                                                 'piechartangle')))
         
     def createWidget(self):
         widget = wx.lib.agw.piectrl.PieCtrl(self)
         widget.SetShowEdges(False)
-        widget.SetAngle(30/180.*math.pi)
         widget.SetHeight(20)
         self.initLegend(widget)
         for dummy in range(5):
@@ -1123,7 +1125,8 @@ class TaskStatsViewer(BaseTaskViewer):
         return (uicommand.ViewerHideCompletedTasks(viewer=self,
                                                    bitmap='filtercompletedtasks'),
                 uicommand.ViewerHideInactiveTasks(viewer=self,
-                                                  bitmap='filterinactivetasks'))            
+                                                  bitmap='filterinactivetasks'),
+                uicommand.ViewerPieChartAngle(viewer=self, settings=self.settings))            
         
     def initLegend(self, widget):
         legend = widget.GetLegend()
@@ -1133,6 +1136,7 @@ class TaskStatsViewer(BaseTaskViewer):
         legend.Show()
     
     def refresh(self):
+        self.widget.SetAngle(self.settings.getint(self.settingsSection(), 'piechartangle')/180.*math.pi)
         self.refreshCounts()
         self.refreshColors()
         self.widget.Refresh()
@@ -1195,3 +1199,6 @@ class TaskStatsViewer(BaseTaskViewer):
 
     def isTreeViewer(self):
         return False
+
+    def onPieChartAngleChanged(self, event):
+        self.refresh()

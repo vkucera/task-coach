@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.1', 'November 21, 2011',
+Release('1.3.1', 'November 25, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Don't turn off the start date on new tasks when the user
@@ -30,6 +30,27 @@ has indicated in the preferences that she wants a default start date.''',
             '3440634'),
         Bug('''The "Start tracking from last effort" button in the effort
 dialog didn't work.''', '3440794'),
+        Bug('''"View->Tree options->Collapse all items" did only collapse top
+level items.''', '3441180'),
+        Bug('''The language choice control in the preferences dialog would 
+always show "Let the system determine the language", no matter what language 
+the user had picked before.''', '3441456'),
+        Bug('''Allow for flat pie charts, because reading data from flat pie
+charts is easier than from 3D pie charts.''', '3441469'),
+        Bug('''On Windows, the Edit menu could become very wide if the user
+would edit a long subject.''', ' 3441474'),
+        Bug('''When the user edits the reminder date and time and it is
+in the past, don't fire the reminder immediately, but wait a minute to give 
+the user a change to finish changing the reminder date and time into a 
+future date and time.''','3441442'),
+        Bug('''Make sure the edit dialogs are by default big enough to show all
+controls.''', '3441783'),
+        ],
+    featuresAdded=[
+        Feature('''The effort dialog now has a button to set the stop date and
+time of the effort to the current date and time.'''),
+        Feature('''Allow for changing the angle of the pie charts via a slider
+in the toolbar of the task statistics viewer.'''),
         ],
     ),
             
