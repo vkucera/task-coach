@@ -54,6 +54,9 @@ dependency to the Debian (.deb) package.'''),
 time of the effort to the current date and time.'''),
         Feature('''Allow for changing the angle of the pie charts via a slider
 in the toolbar of the task statistics viewer.'''),
+        Feature('''Allow for 6 minutes between effort start and stop times,
+in addition to 5, 10, 15, etc. See the features tab in the preferences 
+dialog.''', 'http://uservoice.com/a/3nnfc'),
         ],
     ),
             
