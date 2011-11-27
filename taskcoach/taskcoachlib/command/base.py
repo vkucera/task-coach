@@ -318,59 +318,86 @@ class DragAndDropCommand(BaseCommand, SaveStateMixin, CompositeMixin):
         return siblings
 
     def do_command(self):
-        ## if self.__part == 0:
-        if True:
+        if self.__part == 0:
             self.list.removeItems(self.items)
             for item in self.items:
                 item.setParent(self.__itemToDropOn)
             self.list.extend(self.items)
         else:
-            siblings = self.getSiblings()
-            self.list.removeItems(self.items)
-            for item in self.items:
-                item.setParent(self.__itemToDropOn.parent())
-
-            minOrdering = min([item.ordering() for item in self.items])
-            maxOrdering = max([item.ordering() for item in self.items])
-
-            insertIndex = siblings.index(self.__itemToDropOn) + (self.__part + 1) // 2
-
-            # Simple special cases
-            if insertIndex == 0:
-                minOrderingOfSiblings = min([item.ordering() for item in siblings])
-                for item in self.items:
-                    item.setOrdering(item.ordering() - maxOrdering + minOrderingOfSiblings - 1)
-            elif insertIndex == len(siblings):
-                maxOrderingOfSiblings = max([item.ordering() for item in siblings])
-                for item in self.items:
-                    item.setOrdering(item.ordering() - minOrdering + maxOrderingOfSiblings + 1)
+            if self.__part == -1:
+                # Up part. Add dropped items as prerequesites of dropped on item.
+                self.__itemToDropOn.addPrerequisites(self.items)
+                self.__itemToDropOn.addTaskAsDependencyOf(self.items)
             else:
-                maxOrderingOfPreviousSiblings = max([item.ordering() for idx, item in enumerate(siblings) if idx < insertIndex])
-                minOrderingOfPreviousSiblings = min([item.ordering() for idx, item in enumerate(siblings) if idx < insertIndex])
-                maxOrderingOfNextSiblings = max([item.ordering() for idx, item in enumerate(siblings) if idx >= insertIndex])
-                minOrderingOfNextSiblings = min([item.ordering() for idx, item in enumerate(siblings) if idx >= insertIndex])
-                if insertIndex < len(siblings) // 2:
-                    for item in self.items:
-                        item.setOrdering(item.ordering() - maxOrdering - 1 + minOrderingOfNextSiblings)
-                    for item in siblings[:insertIndex]:
-                        item.setOrdering(item.ordering() - maxOrderingOfPreviousSiblings - 1 + minOrdering - maxOrdering - 1 + minOrderingOfNextSiblings)
-                else:
-                    for item in self.items:
-                        item.setOrdering(item.ordering() - minOrdering + 1 + maxOrderingOfPreviousSiblings)
-                    for item in siblings[insertIndex:]:
-                        item.setOrdering(item.ordering() - minOrderingOfNextSiblings + 1 + maxOrdering - minOrdering + 1 + maxOrderingOfPreviousSiblings)
+                # Down. Add dropped on item as prerequisite of dropped items.
+                for item in self.items:
+                    item.addPrerequisites([self.__itemToDropOn])
+                    item.addTaskAsDependencyOf([self.__itemToDropOn])
 
-            self.list.extend(self.items)
+            # Keep this around for reminder
+
+            ## siblings = self.getSiblings()
+            ## self.list.removeItems(self.items)
+            ## for item in self.items:
+            ##     item.setParent(self.__itemToDropOn.parent())
+
+            ## minOrdering = min([item.ordering() for item in self.items])
+            ## maxOrdering = max([item.ordering() for item in self.items])
+
+            ## insertIndex = siblings.index(self.__itemToDropOn) + (self.__part + 1) // 2
+
+            ## # Simple special cases
+            ## if insertIndex == 0:
+            ##     minOrderingOfSiblings = min([item.ordering() for item in siblings])
+            ##     for item in self.items:
+            ##         item.setOrdering(item.ordering() - maxOrdering + minOrderingOfSiblings - 1)
+            ## elif insertIndex == len(siblings):
+            ##     maxOrderingOfSiblings = max([item.ordering() for item in siblings])
+            ##     for item in self.items:
+            ##         item.setOrdering(item.ordering() - minOrdering + maxOrderingOfSiblings + 1)
+            ## else:
+            ##     maxOrderingOfPreviousSiblings = max([item.ordering() for idx, item in enumerate(siblings) if idx < insertIndex])
+            ##     minOrderingOfPreviousSiblings = min([item.ordering() for idx, item in enumerate(siblings) if idx < insertIndex])
+            ##     maxOrderingOfNextSiblings = max([item.ordering() for idx, item in enumerate(siblings) if idx >= insertIndex])
+            ##     minOrderingOfNextSiblings = min([item.ordering() for idx, item in enumerate(siblings) if idx >= insertIndex])
+            ##     if insertIndex < len(siblings) // 2:
+            ##         for item in self.items:
+            ##             item.setOrdering(item.ordering() - maxOrdering - 1 + minOrderingOfNextSiblings)
+            ##         for item in siblings[:insertIndex]:
+            ##             item.setOrdering(item.ordering() - maxOrderingOfPreviousSiblings - 1 + minOrdering - maxOrdering - 1 + minOrderingOfNextSiblings)
+            ##     else:
+            ##         for item in self.items:
+            ##             item.setOrdering(item.ordering() - minOrdering + 1 + maxOrderingOfPreviousSiblings)
+            ##         for item in siblings[insertIndex:]:
+            ##             item.setOrdering(item.ordering() - minOrderingOfNextSiblings + 1 + maxOrdering - minOrdering + 1 + maxOrderingOfPreviousSiblings)
+
+            ## self.list.extend(self.items)
 
     def undo_command(self):
-        self.list.removeItems(self.items)
-        self.undoStates()
-        self.list.extend(self.items)
-        
+        if self.__part == 0:
+            self.list.removeItems(self.items)
+            self.undoStates()
+            self.list.extend(self.items)
+        elif self.__part == -1:
+            self.__itemToDropOn.removePrerequisites(self.items)
+            self.__itemToDropOn.removeTaskAsDependencyOf(self.items)
+        else:
+            for item in self.items:
+                item.removePrerequisites([self.__itemToDropOn])
+                item.removeTaskAsDependencyOf([self.__itemToDropOn])
+
     def redo_command(self):
-        self.list.removeItems(self.items)
-        self.redoStates()
-        self.list.extend(self.items)
+        if self.__part == 0:
+            self.list.removeItems(self.items)
+            self.redoStates()
+            self.list.extend(self.items)
+        elif self.__part == -1:
+            self.__itemToDropOn.addPrerequisites(self.items)
+            self.__itemToDropOn.addTaskAsDependencyOf(self.items)
+        else:
+            for item in self.items:
+                item.addPrerequisites([self.__itemToDropOn])
+                item.addTaskAsDependencyOf([self.__itemToDropOn])
 
 
 class EditSubjectCommand(BaseCommand):

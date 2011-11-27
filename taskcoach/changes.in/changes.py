@@ -21,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
-            
-Release('1.3.1', 'November 25, 2011',
+
+Release('1.3.1', 'November 27, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Don't turn off the start date on new tasks when the user
@@ -45,12 +45,19 @@ the user a change to finish changing the reminder date and time into a
 future date and time.''','3441442'),
         Bug('''Make sure the edit dialogs are by default big enough to show all
 controls.''', '3441783'),
+        Bug('''On Linux without libXss installed (seen on Ubuntu 11.10), Task 
+Coach would fail to start. Fixed by adding libXss as an explicit 
+dependency to the Debian (.deb) package.'''),
         ],
     featuresAdded=[
         Feature('''The effort dialog now has a button to set the stop date and
 time of the effort to the current date and time.'''),
         Feature('''Allow for changing the angle of the pie charts via a slider
 in the toolbar of the task statistics viewer.'''),
+        Feature('''Allow for 6 minutes between effort start and stop times,
+in addition to 5, 10, 15, etc. See the features tab in the preferences 
+dialog.''', 'http://uservoice.com/a/3nnfc'),
+        Feature('''Dependencies can now be set using drag and drop.'''),
         ],
     ),
             

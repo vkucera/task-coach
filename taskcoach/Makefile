@@ -85,6 +85,7 @@ fedora: prepare changes templates
 	rm MANIFEST.in
 
 opensuse: sdist_linux
+	cp build.in/debian/MANIFEST.in .
 	$(PYTHON) make.py bdist_rpm_opensuse 
 	mv dist/taskcoach-$(TCVERSION)-1.noarch.rpm dist/taskcoach-$(TCVERSION)-1.opensuse.i386.rpm
 	mv dist/taskcoach-$(TCVERSION)-1.src.rpm dist/taskcoach-$(TCVERSION)-1.opensuse.src.rpm
