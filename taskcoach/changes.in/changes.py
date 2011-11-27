@@ -22,6 +22,14 @@ from changetypes import *
 
 releases = [
 
+Release('1.3.2', 'November 27, 2011',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''When a subject contained an ampersand (&), the ampersand would 
+not be shown in menu's where the subject is used.'''),
+        ]
+    ),
+
 Release('1.3.1', 'November 27, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[

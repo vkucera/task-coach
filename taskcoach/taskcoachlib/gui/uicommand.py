@@ -1452,7 +1452,7 @@ class TaskNewFromTemplate(TaskNew):
         super(TaskNewFromTemplate, self).__init__(*args, **kwargs)
         self.__filename = filename
         templateTask = self.__readTemplate()
-        self.menuText = '&' + templateTask.subject() # pylint: disable-msg=E1103
+        self.menuText = '&' + templateTask.subject().replace('&', '&&') # pylint: disable-msg=E1103
 
     def __readTemplate(self):
         return persistence.TemplateXMLReader(file(self.__filename,
@@ -1713,7 +1713,7 @@ class ToggleCategory(NeedsSelectedCategorizableMixin, ViewerCommand):
         # items isn't possible. Hence, we use wx.ITEM_CHECK, even for mutual 
         # exclusive categories.
         kind = wx.ITEM_CHECK
-        super(ToggleCategory, self).__init__(menuText='&' + subject,
+        super(ToggleCategory, self).__init__(menuText='&' + subject.replace('&', '&&'),
             helpText=_('Toggle %s')%subject, kind=kind, *args, **kwargs)
         
     def doCommand(self, event):
@@ -1909,7 +1909,7 @@ class EffortStartForTask(TaskListCommand):
         self.task = kwargs.pop('task')
         subject = self.task.subject() or _('(No subject)') 
         super(EffortStartForTask, self).__init__( \
-            bitmap=self.task.icon(recursive=True), menuText='&'+subject,
+            bitmap=self.task.icon(recursive=True), menuText='&'+subject.replace('&', '&&'),
             helpText=_('Start tracking effort for %s')%subject, 
             *args, **kwargs)
         
