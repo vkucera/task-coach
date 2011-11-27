@@ -22,13 +22,6 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.2', 'December ??, 2011',
-    summary='''This is a feature release.''',
-    featuresAdded=[
-        Feature('''Dependencies can now be set using drag and drop.'''),
-        ],
-    ),
-
 Release('1.3.1', 'November 27, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
@@ -64,6 +57,7 @@ in the toolbar of the task statistics viewer.'''),
         Feature('''Allow for 6 minutes between effort start and stop times,
 in addition to 5, 10, 15, etc. See the features tab in the preferences 
 dialog.''', 'http://uservoice.com/a/3nnfc'),
+        Feature('''Dependencies can now be set using drag and drop.'''),
         ],
     ),
             
