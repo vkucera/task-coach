@@ -27,6 +27,8 @@ Release('1.3.2', 'November 30, 2011',
     bugsFixed=[
         Bug('''When a subject contained an ampersand (&), the ampersand would 
 not be shown in menu's where the subject is used.'''),
+        Bug('''When creating new subtasks, they would always be inactive.''', 
+            '3446309'),
         ],
     featuresAdded=[
         Feature('''Rounding of effort in effort viewers.''', 
