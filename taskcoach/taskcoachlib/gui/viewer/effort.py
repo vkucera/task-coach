@@ -47,13 +47,28 @@ class EffortViewer(base.ListViewer,
         self.__domainObjectsToView = None
         self.__observersToDetach = []
         super(EffortViewer, self).__init__(parent, taskFile, settings, *args, **kwargs)
-        self.aggregation = settings.get(self.settingsSection(), 'aggregation')
         self.secondRefresher = refresher.SecondRefresher(self,
             effort.Effort.trackStartEventType(), 
             effort.Effort.trackStopEventType())
-        self.aggregationUICommand.setChoice(self.aggregation)
+        self.aggregation = settings.get(self.settingsSection(), 'aggregation')
+        self.initModeToolBarUICommands()
         patterns.Publisher().registerObserver(self.onAttributeChanged,
                                               eventType=effort.Effort.appearanceChangedEventType())
+        patterns.Publisher().registerObserver(self.onRoundingChanged,
+                                              eventType='%s.round'%self.settingsSection())
+        
+    def onRoundingChanged(self, event): # pylint: disable-msg=W0613
+        self.refresh()
+        
+    def initModeToolBarUICommands(self):
+        self.aggregationUICommand.setChoice(self.aggregation)
+        self.initRoundingToolBarUICommand()
+        
+    def initRoundingToolBarUICommand(self):
+        aggregated = self.isShowingAggregatedEffort()
+        rounding = self.settings.get(self.settingsSection(), 'round') if aggregated else '0'
+        self.roundingUICommand.setChoice(rounding)
+        self.roundingUICommand.enable(aggregated)
         
     def domainObjectsToView(self):
         if self.__domainObjectsToView is None:
@@ -108,6 +123,7 @@ class EffortViewer(base.ListViewer,
         self._showTotalColumns(show=aggregation!='details')
         if autoResizing:
             self.widget.ToggleAutoResizing(True)
+        self.initRoundingToolBarUICommand()
         patterns.Event('effortviewer.aggregation').send()
             
     def isShowingAggregatedEffort(self):
@@ -174,10 +190,8 @@ class EffortViewer(base.ListViewer,
              renderCallback=renderCallback, alignment=wx.LIST_FORMAT_RIGHT,
              **kwargs) \
             for name, columnHeader, eventType, renderCallback in \
-            ('timeSpent', _('Time spent'), 'effort.duration', 
-                lambda effort: render.timeSpent(effort.duration())),
-            ('totalTimeSpent', _('Total time spent'), 'effort.duration',
-                lambda effort: render.timeSpent(effort.duration(recursive=True))),
+            ('timeSpent', _('Time spent'), 'effort.duration', self.renderTimeSpent),
+            ('totalTimeSpent', _('Total time spent'), 'effort.duration', self.renderTotalTimeSpent),
             ('revenue', _('Revenue'), 'effort.revenue', 
                 lambda effort: render.monetaryAmount(effort.revenue())),
             ('totalRevenue', _('Total revenue'), 'effort.revenue',
@@ -278,7 +292,8 @@ class EffortViewer(base.ListViewer,
         # programmatically
         self.aggregationUICommand = \
             uicommand.EffortViewerAggregationChoice(viewer=self)
-        return (self.aggregationUICommand,)
+        self.roundingUICommand = uicommand.RoundingPrecision(viewer=self, settings=self.settings)
+        return (self.aggregationUICommand, self.roundingUICommand)
 
     def getItemImages(self, index, column=0): # pylint: disable-msg=W0613
         return {wx.TreeItemIcon_Normal: -1}
@@ -337,10 +352,31 @@ class EffortViewer(base.ListViewer,
         # If we get here, we are in details mode and the starts are equal 
         # Period can only be repeated when the stop times are also equal
         return anEffort.getStop() == previousEffort.getStop()
+    
+    def renderTimeSpent(self, anEffort):
+        duration = anEffort.duration()
+        # Check for aggregation because we never round in details mode
+        if self.isShowingAggregatedEffort():
+            duration = self.round(duration)
+            showSeconds = self.settings.getint(self.settingsSection(), 'round') == 0
+        else:
+            showSeconds = True
+        return render.timeSpent(duration, showSeconds=showSeconds)
 
+    def renderTotalTimeSpent(self, anEffort):
+        # No need to check for aggregation because this method is only used
+        # in aggregated mode
+        showSeconds = self.settings.getint(self.settingsSection(), 'round') == 0
+        return render.timeSpent(self.round(anEffort.duration(recursive=True)), showSeconds=showSeconds)
+    
     def renderTimeSpentOnDay(self, anEffort, dayOffset):
         duration = anEffort.durationDay(dayOffset) if self.aggregation == 'week' else date.TimeDelta()
-        return render.timeSpent(duration)
+        showSeconds = self.settings.getint(self.settingsSection(), 'round') == 0
+        return render.timeSpent(self.round(duration), showSeconds=showSeconds)
+    
+    def round(self, duration):
+        round_precision = self.settings.getint(self.settingsSection(), 'round')
+        return duration.round(seconds=round_precision)
     
     def newItemDialog(self, *args, **kwargs):
         selectedTasks = kwargs.get('selectedTasks', [])

@@ -46,15 +46,16 @@ def timeLeft(timeLeft, completedTask):
     hours_and_minutes = ':'.join(str(timeLeft).split(':')[:-1]).split(', ')[-1]
     return sign + days + hours_and_minutes
 
-def timeSpent(timeSpent):
-    ''' render time spent (of type date.TimeDelta) as
-    "<hours>:<minutes>:<seconds>" '''
+def timeSpent(timeSpent, showSeconds=True):
+    ''' Render time spent (of type date.TimeDelta) as
+        "<hours>:<minutes>:<seconds>" or "<hours>:<minutes>" '''
     zero = datemodule.TimeDelta()
     if timeSpent == zero:
         return ''
     else:
         sign = '-' if timeSpent < zero else ''
-        return sign + '%d:%02d:%02d'%timeSpent.hoursMinutesSeconds()
+        hours, minutes, seconds = timeSpent.hoursMinutesSeconds()
+        return sign + '%d:%02d'%(hours, minutes) + (':%02d'%seconds if showSeconds else '')
 
 def recurrence(recurrence):
     if not recurrence:

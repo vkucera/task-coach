@@ -2453,6 +2453,9 @@ class ToolbarChoiceCommandMixin(object):
         index = self.choiceData.index(choice)
         self.choiceCtrl.Selection = index
         self.currentChoice = index
+        
+    def enable(self, enable=True):
+        self.choiceCtrl.Enable(enable)
 
 
 class EffortViewerAggregationChoice(ToolbarChoiceCommandMixin, ViewerCommand):
@@ -2585,3 +2588,12 @@ class ViewerPieChartAngle(ViewerCommand, SettingsCommand):
         self.settings.set(self.viewer.settingsSection(), 'piechartangle', 
                           str(self.sliderCtrl.GetValue()))
    
+
+class RoundingPrecision(ToolbarChoiceCommandMixin, ViewerCommand, SettingsCommand):
+    roundingChoices =  (0, 1, 5, 6, 10, 15, 20, 30, 60) # Minutes
+    choiceData = [str(minutes * 60) for minutes in roundingChoices] # Seconds
+    choiceLabels = [_('No rounding'), _('1 minute')] + [_('%d minutes')%minutes for minutes in roundingChoices[2:]]
+
+    def doChoice(self, choice):
+        self.settings.set(self.viewer.settingsSection(), 'round', choice)
+  
