@@ -22,13 +22,14 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.2', 'November 30, 2011',
+Release('1.3.2', 'December 3, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''When a subject contained an ampersand (&), the ampersand would 
 not be shown in menu's where the subject is used.'''),
         Bug('''When creating new subtasks, they would always be inactive.''', 
             '3446309'),
+        Bug('''Closing task dialogs was very slow with a large task file.'''),
         ],
     featuresAdded=[
         Feature('''Rounding of effort in effort viewers.''', 

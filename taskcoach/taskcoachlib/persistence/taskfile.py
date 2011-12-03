@@ -231,11 +231,13 @@ class TaskFile(patterns.Observer):
                 guid = generate()
                 syncMLConfig = createDefaultSyncConfig(guid)
             self.clear()
-            self.categories().extend(categories)
-            self.tasks().extend(tasks)
-            self.notes().extend(notes)
+            event = patterns.Event()
+            self.categories().extend(categories, event=event)
+            self.tasks().extend(tasks, event=event)
+            self.notes().extend(notes, event=event)
             self.__syncMLConfig = syncMLConfig
             self.__guid = guid
+            event.send()
         except:
             self.setFilename('')
             raise

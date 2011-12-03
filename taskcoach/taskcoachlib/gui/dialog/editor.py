@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx.combo, os.path
+import wx, os.path
 from taskcoachlib import widgets, patterns, command, operating_system
 from taskcoachlib.gui import viewer, uicommand, windowdimensionstracker
 from taskcoachlib.i18n import _
@@ -33,6 +33,7 @@ class Page(widgets.BookPage):
     
     def __init__(self, items, *args, **kwargs):
         self.items = items
+        self.__observers = []
         super(Page, self).__init__(columns=self.columns, *args, **kwargs)
         self.addEntries()
         self.fit()
@@ -54,6 +55,15 @@ class Page(widgets.BookPage):
         except (AttributeError, TypeError):
             pass # Not a TextCtrl
         theEntry.SetFocus()
+        
+    def registerObserver(self, observer, eventType, eventSource=None):
+        patterns.Publisher().registerObserver(observer, eventType, eventSource)
+        self.__observers.append(observer)
+        
+    def close(self):
+        removeObserver = patterns.Publisher().removeObserver
+        for observer in self.__observers:
+            removeObserver(observer)
 
                         
 class SubjectPage(Page):
@@ -88,7 +98,7 @@ class SubjectPage(Page):
     def entries(self):
         return dict(firstEntry=self._subjectEntry,
                     subject=self._subjectEntry,
-                    description=self._descriptionEntry)
+                    description=self._descriptionEntry)        
 
     
 class TaskSubjectPage(SubjectPage):
@@ -397,9 +407,9 @@ class BudgetPage(Page):
                                                     readonly=True)
         self.addEntry(_('Time spent'), self._timeSpentEntry, 
                       flags=[None, wx.ALL])
-        patterns.Publisher().registerObserver(self.onTimeSpentChanged, 
-                                              eventType='task.timeSpent', 
-                                              eventSource=self.items[0])
+        self.registerObserver(self.onTimeSpentChanged, 
+                              eventType='task.timeSpent', 
+                              eventSource=self.items[0])
         
     def onTimeSpentChanged(self, event): # pylint: disable-msg=W0613
         newTimeSpent = self.items[0].timeSpent()
@@ -414,9 +424,9 @@ class BudgetPage(Page):
                                                      readonly=True)
         self.addEntry(_('Budget left'), self._budgetLeftEntry, 
                       flags=[None, wx.ALL])
-        patterns.Publisher().registerObserver(self.onBudgetLeftChanged,
-                                              eventType='task.budgetLeft',
-                                              eventSource=self.items[0])
+        self.registerObserver(self.onBudgetLeftChanged,
+                              eventType='task.budgetLeft',
+                              eventSource=self.items[0])
         
     def onBudgetLeftChanged(self, event): # pylint: disable-msg=W0613
         newBudgetLeft = self.items[0].budgetLeft()
@@ -453,9 +463,9 @@ class BudgetPage(Page):
         revenue = self.items[0].revenue()
         self._revenueEntry = entry.AmountEntry(self, revenue, readonly=True) # pylint: disable-msg=W0201
         self.addEntry(_('Revenue'), self._revenueEntry, flags=[None, wx.ALL])
-        patterns.Publisher().registerObserver(self.onRevenueChanged,
-                                              eventType='task.revenue',
-                                              eventSource=self.items[0])
+        self.registerObserver(self.onRevenueChanged,
+                              eventType='task.revenue',
+                              eventSource=self.items[0])
 
     def onRevenueChanged(self, event): # pylint: disable-msg=W0613
         newRevenue = self.items[0].revenue()
@@ -465,14 +475,13 @@ class BudgetPage(Page):
     def observeTracking(self):
         if len(self.items) != 1:
             return
-        registerObserver = patterns.Publisher().registerObserver
         item = self.items[0]
-        registerObserver(self.onStartTracking, 
-                         eventType=item.trackStartEventType(), 
-                         eventSource=item)
-        registerObserver(self.onStopTracking, 
-                         eventType=item.trackStopEventType(), 
-                         eventSource=item)
+        self.registerObserver(self.onStartTracking, 
+                              eventType=item.trackStartEventType(), 
+                              eventSource=item)
+        self.registerObserver(self.onStopTracking, 
+                              eventType=item.trackStopEventType(), 
+                              eventSource=item)
         if item.isBeingTracked():
             self.onStartTracking(None)
         
@@ -480,13 +489,14 @@ class BudgetPage(Page):
         # We might already be observing the clock if the user is tracking this
         # task with multiple effort records simultaneously
         if self.onEverySecond not in patterns.Publisher().observers('clock.second'):
-            patterns.Publisher().registerObserver(self.onEverySecond, eventType='clock.second')
+            self.registerObserver(self.onEverySecond, eventType='clock.second')
         
     def onStopTracking(self, event): # pylint: disable-msg=W0613
         # We might need to keep tracking the clock if the user was tracking this
         # task with multiple effort records simultaneously
         if not self.items[0].isBeingTracked():
             patterns.Publisher().removeObserver(self.onEverySecond, eventType='clock.second')
+            self.__observers.remove(self.onEverySecond)
     
     def onEverySecond(self, event):
         self.onTimeSpentChanged(event)
@@ -500,6 +510,7 @@ class BudgetPage(Page):
                     hourlyFee=self._hourlyFeeEntry,
                     fixedFee=self._fixedFeeEntry,
                     revenue=self._hourlyFeeEntry)
+        
 
 
 class PageWithViewer(Page):
@@ -579,11 +590,10 @@ class CategoriesPage(PageWithViewer):
     def createViewer(self, taskFile, settings, settingsSection):
         assert len(self.items) == 1
         item = self.items[0]
-        registerObserver = patterns.Publisher().registerObserver
         for eventType in (item.categoryAddedEventType(), 
                          item.categoryRemovedEventType()):
-            registerObserver(self.onCategoryChanged, eventType=eventType,
-                            eventSource=item)
+            self. registerObserver(self.onCategoryChanged, eventType=eventType,
+                                   eventSource=item)
         return LocalCategoryViewer(self.items, self, taskFile, settings,
                                    settingsSection=settingsSection)
         
@@ -615,7 +625,7 @@ class AttachmentsPage(PageWithViewer):
     def createViewer(self, taskFile, settings, settingsSection):
         assert len(self.items) == 1
         item = self.items[0]
-        patterns.Publisher().registerObserver(self.onAttachmentsChanged, 
+        self.registerObserver(self.onAttachmentsChanged, 
             eventType=item.attachmentsChangedEventType(), 
             eventSource=item)    
         return LocalAttachmentViewer(self, taskFile, settings,
@@ -653,9 +663,9 @@ class NotesPage(PageWithViewer):
     def createViewer(self, taskFile, settings, settingsSection):
         assert len(self.items) == 1
         item = self.items[0]
-        patterns.Publisher().registerObserver(self.onNotesChanged,
-                                              eventType=item.notesChangedEventType(),
-                                              eventSource=item)
+        self.registerObserver(self.onNotesChanged,
+                              eventType=item.notesChangedEventType(),
+                              eventSource=item)
         return LocalNoteViewer(self, taskFile, settings, 
                                settingsSection=settingsSection, owner=item)
 
@@ -694,9 +704,9 @@ class PrerequisitesPage(PageWithViewer):
     
     def createViewer(self, taskFile, settings, settingsSection):
         assert len(self.items) == 1
-        patterns.Publisher().registerObserver(self.onPrerequisitesChanged, 
-                                              eventType='task.prerequisites', 
-                                              eventSource=self.items[0])
+        self.registerObserver(self.onPrerequisitesChanged, 
+                              eventType='task.prerequisites', 
+                              eventSource=self.items[0])
         return LocalPrerequisiteViewer(self.items, self, taskFile, settings,
                                        settingsSection=settingsSection)
         
@@ -841,9 +851,8 @@ class EditBook(widgets.Notebook):
     
     def onClose(self, event):
         event.Skip()
-        removeInstance = patterns.Publisher().removeInstance
         for page in self:
-            removeInstance(page)
+            page.close()
         pageNames = [self[index].pageName for index in range(self.GetPageCount())]
         self.settings.setlist('editor', '%spages'%self.object, pageNames)
         self.savePerspective(pageNames)
@@ -1103,7 +1112,8 @@ class Editor(widgets.Dialog):
 
     def onClose(self, event):
         event.Skip()
-        patterns.Publisher().removeInstance(self)
+        patterns.Publisher().removeObserver(self.onItemRemoved)
+        patterns.Publisher().removeObserver(self.onSubjectChanged)
         # On Mac OS X, the text control does not lose focus when
         # destroyed...
         if operating_system.isMac():
