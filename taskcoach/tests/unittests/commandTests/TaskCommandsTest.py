@@ -70,12 +70,12 @@ class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
         
     def editStart(self, newStartDateTime, tasks=None, keep_delta=False):
         command.EditStartDateTimeCommand(self.taskList, tasks or [],
-                                         datetime=newStartDateTime,
+                                         newValue=newStartDateTime,
                                          keep_delta=keep_delta).do()
 
     def editDue(self, newDueDateTime, tasks=None, keep_delta=False):
         command.EditDueDateTimeCommand(self.taskList, tasks or [],
-                                       datetime=newDueDateTime, keep_delta=keep_delta).do()
+                                       newValue=newDueDateTime, keep_delta=keep_delta).do()
 
 
 class CommandWithChildrenTestCase(TaskCommandTestCase):

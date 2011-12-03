@@ -58,7 +58,7 @@ class EditExclusiveSubcategoriesCommand(base.BaseCommand):
     singular_name = _('Edit exclusive subcategories of "%s"')
 
     def __init__(self, *args, **kwargs):
-        self.__newExclusivity = kwargs.pop('exclusivity')
+        self.__newExclusivity = kwargs.pop('newValue')
         super(EditExclusiveSubcategoriesCommand, self).__init__(*args, **kwargs)
         self.__oldExclusivities = [item.hasExclusiveSubcategories() for item in self.items]
         

@@ -60,6 +60,9 @@ class Page(widgets.BookPage):
         patterns.Publisher().registerObserver(observer, eventType, eventSource)
         self.__observers.append(observer)
         
+    def removeObserver(self, observer, eventType):
+        patterns.Publisher().removeObserver(observer, eventType)
+        
     def close(self):
         removeObserver = patterns.Publisher().removeObserver
         for observer in self.__observers:
@@ -133,11 +136,10 @@ class CategorySubjectPage(SubjectPage):
         self._exclusiveSubcategoriesCheckBox = wx.CheckBox(self, label=_('Mutually exclusive')) 
         self._exclusiveSubcategoriesCheckBox.SetValue(currentExclusivity)
         self._exclusiveSubcategoriesSync = attributesync.AttributeSync( \
-            'exclusivity', self._exclusiveSubcategoriesCheckBox, 
+            'hasExclusiveSubcategories', self._exclusiveSubcategoriesCheckBox, 
             currentExclusivity, self.items, 
             command.EditExclusiveSubcategoriesCommand, wx.EVT_CHECKBOX,
-            self.items[0].exclusiveSubcategoriesChangedEventType(),
-            'hasExclusiveSubcategories')
+            self.items[0].exclusiveSubcategoriesChangedEventType())
         self.addEntry(_('Subcategories'), self._exclusiveSubcategoriesCheckBox,
                       flags=[None, wx.ALL])
             
@@ -210,9 +212,9 @@ class TaskAppearancePage(Page):
         colorEntry = entry.ColorEntry(self, currentColor, defaultColor)
         setattr(self, '_%sColorEntry'%colorType, colorEntry)        
         commandClass = getattr(command, 'Edit%sColorCommand'%colorType.capitalize())
-        colorSync = attributesync.AttributeSync('color', colorEntry, currentColor, 
+        colorSync = attributesync.AttributeSync('%sColor'%colorType, colorEntry, currentColor, 
             self.items, commandClass, entry.EVT_COLORENTRY, 
-            self.items[0].appearanceChangedEventType(), '%sColor'%colorType)
+            self.items[0].appearanceChangedEventType())
         setattr(self, '_%sColorSync'%colorType, colorSync)
         self.addEntry(labelText, colorEntry, flags=[None, wx.ALL])
             
@@ -224,10 +226,10 @@ class TaskAppearancePage(Page):
         self._fontSync = attributesync.AttributeSync('font', self._fontEntry, 
             currentFont, self.items, command.EditFontCommand, 
             entry.EVT_FONTENTRY, self.items[0].appearanceChangedEventType())
-        self._fontColorSync = attributesync.FontColorSync('color', 
+        self._fontColorSync = attributesync.FontColorSync('foregroundColor', 
             self._fontEntry, currentColor, self.items, 
             command.EditForegroundColorCommand, entry.EVT_FONTENTRY,
-            self.items[0].appearanceChangedEventType(), 'foregroundColor')
+            self.items[0].appearanceChangedEventType())
         self.addEntry(_('Font'), self._fontEntry, flags=[None, wx.ALL])
                     
     def addIconEntry(self):
@@ -279,9 +281,9 @@ class DatesPage(Page):
         commandClass = getattr(command, 'Edit%sCommand'%TaskMethodName)
         eventType = 'task.%s'%taskMethodName
         keep_delta = self.__keep_delta(taskMethodName)
-        datetimeSync = attributesync.AttributeSync('datetime', dateTimeEntry, 
+        datetimeSync = attributesync.AttributeSync(taskMethodName, dateTimeEntry, 
             dateTime, self.items, commandClass, entry.EVT_DATETIMEENTRY, 
-            eventType, taskMethodName, keep_delta=keep_delta)
+            eventType, keep_delta=keep_delta)
         setattr(self, '_%sSync'%taskMethodName, datetimeSync) 
         self.addEntry(label, dateTimeEntry)
             
@@ -297,10 +299,10 @@ class DatesPage(Page):
         self._reminderDateTimeEntry = entry.DateTimeEntry(self, self.__settings,
                                                           reminderDateTime, 
                                                           suggestedDateTime=suggestedDateTime)
-        self._reminderDateTimeSync = attributesync.AttributeSync('datetime', 
+        self._reminderDateTimeSync = attributesync.AttributeSync('reminder', 
             self._reminderDateTimeEntry, reminderDateTime, self.items, 
             command.EditReminderDateTimeCommand, entry.EVT_DATETIMEENTRY, 
-            'task.reminder', 'reminder')
+            'task.reminder')
         self.addEntry(_('Reminder'), self._reminderDateTimeEntry)
         
     def addRecurrenceEntry(self):
@@ -338,12 +340,11 @@ class ProgressPage(Page):
         currentPercentageComplete = self.items[0].percentageComplete() if len(self.items) == 1 else self.averagePercentageComplete(self.items)
         self._percentageCompleteEntry = entry.PercentageEntry(self, 
             currentPercentageComplete)
-        self._percentageCompleteSync = attributesync.AttributeSync('percentage', 
+        self._percentageCompleteSync = attributesync.AttributeSync('percentageComplete', 
             self._percentageCompleteEntry, currentPercentageComplete, 
             self.items, command.EditPercentageCompleteCommand, 
             entry.EVT_PERCENTAGEENTRY, 
-            self.items[0].percentageCompleteChangedEventType(), 
-            'percentageComplete')
+            self.items[0].percentageCompleteChangedEventType())
         self.addEntry(_('Percentage complete'), self._percentageCompleteEntry)
 
     @staticmethod
@@ -360,11 +361,10 @@ class ProgressPage(Page):
         self._shouldMarkCompletedEntry = entry.ChoiceEntry(self, choices,
                                                            currentChoice)
         self._shouldMarkCompletedSync = attributesync.AttributeSync( \
-            'shouldMarkCompleted', self._shouldMarkCompletedEntry, 
+            'shouldMarkCompletedWhenAllChildrenCompleted', self._shouldMarkCompletedEntry, 
             currentChoice, self.items, command.EditShouldMarkCompletedCommand, 
             entry.EVT_CHOICEENTRY,
-            'task.setting.shouldMarkCompletedWhenAllChildrenCompleted',
-            'shouldMarkCompletedWhenAllChildrenCompleted')                                                       
+            'task.setting.shouldMarkCompletedWhenAllChildrenCompleted')                                                       
         self.addEntry(_('Mark task completed when all children are completed?'), 
                       self._shouldMarkCompletedEntry, flags=[None, wx.ALL])
         
@@ -495,8 +495,7 @@ class BudgetPage(Page):
         # We might need to keep tracking the clock if the user was tracking this
         # task with multiple effort records simultaneously
         if not self.items[0].isBeingTracked():
-            patterns.Publisher().removeObserver(self.onEverySecond, eventType='clock.second')
-            self.__observers.remove(self.onEverySecond)
+            self.removeObserver(self.onEverySecond, eventType='clock.second')
     
     def onEverySecond(self, event):
         self.onTimeSpentChanged(event)
@@ -922,7 +921,7 @@ class EffortEditBook(Page):
         self._taskEntry = entry.TaskEntry(panel,
             rootTasks=self._taskList.rootItems(), selectedTask=currentTask)
         self._taskSync = attributesync.AttributeSync('task', self._taskEntry,
-            currentTask, self.items, command.ChangeTaskCommand,
+            currentTask, self.items, command.EditTaskCommand,
             entry.EVT_TASKENTRY, self.items[0].taskChangedEventType())
         editTaskButton = wx.Button(panel, label=_('Edit task'))
         editTaskButton.Bind(wx.EVT_BUTTON, self.onEditTask)
@@ -943,10 +942,10 @@ class EffortEditBook(Page):
         currentStartDateTime = self.items[0].getStart()
         self._startDateTimeEntry = entry.DateTimeEntry(self, self._settings,
             currentStartDateTime, noneAllowed=False, **dateTimeEntryKwArgs)
-        self._startDateTimeSync = attributesync.AttributeSync('datetime',
+        self._startDateTimeSync = attributesync.AttributeSync('getStart',
             self._startDateTimeEntry, currentStartDateTime, self.items,
-            command.ChangeEffortStartDateTimeCommand, entry.EVT_DATETIMEENTRY,
-            'effort.start', 'getStart')
+            command.EditEffortStartDateTimeCommand, entry.EVT_DATETIMEENTRY,
+            'effort.start')
         self._startDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onDateTimeChanged)        
         startFromLastEffortButton = self._createStartFromLastEffortButton()
         self.addEntry(_('Start'), self._startDateTimeEntry,
@@ -955,10 +954,10 @@ class EffortEditBook(Page):
         currentStopDateTime = self.items[0].getStop()
         self._stopDateTimeEntry = entry.DateTimeEntry(self, self._settings, 
             currentStopDateTime, noneAllowed=True, **dateTimeEntryKwArgs)
-        self._stopDateTimeSync = attributesync.AttributeSync('datetime',
+        self._stopDateTimeSync = attributesync.AttributeSync('getStop',
             self._stopDateTimeEntry, currentStopDateTime, self.items,
-            command.ChangeEffortStopDateTimeCommand, entry.EVT_DATETIMEENTRY,
-            'effort.stop', 'getStop')
+            command.EditEffortStopDateTimeCommand, entry.EVT_DATETIMEENTRY,
+            'effort.stop')
         self._stopDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onStopDateTimeChanged)
         stopNowButton = self._createStopNowButton()
         self._invalidPeriodMessage = self._createInvalidPeriodMessage()

@@ -26,10 +26,9 @@ class AttributeSync(object):
         attribute of the domain object is changed (e.g. in another dialog) the 
         value of the control is updated. '''
         
-    def __init__(self, attributeName, entry, currentValue, items, commandClass, 
-                 editedEventType, changedEventType, getter=None, **kwargs):
-        self._attributeName = attributeName
-        self._getter = getter or attributeName
+    def __init__(self, attributeGetterName, entry, currentValue, items, commandClass, 
+                 editedEventType, changedEventType, **kwargs):
+        self._getter = attributeGetterName
         self._entry = entry
         self._currentValue = currentValue
         self._items = items
@@ -57,7 +56,7 @@ class AttributeSync(object):
             self.stopObservingAttribute()
             
     def commandKwArgs(self, newValue):
-        self.__commandKwArgs[self._attributeName] = newValue
+        self.__commandKwArgs['newValue'] = newValue
         return self.__commandKwArgs
     
     def setValue(self, newValue):

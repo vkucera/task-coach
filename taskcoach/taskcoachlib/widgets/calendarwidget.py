@@ -340,28 +340,28 @@ class TaskSchedule(wxSchedule):
             self.Thaw()
 
     def SetStart(self, start):
-        command.EditStartDateTimeCommand(items=[self.task], datetime=self.tcDateTime(start)).do()
+        command.EditStartDateTimeCommand(items=[self.task], newValue=self.tcDateTime(start)).do()
 
     def SetEnd(self, end):
         if self.task.completed():
-            command.EditCompletionDateTimeCommand(items=[self.task], datetime=self.tcDateTime(end)).do()
+            command.EditCompletionDateTimeCommand(items=[self.task], newValue=self.tcDateTime(end)).do()
         else:
-            command.EditDueDateTimeCommand(items=[self.task], datetime=self.tcDateTime(end)).do()
+            command.EditDueDateTimeCommand(items=[self.task], newValue=self.tcDateTime(end)).do()
 
     def Offset(self, ts):
         kwargs = dict()
         if self.task.startDateTime() != date.DateTime():
             start = self.GetStart()
             start.AddTS(ts)
-            command.EditStartDateTimeCommand(items=[self.task], datetime=self.tcDateTime(start)).do()
+            command.EditStartDateTimeCommand(items=[self.task], newValue=self.tcDateTime(start)).do()
         if self.task.completed():
             end = self.GetEnd()
             end.AddTS(ts)
-            command.EditCompletionDateTimeCommand(items=[self.task], datetime=self.tcDateTime(end)).do()
+            command.EditCompletionDateTimeCommand(items=[self.task], newValue=self.tcDateTime(end)).do()
         elif self.task.dueDateTime() != date.DateTime():
             end = self.GetEnd()
             end.AddTS(ts)
-            command.EditDueDateTimeCommand(items=[self.task], datetime=self.tcDateTime(end)).do()
+            command.EditDueDateTimeCommand(items=[self.task], newValue=self.tcDateTime(end)).do()
 
     @property
     def task(self):

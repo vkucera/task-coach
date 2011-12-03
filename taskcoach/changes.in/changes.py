@@ -30,6 +30,8 @@ not be shown in menu's where the subject is used.'''),
         Bug('''When creating new subtasks, they would always be inactive.''', 
             '3446309'),
         Bug('''Closing task dialogs was very slow with a large task file.'''),
+        Bug('''Setting a budget to zero would make it impossible to save the 
+task file.''', '3449423'),
         ],
     featuresAdded=[
         Feature('''Rounding of effort in effort viewers.''', 

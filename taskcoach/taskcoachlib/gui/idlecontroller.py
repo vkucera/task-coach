@@ -21,7 +21,7 @@ import wx
 from taskcoachlib.powermgt import IdleNotifier
 from taskcoachlib.patterns import Observer
 from taskcoachlib.domain import effort, date
-from taskcoachlib.command import NewEffortCommand, ChangeEffortStopDateTimeCommand
+from taskcoachlib.command import NewEffortCommand, EditEffortStopDateTimeCommand
 from taskcoachlib.notify import NotificationFrameBase, NotificationCenter
 from taskcoachlib.i18n import _
 
@@ -57,11 +57,11 @@ class WakeFromIdleFrame(NotificationFrameBase):
         self.DoClose()
 
     def DoStopAt(self, event):
-        ChangeEffortStopDateTimeCommand(datetime=self._idleTime, items=[self._effort]).do()
+        EditEffortStopDateTimeCommand(newValue=self._idleTime, items=[self._effort]).do()
         self.DoClose()
 
     def DoStopResume(self, event):
-        ChangeEffortStopDateTimeCommand(datetime=self._idleTime, items=[self._effort]).do()
+        EditEffortStopDateTimeCommand(newValue=self._idleTime, items=[self._effort]).do()
         NewEffortCommand(items=[self._effort.task()]).do()
         self.DoClose()
 
