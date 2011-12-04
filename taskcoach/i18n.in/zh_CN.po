@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zh_CN\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-26 00:12+0000\n"
-"PO-Revision-Date: 2011-02-13 11:40+0000\n"
-"Last-Translator: Alex Gissing <jixing_alex@yahoo.com.cn>\n"
+"POT-Creation-Date: 2011-11-27 12:51+0000\n"
+"PO-Revision-Date: 2011-11-29 07:56+0000\n"
+"Last-Translator: Carson Zhang <Unknown>\n"
 "Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-27 10:21+0000\n"
-"X-Generator: Launchpad (build 14381)\n"
+"X-Launchpad-Export-Date: 2011-12-04 14:12+0000\n"
+"X-Generator: Launchpad (build 14418)\n"
 "X-Poedit-Country: CHINA\n"
 "X-Poedit-Language: Chinese\n"
 "Generated-By: pygettext.py 1.5\n"
@@ -40,23 +40,23 @@ msgstr "新建附件"
 
 #: taskcoachlib/command/attachmentCommands.py:43
 msgid "Delete attachments"
-msgstr ""
+msgstr "删除附件"
 
 #: taskcoachlib/command/attachmentCommands.py:44
 msgid "Delete attachment \"%s\""
-msgstr ""
+msgstr "删除附件 \"%s\""
 
 #: taskcoachlib/command/attachmentCommands.py:48
 msgid "Add note to attachments"
-msgstr ""
+msgstr "添加附件描述"
 
 #: taskcoachlib/command/attachmentCommands.py:52
 msgid "Edit location of attachments"
-msgstr ""
+msgstr "更改附件路径"
 
 #: taskcoachlib/command/attachmentCommands.py:53
 msgid "Edit attachment \"%s\" location"
-msgstr ""
+msgstr "更改附件 \"%s\" 的路径"
 
 #: taskcoachlib/command/attachmentCommands.py:75
 #: taskcoachlib/widgets/dialog.py:155
@@ -65,15 +65,15 @@ msgstr "添加附件"
 
 #: taskcoachlib/command/attachmentCommands.py:76
 msgid "Add attachment to \"%s\""
-msgstr ""
+msgstr "往 \"%s\" 中添加附件"
 
 #: taskcoachlib/command/attachmentCommands.py:108
 msgid "Remove attachment"
-msgstr ""
+msgstr "删除附件"
 
 #: taskcoachlib/command/attachmentCommands.py:109
 msgid "Remove attachment to \"%s\""
-msgstr ""
+msgstr "移动附件至 \"%s\""
 
 #: taskcoachlib/command/base.py:171
 msgid "Copy"
@@ -81,7 +81,7 @@ msgstr "复制"
 
 #: taskcoachlib/command/base.py:172
 msgid "Copy \"%s\""
-msgstr ""
+msgstr "复制 \"%s\""
 
 #: taskcoachlib/command/base.py:186
 msgid "Delete"
@@ -89,7 +89,7 @@ msgstr "删除"
 
 #: taskcoachlib/command/base.py:187
 msgid "Delete \"%s\""
-msgstr ""
+msgstr "删除 \"%s\""
 
 #: taskcoachlib/command/base.py:216
 msgid "Cut"
@@ -97,7 +97,7 @@ msgstr "剪切"
 
 #: taskcoachlib/command/base.py:217
 msgid "Cut \"%s\""
-msgstr ""
+msgstr "剪切 \"%s\""
 
 #: taskcoachlib/command/base.py:242
 msgid "Paste"
@@ -105,15 +105,15 @@ msgstr "粘贴"
 
 #: taskcoachlib/command/base.py:243
 msgid "Paste \"%s\""
-msgstr ""
+msgstr "粘贴 \"%s\""
 
 #: taskcoachlib/command/base.py:278
 msgid "Paste as subitem"
-msgstr ""
+msgstr "作为子条目粘贴"
 
 #: taskcoachlib/command/base.py:279
 msgid "Paste as subitem of \"%s\""
-msgstr ""
+msgstr "粘帖为\"%s\"的子项目"
 
 #: taskcoachlib/command/base.py:291
 msgid "Drag and drop"
@@ -121,55 +121,55 @@ msgstr "拖拽"
 
 #: taskcoachlib/command/base.py:292
 msgid "Drag and drop \"%s\""
-msgstr ""
+msgstr "拖拽\"%s\""
 
 #: taskcoachlib/command/base.py:377
 msgid "Edit subjects"
-msgstr ""
+msgstr "编辑主题"
 
 #: taskcoachlib/command/base.py:378
 msgid "Edit subject \"%s\""
-msgstr ""
+msgstr "编辑主题\"%s\""
 
 #: taskcoachlib/command/base.py:400
 msgid "Edit descriptions"
-msgstr ""
+msgstr "编辑描述"
 
 #: taskcoachlib/command/base.py:401
 msgid "Edit description \"%s\""
-msgstr ""
+msgstr "编辑描述\"%s\""
 
 #: taskcoachlib/command/base.py:423
 msgid "Change icons"
-msgstr ""
+msgstr "更改图标"
 
 #: taskcoachlib/command/base.py:424
 msgid "Change icon \"%s\""
-msgstr ""
+msgstr "更改图标\"%s\""
 
 #: taskcoachlib/command/base.py:451
 msgid "Change fonts"
-msgstr ""
+msgstr "更改字体"
 
 #: taskcoachlib/command/base.py:452
 msgid "Change font \"%s\""
-msgstr ""
+msgstr "更改字体\"%s\""
 
 #: taskcoachlib/command/base.py:502
 msgid "Change foreground colors"
-msgstr ""
+msgstr "改变前景色"
 
 #: taskcoachlib/command/base.py:503
 msgid "Change foreground color \"%s\""
-msgstr ""
+msgstr "改变前景色\"%s\""
 
 #: taskcoachlib/command/base.py:515
 msgid "Change background colors"
-msgstr ""
+msgstr "改变背景色"
 
 #: taskcoachlib/command/base.py:516
 msgid "Change background color \"%s\""
-msgstr ""
+msgstr "改变背景色\"%s\""
 
 #: taskcoachlib/command/categorizableCommands.py:25
 msgid "Toggle category"
@@ -186,11 +186,11 @@ msgstr "新建类别"
 
 #: taskcoachlib/command/categoryCommands.py:41
 msgid "New subcategories"
-msgstr ""
+msgstr "新建子分类"
 
 #: taskcoachlib/command/categoryCommands.py:42
 msgid "New subcategory of \"%s\""
-msgstr ""
+msgstr "新建子分类\"%s\""
 
 #: taskcoachlib/command/categoryCommands.py:45
 msgid "New subcategory"
@@ -198,43 +198,43 @@ msgstr "新建子类别"
 
 #: taskcoachlib/command/categoryCommands.py:57
 msgid "Edit exclusive subcategories"
-msgstr ""
+msgstr "编辑互斥子分类"
 
 #: taskcoachlib/command/categoryCommands.py:58
 msgid "Edit exclusive subcategories of \"%s\""
-msgstr ""
+msgstr "编辑互斥子分类\"%s\""
 
 #: taskcoachlib/command/categoryCommands.py:80
 msgid "Delete categories"
-msgstr ""
+msgstr "删除分类"
 
 #: taskcoachlib/command/categoryCommands.py:81
 msgid "Delete category \"%s\""
-msgstr ""
+msgstr "删除分类\"%s\""
 
 #: taskcoachlib/command/categoryCommands.py:85
 msgid "Drag and drop categories"
-msgstr ""
+msgstr "拖拽分类"
 
 #: taskcoachlib/command/effortCommands.py:26
 msgid "New efforts"
-msgstr ""
+msgstr "新建花费"
 
 #: taskcoachlib/command/effortCommands.py:27
 msgid "New effort of \"%s\""
-msgstr ""
+msgstr "新建花费 \"%s\""
 
 #: taskcoachlib/command/effortCommands.py:48
 msgid "Delete efforts"
-msgstr ""
+msgstr "删除花费"
 
 #: taskcoachlib/command/effortCommands.py:49
 msgid "Delete effort \"%s\""
-msgstr ""
+msgstr "删除花费 \"%s\""
 
 #: taskcoachlib/command/effortCommands.py:53
 msgid "Change task of effort"
-msgstr ""
+msgstr "更改任务花费"
 
 #: taskcoachlib/command/effortCommands.py:54
 msgid "Change task of \"%s\" effort"
