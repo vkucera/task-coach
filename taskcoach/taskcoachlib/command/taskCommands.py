@@ -147,7 +147,12 @@ class NewSubTaskCommand(base.NewSubItemCommand, SaveTaskStateMixin):
     def __init__(self, *args, **kwargs):
         super(NewSubTaskCommand, self).__init__(*args, **kwargs)
         subject = kwargs.pop('subject', _('New subtask'))
-        self.items = [parent.newChild(subject=subject, dueDateTime=parent.dueDateTime(), **kwargs) for parent in self.items]
+        startDateTime = kwargs.pop('startDateTime', date.DateTime())
+        dueDateTime = kwargs.pop('dueDateTime', date.DateTime())
+        self.items = [parent.newChild(subject=subject, 
+                                      startDateTime=max([parent.startDateTime(), startDateTime]),
+                                      dueDateTime=min([parent.dueDateTime(), dueDateTime]), 
+                                      **kwargs) for parent in self.items]
         self.saveStates(self.getTasksToSave())
     
     def getTasksToSave(self):
@@ -334,7 +339,7 @@ class EditPriorityCommand(base.BaseCommand):
     singular_name = _('Change priority of "%s"')
     
     def __init__(self, *args, **kwargs):
-        self.__newPriority = kwargs.pop('priority', '') or kwargs.pop('newValue', '')
+        self.__newPriority = kwargs.pop('newValue')
         super(EditPriorityCommand, self).__init__(*args, **kwargs)
         self.__oldPriorities = [item.priority() for item in self.items]
 
@@ -358,7 +363,7 @@ class AddTaskNoteCommand(noteCommands.AddNoteCommand):
 
 class EditDateTimeCommand(base.BaseCommand):
     def __init__(self, *args, **kwargs):
-        self._newDateTime = kwargs.pop('datetime', '') or kwargs.pop('newValue', '')
+        self._newDateTime = kwargs.pop('newValue')
         super(EditDateTimeCommand, self).__init__(*args, **kwargs)
         self.__oldDateTimes = [self.getDateTime(item) for item in self.items]
         familyMembers = set()
@@ -514,7 +519,7 @@ class EditRecurrenceCommand(base.BaseCommand):
     singular_name = _('Change recurrence of "%s"')
     
     def __init__(self, *args, **kwargs):
-        self.__newRecurrence = kwargs.pop('recurrence')
+        self.__newRecurrence = kwargs.pop('newValue')
         super(EditRecurrenceCommand, self).__init__(*args, **kwargs)
         self.__oldRecurrences = [item.recurrence() for item in self.items]
 
@@ -537,7 +542,7 @@ class EditPercentageCompleteCommand(base.SaveStateMixin, EffortCommand):
     singular_name = _('Change percentage complete of "%s"')
     
     def __init__(self, *args, **kwargs):
-        self.__newPercentage = kwargs.pop('percentage', '') or kwargs.pop('newValue', '')
+        self.__newPercentage = kwargs.pop('newValue')
         super(EditPercentageCompleteCommand, self).__init__(*args, **kwargs)
         itemsToSave = set([relative for item in self.items for relative in item.family()]) 
         self.saveStates(itemsToSave)
@@ -566,7 +571,7 @@ class EditShouldMarkCompletedCommand(base.BaseCommand):
     singular_name = _('Change when "%s" is marked completed')
     
     def __init__(self, *args, **kwargs):
-        self.__newShouldMarkCompleted = kwargs.pop('shouldMarkCompleted')
+        self.__newShouldMarkCompleted = kwargs.pop('newValue')
         super(EditShouldMarkCompletedCommand, self).__init__(*args, **kwargs)
         self.__oldShouldMarkCompleted = [item.shouldMarkCompletedWhenAllChildrenCompleted() for item in self.items]
         
@@ -589,7 +594,7 @@ class EditBudgetCommand(base.BaseCommand):
     singular_name = _('Change budget of "%s"')
     
     def __init__(self, *args, **kwargs):
-        self.__newBudget = kwargs.pop('budget', '') or kwargs.pop('newValue', '') 
+        self.__newBudget = kwargs.pop('newValue') 
         super(EditBudgetCommand, self).__init__(*args, **kwargs)
         self.__oldBudgets = [item.budget() for item in self.items]
         
@@ -612,7 +617,7 @@ class EditHourlyFeeCommand(base.BaseCommand):
     singular_name = _('Change hourly fee of "%s"')
     
     def __init__(self, *args, **kwargs):
-        self.__newHourlyFee = kwargs.pop('hourlyFee', '') or kwargs.pop('newValue', '')
+        self.__newHourlyFee = kwargs.pop('newValue')
         super(EditHourlyFeeCommand, self).__init__(*args, **kwargs)
         self.__oldHourlyFees = [item.hourlyFee() for item in self.items]
         
@@ -635,7 +640,7 @@ class EditFixedFeeCommand(base.BaseCommand):
     singular_name = _('Change fixed fee of "%s"')
     
     def __init__(self, *args, **kwargs):
-        self.__newFixedFee = kwargs.pop('fixedFee', '') or kwargs.pop('newValue', '')
+        self.__newFixedFee = kwargs.pop('newValue')
         super(EditFixedFeeCommand, self).__init__(*args, **kwargs)
         self.__oldFixedFees = [item.fixedFee() for item in self.items]
         

@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx.combo, os.path
+import wx, os.path
 from taskcoachlib import widgets, patterns, command, operating_system
 from taskcoachlib.gui import viewer, uicommand, windowdimensionstracker
 from taskcoachlib.i18n import _
@@ -33,6 +33,7 @@ class Page(widgets.BookPage):
     
     def __init__(self, items, *args, **kwargs):
         self.items = items
+        self.__observers = []
         super(Page, self).__init__(columns=self.columns, *args, **kwargs)
         self.addEntries()
         self.fit()
@@ -49,11 +50,32 @@ class Page(widgets.BookPage):
             theEntry = self.entries()[columnName]
         except KeyError:
             theEntry = self.entries()['firstEntry']
+        theEntry.SetFocus()
         try:
-            theEntry.SetSelection(-1, -1) # Select all text
+            # This ensures that if the TextCtrl value is more than can be displayed,
+            # it will display the start instead of the end.
+            if operating_system.isMac():
+                theEntry.SetSelection(-1, -1)
+            elif operating_system.isWindows():
+                from taskcoachlib.thirdparty import SendKeys
+                SendKeys.SendKeys('{END}+{HOME}')
+            else:
+                wx.Yield()
+                theEntry.SetSelection(len(theEntry.GetValue()), 0)
         except (AttributeError, TypeError):
             pass # Not a TextCtrl
-        theEntry.SetFocus()
+        
+    def registerObserver(self, observer, eventType, eventSource=None):
+        patterns.Publisher().registerObserver(observer, eventType, eventSource)
+        self.__observers.append(observer)
+        
+    def removeObserver(self, observer, eventType):
+        patterns.Publisher().removeObserver(observer, eventType)
+        
+    def close(self):
+        removeObserver = patterns.Publisher().removeObserver
+        for observer in self.__observers:
+            removeObserver(observer)
 
                         
 class SubjectPage(Page):
@@ -88,7 +110,7 @@ class SubjectPage(Page):
     def entries(self):
         return dict(firstEntry=self._subjectEntry,
                     subject=self._subjectEntry,
-                    description=self._descriptionEntry)
+                    description=self._descriptionEntry)        
 
     
 class TaskSubjectPage(SubjectPage):
@@ -123,11 +145,10 @@ class CategorySubjectPage(SubjectPage):
         self._exclusiveSubcategoriesCheckBox = wx.CheckBox(self, label=_('Mutually exclusive')) 
         self._exclusiveSubcategoriesCheckBox.SetValue(currentExclusivity)
         self._exclusiveSubcategoriesSync = attributesync.AttributeSync( \
-            'exclusivity', self._exclusiveSubcategoriesCheckBox, 
+            'hasExclusiveSubcategories', self._exclusiveSubcategoriesCheckBox, 
             currentExclusivity, self.items, 
             command.EditExclusiveSubcategoriesCommand, wx.EVT_CHECKBOX,
-            self.items[0].exclusiveSubcategoriesChangedEventType(),
-            'hasExclusiveSubcategories')
+            self.items[0].exclusiveSubcategoriesChangedEventType())
         self.addEntry(_('Subcategories'), self._exclusiveSubcategoriesCheckBox,
                       flags=[None, wx.ALL])
             
@@ -200,9 +221,9 @@ class TaskAppearancePage(Page):
         colorEntry = entry.ColorEntry(self, currentColor, defaultColor)
         setattr(self, '_%sColorEntry'%colorType, colorEntry)        
         commandClass = getattr(command, 'Edit%sColorCommand'%colorType.capitalize())
-        colorSync = attributesync.AttributeSync('color', colorEntry, currentColor, 
+        colorSync = attributesync.AttributeSync('%sColor'%colorType, colorEntry, currentColor, 
             self.items, commandClass, entry.EVT_COLORENTRY, 
-            self.items[0].appearanceChangedEventType(), '%sColor'%colorType)
+            self.items[0].appearanceChangedEventType())
         setattr(self, '_%sColorSync'%colorType, colorSync)
         self.addEntry(labelText, colorEntry, flags=[None, wx.ALL])
             
@@ -214,10 +235,10 @@ class TaskAppearancePage(Page):
         self._fontSync = attributesync.AttributeSync('font', self._fontEntry, 
             currentFont, self.items, command.EditFontCommand, 
             entry.EVT_FONTENTRY, self.items[0].appearanceChangedEventType())
-        self._fontColorSync = attributesync.FontColorSync('color', 
+        self._fontColorSync = attributesync.FontColorSync('foregroundColor', 
             self._fontEntry, currentColor, self.items, 
             command.EditForegroundColorCommand, entry.EVT_FONTENTRY,
-            self.items[0].appearanceChangedEventType(), 'foregroundColor')
+            self.items[0].appearanceChangedEventType())
         self.addEntry(_('Font'), self._fontEntry, flags=[None, wx.ALL])
                     
     def addIconEntry(self):
@@ -272,9 +293,9 @@ class DatesPage(Page):
         except AttributeError:
             eventType = 'task.%s' % taskMethodName
         keep_delta = self.__keep_delta(taskMethodName)
-        datetimeSync = attributesync.AttributeSync('datetime', dateTimeEntry, 
+        datetimeSync = attributesync.AttributeSync(taskMethodName, dateTimeEntry, 
             dateTime, self.items, commandClass, entry.EVT_DATETIMEENTRY, 
-            eventType, taskMethodName, keep_delta=keep_delta)
+            eventType, keep_delta=keep_delta)
         setattr(self, '_%sSync'%taskMethodName, datetimeSync) 
         self.addEntry(label, dateTimeEntry)
             
@@ -290,10 +311,10 @@ class DatesPage(Page):
         self._reminderDateTimeEntry = entry.DateTimeEntry(self, self.__settings,
                                                           reminderDateTime, 
                                                           suggestedDateTime=suggestedDateTime)
-        self._reminderDateTimeSync = attributesync.AttributeSync('datetime', 
+        self._reminderDateTimeSync = attributesync.AttributeSync('reminder', 
             self._reminderDateTimeEntry, reminderDateTime, self.items, 
             command.EditReminderDateTimeCommand, entry.EVT_DATETIMEENTRY, 
-            task.Task.reminderChangedEventType(), 'reminder')
+            task.Task.reminderChangedEventType())
         self.addEntry(_('Reminder'), self._reminderDateTimeEntry)
         
     def addRecurrenceEntry(self):
@@ -331,12 +352,11 @@ class ProgressPage(Page):
         currentPercentageComplete = self.items[0].percentageComplete() if len(self.items) == 1 else self.averagePercentageComplete(self.items)
         self._percentageCompleteEntry = entry.PercentageEntry(self, 
             currentPercentageComplete)
-        self._percentageCompleteSync = attributesync.AttributeSync('percentage', 
+        self._percentageCompleteSync = attributesync.AttributeSync('percentageComplete', 
             self._percentageCompleteEntry, currentPercentageComplete, 
             self.items, command.EditPercentageCompleteCommand, 
             entry.EVT_PERCENTAGEENTRY, 
-            self.items[0].percentageCompleteChangedEventType(), 
-            'percentageComplete')
+            self.items[0].percentageCompleteChangedEventType())
         self.addEntry(_('Percentage complete'), self._percentageCompleteEntry)
 
     @staticmethod
@@ -353,11 +373,10 @@ class ProgressPage(Page):
         self._shouldMarkCompletedEntry = entry.ChoiceEntry(self, choices,
                                                            currentChoice)
         self._shouldMarkCompletedSync = attributesync.AttributeSync( \
-            'shouldMarkCompleted', self._shouldMarkCompletedEntry, 
+            'shouldMarkCompletedWhenAllChildrenCompleted', self._shouldMarkCompletedEntry, 
             currentChoice, self.items, command.EditShouldMarkCompletedCommand, 
             entry.EVT_CHOICEENTRY,
-            task.Task.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType(),
-            'shouldMarkCompletedWhenAllChildrenCompleted')                                                       
+            task.Task.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType())                                                       
         self.addEntry(_('Mark task completed when all children are completed?'), 
                       self._shouldMarkCompletedEntry, flags=[None, wx.ALL])
         
@@ -400,9 +419,9 @@ class BudgetPage(Page):
                                                     readonly=True)
         self.addEntry(_('Time spent'), self._timeSpentEntry, 
                       flags=[None, wx.ALL])
-        patterns.Publisher().registerObserver(self.onTimeSpentChanged, 
-                                              eventType='task.timeSpent', 
-                                              eventSource=self.items[0])
+        self.registerObserver(self.onTimeSpentChanged, 
+                              eventType='task.timeSpent', 
+                              eventSource=self.items[0])
         
     def onTimeSpentChanged(self, event): # pylint: disable-msg=W0613
         newTimeSpent = self.items[0].timeSpent()
@@ -417,9 +436,9 @@ class BudgetPage(Page):
                                                      readonly=True)
         self.addEntry(_('Budget left'), self._budgetLeftEntry, 
                       flags=[None, wx.ALL])
-        patterns.Publisher().registerObserver(self.onBudgetLeftChanged,
-                                              eventType='task.budgetLeft',
-                                              eventSource=self.items[0])
+        self.registerObserver(self.onBudgetLeftChanged,
+                              eventType='task.budgetLeft',
+                              eventSource=self.items[0])
         
     def onBudgetLeftChanged(self, event): # pylint: disable-msg=W0613
         newBudgetLeft = self.items[0].budgetLeft()
@@ -456,9 +475,9 @@ class BudgetPage(Page):
         revenue = self.items[0].revenue()
         self._revenueEntry = entry.AmountEntry(self, revenue, readonly=True) # pylint: disable-msg=W0201
         self.addEntry(_('Revenue'), self._revenueEntry, flags=[None, wx.ALL])
-        patterns.Publisher().registerObserver(self.onRevenueChanged,
-                                              eventType='task.revenue',
-                                              eventSource=self.items[0])
+        self.registerObserver(self.onRevenueChanged,
+                              eventType='task.revenue',
+                              eventSource=self.items[0])
 
     def onRevenueChanged(self, event): # pylint: disable-msg=W0613
         newRevenue = self.items[0].revenue()
@@ -468,14 +487,13 @@ class BudgetPage(Page):
     def observeTracking(self):
         if len(self.items) != 1:
             return
-        registerObserver = patterns.Publisher().registerObserver
         item = self.items[0]
-        registerObserver(self.onStartTracking, 
-                         eventType=item.trackStartEventType(), 
-                         eventSource=item)
-        registerObserver(self.onStopTracking, 
-                         eventType=item.trackStopEventType(), 
-                         eventSource=item)
+        self.registerObserver(self.onStartTracking, 
+                              eventType=item.trackStartEventType(), 
+                              eventSource=item)
+        self.registerObserver(self.onStopTracking, 
+                              eventType=item.trackStopEventType(), 
+                              eventSource=item)
         if item.isBeingTracked():
             self.onStartTracking(None)
         
@@ -483,13 +501,13 @@ class BudgetPage(Page):
         # We might already be observing the clock if the user is tracking this
         # task with multiple effort records simultaneously
         if self.onEverySecond not in patterns.Publisher().observers('clock.second'):
-            patterns.Publisher().registerObserver(self.onEverySecond, eventType='clock.second')
+            self.registerObserver(self.onEverySecond, eventType='clock.second')
         
     def onStopTracking(self, event): # pylint: disable-msg=W0613
         # We might need to keep tracking the clock if the user was tracking this
         # task with multiple effort records simultaneously
         if not self.items[0].isBeingTracked():
-            patterns.Publisher().removeObserver(self.onEverySecond, eventType='clock.second')
+            self.removeObserver(self.onEverySecond, eventType='clock.second')
     
     def onEverySecond(self, event):
         self.onTimeSpentChanged(event)
@@ -503,6 +521,7 @@ class BudgetPage(Page):
                     hourlyFee=self._hourlyFeeEntry,
                     fixedFee=self._fixedFeeEntry,
                     revenue=self._hourlyFeeEntry)
+        
 
 
 class PageWithViewer(Page):
@@ -582,11 +601,10 @@ class CategoriesPage(PageWithViewer):
     def createViewer(self, taskFile, settings, settingsSection):
         assert len(self.items) == 1
         item = self.items[0]
-        registerObserver = patterns.Publisher().registerObserver
         for eventType in (item.categoryAddedEventType(), 
                          item.categoryRemovedEventType()):
-            registerObserver(self.onCategoryChanged, eventType=eventType,
-                            eventSource=item)
+            self. registerObserver(self.onCategoryChanged, eventType=eventType,
+                                   eventSource=item)
         return LocalCategoryViewer(self.items, self, taskFile, settings,
                                    settingsSection=settingsSection)
         
@@ -618,7 +636,7 @@ class AttachmentsPage(PageWithViewer):
     def createViewer(self, taskFile, settings, settingsSection):
         assert len(self.items) == 1
         item = self.items[0]
-        patterns.Publisher().registerObserver(self.onAttachmentsChanged, 
+        self.registerObserver(self.onAttachmentsChanged, 
             eventType=item.attachmentsChangedEventType(), 
             eventSource=item)    
         return LocalAttachmentViewer(self, taskFile, settings,
@@ -656,9 +674,9 @@ class NotesPage(PageWithViewer):
     def createViewer(self, taskFile, settings, settingsSection):
         assert len(self.items) == 1
         item = self.items[0]
-        patterns.Publisher().registerObserver(self.onNotesChanged,
-                                              eventType=item.notesChangedEventType(),
-                                              eventSource=item)
+        self.registerObserver(self.onNotesChanged,
+                              eventType=item.notesChangedEventType(),
+                              eventSource=item)
         return LocalNoteViewer(self, taskFile, settings, 
                                settingsSection=settingsSection, owner=item)
 
@@ -697,9 +715,9 @@ class PrerequisitesPage(PageWithViewer):
     
     def createViewer(self, taskFile, settings, settingsSection):
         assert len(self.items) == 1
-        patterns.Publisher().registerObserver(self.onPrerequisitesChanged, 
-                                              eventType='task.prerequisites', 
-                                              eventSource=self.items[0])
+        self.registerObserver(self.onPrerequisitesChanged, 
+                              eventType='task.prerequisites', 
+                              eventSource=self.items[0])
         return LocalPrerequisiteViewer(self.items, self, taskFile, settings,
                                        settingsSection=settingsSection)
         
@@ -844,9 +862,8 @@ class EditBook(widgets.Notebook):
     
     def onClose(self, event):
         event.Skip()
-        removeInstance = patterns.Publisher().removeInstance
         for page in self:
-            removeInstance(page)
+            page.close()
         pageNames = [self[index].pageName for index in range(self.GetPageCount())]
         self.settings.setlist('editor', '%spages'%self.object, pageNames)
         self.savePerspective(pageNames)
@@ -916,7 +933,7 @@ class EffortEditBook(Page):
         self._taskEntry = entry.TaskEntry(panel,
             rootTasks=self._taskList.rootItems(), selectedTask=currentTask)
         self._taskSync = attributesync.AttributeSync('task', self._taskEntry,
-            currentTask, self.items, command.ChangeTaskCommand,
+            currentTask, self.items, command.EditTaskCommand,
             entry.EVT_TASKENTRY, self.items[0].taskChangedEventType())
         editTaskButton = wx.Button(panel, label=_('Edit task'))
         editTaskButton.Bind(wx.EVT_BUTTON, self.onEditTask)
@@ -937,10 +954,10 @@ class EffortEditBook(Page):
         currentStartDateTime = self.items[0].getStart()
         self._startDateTimeEntry = entry.DateTimeEntry(self, self._settings,
             currentStartDateTime, noneAllowed=False, **dateTimeEntryKwArgs)
-        self._startDateTimeSync = attributesync.AttributeSync('datetime',
+        self._startDateTimeSync = attributesync.AttributeSync('getStart',
             self._startDateTimeEntry, currentStartDateTime, self.items,
-            command.ChangeEffortStartDateTimeCommand, entry.EVT_DATETIMEENTRY,
-            'effort.start', 'getStart')
+            command.EditEffortStartDateTimeCommand, entry.EVT_DATETIMEENTRY,
+            'effort.start')
         self._startDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onDateTimeChanged)        
         startFromLastEffortButton = self._createStartFromLastEffortButton()
         self.addEntry(_('Start'), self._startDateTimeEntry,
@@ -949,10 +966,10 @@ class EffortEditBook(Page):
         currentStopDateTime = self.items[0].getStop()
         self._stopDateTimeEntry = entry.DateTimeEntry(self, self._settings, 
             currentStopDateTime, noneAllowed=True, **dateTimeEntryKwArgs)
-        self._stopDateTimeSync = attributesync.AttributeSync('datetime',
+        self._stopDateTimeSync = attributesync.AttributeSync('getStop',
             self._stopDateTimeEntry, currentStopDateTime, self.items,
-            command.ChangeEffortStopDateTimeCommand, entry.EVT_DATETIMEENTRY,
-            'effort.stop', 'getStop')
+            command.EditEffortStopDateTimeCommand, entry.EVT_DATETIMEENTRY,
+            'effort.stop')
         self._stopDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onStopDateTimeChanged)
         stopNowButton = self._createStopNowButton()
         self._invalidPeriodMessage = self._createInvalidPeriodMessage()
@@ -1106,7 +1123,8 @@ class Editor(widgets.Dialog):
 
     def onClose(self, event):
         event.Skip()
-        patterns.Publisher().removeInstance(self)
+        patterns.Publisher().removeObserver(self.onItemRemoved)
+        patterns.Publisher().removeObserver(self.onSubjectChanged)
         # On Mac OS X, the text control does not lose focus when
         # destroyed...
         if operating_system.isMac():

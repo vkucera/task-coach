@@ -33,6 +33,12 @@ class CategoryContainerTest(test.TestCase):
         self.categories.append(category.Category(self.category.subject()))
         self.assertEqual(2, len(self.categories))
         
+    def testAddCategoryWithCategorizable(self):
+        aTask = task.Task()
+        self.category.addCategorizable(aTask)
+        self.categories.append(self.category)
+        self.assertEqual(set([self.category]), aTask.categories())
+        
     def testRemoveCategoryWithTask(self):
         aTask = task.Task()
         self.categories.append(self.category)

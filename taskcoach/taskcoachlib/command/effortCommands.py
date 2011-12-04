@@ -49,13 +49,13 @@ class DeleteEffortCommand(base.DeleteCommand):
     singular_name = _('Delete effort "%s"')
     
     
-class ChangeTaskCommand(base.BaseCommand):
+class EditTaskCommand(base.BaseCommand):
     plural_name = _('Change task of effort')
     singular_name = _('Change task of "%s" effort')
     
     def __init__(self, *args, **kwargs):
-        self.__task = kwargs.pop('task')
-        super(ChangeTaskCommand, self).__init__(*args, **kwargs)
+        self.__task = kwargs.pop('newValue')
+        super(EditTaskCommand, self).__init__(*args, **kwargs)
         self.__oldTasks = [item.task() for item in self.items]
         
     @patterns.eventSource
@@ -72,18 +72,18 @@ class ChangeTaskCommand(base.BaseCommand):
         self.do_command()
 
 
-class ChangeEffortStartDateTimeCommand(base.BaseCommand):
+class EditEffortStartDateTimeCommand(base.BaseCommand):
     plural_name = _('Change effort start date and time')
     singular_name = _('Change effort start date and time of "%s"')
     
     def __init__(self, *args, **kwargs):
-        self.__datetime = kwargs.pop('datetime')
-        super(ChangeEffortStartDateTimeCommand, self).__init__(*args, **kwargs)
+        self.__datetime = kwargs.pop('newValue')
+        super(EditEffortStartDateTimeCommand, self).__init__(*args, **kwargs)
         self.__oldDateTimes = [item.getStart() for item in self.items]
         
     def canDo(self):
         maxDateTime = date.DateTime()
-        return super(ChangeEffortStartDateTimeCommand, self).canDo() and \
+        return super(EditEffortStartDateTimeCommand, self).canDo() and \
             all(self.__datetime < (item.getStop() or maxDateTime) for item in self.items)
         
     @patterns.eventSource
@@ -100,17 +100,17 @@ class ChangeEffortStartDateTimeCommand(base.BaseCommand):
         self.do_command()
 
 
-class ChangeEffortStopDateTimeCommand(base.BaseCommand):
+class EditEffortStopDateTimeCommand(base.BaseCommand):
     plural_name = _('Change effort stop date and time')
     singular_name = _('Change effort stop date and time of "%s"')
     
     def __init__(self, *args, **kwargs):
-        self.__datetime = kwargs.pop('datetime')
-        super(ChangeEffortStopDateTimeCommand, self).__init__(*args, **kwargs)
+        self.__datetime = kwargs.pop('newValue')
+        super(EditEffortStopDateTimeCommand, self).__init__(*args, **kwargs)
         self.__oldDateTimes = [item.getStop() for item in self.items]
 
     def canDo(self):
-        return super(ChangeEffortStopDateTimeCommand, self).canDo() and \
+        return super(EditEffortStopDateTimeCommand, self).canDo() and \
             all(self.__datetime > item.getStart() for item in self.items)
                 
     @patterns.eventSource

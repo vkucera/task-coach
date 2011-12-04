@@ -258,7 +258,9 @@ defaults = { \
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
-    'searchdescription': 'False' },
+    'searchdescription': 'False',
+    'round': '0' # round effort to this number of seconds, 0 = no rounding
+},
 'effortviewerintaskeditor': { \
     'aggregation': 'details', # 'details' (default), 'day', 'week', or 'month'
     'sortby': 'period',
@@ -271,7 +273,9 @@ defaults = { \
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
-    'searchdescription': 'False' },
+    'searchdescription': 'False',
+    'round': '0' # round effort to this number of seconds, 0 = no rounding
+},
 'attachmentviewer': { \
     'title': '',
     'sortby': 'subject',

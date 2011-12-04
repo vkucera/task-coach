@@ -53,7 +53,7 @@ class EditAttachmentLocationCommand(base.BaseCommand):
     singular_name = _('Edit attachment "%s" location')
 
     def __init__(self, *args, **kwargs):
-        self.__newLocation = kwargs.pop('location')
+        self.__newLocation = kwargs.pop('newValue')
         super(EditAttachmentLocationCommand, self).__init__(*args, **kwargs)
         self.__oldLocations = [item.location() for item in self.items]
     

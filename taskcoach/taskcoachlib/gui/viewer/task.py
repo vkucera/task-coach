@@ -142,6 +142,31 @@ class BaseTaskTreeViewer(BaseTaskViewer):
     def newSubItemCommandClass(self):
         return command.NewSubTaskCommand
     
+    def newSubItemCommand(self):
+        kwargs = dict()
+        if self.__shouldPresetStartDateTime():
+            kwargs['startDateTime'] = task.Task.suggestedStartDateTime()
+        if self.__shouldPresetDueDateTime():
+            kwargs['dueDateTime'] = task.Task.suggestedDueDateTime()
+        if self.__shouldPresetCompletionDateTime():
+            kwargs['completionDateTime'] = task.Task.suggestedCompletionDateTime()
+        if self.__shouldPresetReminderDateTime():
+            kwargs['reminder'] = task.Task.suggestedReminderDateTime()
+        return self.newSubItemCommandClass()(self.presentation(), 
+                                             self.curselection(), **kwargs)
+
+    def __shouldPresetStartDateTime(self):
+        return self.settings.get('view', 'defaultstartdatetime').startswith('preset')
+            
+    def __shouldPresetDueDateTime(self):
+        return self.settings.get('view', 'defaultduedatetime').startswith('preset')
+    
+    def __shouldPresetCompletionDateTime(self):
+        return self.settings.get('view', 'defaultcompletiondatetime').startswith('preset')
+            
+    def __shouldPresetReminderDateTime(self):
+        return self.settings.get('view', 'defaultreminderdatetime').startswith('preset')
+           
     def deleteItemCommand(self):
         return command.DeleteTaskCommand(self.presentation(), self.curselection(),
                   shadow=self.settings.getboolean('feature', 'syncml'))    

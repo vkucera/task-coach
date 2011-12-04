@@ -50,6 +50,11 @@ class TimeDelta(datetime.timedelta):
         ''' Timedelta expressed in number of minutes. '''
         hours, minutes, seconds = self.hoursMinutesSeconds()
         return self.sign() * (hours * 60 + minutes + (seconds / 60.))
+    
+    def totalSeconds(self):
+        ''' Timedelta expressed in number of seconds. '''
+        hours, minutes, seconds = self.hoursMinutesSeconds()
+        return self.sign() * (hours * 3600 + minutes * 60 + seconds)        
         
     def milliseconds(self):
         ''' Timedelta expressed in number of milliseconds. '''
@@ -57,6 +62,16 @@ class TimeDelta(datetime.timedelta):
         return int(round((self.days * self.millisecondsPerDay) + \
                          (self.seconds * self.millisecondsPerSecond) + \
                          (self.microseconds * self.millisecondsPerMicroSecond)))
+        
+    def round(self, hours=0, minutes=0, seconds=0):
+        ''' Round the timedelta to the nearest x units. '''
+        assert [hours, minutes, seconds].count(0) >= 2
+        roundingUnit = hours * 3600 + minutes * 60 + seconds
+        if roundingUnit:
+            roundedSeconds = round(self.totalSeconds() / float(roundingUnit)) * roundingUnit
+            return self.__class__(0, roundedSeconds)
+        else:
+            return self
         
     def __add__(self, other):
         ''' Make sure we return a TimeDelta instance and not a 

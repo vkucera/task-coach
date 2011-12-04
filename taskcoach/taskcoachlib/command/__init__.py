@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskCommands import *
 from effortCommands import NewEffortCommand, DeleteEffortCommand, \
-    ChangeTaskCommand, ChangeEffortStartDateTimeCommand, \
-    ChangeEffortStopDateTimeCommand
+    EditTaskCommand, EditEffortStartDateTimeCommand, \
+    EditEffortStopDateTimeCommand
 from categoryCommands import *
 from categorizableCommands import *
 from noteCommands import *

@@ -405,7 +405,7 @@ class EditSubjectCommand(BaseCommand):
     singular_name = _('Edit subject "%s"')
 
     def __init__(self, *args, **kwargs):
-        self.__newSubject = kwargs.pop('newValue', '') or kwargs.pop('subject', '')
+        self.__newSubject = kwargs.pop('newValue')
         super(EditSubjectCommand, self).__init__(*args, **kwargs)
         self.__oldSubjects = [item.subject() for item in self.items]
     
@@ -428,7 +428,7 @@ class EditDescriptionCommand(BaseCommand):
     singular_name = _('Edit description "%s"')
 
     def __init__(self, *args, **kwargs):
-        self.__newDescription = kwargs.pop('newValue', '') or kwargs.pop('description', '')
+        self.__newDescription = kwargs.pop('newValue')
         super(EditDescriptionCommand, self).__init__(*args, **kwargs)
         self.__oldDescriptions = [item.description() for item in self.items]
     
@@ -451,7 +451,7 @@ class EditIconCommand(BaseCommand):
     singular_name = _('Change icon "%s"')
     
     def __init__(self, *args, **kwargs):
-        self.__newIcon = icon = kwargs.pop('icon')
+        self.__newIcon = icon = kwargs.pop('newValue')
         self.__newSelectedIcon = icon[:-len('_icon')] + '_open_icon' \
             if (icon.startswith('folder') and icon.count('_') == 2) \
             else icon
@@ -479,7 +479,7 @@ class EditFontCommand(BaseCommand):
     singular_name = _('Change font "%s"')
     
     def __init__(self, *args, **kwargs):
-        self.__newFont = kwargs.pop('font')
+        self.__newFont = kwargs.pop('newValue')
         super(EditFontCommand, self).__init__(*args, **kwargs)
         self.__oldFonts = [item.font() for item in self.items]
     
@@ -502,7 +502,7 @@ class EditColorCommand(BaseCommand):
         self.do_command()
 
     def __init__(self, *args, **kwargs):
-        self.__newColor = kwargs.pop('color')
+        self.__newColor = kwargs.pop('newValue')
         super(EditColorCommand, self).__init__(*args, **kwargs)
         self.__oldColors = [self.getItemColor(item) for item in self.items]
         

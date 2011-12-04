@@ -1465,7 +1465,7 @@ class TaskNewFromTemplate(TaskNew):
         super(TaskNewFromTemplate, self).__init__(*args, **kwargs)
         self.__filename = filename
         templateTask = self.__readTemplate()
-        self.menuText = '&' + templateTask.subject() # pylint: disable-msg=E1103
+        self.menuText = '&' + templateTask.subject().replace('&', '&&') # pylint: disable-msg=E1103
 
     def __readTemplate(self):
         return persistence.TemplateXMLReader(file(self.__filename,
@@ -1726,7 +1726,7 @@ class ToggleCategory(NeedsSelectedCategorizableMixin, ViewerCommand):
         # items isn't possible. Hence, we use wx.ITEM_CHECK, even for mutual 
         # exclusive categories.
         kind = wx.ITEM_CHECK
-        super(ToggleCategory, self).__init__(menuText='&' + subject,
+        super(ToggleCategory, self).__init__(menuText='&' + subject.replace('&', '&&'),
             helpText=_('Toggle %s')%subject, kind=kind, *args, **kwargs)
         
     def doCommand(self, event):
@@ -1922,7 +1922,7 @@ class EffortStartForTask(TaskListCommand):
         self.task = kwargs.pop('task')
         subject = self.task.subject() or _('(No subject)') 
         super(EffortStartForTask, self).__init__( \
-            bitmap=self.task.icon(recursive=True), menuText='&'+subject,
+            bitmap=self.task.icon(recursive=True), menuText='&'+subject.replace('&', '&&'),
             helpText=_('Start tracking effort for %s')%subject, 
             *args, **kwargs)
         
@@ -2466,6 +2466,9 @@ class ToolbarChoiceCommandMixin(object):
         index = self.choiceData.index(choice)
         self.choiceCtrl.Selection = index
         self.currentChoice = index
+        
+    def enable(self, enable=True):
+        self.choiceCtrl.Enable(enable)
 
 
 class EffortViewerAggregationChoice(ToolbarChoiceCommandMixin, ViewerCommand):
@@ -2598,3 +2601,12 @@ class ViewerPieChartAngle(ViewerCommand, SettingsCommand):
         self.settings.set(self.viewer.settingsSection(), 'piechartangle', 
                           str(self.sliderCtrl.GetValue()))
    
+
+class RoundingPrecision(ToolbarChoiceCommandMixin, ViewerCommand, SettingsCommand):
+    roundingChoices =  (0, 1, 5, 6, 10, 15, 20, 30, 60) # Minutes
+    choiceData = [str(minutes * 60) for minutes in roundingChoices] # Seconds
+    choiceLabels = [_('No rounding'), _('1 minute')] + [_('%d minutes')%minutes for minutes in roundingChoices[2:]]
+
+    def doChoice(self, choice):
+        self.settings.set(self.viewer.settingsSection(), 'round', choice)
+  
