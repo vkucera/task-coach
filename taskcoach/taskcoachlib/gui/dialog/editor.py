@@ -50,11 +50,14 @@ class Page(widgets.BookPage):
             theEntry = self.entries()[columnName]
         except KeyError:
             theEntry = self.entries()['firstEntry']
+        theEntry.SetFocus()
         try:
-            theEntry.SetSelection(-1, -1) # Select all text
+            # This ensures that if the TextCtrl value is more than can be displayed,
+            # it will display the start instead of the end.
+            wx.Yield()
+            theEntry.SetSelection(len(theEntry.GetValue()), 0)
         except (AttributeError, TypeError):
             pass # Not a TextCtrl
-        theEntry.SetFocus()
         
     def registerObserver(self, observer, eventType, eventSource=None):
         patterns.Publisher().registerObserver(observer, eventType, eventSource)
