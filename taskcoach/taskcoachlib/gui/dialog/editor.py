@@ -52,11 +52,14 @@ class Page(widgets.BookPage):
             theEntry = self.entries()['firstEntry']
         theEntry.SetFocus()
         try:
+            # This ensures that if the TextCtrl value is more than can be displayed,
+            # it will display the start instead of the end.
             if operating_system.isMac():
                 theEntry.SetSelection(-1, -1)
+            elif operating_system.isWindows():
+                from taskcoachlib.thirdparty import SendKeys
+                SendKeys.SendKeys('{END}+{HOME}')
             else:
-                # This ensures that if the TextCtrl value is more than can be displayed,
-                # it will display the start instead of the end.
                 wx.Yield()
                 theEntry.SetSelection(len(theEntry.GetValue()), 0)
         except (AttributeError, TypeError):
