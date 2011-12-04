@@ -52,7 +52,7 @@ class Page(widgets.BookPage):
             theEntry = self.entries()['firstEntry']
         theEntry.SetFocus()
         try:
-            if '__WXMAC__' in wx.PlatformInfo:
+            if operating_system.isMac():
                 theEntry.SetSelection(-1, -1)
             else:
                 # This ensures that if the TextCtrl value is more than can be displayed,
