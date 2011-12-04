@@ -52,10 +52,13 @@ class Page(widgets.BookPage):
             theEntry = self.entries()['firstEntry']
         theEntry.SetFocus()
         try:
-            # This ensures that if the TextCtrl value is more than can be displayed,
-            # it will display the start instead of the end.
-            wx.Yield()
-            theEntry.SetSelection(len(theEntry.GetValue()), 0)
+            if '__WXMAC__' in wx.PlatformInfo:
+                theEntry.SetSelection(-1, -1)
+            else:
+                # This ensures that if the TextCtrl value is more than can be displayed,
+                # it will display the start instead of the end.
+                wx.Yield()
+                theEntry.SetSelection(len(theEntry.GetValue()), 0)
         except (AttributeError, TypeError):
             pass # Not a TextCtrl
         
