@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.2', 'December 3, 2011',
+Release('1.3.2', 'December 5, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''When a subject contained an ampersand (&), the ampersand would 
