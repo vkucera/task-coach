@@ -2590,7 +2590,7 @@ class ViewerPieChartAngle(ViewerCommand, SettingsCommand):
    
 
 class RoundingPrecision(ToolbarChoiceCommandMixin, ViewerCommand, SettingsCommand):
-    roundingChoices =  (0, 1, 5, 6, 10, 15, 20, 30, 60) # Minutes
+    roundingChoices =  (0, 1, 3, 5, 6, 10, 15, 20, 30, 60) # Minutes
     choiceData = [str(minutes * 60) for minutes in roundingChoices] # Seconds
     choiceLabels = [_('No rounding'), _('1 minute')] + [_('%d minutes')%minutes for minutes in roundingChoices[2:]]
 
