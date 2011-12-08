@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.3', 'December 7, 2011',
+Release('1.3.3', 'December 8, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''On Linux, after every edit of a task, the undo history 
