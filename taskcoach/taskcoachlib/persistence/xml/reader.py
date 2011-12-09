@@ -218,9 +218,9 @@ class XMLReader(object):
                                            *self.defaultEndTime),
             completionDateTime=date.parseDateTime(taskNode.attrib.get('completiondate', ''), 
                                                   *self.defaultEndTime),
-            percentageComplete=int(taskNode.attrib.get('percentageComplete','0')),
+            percentageComplete=self._parseIntAttribute(taskNode, 'percentageComplete'),
             budget=date.parseTimeDelta(taskNode.attrib.get('budget', '')),
-            priority=int(taskNode.attrib.get('priority', '0')),
+            priority=self._parseIntAttribute(taskNode, 'priority'),
             hourlyFee=float(taskNode.attrib.get('hourlyFee', '0')),
             fixedFee=float(taskNode.attrib.get('fixedFee', '0')),
             reminder=self._parseDateTime(taskNode.attrib.get('reminder', '')),
@@ -430,6 +430,12 @@ class XMLReader(object):
                 text = text[:-1]
         return text
                     
+    def _parseIntAttribute(self, node, attributeName):
+        try:
+            return int(node.attrib.get(attributeName, '0'))
+        except ValueError:
+            return 0
+        
     def _parseDateTime(self, dateTimeText, *timeDefaults):
         return self._parse(dateTimeText, date.parseDateTime, None, *timeDefaults)
     
