@@ -22,12 +22,15 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.3', 'December 9, 2011',
+Release('1.3.3', 'December 10, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''On Linux, after every edit of a task, the undo history 
 would contain a "recurrence edited" action even though the recurrence was 
 not changed.''', '3453625'),
+        Bug('''On Windows, when the user tries to save the task file in a 
+folder where she doesn't have permission, Task Coach would not give a proper
+warning.'''),
         ],
     ),
 

@@ -245,7 +245,7 @@ class IOController(object):
                 'It is locked by another instance of %s.\n')%(filename, meta.name)
             showerror(errorMessage, **self.__errorMessageOptions)
             return False
-        except IOError, reason:
+        except (OSError, IOError), reason:
             errorMessage = _('Cannot save %s\n%s')%(filename, reason)
             showerror(errorMessage, **self.__errorMessageOptions)
             return False
