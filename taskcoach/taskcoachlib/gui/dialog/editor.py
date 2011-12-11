@@ -60,7 +60,7 @@ class Page(widgets.BookPage):
             if operating_system.isWindows():
                 # This ensures that if the TextCtrl value is more than can be 
                 # displayed, it will display the start instead of the end:
-                from taskcoachlib.thirdparty import SendKeys
+                from taskcoachlib.thirdparty import SendKeys # pylint: disable-msg=W0404
                 SendKeys.SendKeys('{END}+{HOME}')
             elif operating_system.isGTK() and isinstance(theEntry, wx.TextCtrl):
                 # This ensures that if the TextCtrl value is more than can be 
