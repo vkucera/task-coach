@@ -130,7 +130,6 @@ class wxSchedulerCore( wxSchedulerPaint ):
 		else:
 			raise ValueError( "Invalid value passed" )
 
-		self.InvalidateMinSize()
 		self.Refresh()
 		
 	def Delete( self, index ):
@@ -153,7 +152,6 @@ class wxSchedulerCore( wxSchedulerPaint ):
 		# Without that the object is never actually freed
 		schedule.Destroy()
 
-		self.InvalidateMinSize()
 		self.Refresh()
 		
 	def DeleteAll( self ):
