@@ -261,7 +261,6 @@ class wxSchedulerCore( wxSchedulerPaint ):
 		try:
 			for step in xrange( steps ):
 				self.SetViewType( wxSCHEDULER_NEXT )
-			self.InvalidateMinSize()
 		finally:
 			self.Thaw()
 
@@ -270,7 +269,6 @@ class wxSchedulerCore( wxSchedulerPaint ):
 		try:
 			for step in xrange( steps ):
 				self.SetViewType( wxSCHEDULER_PREV )
-			self.InvalidateMinSize()
 		finally:
 			self.Thaw()
 
@@ -280,7 +278,6 @@ class wxSchedulerCore( wxSchedulerPaint ):
 			date = wx.DateTime.Now()
 		self._currentDate = date
 		self._calculateWorkHour()
-		self.InvalidateMinSize()
 		self.Refresh()
 			
 	def SetDc( self, dc=None ):
@@ -327,7 +324,6 @@ class wxSchedulerCore( wxSchedulerPaint ):
 		Defaults it's start on Monday
 		"""
 		self._weekstart = weekstart
-		self.InvalidateMinSize()
 		self.Refresh()
 
 	def GetWeekStart( self ):
