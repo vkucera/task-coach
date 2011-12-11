@@ -179,7 +179,7 @@ macDMG = download_table(image='mac',
                         platform='Mac OS X', platform_lower='macosx',
                         platform_versions_supported='Mac OS X Tiger/10.4 (Universal) and newer',
                         prerequisites='none',
-                        installation='double click the package and drop the %(name)s application in your programs folder')
+                        installation='double click the package and drop the %(name)s application in your Applications folder')
 
 pages['download_for_mac'] = sep.join([download_header(platform='Mac OS X',
                                                       release='%(version)s'), 

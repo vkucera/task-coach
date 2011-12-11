@@ -47,30 +47,28 @@ class CategoryFilter(base.Filter):
         if not filteredCategories:
             return categorizables
         
-        filteredCategorizables = set()
         if self.__filterOnlyWhenAllCategoriesMatch:
-            allowedCategorizables = set(categorizables)
+            filteredCategorizables = set(categorizables)
             for category in filteredCategories:
-                allowedCategorizables &= self.__categorizablesBelongingToCategory(category)
+                filteredCategorizables &= self.__categorizablesBelongingToCategory(category)
         else:
-            allowedCategorizables = set()
+            filteredCategorizables = set()
             for category in filteredCategories: 
-                allowedCategorizables |= self.__categorizablesBelongingToCategory(category)
+                filteredCategorizables |= self.__categorizablesBelongingToCategory(category)
 
-        for categorizable in categorizables:
-            categorizablesToInvestigate = set([categorizable]) 
-            if self.treeMode():
-                categorizablesToInvestigate.update(child for child in categorizable.children(recursive=True) \
-                                                   if child in self.observable())
-            if allowedCategorizables & categorizablesToInvestigate:
-                filteredCategorizables.add(categorizable)
+        filteredCategorizables &= self.observable()
+        
+        if self.treeMode():
+            # Include all ancestors in the result 
+            for categorizable in filteredCategorizables.copy():
+                filteredCategorizables |= set(categorizable.ancestors())
         return filteredCategorizables
 
     @staticmethod
     def __categorizablesBelongingToCategory(category):
         categorizables = category.categorizables(recursive=True)
         for categorizable in categorizables.copy():
-            categorizables |= set(categorizable.children(recursive=True))            
+            categorizables |= set(categorizable.children(recursive=True))           
         return categorizables
         
     def onFilterMatchingChanged(self, event):

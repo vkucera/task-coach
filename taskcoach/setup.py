@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import platform, os
+import platform, os, sys
 from distutils.core import setup
 from taskcoachlib import meta
 
@@ -31,9 +31,16 @@ def findPackages(base):
         if os.path.isdir(fname) and \
                os.path.exists(os.path.join(fname, '__init__.py')):
             result.extend(findPackages(fname))
-
     return result
 
+
+def majorAndMinorPythonVersion():
+    info = sys.version_info
+    try:
+        return info.major, info.minor
+    except AttributeError:
+        return info[0], info[1]
+    
 
 setupOptions = { 
     'name': meta.filename,
@@ -53,7 +60,6 @@ setupOptions = {
         'License :: OSI Approved :: GNU General Public License (GPL)',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.5',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Topic :: Office/Business']}
@@ -73,15 +79,14 @@ if system == 'Linux':
 	    ('share/pixmaps', ['icons.in/taskcoach.png'])]
 elif system == 'Windows':
     setupOptions['scripts'].append('taskcoach.pyw')
-    import sys
-    info = sys.version_info
-    sys.path.insert(0, os.path.join('taskcoachlib', 'bin.in', 'windows', 'py%d%d' % (info.major, info.minor)))
+    major, minor = majorAndMinorPythonVersion()
+    sys.path.insert(0, os.path.join('taskcoachlib', 'bin.in', 'windows', 'py%d%d' % (major, minor)))
     import _pysyncml
 elif system == 'Darwin':
     # When packaging for MacOS, choose the right binary depending on
     # the platform word size. Actually, we're always packaging on 32
     # bits.
-    import sys, struct
+    import struct
     wordSize = '32' if struct.calcsize('L') == 4 else '64'
     sys.path.insert(0, os.path.join('taskcoachlib', 'bin.in', 'macos', 'IA%s'%wordSize))
     sys.path.insert(0, os.path.join('extension', 'macos', 'bin-ia32'))

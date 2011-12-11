@@ -51,17 +51,24 @@ class Page(widgets.BookPage):
         except KeyError:
             theEntry = self.entries()['firstEntry']
         theEntry.SetFocus()
+        self.__setSelection(theEntry)
+
+    def __setSelection(self, theEntry):
+        ''' If the entry has selectable text, select the text so that the user
+            can start typing over it immediately. '''
         try:
-            # This ensures that if the TextCtrl value is more than can be displayed,
-            # it will display the start instead of the end.
-            if operating_system.isMac():
-                theEntry.SetSelection(-1, -1)
-            elif operating_system.isWindows():
-                from taskcoachlib.thirdparty import SendKeys
+            if operating_system.isWindows():
+                # This ensures that if the TextCtrl value is more than can be 
+                # displayed, it will display the start instead of the end:
+                from taskcoachlib.thirdparty import SendKeys # pylint: disable-msg=W0404
                 SendKeys.SendKeys('{END}+{HOME}')
-            else:
+            elif operating_system.isGTK() and isinstance(theEntry, wx.TextCtrl):
+                # This ensures that if the TextCtrl value is more than can be 
+                # displayed, it will display the start instead of the end:
                 wx.Yield()
                 theEntry.SetSelection(len(theEntry.GetValue()), 0)
+            else:
+                theEntry.SetSelection(-1, -1)
         except (AttributeError, TypeError):
             pass # Not a TextCtrl
         

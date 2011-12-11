@@ -107,7 +107,6 @@ class wxScheduler( wxSchedulerCore, scrolled.ScrolledPanel ):
 			self._dirty = True
 		else:
 			if event.layoutNeeded:
-				self.InvalidateMinSize()
 				self.Refresh()
 			else:
 				self.RefreshSchedule(event.schedule)
