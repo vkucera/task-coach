@@ -60,7 +60,6 @@ class Page(widgets.BookPage):
                 from taskcoachlib.thirdparty import SendKeys
                 SendKeys.SendKeys('{END}+{HOME}')
             else:
-                wx.Yield()
                 theEntry.SetSelection(len(theEntry.GetValue()), 0)
         except (AttributeError, TypeError):
             pass # Not a TextCtrl
