@@ -1024,7 +1024,7 @@ class ToggleCategoryFilter(UICommand):
         # items isn't possible. Hence, we use wx.ITEM_CHECK, even for mutual 
         # exclusive categories.
         kind = wx.ITEM_CHECK
-        super(ToggleCategoryFilter, self).__init__(menuText='&' + subject,
+        super(ToggleCategoryFilter, self).__init__(menuText='&' + subject.replace('&', '&&'),
             helpText=_('Show/hide items belonging to %s')%subject, kind=kind, 
             *args, **kwargs)
 
