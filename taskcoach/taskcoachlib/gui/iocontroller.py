@@ -130,18 +130,10 @@ class IOController(object):
                 else:
                     return
             except persistence.xml.reader.XMLReaderTooNewException:
-                showerror(_('Cannot open %(filename)s\n'
-                            'because it was created by a newer version of %(name)s.\n'
-                            'Please upgrade %(name)s.')%\
-                          dict(filename=filename, name=meta.name))
+                self.__showTooNewErrorMessage(filename, showerror)
                 return
             except Exception:
-                # pylint: disable-msg=W0142
-                print ''.join(traceback.format_exception(*sys.exc_info()))
-                showerror(_('Error while reading %s:\n')%filename + \
-                    ''.join(traceback.format_exception(*sys.exc_info())) + \
-                    _('Are you sure it is a %s-file?')%meta.name, 
-                    **self.__errorMessageOptions)
+                self.__showGenericErrorMessage(filename, showerror)
                 return
             self.__messageCallback(_('Loaded %(nrtasks)d tasks from %(filename)s')%\
                 {'nrtasks': len(self.__taskFile.tasks()), 
@@ -167,16 +159,10 @@ class IOController(object):
                           **self.__errorMessageOptions)
                 return
             except persistence.xml.reader.XMLReaderTooNewException:
-                showerror(_('Cannot open %(filename)s\n'
-                            'because it was created by a newer version of %(name)s.\n'
-                            'Please upgrade %(name)s.')%\
-                          dict(filename=filename, name=meta.name))
+                self.__showTooNewErrorMessage(filename, showerror)
                 return
             except Exception:
-                showerror(_('Error while reading %s:\n')%filename + \
-                    ''.join(traceback.format_exception(*sys.exc_info())) + \
-                    _('Are you sure it is a %s-file?')%meta.name, 
-                    **self.__errorMessageOptions)
+                self.__showGenericErrorMessage(filename, showerror)
                 return                
             self.__messageCallback(_('Merged %(filename)s')%{'filename': filename}) 
             self.__addRecentFile(filename)
@@ -467,6 +453,19 @@ Break the lock?''') % filename,
         self.__messageCallback(_('Saved %(nrtasks)d tasks to %(filename)s')%\
             {'nrtasks': len(savedFile.tasks()), 
              'filename': savedFile.filename()})
+        
+    def __showTooNewErrorMessage(self, filename, showerror):
+        showerror(_('Cannot open %(filename)s\n'
+                    'because it was created by a newer version of %(name)s.\n'
+                    'Please upgrade %(name)s.')%\
+            dict(filename=filename, name=meta.name),
+            **self.__errorMessageOptions)
+        
+    def __showGenericErrorMessage(self, filename, showerror):
+        sys.stderr.write(''.join(traceback.format_exception(*sys.exc_info())))
+        limitedException = ''.join(traceback.format_exception(*sys.exc_info(), limit=10))
+        showerror(_('Error while reading %s:\n')%filename + \
+                    limitedException, **self.__errorMessageOptions)
 
     def __updateDefaultPath(self, filename):
         for options in [self.__tskFileOpenDialogOpts, 
