@@ -57,6 +57,7 @@ class wxSchedulerPaint( object ):
 		self._bitmap = None
 		self._minSize = None
 		self._drawHeaders = True
+		self._guardRedraw = False
 
 		self._periodWidth = 150
 		self._headerBounds = []
@@ -933,10 +934,14 @@ class wxSchedulerPaint( object ):
 
 		# Bad things may happen here from time to time.
 		if isinstance(self, wx.ScrolledWindow):
-			if self._resizable:
-				if int(width) > size.GetWidth() or int(height) > size.GetHeight():
-					self.SetVirtualSize(wx.Size(int(width), int(height)))
-					self.DrawBuffer()
+			if self._resizable and not self._guardRedraw:
+				self._guardRedraw = True
+				try:
+					if int(width) > size.GetWidth() or int(height) > size.GetHeight():
+						self.SetVirtualSize(wx.Size(int(width), int(height)))
+						self.DrawBuffer()
+				finally:
+					self._guardRedraw = False
 
 	def RefreshSchedule( self, schedule ):
 		if schedule.bounds is not None:
