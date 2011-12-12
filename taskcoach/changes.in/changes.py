@@ -33,6 +33,8 @@ be invisible.''', '3452446'),
         Bug('''On Windows, when the user tries to save the task file in a 
 folder where she doesn't have permission, Task Coach would not give a proper
 warning.'''),
+        Bug('''When editing multiple items at once, show all descriptions in the
+description field for easier editing and/or copying.''', '3446417'),
         ],
     ),
 
