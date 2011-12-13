@@ -88,6 +88,8 @@ footer = '''
                        title="List of features in the current version of %(name)s">Features</a></li>
                     <li><a href="i18n.html" 
                                title="Available translations">Translations</a></li>
+                    <li><a href="https://sourceforge.net/projects/taskcoach/?sort=usefulness#reviews-n-ratings"
+                           title="See what others have to say about %(name)s">User reviews</a></li>
                     <li><a href="changes.html" 
                        title="An overview of bugs fixed and features added per version of %(name)s">Change history</a></li>
                     <li><a href="license.html" 
