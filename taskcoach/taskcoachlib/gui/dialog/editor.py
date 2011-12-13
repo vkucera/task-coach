@@ -106,7 +106,11 @@ class SubjectPage(Page):
 
     def addDescriptionEntry(self):
         # pylint: disable-msg=W0201
-        currentDescription = self.items[0].description() if len(self.items) == 1 else _('Edit to change all descriptions')
+        def combinedDescription(items):
+            return u'[%s]\n\n'%_('Edit to change all descriptions') + \
+                '\n\n'.join(item.description() for item in items)
+
+        currentDescription = self.items[0].description() if len(self.items) == 1 else combinedDescription(self.items)
         self._descriptionEntry = widgets.MultiLineTextCtrl(self, currentDescription)
         self._descriptionSync = attributesync.AttributeSync('description', 
             self._descriptionEntry, currentDescription, self.items,
@@ -1040,7 +1044,11 @@ class EffortEditBook(Page):
 
     def addDescriptionEntry(self):
         # pylint: disable-msg=W0201
-        currentDescription = self.items[0].description() if len(self.items) == 1 else _('Edit to change all descriptions')
+        def combinedDescription(items):
+            return u'[%s]\n\n'%_('Edit to change all descriptions') + \
+                '\n\n'.join(item.description() for item in items)
+                
+        currentDescription = self.items[0].description() if len(self.items) == 1 else combinedDescription(self.items)
         self._descriptionEntry = widgets.MultiLineTextCtrl(self, currentDescription)
         self._descriptionEntry.SetSizeHints(300, 150)
         self._descriptionSync = attributesync.AttributeSync('description', 
