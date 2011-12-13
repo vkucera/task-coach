@@ -196,8 +196,16 @@ class SimpleFTP(ftplib.FTP, object):
                     print info
             for filename in filenames:
                 print 'Store %s'%os.path.join(root, filename)
-                self.storbinary('STOR %s'%filename, 
-                                file(os.path.join(root, filename), 'rb'))
+                try:
+                    self.storbinary('STOR %s'%filename, 
+                                    file(os.path.join(root, filename), 'rb'))
+                except ftplib.error_perm, info:
+                    if str(info).endswith('Overwrite permission denied'):
+                        self.delete(filename)
+                        self.storbinary('STOR %s'%filename, 
+                                        file(os.path.join(root, filename), 'rb'))
+                    else:
+                        raise
             self.cwd(self.remote_root)
 
     def get(self, filename):
