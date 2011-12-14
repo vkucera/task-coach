@@ -27,7 +27,7 @@ class TranslationIntegrityTestsMixin(object):
     ''' Unittests for translations. This class is subclassed below for each
         translated string in each language. '''
     
-    conversionSpecificationRE = re.compile('%\(w+\)[sd]')
+    conversionSpecificationRE = re.compile('%\(\w+\)[sd]')
     
     @staticmethod
     def countMatches(regex, searchString):

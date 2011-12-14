@@ -27,6 +27,7 @@ Release('1.3.4', 'December 14, 2011',
     bugsFixed=[
         Bug('''Changing the color and font of tasks in the preferences dialog
 didn't work.'''),
+        Bug('''In Spanish, showing reminders wouldn't work.''', '3459524'),
         ],
     ),
             

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Task Coach\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-04 19:42+0000\n"
+"POT-Creation-Date: 2011-12-14 20:52+0000\n"
 "PO-Revision-Date: 2011-02-13 11:40+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Slovak\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-11 20:57+0000\n"
-"X-Generator: Launchpad (build 14450)\n"
+"X-Launchpad-Export-Date: 2011-12-14 22:02+0000\n"
+"X-Generator: Launchpad (build 14487)\n"
 "X-Poedit-Country: slo\n"
 "X-Poedit-Language: slo\n"
 "Generated-By: pygettext.py 1.5\n"
@@ -990,8 +990,8 @@ msgstr ""
 msgid "No icon"
 msgstr "Bez ikony"
 
-#: taskcoachlib/gui/dialog/editor.py:83 taskcoachlib/gui/dialog/editor.py:108
-#: taskcoachlib/gui/dialog/editor.py:1040
+#: taskcoachlib/gui/dialog/editor.py:90 taskcoachlib/gui/dialog/editor.py:119
+#: taskcoachlib/gui/dialog/editor.py:1055
 #: taskcoachlib/gui/viewer/attachment.py:85
 #: taskcoachlib/gui/viewer/category.py:88
 #: taskcoachlib/gui/viewer/effort.py:184 taskcoachlib/gui/viewer/note.py:117
@@ -1002,11 +1002,11 @@ msgstr "Bez ikony"
 msgid "Description"
 msgstr "Popis"
 
-#: taskcoachlib/gui/dialog/editor.py:92
+#: taskcoachlib/gui/dialog/editor.py:99
 msgid "Edit to change all subjects"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:98
+#: taskcoachlib/gui/dialog/editor.py:105
 #: taskcoachlib/gui/dialog/templates.py:109
 #: taskcoachlib/gui/viewer/attachment.py:75
 #: taskcoachlib/gui/viewer/base.py:290 taskcoachlib/gui/viewer/category.py:80
@@ -1017,12 +1017,12 @@ msgstr ""
 msgid "Subject"
 msgstr "Predmet"
 
-#: taskcoachlib/gui/dialog/editor.py:102
-#: taskcoachlib/gui/dialog/editor.py:1033
+#: taskcoachlib/gui/dialog/editor.py:110
+#: taskcoachlib/gui/dialog/editor.py:1045
 msgid "Edit to change all descriptions"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:129 taskcoachlib/gui/uicommand.py:2488
+#: taskcoachlib/gui/dialog/editor.py:140 taskcoachlib/gui/uicommand.py:2488
 #: taskcoachlib/gui/viewer/task.py:817
 #: taskcoachlib/gui/wizard/csvimport.py:226
 #: taskcoachlib/persistence/csv/reader.py:84
@@ -1030,55 +1030,55 @@ msgstr ""
 msgid "Priority"
 msgstr "Priorita"
 
-#: taskcoachlib/gui/dialog/editor.py:145
+#: taskcoachlib/gui/dialog/editor.py:156
 msgid "Mutually exclusive"
 msgstr "Vzájomne sa vylučujúce"
 
-#: taskcoachlib/gui/dialog/editor.py:152
+#: taskcoachlib/gui/dialog/editor.py:163
 msgid "Subcategories"
 msgstr "Podkategórie"
 
-#: taskcoachlib/gui/dialog/editor.py:173
+#: taskcoachlib/gui/dialog/editor.py:184
 msgid "Edit to change location of all attachments"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:181
+#: taskcoachlib/gui/dialog/editor.py:192
 msgid "Browse"
 msgstr "Prechádzať"
 
-#: taskcoachlib/gui/dialog/editor.py:185
+#: taskcoachlib/gui/dialog/editor.py:196
 msgid "Location"
 msgstr "Umiestnenie"
 
-#: taskcoachlib/gui/dialog/editor.py:206
+#: taskcoachlib/gui/dialog/editor.py:217
 msgid "Appearance"
 msgstr "Vzhľad"
 
-#: taskcoachlib/gui/dialog/editor.py:216
+#: taskcoachlib/gui/dialog/editor.py:227
 #: taskcoachlib/gui/dialog/preferences.py:119
 msgid "Foreground color"
 msgstr "Farba popredia"
 
-#: taskcoachlib/gui/dialog/editor.py:217
+#: taskcoachlib/gui/dialog/editor.py:228
 #: taskcoachlib/gui/dialog/preferences.py:119
 msgid "Background color"
 msgstr "Farba pozadia"
 
-#: taskcoachlib/gui/dialog/editor.py:242
+#: taskcoachlib/gui/dialog/editor.py:253
 #: taskcoachlib/gui/dialog/preferences.py:120
 msgid "Font"
 msgstr "Písmo"
 
-#: taskcoachlib/gui/dialog/editor.py:251
+#: taskcoachlib/gui/dialog/editor.py:262
 #: taskcoachlib/gui/dialog/preferences.py:120
 msgid "Icon"
 msgstr "Ikona"
 
-#: taskcoachlib/gui/dialog/editor.py:259
+#: taskcoachlib/gui/dialog/editor.py:270
 msgid "Dates"
 msgstr "Dátumy"
 
-#: taskcoachlib/gui/dialog/editor.py:276
+#: taskcoachlib/gui/dialog/editor.py:287
 #: taskcoachlib/gui/dialog/templates.py:112
 #: taskcoachlib/gui/viewer/task.py:796
 #: taskcoachlib/gui/wizard/csvimport.py:227
@@ -1088,7 +1088,7 @@ msgstr "Dátumy"
 msgid "Start date"
 msgstr "Dátum začiatku"
 
-#: taskcoachlib/gui/dialog/editor.py:277
+#: taskcoachlib/gui/dialog/editor.py:288
 #: taskcoachlib/gui/dialog/templates.py:115
 #: taskcoachlib/gui/viewer/task.py:797
 #: taskcoachlib/gui/wizard/csvimport.py:228
@@ -1098,7 +1098,7 @@ msgstr "Dátum začiatku"
 msgid "Due date"
 msgstr "Termín"
 
-#: taskcoachlib/gui/dialog/editor.py:278
+#: taskcoachlib/gui/dialog/editor.py:289
 #: taskcoachlib/gui/dialog/templates.py:118
 #: taskcoachlib/gui/viewer/task.py:798
 #: taskcoachlib/gui/wizard/csvimport.py:229
@@ -1108,80 +1108,80 @@ msgstr "Termín"
 msgid "Completion date"
 msgstr "Dátum dokončenia"
 
-#: taskcoachlib/gui/dialog/editor.py:315
+#: taskcoachlib/gui/dialog/editor.py:326
 #: taskcoachlib/gui/dialog/templates.py:121
 #: taskcoachlib/gui/viewer/task.py:829
 msgid "Reminder"
 msgstr "Pripomienka"
 
-#: taskcoachlib/gui/dialog/editor.py:325 taskcoachlib/gui/viewer/task.py:813
+#: taskcoachlib/gui/dialog/editor.py:336 taskcoachlib/gui/viewer/task.py:813
 msgid "Recurrence"
 msgstr "Opakovanie"
 
-#: taskcoachlib/gui/dialog/editor.py:340
+#: taskcoachlib/gui/dialog/editor.py:351
 msgid "Progress"
 msgstr "Priebeh"
 
-#: taskcoachlib/gui/dialog/editor.py:357
+#: taskcoachlib/gui/dialog/editor.py:368
 msgid "Percentage complete"
 msgstr "Dokončených percent"
 
-#: taskcoachlib/gui/dialog/editor.py:366
+#: taskcoachlib/gui/dialog/editor.py:377
 msgid "Use application-wide setting"
 msgstr "Použiť nastavenie aplikácie"
 
-#: taskcoachlib/gui/dialog/editor.py:367
+#: taskcoachlib/gui/dialog/editor.py:378
 msgid "No"
 msgstr "Nie"
 
-#: taskcoachlib/gui/dialog/editor.py:367
+#: taskcoachlib/gui/dialog/editor.py:378
 msgid "Yes"
 msgstr "Áno"
 
-#: taskcoachlib/gui/dialog/editor.py:377
+#: taskcoachlib/gui/dialog/editor.py:388
 msgid "Mark task completed when all children are completed?"
 msgstr "Označiť úlohu ako dokončenú, keď sú dokončené všetky podúlohy?"
 
-#: taskcoachlib/gui/dialog/editor.py:387 taskcoachlib/gui/dialog/editor.py:409
+#: taskcoachlib/gui/dialog/editor.py:398 taskcoachlib/gui/dialog/editor.py:420
 #: taskcoachlib/gui/uicommand.py:2488 taskcoachlib/gui/viewer/task.py:814
 #: taskcoachlib/gui/wizard/csvimport.py:230
 #: taskcoachlib/persistence/csv/reader.py:95
 msgid "Budget"
 msgstr "Rozpočet"
 
-#: taskcoachlib/gui/dialog/editor.py:417 taskcoachlib/gui/uicommand.py:2488
+#: taskcoachlib/gui/dialog/editor.py:428 taskcoachlib/gui/uicommand.py:2488
 #: taskcoachlib/gui/viewer/effort.py:193 taskcoachlib/gui/viewer/task.py:815
 msgid "Time spent"
 msgstr "Strávený čas"
 
-#: taskcoachlib/gui/dialog/editor.py:434 taskcoachlib/gui/viewer/task.py:816
+#: taskcoachlib/gui/dialog/editor.py:445 taskcoachlib/gui/viewer/task.py:816
 msgid "Budget left"
 msgstr "Zostáva v rozpočte"
 
-#: taskcoachlib/gui/dialog/editor.py:459 taskcoachlib/gui/viewer/task.py:818
+#: taskcoachlib/gui/dialog/editor.py:470 taskcoachlib/gui/viewer/task.py:818
 #: taskcoachlib/gui/wizard/csvimport.py:232
 #: taskcoachlib/persistence/csv/reader.py:114
 msgid "Hourly fee"
 msgstr "Hodinová odmena"
 
-#: taskcoachlib/gui/dialog/editor.py:468 taskcoachlib/gui/uicommand.py:2488
+#: taskcoachlib/gui/dialog/editor.py:479 taskcoachlib/gui/uicommand.py:2488
 #: taskcoachlib/gui/viewer/task.py:819
 #: taskcoachlib/gui/wizard/csvimport.py:231
 #: taskcoachlib/persistence/csv/reader.py:109
 msgid "Fixed fee"
 msgstr "Pevná odmena"
 
-#: taskcoachlib/gui/dialog/editor.py:474 taskcoachlib/gui/uicommand.py:2488
+#: taskcoachlib/gui/dialog/editor.py:485 taskcoachlib/gui/uicommand.py:2488
 #: taskcoachlib/gui/viewer/effort.py:195 taskcoachlib/gui/viewer/task.py:820
 msgid "Revenue"
 msgstr "Odmena"
 
-#: taskcoachlib/gui/dialog/editor.py:557 taskcoachlib/gui/viewer/effort.py:36
+#: taskcoachlib/gui/dialog/editor.py:568 taskcoachlib/gui/viewer/effort.py:36
 #: taskcoachlib/help/__init__.py:75 taskcoachlib/help/__init__.py:214
 msgid "Effort"
 msgstr "Práca"
 
-#: taskcoachlib/gui/dialog/editor.py:595
+#: taskcoachlib/gui/dialog/editor.py:606
 #: taskcoachlib/gui/viewer/category.py:38
 #: taskcoachlib/gui/viewer/effort.py:185 taskcoachlib/gui/viewer/note.py:134
 #: taskcoachlib/gui/viewer/task.py:764 taskcoachlib/help/__init__.py:80
@@ -1189,86 +1189,86 @@ msgstr "Práca"
 msgid "Categories"
 msgstr "Kategórie"
 
-#: taskcoachlib/gui/dialog/editor.py:630
+#: taskcoachlib/gui/dialog/editor.py:641
 msgid "Attachments"
 msgstr "Prílohy"
 
-#: taskcoachlib/gui/dialog/editor.py:668 taskcoachlib/gui/viewer/note.py:37
+#: taskcoachlib/gui/dialog/editor.py:679 taskcoachlib/gui/viewer/note.py:37
 #: taskcoachlib/help/__init__.py:85 taskcoachlib/help/__init__.py:275
 msgid "Notes"
 msgstr "Poznámky"
 
-#: taskcoachlib/gui/dialog/editor.py:710 taskcoachlib/gui/viewer/task.py:773
+#: taskcoachlib/gui/dialog/editor.py:721 taskcoachlib/gui/viewer/task.py:773
 msgid "Prerequisites"
 msgstr "Požiadavky"
 
-#: taskcoachlib/gui/dialog/editor.py:935
+#: taskcoachlib/gui/dialog/editor.py:946
 msgid "Edit task"
 msgstr "Upraviť úlohu"
 
-#: taskcoachlib/gui/dialog/editor.py:944
+#: taskcoachlib/gui/dialog/editor.py:955
 #: taskcoachlib/gui/dialog/reminder.py:52
 #: taskcoachlib/gui/viewer/effort.py:183
 msgid "Task"
 msgstr "Úloha"
 
-#: taskcoachlib/gui/dialog/editor.py:960
+#: taskcoachlib/gui/dialog/editor.py:971
 msgid "Start"
 msgstr "Začať"
 
-#: taskcoachlib/gui/dialog/editor.py:973
+#: taskcoachlib/gui/dialog/editor.py:984
 msgid "Stop"
 msgstr "Zastaviť"
 
-#: taskcoachlib/gui/dialog/editor.py:979
+#: taskcoachlib/gui/dialog/editor.py:990
 msgid "Start tracking from last stop time"
 msgstr "Začať merať od posledného zastavenia"
 
-#: taskcoachlib/gui/dialog/editor.py:986
+#: taskcoachlib/gui/dialog/editor.py:997
 msgid "Stop tracking now"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1017
+#: taskcoachlib/gui/dialog/editor.py:1028
 msgid "Warning: start must be earlier than stop"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1153
+#: taskcoachlib/gui/dialog/editor.py:1168
 msgid "Multiple tasks"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1154
+#: taskcoachlib/gui/dialog/editor.py:1169
 msgid "%s (task)"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1159
+#: taskcoachlib/gui/dialog/editor.py:1174
 msgid "Multiple categories"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1160
+#: taskcoachlib/gui/dialog/editor.py:1175
 msgid "%s (category)"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1165
+#: taskcoachlib/gui/dialog/editor.py:1180
 msgid "Multiple notes"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1166
+#: taskcoachlib/gui/dialog/editor.py:1181
 msgid "%s (note)"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1171
+#: taskcoachlib/gui/dialog/editor.py:1186
 msgid "Multiple attachments"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1172
+#: taskcoachlib/gui/dialog/editor.py:1187
 msgid "%s (attachment)"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1177
+#: taskcoachlib/gui/dialog/editor.py:1192
 msgid "Multiple efforts"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1178
+#: taskcoachlib/gui/dialog/editor.py:1193
 msgid "%s (effort)"
 msgstr ""
 
@@ -1377,19 +1377,19 @@ msgid ""
 "on the next export."
 msgstr ""
 
-#: taskcoachlib/gui/dialog/export.py:237 taskcoachlib/gui/iocontroller.py:312
+#: taskcoachlib/gui/dialog/export.py:237 taskcoachlib/gui/iocontroller.py:298
 msgid "Export as CSV"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/export.py:256 taskcoachlib/gui/iocontroller.py:319
+#: taskcoachlib/gui/dialog/export.py:256 taskcoachlib/gui/iocontroller.py:305
 msgid "Export as iCalendar"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/export.py:272 taskcoachlib/gui/iocontroller.py:305
+#: taskcoachlib/gui/dialog/export.py:272 taskcoachlib/gui/iocontroller.py:291
 msgid "Export as HTML"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/export.py:288 taskcoachlib/gui/iocontroller.py:325
+#: taskcoachlib/gui/dialog/export.py:288 taskcoachlib/gui/iocontroller.py:311
 msgid "Export as Todo.txt"
 msgstr ""
 
@@ -2023,34 +2023,19 @@ msgstr ""
 msgid "Open"
 msgstr "Otvoriť"
 
-#: taskcoachlib/gui/iocontroller.py:133 taskcoachlib/gui/iocontroller.py:170
-msgid ""
-"Cannot open %(filename)s\n"
-"because it was created by a newer version of %(name)s.\n"
-"Please upgrade %(name)s."
-msgstr ""
-
-#: taskcoachlib/gui/iocontroller.py:141 taskcoachlib/gui/iocontroller.py:176
-msgid "Error while reading %s:\n"
-msgstr "Chyba pri čítaní %s:\n"
-
-#: taskcoachlib/gui/iocontroller.py:143 taskcoachlib/gui/iocontroller.py:178
-msgid "Are you sure it is a %s-file?"
-msgstr "Ste si istý, že je to súbor %s?"
-
-#: taskcoachlib/gui/iocontroller.py:146
+#: taskcoachlib/gui/iocontroller.py:138
 msgid "Loaded %(nrtasks)d tasks from %(filename)s"
 msgstr "Načítaných %(nrtasks)d úloh z %(filename)s"
 
-#: taskcoachlib/gui/iocontroller.py:150
+#: taskcoachlib/gui/iocontroller.py:142
 msgid "Cannot open %s because it doesn't exist"
 msgstr "Nemožno otvoriť %s, pretože neexistuje"
 
-#: taskcoachlib/gui/iocontroller.py:160
+#: taskcoachlib/gui/iocontroller.py:152
 msgid "Merge"
 msgstr "Zlúčiť"
 
-#: taskcoachlib/gui/iocontroller.py:165
+#: taskcoachlib/gui/iocontroller.py:157
 msgid ""
 "Cannot open %(filename)s\n"
 "because it is locked."
@@ -2058,19 +2043,19 @@ msgstr ""
 "Nemôžem otvoriť súbor %(filename)s\n"
 "pretože je zamknutý."
 
-#: taskcoachlib/gui/iocontroller.py:181
+#: taskcoachlib/gui/iocontroller.py:167
 msgid "Merged %(filename)s"
 msgstr "Zlúčené %(filename)s"
 
-#: taskcoachlib/gui/iocontroller.py:198
+#: taskcoachlib/gui/iocontroller.py:184
 msgid "Save as"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:211
+#: taskcoachlib/gui/iocontroller.py:197
 msgid "Save selection"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:244
+#: taskcoachlib/gui/iocontroller.py:230
 msgid ""
 "Cannot save %s\n"
 "It is locked by another instance of %s.\n"
@@ -2078,7 +2063,7 @@ msgstr ""
 "Nemôžem uložiť %s\n"
 "je zamknutá inou inštanciou %s.\n"
 
-#: taskcoachlib/gui/iocontroller.py:249
+#: taskcoachlib/gui/iocontroller.py:235
 msgid ""
 "Cannot save %s\n"
 "%s"
@@ -2086,41 +2071,41 @@ msgstr ""
 "Nemôžem uložiť %s\n"
 "%s"
 
-#: taskcoachlib/gui/iocontroller.py:259
+#: taskcoachlib/gui/iocontroller.py:245
 msgid "Import template"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:261
+#: taskcoachlib/gui/iocontroller.py:247
 msgid "%s template files (*.tsktmpl)|*.tsktmpl"
 msgstr "%s súbory šablón (*.tsktmpl)|*.tsktmpl"
 
-#: taskcoachlib/gui/iocontroller.py:267
+#: taskcoachlib/gui/iocontroller.py:253
 msgid ""
 "Cannot import template %s\n"
 "%s"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:296
+#: taskcoachlib/gui/iocontroller.py:282
 msgid "Exported %(count)d items to %(filename)s"
 msgstr "%(count)d položiek exportovaných do %(filename)s"
 
-#: taskcoachlib/gui/iocontroller.py:351
+#: taskcoachlib/gui/iocontroller.py:337
 msgid "Finished synchronization"
 msgstr "Synchornizácia dokončená"
 
-#: taskcoachlib/gui/iocontroller.py:361
+#: taskcoachlib/gui/iocontroller.py:347
 msgid "Note conflict"
 msgstr "Konflikt poznámok"
 
-#: taskcoachlib/gui/iocontroller.py:365
+#: taskcoachlib/gui/iocontroller.py:351
 msgid "Task conflict"
 msgstr "Konflikt úloh"
 
-#: taskcoachlib/gui/iocontroller.py:377
+#: taskcoachlib/gui/iocontroller.py:363
 msgid "Synchronization status"
 msgstr "Stav synchronizácie"
 
-#: taskcoachlib/gui/iocontroller.py:385
+#: taskcoachlib/gui/iocontroller.py:371
 msgid ""
 "Cannot open %s\n"
 "%s"
@@ -2128,13 +2113,13 @@ msgstr ""
 "Nedá sa otvoriť %s\n"
 "%s"
 
-#: taskcoachlib/gui/iocontroller.py:419
+#: taskcoachlib/gui/iocontroller.py:405
 msgid ""
 "A file named %s already exists.\n"
 "Do you want to replace it?"
 msgstr "Súbor \"%s\" už existuje."
 
-#: taskcoachlib/gui/iocontroller.py:431
+#: taskcoachlib/gui/iocontroller.py:417
 msgid ""
 "You have unsaved changes.\n"
 "Save before closing?"
@@ -2142,11 +2127,11 @@ msgstr ""
 "Od posledného uloženia sú zmeny.\n"
 "Uložiť pred zavretím?"
 
-#: taskcoachlib/gui/iocontroller.py:432
+#: taskcoachlib/gui/iocontroller.py:418
 msgid "%s: save changes?"
 msgstr "%s: uložiť zmeny?"
 
-#: taskcoachlib/gui/iocontroller.py:442
+#: taskcoachlib/gui/iocontroller.py:428
 msgid ""
 "Cannot open %s because it is locked.\n"
 "\n"
@@ -2158,11 +2143,11 @@ msgid ""
 "Break the lock?"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:450 taskcoachlib/gui/iocontroller.py:457
+#: taskcoachlib/gui/iocontroller.py:436 taskcoachlib/gui/iocontroller.py:443
 msgid "%s: file locked"
 msgstr "%s: súbor je zamknutý"
 
-#: taskcoachlib/gui/iocontroller.py:455
+#: taskcoachlib/gui/iocontroller.py:441
 msgid ""
 "Cannot acquire a lock because locking is not supported\n"
 "on the location of %s.\n"
@@ -2172,13 +2157,24 @@ msgstr ""
 "v %s podporované.\n"
 "Otvoriť %s bez zámku?"
 
-#: taskcoachlib/gui/iocontroller.py:462
+#: taskcoachlib/gui/iocontroller.py:448
 msgid "Closed %s"
 msgstr "Zavreté %s"
 
-#: taskcoachlib/gui/iocontroller.py:467
+#: taskcoachlib/gui/iocontroller.py:453
 msgid "Saved %(nrtasks)d tasks to %(filename)s"
 msgstr "Uložených %(nrtasks)d úloh do %(filename)s"
+
+#: taskcoachlib/gui/iocontroller.py:458
+msgid ""
+"Cannot open %(filename)s\n"
+"because it was created by a newer version of %(name)s.\n"
+"Please upgrade %(name)s."
+msgstr ""
+
+#: taskcoachlib/gui/iocontroller.py:467
+msgid "Error while reading %s:\n"
+msgstr "Chyba pri čítaní %s:\n"
 
 #: taskcoachlib/gui/iphone.py:32
 msgid "Synchronizing..."
@@ -6316,3 +6312,6 @@ msgstr ""
 #: taskcoachlib/widgets/textctrl.py:77
 msgid "Error opening URL"
 msgstr ""
+
+#~ msgid "Are you sure it is a %s-file?"
+#~ msgstr "Ste si istý, že je to súbor %s?"
