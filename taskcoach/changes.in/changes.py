@@ -22,12 +22,14 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.4', 'December 14, 2011',
+Release('1.3.4', 'December 16, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Changing the color and font of tasks in the preferences dialog
 didn't work.'''),
         Bug('''In Spanish, showing reminders wouldn't work.''', '3459524'),
+        Bug('''Fix a small translation error in the French translation.''', 
+            '3459028'),
         ],
     ),
             
