@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.4', 'December 16, 2011',
+Release('1.3.4', 'December 17, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Changing the color and font of tasks in the preferences dialog
