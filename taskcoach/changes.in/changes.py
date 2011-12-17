@@ -31,6 +31,10 @@ didn't work.'''),
         Bug('''Fix a small translation error in the French translation.''', 
             '3459028'),
         ],
+    featuresAdded=[
+        Feature('''Provide for an option to always round effort up to the next
+increment in the effort viewer.''', 'http://uservoice.com/a/5Hbrf'),
+        ],
     ),
             
 Release('1.3.3', 'December 13, 2011',

@@ -2597,3 +2597,23 @@ class RoundingPrecision(ToolbarChoiceCommandMixin, ViewerCommand, SettingsComman
     def doChoice(self, choice):
         self.settings.set(self.viewer.settingsSection(), 'round', choice)
   
+  
+class AlwaysRoundUp(ViewerCommand, SettingsCommand):
+    def appendToToolBar(self, toolbar):
+        ''' Add our checkbox control to the toolbar. '''
+        # pylint: disable-msg=W0201
+        self.checkboxCtrl = wx.CheckBox(toolbar, label=_('Always round up'))
+        self.checkboxCtrl.Bind(wx.EVT_CHECKBOX, self.onCheck)
+        toolbar.AddControl(self.checkboxCtrl)
+        
+    def onCheck(self, event):
+        self.settings.set(self.viewer.settingsSection(), 'alwaysroundup', str(event.IsChecked()))
+ 
+    def doCommand(self, event):
+        pass # Not used
+    
+    def setValue(self, value):
+        self.checkboxCtrl.SetValue(value)
+       
+    def enable(self, enable=True):
+        self.checkboxCtrl.Enable(enable)

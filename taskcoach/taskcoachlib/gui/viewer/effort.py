@@ -56,19 +56,25 @@ class EffortViewer(base.ListViewer,
                                               eventType=effort.Effort.appearanceChangedEventType())
         patterns.Publisher().registerObserver(self.onRoundingChanged,
                                               eventType='%s.round'%self.settingsSection())
+        patterns.Publisher().registerObserver(self.onRoundingChanged,
+                                              eventType='%s.alwaysroundup'%self.settingsSection())
         
     def onRoundingChanged(self, event): # pylint: disable-msg=W0613
+        self.initRoundingToolBarUICommands()
         self.refresh()
         
     def initModeToolBarUICommands(self):
         self.aggregationUICommand.setChoice(self.aggregation)
-        self.initRoundingToolBarUICommand()
+        self.initRoundingToolBarUICommands()
         
-    def initRoundingToolBarUICommand(self):
+    def initRoundingToolBarUICommands(self):
         aggregated = self.isShowingAggregatedEffort()
         rounding = self.settings.get(self.settingsSection(), 'round') if aggregated else '0'
         self.roundingUICommand.setChoice(rounding)
         self.roundingUICommand.enable(aggregated)
+        alwaysRoundUp = self.settings.getboolean(self.settingsSection(), 'alwaysroundup')
+        self.alwaysRoundUpUICommand.setValue(alwaysRoundUp)
+        self.alwaysRoundUpUICommand.enable(aggregated and rounding != '0')
         
     def domainObjectsToView(self):
         if self.__domainObjectsToView is None:
@@ -123,7 +129,7 @@ class EffortViewer(base.ListViewer,
         self._showTotalColumns(show=aggregation!='details')
         if autoResizing:
             self.widget.ToggleAutoResizing(True)
-        self.initRoundingToolBarUICommand()
+        self.initRoundingToolBarUICommands()
         patterns.Event('effortviewer.aggregation').send()
             
     def isShowingAggregatedEffort(self):
@@ -157,7 +163,7 @@ class EffortViewer(base.ListViewer,
             
     def createWidget(self):
         imageList = self.createImageList() # Has side-effects
-        self._columns = self._createColumns()
+        self._columns = self._createColumns() # pylint: disable-msg=W0201
         itemPopupMenu = menu.EffortPopupMenu(self.parent, self.taskFile.tasks(),
             self.taskFile.efforts(), self.settings, self)
         columnPopupMenu = menu.EffortViewerColumnPopupMenu(self)
@@ -290,10 +296,12 @@ class EffortViewer(base.ListViewer,
     def createModeToolBarUICommands(self):
         # This is an instance variable so that the choice can be changed 
         # programmatically
+        # pylint: disable-msg=W0201
         self.aggregationUICommand = \
             uicommand.EffortViewerAggregationChoice(viewer=self)
         self.roundingUICommand = uicommand.RoundingPrecision(viewer=self, settings=self.settings)
-        return (self.aggregationUICommand, self.roundingUICommand)
+        self.alwaysRoundUpUICommand = uicommand.AlwaysRoundUp(viewer=self, settings=self.settings)
+        return (self.aggregationUICommand, self.roundingUICommand, self.alwaysRoundUpUICommand)
 
     def getItemImages(self, index, column=0): # pylint: disable-msg=W0613
         return {wx.TreeItemIcon_Normal: -1}
@@ -376,7 +384,8 @@ class EffortViewer(base.ListViewer,
     
     def round(self, duration):
         round_precision = self.settings.getint(self.settingsSection(), 'round')
-        return duration.round(seconds=round_precision)
+        alwaysRoundUp = self.settings.getboolean(self.settingsSection(), 'alwaysroundup')
+        return duration.round(seconds=round_precision, alwaysUp=alwaysRoundUp)
     
     def newItemDialog(self, *args, **kwargs):
         selectedTasks = kwargs.get('selectedTasks', [])
