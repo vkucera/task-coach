@@ -343,6 +343,12 @@ class Viewer(wx.Panel):
     def getFilterUICommands(self):
         return []
     
+    def supportsRounding(self):
+        return False
+    
+    def getRoundingUICommands(self):
+        return []
+    
     def createToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
         table = wx.AcceleratorTable([(wx.ACCEL_CMD, ord('X'), wx.ID_CUT),

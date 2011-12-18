@@ -2596,22 +2596,44 @@ class RoundingPrecision(ToolbarChoiceCommandMixin, ViewerCommand, SettingsComman
 
     def doChoice(self, choice):
         self.settings.set(self.viewer.settingsSection(), 'round', choice)
+
+
+class RoundBy(UIRadioCommand, ViewerCommand, SettingsCommand):        
+    def isSettingChecked(self):
+        return self.settings.get(self.viewer.settingsSection(), 'round') == self.value
+    
+    def doCommand(self, event):
+        self.settings.set(self.viewer.settingsSection(), 'round', self.value)
+
   
-  
-class AlwaysRoundUp(ViewerCommand, SettingsCommand):
+class AlwaysRoundUp(UICheckCommand, ViewerCommand, SettingsCommand):
+    def __init__(self, *args, **kwargs):
+        super(AlwaysRoundUp, self).__init__(\
+            menuText=_('&Always round up'),
+            helpText=_('Always round up to the next rounding increment'), 
+            *args, **kwargs)
+
     def appendToToolBar(self, toolbar):
-        ''' Add our checkbox control to the toolbar. '''
+        ''' Add a checkbox control to the toolbar. '''
         # pylint: disable-msg=W0201
-        self.checkboxCtrl = wx.CheckBox(toolbar, label=_('Always round up'))
+        self.checkboxCtrl = wx.CheckBox(toolbar, label=self.menuText)
         self.checkboxCtrl.Bind(wx.EVT_CHECKBOX, self.onCheck)
         toolbar.AddControl(self.checkboxCtrl)
+
+    def isSettingChecked(self):
+        return self.settings.getboolean(self.viewer.settingsSection(),
+                                        'alwaysroundup')
         
     def onCheck(self, event):
-        self.settings.set(self.viewer.settingsSection(), 'alwaysroundup', str(event.IsChecked()))
+        self.setSetting(event.IsChecked())
  
     def doCommand(self, event):
-        pass # Not used
+        self.setSetting(self._isMenuItemChecked(event))
     
+    def setSetting(self, alwaysRoundUp):
+        self.settings.set(self.viewer.settingsSection(), 'alwaysroundup',
+                          str(alwaysRoundUp))
+        
     def setValue(self, value):
         self.checkboxCtrl.SetValue(value)
        

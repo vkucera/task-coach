@@ -370,6 +370,8 @@ class ViewMenu(Menu):
                         SortMenu(mainwindow, self, _('&Sort')))
         self.appendMenu(_('&Columns'), 
                         ColumnMenu(mainwindow, self, _('&Columns')))
+        self.appendMenu(_('&Rounding'),
+                        RoundingMenu(mainwindow, self, _('&Rounding')))
         self.appendUICommands(None)
         self.appendMenu(_('&Tree options'), 
                         ViewTreeOptionsMenu(mainwindow, viewerContainer),
@@ -446,7 +448,7 @@ class ColumnMenu(DynamicMenuThatGetsUICommandsFromViewer):
     
     def getUICommands(self):
         return self._window.viewer.getColumnUICommands()
-        
+
 
 class SortMenu(DynamicMenuThatGetsUICommandsFromViewer):
     def enabled(self):
@@ -455,6 +457,14 @@ class SortMenu(DynamicMenuThatGetsUICommandsFromViewer):
     def getUICommands(self):
         return self._window.viewer.getSortUICommands()
 
+
+class RoundingMenu(DynamicMenuThatGetsUICommandsFromViewer):
+    def enabled(self):
+        return self._window.viewer.supportsRounding()
+    
+    def getUICommands(self):
+        return self._window.viewer.getRoundingUICommands()
+    
 
 class ToolBarMenu(Menu):
     def __init__(self, mainwindow, settings):

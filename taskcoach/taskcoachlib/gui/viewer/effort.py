@@ -303,6 +303,13 @@ class EffortViewer(base.ListViewer,
         self.alwaysRoundUpUICommand = uicommand.AlwaysRoundUp(viewer=self, settings=self.settings)
         return (self.aggregationUICommand, self.roundingUICommand, self.alwaysRoundUpUICommand)
 
+    def supportsRounding(self):
+        return True
+    
+    def getRoundingUICommands(self):
+        return [uicommand.AlwaysRoundUp(viewer=self, settings=self.settings), None] + \
+            [uicommand.RoundBy(menuText=menuText, value=value, viewer=self, settings=self.settings) for (menuText, value) in zip(uicommand.RoundingPrecision.choiceLabels, uicommand.RoundingPrecision.choiceData)]
+
     def getItemImages(self, index, column=0): # pylint: disable-msg=W0613
         return {wx.TreeItemIcon_Normal: -1}
     
