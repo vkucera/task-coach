@@ -370,8 +370,9 @@ class ViewMenu(Menu):
                         SortMenu(mainwindow, self, _('&Sort')))
         self.appendMenu(_('&Columns'), 
                         ColumnMenu(mainwindow, self, _('&Columns')))
-        self.appendMenu(_('&Rounding'),
-                        RoundingMenu(mainwindow, self, _('&Rounding')))
+        if settings.getboolean('feature', 'effort'):
+            self.appendMenu(_('&Rounding'),
+                            RoundingMenu(mainwindow, self, _('&Rounding')))
         self.appendUICommands(None)
         self.appendMenu(_('&Tree options'), 
                         ViewTreeOptionsMenu(mainwindow, viewerContainer),
