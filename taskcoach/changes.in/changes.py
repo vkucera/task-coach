@@ -30,6 +30,8 @@ didn't work.'''),
         Bug('''In Spanish, showing reminders wouldn't work.''', '3459524'),
         Bug('''Fix a small translation error in the French translation.''', 
             '3459028'),
+        Bug('''Changes on a newly created template in the template editor
+were discarded.'''),
         ],
     featuresAdded=[
         Feature('''Provide for an option to always round effort up to the next
