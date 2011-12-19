@@ -32,6 +32,8 @@ didn't work.'''),
             '3459028'),
         Bug('''Changes on a newly created template in the template editor
 were discarded.'''),
+        Bug('''Help text referred to "Add template", but the menu item is 
+called "Import template".''', '3462367'),
         ],
     featuresAdded=[
         Feature('''Provide for an option to always round effort up to the next

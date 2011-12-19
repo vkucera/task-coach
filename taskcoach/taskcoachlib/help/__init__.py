@@ -636,7 +636,7 @@ on the "Save task as template" item in the File menu. All subtasks, notes and
 attachments are part of the template. Only categories are not saved.''')),
     p(
         _('''You can also create a new template from a pre-made template file 
-(.tsktmpl); just select "Add template" in the File menu and select the file. 
+(.tsktmpl); just select "Import template" in the File menu and select the file. 
 Template files are stored in a subdirectory of the directory where TaskCoach.ini 
 is.''')),
     p(
