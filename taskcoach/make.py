@@ -120,7 +120,11 @@ elif sys.argv[1] == 'py2app':
             # are imported implicitly via __import__:
             includes=[filename[:-3].replace('/', '.') for filename \
                       in glob.glob('taskcoachlib/i18n/*.py')],
-            plist=dict(CFBundleIconFile='taskcoach.icns')))))
+            plist=dict(CFBundleIconFile='taskcoach.icns',
+                       CFBundleDocumentTypes=[dict(CFBundleTypeExtensions=['tsk'],
+                                                   CFBundleTypeIconFile='taskcoach.icns',
+                                                   CFBundleTypeName='%s task file'%meta.name,
+                                                   CFBundleTypeRole='Editor')])))))
     
 elif sys.argv[1] == 'bdist_rpm_fedora':
     from distutils.core import setup

@@ -34,6 +34,8 @@ didn't work.'''),
 were discarded.'''),
         Bug('''Help text referred to "Add template", but the menu item is 
 called "Import template".''', '3462367'),
+        Bug('''On Mac OS X, associate .tsk files with Task Coach and let the 
+Finder use the Task Coach icon for .tsk files.''', '3462366'),
         ],
     featuresAdded=[
         Feature('''Provide for an option to always round effort up to the next
@@ -3319,4 +3321,3 @@ settings and restored on the next session. This also includes whether the
 main window is iconized or not.'''),
         Feature('Splash screen can be turned off.')])
 ]
-
