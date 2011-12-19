@@ -222,8 +222,8 @@ class TemplatesDialog(sized_controls.SizedDialog):
         for name in ('startdatetmpl', 'duedatetmpl', 'completiondatetmpl', 
                      'remindertmpl'):
             setattr(template, name, None)
-        self._templates.addTemplate(template)
-        self.appendTemplate(self._root, template)
+        theTask = self._templates.addTemplate(template)
+        self.appendTemplate(self._root, theTask)
 
     def ok(self, event):
         self._templates.save()

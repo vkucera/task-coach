@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import datetime
+import datetime, math
 
 class TimeDelta(datetime.timedelta):
     millisecondsPerSecond = 1000
@@ -63,12 +63,13 @@ class TimeDelta(datetime.timedelta):
                          (self.seconds * self.millisecondsPerSecond) + \
                          (self.microseconds * self.millisecondsPerMicroSecond)))
         
-    def round(self, hours=0, minutes=0, seconds=0):
+    def round(self, hours=0, minutes=0, seconds=0, alwaysUp=False):
         ''' Round the timedelta to the nearest x units. '''
         assert [hours, minutes, seconds].count(0) >= 2
         roundingUnit = hours * 3600 + minutes * 60 + seconds
         if roundingUnit:
-            roundedSeconds = round(self.totalSeconds() / float(roundingUnit)) * roundingUnit
+            round_ = math.ceil if alwaysUp else round
+            roundedSeconds = round_(self.totalSeconds() / float(roundingUnit)) * roundingUnit
             return self.__class__(0, roundedSeconds)
         else:
             return self

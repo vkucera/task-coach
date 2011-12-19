@@ -22,6 +22,23 @@ from changetypes import *
 
 releases = [
 
+Release('1.3.4', 'December 19, 2011',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Changing the color and font of tasks in the preferences dialog
+didn't work.'''),
+        Bug('''In Spanish, showing reminders wouldn't work.''', '3459524'),
+        Bug('''Fix a small translation error in the French translation.''', 
+            '3459028'),
+        Bug('''Changes on a newly created template in the template editor
+were discarded.'''),
+        ],
+    featuresAdded=[
+        Feature('''Provide for an option to always round effort up to the next
+increment in the effort viewer.''', 'http://uservoice.com/a/5Hbrf'),
+        ],
+    ),
+            
 Release('1.3.3', 'December 13, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[

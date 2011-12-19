@@ -36,7 +36,7 @@ class FontColorSyncer(object):
         fontButton.Bind(wx.EVT_FONTPICKER_CHANGED, self.onFontPicked)
 
     def onFgColorPicked(self, event): # pylint: disable-msg=W0613
-        self._fontButton.SetColour(self._fgColorButton.GetColour())
+        self._fontButton.SetSelectedColour(self._fgColorButton.GetColour())
         
     def onBgColorPicked(self, event): # pylint: disable-msg=W0613
         self._fontButton.SetBackgroundColour(self._bgColorButton.GetColour())
@@ -46,7 +46,7 @@ class FontColorSyncer(object):
         if  fontColor != self._fgColorButton.GetColour() and fontColor != wx.BLACK:
             self._fgColorButton.SetColour(self._fontButton.GetSelectedColour())
         else:
-            self._fontButton.SetColour(self._fgColorButton.GetColour())
+            self._fontButton.SetSelectedColour(self._fgColorButton.GetColour())
 
 
 class SettingsPageBase(widgets.BookPage):

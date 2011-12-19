@@ -79,7 +79,9 @@ class TemplateList(object):
         writer = TemplateXMLWriter(templateFile)
         writer.write(task.copy())
         templateFile.close()
-        self._templates.append((TemplateXMLReader(file(filename, 'rU')).read(), os.path.split(filename)[-1]))
+        theTask = TemplateXMLReader(file(filename, 'rU')).read()
+        self._templates.append((theTask, os.path.split(filename)[-1]))
+        return theTask
 
     def deleteTemplate(self, idx):
         self._toDelete.append(self._templates[idx])
