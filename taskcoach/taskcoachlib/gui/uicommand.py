@@ -539,7 +539,7 @@ class FileSave(IOCommand):
 
 class FileMergeDiskChanges(IOCommand):
     def __init__(self, *args, **kwargs):
-        super(FileMergeDiskChanges, self).__init__(menuText=_('Merge &disk changes\tCtrl+D'),
+        super(FileMergeDiskChanges, self).__init__(menuText=_('Merge &disk changes\tShift-Ctrl-M'),
             helpText=help.fileMergeDiskChanges, bitmap='mergedisk', 
             *args, **kwargs)
 
