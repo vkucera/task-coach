@@ -182,6 +182,7 @@ class UploadDoc(DirectoryUpload):
         self.addURL('Documentation',
                     'http://www.fraca7.net/TaskCoach-doc/%s/index.html' % (self.getProperty('buildername')))
 
+
 
 #==============================================================================
 # Platform-specific packages
@@ -243,6 +244,17 @@ class UploadBase(FileUpload):
                                                                       self.getProperty('basefilename'))
 
             self.addURL('Download', url)
+
+
+class UploadChangelog(FileUpload):
+    def __init__(self, **kwargs):
+        kwargs['slavesrc'] = 'changelog_content'
+        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-packages/%s/changelog_content',
+                                              'branch')
+        kwargs['mode'] = 0644
+        FileUpload.__init__(self, **kwargs)
+
+
 
 # Mac OS X
 
