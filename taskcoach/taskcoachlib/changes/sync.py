@@ -461,4 +461,4 @@ class ChangeSynchronizer(object):
                             getattr(memObject, 'set' + changeName[0].upper() + changeName[1:])(getattr(diskObject, getterName)())
 
                     if conflicts:
-                        self.notify(_('Conflicts detected for "%s".\nThe local version was used.' % memObject.subject()))
+                        self.notify(_('Conflicts detected for "%s".\nThe local version was used.') % memObject.subject())
