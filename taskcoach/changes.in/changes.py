@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.4', 'December 18, 2011',
+Release('1.3.4', 'December 20, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Changing the color and font of tasks in the preferences dialog
@@ -36,6 +36,9 @@ were discarded.'''),
 called "Import template".''', '3462367'),
         Bug('''On Mac OS X, associate .tsk files with Task Coach and let the 
 Finder use the Task Coach icon for .tsk files.''', '3462366'),
+        Bug('''On Linux without libXss installed (seen on Fedora 16), Task 
+Coach would fail to start. Fixed by adding libXss as an explicit 
+dependency to the RPM-package.''', '3463044'),
         ],
     featuresAdded=[
         Feature('''Provide for an option to always round effort up to the next
