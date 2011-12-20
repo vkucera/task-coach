@@ -100,6 +100,7 @@ class LanguageTests(Compile):
     name = 'language tests'
     description = ['Running', 'language', 'tests']
     descriptionDone = ['Language', 'tests']
+    haltOnFailure = False
 
     def __init__(self, **kwargs):
         kwargs['command'] = ['make', 'languagetests']
