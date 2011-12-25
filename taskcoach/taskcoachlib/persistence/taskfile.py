@@ -490,7 +490,7 @@ class LockedTaskFile(TaskFile):
         self.__lock.break_lock()
 
     def close(self):
-        if self.filename():
+        if self.filename() and os.path.exists(self.filename()):
             self.acquire_lock(self.filename())
         try:
             super(LockedTaskFile, self).close()
