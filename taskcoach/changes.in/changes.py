@@ -42,7 +42,7 @@ dependency to the RPM-package.''', '3463044'),
         Bug('''A lock created under Mac OS X Lion on a network share could
 not be broken on another OS.'''),
         Bug('''Trying to save to a disconnected network share/USB drive would
-fail on Windows.'''),
+fail on Windows.''', '3462383'),
         ],
     featuresAdded=[
         Feature('''Provide for an option to always round effort up to the next
