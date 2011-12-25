@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.4', 'December 19, 2011',
+Release('1.3.4', 'December 20, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Changing the color and font of tasks in the preferences dialog
@@ -32,6 +32,17 @@ didn't work.'''),
             '3459028'),
         Bug('''Changes on a newly created template in the template editor
 were discarded.'''),
+        Bug('''Help text referred to "Add template", but the menu item is 
+called "Import template".''', '3462367'),
+        Bug('''On Mac OS X, associate .tsk files with Task Coach and let the 
+Finder use the Task Coach icon for .tsk files.''', '3462366'),
+        Bug('''On Linux without libXss installed (seen on Fedora 16), Task 
+Coach would fail to start. Fixed by adding libXss as an explicit 
+dependency to the RPM-package.''', '3463044'),
+        Bug('''A lock created under Mac OS X Lion on a network share could
+not be broken on another OS.'''),
+        Bug('''Trying to save to a disconnected network share/USB drive would
+fail on Windows.'''),
         ],
     featuresAdded=[
         Feature('''Provide for an option to always round effort up to the next
@@ -3317,4 +3328,3 @@ settings and restored on the next session. This also includes whether the
 main window is iconized or not.'''),
         Feature('Splash screen can be turned off.')])
 ]
-

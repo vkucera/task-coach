@@ -33,6 +33,7 @@ BuildRoot: 	%%{_tmppath}/%%{name}-%%{version}-%%{release}-root-%%(%%{__id_u} -n)
 BuildArch:	noarch
 Requires: 	python >= %(pythonversion)s
 Requires:	wxPython >= %(wxpythonversionnumber)s
+Requires:   libXScrnSaver >= 1.2.1
 
 # Must have setuptools to build the package
 BuildRequires: python-setuptools-devel
