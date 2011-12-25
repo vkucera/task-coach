@@ -148,7 +148,7 @@ class FilesystemNotifier(base.NotifierBase, threading.Thread):
             while not self.cancelled:
                 self.lock.acquire()
                 try:
-                    myName = self.filename
+                    myName = self._filename
                 finally:
                     self.lock.release()
                 if myName is not None:
@@ -175,8 +175,8 @@ class FilesystemNotifier(base.NotifierBase, threading.Thread):
                     self.notifier.rm_watch(self.wd)
                     self.wd = None
                 super(FilesystemNotifier, self).setFilename(filename)
-                if self.filename:
-                    self.wd = self.notifier.add_watch(self.path.encode('UTF-8'),
+                if self._filename:
+                    self.wd = self.notifier.add_watch(self._path.encode('UTF-8'),
                                 FLAGS['MODIFY']|FLAGS['MOVED_TO'])
             finally:
                 self.lock.release()

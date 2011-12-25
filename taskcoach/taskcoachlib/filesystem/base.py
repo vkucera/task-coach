@@ -24,9 +24,9 @@ class NotifierBase(object):
     def __init__(self):
         super(NotifierBase, self).__init__()
 
-        self.filename = None
-        self.path = None
-        self.name = None
+        self._filename = None
+        self._path = None
+        self._name = None
         self.stamp = None
         atexit.register(self._stop)
 
@@ -43,20 +43,20 @@ class NotifierBase(object):
                 os.stat(filename).st_mtime > self.stamp)
 
     def setFilename(self, filename):
-        self.filename = filename
+        self._filename = filename
         self.stamp = None
         if filename:
-            self.path, self.name = os.path.split(filename)
+            self._path, self._name = os.path.split(filename)
             if os.path.exists(filename):
                 self.stamp = os.stat(filename).st_mtime
         else:
-            self.path, self.name = None, None
+            self._path, self._name = None, None
 
     def saved(self):
         self.lock.acquire()
         try:
-            if self.filename and os.path.exists(self.filename):
-                self.stamp = os.stat(self.filename).st_mtime
+            if self._filename and os.path.exists(self._filename):
+                self.stamp = os.stat(self._filename).st_mtime
             else:
                 self.stamp = None
         finally:

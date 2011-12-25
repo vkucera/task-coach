@@ -42,8 +42,8 @@ class FilesystemPollerNotifier(base.NotifierBase, threading.Thread):
             while not self.cancelled:
                 self.lock.acquire()
                 try:
-                    if self.filename and os.path.exists(self.filename):
-                        stamp = os.stat(self.filename).st_mtime
+                    if self._filename and os.path.exists(self._filename):
+                        stamp = os.stat(self._filename).st_mtime
                         if stamp > self.stamp:
                             self.stamp = stamp
                             self.onFileChanged()
