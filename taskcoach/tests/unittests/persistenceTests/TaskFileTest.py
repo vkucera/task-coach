@@ -1356,6 +1356,23 @@ class TaskFileMultiUserTestBase(object):
         self.assertEqual(len(getattr(self.taskFile1, listName)()), 0)
         self.assertEqual(len(getattr(self.taskFile2, listName)()), 0)
 
+    def _testDeleteModifiedLocalObject(self, listName):
+        item = getattr(self.taskFile1, listName)().rootItems()[0]
+        getattr(self.taskFile1, listName)().remove(item)
+        self.taskFile1.save()
+        getattr(self.taskFile2, listName)().rootItems()[0].setSubject('New subject.')
+        self.doSave(self.taskFile2)
+        self.assertEqual(len(getattr(self.taskFile2, listName)()), 1)
+
+    def _testDeleteModifiedRemoteObject(self, listName):
+        getattr(self.taskFile1, listName)().rootItems()[0].setSubject('New subject.')
+        self.taskFile1.save()
+        item = getattr(self.taskFile2, listName)().rootItems()[0]
+        getattr(self.taskFile2, listName)().remove(item)
+        self.doSave(self.taskFile2)
+        self.assertEqual(len(getattr(self.taskFile2, listName)()), 1)
+        self.assertEqual(getattr(self.taskFile2, listName)().rootItems()[0].subject(), 'New subject.')
+
     def testDeleteCategory(self):
         self._testDeleteObject('categories')
 
@@ -1364,6 +1381,24 @@ class TaskFileMultiUserTestBase(object):
 
     def testDeleteTask(self):
         self._testDeleteObject('tasks')
+
+    def testDeleteModifiedLocalCategory(self):
+        self._testDeleteModifiedLocalObject('categories')
+
+    def testDeleteModifiedLocalNote(self):
+        self._testDeleteModifiedLocalObject('notes')
+
+    def testDeleteModifiedLocalTask(self):
+        self._testDeleteModifiedLocalObject('tasks')
+
+    def testDeleteModifiedRemoteCategory(self):
+        self._testDeleteModifiedRemoteObject('categories')
+
+    def testDeleteModifiedRemoteNote(self):
+        self._testDeleteModifiedRemoteObject('notes')
+
+    def testDeleteModifiedRemoteTask(self):
+        self._testDeleteModifiedRemoteObject('tasks')
 
     def _testAddNoteToObject(self, listName):
         newNote = note.Note(subject='Other note')

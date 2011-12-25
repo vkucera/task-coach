@@ -117,12 +117,13 @@ class ChangeSynchronizer(object):
         for diskObject in diskList.allItemsSorted():
             memChanges = self._monitor.getChanges(diskObject)
             deleted = memChanges is not None and '__del__' in memChanges
+            diskChanges = self.diskChanges.getChanges(diskObject)
+            if deleted and diskChanges is not None and '__del__' not in diskChanges and len(diskChanges) > 0:
+                # "undelete" it
+                memChanges.remove('__del__')
+                deleted = False
 
-            if diskObject.id() not in self.memMap:
-                diskChanges = self.diskChanges.getChanges(diskObject)
-                if deleted and diskChanges is not None and '__del__' not in diskChanges:
-                    # "undelete" it
-                    memChanges.remove('__del__')
+            if diskObject.id() not in self.memMap and not deleted:
                 if isinstance(diskObject, CompositeObject):
                     # New children will be handled later. This assumes
                     # that the parent() is not changed when removing a
@@ -320,7 +321,7 @@ class ChangeSynchronizer(object):
                 else:
                     # If there are local changes they win over deletion.
                     self.diskMap[memObject.id()] = memObject
-                    self.diskChanges.setChanges(memObject.id(), None)
+                    self.diskChanges.resetChanges(memObject)
 
     def deletedOwnedObjects(self, memList):
         for obj in memList.allItemsSorted():
