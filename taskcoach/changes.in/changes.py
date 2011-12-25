@@ -39,6 +39,8 @@ Finder use the Task Coach icon for .tsk files.''', '3462366'),
         Bug('''On Linux without libXss installed (seen on Fedora 16), Task 
 Coach would fail to start. Fixed by adding libXss as an explicit 
 dependency to the RPM-package.''', '3463044'),
+        Bug('''A lock created under Mac OS X Lion on a network share could
+not be broken on another OS.'''),
         ],
     featuresAdded=[
         Feature('''Provide for an option to always round effort up to the next

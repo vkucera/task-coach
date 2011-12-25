@@ -58,6 +58,7 @@ import threading
 import time
 import errno
 import urllib
+import shutil
 
 # Work with PEP8 and non-PEP8 versions of threading module.
 if not hasattr(threading, "current_thread"):
@@ -364,9 +365,7 @@ class MkdirFileLock(LockBase):
 
     def break_lock(self):
         if os.path.exists(self.lock_file):
-            for name in os.listdir(self.lock_file):
-                os.unlink(os.path.join(self.lock_file, name))
-            os.rmdir(self.lock_file)
+            shutil.rmtree(self.lock_file)
 
 class SQLiteFileLock(LockBase):
     "Demonstration of using same SQL-based locking."
