@@ -22,6 +22,13 @@ from changetypes import *
 
 releases = [
 
+Release('1.3.5', 'January ??, 2012',
+    summary='''This is a feature release.''',
+    featuresAdded=[
+        Feature('''Note categories are now synced as well (SyncML)'''),
+        ],
+    ),
+
 Release('1.3.4', 'December 25, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[

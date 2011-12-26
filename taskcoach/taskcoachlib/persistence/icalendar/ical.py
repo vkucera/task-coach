@@ -92,8 +92,10 @@ class VCalendarParser(object):
     def __init__(self, *args, **kwargs):
         super(VCalendarParser, self).__init__(*args, **kwargs)
         self.stateMap = { 'VCALENDAR': VCalendarParser,
-                          'VTODO':     VTodoParser }
+                          'VTODO':     VTodoParser,
+                          'VNOTE':     VNoteParser }
         self.tasks = []
+        self.notes = []
         self.init()
 
     def init(self):
@@ -230,6 +232,31 @@ class VTodoParser(VCalendarParser):
         else:
             super(VTodoParser, self).acceptItem(name, value)
 
+
+class VNoteParser(VCalendarParser):
+    '''Parse VNote objects.'''
+
+    def onFinish(self):
+        # Summary is not mandatory.
+        if not self.kwargs.has_key('subject'):
+            self.kwargs['subject'] = self.kwargs['description'].split('\n')[0]
+        self.kwargs['status'] = Object.STATUS_NONE
+        self.notes.append(self.kwargs)
+
+    def acceptItem(self, name, value):
+        if name == 'X-IRMC-LUID':
+            self.kwargs['id'] = value.decode('UTF-8')
+        elif name == 'SUMMARY':
+            self.kwargs['subject'] = value
+        elif name == 'BODY':
+            self.kwargs['description'] = value
+        elif name == 'CATEGORIES':
+            self.kwargs['categories'] = value.split(',')
+        elif name in ['DCREATED', 'LAST-MODIFIED', 'CLASS']:
+            pass
+        else:
+            super(VNoteParser, self).acceptItem(name, value)
+
 #}
 
 #==============================================================================
@@ -273,7 +300,6 @@ def VCalFromTask(task, encoding=True):
 
     return fold(components)
 
-#}
 
 def VCalFromEffort(effort, encoding=True):
     encoding = ';CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE' if encoding else ''
@@ -288,6 +314,23 @@ def VCalFromEffort(effort, encoding=True):
         components.append('DTEND:%s'%fmtDateTime(effort.getStop()))
     components.append('END:VEVENT')
     return fold(components)
+
+
+def VNoteFromNote(note, encoding=True):
+    encoding = ';CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE' if encoding else ''
+    quote = quoteString if encoding else lambda s: s
+    components = []
+    components.append('BEGIN:VNOTE')
+    components.append('X-IRMC-LUID: %s' % note.id().encode('UTF-8'))
+    components.append('SUMMARY%s: %s' % (encoding, quote(note.subject())))
+    components.append('BODY%s:%s' % (encoding, quote(note.description())))
+    components.append('END:VNOTE')
+    if note.categories(recursive=True, upwards=True):
+        categories = ','.join([quote(unicode(c)) for c in note.categories(recursive=True, upwards=True)])
+        components.append('CATEGORIES%s:%s'%(encoding, categories))
+    return fold(components)
+
+#}
 
 
 def fold(components, linewidth=75, eol='\r\n', indent=' '):

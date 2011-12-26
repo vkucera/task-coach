@@ -178,13 +178,14 @@ class Synchronizer(wx.ProgressDialog):
 
             cfg.URI = self.notedbname
             cfg.syncModes = 'two-way'
-            cfg.supportedTypes = 'text/plain'
+            cfg.supportedTypes = 'text/x-vnote:1.1'
             cfg.version = '1.0'
 
             self.dmt.setSyncSourceConfig(cfg)
 
             src = NoteSource(self,
                              self.taskFile.notes(),
+                             self.taskFile.categories(),
                              '%s.Notes' % self.clientName, cfg)
             src.preferredSyncMode = globals()[self.notemode]
             self.sources.append(src)
