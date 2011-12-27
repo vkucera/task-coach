@@ -210,9 +210,10 @@ class XMLReader(object):
                 ''' Ignore all method calls. '''
                 return lambda *args, **kwargs: None
             
+        plannedStartDateTimeAttributeName = 'startdate' if self.tskversion() <= 33 else 'plannedstartdate'
         kwargs = self._parseBaseCompositeAttributes(taskNode, self._parseTaskNodes)
         kwargs.update(dict(
-            plannedStartDateTime=date.parseDateTime(taskNode.attrib.get('startdate', ''), 
+            plannedStartDateTime=date.parseDateTime(taskNode.attrib.get(plannedStartDateTimeAttributeName, ''), 
                                                     *self.defaultStartTime),
             dueDateTime=date.parseDateTime(taskNode.attrib.get('duedate', ''), 
                                            *self.defaultEndTime),

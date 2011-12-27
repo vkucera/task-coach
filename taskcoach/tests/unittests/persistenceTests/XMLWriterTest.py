@@ -83,11 +83,11 @@ class XMLWriterTest(test.TestCase):
         
     def testTaskPlannedStartDateTime(self):
         self.task.setPlannedStartDateTime(date.DateTime(2004,1,1,11,0,0))
-        self.expectInXML('startdate="%s"'%str(self.task.plannedStartDateTime()))
+        self.expectInXML('plannedstartdate="%s"'%str(self.task.plannedStartDateTime()))
         
     def testNoPlannedStartDateTime(self):
         self.task.setPlannedStartDateTime(date.DateTime())
-        self.expectNotInXML('startdate=')
+        self.expectNotInXML('plannedstartdate=')
         
     def testTaskDueDateTime(self):
         self.task.setDueDateTime(date.DateTime(2004,1,1,10,5,5))

@@ -96,7 +96,7 @@ class XMLWriter(object):
         node = self.baseCompositeNode(parentNode, task, 'task', self.taskNode)
         node.attrib['status'] = str(task.getStatus())
         if task.plannedStartDateTime() != maxDateTime:
-            node.attrib['startdate'] = str(task.plannedStartDateTime())
+            node.attrib['plannedstartdate'] = str(task.plannedStartDateTime())
         if task.dueDateTime() != maxDateTime:
             node.attrib['duedate'] = str(task.dueDateTime())
         if task.completionDateTime() != maxDateTime:

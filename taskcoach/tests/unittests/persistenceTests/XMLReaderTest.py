@@ -1496,3 +1496,37 @@ class XMLReaderVersion33Test(XMLReaderTestCase):
             </task>
         </tasks>''')
         self.failUnless(tasks[0].recurrence().recurBasedOnCompletion)
+
+
+class XMLReaderVersion34Test(XMLReaderTestCase):
+    tskversion = 34 # New in release 1.3.5.
+    
+    def testStartDateTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task plannedstartdate="2005-04-17 10:05:11"/>
+        </tasks>\n''')
+        self.assertEqual(date.DateTime(2005,4,17,10,5,11), 
+                         tasks[0].plannedStartDateTime())
+
+    def testStartDateTimeWithoutTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task plannedstartdate="2005-04-17"/>
+        </tasks>\n''')
+        self.assertEqual(date.DateTime(2005,4,17), tasks[0].plannedStartDateTime())
+
+    def testNoStartDateTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task />
+        </tasks>\n''')
+        self.assertEqual(date.DateTime(), tasks[0].plannedStartDateTime())
+
+    def testStartDateTimeWithMicroseconds(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task plannedstartdate="2005-01-01 22:01:30.456"/>
+        </tasks>\n''')
+        self.assertEqual(date.DateTime(2005,1,1,22,1,30,456), 
+                         tasks[0].plannedStartDateTime())
