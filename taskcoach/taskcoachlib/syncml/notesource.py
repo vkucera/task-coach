@@ -33,7 +33,7 @@ class NoteSource(BaseSource):
 
     def updateItemProperties(self, item, note):
         item.dataType = 'text/x-vnote:1.1'
-        item.data = ical.VNoteFromNote(note)
+        item.data = ical.VNoteFromNote(note, doFold=False)
 
     def _parseObject(self, item):
         parser = ical.VCalendarParser()

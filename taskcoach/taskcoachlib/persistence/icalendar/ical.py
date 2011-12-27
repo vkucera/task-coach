@@ -262,7 +262,7 @@ class VNoteParser(VCalendarParser):
 #==============================================================================
 #{ Generating iCalendar files.
 
-def VCalFromTask(task, encoding=True):
+def VCalFromTask(task, encoding=True, doFold=True):
     ''' This function returns a string representing the task in
         iCalendar format. '''
 
@@ -297,10 +297,12 @@ def VCalFromTask(task, encoding=True):
     components.append('PRIORITY:%d'%min(3, task.priority() + 1))
     components.append('SUMMARY%s:%s'%(encoding, quote(task.subject())))
     components.append('END:VTODO') # pylint: disable-msg=W0511
-    return fold(components)
+    if doFold:
+        return fold(components)
+    return '\r\n'.join(components) + '\r\n'
 
 
-def VCalFromEffort(effort, encoding=True):
+def VCalFromEffort(effort, encoding=True, doFold=True):
     encoding = ';ENCODING=QUOTED-PRINTABLE;CHARSET=UTF-8' if encoding else ''
     quote = quoteString if encoding else lambda s: s.encode('UTF-8')
     components = []
@@ -312,10 +314,12 @@ def VCalFromEffort(effort, encoding=True):
     if effort.getStop():
         components.append('DTEND:%s'%fmtDateTime(effort.getStop()))
     components.append('END:VEVENT')
-    return fold(components)
+    if doFold:
+        return fold(components)
+    return '\r\n'.join(components) + '\r\n'
 
 
-def VNoteFromNote(note, encoding=True):
+def VNoteFromNote(note, encoding=True, doFold=True):
     encoding = ';ENCODING=QUOTED-PRINTABLE;CHARSET=UTF-8' if encoding else ''
     quote = quoteString if encoding else lambda s: s.encode('UTF-8')
     components = []
@@ -327,7 +331,9 @@ def VNoteFromNote(note, encoding=True):
     if note.categories(recursive=True, upwards=True):
         categories = ','.join([quote(unicode(c)) for c in note.categories(recursive=True, upwards=True)])
         components.append('CATEGORIES%s:%s'%(encoding, categories))
-    return fold(components)
+    if doFold:
+        return fold(components)
+    return '\r\n'.join(components) + '\r\n'
 
 #}
 

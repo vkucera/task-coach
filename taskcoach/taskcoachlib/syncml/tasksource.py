@@ -33,7 +33,7 @@ class TaskSource(basesource.BaseSource):
 
     def updateItemProperties(self, item, task):
         item.data = 'BEGIN:VCALENDAR\r\nVERSION: 1.0\r\n' + \
-                    ical.VCalFromTask(task) + \
+                    ical.VCalFromTask(task, doFold=False) + \
                     'END:VCALENDAR'
         item.dataType = 'text/x-vcalendar:1.0'
 
