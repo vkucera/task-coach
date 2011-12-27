@@ -46,10 +46,10 @@ defaults = { \
     'snoozetimes': "[5, 10, 15, 30, 60, 120, 1440]",
     'defaultsnoozetime': '5',        # Default snooze time
     'perspective': '',               # The layout of the viewers in the main window
-    'datestied': '',                 # What to do when changing the start date or due date
+    'datestied': '',                 # What to do when changing the planned start date or due date
     # Default date and times to offer in the task dialog, see preferences for
     # possible values.
-    'defaultstartdatetime': 'preset_today_currenttime',
+    'defaultplannedstartdatetime': 'preset_today_currenttime',
     'defaultduedatetime': 'propose_tomorrow_endofworkingday',
     'defaultcompletiondatetime': 'propose_today_currenttime',
     'defaultreminderdatetime': 'propose_tomorrow_startofworkingday',
@@ -65,7 +65,7 @@ defaults = { \
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
     'searchdescription': 'False',
-    'columns': "['startDateTime', 'dueDateTime']",
+    'columns': "['plannedStartDateTime', 'dueDateTime']",
     'columnsalwaysvisible': "['subject']",
     'columnwidths': "{'attachments': 28, 'notes': 28, 'ordering': 38}",
     'columnautoresizing': 'True',
@@ -99,7 +99,7 @@ defaults = { \
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
     'searchdescription': 'False',
-    'columns': "['prerequisites', 'dependencies', 'startDateTime', 'dueDateTime']",
+    'columns': "['prerequisites', 'dependencies', 'plannedStartDateTime', 'dueDateTime']",
     'columnsalwaysvisible': "['subject']",
     'columnwidths': "{'attachments': 28, 'notes': 28}",
     'columnautoresizing': 'True',

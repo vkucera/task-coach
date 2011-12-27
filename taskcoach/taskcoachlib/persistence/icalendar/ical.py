@@ -192,10 +192,10 @@ class VTodoParser(VCalendarParser):
     ''' This is the state responsible for parsing VTODO objects. ''' # pylint: disable-msg=W0511
 
     def onFinish(self):
-        if not self.kwargs.has_key('startDateTime'):
-            # This means no start date, but the task constructor will
+        if not self.kwargs.has_key('plannedStartDateTime'):
+            # This means no planned start date, but the task constructor will
             # take today by default, so force.
-            self.kwargs['startDateTime'] = date.DateTime()
+            self.kwargs['plannedStartDateTime'] = date.DateTime()
 
         if self.kwargs.has_key('vcardStatus'):
             if self.kwargs['vcardStatus'] == 'COMPLETED' and \
@@ -211,7 +211,7 @@ class VTodoParser(VCalendarParser):
 
     def acceptItem(self, name, value):
         if name == 'DTSTART':
-            self.kwargs['startDateTime'] = parseDateTime(value)
+            self.kwargs['plannedStartDateTime'] = parseDateTime(value)
         elif name == 'DUE':
             self.kwargs['dueDateTime'] = parseDateTime(value)
         elif name == 'COMPLETED':
@@ -273,8 +273,8 @@ def VCalFromTask(task, encoding=True, doFold=True):
     components.append('BEGIN:VTODO') # pylint: disable-msg=W0511
     components.append('UID:%s' % task.id().encode('UTF-8'))
 
-    if task.startDateTime() != date.DateTime():
-        components.append('DTSTART:%s'%fmtDateTime(task.startDateTime()))
+    if task.plannedStartDateTime() != date.DateTime():
+        components.append('DTSTART:%s'%fmtDateTime(task.plannedStartDateTime()))
 
     if task.dueDateTime() != date.DateTime():
         components.append('DUE:%s'%fmtDateTime(task.dueDateTime()))

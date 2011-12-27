@@ -27,9 +27,9 @@ class ViewFilter(base.Filter):
                                                                                'Never'))
         self.__completionDateTimeFilter = self.__stringToCompletionDateTimeFilter(kwargs.pop('completionDateTimeFilter',
                                                                                              'Never'))
-        self.__startDateTimeFilterString = kwargs.pop('startDateTimeFilter', 
+        self.__plannedStartDateTimeFilterString = kwargs.pop('plannedStartDateTimeFilter', 
                                                       'Never')
-        self.__startDateTimeFilter = self.__stringToStartDateTimeFilter(self.__startDateTimeFilterString)
+        self.__plannedStartDateTimeFilter = self.__stringToPlannedStartDateTimeFilter(self.__plannedStartDateTimeFilterString)
         self.__hideActiveTasks = kwargs.pop('hideActiveTasks', False)
         self.__hideCompositeTasks = kwargs.pop('hideCompositeTasks', False)
         self.registerObservers()
@@ -37,7 +37,7 @@ class ViewFilter(base.Filter):
         
     def registerObservers(self):
         registerObserver = patterns.Publisher().registerObserver
-        for eventType in ('task.dueDateTime', 'task.startDateTime', 
+        for eventType in ('task.dueDateTime', 'task.plannedStartDateTime', 
                           'task.completionDateTime', 'task.prerequisites',
                           task.Task.appearanceChangedEventType(), # Proxy for status changes
                           task.Task.addChildEventType(),
@@ -56,9 +56,9 @@ class ViewFilter(base.Filter):
         self.__completionDateTimeFilter = self.__stringToCompletionDateTimeFilter(completionDateTimeString)
         self.reset()
 
-    def setFilteredByStartDateTime(self, startDateTimeString):
-        self.__startDateTimeFilterString = startDateTimeString
-        self.__startDateTimeFilter = self.__stringToStartDateTimeFilter(startDateTimeString)
+    def setFilteredByPlannedStartDateTime(self, plannedStartDateTimeString):
+        self.__plannedStartDateTimeFilterString = plannedStartDateTimeString
+        self.__plannedStartDateTimeFilter = self.__stringToPlannedStartDateTimeFilter(plannedStartDateTimeString)
         self.reset()
         
     def hideActiveTasks(self, hide=True):
@@ -82,9 +82,9 @@ class ViewFilter(base.Filter):
             result = False # Hide due task
         elif self.__taskCompletedEarlierThanCompletionDateTimeFilter(task):
             result = False # Hide completed task
-        elif self.__startDateTimeFilterString == 'Always' and task.inactive():
-            result = False # Hide prerequisite task no matter what start date
-        elif self.__taskStartsLaterThanStartDateTimeFilter(task):
+        elif self.__plannedStartDateTimeFilterString == 'Always' and task.inactive():
+            result = False # Hide prerequisite task no matter what planned start date
+        elif self.__taskStartsLaterThanPlannedStartDateTimeFilter(task):
             result = False # Hide future task 
         return result
     
@@ -102,9 +102,9 @@ class ViewFilter(base.Filter):
         else:
             return False
         
-    def __taskStartsLaterThanStartDateTimeFilter(self, task):
-        if self.__startDateTimeFilter:
-            return task.startDateTime(recursive=self.treeMode()) > self.__startDateTimeFilter()
+    def __taskStartsLaterThanPlannedStartDateTimeFilter(self, task):
+        if self.__plannedStartDateTimeFilter:
+            return task.plannedStartDateTime(recursive=self.treeMode()) > self.__plannedStartDateTimeFilter()
         else:
             return False
 
@@ -145,7 +145,7 @@ class ViewFilter(base.Filter):
                                        filterString)
     
     @classmethod
-    def __stringToStartDateTimeFilter(class_, filterString):
+    def __stringToPlannedStartDateTimeFilter(class_, filterString):
         return class_.__stringToFilter(class_.endOfPeriodFilterFactory, 
                                        filterString)
     

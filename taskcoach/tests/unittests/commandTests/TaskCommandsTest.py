@@ -30,8 +30,8 @@ class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
         self.categories = category.CategoryList()
         self.category = category.Category('cat')
         self.categories.append(self.category)
-        self.task1 = task.Task('task1', startDateTime=date.Now(), dueDateTime=date.Now()+date.oneHour)
-        self.task2 = task.Task('task2', startDateTime=date.Now())
+        self.task1 = task.Task('task1', plannedStartDateTime=date.Now(), dueDateTime=date.Now()+date.oneHour)
+        self.task2 = task.Task('task2', plannedStartDateTime=date.Now())
         self.taskList.append(self.task1)
         self.originalList = [self.task1]
         
@@ -68,10 +68,10 @@ class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
         command.DragAndDropTaskCommand(self.taskList, tasks or [], 
                                        drop=dropTarget).do()
         
-    def editStart(self, newStartDateTime, tasks=None, keep_delta=False):
-        command.EditStartDateTimeCommand(self.taskList, tasks or [],
-                                         newValue=newStartDateTime,
-                                         keep_delta=keep_delta).do()
+    def editPlannedStart(self, newPlannedStartDateTime, tasks=None, keep_delta=False):
+        command.EditPlannedStartDateTimeCommand(self.taskList, tasks or [],
+                                                newValue=newPlannedStartDateTime,
+                                                keep_delta=keep_delta).do()
 
     def editDue(self, newDueDateTime, tasks=None, keep_delta=False):
         command.EditDueDateTimeCommand(self.taskList, tasks or [],
@@ -307,8 +307,8 @@ class NewTaskCommandTest(TaskCommandTestCase):
         
     def testNewTaskWithKeywords(self):
         dateTime = date.DateTime(2042, 2, 3)
-        newTask = self.new(startDateTime=dateTime)
-        self.assertEqual(dateTime, newTask.startDateTime())
+        newTask = self.new(plannedStartDateTime=dateTime)
+        self.assertEqual(dateTime, newTask.plannedStartDateTime())
         
     def testItemsAreNew(self):
         self.failUnless(command.NewTaskCommand(self.taskList).itemsAreNew())
@@ -407,14 +407,14 @@ class MarkCompletedCommandTest(CommandWithChildrenTestCase):
         self.markCompleted([self.task1])
         self.assertDoUndoRedo(lambda: self.failIf(self.task1.completed()))
 
-    def testMarkRecurringTaskCompleted_StartDateIsIncreased(self):
+    def testMarkRecurringTaskCompleted_PlannedStartDateIsIncreased(self):
         self.task1.setRecurrence(date.Recurrence('weekly'))
-        startDateTime = self.task1.startDateTime()
-        newStartDateTime = startDateTime + date.TimeDelta(days=7)
+        plannedStartDateTime = self.task1.plannedStartDateTime()
+        newPlannedStartDateTime = plannedStartDateTime + date.TimeDelta(days=7)
         self.markCompleted([self.task1])
         self.assertDoUndoRedo(
-            lambda: self.assertEqual(newStartDateTime, self.task1.startDateTime()),
-            lambda: self.assertEqual(startDateTime, self.task1.startDateTime()))
+            lambda: self.assertEqual(newPlannedStartDateTime, self.task1.plannedStartDateTime()),
+            lambda: self.assertEqual(plannedStartDateTime, self.task1.plannedStartDateTime()))
 
     def testMarkRecurringTaskCompleted_DueDateIsIncreased(self):
         self.task1.setRecurrence(date.Recurrence('weekly'))
@@ -595,14 +595,14 @@ class AddNoteCommandTest(TaskCommandTestCase):
             lambda: self.failIf(self.task1.notes() or self.task2.notes()))
     
 
-class EditDueStartDateCommandTest(TaskCommandTestCase):
-    def testSetStartDateToTomorrow(self):
-        previousStart = self.task1.startDateTime()
+class EditDuePlannedStartDateCommandTest(TaskCommandTestCase):
+    def testSetPlannedStartDateToTomorrow(self):
+        previousStart = self.task1.plannedStartDateTime()
         newStart = date.Now() + date.TimeDelta(hours=1)
-        self.editStart(newStart, [self.task1])
+        self.editPlannedStart(newStart, [self.task1])
         self.assertDoUndoRedo(\
-            lambda: self.assertEqual(newStart, self.task1.startDateTime()),
-            lambda: self.assertEqual(previousStart, self.task1.startDateTime()))
+            lambda: self.assertEqual(newStart, self.task1.plannedStartDateTime()),
+            lambda: self.assertEqual(previousStart, self.task1.plannedStartDateTime()))
 
     def testSetDueDateToTomorrow(self):
         previousDue = self.task1.dueDateTime()
@@ -612,66 +612,66 @@ class EditDueStartDateCommandTest(TaskCommandTestCase):
             lambda: self.assertEqual(newDue, self.task1.dueDateTime()),
             lambda: self.assertEqual(previousDue, self.task1.dueDateTime()))
 
-    def testPushingBackStartDatePushesBackDueDate(self):
+    def testPushingBackPlannedStartDatePushesBackDueDate(self):
         self.task1.setDueDateTime(date.Now() + date.TimeDelta(hours=2)) 
-        previousStart = self.task1.startDateTime()
+        previousPlannedStart = self.task1.plannedStartDateTime()
         previousDue = self.task1.dueDateTime()
         pushBack = date.TimeDelta(hours=1)
-        newStart = previousStart + pushBack
+        newPlannedStart = previousPlannedStart + pushBack
         expectedDue = previousDue + pushBack
-        self.editStart(newStart, [self.task1], keep_delta=True)
+        self.editPlannedStart(newPlannedStart, [self.task1], keep_delta=True)
         self.assertDoUndoRedo(\
             lambda: self.assertEqual(expectedDue, self.task1.dueDateTime()),
             lambda: self.assertEqual(previousDue, self.task1.dueDateTime()))
 
-    def testPushingBackDueDatePushesBackStartDate(self):
+    def testPushingBackDueDatePushesBackPlannedStartDate(self):
         self.task1.setDueDateTime(date.Now() + date.TimeDelta(hours=2))
-        previousStart = self.task1.startDateTime()
+        previousPlannedStart = self.task1.plannedStartDateTime()
         previousDue = self.task1.dueDateTime()
         pushBack = date.TimeDelta(hours=1)
         newDue = previousDue + pushBack
-        expectedStart = previousStart + pushBack
+        expectedPlannedStart = previousPlannedStart + pushBack
         self.editDue(newDue, [self.task1], keep_delta=True)
         self.assertDoUndoRedo(\
-            lambda: self.assertEqual(expectedStart, self.task1.startDateTime()),
-            lambda: self.assertEqual(previousStart, self.task1.startDateTime()))
+            lambda: self.assertEqual(expectedPlannedStart, self.task1.plannedStartDateTime()),
+            lambda: self.assertEqual(previousPlannedStart, self.task1.plannedStartDateTime()))
 
-    def testPushingBackStartDateDoesNotPushBackDueDate(self):
+    def testPushingBackPlannedStartDateDoesNotPushBackDueDate(self):
         self.task1.setDueDateTime(date.Now() + date.TimeDelta(hours=2)) 
-        previousStart = self.task1.startDateTime()
+        previousPlannedStart = self.task1.plannedStartDateTime()
         previousDue = self.task1.dueDateTime()
         pushBack = date.TimeDelta(hours=1)
-        newStart = previousStart + pushBack
+        newPlannedStart = previousPlannedStart + pushBack
         expectedDue = previousDue
-        self.editStart(newStart, [self.task1])
+        self.editPlannedStart(newPlannedStart, [self.task1])
         self.assertDoUndoRedo(\
             lambda: self.assertEqual(expectedDue, self.task1.dueDateTime()),
             lambda: self.assertEqual(previousDue, self.task1.dueDateTime()))
 
-    def testPushingBackDueDateDoesNotPushBackStartDate(self):
+    def testPushingBackDueDateDoesNotPushBackPlannedStartDate(self):
         self.task1.setDueDateTime(date.Now() + date.TimeDelta(hours=2))
-        previousStart = self.task1.startDateTime()
+        previousPlannedStart = self.task1.plannedStartDateTime()
         previousDue = self.task1.dueDateTime()
         pushBack = date.TimeDelta(hours=1)
         newDue = previousDue + pushBack
-        expectedStart = previousStart
+        expectedPlannedStart = previousPlannedStart
         self.editDue(newDue, [self.task1])
         self.assertDoUndoRedo(\
-            lambda: self.assertEqual(expectedStart, self.task1.startDateTime()),
-            lambda: self.assertEqual(previousStart, self.task1.startDateTime()))
+            lambda: self.assertEqual(expectedPlannedStart, self.task1.plannedStartDateTime()),
+            lambda: self.assertEqual(previousPlannedStart, self.task1.plannedStartDateTime()))
 
     def testMissingDueDateIsNotPushedBack(self):
-        previousStart = self.task1.startDateTime()
+        previousPlannedStart = self.task1.plannedStartDateTime()
         pushBack = date.TimeDelta(hours=1)
-        newStart = previousStart + pushBack
+        newPlannedStart = previousPlannedStart + pushBack
         expectedDue = date.DateTime()
         self.task1.setDueDateTime(expectedDue)
-        self.editStart(newStart, [self.task1], keep_delta=True)
+        self.editPlannedStart(newPlannedStart, [self.task1], keep_delta=True)
         self.assertDoUndoRedo(\
             lambda: self.assertEqual(expectedDue, self.task1.dueDateTime()))
 
-    def testMissingStartDateIsNotPushedBack(self):
-        self.task1.setStartDateTime(date.DateTime())
+    def testMissingPlannedStartDateIsNotPushedBack(self):
+        self.task1.setPlannedStartDateTime(date.DateTime())
         self.task1.setDueDateTime(date.Now() + date.TimeDelta(hours=2))
         previousDue = self.task1.dueDateTime()
         pushBack = date.TimeDelta(hours=1)
@@ -679,38 +679,38 @@ class EditDueStartDateCommandTest(TaskCommandTestCase):
         expectedStart = date.DateTime()
         self.editDue(newDue, [self.task1], keep_delta=True)
         self.assertDoUndoRedo(\
-            lambda: self.assertEqual(expectedStart, self.task1.startDateTime()))
+            lambda: self.assertEqual(expectedStart, self.task1.plannedStartDateTime()))
 
-    def testDueDateIsNotPushedBackWhenStartDateIsMissing(self):
-        self.task1.setStartDateTime(date.DateTime())
+    def testDueDateIsNotPushedBackWhenPlannedStartDateIsMissing(self):
+        self.task1.setPlannedStartDateTime(date.DateTime())
         self.task1.setDueDateTime(date.Now() + date.TimeDelta(hours=2))
         pushBack = date.TimeDelta(hours=1)
         newStart = date.Now() + pushBack
         expectedDue = self.task1.dueDateTime()
-        self.editStart(newStart, [self.task1], keep_delta=True)
+        self.editPlannedStart(newStart, [self.task1], keep_delta=True)
         self.assertDoUndoRedo(\
             lambda: self.assertEqual(expectedDue, self.task1.dueDateTime()))
 
-    def testStartDateIsNotPushedBackWhenDueDateIsMissing(self):
+    def testPlannedStartDateIsNotPushedBackWhenDueDateIsMissing(self):
         pushBack = date.TimeDelta(hours=1)
         newDue = date.Now() + pushBack
-        expectedStart = self.task1.startDateTime()
+        expectedStart = self.task1.plannedStartDateTime()
         self.task1.setDueDateTime(date.DateTime())
         self.editDue(newDue, [self.task1], keep_delta=True)
         self.assertDoUndoRedo(\
-            lambda: self.assertEqual(expectedStart, self.task1.startDateTime()))
+            lambda: self.assertEqual(expectedStart, self.task1.plannedStartDateTime()))
         
-    def testSetInfiniteStartDate(self):
-        newStartDateTime = date.DateTime()
-        originalStartDateTime = self.task1.startDateTime()
-        self.editStart(newStartDateTime, [self.task1])
-        self.assertDoUndoRedo(lambda: self.assertEqual(newStartDateTime, self.task1.startDateTime()),
-                              lambda: self.assertEqual(originalStartDateTime, self.task1.startDateTime()))
+    def testSetInfinitePlannedStartDate(self):
+        newPlannedStartDateTime = date.DateTime()
+        originalPlannedStartDateTime = self.task1.plannedStartDateTime()
+        self.editPlannedStart(newPlannedStartDateTime, [self.task1])
+        self.assertDoUndoRedo(lambda: self.assertEqual(newPlannedStartDateTime, self.task1.plannedStartDateTime()),
+                              lambda: self.assertEqual(originalPlannedStartDateTime, self.task1.plannedStartDateTime()))
         
-    def testSetInfiniteStartDateDoesNotChangeDueDate(self):
-        newStartDateTime = date.DateTime()
+    def testSetInfinitePlannedStartDateDoesNotChangeDueDate(self):
+        newPlannedStartDateTime = date.DateTime()
         originalDueDateTime = self.task1.dueDateTime()
-        self.editStart(newStartDateTime, [self.task1], keep_delta=True)
+        self.editPlannedStart(newPlannedStartDateTime, [self.task1], keep_delta=True)
         self.assertDoUndoRedo(lambda: self.assertEqual(originalDueDateTime, 
                                                        self.task1.dueDateTime()))
         
@@ -721,9 +721,9 @@ class EditDueStartDateCommandTest(TaskCommandTestCase):
         self.assertDoUndoRedo(lambda: self.assertEqual(newDueDateTime, self.task1.dueDateTime()),
                               lambda: self.assertEqual(originalDueDateTime, self.task1.dueDateTime()))
         
-    def testSetInfiniteDueDateDoesNotChangeStartDate(self):
+    def testSetInfiniteDueDateDoesNotChangePlannedStartDate(self):
         newDueDateTime = date.DateTime()
-        originalStartDateTime = self.task1.startDateTime()
+        originalPlannedStartDateTime = self.task1.plannedStartDateTime()
         self.editDue(newDueDateTime, [self.task1], keep_delta=True)
-        self.assertDoUndoRedo(lambda: self.assertEqual(originalStartDateTime, 
-                                                       self.task1.startDateTime()))
+        self.assertDoUndoRedo(lambda: self.assertEqual(originalPlannedStartDateTime, 
+                                                       self.task1.plannedStartDateTime()))

@@ -16,19 +16,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import inspect
 from taskcoachlib.syncml import basesource
 from taskcoachlib.domain.task import Task
 from taskcoachlib.domain.category import Category
 from taskcoachlib.persistence.icalendar import ical
 
-from taskcoachlib.i18n import _
-
-import wx, inspect
 
 class TaskSource(basesource.BaseSource):
     def __init__(self, callback, taskList, categoryList, *args, **kwargs):
         super(TaskSource, self).__init__(callback, taskList, *args, **kwargs)
-
         self.categoryList = categoryList
 
     def updateItemProperties(self, item, task):
@@ -62,7 +59,7 @@ class TaskSource(basesource.BaseSource):
         return 201
 
     def doUpdateItem(self, task, local):
-        local.setStartDateTime(task.startDateTime())
+        local.setPlannedStartDateTime(task.plannedStartDateTime())
         local.setDueDateTime(task.dueDateTime())
         local.setDescription(task.description())
         local.setSubject(task.subject())

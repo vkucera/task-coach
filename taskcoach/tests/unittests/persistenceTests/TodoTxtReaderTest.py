@@ -42,7 +42,7 @@ class TodoTxtReaderTestCase(test.TestCase):
         
     def assertStartDate(self, *dateTimeArgs):
         self.assertEqual(date.DateTime(*dateTimeArgs), 
-                         list(self.tasks)[0].startDateTime())
+                         list(self.tasks)[0].plannedStartDateTime())
         
     def assertCompletionDate(self, *dateTimeArgs, **kwargs):
         expectedDateTime = kwargs['dateTime'] if 'dateTime' in kwargs else date.DateTime(*dateTimeArgs)

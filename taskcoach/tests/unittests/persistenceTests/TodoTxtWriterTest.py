@@ -72,7 +72,7 @@ class TodoTxtWriterTestCase(test.wxTestCase):
         
     def testStartDate(self):
         self.taskFile.tasks().append(task.Task(subject='Get cheese', 
-                                               startDateTime=date.DateTime(2027,1,23,15,34,12)))
+                                               plannedStartDateTime=date.DateTime(2027,1,23,15,34,12)))
         self.writer.write(self.viewer, self.settings, False)
         self.assertEqual('2027-01-23 Get cheese\n', self.file.getvalue())
         

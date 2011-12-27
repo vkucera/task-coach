@@ -57,7 +57,7 @@ class CSVReader(object):
             description = StringIO.StringIO()
             categories = []
             priority = 0
-            startDateTime = None
+            plannedStartDateTime = None
             dueDateTime = None
             completionDateTime = None
             budget = TimeDelta()
@@ -86,8 +86,8 @@ class CSVReader(object):
                         priority = int(fieldValue)
                     except ValueError:
                         pass
-                elif kwargs['mappings'][idx] == _('Start date'):
-                    startDateTime = self.parseDateTime(fieldValue, dayfirst=dayfirst)
+                elif kwargs['mappings'][idx] == _('Planned start date'):
+                    plannedStartDateTime = self.parseDateTime(fieldValue, dayfirst=dayfirst)
                 elif kwargs['mappings'][idx] == _('Due date'):
                     dueDateTime = self.parseDateTime(fieldValue, 23, 59, 59, dayfirst=dayfirst) 
                 elif kwargs['mappings'][idx] == _('Completion date'):
@@ -125,7 +125,7 @@ class CSVReader(object):
             task = Task(subject=subject,
                         description=description.getvalue(),
                         priority=priority,
-                        startDateTime=startDateTime,
+                        plannedStartDateTime=plannedStartDateTime,
                         dueDateTime=dueDateTime,
                         completionDateTime=completionDateTime,
                         budget=budget,

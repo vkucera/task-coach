@@ -102,7 +102,7 @@ def generateEfforts():
 def generateTask(index, categories, children=3, chanceNextLevel=0.8):
     efforts = generateEfforts()
     newTask = task.Task(subject='Task %s: %s'%('.'.join(index), randomSubject()),
-                        startDateTime=randomDateTime(),
+                        plannedStartDateTime=randomDateTime(),
                         dueDateTime=randomDateTime(),
                         completionDateTime=randomDateTime(),
                         priority=random.randint(0,100),

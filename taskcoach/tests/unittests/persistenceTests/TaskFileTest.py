@@ -275,8 +275,8 @@ class DirtyTaskFileTest(TaskFileTestCase):
         self.task.setBackgroundColor(wx.RED)
         self.failUnless(self.taskFile.needSave())
         
-    def testNeedSave_AfterEditTaskStartDateTime(self):
-        self.task.setStartDateTime(date.Now() + date.oneHour)
+    def testNeedSave_AfterEditTaskPlannedStartDateTime(self):
+        self.task.setPlannedStartDateTime(date.Now() + date.oneHour)
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterEditTaskDueDate(self):

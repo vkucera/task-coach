@@ -463,10 +463,10 @@ class TaskDatesPage(SettingsPage):
             _("Number of hours that tasks are considered to be 'due soon'"), 
             minimum=0, maximum=9999, flags=(None, wx.ALL|wx.ALIGN_LEFT))
         choices = [('', _('Nothing')),
-                   ('startdue', _('Changing the start date changes the due date')),
-                   ('duestart', _('Changing the due date changes the start date'))]
+                   ('startdue', _('Changing the planned start date changes the due date')),
+                   ('duestart', _('Changing the due date changes the planned start date'))]
         self.addChoiceSetting('view', 'datestied', 
-            _('What to do with start and due date if the other one is changed'), 
+            _('What to do with planned start and due date if the other one is changed'), 
             '', choices, flags=(None, wx.ALL|wx.ALIGN_LEFT))
 
         check_choices = [('preset', _('Preset')),
@@ -481,8 +481,8 @@ class TaskDatesPage(SettingsPage):
                         ('currenttime', _('Current time')),
                         ('endofworkingday', _('End of working day')),
                         ('endofday', _('End of day'))]
-        self.addChoiceSetting('view', 'defaultstartdatetime', 
-                              _('Default start date and time'), 
+        self.addChoiceSetting('view', 'defaultplannedstartdatetime', 
+                              _('Default planned start date and time'), 
                               '', check_choices, day_choices, time_choices)
         self.addChoiceSetting('view', 'defaultduedatetime', 
                               _('Default due date and time'), 

@@ -72,9 +72,9 @@ class TaskSorterSettingsTest(test.TestCase):
     def setUp(self):
         self.taskList = task.TaskList()
         self.sorter = task.sorter.Sorter(self.taskList)        
-        self.task1 = task.Task(subject='A', startDateTime=date.Now(),
+        self.task1 = task.Task(subject='A', plannedStartDateTime=date.Now(),
                                dueDateTime=date.Now() + date.oneDay)
-        self.task2 = task.Task(subject='B', startDateTime=date.Now(),
+        self.task2 = task.Task(subject='B', plannedStartDateTime=date.Now(),
                                dueDateTime=date.Now() + date.oneHour)
         self.taskList.extend([self.task1, self.task2])
 
@@ -96,7 +96,7 @@ class TaskSorterSettingsTest(test.TestCase):
         self.assertEqual([self.task1, self.task2], list(self.sorter))
         
     def testSortByInactiveStatus(self):
-        self.task2.setStartDateTime(date.Now() + date.oneDay)
+        self.task2.setPlannedStartDateTime(date.Now() + date.oneDay)
         self.assertEqual([self.task1, self.task2], list(self.sorter))
     
     def testSortBySubjectDescending(self):
@@ -104,10 +104,10 @@ class TaskSorterSettingsTest(test.TestCase):
         self.sorter.sortAscending(False)
         self.assertEqual([self.task2, self.task1], list(self.sorter))
         
-    def testSortByStartDateTime(self):
-        self.sorter.sortBy('startDateTime')
+    def testSortByPlannedStartDateTime(self):
+        self.sorter.sortBy('plannedStartDateTime')
         self.task1.setDueDateTime(date.Now() - date.oneDay)
-        self.task2.setStartDateTime(date.Now() - date.oneDay)
+        self.task2.setPlannedStartDateTime(date.Now() - date.oneDay)
         self.assertEqual([self.task2, self.task1], list(self.sorter))
         
     def testSortByDueDateTimeDescending(self):
@@ -268,14 +268,14 @@ class TaskSorterSettingsTest(test.TestCase):
         self.task1.setCompletionDateTime()
         self.assertEqual([self.task2, self.task1], list(self.sorter))
 
-    def testAlwaysKeepSubscriptionToStartDateTime(self):
-        ''' TaskSorter should keep a subscription to task.startDateTime 
-            even when the start date is not the sort key, because sorting
-            on task status (active, completed, etc.) depends on the start
+    def testAlwaysKeepSubscriptionToPlannedStartDateTime(self):
+        ''' TaskSorter should keep a subscription to task.plannedStartDateTime 
+            even when the planned start date is not the sort key, because sorting
+            on task status (active, completed, etc.) depends on the planned start
             date. '''
-        self.sorter.sortBy('startDateTime')
+        self.sorter.sortBy('plannedStartDateTime')
         self.sorter.sortBy('subject')
-        self.task1.setStartDateTime(date.Now() + date.oneDay)
+        self.task1.setPlannedStartDateTime(date.Now() + date.oneDay)
         self.assertEqual([self.task2, self.task1], list(self.sorter))
         
     def testSortByCategories(self):

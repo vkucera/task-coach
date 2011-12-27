@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from unittests import asserts
 from CommandTestCase import CommandTestCase
-from taskcoachlib import command, patterns, config
+from taskcoachlib import command, config
 from taskcoachlib.domain import task, effort, date
 
 
@@ -87,16 +87,16 @@ class StartAndStopEffortCommandTest(EffortCommandTestCase):
             lambda: self.failIf(self.originalTask.isBeingTracked()),
             lambda: self.failUnless(self.originalTask.isBeingTracked()))
         
-    def testStartTrackingInactiveTaskSetsStartDate(self):
+    def testStartTrackingInactiveTaskSetsPlannedStartDate(self): # FIXME: use actualStartDate
         self.assertDoUndoRedo(
-            lambda: self.assertEqual(date.Today(), self.originalTask.startDateTime().date()),
-            lambda: self.assertEqual(date.DateTime(), self.originalTask.startDateTime()))
+            lambda: self.assertEqual(date.Today(), self.originalTask.plannedStartDateTime().date()),
+            lambda: self.assertEqual(date.DateTime(), self.originalTask.plannedStartDateTime()))
         
-    def testStartTrackingInactiveTaskWithFutureStartDate(self):
+    def testStartTrackingInactiveTaskWithFuturePlannedStartDate(self): # FIXME: use actualStartDate
         futureStartDateTime = date.Now() + date.TimeDelta(days=1)
-        self.task2.setStartDateTime(futureStartDateTime)
+        self.task2.setPlannedStartDateTime(futureStartDateTime)
         start = command.StartEffortCommand(self.taskList, [self.task2])
         start.do()
         self.assertDoUndoRedo(
-            lambda: self.assertEqual(date.Today(), self.task2.startDateTime().date()),
-            lambda: self.assertEqual(futureStartDateTime, self.task2.startDateTime()))
+            lambda: self.assertEqual(date.Today(), self.task2.plannedStartDateTime().date()),
+            lambda: self.assertEqual(futureStartDateTime, self.task2.plannedStartDateTime()))

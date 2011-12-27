@@ -149,8 +149,8 @@ project consisting of different phases and numerous activities.''')),
             li(_('Description: a multi-line description of the task.')),
             li(_('''Due date: the date the task should be finished. 
 This can be 'None' indicating that this task has no fixed due date.''')),
-            li(_('''Start date: the first date on which the task can be started. 
-The start date defaults to the date the task is created. It can also be 'None' 
+            li(_('''Planned start date: the first date on which the task can be started. 
+The planned start date defaults to the date the task is created. It can also be 'None' 
 indicating that you don't really want to start this task. This can be convenient 
 for e.g. registering sick leave.''')),
             li(_('''Completion date: this date is 'None' as long as the task has 
@@ -158,7 +158,7 @@ not been completed. It is set to the current date when you mark the task as
 completed. The completion date can also be entered manually.''')),
             li(_('''Prerequisites: other tasks that need to be completed before
 a task can be started. The task is inactive until the last prerequisite task is 
-completed. Note that if the task has a specific start date set, that start
+completed. Note that if the task has a specific planned start date set, that
 date has to be in the past <em>and</em> all prerequisite tasks need to be
 completed before the task becomes active.''')),
             li(_('Budget: amount of hours available for the task.')),
@@ -179,8 +179,8 @@ prerequisite task has been completed.''')),
     p(
         _('Tasks always have exactly one of the following states:'),
         ul(
-            li(_('Active: the start date is in the past and the due date in the future;')),
-            li(_('''Inactive: the start date is in the future, and/or not all 
+            li(_('Active: the planned start date is in the past and the due date in the future;')),
+            li(_('''Inactive: the planned start date is in the future, and/or not all 
 prerequisite tasks have been completed;''')),
             li(_('Completed: the task has been completed.')))),
     p(
@@ -488,7 +488,7 @@ recurrence)...''')),
 Settings application:'''),
         ul(
             li(_('Show completed: whether to show completed tasks.')),
-            li(_('''Show inactive: whether to show inactive tasks (start date 
+            li(_('''Show inactive: whether to show inactive tasks (planned start date 
 in the future).''')),
             li(_('''Icon position: the LED icon may show up either on the 
 left side or the right side of the screen.''')),
@@ -582,7 +582,7 @@ todo.txt file in sync.''')%meta.metaDict),
     h4(
         a_name(_('Importing todo.txt'), 'todotxtimporting')),
     p(
-        _('''%(name)s imports task subjects, start date, due date, completion 
+        _('''%(name)s imports task subjects, planned start date, due date, completion 
 date, priority, contexts and projects. Contexts and projects are both 
 transformed into categories in %(name)s. Projects cannot be transformed into 
 parent tasks because Todo.txt allows tasks to belong to multiple projects, 
@@ -595,7 +595,7 @@ item if any.''')),
     h4(
         a_name(_('Exporting todo.txt'), 'todotxtexporting')),
     p(
-        _('''%(name)s exports task subjects, start date, due date, completion 
+        _('''%(name)s exports task subjects, planned start date, due date, completion 
 date, priority and categories to the Todo.txt format. Other attributes are not
 exported.''')%meta.metaDict),
     p(
@@ -603,7 +603,7 @@ exported.''')%meta.metaDict),
 dates, so the time part of start, due, and completion date/times is not
 exported.''')%meta.metaDict),
     p(
-        _('''The default Todo.txt format only supports start dates and 
+        _('''The default Todo.txt format only supports planned start dates and 
 completion dates, but no due dates. Therefore, %(name)s uses an extension to
 export the due date of tasks. Due dates are shown as "due:YYYY-MM-DD" in the
 todo.txt file.''')%meta.metaDict),
@@ -645,7 +645,7 @@ template" menu in the Task menu, or the equivalent toolbar button. When the
 task is created, the due, start and completion dates, if applicable, are 
 reevaluated relatively to the current date. That means that if you create a 
 template from a task starting today and due tomorrow, every time the template 
-is instantiated, the start date will be replaced by the current date and the 
+is instantiated, the planned start date will be replaced by the current date and the 
 due date by the current date plus one day.''')),
     p(
         _('''You can also add templates from the template editor (File/Edit

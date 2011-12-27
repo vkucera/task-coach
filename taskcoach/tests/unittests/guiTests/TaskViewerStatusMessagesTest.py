@@ -56,7 +56,7 @@ class TaskViewerStatusMessagesTest(test.TestCase):
         self.assertEqual((message1, message2), self.status())
         
     def addActiveTask(self):
-        self.task.setStartDateTime(date.Now())
+        self.task.setPlannedStartDateTime(date.Now())
         self.taskList.append(self.task)
         
     def addOverdueTask(self):
@@ -80,10 +80,10 @@ class TaskViewerStatusMessagesTest(test.TestCase):
         self.task.setCompletionDateTime(date.DateTime.max)
         
     def makeTaskActive(self):
-        self.task.setStartDateTime(date.Now())
+        self.task.setPlannedStartDateTime(date.Now())
         
     def makeTaskInactive(self):
-        self.task.setStartDateTime(date.Now() + date.TimeDelta(hours=1))
+        self.task.setPlannedStartDateTime(date.Now() + date.TimeDelta(hours=1))
         
     def selectTask(self):
         self.viewer._selection = [self.task]
@@ -186,7 +186,7 @@ class TaskViewerStatusMessagesTest(test.TestCase):
         self.assertMessages(visible=1, total=1, completed=1)
         
     def testTotalWhenHidingCompletedTasksWithActiveTask(self):
-        self.taskList.append(task.Task(startDateTime=date.Now()))
+        self.taskList.append(task.Task(plannedStartDateTime=date.Now()))
         self.addCompletedTask()
         self.hideCompletedTasks()
         self.assertMessages(visible=1, total=2, completed=1)

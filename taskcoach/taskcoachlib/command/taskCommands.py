@@ -147,10 +147,10 @@ class NewSubTaskCommand(base.NewSubItemCommand, SaveTaskStateMixin):
     def __init__(self, *args, **kwargs):
         super(NewSubTaskCommand, self).__init__(*args, **kwargs)
         subject = kwargs.pop('subject', _('New subtask'))
-        startDateTime = kwargs.pop('startDateTime', date.DateTime())
+        plannedStartDateTime = kwargs.pop('plannedStartDateTime', date.DateTime())
         dueDateTime = kwargs.pop('dueDateTime', date.DateTime())
         self.items = [parent.newChild(subject=subject, 
-                                      startDateTime=max([parent.startDateTime(), startDateTime]),
+                                      plannedStartDateTime=max([parent.plannedStartDateTime(), plannedStartDateTime]),
                                       dueDateTime=min([parent.dueDateTime(), dueDateTime]), 
                                       **kwargs) for parent in self.items]
         self.saveStates(self.getTasksToSave())
@@ -197,7 +197,7 @@ class MarkCompletedCommand(base.SaveStateMixin, EffortCommand):
         return self.items                
 
                 
-class StartEffortCommand(EffortCommand):
+class StartEffortCommand(EffortCommand): # FIXME: use actualStartDateTime instead of plannedStartDateTime
     plural_name = _('Start tracking')
     singular_name = _('Start tracking "%s"')
 
@@ -205,7 +205,7 @@ class StartEffortCommand(EffortCommand):
         super(StartEffortCommand, self).__init__(*args, **kwargs)
         start = date.DateTime.now()
         self.efforts = [effort.Effort(item, start) for item in self.items]
-        self.startDateTimes = [(item.startDateTime() if start < item.startDateTime() else None) for item in self.items]
+        self.plannedStartDateTimes = [(item.plannedStartDateTime() if start < item.plannedStartDateTime() else None) for item in self.items]
         
     def do_command(self):
         super(StartEffortCommand, self).do_command()
@@ -221,17 +221,17 @@ class StartEffortCommand(EffortCommand):
 
     @patterns.eventSource
     def addEfforts(self, event=None):
-        for item, newEffort, currentStartDateTime in zip(self.items, self.efforts, self.startDateTimes):
+        for item, newEffort, currentPlannedStartDateTime in zip(self.items, self.efforts, self.plannedStartDateTimes):
             item.addEffort(newEffort, event=event)
-            if currentStartDateTime:
-                item.setStartDateTime(newEffort.getStart())
+            if currentPlannedStartDateTime:
+                item.setPlannedStartDateTime(newEffort.getStart())
             
     @patterns.eventSource
     def removeEfforts(self, event=None):
-        for item, newEffort, previousStartDateTime in zip(self.items, self.efforts, self.startDateTimes):
+        for item, newEffort, previousPlannedStartDateTime in zip(self.items, self.efforts, self.plannedStartDateTimes):
             item.removeEffort(newEffort, event=event)
-            if previousStartDateTime:
-                item.setStartDateTime(previousStartDateTime)
+            if previousPlannedStartDateTime:
+                item.setPlannedStartDateTime(previousPlannedStartDateTime)
             
         
 class StopEffortCommand(EffortCommand):
@@ -401,8 +401,8 @@ class EditDateTimeCommand(base.BaseCommand):
 
 class EditPeriodDateTimeCommand(EditDateTimeCommand):
     ''' Base for date/time commands that also may have to adjust the other
-        end of the period. E.g., where changing the start date should also 
-        change the due date to keep the period the same length. '''
+        end of the period. E.g., where changing the planned start date should 
+        also change the due date to keep the period the same length. '''
     
     def __init__(self, *args, **kwargs):            
         self.__keep_delta = kwargs.pop('keep_delta', False)
@@ -429,7 +429,7 @@ class EditPeriodDateTimeCommand(EditDateTimeCommand):
         ''' Determine whether the other date/time of the item should be
             adjusted. '''
         return self.__keep_delta and date.DateTime() not in (self._newDateTime, 
-                                                             item.startDateTime(),
+                                                             item.plannedStartDateTime(),
                                                              item.dueDateTime())
 
     @staticmethod
@@ -443,17 +443,17 @@ class EditPeriodDateTimeCommand(EditDateTimeCommand):
         raise NotImplementedError # pragma: no cover
     
     
-class EditStartDateTimeCommand(EditPeriodDateTimeCommand):
-    plural_name = _('Change start date')
-    singular_name = _('Change start date of "%s"')
+class EditPlannedStartDateTimeCommand(EditPeriodDateTimeCommand):
+    plural_name = _('Change planned start date')
+    singular_name = _('Change planned start date of "%s"')
     
     @staticmethod
     def getDateTime(item):
-        return item.startDateTime()
+        return item.plannedStartDateTime()
     
     @staticmethod
     def setDateTime(item, dateTime, event):
-        item.setStartDateTime(dateTime, event=event)
+        item.setPlannedStartDateTime(dateTime, event=event)
         
     @staticmethod
     def getOtherDateTime(item):
@@ -478,11 +478,11 @@ class EditDueDateTimeCommand(EditPeriodDateTimeCommand):
         
     @staticmethod
     def getOtherDateTime(item):
-        return item.startDateTime()
+        return item.plannedStartDateTime()
 
     @staticmethod
     def setOtherDateTime(item, dateTime, event):
-        item.setStartDateTime(dateTime, event=event)
+        item.setPlannedStartDateTime(dateTime, event=event)
                 
 
 class EditCompletionDateTimeCommand(EditDateTimeCommand, EffortCommand):

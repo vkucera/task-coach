@@ -38,7 +38,7 @@ class TodoTxtWriter(object):
             count += 1
             self.__fd.write(self.priority(task.priority()) + \
                             self.completionDate(task.completionDateTime()) + \
-                            self.startDate(task.startDateTime()) + \
+                            self.startDate(task.plannedStartDateTime()) + \
                             task.subject(recursive=True) + \
                             self.contextsAndProjects(task) + \
                             self.dueDate(task.dueDateTime()) + '\n')
@@ -49,8 +49,8 @@ class TodoTxtWriter(object):
         return '(%s) '%chr(ord('A') + priorityNumber - 1) if 1 <= priorityNumber <= 26 else ''
 
     @classmethod
-    def startDate(cls, startDateTime):
-        return '%s '%cls.dateTime(startDateTime) if cls.isActualDateTime(startDateTime) else ''
+    def startDate(cls, plannedStartDateTime):
+        return '%s '%cls.dateTime(plannedStartDateTime) if cls.isActualDateTime(plannedStartDateTime) else ''
     
     @classmethod
     def dueDate(cls, dueDateTime):

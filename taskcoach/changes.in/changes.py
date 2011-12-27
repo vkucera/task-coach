@@ -22,10 +22,14 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.5', 'January ??, 2012',
+Release('1.3.5', 'December 27, 2011',
     summary='''This is a feature release.''',
     featuresAdded=[
         Feature('''Note categories are now synced as well (SyncML)'''),
+        ],
+    featuresChanged=[
+        Feature('''Rename "start date" to "planned start date" in preparation of
+adding a separate "actual start date" attribute to tasks.'''),
         ],
     ),
 

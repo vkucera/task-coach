@@ -23,7 +23,7 @@ import task
 
 class Sorter(base.TreeSorter):
     DomainObjectClass = task.Task # What are we sorting
-    TaskStatusAttributes = ('startDateTime', 'completionDateTime',
+    TaskStatusAttributes = ('plannedStartDateTime', 'completionDateTime',
                             'prerequisites')
     
     def __init__(self, *args, **kwargs):
@@ -69,7 +69,7 @@ class Sorter(base.TreeSorter):
             return lambda task: []
 
     def _registerObserverForAttribute(self, attribute):
-        # Sorter is always observing completion date, start date and 
+        # Sorter is always observing completion date, planned start date and 
         # prerequisites because sorting by status depends on those attributes. 
         # Hence we don't need to subscribe to these attributes when they become 
         # the sort key.

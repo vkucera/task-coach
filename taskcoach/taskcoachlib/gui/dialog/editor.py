@@ -284,7 +284,7 @@ class DatesPage(Page):
         self.addRecurrenceEntry()
 
     def addDateEntries(self):
-        for label, taskMethodName in [(_('Start date'), 'startDateTime'),
+        for label, taskMethodName in [(_('Planned start date'), 'plannedStartDateTime'),
                                       (_('Due date'), 'dueDateTime'),
                                       (_('Completion date'), 'completionDateTime')]:
             self.addDateEntry(label, taskMethodName)
@@ -309,7 +309,7 @@ class DatesPage(Page):
             
     def __keep_delta(self, taskMethodName):
         datesTied = self.__settings.get('view', 'datestied')
-        return (datesTied == 'startdue' and taskMethodName == 'startDateTime') or \
+        return (datesTied == 'startdue' and taskMethodName == 'plannedStartDateTime') or \
                (datesTied == 'duestart' and taskMethodName == 'dueDateTime')
                
     def addReminderEntry(self):
@@ -337,8 +337,8 @@ class DatesPage(Page):
             
     def entries(self):
         # pylint: disable-msg=E1101
-        return dict(firstEntry=self._startDateTimeEntry,
-                    startDateTime=self._startDateTimeEntry,
+        return dict(firstEntry=self._plannedStartDateTimeEntry,
+                    plannedStartDateTime=self._plannedStartDateTimeEntry,
                     dueDateTime=self._dueDateTimeEntry,
                     completionDateTime=self._completionDateTimeEntry,
                     timeLeft=self._dueDateTimeEntry,
