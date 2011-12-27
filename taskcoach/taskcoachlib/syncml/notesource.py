@@ -26,9 +26,6 @@ from taskcoachlib.i18n import _
 import wx, inspect
 
 class NoteSource(BaseSource):
-    CONFLICT_SUBJECT       = 0x01
-    CONFLICT_DESCRIPTION   = 0x02
-
     def __init__(self, callback, noteList, categoryList, *args, **kwargs):
         super(NoteSource, self).__init__(callback, noteList, *args, **kwargs)
 
@@ -37,16 +34,6 @@ class NoteSource(BaseSource):
     def updateItemProperties(self, item, note):
         item.dataType = 'text/x-vnote:1.1'
         item.data = ical.VNoteFromNote(note)
-
-    def compareItemProperties(self, local, remote):
-        result = 0
-
-        if local.subject() != remote.subject():
-            result |= self.CONFLICT_SUBJECT
-        if local.description() != remote.description():
-            result |= self.CONFLICT_DESCRIPTION
-
-        return result
 
     def _parseObject(self, item):
         parser = ical.VCalendarParser()
@@ -78,38 +65,3 @@ class NoteSource(BaseSource):
             category.addCategorizable(local)
 
         return 200
-
-    def doResolveConflict(self, note, local, result):
-        resolved = self.callback.resolveNoteConflict(result, local, note)
-
-        if resolved.has_key('subject'):
-            local.setSubject(resolved['subject'])
-        if resolved.has_key('description'):
-            local.setDescription(resolved['description'])
-
-        if resolved.has_key('categories'):
-            for category in local.categories().copy():
-                category.removeCategorizable(local)
-                local.removeCategory(category)
-
-            for category in resolved['categories'].split(','):
-                categoryObject = self.categoryList.findCategoryByName(category)
-                if categoryObject is None:
-                    categoryObject = Category(category)
-                    self.categoryList.extend([categoryObject])
-                local.addCategory(categoryObject)
-
-            for category in local.categories():
-                category.addCategorizable(local)
-
-        return local
-
-    def objectRemovedOnServer(self, note):
-        return wx.MessageBox(_('Note "%s" has been deleted on server,\n') % note.subject() + \
-                             _('but locally modified. Should I keep the local version?'),
-                             _('Synchronization conflict'), wx.YES_NO) == wx.YES
-
-    def objectRemovedOnClient(self, note):
-        return wx.MessageBox(_('Note "%s" has been locally deleted,\n') % note.subject() + \
-                             _('but modified on server. Should I keep the remote version?'),
-                             _('Synchronization conflict'), wx.YES_NO) == wx.YES

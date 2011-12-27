@@ -26,14 +26,6 @@ from taskcoachlib.i18n import _
 import wx, inspect
 
 class TaskSource(basesource.BaseSource):
-    CONFLICT_STARTDATETIME      = 0x01
-    CONFLICT_DUEDATETIME        = 0x02
-    CONFLICT_DESCRIPTION        = 0x04
-    CONFLICT_SUBJECT            = 0x08
-    CONFLICT_PRIORITY           = 0x10
-    CONFLICT_CATEGORIES         = 0x20
-    CONFLICT_COMPLETIONDATETIME = 0x40
-
     def __init__(self, callback, taskList, categoryList, *args, **kwargs):
         super(TaskSource, self).__init__(callback, taskList, *args, **kwargs)
 
@@ -43,34 +35,7 @@ class TaskSource(basesource.BaseSource):
         item.data = 'BEGIN:VCALENDAR\r\nVERSION: 1.0\r\n' + \
                     ical.VCalFromTask(task) + \
                     'END:VCALENDAR'
-        item.dataType = 'text/x-vcalendar'
-
-    def compareItemProperties(self, local, remote):
-        result = 0
-
-        if local.startDateTime() != remote.startDateTime():
-            result |= self.CONFLICT_STARTDATETIME
-        if local.dueDateTime() != remote.dueDateTime():
-            result |= self.CONFLICT_DUEDATETIME
-        if local.description() != remote.description():
-            result |= self.CONFLICT_DESCRIPTION
-        if local.subject() != remote.subject():
-            result |= self.CONFLICT_SUBJECT
-        if local.priority() != remote.priority():
-            result |= self.CONFLICT_PRIORITY
-        if local.completionDateTime() != remote.completionDateTime():
-            result |= self.CONFLICT_COMPLETIONDATETIME
-
-        localCategories = map(unicode, local.categories(recursive=True, upwards=True))
-        remoteCategories = map(unicode, remote.categories())
-
-        localCategories.sort()
-        remoteCategories.sort()
-
-        if localCategories != remoteCategories:
-            result |= self.CONFLICT_CATEGORIES
-
-        return result
+        item.dataType = 'text/x-vcalendar:1.0'
 
     def _parseObject(self, item):
         parser = ical.VCalendarParser()
@@ -113,49 +78,3 @@ class TaskSource(basesource.BaseSource):
             category.addCategorizable(local)
 
         return 200 # FIXME
-
-    def doResolveConflict(self, task, local, result):
-        resolved = self.callback.resolveTaskConflict(result, local, task)
-
-        if resolved.has_key('subject'):
-            local.setSubject(resolved['subject'])
-        if resolved.has_key('description'):
-            local.setDescription(resolved['description'])
-        if resolved.has_key('startDateTime'):
-            local.setStartDateTime(resolved['startDateTime'])
-        if resolved.has_key('dueDateTime'):
-            local.setDueDateTime(resolved['dueDateTime'])
-        if resolved.has_key('priority'):
-            local.setPriority(resolved['priority'])
-        if resolved.has_key('completionDateTime'):
-            local.setCompletionDateTime(resolved['completionDateTime'])
-        if resolved.has_key('categories'):
-            # Ahah,      tricky       part.      This      is      why
-            # callback.resolvedXXXConflict return dictionaries instead
-            # of Task object.
-
-            for category in local.categories().copy():
-                category.removeCategorizable(local)
-                local.removeCategory(category)
-
-            for category in resolved['categories'].split(','):
-                categoryObject = self.categoryList.findCategoryByName(category)
-                if categoryObject is None:
-                    categoryObject = Category(category)
-                    self.categoryList.extend([categoryObject])
-                local.addCategory(categoryObject)
-
-            for category in local.categories():
-                category.addCategorizable(local)
-
-        return local
-
-    def objectRemovedOnServer(self, task):
-        return wx.MessageBox(_('Task "%s" has been deleted on server,\n') % task.subject() + \
-                             _('but locally modified. Should I keep the local version?'),
-                             _('Synchronization conflict'), wx.YES_NO) == wx.YES
-
-    def objectRemovedOnClient(self, task):
-        return wx.MessageBox(_('Task "%s" has been locally deleted,\n') % task.subject() + \
-                             _('but modified on server. Should I keep the remote version?'),
-                             _('Synchronization conflict'), wx.YES_NO) == wx.YES

@@ -26,7 +26,6 @@ from taskcoachlib.widgets import GetPassword
 
 try:
     from taskcoachlib.syncml import sync
-    from taskcoachlib.widgets import conflict
 except ImportError: # pragma: no cover
     # Unsupported platform.
     pass
@@ -327,7 +326,7 @@ class IOController(object):
             if not password:
                 break
 
-            synchronizer = sync.Synchronizer(self.__syncReport, self, 
+            synchronizer = sync.Synchronizer(self.__syncReport,
                                          self.__taskFile, password)
             try:
                 synchronizer.synchronize()
@@ -341,23 +340,6 @@ class IOController(object):
 
     def filename(self):
         return self.__taskFile.filename()
-
-    def resolveNoteConflict(self, flags, local, remote):
-        return self.resolveConflict(conflict.NoteConflictPanel, 
-                                    flags, local, remote, _('Note conflict'))
-
-    def resolveTaskConflict(self, flags, local, remote):
-        return self.resolveConflict(conflict.TaskConflictPanel, 
-                                    flags, local, remote, _('Task conflict'))
-    
-    def resolveConflict(self, panel, flags, local, remote, title):
-        dialog = conflict.ConflictDialog(panel, flags, local, remote, None, 
-                                         wx.ID_ANY, title)
-        try:
-            dialog.ShowModal()
-        finally:
-            dialog.Destroy()
-        return dialog.resolved
 
     def __syncReport(self, msg):
         wx.MessageBox(msg, _('Synchronization status'), 
