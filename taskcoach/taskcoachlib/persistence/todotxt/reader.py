@@ -56,7 +56,7 @@ class TodoTxtReader(object):
         match = todoTxtRE.match(line)
         priority = self.priority(match)    
         completionDateTime = self.completionDateTime(match, now)
-        startDateTime = self.startDateTime(match)
+        plannedStartDateTime = self.plannedStartDateTime(match)
         categories = self.categories(match, event)
        
         recursiveSubject = match.group('subject')
@@ -66,7 +66,7 @@ class TodoTxtReader(object):
             newTask = self.findOrCreateTask(subject.strip(), newTask, event)
         
         newTask.setPriority(priority, event=event)
-        newTask.setStartDateTime(startDateTime, event=event)
+        newTask.setPlannedStartDateTime(plannedStartDateTime, event=event)
         newTask.setCompletionDateTime(completionDateTime, event=event)
         newTask.setDueDateTime(dueDateTime, event=event)
         for eachCategory in categories:
@@ -87,7 +87,7 @@ class TodoTxtReader(object):
             return date.DateTime()
         
     @classmethod
-    def startDateTime(cls, match):
+    def plannedStartDateTime(cls, match):
         startDateText = match.group('startDate')
         return cls.dateTime(startDateText) if startDateText else date.DateTime()
     

@@ -188,18 +188,18 @@ class TaskNewTest(wxTestCaseWithFrameAsTopLevelWindow):
         firstChild = tree.GetFirstChild(tree.GetRootItem())[0]
         self.failUnless(firstChild.IsChecked())
         
-    def testNewTaskWithPresetStartDateTime(self):
+    def testNewTaskWithPresetPlannedStartDateTime(self):
         taskNew = gui.uicommand.TaskNew(taskList=self.taskFile.tasks(),
                                         settings=self.settings)
         taskNew.doCommand(None, show=False)
-        self.failIf(date.DateTime() == list(self.taskFile.tasks())[0].startDateTime())
+        self.failIf(date.DateTime() == list(self.taskFile.tasks())[0].plannedStartDateTime())
 
-    def testNewTaskWithProposedStartDateTime(self):
-        self.settings.set('view', 'defaultstartdatetime', 'propose_tomorrow_endofworkingday')
+    def testNewTaskWithProposedPlannedStartDateTime(self):
+        self.settings.set('view', 'defaultplannedstartdatetime', 'propose_tomorrow_endofworkingday')
         taskNew = gui.uicommand.TaskNew(taskList=self.taskFile.tasks(),
                                         settings=self.settings)
         taskNew.doCommand(None, show=False)
-        self.assertEqual(date.DateTime(), list(self.taskFile.tasks())[0].startDateTime())
+        self.assertEqual(date.DateTime(), list(self.taskFile.tasks())[0].plannedStartDateTime())
         
     def testNewTaskWithPresetDueDateTime(self):
         self.settings.set('view', 'defaultduedatetime', 'preset_tomorrow_endofworkingday')

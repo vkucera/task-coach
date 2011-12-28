@@ -61,7 +61,7 @@ class TaskAssertsMixin(object):
         self.assertEqual(orig.subject(), copy.subject())
         self.assertEqual(orig.description(), copy.description())
         self.assertEqual(orig.dueDateTime(), copy.dueDateTime())
-        self.assertEqual(orig.startDateTime(), copy.startDateTime())
+        self.assertEqual(orig.plannedStartDateTime(), copy.plannedStartDateTime())
         self.assertEqual(orig.completionDateTime(), copy.completionDateTime())
         self.assertEqual(orig.recurrence(), copy.recurrence())
         self.assertEqual(orig.budget(), copy.budget())

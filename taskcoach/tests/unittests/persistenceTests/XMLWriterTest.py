@@ -82,13 +82,13 @@ class XMLWriterTest(test.TestCase):
     def testEmptyTaskDescriptionIsNotWritten(self):
         self.expectNotInXML('<description>')
         
-    def testTaskStartDateTime(self):
-        self.task.setStartDateTime(date.DateTime(2004,1,1,11,0,0))
-        self.expectInXML('startdate="%s"'%str(self.task.startDateTime()))
+    def testTaskPlannedStartDateTime(self):
+        self.task.setPlannedStartDateTime(date.DateTime(2004,1,1,11,0,0))
+        self.expectInXML('plannedstartdate="%s"'%str(self.task.plannedStartDateTime()))
         
-    def testNoStartDateTime(self):
-        self.task.setStartDateTime(date.DateTime())
-        self.expectNotInXML('startdate=')
+    def testNoPlannedStartDateTime(self):
+        self.task.setPlannedStartDateTime(date.DateTime())
+        self.expectNotInXML('plannedstartdate=')
         
     def testTaskDueDateTime(self):
         self.task.setDueDateTime(date.DateTime(2004,1,1,10,5,5))
@@ -355,7 +355,7 @@ class XMLWriterTest(test.TestCase):
     def testDontWriteInheritedTaskForegroundColor(self):
         self.task.setForegroundColor(wx.RED)
         child = task.Task(subject='child', id='id',
-                          startDateTime=date.DateTime())
+                          plannedStartDateTime=date.DateTime())
         self.task.addChild(child)
         self.taskList.append(child)
         self.expectInXML('<task id="id" status="1" subject="child" />')
@@ -363,7 +363,7 @@ class XMLWriterTest(test.TestCase):
     def testDontWriteInheritedTaskBackgroundColor(self):
         self.task.setBackgroundColor(wx.RED)
         child = task.Task(subject='child', id='id', 
-                          startDateTime=date.DateTime())
+                          plannedStartDateTime=date.DateTime())
         self.task.addChild(child)
         self.taskList.append(child)
         self.expectInXML('<task id="id" status="1" subject="child" />')

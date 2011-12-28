@@ -144,8 +144,8 @@ class BaseTaskTreeViewer(BaseTaskViewer):
     
     def newSubItemCommand(self):
         kwargs = dict()
-        if self.__shouldPresetStartDateTime():
-            kwargs['startDateTime'] = task.Task.suggestedStartDateTime()
+        if self.__shouldPresetPlannedStartDateTime():
+            kwargs['plannedStartDateTime'] = task.Task.suggestedPlannedStartDateTime()
         if self.__shouldPresetDueDateTime():
             kwargs['dueDateTime'] = task.Task.suggestedDueDateTime()
         if self.__shouldPresetCompletionDateTime():
@@ -155,8 +155,8 @@ class BaseTaskTreeViewer(BaseTaskViewer):
         return self.newSubItemCommandClass()(self.presentation(), 
                                              self.curselection(), **kwargs)
 
-    def __shouldPresetStartDateTime(self):
-        return self.settings.get('view', 'defaultstartdatetime').startswith('preset')
+    def __shouldPresetPlannedStartDateTime(self):
+        return self.settings.get('view', 'defaultplannedstartdatetime').startswith('preset')
             
     def __shouldPresetDueDateTime(self):
         return self.settings.get('view', 'defaultduedatetime').startswith('preset')
@@ -276,7 +276,7 @@ class SquareMapRootNode(RootNode):
 class TimelineRootNode(RootNode):
     def children(self, recursive=False):
         children = super(TimelineRootNode, self).children(recursive)
-        children.sort(key=lambda task: task.startDateTime())
+        children.sort(key=lambda task: task.plannedStartDateTime())
         return children
     
     def parallel_children(self, recursive=False):
@@ -285,12 +285,12 @@ class TimelineRootNode(RootNode):
     def sequential_children(self):
         return []
 
-    def startDateTime(self, recursive=False): # pylint: disable-msg=W0613
-        startDateTimes = [item.startDateTime(recursive=True) for item in self.parallel_children()]
-        startDateTimes = [dt for dt in startDateTimes if dt != date.DateTime()]
-        if not startDateTimes:
-            startDateTimes.append(date.Now())
-        return min(startDateTimes)
+    def plannedStartDateTime(self, recursive=False): # pylint: disable-msg=W0613
+        plannedStartDateTimes = [item.plannedStartDateTime(recursive=True) for item in self.parallel_children()]
+        plannedStartDateTimes = [dt for dt in plannedStartDateTimes if dt != date.DateTime()]
+        if not plannedStartDateTimes:
+            plannedStartDateTimes.append(date.Now())
+        return min(plannedStartDateTimes)
     
     def dueDateTime(self, recursive=False): # pylint: disable-msg=W0613
         dueDateTimes = [item.dueDateTime(recursive=True) for item in self.parallel_children()]
@@ -308,7 +308,7 @@ class TimelineViewer(BaseTaskTreeViewer):
         kwargs.setdefault('settingsSection', 'timelineviewer')
         super(TimelineViewer, self).__init__(*args, **kwargs)
         for eventType in (task.Task.subjectChangedEventType(),
-                          task.Task.startDateTimeChangedEventType(),
+                          task.Task.plannedStartDateTimeChangedEventType(),
                           task.Task.dueDateTimeChangedEventType(),
                           task.Task.completionDateTimeChangedEventType()):
             self.registerObserver(self.onAttributeChanged, eventType)
@@ -339,7 +339,7 @@ class TimelineViewer(BaseTaskTreeViewer):
  
     def start(self, item, recursive=False):
         try:
-            start = item.startDateTime(recursive=recursive)
+            start = item.plannedStartDateTime(recursive=recursive)
             if start == date.DateTime():
                 return None
         except AttributeError:
@@ -372,7 +372,7 @@ class TimelineViewer(BaseTaskTreeViewer):
         try:
             children = [child for child in item.children(recursive=recursive) \
                         if child in self.presentation()]
-            children.sort(key=lambda task: task.startDateTime())
+            children.sort(key=lambda task: task.plannedStartDateTime())
             return children
         except AttributeError:
             return []
@@ -422,7 +422,7 @@ class SquareTaskViewer(BaseTaskTreeViewer):
         self.orderUICommand.setChoice(self.__orderBy)
         for eventType in (task.Task.subjectChangedEventType(),
                           task.Task.dueDateTimeChangedEventType(),
-                          task.Task.startDateTimeChangedEventType(),
+                          task.Task.plannedStartDateTimeChangedEventType(),
                           task.Task.completionDateTimeChangedEventType()):
             self.registerObserver(self.onAttributeChanged, eventType)
 
@@ -545,7 +545,7 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
 
         # pylint: disable-msg=E1101
         for eventType in (task.Task.subjectChangedEventType(),
-                          task.Task.startDateTimeChangedEventType(),
+                          task.Task.plannedStartDateTimeChangedEventType(),
                           task.Task.dueDateTimeChangedEventType(),
                           task.Task.completionDateTimeChangedEventType(),
                           task.Task.attachmentsChangedEventType(),
@@ -593,11 +593,11 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         edit(item)
 
     def onCreate(self, dateTime, show=True):
-        startDateTime = dateTime
+        plannedStartDateTime = dateTime
         dueDateTime = dateTime.endOfDay() if dateTime == dateTime.startOfDay() else dateTime
         create = uicommand.TaskNew(taskList=self.presentation(), 
                                    settings=self.settings,
-                                   taskKeywords=dict(startDateTime=startDateTime, 
+                                   taskKeywords=dict(plannedStartDateTime=plannedStartDateTime, 
                                                      dueDateTime=dueDateTime))
         return create(event=None, show=show)
 
@@ -735,7 +735,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
                 task.Task.subjectChangedEventType(),
                 task.Task.completionDateTimeChangedEventType(),
                 task.Task.dueDateTimeChangedEventType(),
-                task.Task.startDateTimeChangedEventType(),
+                task.Task.plannedStartDateTimeChangedEventType(),
                 task.Task.trackStartEventType(), task.Task.trackStopEventType(), 
                 sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                     value='subject'),
@@ -800,7 +800,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
             ##     width=self.getColumnWidth('ordering'))] + \
 
         for name, columnHeader, editCtrl, editCallback, eventTypes in [
-            ('startDateTime', _('Start date'), inplace_editor.DateTimeCtrl, self.onEditStartDateTime, []),
+            ('plannedStartDateTime', _('Planned start date'), inplace_editor.DateTimeCtrl, self.onEditPlannedStartDateTime, []),
             ('dueDateTime', _('Due date'), inplace_editor.DateTimeCtrl, self.onEditDueDateTime, [task.Task.expansionChangedEventType()]),
             ('completionDateTime', _('Completion date'), inplace_editor.DateTimeCtrl, self.onEditCompletionDateTime, [task.Task.expansionChangedEventType()])]:
             renderCallback = getattr(self, 'render%s'%(name[0].capitalize()+name[1:]))
@@ -849,13 +849,13 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
             (_('&Dates'),
              uicommand.ViewColumns(menuText=_('&All date columns'),
                 helpText=_('Show/hide all date-related columns'),
-                setting=['startDateTime', 'dueDateTime', 'timeLeft', 
+                setting=['plannedStartDateTime', 'dueDateTime', 'timeLeft', 
                          'completionDateTime', 'recurrence'],
                 viewer=self),
              None,
-             uicommand.ViewColumn(menuText=_('&Start date'),
-                 helpText=_('Show/hide start date column'),
-                 setting='startDateTime', viewer=self),
+             uicommand.ViewColumn(menuText=_('&Planned start date'),
+                 helpText=_('Show/hide planned start date column'),
+                 setting='plannedStartDateTime', viewer=self),
              uicommand.ViewColumn(menuText=_('&Due date'),
                  helpText=_('Show/hide due date column'),
                  setting='dueDateTime', viewer=self),
@@ -970,11 +970,11 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
         return task.subject(recursive=not self.isTreeViewer())
     
     @staticmethod
-    def renderStartDateTime(task):
-        # The rendering of the start date time doesn't depend on whether the
-        # task is collapsed since the start date time is a parent is always <=
-        # start date times of all children. 
-        return render.dateTime(task.startDateTime())
+    def renderPlannedStartDateTime(task):
+        # The rendering of the planned start date time doesn't depend on whether 
+        # the task is collapsed since the planned start date time of a parent is 
+        # always <= planned start date times of all children. 
+        return render.dateTime(task.plannedStartDateTime())
     
     def renderDueDateTime(self, task):
         return self.renderedValue(task, task.dueDateTime, render.dateTime)
@@ -1031,10 +1031,10 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
                 template = '(%s)'
         return template%renderValue(value, *extraRenderArgs)
     
-    def onEditStartDateTime(self, item, newValue):
+    def onEditPlannedStartDateTime(self, item, newValue):
         keep_delta = self.settings.get('view', 'datestied') == 'startdue'
-        command.EditStartDateTimeCommand(items=[item], newValue=newValue, 
-                                         keep_delta=keep_delta).do()
+        command.EditPlannedStartDateTimeCommand(items=[item], newValue=newValue, 
+                                                keep_delta=keep_delta).do()
         
     def onEditDueDateTime(self, item, newValue):       
         keep_delta = self.settings.get('view', 'datestied') == 'duestart'

@@ -72,7 +72,7 @@ class IntegrationTest(IntegrationTestCase):
         # pylint: disable-msg=W0201
         self.description = 'Description\nLine 2'
         self.task = task.Task(subject='Subject', description=self.description, 
-            startDateTime=date.Now() - date.TimeDelta(days=1), 
+            plannedStartDateTime=date.Now() - date.TimeDelta(days=1), 
             dueDateTime=date.Now() + date.TimeDelta(days=1), 
             completionDateTime=date.Now() - date.TimeDelta(days=1), 
             budget=date.TimeDelta(hours=1), 
@@ -138,8 +138,8 @@ class IntegrationTest(IntegrationTestCase):
     def testExpansionState(self):
         self.assertAttributeWrittenAndRead(self.task, 'isExpanded')
          
-    def testStartDateTime(self):
-        self.assertAttributeWrittenAndRead(self.task, 'startDateTime')
+    def testPlannedStartDateTime(self):
+        self.assertAttributeWrittenAndRead(self.task, 'plannedStartDateTime')
                 
     def testDueDateTime(self):
         self.assertAttributeWrittenAndRead(self.task, 'dueDateTime')

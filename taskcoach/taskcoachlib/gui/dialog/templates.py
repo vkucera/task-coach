@@ -109,9 +109,9 @@ class TemplatesDialog(sized_controls.SizedDialog):
         label = wx.StaticText(panel, label=_('Subject'))
         label.SetSizerProps(valign='center')
         self._subjectCtrl = wx.TextCtrl(panel)
-        label = wx.StaticText(panel, label=_('Start date'))
+        label = wx.StaticText(panel, label=_('Planned start date'))
         label.SetSizerProps(valign='center')
-        self._startDateTimeCtrl = TimeExpressionEntry(panel)
+        self._plannedStartDateTimeCtrl = TimeExpressionEntry(panel)
         label = wx.StaticText(panel, label=_('Due date'))
         label.SetSizerProps(valign='center')
         self._dueDateTimeCtrl = TimeExpressionEntry(panel)
@@ -121,7 +121,7 @@ class TemplatesDialog(sized_controls.SizedDialog):
         label = wx.StaticText(panel, label=_('Reminder'))
         label.SetSizerProps(valign='center')
         self._reminderDateTimeCtrl = TimeExpressionEntry(panel)
-        self._taskControls = (self._subjectCtrl, self._startDateTimeCtrl, self._dueDateTimeCtrl,
+        self._taskControls = (self._subjectCtrl, self._plannedStartDateTimeCtrl, self._dueDateTimeCtrl,
                               self._completionDateTimeCtrl, self._reminderDateTimeCtrl)
         for ctrl in self._taskControls:
             ctrl.SetSizerProps(valign='center', expand=True)
@@ -144,7 +144,7 @@ class TemplatesDialog(sized_controls.SizedDialog):
         if self._GetSelection().IsOk() and not self._changing:
             task = self._templateList.GetItemData(self._GetSelection()).GetData()
             task.setSubject(self._subjectCtrl.GetValue())
-            for ctrl, name in [(self._startDateTimeCtrl, 'startdatetmpl'),
+            for ctrl, name in [(self._plannedStartDateTimeCtrl, 'plannedstartdatetmpl'),
                                (self._dueDateTimeCtrl, 'duedatetmpl'),
                                (self._completionDateTimeCtrl, 'completiondatetmpl'),
                                (self._reminderDateTimeCtrl, 'remindertmpl')]:
@@ -173,7 +173,7 @@ class TemplatesDialog(sized_controls.SizedDialog):
                         ctrl.SetValue(u'')
                 else:
                     self._subjectCtrl.SetValue(task.subject())
-                    self._startDateTimeCtrl.SetValue(task.startdatetmpl or u'')
+                    self._plannedStartDateTimeCtrl.SetValue(task.plannedstartdatetmpl or u'')
                     self._dueDateTimeCtrl.SetValue(task.duedatetmpl or u'')
                     self._completionDateTimeCtrl.SetValue(task.completiondatetmpl or u'')
                     self._reminderDateTimeCtrl.SetValue(task.remindertmpl or u'')
@@ -219,7 +219,7 @@ class TemplatesDialog(sized_controls.SizedDialog):
 
     def OnAdd(self, event): # pylint: disable-msg=W0613
         template = Task(subject=_('New task template'))
-        for name in ('startdatetmpl', 'duedatetmpl', 'completiondatetmpl', 
+        for name in ('plannedstartdatetmpl', 'duedatetmpl', 'completiondatetmpl', 
                      'remindertmpl'):
             setattr(template, name, None)
         theTask = self._templates.addTemplate(template)

@@ -31,7 +31,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     maxDateTime = date.DateTime()
     
     def __init__(self, subject='', description='', 
-                 dueDateTime=None, startDateTime=None, completionDateTime=None,
+                 dueDateTime=None, plannedStartDateTime=None, completionDateTime=None,
                  budget=None, priority=0, id=None, hourlyFee=0, # pylint: disable-msg=W0622
                  fixedFee=0, reminder=None, reminderBeforeSnooze=None, categories=None,
                  efforts=None, shouldMarkCompletedWhenAllChildrenCompleted=None, 
@@ -47,8 +47,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         maxDateTime = self.maxDateTime    
         self.__dueDateTime = Attribute(dueDateTime or maxDateTime, self, 
                                        self.dueDateTimeEvent)
-        self.__startDateTime = Attribute(startDateTime or maxDateTime, self, 
-                                         self.startDateTimeEvent)
+        self.__plannedStartDateTime = Attribute(plannedStartDateTime or maxDateTime, self, 
+                                                self.plannedStartDateTimeEvent)
         if completionDateTime is None and percentageComplete == 100:
             completionDateTime = date.Now()
         self.__completionDateTime = Attribute(completionDateTime or maxDateTime, 
@@ -86,14 +86,14 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if now < self.__dueDateTime.get() < maxDateTime:
             registerObserver(self.onOverDue, 
                              date.Clock.eventType(self.__dueDateTime.get() + date.oneSecond))
-        if now < self.__startDateTime.get() < maxDateTime:
+        if now < self.__plannedStartDateTime.get() < maxDateTime:
             registerObserver(self.onStarted,
-                             date.Clock.eventType(self.__startDateTime.get() + date.oneSecond))
+                             date.Clock.eventType(self.__plannedStartDateTime.get() + date.oneSecond))
 
     @patterns.eventSource
     def __setstate__(self, state, event=None):
         super(Task, self).__setstate__(state, event=event)
-        self.setStartDateTime(state['startDateTime'], event=event)
+        self.setPlannedStartDateTime(state['plannedStartDateTime'], event=event)
         self.setDueDateTime(state['dueDateTime'], event=event)
         self.setCompletionDateTime(state['completionDateTime'], event=event)
         self.setPercentageComplete(state['percentageComplete'], event=event)
@@ -112,7 +112,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def __getstate__(self):
         state = super(Task, self).__getstate__()
         state.update(dict(dueDateTime=self.__dueDateTime.get(), 
-            startDateTime=self.__startDateTime.get(),  
+            plannedStartDateTime=self.__plannedStartDateTime.get(),  
             completionDateTime=self.__completionDateTime.get(),
             percentageComplete=self.__percentageComplete.get(),
             children=self.children(), parent=self.parent(), 
@@ -130,7 +130,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def __getcopystate__(self):
         state = super(Task, self).__getcopystate__()
         state.update(dict(dueDateTime=self.__dueDateTime.get(), 
-            startDateTime=self.__startDateTime.get(), 
+            plannedStartDateTime=self.__plannedStartDateTime.get(), 
             completionDateTime=self.__completionDateTime.get(),
             percentageComplete=self.__percentageComplete.get(), 
             efforts=[effort.copy() for effort in self._efforts], 
@@ -145,7 +145,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def monitoredAttributes(class_):
         return categorizable.CategorizableCompositeObject.monitoredAttributes() + \
-               ['startDateTime', 'dueDateTime', 'completionDateTime',
+               ['plannedStartDateTime', 'dueDateTime', 'completionDateTime',
                 'percentageComplete', 'recurrence', 'reminder', 'budget',
                 'priority', 'hourlyFee', 'fixedFee',
                 'shouldMarkCompletedWhenAllChildrenCompleted']
@@ -183,8 +183,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             self.setCompletionDateTime(self.maxDateTime, event=event)
         if self.maxDateTime > child.dueDateTime() > self.dueDateTime():
             self.setDueDateTime(child.dueDateTime(), event=event)           
-        if child.startDateTime() < self.startDateTime():
-            self.setStartDateTime(child.startDateTime(), event=event)
+        if child.plannedStartDateTime() < self.plannedStartDateTime():
+            self.setPlannedStartDateTime(child.plannedStartDateTime(), event=event)
         self.recomputeAppearance(recursive=False, event=event)
         child.recomputeAppearance(recursive=True, event=event)
 
@@ -289,51 +289,51 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         ''' The event types that influence the due date time sort order. '''
         return (class_.dueDateTimeChangedEventType(),)
     
-    # Start date
+    # Planned start date
     
-    def startDateTime(self, recursive=False):
+    def plannedStartDateTime(self, recursive=False):
         if recursive:
-            childrenStartDateTimes = [child.startDateTime(recursive=True) for child in \
+            childrenPlannedStartDateTimes = [child.plannedStartDateTime(recursive=True) for child in \
                                       self.children() if not child.completed()]
-            return min(childrenStartDateTimes + [self.__startDateTime.get()])
+            return min(childrenPlannedStartDateTimes + [self.__plannedStartDateTime.get()])
         else:
-            return self.__startDateTime.get()
-
+            return self.__plannedStartDateTime.get()
+        
     @patterns.eventSource
-    def setStartDateTime(self, startDateTime, event=None):
+    def setPlannedStartDateTime(self, plannedStartDateTime, event=None):
         self.removeObserver(self.onStarted)
-        self.__startDateTime.set(startDateTime, event=event)
-        if startDateTime != self.maxDateTime:
-            self.registerObserver(self.onStarted, date.Clock.eventType(startDateTime + date.oneSecond))
-            
-    def startDateTimeEvent(self, event):
-        startDateTime = self.startDateTime()
-        event.addSource(self, startDateTime, type=self.startDateTimeChangedEventType())
+        self.__plannedStartDateTime.set(plannedStartDateTime, event=event)
+        if plannedStartDateTime != self.maxDateTime:
+            self.registerObserver(self.onStarted, date.Clock.eventType(plannedStartDateTime + date.oneSecond))
+
+    def plannedStartDateTimeEvent(self, event):
+        plannedStartDateTime = self.plannedStartDateTime()
+        event.addSource(self, plannedStartDateTime, type=self.plannedStartDateTimeChangedEventType())
         if not self.recurrence(recursive=True, upwards=True):
             for child in self.children():
-                if startDateTime > child.startDateTime():
-                    child.setStartDateTime(startDateTime, event=event)
+                if plannedStartDateTime > child.plannedStartDateTime():
+                    child.setPlannedStartDateTime(plannedStartDateTime, event=event)
         parent = self.parent()
-        if parent and startDateTime < parent.startDateTime():
-            parent.setStartDateTime(startDateTime, event=event)
+        if parent and plannedStartDateTime < parent.plannedStartDateTime():
+            parent.setPlannedStartDateTime(plannedStartDateTime, event=event)
         self.recomputeAppearance(event=event)
-
-    @classmethod
-    def startDateTimeChangedEventType(class_):
-        return '%s.startDateTime' % class_
 
     def onStarted(self, event): # pylint: disable-msg=W0613
         self.recomputeAppearance()
+
+    @classmethod
+    def plannedStartDateTimeChangedEventType(class_):
+        return '%s.plannedStartDateTime' % class_
         
     @staticmethod
-    def startDateTimeSortFunction(**kwargs):
+    def plannedStartDateTimeSortFunction(**kwargs):
         recursive = kwargs.get('treeMode', False)
-        return lambda task: task.startDateTime(recursive=recursive)
+        return lambda task: task.plannedStartDateTime(recursive=recursive)
     
     @classmethod
-    def startDateTimeSortEventTypes(class_):
+    def plannedStartDateTimeSortEventTypes(class_):
         ''' The event types that influence the start date time sort order. '''
-        return (class_.startDateTimeChangedEventType(),)
+        return (class_.plannedStartDateTimeChangedEventType(),)
 
     def timeLeft(self, recursive=False):
         return self.dueDateTime(recursive) - date.Now()
@@ -440,12 +440,12 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return self.dueDateTime() < date.Now() and not self.completed()
 
     def inactive(self):
-        ''' A task is inactive if it is not completed and either has no start
-            date/time or a start date/time in the future, and/or its 
-            prerequisites are not completed. '''
+        ''' A task is inactive if it is not completed and either has no planned 
+            start date/time or a planned start date/time in the future, and/or 
+            its prerequisites are not completed. '''
         if self.completed():
             return False # Completed tasks are never inactive
-        if date.Now() < self.startDateTime() < self.maxDateTime:
+        if date.Now() < self.plannedStartDateTime() < self.maxDateTime:
             return True # Start at a specific future datetime, so inactive now
         if self.parent() and self.parent().inactive():
             return True
@@ -453,12 +453,12 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             # We're inactive as long as not all prerequisites are completed
             return any([not prerequisite.completed() for prerequisite in self.prerequisites()])
         else:
-            # We're inactive only if we have no startDateTime at all 
-            return self.startDateTime() == self.maxDateTime
+            # We're inactive only if we have no plannedStartDateTime at all 
+            return self.plannedStartDateTime() == self.maxDateTime
         
     def active(self):
-        ''' A task is active if it has a start date/time in the past and it is
-            not completed. Note that over due and due soon tasks are also 
+        ''' A task is active if it has a planned start date/time in the past and 
+            it is not completed. Note that over due and due soon tasks are also 
             considered to be active. So the statuses active, inactive and 
             completed are disjunct, but the statuses active, due soon and over 
             due are not. '''
@@ -1066,19 +1066,19 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                                                       microsecond=currentDueDateTime.microsecond)
             self.setDueDateTime(nextDueDateTime, event=event)
         
-        currentStartDateTime = self.startDateTime()
-        if currentStartDateTime != date.DateTime():        
-            if date.DateTime() not in (currentStartDateTime, currentDueDateTime):
-                taskDuration = currentDueDateTime - currentStartDateTime
-                nextStartDateTime = nextDueDateTime - taskDuration
+        currentPlannedStartDateTime = self.plannedStartDateTime()
+        if currentPlannedStartDateTime != date.DateTime():        
+            if date.DateTime() not in (currentPlannedStartDateTime, currentDueDateTime):
+                taskDuration = currentDueDateTime - currentPlannedStartDateTime
+                nextPlannedStartDateTime = nextDueDateTime - taskDuration
             else:
-                basisForRecurrence = completionDateTime if recur.recurBasedOnCompletion else currentStartDateTime
-                nextStartDateTime = recur(basisForRecurrence, next=False)
-            nextStartDateTime = nextStartDateTime.replace(hour=currentStartDateTime.hour,
-                                                          minute=currentStartDateTime.minute,
-                                                          second=currentStartDateTime.second,
-                                                          microsecond=currentStartDateTime.microsecond)
-            self.setStartDateTime(nextStartDateTime, event=event)
+                basisForRecurrence = completionDateTime if recur.recurBasedOnCompletion else currentPlannedStartDateTime
+                nextPlannedStartDateTime = recur(basisForRecurrence, next=False)
+            nextPlannedStartDateTime = nextPlannedStartDateTime.replace(hour=currentPlannedStartDateTime.hour,
+                                                                        minute=currentPlannedStartDateTime.minute,
+                                                                        second=currentPlannedStartDateTime.second,
+                                                                        microsecond=currentPlannedStartDateTime.microsecond)
+            self.setPlannedStartDateTime(nextPlannedStartDateTime, event=event)
         
         self.setPercentageComplete(0, event=event)
         if self.reminder():
@@ -1245,8 +1245,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return '%s.setting.shouldMarkCompletedWhenAllChildrenCompleted' % class_
 
     @classmethod
-    def suggestedStartDateTime(cls, now=date.Now):
-        return cls.suggestedDateTime('defaultstartdatetime', now)
+    def suggestedPlannedStartDateTime(cls, now=date.Now):
+        return cls.suggestedDateTime('defaultplannedstartdatetime', now)
     
     @classmethod
     def suggestedDueDateTime(cls, now=date.Now):
@@ -1300,7 +1300,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def modificationEventTypes(class_):
         eventTypes = super(Task, class_).modificationEventTypes()
         return eventTypes + [class_.dueDateTimeChangedEventType(),
-                             class_.startDateTimeChangedEventType(),
+                             class_.plannedStartDateTimeChangedEventType(),
                              class_.completionDateTimeChangedEventType(),
                              'task.effort.add', 'task.effort.remove', 
                              class_.budgetChangedEventType(),

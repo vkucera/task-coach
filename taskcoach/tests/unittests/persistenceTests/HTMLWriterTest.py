@@ -32,7 +32,7 @@ class HTMLWriterTestCase(test.wxTestCase):
         self.fd = StringIO.StringIO()
         self.writer = persistence.HTMLWriter(self.fd, self.filename)
         self.taskFile = persistence.TaskFile()
-        self.task = task.Task('Task subject', startDateTime=date.Now())
+        self.task = task.Task('Task subject', plannedStartDateTime=date.Now())
         self.taskFile.tasks().append(self.task)
         self.viewer = self.createViewer()
         
@@ -135,7 +135,7 @@ class TaskTestsMixin(CommonTestsMixin):
         self.expectInHTML(fragment)
         
     def testInactiveTask(self):
-        self.task.setStartDateTime(date.Now() + date.oneDay)
+        self.task.setPlannedStartDateTime(date.Now() + date.oneDay)
         fragment = '<tr class="inactive">' if self.filename else '<font color="#C0C0C0">Task subject</font>'
         self.expectInHTML(fragment)
 

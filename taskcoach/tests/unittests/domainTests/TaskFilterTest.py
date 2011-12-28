@@ -36,8 +36,8 @@ class ViewFilterTestCase(test.TestCase):
         
     def assertFilterShows(self, *tasks):
         self.assertEqual(len(tasks), len(self.filter))
-        for task in tasks:
-            self.failUnless(task in self.filter)
+        for eachTask in tasks:
+            self.failUnless(eachTask in self.filter)
         
     def assertFilterIsEmpty(self):
         self.failIf(self.filter)
@@ -101,22 +101,22 @@ class ViewFilterTestsMixin(object):
         self.assertFilterIsEmpty()
         
     def testFilterInactiveTask(self):
-        self.task.setStartDateTime(date.Now() + date.oneDay)
+        self.task.setPlannedStartDateTime(date.Now() + date.oneDay)
         self.list.append(self.task)
-        self.filter.setFilteredByStartDateTime('Always')
+        self.filter.setFilteredByPlannedStartDateTime('Always')
         self.assertFilterIsEmpty()
         
-    def testFilterInactiveTask_ChangeStartDateTime(self):
-        self.task.setStartDateTime(date.Now() + date.oneDay)
+    def testFilterInactiveTask_ChangePlannedStartDateTime(self):
+        self.task.setPlannedStartDateTime(date.Now() + date.oneDay)
         self.list.append(self.task)
-        self.filter.setFilteredByStartDateTime('Always')
-        self.task.setStartDateTime(date.Now())
+        self.filter.setFilteredByPlannedStartDateTime('Always')
+        self.task.setPlannedStartDateTime(date.Now())
         self.assertFilterShows(self.task)
         
-    def testFilterInactiveTask_WhenStartDateTimePasses(self):
-        self.task.setStartDateTime(date.Now() + date.oneDay)
+    def testFilterInactiveTask_WhenPlanndStartDateTimePasses(self):
+        self.task.setPlannedStartDateTime(date.Now() + date.oneDay)
         self.list.append(self.task)
-        self.filter.setFilteredByStartDateTime('Always')
+        self.filter.setFilteredByPlannedStartDateTime('Always')
         oldNow = date.Now
         date.Now = lambda: oldNow() + date.oneDay + date.TimeDelta(seconds=1)
         date.Clock().notifySpecificTimeObservers(date.Now())
@@ -178,10 +178,10 @@ class ViewFilterTestsMixin(object):
 
     def testMarkPrerequisiteCompletedWhileFilteringInactiveTasks(self):
         self.task.addPrerequisites([self.dueToday])
-        self.task.setStartDateTime(date.Now())
-        self.dueToday.setStartDateTime(date.Now())
+        self.task.setPlannedStartDateTime(date.Now())
+        self.dueToday.setPlannedStartDateTime(date.Now())
         self.filter.extend([self.dueToday, self.task])
-        self.filter.setFilteredByStartDateTime('Always')
+        self.filter.setFilteredByPlannedStartDateTime('Always')
         self.filter.setFilteredByCompletionDateTime('Always')
         self.assertFilterShows(self.dueToday)
         self.dueToday.setCompletionDateTime()
@@ -189,9 +189,9 @@ class ViewFilterTestsMixin(object):
         
     def testAddPrerequisiteToActiveTaskWhileFilteringInactiveTasksShouldHideTask(self):
         for eachTask in (self.task, self.dueToday):
-            eachTask.setStartDateTime(date.Now())
+            eachTask.setPlannedStartDateTime(date.Now())
         self.filter.extend([self.dueToday, self.task])
-        self.filter.setFilteredByStartDateTime('Always')
+        self.filter.setFilteredByPlannedStartDateTime('Always')
         self.task.addPrerequisites([self.dueToday])
         self.assertFilterShows(self.dueToday)
         
@@ -236,7 +236,7 @@ class HideCompositeTasksTestsMixin(object):
     def testTurnOn(self):
         self.filter.hideCompositeTasks()
         expectedTasks = (self.task, self.child) if self.filter.treeMode() else (self.child,)
-        self.assertFilterShows(*expectedTasks)
+        self.assertFilterShows(*expectedTasks) # pylint: disable-msg=W0142
 
     def testTurnOff(self):
         self.filter.hideCompositeTasks()
@@ -249,7 +249,7 @@ class HideCompositeTasksTestsMixin(object):
         self.list.append(grandChild)
         self.child.addChild(grandChild)
         expectedTasks = (self.task, self.child, grandChild) if self.filter.treeMode() else (grandChild,)
-        self.assertFilterShows(*expectedTasks)
+        self.assertFilterShows(*expectedTasks) # pylint: disable-msg=W0142
 
     def testRemoveChild(self):
         self.filter.hideCompositeTasks()
@@ -262,14 +262,14 @@ class HideCompositeTasksTestsMixin(object):
         expectedTasks = (self.task, self.child, self.grandChild1, 
                          self.grandChild2) if self.filter.treeMode() else \
                         (self.grandChild1, self.grandChild2)
-        self.assertFilterShows(*expectedTasks)
+        self.assertFilterShows(*expectedTasks) # pylint: disable-msg=W0142
 
     def testRemoveTwoChildren(self):
         self._addTwoGrandChildren()
         self.filter.hideCompositeTasks()
         self.list.removeItems([self.grandChild1, self.grandChild2])
         expectedTasks = (self.task, self.child) if self.filter.treeMode() else (self.child,)
-        self.assertFilterShows(*expectedTasks)
+        self.assertFilterShows(*expectedTasks) # pylint: disable-msg=W0142
 
 
 class HideCompositeTasksInListModeTest(HideCompositeTasksTestsMixin, 

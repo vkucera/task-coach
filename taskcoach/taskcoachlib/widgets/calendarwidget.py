@@ -54,7 +54,7 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
         self.__tip = tooltip.SimpleToolTip(self)
         self.__selection = []
 
-        self.__showNoStartDate = False
+        self.__showNoPlannedStartDate = False
         self.__showNoDueDate = False
         self.__showUnplanned = False
 
@@ -78,7 +78,7 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
                     cb(item.task, droppedObject)
                 else:
                     datetime = date.DateTime(item.GetYear(), item.GetMonth() + 1, item.GetDay())
-                    cb(None, droppedObject, startDateTime=datetime, dueDateTime=datetime.endOfDay())
+                    cb(None, droppedObject, plannedStartDateTime=datetime, dueDateTime=datetime.endOfDay())
 
     def OnDropURL(self, x, y, url):
         self._handleDrop(x, y, url, self.__onDropURLCallback)
@@ -90,7 +90,7 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
         self._handleDrop(x, y, mail, self.__onDropMailCallback)
 
     def SetShowNoStartDate(self, doShow):
-        self.__showNoStartDate = doShow
+        self.__showNoPlannedStartDate = doShow
         self.RefreshAllItems(0)
 
     def SetShowNoDueDate(self, doShow):
@@ -155,15 +155,15 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
 
         for task in self.taskList:
             if not task.isDeleted():
-                if task.startDateTime() == maxDateTime or not task.completed():
-                    if task.startDateTime() == maxDateTime and not self.__showNoStartDate:
+                if task.plannedStartDateTime() == maxDateTime or not task.completed():
+                    if task.plannedStartDateTime() == maxDateTime and not self.__showNoPlannedStartDate:
                         continue
 
                     if task.dueDateTime() == maxDateTime and not self.__showNoDueDate:
                         continue
 
                     if not self.__showUnplanned:
-                        if task.startDateTime() == maxDateTime and task.dueDateTime() == maxDateTime:
+                        if task.plannedStartDateTime() == maxDateTime and task.dueDateTime() == maxDateTime:
                             continue
 
                 schedule = TaskSchedule(task, self.iconProvider)
@@ -187,10 +187,10 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
         for task in args:
             doShow = True
 
-            if task.startDateTime() == date.DateTime() and task.dueDateTime() == date.DateTime():
+            if task.plannedStartDateTime() == date.DateTime() and task.dueDateTime() == date.DateTime():
                 doShow = False
 
-            if task.startDateTime() == date.DateTime() and not self.__showNoStartDate:
+            if task.plannedStartDateTime() == date.DateTime() and not self.__showNoPlannedStartDate:
                 doShow = False
 
             if task.dueDateTime() == date.DateTime() and not self.__showNoDueDate:
@@ -200,7 +200,7 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
 
             if task.isDeleted():
                 doShow = False
-            elif task.startDateTime() != date.DateTime() and task.completed():
+            elif task.plannedStartDateTime() != date.DateTime() and task.completed():
                 doShow = True
 
             if doShow:
@@ -340,7 +340,7 @@ class TaskSchedule(wxSchedule):
             self.Thaw()
 
     def SetStart(self, start):
-        command.EditStartDateTimeCommand(items=[self.task], newValue=self.tcDateTime(start)).do()
+        command.EditPlannedStartDateTimeCommand(items=[self.task], newValue=self.tcDateTime(start)).do()
 
     def SetEnd(self, end):
         if self.task.completed():
@@ -350,10 +350,10 @@ class TaskSchedule(wxSchedule):
 
     def Offset(self, ts):
         kwargs = dict()
-        if self.task.startDateTime() != date.DateTime():
+        if self.task.plannedStartDateTime() != date.DateTime():
             start = self.GetStart()
             start.AddTS(ts)
-            command.EditStartDateTimeCommand(items=[self.task], newValue=self.tcDateTime(start)).do()
+            command.EditPlannedStartDateTimeCommand(items=[self.task], newValue=self.tcDateTime(start)).do()
         if self.task.completed():
             end = self.GetEnd()
             end.AddTS(ts)
@@ -372,7 +372,7 @@ class TaskSchedule(wxSchedule):
         try:
             self.description = self.task.subject()
 
-            self.start = self.wxDateTime(self.task.startDateTime(), (1, 1, 0))
+            self.start = self.wxDateTime(self.task.plannedStartDateTime(), (1, 1, 0))
             end = self.task.completionDateTime() if self.task.completed() else self.task.dueDateTime()
             self.end = self.wxDateTime(end, (1, 1, 9999))
             

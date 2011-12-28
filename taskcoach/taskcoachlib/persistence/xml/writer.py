@@ -96,8 +96,8 @@ class XMLWriter(object):
         maxDateTime = self.maxDateTime
         node = self.baseCompositeNode(parentNode, task, 'task', self.taskNode)
         node.attrib['status'] = str(task.getStatus())
-        if task.startDateTime() != maxDateTime:
-            node.attrib['startdate'] = str(task.startDateTime())
+        if task.plannedStartDateTime() != maxDateTime:
+            node.attrib['plannedstartdate'] = str(task.plannedStartDateTime())
         if task.dueDateTime() != maxDateTime:
             node.attrib['duedate'] = str(task.dueDateTime())
         if task.completionDateTime() != maxDateTime:
@@ -307,7 +307,7 @@ class TemplateXMLWriter(XMLWriter):
     def taskNode(self, parentNode, task): # pylint: disable-msg=W0621
         node = super(TemplateXMLWriter, self).taskNode(parentNode, task)
 
-        for name, getter in [('startdate', 'startDateTime'),
+        for name, getter in [('plannedstartdate', 'plannedStartDateTime'),
                              ('duedate', 'dueDateTime'),
                              ('completiondate', 'completionDateTime'),
                              ('reminder', 'reminder')]:

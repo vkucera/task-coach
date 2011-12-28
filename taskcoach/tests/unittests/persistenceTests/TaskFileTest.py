@@ -17,11 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import os, wx
-from xml.etree import ElementTree as ET
 import test
 from taskcoachlib import persistence, config
 from taskcoachlib.domain import base, task, effort, date, category, note, attachment
-from taskcoachlib.changes import ChangeMonitor
 
 
 class FakeAttachment(base.Object):
@@ -281,8 +279,8 @@ class DirtyTaskFileTest(TaskFileTestCase):
         self.task.setBackgroundColor(wx.RED)
         self.failUnless(self.taskFile.needSave())
 
-    def testNeedSave_AfterEditTaskStartDateTime(self):
-        self.task.setStartDateTime(date.Now() + date.oneHour)
+    def testNeedSave_AfterEditTaskPlannedStartDateTime(self):
+        self.task.setPlannedStartDateTime(date.Now() + date.oneHour)
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterEditTaskDueDate(self):
@@ -1210,7 +1208,7 @@ class TaskFileMultiUserTestBase(object):
         self._testChangeAttribute('description', 'New note description', 'notes')
 
     def testChangeTaskStartDateTime(self):
-        self._testChangeAttribute('startDateTime', date.DateTime(2011, 6, 15), 'tasks')
+        self._testChangeAttribute('plannedStartDateTime', date.DateTime(2011, 6, 15), 'tasks')
 
     def testChangeTaskDueDateTime(self):
         self._testChangeAttribute('dueDateTime', date.DateTime(2011, 7, 16), 'tasks')

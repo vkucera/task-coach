@@ -218,10 +218,11 @@ class XMLReader(object):
                 ''' Ignore all method calls. '''
                 return lambda *args, **kwargs: None
             
+        plannedStartDateTimeAttributeName = 'startdate' if self.tskversion() <= 33 else 'plannedstartdate'
         kwargs = self._parseBaseCompositeAttributes(taskNode, self._parseTaskNodes)
         kwargs.update(dict(
-            startDateTime=date.parseDateTime(taskNode.attrib.get('startdate', ''), 
-                                             *self.defaultStartTime),
+            plannedStartDateTime=date.parseDateTime(taskNode.attrib.get(plannedStartDateTimeAttributeName, ''), 
+                                                    *self.defaultStartTime),
             dueDateTime=date.parseDateTime(taskNode.attrib.get('duedate', ''), 
                                            *self.defaultEndTime),
             completionDateTime=date.parseDateTime(taskNode.attrib.get('completiondate', ''), 
@@ -507,16 +508,18 @@ class TemplateXMLReader(XMLReader):
 
     def _parseTaskNode(self, taskNode):
         attrs = dict()
-        for name in ['startdate', 'duedate', 'completiondate', 'reminder']:
+        attributeRenames = dict(startdate='plannedstartdate')
+        for name in ['startdate', 'plannedstartdate', 'duedate', 'completiondate', 'reminder']:
+            newName = attributeRenames.get(name, name)
             if taskNode.attrib.has_key(name + 'tmpl'):
                 if self.tskversion() < 32:
                     value = TemplateXMLReader.convertOldFormat(taskNode.attrib[name + 'tmpl'])
                 else:
                     value = taskNode.attrib[name + 'tmpl']
-                attrs[name] = value
-                taskNode.attrib[name] = str(nlTimeExpression.parseString(value).calculatedTime)
+                attrs[newName] = value
+                taskNode.attrib[newName] = str(nlTimeExpression.parseString(value).calculatedTime)
             else:
-                attrs[name] = None
+                attrs[newName] = None
         if taskNode.attrib.has_key('subject'):
             taskNode.attrib['subject'] = translate(taskNode.attrib['subject'])
         task = super(TemplateXMLReader, self)._parseTaskNode(taskNode)

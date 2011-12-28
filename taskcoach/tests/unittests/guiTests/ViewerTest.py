@@ -16,9 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, wx
+import test
 from taskcoachlib import gui, config, widgets, persistence
-from taskcoachlib.domain import task, date, base
+from taskcoachlib.domain import task, date
 from taskcoachlib.thirdparty import hypertreelist
 
 
@@ -323,26 +323,26 @@ class FilterableViewerForTasks(test.TestCase):
         self.failUnless(self.viewer.presentation())
 
     def testIsNotHidingInactiveTasksByDefault(self):
-        self.failUnless(self.viewer.isFilteredByStartDateTime('Never'))
+        self.failUnless(self.viewer.isFilteredByPlannedStartDateTime('Never'))
 
     def testHideInactiveTasks(self):
-        self.viewer.setFilteredByStartDateTime('Always')
-        self.assertEqual('Always', self.viewer.getFilteredByStartDateTime())
+        self.viewer.setFilteredByPlannedStartDateTime('Always')
+        self.assertEqual('Always', self.viewer.getFilteredByPlannedStartDateTime())
         
     def testHideInactiveTasks_SetsSetting(self):
-        self.viewer.setFilteredByStartDateTime('Always')
+        self.viewer.setFilteredByPlannedStartDateTime('Always')
         self.assertEqual('Always', self.settings.get(self.viewer.settingsSection(), 
-                                                 'tasksinactive'))
+                                                     'tasksinactive'))
 
     def testHideInactiveTasks_AffectsPresentation(self):
-        self.viewer.presentation().append(task.Task(startDateTime=date.Now() + date.oneDay))
-        self.viewer.setFilteredByStartDateTime('Always')
+        self.viewer.presentation().append(task.Task(plannedStartDateTime=date.Now() + date.oneDay))
+        self.viewer.setFilteredByPlannedStartDateTime('Always')
         self.failIf(self.viewer.presentation())
     
     def testUnhideInactiveTasks(self):
-        self.viewer.presentation().append(task.Task(startDateTime=date.Now() + date.oneDay))
-        self.viewer.setFilteredByStartDateTime('Always')
-        self.viewer.setFilteredByStartDateTime('Never')
+        self.viewer.presentation().append(task.Task(plannedStartDateTime=date.Now() + date.oneDay))
+        self.viewer.setFilteredByPlannedStartDateTime('Always')
+        self.viewer.setFilteredByPlannedStartDateTime('Never')
         self.failUnless(self.viewer.presentation())
     
     def testIsNotHidingCompletedTasksByDefault(self):
@@ -398,12 +398,12 @@ class FilterableViewerForTasks(test.TestCase):
         self.assertEqual(2, len(self.viewer.presentation()))
         
     def testClearAllFilters(self):
-        self.viewer.setFilteredByStartDateTime('Always')
+        self.viewer.setFilteredByPlannedStartDateTime('Always')
         self.viewer.setFilteredByCompletionDateTime('Today')
         self.viewer.hideCompositeTasks()
         self.viewer.setFilteredByDueDateTime('Today')
         self.viewer.resetFilter()
-        self.failUnless(self.viewer.isFilteredByStartDateTime('Never'))
+        self.failUnless(self.viewer.isFilteredByPlannedStartDateTime('Never'))
         self.failUnless(self.viewer.isFilteredByCompletionDateTime('Never'))
         self.failIf(self.viewer.isHidingCompositeTasks())
         self.failUnless(self.viewer.isFilteredByDueDateTime('Never'))     

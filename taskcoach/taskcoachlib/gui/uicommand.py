@@ -1243,28 +1243,28 @@ class ViewerFilterByCompletionDateTime(ViewerCommand, UIRadioCommand):
         self.viewer.setFilteredByCompletionDateTime(self.value)
 
 
-class ViewerFilterByStartDateTime(ViewerCommand, UIRadioCommand):
+class ViewerFilterByPlannedStartDateTime(ViewerCommand, UIRadioCommand):
     def isSettingChecked(self):
-        return self.viewer.isFilteredByStartDateTime(self.value)
+        return self.viewer.isFilteredByPlannedStartDateTime(self.value)
     
     def doCommand(self, event):
-        self.viewer.setFilteredByStartDateTime(self.value)
+        self.viewer.setFilteredByPlannedStartDateTime(self.value)
         
 
 class ViewerHideInactiveTasks(ViewerCommand, UICheckCommand):
     def __init__(self, *args, **kwargs):
         super(ViewerHideInactiveTasks, self).__init__(menuText=_('Hide &inactive tasks'), 
-            helpText=_('Show/hide inactive tasks (tasks with a start date in the future)'),
+            helpText=_('Show/hide inactive tasks (tasks with a planned start date in the future)'),
             *args, **kwargs)
         
     def isSettingChecked(self):
-        return not self.viewer.isFilteredByStartDateTime('Never')
+        return not self.viewer.isFilteredByPlannedStartDateTime('Never')
         
     def doCommand(self, event):
         self.viewer.freeze()
         try:
             filter = 'Always' if self._isMenuItemChecked(event) else 'Never'
-            self.viewer.setFilteredByStartDateTime(filter)
+            self.viewer.setFilteredByPlannedStartDateTime(filter)
         finally:
             self.viewer.thaw()
 
@@ -1272,7 +1272,7 @@ class ViewerHideInactiveTasks(ViewerCommand, UICheckCommand):
 class ViewerHideActiveTasks(ViewerCommand, UICheckCommand):
     def __init__(self, *args, **kwargs):
         super(ViewerHideActiveTasks, self).__init__(menuText=_('Hide &active tasks'), 
-            helpText=_('Show/hide active tasks (tasks with a start date in the past that are not completed)'),
+            helpText=_('Show/hide active tasks (tasks with a planned start date in the past that are not completed)'),
             *args, **kwargs)
         
     def isSettingChecked(self):
@@ -1414,8 +1414,8 @@ class TaskNew(TaskListCommand, SettingsCommand):
 
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
         kwargs = self.taskKeywords.copy()
-        if self.__shouldPresetStartDateTime():
-            kwargs['startDateTime'] = task.Task.suggestedStartDateTime()
+        if self.__shouldPresetPlannedStartDateTime():
+            kwargs['plannedStartDateTime'] = task.Task.suggestedPlannedStartDateTime()
         if self.__shouldPresetDueDateTime():
             kwargs['dueDateTime'] = task.Task.suggestedDueDateTime()
         if self.__shouldPresetCompletionDateTime():
@@ -1443,9 +1443,9 @@ class TaskNew(TaskListCommand, SettingsCommand):
     def dependenciesForTheNewTask(self):
         return []
     
-    def __shouldPresetStartDateTime(self):
-        return 'startDateTime' not in self.taskKeywords and \
-            self.settings.get('view', 'defaultstartdatetime').startswith('preset')
+    def __shouldPresetPlannedStartDateTime(self):
+        return 'plannedStartDateTime' not in self.taskKeywords and \
+            self.settings.get('view', 'defaultplannedstartdatetime').startswith('preset')
             
     def __shouldPresetDueDateTime(self):
         return 'dueDateTime' not in self.taskKeywords and \

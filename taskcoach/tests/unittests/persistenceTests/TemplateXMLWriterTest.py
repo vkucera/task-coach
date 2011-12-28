@@ -43,9 +43,9 @@ class TemplateXMLWriterTestCase(test.TestCase):
     def testDefaultTask(self):
         self.expectInXML('<tasks>\n<task id="%s" status="1" />\n</tasks>'%self.task.id())
         
-    def testTaskWithStartDateTime(self):
-        self.task.setStartDateTime(date.Now() + date.TimeDelta(minutes=31))
-        self.expectInXML('startdatetmpl="31 minutes from now')
+    def testTaskWithPlannedStartDateTime(self):
+        self.task.setPlannedStartDateTime(date.Now() + date.TimeDelta(minutes=31))
+        self.expectInXML('plannedstartdatetmpl="31 minutes from now')
         
     def testTaskWithDueDateTime(self):
         self.task.setDueDateTime(date.Now() + date.TimeDelta(minutes=13))

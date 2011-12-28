@@ -88,15 +88,15 @@ class TaskTestsMixin(object):
         self.expectNotInCSV('Child', selectionOnly=True)
         
     def testWriteSeparateDateAndTimeColumns(self):
-        startDateTime = date.Now()
-        self.task.setStartDateTime(startDateTime)
-        self.expectInCSV(','.join((render.date(startDateTime), render.time(startDateTime))),
+        plannedStartDateTime = date.Now()
+        self.task.setPlannedStartDateTime(plannedStartDateTime)
+        self.expectInCSV(','.join((render.date(plannedStartDateTime), render.time(plannedStartDateTime))),
                          separateDateAndTimeColumns=True)
                 
     def testDontWriteSeparateDateAndTimeColumns(self):
-        startDateTime = date.Now()
-        self.task.setStartDateTime(startDateTime)
-        self.expectInCSV(' '.join((render.date(startDateTime), render.time(startDateTime))),
+        plannedStartDateTime = date.Now()
+        self.task.setPlannedStartDateTime(plannedStartDateTime)
+        self.expectInCSV(' '.join((render.date(plannedStartDateTime), render.time(plannedStartDateTime))),
                          separateDateAndTimeColumns=False)
         
     def testSpecifyColumns(self):

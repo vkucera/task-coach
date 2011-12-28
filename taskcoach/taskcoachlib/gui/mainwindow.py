@@ -374,12 +374,12 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         effort.setStop(ended)
 
     @synchronized
-    def modifyIPhoneTask(self, task, subject, description, startDateTime, 
+    def modifyIPhoneTask(self, task, subject, description, plannedStartDateTime, 
                          dueDateTime, completionDateTime, reminderDateTime,
                          recurrence, priority, categories):
         task.setSubject(subject)
         task.setDescription(description)
-        task.setStartDateTime(startDateTime)
+        task.setPlannedStartDateTime(plannedStartDateTime)
         task.setDueDateTime(dueDateTime)
         task.setCompletionDateTime(completionDateTime)
         task.setReminder(reminderDateTime)

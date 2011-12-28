@@ -27,12 +27,12 @@ class CommonTaskRelationshipManagerTestsMixin(object):
         now = self.now = date.Now()
         self.yesterday = now - date.oneDay
         self.tomorrow = now + date.oneDay
-        self.parent = task.Task('parent', startDateTime=now)
-        self.child = task.Task('child', startDateTime=now)
+        self.parent = task.Task('parent', plannedStartDateTime=now)
+        self.child = task.Task('child', plannedStartDateTime=now)
         self.parent.addChild(self.child)
         self.child.setParent(self.parent)
-        self.child2 = task.Task('child2', startDateTime=now)
-        self.grandchild = task.Task('grandchild', startDateTime=now)
+        self.child2 = task.Task('child2', plannedStartDateTime=now)
+        self.grandchild = task.Task('grandchild', plannedStartDateTime=now)
         settings.set('behavior', 'markparentcompletedwhenallchildrencompleted', 
             str(self.markParentCompletedWhenAllChildrenCompleted))
         self.taskList = task.TaskList([self.parent, self.child2, self.grandchild])
@@ -115,24 +115,20 @@ class CommonTaskRelationshipManagerTestsMixin(object):
     def testMarkLastChildCompletedMakesParentRecur(self):
         self.parent.setRecurrence(date.Recurrence('weekly'))
         self.child.setCompletionDateTime(self.now)
+        expectedPlannedStartDateTime = self.now
         if self.shouldMarkCompletedWhenAllChildrenCompleted(self.parent):
-            expectedStartDateTime = self.now + date.TimeDelta(days=7)
-            self.assertAlmostEqual(expectedStartDateTime.toordinal(), 
-                                   self.parent.startDateTime().toordinal())
-        else:
-            self.assertAlmostEqual(self.now.toordinal(), 
-                                   self.parent.startDateTime().toordinal())
+            expectedPlannedStartDateTime += date.TimeDelta(days=7)
+        self.assertAlmostEqual(expectedPlannedStartDateTime.toordinal(), 
+                               self.parent.plannedStartDateTime().toordinal())
 
     def testMarkLastChildCompletedMakesParentRecur_AndThusChildToo(self):
         self.parent.setRecurrence(date.Recurrence('weekly'))
         self.child.setCompletionDateTime(self.now)
+        expectedPlannedStartDateTime = self.now        
         if self.shouldMarkCompletedWhenAllChildrenCompleted(self.parent):
-            expectedStartDateTime = self.now + date.TimeDelta(days=7)
-            self.assertAlmostEqual(expectedStartDateTime.toordinal(), 
-                                   self.child.startDateTime().toordinal())
-        else:
-            self.assertAlmostEqual(self.now.toordinal(), 
-                                   self.child.startDateTime().toordinal())
+            expectedPlannedStartDateTime += date.TimeDelta(days=7)
+        self.assertAlmostEqual(expectedPlannedStartDateTime.toordinal(), 
+                               self.child.plannedStartDateTime().toordinal())
 
     def testMarkLastChildCompletedMakesParentRecur_AndThusChildIsNotCompleted(self):
         self.parent.setRecurrence(date.Recurrence('weekly'))
@@ -147,26 +143,22 @@ class CommonTaskRelationshipManagerTestsMixin(object):
         self.child.addChild(self.grandchild)
         self.grandchild.setParent(self.child)
         self.grandchild.setCompletionDateTime(self.now)
+        expectedPlannedStartDateTime = self.now
         if self.shouldMarkCompletedWhenAllChildrenCompleted(self.parent):
-            expectedStartDateTime = self.now + date.TimeDelta(days=7)
-            self.assertAlmostEqual(expectedStartDateTime.toordinal(), 
-                                   self.parent.startDateTime().toordinal())
-        else:
-            self.assertAlmostEqual(self.now.toordinal(), 
-                                   self.parent.startDateTime().toordinal())
+            expectedPlannedStartDateTime += date.TimeDelta(days=7)
+        self.assertAlmostEqual(expectedPlannedStartDateTime.toordinal(), 
+                               self.parent.plannedStartDateTime().toordinal())
 
     def testMarkLastGrandChildCompletedMakesParentRecur_AndThusGrandChildToo(self):
         self.parent.setRecurrence(date.Recurrence('weekly'))
         self.child.addChild(self.grandchild)
         self.grandchild.setParent(self.child)
         self.grandchild.setCompletionDateTime(self.now)
+        expectedPlannedStartDateTime = self.now
         if self.shouldMarkCompletedWhenAllChildrenCompleted(self.parent):
-            expectedStartDateTime = self.now + date.TimeDelta(days=7)
-            self.assertAlmostEqual(expectedStartDateTime.toordinal(), 
-                                   self.grandchild.startDateTime().toordinal())
-        else:
-            self.assertAlmostEqual(self.now.toordinal(), 
-                                   self.grandchild.startDateTime().toordinal())
+            expectedPlannedStartDateTime += date.TimeDelta(days=7)
+        self.assertAlmostEqual(expectedPlannedStartDateTime.toordinal(), 
+                               self.grandchild.plannedStartDateTime().toordinal())
 
     def testMarkLastChildCompletedMakesParentRecur_AndThusGrandChildIsNotCompleted(self):
         self.parent.setRecurrence(date.Recurrence('weekly'))
@@ -224,39 +216,39 @@ class CommonTaskRelationshipManagerTestsMixin(object):
         self.child.setDueDateTime(self.tomorrow)
         self.assertEqual(self.tomorrow, self.parent.dueDateTime())
 
-    # start date
+    # Planned start date
 
-    def testAddChildWithStartDateToParentWithStartDate(self):
-        self.assertAlmostEqual(self.parent.startDateTime().toordinal(), 
-                               self.child.startDateTime().toordinal())
+    def testAddChildWithPlannedStartDateToParentWithPlannedStartDate(self):
+        self.assertAlmostEqual(self.parent.plannedStartDateTime().toordinal(), 
+                               self.child.plannedStartDateTime().toordinal())
         
-    def testAddChildWithBiggerStartDateThanParent(self):
-        self.child2.setStartDateTime(self.tomorrow)
+    def testAddChildWithBiggerPlannedStartDateThanParent(self):
+        self.child2.setPlannedStartDateTime(self.tomorrow)
         self.parent.addChild(self.child2)
         self.assertAlmostEqual(self.now.toordinal(), 
-                               self.parent.startDateTime().toordinal())
+                               self.parent.plannedStartDateTime().toordinal())
         
-    def testAddChildWithSmallerStartDateThanParent(self):
-        self.child2.setStartDateTime(self.yesterday)
+    def testAddChildWithSmallerPlannedStartDateThanParent(self):
+        self.child2.setPlannedStartDateTime(self.yesterday)
         self.parent.addChild(self.child2)
-        self.assertEqual(self.child2.startDateTime(), self.parent.startDateTime())
+        self.assertEqual(self.child2.plannedStartDateTime(), self.parent.plannedStartDateTime())
         
-    def testSetStartDateParentInfinite(self):
-        self.parent.setStartDateTime(date.DateTime())
-        self.assertEqual(date.DateTime(), self.child.startDateTime())
+    def testSetPlannedStartDateParentInfinite(self):
+        self.parent.setPlannedStartDateTime(date.DateTime())
+        self.assertEqual(date.DateTime(), self.child.plannedStartDateTime())
         
-    def testSetStartDateParentBiggerThanChildStartDate(self):
-        self.parent.setStartDateTime(self.tomorrow)
-        self.assertEqual(self.tomorrow, self.child.startDateTime())
+    def testSetPlannedStartDateParentBiggerThanChildPlannedStartDate(self):
+        self.parent.setPlannedStartDateTime(self.tomorrow)
+        self.assertEqual(self.tomorrow, self.child.plannedStartDateTime())
         
-    def testSetChildStartDateInfinite(self):
-        self.child.setStartDateTime(date.DateTime())
+    def testSetChildPlannedStartDateInfinite(self):
+        self.child.setPlannedStartDateTime(date.DateTime())
         self.assertAlmostEqual(self.now.toordinal(), 
-                               self.parent.startDateTime().toordinal())
+                               self.parent.plannedStartDateTime().toordinal())
         
-    def testSetChildStartDateEarlierThanParentStartDate(self):
-        self.child.setStartDateTime(self.yesterday)
-        self.assertEqual(self.yesterday, self.parent.startDateTime())
+    def testSetChildPlannedStartDateEarlierThanParentPlannedStartDate(self):
+        self.child.setPlannedStartDateTime(self.yesterday)
+        self.assertEqual(self.yesterday, self.parent.plannedStartDateTime())
 
 
 class MarkParentTaskCompletedTestsMixin(object):

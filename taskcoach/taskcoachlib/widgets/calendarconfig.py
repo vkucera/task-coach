@@ -77,8 +77,8 @@ class CalendarConfigDialog(sized_controls.SizedDialog):
     def createDisplayEntry(self, pane):
         label = wx.StaticText(pane, label=_('Which tasks to display'))
         label.SetSizerProps(valign='center')
-        choices = (_('Tasks with a start date and a due date'), 
-                   _('Tasks with a start date'), _('Tasks with a due date'),
+        choices = (_('Tasks with a planned start date and a due date'), 
+                   _('Tasks with a planned start date'), _('Tasks with a due date'),
                    _('All tasks, except unplanned tasks'), _('All tasks'))
         self._display = wx.Choice(pane, choices=choices) # pylint: disable-msg=W0201
         self._display.SetSizerProps(valign='center')

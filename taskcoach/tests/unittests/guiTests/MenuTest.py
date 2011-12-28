@@ -274,7 +274,7 @@ class StartEffortForTaskMenuTest(test.wxTestCase):
         self.menu = gui.menu.StartEffortForTaskMenu(self.frame, self.tasks)
         
     def addTask(self):
-        newTask = task.Task(subject='Subject', startDateTime=date.Now())
+        newTask = task.Task(subject='Subject', plannedStartDateTime=date.Now())
         self.tasks.append(newTask)
         return newTask
     
