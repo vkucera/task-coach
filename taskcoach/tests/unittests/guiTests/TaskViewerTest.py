@@ -279,7 +279,8 @@ class CommonTestsMixin(object):
         self.assertColor(newColor)
         
     def testTurnColumnsOnAndOff(self):
-        columns = dict(hourlyFee=(3, _('Hourly fee')), 
+        columns = dict(actualStartDateTime=(3, _('Actual start date')),
+                       hourlyFee=(3, _('Hourly fee')), 
                        fixedFee=(3, _('Fixed fee')),
                        revenue=(3, _('Revenue')),
                        priority=(3, _('Priority')),
@@ -446,7 +447,7 @@ class CommonTestsMixin(object):
         self.taskList.extend([prerequisite1, prerequisite2, self.task])
         try:
             self.assertItems(prerequisite1, prerequisite2, self.task)
-        except AssertionError:
+        except AssertionError: # pragma: no cover
             self.assertItems(prerequisite2, prerequisite1, self.task)
 
     def testSortByPrerequisite_ChainedPrerequisites(self):

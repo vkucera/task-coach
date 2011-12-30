@@ -1502,7 +1502,7 @@ class XMLReaderVersion33Test(XMLReaderTestCase):
 class XMLReaderVersion34Test(XMLReaderTestCase):
     tskversion = 34 # New in release 1.3.5.
     
-    def testStartDateTime(self):
+    def testPlannedStartDateTime(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
             <task plannedstartdate="2005-04-17 10:05:11"/>
@@ -1510,24 +1510,54 @@ class XMLReaderVersion34Test(XMLReaderTestCase):
         self.assertEqual(date.DateTime(2005,4,17,10,5,11), 
                          tasks[0].plannedStartDateTime())
 
-    def testStartDateTimeWithoutTime(self):
+    def testPlannedStartDateTimeWithoutTime(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
             <task plannedstartdate="2005-04-17"/>
         </tasks>\n''')
         self.assertEqual(date.DateTime(2005,4,17), tasks[0].plannedStartDateTime())
 
-    def testNoStartDateTime(self):
+    def testNoPlannedStartDateTime(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
             <task />
         </tasks>\n''')
         self.assertEqual(date.DateTime(), tasks[0].plannedStartDateTime())
 
-    def testStartDateTimeWithMicroseconds(self):
+    def testPlannedStartDateTimeWithMicroseconds(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
             <task plannedstartdate="2005-01-01 22:01:30.456"/>
         </tasks>\n''')
         self.assertEqual(date.DateTime(2005,1,1,22,1,30,456), 
                          tasks[0].plannedStartDateTime())
+
+    def testActualStartDateTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task actualstartdate="2005-04-17 10:05:11"/>
+        </tasks>\n''')
+        self.assertEqual(date.DateTime(2005,4,17,10,5,11), 
+                         tasks[0].actualStartDateTime())
+
+    def testActualStartDateTimeWithoutTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task actualstartdate="2005-04-17"/>
+        </tasks>\n''')
+        self.assertEqual(date.DateTime(2005,4,17), tasks[0].actualStartDateTime())
+
+    def testNoActualStartDateTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task />
+        </tasks>\n''')
+        self.assertEqual(date.DateTime(), tasks[0].actualStartDateTime())
+
+    def testActualStartDateTimeWithMicroseconds(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task actualstartdate="2005-01-01 22:01:30.456"/>
+        </tasks>\n''')
+        self.assertEqual(date.DateTime(2005,1,1,22,1,30,456), 
+                         tasks[0].actualStartDateTime())

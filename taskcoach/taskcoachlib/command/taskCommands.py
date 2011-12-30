@@ -483,7 +483,28 @@ class EditDueDateTimeCommand(EditPeriodDateTimeCommand):
     @staticmethod
     def setOtherDateTime(item, dateTime, event):
         item.setPlannedStartDateTime(dateTime, event=event)
-                
+ 
+
+class EditActualStartDateTimeCommand(EditPeriodDateTimeCommand):
+    plural_name = _('Change actual start date')
+    singular_name = _('Change actual start date of "%s"')
+    
+    @staticmethod
+    def getDateTime(item):
+        return item.actualStartDateTime()
+    
+    @staticmethod
+    def setDateTime(item, dateTime, event):
+        item.setActualStartDateTime(dateTime, event=event)
+        
+    @staticmethod
+    def getOtherDateTime(item):
+        return item.completionDateTime()
+    
+    @staticmethod
+    def setOtherDateTime(item, dateTime, event):
+        item.setCompletionDateTime(dateTime, event=event)
+               
 
 class EditCompletionDateTimeCommand(EditDateTimeCommand, EffortCommand):
     plural_name = _('Change completion date')
@@ -496,6 +517,14 @@ class EditCompletionDateTimeCommand(EditDateTimeCommand, EffortCommand):
     @staticmethod
     def setDateTime(item, dateTime, event):
         item.setCompletionDateTime(dateTime, event=event)
+
+    @staticmethod
+    def getOtherDateTime(item):
+        return item.actualStartDateTime()
+    
+    @staticmethod
+    def setOtherDateTime(item, dateTime, event):
+        item.setActualStartDateTime(dateTime, event=event)
 
     def tasksToStopTracking(self):
         return self.items

@@ -45,6 +45,9 @@ class TaskEditorSetterBase(object):
     def setDueDateTime(self, dateTime):
         self.setDateTime(self.editor._interior[1]._dueDateTimeEntry, dateTime)
 
+    def setActualStartDateTime(self, dateTime):
+        self.setDateTime(self.editor._interior[1]._actualStartDateTimeEntry, dateTime)
+
     def setCompletionDateTime(self, dateTime):
         self.setDateTime(self.editor._interior[1]._completionDateTimeEntry, dateTime)
 
@@ -132,7 +135,11 @@ class EditorDisplayTest(TaskEditorTestCase):
     def testDueDateTime(self):
         self.assertEqual(date.DateTime(),
                          self.editor._interior[1]._dueDateTimeEntry.GetValue())
-        
+ 
+    def testActualStartDateTime(self):
+        self.assertEqual(date.DateTime(),
+                         self.editor._interior[1]._actualStartDateTimeEntry.GetValue())
+       
     def testRecurrenceUnit(self):
         choice = self.editor._interior[1]._recurrenceEntry._recurrencePeriodEntry
         self.assertEqual('Daily', choice.GetString(choice.GetSelection()))
@@ -162,17 +169,23 @@ class EditTaskTestBase(object):
         self.assertEqual('Description', self.task.description())
 
     # pylint: disable-msg=W0212
+   
+    def testSetPlannedStartDateTime(self):
+        self.setPlannedStartDateTime(self.tomorrow)
+        self.assertAlmostEqual(self.tomorrow.toordinal(), 
+                               self.task.plannedStartDateTime().toordinal(),
+                               places=2)
 
     def testSetDueDateTime(self):
         self.setDueDateTime(self.tomorrow)
         self.assertAlmostEqual(self.tomorrow.toordinal(), 
                                self.task.dueDateTime().toordinal(),
                                places=2)
-    
-    def testSetPlannedStartDateTime(self):
-        self.setPlannedStartDateTime(self.tomorrow)
+
+    def testSetActualStartDateTime(self):
+        self.setActualStartDateTime(self.tomorrow)
         self.assertAlmostEqual(self.tomorrow.toordinal(), 
-                               self.task.plannedStartDateTime().toordinal(),
+                               self.task.actualStartDateTime().toordinal(),
                                places=2)
 
     def testSetCompletionDateTime(self):

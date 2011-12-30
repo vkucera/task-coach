@@ -74,6 +74,7 @@ class IntegrationTest(IntegrationTestCase):
         self.task = task.Task(subject='Subject', description=self.description, 
             plannedStartDateTime=date.Now() - date.TimeDelta(days=1), 
             dueDateTime=date.Now() + date.TimeDelta(days=1), 
+            actualStartDateTime=date.Now() - date.TimeDelta(hours=4),
             completionDateTime=date.Now() - date.TimeDelta(days=1), 
             budget=date.TimeDelta(hours=1), 
             priority=4, hourlyFee=100.5, fixedFee=1000, 
@@ -143,7 +144,10 @@ class IntegrationTest(IntegrationTestCase):
                 
     def testDueDateTime(self):
         self.assertAttributeWrittenAndRead(self.task, 'dueDateTime')
- 
+
+    def testActualStartDateTime(self):
+        self.assertAttributeWrittenAndRead(self.task, 'actualStartDateTime')
+  
     def testCompletionDateTime(self):
         self.assertAttributeWrittenAndRead(self.task, 'completionDateTime')
         

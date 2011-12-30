@@ -679,6 +679,7 @@ class StartEffortForTaskMenu(DynamicMenu):
                           task.Task.trackStopEventType(),
                           task.Task.plannedStartDateTimeChangedEventType(),
                           task.Task.dueDateTimeChangedEventType(),
+                          task.Task.actualStartDateTimeChangedEventType(),
                           task.Task.completionDateTimeChangedEventType()):
             patterns.Publisher().registerObserver(self.onUpdateMenu, eventType)
     

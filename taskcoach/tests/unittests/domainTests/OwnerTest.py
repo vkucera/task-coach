@@ -53,3 +53,6 @@ class OwnerTest(test.TestCase):
         self.owner.setFoos([Foo()])
         self.assertEqual(1, len(self.events))
 
+    def testRemoveNoObjects(self):
+        self.owner.removeFoos()
+        self.failIf(self.owner.foos())

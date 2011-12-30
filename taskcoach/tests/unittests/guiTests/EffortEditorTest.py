@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test
-from taskcoachlib import gui, command, config, persistence
+from taskcoachlib import gui, config, persistence
 from taskcoachlib.domain import task, effort, date
 from unittests import dummy
 
@@ -27,7 +27,7 @@ class EditorUnderTest(gui.dialog.editor.EffortEditor):
         super(EditorUnderTest, self).__init__(*args, **kwargs)
         self.editorClosed = False
                 
-    def onClose(self, event):
+    def onClose(self, event): # pragma: no cover
         self.editorClosed = True
         super(EditorUnderTest, self).onClose(event)
         

@@ -185,5 +185,5 @@ class EffortAggregator(patterns.SetDecorator,
     
     @classmethod
     def sortEventType(class_):
-        return 'this event type is not used' 
+        return 'this event type is not used' # pragma: no cover
 

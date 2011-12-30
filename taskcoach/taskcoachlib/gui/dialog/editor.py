@@ -286,6 +286,7 @@ class DatesPage(Page):
     def addDateEntries(self):
         for label, taskMethodName in [(_('Planned start date'), 'plannedStartDateTime'),
                                       (_('Due date'), 'dueDateTime'),
+                                      (_('Actual start date'), 'actualStartDateTime'),
                                       (_('Completion date'), 'completionDateTime')]:
             self.addDateEntry(label, taskMethodName)
 
@@ -343,6 +344,7 @@ class DatesPage(Page):
         return dict(firstEntry=self._plannedStartDateTimeEntry,
                     plannedStartDateTime=self._plannedStartDateTimeEntry,
                     dueDateTime=self._dueDateTimeEntry,
+                    actualStartDateTime=self._actualStartDateTimeEntry,
                     completionDateTime=self._completionDateTimeEntry,
                     timeLeft=self._dueDateTimeEntry,
                     reminder=self._reminderDateTimeEntry,

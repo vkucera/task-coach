@@ -76,6 +76,12 @@ class EffortTest(test.TestCase, asserts.Mixin):
         stop = date.DateTime.now()
         self.effort.setStop(stop)
         self.assertEqual(stop, self.events[0].value())
+        
+    def testNoNotificationForSetStopWhenNewStopEqualsOldStop(self):
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType='effort.stop')
+        self.effort.setStop(self.effort.getStop())
+        self.failIf(self.events)
 
     def testDurationNotificationForSetStart(self):
         patterns.Publisher().registerObserver(self.onEvent,

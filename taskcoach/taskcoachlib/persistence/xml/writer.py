@@ -100,6 +100,8 @@ class XMLWriter(object):
             node.attrib['plannedstartdate'] = str(task.plannedStartDateTime())
         if task.dueDateTime() != maxDateTime:
             node.attrib['duedate'] = str(task.dueDateTime())
+        if task.actualStartDateTime() != maxDateTime:
+            node.attrib['actualstartdate'] = str(task.actualStartDateTime())
         if task.completionDateTime() != maxDateTime:
             node.attrib['completiondate'] = str(task.completionDateTime())
         if task.percentageComplete():

@@ -51,6 +51,7 @@ defaults = { \
     # possible values.
     'defaultplannedstartdatetime': 'preset_today_currenttime',
     'defaultduedatetime': 'propose_tomorrow_endofworkingday',
+    'defaultactualstartdatetime': 'preset_today_currenttime',
     'defaultcompletiondatetime': 'propose_today_currenttime',
     'defaultreminderdatetime': 'propose_tomorrow_startofworkingday',
 },

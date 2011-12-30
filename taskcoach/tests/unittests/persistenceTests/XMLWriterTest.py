@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, StringIO # We cannot use CStringIO since unicode strings are used below.
 import test
-from taskcoachlib import persistence, config
+from taskcoachlib import persistence, config, meta
 from taskcoachlib.domain import base, task, effort, date, category, note, attachment
 from taskcoachlib.syncml.config import SyncMLConfigNode
 
@@ -57,7 +57,6 @@ class XMLWriterTest(test.TestCase):
     # tests
         
     def testVersion(self):
-        from taskcoachlib import meta
         self.expectInXML('<?taskcoach release="%s"'%meta.data.version)
 
     def testGUID(self):
@@ -90,6 +89,14 @@ class XMLWriterTest(test.TestCase):
         self.task.setPlannedStartDateTime(date.DateTime())
         self.expectNotInXML('plannedstartdate=')
         
+    def testTaskActualStartDateTime(self):
+        self.task.setActualStartDateTime(date.DateTime(2007,12,31,9,0,0))
+        self.expectInXML('actualstartdate="%s"'%str(self.task.actualStartDateTime()))
+
+    def testNoActualStartDateTime(self):
+        self.task.setActualStartDateTime(date.DateTime())
+        self.expectNotInXML('actualstartdate=')
+         
     def testTaskDueDateTime(self):
         self.task.setDueDateTime(date.DateTime(2004,1,1,10,5,5))
         self.expectInXML('duedate="%s"'%str(self.task.dueDateTime()))
@@ -404,6 +411,10 @@ class XMLWriterTest(test.TestCase):
     def testMonthlyRecurrence(self):
         self.task.setRecurrence(date.Recurrence('monthly'))
         self.expectInXML('<recurrence unit="monthly" />')
+        
+    def testMonthlyRecurrenceOnSameWeekday(self):
+        self.task.setRecurrence(date.Recurrence('monthly', sameWeekday=True))
+        self.expectInXML('<recurrence sameWeekday="True" unit="monthly" />')
 
     def testYearlyRecurrence(self):
         self.task.setRecurrence(date.Recurrence('yearly'))
