@@ -110,6 +110,12 @@ class TaskSorterSettingsTest(test.TestCase):
         self.task2.setPlannedStartDateTime(date.Now() - date.oneDay)
         self.assertEqual([self.task2, self.task1], list(self.sorter))
         
+    def testSortByActualStartDateTime(self):
+        self.sorter.sortBy('actualStartDateTime')
+        self.task1.setActualStartDateTime(date.Now() - date.oneDay)
+        self.task2.setActualStartDateTime(date.Now() + date.oneDay)
+        self.assertEqual([self.task1, self.task2], list(self.sorter))
+
     def testSortByDueDateTimeDescending(self):
         self.sorter.sortBy('dueDateTime')
         self.sorter.sortAscending(False)

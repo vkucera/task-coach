@@ -148,6 +148,8 @@ class BaseTaskTreeViewer(BaseTaskViewer):
             kwargs['plannedStartDateTime'] = task.Task.suggestedPlannedStartDateTime()
         if self.__shouldPresetDueDateTime():
             kwargs['dueDateTime'] = task.Task.suggestedDueDateTime()
+        if self.__shouldPresetActualStartDateTime():
+            kwargs['actualStartDateTime'] = task.Task.suggestedActualStartDateTime()
         if self.__shouldPresetCompletionDateTime():
             kwargs['completionDateTime'] = task.Task.suggestedCompletionDateTime()
         if self.__shouldPresetReminderDateTime():
@@ -160,6 +162,9 @@ class BaseTaskTreeViewer(BaseTaskViewer):
             
     def __shouldPresetDueDateTime(self):
         return self.settings.get('view', 'defaultduedatetime').startswith('preset')
+
+    def __shouldPresetActualStartDateTime(self):
+        return self.settings.get('view', 'defaultactualstartdatetime').startswith('preset')
     
     def __shouldPresetCompletionDateTime(self):
         return self.settings.get('view', 'defaultcompletiondatetime').startswith('preset')
@@ -728,7 +733,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
         columns = [widgets.Column('subject', _('Subject'), 
                 task.Task.subjectChangedEventType(), 
                 'task.completionDateTime', 'task.dueDateTime', 
-                'task.plannedStartDateTime',
+                'task.actualStartDateTime', 'task.plannedStartDateTime',
                 task.Task.trackStartEventType(), task.Task.trackStopEventType(), 
                 sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                     value='subject'),
@@ -795,6 +800,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
         for name, columnHeader, editCtrl, editCallback, eventTypes in [
             ('plannedStartDateTime', _('Planned start date'), inplace_editor.DateTimeCtrl, self.onEditPlannedStartDateTime, []),
             ('dueDateTime', _('Due date'), inplace_editor.DateTimeCtrl, self.onEditDueDateTime, [task.Task.expansionChangedEventType()]),
+            ('actualStartDateTime', _('Actual start date'), inplace_editor.DateTimeCtrl, self.onEditActualStartDateTime, [task.Task.expansionChangedEventType()]),
             ('completionDateTime', _('Completion date'), inplace_editor.DateTimeCtrl, self.onEditCompletionDateTime, [task.Task.expansionChangedEventType()])]:
             renderCallback = getattr(self, 'render%s'%(name[0].capitalize()+name[1:]))
             columns.append(widgets.Column(name, columnHeader,  
@@ -843,7 +849,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
              uicommand.ViewColumns(menuText=_('&All date columns'),
                 helpText=_('Show/hide all date-related columns'),
                 setting=['plannedStartDateTime', 'dueDateTime', 'timeLeft', 
-                         'completionDateTime', 'recurrence'],
+                         'actualStartDateTime', 'completionDateTime', 'recurrence'],
                 viewer=self),
              None,
              uicommand.ViewColumn(menuText=_('&Planned start date'),
@@ -852,6 +858,9 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
              uicommand.ViewColumn(menuText=_('&Due date'),
                  helpText=_('Show/hide due date column'),
                  setting='dueDateTime', viewer=self),
+             uicommand.ViewColumn(menuText=_('&Actual start date'),
+                helpText=_('Show/hide actual start date column'),
+                setting='actualStartDateTime', viewer=self),
              uicommand.ViewColumn(menuText=_('&Completion date'),
                  helpText=_('Show/hide completion date column'),
                  setting='completionDateTime', viewer=self),
@@ -972,6 +981,13 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
     def renderDueDateTime(self, task):
         return self.renderedValue(task, task.dueDateTime, render.dateTime)
 
+    @staticmethod
+    def renderActualStartDateTime(task):
+        # The rendering of the actual start date time doesn't depend on whether 
+        # the task is collapsed since the actual start date time of a parent is 
+        # always <= actual start date times of all children. 
+        return render.dateTime(task.actualStartDateTime())
+
     def renderCompletionDateTime(self, task):
         return self.renderedValue(task, task.completionDateTime, render.dateTime)
 
@@ -1033,6 +1049,9 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
         keep_delta = self.settings.get('view', 'datestied') == 'duestart'
         command.EditDueDateTimeCommand(items=[item], newValue=newValue,
                                        keep_delta=keep_delta).do()
+
+    def onEditActualStartDateTime(self, item, newValue):
+        command.EditActualStartDateTimeCommand(items=[item], newValue=newValue).do()
         
     def onEditCompletionDateTime(self, item, newValue):
         command.EditCompletionDateTimeCommand(items=[item], newValue=newValue).do()

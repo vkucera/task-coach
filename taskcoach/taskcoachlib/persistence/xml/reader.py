@@ -217,6 +217,8 @@ class XMLReader(object):
                                                     *self.defaultStartTime),
             dueDateTime=date.parseDateTime(taskNode.attrib.get('duedate', ''), 
                                            *self.defaultEndTime),
+            actualStartDateTime=date.parseDateTime(taskNode.attrib.get('actualstartdate', ''),
+                                                   *self.defaultStartTime),
             completionDateTime=date.parseDateTime(taskNode.attrib.get('completiondate', ''), 
                                                   *self.defaultEndTime),
             percentageComplete=self._parseIntAttribute(taskNode, 'percentageComplete'),

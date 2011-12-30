@@ -31,7 +31,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     maxDateTime = date.DateTime()
     
     def __init__(self, subject='', description='', 
-                 dueDateTime=None, plannedStartDateTime=None, completionDateTime=None,
+                 dueDateTime=None, plannedStartDateTime=None, 
+                 actualStartDateTime=None, completionDateTime=None,
                  budget=None, priority=0, id=None, hourlyFee=0, # pylint: disable-msg=W0622
                  fixedFee=0, reminder=None, reminderBeforeSnooze=None, categories=None,
                  efforts=None, shouldMarkCompletedWhenAllChildrenCompleted=None, 
@@ -49,6 +50,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                                        self.dueDateTimeEvent)
         self.__plannedStartDateTime = Attribute(plannedStartDateTime or maxDateTime, self, 
                                                 self.plannedStartDateTimeEvent)
+        self.__actualStartDateTime = Attribute(actualStartDateTime or maxDateTime, self,
+                                               self.actualStartDateTimeEvent)
         if completionDateTime is None and percentageComplete == 100:
             completionDateTime = date.Now()
         self.__completionDateTime = Attribute(completionDateTime or maxDateTime, 
@@ -94,6 +97,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def __setstate__(self, state, event=None):
         super(Task, self).__setstate__(state, event=event)
         self.setPlannedStartDateTime(state['plannedStartDateTime'], event=event)
+        self.setActualStartDateTime(state['actualStartDateTime'], event=event)
         self.setDueDateTime(state['dueDateTime'], event=event)
         self.setCompletionDateTime(state['completionDateTime'], event=event)
         self.setPercentageComplete(state['percentageComplete'], event=event)
@@ -112,7 +116,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def __getstate__(self):
         state = super(Task, self).__getstate__()
         state.update(dict(dueDateTime=self.__dueDateTime.get(), 
-            plannedStartDateTime=self.__plannedStartDateTime.get(),  
+            plannedStartDateTime=self.__plannedStartDateTime.get(),
+            actualStartDateTime=self.__actualStartDateTime.get(),
             completionDateTime=self.__completionDateTime.get(),
             percentageComplete=self.__percentageComplete.get(),
             children=self.children(), parent=self.parent(), 
@@ -129,8 +134,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     def __getcopystate__(self):
         state = super(Task, self).__getcopystate__()
-        state.update(dict(dueDateTime=self.__dueDateTime.get(), 
-            plannedStartDateTime=self.__plannedStartDateTime.get(), 
+        state.update(dict(plannedStartDateTime=self.__plannedStartDateTime.get(), 
+            dueDateTime=self.__dueDateTime.get(), 
+            actualStartDateTime=self.__actualStartDateTime.get(), 
             completionDateTime=self.__completionDateTime.get(),
             percentageComplete=self.__percentageComplete.get(), 
             efforts=[effort.copy() for effort in self._efforts], 
@@ -177,6 +183,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             self.setDueDateTime(child.dueDateTime(), event=event)           
         if child.plannedStartDateTime() < self.plannedStartDateTime():
             self.setPlannedStartDateTime(child.plannedStartDateTime(), event=event)
+        if child.actualStartDateTime() < self.actualStartDateTime():
+            self.setActualStartDateTime(child.actualStartDateTime(), event=event)
         self.recomputeAppearance(recursive=False, event=event)
         child.recomputeAppearance(recursive=True, event=event)
 
@@ -331,7 +339,25 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def timeLeftSortEventTypes(class_):
         ''' The event types that influence the time left sort order. '''
         return ('task.dueDateTime',)
-                    
+    
+    # Actual start date
+    
+    def actualStartDateTime(self, recursive=False):
+        if recursive:
+            childrenActualStartDateTimes = [child.actualStartDateTime(recursive=True) for child in \
+                                      self.children() if not child.completed()]
+            return min(childrenActualStartDateTimes + [self.__actualStartDateTime.get()])
+        else:
+            return self.__actualStartDateTime.get()
+    
+    @patterns.eventSource
+    def setActualStartDateTime(self, actualStartDateTime, event=None):
+        self.__actualStartDateTime.set(actualStartDateTime, event=event)
+        
+    def actualStartDateTimeEvent(self, event):
+        actualStartDateTime = self.actualStartDateTime()
+        event.addSource(self, actualStartDateTime, type='task.actualStartDateTime')
+        
     # Completion date
             
     def completionDateTime(self, recursive=False):
@@ -1203,7 +1229,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def suggestedPlannedStartDateTime(cls, now=date.Now):
         return cls.suggestedDateTime('defaultplannedstartdatetime', now)
-    
+
+    @classmethod
+    def suggestedActualStartDateTime(cls, now=date.Now):
+        return cls.suggestedDateTime('defaultactualstartdatetime', now)
+     
     @classmethod
     def suggestedDueDateTime(cls, now=date.Now):
         return cls.suggestedDateTime('defaultduedatetime', now)
@@ -1255,8 +1285,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def modificationEventTypes(class_):
         eventTypes = super(Task, class_).modificationEventTypes()
-        return eventTypes + ['task.dueDateTime', 'task.plannedStartDateTime', 
-                             'task.completionDateTime', 
+        return eventTypes + ['task.plannedStartDateTime', 'task.dueDateTime', 
+                             'task.actualStartDateTime', 'task.completionDateTime', 
                              'task.effort.add', 'task.effort.remove', 
                              'task.budget', 'task.percentageComplete', 
                              'task.priority', 

@@ -138,7 +138,7 @@ class Settings(patterns.Observer, CachingConfigParser):
         try:
             return defaultSection[option]
         except KeyError:
-            raise ConfigParser.NoOptionError, (defaultSection, option)
+            raise ConfigParser.NoOptionError, (option, defaultSection)
             
     def _ensureMinimum(self, section, option, result):
         # Some settings may have a minimum value, make sure we return at 
