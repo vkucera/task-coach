@@ -182,7 +182,7 @@ class MethodProxy(object):
         self.method = method
         
     def __repr__(self):
-        return 'MethodProxy(%s)'%self.method
+        return 'MethodProxy(%s)'%self.method # pragma: no cover
         
     def __call__(self, *args, **kwargs):
         return self.method(*args, **kwargs)

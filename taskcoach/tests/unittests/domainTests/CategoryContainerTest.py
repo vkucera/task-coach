@@ -87,4 +87,7 @@ class CategoryContainerTest(test.TestCase):
         self.filteredCategory.setFiltered(False)
         self.failIf(self.categories.filteredCategories())
 
-    
+    def testResetAllFilteredCategories(self):
+        self.categories.extend([self.category, self.filteredCategory])
+        self.categories.resetAllFilteredCategories()
+        self.failIf(self.filteredCategory.isFiltered())

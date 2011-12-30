@@ -410,6 +410,10 @@ class XMLWriterTest(test.TestCase):
     def testMonthlyRecurrence(self):
         self.task.setRecurrence(date.Recurrence('monthly'))
         self.expectInXML('<recurrence unit="monthly" />')
+        
+    def testMonthlyRecurrenceOnSameWeekday(self):
+        self.task.setRecurrence(date.Recurrence('monthly', sameWeekday=True))
+        self.expectInXML('<recurrence sameWeekday="True" unit="monthly" />')
 
     def testYearlyRecurrence(self):
         self.task.setRecurrence(date.Recurrence('yearly'))

@@ -163,3 +163,11 @@ class TodoTxtWriterTestCase(test.wxTestCase):
                                                dueDateTime=date.DateTime(2011,1,1,16,50,10)))
         self.writer.write(self.viewer, self.settings, False)
         self.assertEqual('Export due date due:2011-01-01\n', self.file.getvalue())
+        
+    def testExportSelectionOnly(self):
+        cheese = task.Task(subject='Get cheese')
+        self.taskFile.tasks().append(cheese)
+        self.taskFile.tasks().append(task.Task(subject='Paint house'))
+        self.viewer.select([cheese])
+        self.writer.write(self.viewer, self.settings, True)
+        self.assertEqual('Get cheese\n', self.file.getvalue())

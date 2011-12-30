@@ -149,3 +149,18 @@ class CopyAndPasteCommandTest(CategoryCommandTestCase):
             lambda: self.assertEqual(2, len(self.task.categories())),
             lambda: self.assertEqual(set([childCat]), self.task.categories()))
 
+
+class EditExclusiveSubcategoriesCommandTest(CategoryCommandTestCase):
+    def setUp(self):
+        super(EditExclusiveSubcategoriesCommandTest, self).setUp()
+        self.category = category.Category('category')
+        
+    def testEdit(self):
+        self.categories.append(self.category)
+        edit = command.EditExclusiveSubcategoriesCommand(self.categories, 
+                                                         [self.category],
+                                                         newValue=True)
+        edit.do()
+        self.assertDoUndoRedo(
+            lambda: self.failUnless(self.category.hasExclusiveSubcategories()),
+            lambda: self.failIf(self.category.hasExclusiveSubcategories()))

@@ -22,7 +22,7 @@ from taskcoachlib.domain import attachment
 
 
 class DummyEvent(object):
-    def Skip(self):
+    def Skip(self): # pragma: no cover
         pass
 
 
@@ -42,18 +42,18 @@ class AttachmentEditorTest(test.wxTestCase):
         page = self.editor._interior[0]
         page._subjectEntry.SetFocus()
         page._subjectEntry.SetValue(newSubject)
-        if operating_system.isGTK():
+        if operating_system.isGTK(): # pragma: no cover
             page._subjectSync.onAttributeEdited(DummyEvent())
-        else:
+        else: # pragma: no cover
             page._descriptionEntry.SetFocus()
         
     def setDescription(self, newDescription):
         page = self.editor._interior[0]
         page._descriptionEntry.SetFocus()
         page._descriptionEntry.SetValue(newDescription)
-        if operating_system.isGTK():
+        if operating_system.isGTK(): # pragma: no cover
             page._descriptionSync.onAttributeEdited(DummyEvent())
-        else:
+        else: # pragma: no cover
             page._subjectEntry.SetFocus()
         
     def testCreate(self):

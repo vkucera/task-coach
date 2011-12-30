@@ -445,7 +445,7 @@ class CommonTestsMixin(object):
         self.taskList.extend([prerequisite1, prerequisite2, self.task])
         try:
             self.assertItems(prerequisite1, prerequisite2, self.task)
-        except AssertionError:
+        except AssertionError: # pragma: no cover
             self.assertItems(prerequisite2, prerequisite1, self.task)
 
     def testSortByPrerequisite_ChainedPrerequisites(self):

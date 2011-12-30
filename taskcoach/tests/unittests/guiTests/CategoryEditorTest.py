@@ -16,14 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, sys
+import wx
 import test
 from taskcoachlib import gui, command, config, persistence, operating_system
 from taskcoachlib.domain import category, attachment
 
 
 class DummyEvent(object):
-    def Skip(self):
+    def Skip(self): # pragma: no cover
         pass
     
 
@@ -44,11 +44,6 @@ class CategoryEditorTest(test.wxTestCase):
         if operating_system.isGTK():
             wx.Yield() # pragma: no cover 
         super(CategoryEditorTest, self).tearDown()
-        
-    def createCommand(self):
-        newCategoryCommand = command.NewCategoryCommand(self.categories)
-        self.category = newCategoryCommand.items[0] # pylint: disable-msg=W0201
-        return newCategoryCommand
 
     # pylint: disable-msg=E1101,E1103,W0212
     
@@ -63,18 +58,18 @@ class CategoryEditorTest(test.wxTestCase):
         page = self.editor._interior[0]
         page._subjectEntry.SetFocus()
         page._subjectEntry.SetValue(newSubject)
-        if operating_system.isGTK():
+        if operating_system.isGTK(): # pragma: no cover 
             page._subjectSync.onAttributeEdited(DummyEvent())
-        else:
+        else: # pragma: no cover 
             page._descriptionEntry.SetFocus()
 
     def setDescription(self, newDescription):
         page = self.editor._interior[0]
         page._descriptionEntry.SetFocus()
         page._descriptionEntry.SetValue(newDescription)
-        if operating_system.isGTK():
+        if operating_system.isGTK(): # pragma: no cover 
             page._descriptionSync.onAttributeEdited(DummyEvent())
-        else: 
+        else:  # pragma: no cover
             page._subjectEntry.SetFocus()
         
     def testCreate(self):

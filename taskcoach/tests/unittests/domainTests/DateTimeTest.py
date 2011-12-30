@@ -90,6 +90,10 @@ class DateTimeTest(test.TestCase):
         endOfMonth = date.DateTime(2005,4,30).endOfDay()
         midMonth = date.DateTime(2005,4,15,12,45,1,999999)
         self.assertEqual(endOfMonth, midMonth.endOfMonth())
+        
+    def testStartOfYear(self):
+        self.assertEqual(date.DateTime(2010,1,1,0,0,0), 
+                         date.DateTime(2010,12,31,11,4,5).startOfYear())
 
     def testEndOfYear_AtMidYear(self):
         endOfYear = date.DateTime(2010,12,31,23,59,59,999999)

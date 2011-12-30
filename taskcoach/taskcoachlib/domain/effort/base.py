@@ -56,7 +56,7 @@ class BaseEffort(object):
         return self.task().font(recursive)
     
     def duration(self, recursive=False):
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
     def isTotal(self):
         return False # Are we a detail effort or a total effort? For sorting.
