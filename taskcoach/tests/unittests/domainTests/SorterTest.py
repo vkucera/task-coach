@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -115,6 +115,13 @@ class TaskSorterSettingsTest(test.TestCase):
         self.task1.setActualStartDateTime(date.Now() - date.oneDay)
         self.task2.setActualStartDateTime(date.Now() + date.oneDay)
         self.assertEqual([self.task1, self.task2], list(self.sorter))
+        
+    def testSortByActualStartDateTimeKeepsSortingWhenChangingActualStartDateTime(self):
+        self.sorter.sortBy('actualStartDateTime')
+        self.task1.setActualStartDateTime(date.Now() - date.oneHour)
+        self.task2.setActualStartDateTime(date.Now() + date.oneHour)
+        self.task1.setActualStartDateTime(date.Now() + date.twoHours)
+        self.assertEqual([self.task2, self.task1], list(self.sorter))        
 
     def testSortByDueDateTimeDescending(self):
         self.sorter.sortBy('dueDateTime')

@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.5', 'December 30, 2011',
+Release('1.3.5', 'January 1, 2012',
     summary='''This is a feature release.''',
     featuresAdded=[
         Feature('''Note categories are now synced as well (SyncML)'''),

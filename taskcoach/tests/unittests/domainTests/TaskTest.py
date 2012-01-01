@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -94,26 +94,6 @@ class CommonTaskTestsMixin(asserts.TaskAssertsMixin):
         copy = self.task.copy()
         self.assertEqual(copy.getStatus(), copy.STATUS_NEW)
 
-    def testModificationEventTypes(self): # pylint: disable-msg=E1003
-        self.assertEqual(super(task.Task, self.task).modificationEventTypes() +\
-             [task.Task.plannedStartDateTimeChangedEventType(),
-              task.Task.dueDateTimeChangedEventType(),
-              task.Task.actualStartDateTimeChangedEventType(),
-              task.Task.completionDateTimeChangedEventType(),
-              'task.effort.add',
-              'task.effort.remove',
-              task.Task.budgetChangedEventType(),
-              task.Task.percentageCompleteChangedEventType(),
-              task.Task.priorityChangedEventType(),
-              task.Task.hourlyFeeChangedEventType(),
-              task.Task.fixedFeeChangedEventType(),
-              task.Task.reminderChangedEventType(),
-              task.Task.recurrenceChangedEventType(),
-              'task.prerequisites',
-              'task.dependencies',
-              task.Task.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType()],
-             self.task.modificationEventTypes())
-        
 
 class NoBudgetTestsMixin(object):
     ''' These tests should succeed for all tasks without budget. '''
@@ -265,12 +245,12 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.assertEqual(self.yesterday, self.task.actualStartDateTime())
 
     def testSetActualStartDateTimeNotification(self):
-        self.registerObserver('task.actualStartDateTime')
+        self.registerObserver(task.Task.actualStartDateTimeChangedEventType())
         self.task.setActualStartDateTime(self.yesterday)
         self.assertEqual(self.yesterday, self.events[0].value())
 
     def testSetActualStartDateTimeUnchangedCausesNoNotification(self):
-        self.registerObserver('task.actualStartDateTime')
+        self.registerObserver(task.Task.actualStartDateTimeChangedEventType())
         self.task.setActualStartDateTime(self.task.actualStartDateTime())
         self.failIf(self.events)
 
@@ -764,7 +744,27 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.task.setOrdering(42)
         self.task.__setstate__(state)
         self.assertEqual(0L, self.task.ordering())
-        
+
+    def testModificationEventTypes(self): # pylint: disable-msg=E1003
+        self.assertEqual(super(task.Task, self.task).modificationEventTypes() +\
+             [task.Task.plannedStartDateTimeChangedEventType(),
+              task.Task.dueDateTimeChangedEventType(),
+              task.Task.actualStartDateTimeChangedEventType(),
+              task.Task.completionDateTimeChangedEventType(),
+              'task.effort.add',
+              'task.effort.remove',
+              task.Task.budgetChangedEventType(),
+              task.Task.percentageCompleteChangedEventType(),
+              task.Task.priorityChangedEventType(),
+              task.Task.hourlyFeeChangedEventType(),
+              task.Task.fixedFeeChangedEventType(),
+              task.Task.reminderChangedEventType(),
+              task.Task.recurrenceChangedEventType(),
+              'task.prerequisites',
+              'task.dependencies',
+              task.Task.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType()],
+             self.task.modificationEventTypes())
+
 
 class TaskDueTodayTest(TaskTestCase, CommonTaskTestsMixin):
     def taskCreationKeywordArguments(self):
@@ -2505,3 +2505,13 @@ class TaskSuggestedDateTimeTestWithStartAndEndOfWorkingDayEqualToDay( \
     def changeSettings(self):
         self.settings.set('view', 'efforthourstart', '0')
         self.settings.set('view', 'efforthourend', '24')
+
+
+class TaskConstructionTest(test.TestCase):
+    def testActualStartDateTimeIsDeterminedByEffortsWhenMissing(self):
+        newTask = task.Task(efforts=[effort.Effort(None, date.DateTime(2000,1,1))])
+        self.assertEqual(date.DateTime(2000,1,1), newTask.actualStartDateTime())
+
+    def testActualStartDateTimeIsNotDeterminedByEffortsWhenPassingAnActualStartDateTime(self):
+        newTask = task.Task(actualStartDateTime=date.DateTime(2010,1,1), efforts=[effort.Effort(None, date.DateTime(2000,1,1))])
+        self.assertEqual(date.DateTime(2010,1,1), newTask.actualStartDateTime())

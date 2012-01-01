@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,9 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 version = '1.4.0' # Current version number of the application
 tskversion = 34 # Current version number of the task file format, changed to 34 for release 1.3.5.
-release_day = '30' # Day number of the release, 1-31, as string
-release_month = 'December' # Month of the release in plain English
-release_year = '2011' # Year of the release as string
+release_day = '1' # Day number of the release, 1-31, as string
+release_month = 'January' # Month of the release in plain English
+release_year = '2012' # Year of the release as string
 release_status = 'stable' # One of 'alpha', 'beta', 'stable'
 
 # No editing needed below this line for doing a release.
