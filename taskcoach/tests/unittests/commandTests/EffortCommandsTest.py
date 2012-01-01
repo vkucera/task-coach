@@ -45,6 +45,16 @@ class NewEffortCommandTest(EffortCommandTestCase):
         self.assertDoUndoRedo(
             lambda: self.failUnless(newEffort in self.originalTask.efforts()),
             lambda: self.assertEqual([self.effort], self.originalTask.efforts()))
+        
+    def testAddingNewEffortSetsActualStartDateTimeOfTask(self):
+        originalStart = self.originalTask.actualStartDateTime()
+        newEffortCommand = command.NewEffortCommand(self.effortList, 
+                                                    [self.originalTask])
+        newEffortCommand.do()
+        newEffort = newEffortCommand.efforts[0]
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(newEffort.getStart(), self.originalTask.actualStartDateTime()),
+            lambda: self.assertEqual(originalStart, self.originalTask.actualStartDateTime()))
 
     def testNewEffortWhenUserEditsTask(self):
         secondTask = task.Task()
@@ -100,3 +110,37 @@ class StartAndStopEffortCommandTest(EffortCommandTestCase):
         self.assertDoUndoRedo(
             lambda: self.assertEqual(date.Today(), self.task2.plannedStartDateTime().date()),
             lambda: self.assertEqual(futureStartDateTime, self.task2.plannedStartDateTime()))
+
+
+class EditEffortStartDateTimeCommandTest(EffortCommandTestCase):
+    def testNewStartDateTime(self):
+        oldStart = self.effort.getStart()
+        newStart = date.DateTime(2000, 1, 1)
+        edit = command.EditEffortStartDateTimeCommand(self.effortList,
+                                                      [self.effort], newValue=newStart)
+        edit.do()
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(newStart, self.effort.getStart()),
+            lambda: self.assertEqual(oldStart, self.effort.getStart()))
+        
+    def testNewStartDateTimeSetsActualStartOfTask(self):
+        oldStart = self.effort.task().actualStartDateTime() 
+        newStart = date.DateTime(2000, 1, 1)
+        edit = command.EditEffortStartDateTimeCommand(self.effortList,
+                                                      [self.effort], newValue=newStart)
+        edit.do()
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(newStart, self.effort.task().actualStartDateTime()),
+            lambda: self.assertEqual(oldStart, self.effort.task().actualStartDateTime()))        
+
+
+class EditEffortStopDateTimeCommandTest(EffortCommandTestCase):
+    def testNewStopDateTime(self):
+        oldStop = self.effort.getStop()
+        newStop = oldStop + date.TimeDelta(hours=1)
+        edit = command.EditEffortStopDateTimeCommand(self.effortList,
+                                                     [self.effort], newValue=newStop)
+        edit.do()
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(newStop, self.effort.getStop()),
+            lambda: self.assertEqual(oldStop, self.effort.getStop()))

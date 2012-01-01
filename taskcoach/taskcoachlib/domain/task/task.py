@@ -50,6 +50,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                                        self.dueDateTimeEvent)
         self.__plannedStartDateTime = Attribute(plannedStartDateTime or maxDateTime, self, 
                                                 self.plannedStartDateTimeEvent)
+        if not actualStartDateTime and efforts:
+            actualStartDateTime = min([effort.getStart() for effort in efforts])
         self.__actualStartDateTime = Attribute(actualStartDateTime or maxDateTime, self,
                                                self.actualStartDateTimeEvent)
         if completionDateTime is None and percentageComplete == 100:
@@ -357,6 +359,16 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def actualStartDateTimeEvent(self, event):
         actualStartDateTime = self.actualStartDateTime()
         event.addSource(self, actualStartDateTime, type='task.actualStartDateTime')
+
+    @staticmethod
+    def actualStartDateTimeSortFunction(**kwargs):
+        recursive = kwargs.get('treeMode', False)
+        return lambda task: task.actualStartDateTime(recursive=recursive)
+    
+    @classmethod
+    def actualStartDateTimeSortEventTypes(class_):
+        ''' The event types that influence the actual start date time sort order. '''
+        return ('task.actualStartDateTime',)
         
     # Completion date
             

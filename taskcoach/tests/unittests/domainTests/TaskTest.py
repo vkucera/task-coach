@@ -94,18 +94,6 @@ class CommonTaskTestsMixin(asserts.TaskAssertsMixin):
         copy = self.task.copy()
         self.assertEqual(copy.getStatus(), copy.STATUS_NEW)
 
-    def testModificationEventTypes(self): # pylint: disable-msg=E1003
-        self.assertEqual(super(task.Task, self.task).modificationEventTypes() +\
-             ['task.plannedStartDateTime', 'task.dueDateTime',
-              'task.actualStartDateTime', 'task.completionDateTime',
-              'task.effort.add', 'task.effort.remove', 'task.budget', 
-              'task.percentageComplete', 'task.priority', 
-              task.Task.hourlyFeeChangedEventType(), 
-              'task.fixedFee', 'task.reminder', 'task.recurrence',
-              'task.prerequisites', 'task.dependencies', 
-              'task.setting.shouldMarkCompletedWhenAllChildrenCompleted'],
-             self.task.modificationEventTypes())
-        
 
 class NoBudgetTestsMixin(object):
     ''' These tests should succeed for all tasks without budget. '''
@@ -756,7 +744,19 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.task.setOrdering(42)
         self.task.__setstate__(state)
         self.assertEqual(0L, self.task.ordering())
-        
+
+    def testModificationEventTypes(self): # pylint: disable-msg=E1003
+        self.assertEqual(super(task.Task, self.task).modificationEventTypes() +\
+             ['task.plannedStartDateTime', 'task.dueDateTime',
+              'task.actualStartDateTime', 'task.completionDateTime',
+              'task.effort.add', 'task.effort.remove', 'task.budget', 
+              'task.percentageComplete', 'task.priority', 
+              task.Task.hourlyFeeChangedEventType(), 
+              'task.fixedFee', 'task.reminder', 'task.recurrence',
+              'task.prerequisites', 'task.dependencies', 
+              'task.setting.shouldMarkCompletedWhenAllChildrenCompleted'],
+             self.task.modificationEventTypes())
+          
 
 class TaskDueTodayTest(TaskTestCase, CommonTaskTestsMixin):
     def taskCreationKeywordArguments(self):
@@ -2497,3 +2497,13 @@ class TaskSuggestedDateTimeTestWithStartAndEndOfWorkingDayEqualToDay( \
     def changeSettings(self):
         self.settings.set('view', 'efforthourstart', '0')
         self.settings.set('view', 'efforthourend', '24')
+
+
+class TaskConstructionTest(test.TestCase):
+    def testActualStartDateTimeIsDeterminedByEffortsWhenMissing(self):
+        newTask = task.Task(efforts=[effort.Effort(None, date.DateTime(2000,1,1))])
+        self.assertEqual(date.DateTime(2000,1,1), newTask.actualStartDateTime())
+
+    def testActualStartDateTimeIsNotDeterminedByEffortsWhenPassingAnActualStartDateTime(self):
+        newTask = task.Task(actualStartDateTime=date.DateTime(2010,1,1), efforts=[effort.Effort(None, date.DateTime(2000,1,1))])
+        self.assertEqual(date.DateTime(2010,1,1), newTask.actualStartDateTime())

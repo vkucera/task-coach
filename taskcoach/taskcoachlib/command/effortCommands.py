@@ -29,17 +29,28 @@ class NewEffortCommand(base.BaseCommand):
     def __init__(self, *args, **kwargs):
         super(NewEffortCommand, self).__init__(*args, **kwargs)
         self.items = self.efforts = [effort.Effort(task) for task in self.items]
+        self.__oldActualStartDateTimes = {}
 
-    def name_subject(self, effort):
+    def name_subject(self, effort): # pylint: disable-msg=W0621
         return effort.task().subject()
         
-    def do_command(self):
+    @patterns.eventSource
+    def do_command(self, event=None):
         for effort in self.efforts: # pylint: disable-msg=W0621
-            effort.task().addEffort(effort)
+            task = effort.task()
+            task.addEffort(effort, event=event)
+            if task not in self.__oldActualStartDateTimes and effort.getStart() < task.actualStartDateTime():
+                self.__oldActualStartDateTimes[task] = task.actualStartDateTime()
+                task.setActualStartDateTime(effort.getStart(), event=event)
             
-    def undo_command(self):
+    @patterns.eventSource
+    def undo_command(self, event=None):
         for effort in self.efforts: # pylint: disable-msg=W0621
-            effort.task().removeEffort(effort)
+            task = effort.task()
+            task.removeEffort(effort, event=event)
+            if task in self.__oldActualStartDateTimes:
+                task.setActualStartDateTime(self.__oldActualStartDateTimes[task], event=event)
+                del self.__oldActualStartDateTimes[task]
             
     redo_command = do_command
     
@@ -80,6 +91,7 @@ class EditEffortStartDateTimeCommand(base.BaseCommand):
         self.__datetime = kwargs.pop('newValue')
         super(EditEffortStartDateTimeCommand, self).__init__(*args, **kwargs)
         self.__oldDateTimes = [item.getStart() for item in self.items]
+        self.__oldActualStartDateTimes = {}
         
     def canDo(self):
         maxDateTime = date.DateTime()
@@ -90,12 +102,20 @@ class EditEffortStartDateTimeCommand(base.BaseCommand):
     def do_command(self, event=None):
         for item in self.items:
             item.setStart(self.__datetime, event=event)
+            task = item.task()
+            if task not in self.__oldActualStartDateTimes and self.__datetime < task.actualStartDateTime():
+                self.__oldActualStartDateTimes[task] = task.actualStartDateTime()
+                task.setActualStartDateTime(self.__datetime, event=event)
             
     @patterns.eventSource
     def undo_command(self, event=None):
         for item, oldDateTime in zip(self.items, self.__oldDateTimes):
             item.setStart(oldDateTime, event=event)
-
+            task = item.task()
+            if task in self.__oldActualStartDateTimes:
+                task.setActualStartDateTime(self.__oldActualStartDateTimes[task], event=event)
+                del self.__oldActualStartDateTimes[task]
+                
     def redo_command(self):
         self.do_command()
 
