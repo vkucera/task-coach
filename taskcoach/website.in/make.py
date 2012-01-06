@@ -28,65 +28,88 @@ try:
     md5digests = md5digests.md5digests
 except ImportError:
     md5digests = dict()
-    
 
-pages = {}
-pages['index'] = \
-u'''          
-            <div class="row">
-                <div class="span16">
-                    <p><img src="images/banner.png" alt="Banner image"></p>
-                </div>
-            </div>    
-            <div class="row">    
-                <div class="span7">
-                    <h3>About %(name)s</h3>  
-                    <p>%(name)s is a simple open source todo manager to keep track of
-                    personal tasks and todo lists. It grew out of a frustration that
-                    most task managers do not provide facilities for composite tasks.
-                    Often, tasks and other things todo consist of several activities.
-                    %(name)s is designed to deal with composite tasks. In addition, it offers
-                    effort tracking, categories, and notes. %(name)s is available for Windows,
-                    Mac OS X, Linux, BSD, and iPhone and iPod Touch.</p>
-                    <p>%(name)s is licensed under the <A HREF="license.html">%(license)s</A> 
-                    and free to use for both individuals and companies.</p>
-                    <p>%(name)s is developed by %(author_unicode)s, with
-                    help of different people providing translations. 
-                    If %(name)s is a useful product for you, 
-                    please consider supporting the development of %(name)s. You can support 
-                    further development by spreading the word, <a href="i18n.html">help 
-                    translate</a> %(name)s in your language, 
-                    <a href="devinfo.html">help develop</a> new features and/or 
-                    <a href="donations.html">donate some money</a> (to help recover 
-                    costs; any amount is appreciated).</p>
-                    <p>Enjoy, <a href="mailto:%(author_email)s">%(author_unicode)s</a></p>
-                    <!-- AppStoreHQ:claim_code:258f8973d401112a215d79afdb82fef934ee56c9 -->
-                    <!-- AppStoreHQ:developer_claim_code:d28c5a79965194fd06870ec80ab83114356b664d -->
-                </div>
-                <div class="span6">
-                    <h3>Twitter updates</h3>
-                    <div id="twitter_div">
-                        <ul id="twitter_update_list"></ul>
-                    </div>
-                    <script type="text/javascript" src="http://twitter.com/javascripts/blogger.js"></script>
-                    <script type="text/javascript" src="http://twitter.com/statuses/user_timeline/taskcoach.json?callback=twitterCallback2&amp;count=3"></script>
-                    <a href="http://twitter.com/taskcoach" class="twitter-follow-button">Follow Task Coach on Twitter</a>
-                    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
-                </div>
-                <div class="span3">
+
+one_ad = '''
                     <div class="well">
-                    <p>
-                        <script type="text/javascript"><!--
-google_ad_client = "pub-2371570118755412";
+                        <p>
+                            <script type="text/javascript"><!--
+google_ad_client = "ca-pub-2371570118755412";
 /* 120x240, gemaakt 10-5-09 */
 google_ad_slot = "6528039249";
 google_ad_width = 120;
 google_ad_height = 240;
 //-->
-                        </script>
-                        <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
-                    </p>   
-                    </div>              
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+                        </p>   
+                    </div>'''
+
+ads = '''
+                    <div class="well">
+                        <p>
+                            <script type="text/javascript"><!--
+google_ad_client = "ca-pub-2371570118755412";
+/* 120x600 tekstads */
+google_ad_slot = "6546906699";
+google_ad_width = 120;
+google_ad_height = 600;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+                        </p>   
+                    </div>'''
+
+pages = {}
+pages['index'] = u'''          
+            <div class="row">
+                <div class="span13">
+                    <p><img src="images/banner.png" alt="Banner image"></p>
+                    <div class="row">
+                        <div class="span6">
+                            <h3>What is %(name)s?</h3>  
+                            <p>%(name)s is a simple open source todo manager to keep track of
+                            personal tasks and todo lists. It is designed for composite tasks.
+                            In addition, it offers effort tracking, categories, notes and more.</p>
+                            <p><a class="btn info" href="features.html">Read more &raquo;</a></p>
+                            <h3>What does it cost?</h3>
+                            The desktop versions of %(name)s are completely <span class="label success">free</span>. The iOS versions
+                            of %(name)s come with a small price tag because it costs us money to make them 
+                            available.</p>
+                            <p><a class="btn info" href="license.html">Read license &raquo;</a></p>
+                            <h3>What support is available?</h3>
+                            <p>We offer support for free. You can contact us by e-mail, 
+                            via our support request tracker, and via our bug tracker.</p>
+                            <p><a class="btn info" href="getsupport.html">Get support &raquo;</a></p>
+                        </div>
+                        <div class="span6 offset1">  
+                            <h3>What platforms are supported?</h3>
+                            <p>%(name)s is available for 
+                            <a href="download_for_windows.html">Windows</a>,
+                            <a href="download_for_mac.html">Mac OS X</a>, <a href="download_for_linux.html">Linux</a>, 
+                            <a href="download_for_bsd.html">BSD</a>, <a href="download_for_iphone.html">iPhone, 
+                            iPad, and iPod Touch</a>.</p>
+                            <p><a class="btn primary" href="download.html">Download &raquo;</a></p>
+                            <h3>How can I help?</a>
+                            <p>Glad you asked! The easiest way to give back is to help 
+                            spread the word. Helping out with a translation is also a good
+                            way to help. Patches are welcome too. And we'll gladly accept donations.</a>
+                            <p><a class="btn info" href="givesupport.html">Give support &raquo;</a></p>
+                            <h3>Who is behind this?</h3>
+                            <p>%(name)s is developed by <a href="mailto:%(author_email)s">%(author_unicode)s</a>, 
+                            with help of different people providing <a href="i18n.html">translations</a>. 
+                            <p><a href="http://twitter.com/taskcoach" class="twitter-follow-button">Follow Task Coach on Twitter</a>
+                            <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script></p> 
+                            <!-- AppStoreHQ:claim_code:258f8973d401112a215d79afdb82fef934ee56c9 -->
+                            <!-- AppStoreHQ:developer_claim_code:d28c5a79965194fd06870ec80ab83114356b664d -->
+                        </div>
+                    </div>
+                </div>
+                <div class="span3">''' + ads + '''
                 </div>
             </div>
         '''
@@ -234,10 +257,28 @@ pages['givesupport'] = '''
             </div>'''
 
 
-pages['changes'] = file('changes.html').read().decode('UTF-8')
-pages['changes'] += '<p><a href="all_changes.html">View complete change history</a></p>'
-pages['all_changes'] = file('all_changes.html').read().decode('UTF-8')
-
+pages['changes'] = '''
+            <div class="page-header">
+                <h1>Change history</h1>
+            </div>
+            <div class="row">
+                <div class="span13">''' + file('changes.html').read().decode('UTF-8') + '''
+                    <p><a href="all_changes.html">View complete change history</a></p>
+                </div>
+                <div class="span3">''' + ads + '''
+                </div>
+            </div>'''
+                    
+pages['all_changes'] = '''
+            <div class="page-header">
+                <h1>Change history</h1>
+            </div>
+            <div class="row">
+                <div class="span13">''' + file('all_changes.html').read().decode('UTF-8') + '''
+                </div>
+                <div class="span3">''' + ads + '''
+                </div>
+            </div>'''
 
 prerequisites = '''
               <a href="http://www.python.org/download/">Python</a> 
@@ -267,10 +308,18 @@ def download_header(platform=None, release=None, warning=None):
             <div class="page-header">
                 <h1>%s</h1>
             </div>
-            <p>
-                <span class="label warning">Warning</span> %s
-            </p>'''%(title, warning)
-          
+            <div class="row">
+                <div class="span13">
+                    <p>
+                        <span class="label warning">Warning</span> %s
+                    </p>'''%(title, warning)
+
+def download_footer(ads=ads):
+    return '''
+                </div>
+                <div class="span3">''' + ads + '''
+                </div>
+            </div>'''
 
 def download_table(**kwargs):
     filename = kwargs['download_url'].split('/')[-1]%meta.metaDict
@@ -331,7 +380,8 @@ sep = '\n'
 pages['download_for_windows'] = sep.join([download_header(platform='Microsoft Windows',
                                                           release='%(version)s'), 
                                           windowsInstaller, windowsPortableApp, 
-                                          windowsPenPack]) 
+                                          windowsPenPack,
+                                          download_footer()]) 
 
 
 macDMG = download_table(image='mac',
@@ -343,7 +393,8 @@ macDMG = download_table(image='mac',
 
 pages['download_for_mac'] = sep.join([download_header(platform='Mac OS X',
                                                       release='%(version)s'), 
-                                                      macDMG])
+                                                      macDMG,
+                                                      download_footer(one_ad)])
 
 
 debian = download_table(image='debian', 
@@ -412,7 +463,8 @@ linux = download_table(image='linux',
 pages['download_for_linux'] = sep.join([download_header(platform='Linux',
                                                         release='%(version)s'), 
                                         ubuntu, debian, fedora14, gentoo, 
-                                        opensuse, redhat_el4and5, linux])
+                                        opensuse, redhat_el4and5, linux,
+                                        download_footer()])
 
 
 freeBSD = download_table(image='freebsd',
@@ -424,7 +476,8 @@ freeBSD = download_table(image='freebsd',
 
 pages['download_for_bsd'] = sep.join([download_header(platform='FreeBSD',
                                                       release='%(version)s'), 
-                                                      freeBSD])
+                                                      freeBSD, 
+                                                      download_footer(one_ad)])
 
 
 iphone = download_table(image='appstore',
@@ -436,7 +489,8 @@ iphone = download_table(image='appstore',
                         
 pages['download_for_iphone'] = sep.join([download_header(platform='iPhone and iPod Touch',
                                                          release='1.1'), 
-                                         iphone])
+                                         iphone,
+                                         download_footer(one_ad)])
 
 
 sourceOptions = dict(image='source', prerequisites=prerequisites,
@@ -476,7 +530,8 @@ subversion = download_table(image='sources',
 
 pages['download_sources'] = sep.join([download_header(release='%(version)s'), 
                                       source_rpm, source_zip, 
-                                      source_tgz, subversion])
+                                      source_tgz, subversion,
+                                      download_footer()])
 
 
 buildbotOptions = dict(platform='all platforms', 
@@ -502,7 +557,8 @@ warning = '''          These packages are automatically generated by our <a
         edge, use at your own risk.'''
         
 pages['download_daily_build'] = sep.join([download_header(warning=warning), 
-                                          latest_bugfixes, latest_features])
+                                          latest_bugfixes, latest_features,
+                                          download_footer(one_ad)])
 
 old_releases = download_table(image='archive',
                               download_url='http://sourceforge.net/projects/taskcoach/files/taskcoach/',
@@ -512,14 +568,60 @@ old_releases = download_table(image='archive',
                               prerequisites='See the different download sections',
                               installation='See the different download sections')
                             
-pages['download_old_releases'] = sep.join([download_header(), old_releases]) 
+pages['download_old_releases'] = sep.join([download_header(), old_releases,
+                                           download_footer(one_ad)]) 
 
         
 pages['download'] = ''' 
             <div class="page-header">
                 <h1>Download %(name)s</h1>
             </div>
-            <p>Please pick your platform in the download menu above.</p>''' 
+            <div class="row">
+                <div class="span13">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td style="border-top: 0px;">
+                                    <h3>Windows</h3>
+                                    <a href="download_for_windows.html"><img alt"Windows" src="images/windows.png"></a>
+                                </td>
+                                <td style="border-top: 0px;">
+                                    <h3>Mac OS X</h3>
+                                    <a href="download_for_mac.html"><img alt"Mac OS X" src="images/mac.png"></a>
+                                </td>
+                                <td style="border-top: 0px;">
+                                    <h3>Linux</h3>
+                                    <a href="download_for_linux.html"><img alt"Linux" src="images/linux.png"></a>
+                                </td>
+                                <td style="border-top: 0px;">
+                                    <h3>BSD</h3>
+                                    <a href="download_for_bsd.html"><img alt"BSD" src="images/freebsd.png"></a>
+                                </td>
+                            </tr>
+                            <tr> 
+                                <td>
+                                    <h3>iPhone, iPad,<br>iPod Touch</h3>
+                                    <a href="download_for_iphone.html"><img alt"iOS" src="images/appstore.png"></a>
+                                </td>
+                                <td>
+                                    <h3>Sources</h3>
+                                    <a href="download_for_iphone.html"><img alt"iOS" src="images/sources.png"></a>
+                                </td>
+                                <td>
+                                    <h3>Daily builds</h3>
+                                    <a href="download_daily_build.html"><img alt"iOS" src="images/latest_features.png"></a>
+                                </td>
+                                <td>
+                                    <h3>Old releases</h3>
+                                    <a href="download_old_releases.html"><img alt"iOS" src="images/archive.png"></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="span3">''' + one_ad + '''
+                </div>
+            </div>'''
 
 
 pages['features'] = '''        
@@ -527,7 +629,7 @@ pages['features'] = '''
                 <h1>Features</h1>
             </div>
             <div class="row">
-                <div class="span-two-thirds">
+                <div class="span13">
                     <h4>%(name)s for the desktop</h4>
                     <p>The desktop version of %(name)s (Windows, Mac, Linux, BSD)
                     has the following features:</p>
@@ -569,8 +671,6 @@ pages['features'] = '''
                         <a href="http://www.funambol.com/">Funambol</a> server such
                         as <a href="http://my.funambol.com">My Funambol</a>.</li>
                     </ul>
-                </div>
-                <div class="span-one-third">
                     <h4>%(name)s for iOS</h4>
                     <p>There is a todo-list application for iPhone, iPad and iPod Touch that 
                     can synchronize with %(name)s through the network. Main features are:</p>
@@ -580,6 +680,8 @@ pages['features'] = '''
                         <li>Tap on the task's led icon to mark it complete.</li>
                         <li>Available in English and French.</li>
                     </ul>
+                </div>
+                <div class="span3">''' + ads + '''
                 </div>
             </div>'''
 
@@ -615,7 +717,18 @@ def appendThumbnails(name):
             pages[name] += '</div>'
 
 
-pages['license'] = '<pre>%s</pre>'%meta.licenseText
+pages['license'] = '''
+            <div class="page-header">
+                <h1>License</h1>
+            </div>
+            <div class="row">
+                <div class="span13">
+                    <pre style="background-color: white; border: none;">''' + meta.licenseText + '''
+                    </pre>
+                </div>
+                <div class="span3">''' + ads + '''
+                </div>
+            </div>'''
 
 pages['screenshots'] = '''
             <div class="page-header">
@@ -624,7 +737,7 @@ pages['screenshots'] = '''
             <p>Click on a thumbnail image to see the full size screenshot.</p>'''
 appendThumbnails('screenshots')
 
-def languages(nr_columns=3):
+def languages(nr_columns=9):
     languages = sorted(meta.languages.keys())
     while len(languages)%nr_columns:
         languages.append('')
@@ -639,7 +752,7 @@ pages['i18n'] = '''
                 <h1>Internationalization</h1>
             </div>
             <div class="row">
-                <div class="span8">
+                <div class="span13">
                     <h4>Information for users</h4>
                     <p>You can select languages via 'Edit' -> 'Preferences'. 
                     Click the 'Language' icon, select the language of your 
@@ -653,8 +766,6 @@ pages['i18n'] = '''
                             </tr>
                         </tbody>
                     </table>
-                </div>
-                <div class="span8">
                     <h4>Instructions for translators</h4>
                     <p>We would welcome translations in additional languages.
                     Please be aware that, next to providing the initial translation,
@@ -703,165 +814,155 @@ pages['i18n'] = '''
                         command line option.</li> 
                     </ol>
                 </div>
+                <div class="span3">''' + ads + '''
+                </div>
             </div>'''
 
-        
-pages['mailinglist'] = '''
-            <div class="page-header">
-                <h1>Mailing list</h1>
-            </div>
-            <p>A Yahoo!Groups mailing list is available for discussing
-            %(name)s. You can join by sending mail to <tt><a 
-            href="mailto:taskcoach-subscribe@yahoogroups.com">taskcoach-subscribe@yahoogroups.com</a></tt>
-            or alternatively, if you have a Yahoo id (or don't mind creating
-            one), join via the <a
-            href="http://groups.yahoo.com/group/taskcoach/join">webinterface</a>.</p>
-            <p>You can browse the <a
-            href="http://groups.yahoo.com/group/taskcoach/messages">archive
-            of messages</a> without subscribing to the mailing list.</p>
-            <p>The mailing list is also available as the newsgroup 
-            <a href="http://dir.gmane.org/gmane.comp.sysutils.pim.taskcoach">gmane.comp.sysutils.pim.taskcoach</a>
-            on <a href="http://gmane.org">Gmane</a>.</p>'''
-        
 
 pages['devinfo'] = '''
             <div class="page-header">
                 <h1>Information for developers</h1>
             </div>
-            <p>Here's some information for developers that either want to hack
-            on %(name)s or reuse code.</p>
-    
-            <h4>Project hosting</h4>
-            <p>%(name)s source code, file downloads and bug/patch/support trackers are hosted at 
-            <a href="https://sourceforge.net/projects/taskcoach/" 
-            title="%(name)s @ Sourceforge">Sourceforge</a>. Translations are hosted
-            at <a href="http://launchpad.net/taskcoach/"
-            title="%(name)s @Launchpad">Launchpad</a>. Feature requests are hosted at
-            <a href="http://taskcoach.uservoice.com/">Uservoice</a>.
-            </p>
-    
-            <h4>Mailing list</h4>
-            <p>A Yahoo!Groups mailing list is available for discussing the development
-            of %(name)s. You can join by sending mail to <tt><a 
-            href="mailto:taskcoach-dev-subscribe@yahoogroups.com">taskcoach-dev-subscribe@yahoogroups.com</a></tt>
-            or alternatively, if you have a Yahoo id (or don't mind creating one), 
-            join via the <a href="http://groups.yahoo.com/group/taskcoach-dev/join">webinterface</a>.</p>
-            <p>You can browse the <a href="http://groups.yahoo.com/group/taskcoach-dev/messages">archive
-            of messages</a> without subscribing to the mailing list.</p>
-            <p>The mailing list is also available as the newsgroup 
-            <a href="http://dir.gmane.org/gmane.comp.sysutils.pim.taskcoach.devel">gmane.comp.sysutils.pim.taskcoach.devel</a>
-            on <a href="http://gmane.org">Gmane</a>.</p>
-            <p>A Sourceforge mailing list is available for receiving commit messages.
-            If you are a %(name)s developer you can <a href="http://lists.sourceforge.net/lists/listinfo/taskcoach-commits">join 
-            this mailing list</a>.
-    
-            <h4>Dependencies</h4>
-            <p>%(name)s is developed in <a href="http://www.python.org">Python</a>,
-            using <a href="http://www.wxpython.org">wxPython</A> for the
-            graphical user interface. On Windows, 
-            <a href="http://sourceforge.net/projects/pywin32/">Pywin32</a> 
-            is used as well. For generating the API documentation you need to have
-            <a href="http://epydoc.sourceforge.net/">Epydoc</a> installed. For
-            generating inheritance diagrams you need to have <a
-            href="http://www.graphviz.org">Graphviz</a> installed.</p>
-            <p>The few other libraries (other than those
-            provided by Python, wxPython and Pywin32) that are used are put into the
-            taskcoachlib/thirdparty package and included in the source code
-            repository.</p>
+            <div class="row">
+                <div class="span13">
+                    <p>Here's some information for developers that either want to hack
+                    on %(name)s or reuse code.</p>
             
-            <h4>Development environment</h4>
-            <p>
-            You are free to use whatever IDE you want. To make use of the Makefile you
-            need to have <tt>make</tt> installed. It is installed on Linux and Mac OS X 
-            by default. On Windows we recommend you to install
-            <a href="http://www.cygwin.com">Cygwin</a> 
-            which provides a shell (bash) and a whole range of useful utilities. 
-            Make sure to explicitly include <tt>make</tt> in the Cygwin setup program 
-            because the standard install doesn't contain <tt>make</tt>.</p>
+                    <h4>Project hosting</h4>
+                    <p>%(name)s source code, file downloads and bug/patch/support trackers are hosted at 
+                    <a href="https://sourceforge.net/projects/taskcoach/" 
+                    title="%(name)s @ Sourceforge">Sourceforge</a>. Translations are hosted
+                    at <a href="http://launchpad.net/taskcoach/"
+                    title="%(name)s @Launchpad">Launchpad</a>. Feature requests are hosted at
+                    <a href="http://taskcoach.uservoice.com/">Uservoice</a>.
+                    </p>
             
-            <h4>Getting the source</h4>
-            <p>%(name)s source code is hosted in a <a
-            href="http://sourceforge.net/svn/?group_id=130831">Subversion repository 
-            at SourceForge</a>. You can check out the code from the repository 
-            directly or <a href="http://taskcoach.svn.sourceforge.net/">browse the
-            repository</A>. Please read the file <tt>HACKING.txt</tt> after checking
-            out the sources. You can generate documentation with Epydoc and Graphviz
-            from the Makefile: <code>make dot epydoc</code>.</p>
+                    <h4>Mailing list</h4>
+                    <p>A Yahoo!Groups mailing list is available for discussing the development
+                    of %(name)s. You can join by sending mail to <tt><a 
+                    href="mailto:taskcoach-dev-subscribe@yahoogroups.com">taskcoach-dev-subscribe@yahoogroups.com</a></tt>
+                    or alternatively, if you have a Yahoo id (or don't mind creating one), 
+                    join via the <a href="http://groups.yahoo.com/group/taskcoach-dev/join">webinterface</a>.</p>
+                    <p>You can browse the <a href="http://groups.yahoo.com/group/taskcoach-dev/messages">archive
+                    of messages</a> without subscribing to the mailing list.</p>
+                    <p>The mailing list is also available as the newsgroup 
+                    <a href="http://dir.gmane.org/gmane.comp.sysutils.pim.taskcoach.devel">gmane.comp.sysutils.pim.taskcoach.devel</a>
+                    on <a href="http://gmane.org">Gmane</a>.</p>
+                    <p>A Sourceforge mailing list is available for receiving commit messages.
+                    If you are a %(name)s developer you can <a href="http://lists.sourceforge.net/lists/listinfo/taskcoach-commits">join 
+                    this mailing list</a>.
             
-            <h4>Tests</h4>
-            <p>Tests can be run from the Makefile. There are targets for
-            <tt>unittests</tt>, <tt>integrationtests</tt>,
-            <tt>releasetests</tt>, and <tt>alltests</tt>. These targets all
-            invoke the tests/test.py script. Run <code>tests/test.py --help</code> for 
-            many more test options (including profiling, timing, measuring test 
-            coverage, etc.).</p>
-            
-            <h4>Building the distributions</h4>
-            <p>The Makefile is used to build the different distributions of
-            %(name)s. Currently, a Windows installer is built, a Mac OSX dmg
-            file, RPM and Debian packages are created and the sources are packaged 
-            as compressed archives (.zip and .tar.gz). The Makefile contains targets 
-            for each of the distributions. Most of the code for the actual building 
-            of the distributions, using the python distutils package, is located in 
-            make.py. In turn, make.py imports setup.py. These two files were
-            split so that setup.py only contains distutils information related
-            to <i>installing</i>, while make.py contains all information related
-            to <i>building</i> the distributions. Only setup.py is included in
-            the source distributions.</p>
-            <h5>Windows</h5>
-            <p>On Windows, py2exe is used to bundle the application with the python
-            interpreter and wxPython libraries. Innosetup is used to create an
-            executable installer. 
-            All the necessary packaging code is in make.py
-            and driven from the Makefile (<tt>windist</tt> target).</p>
-            <h5>Mac OSX</h5>
-            <p>On Mac OSX, py2app is used to bundle the application. The resulting
-            application is packaged into a dmg file using the <tt>hdiutil</tt>
-            utility, which is part of Mac OSX. 
-            All the necessary packaging code is in make.py
-            and driven from the Makefile (<tt>dmg</tt> target).</p>
-            <h5>Linux</h5>
-            <p>We create RPM and Debian packages on Ubuntu (<tt>rpm</tt> and <tt>deb</tt>
-            targets) and a Fedora RPM package on Fedora (<tt>fedora</tt> target). 
-            Alternatively, Linux users that have installed python and wxPython
-            themselves (if not installed by default) can also use the source
-            distribution. The source distributions are created by the
-            <tt>sdist</tt> Makefile target.</p>
-            
-            <h4>Coding style</h4>
-            <p>Class names are StudlyCaps. Method names are camelCase, except
-            for wxPython methods that are called or overridden because those are
-            StudlyCaps. At first this looked ugly, a mixture of two
-            styles. But it turned out to be quite handy, since you can easily
-            see whether some method is a wxPython method or not.</p>
-            
-            <h4>SVN usage conventions</h4>
-            <p>Releases are tagged ReleaseX_Y_Z and for each ReleaseX_Y_0 a 
-            branch (ReleaseX_Y_Branch) is created to facilitate bug fix releases. 
-            The release tagging and branching is part of 
-            the release process as documented in release.py.</p>
-            <p>For new big features, feature-specific branches may be created to 
-            facilitate parallel development, checking in changes while developing, 
-            and keep the code on the main trunk releaseable. The process is as 
-            follows:</p>
-            <ul>
-            <li>The feature is discussed on taskcoach-dev.</li>
-            <li>If all agree it's a good feature to work on, a
-            Feature_&lt;FeatureName&gt;_Branch branch is created and used for
-            development of the feature.</li>
-            <li>When the feature is done, it is announced on taskcoach-dev.</li>
-            <li>The feature is tested on all platforms.</li>
-            <li>The changes are merged back to main trunk.</li>
-            </ul>
-            <p>
-            For small new features, development is done on the trunk, but all unittests
-            should succeed before committing.
-            </p>
-            <h4>Blog</h4>
-            <p>Frank keeps a not very frequent 
-            <a href="http://taskcoach.blogspot.com">blog</a> about
-            lessons learned from developing %(name)s.</p>'''
-
+                    <h4>Dependencies</h4>
+                    <p>%(name)s is developed in <a href="http://www.python.org">Python</a>,
+                    using <a href="http://www.wxpython.org">wxPython</A> for the
+                    graphical user interface. On Windows, 
+                    <a href="http://sourceforge.net/projects/pywin32/">Pywin32</a> 
+                    is used as well. For generating the API documentation you need to have
+                    <a href="http://epydoc.sourceforge.net/">Epydoc</a> installed. For
+                    generating inheritance diagrams you need to have <a
+                    href="http://www.graphviz.org">Graphviz</a> installed.</p>
+                    <p>The few other libraries (other than those
+                    provided by Python, wxPython and Pywin32) that are used are put into the
+                    taskcoachlib/thirdparty package and included in the source code
+                    repository.</p>
+                    
+                    <h4>Development environment</h4>
+                    <p>
+                    You are free to use whatever IDE you want. To make use of the Makefile you
+                    need to have <tt>make</tt> installed. It is installed on Linux and Mac OS X 
+                    by default. On Windows we recommend you to install
+                    <a href="http://www.cygwin.com">Cygwin</a> 
+                    which provides a shell (bash) and a whole range of useful utilities. 
+                    Make sure to explicitly include <tt>make</tt> in the Cygwin setup program 
+                    because the standard install doesn't contain <tt>make</tt>.</p>
+                    
+                    <h4>Getting the source</h4>
+                    <p>%(name)s source code is hosted in a <a
+                    href="http://sourceforge.net/svn/?group_id=130831">Subversion repository 
+                    at SourceForge</a>. You can check out the code from the repository 
+                    directly or <a href="http://taskcoach.svn.sourceforge.net/">browse the
+                    repository</A>. Please read the file <tt>HACKING.txt</tt> after checking
+                    out the sources. You can generate documentation with Epydoc and Graphviz
+                    from the Makefile: <code>make dot epydoc</code>.</p>
+                    
+                    <h4>Tests</h4>
+                    <p>Tests can be run from the Makefile. There are targets for
+                    <tt>unittests</tt>, <tt>integrationtests</tt>,
+                    <tt>releasetests</tt>, and <tt>alltests</tt>. These targets all
+                    invoke the tests/test.py script. Run <code>tests/test.py --help</code> for 
+                    many more test options (including profiling, timing, measuring test 
+                    coverage, etc.).</p>
+                    
+                    <h4>Building the distributions</h4>
+                    <p>The Makefile is used to build the different distributions of
+                    %(name)s. Currently, a Windows installer is built, a Mac OSX dmg
+                    file, RPM and Debian packages are created and the sources are packaged 
+                    as compressed archives (.zip and .tar.gz). The Makefile contains targets 
+                    for each of the distributions. Most of the code for the actual building 
+                    of the distributions, using the python distutils package, is located in 
+                    make.py. In turn, make.py imports setup.py. These two files were
+                    split so that setup.py only contains distutils information related
+                    to <i>installing</i>, while make.py contains all information related
+                    to <i>building</i> the distributions. Only setup.py is included in
+                    the source distributions.</p>
+                    <h5>Windows</h5>
+                    <p>On Windows, py2exe is used to bundle the application with the python
+                    interpreter and wxPython libraries. Innosetup is used to create an
+                    executable installer. 
+                    All the necessary packaging code is in make.py
+                    and driven from the Makefile (<tt>windist</tt> target).</p>
+                    <h5>Mac OSX</h5>
+                    <p>On Mac OSX, py2app is used to bundle the application. The resulting
+                    application is packaged into a dmg file using the <tt>hdiutil</tt>
+                    utility, which is part of Mac OSX. 
+                    All the necessary packaging code is in make.py
+                    and driven from the Makefile (<tt>dmg</tt> target).</p>
+                    <h5>Linux</h5>
+                    <p>We create RPM and Debian packages on Ubuntu (<tt>rpm</tt> and <tt>deb</tt>
+                    targets) and a Fedora RPM package on Fedora (<tt>fedora</tt> target). 
+                    Alternatively, Linux users that have installed python and wxPython
+                    themselves (if not installed by default) can also use the source
+                    distribution. The source distributions are created by the
+                    <tt>sdist</tt> Makefile target.</p>
+                    
+                    <h4>Coding style</h4>
+                    <p>Class names are StudlyCaps. Method names are camelCase, except
+                    for wxPython methods that are called or overridden because those are
+                    StudlyCaps. At first this looked ugly, a mixture of two
+                    styles. But it turned out to be quite handy, since you can easily
+                    see whether some method is a wxPython method or not.</p>
+                    
+                    <h4>SVN usage conventions</h4>
+                    <p>Releases are tagged ReleaseX_Y_Z and for each ReleaseX_Y_0 a 
+                    branch (ReleaseX_Y_Branch) is created to facilitate bug fix releases. 
+                    The release tagging and branching is part of 
+                    the release process as documented in release.py.</p>
+                    <p>For new big features, feature-specific branches may be created to 
+                    facilitate parallel development, checking in changes while developing, 
+                    and keep the code on the main trunk releaseable. The process is as 
+                    follows:</p>
+                    <ul>
+                    <li>The feature is discussed on taskcoach-dev.</li>
+                    <li>If all agree it's a good feature to work on, a
+                    Feature_&lt;FeatureName&gt;_Branch branch is created and used for
+                    development of the feature.</li>
+                    <li>When the feature is done, it is announced on taskcoach-dev.</li>
+                    <li>The feature is tested on all platforms.</li>
+                    <li>The changes are merged back to main trunk.</li>
+                    </ul>
+                    <p>
+                    For small new features, development is done on the trunk, but all unittests
+                    should succeed before committing.
+                    </p>
+                    <h4>Blog</h4>
+                    <p>Frank keeps a not very frequent 
+                    <a href="http://taskcoach.blogspot.com">blog</a> about
+                    lessons learned from developing %(name)s.</p>
+                </div>
+                <div class="span3">''' + ads + '''
+                </div>
+            </div>'''
+ 
 
 def ensureFolderExists(folder):
     if not os.path.exists(folder):
