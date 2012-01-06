@@ -17,13 +17,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import sys, threading, time
+from taskcoachlib import operating_system
 from ctypes import *
 
 
 #==============================================================================
-# Linux
+# Linux/BSD
 
-if sys.platform == 'linux2':
+if operating_system.isGTK():
     class XScreenSaverInfo(Structure):
         _fields_ = [('window', c_ulong),
                     ('state', c_int),
@@ -54,11 +55,13 @@ if sys.platform == 'linux2':
 
         def getIdleSeconds(self):
             self.XScreenSaverQueryInfo(self.dpy, self.XRootWindow(self.dpy, 0), self.info)
-            return 1.0 * self.info.contents.idle / 1000
+            idle = 1.0 * self.info.contents.idle / 1000
+            import time
+            file('/home/jla/idle.txt', 'a+').write('%s: %.2f\n' % (time.ctime(), idle))
 
     IdleQuery = LinuxIdleQuery
 
-elif sys.platform == 'win32':
+elif operating_system.isWindows():
     class LASTINPUTINFO(Structure):
         _fields_ = [('cbSize', c_uint), ('dwTime', c_uint)]
 
@@ -76,8 +79,7 @@ elif sys.platform == 'win32':
 
     IdleQuery = WindowsIdleQuery
 
-elif sys.platform == 'darwin':
-
+elif operating_system.isMac():
     # When running from source, select the right binary...
 
     if not hasattr(sys, 'frozen'):
