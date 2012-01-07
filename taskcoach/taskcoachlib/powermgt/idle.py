@@ -55,9 +55,7 @@ if operating_system.isGTK():
 
         def getIdleSeconds(self):
             self.XScreenSaverQueryInfo(self.dpy, self.XRootWindow(self.dpy, 0), self.info)
-            idle = 1.0 * self.info.contents.idle / 1000
-            import time
-            file('/home/jla/idle.txt', 'a+').write('%s: %.2f\n' % (time.ctime(), idle))
+            return 1.0 * self.info.contents.idle / 1000
 
     IdleQuery = LinuxIdleQuery
 
