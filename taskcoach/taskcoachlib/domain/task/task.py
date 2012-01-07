@@ -1082,6 +1082,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                                                                         microsecond=currentPlannedStartDateTime.microsecond)
             self.setPlannedStartDateTime(nextPlannedStartDateTime, event=event)
         
+        self.setActualStartDateTime(date.DateTime(), event=event)
         self.setPercentageComplete(0, event=event)
         if self.reminder():
             nextReminder = recur(self.reminder(includeSnooze=False), next=False)

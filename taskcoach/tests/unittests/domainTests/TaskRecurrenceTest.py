@@ -71,6 +71,15 @@ class CommonRecurrenceTestsMixin(object):
         self.task.setCompletionDateTime()
         self.assertEqual(self.createRecurrence()(plannedStartDateTime), 
                          self.task.plannedStartDateTime())
+        
+    def testNoActualStartDateAfterRecurrence(self):
+        self.task.setCompletionDateTime()
+        self.assertEqual(date.DateTime(), self.task.actualStartDateTime())
+        
+    def testMarkCompletedResetsActualStartDateIfItWasSetPreviously(self):
+        self.task.setActualStartDateTime(date.Now())
+        self.task.setCompletionDateTime()
+        self.assertEqual(date.DateTime(), self.task.actualStartDateTime())
 
     def testMarkCompletedSetsNewDueDateIfItWasSetPreviously(self):
         self.task.setDueDateTime(self.tomorrow)
