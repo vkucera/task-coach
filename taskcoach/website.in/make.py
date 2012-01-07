@@ -77,7 +77,7 @@ pages['index'] = u'''
                             In addition, it offers effort tracking, categories, notes and more.</p>
                             <p><a class="btn info" href="features.html">Read more &raquo;</a></p>
                             <h3>What does it cost?</h3>
-                            The desktop versions of %(name)s are completely <span class="label success">free</span>. The iOS versions
+                            The desktop versions of %(name)s are completely free. The iOS versions
                             of %(name)s come with a small price tag because it costs us money to make them 
                             available.</p>
                             <p><a class="btn info" href="license.html">Read license &raquo;</a></p>
