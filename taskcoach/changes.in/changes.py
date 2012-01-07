@@ -22,15 +22,22 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.5', 'January 1, 2012',
+Release('1.3.5', 'January 7, 2012',
     summary='''This is a feature release.''',
+    bugsFixed=[
+        Bug('''After a reminder of a recurring task had been dismissed, Task 
+Coach would not create a new reminder when recurring the task.''', '3469217'),
+        ],
     featuresAdded=[
         Feature('''Note categories are now synced as well (SyncML)'''),
+        Feature('''Add "actual start date" attribute to tasks.'''),
         ],
     featuresChanged=[
-        Feature('''Rename "start date" to "planned start date" in preparation of
+        Feature('''Rename "start date" to "planned start date" to enable
 adding a separate "actual start date" attribute to tasks.'''),
-        Feature('''Add "actual start date" attribute to tasks.'''),
+        ],
+    websiteChanges=[
+        Website('''Redesigned website using Twitter Bootstrap.''', 'index.html'),
         ],
     ),
 

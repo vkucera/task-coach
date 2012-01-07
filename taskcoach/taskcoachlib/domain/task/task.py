@@ -1051,7 +1051,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if timeDelta:
             self.__reminder.set(now() + timeDelta, event=event)
         else:
-            self.setReminder(event=event)
+            if self.recurrence():
+                self.__reminder.set(None, event=event)
+            else:
+                self.setReminder(event=event)
 
     def reminderEvent(self, event):
         event.addSource(self, self.reminder(), type=self.reminderChangedEventType())
@@ -1122,8 +1125,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                                                                         microsecond=currentPlannedStartDateTime.microsecond)
             self.setPlannedStartDateTime(nextPlannedStartDateTime, event=event)
         
+        self.setActualStartDateTime(date.DateTime(), event=event)
         self.setPercentageComplete(0, event=event)
-        if self.reminder():
+        if self.reminder(includeSnooze=False):
             nextReminder = recur(self.reminder(includeSnooze=False), next=False)
             self.setReminder(nextReminder, event=event)
         for child in self.children():

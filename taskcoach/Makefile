@@ -165,9 +165,9 @@ epydoc:
 	$(EPYDOC) --parse-only -v --simple-term -o epydoc.out taskcoachlib taskcoach.py
 
 dot:
-	$(PYTHON) dot.py taskcoachlib/gui/viewer > dot.out/viewer.dot
-	$(PYTHON) dot.py taskcoachlib/gui/dialog > dot.out/dialog.dot
-	$(DOT) -Tpng -Kdot -O dot.out/*.dot
+	$(PYTHON) tools/dot.py taskcoachlib/gui/viewer > doc/viewer.dot
+	$(PYTHON) tools/dot.py taskcoachlib/gui/dialog > doc/dialog.dot
+	$(DOT) -Tpng -Kdot -O doc/*.dot
 
 i18n: templates taskcoachlib/i18n/nl.py
 
@@ -210,7 +210,7 @@ coverage_run:
 coverage_report:
 	cd tests; coverage html -d coverage.out --omit=../taskcoachlib/i18n/po2dict.py,../taskcoachlib/i18n/??.py,../taskcoachlib/i18n/???.py,../taskcoachlib/i18n/??_??.py,../taskcoachlib/thirdparty/*.py,../taskcoachlib/meta/debug.py,test.py
 
-CLEANFILES=build build-* website.out dot.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle .profile tests/.coverage tests/coverage.out
+CLEANFILES=build build-* website.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle .profile tests/.coverage tests/coverage.out
 REALLYCLEANFILES=dist taskcoachlib/gui/icons.py taskcoachlib/persistence/templates.py \
 	taskcoachlib/i18n/??.py taskcoachlib/i18n/???.py taskcoachlib/i18n/??_??.py .\#* */.\#* */*/.\#*
 

@@ -19,9 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os, re, glob, sys
 
-if not os.path.exists('dot.out'):
-    os.mkdir('dot.out')
-
 packages = []
 modules = []
 classdef = re.compile('class ([A-Za-z]+)\(([^)]+)\)', re.MULTILINE)
@@ -52,3 +49,4 @@ for filename in glob.glob(os.path.join(sys.argv[1], '*.py')):
     print
 
 print '}'
+

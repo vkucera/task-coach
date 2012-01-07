@@ -426,6 +426,15 @@ class MarkCompletedCommandTest(CommandWithChildrenTestCase):
             lambda: self.assertEqual(newDueDate, self.task1.dueDateTime()),
             lambda: self.assertEqual(tomorrow, self.task1.dueDateTime()))
         
+    def testMarkRecurringTaskCompleted_ActualStartDateIsReset(self):
+        self.task1.setRecurrence(date.Recurrence('weekly'))
+        now = date.Now()
+        self.task1.setActualStartDateTime(now)
+        self.markCompleted([self.task1])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(date.DateTime(), self.task1.actualStartDateTime()),
+            lambda: self.assertEqual(now, self.task1.actualStartDateTime()))
+        
     def testMarkParentWithRecurringChildCompleted_RemovesChildRecurrence(self):
         self.child.setRecurrence(date.Recurrence('daily'))
         self.markCompleted([self.parent])
