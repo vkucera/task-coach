@@ -690,8 +690,6 @@ def appendThumbnails(name):
     systems = reversed([path for path in os.listdir('screenshots') \
                             if os.path.isdir(os.path.join('screenshots', path)) and \
                             not path.startswith('.')])
-
-    pages[name] += ''
     
     for system in systems:
         images = []
@@ -705,16 +703,11 @@ def appendThumbnails(name):
             caption = '%s (release %s on %s)' % (description, release, platform)
             images.append((caption, thumbnailFilename, filename.replace('\\', '/')))
 
-        pages[name] += '<hr/><h2>%s</h2>' % system
-
-        while images:
-            pages[name] += '<div class="row">'
-            for x in xrange(3):
-                if images:
-                    caption, thumbnailFilename, filename = images.pop(0)
-                    pages[name] += '<div class="span-one-third"><p>%s</p><a href="%s" rel="lightbox"><img src="%s" alt="%s"/></a></div>' % (caption, 
+        pages[name] += '<hr/><h2>%s</h2><ul class="media-grid">' % system
+        for caption, thumbnailFilename, filename in images:
+            pages[name] += '<li><a rel="lightbox" title="%s" href="%s"><img src="%s" alt="%s"/></a></li>'% (caption, 
                         filename.replace('\\', '/'), thumbnailFilename.replace('\\', '/'), caption)
-            pages[name] += '</div>'
+        pages[name] += '</ul>'
 
 
 pages['license'] = '''
