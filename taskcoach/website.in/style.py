@@ -66,10 +66,10 @@ pageTracker._trackPageview();
     <div class="topbar">
         <div class="topbar-inner">
             <div class="container">
-                <a class="brand" href="index.html">%(name)s</a>
+                <a class="brand" title="Your friendly task manager" href="index.html">%(name)s</a>
                 <ul class="nav">
                     <li class="dropdown" data-dropdown="dropdown">
-                        <a href="#" class="dropdown-toggle">About</a>
+                        <a title="About %(name)s" href="#" class="dropdown-toggle">About</a>
                         <ul class="dropdown-menu">
                             <li><a href="screenshots.html" 
                                    title="View some screenshots of %(name)s here">Screenshots</a></li>
@@ -88,7 +88,7 @@ pageTracker._trackPageview();
                 </ul>
                 <ul class="nav">
                     <li class="dropdown" data-dropdown="dropdown">
-                        <a href="#" class="dropdown-toggle">Download</a>
+                        <a href="#" title="Download %(name)s for free" class="dropdown-toggle">Download</a>
                         <ul class="dropdown-menu">
                             <li><a href="download_for_windows.html" title="Download %(name)s for Windows">Windows</a></li>
                             <li><a href="download_for_mac.html" title="Download %(name)s for Mac OS X">Mac OS X</a></li>
@@ -101,8 +101,8 @@ pageTracker._trackPageview();
                         </ul>
                 </ul>
                 <ul class="nav">
-                    <li><a href="getsupport.html">Get support</a></li>
-                    <li><a href="givesupport.html">Give support</a></li>
+                    <li><a title="Support options" href="getsupport.html">Get support</a></li>
+                    <li><a title="How you can help us" href="givesupport.html">Give support</a></li>
                 </ul>
                 <ul class="nav secondary-nav">
                     <li><a href="changes.html">%(name)s %(version)s was released on %(date)s.</a></li>
