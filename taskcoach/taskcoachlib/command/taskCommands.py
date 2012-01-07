@@ -205,7 +205,7 @@ class StartEffortCommand(EffortCommand): # FIXME: use actualStartDateTime instea
         super(StartEffortCommand, self).__init__(*args, **kwargs)
         start = date.DateTime.now()
         self.efforts = [effort.Effort(item, start) for item in self.items]
-        self.plannedStartDateTimes = [(item.plannedStartDateTime() if start < item.plannedStartDateTime() else None) for item in self.items]
+        self.actualStartDateTimes = [(item.actualStartDateTime() if start < item.actualStartDateTime() else None) for item in self.items]
         
     def do_command(self):
         super(StartEffortCommand, self).do_command()
@@ -221,17 +221,17 @@ class StartEffortCommand(EffortCommand): # FIXME: use actualStartDateTime instea
 
     @patterns.eventSource
     def addEfforts(self, event=None):
-        for item, newEffort, currentPlannedStartDateTime in zip(self.items, self.efforts, self.plannedStartDateTimes):
+        for item, newEffort, currentActualStartDateTime in zip(self.items, self.efforts, self.actualStartDateTimes):
             item.addEffort(newEffort, event=event)
-            if currentPlannedStartDateTime:
-                item.setPlannedStartDateTime(newEffort.getStart())
+            if currentActualStartDateTime:
+                item.setActualStartDateTime(newEffort.getStart())
             
     @patterns.eventSource
     def removeEfforts(self, event=None):
-        for item, newEffort, previousPlannedStartDateTime in zip(self.items, self.efforts, self.plannedStartDateTimes):
+        for item, newEffort, previousActualStartDateTime in zip(self.items, self.efforts, self.actualStartDateTimes):
             item.removeEffort(newEffort, event=event)
-            if previousPlannedStartDateTime:
-                item.setPlannedStartDateTime(previousPlannedStartDateTime)
+            if previousActualStartDateTime:
+                item.setActualStartDateTime(previousActualStartDateTime)
             
         
 class StopEffortCommand(EffortCommand):

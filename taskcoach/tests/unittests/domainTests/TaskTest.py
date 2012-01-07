@@ -611,6 +611,11 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.task.addEffort(activeEffort)
         self.assertEvent(self.task.trackStartEventType(),
                          self.task, activeEffort)
+        
+    def testAddEffortSetActualStartDateTime(self):
+        now = date.Now()
+        self.task.addEffort(effort.Effort(self.task, now))
+        self.assertEqual(now, self.task.actualStartDateTime())
 
     # Notes:
     

@@ -518,6 +518,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             return
         wasTracking = self.isBeingTracked()
         self._efforts.append(effort)
+        if effort.getStart() < self.actualStartDateTime():
+            self.setActualStartDateTime(effort.getStart(), event=event)
         self.addEffortEvent(event, effort)
         if effort.isBeingTracked() and not wasTracking:
             self.startTrackingEvent(event, effort)
