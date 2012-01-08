@@ -708,7 +708,7 @@ def appendThumbnails(name):
 
         pages[name] += '<hr/><h2>%s</h2><ul class="media-grid">' % system
         for caption, thumbnailFilename, filename in images:
-            pages[name] += '<li><a rel="lightbox" title="%s" href="%s"><img src="%s" alt="%s"/></a></li>'% (caption, 
+            pages[name] += '<li><a class="lightbox" title="%s" href="%s"><img src="%s" alt="%s"/></a></li>'% (caption, 
                         filename.replace('\\', '/'), thumbnailFilename.replace('\\', '/'), caption)
         pages[name] += '</ul>'
 
