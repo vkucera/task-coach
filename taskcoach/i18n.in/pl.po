@@ -9,15 +9,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pl\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-14 20:52+0000\n"
-"PO-Revision-Date: 2011-12-14 20:48+0000\n"
+"POT-Creation-Date: 2012-01-08 02:22+0000\n"
+"PO-Revision-Date: 2011-12-20 22:01+0000\n"
 "Last-Translator: Krystian Brodowski <Unknown>\n"
 "Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-14 22:01+0000\n"
-"X-Generator: Launchpad (build 14487)\n"
+"X-Launchpad-Export-Date: 2012-01-08 09:22+0000\n"
+"X-Generator: Launchpad (build 14640)\n"
 
 #: taskcoachlib/application/application.py:244
 msgid ""
@@ -28,7 +28,7 @@ msgstr ""
 "%s"
 
 #: taskcoachlib/application/application.py:245
-#: taskcoachlib/gui/iocontroller.py:65
+#: taskcoachlib/gui/iocontroller.py:64
 msgid "%s file error"
 msgstr "Błąd pliku %s"
 
@@ -224,35 +224,35 @@ msgstr "Nowy nakład pracy"
 msgid "New effort of \"%s\""
 msgstr "Nowy nakład pracy \"%s\""
 
-#: taskcoachlib/command/effortCommands.py:48
+#: taskcoachlib/command/effortCommands.py:59
 msgid "Delete efforts"
 msgstr "Usuń działania"
 
-#: taskcoachlib/command/effortCommands.py:49
+#: taskcoachlib/command/effortCommands.py:60
 msgid "Delete effort \"%s\""
 msgstr "Usuń działanie \"%s\""
 
-#: taskcoachlib/command/effortCommands.py:53
+#: taskcoachlib/command/effortCommands.py:64
 msgid "Change task of effort"
 msgstr ""
 
-#: taskcoachlib/command/effortCommands.py:54
+#: taskcoachlib/command/effortCommands.py:65
 msgid "Change task of \"%s\" effort"
 msgstr ""
 
-#: taskcoachlib/command/effortCommands.py:76
+#: taskcoachlib/command/effortCommands.py:87
 msgid "Change effort start date and time"
 msgstr ""
 
-#: taskcoachlib/command/effortCommands.py:77
+#: taskcoachlib/command/effortCommands.py:88
 msgid "Change effort start date and time of \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/effortCommands.py:104
+#: taskcoachlib/command/effortCommands.py:124
 msgid "Change effort stop date and time"
 msgstr ""
 
-#: taskcoachlib/command/effortCommands.py:105
+#: taskcoachlib/command/effortCommands.py:125
 msgid "Change effort stop date and time of \"%s\""
 msgstr ""
 
@@ -413,12 +413,12 @@ msgid "Add note to tasks"
 msgstr "Dodaj notatkę do zadań"
 
 #: taskcoachlib/command/taskCommands.py:447
-msgid "Change start date"
-msgstr "Zmień datę początkową"
+msgid "Change planned start date"
+msgstr ""
 
 #: taskcoachlib/command/taskCommands.py:448
-msgid "Change start date of \"%s\""
-msgstr "Zmień datę początkową dla \"%s\""
+msgid "Change planned start date of \"%s\""
+msgstr ""
 
 #: taskcoachlib/command/taskCommands.py:468
 msgid "Change due date"
@@ -429,70 +429,78 @@ msgid "Change due date of \"%s\""
 msgstr ""
 
 #: taskcoachlib/command/taskCommands.py:489
+msgid "Change actual start date"
+msgstr ""
+
+#: taskcoachlib/command/taskCommands.py:490
+msgid "Change actual start date of \"%s\""
+msgstr ""
+
+#: taskcoachlib/command/taskCommands.py:510
 msgid "Change completion date"
 msgstr "Zmień datę zakończenia"
 
-#: taskcoachlib/command/taskCommands.py:490
+#: taskcoachlib/command/taskCommands.py:511
 msgid "Change completion date of \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:505
+#: taskcoachlib/command/taskCommands.py:534
 msgid "Change reminder dates/times"
 msgstr "Zmień datę/czas przypomnienia"
 
-#: taskcoachlib/command/taskCommands.py:506
+#: taskcoachlib/command/taskCommands.py:535
 msgid "Change reminder date/time of \"%s\""
 msgstr "Zmień datę/czas przypomnienia \"%s\""
 
-#: taskcoachlib/command/taskCommands.py:518
+#: taskcoachlib/command/taskCommands.py:547
 msgid "Change recurrences"
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:519
+#: taskcoachlib/command/taskCommands.py:548
 msgid "Change recurrence of \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:542
+#: taskcoachlib/command/taskCommands.py:571
 msgid "Change percentage complete of \"%s\""
 msgstr "Zmień procent zakończenia \"%s\""
 
-#: taskcoachlib/command/taskCommands.py:570
+#: taskcoachlib/command/taskCommands.py:599
 msgid "Change when tasks are marked completed"
 msgstr "Zmień kiedy zadanie będzie oznaczone jako zakończone"
 
-#: taskcoachlib/command/taskCommands.py:571
+#: taskcoachlib/command/taskCommands.py:600
 msgid "Change when \"%s\" is marked completed"
 msgstr "Zmień kiedy \"%s\" będzie oznaczone jako zakończone"
 
-#: taskcoachlib/command/taskCommands.py:593
+#: taskcoachlib/command/taskCommands.py:622
 msgid "Change budgets"
 msgstr "Zmień budżety"
 
-#: taskcoachlib/command/taskCommands.py:594
+#: taskcoachlib/command/taskCommands.py:623
 msgid "Change budget of \"%s\""
 msgstr "Zmień budżet \"%s\""
 
-#: taskcoachlib/command/taskCommands.py:616
+#: taskcoachlib/command/taskCommands.py:645
 msgid "Change hourly fees"
 msgstr "Zmiana stawek godzinowych"
 
-#: taskcoachlib/command/taskCommands.py:617
+#: taskcoachlib/command/taskCommands.py:646
 msgid "Change hourly fee of \"%s\""
 msgstr "Zmień stawkę godzinową \"%s\""
 
-#: taskcoachlib/command/taskCommands.py:639
+#: taskcoachlib/command/taskCommands.py:668
 msgid "Change fixed fees"
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:640
+#: taskcoachlib/command/taskCommands.py:669
 msgid "Change fixed fee of \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:662
+#: taskcoachlib/command/taskCommands.py:691
 msgid "Toggle prerequisite"
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:663
+#: taskcoachlib/command/taskCommands.py:692
 msgid "Toggle prerequisite of \"%s\""
 msgstr ""
 
@@ -697,7 +705,7 @@ msgstr "Ciastko"
 msgid "Calculator"
 msgstr "Kalkulator"
 
-#: taskcoachlib/gui/artprovider.py:107 taskcoachlib/gui/viewer/task.py:519
+#: taskcoachlib/gui/artprovider.py:107 taskcoachlib/gui/viewer/task.py:524
 msgid "Calendar"
 msgstr "Kalendarz"
 
@@ -991,14 +999,13 @@ msgid "No icon"
 msgstr "Brak ikony"
 
 #: taskcoachlib/gui/dialog/editor.py:90 taskcoachlib/gui/dialog/editor.py:119
-#: taskcoachlib/gui/dialog/editor.py:1055
+#: taskcoachlib/gui/dialog/editor.py:1057
 #: taskcoachlib/gui/viewer/attachment.py:85
 #: taskcoachlib/gui/viewer/category.py:88
-#: taskcoachlib/gui/viewer/effort.py:184 taskcoachlib/gui/viewer/note.py:117
-#: taskcoachlib/gui/viewer/task.py:740
+#: taskcoachlib/gui/viewer/effort.py:190 taskcoachlib/gui/viewer/note.py:117
+#: taskcoachlib/gui/viewer/task.py:745
 #: taskcoachlib/gui/wizard/csvimport.py:224
 #: taskcoachlib/persistence/csv/reader.py:73
-#: taskcoachlib/widgets/conflict.py:160 taskcoachlib/widgets/conflict.py:188
 msgid "Description"
 msgstr "Opis"
 
@@ -1010,23 +1017,21 @@ msgstr "Edytuj, aby zmienić wszystkie tematy"
 #: taskcoachlib/gui/dialog/templates.py:109
 #: taskcoachlib/gui/viewer/attachment.py:75
 #: taskcoachlib/gui/viewer/base.py:290 taskcoachlib/gui/viewer/category.py:80
-#: taskcoachlib/gui/viewer/note.py:99 taskcoachlib/gui/viewer/task.py:728
+#: taskcoachlib/gui/viewer/note.py:99 taskcoachlib/gui/viewer/task.py:733
 #: taskcoachlib/gui/wizard/csvimport.py:223
 #: taskcoachlib/persistence/csv/reader.py:71
-#: taskcoachlib/widgets/conflict.py:155 taskcoachlib/widgets/conflict.py:183
 msgid "Subject"
 msgstr "Temat"
 
 #: taskcoachlib/gui/dialog/editor.py:110
-#: taskcoachlib/gui/dialog/editor.py:1045
+#: taskcoachlib/gui/dialog/editor.py:1047
 msgid "Edit to change all descriptions"
 msgstr "Edytuj, aby zmienić wszystkie opisy"
 
 #: taskcoachlib/gui/dialog/editor.py:140 taskcoachlib/gui/uicommand.py:2488
-#: taskcoachlib/gui/viewer/task.py:817
+#: taskcoachlib/gui/viewer/task.py:823
 #: taskcoachlib/gui/wizard/csvimport.py:226
 #: taskcoachlib/persistence/csv/reader.py:84
-#: taskcoachlib/widgets/conflict.py:208
 msgid "Priority"
 msgstr "Priorytet"
 
@@ -1080,197 +1085,198 @@ msgstr "Daty"
 
 #: taskcoachlib/gui/dialog/editor.py:287
 #: taskcoachlib/gui/dialog/templates.py:112
-#: taskcoachlib/gui/viewer/task.py:796
+#: taskcoachlib/gui/viewer/task.py:801
 #: taskcoachlib/gui/wizard/csvimport.py:227
 #: taskcoachlib/persistence/csv/generator.py:33
 #: taskcoachlib/persistence/csv/reader.py:89
-#: taskcoachlib/widgets/conflict.py:193
-msgid "Start date"
-msgstr "Data rozpoczęcia"
+msgid "Planned start date"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:288
 #: taskcoachlib/gui/dialog/templates.py:115
-#: taskcoachlib/gui/viewer/task.py:797
+#: taskcoachlib/gui/viewer/task.py:802
 #: taskcoachlib/gui/wizard/csvimport.py:228
 #: taskcoachlib/persistence/csv/generator.py:34
 #: taskcoachlib/persistence/csv/reader.py:91
-#: taskcoachlib/widgets/conflict.py:198
 msgid "Due date"
 msgstr "Data wykonania"
 
-#: taskcoachlib/gui/dialog/editor.py:289
+#: taskcoachlib/gui/dialog/editor.py:289 taskcoachlib/gui/viewer/task.py:803
+msgid "Actual start date"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/editor.py:290
 #: taskcoachlib/gui/dialog/templates.py:118
-#: taskcoachlib/gui/viewer/task.py:798
+#: taskcoachlib/gui/viewer/task.py:804
 #: taskcoachlib/gui/wizard/csvimport.py:229
 #: taskcoachlib/persistence/csv/generator.py:35
 #: taskcoachlib/persistence/csv/reader.py:93
-#: taskcoachlib/widgets/conflict.py:203
 msgid "Completion date"
 msgstr "Data ukończenia"
 
-#: taskcoachlib/gui/dialog/editor.py:326
+#: taskcoachlib/gui/dialog/editor.py:327
 #: taskcoachlib/gui/dialog/templates.py:121
-#: taskcoachlib/gui/viewer/task.py:829
+#: taskcoachlib/gui/viewer/task.py:835
 msgid "Reminder"
 msgstr "Przypominanie"
 
-#: taskcoachlib/gui/dialog/editor.py:336 taskcoachlib/gui/viewer/task.py:813
+#: taskcoachlib/gui/dialog/editor.py:337 taskcoachlib/gui/viewer/task.py:819
 msgid "Recurrence"
 msgstr "Powtarzanie"
 
-#: taskcoachlib/gui/dialog/editor.py:351
+#: taskcoachlib/gui/dialog/editor.py:353
 msgid "Progress"
 msgstr "Postęp"
 
-#: taskcoachlib/gui/dialog/editor.py:368
+#: taskcoachlib/gui/dialog/editor.py:370
 msgid "Percentage complete"
 msgstr "Stopień zaawansowania"
 
-#: taskcoachlib/gui/dialog/editor.py:377
+#: taskcoachlib/gui/dialog/editor.py:379
 msgid "Use application-wide setting"
 msgstr "Użyj domyślnych ustawień aplikacji"
 
-#: taskcoachlib/gui/dialog/editor.py:378
+#: taskcoachlib/gui/dialog/editor.py:380
 msgid "No"
 msgstr "Nie"
 
-#: taskcoachlib/gui/dialog/editor.py:378
+#: taskcoachlib/gui/dialog/editor.py:380
 msgid "Yes"
 msgstr "Tak"
 
-#: taskcoachlib/gui/dialog/editor.py:388
+#: taskcoachlib/gui/dialog/editor.py:390
 msgid "Mark task completed when all children are completed?"
 msgstr ""
 "Czy oznaczyć zadanie jako ukończone, gdy wszystkie podzadania zostaną "
 "ukończone?"
 
-#: taskcoachlib/gui/dialog/editor.py:398 taskcoachlib/gui/dialog/editor.py:420
-#: taskcoachlib/gui/uicommand.py:2488 taskcoachlib/gui/viewer/task.py:814
+#: taskcoachlib/gui/dialog/editor.py:400 taskcoachlib/gui/dialog/editor.py:422
+#: taskcoachlib/gui/uicommand.py:2488 taskcoachlib/gui/viewer/task.py:820
 #: taskcoachlib/gui/wizard/csvimport.py:230
 #: taskcoachlib/persistence/csv/reader.py:95
 msgid "Budget"
 msgstr "Budżet"
 
-#: taskcoachlib/gui/dialog/editor.py:428 taskcoachlib/gui/uicommand.py:2488
-#: taskcoachlib/gui/viewer/effort.py:193 taskcoachlib/gui/viewer/task.py:815
+#: taskcoachlib/gui/dialog/editor.py:430 taskcoachlib/gui/uicommand.py:2488
+#: taskcoachlib/gui/viewer/effort.py:199 taskcoachlib/gui/viewer/task.py:821
 msgid "Time spent"
 msgstr "Spędzony czas"
 
-#: taskcoachlib/gui/dialog/editor.py:445 taskcoachlib/gui/viewer/task.py:816
+#: taskcoachlib/gui/dialog/editor.py:447 taskcoachlib/gui/viewer/task.py:822
 msgid "Budget left"
 msgstr "Pozostały budżet"
 
-#: taskcoachlib/gui/dialog/editor.py:470 taskcoachlib/gui/viewer/task.py:818
+#: taskcoachlib/gui/dialog/editor.py:472 taskcoachlib/gui/viewer/task.py:824
 #: taskcoachlib/gui/wizard/csvimport.py:232
 #: taskcoachlib/persistence/csv/reader.py:114
 msgid "Hourly fee"
 msgstr "Wynagrodzenie za godzinę"
 
-#: taskcoachlib/gui/dialog/editor.py:479 taskcoachlib/gui/uicommand.py:2488
-#: taskcoachlib/gui/viewer/task.py:819
+#: taskcoachlib/gui/dialog/editor.py:481 taskcoachlib/gui/uicommand.py:2488
+#: taskcoachlib/gui/viewer/task.py:825
 #: taskcoachlib/gui/wizard/csvimport.py:231
 #: taskcoachlib/persistence/csv/reader.py:109
 msgid "Fixed fee"
 msgstr "Stałe wynagrodzenie"
 
-#: taskcoachlib/gui/dialog/editor.py:485 taskcoachlib/gui/uicommand.py:2488
-#: taskcoachlib/gui/viewer/effort.py:195 taskcoachlib/gui/viewer/task.py:820
+#: taskcoachlib/gui/dialog/editor.py:487 taskcoachlib/gui/uicommand.py:2488
+#: taskcoachlib/gui/viewer/effort.py:201 taskcoachlib/gui/viewer/task.py:826
 msgid "Revenue"
 msgstr "Przychód"
 
-#: taskcoachlib/gui/dialog/editor.py:568 taskcoachlib/gui/viewer/effort.py:36
+#: taskcoachlib/gui/dialog/editor.py:570 taskcoachlib/gui/viewer/effort.py:36
 #: taskcoachlib/help/__init__.py:75 taskcoachlib/help/__init__.py:214
 msgid "Effort"
 msgstr "Nakład"
 
-#: taskcoachlib/gui/dialog/editor.py:606
+#: taskcoachlib/gui/dialog/editor.py:608
 #: taskcoachlib/gui/viewer/category.py:38
-#: taskcoachlib/gui/viewer/effort.py:185 taskcoachlib/gui/viewer/note.py:134
-#: taskcoachlib/gui/viewer/task.py:764 taskcoachlib/help/__init__.py:80
-#: taskcoachlib/help/__init__.py:240 taskcoachlib/widgets/conflict.py:213
+#: taskcoachlib/gui/viewer/effort.py:191 taskcoachlib/gui/viewer/note.py:134
+#: taskcoachlib/gui/viewer/task.py:769 taskcoachlib/help/__init__.py:80
+#: taskcoachlib/help/__init__.py:240
 msgid "Categories"
 msgstr "Kategorie"
 
-#: taskcoachlib/gui/dialog/editor.py:641
+#: taskcoachlib/gui/dialog/editor.py:643
 msgid "Attachments"
 msgstr "Załączniki"
 
-#: taskcoachlib/gui/dialog/editor.py:679 taskcoachlib/gui/viewer/note.py:37
+#: taskcoachlib/gui/dialog/editor.py:681 taskcoachlib/gui/viewer/note.py:37
 #: taskcoachlib/help/__init__.py:85 taskcoachlib/help/__init__.py:275
 msgid "Notes"
 msgstr "Notatki"
 
-#: taskcoachlib/gui/dialog/editor.py:721 taskcoachlib/gui/viewer/task.py:773
+#: taskcoachlib/gui/dialog/editor.py:723 taskcoachlib/gui/viewer/task.py:778
 msgid "Prerequisites"
 msgstr "Wymagania"
 
-#: taskcoachlib/gui/dialog/editor.py:946
+#: taskcoachlib/gui/dialog/editor.py:948
 msgid "Edit task"
 msgstr "Edytuj zadanie"
 
-#: taskcoachlib/gui/dialog/editor.py:955
+#: taskcoachlib/gui/dialog/editor.py:957
 #: taskcoachlib/gui/dialog/reminder.py:52
-#: taskcoachlib/gui/viewer/effort.py:183
+#: taskcoachlib/gui/viewer/effort.py:189
 msgid "Task"
 msgstr "Zadanie"
 
-#: taskcoachlib/gui/dialog/editor.py:971
+#: taskcoachlib/gui/dialog/editor.py:973
 msgid "Start"
 msgstr "Rozpocznij"
 
-#: taskcoachlib/gui/dialog/editor.py:984
+#: taskcoachlib/gui/dialog/editor.py:986
 msgid "Stop"
 msgstr "Zatrzymaj"
 
-#: taskcoachlib/gui/dialog/editor.py:990
+#: taskcoachlib/gui/dialog/editor.py:992
 msgid "Start tracking from last stop time"
 msgstr "Rozpocznij śledzenie od ostatniego zatrzymania"
 
-#: taskcoachlib/gui/dialog/editor.py:997
+#: taskcoachlib/gui/dialog/editor.py:999
 msgid "Stop tracking now"
-msgstr ""
+msgstr "Zatrzymaj liczenie czasu"
 
-#: taskcoachlib/gui/dialog/editor.py:1028
+#: taskcoachlib/gui/dialog/editor.py:1030
 msgid "Warning: start must be earlier than stop"
 msgstr "Uwaga: start musi być wcześniej niż stop"
 
-#: taskcoachlib/gui/dialog/editor.py:1168
+#: taskcoachlib/gui/dialog/editor.py:1170
 msgid "Multiple tasks"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1169
+#: taskcoachlib/gui/dialog/editor.py:1171
 msgid "%s (task)"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1174
+#: taskcoachlib/gui/dialog/editor.py:1176
 msgid "Multiple categories"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1175
+#: taskcoachlib/gui/dialog/editor.py:1177
 msgid "%s (category)"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1180
+#: taskcoachlib/gui/dialog/editor.py:1182
 msgid "Multiple notes"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1181
+#: taskcoachlib/gui/dialog/editor.py:1183
 msgid "%s (note)"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1186
+#: taskcoachlib/gui/dialog/editor.py:1188
 msgid "Multiple attachments"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1187
+#: taskcoachlib/gui/dialog/editor.py:1189
 msgid "%s (attachment)"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1192
+#: taskcoachlib/gui/dialog/editor.py:1194
 msgid "Multiple efforts"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1193
+#: taskcoachlib/gui/dialog/editor.py:1195
 msgid "%s (effort)"
 msgstr ""
 
@@ -1379,19 +1385,19 @@ msgid ""
 "on the next export."
 msgstr ""
 
-#: taskcoachlib/gui/dialog/export.py:237 taskcoachlib/gui/iocontroller.py:298
+#: taskcoachlib/gui/dialog/export.py:237 taskcoachlib/gui/iocontroller.py:297
 msgid "Export as CSV"
 msgstr "Eksportuj jako plik CSV"
 
-#: taskcoachlib/gui/dialog/export.py:256 taskcoachlib/gui/iocontroller.py:305
+#: taskcoachlib/gui/dialog/export.py:256 taskcoachlib/gui/iocontroller.py:304
 msgid "Export as iCalendar"
 msgstr "Eksportuj jako iCalendar"
 
-#: taskcoachlib/gui/dialog/export.py:272 taskcoachlib/gui/iocontroller.py:291
+#: taskcoachlib/gui/dialog/export.py:272 taskcoachlib/gui/iocontroller.py:290
 msgid "Export as HTML"
 msgstr "Eksportuj jako HTML"
 
-#: taskcoachlib/gui/dialog/export.py:288 taskcoachlib/gui/iocontroller.py:311
+#: taskcoachlib/gui/dialog/export.py:288 taskcoachlib/gui/iocontroller.py:310
 msgid "Export as Todo.txt"
 msgstr "Eksportuj jako Todo.txt"
 
@@ -1468,7 +1474,7 @@ msgstr ""
 "otwarte."
 
 #: taskcoachlib/gui/dialog/iphone.py:98 taskcoachlib/gui/iphone.py:44
-#: taskcoachlib/widgets/conflict.py:255 taskcoachlib/widgets/password.py:47
+#: taskcoachlib/widgets/password.py:47
 #: taskcoachlib/widgets/syncmlwarning.py:36
 msgid "OK"
 msgstr "Ok"
@@ -1716,15 +1722,16 @@ msgid "Nothing"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:466
-msgid "Changing the start date changes the due date"
+msgid "Changing the planned start date changes the due date"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:467
-msgid "Changing the due date changes the start date"
+msgid "Changing the due date changes the planned start date"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:469
-msgid "What to do with start and due date if the other one is changed"
+msgid ""
+"What to do with planned start and due date if the other one is changed"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:472
@@ -1776,12 +1783,12 @@ msgid "End of day"
 msgstr "Koniec dnia"
 
 #: taskcoachlib/gui/dialog/preferences.py:485
-msgid "Default start date and time"
+msgid "Default planned start date and time"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:488
 msgid "Default due date and time"
-msgstr ""
+msgstr "Domyślna data i czas zakończenia"
 
 #: taskcoachlib/gui/dialog/preferences.py:491
 msgid "Default completion date and time"
@@ -1920,7 +1927,7 @@ msgstr "W jedną stronę z serwera"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:99
 #: taskcoachlib/gui/dialog/syncpreferences.py:112
-#: taskcoachlib/syncml/basesource.py:61 taskcoachlib/syncml/basesource.py:73
+#: taskcoachlib/syncml/basesource.py:43 taskcoachlib/syncml/basesource.py:55
 msgid "Refresh from server"
 msgstr "Odśwież z serwera"
 
@@ -2008,51 +2015,51 @@ msgstr ""
 msgid "Notification"
 msgstr "Powiadomienie"
 
-#: taskcoachlib/gui/iocontroller.py:49
+#: taskcoachlib/gui/iocontroller.py:48
 msgid "%s files (*.tsk)|*.tsk|All files (*.*)|*"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:52
+#: taskcoachlib/gui/iocontroller.py:51
 msgid ""
 "%s files (*.tsk)|*.tsk|Backup files (*.tsk.bak)|*.tsk.bak|All files (*.*)|*"
 msgstr ""
 "Pliki %s (*.tsk)|*.tsk|Pliki zapasowe (*.tsk.bak)|*.tsk.bak|Wszystkie pliki "
 "(*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:55
+#: taskcoachlib/gui/iocontroller.py:54
 msgid "iCalendar files (*.ics)|*.ics|All files (*.*)|*"
 msgstr "Pliki iCalendar (*.ics)|*.isc|Wszystkie pliki  (*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:58
+#: taskcoachlib/gui/iocontroller.py:57
 msgid "HTML files (*.html)|*.html|All files (*.*)|*"
 msgstr "Pliki HTML (*.html)|*.html|Wszystkie pliki (*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:61
+#: taskcoachlib/gui/iocontroller.py:60
 msgid "CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt|All files (*.*)|*"
 msgstr ""
 "Pliki CSV (*.csv)|*.csv|Pliki Tekstowe (*.txt)|*.txt|Wszystkie pliki (*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:64
+#: taskcoachlib/gui/iocontroller.py:63
 msgid "Todo.txt files (*.txt)|*.txt|All files (*.*)|*"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:103
+#: taskcoachlib/gui/iocontroller.py:102
 msgid "Open"
 msgstr "Otwórz"
 
-#: taskcoachlib/gui/iocontroller.py:138
+#: taskcoachlib/gui/iocontroller.py:137
 msgid "Loaded %(nrtasks)d tasks from %(filename)s"
 msgstr "Wczytano %(nrtasks)d zadań z pliku %(filename)s"
 
-#: taskcoachlib/gui/iocontroller.py:142
+#: taskcoachlib/gui/iocontroller.py:141
 msgid "Cannot open %s because it doesn't exist"
 msgstr "Nie można otworzyć %s, ponieważ nie istnieje"
 
-#: taskcoachlib/gui/iocontroller.py:152
+#: taskcoachlib/gui/iocontroller.py:151
 msgid "Merge"
 msgstr "Dołącz"
 
-#: taskcoachlib/gui/iocontroller.py:157
+#: taskcoachlib/gui/iocontroller.py:156
 msgid ""
 "Cannot open %(filename)s\n"
 "because it is locked."
@@ -2060,19 +2067,19 @@ msgstr ""
 "Nie można otworzyć %(filename)s\n"
 "ponieważ jest zablokowany."
 
-#: taskcoachlib/gui/iocontroller.py:167
+#: taskcoachlib/gui/iocontroller.py:166
 msgid "Merged %(filename)s"
 msgstr "Dołączono %(filename)s"
 
-#: taskcoachlib/gui/iocontroller.py:184
+#: taskcoachlib/gui/iocontroller.py:183
 msgid "Save as"
 msgstr "Zapisz jako"
 
-#: taskcoachlib/gui/iocontroller.py:197
+#: taskcoachlib/gui/iocontroller.py:196
 msgid "Save selection"
 msgstr "Zapisz zaznaczenie"
 
-#: taskcoachlib/gui/iocontroller.py:230
+#: taskcoachlib/gui/iocontroller.py:229
 msgid ""
 "Cannot save %s\n"
 "It is locked by another instance of %s.\n"
@@ -2080,7 +2087,7 @@ msgstr ""
 "Nie można zapisać %s\n"
 "Zablokowany jest przez inną instancję %s.\n"
 
-#: taskcoachlib/gui/iocontroller.py:235
+#: taskcoachlib/gui/iocontroller.py:234
 msgid ""
 "Cannot save %s\n"
 "%s"
@@ -2088,41 +2095,33 @@ msgstr ""
 "Nie można zapisać %s\n"
 "%s"
 
-#: taskcoachlib/gui/iocontroller.py:245
+#: taskcoachlib/gui/iocontroller.py:244
 msgid "Import template"
 msgstr "Importuj szablon"
 
-#: taskcoachlib/gui/iocontroller.py:247
+#: taskcoachlib/gui/iocontroller.py:246
 msgid "%s template files (*.tsktmpl)|*.tsktmpl"
 msgstr "%s pliki szablonu (*.tsktmpl)|*.tsktmpl"
 
-#: taskcoachlib/gui/iocontroller.py:253
+#: taskcoachlib/gui/iocontroller.py:252
 msgid ""
 "Cannot import template %s\n"
 "%s"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:282
+#: taskcoachlib/gui/iocontroller.py:281
 msgid "Exported %(count)d items to %(filename)s"
 msgstr "Eksportowanych %(count)d pozycji do %(filename)s"
 
-#: taskcoachlib/gui/iocontroller.py:337
+#: taskcoachlib/gui/iocontroller.py:336
 msgid "Finished synchronization"
 msgstr "Synchronizacja zakończona"
 
-#: taskcoachlib/gui/iocontroller.py:347
-msgid "Note conflict"
-msgstr "Konflikt notatek"
-
-#: taskcoachlib/gui/iocontroller.py:351
-msgid "Task conflict"
-msgstr "Konflikt zadań"
-
-#: taskcoachlib/gui/iocontroller.py:363
+#: taskcoachlib/gui/iocontroller.py:345
 msgid "Synchronization status"
 msgstr "Status synchronizacji"
 
-#: taskcoachlib/gui/iocontroller.py:371
+#: taskcoachlib/gui/iocontroller.py:353
 msgid ""
 "Cannot open %s\n"
 "%s"
@@ -2130,7 +2129,7 @@ msgstr ""
 "Nie można otworzyć %s\n"
 "%s"
 
-#: taskcoachlib/gui/iocontroller.py:405
+#: taskcoachlib/gui/iocontroller.py:387
 msgid ""
 "A file named %s already exists.\n"
 "Do you want to replace it?"
@@ -2138,7 +2137,7 @@ msgstr ""
 "Plik %s istnieje.\n"
 "Czy chcesz go zamienić?"
 
-#: taskcoachlib/gui/iocontroller.py:417
+#: taskcoachlib/gui/iocontroller.py:399
 msgid ""
 "You have unsaved changes.\n"
 "Save before closing?"
@@ -2146,11 +2145,11 @@ msgstr ""
 "Pewne zmiany nie zostały zapisane.\n"
 "Zapisać przed wyjściem?"
 
-#: taskcoachlib/gui/iocontroller.py:418
+#: taskcoachlib/gui/iocontroller.py:400
 msgid "%s: save changes?"
 msgstr "%s: zapisać zmiany?"
 
-#: taskcoachlib/gui/iocontroller.py:428
+#: taskcoachlib/gui/iocontroller.py:410
 msgid ""
 "Cannot open %s because it is locked.\n"
 "\n"
@@ -2170,11 +2169,11 @@ msgstr ""
 "\n"
 "Wyłączyć blokadę?"
 
-#: taskcoachlib/gui/iocontroller.py:436 taskcoachlib/gui/iocontroller.py:443
+#: taskcoachlib/gui/iocontroller.py:418 taskcoachlib/gui/iocontroller.py:425
 msgid "%s: file locked"
 msgstr "plik %s jest zablokowany"
 
-#: taskcoachlib/gui/iocontroller.py:441
+#: taskcoachlib/gui/iocontroller.py:423
 msgid ""
 "Cannot acquire a lock because locking is not supported\n"
 "on the location of %s.\n"
@@ -2184,15 +2183,15 @@ msgstr ""
 "w miejscu %s.\n"
 "Otworzyć %s odblokowane?"
 
-#: taskcoachlib/gui/iocontroller.py:448
+#: taskcoachlib/gui/iocontroller.py:430
 msgid "Closed %s"
 msgstr "Zamknij %s"
 
-#: taskcoachlib/gui/iocontroller.py:453
+#: taskcoachlib/gui/iocontroller.py:435
 msgid "Saved %(nrtasks)d tasks to %(filename)s"
 msgstr "Zapisano %(nrtasks)d zadań do %(filename)s"
 
-#: taskcoachlib/gui/iocontroller.py:458
+#: taskcoachlib/gui/iocontroller.py:440
 msgid ""
 "Cannot open %(filename)s\n"
 "because it was created by a newer version of %(name)s.\n"
@@ -2202,7 +2201,7 @@ msgstr ""
 "ponieważ został utworzony przez nowszą wersję %(name)s.\n"
 "Proszę zaktualizuj %(name)s."
 
-#: taskcoachlib/gui/iocontroller.py:467
+#: taskcoachlib/gui/iocontroller.py:449
 msgid "Error while reading %s:\n"
 msgstr "Błąd przy odczytywaniu %s:\n"
 
@@ -2306,159 +2305,163 @@ msgstr "&Sortuj"
 msgid "&Columns"
 msgstr "&Kolumny"
 
-#: taskcoachlib/gui/menu.py:374
+#: taskcoachlib/gui/menu.py:374 taskcoachlib/gui/menu.py:375
+msgid "&Rounding"
+msgstr ""
+
+#: taskcoachlib/gui/menu.py:377
 msgid "&Tree options"
 msgstr "Opcje &drzewa"
 
-#: taskcoachlib/gui/menu.py:378
+#: taskcoachlib/gui/menu.py:381
 msgid "T&oolbar"
 msgstr "Pasek &narzędzi"
 
-#: taskcoachlib/gui/menu.py:380
+#: taskcoachlib/gui/menu.py:383
 msgid "Show/hide status bar"
 msgstr "Pokaż/ukryj pasek statusu"
 
-#: taskcoachlib/gui/menu.py:380
+#: taskcoachlib/gui/menu.py:383
 msgid "Status&bar"
 msgstr "Pasek s&tanu"
 
-#: taskcoachlib/gui/menu.py:391
+#: taskcoachlib/gui/menu.py:394
 msgid "&Task"
 msgstr "&Zadania"
 
-#: taskcoachlib/gui/menu.py:392
+#: taskcoachlib/gui/menu.py:395
 msgid "Open a new tab with a viewer that displays tasks"
 msgstr "Otwórz nową zakładkę z listą zadań"
 
-#: taskcoachlib/gui/menu.py:394
+#: taskcoachlib/gui/menu.py:397
 msgid "Task &statistics"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:395
+#: taskcoachlib/gui/menu.py:398
 msgid "Open a new tab with a viewer that displays task statistics"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:397
+#: taskcoachlib/gui/menu.py:400
 msgid "Task &square map"
 msgstr "Mapa kwadratowa zadań"
 
-#: taskcoachlib/gui/menu.py:398
+#: taskcoachlib/gui/menu.py:401
 msgid "Open a new tab with a viewer that displays tasks in a square map"
 msgstr ""
 "Otwiera nową zakładkę zawierającą mapę kwadratów symbolizujących zadania"
 
-#: taskcoachlib/gui/menu.py:400
+#: taskcoachlib/gui/menu.py:403
 msgid "T&imeline"
 msgstr "Ścieżka czasu"
 
-#: taskcoachlib/gui/menu.py:401
+#: taskcoachlib/gui/menu.py:404
 msgid ""
 "Open a new tab with a viewer that displays a timeline of tasks and effort"
 msgstr ""
 "Otwórz nową zakładkę z podglądem na ścieżkę czasu dla zadań i postępu"
 
-#: taskcoachlib/gui/menu.py:403
+#: taskcoachlib/gui/menu.py:406
 msgid "&Calendar"
 msgstr "Kalendarz"
 
-#: taskcoachlib/gui/menu.py:404
+#: taskcoachlib/gui/menu.py:407
 msgid "Open a new tab with a viewer that displays tasks in a calendar"
 msgstr "Otwórz nową kartę z widokiem, który wyświetla zadania w kalendarzu"
 
-#: taskcoachlib/gui/menu.py:406 taskcoachlib/gui/viewer/mixin.py:441
+#: taskcoachlib/gui/menu.py:409 taskcoachlib/gui/viewer/mixin.py:441
 msgid "&Category"
 msgstr "&Kategorie"
 
-#: taskcoachlib/gui/menu.py:407
+#: taskcoachlib/gui/menu.py:410
 msgid "Open a new tab with a viewer that displays categories"
 msgstr "Otwórz nową kartę z widokiem wyświetlającym kategorie"
 
-#: taskcoachlib/gui/menu.py:411
+#: taskcoachlib/gui/menu.py:414
 msgid "&Effort"
 msgstr "Nakład"
 
-#: taskcoachlib/gui/menu.py:412
+#: taskcoachlib/gui/menu.py:415
 msgid "Open a new tab with a viewer that displays efforts"
 msgstr "Otwórz nową zakładkę z listą nakładu"
 
-#: taskcoachlib/gui/menu.py:415
+#: taskcoachlib/gui/menu.py:418
 msgid "Effort for &one task"
 msgstr "Nakład dla jedneg&o zadania"
 
-#: taskcoachlib/gui/menu.py:416
+#: taskcoachlib/gui/menu.py:419
 msgid ""
 "Open a new tab with a viewer that displays efforts for the selected task"
 msgstr "Otwiera nową zakładkę zawierającą nakład dla wybranego zadania"
 
-#: taskcoachlib/gui/menu.py:420
+#: taskcoachlib/gui/menu.py:423
 msgid "&Note"
 msgstr "&Notatka"
 
-#: taskcoachlib/gui/menu.py:421
+#: taskcoachlib/gui/menu.py:424
 msgid "Open a new tab with a viewer that displays notes"
 msgstr "Otwórz nową kartę z podglądem wyświetlającym notatki"
 
-#: taskcoachlib/gui/menu.py:464
+#: taskcoachlib/gui/menu.py:475
 msgid "&Hide"
 msgstr "&Ukryj"
 
-#: taskcoachlib/gui/menu.py:464
+#: taskcoachlib/gui/menu.py:475
 msgid "Hide the toolbar"
 msgstr "Ukryj pasek narzędzi"
 
-#: taskcoachlib/gui/menu.py:465
+#: taskcoachlib/gui/menu.py:476
 msgid "&Small images"
 msgstr "&Małe obrazki"
 
-#: taskcoachlib/gui/menu.py:465
+#: taskcoachlib/gui/menu.py:476
 msgid "Small images (16x16) on the toolbar"
 msgstr "&Małe obrazki (16x16) na pasku narzędzi"
 
-#: taskcoachlib/gui/menu.py:466
+#: taskcoachlib/gui/menu.py:477
 msgid "&Medium-sized images"
 msgstr "Obrazki ś&redniego rozmiaru"
 
-#: taskcoachlib/gui/menu.py:466
+#: taskcoachlib/gui/menu.py:477
 msgid "Medium-sized images (22x22) on the toolbar"
 msgstr "Obrazki średniego rozmiaru (22x22) na pasku narzędzi"
 
-#: taskcoachlib/gui/menu.py:467
+#: taskcoachlib/gui/menu.py:478
 msgid "&Large images"
 msgstr "&Duże obrazki"
 
-#: taskcoachlib/gui/menu.py:467
+#: taskcoachlib/gui/menu.py:478
 msgid "Large images (32x32) on the toolbar"
 msgstr "Duże obrazki (32x32) na pasku narzędzi"
 
-#: taskcoachlib/gui/menu.py:485 taskcoachlib/gui/menu.py:582
+#: taskcoachlib/gui/menu.py:496 taskcoachlib/gui/menu.py:593
 #: taskcoachlib/gui/uicommand.py:1485
 msgid "New task from &template"
 msgstr "Nowe zadanie z szablonu"
 
-#: taskcoachlib/gui/menu.py:524 taskcoachlib/gui/menu.py:723
-#: taskcoachlib/gui/menu.py:821
+#: taskcoachlib/gui/menu.py:535 taskcoachlib/gui/menu.py:734
+#: taskcoachlib/gui/menu.py:832
 msgid "&Toggle category"
 msgstr "Przełącz ka&tegorię"
 
-#: taskcoachlib/gui/menu.py:532
+#: taskcoachlib/gui/menu.py:543
 msgid "Change task &priority"
 msgstr "Zmień &priorytet zadania"
 
-#: taskcoachlib/gui/menu.py:598 taskcoachlib/gui/uicommand.py:1886
+#: taskcoachlib/gui/menu.py:609 taskcoachlib/gui/uicommand.py:1886
 #: taskcoachlib/gui/uicommand.py:1928
 msgid "&Start tracking effort"
 msgstr "&Rozpocznij śledzenie nakładu"
 
-#: taskcoachlib/gui/menu.py:647 taskcoachlib/gui/viewer/mixin.py:114
+#: taskcoachlib/gui/menu.py:658 taskcoachlib/gui/viewer/mixin.py:114
 msgid "%s (subcategories)"
 msgstr "%s (podkategorie)"
 
-#: taskcoachlib/gui/menu.py:689
+#: taskcoachlib/gui/menu.py:700
 msgid "%s (subtasks)"
 msgstr "%s (podzadań)"
 
-#: taskcoachlib/gui/menu.py:730 taskcoachlib/gui/viewer/mixin.py:520
-#: taskcoachlib/gui/viewer/task.py:925
+#: taskcoachlib/gui/menu.py:741 taskcoachlib/gui/viewer/mixin.py:520
+#: taskcoachlib/gui/viewer/task.py:934
 msgid "&Priority"
 msgstr "&Priorytet"
 
@@ -2806,9 +2809,9 @@ msgid "Hide &inactive tasks"
 msgstr "Ukryj &nieaktywne zadania"
 
 #: taskcoachlib/gui/uicommand.py:1244
-msgid "Show/hide inactive tasks (tasks with a start date in the future)"
+msgid ""
+"Show/hide inactive tasks (tasks with a planned start date in the future)"
 msgstr ""
-"Pokaż/ukryj nieaktywne zadania (zadania z datą rozpoczęcia w przyszłości)"
 
 #: taskcoachlib/gui/uicommand.py:1261
 msgid "Hide &active tasks"
@@ -2816,9 +2819,9 @@ msgstr "Ukryj &aktywne zadania"
 
 #: taskcoachlib/gui/uicommand.py:1262
 msgid ""
-"Show/hide active tasks (tasks with a start date in the past that are not "
-"completed)"
-msgstr "Pokaż/ukryj aktywne zadania (oznaczone jako nieukończone)"
+"Show/hide active tasks (tasks with a planned start date in the past that are "
+"not completed)"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1274
 msgid "Hide &completed tasks"
@@ -3258,6 +3261,14 @@ msgstr ""
 msgid "No rounding"
 msgstr ""
 
+#: taskcoachlib/gui/uicommand.py:2612
+msgid "&Always round up"
+msgstr ""
+
+#: taskcoachlib/gui/uicommand.py:2613
+msgid "Always round up to the next rounding increment"
+msgstr ""
+
 #: taskcoachlib/gui/viewer/attachment.py:69
 msgid "Type"
 msgstr "Typ"
@@ -3278,31 +3289,31 @@ msgstr "Sortuj według opisu"
 #: taskcoachlib/gui/viewer/attachment.py:91
 #: taskcoachlib/gui/viewer/attachment.py:112
 #: taskcoachlib/gui/viewer/category.py:129
-#: taskcoachlib/gui/viewer/effort.py:249 taskcoachlib/gui/viewer/mixin.py:406
+#: taskcoachlib/gui/viewer/effort.py:255 taskcoachlib/gui/viewer/mixin.py:406
 #: taskcoachlib/gui/viewer/note.py:85 taskcoachlib/gui/viewer/note.py:123
-#: taskcoachlib/gui/viewer/task.py:898
+#: taskcoachlib/gui/viewer/task.py:907
 msgid "&Description"
 msgstr "&Opis"
 
 #: taskcoachlib/gui/viewer/attachment.py:113
 #: taskcoachlib/gui/viewer/category.py:130
-#: taskcoachlib/gui/viewer/effort.py:250 taskcoachlib/gui/viewer/note.py:86
-#: taskcoachlib/gui/viewer/task.py:899
+#: taskcoachlib/gui/viewer/effort.py:256 taskcoachlib/gui/viewer/note.py:86
+#: taskcoachlib/gui/viewer/task.py:908
 msgid "Show/hide description column"
 msgstr "Pokaż/ukryj kolumnę opisu"
 
 #: taskcoachlib/gui/viewer/attachment.py:115
-#: taskcoachlib/gui/viewer/category.py:139 taskcoachlib/gui/viewer/task.py:918
+#: taskcoachlib/gui/viewer/category.py:139 taskcoachlib/gui/viewer/task.py:927
 msgid "&Notes"
 msgstr "&Notatki"
 
 #: taskcoachlib/gui/viewer/attachment.py:116
-#: taskcoachlib/gui/viewer/category.py:140 taskcoachlib/gui/viewer/task.py:919
+#: taskcoachlib/gui/viewer/category.py:140 taskcoachlib/gui/viewer/task.py:928
 msgid "Show/hide notes column"
 msgstr "Pokaż/ukryj kolumnę notatek"
 
 #: taskcoachlib/gui/viewer/category.py:135 taskcoachlib/gui/viewer/note.py:91
-#: taskcoachlib/gui/viewer/task.py:913
+#: taskcoachlib/gui/viewer/task.py:922
 msgid "&Attachments"
 msgstr "Z&ałączniki"
 
@@ -3318,104 +3329,104 @@ msgstr "Kategorie: %d - zaznaczone, %d - wszystkie"
 msgid "Status: %d filtered"
 msgstr "Status: %d - przefiltrowane"
 
-#: taskcoachlib/gui/viewer/effort.py:181
+#: taskcoachlib/gui/viewer/effort.py:187
 msgid "Period"
 msgstr "Kropka"
 
-#: taskcoachlib/gui/viewer/effort.py:194
+#: taskcoachlib/gui/viewer/effort.py:200
 msgid "Total time spent"
 msgstr "Całkowity spędzony czas"
 
-#: taskcoachlib/gui/viewer/effort.py:197
+#: taskcoachlib/gui/viewer/effort.py:203
 msgid "Total revenue"
 msgstr "Dochód całkowity"
 
-#: taskcoachlib/gui/viewer/effort.py:203
+#: taskcoachlib/gui/viewer/effort.py:209
 msgid "Monday"
 msgstr "Poniedziałek"
 
-#: taskcoachlib/gui/viewer/effort.py:205
+#: taskcoachlib/gui/viewer/effort.py:211
 msgid "Tuesday"
 msgstr "Wtorek"
 
-#: taskcoachlib/gui/viewer/effort.py:207
+#: taskcoachlib/gui/viewer/effort.py:213
 msgid "Wednesday"
 msgstr "Środa"
 
-#: taskcoachlib/gui/viewer/effort.py:209
+#: taskcoachlib/gui/viewer/effort.py:215
 msgid "Thursday"
 msgstr "Czwartek"
 
-#: taskcoachlib/gui/viewer/effort.py:211
+#: taskcoachlib/gui/viewer/effort.py:217
 msgid "Friday"
 msgstr "Piątek"
 
-#: taskcoachlib/gui/viewer/effort.py:213
+#: taskcoachlib/gui/viewer/effort.py:219
 msgid "Saturday"
 msgstr "Sobota"
 
-#: taskcoachlib/gui/viewer/effort.py:215
+#: taskcoachlib/gui/viewer/effort.py:221
 msgid "Sunday"
 msgstr "Niedziela"
 
-#: taskcoachlib/gui/viewer/effort.py:252 taskcoachlib/gui/viewer/mixin.py:99
+#: taskcoachlib/gui/viewer/effort.py:258 taskcoachlib/gui/viewer/mixin.py:99
 #: taskcoachlib/gui/viewer/note.py:94 taskcoachlib/gui/viewer/note.py:143
-#: taskcoachlib/gui/viewer/task.py:922
+#: taskcoachlib/gui/viewer/task.py:931
 msgid "&Categories"
 msgstr "&Kategorie"
 
-#: taskcoachlib/gui/viewer/effort.py:253 taskcoachlib/gui/viewer/note.py:95
-#: taskcoachlib/gui/viewer/task.py:923
+#: taskcoachlib/gui/viewer/effort.py:259 taskcoachlib/gui/viewer/note.py:95
+#: taskcoachlib/gui/viewer/task.py:932
 msgid "Show/hide categories column"
 msgstr "Pokaż/ukryj kolumnę kategorii"
 
-#: taskcoachlib/gui/viewer/effort.py:255 taskcoachlib/gui/viewer/mixin.py:518
-#: taskcoachlib/gui/viewer/task.py:875
+#: taskcoachlib/gui/viewer/effort.py:261 taskcoachlib/gui/viewer/mixin.py:518
+#: taskcoachlib/gui/viewer/task.py:884
 msgid "&Time spent"
 msgstr "&Spędzony czas"
 
-#: taskcoachlib/gui/viewer/effort.py:256 taskcoachlib/gui/viewer/task.py:876
+#: taskcoachlib/gui/viewer/effort.py:262 taskcoachlib/gui/viewer/task.py:885
 msgid "Show/hide time spent column"
 msgstr "Pokaż/ukryj kolumnę spędzonego czasu"
 
-#: taskcoachlib/gui/viewer/effort.py:258 taskcoachlib/gui/viewer/mixin.py:523
-#: taskcoachlib/gui/viewer/task.py:894
+#: taskcoachlib/gui/viewer/effort.py:264 taskcoachlib/gui/viewer/mixin.py:523
+#: taskcoachlib/gui/viewer/task.py:903
 msgid "&Revenue"
 msgstr "&Przychód"
 
-#: taskcoachlib/gui/viewer/effort.py:259 taskcoachlib/gui/viewer/task.py:895
+#: taskcoachlib/gui/viewer/effort.py:265 taskcoachlib/gui/viewer/task.py:904
 msgid "Show/hide revenue column"
 msgstr "Pokaż/ukryj kolumnę przychodu"
 
-#: taskcoachlib/gui/viewer/effort.py:263
+#: taskcoachlib/gui/viewer/effort.py:269
 msgid "&Total time spent"
 msgstr "Łączny czas"
 
-#: taskcoachlib/gui/viewer/effort.py:264
+#: taskcoachlib/gui/viewer/effort.py:270
 msgid "Show/hide total time spent column"
 msgstr "Pokaż/ukryj kolumnę łącznego czasu"
 
-#: taskcoachlib/gui/viewer/effort.py:267
+#: taskcoachlib/gui/viewer/effort.py:273
 msgid "&Total revenue"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/effort.py:268
+#: taskcoachlib/gui/viewer/effort.py:274
 msgid "Show/hide total revenue column"
 msgstr "Pokaż/ukryj kolumnę całkowitego przychodu"
 
-#: taskcoachlib/gui/viewer/effort.py:272
+#: taskcoachlib/gui/viewer/effort.py:278
 msgid "Effort per weekday"
 msgstr "Nakład tygodniowy"
 
-#: taskcoachlib/gui/viewer/effort.py:273
+#: taskcoachlib/gui/viewer/effort.py:279
 msgid "Show/hide time spent per weekday columns"
 msgstr "Pokaż/ukryj kolumnę nakładu tygodniowego"
 
-#: taskcoachlib/gui/viewer/effort.py:327
+#: taskcoachlib/gui/viewer/effort.py:342
 msgid "Effort: %d selected, %d visible, %d total"
 msgstr "Nakład: %d - wybrane, %d - widoczne, %d - wszystkie"
 
-#: taskcoachlib/gui/viewer/effort.py:330
+#: taskcoachlib/gui/viewer/effort.py:345
 msgid "Status: %d tracking"
 msgstr "Status: %d śledzenie"
 
@@ -3612,7 +3623,8 @@ msgid "&Show all inactive tasks"
 msgstr "&Pokaż wszystkie nieaktywne zadania"
 
 #: taskcoachlib/gui/viewer/mixin.py:277
-msgid "Show all inactive tasks (tasks with a start date in the future)"
+msgid ""
+"Show all inactive tasks (tasks with a planned start date in the future)"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/mixin.py:279
@@ -3620,7 +3632,8 @@ msgid "&Hide all inactive tasks"
 msgstr "&Ukryj wszystkie nieaktywne zadania"
 
 #: taskcoachlib/gui/viewer/mixin.py:280
-msgid "Hide all inactive tasks (tasks with a start date in the future)"
+msgid ""
+"Hide all inactive tasks (tasks with a planned start date in the future)"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/mixin.py:282
@@ -3756,18 +3769,18 @@ msgid "Sort tasks by category"
 msgstr "Sortuj zadania wg. kategorii"
 
 #: taskcoachlib/gui/viewer/mixin.py:509
-msgid "Sort tasks by start date"
-msgstr "Sortuj zadania według daty rozpoczęcia"
+msgid "Sort tasks by planned start date"
+msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:509 taskcoachlib/gui/viewer/task.py:849
-msgid "&Start date"
-msgstr "Data &rozpoczęcia"
+#: taskcoachlib/gui/viewer/mixin.py:509 taskcoachlib/gui/viewer/task.py:855
+msgid "&Planned start date"
+msgstr ""
 
 #: taskcoachlib/gui/viewer/mixin.py:510
 msgid "Sort tasks by due date"
 msgstr "Sortuj zadania według daty wykonania"
 
-#: taskcoachlib/gui/viewer/mixin.py:510 taskcoachlib/gui/viewer/task.py:852
+#: taskcoachlib/gui/viewer/mixin.py:510 taskcoachlib/gui/viewer/task.py:858
 msgid "&Due date"
 msgstr "&Termin wykonania"
 
@@ -3775,7 +3788,7 @@ msgstr "&Termin wykonania"
 msgid "Sort tasks by completion date"
 msgstr "Sortuj zadania według daty ukończenia"
 
-#: taskcoachlib/gui/viewer/mixin.py:511 taskcoachlib/gui/viewer/task.py:855
+#: taskcoachlib/gui/viewer/mixin.py:511 taskcoachlib/gui/viewer/task.py:864
 msgid "&Completion date"
 msgstr "Data ukońc&zenia"
 
@@ -3783,7 +3796,7 @@ msgstr "Data ukońc&zenia"
 msgid "Sort tasks by prerequisite tasks"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:512 taskcoachlib/gui/viewer/task.py:904
+#: taskcoachlib/gui/viewer/mixin.py:512 taskcoachlib/gui/viewer/task.py:913
 msgid "&Prerequisites"
 msgstr ""
 
@@ -3791,7 +3804,7 @@ msgstr ""
 msgid "Sort tasks by dependent tasks"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:513 taskcoachlib/gui/viewer/task.py:907
+#: taskcoachlib/gui/viewer/mixin.py:513 taskcoachlib/gui/viewer/task.py:916
 msgid "&Dependencies"
 msgstr "Zależności"
 
@@ -3799,7 +3812,7 @@ msgstr "Zależności"
 msgid "Sort tasks by time left"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:514 taskcoachlib/gui/viewer/task.py:858
+#: taskcoachlib/gui/viewer/mixin.py:514 taskcoachlib/gui/viewer/task.py:867
 msgid "&Time left"
 msgstr ""
 
@@ -3807,7 +3820,7 @@ msgstr ""
 msgid "Sort tasks by percentage complete"
 msgstr "Sortuj zadania wg. procentowego ukończenia"
 
-#: taskcoachlib/gui/viewer/mixin.py:515 taskcoachlib/gui/viewer/task.py:910
+#: taskcoachlib/gui/viewer/mixin.py:515 taskcoachlib/gui/viewer/task.py:919
 msgid "&Percentage complete"
 msgstr "Sto&pień zaawansowania"
 
@@ -3815,7 +3828,7 @@ msgstr "Sto&pień zaawansowania"
 msgid "Sort tasks by recurrence"
 msgstr "Sortuj zadania według powtarzania"
 
-#: taskcoachlib/gui/viewer/mixin.py:516 taskcoachlib/gui/viewer/task.py:861
+#: taskcoachlib/gui/viewer/mixin.py:516 taskcoachlib/gui/viewer/task.py:870
 msgid "&Recurrence"
 msgstr "Po&wtarzanie"
 
@@ -3823,8 +3836,8 @@ msgstr "Po&wtarzanie"
 msgid "Sort tasks by budget"
 msgstr "Sortuj zadania według budżetu"
 
-#: taskcoachlib/gui/viewer/mixin.py:517 taskcoachlib/gui/viewer/task.py:866
-#: taskcoachlib/gui/viewer/task.py:872
+#: taskcoachlib/gui/viewer/mixin.py:517 taskcoachlib/gui/viewer/task.py:875
+#: taskcoachlib/gui/viewer/task.py:881
 msgid "&Budget"
 msgstr "&Budżet"
 
@@ -3848,7 +3861,7 @@ msgstr "Sortuj zadania według priorytetów"
 msgid "Sort tasks by hourly fee"
 msgstr "Sortuj zadania według wynagrodzenia za godzinę"
 
-#: taskcoachlib/gui/viewer/mixin.py:521 taskcoachlib/gui/viewer/task.py:888
+#: taskcoachlib/gui/viewer/mixin.py:521 taskcoachlib/gui/viewer/task.py:897
 msgid "&Hourly fee"
 msgstr "&Wynagrodzenie za godzinę"
 
@@ -3856,7 +3869,7 @@ msgstr "&Wynagrodzenie za godzinę"
 msgid "Sort tasks by fixed fee"
 msgstr "Sortuj zadania według stawki"
 
-#: taskcoachlib/gui/viewer/mixin.py:522 taskcoachlib/gui/viewer/task.py:891
+#: taskcoachlib/gui/viewer/mixin.py:522 taskcoachlib/gui/viewer/task.py:900
 msgid "&Fixed fee"
 msgstr "&Stała stawka"
 
@@ -3868,7 +3881,7 @@ msgstr "Sortuj zadania według przychodu"
 msgid "Sort tasks by reminder date and time"
 msgstr "Sortuj zadania według daty i czasu przypomnienia"
 
-#: taskcoachlib/gui/viewer/mixin.py:524 taskcoachlib/gui/viewer/task.py:928
+#: taskcoachlib/gui/viewer/mixin.py:524 taskcoachlib/gui/viewer/task.py:937
 msgid "&Reminder"
 msgstr "&Przypomnienie"
 
@@ -3901,151 +3914,159 @@ msgstr ""
 msgid "Tasks"
 msgstr "Zadania"
 
-#: taskcoachlib/gui/viewer/task.py:304
+#: taskcoachlib/gui/viewer/task.py:309
 msgid "Timeline"
 msgstr "Linia czasu"
 
-#: taskcoachlib/gui/viewer/task.py:395
+#: taskcoachlib/gui/viewer/task.py:400
 msgid "Now"
 msgstr "Teraz"
 
-#: taskcoachlib/gui/viewer/task.py:410
+#: taskcoachlib/gui/viewer/task.py:415
 msgid "Task square map"
 msgstr "Mapa kwadratowa zadań"
 
-#: taskcoachlib/gui/viewer/task.py:644
+#: taskcoachlib/gui/viewer/task.py:649
 msgid "Calendar viewer configuration"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:780
+#: taskcoachlib/gui/viewer/task.py:785
 msgid "Dependencies"
 msgstr "Zależności"
 
-#: taskcoachlib/gui/viewer/task.py:811
+#: taskcoachlib/gui/viewer/task.py:817
 msgid "% complete"
 msgstr "% gotowe"
 
-#: taskcoachlib/gui/viewer/task.py:812
+#: taskcoachlib/gui/viewer/task.py:818
 msgid "Time left"
-msgstr ""
+msgstr "Pozostały czas"
 
-#: taskcoachlib/gui/viewer/task.py:842
+#: taskcoachlib/gui/viewer/task.py:848
 msgid "&Dates"
 msgstr "&Daty"
 
-#: taskcoachlib/gui/viewer/task.py:843
+#: taskcoachlib/gui/viewer/task.py:849
 msgid "&All date columns"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:844
+#: taskcoachlib/gui/viewer/task.py:850
 msgid "Show/hide all date-related columns"
 msgstr "Pokaż/ukryj wszystkie kolumny dotyczące dat"
 
-#: taskcoachlib/gui/viewer/task.py:850
-msgid "Show/hide start date column"
-msgstr "Pokaż/ukryj kolumnę daty rozpoczęcia"
+#: taskcoachlib/gui/viewer/task.py:856
+msgid "Show/hide planned start date column"
+msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:853
+#: taskcoachlib/gui/viewer/task.py:859
 msgid "Show/hide due date column"
 msgstr "Pokaż/ukryj kolumnę daty"
 
-#: taskcoachlib/gui/viewer/task.py:856
-msgid "Show/hide completion date column"
-msgstr "Pokaż/ukryj kolumnę daty zakończenia"
-
-#: taskcoachlib/gui/viewer/task.py:859
-msgid "Show/hide time left column"
+#: taskcoachlib/gui/viewer/task.py:861
+msgid "&Actual start date"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/task.py:862
+msgid "Show/hide actual start date column"
+msgstr ""
+
+#: taskcoachlib/gui/viewer/task.py:865
+msgid "Show/hide completion date column"
+msgstr "Pokaż/ukryj kolumnę daty zakończenia"
+
+#: taskcoachlib/gui/viewer/task.py:868
+msgid "Show/hide time left column"
+msgstr ""
+
+#: taskcoachlib/gui/viewer/task.py:871
 msgid "Show/hide recurrence column"
 msgstr "Pokaż/Ukryj kolumnę powtarzania"
 
-#: taskcoachlib/gui/viewer/task.py:867
+#: taskcoachlib/gui/viewer/task.py:876
 msgid "&All budget columns"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:868
+#: taskcoachlib/gui/viewer/task.py:877
 msgid "Show/hide all budget-related columns"
 msgstr "Pokaż/ukryj wszystkie kolumny dotyczące budżetu"
 
-#: taskcoachlib/gui/viewer/task.py:873
+#: taskcoachlib/gui/viewer/task.py:882
 msgid "Show/hide budget column"
 msgstr "Pokaż/ukryj kolumnę budżetu"
 
-#: taskcoachlib/gui/viewer/task.py:878
+#: taskcoachlib/gui/viewer/task.py:887
 msgid "&Budget left"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:879
+#: taskcoachlib/gui/viewer/task.py:888
 msgid "Show/hide budget left column"
 msgstr "Pokaż/ukryj kolumnę pozostałego budżetu"
 
-#: taskcoachlib/gui/viewer/task.py:882
+#: taskcoachlib/gui/viewer/task.py:891
 msgid "&Financial"
 msgstr "&Finanse"
 
-#: taskcoachlib/gui/viewer/task.py:883
+#: taskcoachlib/gui/viewer/task.py:892
 msgid "&All financial columns"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:884
+#: taskcoachlib/gui/viewer/task.py:893
 msgid "Show/hide all finance-related columns"
 msgstr "Pokaż/ukryj wszystkie kolumny związane z finansami"
 
-#: taskcoachlib/gui/viewer/task.py:889
+#: taskcoachlib/gui/viewer/task.py:898
 msgid "Show/hide hourly fee column"
 msgstr "Pokaż/ukryj kolumnę kolumnę wynagrodzenia za godzinę"
 
-#: taskcoachlib/gui/viewer/task.py:892
+#: taskcoachlib/gui/viewer/task.py:901
 msgid "Show/hide fixed fee column"
 msgstr "Pokaż/ukryj kolumnę wynagrodzenia"
 
-#: taskcoachlib/gui/viewer/task.py:905
+#: taskcoachlib/gui/viewer/task.py:914
 msgid "Show/hide prerequisites column"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:908
+#: taskcoachlib/gui/viewer/task.py:917
 msgid "Show/hide dependencies column"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:911
+#: taskcoachlib/gui/viewer/task.py:920
 msgid "Show/hide percentage complete column"
 msgstr "Pokaż/ukryj kolumnę procentowego ukończenia"
 
-#: taskcoachlib/gui/viewer/task.py:914
+#: taskcoachlib/gui/viewer/task.py:923
 msgid "Show/hide attachment column"
 msgstr "Pokaż/ukryj kolumnę załączników"
 
-#: taskcoachlib/gui/viewer/task.py:926
+#: taskcoachlib/gui/viewer/task.py:935
 msgid "Show/hide priority column"
 msgstr "Pokaż/ukryj kolumnę priorytetu"
 
-#: taskcoachlib/gui/viewer/task.py:929
+#: taskcoachlib/gui/viewer/task.py:938
 msgid "Show/hide reminder column"
 msgstr "Pokaż/ukryj kolumnę powiadomień"
 
-#: taskcoachlib/gui/viewer/task.py:1106
+#: taskcoachlib/gui/viewer/task.py:1125
 msgid "Task statistics"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1109
+#: taskcoachlib/gui/viewer/task.py:1128
 msgid "Due soon tasks: %d (%d%%)"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1109
+#: taskcoachlib/gui/viewer/task.py:1128
 msgid "Overdue tasks: %d (%d%%)"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1110
+#: taskcoachlib/gui/viewer/task.py:1129
 msgid "Active tasks: %d (%d%%)"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1110
+#: taskcoachlib/gui/viewer/task.py:1129
 msgid "Inactive tasks: %d (%d%%)"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1111
+#: taskcoachlib/gui/viewer/task.py:1130
 msgid "Completed tasks: %d (%d%%)"
 msgstr ""
 
@@ -4107,7 +4128,7 @@ msgstr "Separator"
 
 #: taskcoachlib/gui/wizard/csvimport.py:96
 msgid "Date format"
-msgstr ""
+msgstr "Format daty"
 
 #: taskcoachlib/gui/wizard/csvimport.py:99
 msgid "Quote character"
@@ -4263,7 +4284,7 @@ msgstr "Wyczyść usunięte elementy"
 
 #: taskcoachlib/help/__init__.py:111
 msgid "iPhone and iPod Touch"
-msgstr ""
+msgstr "iPhone i iPod Touch"
 
 #: taskcoachlib/help/__init__.py:113
 msgid "%(name)s on the iPhone"
@@ -4275,7 +4296,7 @@ msgstr "Konfiguracja"
 
 #: taskcoachlib/help/__init__.py:117 taskcoachlib/help/__init__.py:558
 msgid "Android"
-msgstr ""
+msgstr "Android"
 
 #: taskcoachlib/help/__init__.py:119 taskcoachlib/help/__init__.py:560
 msgid "%(name)s on Android?"
@@ -4311,7 +4332,7 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:131 taskcoachlib/help/__init__.py:689
 msgid "Keyboard shortcuts"
-msgstr ""
+msgstr "Skróty klawiszowe"
 
 #: taskcoachlib/help/__init__.py:140
 msgid ""
@@ -4340,9 +4361,9 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:152
 msgid ""
-"Start date: the first date on which the task can be started. \n"
-"The start date defaults to the date the task is created. It can also be "
-"'None' \n"
+"Planned start date: the first date on which the task can be started. \n"
+"The planned start date defaults to the date the task is created. It can also "
+"be 'None' \n"
 "indicating that you don't really want to start this task. This can be "
 "convenient \n"
 "for e.g. registering sick leave."
@@ -4361,7 +4382,8 @@ msgid ""
 "Prerequisites: other tasks that need to be completed before\n"
 "a task can be started. The task is inactive until the last prerequisite task "
 "is \n"
-"completed. Note that if the task has a specific start date set, that start\n"
+"completed. Note that if the task has a specific planned start date set, "
+"that\n"
 "date has to be in the past <em>and</em> all prerequisite tasks need to be\n"
 "completed before the task becomes active."
 msgstr ""
@@ -4411,12 +4433,13 @@ msgid "Tasks always have exactly one of the following states:"
 msgstr ""
 
 #: taskcoachlib/help/__init__.py:182
-msgid "Active: the start date is in the past and the due date in the future;"
+msgid ""
+"Active: the planned start date is in the past and the due date in the future;"
 msgstr ""
 
 #: taskcoachlib/help/__init__.py:183
 msgid ""
-"Inactive: the start date is in the future, and/or not all \n"
+"Inactive: the planned start date is in the future, and/or not all \n"
 "prerequisite tasks have been completed;"
 msgstr ""
 
@@ -4472,7 +4495,7 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:204
 msgid "Completed tasks are green."
-msgstr ""
+msgstr "Zakończone zadania są zaznaczone na zielono."
 
 #: taskcoachlib/help/__init__.py:205
 msgid ""
@@ -4665,11 +4688,11 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:349
 msgid "Mozilla Thunderbird"
-msgstr ""
+msgstr "Mozilla Thunderbird"
 
 #: taskcoachlib/help/__init__.py:350
 msgid "Microsoft Outlook"
-msgstr ""
+msgstr "Microsoft Outlook"
 
 #: taskcoachlib/help/__init__.py:351
 msgid "Claws Mail"
@@ -4804,11 +4827,11 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:437
 msgid "Windows, 32 bits (see below)"
-msgstr ""
+msgstr "Windows, 32 bitowy (zobacz poniżej)"
 
 #: taskcoachlib/help/__init__.py:438
 msgid "Linux, 32 bits"
-msgstr ""
+msgstr "Linux, 32 bitowy"
 
 #: taskcoachlib/help/__init__.py:439
 msgid "Mac OS 10.3 and later, both Intel and PPC"
@@ -4848,7 +4871,7 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:463
 msgid "iPhone, iPod Touch and iPad"
-msgstr ""
+msgstr "iPhone, iPod Touch i iPad"
 
 #: taskcoachlib/help/__init__.py:465
 msgid "%(name)s on the iPhone/iPod Touch/iPad"
@@ -4908,7 +4931,7 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:491
 msgid ""
-"Show inactive: whether to show inactive tasks (start date \n"
+"Show inactive: whether to show inactive tasks (planned start date \n"
 "in the future)."
 msgstr ""
 
@@ -5063,7 +5086,7 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:585
 msgid ""
-"%(name)s imports task subjects, start date, due date, completion \n"
+"%(name)s imports task subjects, planned start date, due date, completion \n"
 "date, priority, contexts and projects. Contexts and projects are both \n"
 "transformed into categories in %(name)s. Projects cannot be transformed into "
 "\n"
@@ -5083,7 +5106,7 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:598
 msgid ""
-"%(name)s exports task subjects, start date, due date, completion \n"
+"%(name)s exports task subjects, planned start date, due date, completion \n"
 "date, priority and categories to the Todo.txt format. Other attributes are "
 "not\n"
 "exported."
@@ -5098,7 +5121,7 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:606
 msgid ""
-"The default Todo.txt format only supports start dates and \n"
+"The default Todo.txt format only supports planned start dates and \n"
 "completion dates, but no due dates. Therefore, %(name)s uses an extension "
 "to\n"
 "export the due date of tasks. Due dates are shown as \"due:YYYY-MM-DD\" in "
@@ -5145,7 +5168,7 @@ msgstr ""
 #: taskcoachlib/help/__init__.py:638
 msgid ""
 "You can also create a new template from a pre-made template file \n"
-"(.tsktmpl); just select \"Add template\" in the File menu and select the "
+"(.tsktmpl); just select \"Import template\" in the File menu and select the "
 "file. \n"
 "Template files are stored in a subdirectory of the directory where "
 "TaskCoach.ini \n"
@@ -5162,8 +5185,8 @@ msgid ""
 "\n"
 "template from a task starting today and due tomorrow, every time the "
 "template \n"
-"is instantiated, the start date will be replaced by the current date and the "
-"\n"
+"is instantiated, the planned start date will be replaced by the current date "
+"and the \n"
 "due date by the current date plus one day."
 msgstr ""
 
@@ -5221,79 +5244,79 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:695
 msgid "Ctrl-A"
-msgstr ""
+msgstr "Ctrl-A"
 
 #: taskcoachlib/help/__init__.py:696
 msgid "Shift-Ctrl-A"
-msgstr ""
+msgstr "Shift-Ctrl-A"
 
 #: taskcoachlib/help/__init__.py:697
 msgid "Ctrl-B"
-msgstr ""
+msgstr "Ctrl-B"
 
 #: taskcoachlib/help/__init__.py:698
 msgid "Shift-Ctrl-B"
-msgstr ""
+msgstr "Shift-Ctrl-B"
 
 #: taskcoachlib/help/__init__.py:699
 msgid "Ctrl-C"
-msgstr ""
+msgstr "Ctrl-C"
 
 #: taskcoachlib/help/__init__.py:700
 msgid "Shift-Ctrl-C"
-msgstr ""
+msgstr "Shift-Ctrl-C"
 
 #: taskcoachlib/help/__init__.py:701
 msgid "Ctrl-D"
-msgstr ""
+msgstr "Ctrl-D"
 
 #: taskcoachlib/help/__init__.py:702
 msgid "Shift-Ctrl-D"
-msgstr ""
+msgstr "Shift-Ctrl-D"
 
 #: taskcoachlib/help/__init__.py:703
 msgid "Ctrl-E"
-msgstr ""
+msgstr "Ctrl-E"
 
 #: taskcoachlib/help/__init__.py:704
 msgid "Shift-Ctrl-E"
-msgstr ""
+msgstr "Shift-Ctrl-E"
 
 #: taskcoachlib/help/__init__.py:705
 msgid "Ctrl-F"
-msgstr ""
+msgstr "Ctrl-F"
 
 #: taskcoachlib/help/__init__.py:706
 msgid "Ctrl-G"
-msgstr ""
+msgstr "Ctrl-G"
 
 #: taskcoachlib/help/__init__.py:707
 msgid "Ctrl-H"
-msgstr ""
+msgstr "Ctrl-H"
 
 #: taskcoachlib/help/__init__.py:708
 msgid "Ctrl-I"
-msgstr ""
+msgstr "Ctrl-I"
 
 #: taskcoachlib/help/__init__.py:709
 msgid "Shift-Ctrl-I"
-msgstr ""
+msgstr "Shift-Ctrl-I"
 
 #: taskcoachlib/help/__init__.py:710
 msgid "Ctrl-J"
-msgstr ""
+msgstr "Ctrl-J"
 
 #: taskcoachlib/help/__init__.py:711
 msgid "Ctrl-M"
-msgstr ""
+msgstr "Ctrl-M"
 
 #: taskcoachlib/help/__init__.py:712
 msgid "Ctrl-N (Linux and Mac OS X)"
-msgstr ""
+msgstr "Ctrl-N (Linux i Mac OS X)"
 
 #: taskcoachlib/help/__init__.py:713
 msgid "Shift-Ctrl-N (Linux and Mac OS X)"
-msgstr ""
+msgstr "Shift-Ctrl-N (Linux i Mac OS X)"
 
 #: taskcoachlib/help/__init__.py:713 taskcoachlib/help/__init__.py:741
 msgid "Insert a new subitem"
@@ -5301,75 +5324,75 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:714
 msgid "Ctrl-O"
-msgstr ""
+msgstr "Ctrl-O"
 
 #: taskcoachlib/help/__init__.py:715
 msgid "Shift-Ctrl-O"
-msgstr ""
+msgstr "Shift-Ctrl-O"
 
 #: taskcoachlib/help/__init__.py:716
 msgid "Alt-P"
-msgstr ""
+msgstr "Alt-P"
 
 #: taskcoachlib/help/__init__.py:717
 msgid "Ctrl-P"
-msgstr ""
+msgstr "Ctrl-P"
 
 #: taskcoachlib/help/__init__.py:718
 msgid "Shift-Ctrl-P"
-msgstr ""
+msgstr "Shift-Ctrl-P"
 
 #: taskcoachlib/help/__init__.py:719
 msgid "Ctrl-Q"
-msgstr ""
+msgstr "Ctrl-Q"
 
 #: taskcoachlib/help/__init__.py:720
 msgid "Ctrl-R"
-msgstr ""
+msgstr "Ctrl-R"
 
 #: taskcoachlib/help/__init__.py:721
 msgid "Shift-Ctrl-R"
-msgstr ""
+msgstr "Shift-Ctrl-R"
 
 #: taskcoachlib/help/__init__.py:722
 msgid "Ctrl-S"
-msgstr ""
+msgstr "Ctrl-S"
 
 #: taskcoachlib/help/__init__.py:723
 msgid "Shift-Ctrl-S"
-msgstr ""
+msgstr "Shift-Ctrl-S"
 
 #: taskcoachlib/help/__init__.py:724
 msgid "Ctrl-T"
-msgstr ""
+msgstr "Ctrl-T"
 
 #: taskcoachlib/help/__init__.py:725
 msgid "Shift-Ctrl-T"
-msgstr ""
+msgstr "Shift-Ctrl-T"
 
 #: taskcoachlib/help/__init__.py:726
 msgid "Ctrl-V"
-msgstr ""
+msgstr "Ctrl-V"
 
 #: taskcoachlib/help/__init__.py:727
 msgid "Shift-Ctrl-V"
-msgstr ""
+msgstr "Shift-Ctrl-V"
 
 #: taskcoachlib/help/__init__.py:728
 msgid "Ctrl-W"
-msgstr ""
+msgstr "Ctrl-W"
 
 #: taskcoachlib/help/__init__.py:729
 msgid "Ctrl-X"
-msgstr ""
+msgstr "Ctrl-X"
 
 #: taskcoachlib/help/__init__.py:730
 msgid "Ctrl-Y"
-msgstr ""
+msgstr "Ctrl-Y"
 
 #: taskcoachlib/help/__init__.py:731
 msgid "Ctrl-Z"
-msgstr ""
+msgstr "Ctrl-Z"
 
 #: taskcoachlib/help/__init__.py:732
 msgid "Edit the selected item(s) or close a dialog"
@@ -5381,7 +5404,7 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:733
 msgid "Ctrl-Enter"
-msgstr ""
+msgstr "Ctrl-Enter"
 
 #: taskcoachlib/help/__init__.py:733
 msgid "Mark the selected task(s) (un)completed"
@@ -5406,11 +5429,11 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:736
 msgid "Shift-Tab"
-msgstr ""
+msgstr "Shift-Tab"
 
 #: taskcoachlib/help/__init__.py:737
 msgid "Ctrl-Tab"
-msgstr ""
+msgstr "Ctrl-Tab"
 
 #: taskcoachlib/help/__init__.py:737
 msgid "Move keyboard focus to the next tab in a notebook control"
@@ -5438,11 +5461,11 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:742
 msgid "Ctrl-PgDn"
-msgstr ""
+msgstr "Ctrl-PgDn"
 
 #: taskcoachlib/help/__init__.py:743
 msgid "Ctrl-PgUp"
-msgstr ""
+msgstr "Ctrl-PgUp"
 
 #: taskcoachlib/help/__init__.py:744
 msgid "Alt-Down"
@@ -5679,7 +5702,7 @@ msgstr "Rozpocznij śledzenie nakładu dla wybranych zadań"
 
 #: taskcoachlib/help/uicommand.py:39
 msgid "Stop tracking effort or resume tracking effort"
-msgstr ""
+msgstr "Zatrzymaj liczenie czasu lub wznów"
 
 #: taskcoachlib/help/uicommand.py:40
 msgid "Close the current file"
@@ -5789,11 +5812,11 @@ msgstr ""
 
 #: taskcoachlib/iphone/protocol.py:598
 msgid "Protocol version: %d"
-msgstr ""
+msgstr "Wersja protokołu: %d"
 
 #: taskcoachlib/iphone/protocol.py:606
 msgid "Rejected protocol version %d"
-msgstr ""
+msgstr "Odrzucona wersja protokołu %d"
 
 #: taskcoachlib/iphone/protocol.py:625
 msgid "Hash OK."
@@ -5847,7 +5870,7 @@ msgstr ""
 msgid "Send effort %s"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:869 taskcoachlib/iphone/protocol.py:1308
+#: taskcoachlib/iphone/protocol.py:869 taskcoachlib/iphone/protocol.py:1306
 msgid "Finished."
 msgstr "Zakończono."
 
@@ -5899,36 +5922,36 @@ msgstr ""
 msgid "Modify category %s"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:1086 taskcoachlib/iphone/protocol.py:1121
-#: taskcoachlib/iphone/protocol.py:1157
+#: taskcoachlib/iphone/protocol.py:1086 taskcoachlib/iphone/protocol.py:1119
+#: taskcoachlib/iphone/protocol.py:1155
 msgid "New task %s"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:1177
+#: taskcoachlib/iphone/protocol.py:1175
 msgid "Delete task %s"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:1233
+#: taskcoachlib/iphone/protocol.py:1231
 msgid "Modify task %s"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:1242
+#: taskcoachlib/iphone/protocol.py:1240
 msgid "End of task synchronization."
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:1259
+#: taskcoachlib/iphone/protocol.py:1257
 msgid "Could not find task %s for effort."
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:1262
+#: taskcoachlib/iphone/protocol.py:1260
 msgid "New effort %s"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:1287
+#: taskcoachlib/iphone/protocol.py:1285
 msgid "Modify effort %s"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:1301
+#: taskcoachlib/iphone/protocol.py:1299
 msgid "Sending GUID: %s"
 msgstr "Wysyłanie GUID: %s"
 
@@ -5992,8 +6015,8 @@ msgid "No such mail: %d"
 msgstr ""
 
 #: taskcoachlib/persistence/csv/generator.py:33
-msgid "Start time"
-msgstr "Czas rozpoczęcia"
+msgid "Planned start time"
+msgstr ""
 
 #: taskcoachlib/persistence/csv/generator.py:34
 msgid "Due time"
@@ -6071,11 +6094,11 @@ msgstr "Każdy inny rok"
 msgid "now"
 msgstr "teraz"
 
-#: taskcoachlib/syncml/basesource.py:58 taskcoachlib/syncml/basesource.py:70
+#: taskcoachlib/syncml/basesource.py:40 taskcoachlib/syncml/basesource.py:52
 msgid "The synchronization for source %s"
 msgstr "Synchronizacja dla źródła %s"
 
-#: taskcoachlib/syncml/basesource.py:59
+#: taskcoachlib/syncml/basesource.py:41
 msgid ""
 "will be a refresh from server. All local items will\n"
 "be deleted. Do you wish to continue?"
@@ -6083,34 +6106,13 @@ msgstr ""
 "zostanie odświeżone z serwera. Wszystkie lokalne elementy\n"
 "zostaną usunięte. Chcesz kontynuować?"
 
-#: taskcoachlib/syncml/basesource.py:71
+#: taskcoachlib/syncml/basesource.py:53
 msgid ""
 "will be a refresh from client. All remote items will\n"
 "be deleted. Do you wish to continue?"
 msgstr ""
 "zostanie odświeżone z klienta. Wszystkie zdalne elementy\n"
 "zostaną usunięte. Chcesz kontynuować?"
-
-#: taskcoachlib/syncml/notesource.py:73
-msgid "Note \"%s\" has been deleted on server,\n"
-msgstr "Notatka \"%s\" została usunięta z serwera,\n"
-
-#: taskcoachlib/syncml/notesource.py:74 taskcoachlib/syncml/tasksource.py:155
-msgid "but locally modified. Should I keep the local version?"
-msgstr "ale zmodyfikowane lokalnie. Zachować wersję lokalną?"
-
-#: taskcoachlib/syncml/notesource.py:75 taskcoachlib/syncml/notesource.py:80
-#: taskcoachlib/syncml/tasksource.py:156 taskcoachlib/syncml/tasksource.py:161
-msgid "Synchronization conflict"
-msgstr "Konflikt synchronizacji"
-
-#: taskcoachlib/syncml/notesource.py:78
-msgid "Note \"%s\" has been locally deleted,\n"
-msgstr "Notatka \"%s\" została usunięta lokalnie,\n"
-
-#: taskcoachlib/syncml/notesource.py:79 taskcoachlib/syncml/tasksource.py:160
-msgid "but modified on server. Should I keep the remote version?"
-msgstr "ale zmodyfikowane na serwerze. Zachować wersję zdalną?"
 
 #: taskcoachlib/syncml/sync.py:102
 msgid "Synchronization"
@@ -6148,14 +6150,6 @@ msgstr ""
 msgid "You must first edit your SyncML Settings, in Edit/SyncML preferences."
 msgstr ""
 "Musisz najpierw edytować ustawienia SyncML w menu Edytuj/Ustawienia SyncML."
-
-#: taskcoachlib/syncml/tasksource.py:154
-msgid "Task \"%s\" has been deleted on server,\n"
-msgstr "Zadanie \"%s\" zostało usunięte z serwera,\n"
-
-#: taskcoachlib/syncml/tasksource.py:159
-msgid "Task \"%s\" has been locally deleted,\n"
-msgstr "Zadanie \"%s\" zostało usunięte lokalnie,\n"
 
 #: taskcoachlib/thirdparty/aui/aui_switcherdialog.py:1053
 msgid "Pane Switcher"
@@ -6221,7 +6215,7 @@ msgstr ""
 
 #: taskcoachlib/widgets/calendarconfig.py:58
 msgid "Day(s)"
-msgstr ""
+msgstr "Dzień/Dni"
 
 #: taskcoachlib/widgets/calendarconfig.py:58
 msgid "Month"
@@ -6248,7 +6242,7 @@ msgid "Which tasks to display"
 msgstr ""
 
 #: taskcoachlib/widgets/calendarconfig.py:80
-msgid "Tasks with a start date and a due date"
+msgid "Tasks with a planned start date and a due date"
 msgstr ""
 
 #: taskcoachlib/widgets/calendarconfig.py:81
@@ -6256,7 +6250,7 @@ msgid "Tasks with a due date"
 msgstr ""
 
 #: taskcoachlib/widgets/calendarconfig.py:81
-msgid "Tasks with a start date"
+msgid "Tasks with a planned start date"
 msgstr ""
 
 #: taskcoachlib/widgets/calendarconfig.py:82
@@ -6274,22 +6268,6 @@ msgstr "Rysuj linię pokazującą aktualny czas"
 #: taskcoachlib/widgets/calendarconfig.py:98
 msgid "Color used to highlight the current day"
 msgstr "Kolor używany do zaznaczenia aktualnego dnia"
-
-#: taskcoachlib/widgets/conflict.py:85
-msgid "Field name"
-msgstr "Nazwa pola"
-
-#: taskcoachlib/widgets/conflict.py:86
-msgid "Local"
-msgstr "Lokalny"
-
-#: taskcoachlib/widgets/conflict.py:88
-msgid "Remote"
-msgstr "Zdalny"
-
-#: taskcoachlib/widgets/conflict.py:90
-msgid "Fusion"
-msgstr "Fuzja"
 
 #: taskcoachlib/widgets/dialog.py:65
 msgid "Close"
@@ -6379,7 +6357,7 @@ msgstr ""
 "mogły zostać załadowane. Możliwe, że twój system operacyjny\n"
 "nie jest obsługiwany lub brakuje w twoim Windowsie\n"
 "kilku ważnych plików DLL. Proszę zobaczyć sekcję SyncML w\n"
-"pomocy programu (dział \"Rozwiązywanie problemów\")."
+"internetowej pomocy programu (dział \"Rozwiązywanie problemów\")."
 
 #: taskcoachlib/widgets/syncmlwarning.py:34
 msgid "Never show this dialog again"
@@ -6387,7 +6365,85 @@ msgstr "Nie pokazuj tego okna ponownie"
 
 #: taskcoachlib/widgets/textctrl.py:77
 msgid "Error opening URL"
-msgstr "Błąd podczas otwierania adresu"
+msgstr "Błąd otwierania adresu URL"
+
+#~ msgid "Start date"
+#~ msgstr "Data rozpoczęcia"
 
 #~ msgid "Are you sure it is a %s-file?"
 #~ msgstr "Czy jesteś pewien, że jest to plik %s?"
+
+#~ msgid "Note conflict"
+#~ msgstr "Konflikt notatek"
+
+#~ msgid "Task conflict"
+#~ msgstr "Konflikt zadań"
+
+#~ msgid "Show/hide inactive tasks (tasks with a start date in the future)"
+#~ msgstr ""
+#~ "Pokaż/ukryj nieaktywne zadania (zadania z datą rozpoczęcia w przyszłości)"
+
+#~ msgid ""
+#~ "Show/hide active tasks (tasks with a start date in the past that are not "
+#~ "completed)"
+#~ msgstr "Pokaż/ukryj aktywne zadania (oznaczone jako nieukończone)"
+
+#~ msgid "Sort tasks by start date"
+#~ msgstr "Sortuj zadania według daty rozpoczęcia"
+
+#~ msgid "&Start date"
+#~ msgstr "Data &rozpoczęcia"
+
+#~ msgid "Show/hide start date column"
+#~ msgstr "Pokaż/ukryj kolumnę daty rozpoczęcia"
+
+#~ msgid "Note \"%s\" has been deleted on server,\n"
+#~ msgstr "Notatka \"%s\" została usunięta z serwera,\n"
+
+#~ msgid "but locally modified. Should I keep the local version?"
+#~ msgstr "ale zmodyfikowane lokalnie. Zachować wersję lokalną?"
+
+#~ msgid "Synchronization conflict"
+#~ msgstr "Konflikt synchronizacji"
+
+#~ msgid "Note \"%s\" has been locally deleted,\n"
+#~ msgstr "Notatka \"%s\" została usunięta lokalnie,\n"
+
+#~ msgid "but modified on server. Should I keep the remote version?"
+#~ msgstr "ale zmodyfikowane na serwerze. Zachować wersję zdalną?"
+
+#~ msgid "Task \"%s\" has been deleted on server,\n"
+#~ msgstr "Zadanie \"%s\" zostało usunięte z serwera,\n"
+
+#~ msgid "Task \"%s\" has been locally deleted,\n"
+#~ msgstr "Zadanie \"%s\" zostało usunięte lokalnie,\n"
+
+#~ msgid "Field name"
+#~ msgstr "Nazwa pola"
+
+#~ msgid "Local"
+#~ msgstr "Lokalny"
+
+#~ msgid "Remote"
+#~ msgstr "Zdalny"
+
+#~ msgid "Fusion"
+#~ msgstr "Fuzja"
+
+#~ msgid "Change start date"
+#~ msgstr "Zmień datę początkową"
+
+#~ msgid "Change start date of \"%s\""
+#~ msgstr "Zmień datę początkową dla \"%s\""
+
+#~ msgid "Start time"
+#~ msgstr "Czas rozpoczęcia"
+
+#~ msgid "Changing the due date changes the start date"
+#~ msgstr "Zmiana daty zakończenia zmieni datę rozpoczęcia"
+
+#~ msgid "Changing the start date changes the due date"
+#~ msgstr "Zmiana daty rozpoczęcia zmieni datę zakończenia"
+
+#~ msgid "Default start date and time"
+#~ msgstr "Domyślna data i czas rozpoczęcia"
