@@ -702,6 +702,9 @@ def appendThumbnails(name):
             description = description[:-len('.png')].replace('_', ' ')
             caption = '%s (release %s on %s)' % (description, release, platform)
             images.append((caption, thumbnailFilename, filename.replace('\\', '/')))
+        
+        if not images:
+            continue
 
         pages[name] += '<hr/><h2>%s</h2><ul class="media-grid">' % system
         for caption, thumbnailFilename, filename in images:
@@ -888,7 +891,7 @@ pages['devinfo'] = '''
                     
                     <h4>Building the distributions</h4>
                     <p>The Makefile is used to build the different distributions of
-                    %(name)s. Currently, a Windows installer is built, a Mac OSX dmg
+                    %(name)s. Currently, a Windows installer is built, a Mac OS X dmg
                     file, RPM and Debian packages are created and the sources are packaged 
                     as compressed archives (.zip and .tar.gz). The Makefile contains targets 
                     for each of the distributions. Most of the code for the actual building 
@@ -904,10 +907,10 @@ pages['devinfo'] = '''
                     executable installer. 
                     All the necessary packaging code is in make.py
                     and driven from the Makefile (<tt>windist</tt> target).</p>
-                    <h5>Mac OSX</h5>
-                    <p>On Mac OSX, py2app is used to bundle the application. The resulting
+                    <h5>Mac OS X</h5>
+                    <p>On Mac OS X, py2app is used to bundle the application. The resulting
                     application is packaged into a dmg file using the <tt>hdiutil</tt>
-                    utility, which is part of Mac OSX. 
+                    utility, which is part of Mac OS X. 
                     All the necessary packaging code is in make.py
                     and driven from the Makefile (<tt>dmg</tt> target).</p>
                     <h5>Linux</h5>
