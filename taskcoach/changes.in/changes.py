@@ -27,6 +27,9 @@ Release('1.3.5', 'January 8, 2012',
     bugsFixed=[
         Bug('''After a reminder of a recurring task had been dismissed, Task 
 Coach would not create a new reminder when recurring the task.''', '3469217'),
+        Bug('''When the user is not using a translation, still set the 
+locale so that the proper formatting for dates and numbers is used.''', 
+            '3091934')
         ],
     featuresAdded=[
         Feature('''Note categories are now synced as well (SyncML)'''),
