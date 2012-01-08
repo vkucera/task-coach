@@ -47,14 +47,14 @@ class NewEffortCommandTest(EffortCommandTestCase):
             lambda: self.assertEqual([self.effort], self.originalTask.efforts()))
         
     def testAddingNewEffortSetsActualStartDateTimeOfTask(self):
-        originalStart = self.originalTask.actualStartDateTime()
-        newEffortCommand = command.NewEffortCommand(self.effortList, 
-                                                    [self.originalTask])
+        newTask = task.Task()
+        self.taskList.append(newTask)
+        newEffortCommand = command.NewEffortCommand(self.effortList, [newTask])
         newEffortCommand.do()
         newEffort = newEffortCommand.efforts[0]
         self.assertDoUndoRedo(
-            lambda: self.assertEqual(newEffort.getStart(), self.originalTask.actualStartDateTime()),
-            lambda: self.assertEqual(originalStart, self.originalTask.actualStartDateTime()))
+            lambda: self.assertEqual(newEffort.getStart(), newTask.actualStartDateTime()),
+            lambda: self.assertEqual(date.DateTime(), newTask.actualStartDateTime()))
 
     def testNewEffortWhenUserEditsTask(self):
         secondTask = task.Task()
@@ -97,19 +97,21 @@ class StartAndStopEffortCommandTest(EffortCommandTestCase):
             lambda: self.failIf(self.originalTask.isBeingTracked()),
             lambda: self.failUnless(self.originalTask.isBeingTracked()))
         
-    def testStartTrackingInactiveTaskSetsPlannedStartDate(self): # FIXME: use actualStartDate
-        self.assertDoUndoRedo(
-            lambda: self.assertEqual(date.Today(), self.originalTask.plannedStartDateTime().date()),
-            lambda: self.assertEqual(date.DateTime(), self.originalTask.plannedStartDateTime()))
-        
-    def testStartTrackingInactiveTaskWithFuturePlannedStartDate(self): # FIXME: use actualStartDate
-        futureStartDateTime = date.Now() + date.TimeDelta(days=1)
-        self.task2.setPlannedStartDateTime(futureStartDateTime)
+    def testStartTrackingInactiveTaskSetsActualStartDate(self):
         start = command.StartEffortCommand(self.taskList, [self.task2])
         start.do()
         self.assertDoUndoRedo(
-            lambda: self.assertEqual(date.Today(), self.task2.plannedStartDateTime().date()),
-            lambda: self.assertEqual(futureStartDateTime, self.task2.plannedStartDateTime()))
+            lambda: self.assertEqual(date.Today(), self.task2.actualStartDateTime().date()),
+            lambda: self.assertEqual(date.DateTime(), self.task2.actualStartDateTime()))
+        
+    def testStartTrackingInactiveTaskWithFutureActualStartDate(self):
+        futureStartDateTime = date.Now() + date.TimeDelta(days=1)
+        self.task2.setActualStartDateTime(futureStartDateTime)
+        start = command.StartEffortCommand(self.taskList, [self.task2])
+        start.do()
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(date.Today(), self.task2.actualStartDateTime().date()),
+            lambda: self.assertEqual(futureStartDateTime, self.task2.actualStartDateTime()))
 
 
 class EditEffortStartDateTimeCommandTest(EffortCommandTestCase):

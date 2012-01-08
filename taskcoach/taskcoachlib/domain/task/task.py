@@ -542,6 +542,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             return
         wasTracking = self.isBeingTracked()
         self._efforts.append(effort)
+        if effort.getStart() < self.actualStartDateTime():
+            self.setActualStartDateTime(effort.getStart(), event=event)
         self.addEffortEvent(event, effort)
         if effort.isBeingTracked() and not wasTracking:
             self.startTrackingEvent(event, effort)
@@ -891,6 +893,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             self.setCompletionDateTime(date.Now(), event=event)
         elif oldPercentage == 100 and percentage != 100 and self.completionDateTime() != self.maxDateTime:
             self.setCompletionDateTime(self.maxDateTime, event=event)
+        if percentage > 0 and self.actualStartDateTime() == date.DateTime():
+            self.setActualStartDateTime(date.Now(), event=event)
     
     def percentageCompleteEvent(self, event):
         event.addSource(self, self.percentageComplete(), 

@@ -55,6 +55,10 @@ class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
         
     def markCompleted(self, tasks=None):
         command.MarkCompletedCommand(self.taskList, tasks or []).do()
+        
+    def editPercentageComplete(self, tasks=None, percentage=50):
+        command.EditPercentageCompleteCommand(self.taskList, tasks or [], 
+                                              newValue=percentage).do()
 
     def newSubTask(self, tasks=None, markCompleted=False):
         tasks = tasks or []
@@ -448,7 +452,21 @@ class MarkCompletedCommandTest(CommandWithChildrenTestCase):
         self.assertDoUndoRedo(
             lambda: self.failUnless(self.child.completed()),
             lambda: self.failIf(self.child.completed()))
+
+
+class EditPercentageCompleteTest(TaskCommandTestCase):
+    def testEditPercentageComplete(self):
+        self.editPercentageComplete([self.task1])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(50, self.task1.percentageComplete()),
+            lambda: self.assertEqual(0, self.task1.percentageComplete()))
         
+    def testTaskIsStartedAfterEditingPercentageComplete(self):
+        self.editPercentageComplete([self.task1])
+        self.assertDoUndoRedo(
+            lambda: self.assertNotEqual(date.DateTime(), self.task1.actualStartDateTime()),
+            lambda: self.assertEqual(date.DateTime(), self.task1.actualStartDateTime()))
+
         
 class DragAndDropTaskCommandTest(CommandWithChildrenTestCase):
     def testCannotDropOnParent(self):

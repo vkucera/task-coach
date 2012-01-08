@@ -343,6 +343,16 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
                                          self.task, 100)], 
                          self.events)
 
+    def testSetPercentageCompleteSetsActualStartDateTime(self):
+        self.task.setPercentageComplete(50)
+        self.assertNotEqual(date.DateTime(), self.task.actualStartDateTime())
+        
+    def testSetPercentageCompleteToZeroDoesNotSetActualStartDateTime(self):
+        self.task.setPercentageComplete(50)
+        self.task.setActualStartDateTime(date.DateTime())
+        self.task.setPercentageComplete(0)
+        self.assertEqual(date.DateTime(), self.task.actualStartDateTime())
+        
     def testSetDescription(self):
         self.task.setDescription('A new description')
         self.assertEqual('A new description', self.task.description())
@@ -601,6 +611,11 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.task.addEffort(activeEffort)
         self.assertEvent(self.task.trackStartEventType(),
                          self.task, activeEffort)
+        
+    def testAddEffortSetActualStartDateTime(self):
+        now = date.Now()
+        self.task.addEffort(effort.Effort(self.task, now))
+        self.assertEqual(now, self.task.actualStartDateTime())
 
     # Notes:
     

@@ -743,19 +743,13 @@ class CommonTestsMixin(object):
         self.taskList.append(self.task)
         self.task.setCompletionDateTime(date.Now())
         # We still get an event for the subject column:
-        expectedEvent = patterns.Event(task.Task.completionDateTimeChangedEventType(), self.task, self.task.completionDateTime())
-        expectedEvent.addSource(self.task, self.task.percentageComplete(), type=self.task.percentageCompleteChangedEventType())
-        expectedEvent.addSource(self.task, type=self.task.appearanceChangedEventType())
-        self.assertEqual([expectedEvent], self.viewer.events)
+        self.failUnless(task.Task.completionDateTimeChangedEventType() in self.viewer.events[0].types())
 
     def testChangeCompletionDateWhileColumnShown(self):
         self.taskList.append(self.task)
         self.showColumn('completionDate')
         self.task.setCompletionDateTime(date.Now())
-        expectedEvent = patterns.Event(task.Task.completionDateTimeChangedEventType(), self.task, self.task.completionDateTime())
-        expectedEvent.addSource(self.task, self.task.percentageComplete(), type=self.task.percentageCompleteChangedEventType())
-        expectedEvent.addSource(self.task, type=self.task.appearanceChangedEventType())
-        self.assertEqual([expectedEvent], self.viewer.events)
+        self.failUnless(task.Task.completionDateTimeChangedEventType() in self.viewer.events[0].types())
 
     def testChangePercentageCompleteWhileColumnNotShown(self):
         self.taskList.append(self.task)
