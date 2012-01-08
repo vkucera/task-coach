@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: Task Coach\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-01-08 02:22+0000\n"
-"PO-Revision-Date: 2012-01-08 09:05+0000\n"
+"PO-Revision-Date: 2012-01-08 15:20+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Dutch <frank@niessink.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-08 09:22+0000\n"
+"X-Launchpad-Export-Date: 2012-01-08 15:24+0000\n"
 "X-Generator: Launchpad (build 14640)\n"
 "X-Poedit-Country: NETHERLANDS\n"
 "X-Poedit-Language: dutch\n"
@@ -3463,19 +3463,19 @@ msgstr "Taken met een &einddatum"
 
 #: taskcoachlib/gui/viewer/mixin.py:212
 msgid "&Show all due tasks"
-msgstr "Alle taken met een einddatum &tonen"
+msgstr "Alle taken met een geplande einddatum &tonen"
 
 #: taskcoachlib/gui/viewer/mixin.py:212
 msgid "Show all due tasks"
-msgstr "Alle taken met een einddatum tonen"
+msgstr "Alle taken met een geplande einddatum tonen"
 
 #: taskcoachlib/gui/viewer/mixin.py:214
 msgid "&Hide all due tasks"
-msgstr "Alle taken met een einddatum &verbergen"
+msgstr "Alle taken met een geplande einddatum &verbergen"
 
 #: taskcoachlib/gui/viewer/mixin.py:214
 msgid "Hide all due tasks"
-msgstr "Alle taken met een einddatum verbergen"
+msgstr "Alle taken met een geplande einddatum verbergen"
 
 #: taskcoachlib/gui/viewer/mixin.py:216
 msgid "Only show tasks due &today"
