@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: Task Coach\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-01-08 02:22+0000\n"
-"PO-Revision-Date: 2012-01-08 15:20+0000\n"
+"PO-Revision-Date: 2012-01-08 15:36+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Dutch <frank@niessink.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-08 15:24+0000\n"
+"X-Launchpad-Export-Date: 2012-01-08 15:40+0000\n"
 "X-Generator: Launchpad (build 14640)\n"
 "X-Poedit-Country: NETHERLANDS\n"
 "X-Poedit-Language: dutch\n"
@@ -3459,7 +3459,7 @@ msgstr "Status: %d gestart"
 
 #: taskcoachlib/gui/viewer/mixin.py:211
 msgid "&Due tasks"
-msgstr "Taken met een &einddatum"
+msgstr "Taken met een geplande &einddatum"
 
 #: taskcoachlib/gui/viewer/mixin.py:212
 msgid "&Show all due tasks"
@@ -3669,7 +3669,7 @@ msgstr "Alle inactieve taken &tonen"
 msgid ""
 "Show all inactive tasks (tasks with a planned start date in the future)"
 msgstr ""
-"Alle inactive taken (taken met een geplande startdatum in de toekomst) tonen"
+"Alle inactieve taken (taken met een geplande startdatum in de toekomst) tonen"
 
 #: taskcoachlib/gui/viewer/mixin.py:279
 msgid "&Hide all inactive tasks"
@@ -3679,7 +3679,7 @@ msgstr "Alle inactieve taken &verbergen"
 msgid ""
 "Hide all inactive tasks (tasks with a planned start date in the future)"
 msgstr ""
-"Alle inactive taken (taken met een geplande startdatum in de toekomst) "
+"Alle inactieve taken (taken met een geplande startdatum in de toekomst) "
 "verbergen"
 
 #: taskcoachlib/gui/viewer/mixin.py:282
