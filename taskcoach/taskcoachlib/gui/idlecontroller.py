@@ -26,9 +26,10 @@ from taskcoachlib.notify import NotificationFrameBase, NotificationCenter
 from taskcoachlib.i18n import _
 
 class WakeFromIdleFrame(NotificationFrameBase):
-    def __init__(self, idleTime, effort, *args, **kwargs):
+    def __init__(self, idleTime, effort, displayedEfforts, *args, **kwargs):
         self._idleTime = idleTime
         self._effort = effort
+        self._displayed = displayedEfforts
         super(WakeFromIdleFrame, self).__init__(*args, **kwargs)
 
     def AddInnerContent(self, sizer, panel):
@@ -54,13 +55,16 @@ class WakeFromIdleFrame(NotificationFrameBase):
         return None
 
     def DoNothing(self, event):
+        self._displayed.remove(self._effort)
         self.DoClose()
 
     def DoStopAt(self, event):
+        self._displayed.remove(self._effort)
         EditEffortStopDateTimeCommand(newValue=self._idleTime, items=[self._effort]).do()
         self.DoClose()
 
     def DoStopResume(self, event):
+        self._displayed.remove(self._effort)
         EditEffortStopDateTimeCommand(newValue=self._idleTime, items=[self._effort]).do()
         NewEffortCommand(items=[self._effort.task()]).do()
         self.DoClose()
@@ -72,6 +76,7 @@ class IdleController(Observer, IdleNotifier):
         self._settings = settings
         self._effortList = effortList
         self._wentIdle = None
+        self._displayed = set()
 
         super(IdleController, self).__init__()
 
@@ -123,6 +128,8 @@ class IdleController(Observer, IdleNotifier):
 
     def OnWake(self):
         for effort in self.__trackedEfforts:
-            frm = WakeFromIdleFrame(self._wentIdle, effort, _('Notification'),
-                                    icon=wx.ArtProvider.GetBitmap('taskcoach', wx.ART_FRAME_ICON, (16, 16)))
-            NotificationCenter().NotifyFrame(frm)
+            if effort not in self._displayed:
+                self._displayed.add(effort)
+                frm = WakeFromIdleFrame(self._wentIdle, effort, self._displayed, _('Notification'),
+                                        icon=wx.ArtProvider.GetBitmap('taskcoach', wx.ART_FRAME_ICON, (16, 16)))
+                NotificationCenter().NotifyFrame(frm)
