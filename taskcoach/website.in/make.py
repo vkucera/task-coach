@@ -75,16 +75,16 @@ pages['index'] = u'''
                             <p>%(name)s is a simple open source todo manager to keep track of
                             personal tasks and todo lists. It is designed for composite tasks.
                             In addition, it offers effort tracking, categories, notes and more.</p>
-                            <p><a class="btn info" href="features.html">Read more &raquo;</a></p>
+                            <p><a class="btn small" href="features.html">Read more &raquo;</a></p>
                             <h3>What does it cost?</h3>
                             The desktop versions of %(name)s are completely free. The iOS versions
                             of %(name)s come with a small price tag because it costs us money to make them 
                             available.</p>
-                            <p><a class="btn info" href="license.html">Read license &raquo;</a></p>
+                            <p><a class="btn small" href="license.html">Read license &raquo;</a></p>
                             <h3>What support is available?</h3>
                             <p>We offer support for free. You can contact us by e-mail, 
                             via our support request tracker, and via our bug tracker.</p>
-                            <p><a class="btn info" href="getsupport.html">Get support &raquo;</a></p>
+                            <p><a class="btn small" href="getsupport.html">Get support &raquo;</a></p>
                         </div>
                         <div class="span6 offset1">  
                             <h3>What platforms are supported?</h3>
@@ -93,12 +93,12 @@ pages['index'] = u'''
                             <a href="download_for_mac.html">Mac OS X</a>, <a href="download_for_linux.html">Linux</a>, 
                             <a href="download_for_bsd.html">BSD</a>, <a href="download_for_iphone.html">iPhone, 
                             iPad, and iPod Touch</a>.</p>
-                            <p><a class="btn primary" href="download.html">Download &raquo;</a></p>
+                            <p><a class="btn small primary" href="download.html">Download &raquo;</a></p>
                             <h3>How can I help?</a>
                             <p>Glad you asked! The easiest way to give back is to help 
                             spread the word. Helping out with a translation is also a good
                             way to help. Patches are welcome too. And we'll gladly accept donations.</a>
-                            <p><a class="btn info" href="givesupport.html">Give support &raquo;</a></p>
+                            <p><a class="btn small" href="givesupport.html">Give support &raquo;</a></p>
                             <h3>Who is behind this?</h3>
                             <p>%(name)s is developed by <a href="mailto:%(author_email)s">%(author_unicode)s</a>, 
                             with help of different people providing <a href="i18n.html">translations</a>. 
@@ -166,7 +166,7 @@ pages['getsupport'] = '''
                     the bug with as much detail as you can. Mention the 
                     version of %(name)s you are using, the operating system 
                     you are using and how to trigger the bug.
-                    <p><a class="btn large danger" href="%(known_bugs_url)s" 
+                    <p><a class="btn large info" href="%(known_bugs_url)s" 
                           title="Browse known bugs and report new bugs">Report a bug</a></p>
                 </div>
                 <div class="span-one-third">
@@ -215,8 +215,8 @@ pages['givesupport'] = '''
                 <div class="span-one-third">
                     <h2>Donate</h2>
                     <p>Donations for the development of %(name)s are very much 
-                    appreciated. Please donate the value %(name)s represents for
-                    you, but any amount is fine.</p>
+                    appreciated. Please donate what you feel %(name)s is worth 
+                    to you, but any amount is fine.</p>
                     <p>
                         <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
                             <input type="hidden" name="cmd" value="_s-xclick">
@@ -734,7 +734,9 @@ pages['screenshots'] = '''
 appendThumbnails('screenshots')
 
 def languages(nr_columns=9):
+    link = '<a href="https://translations.launchpad.net/taskcoach/1.3/+pots/i18n.in/%s/+details">%s</a>'
     languages = sorted(meta.languages.keys())
+    languages = [link%(meta.languages[language], language) for language in languages]
     while len(languages)%nr_columns:
         languages.append('')
     nr_of_rows = len(languages)/nr_columns
