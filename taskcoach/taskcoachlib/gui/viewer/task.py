@@ -262,7 +262,7 @@ class RootNode(object):
     def completed(self, *args, **kwargs):
         return False
 
-    dueSoon = inactive = overdue = isBeingTracked = completed
+    late = dueSoon = inactive = overdue = isBeingTracked = completed
 
 
 class SquareMapRootNode(RootNode):
@@ -499,7 +499,10 @@ class SquareTaskViewer(BaseTaskTreeViewer):
         return task.foregroundColor(recursive=True)
         
     def background_color(self, task, depth): # pylint: disable-msg=W0613
-        return task.backgroundColor(recursive=True)
+        red = blue = 255 - (depth * 3)%100
+        green = 255 - (depth * 2)%100
+        color = wx.Color( red, green, blue )
+        return task.backgroundColor(recursive=True) or color
     
     def font(self, task, depth): # pylint: disable-msg=W0613
         return task.font(recursive=True)
