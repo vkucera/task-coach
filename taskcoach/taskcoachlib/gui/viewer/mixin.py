@@ -370,10 +370,10 @@ class SortableViewerMixin(object):
         return self.settings.getboolean(self.settingsSection(), 
             'sortcasesensitive')
         
-    def setSortCaseSensitive(self, caseSensitive=True):
+    def setSortCaseSensitive(self, sortCaseSensitive=True):
         self.settings.set(self.settingsSection(), 'sortcasesensitive', 
-            str(caseSensitive))
-        self.presentation().sortCaseSensitive(caseSensitive)
+            str(sortCaseSensitive))
+        self.presentation().sortCaseSensitive(sortCaseSensitive)
 
     def getSortUICommands(self):
         if not self._sortUICommands:

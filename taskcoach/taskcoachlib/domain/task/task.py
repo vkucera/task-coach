@@ -80,7 +80,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             effort.setTask(self)
         self.registerObserver = registerObserver = patterns.Publisher().registerObserver
         self.removeObserver = patterns.Publisher().removeObserver
-        for eventType in 'active', 'inactive', 'completed', 'duesoon', 'overdue':
+        for eventType in 'active', 'inactive', 'completed', 'duesoon', 'overdue', 'late':
             registerObserver(self.__computeRecursiveForegroundColor, 'fgcolor.%stasks'%eventType)
             registerObserver(self.__computeRecursiveBackgroundColor, 'bgcolor.%stasks'%eventType)
             registerObserver(self.__computeRecursiveIcon, 'icon.%stasks'%eventType)
@@ -353,8 +353,12 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             return self.__actualStartDateTime.get()
     
     @patterns.eventSource
-    def setActualStartDateTime(self, actualStartDateTime, event=None):
+    def setActualStartDateTime(self, actualStartDateTime, event=None, recursive=False):
         self.__actualStartDateTime.set(actualStartDateTime, event=event)
+        if recursive:
+            for child in self.children(recursive=True):
+                child.setActualStartDateTime(actualStartDateTime, event=event)
+        self.recomputeAppearance(event=event)
         
     def actualStartDateTimeEvent(self, event):
         actualStartDateTime = self.actualStartDateTime()
@@ -449,30 +453,19 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     
     def completed(self):
         ''' A task is completed if it has a completion date/time. '''
-        return self.completionDateTime() != self.maxDateTime
+        return self.status() == 'completed'
 
     def overdue(self):
         ''' A task is over due if its due date/time is in the past and it is
             not completed. Note that an over due task is also either active 
             or inactive. '''
-        return self.dueDateTime() < date.Now() and not self.completed()
+        return self.status() == 'overdue'
 
     def inactive(self):
         ''' A task is inactive if it is not completed and either has no planned 
             start date/time or a planned start date/time in the future, and/or 
             its prerequisites are not completed. '''
-        if self.completed():
-            return False # Completed tasks are never inactive
-        if date.Now() < self.plannedStartDateTime() < self.maxDateTime:
-            return True # Start at a specific future datetime, so inactive now
-        if self.parent() and self.parent().inactive():
-            return True
-        if self.prerequisites():
-            # We're inactive as long as not all prerequisites are completed
-            return any([not prerequisite.completed() for prerequisite in self.prerequisites()])
-        else:
-            # We're inactive only if we have no plannedStartDateTime at all 
-            return self.plannedStartDateTime() == self.maxDateTime
+        return self.status() == 'inactive'
         
     def active(self):
         ''' A task is active if it has a planned start date/time in the past and 
@@ -480,13 +473,35 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             considered to be active. So the statuses active, inactive and 
             completed are disjunct, but the statuses active, due soon and over 
             due are not. '''
-        return not self.inactive() and not self.completed()
+        return self.status() == 'active'
 
     def dueSoon(self):
         ''' A task is due soon if it is not completed and there is still time 
             left (i.e. it is not over due). '''
-        return (0 <= self.timeLeft().hours() < self.__dueSoonHours and not self.completed())
-    
+        return self.status() == 'duesoon'
+
+    def late(self):
+        ''' A task is late if it is not active and its planned start date time
+            is in the past. '''
+        return self.status() == 'late'
+
+    def status(self):
+        if self.completionDateTime() != self.maxDateTime:
+            return 'completed'
+        if self.dueDateTime() < date.Now(): 
+            return 'overdue'
+        if 0 <= self.timeLeft().hours() < self.__dueSoonHours:
+            return 'duesoon'
+        if self.actualStartDateTime() < date.Now():
+            return 'active'
+        if any([not prerequisite.completed() for prerequisite in self.prerequisites()]):
+            return 'inactive'
+        if self.parent() and self.parent().inactive():
+            return 'inactive'
+        if self.plannedStartDateTime() < date.Now():
+            return 'late'
+        return 'inactive'
+                
     def onDueSoonHoursChanged(self, event):
         self.removeObserver(self.onDueSoon)
         self.__dueSoonHours = int(event.value())
@@ -696,20 +711,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__computeRecursiveSelectedIcon()
         super(Task, self).appearanceChangedEvent(event)
         for eachEffort in self.efforts():
-            eachEffort.appearanceChangedEvent(event)
-        
-    def status(self):
-        if self.completed():
-            return 'completed'
-        elif self.overdue(): 
-            return 'overdue'
-        elif self.dueSoon():
-            return 'duesoon'
-        elif self.inactive(): 
-            return 'inactive'
-        else:
-            return 'active'
-        
+            eachEffort.appearanceChangedEvent(event)        
+
     # Background color
     
     def setBackgroundColor(self, *args, **kwargs):
@@ -865,7 +868,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             self.setCompletionDateTime(date.Now(), event=event)
         elif oldPercentage == 100 and percentage != 100 and self.completionDateTime() != self.maxDateTime:
             self.setCompletionDateTime(self.maxDateTime, event=event)
-        if percentage > 0 and self.actualStartDateTime() == date.DateTime():
+        if 0 < percentage < 100 and self.actualStartDateTime() == date.DateTime():
             self.setActualStartDateTime(date.Now(), event=event)
     
     def percentageCompleteEvent(self, event):
@@ -1123,11 +1126,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @patterns.eventSource
     def setPrerequisites(self, prerequisites, event=None):
         if self.__prerequisites.set(set(prerequisites), event=event):
+            self.setActualStartDateTime(self.maxDateTime, event=event, recursive=True)
             self.recomputeAppearance(recursive=True, event=event)
         
     @patterns.eventSource
     def addPrerequisites(self, prerequisites, event=None):
         if self.__prerequisites.add(set(prerequisites), event=event):
+            self.setActualStartDateTime(self.maxDateTime, event=event, recursive=True)
             self.recomputeAppearance(recursive=True, event=event)
         
     @patterns.eventSource

@@ -22,14 +22,15 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.5', 'January 8, 2012',
-    summary='''This is a feature release.''',
+Release('1.3.5', 'January 12, 2012',
+    summary='''This is a mixed feature and bug fix release.''',
     bugsFixed=[
         Bug('''After a reminder of a recurring task had been dismissed, Task 
 Coach would not create a new reminder when recurring the task.''', '3469217'),
         Bug('''When the user is not using a translation, still set the 
 locale so that the proper formatting for dates and numbers is used.''', 
-            '3091934')
+            '3091934'),
+        Bug('''Sorting case sensitive didn't work.'''),
         ],
     featuresAdded=[
         Feature('''Note categories are now synced as well (SyncML)'''),

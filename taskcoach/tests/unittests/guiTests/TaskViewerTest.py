@@ -506,12 +506,12 @@ class CommonTestsMixin(object):
         
     def testChangeActiveTaskForegroundColor(self):
         self.setColor('activetasks')
-        self.taskList.append(task.Task(subject='test', plannedStartDateTime=date.Now()))
+        self.taskList.append(task.Task(subject='test', actualStartDateTime=date.Now()))
         self.assertColor()
     
     def testChangeInactiveTaskForegroundColor(self):
         self.setColor('inactivetasks')
-        self.taskList.append(task.Task(plannedStartDateTime=date.Now() + date.oneDay))
+        self.taskList.append(task.Task())
         self.assertColor()
     
     def testChangeCompletedTaskForegroundColor(self):
@@ -531,7 +531,7 @@ class CommonTestsMixin(object):
             
     def testStatusMessage_EmptyTaskList(self):
         self.assertEqual(('Tasks: 0 selected, 0 visible, 0 total', 
-            'Status: 0 overdue, 0 inactive, 0 completed'),
+            'Status: 0 overdue, 0 late, 0 inactive, 0 completed'),
             self.viewer.statusMessages())
     
     def testOnDropFiles(self):
@@ -602,7 +602,7 @@ class CommonTestsMixin(object):
         self.task.addPrerequisites([prerequisite])
         prerequisite.addDependencies([self.task]) 
         prerequisite.setCompletionDateTime(date.Now())
-        self.assertIcon('led_blue_icon') # Should be grey?
+        self.assertIcon('led_purple_icon')
         
     def testIconUpdatesWhenEffortTrackingStarts(self):
         self.taskList.append(self.task)

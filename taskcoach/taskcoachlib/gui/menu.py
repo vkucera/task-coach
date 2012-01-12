@@ -682,10 +682,10 @@ class StartEffortForTaskMenu(DynamicMenu):
     
     def updateMenuItems(self):
         self.clearMenu()
-        activeRootTasks = self._activeRootTasks()
-        activeRootTasks.sort(key=lambda task: task.subject())
-        for activeRootTask in activeRootTasks:
-            self.addMenuItemForTask(activeRootTask, self)
+        trackableRootTasks = self._trackableRootTasks()
+        trackableRootTasks.sort(key=lambda task: task.subject())
+        for trackableRootTask in trackableRootTasks:
+            self.addMenuItemForTask(trackableRootTask, self)
                 
     def addMenuItemForTask(self, task, menu): # pylint: disable-msg=W0621
         uiCommand = uicommand.EffortStartForTask(task=task, taskList=self.tasks)
@@ -700,11 +700,11 @@ class StartEffortForTaskMenu(DynamicMenu):
             menu.AppendSubMenu(subMenu, _('%s (subtasks)')%task.subject())
                         
     def enabled(self):
-        return bool(self._activeRootTasks())
+        return bool(self._trackableRootTasks())
 
-    def _activeRootTasks(self):
+    def _trackableRootTasks(self):
         return [rootTask for rootTask in self.tasks.rootItems() \
-                if rootTask.active()]
+                if not rootTask.completed()]
     
 
 class TaskPopupMenu(Menu):

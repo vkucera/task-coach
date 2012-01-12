@@ -2,7 +2,7 @@ digraph task_states {
     rankdir=LR;
     node [shape = circle, width = 1];
     Inactive [shape = doublecircle, style = filled, fillcolor = grey];
-    Late [style = filled, fillcolor = yellow];
+    Late [style = filled, fillcolor = purple];
     Active [style = filled, fillcolor = deepskyblue];
     "Due soon" [style = filled, fillcolor = orange];
     Overdue [style = filled, fillcolor = red];

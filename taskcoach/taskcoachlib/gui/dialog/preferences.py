@@ -406,7 +406,8 @@ class TaskAppearancePage(SettingsPage):
              ('inactivetasks', _('Inactive tasks')),
              ('completedtasks', _('Completed tasks')),
              ('overduetasks', _('Overdue tasks')),
-             ('duesoontasks', _('Tasks due soon'))]:
+             ('duesoontasks', _('Tasks due soon')),
+             ('latetasks', _('Late tasks'))]:
             self.addLine()
             self.addAppearanceSetting('fgcolor', setting, 
                                       'bgcolor', setting, 

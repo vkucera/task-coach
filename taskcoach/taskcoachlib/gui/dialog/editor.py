@@ -284,11 +284,11 @@ class DatesPage(Page):
         self.addRecurrenceEntry()
 
     def addDateEntries(self):
-        for label, taskMethodName in [(_('Planned start date'), 'plannedStartDateTime'),
-                                      (_('Due date'), 'dueDateTime'),
-                                      (_('Actual start date'), 'actualStartDateTime'),
-                                      (_('Completion date'), 'completionDateTime')]:
-            self.addDateEntry(label, taskMethodName)
+        self.addDateEntry(_('Planned start date'), 'plannedStartDateTime')
+        self.addDateEntry(_('Due date'), 'dueDateTime')
+        self.addLine()
+        self.addDateEntry(_('Actual start date'), 'actualStartDateTime')
+        self.addDateEntry(_('Completion date'), 'completionDateTime')
 
     def addDateEntry(self, label, taskMethodName):
         TaskMethodName = taskMethodName[0].capitalize() + taskMethodName[1:]

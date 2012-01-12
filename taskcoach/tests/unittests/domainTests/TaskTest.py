@@ -237,7 +237,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         oldNow = date.Now
         date.Now = lambda: now
         date.Clock().notifySpecificTimeObservers(now)
-        self.assertEqual('led_blue_icon', self.task.icon(recursive=True))
+        self.assertEqual('led_purple_icon', self.task.icon(recursive=True))
         date.Now = oldNow
         
     def testSetActualStartDateTime(self):
@@ -660,6 +660,12 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.task.addPrerequisites(prerequisites)
         self.failUnless(self.task.inactive())
         
+    def testAddPrerequisiteResetsActualStartDateTime(self):
+        self.task.setActualStartDateTime(date.Now())
+        prerequisites = set([task.Task()])
+        self.task.addPrerequisites(prerequisites)
+        self.assertEqual(date.DateTime(), self.task.actualStartDateTime())
+        
     # Dependencies
 
     def testAddOneDependency(self):
@@ -832,8 +838,7 @@ class TaskDueTodayTest(TaskTestCase, CommonTaskTestsMixin):
 
 class TaskDueTomorrowTest(TaskTestCase, CommonTaskTestsMixin):
     def taskCreationKeywordArguments(self):
-        return [{'dueDateTime': self.tomorrow.endOfDay(),
-                 'plannedStartDateTime': date.Now()}]
+        return [{'dueDateTime': self.tomorrow.endOfDay()}]
         
     def testDaysLeft(self):
         self.assertEqual(1, self.task.timeLeft().days)
@@ -850,10 +855,10 @@ class TaskDueTomorrowTest(TaskTestCase, CommonTaskTestsMixin):
         self.failUnless(self.task.dueSoon())
 
     def testIconNotDueSoon(self):
-        self.assertEqual('led_blue_icon', self.task.icon(recursive=True))
+        self.assertEqual('led_grey_icon', self.task.icon(recursive=True))
 
     def testselectedIconNotDueSoon(self):
-        self.assertEqual('led_blue_icon', self.task.selectedIcon(recursive=True))
+        self.assertEqual('led_grey_icon', self.task.selectedIcon(recursive=True))
 
     def testIconDueSoon(self):
         self.settings.set('behavior', 'duesoonhours', '48')
@@ -1010,7 +1015,7 @@ class TaskWithPlannedStartDateInTheFutureTest(TaskTestCase, CommonTaskTestsMixin
     def testTaskWithStartDateInTheFutureIsInactive(self):
         self.failUnless(self.task.inactive())
         
-    def testTaskWithStartDateInTheFutureIsInactiveEvenWhenAllPrerequisitesAreCompleted(self):
+    def testTaskWithPlannedStartDateInTheFutureIsInactiveEvenWhenAllPrerequisitesAreCompleted(self):
         # pylint: disable-msg=E1101
         self.task.addPrerequisites([self.task2])
         self.task2.addDependencies([self.task])
@@ -1024,8 +1029,8 @@ class TaskWithPlannedStartDateInTheFutureTest(TaskTestCase, CommonTaskTestsMixin
     def testPlannedStartDateTime(self):
         self.assertEqual(self.tomorrow, self.task.plannedStartDateTime())
 
-    def testSetPlannedStartDateTimeToTodayMakesTaskActive(self):
-        self.task.setPlannedStartDateTime(date.Now())
+    def testSetActualStartDateTimeToTodayMakesTaskActive(self):
+        self.task.setActualStartDateTime(date.Now())
         self.failUnless(self.task.active())
 
     def testDefaultInactiveColor(self):
@@ -1052,7 +1057,7 @@ class TaskWithPlannedStartDateInTheFutureTest(TaskTestCase, CommonTaskTestsMixin
         oldNow = date.Now
         date.Now = lambda: now
         date.Clock().notifySpecificTimeObservers(now)
-        self.assertEqual('led_blue_icon', self.task.icon(recursive=True))
+        self.assertEqual('led_purple_icon', self.task.icon(recursive=True))
         date.Now = oldNow
         
     def testAppearanceNotificationAfterPlannedStartDateTimeHasPassed(self):
@@ -1079,11 +1084,11 @@ class TaskWithPlannedStartDateInTheFutureTest(TaskTestCase, CommonTaskTestsMixin
 
     def testIconAfterChangingPlannedStartDateTime(self):
         self.task.setPlannedStartDateTime(date.Now() - date.TimeDelta(hours=72))
-        self.assertEqual('led_blue_icon', self.task.icon(recursive=True))
+        self.assertEqual('led_purple_icon', self.task.icon(recursive=True))
 
     def testSelectedIconAfterChangingPlannedStartDateTime(self):
         self.task.setPlannedStartDateTime(date.Now() - date.TimeDelta(hours=72))
-        self.assertEqual('led_blue_icon', self.task.selectedIcon(recursive=True))
+        self.assertEqual('led_purple_icon', self.task.selectedIcon(recursive=True))
 
     def testAppearanceNotificationAfterChangingPlannedStartDateTime(self):
         self.registerObserver(self.task.appearanceChangedEventType())
@@ -1136,21 +1141,21 @@ class TaskWithoutPlannedStartDateTimeTest(TaskTestCase, CommonTaskTestsMixin):
     def testTaskWithoutPlannedStartDateTimeIsInactive(self):
         self.failUnless(self.task.inactive())
 
-    def testTaskBecomesActiveWhenUncompletedPrerequisiteIsCompleted(self):
+    def testTaskStaysInactiveWhenUncompletedPrerequisiteIsCompleted(self):
         # pylint: disable-msg=E1101
         self.task.addPrerequisites([self.task2])
         self.task2.addDependencies([self.task])
         self.task2.setCompletionDateTime()
-        self.failUnless(self.task.active())
-        self.assertEqual('led_blue_icon', self.task.icon(recursive=True))
+        self.failUnless(self.task.inactive())
+        self.assertEqual('led_grey_icon', self.task.icon(recursive=True))
 
-    def testAppearanceNotificationWhenUncompletedPrerequisiteIsCompleted(self):
+    def testNoAppearanceNotificationWhenUncompletedPrerequisiteIsCompleted(self):
         # pylint: disable-msg=E1101
         self.task.addPrerequisites([self.task2])
         self.task2.addDependencies([self.task])
         self.registerObserver(self.task.appearanceChangedEventType(), eventSource=self.task)
         self.task2.setCompletionDateTime()
-        self.failUnless(self.task.appearanceChangedEventType() in self.events[0].types())
+        self.failIf(self.events)
 
         
 class InactiveTaskWithChildTest(TaskTestCase):
@@ -1240,6 +1245,7 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
     def taskCreationKeywordArguments(self):
         now = date.Now()
         return [{'plannedStartDateTime': now,
+                 'actualStartDateTime': now,
                  'children': [task.Task(subject='child', actualStartDateTime=now,
                                         plannedStartDateTime=now)]}]
     
@@ -1647,7 +1653,7 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
         # First make sure the icon is cached:
         self.assertEqual('led_grey_icon', self.task1_1.icon(recursive=True))
         self.task.removePrerequisites([prerequisite])
-        self.assertEqual('led_blue_icon', self.task1_1.icon(recursive=True))
+        self.assertEqual('led_purple_icon', self.task1_1.icon(recursive=True))
         
     def testCompletingPrerequisiteOfParentRecomputesChildAppearance(self):
         prerequisite = task.Task()
@@ -1656,7 +1662,7 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
         # First make sure the icon is cached:
         self.assertEqual('led_grey_icon', self.task1_1.icon(recursive=True))
         prerequisite.setCompletionDateTime(date.Today())
-        self.assertEqual('led_blue_icon', self.task1_1.icon(recursive=True))
+        self.assertEqual('led_purple_icon', self.task1_1.icon(recursive=True))
 
 
 class TaskWithTwoChildrenTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
@@ -2299,17 +2305,16 @@ class TaskColorTest(test.TestCase):
         self.assertEqual(wx.Colour(255, 128, 0), duetoday.statusFgColor())
 
     def testDueTomorrow(self):
-        duetomorrow = task.Task(plannedStartDateTime=date.Now(),
-                                dueDateTime=self.tomorrow + date.oneHour)
-        self.assertEqual(wx.NamedColour('BLACK'), duetomorrow.statusFgColor())
+        duetomorrow = task.Task(dueDateTime=self.tomorrow + date.oneHour)
+        self.assertEqual(wx.Colour(192, 192, 192), duetomorrow.statusFgColor())
 
     def testActive(self):
-        active = task.Task(plannedStartDateTime=date.Now())
+        active = task.Task(actualStartDateTime=date.Now())
         self.assertEqual(wx.Colour(*eval(task.Task.settings.get('fgcolor', 
                          'activetasks'))), active.statusFgColor())
 
     def testActiveTaskWithCategory(self):
-        activeTask = task.Task(plannedStartDateTime=date.Now())
+        activeTask = task.Task(actualStartDateTime=date.Now())
         redCategory = category.Category(subject='Red category', fgColor=wx.RED)
         activeTask.addCategory(redCategory)
         redCategory.addCategorizable(activeTask)

@@ -55,8 +55,8 @@ class Sorter(patterns.ListDecorator):
         self._sortAscending = ascending
         self.reset()
         
-    def sortCaseSensitive(self, caseSensitive):
-        self._sortCaseSensitive = caseSensitive
+    def sortCaseSensitive(self, sortCaseSensitive):
+        self._sortCaseSensitive = sortCaseSensitive
         self.reset()
     
     @patterns.eventSource
@@ -66,8 +66,6 @@ class Sorter(patterns.ListDecorator):
         oldSelf = self[:]
         self.sort(key=self.createSortKeyFunction(), 
                   reverse=not self._sortAscending)
-        # Then sort by 'ordering' attribute; this assumes that list.sort is stable
-        self.sort(lambda x, y: cmp(x.ordering(), y.ordering()))
         if self != oldSelf:
             event.addSource(self, type=self.sortEventType())
 
@@ -77,7 +75,7 @@ class Sorter(patterns.ListDecorator):
             in the list. We expect the domain object class to provide a
             <sortKey>SortFunction(sortCaseSensitive) method that returns the
             sortKeyFunction for the sortKey. '''
-        return self._getSortKeyFunction()(caseSensitive=self._sortCaseSensitive)
+        return self._getSortKeyFunction()(sortCaseSensitive=self._sortCaseSensitive)
             
     def _getSortKeyFunction(self):
         try:
@@ -120,7 +118,7 @@ class TreeSorter(Sorter):
             in the list. We expect the domain object class to provide a
             <sortKey>SortFunction(sortCaseSensitive, treeMode) method that 
             returns the sortKeyFunction for the sortKey. '''            
-        return self._getSortKeyFunction()(caseSensitive=self._sortCaseSensitive, 
+        return self._getSortKeyFunction()(sortCaseSensitive=self._sortCaseSensitive, 
                                           treeMode=self.treeMode())
 
     @patterns.eventSource
