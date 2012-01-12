@@ -358,6 +358,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if recursive:
             for child in self.children(recursive=True):
                 child.setActualStartDateTime(actualStartDateTime, event=event)
+        parent = self.parent()
+        if parent and actualStartDateTime < parent.actualStartDateTime():
+            parent.setActualStartDateTime(actualStartDateTime, event=event)
         self.recomputeAppearance(event=event)
         
     def actualStartDateTimeEvent(self, event):
