@@ -32,7 +32,7 @@ class HTMLWriterTestCase(test.wxTestCase):
         self.fd = StringIO.StringIO()
         self.writer = persistence.HTMLWriter(self.fd, self.filename)
         self.taskFile = persistence.TaskFile()
-        self.task = task.Task('Task subject', plannedStartDateTime=date.Now())
+        self.task = task.Task('Task subject')
         self.taskFile.tasks().append(self.task)
         self.viewer = self.createViewer()
         
@@ -136,19 +136,27 @@ class TaskTestsMixin(CommonTestsMixin):
         self.task.setPlannedStartDateTime(date.Now() + date.oneDay)
         fragment = '<tr class="inactive">' if self.filename else '<font color="#C0C0C0">Task subject</font>'
         self.expectInHTML(fragment)
+        
+    def testLateTask(self):
+        self.task.setPlannedStartDateTime(date.Now() - date.oneDay)
+        fragment = '<tr class="late">' if self.filename else '<font color="#A020F0">Task subject</font>'
+        self.expectInHTML(fragment)
 
     def testTaskBackgroundColor(self):
+        self.task.setActualStartDateTime(date.Now())
         self.task.setBackgroundColor(wx.RED)
         fragment = '<tr class="active" style="background: #FF0000">' if self.filename else '<tr bgcolor="#FF0000">'
         self.expectInHTML(fragment)
         
     def testTaskHasCategoryBackgroundColor(self):
+        self.task.setActualStartDateTime(date.Now())
         cat = category.Category('cat', bgColor=wx.RED)
         self.task.addCategory(cat)
         fragment = '<tr class="active" style="background: #FF0000">' if self.filename else '<tr bgcolor="#FF0000">'
         self.expectInHTML(fragment)
 
     def testCategoryBackgroundColorAsTuple(self):
+        self.task.setActualStartDateTime(date.Now())
         cat = category.Category('cat', bgColor=(255, 0, 0, 0))
         self.task.addCategory(cat)
         if self.filename:

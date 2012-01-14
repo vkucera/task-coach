@@ -134,7 +134,7 @@ class Viewer2HTMLConverter(object):
             columnStyle = self.indent('.%s {text-align: %s}'%(column.name(), alignment), level+1)
             styleContent.append(columnStyle)
         if self.viewer.isShowingTasks():
-            for status in 'completed', 'duesoon', 'overdue', 'inactive', 'active':
+            for status in 'completed', 'duesoon', 'overdue', 'late', 'inactive', 'active':
                 statusColor = task.Task.fgColorForStatus(status)
                 statusColor = self.cssColorSyntax(statusColor)
                 statusStyle = '.%s {color: %s}'%(status, statusColor)
@@ -239,18 +239,8 @@ class Viewer2HTMLConverter(object):
     def bodyRowFgColor(self, item):
         ''' Determine the foreground color for the item. Returns a CSS style
             specification. '''
-        if self.viewer.isShowingTasks(): 
-            if item.completed():
-                class_ = 'completed'
-            elif item.overdue():
-                class_ = 'overdue'
-            elif item.dueSoon():
-                class_ = 'duesoon'
-            elif item.inactive():
-                class_ = 'inactive'
-            else:
-                class_ = 'active'
-            return {'class': class_}
+        if self.viewer.isShowingTasks():
+            return {'class': item.status()}
         else:
             return dict()
         
