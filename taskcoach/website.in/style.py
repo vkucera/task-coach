@@ -28,9 +28,7 @@ header = '''
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />     
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
         <script type="text/javascript" src="http://twitter.github.com/bootstrap/1.4.0/bootstrap-dropdown.js"></script>
-        <script type="text/javascript" src="js/prototype.js"></script>
-        <script type="text/javascript" src="js/scriptaculous.js?load=effects,builder"></script>
-        <script type="text/javascript" src="js/lightbox.js"></script>
+        <script type="text/javascript" src="js/jquery.lightbox-0.5.min.js"></script>
         <script type="text/javascript">
 /* <![CDATA[ */
     (function() {
@@ -43,7 +41,7 @@ header = '''
 /* ]]> */
         </script>
         <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
-        <link rel="stylesheet" href="css/lightbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="css/jquery.lightbox-0.5.css" type="text/css" media="screen" />
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
         <link rel="canonical" href="%(url)s" />
         <title>%(name)s</title>
@@ -56,7 +54,7 @@ header = '''
     <body>
     <script type="text/javascript">
 $(function() {
-    $('a[@rel*=lightbox]').lightBox(); // Select all links that contain lightbox in the attribute rel
+    $('a.lightbox').lightBox(); // Select all links with class lightbox
 });
     </script>
     <script type="text/javascript">

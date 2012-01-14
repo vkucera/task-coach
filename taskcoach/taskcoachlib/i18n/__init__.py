@@ -25,11 +25,10 @@ class Translator:
     __metaclass__ = patterns.Singleton
     
     def __init__(self, language=None):
-        if not language:
-            return
-        load = self._loadPoFile if language.endswith('.po') else self._loadModule
-        module, language = load(language) 
-        self._installModule(module)
+        if language:            
+            load = self._loadPoFile if language.endswith('.po') else self._loadModule
+            module, language = load(language) 
+            self._installModule(module)
         self._setLocale(language)
 
     def _loadPoFile(self, poFilename):
@@ -62,6 +61,7 @@ class Translator:
 
     def _installModule(self, module):
         ''' Make the module's translation dictionary and encoding available. '''
+        # pylint: disable-msg=W0201
         if module:
             self.__language = module.dict
             self.__encoding = module.encoding
@@ -74,7 +74,7 @@ class Translator:
         for localeString in self._localeStrings(language):
             languageInfo = wx.Locale.FindLanguageInfo(localeString)
             if languageInfo:
-                self.__locale = wx.Locale(languageInfo.Language)
+                self.__locale = wx.Locale(languageInfo.Language) # pylint: disable-msg=W0201
                 # Add the wxWidgets message catalog. This is really only for 
                 # py2exe'ified versions, but it doesn't seem to hurt on other
                 # platforms...
@@ -85,9 +85,11 @@ class Translator:
 
     def _localeStrings(self, language):
         ''' Extract language and language_country from language if possible. '''
-        localeStrings = [language]
-        if '_' in language:
-            localeStrings.append(language.split('_')[0])
+        localeStrings = []
+        if language:
+            localeStrings.append(language)
+            if '_' in language:
+                localeStrings.append(language.split('_')[0])
         return localeStrings
     
     def _languageFromPoFilename(self, poFilename):

@@ -152,20 +152,24 @@ project consisting of different phases and numerous activities.''')),
         ul(
             li(_('Subject: a single line that summarizes the task.')),
             li(_('Description: a multi-line description of the task.')),
-            li(_('''Due date: the date the task should be finished. 
-This can be 'None' indicating that this task has no fixed due date.''')),
             li(_('''Planned start date: the first date on which the task can be started. 
 The planned start date defaults to the date the task is created. It can also be 'None' 
 indicating that you don't really want to start this task. This can be convenient 
 for e.g. registering sick leave.''')),
+           li(_('''Due date: the date the task should be finished. 
+This can be 'None' indicating that this task has no fixed due date.''')),
+           li(_('''Actual start date: the date the task was actually started.
+The actual start date can be edited directly, but it is also set when you 
+track effort for the task or when you set the percentage completed of a task
+to a value between 0% and 100%.''')),
             li(_('''Completion date: this date is 'None' as long as the task has 
 not been completed. It is set to the current date when you mark the task as 
 completed. The completion date can also be entered manually.''')),
             li(_('''Prerequisites: other tasks that need to be completed before
-a task can be started. The task is inactive until the last prerequisite task is 
+a task can be started. The task remains inactive until the last prerequisite task is 
 completed. Note that if the task has a specific planned start date set, that
 date has to be in the past <em>and</em> all prerequisite tasks need to be
-completed before the task becomes active.''')),
+completed before the task becomes late.''')),
             li(_('Budget: amount of hours available for the task.')),
             li(_('Hourly fee: the amount of money earned with the task per hour.')),
             li(_('''Fixed fee: the amount of money earned with the task 
@@ -184,8 +188,8 @@ prerequisite task has been completed.''')),
     p(
         _('Tasks always have exactly one of the following states:'),
         ul(
-            li(_('Active: the planned start date is in the past and the due date in the future;')),
-            li(_('''Inactive: the planned start date is in the future, and/or not all 
+            li(_('Active: the actual start date is in the past;')),
+            li(_('''Inactive: the task has not been started and/or not all 
 prerequisite tasks have been completed;''')),
             li(_('Completed: the task has been completed.')))),
     p(
@@ -194,6 +198,8 @@ prerequisite tasks have been completed;''')),
             li(_('Overdue: the due date is in the past;')),
             li(_('''Due soon: the due date is soon (what 'soon' is, can be 
 changed in the preferences);''')),
+            li(_('''Late: the planned start is in the past and the task has 
+not been started;''')),
             li(_('Over budget: no budget left;')),
             li(_('Under budget: still budget left;')),
             li(_('No budget: the task has no budget.')))),
@@ -205,6 +211,7 @@ changed in the preferences);''')),
             li(_('Overdue tasks are red;')),
             li(_('Tasks due soon are orange;')),
             li(_('Active tasks are black text with a blue icon;')),
+            li(_('Late tasks are purple;')),
             li(_('Future tasks are gray, and')),
             li(_('Completed tasks are green.'))),   
         _('''This all assumes you have not changed the text colors through the 

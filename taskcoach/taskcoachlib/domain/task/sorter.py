@@ -23,7 +23,8 @@ import task
 
 class Sorter(base.TreeSorter):
     DomainObjectClass = task.Task # What are we sorting
-    TaskStatusAttributes = ('plannedStartDateTime', 'completionDateTime',
+    TaskStatusAttributes = ('plannedStartDateTime', 'actualStartDateTime',
+                            'dueDateTime', 'completionDateTime',
                             'prerequisites')
     
     def __init__(self, *args, **kwargs):

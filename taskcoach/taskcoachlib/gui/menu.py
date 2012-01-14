@@ -520,6 +520,7 @@ class ActionMenu(Menu):
         tasks = taskFile.tasks()
         efforts = taskFile.efforts()
         categories = taskFile.categories()
+        # Generic actions, applicable to all/most domain objects:
         self.appendUICommands(
             uicommand.AddAttachment(viewer=viewerContainer, settings=settings),
             uicommand.OpenAllAttachments(viewer=viewerContainer,
@@ -536,13 +537,17 @@ class ActionMenu(Menu):
         self.appendMenu(_('&Toggle category'),
                         ToggleCategoryMenu(mainwindow, categories=categories,
                                            viewer=viewerContainer),
-                        'folder_blue_arrow_icon')
-
+                        'folder_blue_arrow_icon')        
+        # Start of task specific actions:
         self.appendUICommands(
             None,
-            uicommand.TaskToggleCompletion(viewer=viewerContainer))
+            uicommand.TaskMarkInactive(viewer=viewerContainer),
+            uicommand.TaskMarkActive(viewer=viewerContainer),
+            uicommand.TaskMarkCompleted(viewer=viewerContainer),
+            None)
         self.appendMenu(_('Change task &priority'), 
-                        TaskPriorityMenu(mainwindow, tasks, viewerContainer))
+                        TaskPriorityMenu(mainwindow, tasks, viewerContainer),
+                        'incpriority')
         if settings.getboolean('feature', 'effort'):
             self.appendUICommands(
                 None,
@@ -685,10 +690,10 @@ class StartEffortForTaskMenu(DynamicMenu):
     
     def updateMenuItems(self):
         self.clearMenu()
-        activeRootTasks = self._activeRootTasks()
-        activeRootTasks.sort(key=lambda task: task.subject())
-        for activeRootTask in activeRootTasks:
-            self.addMenuItemForTask(activeRootTask, self)
+        trackableRootTasks = self._trackableRootTasks()
+        trackableRootTasks.sort(key=lambda task: task.subject())
+        for trackableRootTask in trackableRootTasks:
+            self.addMenuItemForTask(trackableRootTask, self)
                 
     def addMenuItemForTask(self, task, menu): # pylint: disable-msg=W0621
         uiCommand = uicommand.EffortStartForTask(task=task, taskList=self.tasks)
@@ -703,11 +708,11 @@ class StartEffortForTaskMenu(DynamicMenu):
             menu.AppendSubMenu(subMenu, _('%s (subtasks)')%task.subject())
                         
     def enabled(self):
-        return bool(self._activeRootTasks())
+        return bool(self._trackableRootTasks())
 
-    def _activeRootTasks(self):
+    def _trackableRootTasks(self):
         return [rootTask for rootTask in self.tasks.rootItems() \
-                if rootTask.active()]
+                if not rootTask.completed()]
     
 
 class TaskPopupMenu(Menu):
@@ -733,16 +738,21 @@ class TaskPopupMenu(Menu):
                 uicommand.OpenAllNotes(viewer=taskViewer, settings=settings))
         self.appendUICommands(
             None,
-            uicommand.Mail(viewer=taskViewer))
+            uicommand.Mail(viewer=taskViewer),
+            None)
         self.appendMenu(_('&Toggle category'),
                         ToggleCategoryMenu(mainwindow, categories=categories,
                                            viewer=taskViewer),
                         'folder_blue_arrow_icon')
         self.appendUICommands(
-            None,            
-            uicommand.TaskToggleCompletion(viewer=taskViewer))
+            None,
+            uicommand.TaskMarkInactive(viewer=taskViewer),
+            uicommand.TaskMarkActive(viewer=taskViewer),    
+            uicommand.TaskMarkCompleted(viewer=taskViewer),
+            None)
         self.appendMenu(_('&Priority'), 
-                        TaskPriorityMenu(mainwindow, tasks, taskViewer))
+                        TaskPriorityMenu(mainwindow, tasks, taskViewer),
+                        'incpriority')
         if settings.getboolean('feature', 'effort'):
             self.appendUICommands(
                 None,
@@ -831,7 +841,8 @@ class NotePopupMenu(Menu):
             uicommand.OpenAllAttachments(viewer=noteViewer,
                                          settings=settings),
             None,
-            uicommand.Mail(viewer=noteViewer))
+            uicommand.Mail(viewer=noteViewer),
+            None)
         self.appendMenu(_('&Toggle category'),
                         ToggleCategoryMenu(mainwindow, categories=categories,
                                            viewer=noteViewer),

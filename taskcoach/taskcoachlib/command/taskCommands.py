@@ -175,6 +175,7 @@ class MarkCompletedCommand(base.SaveStateMixin, EffortCommand):
     
     def __init__(self, *args, **kwargs):
         super(MarkCompletedCommand, self).__init__(*args, **kwargs)
+        self.items = [item for item in self.items if item.completionDateTime() > date.Now()]
         itemsToSave = set([relative for item in self.items for relative in item.family()]) 
         self.saveStates(itemsToSave)
 
@@ -182,8 +183,7 @@ class MarkCompletedCommand(base.SaveStateMixin, EffortCommand):
     def do_command(self, event=None):
         super(MarkCompletedCommand, self).do_command()
         for item in self.items:
-            completionDateTime = date.DateTime() if item.completed() else task.Task.suggestedCompletionDateTime()
-            item.setCompletionDateTime(completionDateTime, event=event)
+            item.setCompletionDateTime(task.Task.suggestedCompletionDateTime(), event=event)
 
     def undo_command(self):
         self.undoStates()
@@ -196,6 +196,58 @@ class MarkCompletedCommand(base.SaveStateMixin, EffortCommand):
     def tasksToStopTracking(self):
         return self.items                
 
+
+class MarkActiveCommand(base.SaveStateMixin, base.BaseCommand):
+    plural_name = _('Mark task active')
+    singular_name = _('Mark "%s" active')
+    
+    def __init__(self, *args, **kwargs):
+        super(MarkActiveCommand, self).__init__(*args, **kwargs)
+        self.items = [item for item in self.items if item.actualStartDateTime() > date.Now() or item.completionDateTime() != date.DateTime()]
+        itemsToSave = set([relative for item in self.items for relative in item.family()]) 
+        self.saveStates(itemsToSave)
+
+    @patterns.eventSource
+    def do_command(self, event=None):
+        super(MarkActiveCommand, self).do_command()
+        for item in self.items:
+            item.setActualStartDateTime(task.Task.suggestedActualStartDateTime(), event=event)
+            item.setCompletionDateTime(date.DateTime(), event=event)
+
+    def undo_command(self):
+        self.undoStates()
+        super(MarkActiveCommand, self).undo_command()
+
+    def redo_command(self):
+        self.redoStates()
+        super(MarkActiveCommand, self).redo_command()
+
+
+class MarkInactiveCommand(base.SaveStateMixin, base.BaseCommand):
+    plural_name = _('Mark task inactive')
+    singular_name = _('Mark "%s" inactive')
+    
+    def __init__(self, *args, **kwargs):
+        super(MarkInactiveCommand, self).__init__(*args, **kwargs)
+        self.items = [item for item in self.items if item.actualStartDateTime() != date.DateTime() or item.completionDateTime() != date.DateTime()]
+        itemsToSave = set([relative for item in self.items for relative in item.family()]) 
+        self.saveStates(itemsToSave)
+
+    @patterns.eventSource
+    def do_command(self, event=None):
+        super(MarkInactiveCommand, self).do_command()
+        for item in self.items:
+            item.setActualStartDateTime(date.DateTime(), event=event)
+            item.setCompletionDateTime(date.DateTime(), event=event)
+
+    def undo_command(self):
+        self.undoStates()
+        super(MarkInactiveCommand, self).undo_command()
+
+    def redo_command(self):
+        self.redoStates()
+        super(MarkInactiveCommand, self).redo_command()
+    
                 
 class StartEffortCommand(EffortCommand): # FIXME: use actualStartDateTime instead of plannedStartDateTime
     plural_name = _('Start tracking')

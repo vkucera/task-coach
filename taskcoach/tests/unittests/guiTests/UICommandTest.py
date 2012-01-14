@@ -151,11 +151,63 @@ class MailTaskTest(test.TestCase):
         mailTask.doCommand(None, mail=mail, showerror=showerror)
         self.assertEqual('Cannot send email:\nmessage', self.showerror[0])
 
+
+class MarkActiveTest(test.TestCase):
+    def assertMarkActiveIsEnabled(self, selection, shouldBeEnabled=True):
+        viewer = DummyViewer(selection)
+        markActive = gui.uicommand.TaskMarkActive(viewer=viewer)
+        isEnabled = markActive.enabled(None)
+        if shouldBeEnabled:
+            self.failUnless(isEnabled)
+        else:
+            self.failIf(isEnabled)
+            
+    def testNotEnabledWhenSelectionIsEmpty(self):
+        self.assertMarkActiveIsEnabled(selection=[], shouldBeEnabled=False)
+        
+    def testEnabledWhenSelectedTaskIsNotActive(self):
+        self.assertMarkActiveIsEnabled(selection=[task.Task()])
+        
+    def testEnabledWhenSelectedTaskIsActive(self):
+        self.assertMarkActiveIsEnabled(
+            selection=[task.Task(actualStartDateTime=date.Now())],
+            shouldBeEnabled=False)
+        
+    def testEnabledWhenSelectedTasksAreBothActiveAndInactive(self):
+        self.assertMarkActiveIsEnabled(
+            selection=[task.Task(actualStartDateTime=date.Now()), task.Task()])
+
+
+class MarkInactiveTest(test.TestCase):
+    def assertMarkInactiveIsEnabled(self, selection, shouldBeEnabled=True):
+        viewer = DummyViewer(selection)
+        markInactive = gui.uicommand.TaskMarkInactive(viewer=viewer)
+        isEnabled = markInactive.enabled(None)
+        if shouldBeEnabled:
+            self.failUnless(isEnabled)
+        else:
+            self.failIf(isEnabled)
+            
+    def testNotEnabledWhenSelectionIsEmpty(self):
+        self.assertMarkInactiveIsEnabled(selection=[], shouldBeEnabled=False)
+        
+    def testEnabledWhenSelectedTaskIsNotInactive(self):
+        self.assertMarkInactiveIsEnabled( \
+            selection=[task.Task(actualStartDateTime=date.Now())])
+        
+    def testEnabledWhenSelectedTaskIsInactive(self):
+        self.assertMarkInactiveIsEnabled(selection=[task.Task()], 
+                                         shouldBeEnabled=False)
+        
+    def testEnabledWhenSelectedTasksAreBothActiveAndInactive(self):
+        self.assertMarkInactiveIsEnabled(
+            selection=[task.Task(actualStartDateTime=date.Now()), task.Task()])
+
     
 class MarkCompletedTest(test.TestCase):
     def assertMarkCompletedIsEnabled(self, selection, shouldBeEnabled=True):
         viewer = DummyViewer(selection)
-        markCompleted = gui.uicommand.TaskToggleCompletion(viewer=viewer)
+        markCompleted = gui.uicommand.TaskMarkCompleted(viewer=viewer)
         isEnabled = markCompleted.enabled(None)
         if shouldBeEnabled:
             self.failUnless(isEnabled)
@@ -170,7 +222,8 @@ class MarkCompletedTest(test.TestCase):
         
     def testEnabledWhenSelectedTaskIsCompleted(self):
         self.assertMarkCompletedIsEnabled(
-            selection=[task.Task(completionDateTime=date.Now())])
+            selection=[task.Task(completionDateTime=date.Now())],
+            shouldBeEnabled=False)
         
     def testEnabledWhenSelectedTasksAreBothCompletedAndUncompleted(self):
         self.assertMarkCompletedIsEnabled(

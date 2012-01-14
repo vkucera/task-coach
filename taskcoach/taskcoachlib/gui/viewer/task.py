@@ -32,7 +32,7 @@ import base, mixin, refresher, inplace_editor
 
 class TaskViewerStatusMessages(patterns.Observer):
     template1 = _('Tasks: %d selected, %d visible, %d total')
-    template2 = _('Status: %d overdue, %d inactive, %d completed')
+    template2 = _('Status: %d overdue, %d late, %d inactive, %d completed')
     
     def __init__(self, viewer):
         super(TaskViewerStatusMessages, self).__init__()
@@ -44,6 +44,7 @@ class TaskViewerStatusMessages(patterns.Observer):
                                self.__viewer.nrOfVisibleTasks(), 
                                self.__presentation.originalLength()), \
                self.template2%(self.__presentation.nrOverdue(), 
+                               self.__presentation.nrLate(),
                                self.__presentation.nrInactive(), 
                                self.__presentation.nrCompleted())
 
@@ -59,7 +60,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin, # pylint: disable-msg=W0223
     def __registerForAppearanceChanges(self):
         for appearance in ('font', 'fgcolor', 'bgcolor', 'icon'):
             appearanceSettings = ['%s.%s'%(appearance, setting) for setting in 'activetasks',\
-                                  'inactivetasks', 'completedtasks', 'duesoontasks', 'overduetasks'] 
+                                  'inactivetasks', 'completedtasks', 'duesoontasks', 'overduetasks', 'latetasks'] 
             for appearanceSetting in appearanceSettings:
                 patterns.Publisher().registerObserver(self.onAppearanceSettingChange, 
                                                       eventType=appearanceSetting)
@@ -191,13 +192,16 @@ class BaseTaskTreeViewer(BaseTaskViewer):
             super(BaseTaskTreeViewer, self).createCreationToolBarUICommands()
     
     def createActionToolBarUICommands(self):
-        uiCommands = (uicommand.TaskToggleCompletion(viewer=self),)
+        uiCommands = (uicommand.TaskMarkInactive(viewer=self),
+                      uicommand.TaskMarkActive(viewer=self),
+                      uicommand.TaskMarkCompleted(viewer=self))
         if self.settings.getboolean('feature', 'effort'):
             uiCommands += (
                 # EffortStart needs a reference to the original (task) list to
                 # be able to stop tracking effort for tasks that are already 
                 # being tracked, but that might be filtered in the viewer's 
                 # presentation.
+                None,
                 uicommand.EffortStart(viewer=self, 
                                       taskList=self.taskFile.tasks()),
                 uicommand.EffortStop(effortList=self.taskFile.efforts(),
@@ -261,7 +265,7 @@ class RootNode(object):
     def completed(self, *args, **kwargs):
         return False
 
-    dueSoon = inactive = overdue = isBeingTracked = completed
+    late = dueSoon = inactive = overdue = isBeingTracked = completed
 
 
 class SquareMapRootNode(RootNode):
@@ -502,7 +506,10 @@ class SquareTaskViewer(BaseTaskTreeViewer):
         return task.foregroundColor(recursive=True)
         
     def background_color(self, task, depth): # pylint: disable-msg=W0613
-        return task.backgroundColor(recursive=True)
+        red = blue = 255 - (depth * 3)%100
+        green = 255 - (depth * 2)%100
+        color = wx.Color( red, green, blue )
+        return task.backgroundColor(recursive=True) or color
     
     def font(self, task, depth): # pylint: disable-msg=W0613
         return task.font(recursive=True)
@@ -1134,8 +1141,8 @@ class TaskStatsViewer(BaseTaskViewer):
     defaultBitmap = 'charts_icon'
 
     labels = [_('Overdue tasks: %d (%d%%)'), _('Due soon tasks: %d (%d%%)'), 
-              _('Active tasks: %d (%d%%)'), _('Inactive tasks: %d (%d%%)'), 
-              _('Completed tasks: %d (%d%%)')]
+              _('Active tasks: %d (%d%%)'), _('Late tasks: %d (%d%%)'),
+              _('Inactive tasks: %d (%d%%)'), _('Completed tasks: %d (%d%%)')]
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'taskstatsviewer')
@@ -1149,7 +1156,7 @@ class TaskStatsViewer(BaseTaskViewer):
         widget.SetShowEdges(False)
         widget.SetHeight(20)
         self.initLegend(widget)
-        for dummy in range(5):
+        for dummy in range(len(self.labels)):
             widget._series.append(wx.lib.agw.piectrl.PiePart())
         return widget
 
@@ -1190,7 +1197,7 @@ class TaskStatsViewer(BaseTaskViewer):
         series = self.widget._series
         tasks = self.presentation()
         total = len(tasks)
-        overdue, dueSoon, active, inactive, completed = range(5)
+        overdue, dueSoon, active, late, inactive, completed = range(len(self.labels))
         
         def refreshPart(part, label, nrTasks):
             percentage = round(100.*nrTasks/total) if total else 0
@@ -1198,7 +1205,7 @@ class TaskStatsViewer(BaseTaskViewer):
             part.SetValue(nrTasks)
         
         def countTasksPerStatus(tasks):
-            counts = [0] * 5
+            counts = [0] * len(self.labels)
             for task in tasks:
                 if task.completed():
                     status = completed
@@ -1208,6 +1215,8 @@ class TaskStatsViewer(BaseTaskViewer):
                     status = dueSoon
                 elif task.active():
                     status = active
+                elif task.late():
+                    status = late
                 else:
                     status = inactive
                 counts[status] += 1
@@ -1227,8 +1236,9 @@ class TaskStatsViewer(BaseTaskViewer):
         if activeColor == wx.BLACK:
             activeColor = wx.BLUE
         series[2].SetColour(activeColor)
-        series[3].SetColour(self.getFgColor('inactivetasks'))
-        series[4].SetColour(self.getFgColor('completedtasks'))
+        series[3].SetColour(self.getFgColor('latetasks'))
+        series[4].SetColour(self.getFgColor('inactivetasks'))
+        series[5].SetColour(self.getFgColor('completedtasks'))
         
     def getFgColor(self, setting):
         return wx.Colour(*eval(self.settings.get('fgcolor', setting)))

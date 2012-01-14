@@ -113,7 +113,7 @@ class ViewFilterTestsMixin(object):
         self.task.setPlannedStartDateTime(date.Now())
         self.assertFilterShows(self.task)
         
-    def testFilterInactiveTask_WhenPlanndStartDateTimePasses(self):
+    def testFilterInactiveTask_WhenPlannedStartDateTimePasses(self):
         self.task.setPlannedStartDateTime(date.Now() + date.oneDay)
         self.list.append(self.task)
         self.filter.setFilteredByPlannedStartDateTime('Always')

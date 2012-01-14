@@ -27,8 +27,8 @@ class CommonTaskRelationshipManagerTestsMixin(object):
         now = self.now = date.Now()
         self.yesterday = now - date.oneDay
         self.tomorrow = now + date.oneDay
-        self.parent = task.Task('parent', plannedStartDateTime=now)
-        self.child = task.Task('child', plannedStartDateTime=now)
+        self.parent = task.Task('parent')#, plannedStartDateTime=now)
+        self.child = task.Task('child')#, plannedStartDateTime=now)
         self.parent.addChild(self.child)
         self.child.setParent(self.parent)
         self.child2 = task.Task('child2', plannedStartDateTime=now)
@@ -113,6 +113,7 @@ class CommonTaskRelationshipManagerTestsMixin(object):
              self.markParentCompletedWhenAllChildrenCompleted == True)
         
     def testMarkLastChildCompletedMakesParentRecur(self):
+        self.parent.setPlannedStartDateTime(self.now)
         self.parent.setRecurrence(date.Recurrence('weekly'))
         self.child.setCompletionDateTime(self.now)
         expectedPlannedStartDateTime = self.now
@@ -122,7 +123,9 @@ class CommonTaskRelationshipManagerTestsMixin(object):
                                self.parent.plannedStartDateTime().toordinal())
 
     def testMarkLastChildCompletedMakesParentRecur_AndThusChildToo(self):
+        self.child.setPlannedStartDateTime(self.now)
         self.parent.setRecurrence(date.Recurrence('weekly'))
+        self.parent.setPlannedStartDateTime(self.now)
         self.child.setCompletionDateTime(self.now)
         expectedPlannedStartDateTime = self.now        
         if self.shouldMarkCompletedWhenAllChildrenCompleted(self.parent):
@@ -223,6 +226,7 @@ class CommonTaskRelationshipManagerTestsMixin(object):
                                self.child.plannedStartDateTime().toordinal())
         
     def testAddChildWithBiggerPlannedStartDateThanParent(self):
+        self.parent.setPlannedStartDateTime(self.now)
         self.child2.setPlannedStartDateTime(self.tomorrow)
         self.parent.addChild(self.child2)
         self.assertAlmostEqual(self.now.toordinal(), 
@@ -238,10 +242,12 @@ class CommonTaskRelationshipManagerTestsMixin(object):
         self.assertEqual(date.DateTime(), self.child.plannedStartDateTime())
         
     def testSetPlannedStartDateParentBiggerThanChildPlannedStartDate(self):
+        self.child.setPlannedStartDateTime(self.now)
         self.parent.setPlannedStartDateTime(self.tomorrow)
         self.assertEqual(self.tomorrow, self.child.plannedStartDateTime())
         
     def testSetChildPlannedStartDateInfinite(self):
+        self.parent.setPlannedStartDateTime(self.now)
         self.child.setPlannedStartDateTime(date.DateTime())
         self.assertAlmostEqual(self.now.toordinal(), 
                                self.parent.plannedStartDateTime().toordinal())
@@ -249,6 +255,15 @@ class CommonTaskRelationshipManagerTestsMixin(object):
     def testSetChildPlannedStartDateEarlierThanParentPlannedStartDate(self):
         self.child.setPlannedStartDateTime(self.yesterday)
         self.assertEqual(self.yesterday, self.parent.plannedStartDateTime())
+        
+    def testSetChildActualStartDateEarlierThanParentActualStartDate(self):
+        self.parent.setActualStartDateTime(self.now)
+        self.child.setActualStartDateTime(self.yesterday)
+        self.assertEqual(self.yesterday, self.parent.actualStartDateTime())
+
+    def testSetChildActualStartDateWhenParentHasNoActualStartDate(self):
+        self.child.setActualStartDateTime(self.yesterday)
+        self.assertEqual(self.yesterday, self.parent.actualStartDateTime())
 
 
 class MarkParentTaskCompletedTestsMixin(object):

@@ -52,6 +52,9 @@ class TaskList(categorizable.CategorizableContainer):
     def nrDueSoon(self):
         return self._nrInterestingTasks(task.Task.dueSoon)
     
+    def nrLate(self):
+        return self._nrInterestingTasks(task.Task.late)
+    
     def nrBeingTracked(self):
         return self._nrInterestingTasks(task.Task.isBeingTracked)
     

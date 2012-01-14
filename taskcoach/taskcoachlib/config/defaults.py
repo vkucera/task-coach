@@ -389,24 +389,28 @@ defaults = { \
     'inifileloaderror': '' },
 'fgcolor': { \
     'activetasks': '(0, 0, 0, 255)',
+    'latetasks': '(160, 32, 240, 255)',
     'completedtasks': '(0, 255, 0, 255)',
     'overduetasks': '(255, 0, 0, 255)',
     'inactivetasks': '(192, 192, 192, 255)',
     'duesoontasks': '(255, 128, 0, 255)' },
 'bgcolor': { \
     'activetasks': '(255, 255, 255, 255)',
+    'latetasks': '(255, 255, 255, 255)',
     'completedtasks': '(255, 255, 255, 255)',
     'overduetasks': '(255, 255, 255, 255)',
     'inactivetasks': '(255, 255, 255, 255)',
     'duesoontasks': '(255, 255, 255, 255)' },
 'font': { \
     'activetasks': '',
+    'latetasks': '',
     'completedtasks': '',
     'overduetasks': '',
     'inactivetasks': '',
     'duesoontasks': '' },
 'icon': { \
     'activetasks': 'led_blue_icon',
+    'latetasks': 'led_purple_icon',
     'completedtasks': 'led_green_icon',
     'overduetasks': 'led_red_icon',
     'inactivetasks': 'led_grey_icon',
