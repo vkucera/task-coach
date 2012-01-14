@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.5', 'January 12, 2012',
+Release('1.3.5', 'January 14, 2012',
     summary='''This is a mixed feature and bug fix release.''',
     bugsFixed=[
         Bug('''After a reminder of a recurring task had been dismissed, Task 
@@ -35,6 +35,8 @@ locale so that the proper formatting for dates and numbers is used.''',
     featuresAdded=[
         Feature('''Note categories are now synced as well (SyncML)'''),
         Feature('''Add "actual start date" attribute to tasks.'''),
+        Feature('''Add toolbar buttons and menu items for marking tasks 
+inactive, active and completed.'''),
         ],
     featuresChanged=[
         Feature('''Rename "start date" to "planned start date" to enable

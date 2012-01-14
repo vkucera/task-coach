@@ -59,6 +59,12 @@ class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
     def editPercentageComplete(self, tasks=None, percentage=50):
         command.EditPercentageCompleteCommand(self.taskList, tasks or [], 
                                               newValue=percentage).do()
+                                              
+    def markActive(self, tasks=None):
+        command.MarkActiveCommand(self.taskList, tasks or []).do()
+        
+    def markInactive(self, tasks=None):
+        command.MarkInactiveCommand(self.taskList, tasks or []).do()
 
     def newSubTask(self, tasks=None, markCompleted=False):
         tasks = tasks or []
@@ -372,7 +378,6 @@ class MarkCompletedCommandTest(CommandWithChildrenTestCase):
         self.task1.setCompletionDateTime()
         self.markCompleted([self.task1])
         self.assertDoUndoRedo(
-            lambda: self.failIf(self.task1.completed()),
             lambda: self.failUnless(self.task1.completed()))
 
     def testMarkCompletedParent(self):
@@ -467,7 +472,69 @@ class EditPercentageCompleteTest(TaskCommandTestCase):
             lambda: self.assertNotEqual(date.DateTime(), self.task1.actualStartDateTime()),
             lambda: self.assertEqual(date.DateTime(), self.task1.actualStartDateTime()))
 
+
+class MarkActiveCommandTest(TaskCommandTestCase):
+    def testMarkInactiveTaskActive(self):
+        self.markActive([self.task1])
+        self.assertDoUndoRedo(
+            lambda: self.assertNotEqual(date.DateTime(), self.task1.actualStartDateTime()),
+            lambda: self.assertEqual(date.DateTime(), self.task1.actualStartDateTime()))
+    
+    def testMarkCompletedTaskActive(self):
+        now = date.Now()
+        self.task1.setCompletionDateTime(now)        
+        self.markActive([self.task1])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(date.DateTime(), self.task1.completionDateTime()),
+            lambda: self.assertEqual(now, self.task1.completionDateTime()))
+
+    def testIgnoreTaskThatIsAlreadyActive(self):
+        now = date.Now()
+        self.task1.setActualStartDateTime(now)
+        self.markActive([self.task1])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(now, self.task1.actualStartDateTime()))
         
+    def testTaskWithFutureActualStartDateTime(self):
+        tomorrow = date.Now() + date.oneDay
+        self.task1.setActualStartDateTime(tomorrow)
+        self.markActive([self.task1])
+        self.assertDoUndoRedo(
+            lambda: self.assertAlmostEqual(date.Now().toordinal(), self.task1.actualStartDateTime().toordinal(), places=2),
+            lambda: self.assertEqual(tomorrow, self.task1.actualStartDateTime()))
+
+
+class MarkInactiveCommandTest(TaskCommandTestCase):
+    def testMarkActiveTaskInactive(self):
+        now = date.Now()
+        self.task1.setActualStartDateTime(now)
+        self.markInactive([self.task1])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(date.DateTime(), self.task1.actualStartDateTime()),
+            lambda: self.assertEqual(now, self.task1.actualStartDateTime()))
+    
+    def testMarkCompletedTaskInactive(self):
+        now = date.Now()
+        self.task1.setCompletionDateTime(now)
+        self.markInactive([self.task1])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(date.DateTime(), self.task1.completionDateTime()),
+            lambda: self.assertEqual(now, self.task1.completionDateTime()))
+        
+    def testIgnoreTaskThatIsAlreadyInactive(self):
+        self.markInactive([self.task1])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(date.DateTime(), self.task1.actualStartDateTime()))
+        
+    def testTaskWithFutureActualStartDateTime(self):
+        tomorrow = date.Now() + date.oneDay
+        self.task1.setActualStartDateTime(tomorrow)
+        self.markInactive([self.task1])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(date.DateTime(), self.task1.actualStartDateTime()),
+            lambda: self.assertEqual(tomorrow, self.task1.actualStartDateTime()))
+           
+
 class DragAndDropTaskCommandTest(CommandWithChildrenTestCase):
     def testCannotDropOnParent(self):
         self.dragAndDrop([self.parent], [self.child])

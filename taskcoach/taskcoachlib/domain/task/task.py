@@ -426,7 +426,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         event.addSource(self, self.completionDateTime(), type='task.completionDateTime')
         for dependency in self.dependencies():
             dependency.recomputeAppearance(recursive=True, event=event)
-        
+            
     def shouldBeMarkedCompleted(self):
         ''' Return whether this task should be marked completed. It should be
             marked completed when 1) it's not completed, 2) all of its children
@@ -504,7 +504,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if self.plannedStartDateTime() < date.Now():
             return 'late'
         return 'inactive'
-                
+    
     def onDueSoonHoursChanged(self, event):
         self.removeObserver(self.onDueSoon)
         self.__dueSoonHours = int(event.value())

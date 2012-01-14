@@ -192,13 +192,16 @@ class BaseTaskTreeViewer(BaseTaskViewer):
             super(BaseTaskTreeViewer, self).createCreationToolBarUICommands()
     
     def createActionToolBarUICommands(self):
-        uiCommands = (uicommand.TaskToggleCompletion(viewer=self),)
+        uiCommands = (uicommand.TaskMarkInactive(viewer=self),
+                      uicommand.TaskMarkActive(viewer=self),
+                      uicommand.TaskMarkCompleted(viewer=self))
         if self.settings.getboolean('feature', 'effort'):
             uiCommands += (
                 # EffortStart needs a reference to the original (task) list to
                 # be able to stop tracking effort for tasks that are already 
                 # being tracked, but that might be filtered in the viewer's 
                 # presentation.
+                None,
                 uicommand.EffortStart(viewer=self, 
                                       taskList=self.taskFile.tasks()),
                 uicommand.EffortStop(effortList=self.taskFile.efforts(),

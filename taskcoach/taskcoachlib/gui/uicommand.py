@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 from taskcoachlib import patterns, meta, command, help, widgets, persistence, thirdparty, render, operating_system # pylint: disable-msg=W0622
 from taskcoachlib.i18n import _
-from taskcoachlib.domain import base, task, note, category, attachment, effort
+from taskcoachlib.domain import base, task, note, category, attachment, effort, date
 from taskcoachlib.mailer import sendMail
 from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_NEXT, wxSCHEDULER_PREV, wxSCHEDULER_TODAY
 from taskcoachlib.thirdparty import desktop, hypertreelist
@@ -1547,83 +1547,64 @@ class NewSubItem(NeedsOneSelectedCompositeItemMixin, ViewerCommand):
             if self.viewer.curselectionIsInstanceOf(class_):
                 return self.labels[class_] + self.shortcut
         return self.defaultMenuText
+
+
+class TaskMarkActive(NeedsSelectedTasksMixin, ViewerCommand):    
+    def __init__(self, *args, **kwargs):
+        super(TaskMarkActive, self).__init__(bitmap='led_blue_icon',
+            menuText=_('Mark task &active\tAlt+RETURN'),
+            helpText=_('Mark the selected task(s) active'),
+            *args, **kwargs)
+                
+    def doCommand(self, event):
+        command.MarkActiveCommand(self.viewer.presentation(), 
+                                  self.viewer.curselection()).do()
+        
+    def enabled(self, event):
+        def canBeMarkedActive(task):
+            return task.actualStartDateTime() > date.Now() or task.completed()
+        
+        return super(TaskMarkActive, self).enabled(event) and \
+            any([canBeMarkedActive(task) for task in self.viewer.curselection()])         
+ 
+
+class TaskMarkInactive(NeedsSelectedTasksMixin, ViewerCommand):    
+    def __init__(self, *args, **kwargs):
+        super(TaskMarkInactive, self).__init__(bitmap='led_grey_icon',
+            menuText=_('Mark task &inactive\tCtrl+Alt+RETURN'),
+            helpText=_('Mark the selected task(s) inactive'),
+            *args, **kwargs)
+                
+    def doCommand(self, event):
+        command.MarkInactiveCommand(self.viewer.presentation(), 
+                                    self.viewer.curselection()).do()
+        
+    def enabled(self, event):
+        def canBeMarkedInactive(task):
+            return not task.inactive() and not task.late()
+        
+        return super(TaskMarkInactive, self).enabled(event) and \
+            any([canBeMarkedInactive(task) for task in self.viewer.curselection()])         
     
 
-class TaskToggleCompletion(NeedsSelectedTasksMixin, ViewerCommand):
-    defaultMenuText = _('&Mark task completed\tCtrl+RETURN')
-    defaultHelpText = _('Mark the selected task(s) completed')
-    alternativeMenuText = _('&Mark task uncompleted\tCtrl+RETURN')
-    alternativeHelpText = _('Mark the selected task(s) uncompleted')
-    
+class TaskMarkCompleted(NeedsSelectedTasksMixin, ViewerCommand):    
     def __init__(self, *args, **kwargs):
-        super(TaskToggleCompletion, self).__init__(bitmap='markuncompleted',
-            bitmap2='markcompleted', menuText=self.defaultMenuText,
-            helpText=self.defaultHelpText,
-            kind=wx.ITEM_CHECK, *args, **kwargs)
-        self.currentBitmap = None # Don't know yet what our bitmap is
+        super(TaskMarkCompleted, self).__init__(bitmap='led_green_icon',
+            menuText=_('Mark task &completed\tCtrl+RETURN'),
+            helpText=_('Mark the selected task(s) completed'),
+            *args, **kwargs)
                 
     def doCommand(self, event):
         markCompletedCommand = command.MarkCompletedCommand( \
             self.viewer.presentation(), self.viewer.curselection())
-        markCompletedCommand.do()
-            
-    def onUpdateUI(self, event):
-        super(TaskToggleCompletion, self).onUpdateUI(event)
-        allSelectedTasksAreCompleted = self.allSelectedTasksAreCompleted()
-        self.updateToolState(allSelectedTasksAreCompleted)
-        bitmapName = self.bitmap if allSelectedTasksAreCompleted else self.bitmap2
-        if bitmapName != self.currentBitmap:
-            self.currentBitmap = bitmapName
-            self.updateToolBitmap(bitmapName)
-            self.updateToolHelp()
-            self.updateMenuItems(allSelectedTasksAreCompleted)
+        markCompletedCommand.do()  
         
-    def updateToolState(self, allSelectedTasksAreCompleted):
-        if not self.toolbar: return # Toolbar is hidden        
-        if allSelectedTasksAreCompleted != self.toolbar.GetToolState(self.id): 
-            self.toolbar.ToggleTool(self.id, allSelectedTasksAreCompleted)
-
-    def updateToolBitmap(self, bitmapName):
-        if not self.toolbar: return # Toolbar is hidden
-        bitmap = wx.ArtProvider_GetBitmap(bitmapName, wx.ART_TOOLBAR, 
-                                          self.toolbar.GetToolBitmapSize())
-        # On wxGTK, changing the bitmap doesn't work when the tool is 
-        # disabled, so we first enable it if necessary:
-        disable = False
-        if not self.toolbar.GetToolEnabled(self.id):
-            self.toolbar.EnableTool(self.id, True)
-            disable = True
-        self.toolbar.SetToolNormalBitmap(self.id, bitmap)
-        if disable:
-            self.toolbar.EnableTool(self.id, False)     
-    
-    def updateMenuItems(self, allSelectedTasksAreCompleted):
-        menuText = self.getMenuText(allSelectedTasksAreCompleted)
-        helpText = self.getHelpText(allSelectedTasksAreCompleted)
-        for menuItem in self.menuItems:
-            menuItem.Check(allSelectedTasksAreCompleted)
-            menuItem.SetItemLabel(menuText)
-            menuItem.SetHelp(helpText)
+    def enabled(self, event):
+        def canBeMarkedCompleted(task):
+            return not task.completed()
         
-    def getMenuText(self, allSelectedTasksAreCompleted=None): # pylint: disable-msg=W0221
-        if allSelectedTasksAreCompleted is None:
-            allSelectedTasksAreCompleted = self.allSelectedTasksAreCompleted()
-        return self.alternativeMenuText if allSelectedTasksAreCompleted else self.defaultMenuText
-        
-    def getHelpText(self, allSelectedTasksAreCompleted=None): # pylint: disable-msg=W0221
-        if allSelectedTasksAreCompleted is None:
-            allSelectedTasksAreCompleted = self.allSelectedTasksAreCompleted()
-        return self.alternativeHelpText if allSelectedTasksAreCompleted else self.defaultHelpText
-        
-    def allSelectedTasksAreCompleted(self):
-        if super(TaskToggleCompletion, self).enabled(None) and \
-           len(self.viewer.curselection()) < 20:
-            for selectedTask in self.viewer.curselection():
-                if not selectedTask.completed():
-                    return False
-            return True
-        else:
-            return False
+        return super(TaskMarkCompleted, self).enabled(event) and \
+            any([canBeMarkedCompleted(task) for task in self.viewer.curselection()])         
 
     
 class TaskMaxPriority(NeedsSelectedTasksMixin, TaskListCommand, ViewerCommand):
