@@ -226,6 +226,7 @@ class CSVImportMappingPage(wiz.WizardPageSimple):
             (_('Priority'), False),
             (_('Planned start date'), False),
             (_('Due date'), False),
+            (_('Actual start date'), False),
             (_('Completion date'), False),
             (_('Budget'), False),
             (_('Fixed fee'), False),

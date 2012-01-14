@@ -30,7 +30,8 @@ def extendedWithAncestors(selection):
 
 
 class RowBuilder(object):
-    dateAndTimeColumnHeaders = dict(plannedStartDateTime=[_('Planned start date'), _('Planned start time')],
+    dateAndTimeColumnHeaders = dict(actualStartDateTime=[_('Actual start date'), _('Actual start time')],
+                                    plannedStartDateTime=[_('Planned start date'), _('Planned start time')],
                                     dueDateTime=[_('Due date'), _('Due time')],
                                     completionDateTime=[_('Completion date'), _('Completion time')],
                                     reminder=[_('Reminder date'), _('Reminder time')])
