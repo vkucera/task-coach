@@ -36,7 +36,7 @@ You can edit this file, it will not be overwritten by %(name)s.
    }
 
    If the exported HTML file contains tasks it is possible to change the color 
-   of completed (or overdue, duesoon, inactive, active) tasks like this:
+   of completed (or overdue, duesoon, late, inactive, active) tasks like this:
    
    .completed {
        color: red;
