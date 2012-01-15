@@ -216,6 +216,8 @@ class VTodoParser(VCalendarParser):
             self.kwargs['dueDateTime'] = parseDateTime(value)
         elif name == 'COMPLETED':
             self.kwargs['completionDateTime'] = parseDateTime(value)
+        elif name == 'PERCENT-COMPLETE':
+            self.kwargs['percentageComplete'] = int(value)
         elif name == 'UID':
             self.kwargs['id'] = value.decode('UTF-8')
         elif name == 'PRIORITY':
@@ -295,6 +297,7 @@ def VCalFromTask(task, encoding=True, doFold=True):
 
     components.append('DESCRIPTION%s:%s'%(encoding, quote(task.description())))
     components.append('PRIORITY:%d'%min(3, task.priority() + 1))
+    components.append('PERCENT-COMPLETE:%d'%task.percentageComplete())
     components.append('SUMMARY%s:%s'%(encoding, quote(task.subject())))
     components.append('END:VTODO') # pylint: disable-msg=W0511
     if doFold:

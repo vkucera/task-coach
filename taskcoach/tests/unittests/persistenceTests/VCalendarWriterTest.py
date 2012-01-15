@@ -127,7 +127,8 @@ class VCalTaskWriterTestCase(VCalTestCase):
     
     def setUp(self):
         super(VCalTaskWriterTestCase, self).setUp() 
-        self.task1 = task.Task('Task subject 1', description='Task description 1')
+        self.task1 = task.Task('Task subject 1', description='Task description 1',
+                               percentageComplete=56)
         self.task2 = task.Task(u'Task subject 2', description=u'Task description 2\nwith newline\n微软雅黑')
         self.taskFile.tasks().extend([self.task1, self.task2])
         self.settings.set('taskviewer', 'treemode', self.treeMode)
@@ -150,7 +151,7 @@ class VCalTaskCommonTestsMixin(VCalendarCommonTestsMixin):
 
     def testTaskId(self):
         self.failUnless('UID:%s'%self.task2.id() in self.vcalFile)
-
+        
 
 class TestSelectionOnlyMixin(VCalTaskCommonTestsMixin):
     selectionOnly = True
@@ -171,6 +172,9 @@ class TestNotSelectionOnlyMixin(VCalTaskCommonTestsMixin):
 
     def expectedNumberOfItems(self):
         return self.numberOfVisibleItems()
+
+    def testPercentageComplete(self):
+        self.failUnless('PERCENT-COMPLETE:56' in self.vcalFile)
 
 
 class TestNotSelectionList(TestNotSelectionOnlyMixin, VCalTaskWriterTestCase):

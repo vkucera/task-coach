@@ -22,6 +22,8 @@ from taskcoachlib.domain import date
 
 
 class VCalendarParserTest(test.TestCase):
+    # pylint: disable-msg=W0511
+
     def setUp(self):
         self.parser = persistence.icalendar.ical.VCalendarParser()
         
@@ -44,5 +46,12 @@ class VCalendarParserTest(test.TestCase):
         self.parser.parse(['BEGIN:VTODO', 'DUE:20100101T120000', 'END:VTODO'])
         self.assertEqual(dict(status=0, 
                               dueDateTime=date.DateTime(2010,1,1,12,0,0), 
+                              plannedStartDateTime=date.DateTime()), 
+                         self.parser.tasks[0])
+
+    def testPercentageComplete(self):
+        self.parser.parse(['BEGIN:VTODO', 'PERCENT-COMPLETE:56', 'END:VTODO'])
+        self.assertEqual(dict(status=0, 
+                              percentageComplete=56, 
                               plannedStartDateTime=date.DateTime()), 
                          self.parser.tasks[0])
