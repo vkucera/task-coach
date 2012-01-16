@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.5', 'January 15, 2012',
+Release('1.3.5', 'January 16, 2012',
     summary='''This is a mixed feature and bug fix release.''',
     bugsFixed=[
         Bug('''After a reminder of a recurring task had been dismissed, Task 
@@ -31,6 +31,8 @@ Coach would not create a new reminder when recurring the task.''', '3469217'),
 locale so that the proper formatting for dates and numbers is used.''', 
             '3091934'),
         Bug('''Sorting case sensitive didn't work.'''),
+        Bug('''Categories of notes belonging to tasks and categories weren't 
+saved.''', '3474487'),
         ],
     featuresAdded=[
         Feature('''Note categories are now synced as well (SyncML)'''),

@@ -1560,3 +1560,14 @@ class XMLReaderVersion34Test(XMLReaderTestCase):
         </tasks>\n''')
         self.assertEqual(date.DateTime(2005,1,1,22,1,30,456), 
                          tasks[0].actualStartDateTime())
+        
+    def testTaskWithNoteWithCategory(self):
+        tasks, categories = self.writeAndReadTasksAndCategories('''
+        <tasks>
+            <task>
+                <note subject="note" id="note1"/>
+            </task>
+            <category id="cat1" categorizables="note1"/>
+        </tasks>\n''')
+        self.assertEqual(list(tasks[0].notes())[0], 
+                         list(categories[0].categorizables())[0])

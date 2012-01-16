@@ -488,6 +488,13 @@ class XMLWriterTest(test.TestCase):
         self.expectInXML('>\n<note id="%s" status="1">\n'
             '<note id="id" status="1" subject="Subnote" />\n</note>\n</task>'%self.note.id())
 
+    def testTaskWithNoteWithCategory(self):
+        self.task.addNote(self.note)
+        self.note.addCategory(self.category)
+        self.category.addCategorizable(self.note)
+        self.expectInXML('<category categorizables="%s" id="%s" status="1" subject="%s" />'%\
+                         (self.note.id(), self.category.id(), self.category.subject()))
+        
     def testCategoryWithNote(self):
         self.category.addNote(self.note)
         self.expectInXML('>\n<note id="%s" status="1" />\n</category>'%self.note.id())
