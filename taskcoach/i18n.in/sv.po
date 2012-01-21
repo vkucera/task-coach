@@ -9,15 +9,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sv\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-01-15 04:09+0000\n"
-"PO-Revision-Date: 2012-01-14 20:35+0000\n"
+"POT-Creation-Date: 2012-01-15 22:12+0000\n"
+"PO-Revision-Date: 2012-01-20 12:31+0000\n"
 "Last-Translator: Rikard Edgren <Unknown>\n"
 "Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-15 15:57+0000\n"
-"X-Generator: Launchpad (build 14664)\n"
+"X-Launchpad-Export-Date: 2012-01-21 21:49+0000\n"
+"X-Generator: Launchpad (build 14700)\n"
 
 #: taskcoachlib/application/application.py:244
 msgid ""
@@ -234,11 +234,11 @@ msgstr "Ta bort insatsen \"%s\""
 
 #: taskcoachlib/command/effortCommands.py:64
 msgid "Change task of effort"
-msgstr "Ändra aktivitet för insats"
+msgstr "Ändra uppgift för insats"
 
 #: taskcoachlib/command/effortCommands.py:65
 msgid "Change task of \"%s\" effort"
-msgstr "Ändra aktivitet för \"%s\" insats"
+msgstr "Ändra uppgift för \"%s\" insats"
 
 #: taskcoachlib/command/effortCommands.py:87
 msgid "Change effort start date and time"
@@ -317,36 +317,36 @@ msgstr "Ta bort anteckning från \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:59
 msgid "Drag and drop tasks"
-msgstr "Dra och släpp aktiviteter"
+msgstr "Dra och släpp uppgifter"
 
 #: taskcoachlib/command/taskCommands.py:63
 msgid "Delete tasks"
-msgstr "Ta bort aktiviteter"
+msgstr "Ta bort uppgifter"
 
 #: taskcoachlib/command/taskCommands.py:64
 msgid "Delete task \"%s\""
-msgstr "Ta bort aktivitet \"%s\""
+msgstr "Ta bort uppgift \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:106
 #: taskcoachlib/command/taskCommands.py:109
 msgid "New task"
-msgstr "Ny aktivitet"
+msgstr "Ny uppgift"
 
 #: taskcoachlib/command/taskCommands.py:143
 msgid "New subtasks"
-msgstr "Nya underaktiviteter"
+msgstr "Nya underuppgifter"
 
 #: taskcoachlib/command/taskCommands.py:144
 msgid "New subtask of \"%s\""
-msgstr "Ny underaktivitet till \"%s\""
+msgstr "Ny underuppgift  till \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:149
 msgid "New subtask"
-msgstr "Ny underaktivitet"
+msgstr "Ny underuppgift"
 
 #: taskcoachlib/command/taskCommands.py:173
 msgid "Mark tasks completed"
-msgstr "Markera aktivitet som färdig"
+msgstr "Markera uppgift som färdig"
 
 #: taskcoachlib/command/taskCommands.py:174
 msgid "Mark \"%s\" completed"
@@ -426,7 +426,7 @@ msgstr "Ändra prioriteten på \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:413
 msgid "Add note to tasks"
-msgstr "Lägg till anteckning till aktiviteter"
+msgstr "Lägg till anteckning till uppgifter"
 
 #: taskcoachlib/command/taskCommands.py:499
 msgid "Change planned start date"
@@ -482,7 +482,7 @@ msgstr "Ändra slutförd andel för \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:651
 msgid "Change when tasks are marked completed"
-msgstr "Ändra när aktiviteter markerats som slutförda"
+msgstr "Ändra när uppgifter markerats som slutförda"
 
 #: taskcoachlib/command/taskCommands.py:652
 msgid "Change when \"%s\" is marked completed"
@@ -668,7 +668,7 @@ msgstr "&Ny insats...\tCtrl+E"
 
 #: taskcoachlib/domain/task/tasklist.py:31
 msgid "&New task..."
-msgstr "%Ny aktivitet..."
+msgstr "&Ny uppgift..."
 
 #: taskcoachlib/gui/artprovider.py:94
 msgid "Arrow down"
@@ -871,7 +871,7 @@ msgid "Question mark"
 msgstr "Frågetecken"
 
 #: taskcoachlib/gui/artprovider.py:144
-#: taskcoachlib/gui/wizard/csvimport.py:333
+#: taskcoachlib/gui/wizard/csvimport.py:334
 msgid "Information"
 msgstr "Information"
 
@@ -1022,7 +1022,7 @@ msgstr "Ingen ikon"
 #: taskcoachlib/gui/viewer/effort.py:190 taskcoachlib/gui/viewer/note.py:117
 #: taskcoachlib/gui/viewer/task.py:752
 #: taskcoachlib/gui/wizard/csvimport.py:224
-#: taskcoachlib/persistence/csv/reader.py:73
+#: taskcoachlib/persistence/csv/reader.py:74
 msgid "Description"
 msgstr "Beskrivning"
 
@@ -1036,7 +1036,7 @@ msgstr "Redigera alla ämnen"
 #: taskcoachlib/gui/viewer/base.py:290 taskcoachlib/gui/viewer/category.py:80
 #: taskcoachlib/gui/viewer/note.py:99 taskcoachlib/gui/viewer/task.py:740
 #: taskcoachlib/gui/wizard/csvimport.py:223
-#: taskcoachlib/persistence/csv/reader.py:71
+#: taskcoachlib/persistence/csv/reader.py:72
 msgid "Subject"
 msgstr "Ämne"
 
@@ -1048,7 +1048,7 @@ msgstr "Redigera alla beskrivningar"
 #: taskcoachlib/gui/dialog/editor.py:140 taskcoachlib/gui/uicommand.py:2469
 #: taskcoachlib/gui/viewer/task.py:830
 #: taskcoachlib/gui/wizard/csvimport.py:226
-#: taskcoachlib/persistence/csv/reader.py:84
+#: taskcoachlib/persistence/csv/reader.py:85
 msgid "Priority"
 msgstr "Prioritet"
 
@@ -1104,8 +1104,8 @@ msgstr "Tider"
 #: taskcoachlib/gui/dialog/templates.py:112
 #: taskcoachlib/gui/viewer/task.py:808
 #: taskcoachlib/gui/wizard/csvimport.py:227
-#: taskcoachlib/persistence/csv/generator.py:33
-#: taskcoachlib/persistence/csv/reader.py:89
+#: taskcoachlib/persistence/csv/generator.py:34
+#: taskcoachlib/persistence/csv/reader.py:92
 msgid "Planned start date"
 msgstr "Planerat startdatum"
 
@@ -1113,21 +1113,24 @@ msgstr "Planerat startdatum"
 #: taskcoachlib/gui/dialog/templates.py:115
 #: taskcoachlib/gui/viewer/task.py:809
 #: taskcoachlib/gui/wizard/csvimport.py:228
-#: taskcoachlib/persistence/csv/generator.py:34
-#: taskcoachlib/persistence/csv/reader.py:91
+#: taskcoachlib/persistence/csv/generator.py:35
+#: taskcoachlib/persistence/csv/reader.py:94
 msgid "Due date"
 msgstr "Deadline"
 
 #: taskcoachlib/gui/dialog/editor.py:290 taskcoachlib/gui/viewer/task.py:810
+#: taskcoachlib/gui/wizard/csvimport.py:229
+#: taskcoachlib/persistence/csv/generator.py:33
+#: taskcoachlib/persistence/csv/reader.py:90
 msgid "Actual start date"
 msgstr "Verkligt startdatum"
 
 #: taskcoachlib/gui/dialog/editor.py:291
 #: taskcoachlib/gui/dialog/templates.py:118
 #: taskcoachlib/gui/viewer/task.py:811
-#: taskcoachlib/gui/wizard/csvimport.py:229
-#: taskcoachlib/persistence/csv/generator.py:35
-#: taskcoachlib/persistence/csv/reader.py:93
+#: taskcoachlib/gui/wizard/csvimport.py:230
+#: taskcoachlib/persistence/csv/generator.py:36
+#: taskcoachlib/persistence/csv/reader.py:96
 msgid "Completion date"
 msgstr "Klarskriven"
 
@@ -1167,8 +1170,8 @@ msgstr "Klarskriv uppgift när deluppgifter är klara?"
 
 #: taskcoachlib/gui/dialog/editor.py:400 taskcoachlib/gui/dialog/editor.py:422
 #: taskcoachlib/gui/uicommand.py:2469 taskcoachlib/gui/viewer/task.py:827
-#: taskcoachlib/gui/wizard/csvimport.py:230
-#: taskcoachlib/persistence/csv/reader.py:95
+#: taskcoachlib/gui/wizard/csvimport.py:231
+#: taskcoachlib/persistence/csv/reader.py:98
 msgid "Budget"
 msgstr "Planerad tidsåtgång"
 
@@ -1182,15 +1185,15 @@ msgid "Budget left"
 msgstr "Återstående tid"
 
 #: taskcoachlib/gui/dialog/editor.py:472 taskcoachlib/gui/viewer/task.py:831
-#: taskcoachlib/gui/wizard/csvimport.py:232
-#: taskcoachlib/persistence/csv/reader.py:114
+#: taskcoachlib/gui/wizard/csvimport.py:233
+#: taskcoachlib/persistence/csv/reader.py:117
 msgid "Hourly fee"
 msgstr "Timpris"
 
 #: taskcoachlib/gui/dialog/editor.py:481 taskcoachlib/gui/uicommand.py:2469
 #: taskcoachlib/gui/viewer/task.py:832
-#: taskcoachlib/gui/wizard/csvimport.py:231
-#: taskcoachlib/persistence/csv/reader.py:109
+#: taskcoachlib/gui/wizard/csvimport.py:232
+#: taskcoachlib/persistence/csv/reader.py:112
 msgid "Fixed fee"
 msgstr "Fast pris"
 
@@ -1233,7 +1236,7 @@ msgstr "Redigera uppgift"
 #: taskcoachlib/gui/dialog/reminder.py:52
 #: taskcoachlib/gui/viewer/effort.py:189
 msgid "Task"
-msgstr "Aktivitet"
+msgstr "Uppgift"
 
 #: taskcoachlib/gui/dialog/editor.py:973
 msgid "Start"
@@ -1257,11 +1260,11 @@ msgstr "Varning: start måste komma före stopp"
 
 #: taskcoachlib/gui/dialog/editor.py:1170
 msgid "Multiple tasks"
-msgstr "Flera aktiviteter"
+msgstr "Flera uppgifter"
 
 #: taskcoachlib/gui/dialog/editor.py:1171
 msgid "%s (task)"
-msgstr "%s (aktivitet)"
+msgstr "%s (uppgift)"
 
 #: taskcoachlib/gui/dialog/editor.py:1176
 msgid "Multiple categories"
@@ -1560,7 +1563,7 @@ msgid ""
 "but with extension .txt"
 msgstr ""
 "Innan spara sker, importerar %s automatiskt\n"
-"aktiviteter från en Todo.txt-fil med samma namn som aktivitetsfilen,\n"
+"uppgifter från en Todo.txt-fil med samma namn som aktivitetsfilen,\n"
 "men med filändelsen .txt"
 
 #: taskcoachlib/gui/dialog/preferences.py:272
@@ -1574,7 +1577,7 @@ msgid ""
 "but with extension .txt"
 msgstr ""
 "I samband med sparning, exporterar %s automatiskt\n"
-"aktiviteter till en Todo.txt-fil med samma namn som aktivitetsfilen,\n"
+"uppgifter till en Todo.txt-fil med samma namn som aktivitetsfilen,\n"
 "men med filändelsen .txt"
 
 #: taskcoachlib/gui/dialog/preferences.py:282
@@ -1654,7 +1657,7 @@ msgstr "Hittar inte språket?"
 
 #: taskcoachlib/gui/dialog/preferences.py:398
 msgid "Task appearance"
-msgstr "Visning av aktiviteter"
+msgstr "Visning av uppgifter"
 
 #: taskcoachlib/gui/dialog/preferences.py:405
 msgid "Active tasks"
@@ -1734,7 +1737,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:456
 msgid "Task dates"
-msgstr "Datum för aktiviteter"
+msgstr "Datum för uppgifter"
 
 #: taskcoachlib/gui/dialog/preferences.py:462
 msgid "Mark parent task completed when all children are completed"
@@ -1828,7 +1831,7 @@ msgstr "Förinställt påminnelsedatum och tid"
 
 #: taskcoachlib/gui/dialog/preferences.py:502
 msgid "Task reminders"
-msgstr "Påminnelse för aktiviteter"
+msgstr "Påminnelse för uppgifter"
 
 #: taskcoachlib/gui/dialog/preferences.py:511
 msgid "Notification system to use for reminders"
@@ -1922,7 +1925,7 @@ msgstr "Aktivera synkronisering av uppgifter"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:92
 msgid "Tasks database name"
-msgstr "Aktivitetsdatabasens namn"
+msgstr "Uppgiftsdatabasens namn"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:93
 #: taskcoachlib/gui/dialog/syncpreferences.py:106
@@ -2020,27 +2023,27 @@ msgstr "Du kör betaversion av %(name)s, %(currentVersion)s."
 msgid "The latest released version of %(name)s is %(version)s."
 msgstr "Den senaste utgivna versionen av %(name)s är %(version)s."
 
-#: taskcoachlib/gui/idlecontroller.py:36
+#: taskcoachlib/gui/idlecontroller.py:37
 msgid ""
 "No user input since %s. The following task was\n"
 "being tracked:"
 msgstr ""
-"Ingen användaraktivitet sedan %s. Följande aktivitet\n"
+"Ingen användaraktivitet sedan %s. Följande uppgift \n"
 "hade tidtagning igång:"
 
-#: taskcoachlib/gui/idlecontroller.py:41
+#: taskcoachlib/gui/idlecontroller.py:42
 msgid "Do nothing"
 msgstr "Gör inget"
 
-#: taskcoachlib/gui/idlecontroller.py:42
+#: taskcoachlib/gui/idlecontroller.py:43
 msgid "Stop it at %s"
 msgstr "Stanna vid %s"
 
-#: taskcoachlib/gui/idlecontroller.py:43
+#: taskcoachlib/gui/idlecontroller.py:44
 msgid "Stop it at %s and resume now"
 msgstr "Stoppa vid %s och återuppta nu"
 
-#: taskcoachlib/gui/idlecontroller.py:126
+#: taskcoachlib/gui/idlecontroller.py:133
 msgid "Notification"
 msgstr "Meddelande"
 
@@ -2361,15 +2364,15 @@ msgstr "Ak&tivitet"
 
 #: taskcoachlib/gui/menu.py:395
 msgid "Open a new tab with a viewer that displays tasks"
-msgstr "Öppna en ny flik med en aktivitetsvy"
+msgstr "Öppna en ny flik med en uppgiftsvy"
 
 #: taskcoachlib/gui/menu.py:397
 msgid "Task &statistics"
-msgstr "&Statistik för aktiviteter"
+msgstr "&Statistik för uppgifter"
 
 #: taskcoachlib/gui/menu.py:398
 msgid "Open a new tab with a viewer that displays task statistics"
-msgstr "Öppna en ny flik med statistik för aktiviteter"
+msgstr "Öppna en ny flik med statistik för uppgifter"
 
 #: taskcoachlib/gui/menu.py:400
 msgid "Task &square map"
@@ -2465,7 +2468,7 @@ msgstr "Stora ikoner (32x32) i verktygsfältet"
 #: taskcoachlib/gui/menu.py:496 taskcoachlib/gui/menu.py:598
 #: taskcoachlib/gui/uicommand.py:1485
 msgid "New task from &template"
-msgstr "Ny aktivitet från &mall"
+msgstr "Ny uppgift från &mall"
 
 #: taskcoachlib/gui/menu.py:536 taskcoachlib/gui/menu.py:740
 #: taskcoachlib/gui/menu.py:843
@@ -2487,7 +2490,7 @@ msgstr "%s (underkategorier)"
 
 #: taskcoachlib/gui/menu.py:705
 msgid "%s (subtasks)"
-msgstr "%s (delaktiviteter)"
+msgstr "%s (underuppgifter)"
 
 #: taskcoachlib/gui/menu.py:750 taskcoachlib/gui/viewer/mixin.py:520
 #: taskcoachlib/gui/viewer/task.py:941
@@ -2512,11 +2515,11 @@ msgstr "en försenad uppgift"
 
 #: taskcoachlib/gui/taskbaricon.py:137
 msgid "%d tasks due soon"
-msgstr "%d aktiviteter på gång"
+msgstr "%d uppgifter på gång"
 
 #: taskcoachlib/gui/taskbaricon.py:137
 msgid "one task due soon"
-msgstr "en aktivitet på gång"
+msgstr "en uppgift på gång"
 
 #: taskcoachlib/gui/taskbaricon.py:148
 msgid "tracking \"%s\""
@@ -2524,7 +2527,7 @@ msgstr "tar tid på \"%s\""
 
 #: taskcoachlib/gui/taskbaricon.py:150
 msgid "tracking effort for %d tasks"
-msgstr "tar tid på %d aktiviteter"
+msgstr "tar tid på %d uppgifter"
 
 #: taskcoachlib/gui/uicommand.py:488
 msgid "&Open...\tCtrl+O"
@@ -2689,7 +2692,7 @@ msgstr "&Importera Todo.txt..."
 
 #: taskcoachlib/gui/uicommand.py:766
 msgid "Import tasks from a Todo.txt (see todotxt.com) file"
-msgstr "Importera aktiviteter från en Todo.txt-fil (se todotxt.com)"
+msgstr "Importera uppgifter från en Todo.txt-fil (se todotxt.com)"
 
 #: taskcoachlib/gui/uicommand.py:770
 msgid "Import Todo.txt"
@@ -2842,7 +2845,7 @@ msgstr "Dölj &passiva uppgifter"
 #: taskcoachlib/gui/uicommand.py:1244
 msgid ""
 "Show/hide inactive tasks (tasks with a planned start date in the future)"
-msgstr "Visa/dölj passiva aktiviteter (har planerat startdatum i framtiden)"
+msgstr "Visa/dölj passiva uppgifter (har planerat startdatum i framtiden)"
 
 #: taskcoachlib/gui/uicommand.py:1261
 msgid "Hide &active tasks"
@@ -2853,8 +2856,8 @@ msgid ""
 "Show/hide active tasks (tasks with a planned start date in the past that are "
 "not completed)"
 msgstr ""
-"Visa/dölj aktiva aktiviteter (ej klarskrivna aktiviteter där planerat "
-"startdatum inträffat)"
+"Visa/dölj aktiva uppgifter (ej klarskrivna uppgifter där planerat startdatum "
+"inträffat)"
 
 #: taskcoachlib/gui/uicommand.py:1274
 msgid "Hide &completed tasks"
@@ -2930,7 +2933,7 @@ msgstr "Nytt &underobjekt..."
 
 #: taskcoachlib/gui/uicommand.py:1529
 msgid "New &subtask..."
-msgstr "Ny &underaktivitet..."
+msgstr "Ny &underuppgift..."
 
 #: taskcoachlib/gui/uicommand.py:1530
 msgid "New &subnote..."
@@ -3118,7 +3121,7 @@ msgstr "Anonymisera"
 
 #: taskcoachlib/gui/uicommand.py:2248
 msgid "Anonymize a task file to attach it to a bug report"
-msgstr "Anonymisera en aktivitetsfil och bifoga till en buggrapport"
+msgstr "Anonymisera en uppgiftsfil och bifoga till en buggrapport"
 
 #: taskcoachlib/gui/uicommand.py:2257
 msgid "&About %s"
@@ -3234,11 +3237,11 @@ msgstr "Insats per vecka"
 
 #: taskcoachlib/gui/uicommand.py:2452
 msgid "List of tasks"
-msgstr "Aktiviteter i lista"
+msgstr "Uppgifter i lista"
 
 #: taskcoachlib/gui/uicommand.py:2452
 msgid "Tree of tasks"
-msgstr "Aktiviteter i träd"
+msgstr "Uppgifter i träd"
 
 #: taskcoachlib/gui/uicommand.py:2460
 msgid "Filter on all checked categories"
@@ -3694,7 +3697,7 @@ msgstr "&Visa alla passiva uppgifter"
 #: taskcoachlib/gui/viewer/mixin.py:277
 msgid ""
 "Show all inactive tasks (tasks with a planned start date in the future)"
-msgstr "Visa alla passiva aktiviteter (som har startdatum i framtiden)"
+msgstr "Visa alla passiva uppgifter (som har startdatum i framtiden)"
 
 #: taskcoachlib/gui/viewer/mixin.py:279
 msgid "&Hide all inactive tasks"
@@ -3704,7 +3707,7 @@ msgstr "&Dölj alla passiva uppgifter"
 msgid ""
 "Hide all inactive tasks (tasks with a planned start date in the future)"
 msgstr ""
-"Dölj alla passiva aktiviteter (som har planerat startdatum i framtiden)"
+"Dölj alla passiva uppgifter (som har planerat startdatum i framtiden)"
 
 #: taskcoachlib/gui/viewer/mixin.py:282
 msgid "Only show tasks starting &today"
@@ -3843,15 +3846,15 @@ msgstr "Sortera uppgifter enligt beskrivning"
 
 #: taskcoachlib/gui/viewer/mixin.py:464
 msgid "Sort tasks manually"
-msgstr "Sortera aktiviteter manuellt"
+msgstr "Sortera uppgifter manuellt"
 
 #: taskcoachlib/gui/viewer/mixin.py:465
 msgid "Sort tasks by category"
-msgstr "Sortera aktiviteter enligt kategori"
+msgstr "Sortera uppgifter enligt kategori"
 
 #: taskcoachlib/gui/viewer/mixin.py:509
 msgid "Sort tasks by planned start date"
-msgstr "Sortera aktiviteter enligt planerat startdatum"
+msgstr "Sortera uppgifter enligt planerat startdatum"
 
 #: taskcoachlib/gui/viewer/mixin.py:509 taskcoachlib/gui/viewer/task.py:862
 msgid "&Planned start date"
@@ -3867,7 +3870,7 @@ msgstr "&Deadline"
 
 #: taskcoachlib/gui/viewer/mixin.py:511
 msgid "Sort tasks by completion date"
-msgstr "Sortera aktiviteter enligt klartidpunkt"
+msgstr "Sortera uppgifter enligt klartidpunkt"
 
 #: taskcoachlib/gui/viewer/mixin.py:511 taskcoachlib/gui/viewer/task.py:871
 msgid "&Completion date"
@@ -3875,7 +3878,7 @@ msgstr "&Klarskriven"
 
 #: taskcoachlib/gui/viewer/mixin.py:512
 msgid "Sort tasks by prerequisite tasks"
-msgstr "Sortera aktiviteter enligt de som är förutsättningar"
+msgstr "Sortera uppgifter enligt de som är förutsättningar"
 
 #: taskcoachlib/gui/viewer/mixin.py:512 taskcoachlib/gui/viewer/task.py:920
 msgid "&Prerequisites"
@@ -3883,7 +3886,7 @@ msgstr "&Förutsättningar"
 
 #: taskcoachlib/gui/viewer/mixin.py:513
 msgid "Sort tasks by dependent tasks"
-msgstr "Sortera aktiviteter enligt beroende aktiviteter"
+msgstr "Sortera uppgifter enligt beroende uppgifter"
 
 #: taskcoachlib/gui/viewer/mixin.py:513 taskcoachlib/gui/viewer/task.py:923
 msgid "&Dependencies"
@@ -3899,7 +3902,7 @@ msgstr "&Kvarvarande tid"
 
 #: taskcoachlib/gui/viewer/mixin.py:515
 msgid "Sort tasks by percentage complete"
-msgstr "Sortera aktiviteter enligt progress"
+msgstr "Sortera uppgifter enligt progress"
 
 #: taskcoachlib/gui/viewer/mixin.py:515 taskcoachlib/gui/viewer/task.py:926
 msgid "&Percentage complete"
@@ -3907,7 +3910,7 @@ msgstr "&Progress"
 
 #: taskcoachlib/gui/viewer/mixin.py:516
 msgid "Sort tasks by recurrence"
-msgstr "Sortera aktiviteter enligt återkommande"
+msgstr "Sortera uppgifter enligt återkommande"
 
 #: taskcoachlib/gui/viewer/mixin.py:516 taskcoachlib/gui/viewer/task.py:877
 msgid "&Recurrence"
@@ -3932,7 +3935,7 @@ msgstr "Återstående &tid"
 
 #: taskcoachlib/gui/viewer/mixin.py:519
 msgid "Sort tasks by budget left"
-msgstr "Sortera aktiviteter enligt återstående tid"
+msgstr "Sortera uppgifter enligt återstående tid"
 
 #: taskcoachlib/gui/viewer/mixin.py:520
 msgid "Sort tasks by priority"
@@ -3940,7 +3943,7 @@ msgstr "Sortera uppgifter i prioritetsordning"
 
 #: taskcoachlib/gui/viewer/mixin.py:521
 msgid "Sort tasks by hourly fee"
-msgstr "Sortera aktiviteter enligt timpris"
+msgstr "Sortera uppgifter enligt timpris"
 
 #: taskcoachlib/gui/viewer/mixin.py:521 taskcoachlib/gui/viewer/task.py:904
 msgid "&Hourly fee"
@@ -3948,7 +3951,7 @@ msgstr "&Timpris"
 
 #: taskcoachlib/gui/viewer/mixin.py:522
 msgid "Sort tasks by fixed fee"
-msgstr "Sortera aktiviteter enligt fast pris"
+msgstr "Sortera uppgifter enligt fast pris"
 
 #: taskcoachlib/gui/viewer/mixin.py:522 taskcoachlib/gui/viewer/task.py:907
 msgid "&Fixed fee"
@@ -3993,7 +3996,7 @@ msgstr ""
 #: taskcoachlib/gui/viewer/task.py:103 taskcoachlib/help/__init__.py:68
 #: taskcoachlib/help/__init__.py:136
 msgid "Tasks"
-msgstr "Aktiviteter"
+msgstr "Uppgifter"
 
 #: taskcoachlib/gui/viewer/task.py:313
 msgid "Timeline"
@@ -4005,7 +4008,7 @@ msgstr "Nu"
 
 #: taskcoachlib/gui/viewer/task.py:419
 msgid "Task square map"
-msgstr "Rutkarta med aktiviteter"
+msgstr "Rutkarta med uppgifter"
 
 #: taskcoachlib/gui/viewer/task.py:656
 msgid "Calendar viewer configuration"
@@ -4129,19 +4132,19 @@ msgstr "Visa/dölj kolumn för påminnelser"
 
 #: taskcoachlib/gui/viewer/task.py:1132
 msgid "Task statistics"
-msgstr "Statistik för aktiviteter"
+msgstr "Statistik för uppgifter"
 
 #: taskcoachlib/gui/viewer/task.py:1135
 msgid "Due soon tasks: %d (%d%%)"
-msgstr "Aktiviteter nära deadline: %d (%d%%)"
+msgstr "Uppgifter nära deadline: %d (%d%%)"
 
 #: taskcoachlib/gui/viewer/task.py:1135
 msgid "Overdue tasks: %d (%d%%)"
-msgstr "Försenade aktiviteter: %d (%d%%)"
+msgstr "Försenade uppgifter: %d (%d%%)"
 
 #: taskcoachlib/gui/viewer/task.py:1136
 msgid "Active tasks: %d (%d%%)"
-msgstr "Aktiva aktiviteter: %d (%d%%)"
+msgstr "Aktiva uppgifter: %d (%d%%)"
 
 #: taskcoachlib/gui/viewer/task.py:1136
 msgid "Late tasks: %d (%d%%)"
@@ -4149,11 +4152,11 @@ msgstr ""
 
 #: taskcoachlib/gui/viewer/task.py:1137
 msgid "Completed tasks: %d (%d%%)"
-msgstr "Klarskrivna aktiviteter: %d (%d%%)"
+msgstr "Klarskrivna uppgifter: %d (%d%%)"
 
 #: taskcoachlib/gui/viewer/task.py:1137
 msgid "Inactive tasks: %d (%d%%)"
-msgstr "Passiva aktiviteter: %d (%d%%)"
+msgstr "Passiva uppgifter: %d (%d%%)"
 
 #: taskcoachlib/gui/wizard/csvimport.py:46
 msgid "Comma"
@@ -4232,37 +4235,37 @@ msgid "Please select a file."
 msgstr "Välj en fil."
 
 #: taskcoachlib/gui/wizard/csvimport.py:222
-#: taskcoachlib/persistence/csv/reader.py:69
+#: taskcoachlib/persistence/csv/reader.py:70
 msgid "ID"
 msgstr "ID"
 
 #: taskcoachlib/gui/wizard/csvimport.py:225
-#: taskcoachlib/persistence/csv/reader.py:76
+#: taskcoachlib/persistence/csv/reader.py:77
 msgid "Category"
 msgstr "Kategori"
 
-#: taskcoachlib/gui/wizard/csvimport.py:233
-#: taskcoachlib/persistence/csv/reader.py:119
+#: taskcoachlib/gui/wizard/csvimport.py:234
+#: taskcoachlib/persistence/csv/reader.py:122
 msgid "Percent complete"
 msgstr "Progress"
 
-#: taskcoachlib/gui/wizard/csvimport.py:256
+#: taskcoachlib/gui/wizard/csvimport.py:257
 msgid "Column header in CSV file"
 msgstr "Kolumnrubrik i CSV-fil"
 
-#: taskcoachlib/gui/wizard/csvimport.py:257
+#: taskcoachlib/gui/wizard/csvimport.py:258
 msgid "%s attribute"
 msgstr "%s egenskap"
 
-#: taskcoachlib/gui/wizard/csvimport.py:298
+#: taskcoachlib/gui/wizard/csvimport.py:299
 msgid "No field mapping."
 msgstr "Ingen fältmappning"
 
-#: taskcoachlib/gui/wizard/csvimport.py:301
+#: taskcoachlib/gui/wizard/csvimport.py:302
 msgid "The \"%s\" field cannot be selected several times."
 msgstr "Fältet \"%s\" kan inte markeras flera gånger"
 
-#: taskcoachlib/gui/wizard/csvimport.py:304
+#: taskcoachlib/gui/wizard/csvimport.py:305
 msgid "The fields %s cannot be selected several times."
 msgstr "Fälten \"%s\" kan inte markeras flera gånger"
 
@@ -4272,15 +4275,15 @@ msgstr "Innehållsförteckning"
 
 #: taskcoachlib/help/__init__.py:70 taskcoachlib/help/__init__.py:138
 msgid "About tasks"
-msgstr "Om aktiviteter"
+msgstr "Om uppgifter"
 
 #: taskcoachlib/help/__init__.py:71 taskcoachlib/help/__init__.py:144
 msgid "Task properties"
-msgstr "Egenskaper för aktiviteter"
+msgstr "Egenskaper för uppgifter"
 
 #: taskcoachlib/help/__init__.py:72 taskcoachlib/help/__init__.py:182
 msgid "Task states"
-msgstr "Status för aktiviteter"
+msgstr "Status för uppgifter"
 
 #: taskcoachlib/help/__init__.py:73 taskcoachlib/help/__init__.py:202
 msgid "Task colors"
@@ -4450,8 +4453,8 @@ msgid ""
 "convenient \n"
 "for e.g. registering sick leave."
 msgstr ""
-"Planerat startdatum: den första dag då aktiviteten kan startas. \n"
-"Defaultvärde är den dag då aktiviteten skapades. Den kan också sättas till "
+"Planerat startdatum: den första dag då uppgiften kan startas. \n"
+"Defaultvärde är den dag då uppgiften skapades. Den kan också sättas till "
 "'Inget' \n"
 "för att indikera att du inte vill påbörja den. \n"
 "Detta kan vara praktiskt för t.ex. sjukfrånvaro."
@@ -5203,7 +5206,7 @@ msgid ""
 "Show inactive: whether to show inactive tasks (planned start date \n"
 "in the future)."
 msgstr ""
-"Visa passiva: om passiva aktiviteter (planerat startdatum \n"
+"Visa passiva: om passiva uppgifter (planerat startdatum \n"
 "i framtiden) ska visas"
 
 #: taskcoachlib/help/__init__.py:500
@@ -5219,7 +5222,7 @@ msgid ""
 "Compact mode: if this is enabled, the task list has smaller \n"
 "LEDs and doesn't show categories or dates."
 msgstr ""
-"Kompakt läge: aktivitetslistan visas med mindre LED-ikoner \n"
+"Kompakt läge: uppgiftslistan visas med mindre LED-ikoner \n"
 "och utan kategorier och tidpunkter."
 
 #: taskcoachlib/help/__init__.py:504
@@ -5371,10 +5374,10 @@ msgid ""
 msgstr ""
 "Nej, %(name)s är inte tillgänglig för Android-plattformen. Men,\n"
 "<a target=\"_blank\" href=\"http://todotxt.com\">Todo.txt Touch</a> är. \n"
-"Du kan exportera dina aktiviteter från %(name)s till <a target=\"_blank\" \n"
+"Du kan exportera dina uppgifter från %(name)s till <a target=\"_blank\" \n"
 "href=\"https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-"
 "Format\">Todo.txt \n"
-"format</a> och sen redigera dina aktiviteter på din and Android-enhet."
+"format</a> och sen redigera dina uppgifter på din and Android-enhet."
 
 #: taskcoachlib/help/__init__.py:577
 msgid ""
@@ -5435,7 +5438,7 @@ msgid ""
 "not\n"
 "exported."
 msgstr ""
-"%(name)s exporterar aktiviteters rubrik, planerat startdatum, deadline, \n"
+"%(name)s exporterar uppgifters rubrik, planerat startdatum, deadline, \n"
 "klarskrivningsdatum, prioritet och kategorier till Todo.txt-formatet.\n"
 "Övriga egenskaper exporteras inte."
 
@@ -5677,7 +5680,7 @@ msgstr "Shift-Ctrl-N (Linux och Mac OS X)"
 
 #: taskcoachlib/help/__init__.py:720 taskcoachlib/help/__init__.py:748
 msgid "Insert a new subitem"
-msgstr "Lägg till en ny delaktivitet"
+msgstr "Lägg till en ny underuppgift"
 
 #: taskcoachlib/help/__init__.py:721
 msgid "Ctrl-O"
@@ -6299,11 +6302,11 @@ msgstr "Redigera uppgift %s"
 
 #: taskcoachlib/iphone/protocol.py:1240
 msgid "End of task synchronization."
-msgstr "Slut på synkronisering av aktiviteter."
+msgstr "Slut på synkronisering av uppgifter."
 
 #: taskcoachlib/iphone/protocol.py:1257
 msgid "Could not find task %s for effort."
-msgstr "Kunde inte hitta aktiviteten %s för insats."
+msgstr "Kunde inte hitta uppgiften %s för insats."
 
 #: taskcoachlib/iphone/protocol.py:1260
 msgid "New effort %s"
@@ -6387,22 +6390,26 @@ msgid "No such mail: %d"
 msgstr "Ingen sådan e-post: %d"
 
 #: taskcoachlib/persistence/csv/generator.py:33
+msgid "Actual start time"
+msgstr ""
+
+#: taskcoachlib/persistence/csv/generator.py:34
 msgid "Planned start time"
 msgstr "Planerad starttid"
 
-#: taskcoachlib/persistence/csv/generator.py:34
+#: taskcoachlib/persistence/csv/generator.py:35
 msgid "Due time"
 msgstr "Deadline"
 
-#: taskcoachlib/persistence/csv/generator.py:35
+#: taskcoachlib/persistence/csv/generator.py:36
 msgid "Completion time"
 msgstr "Tid för klarskrivning"
 
-#: taskcoachlib/persistence/csv/generator.py:36
+#: taskcoachlib/persistence/csv/generator.py:37
 msgid "Reminder date"
 msgstr "Påminnelsedatum"
 
-#: taskcoachlib/persistence/csv/generator.py:36
+#: taskcoachlib/persistence/csv/generator.py:37
 msgid "Reminder time"
 msgstr "Påminnelsetid"
 
@@ -6575,7 +6582,7 @@ msgstr "&Fönster"
 
 #: taskcoachlib/tools/anonymize.py:56
 msgid "Your task file has been anonymized and saved to:"
-msgstr "Din aktivitetsfil har anonymiserats och sparats till:"
+msgstr "Din uppgiftsfil har anonymiserats och sparats till:"
 
 #: taskcoachlib/tools/anonymize.py:57
 msgid "Finished"
@@ -6611,27 +6618,27 @@ msgstr "Vertikal"
 
 #: taskcoachlib/widgets/calendarconfig.py:78
 msgid "Which tasks to display"
-msgstr "Vilka aktiviteter som ska visas"
+msgstr "Vilka uppgifter som ska visas"
 
 #: taskcoachlib/widgets/calendarconfig.py:80
 msgid "Tasks with a planned start date and a due date"
-msgstr "Aktiviteter med planerat startdatum och deadline"
+msgstr "Uppgifter med planerat startdatum och deadline"
 
 #: taskcoachlib/widgets/calendarconfig.py:81
 msgid "Tasks with a due date"
-msgstr "Aktiviteter med slutdatum"
+msgstr "Uppgifter med slutdatum"
 
 #: taskcoachlib/widgets/calendarconfig.py:81
 msgid "Tasks with a planned start date"
-msgstr "Aktiviteter med planerat startdatum"
+msgstr "Uppgifter med planerat startdatum"
 
 #: taskcoachlib/widgets/calendarconfig.py:82
 msgid "All tasks"
-msgstr "Alla aktiviteter"
+msgstr "Alla uppgifter"
 
 #: taskcoachlib/widgets/calendarconfig.py:82
 msgid "All tasks, except unplanned tasks"
-msgstr "Alla aktiviteter, utom oplanerade"
+msgstr "Alla uppgifter, utom oplanerade"
 
 #: taskcoachlib/widgets/calendarconfig.py:91
 msgid "Draw a line showing the current time"
@@ -6919,30 +6926,3 @@ msgstr "Fel när webbadressen skulle öppnas"
 
 #~ msgid "Task conflict"
 #~ msgstr "Konflikt mellan aktiviteter"
-
-#~ msgid ""
-#~ "Inactive: the planned start date is in the future, and/or not all \n"
-#~ "prerequisite tasks have been completed;"
-#~ msgstr ""
-#~ "Passiv: planerat startdatum är i framtiden och/eller alla \n"
-#~ "beroende aktiviteter är inte klarskrivna;"
-
-#~ msgid ""
-#~ "Active: the planned start date is in the past and the due date in the future;"
-#~ msgstr "Aktiv: planerat startdatum har passerat och deadline är i framtiden;"
-
-#~ msgid ""
-#~ "Prerequisites: other tasks that need to be completed before\n"
-#~ "a task can be started. The task is inactive until the last prerequisite task "
-#~ "is \n"
-#~ "completed. Note that if the task has a specific planned start date set, "
-#~ "that\n"
-#~ "date has to be in the past <em>and</em> all prerequisite tasks need to be\n"
-#~ "completed before the task becomes active."
-#~ msgstr ""
-#~ "Beroenden: andra aktiviteter som måste genomföras innan en aktivitet\n"
-#~ "kan startas. Aktiviteten är passiv tills det sista beroenden är klarskrivet. "
-#~ "\n"
-#~ "Om aktiviteten har ett specifikt planerat startdatum, så måste det \n"
-#~ "datumet vara passerat, <em>och</em> alla beroende uppgifter måste \n"
-#~ "vara klarskrivna innan aktiviteten blir aktiv."

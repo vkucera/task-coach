@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zh_CN\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-15 04:09+0000\n"
-"PO-Revision-Date: 2012-01-09 09:19+0000\n"
+"POT-Creation-Date: 2012-01-15 22:12+0000\n"
+"PO-Revision-Date: 2012-01-20 08:22+0000\n"
 "Last-Translator: Lu Dengpan <Unknown>\n"
 "Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-15 15:57+0000\n"
-"X-Generator: Launchpad (build 14664)\n"
+"X-Launchpad-Export-Date: 2012-01-21 21:50+0000\n"
+"X-Generator: Launchpad (build 14700)\n"
 "X-Poedit-Country: CHINA\n"
 "X-Poedit-Language: Chinese\n"
 "Generated-By: pygettext.py 1.5\n"
@@ -870,7 +870,7 @@ msgid "Question mark"
 msgstr "问题标记"
 
 #: taskcoachlib/gui/artprovider.py:144
-#: taskcoachlib/gui/wizard/csvimport.py:333
+#: taskcoachlib/gui/wizard/csvimport.py:334
 msgid "Information"
 msgstr "信息"
 
@@ -1021,7 +1021,7 @@ msgstr "没有图标"
 #: taskcoachlib/gui/viewer/effort.py:190 taskcoachlib/gui/viewer/note.py:117
 #: taskcoachlib/gui/viewer/task.py:752
 #: taskcoachlib/gui/wizard/csvimport.py:224
-#: taskcoachlib/persistence/csv/reader.py:73
+#: taskcoachlib/persistence/csv/reader.py:74
 msgid "Description"
 msgstr "描述"
 
@@ -1035,7 +1035,7 @@ msgstr "编辑改变所有主题"
 #: taskcoachlib/gui/viewer/base.py:290 taskcoachlib/gui/viewer/category.py:80
 #: taskcoachlib/gui/viewer/note.py:99 taskcoachlib/gui/viewer/task.py:740
 #: taskcoachlib/gui/wizard/csvimport.py:223
-#: taskcoachlib/persistence/csv/reader.py:71
+#: taskcoachlib/persistence/csv/reader.py:72
 msgid "Subject"
 msgstr "主题"
 
@@ -1047,7 +1047,7 @@ msgstr "编辑改变所有描述"
 #: taskcoachlib/gui/dialog/editor.py:140 taskcoachlib/gui/uicommand.py:2469
 #: taskcoachlib/gui/viewer/task.py:830
 #: taskcoachlib/gui/wizard/csvimport.py:226
-#: taskcoachlib/persistence/csv/reader.py:84
+#: taskcoachlib/persistence/csv/reader.py:85
 msgid "Priority"
 msgstr "优先级"
 
@@ -1103,8 +1103,8 @@ msgstr "日期"
 #: taskcoachlib/gui/dialog/templates.py:112
 #: taskcoachlib/gui/viewer/task.py:808
 #: taskcoachlib/gui/wizard/csvimport.py:227
-#: taskcoachlib/persistence/csv/generator.py:33
-#: taskcoachlib/persistence/csv/reader.py:89
+#: taskcoachlib/persistence/csv/generator.py:34
+#: taskcoachlib/persistence/csv/reader.py:92
 msgid "Planned start date"
 msgstr ""
 
@@ -1112,21 +1112,24 @@ msgstr ""
 #: taskcoachlib/gui/dialog/templates.py:115
 #: taskcoachlib/gui/viewer/task.py:809
 #: taskcoachlib/gui/wizard/csvimport.py:228
-#: taskcoachlib/persistence/csv/generator.py:34
-#: taskcoachlib/persistence/csv/reader.py:91
+#: taskcoachlib/persistence/csv/generator.py:35
+#: taskcoachlib/persistence/csv/reader.py:94
 msgid "Due date"
 msgstr "到期日期"
 
 #: taskcoachlib/gui/dialog/editor.py:290 taskcoachlib/gui/viewer/task.py:810
+#: taskcoachlib/gui/wizard/csvimport.py:229
+#: taskcoachlib/persistence/csv/generator.py:33
+#: taskcoachlib/persistence/csv/reader.py:90
 msgid "Actual start date"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:291
 #: taskcoachlib/gui/dialog/templates.py:118
 #: taskcoachlib/gui/viewer/task.py:811
-#: taskcoachlib/gui/wizard/csvimport.py:229
-#: taskcoachlib/persistence/csv/generator.py:35
-#: taskcoachlib/persistence/csv/reader.py:93
+#: taskcoachlib/gui/wizard/csvimport.py:230
+#: taskcoachlib/persistence/csv/generator.py:36
+#: taskcoachlib/persistence/csv/reader.py:96
 msgid "Completion date"
 msgstr "完成日期"
 
@@ -1166,8 +1169,8 @@ msgstr "当任务的所有子任务完成时，是否标记该任务为完成？
 
 #: taskcoachlib/gui/dialog/editor.py:400 taskcoachlib/gui/dialog/editor.py:422
 #: taskcoachlib/gui/uicommand.py:2469 taskcoachlib/gui/viewer/task.py:827
-#: taskcoachlib/gui/wizard/csvimport.py:230
-#: taskcoachlib/persistence/csv/reader.py:95
+#: taskcoachlib/gui/wizard/csvimport.py:231
+#: taskcoachlib/persistence/csv/reader.py:98
 msgid "Budget"
 msgstr "预算"
 
@@ -1181,15 +1184,15 @@ msgid "Budget left"
 msgstr "剩余预算"
 
 #: taskcoachlib/gui/dialog/editor.py:472 taskcoachlib/gui/viewer/task.py:831
-#: taskcoachlib/gui/wizard/csvimport.py:232
-#: taskcoachlib/persistence/csv/reader.py:114
+#: taskcoachlib/gui/wizard/csvimport.py:233
+#: taskcoachlib/persistence/csv/reader.py:117
 msgid "Hourly fee"
 msgstr "每小时报酬"
 
 #: taskcoachlib/gui/dialog/editor.py:481 taskcoachlib/gui/uicommand.py:2469
 #: taskcoachlib/gui/viewer/task.py:832
-#: taskcoachlib/gui/wizard/csvimport.py:231
-#: taskcoachlib/persistence/csv/reader.py:109
+#: taskcoachlib/gui/wizard/csvimport.py:232
+#: taskcoachlib/persistence/csv/reader.py:112
 msgid "Fixed fee"
 msgstr "固定报酬"
 
@@ -1790,7 +1793,7 @@ msgstr "一天的结束"
 
 #: taskcoachlib/gui/dialog/preferences.py:486
 msgid "Default planned start date and time"
-msgstr ""
+msgstr "默认计划开始日期和时间"
 
 #: taskcoachlib/gui/dialog/preferences.py:489
 msgid "Default due date and time"
@@ -1997,25 +2000,25 @@ msgstr ""
 msgid "The latest released version of %(name)s is %(version)s."
 msgstr ""
 
-#: taskcoachlib/gui/idlecontroller.py:36
+#: taskcoachlib/gui/idlecontroller.py:37
 msgid ""
 "No user input since %s. The following task was\n"
 "being tracked:"
 msgstr ""
 
-#: taskcoachlib/gui/idlecontroller.py:41
+#: taskcoachlib/gui/idlecontroller.py:42
 msgid "Do nothing"
 msgstr "不处理"
 
-#: taskcoachlib/gui/idlecontroller.py:42
+#: taskcoachlib/gui/idlecontroller.py:43
 msgid "Stop it at %s"
 msgstr ""
 
-#: taskcoachlib/gui/idlecontroller.py:43
+#: taskcoachlib/gui/idlecontroller.py:44
 msgid "Stop it at %s and resume now"
 msgstr ""
 
-#: taskcoachlib/gui/idlecontroller.py:126
+#: taskcoachlib/gui/idlecontroller.py:133
 msgid "Notification"
 msgstr "通知"
 
@@ -3020,7 +3023,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:2067
 msgid "New category...\tCtrl-G"
-msgstr ""
+msgstr "新建分类...\tCtrl-G"
 
 #: taskcoachlib/gui/uicommand.py:2087
 msgid "New note...\tCtrl-J"
@@ -3154,7 +3157,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:2335
 msgid "&Donate..."
-msgstr ""
+msgstr "捐赠(&D)..."
 
 #: taskcoachlib/gui/uicommand.py:2336
 msgid "Donate to support the development of %s"
@@ -4142,37 +4145,37 @@ msgid "Please select a file."
 msgstr ""
 
 #: taskcoachlib/gui/wizard/csvimport.py:222
-#: taskcoachlib/persistence/csv/reader.py:69
+#: taskcoachlib/persistence/csv/reader.py:70
 msgid "ID"
 msgstr ""
 
 #: taskcoachlib/gui/wizard/csvimport.py:225
-#: taskcoachlib/persistence/csv/reader.py:76
+#: taskcoachlib/persistence/csv/reader.py:77
 msgid "Category"
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:233
-#: taskcoachlib/persistence/csv/reader.py:119
+#: taskcoachlib/gui/wizard/csvimport.py:234
+#: taskcoachlib/persistence/csv/reader.py:122
 msgid "Percent complete"
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:256
+#: taskcoachlib/gui/wizard/csvimport.py:257
 msgid "Column header in CSV file"
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:257
+#: taskcoachlib/gui/wizard/csvimport.py:258
 msgid "%s attribute"
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:298
+#: taskcoachlib/gui/wizard/csvimport.py:299
 msgid "No field mapping."
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:301
+#: taskcoachlib/gui/wizard/csvimport.py:302
 msgid "The \"%s\" field cannot be selected several times."
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:304
+#: taskcoachlib/gui/wizard/csvimport.py:305
 msgid "The fields %s cannot be selected several times."
 msgstr ""
 
@@ -5985,22 +5988,26 @@ msgid "No such mail: %d"
 msgstr ""
 
 #: taskcoachlib/persistence/csv/generator.py:33
-msgid "Planned start time"
+msgid "Actual start time"
 msgstr ""
 
 #: taskcoachlib/persistence/csv/generator.py:34
-msgid "Due time"
+msgid "Planned start time"
 msgstr ""
 
 #: taskcoachlib/persistence/csv/generator.py:35
+msgid "Due time"
+msgstr ""
+
+#: taskcoachlib/persistence/csv/generator.py:36
 msgid "Completion time"
 msgstr ""
 
-#: taskcoachlib/persistence/csv/generator.py:36
+#: taskcoachlib/persistence/csv/generator.py:37
 msgid "Reminder date"
 msgstr ""
 
-#: taskcoachlib/persistence/csv/generator.py:36
+#: taskcoachlib/persistence/csv/generator.py:37
 msgid "Reminder time"
 msgstr ""
 

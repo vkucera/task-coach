@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-01-15 04:09+0000\n"
+"POT-Creation-Date: 2012-01-15 22:12+0000\n"
 "PO-Revision-Date: 2011-02-13 11:40+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-15 15:57+0000\n"
-"X-Generator: Launchpad (build 14664)\n"
+"X-Launchpad-Export-Date: 2012-01-21 21:50+0000\n"
+"X-Generator: Launchpad (build 14700)\n"
 
 #: taskcoachlib/application/application.py:244
 msgid ""
@@ -866,7 +866,7 @@ msgid "Question mark"
 msgstr ""
 
 #: taskcoachlib/gui/artprovider.py:144
-#: taskcoachlib/gui/wizard/csvimport.py:333
+#: taskcoachlib/gui/wizard/csvimport.py:334
 msgid "Information"
 msgstr ""
 
@@ -1017,7 +1017,7 @@ msgstr ""
 #: taskcoachlib/gui/viewer/effort.py:190 taskcoachlib/gui/viewer/note.py:117
 #: taskcoachlib/gui/viewer/task.py:752
 #: taskcoachlib/gui/wizard/csvimport.py:224
-#: taskcoachlib/persistence/csv/reader.py:73
+#: taskcoachlib/persistence/csv/reader.py:74
 msgid "Description"
 msgstr "Περιγραφή"
 
@@ -1031,7 +1031,7 @@ msgstr ""
 #: taskcoachlib/gui/viewer/base.py:290 taskcoachlib/gui/viewer/category.py:80
 #: taskcoachlib/gui/viewer/note.py:99 taskcoachlib/gui/viewer/task.py:740
 #: taskcoachlib/gui/wizard/csvimport.py:223
-#: taskcoachlib/persistence/csv/reader.py:71
+#: taskcoachlib/persistence/csv/reader.py:72
 msgid "Subject"
 msgstr "Θέμα"
 
@@ -1043,7 +1043,7 @@ msgstr ""
 #: taskcoachlib/gui/dialog/editor.py:140 taskcoachlib/gui/uicommand.py:2469
 #: taskcoachlib/gui/viewer/task.py:830
 #: taskcoachlib/gui/wizard/csvimport.py:226
-#: taskcoachlib/persistence/csv/reader.py:84
+#: taskcoachlib/persistence/csv/reader.py:85
 msgid "Priority"
 msgstr "Προτεραιότητα"
 
@@ -1099,8 +1099,8 @@ msgstr "Ημερομηνίες"
 #: taskcoachlib/gui/dialog/templates.py:112
 #: taskcoachlib/gui/viewer/task.py:808
 #: taskcoachlib/gui/wizard/csvimport.py:227
-#: taskcoachlib/persistence/csv/generator.py:33
-#: taskcoachlib/persistence/csv/reader.py:89
+#: taskcoachlib/persistence/csv/generator.py:34
+#: taskcoachlib/persistence/csv/reader.py:92
 msgid "Planned start date"
 msgstr ""
 
@@ -1108,21 +1108,24 @@ msgstr ""
 #: taskcoachlib/gui/dialog/templates.py:115
 #: taskcoachlib/gui/viewer/task.py:809
 #: taskcoachlib/gui/wizard/csvimport.py:228
-#: taskcoachlib/persistence/csv/generator.py:34
-#: taskcoachlib/persistence/csv/reader.py:91
+#: taskcoachlib/persistence/csv/generator.py:35
+#: taskcoachlib/persistence/csv/reader.py:94
 msgid "Due date"
 msgstr "Ημερομηνία λήξης"
 
 #: taskcoachlib/gui/dialog/editor.py:290 taskcoachlib/gui/viewer/task.py:810
+#: taskcoachlib/gui/wizard/csvimport.py:229
+#: taskcoachlib/persistence/csv/generator.py:33
+#: taskcoachlib/persistence/csv/reader.py:90
 msgid "Actual start date"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:291
 #: taskcoachlib/gui/dialog/templates.py:118
 #: taskcoachlib/gui/viewer/task.py:811
-#: taskcoachlib/gui/wizard/csvimport.py:229
-#: taskcoachlib/persistence/csv/generator.py:35
-#: taskcoachlib/persistence/csv/reader.py:93
+#: taskcoachlib/gui/wizard/csvimport.py:230
+#: taskcoachlib/persistence/csv/generator.py:36
+#: taskcoachlib/persistence/csv/reader.py:96
 msgid "Completion date"
 msgstr "Ημερομηνία ολοκλήρωσης"
 
@@ -1162,8 +1165,8 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:400 taskcoachlib/gui/dialog/editor.py:422
 #: taskcoachlib/gui/uicommand.py:2469 taskcoachlib/gui/viewer/task.py:827
-#: taskcoachlib/gui/wizard/csvimport.py:230
-#: taskcoachlib/persistence/csv/reader.py:95
+#: taskcoachlib/gui/wizard/csvimport.py:231
+#: taskcoachlib/persistence/csv/reader.py:98
 msgid "Budget"
 msgstr "Έσοδα"
 
@@ -1177,15 +1180,15 @@ msgid "Budget left"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:472 taskcoachlib/gui/viewer/task.py:831
-#: taskcoachlib/gui/wizard/csvimport.py:232
-#: taskcoachlib/persistence/csv/reader.py:114
+#: taskcoachlib/gui/wizard/csvimport.py:233
+#: taskcoachlib/persistence/csv/reader.py:117
 msgid "Hourly fee"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:481 taskcoachlib/gui/uicommand.py:2469
 #: taskcoachlib/gui/viewer/task.py:832
-#: taskcoachlib/gui/wizard/csvimport.py:231
-#: taskcoachlib/persistence/csv/reader.py:109
+#: taskcoachlib/gui/wizard/csvimport.py:232
+#: taskcoachlib/persistence/csv/reader.py:112
 msgid "Fixed fee"
 msgstr ""
 
@@ -1972,25 +1975,25 @@ msgstr ""
 msgid "The latest released version of %(name)s is %(version)s."
 msgstr ""
 
-#: taskcoachlib/gui/idlecontroller.py:36
+#: taskcoachlib/gui/idlecontroller.py:37
 msgid ""
 "No user input since %s. The following task was\n"
 "being tracked:"
 msgstr ""
 
-#: taskcoachlib/gui/idlecontroller.py:41
+#: taskcoachlib/gui/idlecontroller.py:42
 msgid "Do nothing"
 msgstr ""
 
-#: taskcoachlib/gui/idlecontroller.py:42
+#: taskcoachlib/gui/idlecontroller.py:43
 msgid "Stop it at %s"
 msgstr ""
 
-#: taskcoachlib/gui/idlecontroller.py:43
+#: taskcoachlib/gui/idlecontroller.py:44
 msgid "Stop it at %s and resume now"
 msgstr ""
 
-#: taskcoachlib/gui/idlecontroller.py:126
+#: taskcoachlib/gui/idlecontroller.py:133
 msgid "Notification"
 msgstr ""
 
@@ -4096,37 +4099,37 @@ msgid "Please select a file."
 msgstr ""
 
 #: taskcoachlib/gui/wizard/csvimport.py:222
-#: taskcoachlib/persistence/csv/reader.py:69
+#: taskcoachlib/persistence/csv/reader.py:70
 msgid "ID"
 msgstr ""
 
 #: taskcoachlib/gui/wizard/csvimport.py:225
-#: taskcoachlib/persistence/csv/reader.py:76
+#: taskcoachlib/persistence/csv/reader.py:77
 msgid "Category"
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:233
-#: taskcoachlib/persistence/csv/reader.py:119
+#: taskcoachlib/gui/wizard/csvimport.py:234
+#: taskcoachlib/persistence/csv/reader.py:122
 msgid "Percent complete"
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:256
+#: taskcoachlib/gui/wizard/csvimport.py:257
 msgid "Column header in CSV file"
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:257
+#: taskcoachlib/gui/wizard/csvimport.py:258
 msgid "%s attribute"
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:298
+#: taskcoachlib/gui/wizard/csvimport.py:299
 msgid "No field mapping."
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:301
+#: taskcoachlib/gui/wizard/csvimport.py:302
 msgid "The \"%s\" field cannot be selected several times."
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:304
+#: taskcoachlib/gui/wizard/csvimport.py:305
 msgid "The fields %s cannot be selected several times."
 msgstr ""
 
@@ -5929,22 +5932,26 @@ msgid "No such mail: %d"
 msgstr ""
 
 #: taskcoachlib/persistence/csv/generator.py:33
-msgid "Planned start time"
+msgid "Actual start time"
 msgstr ""
 
 #: taskcoachlib/persistence/csv/generator.py:34
-msgid "Due time"
+msgid "Planned start time"
 msgstr ""
 
 #: taskcoachlib/persistence/csv/generator.py:35
+msgid "Due time"
+msgstr ""
+
+#: taskcoachlib/persistence/csv/generator.py:36
 msgid "Completion time"
 msgstr ""
 
-#: taskcoachlib/persistence/csv/generator.py:36
+#: taskcoachlib/persistence/csv/generator.py:37
 msgid "Reminder date"
 msgstr ""
 
-#: taskcoachlib/persistence/csv/generator.py:36
+#: taskcoachlib/persistence/csv/generator.py:37
 msgid "Reminder time"
 msgstr ""
 
