@@ -160,13 +160,13 @@ elif sys.argv[1] in ['bdist_deb', 'bdist_ubuntu']:
         license_summary=meta.data.license_notice, 
         wxpythonversion=meta.data.wxpythonversionnumber,
         subsection='Office', url=meta.data.url,
-        command='/usr/bin/taskcoach.py')
+        command='/usr/bin/taskcoach.py',
+        changelog_content=file('changelog_content', 'rb').read().rstrip())
 
     if sys.argv[1] == 'bdist_ubuntu':
         bdist_deb['distribution'] = sys.argv[2]
         bdist_deb['version'] = '%s-0ubuntu%s~%s' % (meta.version, sys.argv[3], sys.argv[2])
         bdist_deb['section'] = 'editors'
-        bdist_deb['changelog_content'] = file('changelog_content', 'rb').read().rstrip()
         sys.argv[1] = 'bdist_deb'
         del sys.argv[2]
         del sys.argv[2]
