@@ -497,7 +497,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             return 'duesoon'
         if self.actualStartDateTime() < date.Now():
             return 'active'
-        if any([not prerequisite.completed() for prerequisite in self.prerequisites()]):
+        # Don't call prerequisite.completed() because it will lead to infinite
+        # recursion in the case of circular dependencies:
+        if any([prerequisite.completionDateTime() == self.maxDateTime for prerequisite in self.prerequisites()]):
             return 'inactive'
         if self.parent() and self.parent().inactive():
             return 'inactive'

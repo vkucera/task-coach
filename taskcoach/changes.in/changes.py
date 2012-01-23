@@ -22,11 +22,13 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.6', 'January 22, 2012',
+Release('1.3.6', 'January 23, 2012',
     summary='''This is a bug fix release.''',
     bugsFixed=[
         Bug('''The link on the website for downloading sources pointed to the 
 iOS downloads.'''),
+        Bug('''Task Coach couldn't deal with circular dependencies between 
+tasks.''', '3477762'),
         ]
     ),
             
