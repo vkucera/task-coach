@@ -28,7 +28,7 @@ Release('1.3.6', 'January 23, 2012',
         Bug('''The link on the website for downloading sources pointed to the 
 iOS downloads.'''),
         Bug('''Task Coach couldn't deal with circular dependencies between 
-tasks.''', '3477762'),
+tasks.''', '3477762', '3477637'),
         ]
     ),
             
