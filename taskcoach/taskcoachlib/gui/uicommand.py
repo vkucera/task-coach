@@ -1405,6 +1405,8 @@ class TaskNew(TaskListCommand, SettingsCommand):
             kwargs['plannedStartDateTime'] = task.Task.suggestedPlannedStartDateTime()
         if self.__shouldPresetDueDateTime():
             kwargs['dueDateTime'] = task.Task.suggestedDueDateTime()
+        if self.__shouldPresetActualStartDateTime():
+            kwargs['actualStartDateTime'] = task.Task.suggestedActualStartDateTime()
         if self.__shouldPresetCompletionDateTime():
             kwargs['completionDateTime'] = task.Task.suggestedCompletionDateTime()
         if self.__shouldPresetReminderDateTime():
@@ -1438,6 +1440,10 @@ class TaskNew(TaskListCommand, SettingsCommand):
         return 'dueDateTime' not in self.taskKeywords and \
             self.settings.get('view', 'defaultduedatetime').startswith('preset')
     
+    def __shouldPresetActualStartDateTime(self):
+        return 'actualStartDateTime' not in self.taskKeywords and \
+            self.settings.get('view', 'defaultactualstartdatetime').startswith('preset')
+            
     def __shouldPresetCompletionDateTime(self):
         return 'completionDateTime' not in self.taskKeywords and \
             self.settings.get('view', 'defaultcompletiondatetime').startswith('preset')
