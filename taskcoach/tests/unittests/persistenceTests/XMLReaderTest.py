@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import xml.parsers.expat, wx, StringIO, os, tempfile
+import xml.parsers.expat, wx, StringIO, os, tempfile, base64
 import test
 from taskcoachlib import persistence, config, operating_system
 from taskcoachlib.domain import date, task
@@ -130,7 +130,6 @@ class TempFileLockTest(XMLReaderTestCase):
 
     def testLock(self):
         if os.name == 'nt': # pragma: no cover
-            import base64 # pylint: disable-msg=W0404
             self.writeAndReadTasks(\
                 '<tasks>\n<task status="0">\n'
                 '<attachment type="mail" status="0">\n'
@@ -1026,7 +1025,6 @@ class XMLReaderVersion23Test(XMLReaderTestCase):
         self.assertEqual('\nDescription\n', tasks[0].description())
 
     def testAttachmentData(self):
-        import base64
         tasks = self.writeAndReadTasks(\
             '<tasks>\n<task status="0">\n'
             '<attachment type="mail" status="0">\n'
@@ -1058,7 +1056,6 @@ class XMLReaderVersion24Test(XMLReaderTestCase):
         self.assertEqual('Description', tasks[0].description())
         
     def testAttachmentData(self):
-        import base64
         tasks = self.writeAndReadTasks(\
             '<tasks>\n<task status="0">\n'
             '<attachment type="mail" status="0">\n'
@@ -1399,9 +1396,9 @@ class XMLReaderVersion31Test(XMLReaderTestCase):
         tasks = super(XMLReaderVersion31Test, self).writeAndReadTasks(*args, **kwargs)
         tasksById = dict()
         def collectIds(tasks):
-            for task in tasks:
-                tasksById[task.id()] = task
-                collectIds(task.children())
+            for eachTask in tasks:
+                tasksById[eachTask.id()] = eachTask
+                collectIds(eachTask.children())
         collectIds(tasks)
         return tasksById
     
@@ -1456,6 +1453,32 @@ class XMLReaderVersion31Test(XMLReaderTestCase):
             </task>
         </tasks>\n''')
         self.assertDepends(tasks['1.1'], tasks['1.2'])
+
+    def testMutualPrerequisites(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task id="1" prerequisites="2"/>
+            <task id="2" prerequisites="1"/>
+        </tasks>\n''')
+        self.assertDepends(tasks['1'], tasks['2'])
+        self.assertDepends(tasks['2'], tasks['1'])
+
+    def testMutualPrerequisiteWithChild(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task id="1" prerequisites="1.1">
+                <task id="1.1" prerequisites="1"/>
+            </task>
+        </tasks>\n''')
+        self.assertDepends(tasks['1'], tasks['1.1'])
+        self.assertDepends(tasks['1.1'], tasks['1'])
+                
+    def testSelfPrerequisite(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task id="1" prerequisites="1"/>
+        </tasks>\n''')
+        self.assertDepends(tasks['1'], tasks['1'])
 
 
 class XMLReaderVersion33Test(XMLReaderTestCase):
@@ -1561,3 +1584,14 @@ class XMLReaderVersion34Test(XMLReaderTestCase):
         </tasks>\n''')
         self.assertEqual(date.DateTime(2005,1,1,22,1,30,456), 
                          tasks[0].actualStartDateTime())
+        
+    def testTaskWithNoteWithCategory(self):
+        tasks, categories = self.writeAndReadTasksAndCategories('''
+        <tasks>
+            <task>
+                <note subject="note" id="note1"/>
+            </task>
+            <category id="cat1" categorizables="note1"/>
+        </tasks>\n''')
+        self.assertEqual(list(tasks[0].notes())[0], 
+                         list(categories[0].categorizables())[0])

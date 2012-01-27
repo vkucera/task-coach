@@ -249,4 +249,11 @@ class TaskStatusTest(test.TestCase):
             expectedStatus = 'late' if planned < self.now else 'inactive'
             self.assertTaskStatus(expectedStatus, plannedStartDateTime=planned,
                                                   prerequisites=[prerequisite])
+            
+    def testMutualPrerequisites(self):
+        taskA = task.Task()
+        taskB = task.Task(prerequisites=[taskA])
+        taskA.addPrerequisites([taskB])
+        for eachTask in (taskA, taskB):
+            self.assertEqual('inactive', eachTask.status())
              

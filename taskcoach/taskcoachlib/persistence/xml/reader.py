@@ -72,10 +72,9 @@ class XMLReader(object):
         categorizables = tasks[:]
         for eachTask in tasks:
             categorizables.extend(eachTask.children(recursive=True))
-        if self.__tskversion <= 15:
-            notes = []
-        else:
-            notes = self._parseNoteNodes(root)
+        for eachTask in tasks:
+            categorizables.extend(eachTask.notes(recursive=True))
+        notes = self._parseNoteNodes(root)
         categorizables.extend(notes)
         for eachNote in notes:
             categorizables.extend(eachNote.children(recursive=True))

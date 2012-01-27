@@ -493,6 +493,9 @@ class TaskDatesPage(SettingsPage):
         self.addChoiceSetting('view', 'defaultduedatetime', 
                               _('Default due date and time'), 
                               '', check_choices, day_choices, time_choices)
+        self.addChoiceSetting('view', 'defaultactualstartdatetime',
+                              _('Default actual start date and time'),
+                              '', check_choices, day_choices, time_choices)
         self.addChoiceSetting('view', 'defaultcompletiondatetime', 
                               _('Default completion date and time'),
                               '', [check_choices[1]], day_choices, time_choices)

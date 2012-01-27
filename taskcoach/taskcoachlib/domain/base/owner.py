@@ -75,10 +75,14 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
     
     klass.modificationEventTypes = classmethod(modificationEventTypes)
 
-    def objects(instance):
+    def objects(instance, recursive=False):
         ownedObjects = getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower()))
-        return [ownedObject for ownedObject in ownedObjects \
+        result = [ownedObject for ownedObject in ownedObjects \
                 if not ownedObject.isDeleted()]
+        if recursive:
+            for ownedObject in result[:]:
+                result.extend(ownedObject.children(recursive=True))
+        return result
 
     setattr(klass, '%ss' % klass.__ownedType__.lower(), objects)
 

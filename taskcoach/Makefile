@@ -92,17 +92,17 @@ opensuse: sdist_linux
 
 deb: sdist_linux
 	mv dist/TaskCoach-$(TCVERSION).tar.gz dist/TaskCoach_$(TCVERSION).tar.gz
-	$(PYTHON) make.py bdist_deb --sdist=dist/TaskCoach_$(TCVERSION).tar.gz
+	LC_ALL=C $(PYTHON) make.py bdist_deb --sdist=dist/TaskCoach_$(TCVERSION).tar.gz
 	mv dist/taskcoach_$(TCVERSION)-1_all.deb dist/taskcoach_$(TCVERSION)-1.deb
 
 ubuntu: sdist_ubuntu
-	$(PYTHON) make.py bdist_ubuntu lucid 10 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu10~lucid.tar.gz
+	LC_ALL=C $(PYTHON) make.py bdist_ubuntu lucid 10 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu10~lucid.tar.gz
 	mv build build-lucid
-	$(PYTHON) make.py bdist_ubuntu maverick 10 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu10~maverick.tar.gz
+	LC_ALL=C $(PYTHON) make.py bdist_ubuntu maverick 10 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu10~maverick.tar.gz
 	mv build build-maverick
-	$(PYTHON) make.py bdist_ubuntu natty 11 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu11~natty.tar.gz
+	LC_ALL=C $(PYTHON) make.py bdist_ubuntu natty 11 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu11~natty.tar.gz
 	mv build build-natty
-	$(PYTHON) make.py bdist_ubuntu oneiric 11 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu11~oneiric.tar.gz
+	LC_ALL=C $(PYTHON) make.py bdist_ubuntu oneiric 11 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu11~oneiric.tar.gz
 	mv build build-oneiric
 
 ppa-sign: ubuntu

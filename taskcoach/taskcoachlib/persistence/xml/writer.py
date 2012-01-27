@@ -78,10 +78,14 @@ class XMLWriter(object):
 
         for rootTask in sortedById(taskList.rootItems()):
             self.taskNode(root, rootTask)
+        
+        ownedNotes = self.notesOwnedByNoteOwners(taskList, categoryContainer)
         for rootCategory in sortedById(categoryContainer.rootItems()):
-            self.categoryNode(root, rootCategory, taskList, noteContainer)
+            self.categoryNode(root, rootCategory, taskList, noteContainer, ownedNotes)
+
         for rootNote in sortedById(noteContainer.rootItems()):
             self.noteNode(root, rootNote)
+        
         if syncMLConfig:
             self.syncMLNode(root, syncMLConfig)
         if guid:
@@ -91,7 +95,14 @@ class XMLWriter(object):
         PIElementTree('<?taskcoach release="%s" tskversion="%d"?>\n' % (meta.data.version,
                                                                          self.__versionnr),
                                                 root).write(self.__fd, 'utf-8')
-
+    
+    def notesOwnedByNoteOwners(self, *collectionOfNoteOwners):
+        notes = []
+        for noteOwners in collectionOfNoteOwners:
+            for noteOwner in noteOwners:
+                notes.extend(noteOwner.notes(recursive=True))
+        return notes
+    
     def taskNode(self, parentNode, task): # pylint: disable-msg=W0621
         maxDateTime = self.maxDateTime
         node = self.baseCompositeNode(parentNode, task, 'task', self.taskNode)

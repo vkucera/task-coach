@@ -605,7 +605,7 @@ pages['download'] = '''
                                 </td>
                                 <td>
                                     <h3>Sources</h3>
-                                    <a href="download_for_iphone.html"><img alt"iOS" src="images/sources.png"></a>
+                                    <a href="download_sources.html"><img alt"iOS" src="images/sources.png"></a>
                                 </td>
                                 <td>
                                     <h3>Daily builds</h3>
