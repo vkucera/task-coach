@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TaskCoach\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-15 22:12+0000\n"
-"PO-Revision-Date: 2012-01-16 00:21+0000\n"
-"Last-Translator: Jérôme Laheurte <fraca7@free.fr>\n"
+"POT-Creation-Date: 2012-01-22 23:30+0000\n"
+"PO-Revision-Date: 2012-01-28 22:24+0000\n"
+"Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Français <fraca7@free.fr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-21 21:49+0000\n"
-"X-Generator: Launchpad (build 14700)\n"
+"X-Launchpad-Export-Date: 2012-01-28 22:33+0000\n"
+"X-Generator: Launchpad (build 14727)\n"
 "X-Poedit-Country: France\n"
 "X-Poedit-Language: fr_FR\n"
 "Generated-By: pygettext.py 1.5\n"
@@ -354,19 +354,19 @@ msgstr "Marquer \"%s\" terminée"
 
 #: taskcoachlib/command/taskCommands.py:201
 msgid "Mark task active"
-msgstr ""
+msgstr "Activer la tâche"
 
 #: taskcoachlib/command/taskCommands.py:202
 msgid "Mark \"%s\" active"
-msgstr ""
+msgstr "Activer \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:227
 msgid "Mark task inactive"
-msgstr ""
+msgstr "Désactiver la tâche"
 
 #: taskcoachlib/command/taskCommands.py:228
 msgid "Mark \"%s\" inactive"
-msgstr ""
+msgstr "Désactiver \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:253
 msgid "Start tracking"
@@ -1677,7 +1677,7 @@ msgstr "Tâches dues bientôt"
 
 #: taskcoachlib/gui/dialog/preferences.py:410
 msgid "Late tasks"
-msgstr ""
+msgstr "Tâches en retard"
 
 #: taskcoachlib/gui/dialog/preferences.py:421
 msgid "Features"
@@ -2963,7 +2963,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1556
 msgid "Mark the selected task(s) active"
-msgstr ""
+msgstr "Activer les tâches sélectionnées"
 
 #: taskcoachlib/gui/uicommand.py:1574
 msgid "Mark task &inactive\tCtrl+Alt+RETURN"
@@ -2971,7 +2971,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1575
 msgid "Mark the selected task(s) inactive"
-msgstr ""
+msgstr "Désactiver les tâches sélectionnées"
 
 #: taskcoachlib/gui/uicommand.py:1593
 msgid "Mark task &completed\tCtrl+RETURN"
@@ -4015,6 +4015,7 @@ msgstr "Tâches: %d sélectionnée(s), %d visible(s), %d au total"
 #: taskcoachlib/gui/viewer/task.py:35
 msgid "Status: %d overdue, %d late, %d inactive, %d completed"
 msgstr ""
+"Récap : %d en dépassement, %d en retard, %d inactive(s), %d terminé(e)s"
 
 #: taskcoachlib/gui/viewer/task.py:103 taskcoachlib/help/__init__.py:68
 #: taskcoachlib/help/__init__.py:136
@@ -4171,7 +4172,7 @@ msgstr "Tâches actives: %d (%d%%)"
 
 #: taskcoachlib/gui/viewer/task.py:1136
 msgid "Late tasks: %d (%d%%)"
-msgstr ""
+msgstr "Tâches en retard : %d (%d%%)"
 
 #: taskcoachlib/gui/viewer/task.py:1137
 msgid "Completed tasks: %d (%d%%)"
@@ -4501,6 +4502,10 @@ msgid ""
 "task\n"
 "to a value between 0% and 100%."
 msgstr ""
+"date effective de début : la date à laquelle la tâche a réellement débuté.\n"
+"La date effective de début peut être éditée manuellement. Elle est aussi "
+"automatiquement enregistrée quand vous activez le suivi d'effort ou quand "
+"vous précisez le degré d'avancement d'une tâche."
 
 #: taskcoachlib/help/__init__.py:160
 msgid ""
@@ -4525,6 +4530,12 @@ msgid ""
 "date has to be in the past <em>and</em> all prerequisite tasks need to be\n"
 "completed before the task becomes late."
 msgstr ""
+"Prérequis : Autres tâches qui doivent être accomplies avant qu'une tâche "
+"puisse être démarrée. La tâche demeure inactive tant que la dernière tâche "
+"annexe n'est pas terminée.\n"
+"NB : si une tâche possède une date de début planifié spécifique, cette date "
+"doit être antérieure.  <em>Par ailleurs</em> toutes les tâches annexes "
+"doivent être réalisées avant que la tâche devienne en retard."
 
 #: taskcoachlib/help/__init__.py:168
 msgid "Budget: amount of hours available for the task."
@@ -4579,13 +4590,15 @@ msgstr "Une tâche est toujours dans un seul de ces états:"
 
 #: taskcoachlib/help/__init__.py:186
 msgid "Active: the actual start date is in the past;"
-msgstr ""
+msgstr "Active : La date réelle de début est antérieure"
 
 #: taskcoachlib/help/__init__.py:187
 msgid ""
 "Inactive: the task has not been started and/or not all \n"
 "prerequisite tasks have been completed;"
 msgstr ""
+"Inactive : la tâche n'a pas débuté et/ou l'ensemble des tâches liées n'a pas "
+"été réalisé;"
 
 #: taskcoachlib/help/__init__.py:189
 msgid "Completed: the task has been completed."
@@ -4613,6 +4626,7 @@ msgid ""
 "Late: the planned start is in the past and the task has \n"
 "not been started;"
 msgstr ""
+"En retard : la date de début prévue est antérieure et la tâche n'a pas débuté"
 
 #: taskcoachlib/help/__init__.py:198
 msgid "Over budget: no budget left;"
@@ -4644,7 +4658,7 @@ msgstr "Les tâches actives on un texte noir et une icône bleue;"
 
 #: taskcoachlib/help/__init__.py:209
 msgid "Late tasks are purple;"
-msgstr ""
+msgstr "Les tâches en retard sont indiquées en violet"
 
 #: taskcoachlib/help/__init__.py:210
 msgid "Future tasks are gray, and"
@@ -6529,7 +6543,7 @@ msgstr "Aucun mail correspondant: %d"
 
 #: taskcoachlib/persistence/csv/generator.py:33
 msgid "Actual start time"
-msgstr ""
+msgstr "Date réelle de début"
 
 #: taskcoachlib/persistence/csv/generator.py:34
 msgid "Planned start time"

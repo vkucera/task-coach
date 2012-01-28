@@ -2,15 +2,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Task Coach 0.45\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-15 22:12+0000\n"
-"PO-Revision-Date: 2012-01-15 23:54+0000\n"
+"POT-Creation-Date: 2012-01-22 23:30+0000\n"
+"PO-Revision-Date: 2012-01-28 22:23+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: jjramos <jjramos@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-21 21:48+0000\n"
-"X-Generator: Launchpad (build 14700)\n"
+"X-Launchpad-Export-Date: 2012-01-28 22:33+0000\n"
+"X-Generator: Launchpad (build 14727)\n"
 "X-Poedit-Country: SPAIN\n"
 "X-Poedit-Language: Spanish\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -121,11 +121,11 @@ msgstr "Arrastrar y soltar \"%s\""
 
 #: taskcoachlib/command/base.py:404
 msgid "Edit subjects"
-msgstr "Editar los sujetos"
+msgstr "Editar los asuntos"
 
 #: taskcoachlib/command/base.py:405
 msgid "Edit subject \"%s\""
-msgstr "Editar los sujetos \"%s\""
+msgstr "Editar los asuntos \"%s\""
 
 #: taskcoachlib/command/base.py:427
 msgid "Edit descriptions"
@@ -153,11 +153,11 @@ msgstr "Cambiar fuente \"%s\""
 
 #: taskcoachlib/command/base.py:529
 msgid "Change foreground colors"
-msgstr "Cambiar los colores del primer plano"
+msgstr "Cambiar los colores de primer plano"
 
 #: taskcoachlib/command/base.py:530
 msgid "Change foreground color \"%s\""
-msgstr "Cambiar el color del primer plano \"%s\""
+msgstr "Cambiar el color de primer plano \"%s\""
 
 #: taskcoachlib/command/base.py:542
 msgid "Change background colors"
@@ -182,7 +182,7 @@ msgstr "Nueva categoría"
 
 #: taskcoachlib/command/categoryCommands.py:41
 msgid "New subcategories"
-msgstr "Nueva subcategorias"
+msgstr "Nuevas subcategorias"
 
 #: taskcoachlib/command/categoryCommands.py:42
 msgid "New subcategory of \"%s\""
@@ -342,7 +342,7 @@ msgstr "Nueva subtarea"
 
 #: taskcoachlib/command/taskCommands.py:173
 msgid "Mark tasks completed"
-msgstr "Marcar Tareas Completadas"
+msgstr "Marcar tareas completadas"
 
 #: taskcoachlib/command/taskCommands.py:174
 msgid "Mark \"%s\" completed"
@@ -350,19 +350,19 @@ msgstr "Marcar \"%s\" como completada"
 
 #: taskcoachlib/command/taskCommands.py:201
 msgid "Mark task active"
-msgstr ""
+msgstr "Marcar tarea activa"
 
 #: taskcoachlib/command/taskCommands.py:202
 msgid "Mark \"%s\" active"
-msgstr ""
+msgstr "Marcar \"%s\" activa"
 
 #: taskcoachlib/command/taskCommands.py:227
 msgid "Mark task inactive"
-msgstr ""
+msgstr "Marcar tarea inactiva"
 
 #: taskcoachlib/command/taskCommands.py:228
 msgid "Mark \"%s\" inactive"
-msgstr ""
+msgstr "Marcar \"%s\" inactiva"
 
 #: taskcoachlib/command/taskCommands.py:253
 msgid "Start tracking"
@@ -370,7 +370,7 @@ msgstr "Comenzar seguimiento"
 
 #: taskcoachlib/command/taskCommands.py:254
 msgid "Start tracking \"%s\""
-msgstr "seguimiento de inicio \"%s\""
+msgstr "Comenzar el seguimiento  \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:290
 msgid "Stop tracking"
@@ -1886,7 +1886,7 @@ msgstr "Recordatorio de fecha y hora"
 
 #: taskcoachlib/gui/dialog/reminder.py:67
 msgid "Snooze"
-msgstr "Permitir postoner"
+msgstr "Permitir postponer"
 
 #: taskcoachlib/gui/dialog/reminder.py:85
 msgid ""
@@ -2508,11 +2508,11 @@ msgstr "Recuerdo %s"
 
 #: taskcoachlib/gui/taskbaricon.py:136
 msgid "%d tasks overdue"
-msgstr "%d de tareas pasadas de fecha"
+msgstr "%d de tareas vencidas"
 
 #: taskcoachlib/gui/taskbaricon.py:136
 msgid "one task overdue"
-msgstr "una tarea pasada de fecha"
+msgstr "una tarea vencida"
 
 #: taskcoachlib/gui/taskbaricon.py:137
 msgid "%d tasks due soon"
@@ -2757,7 +2757,7 @@ msgstr "Editar preferencias de SyncML"
 
 #: taskcoachlib/gui/uicommand.py:962
 msgid "SyncML preferences"
-msgstr "SyncML preferencias"
+msgstr "Preferencias de SyncML"
 
 #: taskcoachlib/gui/uicommand.py:968
 msgid "&All\tCtrl+A"
@@ -2832,7 +2832,7 @@ msgid ""
 "When comparing text, sorting is case sensitive (checked) or insensitive "
 "(unchecked)"
 msgstr ""
-"Cuando compare texto, ordenar si es sensible al tipo de letra (marcado) o no "
+"Cuando se compara texto, ordenar distinguiendo mayúsculas (marcado) o no "
 "(desmarcado)"
 
 #: taskcoachlib/gui/uicommand.py:1206
@@ -2960,23 +2960,23 @@ msgstr "Insertar un nuevo subitem del item seleccionado"
 
 #: taskcoachlib/gui/uicommand.py:1555
 msgid "Mark task &active\tAlt+RETURN"
-msgstr ""
+msgstr "Marcar tarea &activa\tAlt+RETURN"
 
 #: taskcoachlib/gui/uicommand.py:1556
 msgid "Mark the selected task(s) active"
-msgstr ""
+msgstr "Marcar la(s) tarea(s) seleccionada(s) como activa(s)"
 
 #: taskcoachlib/gui/uicommand.py:1574
 msgid "Mark task &inactive\tCtrl+Alt+RETURN"
-msgstr ""
+msgstr "Marcar tarea &inactiva\tCtrl+Alt+RETURN"
 
 #: taskcoachlib/gui/uicommand.py:1575
 msgid "Mark the selected task(s) inactive"
-msgstr ""
+msgstr "Marcar la(s) tarea(s) seleccionada(s) como inactiva(s)"
 
 #: taskcoachlib/gui/uicommand.py:1593
 msgid "Mark task &completed\tCtrl+RETURN"
-msgstr ""
+msgstr "Marcar tarea &completada\tCtrl+RETURN"
 
 #: taskcoachlib/gui/uicommand.py:1594
 msgid "Mark the selected task(s) completed"
@@ -3142,7 +3142,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:2257
 msgid "&About %s"
-msgstr "&Sobre %s"
+msgstr "&Acerca de %s"
 
 #: taskcoachlib/gui/uicommand.py:2258
 msgid "Version and contact information about %s"
@@ -3190,11 +3190,11 @@ msgstr "Examine las preguntas frecuentes y sus respuestas"
 
 #: taskcoachlib/gui/uicommand.py:2306
 msgid "Report a &bug..."
-msgstr "Reporte una &pulga..."
+msgstr "Informe de un &error..."
 
 #: taskcoachlib/gui/uicommand.py:2307
 msgid "Report a bug or browse known bugs"
-msgstr "Reportar una pulga o navegar entre pulgas conocidas"
+msgstr "Informar de un error o ver errores conocidos"
 
 #: taskcoachlib/gui/uicommand.py:2313
 msgid "Request a &feature..."
@@ -5913,7 +5913,7 @@ msgid ""
 msgstr ""
 "%(name)s se está desarrollando activamente. Aunque los desarrolladores "
 "%(name)s intentan evitarlos, los errores existen. Por ello, se recomienda "
-"encarecidamente realizar copias de resguardo de su trabajo."
+"encarecidamente realizar copias de seguridad de su trabajo."
 
 #: taskcoachlib/help/tips.py:26
 msgid ""
@@ -6671,7 +6671,7 @@ msgstr "Color usado para resaltar el día actual"
 
 #: taskcoachlib/widgets/dialog.py:65
 msgid "Close"
-msgstr "Cerrada"
+msgstr "Cerrar"
 
 #: taskcoachlib/widgets/dialog.py:157
 msgid "All files (*.*)|*"
@@ -6957,4 +6957,4 @@ msgstr "Error al abrir la URL"
 #~ msgstr "Fecha y hora de inicio por defecto"
 
 #~ msgid "Status: %d overdue, %d inactive, %d completed"
-#~ msgstr "Estatus: %d vencidas, %d inactivas, %d completadas"
+#~ msgstr "Estado: %d vencidas, %d inactivas, %d completadas"

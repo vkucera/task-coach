@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Task Coach\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-15 22:12+0000\n"
-"PO-Revision-Date: 2011-12-16 15:45+0000\n"
-"Last-Translator: Наталья <Unknown>\n"
+"POT-Creation-Date: 2012-01-22 23:30+0000\n"
+"PO-Revision-Date: 2012-01-24 19:24+0000\n"
+"Last-Translator: Sidorov MA <mish-74@yandex.ru>\n"
 "Language-Team: Russian <fundamentator@yahoo.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-21 21:49+0000\n"
-"X-Generator: Launchpad (build 14700)\n"
+"X-Launchpad-Export-Date: 2012-01-28 22:32+0000\n"
+"X-Generator: Launchpad (build 14727)\n"
 "Generated-By: pygettext.py 1.5\n"
 
 #: taskcoachlib/application/application.py:244
@@ -444,7 +444,7 @@ msgstr "Изменить срок \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:541
 msgid "Change actual start date"
-msgstr ""
+msgstr "Изменить дату начала работ"
 
 #: taskcoachlib/command/taskCommands.py:542
 msgid "Change actual start date of \"%s\""
@@ -1106,7 +1106,7 @@ msgstr "Даты"
 #: taskcoachlib/persistence/csv/generator.py:34
 #: taskcoachlib/persistence/csv/reader.py:92
 msgid "Planned start date"
-msgstr ""
+msgstr "Плановое начало работ"
 
 #: taskcoachlib/gui/dialog/editor.py:288
 #: taskcoachlib/gui/dialog/templates.py:115
@@ -1122,7 +1122,7 @@ msgstr "Срок"
 #: taskcoachlib/persistence/csv/generator.py:33
 #: taskcoachlib/persistence/csv/reader.py:90
 msgid "Actual start date"
-msgstr ""
+msgstr "Дата начала работ"
 
 #: taskcoachlib/gui/dialog/editor.py:291
 #: taskcoachlib/gui/dialog/templates.py:118
@@ -2841,6 +2841,8 @@ msgstr "Скрыть неактивные задачи"
 msgid ""
 "Show/hide inactive tasks (tasks with a planned start date in the future)"
 msgstr ""
+"Показать/скрыть неактивные задачи (задачи с не наступившей плановой датой "
+"начала)"
 
 #: taskcoachlib/gui/uicommand.py:1261
 msgid "Hide &active tasks"
@@ -2947,7 +2949,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1556
 msgid "Mark the selected task(s) active"
-msgstr ""
+msgstr "Пометить выделенные задачи как активные"
 
 #: taskcoachlib/gui/uicommand.py:1574
 msgid "Mark task &inactive\tCtrl+Alt+RETURN"
@@ -2955,7 +2957,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1575
 msgid "Mark the selected task(s) inactive"
-msgstr ""
+msgstr "Пометить выделенные задачи неактивными"
 
 #: taskcoachlib/gui/uicommand.py:1593
 msgid "Mark task &completed\tCtrl+RETURN"
@@ -3308,7 +3310,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:2594
 msgid "Always round up to the next rounding increment"
-msgstr ""
+msgstr "Всегда округлять до большего значения"
 
 #: taskcoachlib/gui/viewer/attachment.py:69
 msgid "Type"
@@ -3694,6 +3696,7 @@ msgstr "&Скрыть все неактивные задачи"
 msgid ""
 "Hide all inactive tasks (tasks with a planned start date in the future)"
 msgstr ""
+"Скрыть все неактивные задачи (задачи с не наступившей плановой датой начала)"
 
 #: taskcoachlib/gui/viewer/mixin.py:282
 msgid "Only show tasks starting &today"
@@ -3837,7 +3840,7 @@ msgstr "Сортировать задачи по категориям"
 
 #: taskcoachlib/gui/viewer/mixin.py:509
 msgid "Sort tasks by planned start date"
-msgstr ""
+msgstr "Сортировать задачи по плановой дате начала"
 
 #: taskcoachlib/gui/viewer/mixin.py:509 taskcoachlib/gui/viewer/task.py:862
 msgid "&Planned start date"
@@ -4023,7 +4026,7 @@ msgstr "Показать/скрыть все колонки, связанные 
 
 #: taskcoachlib/gui/viewer/task.py:863
 msgid "Show/hide planned start date column"
-msgstr ""
+msgstr "Показать/скрыть плановую дату начала"
 
 #: taskcoachlib/gui/viewer/task.py:866
 msgid "Show/hide due date column"
@@ -6425,11 +6428,11 @@ msgstr "Нет такого письма: %d"
 
 #: taskcoachlib/persistence/csv/generator.py:33
 msgid "Actual start time"
-msgstr ""
+msgstr "Актуальное время начала работ"
 
 #: taskcoachlib/persistence/csv/generator.py:34
 msgid "Planned start time"
-msgstr ""
+msgstr "Запланированное время начала работ"
 
 #: taskcoachlib/persistence/csv/generator.py:35
 msgid "Due time"
@@ -6664,7 +6667,7 @@ msgstr "Задачи с датой окончания"
 
 #: taskcoachlib/widgets/calendarconfig.py:81
 msgid "Tasks with a planned start date"
-msgstr ""
+msgstr "Задачи с запланированной датой начала"
 
 #: taskcoachlib/widgets/calendarconfig.py:82
 msgid "All tasks"

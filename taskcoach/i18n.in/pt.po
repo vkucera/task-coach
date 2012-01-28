@@ -9,15 +9,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pt\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-01-15 22:12+0000\n"
-"PO-Revision-Date: 2011-12-26 11:37+0000\n"
-"Last-Translator: jbatista <Unknown>\n"
+"POT-Creation-Date: 2012-01-22 23:30+0000\n"
+"PO-Revision-Date: 2012-01-25 22:51+0000\n"
+"Last-Translator: millemiglia <dnieper650@gmail.com>\n"
 "Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-21 21:50+0000\n"
-"X-Generator: Launchpad (build 14700)\n"
+"X-Launchpad-Export-Date: 2012-01-28 22:32+0000\n"
+"X-Generator: Launchpad (build 14727)\n"
 
 #: taskcoachlib/application/application.py:244
 msgid ""
@@ -354,19 +354,19 @@ msgstr "Marcar \"%s\" como concluída"
 
 #: taskcoachlib/command/taskCommands.py:201
 msgid "Mark task active"
-msgstr ""
+msgstr "Marcar tarefas ativas"
 
 #: taskcoachlib/command/taskCommands.py:202
 msgid "Mark \"%s\" active"
-msgstr ""
+msgstr "Marcar \"%s\" como ativa"
 
 #: taskcoachlib/command/taskCommands.py:227
 msgid "Mark task inactive"
-msgstr ""
+msgstr "Marcar tarefas inativas"
 
 #: taskcoachlib/command/taskCommands.py:228
 msgid "Mark \"%s\" inactive"
-msgstr ""
+msgstr "Marcar \"%s\" como inativa"
 
 #: taskcoachlib/command/taskCommands.py:253
 msgid "Start tracking"
@@ -1678,7 +1678,7 @@ msgstr "Tarefa a vencer em breve"
 
 #: taskcoachlib/gui/dialog/preferences.py:410
 msgid "Late tasks"
-msgstr ""
+msgstr "Tarefas atrasadas"
 
 #: taskcoachlib/gui/dialog/preferences.py:421
 msgid "Features"
@@ -2857,6 +2857,8 @@ msgstr "Ocultar tarefas &inactivas"
 msgid ""
 "Show/hide inactive tasks (tasks with a planned start date in the future)"
 msgstr ""
+"Mostrar/ocultar tarefas inativas (tarefas com uma data planejada de início "
+"no futuro)"
 
 #: taskcoachlib/gui/uicommand.py:1261
 msgid "Hide &active tasks"
@@ -2867,6 +2869,8 @@ msgid ""
 "Show/hide active tasks (tasks with a planned start date in the past that are "
 "not completed)"
 msgstr ""
+"Mostrar/ocultar tarefas ativas (tarefas com uma data planejada de início no "
+"passado que ainda não estão finalizadas)"
 
 #: taskcoachlib/gui/uicommand.py:1274
 msgid "Hide &completed tasks"
@@ -2960,7 +2964,7 @@ msgstr "Inserir um novo subitem para o item seleccionado"
 
 #: taskcoachlib/gui/uicommand.py:1555
 msgid "Mark task &active\tAlt+RETURN"
-msgstr ""
+msgstr "Marcar tarefa como &ativa\tAlt+RETURN"
 
 #: taskcoachlib/gui/uicommand.py:1556
 msgid "Mark the selected task(s) active"
@@ -2968,7 +2972,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1574
 msgid "Mark task &inactive\tCtrl+Alt+RETURN"
-msgstr ""
+msgstr "Marcar tarefa como &inativa\tCtrl+Alt+RETURN"
 
 #: taskcoachlib/gui/uicommand.py:1575
 msgid "Mark the selected task(s) inactive"
@@ -2976,7 +2980,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1593
 msgid "Mark task &completed\tCtrl+RETURN"
-msgstr ""
+msgstr "Marcar tarefa como &finalizada\tCtrl+RETURN"
 
 #: taskcoachlib/gui/uicommand.py:1594
 msgid "Mark the selected task(s) completed"
@@ -3706,6 +3710,8 @@ msgstr "Mo&strar todas as tarefas inactivas"
 msgid ""
 "Show all inactive tasks (tasks with a planned start date in the future)"
 msgstr ""
+"Mostrar todas as tarefas inativas (tarefas com uma data planejada de início "
+"no futuro)"
 
 #: taskcoachlib/gui/viewer/mixin.py:279
 msgid "&Hide all inactive tasks"
@@ -3715,6 +3721,8 @@ msgstr "Esconder todas as tarefas inactivas"
 msgid ""
 "Hide all inactive tasks (tasks with a planned start date in the future)"
 msgstr ""
+"Ocultar todas as tarefas inativas (tarefas com uma data planejada de início "
+"no futuro)"
 
 #: taskcoachlib/gui/viewer/mixin.py:282
 msgid "Only show tasks starting &today"
@@ -3860,11 +3868,11 @@ msgstr "Ordenar tarefas por categoria"
 
 #: taskcoachlib/gui/viewer/mixin.py:509
 msgid "Sort tasks by planned start date"
-msgstr ""
+msgstr "Ordenar tarefas por data planejada de início"
 
 #: taskcoachlib/gui/viewer/mixin.py:509 taskcoachlib/gui/viewer/task.py:862
 msgid "&Planned start date"
-msgstr ""
+msgstr "Data &planejada de início"
 
 #: taskcoachlib/gui/viewer/mixin.py:510
 msgid "Sort tasks by due date"
@@ -3997,7 +4005,7 @@ msgstr "Tarefas: %d seleccionadas, %d visíveis, %d total"
 
 #: taskcoachlib/gui/viewer/task.py:35
 msgid "Status: %d overdue, %d late, %d inactive, %d completed"
-msgstr ""
+msgstr "Status: %d vencidas, %d atrasadas, %d inativas, %d finalizadas"
 
 #: taskcoachlib/gui/viewer/task.py:103 taskcoachlib/help/__init__.py:68
 #: taskcoachlib/help/__init__.py:136
@@ -4046,7 +4054,7 @@ msgstr "Mostrar/ocultar todas as colunas relacionadas com datas"
 
 #: taskcoachlib/gui/viewer/task.py:863
 msgid "Show/hide planned start date column"
-msgstr ""
+msgstr "Mostrar/ocultar coluna de data planejada de início"
 
 #: taskcoachlib/gui/viewer/task.py:866
 msgid "Show/hide due date column"
@@ -4054,11 +4062,11 @@ msgstr "Mostrar/ocultar coluna de data-limite"
 
 #: taskcoachlib/gui/viewer/task.py:868
 msgid "&Actual start date"
-msgstr ""
+msgstr "Data &real de início"
 
 #: taskcoachlib/gui/viewer/task.py:869
 msgid "Show/hide actual start date column"
-msgstr ""
+msgstr "Mostrar/ocultar coluna de data real de início"
 
 #: taskcoachlib/gui/viewer/task.py:872
 msgid "Show/hide completion date column"
@@ -4154,7 +4162,7 @@ msgstr "Tarefas ativas: %d (%d%%)"
 
 #: taskcoachlib/gui/viewer/task.py:1136
 msgid "Late tasks: %d (%d%%)"
-msgstr ""
+msgstr "Tarefas atrasadas: %d (%d%%)"
 
 #: taskcoachlib/gui/viewer/task.py:1137
 msgid "Completed tasks: %d (%d%%)"

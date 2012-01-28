@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-01-15 22:12+0000\n"
-"PO-Revision-Date: 2012-01-18 15:27+0000\n"
+"POT-Creation-Date: 2012-01-22 23:30+0000\n"
+"PO-Revision-Date: 2012-01-24 23:32+0000\n"
 "Last-Translator: millemiglia <dnieper650@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-21 21:49+0000\n"
-"X-Generator: Launchpad (build 14700)\n"
+"X-Launchpad-Export-Date: 2012-01-28 22:32+0000\n"
+"X-Generator: Launchpad (build 14727)\n"
 
 #: taskcoachlib/application/application.py:244
 msgid ""
@@ -3054,7 +3054,7 @@ msgstr "(Sem assunto)"
 
 #: taskcoachlib/gui/uicommand.py:1894
 msgid "Start tracking effort for %s"
-msgstr "Iniciarmonitoramento de atividade %s"
+msgstr "Iniciar monitoramento de atividade %s"
 
 #: taskcoachlib/gui/uicommand.py:1910
 msgid "Select a task via the menu and start tracking effort for it"
@@ -3488,7 +3488,7 @@ msgstr "Atividade: %d selecionados, %d visíveis, %d total"
 
 #: taskcoachlib/gui/viewer/effort.py:345
 msgid "Status: %d tracking"
-msgstr "Status: %d em acompanhamento"
+msgstr "Status: %d em monitoramento"
 
 #: taskcoachlib/gui/viewer/mixin.py:211
 msgid "&Due tasks"
@@ -4673,12 +4673,12 @@ msgid ""
 "the Effort menu or context menu or via the 'Start tracking effort' toolbar \n"
 "button."
 msgstr ""
-"Quando você dispende tempo nas tarefas, você pode gravar a quantidade de "
+"Quando você despende tempo nas tarefas, você pode gravar a quantidade de "
 "tempo\n"
-"gasto durante atividade. Selecione a tarefa e clique 'Iniciar acompanhamento "
+"gasto durante atividade. Selecione a tarefa e clique 'Iniciar monitoramento "
 "de atividade' no\n"
 "menu Atividade ou no menu de contexto ou através do botão 'Iniciar "
-"acompanhamento de atividade'\n"
+"onitoramento de atividade'\n"
 "na barra de ferramentas."
 
 #: taskcoachlib/help/__init__.py:232
@@ -6213,11 +6213,11 @@ msgstr ""
 
 #: taskcoachlib/help/uicommand.py:38
 msgid "Start tracking effort for the selected task(s)"
-msgstr "Iniciar acompanhamento de atividade para as tarefas selecionadas"
+msgstr "Iniciar monitoramento de atividade para as tarefas selecionadas"
 
 #: taskcoachlib/help/uicommand.py:39
 msgid "Stop tracking effort or resume tracking effort"
-msgstr "Parar ou reiniciar acompanhamento de atividade"
+msgstr "Parar ou reiniciar monitoramento de atividade"
 
 #: taskcoachlib/help/uicommand.py:40
 msgid "Close the current file"

@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-15 22:12+0000\n"
-"PO-Revision-Date: 2012-01-08 09:13+0000\n"
-"Last-Translator: Frank Niessink <frank@niessink.com>\n"
+"POT-Creation-Date: 2012-01-22 23:30+0000\n"
+"PO-Revision-Date: 2012-01-23 16:22+0000\n"
+"Last-Translator: ig ge <elchspam@aol.com>\n"
 "Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-21 21:48+0000\n"
-"X-Generator: Launchpad (build 14700)\n"
+"X-Launchpad-Export-Date: 2012-01-28 22:32+0000\n"
+"X-Generator: Launchpad (build 14727)\n"
 "X-Poedit-Country: GERMANY\n"
 "X-Poedit-Language: German\n"
 "Generated-By: pygettext.py 1.5\n"
@@ -356,19 +356,19 @@ msgstr "Markiere \"%s\" als erledigt"
 
 #: taskcoachlib/command/taskCommands.py:201
 msgid "Mark task active"
-msgstr ""
+msgstr "Als aktiv markieren"
 
 #: taskcoachlib/command/taskCommands.py:202
 msgid "Mark \"%s\" active"
-msgstr ""
+msgstr "\"%s\" als aktiv markieren"
 
 #: taskcoachlib/command/taskCommands.py:227
 msgid "Mark task inactive"
-msgstr ""
+msgstr "Aufgabe als inakziv markieren"
 
 #: taskcoachlib/command/taskCommands.py:228
 msgid "Mark \"%s\" inactive"
-msgstr ""
+msgstr "\"%s\" als inaktiv markieren"
 
 #: taskcoachlib/command/taskCommands.py:253
 msgid "Start tracking"
@@ -6289,7 +6289,7 @@ msgstr ""
 
 #: taskcoachlib/persistence/csv/generator.py:34
 msgid "Planned start time"
-msgstr ""
+msgstr "Geplanter Startzeitpunkt"
 
 #: taskcoachlib/persistence/csv/generator.py:35
 msgid "Due time"
