@@ -932,11 +932,21 @@ class EditPasteAsSubItem(NeedsSelectedCompositeMixin, ViewerCommand):
         if not (super(EditPasteAsSubItem, self).enabled(event) and command.Clipboard()):
             return False
         targetClass = self.viewer.curselection()[0].__class__
-        for item in command.Clipboard().peek():
-            if item.__class__ != targetClass:
+        pastedClasses = [item.__class__ for item in command.Clipboard().peek()]
+        return self.targetClassAndPastedClassesAreAllEqual(targetClass, pastedClasses) or \
+            self.targetClassIsTaskAndPastedClassesAreAllEffort(targetClass, pastedClasses)
+        
+    def targetClassIsTaskAndPastedClassesAreAllEffort(self, targetClass, pastedClasses):
+        if targetClass != task.Task:
+            return False
+        return self.targetClassAndPastedClassesAreAllEqual(effort.Effort, pastedClasses)
+    
+    def targetClassAndPastedClassesAreAllEqual(self, targetClass, pastedClasses):
+        for pastedClass in pastedClasses:
+            if pastedClass != targetClass:
                 return False
         return True
-
+    
 
 class EditPreferences(SettingsCommand):
     def __init__(self, *args, **kwargs):
@@ -1214,52 +1224,23 @@ class ViewerSortByTaskStatusFirst(ViewerCommand, UICheckCommand):
         self.viewer.setSortByTaskStatusFirst(self._isMenuItemChecked(event))
 
 
-class ViewerFilterByDueDateTime(ViewerCommand, UIRadioCommand):
-    def isSettingChecked(self):
-        return self.viewer.isFilteredByDueDateTime(self.value)
-    
-    def doCommand(self, event):
-        self.viewer.setFilteredByDueDateTime(self.value)
-
-
-class ViewerFilterByCompletionDateTime(ViewerCommand, UIRadioCommand):
-    def isSettingChecked(self):
-        return self.viewer.isFilteredByCompletionDateTime(self.value)
-    
-    def doCommand(self, event):
-        self.viewer.setFilteredByCompletionDateTime(self.value)
-
-
-class ViewerFilterByPlannedStartDateTime(ViewerCommand, UIRadioCommand):
-    def isSettingChecked(self):
-        return self.viewer.isFilteredByPlannedStartDateTime(self.value)
-    
-    def doCommand(self, event):
-        self.viewer.setFilteredByPlannedStartDateTime(self.value)
-        
-
 class ViewerHideInactiveTasks(ViewerCommand, UICheckCommand):
     def __init__(self, *args, **kwargs):
         super(ViewerHideInactiveTasks, self).__init__(menuText=_('Hide &inactive tasks'), 
-            helpText=_('Show/hide inactive tasks (tasks with a planned start date in the future)'),
+            helpText=_('Show/hide inactive tasks (tasks without actual start date)'),
             *args, **kwargs)
         
     def isSettingChecked(self):
-        return not self.viewer.isFilteredByPlannedStartDateTime('Never')
+        return self.viewer.isHidingInactiveTasks()
         
     def doCommand(self, event):
-        self.viewer.freeze()
-        try:
-            filter = 'Always' if self._isMenuItemChecked(event) else 'Never'
-            self.viewer.setFilteredByPlannedStartDateTime(filter)
-        finally:
-            self.viewer.thaw()
+        self.viewer.hideInactiveTasks(self._isMenuItemChecked(event))
 
 
 class ViewerHideActiveTasks(ViewerCommand, UICheckCommand):
     def __init__(self, *args, **kwargs):
         super(ViewerHideActiveTasks, self).__init__(menuText=_('Hide &active tasks'), 
-            helpText=_('Show/hide active tasks (tasks with a planned start date in the past that are not completed)'),
+            helpText=_('Show/hide active tasks (tasks with an actual start date in the past that are not completed)'),
             *args, **kwargs)
         
     def isSettingChecked(self):
@@ -1275,15 +1256,10 @@ class ViewerHideCompletedTasks(ViewerCommand, UICheckCommand):
             helpText=_('Show/hide completed tasks'), *args, **kwargs)
          
     def isSettingChecked(self):
-        return not self.viewer.isFilteredByCompletionDateTime('Never')
+        return self.viewer.isHidingCompletedTasks()
         
     def doCommand(self, event):
-        self.viewer.freeze()
-        try:
-            filter = 'Always' if self._isMenuItemChecked(event) else 'Never'
-            self.viewer.setFilteredByCompletionDateTime(filter)
-        finally:
-            self.viewer.thaw()
+        self.viewer.hideCompletedTasks(self._isMenuItemChecked(event))
 
 
 class ViewerHideCompositeTasks(ViewerCommand, UICheckCommand):

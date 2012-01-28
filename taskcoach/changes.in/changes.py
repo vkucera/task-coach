@@ -21,6 +21,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
+            
+Release('1.3.7', 'January 28, 2012',
+    summary='''This is a bug fix release.''',
+    bugsFixed=[
+        Bug('''Paste as subitem didn't work for efforts.''', '3479734'),
+        Bug('''Hiding inactive tasks would also hide some active tasks.''', 
+            '3479952'),
+        ],
+    featuresRemoved=[
+        Feature('''The more complex filtering options for hiding tasks have
+been removed. The complexity was causing bugs.'''),
+        ],
+    ),
 
 Release('1.3.6', 'January 24, 2012',
     summary='''This is a bug fix release.''',

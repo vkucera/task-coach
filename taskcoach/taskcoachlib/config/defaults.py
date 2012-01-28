@@ -70,10 +70,9 @@ defaults = { \
     'columnsalwaysvisible': "['subject']",
     'columnwidths': "{'attachments': 28, 'notes': 28, 'ordering': 38}",
     'columnautoresizing': 'True',
-    'tasksdue': 'Never',             # Show tasks when they're due today, tomorrow, etc.
-    'taskscompleted': 'Never',       # Show tasks completed today, yesterday, etc.
-    'tasksinactive': 'Never',        # Show tasks when they'll be active today, tomorrow, etc.   
+    'hideinactivetasks': 'False',
     'hideactivetasks': 'False',
+    'hidecompletedtasks': 'False',
     'hidecompositetasks': 'False',
 },              
 'taskstatsviewer': { \
@@ -82,10 +81,9 @@ defaults = { \
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
     'searchdescription': 'False',
-    'tasksdue': 'Never',             # Show tasks when they're due today, tomorrow, etc.
-    'taskscompleted': 'Never',       # Show tasks completed today, yesterday, etc.
-    'tasksinactive': 'Never',        # Show tasks when they'll be active today, tomorrow, etc.   
+    'hideinactivetasks': 'False',
     'hideactivetasks': 'False',
+    'hidecompletedtasks': 'False',
     'hidecompositetasks': 'False',
     'piechartangle': '30',
 },
@@ -104,9 +102,8 @@ defaults = { \
     'columnsalwaysvisible': "['subject']",
     'columnwidths': "{'attachments': 28, 'notes': 28}",
     'columnautoresizing': 'True',
-    'tasksdue': 'Never',             # Show tasks when they're due today, tomorrow, etc.
-    'taskscompleted': 'Never',       # Show tasks completed today, yesterday, etc.   
-    'tasksinactive': 'Never',        # Show tasks when they'll be active today, tomorrow, etc.   
+    'hideinactivetasks': 'False',
+    'hidecompletedtasks': 'False',
     'hideactivetasks': 'False',
     'hidecompositetasks': 'False' },
 'squaretaskviewer': { \
@@ -116,10 +113,9 @@ defaults = { \
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
     'searchdescription': 'False',
-    'tasksdue': 'Never',             # Show tasks when they're due today, tomorrow, etc.
-    'taskscompleted': 'Never',       # Show tasks completed today, yesterday, etc.   
-    'tasksinactive': 'Never',        # Show tasks when they'll be active today, tomorrow, etc.   
+    'hideinactivetasks': 'False',
     'hideactivetasks': 'False',
+    'hidecompletedtasks': 'False',
     'hidecompositetasks': 'False' },
 'timelineviewer': { \
     'title': '',
@@ -127,10 +123,9 @@ defaults = { \
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
     'searchdescription': 'False',
-    'tasksdue': 'Never',             # Show tasks when they're due today, tomorrow, etc.
-    'taskscompleted': 'Never',       # Show tasks completed today, yesterday, etc.   
-    'tasksinactive': 'Never',        # Show tasks when they'll be active today, tomorrow, etc.   
+    'hideinactivetasks': 'False',
     'hideactivetasks': 'False',
+    'hidecompletedtasks': 'False',
     'hidecompositetasks': 'False' },
 'calendarviewer': { \
     'title': '',
@@ -147,10 +142,9 @@ defaults = { \
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
     'searchdescription': 'False',
-    'tasksdue': 'Never',             # Show tasks when they're due today, tomorrow, etc.
-    'taskscompleted': 'Never',       # Show tasks completed today, yesterday, etc.   
-    'tasksinactive': 'Never',        # Show tasks when they'll be active today, tomorrow, etc.   
+    'hideinactivetasks': 'False',
     'hideactivetasks': 'False',
+    'hidecompletedtasks': 'False',
     'hidecompositetasks': 'False',
     'sortby': 'subject',
     'sortascending': 'True',

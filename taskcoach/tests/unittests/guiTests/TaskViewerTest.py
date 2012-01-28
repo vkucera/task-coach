@@ -207,25 +207,9 @@ class CommonTestsMixin(object):
         self.assertItems(self.task, task2)
         self.task.setPlannedStartDateTime(date.Now() + date.oneDay)
         self.assertItems(task2, self.task)
-                        
-    def testViewDueTodayHidesTasksNotDueToday(self):
-        self.viewer.setFilteredByDueDateTime('Today')
-        self.task.addChild(self.child)
-        self.taskList.append(self.task)
-        self.assertItems()
-        
-    def testViewDueTodayShowsTasksWhoseChildrenAreDueToday(self):
-        self.viewer.setFilteredByDueDateTime('Today')
-        child = task.Task(subject='child', dueDateTime=date.Now().replace(hour=12))
-        self.task.addChild(child)
-        self.taskList.append(self.task)
-        if self.viewer.isTreeViewer():
-            self.assertItems((self.task, 1), child)
-        else:
-            self.assertItems(child)
         
     def testFilterCompletedTasks(self):
-        self.viewer.setFilteredByCompletionDateTime('Always')
+        self.viewer.hideCompletedTasks()
         completedChild = task.Task(completionDateTime=date.Now() - date.oneHour)
         notCompletedChild = task.Task(plannedStartDateTime=date.Now())
         self.task.addChild(notCompletedChild)
@@ -237,7 +221,7 @@ class CommonTestsMixin(object):
             self.assertItems(notCompletedChild, self.task)
             
     def testUndoMarkCompletedWhenFilteringCompletedTasks(self):
-        self.viewer.setFilteredByCompletionDateTime('Always')
+        self.viewer.hideCompletedTasks()
         child1 = task.Task('child1')
         child2 = task.Task('child2')
         grandChild = task.Task('grandChild')
