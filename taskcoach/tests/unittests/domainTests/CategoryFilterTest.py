@@ -737,7 +737,7 @@ class CategoryFilterAndViewFilterFixtureAndCommonTestsMixin(CategoryFilterHelper
         
     def testThatParentIsShownWhenFilteredCompletedChildIsUnhidden(self):
         self.childCategory.setFiltered(True)
-        self.viewerFilter.hideCompletedTasks()
+        self.viewFilter.hideCompletedTasks()
         self.assertEqual(0, len(self.categoryFilter))
         self.viewFilter.hideCompletedTasks(False)
         self.assertEqual(2 if self.treeMode else 1, len(self.categoryFilter))
