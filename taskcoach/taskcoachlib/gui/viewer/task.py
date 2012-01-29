@@ -99,7 +99,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin, # pylint: disable-msg=W0223
         return len(self.presentation())
 
 
-class BaseTaskTreeViewer(BaseTaskViewer): 
+class BaseTaskTreeViewer(BaseTaskViewer): # pylint: disable-msg=W0223
     defaultTitle = _('Tasks')
     defaultBitmap = 'led_blue_icon'
     
@@ -144,7 +144,7 @@ class BaseTaskTreeViewer(BaseTaskViewer):
         return command.NewSubTaskCommand
     
     def newSubItemCommand(self):
-        kwargs = dict()
+        kwargs = dict() 
         if self.__shouldPresetPlannedStartDateTime():
             kwargs['plannedStartDateTime'] = task.Task.suggestedPlannedStartDateTime()
         if self.__shouldPresetDueDateTime():
@@ -155,6 +155,7 @@ class BaseTaskTreeViewer(BaseTaskViewer):
             kwargs['completionDateTime'] = task.Task.suggestedCompletionDateTime()
         if self.__shouldPresetReminderDateTime():
             kwargs['reminder'] = task.Task.suggestedReminderDateTime()
+        # pylint: disable-msg=W0142
         return self.newSubItemCommandClass()(self.presentation(), 
                                              self.curselection(), **kwargs)
 
@@ -1128,13 +1129,16 @@ class CheckableTaskViewer(TaskViewer): # pylint: disable-msg=W0223
         return False
     
     
-class TaskStatsViewer(BaseTaskViewer):
+class TaskStatsViewer(BaseTaskViewer): # pylint: disable-msg=W0223
     defaultTitle = _('Task statistics')
     defaultBitmap = 'charts_icon'
 
-    labels = [_('Overdue tasks: %d (%d%%)'), _('Due soon tasks: %d (%d%%)'), 
-              _('Active tasks: %d (%d%%)'), _('Late tasks: %d (%d%%)'),
-              _('Inactive tasks: %d (%d%%)'), _('Completed tasks: %d (%d%%)')]
+    labels = dict(overdue=_('Overdue tasks: %d (%d%%)'), 
+                  duesoon=_('Due soon tasks: %d (%d%%)'), 
+                  active=_('Active tasks: %d (%d%%)'), 
+                  late=_('Late tasks: %d (%d%%)'),
+                  inactive=_('Inactive tasks: %d (%d%%)'), 
+                  completed=_('Completed tasks: %d (%d%%)'))
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'taskstatsviewer')
@@ -1149,7 +1153,7 @@ class TaskStatsViewer(BaseTaskViewer):
         widget.SetHeight(20)
         self.initLegend(widget)
         for dummy in range(len(self.labels)):
-            widget._series.append(wx.lib.agw.piectrl.PiePart())
+            widget._series.append(wx.lib.agw.piectrl.PiePart()) # pylint: disable-msg=W0212
         return widget
 
     def createClipboardToolBarUICommands(self):
@@ -1181,61 +1185,31 @@ class TaskStatsViewer(BaseTaskViewer):
     
     def refresh(self):
         self.widget.SetAngle(self.settings.getint(self.settingsSection(), 'piechartangle')/180.*math.pi)
-        self.refreshCounts()
-        self.refreshColors()
+        self.refreshParts()
         self.widget.Refresh()
         
-    def refreshCounts(self):
-        series = self.widget._series
+    def refreshParts(self):
+        series = self.widget._series # pylint: disable-msg=W0212
         tasks = self.presentation()
         total = len(tasks)
-        overdue, dueSoon, active, late, inactive, completed = range(len(self.labels))
-        
-        def refreshPart(part, label, nrTasks):
+        statuses = [eachTask.status() for eachTask in tasks]
+        for part, status in zip(series, task.Task.possibleStatuses()):
+            nrTasks = statuses.count(status)
             percentage = round(100.*nrTasks/total) if total else 0
-            part.SetLabel(label%(nrTasks, percentage))
+            part.SetLabel(self.labels[status]%(nrTasks, percentage))
             part.SetValue(nrTasks)
-        
-        def countTasksPerStatus(tasks):
-            counts = [0] * len(self.labels)
-            for task in tasks:
-                if task.completed():
-                    status = completed
-                elif task.overdue():
-                    status = overdue
-                elif task.dueSoon():
-                    status = dueSoon
-                elif task.active():
-                    status = active
-                elif task.late():
-                    status = late
-                else:
-                    status = inactive
-                counts[status] += 1
-            return counts
-        
-        for part, label, nrTasks in zip(series, self.labels, countTasksPerStatus(tasks)):
-            refreshPart(part, label, nrTasks)
+            part.SetColour(self.getFgColor(status))
         # PietCtrl can't handle empty pie charts:    
         if total == 0:
-            series[inactive].SetValue(1)
+            series[0].SetValue(1)
+       
+    def getFgColor(self, status):
+        color = wx.Colour(*eval(self.settings.get('fgcolor', '%stasks'%status)))
+        if status == 'active' and color == wx.BLACK:
+            color = wx.BLUE
+        return color
         
-    def refreshColors(self):
-        series = self.widget._series
-        series[0].SetColour(self.getFgColor('overduetasks'))
-        series[1].SetColour(self.getFgColor('duesoontasks'))
-        activeColor = self.getFgColor('activetasks')
-        if activeColor == wx.BLACK:
-            activeColor = wx.BLUE
-        series[2].SetColour(activeColor)
-        series[3].SetColour(self.getFgColor('latetasks'))
-        series[4].SetColour(self.getFgColor('inactivetasks'))
-        series[5].SetColour(self.getFgColor('completedtasks'))
-        
-    def getFgColor(self, setting):
-        return wx.Colour(*eval(self.settings.get('fgcolor', setting)))
-        
-    def refreshItems(self, *args, **kwargs):
+    def refreshItems(self, *args, **kwargs): # pylint: disable-msg=W0613
         self.refresh()
     
     def select(self, *args):
@@ -1247,5 +1221,5 @@ class TaskStatsViewer(BaseTaskViewer):
     def isTreeViewer(self):
         return False
 
-    def onPieChartAngleChanged(self, event):
+    def onPieChartAngleChanged(self, event): # pylint: disable-msg=W0613
         self.refresh()

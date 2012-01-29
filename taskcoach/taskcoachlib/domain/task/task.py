@@ -487,6 +487,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         ''' A task is late if it is not active and its planned start date time
             is in the past. '''
         return self.status() == 'late'
+    
+    @staticmethod
+    def possibleStatuses():
+        return 'inactive', 'late', 'active', 'duesoon', 'overdue', 'completed'
 
     def status(self):
         if self.completionDateTime() != self.maxDateTime:
