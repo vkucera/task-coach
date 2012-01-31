@@ -193,10 +193,10 @@ class SettingsPageBase(widgets.BookPage):
         for section, setting, colorButton in self._colorSettings:
             self.set(section, setting, str(colorButton.GetColour()))
         for section, setting, fontButton in self._fontSettings:
-            nativeFontInfoDesc = fontButton.GetSelectedFont().GetNativeFontInfoDesc()
-            defaultFontInfoDesc = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT).GetNativeFontInfoDesc()
-            if nativeFontInfoDesc != defaultFontInfoDesc:
-                self.set(section, setting, nativeFontInfoDesc)
+            selectedFont = fontButton.GetSelectedFont()
+            defaultFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+            fontInfoDesc = '' if selectedFont == defaultFont else selectedFont.GetNativeFontInfoDesc()
+            self.set(section, setting, fontInfoDesc)
         for section, setting, iconEntry in self._iconSettings:
             iconName = iconEntry.GetClientData(iconEntry.GetSelection())
             self.set(section, setting, iconName)

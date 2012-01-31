@@ -92,7 +92,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             registerObserver(self.onOverDue, 
                              date.Clock.eventType(self.__dueDateTime.get() + date.oneSecond))
         if now < self.__plannedStartDateTime.get() < maxDateTime:
-            registerObserver(self.onStarted,
+            registerObserver(self.onTimeToStart,
                              date.Clock.eventType(self.__plannedStartDateTime.get() + date.oneSecond))
             
     @patterns.eventSource
@@ -252,7 +252,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.removeObserver(self.onOverDue)
         self.removeObserver(self.onDueSoon)
         self.__dueDateTime.set(dueDateTime, event=event)
-        if dueDateTime != self.maxDateTime:
+        if date.Now() <= dueDateTime < self.maxDateTime:
             self.registerObserver(self.onOverDue, date.Clock.eventType(dueDateTime + date.oneSecond))
             if self.__dueSoonHours > 0:
                 dueSoonDateTime = dueDateTime + date.oneSecond - date.TimeDelta(hours=self.__dueSoonHours)
@@ -299,10 +299,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         
     @patterns.eventSource
     def setPlannedStartDateTime(self, plannedStartDateTime, event=None):
-        self.removeObserver(self.onStarted)
+        self.removeObserver(self.onTimeToStart)
         self.__plannedStartDateTime.set(plannedStartDateTime, event=event)
         if plannedStartDateTime != self.maxDateTime:
-            self.registerObserver(self.onStarted, date.Clock.eventType(plannedStartDateTime + date.oneSecond))
+            self.registerObserver(self.onTimeToStart, date.Clock.eventType(plannedStartDateTime + date.oneSecond))
         
     def plannedStartDateTimeEvent(self, event):
         plannedStartDateTime = self.plannedStartDateTime()
@@ -316,7 +316,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             parent.setPlannedStartDateTime(plannedStartDateTime, event=event)
         self.recomputeAppearance(event=event)
         
-    def onStarted(self, event): # pylint: disable-msg=W0613
+    def onTimeToStart(self, event): # pylint: disable-msg=W0613
         self.recomputeAppearance()
         
     @staticmethod

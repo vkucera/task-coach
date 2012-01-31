@@ -22,12 +22,17 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.7', 'January 29, 2012',
+Release('1.3.7', 'January 31, 2012',
     summary='''This is a bug fix release.''',
     bugsFixed=[
         Bug('''Paste as subitem didn't work for efforts.''', '3479734'),
         Bug('''Hiding inactive tasks would also hide some active tasks.''', 
             '3479952'),
+        Bug('''Setting the task font back to the default font
+in the preferences dialog wouldn't work.'''),
+        Bug('''Put a little bit of white space to the right of the priority
+column in the task viewer to separate the numbers from the scroll bar.''', 
+        '3479686'),
         ],
     featuresRemoved=[
         Feature('''The more complex filtering options for hiding tasks have

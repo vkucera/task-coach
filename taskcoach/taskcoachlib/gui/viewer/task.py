@@ -1033,7 +1033,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
         return self.renderedValue(task, task.percentageComplete, render.percentage)
 
     def renderPriority(self, task):
-        return self.renderedValue(task, task.priority, render.priority)
+        return self.renderedValue(task, task.priority, render.priority) + ' '
     
     def renderReminder(self, task):
         return self.renderedValue(task, task.reminder, render.dateTime)
