@@ -2520,9 +2520,9 @@ class TaskSuggestedDateTimeTestWithStartAndEndOfWorkingDayEqualToDay( \
 
 
 class TaskConstructionTest(test.TestCase):
-    def testActualStartDateTimeIsDeterminedByEffortsWhenMissing(self):
+    def testActualStartDateTimeIsNotDeterminedByEffortsWhenMissing(self):
         newTask = task.Task(efforts=[effort.Effort(None, date.DateTime(2000,1,1))])
-        self.assertEqual(date.DateTime(2000,1,1), newTask.actualStartDateTime())
+        self.assertEqual(date.DateTime(), newTask.actualStartDateTime())
 
     def testActualStartDateTimeIsNotDeterminedByEffortsWhenPassingAnActualStartDateTime(self):
         newTask = task.Task(actualStartDateTime=date.DateTime(2010,1,1), efforts=[effort.Effort(None, date.DateTime(2000,1,1))])

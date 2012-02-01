@@ -50,8 +50,6 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                                        self.dueDateTimeEvent)
         self.__plannedStartDateTime = Attribute(plannedStartDateTime or maxDateTime, self, 
                                                 self.plannedStartDateTimeEvent)
-        if not actualStartDateTime and efforts:
-            actualStartDateTime = min([effort.getStart() for effort in efforts])
         self.__actualStartDateTime = Attribute(actualStartDateTime or maxDateTime, self,
                                                self.actualStartDateTimeEvent)
         if completionDateTime is None and percentageComplete == 100:

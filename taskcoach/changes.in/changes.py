@@ -35,6 +35,9 @@ column in the task viewer to separate the numbers from the scroll bar.''',
         '3479686'),
         Bug('''Disable the Anonymize menu item if there is no task file.''',
             '3482373'),
+        Bug('''After removing an actual start date of a task with effort and 
+saving and opening the task file, the task would still have an actual start date 
+(based on the earliest effort).''', '3478684'),
         ],
     featuresRemoved=[
         Feature('''The more complex filtering options for hiding tasks have
