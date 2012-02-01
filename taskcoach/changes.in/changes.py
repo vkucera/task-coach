@@ -33,6 +33,8 @@ in the preferences dialog wouldn't work.'''),
         Bug('''Put a little bit of white space to the right of the priority
 column in the task viewer to separate the numbers from the scroll bar.''', 
         '3479686'),
+        Bug('''Disable the Anonymize menu item if there is no task file.''',
+            '3482373'),
         ],
     featuresRemoved=[
         Feature('''The more complex filtering options for hiding tasks have

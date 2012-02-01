@@ -2233,6 +2233,9 @@ class Anonymize(IOCommand):
     def doCommand(self, event):
         anonymize(self.iocontroller.filename())
 
+    def enabled(self, event):
+        return bool(self.iocontroller.filename())
+
     
 class HelpAbout(DialogCommand):
     def __init__(self, *args, **kwargs):
