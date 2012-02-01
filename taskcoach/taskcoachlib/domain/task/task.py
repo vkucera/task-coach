@@ -497,7 +497,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             return 'overdue'
         if 0 <= self.timeLeft().hours() < self.__dueSoonHours:
             return 'duesoon'
-        if self.actualStartDateTime() < date.Now():
+        if self.actualStartDateTime() <= date.Now():
             return 'active'
         # Don't call prerequisite.completed() because it will lead to infinite
         # recursion in the case of circular dependencies:
