@@ -269,7 +269,7 @@ def VCalFromTask(task, encoding=True, doFold=True):
         iCalendar format. '''
 
     encoding = ';ENCODING=QUOTED-PRINTABLE;CHARSET=UTF-8' if encoding else ''
-    quote = quoteString if encoding else lambda s: s.encode('UTF-8')
+    quote = quoteString if encoding else lambda s: s
 
     components = []
     components.append('BEGIN:VTODO') # pylint: disable-msg=W0511
@@ -307,7 +307,7 @@ def VCalFromTask(task, encoding=True, doFold=True):
 
 def VCalFromEffort(effort, encoding=True, doFold=True):
     encoding = ';ENCODING=QUOTED-PRINTABLE;CHARSET=UTF-8' if encoding else ''
-    quote = quoteString if encoding else lambda s: s.encode('UTF-8')
+    quote = quoteString if encoding else lambda s: s
     components = []
     components.append('BEGIN:VEVENT')
     components.append('UID:%s' % effort.id().encode('UTF-8'))
@@ -324,7 +324,7 @@ def VCalFromEffort(effort, encoding=True, doFold=True):
 
 def VNoteFromNote(note, encoding=True, doFold=True):
     encoding = ';ENCODING=QUOTED-PRINTABLE;CHARSET=UTF-8' if encoding else ''
-    quote = quoteString if encoding else lambda s: s.encode('UTF-8')
+    quote = quoteString if encoding else lambda s: s
     components = []
     components.append('BEGIN:VNOTE')
     components.append('X-IRMC-LUID: %s' % note.id().encode('UTF-8'))

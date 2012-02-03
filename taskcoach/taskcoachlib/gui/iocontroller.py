@@ -352,7 +352,7 @@ class IOController(object):
                       style=wx.OK|wx.ICON_ERROR)
 
     def __openFileForWriting(self, filename, openfile, showerror, mode='w', 
-                             encoding='utf-8',):
+                             encoding='utf-8'):
         try:
             return openfile(filename, mode, encoding)
         except IOError, reason:

@@ -21,6 +21,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
+            
+Release('1.3.7', 'February 1, 2012',
+    summary='''This is a bug fix release.''',
+    bugsFixed=[
+        Bug('''Paste as subitem didn't work for efforts.''', '3479734'),
+        Bug('''Hiding inactive tasks would also hide some active tasks.''', 
+            '3479952'),
+        Bug('''Setting the task font back to the default font
+in the preferences dialog wouldn't work.'''),
+        Bug('''Put a little bit of white space to the right of the priority
+column in the task viewer to separate the numbers from the scroll bar.''', 
+        '3479686'),
+        Bug('''Disable the Anonymize menu item if there is no task file.''',
+            '3482373'),
+        Bug('''After removing an actual start date of a task with effort and 
+saving and opening the task file, the task would still have an actual start date 
+(based on the earliest effort).''', '3478684', '3479444'),
+        Bug('''Marking an inactive task active wouldn't properly update the 
+task icon from grey to blue.''', '3479444'),
+        Bug('''Exporting to iCalendar wouldn't work if the subject or
+description had non-ASCII characters.''', '3483124'),
+        ],
+    featuresRemoved=[
+        Feature('''The more complex filtering options for hiding tasks have
+been removed. The complexity was causing bugs.'''),
+        ],
+    ),
 
 Release('1.3.6', 'January 24, 2012',
     summary='''This is a bug fix release.''',

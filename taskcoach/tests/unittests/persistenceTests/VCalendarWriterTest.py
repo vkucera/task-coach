@@ -23,13 +23,21 @@ from taskcoachlib import persistence, gui, config, meta
 from taskcoachlib.domain import task, effort, date
 
 
+class UTF8StringIO(StringIO.StringIO):
+    """
+    Mimic codecs.open; encodes on the fly in UTF-8
+    """
+    def write(self, u):
+        StringIO.StringIO.write(self, u.encode('UTF-8'))
+
+
 class VCalTestCase(test.wxTestCase):
     selectionOnly = 'Subclass responsibility'
     
     def setUp(self):
         super(VCalTestCase, self).setUp()
         task.Task.settings = self.settings = config.Settings(load=False)
-        self.fd = StringIO.StringIO()
+        self.fd = UTF8StringIO()
         self.writer = persistence.iCalendarWriter(self.fd)
         self.taskFile = persistence.TaskFile()
 
@@ -132,9 +140,9 @@ class VCalTaskWriterTestCase(VCalTestCase):
     
     def setUp(self):
         super(VCalTaskWriterTestCase, self).setUp() 
-        self.task1 = task.Task('Task subject 1', description='Task description 1',
+        self.task1 = task.Task(u'Task subject 1', description='Task description 1',
                                percentageComplete=56)
-        self.task2 = task.Task(u'Task subject 2', description=u'Task description 2\nwith newline\n微软雅黑')
+        self.task2 = task.Task(u'Task subject 2黑', description=u'Task description 2\nwith newline\n微软雅黑')
         self.taskFile.tasks().extend([self.task1, self.task2])
         self.settings.set('taskviewer', 'treemode', self.treeMode)
         self.viewer = gui.viewer.TaskViewer(self.frame, self.taskFile,
