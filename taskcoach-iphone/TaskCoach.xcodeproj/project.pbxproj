@@ -233,6 +233,7 @@
 		1D3623250D0F684500981E51 /* TaskCoachAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskCoachAppDelegate.m; sourceTree = "<group>"; };
 		1D6058910D05DD3D006BFB54 /* TaskCoach.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TaskCoach.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		1ED4D2EB14DD30EE004950E2 /* TaskCoachCD 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TaskCoachCD 3.xcdatamodel"; sourceTree = "<group>"; };
 		288765FC0DF74451002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* TaskCoach_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskCoach_Prefix.pch; sourceTree = "<group>"; };
@@ -2031,10 +2032,11 @@
 		A65C6889128FFE7900FAEC4B /* TaskCoachCD.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				1ED4D2EB14DD30EE004950E2 /* TaskCoachCD 3.xcdatamodel */,
 				A6CFAE5411B2534100044876 /* TaskCoachCD.xcdatamodel */,
 				A65C688B128FFE7900FAEC4B /* TaskCoachCD 2.xcdatamodel */,
 			);
-			currentVersion = A65C688B128FFE7900FAEC4B /* TaskCoachCD 2.xcdatamodel */;
+			currentVersion = 1ED4D2EB14DD30EE004950E2 /* TaskCoachCD 3.xcdatamodel */;
 			path = TaskCoachCD.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

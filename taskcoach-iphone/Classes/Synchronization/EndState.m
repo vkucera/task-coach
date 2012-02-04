@@ -23,7 +23,9 @@
 	if (![getManagedObjectContext() save:&error])
 	{
 		JLERROR("Could not save: %s", [[error localizedDescription] UTF8String]);
-		assert(0);
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:[error localizedDescription] delegate:nil cancelButtonTitle:_("OK") otherButtonTitles:nil, nil];
+        [alert show];
+        [alert release];
 	}
 }
 
