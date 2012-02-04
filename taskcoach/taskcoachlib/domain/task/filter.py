@@ -24,7 +24,10 @@ import task
 class ViewFilter(base.Filter):
     def __init__(self, *args, **kwargs):
         self.__hideInactiveTasks = kwargs.pop('hideInactiveTasks', False)
+        self.__hideLateTasks = kwargs.pop('hideLateTasks', False)
         self.__hideActiveTasks = kwargs.pop('hideActiveTasks', False)
+        self.__hideDueSoonTasks = kwargs.pop('hideDueSoonTasks', False)
+        self.__hideOverDueTasks = kwargs.pop('hideOverDueTasks', False)
         self.__hideCompletedTasks = kwargs.pop('hideCompletedTasks', False)
         self.__hideCompositeTasks = kwargs.pop('hideCompositeTasks', False)
         self.registerObservers()
@@ -32,8 +35,9 @@ class ViewFilter(base.Filter):
         
     def registerObservers(self):
         registerObserver = patterns.Publisher().registerObserver
-        for eventType in ('task.actualStartDateTime',
-                          'task.completionDateTime', 'task.prerequisites',
+        for eventType in ('task.actualStartDateTime', 'task.plannedStartDateTime',
+                          'task.dueDateTime', 'task.completionDateTime', 
+                          'task.prerequisites',
                           task.Task.appearanceChangedEventType(), # Proxy for status changes
                           task.Task.addChildEventType(),
                           task.Task.removeChildEventType(),
@@ -47,8 +51,20 @@ class ViewFilter(base.Filter):
         self.__hideInactiveTasks = hide
         self.reset()
         
+    def hideLateTasks(self, hide=True):
+        self.__hideLateTasks = hide
+        self.reset()
+        
     def hideActiveTasks(self, hide=True):
         self.__hideActiveTasks = hide
+        self.reset()
+        
+    def hideDueSoonTasks(self, hide=True):
+        self.__hideDueSoonTasks = hide
+        self.reset()
+        
+    def hideOverDueTasks(self, hide=True):
+        self.__hideOverDueTasks = hide
         self.reset()
 
     def hideCompletedTasks(self, hide=True):
@@ -64,10 +80,16 @@ class ViewFilter(base.Filter):
     
     def filterTask(self, task): # pylint: disable-msg=W0621
         result = True
-        if self.__hideActiveTasks and task.active():
-            result = False # Hide active task
-        elif self.__hideInactiveTasks and task.inactive():
+        if self.__hideInactiveTasks and task.inactive():
             result = False # Hide inactive task
+        elif self.__hideLateTasks and task.late():
+            result = False # Hide late task
+        elif self.__hideActiveTasks and task.active():
+            result = False # Hide active task
+        elif self.__hideDueSoonTasks and task.dueSoon():
+            result = False # Hide due soon task
+        elif self.__hideOverDueTasks and task.overdue():
+            result = False # Hide over due task
         elif self.__hideCompletedTasks and task.completed():
             result = False # Hide completed task
         elif self.__hideCompositeTasks and not self.treeMode() and task.children():

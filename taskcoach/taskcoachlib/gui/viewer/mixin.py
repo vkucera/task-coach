@@ -134,9 +134,12 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
         return super(FilterableViewerForTasksMixin, self).createFilter(taskList)
                                    
     def viewFilterOptions(self):
-        options = dict(hideCompletedTasks=self.isHidingCompletedTasks(),
-                       hideInactiveTasks=self.isHidingInactiveTasks(),
+        options = dict(hideInactiveTasks=self.isHidingInactiveTasks(),
+                       hideLateTasks=self.isHidingLateTasks(),
                        hideActiveTasks=self.isHidingActiveTasks(),
+                       hideDueSoonTasks=self.isHidingDueSoonTasks(),
+                       hideOverDueTasks=self.isHidingOverDueTasks(),
+                       hideCompletedTasks=self.isHidingCompletedTasks(),
                        hideCompositeTasks=self.isHidingCompositeTasks())
         return options
     
@@ -147,12 +150,33 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
     def isHidingInactiveTasks(self):
         return self.__getBooleanSetting('hideinactivetasks')
     
+    def hideLateTasks(self, hide=True):
+        self.__setBooleanSetting('hidelatetasks', hide)
+        self.presentation().hideLateTasks(hide)
+        
+    def isHidingLateTasks(self):
+        return self.__getBooleanSetting('hidelatetasks')
+    
     def hideActiveTasks(self, hide=True):
         self.__setBooleanSetting('hideactivetasks', hide)
         self.presentation().hideActiveTasks(hide)
 
     def isHidingActiveTasks(self):
         return self.__getBooleanSetting('hideactivetasks')
+    
+    def hideDueSoonTasks(self, hide=True):
+        self.__setBooleanSetting('hideduesoontasks', hide)
+        self.presentation().hideDueSoonTasks(hide)
+        
+    def isHidingDueSoonTasks(self):
+        return self.__getBooleanSetting('hideduesoontasks')
+    
+    def hideOverDueTasks(self, hide=True):
+        self.__setBooleanSetting('hideoverduetasks', hide)
+        self.presentation().hideOverDueTasks(hide)
+        
+    def isHidingOverDueTasks(self):
+        return self.__getBooleanSetting('hideoverduetasks')
     
     def hideCompletedTasks(self, hide=True):
         self.__setBooleanSetting('hidecompletedtasks', hide)
@@ -171,7 +195,10 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
     def resetFilter(self):
         super(FilterableViewerForTasksMixin, self).resetFilter()
         self.hideInactiveTasks(False)
+        self.hideLateTasks(False)
         self.hideActiveTasks(False)
+        self.hideDueSoonTasks(False)
+        self.hideOverDueTasks(False)
         self.hideCompletedTasks(False)
         self.hideCompositeTasks(False)
 
@@ -179,7 +206,10 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
         return super(FilterableViewerForTasksMixin, 
                      self).createFilterUICommands() + \
             [uicommand.ViewerHideInactiveTasks(viewer=self),
+             uicommand.ViewerHideLateTasks(viewer=self),
              uicommand.ViewerHideActiveTasks(viewer=self),
+             uicommand.ViewerHideDueSoonTasks(viewer=self),
+             uicommand.ViewerHideOverDueTasks(viewer=self),
              uicommand.ViewerHideCompletedTasks(viewer=self),
              uicommand.ViewerHideCompositeTasks(viewer=self)]
             

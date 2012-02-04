@@ -126,6 +126,24 @@ class ViewFilterTestsMixin(object):
         self.task.addPrerequisites([self.dueToday])
         self.assertFilterShows(self.dueToday)
         
+    def testFilterLateTask(self):
+        self.task.setPlannedStartDateTime(date.Now() - date.oneDay)
+        self.list.append(self.task)
+        self.filter.hideLateTasks()
+        self.assertFilterIsEmpty()
+
+    def testFilterDueSoonTask(self):
+        self.task.setDueDateTime(date.Now() + date.oneHour)
+        self.list.append(self.task)
+        self.filter.hideDueSoonTasks()
+        self.assertFilterIsEmpty()
+ 
+    def testFilterOverDueTask(self):
+        self.task.setDueDateTime(date.Now() - date.oneHour)
+        self.list.append(self.task)
+        self.filter.hideOverDueTasks()
+        self.assertFilterIsEmpty()       
+        
 
 class ViewFilterInListModeTest(ViewFilterTestsMixin, ViewFilterTestCase):
     treeMode = False
