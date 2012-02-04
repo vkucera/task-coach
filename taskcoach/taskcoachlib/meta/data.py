@@ -91,7 +91,7 @@ known_bugs_url = 'http://sourceforge.net/tracker/?group_id=130831&atid=719134&st
 feature_request_url = 'http://taskcoach.uservoice.com'
 support_request_url = 'https://sourceforge.net/tracker/?group_id=130831&atid=719135'
 translations_url = 'https://translations.launchpad.net/taskcoach'
-donate_url = url + 'donations.html' 
+donate_url = url + 'givesupport.html' 
 i18n_url = url + 'i18n.html'
 
 announcement_addresses = 'taskcoach@yahoogroups.com, python-announce-list@python.org'
