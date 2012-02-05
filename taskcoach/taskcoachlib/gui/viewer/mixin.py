@@ -137,50 +137,50 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
         options = dict(hideInactiveTasks=self.isHidingInactiveTasks(),
                        hideLateTasks=self.isHidingLateTasks(),
                        hideActiveTasks=self.isHidingActiveTasks(),
-                       hideDueSoonTasks=self.isHidingDueSoonTasks(),
-                       hideOverDueTasks=self.isHidingOverDueTasks(),
+                       hideDuesoonTasks=self.isHidingDueSoonTasks(),
+                       hideOverdueTasks=self.isHidingOverDueTasks(),
                        hideCompletedTasks=self.isHidingCompletedTasks(),
                        hideCompositeTasks=self.isHidingCompositeTasks())
         return options
     
     def hideInactiveTasks(self, hide=True):
         self.__setBooleanSetting('hideinactivetasks', hide)
-        self.presentation().hideInactiveTasks(hide)
+        self.presentation().hideTaskStatus('inactive', hide)
     
     def isHidingInactiveTasks(self):
         return self.__getBooleanSetting('hideinactivetasks')
     
     def hideLateTasks(self, hide=True):
         self.__setBooleanSetting('hidelatetasks', hide)
-        self.presentation().hideLateTasks(hide)
+        self.presentation().hideTaskStatus('late', hide)
         
     def isHidingLateTasks(self):
         return self.__getBooleanSetting('hidelatetasks')
     
     def hideActiveTasks(self, hide=True):
         self.__setBooleanSetting('hideactivetasks', hide)
-        self.presentation().hideActiveTasks(hide)
+        self.presentation().hideTaskStatus('active', hide)
 
     def isHidingActiveTasks(self):
         return self.__getBooleanSetting('hideactivetasks')
     
     def hideDueSoonTasks(self, hide=True):
         self.__setBooleanSetting('hideduesoontasks', hide)
-        self.presentation().hideDueSoonTasks(hide)
+        self.presentation().hideTaskStatus('duesoon', hide)
         
     def isHidingDueSoonTasks(self):
         return self.__getBooleanSetting('hideduesoontasks')
     
     def hideOverDueTasks(self, hide=True):
         self.__setBooleanSetting('hideoverduetasks', hide)
-        self.presentation().hideOverDueTasks(hide)
+        self.presentation().hideTaskStatus('overdue', hide)
         
     def isHidingOverDueTasks(self):
         return self.__getBooleanSetting('hideoverduetasks')
     
     def hideCompletedTasks(self, hide=True):
         self.__setBooleanSetting('hidecompletedtasks', hide)
-        self.presentation().hideCompletedTasks(hide)
+        self.presentation().hideTaskStatus('completed', hide)
         
     def isHidingCompletedTasks(self):
         return self.__getBooleanSetting('hidecompletedtasks')
