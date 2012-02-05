@@ -22,7 +22,25 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.7', 'February 1, 2012',
+Release('1.3.8', 'February 5, 2012',
+    summary='''This is a mixed feature and bugfix release.''',
+    featuresAdded=[
+        Feature('''In task viewers, late tasks, due soon tasks, and over due
+tasks can be hidden. It was already possible to hide inactive tasks, active 
+tasks, and completed tasks. This makes it possible to create a task viewer
+that only shows e.g. due soon tasks or late tasks, or any combination of
+task statuses.'''),
+        Feature('''Add an option to disable session management on GTK.
+The XFCE session manager causes Task Coach to hang randomly on start.'''),
+        ],
+    bugsFixed=[
+        Bug('''Show a warning dialog when running XFCE4 to highlight the
+session management issues and tell the user about the option to disable it''',
+            '3482752'),
+        ],
+    ),
+            
+Release('1.3.7', 'February 3, 2012',
     summary='''This is a bug fix release.''',
     bugsFixed=[
         Bug('''Paste as subitem didn't work for efforts.''', '3479734'),

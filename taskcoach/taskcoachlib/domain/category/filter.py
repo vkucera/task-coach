@@ -57,11 +57,6 @@ class CategoryFilter(base.Filter):
                 filteredCategorizables |= self.__categorizablesBelongingToCategory(category)
 
         filteredCategorizables &= self.observable()
-        
-        if self.treeMode():
-            # Include all ancestors in the result 
-            for categorizable in filteredCategorizables.copy():
-                filteredCategorizables |= set(categorizable.ancestors())
         return filteredCategorizables
 
     @staticmethod
@@ -75,5 +70,5 @@ class CategoryFilter(base.Filter):
         self.__filterOnlyWhenAllCategoriesMatch = eval(event.value())
         self.reset()
 
-    def onCategoryChanged(self, event):
+    def onCategoryChanged(self, event): # pylint: disable-msg=W0613
         self.reset()

@@ -23,16 +23,18 @@ import task
 
 class ViewFilter(base.Filter):
     def __init__(self, *args, **kwargs):
-        self.__hideInactiveTasks = kwargs.pop('hideInactiveTasks', False)
-        self.__hideActiveTasks = kwargs.pop('hideActiveTasks', False)
-        self.__hideCompletedTasks = kwargs.pop('hideCompletedTasks', False)
+        self.__statusesToHide = set()
+        for status in task.Task.possibleStatuses():
+            if kwargs.pop('hide%sTasks'%status.capitalize(), False):
+                self.__statusesToHide.add(status)
         self.__hideCompositeTasks = kwargs.pop('hideCompositeTasks', False)
         self.registerObservers()
         super(ViewFilter, self).__init__(*args, **kwargs)
         
     def registerObservers(self):
         registerObserver = patterns.Publisher().registerObserver
-        for eventType in (task.Task.dueDateTimeChangedEventType(),
+        for eventType in (task.Task.plannedStartDateTimeChangedEventType(),
+                          task.Task.dueDateTimeChangedEventType(),
                           task.Task.actualStartDateTimeChangedEventType(),
                           task.Task.completionDateTimeChangedEventType(),
                           'task.prerequisites',
@@ -45,18 +47,13 @@ class ViewFilter(base.Filter):
     def onTaskStatusChange(self, event): # pylint: disable-msg=W0613
         self.reset()
         
-    def hideInactiveTasks(self, hide=True):
-        self.__hideInactiveTasks = hide
+    def hideTaskStatus(self, status, hide=True):
+        if hide:
+            self.__statusesToHide.add(status)
+        else:
+            self.__statusesToHide.discard(status)
         self.reset()
-        
-    def hideActiveTasks(self, hide=True):
-        self.__hideActiveTasks = hide
-        self.reset()
-
-    def hideCompletedTasks(self, hide=True):
-        self.__hideCompletedTasks = hide
-        self.reset()
-        
+                       
     def hideCompositeTasks(self, hide=True):
         self.__hideCompositeTasks = hide
         self.reset()
@@ -66,12 +63,8 @@ class ViewFilter(base.Filter):
     
     def filterTask(self, task): # pylint: disable-msg=W0621
         result = True
-        if self.__hideActiveTasks and task.active():
-            result = False # Hide active task
-        elif self.__hideInactiveTasks and task.inactive():
-            result = False # Hide inactive task
-        elif self.__hideCompletedTasks and task.completed():
-            result = False # Hide completed task
+        if task.status() in self.__statusesToHide:
+            result = False
         elif self.__hideCompositeTasks and not self.treeMode() and task.children():
             result = False # Hide composite task
         return result

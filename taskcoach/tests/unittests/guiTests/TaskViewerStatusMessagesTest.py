@@ -93,10 +93,10 @@ class TaskViewerStatusMessagesTest(test.TestCase):
         self.viewer._selection = [self.task]
         
     def hideCompletedTasks(self):
-        self.taskList.hideCompletedTasks()
+        self.taskList.hideTaskStatus('completed')
         
     def showCompletedTasks(self):
-        self.taskList.hideCompletedTasks(False)
+        self.taskList.hideTaskStatus('completed', False)
         
     # Tests
     

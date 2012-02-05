@@ -23,6 +23,7 @@ from taskcoachlib import application, meta, patterns, widgets, operating_system 
 from taskcoachlib.i18n import _
 from taskcoachlib.gui.threads import DeferredCallMixin, synchronized
 from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog
+from taskcoachlib.gui.dialog.xfce4warning import XFCE4WarningDialog
 from taskcoachlib.gui.iphone import IPhoneSyncFrame
 from taskcoachlib.powermgt import PowerStateMixin
 import taskcoachlib.thirdparty.aui as aui
@@ -88,6 +89,18 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         self._idleController = idlecontroller.IdleController(self,
                                                              self.settings,
                                                              self.taskFile.efforts())
+
+        wx.CallAfter(self.checkXFCE4)
+
+    def checkXFCE4(self):
+        if operating_system.isGTK():
+            mon = application.Application().sessionMonitor
+            if mon is not None and \
+                    self.settings.getboolean('feature', 'usesm') and \
+                    self.settings.getboolean('feature', 'showsmwarning') and \
+                    mon.vendor == 'xfce4-session':
+                dlg = XFCE4WarningDialog(self, self.settings)
+                dlg.Show()
 
     def createWindowComponents(self):
         self.createViewerContainer()
