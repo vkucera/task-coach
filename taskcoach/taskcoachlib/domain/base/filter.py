@@ -25,6 +25,7 @@ class Filter(patterns.SetDecorator):
     def __init__(self, *args, **kwargs):
         self.__treeMode = kwargs.pop('treeMode', False)        
         super(Filter, self).__init__(*args, **kwargs)
+        self.reset()
         
     def setTreeMode(self, treeMode):
         self.__treeMode = treeMode
@@ -36,32 +37,15 @@ class Filter(patterns.SetDecorator):
         
     def treeMode(self):
         return self.__treeMode
-
-    def extendSelf(self, items, event=None):
-        itemsToAdd = set(self.filter(items))
-        if self.treeMode():
-            for item in itemsToAdd.copy():
-                itemsToAdd.update(self.filter(item.ancestors()))
-        itemsToAdd = [item for item in itemsToAdd if item not in self]
-        super(Filter, self).extendSelf(itemsToAdd, event)
-
-    def removeItemsFromSelf(self, items, event=None):
-        itemsToRemove = set(items)
-        if self.treeMode():
-            for item in itemsToRemove.copy():
-                ancestorsToRemove = [ancestor for ancestor in item.ancestors() if not self.filter([ancestor])]
-                itemsToRemove.update(ancestorsToRemove)
-            for item in itemsToRemove.copy():
-                itemsToRemove.update(item.children(recursive=True))
-        itemsToRemove = [item for item in itemsToRemove if item in self]
-        super(Filter, self).removeItemsFromSelf(itemsToRemove, event)
-    
+   
     @patterns.eventSource    
     def reset(self, event=None):
-        filteredItems = self.filter(self.observable())
-        itemsToRemove = [item for item in self if item not in filteredItems]
-        self.removeItemsFromSelf(itemsToRemove, event)
-        self.extendSelf(self.observable(), event)
+        filteredItems = set(self.filter(self.observable()))
+        if self.treeMode():
+            for item in filteredItems.copy():
+                filteredItems.update(set(item.ancestors()))
+        self.removeItemsFromSelf([item for item in self if item not in filteredItems], event=event)
+        self.extendSelf([item for item in filteredItems if item not in self], event=event)
             
     def filter(self, items):
         ''' filter returns the items that pass the filter. '''
@@ -69,6 +53,12 @@ class Filter(patterns.SetDecorator):
 
     def rootItems(self):
         return [item for item in self if item.parent() is None]
+    
+    def onAddItem(self, event):
+        self.reset()
+        
+    def onRemoveItem(self, event):
+        self.reset()
 
 
 class SelectedItemsFilter(Filter):

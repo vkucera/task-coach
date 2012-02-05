@@ -142,8 +142,19 @@ class ViewFilterTestsMixin(object):
         self.task.setDueDateTime(date.Now() - date.oneHour)
         self.list.append(self.task)
         self.filter.hideOverDueTasks()
-        self.assertFilterIsEmpty()       
+        self.assertFilterIsEmpty()
         
+    def testFilterOverDueTaskWithActiveChild(self):
+        self.child.setActualStartDateTime(date.Now())
+        self.task.setDueDateTime(date.Now() - date.oneHour)
+        self.task.addChild(self.child)
+        self.list.append(self.task)
+        self.filter.hideOverDueTasks()
+        if self.treeMode:
+            self.assertFilterShows(self.task, self.child)
+        else:
+            self.assertFilterShows(self.child)
+
 
 class ViewFilterInListModeTest(ViewFilterTestsMixin, ViewFilterTestCase):
     treeMode = False
