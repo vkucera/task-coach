@@ -436,6 +436,9 @@ class FeaturesPage(SettingsPage):
                 helpText='restart')
         self.addBooleanSetting('feature', 'iphone', _('Enable iPhone synchronization'),
             helpText='restart')
+        if operating_system.isGTK():
+            self.addBooleanSetting('feature', 'usesm', _('Use X11 session management'),
+                  helpText='restart')
         self.addIntegerSetting('view', 'efforthourstart',
             _('Hour of start of work day'), minimum=0, maximum=23, helpText=' ')
         self.addIntegerSetting('view', 'efforthourend',

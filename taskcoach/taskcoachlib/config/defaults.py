@@ -448,7 +448,8 @@ defaults = { \
     'syncml': 'False',
     'iphone': 'False',
     'notifier': 'Task Coach',
-    'minidletime': '0' },
+    'minidletime': '0',
+    'usesm': 'True' },
 'syncml': { \
     'url': '',
     'username': '',

@@ -34,30 +34,6 @@ class wxApp(wx.App):
     def OnInit(self):
         if operating_system.isWindows():
             self.Bind(wx.EVT_QUERY_END_SESSION, self.onQueryEndSession)
-        elif operating_system.isMac():
-            pass # TODO
-        elif operating_system.isGTK():
-            from taskcoachlib.powermgt import xsm
-            class LinuxSessionMonitor(xsm.SessionMonitor):
-                def __init__(self, callback):
-                    super(LinuxSessionMonitor, self).__init__()
-                    self._callback = callback
-                    self.setProperty(xsm.SmCloneCommand, sys.argv)
-                    self.setProperty(xsm.SmRestartCommand, sys.argv)
-                    self.setProperty(xsm.SmCurrentDirectory, os.getcwd())
-                    self.setProperty(xsm.SmProgram, sys.argv[0])
-                    self.setProperty(xsm.SmRestartStyleHint, xsm.SmRestartNever)
-                def saveYourself(self, saveType, shutdown, interactStyle, fast): # pylint: disable-msg=W0613
-                    if shutdown:
-                        self._callback()
-                    self.saveYourselfDone(True)
-                def die(self):
-                    pass
-                def saveComplete(self):
-                    pass
-                def shutdownCancelled(self):
-                    pass
-            self.sessionMonitor = LinuxSessionMonitor(self.onQueryEndSession) # pylint: disable-msg=W0201
 
         return True
     
@@ -66,10 +42,6 @@ class wxApp(wx.App):
 
         if event is not None:
             event.Skip()
-
-    def onQuit(self):
-        if operating_system.isGTK():
-            self.sessionMonitor.stop()
 
 
 class Application(object):
@@ -80,6 +52,32 @@ class Application(object):
         self._args = args
         self.wxApp = wxApp(self.onEndSession, redirect=False)
         self.init(**kwargs)
+
+        if operating_system.isGTK():
+            if self.settings.getboolean('feature', 'usesm'):
+                from taskcoachlib.powermgt import xsm
+                class LinuxSessionMonitor(xsm.SessionMonitor):
+                    def __init__(self, callback):
+                        super(LinuxSessionMonitor, self).__init__()
+                        self._callback = callback
+                        self.setProperty(xsm.SmCloneCommand, sys.argv)
+                        self.setProperty(xsm.SmRestartCommand, sys.argv)
+                        self.setProperty(xsm.SmCurrentDirectory, os.getcwd())
+                        self.setProperty(xsm.SmProgram, sys.argv[0])
+                        self.setProperty(xsm.SmRestartStyleHint, xsm.SmRestartNever)
+                    def saveYourself(self, saveType, shutdown, interactStyle, fast): # pylint: disable-msg=W0613
+                        if shutdown:
+                            self._callback()
+                        self.saveYourselfDone(True)
+                    def die(self):
+                        pass
+                    def saveComplete(self):
+                        pass
+                    def shutdownCancelled(self):
+                        pass
+                self.sessionMonitor = LinuxSessionMonitor(self.onEndSession) # pylint: disable-msg=W0201
+            else:
+                self.sessionMonitor = None
 
     def start(self):
         ''' Call this to start the Application. '''
@@ -268,5 +266,5 @@ class Application(object):
         # For PowerStateMixin
         self.mainwindow.OnQuit()
 
-        # To end session monitor on Linux
-        self.wxApp.onQuit()
+        if operating_system.isGTK() and self.sessionMonitor is not None:
+            self.sessionMonitor.stop()

@@ -30,6 +30,8 @@ tasks can be hidden. It was already possible to hide inactive tasks, active
 tasks, and completed tasks. This makes it possible to create a task viewer
 that only shows e.g. due soon tasks or late tasks, or any combination of
 task statuses.'''),
+        Feature('''Add an option to disable session management on GTK.
+The XFCE session manager causes Task Coach to hang randomly on start.'''),
         ],
     ),
             
