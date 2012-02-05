@@ -209,7 +209,7 @@ class CommonTestsMixin(object):
         self.assertItems(task2, self.task)
         
     def testFilterCompletedTasks(self):
-        self.viewer.hideCompletedTasks()
+        self.viewer.hideTaskStatus('completed')
         completedChild = task.Task(completionDateTime=date.Now() - date.oneHour)
         notCompletedChild = task.Task(plannedStartDateTime=date.Now())
         self.task.addChild(notCompletedChild)
@@ -221,7 +221,7 @@ class CommonTestsMixin(object):
             self.assertItems(notCompletedChild, self.task)
             
     def testUndoMarkCompletedWhenFilteringCompletedTasks(self):
-        self.viewer.hideCompletedTasks()
+        self.viewer.hideTaskStatus('completed')
         child1 = task.Task('child1')
         child2 = task.Task('child2')
         grandChild = task.Task('grandChild')
