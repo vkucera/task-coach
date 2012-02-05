@@ -46,6 +46,7 @@ class App(application.Application):
         self._args = args or []
         self.wxApp = MockWxApp()
         self.init()
+        self.sessionMonitor = None
 
     def init(self): # pylint: disable-msg=W0221
         super(App, self).init(loadSettings=False, loadTaskFile=False)
