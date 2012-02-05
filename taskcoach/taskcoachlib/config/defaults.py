@@ -449,7 +449,8 @@ defaults = { \
     'iphone': 'False',
     'notifier': 'Task Coach',
     'minidletime': '0',
-    'usesm': 'True' },
+    'usesm': 'True',
+    'showsmwarning': 'True' },
 'syncml': { \
     'url': '',
     'username': '',
