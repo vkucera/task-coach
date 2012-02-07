@@ -32,8 +32,9 @@ that only shows e.g. due soon tasks or late tasks, or any combination of
 task statuses.'''),
         Feature('''Add an option to disable session management on GTK.
 The XFCE session manager causes Task Coach to hang randomly on start.'''),
-        Feature('''On Mac OS X, reminders can be spoken. This can be turned
-on in the preferences dialog, on the task reminder tab.'''),
+        Feature('''On Mac OS X and Linux (with espeak installed), 
+reminders can be spoken. This can be turned on in the preferences dialog, 
+on the task reminder tab.'''),
         ],
     bugsFixed=[
         Bug('''Show a warning dialog when running XFCE4 to highlight the

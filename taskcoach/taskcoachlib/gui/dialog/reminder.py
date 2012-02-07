@@ -96,8 +96,11 @@ class ReminderDialog(sized_controls.SizedDialog):
         self.Bind(wx.EVT_BUTTON, self.onOK, id=self.GetAffirmativeId())
         self.Fit()
         self.RequestUserAttention()
-        if operating_system.isMac() and self.settings.getboolean('feature', 'sayreminder'):
-            subprocess.Popen(('say', '"%s: %s"'%(_('Reminder'), task.subject())))
+        if self.settings.getboolean('feature', 'sayreminder'):
+            if operating_system.isMac():
+                subprocess.Popen(('say', '"%s: %s"'%(_('Reminder'), task.subject())))
+            elif operating_system.isGTK():
+                subprocess.Popen(('espeak', '"%s: %s"'%(_('Reminder'), task.subject())))
 
     def onOpenTask(self, event): # pylint: disable-msg=W0613
         self.openTaskAfterClose = True
