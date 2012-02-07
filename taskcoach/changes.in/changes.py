@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.8', 'February 5, 2012',
+Release('1.3.8', 'February 7, 2012',
     summary='''This is a mixed feature and bugfix release.''',
     featuresAdded=[
         Feature('''In task viewers, late tasks, due soon tasks, and over due
@@ -37,6 +37,8 @@ The XFCE session manager causes Task Coach to hang randomly on start.'''),
         Bug('''Show a warning dialog when running XFCE4 to highlight the
 session management issues and tell the user about the option to disable it''',
             '3482752'),
+        Bug('''Display times with a 12 hour clock (AM/PM) when the language is 
+set to English (US).'''),
         ],
     ),
             
