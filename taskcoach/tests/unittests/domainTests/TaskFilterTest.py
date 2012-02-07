@@ -55,30 +55,30 @@ class ViewFilterTestsMixin(object):
         self.task.setCompletionDateTime()
         self.filter.append(self.task)
         self.assertFilterShows(self.task)
-        self.filter.hideTaskStatus('completed')
+        self.filter.hideTaskStatus(task.status.completed)
         self.assertFilterIsEmpty()
         
     def testFilterCompletedTask_RootTasks(self):
         self.task.setCompletionDateTime()
         self.filter.append(self.task)
-        self.filter.hideTaskStatus('completed')
+        self.filter.hideTaskStatus(task.status.completed)
         self.failIf(self.filter.rootItems())
 
     def testMarkTaskCompleted(self):
-        self.filter.hideTaskStatus('completed')
+        self.filter.hideTaskStatus(task.status.completed)
         self.list.append(self.task)
         self.task.setCompletionDateTime()
         self.assertFilterIsEmpty()
 
     def testMarkTaskUncompleted(self):
-        self.filter.hideTaskStatus('completed')
+        self.filter.hideTaskStatus(task.status.completed)
         self.task.setCompletionDateTime()
         self.list.append(self.task)
         self.task.setCompletionDateTime(date.DateTime())
         self.assertFilterShows(self.task)
         
     def testChangeCompletionDateOfAlreadyCompletedTask(self):
-        self.filter.hideTaskStatus('completed')
+        self.filter.hideTaskStatus(task.status.completed)
         self.task.setCompletionDateTime()
         self.list.append(self.task)
         self.task.setCompletionDateTime(date.Now() + date.oneDay)
@@ -87,20 +87,20 @@ class ViewFilterTestsMixin(object):
     def testFilterInactiveTask(self):
         self.task.setPlannedStartDateTime(date.Now() + date.oneDay)
         self.list.append(self.task)
-        self.filter.hideTaskStatus('inactive')
+        self.filter.hideTaskStatus(task.status.inactive)
         self.assertFilterIsEmpty()
         
     def testFilterInactiveTask_ChangePlannedStartDateTime(self):
         self.task.setPlannedStartDateTime(date.Now() + date.oneDay)
         self.list.append(self.task)
-        self.filter.hideTaskStatus('inactive')
+        self.filter.hideTaskStatus(task.status.inactive)
         self.task.setPlannedStartDateTime(date.Now())
         self.assertFilterShows(self.task)
         
     def testFilterInactiveTask_WhenPlannedStartDateTimePasses(self):
         self.task.setPlannedStartDateTime(date.Now() + date.oneDay)
         self.list.append(self.task)
-        self.filter.hideTaskStatus('inactive')
+        self.filter.hideTaskStatus(task.status.inactive)
         oldNow = date.Now
         date.Now = lambda: oldNow() + date.oneDay + date.TimeDelta(seconds=1)
         date.Clock().notifySpecificTimeObservers(date.Now())
@@ -112,8 +112,8 @@ class ViewFilterTestsMixin(object):
         self.task.setPlannedStartDateTime(date.Now())
         self.dueToday.setPlannedStartDateTime(date.Now())
         self.filter.extend([self.dueToday, self.task])
-        self.filter.hideTaskStatus('inactive')
-        self.filter.hideTaskStatus('completed')
+        self.filter.hideTaskStatus(task.status.inactive)
+        self.filter.hideTaskStatus(task.status.completed)
         self.assertFilterShows(self.dueToday)
         self.dueToday.setCompletionDateTime()
         self.assertFilterShows(self.task)
@@ -122,26 +122,26 @@ class ViewFilterTestsMixin(object):
         for eachTask in (self.task, self.dueToday):
             eachTask.setPlannedStartDateTime(date.Now())
         self.filter.extend([self.dueToday, self.task])
-        self.filter.hideTaskStatus('inactive')
+        self.filter.hideTaskStatus(task.status.inactive)
         self.task.addPrerequisites([self.dueToday])
         self.assertFilterShows(self.dueToday)
         
     def testFilterLateTask(self):
         self.task.setPlannedStartDateTime(date.Now() - date.oneDay)
         self.list.append(self.task)
-        self.filter.hideTaskStatus('late')
+        self.filter.hideTaskStatus(task.status.late)
         self.assertFilterIsEmpty()
 
     def testFilterDueSoonTask(self):
         self.task.setDueDateTime(date.Now() + date.oneHour)
         self.list.append(self.task)
-        self.filter.hideTaskStatus('duesoon')
+        self.filter.hideTaskStatus(task.status.duesoon)
         self.assertFilterIsEmpty()
  
     def testFilterOverDueTask(self):
         self.task.setDueDateTime(date.Now() - date.oneHour)
         self.list.append(self.task)
-        self.filter.hideTaskStatus('overdue')
+        self.filter.hideTaskStatus(task.status.overdue)
         self.assertFilterIsEmpty()
         
     def testFilterOverDueTaskWithActiveChild(self):
@@ -149,7 +149,7 @@ class ViewFilterTestsMixin(object):
         self.task.setDueDateTime(date.Now() - date.oneHour)
         self.task.addChild(self.child)
         self.list.append(self.task)
-        self.filter.hideTaskStatus('overdue')
+        self.filter.hideTaskStatus(task.status.overdue)
         if self.treeMode:
             self.assertFilterShows(self.task, self.child)
         else:
@@ -164,7 +164,7 @@ class ViewFilterInTreeModeTest(ViewFilterTestsMixin, ViewFilterTestCase):
     treeMode = True
         
     def testFilterCompletedTasks(self):
-        self.filter.hideTaskStatus('completed')
+        self.filter.hideTaskStatus(task.status.completed)
         child = task.Task()
         self.task.addChild(child)
         child.setParent(self.task)

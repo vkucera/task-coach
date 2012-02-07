@@ -134,10 +134,8 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
         return super(FilterableViewerForTasksMixin, self).createFilter(taskList)
                                    
     def viewFilterOptions(self):
-        options = dict(hideCompositeTasks=self.isHidingCompositeTasks())
-        for status in task.Task.possibleStatuses():
-            options['hide%sTasks'%status.capitalize()] = self.isHidingTaskStatus(status)
-        return options
+        return dict(hideCompositeTasks=self.isHidingCompositeTasks(),
+                    statusesToHide=self.hiddenTaskStatuses())
    
     def hideTaskStatus(self, status, hide=True):
         self.__setBooleanSetting('hide%stasks'%status, hide)
@@ -145,6 +143,9 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
 
     def isHidingTaskStatus(self, status):
         return self.__getBooleanSetting('hide%stasks'%status)
+    
+    def hiddenTaskStatuses(self):
+        return [status for status in task.Task.possibleStatuses() if self.isHidingTaskStatus(status)]
     
     def hideCompositeTasks(self, hide=True):
         self.__setBooleanSetting('hidecompositetasks', hide)
@@ -162,13 +163,8 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
     def createFilterUICommands(self):
         return super(FilterableViewerForTasksMixin, 
                      self).createFilterUICommands() + \
-            [uicommand.ViewerHideInactiveTasks(viewer=self),
-             uicommand.ViewerHideLateTasks(viewer=self),
-             uicommand.ViewerHideActiveTasks(viewer=self),
-             uicommand.ViewerHideDueSoonTasks(viewer=self),
-             uicommand.ViewerHideOverDueTasks(viewer=self),
-             uicommand.ViewerHideCompletedTasks(viewer=self),
-             uicommand.ViewerHideCompositeTasks(viewer=self)]
+            [uicommand.ViewerHideTasks(taskStatus, viewer=self) for taskStatus in task.Task.possibleStatuses()] + \
+            [uicommand.ViewerHideCompositeTasks(viewer=self)]
             
     def __getBooleanSetting(self, setting):
         return self.settings.getboolean(self.settingsSection(), setting)
@@ -262,9 +258,6 @@ class SortableViewerMixin(object):
                 uicommand.ViewerSortByCommand(viewer=self, value='description',
                     menuText=_('&Description'),
                     helpText=self.sortByDescriptionHelpText)]
-                ## uicommand.ViewerSortByCommand(viewer=self, value='ordering',
-                ##     menuText=_('&Manual ordering'),
-                ##     helpText=self.sortByOrderingHelpText)]
 
 
 class SortableViewerForEffortMixin(SortableViewerMixin):
@@ -286,7 +279,6 @@ class SortableViewerForEffortMixin(SortableViewerMixin):
 class SortableViewerForCategoriesMixin(SortableViewerMixin):
     sortBySubjectHelpText = _('Sort categories by subject')
     sortByDescriptionHelpText = _('Sort categories by description')
-    sortByOrderingHelpText = _('Sort categories manually')
 
 
 class SortableViewerForCategorizablesMixin(SortableViewerMixin):
@@ -303,14 +295,12 @@ class SortableViewerForCategorizablesMixin(SortableViewerMixin):
 class SortableViewerForAttachmentsMixin(SortableViewerForCategorizablesMixin):
     sortBySubjectHelpText = _('Sort attachments by subject')
     sortByDescriptionHelpText = _('Sort attachments by description')
-    sortByOrderingHelpText = _('Sort attachments manually')
     sortByCategoryHelpText = _('Sort attachments by category')
     
 
 class SortableViewerForNotesMixin(SortableViewerForCategorizablesMixin):
     sortBySubjectHelpText = _('Sort notes by subject')
     sortByDescriptionHelpText = _('Sort notes by description')
-    sortByOrderingHelpText = _('Sort notes manually')
     sortByCategoryHelpText = _('Sort notes by category')
 
 
@@ -318,7 +308,6 @@ class SortableViewerForTasksMixin(SortableViewerForCategorizablesMixin):
     SorterClass = task.sorter.Sorter
     sortBySubjectHelpText = _('Sort tasks by subject')
     sortByDescriptionHelpText = _('Sort tasks by description')
-    sortByOrderingHelpText = _('Sort tasks manually')
     sortByCategoryHelpText = _('Sort tasks by category')
     
     def __init__(self, *args, **kwargs):

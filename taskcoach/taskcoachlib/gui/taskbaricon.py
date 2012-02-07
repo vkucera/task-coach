@@ -49,6 +49,15 @@ class TaskBarIcon(date.ClockSecondObserver, wx.TaskBarIcon):
             eventType=task.Task.trackStopEventType())
         registerObserver(self.onChangeDueDateTime,
             eventType='task.dueDateTime')
+        # When the user chances the due soon hours preferences it may cause
+        # a task to change appearance. That also means the number of due soon
+        # tasks has changed, so we need to change the tool tip text.
+        # Note that directly subscribing to the setting (behavior.duesoonhours)
+        # is not reliable. The TaskBarIcon may get the event before the tasks
+        # do. When that happens the tasks haven't changed their status yet and
+        # we would use the wrong status count.
+        registerObserver(self.onChangeDueDateTime,
+            eventType=task.Task.appearanceChangedEventType()) 
         event = wx.EVT_TASKBAR_LEFT_DOWN if operating_system.isGTK() else wx.EVT_TASKBAR_LEFT_DCLICK    
         self.Bind(event, self.onTaskbarClick)
         self.__setTooltipText()
@@ -133,8 +142,8 @@ class TaskBarIcon(date.ClockSecondObserver, wx.TaskBarIcon):
             self.__setIcon()
 
     toolTipMessages = \
-        [('nrOverdue', _('one task overdue'), _('%d tasks overdue')),
-         ('nrDueSoon', _('one task due soon'), _('%d tasks due soon'))]
+        [(task.status.overdue, _('one task overdue'), _('%d tasks overdue')),
+         (task.status.duesoon, _('one task due soon'), _('%d tasks due soon'))]
     
     def __setTooltipText(self):
         ''' Note that Windows XP and Vista limit the text shown in the
@@ -150,8 +159,9 @@ class TaskBarIcon(date.ClockSecondObserver, wx.TaskBarIcon):
                 tracking = _('tracking effort for %d tasks')%count
             textParts.append(tracking)
         else:
-            for getCountMethodName, singular, plural in self.toolTipMessages:
-                count = getattr(self.__taskList, getCountMethodName)()
+            counts = self.__taskList.nrOfTasksPerStatus()
+            for status, singular, plural in self.toolTipMessages:
+                count = counts[status]
                 if count == 1:
                     textParts.append(singular)
                 elif count > 1:

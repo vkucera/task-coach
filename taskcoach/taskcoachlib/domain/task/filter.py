@@ -23,10 +23,7 @@ import task
 
 class ViewFilter(base.Filter):
     def __init__(self, *args, **kwargs):
-        self.__statusesToHide = set()
-        for status in task.Task.possibleStatuses():
-            if kwargs.pop('hide%sTasks'%status.capitalize(), False):
-                self.__statusesToHide.add(status)
+        self.__statusesToHide = set(kwargs.pop('statusesToHide', []))
         self.__hideCompositeTasks = kwargs.pop('hideCompositeTasks', False)
         self.registerObservers()
         super(ViewFilter, self).__init__(*args, **kwargs)

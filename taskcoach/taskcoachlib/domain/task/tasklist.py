@@ -31,40 +31,19 @@ class TaskList(categorizable.CategorizableContainer):
     newItemMenuText = _('&New task...') + ('\tINSERT' if not operating_system.isMac() else '\tCtrl+N')
     newItemHelpText = help.taskNew
     
-    def _nrInterestingTasks(self, isInteresting):
-        return len(self._getInterestingTasks(isInteresting))
-    
-    def _getInterestingTasks(self, isInteresting):
-        return [task for task in self if isInteresting(task)] # pylint: disable-msg=W0621
-
-    def nrCompleted(self):
-        return self._nrInterestingTasks(task.Task.completed)
-
-    def nrOverdue(self):
-        return self._nrInterestingTasks(task.Task.overdue)
-    
-    def nrActive(self):
-        return self._nrInterestingTasks(task.Task.active)
-
-    def nrInactive(self):
-        return self._nrInterestingTasks(task.Task.inactive)
-
-    def nrDueSoon(self):
-        return self._nrInterestingTasks(task.Task.dueSoon)
-    
-    def nrLate(self):
-        return self._nrInterestingTasks(task.Task.late)
-    
+    def nrOfTasksPerStatus(self):
+        statuses = [eachTask.status() for eachTask in self]
+        count = dict()
+        for status in task.Task.possibleStatuses():
+            count[status] = statuses.count(status)
+        return count
+        
     def nrBeingTracked(self):
-        return self._nrInterestingTasks(task.Task.isBeingTracked)
+        return len(self.tasksBeingTracked())
     
     def tasksBeingTracked(self):
-        return self._getInterestingTasks(task.Task.isBeingTracked)        
+        return [eachTask for eachTask in self if eachTask.isBeingTracked()]    
 
-    def allCompleted(self):
-        nrCompleted = self.nrCompleted()
-        return nrCompleted > 0 and nrCompleted == len(self)
-            
     def efforts(self):
         result = []
         for task in self: # pylint: disable-msg=W0621

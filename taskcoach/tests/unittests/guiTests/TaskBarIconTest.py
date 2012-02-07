@@ -16,7 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
 import test
 from taskcoachlib import meta, config, gui, operating_system
 from taskcoachlib.domain import task, effort, date
@@ -86,6 +85,11 @@ class TaskBarIconTooltipTest(TaskBarIconTooltipTestCase):
     def testOneTaskDueSoon(self):
         self.taskList.append(task.Task(dueDateTime=date.Now() + date.oneHour))
         self.assertTooltip('one task due soon')
+        
+    def testOneTaskNoLongerDueSoonAfterChangingDueSoonSetting(self):
+        self.taskList.append(task.Task(dueDateTime=date.Now() + date.oneHour))
+        self.settings.set('behavior', 'duesoonhours', '0')
+        self.assertTooltip('')
         
     def testTwoTasksDueSoon(self):
         self.taskList.append(task.Task(dueDateTime=date.Now() + date.oneHour))

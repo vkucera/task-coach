@@ -134,7 +134,7 @@ class Viewer2HTMLConverter(object):
             columnStyle = self.indent('.%s {text-align: %s}'%(column.name(), alignment), level+1)
             styleContent.append(columnStyle)
         if self.viewer.isShowingTasks():
-            for status in 'completed', 'duesoon', 'overdue', 'late', 'inactive', 'active':
+            for status in task.Task.possibleStatuses():
                 statusColor = task.Task.fgColorForStatus(status)
                 statusColor = self.cssColorSyntax(statusColor)
                 statusStyle = '.%s {color: %s}'%(status, statusColor)
@@ -240,7 +240,7 @@ class Viewer2HTMLConverter(object):
         ''' Determine the foreground color for the item. Returns a CSS style
             specification. '''
         if self.viewer.isShowingTasks():
-            return {'class': item.status()}
+            return {'class': item.status().statusString}
         else:
             return dict()
         

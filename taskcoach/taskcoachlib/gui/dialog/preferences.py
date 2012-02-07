@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 from taskcoachlib import meta, widgets, notify, operating_system
 from taskcoachlib.gui import artprovider
-from taskcoachlib.domain import date
+from taskcoachlib.domain import date, task
 from taskcoachlib.i18n import _
 
 
@@ -401,18 +401,13 @@ class TaskAppearancePage(SettingsPage):
     def __init__(self, *args, **kwargs):
         super(TaskAppearancePage, self).__init__(columns=9, growableColumn=-1, *args, **kwargs)
         self.addAppearanceHeader()
-        for setting, label in \
-            [('activetasks', _('Active tasks')), 
-             ('inactivetasks', _('Inactive tasks')),
-             ('completedtasks', _('Completed tasks')),
-             ('overduetasks', _('Overdue tasks')),
-             ('duesoontasks', _('Tasks due soon')),
-             ('latetasks', _('Late tasks'))]:
+        for status in task.Task.possibleStatuses():
             self.addLine()
+            setting = '%stasks'%status
             self.addAppearanceSetting('fgcolor', setting, 
                                       'bgcolor', setting, 
                                       'font', setting, 
-                                      'icon', setting, label)
+                                      'icon', setting, status.pluralLabel)
         self.fit()
 
 

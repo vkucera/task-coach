@@ -29,31 +29,33 @@ class TaskListTest(test.TestCase):
         self.task1 = task.Task(dueDateTime=date.DateTime(2110,1,1))
         self.task2 = task.Task(dueDateTime=date.DateTime(2111,1,1))
         self.task3 = task.Task()
+        
+    def nrStatus(self, status):
+        return self.taskList.nrOfTasksPerStatus()[status]
     
+    def testNrOfTasksPerStatusOfAnEmptyTaskList(self):
+        counts = self.taskList.nrOfTasksPerStatus()
+        for status in task.Task.possibleStatuses():     
+            self.assertEqual(0, counts[status])
+            
     def testNrCompleted(self):
-        self.assertEqual(0, self.taskList.nrCompleted())
+        self.assertEqual(0, self.nrStatus(task.status.completed))
         self.taskList.append(self.task1)
-        self.assertEqual(0, self.taskList.nrCompleted())
+        self.assertEqual(0, self.nrStatus(task.status.completed))
         self.task1.setCompletionDateTime()
-        self.assertEqual(1, self.taskList.nrCompleted())
+        self.assertEqual(1, self.nrStatus(task.status.completed))
     
     def testNrOverdue(self):
-        self.assertEqual(0, self.taskList.nrOverdue())
+        self.assertEqual(0, self.nrStatus(task.status.overdue))
         self.taskList.append(self.task1)
-        self.assertEqual(0, self.taskList.nrOverdue())
+        self.assertEqual(0, self.nrStatus(task.status.overdue))
         self.task1.setDueDateTime(date.DateTime(1990, 1, 1))
-        self.assertEqual(1, self.taskList.nrOverdue())
-
-    def testAllCompleted(self):
-        self.failIf(self.taskList.allCompleted())
-        self.task1.setCompletionDateTime()
-        self.taskList.append(self.task1)
-        self.failUnless(self.taskList.allCompleted())
+        self.assertEqual(1, self.nrStatus(task.status.overdue))
 
     def testNrDueSoon(self):
-        self.assertEqual(0, self.taskList.nrDueSoon())
+        self.assertEqual(0, self.nrStatus(task.status.duesoon))
         self.taskList.append(task.Task(dueDateTime=date.Now() + date.oneHour))
-        self.assertEqual(1, self.taskList.nrDueSoon())
+        self.assertEqual(1, self.nrStatus(task.status.duesoon))
         
     def testNrBeingTracked(self):
         self.assertEqual(0, self.taskList.nrBeingTracked())

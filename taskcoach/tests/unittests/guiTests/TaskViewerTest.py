@@ -209,7 +209,7 @@ class CommonTestsMixin(object):
         self.assertItems(task2, self.task)
         
     def testFilterCompletedTasks(self):
-        self.viewer.hideTaskStatus('completed')
+        self.viewer.hideTaskStatus(task.status.completed)
         completedChild = task.Task(completionDateTime=date.Now() - date.oneHour)
         notCompletedChild = task.Task(plannedStartDateTime=date.Now())
         self.task.addChild(notCompletedChild)
@@ -221,7 +221,7 @@ class CommonTestsMixin(object):
             self.assertItems(notCompletedChild, self.task)
             
     def testUndoMarkCompletedWhenFilteringCompletedTasks(self):
-        self.viewer.hideTaskStatus('completed')
+        self.viewer.hideTaskStatus(task.status.completed)
         child1 = task.Task('child1')
         child2 = task.Task('child2')
         grandChild = task.Task('grandChild')
@@ -851,15 +851,20 @@ class TaskCalendarViewerTest(test.wxTestCase):
         
 class TaskSquareMapViewerTest(test.wxTestCase):
     def testCreate(self):
-        # pylint: disable-msg=W0201
-        task.Task.settings = self.settings = config.Settings(load=False)
-        self.taskFile = persistence.TaskFile()
-        gui.viewer.task.SquareTaskViewer(self.frame, self.taskFile, self.settings)
+        task.Task.settings = settings = config.Settings(load=False)
+        taskFile = persistence.TaskFile()
+        gui.viewer.task.SquareTaskViewer(self.frame, taskFile, settings)
         
         
 class TaskTimelineViewerTest(test.wxTestCase):
     def testCreate(self):
-        # pylint: disable-msg=W0201
-        task.Task.settings = self.settings = config.Settings(load=False)
-        self.taskFile = persistence.TaskFile()
-        gui.viewer.task.TimelineViewer(self.frame, self.taskFile, self.settings)
+        task.Task.settings = settings = config.Settings(load=False)
+        taskFile = persistence.TaskFile()
+        gui.viewer.task.TimelineViewer(self.frame, taskFile, settings)
+
+
+class TaskStatisticsViewerTesT(test.wxTestCase):
+    def testCreate(self):
+        task.Task.settings = settings = config.Settings(load=False)
+        taskFile = persistence.TaskFile()
+        gui.viewer.task.TaskStatsViewer(self.frame, taskFile, settings)

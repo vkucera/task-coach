@@ -290,118 +290,118 @@ class FilterableViewerForTasks(test.TestCase):
         return viewer
 
     def testIsNotHidingInactiveTasksByDefault(self):
-        self.failIf(self.viewer.isHidingTaskStatus('inactive'))
+        self.failIf(self.viewer.isHidingTaskStatus(task.status.inactive))
 
     def testHideInactiveTasks(self):
-        self.viewer.hideTaskStatus('inactive')
-        self.failUnless(self.viewer.isHidingTaskStatus('inactive'))
+        self.viewer.hideTaskStatus(task.status.inactive)
+        self.failUnless(self.viewer.isHidingTaskStatus(task.status.inactive))
         
     def testHideInactiveTasks_SetsSetting(self):
-        self.viewer.hideTaskStatus('inactive')
+        self.viewer.hideTaskStatus(task.status.inactive)
         self.failUnless(self.settings.getboolean(self.viewer.settingsSection(), 
                                                  'hideinactivetasks'))
 
     def testHideInactiveTasks_AffectsPresentation(self):
         self.viewer.presentation().append(task.Task(plannedStartDateTime=date.Now() + date.oneDay))
-        self.viewer.hideTaskStatus('inactive')
+        self.viewer.hideTaskStatus(task.status.inactive)
         self.failIf(self.viewer.presentation())
     
     def testUnhideInactiveTasks(self):
         self.viewer.presentation().append(task.Task(plannedStartDateTime=date.Now() + date.oneDay))
-        self.viewer.hideTaskStatus('inactive')
-        self.viewer.hideTaskStatus('inactive', False)
+        self.viewer.hideTaskStatus(task.status.inactive)
+        self.viewer.hideTaskStatus(task.status.inactive, False)
         self.failUnless(self.viewer.presentation())
 
     def testIsNotHidingLateTasksByDefault(self):
-        self.failIf(self.viewer.isHidingTaskStatus('late'))
+        self.failIf(self.viewer.isHidingTaskStatus(task.status.late))
 
     def testHideLateTasks(self):
-        self.viewer.hideTaskStatus('late')
-        self.failUnless(self.viewer.isHidingTaskStatus('late'))
+        self.viewer.hideTaskStatus(task.status.late)
+        self.failUnless(self.viewer.isHidingTaskStatus(task.status.late))
         
     def testHideLateTasks_SetsSetting(self):
-        self.viewer.hideTaskStatus('late')
+        self.viewer.hideTaskStatus(task.status.late)
         self.failUnless(self.settings.getboolean(self.viewer.settingsSection(), 
                                                  'hidelatetasks'))
 
     def testHideLateTasks_AffectsPresentation(self):
         self.viewer.presentation().append(task.Task(plannedStartDateTime=date.Now() - date.oneDay))
-        self.viewer.hideTaskStatus('late')
+        self.viewer.hideTaskStatus(task.status.late)
         self.failIf(self.viewer.presentation())
     
     def testUnhideLateTasks(self):
         self.viewer.presentation().append(task.Task(plannedStartDateTime=date.Now() - date.oneDay))
-        self.viewer.hideTaskStatus('late')
-        self.viewer.hideTaskStatus('late', False)
+        self.viewer.hideTaskStatus(task.status.late)
+        self.viewer.hideTaskStatus(task.status.late, False)
         self.failUnless(self.viewer.presentation())
  
     def testIsNotHidingDueSoonTasksByDefault(self):
-        self.failIf(self.viewer.isHidingTaskStatus('duesoon'))
+        self.failIf(self.viewer.isHidingTaskStatus(task.status.duesoon))
 
     def testHideDueSoonTasks(self):
-        self.viewer.hideTaskStatus('duesoon')
-        self.failUnless(self.viewer.isHidingTaskStatus('duesoon'))
+        self.viewer.hideTaskStatus(task.status.duesoon)
+        self.failUnless(self.viewer.isHidingTaskStatus(task.status.duesoon))
         
     def testHideDueSoonTasks_SetsSetting(self):
-        self.viewer.hideTaskStatus('duesoon')
+        self.viewer.hideTaskStatus(task.status.duesoon)
         self.failUnless(self.settings.getboolean(self.viewer.settingsSection(), 
                                                  'hideduesoontasks'))
 
     def testHideDueSoonTasks_AffectsPresentation(self):
         self.viewer.presentation().append(task.Task(dueDateTime=date.Now() + date.oneHour))
-        self.viewer.hideTaskStatus('duesoon')
+        self.viewer.hideTaskStatus(task.status.duesoon)
         self.failIf(self.viewer.presentation())
     
     def testUnhideDueSoonTasks(self):
         self.viewer.presentation().append(task.Task(dueDateTime=date.Now() + date.oneHour))
-        self.viewer.hideTaskStatus('duesoon')
-        self.viewer.hideTaskStatus('duesoon', False)
+        self.viewer.hideTaskStatus(task.status.duesoon)
+        self.viewer.hideTaskStatus(task.status.duesoon, False)
         self.failUnless(self.viewer.presentation())
 
     def testIsNotHidingOverDueTasksByDefault(self):
-        self.failIf(self.viewer.isHidingTaskStatus('overdue'))
+        self.failIf(self.viewer.isHidingTaskStatus(task.status.overdue))
 
     def testHideOverDueTasks(self):
-        self.viewer.hideTaskStatus('overdue')
-        self.failUnless(self.viewer.isHidingTaskStatus('overdue'))
+        self.viewer.hideTaskStatus(task.status.overdue)
+        self.failUnless(self.viewer.isHidingTaskStatus(task.status.overdue))
         
     def testHideOverDueTasks_SetsSetting(self):
-        self.viewer.hideTaskStatus('overdue')
+        self.viewer.hideTaskStatus(task.status.overdue)
         self.failUnless(self.settings.getboolean(self.viewer.settingsSection(), 
                                                  'hideoverduetasks'))
 
     def testHideOverDueTasks_AffectsPresentation(self):
         self.viewer.presentation().append(task.Task(dueDateTime=date.Now() - date.oneDay))
-        self.viewer.hideTaskStatus('overdue')
+        self.viewer.hideTaskStatus(task.status.overdue)
         self.failIf(self.viewer.presentation())
     
     def testUnhideOverDueTasks(self):
         self.viewer.presentation().append(task.Task(dueDateTime=date.Now() - date.oneDay))
-        self.viewer.hideTaskStatus('overdue')
-        self.viewer.hideTaskStatus('overdue', False)
+        self.viewer.hideTaskStatus(task.status.overdue)
+        self.viewer.hideTaskStatus(task.status.overdue, False)
         self.failUnless(self.viewer.presentation())
        
     def testIsNotHidingCompletedTasksByDefault(self):
-        self.failIf(self.viewer.isHidingTaskStatus('completed'))
+        self.failIf(self.viewer.isHidingTaskStatus(task.status.completed))
         
     def testHideCompletedTasks(self):
-        self.viewer.hideTaskStatus('completed')
-        self.failUnless(self.viewer.isHidingTaskStatus('completed'))
+        self.viewer.hideTaskStatus(task.status.completed)
+        self.failUnless(self.viewer.isHidingTaskStatus(task.status.completed))
     
     def testHideCompletedTasks_SetsSetting(self):
-        self.viewer.hideTaskStatus('completed')
+        self.viewer.hideTaskStatus(task.status.completed)
         self.failUnless(self.settings.getboolean(self.viewer.settingsSection(),
                                                  'hidecompletedtasks'))
     
     def testHideCompletedTasks_AffectsPresentation(self):
         self.viewer.presentation().append(task.Task(completionDateTime=date.Now()))
-        self.viewer.hideTaskStatus('completed')
+        self.viewer.hideTaskStatus(task.status.completed)
         self.failIf(self.viewer.presentation())
         
     def testUnhideCompletedTasks(self):    
         self.viewer.presentation().append(task.Task(completionDateTime=date.Now()))
-        self.viewer.hideTaskStatus('completed')
-        self.viewer.hideTaskStatus('completed', False)
+        self.viewer.hideTaskStatus(task.status.completed)
+        self.viewer.hideTaskStatus(task.status.completed, False)
         self.failUnless(self.viewer.presentation())
 
     def testIsNotHidingCompositeTasksByDefault(self):
