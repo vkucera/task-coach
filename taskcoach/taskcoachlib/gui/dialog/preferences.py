@@ -511,6 +511,9 @@ class TaskReminderPage(SettingsPage):
         self.addChoiceSetting('feature', 'notifier', 
                               _('Notification system to use for reminders'), 
                               '', names, flags=(None, wx.ALL|wx.ALIGN_LEFT))
+        if operating_system.isMac():
+            self.addBooleanSetting('feature', 'sayreminder', 
+                                   _('Let the computer say the reminder'))
         snoozeChoices = [(str(choice[0]), choice[1]) for choice in date.snoozeChoices]
         self.addChoiceSetting('view', 'defaultsnoozetime', 
                               _('Default snooze time to use after reminder'), 
