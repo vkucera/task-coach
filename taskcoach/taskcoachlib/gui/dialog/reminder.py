@@ -16,8 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
-from taskcoachlib import meta, patterns, command, render
+import wx, subprocess
+from taskcoachlib import meta, patterns, command, render, operating_system
 from taskcoachlib.widgets import sized_controls
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import date
@@ -96,6 +96,11 @@ class ReminderDialog(sized_controls.SizedDialog):
         self.Bind(wx.EVT_BUTTON, self.onOK, id=self.GetAffirmativeId())
         self.Fit()
         self.RequestUserAttention()
+        if self.settings.getboolean('feature', 'sayreminder'):
+            if operating_system.isMac():
+                subprocess.Popen(('say', '"%s: %s"'%(_('Reminder'), task.subject())))
+            elif operating_system.isGTK():
+                subprocess.Popen(('espeak', '"%s: %s"'%(_('Reminder'), task.subject())))
 
     def onOpenTask(self, event): # pylint: disable-msg=W0613
         self.openTaskAfterClose = True

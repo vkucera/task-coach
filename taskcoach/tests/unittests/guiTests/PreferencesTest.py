@@ -32,12 +32,12 @@ class PreferencesTest(test.wxTestCase):
     # pylint: disable-msg=W0212
     
     def testCancel(self):
-        self.preferences[5]._colorSettings[0][2].SetColour(self.newColor)
+        self.preferences[5]._colorSettings[4][2].SetColour(self.newColor)
         self.preferences.cancel()
         self.assertEqual(self.originalColor, self.settings.get('fgcolor', 'activetasks'))
         
     def testOk(self):
-        self.preferences[5]._colorSettings[0][2].SetColour(self.newColor)
+        self.preferences[5]._colorSettings[4][2].SetColour(self.newColor)
         self.preferences.ok()
         self.assertEqual(self.newColor, 
             eval(self.settings.get('fgcolor', 'activetasks'))[:3])

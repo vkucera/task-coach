@@ -452,7 +452,8 @@ defaults = { \
     'notifier': 'Task Coach',
     'minidletime': '0',
     'usesm': 'True',
-    'showsmwarning': 'True' },
+    'showsmwarning': 'True',
+    'sayreminder': 'False' },
 'syncml': { \
     'url': '',
     'username': '',

@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.8', 'February 5, 2012',
+Release('1.3.8', 'February 10, 2012',
     summary='''This is a mixed feature and bugfix release.''',
     featuresAdded=[
         Feature('''In task viewers, late tasks, due soon tasks, and over due
@@ -32,11 +32,19 @@ that only shows e.g. due soon tasks or late tasks, or any combination of
 task statuses.'''),
         Feature('''Add an option to disable session management on GTK.
 The XFCE session manager causes Task Coach to hang randomly on start.'''),
+        Feature('''On Mac OS X and Linux (with espeak installed), 
+reminders can be spoken. This can be turned on in the preferences dialog, 
+on the task reminder tab.'''),
         ],
     bugsFixed=[
         Bug('''Show a warning dialog when running XFCE4 to highlight the
 session management issues and tell the user about the option to disable it''',
             '3482752'),
+        Bug('''Display times with a 12 hour clock (AM/PM) when the language is 
+set to English (US).'''),
+        Bug('''Don't change the selection when deleting or hiding items that 
+are not selected. When adding a new item, select it. When adding a new sub 
+item, also expand the parent item if necessary.''', '3484930'),
         ],
     ),
             

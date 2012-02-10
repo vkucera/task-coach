@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 from taskcoachlib import meta, widgets, notify, operating_system
 from taskcoachlib.gui import artprovider
-from taskcoachlib.domain import date
+from taskcoachlib.domain import date, task
 from taskcoachlib.i18n import _
 
 
@@ -63,10 +63,10 @@ class SettingsPageBase(widgets.BookPage):
         self._textSettings = []
         self._syncers = []
         
-    def addBooleanSetting(self, section, setting, text, helpText=''):
+    def addBooleanSetting(self, section, setting, text, helpText='', **kwargs):
         checkBox = wx.CheckBox(self, -1)
         checkBox.SetValue(self.getboolean(section, setting))
-        self.addEntry(text, checkBox, helpText=helpText)
+        self.addEntry(text, checkBox, helpText=helpText, **kwargs)
         self._booleanSettings.append((section, setting, checkBox))
         return checkBox
 
@@ -406,18 +406,13 @@ class TaskAppearancePage(SettingsPage):
     def __init__(self, *args, **kwargs):
         super(TaskAppearancePage, self).__init__(columns=9, growableColumn=-1, *args, **kwargs)
         self.addAppearanceHeader()
-        for setting, label in \
-            [('activetasks', _('Active tasks')), 
-             ('inactivetasks', _('Inactive tasks')),
-             ('completedtasks', _('Completed tasks')),
-             ('overduetasks', _('Overdue tasks')),
-             ('duesoontasks', _('Tasks due soon')),
-             ('latetasks', _('Late tasks'))]:
+        for status in task.Task.possibleStatuses():
             self.addLine()
+            setting = '%stasks'%status
             self.addAppearanceSetting('fgcolor', setting, 
                                       'bgcolor', setting, 
                                       'font', setting, 
-                                      'icon', setting, label)
+                                      'icon', setting, status.pluralLabel)
         self.fit()
 
 
@@ -514,13 +509,18 @@ class TaskReminderPage(SettingsPage):
     pageIcon = 'clock_alarm_icon'
     
     def __init__(self, *args, **kwargs):
-        super(TaskReminderPage, self).__init__(columns=2, growableColumn=-1, *args, **kwargs)
+        super(TaskReminderPage, self).__init__(columns=3, growableColumn=-1, *args, **kwargs)
         names = [] # There's at least one, the universal one
         for name in notify.AbstractNotifier.names():
             names.append((name, name))
         self.addChoiceSetting('feature', 'notifier', 
                               _('Notification system to use for reminders'), 
                               '', names, flags=(None, wx.ALL|wx.ALIGN_LEFT))
+        if operating_system.isMac() or operating_system.isGTK():
+            self.addBooleanSetting('feature', 'sayreminder', 
+                                   _('Let the computer say the reminder'),
+                                   _('(Needs espeak)') if operating_system.isGTK() else '',
+                                   flags=(None, wx.ALL|wx.ALIGN_LEFT, wx.ALL|wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL))
         snoozeChoices = [(str(choice[0]), choice[1]) for choice in date.snoozeChoices]
         self.addChoiceSetting('view', 'defaultsnoozetime', 
                               _('Default snooze time to use after reminder'), 

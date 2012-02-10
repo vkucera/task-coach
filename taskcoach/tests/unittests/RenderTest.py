@@ -28,10 +28,10 @@ class RenderDateTime(test.TestCase):
     def assertRenderedDateTime(self, expectedDateTime, *dateTimeArgs):
         renderedDateTime = render.dateTime(date.DateTime(*dateTimeArgs))
         if expectedDateTime:
-            renderedParts = renderedDateTime.split(' ')
+            renderedParts = renderedDateTime.split(' ', 1)
             if len(renderedParts) > 1:
                 renderedDate, renderedTime = renderedParts
-                expectedDate, expectedTime = expectedDateTime.split(' ')
+                expectedDate, expectedTime = expectedDateTime.split(' ', 1)
                 self.assertEqual(expectedTime, renderedTime)
             else:
                 expectedDate, renderedDate = expectedDateTime, renderedDateTime

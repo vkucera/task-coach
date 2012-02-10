@@ -134,56 +134,18 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
         return super(FilterableViewerForTasksMixin, self).createFilter(taskList)
                                    
     def viewFilterOptions(self):
-        options = dict(hideInactiveTasks=self.isHidingInactiveTasks(),
-                       hideLateTasks=self.isHidingLateTasks(),
-                       hideActiveTasks=self.isHidingActiveTasks(),
-                       hideDuesoonTasks=self.isHidingDueSoonTasks(),
-                       hideOverdueTasks=self.isHidingOverDueTasks(),
-                       hideCompletedTasks=self.isHidingCompletedTasks(),
-                       hideCompositeTasks=self.isHidingCompositeTasks())
-        return options
-    
-    def hideInactiveTasks(self, hide=True):
-        self.__setBooleanSetting('hideinactivetasks', hide)
-        self.presentation().hideTaskStatus('inactive', hide)
-    
-    def isHidingInactiveTasks(self):
-        return self.__getBooleanSetting('hideinactivetasks')
-    
-    def hideLateTasks(self, hide=True):
-        self.__setBooleanSetting('hidelatetasks', hide)
-        self.presentation().hideTaskStatus('late', hide)
-        
-    def isHidingLateTasks(self):
-        return self.__getBooleanSetting('hidelatetasks')
-    
-    def hideActiveTasks(self, hide=True):
-        self.__setBooleanSetting('hideactivetasks', hide)
-        self.presentation().hideTaskStatus('active', hide)
+        return dict(hideCompositeTasks=self.isHidingCompositeTasks(),
+                    statusesToHide=self.hiddenTaskStatuses())
+   
+    def hideTaskStatus(self, status, hide=True):
+        self.__setBooleanSetting('hide%stasks'%status, hide)
+        self.presentation().hideTaskStatus(status, hide)
 
-    def isHidingActiveTasks(self):
-        return self.__getBooleanSetting('hideactivetasks')
+    def isHidingTaskStatus(self, status):
+        return self.__getBooleanSetting('hide%stasks'%status)
     
-    def hideDueSoonTasks(self, hide=True):
-        self.__setBooleanSetting('hideduesoontasks', hide)
-        self.presentation().hideTaskStatus('duesoon', hide)
-        
-    def isHidingDueSoonTasks(self):
-        return self.__getBooleanSetting('hideduesoontasks')
-    
-    def hideOverDueTasks(self, hide=True):
-        self.__setBooleanSetting('hideoverduetasks', hide)
-        self.presentation().hideTaskStatus('overdue', hide)
-        
-    def isHidingOverDueTasks(self):
-        return self.__getBooleanSetting('hideoverduetasks')
-    
-    def hideCompletedTasks(self, hide=True):
-        self.__setBooleanSetting('hidecompletedtasks', hide)
-        self.presentation().hideTaskStatus('completed', hide)
-        
-    def isHidingCompletedTasks(self):
-        return self.__getBooleanSetting('hidecompletedtasks')
+    def hiddenTaskStatuses(self):
+        return [status for status in task.Task.possibleStatuses() if self.isHidingTaskStatus(status)]
     
     def hideCompositeTasks(self, hide=True):
         self.__setBooleanSetting('hidecompositetasks', hide)
@@ -194,24 +156,15 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
     
     def resetFilter(self):
         super(FilterableViewerForTasksMixin, self).resetFilter()
-        self.hideInactiveTasks(False)
-        self.hideLateTasks(False)
-        self.hideActiveTasks(False)
-        self.hideDueSoonTasks(False)
-        self.hideOverDueTasks(False)
-        self.hideCompletedTasks(False)
+        for status in task.Task.possibleStatuses():
+            self.hideTaskStatus(status, False)
         self.hideCompositeTasks(False)
 
     def createFilterUICommands(self):
         return super(FilterableViewerForTasksMixin, 
                      self).createFilterUICommands() + \
-            [uicommand.ViewerHideInactiveTasks(viewer=self),
-             uicommand.ViewerHideLateTasks(viewer=self),
-             uicommand.ViewerHideActiveTasks(viewer=self),
-             uicommand.ViewerHideDueSoonTasks(viewer=self),
-             uicommand.ViewerHideOverDueTasks(viewer=self),
-             uicommand.ViewerHideCompletedTasks(viewer=self),
-             uicommand.ViewerHideCompositeTasks(viewer=self)]
+            [uicommand.ViewerHideTasks(taskStatus, viewer=self) for taskStatus in task.Task.possibleStatuses()] + \
+            [uicommand.ViewerHideCompositeTasks(viewer=self)]
             
     def __getBooleanSetting(self, setting):
         return self.settings.getboolean(self.settingsSection(), setting)
@@ -305,9 +258,6 @@ class SortableViewerMixin(object):
                 uicommand.ViewerSortByCommand(viewer=self, value='description',
                     menuText=_('&Description'),
                     helpText=self.sortByDescriptionHelpText)]
-                ## uicommand.ViewerSortByCommand(viewer=self, value='ordering',
-                ##     menuText=_('&Manual ordering'),
-                ##     helpText=self.sortByOrderingHelpText)]
 
 
 class SortableViewerForEffortMixin(SortableViewerMixin):
@@ -329,7 +279,6 @@ class SortableViewerForEffortMixin(SortableViewerMixin):
 class SortableViewerForCategoriesMixin(SortableViewerMixin):
     sortBySubjectHelpText = _('Sort categories by subject')
     sortByDescriptionHelpText = _('Sort categories by description')
-    sortByOrderingHelpText = _('Sort categories manually')
 
 
 class SortableViewerForCategorizablesMixin(SortableViewerMixin):
@@ -346,14 +295,12 @@ class SortableViewerForCategorizablesMixin(SortableViewerMixin):
 class SortableViewerForAttachmentsMixin(SortableViewerForCategorizablesMixin):
     sortBySubjectHelpText = _('Sort attachments by subject')
     sortByDescriptionHelpText = _('Sort attachments by description')
-    sortByOrderingHelpText = _('Sort attachments manually')
     sortByCategoryHelpText = _('Sort attachments by category')
     
 
 class SortableViewerForNotesMixin(SortableViewerForCategorizablesMixin):
     sortBySubjectHelpText = _('Sort notes by subject')
     sortByDescriptionHelpText = _('Sort notes by description')
-    sortByOrderingHelpText = _('Sort notes manually')
     sortByCategoryHelpText = _('Sort notes by category')
 
 
@@ -361,7 +308,6 @@ class SortableViewerForTasksMixin(SortableViewerForCategorizablesMixin):
     SorterClass = task.sorter.Sorter
     sortBySubjectHelpText = _('Sort tasks by subject')
     sortByDescriptionHelpText = _('Sort tasks by description')
-    sortByOrderingHelpText = _('Sort tasks manually')
     sortByCategoryHelpText = _('Sort tasks by category')
     
     def __init__(self, *args, **kwargs):

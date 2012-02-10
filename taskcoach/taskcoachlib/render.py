@@ -81,7 +81,10 @@ try:
     codecs.utf_8_decode(datemodule.Now().strftime(dateFormat))
 except UnicodeDecodeError:
     dateFormat = '%Y-%m-%d'
-timeFormat = '%H:%M' # Alas, %X includes seconds
+if '_US' in locale.getlocale()[0]:
+    timeFormat = '%I:%M %p'
+else: 
+    timeFormat = '%H:%M' # Alas, %X includes seconds
 dateTimeFormat = ' '.join([dateFormat, timeFormat])
 
 def date(date): 

@@ -40,13 +40,14 @@ class TaskViewerStatusMessages(patterns.Observer):
         self.__presentation = viewer.presentation()
     
     def __call__(self):
+        count = self.__presentation.nrOfTasksPerStatus()
         return self.template1%(len(self.__viewer.curselection()), 
                                self.__viewer.nrOfVisibleTasks(), 
                                self.__presentation.originalLength()), \
-               self.template2%(self.__presentation.nrOverdue(), 
-                               self.__presentation.nrLate(),
-                               self.__presentation.nrInactive(), 
-                               self.__presentation.nrCompleted())
+               self.template2%(count[task.status.overdue], 
+                               count[task.status.late],
+                               count[task.status.inactive], 
+                               count[task.status.completed])
 
 
 class BaseTaskViewer(mixin.SearchableViewerMixin, # pylint: disable-msg=W0223
@@ -210,10 +211,10 @@ class BaseTaskTreeViewer(BaseTaskViewer): # pylint: disable-msg=W0223
         return uiCommands + super(BaseTaskTreeViewer, self).createActionToolBarUICommands()
     
     def createModeToolBarUICommands(self):
-        hideUICommands = (uicommand.ViewerHideCompletedTasks(viewer=self,
-                                                             bitmap='filtercompletedtasks'),
-                          uicommand.ViewerHideInactiveTasks(viewer=self,
-                                                            bitmap='filterinactivetasks'))
+        hideUICommands = (uicommand.ViewerHideTasks(taskStatus=task.status.completed,
+                                                    viewer=self),
+                          uicommand.ViewerHideTasks(taskStatus=task.status.inactive,
+                                                    viewer=self))
         otherModeUICommands = super(BaseTaskTreeViewer, self).createModeToolBarUICommands()
         separator = (None,) if otherModeUICommands else ()
         return hideUICommands + separator + otherModeUICommands
@@ -1141,13 +1142,6 @@ class TaskStatsViewer(BaseTaskViewer): # pylint: disable-msg=W0223
     defaultTitle = _('Task statistics')
     defaultBitmap = 'charts_icon'
 
-    labels = dict(overdue=_('Overdue tasks: %d (%d%%)'), 
-                  duesoon=_('Due soon tasks: %d (%d%%)'), 
-                  active=_('Active tasks: %d (%d%%)'), 
-                  late=_('Late tasks: %d (%d%%)'),
-                  inactive=_('Inactive tasks: %d (%d%%)'), 
-                  completed=_('Completed tasks: %d (%d%%)'))
-
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'taskstatsviewer')
         super(TaskStatsViewer, self).__init__(*args, **kwargs)
@@ -1160,7 +1154,7 @@ class TaskStatsViewer(BaseTaskViewer): # pylint: disable-msg=W0223
         widget.SetShowEdges(False)
         widget.SetHeight(20)
         self.initLegend(widget)
-        for dummy in range(len(self.labels)):
+        for dummy in task.Task.possibleStatuses():
             widget._series.append(wx.lib.agw.piectrl.PiePart()) # pylint: disable-msg=W0212
         return widget
 
@@ -1178,10 +1172,10 @@ class TaskStatsViewer(BaseTaskViewer): # pylint: disable-msg=W0223
                                                     bitmap='newtmpl'))
         
     def createActionToolBarUICommands(self):
-        return (uicommand.ViewerHideCompletedTasks(viewer=self,
-                                                   bitmap='filtercompletedtasks'),
-                uicommand.ViewerHideInactiveTasks(viewer=self,
-                                                  bitmap='filterinactivetasks'),
+        return (uicommand.ViewerHideTasks(taskStatus=task.status.completed,
+                                          viewer=self),
+                uicommand.ViewerHideTasks(taskStatus=task.status.inactive,
+                                          viewer=self),
                 uicommand.ViewerPieChartAngle(viewer=self, settings=self.settings))            
         
     def initLegend(self, widget):
@@ -1200,11 +1194,11 @@ class TaskStatsViewer(BaseTaskViewer): # pylint: disable-msg=W0223
         series = self.widget._series # pylint: disable-msg=W0212
         tasks = self.presentation()
         total = len(tasks)
-        statuses = [eachTask.status() for eachTask in tasks]
+        counts = tasks.nrOfTasksPerStatus()
         for part, status in zip(series, task.Task.possibleStatuses()):
-            nrTasks = statuses.count(status)
+            nrTasks = counts[status]
             percentage = round(100.*nrTasks/total) if total else 0
-            part.SetLabel(self.labels[status]%(nrTasks, percentage))
+            part.SetLabel(status.countLabel%(nrTasks, percentage))
             part.SetValue(nrTasks)
             part.SetColour(self.getFgColor(status))
         # PietCtrl can't handle empty pie charts:    
@@ -1213,7 +1207,7 @@ class TaskStatsViewer(BaseTaskViewer): # pylint: disable-msg=W0223
        
     def getFgColor(self, status):
         color = wx.Colour(*eval(self.settings.get('fgcolor', '%stasks'%status)))
-        if status == 'active' and color == wx.BLACK:
+        if status == task.status.active and color == wx.BLACK:
             color = wx.BLUE
         return color
         

@@ -23,6 +23,7 @@ import wx
 from taskcoachlib import patterns
 from taskcoachlib.domain import base, date, categorizable, note, attachment
 from taskcoachlib.domain.attribute import color
+import status
 
 
 class Task(note.NoteOwner, attachment.AttachmentOwner, 
@@ -78,11 +79,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             effort.setTask(self)
         self.registerObserver = registerObserver = patterns.Publisher().registerObserver
         self.removeObserver = patterns.Publisher().removeObserver
-        for eventType in 'active', 'inactive', 'completed', 'duesoon', 'overdue', 'late':
-            registerObserver(self.__computeRecursiveForegroundColor, 'fgcolor.%stasks'%eventType)
-            registerObserver(self.__computeRecursiveBackgroundColor, 'bgcolor.%stasks'%eventType)
-            registerObserver(self.__computeRecursiveIcon, 'icon.%stasks'%eventType)
-            registerObserver(self.__computeRecursiveSelectedIcon, 'icon.%stasks'%eventType)
+        for taskStatus in self.possibleStatuses():
+            registerObserver(self.__computeRecursiveForegroundColor, 'fgcolor.%stasks'%taskStatus)
+            registerObserver(self.__computeRecursiveBackgroundColor, 'bgcolor.%stasks'%taskStatus)
+            registerObserver(self.__computeRecursiveIcon, 'icon.%stasks'%taskStatus)
+            registerObserver(self.__computeRecursiveSelectedIcon, 'icon.%stasks'%taskStatus)
         registerObserver(self.onDueSoonHoursChanged, 'behavior.duesoonhours')
 
         now = date.Now()
@@ -478,19 +479,19 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     
     def completed(self):
         ''' A task is completed if it has a completion date/time. '''
-        return self.status() == 'completed'
+        return self.status() == status.completed
 
     def overdue(self):
         ''' A task is over due if its due date/time is in the past and it is
             not completed. Note that an over due task is also either active 
             or inactive. '''
-        return self.status() == 'overdue'
+        return self.status() == status.overdue
 
     def inactive(self):
         ''' A task is inactive if it is not completed and either has no planned 
             start date/time or a planned start date/time in the future, and/or 
             its prerequisites are not completed. '''
-        return self.status() == 'inactive'
+        return self.status() == status.inactive
         
     def active(self):
         ''' A task is active if it has a planned start date/time in the past and 
@@ -498,40 +499,41 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             considered to be active. So the statuses active, inactive and 
             completed are disjunct, but the statuses active, due soon and over 
             due are not. '''
-        return self.status() == 'active'
+        return self.status() == status.active
 
     def dueSoon(self):
         ''' A task is due soon if it is not completed and there is still time 
             left (i.e. it is not over due). '''
-        return self.status() == 'duesoon'
+        return self.status() == status.duesoon
 
     def late(self):
         ''' A task is late if it is not active and its planned start date time
             is in the past. '''
-        return self.status() == 'late'
+        return self.status() == status.late
     
-    @staticmethod
-    def possibleStatuses():
-        return 'inactive', 'late', 'active', 'duesoon', 'overdue', 'completed'
+    @classmethod
+    def possibleStatuses(class_):
+        return (status.inactive, status.late, status.active,
+                status.duesoon, status.overdue, status.completed)
 
     def status(self):
         if self.completionDateTime() != self.maxDateTime:
-            return 'completed'
+            return status.completed
         if self.dueDateTime() < date.Now(): 
-            return 'overdue'
+            return status.overdue
         if 0 <= self.timeLeft().hours() < self.__dueSoonHours:
-            return 'duesoon'
+            return status.duesoon
         if self.actualStartDateTime() <= date.Now():
-            return 'active'
+            return status.active
         # Don't call prerequisite.completed() because it will lead to infinite
         # recursion in the case of circular dependencies:
         if any([prerequisite.completionDateTime() == self.maxDateTime for prerequisite in self.prerequisites()]):
-            return 'inactive'
+            return status.inactive
         if self.parent() and self.parent().inactive():
-            return 'inactive'
+            return status.inactive
         if self.plannedStartDateTime() < date.Now():
-            return 'late'
-        return 'inactive'
+            return status.late
+        return status.inactive
     
     def onDueSoonHoursChanged(self, event):
         self.removeObserver(self.onDueSoon)
@@ -647,7 +649,6 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def timeSpentSortEventTypes(class_):
         ''' The event types that influence the time spent sort order. '''
         return ('task.timeSpent',)
-
     
     # Budget
     
@@ -840,8 +841,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return self.__recursiveSelectedIcon
 
     def statusIcon(self, selected=False):
-        ''' Return the current icon of the task, based on its status (completed,
-            overdue, duesoon, inactive, or active). '''
+        ''' Return the current icon of the task, based on its status. '''
         return self.iconForStatus(self.status(), selected)            
 
     def iconForStatus(self, status, selected=False):

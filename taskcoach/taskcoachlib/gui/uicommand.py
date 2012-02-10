@@ -1237,82 +1237,20 @@ class ViewerSortByTaskStatusFirst(ViewerCommand, UICheckCommand):
         self.viewer.setSortByTaskStatusFirst(self._isMenuItemChecked(event))
 
 
-class ViewerHideInactiveTasks(ViewerCommand, UICheckCommand):
-    def __init__(self, *args, **kwargs):
-        super(ViewerHideInactiveTasks, self).__init__(menuText=_('Hide &inactive tasks'), 
-            helpText=_('Show/hide inactive tasks (tasks without actual start date)'),
-            *args, **kwargs)
-        
-    def isSettingChecked(self):
-        return self.viewer.isHidingInactiveTasks()
-        
-    def doCommand(self, event):
-        self.viewer.hideInactiveTasks(self._isMenuItemChecked(event))
-
-
-class ViewerHideLateTasks(ViewerCommand, UICheckCommand):
-    def __init__(self, *args, **kwargs):
-        super(ViewerHideLateTasks, self).__init__(menuText=_('Hide &late tasks'),
-            helpText=_('Show/hide task tasks (inactive task with a planned start in the past)'),
-            *args, **kwargs)
-        
-    def isSettingChecked(self):
-        return self.viewer.isHidingLateTasks()
+class ViewerHideTasks(ViewerCommand, UICheckCommand):
+    def __init__(self, taskStatus, *args, **kwargs):
+        self.__taskStatus = taskStatus
+        super(ViewerHideTasks, self).__init__(menuText=taskStatus.hideMenuText,
+                                              helpText=taskStatus.hideHelpText,
+                                              bitmap=taskStatus.hideBitmap,
+                                              *args, **kwargs)
     
-    def doCommand(self, event):
-        self.viewer.hideLateTasks(self._isMenuItemChecked(event))
-
-
-class ViewerHideActiveTasks(ViewerCommand, UICheckCommand):
-    def __init__(self, *args, **kwargs):
-        super(ViewerHideActiveTasks, self).__init__(menuText=_('Hide &active tasks'), 
-            helpText=_('Show/hide active tasks (tasks with an actual start date in the past that are not completed)'),
-            *args, **kwargs)
-        
     def isSettingChecked(self):
-        return self.viewer.isHidingActiveTasks()
+        return self.viewer.isHidingTaskStatus(self.__taskStatus)
         
     def doCommand(self, event):
-        self.viewer.hideActiveTasks(self._isMenuItemChecked(event))
-
-
-class ViewerHideDueSoonTasks(ViewerCommand, UICheckCommand):
-    def __init__(self, *args, **kwargs):
-        super(ViewerHideDueSoonTasks, self).__init__(menuText=_('Hide &due soon tasks'), 
-            helpText=_('Show/hide due soon tasks (tasks with a due date in the near future that are not completed)'),
-            *args, **kwargs)
-        
-    def isSettingChecked(self):
-        return self.viewer.isHidingDueSoonTasks()
-        
-    def doCommand(self, event):
-        self.viewer.hideDueSoonTasks(self._isMenuItemChecked(event))
-
-
-class ViewerHideOverDueTasks(ViewerCommand, UICheckCommand):
-    def __init__(self, *args, **kwargs):
-        super(ViewerHideOverDueTasks, self).__init__(menuText=_('Hide &over due tasks'), 
-            helpText=_('Show/hide over due tasks (tasks with a due date in the past that are not completed)'),
-            *args, **kwargs)
-        
-    def isSettingChecked(self):
-        return self.viewer.isHidingOverDueTasks()
-        
-    def doCommand(self, event):
-        self.viewer.hideOverDueTasks(self._isMenuItemChecked(event))
-
-        
-class ViewerHideCompletedTasks(ViewerCommand, UICheckCommand):
-    def __init__(self, *args, **kwargs):
-        super(ViewerHideCompletedTasks, self).__init__(menuText=_('Hide &completed tasks'), 
-            helpText=_('Show/hide completed tasks'), *args, **kwargs)
-         
-    def isSettingChecked(self):
-        return self.viewer.isHidingCompletedTasks()
-        
-    def doCommand(self, event):
-        self.viewer.hideCompletedTasks(self._isMenuItemChecked(event))
-
+        self.viewer.hideTaskStatus(self.__taskStatus, self._isMenuItemChecked(event))
+    
 
 class ViewerHideCompositeTasks(ViewerCommand, UICheckCommand):
     def __init__(self, *args, **kwargs):

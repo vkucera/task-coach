@@ -151,9 +151,11 @@ class CommonTestsMixin(object):
         else:
             self.assertItems(self.child, self.task)
 
+    '''
     def testCurrent(self):
         self.taskList.append(self.task)
         self.assertEqual([self.task], self.viewer.curselection())
+    '''
 
     def testDeleteSelectedTask(self):
         self.taskList.append(self.task)
@@ -164,6 +166,7 @@ class CommonTestsMixin(object):
 
     def testSelectedTaskStaysSelectedWhenStartingEffortTracking(self):
         self.taskList.append(self.task)
+        self.viewer.select([self.task])
         self.assertEqual([self.task], self.viewer.curselection())
         self.task.addEffort(effort.Effort(self.task))
         self.assertEqual([self.task], self.viewer.curselection())
@@ -211,7 +214,7 @@ class CommonTestsMixin(object):
         self.assertItems(task2, self.task)
         
     def testFilterCompletedTasks(self):
-        self.viewer.hideCompletedTasks()
+        self.viewer.hideTaskStatus(task.status.completed)
         completedChild = task.Task(completionDateTime=date.Now() - date.oneHour)
         notCompletedChild = task.Task(plannedStartDateTime=date.Now())
         self.task.addChild(notCompletedChild)
@@ -223,7 +226,7 @@ class CommonTestsMixin(object):
             self.assertItems(notCompletedChild, self.task)
             
     def testUndoMarkCompletedWhenFilteringCompletedTasks(self):
-        self.viewer.hideCompletedTasks()
+        self.viewer.hideTaskStatus(task.status.completed)
         child1 = task.Task('child1')
         child2 = task.Task('child2')
         grandChild = task.Task('grandChild')
@@ -856,24 +859,36 @@ class TaskCalendarViewerTest(test.wxTestCase):
         
 class TaskSquareMapViewerTest(test.wxTestCase):
     def testCreate(self):
-        # pylint: disable-msg=W0201
-        task.Task.settings = self.settings = config.Settings(load=False)
+        task.Task.settings = settings = config.Settings(load=False)
         self.taskFile = persistence.TaskFile()
-        gui.viewer.task.SquareTaskViewer(self.frame, self.taskFile, self.settings)
+        gui.viewer.task.SquareTaskViewer(self.frame, self.ntaskFile, settings)
 
     def tearDown(self):
         super(TaskSquareMapViewerTest, self).tearDown()
         self.taskFile.close()
         self.taskFile.stop()
-        
+
+
 class TaskTimelineViewerTest(test.wxTestCase):
     def testCreate(self):
         # pylint: disable-msg=W0201
-        task.Task.settings = self.settings = config.Settings(load=False)
+        task.Task.settings = settings = config.Settings(load=False)
         self.taskFile = persistence.TaskFile()
-        gui.viewer.task.TimelineViewer(self.frame, self.taskFile, self.settings)
+        gui.viewer.task.TimelineViewer(self.frame, self.taskFile, settings)
 
     def tearDown(self):
         super(TaskTimelineViewerTest, self).tearDown()
+        self.taskFile.close()
+        self.taskFile.stop()
+
+
+class TaskStatisticsViewerTest(test.wxTestCase):
+    def testCreate(self):
+        task.Task.settings = settings = config.Settings(load=False)
+        self.taskFile = persistence.TaskFile()
+        gui.viewer.task.TaskStatsViewer(self.frame, self.taskFile, settings)
+
+    def tearDown(self):
+        super(TaskStatisticsViewerTest, self).tearDown()
         self.taskFile.close()
         self.taskFile.stop()
