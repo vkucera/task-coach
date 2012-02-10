@@ -30,29 +30,30 @@ class SaveTaskStateMixin(base.SaveStateMixin, base.CompositeMixin):
 
 
 class EffortCommand(base.BaseCommand): # pylint: disable-msg=W0223
-    @patterns.eventSource
-    def stopTracking(self, event=None):
+    def stopTracking(self, event):
         self.stoppedEfforts = [] # pylint: disable-msg=W0201
         for taskToStop in self.tasksToStopTracking():
             self.stoppedEfforts.extend(taskToStop.activeEfforts())
             taskToStop.stopTracking(event=event)
 
-    @patterns.eventSource
-    def startTracking(self, event=None):
+    def startTracking(self, event):
         for stoppedEffort in self.stoppedEfforts:
             stoppedEffort.setStop(date.DateTime.max, event=event)
     
     def tasksToStopTracking(self):
         return self.list
-                
-    def do_command(self):
-        self.stopTracking()
+           
+    @patterns.eventSource     
+    def do_command(self, event=None):
+        self.stopTracking(event)
     
-    def undo_command(self):
-        self.startTracking()
-        
-    def redo_command(self):
-        self.stopTracking()
+    @patterns.eventSource
+    def undo_command(self, event=None):
+        self.startTracking(event)
+    
+    @patterns.eventSource
+    def redo_command(self, event=None):
+        self.stopTracking(event)
 
 
 class DragAndDropTaskCommand(base.DragAndDropCommand):
@@ -110,17 +111,20 @@ class NewTaskCommand(base.NewItemCommand):
         super(NewTaskCommand, self).__init__(*args, **kwargs)
         self.items = [task.Task(subject=subject, **kwargs)]
 
-    def do_command(self):
-        super(NewTaskCommand, self).do_command()
-        self.addDependenciesAndPrerequisites()
+    @patterns.eventSource
+    def do_command(self, event=None):
+        super(NewTaskCommand, self).do_command(event=event)
+        self.addDependenciesAndPrerequisites(event=event)
         
-    def undo_command(self):
-        super(NewTaskCommand, self).undo_command()
-        self.removeDependenciesAndPrerequisites()
+    @patterns.eventSource
+    def undo_command(self, event=None):
+        super(NewTaskCommand, self).undo_command(event=event)
+        self.removeDependenciesAndPrerequisites(event=event)
         
-    def redo_command(self):
-        super(NewTaskCommand, self).redo_command()
-        self.addDependenciesAndPrerequisites()
+    @patterns.eventSource
+    def redo_command(self, event=None):
+        super(NewTaskCommand, self).redo_command(event=event)
+        self.addDependenciesAndPrerequisites(event=event)
         
     @patterns.eventSource
     def addDependenciesAndPrerequisites(self, event=None):
@@ -160,13 +164,15 @@ class NewSubTaskCommand(base.NewSubItemCommand, SaveTaskStateMixin):
         parents = [item.parent() for item in self.items if item.parent()]
         return parents + self.getAncestors(parents)
 
-    def undo_command(self):
-        super(NewSubTaskCommand, self).undo_command()
-        self.undoStates()
+    @patterns.eventSource
+    def undo_command(self, event=None):
+        super(NewSubTaskCommand, self).undo_command(event=event)
+        self.undoStates(event=event)
 
-    def redo_command(self):
-        super(NewSubTaskCommand, self).redo_command()
-        self.redoStates()
+    @patterns.eventSource
+    def redo_command(self, event=None):
+        super(NewSubTaskCommand, self).redo_command(event=event)
+        self.redoStates(event=event)
                 
                 
 class MarkCompletedCommand(base.SaveStateMixin, EffortCommand):
@@ -181,17 +187,19 @@ class MarkCompletedCommand(base.SaveStateMixin, EffortCommand):
 
     @patterns.eventSource
     def do_command(self, event=None):
-        super(MarkCompletedCommand, self).do_command()
+        super(MarkCompletedCommand, self).do_command(event=event)
         for item in self.items:
             item.setCompletionDateTime(task.Task.suggestedCompletionDateTime(), event=event)
 
-    def undo_command(self):
-        self.undoStates()
-        super(MarkCompletedCommand, self).undo_command()
+    @patterns.eventSource
+    def undo_command(self, event=None):
+        self.undoStates(event=event)
+        super(MarkCompletedCommand, self).undo_command(event=event)
 
-    def redo_command(self):
-        self.redoStates()
-        super(MarkCompletedCommand, self).redo_command()
+    @patterns.eventSource
+    def redo_command(self, event=None):
+        self.redoStates(event=event)
+        super(MarkCompletedCommand, self).redo_command(event=event)
 
     def tasksToStopTracking(self):
         return self.items                

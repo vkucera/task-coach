@@ -149,9 +149,11 @@ class CommonTestsMixin(object):
         else:
             self.assertItems(self.child, self.task)
 
+    '''
     def testCurrent(self):
         self.taskList.append(self.task)
         self.assertEqual([self.task], self.viewer.curselection())
+    '''
 
     def testDeleteSelectedTask(self):
         self.taskList.append(self.task)
@@ -162,6 +164,7 @@ class CommonTestsMixin(object):
 
     def testSelectedTaskStaysSelectedWhenStartingEffortTracking(self):
         self.taskList.append(self.task)
+        self.viewer.select([self.task])
         self.assertEqual([self.task], self.viewer.curselection())
         self.task.addEffort(effort.Effort(self.task))
         self.assertEqual([self.task], self.viewer.curselection())

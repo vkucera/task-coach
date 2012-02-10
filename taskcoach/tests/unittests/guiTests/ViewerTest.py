@@ -23,8 +23,8 @@ from taskcoachlib.thirdparty import hypertreelist
 
 
 class Window(widgets.AuiManagedFrameWithDynamicCenterPane):
-    def addPane(self, viewer, title):
-        super(Window, self).addPane(viewer, title, 'name')
+    def addPane(self, viewer, title, name='name'):
+        super(Window, self).addPane(viewer, title, name)
         
 
 class ViewerTest(test.wxTestCase):
@@ -66,6 +66,35 @@ class ViewerTest(test.wxTestCase):
         self.viewer.endOfSelectAll()
         self.assertEqual(2, len(self.viewer.curselection()))
         
+    def testSelectNextItemAfterDeletingSelection(self):
+        secondTask = task.Task('second')
+        self.taskFile.tasks().append(secondTask)
+        self.viewer.select([self.task])
+        self.taskFile.tasks().remove(self.task)
+        self.assertEqual([secondTask], self.viewer.curselection())
+
+    def testSelectParentAfterDeletingSelectedChild(self):
+        secondTask = task.Task('second')
+        self.taskFile.tasks().append(secondTask)
+        child = task.Task('child')
+        self.task.addChild(child)
+        child.setParent(self.task)
+        self.taskFile.tasks().append(child)
+        self.viewer.select([child])
+        self.taskFile.tasks().remove(child)
+        self.assertEqual([self.task], self.viewer.curselection())
+        
+    def testDontChangeSelectionAfterDeletingAnItemThatIsNotSelected(self):
+        secondTask = task.Task('second')
+        self.taskFile.tasks().append(secondTask)
+        child = task.Task('child')
+        self.task.addChild(child)
+        child.setParent(self.task)
+        self.taskFile.tasks().append(child)
+        self.viewer.select([secondTask])
+        self.taskFile.tasks().remove(child)
+        self.assertEqual([secondTask], self.viewer.curselection())
+          
     def testFirstViewerInstanceSettingsSection(self):
         self.assertEqual(self.viewer.__class__.__name__.lower(), 
                          self.viewer.settingsSection())
@@ -478,7 +507,7 @@ class ViewerIteratorTestCase(test.wxTestCase):
         self.viewer.sortBy('subject')
 
     def getItemsFromIterator(self):
-        return list(self.viewer.visibleItems())
+        return list(self.viewer.visibleItems()) # pylint: disable-msg=E1101
 
 
 class ViewerIteratorTestsMixin(object):

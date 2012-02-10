@@ -78,6 +78,7 @@ class Viewer(wx.Panel):
         registerObserver(self.onPresentationChanged, 
                          eventType=self.presentation().removeItemEventType(),
                          eventSource=self.presentation())
+        registerObserver(self.onNewItem, eventType='newitem')
                
     def detach(self):
         ''' Should be called by viewer.container before closing the viewer '''
@@ -162,21 +163,23 @@ class Viewer(wx.Panel):
     def onAttributeChanged(self, event):
         self.refreshItems(*event.sources())
         
+    def onNewItem(self, event):
+        self.select([item for item in event.values() if item in self.presentation()]) 
+        
     def onPresentationChanged(self, event): # pylint: disable-msg=W0613
         ''' Whenever our presentation is changed (items added, items removed,
             order changed) the viewer refreshes itself. '''
+        def itemsRemoved():
+            return event.type() == self.presentation().removeItemEventType()
+        
+        def allItemsAreSelected():
+            return set(self.__curselection).issubset(set(event.values()))
+        
         self.refresh()
-        if event.type() == self.presentation().addItemEventType():
-            self.selectNewItems(event.values())
-        elif event.type() == self.presentation().removeItemEventType():
+        if itemsRemoved() and allItemsAreSelected(): 
             self.selectNextItemsAfterRemoval(event.values())
         self.updateSelection(sendViewerStatusEvent=False)
         self.sendViewerStatusEvent()
-        
-    def selectNewItems(self, newItems):
-        nrNewItems = len(newItems)
-        if nrNewItems < min(20, len(self.presentation())) or nrNewItems == 1:
-            self.select(newItems)
             
     def selectNextItemsAfterRemoval(self, removedItems):
         raise NotImplementedError        
@@ -421,8 +424,6 @@ class Viewer(wx.Panel):
     def newSubItemDialog(self, bitmap):
         newSubItemCommand = self.newSubItemCommand()
         newSubItemCommand.do()
-        for item in newSubItemCommand.items:
-            item.parent().expand(True, context=self.settingsSection())
         return self.editItemDialog(newSubItemCommand.items, bitmap, itemsAreNew=True)   
     
     def editItemDialog(self, items, bitmap, columnName='', itemsAreNew=False):
@@ -500,7 +501,7 @@ class TreeViewer(Viewer): # pylint: disable-msg=W0223
             return
         item = self.widget.GetItemPyData(treeItem)
         item.expand(expanded, context=self.settingsSection())
-    
+            
     def expandAll(self):
         # Since the widget does not send EVT_TREE_ITEM_EXPANDED when expanding
         # all items, we have to do the bookkeeping ourselves:
@@ -524,6 +525,18 @@ class TreeViewer(Viewer): # pylint: disable-msg=W0223
         
     def isTreeViewer(self):
         return True
+    
+    def select(self, items):
+        for item in items:
+            self.expandItemRecursively(item)
+        self.refresh()
+        super(TreeViewer, self).select(items)
+        
+    def expandItemRecursively(self, item):
+        parent = self.getItemParent(item)
+        if parent:
+            parent.expand(True, context=self.settingsSection())
+            self.expandItemRecursively(parent)
 
     def selectNextItemsAfterRemoval(self, removedItems):
         parents = [self.getItemParent(item) for item in removedItems]

@@ -92,12 +92,14 @@ class SaveStateMixin(object):
         self.objectsToBeSaved = objects
         self.oldStates = self.__getStates()
 
-    def undoStates(self):
+    @patterns.eventSource
+    def undoStates(self, event=None):
         self.newStates = self.__getStates()
-        self.__setStates(self.oldStates)
+        self.__setStates(self.oldStates, event=event)
 
-    def redoStates(self):
-        self.__setStates(self.newStates)
+    @patterns.eventSource
+    def redoStates(self, event=None):
+        self.__setStates(self.newStates, event=event)
 
     def __getStates(self):
         return [objectToBeSaved.__getstate__() for objectToBeSaved in 
@@ -137,34 +139,27 @@ class NewItemCommand(BaseCommand):
     def itemsAreNew(self):
         return True
 
-    def do_command(self):
-        self.list.extend(self.items)
+    @patterns.eventSource
+    def do_command(self, event=None):
+        self.list.extend(self.items) # Don't use the event to force this change to be notified first
+        event.addSource(self, type='newitem', *self.items)
 
-    def undo_command(self):
-        self.list.removeItems(self.items)
+    @patterns.eventSource
+    def undo_command(self, event=None):
+        self.list.removeItems(self.items, event=event)
 
-    def redo_command(self):
-        self.list.extend(self.items)
-        
+    @patterns.eventSource
+    def redo_command(self, event=None):
+        self.list.extend(self.items) # Don't use the event to force this change to be notified first
+        event.addSource(self, type='newitem', *self.items)
 
-class NewSubItemCommand(BaseCommand):
+
+class NewSubItemCommand(NewItemCommand):
     def name_subject(self, subitem):
         # Override to use the subject of the parent of the new subitem instead
         # of the subject of the new subitem itself, which wouldn't be very
         # interesting because it's something like 'New subitem'.
         return subitem.parent().subject()
-    
-    def itemsAreNew(self):
-        return True
-
-    def do_command(self):
-        self.list.extend(self.items)
-
-    def undo_command(self):
-        self.list.removeItems(self.items)
-
-    def redo_command(self):
-        self.list.extend(self.items)
 
     
 class CopyCommand(BaseCommand):
