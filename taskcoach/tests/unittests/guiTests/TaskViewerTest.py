@@ -861,7 +861,7 @@ class TaskSquareMapViewerTest(test.wxTestCase):
     def testCreate(self):
         task.Task.settings = settings = config.Settings(load=False)
         self.taskFile = persistence.TaskFile()
-        gui.viewer.task.SquareTaskViewer(self.frame, self.ntaskFile, settings)
+        gui.viewer.task.SquareTaskViewer(self.frame, self.taskFile, settings)
 
     def tearDown(self):
         super(TaskSquareMapViewerTest, self).tearDown()
