@@ -866,7 +866,7 @@ class TaskTimelineViewerTest(test.wxTestCase):
         gui.viewer.task.TimelineViewer(self.frame, taskFile, settings)
 
 
-class TaskStatisticsViewerTesT(test.wxTestCase):
+class TaskStatisticsViewerTest(test.wxTestCase):
     def testCreate(self):
         task.Task.settings = settings = config.Settings(load=False)
         taskFile = persistence.TaskFile()
