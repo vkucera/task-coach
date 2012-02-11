@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.8', 'February 10, 2012',
+Release('1.3.8', 'February 11, 2012',
     summary='''This is a mixed feature and bugfix release.''',
     featuresAdded=[
         Feature('''In task viewers, late tasks, due soon tasks, and over due
@@ -45,6 +45,10 @@ set to English (US).'''),
         Bug('''Don't change the selection when deleting or hiding items that 
 are not selected. When adding a new item, select it. When adding a new sub 
 item, also expand the parent item if necessary.''', '3484930'),
+        Bug('''When using the Norsk translation on Linux (both Nynorsk and 
+Bokmal), Task Coach would crash when displaying a date picker control. This is 
+a bug in the underlying wxWidgets toolkit. Worked around by using another 
+locale for dates and times when the language is Norsk.''', '1820497'),
         ],
     ),
             
