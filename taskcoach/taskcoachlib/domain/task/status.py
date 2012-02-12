@@ -29,6 +29,9 @@ class TaskStatus(object):
         self.hideHelpText = hideHelpText
         self.hideBitmap = hideBitmap
         
+    def __repr__(self):
+        return '%s(%s)'%(self.__class__.__name__, self.statusString)
+        
     def __str__(self):
         return self.statusString
            

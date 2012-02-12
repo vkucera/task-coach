@@ -298,7 +298,7 @@ class TaskSorterSettingsTest(test.TestCase):
             date. '''
         self.sorter.sortBy('subject')
         self.assertEqual([self.task1, self.task2], list(self.sorter))
-        self.task2.setPlannedStartDateTime(date.Now())
+        self.task2.setPlannedStartDateTime(date.Now() - date.TimeDelta(seconds=1))
         self.assertEqual([self.task2, self.task1], list(self.sorter))
  
     def testAlwaysKeepSubscriptionToActualStartDateTime(self):

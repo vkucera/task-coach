@@ -26,9 +26,9 @@ class TaskStatusTest(test.TestCase):
         self.settings = task.Task.settings = config.Settings(load=False)
         self.now = date.Now()
         self.yesterday = self.now - date.oneDay
-        self.tomorrow = self.now + date.oneDay
-        self.dates = (self.yesterday, self.tomorrow)
-        self.dayAfterTomorrow = self.tomorrow + date.oneDay
+        self.nearFuture = self.now + date.oneDay - date.oneHour
+        self.dates = (self.yesterday, self.nearFuture)
+        self.farFuture = self.now + date.oneDay + date.oneDay
 
     def assertTaskStatus(self, status, **taskKwArgs):
         self.assertEqual(status, task.Task(**taskKwArgs).status())
@@ -46,28 +46,28 @@ class TaskStatusTest(test.TestCase):
     def testTaskWithCompletionInTheFutureIsCompleted(self):
         # Maybe keep the task inactive until the completion date passes? 
         # That would be more consistent with the other date/times
-        self.assertTaskStatus(task.status.completed, completionDateTime=self.tomorrow)
+        self.assertTaskStatus(task.status.completed, completionDateTime=self.nearFuture)
 
     def testTaskWithPlannedStartInThePastIsLate(self):
         self.assertTaskStatus(task.status.late, plannedStartDateTime=self.yesterday)
                 
     def testTaskWithPlannedStartInTheFutureIsInactive(self):
-        self.assertTaskStatus(task.status.inactive, plannedStartDateTime=self.tomorrow)
+        self.assertTaskStatus(task.status.inactive, plannedStartDateTime=self.nearFuture)
         
     def testTaskWithActualStartInThePastIsActive(self):
         self.assertTaskStatus(task.status.active, actualStartDateTime=self.yesterday)
 
     def testTaskWithActualStartInTheFutureIsInactive(self):
-        self.assertTaskStatus(task.status.inactive, actualStartDateTime=self.tomorrow)
+        self.assertTaskStatus(task.status.inactive, actualStartDateTime=self.nearFuture)
         
     def testTaskWithDueInThePastIsOverdue(self):
         self.assertTaskStatus(task.status.overdue, dueDateTime=self.yesterday)
 
     def testTaskWithDueInTheFutureIsInactive(self):
-        self.assertTaskStatus(task.status.inactive, dueDateTime=self.dayAfterTomorrow)
+        self.assertTaskStatus(task.status.inactive, dueDateTime=self.farFuture)
         
     def testTaskWithDueInTheNearFutureIsDueSoon(self):
-        self.assertTaskStatus(task.status.duesoon, dueDateTime=self.tomorrow)
+        self.assertTaskStatus(task.status.duesoon, dueDateTime=self.nearFuture)
     
     # Two dates/times
     
@@ -81,17 +81,17 @@ class TaskStatusTest(test.TestCase):
     def testTaskWithPlannedStartInThePastAndActualStartInTheFutureIsLate(self):
         self.assertTaskStatus(task.status.late, 
                               plannedStartDateTime=self.yesterday,
-                              actualStartDateTime=self.tomorrow)
+                              actualStartDateTime=self.nearFuture)
         
     def testTaskWithPlannedStartInTheFutureAndActualStartInThePastIsActive(self):
         self.assertTaskStatus(task.status.active, 
-                              plannedStartDateTime=self.tomorrow,
+                              plannedStartDateTime=self.nearFuture,
                               actualStartDateTime=self.yesterday)
 
     def testTaskWithPlannedAndActualStartInTheFutureIsInactive(self):
         self.assertTaskStatus(task.status.inactive, 
-                              plannedStartDateTime=self.tomorrow,
-                              actualStartDateTime=self.tomorrow)
+                              plannedStartDateTime=self.nearFuture,
+                              actualStartDateTime=self.nearFuture)
     
     # planned start date/time and due date/time
         
@@ -103,27 +103,27 @@ class TaskStatusTest(test.TestCase):
     def testTaskWithPlannedStartInThePastAndDueInTheFutureIsLate(self):
         self.assertTaskStatus(task.status.late, 
                               plannedStartDateTime=self.yesterday,
-                              dueDateTime=self.dayAfterTomorrow)
+                              dueDateTime=self.farFuture)
        
     def testTaskWithPlannedStartInThePastAndDueInTheNearFutureIsDueSoon(self):
         self.assertTaskStatus(task.status.duesoon, 
                               plannedStartDateTime=self.yesterday,
-                              dueDateTime=self.tomorrow)
+                              dueDateTime=self.nearFuture)
        
     def testTaskWithPlannedStartInTheFutureAndDueInThePastIsOverdue(self):
         self.assertTaskStatus(task.status.overdue, 
-                              plannedStartDateTime=self.tomorrow,
+                              plannedStartDateTime=self.nearFuture,
                               dueDateTime=self.yesterday)
 
     def testTaskWithPlannedStartInTheFutureAndDueInTheFutureIsLate(self):
         self.assertTaskStatus(task.status.inactive, 
-                              plannedStartDateTime=self.tomorrow,
-                              dueDateTime=self.dayAfterTomorrow)
+                              plannedStartDateTime=self.nearFuture,
+                              dueDateTime=self.farFuture)
        
     def testTaskWithPlannedStartInTheFutureAndDueInTheNearFutureIsDueSoon(self):
         self.assertTaskStatus(task.status.duesoon, 
-                              plannedStartDateTime=self.tomorrow,
-                              dueDateTime=self.tomorrow)
+                              plannedStartDateTime=self.nearFuture,
+                              dueDateTime=self.nearFuture)
 
     # planned start date/time and completion date/time
     
@@ -135,17 +135,17 @@ class TaskStatusTest(test.TestCase):
     def testTaskWithPlannedStartInThePastAndCompletionInTheFutureIsCompleted(self):
         self.assertTaskStatus(task.status.completed, 
                               plannedStartDateTime=self.yesterday,
-                              completionDateTime=self.tomorrow)
+                              completionDateTime=self.nearFuture)
 
     def testTaskWithPlannedStartInTheFutureAndCompletionInThePastIsCompleted(self):
         self.assertTaskStatus(task.status.completed, 
-                              plannedStartDateTime=self.tomorrow,
+                              plannedStartDateTime=self.nearFuture,
                               completionDateTime=self.yesterday)
 
     def testTaskWithPlannedStartInTheFutureAndCompletionInTheFutureIsComplete(self):
         self.assertTaskStatus(task.status.completed, 
-                              plannedStartDateTime=self.tomorrow,
-                              completionDateTime=self.tomorrow)
+                              plannedStartDateTime=self.nearFuture,
+                              completionDateTime=self.nearFuture)
     
     # actual start date/time and due date/time
     
@@ -157,27 +157,27 @@ class TaskStatusTest(test.TestCase):
     def testTaskWithActualStartInThePastAndDueInTheFutureIsActive(self):
         self.assertTaskStatus(task.status.active, 
                               actualStartDateTime=self.yesterday,
-                              dueDateTime=self.dayAfterTomorrow)
+                              dueDateTime=self.farFuture)
 
     def testTaskWithActualStartInThePastAndDueInTheNearFutureIsDueSoon(self):
         self.assertTaskStatus(task.status.duesoon, 
                               actualStartDateTime=self.yesterday,
-                              dueDateTime=self.tomorrow)
+                              dueDateTime=self.nearFuture)
 
     def testTaskWithActualStartInTheFutureAndDueInThePastIsOverdue(self):
         self.assertTaskStatus(task.status.overdue, 
-                              actualStartDateTime=self.tomorrow,
+                              actualStartDateTime=self.nearFuture,
                               dueDateTime=self.yesterday)
 
     def testTaskWithActualStartInTheFutureAndDueInTheFutureIsActive(self):
         self.assertTaskStatus(task.status.inactive, 
-                              actualStartDateTime=self.tomorrow,
-                              dueDateTime=self.dayAfterTomorrow)
+                              actualStartDateTime=self.nearFuture,
+                              dueDateTime=self.farFuture)
 
     def testTaskWithActualStartInTheFutureAndDueInTheNearFutureIsDueSoon(self):
         self.assertTaskStatus(task.status.duesoon, 
-                              actualStartDateTime=self.tomorrow,
-                              dueDateTime=self.tomorrow)
+                              actualStartDateTime=self.nearFuture,
+                              dueDateTime=self.nearFuture)
 
     # actual start date/time and completion date/time
    
@@ -189,17 +189,17 @@ class TaskStatusTest(test.TestCase):
     def testTaskWithActualStartInThePastAndCompletionInTheFutureIsCompleted(self):
         self.assertTaskStatus(task.status.completed, 
                               actualStartDateTime=self.yesterday,
-                              completionDateTime=self.tomorrow)
+                              completionDateTime=self.nearFuture)
 
     def testTaskWithActualStartInTheFutureAndCompletionInThePastIsCompleted(self):
         self.assertTaskStatus(task.status.completed, 
-                              actualStartDateTime=self.tomorrow,
+                              actualStartDateTime=self.nearFuture,
                               completionDateTime=self.yesterday)
 
     def testTaskWithActualStartInTheFutureAndCompletionInTheFutureIsComplete(self):
         self.assertTaskStatus(task.status.completed, 
-                              actualStartDateTime=self.tomorrow,
-                              completionDateTime=self.tomorrow)
+                              actualStartDateTime=self.nearFuture,
+                              completionDateTime=self.nearFuture)
    
     # due date/time and completion date/time
     
@@ -211,17 +211,17 @@ class TaskStatusTest(test.TestCase):
     def testTaskWithDueInThePastAndCompletionInTheFutureIsCompleted(self):
         self.assertTaskStatus(task.status.completed, 
                               dueDateTime=self.yesterday,
-                              completionDateTime=self.tomorrow)
+                              completionDateTime=self.nearFuture)
 
     def testTaskWithDueInTheFutureAndCompletionInThePastIsCompleted(self):
         self.assertTaskStatus(task.status.completed, 
-                              dueDateTime=self.tomorrow,
+                              dueDateTime=self.nearFuture,
                               completionDateTime=self.yesterday)
 
     def testTaskWithDueInTheFutureAndCompletionInTheFutureIsComplete(self):
         self.assertTaskStatus(task.status.completed, 
-                              dueDateTime=self.tomorrow,
-                              completionDateTime=self.tomorrow)
+                              dueDateTime=self.nearFuture,
+                              completionDateTime=self.nearFuture)
    
     # Three dates/times
     
@@ -242,7 +242,7 @@ class TaskStatusTest(test.TestCase):
                 self.assertTaskStatus(task.status.duesoon, 
                                       plannedStartDateTime=planned,
                                       actualStartDateTime=actual,
-                                      dueDateTime=self.tomorrow)
+                                      dueDateTime=self.nearFuture)
          
     def testTaskIsOverdueWheneverDueIsInTheFuture(self):
         for planned in self.dates:
@@ -252,14 +252,14 @@ class TaskStatusTest(test.TestCase):
                 self.assertTaskStatus(expectedStatus, 
                                       plannedStartDateTime=planned,
                                       actualStartDateTime=actual,
-                                      dueDateTime=self.dayAfterTomorrow)
+                                      dueDateTime=self.farFuture)
                
     # Four date/times (always completed)
     
     def testTaskWithCompletionDateTimeIsAlwaysCompleted(self):
         for planned in self.dates:
             for actual in self.dates:
-                for due in self.dates + (self.dayAfterTomorrow,):
+                for due in self.dates + (self.farFuture,):
                     for completion in self.dates:
                         self.assertTaskStatus(task.status.completed, 
                                               plannedStartDateTime=planned,
@@ -289,4 +289,3 @@ class TaskStatusTest(test.TestCase):
         taskA.addPrerequisites([taskB])
         for eachTask in (taskA, taskB):
             self.assertEqual(task.status.inactive, eachTask.status())
-             

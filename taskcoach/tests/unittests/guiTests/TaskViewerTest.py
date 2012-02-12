@@ -170,9 +170,9 @@ class CommonTestsMixin(object):
         self.assertEqual([self.task], self.viewer.curselection())
         
     def testChildOrder(self):
-        child1 = task.Task(subject='1', plannedStartDateTime=date.Now())
+        child1 = task.Task(subject='1', plannedStartDateTime=date.Now()-date.oneSecond)
         self.task.addChild(child1)
-        child2 = task.Task(subject='2', plannedStartDateTime=date.Now())
+        child2 = task.Task(subject='2', plannedStartDateTime=date.Now()-date.oneSecond)
         self.task.addChild(child2)
         self.taskList.append(self.task)
         if self.viewer.isTreeViewer():
@@ -205,7 +205,7 @@ class CommonTestsMixin(object):
         self.assertItems(task2, self.task)
         
     def testMakeInactive(self):
-        task2 = task.Task(subject='task2', plannedStartDateTime=date.Now())
+        task2 = task.Task(subject='task2', plannedStartDateTime=date.Now() - date.oneSecond)
         self.taskList.extend([self.task, task2])
         self.assertItems(self.task, task2)
         self.task.setPlannedStartDateTime(date.Now() + date.oneDay)
@@ -214,7 +214,7 @@ class CommonTestsMixin(object):
     def testFilterCompletedTasks(self):
         self.viewer.hideTaskStatus(task.status.completed)
         completedChild = task.Task(completionDateTime=date.Now() - date.oneHour)
-        notCompletedChild = task.Task(plannedStartDateTime=date.Now())
+        notCompletedChild = task.Task(plannedStartDateTime=date.Now() - date.oneSecond)
         self.task.addChild(notCompletedChild)
         self.task.addChild(completedChild)
         self.taskList.append(self.task)
@@ -379,9 +379,9 @@ class CommonTestsMixin(object):
         
     def testReverseSortOrderWithGrandchildren(self):
         self.task.addChild(self.child)
-        grandchild = task.Task(subject='grandchild', plannedStartDateTime=date.Now())
+        grandchild = task.Task(subject='grandchild', plannedStartDateTime=date.Now() - date.oneSecond)
         self.child.addChild(grandchild)
-        task2 = task.Task(subject='zzz', plannedStartDateTime=date.Now())
+        task2 = task.Task(subject='zzz', plannedStartDateTime=date.Now() - date.oneSecond)
         self.taskList.extend([self.task, task2])
         self.viewer.setSortOrderAscending(False)
         if self.viewer.isTreeViewer():
@@ -391,7 +391,7 @@ class CommonTestsMixin(object):
                 
     def testReverseSortOrder(self):
         self.task.addChild(self.child)
-        task2 = task.Task(subject='zzz', plannedStartDateTime=date.Now())
+        task2 = task.Task(subject='zzz', plannedStartDateTime=date.Now() - date.oneSecond)
         self.taskList.extend([self.task, task2])
         self.viewer.setSortOrderAscending(False)
         if self.viewer.isTreeViewer():
@@ -401,8 +401,8 @@ class CommonTestsMixin(object):
 
     def testSortByDueDate(self):
         self.task.addChild(self.child)
-        task2 = task.Task(subject='zzz', plannedStartDateTime=date.Now())
-        child2 = task.Task(subject='child 2', plannedStartDateTime=date.Now())
+        task2 = task.Task(subject='zzz', plannedStartDateTime=date.Now() - date.oneSecond)
+        child2 = task.Task(subject='child 2', plannedStartDateTime=date.Now() - date.oneSecond)
         task2.addChild(child2)
         child2.setParent(task2)
         self.taskList.extend([self.task, task2])
