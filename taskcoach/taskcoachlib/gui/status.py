@@ -20,13 +20,13 @@ import wx
 from taskcoachlib import patterns
 
 
-class StatusBar(wx.StatusBar):
+class StatusBar(patterns.Observer, wx.StatusBar):
     def __init__(self, parent, viewer):
         super(StatusBar, self).__init__(parent)
         self.SetFieldsCount(2)
         self.parent = parent
         self.viewer = viewer
-        patterns.Publisher().registerObserver(self.onViewerStatusChanged, 
+        self.registerObserver(self.onViewerStatusChanged, 
             eventType=viewer.viewerStatusEventType(), eventSource=viewer)
         self.scheduledStatusDisplay = None
         self.onViewerStatusChanged(None)
@@ -65,7 +65,7 @@ class StatusBar(wx.StatusBar):
         self.scheduledStatusDisplay = wx.FutureCall(delay, self._displayStatus)
 
     def Destroy(self): # pylint: disable-msg=W0221
-        patterns.Publisher().removeInstance(self)
+        self.removeInstance()
         for eventType in self.wxEventTypes:
             self.parent.Unbind(eventType)
         if self.scheduledStatusDisplay:

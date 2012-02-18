@@ -296,15 +296,7 @@ class Publisher(object):
         for key in matchingKeys:
             self.__observers[key].discard(observer)
         self.notifyObserversOfLastObserverRemoved()
-                
-    def removeInstance(self, instance):
-        ''' Remove all observers that are methods of instance. '''
-        for observers in self.__observers.itervalues():
-            for observer in observers.copy():
-                if observer.im_self is instance:
-                    observers.discard(observer)
-        self.notifyObserversOfLastObserverRemoved()
-        
+                        
     @eventSource
     def notifyObserversOfFirstObserverRegistered(self, eventType, event=None):
         event.addSource(self, eventType, 
@@ -353,14 +345,21 @@ class Publisher(object):
     
 
 class Observer(object):
-    def registerObserver(self, *args, **kwargs):
-        Publisher().registerObserver(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        self.__observers = set()
+        super(Observer, self).__init__(*args, **kwargs)
         
-    def removeObserver(self, *args, **kwargs):
-        Publisher().removeObserver(*args, **kwargs)
+    def registerObserver(self, observer, *args, **kwargs):
+        self.__observers.add(observer)
+        Publisher().registerObserver(observer, *args, **kwargs)
+        
+    def removeObserver(self, observer, *args, **kwargs):
+        self.__observers.discard(observer)
+        Publisher().removeObserver(observer, *args, **kwargs)
         
     def removeInstance(self):
-        Publisher().removeInstance(self)
+        for observer in self.__observers.copy():
+            self.removeObserver(observer)
 
 
 class Decorator(Observer):

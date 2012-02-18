@@ -23,7 +23,7 @@ from taskcoachlib.i18n import _
 from taskcoachlib.domain import date
 
 
-class ReminderDialog(sized_controls.SizedDialog):
+class ReminderDialog(patterns.Observer, sized_controls.SizedDialog):
     def __init__(self, task, taskList, effortList, settings, *args, **kwargs):
         kwargs['title'] = _('%(name)s reminder - %(task)s')%dict(name=meta.name, 
                                                                 task=task.subject(recursive=True))
@@ -33,18 +33,18 @@ class ReminderDialog(sized_controls.SizedDialog):
         self.taskList = taskList
         self.effortList = effortList
         self.settings = settings
-        patterns.Publisher().registerObserver(self.onTaskRemoved, 
-                                              eventType=self.taskList.removeItemEventType(),
-                                              eventSource=self.taskList)
-        patterns.Publisher().registerObserver(self.onTaskCompletionDateChanged, 
-                                              eventType='task.completionDateTime',
-                                              eventSource=task)
-        patterns.Publisher().registerObserver(self.onTrackingStartedOrStopped,
-                                              eventType=task.trackStartEventType(),
-                                              eventSource=task)
-        patterns.Publisher().registerObserver(self.onTrackingStartedOrStopped,
-                                              eventType=task.trackStopEventType(),
-                                              eventSource=task)
+        self.registerObserver(self.onTaskRemoved, 
+                              eventType=self.taskList.removeItemEventType(),
+                              eventSource=self.taskList)
+        self.registerObserver(self.onTaskCompletionDateChanged, 
+                              eventType='task.completionDateTime',
+                              eventSource=task)
+        self.registerObserver(self.onTrackingStartedOrStopped,
+                              eventType=task.trackStartEventType(),
+                              eventSource=task)
+        self.registerObserver(self.onTrackingStartedOrStopped,
+                              eventType=task.trackStopEventType(),
+                              eventSource=task)
         self.openTaskAfterClose = self.ignoreSnoozeOption = False
         pane = self.GetContentsPane()
         pane.SetSizerType("form")
@@ -142,7 +142,7 @@ class ReminderDialog(sized_controls.SizedDialog):
             selection = self.snoozeOptions.Selection
             minutes = self.snoozeOptions.GetClientData(selection).minutes()
             self.settings.set('view', 'defaultsnoozetime', str(int(minutes)))
-        patterns.Publisher().removeInstance(self)
+        self.removeInstance()
         
     def onOK(self, event):
         event.Skip()
