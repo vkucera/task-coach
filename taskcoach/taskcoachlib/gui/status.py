@@ -26,6 +26,8 @@ class StatusBar(patterns.Observer, wx.StatusBar):
         self.SetFieldsCount(2)
         self.parent = parent
         self.viewer = viewer
+        self.__timer = wx.Timer(self)
+        self.Bind(wx.EVT_TIMER, self.onUpdateStatus, self.__timer)
         self.registerObserver(self.onViewerStatusChanged, 
             eventType=viewer.viewerStatusEventType(), eventSource=viewer)
         self.scheduledStatusDisplay = None
@@ -47,8 +49,14 @@ class StatusBar(patterns.Observer, wx.StatusBar):
         event.Skip()
 
     def onViewerStatusChanged(self, event): # pylint: disable-msg=W0613
-        # Give viewer a chance to update first:
-        wx.CallAfter(self._displayStatus)
+        # Give viewer a chance to update first and only update when the viewer
+        # hasn't changed status for 0.5 seconds.
+        self.__timer.Start(500, oneShot=True)
+              
+    def onUpdateStatus(self, event):
+        if self.__timer:
+            self.__timer.Stop()
+        self._displayStatus()
 
     def _displayStatus(self):
         try:

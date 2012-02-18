@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, wx.lib.agw.piectrl, math
+import wx.lib.agw.piectrl, math
 from taskcoachlib import patterns, command, widgets, domain, render
 from taskcoachlib.domain import task, date
 from taskcoachlib.i18n import _
