@@ -73,12 +73,12 @@
 
 	UITableViewCell *cell = [[CellFactory cellFactory] createRegularCell];
 	cell.textLabel.text = [NSString stringWithFormat:_("Position: %@"), ([Configuration configuration].iconPosition == ICONPOSITION_RIGHT) ? _("Right") : _("Left")];
-	cell.accessoryType = UITableViewCellAccessoryNone;
+	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	[dpyCells addObject:cell];
 	
 	cell = [[CellFactory cellFactory] createRegularCell];
 	cell.textLabel.text = [NSString stringWithFormat:_("Display: %@"), ([Configuration configuration].dpyStyle == DPY_TREE) ? _("Tree") : _("List")];
-	cell.accessoryType = UITableViewCellAccessoryNone;
+	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	[dpyCells addObject:cell];
 	
 	switchCell = [[CellFactory cellFactory] createSwitchCell];
