@@ -40,6 +40,9 @@ class TaskStatus(object):
     
     def __neq__(self, other):
         return self.statusString != other.statusString
+    
+    def __nonzero__(self):
+        return True
 
 
 inactive = TaskStatus('inactive', _('Inactive tasks'), 
