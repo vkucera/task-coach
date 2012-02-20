@@ -23,7 +23,7 @@ from taskcoachlib.i18n import _
 from taskcoachlib.domain import date
 
 
-class ReminderDialog(sized_controls.SizedDialog):
+class ReminderDialog(patterns.Observer, sized_controls.SizedDialog):
     def __init__(self, task, taskList, effortList, settings, *args, **kwargs):
         kwargs['title'] = _('%(name)s reminder - %(task)s')%dict(name=meta.name, 
                                                                 task=task.subject(recursive=True))
@@ -142,7 +142,7 @@ class ReminderDialog(sized_controls.SizedDialog):
             selection = self.snoozeOptions.Selection
             minutes = self.snoozeOptions.GetClientData(selection).minutes()
             self.settings.set('view', 'defaultsnoozetime', str(int(minutes)))
-        patterns.Publisher().removeInstance(self)
+        self.removeInstance()
         
     def onOK(self, event):
         event.Skip()

@@ -20,13 +20,15 @@ import wx
 from taskcoachlib import patterns
 
 
-class StatusBar(wx.StatusBar):
+class StatusBar(patterns.Observer, wx.StatusBar):
     def __init__(self, parent, viewer):
         super(StatusBar, self).__init__(parent)
         self.SetFieldsCount(2)
         self.parent = parent
         self.viewer = viewer
-        patterns.Publisher().registerObserver(self.onViewerStatusChanged, 
+        self.__timer = wx.Timer(self)
+        self.Bind(wx.EVT_TIMER, self.onUpdateStatus, self.__timer)
+        self.registerObserver(self.onViewerStatusChanged, 
             eventType=viewer.viewerStatusEventType(), eventSource=viewer)
         self.scheduledStatusDisplay = None
         self.onViewerStatusChanged(None)
@@ -47,8 +49,14 @@ class StatusBar(wx.StatusBar):
         event.Skip()
 
     def onViewerStatusChanged(self, event): # pylint: disable-msg=W0613
-        # Give viewer a chance to update first:
-        wx.CallAfter(self._displayStatus)
+        # Give viewer a chance to update first and only update when the viewer
+        # hasn't changed status for 0.5 seconds.
+        self.__timer.Start(500, oneShot=True)
+              
+    def onUpdateStatus(self, event):
+        if self.__timer:
+            self.__timer.Stop()
+        self._displayStatus()
 
     def _displayStatus(self):
         try:
@@ -65,7 +73,7 @@ class StatusBar(wx.StatusBar):
         self.scheduledStatusDisplay = wx.FutureCall(delay, self._displayStatus)
 
     def Destroy(self): # pylint: disable-msg=W0221
-        patterns.Publisher().removeInstance(self)
+        self.removeInstance()
         for eventType in self.wxEventTypes:
             self.parent.Unbind(eventType)
         if self.scheduledStatusDisplay:

@@ -1251,7 +1251,7 @@ class NewChildTest(TaskTestCase):
 
 class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
     def taskCreationKeywordArguments(self):
-        now = date.Now()
+        now = date.Now() - date.oneSecond
         return [{'plannedStartDateTime': now,
                  'actualStartDateTime': now,
                  'children': [task.Task(subject='child', actualStartDateTime=now,

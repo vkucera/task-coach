@@ -98,7 +98,10 @@ class wxSchedulerPaint( object ):
 			self._scheduleDraggingOrigin = self._computeCoords(point, 0, 0)
 			self._scheduleDraggingStick = shiftDown
 		else:
-			pMin, pMax, sch = self._findSchedule( point )
+			try:
+				pMin, pMax, sch = self._findSchedule( point )
+			except TypeError: # returned None
+				return
 			if isinstance( sch, wxSchedule ):
 				self._scheduleDragged = pMin, pMax, sch
 				self._scheduleDraggingState = 1

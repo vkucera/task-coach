@@ -519,11 +519,12 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def status(self):
         if self.completionDateTime() != self.maxDateTime:
             return status.completed
-        if self.dueDateTime() < date.Now(): 
+        now = date.Now()
+        if self.dueDateTime() < now: 
             return status.overdue
         if 0 <= self.timeLeft().hours() < self.__dueSoonHours:
             return status.duesoon
-        if self.actualStartDateTime() <= date.Now():
+        if self.actualStartDateTime() <= now:
             return status.active
         # Don't call prerequisite.completed() because it will lead to infinite
         # recursion in the case of circular dependencies:
@@ -531,7 +532,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             return status.inactive
         if self.parent() and self.parent().inactive():
             return status.inactive
-        if self.plannedStartDateTime() < date.Now():
+        if self.plannedStartDateTime() < now:
             return status.late
         return status.inactive
     

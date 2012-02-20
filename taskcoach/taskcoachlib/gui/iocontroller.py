@@ -23,6 +23,7 @@ from taskcoachlib import meta, persistence, patterns, operating_system
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty import lockfile
 from taskcoachlib.widgets import GetPassword
+from taskcoachlib.workarounds import ExceptionAsUnicode
 
 try:
     from taskcoachlib.syncml import sync
@@ -237,7 +238,7 @@ class IOController(object):
             showerror(errorMessage, **self.__errorMessageOptions)
             return False
         except (OSError, IOError, lockfile.LockFailed), reason:
-            errorMessage = _('Cannot save %s\n%s')%(filename, reason)
+            errorMessage = _('Cannot save %s\n%s')%(filename, ExceptionAsUnicode(reason))
             showerror(errorMessage, **self.__errorMessageOptions)
             return False
         
@@ -255,7 +256,7 @@ class IOController(object):
             try:
                 templates.copyTemplate(filename)
             except Exception, reason: # pylint: disable-msg=W0703
-                errorMessage = _('Cannot import template %s\n%s')%(filename, reason)
+                errorMessage = _('Cannot import template %s\n%s')%(filename, ExceptionAsUnicode(reason))
                 showerror(errorMessage, **self.__errorMessageOptions)
             
     def close(self, force=False):
@@ -356,7 +357,7 @@ class IOController(object):
         try:
             return openfile(filename, mode, encoding)
         except IOError, reason:
-            errorMessage = _('Cannot open %s\n%s')%(filename, reason)
+            errorMessage = _('Cannot open %s\n%s')%(filename, ExceptionAsUnicode(reason))
             showerror(errorMessage, **self.__errorMessageOptions)
             return None
         

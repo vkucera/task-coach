@@ -82,6 +82,29 @@ class Translator:
                 self.__locale.AddCatalogLookupPathPrefix(localeDir)
                 self.__locale.AddCatalog('wxstd')
                 break
+        self._fixBrokenLocales()
+            
+    def _fixBrokenLocales(self):
+        current_language = locale.getlocale(locale.LC_TIME)[0]
+        if current_language and '_NO' in current_language:
+            # nb_BO and ny_NO cause crashes in the wx.DatePicker. Set the
+            # time part of the locale to some other locale. Since we don't
+            # know which ones are available we try a few. First we try the
+            # default locale of the user (''). It's probably *_NO, but it 
+            # might be some other language so we try just in case. Then we try 
+            # English (GB) so the user at least gets a European date and time 
+            # format if that works. If all else fails we use the default 
+            # 'C' locale.
+            for lang in ['', 'en_GB.utf8', 'C']:
+                try:
+                    locale.setlocale(locale.LC_TIME, lang)
+                except locale.Error:
+                    continue
+                current_language = locale.getlocale(locale.LC_TIME)[0]
+                if current_language and '_NO' in current_language:
+                    continue
+                else: 
+                    break
 
     def _localeStrings(self, language):
         ''' Extract language and language_country from language if possible. '''

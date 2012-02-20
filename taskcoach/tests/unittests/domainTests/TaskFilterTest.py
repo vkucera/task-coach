@@ -94,22 +94,23 @@ class ViewFilterTestsMixin(object):
         self.task.setPlannedStartDateTime(date.Now() + date.oneDay)
         self.list.append(self.task)
         self.filter.hideTaskStatus(task.status.inactive)
-        self.task.setPlannedStartDateTime(date.Now())
+        self.task.setPlannedStartDateTime(date.Now() - date.oneSecond)
         self.assertFilterShows(self.task)
         
     def testFilterInactiveTask_WhenPlannedStartDateTimePasses(self):
-        self.task.setPlannedStartDateTime(date.Now() + date.oneDay)
+        plannedStart = date.Now() + date.oneDay
+        self.task.setPlannedStartDateTime(plannedStart)
         self.list.append(self.task)
         self.filter.hideTaskStatus(task.status.inactive)
         oldNow = date.Now
-        date.Now = lambda: oldNow() + date.oneDay + date.TimeDelta(seconds=1)
+        date.Now = lambda: plannedStart + date.TimeDelta(seconds=1)
         date.Clock().notifySpecificTimeObservers(date.Now())
         self.assertFilterShows(self.task)
         date.Now = oldNow
 
     def testMarkPrerequisiteCompletedWhileFilteringInactiveTasks(self):
         self.task.addPrerequisites([self.dueToday])
-        self.task.setPlannedStartDateTime(date.Now())
+        self.task.setPlannedStartDateTime(date.Now() - date.oneSecond)
         self.dueToday.setPlannedStartDateTime(date.Now())
         self.filter.extend([self.dueToday, self.task])
         self.filter.hideTaskStatus(task.status.inactive)

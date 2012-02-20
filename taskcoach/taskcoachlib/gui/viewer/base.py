@@ -28,7 +28,7 @@ from taskcoachlib.thirdparty import hypertreelist
 import mixin
 
 
-class Viewer(wx.Panel):
+class Viewer(patterns.Observer, wx.Panel):
     ''' A Viewer shows domain objects (e.g. tasks or efforts) by means of a 
         widget (e.g. a ListCtrl or a TreeListCtrl).'''
     
@@ -70,15 +70,14 @@ class Viewer(wx.Panel):
         raise NotImplementedError
     
     def registerPresentationObservers(self):
-        patterns.Publisher().removeObserver(self.onPresentationChanged)
-        registerObserver = patterns.Publisher().registerObserver
-        registerObserver(self.onPresentationChanged, 
-                         eventType=self.presentation().addItemEventType(),
-                         eventSource=self.presentation())
-        registerObserver(self.onPresentationChanged, 
-                         eventType=self.presentation().removeItemEventType(),
-                         eventSource=self.presentation())
-        registerObserver(self.onNewItem, eventType='newitem')
+        self.removeObserver(self.onPresentationChanged)
+        self.registerObserver(self.onPresentationChanged, 
+                              eventType=self.presentation().addItemEventType(),
+                              eventSource=self.presentation())
+        self.registerObserver(self.onPresentationChanged, 
+                              eventType=self.presentation().removeItemEventType(),
+                              eventSource=self.presentation())
+        self.registerObserver(self.onNewItem, eventType='newitem')
                
     def detach(self):
         ''' Should be called by viewer.container before closing the viewer '''
@@ -92,7 +91,10 @@ class Viewer(wx.Panel):
             else:
                 observers.append(observable)
         for observer in observers:
-            patterns.Publisher().removeInstance(observer)
+            try:
+                observer.removeInstance()
+            except AttributeError:
+                pass # Ignore observables that are not an observer themselves
         
         for popupMenu in self._popupMenus:
             try:
@@ -740,7 +742,7 @@ class ViewerWithColumns(Viewer): # pylint: disable-msg=W0223
             
     def __startObserving(self, eventTypes):
         for eventType in eventTypes:
-            patterns.Publisher().registerObserver(self.onAttributeChanged, 
+            self.registerObserver(self.onAttributeChanged, 
                 eventType=eventType)                    
         
     def __stopObserving(self, eventTypes):
@@ -749,10 +751,9 @@ class ViewerWithColumns(Viewer): # pylint: disable-msg=W0223
         eventTypesOfVisibleColumns = []
         for column in self.visibleColumns():
             eventTypesOfVisibleColumns.extend(column.eventTypes())
-        removeObserver = patterns.Publisher().removeObserver
         for eventType in eventTypes:
             if eventType not in eventTypesOfVisibleColumns:
-                removeObserver(self.onAttributeChanged, eventType=eventType)
+                self.removeObserver(self.onAttributeChanged, eventType=eventType)
 
     def renderCategories(self, item):
         return self.renderSubjectsOfRelatedItems(item, item.categories)        

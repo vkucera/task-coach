@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, wx.lib.agw.piectrl, math
+import wx.lib.agw.piectrl, math
 from taskcoachlib import patterns, command, widgets, domain, render
 from taskcoachlib.domain import task, date
 from taskcoachlib.i18n import _
@@ -52,7 +52,7 @@ class TaskViewerStatusMessages(patterns.Observer):
 
 class BaseTaskViewer(mixin.SearchableViewerMixin, # pylint: disable-msg=W0223
                      mixin.FilterableViewerForTasksMixin,
-                     base.TreeViewer, patterns.Observer):        
+                     base.TreeViewer):        
     def __init__(self, *args, **kwargs):
         super(BaseTaskViewer, self).__init__(*args, **kwargs)
         self.statusMessages = TaskViewerStatusMessages(self)
