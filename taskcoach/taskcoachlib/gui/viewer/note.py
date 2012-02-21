@@ -43,8 +43,8 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W022
         super(BaseNoteViewer, self).__init__(*args, **kwargs)
         for eventType in (note.Note.appearanceChangedEventType(), 
                           note.Note.subjectChangedEventType()):
-            patterns.Publisher().registerObserver(self.onAttributeChanged, 
-                                                  eventType)
+            self.registerObserver(self.onAttributeChanged, 
+                                  eventType)
 
     def domainObjectsToView(self):
         return self.taskFile.notes() if self.notesToShow is None else self.notesToShow
