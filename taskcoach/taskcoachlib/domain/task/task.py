@@ -44,6 +44,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         kwargs['description'] = description
         kwargs['categories'] = categories
         super(Task, self).__init__(*args, **kwargs)
+        self.__status = None # status cache
         self.__dueSoonHours = self.settings.getint('behavior', 'duesoonhours') # pylint: disable-msg=E1101
         Attribute, SetAttribute = base.Attribute, base.SetAttribute
         maxDateTime = self.maxDateTime    
@@ -417,6 +418,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             parent = self.parent()
             if parent:
                 oldParentPriority = parent.priority(recursive=True)
+            self.__status = None
             self.__completionDateTime.set(completionDateTime, event=event)
             if parent and parent.priority(recursive=True) != oldParentPriority:
                 self.priorityEvent(event)              
@@ -517,24 +519,29 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 status.duesoon, status.overdue, status.completed)
 
     def status(self):
+        if self.__status:
+            return self.__status
         if self.completionDateTime() != self.maxDateTime:
-            return status.completed
-        now = date.Now()
-        if self.dueDateTime() < now: 
-            return status.overdue
-        if 0 <= self.timeLeft().hours() < self.__dueSoonHours:
-            return status.duesoon
-        if self.actualStartDateTime() <= now:
-            return status.active
-        # Don't call prerequisite.completed() because it will lead to infinite
-        # recursion in the case of circular dependencies:
-        if any([prerequisite.completionDateTime() == self.maxDateTime for prerequisite in self.prerequisites()]):
-            return status.inactive
-        if self.parent() and self.parent().inactive():
-            return status.inactive
-        if self.plannedStartDateTime() < now:
-            return status.late
-        return status.inactive
+            self.__status = status.completed
+        else:
+            now = date.Now()
+            if self.dueDateTime() < now: 
+                self.__status = status.overdue
+            elif 0 <= self.timeLeft().hours() < self.__dueSoonHours:
+                self.__status = status.duesoon
+            elif self.actualStartDateTime() <= now:
+                self.__status = status.active
+            # Don't call prerequisite.completed() because it will lead to infinite
+            # recursion in the case of circular dependencies:
+            elif any([prerequisite.completionDateTime() == self.maxDateTime for prerequisite in self.prerequisites()]):
+                self.__status = status.inactive
+            elif self.parent() and self.parent().inactive():
+                self.__status =  status.inactive
+            elif self.plannedStartDateTime() < now:
+                self.__status = status.late
+            else:
+                self.__status = status.inactive
+        return self.__status
     
     def onDueSoonHoursChanged(self, event):
         self.removeObserver(self.onDueSoon)
@@ -854,6 +861,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     @patterns.eventSource
     def recomputeAppearance(self, recursive=False, event=None):
+        self.__status = None
         # Need to prepare for AttributeError because the cached recursive values
         # are not set in __init__ for performance reasons
         try:

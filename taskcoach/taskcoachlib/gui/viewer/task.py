@@ -63,16 +63,16 @@ class BaseTaskViewer(mixin.SearchableViewerMixin, # pylint: disable-msg=W0223
             appearanceSettings = ['%s.%s'%(appearance, setting) for setting in 'activetasks',\
                                   'inactivetasks', 'completedtasks', 'duesoontasks', 'overduetasks', 'latetasks'] 
             for appearanceSetting in appearanceSettings:
-                patterns.Publisher().registerObserver(self.onAppearanceSettingChange, 
-                                                      eventType=appearanceSetting)
+                self.registerObserver(self.onAppearanceSettingChange, 
+                                      eventType=appearanceSetting)
         for eventType in (task.Task.appearanceChangedEventType(), 
                           task.Task.percentageCompleteChangedEventType(),
                           'task.prerequisites'):
-            patterns.Publisher().registerObserver(self.onAttributeChanged,
-                                                  eventType=eventType)
-        patterns.Publisher().registerObserver(self.atMidnight,
+            self.registerObserver(self.onAttributeChanged,
+                                  eventType=eventType)
+        self.registerObserver(self.atMidnight,
             eventType='clock.day')
-        patterns.Publisher().registerObserver(self.onWake,
+        self.registerObserver(self.onWake,
             eventType='powermgt.on')
 
     def atMidnight(self, event): # pylint: disable-msg=W0613
@@ -1145,9 +1145,9 @@ class TaskStatsViewer(BaseTaskViewer): # pylint: disable-msg=W0223
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'taskstatsviewer')
         super(TaskStatsViewer, self).__init__(*args, **kwargs)
-        patterns.Publisher().registerObserver(self.onPieChartAngleChanged,
-                                              eventType='.'.join((self.settingsSection(),
-                                                                 'piechartangle')))
+        self.registerObserver(self.onPieChartAngleChanged,
+                              eventType='.'.join((self.settingsSection(),
+                                                  'piechartangle')))
         
     def createWidget(self):
         widget = wx.lib.agw.piectrl.PieCtrl(self)

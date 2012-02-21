@@ -52,12 +52,12 @@ class EffortViewer(base.ListViewer,
             effort.Effort.trackStopEventType())
         self.aggregation = settings.get(self.settingsSection(), 'aggregation')
         self.initModeToolBarUICommands()
-        patterns.Publisher().registerObserver(self.onAttributeChanged,
-                                              eventType=effort.Effort.appearanceChangedEventType())
-        patterns.Publisher().registerObserver(self.onRoundingChanged,
-                                              eventType='%s.round'%self.settingsSection())
-        patterns.Publisher().registerObserver(self.onRoundingChanged,
-                                              eventType='%s.alwaysroundup'%self.settingsSection())
+        self.registerObserver(self.onAttributeChanged,
+                              eventType=effort.Effort.appearanceChangedEventType())
+        self.registerObserver(self.onRoundingChanged,
+                              eventType='%s.round'%self.settingsSection())
+        self.registerObserver(self.onRoundingChanged,
+                              eventType='%s.alwaysroundup'%self.settingsSection())
         
     def onRoundingChanged(self, event): # pylint: disable-msg=W0613
         self.initRoundingToolBarUICommands()

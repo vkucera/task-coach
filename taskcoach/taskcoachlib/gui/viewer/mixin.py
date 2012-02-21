@@ -185,7 +185,7 @@ class SortableViewerMixin(object):
 
     def registerPresentationObservers(self):
         super(SortableViewerMixin, self).registerPresentationObservers()
-        patterns.Publisher().registerObserver(self.onPresentationChanged, 
+        self.registerObserver(self.onPresentationChanged, 
             eventType=self.presentation().sortEventType(),
             eventSource=self.presentation())
 

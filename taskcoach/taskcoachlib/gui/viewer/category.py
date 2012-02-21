@@ -45,7 +45,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
                           category.Category.appearanceChangedEventType(),
                           category.Category.exclusiveSubcategoriesChangedEventType(),
                           category.Category.filterChangedEventType()]:
-            patterns.Publisher().registerObserver(self.onAttributeChanged, 
+            self.registerObserver(self.onAttributeChanged, 
                 eventType)
 
     def domainObjectsToView(self):
