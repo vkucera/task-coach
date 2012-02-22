@@ -52,6 +52,7 @@ locale for dates and times when the language is Norsk.''', '1820497'),
         Bug('''On Mac OS X, the shortcut to email a task is now Shift-Cmd-M
 instead of Cmd-M (which is the system shortcut to minimize the active
 window).''', '3489341'),
+        Bug('''Don't escape characters on Mac OS X when emailing a task., '3489341'),
         ],
     ),
             
