@@ -28,6 +28,7 @@ from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_NEXT, wxSCHEDULER_PR
 from taskcoachlib.thirdparty import desktop, hypertreelist
 from taskcoachlib.gui.wizard import CSVImportWizard
 from taskcoachlib.tools import anonymize
+from taskcoachlib.workarounds import ExceptionAsUnicode
 import dialog, viewer, printer
 
 
@@ -1726,7 +1727,7 @@ class Mail(NeedsSelectionMixin, ViewerCommand):
             try:
                 mail('recipient@domain.com', subject, body)
             except Exception, reason: # pylint: disable-msg=W0703
-                showerror(_('Cannot send email:\n%s')%reason, 
+                showerror(_('Cannot send email:\n%s')%ExceptionAsUnicode(reason), 
                       caption=_('%s mail error')%meta.name, 
                       style=wx.ICON_ERROR)        
  
@@ -2251,7 +2252,7 @@ class URLCommand(UICommand):
         try:
             desktop.open(self.url)
         except Exception, reason:
-            wx.MessageBox(_('Cannot open URL:\n%s')%reason, 
+            wx.MessageBox(_('Cannot open URL:\n%s')%ExceptionAsUnicode(reason), 
                       caption=_('%s URL error')%meta.name, 
                       style=wx.ICON_ERROR)
 
