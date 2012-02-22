@@ -49,6 +49,9 @@ item, also expand the parent item if necessary.''', '3484930'),
 Bokmal), Task Coach would crash when displaying a date picker control. This is 
 a bug in the underlying wxWidgets toolkit. Worked around by using another 
 locale for dates and times when the language is Norsk.''', '1820497'),
+        Bug('''On Mac OS X, the shortcut to email a task is now Shift-Cmd-M
+instead of Cmd-M (which is the system shortcut to minimize the active
+window).''', '3489341'),
         ],
     ),
             
