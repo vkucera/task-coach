@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.8', 'February 20, 2012',
+Release('1.3.8', 'February 24, 2012',
     summary='''This is a mixed feature and bugfix release.''',
     featuresAdded=[
         Feature('''In task viewers, late tasks, due soon tasks, and over due

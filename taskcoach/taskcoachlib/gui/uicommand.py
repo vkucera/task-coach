@@ -1682,12 +1682,11 @@ class ToggleCategory(NeedsSelectedCategorizableMixin, ViewerCommand):
 
 class Mail(NeedsSelectionMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        shortcut = 'Shift-Ctrl-M' if operating_system.isMac() else 'Ctrl-M'
-        super(Mail, self).__init__(menuText=_('&Mail...\t%s' % shortcut),
+        menuText = _('&Mail...\tShift-Ctrl-M') if operating_system.isMac() else _('&Mail...\tCtrl-M')
+        super(Mail, self).__init__(menuText=menuText,
            helpText=help.mailItem, bitmap='envelope_icon', *args, **kwargs)
 
     def doCommand(self, event, mail=sendMail, showerror=wx.MessageBox): # pylint: disable-msg=W0221
-        print 'DO'
         items = self.viewer.curselection()
         subject = self.subject(items)
         body = self.body(items)
