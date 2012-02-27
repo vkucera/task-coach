@@ -17,31 +17,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import os, pickle, tempfile, shutil
-from taskcoachlib import patterns
+from taskcoachlib.thirdparty.pubsub import pub
 from xml import TemplateXMLWriter, TemplateXMLReader
 
 
 class TemplateList(object):
-    def __init__(self, path, TemplateXMLReader=TemplateXMLReader, file=file):
+    def __init__(self, path, TemplateReader=TemplateXMLReader, openFile=file):
         self._path = path
-        self._templates = self._readTemplates(TemplateXMLReader, file)
+        self._templates = self._readTemplates(TemplateReader, openFile)
         self._toDelete = []
 
-    def _readTemplates(self, TemplateXMLReader, file):
+    def _readTemplates(self, TemplateReader, openFile):
         templates = []
         for filename in self._templateFilenames():
-            template = self._readTemplate(filename, TemplateXMLReader, file)
+            template = self._readTemplate(filename, TemplateReader, openFile)
             if template:
                 templates.append((template, filename))
         return templates
     
-    def _readTemplate(self, filename, TemplateXMLReader, file):
+    def _readTemplate(self, filename, TemplateReader, openFile):
         try:
-            fd = file(os.path.join(self._path, filename), 'rU')
+            fd = openFile(os.path.join(self._path, filename), 'rU')
         except IOError:
             return
         try:
-            return TemplateXMLReader(fd).read()
+            return TemplateReader(fd).read()
         except:
             pass
         finally:
@@ -70,7 +70,7 @@ class TemplateList(object):
         for task, name in self._toDelete:
             os.remove(os.path.join(self._path, name))
         self._toDelete = []
-        patterns.Event('templates.saved', self).send()
+        pub.sendMessage('templates.saved')
 
     def addTemplate(self, task):
         handle, filename = tempfile.mkstemp('.tsktmpl', dir=self._path)
@@ -90,7 +90,7 @@ class TemplateList(object):
     def copyTemplate(self, filename):
         shutil.copyfile(filename,
                         os.path.join(self._path, os.path.split(filename)[-1]))
-        patterns.Event('templates.saved', self).send()
+        pub.sendMessage('templates.saved')
         
     def swapTemplates(self, i, j):
         self._templates[i], self._templates[j] = self._templates[j], self._templates[i]
@@ -99,7 +99,7 @@ class TemplateList(object):
         return len(self._templates)
 
     def tasks(self):
-        return [task for task, name in self._templates]
+        return [task for task, _ in self._templates]
 
     def names(self):
-        return [name for task, name in self._templates]
+        return [name for _, name in self._templates]

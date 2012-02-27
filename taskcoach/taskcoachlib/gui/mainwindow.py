@@ -27,6 +27,7 @@ from taskcoachlib.gui.dialog.xfce4warning import XFCE4WarningDialog
 from taskcoachlib.gui.iphone import IPhoneSyncFrame
 from taskcoachlib.powermgt import PowerStateMixin
 import taskcoachlib.thirdparty.aui as aui
+from taskcoachlib.thirdparty.pubsub import pub
 import viewer, toolbar, uicommand, remindercontroller, artprovider, windowdimensionstracker, idlecontroller
 
 
@@ -139,10 +140,10 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
             {'name': meta.name, 'version': meta.version}, pane=1)
 
     def initWindowComponents(self):
-        self.onShowToolBar()
+        self.showToolBar(eval(self.settings.get('view', 'toolbar')))
         # We use CallAfter because otherwise the statusbar will appear at the 
         # top of the window when it is initially hidden and later shown.
-        wx.CallAfter(self.onShowStatusBar)
+        wx.CallAfter(self.showStatusBar, self.settings.getboolean('view', 'statusbar'))
         self.restorePerspective()
             
     def restorePerspective(self):
@@ -173,22 +174,17 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         return perspectiveViewerCount != settingsViewerCount
     
     def registerForWindowComponentChanges(self):
-        patterns.Publisher().registerObserver(self.onFilenameChanged, 
-            eventType='taskfile.filenameChanged', eventSource=self.taskFile)
-        patterns.Publisher().registerObserver(self.onShowStatusBar, 
-            eventType='view.statusbar')
+        pub.subscribe(self.onFilenameChanged, 'taskfile.filenameChanged')
+        pub.subscribe(self.showStatusBar, 'settings.view.statusbar')
         patterns.Publisher().registerObserver(self.onShowToolBar, 
             eventType='view.toolbar')
         self.Bind(aui.EVT_AUI_PANE_CLOSE, self.onCloseToolBar)
 
-    def onShowStatusBar(self, event=None): # pylint: disable-msg=W0613
-        self.showStatusBar(self.settings.getboolean('view', 'statusbar'))
-
     def onShowToolBar(self, event=None): # pylint: disable-msg=W0613
         self.showToolBar(eval(self.settings.get('view', 'toolbar')))
 
-    def onFilenameChanged(self, event):
-        self.setTitle(event.value())
+    def onFilenameChanged(self, filename):
+        self.setTitle(filename)
 
     def setTitle(self, filename):
         title = meta.name
@@ -241,10 +237,10 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         else:
             event.Skip()
             
-    def showStatusBar(self, show=True):
+    def showStatusBar(self, value=True):
         # FIXME: First hiding the statusbar, then hiding the toolbar, then
         # showing the statusbar puts it in the wrong place (only on Linux?)
-        self.GetStatusBar().Show(show)
+        self.GetStatusBar().Show(value)
         self.SendSizeEvent()
         
     def createToolBarUICommands(self):

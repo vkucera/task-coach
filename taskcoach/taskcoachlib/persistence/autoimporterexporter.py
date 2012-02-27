@@ -17,11 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import codecs, os
-from taskcoachlib import patterns
+from taskcoachlib.thirdparty.pubsub import pub
 import todotxt
 
 
-class AutoImporterExporter(patterns.Observer):
+class AutoImporterExporter(object):
     ''' AutoImporterExporter observes task files. If a task file is saved, 
         either by the user or automatically (when autosave is on) and auto 
         import and/or export is on, AutoImporterExporter imports and/or exports 
@@ -30,47 +30,43 @@ class AutoImporterExporter(patterns.Observer):
     def __init__(self, settings):
         super(AutoImporterExporter, self).__init__()
         self.__settings = settings
-        self.registerObserver(self.onTaskFileAboutToBeSaved, 
-                              eventType='taskfile.aboutToSave')
-        self.registerObserver(self.onTaskFileJustRead,
-                              eventType='taskfile.justRead')
+        pub.subscribe(self.onTaskFileAboutToBeSaved, 'taskfile.aboutToSave')
+        pub.subscribe(self.onTaskFileJustRead, 'taskfile.justRead')
         
-    def onTaskFileJustRead(self, event):
+    def onTaskFileJustRead(self, taskFile):
         ''' After a task file has been read and if auto import is on, 
             import it. '''
-        self.importFiles(event)
+        self.importFiles(taskFile)
             
-    def onTaskFileAboutToBeSaved(self, event):
+    def onTaskFileAboutToBeSaved(self, taskFile):
         ''' When a task file is about to be saved and auto import and/or 
             export is on, import and/or export it. '''
-        self.importFiles(event)
-        self.exportFiles(event)
+        self.importFiles(taskFile)
+        self.exportFiles(taskFile)
         
-    def importFiles(self, event):
+    def importFiles(self, taskFile):
         importFormats = self.__settings.getlist('file', 'autoimport')
         for importFormat in importFormats:
             if importFormat == 'Todo.txt':
-                self.importTodoTxt(event)
+                self.importTodoTxt(taskFile)
                 
-    def exportFiles(self, event):
+    def exportFiles(self, taskFile):
         exportFormats = self.__settings.getlist('file', 'autoexport')
         for exportFormat in exportFormats:
             if exportFormat == 'Todo.txt':
-                self.exportTodoTxt(event)
+                self.exportTodoTxt(taskFile)
     
     @classmethod            
-    def importTodoTxt(cls, event):
-        for taskFile in event.sources():
-            filename = cls.todoTxtFilename(taskFile)
-            if os.path.exists(filename):
-                todotxt.TodoTxtReader(taskFile.tasks(), taskFile.categories()).read(filename)
+    def importTodoTxt(cls, taskFile):
+        filename = cls.todoTxtFilename(taskFile)
+        if os.path.exists(filename):
+            todotxt.TodoTxtReader(taskFile.tasks(), taskFile.categories()).read(filename)
 
     @classmethod
-    def exportTodoTxt(cls, event):
-        for taskFile in event.sources():
-            filename = cls.todoTxtFilename(taskFile)
-            with codecs.open(filename, 'w', 'utf-8') as todoFile:
-                todotxt.TodoTxtWriter(todoFile, filename).writeTasks(taskFile.tasks())
+    def exportTodoTxt(cls, taskFile):
+        filename = cls.todoTxtFilename(taskFile)
+        with codecs.open(filename, 'w', 'utf-8') as todoFile:
+            todotxt.TodoTxtWriter(todoFile, filename).writeTasks(taskFile.tasks())
     
     @staticmethod   
     def todoTxtFilename(taskFile):

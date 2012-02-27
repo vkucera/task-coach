@@ -16,23 +16,22 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib import patterns
+from taskcoachlib.thirdparty.pubsub import pub
 
 
-class AutoSaver(patterns.Observer):
+class AutoSaver(object):
     ''' AutoSaver observes task files. If a task file is changed by the user 
         (gets 'dirty') and auto save is on, AutoSaver saves the task file. '''
         
     def __init__(self, settings, *args, **kwargs):
         super(AutoSaver, self).__init__(*args, **kwargs)
         self.__settings = settings
-        self.registerObserver(self.onTaskFileDirty, eventType='taskfile.dirty')
+        pub.subscribe(self.onTaskFileDirty, 'taskfile.dirty')
             
-    def onTaskFileDirty(self, event):
+    def onTaskFileDirty(self, taskFile):
         ''' When a task file gets dirty and auto save is on, save it. '''
-        for taskFile in event.sources():
-            if self._needSave(taskFile):
-                taskFile.save()
+        if self._needSave(taskFile):
+            taskFile.save()
 
     def _needSave(self, taskFile):
         return taskFile.filename() and taskFile.needSave() and \

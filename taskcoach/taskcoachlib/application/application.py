@@ -22,6 +22,7 @@ from taskcoachlib import workarounds # pylint: disable-msg=W0611
 
 import wx, os, locale, sys
 from taskcoachlib import patterns, operating_system
+from taskcoachlib.thirdparty.pubsub import pub
 
 # pylint: disable-msg=W0404
 
@@ -123,13 +124,12 @@ class Application(object):
         self.mainwindow = gui.MainWindow(self.iocontroller, self.taskFile, 
                                          self.settings)
         self.wxApp.SetTopWindow(self.mainwindow)
+        self.initSpellChecking()
         if not self.settings.getboolean('file', 'inifileloaded'):
             self.closeSplash(splash)
             self.warnUserThatIniFileWasNotLoaded()
         if loadTaskFile:
             self.iocontroller.openAfterStart(self._args)
-        wx.SystemOptions.SetOptionInt("mac.textcontrol-use-spell-checker",
-            self.settings.getboolean('editor', 'maccheckspelling'))
         self.registerSignalHandlers()
         self.createMutex()
         self.createTaskBarIcon()
@@ -188,7 +188,14 @@ class Application(object):
         from taskcoachlib import meta
         self.wxApp.SetAppName(meta.name)
         self.wxApp.SetVendorName(meta.author)
-                
+        
+    def initSpellChecking(self):
+        self.onSpellChecking(self.settings.getboolean('editor', 'maccheckspelling'))
+        pub.subscribe(self.onSpellChecking, 'settings.editor.maccheckspelling')
+        
+    def onSpellChecking(self, value):
+        wx.SystemOptions.SetOptionInt("mac.textcontrol-use-spell-checker", value)
+        
     def registerSignalHandlers(self):
         quitAdapter = lambda *args: self.quit()
         if operating_system.isWindows():

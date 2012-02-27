@@ -249,8 +249,8 @@ class UICheckCommand(BooleanSettingsCommand):
             return event.IsChecked()
         
     def doCommand(self, event):
-        self.settings.set(self.section, self.setting, 
-            str(self._isMenuItemChecked(event)))
+        self.settings.setboolean(self.section, self.setting, 
+            self._isMenuItemChecked(event))
         
     def getBitmap(self):
         # Using our own bitmap for checkable menu items does not work on

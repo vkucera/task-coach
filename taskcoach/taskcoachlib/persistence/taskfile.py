@@ -22,6 +22,7 @@ from taskcoachlib.domain import base, task, category, note, effort, attachment
 from taskcoachlib.syncml.config import createDefaultSyncConfig
 from taskcoachlib.thirdparty.guid import generate
 from taskcoachlib.thirdparty import lockfile
+from taskcoachlib.thirdparty.pubsub import pub
 
 
 def getTemporaryFileName(path):
@@ -169,8 +170,8 @@ class TaskFile(patterns.Observer):
             return
         self.__lastFilename = filename or self.__filename
         self.__filename = filename
-        patterns.Event('taskfile.filenameChanged', self, filename).send()
-
+        pub.sendMessage('taskfile.filenameChanged', filename=filename)
+        
     def filename(self):
         return self.__filename
         
@@ -180,12 +181,11 @@ class TaskFile(patterns.Observer):
     def markDirty(self, force=False):
         if force or not self.__needSave:
             self.__needSave = True
-            patterns.Event('taskfile.dirty', self, True).send()
+            pub.sendMessage('taskfile.dirty', taskFile=self)
                 
     def markClean(self):
         if self.__needSave:
             self.__needSave = False
-            patterns.Event('taskfile.dirty', self, False).send()
             
     @patterns.eventSource
     def clear(self, regenerate=True, event=None):
@@ -244,10 +244,10 @@ class TaskFile(patterns.Observer):
         finally:
             self.__loading = False
             self.__needSave = False
-        patterns.Event('taskfile.justRead', self).send()
+        pub.sendMessage('taskfile.justRead', taskFile=self)
         
     def save(self):
-        patterns.Event('taskfile.aboutToSave', self).send()
+        pub.sendMessage('taskfile.aboutToSave', taskFile=self)
         # When encountering a problem while saving (disk full,
         # computer on fire), if we were writing directly to the file,
         # it's lost. So write to a temporary file and rename it if

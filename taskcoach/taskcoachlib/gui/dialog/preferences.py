@@ -181,7 +181,7 @@ class SettingsPageBase(widgets.BookPage):
 
     def ok(self):
         for section, setting, checkBox in self._booleanSettings:
-            self.set(section, setting, str(checkBox.IsChecked()))
+            self.setboolean(section, setting, checkBox.IsChecked())
         for section, setting, choiceCtrls in self._choiceSettings:
             value = '_'.join([choice.GetClientData(choice.GetSelection()) for choice in choiceCtrls])
             self.set(section, setting, value)
@@ -211,6 +211,9 @@ class SettingsPageBase(widgets.BookPage):
     def getint(self, section, name):
         return int(self.get(section, name))
 
+    def setboolean(self, section, name, value):
+        raise NotImplementedError
+        
     def getboolean(self, section, name):
         return self.get(section, name) == 'True'
 
@@ -243,6 +246,10 @@ class SettingsPage(SettingsPageBase):
     def set(self, section, name, value):
         if section is not None:
             self.settings.set(section, name, value)
+            
+    def setboolean(self, section, name, value):
+        if section is not None:
+            self.settings.setboolean(section, name, value)
 
 
 class SavePage(SettingsPage):

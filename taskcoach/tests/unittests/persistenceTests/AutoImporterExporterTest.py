@@ -42,7 +42,7 @@ class AutoExporterTestCase(test.TestCase):
     def testAddOneTaskWhenAutoSaveIsOn(self):
         self.settings.set('file', 'autoexport', '["Todo.txt"]')
         self.settings.set('file', 'autosave', 'True')
-        persistence.AutoSaver(self.settings)
+        autosaver = persistence.AutoSaver(self.settings)
         self.taskFile.tasks().append(task.Task(subject='Some task'))
         self.assertEqual('Some task\n', file(self.txtFilename, 'r').read())
         
@@ -63,7 +63,7 @@ class AutoExporterTestCase(test.TestCase):
     def testImportOneTaskWhenAutoSaving(self):
         self.settings.set('file', 'autoimport', '["Todo.txt"]')
         self.settings.set('file', 'autosave', 'True')
-        persistence.AutoSaver(self.settings)
+        autosaver = persistence.AutoSaver(self.settings)
         with file(self.txtFilename, 'w') as todoTxtFile:
             todoTxtFile.write('Imported task\n')
         self.taskFile.tasks().append(task.Task(subject='Some task'))

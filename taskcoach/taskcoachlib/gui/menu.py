@@ -20,6 +20,7 @@ import wx, os
 from taskcoachlib import patterns, persistence, help # pylint: disable-msg=W0622
 from taskcoachlib.domain import task, base, category
 from taskcoachlib.i18n import _
+from taskcoachlib.thirdparty.pubsub import pub
 import uicommand, viewer
 
 
@@ -285,9 +286,11 @@ class TaskTemplateMenu(DynamicMenu):
         super(TaskTemplateMenu, self).__init__(mainwindow)
 
     def registerForMenuUpdate(self):
-        patterns.Publisher().registerObserver(self.onUpdateMenu, 
-                                              eventType='templates.saved')
+        pub.subscribe(self.onTemplatesSaved, 'templates.saved')
         
+    def onTemplatesSaved(self):
+        self.onUpdateMenu(None)
+    
     def updateMenuItems(self):
         self.clearMenu()
         self.fillMenu(self.getUICommands())
@@ -297,10 +300,9 @@ class TaskTemplateMenu(DynamicMenu):
 
     def getUICommands(self):
         path = self.settings.pathToTemplatesDir()
-
         commands = [uicommand.TaskNewFromTemplate(os.path.join(path, name),
-                                                  taskList=self.taskList,
-                                                  settings=self.settings) for name in persistence.TemplateList(path).names()]
+            taskList=self.taskList,
+            settings=self.settings) for name in persistence.TemplateList(path).names()]
         return commands
 
 
