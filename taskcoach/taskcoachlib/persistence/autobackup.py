@@ -17,11 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import os, shutil, glob, math
-from taskcoachlib import patterns
 from taskcoachlib.domain import date
+from taskcoachlib.thirdparty.pubsub import pub
 
 
-class AutoBackup(patterns.Observer):
+class AutoBackup(object):
     ''' If backups are on, AutoBackup creates a backup copy of the task 
         file before it is overwritten. To prevent the number of backups growing
         indefinitely, AutoBackup removes older backups. '''
@@ -33,16 +33,14 @@ class AutoBackup(patterns.Observer):
         super(AutoBackup, self).__init__()
         self.__settings = settings
         self.__copyfile = copyfile
-        self.registerObserver(self.onTaskFileAboutToSave,
-                              eventType='taskfile.aboutToSave')
+        pub.subscribe(self.onTaskFileAboutToSave, 'taskfile.aboutToSave')
             
-    def onTaskFileAboutToSave(self, event):
+    def onTaskFileAboutToSave(self, taskFile):
         ''' Just before a task file is about to be saved, and backups are on,
             create a backup and remove extraneous backup files. '''
-        for taskFile in event.sources():
-            if self.needBackup(taskFile):
-                self.createBackup(taskFile)
-            self.removeExtraneousBackupFiles(taskFile)
+        if self.needBackup(taskFile):
+            self.createBackup(taskFile)
+        self.removeExtraneousBackupFiles(taskFile)
 
     def needBackup(self, taskFile):
         return self.__settings.getboolean('file', 'backup') and taskFile.exists()

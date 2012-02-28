@@ -21,6 +21,7 @@ import test
 from taskcoachlib import gui, config
 from taskcoachlib.gui import uicommand
 from taskcoachlib.domain import task, category, date
+from taskcoachlib.thirdparty.pubsub import pub
 
 
 class MockViewerContainer(object):
@@ -130,14 +131,14 @@ class MenuWithRadioItemsTest(MenuWithBooleanMenuItemsTestCase):
         return [uicommand.UIRadioCommand(settings=self.settings, 
                                          section='view', setting='toolbar', 
                                          value=value) \
-                for value in ['None', '(16, 16)']]
+                for value in [None, (16, 16)]]
 
     def testRadioItem_FirstChecked(self):
-        self.settings.set('view', 'toolbar', 'None')
+        self.settings.setvalue('view', 'toolbar', None)
         self.assertMenuItemsChecked(True, False)
 
     def testRadioItem_SecondChecked(self):
-        self.settings.set('view', 'toolbar', '(16, 16)')
+        self.settings.setvalue('view', 'toolbar', (16, 16))
         self.assertMenuItemsChecked(False, True)
 
 
@@ -373,3 +374,21 @@ class ToggleCategoryMenuTest(test.wxTestCase):
         subMenuItems = self.menu.GetMenuItems()[2].GetSubMenu().GetMenuItems()
         checkedItems = [item for item in subMenuItems if item.IsChecked()]
         self.failIf(checkedItems)
+
+
+class TaskTemplateMenuTest(test.wxTestCase):
+    def testMenuIsUpdatedWhenTemplatesAreSaved(self):
+        uicommands = [None] # Just a separator for testing purposes
+        class TaskTemplateMenu(gui.menu.TaskTemplateMenu):
+            def getUICommands(self):
+                return uicommands
+            
+        settings = config.Settings(load=False)
+        taskList = task.TaskList()
+        menu = TaskTemplateMenu(self.frame, taskList, settings)
+        self.assertEqual(1, len(menu))
+        uicommands.append(None) # Add another separator
+        pub.sendMessage('templates.saved')
+        self.assertEqual(2, len(menu))
+        
+        

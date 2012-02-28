@@ -72,11 +72,11 @@ class MainWindowTestCase(test.wxTestCase):
         
 class MainWindowTest(MainWindowTestCase):
     def testStatusBar_Show(self):
-        self.settings.set('view', 'statusbar', 'True')
+        self.settings.setboolean('view', 'statusbar', True)
         self.failUnless(self.mainwindow.GetStatusBar().IsShown())
 
     def testStatusBar_Hide(self):
-        self.settings.set('view', 'statusbar', 'False')
+        self.settings.setboolean('view', 'statusbar', False)
         self.failIf(self.mainwindow.GetStatusBar().IsShown())
 
     def testTitle_Default(self):
@@ -86,7 +86,6 @@ class MainWindowTest(MainWindowTestCase):
         self.taskFile.setFilename('New filename')
         self.assertEqual('%s - %s'%(meta.name, self.taskFile.filename()), 
             self.mainwindow.GetTitle())
-
         
 
 class MainWindowMaximizeTestCase(MainWindowTestCase):

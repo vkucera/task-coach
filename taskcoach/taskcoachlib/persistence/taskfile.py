@@ -24,6 +24,7 @@ from taskcoachlib.thirdparty.guid import generate
 from taskcoachlib.thirdparty import lockfile
 from taskcoachlib.changes import ChangeMonitor, ChangeSynchronizer
 from taskcoachlib.filesystem import FilesystemNotifier, FilesystemPollerNotifier
+from taskcoachlib.thirdparty.pubsub import pub
 
 
 def getTemporaryFileName(path):
@@ -213,8 +214,8 @@ class TaskFile(patterns.Observer):
         self.__lastFilename = filename or self.__filename
         self.__filename = filename
         self.__notifier.setFilename(filename)
-        patterns.Event('taskfile.filenameChanged', self, filename).send()
-
+        pub.sendMessage('taskfile.filenameChanged', filename=filename)
+        
     def filename(self):
         return self.__filename
         
@@ -224,18 +225,17 @@ class TaskFile(patterns.Observer):
     def markDirty(self, force=False):
         if force or not self.__needSave:
             self.__needSave = True
-            patterns.Event('taskfile.dirty', self, True).send()
+            pub.sendMessage('taskfile.dirty', taskFile=self)
                 
     def markClean(self):
         if self.__needSave:
             self.__needSave = False
-            patterns.Event('taskfile.dirty', self, False).send()
 
     def onFileChanged(self):
         if not self.__saving:
             import wx # Not really clean but we're in another thread...
             self.__changedOnDisk = True
-            wx.CallAfter(patterns.Event('taskfile.changed', self, False).send)
+            wx.CallAfter(pub.sendMessage, 'taskfile.changed', self)
 
     @patterns.eventSource
     def clear(self, regenerate=True, event=None):
@@ -329,10 +329,10 @@ class TaskFile(patterns.Observer):
             self.__loading = False
             self.__needSave = False
             self.__changedOnDisk = False
-        patterns.Event('taskfile.justRead', self).send()
+        pub.sendMessage('taskfile.justRead', taskFile=self)
         
     def save(self):
-        patterns.Event('taskfile.aboutToSave', self).send()
+        pub.sendMessage('taskfile.aboutToSave', taskFile=self)
         # When encountering a problem while saving (disk full,
         # computer on fire), if we were writing directly to the file,
         # it's lost. So write to a temporary file and rename it if

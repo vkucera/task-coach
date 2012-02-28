@@ -113,5 +113,5 @@ def sendMail(to, subject, body, openURL=desktop.open):
     # one, it fails.  Maybe we should use Mail.app  directly ? What if
     # the user uses something else ?
 
-    openURL(u'mailto:%s?subject=%s&body=%s' % (to, unicode_quote(subject),
-                                               unicode_quote(body)))
+    openURL(u'mailto:%s?subject=%s&body=%s' % (to, subject,
+                                               body))

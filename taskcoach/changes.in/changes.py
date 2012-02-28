@@ -22,7 +22,14 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.8', 'February 20, 2012',
+Release('1.3.9', 'February 28, 2012',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug(''' ... '''),
+        ],
+    ),
+            
+Release('1.3.8', 'February 25, 2012',
     summary='''This is a mixed feature and bugfix release.''',
     featuresAdded=[
         Feature('''In task viewers, late tasks, due soon tasks, and over due
@@ -49,6 +56,11 @@ item, also expand the parent item if necessary.''', '3484930'),
 Bokmal), Task Coach would crash when displaying a date picker control. This is 
 a bug in the underlying wxWidgets toolkit. Worked around by using another 
 locale for dates and times when the language is Norsk.''', '1820497'),
+        Bug('''On Mac OS X, the shortcut to email a task is now Shift-Cmd-M
+instead of Cmd-M (which is the system shortcut to minimize the active
+window).''', '3489341'),
+        Bug('''Don't escape characters on Mac OS X when emailing a task.''',
+            '3489341'),
         ],
     ),
             

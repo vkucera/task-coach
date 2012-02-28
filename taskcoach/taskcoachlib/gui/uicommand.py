@@ -28,6 +28,7 @@ from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_NEXT, wxSCHEDULER_PR
 from taskcoachlib.thirdparty import desktop, hypertreelist
 from taskcoachlib.gui.wizard import CSVImportWizard
 from taskcoachlib.tools import anonymize
+from taskcoachlib.workarounds import ExceptionAsUnicode
 import dialog, viewer, printer
 
 
@@ -248,8 +249,8 @@ class UICheckCommand(BooleanSettingsCommand):
             return event.IsChecked()
         
     def doCommand(self, event):
-        self.settings.set(self.section, self.setting, 
-            str(self._isMenuItemChecked(event)))
+        self.settings.setboolean(self.section, self.setting, 
+            self._isMenuItemChecked(event))
         
     def getBitmap(self):
         # Using our own bitmap for checkable menu items does not work on
@@ -272,7 +273,7 @@ class UIRadioCommand(BooleanSettingsCommand):
         return self.settings.get(self.section, self.setting) == str(self.value)
 
     def doCommand(self, event):
-        self.settings.set(self.section, self.setting, str(self.value))
+        self.settings.setvalue(self.section, self.setting, self.value)
 
 
 class IOCommand(UICommand): # pylint: disable-msg=W0223
@@ -1694,7 +1695,8 @@ class ToggleCategory(NeedsSelectedCategorizableMixin, ViewerCommand):
 
 class Mail(NeedsSelectionMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(Mail, self).__init__(menuText=_('&Mail...\tCtrl-M'),
+        menuText = _('&Mail...\tShift-Ctrl-M') if operating_system.isMac() else _('&Mail...\tCtrl-M')
+        super(Mail, self).__init__(menuText=menuText,
            helpText=help.mailItem, bitmap='envelope_icon', *args, **kwargs)
 
     def doCommand(self, event, mail=sendMail, showerror=wx.MessageBox): # pylint: disable-msg=W0221
@@ -1739,7 +1741,7 @@ class Mail(NeedsSelectionMixin, ViewerCommand):
             try:
                 mail('recipient@domain.com', subject, body)
             except Exception, reason: # pylint: disable-msg=W0703
-                showerror(_('Cannot send email:\n%s')%reason, 
+                showerror(_('Cannot send email:\n%s')%ExceptionAsUnicode(reason), 
                       caption=_('%s mail error')%meta.name, 
                       style=wx.ICON_ERROR)        
  
@@ -2264,7 +2266,7 @@ class URLCommand(UICommand):
         try:
             desktop.open(self.url)
         except Exception, reason:
-            wx.MessageBox(_('Cannot open URL:\n%s')%reason, 
+            wx.MessageBox(_('Cannot open URL:\n%s')%ExceptionAsUnicode(reason), 
                       caption=_('%s URL error')%meta.name, 
                       style=wx.ICON_ERROR)
 

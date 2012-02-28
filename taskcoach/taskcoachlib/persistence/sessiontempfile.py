@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os, stat, atexit, tempfile
 from taskcoachlib import patterns
 
+
 class TempFiles(object):
     __metaclass__ = patterns.Singleton
     

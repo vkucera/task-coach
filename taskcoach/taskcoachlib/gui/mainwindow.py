@@ -27,6 +27,7 @@ from taskcoachlib.gui.dialog.xfce4warning import XFCE4WarningDialog
 from taskcoachlib.gui.iphone import IPhoneSyncFrame
 from taskcoachlib.powermgt import PowerStateMixin
 import taskcoachlib.thirdparty.aui as aui
+from taskcoachlib.thirdparty.pubsub import pub
 import viewer, toolbar, uicommand, remindercontroller, artprovider, windowdimensionstracker, idlecontroller
 
 
@@ -139,10 +140,10 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
             {'name': meta.name, 'version': meta.version}, pane=1)
 
     def initWindowComponents(self):
-        self.onShowToolBar()
+        self.showToolBar(self.settings.getvalue('view', 'toolbar'))
         # We use CallAfter because otherwise the statusbar will appear at the 
         # top of the window when it is initially hidden and later shown.
-        wx.CallAfter(self.onShowStatusBar)
+        wx.CallAfter(self.showStatusBar, self.settings.getboolean('view', 'statusbar'))
         self.restorePerspective()
             
     def restorePerspective(self):
@@ -173,22 +174,10 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         return perspectiveViewerCount != settingsViewerCount
     
     def registerForWindowComponentChanges(self):
-        patterns.Publisher().registerObserver(self.onFilenameChanged, 
-            eventType='taskfile.filenameChanged', eventSource=self.taskFile)
-        patterns.Publisher().registerObserver(self.onShowStatusBar, 
-            eventType='view.statusbar')
-        patterns.Publisher().registerObserver(self.onShowToolBar, 
-            eventType='view.toolbar')
+        pub.subscribe(self.setTitle, 'taskfile.filenameChanged')
+        pub.subscribe(self.showStatusBar, 'settings.view.statusbar')
+        pub.subscribe(self.showToolBar, 'settings.view.toolbar')
         self.Bind(aui.EVT_AUI_PANE_CLOSE, self.onCloseToolBar)
-
-    def onShowStatusBar(self, event=None): # pylint: disable-msg=W0613
-        self.showStatusBar(self.settings.getboolean('view', 'statusbar'))
-
-    def onShowToolBar(self, event=None): # pylint: disable-msg=W0613
-        self.showToolBar(eval(self.settings.get('view', 'toolbar')))
-
-    def onFilenameChanged(self, event):
-        self.setTitle(event.value())
 
     def setTitle(self, filename):
         title = meta.name
@@ -242,10 +231,10 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         else:
             event.Skip()
             
-    def showStatusBar(self, show=True):
+    def showStatusBar(self, value=True):
         # FIXME: First hiding the statusbar, then hiding the toolbar, then
         # showing the statusbar puts it in the wrong place (only on Linux?)
-        self.GetStatusBar().Show(show)
+        self.GetStatusBar().Show(value)
         self.SendSizeEvent()
         
     def createToolBarUICommands(self):
@@ -266,7 +255,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
                                      taskList=self.taskFile.tasks())])
         return uiCommands
         
-    def showToolBar(self, size):
+    def showToolBar(self, value):
         # Current version of wxPython (2.7.8.1) has a bug 
         # (https://sourceforge.net/tracker/?func=detail&atid=109863&aid=1742682&group_id=9863)
         # that makes adding controls to a toolbar not working. Also, when the 
@@ -277,16 +266,16 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         if operating_system.isMac():
             if self.GetToolBar():
                 self.GetToolBar().Destroy()
-            if size is not None:
-                self.SetToolBar(toolbar.ToolBar(self, size=size))
+            if value is not None:
+                self.SetToolBar(toolbar.ToolBar(self, size=value))
             self.SendSizeEvent()
         else:
             currentToolbar = self.manager.GetPane('toolbar')
             if currentToolbar.IsOk():
                 self.manager.DetachPane(currentToolbar.window)
                 currentToolbar.window.Destroy()
-            if size:
-                bar = toolbar.ToolBar(self, size=size)
+            if value:
+                bar = toolbar.ToolBar(self, size=value)
                 self.manager.AddPane(bar, aui.AuiPaneInfo().Name('toolbar').
                                      Caption('Toolbar').ToolbarPane().Top().DestroyOnClose().
                                      LeftDockable(False).RightDockable(False))
@@ -294,7 +283,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
 
     def onCloseToolBar(self, event):
         if event.GetPane().IsToolbar():
-            self.settings.set('view', 'toolbar', 'None')
+            self.settings.setvalue('view', 'toolbar', None)
         event.Skip()
         
     # Viewers

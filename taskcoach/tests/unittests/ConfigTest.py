@@ -19,7 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test, sys, os, ConfigParser, StringIO
-from taskcoachlib import patterns, config, meta
+from taskcoachlib import config, meta
+from taskcoachlib.thirdparty.pubsub import pub
 
 
 class SettingsTestCase(test.TestCase):
@@ -34,11 +35,11 @@ class SettingsTestCase(test.TestCase):
 class SettingsTest(SettingsTestCase):
     def testDefaults(self):
         self.failUnless(self.settings.has_section('view'))
-        self.assertEqual('True', self.settings.get('view', 'statusbar'))
+        self.assertEqual(True, self.settings.getboolean('view', 'statusbar'))
 
     def testSet(self):
-        self.settings.set('view', 'toolbar', '(16, 16)')
-        self.assertEqual('(16, 16)', self.settings.get('view', 'toolbar'))
+        self.settings.setvalue('view', 'toolbar', (16, 16))
+        self.assertEqual((16, 16), self.settings.gettuple('view', 'toolbar'))
 
     def testPathWithAppData(self):
         environ = {'APPDATA' : 'test' }
@@ -165,15 +166,17 @@ class SettingsObservableTest(SettingsTestCase):
     def setUp(self):
         super(SettingsObservableTest, self).setUp()
         self.events = []
-        patterns.Publisher().registerObserver(self.onEvent, 
-            eventType='view.toolbar')
+        pub.subscribe(self.onEvent, 'settings.view.toolbar')
         
-    def onEvent(self, event):
-        self.events.append(event)
+    def tearDown(self):
+        pub.clearNotificationHandlers()
+
+    def onEvent(self, value):
+        self.events.append(value)
         
     def testChangingTheSettingCausesNotification(self):
-        self.settings.set('view', 'toolbar', '(16, 16)')
-        self.assertEqual('(16, 16)', self.events[0].value())
+        self.settings.settuple('view', 'toolbar', (16, 16))
+        self.assertEqual((16, 16), self.events[0])
         
     def testChangingAnotherSettingDoesNotCauseANotification(self):
         self.settings.set('view', 'statusbar', 'True')
@@ -252,9 +255,14 @@ class SettingsFileLocationTest(SettingsTestCase):
         del sys.argv[0]
         
     def testSettingSaveIniFileInProgramDirToFalseRemovesIniFile(self):
-        self.settings.setboolean('file', 'saveinifileinprogramdir', True)
-        self.settings.setboolean('file', 'saveinifileinprogramdir', False)
-        
+        class SettingsUnderTest(config.Settings):
+            def onSettingsFileLocationChanged(self, value):
+                self.onSettingsFileLocationChangedCalled = value # pylint: disable-msg=W0201
+        settings = SettingsUnderTest(load=False)
+        settings.setboolean('file', 'saveinifileinprogramdir', True)
+        settings.setboolean('file', 'saveinifileinprogramdir', False)
+        self.failIf(settings.onSettingsFileLocationChangedCalled)
+
 
 class MinimumSettingsTest(SettingsTestCase):
     def testAtLeastOneTaskTreeListViewer(self):
