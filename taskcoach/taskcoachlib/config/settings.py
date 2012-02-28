@@ -195,15 +195,13 @@ class Settings(patterns.Observer, CachingConfigParser):
     def setboolean(self, section, option, value):
         if self.set(section, option, str(value)):
             pub.sendMessage('settings.%s.%s'%(section, option), value=value)
-
+            
+    setvalue = settuple = setlist = setdict = setboolean
+    
     def getlist(self, section, option):
         return self.getEvaluatedValue(section, option, eval)
-    
-    def setlist(self, section, option, value):
-        self.set(section, option, str(value))
         
-    getdict = getlist
-    setdict = setlist
+    getvalue = gettuple = getdict = getlist
 
     def getint(self, section, option):
         return self.getEvaluatedValue(section, option, int)

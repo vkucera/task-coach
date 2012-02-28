@@ -131,14 +131,14 @@ class MenuWithRadioItemsTest(MenuWithBooleanMenuItemsTestCase):
         return [uicommand.UIRadioCommand(settings=self.settings, 
                                          section='view', setting='toolbar', 
                                          value=value) \
-                for value in ['None', '(16, 16)']]
+                for value in [None, (16, 16)]]
 
     def testRadioItem_FirstChecked(self):
-        self.settings.set('view', 'toolbar', 'None')
+        self.settings.setvalue('view', 'toolbar', None)
         self.assertMenuItemsChecked(True, False)
 
     def testRadioItem_SecondChecked(self):
-        self.settings.set('view', 'toolbar', '(16, 16)')
+        self.settings.setvalue('view', 'toolbar', (16, 16))
         self.assertMenuItemsChecked(False, True)
 
 

@@ -273,7 +273,7 @@ class UIRadioCommand(BooleanSettingsCommand):
         return self.settings.get(self.section, self.setting) == str(self.value)
 
     def doCommand(self, event):
-        self.settings.set(self.section, self.setting, str(self.value))
+        self.settings.setvalue(self.section, self.setting, self.value)
 
 
 class IOCommand(UICommand): # pylint: disable-msg=W0223
