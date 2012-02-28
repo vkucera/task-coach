@@ -55,11 +55,10 @@ class CachingConfigParser(UnicodeAwareConfigParser):
         return cache[key]
         
         
-class Settings(patterns.Observer, CachingConfigParser):
+class Settings(object, CachingConfigParser):
     def __init__(self, load=True, iniFile=None, *args, **kwargs):
         # Sigh, ConfigParser.SafeConfigParser is an old-style class, so we 
         # have to call the superclass __init__ explicitly:
-        super(Settings, self).__init__(*args, **kwargs)
         CachingConfigParser.__init__(self, *args, **kwargs) 
         self.initializeWithDefaults()
         self.__loadAndSave = load
@@ -80,11 +79,11 @@ class Settings(patterns.Observer, CachingConfigParser):
             # Assume that if the settings are not to be loaded, we also 
             # should be quiet (i.e. we are probably in test mode):
             self.__beQuiet()
-        self.registerObserver(self.onSettingsFileLocationChanged, 
-                              'file.saveinifileinprogramdir')
+        pub.subscribe(self.onSettingsFileLocationChanged, 
+                      'settings.file.saveinifileinprogramdir')
         
-    def onSettingsFileLocationChanged(self, event):
-        saveIniFileInProgramDir = event.value() == 'True'
+    def onSettingsFileLocationChanged(self, value):
+        saveIniFileInProgramDir = value
         if not saveIniFileInProgramDir:
             try:
                 os.remove(self.generatedIniFilename(forceProgramDir=True))
@@ -107,7 +106,7 @@ class Settings(patterns.Observer, CachingConfigParser):
     def __beQuiet(self):
         noisySettings = [('window', 'splash', 'False'), 
                          ('window', 'tips', 'False'), 
-                         ('window', 'starticonized', 'True')]
+                         ('window', 'starticonized', 'Always')]
         for section, setting, value in noisySettings:
             self.set(section, setting, value)
             

@@ -255,9 +255,14 @@ class SettingsFileLocationTest(SettingsTestCase):
         del sys.argv[0]
         
     def testSettingSaveIniFileInProgramDirToFalseRemovesIniFile(self):
-        self.settings.setboolean('file', 'saveinifileinprogramdir', True)
-        self.settings.setboolean('file', 'saveinifileinprogramdir', False)
-        
+        class SettingsUnderTest(config.Settings):
+            def onSettingsFileLocationChanged(self, value):
+                self.onSettingsFileLocationChangedCalled = value # pylint: disable-msg=W0201
+        settings = SettingsUnderTest(load=False)
+        settings.setboolean('file', 'saveinifileinprogramdir', True)
+        settings.setboolean('file', 'saveinifileinprogramdir', False)
+        self.failIf(settings.onSettingsFileLocationChangedCalled)
+
 
 class MinimumSettingsTest(SettingsTestCase):
     def testAtLeastOneTaskTreeListViewer(self):
