@@ -40,6 +40,7 @@ class WindowTest(test.wxTestCase):
             h += 40 # pragma: no cover
         self.assertEqual((w, h), self.settings.getvalue(self.section, 'size'))
      
+    @test.skipOnPlatform('__WXGTK__')
     def testMaximize(self):
         for maximized in [True, False]:
             self.frame.Maximize(maximized)
