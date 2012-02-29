@@ -21,16 +21,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx.lib.agw.piectrl, math
-from taskcoachlib import patterns, command, widgets, domain, render
+from taskcoachlib import command, widgets, domain, render
 from taskcoachlib.domain import task, date
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, dialog
 from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_TODAY, wxFancyDrawer
+from taskcoachlib.thirdparty.pubsub import pub
 from taskcoachlib.widgets import CalendarConfigDialog
 import base, mixin, refresher, inplace_editor
 
 
-class TaskViewerStatusMessages(patterns.Observer):
+class TaskViewerStatusMessages(object):
     template1 = _('Tasks: %d selected, %d visible, %d total')
     template2 = _('Status: %d overdue, %d late, %d inactive, %d completed')
     
