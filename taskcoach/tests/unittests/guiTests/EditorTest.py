@@ -42,9 +42,8 @@ class EditorTestCase(test.wxTestCase):
         self.items = base.filter.SearchFilter(self.taskFile.notes())
         self.item = note.Note(subject='item')
         self.items.append(self.item)
-        self.editor = EditorUnderTest(self.frame, [self.item], 
-                                      self.settings, self.items, 
-                                      self.taskFile, raiseDialog=False)
+        self.editor = EditorUnderTest(self.frame, [self.item], self.settings, 
+                                      self.items, self.taskFile)
         self.appearance = self.editor._interior[-1]
 
     def testCloseEditorWhenItemIsDeleted(self):
