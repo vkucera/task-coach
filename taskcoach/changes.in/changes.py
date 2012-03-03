@@ -22,10 +22,12 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.9', 'February 28, 2012',
+Release('1.3.9', 'March 3, 2012',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug(''' ... '''),
+        Bug('''The drop down menu for the option 'Schedule each next 
+recurrence based on' in the dates tab of the task edit dialog wasn't 
+being enabled when the user turned on the recurrence of a task.''', '3496505'),
         ],
     ),
             

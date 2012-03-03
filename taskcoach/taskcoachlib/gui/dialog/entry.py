@@ -475,6 +475,7 @@ class RecurrenceEntry(wx.Panel):
         recurrenceOn = event.String != _('None')
         self._maxRecurrenceCheckBox.Enable(recurrenceOn)
         self._recurrenceFrequencyEntry.Enable(recurrenceOn)
+        self._scheduleChoice.Enable(recurrenceOn)
         self._maxRecurrenceCountEntry.Enable(recurrenceOn and \
             self._maxRecurrenceCheckBox.IsChecked())
         self.updateRecurrenceLabel()
@@ -485,7 +486,7 @@ class RecurrenceEntry(wx.Panel):
         self._maxRecurrenceCountEntry.Enable(maxRecurrenceOn)
         self.onRecurrenceEdited()
 
-    def onRecurrenceEdited(self, event=None):
+    def onRecurrenceEdited(self, event=None): # pylint: disable-msg=W0613
         wx.PostEvent(self, RecurrenceEntryEvent())
         
     def SetValue(self, recurrence):
