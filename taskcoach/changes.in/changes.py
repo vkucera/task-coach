@@ -31,6 +31,8 @@ being enabled when the user turned on the recurrence of a task.''', '3496505'),
         Bug('''On Xubuntu, Task Coach would briefly show dialogs centered over 
 the Task Coach main window before showing them on their destined location.''', 
         '3496271'),
+        Bug('''When exporting to CSV with separate date and time columns, 
+don't write 31/12/9999 for empty dates.''', '3495429'),
         ],
     ),
             
