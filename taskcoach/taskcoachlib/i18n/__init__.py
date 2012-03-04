@@ -68,8 +68,6 @@ class Translator:
 
     def _setLocale(self, language):
         ''' Try to set the locale, trying possibly multiple localeStrings. '''
-        # This is necessary for standard dialog texts to be translated:
-        locale.setlocale(locale.LC_ALL, '')
         # Set the wxPython locale:
         for localeString in self._localeStrings(language):
             languageInfo = wx.Locale.FindLanguageInfo(localeString)
@@ -82,6 +80,8 @@ class Translator:
                 self.__locale.AddCatalogLookupPathPrefix(localeDir)
                 self.__locale.AddCatalog('wxstd')
                 break
+        # This is necessary for standard dialog texts to be translated:
+        locale.setlocale(locale.LC_ALL, '')
         self._fixBrokenLocales()
             
     def _fixBrokenLocales(self):
