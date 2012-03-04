@@ -84,7 +84,7 @@ except UnicodeDecodeError:
 if locale.getlocale()[0] and '_US' in locale.getlocale()[0]:
     timeFormat = '%I:%M %p'
 else: 
-    timeFormat = '%H:%M' # Alas, %X includes seconds
+    timeFormat = '%H:%M' # Alas, %X includes seconds (see http://stackoverflow.com/questions/2507726)
 dateTimeFormat = ' '.join([dateFormat, timeFormat])
 
 def date(date): 
