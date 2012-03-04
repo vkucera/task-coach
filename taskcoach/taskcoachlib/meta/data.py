@@ -35,6 +35,9 @@ try:
 except ImportError:
     revision = None 
 
+months = ['January', 'February', 'March', 'April', 'May', 'June', 
+          'July', 'August', 'September', 'October', 'November', 'December']
+
 if revision: # Buildbot sets revision
     # Decrement version because this version isn't released yet. This
     # assumes that version components are < 100; 99 will actually mean
@@ -50,13 +53,11 @@ if revision: # Buildbot sets revision
 
     now = datetime.datetime.today()
     release_day = str(now.day)
-    release_month = now.strftime('%B')
+    release_month = months[now.month-1]
     release_year = str(now.year)
     release_status = 'beta'
     version += '.' + revision
 
-months = ['January', 'February', 'March', 'April', 'May', 'June', 
-          'July', 'August', 'September', 'October', 'November', 'December']
 assert release_month in months # Try to prevent typo's
 release_month_nr = '%02d'%(months.index(release_month) + 1)
 release_day_nr = '%02d'%int(release_day)
