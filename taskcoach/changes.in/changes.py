@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.9', 'March 3, 2012',
+Release('1.3.9', 'March 4, 2012',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''The drop down menu for the option 'Schedule each next 
@@ -33,6 +33,7 @@ the Task Coach main window before showing them on their destined location.''',
         '3496271'),
         Bug('''When exporting to CSV with separate date and time columns, 
 don't write 31/12/9999 for empty dates.''', '3495429'),
+        Bug('''On Linux, honor the LC_TIME setting.''', '3495925'),
         ],
     ),
             
