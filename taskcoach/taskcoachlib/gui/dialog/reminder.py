@@ -33,18 +33,18 @@ class ReminderDialog(patterns.Observer, sized_controls.SizedDialog):
         self.taskList = taskList
         self.effortList = effortList
         self.settings = settings
-        patterns.Publisher().registerObserver(self.onTaskRemoved, 
-                                              eventType=self.taskList.removeItemEventType(),
-                                              eventSource=self.taskList)
-        patterns.Publisher().registerObserver(self.onTaskCompletionDateChanged, 
-                                              eventType=task.completionDateTimeChangedEventType(),
-                                              eventSource=task)
-        patterns.Publisher().registerObserver(self.onTrackingStartedOrStopped,
-                                              eventType=task.trackStartEventType(),
-                                              eventSource=task)
-        patterns.Publisher().registerObserver(self.onTrackingStartedOrStopped,
-                                              eventType=task.trackStopEventType(),
-                                              eventSource=task)
+        self.registerObserver(self.onTaskRemoved, 
+                              eventType=self.taskList.removeItemEventType(),
+                              eventSource=self.taskList)
+        self.registerObserver(self.onTaskCompletionDateChanged, 
+                              eventType=task.completionDateTimeChangedEventType(),
+                              eventSource=task)
+        self.registerObserver(self.onTrackingStartedOrStopped,
+                              eventType=task.trackStartEventType(),
+                              eventSource=task)
+        self.registerObserver(self.onTrackingStartedOrStopped,
+                              eventType=task.trackStopEventType(),
+                              eventSource=task)
         self.openTaskAfterClose = self.ignoreSnoozeOption = False
         pane = self.GetContentsPane()
         pane.SetSizerType("form")
