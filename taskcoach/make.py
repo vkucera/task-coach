@@ -122,7 +122,10 @@ elif sys.argv[1] == 'py2app':
             # We need to explicitly include i18n modules because they 
             # are imported implicitly via __import__:
             includes=[filename[:-3].replace('/', '.') for filename \
-                      in glob.glob('taskcoachlib/i18n/*.py')],
+                      in glob.glob('taskcoachlib/i18n/*.py') + \
+                      glob.glob('taskcoachlib/thirdparty/pubsub/*.py') + \
+                      glob.glob('taskcoachlib/thirdparty/pubsub/core/*.py') + \
+                      glob.glob('taskcoachlib/thirdparty/pubsub/core/kwargs/*.py')],
             plist=dict(CFBundleIconFile='taskcoach.icns',
                        CFBundleDocumentTypes=[dict(CFBundleTypeExtensions=['tsk'],
                                                    CFBundleTypeIconFile='taskcoach.icns',
