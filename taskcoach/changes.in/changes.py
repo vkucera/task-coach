@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.9', 'March 6, 2012',
+Release('1.3.9', 'March 8, 2012',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''The drop down menu for the option 'Schedule each next 
