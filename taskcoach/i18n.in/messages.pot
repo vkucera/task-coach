@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-03-10 23:28+CET\n"
+"POT-Creation-Date: 2012-03-10 23:31+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -669,7 +669,7 @@ msgid "Inactive tasks: %d (%d%%)"
 msgstr ""
 
 #: taskcoachlib/domain/task/status.py:50
-msgid "Show/hide inactive tasks (tasks without actual start date)"
+msgid "Show/hide inactive tasks (uncompleted tasks without actual start date)"
 msgstr ""
 
 #: taskcoachlib/domain/task/status.py:52
@@ -685,7 +685,7 @@ msgid "Late tasks: %d (%d%%)"
 msgstr ""
 
 #: taskcoachlib/domain/task/status.py:54
-msgid "Show/hide late tasks (inactive task with a planned start in the past)"
+msgid "Show/hide late tasks (inactive tasks with a planned start in the past)"
 msgstr ""
 
 #: taskcoachlib/domain/task/status.py:55
@@ -701,7 +701,7 @@ msgid "Hide &active tasks"
 msgstr ""
 
 #: taskcoachlib/domain/task/status.py:57
-msgid "Show/hide active tasks (tasks with an actual start date in the past that are not completed)"
+msgid "Show/hide active tasks (uncompleted tasks with an actual start date in the past)"
 msgstr ""
 
 #: taskcoachlib/domain/task/status.py:58
@@ -717,7 +717,7 @@ msgid "Hide &due soon tasks"
 msgstr ""
 
 #: taskcoachlib/domain/task/status.py:60
-msgid "Show/hide due soon tasks (tasks with a due date in the near future that are not completed)"
+msgid "Show/hide due soon tasks (uncompleted tasks with a due date in the near future)"
 msgstr ""
 
 #: taskcoachlib/domain/task/status.py:61
@@ -733,7 +733,7 @@ msgid "Overdue tasks: %d (%d%%)"
 msgstr ""
 
 #: taskcoachlib/domain/task/status.py:63
-msgid "Show/hide over due tasks (tasks with a due date in the past that are not completed)"
+msgid "Show/hide over due tasks (uncompleted tasks with a due date in the past)"
 msgstr ""
 
 #: taskcoachlib/domain/task/status.py:64

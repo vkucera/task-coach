@@ -47,20 +47,20 @@ class TaskStatus(object):
 
 inactive = TaskStatus('inactive', _('Inactive tasks'), 
     _('Inactive tasks: %d (%d%%)'), _('Hide &inactive tasks'),
-    _('Show/hide inactive tasks (tasks without actual start date)'),
+    _('Show/hide inactive tasks (uncompleted tasks without actual start date)'),
     hideBitmap='filterinactivetasks')
 late = TaskStatus('late', _('Late tasks'), 
     _('Late tasks: %d (%d%%)'), _('Hide &late tasks'), 
-    _('Show/hide late tasks (inactive task with a planned start in the past)'))
+    _('Show/hide late tasks (inactive tasks with a planned start in the past)'))
 active = TaskStatus('active', _('Active tasks'), 
     _('Active tasks: %d (%d%%)'), _('Hide &active tasks'),
-    _('Show/hide active tasks (tasks with an actual start date in the past that are not completed)'))
+    _('Show/hide active tasks (uncompleted tasks with an actual start date in the past)'))
 duesoon = TaskStatus('duesoon', _('Due soon tasks'), 
     _('Due soon tasks: %d (%d%%)'), _('Hide &due soon tasks'),
-    _('Show/hide due soon tasks (tasks with a due date in the near future that are not completed)'))
+    _('Show/hide due soon tasks (uncompleted tasks with a due date in the near future)'))
 overdue = TaskStatus('overdue', _('Overdue tasks'), 
     _('Overdue tasks: %d (%d%%)'), _('Hide &over due tasks'),
-    _('Show/hide over due tasks (tasks with a due date in the past that are not completed)'))
+    _('Show/hide over due tasks (uncompleted tasks with a due date in the past)'))
 completed = TaskStatus('completed', _('Completed tasks'), 
     _('Completed tasks: %d (%d%%)'), _('Hide &completed tasks'),
     _('Show/hide completed tasks'), hideBitmap='filtercompletedtasks')
