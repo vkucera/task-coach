@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-03-10 23:31+CET\n"
+"POT-Creation-Date: 2012-03-10 23:39+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4963,11 +4963,11 @@ msgid "Ctrl-J"
 msgstr ""
 
 #: taskcoachlib/help/__init__.py:718
-msgid "Ctrl-M (Linux and Windows"
+msgid "Ctrl-M (Linux and Windows)"
 msgstr ""
 
 #: taskcoachlib/help/__init__.py:719
-msgid "Shift-Ctrl-M (Mac OS X"
+msgid "Shift-Ctrl-M (Mac OS X)"
 msgstr ""
 
 #: taskcoachlib/help/__init__.py:720
