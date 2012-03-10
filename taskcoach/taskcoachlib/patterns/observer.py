@@ -258,11 +258,7 @@ class Publisher(object):
             event originates from the specified eventSource. '''
             
         observers = self.__observers.setdefault((eventType, eventSource), set())
-        if observers:
-            observers.add(observer)
-        else:
-            observers.add(observer)
-            self.notifyObserversOfFirstObserverRegistered(eventType)
+        observers.add(observer)
     
     @wrapObserver    
     def removeObserver(self, observer, eventType=None, eventSource=None):
@@ -295,22 +291,6 @@ class Publisher(object):
         matchingKeys = [key for key in self.__observers if match(*key)]
         for key in matchingKeys:
             self.__observers[key].discard(observer)
-        self.notifyObserversOfLastObserverRemoved()
-                        
-    @eventSource
-    def notifyObserversOfFirstObserverRegistered(self, eventType, event=None):
-        event.addSource(self, eventType, 
-                        type='publisher.firstObserverRegisteredFor')
-        event.addSource(self, eventType, 
-                        type='publisher.firstObserverRegisteredFor.%s'%eventType)
-    
-    @eventSource                
-    def notifyObserversOfLastObserverRemoved(self, event=None):
-        for eventType, eventSource in self.__observers.keys():
-            if self.__observers[(eventType, eventSource)]:
-                continue
-            del self.__observers[(eventType, eventSource)]
-            event.addSource(self, eventType, type='publisher.lastObserverRemovedFor')
                         
     def notifyObservers(self, event):
         ''' Notify observers of the event. The event type and sources are 

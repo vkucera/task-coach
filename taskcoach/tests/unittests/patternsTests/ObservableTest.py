@@ -556,33 +556,6 @@ class PublisherTest(test.TestCase):
         self.publisher.clear()
         self.assertEqual([], self.publisher.observers())        
 
-    def testNotificationOfFirstObserverForEventType(self):
-        self.publisher.registerObserver(self.onEvent, eventType='publisher.firstObserverRegisteredFor.eventType')
-        self.publisher.registerObserver(self.onEvent, eventType='eventType')
-        expectedEvent = patterns.Event( \
-            'publisher.firstObserverRegisteredFor.eventType', self.publisher, 
-            'eventType')
-        self.assertEqual([expectedEvent], self.events)
-
-    def testNoNotificationOfSecondObserverForEventType(self):
-        self.publisher.registerObserver(self.onEvent, eventType='eventType')
-        self.publisher.registerObserver(self.onEvent, eventType='publisher.firstObserverRegisteredFor.eventType')
-        self.publisher.registerObserver(self.onEvent, eventType='eventType')
-        self.assertEqual([], self.events)
-        
-    def testNotificationForLastObserverRemoved(self):
-        self.publisher.registerObserver(self.onEvent, eventType='eventType')
-        self.publisher.registerObserver(self.onEvent, eventType='publisher.lastObserverRemovedFor')
-        self.publisher.removeObserver(self.onEvent, eventType='eventType')
-        self.assertEqual([patterns.Event( \
-            'publisher.lastObserverRemovedFor', self.publisher, 
-            'eventType')], self.events)
-
-    def testNoNotificationForNonExistingObserverRemoved(self):
-        self.publisher.registerObserver(self.onEvent, eventType='publisher.lastObserverRemovedFor')
-        self.publisher.removeObserver(self.onEvent, eventType='eventType')
-        self.assertEqual([], self.events)
-
     def testRegisterObserver_ForSpecificSource(self):
         self.publisher.registerObserver(self.onEvent, eventType='eventType', 
                                         eventSource='observable1')

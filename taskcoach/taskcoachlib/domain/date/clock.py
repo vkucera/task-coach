@@ -178,11 +178,7 @@ class Clock(patterns.Observer):
     def __init__(self, *args, **kwargs):
         super(Clock, self).__init__(*args, **kwargs)
         self._timers = dict()
-        #self.registerObserver(self.onFirstObserverRegisteredFor,
-        #    'publisher.firstObserverRegisteredFor')
-        #self.registerObserver(self.onLastObserverRemovedFor,
-        #    'publisher.lastObserverRemovedFor')
-        
+
     def registerClockObserver(self, observer, eventType):
         patterns.Publisher().registerObserver(observer, eventType)
         if eventType.startswith('clock.time.'):
