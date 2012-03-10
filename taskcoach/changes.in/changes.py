@@ -25,7 +25,8 @@ releases = [
 Release('1.3.10', 'March 10, 2012',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug(''' ... '''),
+        Bug('''The statusbar counts of over due tasks, late tasks, etc. would
+include deleted tasks.''', '3501289'),
         ],
     ),
             
