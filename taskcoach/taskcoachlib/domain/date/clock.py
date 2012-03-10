@@ -46,6 +46,9 @@ class Timer(wx.EvtHandler):
 
     def Notify(self):
         self.__callback()
+        
+    def isRunning(self):
+        return self.__timer.IsRunning()
 
 
 class LargeIntervalTimer(Timer):
@@ -175,37 +178,41 @@ class Clock(patterns.Observer):
     def __init__(self, *args, **kwargs):
         super(Clock, self).__init__(*args, **kwargs)
         self._timers = dict()
-        self.registerObserver(self.onFirstObserverRegisteredFor,
-            'publisher.firstObserverRegisteredFor')
-        self.registerObserver(self.onLastObserverRemovedFor,
-            'publisher.lastObserverRemovedFor')
+        #self.registerObserver(self.onFirstObserverRegisteredFor,
+        #    'publisher.firstObserverRegisteredFor')
+        #self.registerObserver(self.onLastObserverRemovedFor,
+        #    'publisher.lastObserverRemovedFor')
         
-    def onFirstObserverRegisteredFor(self, event):
-        if event.value().startswith('clock.time.'):        
-            dateTimeString = event.value().split('.')[-1]
+    def registerClockObserver(self, observer, eventType):
+        patterns.Publisher().registerObserver(observer, eventType)
+        if eventType.startswith('clock.time.'):
+            dateTimeString = eventType.split('.')[-1]
             self._scheduleDateTime(dateTimeString)
-        elif event.value().startswith('clock.'):
-            period = event.value().split('.')[-1]
+        elif eventType.startswith('clock.'):
+            period = eventType.split('.')[-1]
             self._schedulePeriod(period)
+            
+    def removeClockObserver(self, observer, eventType):
+        patterns.Publisher().removeObserver(observer, eventType)
+        if eventType.startswith('clock.'):
+            period = eventType.split('.')[1]
+            if period in self._timers:
+                self._timers[period].Stop()
             
     def _scheduleDateTime(self, dateTimeString):
         dateTimeTuple = time.strptime(dateTimeString, self.timeFormat)[:6]
         dateTime = dateandtime.DateTime(*dateTimeTuple) # pylint: disable-msg=W0142
         timer = self._timers.setdefault('scheduled', 
                                         ScheduledTimer(self.notifySpecificTimeObservers))
-        timer.schedule(dateTime)
+        if not timer.isRunning():
+            timer.schedule(dateTime)
         
     def _schedulePeriod(self, period):
         handler = getattr(self, 'notify%sObservers'%period.capitalize())
         timer = self._timers.setdefault(period, 
                                         PeriodicTimer(handler, period))
-        timer.Start()
-            
-    def onLastObserverRemovedFor(self, event):
-        if event.value().startswith('clock.'):
-            period = event.value().split('.')[1]
-            if period in self._timers:
-                self._timers[period].Stop()
+        if not timer.isRunning():
+            timer.Start()
             
     def notifySecondObservers(self, now=None):
         now = now or dateandtime.DateTime.now()

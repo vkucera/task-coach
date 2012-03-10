@@ -71,7 +71,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin, # pylint: disable-msg=W0223
                           'task.prerequisites'):
             self.registerObserver(self.onAttributeChanged,
                                   eventType=eventType)
-        self.registerObserver(self.atMidnight,
+        date.Clock().registerClockObserver(self.atMidnight,
             eventType='clock.day')
         self.registerObserver(self.onWake,
             eventType='powermgt.on')

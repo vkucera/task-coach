@@ -511,13 +511,13 @@ class BudgetPage(Page):
         # We might already be observing the clock if the user is tracking this
         # task with multiple effort records simultaneously
         if self.onEverySecond not in patterns.Publisher().observers('clock.second'):
-            self.registerObserver(self.onEverySecond, eventType='clock.second')
+            date.Clock().registerClockObserver(self.onEverySecond, eventType='clock.second')
         
     def onStopTracking(self, event): # pylint: disable-msg=W0613
         # We might need to keep tracking the clock if the user was tracking this
         # task with multiple effort records simultaneously
         if not self.items[0].isBeingTracked():
-            self.removeObserver(self.onEverySecond, eventType='clock.second')
+            date.Clock().removeClockObserver(self.onEverySecond, eventType='clock.second')
     
     def onEverySecond(self, event):
         self.onTimeSpentChanged(event)

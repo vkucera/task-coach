@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import patterns
-from taskcoachlib.domain import base
+from taskcoachlib.domain import base, date
 import task
 
 
@@ -35,9 +35,9 @@ class ViewFilter(base.Filter):
                           'task.prerequisites',
                           task.Task.appearanceChangedEventType(), # Proxy for status changes
                           task.Task.addChildEventType(),
-                          task.Task.removeChildEventType(),
-                          'clock.day'):
+                          task.Task.removeChildEventType()):
             registerObserver(self.onTaskStatusChange, eventType=eventType)
+        date.Clock().registerClockObserver(self.onTaskStatusChange, 'clock.day')
 
     def onTaskStatusChange(self, event): # pylint: disable-msg=W0613
         self.reset()
