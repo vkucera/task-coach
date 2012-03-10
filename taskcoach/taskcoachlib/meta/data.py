@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 version = '1.4.0' # Current version number of the application
 tskversion = 34 # Current version number of the task file format, changed to 34 for release 1.3.5.
-release_day = '28' # Day number of the release, 1-31, as string
-release_month = 'February' # Month of the release in plain English
+release_day = '10' # Day number of the release, 1-31, as string
+release_month = 'March' # Month of the release in plain English
 release_year = '2012' # Year of the release as string
 release_status = 'stable' # One of 'alpha', 'beta', 'stable'
 
@@ -34,6 +34,9 @@ try:
     from taskcoachlib.meta.revision import revision # pylint: disable-msg=F0401,W0611
 except ImportError:
     revision = None 
+
+months = ['January', 'February', 'March', 'April', 'May', 'June', 
+          'July', 'August', 'September', 'October', 'November', 'December']
 
 if revision: # Buildbot sets revision
     # Decrement version because this version isn't released yet. This
@@ -50,13 +53,11 @@ if revision: # Buildbot sets revision
 
     now = datetime.datetime.today()
     release_day = str(now.day)
-    release_month = now.strftime('%B')
+    release_month = months[now.month-1]
     release_year = str(now.year)
     release_status = 'beta'
     version += '.' + revision
 
-months = ['January', 'February', 'March', 'April', 'May', 'June', 
-          'July', 'August', 'September', 'October', 'November', 'December']
 assert release_month in months # Try to prevent typo's
 release_month_nr = '%02d'%(months.index(release_month) + 1)
 release_day_nr = '%02d'%int(release_day)

@@ -32,7 +32,7 @@ class TaskList(categorizable.CategorizableContainer):
     newItemHelpText = help.taskNew
     
     def nrOfTasksPerStatus(self):
-        statuses = [eachTask.status() for eachTask in self]
+        statuses = [eachTask.status() for eachTask in self if not eachTask.isDeleted()]
         count = dict()
         for status in task.Task.possibleStatuses():
             count[status] = statuses.count(status)

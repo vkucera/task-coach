@@ -25,6 +25,7 @@ from taskcoachlib import patterns, widgets, command
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, toolbar, artprovider
 from taskcoachlib.thirdparty import hypertreelist
+from taskcoachlib.thirdparty.pubsub import pub
 import mixin
 
 
@@ -102,12 +103,11 @@ class Viewer(patterns.Observer, wx.Panel):
             except wx.PyDeadObjectError:
                 pass
     
-    @classmethod
-    def viewerStatusEventType(class_):
-        return '%s.status'%class_
+    def viewerStatusEventType(self):
+        return 'viewer%s.status'%id(self)
     
     def sendViewerStatusEvent(self):
-        patterns.Event(self.viewerStatusEventType(), self).send()
+        pub.sendMessage(self.viewerStatusEventType(), viewer=self)
     
     def statusMessages(self):
         return '', ''

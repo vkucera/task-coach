@@ -92,12 +92,22 @@ class TaskTestsMixin(object):
         self.task.setPlannedStartDateTime(plannedStartDateTime)
         self.expectInCSV(','.join((render.date(plannedStartDateTime), render.time(plannedStartDateTime))),
                          separateDateAndTimeColumns=True)
-                
+               
     def testDontWriteSeparateDateAndTimeColumns(self):
         plannedStartDateTime = date.Now()
         self.task.setPlannedStartDateTime(plannedStartDateTime)
         self.expectInCSV(' '.join((render.date(plannedStartDateTime), render.time(plannedStartDateTime))),
                          separateDateAndTimeColumns=False)
+        
+    def testDontWriteDefaultDateTimes(self):
+        defaultDateTime = date.DateTime()
+        self.expectNotInCSV(' '.join([render.date(defaultDateTime), render.time(defaultDateTime)]),
+                            separateDateAndTimeColumns=False)
+
+    def testDontWriteDefaultDateTimesWithSeparatedDateAndTimeColumns(self):
+        defaultDateTime = date.DateTime()
+        self.expectNotInCSV(','.join([render.date(defaultDateTime), render.time(defaultDateTime)]),
+                            separateDateAndTimeColumns=True)
         
     def testSpecifyColumns(self):
         self.task.setPriority(999)

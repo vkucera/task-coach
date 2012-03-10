@@ -18,8 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test
 from unittests import dummy
-from taskcoachlib import gui, config, patterns, persistence, operating_system
+from taskcoachlib import gui, config, persistence, operating_system
 from taskcoachlib.domain import task
+from taskcoachlib.thirdparty.pubsub import pub
 
 
 class DummyPane(object):
@@ -55,7 +56,7 @@ class DummyCloseEvent(DummyEvent):
 class ViewerContainerTest(test.wxTestCase):
     def setUp(self):
         super(ViewerContainerTest, self).setUp()
-        self.events = []
+        self.events = 0
         task.Task.settings = self.settings = config.Settings(load=False)
         self.settings.set('view', 'viewerwithdummywidgetcount', '2', new=True)
         self.taskFile = persistence.TaskFile()
@@ -72,6 +73,7 @@ class ViewerContainerTest(test.wxTestCase):
         if operating_system.isMac():
             self.mainWindow.OnQuit() # Stop power monitoring thread
         self.mainWindow._idleController.stop()
+        pub.unsubscribe(self.onEvent, 'viewer.status')
         super(ViewerContainerTest, self).tearDown()
         self.taskFile.close()
         self.taskFile.stop()
@@ -81,8 +83,8 @@ class ViewerContainerTest(test.wxTestCase):
         return dummy.ViewerWithDummyWidget(self.mainWindow, self.taskFile, 
             self.settings, settingsSection=settingsSection)
             
-    def onEvent(self, event):
-        self.events.append(event)
+    def onEvent(self):
+        self.events += 1
     
     def testCreate(self):
         self.assertEqual(0, self.container.size())
@@ -99,11 +101,9 @@ class ViewerContainerTest(test.wxTestCase):
         self.assertEqual(self.viewer2, self.container.activeViewer())
 
     def testChangePage_NotifiesObserversAboutNewActiveViewer(self):
-        patterns.Publisher().registerObserver(self.onEvent, 
-            eventType=self.container.viewerStatusEventType(), 
-            eventSource=self.container)
+        pub.subscribe(self.onEvent, 'viewer.status')
         self.container.onPageChanged(DummyChangeEvent(self.viewer2))
-        self.failUnless(self.events)
+        self.failUnless(self.events > 0)
         
     def testCloseViewer_RemovesViewerFromContainer(self):
         self.container.onPageClosed(DummyCloseEvent(self.viewer1))
@@ -116,9 +116,7 @@ class ViewerContainerTest(test.wxTestCase):
         
     def testCloseViewer_NotifiesObserversAboutNewActiveViewer(self):
         self.container.activateViewer(self.viewer2)
-        patterns.Publisher().registerObserver(self.onEvent, 
-            eventType=self.container.viewerStatusEventType(), 
-            eventSource=self.container)
+        pub.subscribe(self.onEvent, 'viewer.status')
         self.container.closeViewer(self.viewer2)
-        self.failUnless(self.events)
+        self.failUnless(self.events > 0)
 

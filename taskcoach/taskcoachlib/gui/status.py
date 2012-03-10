@@ -17,10 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import patterns
+from taskcoachlib.thirdparty.pubsub import pub
 
 
-class StatusBar(patterns.Observer, wx.StatusBar):
+class StatusBar(wx.StatusBar):
     def __init__(self, parent, viewer):
         super(StatusBar, self).__init__(parent)
         self.SetFieldsCount(2)
@@ -28,10 +28,9 @@ class StatusBar(patterns.Observer, wx.StatusBar):
         self.viewer = viewer
         self.__timer = wx.Timer(self)
         self.Bind(wx.EVT_TIMER, self.onUpdateStatus, self.__timer)
-        self.registerObserver(self.onViewerStatusChanged, 
-            eventType=viewer.viewerStatusEventType(), eventSource=viewer)
+        pub.subscribe(self.onViewerStatusChanged, 'viewer.status')
         self.scheduledStatusDisplay = None
-        self.onViewerStatusChanged(None)
+        self.onViewerStatusChanged()
         self.wxEventTypes = (wx.EVT_MENU_HIGHLIGHT_ALL, wx.EVT_TOOL_ENTER)
         for eventType in self.wxEventTypes:
             parent.Bind(eventType, self.resetStatusBar)
@@ -48,12 +47,12 @@ class StatusBar(patterns.Observer, wx.StatusBar):
             self._displayStatus()
         event.Skip()
 
-    def onViewerStatusChanged(self, event): # pylint: disable-msg=W0613
+    def onViewerStatusChanged(self):
         # Give viewer a chance to update first and only update when the viewer
         # hasn't changed status for 0.5 seconds.
         self.__timer.Start(500, oneShot=True)
               
-    def onUpdateStatus(self, event):
+    def onUpdateStatus(self, event): # pylint: disable-msg=W0613
         if self.__timer:
             self.__timer.Stop()
         self._displayStatus()
@@ -73,7 +72,6 @@ class StatusBar(patterns.Observer, wx.StatusBar):
         self.scheduledStatusDisplay = wx.FutureCall(delay, self._displayStatus)
 
     def Destroy(self): # pylint: disable-msg=W0221
-        self.removeInstance()
         for eventType in self.wxEventTypes:
             self.parent.Unbind(eventType)
         if self.scheduledStatusDisplay:

@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, os, sys, imp, tempfile, locale, gettext
-from taskcoachlib import patterns
+from taskcoachlib import patterns, operating_system
 import po2dict
 
 
@@ -68,8 +68,8 @@ class Translator:
 
     def _setLocale(self, language):
         ''' Try to set the locale, trying possibly multiple localeStrings. '''
-        # This is necessary for standard dialog texts to be translated:
-        locale.setlocale(locale.LC_ALL, '')
+        if not operating_system.isGTK():
+            locale.setlocale(locale.LC_ALL, '')
         # Set the wxPython locale:
         for localeString in self._localeStrings(language):
             languageInfo = wx.Locale.FindLanguageInfo(localeString)
@@ -82,6 +82,8 @@ class Translator:
                 self.__locale.AddCatalogLookupPathPrefix(localeDir)
                 self.__locale.AddCatalog('wxstd')
                 break
+        if operating_system.isGTK():
+            locale.setlocale(locale.LC_ALL, '')
         self._fixBrokenLocales()
             
     def _fixBrokenLocales(self):

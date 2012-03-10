@@ -2208,6 +2208,10 @@ class VC8TabArt(AuiDefaultTabArt):
 
         # add some padding
         tab_width += 10
+
+        if not bitmap.IsOk():
+            tab_width += 5
+            
         tab_height += 2
 
         return (tab_width, tab_height), x_extent

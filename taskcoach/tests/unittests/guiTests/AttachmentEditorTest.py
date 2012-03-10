@@ -35,8 +35,7 @@ class AttachmentEditorTest(test.wxTestCase):
         self.attachments = attachment.AttachmentList()
         self.attachments.append(self.attachment)
         self.editor = gui.dialog.editor.AttachmentEditor(self.frame, 
-            self.attachments, self.settings, self.attachments, self.taskFile, 
-            raiseDialog=False)
+            self.attachments, self.settings, self.attachments, self.taskFile)
 
     def tearDown(self):
         super(AttachmentEditorTest, self).tearDown()

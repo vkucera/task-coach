@@ -28,7 +28,7 @@ class MockViewer(wx.Frame):
         return 'taskviewer'
     
     def viewerStatusEventType(self):
-        return ''
+        return 'mockviewer.status'
 
 
 class MainWindowUnderTest(gui.MainWindow):

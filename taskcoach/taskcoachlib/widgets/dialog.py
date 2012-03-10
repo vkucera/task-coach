@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, wx.html, os
+from taskcoachlib import operating_system
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty import aui, sized_controls
 import notebook
@@ -26,10 +27,6 @@ class Dialog(sized_controls.SizedDialog):
     def __init__(self, parent, title, bitmap='edit', 
                  direction=None, *args, **kwargs):
         self._buttonTypes = kwargs.get('buttonTypes', wx.OK|wx.CANCEL)
-        # On wxGTK, calling Raise() on the dialog causes it to be shown, which
-        # is rather undesirable during testing, so provide a way to instruct 
-        # the dialog to not call self.Raise():
-        raiseDialog = kwargs.pop('raiseDialog', True)  
         super(Dialog, self).__init__(parent, -1, title,
             style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER|wx.MAXIMIZE_BOX|wx.MINIMIZE_BOX)
         self.SetIcon(wx.ArtProvider_GetIcon(bitmap, wx.ART_FRAME_ICON,
@@ -45,7 +42,7 @@ class Dialog(sized_controls.SizedDialog):
         self._panel.Fit()
         self.Fit()
         self.CentreOnParent()
-        if raiseDialog:
+        if not operating_system.isGTK():
             wx.CallAfter(self.Raise)
         wx.CallAfter(self._panel.SetFocus)
         

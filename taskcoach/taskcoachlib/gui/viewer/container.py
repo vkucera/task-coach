@@ -17,9 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import patterns, operating_system
+from taskcoachlib import operating_system
 from taskcoachlib.gui import menu
 import taskcoachlib.thirdparty.aui as aui
+from taskcoachlib.thirdparty.pubsub import pub
 
 
 class ViewerContainer(object):
@@ -69,21 +70,13 @@ class ViewerContainer(object):
         self.viewers.append(viewer)
         if len(self.viewers) == 1:
             self.activateViewer(viewer)
-        patterns.Publisher().registerObserver(self.onStatusChanged, 
-            eventType=viewer.viewerStatusEventType(), eventSource=viewer)
+        pub.subscribe(self.onStatusChanged, viewer.viewerStatusEventType())
         
     def closeViewer(self, viewer):
         if viewer == self.activeViewer():
             self.advanceSelection(False)
         pane = self.containerWidget.manager.GetPane(viewer)
         self.containerWidget.manager.ClosePane(pane)
-
-    @classmethod
-    def viewerStatusEventType(class_):
-        ''' Events of this type are fired by the viewer container whenever the
-            current status (selection, filter, ...) of the active viewer changes,
-            which may also be caused by the active viewer being changed. '''
-        return '%s.status'%class_
     
     def __getattr__(self, attribute):
         ''' Forward unknown attributes to the active viewer or the first
@@ -109,12 +102,13 @@ class ViewerContainer(object):
         paneInfo = self.containerWidget.manager.GetPane(viewerToActivate)
         if paneInfo.IsNotebookPage():
             self.containerWidget.manager.ShowPane(viewerToActivate, True)
+        self.sendViewerStatusEvent()
 
     def __del__(self):
         pass # Don't forward del to one of the viewers.
     
-    def onStatusChanged(self, event):
-        if self.activeViewer() in event.sources():
+    def onStatusChanged(self, viewer):
+        if self.activeViewer() == viewer:
             self.sendViewerStatusEvent()
 
     def onPageChanged(self, event):
@@ -123,7 +117,7 @@ class ViewerContainer(object):
         event.Skip()
     
     def sendViewerStatusEvent(self):
-        patterns.Event(self.viewerStatusEventType(), self).send()
+        pub.sendMessage('viewer.status')
         
     def _ensureActiveViewerHasFocus(self):
         if not self.activeViewer():

@@ -356,7 +356,7 @@ def download_table(**kwargs):
 
 windowsOptions = dict(platform='Microsoft Windows',
                       platform_lower='windows',
-                      platform_versions_supported='Windows 2000, XP, Vista, Windows 7')
+                      platform_versions_supported='Windows 2000, XP, Vista, Windows 7, Windows 8')
 
 windowsInstaller = download_table(image='windows',
                                   download_url='%(dist_download_prefix)s/%(filename)s-%(version)s-win32.exe',

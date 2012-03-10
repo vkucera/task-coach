@@ -104,7 +104,10 @@ if sys.argv[1] == 'py2exe':
             'optimize' : 2, 
             # We need to explicitly include these packages because they 
             # are imported implicitly:
-            'packages' : ['taskcoachlib.i18n'], 
+            'packages' : ['taskcoachlib.i18n',
+                          'taskcoachlib.thirdparty.pubsub',
+                          'taskcoachlib.thirdparty.pubsub.core',
+                          'taskcoachlib.thirdparty.pubsub.core.kwargs'], 
             'dist_dir' : os.path.join(builddir, py2exeDistdir),
             'dll_excludes': ['MSVCR80.dll', 'UxTheme.dll']}},
         'data_files': dll_files + mo_files})
@@ -119,7 +122,10 @@ elif sys.argv[1] == 'py2app':
             # We need to explicitly include i18n modules because they 
             # are imported implicitly via __import__:
             includes=[filename[:-3].replace('/', '.') for filename \
-                      in glob.glob('taskcoachlib/i18n/*.py')],
+                      in glob.glob('taskcoachlib/i18n/*.py') + \
+                      glob.glob('taskcoachlib/thirdparty/pubsub/*.py') + \
+                      glob.glob('taskcoachlib/thirdparty/pubsub/core/*.py') + \
+                      glob.glob('taskcoachlib/thirdparty/pubsub/core/kwargs/*.py')],
             plist=dict(CFBundleIconFile='taskcoach.icns',
                        CFBundleDocumentTypes=[dict(CFBundleTypeExtensions=['tsk'],
                                                    CFBundleTypeIconFile='taskcoach.icns',

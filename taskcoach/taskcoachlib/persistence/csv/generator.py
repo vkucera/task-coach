@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib.i18n import _
 from taskcoachlib import render
+from taskcoachlib.domain import date
 
 
 def extendedWithAncestors(selection):
@@ -68,7 +69,10 @@ class RowBuilder(object):
     
     def splitDateAndTime(self, column, item):
         dateTime = getattr(item, column.name())()
-        return render.date(dateTime), render.time(dateTime)
+        if dateTime == date.DateTime():
+            return '', ''
+        else:
+            return render.date(dateTime), render.time(dateTime)
         
     def itemRows(self, items):
         return [self.itemRow(item) for item in items]

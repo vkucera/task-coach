@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx.lib.agw.piectrl, math
-from taskcoachlib import patterns, command, widgets, domain, render
+from taskcoachlib import command, widgets, domain, render
 from taskcoachlib.domain import task, date
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, dialog
@@ -30,7 +30,7 @@ from taskcoachlib.widgets import CalendarConfigDialog
 import base, mixin, refresher, inplace_editor
 
 
-class TaskViewerStatusMessages(patterns.Observer):
+class TaskViewerStatusMessages(object):
     template1 = _('Tasks: %d selected, %d visible, %d total')
     template2 = _('Status: %d overdue, %d late, %d inactive, %d completed')
     
@@ -70,7 +70,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin, # pylint: disable-msg=W0223
                           'task.prerequisites'):
             self.registerObserver(self.onAttributeChanged,
                                   eventType=eventType)
-        self.registerObserver(self.atMidnight,
+        date.Clock().registerClockObserver(self.atMidnight,
             eventType='clock.day')
         self.registerObserver(self.onWake,
             eventType='powermgt.on')

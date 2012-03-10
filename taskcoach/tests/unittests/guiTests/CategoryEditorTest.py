@@ -36,7 +36,7 @@ class CategoryEditorTest(test.wxTestCase):
         self.categories.extend(self.createCategories())
         self.editor = gui.dialog.editor.CategoryEditor(self.frame, 
             list(self.categories), self.settings, self.categories, 
-            self.taskFile, raiseDialog=False)
+            self.taskFile)
 
     def tearDown(self):
         # CategoryEditor uses CallAfter for setting the focus, make sure those 

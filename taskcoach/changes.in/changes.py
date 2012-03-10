@@ -22,10 +22,29 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.9', 'February 28, 2012',
+Release('1.3.10', 'March 10, 2012',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug(''' ... '''),
+        Bug('''The statusbar counts of over due tasks, late tasks, etc. would
+include deleted tasks.''', '3501289'),
+        ],
+    ),
+            
+Release('1.3.9', 'March 8, 2012',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''The drop down menu for the option 'Schedule each next 
+recurrence based on' in the dates tab of the task edit dialog wasn't 
+being enabled when the user turned on the recurrence of a task.''', '3496505'),
+        Bug('''On Xubuntu, Task Coach would briefly show dialogs centered over 
+the Task Coach main window before showing them on their destined location.''', 
+        '3496271'),
+        Bug('''When exporting to CSV with separate date and time columns, 
+don't write 31/12/9999 for empty dates.''', '3495429'),
+        Bug('''On Linux, honor the LC_TIME setting.''', '3495925'),
+        Bug('''After reading a task file with a deleted task that had a
+subtask with prerequisites, Task Coach would refuse to save the file.''', 
+        '3496986'),
         ],
     ),
             
