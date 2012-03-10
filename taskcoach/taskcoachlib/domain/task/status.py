@@ -51,7 +51,7 @@ inactive = TaskStatus('inactive', _('Inactive tasks'),
     hideBitmap='filterinactivetasks')
 late = TaskStatus('late', _('Late tasks'), 
     _('Late tasks: %d (%d%%)'), _('Hide &late tasks'), 
-    _('Show/hide task tasks (inactive task with a planned start in the past)'))
+    _('Show/hide late tasks (inactive task with a planned start in the past)'))
 active = TaskStatus('active', _('Active tasks'), 
     _('Active tasks: %d (%d%%)'), _('Hide &active tasks'),
     _('Show/hide active tasks (tasks with an actual start date in the past that are not completed)'))
