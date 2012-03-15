@@ -89,11 +89,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
         now = date.Now()
         if now < self.__dueDateTime.get() < maxDateTime:
-            registerObserver(self.onOverDue, 
-                             date.Clock.eventType(self.__dueDateTime.get() + date.oneSecond))
+            date.Clock().registerClockObserverForSpecificTime(self.onOverDue, 
+                                                              self.__dueDateTime.get() + date.oneSecond)
         if now < self.__plannedStartDateTime.get() < maxDateTime:
-            registerObserver(self.onTimeToStart,
-                             date.Clock.eventType(self.__plannedStartDateTime.get() + date.oneSecond))
+            date.Clock().registerClockObserverForSpecificTime(self.onTimeToStart,
+                                                              self.__plannedStartDateTime.get() + date.oneSecond)
             
     @patterns.eventSource
     def __setstate__(self, state, event=None):
@@ -253,11 +253,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.removeObserver(self.onDueSoon)
         self.__dueDateTime.set(dueDateTime, event=event)
         if date.Now() <= dueDateTime < self.maxDateTime:
-            self.registerObserver(self.onOverDue, date.Clock.eventType(dueDateTime + date.oneSecond))
+            date.Clock().registerClockObserverForSpecificTime(self.onOverDue, dueDateTime + date.oneSecond)
             if self.__dueSoonHours > 0:
                 dueSoonDateTime = dueDateTime + date.oneSecond - date.TimeDelta(hours=self.__dueSoonHours)
                 if dueSoonDateTime > date.Now():
-                    self.registerObserver(self.onDueSoon, date.Clock.eventType(dueSoonDateTime))
+                    date.Clock().registerClockObserverForSpecificTime(self.onDueSoon, dueSoonDateTime)
             
     def dueDateTimeEvent(self, event):
         dueDateTime = self.dueDateTime()
@@ -302,7 +302,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.removeObserver(self.onTimeToStart)
         self.__plannedStartDateTime.set(plannedStartDateTime, event=event)
         if plannedStartDateTime != self.maxDateTime:
-            self.registerObserver(self.onTimeToStart, date.Clock.eventType(plannedStartDateTime + date.oneSecond))
+            date.Clock().registerClockObserverForSpecificTime(self.onTimeToStart, 
+                                                              plannedStartDateTime + date.oneSecond)
         
     def plannedStartDateTimeEvent(self, event):
         plannedStartDateTime = self.plannedStartDateTime()
@@ -525,7 +526,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         dueDateTime = self.dueDateTime()
         if dueDateTime != self.maxDateTime:
             newDueSoonDateTime = dueDateTime + date.oneSecond - date.TimeDelta(hours=self.__dueSoonHours)
-            self.registerObserver(self.onDueSoon, date.Clock.eventType(newDueSoonDateTime))    
+            date.Clock().registerClockObserverForSpecificTime(self.onDueSoon, newDueSoonDateTime)
         self.recomputeAppearance()
             
     # effort related methods:

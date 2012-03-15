@@ -60,8 +60,8 @@ class ClockTest(test.wxTestCase):
         
     def testRegisterForSpecificTime(self):
         realSoonNow = date.DateTime.now() + date.TimeDelta(seconds=2)
-        date.Clock().registerClockObserver(self.onEvent, 
-            eventType=date.Clock.eventType(realSoonNow))
+        date.Clock().registerClockObserverForSpecificTime(self.onEvent, 
+            dateTime=realSoonNow)
         self.clock._timers['scheduled']._notify(now=realSoonNow) # pylint: disable-msg=W0212
         self.assertEqual(1, len(self.events))
 

@@ -16,18 +16,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, time
+import wx
 from taskcoachlib import patterns
 import dateandtime, timedelta
 
 
 class Timer(wx.EvtHandler):
     """A timer that fires a callback. This is similar in
-    functionnality to wx.PyTimer except for the fact that it works."""
+    functionality to wx.PyTimer except for the fact that it works."""
 
     def __init__(self, callback=None):
         super(Timer, self).__init__()
-
         self.__callback = callback
         self.__timer = wx.Timer()
         self.__timer.Bind(wx.EVT_TIMER, self.__OnNotify)
@@ -41,7 +40,7 @@ class Timer(wx.EvtHandler):
     def Stop(self):
         self.__timer.Stop()
 
-    def __OnNotify(self, evt):
+    def __OnNotify(self, event):
         self.Notify()
 
     def Notify(self):
@@ -151,17 +150,17 @@ class ScheduledTimer(OnceTimer):
         earliestDateTime = self._earliestDateTimeScheduled()  
         self._schedule.append(dateTime)
         if dateTime < earliestDateTime:
-            self.restartTimer(now)
+            self.__restartTimer(now)
     
     def scheduled(self):
         return self._schedule
     
     def _notify(self, now=None):
-        super(ScheduledTimer, self)._notify(now)
         self._schedule.remove(self._earliestDateTimeScheduled())
-        self.restartTimer(now)
+        self.__restartTimer(now)
+        super(ScheduledTimer, self)._notify(now)
                 
-    def restartTimer(self, now=None):
+    def __restartTimer(self, now=None):
         self.Stop()
         if self._schedule:
             self.Start(self._earliestDateTimeScheduled(), now)
@@ -170,7 +169,7 @@ class ScheduledTimer(OnceTimer):
         return min(self._schedule) if self._schedule else dateandtime.DateTime.max
 
 
-class Clock(patterns.Observer):
+class Clock(object):
     __metaclass__ = patterns.Singleton
     
     timeFormat = '%Y%m%d-%H%M%S'
@@ -180,28 +179,30 @@ class Clock(patterns.Observer):
         self._timers = dict()
 
     def registerClockObserver(self, observer, eventType):
+        assert eventType in ('clock.second', 'clock.minute', 'clock.day')
         patterns.Publisher().registerObserver(observer, eventType)
-        if eventType.startswith('clock.time.'):
-            dateTimeString = eventType.split('.')[-1]
-            self._scheduleDateTime(dateTimeString)
-        elif eventType.startswith('clock.'):
-            period = eventType.split('.')[-1]
-            self._schedulePeriod(period)
+        period = eventType.split('.')[-1]
+        self._schedulePeriod(period)
+            
+    def registerClockObserverForSpecificTime(self, observer, dateTime):
+        patterns.Publisher().registerObserver(observer, self.eventType(dateTime))
+        self._scheduleDateTime(dateTime)
             
     def removeClockObserver(self, observer, eventType):
+        assert eventType in ('clock.second', 'clock.minute', 'clock.day')
         patterns.Publisher().removeObserver(observer, eventType)
-        if eventType.startswith('clock.'):
-            period = eventType.split('.')[1]
-            if period in self._timers:
-                self._timers[period].Stop()
+        period = eventType.split('.')[1]
+        if period in self._timers:
+            self._timers[period].Stop()
+                
+    def removeClockObserverForSpecificTime(self, observer, dateTime):
+        patterns.Publisher().removeObserver(observer, self.eventType(dateTime))
+        # No need to adjust the timer, when it fires nothing happens
             
-    def _scheduleDateTime(self, dateTimeString):
-        dateTimeTuple = time.strptime(dateTimeString, self.timeFormat)[:6]
-        dateTime = dateandtime.DateTime(*dateTimeTuple) # pylint: disable-msg=W0142
+    def _scheduleDateTime(self, dateTime):
         timer = self._timers.setdefault('scheduled', 
                                         ScheduledTimer(self.notifySpecificTimeObservers))
-        if not timer.isRunning():
-            timer.schedule(dateTime)
+        timer.schedule(dateTime)
         
     def _schedulePeriod(self, period):
         handler = getattr(self, 'notify%sObservers'%period.capitalize())

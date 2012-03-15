@@ -16,14 +16,24 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from date import Date, Today, Tomorrow, Yesterday, NextSunday, \
-    NextFriday, LastDayOfCurrentMonth, LastDayOfCurrentYear, parseDate, minimumDate
-from dateandtime import DateTime, Now, parseDateTime
-from timedelta import TimeDelta, oneSecond, zeroHour, oneHour, twoHours, \
-    threeHours, oneDay, oneWeek, oneYear, parseTimeDelta
-from timeclass import Time
-from clock import Clock, ClockSecondObserver, ClockMinuteObserver
-from scheduler import Scheduler
-from recurrence import Recurrence
-from snooze import snoozeChoices
+import wx
+from taskcoachlib import patterns
+from taskcoachlib.thirdparty import apscheduler
+import dateandtime, timedelta
 
+
+class Scheduler(apscheduler.scheduler.Scheduler):
+    __metaclass__ = patterns.Singleton
+    
+    def __init__(self, *args, **kwargs):
+        super(Scheduler, self).__init__(*args, **kwargs)
+        self.start()
+    
+    def schedule(self, func, dateTime):
+        def callback():
+            wx.CallAfter(func)
+
+        if dateTime <= dateandtime.Now() + timedelta.TimeDelta(milliseconds=500):
+            callback()
+        else:
+            return self.add_date_job(callback, dateTime)
