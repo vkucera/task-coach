@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 from taskcoachlib.domain import date
+from taskcoachlib import patterns
 
 
 class MinuteRefresher(object):
@@ -49,7 +50,7 @@ class MinuteRefresher(object):
             self.stopClock()
 
 
-class SecondRefresher(date.ClockSecondObserver):
+class SecondRefresher(patterns.Observer):
     ''' This class can be used by viewers to refresh themselves every second
         whenever items (tasks, efforts) are being tracked. '''
         
@@ -86,15 +87,14 @@ class SecondRefresher(date.ClockSecondObserver):
         self.removeTrackedItems(stoppedItems)
         self.refreshItems(stoppedItems)
 
-    def onEverySecond(self, event): # pylint: disable-msg=W0221,W0613
-        self.refreshItems(self.__trackedItems)
+    def onEverySecond(self):
+        wx.CallAfter(self.refreshItems, self.__trackedItems)
         
     def refreshItems(self, items):
-        try:
+        if self.__viewer:
             self.__viewer.refreshItems(*items) # pylint: disable-msg=W0142
-        except wx.PyDeadObjectError:
-            # Our viewer was deleted, stop observation
-            self.removeInstance()
+        else:
+            self.stopClock()
 
     def setTrackedItems(self, items):
         self.__trackedItems = set(items)
@@ -118,11 +118,20 @@ class SecondRefresher(date.ClockSecondObserver):
     def startClockIfNecessary(self):
         if self.__trackedItems:
             self.startClock()
+            
+    def startClock(self):
+        date.Scheduler().add_interval_job(self.onEverySecond, seconds=1)
 
     def stopClockIfNecessary(self):
         if not self.__trackedItems:
             self.stopClock()
             
+    def stopClock(self):
+        try:
+            date.Scheduler().unschedule_func(self.onEverySecond)
+        except KeyError:
+            pass
+    
     def currentlyTrackedItems(self):
         return list(self.__trackedItems)
 

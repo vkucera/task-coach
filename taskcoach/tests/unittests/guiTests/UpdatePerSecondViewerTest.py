@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import test, wx
 from taskcoachlib import gui, config, persistence, patterns
 from taskcoachlib.domain import base, task, effort, category, date
 
@@ -27,6 +27,12 @@ class MockWidget(object):
         
     def RefreshItems(self, *items):
         self.refreshedItems.extend(items)
+        
+    def ToggleAutoResizing(self, *args, **kwargs):
+        pass
+    
+    def curselection(self):
+        return []
     
 
 class UpdatePerSecondViewerTestsMixin(object):
@@ -46,13 +52,11 @@ class UpdatePerSecondViewerTestsMixin(object):
         return self.ListViewerClass(self.frame, self.taskFile, self.settings)
         
     def testViewerHasRegisteredWithClock(self):
-        self.failUnless(self.updateViewer.secondRefresher.onEveryPeriod in
-            patterns.Publisher().observers(eventType='clock.second'))
+        self.failUnless(date.Scheduler().get_jobs())
 
     def testClockNotificationResultsInRefreshedItem(self):
         self.updateViewer.widget = MockWidget()
-        self.updateViewer.secondRefresher.onEverySecond(patterns.Event('clock.second', 
-            date.Clock()))
+        self.updateViewer.secondRefresher.refreshItems(self.updateViewer.secondRefresher.currentlyTrackedItems())
         usingTaskViewer = self.ListViewerClass != gui.viewer.EffortViewer
         expected = self.trackedTask if usingTaskViewer else self.trackedEffort
         self.assertEqual([expected], self.updateViewer.widget.refreshedItems)
@@ -60,14 +64,12 @@ class UpdatePerSecondViewerTestsMixin(object):
     def testClockNotificationResultsInRefreshedItem_OnlyForTrackedItems(self):
         self.taskList.append(task.Task('not tracked'))
         self.updateViewer.widget = MockWidget()
-        self.updateViewer.secondRefresher.onEverySecond(patterns.Event('clock.second',
-            date.Clock()))
+        self.updateViewer.secondRefresher.refreshItems(self.updateViewer.secondRefresher.currentlyTrackedItems())
         self.assertEqual(1, len(self.updateViewer.widget.refreshedItems))
 
     def testStopTrackingRemovesViewerFromClockObservers(self):
         self.trackedTask.stopTracking()
-        self.failIf(self.updateViewer.secondRefresher.onEverySecond in
-            patterns.Publisher().observers(eventType='clock.second'))
+        self.failIf(date.Scheduler().get_jobs())
         
     def testStopTrackingRefreshesTrackedItems(self):
         self.updateViewer.widget = MockWidget()
@@ -84,9 +86,8 @@ class UpdatePerSecondViewerTestsMixin(object):
             patterns.Publisher().observers(eventType='clock.second'))
         
     def testCreateViewerWithTrackedItemsStartsTheClock(self):
-        viewer = self.createUpdateViewer()
-        self.failUnless(viewer.secondRefresher.onEveryPeriod in
-            patterns.Publisher().observers(eventType='clock.second'))
+        self.createUpdateViewer()
+        self.failUnless(date.Scheduler().get_jobs())
         
     def testViewerDoesNotReactToAddEventsFromOtherContainers(self):
         categories = base.filter.SearchFilter(category.CategoryList())
