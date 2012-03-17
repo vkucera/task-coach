@@ -251,13 +251,3 @@ class ClockObserver(patterns.Observer):
     def __isClockStarted(self):
         return self.onEveryPeriod in \
             patterns.Publisher().observers(eventType=self.eventType)
-    
-    
-class ClockSecondObserver(ClockObserver):
-    eventType = 'clock.second'
-
-    def onEveryPeriod(self, *args, **kwargs):
-        self.onEverySecond(*args, **kwargs)
-
-    def onEverySecond(self, *args, **kwargs):
-        raise NotImplementedError # pragma: no cover
