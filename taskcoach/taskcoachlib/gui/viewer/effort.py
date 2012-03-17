@@ -198,10 +198,8 @@ class EffortViewer(base.ListViewer,
             for name, columnHeader, eventType, renderCallback in \
             ('timeSpent', _('Time spent'), 'effort.duration', self.renderTimeSpent),
             ('totalTimeSpent', _('Total time spent'), 'effort.duration', self.renderTotalTimeSpent),
-            ('revenue', _('Revenue'), 'effort.revenue', 
-                lambda effort: render.monetaryAmount(effort.revenue())),
-            ('totalRevenue', _('Total revenue'), 'effort.revenue',
-                lambda effort: render.monetaryAmount(effort.revenue(recursive=True)))] + \
+            ('revenue', _('Revenue'), 'effort.revenue', self.renderRevenue),
+            ('totalRevenue', _('Total revenue'), 'effort.revenue', self.renderTotalRevenue)] + \
              [widgets.Column(name, columnHeader, eventType, 
               renderCallback=renderCallback, alignment=wx.LIST_FORMAT_RIGHT,
               width=self.getColumnWidth(name), **kwargs) \
@@ -345,13 +343,13 @@ class EffortViewer(base.ListViewer,
         status2 = _('Status: %d tracking')% self.presentation().nrBeingTracked()
         return status1, status2
     
-    renderers = dict(details=lambda anEffort: render.dateTimePeriod(anEffort.getStart(), anEffort.getStop()),
+    periodRenderers = dict(details=lambda anEffort: render.dateTimePeriod(anEffort.getStart(), anEffort.getStop()),
                      day=lambda anEffort: render.date(anEffort.getStart().date()),
                      week=lambda anEffort: render.weekNumber(anEffort.getStart()),
                      month=lambda anEffort: render.month(anEffort.getStart()))
 
     def renderPeriod(self, anEffort):
-        return '' if self._hasRepeatedPeriod(anEffort) else self.renderers[self.aggregation](anEffort)
+        return '' if self._hasRepeatedPeriod(anEffort) else self.periodRenderers[self.aggregation](anEffort)
                     
     def _hasRepeatedPeriod(self, anEffort):
         ''' Return whether the effort has the same period as the previous 
@@ -388,6 +386,12 @@ class EffortViewer(base.ListViewer,
         duration = anEffort.durationDay(dayOffset) if self.aggregation == 'week' else date.TimeDelta()
         showSeconds = self.settings.getint(self.settingsSection(), 'round') == 0
         return render.timeSpent(self.round(duration), showSeconds=showSeconds)
+    
+    def renderRevenue(self, anEffort):
+        return render.monetaryAmount(anEffort.revenue())
+    
+    def renderTotalRevenue(self, anEffort):
+        return render.monetaryAmount(anEffort.revenue(recursive=True))
     
     def round(self, duration):
         round_precision = self.settings.getint(self.settingsSection(), 'round')

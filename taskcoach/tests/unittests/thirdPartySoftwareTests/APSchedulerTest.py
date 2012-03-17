@@ -29,7 +29,8 @@ class APSchedulerTest(test.TestCase):
         self.scheduler.start()
         
     def tearDown(self):
-        self.scheduler.shutdown()
+        self.scheduler.shutdown(False, False)
+        date.Scheduler.deleteInstance()
         super(APSchedulerTest, self).tearDown()
         
     def job(self):
