@@ -261,13 +261,3 @@ class ClockSecondObserver(ClockObserver):
 
     def onEverySecond(self, *args, **kwargs):
         raise NotImplementedError # pragma: no cover
-    
-    
-class ClockMinuteObserver(ClockObserver):
-    eventType = 'clock.minute'
-        
-    def onEveryPeriod(self, *args, **kwargs):
-        self.onEveryMinute(*args, **kwargs)
-
-    def onEveryMinute(self, *args, **kwargs):
-        raise NotImplementedError # pragma: no cover

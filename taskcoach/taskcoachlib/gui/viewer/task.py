@@ -119,7 +119,7 @@ class BaseTaskTreeViewer(BaseTaskViewer): # pylint: disable-msg=W0223
         if self.secondRefresher:
             self.secondRefresher.removeInstance()
         if self.minuteRefresher:
-            self.minuteRefresher.removeInstance()
+            self.minuteRefresher.stopClock()
         
     def newItemDialog(self, *args, **kwargs):
         kwargs['categories'] = self.taskFile.categories().filteredCategories()

@@ -25,10 +25,6 @@ class SchedulerTest(test.TestCase):
         super(SchedulerTest, self).setUp()
         self.scheduler = date.Scheduler()
         
-    def tearDown(self):
-        self.scheduler.shutdown(False, False)
-        date.Scheduler.deleteInstance()
-        
     def callback(self):
         pass
         

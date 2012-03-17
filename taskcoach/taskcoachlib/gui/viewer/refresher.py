@@ -25,21 +25,28 @@ import wx
 from taskcoachlib.domain import date
 
 
-class MinuteRefresher(date.ClockMinuteObserver):
+class MinuteRefresher(object):
     ''' This class can be used by viewers to refresh themselves every minute
         to refresh attributes like time left. The user of this class is
         responsible for calling refresher.startClock() and stopClock(). '''
 
     def __init__(self, viewer):
         self.__viewer = viewer        
-        super(MinuteRefresher, self).__init__()
         
-    def onEveryMinute(self, event): # pylint: disable-msg=W0221,W0613
-        try:
+    def startClock(self):
+        date.Scheduler().add_interval_job(self.onEveryMinute, minutes=1)
+        
+    def stopClock(self):
+        date.Scheduler().remove_listener(self.onEveryMinute)
+        
+    def onEveryMinute(self):
+        wx.CallAfter(self.refreshViewer)
+            
+    def refreshViewer(self):
+        if self.__viewer:
             self.__viewer.refresh()
-        except wx.PyDeadObjectError:
-            # Our viewer was deleted, stop observation
-            self.removeInstance()
+        else:
+            self.stopClock()
 
 
 class SecondRefresher(date.ClockSecondObserver):
