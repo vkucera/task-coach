@@ -76,7 +76,7 @@ class ReminderControllerTest(ReminderControllerTestCase):
     def testAfterReminderJobIsRemovedFromScheduler(self):
         self.task.setReminder(self.reminderDateTime)
         self.failUnless(date.Scheduler().get_jobs())
-        date.Scheduler()._process_jobs(self.reminderDateTime)
+        date.Scheduler()._process_jobs(self.reminderDateTime) # pylint: disable-msg=W0212
         self.failIf(date.Scheduler().get_jobs())
         
     def testAddTaskWithReminderSchedulesJob(self):

@@ -70,13 +70,8 @@ class BaseTaskViewer(mixin.SearchableViewerMixin, # pylint: disable-msg=W0223
                           'task.prerequisites'):
             self.registerObserver(self.onAttributeChanged,
                                   eventType=eventType)
-        date.Clock().registerClockObserver(self.atMidnight,
-            eventType='clock.day')
         self.registerObserver(self.onWake,
             eventType='powermgt.on')
-
-    def atMidnight(self, event): # pylint: disable-msg=W0613
-        pass
 
     def onWake(self, event): # pylint: disable-msg=W0613
         self.refresh()
@@ -560,6 +555,7 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
                           task.Task.notesChangedEventType(),
                           task.Task.trackStartEventType(), task.Task.trackStopEventType()):
             self.registerObserver(self.onAttributeChanged, eventType)
+        date.Scheduler().add_interval_job(self.atMidnight, days=1)
 
     def isTreeViewer(self):
         return False
@@ -567,14 +563,14 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
     def onEverySecond(self, event): # pylint: disable-msg=W0221,W0613
         pass # Too expensive
 
-    def atMidnight(self, event):
+    def atMidnight(self):
         if not self.settings.get(self.settingsSection(), 'viewdate'):
             # User has selected the "current" date/time; it may have
             # changed now
             self.SetViewType(wxSCHEDULER_TODAY)
 
     def onWake(self, event):
-        self.atMidnight(event)
+        self.atMidnight()
 
     def onWorkingHourChanged(self, event): # pylint: disable-msg=W0613
         self.widget.SetWorkHours(self.settings.getint('view', 'efforthourstart'),
