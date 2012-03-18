@@ -91,9 +91,6 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
         self.__setIcon()
         
     def onEverySecond(self):
-        wx.CallAfter(self.refreshIcon)
-
-    def refreshIcon(self):
         if self.__settings.getboolean('window', 
             'blinktaskbariconwhentrackingeffort'):
             self.__toggleTrackingBitmap()
@@ -138,7 +135,7 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
             self.__setIcon()
             
     def startClock(self):
-        date.Scheduler().add_interval_job(self.onEverySecond, seconds=1)
+        date.Scheduler().schedule_interval(self.onEverySecond, seconds=1)
 
     def __stopTicking(self):
         if self.__taskList.nrBeingTracked() == 0:
@@ -147,10 +144,7 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
             self.__setIcon()
             
     def stopClock(self):
-        try:
-            date.Scheduler().unschedule_func(self.onEverySecond)
-        except KeyError:
-            pass
+        date.Scheduler().unschedule(self.onEverySecond)
 
     toolTipMessages = \
         [(task.status.overdue, _('one task overdue'), _('%d tasks overdue')),

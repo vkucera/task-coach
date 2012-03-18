@@ -237,17 +237,3 @@ class Clock(object):
 
 
 _clock = Clock() # make sure the clock is instantiated at least once
-
-
-class ClockObserver(patterns.Observer):
-    def startClock(self):
-        if not self.__isClockStarted():
-            self.registerObserver(self.onEveryPeriod, eventType=self.eventType)
-        
-    def stopClock(self):
-        if self.__isClockStarted():
-            self.removeObserver(self.onEveryPeriod, eventType=self.eventType)
-
-    def __isClockStarted(self):
-        return self.onEveryPeriod in \
-            patterns.Publisher().observers(eventType=self.eventType)

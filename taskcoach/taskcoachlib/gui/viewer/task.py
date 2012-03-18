@@ -117,7 +117,7 @@ class BaseTaskTreeViewer(BaseTaskViewer): # pylint: disable-msg=W0223
     def detach(self):
         super(BaseTaskTreeViewer, self).detach()
         if self.secondRefresher:
-            self.secondRefresher.removeInstance()
+            self.secondRefresher.stopClock()
         if self.minuteRefresher:
             self.minuteRefresher.stopClock()
         

@@ -16,8 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, wx
-from taskcoachlib import gui, config, persistence, patterns
+import test
+from taskcoachlib import gui, config, persistence
 from taskcoachlib.domain import base, task, effort, category, date
 
 
@@ -69,7 +69,7 @@ class UpdatePerSecondViewerTestsMixin(object):
 
     def testStopTrackingRemovesViewerFromClockObservers(self):
         self.trackedTask.stopTracking()
-        self.failIf(date.Scheduler().get_jobs())
+        self.assertRaises(KeyError, date.Scheduler().unschedule(self.updateViewer.secondRefresher.onEverySecond))
         
     def testStopTrackingRefreshesTrackedItems(self):
         self.updateViewer.widget = MockWidget()
@@ -82,8 +82,7 @@ class UpdatePerSecondViewerTestsMixin(object):
         self.taskList.append(parent)
         parent.addChild(self.trackedTask)
         self.taskList.remove(parent)
-        self.failIf(self.updateViewer.secondRefresher.onEverySecond in
-            patterns.Publisher().observers(eventType='clock.second'))
+        self.assertRaises(KeyError, date.Scheduler().unschedule(self.updateViewer.secondRefresher.onEverySecond))
         
     def testCreateViewerWithTrackedItemsStartsTheClock(self):
         self.createUpdateViewer()

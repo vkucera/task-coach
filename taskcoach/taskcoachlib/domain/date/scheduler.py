@@ -27,13 +27,27 @@ class Scheduler(apscheduler.scheduler.Scheduler):
     
     def __init__(self, *args, **kwargs):
         super(Scheduler, self).__init__(*args, **kwargs)
+        self.__jobs = {}
         self.start()
     
-    def schedule(self, func, dateTime):
+    def schedule(self, function, dateTime):
         def callback():
-            wx.CallAfter(func)
+            wx.CallAfter(function)
 
         if dateTime <= dateandtime.Now() + timedelta.TimeDelta(milliseconds=500):
             callback()
         else:
-            return self.add_date_job(callback, dateTime)
+            self.__jobs[function] = self.add_date_job(callback, dateTime)
+        
+    def schedule_interval(self, function, days=0, minutes=0, seconds=0):
+        def callback():
+            wx.CallAfter(function)
+        if function not in self.__jobs:
+            start_date = dateandtime.Now().endOfDay() if days > 0 else None
+            self.__jobs[function] = self.add_interval_job(callback, days=days, minutes=minutes, 
+                                                          seconds=seconds, start_date=start_date)
+
+    def unschedule(self, function):
+        if function in self.__jobs:
+            self.unschedule_job(self.__jobs[function])
+            del self.__jobs[function]

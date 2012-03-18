@@ -35,15 +35,12 @@ class MinuteRefresher(object):
         self.__viewer = viewer        
         
     def startClock(self):
-        date.Scheduler().add_interval_job(self.onEveryMinute, minutes=1)
+        date.Scheduler().schedule_interval(self.onEveryMinute, minutes=1)
         
     def stopClock(self):
-        date.Scheduler().remove_listener(self.onEveryMinute)
+        date.Scheduler().unschedule(self.onEveryMinute)
         
     def onEveryMinute(self):
-        wx.CallAfter(self.refreshViewer)
-            
-    def refreshViewer(self):
         if self.__viewer:
             self.__viewer.refresh()
         else:
@@ -88,7 +85,7 @@ class SecondRefresher(patterns.Observer):
         self.refreshItems(stoppedItems)
 
     def onEverySecond(self):
-        wx.CallAfter(self.refreshItems, self.__trackedItems)
+        self.refreshItems(self.__trackedItems)
         
     def refreshItems(self, items):
         if self.__viewer:
@@ -98,8 +95,7 @@ class SecondRefresher(patterns.Observer):
 
     def setTrackedItems(self, items):
         self.__trackedItems = set(items)
-        self.startClockIfNecessary()
-        self.stopClockIfNecessary()
+        self.startOrStopClock()
         
     def updatePresentation(self):
         self.__presentation = self.__viewer.presentation()
@@ -108,29 +104,24 @@ class SecondRefresher(patterns.Observer):
     def addTrackedItems(self, items):
         if items:
             self.__trackedItems.update(items)
-            self.startClockIfNecessary()
+            self.startOrStopClock()
 
     def removeTrackedItems(self, items):
         if items:
             self.__trackedItems.difference_update(items)
-            self.stopClockIfNecessary()
+            self.startOrStopClock()
 
-    def startClockIfNecessary(self):
+    def startOrStopClock(self):
         if self.__trackedItems:
             self.startClock()
-            
-    def startClock(self):
-        date.Scheduler().add_interval_job(self.onEverySecond, seconds=1)
-
-    def stopClockIfNecessary(self):
-        if not self.__trackedItems:
+        else:
             self.stopClock()
             
+    def startClock(self):
+        date.Scheduler().schedule_interval(self.onEverySecond, seconds=1)
+            
     def stopClock(self):
-        try:
-            date.Scheduler().unschedule_func(self.onEverySecond)
-        except KeyError:
-            pass
+        date.Scheduler().unschedule(self.onEverySecond)
     
     def currentlyTrackedItems(self):
         return list(self.__trackedItems)

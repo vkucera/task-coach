@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test, wx
-from taskcoachlib import gui, patterns, config, persistence
+from taskcoachlib import gui, config, persistence
 from taskcoachlib.domain import task, date, effort
 
 
@@ -75,6 +75,7 @@ class ReminderControllerTest(ReminderControllerTestCase):
         
     def testAfterReminderJobIsRemovedFromScheduler(self):
         self.task.setReminder(self.reminderDateTime)
+        self.failUnless(date.Scheduler().get_jobs())
         date.Scheduler()._process_jobs(self.reminderDateTime)
         self.failIf(date.Scheduler().get_jobs())
         
@@ -87,20 +88,18 @@ class ReminderControllerTest(ReminderControllerTestCase):
     def testRemoveTaskWithReminderRemovesClockEventFromPublisher(self):
         self.task.setReminder(self.reminderDateTime)
         self.taskList.remove(self.task)
-        self.assertEqual([], patterns.Publisher().observers(eventType=\
-                date.Clock.eventType(self.reminderDateTime)))
+        self.assertRaises(KeyError, date.Scheduler().unschedule(self.reminderController.onReminder))
                 
     def testChangeReminderRemovesOldReminder(self):
         self.task.setReminder(self.reminderDateTime)
         self.task.setReminder(self.reminderDateTime + date.TimeDelta(hours=1))
-        self.assertEqual([], patterns.Publisher().observers(eventType=\
-                date.Clock.eventType(self.reminderDateTime)))
+        self.assertRaises(KeyError, date.Scheduler().unschedule(self.reminderController.onReminder))
         
     def testMarkTaskCompletedRemovesReminder(self):
         self.task.setReminder(self.reminderDateTime)
         self.failUnless(date.Scheduler().get_jobs())
         self.task.setCompletionDateTime(date.Now())
-        self.failIf(date.Scheduler().get_jobs())
+        self.assertRaises(KeyError, date.Scheduler().unschedule(self.reminderController.onReminder))
         
     def dummyCloseEvent(self, snoozeTimeDelta=None, openAfterClose=False):
         class DummySnoozeOptions(object):
