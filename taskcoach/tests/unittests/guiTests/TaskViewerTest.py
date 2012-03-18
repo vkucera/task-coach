@@ -149,12 +149,6 @@ class CommonTestsMixin(object):
         else:
             self.assertItems(self.child, self.task)
 
-    '''
-    def testCurrent(self):
-        self.taskList.append(self.task)
-        self.assertEqual([self.task], self.viewer.curselection())
-    '''
-
     def testDeleteSelectedTask(self):
         self.taskList.append(self.task)
         self.viewer.widget.selectall()
@@ -611,7 +605,7 @@ class CommonTestsMixin(object):
         now = dueDateTime + date.oneSecond
         oldNow = date.Now
         date.Now = lambda: now
-        date.Clock().notifySpecificTimeObservers(now)
+        self.task.onOverDue()        
         self.assertIcon('led_red_icon')
         date.Now = oldNow
         

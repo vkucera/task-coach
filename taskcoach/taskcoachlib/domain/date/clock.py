@@ -184,10 +184,6 @@ class Clock(object):
         period = eventType.split('.')[-1]
         self._schedulePeriod(period)
             
-    def registerClockObserverForSpecificTime(self, observer, dateTime):
-        patterns.Publisher().registerObserver(observer, self.eventType(dateTime))
-        self._scheduleDateTime(dateTime)
-            
     def removeClockObserver(self, observer, eventType):
         assert eventType in ('clock.second', 'clock.minute', 'clock.day')
         patterns.Publisher().removeObserver(observer, eventType)

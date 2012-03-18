@@ -89,11 +89,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
         now = date.Now()
         if now < self.__dueDateTime.get() < maxDateTime:
-            date.Clock().registerClockObserverForSpecificTime(self.onOverDue, 
-                                                              self.__dueDateTime.get() + date.oneSecond)
+            date.Scheduler().schedule(self.onOverDue, self.__dueDateTime.get() + date.oneSecond)
         if now < self.__plannedStartDateTime.get() < maxDateTime:
-            date.Clock().registerClockObserverForSpecificTime(self.onTimeToStart,
-                                                              self.__plannedStartDateTime.get() + date.oneSecond)
+            date.Scheduler().schedule(self.onTimeToStart, self.__plannedStartDateTime.get() + date.oneSecond)
             
     @patterns.eventSource
     def __setstate__(self, state, event=None):
@@ -249,15 +247,15 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     @patterns.eventSource
     def setDueDateTime(self, dueDateTime, event=None):
-        self.removeObserver(self.onOverDue)
-        self.removeObserver(self.onDueSoon)
+        date.Scheduler().unschedule(self.onOverDue)
+        date.Scheduler().unschedule(self.onDueSoon)
         self.__dueDateTime.set(dueDateTime, event=event)
         if date.Now() <= dueDateTime < self.maxDateTime:
-            date.Clock().registerClockObserverForSpecificTime(self.onOverDue, dueDateTime + date.oneSecond)
+            date.Scheduler().schedule(self.onOverDue, dueDateTime + date.oneSecond)
             if self.__dueSoonHours > 0:
                 dueSoonDateTime = dueDateTime + date.oneSecond - date.TimeDelta(hours=self.__dueSoonHours)
                 if dueSoonDateTime > date.Now():
-                    date.Clock().registerClockObserverForSpecificTime(self.onDueSoon, dueSoonDateTime)
+                    date.Scheduler().schedule(self.onDueSoon, dueSoonDateTime)
             
     def dueDateTimeEvent(self, event):
         dueDateTime = self.dueDateTime()
@@ -271,10 +269,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 parent.setDueDateTime(dueDateTime, event=event)
         self.recomputeAppearance(event=event)
     
-    def onOverDue(self, event): # pylint: disable-msg=W0613
+    def onOverDue(self):
         self.recomputeAppearance()
         
-    def onDueSoon(self, event): # pylint: disable-msg=W0613
+    def onDueSoon(self):
         self.recomputeAppearance()
         
     @staticmethod
@@ -299,11 +297,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         
     @patterns.eventSource
     def setPlannedStartDateTime(self, plannedStartDateTime, event=None):
-        self.removeObserver(self.onTimeToStart)
+        date.Scheduler().unschedule(self.onTimeToStart)
         self.__plannedStartDateTime.set(plannedStartDateTime, event=event)
-        if plannedStartDateTime != self.maxDateTime:
-            date.Clock().registerClockObserverForSpecificTime(self.onTimeToStart, 
-                                                              plannedStartDateTime + date.oneSecond)
+        if plannedStartDateTime < self.maxDateTime:
+            date.Scheduler().schedule(self.onTimeToStart, plannedStartDateTime + date.oneSecond)
         
     def plannedStartDateTimeEvent(self, event):
         plannedStartDateTime = self.plannedStartDateTime()
@@ -317,7 +314,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             parent.setPlannedStartDateTime(plannedStartDateTime, event=event)
         self.recomputeAppearance(event=event)
         
-    def onTimeToStart(self, event): # pylint: disable-msg=W0613
+    def onTimeToStart(self):
         self.recomputeAppearance()
         
     @staticmethod
@@ -521,12 +518,12 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return self.__status
     
     def onDueSoonHoursChanged(self, event):
-        self.removeObserver(self.onDueSoon)
+        date.Scheduler().unschedule(self.onDueSoon)
         self.__dueSoonHours = int(event.value())
         dueDateTime = self.dueDateTime()
         if dueDateTime != self.maxDateTime:
             newDueSoonDateTime = dueDateTime + date.oneSecond - date.TimeDelta(hours=self.__dueSoonHours)
-            date.Clock().registerClockObserverForSpecificTime(self.onDueSoon, newDueSoonDateTime)
+            date.Scheduler().schedule(self.onDueSoon, newDueSoonDateTime)
         self.recomputeAppearance()
             
     # effort related methods:

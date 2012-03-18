@@ -27,12 +27,7 @@ class APSchedulerTest(test.TestCase):
         self.jobCalled = 0
         self.scheduler = apscheduler.scheduler.Scheduler()
         self.scheduler.start()
-        
-    def tearDown(self):
-        self.scheduler.shutdown(False, False)
-        date.Scheduler.deleteInstance()
-        super(APSchedulerTest, self).tearDown()
-        
+    
     def job(self):
         self.jobCalled += 1
         
@@ -58,4 +53,5 @@ class APSchedulerTest(test.TestCase):
         while self.jobCalled < 2:
             pass
         self.assertEqual(2, self.jobCalled)
+        self.scheduler.unschedule_func(self.job)
         
