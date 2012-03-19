@@ -19,15 +19,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import test
 from taskcoachlib import config
 from taskcoachlib.domain import task, effort, date
-from taskcoachlib import config
 
  
 class TaskListTest(test.TestCase):
     def setUp(self):
         task.Task.settings = config.Settings(load=False)
         self.taskList = task.TaskList()
-        self.task1 = task.Task(dueDateTime=date.DateTime(2110,1,1))
-        self.task2 = task.Task(dueDateTime=date.DateTime(2111,1,1))
+        year = date.Now().year
+        self.task1 = task.Task(dueDateTime=date.DateTime(year+1,1,1))
+        self.task2 = task.Task(dueDateTime=date.DateTime(year+2,1,1))
         self.task3 = task.Task()
         
     def nrStatus(self, status):

@@ -436,7 +436,7 @@ class BudgetPage(Page):
                               eventType='task.timeSpent', 
                               eventSource=self.items[0])
         
-    def onTimeSpentChanged(self, event): # pylint: disable-msg=W0613
+    def onTimeSpentChanged(self, event=None): # pylint: disable-msg=W0613
         newTimeSpent = self.items[0].timeSpent()
         if newTimeSpent != self._timeSpentEntry.GetValue():
             self._timeSpentEntry.SetValue(newTimeSpent)
@@ -453,7 +453,7 @@ class BudgetPage(Page):
                               eventType='task.budgetLeft',
                               eventSource=self.items[0])
         
-    def onBudgetLeftChanged(self, event): # pylint: disable-msg=W0613
+    def onBudgetLeftChanged(self, event=None): # pylint: disable-msg=W0613
         newBudgetLeft = self.items[0].budgetLeft()
         if newBudgetLeft != self._budgetLeftEntry.GetValue():
             self._budgetLeftEntry.SetValue(newBudgetLeft)
@@ -492,7 +492,7 @@ class BudgetPage(Page):
                               eventType='task.revenue',
                               eventSource=self.items[0])
 
-    def onRevenueChanged(self, event): # pylint: disable-msg=W0613
+    def onRevenueChanged(self, event=None): # pylint: disable-msg=W0613
         newRevenue = self.items[0].revenue()
         if newRevenue != self._revenueEntry.GetValue():
             self._revenueEntry.SetValue(newRevenue)
@@ -508,24 +508,25 @@ class BudgetPage(Page):
                               eventType=item.trackStopEventType(), 
                               eventSource=item)
         if item.isBeingTracked():
-            self.onStartTracking(None)
+            self.onStartTracking()
         
-    def onStartTracking(self, event): # pylint: disable-msg=W0613
-        # We might already be observing the clock if the user is tracking this
-        # task with multiple effort records simultaneously
-        if self.onEverySecond not in patterns.Publisher().observers('clock.second'):
-            date.Clock().registerClockObserver(self.onEverySecond, eventType='clock.second')
+    def onStartTracking(self, event=None): # pylint: disable-msg=W0613
+        date.Scheduler().schedule_interval(self.onEverySecond, seconds=1)
         
     def onStopTracking(self, event): # pylint: disable-msg=W0613
         # We might need to keep tracking the clock if the user was tracking this
         # task with multiple effort records simultaneously
         if not self.items[0].isBeingTracked():
-            date.Clock().removeClockObserver(self.onEverySecond, eventType='clock.second')
+            date.Scheduler().unschedule(self.onEverySecond)
     
-    def onEverySecond(self, event):
-        self.onTimeSpentChanged(event)
-        self.onBudgetLeftChanged(event)
-        self.onRevenueChanged(event)
+    def onEverySecond(self):
+        self.onTimeSpentChanged()
+        self.onBudgetLeftChanged()
+        self.onRevenueChanged()
+            
+    def close(self):
+        date.Scheduler().unschedule(self.onEverySecond)
+        super(BudgetPage, self).close()
         
     def entries(self):
         return dict(firstEntry=self._budgetEntry,

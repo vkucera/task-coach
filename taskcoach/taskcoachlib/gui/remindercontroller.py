@@ -57,14 +57,14 @@ class ReminderController(object):
     def onWake(self, event):
         self.showReminderMessages(date.DateTime.now())
         
-    def onReminder(self, event):
-        self.showReminderMessages(event.value())
+    def onReminder(self):
+        self.showReminderMessages(date.DateTime.now())
         
     def showReminderMessages(self, now):
         now += date.TimeDelta(seconds=5) # Be sure not to miss reminders 
         requestUserAttention = False
-        for task, reminderDateTime in self.__tasksWithReminders.items():
-            if reminderDateTime <= now:
+        for task in self.__tasksWithReminders.copy():
+            if task.reminder() <= now:
                 requestUserAttention = True
                 self.showReminderMessage(task)
         if requestUserAttention:
@@ -134,7 +134,7 @@ class ReminderController(object):
             
     def __registerRemindersForTasks(self, tasks):
         for task in tasks:
-            if task.reminder():
+            if task.reminder() and task.reminder() < date.DateTime():
                 self.__registerReminder(task)
 
     def __removeRemindersForTasks(self, tasks):
@@ -146,21 +146,12 @@ class ReminderController(object):
         reminderDateTime = task.reminder()
         now = date.DateTime.now()
         if reminderDateTime < now:
-            reminderDateTime = now + date.TimeDelta(seconds=60)
-        if reminderDateTime not in self.__tasksWithReminders.values():
-            self.__changeDateTimeObservation(reminderDateTime, 
-                                             'registerObserver')
-        self.__tasksWithReminders[task] = reminderDateTime
+            reminderDateTime = now + date.TimeDelta(seconds=10)
+        self.__tasksWithReminders[task] = date.Scheduler().schedule(self.onReminder, reminderDateTime)
             
     def __removeReminder(self, task):
-        oldReminderDateTime = self.__tasksWithReminders[task]
+        scheduler = date.Scheduler()
+        job = self.__tasksWithReminders[task]
+        if job in scheduler.get_jobs():
+            scheduler.unschedule_job(job)
         del self.__tasksWithReminders[task]
-        if oldReminderDateTime not in self.__tasksWithReminders.values():
-            self.__changeDateTimeObservation(oldReminderDateTime, 
-                                             'removeObserver')
-    
-    def __changeDateTimeObservation(self, reminderDateTime, registrationMethod):
-        eventType = date.Clock().eventType(reminderDateTime)
-        getattr(patterns.Publisher(), registrationMethod)(self.onReminder, 
-            eventType=eventType)
-

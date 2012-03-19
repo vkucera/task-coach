@@ -103,8 +103,9 @@ class ViewFilterTestsMixin(object):
         self.list.append(self.task)
         self.filter.hideTaskStatus(task.status.inactive)
         oldNow = date.Now
-        date.Now = lambda: plannedStart + date.TimeDelta(seconds=1)
-        date.Clock().notifySpecificTimeObservers(date.Now())
+        now = plannedStart + date.TimeDelta(seconds=1)
+        date.Now = lambda: now
+        self.task.onTimeToStart()
         self.assertFilterShows(self.task)
         date.Now = oldNow
 

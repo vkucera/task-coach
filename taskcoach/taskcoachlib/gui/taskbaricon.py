@@ -26,7 +26,7 @@ from taskcoachlib.domain import date, task
 import artprovider
 
         
-class TaskBarIcon(date.ClockSecondObserver, wx.TaskBarIcon):
+class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
     def __init__(self, mainwindow, taskList, settings, 
             defaultBitmap='taskcoach', tickBitmap='clock_icon',
             tackBitmap='clock_stopwatch_icon', *args, **kwargs):
@@ -38,16 +38,15 @@ class TaskBarIcon(date.ClockSecondObserver, wx.TaskBarIcon):
         self.__tooltipText = ''
         self.__tickBitmap = tickBitmap
         self.__tackBitmap = tackBitmap
-        registerObserver = patterns.Publisher().registerObserver
-        registerObserver(self.onTaskListChanged,
+        self.registerObserver(self.onTaskListChanged,
             eventType=taskList.addItemEventType(), eventSource=taskList)
-        registerObserver(self.onTaskListChanged, 
+        self.registerObserver(self.onTaskListChanged, 
             eventType=taskList.removeItemEventType(), eventSource=taskList)
-        registerObserver(self.onStartTracking,
+        self.registerObserver(self.onStartTracking,
             eventType=task.Task.trackStartEventType())
-        registerObserver(self.onStopTracking,
+        self.registerObserver(self.onStopTracking,
             eventType=task.Task.trackStopEventType())
-        registerObserver(self.onChangeDueDateTime,
+        self.registerObserver(self.onChangeDueDateTime,
             eventType=task.Task.dueDateTimeChangedEventType())
         # When the user chances the due soon hours preferences it may cause
         # a task to change appearance. That also means the number of due soon
@@ -56,7 +55,7 @@ class TaskBarIcon(date.ClockSecondObserver, wx.TaskBarIcon):
         # is not reliable. The TaskBarIcon may get the event before the tasks
         # do. When that happens the tasks haven't changed their status yet and
         # we would use the wrong status count.
-        registerObserver(self.onChangeDueDateTime,
+        self.registerObserver(self.onChangeDueDateTime,
             eventType=task.Task.appearanceChangedEventType()) 
         event = wx.EVT_TASKBAR_LEFT_DOWN if operating_system.isGTK() else wx.EVT_TASKBAR_LEFT_DCLICK    
         self.Bind(event, self.onTaskbarClick)
@@ -71,14 +70,14 @@ class TaskBarIcon(date.ClockSecondObserver, wx.TaskBarIcon):
         
     def onStartTracking(self, event):
         for item in event.sources():
-            patterns.Publisher().registerObserver(self.onChangeSubject,
+            self.registerObserver(self.onChangeSubject,
                 eventType=item.subjectChangedEventType(), eventSource=item)
         self.__setTooltipText()
         self.__startTicking()
 
     def onStopTracking(self, event):
         for item in event.sources():
-            patterns.Publisher().removeObserver(self.onChangeSubject,
+            self.removeObserver(self.onChangeSubject,
                 eventType=item.subjectChangedEventType())
         self.__setTooltipText()
         self.__stopTicking()
@@ -90,8 +89,8 @@ class TaskBarIcon(date.ClockSecondObserver, wx.TaskBarIcon):
     def onChangeDueDateTime(self, event): # pylint: disable-msg=W0613
         self.__setTooltipText()
         self.__setIcon()
-
-    def onEverySecond(self, *args, **kwargs):
+        
+    def onEverySecond(self):
         if self.__settings.getboolean('window', 
             'blinktaskbariconwhentrackingeffort'):
             self.__toggleTrackingBitmap()
@@ -134,12 +133,18 @@ class TaskBarIcon(date.ClockSecondObserver, wx.TaskBarIcon):
             self.startClock()
             self.__toggleTrackingBitmap()
             self.__setIcon()
+            
+    def startClock(self):
+        date.Scheduler().schedule_interval(self.onEverySecond, seconds=1)
 
     def __stopTicking(self):
         if self.__taskList.nrBeingTracked() == 0:
             self.stopClock()
             self.__setDefaultBitmap()
             self.__setIcon()
+            
+    def stopClock(self):
+        date.Scheduler().unschedule(self.onEverySecond)
 
     toolTipMessages = \
         [(task.status.overdue, _('one task overdue'), _('%d tasks overdue')),

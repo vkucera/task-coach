@@ -39,9 +39,9 @@ class ViewFilter(base.Filter):
                           task.Task.addChildEventType(),
                           task.Task.removeChildEventType()):
             registerObserver(self.onTaskStatusChange, eventType=eventType)
-        date.Clock().registerClockObserver(self.onTaskStatusChange, 'clock.day')
+        date.Scheduler().schedule_interval(self.onTaskStatusChange, days=1)
 
-    def onTaskStatusChange(self, event): # pylint: disable-msg=W0613
+    def onTaskStatusChange(self, event=None): # pylint: disable-msg=W0613
         self.reset()
         
     def hideTaskStatus(self, status, hide=True):

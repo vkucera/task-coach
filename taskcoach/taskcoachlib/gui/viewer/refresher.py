@@ -23,26 +23,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 from taskcoachlib.domain import date
+from taskcoachlib import patterns
 
 
-class MinuteRefresher(date.ClockMinuteObserver):
+class MinuteRefresher(object):
     ''' This class can be used by viewers to refresh themselves every minute
         to refresh attributes like time left. The user of this class is
         responsible for calling refresher.startClock() and stopClock(). '''
 
     def __init__(self, viewer):
         self.__viewer = viewer        
-        super(MinuteRefresher, self).__init__()
         
-    def onEveryMinute(self, event): # pylint: disable-msg=W0221,W0613
-        try:
+    def startClock(self):
+        date.Scheduler().schedule_interval(self.onEveryMinute, minutes=1)
+        
+    def stopClock(self):
+        date.Scheduler().unschedule(self.onEveryMinute)
+        
+    def onEveryMinute(self):
+        if self.__viewer:
             self.__viewer.refresh()
-        except wx.PyDeadObjectError:
-            # Our viewer was deleted, stop observation
-            self.removeInstance()
+        else:
+            self.stopClock()
 
 
-class SecondRefresher(date.ClockSecondObserver):
+class SecondRefresher(patterns.Observer):
     ''' This class can be used by viewers to refresh themselves every second
         whenever items (tasks, efforts) are being tracked. '''
         
@@ -79,20 +84,18 @@ class SecondRefresher(date.ClockSecondObserver):
         self.removeTrackedItems(stoppedItems)
         self.refreshItems(stoppedItems)
 
-    def onEverySecond(self, event): # pylint: disable-msg=W0221,W0613
+    def onEverySecond(self):
         self.refreshItems(self.__trackedItems)
         
     def refreshItems(self, items):
-        try:
+        if self.__viewer:
             self.__viewer.refreshItems(*items) # pylint: disable-msg=W0142
-        except wx.PyDeadObjectError:
-            # Our viewer was deleted, stop observation
-            self.removeInstance()
+        else:
+            self.stopClock()
 
     def setTrackedItems(self, items):
         self.__trackedItems = set(items)
-        self.startClockIfNecessary()
-        self.stopClockIfNecessary()
+        self.startOrStopClock()
         
     def updatePresentation(self):
         self.__presentation = self.__viewer.presentation()
@@ -101,21 +104,25 @@ class SecondRefresher(date.ClockSecondObserver):
     def addTrackedItems(self, items):
         if items:
             self.__trackedItems.update(items)
-            self.startClockIfNecessary()
+            self.startOrStopClock()
 
     def removeTrackedItems(self, items):
         if items:
             self.__trackedItems.difference_update(items)
-            self.stopClockIfNecessary()
+            self.startOrStopClock()
 
-    def startClockIfNecessary(self):
+    def startOrStopClock(self):
         if self.__trackedItems:
             self.startClock()
-
-    def stopClockIfNecessary(self):
-        if not self.__trackedItems:
+        else:
             self.stopClock()
             
+    def startClock(self):
+        date.Scheduler().schedule_interval(self.onEverySecond, seconds=1)
+            
+    def stopClock(self):
+        date.Scheduler().unschedule(self.onEverySecond)
+    
     def currentlyTrackedItems(self):
         return list(self.__trackedItems)
 

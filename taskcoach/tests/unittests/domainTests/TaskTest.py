@@ -236,7 +236,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         now = self.tomorrow + date.oneSecond
         oldNow = date.Now
         date.Now = lambda: now
-        date.Clock().notifySpecificTimeObservers(now)
+        self.task.onTimeToStart()
         self.assertEqual('led_purple_icon', self.task.icon(recursive=True))
         date.Now = oldNow
         
@@ -273,7 +273,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         now = self.tomorrow + date.oneSecond
         oldNow = date.Now
         date.Now = lambda: now
-        date.Clock().notifySpecificTimeObservers(now)
+        self.task.onOverDue()
         self.assertEqual('led_red_icon', self.task.icon(recursive=True))
         date.Now = oldNow
         
@@ -283,7 +283,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         now = self.tomorrow + date.oneSecond - date.TimeDelta(hours=1)
         oldNow = date.Now
         date.Now = lambda: now
-        date.Clock().notifySpecificTimeObservers(now)
+        self.task.onDueSoon()
         self.assertEqual('led_orange_icon', self.task.icon(recursive=True))
         date.Now = oldNow
 
@@ -293,7 +293,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         now = self.tomorrow + date.oneSecond - date.TimeDelta(hours=1)
         oldNow = date.Now
         date.Now = lambda: now
-        date.Clock().notifySpecificTimeObservers(now)
+        self.task.onDueSoon()
         self.assertEqual('led_orange_icon', self.task.icon(recursive=True))
         date.Now = oldNow
 
@@ -830,7 +830,7 @@ class TaskDueTodayTest(TaskTestCase, CommonTaskTestsMixin):
         now = self.task.dueDateTime() + date.oneSecond
         oldNow = date.Now
         date.Now = lambda: now
-        date.Clock().notifySpecificTimeObservers(now)
+        self.task.onOverDue()
         self.assertEqual('led_red_icon', self.task.icon(recursive=True))
         date.Now = oldNow
         
@@ -839,7 +839,7 @@ class TaskDueTodayTest(TaskTestCase, CommonTaskTestsMixin):
         now = self.task.dueDateTime() + date.oneSecond
         oldNow = date.Now
         date.Now = lambda: now
-        date.Clock().notifySpecificTimeObservers(now)
+        self.task.onOverDue()
         self.assertEvent(self.task.appearanceChangedEventType(), self.task)
         date.Now = oldNow
 
@@ -1064,7 +1064,7 @@ class TaskWithPlannedStartDateInTheFutureTest(TaskTestCase, CommonTaskTestsMixin
         now = self.task.plannedStartDateTime() + date.oneSecond
         oldNow = date.Now
         date.Now = lambda: now
-        date.Clock().notifySpecificTimeObservers(now)
+        date.Scheduler()._process_jobs(now)
         self.assertEqual('led_purple_icon', self.task.icon(recursive=True))
         date.Now = oldNow
         
@@ -1073,7 +1073,7 @@ class TaskWithPlannedStartDateInTheFutureTest(TaskTestCase, CommonTaskTestsMixin
         now = self.task.plannedStartDateTime() + date.oneSecond
         oldNow = date.Now
         date.Now = lambda: now
-        date.Clock().notifySpecificTimeObservers(now)
+        self.task.onTimeToStart()
         self.assertEvent(self.task.appearanceChangedEventType(), self.task)
         date.Now = oldNow
 

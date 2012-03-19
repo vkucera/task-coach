@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import sys, unittest, os, time, wx
+import sys, unittest, os, time, wx, logging
 projectRoot = os.path.abspath('..')
 if projectRoot not in sys.path:
     sys.path.insert(0, projectRoot)
@@ -68,7 +68,8 @@ class TestCase(unittest.TestCase, object):
         patterns.CommandHistory().clear()
         patterns.NumberedInstances.count = dict()
         from taskcoachlib.domain import date
-        date.Clock().reset()
+        date.Scheduler().shutdown(False, False)
+        date.Scheduler.deleteInstance()
         if hasattr(self, 'events'):
             del self.events
         super(TestCase, self).tearDown()
@@ -313,6 +314,7 @@ class TestProfiler:
 
     
 if __name__ == '__main__':
+    logging.basicConfig()
     theOptions, theTestFiles = TestOptionParser().parse_args()
     allTests = AllTests(theOptions, theTestFiles)
     if theOptions.profile:
