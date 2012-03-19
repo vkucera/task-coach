@@ -31,7 +31,7 @@ class DummyPane(object):
         
     def IsToolbar(self):
         return False
-
+    
 
 class DummyEvent(object):
     def __init__(self, pane):
@@ -73,9 +73,9 @@ class ViewerContainerTest(test.wxTestCase):
         if operating_system.isMac():
             self.mainWindow.OnQuit() # Stop power monitoring thread
         self.mainWindow._idleController.stop()
-        pub.unsubscribe(self.onEvent, 'viewer.status')
+        self.mainWindow.Destroy()
         super(ViewerContainerTest, self).tearDown()
-
+        
     def createViewer(self, settingsSection):
         self.settings.add_section(settingsSection)
         return dummy.ViewerWithDummyWidget(self.mainWindow, self.taskFile, 
