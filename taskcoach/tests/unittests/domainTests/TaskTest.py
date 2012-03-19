@@ -278,7 +278,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         date.Now = oldNow
         
     def testIconChangedAfterTaskHasBecomeDueSoon(self):
-        self.settings.set('behavior', 'duesoonhours', '1')
+        self.settings.setint('behavior', 'duesoonhours', 1)
         self.task.setDueDateTime(self.tomorrow)
         now = self.tomorrow + date.oneSecond - date.TimeDelta(hours=1)
         oldNow = date.Now
@@ -289,7 +289,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
 
     def testIconChangedAfterTaskHasBecomeDueSoonAccordingToNewDueSoonSetting(self):
         self.task.setDueDateTime(self.tomorrow)
-        self.settings.set('behavior', 'duesoonhours', '1')
+        self.settings.setint('behavior', 'duesoonhours', 1)
         now = self.tomorrow + date.oneSecond - date.TimeDelta(hours=1)
         oldNow = date.Now
         date.Now = lambda: now
@@ -810,12 +810,12 @@ class TaskDueTodayTest(TaskTestCase, CommonTaskTestsMixin):
         self.assertEqual('led_orange_icon', self.task.selectedIcon(recursive=True))
         
     def testIconAfterChangingDueSoonHours(self):
-        self.settings.set('behavior', 'duesoonhours', '0')
+        self.settings.setint('behavior', 'duesoonhours', 0)
         self.assertEqual('led_grey_icon', self.task.icon(recursive=True))
         
     def testAppearanceNotificationAfterChangingDueSoonHours(self):
         self.registerObserver(self.task.appearanceChangedEventType())
-        self.settings.set('behavior', 'duesoonhours', '0')
+        self.settings.setint('behavior', 'duesoonhours', 0)
         self.assertEvent(self.task.appearanceChangedEventType(), self.task)
         
     def testIconAfterDueDateTimeHasPassed(self):
@@ -851,7 +851,7 @@ class TaskDueTomorrowTest(TaskTestCase, CommonTaskTestsMixin):
         self.failIf(self.task.dueSoon())
         
     def testDueSoon_2days(self):
-        self.settings.set('behavior', 'duesoonhours', '48')
+        self.settings.setint('behavior', 'duesoonhours', 48)
         self.failUnless(self.task.dueSoon())
 
     def testIconNotDueSoon(self):
@@ -861,16 +861,16 @@ class TaskDueTomorrowTest(TaskTestCase, CommonTaskTestsMixin):
         self.assertEqual('led_grey_icon', self.task.selectedIcon(recursive=True))
 
     def testIconDueSoon(self):
-        self.settings.set('behavior', 'duesoonhours', '48')
+        self.settings.setint('behavior', 'duesoonhours', 48)
         self.assertEqual('led_orange_icon', self.task.icon(recursive=True))
 
     def testSelectedIconDueSoon(self):
-        self.settings.set('behavior', 'duesoonhours', '48')
+        self.settings.setint('behavior', 'duesoonhours', 48)
         self.assertEqual('led_orange_icon', self.task.selectedIcon(recursive=True))
 
     def testAppearanceNotificationAfterChangingDueSoonHours(self):
         self.registerObserver(self.task.appearanceChangedEventType())
-        self.settings.set('behavior', 'duesoonhours', '48')
+        self.settings.setint('behavior', 'duesoonhours', 48)
         self.assertEvent(self.task.appearanceChangedEventType(), self.task)
 
 

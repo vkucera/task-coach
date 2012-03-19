@@ -189,7 +189,7 @@ class SettingsPageBase(widgets.BookPage):
             self.set(section, setting,
                      str([choices[index] for index in range(len(choices)) if multipleChoice.IsChecked(index)]))
         for section, setting, spin in self._integerSettings:
-            self.set(section, setting, str(spin.GetValue()))
+            self.setint(section, setting, spin.GetValue())
         for section, setting, colorButton in self._colorSettings:
             self.set(section, setting, str(colorButton.GetColour()))
         for section, setting, fontButton in self._fontSettings:
@@ -208,17 +208,21 @@ class SettingsPageBase(widgets.BookPage):
     def get(self, section, name):
         raise NotImplementedError
 
+    def set(self, section, name, value):
+        raise NotImplementedError
+
     def getint(self, section, name):
         return int(self.get(section, name))
-
+    
+    def setint(self, section, name, value):
+        self.set(section, name, str(value))
+        
     def setboolean(self, section, name, value):
-        raise NotImplementedError
+        self.set(section, name, str(value))
         
     def getboolean(self, section, name):
         return self.get(section, name) == 'True'
 
-    def set(self, section, name, value):
-        raise NotImplementedError
 
 
 class SettingsPage(SettingsPageBase):
@@ -237,16 +241,19 @@ class SettingsPage(SettingsPageBase):
     def get(self, section, name):
         return self.settings.get(section, name)
 
-    def getint(self, section, name):
-        return self.settings.getint(section, name)
-
-    def getboolean(self, section, name):
-        return self.settings.getboolean(section, name)
-
     def set(self, section, name, value):
         if section is not None:
             self.settings.set(section, name, value)
-            
+
+    def getint(self, section, name):
+        return self.settings.getint(section, name)
+
+    def setint(self, section, name, value):
+        self.settings.setint(section, name, value)
+        
+    def getboolean(self, section, name):
+        return self.settings.getboolean(section, name)
+
     def setboolean(self, section, name, value):
         if section is not None:
             self.settings.setboolean(section, name, value)

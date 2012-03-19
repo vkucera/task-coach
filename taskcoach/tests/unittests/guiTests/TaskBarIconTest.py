@@ -88,7 +88,7 @@ class TaskBarIconTooltipTest(TaskBarIconTooltipTestCase):
         
     def testOneTaskNoLongerDueSoonAfterChangingDueSoonSetting(self):
         self.taskList.append(task.Task(dueDateTime=date.Now() + date.oneHour))
-        self.settings.set('behavior', 'duesoonhours', '0')
+        self.settings.setint('behavior', 'duesoonhours', 0)
         self.assertTooltip('')
         
     def testTwoTasksDueSoon(self):

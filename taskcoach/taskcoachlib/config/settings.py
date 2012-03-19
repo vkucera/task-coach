@@ -195,7 +195,7 @@ class Settings(object, CachingConfigParser):
         if self.set(section, option, str(value)):
             pub.sendMessage('settings.%s.%s'%(section, option), value=value)
             
-    setvalue = settuple = setlist = setdict = setboolean
+    setvalue = settuple = setlist = setdict = setint = setboolean
     
     def getlist(self, section, option):
         return self.getEvaluatedValue(section, option, eval)

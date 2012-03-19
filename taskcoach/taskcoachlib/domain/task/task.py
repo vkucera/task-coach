@@ -23,6 +23,7 @@ import wx
 from taskcoachlib import patterns
 from taskcoachlib.domain import base, date, categorizable, note, attachment
 from taskcoachlib.domain.attribute import color
+from taskcoachlib.thirdparty.pubsub import pub
 import status
 
 
@@ -85,7 +86,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             registerObserver(self.__computeRecursiveBackgroundColor, 'bgcolor.%stasks'%taskStatus)
             registerObserver(self.__computeRecursiveIcon, 'icon.%stasks'%taskStatus)
             registerObserver(self.__computeRecursiveSelectedIcon, 'icon.%stasks'%taskStatus)
-        registerObserver(self.onDueSoonHoursChanged, 'behavior.duesoonhours')
+        pub.subscribe(self.onDueSoonHoursChanged, 'settings.behavior.duesoonhours')
 
         now = date.Now()
         if now < self.__dueDateTime.get() < maxDateTime:
@@ -517,11 +518,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 self.__status = status.inactive
         return self.__status
     
-    def onDueSoonHoursChanged(self, event):
+    def onDueSoonHoursChanged(self, value):
         date.Scheduler().unschedule(self.onDueSoon)
-        self.__dueSoonHours = int(event.value())
+        self.__dueSoonHours = value
         dueDateTime = self.dueDateTime()
-        if dueDateTime != self.maxDateTime:
+        if dueDateTime < self.maxDateTime:
             newDueSoonDateTime = dueDateTime + date.oneSecond - date.TimeDelta(hours=self.__dueSoonHours)
             date.Scheduler().schedule(self.onDueSoon, newDueSoonDateTime)
         self.recomputeAppearance()
