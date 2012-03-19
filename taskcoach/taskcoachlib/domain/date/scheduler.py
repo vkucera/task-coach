@@ -42,6 +42,7 @@ class Scheduler(apscheduler.scheduler.Scheduler):
     def schedule_interval(self, function, days=0, minutes=0, seconds=0):
         def callback():
             wx.CallAfter(function)
+            
         if function not in self.__jobs:
             start_date = dateandtime.Now().endOfDay() if days > 0 else None
             self.__jobs[function] = self.add_interval_job(callback, days=days, minutes=minutes, 

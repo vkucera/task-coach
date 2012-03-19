@@ -190,10 +190,6 @@ class Clock(object):
         period = eventType.split('.')[1]
         if period in self._timers:
             self._timers[period].Stop()
-                
-    def removeClockObserverForSpecificTime(self, observer, dateTime):
-        patterns.Publisher().removeObserver(observer, self.eventType(dateTime))
-        # No need to adjust the timer, when it fires nothing happens
             
     def _scheduleDateTime(self, dateTime):
         timer = self._timers.setdefault('scheduled', 

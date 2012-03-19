@@ -32,14 +32,14 @@ class APSchedulerTest(test.TestCase):
         self.jobCalled += 1
         
     def testScheduleJob(self):
-        self.scheduler.add_date_job(self.job, date.Now() + date.TimeDelta(microseconds=500))
+        self.scheduler.add_date_job(self.job, date.Now() + date.TimeDelta(microseconds=600))
         while self.scheduler.get_jobs():
             pass
         self.assertEqual(1, self.jobCalled)
         
     def testScheduleTwoJobs(self):
-        self.scheduler.add_date_job(self.job, date.Now() + date.TimeDelta(microseconds=500))
-        self.scheduler.add_date_job(self.job, date.Now() + date.TimeDelta(microseconds=600))
+        self.scheduler.add_date_job(self.job, date.Now() + date.TimeDelta(microseconds=650))
+        self.scheduler.add_date_job(self.job, date.Now() + date.TimeDelta(microseconds=700))
         while self.scheduler.get_jobs():
             pass
         self.assertEqual(2, self.jobCalled)
