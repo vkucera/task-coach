@@ -48,6 +48,7 @@ class AppTests(test.TestCase):
         self.assertEqual(meta.author, wxApp.GetVendorName())
         app.mainwindow._idleController.stop()
         app.quit()
+        app.mainwindow.Destroy()
         application.Application.deleteInstance()
         
     def assertLanguage(self, expectedLanguage, locale=None):
