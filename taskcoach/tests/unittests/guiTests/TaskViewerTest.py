@@ -52,13 +52,15 @@ class TaskViewerTestCase(test.wxTestCase):
         self.viewer.showTree(self.treeMode)
         self.newColor = (100, 200, 100, 255)
         attachment.Attachment.attdir = os.getcwd()
-        self.originalLocale = locale.getlocale(locale.LC_ALL)
-        tmpLocale = os.environ['LC_ALL'] if 'LC_ALL' in os.environ else ('en_US' if operating_system.isMac() else '')
-        locale.setlocale(locale.LC_ALL, tmpLocale)
+        if not operating_system.isGTK():
+            self.originalLocale = locale.getlocale(locale.LC_ALL)
+            tmpLocale = os.environ['LC_ALL'] if 'LC_ALL' in os.environ else ('en_US' if operating_system.isMac() else '')
+            locale.setlocale(locale.LC_ALL, tmpLocale)
 
     def tearDown(self):
         super(TaskViewerTestCase, self).tearDown()
-        locale.setlocale(locale.LC_ALL, self.originalLocale)
+        if not operating_system.isGTK():
+            locale.setlocale(locale.LC_ALL, self.originalLocale)
         attachment.Attachment.attdir = None
 
         for name in os.listdir('.'):
