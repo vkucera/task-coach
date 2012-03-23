@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 from taskcoachlib.domain import base
+from taskcoachlib.thirdparty.pubsub import pub
 from category import Category
 
 
@@ -37,9 +38,7 @@ class CategoryFilter(base.Filter):
         for eventType in eventTypes:
             patterns.Publisher().registerObserver(self.onCategoryChanged,
                                                   eventType=eventType)
-        patterns.Publisher().registerObserver(self.onFilterMatchingChanged,
-            eventType='view.categoryfiltermatchall')
-
+        pub.subscribe(self.onFilterMatchingChanged, 'settings.view.categoryfiltermatchall')
         super(CategoryFilter, self).__init__(*args, **kwargs)
     
     def filter(self, categorizables):
@@ -66,8 +65,8 @@ class CategoryFilter(base.Filter):
             categorizables |= set(categorizable.children(recursive=True))           
         return categorizables
         
-    def onFilterMatchingChanged(self, event):
-        self.__filterOnlyWhenAllCategoriesMatch = eval(event.value())
+    def onFilterMatchingChanged(self, value):
+        self.__filterOnlyWhenAllCategoriesMatch = value
         self.reset()
 
     def onCategoryChanged(self, event): # pylint: disable-msg=W0613
