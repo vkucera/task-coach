@@ -16,7 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-
 import wx
 from taskcoachlib.powermgt import IdleNotifier
 from taskcoachlib.patterns import Observer
@@ -24,6 +23,7 @@ from taskcoachlib.domain import effort, date
 from taskcoachlib.command import NewEffortCommand, EditEffortStopDateTimeCommand
 from taskcoachlib.notify import NotificationFrameBase, NotificationCenter
 from taskcoachlib.i18n import _
+
 
 class WakeFromIdleFrame(NotificationFrameBase):
     def __init__(self, idleTime, effort, displayedEfforts, *args, **kwargs):

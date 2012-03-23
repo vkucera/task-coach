@@ -26,6 +26,7 @@ from taskcoachlib.domain import task, date
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, dialog
 from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_TODAY, wxFancyDrawer
+from taskcoachlib.thirdparty.pubsub import pub
 from taskcoachlib.widgets import CalendarConfigDialog
 import base, mixin, refresher, inplace_editor
 
@@ -70,11 +71,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin, # pylint: disable-msg=W0223
                           'task.prerequisites'):
             self.registerObserver(self.onAttributeChanged,
                                   eventType=eventType)
-        self.registerObserver(self.onWake,
-            eventType='powermgt.on')
-
-    def onWake(self, event): # pylint: disable-msg=W0613
-        self.refresh()
+        pub.subscribe(self.refresh, 'powermgt.on')
         
     def onAppearanceSettingChange(self, event): # pylint: disable-msg=W0613
         wx.CallAfter(self.refresh) # Let domain objects update appearance first
