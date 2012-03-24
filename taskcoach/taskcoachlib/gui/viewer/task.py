@@ -542,8 +542,8 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         self.reconfig()
         self.widget.SetPeriodWidth(self.settings.getint(self.settingsSection(), 'periodwidth'))
 
-        for eventType in ('view.efforthourstart', 'view.efforthourend'):
-            self.registerObserver(self.onWorkingHourChanged, eventType)
+        for eventType in ('start', 'end'):
+            pub.subscribe(self.onWorkingHourChanged, 'settings.view.efforthour%s'%eventType)
 
         # pylint: disable-msg=E1101
         for eventType in (task.Task.subjectChangedEventType(), 'task.plannedStartDateTime',
@@ -569,7 +569,7 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
     def onWake(self, event):
         self.atMidnight()
 
-    def onWorkingHourChanged(self, event): # pylint: disable-msg=W0613
+    def onWorkingHourChanged(self, value): # pylint: disable-msg=W0613
         self.widget.SetWorkHours(self.settings.getint('view', 'efforthourstart'),
                                  self.settings.getint('view', 'efforthourend'))
 

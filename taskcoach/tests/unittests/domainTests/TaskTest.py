@@ -2515,8 +2515,8 @@ class TaskSuggestedDateTimeTestWithDefaultStartAndEndOfWorkingDay( \
 class TaskSuggestedDateTimeTestWithStartAndEndOfWorkingDayEqualToDay( \
         TaskSuggestedDateTimeBaseSetupAndTests, test.TestCase):
     def changeSettings(self):
-        self.settings.set('view', 'efforthourstart', '0')
-        self.settings.set('view', 'efforthourend', '24')
+        self.settings.setint('view', 'efforthourstart', 0)
+        self.settings.setint('view', 'efforthourend', 24)
 
 
 class TaskConstructionTest(test.TestCase):
