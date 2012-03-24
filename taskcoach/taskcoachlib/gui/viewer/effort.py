@@ -21,11 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import patterns, command, widgets, domain, render
+from taskcoachlib import command, widgets, domain, render
 from taskcoachlib.domain import effort, date
 from taskcoachlib.domain.base import filter # pylint: disable-msg=W0622
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, dialog
+from taskcoachlib.thirdparty.pubsub import pub
 import base, mixin, refresher
 
 
@@ -130,7 +131,7 @@ class EffortViewer(base.ListViewer,
         if autoResizing:
             self.widget.ToggleAutoResizing(True)
         self.initRoundingToolBarUICommands()
-        patterns.Event('effortviewer.aggregation').send()
+        pub.sendMessage('effortviewer.aggregation')
             
     def isShowingAggregatedEffort(self):
         return self.aggregation != 'details'

@@ -75,12 +75,12 @@ class DynamicMenu(Menu):
             that the menu gets a chance to update itself at the right time. '''
         raise NotImplementedError
 
-    def onUpdateMenu(self, event):
+    def onUpdateMenu(self, event=None):
         ''' This event handler should be called at the right times so that
             the menu has a chance to update itself. '''
         # If this is called by wx, 'skip' the event so that other event
         # handlers get a chance too:
-        if hasattr(event, 'Skip'):
+        if event and hasattr(event, 'Skip'):
             event.Skip()
         try: # Prepare for menu or window to be destroyed
             self.updateMenu()
@@ -885,9 +885,11 @@ class EffortViewerColumnPopupMenu(ColumnPopupMenuMixin,
     ''' Column header popup menu. '''
     
     def registerForMenuUpdate(self):
-        patterns.Publisher().registerObserver(self.onUpdateMenu, 
-                                              'effortviewer.aggregation')
+        pub.subscribe(self.onChangeAggregation, 'effortviewer.aggregation')
             
+    def onChangeAggregation(self):
+        self.onUpdateMenu()
+        
 
 class AttachmentPopupMenu(Menu):
     def __init__(self, mainwindow, settings, attachments, attachmentViewer):
