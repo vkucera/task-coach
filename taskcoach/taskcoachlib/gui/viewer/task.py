@@ -1130,9 +1130,8 @@ class TaskStatsViewer(BaseTaskViewer): # pylint: disable-msg=W0223
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'taskstatsviewer')
         super(TaskStatsViewer, self).__init__(*args, **kwargs)
-        self.registerObserver(self.onPieChartAngleChanged,
-                              eventType='.'.join((self.settingsSection(),
-                                                  'piechartangle')))
+        pub.subscribe(self.onPieChartAngleChanged, 
+                      'settings.%s.piechartangle'%self.settingsSection())
         
     def createWidget(self):
         widget = wx.lib.agw.piectrl.PieCtrl(self)
@@ -1208,5 +1207,5 @@ class TaskStatsViewer(BaseTaskViewer): # pylint: disable-msg=W0223
     def isTreeViewer(self):
         return False
 
-    def onPieChartAngleChanged(self, event): # pylint: disable-msg=W0613
+    def onPieChartAngleChanged(self, value): # pylint: disable-msg=W0613
         self.refresh()

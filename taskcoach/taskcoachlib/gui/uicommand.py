@@ -2530,8 +2530,8 @@ class ViewerPieChartAngle(ViewerCommand, SettingsCommand):
                                     'piechartangle')
 
     def setCurrentAngle(self):
-        self.settings.set(self.viewer.settingsSection(), 'piechartangle', 
-                          str(self.sliderCtrl.GetValue()))
+        self.settings.setint(self.viewer.settingsSection(), 'piechartangle', 
+                             self.sliderCtrl.GetValue())
    
 
 class RoundingPrecision(ToolbarChoiceCommandMixin, ViewerCommand, SettingsCommand):
