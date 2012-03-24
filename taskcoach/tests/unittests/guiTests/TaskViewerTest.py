@@ -110,7 +110,7 @@ class TaskViewerTestCase(test.wxTestCase):
         self.viewer.showColumnByName(columnName, show)
 
     def setColor(self, setting):
-        self.settings.set('fgcolor', setting, str(self.newColor))        
+        self.settings.settuple('fgcolor', setting, self.newColor)       
          
     def assertColor(self, expectedColor=None):
         expectedColor = expectedColor or wx.Colour(*self.newColor)

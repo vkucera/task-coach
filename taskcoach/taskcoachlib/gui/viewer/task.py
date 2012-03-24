@@ -61,11 +61,10 @@ class BaseTaskViewer(mixin.SearchableViewerMixin, # pylint: disable-msg=W0223
 
     def __registerForAppearanceChanges(self):
         for appearance in ('font', 'fgcolor', 'bgcolor', 'icon'):
-            appearanceSettings = ['%s.%s'%(appearance, setting) for setting in 'activetasks',\
+            appearanceSettings = ['settings.%s.%s'%(appearance, setting) for setting in 'activetasks',\
                                   'inactivetasks', 'completedtasks', 'duesoontasks', 'overduetasks', 'latetasks'] 
             for appearanceSetting in appearanceSettings:
-                self.registerObserver(self.onAppearanceSettingChange, 
-                                      eventType=appearanceSetting)
+                pub.subscribe(self.onAppearanceSettingChange, appearanceSetting)
         for eventType in (task.Task.appearanceChangedEventType(), 
                           task.Task.percentageCompleteChangedEventType(),
                           'task.prerequisites'):
@@ -73,7 +72,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin, # pylint: disable-msg=W0223
                                   eventType=eventType)
         pub.subscribe(self.refresh, 'powermgt.on')
         
-    def onAppearanceSettingChange(self, event): # pylint: disable-msg=W0613
+    def onAppearanceSettingChange(self, value): # pylint: disable-msg=W0613
         wx.CallAfter(self.refresh) # Let domain objects update appearance first
 
     def domainObjectsToView(self):
