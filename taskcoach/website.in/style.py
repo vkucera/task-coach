@@ -26,8 +26,8 @@ header = '''
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />     
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-        <script type="text/javascript" src="http://twitter.github.com/bootstrap/1.4.0/bootstrap-dropdown.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+        <script type="text/javascript" src="js/bootstrap-dropdown.js"></script>
         <script type="text/javascript" src="js/jquery.lightbox-0.5.min.js"></script>
         <script type="text/javascript">
 /* <![CDATA[ */
@@ -40,7 +40,7 @@ header = '''
     })();
 /* ]]> */
         </script>
-        <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/jquery.lightbox-0.5.css" type="text/css" media="screen" />
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
         <link rel="canonical" href="%(url)s" />
@@ -66,13 +66,13 @@ try {
 var pageTracker = _gat._getTracker("UA-8814256-1");
 pageTracker._trackPageview();
 } catch(err) {}</script>
-    <div class="topbar">
-        <div class="topbar-inner">
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
             <div class="container">
                 <a class="brand" title="Your friendly task manager" href="index.html">%(name)s</a>
                 <ul class="nav">
-                    <li class="dropdown" data-dropdown="dropdown">
-                        <a title="About %(name)s" href="#" class="dropdown-toggle">About</a>
+                    <li class="dropdown" id="about_menu">
+                        <a title="About %(name)s" href="#about_menu" class="dropdown-toggle" data-toggle="dropdown">About</a>
                         <ul class="dropdown-menu">
                             <li><a href="screenshots.html" 
                                    title="View some screenshots of %(name)s here">Screenshots</a></li>
@@ -90,14 +90,15 @@ pageTracker._trackPageview();
                     </li>
                 </ul>
                 <ul class="nav">
-                    <li class="dropdown" data-dropdown="dropdown">
-                        <a href="#" title="Download %(name)s for free" class="dropdown-toggle">Download</a>
+                    <li class="dropdown" id="download_menu">
+                        <a href="#download_menu" title="Download %(name)s for free" class="dropdown-toggle" data-toggle="dropdown">Download</a>
                         <ul class="dropdown-menu">
                             <li><a href="download_for_windows.html" title="Download %(name)s for Windows">Windows</a></li>
                             <li><a href="download_for_mac.html" title="Download %(name)s for Mac OS X">Mac OS X</a></li>
                             <li><a href="download_for_linux.html" title="Download %(name)s for Linux">Linux</a></li>
                             <li><a href="download_for_bsd.html" title="Download %(name)s for BSD">BSD</a></li>
                             <li><a href="download_for_iphone.html" title="Download %(name)s for iPhone and iPod Touch">iPhone and iPod Touch</a></li>
+                            <li class="divider"></li>
                             <li><a href="download_sources.html" title="Download %(name)s sources">Sources</a></li>
                             <li><a href="download_daily_build.html" title="Download %(name)s daily builds">Daily builds</a></li>
                             <li><a href="download_old_releases.html" title="Download old releases of %(name)s ">Old releases</a></li>
@@ -107,7 +108,7 @@ pageTracker._trackPageview();
                     <li><a title="Support options" href="getsupport.html">Get support</a></li>
                     <li><a title="How you can help us" href="givesupport.html">Give support</a></li>
                 </ul>
-                <ul class="nav secondary-nav">
+                <ul class="nav pull-right">
                     <li><a href="changes.html">%(name)s %(version)s was released on %(date)s.</a></li>
                 </ul>
             </div>
@@ -120,7 +121,8 @@ pageTracker._trackPageview();
 footer = '''        
         </div><!-- end of content div -->
         <script type="text/javascript" src="http://apis.google.com/js/plusone.js"></script>
-        <footer>
+        <footer class="footer">
+            <hr>
             <p style="text-align: center">
                 %(name)s is made possible by:
                 <br>
