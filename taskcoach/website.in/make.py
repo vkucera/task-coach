@@ -699,11 +699,11 @@ pages['features'] = '''
             </div>'''
 
 
-def appendThumbnails(name):
+def thumbnails(indent):
     systems = reversed([path for path in os.listdir('screenshots') \
                             if os.path.isdir(os.path.join('screenshots', path)) and \
                             not path.startswith('.')])
-    
+    thumbnails = ''
     for system in systems:
         images = []
 
@@ -719,12 +719,26 @@ def appendThumbnails(name):
         if not images:
             continue
 
-        pages[name] += '<h2>%s</h2><ul class="thumbnails">' % system
+        thumbnails += ' ' * indent + '<h2>%s</h2>\n'%system
+        thumbnails += ' ' * indent + '<ul class="thumbnails">\n'
         for caption, thumbnailFilename, filename in images:
-            pages[name] += '<li><a class="lightbox" title="%s" href="%s"><img src="%s" alt="%s"/></a></li>'% (caption, 
+            thumbnails += ' ' * (indent + 4) + '<li><a class="lightbox" title="%s" href="%s"><img src="%s" alt="%s"/></a></li>\n'% (caption, 
                         filename.replace('\\', '/'), thumbnailFilename.replace('\\', '/'), caption)
-        pages[name] += '</ul>'
+        thumbnails += ' ' * indent + '</ul>'
+    return thumbnails
 
+
+pages['screenshots'] = '''
+            <div class="page-header">
+                <h1>Screenshots <small>Click thumbnails to see full size screenshots</small></h1>
+            </div>
+            <div class="row">
+                <div class="span10">
+''' + thumbnails(indent=20) + '''
+                </div>
+                <div class="span2">''' + ads + '''
+                </div>
+            </div>'''
 
 pages['license'] = '''
             <div class="page-header">
@@ -739,11 +753,6 @@ pages['license'] = '''
                 </div>
             </div>'''
 
-pages['screenshots'] = '''
-            <div class="page-header">
-                <h1>Screenshots <small>Click thumbnails to see full size screenshots</small></h1>
-            </div>'''
-appendThumbnails('screenshots')
 
 def languages(nr_columns=9):
     link = '<a href="https://translations.launchpad.net/taskcoach/1.3/+pots/i18n.in/%s/+details">%s</a>'
