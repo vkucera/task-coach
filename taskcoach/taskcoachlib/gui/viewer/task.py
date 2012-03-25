@@ -26,6 +26,7 @@ from taskcoachlib.domain import task, date
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, dialog
 from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_TODAY, wxFancyDrawer
+from taskcoachlib.thirdparty.pubsub import pub
 from taskcoachlib.widgets import CalendarConfigDialog
 import base, mixin, refresher, inplace_editor
 
@@ -60,23 +61,18 @@ class BaseTaskViewer(mixin.SearchableViewerMixin, # pylint: disable-msg=W0223
 
     def __registerForAppearanceChanges(self):
         for appearance in ('font', 'fgcolor', 'bgcolor', 'icon'):
-            appearanceSettings = ['%s.%s'%(appearance, setting) for setting in 'activetasks',\
+            appearanceSettings = ['settings.%s.%s'%(appearance, setting) for setting in 'activetasks',\
                                   'inactivetasks', 'completedtasks', 'duesoontasks', 'overduetasks', 'latetasks'] 
             for appearanceSetting in appearanceSettings:
-                self.registerObserver(self.onAppearanceSettingChange, 
-                                      eventType=appearanceSetting)
+                pub.subscribe(self.onAppearanceSettingChange, appearanceSetting)
         for eventType in (task.Task.appearanceChangedEventType(), 
                           task.Task.percentageCompleteChangedEventType(),
                           'task.prerequisites'):
             self.registerObserver(self.onAttributeChanged,
                                   eventType=eventType)
-        self.registerObserver(self.onWake,
-            eventType='powermgt.on')
-
-    def onWake(self, event): # pylint: disable-msg=W0613
-        self.refresh()
+        pub.subscribe(self.refresh, 'powermgt.on')
         
-    def onAppearanceSettingChange(self, event): # pylint: disable-msg=W0613
+    def onAppearanceSettingChange(self, value): # pylint: disable-msg=W0613
         wx.CallAfter(self.refresh) # Let domain objects update appearance first
 
     def domainObjectsToView(self):
@@ -549,8 +545,8 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         self.reconfig()
         self.widget.SetPeriodWidth(self.settings.getint(self.settingsSection(), 'periodwidth'))
 
-        for eventType in ('view.efforthourstart', 'view.efforthourend'):
-            self.registerObserver(self.onWorkingHourChanged, eventType)
+        for eventType in ('start', 'end'):
+            pub.subscribe(self.onWorkingHourChanged, 'settings.view.efforthour%s'%eventType)
 
         # pylint: disable-msg=E1101
         for eventType in (task.Task.subjectChangedEventType(),
@@ -578,7 +574,7 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
     def onWake(self, event):
         self.atMidnight()
 
-    def onWorkingHourChanged(self, event): # pylint: disable-msg=W0613
+    def onWorkingHourChanged(self, value): # pylint: disable-msg=W0613
         self.widget.SetWorkHours(self.settings.getint('view', 'efforthourstart'),
                                  self.settings.getint('view', 'efforthourend'))
 
@@ -1141,9 +1137,8 @@ class TaskStatsViewer(BaseTaskViewer): # pylint: disable-msg=W0223
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'taskstatsviewer')
         super(TaskStatsViewer, self).__init__(*args, **kwargs)
-        self.registerObserver(self.onPieChartAngleChanged,
-                              eventType='.'.join((self.settingsSection(),
-                                                  'piechartangle')))
+        pub.subscribe(self.onPieChartAngleChanged, 
+                      'settings.%s.piechartangle'%self.settingsSection())
         
     def createWidget(self):
         widget = wx.lib.agw.piectrl.PieCtrl(self)
@@ -1219,5 +1214,5 @@ class TaskStatsViewer(BaseTaskViewer): # pylint: disable-msg=W0223
     def isTreeViewer(self):
         return False
 
-    def onPieChartAngleChanged(self, event): # pylint: disable-msg=W0613
+    def onPieChartAngleChanged(self, value): # pylint: disable-msg=W0613
         self.refresh()

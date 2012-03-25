@@ -55,7 +55,7 @@ class MainWindowTestCase(test.wxTestCase):
         self.taskFile = persistence.TaskFile()
         self.mainwindow = MainWindowUnderTest(DummyIOController(),
             self.taskFile, self.settings)
-        
+            
     def setSettings(self):
         pass
 
@@ -93,7 +93,8 @@ class MainWindowMaximizeTestCase(MainWindowTestCase):
     
     def setUp(self):
         super(MainWindowMaximizeTestCase, self).setUp()
-        self.mainwindow.Show() # Or IsMaximized() returns always False...
+        if not operating_system.isMac():
+            self.mainwindow.Show() # Or IsMaximized() returns always False...
         
     def setSettings(self):
         self.settings.setboolean('window', 'maximized', self.maximized)
@@ -112,7 +113,8 @@ class MainWindowNotMaximizedTest(MainWindowMaximizeTestCase):
         # http://trac.wxwidgets.org/ticket/9167 and to my own tests,
         # EVT_MAXIMIZE is a noop under this platform.
         self.mainwindow.Maximize()
-        wx.Yield()
+        if operating_system.isWindows():
+            wx.Yield()
         self.failUnless(self.settings.getboolean('window', 'maximized'))
 
 

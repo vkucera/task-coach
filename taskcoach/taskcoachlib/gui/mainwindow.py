@@ -297,8 +297,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
     # Power management
 
     def OnPowerState(self, state):
-        patterns.observer.Event('powermgt.%s' % {self.POWERON: 'on', self.POWEROFF: 'off'}[state],
-                                self).send()
+        pub.sendMessage('powermgt.%s' % {self.POWERON: 'on', self.POWEROFF: 'off'}[state])
 
     # iPhone-related methods. These are called from the asyncore thread so they're deferred.
 

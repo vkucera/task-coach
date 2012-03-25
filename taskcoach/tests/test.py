@@ -72,6 +72,8 @@ class TestCase(unittest.TestCase, object):
         date.Scheduler.deleteInstance()
         if hasattr(self, 'events'):
             del self.events
+        from taskcoachlib.thirdparty.pubsub import pub
+        pub.unsubAll()
         super(TestCase, self).tearDown()
         
 

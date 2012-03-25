@@ -20,6 +20,7 @@ import wx
 from taskcoachlib import patterns, meta, notify
 from taskcoachlib.domain import date, task
 from taskcoachlib.gui.dialog import reminder, editor
+from taskcoachlib.thirdparty.pubsub import pub
 from taskcoachlib.i18n import _
 
 
@@ -34,7 +35,7 @@ class ReminderController(object):
         patterns.Publisher().registerObserver(self.onRemoveTask,
             eventType=taskList.removeItemEventType(),
             eventSource=taskList)
-        patterns.Publisher().registerObserver(self.onWake, eventType='powermgt.on')
+        pub.subscribe(self.onReminder, 'powermgt.on')
         self.__tasksWithReminders = {} # {task: reminderDateTime}
         self.__mainWindow = mainWindow
         self.__mainWindowWasHidden = False
@@ -53,9 +54,6 @@ class ReminderController(object):
         tasks = event.sources()
         self.__removeRemindersForTasks(tasks)
         self.__registerRemindersForTasks(tasks)
-        
-    def onWake(self, event):
-        self.showReminderMessages(date.DateTime.now())
         
     def onReminder(self):
         self.showReminderMessages(date.DateTime.now())

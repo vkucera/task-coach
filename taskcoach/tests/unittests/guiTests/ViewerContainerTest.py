@@ -18,9 +18,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test
 from unittests import dummy
-from taskcoachlib import gui, config, persistence, operating_system
+from taskcoachlib import gui, config, persistence, widgets
 from taskcoachlib.domain import task
 from taskcoachlib.thirdparty.pubsub import pub
+
+
+class DummyMainWindow(widgets.AuiManagedFrameWithDynamicCenterPane):
+    count = 0
+    
+    def __init__(self):
+        super(DummyMainWindow, self).__init__(None)
+
+    def addPane(self, pane, title):
+        self.count += 1
+        super(DummyMainWindow, self).addPane(pane, title, str('name%d'%self.count))
 
 
 class DummyPane(object):
@@ -31,7 +42,16 @@ class DummyPane(object):
         
     def IsToolbar(self):
         return False
-
+    
+    def IsNotebookPage(self):
+        return True
+    
+    def IsNotebookControl(self):
+        return False
+    
+    def HasFlag(self, flag):
+        return True
+    
 
 class DummyEvent(object):
     def __init__(self, pane):
@@ -60,23 +80,13 @@ class ViewerContainerTest(test.wxTestCase):
         task.Task.settings = self.settings = config.Settings(load=False)
         self.settings.set('view', 'viewerwithdummywidgetcount', '2', new=True)
         self.taskFile = persistence.TaskFile()
-        self.mainWindow = gui.mainwindow.MainWindow(None, self.taskFile, 
-                                                    self.settings)
+        self.mainWindow = DummyMainWindow()
         self.container = gui.viewer.ViewerContainer(self.mainWindow,
                                                     self.settings)
         self.viewer1 = self.createViewer('taskviewer1')
         self.container.addViewer(self.viewer1)
         self.viewer2 = self.createViewer('taskviewer2')
         self.container.addViewer(self.viewer2)
-
-    def tearDown(self):
-        if operating_system.isMac():
-            self.mainWindow.OnQuit() # Stop power monitoring thread
-        self.mainWindow._idleController.stop()
-        pub.unsubscribe(self.onEvent, 'viewer.status')
-        super(ViewerContainerTest, self).tearDown()
-        self.taskFile.close()
-        self.taskFile.stop()
 
     def createViewer(self, settingsSection):
         self.settings.add_section(settingsSection)

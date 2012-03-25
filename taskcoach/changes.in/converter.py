@@ -194,7 +194,7 @@ class ReleaseToHTMLConverter(ReleaseConverter):
     ChangeConverterClass = ChangeToHTMLConverter
 
     def header(self, release):
-        return '<h4>%s</h4>'%super(ReleaseToHTMLConverter, self).header(release)
+        return '<h2>Release %s <small>%s</small></h2>'%(release.number, release.date)
 
     def sectionHeader(self, section, list):
         return super(ReleaseToHTMLConverter, self).sectionHeader(section, 

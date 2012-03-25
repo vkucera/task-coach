@@ -72,7 +72,7 @@ class SettingsPageBase(widgets.BookPage):
 
     def addChoiceSetting(self, section, setting, text, helpText, *listsOfChoices, **kwargs):
         choiceCtrls = []
-        currentValue = self.get(section, setting)
+        currentValue = self.gettext(section, setting)
         sep = kwargs.pop('sep', '_')
         for choices, currentValuePart in zip(listsOfChoices, currentValue.split(sep)):
             choiceCtrl = wx.Choice(self)
@@ -99,7 +99,7 @@ class SettingsPageBase(widgets.BookPage):
     def addMultipleChoiceSettings(self, section, setting, text, choices, helpText='', **kwargs):
         ''' choices is a list of (number, text) tuples. '''
         multipleChoice = wx.CheckListBox(self, choices=[choice[1] for choice in choices])
-        checkedNumbers = eval(self.get(section, setting))
+        checkedNumbers = self.getlist(section, setting)
         for index, choice in enumerate(choices):
             multipleChoice.Check(index, choice[0] in checkedNumbers)
         self.addEntry(text, multipleChoice, helpText=helpText, growable=True, 
@@ -122,12 +122,12 @@ class SettingsPageBase(widgets.BookPage):
     def addAppearanceSetting(self, fgColorSection, fgColorSetting, bgColorSection,
                              bgColorSetting, fontSection, fontSetting, iconSection,
                              iconSetting, text):
-        currentFgColor = eval(self.get(fgColorSection, fgColorSetting))
+        currentFgColor = self.getvalue(fgColorSection, fgColorSetting)
         fgColorButton = wx.ColourPickerCtrl(self, col=currentFgColor)
-        currentBgColor = eval(self.get(bgColorSection, bgColorSetting))
+        currentBgColor = self.getvalue(bgColorSection, bgColorSetting)
         bgColorButton = wx.ColourPickerCtrl(self, col=currentBgColor)
         defaultFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        nativeInfoString = self.get(fontSection, fontSetting)
+        nativeInfoString = self.gettext(fontSection, fontSetting)
         currentFont = wx.FontFromNativeInfoString(nativeInfoString) if nativeInfoString else None
         fontButton = widgets.FontPickerCtrl(self, font=currentFont or defaultFont, colour=currentFgColor)
         fontButton.SetBackgroundColour(currentBgColor)        
@@ -138,7 +138,7 @@ class SettingsPageBase(widgets.BookPage):
             bitmap = wx.ArtProvider_GetBitmap(imageName, wx.ART_MENU, (16, 16))
             item = iconEntry.Append(label, bitmap)
             iconEntry.SetClientData(item, imageName)
-        currentIcon = self.get(iconSection, iconSetting)
+        currentIcon = self.gettext(iconSection, iconSetting)
         currentSelectionIndex = imageNames.index(currentIcon)
         iconEntry.SetSelection(currentSelectionIndex) # pylint: disable-msg=E1101
 
@@ -156,12 +156,12 @@ class SettingsPageBase(widgets.BookPage):
         
     def addPathSetting(self, section, setting, text, helpText=''):
         pathChooser = widgets.DirectoryChooser(self, wx.ID_ANY)
-        pathChooser.SetPath(self.get(section, setting))
+        pathChooser.SetPath(self.gettext(section, setting))
         self.addEntry(text, pathChooser, helpText=helpText)
         self._pathSettings.append((section, setting, pathChooser))
 
     def addTextSetting(self, section, setting, text, helpText=''):
-        textChooser = wx.TextCtrl(self, wx.ID_ANY, self.get(section, setting))
+        textChooser = wx.TextCtrl(self, wx.ID_ANY, self.gettext(section, setting))
         self.addEntry(text, textChooser, helpText=helpText)
         self._textSettings.append((section, setting, textChooser))
 
@@ -184,41 +184,62 @@ class SettingsPageBase(widgets.BookPage):
             self.setboolean(section, setting, checkBox.IsChecked())
         for section, setting, choiceCtrls in self._choiceSettings:
             value = '_'.join([choice.GetClientData(choice.GetSelection()) for choice in choiceCtrls])
-            self.set(section, setting, value)
+            self.settext(section, setting, value)
         for section, setting, multipleChoice, choices in self._multipleChoiceSettings:
-            self.set(section, setting,
-                     str([choices[index] for index in range(len(choices)) if multipleChoice.IsChecked(index)]))
+            self.setlist(section, setting,
+                         [choices[index] for index in range(len(choices)) if multipleChoice.IsChecked(index)])
         for section, setting, spin in self._integerSettings:
-            self.set(section, setting, str(spin.GetValue()))
+            self.setint(section, setting, spin.GetValue())
         for section, setting, colorButton in self._colorSettings:
-            self.set(section, setting, str(colorButton.GetColour()))
+            self.setvalue(section, setting, colorButton.GetColour())
         for section, setting, fontButton in self._fontSettings:
             selectedFont = fontButton.GetSelectedFont()
             defaultFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
             fontInfoDesc = '' if selectedFont == defaultFont else selectedFont.GetNativeFontInfoDesc()
-            self.set(section, setting, fontInfoDesc)
+            self.settext(section, setting, fontInfoDesc)
         for section, setting, iconEntry in self._iconSettings:
             iconName = iconEntry.GetClientData(iconEntry.GetSelection())
-            self.set(section, setting, iconName)
+            self.settext(section, setting, iconName)
         for section, setting, btn in self._pathSettings:
-            self.set(section, setting, btn.GetPath())
+            self.settext(section, setting, btn.GetPath())
         for section, setting, txt in self._textSettings:
-            self.set(section, setting, txt.GetValue())
+            self.settext(section, setting, txt.GetValue())
 
     def get(self, section, name):
         raise NotImplementedError
 
+    def set(self, section, name, value):
+        raise NotImplementedError
+
     def getint(self, section, name):
         return int(self.get(section, name))
-
+    
+    def setint(self, section, name, value):
+        self.set(section, name, str(value))
+        
     def setboolean(self, section, name, value):
-        raise NotImplementedError
+        self.set(section, name, str(value))
         
     def getboolean(self, section, name):
         return self.get(section, name) == 'True'
-
-    def set(self, section, name, value):
-        raise NotImplementedError
+    
+    def settext(self, section, name, value):
+        self.set(section, name, value)
+        
+    def gettext(self, section, name):
+        return self.get(section, name)
+    
+    def getlist(self, section, name):
+        return eval(self.get(section, name))
+    
+    def setlist(self, section, name, value):
+        self.set(section, name, str(value))
+        
+    def getvalue(self, section, name):
+        return eval(self.get(section, name))
+    
+    def setvalue(self, section, name, value):
+        self.set(section, name, str(value))
 
 
 class SettingsPage(SettingsPageBase):
@@ -237,21 +258,42 @@ class SettingsPage(SettingsPageBase):
     def get(self, section, name):
         return self.settings.get(section, name)
 
-    def getint(self, section, name):
-        return self.settings.getint(section, name)
-
-    def getboolean(self, section, name):
-        return self.settings.getboolean(section, name)
-
     def set(self, section, name, value):
         if section is not None:
             self.settings.set(section, name, value)
-            
+
+    def getint(self, section, name):
+        return self.settings.getint(section, name)
+
+    def setint(self, section, name, value):
+        self.settings.setint(section, name, value)
+        
+    def getboolean(self, section, name):
+        return self.settings.getboolean(section, name)
+
     def setboolean(self, section, name, value):
         if section is not None:
             self.settings.setboolean(section, name, value)
+            
+    def settext(self, section, name, value):
+        self.settings.settext(section, name, value)
 
+    def gettext(self, section, name):
+        return self.settings.gettext(section, name)
 
+    def setvalue(self, section, name, value):
+        self.settings.setvalue(section, name, value)
+        
+    def getvalue(self, section, name):
+        return self.settings.getvalue(section, name)
+
+    def setlist(self, section, name, value):
+        self.settings.setlist(section, name, value)
+        
+    def getlist(self, section, name):
+        return self.settings.getlist(section, name)
+    
+    
 class SavePage(SettingsPage):
     pageName = 'save'
     pageTitle = _('Files')

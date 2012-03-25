@@ -67,38 +67,38 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 pages = {}
 pages['index'] = u'''          
             <div class="row">
-                <div class="span13">
+                <div class="span10">
                     <p><img src="images/banner.png" alt="Banner image"></p>
                     <div class="row">
-                        <div class="span6">
+                        <div class="span5">
                             <h3>What is %(name)s?</h3>  
                             <p>%(name)s is a simple open source todo manager to keep track of
-                            personal tasks and todo lists. It is designed for composite tasks.
-                            In addition, it offers effort tracking, categories, notes and more.</p>
-                            <p><a class="btn small" href="features.html">Read more &raquo;</a></p>
+                            personal tasks and todo lists. It is designed for composite tasks,
+                            and also offers effort tracking, categories, notes and more.</p>
+                            <p><a class="btn" href="features.html">Read more &raquo;</a></p>
                             <h3>What does it cost?</h3>
                             The desktop versions of %(name)s are completely free. The iOS versions
                             of %(name)s come with a small price tag because it costs us money to make them 
                             available.</p>
-                            <p><a class="btn small" href="license.html">Read license &raquo;</a></p>
+                            <p><a class="btn" href="license.html">Read license &raquo;</a></p>
                             <h3>What support is available?</h3>
                             <p>We offer support for free. You can contact us by e-mail, 
                             via our support request tracker, and via our bug tracker.</p>
-                            <p><a class="btn small" href="getsupport.html">Get support &raquo;</a></p>
+                            <p><a class="btn" href="getsupport.html">Get support &raquo;</a></p>
                         </div>
-                        <div class="span6 offset1">  
+                        <div class="span5">  
                             <h3>What platforms are supported?</h3>
                             <p>%(name)s is available for 
                             <a href="download_for_windows.html">Windows</a>,
                             <a href="download_for_mac.html">Mac OS X</a>, <a href="download_for_linux.html">Linux</a>, 
                             <a href="download_for_bsd.html">BSD</a>, <a href="download_for_iphone.html">iPhone, 
                             iPad, and iPod Touch</a>.</p>
-                            <p><a class="btn small primary" href="download.html">Download &raquo;</a></p>
-                            <h3>How can I help?</a>
-                            <p>Glad you asked! The easiest way to give back is to help 
-                            spread the word. Helping out with a translation is also a good
-                            way to help. Patches are welcome too. And we'll gladly accept donations.</a>
-                            <p><a class="btn small" href="givesupport.html">Give support &raquo;</a></p>
+                            <p><a class="btn btn-primary" href="download.html">Download &raquo;</a></p>
+                            <h3>How can I help?</h3>
+                            <p>Glad you asked! The easiest way is to help spread the word. Improving 
+                            a translation is also an easy way to help. Patches are very welcome. 
+                            And we'll gladly accept donations.</p>
+                            <p><a class="btn" href="givesupport.html">Give support &raquo;</a></p>
                             <h3>Who is behind this?</h3>
                             <p>%(name)s is developed by <a href="mailto:%(author_email)s">%(author_unicode)s</a>, 
                             with help of different people providing <a href="i18n.html">translations</a>. 
@@ -109,7 +109,7 @@ pages['index'] = u'''
                         </div>
                     </div>
                 </div>
-                <div class="span3">''' + ads + '''
+                <div class="span2">''' + ads + '''
                 </div>
             </div>
         '''
@@ -119,15 +119,27 @@ pages['getsupport'] = '''
                 <h1>Get support</h1>
             </div>
             <div class="row">
-             <div class="span-one-third">
-                    <h2>Browse FAQ</h>
+             <div class="span4">
+                    <h2>Browse FAQ</h2>
                     <p>Browse the frequently asked questions to see whether your 
                     question has been answered before.</p>
                     <p>Please do not ask questions on the mailinglist or submit
                     support requests before you have browsed the FAQ. Thanks!</p>
-                    <p><a class="btn large primary" href="%(faq_url)s">Browse FAQ</a></p>
+                    <div class="btn-group">
+                        <a class="btn btn-primary" href="%(faq_url)s">Browse FAQ</a>
+                        <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="https://answers.launchpad.net/taskcoach/+faq/1756">Is Task Coach available for Android?</a></li>
+                            <li><a href="https://answers.launchpad.net/taskcoach/+faq/1724">Why can I not mark this task completed?</a></li>
+                            <li><a href="https://answers.launchpad.net/taskcoach/+faq/1448">Can a task file be edited by multiple users?</a></li>
+                            <li class="divider"></li>
+                            <li><a href="%(faq_url)s">Browse all frequently asked questions</a></li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="span-one-third">
+                <div class="span4">
                     <h2>Join the mailinglist</h2>
                     <p>A Yahoo!Groups mailing list is available for discussing
                     %(name)s.</p>
@@ -137,45 +149,45 @@ pages['getsupport'] = '''
                     <p>The mailing list is also available as  
                     <a href="http://dir.gmane.org/gmane.comp.sysutils.pim.taskcoach">newsgroup</a>
                     on <a href="http://gmane.org">Gmane</a>.</p>
-                    <p><a class="btn large info"
+                    <p><a class="btn"
                     href="http://groups.yahoo.com/group/taskcoach/join">Join mailinglist</a></p>
                 </div>
-                <div class="span-one-third">
+                <div class="span4">
                     <h2>User manual</h2>
                     <p>A user manual is under development in a Wiki. Unfortunately,
                     the manual is far from being completed. However, since this is a 
                     community effort, you can help too.</p>
-                    <p><a class="btn large info" 
+                    <p><a class="btn" 
                           href="http://taskcoach.wikispaces.com">Browse manual</a></p>
                 </div>
             </div>
             <hr>
             <div class="row">
-                <div class="span-one-third">
+                <div class="span4">
                     <h2>Request support</h2>
                     <p>Submit a support request on Sourceforge. Be sure to 
                     explain your issue with as much detail as you can. Mention 
                     the version of %(name)s you are using, the operating system 
                     you are using and what exactly your issue is.</p>
-                    <p><a class="btn large info" href="%(support_request_url)s" 
+                    <p><a class="btn" href="%(support_request_url)s" 
                           title="Request support from the developers">Request support</a></p>
                 </div>
-                <div class="span-one-third">
+                <div class="span4">
                     <h2>Report a bug</h2>
                     <p>Submit a bug report on Sourceforge. Be sure to explain 
                     the bug with as much detail as you can. Mention the 
                     version of %(name)s you are using, the operating system 
                     you are using and how to trigger the bug.
-                    <p><a class="btn large info" href="%(known_bugs_url)s" 
+                    <p><a class="btn" href="%(known_bugs_url)s" 
                           title="Browse known bugs and report new bugs">Report a bug</a></p>
                 </div>
-                <div class="span-one-third">
+                <div class="span4">
                     <h2>Request a feature</h2>
                     <p>Submit a request for a new feature on UserVoice or vote on
                     existing feature requests. Please note that we have many open
                     feature requests and we can't make any promises on when new 
                     features are delivered.</p>
-                    <p><a class="btn large info" href="%(feature_request_url)s" 
+                    <p><a class="btn" href="%(feature_request_url)s" 
                           title="Browse requested features, vote for your favorite features and request new features">Request a feature</a></p>
                 </div>
             </div>'''
@@ -185,34 +197,34 @@ pages['givesupport'] = '''
                 <h1>Give support</h1>
             </div>
            <div class="row">
-                <div class="span-one-third">
+                <div class="span4">
                     <h2>Help translate</h2>
                     <p>If you speak a language different than English, you can help 
                     translate the user interface of %(name)s in your language. 
                     Even if you have limited time available you can help by
                     translating a few strings.</p>
-                    <p><a class="btn large info" href="i18n.html">Help translate</a></p>
+                    <p><a class="btn" href="i18n.html">Help translate</a></p>
                 </div>
-                <div class="span-one-third">
+                <div class="span4">
                     <h2>Help write the manual</h2>
                     <p>A user manual is under development in a Wiki. Unfortunately,
                     the manual is far from being completed. However, since this is a 
                     community effort, you can help too.</p>
-                    <p><a class="btn large info" 
+                    <p><a class="btn" 
                           href="http://taskcoach.wikispaces.com">Browse manual</a></p>
                 </div>
-                <div class="span-one-third">
+                <div class="span4">
                     <h2>Help develop</h2>
                     <p>If you know how to program, you can learn 
                     <a href="http://www.python.org">Python</a>. If you know Python,
                     you can help develop! And we are looking for developers, so
                     don't hesitate to jump in.</p>  
-                    <p><a class="btn large info" href="devinfo.html">Developer info</a></p>
+                    <p><a class="btn" href="devinfo.html">Developer info</a></p>
                 </div>
             </div>
             <hr>
             <div class="row">
-                <div class="span-one-third">
+                <div class="span4">
                     <h2>Donate</h2>
                     <p>Donations for the development of %(name)s are very much 
                     appreciated. Please donate what you feel %(name)s is worth 
@@ -227,7 +239,7 @@ pages['givesupport'] = '''
                         </form>
                     </p>
                 </div>
-                <div class="span-one-third">
+                <div class="span4">
                     <h2>Flattr us</h2>
                     <p><a href="http://flattr.com">Flattr</a> is a mechanism for
                     making social micropayments. In plain English, you can donate
@@ -242,7 +254,7 @@ pages['givesupport'] = '''
                         </noscript>
                     </p>
                 </div>
-                <div class="span-one-third">
+                <div class="span4">
                     <h2>Spread the word</h2>
                     <p>Help us spread the word. Talk about %(name)s with your
                     family, friends and colleagues. Tweet about %(name)s, +1 us,
@@ -260,24 +272,24 @@ pages['givesupport'] = '''
 
 pages['changes'] = '''
             <div class="page-header">
-                <h1>Change history</h1>
+                <h1>Change history <small>Recent releases</small></h1>
             </div>
             <div class="row">
-                <div class="span13">''' + file('changes.html').read().decode('UTF-8') + '''
-                    <p><a href="all_changes.html">View complete change history</a></p>
+                <div class="span10">''' + file('changes.html').read().decode('UTF-8') + '''
+                    <p><a class="btn" href="all_changes.html">View complete change history &raquo;</a></p>
                 </div>
-                <div class="span3">''' + ads + '''
+                <div class="span2">''' + ads + '''
                 </div>
             </div>'''
                     
 pages['all_changes'] = '''
             <div class="page-header">
-                <h1>Change history</h1>
+                <h1>Change history <small>All releases</small></h1>
             </div>
             <div class="row">
-                <div class="span13">''' + file('all_changes.html').read().decode('UTF-8') + '''
+                <div class="span10">''' + file('all_changes.html').read().decode('UTF-8') + '''
                 </div>
-                <div class="span3">''' + ads + '''
+                <div class="span2">''' + ads + '''
                 </div>
             </div>'''
 
@@ -310,15 +322,15 @@ def download_header(platform=None, release=None, warning=None):
                 <h1>%s</h1>
             </div>
             <div class="row">
-                <div class="span13">
+                <div class="span10">
                     <p>
-                        <span class="label warning">Warning</span> %s
+                        <span class="label label-warning">Warning</span> %s
                     </p>'''%(title, warning)
 
 def download_footer(ads=ads):
     return '''
                 </div>
-                <div class="span3">''' + ads + '''
+                <div class="span2">''' + ads + '''
                 </div>
             </div>'''
 
@@ -333,7 +345,7 @@ def download_table(**kwargs):
         kwargs['prerequisites'] = 'None'
     kwargs['platform_versions'] = 'Platforms' if platform == 'all platforms' else platform + ' versions'
     return '''        <p>
-          <table class="zebra-striped">
+          <table width="100%%%%" class="table table-striped">
             <tbody>
             <tr>
               <td rowspan=%(rows)s valign=top width=130>
@@ -578,8 +590,8 @@ pages['download'] = '''
                 <h1>Download %(name)s</h1>
             </div>
             <div class="row">
-                <div class="span13">
-                    <table>
+                <div class="span10">
+                    <table width="100%%">
                         <tbody>
                             <tr>
                                 <td style="border-top: 0px;">
@@ -620,7 +632,7 @@ pages['download'] = '''
                         </tbody>
                     </table>
                 </div>
-                <div class="span3">''' + one_ad + '''
+                <div class="span2">''' + one_ad + '''
                 </div>
             </div>'''
 
@@ -630,8 +642,8 @@ pages['features'] = '''
                 <h1>Features</h1>
             </div>
             <div class="row">
-                <div class="span13">
-                    <h4>%(name)s for the desktop</h4>
+                <div class="span10">
+                    <h2>%(name)s for the desktop</h2>
                     <p>The desktop version of %(name)s (Windows, Mac, Linux, BSD)
                     has the following features:</p>
                     <ul>
@@ -672,7 +684,7 @@ pages['features'] = '''
                         <a href="http://www.funambol.com/">Funambol</a> server such
                         as <a href="http://my.funambol.com">My Funambol</a>.</li>
                     </ul>
-                    <h4>%(name)s for iOS</h4>
+                    <h2>%(name)s for iOS</h2>
                     <p>There is a todo-list application for iPhone, iPad and iPod Touch that 
                     can synchronize with %(name)s through the network. Main features are:</p>
                     <ul>
@@ -682,7 +694,7 @@ pages['features'] = '''
                         <li>Available in English and French.</li>
                     </ul>
                 </div>
-                <div class="span3">''' + ads + '''
+                <div class="span2">''' + ads + '''
                 </div>
             </div>'''
 
@@ -707,7 +719,7 @@ def appendThumbnails(name):
         if not images:
             continue
 
-        pages[name] += '<hr/><h2>%s</h2><ul class="media-grid">' % system
+        pages[name] += '<h2>%s</h2><ul class="thumbnails">' % system
         for caption, thumbnailFilename, filename in images:
             pages[name] += '<li><a class="lightbox" title="%s" href="%s"><img src="%s" alt="%s"/></a></li>'% (caption, 
                         filename.replace('\\', '/'), thumbnailFilename.replace('\\', '/'), caption)
@@ -719,19 +731,18 @@ pages['license'] = '''
                 <h1>License</h1>
             </div>
             <div class="row">
-                <div class="span13">
+                <div class="span10">
                     <pre style="background-color: white; border: none;">''' + meta.licenseText + '''
                     </pre>
                 </div>
-                <div class="span3">''' + ads + '''
+                <div class="span2">''' + ads + '''
                 </div>
             </div>'''
 
 pages['screenshots'] = '''
             <div class="page-header">
-                <h1>Screenshots</h1>
-            </div>
-            <p>Click on a thumbnail image to see the full size screenshot.</p>'''
+                <h1>Screenshots <small>Click thumbnails to see full size screenshots</small></h1>
+            </div>'''
 appendThumbnails('screenshots')
 
 def languages(nr_columns=9):
@@ -751,21 +762,21 @@ pages['i18n'] = '''
                 <h1>Internationalization</h1>
             </div>
             <div class="row">
-                <div class="span13">
-                    <h4>Information for users</h4>
+                <div class="span10">
+                    <h2>Information for users</h2>
                     <p>You can select languages via 'Edit' -> 'Preferences'. 
                     Click the 'Language' icon, select the language of your 
                     choice and restart %(name)s.</p>
                     <p>Currently, %(name)s is available in these languages 
                     (though some translations are incomplete):</p>
-                    <table class="bordered-table">
+                    <table class="table table-bordered">
                         <tbody>
                             <tr>
 ''' + languages() + '''
                             </tr>
                         </tbody>
                     </table>
-                    <h4>Instructions for translators</h4>
+                    <h2>Instructions for translators</h2>
                     <p>We would welcome translations in additional languages.
                     Please be aware that, next to providing the initial translation,
                     you will be expected to keep your translation up to date as new
@@ -788,7 +799,7 @@ pages['i18n'] = '''
                         Launchpad</a> and click "Help translate".</li>
                         <li>Start contributing to an existing translation or create a new
                         one.</li>
-                        <li><span class="label notice">Note</span> Please make sure you 
+                        <li><span class="label label-info">Note</span> Please make sure you 
                         understand how <a href="http://docs.python.org/lib/typesseq-strings.html">Python
                         string formatting</a> works since %(name)s uses both the regular
                         <code>%%s</code> type of string formatting as well as the 
@@ -800,7 +811,7 @@ pages['i18n'] = '''
                         in the English version. Formatting in the form <code>%%(mapping_key)s</code>
                         can be ordered differently in the translated string than in the 
                         English version.</li>
-                        <li><span class="label warning">Warning</span> Don't translate 
+                        <li><span class="label label-warning">Warning</span> Don't translate 
                         the string formatting keys: e.g. when you see
                         <code>%%(name)s</code>, don't translate the word <code>name</code>.</li>
                         <li>Don't translate keyboard shortcuts: e.g. when you see 
@@ -813,7 +824,7 @@ pages['i18n'] = '''
                         command line option.</li> 
                     </ol>
                 </div>
-                <div class="span3">''' + ads + '''
+                <div class="span2">''' + ads + '''
                 </div>
             </div>'''
 
@@ -823,11 +834,11 @@ pages['devinfo'] = '''
                 <h1>Information for developers</h1>
             </div>
             <div class="row">
-                <div class="span13">
+                <div class="span10">
                     <p>Here's some information for developers that either want to hack
                     on %(name)s or reuse code.</p>
             
-                    <h4>Project hosting</h4>
+                    <h2>Project hosting</h2>
                     <p>%(name)s source code, file downloads and bug/patch/support trackers are hosted at 
                     <a href="https://sourceforge.net/projects/taskcoach/" 
                     title="%(name)s @ Sourceforge">Sourceforge</a>. Translations are hosted
@@ -836,7 +847,7 @@ pages['devinfo'] = '''
                     <a href="http://taskcoach.uservoice.com/">Uservoice</a>.
                     </p>
             
-                    <h4>Mailing list</h4>
+                    <h2>Mailing list</h2>
                     <p>A Yahoo!Groups mailing list is available for discussing the development
                     of %(name)s. You can join by sending mail to <tt><a 
                     href="mailto:taskcoach-dev-subscribe@yahoogroups.com">taskcoach-dev-subscribe@yahoogroups.com</a></tt>
@@ -851,7 +862,7 @@ pages['devinfo'] = '''
                     If you are a %(name)s developer you can <a href="http://lists.sourceforge.net/lists/listinfo/taskcoach-commits">join 
                     this mailing list</a>.
             
-                    <h4>Dependencies</h4>
+                    <h2>Dependencies</h2>
                     <p>%(name)s is developed in <a href="http://www.python.org">Python</a>,
                     using <a href="http://www.wxpython.org">wxPython</A> for the
                     graphical user interface. On Windows, 
@@ -865,7 +876,7 @@ pages['devinfo'] = '''
                     taskcoachlib/thirdparty package and included in the source code
                     repository.</p>
                     
-                    <h4>Development environment</h4>
+                    <h2>Development environment</h2>
                     <p>
                     You are free to use whatever IDE you want. To make use of the Makefile you
                     need to have <tt>make</tt> installed. It is installed on Linux and Mac OS X 
@@ -875,7 +886,7 @@ pages['devinfo'] = '''
                     Make sure to explicitly include <tt>make</tt> in the Cygwin setup program 
                     because the standard install doesn't contain <tt>make</tt>.</p>
                     
-                    <h4>Getting the source</h4>
+                    <h2>Getting the source</h2>
                     <p>%(name)s source code is hosted in a <a
                     href="http://sourceforge.net/svn/?group_id=130831">Subversion repository 
                     at SourceForge</a>. You can check out the code from the repository 
@@ -884,7 +895,7 @@ pages['devinfo'] = '''
                     out the sources. You can generate documentation with Epydoc and Graphviz
                     from the Makefile: <code>make dot epydoc</code>.</p>
                     
-                    <h4>Tests</h4>
+                    <h2>Tests</h2>
                     <p>Tests can be run from the Makefile. There are targets for
                     <tt>unittests</tt>, <tt>integrationtests</tt>,
                     <tt>releasetests</tt>, and <tt>alltests</tt>. These targets all
@@ -892,7 +903,7 @@ pages['devinfo'] = '''
                     many more test options (including profiling, timing, measuring test 
                     coverage, etc.).</p>
                     
-                    <h4>Building the distributions</h4>
+                    <h2>Building the distributions</h2>
                     <p>The Makefile is used to build the different distributions of
                     %(name)s. Currently, a Windows installer is built, a Mac OS X dmg
                     file, RPM and Debian packages are created and the sources are packaged 
@@ -924,14 +935,14 @@ pages['devinfo'] = '''
                     distribution. The source distributions are created by the
                     <tt>sdist</tt> Makefile target.</p>
                     
-                    <h4>Coding style</h4>
+                    <h2>Coding style</h2>
                     <p>Class names are StudlyCaps. Method names are camelCase, except
                     for wxPython methods that are called or overridden because those are
                     StudlyCaps. At first this looked ugly, a mixture of two
                     styles. But it turned out to be quite handy, since you can easily
                     see whether some method is a wxPython method or not.</p>
                     
-                    <h4>SVN usage conventions</h4>
+                    <h2>SVN usage conventions</h2>
                     <p>Releases are tagged ReleaseX_Y_Z and for each ReleaseX_Y_0 a 
                     branch (ReleaseX_Y_Branch) is created to facilitate bug fix releases. 
                     The release tagging and branching is part of 
@@ -953,12 +964,13 @@ pages['devinfo'] = '''
                     For small new features, development is done on the trunk, but all unittests
                     should succeed before committing.
                     </p>
-                    <h4>Blog</h4>
+                    
+                    <h2>Blog</h2>
                     <p>Frank keeps a not very frequent 
                     <a href="http://taskcoach.blogspot.com">blog</a> about
                     lessons learned from developing %(name)s.</p>
                 </div>
-                <div class="span3">''' + ads + '''
+                <div class="span2">''' + ads + '''
                 </div>
             </div>'''
  

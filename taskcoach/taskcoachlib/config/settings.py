@@ -194,9 +194,13 @@ class Settings(object, CachingConfigParser):
     def setboolean(self, section, option, value):
         if self.set(section, option, str(value)):
             pub.sendMessage('settings.%s.%s'%(section, option), value=value)
+
+    setvalue = settuple = setlist = setdict = setint = setboolean
             
-    setvalue = settuple = setlist = setdict = setboolean
-    
+    def settext(self, section, option, value):
+        if self.set(section, option, value):
+            pub.sendMessage('settings.%s.%s'%(section, option), value=value)            
+                
     def getlist(self, section, option):
         return self.getEvaluatedValue(section, option, eval)
         
@@ -207,6 +211,9 @@ class Settings(object, CachingConfigParser):
     
     def getboolean(self, section, option):
         return self.getEvaluatedValue(section, option, self.evalBoolean)
+    
+    def gettext(self, section, option):
+        return self.get(section, option)
 
     @staticmethod
     def evalBoolean(stringValue):

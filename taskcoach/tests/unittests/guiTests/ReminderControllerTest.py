@@ -142,5 +142,5 @@ class ReminderControllerTest(ReminderControllerTestCase):
         self.failUnless(frame)
         
     def testOnWakeDoesNotRequestUserAttentionWhenThereAreNoReminders(self):
-        self.reminderController.onWake(None)
+        self.reminderController.onReminder()
         self.failIf(self.reminderController.userAttentionRequested)
