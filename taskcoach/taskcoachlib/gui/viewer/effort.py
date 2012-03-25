@@ -55,12 +55,10 @@ class EffortViewer(base.ListViewer,
         self.initModeToolBarUICommands()
         self.registerObserver(self.onAttributeChanged,
                               eventType=effort.Effort.appearanceChangedEventType())
-        self.registerObserver(self.onRoundingChanged,
-                              eventType='%s.round'%self.settingsSection())
-        self.registerObserver(self.onRoundingChanged,
-                              eventType='%s.alwaysroundup'%self.settingsSection())
+        pub.subscribe(self.onRoundingChanged, 'settings.%s.round'%self.settingsSection())
+        pub.subscribe(self.onRoundingChanged, 'settings.%s.alwaysroundup'%self.settingsSection())
         
-    def onRoundingChanged(self, event): # pylint: disable-msg=W0613
+    def onRoundingChanged(self, value): # pylint: disable-msg=W0613
         self.initRoundingToolBarUICommands()
         self.refresh()
         
@@ -70,12 +68,12 @@ class EffortViewer(base.ListViewer,
         
     def initRoundingToolBarUICommands(self):
         aggregated = self.isShowingAggregatedEffort()
-        rounding = self.settings.get(self.settingsSection(), 'round') if aggregated else '0'
+        rounding = self.settings.getint(self.settingsSection(), 'round') if aggregated else 0
         self.roundingUICommand.setChoice(rounding)
         self.roundingUICommand.enable(aggregated)
         alwaysRoundUp = self.settings.getboolean(self.settingsSection(), 'alwaysroundup')
         self.alwaysRoundUpUICommand.setValue(alwaysRoundUp)
-        self.alwaysRoundUpUICommand.enable(aggregated and rounding != '0')
+        self.alwaysRoundUpUICommand.enable(aggregated and rounding != 0)
         
     def domainObjectsToView(self):
         if self.__domainObjectsToView is None:

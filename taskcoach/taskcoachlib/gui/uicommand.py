@@ -2536,19 +2536,19 @@ class ViewerPieChartAngle(ViewerCommand, SettingsCommand):
 
 class RoundingPrecision(ToolbarChoiceCommandMixin, ViewerCommand, SettingsCommand):
     roundingChoices =  (0, 1, 3, 5, 6, 10, 15, 20, 30, 60) # Minutes
-    choiceData = [str(minutes * 60) for minutes in roundingChoices] # Seconds
+    choiceData = [minutes * 60 for minutes in roundingChoices] # Seconds
     choiceLabels = [_('No rounding'), _('1 minute')] + [_('%d minutes')%minutes for minutes in roundingChoices[2:]]
 
     def doChoice(self, choice):
-        self.settings.set(self.viewer.settingsSection(), 'round', choice)
+        self.settings.setint(self.viewer.settingsSection(), 'round', choice)
 
 
 class RoundBy(UIRadioCommand, ViewerCommand, SettingsCommand):        
     def isSettingChecked(self):
-        return self.settings.get(self.viewer.settingsSection(), 'round') == self.value
+        return self.settings.getint(self.viewer.settingsSection(), 'round') == self.value
     
     def doCommand(self, event):
-        self.settings.set(self.viewer.settingsSection(), 'round', self.value)
+        self.settings.setint(self.viewer.settingsSection(), 'round', self.value)
 
   
 class AlwaysRoundUp(UICheckCommand, ViewerCommand, SettingsCommand):
@@ -2576,8 +2576,8 @@ class AlwaysRoundUp(UICheckCommand, ViewerCommand, SettingsCommand):
         self.setSetting(self._isMenuItemChecked(event))
     
     def setSetting(self, alwaysRoundUp):
-        self.settings.set(self.viewer.settingsSection(), 'alwaysroundup',
-                          str(alwaysRoundUp))
+        self.settings.setboolean(self.viewer.settingsSection(), 'alwaysroundup',
+                                 alwaysRoundUp)
         
     def setValue(self, value):
         self.checkboxCtrl.SetValue(value)
