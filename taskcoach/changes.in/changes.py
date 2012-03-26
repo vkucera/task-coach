@@ -22,11 +22,15 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.10', 'March 25, 2012',
+Release('1.3.10', 'March 26, 2012',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''The statusbar counts of over due tasks, late tasks, etc. would
 include deleted tasks.''', '3501289'),
+        ],
+    featuresAdded=[
+        Feature('''Allow for importing reminder date/time when importing from
+a CSV file.''', 'http://uservoice.com/a/2xhV6')
         ],
     ),
             

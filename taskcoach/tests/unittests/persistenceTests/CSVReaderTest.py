@@ -135,6 +135,22 @@ class CSVReaderTestCase(test.TestCase):
         self.assertEqual(date.DateTime(2011, 6, 30, 1, 33, 0), 
                          list(self.taskList)[0].completionDateTime())
 
+    def testTaskWithReminderDate(self):
+        filename = self.createCSVFile('Subject,2012-6-30\n')
+        self.reader.read(filename=filename,
+                         mappings={0: 'Subject', 1: 'Reminder date'},
+                         **self.defaultReaderKwArgs)
+        self.assertEqual(date.DateTime(2012, 6, 30, 0, 0, 0),
+                         list(self.taskList)[0].reminder())
+        
+    def testTaskWithReminderDateTime(self):
+        filename = self.createCSVFile('Subject,12:31 2012-6-30\n')
+        self.reader.read(filename=filename,
+                         mappings={0: 'Subject', 1: 'Reminder date'},
+                         **self.defaultReaderKwArgs)
+        self.assertEqual(date.DateTime(2012, 6, 30, 12, 31, 0),
+                         list(self.taskList)[0].reminder())
+        
     def testTaskWithHourMinuteBudget(self):
         filename = self.createCSVFile('Subject,60:30\n')
         self.reader.read(filename=filename,
