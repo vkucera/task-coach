@@ -21,6 +21,8 @@ import wx
 from taskcoachlib.thirdparty.wxScheduler import wxScheduler, wxSchedule, \
     EVT_SCHEDULE_ACTIVATED, EVT_SCHEDULE_RIGHT_CLICK, \
     EVT_SCHEDULE_DCLICK, EVT_PERIODWIDTH_CHANGED
+from taskcoachlib.thirdparty.wxScheduler.wxSchedulerConstants import wxSCHEDULER_WEEKSTART_MONDAY,\
+    wxSCHEDULER_WEEKSTART_SUNDAY
 from taskcoachlib.domain import date
 from taskcoachlib.widgets import draganddrop
 from taskcoachlib import command
@@ -282,6 +284,12 @@ class Calendar(wx.Panel):
 
     def SetShowUnplanned(self, doShow):
         self._content.SetShowUnplanned(doShow)
+        
+    def SetWeekStartMonday(self):
+        self._content.SetWeekStart(wxSCHEDULER_WEEKSTART_MONDAY)
+        
+    def SetWeekStartSunday(self):
+        self._content.SetWeekStart(wxSCHEDULER_WEEKSTART_SUNDAY)
 
     def RefreshAllItems(self, count):
         self._content.RefreshAllItems(count)
