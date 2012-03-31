@@ -52,3 +52,6 @@ class Scheduler(apscheduler.scheduler.Scheduler):
         if function in self.__jobs:
             self.unschedule_job(self.__jobs[function])
             del self.__jobs[function]
+
+    def is_scheduled(self, function):
+        return function in self.__jobs
