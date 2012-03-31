@@ -21,7 +21,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
-            
+
+Release('1.3.11', 'March 30, 2012',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Task Coach wouldn't start due to a missing module.''', '3513392'),
+        ],
+    ),
+    
 Release('1.3.10', 'March 30, 2012',
     summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
