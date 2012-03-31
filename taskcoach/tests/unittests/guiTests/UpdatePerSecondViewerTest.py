@@ -69,7 +69,7 @@ class UpdatePerSecondViewerTestsMixin(object):
 
     def testStopTrackingRemovesViewerFromClockObservers(self):
         self.trackedTask.stopTracking()
-        self.assertRaises(KeyError, date.Scheduler().unschedule(self.updateViewer.secondRefresher.onEverySecond))
+        self.failIf(date.Scheduler().is_scheduled(self.updateViewer.secondRefresher.onEverySecond))
         
     def testStopTrackingRefreshesTrackedItems(self):
         self.updateViewer.widget = MockWidget()
@@ -82,7 +82,7 @@ class UpdatePerSecondViewerTestsMixin(object):
         self.taskList.append(parent)
         parent.addChild(self.trackedTask)
         self.taskList.remove(parent)
-        self.assertRaises(KeyError, date.Scheduler().unschedule(self.updateViewer.secondRefresher.onEverySecond))
+        self.failIf(date.Scheduler().is_scheduled(self.updateViewer.secondRefresher.onEverySecond))
         
     def testCreateViewerWithTrackedItemsStartsTheClock(self):
         self.createUpdateViewer()
