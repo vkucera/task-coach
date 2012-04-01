@@ -450,7 +450,7 @@ defaults = { \
     'iphone': 'False',
     'notifier': 'Task Coach',
     'minidletime': '0',
-    'usesm': 'True',
+    'usesm2': 'False',
     'showsmwarning': 'True',
     'sayreminder': 'False' },
 'syncml': { \
