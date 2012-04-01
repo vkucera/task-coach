@@ -26,7 +26,7 @@ Release('1.3.12', 'April ??, 2012',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''X session management is now disabled by default.''',
-            '3502180', '3505263'),
+            '3502180'),
         ],
     ),
 
