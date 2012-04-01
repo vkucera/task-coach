@@ -104,7 +104,9 @@ class DCPrintout(wx.Printout):
 def Printout(viewer, settings, printSelectionOnly=False, 
              twoPrintouts=False):
     widget = viewer.getWidget()
-    if hasattr(widget, 'Draw'):
+    if hasattr(widget, 'GetPrintout'):
+        _printout = widget.GetPrintout
+    elif hasattr(widget, 'Draw'):
         def _printout():
             return DCPrintout(widget)
     else:

@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 from taskcoachlib.thirdparty.wxScheduler import wxScheduler, wxSchedule, \
     EVT_SCHEDULE_ACTIVATED, EVT_SCHEDULE_RIGHT_CLICK, \
-    EVT_SCHEDULE_DCLICK, EVT_PERIODWIDTH_CHANGED
+    EVT_SCHEDULE_DCLICK, EVT_PERIODWIDTH_CHANGED, wxReportScheduler
 from taskcoachlib.thirdparty.wxScheduler.wxSchedulerConstants import wxSCHEDULER_WEEKSTART_MONDAY,\
     wxSCHEDULER_WEEKSTART_SUNDAY
 from taskcoachlib.domain import date
@@ -81,6 +81,15 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
                 else:
                     datetime = date.DateTime(item.GetYear(), item.GetMonth() + 1, item.GetDay())
                     cb(None, droppedObject, plannedStartDateTime=datetime, dueDateTime=datetime.endOfDay())
+
+    def GetPrintout(self):
+        return wxReportScheduler(self.GetViewType(),
+                                 self.GetStyle(),
+                                 self.GetDrawer(),
+                                 self.GetDate(),
+                                 self.GetWeekStart(),
+                                 self.GetPeriodCount(),
+                                 self.GetSchedules())
 
     def OnDropURL(self, x, y, url):
         self._handleDrop(x, y, url, self.__onDropURLCallback)
@@ -275,6 +284,9 @@ class Calendar(wx.Panel):
 
         # Must wx.CallAfter because SetDrawerClass is called this way.
         wx.CallAfter(self._content.SetHeaderPanel, self._headers)
+
+    def Draw(self, dc):
+        self._content.Draw(dc)
 
     def SetShowNoStartDate(self, doShow):
         self._content.SetShowNoStartDate(doShow)

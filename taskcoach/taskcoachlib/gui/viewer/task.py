@@ -657,6 +657,9 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         if dlg.ShowModal() == wx.ID_OK:
             self.reconfig()
 
+    def GetPrintout(self):
+        return self.widget.GetPrintout()
+
 
 class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
                  mixin.SortableViewerForTasksMixin, 
