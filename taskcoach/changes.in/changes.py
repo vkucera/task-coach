@@ -21,12 +21,36 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
-            
-Release('1.3.10', 'March 25, 2012',
+
+Release('1.3.12', 'April 1, 2012',
+    summary='''This is a mixed feature and bugfix release.''',
+    bugsFixed=[
+        Bug('''X session management is now disabled by default.''',
+            '3502180'),
+        ],
+    featuresAdded=[
+        Feature('''The calendar view can now be printed as is.''', '3503258'),
+        ],
+    ),
+
+Release('1.3.11', 'March 31, 2012',
     summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Task Coach wouldn't start due to a missing module.''', '3513392'),
+        ],
+    ),
+    
+Release('1.3.10', 'March 30, 2012',
+    summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
         Bug('''The statusbar counts of over due tasks, late tasks, etc. would
 include deleted tasks.''', '3501289'),
+        ],
+    featuresAdded=[
+        Feature('''Allow for importing reminder date/time when importing from
+a CSV file.''', 'http://uservoice.com/a/2xhV6'),
+        Feature('''Allow for setting the first day of the week (either Sunday
+or Monday) in the preferences dialog (features tab).''', 'http://uservoice.com/a/81C1K'),
         ],
     ),
             

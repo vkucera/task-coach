@@ -539,14 +539,15 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
             dt.ParseDateTime(start)
             self.widget.SetDate(dt)
 
-        self.widget.SetWorkHours(self.settings.getint('view', 'efforthourstart'),
-                                 self.settings.getint('view', 'efforthourend'))
+        self.onWeekStartChanged(self.settings.gettext('view', 'weekstart'))
+        self.onWorkingHourChanged()
 
         self.reconfig()
         self.widget.SetPeriodWidth(self.settings.getint(self.settingsSection(), 'periodwidth'))
 
         for eventType in ('start', 'end'):
             pub.subscribe(self.onWorkingHourChanged, 'settings.view.efforthour%s'%eventType)
+        pub.subscribe(self.onWeekStartChanged, 'settings.view.weekstartmonday')
 
         # pylint: disable-msg=E1101
         for eventType in (task.Task.subjectChangedEventType(),
@@ -571,12 +572,16 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
             # changed now
             self.SetViewType(wxSCHEDULER_TODAY)
 
-    def onWake(self, event):
-        self.atMidnight()
-
-    def onWorkingHourChanged(self, value): # pylint: disable-msg=W0613
+    def onWorkingHourChanged(self, value=None): # pylint: disable-msg=W0613
         self.widget.SetWorkHours(self.settings.getint('view', 'efforthourstart'),
                                  self.settings.getint('view', 'efforthourend'))
+        
+    def onWeekStartChanged(self, value):
+        assert value in ('monday', 'sunday')
+        if value == 'monday':
+            self.widget.SetWeekStartMonday()
+        else:
+            self.widget.SetWeekStartSunday()
 
     def createWidget(self):
         itemPopupMenu = self.createTaskPopupMenu()
@@ -657,6 +662,9 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         dlg.CentreOnParent()
         if dlg.ShowModal() == wx.ID_OK:
             self.reconfig()
+
+    def GetPrintout(self):
+        return self.widget.GetPrintout()
 
 
 class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223

@@ -61,6 +61,7 @@ class CSVReader(object):
             plannedStartDateTime = None
             dueDateTime = None
             completionDateTime = None
+            reminderDateTime = None
             budget = TimeDelta()
             fixedFee = 0.0
             hourlyFee = 0.0
@@ -95,6 +96,8 @@ class CSVReader(object):
                     dueDateTime = self.parseDateTime(fieldValue, 23, 59, 59, dayfirst=dayfirst) 
                 elif kwargs['mappings'][idx] == _('Completion date'):
                     completionDateTime = self.parseDateTime(fieldValue, 12, 0, 0, dayfirst=dayfirst) 
+                elif kwargs['mappings'][idx] == _('Reminder date'):
+                    reminderDateTime = self.parseDateTime(fieldValue, dayfirst=dayfirst)
                 elif kwargs['mappings'][idx] == _('Budget'):
                     try:
                         value = float(fieldValue)
@@ -132,6 +135,7 @@ class CSVReader(object):
                         plannedStartDateTime=plannedStartDateTime,
                         dueDateTime=dueDateTime,
                         completionDateTime=completionDateTime,
+                        reminder=reminderDateTime,
                         budget=budget,
                         fixedFee=fixedFee,
                         hourlyFee=hourlyFee,

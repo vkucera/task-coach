@@ -55,7 +55,7 @@ class Application(object):
         self.init(**kwargs)
 
         if operating_system.isGTK():
-            if self.settings.getboolean('feature', 'usesm'):
+            if self.settings.getboolean('feature', 'usesm2'):
                 from taskcoachlib.powermgt import xsm
                 class LinuxSessionMonitor(xsm.SessionMonitor):
                     def __init__(self, callback):

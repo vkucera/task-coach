@@ -89,19 +89,21 @@ class ReminderControllerTest(ReminderControllerTestCase):
                 
     def testRemoveTaskWithReminderRemovesClockEventFromPublisher(self):
         self.task.setReminder(self.reminderDateTime)
+        job = date.Scheduler().get_jobs()[0]
         self.taskList.remove(self.task)
-        self.assertRaises(KeyError, date.Scheduler().unschedule(self.reminderController.onReminder))
+        self.failIf(job in date.Scheduler().get_jobs())
                 
     def testChangeReminderRemovesOldReminder(self):
         self.task.setReminder(self.reminderDateTime)
+        job = date.Scheduler().get_jobs()[0]
         self.task.setReminder(self.reminderDateTime + date.TimeDelta(hours=1))
-        self.assertRaises(KeyError, date.Scheduler().unschedule(self.reminderController.onReminder))
+        self.failIf(job in date.Scheduler().get_jobs())
         
     def testMarkTaskCompletedRemovesReminder(self):
         self.task.setReminder(self.reminderDateTime)
         self.failUnless(date.Scheduler().get_jobs())
         self.task.setCompletionDateTime(date.Now())
-        self.assertRaises(KeyError, date.Scheduler().unschedule(self.reminderController.onReminder))
+        self.failIf(date.Scheduler().get_jobs())
         
     def dummyCloseEvent(self, snoozeTimeDelta=None, openAfterClose=False):
         class DummySnoozeOptions(object):

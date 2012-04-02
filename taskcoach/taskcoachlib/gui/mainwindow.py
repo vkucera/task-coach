@@ -97,7 +97,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         if operating_system.isGTK():
             mon = application.Application().sessionMonitor
             if mon is not None and \
-                    self.settings.getboolean('feature', 'usesm') and \
+                    self.settings.getboolean('feature', 'usesm2') and \
                     self.settings.getboolean('feature', 'showsmwarning') and \
                     mon.vendor == 'xfce4-session':
                 dlg = XFCE4WarningDialog(self, self.settings)

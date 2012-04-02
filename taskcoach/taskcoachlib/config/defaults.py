@@ -38,6 +38,7 @@ defaults = { \
     'language_set_by_user': '',      # Language and locale as set by user via preferences, overrides language
     'categoryfiltermatchall': 'False',
     'descriptionpopups': 'True',
+    'weekstart': 'monday',           # Start of work week, 'monday' or 'sunday'
     # The next three options are used in the effort dialog to populate the
     # drop down menu with start and stop times.
     'efforthourstart': '8',          # Earliest time, i.e. start of working day
@@ -451,7 +452,7 @@ defaults = { \
     'iphone': 'False',
     'notifier': 'Task Coach',
     'minidletime': '0',
-    'usesm': 'True',
+    'usesm2': 'False',
     'showsmwarning': 'True',
     'sayreminder': 'False' },
 'syncml': { \

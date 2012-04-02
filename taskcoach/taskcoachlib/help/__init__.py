@@ -646,7 +646,7 @@ while %(name)s only allows one parent task per task.''')%meta.metaDict),
         _('''When importing, %(name)s tries to find matching tasks and 
 categories and update those instead of creating new ones. It does the matching
 by looking at the subject of the task (or project, or context) and the parent
-item if any.''')),
+item if any.''')%meta.metaDict),
     h4(
         a_name(_('Exporting todo.txt'), 'todotxtexporting')),
     p(
