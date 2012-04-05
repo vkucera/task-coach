@@ -41,7 +41,7 @@ class TaskViewerStatusMessages(object):
         self.__presentation = viewer.presentation()
     
     def __call__(self):
-        count = self.__presentation.nrOfTasksPerStatus()
+        count = self.__presentation.observable(recursive=True).nrOfTasksPerStatus()
         return self.template1%(len(self.__viewer.curselection()), 
                                self.__viewer.nrOfVisibleTasks(), 
                                self.__presentation.originalLength()), \
@@ -1146,7 +1146,7 @@ class TaskStatsViewer(BaseTaskViewer): # pylint: disable-msg=W0223
         widget.SetHeight(20)
         self.initLegend(widget)
         for dummy in task.Task.possibleStatuses():
-            widget._series.append(wx.lib.agw.piectrl.PiePart()) # pylint: disable-msg=W0212
+            widget._series.append(wx.lib.agw.piectrl.PiePart(1)) # pylint: disable-msg=W0212
         return widget
 
     def createClipboardToolBarUICommands(self):

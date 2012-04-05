@@ -25,19 +25,21 @@ from taskcoachlib import help, operating_system # pylint: disable-msg=W0622
 import task
 
 
-class TaskList(categorizable.CategorizableContainer):
-    # FIXME: TaskList should be called TaskCollection or TaskSet
-
-    newItemMenuText = _('&New task...') + ('\tINSERT' if not operating_system.isMac() else '\tCtrl+N')
-    newItemHelpText = help.taskNew
-    
+class TaskListQueryMixin(object):
     def nrOfTasksPerStatus(self):
         statuses = [eachTask.status() for eachTask in self if not eachTask.isDeleted()]
         count = dict()
         for status in task.Task.possibleStatuses():
             count[status] = statuses.count(status)
         return count
-        
+    
+    
+class TaskList(TaskListQueryMixin, categorizable.CategorizableContainer):
+    # FIXME: TaskList should be called TaskCollection or TaskSet
+
+    newItemMenuText = _('&New task...') + ('\tINSERT' if not operating_system.isMac() else '\tCtrl+N')
+    newItemHelpText = help.taskNew
+       
     def nrBeingTracked(self):
         return len(self.tasksBeingTracked())
     

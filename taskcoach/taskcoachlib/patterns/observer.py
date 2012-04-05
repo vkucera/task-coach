@@ -347,8 +347,13 @@ class Decorator(Observer):
         self.__observable = observable
         super(Decorator, self).__init__(*args, **kwargs)
 
-    def observable(self):
-        return self.__observable 
+    def observable(self, recursive=False):
+        if recursive:
+            try:
+                return self.__observable.observable(recursive=True)
+            except AttributeError:
+                pass
+        return self.__observable
 
     def __getattr__(self, attribute):
         return getattr(self.observable(), attribute)

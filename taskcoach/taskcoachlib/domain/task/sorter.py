@@ -78,7 +78,7 @@ class Sorter(base.TreeSorter):
             super(Sorter, self)._registerObserverForAttribute(attribute)
             
     def _removeObserverForAttribute(self, attribute):
-         # See comment at _registerObserverForAttribute.
+        # See comment at _registerObserverForAttribute.
         if attribute not in self.TaskStatusAttributes:
             super(Sorter, self)._removeObserverForAttribute(attribute)
         

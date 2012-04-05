@@ -18,10 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 from taskcoachlib.domain import base, date
-import task
+import task, tasklist
 
 
-class ViewFilter(base.Filter):
+class ViewFilter(tasklist.TaskListQueryMixin, base.Filter):
     def __init__(self, *args, **kwargs):
         self.__statusesToHide = set(kwargs.pop('statusesToHide', []))
         self.__hideCompositeTasks = kwargs.pop('hideCompositeTasks', False)
