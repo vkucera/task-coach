@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.12', 'April 6, 2012',
+Release('1.3.12', 'April 7, 2012',
     summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
         Bug('''X session management is now disabled by default.''',
@@ -34,6 +34,7 @@ categories.'''),
 categories didn't have effect.''', '3514880'),
         Bug('''Merging a file that would remove a subcategory linked to 
 existing tasks or notes would not work.''', '3515503'),
+        Bug('''Drag and drop was broken.''', '3514209'),
         ],
     featuresAdded=[
         Feature('''The calendar view can now be printed as is.''', '3503258'),
