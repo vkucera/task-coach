@@ -26,7 +26,8 @@ Date: 2012-03-08
 License: wxPython license
 Source: http://svn.wxwidgets.org/viewvc/wx/wxPython/3rdParty/AGW/agw/customtreectrl.py?revision=70845
 Copied on: 2012-03-10
-Changes for Task Coach: none
+Changes for Task Coach: partial highlighting of items
+Patch file: customtreectrl.py.patch
 
 Component: hypertreelist.py
 Name: HyperTreeList
@@ -36,5 +37,7 @@ Date: 2012-03-03
 License: wxPython license
 Source: http://svn.wxwidgets.org/viewvc/wx/wxPython/3rdParty/AGW/agw/hypertreelist.py?revision=70819
 Copied on: 2012-03-10
-Changes for Task Coach: none
+Changes for Task Coach: partial highlighting of items 
+Patch file: hypertreelist.py.patch
+
 
