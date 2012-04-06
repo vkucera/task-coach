@@ -270,8 +270,8 @@ class TaskFile(patterns.Observer):
         mergeFile = self.__class__()
         mergeFile.load(filename)
         self.__loading = True
-        self.tasks().removeItems(self.objectsToOverwrite(self.tasks(), mergeFile.tasks()))
         categoryMap = dict()
+        self.tasks().removeItems(self.objectsToOverwrite(self.tasks(), mergeFile.tasks()))
         self.rememberCategoryLinks(categoryMap, self.tasks())
         self.tasks().extend(mergeFile.tasks().rootItems())
         self.notes().removeItems(self.objectsToOverwrite(self.notes(), mergeFile.notes()))
@@ -296,17 +296,19 @@ class TaskFile(patterns.Observer):
         
     def rememberCategoryLinks(self, categoryMap, categorizables):
         for categorizable in categorizables:
-            for category in categorizable.categories():
-                categoryMap.setdefault(category.id(), []).append(categorizable)
+            for categoryToLinkLater in categorizable.categories():
+                categoryMap.setdefault(categoryToLinkLater.id(), []).append(categorizable)
             
     def restoreCategoryLinks(self, categoryMap):
         categories = self.categories()
         for categoryId, categorizables in categoryMap.iteritems():
-            category = categories.getObjectById(categoryId)
+            try:
+                categoryToLink = categories.getObjectById(categoryId)
+            except IndexError:
+                continue # Subcategory was removed by the merge
             for categorizable in categorizables:
-                categorizable.addCategory(category)
-                category.addCategorizable(categorizable)
-        
+                categorizable.addCategory(categoryToLink)
+                categoryToLink.addCategorizable(categorizable)
     
     def needSave(self):
         return not self.__loading and self.__needSave

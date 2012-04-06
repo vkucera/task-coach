@@ -32,6 +32,8 @@ task statistics viewer (the pie chart) would be wrong when filtering
 categories.'''),
         Bug('''The category drop down menu for filtering on any or all
 categories didn't have effect.''', '3514880'),
+        Bug('''Merging a file that would remove a subcategory linked to 
+existing tasks or notes would not work.''', '3515503'),
         ],
     featuresAdded=[
         Feature('''The calendar view can now be printed as is.''', '3503258'),
