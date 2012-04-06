@@ -67,3 +67,26 @@ class NoteViewerTest(test.wxTestCase):
         self.assertEqual(self.viewer.imageIndex['paperclip_icon'], 
                          self.firstItemIcon(column=1))
 
+    def testFilterOnAllCategories(self):
+        cat1 = category.Category('category 1')
+        cat2 = category.Category('category 2')
+        self.note.addCategory(cat1)
+        cat1.addCategorizable(self.note)
+        self.taskFile.categories().extend([cat1, cat2])
+        cat1.setFiltered(True)
+        cat2.setFiltered(True)
+        self.assertEqual(1, self.viewer.size())
+        self.settings.setboolean('view', 'categoryfiltermatchall', True)
+        self.assertEqual(0, self.viewer.size())
+        
+    def testFilterOnAnyCategory(self):
+        cat1 = category.Category('category 1')
+        cat2 = category.Category('category 2')
+        self.note.addCategory(cat1)
+        cat1.addCategorizable(self.note)
+        self.taskFile.categories().extend([cat1, cat2])
+        cat1.setFiltered(True)
+        cat2.setFiltered(True)
+        self.assertEqual(1, self.viewer.size())
+        self.settings.setboolean('view', 'categoryfiltermatchall', False)
+        self.assertEqual(1, self.viewer.size())

@@ -58,3 +58,12 @@ class CategoryViewerTest(test.wxTestCase):
         self.viewer.widget.selectall()
         self.viewer.updateSelection()
         self.assertEqual(2, len(self.viewer.curselection()))
+        
+    def testFilterOnAllCheckedCategoriesSetsSetting(self):
+        self.viewer.filterUICommand.doChoice(True)
+        self.failUnless(self.settings.getboolean('view', 'categoryfiltermatchall'))
+
+    def testFilterOnAnyCheckedCategoriesSetsSetting(self):
+        self.viewer.filterUICommand.doChoice(False)
+        self.failIf(self.settings.getboolean('view', 'categoryfiltermatchall'))
+    

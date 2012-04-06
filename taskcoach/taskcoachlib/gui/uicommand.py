@@ -2426,7 +2426,7 @@ class CategoryViewerFilterChoice(ToolbarChoiceCommandMixin, SettingsCommand):
     choiceData = [True, False]
 
     def doChoice(self, choice):
-        self.settings.set('view', 'categoryfiltermatchall', str(choice))
+        self.settings.setboolean('view', 'categoryfiltermatchall', choice)
 
 
 class SquareTaskViewerOrderChoice(ToolbarChoiceCommandMixin, ViewerCommand):

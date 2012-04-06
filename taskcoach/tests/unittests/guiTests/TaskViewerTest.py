@@ -236,6 +236,34 @@ class CommonTestsMixin(object):
         self.assertEqual(2, self.viewer.size())
         patterns.CommandHistory().undo()
         self.assertEqual(4, self.viewer.size())
+
+    def testFilterOnAllCategories(self):
+        self.settings.setboolean('view', 'categoryfiltermatchall', False)
+        self.taskList.append(self.task)
+        cat1 = category.Category('category 1')
+        cat2 = category.Category('category 2')
+        self.task.addCategory(cat1)
+        cat1.addCategorizable(self.task)
+        self.taskFile.categories().extend([cat1, cat2])
+        cat1.setFiltered(True)
+        cat2.setFiltered(True)
+        self.assertEqual(1, self.viewer.size())
+        self.settings.setboolean('view', 'categoryfiltermatchall', True)
+        self.assertEqual(0, self.viewer.size())
+        
+    def testFilterOnAnyCategory(self):
+        self.settings.setboolean('view', 'categoryfiltermatchall', True)
+        self.taskList.append(self.task)
+        cat1 = category.Category('category 1')
+        cat2 = category.Category('category 2')
+        self.task.addCategory(cat1)
+        cat1.addCategorizable(self.task)
+        self.taskFile.categories().extend([cat1, cat2])
+        cat1.setFiltered(True)
+        cat2.setFiltered(True)
+        self.assertEqual(0, self.viewer.size())
+        self.settings.setboolean('view', 'categoryfiltermatchall', False)
+        self.assertEqual(1, self.viewer.size())
             
     def testDefaultVisibleColumns(self):
         self.assertEqual(_('Subject'), self.viewer.widget.GetColumn(0).GetText())    

@@ -22,14 +22,16 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.12', 'April 5, 2012',
+Release('1.3.12', 'April 6, 2012',
     summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
         Bug('''X session management is now disabled by default.''',
             '3502180'),
         Bug('''The percentage of tasks completed, active, etc. in the 
 task statistics viewer (the pie chart) would be wrong when filtering 
-categories.'''),  
+categories.'''),
+        Bug('''The category drop down menu for filtering on any or all
+categories didn't have effect.''', '3514880'),
         ],
     featuresAdded=[
         Feature('''The calendar view can now be printed as is.''', '3503258'),
