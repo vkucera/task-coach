@@ -109,12 +109,12 @@ def sendMail(to, subject, body, openURL=desktop.open):
         chars = [c if ord(c) >= 128 else urllib.quote(c) for c in s]
         return ''.join(chars)
     
-    if operating_system.isWindows():
-        body = unicode_quote(body) # Otherwise newlines disappear
-
     # FIXME: Very  strange things happen on  MacOS X. If  there is one
     # non-ASCII character in the body, it works. If there is more than
     # one, it fails.  Maybe we should use Mail.app  directly ? What if
     # the user uses something else ?
+
+    if not operating_system.isMac():
+        body = unicode_quote(body) # Otherwise newlines disappear
 
     openURL(u'mailto:%s?subject=%s&body=%s' % (to, subject, body))

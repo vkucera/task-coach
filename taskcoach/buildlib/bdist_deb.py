@@ -247,7 +247,7 @@ Homepage: %(url)s
 Package: %(package)s
 Architecture: %(architecture)s
 Depends: python, python-wxgtk2.8 (>= %(wxpythonversion)s), python-wxversion, libxss1
-Recommends: python-notify
+Recommends: python-notify, libgnome2-0
 Description: %(description)s.
 %(long_description)s
 '''
