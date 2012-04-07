@@ -1,6 +1,6 @@
 Index: customtreectrl.py
 ===================================================================
---- customtreectrl.py	(revision 5255)
+--- customtreectrl.py	(revision 5199)
 +++ customtreectrl.py	(working copy)
 @@ -1601,6 +1601,7 @@
  
@@ -10,8 +10,13 @@ Index: customtreectrl.py
          self._hasPlus = False       # used for item which doesn't have
                                      # children but has a [+] button
          self._isBold = False        # render the label in bold font
-@@ -2101,6 +2102,16 @@
-         self._hasHilight = set 
+@@ -2098,9 +2099,20 @@
+         :param bool `set`: ``True`` to set the focus to the item, ``False`` otherwise.    
+         """
+ 
+-        self._hasHilight = set 
++        self._hasHilight = set
++        self._hilightPart = 0
  
  
 +    def SetPartialHilight(self, flags=0):
@@ -27,7 +32,7 @@ Index: customtreectrl.py
      def HasChildren(self):
          """
          Returns whether the item has children or not.
-@@ -2120,7 +2131,13 @@
+@@ -2120,7 +2132,13 @@
  
          return self._hasHilight != 0 
  

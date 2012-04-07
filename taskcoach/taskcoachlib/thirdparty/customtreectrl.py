@@ -2099,7 +2099,8 @@ class GenericTreeItem(object):
         :param bool `set`: ``True`` to set the focus to the item, ``False`` otherwise.    
         """
 
-        self._hasHilight = set 
+        self._hasHilight = set
+        self._hilightPart = 0
 
 
     def SetPartialHilight(self, flags=0):
