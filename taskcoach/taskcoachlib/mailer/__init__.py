@@ -20,6 +20,7 @@ import wx, os, re, tempfile, urllib, email, email.header
 from taskcoachlib.thirdparty import desktop, chardet
 from taskcoachlib.mailer.macmail import getSubjectOfMail
 from taskcoachlib.i18n import _
+from taskcoachlib import operating_system
 
 
 def readMail(filename, readContent=True):
@@ -107,11 +108,13 @@ def sendMail(to, subject, body, openURL=desktop.open):
         # which urllib.quote does not support.
         chars = [c if ord(c) >= 128 else urllib.quote(c) for c in s]
         return ''.join(chars)
+    
+    if operating_system.isWindows():
+        body = unicode_quote(body) # Otherwise newlines disappear
 
     # FIXME: Very  strange things happen on  MacOS X. If  there is one
     # non-ASCII character in the body, it works. If there is more than
     # one, it fails.  Maybe we should use Mail.app  directly ? What if
     # the user uses something else ?
 
-    openURL(u'mailto:%s?subject=%s&body=%s' % (to, subject,
-                                               body))
+    openURL(u'mailto:%s?subject=%s&body=%s' % (to, subject, body))

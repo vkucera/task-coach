@@ -35,6 +35,8 @@ categories didn't have effect.''', '3514880'),
         Bug('''Merging a file that would remove a subcategory linked to 
 existing tasks or notes would not work.''', '3515503'),
         Bug('''Drag and drop was broken.''', '3514209'),
+        Bug('''On Windows, when emailing items, new lines in the description
+would disappear.''', '3514288'),
         ],
     featuresAdded=[
         Feature('''The calendar view can now be printed as is.''', '3503258'),
