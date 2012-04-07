@@ -37,6 +37,8 @@ existing tasks or notes would not work.''', '3515503'),
         Bug('''Drag and drop was broken.''', '3514209'),
         Bug('''On Windows, when emailing items, new lines in the description
 would disappear.''', '3514288'),
+        Bug('''Properly shut down the internal scheduler before closing 
+Task Coach to prevent an exception.''', '3514651'),
         ],
     featuresAdded=[
         Feature('''The calendar view can now be printed as is.''', '3503258'),
