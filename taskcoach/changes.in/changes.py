@@ -40,7 +40,10 @@ would disappear.''', '3514288'),
         Bug('''Properly shut down the internal scheduler before closing 
 Task Coach to prevent an exception.''', '3514651'),
         Bug('''Changing the task appearance in the preference dialog didn't 
-work unless no tasks had been edited before changing the appearance.'''),
+work unless no tasks had been edited before changing the appearance.''', 
+        '3514174'),
+        Bug('''Marking a recurring task complete from a reminder could throw
+an exception.''', '3514174'),
         ],
     featuresAdded=[
         Feature('''The calendar view can now be printed as is.''', '3503258'),
