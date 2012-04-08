@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.12', 'April 7, 2012',
+Release('1.3.12', 'April 8, 2012',
     summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
         Bug('''X session management is now disabled by default.''',
@@ -39,6 +39,8 @@ existing tasks or notes would not work.''', '3515503'),
 would disappear.''', '3514288'),
         Bug('''Properly shut down the internal scheduler before closing 
 Task Coach to prevent an exception.''', '3514651'),
+        Bug('''Changing the task appearance in the preference dialog didn't 
+work unless no tasks had been edited before changing the appearance.'''),
         ],
     featuresAdded=[
         Feature('''The calendar view can now be printed as is.''', '3503258'),
