@@ -22,11 +22,28 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.12', 'April 1, 2012',
+Release('1.3.12', 'April 9, 2012',
     summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
         Bug('''X session management is now disabled by default.''',
             '3502180'),
+        Bug('''The percentage of tasks completed, active, etc. in the 
+task statistics viewer (the pie chart) would be wrong when filtering 
+categories.'''),
+        Bug('''The category drop down menu for filtering on any or all
+categories didn't have effect.''', '3514880'),
+        Bug('''Merging a file that would remove a subcategory linked to 
+existing tasks or notes would not work.''', '3515503'),
+        Bug('''Drag and drop was broken.''', '3514209'),
+        Bug('''On Windows, when emailing items, new lines in the description
+would disappear.''', '3514288'),
+        Bug('''Properly shut down the internal scheduler before closing 
+Task Coach to prevent an exception.''', '3514651'),
+        Bug('''Changing the task appearance in the preference dialog didn't 
+work unless no tasks had been edited before changing the appearance.''', 
+        '3514174'),
+        Bug('''Marking a recurring task complete from a reminder could throw
+an exception.''', '3514174'),
         ],
     featuresAdded=[
         Feature('''The calendar view can now be printed as is.''', '3503258'),

@@ -57,7 +57,13 @@ class ViewFilterTestsMixin(object):
         self.assertFilterShows(self.task)
         self.filter.hideTaskStatus(task.status.completed)
         self.assertFilterIsEmpty()
-        
+
+    def testNrOfTasksPerStatusIsAffectedByFiltering(self):
+        self.task.setCompletionDateTime()
+        self.filter.append(self.task)
+        self.filter.hideTaskStatus(task.status.completed)
+        self.assertEqual(0, self.filter.nrOfTasksPerStatus()[task.status.completed])
+                
     def testFilterCompletedTask_RootTasks(self):
         self.task.setCompletionDateTime()
         self.filter.append(self.task)

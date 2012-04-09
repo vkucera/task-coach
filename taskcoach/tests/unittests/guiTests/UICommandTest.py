@@ -150,6 +150,11 @@ class MailTaskTest(test.TestCase):
         mailTask = gui.uicommand.Mail(viewer=DummyViewer([DummyTask()]))
         mailTask.doCommand(None, mail=mail, showerror=showerror)
         self.assertEqual('Cannot send email:\nmessage', self.showerror[0])
+        
+    def testBodyFormatting(self):
+        aTask = task.Task('subject', description='line1\nline2\n')
+        self.assertEqual('line1\r\nline2', 
+                         gui.uicommand.Mail(viewer=DummyViewer()).body([aTask]))
 
 
 class MarkActiveTest(test.TestCase):

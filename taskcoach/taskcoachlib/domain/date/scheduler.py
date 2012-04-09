@@ -32,6 +32,8 @@ class Scheduler(apscheduler.scheduler.Scheduler):
     
     def schedule(self, function, dateTime):
         def callback():
+            if function in self.__jobs:
+                del self.__jobs[function]
             wx.CallAfter(function)
 
         if dateTime <= dateandtime.Now() + timedelta.TimeDelta(milliseconds=500):

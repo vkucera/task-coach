@@ -59,6 +59,59 @@ class EffortCommand(base.BaseCommand): # pylint: disable-msg=W0223
 class DragAndDropTaskCommand(base.DragAndDropCommand):
     plural_name = _('Drag and drop tasks')
 
+    def __init__(self, *args, **kwargs):
+        self.__part = kwargs.pop('part', 0)
+        super(DragAndDropTaskCommand, self).__init__(*args, **kwargs)
+
+    def getItemsToSave(self):
+        toSave = super(DragAndDropTaskCommand, self).getItemsToSave()
+        if self.__part != 0:
+            toSave.extend(self.getSiblings())
+        return toSave        
+
+    def getSiblings(self):
+        siblings = []
+        for item in self.list:
+            if item.parent() == self._itemToDropOn.parent() and item not in self.items:
+                siblings.append(item)
+        return siblings
+
+    def do_command(self):
+        if self.__part == 0:
+            super(DragAndDropTaskCommand, self).do_command()
+        else:
+            if self.__part == -1:
+                # Up part. Add dropped items as prerequesites of dropped on item.
+                self._itemToDropOn.addPrerequisites(self.items)
+                self._itemToDropOn.addTaskAsDependencyOf(self.items)
+            else:
+                # Down. Add dropped on item as prerequisite of dropped items.
+                for item in self.items:
+                    item.addPrerequisites([self._itemToDropOn])
+                    item.addTaskAsDependencyOf([self._itemToDropOn])
+
+    def undo_command(self):
+        if self.__part == 0:
+            super(DragAndDropTaskCommand, self).undo_command()
+        elif self.__part == -1:
+            self._itemToDropOn.removePrerequisites(self.items)
+            self._itemToDropOn.removeTaskAsDependencyOf(self.items)
+        else:
+            for item in self.items:
+                item.removePrerequisites([self._itemToDropOn])
+                item.removeTaskAsDependencyOf([self._itemToDropOn])
+
+    def redo_command(self):
+        if self.__part == 0:
+            super(DragAndDropTaskCommand, self).redo_command()
+        elif self.__part == -1:
+            self._itemToDropOn.addPrerequisites(self.items)
+            self._itemToDropOn.addTaskAsDependencyOf(self.items)
+        else:
+            for item in self.items:
+                item.addPrerequisites([self._itemToDropOn])
+                item.addTaskAsDependencyOf([self._itemToDropOn])
+
 
 class DeleteTaskCommand(base.DeleteCommand, EffortCommand):
     plural_name = _('Delete tasks')

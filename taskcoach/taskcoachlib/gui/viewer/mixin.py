@@ -129,10 +129,10 @@ class FilterableViewerForCategorizablesMixin(FilterableViewerMixin):
 
 class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
     def createFilter(self, taskList):
-        taskList = task.filter.ViewFilter(taskList, treeMode=self.isTreeViewer(), 
+        taskList = super(FilterableViewerForTasksMixin, self).createFilter(taskList)
+        return task.filter.ViewFilter(taskList, treeMode=self.isTreeViewer(), 
                                           **self.viewFilterOptions())
-        return super(FilterableViewerForTasksMixin, self).createFilter(taskList)
-                                   
+        
     def viewFilterOptions(self):
         return dict(hideCompositeTasks=self.isHidingCompositeTasks(),
                     statusesToHide=self.hiddenTaskStatuses())

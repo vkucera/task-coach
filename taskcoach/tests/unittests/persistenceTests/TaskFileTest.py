@@ -867,8 +867,20 @@ class TaskFileMergeTest(TaskFileTestCase):
         self.mergeFile.categories().append(mergedCategory)
         self.merge()
         self.assertEqual(self.category.id(), list(self.note.categories())[0].id())
-
-
+        
+    def testMerge_ExistingCategoryWithoutExistingSubCategoryRemovesTheSubCategory(self):
+        subCategory = category.Category('subcategory')
+        self.category.addChild(subCategory)
+        self.taskFile.categories().append(subCategory)
+        self.task.addCategory(subCategory)
+        subCategory.addCategorizable(self.task)
+        self.assertEqual(2, len(self.taskFile.categories()))
+        mergedCategory = category.Category('merged category', id=self.category.id())
+        self.mergeFile.categories().append(mergedCategory)
+        self.merge()
+        self.assertEqual(1, len(self.taskFile.categories()))
+        
+        
 class LockedTaskFileLockTest(TaskFileTestCase):
     def createTaskFiles(self):
         # pylint: disable-msg=W0201
