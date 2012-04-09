@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.12', 'April 8, 2012',
+Release('1.3.12', 'April 9, 2012',
     summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
         Bug('''X session management is now disabled by default.''',
