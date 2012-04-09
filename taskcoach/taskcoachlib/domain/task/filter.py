@@ -18,7 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 from taskcoachlib.domain import base, date
-import task, tasklist
+import task
+import tasklist
 
 
 class ViewFilter(tasklist.TaskListQueryMixin, base.Filter):
@@ -33,13 +34,13 @@ class ViewFilter(tasklist.TaskListQueryMixin, base.Filter):
         for eventType in ('task.actualStartDateTime', 'task.plannedStartDateTime',
                           'task.dueDateTime', 'task.completionDateTime', 
                           'task.prerequisites',
-                          task.Task.appearanceChangedEventType(), # Proxy for status changes
+                          task.Task.appearanceChangedEventType(),  # Proxy for status changes
                           task.Task.addChildEventType(),
                           task.Task.removeChildEventType()):
             registerObserver(self.onTaskStatusChange, eventType=eventType)
         date.Scheduler().schedule_interval(self.onTaskStatusChange, days=1)
 
-    def onTaskStatusChange(self, event=None): # pylint: disable-msg=W0613
+    def onTaskStatusChange(self, event=None):  # pylint: disable-msg=W0613
         self.reset()
         
     def hideTaskStatus(self, status, hide=True):
@@ -54,12 +55,12 @@ class ViewFilter(tasklist.TaskListQueryMixin, base.Filter):
         self.reset()
         
     def filter(self, tasks):
-        return [task for task in tasks if self.filterTask(task)] # pylint: disable-msg=W0621
+        return [task for task in tasks if self.filterTask(task)]  # pylint: disable-msg=W0621
     
-    def filterTask(self, task): # pylint: disable-msg=W0621
+    def filterTask(self, task):  # pylint: disable-msg=W0621
         result = True
         if task.status() in self.__statusesToHide:
             result = False
         elif self.__hideCompositeTasks and not self.treeMode() and task.children():
-            result = False # Hide composite task
+            result = False  # Hide composite task
         return result

@@ -18,9 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # This modules works around bugs in third party modules, mostly by
 # monkey-patching so import it first
-from taskcoachlib import workarounds # pylint: disable-msg=W0611
+from taskcoachlib import workarounds  # pylint: disable-msg=W0611
 
-import wx, os, locale, sys
+import wx
+import os
+import locale
+import sys
 from taskcoachlib import patterns, operating_system
 from taskcoachlib.thirdparty.pubsub import pub
 from taskcoachlib.domain import date 
@@ -58,6 +61,7 @@ class Application(object):
         if operating_system.isGTK():
             if self.settings.getboolean('feature', 'usesm2'):
                 from taskcoachlib.powermgt import xsm
+                
                 class LinuxSessionMonitor(xsm.SessionMonitor):
                     def __init__(self, callback):
                         super(LinuxSessionMonitor, self).__init__()
@@ -67,17 +71,22 @@ class Application(object):
                         self.setProperty(xsm.SmCurrentDirectory, os.getcwd())
                         self.setProperty(xsm.SmProgram, sys.argv[0])
                         self.setProperty(xsm.SmRestartStyleHint, xsm.SmRestartNever)
-                    def saveYourself(self, saveType, shutdown, interactStyle, fast): # pylint: disable-msg=W0613
+                        
+                    def saveYourself(self, saveType, shutdown, interactStyle, fast):  # pylint: disable-msg=W0613
                         if shutdown:
                             self._callback()
                         self.saveYourselfDone(True)
+                        
                     def die(self):
                         pass
+                    
                     def saveComplete(self):
                         pass
+                    
                     def shutdownCancelled(self):
                         pass
-                self.sessionMonitor = LinuxSessionMonitor(self.onEndSession) # pylint: disable-msg=W0201
+                    
+                self.sessionMonitor = LinuxSessionMonitor(self.onEndSession)  # pylint: disable-msg=W0201
             else:
                 self.sessionMonitor = None
 
@@ -198,16 +207,16 @@ class Application(object):
         wx.SystemOptions.SetOptionInt("mac.textcontrol-use-spell-checker", value)
         
     def registerSignalHandlers(self):
-        quitAdapter = lambda *args: self.quit()
+        quitAdapter = lambda *args: self.quitApplication()
         if operating_system.isWindows():
-            import win32api # pylint: disable-msg=F0401
+            import win32api  # pylint: disable-msg=F0401
             win32api.SetConsoleCtrlHandler(quitAdapter, True)
         else:
             import signal
             signal.signal(signal.SIGTERM, quitAdapter)
             if hasattr(signal, 'SIGHUP'):
-                forcedQuit = lambda *args: self.quit(force=True)
-                signal.signal(signal.SIGHUP, forcedQuit) # pylint: disable-msg=E1101
+                forcedQuit = lambda *args: self.quitApplication(force=True)
+                signal.signal(signal.SIGHUP, forcedQuit)  # pylint: disable-msg=E1101
         
     def createMutex(self):
         ''' On Windows, create a mutex so that InnoSetup can check whether the
@@ -220,17 +229,17 @@ class Application(object):
     def createTaskBarIcon(self):
         if self.canCreateTaskBarIcon():
             from taskcoachlib.gui import taskbaricon, menu
-            self.taskBarIcon = taskbaricon.TaskBarIcon(self.mainwindow, # pylint: disable-msg=W0201
+            self.taskBarIcon = taskbaricon.TaskBarIcon(self.mainwindow,  # pylint: disable-msg=W0201
                 self.taskFile.tasks(), self.settings)
             self.taskBarIcon.setPopupMenu(menu.TaskBarMenu(self.taskBarIcon, 
                 self.settings, self.taskFile))
 
     def canCreateTaskBarIcon(self):
         try:
-            from taskcoachlib.gui import taskbaricon # pylint: disable-msg=W0612
+            from taskcoachlib.gui import taskbaricon  # pylint: disable-msg=W0612
             return True
         except:
-            return False # pylint: disable-msg=W0702
+            return False  # pylint: disable-msg=W0702
                     
     @staticmethod
     def closeSplash(splash):
@@ -239,7 +248,7 @@ class Application(object):
             
     def showTips(self):
         if self.settings.getboolean('window', 'tips'):
-            from taskcoachlib import help # pylint: disable-msg=W0622
+            from taskcoachlib import help  # pylint: disable-msg=W0622
             help.showTips(self.mainwindow, self.settings)
 
     def warnUserThatIniFileWasNotLoaded(self):
@@ -247,17 +256,17 @@ class Application(object):
         from taskcoachlib.i18n import _
         reason = self.settings.get('file', 'inifileloaderror')
         wx.MessageBox(\
-            _("Couldn't load settings from TaskCoach.ini:\n%s")%reason,
-            _('%s file error')%meta.name, style=wx.OK|wx.ICON_ERROR)
-        self.settings.setboolean('file', 'inifileloaded', True) # Reset
+            _("Couldn't load settings from TaskCoach.ini:\n%s") % reason,
+            _('%s file error') % meta.name, style=wx.OK | wx.ICON_ERROR)
+        self.settings.setboolean('file', 'inifileloaded', True)  # Reset
 
     def displayMessage(self, message):
         self.mainwindow.displayMessage(message)
 
     def onEndSession(self):
-        wx.CallAfter(self.quit, force=True)
+        wx.CallAfter(self.quitApplication, force=True)
 
-    def quit(self, force=False):
+    def quitApplication(self, force=False):
         if not self.iocontroller.close(force=force):
             return
         # Remember what the user was working on: 

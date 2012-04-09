@@ -20,15 +20,19 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx.lib.agw.piectrl, math
+import math
+import wx.lib.agw.piectrl
 from taskcoachlib import command, widgets, domain, render
 from taskcoachlib.domain import task, date
-from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, dialog
-from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_TODAY, wxFancyDrawer
+from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty.pubsub import pub
+from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_TODAY, wxFancyDrawer
 from taskcoachlib.widgets import CalendarConfigDialog
-import base, mixin, refresher, inplace_editor
+import base
+import inplace_editor
+import mixin
+import refresher 
 
 
 class TaskViewerStatusMessages(object):
@@ -42,16 +46,16 @@ class TaskViewerStatusMessages(object):
     
     def __call__(self):
         count = self.__presentation.observable(recursive=True).nrOfTasksPerStatus()
-        return self.template1%(len(self.__viewer.curselection()), 
-                               self.__viewer.nrOfVisibleTasks(), 
-                               self.__presentation.originalLength()), \
-               self.template2%(count[task.status.overdue], 
-                               count[task.status.late],
-                               count[task.status.inactive], 
-                               count[task.status.completed])
+        return self.template1 % (len(self.__viewer.curselection()), 
+                                 self.__viewer.nrOfVisibleTasks(), 
+                                 self.__presentation.originalLength()), \
+               self.template2 % (count[task.status.overdue], 
+                                 count[task.status.late],
+                                 count[task.status.inactive], 
+                                 count[task.status.completed])
 
 
-class BaseTaskViewer(mixin.SearchableViewerMixin, # pylint: disable-msg=W0223
+class BaseTaskViewer(mixin.SearchableViewerMixin,  # pylint: disable-msg=W0223
                      mixin.FilterableViewerForTasksMixin,
                      base.TreeViewer):        
     def __init__(self, *args, **kwargs):
@@ -61,7 +65,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin, # pylint: disable-msg=W0223
 
     def __registerForAppearanceChanges(self):
         for appearance in ('font', 'fgcolor', 'bgcolor', 'icon'):
-            appearanceSettings = ['settings.%s.%s'%(appearance, setting) for setting in 'activetasks',\
+            appearanceSettings = ['settings.%s.%s' % (appearance, setting) for setting in 'activetasks',\
                                   'inactivetasks', 'completedtasks', 'duesoontasks', 'overduetasks', 'latetasks'] 
             for appearanceSetting in appearanceSettings:
                 pub.subscribe(self.onAppearanceSettingChange, appearanceSetting)
@@ -72,9 +76,9 @@ class BaseTaskViewer(mixin.SearchableViewerMixin, # pylint: disable-msg=W0223
                                   eventType=eventType)
         pub.subscribe(self.refresh, 'powermgt.on')
         
-    def onAppearanceSettingChange(self, value): # pylint: disable-msg=W0613
+    def onAppearanceSettingChange(self, value):  # pylint: disable-msg=W0613
         if self:
-            wx.CallAfter(self.refresh) # Let domain objects update appearance first
+            wx.CallAfter(self.refresh)  # Let domain objects update appearance first
 
     def domainObjectsToView(self):
         return self.taskFile.tasks()
@@ -92,7 +96,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin, # pylint: disable-msg=W0223
         return len(self.presentation())
 
 
-class BaseTaskTreeViewer(BaseTaskViewer): # pylint: disable-msg=W0223
+class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable-msg=W0223
     defaultTitle = _('Tasks')
     defaultBitmap = 'led_blue_icon'
     
@@ -214,7 +218,7 @@ class BaseTaskTreeViewer(BaseTaskViewer): # pylint: disable-msg=W0223
     def iconName(self, item, isSelected):
         return item.selectedIcon(recursive=True) if isSelected else item.icon(recursive=True)
 
-    def getItemTooltipData(self, task): # pylint: disable-msg=W0621
+    def getItemTooltipData(self, task):  # pylint: disable-msg=W0621
         if not self.settings.getboolean('view', 'descriptionpopups'):
             return []
         result = [(self.iconName(task, task in self.curselection()), 
@@ -228,7 +232,7 @@ class BaseTaskTreeViewer(BaseTaskViewer): # pylint: disable-msg=W0223
                 sorted([unicode(attachment) for attachment in task.attachments()])))
         return result
 
-    def label(self, task): # pylint: disable-msg=W0621
+    def label(self, task):  # pylint: disable-msg=W0621
         return self.getItemText(task)
 
 
@@ -272,7 +276,7 @@ class SquareMapRootNode(RootNode):
             else:
                 return self.__zero
 
-        self.__zero = date.TimeDelta() if attr in ('budget', 'budgetLeft', 'timeSpent') else 0 # pylint: disable-msg=W0201
+        self.__zero = date.TimeDelta() if attr in ('budget', 'budgetLeft', 'timeSpent') else 0  # pylint: disable-msg=W0201
         return getTaskAttribute
 
 
@@ -288,14 +292,14 @@ class TimelineRootNode(RootNode):
     def sequential_children(self):
         return []
 
-    def plannedStartDateTime(self, recursive=False): # pylint: disable-msg=W0613
+    def plannedStartDateTime(self, recursive=False):  # pylint: disable-msg=W0613
         plannedStartDateTimes = [item.plannedStartDateTime(recursive=True) for item in self.parallel_children()]
         plannedStartDateTimes = [dt for dt in plannedStartDateTimes if dt != date.DateTime()]
         if not plannedStartDateTimes:
             plannedStartDateTimes.append(date.Now())
         return min(plannedStartDateTimes)
     
-    def dueDateTime(self, recursive=False): # pylint: disable-msg=W0613
+    def dueDateTime(self, recursive=False):  # pylint: disable-msg=W0613
         dueDateTimes = [item.dueDateTime(recursive=True) for item in self.parallel_children()]
         dueDateTimes = [dt for dt in dueDateTimes if dt != date.DateTime()]
         if not dueDateTimes:
@@ -315,7 +319,7 @@ class TimelineViewer(BaseTaskTreeViewer):
             self.registerObserver(self.onAttributeChanged, eventType)
         
     def createWidget(self):
-        self.rootNode = TimelineRootNode(self.presentation()) # pylint: disable-msg=W0201
+        self.rootNode = TimelineRootNode(self.presentation())  # pylint: disable-msg=W0201
         itemPopupMenu = self.createTaskPopupMenu()
         self._popupMenus.append(itemPopupMenu)
         return widgets.Timeline(self, self.rootNode, self.onSelect, self.onEdit,
@@ -378,18 +382,18 @@ class TimelineViewer(BaseTaskTreeViewer):
         except AttributeError:
             return []
 
-    def foreground_color(self, item, depth=0): # pylint: disable-msg=W0613
+    def foreground_color(self, item, depth=0):  # pylint: disable-msg=W0613
         return item.foregroundColor(recursive=True)
           
-    def background_color(self, item, depth=0): # pylint: disable-msg=W0613
+    def background_color(self, item, depth=0):  # pylint: disable-msg=W0613
         return item.backgroundColor(recursive=True)
     
-    def font(self, item, depth=0): # pylint: disable-msg=W0613
+    def font(self, item, depth=0):  # pylint: disable-msg=W0613
         return item.font(recursive=True)
 
     def icon(self, item, isSelected=False):
         bitmap = self.iconName(item, isSelected)
-        return wx.ArtProvider_GetIcon(bitmap, wx.ART_MENU, (16,16))
+        return wx.ArtProvider_GetIcon(bitmap, wx.ART_MENU, (16, 16))
     
     def now(self):
         return date.Now().toordinal()
@@ -435,7 +439,7 @@ class SquareTaskViewer(BaseTaskTreeViewer):
             self.onSelect, uicommand.Edit(viewer=self), itemPopupMenu)
         
     def createModeToolBarUICommands(self):
-        self.orderUICommand = uicommand.SquareTaskViewerOrderChoice(viewer=self) # pylint: disable-msg=W0201
+        self.orderUICommand = uicommand.SquareTaskViewerOrderChoice(viewer=self)  # pylint: disable-msg=W0201
         return super(SquareTaskViewer, self).createModeToolBarUICommands() + \
             (self.orderUICommand,)
         
@@ -445,10 +449,10 @@ class SquareTaskViewer(BaseTaskTreeViewer):
         oldChoice = self.__orderBy
         self.__orderBy = choice
         self.settings.set(self.settingsSection(), 'sortby', choice)
-        self.removeObserver(self.onAttributeChanged, 'task.%s'%oldChoice)
-        self.registerObserver(self.onAttributeChanged, 'task.%s'%choice)
+        self.removeObserver(self.onAttributeChanged, 'task.%s' % oldChoice)
+        self.registerObserver(self.onAttributeChanged, 'task.%s' % choice)
         if choice in ('budget', 'timeSpent'):
-            self.__transformTaskAttribute = lambda timeSpent: timeSpent.milliseconds()/1000
+            self.__transformTaskAttribute = lambda timeSpent: timeSpent.milliseconds() / 1000
             self.__zero = date.TimeDelta()
         else:
             self.__transformTaskAttribute = lambda x: x
@@ -472,7 +476,7 @@ class SquareTaskViewer(BaseTaskTreeViewer):
         return self.__transformTaskAttribute(max(getattr(task, self.__orderBy)(recursive=True),
                                                  self.__zero))
     
-    def children_sum(self, children, parent): # pylint: disable-msg=W0613
+    def children_sum(self, children, parent):  # pylint: disable-msg=W0613
         children_sum = sum((max(getattr(child, self.__orderBy)(recursive=True), self.__zero) for child in children \
                             if child in self.presentation()), self.__zero)
         return self.__transformTaskAttribute(max(children_sum, self.__zero))
@@ -481,32 +485,33 @@ class SquareTaskViewer(BaseTaskTreeViewer):
         overall = self.overall(task)
         if overall:
             children_sum = self.children_sum(self.children(task), task)
-            return max(self.__transformTaskAttribute(self.__zero), (overall - children_sum))/float(overall)
+            return max(self.__transformTaskAttribute(self.__zero), 
+                       (overall - children_sum)) / float(overall)
         return 0
     
     def getItemText(self, task):
         text = super(SquareTaskViewer, self).getItemText(task)
         value = self.render(getattr(task, self.__orderBy)(recursive=False))
-        return '%s (%s)'%(text, value) if value else text
+        return '%s (%s)' % (text, value) if value else text
 
-    def value(self, task, parent=None): # pylint: disable-msg=W0613
+    def value(self, task, parent=None):  # pylint: disable-msg=W0613
         return self.overall(task)
 
-    def foreground_color(self, task, depth): # pylint: disable-msg=W0613
+    def foreground_color(self, task, depth):  # pylint: disable-msg=W0613
         return task.foregroundColor(recursive=True)
         
-    def background_color(self, task, depth): # pylint: disable-msg=W0613
-        red = blue = 255 - (depth * 3)%100
-        green = 255 - (depth * 2)%100
-        color = wx.Color( red, green, blue )
+    def background_color(self, task, depth):  # pylint: disable-msg=W0613
+        red = blue = 255 - (depth * 3) % 100
+        green = 255 - (depth * 2) % 100
+        color = wx.Color(red, green, blue)
         return task.backgroundColor(recursive=True) or color
     
-    def font(self, task, depth): # pylint: disable-msg=W0613
+    def font(self, task, depth):  # pylint: disable-msg=W0613
         return task.font(recursive=True)
 
     def icon(self, task, isSelected):
         bitmap = self.iconName(task, isSelected) or 'led_blue_icon'
-        return wx.ArtProvider_GetIcon(bitmap, wx.ART_MENU, (16,16))
+        return wx.ArtProvider_GetIcon(bitmap, wx.ART_MENU, (16, 16))
 
     # Helper methods
     
@@ -543,7 +548,7 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         self.widget.SetPeriodWidth(self.settings.getint(self.settingsSection(), 'periodwidth'))
 
         for eventType in ('start', 'end'):
-            pub.subscribe(self.onWorkingHourChanged, 'settings.view.efforthour%s'%eventType)
+            pub.subscribe(self.onWorkingHourChanged, 'settings.view.efforthour%s' % eventType)
         pub.subscribe(self.onWeekStartChanged, 'settings.view.weekstartmonday')
 
         # pylint: disable-msg=E1101
@@ -558,8 +563,8 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
     def isTreeViewer(self):
         return False
 
-    def onEverySecond(self, event): # pylint: disable-msg=W0221,W0613
-        pass # Too expensive
+    def onEverySecond(self, event):  # pylint: disable-msg=W0221,W0613
+        pass  # Too expensive
 
     def atMidnight(self):
         if not self.settings.get(self.settingsSection(), 'viewdate'):
@@ -567,7 +572,7 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
             # changed now
             self.SetViewType(wxSCHEDULER_TODAY)
 
-    def onWorkingHourChanged(self, value=None): # pylint: disable-msg=W0613
+    def onWorkingHourChanged(self, value=None):  # pylint: disable-msg=W0613
         self.widget.SetWorkHours(self.settings.getint('view', 'efforthourstart'),
                                  self.settings.getint('view', 'efforthourend'))
         
@@ -662,7 +667,7 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         return self.widget.GetPrintout()
 
 
-class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
+class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable-msg=W0223
                  mixin.SortableViewerForTasksMixin, 
                  mixin.NoteColumnMixin, mixin.AttachmentColumnMixin,
                  base.SortableViewerWithColumns, BaseTaskTreeViewer):
@@ -696,7 +701,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
         return class_ == task.Task
     
     def createWidget(self):
-        imageList = self.createImageList() # Has side-effects
+        imageList = self.createImageList()  # Has side-effects
         self._columns = self._createColumns()
         itemPopupMenu = self.createTaskPopupMenu()
         columnPopupMenu = self.createColumnPopupMenu()
@@ -706,7 +711,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
             uicommand.TaskDragAndDrop(taskList=self.presentation(), viewer=self),
             itemPopupMenu, columnPopupMenu,
             **self.widgetCreationKeywordArguments())
-        widget.AssignImageList(imageList) # pylint: disable-msg=E1101
+        widget.AssignImageList(imageList)  # pylint: disable-msg=E1101
         widget.Bind(wx.EVT_TREE_BEGIN_LABEL_EDIT, self.onBeginEdit)
         widget.Bind(wx.EVT_TREE_END_LABEL_EDIT, self.onEndEdit)
         return widget
@@ -800,19 +805,12 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
                 renderCallback=self.renderDependencies,
                 width=self.getColumnWidth('dependencies'), **kwargs)])
 
-            ## [widgets.Column('ordering', _('Manual ordering'),
-            ##     task.Task.orderingChangedEventType(),
-            ##     sortCallback=uicommand.ViewerSortByCommand(viewer=self,
-            ##         value='ordering'),
-            ##     renderCallback=lambda task: '',
-            ##     width=self.getColumnWidth('ordering'))] + \
-
         for name, columnHeader, editCtrl, editCallback, eventTypes in [
             ('plannedStartDateTime', _('Planned start date'), inplace_editor.DateTimeCtrl, self.onEditPlannedStartDateTime, []),
             ('dueDateTime', _('Due date'), inplace_editor.DateTimeCtrl, self.onEditDueDateTime, [task.Task.expansionChangedEventType()]),
             ('actualStartDateTime', _('Actual start date'), inplace_editor.DateTimeCtrl, self.onEditActualStartDateTime, [task.Task.expansionChangedEventType()]),
             ('completionDateTime', _('Completion date'), inplace_editor.DateTimeCtrl, self.onEditCompletionDateTime, [task.Task.expansionChangedEventType()])]:
-            renderCallback = getattr(self, 'render%s'%(name[0].capitalize()+name[1:]))
+            renderCallback = getattr(self, 'render%s' % (name[0].capitalize() + name[1:]))
             columns.append(widgets.Column(name, columnHeader,  
                 sortCallback=uicommand.ViewerSortByCommand(viewer=self, value=name),
                 renderCallback=renderCallback, width=self.getColumnWidth(name),
@@ -820,7 +818,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
                 editCallback=editCallback, settings=self.settings, *eventTypes, **kwargs))
 
         effortOn = self.settings.getboolean('feature', 'effort')
-        dependsOnEffortFeature = ['budget',  'timeSpent', 'budgetLeft',
+        dependsOnEffortFeature = ['budget', 'timeSpent', 'budgetLeft',
                                   'hourlyFee', 'fixedFee', 'revenue']
             
         for name, columnHeader, editCtrl, editCallback, eventTypes in [        
@@ -835,7 +833,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
             ('fixedFee', _('Fixed fee'), inplace_editor.AmountCtrl, self.onEditFixedFee, [task.Task.expansionChangedEventType(), 'task.fixedFee']),            
             ('revenue', _('Revenue'), None, None, [task.Task.expansionChangedEventType(), 'task.revenue'])]:
             if (name in dependsOnEffortFeature and effortOn) or name not in dependsOnEffortFeature:
-                renderCallback = getattr(self, 'render%s'%(name[0].capitalize()+name[1:]))
+                renderCallback = getattr(self, 'render%s' % (name[0].capitalize() + name[1:]))
                 columns.append(widgets.Column(name, columnHeader,  
                     sortCallback=uicommand.ViewerSortByCommand(viewer=self, value=name),
                     renderCallback=renderCallback, width=self.getColumnWidth(name),
@@ -917,9 +915,6 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
             uicommand.ViewColumn(menuText=_('&Description'),
                 helpText=_('Show/hide description column'),
                 setting='description', viewer=self),
-            ## uicommand.ViewColumn(menuText=_('&Manual ordering'),
-            ##     helpText=_('Show/hide manual ordering column'),
-            ##     setting='ordering', viewer=self),
             uicommand.ViewColumn(menuText=_('&Prerequisites'),
                  helpText=_('Show/hide prerequisites column'),
                  setting='prerequisites', viewer=self),
@@ -950,27 +945,27 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
         return commands
 
     def createModeToolBarUICommands(self):
-        self.treeOrListUICommand = uicommand.TaskViewerTreeOrListChoice(viewer=self) # pylint: disable-msg=W0201 
+        self.treeOrListUICommand = uicommand.TaskViewerTreeOrListChoice(viewer=self)  # pylint: disable-msg=W0201 
         return super(TaskViewer, self).createModeToolBarUICommands() + \
             (self.treeOrListUICommand,)
 
     def createColumnPopupMenu(self):
         return menu.ColumnPopupMenu(self)
                     
-    def setSortByTaskStatusFirst(self, *args, **kwargs): # pylint: disable-msg=W0221
+    def setSortByTaskStatusFirst(self, *args, **kwargs):  # pylint: disable-msg=W0221
         super(TaskViewer, self).setSortByTaskStatusFirst(*args, **kwargs)
         self.showSortOrder()
         
     def getSortOrderImage(self):
         sortOrderImage = super(TaskViewer, self).getSortOrderImage()
-        if self.isSortByTaskStatusFirst(): # pylint: disable-msg=E1101
+        if self.isSortByTaskStatusFirst():  # pylint: disable-msg=E1101
             sortOrderImage = sortOrderImage.rstrip('icon') + 'with_status_icon'
         return sortOrderImage
 
-    def setSearchFilter(self, searchString, *args, **kwargs): # pylint: disable-msg=W0221
+    def setSearchFilter(self, searchString, *args, **kwargs):  # pylint: disable-msg=W0221
         super(TaskViewer, self).setSearchFilter(searchString, *args, **kwargs)
         if searchString:
-            self.expandAll() # pylint: disable-msg=E1101      
+            self.expandAll()  # pylint: disable-msg=E1101      
 
     def showTree(self, treeMode):
         self.settings.set(self.settingsSection(), 'treemode', str(treeMode))
@@ -1026,7 +1021,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
         return self.renderedValue(task, task.revenue, render.monetaryAmount)
     
     def renderHourlyFee(self, task):
-        return render.monetaryAmount(task.hourlyFee()) # hourlyFee has no recursive value
+        return render.monetaryAmount(task.hourlyFee())  # hourlyFee has no recursive value
     
     def renderFixedFee(self, task):
         return self.renderedValue(task, task.fixedFee, render.monetaryAmount)
@@ -1048,7 +1043,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
             if value != recursiveValue:
                 value = recursiveValue
                 template = '(%s)'
-        return template%renderValue(value, *extraRenderArgs)
+        return template % renderValue(value, *extraRenderArgs)
     
     def onEditPlannedStartDateTime(self, item, newValue):
         keep_delta = self.settings.get('view', 'datestied') == 'startdue'
@@ -1067,7 +1062,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
         command.EditCompletionDateTimeCommand(items=[item], newValue=newValue).do()
         
     def onEditPercentageComplete(self, item, newValue):
-        command.EditPercentageCompleteCommand(items=[item], newValue=newValue).do()
+        command.EditPercentageCompleteCommand(items=[item], newValue=newValue).do()  # pylint: disable-msg=E1101
         
     def onEditBudget(self, item, newValue):
         command.EditBudgetCommand(items=[item], newValue=newValue).do()
@@ -1105,9 +1100,9 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
             (self.isTreeViewer() or item is None) else []
 
 
-class CheckableTaskViewer(TaskViewer): # pylint: disable-msg=W0223
+class CheckableTaskViewer(TaskViewer):  # pylint: disable-msg=W0223
     def createWidget(self):
-        imageList = self.createImageList() # Has side-effects
+        imageList = self.createImageList()  # Has side-effects
         self._columns = self._createColumns()
         itemPopupMenu = self.createTaskPopupMenu()
         columnPopupMenu = self.createColumnPopupMenu()
@@ -1118,20 +1113,20 @@ class CheckableTaskViewer(TaskViewer): # pylint: disable-msg=W0223
             uicommand.TaskDragAndDrop(taskList=self.presentation(), viewer=self),
             itemPopupMenu, columnPopupMenu,
             **self.widgetCreationKeywordArguments())
-        widget.AssignImageList(imageList) # pylint: disable-msg=E1101
+        widget.AssignImageList(imageList)  # pylint: disable-msg=E1101
         return widget    
     
-    def onCheck(self, *args, **kwargs):
+    def onCheck(self, event):
         pass
     
-    def getIsItemChecked(self, task): # pylint: disable-msg=W0613,W0621
+    def getIsItemChecked(self, task):  # pylint: disable-msg=W0613,W0621
         return False
     
-    def getItemParentHasExclusiveChildren(self, task): # pylint: disable-msg=W0613,W0621
+    def getItemParentHasExclusiveChildren(self, task):  # pylint: disable-msg=W0613,W0621
         return False
     
     
-class TaskStatsViewer(BaseTaskViewer): # pylint: disable-msg=W0223
+class TaskStatsViewer(BaseTaskViewer):  # pylint: disable-msg=W0223
     defaultTitle = _('Task statistics')
     defaultBitmap = 'charts_icon'
 
@@ -1139,7 +1134,7 @@ class TaskStatsViewer(BaseTaskViewer): # pylint: disable-msg=W0223
         kwargs.setdefault('settingsSection', 'taskstatsviewer')
         super(TaskStatsViewer, self).__init__(*args, **kwargs)
         pub.subscribe(self.onPieChartAngleChanged, 
-                      'settings.%s.piechartangle'%self.settingsSection())
+                      'settings.%s.piechartangle' % self.settingsSection())
         
     def createWidget(self):
         widget = wx.lib.agw.piectrl.PieCtrl(self)
@@ -1147,7 +1142,7 @@ class TaskStatsViewer(BaseTaskViewer): # pylint: disable-msg=W0223
         widget.SetHeight(20)
         self.initLegend(widget)
         for dummy in task.Task.possibleStatuses():
-            widget._series.append(wx.lib.agw.piectrl.PiePart(1)) # pylint: disable-msg=W0212
+            widget._series.append(wx.lib.agw.piectrl.PiePart(1))  # pylint: disable-msg=W0212
         return widget
 
     def createClipboardToolBarUICommands(self):
@@ -1178,19 +1173,19 @@ class TaskStatsViewer(BaseTaskViewer): # pylint: disable-msg=W0223
         legend.Show()
     
     def refresh(self):
-        self.widget.SetAngle(self.settings.getint(self.settingsSection(), 'piechartangle')/180.*math.pi)
+        self.widget.SetAngle(self.settings.getint(self.settingsSection(), 'piechartangle') / 180. * math.pi)
         self.refreshParts()
         self.widget.Refresh()
         
     def refreshParts(self):
-        series = self.widget._series # pylint: disable-msg=W0212
+        series = self.widget._series  # pylint: disable-msg=W0212
         tasks = self.presentation()
         total = len(tasks)
         counts = tasks.nrOfTasksPerStatus()
         for part, status in zip(series, task.Task.possibleStatuses()):
             nrTasks = counts[status]
-            percentage = round(100.*nrTasks/total) if total else 0
-            part.SetLabel(status.countLabel%(nrTasks, percentage))
+            percentage = round(100. * nrTasks / total) if total else 0
+            part.SetLabel(status.countLabel % (nrTasks, percentage))
             part.SetValue(nrTasks)
             part.SetColour(self.getFgColor(status))
         # PietCtrl can't handle empty pie charts:    
@@ -1198,12 +1193,12 @@ class TaskStatsViewer(BaseTaskViewer): # pylint: disable-msg=W0223
             series[0].SetValue(1)
        
     def getFgColor(self, status):
-        color = wx.Colour(*eval(self.settings.get('fgcolor', '%stasks'%status)))
+        color = wx.Colour(*eval(self.settings.get('fgcolor', '%stasks' % status)))
         if status == task.status.active and color == wx.BLACK:
             color = wx.BLUE
         return color
         
-    def refreshItems(self, *args, **kwargs): # pylint: disable-msg=W0613
+    def refreshItems(self, *args, **kwargs):  # pylint: disable-msg=W0613
         self.refresh()
     
     def select(self, *args):
@@ -1215,5 +1210,5 @@ class TaskStatsViewer(BaseTaskViewer): # pylint: disable-msg=W0223
     def isTreeViewer(self):
         return False
 
-    def onPieChartAngleChanged(self, value): # pylint: disable-msg=W0613
+    def onPieChartAngleChanged(self, value):  # pylint: disable-msg=W0613
         self.refresh()

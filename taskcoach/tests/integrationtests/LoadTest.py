@@ -37,7 +37,7 @@ class LoadTest(test.TestCase):
 
     def tearDown(self):
         wx.CallAfter = self.oldCallAfter
-        self.mockApp.quit()
+        self.mockApp.quitApplication()
         if os.path.isfile(self.filename):
             os.remove(self.filename)
         mock.App.deleteInstance()

@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import categorizable
-from taskcoachlib import help, operating_system # pylint: disable-msg=W0622
+from taskcoachlib import help, operating_system  # pylint: disable-msg=W0622
 import task
 
 
@@ -48,7 +48,7 @@ class TaskList(TaskListQueryMixin, categorizable.CategorizableContainer):
 
     def efforts(self):
         result = []
-        for task in self: # pylint: disable-msg=W0621
+        for task in self:  # pylint: disable-msg=W0621
             result.extend(task.efforts())
         return result
         
@@ -63,4 +63,4 @@ class TaskList(TaskListQueryMixin, categorizable.CategorizableContainer):
         return max(self.__allPriorities())
         
     def __allPriorities(self):
-        return [task.priority() for task in self if not task.isDeleted()] or (0,) # pylint: disable-msg=W0621
+        return [task.priority() for task in self if not task.isDeleted()] or (0,)  # pylint: disable-msg=W0621

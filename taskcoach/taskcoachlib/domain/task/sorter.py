@@ -22,7 +22,7 @@ import task
 
 
 class Sorter(base.TreeSorter):
-    DomainObjectClass = task.Task # What are we sorting
+    DomainObjectClass = task.Task  # What are we sorting
     TaskStatusAttributes = ('plannedStartDateTime', 'actualStartDateTime',
                             'dueDateTime', 'completionDateTime',
                             'prerequisites')
@@ -44,7 +44,7 @@ class Sorter(base.TreeSorter):
         except AttributeError:
             pass
         self.reset(event=event)
-        event.addSource(self, type=self.sortEventType()) # force notification 
+        event.addSource(self, type=self.sortEventType())  # Force notification 
 
     def treeMode(self):
         return self.__treeMode
@@ -81,4 +81,3 @@ class Sorter(base.TreeSorter):
         # See comment at _registerObserverForAttribute.
         if attribute not in self.TaskStatusAttributes:
             super(Sorter, self)._removeObserverForAttribute(attribute)
-        

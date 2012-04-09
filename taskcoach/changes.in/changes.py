@@ -503,8 +503,6 @@ category viewer was slightly different.''', '3345002'),
 and the "file locked" dialog are displayed.''', '3383050'),
         Bug('''Startup even when reading one of the templates fails.''', '3386296'),
         Bug('''Task Coach would sometimes crash on startup on Linux.'''),
-        ## Bug('''SyncML synchronization now works with myFunambol.''',
-        ##     '3337902', '3295655', '3377497'),
         ],
     featuresAdded=[
         Feature('''Users can choose default (relative) dates and
