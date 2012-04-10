@@ -26,7 +26,6 @@ import locale
 import sys
 from taskcoachlib import patterns, operating_system
 from taskcoachlib.thirdparty.pubsub import pub
-from taskcoachlib.domain import date 
 
 # pylint: disable-msg=W0404
 
@@ -277,6 +276,7 @@ class Application(object):
             self.taskBarIcon.RemoveIcon()
         if self.mainwindow.bonjourRegister is not None:
             self.mainwindow.bonjourRegister.stop()
+        from taskcoachlib.domain import date 
         date.Scheduler().shutdown()
         self.wxApp.ProcessIdle()
         self.wxApp.ExitMainLoop()

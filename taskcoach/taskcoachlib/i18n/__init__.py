@@ -24,11 +24,10 @@ import po2dict
 class Translator:
     __metaclass__ = patterns.Singleton
     
-    def __init__(self, language=None):
-        if language:            
-            load = self._loadPoFile if language.endswith('.po') else self._loadModule
-            module, language = load(language) 
-            self._installModule(module)
+    def __init__(self, language):
+        load = self._loadPoFile if language.endswith('.po') else self._loadModule
+        module, language = load(language) 
+        self._installModule(module)
         self._setLocale(language)
 
     def _loadPoFile(self, poFilename):
