@@ -21,6 +21,7 @@ from taskcoachlib.i18n import _
 from tips import showTips
 from uicommand import *
 
+
 _MSURL = "http://www.microsoft.com/downloadS/details.aspx?familyid=200B2FD9-AE1A-4A14-984D-389C36F85647&displaylang=en"
 
 def sequence(*text):
