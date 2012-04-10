@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+from taskcoachlib import i18n
+i18n.Translator('en_US')
+
 from taskcoachlib import meta, help # pylint: disable-msg=W0622
 import sys, os, glob, wx
 from setup import setupOptions
