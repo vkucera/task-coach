@@ -16,10 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib import i18n
-i18n.Translator('en_US')
 
-from taskcoachlib import meta, help # pylint: disable-msg=W0622
+from taskcoachlib import meta
 import sys, os, glob, wx
 from setup import setupOptions
 from buildlib import (clean, bdist_rpm_fedora, bdist_rpm_opensuse,
@@ -60,6 +58,78 @@ manifest = """
     </dependency>
 </assembly>
 """%meta.name
+
+doubleline = '================================================================\n'
+
+header = doubleline + '%(name)s - %(description)s\n'%meta.metaDict + doubleline
+
+aboutText = header + '''
+Version %(version)s, %(date)s
+
+By %(author)s <%(author_email)s>
+
+%(url)s
+
+%(copyright)s
+%(license)s
+
+'''%meta.metaDict + doubleline
+
+installText = header + '''
+
+--- Prerequisites ----------------------------------------------
+
+You need Python version %(pythonversion)s or higher and wxPython 
+version %(wxpythonversion)s or higher.
+
+
+--- Testing ----------------------------------------------------
+
+Before installing, you may want to run the unittests included.
+Issue the following command:
+
+  cd tests; python test.py
+
+If all goes well, you should see a number of dots appearing and
+the message 'Ran X tests in Y seconds. OK'. If not, you'll get
+one or more failed tests. In that case, please run the tests
+again, redirecting the output to a textfile, like this:
+
+  python test.py 2> errors.txt
+
+Please mail me the errors.txt file and your platform information
+(operating system version, Python version and wxPython version).
+
+
+--- Installation -----------------------------------------------
+
+There are two options to install %(name)s: 
+
+First, you can simply move this directory to some suitable 
+location and run taskcoach.py (or taskcoach.pyw if you are on 
+the Windows platform) from there.
+
+Alternatively, you can use the Python distutils setup script
+to let Python install %(name)s for you. In that case run the
+following command:
+
+  python setup.py install
+
+If you have a previous version of %(name)s installed, you may
+need to force old files to be overwritten, like this:
+
+  python setup.py install --force
+
+'''%meta.metaDict + doubleline
+
+buildText = header + '''
+
+--- Building ---------------------------------------------------
+
+To be done.
+
+'''%meta.metaDict + doubleline
+
 
 def writeFile(filename, text, directory='.'): # pylint: disable-msg=W0621
     if not os.path.exists(directory):
