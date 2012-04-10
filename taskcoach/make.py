@@ -138,8 +138,8 @@ def writeFile(filename, text, directory='.'): # pylint: disable-msg=W0621
         textFile.write(text)
 
 def createDocumentation():
-    writeFile('README.txt',  help.aboutText)
-    writeFile('INSTALL.txt', help.installText)
+    writeFile('README.txt',  aboutText)
+    writeFile('INSTALL.txt', installText)
     writeFile('LICENSE.txt', meta.licenseText)
 
 def createInnoSetupScript():
