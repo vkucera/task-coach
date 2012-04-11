@@ -28,6 +28,8 @@ Release('1.3.13', 'April 11, 2012',
         Bug('''Translations couldn't be changed.''', '3516306'),
         Bug('''Exporting to CSV with dates and times to separate columns would
 fail if any of the tasks had a date before 1900.''', '3516964'),
+        Bug('''Disable the checkbox for separate date and time columns in the CSV
+export dialog when the user picks a viewer that doesn't contain tasks.''', '3515241'),
         ],
     ),
 
