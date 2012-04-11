@@ -22,10 +22,12 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.13', 'April 10, 2012',
+Release('1.3.13', 'April 11, 2012',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Translations couldn't be changed.''', '3516306'),
+        Bug('''Exporting to CSV with dates and times to separate columns would
+fail if any of the tasks had a date before 1900.''', '3516964'),
         ],
     ),
 

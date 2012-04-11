@@ -51,12 +51,12 @@ class CSVWriterTestCase(test.wxTestCase):
                     columns=None):
         csv = self.__writeAndRead(selectionOnly, separateDateAndTimeColumns, columns)
         self.failUnless(csvFragment in csv, 
-                        '%s not in %s'%(csvFragment, csv))
+                        '%s not in %s' % (csvFragment, csv))
     
     def expectNotInCSV(self, csvFragment, selectionOnly=False, separateDateAndTimeColumns=False,
                        columns=None):
         csv = self.__writeAndRead(selectionOnly, separateDateAndTimeColumns, columns)
-        self.failIf(csvFragment in csv, '%s in %s'%(csvFragment, csv))
+        self.failIf(csvFragment in csv, '%s in %s' % (csvFragment, csv))
 
     def selectItem(self, items):
         self.viewer.select(items)
@@ -87,13 +87,19 @@ class TaskTestsMixin(object):
         self.task.setPlannedStartDateTime(plannedStartDateTime)
         self.expectInCSV(','.join((render.date(plannedStartDateTime), render.time(plannedStartDateTime))),
                          separateDateAndTimeColumns=True)
+        
+    def testWriteSeparateDateAndTimeColumnsWithDateBefore1900(self):
+        plannedStartDateTime = date.DateTime(1600, 1, 1, 12, 30, 0)
+        self.task.setPlannedStartDateTime(plannedStartDateTime)
+        self.expectInCSV(','.join((render.date(plannedStartDateTime), render.time(plannedStartDateTime))),
+                         separateDateAndTimeColumns=True)       
                
     def testDontWriteSeparateDateAndTimeColumns(self):
         plannedStartDateTime = date.Now()
         self.task.setPlannedStartDateTime(plannedStartDateTime)
         self.expectInCSV(' '.join((render.date(plannedStartDateTime), render.time(plannedStartDateTime))),
                          separateDateAndTimeColumns=False)
-        
+                
     def testDontWriteDefaultDateTimes(self):
         defaultDateTime = date.DateTime()
         self.expectNotInCSV(' '.join([render.date(defaultDateTime), render.time(defaultDateTime)]),
@@ -158,4 +164,3 @@ class EffortWriterTest(CSVWriterTestCase):
         self.viewer.widget.selectall()
         self.viewer.updateSelection()
         self.expectInCSV('Total', selectionOnly=True)
-        
