@@ -248,9 +248,12 @@ class Settings(object, CachingConfigParser):
             path = self.path()
             if not os.path.exists(path):
                 os.mkdir(path)
-            iniFile = file(self.filename(), 'w')
-            self.write(iniFile)
-            iniFile.close()
+            tmpFile = file(self.filename() + '.tmp', 'w')
+            self.write(tmpFile)
+            tmpFile.close()
+            if os.path.exists(self.filename()):
+                os.remove(self.filename())
+            os.rename(self.filename() + '.tmp', self.filename())
         except Exception, message: # pylint: disable-msg=W0703
             showerror(_('Error while saving %s.ini:\n%s\n')% \
                       (meta.filename, message), caption=_('Save error'), 
