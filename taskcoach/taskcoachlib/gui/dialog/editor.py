@@ -585,8 +585,9 @@ class LocalCategoryViewer(viewer.BaseCategoryViewer):  # pylint: disable-msg=W02
     def __init__(self, items, *args, **kwargs):
         self.__items = items
         super(LocalCategoryViewer, self).__init__(*args, **kwargs)
+        event = patterns.Event()  # Make sure item.expand doesn't send events
         for item in self.domainObjectsToView():
-            item.expand(context=self.settingsSection())
+            item.expand(context=self.settingsSection(), event=event)
 
     def getIsItemChecked(self, category):  # pylint: disable-msg=W0621
         for item in self.__items:
@@ -614,8 +615,8 @@ class CategoriesPage(PageWithViewer):
         item = self.items[0]
         for eventType in (item.categoryAddedEventType(), 
                          item.categoryRemovedEventType()):
-            self. registerObserver(self.onCategoryChanged, eventType=eventType,
-                                   eventSource=item)
+            self.registerObserver(self.onCategoryChanged, eventType=eventType,
+                                  eventSource=item)
         return LocalCategoryViewer(self.items, self, taskFile, settings,
                                    settingsSection=settingsSection)
         

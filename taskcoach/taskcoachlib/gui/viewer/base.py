@@ -211,7 +211,8 @@ class Viewer(patterns.Observer, wx.Panel):
         self.widget.Thaw()
 
     def refresh(self):
-        self.widget.RefreshAllItems(len(self.presentation()))
+        if self:
+            self.widget.RefreshAllItems(len(self.presentation()))
     
     def refreshItems(self, *items):
         items = [item for item in items if item in self.presentation()]
