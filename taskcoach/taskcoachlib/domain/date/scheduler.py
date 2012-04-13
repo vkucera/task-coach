@@ -28,11 +28,20 @@ class Scheduler(apscheduler.scheduler.Scheduler):
     __metaclass__ = patterns.Singleton
     
     def __init__(self, *args, **kwargs):
-        logging.getLogger('taskcoachlib.thirdparty.apscheduler.scheduler').addHandler(logging.NullHandler())
+        self.createLogHandler()
         super(Scheduler, self).__init__(*args, **kwargs)
         self.__jobs = {}
         self.start()
-    
+        
+    def createLogHandler(self):
+        # apscheduler logs, but doesn't provide a default handler itself, make it happy:
+        schedulerLogger = logging.getLogger('taskcoachlib.thirdparty.apscheduler.scheduler')
+        try:
+            schedulerLogger.addHandler(logging.NullHandler())
+        except AttributeError:
+            # NullHandler is new in Python 2.7, log to stderr if not available
+            schedulerLogger.addHandler(logging.StreamHandler())
+            
     def schedule(self, function, dateTime):
         def callback():
             if function in self.__jobs:
