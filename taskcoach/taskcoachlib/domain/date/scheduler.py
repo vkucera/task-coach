@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
+import logging
 from taskcoachlib import patterns
 from taskcoachlib.thirdparty import apscheduler
 import dateandtime
@@ -27,6 +28,7 @@ class Scheduler(apscheduler.scheduler.Scheduler):
     __metaclass__ = patterns.Singleton
     
     def __init__(self, *args, **kwargs):
+        logging.getLogger('taskcoachlib.thirdparty.apscheduler.scheduler').addHandler(logging.NullHandler())
         super(Scheduler, self).__init__(*args, **kwargs)
         self.__jobs = {}
         self.start()

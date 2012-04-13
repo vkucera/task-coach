@@ -16,7 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import re, sre_constants
+import re
+import sre_constants
 from taskcoachlib import patterns
 from taskcoachlib.domain.base import object as domainobject
 
@@ -49,7 +50,7 @@ class Filter(patterns.SetDecorator):
             
     def filter(self, items):
         ''' filter returns the items that pass the filter. '''
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
     def rootItems(self):
         return [item for item in self if item.parent() is None]
