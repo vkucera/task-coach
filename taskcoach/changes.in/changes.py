@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.13', 'April 13, 2012',
+Release('1.3.13', 'April 14, 2012',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Translations couldn't be changed.''', '3516306'),
@@ -30,6 +30,8 @@ Release('1.3.13', 'April 13, 2012',
 fail if any of the tasks had a date before 1900.''', '3516964'),
         Bug('''Disable the checkbox for separate date and time columns in the CSV
 export dialog when the user picks a viewer that doesn't contain tasks.''', '3515241'),
+        Bug('''Don't complain about a missing log handler in the log file
+on Windows.''', '3517705'),
         ],
     ),
 
