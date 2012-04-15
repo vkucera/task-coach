@@ -54,7 +54,7 @@ class ViewFilter(tasklist.TaskListQueryMixin, base.Filter):
         self.__hideCompositeTasks = hide
         self.reset()
         
-    def filter(self, tasks):
+    def filterItems(self, tasks):
         return [task for task in tasks if self.filterTask(task)]  # pylint: disable-msg=W0621
     
     def filterTask(self, task):  # pylint: disable-msg=W0621

@@ -41,7 +41,7 @@ class CategoryFilter(base.Filter):
         pub.subscribe(self.onFilterMatchingChanged, 'settings.view.categoryfiltermatchall')
         super(CategoryFilter, self).__init__(*args, **kwargs)
     
-    def filter(self, categorizables):
+    def filterItems(self, categorizables):
         filteredCategories = self.__categories.filteredCategories()
         if not filteredCategories:
             return categorizables
