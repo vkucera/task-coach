@@ -45,9 +45,6 @@ class CategoryTest(test.TestCase):
     def testGetState_ExclusiveSubcategories(self):
         self.assertEqual(False, self.category.__getstate__()['exclusiveSubcategories'])
 
-    def testGetState_Ordering(self):
-        self.assertEqual(0L, self.category.__getstate__()['ordering'])
-
     def testSetState_ExclusiveSubcategories(self):
         state = self.category.__getstate__()
         self.category.makeSubcategoriesExclusive()
@@ -61,7 +58,7 @@ class CategoryTest(test.TestCase):
                         parent=None, children=[self.subCategory], id=self.category.id(),
                         categorizables=[self.categorizable], notes=[],
                         attachments=[], filtered=True, exclusiveSubcategories=True,
-                        icon='icon', selectedIcon='selected', ordering=42L)
+                        icon='icon', selectedIcon='selected')
         for eventType in self.category.modificationEventTypes():
             self.registerObserver(eventType)
         self.category.__setstate__(newState)

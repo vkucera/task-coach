@@ -69,7 +69,7 @@ defaults = { \
     'searchdescription': 'False',
     'columns': "['plannedStartDateTime', 'dueDateTime']",
     'columnsalwaysvisible': "['subject']",
-    'columnwidths': "{'attachments': 28, 'notes': 28, 'ordering': 38}",
+    'columnwidths': "{'attachments': 28, 'notes': 28}",
     'columnautoresizing': 'True',
     'hideinactivetasks': 'False',
     'hidelatetasks': 'False',
