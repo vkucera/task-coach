@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import test
-from taskcoachlib import patterns
 from taskcoachlib.domain import attachment
+from taskcoachlib.thirdparty.pubsub import pub
 
 
 class GetRelativePathTest(test.TestCase):
@@ -43,8 +43,8 @@ class FileAttachmentTest(test.TestCase):
         self.attachment = attachment.FileAttachment('filename')
         self.events = []
         
-    def onEvent(self, event):
-        self.events.append(event)
+    def onEvent(self, newValue):
+        self.events.append(newValue)
         
     def openAttachment(self, filename):
         self.filename = filename
@@ -69,18 +69,14 @@ class FileAttachmentTest(test.TestCase):
                                 
     def testCopy(self):
         copy = self.attachment.copy()
-        # pylint: disable-msg=E1101
         self.assertEqual(copy.location(), self.attachment.location())
         self.attachment.setDescription('new')
         self.assertEqual(copy.location(), self.attachment.location())
 
     def testLocationNotification(self):
-        eventType = self.attachment.locationChangedEventType()
-        patterns.Publisher().registerObserver(self.onEvent, eventType)
+        pub.subscribe(self.onEvent, self.attachment.locationChangedEventType())
         self.attachment.setLocation('new location')
-        self.assertEqual([patterns.Event(eventType, self.attachment, 
-                                         'new location')], 
-                         self.events)
+        self.assertEqual(['new location'], self.events)
 
     def testModificationEventTypes(self):
         Attachment = attachment.Attachment

@@ -16,7 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, xml
+import os
+import xml
 from taskcoachlib import patterns
 from taskcoachlib.domain import base, task, category, note, effort, attachment
 from taskcoachlib.syncml.config import createDefaultSyncConfig
@@ -72,8 +73,10 @@ class TaskFile(patterns.Observer):
             self.registerObserver(self.onCategoryChanged, eventType)
         for eventType in attachment.FileAttachment.modificationEventTypes() + \
                          attachment.URIAttachment.modificationEventTypes() + \
-                         attachment.MailAttachment.modificationEventTypes(): 
-            self.registerObserver(self.onAttachmentChanged, eventType) 
+                         attachment.MailAttachment.modificationEventTypes():
+            if not eventType.startswith('pubsub'):
+                self.registerObserver(self.onAttachmentChanged_Deprecated, eventType) 
+        pub.subscribe(self.onAttachmentChanged, 'pubsub.attachment')
 
     def __str__(self):
         return self.filename()
@@ -107,7 +110,7 @@ class TaskFile(patterns.Observer):
     def isEmpty(self):
         return 0 == len(self.categories()) == len(self.tasks()) == len(self.notes())
             
-    def onDomainObjectAddedOrRemoved(self, event): # pylint: disable-msg=W0613
+    def onDomainObjectAddedOrRemoved(self, event):  # pylint: disable-msg=W0613
         self.markDirty()
         
     def onTaskChanged(self, event):
@@ -156,7 +159,14 @@ class TaskFile(patterns.Observer):
         for changedNote in event.sources():
             changedNote.markDirty()
             
-    def onAttachmentChanged(self, event):
+    def onAttachmentChanged(self):
+        if self.__loading:
+            return
+        # Attachments don't know their owner, so we can't check whether the
+        # attachment is actually in the task file. Assume it is.
+        self.markDirty()
+            
+    def onAttachmentChanged_Deprecated(self, event):
         if self.__loading:
             return
         # Attachments don't know their owner, so we can't check whether the
