@@ -16,7 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, wx
+import test
+import wx
 from taskcoachlib import meta, application, config
 
 
@@ -47,7 +48,7 @@ class AppTests(test.TestCase):
         self.assertEqual(meta.name, wxApp.GetAppName())
         self.assertEqual(meta.author, wxApp.GetVendorName())
         app.mainwindow._idleController.stop()
-        app.quit()
+        app.quitApplication()
         app.mainwindow.Destroy()
         application.Application.deleteInstance()
         
@@ -56,7 +57,7 @@ class AppTests(test.TestCase):
         if locale:
             args.append(locale)
         self.assertEqual(expectedLanguage, 
-                         application.Application.determineLanguage(*args))
+                         application.Application.determineLanguage(*args))  # pylint: disable-msg=W0142
         
     def testLanguageViaCommandLineOption(self):
         self.options.language = 'fi_FI'

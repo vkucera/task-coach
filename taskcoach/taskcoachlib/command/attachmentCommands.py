@@ -60,12 +60,12 @@ class EditAttachmentLocationCommand(base.BaseCommand):
     @patterns.eventSource
     def do_command(self, event=None):
         for item in self.items:
-            item.setLocation(self.__newLocation, event=event)
+            item.setLocation(self.__newLocation)
             
     @patterns.eventSource
     def undo_command(self, event=None):
         for item, oldLocation in zip(self.items, self.__oldLocations):
-            item.setLocation(oldLocation, event=event)
+            item.setLocation(oldLocation)
             
     def redo_command(self):
         self.do_command()

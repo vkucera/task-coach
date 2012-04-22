@@ -43,6 +43,7 @@ import wx, asynchat, threading, asyncore, struct, \
 ###############################################################################
 #{ Support classes: object serialisation & packing
 
+
 class BaseItem(object):
     """This is the base class of the network packet system. Each
     subclass maps to a particular type of data.

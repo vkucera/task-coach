@@ -21,6 +21,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
+            
+Release('1.3.14', 'April 21, 2012',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        ],
+    ),
+            
+Release('1.3.13', 'April 14, 2012',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Translations couldn't be changed.''', '3516306'),
+        Bug('''Exporting to CSV with dates and times to separate columns would
+fail if any of the tasks had a date before 1900.''', '3516964'),
+        Bug('''Disable the checkbox for separate date and time columns in the CSV
+export dialog when the user picks a viewer that doesn't contain tasks.''', '3515241'),
+        Bug('''Don't complain about a missing log handler in the log file
+on Windows.''', '3517705'),
+        ],
+    ),
 
 Release('1.3.12', 'April 9, 2012',
     summary='''This is a mixed feature and bugfix release.''',
@@ -503,8 +522,6 @@ category viewer was slightly different.''', '3345002'),
 and the "file locked" dialog are displayed.''', '3383050'),
         Bug('''Startup even when reading one of the templates fails.''', '3386296'),
         Bug('''Task Coach would sometimes crash on startup on Linux.'''),
-        ## Bug('''SyncML synchronization now works with myFunambol.''',
-        ##     '3337902', '3295655', '3377497'),
         ],
     featuresAdded=[
         Feature('''Users can choose default (relative) dates and

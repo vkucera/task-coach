@@ -18,7 +18,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import xml.parsers.expat, wx, StringIO, os, tempfile, base64
+import xml.parsers.expat
+import wx
+import StringIO
+import os
+import tempfile
+import base64
 import test
 from taskcoachlib import persistence, config, operating_system
 from taskcoachlib.domain import date, task
@@ -44,11 +49,11 @@ class XMLTemplateReaderTestCase(test.TestCase):
         self.assertEqual('11:59 PM tomorrow', self.convert('Now().endOfDay() + oneDay'))
 
     def testConvertNowAndPositiveTimeDelta(self):
-        self.assertEqual('%d minutes from now'%date.TimeDelta(2, 1861, 0).minutes(), 
+        self.assertEqual('%d minutes from now' % date.TimeDelta(2, 1861, 0).minutes(),
                          self.convert('Now() + TimeDelta(2, 1861, 0)'))
 
     def testConvertNowAndNegativeTimeDelta(self):
-        self.assertEqual('%d minutes ago'%date.TimeDelta(2, 1861, 0).minutes(),
+        self.assertEqual('%d minutes ago' % date.TimeDelta(2, 1861, 0).minutes(),
                          self.convert('Now() - TimeDelta(2, 1861, 0)'))
 
     def testConvertTodayAndPositiveTimeDelta(self):
@@ -78,7 +83,7 @@ class XMLReaderTestCase(test.TestCase):
         self.fd = StringIO.StringIO()
         self.fd.name = 'testfile.tsk'
         self.reader = persistence.XMLReader(self.fd)
-        allXML = '<?taskcoach release="whatever" tskversion="%d"?>\n'%self.tskversion + xmlContents
+        allXML = '<?taskcoach release="whatever" tskversion="%d"?>\n' % self.tskversion + xmlContents
         self.fd.write(allXML)
         self.fd.seek(0)
         return self.reader.read()
@@ -116,12 +121,13 @@ class TempFileLockTest(XMLReaderTestCase):
 
     def setUp(self):
         self.oldMkstemp = tempfile.mkstemp
-        def newMkstemp(*args, **kwargs): # pragma: no cover
+        
+        def newMkstemp(*args, **kwargs):  # pragma: no cover
             handle, name = self.oldMkstemp(*args, **kwargs)
-            self.__filename = name # pylint: disable-msg=W0201
+            self.__filename = name  # pylint: disable-msg=W0201
             return handle, name
+        
         tempfile.mkstemp = newMkstemp
-
         super(TempFileLockTest, self).setUp()
 
     def tearDown(self):
@@ -129,17 +135,17 @@ class TempFileLockTest(XMLReaderTestCase):
         super(TempFileLockTest, self).tearDown()
 
     def testLock(self):
-        if os.name == 'nt': # pragma: no cover
+        if os.name == 'nt':  # pragma: no cover
             self.writeAndReadTasks(\
                 '<tasks>\n<task status="0">\n'
                 '<attachment type="mail" status="0">\n'
                 '<data extension="eml">%s</data>\n'
-                '</attachment>\n</task>\n</tasks>\n'%base64.encodestring('Data'))
+                '</attachment>\n</task>\n</tasks>\n' % base64.encodestring('Data'))
             try:
                 os.remove(self.__filename)
                 os.remove(self.__filename + '.delta')
             except:
-                pass # pylint: disable-msg=W0702
+                pass  # pylint: disable-msg=W0702
 
             self.assert_(os.path.exists(self.__filename))
 
@@ -151,7 +157,7 @@ class XMLReaderVersion6Test(XMLReaderTestCase):
         tasks = self.writeAndReadTasks('''
         <tasks>
             <task description="%s" id="foo"/>
-        </tasks>\n'''%u'Description')
+        </tasks>\n''' % u'Description')
         self.assertEqual(u'Description', tasks[0].description())
 
     def testEffortDescription(self):
@@ -334,11 +340,11 @@ class XMLReaderVersion18Test(XMLReaderTestCase):
         <tasks>
             <task lastModificationTime="2004-01-01 10:00:00"/>
         </tasks>''')
-        self.assertEqual(1, len(tasks)) # Ignore lastModificationTime
+        self.assertEqual(1, len(tasks))  # Ignore lastModificationTime
 
 
 class XMLReaderVersion19Test(XMLReaderTestCase):
-    tskversion = 19 # New in release 0.69.0?        
+    tskversion = 19  # New in release 0.69.0?        
 
     def testDailyRecurrence(self):
         tasks = self.writeAndReadTasks('''
@@ -384,17 +390,17 @@ class XMLReaderVersion19Test(XMLReaderTestCase):
 
 
 class XMLReaderVersion20Test(XMLReaderTestCase):
-    tskversion = 20 # New in release 0.71.0
+    tskversion = 20  # New in release 0.71.0
            
     def testReadEmptyStream(self):
         reader = persistence.XMLReader(StringIO.StringIO())
         try:
             reader.read()
-            self.fail('Expected ExpatError or ParseError') # pragma: no cover
+            self.fail('Expected ExpatError or ParseError')  # pragma: no cover
         except xml.parsers.expat.ExpatError:
-            pass # pragma: no cover
+            pass  # pragma: no cover
         except xml.etree.ElementTree.ParseError:
-            pass # pragma: no cover
+            pass  # pragma: no cover
         
     def testNoTasksAndNoCategories(self):
         tasks, categories, notes = self.writeAndReadTasksAndCategoriesAndNotes('<tasks/>\n')
@@ -447,7 +453,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
             <task>
                 <description>%s</description>
             </task>
-        </tasks>\n'''%description)
+        </tasks>\n''' % description)
         self.assertEqual(description, tasks[0].description())
     
     def testNoChildren(self):
@@ -525,7 +531,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
                     <description>%s</description>
                 </effort>
             </task>
-        </tasks>'''%description)
+        </tasks>''' % description)
         self.assertEqual(description, tasks[0].efforts()[0].description())
         
     def testActiveEffort(self):
@@ -575,7 +581,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
         <tasks>
             <task reminder="2004-01-01 10:00:00"/>
         </tasks>''')
-        self.assertEqual(date.DateTime(2004,1,1,10,0,0,0), 
+        self.assertEqual(date.DateTime(2004, 1, 1, 10, 0, 0, 0),
                          tasks[0].reminder())
         
     def testMarkCompletedWhenAllChildrenCompletedSetting_True(self):
@@ -993,7 +999,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
 
 
 class XMLReaderVersion21Test(XMLReaderTestCase):
-    tskversion = 21 # New in release 0.71.0
+    tskversion = 21  # New in release 0.71.0
 
     def testAttachmentLocation(self):
         categories = self.writeAndReadCategories('''
@@ -1029,7 +1035,7 @@ class XMLReaderVersion23Test(XMLReaderTestCase):
             '<tasks>\n<task status="0">\n'
             '<attachment type="mail" status="0">\n'
             '<data extension="eml">%s</data>\n'
-            '</attachment>\n</task>\n</tasks>\n'%base64.encodestring('Data'))
+            '</attachment>\n</task>\n</tasks>\n' % base64.encodestring('Data'))
         self.assertEqual('Data', tasks[0].attachments()[0].data())
     
     def testGUID(self):
@@ -1042,7 +1048,7 @@ class XMLReaderVersion23Test(XMLReaderTestCase):
         
         
 class XMLReaderVersion24Test(XMLReaderTestCase):
-    tskversion = 24 # New in release 0.72.9
+    tskversion = 24  # New in release 0.72.9
 
     # tskversion 24 introduces newlines so that the XML is not on one long
     # line anymore. We have to be sure not to introduce new lines in
@@ -1060,7 +1066,7 @@ class XMLReaderVersion24Test(XMLReaderTestCase):
             '<tasks>\n<task status="0">\n'
             '<attachment type="mail" status="0">\n'
             '<data extension="eml">\n%s\n</data>\n'
-            '</attachment>\n</task>\n</tasks>\n'%base64.encodestring('Data'))
+            '</attachment>\n</task>\n</tasks>\n' % base64.encodestring('Data'))
         self.assertEqual('Data', tasks[0].attachments()[0].data())
 
     def testGUID(self):
@@ -1095,7 +1101,7 @@ class XMLReaderVersion24Test(XMLReaderTestCase):
         
 
 class XMLReaderVersion26Test(XMLReaderTestCase):
-    tskversion = 26 # New in release 0.75.0
+    tskversion = 26  # New in release 0.75.0
 
     # Release 0.75.0 introduces percentage complete for tasks
     
@@ -1107,7 +1113,7 @@ class XMLReaderVersion26Test(XMLReaderTestCase):
 
 
 class XMLReaderVersion27Test(XMLReaderTestCase):
-    tskversion = 27 # New in release 0.76.0
+    tskversion = 27  # New in release 0.76.0
     
     # Release 0.76.0 introduces exclusive subcategories
     
@@ -1128,7 +1134,7 @@ class XMLReaderVersion27Test(XMLReaderTestCase):
         
 
 class XMLReaderVersion28Test(XMLReaderTestCase):
-    tskversion = 28 # New in release 0.78.0
+    tskversion = 28  # New in release 0.78.0
     
     # Release 0.78.0 introduces foreground colors and fonts that can be set per object.
 
@@ -1171,7 +1177,7 @@ class XMLReaderVersion28Test(XMLReaderTestCase):
     def testTaskFont(self):
         tasks = self.writeAndReadTasks(\
             '<tasks>\n<task subject="Task" font="%s"/>\n'
-            '</tasks>\n'%wx.NORMAL_FONT.GetNativeFontInfoDesc())
+            '</tasks>\n' % wx.NORMAL_FONT.GetNativeFontInfoDesc())
         self.assertEqual(wx.NORMAL_FONT, tasks[0].font())
         
     def testNoTaskFont(self):
@@ -1182,20 +1188,20 @@ class XMLReaderVersion28Test(XMLReaderTestCase):
     def testCategoryFont(self):
         categories = self.writeAndReadCategories(\
             '<categories>\n<category subject="Category" font="%s"/>\n'
-            '</categories>\n'%wx.NORMAL_FONT.GetNativeFontInfoDesc())
+            '</categories>\n' % wx.NORMAL_FONT.GetNativeFontInfoDesc())
         self.assertEqual(wx.NORMAL_FONT, categories[0].font())
 
     def testNoteFont(self):
         notes = self.writeAndReadNotes(\
             '<notes>\n<note subject="Note" font="%s"/>\n'
-            '</notes>\n'%wx.NORMAL_FONT.GetNativeFontInfoDesc())
+            '</notes>\n' % wx.NORMAL_FONT.GetNativeFontInfoDesc())
         self.assertEqual(wx.NORMAL_FONT, notes[0].font())
 
     def testAttachmentFont(self):
         tasks = self.writeAndReadTasks(\
             '<tasks>\n<task subject="Task">\n'
             '<attachment type="file" location="whatever" font="%s"/>\n'
-            '</task>\n</tasks>\n'%wx.NORMAL_FONT.GetNativeFontInfoDesc())
+            '</task>\n</tasks>\n' % wx.NORMAL_FONT.GetNativeFontInfoDesc())
         self.assertEqual(wx.NORMAL_FONT, tasks[0].attachments()[0].font())
 
 
@@ -1254,14 +1260,14 @@ class XMLReaderVersion29Test(XMLReaderTestCase):
 
 
 class XMLReaderVersion30Test(XMLReaderTestCase):
-    tskversion = 30 # New in release 1.1.0.
+    tskversion = 30  # New in release 1.1.0.
     
     def testStartDateTime(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
             <task startdate="2005-04-17 10:05:11"/>
         </tasks>\n''')
-        self.assertEqual(date.DateTime(2005,4,17,10,5,11), 
+        self.assertEqual(date.DateTime(2005, 4, 17, 10, 5, 11),
                          tasks[0].plannedStartDateTime())
 
     def testStartDateTimeWithoutTime(self):
@@ -1269,7 +1275,8 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
         <tasks>
             <task startdate="2005-04-17"/>
         </tasks>\n''')
-        self.assertEqual(date.DateTime(2005,4,17), tasks[0].plannedStartDateTime())
+        self.assertEqual(date.DateTime(2005, 4, 17), 
+                         tasks[0].plannedStartDateTime())
 
     def testNoStartDateTime(self):
         tasks = self.writeAndReadTasks('''
@@ -1283,7 +1290,7 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
         <tasks>
             <task startdate="2005-01-01 22:01:30.456"/>
         </tasks>\n''')
-        self.assertEqual(date.DateTime(2005,1,1,22,1,30,456), 
+        self.assertEqual(date.DateTime(2005, 1, 1, 22, 1, 30, 456),
                          tasks[0].plannedStartDateTime())
         
     def testDueDateTime(self):
@@ -1291,7 +1298,7 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
         <tasks>
             <task duedate="2005-04-17 13:05:59"/>
         </tasks>\n''')
-        self.assertEqual(date.DateTime(2005,4,17,13,5,59), 
+        self.assertEqual(date.DateTime(2005, 4, 17, 13, 5, 59),
                          tasks[0].dueDateTime())
 
     def testDueDateTimeWithoutTime(self):
@@ -1299,7 +1306,7 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
         <tasks>
             <task duedate="2005-04-17"/>
         </tasks>\n''')
-        self.assertEqual(date.DateTime(2005,4,17,23,59,59,999999), 
+        self.assertEqual(date.DateTime(2005, 4, 17, 23, 59, 59, 999999),
                          tasks[0].dueDateTime())
 
     def testDueDateTimeWithoutTimeWhenEndHourIs24(self):
@@ -1307,7 +1314,7 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
         <tasks>
             <task duedate="2005-04-17"/>
         </tasks>\n''')
-        self.assertEqual(date.DateTime(2005,4,17,23,59,59,999999), 
+        self.assertEqual(date.DateTime(2005, 4, 17, 23, 59, 59, 999999),
                          tasks[0].dueDateTime())
 
     def testNoDueDateTime(self):
@@ -1322,7 +1329,7 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
         <tasks>
             <task duedate="2005-01-01 22:01:30.456000"/>
         </tasks>\n''')
-        self.assertEqual(date.DateTime(2005,1,1,22,1,30,456000), 
+        self.assertEqual(date.DateTime(2005, 1, 1, 22, 1, 30, 456000),
                          tasks[0].dueDateTime())
         
     def testCompletionDateTime(self):
@@ -1330,7 +1337,7 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
         <tasks>
             <task completiondate="2005-01-01 22:01:30"/>
         </tasks>\n''')
-        self.assertEqual(date.DateTime(2005,1,1,22,1,30), 
+        self.assertEqual(date.DateTime(2005, 1, 1, 22, 1, 30),
                          tasks[0].completionDateTime())
         self.failUnless(tasks[0].completed())
 
@@ -1339,7 +1346,7 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
         <tasks>
             <task completiondate="2005-01-01 22:01:30.456000"/>
         </tasks>\n''')
-        self.assertEqual(date.DateTime(2005,1,1,22,1,30,456000), 
+        self.assertEqual(date.DateTime(2005, 1, 1, 22, 1, 30, 456000),
                          tasks[0].completionDateTime())
         self.failUnless(tasks[0].completed())
 
@@ -1355,7 +1362,7 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
         <tasks>
             <task completiondate="2005-01-01"/>
         </tasks>\n''')
-        self.assertEqual(date.DateTime(2005,1,1,23,59,59,999999), 
+        self.assertEqual(date.DateTime(2005, 1, 1, 23, 59, 59, 999999),
                          tasks[0].completionDateTime())
         self.failUnless(tasks[0].completed())
 
@@ -1372,9 +1379,9 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
             <task font="0;11;70;90;90;0;Helvetica Neue Light;0"/>
         </tasks>\n''')
         size = tasks[0].font().GetPointSize()
-        if operating_system.isMac(): # pragma: no cover
+        if operating_system.isMac():  # pragma: no cover
             self.assertEqual(11, size)
-        else: # pragma: no cover
+        else:  # pragma: no cover
             self.failUnless(size > 0)
         
     def testSans9LinuxFont(self):
@@ -1382,23 +1389,25 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
         <tasks>
             <task font="Sans 9"/>
         </tasks>\n''')
-        if operating_system.isMac(): # pragma: no cover
+        if operating_system.isMac():  # pragma: no cover
             self.assertEqual(None, tasks[0].font())
-        else: # pragma: no cover
+        else:  # pragma: no cover
             expectedFontSize = 9 if operating_system.isGTK() else 8
             self.assertEqual(expectedFontSize, tasks[0].font().GetPointSize())
 
 
 class XMLReaderVersion31Test(XMLReaderTestCase):
-    tskversion = 31 # New in release 1.2.0.
+    tskversion = 31  # New in release 1.2.0.
     
     def writeAndReadTasks(self, *args, **kwargs):
         tasks = super(XMLReaderVersion31Test, self).writeAndReadTasks(*args, **kwargs)
         tasksById = dict()
+        
         def collectIds(tasks):
             for eachTask in tasks:
                 tasksById[eachTask.id()] = eachTask
                 collectIds(eachTask.children())
+                
         collectIds(tasks)
         return tasksById
     
@@ -1482,7 +1491,7 @@ class XMLReaderVersion31Test(XMLReaderTestCase):
 
 
 class XMLReaderVersion33Test(XMLReaderTestCase):
-    tskversion = 33 # New in release 1.2.24.
+    tskversion = 33  # New in release 1.2.24.
     
     def testReminderBeforeSnooze(self):
         tasks = self.writeAndReadTasks('''
@@ -1523,14 +1532,14 @@ class XMLReaderVersion33Test(XMLReaderTestCase):
 
 
 class XMLReaderVersion34Test(XMLReaderTestCase):
-    tskversion = 34 # New in release 1.3.5.
+    tskversion = 34  # New in release 1.3.5.
     
     def testPlannedStartDateTime(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
             <task plannedstartdate="2005-04-17 10:05:11"/>
         </tasks>\n''')
-        self.assertEqual(date.DateTime(2005,4,17,10,5,11), 
+        self.assertEqual(date.DateTime(2005, 4, 17, 10, 5, 11),
                          tasks[0].plannedStartDateTime())
 
     def testPlannedStartDateTimeWithoutTime(self):
@@ -1538,7 +1547,8 @@ class XMLReaderVersion34Test(XMLReaderTestCase):
         <tasks>
             <task plannedstartdate="2005-04-17"/>
         </tasks>\n''')
-        self.assertEqual(date.DateTime(2005,4,17), tasks[0].plannedStartDateTime())
+        self.assertEqual(date.DateTime(2005, 4, 17), 
+                         tasks[0].plannedStartDateTime())
 
     def testNoPlannedStartDateTime(self):
         tasks = self.writeAndReadTasks('''
@@ -1552,7 +1562,7 @@ class XMLReaderVersion34Test(XMLReaderTestCase):
         <tasks>
             <task plannedstartdate="2005-01-01 22:01:30.456"/>
         </tasks>\n''')
-        self.assertEqual(date.DateTime(2005,1,1,22,1,30,456), 
+        self.assertEqual(date.DateTime(2005, 1, 1, 22, 1, 30, 456),
                          tasks[0].plannedStartDateTime())
 
     def testActualStartDateTime(self):
@@ -1560,7 +1570,7 @@ class XMLReaderVersion34Test(XMLReaderTestCase):
         <tasks>
             <task actualstartdate="2005-04-17 10:05:11"/>
         </tasks>\n''')
-        self.assertEqual(date.DateTime(2005,4,17,10,5,11), 
+        self.assertEqual(date.DateTime(2005, 4, 17, 10, 5, 11),
                          tasks[0].actualStartDateTime())
 
     def testActualStartDateTimeWithoutTime(self):
@@ -1568,7 +1578,8 @@ class XMLReaderVersion34Test(XMLReaderTestCase):
         <tasks>
             <task actualstartdate="2005-04-17"/>
         </tasks>\n''')
-        self.assertEqual(date.DateTime(2005,4,17), tasks[0].actualStartDateTime())
+        self.assertEqual(date.DateTime(2005, 4, 17), 
+                         tasks[0].actualStartDateTime())
 
     def testNoActualStartDateTime(self):
         tasks = self.writeAndReadTasks('''
@@ -1582,7 +1593,7 @@ class XMLReaderVersion34Test(XMLReaderTestCase):
         <tasks>
             <task actualstartdate="2005-01-01 22:01:30.456"/>
         </tasks>\n''')
-        self.assertEqual(date.DateTime(2005,1,1,22,1,30,456), 
+        self.assertEqual(date.DateTime(2005, 1, 1, 22, 1, 30, 456),
                          tasks[0].actualStartDateTime())
         
     def testTaskWithNoteWithCategory(self):

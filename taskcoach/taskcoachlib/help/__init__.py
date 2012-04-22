@@ -21,6 +21,7 @@ from taskcoachlib.i18n import _
 from tips import showTips
 from uicommand import *
 
+
 _MSURL = "http://www.microsoft.com/downloadS/details.aspx?familyid=200B2FD9-AE1A-4A14-984D-389C36F85647&displaylang=en"
 
 def sequence(*text):
@@ -815,74 +816,3 @@ aboutHTML = _('''<h4>%(name)s - %(description)s</h4>
 <p>%(copyright)s</p>
 <p>%(license_notice_html)s</p>
 ''')%meta.metaDict
-
-doubleline = '================================================================\n'
-
-header = doubleline + '%(name)s - %(description)s\n'%meta.metaDict + doubleline
-
-aboutText = header + _('''
-Version %(version)s, %(date)s
-
-By %(author)s <%(author_email)s>
-
-%(url)s
-
-%(copyright)s
-%(license)s
-
-''')%meta.metaDict + doubleline
-
-installText = header + '''
-
---- Prerequisites ----------------------------------------------
-
-You need Python version %(pythonversion)s or higher and wxPython 
-version %(wxpythonversion)s or higher.
-
-
---- Testing ----------------------------------------------------
-
-Before installing, you may want to run the unittests included.
-Issue the following command:
-
-  cd tests; python test.py
-
-If all goes well, you should see a number of dots appearing and
-the message 'Ran X tests in Y seconds. OK'. If not, you'll get
-one or more failed tests. In that case, please run the tests
-again, redirecting the output to a textfile, like this:
-
-  python test.py 2> errors.txt
-
-Please mail me the errors.txt file and your platform information
-(operating system version, Python version and wxPython version).
-
-
---- Installation -----------------------------------------------
-
-There are two options to install %(name)s: 
-
-First, you can simply move this directory to some suitable 
-location and run taskcoach.py (or taskcoach.pyw if you are on 
-the Windows platform) from there.
-
-Alternatively, you can use the Python distutils setup script
-to let Python install %(name)s for you. In that case run the
-following command:
-
-  python setup.py install
-
-If you have a previous version of %(name)s installed, you may
-need to force old files to be overwritten, like this:
-
-  python setup.py install --force
-
-'''%meta.metaDict + doubleline
-
-buildText = header + '''
-
---- Building ---------------------------------------------------
-
-To be done.
-
-'''%meta.metaDict + doubleline

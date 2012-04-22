@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import patterns
+from taskcoachlib.thirdparty.pubsub import pub
 
 
 class AttributeSync(object):
@@ -34,6 +35,7 @@ class AttributeSync(object):
         self._items = items
         self._commandClass = commandClass
         self.__commandKwArgs = kwargs
+        self.__changedEventType = changedEventType
         entry.Bind(editedEventType, self.onAttributeEdited)
         if len(items) == 1:
             self.startObservingAttribute(changedEventType, items[0])
@@ -44,9 +46,9 @@ class AttributeSync(object):
         if newValue != self._currentValue:
             self._currentValue = newValue
             commandKwArgs = self.commandKwArgs(newValue)
-            self._commandClass(None, self._items, **commandKwArgs).do() # pylint: disable-msg=W0142
+            self._commandClass(None, self._items, **commandKwArgs).do()  # pylint: disable-msg=W0142
             
-    def onAttributeChanged(self, event):
+    def onAttributeChanged_Deprecated(self, event):  # pylint: disable-msg=W0613
         if self._entry: 
             newValue = getattr(self._items[0], self._getter)()
             if newValue != self._currentValue:
@@ -54,6 +56,15 @@ class AttributeSync(object):
                 self.setValue(newValue)
         else:
             self.stopObservingAttribute()
+            
+    def onAttributeChanged(self, newValue, sender):
+        if sender in self._items:
+            if self._entry:
+                if newValue != self._currentValue:
+                    self._currentValue = newValue
+                    self.setValue(newValue)
+            else:
+                self.stopObservingAttribute()
             
     def commandKwArgs(self, newValue):
         self.__commandKwArgs['newValue'] = newValue
@@ -66,12 +77,19 @@ class AttributeSync(object):
         return self._entry.GetValue()
     
     def startObservingAttribute(self, eventType, eventSource):
-        patterns.Publisher().registerObserver(self.onAttributeChanged,
+        if eventType.startswith('pubsub'):
+            pub.subscribe(self.onAttributeChanged, eventType)
+        else:
+            patterns.Publisher().registerObserver(self.onAttributeChanged_Deprecated,
                                                   eventType=eventType,
                                                   eventSource=eventSource)
     
     def stopObservingAttribute(self):
-        patterns.Publisher().removeObserver(self.onAttributeChanged)
+        try:
+            pub.unsubscribe(self.onAttributeChanged, self.__changedEventType)
+        except pub.UndefinedTopic:
+            pass
+        patterns.Publisher().removeObserver(self.onAttributeChanged_Deprecated)
 
 
 class FontColorSync(AttributeSync):

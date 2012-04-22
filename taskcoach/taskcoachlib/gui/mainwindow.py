@@ -214,9 +214,9 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         else:
             self._idleController.stop()
             self.taskFile.stop()
-            application.Application().quit()
+            application.Application().quitApplication()
 
-    def restore(self, event): # pylint: disable-msg=W0613
+    def restore(self, event):  # pylint: disable-msg=W0613
         if self.settings.getboolean('window', 'maximized'):
             self.Maximize()
         self.Iconize(False)

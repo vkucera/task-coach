@@ -25,4 +25,3 @@ class Note(attachment.AttachmentOwner,
     ''' This class represents notes. Notes consist of a subject, description, 
         and attachments. In addition, a note may be assigned to categories. '''
     pass
-

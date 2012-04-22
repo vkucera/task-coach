@@ -18,7 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, wx
+import test
+import wx
 from unittests import asserts
 from taskcoachlib import patterns, config
 from taskcoachlib.domain import task, effort, date, attachment, note, category
@@ -29,14 +30,14 @@ class TaskTestCase(test.TestCase):
     
     def labelTaskChildrenAndEffort(self, parentTask, taskLabel):
         for childIndex, child in enumerate(parentTask.children()):
-            childLabel = '%s_%d'%(taskLabel, childIndex+1)
+            childLabel = '%s_%d' % (taskLabel, childIndex + 1)
             setattr(self, childLabel, child)
             self.labelTaskChildrenAndEffort(child, childLabel)
             self.labelEfforts(child, childLabel)
             
     def labelEfforts(self, parentTask, taskLabel):
         for effortIndex, eachEffort in enumerate(parentTask.efforts()):
-            effortLabel = '%seffort%d'%(taskLabel, effortIndex+1)
+            effortLabel = '%seffort%d' % (taskLabel, effortIndex + 1)
             setattr(self, effortLabel, eachEffort)
             
     def setUp(self):
@@ -46,16 +47,16 @@ class TaskTestCase(test.TestCase):
         self.tasks = self.createTasks()
         self.task = self.tasks[0]
         for index, eachTask in enumerate(self.tasks):
-            taskLabel = 'task%d'%(index+1)
+            taskLabel = 'task%d' % (index + 1)
             setattr(self, taskLabel, eachTask)
             self.labelTaskChildrenAndEffort(eachTask, taskLabel)
             self.labelEfforts(eachTask, taskLabel)
         for eventType in self.eventTypes:
-            self.registerObserver(eventType) # pylint: disable-msg=W0201
+            self.registerObserver(eventType)  # pylint: disable-msg=W0201
             
     def createTasks(self):
         def createAttachments(kwargs):
-            if kwargs.has_key('attachments'):
+            if 'attachments' in kwargs:
                 kwargs['attachments'] = [attachment.FileAttachment(filename) for filename in kwargs['attachments']]
             return kwargs
 
@@ -67,9 +68,9 @@ class TaskTestCase(test.TestCase):
 
     def addEffort(self, hours, taskToAddEffortTo=None):
         taskToAddEffortTo = taskToAddEffortTo or self.task
-        start = date.DateTime(2005,1,1)
+        start = date.DateTime(2005, 1, 1)
         taskToAddEffortTo.addEffort(effort.Effort(taskToAddEffortTo, 
-                                                  start, start+hours))
+                                                  start, start + hours))
 
     def assertReminder(self, expectedReminder, taskWithReminder=None):
         taskWithReminder = taskWithReminder or self.task
@@ -758,13 +759,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         state = self.task.__getstate__()
         self.task.addDependencies([task.Task(subject='dependency2')]) 
         self.task.__setstate__(state)
-        self.assertEqual(previousDependencies, self.task.dependencies())                    
-
-    def testTaskStateIncludesOrdering(self):
-        state = self.task.__getstate__()
-        self.task.setOrdering(42)
-        self.task.__setstate__(state)
-        self.assertEqual(0L, self.task.ordering())
+        self.assertEqual(previousDependencies, self.task.dependencies())
 
     def testModificationEventTypes(self): # pylint: disable-msg=E1003
         self.assertEqual(super(task.Task, self.task).modificationEventTypes() +\

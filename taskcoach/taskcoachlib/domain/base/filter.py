@@ -16,7 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import re, sre_constants
+import re
+import sre_constants
 from taskcoachlib import patterns
 from taskcoachlib.domain.base import object as domainobject
 
@@ -40,16 +41,16 @@ class Filter(patterns.SetDecorator):
    
     @patterns.eventSource    
     def reset(self, event=None):
-        filteredItems = set(self.filter(self.observable()))
+        filteredItems = set(self.filterItems(self.observable()))
         if self.treeMode():
             for item in filteredItems.copy():
                 filteredItems.update(set(item.ancestors()))
         self.removeItemsFromSelf([item for item in self if item not in filteredItems], event=event)
         self.extendSelf([item for item in filteredItems if item not in self], event=event)
             
-    def filter(self, items):
+    def filterItems(self, items):
         ''' filter returns the items that pass the filter. '''
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
     def rootItems(self):
         return [item for item in self if item.parent() is None]
@@ -63,7 +64,7 @@ class Filter(patterns.SetDecorator):
 
 class SelectedItemsFilter(Filter):
     def __init__(self, *args, **kwargs):
-        self.__selectedItems = set(kwargs.pop('selectedItems' , []))
+        self.__selectedItems = set(kwargs.pop('selectedItems', []))
         self.__includeSubItems = kwargs.pop('includeSubItems', True)
         super(SelectedItemsFilter, self).__init__(*args, **kwargs)
 
@@ -74,7 +75,7 @@ class SelectedItemsFilter(Filter):
         if not self.__selectedItems:
             self.extendSelf(self.observable(), event)
                
-    def filter(self, items):
+    def filterItems(self, items):
         if self.__selectedItems:
             result = [item for item in items if self.itemOrAncestorInSelectedItems(item)]
             if self.__includeSubItems:
@@ -120,7 +121,7 @@ class SearchFilter(Filter):
     def __compileSearchPredicate(searchString, matchCase):
         if not searchString:
             return ''
-        flag = 0 if matchCase else re.IGNORECASE|re.UNICODE
+        flag = 0 if matchCase else re.IGNORECASE | re.UNICODE
         try:    
             rx = re.compile(searchString, flag)
         except sre_constants.error:
@@ -131,7 +132,7 @@ class SearchFilter(Filter):
         else:
             return rx.search
 
-    def filter(self, items):
+    def filterItems(self, items):
         return [item for item in items if \
                 self.__searchPredicate(self.__itemText(item))] \
                 if self.__searchPredicate else items
@@ -164,8 +165,8 @@ class DeletedFilter(Filter):
             patterns.Publisher().registerObserver(self.onObjectMarkedDeletedOrNot,
                           eventType=eventType)
 
-    def onObjectMarkedDeletedOrNot(self, event):
+    def onObjectMarkedDeletedOrNot(self, event):  # pylint: disable-msg=W0613
         self.reset()
 
-    def filter(self, items):
+    def filterItems(self, items):
         return [item for item in items if not item.isDeleted()]

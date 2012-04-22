@@ -32,7 +32,7 @@ class SynchronizedObjectTest(test.TestCase):
     def onEvent(self, event):
         self.events.append(event)
         
-    def registerObserver(self, eventType): # pylint: disable-msg=W0221
+    def registerObserver(self, eventType):  # pylint: disable-msg=W0221
         patterns.Publisher().registerObserver(self.onEvent, eventType)
         
     def assertObjectStatus(self, expectedStatus):
@@ -119,7 +119,7 @@ class ObjectTest(test.TestCase):
         self.assertNotEqual(base.Object().id(), self.object.id())
         
     def testCopyHasDifferentId(self):
-        objectId = self.object.id() # Force generation of id
+        objectId = self.object.id()  # Force generation of id
         copy = self.object.copy()
         self.assertNotEqual(copy.id(), objectId)
                 
@@ -183,15 +183,15 @@ class ObjectTest(test.TestCase):
     def testGetState(self):
         self.assertEqual(dict(subject='', description='', id=self.object.id(),
                               status=self.object.getStatus(), fgColor=None,
-                              bgColor=None, font=None, icon='', selectedIcon='',
-                              ordering=0L),
+                              bgColor=None, font=None, icon='', 
+                              selectedIcon=''),
                          self.object.__getstate__())
 
     def testSetState(self):
         newState = dict(subject='New', description='New', id=None,
                         status=self.object.STATUS_DELETED, 
                         fgColor=wx.GREEN, bgColor=wx.RED, font=wx.SWISS_FONT,
-                        icon='icon', selectedIcon='selectedIcon', ordering=42L)
+                        icon='icon', selectedIcon='selectedIcon')
         self.object.__setstate__(newState)
         self.assertEqual(newState, self.object.__getstate__())
         
@@ -199,7 +199,7 @@ class ObjectTest(test.TestCase):
         newState = dict(subject='New', description='New', id=None,
                         status=self.object.STATUS_DELETED, 
                         fgColor=wx.GREEN, bgColor=wx.RED, font=wx.SWISS_FONT,
-                        icon='icon', selectedIcon='selectedIcon', ordering=42L)
+                        icon='icon', selectedIcon='selectedIcon')
         self.object.__setstate__(newState)
         self.assertEqual(1, len(self.eventsReceived))
         

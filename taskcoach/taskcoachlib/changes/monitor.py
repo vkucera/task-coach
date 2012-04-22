@@ -16,12 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib.patterns import Observer, Singleton, ObservableComposite
+from taskcoachlib.patterns import Observer, ObservableComposite
 from taskcoachlib.domain.categorizable import CategorizableCompositeObject
 from taskcoachlib.domain.note import NoteOwner
 from taskcoachlib.domain.task import Task
 from taskcoachlib.domain.attachment import AttachmentOwner
 from taskcoachlib.thirdparty import guid
+from taskcoachlib.thirdparty.pubsub import pub
+
 
 class ChangeMonitor(Observer):
     """
@@ -52,7 +54,11 @@ class ChangeMonitor(Observer):
     def monitorClass(self, klass):
         if klass not in self._classes:
             for name in klass.monitoredAttributes():
-                self.registerObserver(self.onAttributeChanged, getattr(klass, '%sChangedEventType' % name)())
+                eventType = getattr(klass, '%sChangedEventType' % name)()    
+                if eventType.startswith('pubsub'):
+                    pub.subscribe(self.onAttributeChanged, eventType)
+                else:
+                    self.registerObserver(self.onAttributeChanged_Deprecated, eventType)
                 self._classes.add(klass)
             if issubclass(klass, ObservableComposite):
                 self.registerObserver(self.onChildAdded, klass.addChildEventType())
@@ -101,7 +107,16 @@ class ChangeMonitor(Observer):
         self.removeObserver(self.onObjectAdded, collection.addItemEventType(), eventSource=collection)
         self.removeObserver(self.onObjectRemoved, collection.removeItemEventType(), eventSource=collection)
 
-    def onAttributeChanged(self, event):
+    def onAttributeChanged(self, newValue, sender, topic=pub.AUTO_TOPIC):
+        if self.__frozen:
+            return
+
+        for name in sender.monitoredAttributes():
+            if name in topic.getNameTuple():
+                if sender.id() in self._changes and self._changes[sender.id()] is not None:
+                    self._changes[sender.id()].add(name)
+
+    def onAttributeChanged_Deprecated(self, event):
         if self.__frozen:
             return
 
@@ -111,7 +126,7 @@ class ChangeMonitor(Observer):
                     if type_ == getattr(obj, '%sChangedEventType' % name)():
                         if obj.id() in self._changes and self._changes[obj.id()] is not None:
                             self._changes[obj.id()].add(name)
-
+                                
     def _objectAdded(self, obj):
         if obj.id() in self._changes:
             if self._changes[obj.id()] is not None and \

@@ -20,7 +20,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, os.path
+import wx
+import os.path
 from taskcoachlib import widgets, patterns, command, operating_system
 from taskcoachlib.gui import viewer, uicommand, windowdimensionstracker
 from taskcoachlib.i18n import _
@@ -60,7 +61,7 @@ class Page(widgets.BookPage):
             if operating_system.isWindows():
                 # This ensures that if the TextCtrl value is more than can be 
                 # displayed, it will display the start instead of the end:
-                from taskcoachlib.thirdparty import SendKeys # pylint: disable-msg=W0404
+                from taskcoachlib.thirdparty import SendKeys  # pylint: disable-msg=W0404
                 SendKeys.SendKeys('{END}+{HOME}')
             elif operating_system.isGTK() and isinstance(theEntry, wx.TextCtrl):
                 # This ensures that if the TextCtrl value is more than can be 
@@ -70,7 +71,7 @@ class Page(widgets.BookPage):
             else:
                 theEntry.SetSelection(-1, -1)
         except (AttributeError, TypeError):
-            pass # Not a TextCtrl
+            pass  # Not a TextCtrl
         
     def registerObserver(self, observer, eventType, eventSource=None):
         patterns.Publisher().registerObserver(observer, eventType, eventSource)
@@ -107,7 +108,7 @@ class SubjectPage(Page):
     def addDescriptionEntry(self):
         # pylint: disable-msg=W0201
         def combinedDescription(items):
-            return u'[%s]\n\n'%_('Edit to change all descriptions') + \
+            return u'[%s]\n\n' % _('Edit to change all descriptions') + \
                 '\n\n'.join(item.description() for item in items)
 
         currentDescription = self.items[0].description() if len(self.items) == 1 else combinedDescription(self.items)
@@ -193,9 +194,9 @@ class AttachmentSubjectPage(SubjectPage):
             sizer.Add(button, 0, wx.ALL, 3)
             wx.EVT_BUTTON(button, wx.ID_ANY, self.onSelectLocation)
         panel.SetSizer(sizer)
-        self.addEntry(_('Location'), panel, flags=[None, wx.ALL|wx.EXPAND])
+        self.addEntry(_('Location'), panel, flags=[None, wx.ALL | wx.EXPAND])
 
-    def onSelectLocation(self, event): # pylint: disable-msg=W0613
+    def onSelectLocation(self, event):  # pylint: disable-msg=W0613
         basePath = self.settings.get('file', 'lastattachmentpath')
         if not basePath:
             basePath = os.getcwd()
@@ -228,14 +229,14 @@ class TaskAppearancePage(Page):
         self.addColorEntry(_('Background color'), 'background', wx.WHITE)
         
     def addColorEntry(self, labelText, colorType, defaultColor):
-        currentColor = getattr(self.items[0], '%sColor'%colorType)(recursive=False) if len(self.items) == 1 else None
+        currentColor = getattr(self.items[0], '%sColor' % colorType)(recursive=False) if len(self.items) == 1 else None
         colorEntry = entry.ColorEntry(self, currentColor, defaultColor)
-        setattr(self, '_%sColorEntry'%colorType, colorEntry)        
-        commandClass = getattr(command, 'Edit%sColorCommand'%colorType.capitalize())
-        colorSync = attributesync.AttributeSync('%sColor'%colorType, colorEntry, currentColor, 
+        setattr(self, '_%sColorEntry' % colorType, colorEntry)        
+        commandClass = getattr(command, 'Edit%sColorCommand' % colorType.capitalize())
+        colorSync = attributesync.AttributeSync('%sColor' % colorType, colorEntry, currentColor, 
             self.items, commandClass, entry.EVT_COLORENTRY, 
             self.items[0].appearanceChangedEventType())
-        setattr(self, '_%sColorSync'%colorType, colorSync)
+        setattr(self, '_%sColorSync' % colorType, colorSync)
         self.addEntry(labelText, colorEntry, flags=[None, wx.ALL])
             
     def addFontEntry(self):
@@ -262,7 +263,7 @@ class TaskAppearancePage(Page):
         self.addEntry(_('Icon'), self._iconEntry, flags=[None, wx.ALL])
 
     def entries(self):
-        return dict(firstEntry=self._foregroundColorEntry) # pylint: disable-msg=E1101
+        return dict(firstEntry=self._foregroundColorEntry)  # pylint: disable-msg=E1101
     
 
 class DatesPage(Page):
@@ -293,13 +294,13 @@ class DatesPage(Page):
     def addDateEntry(self, label, taskMethodName):
         TaskMethodName = taskMethodName[0].capitalize() + taskMethodName[1:]
         dateTime = getattr(self.items[0], taskMethodName)() if len(self.items) == 1 else date.DateTime()
-        setattr(self, '_current%s'%TaskMethodName, dateTime)
+        setattr(self, '_current%s' % TaskMethodName, dateTime)
         suggestedDateTimeMethodName = 'suggested' + TaskMethodName
         suggestedDateTime = getattr(self.items[0], suggestedDateTimeMethodName)()
         dateTimeEntry = entry.DateTimeEntry(self, self.__settings, dateTime,
                                             suggestedDateTime=suggestedDateTime)
-        setattr(self, '_%sEntry'%taskMethodName, dateTimeEntry)
-        commandClass = getattr(command, 'Edit%sCommand'%TaskMethodName)
+        setattr(self, '_%sEntry' % taskMethodName, dateTimeEntry)
+        commandClass = getattr(command, 'Edit%sCommand' % TaskMethodName)
         try:
             eventType = getattr(task.Task, '%sChangedEventType' % taskMethodName)()
         except AttributeError:
@@ -308,7 +309,7 @@ class DatesPage(Page):
         datetimeSync = attributesync.AttributeSync(taskMethodName, dateTimeEntry, 
             dateTime, self.items, commandClass, entry.EVT_DATETIMEENTRY, 
             eventType, keep_delta=keep_delta)
-        setattr(self, '_%sSync'%taskMethodName, datetimeSync) 
+        setattr(self, '_%sSync' % taskMethodName, datetimeSync) 
         self.addEntry(label, dateTimeEntry)
             
     def __keep_delta(self, taskMethodName):
@@ -436,7 +437,7 @@ class BudgetPage(Page):
                               eventType='task.timeSpent', 
                               eventSource=self.items[0])
         
-    def onTimeSpentChanged(self, event=None): # pylint: disable-msg=W0613
+    def onTimeSpentChanged(self, event=None):  # pylint: disable-msg=W0613
         newTimeSpent = self.items[0].timeSpent()
         if newTimeSpent != self._timeSpentEntry.GetValue():
             self._timeSpentEntry.SetValue(newTimeSpent)
@@ -453,7 +454,7 @@ class BudgetPage(Page):
                               eventType='task.budgetLeft',
                               eventSource=self.items[0])
         
-    def onBudgetLeftChanged(self, event=None): # pylint: disable-msg=W0613
+    def onBudgetLeftChanged(self, event=None):  # pylint: disable-msg=W0613
         newBudgetLeft = self.items[0].budgetLeft()
         if newBudgetLeft != self._budgetLeftEntry.GetValue():
             self._budgetLeftEntry.SetValue(newBudgetLeft)
@@ -486,13 +487,13 @@ class BudgetPage(Page):
     def addRevenueEntry(self):
         assert len(self.items) == 1
         revenue = self.items[0].revenue()
-        self._revenueEntry = entry.AmountEntry(self, revenue, readonly=True) # pylint: disable-msg=W0201
+        self._revenueEntry = entry.AmountEntry(self, revenue, readonly=True)  # pylint: disable-msg=W0201
         self.addEntry(_('Revenue'), self._revenueEntry, flags=[None, wx.ALL])
         self.registerObserver(self.onRevenueChanged,
                               eventType='task.revenue',
                               eventSource=self.items[0])
 
-    def onRevenueChanged(self, event=None): # pylint: disable-msg=W0613
+    def onRevenueChanged(self, event=None):  # pylint: disable-msg=W0613
         newRevenue = self.items[0].revenue()
         if newRevenue != self._revenueEntry.GetValue():
             self._revenueEntry.SetValue(newRevenue)
@@ -510,10 +511,10 @@ class BudgetPage(Page):
         if item.isBeingTracked():
             self.onStartTracking()
         
-    def onStartTracking(self, event=None): # pylint: disable-msg=W0613
+    def onStartTracking(self, event=None):  # pylint: disable-msg=W0613
         date.Scheduler().schedule_interval(self.onEverySecond, seconds=1)
         
-    def onStopTracking(self, event): # pylint: disable-msg=W0613
+    def onStopTracking(self, event):  # pylint: disable-msg=W0613
         # We might need to keep tracking the clock if the user was tracking this
         # task with multiple effort records simultaneously
         if not self.items[0].isBeingTracked():
@@ -536,7 +537,6 @@ class BudgetPage(Page):
                     fixedFee=self._fixedFeeEntry,
                     revenue=self._hourlyFeeEntry)
         
-
 
 class PageWithViewer(Page):
     columns = 1
@@ -584,14 +584,15 @@ class EffortPage(PageWithViewer):
                     timeSpent=self.viewer)
         
 
-class LocalCategoryViewer(viewer.BaseCategoryViewer):
+class LocalCategoryViewer(viewer.BaseCategoryViewer):  # pylint: disable-msg=W0223
     def __init__(self, items, *args, **kwargs):
         self.__items = items
         super(LocalCategoryViewer, self).__init__(*args, **kwargs)
+        event = patterns.Event()  # Make sure item.expand doesn't send events
         for item in self.domainObjectsToView():
-            item.expand(context=self.settingsSection())
+            item.expand(context=self.settingsSection(), event=event)
 
-    def getIsItemChecked(self, category): # pylint: disable-msg=W0621
+    def getIsItemChecked(self, category):  # pylint: disable-msg=W0621
         for item in self.__items:
             if category in item.categories():
                 return True
@@ -603,7 +604,7 @@ class LocalCategoryViewer(viewer.BaseCategoryViewer):
         category = self.widget.GetItemPyData(event.GetItem())
         command.ToggleCategoryCommand(None, self.__items, category=category).do()
 
-    def createCategoryPopupMenu(self): # pylint: disable-msg=W0221
+    def createCategoryPopupMenu(self):  # pylint: disable-msg=W0221
         return super(LocalCategoryViewer, self).createCategoryPopupMenu(True)            
 
 
@@ -617,8 +618,8 @@ class CategoriesPage(PageWithViewer):
         item = self.items[0]
         for eventType in (item.categoryAddedEventType(), 
                          item.categoryRemovedEventType()):
-            self. registerObserver(self.onCategoryChanged, eventType=eventType,
-                                   eventSource=item)
+            self.registerObserver(self.onCategoryChanged, eventType=eventType,
+                                  eventSource=item)
         return LocalCategoryViewer(self.items, self, taskFile, settings,
                                    settingsSection=settingsSection)
         
@@ -629,7 +630,7 @@ class CategoriesPage(PageWithViewer):
         return dict(firstEntry=self.viewer, categories=self.viewer) 
 
 
-class LocalAttachmentViewer(viewer.AttachmentViewer):
+class LocalAttachmentViewer(viewer.AttachmentViewer):  # pylint: disable-msg=W0223
     def __init__(self, *args, **kwargs):
         self.attachmentOwner = kwargs.pop('owner')
         attachments = attachment.AttachmentList(self.attachmentOwner.attachments())
@@ -656,7 +657,7 @@ class AttachmentsPage(PageWithViewer):
         return LocalAttachmentViewer(self, taskFile, settings,
             settingsSection=settingsSection, owner=item)
 
-    def onAttachmentsChanged(self, event): # pylint: disable-msg=W0613
+    def onAttachmentsChanged(self, event):  # pylint: disable-msg=W0613
         self.viewer.domainObjectsToView().clear()
         self.viewer.domainObjectsToView().extend(self.items[0].attachments())
         
@@ -664,7 +665,7 @@ class AttachmentsPage(PageWithViewer):
         return dict(firstEntry=self.viewer, attachments=self.viewer)
 
 
-class LocalNoteViewer(viewer.BaseNoteViewer):
+class LocalNoteViewer(viewer.BaseNoteViewer):  # pylint: disable-msg=W0223
     def __init__(self, *args, **kwargs):
         self.noteOwner = kwargs.pop('owner')
         notes = note.NoteContainer(self.noteOwner.notes())
@@ -694,7 +695,7 @@ class NotesPage(PageWithViewer):
         return LocalNoteViewer(self, taskFile, settings, 
                                settingsSection=settingsSection, owner=item)
 
-    def onNotesChanged(self, event): # pylint: disable-msg=W0613
+    def onNotesChanged(self, event):  # pylint: disable-msg=W0613
         self.viewer.domainObjectsToView().clear()
         self.viewer.domainObjectsToView().extend(self.items[0].notes())
 
@@ -702,7 +703,7 @@ class NotesPage(PageWithViewer):
         return dict(firstEntry=self.viewer, notes=self.viewer)
     
 
-class LocalPrerequisiteViewer(viewer.CheckableTaskViewer):
+class LocalPrerequisiteViewer(viewer.CheckableTaskViewer):  # pylint: disable-msg=W0223
     def __init__(self, items, *args, **kwargs):
         self.__items = items
         super(LocalPrerequisiteViewer, self).__init__(*args, **kwargs)
@@ -745,7 +746,7 @@ class PrerequisitesPage(PageWithViewer):
 
 class EditBook(widgets.Notebook):
     allPageNames = ['subclass responsibility']
-    object = 'subclass responsibility'
+    domainObject = 'subclass responsibility'
     
     def __init__(self, parent, items, taskFile, settings, itemsAreNew):
         self.items = items
@@ -784,13 +785,13 @@ class EditBook(widgets.Notebook):
         ''' Return all pages names in the order stored in the settings. The
             settings may not contain all pages (e.g. because a feature was
             turned off by the user) so we add the missing pages if necessary. '''
-        pageNamesInUserOrder = self.settings.getlist('editor', '%spages' % self.object)
+        pageNamesInUserOrder = self.settings.getlist('editor', '%spages' % self.domainObject)
         remainingPageNames = self.allPageNames[:]
         for pageName in pageNamesInUserOrder:
             try:
                 remainingPageNames.remove(pageName)
             except ValueError:
-                pass # Page doesn't exist anymore
+                pass  # Page doesn't exist anymore
         return pageNamesInUserOrder + remainingPageNames
                     
     def shouldCreatePage(self, pageName):
@@ -815,23 +816,23 @@ class EditBook(widgets.Notebook):
             return DatesPage(self.items, self, self.settings, itemsAreNew) 
         elif pageName == 'prerequisites':
             return PrerequisitesPage(self.items, self, taskFile, self.settings,
-                                     settingsSection='prerequisiteviewerin%seditor' % self.object)
+                                     settingsSection='prerequisiteviewerin%seditor' % self.domainObject)
         elif pageName == 'progress':    
             return ProgressPage(self.items, self)
         elif pageName == 'categories':
             return CategoriesPage(self.items, self, taskFile, self.settings,
-                                  settingsSection='categoryviewerin%seditor' % self.object)
+                                  settingsSection='categoryviewerin%seditor' % self.domainObject)
         elif pageName == 'budget':                 
             return BudgetPage(self.items, self)
         elif pageName == 'effort':        
             return EffortPage(self.items, self, taskFile, self.settings,
-                              settingsSection='effortviewerin%seditor' % self.object)
+                              settingsSection='effortviewerin%seditor' % self.domainObject)
         elif pageName == 'notes':
             return NotesPage(self.items, self, taskFile, self.settings,
-                             settingsSection='noteviewerin%seditor' % self.object)
+                             settingsSection='noteviewerin%seditor' % self.domainObject)
         elif pageName == 'attachments':
             return AttachmentsPage(self.items, self, taskFile, self.settings,
-                                   settingsSection='attachmentviewerin%seditor' % self.object)
+                                   settingsSection='attachmentviewerin%seditor' % self.domainObject)
         elif pageName == 'appearance':
             return TaskAppearancePage(self.items, self)
         
@@ -857,18 +858,18 @@ class EditBook(widgets.Notebook):
     
     def loadPerspective(self, pageNames):
         perspectiveKey = self.perspectiveKey(pageNames) 
-        perspective = self.settings.getdict('%sdialog'%self.object, 'perspectives').get(perspectiveKey, '')
+        perspective = self.settings.getdict('%sdialog' % self.domainObject, 'perspectives').get(perspectiveKey, '')
         if perspective:
             try:
                 self.LoadPerspective(perspective)
             except:
-                pass # pylint: disable-msg=W0702
+                pass  # pylint: disable-msg=W0702
 
     def savePerspective(self, pageNames):
-        perspectives = self.settings.getdict('%sdialog'%self.object, 'perspectives')
+        perspectives = self.settings.getdict('%sdialog' % self.domainObject, 'perspectives')
         perspectiveKey = self.perspectiveKey(pageNames)
         perspectives[perspectiveKey] = self.SavePerspective() 
-        self.settings.setdict('%sdialog'%self.object, 'perspectives', perspectives)
+        self.settings.setdict('%sdialog' % self.domainObject, 'perspectives', perspectives)
         
     @staticmethod
     def perspectiveKey(pageNames):
@@ -879,7 +880,7 @@ class EditBook(widgets.Notebook):
         for page in self:
             page.close()
         pageNames = [self[index].pageName for index in range(self.GetPageCount())]
-        self.settings.setlist('editor', '%spages'%self.object, pageNames)
+        self.settings.setlist('editor', '%spages' % self.domainObject, pageNames)
         self.savePerspective(pageNames)
 
 
@@ -887,7 +888,7 @@ class TaskEditBook(EditBook):
     allPageNames = ['subject', 'dates', 'prerequisites', 'progress',
                     'categories', 'budget', 'effort', 'notes', 'attachments',
                     'appearance']
-    object = 'task'
+    domainObject = 'task'
 
     def createSubjectPage(self):    
         return TaskSubjectPage(self.items, self)
@@ -895,7 +896,7 @@ class TaskEditBook(EditBook):
 
 class CategoryEditBook(EditBook):
     allPageNames = ['subject', 'notes', 'attachments', 'appearance']
-    object = 'category'
+    domainObject = 'category'
 
     def createSubjectPage(self):
         return CategorySubjectPage(self.items, self)
@@ -903,12 +904,12 @@ class CategoryEditBook(EditBook):
 
 class NoteEditBook(EditBook):
     allPageNames = ['subject', 'categories', 'attachments', 'appearance']
-    object = 'note'
+    domainObject = 'note'
     
 
 class AttachmentEditBook(EditBook):
     allPageNames = ['subject', 'notes', 'appearance']
-    object = 'attachment'
+    domainObject = 'attachment'
             
     def createSubjectPage(self):
         return AttachmentSubjectPage(self.items, self, self.settings)
@@ -918,10 +919,10 @@ class AttachmentEditBook(EditBook):
     
         
 class EffortEditBook(Page):
-    object = 'effort'
+    domainObject = 'effort'
     columns = 3
     
-    def __init__(self, parent, efforts, taskFile, settings, itemsAreNew, *args, **kwargs): # pylint: disable-msg=W0613
+    def __init__(self, parent, efforts, taskFile, settings, itemsAreNew, *args, **kwargs):  # pylint: disable-msg=W0613
         self._effortList = taskFile.efforts()
         taskList = taskFile.tasks()
         self._taskList = task.TaskList(taskList)
@@ -930,8 +931,8 @@ class EffortEditBook(Page):
         self._taskFile = taskFile
         super(EffortEditBook, self).__init__(efforts, parent, *args, **kwargs)
         
-    def getPage(self, pageName): # pylint: disable-msg=W0613
-        return None # An EffortEditBook is not really a notebook...
+    def getPage(self, pageName):  # pylint: disable-msg=W0613
+        return None  # An EffortEditBook is not really a notebook...
         
     def addEntries(self):
         self.addTaskEntry()
@@ -958,7 +959,7 @@ class EffortEditBook(Page):
         panelSizer.Add(editTaskButton, proportion=0,
                        flag=wx.ALIGN_CENTER_VERTICAL)
         panel.SetSizerAndFit(panelSizer)
-        self.addEntry(_('Task'), panel, flags=[None, wx.ALL|wx.EXPAND])
+        self.addEntry(_('Task'), panel, flags=[None, wx.ALL | wx.EXPAND])
 
     def addStartAndStopEntries(self):
         # pylint: disable-msg=W0201,W0142
@@ -1011,7 +1012,7 @@ class EffortEditBook(Page):
         text.SetFont(font)
         return text
 
-    def onStartFromLastEffort(self, event): # pylint: disable-msg=W0613
+    def onStartFromLastEffort(self, event):  # pylint: disable-msg=W0613
         maxDateTime = self._effortList.maxDateTime()
         if self._startDateTimeEntry.GetValue() != maxDateTime:
             self._startDateTimeEntry.SetValue(self._effortList.maxDateTime())
@@ -1038,9 +1039,9 @@ class EffortEditBook(Page):
         try:
             return self._startDateTimeEntry.GetValue() < self._stopDateTimeEntry.GetValue()
         except AttributeError:
-            return True # Entries not created yet
+            return True  # Entries not created yet
 
-    def onEditTask(self, event): # pylint: disable-msg=W0613
+    def onEditTask(self, event):  # pylint: disable-msg=W0613
         taskToEdit = self._taskEntry.GetValue()
         TaskEditor(None, [taskToEdit], self._settings, self._taskFile.tasks(), 
             self._taskFile).Show()
@@ -1048,7 +1049,7 @@ class EffortEditBook(Page):
     def addDescriptionEntry(self):
         # pylint: disable-msg=W0201
         def combinedDescription(items):
-            return u'[%s]\n\n'%_('Edit to change all descriptions') + \
+            return u'[%s]\n\n' % _('Edit to change all descriptions') + \
                 '\n\n'.join(item.description() for item in items)
                 
         currentDescription = self.items[0].description() if len(self.items) == 1 else combinedDescription(self.items)
@@ -1065,9 +1066,9 @@ class EffortEditBook(Page):
         
     def isDisplayingItemOrChildOfItem(self, item):
         if hasattr(item, 'setTask'):
-            return self.items[0] == item # Regular effort
+            return self.items[0] == item  # Regular effort
         else:
-            return item.mayContain(self.items[0]) # Composite effort
+            return item.mayContain(self.items[0])  # Composite effort
     
     def entries(self):
         return dict(firstEntry=self._taskEntry, task=self._taskEntry,
@@ -1111,7 +1112,8 @@ class Editor(widgets.Dialog):
         # On Linux this is not needed but doesn't do any harm.
         self.CentreOnParent()
         self.createUICommands()
-        self._dimensionsTracker = windowdimensionstracker.WindowSizeAndPositionTracker(self, settings, '%sdialog' % self.EditBookClass.object)
+        self._dimensionsTracker = windowdimensionstracker.WindowSizeAndPositionTracker(
+            self, settings, '%sdialog' % self.EditBookClass.domainObject)
         
     def createUICommands(self):
         # FIXME: keyboard shortcuts are hardcoded here, but they can be 
@@ -1153,7 +1155,7 @@ class Editor(widgets.Dialog):
             is hidden by a filter. If the item is really removed, close the tab 
             of the item involved and close the whole editor if there are no 
             tabs left. '''
-        if self: # Prevent _wxPyDeadObject TypeError
+        if self:  # Prevent _wxPyDeadObject TypeError
             self._callAfter(self.closeIfItemIsDeleted, event.values())
         
     def closeIfItemIsDeleted(self, items):
@@ -1162,12 +1164,12 @@ class Editor(widgets.Dialog):
                 self.Close()
                 break            
 
-    def onSubjectChanged(self, event): # pylint: disable-msg=W0613
+    def onSubjectChanged(self, event):  # pylint: disable-msg=W0613
         self.SetTitle(self.title())
         
     def title(self):
         return self.plural_title if len(self._items) > 1 else \
-               self.singular_title%self._items[0].subject()
+               self.singular_title % self._items[0].subject()
     
     
 class TaskEditor(Editor):

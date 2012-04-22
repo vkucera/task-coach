@@ -36,7 +36,7 @@ class ExportDialog(sized_controls.SizedDialog):
         pane = self.GetContentsPane()
         pane.SetSizerType('vertical')
         self.components = self.createInterior(pane)
-        buttonSizer = self.CreateStdDialogButtonSizer(wx.OK|wx.CANCEL)
+        buttonSizer = self.CreateStdDialogButtonSizer(wx.OK | wx.CANCEL)
         self.SetButtonSizer(buttonSizer)
         buttonSizer.GetAffirmativeButton().Bind(wx.EVT_BUTTON, self.onOk)
         self.Fit()
@@ -67,6 +67,7 @@ class ExportDialog(sized_controls.SizedDialog):
 
 ViewerPickedEvent, EVT_VIEWERPICKED = wx.lib.newevent.NewEvent()
 
+
 class ViewerPicker(sized_controls.SizedPanel):
     ''' Control for adding a viewer chooser widget to the export dialog. '''
     
@@ -80,13 +81,13 @@ class ViewerPicker(sized_controls.SizedPanel):
     def createPicker(self):
         label = wx.StaticText(self, label=_('Export items from:'))
         label.SetSizerProps(valign='center')
-        self.viewerComboBox = wx.ComboBox(self, style=wx.CB_READONLY|wx.CB_SORT) # pylint: disable-msg=W0201
+        self.viewerComboBox = wx.ComboBox(self, style=wx.CB_READONLY | wx.CB_SORT)  # pylint: disable-msg=W0201
         self.viewerComboBox.Bind(wx.EVT_COMBOBOX, self.onViewerChanged)
         
     def populatePicker(self, viewers):
-        self.titleToViewer = dict() # pylint: disable-msg=W0201
+        self.titleToViewer = dict()  # pylint: disable-msg=W0201
         for viewer in viewers:
-            self.viewerComboBox.Append(viewer.title()) # pylint: disable-msg=E1101
+            self.viewerComboBox.Append(viewer.title())  # pylint: disable-msg=E1101
             # Would like to user client data in the combobox, but that 
             # doesn't work on all platforms
             self.titleToViewer[viewer.title()] = viewer
@@ -106,7 +107,7 @@ class ViewerPicker(sized_controls.SizedPanel):
         wx.PostEvent(self, ViewerPickedEvent(viewer=self.selectedViewer()))   
         
     def saveSettings(self):
-        pass # No settings to remember
+        pass  # No settings to remember
             
 
 class SelectionOnlyCheckBox(wx.CheckBox):  
@@ -129,7 +130,7 @@ class SelectionOnlyCheckBox(wx.CheckBox):
         return dict(selectionOnly=self.GetValue())
 
     def saveSettings(self):
-        self.settings.set(self.section, self.setting, # pylint: disable-msg=E1101
+        self.settings.set(self.section, self.setting,  # pylint: disable-msg=E1101
                           str(self.GetValue()))    
 
 
@@ -147,7 +148,7 @@ class ColumnPicker(sized_controls.SizedPanel):
     def createColumnPicker(self):
         label = wx.StaticText(self, label=_('Columns to export:'))
         label.SetSizerProps(valign='top')
-        self.columnPicker = widgets.CheckListBox(self) # pylint: disable-msg=W0201
+        self.columnPicker = widgets.CheckListBox(self)  # pylint: disable-msg=W0201
         self.columnPicker.SetSizerProps(expand=True, proportion=1)
         
     def populateColumnPicker(self, viewer):
@@ -171,7 +172,7 @@ class ColumnPicker(sized_controls.SizedPanel):
         return dict(columns=self.selectedColumns())
     
     def saveSettings(self):
-        pass # No settings to save
+        pass  # No settings to save
 
 
 class SeparateDateAndTimeColumnsCheckBox(wx.CheckBox):
@@ -180,7 +181,7 @@ class SeparateDateAndTimeColumnsCheckBox(wx.CheckBox):
         
     def __init__(self, parent, settings, section, setting):
         super(SeparateDateAndTimeColumnsCheckBox, self).__init__(parent,
-            label=_('Put dates and times in separate columns'))
+            label=_('Put task dates and times in separate columns'))
         self.settings = settings
         self.section = section
         self.setting = setting
@@ -211,7 +212,7 @@ class SeparateCSSCheckBox(sized_controls.SizedPanel):
         self.createHelpInformation(parent)
         
     def createCheckBox(self):
-        self.separateCSSCheckBox = wx.CheckBox(self, # pylint: disable-msg=W0201
+        self.separateCSSCheckBox = wx.CheckBox(self,  # pylint: disable-msg=W0201
             label=_('Write style information to a separate CSS file'))
         separateCSS = self.settings.getboolean(self.section, self.setting)
         self.separateCSSCheckBox.SetValue(separateCSS)
@@ -220,7 +221,7 @@ class SeparateCSSCheckBox(sized_controls.SizedPanel):
         width = max([child.GetSize()[0] for child in [self.separateCSSCheckBox] + list(parent.GetChildren())])
         info = wx.StaticText(self, 
             label=_('If a CSS file exists for the exported file, %(name)s will not overwrite it. ' \
-                    'This allows you to change the style information without losing your changes on the next export.')%meta.metaDict)
+                    'This allows you to change the style information without losing your changes on the next export.') % meta.metaDict)
         info.Wrap(width)
         
     def options(self):
@@ -239,17 +240,19 @@ class ExportAsCSVDialog(ExportDialog):
     def createInterior(self, pane):
         viewerPicker = ViewerPicker(pane, self.exportableViewers(), self.activeViewer())
         viewerPicker.Bind(EVT_VIEWERPICKED, self.onViewerChanged)
-        self.columnPicker = ColumnPicker(pane, viewerPicker.selectedViewer()) # pylint: disable-msg=W0201
+        # pylint: disable-msg=W0201
+        self.columnPicker = ColumnPicker(pane, viewerPicker.selectedViewer())
         selectionOnlyCheckBox = SelectionOnlyCheckBox(pane, self.settings, 
                                                       self.section, 'csv_selectiononly')
-        separateDateAndTimeColumnsCheckBox = \
-            SeparateDateAndTimeColumnsCheckBox(pane, self.settings, self.section, 
+        self.separateDateAndTimeColumnsCheckBox = \
+            SeparateDateAndTimeColumnsCheckBox(pane, self.settings, self.section,
                                                'csv_separatedateandtimecolumns')
-        return viewerPicker, self.columnPicker, selectionOnlyCheckBox, separateDateAndTimeColumnsCheckBox
+        return viewerPicker, self.columnPicker, selectionOnlyCheckBox, self.separateDateAndTimeColumnsCheckBox
     
     def onViewerChanged(self, event):
         event.Skip()
         self.columnPicker.populateColumnPicker(event.viewer)
+        self.separateDateAndTimeColumnsCheckBox.Enable(event.viewer.isShowingTasks())
 
           
 class ExportAsICalendarDialog(ExportDialog):
@@ -274,7 +277,7 @@ class ExportAsHTMLDialog(ExportDialog):
     def createInterior(self, pane):
         viewerPicker = ViewerPicker(pane, self.exportableViewers(), self.activeViewer())
         viewerPicker.Bind(EVT_VIEWERPICKED, self.onViewerChanged)
-        self.columnPicker = ColumnPicker(pane, viewerPicker.selectedViewer()) # pylint: disable-msg=W0201
+        self.columnPicker = ColumnPicker(pane, viewerPicker.selectedViewer())  # pylint: disable-msg=W0201
         selectionOnlyCheckBox = SelectionOnlyCheckBox(pane, self.settings, self.section, 'html_selectiononly')
         separateCSSChooser = SeparateCSSCheckBox(pane, self.settings, self.section, 'html_separatecss')
         return viewerPicker, self.columnPicker, selectionOnlyCheckBox, separateCSSChooser
@@ -296,4 +299,3 @@ class ExportAsTodoTxtDialog(ExportDialog):
     def exportableViewers(self):
         viewers = super(ExportAsTodoTxtDialog, self).exportableViewers()
         return [viewer for viewer in viewers if viewer.isShowingTasks()]
-    

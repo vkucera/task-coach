@@ -29,7 +29,7 @@ class SaveTest(test.TestCase):
 
     def tearDown(self):
         self.mockApp.iocontroller.save()
-        self.mockApp.quit()
+        self.mockApp.quitApplication()
         for filename in [self.filename, self.filename2]:
             if os.path.isfile(filename):
                 os.remove(filename)
@@ -65,4 +65,4 @@ class SaveTest(test.TestCase):
         self.mockApp.iocontroller.merge(self.filename2)
         self.assertTasksLoaded(4)
         self.mockApp.iocontroller.saveas(self.filename)
-        mockApp2.quit()
+        mockApp2.quitApplication()

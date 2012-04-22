@@ -49,4 +49,4 @@ class PerformanceTest(test.TestCase):
         end = time.time()
         self.assertEqual(self.nrTasks, len(mockApp.taskFile.tasks()))
         self.failUnless(end-start < self.nrTasks/10)
-        mockApp.quit()
+        mockApp.quitApplication()
