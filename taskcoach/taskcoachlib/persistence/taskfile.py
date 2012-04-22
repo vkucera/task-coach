@@ -159,7 +159,7 @@ class TaskFile(patterns.Observer):
         for changedNote in event.sources():
             changedNote.markDirty()
             
-    def onAttachmentChanged(self):
+    def onAttachmentChanged(self, newValue, sender):
         if self.__loading:
             return
         # Attachments don't know their owner, so we can't check whether the

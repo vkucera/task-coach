@@ -57,13 +57,14 @@ class AttributeSync(object):
         else:
             self.stopObservingAttribute()
             
-    def onAttributeChanged(self, newValue):
-        if self._entry:
-            if newValue != self._currentValue:
-                self._currentValue = newValue
-                self.setValue(newValue)
-        else:
-            self.stopObservingAttribute()
+    def onAttributeChanged(self, newValue, sender):
+        if sender in self._items:
+            if self._entry:
+                if newValue != self._currentValue:
+                    self._currentValue = newValue
+                    self.setValue(newValue)
+            else:
+                self.stopObservingAttribute()
             
     def commandKwArgs(self, newValue):
         self.__commandKwArgs['newValue'] = newValue
