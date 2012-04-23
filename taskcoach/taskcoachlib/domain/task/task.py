@@ -49,8 +49,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__dueSoonHours = self.settings.getint('behavior', 'duesoonhours')  # pylint: disable-msg=E1101
         Attribute, SetAttribute = base.Attribute, base.SetAttribute
         maxDateTime = self.maxDateTime    
-        self.__dueDateTime = Attribute(dueDateTime or maxDateTime, self, 
-                                       self.dueDateTimeEvent)
+        self.__dueDateTime = dueDateTime or maxDateTime
         self.__plannedStartDateTime = Attribute(plannedStartDateTime or maxDateTime, self, 
                                                 self.plannedStartDateTimeEvent)
         self.__actualStartDateTime = Attribute(actualStartDateTime or maxDateTime, self,
@@ -89,8 +88,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         pub.subscribe(self.onDueSoonHoursChanged, 'settings.behavior.duesoonhours')
 
         now = date.Now()
-        if now < self.__dueDateTime.get() < maxDateTime:
-            date.Scheduler().schedule(self.onOverDue, self.__dueDateTime.get() + date.oneSecond)
+        if now < self.__dueDateTime < maxDateTime:
+            date.Scheduler().schedule(self.onOverDue, self.__dueDateTime + date.oneSecond)
         if now < self.__plannedStartDateTime.get() < maxDateTime:
             date.Scheduler().schedule(self.onTimeToStart, self.__plannedStartDateTime.get() + date.oneSecond)
             
@@ -99,7 +98,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         super(Task, self).__setstate__(state, event=event)
         self.setPlannedStartDateTime(state['plannedStartDateTime'], event=event)
         self.setActualStartDateTime(state['actualStartDateTime'], event=event)
-        self.setDueDateTime(state['dueDateTime'], event=event)
+        self.setDueDateTime(state['dueDateTime'])
         self.setCompletionDateTime(state['completionDateTime'], event=event)
         self.setPercentageComplete(state['percentageComplete'], event=event)
         self.setRecurrence(state['recurrence'], event=event)
@@ -116,7 +115,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         
     def __getstate__(self):
         state = super(Task, self).__getstate__()
-        state.update(dict(dueDateTime=self.__dueDateTime.get(), 
+        state.update(dict(dueDateTime=self.__dueDateTime, 
             plannedStartDateTime=self.__plannedStartDateTime.get(),
             actualStartDateTime=self.__actualStartDateTime.get(),
             completionDateTime=self.__completionDateTime.get(),
@@ -135,7 +134,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def __getcopystate__(self):
         state = super(Task, self).__getcopystate__()
         state.update(dict(plannedStartDateTime=self.__plannedStartDateTime.get(), 
-            dueDateTime=self.__dueDateTime.get(), 
+            dueDateTime=self.__dueDateTime, 
             actualStartDateTime=self.__actualStartDateTime.get(), 
             completionDateTime=self.__completionDateTime.get(),
             percentageComplete=self.__percentageComplete.get(), 
@@ -179,7 +178,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         elif self.completed() and not child.completed():
             self.setCompletionDateTime(self.maxDateTime, event=event)
         if self.maxDateTime > child.dueDateTime() > self.dueDateTime():
-            self.setDueDateTime(child.dueDateTime(), event=event)           
+            self.setDueDateTime(child.dueDateTime())           
         if child.plannedStartDateTime() < self.plannedStartDateTime():
             self.setPlannedStartDateTime(child.plannedStartDateTime(), event=event)
         if child.actualStartDateTime() < self.actualStartDateTime():
@@ -240,33 +239,38 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if recursive:
             childrenDueDateTimes = [child.dueDateTime(recursive=True) for child in \
                                     self.children() if not child.completed()]
-            return min(childrenDueDateTimes + [self.__dueDateTime.get()])
+            return min(childrenDueDateTimes + [self.__dueDateTime])
         else:
-            return self.__dueDateTime.get()
+            return self.__dueDateTime
 
-    @patterns.eventSource
-    def setDueDateTime(self, dueDateTime, event=None):
+    def setDueDateTime(self, dueDateTime):
+        if dueDateTime == self.__dueDateTime:
+            return
+        self.__dueDateTime = dueDateTime
         date.Scheduler().unschedule(self.onOverDue)
         date.Scheduler().unschedule(self.onDueSoon)
-        self.__dueDateTime.set(dueDateTime, event=event)
+        if dueDateTime != self.maxDateTime:
+            for child in self.children():
+                if child.dueDateTime() > dueDateTime:
+                    child.setDueDateTime(dueDateTime)
+            if self.parent():
+                parent = self.parent()
+                if dueDateTime > parent.dueDateTime():
+                    parent.setDueDateTime(dueDateTime)
         if date.Now() <= dueDateTime < self.maxDateTime:
             date.Scheduler().schedule(self.onOverDue, dueDateTime + date.oneSecond)
             if self.__dueSoonHours > 0:
                 dueSoonDateTime = dueDateTime + date.oneSecond - date.TimeDelta(hours=self.__dueSoonHours)
                 if dueSoonDateTime > date.Now():
                     date.Scheduler().schedule(self.onDueSoon, dueSoonDateTime)
-            
-    def dueDateTimeEvent(self, event):
-        dueDateTime = self.dueDateTime()
-        event.addSource(self, dueDateTime, type='task.dueDateTime')
-        for child in self.children():
-            if child.dueDateTime() > dueDateTime:
-                child.setDueDateTime(dueDateTime, event=event)
-        if self.parent():
-            parent = self.parent()
-            if dueDateTime > parent.dueDateTime():
-                parent.setDueDateTime(dueDateTime, event=event)
-        self.recomputeAppearance(event=event)
+        self.markDirty()
+        self.recomputeAppearance()
+        pub.sendMessage(self.dueDateTimeChangedEventType(), 
+                        newValue=dueDateTime, sender=self)
+
+    @classmethod
+    def dueDateTimeChangedEventType(class_):
+        return 'pubsub.task.dueDateTime'
     
     def onOverDue(self):
         self.recomputeAppearance()
@@ -282,7 +286,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def dueDateTimeSortEventTypes(class_):
         ''' The event types that influence the due date time sort order. '''
-        return ('task.dueDateTime',)
+        return (class_.dueDateTimeChangedEventType(),)
     
     # Planned start date
     
@@ -337,7 +341,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def timeLeftSortEventTypes(class_):
         ''' The event types that influence the time left sort order. '''
-        return ('task.dueDateTime',)
+        return (class_.dueDateTimeChangedEventType(),)
     
     # Actual start date
     
@@ -1089,7 +1093,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                                                       minute=currentDueDateTime.minute,
                                                       second=currentDueDateTime.second,
                                                       microsecond=currentDueDateTime.microsecond)
-            self.setDueDateTime(nextDueDateTime, event=event)
+            self.setDueDateTime(nextDueDateTime)
         
         currentPlannedStartDateTime = self.plannedStartDateTime()
         if currentPlannedStartDateTime != date.DateTime():        
@@ -1323,7 +1327,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def modificationEventTypes(class_):
         eventTypes = super(Task, class_).modificationEventTypes()
-        return eventTypes + ['task.plannedStartDateTime', 'task.dueDateTime', 
+        return eventTypes + ['task.plannedStartDateTime', 
+                             class_.dueDateTimeChangedEventType(), 
                              'task.actualStartDateTime', 'task.completionDateTime', 
                              'task.effort.add', 'task.effort.remove', 
                              'task.budget', 'task.percentageComplete', 

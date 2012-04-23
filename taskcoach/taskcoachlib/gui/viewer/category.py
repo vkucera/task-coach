@@ -47,7 +47,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable-msg
                           category.Category.appearanceChangedEventType(),
                           category.Category.exclusiveSubcategoriesChangedEventType(),
                           category.Category.filterChangedEventType()]:
-            self.registerObserver(self.onAttributeChanged, 
+            self.registerObserver(self.onAttributeChanged_Deprecated, 
                 eventType)
 
     def domainObjectsToView(self):
@@ -134,7 +134,10 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable-msg
                 setting='notes', viewer=self))
         return commands
 
-    def onAttributeChanged(self, event):
+    def onAttributeChanged(self, newValue, sender):
+        super(BaseCategoryViewer, self).onAttributeChanged(newValue, sender)
+            
+    def onAttributeChanged_Deprecated(self, event):
         if category.Category.exclusiveSubcategoriesChangedEventType() in event.types():
             # We need to refresh the children of the changed item as well 
             # because they have to use radio buttons instead of checkboxes, or
@@ -144,7 +147,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable-msg
                 items |= set(item.children())
             self.widget.RefreshItems(*items)  # pylint: disable-msg=W0142
         else:
-            super(BaseCategoryViewer, self).onAttributeChanged(event)
+            super(BaseCategoryViewer, self).onAttributeChanged_Deprecated(event)
         
     def onCheck(self, event):
         categoryToFilter = self.widget.GetItemPyData(event.GetItem())

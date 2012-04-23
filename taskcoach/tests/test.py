@@ -24,7 +24,7 @@ if projectRoot not in sys.path:
     sys.path.insert(0, projectRoot)
 
 
-def ignore(*args, **kwargs): # pylint: disable-msg=W0613
+def ignore(*args, **kwargs):  # pylint: disable-msg=W0613
     pass
 
 
@@ -51,8 +51,8 @@ class TestCase(unittest.TestCase, object):
             
     def registerObserver(self, eventType, eventSource=None):
         if not hasattr(self, 'events'):
-            self.events = [] # pylint: disable-msg=W0201
-        from taskcoachlib import patterns # pylint: disable-msg=W0404
+            self.events = []  # pylint: disable-msg=W0201
+        from taskcoachlib import patterns  # pylint: disable-msg=W0404
         patterns.Publisher().registerObserver(self.onEvent, eventType=eventType,
                                               eventSource=eventSource)
         

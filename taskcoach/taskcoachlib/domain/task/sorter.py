@@ -18,13 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 from taskcoachlib.domain import base
+from taskcoachlib.thirdparty.pubsub import pub
 import task
 
 
 class Sorter(base.TreeSorter):
     DomainObjectClass = task.Task  # What are we sorting
     TaskStatusAttributes = ('plannedStartDateTime', 'actualStartDateTime',
-                            'dueDateTime', 'completionDateTime',
+                            'completionDateTime',
                             'prerequisites')
     
     def __init__(self, *args, **kwargs):
@@ -33,8 +34,10 @@ class Sorter(base.TreeSorter):
         super(Sorter, self).__init__(*args, **kwargs)
         for attribute in self.TaskStatusAttributes:
             eventType = '.'.join(['task', attribute])
-            patterns.Publisher().registerObserver(self.onAttributeChanged, 
+            patterns.Publisher().registerObserver(self.onAttributeChanged_Deprecated, 
                                                   eventType=eventType)
+        pub.subscribe(self.onAttributeChanged, 
+                      task.Task.dueDateTimeChangedEventType())
     
     @patterns.eventSource       
     def setTreeMode(self, treeMode=True, event=None):
@@ -74,10 +77,10 @@ class Sorter(base.TreeSorter):
         # prerequisites because sorting by status depends on those attributes. 
         # Hence we don't need to subscribe to these attributes when they become 
         # the sort key.
-        if attribute not in self.TaskStatusAttributes:
+        if attribute not in self.TaskStatusAttributes + ('dueDateTime',):
             super(Sorter, self)._registerObserverForAttribute(attribute)
             
     def _removeObserverForAttribute(self, attribute):
         # See comment at _registerObserverForAttribute.
-        if attribute not in self.TaskStatusAttributes:
+        if attribute not in self.TaskStatusAttributes + ('dueDateTime',):
             super(Sorter, self)._removeObserverForAttribute(attribute)

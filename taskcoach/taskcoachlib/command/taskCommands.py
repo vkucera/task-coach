@@ -574,7 +574,7 @@ class EditPlannedStartDateTimeCommand(EditPeriodDateTimeCommand):
     
     @staticmethod
     def setOtherDateTime(item, dateTime, event):
-        item.setDueDateTime(dateTime, event=event)
+        item.setDueDateTime(dateTime)
 
 
 class EditDueDateTimeCommand(EditPeriodDateTimeCommand):
@@ -587,7 +587,7 @@ class EditDueDateTimeCommand(EditPeriodDateTimeCommand):
     
     @staticmethod
     def setDateTime(item, dateTime, event):
-        item.setDueDateTime(dateTime, event=event)
+        item.setDueDateTime(dateTime)
         
     @staticmethod
     def getOtherDateTime(item):

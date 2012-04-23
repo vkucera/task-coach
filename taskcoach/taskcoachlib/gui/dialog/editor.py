@@ -301,7 +301,7 @@ class DatesPage(Page):
                                             suggestedDateTime=suggestedDateTime)
         setattr(self, '_%sEntry' % taskMethodName, dateTimeEntry)
         commandClass = getattr(command, 'Edit%sCommand' % TaskMethodName)
-        eventType = 'task.%s' % taskMethodName
+        eventType = self.items[0].dueDateTimeChangedEventType() if taskMethodName == 'dueDateTime' else 'task.%s' % taskMethodName
         keep_delta = self.__keep_delta(taskMethodName)
         datetimeSync = attributesync.AttributeSync(taskMethodName, dateTimeEntry, 
             dateTime, self.items, commandClass, entry.EVT_DATETIMEENTRY, 

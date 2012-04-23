@@ -19,9 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 ''' This module provides classes that implement refreshing strategies for
-    viewers. ''' # pylint: disable-msg=W0105
+    viewers. '''  # pylint: disable-msg=W0105
 
-import wx
+
 from taskcoachlib.domain import date
 from taskcoachlib import patterns
 
@@ -89,7 +89,7 @@ class SecondRefresher(patterns.Observer):
         
     def refreshItems(self, items):
         if self.__viewer:
-            self.__viewer.refreshItems(*items) # pylint: disable-msg=W0142
+            self.__viewer.refreshItems(*items)  # pylint: disable-msg=W0142
         else:
             self.stopClock()
 

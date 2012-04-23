@@ -23,6 +23,7 @@ import wx
 from unittests import asserts
 from taskcoachlib import patterns, config
 from taskcoachlib.domain import task, effort, date, attachment, note, category
+from taskcoachlib.thirdparty.pubsub import pub
 
 
 class TaskTestCase(test.TestCase):
@@ -260,14 +261,24 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.assertEqual(self.tomorrow, self.task.dueDateTime())
 
     def testSetDueDateTimeNotification(self):
-        self.registerObserver('task.dueDateTime')
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.dueDateTimeChangedEventType())
         self.task.setDueDateTime(self.tomorrow)
-        self.assertEqual(self.tomorrow, self.events[0].value())
+        self.assertEqual((self.tomorrow, self.task), events[0])
 
     def testSetDueDateTimeUnchangedCausesNoNotification(self):
-        self.registerObserver('task.dueDateTime')
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.dueDateTimeChangedEventType())        
         self.task.setDueDateTime(self.task.dueDateTime())
-        self.failIf(self.events)
+        self.failIf(events)
 
     def testIconChangedAfterSetDueDateTimeHasPassed(self):
         self.task.setDueDateTime(self.tomorrow)
@@ -763,7 +774,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
 
     def testModificationEventTypes(self): # pylint: disable-msg=E1003
         self.assertEqual(super(task.Task, self.task).modificationEventTypes() +\
-             ['task.plannedStartDateTime', 'task.dueDateTime',
+             ['task.plannedStartDateTime', task.Task.dueDateTimeChangedEventType(),
               'task.actualStartDateTime', 'task.completionDateTime',
               'task.effort.add', 'task.effort.remove', 'task.budget', 
               'task.percentageComplete', 'task.priority', 

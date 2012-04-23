@@ -53,7 +53,7 @@ class EffortViewer(base.ListViewer,
             effort.Effort.trackStopEventType())
         self.aggregation = settings.get(self.settingsSection(), 'aggregation')
         self.initModeToolBarUICommands()
-        self.registerObserver(self.onAttributeChanged,
+        self.registerObserver(self.onAttributeChanged_Deprecated,
                               eventType=effort.Effort.appearanceChangedEventType())
         pub.subscribe(self.onRoundingChanged, 'settings.%s.round'%self.settingsSection())
         pub.subscribe(self.onRoundingChanged, 'settings.%s.alwaysroundup'%self.settingsSection())

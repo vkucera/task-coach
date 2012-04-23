@@ -72,7 +72,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,  # pylint: disable-msg=W0223
         for eventType in (task.Task.appearanceChangedEventType(), 
                           task.Task.percentageCompleteChangedEventType(),
                           'task.prerequisites'):
-            self.registerObserver(self.onAttributeChanged,
+            self.registerObserver(self.onAttributeChanged_Deprecated,
                                   eventType=eventType)
         pub.subscribe(self.refresh, 'powermgt.on')
         
@@ -114,8 +114,10 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable-msg=W0223
         super(BaseTaskTreeViewer, self).detach()
         if self.secondRefresher:
             self.secondRefresher.stopClock()
+            del self.secondRefresher
         if self.minuteRefresher:
             self.minuteRefresher.stopClock()
+            del self.minuteRefresher
         
     def newItemDialog(self, *args, **kwargs):
         kwargs['categories'] = self.taskFile.categories().filteredCategories()
@@ -315,8 +317,12 @@ class TimelineViewer(BaseTaskTreeViewer):
         kwargs.setdefault('settingsSection', 'timelineviewer')
         super(TimelineViewer, self).__init__(*args, **kwargs)
         for eventType in (task.Task.subjectChangedEventType(), 'task.plannedStartDateTime',
-            'task.dueDateTime', 'task.completionDateTime'):
-            self.registerObserver(self.onAttributeChanged, eventType)
+            task.Task.dueDateTimeChangedEventType(), 'task.completionDateTime'):
+            if eventType.startswith('pubsub'):
+                pub.subscribe(self.onAttributeChanged, eventType)
+            else:
+                self.registerObserver(self.onAttributeChanged_Deprecated, 
+                                      eventType)
         
     def createWidget(self):
         self.rootNode = TimelineRootNode(self.presentation())  # pylint: disable-msg=W0201
@@ -425,9 +431,13 @@ class SquareTaskViewer(BaseTaskTreeViewer):
         super(SquareTaskViewer, self).__init__(*args, **kwargs)
         self.orderBy(self.settings.get(self.settingsSection(), 'sortby'))
         self.orderUICommand.setChoice(self.__orderBy)
-        for eventType in (task.Task.subjectChangedEventType(), 'task.dueDateTime',
+        for eventType in (task.Task.subjectChangedEventType(),
+            task.Task.dueDateTimeChangedEventType(),
             'task.plannedStartDateTime', 'task.completionDateTime'):
-            self.registerObserver(self.onAttributeChanged, eventType)
+            if eventType.startswith('pubsub'):
+                pub.subscribe(self.onAttributeChanged, eventType)
+            else:
+                self.registerObserver(self.onAttributeChanged_Deprecated, eventType)
 
     def curselectionIsInstanceOf(self, class_):
         return class_ == task.Task
@@ -449,8 +459,14 @@ class SquareTaskViewer(BaseTaskTreeViewer):
         oldChoice = self.__orderBy
         self.__orderBy = choice
         self.settings.set(self.settingsSection(), 'sortby', choice)
-        self.removeObserver(self.onAttributeChanged, 'task.%s' % oldChoice)
-        self.registerObserver(self.onAttributeChanged, 'task.%s' % choice)
+        if oldChoice == 'dueDateTime':
+            pub.unsubscribe(self.onAttributeChanged, task.Task.dueDateTimeChangedEventType())
+        else:
+            self.removeObserver(self.onAttributeChanged_Deprecated, 'task.%s' % oldChoice)
+        if choice == 'dueDateTime':
+            pub.subscribe(self.onAttributeChanged, task.Task.dueDateTimeChangedEventType())
+        else:
+            self.registerObserver(self.onAttributeChanged_Deprecated, 'task.%s' % choice)
         if choice in ('budget', 'timeSpent'):
             self.__transformTaskAttribute = lambda timeSpent: timeSpent.milliseconds() / 1000
             self.__zero = date.TimeDelta()
@@ -552,12 +568,18 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         pub.subscribe(self.onWeekStartChanged, 'settings.view.weekstartmonday')
 
         # pylint: disable-msg=E1101
-        for eventType in (task.Task.subjectChangedEventType(), 'task.plannedStartDateTime',
-                          'task.dueDateTime', 'task.completionDateTime',
+        for eventType in (task.Task.subjectChangedEventType(), 
+                          'task.plannedStartDateTime',
+                          task.Task.dueDateTimeChangedEventType(), 
+                          'task.completionDateTime',
                           task.Task.attachmentsChangedEventType(),
                           task.Task.notesChangedEventType(),
                           task.Task.trackStartEventType(), task.Task.trackStopEventType()):
-            self.registerObserver(self.onAttributeChanged, eventType)
+            if eventType.startswith('pubsub'):
+                self.registerObserver(self.onAttributeChanged, eventType)
+            else:
+                self.registerObserver(self.onAttributeChanged_Deprecated, 
+                                      eventType)
         date.Scheduler().add_interval_job(self.atMidnight, days=1)
 
     def isTreeViewer(self):
@@ -747,7 +769,8 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable-msg=W0223
         # pylint: disable-msg=E1101,W0142
         columns = [widgets.Column('subject', _('Subject'), 
                 task.Task.subjectChangedEventType(), 
-                'task.completionDateTime', 'task.dueDateTime', 
+                'task.completionDateTime', 
+                task.Task.dueDateTimeChangedEventType(), 
                 'task.actualStartDateTime', 'task.plannedStartDateTime',
                 task.Task.trackStartEventType(), task.Task.trackStopEventType(), 
                 sortCallback=uicommand.ViewerSortByCommand(viewer=self,
