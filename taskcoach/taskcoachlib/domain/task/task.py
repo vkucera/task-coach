@@ -19,12 +19,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
 from taskcoachlib import patterns
 from taskcoachlib.domain import base, date, categorizable, note, attachment
 from taskcoachlib.domain.attribute import color
 from taskcoachlib.thirdparty.pubsub import pub
 import status
+import wx
 
 
 class Task(note.NoteOwner, attachment.AttachmentOwner,
@@ -49,10 +49,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__dueSoonHours = self.settings.getint('behavior', 'duesoonhours')  # pylint: disable-msg=E1101
         Attribute, SetAttribute = base.Attribute, base.SetAttribute
         maxDateTime = self.maxDateTime    
-        self.__dueDateTime = Attribute(dueDateTime or maxDateTime, self, 
-                                       self.dueDateTimeEvent)
-        self.__plannedStartDateTime = Attribute(plannedStartDateTime or maxDateTime, self, 
-                                                self.plannedStartDateTimeEvent)
+        self.__dueDateTime = dueDateTime or maxDateTime
+        self.__plannedStartDateTime = plannedStartDateTime or maxDateTime
         self.__actualStartDateTime = Attribute(actualStartDateTime or maxDateTime, self,
                                                self.actualStartDateTimeEvent)
         if completionDateTime is None and percentageComplete == 100:
@@ -89,17 +87,17 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         pub.subscribe(self.onDueSoonHoursChanged, 'settings.behavior.duesoonhours')
 
         now = date.Now()
-        if now < self.__dueDateTime.get() < maxDateTime:
-            date.Scheduler().schedule(self.onOverDue, self.__dueDateTime.get() + date.oneSecond)
-        if now < self.__plannedStartDateTime.get() < maxDateTime:
-            date.Scheduler().schedule(self.onTimeToStart, self.__plannedStartDateTime.get() + date.oneSecond)
+        if now < self.__dueDateTime < maxDateTime:
+            date.Scheduler().schedule(self.onOverDue, self.__dueDateTime + date.oneSecond)
+        if now < self.__plannedStartDateTime < maxDateTime:
+            date.Scheduler().schedule(self.onTimeToStart, self.__plannedStartDateTime + date.oneSecond)
 
     @patterns.eventSource
     def __setstate__(self, state, event=None):
         super(Task, self).__setstate__(state, event=event)
-        self.setPlannedStartDateTime(state['plannedStartDateTime'], event=event)
+        self.setPlannedStartDateTime(state['plannedStartDateTime'])
         self.setActualStartDateTime(state['actualStartDateTime'], event=event)
-        self.setDueDateTime(state['dueDateTime'], event=event)
+        self.setDueDateTime(state['dueDateTime'])
         self.setCompletionDateTime(state['completionDateTime'], event=event)
         self.setPercentageComplete(state['percentageComplete'], event=event)
         self.setRecurrence(state['recurrence'], event=event)
@@ -116,8 +114,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         
     def __getstate__(self):
         state = super(Task, self).__getstate__()
-        state.update(dict(dueDateTime=self.__dueDateTime.get(), 
-            plannedStartDateTime=self.__plannedStartDateTime.get(),
+        state.update(dict(dueDateTime=self.__dueDateTime, 
+            plannedStartDateTime=self.__plannedStartDateTime,
             actualStartDateTime=self.__actualStartDateTime.get(),
             completionDateTime=self.__completionDateTime.get(),
             percentageComplete=self.__percentageComplete.get(),
@@ -134,8 +132,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     def __getcopystate__(self):
         state = super(Task, self).__getcopystate__()
-        state.update(dict(plannedStartDateTime=self.__plannedStartDateTime.get(), 
-            dueDateTime=self.__dueDateTime.get(), 
+        state.update(dict(plannedStartDateTime=self.__plannedStartDateTime, 
+            dueDateTime=self.__dueDateTime, 
             actualStartDateTime=self.__actualStartDateTime.get(), 
             completionDateTime=self.__completionDateTime.get(),
             percentageComplete=self.__percentageComplete.get(), 
@@ -187,9 +185,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         elif self.completed() and not child.completed():
             self.setCompletionDateTime(self.maxDateTime, event=event)
         if self.maxDateTime > child.dueDateTime() > self.dueDateTime():
-            self.setDueDateTime(child.dueDateTime(), event=event)           
+            self.setDueDateTime(child.dueDateTime())           
         if child.plannedStartDateTime() < self.plannedStartDateTime():
-            self.setPlannedStartDateTime(child.plannedStartDateTime(), event=event)
+            self.setPlannedStartDateTime(child.plannedStartDateTime())
         if child.actualStartDateTime() < self.actualStartDateTime():
             self.setActualStartDateTime(child.actualStartDateTime(), event=event)
         self.recomputeAppearance(recursive=False, event=event)
@@ -248,37 +246,38 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if recursive:
             childrenDueDateTimes = [child.dueDateTime(recursive=True) for child in \
                                     self.children() if not child.completed()]
-            return min(childrenDueDateTimes + [self.__dueDateTime.get()])
+            return min(childrenDueDateTimes + [self.__dueDateTime])
         else:
-            return self.__dueDateTime.get()
+            return self.__dueDateTime
 
-    @patterns.eventSource
-    def setDueDateTime(self, dueDateTime, event=None):
+    def setDueDateTime(self, dueDateTime):
+        if dueDateTime == self.__dueDateTime:
+            return
+        self.__dueDateTime = dueDateTime
         date.Scheduler().unschedule(self.onOverDue)
         date.Scheduler().unschedule(self.onDueSoon)
-        self.__dueDateTime.set(dueDateTime, event=event)
+        if dueDateTime != self.maxDateTime:
+            for child in self.children():
+                if child.dueDateTime() > dueDateTime:
+                    child.setDueDateTime(dueDateTime)
+            if self.parent():
+                parent = self.parent()
+                if dueDateTime > parent.dueDateTime():
+                    parent.setDueDateTime(dueDateTime)
         if date.Now() <= dueDateTime < self.maxDateTime:
             date.Scheduler().schedule(self.onOverDue, dueDateTime + date.oneSecond)
             if self.__dueSoonHours > 0:
                 dueSoonDateTime = dueDateTime + date.oneSecond - date.TimeDelta(hours=self.__dueSoonHours)
                 if dueSoonDateTime > date.Now():
                     date.Scheduler().schedule(self.onDueSoon, dueSoonDateTime)
-            
-    def dueDateTimeEvent(self, event):
-        dueDateTime = self.dueDateTime()
-        event.addSource(self, dueDateTime, type=self.dueDateTimeChangedEventType())
-        for child in self.children():
-            if child.dueDateTime() > dueDateTime:
-                child.setDueDateTime(dueDateTime, event=event)
-        if self.parent():
-            parent = self.parent()
-            if dueDateTime > parent.dueDateTime():
-                parent.setDueDateTime(dueDateTime, event=event)
-        self.recomputeAppearance(event=event)
+        self.markDirty()
+        self.recomputeAppearance()
+        pub.sendMessage(self.dueDateTimeChangedEventType(), 
+                        newValue=dueDateTime, sender=self)
 
     @classmethod
     def dueDateTimeChangedEventType(class_):
-        return '%s.dueDateTime' % class_
+        return 'pubsub.task.dueDateTime'
 
     def onOverDue(self):
         self.recomputeAppearance()
@@ -302,36 +301,38 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if recursive:
             childrenPlannedStartDateTimes = [child.plannedStartDateTime(recursive=True) for child in \
                                       self.children() if not child.completed()]
-            return min(childrenPlannedStartDateTimes + [self.__plannedStartDateTime.get()])
+            return min(childrenPlannedStartDateTimes + [self.__plannedStartDateTime])
         else:
-            return self.__plannedStartDateTime.get()
+            return self.__plannedStartDateTime
         
-    @patterns.eventSource
-    def setPlannedStartDateTime(self, plannedStartDateTime, event=None):
+    def setPlannedStartDateTime(self, plannedStartDateTime):
+        if plannedStartDateTime == self.__plannedStartDateTime:
+            return
+        self.__plannedStartDateTime = plannedStartDateTime
         date.Scheduler().unschedule(self.onTimeToStart)
-        self.__plannedStartDateTime.set(plannedStartDateTime, event=event)
-        if plannedStartDateTime < self.maxDateTime:
-            date.Scheduler().schedule(self.onTimeToStart, plannedStartDateTime + date.oneSecond)
-
-    def plannedStartDateTimeEvent(self, event):
-        plannedStartDateTime = self.plannedStartDateTime()
-        event.addSource(self, plannedStartDateTime, type=self.plannedStartDateTimeChangedEventType())
-        if not self.recurrence(recursive=True, upwards=True):
-            for child in self.children():
-                if plannedStartDateTime > child.plannedStartDateTime():
-                    child.setPlannedStartDateTime(plannedStartDateTime, event=event)
-        parent = self.parent()
-        if parent and plannedStartDateTime < parent.plannedStartDateTime():
-            parent.setPlannedStartDateTime(plannedStartDateTime, event=event)
-        self.recomputeAppearance(event=event)
-
-    def onTimeToStart(self):
+        if plannedStartDateTime != self.maxDateTime:
+            if not self.recurrence(recursive=True, upwards=True):
+                for child in self.children():
+                    if plannedStartDateTime > child.plannedStartDateTime():
+                        child.setPlannedStartDateTime(plannedStartDateTime)
+            parent = self.parent()
+            if parent and plannedStartDateTime < parent.plannedStartDateTime():
+                parent.setPlannedStartDateTime(plannedStartDateTime)
+        self.markDirty()
         self.recomputeAppearance()
+        if plannedStartDateTime < self.maxDateTime:
+            date.Scheduler().schedule(self.onTimeToStart, 
+                                      plannedStartDateTime + date.oneSecond)
+        pub.sendMessage(self.plannedStartDateTimeChangedEventType(), 
+                        newValue=plannedStartDateTime, sender=self)
 
     @classmethod
     def plannedStartDateTimeChangedEventType(class_):
-        return '%s.plannedStartDateTime' % class_
-        
+        return 'pubsub.task.plannedStartDateTime'
+    
+    def onTimeToStart(self):
+        self.recomputeAppearance()
+
     @staticmethod
     def plannedStartDateTimeSortFunction(**kwargs):
         recursive = kwargs.get('treeMode', False)
@@ -339,7 +340,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     
     @classmethod
     def plannedStartDateTimeSortEventTypes(class_):
-        ''' The event types that influence the start date time sort order. '''
+        ''' The event types that influence the planned start date time sort 
+            order. '''
         return (class_.plannedStartDateTimeChangedEventType(),)
 
     def timeLeft(self, recursive=False):
@@ -1129,7 +1131,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                                                       minute=currentDueDateTime.minute,
                                                       second=currentDueDateTime.second,
                                                       microsecond=currentDueDateTime.microsecond)
-            self.setDueDateTime(nextDueDateTime, event=event)
+            self.setDueDateTime(nextDueDateTime)
         
         currentPlannedStartDateTime = self.plannedStartDateTime()
         if currentPlannedStartDateTime != date.DateTime():        
@@ -1143,7 +1145,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                                                                         minute=currentPlannedStartDateTime.minute,
                                                                         second=currentPlannedStartDateTime.second,
                                                                         microsecond=currentPlannedStartDateTime.microsecond)
-            self.setPlannedStartDateTime(nextPlannedStartDateTime, event=event)
+            self.setPlannedStartDateTime(nextPlannedStartDateTime)
         
         self.setActualStartDateTime(date.DateTime(), event=event)
         self.setPercentageComplete(0, event=event)

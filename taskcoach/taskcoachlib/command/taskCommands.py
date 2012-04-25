@@ -310,7 +310,7 @@ class MarkInactiveCommand(base.SaveStateMixin, base.BaseCommand):
         super(MarkInactiveCommand, self).redo_command()
     
                 
-class StartEffortCommand(EffortCommand): # FIXME: use actualStartDateTime instead of plannedStartDateTime
+class StartEffortCommand(EffortCommand):
     plural_name = _('Start tracking')
     singular_name = _('Start tracking "%s"')
 
@@ -488,25 +488,25 @@ class EditDateTimeCommand(base.BaseCommand):
 
     @staticmethod
     def getDateTime(item):
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
     @staticmethod
-    def setDateTime(item, newDateTime, event):
-        raise NotImplementedError # pragma: no cover
+    def setDateTime(item, newDateTime):
+        raise NotImplementedError  # pragma: no cover
     
     @patterns.eventSource
     def do_command(self, event=None):
         super(EditDateTimeCommand, self).do_command()
         for item in self.items:
-            self.setDateTime(item, self._newDateTime, event=event)
+            self.setDateTime(item, self._newDateTime)
 
     @patterns.eventSource
     def undo_command(self, event=None):
         super(EditDateTimeCommand, self).undo_command()
         for item, oldDateTime in zip(self.items, self.__oldDateTimes):
-            self.setDateTime(item, oldDateTime, event=event)
+            self.setDateTime(item, oldDateTime)
         for familyMember, oldDateTime in self.__oldFamilyMemberDateTimes:
-            self.setDateTime(familyMember, oldDateTime, event=event)
+            self.setDateTime(familyMember, oldDateTime)
     
     def redo_command(self):
         self.do_command()
@@ -536,7 +536,7 @@ class EditPeriodDateTimeCommand(EditDateTimeCommand):
             if self.__shouldAdjustItem(item):
                 delta = direction * (self._newDateTime - self.getDateTime(item))
                 newOtherDateTime = self.getOtherDateTime(item) + delta
-                self.setOtherDateTime(item, newOtherDateTime, event=event)
+                self.setOtherDateTime(item, newOtherDateTime)
 
     def __shouldAdjustItem(self, item):
         ''' Determine whether the other date/time of the item should be
@@ -548,12 +548,12 @@ class EditPeriodDateTimeCommand(EditDateTimeCommand):
     @staticmethod
     def getOtherDateTime(item):
         ''' Gets the date/time that represents the other end of the period. '''
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
     
     @staticmethod
-    def setOtherDateTime(item, newDateTime, event):
+    def setOtherDateTime(item, newDateTime):
         ''' Set the date/time that represents the other end of the period. '''
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
     
     
 class EditPlannedStartDateTimeCommand(EditPeriodDateTimeCommand):
@@ -565,16 +565,16 @@ class EditPlannedStartDateTimeCommand(EditPeriodDateTimeCommand):
         return item.plannedStartDateTime()
     
     @staticmethod
-    def setDateTime(item, dateTime, event):
-        item.setPlannedStartDateTime(dateTime, event=event)
+    def setDateTime(item, dateTime):
+        item.setPlannedStartDateTime(dateTime)
         
     @staticmethod
     def getOtherDateTime(item):
         return item.dueDateTime()
     
     @staticmethod
-    def setOtherDateTime(item, dateTime, event):
-        item.setDueDateTime(dateTime, event=event)
+    def setOtherDateTime(item, dateTime):
+        item.setDueDateTime(dateTime)
 
 
 class EditDueDateTimeCommand(EditPeriodDateTimeCommand):
@@ -586,16 +586,16 @@ class EditDueDateTimeCommand(EditPeriodDateTimeCommand):
         return item.dueDateTime()
     
     @staticmethod
-    def setDateTime(item, dateTime, event):
-        item.setDueDateTime(dateTime, event=event)
+    def setDateTime(item, dateTime):
+        item.setDueDateTime(dateTime)
         
     @staticmethod
     def getOtherDateTime(item):
         return item.plannedStartDateTime()
 
     @staticmethod
-    def setOtherDateTime(item, dateTime, event):
-        item.setPlannedStartDateTime(dateTime, event=event)
+    def setOtherDateTime(item, dateTime):
+        item.setPlannedStartDateTime(dateTime)
  
 
 class EditActualStartDateTimeCommand(EditPeriodDateTimeCommand):
@@ -607,16 +607,16 @@ class EditActualStartDateTimeCommand(EditPeriodDateTimeCommand):
         return item.actualStartDateTime()
     
     @staticmethod
-    def setDateTime(item, dateTime, event):
-        item.setActualStartDateTime(dateTime, event=event)
+    def setDateTime(item, dateTime):
+        item.setActualStartDateTime(dateTime)
         
     @staticmethod
     def getOtherDateTime(item):
         return item.completionDateTime()
     
     @staticmethod
-    def setOtherDateTime(item, dateTime, event):
-        item.setCompletionDateTime(dateTime, event=event)
+    def setOtherDateTime(item, dateTime):
+        item.setCompletionDateTime(dateTime)
                
 
 class EditCompletionDateTimeCommand(EditDateTimeCommand, EffortCommand):
@@ -628,16 +628,16 @@ class EditCompletionDateTimeCommand(EditDateTimeCommand, EffortCommand):
         return item.completionDateTime()
     
     @staticmethod
-    def setDateTime(item, dateTime, event):
-        item.setCompletionDateTime(dateTime, event=event)
+    def setDateTime(item, dateTime):
+        item.setCompletionDateTime(dateTime)
 
     @staticmethod
     def getOtherDateTime(item):
         return item.actualStartDateTime()
     
     @staticmethod
-    def setOtherDateTime(item, dateTime, event):
-        item.setActualStartDateTime(dateTime, event=event)
+    def setOtherDateTime(item, dateTime):
+        item.setActualStartDateTime(dateTime)
 
     def tasksToStopTracking(self):
         return self.items
@@ -652,8 +652,8 @@ class EditReminderDateTimeCommand(EditDateTimeCommand):
         return item.reminder()
     
     @staticmethod
-    def setDateTime(item, dateTime, event):
-        item.setReminder(dateTime, event=event)
+    def setDateTime(item, dateTime):
+        item.setReminder(dateTime)
 
         
 class EditRecurrenceCommand(base.BaseCommand):

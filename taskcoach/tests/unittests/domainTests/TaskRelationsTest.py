@@ -27,8 +27,8 @@ class CommonTaskRelationshipManagerTestsMixin(object):
         now = self.now = date.Now()
         self.yesterday = now - date.oneDay
         self.tomorrow = now + date.oneDay
-        self.parent = task.Task('parent')#, plannedStartDateTime=now)
-        self.child = task.Task('child')#, plannedStartDateTime=now)
+        self.parent = task.Task('parent')
+        self.child = task.Task('child')
         self.parent.addChild(self.child)
         self.child.setParent(self.parent)
         self.child2 = task.Task('child2', plannedStartDateTime=now)

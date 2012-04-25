@@ -23,6 +23,7 @@ import wx
 from unittests import asserts
 from taskcoachlib import patterns, config
 from taskcoachlib.domain import task, effort, date, attachment, note, category
+from taskcoachlib.thirdparty.pubsub import pub
 
 
 class TaskTestCase(test.TestCase):
@@ -219,14 +220,24 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.assertEqual(self.yesterday, self.task.plannedStartDateTime())
 
     def testSetPlannedStartDateTimeNotification(self):
-        self.registerObserver(task.Task.plannedStartDateTimeChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.plannedStartDateTimeChangedEventType())
         self.task.setPlannedStartDateTime(self.yesterday)
-        self.assertEqual(self.yesterday, self.events[0].value())
+        self.assertEqual((self.yesterday, self.task), events[0])
 
     def testSetPlannedStartDateTimeUnchangedCausesNoNotification(self):
-        self.registerObserver(task.Task.plannedStartDateTimeChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.plannedStartDateTimeChangedEventType())        
         self.task.setPlannedStartDateTime(self.task.plannedStartDateTime())
-        self.failIf(self.events)
+        self.failIf(events)
         
     def testSetFuturePlannedStartDateTimeChangesIcon(self):
         self.task.setPlannedStartDateTime(self.tomorrow)
@@ -260,14 +271,24 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.assertEqual(self.tomorrow, self.task.dueDateTime())
 
     def testSetDueDateTimeNotification(self):
-        self.registerObserver(task.Task.dueDateTimeChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.dueDateTimeChangedEventType())
         self.task.setDueDateTime(self.tomorrow)
-        self.assertEqual(self.tomorrow, self.events[0].value())
+        self.assertEqual((self.tomorrow, self.task), events[0])
 
     def testSetDueDateTimeUnchangedCausesNoNotification(self):
-        self.registerObserver(task.Task.dueDateTimeChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.dueDateTimeChangedEventType())        
         self.task.setDueDateTime(self.task.dueDateTime())
-        self.failIf(self.events)
+        self.failIf(events)
 
     def testIconChangedAfterSetDueDateTimeHasPassed(self):
         self.task.setDueDateTime(self.tomorrow)
@@ -761,7 +782,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.task.__setstate__(state)
         self.assertEqual(previousDependencies, self.task.dependencies())
 
-    def testModificationEventTypes(self): # pylint: disable-msg=E1003
+    def testModificationEventTypes(self):  # pylint: disable-msg=E1003
         self.assertEqual(super(task.Task, self.task).modificationEventTypes() +\
              [task.Task.plannedStartDateTimeChangedEventType(),
               task.Task.dueDateTimeChangedEventType(),
@@ -784,7 +805,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
 
 class TaskDueTodayTest(TaskTestCase, CommonTaskTestsMixin):
     def taskCreationKeywordArguments(self):
-        self.dueDateTime = date.Now() + date.oneHour # pylint: disable-msg=W0201
+        self.dueDateTime = date.Now() + date.oneHour  # pylint: disable-msg=W0201
         return [{'dueDateTime': self.dueDateTime}]
     
     def testIsDueSoon(self):

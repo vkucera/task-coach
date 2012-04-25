@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 from taskcoachlib.domain import base, date
+from taskcoachlib.thirdparty.pubsub import pub
 import task
 import tasklist
 
@@ -39,10 +40,16 @@ class ViewFilter(tasklist.TaskListQueryMixin, base.Filter):
                           task.Task.appearanceChangedEventType(),  # Proxy for status changes
                           task.Task.addChildEventType(),
                           task.Task.removeChildEventType()):
-            registerObserver(self.onTaskStatusChange, eventType=eventType)
+            if eventType.startswith('pubsub'):
+                pub.subscribe(self.onTaskStatusChange, eventType)
+            else:
+                registerObserver(self.onTaskStatusChange_Deprecated, eventType=eventType)
         date.Scheduler().schedule_interval(self.onTaskStatusChange, days=1)
 
-    def onTaskStatusChange(self, event=None):  # pylint: disable-msg=W0613
+    def onTaskStatusChange(self, newValue, sender):  # pylint: disable-msg=W0613
+        self.reset()
+        
+    def onTaskStatusChange_Deprecated(self, event=None):  # pylint: disable-msg=W0613
         self.reset()
         
     def hideTaskStatus(self, status, hide=True):

@@ -19,10 +19,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, os
+import wx
+import os
 from taskcoachlib import meta, patterns, operating_system
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import date, task
+from taskcoachlib.thirdparty.pubsub import pub
 import artprovider
 
         
@@ -46,8 +48,8 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
             eventType=task.Task.trackStartEventType())
         self.registerObserver(self.onStopTracking,
             eventType=task.Task.trackStopEventType())
-        self.registerObserver(self.onChangeDueDateTime,
-            eventType=task.Task.dueDateTimeChangedEventType())
+        pub.subscribe(self.onChangeDueDateTime, 
+                      task.Task.dueDateTimeChangedEventType())
         # When the user chances the due soon hours preferences it may cause
         # a task to change appearance. That also means the number of due soon
         # tasks has changed, so we need to change the tool tip text.
@@ -55,7 +57,7 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
         # is not reliable. The TaskBarIcon may get the event before the tasks
         # do. When that happens the tasks haven't changed their status yet and
         # we would use the wrong status count.
-        self.registerObserver(self.onChangeDueDateTime,
+        self.registerObserver(self.onChangeDueDateTime_Deprecated,
             eventType=task.Task.appearanceChangedEventType()) 
         event = wx.EVT_TASKBAR_LEFT_DOWN if operating_system.isGTK() else wx.EVT_TASKBAR_LEFT_DCLICK    
         self.Bind(event, self.onTaskbarClick)
@@ -82,11 +84,15 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
         self.__setTooltipText()
         self.__stopTicking()
 
-    def onChangeSubject(self, event): # pylint: disable-msg=W0613
+    def onChangeSubject(self, event):  # pylint: disable-msg=W0613
         self.__setTooltipText()
         self.__setIcon()
 
-    def onChangeDueDateTime(self, event): # pylint: disable-msg=W0613
+    def onChangeDueDateTime(self, newValue, sender):  # pylint: disable-msg=W0613
+        self.__setTooltipText()
+        self.__setIcon()
+        
+    def onChangeDueDateTime_Deprecated(self, event):
         self.__setTooltipText()
         self.__setIcon()
         
