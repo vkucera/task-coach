@@ -735,8 +735,9 @@ class CommonTestsMixin(object):
 
     def testChangePlannedStartDateTimeWhileColumnShown(self):
         self.taskList.append(self.task)
-        self.task.setPlannedStartDateTime(date.Now() - date.oneDay)
-        self.assertEqual('task.plannedStartDateTime', self.viewer.events_deprecated[0].type())
+        newValue = date.Now() - date.oneDay
+        self.task.setPlannedStartDateTime(newValue)
+        self.assertEqual((newValue, self.task), self.viewer.events[0])
 
     def testStartTracking(self):
         self.taskList.append(self.task)
@@ -747,7 +748,7 @@ class CommonTestsMixin(object):
         self.taskList.append(self.task)
         self.showColumn('startDate', False)
         self.task.setPlannedStartDateTime(date.Now() - date.oneDay)
-        self.assertEqual(1, len(self.viewer.events_deprecated))
+        self.assertEqual(1, len(self.viewer.events))
 
     def testChangeDueDate(self):
         self.taskList.append(self.task)

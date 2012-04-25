@@ -64,7 +64,9 @@ class TaskFile(patterns.Observer):
             self.registerObserver(self.onDomainObjectAddedOrRemoved, eventType)
             
         for eventType in task.Task.modificationEventTypes():
-            self.registerObserver(self.onTaskChanged, eventType)
+            if not eventType.startswith('pubsub'):
+                self.registerObserver(self.onTaskChanged_Deprecated, eventType)
+        pub.subscribe(self.onTaskChanged, 'pubsub.task')
         for eventType in effort.Effort.modificationEventTypes():
             self.registerObserver(self.onEffortChanged, eventType)
         for eventType in note.Note.modificationEventTypes():
@@ -112,8 +114,13 @@ class TaskFile(patterns.Observer):
             
     def onDomainObjectAddedOrRemoved(self, event):  # pylint: disable-msg=W0613
         self.markDirty()
-        
-    def onTaskChanged(self, event):
+
+    def onTaskChanged(self, newValue, sender):
+        if self.__loading:
+            return
+        self.markDirty()
+                    
+    def onTaskChanged_Deprecated(self, event):
         if self.__loading:
             return
         changedTasks = [changedTask for changedTask in event.sources() \

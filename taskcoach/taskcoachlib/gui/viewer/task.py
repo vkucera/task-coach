@@ -316,7 +316,8 @@ class TimelineViewer(BaseTaskTreeViewer):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'timelineviewer')
         super(TimelineViewer, self).__init__(*args, **kwargs)
-        for eventType in (task.Task.subjectChangedEventType(), 'task.plannedStartDateTime',
+        for eventType in (task.Task.subjectChangedEventType(), 
+            task.Task.plannedStartDateTimeChangedEventType(),
             task.Task.dueDateTimeChangedEventType(), 'task.completionDateTime'):
             if eventType.startswith('pubsub'):
                 pub.subscribe(self.onAttributeChanged, eventType)
@@ -433,7 +434,8 @@ class SquareTaskViewer(BaseTaskTreeViewer):
         self.orderUICommand.setChoice(self.__orderBy)
         for eventType in (task.Task.subjectChangedEventType(),
             task.Task.dueDateTimeChangedEventType(),
-            'task.plannedStartDateTime', 'task.completionDateTime'):
+            task.Task.plannedStartDateTimeChangedEventType(),
+            'task.completionDateTime'):
             if eventType.startswith('pubsub'):
                 pub.subscribe(self.onAttributeChanged, eventType)
             else:
@@ -569,7 +571,7 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
 
         # pylint: disable-msg=E1101
         for eventType in (task.Task.subjectChangedEventType(), 
-                          'task.plannedStartDateTime',
+                          task.Task.plannedStartDateTimeChangedEventType(),
                           task.Task.dueDateTimeChangedEventType(), 
                           'task.completionDateTime',
                           task.Task.attachmentsChangedEventType(),
@@ -771,7 +773,8 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable-msg=W0223
                 task.Task.subjectChangedEventType(), 
                 'task.completionDateTime', 
                 task.Task.dueDateTimeChangedEventType(), 
-                'task.actualStartDateTime', 'task.plannedStartDateTime',
+                'task.actualStartDateTime', 
+                task.Task.plannedStartDateTimeChangedEventType(),
                 task.Task.trackStartEventType(), task.Task.trackStopEventType(), 
                 sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                     value='subject'),
