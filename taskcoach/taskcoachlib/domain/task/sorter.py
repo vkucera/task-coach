@@ -24,8 +24,7 @@ import task
 
 class Sorter(base.TreeSorter):
     DomainObjectClass = task.Task  # What are we sorting
-    TaskStatusAttributes = ('actualStartDateTime',
-                            'completionDateTime',
+    TaskStatusAttributes = ('completionDateTime',
                             'prerequisites')
     
     def __init__(self, *args, **kwargs):
@@ -43,6 +42,8 @@ class Sorter(base.TreeSorter):
                       task.Task.dueDateTimeChangedEventType())
         pub.subscribe(self.onAttributeChanged,
                       task.Task.plannedStartDateTimeChangedEventType())
+        pub.subscribe(self.onAttributeChanged, 
+                      task.Task.actualStartDateTimeChangedEventType())
     
     @patterns.eventSource       
     def setTreeMode(self, treeMode=True, event=None):
@@ -82,10 +83,10 @@ class Sorter(base.TreeSorter):
         # prerequisites because sorting by status depends on those attributes. 
         # Hence we don't need to subscribe to these attributes when they become 
         # the sort key.
-        if attribute not in self.TaskStatusAttributes + ('dueDateTime', 'plannedStartDateTime'):
+        if attribute not in self.TaskStatusAttributes + ('dueDateTime', 'plannedStartDateTime', 'actualStartDateTime'):
             super(Sorter, self)._registerObserverForAttribute(attribute)
             
     def _removeObserverForAttribute(self, attribute):
         # See comment at _registerObserverForAttribute.
-        if attribute not in self.TaskStatusAttributes + ('dueDateTime', 'plannedStartDateTime'):
+        if attribute not in self.TaskStatusAttributes + ('dueDateTime', 'plannedStartDateTime', 'actualStartDateTime'):
             super(Sorter, self)._removeObserverForAttribute(attribute)

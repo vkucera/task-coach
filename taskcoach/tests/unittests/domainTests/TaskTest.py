@@ -257,14 +257,24 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.assertEqual(self.yesterday, self.task.actualStartDateTime())
 
     def testSetActualStartDateTimeNotification(self):
-        self.registerObserver(task.Task.actualStartDateTimeChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.actualStartDateTimeChangedEventType())
         self.task.setActualStartDateTime(self.yesterday)
-        self.assertEqual(self.yesterday, self.events[0].value())
+        self.assertEqual((self.yesterday, self.task), events[0])
 
     def testSetActualStartDateTimeUnchangedCausesNoNotification(self):
-        self.registerObserver(task.Task.actualStartDateTimeChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.actualStartDateTimeChangedEventType())
         self.task.setActualStartDateTime(self.task.actualStartDateTime())
-        self.failIf(self.events)
+        self.failIf(events)
 
     def testSetDueDateTime(self):
         self.task.setDueDateTime(self.tomorrow)

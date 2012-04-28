@@ -744,7 +744,7 @@ class CommonTestsMixin(object):
     def testStartTracking(self):
         self.taskList.append(self.task)
         self.task.addEffort(effort.Effort(self.task))
-        self.assertEqual(self.task.trackStartEventType(), self.viewer.events_deprecated[0].type())
+        self.assertEqual(self.task.trackStartEventType(), self.viewer.events_deprecated[-1].type())
 
     def testChangePlannedStartDateTimeWhileColumnNotShown(self):
         self.taskList.append(self.task)

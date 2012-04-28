@@ -161,7 +161,8 @@ class TaskFile(patterns.Observer):
     def onTaskChanged(self, newValue, sender):
         if self.__loading or self.__saving:
             return
-        self.markDirty()
+        if sender in self.tasks():
+            self.markDirty()
                     
     def onTaskChanged_Deprecated(self, event):
         if self.__loading:
@@ -462,7 +463,7 @@ class TaskFile(patterns.Observer):
             try:
                 categoryToLink = categories.getObjectById(categoryId)
             except IndexError:
-                continue # Subcategory was removed by the merge
+                continue  # Subcategory was removed by the merge
             for categorizable in categorizables:
                 categorizable.addCategory(categoryToLink)
                 categoryToLink.addCategorizable(categorizable)
