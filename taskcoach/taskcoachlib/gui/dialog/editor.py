@@ -301,11 +301,12 @@ class DatesPage(Page):
                                             suggestedDateTime=suggestedDateTime)
         setattr(self, '_%sEntry' % taskMethodName, dateTimeEntry)
         commandClass = getattr(command, 'Edit%sCommand' % TaskMethodName)
-        if taskMethodName in ('dueDateTime', 'plannedStartDateTime'):
-            if taskMethodName == 'dueDateTime':
-                eventType = self.items[0].dueDateTimeChangedEventType()
-            else:
-                eventType = self.items[0].plannedStartDateTimeChangedEventType()
+        if taskMethodName == 'dueDateTime':
+            eventType = self.items[0].dueDateTimeChangedEventType()
+        elif taskMethodName == 'plannedStartDateTime':
+            eventType = self.items[0].plannedStartDateTimeChangedEventType()
+        elif taskMethodName == 'actualStartDateTime':
+            eventType = self.items[0].actualStartDateTimeChangedEventType()
         else:
             eventType = 'task.%s' % taskMethodName
         keep_delta = self.__keep_delta(taskMethodName)

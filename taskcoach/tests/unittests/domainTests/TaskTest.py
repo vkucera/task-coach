@@ -257,14 +257,24 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.assertEqual(self.yesterday, self.task.actualStartDateTime())
 
     def testSetActualStartDateTimeNotification(self):
-        self.registerObserver('task.actualStartDateTime')
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.actualStartDateTimeChangedEventType())
         self.task.setActualStartDateTime(self.yesterday)
-        self.assertEqual(self.yesterday, self.events[0].value())
+        self.assertEqual((self.yesterday, self.task), events[0])
 
     def testSetActualStartDateTimeUnchangedCausesNoNotification(self):
-        self.registerObserver('task.actualStartDateTime')
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.actualStartDateTimeChangedEventType())
         self.task.setActualStartDateTime(self.task.actualStartDateTime())
-        self.failIf(self.events)
+        self.failIf(events)
 
     def testSetDueDateTime(self):
         self.task.setDueDateTime(self.tomorrow)
@@ -786,7 +796,8 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.assertEqual(super(task.Task, self.task).modificationEventTypes() +\
              [task.Task.plannedStartDateTimeChangedEventType(), 
               task.Task.dueDateTimeChangedEventType(),
-              'task.actualStartDateTime', 'task.completionDateTime',
+              task.Task.actualStartDateTimeChangedEventType(),
+              'task.completionDateTime',
               'task.effort.add', 'task.effort.remove', 'task.budget', 
               'task.percentageComplete', 'task.priority', 
               task.Task.hourlyFeeChangedEventType(), 

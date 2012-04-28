@@ -51,8 +51,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         maxDateTime = self.maxDateTime    
         self.__dueDateTime = dueDateTime or maxDateTime
         self.__plannedStartDateTime = plannedStartDateTime or maxDateTime
-        self.__actualStartDateTime = Attribute(actualStartDateTime or maxDateTime, self,
-                                               self.actualStartDateTimeEvent)
+        self.__actualStartDateTime = actualStartDateTime or maxDateTime
         if completionDateTime is None and percentageComplete == 100:
             completionDateTime = date.Now()
         self.__completionDateTime = Attribute(completionDateTime or maxDateTime, 
@@ -96,7 +95,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def __setstate__(self, state, event=None):
         super(Task, self).__setstate__(state, event=event)
         self.setPlannedStartDateTime(state['plannedStartDateTime'])
-        self.setActualStartDateTime(state['actualStartDateTime'], event=event)
+        self.setActualStartDateTime(state['actualStartDateTime'])
         self.setDueDateTime(state['dueDateTime'])
         self.setCompletionDateTime(state['completionDateTime'], event=event)
         self.setPercentageComplete(state['percentageComplete'], event=event)
@@ -116,7 +115,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         state = super(Task, self).__getstate__()
         state.update(dict(dueDateTime=self.__dueDateTime, 
             plannedStartDateTime=self.__plannedStartDateTime,
-            actualStartDateTime=self.__actualStartDateTime.get(),
+            actualStartDateTime=self.__actualStartDateTime,
             completionDateTime=self.__completionDateTime.get(),
             percentageComplete=self.__percentageComplete.get(),
             children=self.children(), parent=self.parent(), 
@@ -134,7 +133,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         state = super(Task, self).__getcopystate__()
         state.update(dict(plannedStartDateTime=self.__plannedStartDateTime, 
             dueDateTime=self.__dueDateTime, 
-            actualStartDateTime=self.__actualStartDateTime.get(), 
+            actualStartDateTime=self.__actualStartDateTime, 
             completionDateTime=self.__completionDateTime.get(),
             percentageComplete=self.__percentageComplete.get(), 
             efforts=[effort.copy() for effort in self._efforts], 
@@ -181,7 +180,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if child.plannedStartDateTime() < self.plannedStartDateTime():
             self.setPlannedStartDateTime(child.plannedStartDateTime())
         if child.actualStartDateTime() < self.actualStartDateTime():
-            self.setActualStartDateTime(child.actualStartDateTime(), event=event)
+            self.setActualStartDateTime(child.actualStartDateTime())
         self.recomputeAppearance(recursive=False, event=event)
         child.recomputeAppearance(recursive=True, event=event)
 
@@ -355,24 +354,28 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if recursive:
             childrenActualStartDateTimes = [child.actualStartDateTime(recursive=True) for child in \
                                       self.children() if not child.completed()]
-            return min(childrenActualStartDateTimes + [self.__actualStartDateTime.get()])
+            return min(childrenActualStartDateTimes + [self.__actualStartDateTime])
         else:
-            return self.__actualStartDateTime.get()
+            return self.__actualStartDateTime
     
-    @patterns.eventSource
-    def setActualStartDateTime(self, actualStartDateTime, event=None, recursive=False):
-        self.__actualStartDateTime.set(actualStartDateTime, event=event)
+    def setActualStartDateTime(self, actualStartDateTime, recursive=False):
+        if actualStartDateTime == self.__actualStartDateTime:
+            return
+        self.__actualStartDateTime = actualStartDateTime
         if recursive:
             for child in self.children(recursive=True):
-                child.setActualStartDateTime(actualStartDateTime, event=event)
+                child.setActualStartDateTime(actualStartDateTime)
         parent = self.parent()
         if parent and actualStartDateTime < parent.actualStartDateTime():
-            parent.setActualStartDateTime(actualStartDateTime, event=event)
-        self.recomputeAppearance(event=event)
-        
-    def actualStartDateTimeEvent(self, event):
-        actualStartDateTime = self.actualStartDateTime()
-        event.addSource(self, actualStartDateTime, type='task.actualStartDateTime')
+            parent.setActualStartDateTime(actualStartDateTime)
+        self.markDirty()
+        self.recomputeAppearance()
+        pub.sendMessage(self.actualStartDateTimeChangedEventType(), 
+                        newValue=actualStartDateTime, sender=self)
+
+    @classmethod
+    def actualStartDateTimeChangedEventType(class_):
+        return 'pubsub.task.actualStartDateTime'
 
     @staticmethod
     def actualStartDateTimeSortFunction(**kwargs):
@@ -382,7 +385,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def actualStartDateTimeSortEventTypes(class_):
         ''' The event types that influence the actual start date time sort order. '''
-        return ('task.actualStartDateTime',)
+        return (class_.actualStartDateTimeChangedEventType(),)
         
     # Completion date
             
@@ -558,7 +561,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         wasTracking = self.isBeingTracked()
         self._efforts.append(effort)
         if effort.getStart() < self.actualStartDateTime():
-            self.setActualStartDateTime(effort.getStart(), event=event)
+            self.setActualStartDateTime(effort.getStart())
         self.addEffortEvent(event, effort)
         if effort.isBeingTracked() and not wasTracking:
             self.startTrackingEvent(event, effort)
@@ -892,7 +895,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         elif oldPercentage == 100 and percentage != 100 and self.completionDateTime() != self.maxDateTime:
             self.setCompletionDateTime(self.maxDateTime, event=event)
         if 0 < percentage < 100 and self.actualStartDateTime() == date.DateTime():
-            self.setActualStartDateTime(date.Now(), event=event)
+            self.setActualStartDateTime(date.Now())
     
     def percentageCompleteEvent(self, event):
         event.addSource(self, self.percentageComplete(), 
@@ -1115,7 +1118,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                                                                         microsecond=currentPlannedStartDateTime.microsecond)
             self.setPlannedStartDateTime(nextPlannedStartDateTime)
         
-        self.setActualStartDateTime(date.DateTime(), event=event)
+        self.setActualStartDateTime(date.DateTime())
         self.setPercentageComplete(0, event=event)
         if self.reminder(includeSnooze=False):
             nextReminder = recur(self.reminder(includeSnooze=False), next=False)
@@ -1149,13 +1152,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @patterns.eventSource
     def setPrerequisites(self, prerequisites, event=None):
         if self.__prerequisites.set(set(prerequisites), event=event):
-            self.setActualStartDateTime(self.maxDateTime, event=event, recursive=True)
+            self.setActualStartDateTime(self.maxDateTime, recursive=True)
             self.recomputeAppearance(recursive=True, event=event)
         
     @patterns.eventSource
     def addPrerequisites(self, prerequisites, event=None):
         if self.__prerequisites.add(set(prerequisites), event=event):
-            self.setActualStartDateTime(self.maxDateTime, event=event, recursive=True)
+            self.setActualStartDateTime(self.maxDateTime, recursive=True)
             self.recomputeAppearance(recursive=True, event=event)
         
     @patterns.eventSource
@@ -1335,7 +1338,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         eventTypes = super(Task, class_).modificationEventTypes()
         return eventTypes + [class_.plannedStartDateTimeChangedEventType(), 
                              class_.dueDateTimeChangedEventType(), 
-                             'task.actualStartDateTime', 'task.completionDateTime', 
+                             class_.actualStartDateTimeChangedEventType(), 
+                             'task.completionDateTime', 
                              'task.effort.add', 'task.effort.remove', 
                              'task.budget', 'task.percentageComplete', 
                              'task.priority', 

@@ -50,8 +50,8 @@ class TaskFileTestCase(test.TestCase):
         self.taskFile.categories().append(self.category)
         self.note = note.Note()
         self.taskFile.notes().append(self.note)
-        self.effort = effort.Effort(self.task, date.DateTime(2004,1,1),
-                                               date.DateTime(2004,1,2))
+        self.effort = effort.Effort(self.task, date.DateTime(2004, 1, 1),
+                                               date.DateTime(2004, 1, 2))
         self.task.addEffort(self.effort)
         self.filename = 'test.tsk'
         self.filename2 = 'test2.tsk'

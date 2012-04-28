@@ -32,7 +32,7 @@ class ViewFilter(tasklist.TaskListQueryMixin, base.Filter):
         
     def registerObservers(self):
         registerObserver = patterns.Publisher().registerObserver
-        for eventType in ('task.actualStartDateTime', 
+        for eventType in (task.Task.actualStartDateTimeChangedEventType(), 
                           task.Task.plannedStartDateTimeChangedEventType(),
                           task.Task.dueDateTimeChangedEventType(), 
                           'task.completionDateTime', 

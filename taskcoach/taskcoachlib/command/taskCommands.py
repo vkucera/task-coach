@@ -272,7 +272,7 @@ class MarkActiveCommand(base.SaveStateMixin, base.BaseCommand):
     def do_command(self, event=None):
         super(MarkActiveCommand, self).do_command()
         for item in self.items:
-            item.setActualStartDateTime(task.Task.suggestedActualStartDateTime(), event=event)
+            item.setActualStartDateTime(task.Task.suggestedActualStartDateTime())
             item.setCompletionDateTime(date.DateTime(), event=event)
 
     def undo_command(self):
@@ -298,7 +298,7 @@ class MarkInactiveCommand(base.SaveStateMixin, base.BaseCommand):
     def do_command(self, event=None):
         super(MarkInactiveCommand, self).do_command()
         for item in self.items:
-            item.setActualStartDateTime(date.DateTime(), event=event)
+            item.setActualStartDateTime(date.DateTime())
             item.setCompletionDateTime(date.DateTime(), event=event)
 
     def undo_command(self):
