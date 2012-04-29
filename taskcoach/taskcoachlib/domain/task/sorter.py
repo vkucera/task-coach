@@ -24,8 +24,7 @@ import task
 
 class Sorter(base.TreeSorter):
     DomainObjectClass = task.Task  # What are we sorting
-    TaskStatusAttributes = ('completionDateTime',
-                            'prerequisites')
+    TaskStatusAttributes = ('prerequisites',)
     
     def __init__(self, *args, **kwargs):
         self.__treeMode = kwargs.pop('treeMode', False)
@@ -41,6 +40,8 @@ class Sorter(base.TreeSorter):
                       task.Task.plannedStartDateTimeChangedEventType())
         pub.subscribe(self.onAttributeChanged, 
                       task.Task.actualStartDateTimeChangedEventType())
+        pub.subscribe(self.onAttributeChanged,
+                      task.Task.completionDateTimeChangedEventType())
     
     @patterns.eventSource       
     def setTreeMode(self, treeMode=True, event=None):
@@ -76,14 +77,13 @@ class Sorter(base.TreeSorter):
             return lambda task: []
 
     def _registerObserverForAttribute(self, attribute):
-        # Sorter is always observing completion date, planned start date and 
-        # prerequisites because sorting by status depends on those attributes. 
-        # Hence we don't need to subscribe to these attributes when they become 
-        # the sort key.
-        if attribute not in self.TaskStatusAttributes + ('dueDateTime', 'plannedStartDateTime', 'actualStartDateTime'):
+        # Sorter is always observing task dates and prerequisites because 
+        # sorting by status depends on those attributes. Hence we don't need
+        # to subscribe to these attributes when they become the sort key.
+        if attribute not in self.TaskStatusAttributes + ('dueDateTime', 'plannedStartDateTime', 'actualStartDateTime', 'completionDateTime'):
             super(Sorter, self)._registerObserverForAttribute(attribute)
             
     def _removeObserverForAttribute(self, attribute):
         # See comment at _registerObserverForAttribute.
-        if attribute not in self.TaskStatusAttributes + ('dueDateTime', 'plannedStartDateTime', 'actualStartDateTime'):
+        if attribute not in self.TaskStatusAttributes + ('dueDateTime', 'plannedStartDateTime', 'actualStartDateTime', 'completionDateTime'):
             super(Sorter, self)._removeObserverForAttribute(attribute)

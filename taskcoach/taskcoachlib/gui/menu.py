@@ -694,7 +694,7 @@ class StartEffortForTaskMenu(DynamicMenu):
                           task.Task.plannedStartDateTimeChangedEventType(),
                           task.Task.dueDateTimeChangedEventType(), 
                           task.Task.actualStartDateTimeChangedEventType(),
-                          'task.completionDateTime'):
+                          task.Task.completionDateTimeChangedEventType()):
             if eventType.startswith('pubsub'):
                 pub.subscribe(self.onUpdateMenu, eventType)
             else:

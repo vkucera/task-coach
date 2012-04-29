@@ -318,7 +318,8 @@ class TimelineViewer(BaseTaskTreeViewer):
         super(TimelineViewer, self).__init__(*args, **kwargs)
         for eventType in (task.Task.subjectChangedEventType(), 
             task.Task.plannedStartDateTimeChangedEventType(),
-            task.Task.dueDateTimeChangedEventType(), 'task.completionDateTime'):
+            task.Task.dueDateTimeChangedEventType(), 
+            task.Task.completionDateTimeChangedEventType()):
             if eventType.startswith('pubsub'):
                 pub.subscribe(self.onAttributeChanged, eventType)
             else:
@@ -435,7 +436,7 @@ class SquareTaskViewer(BaseTaskTreeViewer):
         for eventType in (task.Task.subjectChangedEventType(),
             task.Task.dueDateTimeChangedEventType(),
             task.Task.plannedStartDateTimeChangedEventType(),
-            'task.completionDateTime'):
+            task.Task.completionDateTimeChangedEventType()):
             if eventType.startswith('pubsub'):
                 pub.subscribe(self.onAttributeChanged, eventType)
             else:
@@ -573,7 +574,7 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         for eventType in (task.Task.subjectChangedEventType(), 
                           task.Task.plannedStartDateTimeChangedEventType(),
                           task.Task.dueDateTimeChangedEventType(), 
-                          'task.completionDateTime',
+                          task.Task.completionDateTimeChangedEventType(),
                           task.Task.attachmentsChangedEventType(),
                           task.Task.notesChangedEventType(),
                           task.Task.trackStartEventType(), task.Task.trackStopEventType()):
@@ -771,7 +772,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable-msg=W0223
         # pylint: disable-msg=E1101,W0142
         columns = [widgets.Column('subject', _('Subject'), 
                 task.Task.subjectChangedEventType(), 
-                'task.completionDateTime', 
+                task.Task.completionDateTimeChangedEventType(),
                 task.Task.dueDateTimeChangedEventType(),
                 task.Task.actualStartDateTimeChangedEventType(),
                 task.Task.plannedStartDateTimeChangedEventType(),

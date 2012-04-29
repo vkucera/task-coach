@@ -30,7 +30,8 @@ class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
         self.categories = category.CategoryList()
         self.category = category.Category('cat')
         self.categories.append(self.category)
-        self.task1 = task.Task('task1', plannedStartDateTime=date.Now(), dueDateTime=date.Now()+date.oneHour)
+        self.task1 = task.Task('task1', plannedStartDateTime=date.Now(), 
+                               dueDateTime=date.Now() + date.oneHour)
         self.task2 = task.Task('task2', plannedStartDateTime=date.Now())
         self.taskList.append(self.task1)
         self.originalList = [self.task1]
@@ -44,7 +45,7 @@ class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
             items = list(self.list)
         command.DeleteTaskCommand(self.list, items or [], shadow=shadow).do()
  
-    def paste(self, items=None): # pylint: disable-msg=W0221
+    def paste(self, items=None):  # pylint: disable-msg=W0221
         if items:
             command.PasteAsSubItemCommand(self.taskList, items).do()
         else:
@@ -109,7 +110,7 @@ class CommandWithEffortTestCase(TaskCommandTestCase):
         self.effort1 = effort.Effort(self.task1)
         self.task1.addEffort(self.effort1)
         self.effort2 = effort.Effort(self.task2, 
-            date.DateTime(2004,1,1), date.DateTime(2004,1,2))
+            date.DateTime(2004, 1, 1), date.DateTime(2004, 1, 2))
         self.task2.addEffort(self.effort2)
         self.taskList.append(self.task2)
         self.originalEffortList = [self.effort1, self.effort2]
@@ -336,7 +337,7 @@ class NewSubTaskCommandTest(TaskCommandTestCase):
             lambda: self.assertTaskList(self.originalList))
 
     def assertNewSubTask(self, newSubTask):
-        self.assertEqual(len(self.originalList)+1, len(self.taskList))
+        self.assertEqual(len(self.originalList) + 1, len(self.taskList))
         self.assertEqualLists([newSubTask], self.task1.children())
 
     def testNewSubTask_MarksParentAsNotCompleted(self):
@@ -560,7 +561,7 @@ class PriorityCommandTestCase(TaskCommandTestCase):
         super(PriorityCommandTestCase, self).setUp()
         self.taskList.append(self.task2)
 
-    def assertDoUndoRedo(self, priority1do, priority2do, priority1undo, priority2undo): # pylint: disable-msg=W0221
+    def assertDoUndoRedo(self, priority1do, priority2do, priority1undo, priority2undo):  # pylint: disable-msg=W0221
         super(PriorityCommandTestCase, self).assertDoUndoRedo(
             lambda: self.failUnless(priority1do == self.task1.priority() and
                     priority2do == self.task2.priority()),
