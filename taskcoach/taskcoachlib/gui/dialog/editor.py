@@ -137,7 +137,8 @@ class TaskSubjectPage(SubjectPage):
             value=currentPriority)
         self._prioritySync = attributesync.AttributeSync('priority', 
             self._priorityEntry, currentPriority, self.items,
-            command.EditPriorityCommand, wx.EVT_SPINCTRL, 'task.priority')
+            command.EditPriorityCommand, wx.EVT_SPINCTRL, 
+            self.items[0].priorityChangedEventType())
         self.addEntry(_('Priority'), self._priorityEntry, flags=[None, wx.ALL])
             
     def entries(self):
