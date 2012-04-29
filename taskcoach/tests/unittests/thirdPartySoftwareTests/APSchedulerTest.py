@@ -16,9 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
 from taskcoachlib.domain import date
 from taskcoachlib.thirdparty import apscheduler
+import test
 
 
 class APSchedulerTest(test.TestCase):
@@ -36,14 +36,7 @@ class APSchedulerTest(test.TestCase):
         while self.jobCalled == 0:
             pass
         self.assertEqual(1, self.jobCalled)
-        
-    def testScheduleTwoJobs(self):
-        self.scheduler.add_date_job(self.job, date.Now() + date.TimeDelta(microseconds=650))
-        self.scheduler.add_date_job(self.job, date.Now() + date.TimeDelta(microseconds=700))
-        while self.scheduler.get_jobs():
-            pass
-        self.assertEqual(2, self.jobCalled)
-        
+
     def testScheduleJobInThePastRaisesValueError(self):
         self.assertRaises(ValueError, 
                           lambda: self.scheduler.add_date_job(self.job, date.Now() - date.TimeDelta(microseconds=500)))
@@ -54,4 +47,3 @@ class APSchedulerTest(test.TestCase):
             pass
         self.assertEqual(2, self.jobCalled)
         self.scheduler.unschedule_func(self.job)
-        
