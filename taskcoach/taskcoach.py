@@ -18,7 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import sys, os
+import os
+import sys
 # Workaround for a bug in Ubuntu 10.10
 os.environ['XLIB_SKIP_ARGB_VISUALS'] = '1'
 
@@ -30,17 +31,12 @@ if not hasattr(sys, "frozen"):
     try:
         import taskcoachlib  # pylint: disable-msg=W0611
     except ImportError:
-        # On Ubuntu 12.04 this happens. Don't understand why. 
-        # This should fix it.
-        sys.path.append('/usr/share/pyshared')
-        try:
-            import taskcoachlib  # pylint: disable-msg=W0611
-        except ImportError:
-            sys.stderr.write('''ERROR: cannot import the library 'taskcoachlib'.
+        sys.stderr.write('''ERROR: cannot import the library 'taskcoachlib'.
 Please see https://answers.launchpad.net/taskcoach/+faq/1063 
 for more information and possible resolutions.
 ''')
-            sys.exit(1)
+        sys.exit(1)
+
 
 def start():
     # pylint: disable-msg=W0404
