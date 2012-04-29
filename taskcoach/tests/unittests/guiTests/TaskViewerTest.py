@@ -763,15 +763,17 @@ class CommonTestsMixin(object):
 
     def testChangeCompletionDateWhileColumnNotShown(self):
         self.taskList.append(self.task)
-        self.task.setCompletionDateTime(date.Now())
+        now = date.Now()
+        self.task.setCompletionDateTime(now)
         # We still get an event for the subject column:
-        self.failUnless(task.Task.completionDateTimeChangedEventType() in self.viewer.events_deprecated[0].types())
+        self.failUnless((now, self.task) in self.viewer.events)
 
     def testChangeCompletionDateWhileColumnShown(self):
         self.taskList.append(self.task)
         self.showColumn('completionDate')
-        self.task.setCompletionDateTime(date.Now())
-        self.failUnless(task.Task.completionDateTimeChangedEventType() in self.viewer.events_deprecated[0].types())
+        now = date.Now()
+        self.task.setCompletionDateTime(now)
+        self.failUnless((now, self.task) in self.viewer.events)
 
     def testChangePercentageCompleteWhileColumnNotShown(self):
         self.taskList.append(self.task)

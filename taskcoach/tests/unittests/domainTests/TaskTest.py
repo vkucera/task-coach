@@ -335,16 +335,25 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.assertEqual(now, self.task.completionDateTime())
 
     def testSetCompletionDateTimeNotification(self):
-        self.registerObserver(task.Task.completionDateTimeChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+        
+        pub.subscribe(onEvent, task.Task.completionDateTimeChangedEventType())
         now = date.Now()
         self.task.setCompletionDateTime(now)
-        self.assertEqual([patterns.Event(task.Task.completionDateTimeChangedEventType(),
-                                         self.task, now)], self.events)
+        self.assertEqual([(now, self.task)], events)
 
     def testSetCompletionDateTimeUnchangedCausesNoNotification(self):
-        self.registerObserver(task.Task.completionDateTimeChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+        
+        pub.subscribe(onEvent, task.Task.completionDateTimeChangedEventType())
         self.task.setCompletionDateTime(date.DateTime())
-        self.failIf(self.events)
+        self.failIf(events)
 
     def testSetCompletionDateTimeMakesTaskCompleted(self):
         self.task.setCompletionDateTime()

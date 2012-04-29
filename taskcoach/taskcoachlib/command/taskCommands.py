@@ -238,21 +238,18 @@ class MarkCompletedCommand(base.SaveStateMixin, EffortCommand):
         itemsToSave = set([relative for item in self.items for relative in item.family()]) 
         self.saveStates(itemsToSave)
 
-    @patterns.eventSource
-    def do_command(self, event=None):
-        super(MarkCompletedCommand, self).do_command(event=event)
+    def do_command(self):
+        super(MarkCompletedCommand, self).do_command()
         for item in self.items:
-            item.setCompletionDateTime(task.Task.suggestedCompletionDateTime(), event=event)
+            item.setCompletionDateTime(task.Task.suggestedCompletionDateTime())
 
-    @patterns.eventSource
-    def undo_command(self, event=None):
-        self.undoStates(event=event)
-        super(MarkCompletedCommand, self).undo_command(event=event)
+    def undo_command(self):
+        self.undoStates()
+        super(MarkCompletedCommand, self).undo_command()
 
-    @patterns.eventSource
-    def redo_command(self, event=None):
-        self.redoStates(event=event)
-        super(MarkCompletedCommand, self).redo_command(event=event)
+    def redo_command(self):
+        self.redoStates()
+        super(MarkCompletedCommand, self).redo_command()
 
     def tasksToStopTracking(self):
         return self.items                
@@ -273,7 +270,7 @@ class MarkActiveCommand(base.SaveStateMixin, base.BaseCommand):
         super(MarkActiveCommand, self).do_command()
         for item in self.items:
             item.setActualStartDateTime(task.Task.suggestedActualStartDateTime())
-            item.setCompletionDateTime(date.DateTime(), event=event)
+            item.setCompletionDateTime(date.DateTime())
 
     def undo_command(self):
         self.undoStates()
@@ -294,12 +291,11 @@ class MarkInactiveCommand(base.SaveStateMixin, base.BaseCommand):
         itemsToSave = set([relative for item in self.items for relative in item.family()]) 
         self.saveStates(itemsToSave)
 
-    @patterns.eventSource
-    def do_command(self, event=None):
+    def do_command(self):
         super(MarkInactiveCommand, self).do_command()
         for item in self.items:
             item.setActualStartDateTime(date.DateTime())
-            item.setCompletionDateTime(date.DateTime(), event=event)
+            item.setCompletionDateTime(date.DateTime())
 
     def undo_command(self):
         self.undoStates()

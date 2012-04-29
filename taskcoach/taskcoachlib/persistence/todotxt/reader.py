@@ -67,7 +67,7 @@ class TodoTxtReader(object):
         
         newTask.setPriority(priority)
         newTask.setPlannedStartDateTime(plannedStartDateTime)
-        newTask.setCompletionDateTime(completionDateTime, event=event)
+        newTask.setCompletionDateTime(completionDateTime)
         newTask.setDueDateTime(dueDateTime)
         for eachCategory in categories:
             newTask.addCategory(eachCategory, event=event)
