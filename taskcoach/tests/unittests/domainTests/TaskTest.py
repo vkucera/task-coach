@@ -420,14 +420,24 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.assertEqual(10, self.task.priority())
 
     def testSetPriorityCausesNotification(self):
-        self.registerObserver(task.Task.priorityChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.priorityChangedEventType())
         self.task.setPriority(10)
-        self.assertEqual(10, self.events[0].value())
+        self.assertEqual((10, self.task), events[0])
 
     def testSetPriorityUnchangedCausesNoNotification(self):
-        self.registerObserver(task.Task.priorityChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.priorityChangedEventType())
         self.task.setPriority(self.task.priority())
-        self.failIf(self.events)
+        self.failIf(events)
 
     def testNegativePriority(self):
         self.task.setPriority(-1)
@@ -588,15 +598,25 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.failIf(self.events)
 
     def testAddChildWithHigherPriorityCausesPriorityNotification(self):
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.priorityChangedEventType())
         child = task.Task(priority=10)
-        self.registerObserver(task.Task.priorityChangedEventType())
         self.task.addChild(child)
-        self.assertEvent(task.Task.priorityChangedEventType(), self.task, 0) 
+        self.assertEqual([(0, self.task)], events) 
 
     def testAddChildWithLowerPriorityCausesNoPriorityNotification(self):
-        self.registerObserver(task.Task.priorityChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.priorityChangedEventType())
         self.task.addChild(task.Task(priority=-10))
-        self.failIf(self.events)
+        self.failIf(events)
 
     def testAddChildWithRevenueCausesRevenueNotification(self):
         self.registerObserver('task.revenue')
@@ -1342,16 +1362,26 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
         self.failIf(self.events)
 
     def testRemoveChildWithHighPriorityCausesPriorityNotification(self):
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
         self.task1_1.setPriority(10)
-        self.registerObserver(task.Task.priorityChangedEventType())
+        pub.subscribe(onEvent, task.Task.priorityChangedEventType())
         self.task1.removeChild(self.task1_1)
-        self.assertEvent(task.Task.priorityChangedEventType(), self.task1, 0) 
+        self.assertEqual([(0, self.task1)], events) 
 
     def testRemoveChildWithLowPriorityCausesNoTotalPriorityNotification(self):
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+        
         self.task1_1.setPriority(-10)
-        self.registerObserver('task.totalPriority')
+        pub.subscribe(onEvent, task.Task.priorityChangedEventType())
         self.task1.removeChild(self.task1_1)
-        self.failIf(self.events)
+        self.failIf(events)
 
     def testRemoveChildWithRevenueCausesTotalRevenueNotification(self):
         self.task1_1.setFixedFee(1000)
@@ -1524,14 +1554,24 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
         self.assertEvent('task.timeSpent', self.task1, childEffort)
 
     def testRecursivePriorityNotification(self):
-        self.registerObserver(task.Task.priorityChangedEventType(), eventSource=self.task1)
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.priorityChangedEventType())
         self.task1_1.setPriority(10)
-        self.assertEvent(task.Task.priorityChangedEventType(), self.task1, 10)
+        self.assertEqual([(10, self.task1_1), (0, self.task1)], events)
 
     def testPriorityNotification_WithLowerChildPriority(self):
-        self.registerObserver(task.Task.priorityChangedEventType(), eventSource=self.task1)
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.priorityChangedEventType())
         self.task1_1.setPriority(-1)
-        self.assertEvent(task.Task.priorityChangedEventType(), self.task1, 0)
+        self.assertEqual([(-1, self.task1_1), (0, self.task1)], events)
         
     def testRevenueNotificationWhenChildHasEffortAdded(self):
         self.registerObserver('task.revenue', eventSource=self.task1)
@@ -2227,15 +2267,25 @@ class RecursivePriorityFixture(TaskTestCase, CommonTaskTestsMixin):
         self.assertEqual(1, self.task1.priority(recursive=True))
         
     def testPriorityNotificationWhenMarkingChildCompleted(self):
-        self.registerObserver(task.Task.priorityChangedEventType(), eventSource=self.task1)
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.priorityChangedEventType())
         self.task1_1.setCompletionDateTime()
-        self.assertEvent(task.Task.priorityChangedEventType(), self.task1, 1)
+        self.assertEqual((1, self.task1), events[0])
         
     def testPriorityNotificationWhenMarkingChildUncompleted(self):
         self.task1_1.setCompletionDateTime()
-        self.registerObserver(task.Task.priorityChangedEventType(), eventSource=self.task1)
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.priorityChangedEventType())
         self.task1_1.setCompletionDateTime(date.DateTime())
-        self.assertEvent(task.Task.priorityChangedEventType(), self.task1, 2)
+        self.assertEqual((1, self.task1), events[0])
 
 
 class TaskWithFixedFeeFixture(TaskTestCase, CommonTaskTestsMixin):

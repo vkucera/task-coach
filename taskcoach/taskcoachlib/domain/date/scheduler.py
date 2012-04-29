@@ -37,11 +37,21 @@ class Scheduler(apscheduler.scheduler.Scheduler):
         # apscheduler logs, but doesn't provide a default handler itself, make it happy:
         schedulerLogger = logging.getLogger('taskcoachlib.thirdparty.apscheduler.scheduler')
         try:
-            schedulerLogger.addHandler(logging.NullHandler())
+            self.__handler = logging.NullHandler()
         except AttributeError:
             # NullHandler is new in Python 2.7, log to stderr if not available
-            schedulerLogger.addHandler(logging.StreamHandler())
-            
+            self.__handler = logging.StreamHandler()
+        schedulerLogger.addHandler(self.__handler)
+
+    def removeLogHandler(self):
+        # accumulation of handlers in the unit/language/etc tests makes them *slow*
+        schedulerLogger = logging.getLogger('taskcoachlib.thirdparty.apscheduler.scheduler')
+        schedulerLogger.removeHandler(self.__handler)
+
+    def shutdown(self, wait=True, shutdown_threadpool=True):
+        super(Scheduler, self).shutdown(wait=wait, shutdown_threadpool=shutdown_threadpool)
+        self.removeLogHandler()
+
     def schedule(self, function, dateTime):
         def callback():
             if function in self.__jobs:

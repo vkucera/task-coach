@@ -368,18 +368,16 @@ class ExtremePriorityCommand(base.BaseCommand): # pylint: disable-msg=W0223
         self.oldExtremePriority = self.getOldExtremePriority()
         
     def getOldExtremePriority(self):
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
-    @patterns.eventSource
-    def setNewExtremePriority(self, event=None):
+    def setNewExtremePriority(self):
         newExtremePriority = self.oldExtremePriority + self.delta 
         for item in self.items:
-            item.setPriority(newExtremePriority, event=event)
+            item.setPriority(newExtremePriority)
 
-    @patterns.eventSource
-    def restorePriorities(self, event=None):
+    def restorePriorities(self):
         for item, oldPriority in zip(self.items, self.oldPriorities):
-            item.setPriority(oldPriority, event=event)
+            item.setPriority(oldPriority)
 
     def do_command(self):
         super(ExtremePriorityCommand, self).do_command()
@@ -414,13 +412,12 @@ class MinPriorityCommand(ExtremePriorityCommand):
         return self.list.minPriority()
     
 
-class ChangePriorityCommand(base.BaseCommand): # pylint: disable-msg=W0223
+class ChangePriorityCommand(base.BaseCommand):  # pylint: disable-msg=W0223
     delta = 'Subclass responsibility'
     
-    @patterns.eventSource
-    def changePriorities(self, delta, event=None):
+    def changePriorities(self, delta):
         for item in self.items:
-            item.setPriority(item.priority() + delta, event=event)
+            item.setPriority(item.priority() + delta)
 
     def do_command(self):
         super(ChangePriorityCommand, self).do_command()
@@ -456,15 +453,13 @@ class EditPriorityCommand(base.BaseCommand):
         super(EditPriorityCommand, self).__init__(*args, **kwargs)
         self.__oldPriorities = [item.priority() for item in self.items]
 
-    @patterns.eventSource
-    def do_command(self, event=None):
+    def do_command(self):
         for item in self.items:
-            item.setPriority(self.__newPriority, event=event)
+            item.setPriority(self.__newPriority)
 
-    @patterns.eventSource
-    def undo_command(self, event=None):
+    def undo_command(self):
         for item, oldPriority in zip(self.items, self.__oldPriorities):
-            item.setPriority(oldPriority, event=event)
+            item.setPriority(oldPriority)
 
     def redo_command(self):
         self.do_command()

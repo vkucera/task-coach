@@ -855,7 +855,8 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable-msg=W0223
             ('budget', _('Budget'), inplace_editor.BudgetCtrl, self.onEditBudget, [task.Task.expansionChangedEventType(), task.Task.budgetChangedEventType()]),            
             ('timeSpent', _('Time spent'), None, None, [task.Task.expansionChangedEventType(), 'task.timeSpent']),
             ('budgetLeft', _('Budget left'), None, None, [task.Task.expansionChangedEventType(), 'task.budgetLeft']),            
-            ('priority', _('Priority'), inplace_editor.PriorityCtrl, self.onEditPriority, [task.Task.expansionChangedEventType(), task.Task.priorityChangedEventType()]),
+            ('priority', _('Priority'), inplace_editor.PriorityCtrl, self.onEditPriority, 
+                 [task.Task.expansionChangedEventType(), task.Task.priorityChangedEventType()]),
             ('hourlyFee', _('Hourly fee'), inplace_editor.AmountCtrl, self.onEditHourlyFee, [task.Task.hourlyFeeChangedEventType()]),
             ('fixedFee', _('Fixed fee'), inplace_editor.AmountCtrl, self.onEditFixedFee, [task.Task.expansionChangedEventType(), task.Task.fixedFeeChangedEventType()]),            
             ('revenue', _('Revenue'), None, None, [task.Task.expansionChangedEventType(), 'task.revenue'])]:

@@ -62,7 +62,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__budget = Attribute(budget or date.TimeDelta(), self, 
                                   self.budgetEvent)
         self._efforts = efforts or []
-        self.__priority = Attribute(priority, self, self.priorityEvent)
+        self.__priority = priority
         self.__hourlyFee = Attribute(hourlyFee, self, self.hourlyFeeEvent)
         self.__fixedFee = Attribute(fixedFee, self, self.fixedFeeEvent)
         self.__reminder = Attribute(reminder or maxDateTime, self, self.reminderEvent)
@@ -103,7 +103,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.setReminder(state['reminder'], event=event)
         self.setEfforts(state['efforts'], event=event)
         self.setBudget(state['budget'], event=event)
-        self.setPriority(state['priority'], event=event)
+        self.setPriority(state['priority'])
         self.setHourlyFee(state['hourlyFee'], event=event)
         self.setFixedFee(state['fixedFee'], event=event)
         self.setPrerequisites(state['prerequisites'], event=event)
@@ -120,7 +120,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             percentageComplete=self.__percentageComplete.get(),
             children=self.children(), parent=self.parent(), 
             efforts=self._efforts, budget=self.__budget.get(), 
-            priority=self.__priority.get(), 
+            priority=self.__priority,
             hourlyFee=self.__hourlyFee.get(), fixedFee=self.__fixedFee.get(), 
             recurrence=self._recurrence.copy(),
             reminder=self.__reminder.get(),
@@ -137,7 +137,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             completionDateTime=self.__completionDateTime.get(),
             percentageComplete=self.__percentageComplete.get(), 
             efforts=[effort.copy() for effort in self._efforts], 
-            budget=self.__budget.get(), priority=self.__priority.get(), 
+            budget=self.__budget.get(), priority=self.__priority,
             hourlyFee=self.__hourlyFee.get(), fixedFee=self.__fixedFee.get(), 
             recurrence=self._recurrence.copy(),
             reminder=self.__reminder.get(), 
@@ -221,7 +221,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                                   (childHasBudget or self.budget())):
             self.budgetLeftEvent(event)
         if childPriority > self.priority():
-            self.priorityEvent(event)
+            self.sendPriorityChangedMessage()
+            
         if child.isBeingTracked(recursive=True):
             activeEfforts = child.activeEfforts(recursive=True)
             if self.isBeingTracked(recursive=True):
@@ -419,7 +420,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             self.__status = None
             self.__completionDateTime.set(completionDateTime, event=event)
             if parent and parent.priority(recursive=True) != oldParentPriority:
-                self.priorityEvent(event)              
+                parent.sendPriorityChangedMessage()           
             if completionDateTime != self.maxDateTime:
                 self.setReminder(None, event=event)
                 self.setPercentageComplete(100, event=event)
@@ -941,23 +942,28 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             childPriorities = [child.priority(recursive=True) \
                                for child in self.children() \
                                if not child.completed()]
-            return max(childPriorities + [self.__priority.get()])
+            return max(childPriorities + [self.__priority])
         else:
-            return self.__priority.get()
+            return self.__priority
         
-    def setPriority(self, priority, event=None):
-        self.__priority.set(priority, event=event)
-        
-    def priorityEvent(self, event):
-        event.addSource(self, self.priority(), type=self.priorityChangedEventType())
+    def setPriority(self, priority):
+        if priority == self.__priority:
+            return
+        self.__priority = priority
+        self.sendPriorityChangedMessage()
+    
+    def sendPriorityChangedMessage(self):
+        pub.sendMessage(self.priorityChangedEventType(), 
+                        newValue=self.priority(), sender=self)
         for ancestor in self.ancestors():
-            event.addSource(ancestor, ancestor.priority(recursive=True),
-                            type=self.priorityChangedEventType())
+            pub.sendMessage(ancestor.priorityChangedEventType(), 
+                            newValue=ancestor.priority(),
+                            sender=ancestor)
 
     @classmethod
     def priorityChangedEventType(class_):
-        return '%s.priority' % class_
-
+        return 'pubsub.task.priority'
+    
     @staticmethod
     def prioritySortFunction(**kwargs):
         recursive = kwargs.get('treeMode', False)
