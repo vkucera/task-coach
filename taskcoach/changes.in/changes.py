@@ -25,7 +25,7 @@ releases = [
 Release('1.3.14', 'April 29, 2012',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug('''Task Coach wouldn't start on Ubuntu 12.04.'''),
+        Bug('''Task Coach wouldn't start on Ubuntu 12.04.''', '3522305'),
         ],
     ),
             
