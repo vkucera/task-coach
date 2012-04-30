@@ -882,7 +882,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable-msg=W0223
             renderCallback=self.renderReminder, width=self.getColumnWidth('reminder'),
             alignment=wx.LIST_FORMAT_RIGHT, editControl=inplace_editor.DateTimeCtrl,
             editCallback=self.onEditReminderDateTime, settings=self.settings,
-            *[task.Task.expansionChangedEventType(), 'task.reminder'], **kwargs))
+            *[task.Task.expansionChangedEventType(), task.Task.reminderChangedEventType()], **kwargs))
         return columns
     
     def createColumnUICommands(self):

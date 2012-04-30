@@ -325,7 +325,7 @@ class DatesPage(Page):
         self._reminderDateTimeSync = attributesync.AttributeSync('reminder', 
             self._reminderDateTimeEntry, reminderDateTime, self.items, 
             command.EditReminderDateTimeCommand, entry.EVT_DATETIMEENTRY, 
-            'task.reminder')
+            self.items[0].reminderChangedEventType())
         self.addEntry(_('Reminder'), self._reminderDateTimeEntry)
         
     def addRecurrenceEntry(self):
