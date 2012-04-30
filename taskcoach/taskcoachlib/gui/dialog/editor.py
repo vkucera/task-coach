@@ -302,10 +302,7 @@ class DatesPage(Page):
                                             suggestedDateTime=suggestedDateTime)
         setattr(self, '_%sEntry' % taskMethodName, dateTimeEntry)
         commandClass = getattr(command, 'Edit%sCommand' % TaskMethodName)
-        try:
-            eventType = getattr(task.Task, '%sChangedEventType' % taskMethodName)()
-        except AttributeError:
-            eventType = 'task.%s' % taskMethodName
+        eventType = getattr(self.items[0], '%sChangedEventType' % taskMethodName)()
         keep_delta = self.__keep_delta(taskMethodName)
         datetimeSync = attributesync.AttributeSync(taskMethodName, dateTimeEntry, 
             dateTime, self.items, commandClass, entry.EVT_DATETIMEENTRY, 
@@ -328,7 +325,7 @@ class DatesPage(Page):
         self._reminderDateTimeSync = attributesync.AttributeSync('reminder', 
             self._reminderDateTimeEntry, reminderDateTime, self.items, 
             command.EditReminderDateTimeCommand, entry.EVT_DATETIMEENTRY, 
-            task.Task.reminderChangedEventType())
+            self.items[0].reminderChangedEventType())
         self.addEntry(_('Reminder'), self._reminderDateTimeEntry)
         
     def addRecurrenceEntry(self):

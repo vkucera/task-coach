@@ -63,8 +63,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__priority = priority
         self.__hourlyFee = Attribute(hourlyFee, self, self.hourlyFeeEvent)
         self.__fixedFee = Attribute(fixedFee, self, self.fixedFeeEvent)
-        self.__reminder = Attribute(reminder or maxDateTime, self, self.reminderEvent)
-        self.__reminderBeforeSnooze = reminderBeforeSnooze or self.__reminder.get()
+        self.__reminder = reminder or maxDateTime
+        self.__reminderBeforeSnooze = reminderBeforeSnooze or self.__reminder
         self._recurrence = date.Recurrence() if recurrence is None else recurrence
         self.__prerequisites = SetAttribute(prerequisites or [], self, 
                                             changeEvent=self.prerequisitesEvent)
@@ -98,7 +98,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.setCompletionDateTime(state['completionDateTime'])
         self.setPercentageComplete(state['percentageComplete'])
         self.setRecurrence(state['recurrence'], event=event)
-        self.setReminder(state['reminder'], event=event)
+        self.setReminder(state['reminder'])
         self.setEfforts(state['efforts'], event=event)
         self.setBudget(state['budget'], event=event)
         self.setPriority(state['priority'])
@@ -121,7 +121,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             priority=self.__priority,
             hourlyFee=self.__hourlyFee.get(), fixedFee=self.__fixedFee.get(), 
             recurrence=self._recurrence.copy(),
-            reminder=self.__reminder.get(),
+            reminder=self.__reminder,
             prerequisites=self.__prerequisites.get(),
             dependencies=self.__dependencies.get(),
             shouldMarkCompletedWhenAllChildrenCompleted=self._shouldMarkCompletedWhenAllChildrenCompleted))
@@ -138,7 +138,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             budget=self.__budget.get(), priority=self.__priority,
             hourlyFee=self.__hourlyFee.get(), fixedFee=self.__fixedFee.get(), 
             recurrence=self._recurrence.copy(),
-            reminder=self.__reminder.get(), 
+            reminder=self.__reminder, 
             shouldMarkCompletedWhenAllChildrenCompleted=self._shouldMarkCompletedWhenAllChildrenCompleted))
         return state
 
@@ -1055,29 +1055,38 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def reminder(self, recursive=False, includeSnooze=True):  # pylint: disable-msg=W0613
         if recursive:
             reminders = [child.reminder(recursive=True) for child in \
-                         self.children()] + [self.__reminder.get()]
+                         self.children()] + [self.__reminder]
             reminders = [reminder for reminder in reminders if reminder]
             return min(reminders) if reminders else None
         else:
-            return self.__reminder.get() if includeSnooze else self.__reminderBeforeSnooze
+            return self.__reminder if includeSnooze else self.__reminderBeforeSnooze
 
-    def setReminder(self, reminderDateTime=None, event=None):
+    def setReminder(self, reminderDateTime=None):
         if reminderDateTime == self.maxDateTime:
             reminderDateTime = None
-        self.__reminder.set(reminderDateTime, event=event)
+        if reminderDateTime == self.__reminder:
+            return
+        self.__reminder = reminderDateTime
         self.__reminderBeforeSnooze = reminderDateTime
+        pub.sendMessage(self.reminderChangedEventType(), 
+                        newValue=reminderDateTime, sender=self)
         
-    def snoozeReminder(self, timeDelta, event=None, now=date.Now):
+    def snoozeReminder(self, timeDelta, now=date.Now):
         if timeDelta:
-            self.__reminder.set(now() + timeDelta, event=event)
+            self.__reminder = now() + timeDelta
+            pub.sendMessage(self.reminderChangedEventType(), 
+                            newValue=self.__reminder, sender=self)
         else:
             if self.recurrence():
-                self.__reminder.set(None, event=event)
+                self.__reminder = None
+                pub.sendMessage(self.reminderChangedEventType(), 
+                                newValue=self.__reminder, sender=self)
             else:
-                self.setReminder(event=event)
+                self.setReminder()
 
-    def reminderEvent(self, event):
-        event.addSource(self, self.reminder(), type=self.reminderChangedEventType())
+    @classmethod
+    def reminderChangedEventType(class_):
+        return 'pubsub.task.reminder'
     
     @staticmethod
     def reminderSortFunction(**kwargs):
@@ -1089,10 +1098,6 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def reminderSortEventTypes(class_):
         ''' The event types that influence the reminder sort order. '''
         return (class_.reminderChangedEventType(),)
-
-    @classmethod
-    def reminderChangedEventType(class_):
-        return '%s.reminder' % class_
 
     # Recurrence
     
@@ -1149,7 +1154,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.setPercentageComplete(0)
         if self.reminder(includeSnooze=False):
             nextReminder = recur(self.reminder(includeSnooze=False), next=False)
-            self.setReminder(nextReminder, event=event)
+            self.setReminder(nextReminder)
         for child in self.children():
             if not child.recurrence():
                 child.recur(completionDateTime, event=event)

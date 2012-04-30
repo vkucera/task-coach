@@ -2125,13 +2125,25 @@ class TaskReminderTestCase(TaskTestCase, CommonTaskTestsMixin):
         self.assertReminder(None)
         
     def testTaskNotifiesObserverOfNewReminder(self):
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.reminderChangedEventType())
         newReminder = self.initialReminder() + date.TimeDelta(seconds=1)
         self.task.setReminder(newReminder)
-        self.assertEvent(task.Task.reminderChangedEventType(), self.task, newReminder)
+        self.assertEqual([(newReminder, self.task)], events)
             
     def testNewReminderCancelsPreviousReminder(self):
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.reminderChangedEventType())
         self.task.setReminder()
-        self.assertEvent(task.Task.reminderChangedEventType(), self.task, None)
+        self.assertEqual([(None, self.task)], events)
         
     def testMarkCompletedCancelsReminder(self):
         self.task.setCompletionDateTime()
@@ -2147,13 +2159,13 @@ class TaskReminderTestCase(TaskTestCase, CommonTaskTestsMixin):
                          self.task.reminder(recursive=True))
     
     def testRecursiveReminderWithChildWithLaterReminder(self):
-        self.task.addChild(task.Task(reminder=date.DateTime(3000,1,1)))
+        self.task.addChild(task.Task(reminder=date.DateTime(3000, 1, 1)))
         self.assertEqual(self.initialReminder(), 
                          self.task.reminder(recursive=True))
     
     def testRecursiveReminderWithChildWithEarlierReminder(self):
-        self.task.addChild(task.Task(reminder=date.DateTime(2000,1,1)))
-        self.assertEqual(date.DateTime(2000,1,1), 
+        self.task.addChild(task.Task(reminder=date.DateTime(2000, 1, 1)))
+        self.assertEqual(date.DateTime(2000, 1, 1), 
                          self.task.reminder(recursive=True))
         
         
