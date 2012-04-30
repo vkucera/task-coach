@@ -462,14 +462,22 @@ class SquareTaskViewer(BaseTaskTreeViewer):
         oldChoice = self.__orderBy
         self.__orderBy = choice
         self.settings.set(self.settingsSection(), 'sortby', choice)
-        if oldChoice == 'dueDateTime':
-            pub.unsubscribe(self.onAttributeChanged, task.Task.dueDateTimeChangedEventType())
+        try:
+            oldEventType = getattr(task.Task, '%sChangedEventType' % oldChoice)()
+        except AttributeError:
+            oldEventType = 'task.%s' % oldChoice
+        if oldEventType.startswith('pubsub'):
+            pub.unsubscribe(self.onAttributeChanged, oldEventType)
         else:
-            self.removeObserver(self.onAttributeChanged_Deprecated, 'task.%s' % oldChoice)
-        if choice == 'dueDateTime':
-            pub.subscribe(self.onAttributeChanged, task.Task.dueDateTimeChangedEventType())
+            self.removeObserver(self.onAttributeChanged_Deprecated, oldEventType)
+        try:
+            newEventType = getattr(task.Task, '%sChangedEventType' % choice)()
+        except AttributeError:
+            newEventType = 'task.%s' % choice
+        if newEventType.startswith('pubsub'):
+            pub.subscribe(self.onAttributeChanged, newEventType)
         else:
-            self.registerObserver(self.onAttributeChanged_Deprecated, 'task.%s' % choice)
+            self.registerObserver(self.onAttributeChanged_Deprecated, newEventType)
         if choice in ('budget', 'timeSpent'):
             self.__transformTaskAttribute = lambda timeSpent: timeSpent.milliseconds() / 1000
             self.__zero = date.TimeDelta()
