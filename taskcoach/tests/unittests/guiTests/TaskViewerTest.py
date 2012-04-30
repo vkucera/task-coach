@@ -776,13 +776,13 @@ class CommonTestsMixin(object):
     def testChangePercentageCompleteWhileColumnNotShown(self):
         self.taskList.append(self.task)
         self.task.setPercentageComplete(50)
-        self.assertEventFired_Deprecated('task.percentageComplete')
+        self.failIf((50, self.task) in self.viewer.events)
 
     def testChangePercentageCompleteWhileColumnShown(self):
         self.taskList.append(self.task)
         self.showColumn('percentageComplete')
         self.task.setPercentageComplete(50)
-        self.assertEventFired_Deprecated('task.percentageComplete')
+        self.failUnless((50, self.task) in self.viewer.events)
 
     def testChangePriorityWhileColumnNotShown(self):
         self.taskList.append(self.task)

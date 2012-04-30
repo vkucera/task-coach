@@ -680,14 +680,12 @@ class EditPercentageCompleteCommand(base.SaveStateMixin, EffortCommand):
         itemsToSave = set([relative for item in self.items for relative in item.family()]) 
         self.saveStates(itemsToSave)
         
-    @patterns.eventSource
-    def do_command(self, event=None):
+    def do_command(self):
         super(EditPercentageCompleteCommand, self).do_command()
         for item in self.items:
-            item.setPercentageComplete(self.__newPercentage, event=event)
+            item.setPercentageComplete(self.__newPercentage)
             
-    @patterns.eventSource
-    def undo_command(self, event=None):
+    def undo_command(self):
         self.undoStates()
         super(EditPercentageCompleteCommand, self).undo_command()
         
