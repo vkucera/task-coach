@@ -848,8 +848,9 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable-msg=W0223
         dependsOnEffortFeature = ['budget', 'timeSpent', 'budgetLeft',
                                   'hourlyFee', 'fixedFee', 'revenue']
             
-        for name, columnHeader, editCtrl, editCallback, eventTypes in [        
-            ('percentageComplete', _('% complete'), inplace_editor.PercentageCtrl, self.onEditPercentageComplete, [task.Task.expansionChangedEventType(), task.Task.percentageCompleteChangedEventType()]),
+        for name, columnHeader, editCtrl, editCallback, eventTypes in [
+            ('percentageComplete', _('% complete'), inplace_editor.PercentageCtrl, self.onEditPercentageComplete, 
+                 [task.Task.expansionChangedEventType(), task.Task.percentageCompleteChangedEventType()]),
             ('timeLeft', _('Time left'), None, None, [task.Task.expansionChangedEventType(), 'task.timeLeft']),
             ('recurrence', _('Recurrence'), None, None, [task.Task.expansionChangedEventType(), task.Task.recurrenceChangedEventType()]),
             ('budget', _('Budget'), inplace_editor.BudgetCtrl, self.onEditBudget, [task.Task.expansionChangedEventType(), task.Task.budgetChangedEventType()]),            

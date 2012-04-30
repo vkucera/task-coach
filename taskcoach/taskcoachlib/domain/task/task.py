@@ -56,8 +56,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             completionDateTime = date.Now()
         self.__completionDateTime = completionDateTime or maxDateTime
         percentageComplete = 100 if self.__completionDateTime != maxDateTime else percentageComplete
-        self.__percentageComplete = Attribute(percentageComplete, 
-                                              self, self.percentageCompleteEvent)
+        self.__percentageComplete = percentageComplete
         self.__budget = Attribute(budget or date.TimeDelta(), self, 
                                   self.budgetEvent)
         self._efforts = efforts or []
@@ -97,7 +96,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.setActualStartDateTime(state['actualStartDateTime'])
         self.setDueDateTime(state['dueDateTime'])
         self.setCompletionDateTime(state['completionDateTime'])
-        self.setPercentageComplete(state['percentageComplete'], event=event)
+        self.setPercentageComplete(state['percentageComplete'])
         self.setRecurrence(state['recurrence'], event=event)
         self.setReminder(state['reminder'], event=event)
         self.setEfforts(state['efforts'], event=event)
@@ -116,7 +115,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             plannedStartDateTime=self.__plannedStartDateTime,
             actualStartDateTime=self.__actualStartDateTime,
             completionDateTime=self.__completionDateTime,
-            percentageComplete=self.__percentageComplete.get(),
+            percentageComplete=self.__percentageComplete,
             children=self.children(), parent=self.parent(), 
             efforts=self._efforts, budget=self.__budget.get(), 
             priority=self.__priority,
@@ -134,7 +133,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             dueDateTime=self.__dueDateTime, 
             actualStartDateTime=self.__actualStartDateTime, 
             completionDateTime=self.__completionDateTime,
-            percentageComplete=self.__percentageComplete.get(), 
+            percentageComplete=self.__percentageComplete,
             efforts=[effort.copy() for effort in self._efforts], 
             budget=self.__budget.get(), priority=self.__priority,
             hourlyFee=self.__hourlyFee.get(), fixedFee=self.__fixedFee.get(), 
@@ -886,37 +885,34 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     # percentage Complete
     
     def percentageComplete(self, recursive=False):
-        myPercentage = self.__percentageComplete.get()
         if recursive:
             # We ignore our own percentageComplete when we are marked complete
             # when all children are completed *and* our percentageComplete is 0
             percentages = []
-            if myPercentage > 0 or not self.shouldMarkCompletedWhenAllChildrenCompleted():
-                percentages.append(myPercentage)
+            if self.__percentageComplete > 0 or not self.shouldMarkCompletedWhenAllChildrenCompleted():
+                percentages.append(self.__percentageComplete)
             percentages.extend([child.percentageComplete(recursive) for child in self.children()])
             return sum(percentages) / len(percentages) if percentages else 0
         else:
-            return myPercentage
+            return self.__percentageComplete
         
-    @patterns.eventSource
-    def setPercentageComplete(self, percentage, event=None):
-        if percentage == self.percentageComplete():
+    def setPercentageComplete(self, percentage):
+        if percentage == self.__percentageComplete:
             return
-        oldPercentage = self.percentageComplete()
-        self.__percentageComplete.set(percentage, event=event)
+        oldPercentage = self.__percentageComplete
+        self.__percentageComplete = percentage
         if percentage == 100 and oldPercentage != 100 and self.completionDateTime() == self.maxDateTime:
             self.setCompletionDateTime(date.Now())
         elif oldPercentage == 100 and percentage != 100 and self.completionDateTime() != self.maxDateTime:
             self.setCompletionDateTime(self.maxDateTime)
         if 0 < percentage < 100 and self.actualStartDateTime() == date.DateTime():
             self.setActualStartDateTime(date.Now())
-    
-    def percentageCompleteEvent(self, event):
-        event.addSource(self, self.percentageComplete(), 
-                        type=self.percentageCompleteChangedEventType())
+        pub.sendMessage(self.percentageCompleteChangedEventType(),
+                        newValue=percentage, sender=self)
         for ancestor in self.ancestors():
-            event.addSource(ancestor, ancestor.percentageComplete(recursive=True), 
-                            type=self.percentageCompleteChangedEventType())
+            pub.sendMessage(ancestor.percentageCompleteChangedEventType(),
+                            newValue=ancestor.percentageComplete(recursive=True),
+                            sender=ancestor)
     
     @staticmethod
     def percentageCompleteSortFunction(**kwargs):
@@ -930,7 +926,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     @classmethod
     def percentageCompleteChangedEventType(class_):
-        return '%s.percentageComplete' % class_
+        return 'pubsub.task.percentageComplete'
        
     # priority
     
@@ -1150,7 +1146,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             self.setPlannedStartDateTime(nextPlannedStartDateTime)
         
         self.setActualStartDateTime(date.DateTime())
-        self.setPercentageComplete(0, event=event)
+        self.setPercentageComplete(0)
         if self.reminder(includeSnooze=False):
             nextReminder = recur(self.reminder(includeSnooze=False), next=False)
             self.setReminder(nextReminder, event=event)
@@ -1306,8 +1302,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self._shouldMarkCompletedWhenAllChildrenCompleted = newValue
         event.addSource(self, newValue, 
                         type=self.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType())
-        event.addSource(self, self.percentageComplete(recursive=True), 
-                        type=self.percentageCompleteChangedEventType())
+        pub.sendMessage(self.percentageCompleteChangedEventType(), 
+                        newValue=self.percentageComplete(recursive=True), 
+                        sender=self)
 
     def shouldMarkCompletedWhenAllChildrenCompleted(self):
         return self._shouldMarkCompletedWhenAllChildrenCompleted
