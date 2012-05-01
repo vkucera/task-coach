@@ -16,17 +16,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
 from taskcoachlib import gui, config, persistence
 from taskcoachlib.domain import base, task, effort, category, date
+import test
 
 
 class MockWidget(object):
     def __init__(self):
-        self.refreshedItems = []
+        self.refreshedItems = set()
         
     def RefreshItems(self, *items):
-        self.refreshedItems.extend(items)
+        self.refreshedItems.update(set(items))
         
     def ToggleAutoResizing(self, *args, **kwargs):
         pass
@@ -64,7 +64,7 @@ class UpdatePerSecondViewerTestsMixin(object):
         self.updateViewer.secondRefresher.refreshItems(self.updateViewer.secondRefresher.currentlyTrackedItems())
         usingTaskViewer = self.ListViewerClass != gui.viewer.EffortViewer
         expected = self.trackedTask if usingTaskViewer else self.trackedEffort
-        self.assertEqual([expected], self.updateViewer.widget.refreshedItems)
+        self.assertEqual(set([expected]), self.updateViewer.widget.refreshedItems)
 
     def testClockNotificationResultsInRefreshedItem_OnlyForTrackedItems(self):
         self.taskList.append(task.Task('not tracked'))
@@ -79,8 +79,7 @@ class UpdatePerSecondViewerTestsMixin(object):
     def testStopTrackingRefreshesTrackedItems(self):
         self.updateViewer.widget = MockWidget()
         self.trackedTask.stopTracking()
-        expectedNrRefreshedItems = 1 if self.ListViewerClass == gui.viewer.SquareTaskViewer else 2
-        self.assertEqual(expectedNrRefreshedItems, len(self.updateViewer.widget.refreshedItems))
+        self.assertEqual(1, len(self.updateViewer.widget.refreshedItems))
             
     def testRemoveTrackedChildAndParentRemovesViewerFromClockObservers(self):
         parent = task.Task()
@@ -97,7 +96,7 @@ class UpdatePerSecondViewerTestsMixin(object):
         categories = base.filter.SearchFilter(category.CategoryList())
         try:
             categories.append(category.Category('Test'))
-        except AttributeError: # pragma: no cover
+        except AttributeError:  # pragma: no cover
             self.fail("Adding a category shouldn't affect the UpdatePerSecondViewer.")
 
     def testViewerDoesNotReactToRemoveEventsFromOtherContainers(self):

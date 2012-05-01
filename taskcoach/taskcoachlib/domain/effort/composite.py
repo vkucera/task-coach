@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import patterns, render
 from taskcoachlib.domain import date, task
 from taskcoachlib.i18n import _
+from taskcoachlib.thirdparty.pubsub import pub
 import base
 
 
@@ -77,7 +78,7 @@ class BaseCompositeEffort(base.BaseEffort):  # pylint: disable-msg=W0223
         return []  # A composite effort cannot be 'dirty' since its contents
         # are determined by the contained efforts.
 
-    def onTimeSpentChanged(self, event):
+    def onTimeSpentChanged(self, newValue, sender):  # pylint: disable-msg=W0613
         self._invalidateCache()
         self.notifyObserversOfDurationOrEmpty()
 
@@ -118,8 +119,7 @@ class CompositeEffort(BaseCompositeEffort):
             eventType=task.trackStartEventType(), eventSource=task)
         patterns.Publisher().registerObserver(self.onStopTracking,
             eventType=task.trackStopEventType(), eventSource=task)
-        patterns.Publisher().registerObserver(self.onTimeSpentChanged,
-            eventType='task.timeSpent', eventSource=task)
+        pub.subscribe(self.onTimeSpentChanged, task.timeSpentChangedEventType())
         patterns.Publisher().registerObserver(self.onRevenueChanged,
             eventType=task.hourlyFeeChangedEventType())
         '''
@@ -160,6 +160,10 @@ class CompositeEffort(BaseCompositeEffort):
         effortDescriptions = [effort.description() for effort in \
                               self._getEfforts(False) if effort.description()]
         return '\n'.join(effortDescriptions)
+    
+    def onTimeSpentChanged(self, newValue, sender):
+        if sender == self.task():
+            super(CompositeEffort, self).onTimeSpentChanged(newValue, sender)
         
     def onAppearanceChanged(self, event):    
         return  # FIXME: CompositeEffort does not derive from base.Object
@@ -175,8 +179,8 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
             self.__effortCache = [initialEffort]
         else:
             self._invalidateCache()
-        patterns.Publisher().registerObserver(self.onTimeSpentChanged,
-            eventType='task.timeSpent')
+        pub.subscribe(self.onTimeSpentChanged, 
+                      task.Task.timeSpentChangedEventType())
         patterns.Publisher().registerObserver(self.onRevenueChanged,
             eventType=task.Task.hourlyFeeChangedEventType())
         for eventType in self.taskList.modificationEventTypes():

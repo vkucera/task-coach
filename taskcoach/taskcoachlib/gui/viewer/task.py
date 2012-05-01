@@ -467,7 +467,10 @@ class SquareTaskViewer(BaseTaskTreeViewer):
         except AttributeError:
             oldEventType = 'task.%s' % oldChoice
         if oldEventType.startswith('pubsub'):
-            pub.unsubscribe(self.onAttributeChanged, oldEventType)
+            try:
+                pub.unsubscribe(self.onAttributeChanged, oldEventType)
+            except pub.UndefinedSubtopic:
+                pass  # Can happen on first call to orderBy
         else:
             self.removeObserver(self.onAttributeChanged_Deprecated, oldEventType)
         try:
@@ -863,14 +866,16 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable-msg=W0223
             ('recurrence', _('Recurrence'), None, None, [task.Task.expansionChangedEventType(), task.Task.recurrenceChangedEventType()]),
             ('budget', _('Budget'), inplace_editor.BudgetCtrl, self.onEditBudget, 
                  [task.Task.expansionChangedEventType(), task.Task.budgetChangedEventType()]),            
-            ('timeSpent', _('Time spent'), None, None, [task.Task.expansionChangedEventType(), 'task.timeSpent']),
+            ('timeSpent', _('Time spent'), None, None, 
+                 [task.Task.expansionChangedEventType(), task.Task.timeSpentChangedEventType()]),
             ('budgetLeft', _('Budget left'), None, None, 
                  [task.Task.expansionChangedEventType(), task.Task.budgetLeftChangedEventType()]),            
             ('priority', _('Priority'), inplace_editor.PriorityCtrl, self.onEditPriority, 
                  [task.Task.expansionChangedEventType(), task.Task.priorityChangedEventType()]),
             ('hourlyFee', _('Hourly fee'), inplace_editor.AmountCtrl, self.onEditHourlyFee, [task.Task.hourlyFeeChangedEventType()]),
             ('fixedFee', _('Fixed fee'), inplace_editor.AmountCtrl, self.onEditFixedFee, [task.Task.expansionChangedEventType(), task.Task.fixedFeeChangedEventType()]),            
-            ('revenue', _('Revenue'), None, None, [task.Task.expansionChangedEventType(), 'task.revenue'])]:
+            ('revenue', _('Revenue'), None, None, 
+                [task.Task.expansionChangedEventType(), task.Task.revenueChangedEventType()])]:
             if (name in dependsOnEffortFeature and effortOn) or name not in dependsOnEffortFeature:
                 renderCallback = getattr(self, 'render%s' % (name[0].capitalize() + name[1:]))
                 columns.append(widgets.Column(name, columnHeader,  
