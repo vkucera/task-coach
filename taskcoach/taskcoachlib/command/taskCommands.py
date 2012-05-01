@@ -729,15 +729,13 @@ class EditBudgetCommand(base.BaseCommand):
         super(EditBudgetCommand, self).__init__(*args, **kwargs)
         self.__oldBudgets = [item.budget() for item in self.items]
         
-    @patterns.eventSource
-    def do_command(self, event=None):
+    def do_command(self):
         for item in self.items:
-            item.setBudget(self.__newBudget, event=event)
+            item.setBudget(self.__newBudget)
             
-    @patterns.eventSource
-    def undo_command(self, event=None):
+    def undo_command(self):
         for item, oldBudget in zip(self.items, self.__oldBudgets):
-            item.setBudget(oldBudget, event=event)
+            item.setBudget(oldBudget)
             
     def redo_command(self):
         self.do_command()

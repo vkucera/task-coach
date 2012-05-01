@@ -57,8 +57,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__completionDateTime = completionDateTime or maxDateTime
         percentageComplete = 100 if self.__completionDateTime != maxDateTime else percentageComplete
         self.__percentageComplete = percentageComplete
-        self.__budget = Attribute(budget or date.TimeDelta(), self, 
-                                  self.budgetEvent)
+        self.__budget = budget or date.TimeDelta()
         self._efforts = efforts or []
         self.__priority = priority
         self.__hourlyFee = Attribute(hourlyFee, self, self.hourlyFeeEvent)
@@ -100,7 +99,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.setRecurrence(state['recurrence'], event=event)
         self.setReminder(state['reminder'])
         self.setEfforts(state['efforts'], event=event)
-        self.setBudget(state['budget'], event=event)
+        self.setBudget(state['budget'])
         self.setPriority(state['priority'])
         self.setHourlyFee(state['hourlyFee'], event=event)
         self.setFixedFee(state['fixedFee'], event=event)
@@ -117,7 +116,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             completionDateTime=self.__completionDateTime,
             percentageComplete=self.__percentageComplete,
             children=self.children(), parent=self.parent(), 
-            efforts=self._efforts, budget=self.__budget.get(), 
+            efforts=self._efforts, budget=self.__budget, 
             priority=self.__priority,
             hourlyFee=self.__hourlyFee.get(), fixedFee=self.__fixedFee.get(), 
             recurrence=self._recurrence.copy(),
@@ -135,7 +134,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             completionDateTime=self.__completionDateTime,
             percentageComplete=self.__percentageComplete,
             efforts=[effort.copy() for effort in self._efforts], 
-            budget=self.__budget.get(), priority=self.__priority,
+            budget=self.__budget, priority=self.__priority,
             hourlyFee=self.__hourlyFee.get(), fixedFee=self.__fixedFee.get(), 
             recurrence=self._recurrence.copy(),
             reminder=self.__reminder, 
@@ -206,10 +205,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if childHasRevenue:
             self.revenueEvent(event)
         if childHasBudget:
-            self.budgetEvent(event)
+            self.sendBudgetChangedMessage()
         if childHasBudgetLeft or (childHasTimeSpent and \
                                   (childHasBudget or self.budget())):
-            self.budgetLeftEvent(event)
+            self.sendBudgetLeftChangedMessage()
         if childPriority > self.priority():
             self.sendPriorityChangedMessage()
             
@@ -631,7 +630,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         for ancestor in self.ancestors():
             event.addSource(ancestor, *efforts, **dict(type='task.timeSpent'))
         if self.budget(recursive=True):
-            self.budgetLeftEvent(event)
+            self.sendBudgetLeftChangedMessage()
         if self.hourlyFee() > 0:
             self.revenueEvent(event)
 
@@ -648,22 +647,31 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     # Budget
     
     def budget(self, recursive=False):
-        result = self.__budget.get()
+        result = self.__budget
         if recursive:
             for task in self.children():
                 result += task.budget(recursive)
         return result
         
-    def setBudget(self, budget, event=None):
-        self.__budget.set(budget, event=event)
+    def setBudget(self, budget):
+        if budget == self.__budget:
+            return
+        self.__budget = budget
+        self.sendBudgetChangedMessage()
+        self.sendBudgetLeftChangedMessage()
         
-    def budgetEvent(self, event):
-        event.addSource(self, self.budget(), type='task.budget')
+    def sendBudgetChangedMessage(self):
+        pub.sendMessage(self.budgetChangedEventType(), newValue=self.budget(),
+                        sender=self)
         for ancestor in self.ancestors():
-            event.addSource(ancestor, ancestor.budget(recursive=True), 
-                            type='task.budget')
-        self.budgetLeftEvent(event)
-        
+            pub.sendMessage(ancestor.budgetChangedEventType(), 
+                            newValue=ancestor.budget(recursive=True),
+                            sender=ancestor)
+            
+    @classmethod
+    def budgetChangedEventType(class_):
+        return 'pubsub.task.budget'
+    
     @staticmethod
     def budgetSortFunction(**kwargs):
         recursive = kwargs.get('treeMode', False)
@@ -672,19 +680,25 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def budgetSortEventTypes(class_):
         ''' The event types that influence the budget sort order. '''
-        return ('task.budget',)
+        return (class_.budgetChangedEventType(),)
 
     # Budget left
     
     def budgetLeft(self, recursive=False):
         budget = self.budget(recursive)
         return budget - self.timeSpent(recursive) if budget else budget
-
-    def budgetLeftEvent(self, event):
-        event.addSource(self, self.budgetLeft(), type='task.budgetLeft')
+    
+    def sendBudgetLeftChangedMessage(self):
+        pub.sendMessage(self.budgetLeftChangedEventType(), 
+                        newValue=self.budgetLeft(), sender=self)
         for ancestor in self.ancestors():
-            event.addSource(ancestor, ancestor.budgetLeft(recursive=True), 
-                            type='task.budgetLeft')
+            pub.sendMessage(ancestor.budgetLeftChangedEventType(),
+                            newValue=ancestor.budgetLeft(recursive=True),
+                            sender=ancestor)
+            
+    @classmethod
+    def budgetLeftChangedEventType(class_):
+        return 'pubsub.task.budgetLeft'
 
     @staticmethod
     def budgetLeftSortFunction(**kwargs):
@@ -694,7 +708,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def budgetLeftSortEventTypes(class_):
         ''' The event types that influence the budget left sort order. '''
-        return ('task.budgetLeft',)
+        return (class_.budgetLeftChangedEventType(),)
 
     # Foreground color
 
@@ -1358,7 +1372,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                              class_.actualStartDateTimeChangedEventType(),
                              class_.completionDateTimeChangedEventType(),
                              'task.effort.add', 'task.effort.remove', 
-                             'task.budget', 
+                             class_.budgetChangedEventType(),
                              class_.percentageCompleteChangedEventType(),
                              class_.priorityChangedEventType(),
                              class_.hourlyFeeChangedEventType(), 
