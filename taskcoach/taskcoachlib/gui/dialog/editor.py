@@ -20,13 +20,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
-import os.path
 from taskcoachlib import widgets, patterns, command, operating_system
-from taskcoachlib.gui import viewer, uicommand, windowdimensionstracker
-from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, date, note, attachment
+from taskcoachlib.gui import viewer, uicommand, windowdimensionstracker
 from taskcoachlib.gui.dialog import entry, attributesync
+from taskcoachlib.i18n import _
+from taskcoachlib.thirdparty.pubsub import pub
+import os.path
+import wx
 
 
 class Page(widgets.BookPage):
@@ -420,7 +421,8 @@ class BudgetPage(Page):
         self._budgetEntry = entry.TimeDeltaEntry(self, currentBudget)
         self._budgetSync = attributesync.AttributeSync('budget', 
             self._budgetEntry, currentBudget, self.items,                                         
-            command.EditBudgetCommand, wx.EVT_KILL_FOCUS, task.Task.budgetChangedEventType())
+            command.EditBudgetCommand, wx.EVT_KILL_FOCUS, 
+            self.items[0].budgetChangedEventType())
         self.addEntry(_('Budget'), self._budgetEntry, flags=[None, wx.ALL])
                     
     def addTimeSpentEntry(self):
@@ -448,14 +450,13 @@ class BudgetPage(Page):
                                                      readonly=True)
         self.addEntry(_('Budget left'), self._budgetLeftEntry, 
                       flags=[None, wx.ALL])
-        self.registerObserver(self.onBudgetLeftChanged,
-                              eventType='task.budgetLeft',
-                              eventSource=self.items[0])
+        pub.subscribe(self.onBudgetLeftChanged, 
+                      self.items[0].budgetLeftChangedEventType())
         
-    def onBudgetLeftChanged(self, event=None):  # pylint: disable-msg=W0613
-        newBudgetLeft = self.items[0].budgetLeft()
-        if newBudgetLeft != self._budgetLeftEntry.GetValue():
-            self._budgetLeftEntry.SetValue(newBudgetLeft)
+    def onBudgetLeftChanged(self, newValue, sender):  # pylint: disable-msg=W0613
+        if sender == self.items[0]:
+            if newValue != self._budgetLeftEntry.GetValue():
+                self._budgetLeftEntry.SetValue(newValue)
             
     def addRevenueEntries(self):
         self.addHourlyFeeEntry()
@@ -520,7 +521,7 @@ class BudgetPage(Page):
     
     def onEverySecond(self):
         self.onTimeSpentChanged()
-        self.onBudgetLeftChanged()
+        self.onBudgetLeftChanged(self.items[0].budgetLeft(), self.items[0])
         self.onRevenueChanged()
             
     def close(self):
