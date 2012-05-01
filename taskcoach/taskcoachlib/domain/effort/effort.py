@@ -85,7 +85,7 @@ class Effort(baseeffort.BaseEffort, base.Object):
             return
         self._start = startDateTime
         self.__updateDurationCache()
-        self.task().timeSpentEvent(event, self)
+        self.task().sendTimeSpentChangedMessage()
         event.addSource(self, self._start, type='effort.start')
         event.addSource(self, self.duration(), type='effort.duration')
         if self.task().hourlyFee():
@@ -108,7 +108,7 @@ class Effort(baseeffort.BaseEffort, base.Object):
         elif previousStop == None:
             event.addSource(self, type=self.trackStopEventType())
             self.task().stopTrackingEvent(event, self)
-        self.task().timeSpentEvent(event, self)
+        self.task().sendTimeSpentChangedMessage()
         event.addSource(self, newStop, type='effort.stop')
         event.addSource(self, self.duration(), type='effort.duration')
         if self.task().hourlyFee():
@@ -117,7 +117,7 @@ class Effort(baseeffort.BaseEffort, base.Object):
     def __updateDurationCache(self):
         self.__cachedDuration = self._stop - self._start if self._stop else None
         
-    def isBeingTracked(self, recursive=False): # pylint: disable-msg=W0613
+    def isBeingTracked(self, recursive=False):  # pylint: disable-msg=W0613
         return self._stop is None
 
     def revenue(self):

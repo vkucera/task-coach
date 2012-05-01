@@ -433,14 +433,13 @@ class BudgetPage(Page):
                                                     readonly=True)
         self.addEntry(_('Time spent'), self._timeSpentEntry, 
                       flags=[None, wx.ALL])
-        self.registerObserver(self.onTimeSpentChanged, 
-                              eventType='task.timeSpent', 
-                              eventSource=self.items[0])
-        
-    def onTimeSpentChanged(self, event=None):  # pylint: disable-msg=W0613
-        newTimeSpent = self.items[0].timeSpent()
-        if newTimeSpent != self._timeSpentEntry.GetValue():
-            self._timeSpentEntry.SetValue(newTimeSpent)
+        pub.subscribe(self.onTimeSpentChanged, 
+                      self.items[0].timeSpentChangedEventType())
+
+    def onTimeSpentChanged(self, newValue, sender):
+        if sender == self.items[0]:
+            if newValue != self._timeSpentEntry.GetValue():
+                self._timeSpentEntry.SetValue(newValue)
             
     def addBudgetLeftEntry(self):
         assert len(self.items) == 1
@@ -488,14 +487,13 @@ class BudgetPage(Page):
         revenue = self.items[0].revenue()
         self._revenueEntry = entry.AmountEntry(self, revenue, readonly=True)  # pylint: disable-msg=W0201
         self.addEntry(_('Revenue'), self._revenueEntry, flags=[None, wx.ALL])
-        self.registerObserver(self.onRevenueChanged,
-                              eventType='task.revenue',
-                              eventSource=self.items[0])
+        pub.subscribe(self.onRevenueChanged, 
+                      self.items[0].revenueChangedEventType())
 
-    def onRevenueChanged(self, event=None):  # pylint: disable-msg=W0613
-        newRevenue = self.items[0].revenue()
-        if newRevenue != self._revenueEntry.GetValue():
-            self._revenueEntry.SetValue(newRevenue)
+    def onRevenueChanged(self, newValue, sender):
+        if sender == self.items[0]:
+            if newValue != self._revenueEntry.GetValue():
+                self._revenueEntry.SetValue(newValue)
             
     def observeTracking(self):
         if len(self.items) != 1:
@@ -520,9 +518,10 @@ class BudgetPage(Page):
             date.Scheduler().unschedule(self.onEverySecond)
     
     def onEverySecond(self):
-        self.onTimeSpentChanged()
-        self.onBudgetLeftChanged(self.items[0].budgetLeft(), self.items[0])
-        self.onRevenueChanged()
+        taskDisplayed = self.items[0]
+        self.onTimeSpentChanged(taskDisplayed.timeSpent(), taskDisplayed)
+        self.onBudgetLeftChanged(taskDisplayed.budgetLeft(), taskDisplayed)
+        self.onRevenueChanged(taskDisplayed.revenue(), taskDisplayed)
             
     def close(self):
         date.Scheduler().unschedule(self.onEverySecond)

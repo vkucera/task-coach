@@ -201,9 +201,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         childPriority = child.priority(recursive=True)
         # Determine what changes due to the child being added or removed:
         if childHasTimeSpent:
-            self.timeSpentEvent(event, *child.efforts())
+            self.sendTimeSpentChangedMessage()
         if childHasRevenue:
-            self.revenueEvent(event)
+            self.sendRevenueChangedMessage()
         if childHasBudget:
             self.sendBudgetChangedMessage()
         if childHasBudgetLeft or (childHasTimeSpent and \
@@ -565,7 +565,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.addEffortEvent(event, effort)
         if effort.isBeingTracked() and not wasTracking:
             self.startTrackingEvent(event, effort)
-        self.timeSpentEvent(event, effort)
+        self.sendTimeSpentChangedMessage()
   
     def addEffortEvent(self, event, *efforts):
         event.addSource(self, *efforts, **dict(type='task.effort.add'))
@@ -584,7 +584,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.removeEffortEvent(event, effort)
         if effort.isBeingTracked() and not self.isBeingTracked():
             self.stopTrackingEvent(event, effort)
-        self.timeSpentEvent(event, effort)
+        self.sendTimeSpentChangedMessage()
         
     def removeEffortEvent(self, event, *efforts):
         event.addSource(self, *efforts, **dict(type='task.effort.remove'))
@@ -609,7 +609,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         # pylint: disable-msg=W0142
         self.removeEffortEvent(event, *oldEfforts)
         self.addEffortEvent(event, *efforts)
-        self.timeSpentEvent(event, *(oldEfforts + efforts))
+        self.sendTimeSpentChangedMessage()
         
     @classmethod
     def trackStartEventType(class_):
@@ -624,15 +624,22 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def timeSpent(self, recursive=False):
         return sum((effort.duration() for effort in self.efforts(recursive)), 
                    date.TimeDelta())
-
-    def timeSpentEvent(self, event, *efforts):
-        event.addSource(self, *efforts, **dict(type='task.timeSpent'))
+        
+    def sendTimeSpentChangedMessage(self):
+        pub.sendMessage(self.timeSpentChangedEventType(), 
+                        newValue=self.timeSpent(), sender=self)
         for ancestor in self.ancestors():
-            event.addSource(ancestor, *efforts, **dict(type='task.timeSpent'))
+            pub.sendMessage(ancestor.timeSpentChangedEventType(), 
+                            newValue=ancestor.timeSpent(recursive=True),
+                            sender=ancestor)
         if self.budget(recursive=True):
             self.sendBudgetLeftChangedMessage()
         if self.hourlyFee() > 0:
-            self.revenueEvent(event)
+            self.sendRevenueChangedMessage()
+            
+    @classmethod
+    def timeSpentChangedEventType(class_):
+        return 'pubsub.task.timeSpent'
 
     @staticmethod
     def timeSpentSortFunction(**kwargs):
@@ -642,7 +649,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def timeSpentSortEventTypes(class_):
         ''' The event types that influence the time spent sort order. '''
-        return ('task.timeSpent',)
+        return (class_.timeSpentChangedEventType(),)
     
     # Budget
     
@@ -981,8 +988,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         event.addSource(self, self.hourlyFee(), 
                         type=self.hourlyFeeChangedEventType())
         if self.timeSpent() > date.TimeDelta():
-            for objectWithRevenue in [self] + self.efforts():
-                objectWithRevenue.revenueEvent(event)
+            self.sendRevenueChangedMessage()
+            for effort in self.efforts():
+                effort.revenueEvent(event)
             
     @classmethod
     def hourlyFeeChangedEventType(class_):
@@ -1012,7 +1020,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         for ancestor in self.ancestors():
             event.addSource(ancestor, ancestor.fixedFee(recursive=True),
                             type='task.fixedFee')
-        self.revenueEvent(event)
+        self.sendRevenueChangedMessage()
 
     @staticmethod
     def fixedFeeSortFunction(**kwargs):
@@ -1032,12 +1040,18 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return self.timeSpent().hours() * self.hourlyFee() + self.fixedFee() + \
                childRevenues
 
-    def revenueEvent(self, event):
-        event.addSource(self, self.revenue(), type='task.revenue')
+    def sendRevenueChangedMessage(self):
+        pub.sendMessage(self.revenueChangedEventType(), 
+                        newValue=self.revenue(), sender=self)
         for ancestor in self.ancestors():
-            event.addSource(ancestor, ancestor.revenue(recursive=False), 
-                            type='task.revenue')
+            pub.sendMessage(ancestor.revenueChangedEventType(),
+                            newValue=ancestor.revenue(recursive=True),
+                            sender=ancestor)
 
+    @classmethod
+    def revenueChangedEventType(class_):
+        return 'pubsub.task.revenue'
+    
     @staticmethod
     def revenueSortFunction(**kwargs):            
         recursive = kwargs.get('treeMode', False)
@@ -1046,7 +1060,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def revenueSortEventTypes(class_):
         ''' The event types that influence the revenue sort order. '''
-        return ('task.revenue',)
+        return (class_.revenueChangedEventType(),)
     
     # reminder
     
