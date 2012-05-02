@@ -82,7 +82,7 @@ class BaseCompositeEffort(base.BaseEffort):  # pylint: disable-msg=W0223
         self._invalidateCache()
         self.notifyObserversOfDurationOrEmpty()
 
-    def onRevenueChanged(self, event):  # pylint: disable-msg=W0613
+    def onRevenueChanged(self, newValue, sender):  # pylint: disable-msg=W0613
         patterns.Event('effort.revenue', self, self.revenue(recursive=True)).send()
 
     def onStartTracking(self, event):
@@ -97,11 +97,14 @@ class BaseCompositeEffort(base.BaseEffort):  # pylint: disable-msg=W0223
             self._invalidateCache()
             patterns.Event(self.trackStopEventType(), self, stoppedEffort).send()
         
+    def revenue(self, recursive=False):
+        raise NotImplementedError  # pragma: no cover
+    
     def _invalidateCache(self):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
     
     def _inCache(self, effort):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
             
 
 class CompositeEffort(BaseCompositeEffort):
@@ -120,8 +123,7 @@ class CompositeEffort(BaseCompositeEffort):
         patterns.Publisher().registerObserver(self.onStopTracking,
             eventType=task.trackStopEventType(), eventSource=task)
         pub.subscribe(self.onTimeSpentChanged, task.timeSpentChangedEventType())
-        patterns.Publisher().registerObserver(self.onRevenueChanged,
-            eventType=task.hourlyFeeChangedEventType())
+        pub.subscribe(self.onRevenueChanged, task.hourlyFeeChangedEventType())
         '''
         FIMXE! CompositeEffort does not derive from base.Object
         patterns.Publisher().registerObserver(self.onAppearanceChanged,
@@ -132,7 +134,7 @@ class CompositeEffort(BaseCompositeEffort):
         return hash((self.task(), self.getStart()))
 
     def __repr__(self):
-        return 'CompositeEffort(task=%s, start=%s, stop=%s, efforts=%s)'%\
+        return 'CompositeEffort(task=%s, start=%s, stop=%s, efforts=%s)' % \
             (self.task(), self.getStart(), self.getStop(),
             str([e for e in self._getEfforts()]))
 
@@ -181,8 +183,8 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
             self._invalidateCache()
         pub.subscribe(self.onTimeSpentChanged, 
                       task.Task.timeSpentChangedEventType())
-        patterns.Publisher().registerObserver(self.onRevenueChanged,
-            eventType=task.Task.hourlyFeeChangedEventType())
+        pub.subscribe(self.onRevenueChanged, 
+                      task.Task.hourlyFeeChangedEventType())
         for eventType in self.taskList.modificationEventTypes():
             patterns.Publisher().registerObserver(self.onTaskAddedOrRemoved, eventType,
                                                   eventSource=self.taskList)

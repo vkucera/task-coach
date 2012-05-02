@@ -750,15 +750,13 @@ class EditHourlyFeeCommand(base.BaseCommand):
         super(EditHourlyFeeCommand, self).__init__(*args, **kwargs)
         self.__oldHourlyFees = [item.hourlyFee() for item in self.items]
         
-    @patterns.eventSource
-    def do_command(self, event=None):
+    def do_command(self):
         for item in self.items:
-            item.setHourlyFee(self.__newHourlyFee, event=event)
+            item.setHourlyFee(self.__newHourlyFee)
             
-    @patterns.eventSource
-    def undo_command(self, event=None):
+    def undo_command(self):
         for item, oldHourlyFee in zip(self.items, self.__oldHourlyFees):
-            item.setHourlyFee(oldHourlyFee, event=event)
+            item.setHourlyFee(oldHourlyFee)
             
     def redo_command(self):
         self.do_command()

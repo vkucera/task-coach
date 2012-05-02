@@ -494,11 +494,14 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.assertEqual(100, self.task.hourlyFee())
   
     def testSetHourlyFeeCausesNotification(self):
-        self.registerObserver(self.task.hourlyFeeChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.hourlyFeeChangedEventType())
         self.task.setHourlyFee(100)
-        self.assertEqual([patterns.Event( \
-            self.task.hourlyFeeChangedEventType(), self.task, 100)], 
-            self.events)
+        self.assertEqual([(100, self.task)], events)
   
     def testSetRecurrence(self):
         self.task.setRecurrence(date.Recurrence('weekly'))
