@@ -64,7 +64,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__fixedFee = fixedFee
         self.__reminder = reminder or maxDateTime
         self.__reminderBeforeSnooze = reminderBeforeSnooze or self.__reminder
-        self._recurrence = date.Recurrence() if recurrence is None else recurrence
+        self.__recurrence = date.Recurrence() if recurrence is None else recurrence
         self.__prerequisites = SetAttribute(prerequisites or [], self, 
                                             changeEvent=self.prerequisitesEvent)
         self.__dependencies = SetAttribute(dependencies or [], self, 
@@ -73,13 +73,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             shouldMarkCompletedWhenAllChildrenCompleted
         for effort in self._efforts:
             effort.setTask(self)
-        self.registerObserver = registerObserver = patterns.Publisher().registerObserver
-        self.removeObserver = patterns.Publisher().removeObserver
         for taskStatus in self.possibleStatuses():
-            registerObserver(self.__computeRecursiveForegroundColor, 'fgcolor.%stasks' % taskStatus)
-            registerObserver(self.__computeRecursiveBackgroundColor, 'bgcolor.%stasks' % taskStatus)
-            registerObserver(self.__computeRecursiveIcon, 'icon.%stasks' % taskStatus)
-            registerObserver(self.__computeRecursiveSelectedIcon, 'icon.%stasks' % taskStatus)
+            pub.subscribe(self.__computeRecursiveForegroundColor, 'settings.fgcolor.%stasks' % taskStatus)
+            pub.subscribe(self.__computeRecursiveBackgroundColor, 'settings.bgcolor.%stasks' % taskStatus)
+            pub.subscribe(self.__computeRecursiveIcon, 'settings.icon.%stasks' % taskStatus)
+            pub.subscribe(self.__computeRecursiveSelectedIcon, 'settings.icon.%stasks' % taskStatus)
         pub.subscribe(self.onDueSoonHoursChanged, 'settings.behavior.duesoonhours')
 
         now = date.Now()
@@ -96,7 +94,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.setDueDateTime(state['dueDateTime'])
         self.setCompletionDateTime(state['completionDateTime'])
         self.setPercentageComplete(state['percentageComplete'])
-        self.setRecurrence(state['recurrence'], event=event)
+        self.setRecurrence(state['recurrence'])
         self.setReminder(state['reminder'])
         self.setEfforts(state['efforts'], event=event)
         self.setBudget(state['budget'])
@@ -119,7 +117,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             efforts=self._efforts, budget=self.__budget, 
             priority=self.__priority,
             hourlyFee=self.__hourlyFee, fixedFee=self.__fixedFee, 
-            recurrence=self._recurrence.copy(),
+            recurrence=self.__recurrence.copy(),
             reminder=self.__reminder,
             prerequisites=self.__prerequisites.get(),
             dependencies=self.__dependencies.get(),
@@ -136,7 +134,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             efforts=[effort.copy() for effort in self._efforts], 
             budget=self.__budget, priority=self.__priority,
             hourlyFee=self.__hourlyFee, fixedFee=self.__fixedFee, 
-            recurrence=self._recurrence.copy(),
+            recurrence=self.__recurrence.copy(),
             reminder=self.__reminder, 
             shouldMarkCompletedWhenAllChildrenCompleted=self.__shouldMarkCompletedWhenAllChildrenCompleted))
         return state
@@ -739,7 +737,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         except AttributeError:
             return self.__computeRecursiveForegroundColor()
         
-    def __computeRecursiveForegroundColor(self, *args, **kwargs):  # pylint: disable-msg=W0613
+    def __computeRecursiveForegroundColor(self, value=None):  # pylint: disable-msg=W0613
         fgColor = super(Task, self).foregroundColor(recursive=True)
         statusColor = self.statusFgColor()
         if statusColor == wx.BLACK:
@@ -1130,23 +1128,27 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     # Recurrence
     
     def recurrence(self, recursive=False, upwards=False):
-        if not self._recurrence and recursive and upwards and self.parent():
+        if not self.__recurrence and recursive and upwards and self.parent():
             return self.parent().recurrence(recursive, upwards)
         elif recursive and not upwards:
             recurrences = [child.recurrence() for child in self.children(recursive)]
-            recurrences.append(self._recurrence)
+            recurrences.append(self.__recurrence)
             recurrences = [r for r in recurrences if r]
-            return min(recurrences) if recurrences else self._recurrence
+            return min(recurrences) if recurrences else self.__recurrence
         else:
-            return self._recurrence
+            return self.__recurrence
 
-    @patterns.eventSource
-    def setRecurrence(self, recurrence=None, event=None):
+    def setRecurrence(self, recurrence=None):
         recurrence = recurrence or date.Recurrence()
-        if recurrence == self._recurrence:
+        if recurrence == self.__recurrence:
             return
-        self._recurrence = recurrence
-        event.addSource(self, recurrence, type=self.recurrenceChangedEventType())
+        self.__recurrence = recurrence
+        pub.sendMessage(self.recurrenceChangedEventType(), newValue=recurrence,
+                        sender=self)
+        
+    @classmethod
+    def recurrenceChangedEventType(class_):
+        return 'pubsub.task.recurrence'
 
     @patterns.eventSource
     def recur(self, completionDateTime=None, event=None):
@@ -1197,10 +1199,6 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def recurrenceSortEventTypes(class_):
         ''' The event types that influence the recurrence sort order. '''
         return (class_.recurrenceChangedEventType(),)
-
-    @classmethod
-    def recurrenceChangedEventType(class_):
-        return '%s.recurrence' % class_
 
     # Prerequisites
     
@@ -1414,7 +1412,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                              class_.priorityChangedEventType(),
                              class_.hourlyFeeChangedEventType(), 
                              class_.fixedFeeChangedEventType(),
-                             class_.reminderChangedEventType(),
+                             class_.reminderChangedEventType(), 
                              class_.recurrenceChangedEventType(),
                              'task.prerequisites', 'task.dependencies',
                              class_.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType()]

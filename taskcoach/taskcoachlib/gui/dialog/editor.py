@@ -336,7 +336,7 @@ class DatesPage(Page):
         self._recurrenceSync = attributesync.AttributeSync('recurrence',
             self._recurrenceEntry, currentRecurrence, self.items,
             command.EditRecurrenceCommand, entry.EVT_RECURRENCEENTRY,
-            task.Task.recurrenceChangedEventType())
+            self.items[0].recurrenceChangedEventType())
         self.addEntry(_('Recurrence'), self._recurrenceEntry)
             
     def entries(self):
