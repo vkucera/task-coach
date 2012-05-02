@@ -61,7 +61,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self._efforts = efforts or []
         self.__priority = priority
         self.__hourlyFee = hourlyFee
-        self.__fixedFee = Attribute(fixedFee, self, self.fixedFeeEvent)
+        self.__fixedFee = fixedFee
         self.__reminder = reminder or maxDateTime
         self.__reminderBeforeSnooze = reminderBeforeSnooze or self.__reminder
         self._recurrence = date.Recurrence() if recurrence is None else recurrence
@@ -102,7 +102,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.setBudget(state['budget'])
         self.setPriority(state['priority'])
         self.setHourlyFee(state['hourlyFee'])
-        self.setFixedFee(state['fixedFee'], event=event)
+        self.setFixedFee(state['fixedFee'])
         self.setPrerequisites(state['prerequisites'], event=event)
         self.setDependencies(state['dependencies'], event=event)
         self.setShouldMarkCompletedWhenAllChildrenCompleted( \
@@ -118,7 +118,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             children=self.children(), parent=self.parent(), 
             efforts=self._efforts, budget=self.__budget, 
             priority=self.__priority,
-            hourlyFee=self.__hourlyFee, fixedFee=self.__fixedFee.get(), 
+            hourlyFee=self.__hourlyFee, fixedFee=self.__fixedFee, 
             recurrence=self._recurrence.copy(),
             reminder=self.__reminder,
             prerequisites=self.__prerequisites.get(),
@@ -135,7 +135,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             percentageComplete=self.__percentageComplete,
             efforts=[effort.copy() for effort in self._efforts], 
             budget=self.__budget, priority=self.__priority,
-            hourlyFee=self.__hourlyFee, fixedFee=self.__fixedFee.get(), 
+            hourlyFee=self.__hourlyFee, fixedFee=self.__fixedFee, 
             recurrence=self._recurrence.copy(),
             reminder=self.__reminder, 
             shouldMarkCompletedWhenAllChildrenCompleted=self._shouldMarkCompletedWhenAllChildrenCompleted))
@@ -1012,17 +1012,23 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def fixedFee(self, recursive=False):
         childFixedFees = sum(child.fixedFee(recursive) for child in 
                              self.children()) if recursive else 0
-        return self.__fixedFee.get() + childFixedFees
+        return self.__fixedFee + childFixedFees
     
-    def setFixedFee(self, fixedFee, event=None):
-        self.__fixedFee.set(fixedFee, event=event)
-        
-    def fixedFeeEvent(self, event):
-        event.addSource(self, self.fixedFee(), type='task.fixedFee')
+    def setFixedFee(self, fixedFee):
+        if fixedFee == self.__fixedFee:
+            return
+        self.__fixedFee = fixedFee
+        pub.sendMessage(self.fixedFeeChangedEventType(), newValue=fixedFee,
+                        sender=self)
         for ancestor in self.ancestors():
-            event.addSource(ancestor, ancestor.fixedFee(recursive=True),
-                            type='task.fixedFee')
+            pub.sendMessage(ancestor.fixedFeeChangedEventType(), 
+                            newValue=ancestor.fixedFee(recursive=True),
+                            sender=ancestor)
         self.sendRevenueChangedMessage()
+        
+    @classmethod
+    def fixedFeeChangedEventType(class_):
+        return 'pubsub.task.fixedFee'
 
     @staticmethod
     def fixedFeeSortFunction(**kwargs):
@@ -1032,7 +1038,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def fixedFeeSortEventTypes(class_):
         ''' The event types that influence the fixed fee sort order. '''
-        return ('task.fixedFee',)
+        return (class_.fixedFeeChangedEventType(),)
 
     # Revenue        
         
@@ -1391,8 +1397,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                              class_.budgetChangedEventType(),
                              class_.percentageCompleteChangedEventType(),
                              class_.priorityChangedEventType(),
-                             class_.hourlyFeeChangedEventType(), 
-                             'task.fixedFee',
+                             class_.hourlyFeeChangedEventType(),
+                             class_.fixedFeeChangedEventType(),
                              class_.reminderChangedEventType(), 
                              'task.recurrence',
                              'task.prerequisites', 'task.dependencies',

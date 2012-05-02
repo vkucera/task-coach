@@ -479,7 +479,8 @@ class BudgetPage(Page):
         self._fixedFeeEntry = entry.AmountEntry(self, currentFixedFee)
         self._fixedFeeSync = attributesync.AttributeSync('fixedFee',
             self._fixedFeeEntry, currentFixedFee, self.items,
-            command.EditFixedFeeCommand, wx.EVT_KILL_FOCUS, 'task.fixedFee')
+            command.EditFixedFeeCommand, wx.EVT_KILL_FOCUS, 
+            self.items[0].fixedFeeChangedEventType())
         self.addEntry(_('Fixed fee'), self._fixedFeeEntry, flags=[None, wx.ALL])
 
     def addRevenueEntry(self):

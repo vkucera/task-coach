@@ -470,14 +470,24 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.assertEqual(1000, self.task.fixedFee())
 
     def testSetFixedFeeUnchangedCausesNoNotification(self):
-        self.registerObserver('task.fixedFee')
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.fixedFeeChangedEventType())
         self.task.setFixedFee(self.task.fixedFee())
-        self.failIf(self.events)
+        self.failIf(events)
         
     def testSetFixedFeeCausesNotification(self):
-        self.registerObserver('task.fixedFee')
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.fixedFeeChangedEventType())        
         self.task.setFixedFee(1000)
-        self.assertEqual(1000, self.events[0].value())
+        self.assertEqual([(1000, self.task)], events)
     
     def testSetFixedFeeCausesRevenueChangeNotification(self):
         events = []
@@ -910,7 +920,8 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
               task.Task.percentageCompleteChangedEventType(), 
               task.Task.priorityChangedEventType(), 
               task.Task.hourlyFeeChangedEventType(), 
-              'task.fixedFee', task.Task.reminderChangedEventType(), 
+              task.Task.fixedFeeChangedEventType(),
+              task.Task.reminderChangedEventType(), 
               'task.recurrence',
               'task.prerequisites', 'task.dependencies', 
               'task.setting.shouldMarkCompletedWhenAllChildrenCompleted'],
@@ -1789,9 +1800,14 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
                          self.task1, activeEffort)
 
     def testSetFixedFeeOfChild(self):
-        self.registerObserver('task.fixedFee', eventSource=self.task1)
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.fixedFeeChangedEventType())
         self.task1_1.setFixedFee(1000)
-        self.assertEvent('task.fixedFee', self.task1, 1000)
+        self.failUnless((1000, self.task1) in events)
 
     def testGetFixedFeeRecursive(self):
         self.task.setFixedFee(2000)

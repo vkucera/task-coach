@@ -771,15 +771,13 @@ class EditFixedFeeCommand(base.BaseCommand):
         super(EditFixedFeeCommand, self).__init__(*args, **kwargs)
         self.__oldFixedFees = [item.fixedFee() for item in self.items]
         
-    @patterns.eventSource
-    def do_command(self, event=None):
+    def do_command(self):
         for item in self.items:
-            item.setFixedFee(self.__newFixedFee, event=event)
+            item.setFixedFee(self.__newFixedFee)
             
-    @patterns.eventSource
-    def undo_command(self, event=None):
+    def undo_command(self):
         for item, oldFixedFee in zip(self.items, self.__oldFixedFees):
-            item.setFixedFee(oldFixedFee, event=event)
+            item.setFixedFee(oldFixedFee)
             
     def redo_command(self):
         self.do_command()
