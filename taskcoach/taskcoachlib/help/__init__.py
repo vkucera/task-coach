@@ -24,42 +24,54 @@ from uicommand import *
 
 _MSURL = "http://www.microsoft.com/downloadS/details.aspx?familyid=200B2FD9-AE1A-4A14-984D-389C36F85647&displaylang=en"
 
+
 def sequence(*text):
     return ''.join(text)
 
+
 def a_href(text, name):
-    return '<a href="#%s">%s</a>'%(name, text)
+    return '<a href="#%s">%s</a>' % (name, text)
+
 
 def a_name(text, name):
-    return '<a name="%s">%s</a>'%(name, text)
+    return '<a name="%s">%s</a>' % (name, text)
+
 
 def h(level, text):
-    return '<h%d>%s</h%d>'%(level, text, level)
+    return '<h%d>%s</h%d>' % (level, text, level)
+
 
 def h3(text):
     return h(3, text)
 
+
 def h4(text):
     return h(4, text)
 
+
 def h5(text):
     return h(5, text)
+
     
 def p(*text):
-    return '<p>%s</p>'%'\n'.join(text)
+    return '<p>%s</p>' % '\n'.join(text)
 
-def ul(*li): # pylint: disable-msg=W0621
-    return '<ul>%s</ul>'%'\n'.join(li)
+
+def ul(*li):  # pylint: disable-msg=W0621
+    return '<ul>%s</ul>' % '\n'.join(li)
+
 
 def li(*text):
-    return '<li>%s</li>'%'\n'.join(text)
+    return '<li>%s</li>' % '\n'.join(text)
 
-def table(*tr): # pylint: disable-msg=W0621
-    return '<table border=1>%s</table>'%'\n'.join(tr)
+
+def table(*tr):  # pylint: disable-msg=W0621
+    return '<table border=1>%s</table>' % '\n'.join(tr)
+
 
 def tr(*td):
-    td = '\n'.join(['<td>%s</td>'%td for td in td]) 
-    return '<tr>%s</tr>\n'%td
+    td = '\n'.join(['<td>%s</td>' % td for td in td]) 
+    return '<tr>%s</tr>\n' % td
 
 
 _TOC = sequence(
@@ -71,7 +83,8 @@ _TOC = sequence(
                 li(a_href(_('About tasks'), 'abouttasks')),
                 li(a_href(_('Task properties'), 'taskproperties')),
                 li(a_href(_('Task states'), 'taskstates')),
-                li(a_href(_('Task colors'), 'taskcolor')))),
+                li(a_href(_('Task colors'), 'taskcolor')),
+                li(a_href(_('Reminders'), 'reminders')))),
         li(
             a_href(_('Effort'), 'effort'),
             ul(
@@ -111,13 +124,13 @@ _TOC = sequence(
         li(
             a_href(_('iPhone and iPod Touch'), 'iphone'),
             ul(
-                li(a_href(_('%(name)s on the iPhone')%meta.metaDict, 'taskcoachiphone')),
+                li(a_href(_('%(name)s on the iPhone') % meta.metaDict, 'taskcoachiphone')),
                 li(a_href(_('Configuration'), 'iphoneconf')),
                 li(a_href(_('Troubleshooting'), 'iphonetrouble')))),
         li(
             a_href(_('Android'), 'android'),
             ul(
-                li(a_href(_('%(name)s on Android?')%meta.metaDict, 'taskcoachandroid')),
+                li(a_href(_('%(name)s on Android?') % meta.metaDict, 'taskcoachandroid')),
                 li(a_href(_('Todo.txt and Todo.txt Touch'), 'todotxt')),
                 li(a_href(_('Importing todo.txt'), 'todotxtimporting')),
                 li(a_href(_('Exporting todo.txt'), 'todotxtexporting')))),
@@ -215,7 +228,17 @@ preferences dialog, of course.''')),
     p(
         _('''The background color of tasks is determined by the categories the 
 task belongs to. See the section about 
-<a href="#categoryproperties">category properties</a> below.''')))
+<a href="#categoryproperties">category properties</a> below.''')),
+    h4(
+        a_name(_('Reminders'), 'reminders')),
+    p(
+        _('''You can set a reminder for a specific date and time. %(name)s will
+show a reminder message at that date and time. From the reminder dialog
+you can open the task, start tracking effort for the task, or mark the task
+completed. It is also possible to snooze the reminder.''') % meta.metaDict),
+    p(
+        _('''If you have Growl or Snarl installed, you can instruct
+%(name)s to use these for reminders in the preferences dialog.''') % meta.metaDict))
 
 _effortSection = sequence(
     h3(
