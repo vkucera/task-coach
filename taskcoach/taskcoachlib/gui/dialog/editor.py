@@ -389,7 +389,7 @@ class ProgressPage(Page):
             'shouldMarkCompletedWhenAllChildrenCompleted', self._shouldMarkCompletedEntry, 
             currentChoice, self.items, command.EditShouldMarkCompletedCommand, 
             entry.EVT_CHOICEENTRY,
-            'task.setting.shouldMarkCompletedWhenAllChildrenCompleted')                                                       
+            task.Task.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType())                                                       
         self.addEntry(_('Mark task completed when all children are completed?'), 
                       self._shouldMarkCompletedEntry, flags=[None, wx.ALL])
         

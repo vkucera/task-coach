@@ -923,8 +923,8 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
               task.Task.fixedFeeChangedEventType(),
               task.Task.reminderChangedEventType(), 
               'task.recurrence',
-              'task.prerequisites', 'task.dependencies', 
-              'task.setting.shouldMarkCompletedWhenAllChildrenCompleted'],
+              'task.prerequisites', 'task.dependencies',
+              task.Task.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType()],
              self.task.modificationEventTypes())
           
 
@@ -2358,7 +2358,7 @@ class TaskReminderTestCase(TaskTestCase, CommonTaskTestsMixin):
         
         
 class TaskSettingTestCase(TaskTestCase, CommonTaskTestsMixin):
-    eventTypes = ['task.setting.shouldMarkCompletedWhenAllChildrenCompleted',
+    eventTypes = [task.Task.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType(),
                   task.Task.percentageCompleteChangedEventType()]
 
     
@@ -2376,9 +2376,15 @@ class MarkTaskCompletedWhenAllChildrenCompletedSettingIsTrueFixture(TaskSettingT
             self.task.shouldMarkCompletedWhenAllChildrenCompleted())
 
     def testSetSettingCausesNotification(self):
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent,
+                      task.Task.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType())
         self.task.setShouldMarkCompletedWhenAllChildrenCompleted(False)
-        event = self.events[0]
-        self.failUnless('task.setting.shouldMarkCompletedWhenAllChildrenCompleted' in event.types())
+        self.assertEqual([(False, self.task)], events)
         
     def testSetSettingCausesPercentageCompleteNotification(self):
         events = []
