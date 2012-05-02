@@ -65,8 +65,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__reminder = reminder or maxDateTime
         self.__reminderBeforeSnooze = reminderBeforeSnooze or self.__reminder
         self.__recurrence = date.Recurrence() if recurrence is None else recurrence
-        self.__prerequisites = SetAttribute(prerequisites or [], self, 
-                                            changeEvent=self.prerequisitesEvent)
+        self.__prerequisites = set(prerequisites or [])
         self.__dependencies = SetAttribute(dependencies or [], self, 
                                            changeEvent=self.dependenciesEvent)
         self.__shouldMarkCompletedWhenAllChildrenCompleted = \
@@ -101,7 +100,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.setPriority(state['priority'])
         self.setHourlyFee(state['hourlyFee'])
         self.setFixedFee(state['fixedFee'])
-        self.setPrerequisites(state['prerequisites'], event=event)
+        self.setPrerequisites(state['prerequisites'])
         self.setDependencies(state['dependencies'], event=event)
         self.setShouldMarkCompletedWhenAllChildrenCompleted( \
             state['shouldMarkCompletedWhenAllChildrenCompleted'])
@@ -119,7 +118,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             hourlyFee=self.__hourlyFee, fixedFee=self.__fixedFee, 
             recurrence=self.__recurrence.copy(),
             reminder=self.__reminder,
-            prerequisites=self.__prerequisites.get(),
+            prerequisites=self.__prerequisites.copy(),
             dependencies=self.__dependencies.get(),
             shouldMarkCompletedWhenAllChildrenCompleted=self.__shouldMarkCompletedWhenAllChildrenCompleted))
         return state
@@ -1203,7 +1202,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     # Prerequisites
     
     def prerequisites(self, recursive=False, upwards=False):
-        prerequisites = self.__prerequisites.get() 
+        prerequisites = self.__prerequisites.copy()
         if recursive and upwards and self.parent() is not None:
             prerequisites |= self.parent().prerequisites(recursive=True, upwards=True)
         elif recursive and not upwards:
@@ -1211,22 +1210,34 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 prerequisites |= child.prerequisites()
         return prerequisites
     
-    @patterns.eventSource
-    def setPrerequisites(self, prerequisites, event=None):
-        if self.__prerequisites.set(set(prerequisites), event=event):
-            self.setActualStartDateTime(self.maxDateTime, recursive=True)
-            self.recomputeAppearance(recursive=True, event=event)
+    def setPrerequisites(self, prerequisites):
+        prerequisites = set(prerequisites)
+        if prerequisites == self.__prerequisites:
+            return
+        self.__prerequisites = prerequisites
+        self.setActualStartDateTime(self.maxDateTime, recursive=True)
+        self.recomputeAppearance(recursive=True)
+        pub.sendMessage(self.prerequisitesChangedEventType(), 
+                        newValue=self.__prerequisites, sender=self)
         
-    @patterns.eventSource
-    def addPrerequisites(self, prerequisites, event=None):
-        if self.__prerequisites.add(set(prerequisites), event=event):
-            self.setActualStartDateTime(self.maxDateTime, recursive=True)
-            self.recomputeAppearance(recursive=True, event=event)
+    def addPrerequisites(self, prerequisites):
+        prerequisites = set(prerequisites)
+        if prerequisites <= self.__prerequisites:
+            return
+        self.__prerequisites |= prerequisites
+        self.setActualStartDateTime(self.maxDateTime, recursive=True)
+        self.recomputeAppearance(recursive=True)
+        pub.sendMessage(self.prerequisitesChangedEventType(), 
+                        newValue=self.__prerequisites, sender=self)
         
-    @patterns.eventSource
-    def removePrerequisites(self, prerequisites, event=None):
-        if self.__prerequisites.remove(set(prerequisites), event=event):
-            self.recomputeAppearance(recursive=True, event=event)
+    def removePrerequisites(self, prerequisites):
+        prerequisites = set(prerequisites)
+        if self.__prerequisites.isdisjoint(prerequisites):
+            return
+        self.__prerequisites -= prerequisites
+        self.recomputeAppearance(recursive=True)
+        pub.sendMessage(self.prerequisitesChangedEventType(), 
+                        newValue=self.__prerequisites, sender=self)
         
     @patterns.eventSource
     def addTaskAsDependencyOf(self, prerequisites, event=None):
@@ -1238,8 +1249,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         for prerequisite in prerequisites:
             prerequisite.removeDependencies([self], event=event)
             
-    def prerequisitesEvent(self, event, *prerequisites):
-        event.addSource(self, *prerequisites, **dict(type='task.prerequisites'))
+    @classmethod
+    def prerequisitesChangedEventType(class_):
+        return 'pubsub.task.prerequisites'
 
     @staticmethod
     def prerequisitesSortFunction(**kwargs):
@@ -1264,7 +1276,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def prerequisitesSortEventTypes(class_):
         ''' The event types that influence the prerequisites sort order. '''
-        return ('task.prerequisites')
+        return (class_.prerequisitesChangedEventType(),)
 
     # Dependencies
     
@@ -1286,15 +1298,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def removeDependencies(self, dependencies, event=None):
         self.__dependencies.remove(set(dependencies), event=event)
         
-    @patterns.eventSource
-    def addTaskAsPrerequisiteOf(self, dependencies, event=None):
+    def addTaskAsPrerequisiteOf(self, dependencies):
         for dependency in dependencies:
-            dependency.addPrerequisites([self], event=event)
+            dependency.addPrerequisites([self])
             
-    @patterns.eventSource
-    def removeTaskAsPrerequisiteOf(self, dependencies, event=None):
+    def removeTaskAsPrerequisiteOf(self, dependencies):
         for dependency in dependencies:
-            dependency.removePrerequisites([self], event=event)      
+            dependency.removePrerequisites([self])      
 
     def dependenciesEvent(self, event, *dependencies):
         event.addSource(self, *dependencies, **dict(type='task.dependencies'))
@@ -1414,5 +1424,6 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                              class_.fixedFeeChangedEventType(),
                              class_.reminderChangedEventType(), 
                              class_.recurrenceChangedEventType(),
-                             'task.prerequisites', 'task.dependencies',
+                             class_.prerequisitesChangedEventType(),
+                             'task.dependencies',
                              class_.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType()]

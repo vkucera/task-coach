@@ -797,11 +797,15 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.assertEqual(prerequisites, self.task.prerequisites())
         
     def testAddPrerequisiteCausesNotification(self):
-        eventType = 'task.prerequisites'
-        self.registerObserver(eventType)
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.prerequisitesChangedEventType())
         prerequisite = task.Task()
         self.task.addPrerequisites([prerequisite])
-        self.assertEvent(eventType, self.task, prerequisite)
+        self.assertEqual([(set([prerequisite]), self.task)], events)
         
     def testRemovePrerequisiteThatHasNotBeenAdded(self):
         prerequisite = task.Task()
@@ -928,7 +932,8 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
               task.Task.fixedFeeChangedEventType(),
               task.Task.reminderChangedEventType(), 
               task.Task.recurrenceChangedEventType(),
-              'task.prerequisites', 'task.dependencies',
+              task.Task.prerequisitesChangedEventType(),
+              'task.dependencies',
               task.Task.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType()],
              self.task.modificationEventTypes())
 
@@ -2676,10 +2681,14 @@ class TaskWithPrerequisite(TaskTestCase):
         self.failUnless(self.prerequisite in self.task.prerequisites())
         
     def testRemovePrerequisiteNotification(self):
-        eventType = 'task.prerequisites'
-        self.registerObserver(eventType)
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.prerequisitesChangedEventType())
         self.task.removePrerequisites([self.prerequisite])
-        self.assertEvent(eventType, self.task)
+        self.assertEqual([(set([]), self.task)], events)
         
     def testSetPrerequisitesRemovesOldPrerequisites(self):
         newPrerequisites = set([task.Task()])

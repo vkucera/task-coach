@@ -139,20 +139,20 @@ class DeleteTaskCommand(base.DeleteCommand, EffortCommand):
         self.__removePrerequisites(event)
     
     def __removePrerequisites(self, event):
-        self.__relationsToRestore = dict() # pylint: disable-msg=W0201
+        self.__relationsToRestore = dict()  # pylint: disable-msg=W0201
         for eachTask in self.items:
             prerequisites, dependencies = eachTask.prerequisites(), eachTask.dependencies()
             self.__relationsToRestore[eachTask] = prerequisites, dependencies
             eachTask.removeTaskAsDependencyOf(prerequisites, event=event)
-            eachTask.removeTaskAsPrerequisiteOf(dependencies, event=event)
-            eachTask.setPrerequisites([], event=event)
+            eachTask.removeTaskAsPrerequisiteOf(dependencies)
+            eachTask.setPrerequisites([])
             eachTask.setDependencies([], event=event)
 
     def __restorePrerequisites(self, event):
         for eachTask, (prerequisites, dependencies) in self.__relationsToRestore.items():
             eachTask.addTaskAsDependencyOf(prerequisites, event=event)
-            eachTask.addTaskAsPrerequisiteOf(dependencies, event=event)
-            eachTask.setPrerequisites(prerequisites, event=event)
+            eachTask.addTaskAsPrerequisiteOf(dependencies)
+            eachTask.setPrerequisites(prerequisites)
             eachTask.setDependencies(dependencies, event=event)
             
 
@@ -185,7 +185,7 @@ class NewTaskCommand(base.NewItemCommand):
             for prerequisite in eachTask.prerequisites():
                 prerequisite.addDependencies([eachTask], event=event)
             for dependency in eachTask.dependencies():
-                dependency.addPrerequisites([eachTask], event=event)
+                dependency.addPrerequisites([eachTask])
 
     @patterns.eventSource
     def removeDependenciesAndPrerequisites(self, event=None):
@@ -193,7 +193,7 @@ class NewTaskCommand(base.NewItemCommand):
             for prerequisite in eachTask.prerequisites():
                 prerequisite.removeDependencies([eachTask], event=event)                                
             for dependency in eachTask.dependencies():
-                dependency.removePrerequisites([eachTask], event=event)
+                dependency.removePrerequisites([eachTask])
                 
                 
 class NewSubTaskCommand(base.NewSubItemCommand, SaveTaskStateMixin):
@@ -791,17 +791,17 @@ class TogglePrerequisiteCommand(base.BaseCommand):
     @patterns.eventSource
     def do_command(self, event=None):
         for item in self.items:
-            item.addPrerequisites(self.__checkedPrerequisites, event=event)
+            item.addPrerequisites(self.__checkedPrerequisites)
             item.addTaskAsDependencyOf(self.__checkedPrerequisites, event=event)
-            item.removePrerequisites(self.__uncheckedPrerequisites, event=event)
+            item.removePrerequisites(self.__uncheckedPrerequisites)
             item.removeTaskAsDependencyOf(self.__uncheckedPrerequisites, event=event)
 
     @patterns.eventSource
     def undo_command(self, event=None):
         for item in self.items:
-            item.removePrerequisites(self.__checkedPrerequisites, event=event)
+            item.removePrerequisites(self.__checkedPrerequisites)
             item.removeTaskAsDependencyOf(self.__checkedPrerequisites, event=event)
-            item.addPrerequisites(self.__uncheckedPrerequisites, event=event)
+            item.addPrerequisites(self.__uncheckedPrerequisites)
             item.addTaskAsDependencyOf(self.__uncheckedPrerequisites, event=event)
 
     def redo_command(self):

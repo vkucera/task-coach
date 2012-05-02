@@ -24,27 +24,20 @@ import task
 
 class Sorter(base.TreeSorter):
     DomainObjectClass = task.Task  # What are we sorting
-    TaskStatusAttributes = ('prerequisites',)
+    TaskStatusAttributes = ('prerequisites', 'dueDateTime', 
+                            'plannedStartDateTime', 'actualStartDateTime', 
+                            'completionDateTime')
     
     def __init__(self, *args, **kwargs):
         self.__treeMode = kwargs.pop('treeMode', False)
         self.__sortByTaskStatusFirst = kwargs.pop('sortByTaskStatusFirst', True)
         super(Sorter, self).__init__(*args, **kwargs)
-        for attribute in self.TaskStatusAttributes:
-            try:
-                eventType = getattr(self.DomainObjectClass, '%sChangedEventType' % attribute)()
-            except AttributeError:
-                eventType = 'task.%s' % attribute
-            patterns.Publisher().registerObserver(self.onAttributeChanged_Deprecated, 
-                                                  eventType=eventType)
-        pub.subscribe(self.onAttributeChanged, 
-                      task.Task.dueDateTimeChangedEventType())
-        pub.subscribe(self.onAttributeChanged,
-                      task.Task.plannedStartDateTimeChangedEventType())
-        pub.subscribe(self.onAttributeChanged, 
-                      task.Task.actualStartDateTimeChangedEventType())
-        pub.subscribe(self.onAttributeChanged,
-                      task.Task.completionDateTimeChangedEventType())
+        for eventType in (task.Task.prerequisitesChangedEventType(),
+                          task.Task.dueDateTimeChangedEventType(),
+                          task.Task.plannedStartDateTimeChangedEventType(),
+                          task.Task.actualStartDateTimeChangedEventType(),
+                          task.Task.completionDateTimeChangedEventType()):
+            pub.subscribe(self.onAttributeChanged, eventType)
     
     @patterns.eventSource       
     def setTreeMode(self, treeMode=True, event=None):
@@ -83,10 +76,10 @@ class Sorter(base.TreeSorter):
         # Sorter is always observing task dates and prerequisites because 
         # sorting by status depends on those attributes. Hence we don't need
         # to subscribe to these attributes when they become the sort key.
-        if attribute not in self.TaskStatusAttributes + ('dueDateTime', 'plannedStartDateTime', 'actualStartDateTime', 'completionDateTime'):
+        if attribute not in self.TaskStatusAttributes:
             super(Sorter, self)._registerObserverForAttribute(attribute)
             
     def _removeObserverForAttribute(self, attribute):
         # See comment at _registerObserverForAttribute.
-        if attribute not in self.TaskStatusAttributes + ('dueDateTime', 'plannedStartDateTime', 'actualStartDateTime', 'completionDateTime'):
+        if attribute not in self.TaskStatusAttributes:
             super(Sorter, self)._removeObserverForAttribute(attribute)

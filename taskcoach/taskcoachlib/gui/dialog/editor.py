@@ -729,14 +729,14 @@ class PrerequisitesPage(PageWithViewer):
     
     def createViewer(self, taskFile, settings, settingsSection):
         assert len(self.items) == 1
-        self.registerObserver(self.onPrerequisitesChanged, 
-                              eventType='task.prerequisites', 
-                              eventSource=self.items[0])
+        pub.subscribe(self.onPrerequisitesChanged, 
+                      self.items[0].prerequisitesChangedEventType())
         return LocalPrerequisiteViewer(self.items, self, taskFile, settings,
                                        settingsSection=settingsSection)
         
-    def onPrerequisitesChanged(self, event):
-        self.viewer.refreshItems(*event.values())
+    def onPrerequisitesChanged(self, newValue, sender):
+        if sender == self.items[0]:
+            self.viewer.refreshItems(*newValue)
     
     def entries(self):
         return dict(firstEntry=self.viewer, prerequisites=self.viewer,

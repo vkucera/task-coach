@@ -137,7 +137,7 @@ class XMLReader(object):
                     # Don't restore prerequisites and dependencies for deleted
                     # tasks
                     for deletedTask in [each_task] + each_task.children(recursive=True):
-                        deletedTask.setPrerequisites([], event=event)
+                        deletedTask.setPrerequisites([])
                     continue
                 dummyPrerequisites = each_task.prerequisites()
                 prerequisites = set()
@@ -148,7 +148,7 @@ class XMLReader(object):
                         # Release 1.2.11 and older have a bug where tasks can
                         # have prerequisites listed that don't exist anymore
                         pass
-                each_task.setPrerequisites(prerequisites, event=event)
+                each_task.setPrerequisites(prerequisites)
                 for prerequisite in prerequisites:
                     prerequisite.addDependencies([each_task], event=event)
                 addPrerequisitesAndDependencies(each_task.children(), event)

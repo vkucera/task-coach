@@ -69,11 +69,9 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,  # pylint: disable-msg=W0223
                                   'inactivetasks', 'completedtasks', 'duesoontasks', 'overduetasks', 'latetasks'] 
             for appearanceSetting in appearanceSettings:
                 pub.subscribe(self.onAppearanceSettingChange, appearanceSetting)
-        for eventType in (task.Task.appearanceChangedEventType(), 
-                          task.Task.percentageCompleteChangedEventType(),
-                          'task.prerequisites'):
-            self.registerObserver(self.onAttributeChanged_Deprecated,
-                                  eventType=eventType)
+        self.registerObserver(self.onAttributeChanged_Deprecated,
+                              eventType=task.Task.appearanceChangedEventType())
+        pub.subscribe(self.onAttributeChanged, task.Task.prerequisitesChangedEventType())
         pub.subscribe(self.refresh, 'powermgt.on')
         
     def onAppearanceSettingChange(self, value):  # pylint: disable-msg=W0613
@@ -829,7 +827,8 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable-msg=W0223
                 width=self.getColumnWidth('categories'),
                 renderCallback=self.renderCategories, **kwargs),
              widgets.Column('prerequisites', _('Prerequisites'),
-                'task.prerequisites', 'task.prerequisite.subject',
+                task.Task.prerequisitesChangedEventType(), 
+                'task.prerequisite.subject',
                 task.Task.expansionChangedEventType(),
                 sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                                                            value='prerequisites'),
