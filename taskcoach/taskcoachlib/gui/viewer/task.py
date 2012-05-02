@@ -873,7 +873,8 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable-msg=W0223
             ('priority', _('Priority'), inplace_editor.PriorityCtrl, self.onEditPriority, 
                  [task.Task.expansionChangedEventType(), task.Task.priorityChangedEventType()]),
             ('hourlyFee', _('Hourly fee'), inplace_editor.AmountCtrl, self.onEditHourlyFee, [task.Task.hourlyFeeChangedEventType()]),
-            ('fixedFee', _('Fixed fee'), inplace_editor.AmountCtrl, self.onEditFixedFee, [task.Task.expansionChangedEventType(), task.Task.fixedFeeChangedEventType()]),            
+            ('fixedFee', _('Fixed fee'), inplace_editor.AmountCtrl, self.onEditFixedFee, 
+                 [task.Task.expansionChangedEventType(), task.Task.fixedFeeChangedEventType()]),            
             ('revenue', _('Revenue'), None, None, 
                 [task.Task.expansionChangedEventType(), task.Task.revenueChangedEventType()])]:
             if (name in dependsOnEffortFeature and effortOn) or name not in dependsOnEffortFeature:
