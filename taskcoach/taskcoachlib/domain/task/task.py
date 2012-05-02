@@ -60,7 +60,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__budget = budget or date.TimeDelta()
         self._efforts = efforts or []
         self.__priority = priority
-        self.__hourlyFee = Attribute(hourlyFee, self, self.hourlyFeeEvent)
+        self.__hourlyFee = hourlyFee
         self.__fixedFee = Attribute(fixedFee, self, self.fixedFeeEvent)
         self.__reminder = reminder or maxDateTime
         self.__reminderBeforeSnooze = reminderBeforeSnooze or self.__reminder
@@ -101,7 +101,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.setEfforts(state['efforts'], event=event)
         self.setBudget(state['budget'])
         self.setPriority(state['priority'])
-        self.setHourlyFee(state['hourlyFee'], event=event)
+        self.setHourlyFee(state['hourlyFee'])
         self.setFixedFee(state['fixedFee'], event=event)
         self.setPrerequisites(state['prerequisites'], event=event)
         self.setDependencies(state['dependencies'], event=event)
@@ -118,7 +118,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             children=self.children(), parent=self.parent(), 
             efforts=self._efforts, budget=self.__budget, 
             priority=self.__priority,
-            hourlyFee=self.__hourlyFee.get(), fixedFee=self.__fixedFee.get(), 
+            hourlyFee=self.__hourlyFee, fixedFee=self.__fixedFee.get(), 
             recurrence=self._recurrence.copy(),
             reminder=self.__reminder,
             prerequisites=self.__prerequisites.get(),
@@ -135,7 +135,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             percentageComplete=self.__percentageComplete,
             efforts=[effort.copy() for effort in self._efforts], 
             budget=self.__budget, priority=self.__priority,
-            hourlyFee=self.__hourlyFee.get(), fixedFee=self.__fixedFee.get(), 
+            hourlyFee=self.__hourlyFee, fixedFee=self.__fixedFee.get(), 
             recurrence=self._recurrence.copy(),
             reminder=self.__reminder, 
             shouldMarkCompletedWhenAllChildrenCompleted=self._shouldMarkCompletedWhenAllChildrenCompleted))
@@ -979,22 +979,24 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     # Hourly fee
     
     def hourlyFee(self, recursive=False):  # pylint: disable-msg=W0613
-        return self.__hourlyFee.get()
+        return self.__hourlyFee
     
-    def setHourlyFee(self, hourlyFee, event=None):
-        self.__hourlyFee.set(hourlyFee, event=event)
-
-    def hourlyFeeEvent(self, event):
-        event.addSource(self, self.hourlyFee(), 
-                        type=self.hourlyFeeChangedEventType())
+    def setHourlyFee(self, hourlyFee):
+        if hourlyFee == self.__hourlyFee:
+            return
+        self.__hourlyFee = hourlyFee
+        pub.sendMessage(self.hourlyFeeChangedEventType(), newValue=hourlyFee, 
+                        sender=self)
         if self.timeSpent() > date.TimeDelta():
             self.sendRevenueChangedMessage()
             for effort in self.efforts():
+                event = patterns.Event()
                 effort.revenueEvent(event)
+                event.send()
             
     @classmethod
     def hourlyFeeChangedEventType(class_):
-        return '%s.hourlyFee' % class_
+        return 'pubsub.task.hourlyFee'
     
     @staticmethod  # pylint: disable-msg=W0613
     def hourlyFeeSortFunction(**kwargs): 
