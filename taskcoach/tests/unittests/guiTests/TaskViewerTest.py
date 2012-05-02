@@ -787,7 +787,7 @@ class CommonTestsMixin(object):
     def testChangePriorityWhileColumnNotShown(self):
         self.taskList.append(self.task)
         self.task.setPriority(10)
-        self.failIf(self.viewer.events_deprecated)
+        self.failIf(self.viewer.events)
 
     def testChangePriorityWhileColumnShown(self):
         self.taskList.append(self.task)

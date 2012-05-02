@@ -162,7 +162,7 @@ class Viewer(patterns.Observer, wx.Panel):
             filter. '''
         return collection
 
-    def onAttributeChanged(self, newValue, sender):
+    def onAttributeChanged(self, newValue, sender):  # pylint: disable-msg=W0613
         if self:
             self.refreshItems(sender)
         
