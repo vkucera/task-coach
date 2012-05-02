@@ -73,13 +73,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             shouldMarkCompletedWhenAllChildrenCompleted
         for effort in self._efforts:
             effort.setTask(self)
-        self.registerObserver = registerObserver = patterns.Publisher().registerObserver
-        self.removeObserver = patterns.Publisher().removeObserver
         for taskStatus in self.possibleStatuses():
-            registerObserver(self.__computeRecursiveForegroundColor, 'fgcolor.%stasks' % taskStatus)
-            registerObserver(self.__computeRecursiveBackgroundColor, 'bgcolor.%stasks' % taskStatus)
-            registerObserver(self.__computeRecursiveIcon, 'icon.%stasks' % taskStatus)
-            registerObserver(self.__computeRecursiveSelectedIcon, 'icon.%stasks' % taskStatus)
+            pub.subscribe(self.__computeRecursiveForegroundColor, 'settings.fgcolor.%stasks' % taskStatus)
+            pub.subscribe(self.__computeRecursiveBackgroundColor, 'settings.bgcolor.%stasks' % taskStatus)
+            pub.subscribe(self.__computeRecursiveIcon, 'settings.icon.%stasks' % taskStatus)
+            pub.subscribe(self.__computeRecursiveSelectedIcon, 'settings.icon.%stasks' % taskStatus)
         pub.subscribe(self.onDueSoonHoursChanged, 'settings.behavior.duesoonhours')
 
         now = date.Now()
@@ -731,7 +729,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         except AttributeError:
             return self.__computeRecursiveForegroundColor()
         
-    def __computeRecursiveForegroundColor(self, *args, **kwargs):  # pylint: disable-msg=W0613
+    def __computeRecursiveForegroundColor(self, value=None):  # pylint: disable-msg=W0613
         fgColor = super(Task, self).foregroundColor(recursive=True)
         statusColor = self.statusFgColor()
         if statusColor == wx.BLACK:
