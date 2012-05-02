@@ -518,10 +518,14 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.assertEqual(date.Recurrence('weekly'), self.task.recurrence())
 
     def testSetRecurrenceCausesNotification(self):
-        self.registerObserver('task.recurrence')
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+
+        pub.subscribe(onEvent, task.Task.recurrenceChangedEventType())
         self.task.setRecurrence(date.Recurrence('weekly'))
-        self.assertEqual([patterns.Event('task.recurrence', self.task,
-            date.Recurrence('weekly'))], self.events)
+        self.assertEqual([(date.Recurrence('weekly'), self.task)], events)
 
     # Add child
         
@@ -849,7 +853,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
 
     def testTaskStateIncludesRecurrence(self):
         state = self.task.__getstate__()
-        self.task.setRecurrence('weekly')
+        self.task.setRecurrence(date.Recurrence('weekly'))
         self.task.__setstate__(state)
         self.failIf(self.task.recurrence())
 
@@ -922,7 +926,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
               task.Task.hourlyFeeChangedEventType(), 
               task.Task.fixedFeeChangedEventType(),
               task.Task.reminderChangedEventType(), 
-              'task.recurrence',
+              task.Task.recurrenceChangedEventType(),
               'task.prerequisites', 'task.dependencies',
               task.Task.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType()],
              self.task.modificationEventTypes())

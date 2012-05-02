@@ -656,15 +656,13 @@ class EditRecurrenceCommand(base.BaseCommand):
         super(EditRecurrenceCommand, self).__init__(*args, **kwargs)
         self.__oldRecurrences = [item.recurrence() for item in self.items]
 
-    @patterns.eventSource
-    def do_command(self, event=None):
+    def do_command(self):
         for item in self.items:
-            item.setRecurrence(self.__newRecurrence, event=event)
+            item.setRecurrence(self.__newRecurrence)
 
-    @patterns.eventSource
-    def undo_command(self, event=None):
+    def undo_command(self):
         for item, oldRecurrence in zip(self.items, self.__oldRecurrences):
-            item.setRecurrence(oldRecurrence, event=event)
+            item.setRecurrence(oldRecurrence)
 
     def redo_command(self):
         self.do_command()

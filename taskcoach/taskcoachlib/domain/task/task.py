@@ -64,7 +64,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__fixedFee = fixedFee
         self.__reminder = reminder or maxDateTime
         self.__reminderBeforeSnooze = reminderBeforeSnooze or self.__reminder
-        self._recurrence = date.Recurrence() if recurrence is None else recurrence
+        self.__recurrence = date.Recurrence() if recurrence is None else recurrence
         self.__prerequisites = SetAttribute(prerequisites or [], self, 
                                             changeEvent=self.prerequisitesEvent)
         self.__dependencies = SetAttribute(dependencies or [], self, 
@@ -94,7 +94,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.setDueDateTime(state['dueDateTime'])
         self.setCompletionDateTime(state['completionDateTime'])
         self.setPercentageComplete(state['percentageComplete'])
-        self.setRecurrence(state['recurrence'], event=event)
+        self.setRecurrence(state['recurrence'])
         self.setReminder(state['reminder'])
         self.setEfforts(state['efforts'], event=event)
         self.setBudget(state['budget'])
@@ -117,7 +117,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             efforts=self._efforts, budget=self.__budget, 
             priority=self.__priority,
             hourlyFee=self.__hourlyFee, fixedFee=self.__fixedFee, 
-            recurrence=self._recurrence.copy(),
+            recurrence=self.__recurrence.copy(),
             reminder=self.__reminder,
             prerequisites=self.__prerequisites.get(),
             dependencies=self.__dependencies.get(),
@@ -134,7 +134,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             efforts=[effort.copy() for effort in self._efforts], 
             budget=self.__budget, priority=self.__priority,
             hourlyFee=self.__hourlyFee, fixedFee=self.__fixedFee, 
-            recurrence=self._recurrence.copy(),
+            recurrence=self.__recurrence.copy(),
             reminder=self.__reminder, 
             shouldMarkCompletedWhenAllChildrenCompleted=self.__shouldMarkCompletedWhenAllChildrenCompleted))
         return state
@@ -1120,23 +1120,27 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     # Recurrence
     
     def recurrence(self, recursive=False, upwards=False):
-        if not self._recurrence and recursive and upwards and self.parent():
+        if not self.__recurrence and recursive and upwards and self.parent():
             return self.parent().recurrence(recursive, upwards)
         elif recursive and not upwards:
             recurrences = [child.recurrence() for child in self.children(recursive)]
-            recurrences.append(self._recurrence)
+            recurrences.append(self.__recurrence)
             recurrences = [r for r in recurrences if r]
-            return min(recurrences) if recurrences else self._recurrence
+            return min(recurrences) if recurrences else self.__recurrence
         else:
-            return self._recurrence
+            return self.__recurrence
 
-    @patterns.eventSource
-    def setRecurrence(self, recurrence=None, event=None):
+    def setRecurrence(self, recurrence=None):
         recurrence = recurrence or date.Recurrence()
-        if recurrence == self._recurrence:
+        if recurrence == self.__recurrence:
             return
-        self._recurrence = recurrence
-        event.addSource(self, recurrence, type='task.recurrence')
+        self.__recurrence = recurrence
+        pub.sendMessage(self.recurrenceChangedEventType(), newValue=recurrence,
+                        sender=self)
+        
+    @classmethod
+    def recurrenceChangedEventType(class_):
+        return 'pubsub.task.recurrence'
 
     @patterns.eventSource
     def recur(self, completionDateTime=None, event=None):
@@ -1186,7 +1190,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def recurrenceSortEventTypes(class_):
         ''' The event types that influence the recurrence sort order. '''
-        return ('task.recurrence',)
+        return (class_.recurrenceChangedEventType(),)
     
     # Prerequisites
     
@@ -1401,6 +1405,6 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                              class_.hourlyFeeChangedEventType(),
                              class_.fixedFeeChangedEventType(),
                              class_.reminderChangedEventType(), 
-                             'task.recurrence',
+                             class_.recurrenceChangedEventType(),
                              'task.prerequisites', 'task.dependencies',
                              class_.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType()]
