@@ -47,7 +47,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         super(Task, self).__init__(*args, **kwargs)
         self.__status = None  # status cache
         self.__dueSoonHours = self.settings.getint('behavior', 'duesoonhours')  # pylint: disable-msg=E1101
-        Attribute, SetAttribute = base.Attribute, base.SetAttribute
+        SetAttribute = base.SetAttribute
         maxDateTime = self.maxDateTime    
         self.__dueDateTime = dueDateTime or maxDateTime
         self.__plannedStartDateTime = plannedStartDateTime or maxDateTime
@@ -69,7 +69,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                                             changeEvent=self.prerequisitesEvent)
         self.__dependencies = SetAttribute(dependencies or [], self, 
                                            changeEvent=self.dependenciesEvent)
-        self._shouldMarkCompletedWhenAllChildrenCompleted = \
+        self.__shouldMarkCompletedWhenAllChildrenCompleted = \
             shouldMarkCompletedWhenAllChildrenCompleted
         for effort in self._efforts:
             effort.setTask(self)
@@ -106,7 +106,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.setPrerequisites(state['prerequisites'], event=event)
         self.setDependencies(state['dependencies'], event=event)
         self.setShouldMarkCompletedWhenAllChildrenCompleted( \
-            state['shouldMarkCompletedWhenAllChildrenCompleted'], event=event)
+            state['shouldMarkCompletedWhenAllChildrenCompleted'])
         
     def __getstate__(self):
         state = super(Task, self).__getstate__()
@@ -123,7 +123,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             reminder=self.__reminder,
             prerequisites=self.__prerequisites.get(),
             dependencies=self.__dependencies.get(),
-            shouldMarkCompletedWhenAllChildrenCompleted=self._shouldMarkCompletedWhenAllChildrenCompleted))
+            shouldMarkCompletedWhenAllChildrenCompleted=self.__shouldMarkCompletedWhenAllChildrenCompleted))
         return state
 
     def __getcopystate__(self):
@@ -138,7 +138,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             hourlyFee=self.__hourlyFee, fixedFee=self.__fixedFee, 
             recurrence=self._recurrence.copy(),
             reminder=self.__reminder, 
-            shouldMarkCompletedWhenAllChildrenCompleted=self._shouldMarkCompletedWhenAllChildrenCompleted))
+            shouldMarkCompletedWhenAllChildrenCompleted=self.__shouldMarkCompletedWhenAllChildrenCompleted))
         return state
 
     @classmethod
@@ -1328,23 +1328,22 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 
     # behavior
     
-    @patterns.eventSource
-    def setShouldMarkCompletedWhenAllChildrenCompleted(self, newValue, event=None):
-        if newValue == self._shouldMarkCompletedWhenAllChildrenCompleted:
+    def setShouldMarkCompletedWhenAllChildrenCompleted(self, newValue):
+        if newValue == self.__shouldMarkCompletedWhenAllChildrenCompleted:
             return
-        self._shouldMarkCompletedWhenAllChildrenCompleted = newValue
-        event.addSource(self, newValue, 
-                        type=self.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType())
+        self.__shouldMarkCompletedWhenAllChildrenCompleted = newValue
+        pub.sendMessage(self.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType(),
+                        newValue=newValue, sender=self)
         pub.sendMessage(self.percentageCompleteChangedEventType(), 
                         newValue=self.percentageComplete(recursive=True), 
                         sender=self)
-
-    def shouldMarkCompletedWhenAllChildrenCompleted(self):
-        return self._shouldMarkCompletedWhenAllChildrenCompleted
-
+    
     @classmethod
     def shouldMarkCompletedWhenAllChildrenCompletedChangedEventType(class_):
-        return '%s.setting.shouldMarkCompletedWhenAllChildrenCompleted' % class_
+        return 'pubsub.task.shouldMarkCompletedWhenAllChildrenCompleted'
+
+    def shouldMarkCompletedWhenAllChildrenCompleted(self):
+        return self.__shouldMarkCompletedWhenAllChildrenCompleted
 
     @classmethod
     def suggestedPlannedStartDateTime(cls, now=date.Now):

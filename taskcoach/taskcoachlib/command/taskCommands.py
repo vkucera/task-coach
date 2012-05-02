@@ -706,15 +706,13 @@ class EditShouldMarkCompletedCommand(base.BaseCommand):
         super(EditShouldMarkCompletedCommand, self).__init__(*args, **kwargs)
         self.__oldShouldMarkCompleted = [item.shouldMarkCompletedWhenAllChildrenCompleted() for item in self.items]
         
-    @patterns.eventSource
-    def do_command(self, event=None):
+    def do_command(self):
         for item in self.items:
-            item.setShouldMarkCompletedWhenAllChildrenCompleted(self.__newShouldMarkCompleted, event=event)
+            item.setShouldMarkCompletedWhenAllChildrenCompleted(self.__newShouldMarkCompleted)
             
-    @patterns.eventSource
-    def undo_command(self, event=None):
+    def undo_command(self):
         for item, oldShouldMarkCompleted in zip(self.items, self.__oldShouldMarkCompleted):
-            item.setShouldMarkCompletedWhenAllChildrenCompleted(oldShouldMarkCompleted, event=event)
+            item.setShouldMarkCompletedWhenAllChildrenCompleted(oldShouldMarkCompleted)
             
     def redo_command(self):
         self.do_command()

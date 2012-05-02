@@ -2378,9 +2378,15 @@ class MarkTaskCompletedWhenAllChildrenCompletedSettingIsTrueFixture(TaskSettingT
             self.task.shouldMarkCompletedWhenAllChildrenCompleted())
 
     def testSetSettingCausesNotification(self):
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent,
+                      task.Task.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType())
         self.task.setShouldMarkCompletedWhenAllChildrenCompleted(False)
-        event = self.events[0]
-        self.failUnless(task.Task.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType() in event.types())
+        self.assertEqual([(False, self.task)], events)
         
     def testSetSettingCausesPercentageCompleteNotification(self):
         events = []
