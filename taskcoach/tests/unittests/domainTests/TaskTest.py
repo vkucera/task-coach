@@ -836,11 +836,15 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.assertEqual(dependencies, self.task.dependencies())
         
     def testAddDependencyCausesNotification(self):
-        eventType = 'task.dependencies'
-        self.registerObserver(eventType)
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.dependenciesChangedEventType())
         dependency = task.Task()
         self.task.addDependencies([dependency])
-        self.assertEvent(eventType, self.task, dependency) 
+        self.assertEqual([(set([dependency]), self.task)], events)
         
     def testRemoveDependencyThatHasNotBeenAdded(self):
         dependency = task.Task()
@@ -932,7 +936,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
               task.Task.reminderChangedEventType(), 
               task.Task.recurrenceChangedEventType(),
               task.Task.prerequisitesChangedEventType(),
-              'task.dependencies',
+              task.Task.dependenciesChangedEventType(),
               task.Task.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType()],
              self.task.modificationEventTypes())
           
@@ -2732,9 +2736,14 @@ class TaskWithDependency(TaskTestCase):
         self.failUnless(self.dependency in self.task.dependencies())
         
     def testRemoveDependencyNotification(self):
-        self.registerObserver('task.dependencies')
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.dependenciesChangedEventType())
         self.task.removeDependencies([self.dependency])
-        self.assertEvent('task.dependencies', self.task)
+        self.assertEqual([(set(), self.task)], events)
         
     def testSetDependenciesRemovesOldDependencies(self):
         newDependencies = set([task.Task()])
