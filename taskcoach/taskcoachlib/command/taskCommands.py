@@ -20,40 +20,38 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 from taskcoachlib import patterns
-from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, effort, date
-import base, noteCommands
+from taskcoachlib.i18n import _
+import base
+import noteCommands
 
 
 class SaveTaskStateMixin(base.SaveStateMixin, base.CompositeMixin):
     pass
 
 
-class EffortCommand(base.BaseCommand): # pylint: disable-msg=W0223
-    def stopTracking(self, event):
-        self.stoppedEfforts = [] # pylint: disable-msg=W0201
+class EffortCommand(base.BaseCommand):  # pylint: disable-msg=W0223
+    def stopTracking(self):
+        self.stoppedEfforts = []  # pylint: disable-msg=W0201
         for taskToStop in self.tasksToStopTracking():
             self.stoppedEfforts.extend(taskToStop.activeEfforts())
-            taskToStop.stopTracking(event=event)
+            taskToStop.stopTracking()
 
-    def startTracking(self, event):
+    def startTracking(self):
         for stoppedEffort in self.stoppedEfforts:
-            stoppedEffort.setStop(date.DateTime.max, event=event)
+            stoppedEffort.setStop(date.DateTime.max)
     
     def tasksToStopTracking(self):
         return self.list
            
-    @patterns.eventSource     
-    def do_command(self, event=None):
-        self.stopTracking(event)
+    def do_command(self):
+        self.stopTracking()
     
-    @patterns.eventSource
-    def undo_command(self, event=None):
-        self.startTracking(event)
+    def undo_command(self):
+        self.startTracking()
     
-    @patterns.eventSource
-    def redo_command(self, event=None):
-        self.stopTracking(event)
+    def redo_command(self):
+        self.stopTracking()
 
 
 class DragAndDropTaskCommand(base.DragAndDropCommand):
@@ -81,7 +79,7 @@ class DragAndDropTaskCommand(base.DragAndDropCommand):
             super(DragAndDropTaskCommand, self).do_command()
         else:
             if self.__part == -1:
-                # Up part. Add dropped items as prerequesites of dropped on item.
+                # Up part. Add dropped items as prerequisites of dropped on item.
                 self._itemToDropOn.addPrerequisites(self.items)
                 self._itemToDropOn.addTaskAsDependencyOf(self.items)
             else:
@@ -120,22 +118,19 @@ class DeleteTaskCommand(base.DeleteCommand, EffortCommand):
     def tasksToStopTracking(self):
         return self.items
 
-    @patterns.eventSource 
-    def do_command(self, event=None):
+    def do_command(self):
         super(DeleteTaskCommand, self).do_command()
-        self.stopTracking(event=event)
+        self.stopTracking()
         self.__removePrerequisites()
     
-    @patterns.eventSource
-    def undo_command(self, event=None):
+    def undo_command(self):
         super(DeleteTaskCommand, self).undo_command()
-        self.startTracking(event=event)
+        self.startTracking()
         self.__restorePrerequisites()
         
-    @patterns.eventSource
-    def redo_command(self, event=None):
+    def redo_command(self):
         super(DeleteTaskCommand, self).redo_command()
-        self.stopTracking(event=event)
+        self.stopTracking()
         self.__removePrerequisites()
     
     def __removePrerequisites(self):
@@ -263,8 +258,7 @@ class MarkActiveCommand(base.SaveStateMixin, base.BaseCommand):
         itemsToSave = set([relative for item in self.items for relative in item.family()]) 
         self.saveStates(itemsToSave)
 
-    @patterns.eventSource
-    def do_command(self, event=None):
+    def do_command(self):
         super(MarkActiveCommand, self).do_command()
         for item in self.items:
             item.setActualStartDateTime(task.Task.suggestedActualStartDateTime())
@@ -346,14 +340,14 @@ class StopEffortCommand(EffortCommand):
     singular_name = _('Stop tracking "%s"')
                   
     def canDo(self):
-        return True # No selected items needed.
+        return True  # No selected items needed.
     
     def tasksToStopTracking(self):
         stoppable = lambda effort: effort.isBeingTracked() and not effort.isTotal()
-        return set([effort.task() for effort in self.list if stoppable(effort)]) # pylint: disable-msg=W0621 
+        return set([effort.task() for effort in self.list if stoppable(effort)])  # pylint: disable-msg=W0621 
 
 
-class ExtremePriorityCommand(base.BaseCommand): # pylint: disable-msg=W0223
+class ExtremePriorityCommand(base.BaseCommand):  # pylint: disable-msg=W0223
     delta = 'Subclass responsibility'
     
     def __init__(self, *args, **kwargs):
@@ -483,14 +477,12 @@ class EditDateTimeCommand(base.BaseCommand):
     def setDateTime(item, newDateTime):
         raise NotImplementedError  # pragma: no cover
     
-    @patterns.eventSource
-    def do_command(self, event=None):
+    def do_command(self):
         super(EditDateTimeCommand, self).do_command()
         for item in self.items:
             self.setDateTime(item, self._newDateTime)
 
-    @patterns.eventSource
-    def undo_command(self, event=None):
+    def undo_command(self):
         super(EditDateTimeCommand, self).undo_command()
         for item, oldDateTime in zip(self.items, self.__oldDateTimes):
             self.setDateTime(item, oldDateTime)
@@ -510,17 +502,15 @@ class EditPeriodDateTimeCommand(EditDateTimeCommand):
         self.__keep_delta = kwargs.pop('keep_delta', False)
         super(EditPeriodDateTimeCommand, self).__init__(*args, **kwargs)
 
-    @patterns.eventSource
-    def do_command(self, event=None):
-        self.__adjustOtherDateTime(direction=1, event=event)
-        super(EditPeriodDateTimeCommand, self).do_command(event=event)
+    def do_command(self):
+        self.__adjustOtherDateTime(direction=1)
+        super(EditPeriodDateTimeCommand, self).do_command()
 
-    @patterns.eventSource
-    def undo_command(self, event=None):
-        super(EditPeriodDateTimeCommand, self).undo_command(event=event)
-        self.__adjustOtherDateTime(direction=-1, event=event)
+    def undo_command(self):
+        super(EditPeriodDateTimeCommand, self).undo_command()
+        self.__adjustOtherDateTime(direction=-1)
 
-    def __adjustOtherDateTime(self, direction, event):
+    def __adjustOtherDateTime(self, direction):
         for item in self.items:
             if self.__shouldAdjustItem(item):
                 delta = direction * (self._newDateTime - self.getDateTime(item))
@@ -786,21 +776,19 @@ class TogglePrerequisiteCommand(base.BaseCommand):
         self.__uncheckedPrerequisites = set(kwargs.pop('uncheckedPrerequisites'))
         super(TogglePrerequisiteCommand, self).__init__(*args, **kwargs)
     
-    @patterns.eventSource
-    def do_command(self, event=None):
+    def do_command(self):
         for item in self.items:
             item.addPrerequisites(self.__checkedPrerequisites)
-            item.addTaskAsDependencyOf(self.__checkedPrerequisites, event=event)
+            item.addTaskAsDependencyOf(self.__checkedPrerequisites)
             item.removePrerequisites(self.__uncheckedPrerequisites)
-            item.removeTaskAsDependencyOf(self.__uncheckedPrerequisites, event=event)
+            item.removeTaskAsDependencyOf(self.__uncheckedPrerequisites)
 
-    @patterns.eventSource
-    def undo_command(self, event=None):
+    def undo_command(self):
         for item in self.items:
             item.removePrerequisites(self.__checkedPrerequisites)
-            item.removeTaskAsDependencyOf(self.__checkedPrerequisites, event=event)
+            item.removeTaskAsDependencyOf(self.__checkedPrerequisites)
             item.addPrerequisites(self.__uncheckedPrerequisites)
-            item.addTaskAsDependencyOf(self.__uncheckedPrerequisites, event=event)
+            item.addTaskAsDependencyOf(self.__uncheckedPrerequisites)
 
     def redo_command(self):
         self.do_command()

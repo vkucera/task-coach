@@ -66,24 +66,36 @@ class EffortTest(test.TestCase, asserts.Mixin):
         self.assertEqual(wx.SWISS_FONT, self.effort.font())
 
     def testNotificationForSetStart(self):
-        patterns.Publisher().registerObserver(self.onEvent,
-            eventType=effort.Effort.startChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, effort.Effort.startChangedEventType())
         start = date.DateTime.now()
         self.effort.setStart(start)
-        self.assertEqual(start, self.events[0].value())
+        self.assertEqual([(start, self.effort)], events)
         
     def testNotificationForSetStop(self):
-        patterns.Publisher().registerObserver(self.onEvent,
-            eventType=effort.Effort.stopChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, effort.Effort.stopChangedEventType())
         stop = date.DateTime.now()
         self.effort.setStop(stop)
-        self.assertEqual(stop, self.events[0].value())
+        self.assertEqual([(stop, self.effort)], events)
         
     def testNoNotificationForSetStopWhenNewStopEqualsOldStop(self):
-        patterns.Publisher().registerObserver(self.onEvent,
-            eventType=effort.Effort.stopChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, effort.Effort.stopChangedEventType())
         self.effort.setStop(self.effort.getStop())
-        self.failIf(self.events)
+        self.failIf(events)
 
     def testDurationNotificationForSetStart(self):
         events = []
