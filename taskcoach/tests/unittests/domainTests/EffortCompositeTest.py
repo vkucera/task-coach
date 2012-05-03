@@ -113,11 +113,14 @@ class CompositeEffortTest(test.TestCase):
         self.failIf(self.events)
 
     def testAddEffortNotification(self):
-        patterns.Publisher().registerObserver(self.onEvent,
-            eventType=effort.Effort.durationChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, effort.Effort.durationChangedEventType())
         self.task.addEffort(self.effort1)
-        self.assertEqual(patterns.Event(effort.Effort.durationChangedEventType(), self.composite,
-            self.composite.duration()), self.events[0])
+        self.assertEqual([(self.composite.duration(), self.composite)], events)
 
     def testRemoveEffortFromTask(self):
         self.task.addEffort(self.effort1)
@@ -230,11 +233,14 @@ class CompositeEffortTest(test.TestCase):
 
     def testChangeStartTimeOfEffort_KeepWithinPeriod_Notification(self):
         self.task.addEffort(self.effort1)
-        patterns.Publisher().registerObserver(self.onEvent,
-            eventType=effort.Effort.durationChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, effort.Effort.durationChangedEventType())
         self.effort1.setStart(self.effort1.getStart() + date.TimeDelta(hours=1))
-        self.failUnless(patterns.Event(effort.Effort.durationChangedEventType(), 
-            self.composite, self.composite.duration()) in self.events)
+        self.failUnless((self.composite.duration(), self.composite) in events)
 
     def testChangeStartTimeOfEffort_MoveOutsidePeriode(self):
         self.task.addEffort(self.effort1)
@@ -253,11 +259,14 @@ class CompositeEffortTest(test.TestCase):
 
     def testChangeStartTimeOfEffort_Notification(self):
         self.task.addEffort(self.effort1)
-        self.registerObserver(effort.Effort.durationChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, effort.Effort.durationChangedEventType())
         self.effort1.setStop(self.effort1.getStop() + date.TimeDelta(hours=1))
-        expectedEvent = patterns.Event(effort.Effort.durationChangedEventType(), self.composite, 
-            self.composite.duration())
-        self.failUnless(expectedEvent in self.events)
+        self.failUnless((self.composite.duration(), self.composite) in events)
 
     def testChangeStartTimeOfEffort_MoveInsidePeriod(self):
         self.task.addEffort(self.effort3)
@@ -343,11 +352,14 @@ class CompositeEffortWithSubTasksTest(test.TestCase):
         self.events.append(event)
 
     def testAddEffortToChildTaskNotification(self):
-        patterns.Publisher().registerObserver(self.onEvent,
-            eventType=effort.Effort.durationChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, effort.Effort.durationChangedEventType())
         self.child.addEffort(self.childEffort)
-        self.assertEqual(patterns.Event(effort.Effort.durationChangedEventType(), self.composite,
-            self.composite.duration(recursive=True)), self.events[0])
+        self.failUnless((self.composite.duration(), self.composite) in events)
 
     def testAddTrackedEffortToChildTask(self):
         patterns.Publisher().registerObserver(self.onEvent,

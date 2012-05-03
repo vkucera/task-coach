@@ -87,7 +87,7 @@ class Effort(baseeffort.BaseEffort, base.Object):
         self.__updateDurationCache()
         self.task().sendTimeSpentChangedMessage()
         event.addSource(self, self._start, type=self.startChangedEventType())
-        event.addSource(self, self.duration(), type=self.durationChangedEventType())
+        self.sendDurationChangedMessage()
         if self.task().hourlyFee():
             self.revenueEvent(event)
     
@@ -114,7 +114,7 @@ class Effort(baseeffort.BaseEffort, base.Object):
             self.task().stopTrackingEvent(event, self)
         self.task().sendTimeSpentChangedMessage()
         event.addSource(self, newStop, type=self.stopChangedEventType())
-        event.addSource(self, self.duration(), type=self.durationChangedEventType())
+        self.sendDurationChangedMessage()
         if self.task().hourlyFee():
             self.revenueEvent(event)
             

@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+from taskcoachlib.thirdparty.pubsub import pub
+
 
 class BaseEffort(object):
     def __init__(self, task, start, stop, *args, **kwargs):
@@ -73,9 +75,13 @@ class BaseEffort(object):
     def trackStopEventType(class_):
         return 'effort.track.stop'
     
+    def sendDurationChangedMessage(self):
+        pub.sendMessage(self.durationChangedEventType(), 
+                        newValue=self.duration(), sender=self)
+        
     @classmethod
     def durationChangedEventType(class_):
-        return 'effort.duration'
+        return 'pubsub.effort.duration'
 
     @classmethod
     def revenueChangedEventType(class_):

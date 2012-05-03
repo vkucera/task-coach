@@ -86,20 +86,26 @@ class EffortTest(test.TestCase, asserts.Mixin):
         self.failIf(self.events)
 
     def testDurationNotificationForSetStart(self):
-        patterns.Publisher().registerObserver(self.onEvent,
-            eventType=effort.Effort.durationChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, effort.Effort.durationChangedEventType())
         start = date.DateTime.now()
         self.effort.setStart(start)
-        self.assertEqual(patterns.Event(effort.Effort.durationChangedEventType(), self.effort,
-            self.effort.duration()), self.events[0])
+        self.assertEqual([(self.effort.duration(), self.effort)], events)
 
     def testDurationNotificationForSetStop(self):
-        patterns.Publisher().registerObserver(self.onEvent,
-            eventType=effort.Effort.durationChangedEventType())
-        self.effort.setStop(date.DateTime.now())
-        self.assertEqual(patterns.Event(effort.Effort.durationChangedEventType(), self.effort,
-            self.effort.duration()), self.events[0])
+        events = []
         
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, effort.Effort.durationChangedEventType())
+        self.effort.setStop(date.DateTime.now())
+        self.assertEqual([(self.effort.duration(), self.effort)], events)
+
     def testNotificationForSetDescription(self):
         patterns.Publisher().registerObserver(self.onEvent,
             eventType=effort.Effort.descriptionChangedEventType())

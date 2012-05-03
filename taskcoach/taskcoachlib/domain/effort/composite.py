@@ -68,9 +68,7 @@ class BaseCompositeEffort(base.BaseEffort):  # pylint: disable-msg=W0223
                               
     def notifyObserversOfDurationOrEmpty(self):
         if self._getEfforts():
-            eventArgs = (self.durationChangedEventType(), 
-                         self, self.duration(recursive=True))
-            patterns.Event(*eventArgs).send()  # pylint: disable-msg=W0142
+            self.sendDurationChangedMessage()
         else:
             pub.sendMessage(self.compositeEmptyEventType(), sender=self)
         
