@@ -69,15 +69,13 @@ class EditTaskCommand(base.BaseCommand):
         super(EditTaskCommand, self).__init__(*args, **kwargs)
         self.__oldTasks = [item.task() for item in self.items]
         
-    @patterns.eventSource
-    def do_command(self, event=None):
+    def do_command(self):
         for item in self.items:
-            item.setTask(self.__task, event=event)
+            item.setTask(self.__task)
             
-    @patterns.eventSource
-    def undo_command(self, event=None):
+    def undo_command(self):
         for item, oldTask in zip(self.items, self.__oldTasks):
-            item.setTask(oldTask, event=event)
+            item.setTask(oldTask)
 
     def redo_command(self):
         self.do_command()

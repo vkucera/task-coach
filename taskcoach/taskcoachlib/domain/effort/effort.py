@@ -19,8 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 from taskcoachlib.domain import date, base, task
+from taskcoachlib.thirdparty.pubsub import pub
 import base as baseeffort
-    
+
 
 class Effort(baseeffort.BaseEffort, base.Object):
     def __init__(self, task=None, start=None, stop=None, *args, **kwargs):
@@ -28,8 +29,7 @@ class Effort(baseeffort.BaseEffort, base.Object):
             *args, **kwargs)
         self.__updateDurationCache()
         
-    @patterns.eventSource
-    def setTask(self, task, event=None):
+    def setTask(self, task):
         if self._task is None: 
             # We haven't been fully initialised yet, so allow setting of the
             # task, without notifying observers. Also, don't call addEffort()
@@ -40,10 +40,12 @@ class Effort(baseeffort.BaseEffort, base.Object):
         if task in (self._task, None): 
             # command.PasteCommand may try to set the parent to None
             return
+        event = patterns.Event()  # Change monitor needs one event to detect task change
         self._task.removeEffort(self, event=event)
         self._task = task
         self._task.addEffort(self, event=event)
-        event.addSource(self, task, type=self.taskChangedEventType())
+        event.send()
+        pub.sendMessage(self.taskChangedEventType(), newValue=task, sender=self)
         
     setParent = setTask  # FIXME: should we create a common superclass for Effort and Task?
 
@@ -56,7 +58,7 @@ class Effort(baseeffort.BaseEffort, base.Object):
 
     @classmethod
     def taskChangedEventType(class_):
-        return '%s.task' % class_
+        return 'pubsub.effort.task'
     
     def __str__(self):
         return 'Effort(%s, %s, %s)' % (self._task, self._start, self._stop)
@@ -71,7 +73,7 @@ class Effort(baseeffort.BaseEffort, base.Object):
     @patterns.eventSource
     def __setstate__(self, state, event=None):
         super(Effort, self).__setstate__(state, event=event)
-        self.setTask(state['task'], event=event)
+        self.setTask(state['task'])
         self.setStart(state['start'], event=event)
         self.setStop(state['stop'], event=event)
 

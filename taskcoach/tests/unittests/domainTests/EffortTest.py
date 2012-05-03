@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns, config
 from taskcoachlib.domain import task, effort, date, category
+from taskcoachlib.thirdparty.pubsub import pub
 from unittests import asserts
 import test
 import wx
@@ -106,11 +107,15 @@ class EffortTest(test.TestCase, asserts.Mixin):
         self.assertEqual('description', self.events[0].value())
 
     def testNotificationForSetTask(self):
-        patterns.Publisher().registerObserver(self.onEvent,
-            eventType=effort.Effort.taskChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, effort.Effort.taskChangedEventType())
         task2 = task.Task()
         self.effort.setTask(task2)
-        self.assertEqual(task2, self.events[0].value())
+        self.assertEqual([(task2, self.effort)], events)
 
     def testNotificationForStartTracking(self):
         patterns.Publisher().registerObserver(self.onEvent,
