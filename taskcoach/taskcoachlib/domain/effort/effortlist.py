@@ -29,7 +29,7 @@ class MaxDateTimeMixin(object):
 
 class EffortUICommandNamesMixin(object):
     newItemMenuText = _('&New effort...\tCtrl+E')
-    newItemHelpText =  help.effortNew
+    newItemHelpText = help.effortNew
     
                         
 class EffortList(patterns.SetDecorator, MaxDateTimeMixin, 
@@ -88,7 +88,7 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
         return len(self)
         
     @patterns.eventSource
-    def removeItems(self, efforts, event=None): # pylint: disable-msg=W0221
+    def removeItems(self, efforts, event=None):  # pylint: disable-msg=W0221
         ''' We override ObservableListObserver.removeItems because the default
             implementation is to remove the arguments from the original list,
             which in this case would mean removing efforts from a task list.
@@ -98,7 +98,7 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
             effort.task().removeEffort(effort, event=event)
 
     @patterns.eventSource
-    def extend(self, efforts, event=None): # pylint: disable-msg=W0221
+    def extend(self, efforts, event=None):  # pylint: disable-msg=W0221
         ''' We override ObservableListObserver.extend because the default
             implementation is to add the arguments to the original list,
             which in this case would mean adding efforts to a task list.

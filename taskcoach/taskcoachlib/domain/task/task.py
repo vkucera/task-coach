@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import patterns
-from taskcoachlib.domain import base, date, categorizable, note, attachment
+from taskcoachlib.domain import date, categorizable, note, attachment
 from taskcoachlib.domain.attribute import color
 from taskcoachlib.thirdparty.pubsub import pub
 import status
@@ -47,7 +47,6 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         super(Task, self).__init__(*args, **kwargs)
         self.__status = None  # status cache
         self.__dueSoonHours = self.settings.getint('behavior', 'duesoonhours')  # pylint: disable-msg=E1101
-        SetAttribute = base.SetAttribute
         maxDateTime = self.maxDateTime    
         self.__dueDateTime = dueDateTime or maxDateTime
         self.__plannedStartDateTime = plannedStartDateTime or maxDateTime

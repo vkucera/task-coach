@@ -16,10 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, wx
-from unittests import asserts 
 from taskcoachlib import patterns, config
 from taskcoachlib.domain import task, effort, date, category
+from unittests import asserts
+import test
+import wx
 
 
 class EffortTest(test.TestCase, asserts.Mixin):
@@ -27,7 +28,7 @@ class EffortTest(test.TestCase, asserts.Mixin):
         task.Task.settings = config.Settings(load=False)
         self.task = task.Task()
         self.effort = effort.Effort(self.task, start=date.DateTime(2004, 1, 1),
-            stop=date.DateTime(2004,1,2))
+            stop=date.DateTime(2004, 1, 2))
         self.task.addEffort(self.effort)
         self.events = []
     
@@ -45,7 +46,7 @@ class EffortTest(test.TestCase, asserts.Mixin):
         self.assertEqual('', self.effort.description())
         
     def testStr(self):
-        self.assertEqual('Effort(%s, %s, %s)'%(self.effort.task(), 
+        self.assertEqual('Effort(%s, %s, %s)' % (self.effort.task(), 
             self.effort.getStart(), self.effort.getStop()), str(self.effort))
         
     def testDuration(self):
@@ -135,7 +136,7 @@ class EffortTest(test.TestCase, asserts.Mixin):
         self.task.setHourlyFee(100)
         patterns.Publisher().registerObserver(self.onEvent,
             eventType='effort.revenue')
-        self.effort.setStop(date.DateTime(2004,1,3))
+        self.effort.setStop(date.DateTime(2004, 1, 3))
         self.assertEqual(patterns.Event('effort.revenue', self.effort, 4800.0),
             self.events[0])
 
@@ -143,7 +144,7 @@ class EffortTest(test.TestCase, asserts.Mixin):
         self.task.setHourlyFee(100)
         patterns.Publisher().registerObserver(self.onEvent,
             eventType='effort.revenue')
-        self.effort.setStart(date.DateTime(2004,1,1,12,0,0))
+        self.effort.setStart(date.DateTime(2004, 1, 1, 12, 0, 0))
         self.assertEqual(patterns.Event('effort.revenue', self.effort, 1200.0),
             self.events[0])
 
@@ -151,7 +152,7 @@ class EffortTest(test.TestCase, asserts.Mixin):
         effortPeriod = effort.Effort(self.task)
         currentTime = date.DateTime.now()
         now = lambda: currentTime
-        self.assertEqual(now()-effortPeriod.getStart(), 
+        self.assertEqual(now() - effortPeriod.getStart(),
             effortPeriod.duration(now=now))
      
     def testState(self):
@@ -192,8 +193,8 @@ class EffortTest(test.TestCase, asserts.Mixin):
         self.assertEqual(None, self.effort.getStop())
 
     def testSetStop_SpecificDateTime(self):
-        self.effort.setStop(date.DateTime(2005,1,1))
-        self.assertEqual(date.DateTime(2005,1,1), self.effort.getStop())
+        self.effort.setStop(date.DateTime(2005, 1, 1))
+        self.assertEqual(date.DateTime(2005, 1, 1), self.effort.getStop())
         
     def testIsNotBeingTracked_(self): 
         self.failIf(self.effort.isBeingTracked())
@@ -226,7 +227,7 @@ class EffortTest(test.TestCase, asserts.Mixin):
     def testRevenue_HourlyFee(self):
         self.task.setHourlyFee(100)
         self.task.addEffort(self.effort)
-        self.assertEqual(self.effort.duration().hours()*100, 
+        self.assertEqual(self.effort.duration().hours() * 100, 
             self.effort.revenue())
         
     def testRevenue_FixedFee_OneEffort(self):
@@ -243,7 +244,8 @@ class EffortTest(test.TestCase, asserts.Mixin):
         self.task.setFixedFee(1000)
         self.task.addEffort(self.effort)
         self.task.addEffort(effort.Effort(self.task, 
-            date.DateTime(2005,1,1,10,0), date.DateTime(2005,1,1,22,0)))
+                                          date.DateTime(2005, 1, 1, 10, 0), 
+                                          date.DateTime(2005, 1, 1, 22, 0)))
         self.assertEqual(0, self.effort.revenue())
 
     def testSubject(self):
@@ -256,7 +258,7 @@ class EffortTest(test.TestCase, asserts.Mixin):
         self.task.addCategory(category.Category('C'))
         self.assertEqual(self.task.categories(), self.effort.categories())
 
-    def testModificationEventTypes(self): # pylint: disable-msg=E1003
+    def testModificationEventTypes(self):  # pylint: disable-msg=E1003
         self.assertEqual(super(effort.Effort, self.effort).modificationEventTypes() + \
                          [self.effort.taskChangedEventType(), 
                           'effort.start', 'effort.stop'], 
@@ -265,12 +267,12 @@ class EffortTest(test.TestCase, asserts.Mixin):
 
 class EffortWithoutTaskTest(test.TestCase):   
     def setUp(self):
-        self.effort = effort.Effort(None, start=date.DateTime(2005,1,1))
+        self.effort = effort.Effort(None, start=date.DateTime(2005, 1, 1))
         self.task = task.Task()
         self.events = []
         
     def onEvent(self, event):
-        self.events.append(event) # pragma: no cover
+        self.events.append(event)  # pragma: no cover
         
     def testCreatingAnEffortWithoutTask(self):
         self.assertEqual(None, self.effort.task())
@@ -284,4 +286,3 @@ class EffortWithoutTaskTest(test.TestCase):
                                               self.effort.taskChangedEventType())
         self.effort.setTask(self.task)
         self.failIf(self.events)
-
