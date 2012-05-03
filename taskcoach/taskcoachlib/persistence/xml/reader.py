@@ -131,7 +131,7 @@ class XMLReader(object):
                 tasksById[each_task.id()] = each_task
                 collectIds(each_task.children())
         
-        def addPrerequisitesAndDependencies(tasks, event):
+        def addPrerequisitesAndDependencies(tasks):
             for each_task in tasks:
                 if each_task.isDeleted():
                     # Don't restore prerequisites and dependencies for deleted
@@ -150,12 +150,11 @@ class XMLReader(object):
                         pass
                 each_task.setPrerequisites(prerequisites)
                 for prerequisite in prerequisites:
-                    prerequisite.addDependencies([each_task], event=event)
-                addPrerequisitesAndDependencies(each_task.children(), event)
+                    prerequisite.addDependencies([each_task])
+                addPrerequisitesAndDependencies(each_task.children())
                 
         collectIds(tasks)
-        event = patterns.Event()  # Create an event, but don't send it
-        addPrerequisitesAndDependencies(tasks, event)
+        addPrerequisitesAndDependencies(tasks)
                 
     def _parseCategoryNodes(self, node, categorizablesById):
         return [self._parseCategoryNode(child, categorizablesById) \

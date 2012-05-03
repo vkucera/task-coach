@@ -66,8 +66,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__reminderBeforeSnooze = reminderBeforeSnooze or self.__reminder
         self.__recurrence = date.Recurrence() if recurrence is None else recurrence
         self.__prerequisites = set(prerequisites or [])
-        self.__dependencies = SetAttribute(dependencies or [], self, 
-                                           changeEvent=self.dependenciesEvent)
+        self.__dependencies = set(dependencies or [])
         self.__shouldMarkCompletedWhenAllChildrenCompleted = \
             shouldMarkCompletedWhenAllChildrenCompleted
         for effort in self._efforts:
@@ -101,7 +100,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.setHourlyFee(state['hourlyFee'])
         self.setFixedFee(state['fixedFee'])
         self.setPrerequisites(state['prerequisites'])
-        self.setDependencies(state['dependencies'], event=event)
+        self.setDependencies(state['dependencies'])
         self.setShouldMarkCompletedWhenAllChildrenCompleted( \
             state['shouldMarkCompletedWhenAllChildrenCompleted'])
         
@@ -119,7 +118,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             recurrence=self.__recurrence.copy(),
             reminder=self.__reminder,
             prerequisites=self.__prerequisites.copy(),
-            dependencies=self.__dependencies.get(),
+            dependencies=self.__dependencies.copy(),
             shouldMarkCompletedWhenAllChildrenCompleted=self.__shouldMarkCompletedWhenAllChildrenCompleted))
         return state
 
@@ -1239,15 +1238,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         pub.sendMessage(self.prerequisitesChangedEventType(), 
                         newValue=self.__prerequisites, sender=self)
         
-    @patterns.eventSource
-    def addTaskAsDependencyOf(self, prerequisites, event=None):
+    def addTaskAsDependencyOf(self, prerequisites):
         for prerequisite in prerequisites:
-            prerequisite.addDependencies([self], event=event)
+            prerequisite.addDependencies([self])
     
-    @patterns.eventSource
-    def removeTaskAsDependencyOf(self, prerequisites, event=None):
+    def removeTaskAsDependencyOf(self, prerequisites):
         for prerequisite in prerequisites:
-            prerequisite.removeDependencies([self], event=event)
+            prerequisite.removeDependencies([self])
             
     @classmethod
     def prerequisitesChangedEventType(class_):
@@ -1281,7 +1278,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     # Dependencies
     
     def dependencies(self, recursive=False, upwards=False):
-        dependencies = self.__dependencies.get()
+        dependencies = self.__dependencies.copy()
         if recursive and upwards and self.parent() is not None:
             dependencies |= self.parent().dependencies(recursive=True, upwards=True)
         elif recursive and not upwards:
@@ -1289,14 +1286,29 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 dependencies |= child.dependencies()
         return dependencies
 
-    def setDependencies(self, dependencies, event=None):
-        self.__dependencies.set(set(dependencies), event=event)
+    def setDependencies(self, dependencies):
+        dependencies = set(dependencies)
+        if dependencies == self.__dependencies:
+            return
+        self.__dependencies = dependencies
+        pub.sendMessage(self.dependenciesChangedEventType(),
+                        newValue=self.__dependencies, sender=self)
     
-    def addDependencies(self, dependencies, event=None):
-        self.__dependencies.add(set(dependencies), event=event)
-                
-    def removeDependencies(self, dependencies, event=None):
-        self.__dependencies.remove(set(dependencies), event=event)
+    def addDependencies(self, dependencies):
+        dependencies = set(dependencies)
+        if dependencies <= self.__dependencies:
+            return
+        self.__dependencies |= dependencies
+        pub.sendMessage(self.dependenciesChangedEventType(),
+                        newValue=self.__dependencies, sender=self)
+        
+    def removeDependencies(self, dependencies):
+        dependencies = set(dependencies)
+        if self.__dependencies.isdisjoint(dependencies):
+            return
+        self.__dependencies -= dependencies
+        pub.sendMessage(self.dependenciesChangedEventType(),
+                        newValue=self.__dependencies, sender=self)
         
     def addTaskAsPrerequisiteOf(self, dependencies):
         for dependency in dependencies:
@@ -1306,9 +1318,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         for dependency in dependencies:
             dependency.removePrerequisites([self])      
 
-    def dependenciesEvent(self, event, *dependencies):
-        event.addSource(self, *dependencies, **dict(type='task.dependencies'))
-
+    @classmethod
+    def dependenciesChangedEventType(class_):
+        return 'pubsub.task.dependencies'
+    
     @staticmethod
     def dependenciesSortFunction(**kwargs):
         ''' Return a sort key for sorting by dependencies. Since a task can 
@@ -1332,7 +1345,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def dependenciesSortEventTypes(class_):
         ''' The event types that influence the dependencies sort order. '''
-        return ('task.dependencies',)
+        return (class_.dependenciesChangedEventType(),)
                 
     # behavior
     
@@ -1425,5 +1438,5 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                              class_.reminderChangedEventType(), 
                              class_.recurrenceChangedEventType(),
                              class_.prerequisitesChangedEventType(),
-                             'task.dependencies',
+                             class_.dependenciesChangedEventType(),
                              class_.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType()]
