@@ -45,7 +45,7 @@ class Effort(baseeffort.BaseEffort, base.Object):
         self._task.addEffort(self, event=event)
         event.addSource(self, task, type=self.taskChangedEventType())
         
-    setParent = setTask # FIXME: should we create a common superclass for Effort and Task?
+    setParent = setTask  # FIXME: should we create a common superclass for Effort and Task?
 
     @classmethod
     def monitoredAttributes(class_):
@@ -56,10 +56,10 @@ class Effort(baseeffort.BaseEffort, base.Object):
 
     @classmethod
     def taskChangedEventType(class_):
-        return '%s.task'%class_
+        return '%s.task' % class_
     
     def __str__(self):
-        return 'Effort(%s, %s, %s)'%(self._task, self._start, self._stop)
+        return 'Effort(%s, %s, %s)' % (self._task, self._start, self._stop)
     
     __repr__ = __str__
         
@@ -156,4 +156,3 @@ class Effort(baseeffort.BaseEffort, base.Object):
         eventTypes = super(Effort, class_).modificationEventTypes()
         return eventTypes + [class_.taskChangedEventType(), 
                              class_.startChangedEventType(), class_.stopChangedEventType()]
- 
