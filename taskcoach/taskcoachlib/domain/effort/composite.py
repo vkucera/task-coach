@@ -68,10 +68,13 @@ class BaseCompositeEffort(base.BaseEffort):  # pylint: disable-msg=W0223
                               
     def notifyObserversOfDurationOrEmpty(self):
         if self._getEfforts():
-            eventArgs = ('effort.duration', self, self.duration(recursive=True))
+            self.sendDurationChangedMessage()
         else:
-            eventArgs = ('effort.composite.empty', self)
-        patterns.Event(*eventArgs).send()  # pylint: disable-msg=W0142
+            pub.sendMessage(self.compositeEmptyEventType(), sender=self)
+        
+    @classmethod
+    def compositeEmptyEventType(class_):
+        return 'pubsub.effort.composite.empty'
         
     @classmethod
     def modificationEventTypes(class_):
@@ -83,7 +86,8 @@ class BaseCompositeEffort(base.BaseEffort):  # pylint: disable-msg=W0223
         self.notifyObserversOfDurationOrEmpty()
 
     def onRevenueChanged(self, newValue, sender):  # pylint: disable-msg=W0613
-        patterns.Event('effort.revenue', self, self.revenue(recursive=True)).send()
+        patterns.Event(self.revenueChangedEventType(), self, 
+                       self.revenue(recursive=True)).send()
 
     def onStartTracking(self, event):
         startedEffort = event.value()

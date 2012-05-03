@@ -183,7 +183,8 @@ class EffortViewer(base.ListViewer,
                 sortCallback=sortCallback,
                 width=self.getColumnWidth(name), **kwargs) \
             for name, columnHeader, eventType, renderCallback, sortCallback in \
-            ('period', _('Period'), 'effort.duration', self.renderPeriod, 
+            ('period', _('Period'), effort.Effort.durationChangedEventType(), 
+             self.renderPeriod, 
              uicommand.ViewerSortByCommand(viewer=self, value='period')),
             ('task', _('Task'), effort.Effort.taskChangedEventType(), lambda effort: effort.task().subject(recursive=True), None),
             ('description', _('Description'), effort.Effort.descriptionChangedEventType(), lambda effort: effort.description(), None)] + \
@@ -195,27 +196,39 @@ class EffortViewer(base.ListViewer,
              renderCallback=renderCallback, alignment=wx.LIST_FORMAT_RIGHT,
              **kwargs) \
             for name, columnHeader, eventType, renderCallback in \
-            ('timeSpent', _('Time spent'), 'effort.duration', self.renderTimeSpent),
-            ('totalTimeSpent', _('Total time spent'), 'effort.duration', self.renderTotalTimeSpent),
-            ('revenue', _('Revenue'), 'effort.revenue', self.renderRevenue),
-            ('totalRevenue', _('Total revenue'), 'effort.revenue', self.renderTotalRevenue)] + \
+            ('timeSpent', _('Time spent'), 
+             effort.Effort.durationChangedEventType(), self.renderTimeSpent),
+            ('totalTimeSpent', _('Total time spent'), 
+             effort.Effort.durationChangedEventType(), 
+             self.renderTotalTimeSpent),
+            ('revenue', _('Revenue'), effort.Effort.revenueChangedEventType(), 
+             self.renderRevenue),
+            ('totalRevenue', _('Total revenue'), 
+             effort.Effort.revenueChangedEventType(), self.renderTotalRevenue)] + \
              [widgets.Column(name, columnHeader, eventType, 
               renderCallback=renderCallback, alignment=wx.LIST_FORMAT_RIGHT,
               width=self.getColumnWidth(name), **kwargs) \
              for name, columnHeader, eventType, renderCallback in \
-                ('monday', _('Monday'), 'effort.duration',  
+                ('monday', _('Monday'), 
+                 effort.Effort.durationChangedEventType(),  
                  lambda effort: self.renderTimeSpentOnDay(effort, 0)),                             
-                ('tuesday', _('Tuesday'), 'effort.duration',  
+                ('tuesday', _('Tuesday'), 
+                 effort.Effort.durationChangedEventType(),
                  lambda effort: self.renderTimeSpentOnDay(effort, 1)),
-                ('wednesday', _('Wednesday'), 'effort.duration',  
+                ('wednesday', _('Wednesday'), 
+                 effort.Effort.durationChangedEventType(),  
                  lambda effort: self.renderTimeSpentOnDay(effort, 2)),
-                ('thursday', _('Thursday'), 'effort.duration',  
+                ('thursday', _('Thursday'), 
+                 effort.Effort.durationChangedEventType(),  
                  lambda effort: self.renderTimeSpentOnDay(effort, 3)),
-                ('friday', _('Friday'), 'effort.duration',  
+                ('friday', _('Friday'), 
+                 effort.Effort.durationChangedEventType(),  
                  lambda effort: self.renderTimeSpentOnDay(effort, 4)),
-                ('saturday', _('Saturday'), 'effort.duration',  
+                ('saturday', _('Saturday'), 
+                 effort.Effort.durationChangedEventType(),  
                  lambda effort: self.renderTimeSpentOnDay(effort, 5)),
-                ('sunday', _('Sunday'), 'effort.duration',  
+                ('sunday', _('Sunday'), 
+                 effort.Effort.durationChangedEventType(),  
                  lambda effort: self.renderTimeSpentOnDay(effort, 6))      
              ]
 

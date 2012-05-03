@@ -18,8 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 from taskcoachlib.domain import date, task
-import effortlist
+from taskcoachlib.thirdparty.pubsub import pub
 import composite
+import effortlist
+import effort
 
 
 class EffortAggregator(patterns.SetDecorator, 
@@ -38,14 +40,14 @@ class EffortAggregator(patterns.SetDecorator,
         self.startOfPeriod = getattr(date.DateTime, 'startOf%s' % aggregation)
         self.endOfPeriod = getattr(date.DateTime, 'endOf%s' % aggregation)
         super(EffortAggregator, self).__init__(*args, **kwargs)
-        patterns.Publisher().registerObserver(self.onCompositeEmpty,
-            eventType='effort.composite.empty')
+        pub.subscribe(self.onCompositeEmpty, 
+                      composite.CompositeEffort.compositeEmptyEventType())
         patterns.Publisher().registerObserver(self.onEffortAddedToTask, 
             eventType='task.effort.add')
         patterns.Publisher().registerObserver(self.onChildAddedToTask,
             eventType=task.Task.addChildEventType())
         patterns.Publisher().registerObserver(self.onEffortStartChanged, 
-            eventType='effort.start')
+            eventType=effort.Effort.startChangedEventType())
     
     @patterns.eventSource    
     def extend(self, efforts, event=None):  # pylint: disable-msg=W0221
@@ -98,17 +100,16 @@ class EffortAggregator(patterns.SetDecorator,
                     child.efforts(recursive=True)))
         super(EffortAggregator, self).extendSelf(newComposites)
 
-    def onCompositeEmpty(self, event):
+    def onCompositeEmpty(self, sender):
         # pylint: disable-msg=W0621
-        composites = [composite for composite in event.sources() if \
-                      composite in self]
-        keys = [self.keyForComposite(composite) for composite in composites]
-        # A composite may already have been removed, e.g. when a
-        # parent and child task have effort in the same period
-        keys = [key for key in keys if key in self.__composites]
-        for key in keys:
+        if sender not in self:
+            return
+        key = self.keyForComposite(sender)
+        if key in self.__composites:
+            # A composite may already have been removed, e.g. when a
+            # parent and child task have effort in the same period
             del self.__composites[key]
-        super(EffortAggregator, self).removeItemsFromSelf(composites)
+        super(EffortAggregator, self).removeItemsFromSelf([sender])
         
     def onEffortStartChanged(self, event):
         newComposites = []

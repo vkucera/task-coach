@@ -93,7 +93,7 @@ class Effort(baseeffort.BaseEffort, base.Object):
         self.__updateDurationCache()
         self.task().sendTimeSpentChangedMessage()
         event.addSource(self, self._start, type=self.startChangedEventType())
-        event.addSource(self, self.duration(), type='effort.duration')
+        self.sendDurationChangedMessage()
         if self.task().hourlyFee():
             self.revenueEvent(event)
 
@@ -120,14 +120,14 @@ class Effort(baseeffort.BaseEffort, base.Object):
             self.task().stopTrackingEvent(event, self)
         self.task().sendTimeSpentChangedMessage()
         event.addSource(self, newStop, type=self.stopChangedEventType())
-        event.addSource(self, self.duration(), type='effort.duration')
+        self.sendDurationChangedMessage()
         if self.task().hourlyFee():
             self.revenueEvent(event)
-
+            
     @classmethod
     def stopChangedEventType(class_):
         return 'effort.stop'
-
+        
     def __updateDurationCache(self):
         self.__cachedDuration = self._stop - self._start if self._stop else None
         
@@ -138,7 +138,7 @@ class Effort(baseeffort.BaseEffort, base.Object):
         return self.duration().hours() * self.task().hourlyFee()
         
     def revenueEvent(self, event):
-        event.addSource(self, self.revenue(), type='effort.revenue')
+        event.addSource(self, self.revenue(), type=self.revenueChangedEventType())
 
     @staticmethod
     def periodSortFunction(**kwargs):
@@ -157,4 +157,5 @@ class Effort(baseeffort.BaseEffort, base.Object):
     def modificationEventTypes(class_):
         eventTypes = super(Effort, class_).modificationEventTypes()
         return eventTypes + [class_.taskChangedEventType(), 
-                             class_.startChangedEventType(), class_.stopChangedEventType()]
+                             class_.startChangedEventType(), 
+                             class_.stopChangedEventType()]

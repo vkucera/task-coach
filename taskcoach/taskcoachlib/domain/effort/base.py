@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+from taskcoachlib.thirdparty.pubsub import pub
+
 
 class BaseEffort(object):
     def __init__(self, task, start, stop, *args, **kwargs):
@@ -56,10 +58,10 @@ class BaseEffort(object):
         return self.task().font(recursive)
     
     def duration(self, recursive=False):
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
     def isTotal(self):
-        return False # Are we a detail effort or a total effort? For sorting.
+        return False  # Are we a detail effort or a total effort? For sorting.
 
     @classmethod
     def trackStartEventType(class_):
@@ -73,3 +75,14 @@ class BaseEffort(object):
     def trackStopEventType(class_):
         return 'effort.track.stop'
     
+    def sendDurationChangedMessage(self):
+        pub.sendMessage(self.durationChangedEventType(), 
+                        newValue=self.duration(), sender=self)
+        
+    @classmethod
+    def durationChangedEventType(class_):
+        return 'pubsub.effort.duration'
+
+    @classmethod
+    def revenueChangedEventType(class_):
+        return 'effort.revenue'
