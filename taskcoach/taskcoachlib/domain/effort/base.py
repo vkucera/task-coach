@@ -56,10 +56,10 @@ class BaseEffort(object):
         return self.task().font(recursive)
     
     def duration(self, recursive=False):
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
     def isTotal(self):
-        return False # Are we a detail effort or a total effort? For sorting.
+        return False  # Are we a detail effort or a total effort? For sorting.
 
     @classmethod
     def trackStartEventType(class_):
@@ -73,3 +73,10 @@ class BaseEffort(object):
     def trackStopEventType(class_):
         return 'effort.track.stop'
     
+    @classmethod
+    def durationChangedEventType(class_):
+        return 'effort.duration'
+
+    @classmethod
+    def revenueChangedEventType(class_):
+        return 'effort.revenue'

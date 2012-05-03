@@ -86,10 +86,14 @@ class Effort(baseeffort.BaseEffort, base.Object):
         self._start = startDateTime
         self.__updateDurationCache()
         self.task().sendTimeSpentChangedMessage()
-        event.addSource(self, self._start, type='effort.start')
-        event.addSource(self, self.duration(), type='effort.duration')
+        event.addSource(self, self._start, type=self.startChangedEventType())
+        event.addSource(self, self.duration(), type=self.durationChangedEventType())
         if self.task().hourlyFee():
             self.revenueEvent(event)
+    
+    @classmethod        
+    def startChangedEventType(class_):
+        return 'effort.start'
         
     @patterns.eventSource        
     def setStop(self, newStop=None, event=None):
@@ -109,10 +113,14 @@ class Effort(baseeffort.BaseEffort, base.Object):
             event.addSource(self, type=self.trackStopEventType())
             self.task().stopTrackingEvent(event, self)
         self.task().sendTimeSpentChangedMessage()
-        event.addSource(self, newStop, type='effort.stop')
-        event.addSource(self, self.duration(), type='effort.duration')
+        event.addSource(self, newStop, type=self.stopChangedEventType())
+        event.addSource(self, self.duration(), type=self.durationChangedEventType())
         if self.task().hourlyFee():
             self.revenueEvent(event)
+            
+    @classmethod
+    def stopChangedEventType(class_):
+        return 'effort.stop'
         
     def __updateDurationCache(self):
         self.__cachedDuration = self._stop - self._start if self._stop else None
@@ -124,7 +132,7 @@ class Effort(baseeffort.BaseEffort, base.Object):
         return self.duration().hours() * self.task().hourlyFee()
         
     def revenueEvent(self, event):
-        event.addSource(self, self.revenue(), type='effort.revenue')
+        event.addSource(self, self.revenue(), type=self.revenueChangedEventType())
 
     @staticmethod
     def periodSortFunction(**kwargs):
@@ -136,11 +144,12 @@ class Effort(baseeffort.BaseEffort, base.Object):
     @classmethod
     def periodSortEventTypes(class_):
         ''' The event types that influence the effort sort order. '''
-        return ('effort.start', class_.taskChangedEventType(),
+        return (class_.startChangedEventType(), class_.taskChangedEventType(),
                 task.Task.subjectChangedEventType())
             
     @classmethod    
     def modificationEventTypes(class_):
         eventTypes = super(Effort, class_).modificationEventTypes()
         return eventTypes + [class_.taskChangedEventType(), 
-                             'effort.start', 'effort.stop']
+                             class_.startChangedEventType(), 
+                             class_.stopChangedEventType()]

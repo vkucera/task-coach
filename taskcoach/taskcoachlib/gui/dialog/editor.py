@@ -971,7 +971,7 @@ class EffortEditBook(Page):
         self._startDateTimeSync = attributesync.AttributeSync('getStart',
             self._startDateTimeEntry, currentStartDateTime, self.items,
             command.EditEffortStartDateTimeCommand, entry.EVT_DATETIMEENTRY,
-            'effort.start')
+            self.items[0].startChangedEventType())
         self._startDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onDateTimeChanged)        
         startFromLastEffortButton = self._createStartFromLastEffortButton()
         self.addEntry(_('Start'), self._startDateTimeEntry,
@@ -983,7 +983,7 @@ class EffortEditBook(Page):
         self._stopDateTimeSync = attributesync.AttributeSync('getStop',
             self._stopDateTimeEntry, currentStopDateTime, self.items,
             command.EditEffortStopDateTimeCommand, entry.EVT_DATETIMEENTRY,
-            'effort.stop')
+            self.items[0].stopChangedEventType())
         self._stopDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onStopDateTimeChanged)
         stopNowButton = self._createStopNowButton()
         self._invalidPeriodMessage = self._createInvalidPeriodMessage()
