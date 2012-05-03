@@ -86,8 +86,7 @@ class BaseCompositeEffort(base.BaseEffort):  # pylint: disable-msg=W0223
         self.notifyObserversOfDurationOrEmpty()
 
     def onRevenueChanged(self, newValue, sender):  # pylint: disable-msg=W0613
-        patterns.Event(self.revenueChangedEventType(), self, 
-                       self.revenue(recursive=True)).send()
+        self.sendRevenueChangedMessage()
 
     def onStartTracking(self, event):
         startedEffort = event.value()
@@ -232,7 +231,7 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
 
     def revenue(self, recursive=False):  # pylint: disable-msg=W0613
         return sum(effort.revenue() for effort in self._getEfforts())
-    
+
     def categories(self, *args, **kwargs):
         return [] 
         

@@ -89,7 +89,7 @@ class Effort(baseeffort.BaseEffort, base.Object):
         event.addSource(self, self._start, type=self.startChangedEventType())
         self.sendDurationChangedMessage()
         if self.task().hourlyFee():
-            self.revenueEvent(event)
+            self.sendRevenueChangedMessage()
     
     @classmethod        
     def startChangedEventType(class_):
@@ -116,7 +116,7 @@ class Effort(baseeffort.BaseEffort, base.Object):
         event.addSource(self, newStop, type=self.stopChangedEventType())
         self.sendDurationChangedMessage()
         if self.task().hourlyFee():
-            self.revenueEvent(event)
+            self.sendRevenueChangedMessage()
             
     @classmethod
     def stopChangedEventType(class_):
@@ -130,9 +130,6 @@ class Effort(baseeffort.BaseEffort, base.Object):
 
     def revenue(self):
         return self.duration().hours() * self.task().hourlyFee()
-        
-    def revenueEvent(self, event):
-        event.addSource(self, self.revenue(), type=self.revenueChangedEventType())
 
     @staticmethod
     def periodSortFunction(**kwargs):

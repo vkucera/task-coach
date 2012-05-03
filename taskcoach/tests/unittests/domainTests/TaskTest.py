@@ -2592,15 +2592,25 @@ class TaskWithHourlyFeeFixture(TaskTestCase, CommonTaskTestsMixin):
         self.failUnless((100, self.task) in events)
 
     def testAddingEffortDoesNotTriggerRevenueNotificationForEffort(self):
-        self.registerObserver(effort.Effort.revenueChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, effort.Effort.revenueChangedEventType())      
         self.task.addEffort(self.effort)
-        self.failIf(self.events)
+        self.failIf(events)
 
     def testTaskNotifiesEffortObserversOfRevenueChange(self):
-        self.registerObserver(effort.Effort.revenueChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, effort.Effort.revenueChangedEventType())
         self.task.addEffort(self.effort)
         self.task.setHourlyFee(200)
-        self.assertEvent(effort.Effort.revenueChangedEventType(), self.effort, 200)
+        self.assertEqual([(200, self.effort)], events)
 
 
 class TaskWithCategoryTestCase(TaskTestCase):

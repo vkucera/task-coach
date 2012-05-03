@@ -985,9 +985,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if self.timeSpent() > date.TimeDelta():
             self.sendRevenueChangedMessage()
             for effort in self.efforts():
-                event = patterns.Event()
-                effort.revenueEvent(event)
-                event.send()
+                effort.sendRevenueChangedMessage()
             
     @classmethod
     def hourlyFeeChangedEventType(class_):
