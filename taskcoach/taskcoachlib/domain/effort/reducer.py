@@ -46,8 +46,8 @@ class EffortAggregator(patterns.SetDecorator,
             eventType='task.effort.add')
         patterns.Publisher().registerObserver(self.onChildAddedToTask,
             eventType=task.Task.addChildEventType())
-        patterns.Publisher().registerObserver(self.onEffortStartChanged, 
-            eventType=effort.Effort.startChangedEventType())
+        pub.subscribe(self.onEffortStartChanged, 
+                      effort.Effort.startChangedEventType())
     
     @patterns.eventSource    
     def extend(self, efforts, event=None):  # pylint: disable-msg=W0221
@@ -111,13 +111,12 @@ class EffortAggregator(patterns.SetDecorator,
             del self.__composites[key]
         super(EffortAggregator, self).removeItemsFromSelf([sender])
         
-    def onEffortStartChanged(self, event):
+    def onEffortStartChanged(self, newValue, sender):  # pylint: disable-msg=W0613
         newComposites = []
-        for effort in event.sources():
-            key = self.keyForEffort(effort)
-            task = effort.task()  # pylint: disable-msg=W0621
-            if (task in self.observable()) and (key not in self.__composites):
-                newComposites.extend(self.createComposites(task, [effort]))
+        key = self.keyForEffort(sender)
+        task = sender.task()  # pylint: disable-msg=W0621
+        if (task in self.observable()) and (key not in self.__composites):
+            newComposites.extend(self.createComposites(task, [sender]))
         super(EffortAggregator, self).extendSelf(newComposites)
             
     def createComposites(self, task, efforts):  # pylint: disable-msg=W0621

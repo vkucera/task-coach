@@ -74,8 +74,8 @@ class Effort(baseeffort.BaseEffort, base.Object):
     def __setstate__(self, state, event=None):
         super(Effort, self).__setstate__(state, event=event)
         self.setTask(state['task'])
-        self.setStart(state['start'], event=event)
-        self.setStop(state['stop'], event=event)
+        self.setStart(state['start'])
+        self.setStop(state['stop'])
 
     def __getcopystate__(self):
         state = super(Effort, self).__getcopystate__()
@@ -85,24 +85,23 @@ class Effort(baseeffort.BaseEffort, base.Object):
     def duration(self, now=date.DateTime.now):
         return now() - self._start if self.__cachedDuration is None else self.__cachedDuration
      
-    @patterns.eventSource   
-    def setStart(self, startDateTime, event=None):
+    def setStart(self, startDateTime):
         if startDateTime == self._start:
             return
         self._start = startDateTime
         self.__updateDurationCache()
+        pub.sendMessage(self.startChangedEventType(), newValue=startDateTime,
+                        sender=self)
         self.task().sendTimeSpentChangedMessage()
-        event.addSource(self, self._start, type=self.startChangedEventType())
         self.sendDurationChangedMessage()
         if self.task().hourlyFee():
-            self.revenueEvent(event)
+            self.sendRevenueChangedMessage()
 
     @classmethod
     def startChangedEventType(class_):
-        return 'effort.start'
+        return 'pubsub.effort.start'
 
-    @patterns.eventSource        
-    def setStop(self, newStop=None, event=None):
+    def setStop(self, newStop=None):
         if newStop is None:
             newStop = date.DateTime.now()
         elif newStop == date.DateTime.max:
@@ -112,21 +111,24 @@ class Effort(baseeffort.BaseEffort, base.Object):
         previousStop = self._stop
         self._stop = newStop
         self.__updateDurationCache()
+        event = patterns.Event()
         if newStop == None:
             event.addSource(self, type=self.trackStartEventType())
             self.task().startTrackingEvent(event, self)
         elif previousStop == None:
             event.addSource(self, type=self.trackStopEventType())
             self.task().stopTrackingEvent(event, self)
+        event.send()
         self.task().sendTimeSpentChangedMessage()
-        event.addSource(self, newStop, type=self.stopChangedEventType())
+        pub.sendMessage(self.stopChangedEventType(), newValue=self._stop,
+                           sender=self)
         self.sendDurationChangedMessage()
         if self.task().hourlyFee():
-            self.revenueEvent(event)
+            self.sendRevenueChangedMessage()
             
     @classmethod
     def stopChangedEventType(class_):
-        return 'effort.stop'
+        return 'pubsub.effort.stop'
         
     def __updateDurationCache(self):
         self.__cachedDuration = self._stop - self._start if self._stop else None
@@ -136,9 +138,6 @@ class Effort(baseeffort.BaseEffort, base.Object):
 
     def revenue(self):
         return self.duration().hours() * self.task().hourlyFee()
-        
-    def revenueEvent(self, event):
-        event.addSource(self, self.revenue(), type=self.revenueChangedEventType())
 
     @staticmethod
     def periodSortFunction(**kwargs):

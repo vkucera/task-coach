@@ -66,24 +66,36 @@ class EffortTest(test.TestCase, asserts.Mixin):
         self.assertEqual(wx.SWISS_FONT, self.effort.font())
 
     def testNotificationForSetStart(self):
-        patterns.Publisher().registerObserver(self.onEvent,
-            eventType=effort.Effort.startChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, effort.Effort.startChangedEventType())
         start = date.DateTime.now()
         self.effort.setStart(start)
-        self.assertEqual(start, self.events[0].value())
+        self.assertEqual([(start, self.effort)], events)
         
     def testNotificationForSetStop(self):
-        patterns.Publisher().registerObserver(self.onEvent,
-            eventType=effort.Effort.stopChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, effort.Effort.stopChangedEventType())
         stop = date.DateTime.now()
         self.effort.setStop(stop)
-        self.assertEqual(stop, self.events[0].value())
+        self.assertEqual([(stop, self.effort)], events)
         
     def testNoNotificationForSetStopWhenNewStopEqualsOldStop(self):
-        patterns.Publisher().registerObserver(self.onEvent,
-            eventType=effort.Effort.stopChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, effort.Effort.stopChangedEventType())
         self.effort.setStop(self.effort.getStop())
-        self.failIf(self.events)
+        self.failIf(events)
 
     def testDurationNotificationForSetStart(self):
         events = []
@@ -137,30 +149,36 @@ class EffortTest(test.TestCase, asserts.Mixin):
         self.assertEqual(self.effort.trackStopEventType(), self.events[0].type())
 
     def testRevenueNotificationForTaskHourlyFeeChange(self):
-        patterns.Publisher().registerObserver(self.onEvent,
-            eventType=effort.Effort.revenueChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, effort.Effort.revenueChangedEventType())
         self.task.setHourlyFee(100)
-        self.assertEqual(patterns.Event(effort.Effort.revenueChangedEventType(), 
-                                        self.effort, 2400.0),
-            self.events[0])
+        self.assertEqual([(2400.0, self.effort)], events)
 
     def testRevenueNotificationForEffortDurationChange_ChangeStop(self):
         self.task.setHourlyFee(100)
-        patterns.Publisher().registerObserver(self.onEvent,
-            eventType=effort.Effort.revenueChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, effort.Effort.revenueChangedEventType())
         self.effort.setStop(date.DateTime(2004, 1, 3))
-        self.assertEqual(patterns.Event(effort.Effort.revenueChangedEventType(), 
-                                        self.effort, 4800.0),
-            self.events[0])
+        self.assertEqual([(4800.0, self.effort)], events)
 
     def testRevenueNotificationForEffortDurationChange_ChangeStart(self):
         self.task.setHourlyFee(100)
-        patterns.Publisher().registerObserver(self.onEvent,
-            eventType=effort.Effort.revenueChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, effort.Effort.revenueChangedEventType())
         self.effort.setStart(date.DateTime(2004, 1, 1, 12, 0, 0))
-        self.assertEqual(patterns.Event(effort.Effort.revenueChangedEventType(), 
-                                        self.effort, 1200.0),
-            self.events[0])
+        self.assertEqual([(1200.0, self.effort)], events)
 
     def testDefaultStartAndStop(self):
         effortPeriod = effort.Effort(self.task)

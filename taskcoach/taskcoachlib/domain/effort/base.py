@@ -59,6 +59,9 @@ class BaseEffort(object):
     
     def duration(self, recursive=False):
         raise NotImplementedError  # pragma: no cover
+    
+    def revenue(self, recursive=False):
+        raise NotImplementedError  # pragma: no cover
 
     def isTotal(self):
         return False  # Are we a detail effort or a total effort? For sorting.
@@ -82,7 +85,11 @@ class BaseEffort(object):
     @classmethod
     def durationChangedEventType(class_):
         return 'pubsub.effort.duration'
+    
+    def sendRevenueChangedMessage(self):
+        pub.sendMessage(self.revenueChangedEventType(), 
+                        newValue=self.revenue(), sender=self)
 
     @classmethod
     def revenueChangedEventType(class_):
-        return 'effort.revenue'
+        return 'pubsub.effort.revenue'

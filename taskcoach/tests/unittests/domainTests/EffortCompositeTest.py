@@ -178,12 +178,14 @@ class CompositeEffortTest(test.TestCase):
 
     def testThatAnHourlyFeeChangeCausesARevenueNotification(self):
         self.task.addEffort(self.effort1)
-        patterns.Publisher().registerObserver(self.onEvent, 
-            eventType=effort.Effort.revenueChangedEventType(), 
-            eventSource=self.composite)
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, effort.Effort.revenueChangedEventType())
         self.task.setHourlyFee(100)
-        self.failUnless(patterns.Event(effort.Effort.revenueChangedEventType(), 
-                                       self.composite, 100.0) in self.events)
+        self.failUnless((100.0, self.composite) in events)
 
     def testIsBeingTracked(self):
         self.task.addEffort(self.effort1)
@@ -578,8 +580,11 @@ class CompositeEffortWithSubTasksRevenueTest(test.TestCase):
         self.assertEqual(1000, self.composite.revenue(recursive=True))
 
     def testThatAnHourlyFeeChangeCausesARevenueNotification(self):
-        patterns.Publisher().registerObserver(self.onEvent, 
-            eventType=effort.Effort.revenueChangedEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, effort.Effort.revenueChangedEventType())
         self.child.setHourlyFee(100)
-        self.failUnless(patterns.Event(effort.Effort.revenueChangedEventType(), 
-                                       self.composite, 100.0) in self.events)
+        self.failUnless((0.0, self.composite) in events)

@@ -96,19 +96,17 @@ class EditEffortStartDateTimeCommand(base.BaseCommand):
         return super(EditEffortStartDateTimeCommand, self).canDo() and \
             all(self.__datetime < (item.getStop() or maxDateTime) for item in self.items)
         
-    @patterns.eventSource
-    def do_command(self, event=None):
+    def do_command(self):
         for item in self.items:
-            item.setStart(self.__datetime, event=event)
+            item.setStart(self.__datetime)
             task = item.task()
             if task not in self.__oldActualStartDateTimes and self.__datetime < task.actualStartDateTime():
                 self.__oldActualStartDateTimes[task] = task.actualStartDateTime()
                 task.setActualStartDateTime(self.__datetime)
             
-    @patterns.eventSource
-    def undo_command(self, event=None):
+    def undo_command(self):
         for item, oldDateTime in zip(self.items, self.__oldDateTimes):
-            item.setStart(oldDateTime, event=event)
+            item.setStart(oldDateTime)
             task = item.task()
             if task in self.__oldActualStartDateTimes:
                 task.setActualStartDateTime(self.__oldActualStartDateTimes[task])
@@ -131,15 +129,13 @@ class EditEffortStopDateTimeCommand(base.BaseCommand):
         return super(EditEffortStopDateTimeCommand, self).canDo() and \
             all(self.__datetime > item.getStart() for item in self.items)
                 
-    @patterns.eventSource
-    def do_command(self, event=None):
+    def do_command(self):
         for item in self.items:
-            item.setStop(self.__datetime, event=event)
+            item.setStop(self.__datetime)
             
-    @patterns.eventSource
-    def undo_command(self, event=None):
+    def undo_command(self):
         for item, oldDateTime in zip(self.items, self.__oldDateTimes):
-            item.setStop(oldDateTime, event=event)
+            item.setStop(oldDateTime)
 
     def redo_command(self):
         self.do_command()

@@ -592,10 +592,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def removeEffortEvent(self, event, *efforts):
         event.addSource(self, *efforts, **dict(type='task.effort.remove'))
 
-    @patterns.eventSource
-    def stopTracking(self, event=None):
+    def stopTracking(self):
         for effort in self.activeEfforts():
-            effort.setStop(event=event)
+            effort.setStop()
                         
     def stopTrackingEvent(self, event, *efforts):
         self.recomputeAppearance(event=event)    
@@ -993,9 +992,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if self.timeSpent() > date.TimeDelta():
             self.sendRevenueChangedMessage()
             for effort in self.efforts():
-                event = patterns.Event()
-                effort.revenueEvent(event)
-                event.send()
+                effort.sendRevenueChangedMessage()
             
     @classmethod
     def hourlyFeeChangedEventType(class_):
