@@ -138,23 +138,23 @@ class EffortTest(test.TestCase, asserts.Mixin):
     def testNotificationForStartTracking(self):
         events = []
         
-        def onEvent(sender):
-            events.append(sender)
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
             
-        pub.subscribe(onEvent, self.effort.trackStartEventType())
+        pub.subscribe(onEvent, self.effort.trackingChangedEventType())
         self.effort.setStop(date.DateTime())
-        self.assertEqual([self.effort], events)
+        self.assertEqual([(True, self.effort)], events)
 
     def testNotificationForStopTracking(self):
+        self.effort.setStop(date.DateTime())
         events = []
         
-        def onEvent(sender):
-            events.append(sender)
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
 
-        pub.subscribe(onEvent, self.effort.trackStopEventType())
-        self.effort.setStop(date.DateTime())
+        pub.subscribe(onEvent, self.effort.trackingChangedEventType())
         self.effort.setStop(date.DateTime.now())
-        self.assertEqual([self.effort], events)
+        self.assertEqual([(False, self.effort)], events)
 
     def testRevenueNotificationForTaskHourlyFeeChange(self):
         events = []

@@ -67,13 +67,9 @@ class BaseEffort(object):
         return False  # Are we a detail effort or a total effort? For sorting.
 
     @classmethod
-    def trackStartEventType(class_):
-        return 'pubsub.effort.track.start'
-    
-    @classmethod
-    def trackStopEventType(class_):
-        return 'pubsub.effort.track.stop'
-    
+    def trackingChangedEventType(class_):
+        return 'pubsub.effort.track'
+
     def sendDurationChangedMessage(self):
         pub.sendMessage(self.durationChangedEventType(), 
                         newValue=self.duration(), sender=self)

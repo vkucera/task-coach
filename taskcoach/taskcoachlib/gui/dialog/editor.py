@@ -500,23 +500,19 @@ class BudgetPage(Page):
         if len(self.items) != 1:
             return
         item = self.items[0]
-        self.registerObserver(self.onStartTracking, 
-                              eventType=item.trackStartEventType(), 
-                              eventSource=item)
-        self.registerObserver(self.onStopTracking, 
-                              eventType=item.trackStopEventType(), 
-                              eventSource=item)
+        pub.subscribe(self.onTrackingChanged, item.trackingChangedEventType())
         if item.isBeingTracked():
-            self.onStartTracking()
+            self.onTrackingChanged(True, item)
         
-    def onStartTracking(self, event=None):  # pylint: disable-msg=W0613
-        date.Scheduler().schedule_interval(self.onEverySecond, seconds=1)
-        
-    def onStopTracking(self, event):  # pylint: disable-msg=W0613
-        # We might need to keep tracking the clock if the user was tracking this
-        # task with multiple effort records simultaneously
-        if not self.items[0].isBeingTracked():
-            date.Scheduler().unschedule(self.onEverySecond)
+    def onTrackingChanged(self, newValue, sender):
+        if newValue:
+            if sender in self.items:
+                date.Scheduler().schedule_interval(self.onEverySecond, seconds=1)
+        else:
+            # We might need to keep tracking the clock if the user was tracking this
+            # task with multiple effort records simultaneously
+            if not self.items[0].isBeingTracked():
+                date.Scheduler().unschedule(self.onEverySecond)
     
     def onEverySecond(self):
         taskDisplayed = self.items[0]

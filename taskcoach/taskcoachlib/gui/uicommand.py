@@ -1910,8 +1910,8 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
         self.registerObserver(self.onEffortRemoved, 
                               eventType=self.effortList.removeItemEventType(),
                               eventSource=self.effortList)
-        pub.subscribe(self.onStartTracking, effort.Effort.trackStartEventType())
-        pub.subscribe(self.onStopTracking, effort.Effort.trackStopEventType())
+        pub.subscribe(self.onTrackingChanged, 
+                      effort.Effort.trackingChangedEventType())
                 
     def onEffortAdded(self, event):
         self.__trackedEfforts.extend(self.__filterTrackedEfforts(event.values()))
@@ -1921,12 +1921,12 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
             if effort in self.__trackedEfforts:
                 self.__trackedEfforts.remove(effort)
         
-    def onStartTracking(self, sender):
-        self.__trackedEfforts.extend([sender])
-        
-    def onStopTracking(self, sender):
-        if sender in self.__trackedEfforts:
-            self.__trackedEfforts.remove(sender) 
+    def onTrackingChanged(self, newValue, sender):
+        if newValue:
+            self.__trackedEfforts.extend([sender])
+        else:        
+            if sender in self.__trackedEfforts:
+                self.__trackedEfforts.remove(sender) 
                         
     def doCommand(self, event=None):
         if self.__trackedEfforts:

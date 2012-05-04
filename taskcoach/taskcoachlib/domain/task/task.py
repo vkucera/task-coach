@@ -161,8 +161,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def addChild(self, child, event=None):
         if child in self.children():
             return
+        wasTracking = self.isBeingTracked(recursive=True)
         super(Task, self).addChild(child, event=event)
-        self.childChangeEvent(child, event)
+        self.childChangeEvent(child, wasTracking, event)
         if self.shouldBeMarkedCompleted():
             self.setCompletionDateTime(child.completionDateTime())
         elif self.completed() and not child.completed():
@@ -180,15 +181,16 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def removeChild(self, child, event=None):
         if child not in self.children():
             return
+        wasTracking = self.isBeingTracked(recursive=True)
         super(Task, self).removeChild(child, event=event)
-        self.childChangeEvent(child, event)    
+        self.childChangeEvent(child, wasTracking, event)    
         if self.shouldBeMarkedCompleted(): 
             # The removed child was the last uncompleted child
             self.setCompletionDateTime(date.Now())
         self.recomputeAppearance(recursive=False, event=event)
         child.recomputeAppearance(recursive=True, event=event)
                     
-    def childChangeEvent(self, child, event):
+    def childChangeEvent(self, child, wasTracking, event):
         childHasTimeSpent = child.timeSpent(recursive=True)
         childHasBudget = child.budget(recursive=True)
         childHasBudgetLeft = child.budgetLeft(recursive=True)
@@ -206,14 +208,12 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             self.sendBudgetLeftChangedMessage()
         if childPriority > self.priority():
             self.sendPriorityChangedMessage()
-            
-        if child.isBeingTracked(recursive=True):
-            activeEfforts = child.activeEfforts(recursive=True)
-            if self.isBeingTracked(recursive=True):
-                self.startTrackingEvent(event, *activeEfforts)  # pylint: disable-msg=W0142
-            else:
-                self.stopTrackingEvent(event, *activeEfforts)  # pylint: disable-msg=W0142
-    
+        isTracking = self.isBeingTracked(recursive=True)
+        if wasTracking and not isTracking:
+            self.sendTrackingChangedMessage(tracking=False)
+        elif not wasTracking and isTracking:
+            self.sendTrackingChangedMessage(tracking=True)
+
     @patterns.eventSource    
     def setSubject(self, subject, event=None):
         super(Task, self).setSubject(subject, event=event)
@@ -559,17 +559,19 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             self.setActualStartDateTime(effort.getStart())
         self.addEffortEvent(event, effort)
         if effort.isBeingTracked() and not wasTracking:
-            self.startTrackingEvent(event, effort)
+            self.sendTrackingChangedMessage(tracking=True)
         self.sendTimeSpentChangedMessage()
   
     def addEffortEvent(self, event, *efforts):
         event.addSource(self, *efforts, **dict(type='task.effort.add'))
           
-    def startTrackingEvent(self, event, *efforts):
-        self.recomputeAppearance(event=event)    
-        for ancestor in [self] + self.ancestors():
-            event.addSource(ancestor, *efforts, 
-                            **dict(type=ancestor.trackStartEventType()))
+    def sendTrackingChangedMessage(self, tracking):
+        self.recomputeAppearance()  
+        pub.sendMessage(self.trackingChangedEventType(), newValue=tracking,
+                        sender=self)  
+        for ancestor in self.ancestors():
+            pub.sendMessage(ancestor.trackingChangedEventType(), newValue=tracking,
+                            sender=ancestor)
 
     @patterns.eventSource
     def removeEffort(self, effort, event=None):
@@ -578,7 +580,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self._efforts.remove(effort)
         self.removeEffortEvent(event, effort)
         if effort.isBeingTracked() and not self.isBeingTracked():
-            self.stopTrackingEvent(event, effort)
+            self.sendTrackingChangedMessage(tracking=False)
         self.sendTimeSpentChangedMessage()
         
     def removeEffortEvent(self, event, *efforts):
@@ -587,13 +589,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def stopTracking(self):
         for effort in self.activeEfforts():
             effort.setStop()
-                        
-    def stopTrackingEvent(self, event, *efforts):
-        self.recomputeAppearance(event=event)    
-        for ancestor in [self] + self.ancestors():
-            event.addSource(ancestor, *efforts, 
-                            **dict(type=ancestor.trackStopEventType()))
-        
+  
     @patterns.eventSource
     def setEfforts(self, efforts, event=None):
         if efforts == self._efforts:
@@ -606,12 +602,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.sendTimeSpentChangedMessage()
         
     @classmethod
-    def trackStartEventType(class_):
-        return '%s.track.start' % class_
-
-    @classmethod
-    def trackStopEventType(class_):
-        return '%s.track.stop' % class_
+    def trackingChangedEventType(class_):
+        return 'pubsub.task.track'
 
     # Time spent
     

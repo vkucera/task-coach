@@ -102,8 +102,7 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable-msg=W0223
         super(BaseTaskTreeViewer, self).__init__(*args, **kwargs)
         if kwargs.get('doRefresh', True):
             self.secondRefresher = refresher.SecondRefresher(self,
-                                                             task.Task.trackStartEventType(),
-                                                             task.Task.trackStopEventType())
+                                                             task.Task.trackingChangedEventType())
             self.minuteRefresher = refresher.MinuteRefresher(self)
         else:
             self.secondRefresher = self.minuteRefresher = None
@@ -586,7 +585,7 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
                           task.Task.completionDateTimeChangedEventType(),
                           task.Task.attachmentsChangedEventType(),
                           task.Task.notesChangedEventType(),
-                          task.Task.trackStartEventType(), task.Task.trackStopEventType()):
+                          task.Task.trackingChangedEventType()):
             if eventType.startswith('pubsub'):
                 self.registerObserver(self.onAttributeChanged, eventType)
             else:
@@ -785,7 +784,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable-msg=W0223
                 task.Task.dueDateTimeChangedEventType(),
                 task.Task.actualStartDateTimeChangedEventType(),
                 task.Task.plannedStartDateTimeChangedEventType(),
-                task.Task.trackStartEventType(), task.Task.trackStopEventType(), 
+                task.Task.trackingChangedEventType(),
                 sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                     value='subject'),
                 width=self.getColumnWidth('subject'), 

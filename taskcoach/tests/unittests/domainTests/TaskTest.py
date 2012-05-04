@@ -727,18 +727,27 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
     def testAddTrackedChildCausesStartTrackingNotification(self):
         child = task.Task()
         child.addEffort(effort.Effort(child))
-        self.registerObserver(self.task.trackStartEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, self.task.trackingChangedEventType())
         self.task.addChild(child)
-        self.assertEvent(self.task.trackStartEventType(),
-                         self.task, child.efforts()[0])
+        self.assertEqual([(True, self.task)], events)
         
     def testAddChildWithTwoTrackedEffortsCausesStartTrackingNotification(self):
         child = task.Task()
         child.addEffort(effort.Effort(child))
         child.addEffort(effort.Effort(child))
-        self.registerObserver(self.task.trackStartEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, self.task.trackingChangedEventType())
         self.task.addChild(child)
-        self.assertEqual(self.task.trackStartEventType(), self.events[0].type())
+        self.assertEqual([(True, self.task)], events)
 
     # Constructor
 
@@ -759,11 +768,15 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.failIf(events)
         
     def testAddActiveEffortCausesStartTrackingNotification(self):
-        self.registerObserver(self.task.trackStartEventType())
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, self.task.trackingChangedEventType())
         activeEffort = effort.Effort(self.task)
         self.task.addEffort(activeEffort)
-        self.assertEvent(self.task.trackStartEventType(),
-                         self.task, activeEffort)
+        self.assertEqual([(True, self.task)], events)
         
     def testAddEffortSetActualStartDateTime(self):
         now = date.Now()
@@ -1557,18 +1570,27 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
         self.failIf(events)
 
     def testRemoveTrackedChildCausesStopTrackingNotification(self):
-        self.registerObserver(self.task1.trackStopEventType())
         self.task1_1.addEffort(effort.Effort(self.task1_1))
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.trackingChangedEventType())
         self.task1.removeChild(self.task1_1)
-        self.assertEvent(self.task1.trackStopEventType(), 
-                         self.task1, self.task1_1.efforts()[0])
+        self.assertEqual([(False, self.task1)], events)
 
     def testRemoveTrackedChildWhenParentIsTrackedTooCausesNoStopTrackingNotification(self):
-        self.registerObserver(self.task1.trackStopEventType())
         self.task1.addEffort(effort.Effort(self.task1))
         self.task1_1.addEffort(effort.Effort(self.task1_1))
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.trackingChangedEventType())        
         self.task1.removeChild(self.task1_1)
-        self.failIf(self.events)
+        self.failIf(events)
         
     def testSettingParentDueDateTimeEarlierThanChildDueDateTimeShouldChangeChildDueDateTime(self):
         self.task1_1.setDueDateTime(date.Now() + date.twoHours)
@@ -1796,21 +1818,29 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
         self.failUnless(self.task1.isBeingTracked(recursive=True))
 
     def testNotificationWhenChildIsBeingTracked(self):
-        self.registerObserver(self.task1.trackStartEventType(), 
-                              eventSource=self.task1)
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, self.task1.trackingChangedEventType())
         activeEffort = effort.Effort(self.task1_1)
         self.task1_1.addEffort(activeEffort)
-        self.assertEvent(self.task1.trackStartEventType(),
-                         self.task1, activeEffort)
+        self.assertEqual(set([(True, self.task1), (True, self.task1_1)]), 
+                         set(events))
 
     def testNotificationWhenChildTrackingStops(self):
-        self.registerObserver(self.task1.trackStopEventType(), 
-                              eventSource=self.task1)
         activeEffort = effort.Effort(self.task1_1)
         self.task1_1.addEffort(activeEffort)
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.trackingChangedEventType())
         activeEffort.setStop()
-        self.assertEvent(self.task1.trackStopEventType(), 
-                         self.task1, activeEffort)
+        self.assertEqual(set([(False, self.task), (False, self.task1_1)]), 
+                         set(events))
 
     def testSetFixedFeeOfChild(self):
         events = []
@@ -2040,9 +2070,6 @@ class TaskWithGrandChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMi
         
 
 class TaskWithOneEffortTest(TaskTestCase, CommonTaskTestsMixin):
-    eventTypes = [task.Task.trackStartEventType(),
-                  task.Task.trackStopEventType()]
-
     def taskCreationKeywordArguments(self):
         return [{'efforts': [effort.Effort(None, date.DateTime(2005, 1, 1),
                                            date.DateTime(2005, 1, 2))]}]
@@ -2062,16 +2089,25 @@ class TaskWithOneEffortTest(TaskTestCase, CommonTaskTestsMixin):
         self.assertEqual([self.task1effort1], self.task.efforts())
 
     def testStartTrackingEffort(self):
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, self.task.trackingChangedEventType())
         self.task1effort1.setStop(date.DateTime.max)
-        self.assertEvent(self.task.trackStartEventType(), 
-                         self.task, self.task1effort1)
+        self.assertEqual([(True, self.task)], events)
 
     def testStopTrackingEffort(self):
         self.task1effort1.setStop(date.DateTime.max)
-        self.events = []  # pylint: disable-msg=W0201
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, self.task.trackingChangedEventType())
         self.task1effort1.setStop()
-        self.assertEvent(self.task.trackStopEventType(), 
-                         self.task, self.task1effort1)
+        self.assertEqual([(False, self.task)], events)
 
     def testRevenueWithEffortButWithZeroFee(self):
         self.assertEqual(0, self.task.revenue())
@@ -2102,9 +2138,6 @@ class TaskWithTwoEffortsTest(TaskTestCase, CommonTaskTestsMixin):
 
 
 class TaskWithActiveEffort(TaskTestCase, CommonTaskTestsMixin):
-    eventTypes = [task.Task.trackStartEventType(),
-                  task.Task.trackStopEventType()]
-
     def taskCreationKeywordArguments(self):
         return [{'efforts': [effort.Effort(None, date.DateTime.now())],
                  'icon': 'bomb_icon'}]
@@ -2117,27 +2150,56 @@ class TaskWithActiveEffort(TaskTestCase, CommonTaskTestsMixin):
         self.failIf(self.task.isBeingTracked())
         
     def testNoStartTrackingEventBecauseActiveEffortWasAddedViaConstructor(self):
-        self.failIf(self.events)
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.trackingChangedEventType())
+        task.Task(efforts=[effort.Effort(None)])
+        self.failIf(events)
 
     def testNoStartTrackingEventAfterAddingASecondActiveEffort(self):
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.trackingChangedEventType())
         self.task.addEffort(effort.Effort(self.task))
-        self.failIf(self.events)
+        self.failIf(events)
 
     def testNoStopTrackingEventAfterRemovingFirstOfTwoActiveEfforts(self):
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.trackingChangedEventType())
         secondEffort = effort.Effort(self.task)
         self.task.addEffort(secondEffort)
         self.task.removeEffort(secondEffort)
-        self.failIf(self.events)
+        self.failIf(events)
 
     def testRemoveActiveEffortShouldCauseStopTrackingEvent(self):
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, self.task.trackingChangedEventType())
         self.task.removeEffort(self.task1effort1)
-        self.assertEvent(self.task.trackStopEventType(), 
-                         self.task, self.task1effort1)
+        self.assertEqual([(False, self.task)], events)
 
     def testStopTrackingEvent(self):
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, self.task.trackingChangedEventType())
         self.task.stopTracking()
-        self.assertEvent(self.task.trackStopEventType(), 
-                         self.task, self.task1effort1)
+        self.assertEqual([(False, self.task)], events)
 
     def testIcon(self):
         self.assertEqual('clock_icon', self.task.icon(recursive=True))

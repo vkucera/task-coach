@@ -41,12 +41,7 @@ class ReminderDialog(patterns.Observer, sized_controls.SizedDialog):
                               eventSource=self.taskList)
         pub.subscribe(self.onTaskCompletionDateChanged, 
                       task.completionDateTimeChangedEventType())
-        self.registerObserver(self.onTrackingStartedOrStopped,
-                              eventType=task.trackStartEventType(),
-                              eventSource=task)
-        self.registerObserver(self.onTrackingStartedOrStopped,
-                              eventType=task.trackStopEventType(),
-                              eventSource=task)
+        pub.subscribe(self.onTrackingChanged, task.trackingChangedEventType())
         self.openTaskAfterClose = self.ignoreSnoozeOption = False
         pane = self.GetContentsPane()
         pane.SetSizerType("form")
@@ -117,7 +112,7 @@ class ReminderDialog(patterns.Observer, sized_controls.SizedDialog):
             command.StartEffortCommand(self.taskList, [self.task]).do()
         self.setTrackingIcon()
         
-    def onTrackingStartedOrStopped(self, event):  # pylint: disable-msg=W0613
+    def onTrackingChanged(self, newValue, sender):  # pylint: disable-msg=W0613
         self.setTrackingIcon()
         
     def setTrackingIcon(self):

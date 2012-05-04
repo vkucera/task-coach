@@ -88,18 +88,16 @@ class BaseCompositeEffort(base.BaseEffort):  # pylint: disable-msg=W0223
     def onRevenueChanged(self, newValue, sender):  # pylint: disable-msg=W0613
         self.sendRevenueChangedMessage()
 
-    def onStartTracking(self, event):
-        startedEffort = event.value()
-        if self._inPeriod(startedEffort):
-            self._invalidateCache()
-            pub.sendMessage(self.trackStartEventType(), sender=self)
-
-    def onStopTracking(self, event):
-        stoppedEffort = event.value()
-        if self._inPeriod(stoppedEffort):
-            self._invalidateCache()
-            pub.sendMessage(self.trackStopEventType(), sender=self)
-        
+    def onTrackingChanged(self, newValue, sender):  # pylint: disable-msg=W0613
+        wasBeingTracked = self._isBeingTracked
+        self._invalidateCache()
+        if not wasBeingTracked and self._isBeingTracked:
+            pub.sendMessage(self.trackingChangedEventType(), 
+                            newValue=True, sender=self)
+        elif wasBeingTracked and not self._isBeingTracked:
+            pub.sendMessage(self.trackingChangedEventType(),
+                            newValue=False, sender=self)
+            
     def revenue(self, recursive=False):
         raise NotImplementedError  # pragma: no cover
     
@@ -121,10 +119,7 @@ class CompositeEffort(BaseCompositeEffort):
         super(CompositeEffort, self).__init__(task, start, stop)
         self.__effortCache = {}  # {True: [efforts recursively], False: [efforts]}
         self._invalidateCache()
-        patterns.Publisher().registerObserver(self.onStartTracking,
-            eventType=task.trackStartEventType(), eventSource=task)
-        patterns.Publisher().registerObserver(self.onStopTracking,
-            eventType=task.trackStopEventType(), eventSource=task)
+        pub.subscribe(self.onTrackingChanged, task.trackingChangedEventType())
         pub.subscribe(self.onTimeSpentChanged, task.timeSpentChangedEventType())
         pub.subscribe(self.onRevenueChanged, task.hourlyFeeChangedEventType())
         '''
@@ -149,6 +144,7 @@ class CompositeEffort(BaseCompositeEffort):
             self.__effortCache[recursive] = \
                 [effort for effort in self.task().efforts(recursive=recursive) \
                  if self._inPeriod(effort)]
+        self._isBeingTracked = self.isBeingTracked()
                 
     def _inCache(self, effort):
         return effort in self.__effortCache[True]
@@ -170,9 +166,13 @@ class CompositeEffort(BaseCompositeEffort):
         if sender == self.task():
             super(CompositeEffort, self).onTimeSpentChanged(newValue, sender)
         
+    def onTrackingChanged(self, newValue, sender):
+        if sender == self.task():
+            super(CompositeEffort, self).onTrackingChanged(newValue, sender)
+        
     def onAppearanceChanged(self, event):    
         return  # FIXME: CompositeEffort does not derive from base.Object
-        patterns.Event(self.appearanceChangedEventType(), self, event.value()).send()
+        #patterns.Event(self.appearanceChangedEventType(), self, event.value()).send()
 
 
 class CompositeEffortPerPeriod(BaseCompositeEffort):
@@ -182,6 +182,7 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
         if initialEffort:
             assert self._inPeriod(initialEffort)
             self.__effortCache = [initialEffort]
+            self._isBeingTracked = initialEffort.isBeingTracked()
         else:
             self._invalidateCache()
         pub.subscribe(self.onTimeSpentChanged, 
@@ -191,11 +192,9 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
         for eventType in self.taskList.modificationEventTypes():
             patterns.Publisher().registerObserver(self.onTaskAddedOrRemoved, eventType,
                                                   eventSource=self.taskList)
-        patterns.Publisher().registerObserver(self.onStartTracking,
-            eventType=task.Task.trackStartEventType())
-        patterns.Publisher().registerObserver(self.onStopTracking,
-            eventType=task.Task.trackStopEventType())
-        
+        pub.subscribe(self.onTrackingChanged, 
+                      task.Task.trackingChangedEventType())
+
     def addEffort(self, anEffort):
         assert self._inPeriod(anEffort)
         if anEffort not in self.__effortCache:
@@ -250,6 +249,7 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
         for eachTask in self.taskList:
             self.__effortCache.extend([effort for effort in eachTask.efforts() \
                                        if self._inPeriod(effort)])
+        self._isBeingTracked = self.isBeingTracked()
 
     def _inCache(self, effort):
         return effort in self.__effortCache

@@ -89,8 +89,7 @@ class IdleController(Observer, IdleNotifier):
         self.registerObserver(self.onEffortRemoved, 
                               eventType=self._effortList.removeItemEventType(),
                               eventSource=self._effortList)
-        pub.subscribe(self.onStartTracking, effort.Effort.trackStartEventType())
-        pub.subscribe(self.onStopTracking, effort.Effort.trackStopEventType())
+        pub.subscribe(self.onTrackingChanged, effort.Effort.trackingChangedEventType())
     
     @staticmethod
     def __filterTrackedEfforts(efforts):
@@ -105,12 +104,12 @@ class IdleController(Observer, IdleNotifier):
             if effort in self.__trackedEfforts:
                 self.__trackedEfforts.remove(effort)
         
-    def onStartTracking(self, sender):
-        self.__trackedEfforts.extend(self.__filterTrackedEfforts([sender]))
-        
-    def onStopTracking(self, sender):
-        if sender in self.__trackedEfforts:
-            self.__trackedEfforts.remove(sender) 
+    def onTrackingChanged(self, newValue, sender):
+        if newValue:
+            self.__trackedEfforts.extend(self.__filterTrackedEfforts([sender]))
+        else:
+            if sender in self.__trackedEfforts:
+                self.__trackedEfforts.remove(sender) 
 
     def getMinIdleTime(self):
         return self._settings.getint('feature', 'minidletime') * 60
