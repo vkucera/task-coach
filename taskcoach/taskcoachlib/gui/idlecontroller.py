@@ -16,13 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
-from taskcoachlib.powermgt import IdleNotifier
-from taskcoachlib.patterns import Observer
-from taskcoachlib.domain import effort, date
 from taskcoachlib.command import NewEffortCommand, EditEffortStopDateTimeCommand
-from taskcoachlib.notify import NotificationFrameBase, NotificationCenter
+from taskcoachlib.domain import effort, date
 from taskcoachlib.i18n import _
+from taskcoachlib.notify import NotificationFrameBase, NotificationCenter
+from taskcoachlib.patterns import Observer
+from taskcoachlib.powermgt import IdleNotifier
+from taskcoachlib.thirdparty.pubsub import pub
+import wx
 
 
 class WakeFromIdleFrame(NotificationFrameBase):
@@ -43,9 +44,9 @@ class WakeFromIdleFrame(NotificationFrameBase):
         btnStopAt = wx.Button(panel, wx.ID_ANY, _('Stop it at %s') % self._idleTime)
         btnStopResume = wx.Button(panel, wx.ID_ANY, _('Stop it at %s and resume now') % self._idleTime)
 
-        sizer.Add(btnNothing, 0, wx.EXPAND|wx.ALL, 1)
-        sizer.Add(btnStopAt, 0, wx.EXPAND|wx.ALL, 1)
-        sizer.Add(btnStopResume, 0, wx.EXPAND|wx.ALL, 1)
+        sizer.Add(btnNothing, 0, wx.EXPAND | wx.ALL, 1)
+        sizer.Add(btnStopAt, 0, wx.EXPAND | wx.ALL, 1)
+        sizer.Add(btnStopResume, 0, wx.EXPAND | wx.ALL, 1)
 
         wx.EVT_BUTTON(btnNothing, wx.ID_ANY, self.DoNothing)
         wx.EVT_BUTTON(btnStopAt, wx.ID_ANY, self.DoStopAt)
@@ -88,10 +89,8 @@ class IdleController(Observer, IdleNotifier):
         self.registerObserver(self.onEffortRemoved, 
                               eventType=self._effortList.removeItemEventType(),
                               eventSource=self._effortList)
-        self.registerObserver(self.onStartTracking,  
-                              eventType=effort.Effort.trackStartEventType())
-        self.registerObserver(self.onStopTracking, 
-                              eventType=effort.Effort.trackStopEventType())
+        pub.subscribe(self.onStartTracking, effort.Effort.trackStartEventType())
+        pub.subscribe(self.onStopTracking, effort.Effort.trackStopEventType())
     
     @staticmethod
     def __filterTrackedEfforts(efforts):
@@ -106,13 +105,12 @@ class IdleController(Observer, IdleNotifier):
             if effort in self.__trackedEfforts:
                 self.__trackedEfforts.remove(effort)
         
-    def onStartTracking(self, event):
-        self.__trackedEfforts.extend(self.__filterTrackedEfforts(event.sources()))
+    def onStartTracking(self, sender):
+        self.__trackedEfforts.extend(self.__filterTrackedEfforts([sender]))
         
-    def onStopTracking(self, event):
-        for effort in event.sources():
-            if effort in self.__trackedEfforts:
-                self.__trackedEfforts.remove(effort) 
+    def onStopTracking(self, sender):
+        if sender in self.__trackedEfforts:
+            self.__trackedEfforts.remove(sender) 
 
     def getMinIdleTime(self):
         return self._settings.getint('feature', 'minidletime') * 60

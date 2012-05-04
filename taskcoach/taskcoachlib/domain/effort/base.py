@@ -68,15 +68,11 @@ class BaseEffort(object):
 
     @classmethod
     def trackStartEventType(class_):
-        return 'effort.track.start' 
-        # We don't use '%s.effort...'%class_ because we need Effort and 
-        # CompositeEffort to use the same event types. This is needed to make
-        # SecondRefresher work regardless whether EffortViewer is in aggregate 
-        # mode or not.
+        return 'pubsub.effort.track.start'
     
     @classmethod
     def trackStopEventType(class_):
-        return 'effort.track.stop'
+        return 'pubsub.effort.track.stop'
     
     def sendDurationChangedMessage(self):
         pub.sendMessage(self.durationChangedEventType(), 

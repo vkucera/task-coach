@@ -107,10 +107,10 @@ class Effort(baseeffort.BaseEffort, base.Object):
         self.__updateDurationCache()
         event = patterns.Event()
         if newStop == None:
-            event.addSource(self, type=self.trackStartEventType())
+            pub.sendMessage(self.trackStartEventType(), sender=self)
             self.task().startTrackingEvent(event, self)
         elif previousStop == None:
-            event.addSource(self, type=self.trackStopEventType())
+            pub.sendMessage(self.trackStopEventType(), sender=self)
             self.task().stopTrackingEvent(event, self)
         event.send()
         self.task().sendTimeSpentChangedMessage()
