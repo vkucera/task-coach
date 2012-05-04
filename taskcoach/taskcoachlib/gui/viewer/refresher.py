@@ -22,8 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     viewers. '''  # pylint: disable-msg=W0105
 
 
-from taskcoachlib.domain import date
 from taskcoachlib import patterns
+from taskcoachlib.domain import date
+from taskcoachlib.thirdparty.pubsub import pub
 
 
 class MinuteRefresher(object):
@@ -56,8 +57,14 @@ class SecondRefresher(patterns.Observer):
         self.__viewer = viewer
         self.__presentation = viewer.presentation()
         self.__trackedItems = set()
-        self.registerObserver(self.onStartTracking, eventType=trackStartEventType)
-        self.registerObserver(self.onStopTracking, eventType=trackStopEventType)
+        if trackStartEventType.startswith('pubsub'):
+            pub.subscribe(self.onStartTracking, trackStartEventType)
+        else:
+            self.registerObserver(self.onStartTracking_Deprecated, eventType=trackStartEventType)
+        if trackStopEventType.startswith('pubsub'):
+            pub.subscribe(self.onStopTracking, trackStopEventType)
+        else:
+            self.registerObserver(self.onStopTracking_Deprecated, eventType=trackStopEventType)
         self.registerObserver(self.onItemAdded, 
                               eventType=self.__presentation.addItemEventType(),
                               eventSource=self.__presentation)
@@ -72,13 +79,25 @@ class SecondRefresher(patterns.Observer):
     def onItemRemoved(self, event): 
         self.removeTrackedItems(self.trackedItems(event.values()))
 
-    def onStartTracking(self, event):
+    def onStartTracking(self, sender):
+        if sender not in self.__presentation:
+            return
+        self.addTrackedItems([sender])
+        self.refreshItems([sender])
+        
+    def onStartTracking_Deprecated(self, event):
         startedItems = [item for item in event.sources() \
                         if item in self.__presentation]
         self.addTrackedItems(startedItems)
         self.refreshItems(startedItems)
 
-    def onStopTracking(self, event):
+    def onStopTracking(self, sender):
+        if sender not in self.__presentation:
+            return
+        self.removeTrackedItems([sender])
+        self.refreshItems([sender])
+
+    def onStopTracking_Deprecated(self, event):
         stoppedItems = [item for item in event.sources() \
                         if item in self.__presentation]
         self.removeTrackedItems(stoppedItems)

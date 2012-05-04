@@ -92,13 +92,13 @@ class BaseCompositeEffort(base.BaseEffort):  # pylint: disable-msg=W0223
         startedEffort = event.value()
         if self._inPeriod(startedEffort):
             self._invalidateCache()
-            patterns.Event(self.trackStartEventType(), self, startedEffort).send()
+            pub.sendMessage(self.trackStartEventType(), sender=self)
 
     def onStopTracking(self, event):
         stoppedEffort = event.value()
         if self._inPeriod(stoppedEffort):
             self._invalidateCache()
-            patterns.Event(self.trackStopEventType(), self, stoppedEffort).send()
+            pub.sendMessage(self.trackStopEventType(), sender=self)
         
     def revenue(self, recursive=False):
         raise NotImplementedError  # pragma: no cover

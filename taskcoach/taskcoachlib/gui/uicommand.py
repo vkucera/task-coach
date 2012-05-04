@@ -19,17 +19,23 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
-from taskcoachlib import patterns, meta, command, help, widgets, persistence, thirdparty, render, operating_system # pylint: disable-msg=W0622
-from taskcoachlib.i18n import _
-from taskcoachlib.domain import base, task, note, category, attachment, effort, date
-from taskcoachlib.mailer import sendMail
-from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_NEXT, wxSCHEDULER_PREV, wxSCHEDULER_TODAY
-from taskcoachlib.thirdparty import desktop, hypertreelist
+from taskcoachlib import patterns, meta, command, help, widgets, persistence, \
+    thirdparty, render, operating_system  # pylint: disable-msg=W0622
+from taskcoachlib.domain import base, task, note, category, attachment, effort, \
+    date
 from taskcoachlib.gui.wizard import CSVImportWizard
+from taskcoachlib.i18n import _
+from taskcoachlib.mailer import sendMail
+from taskcoachlib.thirdparty import desktop, hypertreelist
+from taskcoachlib.thirdparty.pubsub import pub
+from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_NEXT, \
+    wxSCHEDULER_PREV, wxSCHEDULER_TODAY
 from taskcoachlib.tools import anonymize
 from taskcoachlib.workarounds import ExceptionAsUnicode
-import dialog, viewer, printer
+import dialog
+import viewer
+import printer
+import wx
 
 
 ''' User interface commands (subclasses of UICommand) are actions that can
@@ -1910,17 +1916,15 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
         # was removed from the effortList. If we would use a set, the effort
         # would be missing from the set after the removal event.    
         self.__trackedEfforts = self.__filterTrackedEfforts(self.effortList)
-        self.__currentBitmap = None # Don't know yet what our bitmap is
+        self.__currentBitmap = None  # Don't know yet what our bitmap is
         self.registerObserver(self.onEffortAdded, 
                               eventType=self.effortList.addItemEventType(),
                               eventSource=self.effortList)
         self.registerObserver(self.onEffortRemoved, 
                               eventType=self.effortList.removeItemEventType(),
                               eventSource=self.effortList)
-        self.registerObserver(self.onStartTracking,  
-                              eventType=effort.Effort.trackStartEventType())
-        self.registerObserver(self.onStopTracking, 
-                              eventType=effort.Effort.trackStopEventType())
+        pub.subscribe(self.onStartTracking, effort.Effort.trackStartEventType())
+        pub.subscribe(self.onStopTracking, effort.Effort.trackStopEventType())
                 
     def onEffortAdded(self, event):
         self.__trackedEfforts.extend(self.__filterTrackedEfforts(event.values()))
@@ -1930,13 +1934,12 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
             if effort in self.__trackedEfforts:
                 self.__trackedEfforts.remove(effort)
         
-    def onStartTracking(self, event):
-        self.__trackedEfforts.extend(event.sources())
+    def onStartTracking(self, sender):
+        self.__trackedEfforts.extend([sender])
         
-    def onStopTracking(self, event):
-        for effort in event.sources():
-            if effort in self.__trackedEfforts:
-                self.__trackedEfforts.remove(effort) 
+    def onStopTracking(self, sender):
+        if sender in self.__trackedEfforts:
+            self.__trackedEfforts.remove(sender) 
                         
     def doCommand(self, event=None):
         if self.__trackedEfforts:
