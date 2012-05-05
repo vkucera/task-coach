@@ -690,8 +690,7 @@ class StartEffortForTaskMenu(DynamicMenu):
                                                   eventType=eventType,
                                                   eventSource=self.tasks)
         for eventType in (task.Task.subjectChangedEventType(),
-                          task.Task.trackStartEventType(), 
-                          task.Task.trackStopEventType(),
+                          task.Task.trackingChangedEventType(), 
                           task.Task.plannedStartDateTimeChangedEventType(),
                           task.Task.dueDateTimeChangedEventType(),
                           task.Task.actualStartDateTimeChangedEventType(),

@@ -16,13 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, wx
-from unittests import dummy
 from taskcoachlib import gui, config, persistence, render
 from taskcoachlib.domain import task, effort, date
+from unittests import dummy
+import test
+import wx
 
 
-class EffortViewerUnderTest(gui.viewer.EffortViewer): # pylint: disable-msg=W0223
+class EffortViewerUnderTest(gui.viewer.EffortViewer):  # pylint: disable-msg=W0223
     def createWidget(self):
         return dummy.DummyWidget(self)
     
@@ -39,11 +40,11 @@ class EffortViewerForSpecificTasksTest(test.wxTestCase):
         self.task1 = task.Task('Task 1')
         self.task2 = task.Task('Task 2')
         self.taskFile.tasks().extend([self.task1, self.task2])
-        self.effort1 = effort.Effort(self.task1, date.DateTime(2006,1,1),
-            date.DateTime(2006,1,2))
+        self.effort1 = effort.Effort(self.task1, date.DateTime(2006, 1, 1),
+            date.DateTime(2006, 1, 2))
         self.task1.addEffort(self.effort1)
-        self.effort2 = effort.Effort(self.task2, date.DateTime(2006,1,2),
-            date.DateTime(2006,1,3))
+        self.effort2 = effort.Effort(self.task2, date.DateTime(2006, 1, 2),
+            date.DateTime(2006, 1, 3))
         self.task2.addEffort(self.effort2)
         self.viewer = EffortViewerUnderTest(self.frame, self.taskFile,  
             self.settings, tasksToShowEffortFor=task.TaskList([self.task1]))
@@ -58,7 +59,7 @@ class EffortViewerForSpecificTasksTest(test.wxTestCase):
         
     def testEffortEditorDoesUseAllTasks(self):
         dialog = self.viewer.newItemDialog()
-        self.assertEqual(2, len(dialog._taskFile.tasks())) # pylint: disable-msg=W0212
+        self.assertEqual(2, len(dialog._taskFile.tasks()))  # pylint: disable-msg=W0212
         
     def testViewerKeepsShowingOnlyEffortForSpecifiedTasksWhenSwitchingAggregation(self):
         self.viewer.showEffortAggregation('week')
@@ -72,10 +73,10 @@ class EffortViewerStatusMessageTest(test.wxTestCase):
         self.taskFile = persistence.TaskFile()
         self.task = task.Task()
         self.taskFile.tasks().append(self.task)
-        self.effort1 = effort.Effort(self.task, date.DateTime(2006,1,1),
-            date.DateTime(2006,1,2))
-        self.effort2 = effort.Effort(self.task, date.DateTime(2006,1,2),
-            date.DateTime(2006,1,3))
+        self.effort1 = effort.Effort(self.task, date.DateTime(2006, 1, 1),
+            date.DateTime(2006, 1, 2))
+        self.effort2 = effort.Effort(self.task, date.DateTime(2006, 1, 2),
+            date.DateTime(2006, 1, 3))
         self.viewer = EffortViewerUnderTest(self.frame, self.taskFile,  
             self.settings)
 
@@ -138,10 +139,10 @@ class EffortViewerTest(test.wxTestCase):
         self.taskFile = persistence.TaskFile()
         self.task = task.Task('task')
         self.taskFile.tasks().append(self.task)
-        self.effort1 = effort.Effort(self.task, date.DateTime(2006,1,1),
-            date.DateTime(2006,1,2))
-        self.effort2 = effort.Effort(self.task, date.DateTime(2006,1,2),
-            date.DateTime(2006,1,3))
+        self.effort1 = effort.Effort(self.task, date.DateTime(2006, 1, 1),
+            date.DateTime(2006, 1, 2))
+        self.effort2 = effort.Effort(self.task, date.DateTime(2006, 1, 2),
+            date.DateTime(2006, 1, 3))
         self.viewer = gui.viewer.EffortViewer(self.frame, self.taskFile, 
                                               self.settings)
 
@@ -150,31 +151,18 @@ class EffortViewerTest(test.wxTestCase):
         self.taskFile.close()
         self.taskFile.stop()
 
-    @test.skipOnPlatform('__WXMSW__') # GetItemBackgroundColour doesn't work on Windows
-    def testEffortBackgroundColor(self): # pragma: no cover
+    @test.skipOnPlatform('__WXMSW__')  # GetItemBackgroundColour doesn't work on Windows
+    def testEffortBackgroundColor(self):  # pragma: no cover
         self.task.setBackgroundColor(wx.RED)
         self.task.addEffort(self.effort1)
         self.assertEqual(wx.RED, self.viewer.widget.GetItemBackgroundColour(0))
 
-    @test.skipOnPlatform('__WXMSW__') # GetItemBackgroundColour doesn't work on Windows
-    def testUpdateEffortBackgroundColor(self): # pragma: no cover
+    @test.skipOnPlatform('__WXMSW__')  # GetItemBackgroundColour doesn't work on Windows
+    def testUpdateEffortBackgroundColor(self):  # pragma: no cover
         self.task.addEffort(self.effort1)
         self.task.setBackgroundColor(wx.RED)
         self.assertEqual(wx.RED, self.viewer.widget.GetItemBackgroundColour(0))
     
-    '''
-    def testIsSelected(self):
-        self.failIf(self.viewer.isselected(self.effort1))
-
-    def testSelect(self):
-        self.task.addEffort(self.effort1)
-        self.failUnless(self.viewer.isselected(self.effort1))
-
-    def testSelectAfterNewEffortWasAdded(self):
-        self.task.addEffort(self.effort1)
-        self.task.addEffort(self.effort2)
-        self.failUnless(self.viewer.isselected(self.effort2))
-    '''
     def testSearch(self):
         self.task.addEffort(self.effort1)
         self.viewer.presentation().setSearchFilter('no such task')
@@ -222,13 +210,16 @@ class EffortViewerAggregationTestCase(test.wxTestCase):
 
         self.task = task.Task('Task')
         self.task.addEffort(effort.Effort(self.task, 
-            date.DateTime(2008,7,16,10,0,0), date.DateTime(2008,7,16,11,0,0)))
+            date.DateTime(2008, 7, 16, 10, 0, 0), 
+            date.DateTime(2008, 7, 16, 11, 0, 0)))
         self.task.addEffort(effort.Effort(self.task, 
-            date.DateTime(2008,7,16,12,0,0), date.DateTime(2008,7,16,13,0,0)))
+            date.DateTime(2008, 7, 16, 12, 0, 0), 
+            date.DateTime(2008, 7, 16, 13, 0, 0)))
         self.task.addEffort(effort.Effort(self.task,
-            date.DateTime(2008,7,17,1,0,0), date.DateTime(2008,7,17,2,0,0)))            
-        mostRecentPeriod = (date.DateTime(2008,7,23,1,0,0), 
-                            date.DateTime(2008,7,23,2,0,0))
+            date.DateTime(2008, 7, 17, 1, 0, 0), 
+            date.DateTime(2008, 7, 17, 2, 0, 0)))
+        mostRecentPeriod = (date.DateTime(2008, 7, 23, 1, 0, 0), 
+                            date.DateTime(2008, 7, 23, 2, 0, 0))
         self.task2 = task.Task('Task2')
         # pylint: disable-msg=W0142
         self.task.addEffort(effort.Effort(self.task, *mostRecentPeriod))
@@ -306,7 +297,7 @@ class CommonTestsMixin(object):
         self.viewer.updateSelection()
         dialog = self.viewer.newItemDialog(selectedTasks=[self.task2], 
                                            bitmap='new')
-        for newEffort in dialog._items: # pylint: disable-msg=W0212
+        for newEffort in dialog._items:  # pylint: disable-msg=W0212
             self.assertEqual(self.task2, newEffort.task())
         
     def testColumnUICommands(self):
@@ -356,16 +347,16 @@ class CommonTestsMixin(object):
                          self.viewer.isVisibleColumnByName('totalRevenue'))
 
     def testActiveEffort(self):
-        self.task2.efforts()[0].setStop(date.DateTime.max) # Make active
-        self.viewer.secondRefresher.onEverySecond() # Simulate clock firing
+        self.task2.efforts()[0].setStop(date.DateTime.max)  # Make active
+        self.viewer.secondRefresher.onEverySecond()  # Simulate clock firing
         expectedNrOfTrackedItems = 1 if self.aggregation == 'details' else 2
         self.assertEqual(expectedNrOfTrackedItems, 
                          len(self.viewer.secondRefresher.currentlyTrackedItems()))
         
     def testActiveEffortAfterSwitch(self):
-        self.task2.efforts()[0].setStop(date.DateTime.max) # Make active
+        self.task2.efforts()[0].setStop(date.DateTime.max)  # Make active
         self.switchAggregation()    
-        self.viewer.secondRefresher.onEverySecond() # Simulate clock firing
+        self.viewer.secondRefresher.onEverySecond()  # Simulate clock firing
         expectedNrOfTrackedItems = 2 if self.aggregation == 'details' else 1
         self.assertEqual(expectedNrOfTrackedItems, 
                          len(self.viewer.secondRefresher.currentlyTrackedItems()))
@@ -387,26 +378,25 @@ class EffortViewerWithoutAggregationTest(CommonTestsMixin,
     aggregation = 'details'
     expectedNumberOfItems = 5
     expectedPeriodRendering = render.dateTimePeriod(\
-        date.DateTime(2008,7,23,1,0), date.DateTime(2008,7,23,2,0))
+        date.DateTime(2008, 7, 23, 1, 0), date.DateTime(2008, 7, 23, 2, 0))
     
     
 class EffortViewerWithAggregationPerDayTest(CommonTestsMixin, 
                                             EffortViewerAggregationTestCase):
     aggregation = 'day'
-    expectedNumberOfItems = 7 # 4 day/task combinations on 3 days (== 3 total rows) 
-    expectedPeriodRendering = render.date(date.DateTime(2008,7,23))
+    expectedNumberOfItems = 7  # 4 day/task combinations on 3 days (== 3 total rows) 
+    expectedPeriodRendering = render.date(date.DateTime(2008, 7, 23))
 
 
 class EffortViewerWithAggregationPerWeekTest(CommonTestsMixin, 
                                              EffortViewerAggregationTestCase):
     aggregation = 'week'
-    expectedNumberOfItems = 5 # 3 week/task combinations in 2 weeks (== 2 total rows)
+    expectedNumberOfItems = 5  # 3 week/task combinations in 2 weeks (== 2 total rows)
     expectedPeriodRendering = '2008-30'
 
 
 class EffortViewerWithAggregationPerMonthTest(CommonTestsMixin, 
                                               EffortViewerAggregationTestCase):
     aggregation = 'month'
-    expectedNumberOfItems = 3 # 2 month/task combinations in 1 month (== 1 total row)
-    expectedPeriodRendering = render.month(date.DateTime(2008,07,01))
-
+    expectedNumberOfItems = 3  # 2 month/task combinations in 1 month (== 1 total row)
+    expectedPeriodRendering = render.month(date.DateTime(2008, 07, 01))

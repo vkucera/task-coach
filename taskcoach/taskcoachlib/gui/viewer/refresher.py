@@ -52,19 +52,12 @@ class SecondRefresher(patterns.Observer):
     ''' This class can be used by viewers to refresh themselves every second
         whenever items (tasks, efforts) are being tracked. '''
         
-    def __init__(self, viewer, trackStartEventType, trackStopEventType):
+    def __init__(self, viewer, trackingChangedEventType):
         super(SecondRefresher, self).__init__()
         self.__viewer = viewer
         self.__presentation = viewer.presentation()
         self.__trackedItems = set()
-        if trackStartEventType.startswith('pubsub'):
-            pub.subscribe(self.onStartTracking, trackStartEventType)
-        else:
-            self.registerObserver(self.onStartTracking_Deprecated, eventType=trackStartEventType)
-        if trackStopEventType.startswith('pubsub'):
-            pub.subscribe(self.onStopTracking, trackStopEventType)
-        else:
-            self.registerObserver(self.onStopTracking_Deprecated, eventType=trackStopEventType)
+        pub.subscribe(self.onTrackingChanged, trackingChangedEventType)
         self.registerObserver(self.onItemAdded, 
                               eventType=self.__presentation.addItemEventType(),
                               eventSource=self.__presentation)
@@ -79,29 +72,14 @@ class SecondRefresher(patterns.Observer):
     def onItemRemoved(self, event): 
         self.removeTrackedItems(self.trackedItems(event.values()))
 
-    def onStartTracking(self, sender):
+    def onTrackingChanged(self, newValue, sender):
         if sender not in self.__presentation:
             return
-        self.addTrackedItems([sender])
+        if newValue:
+            self.addTrackedItems([sender])
+        else:
+            self.removeTrackedItems([sender])
         self.refreshItems([sender])
-        
-    def onStartTracking_Deprecated(self, event):
-        startedItems = [item for item in event.sources() \
-                        if item in self.__presentation]
-        self.addTrackedItems(startedItems)
-        self.refreshItems(startedItems)
-
-    def onStopTracking(self, sender):
-        if sender not in self.__presentation:
-            return
-        self.removeTrackedItems([sender])
-        self.refreshItems([sender])
-
-    def onStopTracking_Deprecated(self, event):
-        stoppedItems = [item for item in event.sources() \
-                        if item in self.__presentation]
-        self.removeTrackedItems(stoppedItems)
-        self.refreshItems(stoppedItems)
 
     def onEverySecond(self):
         self.refreshItems(self.__trackedItems)

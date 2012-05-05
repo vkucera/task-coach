@@ -44,10 +44,8 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
             eventType=taskList.addItemEventType(), eventSource=taskList)
         self.registerObserver(self.onTaskListChanged, 
             eventType=taskList.removeItemEventType(), eventSource=taskList)
-        self.registerObserver(self.onStartTracking,
-            eventType=task.Task.trackStartEventType())
-        self.registerObserver(self.onStopTracking,
-            eventType=task.Task.trackStopEventType())
+        pub.subscribe(self.onTrackingChanged, 
+                      task.Task.trackingChangedEventType())
         pub.subscribe(self.onChangeDueDateTime, 
                       task.Task.dueDateTimeChangedEventType())
         # When the user chances the due soon hours preferences it may cause
@@ -66,23 +64,23 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
 
     # Event handlers:
 
-    def onTaskListChanged(self, event): # pylint: disable-msg=W0613
+    def onTaskListChanged(self, event):  # pylint: disable-msg=W0613
         self.__setTooltipText()
         self.__startOrStopTicking()
         
-    def onStartTracking(self, event):
-        for item in event.sources():
+    def onTrackingChanged(self, newValue, sender):
+        if newValue:
             self.registerObserver(self.onChangeSubject,
-                eventType=item.subjectChangedEventType(), eventSource=item)
-        self.__setTooltipText()
-        self.__startTicking()
-
-    def onStopTracking(self, event):
-        for item in event.sources():
+                                  eventType=sender.subjectChangedEventType(), 
+                                  eventSource=sender)
+        else:
             self.removeObserver(self.onChangeSubject,
-                eventType=item.subjectChangedEventType())
+                                eventType=sender.subjectChangedEventType())
         self.__setTooltipText()
-        self.__stopTicking()
+        if newValue:
+            self.__startTicking()
+        else:
+            self.__stopTicking()
 
     def onChangeSubject(self, event):  # pylint: disable-msg=W0613
         self.__setTooltipText()
@@ -112,9 +110,9 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
 
     def setPopupMenu(self, menu):
         self.Bind(wx.EVT_TASKBAR_RIGHT_UP, self.popupTaskBarMenu)
-        self.popupmenu = menu # pylint: disable-msg=W0201
+        self.popupmenu = menu  # pylint: disable-msg=W0201
 
-    def popupTaskBarMenu(self, event): # pylint: disable-msg=W0613
+    def popupTaskBarMenu(self, event):  # pylint: disable-msg=W0613
         self.PopupMenu(self.popupmenu)
 
     # Getters:
@@ -165,9 +163,9 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
         if trackedTasks:
             count = len(trackedTasks)
             if count == 1:
-                tracking = _('tracking "%s"')%trackedTasks[0].subject()
+                tracking = _('tracking "%s"') % trackedTasks[0].subject()
             else:
-                tracking = _('tracking effort for %d tasks')%count
+                tracking = _('tracking effort for %d tasks') % count
             textParts.append(tracking)
         else:
             counts = self.__taskList.nrOfTasksPerStatus()
@@ -176,16 +174,16 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
                 if count == 1:
                     textParts.append(singular)
                 elif count > 1:
-                    textParts.append(plural%count)
+                    textParts.append(plural % count)
         
         textPart = ', '.join(textParts)
         filename = os.path.basename(self.__window.taskFile.filename())        
-        namePart = u'%s - %s'%(meta.name, filename) if filename else meta.name
-        text = u'%s\n%s'%(namePart, textPart) if textPart else namePart
+        namePart = u'%s - %s' % (meta.name, filename) if filename else meta.name
+        text = u'%s\n%s' % (namePart, textPart) if textPart else namePart
         
         if text != self.__tooltipText:
             self.__tooltipText = text
-            self.__setIcon() # Update tooltip
+            self.__setIcon()  # Update tooltip
             
     def __setDefaultBitmap(self):
         self.__bitmap = self.__defaultBitmap

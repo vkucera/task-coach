@@ -49,8 +49,7 @@ class EffortViewer(base.ListViewer,
         self.__observersToDetach = []
         super(EffortViewer, self).__init__(parent, taskFile, settings, *args, **kwargs)
         self.secondRefresher = refresher.SecondRefresher(self,
-            effort.Effort.trackStartEventType(), 
-            effort.Effort.trackStopEventType())
+            effort.Effort.trackingChangedEventType())
         self.aggregation = settings.get(self.settingsSection(), 'aggregation')
         self.initModeToolBarUICommands()
         self.registerObserver(self.onAttributeChanged_Deprecated,

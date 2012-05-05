@@ -16,13 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
-import os
-import locale
-import test
-from taskcoachlib import gui, config, persistence, command, patterns, render, operating_system
-from taskcoachlib.i18n import _
+from taskcoachlib import gui, config, persistence, command, patterns, render, \
+    operating_system
 from taskcoachlib.domain import task, date, effort, category, attachment
+from taskcoachlib.i18n import _
+import locale
+import os
+import test
+import wx
 
 
 class TaskViewerUnderTest(gui.viewer.task.TaskViewer):  # pylint: disable-msg=W0223
@@ -747,7 +748,7 @@ class CommonTestsMixin(object):
     def testStartTracking(self):
         self.taskList.append(self.task)
         self.task.addEffort(effort.Effort(self.task))
-        self.assertEqual(self.task.trackStartEventType(), self.viewer.events_deprecated[-1].type())
+        self.failUnless((True, self.task) in self.viewer.events)
 
     def testChangePlannedStartDateTimeWhileColumnNotShown(self):
         self.taskList.append(self.task)
