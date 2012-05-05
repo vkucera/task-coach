@@ -22,10 +22,14 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.14', 'May 4, 2012',
-    summary='''This is a bugfix release.''',
+Release('1.3.14', 'May 5, 2012',
+    summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
         Bug('''Task Coach wouldn't start on Ubuntu 12.04.''', '3522305'),
+        ],
+    featuresAdded=[
+        Feature('''Added support for pipe as separator symbol when importing 
+from CSV.''', 'http://uservoice.com/a/arHeO'),
         ],
     ),
             

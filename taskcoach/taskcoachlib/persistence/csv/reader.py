@@ -16,13 +16,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib.thirdparty.dateutil import parser as dparser
-from taskcoachlib.i18n import _
 from taskcoachlib.domain.category import Category
-from taskcoachlib.domain.task import Task
 from taskcoachlib.domain.date import DateTime, TimeDelta
-
-import csv, tempfile, StringIO, re, math
+from taskcoachlib.domain.task import Task
+from taskcoachlib.i18n import _
+from taskcoachlib.thirdparty.dateutil import parser as dparser
+import csv
+import tempfile
+import StringIO
+import re
+import math
 
 
 class CSVReader(object):
@@ -78,7 +81,7 @@ class CSVReader(object):
                 elif kwargs['mappings'][idx] == _('Category') and fieldValue:
                     name = fieldValue.decode('UTF-8')
                     if name.startswith('(') and name.endswith(')'):
-                        continue # Skip categories of subitems
+                        continue  # Skip categories of subitems
                     cat = self.categoryList.findCategoryByName(name)
                     if not cat:
                         cat = self.createCategory(name)
@@ -202,5 +205,5 @@ class CSVReader(object):
                 second = defaultSecond
             return DateTime(dateTime.year, dateTime.month, dateTime.day,
                             hour, minute, second)
-        except:
-            return None # pylint: disable-msg=W0702
+        except:  # pylint: disable-msg=W0702
+            return None  

@@ -760,11 +760,19 @@ class FileImportCSV(IOCommand):
             bitmap='exportascsv', *args, **kwargs)
 
     def doCommand(self, event):
-        filename = wx.FileSelector(_('Import CSV'), wildcard='*.csv')
-        if filename:
-            wiz = CSVImportWizard(filename, None, wx.ID_ANY, _('Import CSV'))
-            if wiz.RunWizard():
-                self.iocontroller.importCSV(**wiz.GetOptions())
+        while True:
+            filename = wx.FileSelector(_('Import CSV'), wildcard='*.csv')
+            if filename:
+                if len(file(filename, 'rb').read()) == 0:
+                    wx.MessageBox(_('''The selected file is empty. Please select a different file.'''), 
+                                  _('Import CSV'))
+                    continue
+                wiz = CSVImportWizard(filename, None, wx.ID_ANY, _('Import CSV'))
+                if wiz.RunWizard():
+                    self.iocontroller.importCSV(**wiz.GetOptions())
+                    break               
+            else:
+                break
                 
                 
 class FileImportTodoTxt(IOCommand):
