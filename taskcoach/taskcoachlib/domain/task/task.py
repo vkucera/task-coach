@@ -226,12 +226,15 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def setSubject(self, subject, event=None):
         super(Task, self).setSubject(subject, event=event)
         # The subject of a dependency of our prerequisites has changed, notify:
-        for prerequisite in self.prerequisites():
-            event.addSource(prerequisite, subject, type='task.dependency.subject')
+        for prerequisite in self.prerequisites():   
+            pub.sendMessage(prerequisite.dependenciesChangedEventType(), 
+                            newValue=prerequisite.dependencies(), 
+                            sender=prerequisite)
         # The subject of a prerequisite of our dependencies has changed, notify:
         for dependency in self.dependencies():
-            event.addSource(dependency, subject, type='task.prerequisite.subject')
-
+            pub.sendMessage(dependency.prerequisitesChangedEventType(), 
+                            newValue=dependency.prerequisites(), 
+                            sender=dependency)
     # Due date
             
     def dueDateTime(self, recursive=False):
