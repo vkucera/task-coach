@@ -42,7 +42,7 @@ import wx
     be invoked by the user via the user interface (menu's, toolbar, etc.).
     See the Taskmaster pattern described here: 
     http://www.objectmentor.com/resources/articles/taskmast.pdf 
-''' # pylint: disable-msg=W0105
+'''  # pylint: disable-msg=W0105
 
 
 class UICommandContainerMixin(object):
@@ -52,7 +52,7 @@ class UICommandContainerMixin(object):
         for uiCommand in uiCommands:
             if uiCommand is None:
                 self.AppendSeparator()
-            elif type(uiCommand) == type(()): # This only works for menu's
+            elif type(uiCommand) == type(()):  # This only works for menu's
                 menuTitle, menuUICommands = uiCommand[0], uiCommand[1:]
                 self.appendSubMenuWithUICommands(menuTitle, menuUICommands)
             else:
@@ -62,7 +62,7 @@ class UICommandContainerMixin(object):
         import menu
         subMenu = menu.Menu(self._window)
         self.appendMenu(menuTitle, subMenu)
-        subMenu.appendUICommands(*uiCommands) # pylint: disable-msg=W0142
+        subMenu.appendUICommands(*uiCommands)  # pylint: disable-msg=W0142
         
 
 class UICommand(object):
@@ -73,9 +73,9 @@ class UICommand(object):
         implement doCommand() and optionally override enabled(). '''
     
     def __init__(self, menuText='', helpText='', bitmap='nobitmap', 
-             kind=wx.ITEM_NORMAL, id=None, bitmap2=None, *args, **kwargs): # pylint: disable-msg=W0622
+             kind=wx.ITEM_NORMAL, id=None, bitmap2=None, *args, **kwargs):  # pylint: disable-msg=W0622
         super(UICommand, self).__init__()
-        menuText = menuText or '<%s>'%_('None')
+        menuText = menuText or '<%s>' % _('None')
         self.menuText = menuText if '&' in menuText else '&' + menuText
         self.helpText = helpText
         self.bitmap = bitmap
@@ -83,7 +83,7 @@ class UICommand(object):
         self.kind = kind
         self.id = id or wx.NewId()
         self.toolbar = None
-        self.menuItems = [] # uiCommands can be used in multiple menu's
+        self.menuItems = []  # uiCommands can be used in multiple menu's
 
     def __eq__(self, other):
         try:
@@ -154,19 +154,19 @@ class UICommand(object):
         return self.onCommandActivate(*args, **kwargs)
         
     def doCommand(self, event):
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
     def onUpdateUI(self, event):
         event.Enable(bool(self.enabled(event)))
         if self.toolbar and (not self.helpText or self.menuText == '?'):
             self.updateToolHelp()
         
-    def enabled(self, event): # pylint: disable-msg=W0613
+    def enabled(self, event):  # pylint: disable-msg=W0613
         ''' Can be overridden in a subclass. '''
         return True
 
     def updateToolHelp(self):
-        if not self.toolbar: return # Not attached to a toolbar or it's hidden
+        if not self.toolbar: return  # Not attached to a toolbar or it's hidden
         shortHelp = wx.MenuItem.GetLabelFromText(self.getMenuText())
         if shortHelp != self.toolbar.GetToolShortHelp(self.id):
             self.toolbar.SetToolShortHelp(self.id, shortHelp)
@@ -203,7 +203,7 @@ class UICommand(object):
         return wx.ArtProvider_GetBitmap(bitmapName, bitmapType, bitmapSize)
     
 
-class SettingsCommand(UICommand): # pylint: disable-msg=W0223
+class SettingsCommand(UICommand):  # pylint: disable-msg=W0223
     ''' SettingsCommands are saved in the settings (a ConfigParser). '''
 
     def __init__(self, settings=None, setting=None, section='view', 
@@ -214,7 +214,7 @@ class SettingsCommand(UICommand): # pylint: disable-msg=W0223
         super(SettingsCommand, self).__init__(*args, **kwargs)
 
 
-class BooleanSettingsCommand(SettingsCommand): # pylint: disable-msg=W0223
+class BooleanSettingsCommand(SettingsCommand):  # pylint: disable-msg=W0223
     def __init__(self, value=None, *args, **kwargs):
         self.value = value
         super(BooleanSettingsCommand, self).__init__(*args, **kwargs)
@@ -230,7 +230,7 @@ class BooleanSettingsCommand(SettingsCommand): # pylint: disable-msg=W0223
         menuItem.Check(self.isSettingChecked())
         
     def isSettingChecked(self):
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
     
 
 class UICheckCommand(BooleanSettingsCommand):

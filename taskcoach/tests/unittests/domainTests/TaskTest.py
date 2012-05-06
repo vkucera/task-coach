@@ -2774,12 +2774,16 @@ class TaskWithPrerequisite(TaskTestCase):
         self.failIf(self.prerequisite in self.task.copy().prerequisites())
 
     def testPrerequisiteSubjectChangedNotification(self):
-        eventType = 'task.prerequisite.subject'
         self.prerequisite.addDependencies([self.task])
-        self.registerObserver(eventType, eventSource=self.task)
-        self.prerequisite.setSubject('New subject')
-        self.assertEvent(eventType, self.task, 'New subject')
+        events = []
         
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.prerequisitesChangedEventType())
+        self.prerequisite.setSubject('New subject')
+        self.assertEqual([(set([self.prerequisite]), self.task)], events)
+               
     def testAppearanceNotificationAfterMarkingPrerequisiteCompleted(self):
         self.prerequisite.addDependencies([self.task])
         eventType = self.task.appearanceChangedEventType()
@@ -2827,9 +2831,14 @@ class TaskWithDependency(TaskTestCase):
 
     def testDependencySubjectChangedNotification(self):
         self.dependency.addPrerequisites([self.task])
-        self.registerObserver('task.dependency.subject', eventSource=self.task)
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, task.Task.dependenciesChangedEventType())
         self.dependency.setSubject('New subject')
-        self.assertEvent('task.dependency.subject', self.task, 'New subject')
+        self.assertEqual([(set([self.dependency]), self.task)], events)
 
 
 class TaskSuggestedDateTimeBaseSetupAndTests(object):
