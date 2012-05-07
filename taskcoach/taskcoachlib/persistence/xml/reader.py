@@ -18,19 +18,19 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import re
-import os
-import stat
+from .. import sessiontempfile  # pylint: disable-msg=F0401
+from taskcoachlib import meta
+from taskcoachlib.domain import date, effort, task, category, note, attachment
+from taskcoachlib.i18n import translate
+from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
+from taskcoachlib.thirdparty.deltaTime import nlTimeExpression
+from taskcoachlib.thirdparty.guid import generate
 import StringIO
+import os
+import re
+import stat
 import wx
 import xml.etree.ElementTree as ET
-from taskcoachlib.domain import date, effort, task, category, note, attachment
-from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
-from taskcoachlib.thirdparty.guid import generate
-from taskcoachlib.thirdparty.deltaTime import nlTimeExpression
-from taskcoachlib.i18n import translate
-from taskcoachlib import meta, patterns
-from .. import sessiontempfile  # pylint: disable-msg=F0401
 
 
 class PIParser(ET.XMLTreeBuilder):

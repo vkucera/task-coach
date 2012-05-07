@@ -70,11 +70,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             shouldMarkCompletedWhenAllChildrenCompleted
         for effort in self._efforts:
             effort.setTask(self)
-        for taskStatus in self.possibleStatuses():
-            pub.subscribe(self.__computeRecursiveForegroundColor, 'settings.fgcolor.%stasks' % taskStatus)
-            pub.subscribe(self.__computeRecursiveBackgroundColor, 'settings.bgcolor.%stasks' % taskStatus)
-            pub.subscribe(self.__computeRecursiveIcon, 'settings.icon.%stasks' % taskStatus)
-            pub.subscribe(self.__computeRecursiveSelectedIcon, 'settings.icon.%stasks' % taskStatus)
+        pub.subscribe(self.__computeRecursiveForegroundColor, 'settings.fgcolor')
+        pub.subscribe(self.__computeRecursiveBackgroundColor, 'settings.bgcolor')
+        pub.subscribe(self.__computeRecursiveIcon, 'settings.icon')
+        pub.subscribe(self.__computeRecursiveSelectedIcon, 'settings.icon')
         pub.subscribe(self.onDueSoonHoursChanged, 'settings.behavior.duesoonhours')
 
         now = date.Now()
@@ -93,7 +92,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.setPercentageComplete(state['percentageComplete'])
         self.setRecurrence(state['recurrence'])
         self.setReminder(state['reminder'])
-        self.setEfforts(state['efforts'], event=event)
+        self.setEfforts(state['efforts'])
         self.setBudget(state['budget'])
         self.setPriority(state['priority'])
         self.setHourlyFee(state['hourlyFee'])
@@ -552,21 +551,23 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return [effort for effort in self.efforts(recursive) \
             if effort.isBeingTracked()]
     
-    @patterns.eventSource    
-    def addEffort(self, effort, event=None):
+    def addEffort(self, effort):
         if effort in self._efforts:
             return
         wasTracking = self.isBeingTracked()
+        oldValue = self._efforts[:]
         self._efforts.append(effort)
         if effort.getStart() < self.actualStartDateTime():
             self.setActualStartDateTime(effort.getStart())
-        self.addEffortEvent(event, effort)
+        pub.sendMessage(self.effortsChangedEventType(), newValue=self._efforts,
+                        oldValue=oldValue, sender=self)
         if effort.isBeingTracked() and not wasTracking:
             self.sendTrackingChangedMessage(tracking=True)
         self.sendTimeSpentChangedMessage()
   
-    def addEffortEvent(self, event, *efforts):
-        event.addSource(self, *efforts, **dict(type='task.effort.add'))
+    @classmethod
+    def effortsChangedEventType(class_):
+        return 'pubsub.task.efforts'
           
     def sendTrackingChangedMessage(self, tracking):
         self.recomputeAppearance()  
@@ -576,32 +577,28 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             pub.sendMessage(ancestor.trackingChangedEventType(), newValue=tracking,
                             sender=ancestor)
 
-    @patterns.eventSource
-    def removeEffort(self, effort, event=None):
+    def removeEffort(self, effort):
         if effort not in self._efforts:
             return
+        oldValue = self._efforts[:]
         self._efforts.remove(effort)
-        self.removeEffortEvent(event, effort)
+        pub.sendMessage(self.effortsChangedEventType(), newValue=self._efforts,
+                        oldValue=oldValue, sender=self)
         if effort.isBeingTracked() and not self.isBeingTracked():
             self.sendTrackingChangedMessage(tracking=False)
         self.sendTimeSpentChangedMessage()
-        
-    def removeEffortEvent(self, event, *efforts):
-        event.addSource(self, *efforts, **dict(type='task.effort.remove'))
 
     def stopTracking(self):
         for effort in self.activeEfforts():
             effort.setStop()
   
-    @patterns.eventSource
-    def setEfforts(self, efforts, event=None):
+    def setEfforts(self, efforts):
         if efforts == self._efforts:
             return
-        oldEfforts = self._efforts
+        oldValue = self._efforts[:]
         self._efforts = efforts
-        # pylint: disable-msg=W0142
-        self.removeEffortEvent(event, *oldEfforts)
-        self.addEffortEvent(event, *efforts)
+        pub.sendMessage(self.effortsChangedEventType(), newValue=self._efforts,
+                        oldValue=oldValue, sender=self)
         self.sendTimeSpentChangedMessage()
         
     @classmethod
@@ -1412,7 +1409,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                              class_.dueDateTimeChangedEventType(), 
                              class_.actualStartDateTimeChangedEventType(),
                              class_.completionDateTimeChangedEventType(),
-                             'task.effort.add', 'task.effort.remove', 
+                             class_.effortsChangedEventType(),
                              class_.budgetChangedEventType(),
                              class_.percentageCompleteChangedEventType(),
                              class_.priorityChangedEventType(),

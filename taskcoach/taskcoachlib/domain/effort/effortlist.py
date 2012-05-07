@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import patterns 
 from taskcoachlib.i18n import _                   
 from taskcoachlib import help
+from taskcoachlib.thirdparty.pubsub import pub
+from taskcoachlib.domain import task
 
 
 class MaxDateTimeMixin(object):
@@ -39,10 +41,8 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
 
     def  __init__(self, *args, **kwargs):
         super(EffortList, self).__init__(*args, **kwargs)
-        patterns.Publisher().registerObserver(self.onAddEffortToOrRemoveEffortFromTask, 
-            eventType='task.effort.add')
-        patterns.Publisher().registerObserver(self.onAddEffortToOrRemoveEffortFromTask,
-            eventType='task.effort.remove')
+        pub.subscribe(self.onAddEffortToOrRemoveEffortFromTask, 
+                      task.Task.effortsChangedEventType())
         
     def extendSelf(self, tasks, event=None):
         ''' This method is called when a task is added to the observed list.
@@ -67,17 +67,11 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
             effortsToRemove.extend(task.efforts())
         super(EffortList, self).removeItemsFromSelf(effortsToRemove, event)
 
-    def onAddEffortToOrRemoveEffortFromTask(self, event):
-        effortsToAdd = []
-        effortsToRemove = []
-        for task in event.sources():
-            if task in self.observable():
-                effortsToAdd.extend(event.values(task, type='task.effort.add'))
-                effortsToRemove.extend(event.values(task, type='task.effort.remove'))
-        # Don't bother with efforts that just change tasks
-        for effort in set(effortsToAdd) & set(effortsToRemove):
-            effortsToAdd.remove(effort)
-            effortsToRemove.remove(effort)
+    def onAddEffortToOrRemoveEffortFromTask(self, newValue, oldValue, sender):
+        if sender not in self.observable():
+            return
+        effortsToAdd = [effort for effort in newValue if not effort in oldValue]
+        effortsToRemove = [effort for effort in oldValue if not effort in newValue]
         super(EffortList, self).extendSelf(effortsToAdd)
         super(EffortList, self).removeItemsFromSelf(effortsToRemove)
 
@@ -87,25 +81,23 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
             records.'''
         return len(self)
         
-    @patterns.eventSource
-    def removeItems(self, efforts, event=None):  # pylint: disable-msg=W0221
+    def removeItems(self, efforts):  # pylint: disable-msg=W0221
         ''' We override ObservableListObserver.removeItems because the default
             implementation is to remove the arguments from the original list,
             which in this case would mean removing efforts from a task list.
             Since that wouldn't work we remove the efforts from the tasks by
             hand. '''
         for effort in efforts:
-            effort.task().removeEffort(effort, event=event)
+            effort.task().removeEffort(effort)
 
-    @patterns.eventSource
-    def extend(self, efforts, event=None):  # pylint: disable-msg=W0221
+    def extend(self, efforts):  # pylint: disable-msg=W0221
         ''' We override ObservableListObserver.extend because the default
             implementation is to add the arguments to the original list,
             which in this case would mean adding efforts to a task list.
             Since that wouldn't work we add the efforts to the tasks by
             hand. '''
         for effort in efforts:
-            effort.task().addEffort(effort, event=event)
+            effort.task().addEffort(effort)
     
     @classmethod        
     def sortEventType(class_):

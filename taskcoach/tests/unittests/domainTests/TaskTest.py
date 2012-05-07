@@ -940,7 +940,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
               task.Task.dueDateTimeChangedEventType(),
               task.Task.actualStartDateTimeChangedEventType(),
               task.Task.completionDateTimeChangedEventType(),
-              'task.effort.add', 'task.effort.remove',
+              task.Task.effortsChangedEventType(),
               task.Task.budgetChangedEventType(),
               task.Task.percentageCompleteChangedEventType(), 
               task.Task.priorityChangedEventType(), 

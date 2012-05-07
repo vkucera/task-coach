@@ -320,17 +320,15 @@ class StartEffortCommand(EffortCommand):
         super(StartEffortCommand, self).redo_command()
         self.addEfforts()
 
-    @patterns.eventSource
-    def addEfforts(self, event=None):
+    def addEfforts(self):
         for item, newEffort, currentActualStartDateTime in zip(self.items, self.efforts, self.actualStartDateTimes):
-            item.addEffort(newEffort, event=event)
+            item.addEffort(newEffort)
             if currentActualStartDateTime:
                 item.setActualStartDateTime(newEffort.getStart())
             
-    @patterns.eventSource
-    def removeEfforts(self, event=None):
+    def removeEfforts(self):
         for item, newEffort, previousActualStartDateTime in zip(self.items, self.efforts, self.actualStartDateTimes):
-            item.removeEffort(newEffort, event=event)
+            item.removeEffort(newEffort)
             if previousActualStartDateTime:
                 item.setActualStartDateTime(previousActualStartDateTime)
             

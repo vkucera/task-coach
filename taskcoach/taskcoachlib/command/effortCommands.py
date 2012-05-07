@@ -34,20 +34,18 @@ class NewEffortCommand(base.BaseCommand):
     def name_subject(self, effort):  # pylint: disable-msg=W0621
         return effort.task().subject()
         
-    @patterns.eventSource
-    def do_command(self, event=None):
+    def do_command(self):
         for effort in self.efforts:  # pylint: disable-msg=W0621
             task = effort.task()
             if task not in self.__oldActualStartDateTimes and effort.getStart() < task.actualStartDateTime():
                 self.__oldActualStartDateTimes[task] = task.actualStartDateTime()
                 task.setActualStartDateTime(effort.getStart())
-            task.addEffort(effort, event=event)
+            task.addEffort(effort)
             
-    @patterns.eventSource
-    def undo_command(self, event=None):
+    def undo_command(self):
         for effort in self.efforts:  # pylint: disable-msg=W0621
             task = effort.task()
-            task.removeEffort(effort, event=event)
+            task.removeEffort(effort)
             if task in self.__oldActualStartDateTimes:
                 task.setActualStartDateTime(self.__oldActualStartDateTimes[task])
                 del self.__oldActualStartDateTimes[task]
