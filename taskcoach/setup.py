@@ -18,9 +18,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import platform, os, sys
 from distutils.core import setup
 from taskcoachlib import meta
+import platform
+import os
+import sys
 
 
 def findPackages(base):
@@ -67,16 +69,15 @@ setupOptions = {
 # Add available translations:
 languages = sorted(meta.data.languages.keys())
 for language in languages:
-    setupOptions['classifiers'].append('Natural Language :: %s'%language)
+    setupOptions['classifiers'].append('Natural Language :: %s' % language)
 
 system = platform.system()
 if system == 'Linux':
     # Add data files for Debian-based systems:
     current_dist = [dist.lower() for dist in platform.dist()]
     if 'debian' in current_dist or 'ubuntu' in current_dist:
-        setupOptions['data_files'] = [\
-	    ('share/applications', ['build.in/fedora/taskcoach.desktop']), 
-	    ('share/pixmaps', ['icons.in/taskcoach.png'])]
+        setupOptions['data_files'] = [('share/applications', ['build.in/fedora/taskcoach.desktop']), 
+                                      ('share/pixmaps', ['icons.in/taskcoach.png'])]
 elif system == 'Windows':
     setupOptions['scripts'].append('taskcoach.pyw')
     major, minor = majorAndMinorPythonVersion()
@@ -88,7 +89,7 @@ elif system == 'Darwin':
     # bits.
     import struct
     wordSize = '32' if struct.calcsize('L') == 4 else '64'
-    sys.path.insert(0, os.path.join('taskcoachlib', 'bin.in', 'macos', 'IA%s'%wordSize))
+    sys.path.insert(0, os.path.join('taskcoachlib', 'bin.in', 'macos', 'IA%s' % wordSize))
     sys.path.insert(0, os.path.join('extension', 'macos', 'bin-ia32'))
     # pylint: disable-msg=F0401,W0611
     import _growl, _growlImage, _powermgt
@@ -96,4 +97,4 @@ elif system == 'Darwin':
 
 
 if __name__ == '__main__':
-    setup(**setupOptions) # pylint: disable-msg=W0142
+    setup(**setupOptions)  # pylint: disable-msg=W0142

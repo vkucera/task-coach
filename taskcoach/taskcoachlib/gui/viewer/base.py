@@ -626,7 +626,7 @@ class ViewerWithColumns(Viewer):  # pylint: disable-msg=W0223
         raise NotImplementedError
     
     def refresh(self, *args, **kwargs):
-        if self.__initDone:
+        if self and self.__initDone:
             super(ViewerWithColumns, self).refresh(*args, **kwargs)
                     
     def initColumns(self):
