@@ -41,9 +41,9 @@ class Effort(baseeffort.BaseEffort, base.Object):
             # command.PasteCommand may try to set the parent to None
             return
         event = patterns.Event()  # Change monitor needs one event to detect task change
-        self._task.removeEffort(self, event=event)
+        self._task.removeEffort(self)
         self._task = task
-        self._task.addEffort(self, event=event)
+        self._task.addEffort(self)
         event.send()
         pub.sendMessage(self.taskChangedEventType(), newValue=task, sender=self)
         

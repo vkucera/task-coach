@@ -20,6 +20,7 @@ from taskcoachlib.patterns import Observer, ObservableComposite
 from taskcoachlib.domain.categorizable import CategorizableCompositeObject
 from taskcoachlib.domain.note import NoteOwner
 from taskcoachlib.domain.task import Task
+from taskcoachlib.domain.effort import Effort
 from taskcoachlib.domain.attachment import AttachmentOwner
 from taskcoachlib.thirdparty import guid
 from taskcoachlib.thirdparty.pubsub import pub
@@ -68,8 +69,7 @@ class ChangeMonitor(Observer):
                 self.registerObserver(self.onCategoryAdded, klass.categoryAddedEventType())
                 self.registerObserver(self.onCategoryRemoved, klass.categoryRemovedEventType())
             if issubclass(klass, Task):
-                self.registerObserver(self.onEffortAddedOrRemoved, 'task.effort.add')
-                self.registerObserver(self.onEffortAddedOrRemoved, 'task.effort.remove')
+                pub.subscribe(self.onEffortAddedOrRemoved, Task.effortsChangedEventType())
                 pub.subscribe(self.onPrerequisitesChanged, Task.prerequisitesChangedEventType())
             if issubclass(klass, NoteOwner):
                 self.registerObserver(self.onOtherObjectAdded, klass.noteAddedEventType())
@@ -77,6 +77,8 @@ class ChangeMonitor(Observer):
             if issubclass(klass, AttachmentOwner):
                 self.registerObserver(self.onOtherObjectAdded, klass.attachmentAddedEventType())
                 self.registerObserver(self.onOtherObjectRemoved, klass.attachmentRemovedEventType())
+            if issubclass(klass, Effort):
+                pub.subscribe(self.onEffortTaskChanged, Effort.taskChangedEventType())
 
     def unmonitorClass(self, klass):
         if klass in self._classes:
@@ -93,8 +95,7 @@ class ChangeMonitor(Observer):
                 self.removeObserver(self.onCategoryAdded, klass.categoryAddedEventType())
                 self.removeObserver(self.onCategoryRemoved, klass.categoryRemovedEventType())
             if issubclass(klass, Task):
-                self.removeObserver(self.onOtherObjectAdded, 'task.effort.add')
-                self.removeObserver(self.onOtherObjectRemoved, 'task.effort.remove')
+                pub.unsubscribe(self.onEffortAddedOrRemoved, Task.effortsChangedEventType())
                 pub.unsubscribe(self.onPrerequisitesChanged, Task.prerequisitesChangedEventType())
             if issubclass(klass, NoteOwner):
                 self.removeObserver(self.onOtherObjectAdded, klass.noteAddedEventType())
@@ -102,6 +103,8 @@ class ChangeMonitor(Observer):
             if issubclass(klass, AttachmentOwner):
                 self.removeObserver(self.onOtherObjectAdded, klass.attachmentAddedEventType())
                 self.removeObserver(self.onOtherObjectRemoved, klass.attachmentRemovedEventType())
+            if issubclass(klass, Effort):
+                pub.unsubscribe(self.onEffortTaskChanged, Effort.taskChangedEventType())
             self._classes.remove(klass)
 
     def monitorCollection(self, collection):
@@ -199,25 +202,18 @@ class ChangeMonitor(Observer):
 
         self._objectsRemoved(event)
 
-    def onEffortAddedOrRemoved(self, event):
-        effortsToAdd = []
-        effortsToRemove = []
-        for task in event.sources():
-            effortsToAdd.extend(event.values(task, type='task.effort.add'))
-            effortsToRemove.extend(event.values(task, type='task.effort.remove'))
-
-        for effort in set(effortsToAdd) & set(effortsToRemove):
-            effortsToAdd.remove(effort)
-            effortsToRemove.remove(effort)
-            # This effort's task was changed.
-            changes = self._changes.get(effort.id(), None)
-            if changes is not None:
-                changes.add('__task__')
-
+    def onEffortAddedOrRemoved(self, newValue, oldValue, sender):
+        effortsToAdd = [effort for effort in newValue if effort not in oldValue]
+        effortsToRemove = [effort for effort in oldValue if effort not in newValue]
         for effort in effortsToAdd:
             self._objectAdded(effort)
         for effort in effortsToRemove:
             self._objectRemoved(effort)
+            
+    def onEffortTaskChanged(self, newValue, sender):
+        changes = self._changes.get(sender.id(), None)
+        if changes is not None:
+            changes.add('__task__')
 
     def onCategoryAdded(self, event):
         if self.__frozen:

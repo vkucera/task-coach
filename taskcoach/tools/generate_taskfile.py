@@ -21,7 +21,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # Script to generate (big) task files
 
 import sys, random, wx
+app = wx.App(False)
 sys.path.insert(0, '..')
+from taskcoachlib import i18n
+i18n.Translator('en_US')
 from taskcoachlib import persistence, config
 from taskcoachlib.domain import task, category, date, effort
 from taskcoachlib.gui import artprovider
@@ -66,7 +69,7 @@ def randomDateTime(chanceNone=0.5):
     except ValueError:
         return randomDateTime(chanceNone)
     
-def generateCategory(index, children=3, chanceNextLevel=0.8):
+def generateCategory(index, children=3, chanceNextLevel=0.2):
     newCategory = category.Category(subject='Category %s: %s'%('.'.join(index), randomSubject()),
                                     exclusiveSubcategories=random.random() < 0.3,
                                     icon=randomIcon(),
@@ -99,7 +102,7 @@ def generateEfforts():
         efforts.append(generateEffort())
     return efforts
     
-def generateTask(index, categories, children=3, chanceNextLevel=0.8):
+def generateTask(index, categories, children=3, chanceNextLevel=0.2):
     efforts = generateEfforts()
     newTask = task.Task(subject='Task %s: %s'%('.'.join(index), randomSubject()),
                         actualStartDateTime=randomDateTime(),
@@ -109,6 +112,7 @@ def generateTask(index, categories, children=3, chanceNextLevel=0.8):
                         priority=random.randint(0,100),
                         efforts=efforts,
                         description=randomDescription())
+    print newTask.subject(recursive=True)
     assignCategories(newTask, categories)
     if random.random() < chanceNextLevel:
         for childNr in range(children):
@@ -119,7 +123,7 @@ def generateTask(index, categories, children=3, chanceNextLevel=0.8):
 def generate(nrCategories=20, nrTasks=250):
     task.Task.settings = config.Settings(load=False)
     taskFile = persistence.TaskFile()
-    taskFile.setFilename('generated_tasfile.tsk')
+    taskFile.setFilename('generated_taskfile.tsk')
     tasks = taskFile.tasks()
     categories = taskFile.categories()
     for index in range(nrCategories):
@@ -130,5 +134,5 @@ def generate(nrCategories=20, nrTasks=250):
         
 
 if __name__ == '__main__':
-    app = wx.App(False)
+    #app = wx.App(False)
     generate()

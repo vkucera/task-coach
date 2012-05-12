@@ -42,22 +42,20 @@ class EffortAggregator(patterns.SetDecorator,
         super(EffortAggregator, self).__init__(*args, **kwargs)
         pub.subscribe(self.onCompositeEmpty, 
                       composite.CompositeEffort.compositeEmptyEventType())
-        patterns.Publisher().registerObserver(self.onEffortAddedToTask, 
-            eventType='task.effort.add')
+        pub.subscribe(self.onEffortAddedToTask, 
+                      task.Task.effortsChangedEventType())
         patterns.Publisher().registerObserver(self.onChildAddedToTask,
             eventType=task.Task.addChildEventType())
         pub.subscribe(self.onEffortStartChanged, 
                       effort.Effort.startChangedEventType())
     
-    @patterns.eventSource    
-    def extend(self, efforts, event=None):  # pylint: disable-msg=W0221
+    def extend(self, efforts):  # pylint: disable-msg=W0221
         for effort in efforts:
-            effort.task().addEffort(effort, event=event)
+            effort.task().addEffort(effort)
 
-    @patterns.eventSource            
-    def removeItems(self, efforts, event=None):  # pylint: disable-msg=W0221
+    def removeItems(self, efforts):  # pylint: disable-msg=W0221
         for effort in efforts:
-            effort.task().removeEffort(effort, event=event)
+            effort.task().removeEffort(effort)
             
     def extendSelf(self, tasks, event=None):
         ''' extendSelf is called when an item is added to the observed
@@ -83,12 +81,12 @@ class EffortAggregator(patterns.SetDecorator,
         super(EffortAggregator, self).removeItemsFromSelf(compositesToRemove, 
                                                           event=event)
         
-    def onEffortAddedToTask(self, event):
+    def onEffortAddedToTask(self, newValue, oldValue, sender):
+        if sender not in self.observable():
+            return
         newComposites = []
-        for task in event.sources():  # pylint: disable-msg=W0621
-            if task in self.observable():
-                efforts = event.values(task)
-                newComposites.extend(self.createComposites(task, efforts))
+        effortsAdded = [effort for effort in newValue if effort not in oldValue]
+        newComposites.extend(self.createComposites(sender, effortsAdded))
         super(EffortAggregator, self).extendSelf(newComposites)
         
     def onChildAddedToTask(self, event):
