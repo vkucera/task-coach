@@ -21,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns, meta, command, help, widgets, persistence, \
     thirdparty, render, operating_system  # pylint: disable-msg=W0622
-from taskcoachlib.domain import base, task, note, category, attachment, effort, \
-    date
+from taskcoachlib.domain import base, task, note, category, attachment, \
+    effort, date
 from taskcoachlib.gui.wizard import CSVImportWizard
 from taskcoachlib.i18n import _
 from taskcoachlib.mailer import sendMail
@@ -33,8 +33,8 @@ from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_NEXT, \
 from taskcoachlib.tools import anonymize
 from taskcoachlib.workarounds import ExceptionAsUnicode
 import dialog
-import viewer
 import printer
+import viewer
 import wx
 
 
@@ -166,7 +166,8 @@ class UICommand(object):
         return True
 
     def updateToolHelp(self):
-        if not self.toolbar: return  # Not attached to a toolbar or it's hidden
+        if not self.toolbar: 
+            return  # Not attached to a toolbar or it's hidden
         shortHelp = wx.MenuItem.GetLabelFromText(self.getMenuText())
         if shortHelp != self.toolbar.GetToolShortHelp(self.id):
             self.toolbar.SetToolShortHelp(self.id, shortHelp)
@@ -282,43 +283,43 @@ class UIRadioCommand(BooleanSettingsCommand):
         self.settings.setvalue(self.section, self.setting, self.value)
 
 
-class IOCommand(UICommand): # pylint: disable-msg=W0223
+class IOCommand(UICommand):  # pylint: disable-msg=W0223
     def __init__(self, *args, **kwargs):
         self.iocontroller = kwargs.pop('iocontroller', None)
         super(IOCommand, self).__init__(*args, **kwargs)
 
 
-class TaskListCommand(UICommand): # pylint: disable-msg=W0223
+class TaskListCommand(UICommand):  # pylint: disable-msg=W0223
     def __init__(self, *args, **kwargs):
         self.taskList = kwargs.pop('taskList', None)
         super(TaskListCommand, self).__init__(*args, **kwargs)
         
         
-class EffortListCommand(UICommand): # pylint: disable-msg=W0223
+class EffortListCommand(UICommand):  # pylint: disable-msg=W0223
     def __init__(self, *args, **kwargs):
         self.effortList = kwargs.pop('effortList', None)
         super(EffortListCommand, self).__init__(*args, **kwargs)
 
 
-class CategoriesCommand(UICommand): # pylint: disable-msg=W0223
+class CategoriesCommand(UICommand):  # pylint: disable-msg=W0223
     def __init__(self, *args, **kwargs):
         self.categories = kwargs.pop('categories', None)
         super(CategoriesCommand, self).__init__(*args, **kwargs)
 
 
-class NotesCommand(UICommand): # pylint: disable-msg=W0223
+class NotesCommand(UICommand):  # pylint: disable-msg=W0223
     def __init__(self, *args, **kwargs):
         self.notes = kwargs.pop('notes', None)
         super(NotesCommand, self).__init__(*args, **kwargs)
 
 
-class AttachmentsCommand(UICommand): # pylint: disable-msg=W0223
+class AttachmentsCommand(UICommand):  # pylint: disable-msg=W0223
     def __init__(self, *args, **kwargs):
         self.attachments = kwargs.pop('attachments', None)
         super(AttachmentsCommand, self).__init__(*args, **kwargs)
 
 
-class ViewerCommand(UICommand): # pylint: disable-msg=W0223
+class ViewerCommand(UICommand):  # pylint: disable-msg=W0223
     def __init__(self, *args, **kwargs):
         self.viewer = kwargs.pop('viewer', None)
         super(ViewerCommand, self).__init__(*args, **kwargs)
@@ -333,15 +334,15 @@ class ViewerCommand(UICommand): # pylint: disable-msg=W0223
 class PopupButtonMixin(object):
     ''' Mix this with a UICommand for a toolbar pop-up menu. '''
 
-    def doCommand(self, event): # pylint: disable-msg=W0613
+    def doCommand(self, event):  # pylint: disable-msg=W0613
         try:
             args = [self.__menu]
         except AttributeError:
-            self.__menu = self.createPopupMenu() # pylint: disable-msg=W0201
+            self.__menu = self.createPopupMenu()  # pylint: disable-msg=W0201
             args = [self.__menu]
         if self.toolbar:
             args.append(self.menuXY())
-        self.mainWindow().PopupMenu(*args) # pylint: disable-msg=W0142
+        self.mainWindow().PopupMenu(*args)  # pylint: disable-msg=W0142
 
     def menuXY(self):
         ''' Location to pop up the menu. '''
@@ -358,7 +359,7 @@ class PopupButtonMixin(object):
         return toolbarY + toolbarHeight
     
     def createPopupMenu(self):
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
 
 class NeedsSelectionMixin(object):
@@ -462,17 +463,17 @@ class NeedsSelectedAttachmentsMixin(NeedsAttachmentViewerMixin, NeedsSelectionMi
 
 
 class NeedsAtLeastOneTaskMixin(object):
-    def enabled(self, event): # pylint: disable-msg=W0613
+    def enabled(self, event):  # pylint: disable-msg=W0613
         return len(self.taskList) > 0
     
     
 class NeedsAtLeastOneCategoryMixin(object):
-    def enabled(self, event): # pylint: disable-msg=W0613
+    def enabled(self, event):  # pylint: disable-msg=W0613
         return len(self.categories) > 0
         
         
 class NeedsItemsMixin(object):
-    def enabled(self, event): # pylint: disable-msg=W0613
+    def enabled(self, event):  # pylint: disable-msg=W0613
         return self.viewer.size() 
 
 
@@ -504,8 +505,9 @@ class RecentFileOpen(IOCommand):
     def __init__(self, *args, **kwargs):
         self.__filename = kwargs.pop('filename')
         index = kwargs.pop('index')
-        super(RecentFileOpen, self).__init__(menuText='%d %s'%(index, self.__filename),
-            helpText=_('Open %s')%self.__filename, *args, **kwargs)
+        super(RecentFileOpen, self).__init__( \
+            menuText='%d %s' % (index, self.__filename),
+            helpText=_('Open %s') % self.__filename, *args, **kwargs)
             
     def doCommand(self, event):
         self.iocontroller.open(self.__filename)
@@ -546,7 +548,8 @@ class FileSave(IOCommand):
 
 class FileSaveAs(IOCommand):
     def __init__(self, *args, **kwargs):
-        super(FileSaveAs, self).__init__(menuText=_('S&ave as...\tShift+Ctrl+S'),
+        super(FileSaveAs, self).__init__( \
+            menuText=_('S&ave as...\tShift+Ctrl+S'),
             helpText=help.fileSaveAs, bitmap='saveas', id=wx.ID_SAVEAS, 
             *args, **kwargs)
 
@@ -556,7 +559,8 @@ class FileSaveAs(IOCommand):
 
 class FileSaveSelection(NeedsSelectedTasksMixin, IOCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(FileSaveSelection, self).__init__(menuText=_('Sa&ve selection...'),
+        super(FileSaveSelection, self).__init__( \
+            menuText=_('Sa&ve selection...'),
             helpText=_('Save the selected tasks to a separate file'), 
             bitmap='saveselection', *args, **kwargs)
     
@@ -564,7 +568,8 @@ class FileSaveSelection(NeedsSelectedTasksMixin, IOCommand, ViewerCommand):
         self.iocontroller.saveselection(self.viewer.curselection()) 
 
 
-class FileSaveSelectedTaskAsTemplate(NeedsOneSelectedTaskMixin, IOCommand, ViewerCommand):
+class FileSaveSelectedTaskAsTemplate(NeedsOneSelectedTaskMixin, IOCommand, 
+                                     ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(FileSaveSelectedTaskAsTemplate, self).__init__(\
             menuText=_('Save selected task as &template'),
@@ -593,16 +598,17 @@ class FileEditTemplates(SettingsCommand, UICommand):
             helpText=_('Edit existing templates'), *args, **kwargs)
 
     def doCommand(self, event):
-        dlg = dialog.templates.TemplatesDialog(self.settings, self.mainWindow(), 
-                                               title=_('Edit templates'))
-        dlg.Show()
+        templateDialog = dialog.templates.TemplatesDialog(self.settings, 
+            self.mainWindow(), title=_('Edit templates'))
+        templateDialog.Show()
 
 
 class FilePurgeDeletedItems(NeedsDeletedItemsMixin, IOCommand):
     def __init__(self, *args, **kwargs):
         super(FilePurgeDeletedItems, self).__init__(\
             menuText=_('&Purge deleted items'),
-            helpText=_('Actually delete deleted tasks and notes (see the SyncML chapter in Help)'),
+            helpText=_('Actually delete deleted tasks and notes '
+                       '(see the SyncML chapter in Help)'),
             bitmap='delete', *args, **kwargs)
 
     def doCommand(self, event):
@@ -618,6 +624,9 @@ Do you still want to purge?'''),
 
 
 class PrintPageSetup(SettingsCommand, UICommand):
+    ''' Action for changing page settings. The page settings are saved in the
+        application wide settings. '''
+    
     def __init__(self, *args, **kwargs):
         super(PrintPageSetup, self).__init__(\
             menuText=_('&Page setup...\tShift+Ctrl+P'),
@@ -630,11 +639,14 @@ class PrintPageSetup(SettingsCommand, UICommand):
                                              printerSettings.pageSetupData)
         result = pageSetupDialog.ShowModal()
         if result == wx.ID_OK:
-            printerSettings.updatePageSetupData(pageSetupDialog.GetPageSetupData())
+            pageSetupData = pageSetupDialog.GetPageSetupData()
+            printerSettings.updatePageSetupData(pageSetupData)
         pageSetupDialog.Destroy()
 
 
 class PrintPreview(ViewerCommand, SettingsCommand):
+    ''' Action for previewing a print of the current viewer. '''
+    
     def __init__(self, *args, **kwargs):
         super(PrintPreview, self).__init__(\
             menuText=_('&Print preview...'), 
@@ -654,6 +666,8 @@ class PrintPreview(ViewerCommand, SettingsCommand):
       
 
 class Print(ViewerCommand, SettingsCommand):
+    ''' Action for printing the contents of the current viewer. '''
+    
     def __init__(self, *args, **kwargs):
         super(Print, self).__init__(menuText=_('&Print...\tCtrl+P'), 
             helpText=help.print_, bitmap='print', id=wx.ID_PRINT, 
@@ -676,51 +690,71 @@ class Print(ViewerCommand, SettingsCommand):
         wxPrinter.Print(self.mainWindow(), printout, prompt=False)
  
  
-class FileExportCommand(IOCommand, SettingsCommand):    
+class FileExportCommand(IOCommand, SettingsCommand):
+    ''' Base class for export actions. '''
+    
     def doCommand(self, event):
-        exportDialog = self.ExportDialogClass(self.mainWindow(), settings=self.settings) # pylint: disable-msg=E1101
+        exportDialog = self.getExportDialogClass()(self.mainWindow(), 
+            settings=self.settings)  # pylint: disable-msg=E1101
         if wx.ID_OK == exportDialog.ShowModal():
             exportOptions = exportDialog.options()
             selectedViewer = exportOptions.pop('selectedViewer')
-            self.exportFunction()(selectedViewer, **exportOptions) # pylint: disable-msg=W0142
+            # pylint: disable-msg=W0142
+            self.exportFunction()(selectedViewer, **exportOptions)  
         exportDialog.Destroy()
+        
+    @staticmethod
+    def getExportDialogClass():
+        ''' Return the class to be used for the export dialog. '''
+        raise NotImplementedError
     
     def exportFunction(self):
         ''' Return a function that does the actual export. The function should
             take the selected viewer as the first parameter and possibly a
             number of keyword arguments for export options. '''
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
  
 
 class FileExportAsHTML(FileExportCommand):
-    ExportDialogClass = dialog.export.ExportAsHTMLDialog
+    ''' Action for exporting the contents of a viewer to HTML. '''
     
     def __init__(self, *args, **kwargs):
-        super(FileExportAsHTML, self).__init__(menuText=_('Export as &HTML...'), 
+        super(FileExportAsHTML, self).__init__( \
+            menuText=_('Export as &HTML...'), 
             helpText=_('Export items from a viewer in HTML format'),
             bitmap='exportashtml', *args, **kwargs)
+        
+    @staticmethod
+    def getExportDialogClass():
+        return dialog.export.ExportAsHTMLDialog
 
     def exportFunction(self):
         return self.iocontroller.exportAsHTML
 
 
 class FileExportAsCSV(FileExportCommand):
-    ExportDialogClass = dialog.export.ExportAsCSVDialog
-    
+    ''' Action for exporting the contents of a viewer to CSV. '''
+     
     def __init__(self, *args, **kwargs):
         super(FileExportAsCSV, self).__init__(menuText=_('Export as &CSV...'),
-            helpText=_('Export items from a viewer in Comma Separated Values (CSV) format'),
+            helpText=_('Export items from a viewer in Comma Separated Values '
+                       '(CSV) format'),
             bitmap='exportascsv', *args, **kwargs)
+        
+    @staticmethod
+    def getExportDialogClass():
+        return dialog.export.ExportAsCSVDialog
         
     def exportFunction(self):
         return self.iocontroller.exportAsCSV
 
 
 class FileExportAsICalendar(FileExportCommand):
-    ExportDialogClass = dialog.export.ExportAsICalendarDialog
-    
+    ''' Action for exporting the contents of a viewer to iCalendar format. '''
+     
     def __init__(self, *args, **kwargs):
-        super(FileExportAsICalendar, self).__init__(menuText=_('Export as &iCalendar...'),
+        super(FileExportAsICalendar, self).__init__( \
+            menuText=_('Export as &iCalendar...'),
             helpText=_('Export items from a viewer in iCalendar format'),
             bitmap='exportasvcal', *args, **kwargs)
      
@@ -728,32 +762,51 @@ class FileExportAsICalendar(FileExportCommand):
         return self.iocontroller.exportAsICalendar
 
     def enabled(self, event):
-        return any(self.exportableViewer(viewer) for viewer in self.mainWindow().viewer)
-        
-    def exportableViewer(self, viewer):
-        return viewer.isShowingTasks() or \
-               (viewer.isShowingEffort() and not viewer.isShowingAggregatedEffort())
+        return any(self.exportableViewer(viewer) for viewer in \
+                   self.mainWindow().viewer)
+    
+    @staticmethod
+    def getExportDialogClass():
+        return dialog.export.ExportAsICalendarDialog
+    
+    @staticmethod    
+    def exportableViewer(aViewer):
+        ''' Return whether the viewer can be exported to iCalendar format. '''
+        return aViewer.isShowingTasks() or (aViewer.isShowingEffort() and \
+            not aViewer.isShowingAggregatedEffort())
 
 
-class FileExportAsTodoTxt(FileExportCommand):
-    ExportDialogClass = dialog.export.ExportAsTodoTxtDialog
+class FileExportAsTodoTxt(FileExportCommand):   
+    ''' Action for exporting the contents of a viewer to Todo.txt format. '''
     
     def __init__(self, *args, **kwargs):
-        super(FileExportAsTodoTxt, self).__init__(menuText=_('Export as &Todo.txt...'),
-            helpText=_('Export items from a viewer in Todo.txt format (see todotxt.com)'),
+        super(FileExportAsTodoTxt, self).__init__( \
+            menuText=_('Export as &Todo.txt...'),
+            helpText=_('Export items from a viewer in Todo.txt format '
+                       '(see todotxt.com)'),
             bitmap='exportascsv', *args, **kwargs)
         
     def exportFunction(self):
         return self.iocontroller.exportAsTodoTxt
     
     def enabled(self, event):
-        return any(self.exportableViewer(viewer) for viewer in self.mainWindow().viewer)
+        return any(self.exportableViewer(viewer) for viewer in \
+                   self.mainWindow().viewer)
     
-    def exportableViewer(self, viewer):
-        return viewer.isShowingTasks()
+    @staticmethod
+    def getExportDialogClass():
+        return dialog.export.ExportAsTodoTxtDialog
+    
+    @staticmethod
+    def exportableViewer(aViewer):
+        ''' Return whether the viewer can be exported to Todo.txt format. '''
+        return aViewer.isShowingTasks()
     
     
 class FileImportCSV(IOCommand):
+    ''' Action for importing data from a CSV file into the current task 
+        file. '''
+    
     def __init__(self, *args, **kwargs):
         super(FileImportCSV, self).__init__(menuText=_('&Import CSV...'),
             helpText=_('Import tasks from a Comma Separated Values (CSV) file'),
@@ -764,20 +817,26 @@ class FileImportCSV(IOCommand):
             filename = wx.FileSelector(_('Import CSV'), wildcard='*.csv')
             if filename:
                 if len(file(filename, 'rb').read()) == 0:
-                    wx.MessageBox(_('''The selected file is empty. Please select a different file.'''), 
+                    wx.MessageBox(_('The selected file is empty. '
+                                    'Please select a different file.'), 
                                   _('Import CSV'))
                     continue
-                wiz = CSVImportWizard(filename, None, wx.ID_ANY, _('Import CSV'))
-                if wiz.RunWizard():
-                    self.iocontroller.importCSV(**wiz.GetOptions())
+                wizard = CSVImportWizard(filename, None, wx.ID_ANY, 
+                                         _('Import CSV'))
+                if wizard.RunWizard():
+                    self.iocontroller.importCSV(**wizard.GetOptions())
                     break               
             else:
                 break
                 
                 
 class FileImportTodoTxt(IOCommand):
+    ''' Action for importing data from a Todo.txt file into the current task
+        file. '''
+    
     def __init__(self, *args, **kwargs):
-        super(FileImportTodoTxt, self).__init__(menuText=_('&Import Todo.txt...'),
+        super(FileImportTodoTxt, self).__init__( \
+            menuText=_('&Import Todo.txt...'),
             helpText=_('Import tasks from a Todo.txt (see todotxt.com) file'),
             bitmap='exportascsv', *args, **kwargs)
 
@@ -788,8 +847,12 @@ class FileImportTodoTxt(IOCommand):
             
 
 class FileSynchronize(IOCommand, SettingsCommand):
+    ''' Action for synchronizing the current task file with a SyncML 
+        server. '''
+    
     def __init__(self, *args, **kwargs):
-        super(FileSynchronize, self).__init__(menuText=_('S&yncML synchronization...'),
+        super(FileSynchronize, self).__init__( \
+            menuText=_('S&yncML synchronization...'),
             helpText=_('Synchronize with a SyncML server'),
             bitmap='arrows_looped_icon', *args, **kwargs)
 
@@ -798,6 +861,8 @@ class FileSynchronize(IOCommand, SettingsCommand):
 
 
 class FileQuit(UICommand):
+    ''' Action for quitting the application. '''
+    
     def __init__(self, *args, **kwargs):
         super(FileQuit, self).__init__(menuText=_('&Quit\tCtrl+Q'), 
             helpText=help.fileQuit, bitmap='exit', id=wx.ID_EXIT, 
@@ -807,15 +872,20 @@ class FileQuit(UICommand):
         self.mainWindow().Close(force=True)
 
 
-def getUndoMenuText():
-    return '%s\tCtrl+Z'%patterns.CommandHistory().undostr(_('&Undo')) 
-
 class EditUndo(UICommand):
+    ''' Action for undoing the previous user action. '''
+    
     def __init__(self, *args, **kwargs):
-        super(EditUndo, self).__init__(menuText=getUndoMenuText(),
+        super(EditUndo, self).__init__(menuText=self.getUndoMenuText(),
             helpText=help.editUndo, bitmap='undo', id=wx.ID_UNDO, 
             *args, **kwargs)
-            
+    
+    @staticmethod        
+    def getUndoMenuText():
+        ''' Return the menu text for the undo command, including a text
+            describing the previous user action. '''
+        return '%s\tCtrl+Z' % patterns.CommandHistory().undostr(_('&Undo')) 
+
     def doCommand(self, event):
         windowWithFocus = wx.Window.FindFocus()
         if isinstance(windowWithFocus, wx.TextCtrl):
@@ -824,7 +894,7 @@ class EditUndo(UICommand):
             patterns.CommandHistory().undo()
 
     def onUpdateUI(self, event):
-        self.updateMenuText(getUndoMenuText())
+        self.updateMenuText(self.getUndoMenuText())
         super(EditUndo, self).onUpdateUI(event)
 
     def enabled(self, event):
@@ -836,14 +906,19 @@ class EditUndo(UICommand):
                 super(EditUndo, self).enabled(event)
 
 
-def getRedoMenuText():
-    return '%s\tCtrl+Y'%patterns.CommandHistory().redostr(_('&Redo')) 
-
 class EditRedo(UICommand):
+    ''' Action for redoing the last undone user action. '''
+
     def __init__(self, *args, **kwargs):
-        super(EditRedo, self).__init__(menuText=getRedoMenuText(),
+        super(EditRedo, self).__init__(menuText=self.getRedoMenuText(),
             helpText=help.editRedo, bitmap='redo', id=wx.ID_REDO, 
             *args, **kwargs)
+        
+    @staticmethod
+    def getRedoMenuText():
+        ''' Return the menu text for the redo command, including a text
+            describing the next user action. '''
+        return '%s\tCtrl+Y' % patterns.CommandHistory().redostr(_('&Redo')) 
 
     def doCommand(self, event):
         windowWithFocus = wx.Window.FindFocus()
@@ -853,7 +928,7 @@ class EditRedo(UICommand):
             patterns.CommandHistory().redo()
 
     def onUpdateUI(self, event):
-        self.updateMenuText(getRedoMenuText())
+        self.updateMenuText(self.getRedoMenuText())
         super(EditRedo, self).onUpdateUI(event)
 
     def enabled(self, event):
@@ -865,7 +940,10 @@ class EditRedo(UICommand):
                 super(EditRedo, self).enabled(event)
 
 
-class EditCut(NeedsSelectionMixin, ViewerCommand):    
+class EditCut(NeedsSelectionMixin, ViewerCommand):
+    ''' Action for cutting the currently selected item(s) to the 
+        clipboard. '''
+    
     def __init__(self, *args, **kwargs):     
         super(EditCut, self).__init__(menuText=_('Cu&t\tCtrl+X'), 
             helpText=help.editCut, bitmap='cut', *args, **kwargs)
@@ -888,6 +966,9 @@ class EditCut(NeedsSelectionMixin, ViewerCommand):
 
 
 class EditCopy(NeedsSelectionMixin, ViewerCommand):
+    ''' Action for copying the currently selected item(s) to the 
+        clipboard. '''
+    
     def __init__(self, *args, **kwargs):
         super(EditCopy, self).__init__(menuText=_('&Copy\tCtrl+C'), 
             helpText=help.editCopy, bitmap='copy', *args, **kwargs)
@@ -910,6 +991,9 @@ class EditCopy(NeedsSelectionMixin, ViewerCommand):
         
 
 class EditPaste(UICommand):
+    ''' Action for pasting the item(s) in the clipboard into the current 
+        taskfile. '''
+    
     def __init__(self, *args, **kwargs):
         super(EditPaste, self).__init__(menuText=_('&Paste\tCtrl+V'), 
             helpText=help.editPaste, bitmap='paste', id=wx.ID_PASTE, 
@@ -932,6 +1016,9 @@ class EditPaste(UICommand):
 
 
 class EditPasteAsSubItem(NeedsSelectedCompositeMixin, ViewerCommand):
+    ''' Action for pasting the item(s) in the clipboard into the current 
+        taskfile, as a subitem of the currently selected item. '''
+    
     def __init__(self, *args, **kwargs):
         super(EditPasteAsSubItem, self).__init__(
             menuText=_('P&aste as subitem\tShift+Ctrl+V'), 
@@ -944,19 +1031,25 @@ class EditPasteAsSubItem(NeedsSelectedCompositeMixin, ViewerCommand):
         pasteCommand.do()
 
     def enabled(self, event):
-        if not (super(EditPasteAsSubItem, self).enabled(event) and command.Clipboard()):
+        if not (super(EditPasteAsSubItem, self).enabled(event) and \
+                command.Clipboard()):
             return False
         targetClass = self.viewer.curselection()[0].__class__
         pastedClasses = [item.__class__ for item in command.Clipboard().peek()]
-        return self.targetClassAndPastedClassesAreAllEqual(targetClass, pastedClasses) or \
-            self.targetClassIsTaskAndPastedClassesAreAllEffort(targetClass, pastedClasses)
+        return self.__targetAndPastedAreEqual(targetClass, pastedClasses) or \
+            self.__targetIsTaskAndPastedIsEffort(targetClass, pastedClasses)
         
-    def targetClassIsTaskAndPastedClassesAreAllEffort(self, targetClass, pastedClasses):
+    @classmethod
+    def __targetIsTaskAndPastedIsEffort(cls, targetClass, pastedClasses):
+        ''' Return whether the target class is a task and the pasted classes
+            are all effort. '''
         if targetClass != task.Task:
             return False
-        return self.targetClassAndPastedClassesAreAllEqual(effort.Effort, pastedClasses)
+        return cls.__targetAndPastedAreEqual(effort.Effort, pastedClasses)
     
-    def targetClassAndPastedClassesAreAllEqual(self, targetClass, pastedClasses):
+    @staticmethod
+    def __targetAndPastedAreEqual(targetClass, pastedClasses):
+        ''' Return whether the targetClass and pastedClasses are all equal. '''
         for pastedClass in pastedClasses:
             if pastedClass != targetClass:
                 return False
@@ -964,26 +1057,32 @@ class EditPasteAsSubItem(NeedsSelectedCompositeMixin, ViewerCommand):
     
 
 class EditPreferences(SettingsCommand):
+    ''' Action for bringing up the preferences dialog. '''
+    
     def __init__(self, *args, **kwargs):
-        super(EditPreferences, self).__init__(menuText=_('&Preferences...\tAlt+P'),
+        super(EditPreferences, self).__init__( \
+            menuText=_('&Preferences...\tAlt+P'),
             helpText=help.editPreferences, bitmap='wrench_icon',
             id=wx.ID_PREFERENCES, *args, **kwargs)
             
-    def doCommand(self, event, show=True): # pylint: disable-msg=W0221
+    def doCommand(self, event, show=True):  # pylint: disable-msg=W0221
         editor = dialog.preferences.Preferences(parent=self.mainWindow(), 
             title=_('Preferences'), settings=self.settings)
         editor.Show(show=show)
 
 
 class EditSyncPreferences(IOCommand):
+    ''' Action for bringing up the synchronization preferences dialog. '''
+    
     def __init__(self, *args, **kwargs):
-        super(EditSyncPreferences, self).__init__(menuText=_('&SyncML preferences...'),
+        super(EditSyncPreferences, self).__init__( \
+            menuText=_('&SyncML preferences...'),
             helpText=_('Edit SyncML preferences'), bitmap='arrows_looped_icon',
             *args, **kwargs)
 
-    def doCommand(self, event, show=True): # pylint: disable-msg=W0221
-        editor = dialog.syncpreferences.SyncMLPreferences(parent=self.mainWindow(),
-            iocontroller=self.iocontroller,
+    def doCommand(self, event, show=True):  # pylint: disable-msg=W0221
+        editor = dialog.syncpreferences.SyncMLPreferences( \
+            parent=self.mainWindow(), iocontroller=self.iocontroller,
             title=_('SyncML preferences'))
         editor.Show(show=show)
 
@@ -997,7 +1096,7 @@ class SelectAll(NeedsItemsMixin, ViewerCommand):
     def doCommand(self, event):
         windowWithFocus = wx.Window.FindFocus()
         if self.windowIsTextCtrl(windowWithFocus):
-            windowWithFocus.SetSelection(-1, -1) # Select all text
+            windowWithFocus.SetSelection(-1, -1)  # Select all text
         else:
             self.viewer.selectall()
             
@@ -1005,7 +1104,6 @@ class SelectAll(NeedsItemsMixin, ViewerCommand):
     def windowIsTextCtrl(window):
         return isinstance(window, wx.TextCtrl) or \
                isinstance(window, hypertreelist.EditCtrl)
-
 
 
 class ClearSelection(NeedsSelectionMixin, ViewerCommand):
@@ -1049,8 +1147,9 @@ class ToggleCategoryFilter(UICommand):
         # items isn't possible. Hence, we use wx.ITEM_CHECK, even for mutual 
         # exclusive categories.
         kind = wx.ITEM_CHECK
-        super(ToggleCategoryFilter, self).__init__(menuText='&' + subject.replace('&', '&&'),
-            helpText=_('Show/hide items belonging to %s')%subject, kind=kind, 
+        super(ToggleCategoryFilter, self).__init__( \
+            menuText='&' + subject.replace('&', '&&'),
+            helpText=_('Show/hide items belonging to %s') % subject, kind=kind, 
             *args, **kwargs)
 
     def doCommand(self, event):
@@ -1071,7 +1170,7 @@ class ViewViewer(SettingsCommand, ViewerCommand):
     def increaseViewerCount(self):
         setting = self.viewerClass.__name__.lower() + 'count'
         viewerCount = self.settings.getint('view', setting)
-        self.settings.set('view', setting, str(viewerCount+1))
+        self.settings.set('view', setting, str(viewerCount + 1))
         
         
 class ViewEffortViewerForSelectedTask(NeedsOneSelectedTaskMixin, SettingsCommand, ViewerCommand):
@@ -1129,7 +1228,7 @@ class HideCurrentColumn(ViewerCommand):
         # Unfortunately the event (an UpdateUIEvent) does not give us any
         # information to determine the current column, so we have to find 
         # the column ourselves. We use the current mouse position to do so.
-        widget = self.viewer.getWidget() # Must use method to make sure viewer dispatch works!
+        widget = self.viewer.getWidget()  # Must use method to make sure viewer dispatch works!
         x, y = widget.ScreenToClient(wx.GetMousePosition())
         # Use wx.Point because CustomTreeCtrl assumes a wx.Point instance:
         columnIndex = widget.HitTest(wx.Point(x, y))[2]
@@ -1276,7 +1375,7 @@ class Edit(NeedsSelectionMixin, ViewerCommand):
             helpText=_('Edit the selected item(s)'), bitmap='edit', 
             *args, **kwargs)
 
-    def doCommand(self, event, show=True): # pylint: disable-msg=W0221
+    def doCommand(self, event, show=True):  # pylint: disable-msg=W0221
         windowWithFocus = wx.Window.FindFocus()
         editCtrl = self.findEditCtrl(windowWithFocus)
         if editCtrl:
@@ -1311,7 +1410,8 @@ class Edit(NeedsSelectionMixin, ViewerCommand):
 
 class EditTrackedTasks(TaskListCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
-        super(EditTrackedTasks, self).__init__(menuText=_('Edit &tracked task...\tShift-Alt-T'),
+        super(EditTrackedTasks, self).__init__( \
+            menuText=_('Edit &tracked task...\tShift-Alt-T'),
             helpText=_('Edit the currently tracked task(s)'), bitmap='edit',
             *args, **kwargs)
         
@@ -1320,7 +1420,7 @@ class EditTrackedTasks(TaskListCommand, SettingsCommand):
             self.taskList.tasksBeingTracked(), self.settings, self.taskList, 
             self.mainWindow().taskFile, bitmap=self.bitmap)
         editTaskDialog.Show(show)
-        return editTaskDialog # for testing purposes
+        return editTaskDialog  # for testing purposes
         
     def enabled(self, event):
         return any(self.taskList.tasksBeingTracked())
@@ -1339,7 +1439,7 @@ class Delete(NeedsSelectionMixin, ViewerCommand):
             fromIndex, toIndex = windowWithFocus.GetSelection()
             if fromIndex == toIndex: 
                 pos = windowWithFocus.GetInsertionPoint()
-                fromIndex, toIndex = pos, pos+1
+                fromIndex, toIndex = pos, pos + 1
             windowWithFocus.Remove(fromIndex, toIndex)            
         else:
             deleteCommand = self.viewer.deleteItemCommand()
@@ -1362,12 +1462,12 @@ class TaskNew(TaskListCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         self.taskKeywords = kwargs.pop('taskKeywords', dict())
         taskList = kwargs['taskList']
-        if 'menuText' not in kwargs: # Provide for subclassing
+        if 'menuText' not in kwargs:  # Provide for subclassing
             kwargs['menuText'] = taskList.newItemMenuText
             kwargs['helpText'] = taskList.newItemHelpText
         super(TaskNew, self).__init__(bitmap='new', *args, **kwargs)
 
-    def doCommand(self, event, show=True): # pylint: disable-msg=W0221
+    def doCommand(self, event, show=True):  # pylint: disable-msg=W0221
         kwargs = self.taskKeywords.copy()
         if self.__shouldPresetPlannedStartDateTime():
             kwargs['plannedStartDateTime'] = task.Task.suggestedPlannedStartDateTime()
@@ -1389,7 +1489,7 @@ class TaskNew(TaskListCommand, SettingsCommand):
             newTaskCommand.items, self.settings, self.taskList, 
             self.mainWindow().taskFile, bitmap=self.bitmap, itemsAreNew=True)
         newTaskDialog.Show(show)
-        return newTaskDialog # for testing purposes
+        return newTaskDialog  # for testing purposes
 
     def categoriesForTheNewTask(self):
         return self.mainWindow().taskFile.categories().filteredCategories()
@@ -1426,13 +1526,13 @@ class TaskNewFromTemplate(TaskNew):
         super(TaskNewFromTemplate, self).__init__(*args, **kwargs)
         self.__filename = filename
         templateTask = self.__readTemplate()
-        self.menuText = '&' + templateTask.subject().replace('&', '&&') # pylint: disable-msg=E1103
+        self.menuText = '&' + templateTask.subject().replace('&', '&&')  # pylint: disable-msg=E1103
 
     def __readTemplate(self):
         return persistence.TemplateXMLReader(file(self.__filename,
                                                   'rU')).read()
 
-    def doCommand(self, event, show=True): # pylint: disable-msg=W0221
+    def doCommand(self, event, show=True):  # pylint: disable-msg=W0221
         # The task template is read every time because it's the
         # TemplateXMLReader that evaluates dynamic values (Now()
         # should be evaluated at task creation for instance).
@@ -1446,7 +1546,7 @@ class TaskNewFromTemplate(TaskNew):
             newTaskCommand.items, self.settings, self.taskList, 
             self.mainWindow().taskFile, bitmap=self.bitmap, itemsAreNew=True)
         newTaskDialog.Show(show)
-        return newTaskDialog # for testing purposes
+        return newTaskDialog  # for testing purposes
    
    
 class TaskNewFromTemplateButton(PopupButtonMixin, TaskListCommand, SettingsCommand):
@@ -1509,7 +1609,7 @@ class NewSubItem(NeedsOneSelectedCompositeItemMixin, ViewerCommand):
             helpText=_('Insert a new subitem of the selected item'),
             bitmap='newsub', *args, **kwargs)
     
-    def doCommand(self, event, show=True): # pylint: disable-msg=W0221
+    def doCommand(self, event, show=True):  # pylint: disable-msg=W0221
         self.viewer.newSubItemDialog(bitmap=self.bitmap).Show(show)
         
     def onUpdateUI(self, event):
@@ -1535,8 +1635,8 @@ class TaskMarkActive(NeedsSelectedTasksMixin, ViewerCommand):
                                   self.viewer.curselection()).do()
         
     def enabled(self, event):
-        def canBeMarkedActive(task):
-            return task.actualStartDateTime() > date.Now() or task.completed()
+        def canBeMarkedActive(aTask):
+            return aTask.actualStartDateTime() > date.Now() or aTask.completed()
         
         return super(TaskMarkActive, self).enabled(event) and \
             any([canBeMarkedActive(task) for task in self.viewer.curselection()])         
@@ -1554,8 +1654,8 @@ class TaskMarkInactive(NeedsSelectedTasksMixin, ViewerCommand):
                                     self.viewer.curselection()).do()
         
     def enabled(self, event):
-        def canBeMarkedInactive(task):
-            return not task.inactive() and not task.late()
+        def canBeMarkedInactive(aTask):
+            return not aTask.inactive() and not aTask.late()
         
         return super(TaskMarkInactive, self).enabled(event) and \
             any([canBeMarkedInactive(task) for task in self.viewer.curselection()])         
@@ -1634,18 +1734,18 @@ class TaskDecPriority(NeedsSelectedTasksMixin, TaskListCommand, ViewerCommand):
 
 
 class DragAndDropCommand(ViewerCommand):
-    def onCommandActivate(self, dropItem, dragItems, part): # pylint: disable-msg=W0221
+    def onCommandActivate(self, dropItem, dragItems, part):  # pylint: disable-msg=W0221
         ''' Override onCommandActivate to be able to accept two items instead
             of one event. '''
         self.doCommand(dropItem, dragItems, part)
 
-    def doCommand(self, dropItem, dragItems, part): # pylint: disable-msg=W0221
+    def doCommand(self, dropItem, dragItems, part):  # pylint: disable-msg=W0221
         dragAndDropCommand = self.createCommand(dropItem=dropItem, dragItems=dragItems, part=part)
         if dragAndDropCommand.canDo():
             dragAndDropCommand.do()
             
     def createCommand(self, dropItem, dragItems, part):
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
     
 
 class TaskDragAndDrop(DragAndDropCommand, TaskListCommand):
@@ -1669,7 +1769,7 @@ class ToggleCategory(NeedsSelectedCategorizableMixin, ViewerCommand):
         # exclusive categories.
         kind = wx.ITEM_CHECK
         super(ToggleCategory, self).__init__(menuText='&' + subject.replace('&', '&&'),
-            helpText=_('Toggle %s')%subject, kind=kind, *args, **kwargs)
+            helpText=_('Toggle %s') % subject, kind=kind, *args, **kwargs)
         
     def doCommand(self, event):
         check = command.ToggleCategoryCommand(category=self.category,
@@ -1690,8 +1790,8 @@ class ToggleCategory(NeedsSelectedCategorizableMixin, ViewerCommand):
         selectionCategories = self.viewer.curselection()[0].categories()
         for ancestor in self.category.ancestors():
             if ancestor.isMutualExclusive() and ancestor not in selectionCategories:
-                return False # Not all mutually exclusive ancestors are checked
-        return True # All mutually exclusive ancestors are checked
+                return False  # Not all mutually exclusive ancestors are checked
+        return True  # All mutually exclusive ancestors are checked
     
 
 class Mail(NeedsSelectionMixin, ViewerCommand):
@@ -1700,7 +1800,7 @@ class Mail(NeedsSelectionMixin, ViewerCommand):
         super(Mail, self).__init__(menuText=menuText,
            helpText=help.mailItem, bitmap='envelope_icon', *args, **kwargs)
 
-    def doCommand(self, event, mail=sendMail, showerror=wx.MessageBox): # pylint: disable-msg=W0221
+    def doCommand(self, event, mail=sendMail, showerror=wx.MessageBox):  # pylint: disable-msg=W0221
         items = self.viewer.curselection()
         subject = self.subject(items)
         body = self.body(items)
@@ -1741,9 +1841,9 @@ class Mail(NeedsSelectionMixin, ViewerCommand):
             # Try again with a dummy recipient:
             try:
                 mail('recipient@domain.com', subject, body)
-            except Exception, reason: # pylint: disable-msg=W0703
-                showerror(_('Cannot send email:\n%s')%ExceptionAsUnicode(reason), 
-                      caption=_('%s mail error')%meta.name, 
+            except Exception, reason:  # pylint: disable-msg=W0703
+                showerror(_('Cannot send email:\n%s') % ExceptionAsUnicode(reason), 
+                      caption=_('%s mail error') % meta.name, 
                       style=wx.ICON_ERROR)        
  
 
@@ -1752,7 +1852,7 @@ class AddNote(NeedsSelectedNoteOwnersMixin, ViewerCommand, SettingsCommand):
         super(AddNote, self).__init__(menuText=_('Add &note...\tCtrl+B'),
             helpText=help.addNote, bitmap='new', *args, **kwargs)
             
-    def doCommand(self, event, show=True): # pylint: disable-msg=W0221
+    def doCommand(self, event, show=True):  # pylint: disable-msg=W0221
         addNoteCommand = command.AddNoteCommand(self.viewer.presentation(), 
                                                 self.viewer.curselection())
         addNoteCommand.do()
@@ -1760,7 +1860,7 @@ class AddNote(NeedsSelectedNoteOwnersMixin, ViewerCommand, SettingsCommand):
             addNoteCommand.items, self.settings, self.viewer.presentation(),  
             self.mainWindow().taskFile, bitmap=self.bitmap)
         editDialog.Show(show)
-        return editDialog # for testing purposes
+        return editDialog  # for testing purposes
     
     
 class OpenAllNotes(NeedsSelectedNoteOwnersMixinWithNotes, ViewerCommand, SettingsCommand):
@@ -1865,8 +1965,8 @@ class EffortStartForTask(TaskListCommand):
         self.task = kwargs.pop('task')
         subject = self.task.subject() or _('(No subject)') 
         super(EffortStartForTask, self).__init__( \
-            bitmap=self.task.icon(recursive=True), menuText='&'+subject.replace('&', '&&'),
-            helpText=_('Start tracking effort for %s')%subject, 
+            bitmap=self.task.icon(recursive=True), menuText='&' + subject.replace('&', '&&'),
+            helpText=_('Start tracking effort for %s') % subject, 
             *args, **kwargs)
         
     def doCommand(self, event):
@@ -2074,7 +2174,7 @@ class NoteNew(NotesCommand, SettingsCommand, ViewerCommand):
                 newNoteCommand.items, self.settings, self.notes, 
                 self.mainWindow().taskFile, bitmap=self.bitmap)
         noteDialog.Show(show)
-        return noteDialog # for testing purposes
+        return noteDialog  # for testing purposes
 
     def categoriesForTheNewNote(self):
         return self.mainWindow().taskFile.categories().filteredCategories()
@@ -2110,8 +2210,10 @@ class AttachmentNew(AttachmentsCommand, ViewerCommand, SettingsCommand):
 
 class AddAttachment(NeedsSelectedAttachmentOwnersMixin, ViewerCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
-        super(AddAttachment, self).__init__(menuText=_('&Add attachment...\tShift-Ctrl-A'),
-            helpText=help.addAttachment, bitmap='paperclip_icon', *args, **kwargs)
+        super(AddAttachment, self).__init__( \
+            menuText=_('&Add attachment...\tShift-Ctrl-A'),
+            helpText=help.addAttachment, bitmap='paperclip_icon', 
+            *args, **kwargs)
         
     def doCommand(self, event):
         filename = widgets.AttachmentSelector()
@@ -2137,15 +2239,15 @@ def openAttachments(attachments, settings, showerror):
                       style=wx.ICON_ERROR)
 
 
-class AttachmentOpen(NeedsSelectedAttachmentsMixin, ViewerCommand, AttachmentsCommand,
-                     SettingsCommand):
+class AttachmentOpen(NeedsSelectedAttachmentsMixin, ViewerCommand, 
+                     AttachmentsCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         attachments = kwargs['attachments']
         super(AttachmentOpen, self).__init__(bitmap='fileopen',
             menuText=attachments.openItemMenuText,
             helpText=attachments.openItemHelpText, *args, **kwargs)
 
-    def doCommand(self, event, showerror=wx.MessageBox): # pylint: disable-msg=W0221
+    def doCommand(self, event, showerror=wx.MessageBox):  # pylint: disable-msg=W0221
         openAttachments(self.viewer.curselection(), self.settings, showerror)
 
 
@@ -2157,7 +2259,7 @@ class OpenAllAttachments(NeedsSelectionWithAttachmentsMixin, ViewerCommand,
            helpText=help.openAllAttachments, bitmap='paperclip_icon', 
            *args, **kwargs)
         
-    def doCommand(self, event, showerror=wx.MessageBox): # pylint: disable-msg=W0221
+    def doCommand(self, event, showerror=wx.MessageBox):  # pylint: disable-msg=W0221
         allAttachments = []
         for item in self.viewer.curselection():
             allAttachments.extend(item.attachments())
@@ -2264,8 +2366,8 @@ class URLCommand(UICommand):
         try:
             desktop.open(self.url)
         except Exception, reason:
-            wx.MessageBox(_('Cannot open URL:\n%s')%ExceptionAsUnicode(reason), 
-                      caption=_('%s URL error')%meta.name, 
+            wx.MessageBox(_('Cannot open URL:\n%s') % ExceptionAsUnicode(reason), 
+                      caption=_('%s URL error') % meta.name, 
                       style=wx.ICON_ERROR)
 
 
@@ -2378,7 +2480,7 @@ class Search(ViewerCommand, SettingsCommand):
             event.Skip()
             
     def doCommand(self, event):
-        pass # Not used
+        pass  # Not used
     
 
 class ToolbarChoiceCommandMixin(object):
@@ -2399,10 +2501,10 @@ class ToolbarChoiceCommandMixin(object):
         self.doChoice(self.choiceData[choiceIndex])
         
     def doChoice(self, choice):
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
     
     def doCommand(self, event):
-        pass # Not used
+        pass  # Not used
         
     def setChoice(self, choice):
         ''' Programmatically set the current choice in the choice control. '''
