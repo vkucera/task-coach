@@ -39,7 +39,7 @@ PrivilegesRequired=none
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 Name: associate; Description: "{cm:AssocFileExtension,{app},.tsk}"; GroupDescription: "Other tasks:"; Flags: unchecked
-Name: userstartup; Description: "Run %(name)s everytime Windows is started"; GroupDescription: "Other tasks:"; Flags: unchecked
+Name: userstartup; Description: "Run %(name)s every time Windows is started"; GroupDescription: "Other tasks:"; Flags: unchecked
 
 [Files]
 Source: "%(filename)s-%(version)s-win32exe\%(filename)s.exe"; DestDir: "{app}"; Flags: ignoreversion
@@ -51,16 +51,17 @@ Filename: "{app}\%(filename)s.url"; Section: "InternetShortcut"; Key: "URL"; Str
 
 [InstallDelete]
 Type: files; Name: "{app}\UxTheme.dll"
+Type: files; Name: "{app}\%(filename_lower)s.exe.log"
 
 [Registry]
-Root: HKCR; Subkey: ".tsk"; ValueType: string; ValueName: ""; ValueData: "TaskCoach"; Flags: uninsdeletevalue; Check: IsAdminLoggedOn
-Root: HKCR; Subkey: "TaskCoach"; ValueType: string; ValueName: ""; ValueData: "%(name)s File"; Flags: uninsdeletekey; Check: IsAdminLoggedOn
-Root: HKCR; Subkey: "TaskCoach\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\%(filename)s.EXE,0"; Check: IsAdminLoggedOn
-Root: HKCR; Subkey: "TaskCoach\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\%(filename)s.EXE"" ""%%1"""; Check: IsAdminLoggedOn
-Root: HKCU; Subkey: "Software\Classes\.tsk"; ValueType: string; ValueName: ""; ValueData: "TaskCoachFile"; Flags: uninsdeletevalue; Check: not IsAdminLoggedOn
-Root: HKCU; Subkey: "Software\Classes\TaskCoachFile"; ValueType: string; ValueName: ""; ValueData: "%(name)s File"; Flags: uninsdeletekey; Check: not IsAdminLoggedOn
-Root: HKCU; Subkey: "Software\Classes\TaskCoachFile\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\%(filename)s.EXE,0"; Check: not IsAdminLoggedOn
-Root: HKCU; Subkey: "Software\Classes\TaskCoachFile\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\%(filename)s.EXE"" ""%%1"""; Check: not IsAdminLoggedOn
+Root: HKCR; Subkey: ".tsk"; ValueType: string; ValueName: ""; ValueData: "%(filename)s"; Flags: uninsdeletevalue; Check: IsAdminLoggedOn
+Root: HKCR; Subkey: "%(filename)s"; ValueType: string; ValueName: ""; ValueData: "%(name)s File"; Flags: uninsdeletekey; Check: IsAdminLoggedOn
+Root: HKCR; Subkey: "%(filename)s\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\%(filename)s.EXE,0"; Check: IsAdminLoggedOn
+Root: HKCR; Subkey: "%(filename)s\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\%(filename)s.EXE"" ""%%1"""; Check: IsAdminLoggedOn
+Root: HKCU; Subkey: "Software\Classes\.tsk"; ValueType: string; ValueName: ""; ValueData: "%(filename)sFile"; Flags: uninsdeletevalue; Check: not IsAdminLoggedOn
+Root: HKCU; Subkey: "Software\Classes\%(filename)sFile"; ValueType: string; ValueName: ""; ValueData: "%(name)s File"; Flags: uninsdeletekey; Check: not IsAdminLoggedOn
+Root: HKCU; Subkey: "Software\Classes\%(filename)sFile\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\%(filename)s.EXE,0"; Check: not IsAdminLoggedOn
+Root: HKCU; Subkey: "Software\Classes\%(filename)sFile\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\%(filename)s.EXE"" ""%%1"""; Check: not IsAdminLoggedOn
 
 [Icons]
 Name: "{group}\%(name)s"; Filename: "{app}\%(filename)s.exe"; WorkingDir: "{app}"
