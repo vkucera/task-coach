@@ -155,7 +155,7 @@ class BookMixin(object):
         pageIndex = pageSelectionArea.HitTest((x, y))
         if type(pageIndex) == type((),):
             pageIndex = pageIndex[0]
-        if pageIndex != wx.NOT_FOUND:
+        if 0 <= pageIndex < self.GetPageCount():
             self.SetSelection(pageIndex)
         return wx.DragNone
     
