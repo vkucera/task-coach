@@ -27,7 +27,8 @@ Release('1.3.15', 'May 17, 2012',
     bugsFixed=[
         Bug('''On Windows 7, when the language is English (US), render times
 in the task viewer using AM/PM.'''),
-        Bug('''On Mac OS X, don't crash when waking up from stand by.'''),
+        Bug('''On Mac OS X and Windows, don't crash when waking up from 
+stand by.''', '3523648'),
         Bug('''Resetting task filters at midnight was not working properly.'''),
         ]
     ),
