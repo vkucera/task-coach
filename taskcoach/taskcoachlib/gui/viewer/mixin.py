@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import command, patterns
+from taskcoachlib import command
 from taskcoachlib.domain import base, task, category, attachment
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand
@@ -111,7 +111,7 @@ class FilterableViewerMixin(object):
         if categoriesWithChildren:
             commands.append(None)
             for eachCategory in categoriesWithChildren:
-                subCommands = [_('%s (subcategories)')%eachCategory.subject()]
+                subCommands = [_('%s (subcategories)') % eachCategory.subject()]
                 subCommands.extend(self.createToggleCategoryFilterCommands(eachCategory.children()))
                 commands.append(tuple(subCommands))
         return commands
@@ -131,7 +131,7 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
     def createFilter(self, taskList):
         taskList = super(FilterableViewerForTasksMixin, self).createFilter(taskList)
         return task.filter.ViewFilter(taskList, treeMode=self.isTreeViewer(), 
-                                          **self.viewFilterOptions())
+                                      **self.viewFilterOptions())
         
     def viewFilterOptions(self):
         return dict(hideCompositeTasks=self.isHidingCompositeTasks(),

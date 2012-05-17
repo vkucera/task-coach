@@ -21,11 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ''' render.py - functions to render various objects, like date, time, 
 etc. '''  # pylint: disable-msg=W0105
 
-import locale
-import codecs
-import re
-from taskcoachlib.i18n import _
 from taskcoachlib.domain import date as datemodule
+from taskcoachlib.i18n import _
+import codecs
+import locale
+import re
 
 # pylint: disable-msg=W0621
 
@@ -36,6 +36,9 @@ def priority(priority):
 
  
 def timeLeft(timeLeft, completedTask):
+    ''' Render time left as a text string. Returns an empty string for 
+        completed tasks and "Infinite" for tasks without planned due date. 
+        Otherwise it returns the number of days, hours, and minutes left. '''
     if completedTask:
         return ''
     if timeLeft == datemodule.TimeDelta.max:
@@ -60,15 +63,20 @@ def timeSpent(timeSpent, showSeconds=True):
     else:
         sign = '-' if timeSpent < zero else ''
         hours, minutes, seconds = timeSpent.hoursMinutesSeconds()
-        return sign + '%d:%02d' % (hours, minutes) + (':%02d' % seconds if showSeconds else '')
+        return sign + '%d:%02d' % (hours, minutes) + \
+               (':%02d' % seconds if showSeconds else '')
 
 
 def recurrence(recurrence):
+    ''' Render the recurrence as a short string describing the frequency of
+        the recurrence. '''
     if not recurrence:
         return ''
     if recurrence.amount > 2:
-        labels = [_('Every %(frequency)d days'), _('Every %(frequency)d weeks'),
-                  _('Every %(frequency)d months'), _('Every %(frequency)d years')] 
+        labels = [_('Every %(frequency)d days'), 
+                  _('Every %(frequency)d weeks'),
+                  _('Every %(frequency)d months'),
+                  _('Every %(frequency)d years')] 
     elif recurrence.amount == 2:
         labels = [_('Every other day'), _('Every other week'),
                   _('Every other month'), _('Every other year')]
@@ -79,8 +87,8 @@ def recurrence(recurrence):
 
 
 def budget(aBudget):
-    ''' render budget (of type date.TimeDelta) as
-    "<hours>:<minutes>:<seconds>". '''
+    ''' Render budget (of type date.TimeDelta) as 
+        "<hours>:<minutes>:<seconds>". '''
     return timeSpent(aBudget)
 
 
@@ -89,10 +97,14 @@ try:
     codecs.utf_8_decode(datemodule.Now().strftime(dateFormat))
 except UnicodeDecodeError:
     dateFormat = '%Y-%m-%d'
-if locale.getlocale()[0] and '_US' in locale.getlocale()[0]:
+
+language_and_country = locale.getlocale()[0]
+if language_and_country and ('_US' in language_and_country or 
+                             '_United States' in language_and_country):
     timeFormat = '%I:%M %p'
 else: 
     timeFormat = '%H:%M'  # Alas, %X includes seconds (see http://stackoverflow.com/questions/2507726)
+
 dateTimeFormat = ' '.join([dateFormat, timeFormat])
 
 

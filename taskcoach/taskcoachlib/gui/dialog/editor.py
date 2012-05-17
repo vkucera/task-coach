@@ -1078,13 +1078,15 @@ class Editor(widgets.Dialog):
     singular_title = 'Subclass responsibility %s'
     plural_title = 'Subclass responsibility'
     
-    def __init__(self, parent, items, settings, container, taskFile, *args, **kwargs):
+    def __init__(self, parent, items, settings, container, taskFile, 
+                 *args, **kwargs):
         self._items = items
         self._settings = settings
         self._taskFile = taskFile
         self.__itemsAreNew = kwargs.get('itemsAreNew', False)
         self._callAfter = kwargs.get('callAfter', wx.CallAfter)
-        super(Editor, self).__init__(parent, self.title(), buttonTypes=wx.ID_CLOSE, *args, **kwargs)
+        super(Editor, self).__init__(parent, self.title(), 
+                                     buttonTypes=wx.ID_CLOSE, *args, **kwargs)
         columnName = kwargs.get('columnName', '')
         self._interior.setFocus(columnName)
         patterns.Publisher().registerObserver(self.onItemRemoved,

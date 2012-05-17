@@ -18,27 +18,29 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+# pylint: disable=C0103
+
 # Edit these for every release:
 
-version = '1.4.0' # Current version number of the application
-tskversion = 34 # Current version number of the task file format, changed to 34 for release 1.3.5.
-release_day = '13' # Day number of the release, 1-31, as string
-release_month = 'May' # Month of the release in plain English
-release_year = '2012' # Year of the release as string
-release_status = 'stable' # One of 'alpha', 'beta', 'stable'
+version = '1.4.0'  # Current version number of the application
+tskversion = 34  # Current version number of the task file format, changed to 34 for release 1.3.5.
+release_day = '13'  # Day number of the release, 1-31, as string
+release_month = 'May'  # Month of the release in plain English
+release_year = '2012'  # Year of the release as string
+release_status = 'stable'  # One of 'alpha', 'beta', 'stable'
 
 # No editing needed below this line for doing a release.
 
 import re, datetime
 try:
-    from taskcoachlib.meta.revision import revision # pylint: disable-msg=F0401,W0611
+    from taskcoachlib.meta.revision import revision  # pylint: disable-msg=F0401,W0611
 except ImportError:
     revision = None 
 
 months = ['January', 'February', 'March', 'April', 'May', 'June', 
           'July', 'August', 'September', 'October', 'November', 'December']
 
-if revision: # Buildbot sets revision
+if revision:  # Buildbot sets revision
     # Decrement version because this version isn't released yet. This
     # assumes that version components are < 100; 99 will actually mean
     # pre-major release
@@ -58,9 +60,9 @@ if revision: # Buildbot sets revision
     release_status = 'beta'
     version += '.' + revision
 
-assert release_month in months # Try to prevent typo's
-release_month_nr = '%02d'%(months.index(release_month) + 1)
-release_day_nr = '%02d'%int(release_day)
+assert release_month in months  # Try to prevent typo's
+release_month_nr = '%02d' % (months.index(release_month) + 1)
+release_day_nr = '%02d' % int(release_day)
 date = release_month + ' ' + release_day + ', ' + release_year
 
 name = 'Task Coach'
@@ -69,28 +71,29 @@ long_description = '%(name)s is a friendly open source todo manager to manage ' 
 'personal tasks and todo lists. It supports composite tasks, i.e. tasks ' \
 'within tasks. In addition, %(name)s allows you to categorize your tasks, ' \
 'track effort against a budget per task, and much more. ' \
-'%(name)s is available for Windows, Mac OS X, BSD, Linux, iPhone and iPad.'%dict(name=name)
+'%(name)s is available for Windows, Mac OS X, BSD, Linux, iPhone and iPad.' % dict(name=name)
 keywords = 'task manager, todo list, pim, time registration, track effort'
-author_first, author_last = 'Frank', 'Niessink' # Needed for PAD file
-author = '%s %s and Jerome Laheurte'%(author_first, author_last)
-author_unicode = u'%s %s and Jérôme Laheurte'%(author_first, author_last)
+author_first, author_last = 'Frank', 'Niessink'  # Needed for PAD file
+author = '%s %s and Jerome Laheurte' % (author_first, author_last)
+author_unicode = u'%s %s and Jérôme Laheurte' % (author_first, author_last)
 author_email = 'developers@taskcoach.org'
 
 filename = name.replace(' ', '')
 filename_lower = filename.lower()
 
-url = 'http://taskcoach.org/' # Don't remove the trailing slash, other code is assuming it will be there
+url = 'http://taskcoach.org/'  # Don't remove the trailing slash, other code is assuming it will be there
 screenshot = url + 'screenshots/Windows/0.71.2-Windows_XP-Tasks_categories_and_effort.png'
 icon = url + 'taskcoach.png'
 pad = url + 'pad.xml'
 version_url = url + 'version.txt'
 download = url + 'download.html'
-dist_download_prefix = 'http://downloads.sourceforge.net/%s'%filename_lower
+dist_download_prefix = 'http://downloads.sourceforge.net/%s' % filename_lower
 faq_url = 'https://answers.launchpad.net/taskcoach/+faqs'
-bug_report_url = 'https://sourceforge.net/tracker/?func=add&group_id=130831&atid=719134'
-known_bugs_url = 'http://sourceforge.net/tracker/?group_id=130831&atid=719134&status=1'
+sf_tracker_url = 'https://sourceforge.net/tracker/'
+bug_report_url = sf_tracker_url + '?func=add&group_id=130831&atid=719134'
+known_bugs_url = sf_tracker_url + '?group_id=130831&atid=719134&status=1'
+support_request_url = sf_tracker_url + '?group_id=130831&atid=719135'
 feature_request_url = 'http://taskcoach.uservoice.com'
-support_request_url = 'https://sourceforge.net/tracker/?group_id=130831&atid=719135'
 translations_url = 'https://translations.launchpad.net/taskcoach'
 donate_url = url + 'givesupport.html' 
 i18n_url = url + 'i18n.html'
@@ -98,11 +101,11 @@ i18n_url = url + 'i18n.html'
 announcement_addresses = 'taskcoach@yahoogroups.com, python-announce-list@python.org'
 bcc_announcement_addresses = 'johnhaller@portableapps.com'
 
-copyright = 'Copyright (C) 2004-%s %s'%(release_year, author) # pylint: disable-msg=W0622
+copyright = 'Copyright (C) 2004-%s %s'%(release_year, author)  # pylint: disable-msg=W0622
 license_title = 'GNU General Public License'
 license_version = '3'
 license_title_and_version = '%s version %s'%(license_title, license_version) 
-license = '%s or any later version'%license_title_and_version # pylint: disable-msg=W0622
+license = '%s or any later version'%license_title_and_version  # pylint: disable-msg=W0622
 license_title_and_version_abbrev = 'GPLv%s'%license_version
 license_abbrev = '%s+'%license_title_and_version_abbrev
 license_notice = '''%(name)s is free software: you can redistribute it and/or modify
@@ -116,7 +119,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.'''%dict(name=name)
+along with this program.  If not, see <http://www.gnu.org/licenses/>.''' % dict(name=name)
 
 license_notice_html = '<p>%s</p>'%license_notice.replace('\n\n', '</p><p>')
 license_notice_html = re.sub(r'<http([^>]*)>', r'<a href="http\1" target="_blank">http\1</a>', license_notice_html)
@@ -124,7 +127,7 @@ license_notice_html = re.sub(r'<http([^>]*)>', r'<a href="http\1" target="_blank
 platform = 'Any'
 pythonversion = '2.6'
 wxpythonversionnumber = '2.8.9.2'
-wxpythonversion = '%s-unicode'%wxpythonversionnumber
+wxpythonversion = '%s-unicode' % wxpythonversionnumber
 
 languages = {
     'English': None, 
@@ -182,11 +185,10 @@ languages_list = ','.join(languages.keys())
 def __createDict(localsDict):
     ''' Provide the local variables as a dictionary for use in string
         formatting. '''
-    metaDict = {} # pylint: disable-msg=W0621
+    metaDict = {}  # pylint: disable-msg=W0621
     for key in localsDict:
         if not key.startswith('__'):
             metaDict[key] = localsDict[key]
     return metaDict
 
 metaDict = __createDict(locals())
-
