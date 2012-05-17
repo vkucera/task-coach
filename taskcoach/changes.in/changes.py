@@ -27,6 +27,7 @@ Release('1.3.15', 'May 14, 2012',
     bugsFixed=[
         Bug('''On Windows 7, when the language is English (US), render times
 in the task viewer using AM/PM.'''),
+        Bug('''Resetting task filters at midnight was not working properly.'''),
         ]
     ),
             

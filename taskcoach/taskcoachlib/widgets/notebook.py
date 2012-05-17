@@ -45,7 +45,7 @@ class GridCursor:
 
     def maxRow(self):
         row, column = self.__nextPosition
-        return max(0, row-1) if column == 0 else row
+        return max(0, row - 1) if column == 0 else row
 
 
 class BookPage(wx.Panel):
@@ -70,11 +70,11 @@ class BookPage(wx.Panel):
         labelInFirstColumn = type(controls[0]) in [type(''), type(u'')]
         flags = []
         for columnIndex in range(len(controls)):
-            flag = wx.ALL|wx.ALIGN_CENTER_VERTICAL
+            flag = wx.ALL | wx.ALIGN_CENTER_VERTICAL
             if columnIndex == 0 and labelInFirstColumn:
                 flag |= wx.ALIGN_LEFT
             else:
-                flag |= wx.ALIGN_RIGHT|wx.EXPAND
+                flag |= wx.ALIGN_RIGHT | wx.EXPAND
             flags.append(flag)
         return flags
 
@@ -105,15 +105,16 @@ class BookPage(wx.Panel):
         lastColumnIndex = len(controls) - 1
         for columnIndex, control in enumerate(controls):
             self.__addControl(columnIndex, control, flags[columnIndex], 
-                              lastColumn=columnIndex==lastColumnIndex)
+                              lastColumn=columnIndex == lastColumnIndex)
             if columnIndex > 0:
-                control.MoveAfterInTabOrder(controls[columnIndex-1])
+                control.MoveAfterInTabOrder(controls[columnIndex - 1])
         if kwargs.get('growable', False):
             self._sizer.AddGrowableRow(self._position.maxRow())
             
     def addLine(self):
         line = wx.StaticLine(self)
-        self.__addControl(0, line, flag=wx.GROW|wx.ALIGN_CENTER_VERTICAL, lastColumn=True)
+        self.__addControl(0, line, flag=wx.GROW | wx.ALIGN_CENTER_VERTICAL, 
+                          lastColumn=True)
 
     def __addControl(self, columnIndex, control, flag, lastColumn):
         colspan = max(self._columns - columnIndex, 1) if lastColumn else 1
@@ -146,7 +147,7 @@ class BookMixin(object):
         else:
             raise IndexError
         
-    def onDragOver(self, x, y, defaultResult, pageSelectionArea=None): # pylint: disable-msg=W0613
+    def onDragOver(self, x, y, defaultResult, pageSelectionArea=None):  # pylint: disable-msg=W0613
         ''' When the user drags something (currently limited to files because
             the DropTarget created in __init__ is a FileDropTarget) over a tab
             raise the appropriate page. '''

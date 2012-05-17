@@ -73,7 +73,8 @@ class UICommand(object):
         implement doCommand() and optionally override enabled(). '''
     
     def __init__(self, menuText='', helpText='', bitmap='nobitmap', 
-             kind=wx.ITEM_NORMAL, id=None, bitmap2=None, *args, **kwargs):  # pylint: disable-msg=W0622
+             kind=wx.ITEM_NORMAL, id=None, bitmap2=None, 
+             *args, **kwargs):  # pylint: disable-msg=W0622
         super(UICommand, self).__init__()
         menuText = menuText or '<%s>' % _('None')
         self.menuText = menuText if '&' in menuText else '&' + menuText
@@ -216,6 +217,11 @@ class SettingsCommand(UICommand):  # pylint: disable-msg=W0223
 
 
 class BooleanSettingsCommand(SettingsCommand):  # pylint: disable-msg=W0223
+    ''' Bae class for commands that change a boolean setting. 
+        Whenever the setting is changed, the user interface 
+        representation is changed as well. E.g. a menu gets 
+        a checkmark. '''
+
     def __init__(self, value=None, *args, **kwargs):
         self.value = value
         super(BooleanSettingsCommand, self).__init__(*args, **kwargs)
@@ -2072,12 +2078,12 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
             self.updateMenuItems(paused)
     
     def updateToolState(self, paused):
-        if not self.toolbar: return # Toolbar is hidden        
+        if not self.toolbar: return  # Toolbar is hidden        
         if paused != self.toolbar.GetToolState(self.id): 
             self.toolbar.ToggleTool(self.id, paused)
 
     def updateToolBitmap(self, bitmapName):
-        if not self.toolbar: return # Toolbar is hidden
+        if not self.toolbar: return  # Toolbar is hidden
         bitmap = wx.ArtProvider_GetBitmap(bitmapName, wx.ART_TOOLBAR, 
                                           self.toolbar.GetToolBitmapSize())
         # On wxGTK, changing the bitmap doesn't work when the tool is 
@@ -2099,18 +2105,18 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
             menuItem.SetItemLabel(menuText)
             menuItem.SetHelp(helpText)
         
-    def getMenuText(self, paused=None): # pylint: disable-msg=W0221
+    def getMenuText(self, paused=None):  # pylint: disable-msg=W0221
         if self.anyTrackedEfforts():
             subject = _('multiple tasks') if len(self.__trackedEfforts) > 1 else self.__trackedEfforts[0].task().subject()
-            return self.stopMenuText%self.trimmedSubject(subject)
+            return self.stopMenuText % self.trimmedSubject(subject)
         if paused is None:
             paused = self.anyStoppedEfforts()
         if paused:
-            return self.resumeMenuText%self.trimmedSubject(self.mostRecentTrackedTask().subject())
+            return self.resumeMenuText % self.trimmedSubject(self.mostRecentTrackedTask().subject())
         else:
             return self.defaultMenuText
         
-    def getHelpText(self, paused=None): # pylint: disable-msg=W0221
+    def getHelpText(self, paused=None):  # pylint: disable-msg=W0221
         if self.anyTrackedEfforts():
             return self.stopHelpText
         if paused is None:
@@ -2139,7 +2145,7 @@ class CategoryNew(CategoriesCommand, SettingsCommand):
             menuText=_('New category...\tCtrl-G'),
             helpText=help.categoryNew, *args, **kwargs)
 
-    def doCommand(self, event, show=True): # pylint: disable-msg=W0221
+    def doCommand(self, event, show=True):  # pylint: disable-msg=W0221
         newCategoryCommand = command.NewCategoryCommand(self.categories)
         newCategoryCommand.do()
         taskFile = self.mainWindow().taskFile
@@ -2163,7 +2169,7 @@ class NoteNew(NotesCommand, SettingsCommand, ViewerCommand):
         super(NoteNew, self).__init__(menuText=self.menuText,
             helpText=self.helpText, bitmap='new', *args, **kwargs)
 
-    def doCommand(self, event, show=True): # pylint: disable-msg=W0221
+    def doCommand(self, event, show=True):  # pylint: disable-msg=W0221
         if self.viewer:
             noteDialog = self.viewer.newItemDialog(bitmap=self.bitmap)
         else: 
@@ -2202,10 +2208,10 @@ class AttachmentNew(AttachmentsCommand, ViewerCommand, SettingsCommand):
             kwargs['helpText'] = attachments.newItemHelpText
         super(AttachmentNew, self).__init__(bitmap='new', *args, **kwargs)
 
-    def doCommand(self, event, show=True): # pylint: disable-msg=W0221
+    def doCommand(self, event, show=True):  # pylint: disable-msg=W0221
         attachmentDialog = self.viewer.newItemDialog(bitmap=self.bitmap)
         attachmentDialog.Show(show)
-        return attachmentDialog # for testing purposes
+        return attachmentDialog  # for testing purposes
 
 
 class AddAttachment(NeedsSelectedAttachmentOwnersMixin, ViewerCommand, SettingsCommand):
@@ -2233,7 +2239,7 @@ def openAttachments(attachments, settings, showerror):
     for eachAttachment in attachments:
         try:
             eachAttachment.open(attachmentBase)
-        except Exception, instance: # pylint: disable-msg=W0703
+        except Exception, instance:  # pylint: disable-msg=W0703
             showerror(render.exception(Exception, instance), 
                       caption=_('Error opening attachment'), 
                       style=wx.ICON_ERROR)
@@ -2331,9 +2337,9 @@ class Anonymize(IOCommand):
     
 class HelpAbout(DialogCommand):
     def __init__(self, *args, **kwargs):
-        super(HelpAbout, self).__init__(menuText=_('&About %s')%meta.name,
-            helpText=_('Version and contact information about %s')%meta.name, 
-            dialogTitle=_('About %s')%meta.name, 
+        super(HelpAbout, self).__init__(menuText=_('&About %s') % meta.name,
+            helpText=_('Version and contact information about %s') % meta.name, 
+            dialogTitle=_('About %s') % meta.name, 
             dialogText=help.aboutHTML, id=wx.ID_ABOUT, 
             bitmap='led_blue_information_icon', *args, **kwargs)
         
@@ -2341,8 +2347,8 @@ class HelpAbout(DialogCommand):
 class HelpLicense(DialogCommand):
     def __init__(self, *args, **kwargs):
         super(HelpLicense, self).__init__(menuText=_('&License'),
-            helpText=_('%s license')%meta.name,
-            dialogTitle=_('%s license')%meta.name, 
+            helpText=_('%s license') % meta.name,
+            dialogTitle=_('%s license') % meta.name, 
             dialogText=meta.licenseHTML, direction=wx.Layout_LeftToRight, 
             bitmap='document_icon', *args, **kwargs)
         
@@ -2350,7 +2356,7 @@ class HelpLicense(DialogCommand):
 class CheckForUpdate(SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(CheckForUpdate, self).__init__(menuText=_('Check for update'),
-            helpText=_('Check for the availability of a new version of %s')%meta.name,
+            helpText=_('Check for the availability of a new version of %s') % meta.name,
             bitmap='box_icon', *args, **kwargs)
         
     def doCommand(self, event):
@@ -2403,14 +2409,14 @@ class HelpTranslate(URLCommand):
     def __init__(self, *args, **kwargs):
         super(HelpTranslate, self).__init__( \
             menuText=_('Help improve &translations...'),
-            helpText=_('Help improve the translations of %s')%meta.name,
+            helpText=_('Help improve the translations of %s') % meta.name,
             bitmap='person_talking_icon', url=meta.translations_url, *args, **kwargs)
         
 
 class Donate(URLCommand):
     def __init__(self, *args, **kwargs):
         super(Donate, self).__init__(menuText=_('&Donate...'),
-            helpText=_('Donate to support the development of %s')%meta.name,
+            helpText=_('Donate to support the development of %s') % meta.name,
             bitmap='heart_icon', url=meta.donate_url, *args, **kwargs)
         
         
@@ -2573,7 +2579,7 @@ class CalendarViewerNavigationCommand(ViewerCommand):
     def doCommand(self, event):
         self.viewer.freeze()
         try:
-            self.viewer.SetViewType(self.calendarViewType) # pylint: disable-msg=E1101
+            self.viewer.SetViewType(self.calendarViewType)  # pylint: disable-msg=E1101
         finally:
             self.viewer.thaw()
 
@@ -2636,7 +2642,7 @@ class ViewerPieChartAngle(ViewerCommand, SettingsCommand):
         self.setCurrentAngle()
    
     def doCommand(self, event):
-        pass # Not used
+        pass  # Not used
         
     def getCurrentAngle(self):
         return self.settings.getint(self.viewer.settingsSection(),
@@ -2648,9 +2654,9 @@ class ViewerPieChartAngle(ViewerCommand, SettingsCommand):
    
 
 class RoundingPrecision(ToolbarChoiceCommandMixin, ViewerCommand, SettingsCommand):
-    roundingChoices =  (0, 1, 3, 5, 6, 10, 15, 20, 30, 60) # Minutes
-    choiceData = [minutes * 60 for minutes in roundingChoices] # Seconds
-    choiceLabels = [_('No rounding'), _('1 minute')] + [_('%d minutes')%minutes for minutes in roundingChoices[2:]]
+    roundingChoices =  (0, 1, 3, 5, 6, 10, 15, 20, 30, 60)  # Minutes
+    choiceData = [minutes * 60 for minutes in roundingChoices]  # Seconds
+    choiceLabels = [_('No rounding'), _('1 minute')] + [_('%d minutes') % minutes for minutes in roundingChoices[2:]]
 
     def doChoice(self, choice):
         self.settings.setint(self.viewer.settingsSection(), 'round', choice)
