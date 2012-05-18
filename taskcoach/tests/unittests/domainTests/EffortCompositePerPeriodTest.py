@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import config
 from taskcoachlib.domain import task, effort, date
 from taskcoachlib.thirdparty.pubsub import pub
+import EffortCompositeTest
 import test
 
 
@@ -43,7 +44,8 @@ class CompositeEffortPerPeriodTest(test.TestCase):
         self.composite = effort.CompositeEffortPerPeriod(\
             date.DateTime(2004, 1, 1, 0, 0, 0), 
             date.DateTime(2004, 1, 1, 23, 59, 59), self.taskList)
-
+        self.reducer = EffortCompositeTest.FakeEffortAggregator(self.composite)
+        
     def testInitialLength(self):
         self.assertEqual(0, len(self.composite))
         

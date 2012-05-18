@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib import patterns, render
-from taskcoachlib.domain import date, task
+from taskcoachlib import render
+from taskcoachlib.domain import date
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty.pubsub import pub
 import base
@@ -104,9 +104,6 @@ class BaseCompositeEffort(base.BaseEffort):  # pylint: disable-msg=W0223
     def _invalidateCache(self):
         raise NotImplementedError  # pragma: no cover
     
-    def _inCache(self, effort):
-        raise NotImplementedError  # pragma: no cover
-            
 
 class CompositeEffort(BaseCompositeEffort):
     ''' CompositeEffort is a lazy list (but cached) of efforts for one task
@@ -119,9 +116,6 @@ class CompositeEffort(BaseCompositeEffort):
         super(CompositeEffort, self).__init__(task, start, stop)
         self.__effortCache = {}  # {True: [efforts recursively], False: [efforts]}
         self._invalidateCache()
-        pub.subscribe(self.onTrackingChanged, task.trackingChangedEventType())
-        pub.subscribe(self.onTimeSpentChanged, task.timeSpentChangedEventType())
-        pub.subscribe(self.onRevenueChanged, task.hourlyFeeChangedEventType())
         '''
         FIMXE! CompositeEffort does not derive from base.Object
         patterns.Publisher().registerObserver(self.onAppearanceChanged,
@@ -146,9 +140,6 @@ class CompositeEffort(BaseCompositeEffort):
                  if self._inPeriod(effort)]
         self._isBeingTracked = self.isBeingTracked()
                 
-    def _inCache(self, effort):
-        return effort in self.__effortCache[True]
-
     def _getEfforts(self, recursive=True):  # pylint: disable-msg=W0221
         return self.__effortCache[recursive]
         
@@ -162,14 +153,6 @@ class CompositeEffort(BaseCompositeEffort):
                               self._getEfforts(False) if effort.description()]
         return '\n'.join(effortDescriptions)
     
-    def onTimeSpentChanged(self, newValue, sender):
-        if sender == self.task():
-            super(CompositeEffort, self).onTimeSpentChanged(newValue, sender)
-        
-    def onTrackingChanged(self, newValue, sender):
-        if sender == self.task():
-            super(CompositeEffort, self).onTrackingChanged(newValue, sender)
-        
     def onAppearanceChanged(self, event):    
         return  # FIXME: CompositeEffort does not derive from base.Object
         #patterns.Event(self.appearanceChangedEventType(), self, event.value()).send()
@@ -185,26 +168,12 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
             self._isBeingTracked = initialEffort.isBeingTracked()
         else:
             self._invalidateCache()
-        pub.subscribe(self.onTimeSpentChanged, 
-                      task.Task.timeSpentChangedEventType())
-        pub.subscribe(self.onRevenueChanged, 
-                      task.Task.hourlyFeeChangedEventType())
-        for eventType in self.taskList.modificationEventTypes():
-            patterns.Publisher().registerObserver(self.onTaskAddedOrRemoved, eventType,
-                                                  eventSource=self.taskList)
-        pub.subscribe(self.onTrackingChanged, 
-                      task.Task.trackingChangedEventType())
-
+            
     def addEffort(self, anEffort):
         assert self._inPeriod(anEffort)
         if anEffort not in self.__effortCache:
             self.__effortCache.append(anEffort)
 
-    def onTaskAddedOrRemoved(self, event):
-        if any(task.efforts() for task in event.values()):
-            self._invalidateCache()
-            self.notifyObserversOfDurationOrEmpty()
-            
     def task(self):
         class Total(object):
             # pylint: disable-msg=W0613
@@ -250,6 +219,3 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
             self.__effortCache.extend([effort for effort in eachTask.efforts() \
                                        if self._inPeriod(effort)])
         self._isBeingTracked = self.isBeingTracked()
-
-    def _inCache(self, effort):
-        return effort in self.__effortCache

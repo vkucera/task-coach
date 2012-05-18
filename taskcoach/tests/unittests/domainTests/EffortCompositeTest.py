@@ -16,12 +16,32 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib import patterns, config
+from taskcoachlib import config
 from taskcoachlib.domain import task, effort, date
 from taskcoachlib.thirdparty.pubsub import pub
 import test
 
 
+class FakeEffortAggregator(object):
+    def __init__(self, composite):
+        self.composite = composite
+        pub.subscribe(self.onTrackingChanged,
+                      task.Task.trackingChangedEventType())
+        pub.subscribe(self.onTimeSpentChanged,
+                      task.Task.timeSpentChangedEventType())
+        pub.subscribe(self.onRevenueChanged,
+                      task.Task.hourlyFeeChangedEventType())
+        
+    def onTimeSpentChanged(self, newValue, sender):
+        self.composite.onTimeSpentChanged(newValue, sender)
+            
+    def onTrackingChanged(self, newValue, sender):
+        self.composite.onTrackingChanged(newValue, sender)
+            
+    def onRevenueChanged(self, newValue, sender):
+        self.composite.onRevenueChanged(newValue, sender)
+    
+    
 class CompositeEffortTest(test.TestCase):
     def setUp(self):
         task.Task.settings = config.Settings(load=False)
@@ -40,11 +60,8 @@ class CompositeEffortTest(test.TestCase):
         self.composite = effort.CompositeEffort(self.task,
             date.DateTime(2004, 1, 1, 0, 0, 0),
             date.DateTime(2004, 1, 1, 23, 59, 59))
-        self.events = []
-    
-    def onEvent(self, event):
-        self.events.append(event)
-
+        self.fakeAggregator = FakeEffortAggregator(self.composite)
+        
     def testInitialLength(self):
         self.assertEqual(0, len(self.composite))
 
@@ -323,7 +340,9 @@ class CompositeEffortTest(test.TestCase):
         pub.subscribe(onEvent, effort.CompositeEffort.compositeEmptyEventType())
         self.task.addEffort(self.effort1)
         self.effort1.setTask(task.Task())
-        self.assertEqual([self.composite], events)
+        # We get the event twice: once because of setTask, second from the 
+        # changed duration 
+        self.assertEqual([self.composite, self.composite], events)
 
     def testGetDescription_ZeroEfforts(self):
         self.assertEqual('', self.composite.description())
@@ -371,10 +390,7 @@ class CompositeEffortWithSubTasksTest(test.TestCase):
         self.composite = effort.CompositeEffort(self.task,
             date.DateTime(2004, 1, 1, 0, 0, 0), 
             date.DateTime(2004, 1, 1, 23, 59, 59))
-        self.events = []
-
-    def onEvent(self, event):
-        self.events.append(event)
+        self.fakeAggregator = FakeEffortAggregator(self.composite)
 
     def testAddEffortToChildTaskNotification(self):
         events = []
@@ -410,7 +426,9 @@ class CompositeEffortWithSubTasksTest(test.TestCase):
             
         pub.subscribe(onEvent, effort.CompositeEffort.compositeEmptyEventType())
         self.child.removeEffort(self.childEffort)
-        self.assertEqual([self.composite], events)
+        # We get the event twice: once because of setTask, second from the 
+        # changed duration 
+        self.assertEqual([self.composite, self.composite], events)
 
     def testRemoveTrackedEffortFromChildTask(self):
         self.child.addEffort(self.trackedEffort)
@@ -527,13 +545,10 @@ class CompositeEffortWithSubTasksRevenueTest(test.TestCase):
         self.composite = effort.CompositeEffort(self.task,
             date.DateTime(2004, 1, 1, 0, 0, 0), 
             date.DateTime(2004, 1, 1, 23, 59, 59))
+        self.fakeAggregator = FakeEffortAggregator(self.composite)
         self.task.addEffort(self.taskEffort)
         self.child.addEffort(self.childEffort)
-        self.events = []
                 
-    def onEvent(self, event):
-        self.events.append(event)
- 
     def testRevenueWhenParentHasHourlyFee(self):
         self.task.setHourlyFee(100)
         self.assertEqual(self.taskEffort.duration().hours() * 100,

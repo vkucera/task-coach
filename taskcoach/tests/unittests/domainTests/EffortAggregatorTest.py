@@ -41,19 +41,26 @@ class EffortAggregatorTestCase(test.TestCase):
         self.task1.addChild(self.task3)
         self.task3.setParent(self.task1)
         self.effort1period1a = effort.Effort(self.task1, 
-            date.DateTime(2004,1,1,11,0,0), date.DateTime(2004,1,1,12,0,0))
+            date.DateTime(2004, 1, 1, 11, 0, 0), 
+            date.DateTime(2004, 1, 1, 12, 0, 0))
         self.effort2period1a = effort.Effort(self.task2, 
-            date.DateTime(2004,1,1,11,0,0), date.DateTime(2004,1,1,12,0,0))
+            date.DateTime(2004, 1, 1, 11, 0, 0), 
+            date.DateTime(2004, 1, 1, 12, 0, 0))
         self.effort1period1b = effort.Effort(self.task1, 
-            date.DateTime(2004,1,1,13,0,0), date.DateTime(2004,1,1,14,0,0))
+            date.DateTime(2004, 1, 1, 13, 0, 0), 
+            date.DateTime(2004, 1, 1, 14, 0, 0))
         self.effort2period1b = effort.Effort(self.task2, 
-            date.DateTime(2004,1,1,13,0,0), date.DateTime(2004,1,1,14,0,0))
+            date.DateTime(2004, 1, 1, 13, 0, 0), 
+            date.DateTime(2004, 1, 1, 14, 0, 0))
         self.effort1period2 = effort.Effort(self.task1, 
-            date.DateTime(2004,2,2,13,0,0), date.DateTime(2004,2,2,14,0,0))
+            date.DateTime(2004, 2, 2, 13, 0, 0), 
+            date.DateTime(2004, 2, 2, 14, 0, 0))
         self.effort1period3 = effort.Effort(self.task1,
-            date.DateTime(2004,1,1,10,0,0), date.DateTime(2005,1,1,10,0,0))
+            date.DateTime(2004, 1, 1, 10, 0, 0), 
+            date.DateTime(2005, 1, 1, 10, 0, 0))
         self.effort3period1a = effort.Effort(self.task3, 
-            date.DateTime(2004,1,1,14,0,0), date.DateTime(2004,1,1,15,0,0))
+            date.DateTime(2004, 1, 1, 14, 0, 0), 
+            date.DateTime(2004, 1, 1, 15, 0, 0))
         self.events = []
 
     def onEvent(self, event):
@@ -231,7 +238,7 @@ class CommonTestsMixin(object):
         self.taskList.append(self.task1)
         self.task1.addEffort(self.effort1period1a)
         self.task1.addEffort(self.effort1period1b)
-        self.effort1period1a.setStart(date.DateTime(2005,1,1,11,0,0))
+        self.effort1period1a.setStart(date.DateTime(2005, 1, 1, 11, 0, 0))
         self.assertEqual(4, len(self.effortAggregator))
 
     def testNotification_Add(self):
