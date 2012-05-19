@@ -21,6 +21,7 @@ import tempfile, wx, os
 from notifier import AbstractNotifier
 from taskcoachlib.meta import data
 
+
 class LibnotifyNotifier(AbstractNotifier):
     def __init__(self):
         super(LibnotifyNotifier, self).__init__()

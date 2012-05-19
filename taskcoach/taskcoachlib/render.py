@@ -35,22 +35,23 @@ def priority(priority):
     return str(priority)
 
  
-def timeLeft(timeLeft, completedTask):
+def timeLeft(time_left, completed_task):
     ''' Render time left as a text string. Returns an empty string for 
         completed tasks and "Infinite" for tasks without planned due date. 
         Otherwise it returns the number of days, hours, and minutes left. '''
-    if completedTask:
+    if completed_task:
         return ''
-    if timeLeft == datemodule.TimeDelta.max:
+    if time_left == datemodule.TimeDelta.max:
         return _('Infinite')
-    sign = '-' if timeLeft.days < 0 else ''
-    timeLeft = abs(timeLeft)
-    if timeLeft.days > 0:
-        days = _('%d days') % timeLeft.days if timeLeft.days > 1 else _('1 day')
+    sign = '-' if time_left.days < 0 else ''
+    time_left = abs(time_left)
+    if time_left.days > 0:
+        days = _('%d days') % time_left.days if time_left.days > 1 else \
+               _('1 day')
         days += ', '
     else:
         days = '' 
-    hours_and_minutes = ':'.join(str(timeLeft).split(':')[:-1]).split(', ')[-1]
+    hours_and_minutes = ':'.join(str(time_left).split(':')[:-1]).split(', ')[-1]
     return sign + days + hours_and_minutes
 
 

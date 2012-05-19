@@ -16,19 +16,19 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
-import logging
 from taskcoachlib import patterns
 from taskcoachlib.thirdparty import apscheduler
 import dateandtime
+import logging
 import timedelta
+import wx
 
 
 class Scheduler(apscheduler.scheduler.Scheduler):
     __metaclass__ = patterns.Singleton
     
     def __init__(self, *args, **kwargs):
-        self.createLogHandler()
+        self.__handler = self.createLogHandler()
         super(Scheduler, self).__init__(*args, **kwargs)
         self.__jobs = {}
         self.start()
@@ -37,11 +37,12 @@ class Scheduler(apscheduler.scheduler.Scheduler):
         # apscheduler logs, but doesn't provide a default handler itself, make it happy:
         schedulerLogger = logging.getLogger('taskcoachlib.thirdparty.apscheduler.scheduler')
         try:
-            self.__handler = logging.NullHandler()
+            handler = logging.NullHandler()
         except AttributeError:
             # NullHandler is new in Python 2.7, log to stderr if not available
-            self.__handler = logging.StreamHandler()
-        schedulerLogger.addHandler(self.__handler)
+            handler = logging.StreamHandler()
+        schedulerLogger.addHandler(handler)
+        return handler
 
     def removeLogHandler(self):
         # accumulation of handlers in the unit/language/etc tests makes them *slow*
@@ -49,7 +50,8 @@ class Scheduler(apscheduler.scheduler.Scheduler):
         schedulerLogger.removeHandler(self.__handler)
 
     def shutdown(self, wait=True, shutdown_threadpool=True):
-        super(Scheduler, self).shutdown(wait=wait, shutdown_threadpool=shutdown_threadpool)
+        super(Scheduler, self).shutdown(wait=wait, 
+                                        shutdown_threadpool=shutdown_threadpool)
         self.removeLogHandler()
 
     def schedule(self, function, dateTime):

@@ -22,12 +22,16 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.15', 'May 14, 2012',
+Release('1.3.15', 'May 19, 2012',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''On Windows 7, when the language is English (US), render times
 in the task viewer using AM/PM.'''),
+        Bug('''On Mac OS X and Windows, don't crash when waking up from 
+stand by.''', '3523648'),
         Bug('''Resetting task filters at midnight was not working properly.'''),
+        Bug('''Faster opening of task files when there are many effort 
+records.'''),
         ]
     ),
             

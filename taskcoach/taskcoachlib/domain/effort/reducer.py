@@ -46,8 +46,17 @@ class EffortAggregator(patterns.SetDecorator,
                       task.Task.effortsChangedEventType())
         patterns.Publisher().registerObserver(self.onChildAddedToTask,
             eventType=task.Task.addChildEventType())
+        for eventType in self.observable().modificationEventTypes():
+            patterns.Publisher().registerObserver(self.onTaskAddedOrRemoved, eventType,
+                                                  eventSource=self.observable())
         pub.subscribe(self.onEffortStartChanged, 
                       effort.Effort.startChangedEventType())
+        pub.subscribe(self.onTrackingChanged,
+                      task.Task.trackingChangedEventType())
+        pub.subscribe(self.onTimeSpentChanged,
+                      task.Task.timeSpentChangedEventType())
+        pub.subscribe(self.onRevenueChanged,
+                      task.Task.hourlyFeeChangedEventType())
     
     def extend(self, efforts):  # pylint: disable-msg=W0221
         for effort in efforts:
@@ -81,6 +90,12 @@ class EffortAggregator(patterns.SetDecorator,
         super(EffortAggregator, self).removeItemsFromSelf(compositesToRemove, 
                                                           event=event)
         
+    def onTaskAddedOrRemoved(self, event):
+        if any(task.efforts() for task in event.values()):
+            for eachComposite in self.getCompositesForTask(None):
+                eachComposite._invalidateCache()
+                eachComposite.notifyObserversOfDurationOrEmpty()
+            
     def onEffortAddedToTask(self, newValue, oldValue, sender):
         if sender not in self.observable():
             return
@@ -117,6 +132,23 @@ class EffortAggregator(patterns.SetDecorator,
             newComposites.extend(self.createComposites(task, [sender]))
         super(EffortAggregator, self).extendSelf(newComposites)
             
+    def onTimeSpentChanged(self, newValue, sender):
+        for affectedComposite in self.getCompositesForTask(sender):
+            affectedComposite.onTimeSpentChanged(newValue, sender)
+            
+    def onTrackingChanged(self, newValue, sender):
+        for affectedComposite in self.getCompositesForTask(sender):
+            affectedComposite.onTrackingChanged(newValue, sender)
+            
+    def onRevenueChanged(self, newValue, sender):
+        for affectedComposite in self.getCompositesForTask(sender):
+            affectedComposite.onRevenueChanged(newValue, sender)
+            
+    def getCompositesForTask(self, theTask):
+        return [eachComposite for eachComposite in self \
+                if theTask == eachComposite.task() or \
+                eachComposite.task().__class__.__name__ == 'Total']
+ 
     def createComposites(self, task, efforts):  # pylint: disable-msg=W0621
         newComposites = []
         for effort in efforts:
