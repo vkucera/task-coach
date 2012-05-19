@@ -16,9 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
 from taskcoachlib import patterns, config
 from taskcoachlib.domain import task, effort, date
+import test
 
 
 class EffortAggregatorTestCase(test.TestCase):
@@ -347,9 +347,8 @@ class MultipleAggregatorsTest(test.TestCase):
         self.taskList.append(aTask)
         # Make sure the start of the day and week are the same, 
         # in other words, use a Monday
-        anEffort = effort.Effort(aTask, date.DateTime(2006,8,28), 
-                                 date.DateTime(2006,8,29))
+        anEffort = effort.Effort(aTask, date.DateTime(2006, 8, 28), 
+                                 date.DateTime(2006, 8, 29))
         aTask.addEffort(anEffort)
         aTask.removeEffort(anEffort)
         self.failIf(self.effortPerDay)
-
