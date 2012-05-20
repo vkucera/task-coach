@@ -455,6 +455,17 @@ fedora14 = download_table(image='fedora',
                           prerequisites=prerequisites27,
                           installation='<code>sudo yum install --nogpgcheck %(filename_lower)s-%(version)s-1.fc*.noarch.rpm</code>')
 
+archlinux = download_table(image='archlinux',
+                           download_url='http://aur.archlinux.org/packages.php?ID=6005',
+                           package_type='Source tar archive',
+                           platform='Arch', platform_lower='arch',
+                           platform_versions_supported='Not applicable (Arch uses a rolling release)',
+                           prerequisites=prerequisites26,
+                           installation='''%(name)s is included in the Arch 
+User Repository. See the 
+<a href="https://wiki.archlinux.org/index.php/AUR_User_Guidelines">AUR user 
+guidelines</a>''')
+
 redhat_el4and5 = download_table(image='redhat',
                                 download_url='%(dist_download_prefix)s/%(filename)s-%(version)s.tar.gz',
                                 package_type='Source tar archive',
@@ -476,8 +487,8 @@ linux = download_table(image='linux',
 pages['download_for_linux'] = sep.join([download_header(platform='Linux',
                                                         release='%(version)s'), 
                                         ubuntu, debian, fedora14, gentoo, 
-                                        opensuse, redhat_el4and5, linux,
-                                        download_footer()])
+                                        opensuse, redhat_el4and5, archlinux,
+                                        linux, download_footer()])
 
 
 freeBSD = download_table(image='freebsd',
