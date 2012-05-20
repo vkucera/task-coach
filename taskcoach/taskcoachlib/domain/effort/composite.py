@@ -25,6 +25,10 @@ import base
 
 
 class BaseCompositeEffort(base.BaseEffort):  # pylint: disable-msg=W0223        
+    def __init__(self, *args, **kwargs):
+        super(BaseCompositeEffort, self).__init__(*args, **kwargs)
+        self.__isBeingTracked = False
+        
     def parent(self):
         # Composite efforts don't have a parent.
         return None
@@ -52,10 +56,8 @@ class BaseCompositeEffort(base.BaseEffort):  # pylint: disable-msg=W0223
                     self._getEfforts(recursive)), date.TimeDelta())
 
     def isBeingTracked(self, recursive=False):  # pylint: disable-msg=W0613
-        for effort in self._getEfforts():
-            if effort.isBeingTracked():
-                return True
-        return False
+        self.__isBeingTracked = any(effort.isBeingTracked() for effort in self._getEfforts())
+        return self.__isBeingTracked
 
     def durationDay(self, dayOffset):
         ''' Return the duration of this composite effort on a specific day. '''
@@ -89,12 +91,12 @@ class BaseCompositeEffort(base.BaseEffort):  # pylint: disable-msg=W0223
         self.sendRevenueChangedMessage()
 
     def onTrackingChanged(self, newValue, sender):  # pylint: disable-msg=W0613
-        wasBeingTracked = self._isBeingTracked
+        wasBeingTracked = self.__isBeingTracked
         self._invalidateCache()
-        if not wasBeingTracked and self._isBeingTracked:
+        if not wasBeingTracked and self.isBeingTracked():
             pub.sendMessage(self.trackingChangedEventType(), 
                             newValue=True, sender=self)
-        elif wasBeingTracked and not self._isBeingTracked:
+        elif wasBeingTracked and not self.isBeingTracked():
             pub.sendMessage(self.trackingChangedEventType(),
                             newValue=False, sender=self)
             
@@ -137,7 +139,6 @@ class CompositeEffort(BaseCompositeEffort):
     
     def _invalidateCache(self):
         self.__effortCache = dict()
-        self._isBeingTracked = self.isBeingTracked()
                 
     def _getEfforts(self, recursive=True):  # pylint: disable-msg=W0221
         try:
@@ -170,7 +171,6 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
         if initialEffort:
             assert self._inPeriod(initialEffort)
             self.__effortCache = [initialEffort]
-            self._isBeingTracked = initialEffort.isBeingTracked()
         else:
             self._invalidateCache()
             
@@ -225,4 +225,3 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
     
     def _invalidateCache(self):
         self.__effortCache = None
-        self._isBeingTracked = self.isBeingTracked()
