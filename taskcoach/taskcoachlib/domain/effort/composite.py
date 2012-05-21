@@ -25,10 +25,6 @@ import base
 
 
 class BaseCompositeEffort(base.BaseEffort):  # pylint: disable-msg=W0223        
-    def __init__(self, *args, **kwargs):
-        super(BaseCompositeEffort, self).__init__(*args, **kwargs)
-        self.__isBeingTracked = False
-        
     def parent(self):
         # Composite efforts don't have a parent.
         return None
@@ -56,8 +52,7 @@ class BaseCompositeEffort(base.BaseEffort):  # pylint: disable-msg=W0223
                     self._getEfforts(recursive)), date.TimeDelta())
 
     def isBeingTracked(self, recursive=False):  # pylint: disable-msg=W0613
-        self.__isBeingTracked = any(effort.isBeingTracked() for effort in self._getEfforts())
-        return self.__isBeingTracked
+        return any(effort.isBeingTracked() for effort in self._getEfforts())
 
     def durationDay(self, dayOffset):
         ''' Return the duration of this composite effort on a specific day. '''
@@ -89,17 +84,7 @@ class BaseCompositeEffort(base.BaseEffort):  # pylint: disable-msg=W0223
 
     def onRevenueChanged(self, newValue, sender):  # pylint: disable-msg=W0613
         self.sendRevenueChangedMessage()
-
-    def onTrackingChanged(self, newValue, sender):  # pylint: disable-msg=W0613
-        wasBeingTracked = self.__isBeingTracked
-        self._invalidateCache()
-        if not wasBeingTracked and self.isBeingTracked():
-            pub.sendMessage(self.trackingChangedEventType(), 
-                            newValue=True, sender=self)
-        elif wasBeingTracked and not self.isBeingTracked():
-            pub.sendMessage(self.trackingChangedEventType(),
-                            newValue=False, sender=self)
-            
+           
     def revenue(self, recursive=False):
         raise NotImplementedError  # pragma: no cover
     
