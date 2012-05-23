@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -107,7 +107,6 @@ def getDefaultProfileDir():
         for process in wmi.WMI().Win32_Process():
             if process.ExecutablePath and process.ExecutablePath.lower().endswith('thunderbirdportable.exe'):
                 _PORTABLECACHE = os.path.join(os.path.split(process.ExecutablePath)[0], 'Data', 'profile')
-                print 'Found:', _PORTABLECACHE
                 break
         else:
             raise ThunderbirdError(_('Could not find Thunderbird profile.'))

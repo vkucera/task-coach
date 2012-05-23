@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ You can edit this file, it will not be overwritten by %(name)s.
    }
 
    If the exported HTML file contains tasks it is possible to change the color 
-   of completed (or overdue, duesoon, inactive, active) tasks like this:
+   of completed (or overdue, duesoon, late, inactive, active) tasks like this:
    
    .completed {
        color: red;
@@ -51,10 +51,10 @@ class HTMLWriter(object):
         self.__filename = filename
         self.__cssFilename = os.path.splitext(filename)[0] + '.css' if filename else ''
 
-    def write(self, viewer, settings, selectionOnly=False, separateCSS=False):
+    def write(self, viewer, settings, selectionOnly=False, separateCSS=False, columns=None):
         cssFilename = os.path.basename(self.__cssFilename) if separateCSS else ''
         htmlText, count = generator.viewer2html(viewer, settings, cssFilename, 
-                                                selectionOnly)
+                                                selectionOnly, columns)
         self.__fd.write(htmlText)
         if separateCSS:
             self._writeCSS()

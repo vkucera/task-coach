@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -72,7 +72,7 @@ class TodoTxtWriterTestCase(test.wxTestCase):
         
     def testStartDate(self):
         self.taskFile.tasks().append(task.Task(subject='Get cheese', 
-                                               startDateTime=date.DateTime(2027,1,23,15,34,12)))
+                                               plannedStartDateTime=date.DateTime(2027,1,23,15,34,12)))
         self.writer.write(self.viewer, self.settings, False)
         self.assertEqual('2027-01-23 Get cheese\n', self.file.getvalue())
         
@@ -163,3 +163,11 @@ class TodoTxtWriterTestCase(test.wxTestCase):
                                                dueDateTime=date.DateTime(2011,1,1,16,50,10)))
         self.writer.write(self.viewer, self.settings, False)
         self.assertEqual('Export due date due:2011-01-01\n', self.file.getvalue())
+        
+    def testExportSelectionOnly(self):
+        cheese = task.Task(subject='Get cheese')
+        self.taskFile.tasks().append(cheese)
+        self.taskFile.tasks().append(task.Task(subject='Paint house'))
+        self.viewer.select([cheese])
+        self.writer.write(self.viewer, self.settings, True)
+        self.assertEqual('Get cheese\n', self.file.getvalue())

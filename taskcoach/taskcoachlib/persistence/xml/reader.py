@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,16 +18,20 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import re, os, stat, StringIO, wx
-import xml.etree.ElementTree as ET
-from taskcoachlib.domain import date, effort, task, category, note, attachment
-from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
-from taskcoachlib.thirdparty.guid import generate
-from taskcoachlib.thirdparty.deltaTime import nlTimeExpression
-from taskcoachlib.i18n import translate
+from .. import sessiontempfile  # pylint: disable-msg=F0401
+from taskcoachlib import meta
 from taskcoachlib.changes import ChangeMonitor
-from taskcoachlib import meta, patterns
-from .. import sessiontempfile # pylint: disable-msg=F0401
+from taskcoachlib.domain import date, effort, task, category, note, attachment
+from taskcoachlib.i18n import translate
+from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
+from taskcoachlib.thirdparty.deltaTime import nlTimeExpression
+from taskcoachlib.thirdparty.guid import generate
+import StringIO
+import os
+import re
+import stat
+import wx
+import xml.etree.ElementTree as ET
 
 
 class PIParser(ET.XMLTreeBuilder):
@@ -64,18 +68,17 @@ class XMLReader(object):
         parser = PIParser()
         tree = ET.parse(self.__fd, parser)
         root = tree.getroot()
-        self.__tskversion = parser.tskversion # pylint: disable-msg=W0201
+        self.__tskversion = parser.tskversion  # pylint: disable-msg=W0201
         if self.__tskversion > meta.data.tskversion:
-            raise XMLReaderTooNewException # Version number of task file is too high
+            raise XMLReaderTooNewException  # Version number of task file is too high
         tasks = self._parseTaskNodes(root)
         self._resolvePrerequisitesAndDependencies(tasks)
         categorizables = tasks[:]
         for eachTask in tasks:
             categorizables.extend(eachTask.children(recursive=True))
-        if self.__tskversion <= 15:
-            notes = []
-        else:
-            notes = self._parseNoteNodes(root)
+        for eachTask in tasks:
+            categorizables.extend(eachTask.notes(recursive=True))
+        notes = self._parseNoteNodes(root)
         categorizables.extend(notes)
         for eachNote in notes:
             categorizables.extend(eachNote.children(recursive=True))
@@ -106,14 +109,14 @@ class XMLReader(object):
     
     def _fixBrokenLines(self):
         ''' Remove spurious newlines from element tags. '''
-        self.__origFd = self.__fd # pylint: disable-msg=W0201
+        self.__origFd = self.__fd  # pylint: disable-msg=W0201
         self.__fd = StringIO.StringIO()
         self.__fd.name = self.__origFd.name
         lines = self.__origFd.readlines()
         for index in xrange(len(lines)):
             if lines[index].endswith('<TaskCoach-\n') or lines[index].endswith('</TaskCoach-\n'):
-                lines[index] = lines[index][:-1] # Remove newline
-                lines[index+1] = lines[index+1][:-1] # Remove newline
+                lines[index] = lines[index][:-1]  # Remove newline
+                lines[index + 1] = lines[index + 1][:-1]  # Remove newline
         self.__fd.write(''.join(lines))
         self.__fd.seek(0)
 
@@ -124,18 +127,19 @@ class XMLReader(object):
         tasksById = dict()
         
         def collectIds(tasks):
-            for task in tasks:
-                tasksById[task.id()] = task
-                collectIds(task.children())
+            for each_task in tasks:
+                tasksById[each_task.id()] = each_task
+                collectIds(each_task.children())
         
-        def addPrerequisitesAndDependencies(tasks, event):
-            for task in tasks:
-                if task.isDeleted():
+        def addPrerequisitesAndDependencies(tasks):
+            for each_task in tasks:
+                if each_task.isDeleted():
                     # Don't restore prerequisites and dependencies for deleted
                     # tasks
-                    task.setPrerequisites([], event=event)
+                    for deletedTask in [each_task] + each_task.children(recursive=True):
+                        deletedTask.setPrerequisites([])
                     continue
-                dummyPrerequisites = task.prerequisites()
+                dummyPrerequisites = each_task.prerequisites()
                 prerequisites = set()
                 for dummyPrerequisite in dummyPrerequisites:
                     try:
@@ -144,14 +148,13 @@ class XMLReader(object):
                         # Release 1.2.11 and older have a bug where tasks can
                         # have prerequisites listed that don't exist anymore
                         pass
-                task.setPrerequisites(prerequisites, event=event)
+                each_task.setPrerequisites(prerequisites)
                 for prerequisite in prerequisites:
-                    prerequisite.addDependencies([task], event=event)
-                addPrerequisitesAndDependencies(task.children(), event)
+                    prerequisite.addDependencies([each_task])
+                addPrerequisitesAndDependencies(each_task.children())
                 
         collectIds(tasks)
-        event = patterns.Event() # Create an event, but don't send it                
-        addPrerequisitesAndDependencies(tasks, event)
+        addPrerequisitesAndDependencies(tasks)
                 
     def _parseCategoryNodes(self, node, categorizablesById):
         return [self._parseCategoryNode(child, categorizablesById) \
@@ -182,7 +185,7 @@ class XMLReader(object):
         kwargs['categorizables'] = categorizables
         if self.__tskversion > 20:
             kwargs['attachments'] = self._parseAttachmentNodes(categoryNode)
-        return category.Category(**kwargs) # pylint: disable-msg=W0142
+        return category.Category(**kwargs)  # pylint: disable-msg=W0142
                       
     def _parseCategoryNodesFromTaskNodes(self, root, tasks):
         ''' In tskversion <=13 category nodes were subnodes of task nodes. '''
@@ -212,29 +215,33 @@ class XMLReader(object):
         
     def _parseTaskNode(self, taskNode):
         class DummyPrerequisite(object):
-            def __init__(self, id):
-                self.id = id
+            def __init__(self, prerequisite_id):
+                self.id = prerequisite_id
+                
             def __getattr__(self, attr):
                 ''' Ignore all method calls. '''
                 return lambda *args, **kwargs: None
             
+        plannedStartDateTimeAttributeName = 'startdate' if self.tskversion() <= 33 else 'plannedstartdate'
         kwargs = self._parseBaseCompositeAttributes(taskNode, self._parseTaskNodes)
         kwargs.update(dict(
-            startDateTime=date.parseDateTime(taskNode.attrib.get('startdate', ''), 
-                                             *self.defaultStartTime),
+            plannedStartDateTime=date.parseDateTime(taskNode.attrib.get(plannedStartDateTimeAttributeName, ''), 
+                                                    *self.defaultStartTime),
             dueDateTime=date.parseDateTime(taskNode.attrib.get('duedate', ''), 
                                            *self.defaultEndTime),
+            actualStartDateTime=date.parseDateTime(taskNode.attrib.get('actualstartdate', ''),
+                                                   *self.defaultStartTime),
             completionDateTime=date.parseDateTime(taskNode.attrib.get('completiondate', ''), 
                                                   *self.defaultEndTime),
-            percentageComplete=int(taskNode.attrib.get('percentageComplete','0')),
+            percentageComplete=self._parseIntAttribute(taskNode, 'percentageComplete'),
             budget=date.parseTimeDelta(taskNode.attrib.get('budget', '')),
-            priority=int(taskNode.attrib.get('priority', '0')),
+            priority=self._parseIntAttribute(taskNode, 'priority'),
             hourlyFee=float(taskNode.attrib.get('hourlyFee', '0')),
             fixedFee=float(taskNode.attrib.get('fixedFee', '0')),
             reminder=self._parseDateTime(taskNode.attrib.get('reminder', '')),
             reminderBeforeSnooze=self._parseDateTime(taskNode.attrib.get('reminderBeforeSnooze', '')),
             # Here we just add the ids, they will be converted to object references later on:
-            prerequisites=[DummyPrerequisite(id) for id in taskNode.attrib.get('prerequisites', '').split(' ') if id], 
+            prerequisites=[DummyPrerequisite(prerequisite_id) for prerequisite_id in taskNode.attrib.get('prerequisites', '').split(' ') if prerequisite_id], 
             shouldMarkCompletedWhenAllChildrenCompleted= \
                 self._parseBoolean(taskNode.attrib.get('shouldMarkCompletedWhenAllChildrenCompleted', '')),
             efforts=self._parseEffortNodes(taskNode),
@@ -242,7 +249,7 @@ class XMLReader(object):
             recurrence=self._parseRecurrence(taskNode)))
         if self.__tskversion > 20:
             kwargs['attachments'] = self._parseAttachmentNodes(taskNode)
-        return task.Task(**kwargs) # pylint: disable-msg=W0142
+        return task.Task(**kwargs)  # pylint: disable-msg=W0142
         
     def _parseRecurrence(self, taskNode):
         if self.__tskversion <= 19:
@@ -289,7 +296,6 @@ class XMLReader(object):
         attributes = dict(id=node.attrib.get('id', ''),
             subject=node.attrib.get('subject', ''),
             description=self._parseDescription(node),
-            ordering=long(node.attrib.get('ordering', '0L')),
             fgColor=self._parseTuple(node.attrib.get('fgColor', ''), None),
             bgColor=self._parseTuple(node.attrib.get(bgColorAttribute, ''), None),
             font=self._parseFontDesc(node.attrib.get('font', '')),
@@ -438,6 +444,12 @@ class XMLReader(object):
                 text = text[:-1]
         return text
                     
+    def _parseIntAttribute(self, node, attributeName):
+        try:
+            return int(node.attrib.get(attributeName, '0'))
+        except ValueError:
+            return 0
+        
     def _parseDateTime(self, dateTimeText, *timeDefaults):
         return self._parse(dateTimeText, date.parseDateTime, None, *timeDefaults)
     
@@ -501,22 +513,24 @@ class TemplateXMLReader(XMLReader):
 
     def _parseTaskNode(self, taskNode):
         attrs = dict()
-        for name in ['startdate', 'duedate', 'completiondate', 'reminder']:
+        attributeRenames = dict(startdate='plannedstartdate')
+        for name in ['startdate', 'plannedstartdate', 'duedate', 'completiondate', 'reminder']:
+            newName = attributeRenames.get(name, name)
             if taskNode.attrib.has_key(name + 'tmpl'):
                 if self.tskversion() < 32:
                     value = TemplateXMLReader.convertOldFormat(taskNode.attrib[name + 'tmpl'])
                 else:
                     value = taskNode.attrib[name + 'tmpl']
-                attrs[name] = value
-                taskNode.attrib[name] = str(nlTimeExpression.parseString(value).calculatedTime)
+                attrs[newName] = value
+                taskNode.attrib[newName] = str(nlTimeExpression.parseString(value).calculatedTime)
             else:
-                attrs[name] = None
+                attrs[newName] = None
         if taskNode.attrib.has_key('subject'):
             taskNode.attrib['subject'] = translate(taskNode.attrib['subject'])
-        task = super(TemplateXMLReader, self)._parseTaskNode(taskNode)
+        parsed_task = super(TemplateXMLReader, self)._parseTaskNode(taskNode)
         for name, value in attrs.items():
-            setattr(task, name + 'tmpl', value)
-        return task
+            setattr(parsed_task, name + 'tmpl', value)
+        return parsed_task
 
     @staticmethod
     def convertOldFormat(expr, now=date.Now):

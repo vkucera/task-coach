@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,6 +22,8 @@ from taskcoachlib.domain import date
 
 
 class VCalendarParserTest(test.TestCase):
+    # pylint: disable-msg=W0511
+
     def setUp(self):
         self.parser = persistence.icalendar.ical.VCalendarParser()
         
@@ -31,18 +33,25 @@ class VCalendarParserTest(test.TestCase):
            
     def testEmptyVTodo(self):
         self.parser.parse(['BEGIN:VTODO', 'END:VTODO'])
-        self.assertEqual(dict(status=0, startDateTime=date.DateTime()), 
+        self.assertEqual(dict(status=0, plannedStartDateTime=date.DateTime()), 
                          self.parser.tasks[0])
         
     def testSubject(self):
         self.parser.parse(['BEGIN:VTODO', 'SUBJECT:Test', 'END:VTODO'])
         self.assertEqual(dict(status=0, subject='Test', 
-                              startDateTime=date.DateTime()), 
+                              plannedStartDateTime=date.DateTime()), 
                          self.parser.tasks[0])
         
     def testDueDate(self):
         self.parser.parse(['BEGIN:VTODO', 'DUE:20100101T120000', 'END:VTODO'])
         self.assertEqual(dict(status=0, 
                               dueDateTime=date.DateTime(2010,1,1,12,0,0), 
-                              startDateTime=date.DateTime()), 
+                              plannedStartDateTime=date.DateTime()), 
+                         self.parser.tasks[0])
+
+    def testPercentageComplete(self):
+        self.parser.parse(['BEGIN:VTODO', 'PERCENT-COMPLETE:56', 'END:VTODO'])
+        self.assertEqual(dict(status=0, 
+                              percentageComplete=56, 
+                              plannedStartDateTime=date.DateTime()), 
                          self.parser.tasks[0])

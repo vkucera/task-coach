@@ -92,7 +92,7 @@ class FileMonitor(object):
         if isinstance(filename, unicode):
             filename = filename.encode('UTF-8') # Not sure...
 
-        self.filename = filename
+        self._filename = filename
         path, name = os.path.split(filename)
 
         self.fd = None
@@ -141,11 +141,11 @@ class FileMonitor(object):
                             self.onFileChanged()
                     elif self.state == 1:
                         # The event can only concern the directory anyway.
-                        if os.path.exists(self.filename):
+                        if os.path.exists(self._filename):
                             # File was re-created
-                            self.fd = open_(self.filename, O_EVTONLY)
+                            self.fd = open_(self._filename, O_EVTONLY)
                             if self.fd < 0:
-                                raise OSError('Could not open "%s"' % self.filename)
+                                raise OSError('Could not open "%s"' % self._filename)
                             EV_SET(changes[1], self.fd, EVFILT_VNODE, EV_ADD | EV_ENABLE | EV_ONESHOT,
                                    NOTE_WRITE | NOTE_EXTEND | NOTE_DELETE | NOTE_ATTRIB | \
                                    NOTE_LINK | NOTE_RENAME | NOTE_REVOKE, 0, 0)
@@ -157,7 +157,7 @@ class FileMonitor(object):
     def stop(self):
         self.cancelled = True
         # To break the kevent() call
-        tempfile.TemporaryFile(dir=os.path.split(self.filename)[0])
+        tempfile.TemporaryFile(dir=os.path.split(self._filename)[0])
 
     def close(self):
         if self.fd is not None:
@@ -171,7 +171,7 @@ class FileMonitor(object):
         self.close()
 
     def onFileChanged(self):
-        self.callback(self.filename)
+        self.callback(self._filename)
 
 
 class FilesystemNotifier(base.NotifierBase):
@@ -192,8 +192,8 @@ class FilesystemNotifier(base.NotifierBase):
                 self.monitor = None
                 self.thread = None
             super(FilesystemNotifier, self).setFilename(filename)
-            if self.filename:
-                self.monitor = FileMonitor(self.filename, self._onFileChanged)
+            if self._filename:
+                self.monitor = FileMonitor(self._filename, self._onFileChanged)
                 self.thread = threading.Thread(target=self._run)
                 self.thread.setDaemon(True)
                 self.thread.start()

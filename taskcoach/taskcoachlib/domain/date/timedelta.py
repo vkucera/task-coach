@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import datetime
+import datetime, math
 
 class TimeDelta(datetime.timedelta):
     millisecondsPerSecond = 1000
@@ -50,6 +50,11 @@ class TimeDelta(datetime.timedelta):
         ''' Timedelta expressed in number of minutes. '''
         hours, minutes, seconds = self.hoursMinutesSeconds()
         return self.sign() * (hours * 60 + minutes + (seconds / 60.))
+    
+    def totalSeconds(self):
+        ''' Timedelta expressed in number of seconds. '''
+        hours, minutes, seconds = self.hoursMinutesSeconds()
+        return self.sign() * (hours * 3600 + minutes * 60 + seconds)        
         
     def milliseconds(self):
         ''' Timedelta expressed in number of milliseconds. '''
@@ -57,6 +62,17 @@ class TimeDelta(datetime.timedelta):
         return int(round((self.days * self.millisecondsPerDay) + \
                          (self.seconds * self.millisecondsPerSecond) + \
                          (self.microseconds * self.millisecondsPerMicroSecond)))
+        
+    def round(self, hours=0, minutes=0, seconds=0, alwaysUp=False):
+        ''' Round the timedelta to the nearest x units. '''
+        assert [hours, minutes, seconds].count(0) >= 2
+        roundingUnit = hours * 3600 + minutes * 60 + seconds
+        if roundingUnit:
+            round_ = math.ceil if alwaysUp else round
+            roundedSeconds = round_(self.totalSeconds() / float(roundingUnit)) * roundingUnit
+            return self.__class__(0, roundedSeconds)
+        else:
+            return self
         
     def __add__(self, other):
         ''' Make sure we return a TimeDelta instance and not a 

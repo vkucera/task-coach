@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -56,7 +56,7 @@ class TodoTxtReader(object):
         match = todoTxtRE.match(line)
         priority = self.priority(match)    
         completionDateTime = self.completionDateTime(match, now)
-        startDateTime = self.startDateTime(match)
+        plannedStartDateTime = self.plannedStartDateTime(match)
         categories = self.categories(match, event)
        
         recursiveSubject = match.group('subject')
@@ -65,10 +65,10 @@ class TodoTxtReader(object):
         for subject in subjects:
             newTask = self.findOrCreateTask(subject.strip(), newTask, event)
         
-        newTask.setPriority(priority, event=event)
-        newTask.setStartDateTime(startDateTime, event=event)
-        newTask.setCompletionDateTime(completionDateTime, event=event)
-        newTask.setDueDateTime(dueDateTime, event=event)
+        newTask.setPriority(priority)
+        newTask.setPlannedStartDateTime(plannedStartDateTime)
+        newTask.setCompletionDateTime(completionDateTime)
+        newTask.setDueDateTime(dueDateTime)
         for eachCategory in categories:
             newTask.addCategory(eachCategory, event=event)
             eachCategory.addCategorizable(newTask, event=event)        
@@ -87,7 +87,7 @@ class TodoTxtReader(object):
             return date.DateTime()
         
     @classmethod
-    def startDateTime(cls, match):
+    def plannedStartDateTime(cls, match):
         startDateText = match.group('startDate')
         return cls.dateTime(startDateText) if startDateText else date.DateTime()
     

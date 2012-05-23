@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ class AutoExporterTestCase(test.TestCase):
     def testAddOneTaskWhenAutoSaveIsOn(self):
         self.settings.set('file', 'autoexport', '["Todo.txt"]')
         self.settings.set('file', 'autosave', 'True')
-        persistence.AutoSaver(self.settings)
+        autosaver = persistence.AutoSaver(self.settings)
         self.taskFile.tasks().append(task.Task(subject='Some task'))
         self.assertEqual('Some task\n', file(self.txtFilename, 'r').read())
         
@@ -63,7 +63,7 @@ class AutoExporterTestCase(test.TestCase):
     def testImportOneTaskWhenAutoSaving(self):
         self.settings.set('file', 'autoimport', '["Todo.txt"]')
         self.settings.set('file', 'autosave', 'True')
-        persistence.AutoSaver(self.settings)
+        autosaver = persistence.AutoSaver(self.settings)
         with file(self.txtFilename, 'w') as todoTxtFile:
             todoTxtFile.write('Imported task\n')
         self.taskFile.tasks().append(task.Task(subject='Some task'))

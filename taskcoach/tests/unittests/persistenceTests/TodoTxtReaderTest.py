@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ class TodoTxtReaderTestCase(test.TestCase):
         
     def assertStartDate(self, *dateTimeArgs):
         self.assertEqual(date.DateTime(*dateTimeArgs), 
-                         list(self.tasks)[0].startDateTime())
+                         list(self.tasks)[0].plannedStartDateTime())
         
     def assertCompletionDate(self, *dateTimeArgs, **kwargs):
         expectedDateTime = kwargs['dateTime'] if 'dateTime' in kwargs else date.DateTime(*dateTimeArgs)

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -92,20 +92,20 @@ class NoteTest(test.TestCase):
         
     def testNewChild(self):
         child = self.note.newChild(subject='child')
-        self.assertEqual('child', child.subject()) # pylint: disable-msg=E1101
+        self.assertEqual('child', child.subject())  # pylint: disable-msg=E1101
         
     def testGetState(self):
         self.assertEqual(dict(id=self.note.id(), subject='', description='', parent=None,
             categories=set(), attachments=[], children=self.note.children(),
             status=self.note.getStatus(), fgColor=None, bgColor=None, font=None,
-            icon='', selectedIcon='', ordering=0L),
+            icon='', selectedIcon=''),
             self.note.__getstate__())
         
     def testSetState(self):
         self.note.__setstate__(dict(id='id', subject='new', description='new', 
             parent=None, children=[], status=42, attachments=[], categories=[],
-            fgColor=(1,1,1,1), bgColor=(0,0,0,255), font=wx.SWISS_FONT,
-            icon='icon', selectedIcon='selected', ordering=0L))
+            fgColor=(1, 1, 1, 1), bgColor=(0, 0, 0, 255), font=wx.SWISS_FONT,
+            icon='icon', selectedIcon='selected'))
         self.assertEqual('new', self.note.description())
         
         
@@ -120,7 +120,7 @@ class NoteOwnerTest(test.TestCase):
     
     # pylint: disable-msg=E1101
         
-    def registerObserver(self): # pylint: disable-msg=W0221
+    def registerObserver(self):  # pylint: disable-msg=W0221
         patterns.Publisher().registerObserver(self.onEvent,
             note.NoteOwner.notesChangedEventType())
         

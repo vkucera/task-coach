@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Carl Zmola <zmola@acm.org>
 
@@ -475,6 +475,7 @@ class RecurrenceEntry(wx.Panel):
         recurrenceOn = event.String != _('None')
         self._maxRecurrenceCheckBox.Enable(recurrenceOn)
         self._recurrenceFrequencyEntry.Enable(recurrenceOn)
+        self._scheduleChoice.Enable(recurrenceOn)
         self._maxRecurrenceCountEntry.Enable(recurrenceOn and \
             self._maxRecurrenceCheckBox.IsChecked())
         self.updateRecurrenceLabel()
@@ -485,7 +486,7 @@ class RecurrenceEntry(wx.Panel):
         self._maxRecurrenceCountEntry.Enable(maxRecurrenceOn)
         self.onRecurrenceEdited()
 
-    def onRecurrenceEdited(self, event=None):
+    def onRecurrenceEdited(self, event=None): # pylint: disable-msg=W0613
         wx.PostEvent(self, RecurrenceEntryEvent())
         
     def SetValue(self, recurrence):

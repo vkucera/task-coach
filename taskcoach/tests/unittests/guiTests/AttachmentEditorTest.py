@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ from taskcoachlib.domain import attachment
 
 
 class DummyEvent(object):
-    def Skip(self):
+    def Skip(self): # pragma: no cover
         pass
 
 
@@ -35,8 +35,7 @@ class AttachmentEditorTest(test.wxTestCase):
         self.attachments = attachment.AttachmentList()
         self.attachments.append(self.attachment)
         self.editor = gui.dialog.editor.AttachmentEditor(self.frame, 
-            self.attachments, self.settings, self.attachments, self.taskFile, 
-            raiseDialog=False)
+            self.attachments, self.settings, self.attachments, self.taskFile)
 
     def tearDown(self):
         super(AttachmentEditorTest, self).tearDown()
@@ -47,18 +46,18 @@ class AttachmentEditorTest(test.wxTestCase):
         page = self.editor._interior[0]
         page._subjectEntry.SetFocus()
         page._subjectEntry.SetValue(newSubject)
-        if operating_system.isGTK():
+        if operating_system.isGTK(): # pragma: no cover
             page._subjectSync.onAttributeEdited(DummyEvent())
-        else:
+        else: # pragma: no cover
             page._descriptionEntry.SetFocus()
         
     def setDescription(self, newDescription):
         page = self.editor._interior[0]
         page._descriptionEntry.SetFocus()
         page._descriptionEntry.SetValue(newDescription)
-        if operating_system.isGTK():
+        if operating_system.isGTK(): # pragma: no cover
             page._descriptionSync.onAttributeEdited(DummyEvent())
-        else:
+        else: # pragma: no cover
             page._subjectEntry.SetFocus()
         
     def testCreate(self):

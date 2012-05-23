@@ -85,8 +85,8 @@ class FilesystemNotifier(base.NotifierBase):
                 self.watcher = None
                 self.thread = None
             super(FilesystemNotifier, self).setFilename(filename)
-            if self.filename:
-                self.watcher = DirectoryWatcher(self.path)
+            if self._filename:
+                self.watcher = DirectoryWatcher(self._path)
                 self.thread = threading.Thread(target=self._run)
                 self.thread.setDaemon(True)
                 self.thread.start()
@@ -111,7 +111,7 @@ class FilesystemNotifier(base.NotifierBase):
         while True:
             self.lock.acquire()
             try:
-                watcher, myname = self.watcher, self.filename
+                watcher, myname = self.watcher, self._filename
             finally:
                 self.lock.release()
 

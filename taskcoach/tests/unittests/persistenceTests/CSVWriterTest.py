@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -46,19 +46,22 @@ class CSVWriterTestCase(test.wxTestCase):
         self.viewer = gui.viewer.TaskViewer(self.frame, self.taskFile,
             self.settings)
 
-    def __writeAndRead(self, selectionOnly, separateDateAndTimeColumns):
+    def __writeAndRead(self, selectionOnly, separateDateAndTimeColumns, columns):
         self.writer.write(self.viewer, self.settings, selectionOnly, 
-                          separateDateAndTimeColumns=separateDateAndTimeColumns)
+                          separateDateAndTimeColumns=separateDateAndTimeColumns,
+                          columns=columns)
         return self.fd.getvalue()
-    
-    def expectInCSV(self, csvFragment, selectionOnly=False, separateDateAndTimeColumns=False):
-        csv = self.__writeAndRead(selectionOnly, separateDateAndTimeColumns)
+
+    def expectInCSV(self, csvFragment, selectionOnly=False, separateDateAndTimeColumns=False,
+                    columns=None):
+        csv = self.__writeAndRead(selectionOnly, separateDateAndTimeColumns, columns)
         self.failUnless(csvFragment in csv, 
-                        '%s not in %s'%(csvFragment, csv))
+                        '%s not in %s' % (csvFragment, csv))
     
-    def expectNotInCSV(self, csvFragment, selectionOnly=False, separateDateAndTimeColumns=False):
-        csv = self.__writeAndRead(selectionOnly, separateDateAndTimeColumns)
-        self.failIf(csvFragment in csv, '%s in %s'%(csvFragment, csv))
+    def expectNotInCSV(self, csvFragment, selectionOnly=False, separateDateAndTimeColumns=False,
+                       columns=None):
+        csv = self.__writeAndRead(selectionOnly, separateDateAndTimeColumns, columns)
+        self.failIf(csvFragment in csv, '%s in %s' % (csvFragment, csv))
 
     def selectItem(self, items):
         self.viewer.select(items)
@@ -85,16 +88,36 @@ class TaskTestsMixin(object):
         self.expectNotInCSV('Child', selectionOnly=True)
         
     def testWriteSeparateDateAndTimeColumns(self):
-        startDateTime = date.Now()
-        self.task.setStartDateTime(startDateTime)
-        self.expectInCSV(','.join((render.date(startDateTime), render.time(startDateTime))),
+        plannedStartDateTime = date.Now()
+        self.task.setPlannedStartDateTime(plannedStartDateTime)
+        self.expectInCSV(','.join((render.date(plannedStartDateTime), render.time(plannedStartDateTime))),
                          separateDateAndTimeColumns=True)
-                
+        
+    def testWriteSeparateDateAndTimeColumnsWithDateBefore1900(self):
+        plannedStartDateTime = date.DateTime(1600, 1, 1, 12, 30, 0)
+        self.task.setPlannedStartDateTime(plannedStartDateTime)
+        self.expectInCSV(','.join((render.date(plannedStartDateTime), render.time(plannedStartDateTime))),
+                         separateDateAndTimeColumns=True)       
+               
     def testDontWriteSeparateDateAndTimeColumns(self):
-        startDateTime = date.Now()
-        self.task.setStartDateTime(startDateTime)
-        self.expectInCSV(' '.join((render.date(startDateTime), render.time(startDateTime))),
+        plannedStartDateTime = date.Now()
+        self.task.setPlannedStartDateTime(plannedStartDateTime)
+        self.expectInCSV(' '.join((render.date(plannedStartDateTime), render.time(plannedStartDateTime))),
                          separateDateAndTimeColumns=False)
+                
+    def testDontWriteDefaultDateTimes(self):
+        defaultDateTime = date.DateTime()
+        self.expectNotInCSV(' '.join([render.date(defaultDateTime), render.time(defaultDateTime)]),
+                            separateDateAndTimeColumns=False)
+
+    def testDontWriteDefaultDateTimesWithSeparatedDateAndTimeColumns(self):
+        defaultDateTime = date.DateTime()
+        self.expectNotInCSV(','.join([render.date(defaultDateTime), render.time(defaultDateTime)]),
+                            separateDateAndTimeColumns=True)
+        
+    def testSpecifyColumns(self):
+        self.task.setPriority(999)
+        self.expectInCSV('999', columns=self.viewer.columns())
                 
         
 class CSVListWriterTest(TaskTestsMixin, CSVWriterTestCase):
@@ -146,4 +169,3 @@ class EffortWriterTest(CSVWriterTestCase):
         self.viewer.widget.selectall()
         self.viewer.updateSelection()
         self.expectInCSV('Total', selectionOnly=True)
-        

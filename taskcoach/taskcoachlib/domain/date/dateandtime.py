@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -128,9 +128,9 @@ def parseDateTime(string, *timeDefaults):
         return None
     else:
         args = [int(arg) for arg in re.split('[-:. ]', string)]
-        if len(args) == 3: # We parsed a date, no time
+        if len(args) == 3:  # We parsed a date, no time
             args.extend(timeDefaults)
-        return DateTime(*args) # pylint: disable-msg=W0142
+        return DateTime(*args)  # pylint: disable-msg=W0142
         
 
 def Now():

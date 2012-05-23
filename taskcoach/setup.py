@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,9 +18,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import platform, os
 from distutils.core import setup
 from taskcoachlib import meta
+import platform
+import os
+import sys
 
 
 def findPackages(base):
@@ -31,9 +33,16 @@ def findPackages(base):
         if os.path.isdir(fname) and \
                os.path.exists(os.path.join(fname, '__init__.py')):
             result.extend(findPackages(fname))
-
     return result
 
+
+def majorAndMinorPythonVersion():
+    info = sys.version_info
+    try:
+        return info.major, info.minor
+    except AttributeError:
+        return info[0], info[1]
+    
 
 setupOptions = { 
     'name': meta.filename,
@@ -53,7 +62,6 @@ setupOptions = {
         'License :: OSI Approved :: GNU General Public License (GPL)',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.5',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Topic :: Office/Business']}
@@ -61,29 +69,27 @@ setupOptions = {
 # Add available translations:
 languages = sorted(meta.data.languages.keys())
 for language in languages:
-    setupOptions['classifiers'].append('Natural Language :: %s'%language)
+    setupOptions['classifiers'].append('Natural Language :: %s' % language)
 
 system = platform.system()
 if system == 'Linux':
     # Add data files for Debian-based systems:
     current_dist = [dist.lower() for dist in platform.dist()]
     if 'debian' in current_dist or 'ubuntu' in current_dist:
-        setupOptions['data_files'] = [\
-	    ('share/applications', ['build.in/fedora/taskcoach.desktop']), 
-	    ('share/pixmaps', ['icons.in/taskcoach.png'])]
+        setupOptions['data_files'] = [('share/applications', ['build.in/fedora/taskcoach.desktop']), 
+                                      ('share/pixmaps', ['icons.in/taskcoach.png'])]
 elif system == 'Windows':
     setupOptions['scripts'].append('taskcoach.pyw')
-    import sys
-    info = sys.version_info
-    sys.path.insert(0, os.path.join('taskcoachlib', 'bin.in', 'windows', 'py%d%d' % (info.major, info.minor)))
+    major, minor = majorAndMinorPythonVersion()
+    sys.path.insert(0, os.path.join('taskcoachlib', 'bin.in', 'windows', 'py%d%d' % (major, minor)))
     import _pysyncml
 elif system == 'Darwin':
     # When packaging for MacOS, choose the right binary depending on
     # the platform word size. Actually, we're always packaging on 32
     # bits.
-    import sys, struct
+    import struct
     wordSize = '32' if struct.calcsize('L') == 4 else '64'
-    sys.path.insert(0, os.path.join('taskcoachlib', 'bin.in', 'macos', 'IA%s'%wordSize))
+    sys.path.insert(0, os.path.join('taskcoachlib', 'bin.in', 'macos', 'IA%s' % wordSize))
     sys.path.insert(0, os.path.join('extension', 'macos', 'bin-ia32'))
     # pylint: disable-msg=F0401,W0611
     import _growl, _growlImage, _powermgt
@@ -91,4 +97,4 @@ elif system == 'Darwin':
 
 
 if __name__ == '__main__':
-    setup(**setupOptions) # pylint: disable-msg=W0142
+    setup(**setupOptions)  # pylint: disable-msg=W0142

@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -39,7 +39,8 @@ class BaseCommand(patterns.Command):
         return self.singular_name%self.name_subject(self.items[0]) if len(self.items) == 1 else self.plural_name
 
     def name_subject(self, item):
-        return item.subject()
+        subject = item.subject()
+        return subject if len(subject) < 60 else subject[:57] + '...'
     
     def itemsAreNew(self):
         return False
@@ -91,12 +92,14 @@ class SaveStateMixin(object):
         self.objectsToBeSaved = objects
         self.oldStates = self.__getStates()
 
-    def undoStates(self):
+    @patterns.eventSource
+    def undoStates(self, event=None):
         self.newStates = self.__getStates()
-        self.__setStates(self.oldStates)
+        self.__setStates(self.oldStates, event=event)
 
-    def redoStates(self):
-        self.__setStates(self.newStates)
+    @patterns.eventSource
+    def redoStates(self, event=None):
+        self.__setStates(self.newStates, event=event)
 
     def __getStates(self):
         return [objectToBeSaved.__getstate__() for objectToBeSaved in 
@@ -136,34 +139,27 @@ class NewItemCommand(BaseCommand):
     def itemsAreNew(self):
         return True
 
-    def do_command(self):
-        self.list.extend(self.items)
+    @patterns.eventSource
+    def do_command(self, event=None):
+        self.list.extend(self.items) # Don't use the event to force this change to be notified first
+        event.addSource(self, type='newitem', *self.items)
 
-    def undo_command(self):
-        self.list.removeItems(self.items)
+    @patterns.eventSource
+    def undo_command(self, event=None):
+        self.list.removeItems(self.items, event=event)
 
-    def redo_command(self):
-        self.list.extend(self.items)
-        
+    @patterns.eventSource
+    def redo_command(self, event=None):
+        self.list.extend(self.items) # Don't use the event to force this change to be notified first
+        event.addSource(self, type='newitem', *self.items)
 
-class NewSubItemCommand(BaseCommand):
+
+class NewSubItemCommand(NewItemCommand):
     def name_subject(self, subitem):
         # Override to use the subject of the parent of the new subitem instead
         # of the subject of the new subitem itself, which wouldn't be very
         # interesting because it's something like 'New subitem'.
         return subitem.parent().subject()
-    
-    def itemsAreNew(self):
-        return True
-
-    def do_command(self):
-        self.list.extend(self.items)
-
-    def undo_command(self):
-        self.list.removeItems(self.items)
-
-    def redo_command(self):
-        self.list.extend(self.items)
 
     
 class CopyCommand(BaseCommand):
@@ -292,80 +288,31 @@ class DragAndDropCommand(BaseCommand, SaveStateMixin, CompositeMixin):
     
     def __init__(self, *args, **kwargs):
         dropTargets = kwargs.pop('drop')
-        self.__itemToDropOn = dropTargets[0] if dropTargets else None
-        self.__part = kwargs.pop('part', 0)
+        self._itemToDropOn = dropTargets[0] if dropTargets else None
         super(DragAndDropCommand, self).__init__(*args, **kwargs)
         self.saveStates(self.getItemsToSave())
         
     def getItemsToSave(self):
         toSave = self.items[:]
-        if self.__itemToDropOn is not None:
-            toSave.insert(0, self.__itemToDropOn)
-        if self.__part != 0:
-            toSave.extend(self.getSiblings())
+        if self._itemToDropOn is not None:
+            toSave.insert(0, self._itemToDropOn)
         return toSave
     
     def canDo(self):
-        return self.__itemToDropOn not in (self.items + \
+        return self._itemToDropOn not in (self.items + \
             self.getAllChildren(self.items) + self.getAllParents(self.items))
 
-    def getSiblings(self):
-        siblings = []
-        for item in self.list:
-            if item.parent() == self.__itemToDropOn.parent() and item not in self.items:
-                siblings.append(item)
-        return siblings
-
     def do_command(self):
-        ## if self.__part == 0:
-        if True:
-            self.list.removeItems(self.items)
-            for item in self.items:
-                item.setParent(self.__itemToDropOn)
-            self.list.extend(self.items)
-        else:
-            siblings = self.getSiblings()
-            self.list.removeItems(self.items)
-            for item in self.items:
-                item.setParent(self.__itemToDropOn.parent())
-
-            minOrdering = min([item.ordering() for item in self.items])
-            maxOrdering = max([item.ordering() for item in self.items])
-
-            insertIndex = siblings.index(self.__itemToDropOn) + (self.__part + 1) // 2
-
-            # Simple special cases
-            if insertIndex == 0:
-                minOrderingOfSiblings = min([item.ordering() for item in siblings])
-                for item in self.items:
-                    item.setOrdering(item.ordering() - maxOrdering + minOrderingOfSiblings - 1)
-            elif insertIndex == len(siblings):
-                maxOrderingOfSiblings = max([item.ordering() for item in siblings])
-                for item in self.items:
-                    item.setOrdering(item.ordering() - minOrdering + maxOrderingOfSiblings + 1)
-            else:
-                maxOrderingOfPreviousSiblings = max([item.ordering() for idx, item in enumerate(siblings) if idx < insertIndex])
-                minOrderingOfPreviousSiblings = min([item.ordering() for idx, item in enumerate(siblings) if idx < insertIndex])
-                maxOrderingOfNextSiblings = max([item.ordering() for idx, item in enumerate(siblings) if idx >= insertIndex])
-                minOrderingOfNextSiblings = min([item.ordering() for idx, item in enumerate(siblings) if idx >= insertIndex])
-                if insertIndex < len(siblings) // 2:
-                    for item in self.items:
-                        item.setOrdering(item.ordering() - maxOrdering - 1 + minOrderingOfNextSiblings)
-                    for item in siblings[:insertIndex]:
-                        item.setOrdering(item.ordering() - maxOrderingOfPreviousSiblings - 1 + minOrdering - maxOrdering - 1 + minOrderingOfNextSiblings)
-                else:
-                    for item in self.items:
-                        item.setOrdering(item.ordering() - minOrdering + 1 + maxOrderingOfPreviousSiblings)
-                    for item in siblings[insertIndex:]:
-                        item.setOrdering(item.ordering() - minOrderingOfNextSiblings + 1 + maxOrdering - minOrdering + 1 + maxOrderingOfPreviousSiblings)
-
-            self.list.extend(self.items)
+        self.list.removeItems(self.items)
+        for item in self.items:
+            item.setParent(self._itemToDropOn)
+        self.list.extend(self.items)
 
     def undo_command(self):
         self.list.removeItems(self.items)
         self.undoStates()
         self.list.extend(self.items)
-        
+
     def redo_command(self):
         self.list.removeItems(self.items)
         self.redoStates()
@@ -377,7 +324,7 @@ class EditSubjectCommand(BaseCommand):
     singular_name = _('Edit subject "%s"')
 
     def __init__(self, *args, **kwargs):
-        self.__newSubject = kwargs.pop('newValue', '') or kwargs.pop('subject', '')
+        self.__newSubject = kwargs.pop('newValue')
         super(EditSubjectCommand, self).__init__(*args, **kwargs)
         self.__oldSubjects = [item.subject() for item in self.items]
     
@@ -400,7 +347,7 @@ class EditDescriptionCommand(BaseCommand):
     singular_name = _('Edit description "%s"')
 
     def __init__(self, *args, **kwargs):
-        self.__newDescription = kwargs.pop('newValue', '') or kwargs.pop('description', '')
+        self.__newDescription = kwargs.pop('newValue')
         super(EditDescriptionCommand, self).__init__(*args, **kwargs)
         self.__oldDescriptions = [item.description() for item in self.items]
     
@@ -423,7 +370,7 @@ class EditIconCommand(BaseCommand):
     singular_name = _('Change icon "%s"')
     
     def __init__(self, *args, **kwargs):
-        self.__newIcon = icon = kwargs.pop('icon')
+        self.__newIcon = icon = kwargs.pop('newValue')
         self.__newSelectedIcon = icon[:-len('_icon')] + '_open_icon' \
             if (icon.startswith('folder') and icon.count('_') == 2) \
             else icon
@@ -451,7 +398,7 @@ class EditFontCommand(BaseCommand):
     singular_name = _('Change font "%s"')
     
     def __init__(self, *args, **kwargs):
-        self.__newFont = kwargs.pop('font')
+        self.__newFont = kwargs.pop('newValue')
         super(EditFontCommand, self).__init__(*args, **kwargs)
         self.__oldFonts = [item.font() for item in self.items]
     
@@ -474,7 +421,7 @@ class EditColorCommand(BaseCommand):
         self.do_command()
 
     def __init__(self, *args, **kwargs):
-        self.__newColor = kwargs.pop('color')
+        self.__newColor = kwargs.pop('newValue')
         super(EditColorCommand, self).__init__(*args, **kwargs)
         self.__oldColors = [self.getItemColor(item) for item in self.items]
         

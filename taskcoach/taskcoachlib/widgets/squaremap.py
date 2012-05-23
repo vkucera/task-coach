@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -36,11 +36,11 @@ class SquareMap(tooltip.ToolTipMixin, squaremap.SquareMap):
         self.popupMenu = popupMenu
         self.Bind(wx.EVT_RIGHT_DOWN, self.onPopup)
         
-    def RefreshAllItems(self, count):
-        self.Refresh()
+    def RefreshAllItems(self, count): # pylint: disable-msg=W0613
+        self.UpdateDrawing()
         
-    def RefreshItems(self, *args):
-        self.Refresh()
+    def RefreshItems(self, *args): # pylint: disable-msg=W0613
+        self.UpdateDrawing()
         
     def onSelect(self, event):
         if event.node == self.model:

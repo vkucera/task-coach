@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import patterns
+from taskcoachlib.thirdparty.pubsub import pub
 
 
 class AttributeSync(object):
@@ -26,14 +27,15 @@ class AttributeSync(object):
         attribute of the domain object is changed (e.g. in another dialog) the 
         value of the control is updated. '''
         
-    def __init__(self, attributeName, entry, currentValue, items, commandClass, 
-                 editedEventType, changedEventType, getter=None):
-        self._attributeName = attributeName
-        self._getter = getter or attributeName
+    def __init__(self, attributeGetterName, entry, currentValue, items, commandClass, 
+                 editedEventType, changedEventType, **kwargs):
+        self._getter = attributeGetterName
         self._entry = entry
         self._currentValue = currentValue
         self._items = items
         self._commandClass = commandClass
+        self.__commandKwArgs = kwargs
+        self.__changedEventType = changedEventType
         entry.Bind(editedEventType, self.onAttributeEdited)
         if len(items) == 1:
             self.startObservingAttribute(changedEventType, items[0])
@@ -44,9 +46,9 @@ class AttributeSync(object):
         if newValue != self._currentValue:
             self._currentValue = newValue
             commandKwArgs = self.commandKwArgs(newValue)
-            self._commandClass(None, self._items, **commandKwArgs).do()
+            self._commandClass(None, self._items, **commandKwArgs).do()  # pylint: disable-msg=W0142
             
-    def onAttributeChanged(self, event):
+    def onAttributeChanged_Deprecated(self, event):  # pylint: disable-msg=W0613
         if self._entry: 
             newValue = getattr(self._items[0], self._getter)()
             if newValue != self._currentValue:
@@ -55,8 +57,18 @@ class AttributeSync(object):
         else:
             self.stopObservingAttribute()
             
+    def onAttributeChanged(self, newValue, sender):
+        if sender in self._items:
+            if self._entry:
+                if newValue != self._currentValue:
+                    self._currentValue = newValue
+                    self.setValue(newValue)
+            else:
+                self.stopObservingAttribute()
+            
     def commandKwArgs(self, newValue):
-        return {self._attributeName: newValue}
+        self.__commandKwArgs['newValue'] = newValue
+        return self.__commandKwArgs
     
     def setValue(self, newValue):
         self._entry.SetValue(newValue)
@@ -65,12 +77,19 @@ class AttributeSync(object):
         return self._entry.GetValue()
     
     def startObservingAttribute(self, eventType, eventSource):
-        patterns.Publisher().registerObserver(self.onAttributeChanged,
+        if eventType.startswith('pubsub'):
+            pub.subscribe(self.onAttributeChanged, eventType)
+        else:
+            patterns.Publisher().registerObserver(self.onAttributeChanged_Deprecated,
                                                   eventType=eventType,
                                                   eventSource=eventSource)
     
     def stopObservingAttribute(self):
-        patterns.Publisher().removeObserver(self.onAttributeChanged)
+        try:
+            pub.unsubscribe(self.onAttributeChanged, self.__changedEventType)
+        except pub.UndefinedTopic:
+            pass
+        patterns.Publisher().removeObserver(self.onAttributeChanged_Deprecated)
 
 
 class FontColorSync(AttributeSync):

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,35 +25,36 @@ class WindowTest(test.wxTestCase):
     def setUp(self):
         super(WindowTest, self).setUp()
         self.settings = config.Settings(load=False)
-        self.settings.set('window', 'position', '(100, 100)')
+        self.settings.setvalue('window', 'position', (50, 50))
         self.tracker = gui.windowdimensionstracker.WindowDimensionsTracker(self.frame, self.settings)
         self.section = 'window'
         
     def testInitialPosition(self):
-        self.assertEqual(eval(self.settings.get(self.section, 'position')), 
-            self.frame.GetPositionTuple())
+        self.assertEqual(self.settings.getvalue(self.section, 'position'), 
+                         self.frame.GetPositionTuple())
          
     def testInitialSize(self):
         # See MainWindowTest...
         w, h = self.frame.GetSizeTuple()
         if operating_system.isMac():
             h += 40 # pragma: no cover
-        self.assertEqual(eval(self.settings.get(self.section, 'size')),
-            (w, h))
+        self.assertEqual((w, h), self.settings.getvalue(self.section, 'size'))
      
-    def testInitialIconizeState(self):
-        self.assertEqual(self.settings.getboolean(self.section, 'iconized'),
-            self.frame.IsIconized())
+    @test.skipOnPlatform('__WXGTK__')
+    def testMaximize(self):
+        for maximized in [True, False]:
+            self.frame.Maximize(maximized)
+            self.assertEqual(maximized, self.frame.IsMaximized())
+            self.assertEqual(maximized, self.settings.getboolean(self.section, 'maximized'))
             
     def testChangeSize(self):
-        self.frame.Show()
-        self.frame.ProcessEvent(wx.SizeEvent((100, 200)))
-        self.assertEqual((100, 200), 
-            eval(self.settings.get(self.section, 'size')))
+        self.frame.Maximize(False)
+        self.frame.ProcessEvent(wx.SizeEvent((123, 200)))
+        self.assertEqual((123, 200), self.settings.getvalue(self.section, 'size'))
         
     def testMove(self):
+        self.frame.Maximize(False)
+        self.frame.Iconize(False)
         self.frame.ProcessEvent(wx.MoveEvent((200, 200)))
-        self.tracker.savePosition()
-        #The move is not processed, dunno why:
-        self.assertEqual((100, 100), eval(self.settings.get(self.section, 'position')))
+        self.assertEqual((200, 200), self.settings.getvalue(self.section, 'position'))
 

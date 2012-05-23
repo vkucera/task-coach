@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -551,43 +551,10 @@ class PublisherTest(test.TestCase):
         self.publisher.removeObserver(self.onEvent, eventType='otherType')
         self.assertEqual([self.onEvent], self.publisher.observers('eventType'))
         
-    def testRemoveObserversForSpecificInstance(self):
-        self.publisher.registerObserver(self.onEvent, eventType='eventType')
-        self.publisher.registerObserver(self.onEvent, eventType='otherType')
-        self.publisher.removeInstance(self)
-        self.assertEqual([], self.publisher.observers())
-        
     def testClear(self):
         self.publisher.registerObserver(self.onEvent, eventType='eventType')
         self.publisher.clear()
         self.assertEqual([], self.publisher.observers())        
-
-    def testNotificationOfFirstObserverForEventType(self):
-        self.publisher.registerObserver(self.onEvent, eventType='publisher.firstObserverRegisteredFor.eventType')
-        self.publisher.registerObserver(self.onEvent, eventType='eventType')
-        expectedEvent = patterns.Event( \
-            'publisher.firstObserverRegisteredFor.eventType', self.publisher, 
-            'eventType')
-        self.assertEqual([expectedEvent], self.events)
-
-    def testNoNotificationOfSecondObserverForEventType(self):
-        self.publisher.registerObserver(self.onEvent, eventType='eventType')
-        self.publisher.registerObserver(self.onEvent, eventType='publisher.firstObserverRegisteredFor.eventType')
-        self.publisher.registerObserver(self.onEvent, eventType='eventType')
-        self.assertEqual([], self.events)
-        
-    def testNotificationForLastObserverRemoved(self):
-        self.publisher.registerObserver(self.onEvent, eventType='eventType')
-        self.publisher.registerObserver(self.onEvent, eventType='publisher.lastObserverRemovedFor')
-        self.publisher.removeObserver(self.onEvent, eventType='eventType')
-        self.assertEqual([patterns.Event( \
-            'publisher.lastObserverRemovedFor', self.publisher, 
-            'eventType')], self.events)
-
-    def testNoNotificationForNonExistingObserverRemoved(self):
-        self.publisher.registerObserver(self.onEvent, eventType='publisher.lastObserverRemovedFor')
-        self.publisher.removeObserver(self.onEvent, eventType='eventType')
-        self.assertEqual([], self.events)
 
     def testRegisterObserver_ForSpecificSource(self):
         self.publisher.registerObserver(self.onEvent, eventType='eventType', 

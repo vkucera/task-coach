@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,10 +27,10 @@ class Tracker(object):
         self.__section = section
                
     def setSetting(self, setting, value):
-        self.__settings.set(self.__section, setting, str(value))
+        self.__settings.setvalue(self.__section, setting, value)
         
     def getSetting(self, setting):
-        return eval(self.__settings.get(self.__section, setting))
+        return self.__settings.getvalue(self.__section, setting)
         
 
 class WindowSizeAndPositionTracker(Tracker):
@@ -63,7 +63,7 @@ class WindowSizeAndPositionTracker(Tracker):
             if not self._window.IsIconized():
                 # Only save position when the window is not maximized 
                 # *and* not minimized
-                self.setSetting('position', self._window.GetPosition())
+                self.setSetting('position', event.GetPosition())
         event.Skip()
 
     def onMaximize(self, event):

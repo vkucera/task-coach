@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,8 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import win32gui, win32con # pylint: disable-msg=F0401
 from taskcoachlib.powermgt.base import PowerStateMixinBase
+# pylint: disable=F0401
+import win32api
+import win32gui
+import win32con
+import wx
 
 
 class PowerStateMixin(PowerStateMixinBase):
@@ -36,9 +40,9 @@ class PowerStateMixin(PowerStateMixinBase):
 
         if msg == win32con.WM_POWERBROADCAST:
             if wParam == win32con.PBT_APMSUSPEND:
-                self.OnPowerState(self.POWEROFF)
+                wx.CallAfter(self.OnPowerState, self.POWEROFF)
             elif wParam == win32con.PBT_APMRESUMESUSPEND:
-                self.OnPowerState(self.POWERON)
+                wx.CallAfter(self.OnPowerState, self.POWERON)
 
         return win32gui.CallWindowProc(self.__oldProc,
                                        hWnd, msg, wParam, lParam)

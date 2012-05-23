@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -39,11 +39,14 @@ class TaskEditorSetterBase(object):
         page._descriptionEntry.SetValue(newDescription)
         return page
     
-    def setStartDateTime(self, dateTime):
-        self.setDateTime(self.editor._interior[1]._startDateTimeEntry, dateTime)
+    def setPlannedStartDateTime(self, dateTime):
+        self.setDateTime(self.editor._interior[1]._plannedStartDateTimeEntry, dateTime)
         
     def setDueDateTime(self, dateTime):
         self.setDateTime(self.editor._interior[1]._dueDateTimeEntry, dateTime)
+
+    def setActualStartDateTime(self, dateTime):
+        self.setDateTime(self.editor._interior[1]._actualStartDateTimeEntry, dateTime)
 
     def setCompletionDateTime(self, dateTime):
         self.setDateTime(self.editor._interior[1]._completionDateTimeEntry, dateTime)
@@ -95,7 +98,7 @@ class TaskEditorTestCase(test.wxTestCase):
         self.taskList = self.taskFile.tasks()
         self.taskList.extend(self.createTasks())
         self.editor = gui.dialog.editor.TaskEditor(self.frame, self.getItems(),
-            self.settings, self.taskList, self.taskFile, raiseDialog=False)
+            self.settings, self.taskList, self.taskFile)
 
     def tearDown(self):
         # TaskEditor uses CallAfter for setting the focus, make sure those 
@@ -132,7 +135,11 @@ class EditorDisplayTest(TaskEditorTestCase):
     def testDueDateTime(self):
         self.assertEqual(date.DateTime(),
                          self.editor._interior[1]._dueDateTimeEntry.GetValue())
-        
+ 
+    def testActualStartDateTime(self):
+        self.assertEqual(date.DateTime(),
+                         self.editor._interior[1]._actualStartDateTimeEntry.GetValue())
+       
     def testRecurrenceUnit(self):
         choice = self.editor._interior[1]._recurrenceEntry._recurrencePeriodEntry
         self.assertEqual('Daily', choice.GetString(choice.GetSelection()))
@@ -162,17 +169,23 @@ class EditTaskTestBase(object):
         self.assertEqual('Description', self.task.description())
 
     # pylint: disable-msg=W0212
+   
+    def testSetPlannedStartDateTime(self):
+        self.setPlannedStartDateTime(self.tomorrow)
+        self.assertAlmostEqual(self.tomorrow.toordinal(), 
+                               self.task.plannedStartDateTime().toordinal(),
+                               places=2)
 
     def testSetDueDateTime(self):
         self.setDueDateTime(self.tomorrow)
         self.assertAlmostEqual(self.tomorrow.toordinal(), 
                                self.task.dueDateTime().toordinal(),
                                places=2)
-    
-    def testSetStartDateTime(self):
-        self.setStartDateTime(self.tomorrow)
+
+    def testSetActualStartDateTime(self):
+        self.setActualStartDateTime(self.tomorrow)
         self.assertAlmostEqual(self.tomorrow.toordinal(), 
-                               self.task.startDateTime().toordinal(),
+                               self.task.actualStartDateTime().toordinal(),
                                places=2)
 
     def testSetCompletionDateTime(self):
@@ -293,8 +306,8 @@ class EditTaskWithChildrenTestBase(object):
 
     def createTasks(self):
         # pylint: disable-msg=W0201
-        self.parent = task.Task('Parent', startDateTime=date.Now())
-        self.child = task.Task('Child', startDateTime=date.Now())
+        self.parent = task.Task('Parent', plannedStartDateTime=date.Now())
+        self.child = task.Task('Child', plannedStartDateTime=date.Now())
         self.parent.addChild(self.child)
         return [self.parent] # self.child is added to tasklist automatically
 
@@ -309,10 +322,10 @@ class EditTaskWithChildrenTestBase(object):
         self.assertAlmostEqual(self.yesterday.toordinal(), 
                                self.child.dueDateTime().toordinal(), places=2)
 
-    def testChangeStartDateTimeOfParentHasNoEffectOnChild(self):
-        self.setStartDateTime(self.tomorrow)
+    def testChangePlannedStartDateTimeOfParentHasNoEffectOnChild(self):
+        self.setPlannedStartDateTime(self.tomorrow)
         self.assertAlmostEqual(self.tomorrow.toordinal(), 
-                               self.child.startDateTime().toordinal(),
+                               self.child.plannedStartDateTime().toordinal(),
                                places=2)
 
 
@@ -361,10 +374,10 @@ class DatesTestBase(TaskEditorSetterBase, TaskEditorTestCase):
 class DatesStartDueTest(DatesTestBase):
     extraSettings = [('view', 'datestied', 'startdue')]
 
-    def testChangeStartDateChangesDueDate(self):
-        self.setStartDateTime(self.yesterday)
+    def testChangePlannedStartDateChangesDueDate(self):
+        self.setPlannedStartDateTime(self.yesterday)
         self.setDueDateTime(self.today)
-        self.setStartDateTime(self.today)
+        self.setPlannedStartDateTime(self.today)
         self.assertAlmostEqual(self.editor._interior[1]._dueDateTimeEntry.GetValue().toordinal(),
                                self.tomorrow.toordinal(),
                                places=2)
@@ -373,28 +386,28 @@ class DatesStartDueTest(DatesTestBase):
 class DatesDueStartBase(DatesTestBase):
     extraSettings = [('view', 'datestied', 'duestart')]
 
-    def testChangeDueDateChangesStartDate(self):
-        self.setStartDateTime(self.yesterday)
+    def testChangeDueDateChangesPlannedStartDate(self):
+        self.setPlannedStartDateTime(self.yesterday)
         self.setDueDateTime(self.today)
         self.setDueDateTime(self.yesterday)
-        self.assertAlmostEqual(self.editor._interior[1]._startDateTimeEntry.GetValue().toordinal(),
+        self.assertAlmostEqual(self.editor._interior[1]._plannedStartDateTimeEntry.GetValue().toordinal(),
                                self.twodaysago.toordinal(),
                                places=2)
 
 
 class DatesTest(DatesTestBase):
-    def testChangeStartDateDoesNotChangeDueDate(self):
-        self.setStartDateTime(self.yesterday)
+    def testChangePlannedStartDateDoesNotChangeDueDate(self):
+        self.setPlannedStartDateTime(self.yesterday)
         self.setDueDateTime(self.today)
-        self.setStartDateTime(self.today)
+        self.setPlannedStartDateTime(self.today)
         self.assertAlmostEqual(self.editor._interior[1]._dueDateTimeEntry.GetValue().toordinal(),
                                self.today.toordinal(),
                                places=2)
 
-    def testChangeDueDateDoesNotChangeStartDate(self):
-        self.setStartDateTime(self.yesterday)
+    def testChangeDueDateDoesNotChangePlannedStartDate(self):
+        self.setPlannedStartDateTime(self.yesterday)
         self.setDueDateTime(self.today)
         self.setDueDateTime(self.yesterday)
-        self.assertAlmostEqual(self.editor._interior[1]._startDateTimeEntry.GetValue().toordinal(),
+        self.assertAlmostEqual(self.editor._interior[1]._plannedStartDateTimeEntry.GetValue().toordinal(),
                                self.yesterday.toordinal(),
                                places=2)

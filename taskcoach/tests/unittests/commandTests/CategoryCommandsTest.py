@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -149,3 +149,18 @@ class CopyAndPasteCommandTest(CategoryCommandTestCase):
             lambda: self.assertEqual(2, len(self.task.categories())),
             lambda: self.assertEqual(set([childCat]), self.task.categories()))
 
+
+class EditExclusiveSubcategoriesCommandTest(CategoryCommandTestCase):
+    def setUp(self):
+        super(EditExclusiveSubcategoriesCommandTest, self).setUp()
+        self.category = category.Category('category')
+        
+    def testEdit(self):
+        self.categories.append(self.category)
+        edit = command.EditExclusiveSubcategoriesCommand(self.categories, 
+                                                         [self.category],
+                                                         newValue=True)
+        edit.do()
+        self.assertDoUndoRedo(
+            lambda: self.failUnless(self.category.hasExclusiveSubcategories()),
+            lambda: self.failIf(self.category.hasExclusiveSubcategories()))

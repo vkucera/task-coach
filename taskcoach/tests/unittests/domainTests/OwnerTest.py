@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -53,3 +53,6 @@ class OwnerTest(test.TestCase):
         self.owner.setFoos([Foo()])
         self.assertEqual(1, len(self.events))
 
+    def testRemoveNoObjects(self):
+        self.owner.removeFoos()
+        self.failIf(self.owner.foos())

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Carl Zmola <zmola@acm.org>
 
@@ -49,12 +49,14 @@ class SpinCtrl(wx.Panel):
         self._spinButton.Bind(wx.EVT_SPIN, self.onSpin)
         
     def onText(self, event):
+        event.Skip()
         try:
-            self._spinButton.SetValue(int(self._textCtrl.GetValue()))
+            newValue = int(event.GetString()) 
+            if newValue != self._spinButton.GetValue():
+                self._spinButton.SetValue(newValue)
+                self.__postEvent()
         except (ValueError, OverflowError):
             self._textCtrl.SetValue(str(self._spinButton.GetValue()))
-        self.__postEvent()
-        event.Skip()
 
     def onKey(self, event):
         deltaByKeyCode = {wx.WXK_UP: 1, wx.WXK_NUMPAD_UP: 1, 

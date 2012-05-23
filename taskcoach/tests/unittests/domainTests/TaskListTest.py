@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,41 +19,43 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import test
 from taskcoachlib import config
 from taskcoachlib.domain import task, effort, date
-from taskcoachlib import config
 
  
 class TaskListTest(test.TestCase):
     def setUp(self):
         task.Task.settings = config.Settings(load=False)
         self.taskList = task.TaskList()
-        self.task1 = task.Task(dueDateTime=date.DateTime(2110,1,1))
-        self.task2 = task.Task(dueDateTime=date.DateTime(2111,1,1))
+        year = date.Now().year
+        self.task1 = task.Task(dueDateTime=date.DateTime(year+1,1,1))
+        self.task2 = task.Task(dueDateTime=date.DateTime(year+2,1,1))
         self.task3 = task.Task()
+        
+    def nrStatus(self, status):
+        return self.taskList.nrOfTasksPerStatus()[status]
     
+    def testNrOfTasksPerStatusOfAnEmptyTaskList(self):
+        counts = self.taskList.nrOfTasksPerStatus()
+        for status in task.Task.possibleStatuses():     
+            self.assertEqual(0, counts[status])
+            
     def testNrCompleted(self):
-        self.assertEqual(0, self.taskList.nrCompleted())
+        self.assertEqual(0, self.nrStatus(task.status.completed))
         self.taskList.append(self.task1)
-        self.assertEqual(0, self.taskList.nrCompleted())
+        self.assertEqual(0, self.nrStatus(task.status.completed))
         self.task1.setCompletionDateTime()
-        self.assertEqual(1, self.taskList.nrCompleted())
+        self.assertEqual(1, self.nrStatus(task.status.completed))
     
     def testNrOverdue(self):
-        self.assertEqual(0, self.taskList.nrOverdue())
+        self.assertEqual(0, self.nrStatus(task.status.overdue))
         self.taskList.append(self.task1)
-        self.assertEqual(0, self.taskList.nrOverdue())
+        self.assertEqual(0, self.nrStatus(task.status.overdue))
         self.task1.setDueDateTime(date.DateTime(1990, 1, 1))
-        self.assertEqual(1, self.taskList.nrOverdue())
-
-    def testAllCompleted(self):
-        self.failIf(self.taskList.allCompleted())
-        self.task1.setCompletionDateTime()
-        self.taskList.append(self.task1)
-        self.failUnless(self.taskList.allCompleted())
+        self.assertEqual(1, self.nrStatus(task.status.overdue))
 
     def testNrDueSoon(self):
-        self.assertEqual(0, self.taskList.nrDueSoon())
+        self.assertEqual(0, self.nrStatus(task.status.duesoon))
         self.taskList.append(task.Task(dueDateTime=date.Now() + date.oneHour))
-        self.assertEqual(1, self.taskList.nrDueSoon())
+        self.assertEqual(1, self.nrStatus(task.status.duesoon))
         
     def testNrBeingTracked(self):
         self.assertEqual(0, self.taskList.nrBeingTracked())

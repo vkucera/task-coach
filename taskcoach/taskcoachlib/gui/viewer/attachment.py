@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
@@ -117,14 +117,14 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0
                 setting='notes', viewer=self)]
     
     def createCreationToolBarUICommands(self):
-        return [uicommand.AttachmentNew(attachments=self.presentation(),
+        return (uicommand.AttachmentNew(attachments=self.presentation(),
                                         settings=self.settings,
-                                        viewer=self)] + \
+                                        viewer=self),) + \
             super(AttachmentViewer, self).createCreationToolBarUICommands()
         
     def createActionToolBarUICommands(self):
-        return [uicommand.AttachmentOpen(attachments=attachment.AttachmentList(),
-                                         viewer=self, settings=self.settings)] + \
+        return (uicommand.AttachmentOpen(attachments=attachment.AttachmentList(),
+                                         viewer=self, settings=self.settings),) + \
            super(AttachmentViewer, self).createActionToolBarUICommands()
     
     def typeImageIndices(self, anAttachment, exists=os.path.exists): # pylint: disable-msg=W0613

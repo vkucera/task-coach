@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,12 +21,12 @@ from frame import AuiManagedFrameWithDynamicCenterPane
 from dialog import Dialog, NotebookDialog, HTMLDialog, AttachmentSelector
 from itemctrl import Column
 from listctrl import ListCtrl
+from checklistbox import CheckListBox
 from treectrl import CheckTreeCtrl, TreeListCtrl
 from squaremap import SquareMap
 from timeline import Timeline
 from datectrl import DateTimeCtrl
-from textctrl import SingleLineTextCtrl, SingleLineTextCtrlWithEnterButton, \
-    MultiLineTextCtrl, StaticTextWithToolTip
+from textctrl import SingleLineTextCtrl, MultiLineTextCtrl, StaticTextWithToolTip
 from panel import PanelWithBoxSizer, BoxWithFlexGridSizer, BoxWithBoxSizer
 from searchctrl import SearchCtrl
 from spinctrl import SpinCtrl

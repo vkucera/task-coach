@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,35 +16,32 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
-from taskcoachlib import meta, patterns, command, render
-from taskcoachlib.widgets import sized_controls
-from taskcoachlib.i18n import _
+from taskcoachlib import meta, patterns, command, render, operating_system
 from taskcoachlib.domain import date
+from taskcoachlib.i18n import _
+from taskcoachlib.thirdparty.pubsub import pub
+from taskcoachlib.widgets import sized_controls
+import subprocess
+import wx
 
 
-class ReminderDialog(sized_controls.SizedDialog):
+class ReminderDialog(patterns.Observer, sized_controls.SizedDialog):
     def __init__(self, task, taskList, effortList, settings, *args, **kwargs):
-        kwargs['title'] = _('%(name)s reminder - %(task)s')%dict(name=meta.name, 
-                                                                task=task.subject(recursive=True))
+        kwargs['title'] = _('%(name)s reminder - %(task)s') % \
+            dict(name=meta.name, task=task.subject(recursive=True))
         super(ReminderDialog, self).__init__(*args, **kwargs)
-        self.SetIcon(wx.ArtProvider_GetIcon('taskcoach', wx.ART_FRAME_ICON, (16,16)))
+        self.SetIcon(wx.ArtProvider_GetIcon('taskcoach', wx.ART_FRAME_ICON, 
+                                            (16, 16)))
         self.task = task
         self.taskList = taskList
         self.effortList = effortList
         self.settings = settings
-        patterns.Publisher().registerObserver(self.onTaskRemoved, 
-                                              eventType=self.taskList.removeItemEventType(),
-                                              eventSource=self.taskList)
-        patterns.Publisher().registerObserver(self.onTaskCompletionDateChanged, 
-                                              eventType=task.completionDateTimeChangedEventType(),
-                                              eventSource=task)
-        patterns.Publisher().registerObserver(self.onTrackingStartedOrStopped,
-                                              eventType=task.trackStartEventType(),
-                                              eventSource=task)
-        patterns.Publisher().registerObserver(self.onTrackingStartedOrStopped,
-                                              eventType=task.trackStopEventType(),
-                                              eventSource=task)
+        self.registerObserver(self.onTaskRemoved, 
+                              eventType=self.taskList.removeItemEventType(),
+                              eventSource=self.taskList)
+        pub.subscribe(self.onTaskCompletionDateChanged, 
+                      task.completionDateTimeChangedEventType())
+        pub.subscribe(self.onTrackingChanged, task.trackingChangedEventType())
         self.openTaskAfterClose = self.ignoreSnoozeOption = False
         pane = self.GetContentsPane()
         pane.SetSizerType("form")
@@ -59,7 +56,7 @@ class ReminderDialog(sized_controls.SizedDialog):
             self.startTracking = wx.BitmapButton(panel)
             self.setTrackingIcon()
             self.startTracking.Bind(wx.EVT_BUTTON, self.onStartOrStopTracking)
-            sizer.Add((3,-1), flag=wx.ALIGN_CENTER_VERTICAL)
+            sizer.Add((3, -1), flag=wx.ALIGN_CENTER_VERTICAL)
             sizer.Add(self.startTracking, flag=wx.ALIGN_CENTER_VERTICAL)
         panel.SetSizerAndFit(sizer)
         
@@ -71,7 +68,7 @@ class ReminderDialog(sized_controls.SizedDialog):
         sizer.Add(self.snoozeOptions, flag=wx.ALIGN_CENTER_VERTICAL)
         snoozeTimesUserWantsToSee = [0] + self.settings.getlist('view', 'snoozetimes')
         defaultSnoozeTime = self.settings.getint('view', 'defaultsnoozetime')
-        selectionIndex = 1 # Use the 1st non-zero option if we don't find the last snooze time
+        selectionIndex = 1  # Use the 1st non-zero option if we don't find the last snooze time
         # pylint: disable-msg=E1101
         for minutes, label in date.snoozeChoices:
             if minutes in snoozeTimesUserWantsToSee:
@@ -96,26 +93,34 @@ class ReminderDialog(sized_controls.SizedDialog):
         self.Bind(wx.EVT_BUTTON, self.onOK, id=self.GetAffirmativeId())
         self.Fit()
         self.RequestUserAttention()
+        if self.settings.getboolean('feature', 'sayreminder'):
+            if operating_system.isMac():
+                subprocess.Popen(('say', '"%s: %s"' % (_('Reminder'), 
+                                                       task.subject())))
+            elif operating_system.isGTK():
+                subprocess.Popen(('espeak', '"%s: %s"' % (_('Reminder'), 
+                                                          task.subject())))
 
-    def onOpenTask(self, event): # pylint: disable-msg=W0613
+    def onOpenTask(self, event):  # pylint: disable-msg=W0613
         self.openTaskAfterClose = True
         self.Close()
         
-    def onStartOrStopTracking(self, event): # pylint: disable-msg=W0613
+    def onStartOrStopTracking(self, event):  # pylint: disable-msg=W0613
         if self.task.isBeingTracked():
             command.StopEffortCommand(self.effortList).do()
         else:
             command.StartEffortCommand(self.taskList, [self.task]).do()
         self.setTrackingIcon()
         
-    def onTrackingStartedOrStopped(self, event): # pylint: disable-msg=W0613
+    def onTrackingChanged(self, newValue, sender):  # pylint: disable-msg=W0613
         self.setTrackingIcon()
         
     def setTrackingIcon(self):
         icon = 'clock_stop_icon' if self.task.isBeingTracked() else 'clock_icon'
-        self.startTracking.SetBitmapLabel(wx.ArtProvider_GetBitmap(icon, wx.ART_TOOLBAR, (16,16)))
+        self.startTracking.SetBitmapLabel(wx.ArtProvider_GetBitmap(icon, 
+            wx.ART_TOOLBAR, (16, 16)))
         
-    def onMarkTaskCompleted(self, event): # pylint: disable-msg=W0613
+    def onMarkTaskCompleted(self, event):  # pylint: disable-msg=W0613
         self.ignoreSnoozeOption = True
         self.Close()
         command.MarkCompletedCommand(self.taskList, [self.task]).do()
@@ -124,11 +129,12 @@ class ReminderDialog(sized_controls.SizedDialog):
         if self.task in event.values():
             self.Close()
             
-    def onTaskCompletionDateChanged(self, event): # pylint: disable-msg=W0613
-        if self.task.completed():
-            self.Close()
-        else:
-            self.markCompleted.Enable()
+    def onTaskCompletionDateChanged(self, newValue, sender):  # pylint: disable-msg=W0613
+        if sender == self.task:
+            if self.task.completed():
+                self.Close()
+            else:
+                self.markCompleted.Enable()
     
     def onClose(self, event):
         event.Skip()
@@ -137,7 +143,7 @@ class ReminderDialog(sized_controls.SizedDialog):
             selection = self.snoozeOptions.Selection
             minutes = self.snoozeOptions.GetClientData(selection).minutes()
             self.settings.set('view', 'defaultsnoozetime', str(int(minutes)))
-        patterns.Publisher().removeInstance(self)
+        self.removeInstance()
         
     def onOK(self, event):
         event.Skip()

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -45,18 +45,18 @@ class TaskViewerStatusMessagesTest(test.TestCase):
         self.viewer = DummyViewer(self.taskList)
         self.status = gui.viewer.task.TaskViewerStatusMessages(self.viewer)
         self.template1 = 'Tasks: %d selected, %d visible, %d total'
-        self.template2 = 'Status: %d overdue, %d inactive, %d completed'
+        self.template2 = 'Status: %d overdue, %d late, %d inactive, %d completed'
     
     # Helper methods
         
     def assertMessages(self, selected=0, visible=0, total=0, overdue=0, 
-                       inactive=0, completed=0):
+                       late=0, inactive=0, completed=0):
         message1 = self.template1%(selected, visible, total)     
-        message2 = self.template2%(overdue, inactive, completed)
+        message2 = self.template2%(overdue, late, inactive, completed)
         self.assertEqual((message1, message2), self.status())
         
     def addActiveTask(self):
-        self.task.setStartDateTime(date.Now())
+        self.task.setActualStartDateTime(date.Now())
         self.taskList.append(self.task)
         
     def addOverdueTask(self):
@@ -70,6 +70,10 @@ class TaskViewerStatusMessagesTest(test.TestCase):
         self.task.setCompletionDateTime(date.Now())
         self.taskList.append(self.task)
         
+    def addLateTask(self):
+        self.task.setPlannedStartDateTime(date.Now() - date.oneDay)
+        self.taskList.append(self.task)
+        
     def removeTask(self):
         self.taskList.remove(self.task)
         
@@ -77,22 +81,22 @@ class TaskViewerStatusMessagesTest(test.TestCase):
         self.task.setCompletionDateTime(date.Now())
 
     def markTaskUncompleted(self):
-        self.task.setCompletionDateTime(date.DateTime.max)
+        self.task.setCompletionDateTime(date.DateTime())
         
     def makeTaskActive(self):
-        self.task.setStartDateTime(date.Now())
+        self.task.setActualStartDateTime(date.Now())
         
     def makeTaskInactive(self):
-        self.task.setStartDateTime(date.Now() + date.TimeDelta(hours=1))
+        self.task.setActualStartDateTime(date.DateTime())
         
     def selectTask(self):
         self.viewer._selection = [self.task]
         
     def hideCompletedTasks(self):
-        self.taskList.setFilteredByCompletionDateTime('Always')
+        self.taskList.hideTaskStatus(task.status.completed)
         
     def showCompletedTasks(self):
-        self.taskList.setFilteredByCompletionDateTime('Never')
+        self.taskList.hideTaskStatus(task.status.completed, False)
         
     # Tests
     
@@ -109,11 +113,15 @@ class TaskViewerStatusMessagesTest(test.TestCase):
         
     def testAddOverdueTask(self):
         self.addOverdueTask()
-        self.assertMessages(visible=1, total=1, inactive=1, overdue=1)
+        self.assertMessages(visible=1, total=1, inactive=0, overdue=1)
 
     def testAddCompletedTask(self):
         self.addCompletedTask()
         self.assertMessages(visible=1, total=1, completed=1)
+        
+    def testAddLateTask(self):
+        self.addLateTask()
+        self.assertMessages(visible=1, late=1, total=1)
         
     def testRemoveActiveTask(self):
         self.addActiveTask()
@@ -186,7 +194,7 @@ class TaskViewerStatusMessagesTest(test.TestCase):
         self.assertMessages(visible=1, total=1, completed=1)
         
     def testTotalWhenHidingCompletedTasksWithActiveTask(self):
-        self.taskList.append(task.Task(startDateTime=date.Now()))
+        self.taskList.append(task.Task(actualStartDateTime=date.Now()))
         self.addCompletedTask()
         self.hideCompletedTasks()
         self.assertMessages(visible=1, total=2, completed=1)
@@ -210,4 +218,4 @@ class TaskViewerStatusMessagesTest(test.TestCase):
         self.addOverdueTask()
         self.selectTask()
         self.assertMessages(selected=1, visible=1, total=1, overdue=1, 
-                            inactive=1)
+                            inactive=0)

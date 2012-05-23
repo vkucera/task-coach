@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -72,3 +72,26 @@ class NoteViewerTest(test.wxTestCase):
         self.assertEqual(self.viewer.imageIndex['paperclip_icon'], 
                          self.firstItemIcon(column=1))
 
+    def testFilterOnAllCategories(self):
+        cat1 = category.Category('category 1')
+        cat2 = category.Category('category 2')
+        self.note.addCategory(cat1)
+        cat1.addCategorizable(self.note)
+        self.taskFile.categories().extend([cat1, cat2])
+        cat1.setFiltered(True)
+        cat2.setFiltered(True)
+        self.assertEqual(1, self.viewer.size())
+        self.settings.setboolean('view', 'categoryfiltermatchall', True)
+        self.assertEqual(0, self.viewer.size())
+        
+    def testFilterOnAnyCategory(self):
+        cat1 = category.Category('category 1')
+        cat2 = category.Category('category 2')
+        self.note.addCategory(cat1)
+        cat1.addCategorizable(self.note)
+        self.taskFile.categories().extend([cat1, cat2])
+        cat1.setFiltered(True)
+        cat2.setFiltered(True)
+        self.assertEqual(1, self.viewer.size())
+        self.settings.setboolean('view', 'categoryfiltermatchall', False)
+        self.assertEqual(1, self.viewer.size())

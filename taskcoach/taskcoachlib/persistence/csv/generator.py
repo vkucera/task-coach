@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib.i18n import _
 from taskcoachlib import render
+from taskcoachlib.domain import date
 
 
 def extendedWithAncestors(selection):
@@ -30,13 +31,14 @@ def extendedWithAncestors(selection):
 
 
 class RowBuilder(object):
-    dateAndTimeColumnHeaders = dict(startDateTime=[_('Start date'), _('Start time')],
+    dateAndTimeColumnHeaders = dict(actualStartDateTime=[_('Actual start date'), _('Actual start time')],
+                                    plannedStartDateTime=[_('Planned start date'), _('Planned start time')],
                                     dueDateTime=[_('Due date'), _('Due time')],
                                     completionDateTime=[_('Completion date'), _('Completion time')],
                                     reminder=[_('Reminder date'), _('Reminder time')])
     
-    def __init__(self, visibleColumns, isTree, separateDateAndTimeColumns):
-        self.__visibleColumns = visibleColumns
+    def __init__(self, columns, isTree, separateDateAndTimeColumns):
+        self.__columns = columns
         self.__separateDateAndTimeColumns = separateDateAndTimeColumns
         if isTree:
             self.indent = lambda item: ' ' * len(item.ancestors())
@@ -45,7 +47,7 @@ class RowBuilder(object):
         
     def headerRow(self):
         headers = []
-        for column in self.__visibleColumns:
+        for column in self.__columns:
             if self.shouldSplitDateAndTime(column):
                 headers.extend(self.dateAndTimeColumnHeaders[column.name()])
             else:
@@ -54,7 +56,7 @@ class RowBuilder(object):
     
     def itemRow(self, item):
         row = []
-        for column in self.__visibleColumns:
+        for column in self.__columns:
             if self.shouldSplitDateAndTime(column):
                 row.extend(self.splitDateAndTime(column, item))
             else:
@@ -67,7 +69,10 @@ class RowBuilder(object):
     
     def splitDateAndTime(self, column, item):
         dateTime = getattr(item, column.name())()
-        return render.date(dateTime), render.time(dateTime)
+        if dateTime == date.DateTime():
+            return '', ''
+        else:
+            return render.date(dateTime), render.time(dateTime)
         
     def itemRows(self, items):
         return [self.itemRow(item) for item in items]
@@ -76,14 +81,16 @@ class RowBuilder(object):
         return [self.headerRow()] + self.itemRows(items)
     
 
-def viewer2csv(viewer, selectionOnly=False, separateDateAndTimeColumns=False):
+def viewer2csv(viewer, selectionOnly=False, separateDateAndTimeColumns=False,
+               columns=None):
     ''' Convert the items displayed by a viewer into a list of rows, where
         each row consists of a list of values. If the viewer is in tree mode, 
         indent the first value (typically the subject of the item) to 
         indicate the depth of the item in the tree. '''
     
     isTree = viewer.isTreeViewer()    
-    rowBuilder = RowBuilder(viewer.visibleColumns(), isTree, separateDateAndTimeColumns)
+    columns = columns or viewer.visibleColumns()
+    rowBuilder = RowBuilder(columns, isTree, separateDateAndTimeColumns)
     items = viewer.visibleItems()
     if selectionOnly:
         items = [item for item in items if viewer.isselected(item)]

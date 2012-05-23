@@ -16,13 +16,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib.thirdparty.dateutil import parser as dparser
-from taskcoachlib.i18n import _
 from taskcoachlib.domain.category import Category
-from taskcoachlib.domain.task import Task
 from taskcoachlib.domain.date import DateTime, TimeDelta
-
-import csv, tempfile, StringIO, re, math
+from taskcoachlib.domain.task import Task
+from taskcoachlib.i18n import _
+from taskcoachlib.thirdparty.dateutil import parser as dparser
+import csv
+import tempfile
+import StringIO
+import re
+import math
 
 
 class CSVReader(object):
@@ -57,9 +60,11 @@ class CSVReader(object):
             description = StringIO.StringIO()
             categories = []
             priority = 0
-            startDateTime = None
+            actualStartDateTime = None
+            plannedStartDateTime = None
             dueDateTime = None
             completionDateTime = None
+            reminderDateTime = None
             budget = TimeDelta()
             fixedFee = 0.0
             hourlyFee = 0.0
@@ -76,7 +81,7 @@ class CSVReader(object):
                 elif kwargs['mappings'][idx] == _('Category') and fieldValue:
                     name = fieldValue.decode('UTF-8')
                     if name.startswith('(') and name.endswith(')'):
-                        continue # Skip categories of subitems
+                        continue  # Skip categories of subitems
                     cat = self.categoryList.findCategoryByName(name)
                     if not cat:
                         cat = self.createCategory(name)
@@ -86,12 +91,16 @@ class CSVReader(object):
                         priority = int(fieldValue)
                     except ValueError:
                         pass
-                elif kwargs['mappings'][idx] == _('Start date'):
-                    startDateTime = self.parseDateTime(fieldValue, dayfirst=dayfirst)
+                elif kwargs['mappings'][idx] == _('Actual start date'):
+                    actualStartDateTime = self.parseDateTime(fieldValue, dayfirst=dayfirst)
+                elif kwargs['mappings'][idx] == _('Planned start date'):
+                    plannedStartDateTime = self.parseDateTime(fieldValue, dayfirst=dayfirst)
                 elif kwargs['mappings'][idx] == _('Due date'):
                     dueDateTime = self.parseDateTime(fieldValue, 23, 59, 59, dayfirst=dayfirst) 
                 elif kwargs['mappings'][idx] == _('Completion date'):
                     completionDateTime = self.parseDateTime(fieldValue, 12, 0, 0, dayfirst=dayfirst) 
+                elif kwargs['mappings'][idx] == _('Reminder date'):
+                    reminderDateTime = self.parseDateTime(fieldValue, dayfirst=dayfirst)
                 elif kwargs['mappings'][idx] == _('Budget'):
                     try:
                         value = float(fieldValue)
@@ -125,9 +134,11 @@ class CSVReader(object):
             task = Task(subject=subject,
                         description=description.getvalue(),
                         priority=priority,
-                        startDateTime=startDateTime,
+                        actualStartDateTime=actualStartDateTime,
+                        plannedStartDateTime=plannedStartDateTime,
                         dueDateTime=dueDateTime,
                         completionDateTime=completionDateTime,
+                        reminder=reminderDateTime,
                         budget=budget,
                         fixedFee=fixedFee,
                         hourlyFee=hourlyFee,
@@ -194,5 +205,5 @@ class CSVReader(object):
                 second = defaultSecond
             return DateTime(dateTime.year, dateTime.month, dateTime.day,
                             hour, minute, second)
-        except:
-            return None # pylint: disable-msg=W0702
+        except:  # pylint: disable-msg=W0702
+            return None  

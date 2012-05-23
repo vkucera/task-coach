@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -46,6 +46,7 @@ class App(application.Application):
         self._args = args or []
         self.wxApp = MockWxApp()
         self.init()
+        self.sessionMonitor = None
 
     def init(self): # pylint: disable-msg=W0221
         super(App, self).init(loadSettings=False, loadTaskFile=False)

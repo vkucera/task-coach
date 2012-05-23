@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-CCopyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,7 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, xml
+import os
+import xml
 from taskcoachlib import patterns
 from taskcoachlib.domain import base, task, category, note, effort, attachment
 from taskcoachlib.syncml.config import createDefaultSyncConfig
@@ -24,6 +25,7 @@ from taskcoachlib.thirdparty.guid import generate
 from taskcoachlib.thirdparty import lockfile
 from taskcoachlib.changes import ChangeMonitor, ChangeSynchronizer
 from taskcoachlib.filesystem import FilesystemNotifier, FilesystemPollerNotifier
+from taskcoachlib.thirdparty.pubsub import pub
 
 
 def getTemporaryFileName(path):
@@ -97,7 +99,9 @@ class TaskFile(patterns.Observer):
             self.registerObserver(self.onDomainObjectAddedOrRemoved, eventType)
             
         for eventType in task.Task.modificationEventTypes():
-            self.registerObserver(self.onTaskChanged, eventType)
+            if not eventType.startswith('pubsub'):
+                self.registerObserver(self.onTaskChanged_Deprecated, eventType)
+        pub.subscribe(self.onTaskChanged, 'pubsub.task')
         for eventType in effort.Effort.modificationEventTypes():
             self.registerObserver(self.onEffortChanged, eventType)
         for eventType in note.Note.modificationEventTypes():
@@ -106,8 +110,10 @@ class TaskFile(patterns.Observer):
             self.registerObserver(self.onCategoryChanged, eventType)
         for eventType in attachment.FileAttachment.modificationEventTypes() + \
                          attachment.URIAttachment.modificationEventTypes() + \
-                         attachment.MailAttachment.modificationEventTypes(): 
-            self.registerObserver(self.onAttachmentChanged, eventType) 
+                         attachment.MailAttachment.modificationEventTypes():
+            if not eventType.startswith('pubsub'):
+                self.registerObserver(self.onAttachmentChanged_Deprecated, eventType) 
+        pub.subscribe(self.onAttachmentChanged, 'pubsub.attachment')
 
     def __str__(self):
         return self.filename()
@@ -147,13 +153,19 @@ class TaskFile(patterns.Observer):
     def isEmpty(self):
         return 0 == len(self.categories()) == len(self.tasks()) == len(self.notes())
             
-    def onDomainObjectAddedOrRemoved(self, event): # pylint: disable-msg=W0613
+    def onDomainObjectAddedOrRemoved(self, event):  # pylint: disable-msg=W0613
         if self.__loading or self.__saving:
             return
         self.markDirty()
-        
-    def onTaskChanged(self, event):
+
+    def onTaskChanged(self, newValue, sender):
         if self.__loading or self.__saving:
+            return
+        if sender in self.tasks():
+            self.markDirty()
+                    
+    def onTaskChanged_Deprecated(self, event):
+        if self.__loading:
             return
         changedTasks = [changedTask for changedTask in event.sources() \
                         if changedTask in self.tasks()]
@@ -198,8 +210,15 @@ class TaskFile(patterns.Observer):
         for changedNote in event.sources():
             changedNote.markDirty()
             
-    def onAttachmentChanged(self, event):
+    def onAttachmentChanged(self, newValue, sender):
         if self.__loading or self.__saving:
+            return
+        # Attachments don't know their owner, so we can't check whether the
+        # attachment is actually in the task file. Assume it is.
+        self.markDirty()
+            
+    def onAttachmentChanged_Deprecated(self, event):
+        if self.__loading:
             return
         # Attachments don't know their owner, so we can't check whether the
         # attachment is actually in the task file. Assume it is.
@@ -213,8 +232,8 @@ class TaskFile(patterns.Observer):
         self.__lastFilename = filename or self.__filename
         self.__filename = filename
         self.__notifier.setFilename(filename)
-        patterns.Event('taskfile.filenameChanged', self, filename).send()
-
+        pub.sendMessage('taskfile.filenameChanged', filename=filename)
+        
     def filename(self):
         return self.__filename
         
@@ -224,18 +243,17 @@ class TaskFile(patterns.Observer):
     def markDirty(self, force=False):
         if force or not self.__needSave:
             self.__needSave = True
-            patterns.Event('taskfile.dirty', self, True).send()
+            pub.sendMessage('taskfile.dirty', taskFile=self)
                 
     def markClean(self):
         if self.__needSave:
             self.__needSave = False
-            patterns.Event('taskfile.dirty', self, False).send()
 
     def onFileChanged(self):
         if not self.__saving:
             import wx # Not really clean but we're in another thread...
             self.__changedOnDisk = True
-            wx.CallAfter(patterns.Event('taskfile.changed', self, False).send)
+            wx.CallAfter(pub.sendMessage, 'taskfile.changed', self)
 
     @patterns.eventSource
     def clear(self, regenerate=True, event=None):
@@ -329,15 +347,14 @@ class TaskFile(patterns.Observer):
             self.__loading = False
             self.__needSave = False
             self.__changedOnDisk = False
-        patterns.Event('taskfile.justRead', self).send()
+        pub.sendMessage('taskfile.justRead', taskFile=self)
         
     def save(self):
-        patterns.Event('taskfile.aboutToSave', self).send()
+        pub.sendMessage('taskfile.aboutToSave', taskFile=self)
         # When encountering a problem while saving (disk full,
         # computer on fire), if we were writing directly to the file,
         # it's lost. So write to a temporary file and rename it if
         # everything went OK.
-
         self.__saving = True
         try:
             self.mergeDiskChanges()
@@ -347,9 +364,9 @@ class TaskFile(patterns.Observer):
                 xml.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes(),
                                         self.syncMLConfig(), self.guid())
                 fd.close()
-                if os.path.exists(self.__filename): # Not using self.exists() because DummyFile.exists returns True
+                if os.path.exists(self.__filename):  # Not using self.exists() because DummyFile.exists returns True
                     os.remove(self.__filename)
-                if name is not None: # Unit tests (AutoSaver)
+                if name is not None:  # Unit tests (AutoSaver)
                     os.rename(name, self.__filename)
 
             self.__needSave = False
@@ -411,8 +428,8 @@ class TaskFile(patterns.Observer):
         mergeFile = self.__class__()
         mergeFile.load(filename)
         self.__loading = True
-        self.tasks().removeItems(self.objectsToOverwrite(self.tasks(), mergeFile.tasks()))
         categoryMap = dict()
+        self.tasks().removeItems(self.objectsToOverwrite(self.tasks(), mergeFile.tasks()))
         self.rememberCategoryLinks(categoryMap, self.tasks())
         self.tasks().extend(mergeFile.tasks().rootItems())
         self.notes().removeItems(self.objectsToOverwrite(self.notes(), mergeFile.notes()))
@@ -437,17 +454,19 @@ class TaskFile(patterns.Observer):
         
     def rememberCategoryLinks(self, categoryMap, categorizables):
         for categorizable in categorizables:
-            for category in categorizable.categories():
-                categoryMap.setdefault(category.id(), []).append(categorizable)
+            for categoryToLinkLater in categorizable.categories():
+                categoryMap.setdefault(categoryToLinkLater.id(), []).append(categorizable)
             
     def restoreCategoryLinks(self, categoryMap):
         categories = self.categories()
         for categoryId, categorizables in categoryMap.iteritems():
-            category = categories.getObjectById(categoryId)
+            try:
+                categoryToLink = categories.getObjectById(categoryId)
+            except IndexError:
+                continue  # Subcategory was removed by the merge
             for categorizable in categorizables:
-                categorizable.addCategory(category)
-                category.addCategorizable(categorizable)
-        
+                categorizable.addCategory(categoryToLink)
+                categoryToLink.addCategorizable(categorizable)
     
     def needSave(self):
         return not self.__loading and self.__needSave
@@ -490,7 +509,7 @@ class LockedTaskFile(TaskFile):
         self.__lock.break_lock()
 
     def close(self):
-        if self.filename():
+        if self.filename() and os.path.exists(self.filename()):
             self.acquire_lock(self.filename())
         try:
             super(LockedTaskFile, self).close()

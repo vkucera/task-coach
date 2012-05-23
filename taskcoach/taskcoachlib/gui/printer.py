@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -104,7 +104,9 @@ class DCPrintout(wx.Printout):
 def Printout(viewer, settings, printSelectionOnly=False, 
              twoPrintouts=False):
     widget = viewer.getWidget()
-    if hasattr(widget, 'Draw'):
+    if hasattr(widget, 'GetPrintout'):
+        _printout = widget.GetPrintout
+    elif hasattr(widget, 'Draw'):
         def _printout():
             return DCPrintout(widget)
     else:

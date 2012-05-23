@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,6 +32,12 @@ class CategoryContainerTest(test.TestCase):
         self.categories.append(self.category)
         self.categories.append(category.Category(self.category.subject()))
         self.assertEqual(2, len(self.categories))
+        
+    def testAddCategoryWithCategorizable(self):
+        aTask = task.Task()
+        self.category.addCategorizable(aTask)
+        self.categories.append(self.category)
+        self.assertEqual(set([self.category]), aTask.categories())
         
     def testRemoveCategoryWithTask(self):
         aTask = task.Task()
@@ -81,4 +87,7 @@ class CategoryContainerTest(test.TestCase):
         self.filteredCategory.setFiltered(False)
         self.failIf(self.categories.filteredCategories())
 
-    
+    def testResetAllFilteredCategories(self):
+        self.categories.extend([self.category, self.filteredCategory])
+        self.categories.resetAllFilteredCategories()
+        self.failIf(self.filteredCategory.isFiltered())

@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
@@ -21,14 +21,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import patterns, command, widgets
+from taskcoachlib import command, widgets
 from taskcoachlib.domain import category 
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, dialog
-import base, mixin, inplace_editor
+import base
+import mixin
+import inplace_editor
 
 
-class BaseCategoryViewer(mixin.AttachmentDropTargetMixin, 
+class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable-msg=W0223
                          mixin.FilterableViewerMixin,
                          mixin.SortableViewerForCategoriesMixin, 
                          mixin.SearchableViewerMixin, 
@@ -45,7 +47,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
                           category.Category.appearanceChangedEventType(),
                           category.Category.exclusiveSubcategoriesChangedEventType(),
                           category.Category.filterChangedEventType()]:
-            patterns.Publisher().registerObserver(self.onAttributeChanged, 
+            self.registerObserver(self.onAttributeChanged_Deprecated, 
                 eventType)
 
     def domainObjectsToView(self):
@@ -55,7 +57,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
         return class_ == category.Category
     
     def createWidget(self):
-        imageList = self.createImageList() # Has side-effects
+        imageList = self.createImageList()  # Has side-effects
         self._columns = self._createColumns()
         itemPopupMenu = self.createCategoryPopupMenu()
         columnPopupMenu = menu.ColumnPopupMenu(self)
@@ -66,7 +68,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
             uicommand.CategoryDragAndDrop(viewer=self, categories=self.presentation()),
             itemPopupMenu, columnPopupMenu,
             **self.widgetCreationKeywordArguments())
-        widget.AssignImageList(imageList) # pylint: disable-msg=E1101
+        widget.AssignImageList(imageList)  # pylint: disable-msg=E1101
         return widget
 
     def createCategoryPopupMenu(self, localOnly=False):
@@ -93,14 +95,8 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
                        width=self.getColumnWidth('description'), 
                        editCallback=self.onEditDescription,
                        editControl=inplace_editor.DescriptionCtrl, **kwargs),
-                   ## widgets.Column('ordering', _('Manual ordering'),
-                   ##     category.Category.orderingChangedEventType(),
-                   ##     sortCallback=uicommand.ViewerSortByCommand(viewer=self,
-                   ##         value='ordering'),
-                   ##     renderCallback=lambda category: '',
-                   ##     width=self.getColumnWidth('ordering')),
                    widgets.Column('attachments', '', 
-                       category.Category.attachmentsChangedEventType(), # pylint: disable-msg=E1101
+                       category.Category.attachmentsChangedEventType(),  # pylint: disable-msg=E1101
                        width=self.getColumnWidth('attachments'),
                        alignment=wx.LIST_FORMAT_LEFT,
                        imageIndicesCallback=self.attachmentImageIndices,
@@ -108,7 +104,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
                        renderCallback=lambda category: '', **kwargs)]
         if self.settings.getboolean('feature', 'notes'):
             columns.append(widgets.Column('notes', '', 
-                       category.Category.notesChangedEventType(), # pylint: disable-msg=E1101
+                       category.Category.notesChangedEventType(),  # pylint: disable-msg=E1101
                        width=self.getColumnWidth('notes'),
                        alignment=wx.LIST_FORMAT_LEFT,
                        imageIndicesCallback=self.noteImageIndices,
@@ -117,9 +113,9 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
         return columns
     
     def createCreationToolBarUICommands(self):
-        return [uicommand.CategoryNew(categories=self.presentation(),
+        return (uicommand.CategoryNew(categories=self.presentation(),
                                       settings=self.settings),
-                uicommand.NewSubItem(viewer=self)]
+                uicommand.NewSubItem(viewer=self))
 
     def createColumnUICommands(self):
         commands = [\
@@ -129,9 +125,6 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
             uicommand.ViewColumn(menuText=_('&Description'),
                 helpText=_('Show/hide description column'),
                 setting='description', viewer=self),
-            ## uicommand.ViewColumn(menuText=_('&Manual ordering'),
-            ##     helpText=_('Show/hide manual ordering column'),
-            ##     setting='ordering', viewer=self),
             uicommand.ViewColumn(menuText=_('&Attachments'),
                 helpText=_('Show/hide attachments column'),
                 setting='attachments', viewer=self)]
@@ -141,7 +134,10 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
                 setting='notes', viewer=self))
         return commands
 
-    def onAttributeChanged(self, event):
+    def onAttributeChanged(self, newValue, sender):
+        super(BaseCategoryViewer, self).onAttributeChanged(newValue, sender)
+            
+    def onAttributeChanged_Deprecated(self, event):
         if category.Category.exclusiveSubcategoriesChangedEventType() in event.types():
             # We need to refresh the children of the changed item as well 
             # because they have to use radio buttons instead of checkboxes, or
@@ -149,14 +145,14 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
             items = event.sources()
             for item in items.copy():
                 items |= set(item.children())
-            self.widget.RefreshItems(*items) # pylint: disable-msg=W0142
+            self.widget.RefreshItems(*items)  # pylint: disable-msg=W0142
         else:
-            super(BaseCategoryViewer, self).onAttributeChanged(event)
+            super(BaseCategoryViewer, self).onAttributeChanged_Deprecated(event)
         
     def onCheck(self, event):
         categoryToFilter = self.widget.GetItemPyData(event.GetItem())
         categoryToFilter.setFiltered(event.GetItem().IsChecked())
-        self.sendViewerStatusEvent() # Notify status observers like the status bar
+        self.sendViewerStatusEvent()  # Notify status observers like the status bar
         
     def getIsItemChecked(self, item):
         if isinstance(item, category.Category):
@@ -171,10 +167,10 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
         return True
 
     def statusMessages(self):
-        status1 = _('Categories: %d selected, %d total')%\
+        status1 = _('Categories: %d selected, %d total') % \
             (len(self.curselection()), len(self.presentation()))
         filteredCategories = self.presentation().filteredCategories()
-        status2 = _('Status: %d filtered')%len(filteredCategories)
+        status2 = _('Status: %d filtered') % len(filteredCategories)
         return status1, status2
         
     def itemEditorClass(self):
@@ -190,7 +186,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
         return command.DeleteCategoryCommand
     
 
-class CategoryViewer(BaseCategoryViewer):
+class CategoryViewer(BaseCategoryViewer):  # pylint: disable-msg=W0223 
     def __init__(self, *args, **kwargs):
         super(CategoryViewer, self).__init__(*args, **kwargs)
         self.filterUICommand.setChoice(self.settings.getboolean('view',
@@ -201,4 +197,4 @@ class CategoryViewer(BaseCategoryViewer):
         self.filterUICommand = \
             uicommand.CategoryViewerFilterChoice(settings=self.settings)
         return super(CategoryViewer, self).createModeToolBarUICommands() + \
-            [self.filterUICommand]
+            (self.filterUICommand,)

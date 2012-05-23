@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,11 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib import meta, help # pylint: disable-msg=W0622
-import sys, os, glob, wx
+from buildlib import clean, bdist_rpm_fedora, bdist_rpm_opensuse, bdist_deb, \
+    bdist_winpenpack, bdist_portableapps
 from setup import setupOptions
-from buildlib import (clean, bdist_rpm_fedora, bdist_rpm_opensuse,
-    bdist_deb, bdist_winpenpack, bdist_portableapps)
+from taskcoachlib import meta
+import sys
+import os
+import glob
+import wx
 
 
 setupOptions['cmdclass'] = dict(clean=clean,
@@ -52,36 +55,111 @@ manifest = """
         <dependentAssembly>
             <assemblyIdentity type="win32" 
             name="Microsoft.VC90.CRT" version="9.0.21022.8"
-	        processorArchitecture="x86" publicKeyToken="1fc8b3b9a1e18e3b" />
+            processorArchitecture="x86" publicKeyToken="1fc8b3b9a1e18e3b" />
         </dependentAssembly>
     </dependency>
 </assembly>
-"""%meta.name
+""" % meta.name
 
-def writeFile(filename, text, directory='.'): # pylint: disable-msg=W0621
+doubleline = '================================================================\n'
+
+header = doubleline + '%(name)s - %(description)s\n' % meta.metaDict + doubleline
+
+aboutText = header + '''
+Version %(version)s, %(date)s
+
+By %(author)s <%(author_email)s>
+
+%(url)s
+
+%(copyright)s
+%(license)s
+
+''' % meta.metaDict + doubleline
+
+installText = header + '''
+
+--- Prerequisites ----------------------------------------------
+
+You need Python version %(pythonversion)s or higher and wxPython 
+version %(wxpythonversion)s or higher.
+
+
+--- Testing ----------------------------------------------------
+
+Before installing, you may want to run the unittests included.
+Issue the following command:
+
+  cd tests; python test.py
+
+If all goes well, you should see a number of dots appearing and
+the message 'Ran X tests in Y seconds. OK'. If not, you'll get
+one or more failed tests. In that case, please run the tests
+again, redirecting the output to a textfile, like this:
+
+  python test.py 2> errors.txt
+
+Please mail me the errors.txt file and your platform information
+(operating system version, Python version and wxPython version).
+
+
+--- Installation -----------------------------------------------
+
+There are two options to install %(name)s: 
+
+First, you can simply move this directory to some suitable 
+location and run taskcoach.py (or taskcoach.pyw if you are on 
+the Windows platform) from there.
+
+Alternatively, you can use the Python distutils setup script
+to let Python install %(name)s for you. In that case run the
+following command:
+
+  python setup.py install
+
+If you have a previous version of %(name)s installed, you may
+need to force old files to be overwritten, like this:
+
+  python setup.py install --force
+
+''' % meta.metaDict + doubleline
+
+buildText = header + '''
+
+--- Building ---------------------------------------------------
+
+To be done.
+
+''' % meta.metaDict + doubleline
+
+
+def writeFile(filename, text, directory='.'):  # pylint: disable-msg=W0621
     if not os.path.exists(directory):
         os.mkdir(directory)
     with file(os.path.join(directory, filename), 'w') as textFile:
         textFile.write(text)
 
+
 def createDocumentation():
-    writeFile('README.txt',  help.aboutText)
-    writeFile('INSTALL.txt', help.installText)
+    writeFile('README.txt', aboutText)
+    writeFile('INSTALL.txt', installText)
     writeFile('LICENSE.txt', meta.licenseText)
+
 
 def createInnoSetupScript():
     script = file('build.in/windows/taskcoach.iss').read()
-    writeFile('taskcoach.iss', script%meta.metaDict, builddir)
+    writeFile('taskcoach.iss', script % meta.metaDict, builddir)
+
 
 def createDebianChangelog():
     changelog = file('build.in/debian/changelog').read()
-    writeFile('changelog', changelog%meta.metaDict, 
+    writeFile('changelog', changelog % meta.metaDict, 
               os.path.join(builddir, 'debian'))
 
 if sys.argv[1] == 'py2exe':
     from distutils.core import setup
-    import py2exe # pylint: disable-msg=F0401
-    py2exeDistdir = '%s-%s-win32exe'%(meta.filename, meta.version)
+    import py2exe  # pylint: disable-msg=F0401
+    py2exeDistdir = '%s-%s-win32exe' % (meta.filename, meta.version)
     # Get .mo files for wxWidgets:
     locale_dir = os.path.join(os.path.dirname(wx.__file__), 'locale')
     mo_path = os.path.join('LC_MESSAGES', 'wxstd.mo')
@@ -96,22 +174,29 @@ if sys.argv[1] == 'py2exe':
                                                   'dist.in/msvcr90.dll',
                                                   'dist.in/Microsoft.VC90.CRT.manifest'])]
     setupOptions.update({
-        'windows' : [{ 'script' : 'taskcoach.pyw', 
-            'other_resources' : [(24, 1, manifest)],
+        'windows': [{'script': 'taskcoach.pyw', 
+            'other_resources': [(24, 1, manifest)],
             'icon_resources': [(1, 'icons.in/taskcoach.ico')]}],
-        'options' : {'py2exe' : {
-            'compressed' : 1, 
-            'optimize' : 2, 
+        'options': {'py2exe': {
+            'compressed': 1, 
+            'optimize': 2, 
             # We need to explicitly include these packages because they 
             # are imported implicitly:
-            'packages' : ['taskcoachlib.i18n'], 
-            'dist_dir' : os.path.join(builddir, py2exeDistdir),
+            'packages': ['taskcoachlib.i18n',
+                          'taskcoachlib.thirdparty.pubsub',
+                          'taskcoachlib.thirdparty.pubsub.core',
+                          'taskcoachlib.thirdparty.pubsub.core.kwargs',
+                          'taskcoachlib.thirdparty.apscheduler',
+                          'taskcoachlib.thirdparty.apscheduler.jobstores',
+                          'taskcoachlib.thirdparty.apscheduler.triggers',
+                          'taskcoachlib.thirdparty.apscheduler.triggers.cron'], 
+            'dist_dir': os.path.join(builddir, py2exeDistdir),
             'dll_excludes': ['MSVCR80.dll', 'UxTheme.dll']}},
         'data_files': dll_files + mo_files})
     os.environ['PATH'] = 'dist.in;' + os.environ['PATH']
  
 elif sys.argv[1] == 'py2app':
-    from setuptools import setup # pylint: disable-msg=W0404
+    from setuptools import setup  # pylint: disable-msg=W0404
     setupOptions.update(dict(app=['taskcoach.py'], 
         setup_requires=['py2app'],
         options=dict(py2app=dict(argv_emulation=True, compressed=True,
@@ -119,12 +204,23 @@ elif sys.argv[1] == 'py2app':
             # We need to explicitly include i18n modules because they 
             # are imported implicitly via __import__:
             includes=[filename[:-3].replace('/', '.') for filename \
-                      in glob.glob('taskcoachlib/i18n/*.py')],
-            plist=dict(CFBundleIconFile='taskcoach.icns')))))
+                      in glob.glob('taskcoachlib/i18n/*.py') + \
+                      glob.glob('taskcoachlib/thirdparty/pubsub/*.py') + \
+                      glob.glob('taskcoachlib/thirdparty/pubsub/core/*.py') + \
+                      glob.glob('taskcoachlib/thirdparty/pubsub/core/kwargs/*.py') + \
+                      glob.glob('taskcoachlib/thirdparty/apscheduler/*.py') + \
+                      glob.glob('taskcoachlib/thirdparty/apscheduler/jobstores/*.py') + \
+                      glob.glob('taskcoachlib/thirdparty/apscheduler/triggers/*.py') + \
+                      glob.glob('taskcoachlib/thirdparty/apscheduler/triggers/cron/*.py')],
+            plist=dict(CFBundleIconFile='taskcoach.icns',
+                       CFBundleDocumentTypes=[dict(CFBundleTypeExtensions=['tsk'],
+                                                   CFBundleTypeIconFile='taskcoach.icns',
+                                                   CFBundleTypeName='%s task file' % meta.name,
+                                                   CFBundleTypeRole='Editor')])))))
     
 elif sys.argv[1] == 'bdist_rpm_fedora':
     from distutils.core import setup
-    spec_file = file('build.in/fedora/taskcoach.spec').read()%meta.metaDict
+    spec_file = file('build.in/fedora/taskcoach.spec').read() % meta.metaDict
     spec_file = spec_file.split('\n')
     setupOptions.update(dict(options=dict(bdist_rpm_fedora=dict(\
         spec_file=spec_file, icon='icons.in/taskcoach.png', 
@@ -135,7 +231,7 @@ elif sys.argv[1] == 'bdist_rpm_fedora':
 
 elif sys.argv[1] == 'bdist_rpm_opensuse':
     from distutils.core import setup
-    spec_file = file('build.in/opensuse/taskcoach.spec').read()%meta.metaDict
+    spec_file = file('build.in/opensuse/taskcoach.spec').read() % meta.metaDict
     spec_file = spec_file.split('\n')
     setupOptions.update(dict(options=dict(bdist_rpm_opensuse=dict(\
         spec_file=spec_file, icon='icons.in/taskcoach.png', 
@@ -156,13 +252,13 @@ elif sys.argv[1] in ['bdist_deb', 'bdist_ubuntu']:
         license_summary=meta.data.license_notice, 
         wxpythonversion=meta.data.wxpythonversionnumber,
         subsection='Office', url=meta.data.url,
-        command='/usr/bin/taskcoach.py')
+        command='/usr/bin/taskcoach.py',
+        changelog_content=file('changelog_content', 'rb').read().rstrip())
 
     if sys.argv[1] == 'bdist_ubuntu':
         bdist_deb['distribution'] = sys.argv[2]
         bdist_deb['version'] = '%s-0ubuntu%s~%s' % (meta.version, sys.argv[3], sys.argv[2])
         bdist_deb['section'] = 'editors'
-        bdist_deb['changelog_content'] = file('changelog_content', 'rb').read().rstrip()
         sys.argv[1] = 'bdist_deb'
         del sys.argv[2]
         del sys.argv[2]
@@ -197,6 +293,6 @@ if __name__ == '__main__':
         if not os.path.exists(directory):
             os.mkdir(directory)
     createDocumentation()
-    setup(**setupOptions) # pylint: disable-msg=W0142
+    setup(**setupOptions)  # pylint: disable-msg=W0142
     if sys.argv[1] == 'py2exe':
         createInnoSetupScript()

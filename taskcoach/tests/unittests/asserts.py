@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -60,8 +60,9 @@ class TaskAssertsMixin(object):
         self.failIf(orig == copy)
         self.assertEqual(orig.subject(), copy.subject())
         self.assertEqual(orig.description(), copy.description())
+        self.assertEqual(orig.plannedStartDateTime(), copy.plannedStartDateTime())
         self.assertEqual(orig.dueDateTime(), copy.dueDateTime())
-        self.assertEqual(orig.startDateTime(), copy.startDateTime())
+        self.assertEqual(orig.actualStartDateTime(), copy.actualStartDateTime())
         self.assertEqual(orig.completionDateTime(), copy.completionDateTime())
         self.assertEqual(orig.recurrence(), copy.recurrence())
         self.assertEqual(orig.budget(), copy.budget())

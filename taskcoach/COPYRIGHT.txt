@@ -1,5 +1,5 @@
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach developers are:
 Copyright (C) 2004-2011 Frank Niessink <frank@niessink.com>
@@ -14,6 +14,24 @@ Copyright (C) 2008 Carl Zmola <zmola@acm.org>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 Copyright (C) 2008 João Alexandre de Toledo <jtoledo@griffo.com.br>
 Copyright (C) 2008 Marcin Zajaczkowski <mszpak@wp.pl>
+Copyright (C) 2011 Tobias Gradl <https://sourceforge.net/users/greentomato>
+
+Files under taskcoachlib/thirdparty are, well, third party. They come
+with their own license. They may include modifications from the
+original, in which cases those modifications comply with the original
+license.
+
+The following files do not include any copyright information except
+for the original author's name:
+
+ - taskcoachlib/notify/snarl.py: that's how we found it on the Interwebs.
+ - taskcoachlib/i18n/po2dict.py: same.
+ - taskcoachlib/persistence/xml/templates.py: because it's a generated
+    file.
+
+Also thanks to Nicolas Boulenguez for helping make this list complete,
+doing some anal harm to various lepidopterans in the process (French
+expression, I'm not sure it translates well in English).
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -74,7 +74,7 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
         
     def bindEventHandlers(self):
         # pylint: disable-msg=W0142,W0612,W0201
-        for args in [(wx.EVT_TIMER, self.onFind),
+        for args in [(wx.EVT_TIMER, self.onFind, self.__timer),
                      (wx.EVT_TEXT_ENTER, self.onFind),
                      (wx.EVT_TEXT, self.onFindLater),
                      (wx.EVT_SEARCHCTRL_CANCEL_BTN, self.onCancel),
@@ -89,7 +89,7 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
         # handler for those menu item ids. It's no problem that the actual menu
         # items don't exist yet. 
         self.__recentSearchMenuItemIds = \
-            [wx.NewId() for i in range(self.__maxRecentSearches)]
+            [wx.NewId() for dummy in range(self.__maxRecentSearches)]
         self.Bind(wx.EVT_MENU_RANGE, self.onRecentSearchMenuItem, 
             id=self.__recentSearchMenuItemIds[0], 
             id2=self.__recentSearchMenuItemIds[-1])

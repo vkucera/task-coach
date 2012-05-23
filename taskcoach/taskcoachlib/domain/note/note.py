@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,4 +25,3 @@ class Note(attachment.AttachmentOwner,
     ''' This class represents notes. Notes consist of a subject, description, 
         and attachments. In addition, a note may be assigned to categories. '''
     pass
-

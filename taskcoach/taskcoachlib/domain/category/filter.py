@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 from taskcoachlib.domain import base
+from taskcoachlib.thirdparty.pubsub import pub
 from category import Category
 
 
@@ -37,45 +38,36 @@ class CategoryFilter(base.Filter):
         for eventType in eventTypes:
             patterns.Publisher().registerObserver(self.onCategoryChanged,
                                                   eventType=eventType)
-        patterns.Publisher().registerObserver(self.onFilterMatchingChanged,
-            eventType='view.categoryfiltermatchall')
-
+        pub.subscribe(self.onFilterMatchingChanged, 'settings.view.categoryfiltermatchall')
         super(CategoryFilter, self).__init__(*args, **kwargs)
     
-    def filter(self, categorizables):
+    def filterItems(self, categorizables):
         filteredCategories = self.__categories.filteredCategories()
         if not filteredCategories:
             return categorizables
         
-        filteredCategorizables = set()
         if self.__filterOnlyWhenAllCategoriesMatch:
-            allowedCategorizables = set(categorizables)
+            filteredCategorizables = set(categorizables)
             for category in filteredCategories:
-                allowedCategorizables &= self.__categorizablesBelongingToCategory(category)
+                filteredCategorizables &= self.__categorizablesBelongingToCategory(category)
         else:
-            allowedCategorizables = set()
+            filteredCategorizables = set()
             for category in filteredCategories: 
-                allowedCategorizables |= self.__categorizablesBelongingToCategory(category)
+                filteredCategorizables |= self.__categorizablesBelongingToCategory(category)
 
-        for categorizable in categorizables:
-            categorizablesToInvestigate = set([categorizable]) 
-            if self.treeMode():
-                categorizablesToInvestigate.update(child for child in categorizable.children(recursive=True) \
-                                                   if child in self.observable())
-            if allowedCategorizables & categorizablesToInvestigate:
-                filteredCategorizables.add(categorizable)
+        filteredCategorizables &= self.observable()
         return filteredCategorizables
 
     @staticmethod
     def __categorizablesBelongingToCategory(category):
         categorizables = category.categorizables(recursive=True)
         for categorizable in categorizables.copy():
-            categorizables |= set(categorizable.children(recursive=True))            
+            categorizables |= set(categorizable.children(recursive=True))           
         return categorizables
         
-    def onFilterMatchingChanged(self, event):
-        self.__filterOnlyWhenAllCategoriesMatch = eval(event.value())
+    def onFilterMatchingChanged(self, value):
+        self.__filterOnlyWhenAllCategoriesMatch = value
         self.reset()
 
-    def onCategoryChanged(self, event):
+    def onCategoryChanged(self, event): # pylint: disable-msg=W0613
         self.reset()

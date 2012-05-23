@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ from taskcoachlib.domain import task, base
 
 
 class TestFilter(base.Filter):
-    def filter(self, items):
+    def filterItems(self, items):
         return [item for item in items if item > 'b']
 
 
@@ -58,11 +58,11 @@ class FilterSetTest(FilterTestsMixin, test.TestCase):
     
     
 class DummyFilter(base.Filter):
-    def filter(self, items):
+    def filterItems(self, items):
         return items
     
     def test(self):
-        self.testcalled = 1 # pylint: disable-msg=W0201
+        self.testcalled = 1  # pylint: disable-msg=W0201
 
 
 class DummyItem(str):

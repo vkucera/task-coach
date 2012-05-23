@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test
-from taskcoachlib import patterns, config
+from taskcoachlib import config
 from taskcoachlib.domain import task, category
 
 # pylint: disable-msg=W0201,E1101
@@ -30,10 +30,10 @@ from taskcoachlib.domain import task, category
 
 class CategoryFilterHelpersMixin(object):
     def setFilterOnAnyCategory(self):
-        self.settings.set('view', 'categoryfiltermatchall', 'False')
+        self.settings.setboolean('view', 'categoryfiltermatchall', False)
         
     def setFilterOnAllCategories(self):
-        self.settings.set('view', 'categoryfiltermatchall', 'True')
+        self.settings.setboolean('view', 'categoryfiltermatchall', True)
 
     def link(self, category, categorizable): # pylint: disable-msg=W0621
         category.addCategorizable(categorizable)
@@ -255,18 +255,6 @@ class TwoCategoriesAndOneTaskFixture(Fixture):
         self.category1.setFiltered()
         self.category2.setFiltered()
         self.assertFilterHidesEverything()
-
-    def testReceiveFilterMatchOnAllNotificationFromViewer(self):
-        self.category1.setFiltered()
-        self.category2.setFiltered()
-        patterns.Event('view.categoryfiltermatchall', 'dummy_source', 'True').send()
-        self.assertFilterHidesEverything()
-
-    def testReceiveFilterMatchOnAnyNotificationFromViewer(self):
-        self.category1.setFiltered()
-        self.category2.setFiltered()
-        patterns.Event('view.categoryfiltermatchall', 'dummy_source', 'False').send()
-        self.assertFilterHidesNothing()
 
 
 class TwoCategoriesAndOneTaskInListModeTest(TwoCategoriesAndOneTaskFixture, test.TestCase):
@@ -717,13 +705,13 @@ class CategoryFilterAndViewFilterFixtureAndCommonTestsMixin(CategoryFilterHelper
             categories=self.categories, treeMode=self.treeMode)
 
     def testThatParentIsHiddenWhenHiddenCompletedChildIsFiltered(self):
-        self.viewFilter.setFilteredByCompletionDateTime('Always')
+        self.viewFilter.hideTaskStatus(task.status.completed)
         self.assertEqual(1, len(self.viewFilter))
         self.childCategory.setFiltered(True)
         self.assertEqual(0, len(self.categoryFilter))
         
     def testThatParentIsShownWhenHiddenCompletedChildIsUnfiltered(self):
-        self.viewFilter.setFilteredByCompletionDateTime('Always')
+        self.viewFilter.hideTaskStatus(task.status.completed)
         self.childCategory.setFiltered(True)
         self.assertEqual(0, len(self.categoryFilter))
         self.childCategory.setFiltered(False)
@@ -732,14 +720,14 @@ class CategoryFilterAndViewFilterFixtureAndCommonTestsMixin(CategoryFilterHelper
     def testThatParentIsHiddenWhenFilteredCompletedChildIsHidden(self):
         self.childCategory.setFiltered(True)
         self.assertEqual(2, len(self.viewFilter))
-        self.viewFilter.setFilteredByCompletionDateTime('Always')
+        self.viewFilter.hideTaskStatus(task.status.completed)
         self.assertEqual(0, len(self.categoryFilter))        
         
     def testThatParentIsShownWhenFilteredCompletedChildIsUnhidden(self):
         self.childCategory.setFiltered(True)
-        self.viewFilter.setFilteredByCompletionDateTime('Always')
+        self.viewFilter.hideTaskStatus(task.status.completed)
         self.assertEqual(0, len(self.categoryFilter))
-        self.viewFilter.setFilteredByCompletionDateTime('Never')
+        self.viewFilter.hideTaskStatus(task.status.completed, False)
         self.assertEqual(2 if self.treeMode else 1, len(self.categoryFilter))
 
 

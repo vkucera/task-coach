@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -78,10 +78,14 @@ class XMLWriter(object):
 
         for rootTask in sortedById(taskList.rootItems()):
             self.taskNode(root, rootTask)
+        
+        ownedNotes = self.notesOwnedByNoteOwners(taskList, categoryContainer)
         for rootCategory in sortedById(categoryContainer.rootItems()):
-            self.categoryNode(root, rootCategory, taskList, noteContainer)
+            self.categoryNode(root, rootCategory, taskList, noteContainer, ownedNotes)
+
         for rootNote in sortedById(noteContainer.rootItems()):
             self.noteNode(root, rootNote)
+        
         if syncMLConfig:
             self.syncMLNode(root, syncMLConfig)
         if guid:
@@ -91,28 +95,37 @@ class XMLWriter(object):
         PIElementTree('<?taskcoach release="%s" tskversion="%d"?>\n' % (meta.data.version,
                                                                          self.__versionnr),
                                                 root).write(self.__fd, 'utf-8')
-
+    
+    def notesOwnedByNoteOwners(self, *collectionOfNoteOwners):
+        notes = []
+        for noteOwners in collectionOfNoteOwners:
+            for noteOwner in noteOwners:
+                notes.extend(noteOwner.notes(recursive=True))
+        return notes
+    
     def taskNode(self, parentNode, task): # pylint: disable-msg=W0621
         maxDateTime = self.maxDateTime
         node = self.baseCompositeNode(parentNode, task, 'task', self.taskNode)
         node.attrib['status'] = str(task.getStatus())
-        if task.startDateTime() != maxDateTime:
-            node.attrib['startdate'] = str(task.startDateTime())
+        if task.plannedStartDateTime() != maxDateTime:
+            node.attrib['plannedstartdate'] = str(task.plannedStartDateTime())
         if task.dueDateTime() != maxDateTime:
             node.attrib['duedate'] = str(task.dueDateTime())
+        if task.actualStartDateTime() != maxDateTime:
+            node.attrib['actualstartdate'] = str(task.actualStartDateTime())
         if task.completionDateTime() != maxDateTime:
             node.attrib['completiondate'] = str(task.completionDateTime())
-        if task.percentageComplete() != 0:
+        if task.percentageComplete():
             node.attrib['percentageComplete'] = str(task.percentageComplete())
         if task.recurrence():
             self.recurrenceNode(node, task.recurrence())
         if task.budget() != date.TimeDelta():
             node.attrib['budget'] = self.budgetAsAttribute(task.budget())
-        if task.priority() != 0:
+        if task.priority():
             node.attrib['priority'] = str(task.priority())
-        if task.hourlyFee() != 0:
+        if task.hourlyFee():
             node.attrib['hourlyFee'] = str(task.hourlyFee())
-        if task.fixedFee() != 0:
+        if task.fixedFee():
             node.attrib['fixedFee'] = str(task.fixedFee())
         reminder = task.reminder() 
         if reminder != maxDateTime and reminder != None:
@@ -217,8 +230,6 @@ class XMLWriter(object):
             node.attrib['icon'] = str(item.icon())
         if item.selectedIcon():
             node.attrib['selectedIcon'] = str(item.selectedIcon())
-        if item.ordering():
-            node.attrib['ordering'] = str(item.ordering())
         return node
 
     def baseCompositeNode(self, parentNode, item, nodeName, childNodeFactory, childNodeFactoryArgs=()):
@@ -235,8 +246,6 @@ class XMLWriter(object):
             node.attrib['icon'] = str(item.icon())
         if item.selectedIcon():
             node.attrib['selectedIcon'] = str(item.selectedIcon())
-        if item.ordering():
-            node.attrib['ordering'] = str(item.ordering())
         if item.expandedContexts():
             node.attrib['expandedContexts'] = \
                      str(tuple(sorted(item.expandedContexts())))
@@ -307,7 +316,7 @@ class TemplateXMLWriter(XMLWriter):
     def taskNode(self, parentNode, task): # pylint: disable-msg=W0621
         node = super(TemplateXMLWriter, self).taskNode(parentNode, task)
 
-        for name, getter in [('startdate', 'startDateTime'),
+        for name, getter in [('plannedstartdate', 'plannedStartDateTime'),
                              ('duedate', 'dueDateTime'),
                              ('completiondate', 'completionDateTime'),
                              ('reminder', 'reminder')]:

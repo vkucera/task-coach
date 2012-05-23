@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from unittests import asserts
 from CommandTestCase import CommandTestCase
-from taskcoachlib import command, patterns, config
+from taskcoachlib import command, config
 from taskcoachlib.domain import task, effort, date
 
 
@@ -45,6 +45,16 @@ class NewEffortCommandTest(EffortCommandTestCase):
         self.assertDoUndoRedo(
             lambda: self.failUnless(newEffort in self.originalTask.efforts()),
             lambda: self.assertEqual([self.effort], self.originalTask.efforts()))
+        
+    def testAddingNewEffortSetsActualStartDateTimeOfTask(self):
+        newTask = task.Task()
+        self.taskList.append(newTask)
+        newEffortCommand = command.NewEffortCommand(self.effortList, [newTask])
+        newEffortCommand.do()
+        newEffort = newEffortCommand.efforts[0]
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(newEffort.getStart(), newTask.actualStartDateTime()),
+            lambda: self.assertEqual(date.DateTime(), newTask.actualStartDateTime()))
 
     def testNewEffortWhenUserEditsTask(self):
         secondTask = task.Task()
@@ -87,16 +97,52 @@ class StartAndStopEffortCommandTest(EffortCommandTestCase):
             lambda: self.failIf(self.originalTask.isBeingTracked()),
             lambda: self.failUnless(self.originalTask.isBeingTracked()))
         
-    def testStartTrackingInactiveTaskSetsStartDate(self):
-        self.assertDoUndoRedo(
-            lambda: self.assertEqual(date.Today(), self.originalTask.startDateTime().date()),
-            lambda: self.assertEqual(date.DateTime(), self.originalTask.startDateTime()))
-        
-    def testStartTrackingInactiveTaskWithFutureStartDate(self):
-        futureStartDateTime = date.Now() + date.TimeDelta(days=1)
-        self.task2.setStartDateTime(futureStartDateTime)
+    def testStartTrackingInactiveTaskSetsActualStartDate(self):
         start = command.StartEffortCommand(self.taskList, [self.task2])
         start.do()
         self.assertDoUndoRedo(
-            lambda: self.assertEqual(date.Today(), self.task2.startDateTime().date()),
-            lambda: self.assertEqual(futureStartDateTime, self.task2.startDateTime()))
+            lambda: self.assertEqual(date.Today(), self.task2.actualStartDateTime().date()),
+            lambda: self.assertEqual(date.DateTime(), self.task2.actualStartDateTime()))
+        
+    def testStartTrackingInactiveTaskWithFutureActualStartDate(self):
+        futureStartDateTime = date.Now() + date.TimeDelta(days=1)
+        self.task2.setActualStartDateTime(futureStartDateTime)
+        start = command.StartEffortCommand(self.taskList, [self.task2])
+        start.do()
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(date.Today(), self.task2.actualStartDateTime().date()),
+            lambda: self.assertEqual(futureStartDateTime, self.task2.actualStartDateTime()))
+
+
+class EditEffortStartDateTimeCommandTest(EffortCommandTestCase):
+    def testNewStartDateTime(self):
+        oldStart = self.effort.getStart()
+        newStart = date.DateTime(2000, 1, 1)
+        edit = command.EditEffortStartDateTimeCommand(self.effortList,
+                                                      [self.effort], newValue=newStart)
+        edit.do()
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(newStart, self.effort.getStart()),
+            lambda: self.assertEqual(oldStart, self.effort.getStart()))
+        
+    def testNewStartDateTimeSetsActualStartOfTask(self):
+        oldStart = self.effort.task().actualStartDateTime() 
+        newStart = date.DateTime(2000, 1, 1)
+        edit = command.EditEffortStartDateTimeCommand(self.effortList,
+                                                      [self.effort], newValue=newStart)
+        edit.do()
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(newStart, self.effort.task().actualStartDateTime()),
+            lambda: self.assertEqual(oldStart, self.effort.task().actualStartDateTime()))        
+
+
+class EditEffortStopDateTimeCommandTest(EffortCommandTestCase):
+    def testNewStopDateTime(self):
+        oldStop = self.effort.getStop()
+        newStop = oldStop + date.TimeDelta(hours=1)
+        edit = command.EditEffortStopDateTimeCommand(self.effortList,
+                                                     [self.effort], newValue=newStop)
+        edit.do()
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(newStop, self.effort.getStop()),
+            lambda: self.assertEqual(oldStop, self.effort.getStop()))

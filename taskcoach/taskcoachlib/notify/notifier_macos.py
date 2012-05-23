@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,7 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import sys, os, struct
+import os
+import struct
+import sys
 
 _subdir = 'IA64' if struct.calcsize('L') == 8 else 'IA32'
 
@@ -40,7 +42,7 @@ class GrowlNotifier(AbstractNotifier):
             self._notifier = TaskCoachGrowlNotifier(applicationIcon=Growl.Image.imageWithIconForCurrentApplication())
             self._notifier.register()
         except:
-            self._available = False # pylint: disable-msg=W0702
+            self._available = False  # pylint: disable-msg=W0702
         else:
             self._available = True
 

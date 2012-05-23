@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import patterns
+from taskcoachlib.thirdparty.pubsub import pub
 
 
 class StatusBar(wx.StatusBar):
@@ -26,10 +26,11 @@ class StatusBar(wx.StatusBar):
         self.SetFieldsCount(2)
         self.parent = parent
         self.viewer = viewer
-        patterns.Publisher().registerObserver(self.onViewerStatusChanged, 
-            eventType=viewer.viewerStatusEventType(), eventSource=viewer)
+        self.__timer = wx.Timer(self)
+        self.Bind(wx.EVT_TIMER, self.onUpdateStatus, self.__timer)
+        pub.subscribe(self.onViewerStatusChanged, 'viewer.status')
         self.scheduledStatusDisplay = None
-        self.onViewerStatusChanged(None)
+        self.onViewerStatusChanged()
         self.wxEventTypes = (wx.EVT_MENU_HIGHLIGHT_ALL, wx.EVT_TOOL_ENTER)
         for eventType in self.wxEventTypes:
             parent.Bind(eventType, self.resetStatusBar)
@@ -46,9 +47,15 @@ class StatusBar(wx.StatusBar):
             self._displayStatus()
         event.Skip()
 
-    def onViewerStatusChanged(self, event): # pylint: disable-msg=W0613
-        # Give viewer a chance to update first:
-        wx.CallAfter(self._displayStatus)
+    def onViewerStatusChanged(self):
+        # Give viewer a chance to update first and only update when the viewer
+        # hasn't changed status for 0.5 seconds.
+        self.__timer.Start(500, oneShot=True)
+              
+    def onUpdateStatus(self, event): # pylint: disable-msg=W0613
+        if self.__timer:
+            self.__timer.Stop()
+        self._displayStatus()
 
     def _displayStatus(self):
         try:
@@ -65,7 +72,6 @@ class StatusBar(wx.StatusBar):
         self.scheduledStatusDisplay = wx.FutureCall(delay, self._displayStatus)
 
     def Destroy(self): # pylint: disable-msg=W0221
-        patterns.Publisher().removeInstance(self)
         for eventType in self.wxEventTypes:
             self.parent.Unbind(eventType)
         if self.scheduledStatusDisplay:

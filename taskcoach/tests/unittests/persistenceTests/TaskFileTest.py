@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,11 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import os, wx
-from xml.etree import ElementTree as ET
 import test
 from taskcoachlib import persistence, config
 from taskcoachlib.domain import base, task, effort, date, category, note, attachment
-from taskcoachlib.changes import ChangeMonitor
 
 
 class FakeAttachment(base.Object):
@@ -52,8 +50,8 @@ class TaskFileTestCase(test.TestCase):
         self.taskFile.categories().append(self.category)
         self.note = note.Note(subject='note')
         self.taskFile.notes().append(self.note)
-        self.effort = effort.Effort(self.task, date.DateTime(2004,1,1),
-                                               date.DateTime(2004,1,2))
+        self.effort = effort.Effort(self.task, date.DateTime(2004, 1, 1),
+                                               date.DateTime(2004, 1, 2))
         self.task.addEffort(self.effort)
         self.filename = 'test.tsk'
         self.filename2 = 'test2.tsk'
@@ -281,8 +279,8 @@ class DirtyTaskFileTest(TaskFileTestCase):
         self.task.setBackgroundColor(wx.RED)
         self.failUnless(self.taskFile.needSave())
 
-    def testNeedSave_AfterEditTaskStartDateTime(self):
-        self.task.setStartDateTime(date.Now() + date.oneHour)
+    def testNeedSave_AfterEditTaskPlannedStartDateTime(self):
+        self.task.setPlannedStartDateTime(date.Now() + date.oneHour)
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterEditTaskDueDate(self):
@@ -869,8 +867,20 @@ class TaskFileMergeTest(TaskFileTestCase):
         self.mergeFile.categories().append(mergedCategory)
         self.merge()
         self.assertEqual(self.category.id(), list(self.note.categories())[0].id())
-
-
+        
+    def testMerge_ExistingCategoryWithoutExistingSubCategoryRemovesTheSubCategory(self):
+        subCategory = category.Category('subcategory')
+        self.category.addChild(subCategory)
+        self.taskFile.categories().append(subCategory)
+        self.task.addCategory(subCategory)
+        subCategory.addCategorizable(self.task)
+        self.assertEqual(2, len(self.taskFile.categories()))
+        mergedCategory = category.Category('merged category', id=self.category.id())
+        self.mergeFile.categories().append(mergedCategory)
+        self.merge()
+        self.assertEqual(1, len(self.taskFile.categories()))
+        
+        
 class LockedTaskFileLockTest(TaskFileTestCase):
     def createTaskFiles(self):
         # pylint: disable-msg=W0201
@@ -1210,7 +1220,7 @@ class TaskFileMultiUserTestBase(object):
         self._testChangeAttribute('description', 'New note description', 'notes')
 
     def testChangeTaskStartDateTime(self):
-        self._testChangeAttribute('startDateTime', date.DateTime(2011, 6, 15), 'tasks')
+        self._testChangeAttribute('plannedStartDateTime', date.DateTime(2011, 6, 15), 'tasks')
 
     def testChangeTaskDueDateTime(self):
         self._testChangeAttribute('dueDateTime', date.DateTime(2011, 7, 16), 'tasks')
@@ -1356,6 +1366,23 @@ class TaskFileMultiUserTestBase(object):
         self.assertEqual(len(getattr(self.taskFile1, listName)()), 0)
         self.assertEqual(len(getattr(self.taskFile2, listName)()), 0)
 
+    def _testDeleteModifiedLocalObject(self, listName):
+        item = getattr(self.taskFile1, listName)().rootItems()[0]
+        getattr(self.taskFile1, listName)().remove(item)
+        self.taskFile1.save()
+        getattr(self.taskFile2, listName)().rootItems()[0].setSubject('New subject.')
+        self.doSave(self.taskFile2)
+        self.assertEqual(len(getattr(self.taskFile2, listName)()), 1)
+
+    def _testDeleteModifiedRemoteObject(self, listName):
+        getattr(self.taskFile1, listName)().rootItems()[0].setSubject('New subject.')
+        self.taskFile1.save()
+        item = getattr(self.taskFile2, listName)().rootItems()[0]
+        getattr(self.taskFile2, listName)().remove(item)
+        self.doSave(self.taskFile2)
+        self.assertEqual(len(getattr(self.taskFile2, listName)()), 1)
+        self.assertEqual(getattr(self.taskFile2, listName)().rootItems()[0].subject(), 'New subject.')
+
     def testDeleteCategory(self):
         self._testDeleteObject('categories')
 
@@ -1364,6 +1391,24 @@ class TaskFileMultiUserTestBase(object):
 
     def testDeleteTask(self):
         self._testDeleteObject('tasks')
+
+    def testDeleteModifiedLocalCategory(self):
+        self._testDeleteModifiedLocalObject('categories')
+
+    def testDeleteModifiedLocalNote(self):
+        self._testDeleteModifiedLocalObject('notes')
+
+    def testDeleteModifiedLocalTask(self):
+        self._testDeleteModifiedLocalObject('tasks')
+
+    def testDeleteModifiedRemoteCategory(self):
+        self._testDeleteModifiedRemoteObject('categories')
+
+    def testDeleteModifiedRemoteNote(self):
+        self._testDeleteModifiedRemoteObject('notes')
+
+    def testDeleteModifiedRemoteTask(self):
+        self._testDeleteModifiedRemoteObject('tasks')
 
     def _testAddNoteToObject(self, listName):
         newNote = note.Note(subject='Other note')

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,21 +16,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
-import test
 from taskcoachlib import meta, config, gui, operating_system
 from taskcoachlib.domain import task, effort, date
+import test
 
 
 class TaskFileMock(object):
     def filename(self):
         return 'filename'
 
+
 class MainWindowMock(object):
     taskFile = TaskFileMock()
     
     def restore(self):
-        pass # pragma: no cover
+        pass  # pragma: no cover
     
 
 class TaskBarIconTestCase(test.TestCase):
@@ -40,7 +40,7 @@ class TaskBarIconTestCase(test.TestCase):
         self.icon = gui.TaskBarIcon(MainWindowMock(), self.taskList,
             self.settings)
 
-    def tearDown(self): # pragma: no cover
+    def tearDown(self):  # pragma: no cover
         if operating_system.isWindows():
             self.icon.Destroy()
         else:
@@ -69,9 +69,9 @@ class TaskBarIconTest(TaskBarIconTestCase):
         
 class TaskBarIconTooltipTestCase(TaskBarIconTestCase):
     def assertTooltip(self, text):
-        expectedTooltip = '%s - %s'%(meta.name, TaskFileMock().filename()) 
+        expectedTooltip = '%s - %s' % (meta.name, TaskFileMock().filename()) 
         if text:
-            expectedTooltip += '\n%s'%text
+            expectedTooltip += '\n%s' % text
         self.assertEqual(expectedTooltip, self.icon.tooltip())
 
 
@@ -86,6 +86,11 @@ class TaskBarIconTooltipTest(TaskBarIconTooltipTestCase):
     def testOneTaskDueSoon(self):
         self.taskList.append(task.Task(dueDateTime=date.Now() + date.oneHour))
         self.assertTooltip('one task due soon')
+        
+    def testOneTaskNoLongerDueSoonAfterChangingDueSoonSetting(self):
+        self.taskList.append(task.Task(dueDateTime=date.Now() + date.oneHour))
+        self.settings.setint('behavior', 'duesoonhours', 0)
+        self.assertTooltip('')
         
     def testTwoTasksDueSoon(self):
         self.taskList.append(task.Task(dueDateTime=date.Now() + date.oneHour))
@@ -130,7 +135,7 @@ class TaskBarIconTooltipWithTrackedTaskTest(TaskBarIconTooltipTestCase):
         self.assertTooltip('tracking "Subject"')
 
     def testStopTracking(self):
-        self.task.efforts()[0].setStop(date.DateTime(2000,1,1,10,0,0))
+        self.task.efforts()[0].setStop(date.DateTime(2000, 1, 1, 10, 0, 0))
         self.assertTooltip('')
 
     def testTrackingTwoTasks(self):
@@ -144,7 +149,6 @@ class TaskBarIconTooltipWithTrackedTaskTest(TaskBarIconTooltipTestCase):
         self.assertTooltip('tracking "New subject"')
 
     def testChangingSubjectOfTaskThatIsNotTrackedAnymore(self):
-        self.task.efforts()[0].setStop(date.DateTime(2000,1,1,10,0,0))
+        self.task.efforts()[0].setStop(date.DateTime(2000, 1, 1, 10, 0, 0))
         self.task.setSubject('New subject')
         self.assertTooltip('')
-

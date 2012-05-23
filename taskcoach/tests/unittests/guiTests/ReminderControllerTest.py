@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test, wx
-from taskcoachlib import gui, patterns, config, persistence
+from taskcoachlib import gui, config, persistence
 from taskcoachlib.domain import task, date, effort
 
 
@@ -27,7 +27,7 @@ class ReminderControllerUnderTest(gui.ReminderController):
         self.userAttentionRequested = False
         super(ReminderControllerUnderTest, self).__init__(*args, **kwargs)
         
-    def showReminderMessage(self, message):
+    def showReminderMessage(self, message): # pylint: disable-msg=W0221
         class DummyDialog(object):
             def __init__(self, *args, **kwargs):
                 pass
@@ -58,62 +58,52 @@ class ReminderControllerTestCase(test.TestCase):
             self.taskList, self.effortList, settings)
         self.nowDateTime = date.DateTime.now()
         self.reminderDateTime = self.nowDateTime + date.TimeDelta(hours=1)
-
+        
     def tearDown(self):
         super(ReminderControllerTestCase, self).tearDown()
         self.dummyWindow.taskFile.close()
         self.dummyWindow.taskFile.stop()
-
+        
 
 class ReminderControllerTest(ReminderControllerTestCase):
     def setUp(self):
         super(ReminderControllerTest, self).setUp()
         self.task = task.Task('Task')
         self.taskList.append(self.task)
-
-    def testSetTaskReminderAddsClockEventToPublisher(self):
-        self.task.setReminder(self.reminderDateTime)
-        self.assertEqual([self.reminderController.onReminder], 
-            patterns.Publisher().observers(eventType=\
-                date.Clock.eventType(self.reminderDateTime)))
-
-    def testClockTriggersReminder(self):
-        self.task.setReminder(self.reminderDateTime)
-        date.Clock().notifySpecificTimeObservers(now=self.reminderDateTime)
-        self.assertEqual([self.task], 
-                         self.reminderController.messages)
         
-    def testAfterReminderClockEventIsRemovedFromPublisher(self):
+    def testSetTaskReminderSchedulesJob(self):
         self.task.setReminder(self.reminderDateTime)
-        date.Clock().notifySpecificTimeObservers(now=self.reminderDateTime)
-        self.assertEqual([], patterns.Publisher().observers(eventType=\
-                date.Clock.eventType(self.reminderDateTime)))
+        self.failUnless(date.Scheduler().get_jobs())
         
-    def testAddTaskWithReminderAddsClockEventToPublisher(self):
+    def testAfterReminderJobIsRemovedFromScheduler(self):
+        self.task.setReminder(self.reminderDateTime)
+        self.failUnless(date.Scheduler().get_jobs())
+        date.Scheduler()._process_jobs(self.reminderDateTime) # pylint: disable-msg=W0212
+        self.failIf(date.Scheduler().get_jobs())
+        
+    def testAddTaskWithReminderSchedulesJob(self):
         taskWithReminder = task.Task('Task with reminder', 
                                      reminder=self.reminderDateTime)
         self.taskList.append(taskWithReminder)
-        self.assertEqual([self.reminderController.onReminder], 
-            patterns.Publisher().observers(eventType=\
-                date.Clock.eventType(self.reminderDateTime)))
+        self.failUnless(date.Scheduler().get_jobs())
                 
     def testRemoveTaskWithReminderRemovesClockEventFromPublisher(self):
         self.task.setReminder(self.reminderDateTime)
+        job = date.Scheduler().get_jobs()[0]
         self.taskList.remove(self.task)
-        self.assertEqual([], patterns.Publisher().observers(eventType=\
-                date.Clock.eventType(self.reminderDateTime)))
+        self.failIf(job in date.Scheduler().get_jobs())
                 
     def testChangeReminderRemovesOldReminder(self):
         self.task.setReminder(self.reminderDateTime)
+        job = date.Scheduler().get_jobs()[0]
         self.task.setReminder(self.reminderDateTime + date.TimeDelta(hours=1))
-        self.assertEqual([], patterns.Publisher().observers(eventType=\
-                date.Clock.eventType(self.reminderDateTime)))
+        self.failIf(job in date.Scheduler().get_jobs())
         
     def testMarkTaskCompletedRemovesReminder(self):
         self.task.setReminder(self.reminderDateTime)
+        self.failUnless(date.Scheduler().get_jobs())
         self.task.setCompletionDateTime(date.Now())
-        self.assertEqual([], patterns.Publisher().observers(eventType=\
-                date.Clock.eventType(self.reminderDateTime)))
+        self.failIf(date.Scheduler().get_jobs())
         
     def dummyCloseEvent(self, snoozeTimeDelta=None, openAfterClose=False):
         class DummySnoozeOptions(object):
@@ -154,36 +144,5 @@ class ReminderControllerTest(ReminderControllerTestCase):
         self.failUnless(frame)
         
     def testOnWakeDoesNotRequestUserAttentionWhenThereAreNoReminders(self):
-        self.reminderController.onWake(None)
+        self.reminderController.onReminder()
         self.failIf(self.reminderController.userAttentionRequested)
-        
-
-class ReminderControllerTest_TwoTasksWithSameReminderDateTime(ReminderControllerTestCase):
-    def setUp(self):
-        super(ReminderControllerTest_TwoTasksWithSameReminderDateTime, self).setUp()
-        self.task1 = task.Task('Task 1', reminder=self.reminderDateTime)
-        self.task2 = task.Task('Task 2', reminder=self.reminderDateTime)
-        self.taskList.extend([self.task1, self.task2])
-
-    def testClockNotificationResultsInTwoMessages(self):
-        date.Clock().notifySpecificTimeObservers(now=self.reminderDateTime)
-        self.assertEqualLists([self.task1, self.task2], 
-            self.reminderController.messages)
-
-    def testChangeOneReminder(self):
-        self.task1.setReminder(self.reminderDateTime + date.TimeDelta(hours=1))
-        date.Clock().notifySpecificTimeObservers(now=self.reminderDateTime + date.TimeDelta(hours=1))
-        self.assertEqualLists([self.task1, self.task2], 
-                              self.reminderController.messages)
-                         
-    def testChangeOneReminderDoesNotAffectTheOther(self):
-        self.task1.setReminder(self.reminderDateTime + date.TimeDelta(hours=1))
-        date.Clock().notifySpecificTimeObservers(now=self.reminderDateTime)
-        self.assertEqual([self.task2], self.reminderController.messages)
-                                                  
-    def testRemoveOneTaskDoesNotAffectTheOther(self):
-        self.taskList.remove(self.task1)
-        date.Clock().notifySpecificTimeObservers(now=self.reminderDateTime)
-        self.assertEqual([self.task2], self.reminderController.messages)
-
-

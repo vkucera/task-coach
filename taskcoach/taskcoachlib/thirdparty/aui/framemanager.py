@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 07 Mar 2012, 21.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -4034,7 +4034,9 @@ class AuiManager(wx.EvtHandler):
          Default value for `agwFlags` is:
          ``AUI_MGR_DEFAULT`` = ``AUI_MGR_ALLOW_FLOATING`` | ``AUI_MGR_TRANSPARENT_HINT`` | ``AUI_MGR_HINT_FADE`` | ``AUI_MGR_NO_VENETIAN_BLINDS_FADE``
 
-         :note: If using the ``AUI_MGR_USE_NATIVE_MINIFRAMES``, double-clicking on a
+         :note:
+
+          If using the ``AUI_MGR_USE_NATIVE_MINIFRAMES``, double-clicking on a
           floating pane caption will not re-dock the pane, but simply maximize it (if
           L{AuiPaneInfo.MaximizeButton} has been set to ``True``) or do nothing.
         """
@@ -4321,7 +4323,9 @@ class AuiManager(wx.EvtHandler):
          ``AUI_MGR_AUTONB_NO_CAPTION``        Panes that merge into an automatic notebook will not have the pane caption visible
          ==================================== ==================================
 
-         :note: If using the ``AUI_MGR_USE_NATIVE_MINIFRAMES``, double-clicking on a
+         :note:
+
+          If using the ``AUI_MGR_USE_NATIVE_MINIFRAMES``, double-clicking on a
           floating pane caption will not re-dock the pane, but simply maximize it (if
           L{AuiPaneInfo.MaximizeButton} has been set to ``True``) or do nothing.
         
@@ -4477,8 +4481,15 @@ class AuiManager(wx.EvtHandler):
         from a window.
         """
 
-        if self._frame:
-            self._frame.RemoveEventHandler(self)
+        if not self._frame:
+            self.Destroy()
+            return
+
+        for klass in [self._frame] + list(self._frame.GetChildren()):
+            handler = klass.GetEventHandler()
+            if klass is not handler:
+                if isinstance(handler, AuiManager):
+                    klass.PopEventHandler(True)
 
 
     def GetArtProvider(self):
@@ -9896,7 +9907,8 @@ class AuiManager(wx.EvtHandler):
             if posMask == AUI_MINIMIZE_POS_TOOLBAR:
                 target = paneInfo.name
                 
-            minimize_toolbar.AddSimpleTool(ID_RESTORE_FRAME, paneInfo.caption, restore_bitmap, "Restore " + paneInfo.caption, target=target)
+            minimize_toolbar.AddSimpleTool(ID_RESTORE_FRAME, paneInfo.caption, restore_bitmap,
+                                           _(u"Restore %s")%paneInfo.caption, target=target)
             minimize_toolbar.SetAuiManager(self)
             minimize_toolbar.Realize()
             toolpanelname = paneInfo.name + "_min"

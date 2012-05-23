@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,10 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, urlparse
+import os
+import urlparse
 from taskcoachlib import patterns, mailer
 from taskcoachlib.domain import base
 from taskcoachlib.thirdparty import desktop
+from taskcoachlib.thirdparty.pubsub import pub
 from taskcoachlib.domain.note.noteowner import NoteOwner
 
 
@@ -58,7 +60,7 @@ def getRelativePath(path, basePath=os.getcwd()):
         path1.insert(0, '..')
         path2.pop(0)
 
-    return os.path.join(*path1) # pylint: disable-msg=W0142
+    return os.path.join(*path1)  # pylint: disable-msg=W0142
 
 
 class Attachment(base.Object, NoteOwner):
@@ -67,35 +69,32 @@ class Attachment(base.Object, NoteOwner):
     type_ = 'unknown'
 
     def __init__(self, location, *args, **kwargs):
-        if not kwargs.has_key('subject'):
+        if 'subject' not in kwargs:
             kwargs['subject'] = location
-
         super(Attachment, self).__init__(*args, **kwargs)
-
-        self.__location = base.Attribute(location, self, 
-                                         self.locationChangedEvent)
+        self.__location = location
 
     def data(self):
         return None
 
     def setParent(self, parent):
-        # FIXME: We  shouldn't assume that pasted  items are composite
+        # FIXME: We shouldn't assume that pasted items are composite
         # in PasteCommand.
         pass
 
     def location(self):
-        return self.__location.get()
+        return self.__location
 
-    def setLocation(self, location, event=None):
-        self.__location.set(location, event=event)
-            
-    def locationChangedEvent(self, event):
-        event.addSource(self, self.location(), 
-                        type=self.locationChangedEventType())
-        
-    @classmethod
+    def setLocation(self, location):
+        if location != self.__location:
+            self.__location = location
+            self.markDirty()
+            pub.sendMessage(self.locationChangedEventType(), newValue=location,
+                            sender=self)
+
+    @classmethod        
     def locationChangedEventType(class_):
-        return '%s.location'%class_
+        return 'pubsub.attachment.location'
 
     @classmethod
     def monitoredAttributes(class_):
@@ -124,7 +123,7 @@ class Attachment(base.Object, NoteOwner):
             super(Attachment, self).__setstate__(state, event=event)
         except AttributeError:
             pass
-        self.setLocation(state['location'], event)
+        self.setLocation(state['location'])
 
     def __getcopystate__(self):
         return self.__getstate__()
@@ -141,7 +140,7 @@ class Attachment(base.Object, NoteOwner):
 class FileAttachment(Attachment):
     type_ = 'file'
 
-    def open(self, workingDir=None, openAttachment=desktop.open): # pylint: disable-msg=W0221
+    def open(self, workingDir=None, openAttachment=desktop.open):  # pylint: disable-msg=W0221
         return openAttachment(self.normalizedLocation(workingDir))
 
     def normalizedLocation(self, workingDir=None):
@@ -207,8 +206,8 @@ def AttachmentFactory(location, type_=None, *args, **kwargs):
         return FileAttachment(location, subject=location, description=location)
 
     try:
-        return { 'file': FileAttachment,
-                 'uri': URIAttachment,
-                 'mail': MailAttachment }[type_](location, *args, **kwargs)
+        return {'file': FileAttachment,
+                'uri': URIAttachment,
+                'mail': MailAttachment}[type_](location, *args, **kwargs)
     except KeyError:
-        raise TypeError, 'Unknown attachment type: %s' % type_
+        raise TypeError('Unknown attachment type: %s' % type_)

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ itemImagePlural = dict(book_icon='books_icon',
                        heart_icon='hearts_icon',
                        key_icon='keys_icon',
                        led_blue_icon='folder_blue_icon',
+                       led_blue_light_icon='folder_blue_light_icon',
                        led_grey_icon='folder_grey_icon',
                        led_green_icon='folder_green_icon',
                        led_orange_icon='folder_orange_icon',

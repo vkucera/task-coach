@@ -1,5 +1,5 @@
 # Task Coach - Your friendly task manager
-# Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+# Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 # Copyright (C) 2008 Marcin Zajaczkowski <mszpak@wp.pl>
 # 
 # Task Coach is free software: you can redistribute it and/or modify
@@ -33,6 +33,8 @@ BuildRoot: 	%%{_tmppath}/%%{name}-%%{version}-%%{release}-root-%%(%%{__id_u} -n)
 BuildArch:	noarch
 Requires: 	python >= %(pythonversion)s
 Requires:	wxPython >= %(wxpythonversionnumber)s
+# Depend on libXScrnSaver for libXss
+Requires:   libXScrnSaver >= 1.2.1
 
 # Must have setuptools to build the package
 BuildRequires: python-setuptools-devel

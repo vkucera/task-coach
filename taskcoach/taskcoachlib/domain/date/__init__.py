@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ from dateandtime import DateTime, Now, parseDateTime
 from timedelta import TimeDelta, oneSecond, zeroHour, oneHour, twoHours, \
     threeHours, oneDay, oneWeek, oneYear, parseTimeDelta
 from timeclass import Time
-from clock import Clock, ClockSecondObserver, ClockMinuteObserver
+from scheduler import Scheduler
 from recurrence import Recurrence
 from snooze import snoozeChoices
 

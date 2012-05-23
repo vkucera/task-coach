@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -36,32 +36,3 @@ class MultiLineTextCtrlTest(test.wxTestCase):
     def testSetInsertionPointAtStart(self):
         textctrl = widgets.MultiLineTextCtrl(self.frame, text='Hiya')
         self.assertEqual(0, textctrl.GetInsertionPoint())
-        
-
-class SingleLineTextCtrlWithEnterButtonTest(test.wxTestCase):
-    def setUp(self):
-        super(SingleLineTextCtrlWithEnterButtonTest, self).setUp()
-        self.textCtrl = widgets.SingleLineTextCtrlWithEnterButton(self.frame, 
-            label='Text', onEnter=self.onEnter)
-        self.enteredText = ''
-            
-    def onEnter(self, text):
-        self.enteredText = text
-        
-    def testDontAllowEnterWhenTheTextCtrlIsEmpty(self):
-        self.failIf(self.textCtrl.isButtonEnabled())
-        
-    def testAllowEnterWhenTheTextCtrlIsNotEmpty(self):
-        self.textCtrl.SetValue('Some text')
-        self.failUnless(self.textCtrl.isButtonEnabled())
-        
-    def testCallback(self): 
-        self.textCtrl.SetValue('Some text')
-        self.textCtrl.onEnter()
-        self.assertEqual('Some text', self.enteredText)
-    
-    def testAfterCallbackTheTextCtrlIsCleared(self):
-        self.textCtrl.SetValue('Some text')
-        self.textCtrl.onEnter()
-        self.failIf(self.textCtrl.isButtonEnabled())
-        

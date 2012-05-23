@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -212,11 +212,10 @@ class Column(object):
         # NB: because the header image is needed for sorting a fixed header
         # image cannot be combined with a sortable column
         self.__headerImageIndex = kwargs.pop('headerImageIndex', -1)
-        self.__editCommand = kwargs.get('editCommand', None)
         self.__editCallback = kwargs.get('editCallback', None)
         self.__editControlClass = kwargs.get('editControl', None)
         self.__parse = kwargs.get('parse', lambda value: value)
-        self.__settings = kwargs.get('settings', None)
+        self.__settings = kwargs.get('settings', None) # FIXME: Column shouldn't need to know about settings
         
     def name(self):
         return self.__name
@@ -264,14 +263,11 @@ class Column(object):
         return self.__hasImages
     
     def isEditable(self):
-        return self.__editCommand != None or self.__editCallback != None
+        return self.__editCallback != None
     
     def onEndEdit(self, item, newValue):
-        if self.__editCallback:
-            self.__editCallback(item, newValue)
-        else:
-            self.__editCommand(items=[item], newValue=newValue).do()
-    
+        self.__editCallback(item, newValue)
+                
     def editControl(self, parent, item, columnIndex, domainObject):
         value = self.value(domainObject)
         kwargs = dict(settings=self.__settings) if self.__settings else dict()

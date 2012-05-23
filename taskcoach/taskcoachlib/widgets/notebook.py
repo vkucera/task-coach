@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,9 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
-import draganddrop
 import taskcoachlib.thirdparty.aui as aui
+import wx
 
 
 class GridCursor:
@@ -45,7 +44,7 @@ class GridCursor:
 
     def maxRow(self):
         row, column = self.__nextPosition
-        return max(0, row-1) if column == 0 else row
+        return max(0, row - 1) if column == 0 else row
 
 
 class BookPage(wx.Panel):
@@ -70,11 +69,11 @@ class BookPage(wx.Panel):
         labelInFirstColumn = type(controls[0]) in [type(''), type(u'')]
         flags = []
         for columnIndex in range(len(controls)):
-            flag = wx.ALL|wx.ALIGN_CENTER_VERTICAL
+            flag = wx.ALL | wx.ALIGN_CENTER_VERTICAL
             if columnIndex == 0 and labelInFirstColumn:
                 flag |= wx.ALIGN_LEFT
             else:
-                flag |= wx.ALIGN_RIGHT|wx.EXPAND
+                flag |= wx.ALIGN_RIGHT | wx.EXPAND
             flags.append(flag)
         return flags
 
@@ -105,15 +104,16 @@ class BookPage(wx.Panel):
         lastColumnIndex = len(controls) - 1
         for columnIndex, control in enumerate(controls):
             self.__addControl(columnIndex, control, flags[columnIndex], 
-                              lastColumn=columnIndex==lastColumnIndex)
+                              lastColumn=columnIndex == lastColumnIndex)
             if columnIndex > 0:
-                control.MoveAfterInTabOrder(controls[columnIndex-1])
+                control.MoveAfterInTabOrder(controls[columnIndex - 1])
         if kwargs.get('growable', False):
             self._sizer.AddGrowableRow(self._position.maxRow())
             
     def addLine(self):
         line = wx.StaticLine(self)
-        self.__addControl(0, line, flag=wx.GROW|wx.ALIGN_CENTER_VERTICAL, lastColumn=True)
+        self.__addControl(0, line, flag=wx.GROW | wx.ALIGN_CENTER_VERTICAL, 
+                          lastColumn=True)
 
     def __addControl(self, columnIndex, control, flag, lastColumn):
         colspan = max(self._columns - columnIndex, 1) if lastColumn else 1
@@ -134,8 +134,6 @@ class BookMixin(object):
     
     def __init__(self, parent, *args, **kwargs):
         super(BookMixin, self).__init__(parent, -1, *args, **kwargs)
-        dropTarget = draganddrop.FileDropTarget(onDragOverCallback=self.onDragOver)
-        self.SetDropTarget(dropTarget)
         self.Bind(self.pageChangedEvent, self.onPageChanged)
         
     def __getitem__(self, index):
@@ -145,24 +143,13 @@ class BookMixin(object):
             return self.GetPage(index)
         else:
             raise IndexError
-        
-    def onDragOver(self, x, y, defaultResult, pageSelectionArea=None): # pylint: disable-msg=W0613
-        ''' When the user drags something (currently limited to files because
-            the DropTarget created in __init__ is a FileDropTarget) over a tab
-            raise the appropriate page. '''
-        pageSelectionArea = pageSelectionArea or self
-        pageIndex = pageSelectionArea.HitTest((x, y))
-        if type(pageIndex) == type((),):
-            pageIndex = pageIndex[0]
-        if pageIndex != wx.NOT_FOUND:
-            self.SetSelection(pageIndex)
-        return wx.DragNone
     
     def onPageChanged(self, event):
-        ''' Can be overridden in a subclass to do something useful '''
+        ''' Can be overridden in a subclass to do something useful. '''
         event.Skip()    
 
     def AddPage(self, page, name, bitmap=None):
+        ''' Override AddPage to allow for simply specifying the bitmap name. '''
         bitmap = wx.ArtProvider_GetBitmap(bitmap, wx.ART_MENU, self._bitmapSize)
         super(BookMixin, self).AddPage(page, name, bitmap=bitmap)
 
@@ -175,5 +162,7 @@ class Notebook(BookMixin, aui.AuiNotebook):
     pageChangedEvent = wx.EVT_NOTEBOOK_PAGE_CHANGED
     
     def __init__(self, *args, **kwargs):
-        kwargs['agwStyle'] = kwargs.get('agwStyle', aui.AUI_NB_DEFAULT_STYLE) & ~aui.AUI_NB_CLOSE_ON_ACTIVE_TAB & ~aui.AUI_NB_MIDDLE_CLICK_CLOSE 
+        defaultStyle = kwargs.get('agwStyle', aui.AUI_NB_DEFAULT_STYLE)
+        kwargs['agwStyle'] = defaultStyle & ~aui.AUI_NB_CLOSE_ON_ACTIVE_TAB & \
+                             ~aui.AUI_NB_MIDDLE_CLICK_CLOSE 
         super(Notebook, self).__init__(*args, **kwargs)

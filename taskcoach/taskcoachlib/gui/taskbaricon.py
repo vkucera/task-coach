@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 João Alexandre de Toledo <jtoledo@griffo.com.br>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -19,14 +19,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, os
+import wx
+import os
 from taskcoachlib import meta, patterns, operating_system
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import date, task
+from taskcoachlib.thirdparty.pubsub import pub
 import artprovider
 
         
-class TaskBarIcon(date.ClockSecondObserver, wx.TaskBarIcon):
+class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
     def __init__(self, mainwindow, taskList, settings, 
             defaultBitmap='taskcoach', tickBitmap='clock_icon',
             tackBitmap='clock_stopwatch_icon', *args, **kwargs):
@@ -38,17 +40,23 @@ class TaskBarIcon(date.ClockSecondObserver, wx.TaskBarIcon):
         self.__tooltipText = ''
         self.__tickBitmap = tickBitmap
         self.__tackBitmap = tackBitmap
-        registerObserver = patterns.Publisher().registerObserver
-        registerObserver(self.onTaskListChanged,
+        self.registerObserver(self.onTaskListChanged,
             eventType=taskList.addItemEventType(), eventSource=taskList)
-        registerObserver(self.onTaskListChanged, 
+        self.registerObserver(self.onTaskListChanged, 
             eventType=taskList.removeItemEventType(), eventSource=taskList)
-        registerObserver(self.onStartTracking,
-            eventType=task.Task.trackStartEventType())
-        registerObserver(self.onStopTracking,
-            eventType=task.Task.trackStopEventType())
-        registerObserver(self.onChangeDueDateTime,
-            eventType=task.Task.dueDateTimeChangedEventType())
+        pub.subscribe(self.onTrackingChanged, 
+                      task.Task.trackingChangedEventType())
+        pub.subscribe(self.onChangeDueDateTime, 
+                      task.Task.dueDateTimeChangedEventType())
+        # When the user chances the due soon hours preferences it may cause
+        # a task to change appearance. That also means the number of due soon
+        # tasks has changed, so we need to change the tool tip text.
+        # Note that directly subscribing to the setting (behavior.duesoonhours)
+        # is not reliable. The TaskBarIcon may get the event before the tasks
+        # do. When that happens the tasks haven't changed their status yet and
+        # we would use the wrong status count.
+        self.registerObserver(self.onChangeDueDateTime_Deprecated,
+            eventType=task.Task.appearanceChangedEventType()) 
         event = wx.EVT_TASKBAR_LEFT_DOWN if operating_system.isGTK() else wx.EVT_TASKBAR_LEFT_DCLICK    
         self.Bind(event, self.onTaskbarClick)
         self.__setTooltipText()
@@ -56,33 +64,37 @@ class TaskBarIcon(date.ClockSecondObserver, wx.TaskBarIcon):
 
     # Event handlers:
 
-    def onTaskListChanged(self, event): # pylint: disable-msg=W0613
+    def onTaskListChanged(self, event):  # pylint: disable-msg=W0613
         self.__setTooltipText()
         self.__startOrStopTicking()
         
-    def onStartTracking(self, event):
-        for item in event.sources():
-            patterns.Publisher().registerObserver(self.onChangeSubject,
-                eventType=item.subjectChangedEventType(), eventSource=item)
+    def onTrackingChanged(self, newValue, sender):
+        if newValue:
+            self.registerObserver(self.onChangeSubject,
+                                  eventType=sender.subjectChangedEventType(), 
+                                  eventSource=sender)
+        else:
+            self.removeObserver(self.onChangeSubject,
+                                eventType=sender.subjectChangedEventType())
         self.__setTooltipText()
-        self.__startTicking()
+        if newValue:
+            self.__startTicking()
+        else:
+            self.__stopTicking()
 
-    def onStopTracking(self, event):
-        for item in event.sources():
-            patterns.Publisher().removeObserver(self.onChangeSubject,
-                eventType=item.subjectChangedEventType())
-        self.__setTooltipText()
-        self.__stopTicking()
-
-    def onChangeSubject(self, event): # pylint: disable-msg=W0613
-        self.__setTooltipText()
-        self.__setIcon()
-
-    def onChangeDueDateTime(self, event): # pylint: disable-msg=W0613
+    def onChangeSubject(self, event):  # pylint: disable-msg=W0613
         self.__setTooltipText()
         self.__setIcon()
 
-    def onEverySecond(self, *args, **kwargs):
+    def onChangeDueDateTime(self, newValue, sender):  # pylint: disable-msg=W0613
+        self.__setTooltipText()
+        self.__setIcon()
+        
+    def onChangeDueDateTime_Deprecated(self, event):
+        self.__setTooltipText()
+        self.__setIcon()
+        
+    def onEverySecond(self):
         if self.__settings.getboolean('window', 
             'blinktaskbariconwhentrackingeffort'):
             self.__toggleTrackingBitmap()
@@ -98,9 +110,9 @@ class TaskBarIcon(date.ClockSecondObserver, wx.TaskBarIcon):
 
     def setPopupMenu(self, menu):
         self.Bind(wx.EVT_TASKBAR_RIGHT_UP, self.popupTaskBarMenu)
-        self.popupmenu = menu # pylint: disable-msg=W0201
+        self.popupmenu = menu  # pylint: disable-msg=W0201
 
-    def popupTaskBarMenu(self, event): # pylint: disable-msg=W0613
+    def popupTaskBarMenu(self, event):  # pylint: disable-msg=W0613
         self.PopupMenu(self.popupmenu)
 
     # Getters:
@@ -125,16 +137,22 @@ class TaskBarIcon(date.ClockSecondObserver, wx.TaskBarIcon):
             self.startClock()
             self.__toggleTrackingBitmap()
             self.__setIcon()
+            
+    def startClock(self):
+        date.Scheduler().schedule_interval(self.onEverySecond, seconds=1)
 
     def __stopTicking(self):
         if self.__taskList.nrBeingTracked() == 0:
             self.stopClock()
             self.__setDefaultBitmap()
             self.__setIcon()
+            
+    def stopClock(self):
+        date.Scheduler().unschedule(self.onEverySecond)
 
     toolTipMessages = \
-        [('nrOverdue', _('one task overdue'), _('%d tasks overdue')),
-         ('nrDueSoon', _('one task due soon'), _('%d tasks due soon'))]
+        [(task.status.overdue, _('one task overdue'), _('%d tasks overdue')),
+         (task.status.duesoon, _('one task due soon'), _('%d tasks due soon'))]
     
     def __setTooltipText(self):
         ''' Note that Windows XP and Vista limit the text shown in the
@@ -145,26 +163,27 @@ class TaskBarIcon(date.ClockSecondObserver, wx.TaskBarIcon):
         if trackedTasks:
             count = len(trackedTasks)
             if count == 1:
-                tracking = _('tracking "%s"')%trackedTasks[0].subject()
+                tracking = _('tracking "%s"') % trackedTasks[0].subject()
             else:
-                tracking = _('tracking effort for %d tasks')%count
+                tracking = _('tracking effort for %d tasks') % count
             textParts.append(tracking)
         else:
-            for getCountMethodName, singular, plural in self.toolTipMessages:
-                count = getattr(self.__taskList, getCountMethodName)()
+            counts = self.__taskList.nrOfTasksPerStatus()
+            for status, singular, plural in self.toolTipMessages:
+                count = counts[status]
                 if count == 1:
                     textParts.append(singular)
                 elif count > 1:
-                    textParts.append(plural%count)
+                    textParts.append(plural % count)
         
         textPart = ', '.join(textParts)
         filename = os.path.basename(self.__window.taskFile.filename())        
-        namePart = u'%s - %s'%(meta.name, filename) if filename else meta.name
-        text = u'%s\n%s'%(namePart, textPart) if textPart else namePart
+        namePart = u'%s - %s' % (meta.name, filename) if filename else meta.name
+        text = u'%s\n%s' % (namePart, textPart) if textPart else namePart
         
         if text != self.__tooltipText:
             self.__tooltipText = text
-            self.__setIcon() # Update tooltip
+            self.__setIcon()  # Update tooltip
             
     def __setDefaultBitmap(self):
         self.__bitmap = self.__defaultBitmap

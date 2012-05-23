@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test
-from taskcoachlib import gui, command, config, persistence
+from taskcoachlib import gui, config, persistence
 from taskcoachlib.domain import task, effort, date
 from unittests import dummy
 
@@ -27,7 +27,7 @@ class EditorUnderTest(gui.dialog.editor.EffortEditor):
         super(EditorUnderTest, self).__init__(*args, **kwargs)
         self.editorClosed = False
                 
-    def onClose(self, event):
+    def onClose(self, event): # pragma: no cover
         self.editorClosed = True
         super(EditorUnderTest, self).onClose(event)
         
@@ -56,8 +56,7 @@ class EffortEditorTest(test.wxTestCase):
     def createEditor(self):
         return EditorUnderTest(self.frame,
             list(self.taskFile.efforts()), self.settings, 
-            self.taskFile.efforts(), self.taskFile,  
-            raiseDialog=False)        
+            self.taskFile.efforts(), self.taskFile)        
 
     # pylint: disable-msg=W0201,W0212
         

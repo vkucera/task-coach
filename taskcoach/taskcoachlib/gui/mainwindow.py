@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,9 +23,11 @@ from taskcoachlib import application, meta, patterns, widgets, operating_system 
 from taskcoachlib.i18n import _
 from taskcoachlib.gui.threads import DeferredCallMixin, synchronized
 from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog
+from taskcoachlib.gui.dialog.xfce4warning import XFCE4WarningDialog
 from taskcoachlib.gui.iphone import IPhoneSyncFrame
 from taskcoachlib.powermgt import PowerStateMixin
 import taskcoachlib.thirdparty.aui as aui
+from taskcoachlib.thirdparty.pubsub import pub
 import viewer, toolbar, uicommand, remindercontroller, artprovider, windowdimensionstracker, idlecontroller
 
 
@@ -89,6 +91,18 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
                                                              self.settings,
                                                              self.taskFile.efforts())
 
+        wx.CallAfter(self.checkXFCE4)
+
+    def checkXFCE4(self):
+        if operating_system.isGTK():
+            mon = application.Application().sessionMonitor
+            if mon is not None and \
+                    self.settings.getboolean('feature', 'usesm2') and \
+                    self.settings.getboolean('feature', 'showsmwarning') and \
+                    mon.vendor == 'xfce4-session':
+                dlg = XFCE4WarningDialog(self, self.settings)
+                dlg.Show()
+
     def createWindowComponents(self):
         self.createViewerContainer()
         viewer.addViewers(self.viewer, self.taskFile, self.settings)
@@ -126,10 +140,10 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
             {'name': meta.name, 'version': meta.version}, pane=1)
 
     def initWindowComponents(self):
-        self.onShowToolBar()
+        self.showToolBar(self.settings.getvalue('view', 'toolbar'))
         # We use CallAfter because otherwise the statusbar will appear at the 
         # top of the window when it is initially hidden and later shown.
-        wx.CallAfter(self.onShowStatusBar)
+        wx.CallAfter(self.showStatusBar, self.settings.getboolean('view', 'statusbar'))
         self.restorePerspective()
             
     def restorePerspective(self):
@@ -160,22 +174,10 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         return perspectiveViewerCount != settingsViewerCount
     
     def registerForWindowComponentChanges(self):
-        patterns.Publisher().registerObserver(self.onFilenameChanged, 
-            eventType='taskfile.filenameChanged', eventSource=self.taskFile)
-        patterns.Publisher().registerObserver(self.onShowStatusBar, 
-            eventType='view.statusbar')
-        patterns.Publisher().registerObserver(self.onShowToolBar, 
-            eventType='view.toolbar')
+        pub.subscribe(self.setTitle, 'taskfile.filenameChanged')
+        pub.subscribe(self.showStatusBar, 'settings.view.statusbar')
+        pub.subscribe(self.showToolBar, 'settings.view.toolbar')
         self.Bind(aui.EVT_AUI_PANE_CLOSE, self.onCloseToolBar)
-
-    def onShowStatusBar(self, event=None): # pylint: disable-msg=W0613
-        self.showStatusBar(self.settings.getboolean('view', 'statusbar'))
-
-    def onShowToolBar(self, event=None): # pylint: disable-msg=W0613
-        self.showToolBar(eval(self.settings.get('view', 'toolbar')))
-
-    def onFilenameChanged(self, event):
-        self.setTitle(event.value())
 
     def setTitle(self, filename):
         title = meta.name
@@ -212,9 +214,9 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         else:
             self._idleController.stop()
             self.taskFile.stop()
-            application.Application().quit()
+            application.Application().quitApplication()
 
-    def restore(self, event): # pylint: disable-msg=W0613
+    def restore(self, event):  # pylint: disable-msg=W0613
         if self.settings.getboolean('window', 'maximized'):
             self.Maximize()
         self.Iconize(False)
@@ -229,10 +231,10 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         else:
             event.Skip()
             
-    def showStatusBar(self, show=True):
+    def showStatusBar(self, value=True):
         # FIXME: First hiding the statusbar, then hiding the toolbar, then
         # showing the statusbar puts it in the wrong place (only on Linux?)
-        self.GetStatusBar().Show(show)
+        self.GetStatusBar().Show(value)
         self.SendSizeEvent()
         
     def createToolBarUICommands(self):
@@ -253,7 +255,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
                                      taskList=self.taskFile.tasks())])
         return uiCommands
         
-    def showToolBar(self, size):
+    def showToolBar(self, value):
         # Current version of wxPython (2.7.8.1) has a bug 
         # (https://sourceforge.net/tracker/?func=detail&atid=109863&aid=1742682&group_id=9863)
         # that makes adding controls to a toolbar not working. Also, when the 
@@ -264,16 +266,16 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         if operating_system.isMac():
             if self.GetToolBar():
                 self.GetToolBar().Destroy()
-            if size is not None:
-                self.SetToolBar(toolbar.ToolBar(self, size=size))
+            if value is not None:
+                self.SetToolBar(toolbar.ToolBar(self, size=value))
             self.SendSizeEvent()
         else:
             currentToolbar = self.manager.GetPane('toolbar')
             if currentToolbar.IsOk():
                 self.manager.DetachPane(currentToolbar.window)
                 currentToolbar.window.Destroy()
-            if size:
-                bar = toolbar.ToolBar(self, size=size)
+            if value:
+                bar = toolbar.ToolBar(self, size=value)
                 self.manager.AddPane(bar, aui.AuiPaneInfo().Name('toolbar').
                                      Caption('Toolbar').ToolbarPane().Top().DestroyOnClose().
                                      LeftDockable(False).RightDockable(False))
@@ -281,7 +283,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
 
     def onCloseToolBar(self, event):
         if event.GetPane().IsToolbar():
-            self.settings.set('view', 'toolbar', 'None')
+            self.settings.setvalue('view', 'toolbar', None)
         event.Skip()
         
     # Viewers
@@ -295,8 +297,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
     # Power management
 
     def OnPowerState(self, state):
-        patterns.observer.Event('powermgt.%s' % {self.POWERON: 'on', self.POWEROFF: 'off'}[state],
-                                self).send()
+        pub.sendMessage('powermgt.%s' % {self.POWERON: 'on', self.POWEROFF: 'off'}[state])
 
     # iPhone-related methods. These are called from the asyncore thread so they're deferred.
 
@@ -374,12 +375,12 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         effort.setStop(ended)
 
     @synchronized
-    def modifyIPhoneTask(self, task, subject, description, startDateTime, 
+    def modifyIPhoneTask(self, task, subject, description, plannedStartDateTime, 
                          dueDateTime, completionDateTime, reminderDateTime,
                          recurrence, priority, categories):
         task.setSubject(subject)
         task.setDescription(description)
-        task.setStartDateTime(startDateTime)
+        task.setPlannedStartDateTime(plannedStartDateTime)
         task.setDueDateTime(dueDateTime)
         task.setCompletionDateTime(completionDateTime)
         task.setReminder(reminderDateTime)

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -188,7 +188,7 @@ class DateTimeCtrl(wx.Panel):
         if self._noneAllowed:
             options['style'] |= wx.DP_ALLOWNONE
         if operating_system.isWindows():
-            options['size'] = (100, -1)
+            options['size'] = (self._adjustForDPI(100), -1) 
         elif operating_system.isGTK():
             options['size'] = (115, -1)
         return options
@@ -204,11 +204,15 @@ class DateTimeCtrl(wx.Panel):
     
     def _timeSize(self):
         if operating_system.isWindows():
-            return (90 if self._showSeconds else 60, -1) 
+            return (self._adjustForDPI(90 if self._showSeconds else 60), -1)
         elif operating_system.isGTK():
             return (105 if self._showSeconds else 80, -1)
         else:
             return (95 if self._showSeconds else 70, self._dateCtrl.GetSize()[1])
+    
+    @staticmethod
+    def _adjustForDPI(size):
+        return round(size * wx.ScreenDC().GetPPI()[0] / 96.)
 
     def _formatTime(self, time):
         formattedTime = '%02d:%02d'%(time.hour, time.minute)
@@ -253,8 +257,7 @@ class DateTimeCtrl(wx.Panel):
         wxDate = date2wxDateTime(datePart)
         if wxDate.IsValid() or self._noneAllowed:
             self._dateCtrl.SetValue(wxDate)
-        if timePart is not None:
-            self._timeCtrl.SetValue(self._formatTime(timePart))
+        self._timeCtrl.SetValue(self._formatTime(date.Now().time() if timePart is None else timePart))
         self._timeCtrl.Enable(self._isDateCtrlEnabled())
         
     def SetNone(self):

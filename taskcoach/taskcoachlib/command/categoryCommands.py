@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -58,7 +58,7 @@ class EditExclusiveSubcategoriesCommand(base.BaseCommand):
     singular_name = _('Edit exclusive subcategories of "%s"')
 
     def __init__(self, *args, **kwargs):
-        self.__newExclusivity = kwargs.pop('exclusivity')
+        self.__newExclusivity = kwargs.pop('newValue')
         super(EditExclusiveSubcategoriesCommand, self).__init__(*args, **kwargs)
         self.__oldExclusivities = [item.hasExclusiveSubcategories() for item in self.items]
         

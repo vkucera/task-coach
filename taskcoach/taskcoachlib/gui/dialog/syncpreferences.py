@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -116,10 +116,6 @@ class SyncMLAccessPage(SyncMLBasePage):
         self.fit()
 
     def OnPresetChanged(self, event):
-        ## if event.GetInt() == 1:
-        ##     self.setTextSetting('access', 'syncUrl', 'http://my.funambol.com/sync')
-        ##     self.setTextSetting('task', 'uri', 'task')
-        ##     self.setTextSetting('note', 'uri', 'note')
         if event.GetInt() == 1:
             self.setTextSetting('access', 'syncUrl', 'http://sync.memotoo.com/syncml')
             self.setTextSetting('task', 'uri', 'task')

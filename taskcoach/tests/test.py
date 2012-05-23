@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,13 +18,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import sys, unittest, os, time, wx
+import sys, unittest, os, time, wx, logging
 projectRoot = os.path.abspath('..')
 if projectRoot not in sys.path:
     sys.path.insert(0, projectRoot)
 
 
-def ignore(*args, **kwargs): # pylint: disable-msg=W0613
+def ignore(*args, **kwargs):  # pylint: disable-msg=W0613
     pass
 
 
@@ -51,8 +51,8 @@ class TestCase(unittest.TestCase, object):
             
     def registerObserver(self, eventType, eventSource=None):
         if not hasattr(self, 'events'):
-            self.events = [] # pylint: disable-msg=W0201
-        from taskcoachlib import patterns # pylint: disable-msg=W0404
+            self.events = []  # pylint: disable-msg=W0201
+        from taskcoachlib import patterns  # pylint: disable-msg=W0404
         patterns.Publisher().registerObserver(self.onEvent, eventType=eventType,
                                               eventSource=eventSource)
         
@@ -68,9 +68,12 @@ class TestCase(unittest.TestCase, object):
         patterns.CommandHistory().clear()
         patterns.NumberedInstances.count = dict()
         from taskcoachlib.domain import date
-        date.Clock().reset()
+        date.Scheduler().shutdown(False, False)
+        date.Scheduler.deleteInstance()
         if hasattr(self, 'events'):
             del self.events
+        from taskcoachlib.thirdparty.pubsub import pub
+        pub.unsubAll()
         super(TestCase, self).tearDown()
         
 
@@ -313,6 +316,7 @@ class TestProfiler:
 
     
 if __name__ == '__main__':
+    logging.basicConfig()
     theOptions, theTestFiles = TestOptionParser().parse_args()
     allTests = AllTests(theOptions, theTestFiles)
     if theOptions.profile:

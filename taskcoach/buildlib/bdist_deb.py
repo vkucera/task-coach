@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,14 +16,19 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, tarfile, shutil, textwrap, time, glob
-from distutils.core import Command
 from distutils import log, errors
+from distutils.core import Command
 from distutils.file_util import copy_file, move_file
+import os
+import tarfile
+import shutil
+import textwrap
+import time
+import glob
 
 
 class bdist_deb(Command, object):
-    
+    # pylint: disable=W0201
     description = 'create a Debian (.deb) package'
     
     user_options = [
@@ -101,7 +106,7 @@ class bdist_deb(Command, object):
         for option, description in mandatoryOptions:
             if not getattr(self, option):
                 raise errors.DistutilsOptionError, \
-                    'you must provide %s (--%s)'%(description, option)
+                    'you must provide %s (--%s)' % (description, option)
         if not self.maintainer:
             self.maintainer = self.author
             self.maintainer_email = self.author_email
@@ -133,7 +138,7 @@ class bdist_deb(Command, object):
     
     def copy_sdist(self):
         ''' Copy the source distribution (.tar.gz archive) to the build dir. '''
-        (dest_name, copied) = copy_file(self.sdist, self.bdist_base)
+        (dest_name, dummy_copied) = copy_file(self.sdist, self.bdist_base)
         orig_name = dest_name[:-len('.tar.gz')] + '.orig.tar.gz'
         orig_name = orig_name.lower()
         if os.path.exists(orig_name):
@@ -144,8 +149,8 @@ class bdist_deb(Command, object):
         ''' Unzip and extract the source distribution archive. '''
         expected_extracted_dir = self.sdist_archive[:-len('.orig.tar.gz')] + '/'
         if self.verbose:
-            log.info('extracting %s to %s'%(self.sdist_archive, 
-                                            expected_extracted_dir))
+            log.info('extracting %s to %s' % (self.sdist_archive, 
+                                              expected_extracted_dir))
         archive = tarfile.open(self.sdist_archive)
         extracted_dir = os.path.join(self.bdist_base, archive.getnames()[0])
         archive.extractall(self.bdist_base)
@@ -162,7 +167,7 @@ class bdist_deb(Command, object):
         for relative_path in self.sdist_exclude:
             absolute_path = os.path.join(self.extracted_dir, relative_path)
             if self.verbose:
-                log.info('removing %s from source distribution'%relative_path)
+                log.info('removing %s from source distribution' % relative_path)
             if os.path.isdir(absolute_path):
                 shutil.rmtree(absolute_path)
             else:
@@ -172,7 +177,7 @@ class bdist_deb(Command, object):
         ''' Create the debian dir for package files. '''
         self.debian_dir = os.path.join(self.extracted_dir, 'debian')
         if self.verbose:
-            log.info('creating %s'%self.debian_dir)
+            log.info('creating %s' % self.debian_dir)
         os.mkdir(self.debian_dir)
 
     def write_debian_files(self):
@@ -181,19 +186,19 @@ class bdist_deb(Command, object):
             menu=menu, control=control, copyright=self.copyright_contents(),
             changelog=changelog)
         for filename, contents in debian_files.iteritems():
-            self.write_debian_file(filename, contents%self.__dict__)
+            self.write_debian_file(filename, contents % self.__dict__)
                
     def write_debian_file(self, filename, contents):
         filename = os.path.join(self.debian_dir, filename)
         if self.verbose:
-            log.info('writing %s'%filename)
+            log.info('writing %s' % filename)
         fd = file(filename, 'w')
         fd.write(contents)
         fd.close()
         os.chmod(filename, 0755)
         
     def build_debian_package(self):
-        os.system('cd %s; debuild -S; dpkg-buildpackage -rfakeroot; cd ..'%\
+        os.system('cd %s; debuild -S; dpkg-buildpackage -rfakeroot; cd ..' % \
                   self.extracted_dir)
 
     def move_debian_package_to_distdir(self):
@@ -204,8 +209,8 @@ class bdist_deb(Command, object):
         ''' Create copyright contents. This is a bit complicated because the
             header and footer need to have their variables filled in first 
             before their text can be wrapped. '''
-        return self.wrap_paragraphs(copyright_header%self.__dict__) + \
-            copyright + self.wrap_paragraphs(copyright_footer%self.__dict__)
+        return self.wrap_paragraphs(copyright_header % self.__dict__) + \
+            copyright + self.wrap_paragraphs(copyright_footer % self.__dict__)
 
     def wrap_paragraphs(self, text, indent=''):
         paragraphs = text.split('\n\n')
@@ -246,8 +251,8 @@ Homepage: %(url)s
 
 Package: %(package)s
 Architecture: %(architecture)s
-Depends: python, python-wxgtk2.8 (>= %(wxpythonversion)s), python-wxversion
-Recommends: python-notify
+Depends: python, python-wxgtk2.8 (>= %(wxpythonversion)s), python-wxversion, libxss1
+Recommends: python-notify, libgnome2-0
 Description: %(description)s.
 %(long_description)s
 '''

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -63,3 +63,12 @@ class CategoryViewerTest(test.wxTestCase):
         self.viewer.widget.selectall()
         self.viewer.updateSelection()
         self.assertEqual(2, len(self.viewer.curselection()))
+        
+    def testFilterOnAllCheckedCategoriesSetsSetting(self):
+        self.viewer.filterUICommand.doChoice(True)
+        self.failUnless(self.settings.getboolean('view', 'categoryfiltermatchall'))
+
+    def testFilterOnAnyCheckedCategoriesSetsSetting(self):
+        self.viewer.filterUICommand.doChoice(False)
+        self.failIf(self.settings.getboolean('view', 'categoryfiltermatchall'))
+    

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -83,6 +83,7 @@ iconlist = [
 ('calendar_icon', 'apps', 'date', [16, 22, 32]),
 ('cat_icon', 'apps', 'package_toys', [16]),
 ('cd_icon', 'actions', 'cd', [16]),
+('charts_icon', 'apps', 'kchart', [16]),
 ('chat_icon', 'apps', 'chat', [16]),
 ('checkmark_green_icon', 'actions', 'apply', [16]),
 ('clock_icon', 'apps', 'clock', [16, 22, 32, 128]),
@@ -104,8 +105,10 @@ iconlist = [
 ('envelope_icon', 'apps', 'email', [16, 22]),
 ('envelopes_icon', 'actions', 'queue', [16]),
 ('folder_blue_icon', 'filesystems', 'folder_blue', [16]),
+('folder_blue_light_icon', 'filesystems', 'folder_blue_light', [16]),
 ('folder_blue_arrow_icon', 'filesystems', 'folder_download', [16, 22]),
 ('folder_blue_open_icon', 'filesystems', 'folder_blue_open', [16]),
+('folder_blue_light_open_icon', 'filesystems', 'folder_blue_light_open', [16]),
 ('folder_green_icon', 'filesystems', 'folder_green', [16]),
 ('folder_green_open_icon', 'filesystems', 'folder_green_open', [16]),
 ('folder_orange_icon', 'filesystems', 'folder_orange', [16]),

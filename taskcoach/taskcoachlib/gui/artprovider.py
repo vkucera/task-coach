@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -107,6 +107,7 @@ chooseableItemImages = dict( \
     calendar_icon=_('Calendar'),
     cat_icon=_('Cat'),
     cd_icon=_('Compact disc (CD)'),
+    charts_icon=_('Charts'),
     chat_icon=_('Chatting'),
     checkmark_green_icon=_('Check mark'),
     clock_icon=_('Clock'),
@@ -125,6 +126,7 @@ chooseableItemImages = dict( \
     envelope_icon=_('Envelope'),
     envelopes_icon=_('Envelopes'),
     folder_blue_icon=_('Blue folder'),
+    folder_blue_light_icon=_('Light blue folder'),
     folder_green_icon=_('Green folder'),
     folder_grey_icon=_('Grey folder'),
     folder_orange_icon=_('Orange folder'),
@@ -179,7 +181,8 @@ chooseableItemImages = dict( \
 itemImages = chooseableItemImages.keys() + ['folder_blue_open_icon',
     'folder_green_open_icon', 'folder_grey_open_icon',
     'folder_orange_open_icon', 'folder_red_open_icon',
-    'folder_purple_open_icon', 'folder_yellow_open_icon']
+    'folder_purple_open_icon', 'folder_yellow_open_icon',
+    'folder_blue_light_open_icon']
 
 chooseableItemImages[''] = _('No icon')
 

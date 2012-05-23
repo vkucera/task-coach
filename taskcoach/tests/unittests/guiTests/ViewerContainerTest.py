@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,8 +18,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test
 from unittests import dummy
-from taskcoachlib import gui, config, patterns, persistence, operating_system
+from taskcoachlib import gui, config, persistence, widgets
 from taskcoachlib.domain import task
+from taskcoachlib.thirdparty.pubsub import pub
+
+
+class DummyMainWindow(widgets.AuiManagedFrameWithDynamicCenterPane):
+    count = 0
+    
+    def __init__(self):
+        super(DummyMainWindow, self).__init__(None)
+
+    def addPane(self, pane, title):
+        self.count += 1
+        super(DummyMainWindow, self).addPane(pane, title, str('name%d'%self.count))
 
 
 class DummyPane(object):
@@ -30,7 +42,16 @@ class DummyPane(object):
         
     def IsToolbar(self):
         return False
-
+    
+    def IsNotebookPage(self):
+        return True
+    
+    def IsNotebookControl(self):
+        return False
+    
+    def HasFlag(self, flag):
+        return True
+    
 
 class DummyEvent(object):
     def __init__(self, pane):
@@ -55,12 +76,11 @@ class DummyCloseEvent(DummyEvent):
 class ViewerContainerTest(test.wxTestCase):
     def setUp(self):
         super(ViewerContainerTest, self).setUp()
-        self.events = []
+        self.events = 0
         task.Task.settings = self.settings = config.Settings(load=False)
         self.settings.set('view', 'viewerwithdummywidgetcount', '2', new=True)
         self.taskFile = persistence.TaskFile()
-        self.mainWindow = gui.mainwindow.MainWindow(None, self.taskFile, 
-                                                    self.settings)
+        self.mainWindow = DummyMainWindow()
         self.container = gui.viewer.ViewerContainer(self.mainWindow,
                                                     self.settings)
         self.viewer1 = self.createViewer('taskviewer1')
@@ -68,21 +88,13 @@ class ViewerContainerTest(test.wxTestCase):
         self.viewer2 = self.createViewer('taskviewer2')
         self.container.addViewer(self.viewer2)
 
-    def tearDown(self):
-        if operating_system.isMac():
-            self.mainWindow.OnQuit() # Stop power monitoring thread
-        self.mainWindow._idleController.stop()
-        super(ViewerContainerTest, self).tearDown()
-        self.taskFile.close()
-        self.taskFile.stop()
-
     def createViewer(self, settingsSection):
         self.settings.add_section(settingsSection)
         return dummy.ViewerWithDummyWidget(self.mainWindow, self.taskFile, 
             self.settings, settingsSection=settingsSection)
             
-    def onEvent(self, event):
-        self.events.append(event)
+    def onEvent(self):
+        self.events += 1
     
     def testCreate(self):
         self.assertEqual(0, self.container.size())
@@ -99,11 +111,9 @@ class ViewerContainerTest(test.wxTestCase):
         self.assertEqual(self.viewer2, self.container.activeViewer())
 
     def testChangePage_NotifiesObserversAboutNewActiveViewer(self):
-        patterns.Publisher().registerObserver(self.onEvent, 
-            eventType=self.container.viewerStatusEventType(), 
-            eventSource=self.container)
+        pub.subscribe(self.onEvent, 'viewer.status')
         self.container.onPageChanged(DummyChangeEvent(self.viewer2))
-        self.failUnless(self.events)
+        self.failUnless(self.events > 0)
         
     def testCloseViewer_RemovesViewerFromContainer(self):
         self.container.onPageClosed(DummyCloseEvent(self.viewer1))
@@ -116,9 +126,7 @@ class ViewerContainerTest(test.wxTestCase):
         
     def testCloseViewer_NotifiesObserversAboutNewActiveViewer(self):
         self.container.activateViewer(self.viewer2)
-        patterns.Publisher().registerObserver(self.onEvent, 
-            eventType=self.container.viewerStatusEventType(), 
-            eventSource=self.container)
+        pub.subscribe(self.onEvent, 'viewer.status')
         self.container.closeViewer(self.viewer2)
-        self.failUnless(self.events)
+        self.failUnless(self.events > 0)
 

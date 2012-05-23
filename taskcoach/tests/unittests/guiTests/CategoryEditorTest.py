@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,14 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, sys
+import wx
 import test
-from taskcoachlib import gui, command, config, persistence, operating_system
+from taskcoachlib import gui, config, persistence, operating_system
 from taskcoachlib.domain import category, attachment
 
 
 class DummyEvent(object):
-    def Skip(self):
+    def Skip(self): # pragma: no cover
         pass
     
 
@@ -36,7 +36,7 @@ class CategoryEditorTest(test.wxTestCase):
         self.categories.extend(self.createCategories())
         self.editor = gui.dialog.editor.CategoryEditor(self.frame, 
             list(self.categories), self.settings, self.categories, 
-            self.taskFile, raiseDialog=False)
+            self.taskFile)
 
     def tearDown(self):
         # CategoryEditor uses CallAfter for setting the focus, make sure those 
@@ -46,11 +46,6 @@ class CategoryEditorTest(test.wxTestCase):
         super(CategoryEditorTest, self).tearDown()
         self.taskFile.close()
         self.taskFile.stop()
-        
-    def createCommand(self):
-        newCategoryCommand = command.NewCategoryCommand(self.categories)
-        self.category = newCategoryCommand.items[0] # pylint: disable-msg=W0201
-        return newCategoryCommand
 
     # pylint: disable-msg=E1101,E1103,W0212
     
@@ -65,18 +60,18 @@ class CategoryEditorTest(test.wxTestCase):
         page = self.editor._interior[0]
         page._subjectEntry.SetFocus()
         page._subjectEntry.SetValue(newSubject)
-        if operating_system.isGTK():
+        if operating_system.isGTK(): # pragma: no cover 
             page._subjectSync.onAttributeEdited(DummyEvent())
-        else:
+        else: # pragma: no cover 
             page._descriptionEntry.SetFocus()
 
     def setDescription(self, newDescription):
         page = self.editor._interior[0]
         page._descriptionEntry.SetFocus()
         page._descriptionEntry.SetValue(newDescription)
-        if operating_system.isGTK():
+        if operating_system.isGTK(): # pragma: no cover 
             page._descriptionSync.onAttributeEdited(DummyEvent())
-        else: 
+        else:  # pragma: no cover
             page._subjectEntry.SetFocus()
         
     def testCreate(self):

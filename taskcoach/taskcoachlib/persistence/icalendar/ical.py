@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -92,8 +92,10 @@ class VCalendarParser(object):
     def __init__(self, *args, **kwargs):
         super(VCalendarParser, self).__init__(*args, **kwargs)
         self.stateMap = { 'VCALENDAR': VCalendarParser,
-                          'VTODO':     VTodoParser }
+                          'VTODO':     VTodoParser,
+                          'VNOTE':     VNoteParser }
         self.tasks = []
+        self.notes = []
         self.init()
 
     def init(self):
@@ -190,10 +192,10 @@ class VTodoParser(VCalendarParser):
     ''' This is the state responsible for parsing VTODO objects. ''' # pylint: disable-msg=W0511
 
     def onFinish(self):
-        if not self.kwargs.has_key('startDateTime'):
-            # This means no start date, but the task constructor will
+        if not self.kwargs.has_key('plannedStartDateTime'):
+            # This means no planned start date, but the task constructor will
             # take today by default, so force.
-            self.kwargs['startDateTime'] = date.DateTime()
+            self.kwargs['plannedStartDateTime'] = date.DateTime()
 
         if self.kwargs.has_key('vcardStatus'):
             if self.kwargs['vcardStatus'] == 'COMPLETED' and \
@@ -209,11 +211,13 @@ class VTodoParser(VCalendarParser):
 
     def acceptItem(self, name, value):
         if name == 'DTSTART':
-            self.kwargs['startDateTime'] = parseDateTime(value)
+            self.kwargs['plannedStartDateTime'] = parseDateTime(value)
         elif name == 'DUE':
             self.kwargs['dueDateTime'] = parseDateTime(value)
         elif name == 'COMPLETED':
             self.kwargs['completionDateTime'] = parseDateTime(value)
+        elif name == 'PERCENT-COMPLETE':
+            self.kwargs['percentageComplete'] = int(value)
         elif name == 'UID':
             self.kwargs['id'] = value.decode('UTF-8')
         elif name == 'PRIORITY':
@@ -230,24 +234,49 @@ class VTodoParser(VCalendarParser):
         else:
             super(VTodoParser, self).acceptItem(name, value)
 
+
+class VNoteParser(VCalendarParser):
+    '''Parse VNote objects.'''
+
+    def onFinish(self):
+        # Summary is not mandatory.
+        if not self.kwargs.has_key('subject'):
+            self.kwargs['subject'] = self.kwargs['description'].split('\n')[0]
+        self.kwargs['status'] = Object.STATUS_NONE
+        self.notes.append(self.kwargs)
+
+    def acceptItem(self, name, value):
+        if name == 'X-IRMC-LUID':
+            self.kwargs['id'] = value.decode('UTF-8')
+        elif name == 'SUMMARY':
+            self.kwargs['subject'] = value
+        elif name == 'BODY':
+            self.kwargs['description'] = value
+        elif name == 'CATEGORIES':
+            self.kwargs['categories'] = value.split(',')
+        elif name in ['DCREATED', 'LAST-MODIFIED', 'CLASS']:
+            pass
+        else:
+            super(VNoteParser, self).acceptItem(name, value)
+
 #}
 
 #==============================================================================
 #{ Generating iCalendar files.
 
-def VCalFromTask(task, encoding=True):
+def VCalFromTask(task, encoding=True, doFold=True):
     ''' This function returns a string representing the task in
         iCalendar format. '''
 
-    encoding = ';CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE' if encoding else ''
+    encoding = ';ENCODING=QUOTED-PRINTABLE;CHARSET=UTF-8' if encoding else ''
     quote = quoteString if encoding else lambda s: s
 
     components = []
     components.append('BEGIN:VTODO') # pylint: disable-msg=W0511
     components.append('UID:%s' % task.id().encode('UTF-8'))
 
-    if task.startDateTime() != date.DateTime():
-        components.append('DTSTART:%s'%fmtDateTime(task.startDateTime()))
+    if task.plannedStartDateTime() != date.DateTime():
+        components.append('DTSTART:%s'%fmtDateTime(task.plannedStartDateTime()))
 
     if task.dueDateTime() != date.DateTime():
         components.append('DUE:%s'%fmtDateTime(task.dueDateTime()))
@@ -268,15 +297,16 @@ def VCalFromTask(task, encoding=True):
 
     components.append('DESCRIPTION%s:%s'%(encoding, quote(task.description())))
     components.append('PRIORITY:%d'%min(3, task.priority() + 1))
+    components.append('PERCENT-COMPLETE:%d'%task.percentageComplete())
     components.append('SUMMARY%s:%s'%(encoding, quote(task.subject())))
     components.append('END:VTODO') # pylint: disable-msg=W0511
+    if doFold:
+        return fold(components)
+    return '\r\n'.join(components) + '\r\n'
 
-    return fold(components)
 
-#}
-
-def VCalFromEffort(effort, encoding=True):
-    encoding = ';CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE' if encoding else ''
+def VCalFromEffort(effort, encoding=True, doFold=True):
+    encoding = ';ENCODING=QUOTED-PRINTABLE;CHARSET=UTF-8' if encoding else ''
     quote = quoteString if encoding else lambda s: s
     components = []
     components.append('BEGIN:VEVENT')
@@ -287,8 +317,28 @@ def VCalFromEffort(effort, encoding=True):
     if effort.getStop():
         components.append('DTEND:%s'%fmtDateTime(effort.getStop()))
     components.append('END:VEVENT')
-    return fold(components)
+    if doFold:
+        return fold(components)
+    return '\r\n'.join(components) + '\r\n'
 
+
+def VNoteFromNote(note, encoding=True, doFold=True):
+    encoding = ';ENCODING=QUOTED-PRINTABLE;CHARSET=UTF-8' if encoding else ''
+    quote = quoteString if encoding else lambda s: s
+    components = []
+    components.append('BEGIN:VNOTE')
+    components.append('X-IRMC-LUID: %s' % note.id().encode('UTF-8'))
+    components.append('SUMMARY%s: %s' % (encoding, quote(note.subject())))
+    components.append('BODY%s:%s' % (encoding, quote(note.description())))
+    components.append('END:VNOTE')
+    if note.categories(recursive=True, upwards=True):
+        categories = ','.join([quote(unicode(c)) for c in note.categories(recursive=True, upwards=True)])
+        components.append('CATEGORIES%s:%s'%(encoding, categories))
+    if doFold:
+        return fold(components)
+    return '\r\n'.join(components) + '\r\n'
+
+#}
 
 def fold(components, linewidth=75, eol='\r\n', indent=' '):
     lines = []

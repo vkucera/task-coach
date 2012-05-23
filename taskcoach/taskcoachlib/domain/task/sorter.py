@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,25 +18,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 from taskcoachlib.domain import base
+from taskcoachlib.thirdparty.pubsub import pub
 import task
 
 
 class Sorter(base.TreeSorter):
-    DomainObjectClass = task.Task # What are we sorting
-    TaskStatusAttributes = ('startDateTime', 'completionDateTime',
-                            'prerequisites')
+    DomainObjectClass = task.Task  # What are we sorting
+    TaskStatusAttributes = ('prerequisites', 'dueDateTime', 
+                            'plannedStartDateTime', 'actualStartDateTime', 
+                            'completionDateTime')
     
     def __init__(self, *args, **kwargs):
         self.__treeMode = kwargs.pop('treeMode', False)
         self.__sortByTaskStatusFirst = kwargs.pop('sortByTaskStatusFirst', True)
         super(Sorter, self).__init__(*args, **kwargs)
-        for attribute in self.TaskStatusAttributes:
-            try:
-                eventType = getattr(self.DomainObjectClass, '%sChangedEventType' % attribute)()
-            except AttributeError:
-                eventType = 'task.%s' % attribute
-            patterns.Publisher().registerObserver(self.onAttributeChanged, 
-                                                  eventType=eventType)
+        for eventType in (task.Task.prerequisitesChangedEventType(),
+                          task.Task.dueDateTimeChangedEventType(),
+                          task.Task.plannedStartDateTimeChangedEventType(),
+                          task.Task.actualStartDateTimeChangedEventType(),
+                          task.Task.completionDateTimeChangedEventType()):
+            pub.subscribe(self.onAttributeChanged, eventType)
     
     @patterns.eventSource       
     def setTreeMode(self, treeMode=True, event=None):
@@ -46,7 +47,7 @@ class Sorter(base.TreeSorter):
         except AttributeError:
             pass
         self.reset(event=event)
-        event.addSource(self, type=self.sortEventType()) # force notification 
+        event.addSource(self, type=self.sortEventType())  # Force notification 
 
     def treeMode(self):
         return self.__treeMode
@@ -72,15 +73,13 @@ class Sorter(base.TreeSorter):
             return lambda task: []
 
     def _registerObserverForAttribute(self, attribute):
-        # Sorter is always observing completion date, start date and 
-        # prerequisites because sorting by status depends on those attributes. 
-        # Hence we don't need to subscribe to these attributes when they become 
-        # the sort key.
+        # Sorter is always observing task dates and prerequisites because 
+        # sorting by status depends on those attributes. Hence we don't need
+        # to subscribe to these attributes when they become the sort key.
         if attribute not in self.TaskStatusAttributes:
             super(Sorter, self)._registerObserverForAttribute(attribute)
             
     def _removeObserverForAttribute(self, attribute):
-         # See comment at _registerObserverForAttribute.
+        # See comment at _registerObserverForAttribute.
         if attribute not in self.TaskStatusAttributes:
             super(Sorter, self)._removeObserverForAttribute(attribute)
-        

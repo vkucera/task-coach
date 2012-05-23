@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
@@ -20,13 +20,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
-from taskcoachlib import patterns, command, widgets, domain, render
+from taskcoachlib import command, widgets, domain, render
 from taskcoachlib.domain import effort, date
-from taskcoachlib.domain.base import filter # pylint: disable-msg=W0622
-from taskcoachlib.i18n import _
+from taskcoachlib.domain.base import filter  # pylint: disable-msg=W0622
 from taskcoachlib.gui import uicommand, menu, dialog
-import base, mixin, refresher
+from taskcoachlib.i18n import _
+from taskcoachlib.thirdparty.pubsub import pub
+import base
+import mixin
+import refresher
+import wx
 
 
 class EffortViewer(base.ListViewer, 
@@ -39,41 +42,60 @@ class EffortViewer(base.ListViewer,
     
     def __init__(self, parent, taskFile, settings, *args, **kwargs):        
         kwargs.setdefault('settingsSection', 'effortviewer')
-        self.tasksToShowEffortFor = kwargs.pop('tasksToShowEffortFor', [])
-        self.aggregation = 'details' # Temporary value, will be properly set below
+        self.__tasksToShowEffortFor = kwargs.pop('tasksToShowEffortFor', [])
+        self.aggregation = 'details'  # Temporary value, will be properly set below
         self.__hiddenWeekdayColumns = []
         self.__hiddenTotalColumns = []
         self.__columnUICommands = None
         self.__domainObjectsToView = None
         self.__observersToDetach = []
         super(EffortViewer, self).__init__(parent, taskFile, settings, *args, **kwargs)
-        self.aggregation = settings.get(self.settingsSection(), 'aggregation')
         self.secondRefresher = refresher.SecondRefresher(self,
-            effort.Effort.trackStartEventType(), 
-            effort.Effort.trackStopEventType())
+            effort.Effort.trackingChangedEventType())
+        self.aggregation = settings.get(self.settingsSection(), 'aggregation')
+        self.__initModeToolBarUICommands()
+        self.registerObserver(self.onAttributeChanged_Deprecated,
+                              eventType=effort.Effort.appearanceChangedEventType())
+        pub.subscribe(self.onRoundingChanged, 
+                      'settings.%s.round' % self.settingsSection())
+        pub.subscribe(self.onRoundingChanged, 
+                      'settings.%s.alwaysroundup' % self.settingsSection())
+        
+    def onRoundingChanged(self, value):  # pylint: disable-msg=W0613
+        self.__initRoundingToolBarUICommands()
+        self.refresh()
+        
+    def __initModeToolBarUICommands(self):
         self.aggregationUICommand.setChoice(self.aggregation)
-        patterns.Publisher().registerObserver(self.onAttributeChanged,
-                                              eventType=effort.Effort.appearanceChangedEventType())
+        self.__initRoundingToolBarUICommands()
+        
+    def __initRoundingToolBarUICommands(self):
+        aggregated = self.isShowingAggregatedEffort()
+        rounding = self.__round_precision() if aggregated else 0
+        self.roundingUICommand.setChoice(rounding)
+        self.roundingUICommand.enable(aggregated)
+        self.alwaysRoundUpUICommand.setValue(self.__always_round_up())
+        self.alwaysRoundUpUICommand.enable(aggregated and rounding != 0)
         
     def domainObjectsToView(self):
         if self.__domainObjectsToView is None:
-            if self.displayingNewTasks():
-                tasks = self.tasksToShowEffortFor
+            if self.__displayingNewTasks():
+                tasks = self.__tasksToShowEffortFor
             else:
                 tasks = selectedItemsFilter = domain.base.SelectedItemsFilter(self.taskFile.tasks(), 
-                                                                              selectedItems=self.tasksToShowEffortFor)
+                                                                              selectedItems=self.__tasksToShowEffortFor)
                 self.__observersToDetach.append(selectedItemsFilter)
             self.__domainObjectsToView = tasks
         return self.__domainObjectsToView
     
-    def displayingNewTasks(self):
-        return any([task not in self.taskFile.tasks() for task in self.tasksToShowEffortFor])
+    def __displayingNewTasks(self):
+        return any([task not in self.taskFile.tasks() for task in self.__tasksToShowEffortFor])
     
     def detach(self):
         super(EffortViewer, self).detach()
-        patterns.Publisher().removeInstance(self.secondRefresher)
+        self.secondRefresher.removeInstance()
         for observer in self.__observersToDetach:
-            patterns.Publisher().removeInstance(observer)    
+            observer.removeInstance()    
             
     def isShowingEffort(self):
         return True
@@ -104,11 +126,12 @@ class EffortViewer(base.ListViewer,
         # efforts than there really are when switching from aggregate mode to
         # detail mode.
         self.refresh()
-        self._showWeekdayColumns(show=aggregation=='week')
-        self._showTotalColumns(show=aggregation!='details')
+        self._showWeekdayColumns(show=aggregation == 'week')
+        self._showTotalColumns(show=aggregation != 'details')
         if autoResizing:
             self.widget.ToggleAutoResizing(True)
-        patterns.Event('effortviewer.aggregation').send()
+        self.__initRoundingToolBarUICommands()
+        pub.sendMessage('effortviewer.aggregation')
             
     def isShowingAggregatedEffort(self):
         return self.aggregation != 'details'
@@ -121,8 +144,10 @@ class EffortViewer(base.ListViewer,
         aggregation = self.settings.get(self.settingsSection(), 'aggregation')
         deletedFilter = filter.DeletedFilter(taskList)
         categoryFilter = super(EffortViewer, self).createFilter(deletedFilter)
-        searchFilter = filter.SearchFilter(self.createAggregator(categoryFilter, aggregation))
-        self.__observersToDetach.extend([deletedFilter, categoryFilter, searchFilter])
+        searchFilter = filter.SearchFilter(self.createAggregator(categoryFilter,
+                                                                 aggregation))
+        self.__observersToDetach.extend([deletedFilter, categoryFilter, 
+                                         searchFilter])
         return searchFilter
     
     def createAggregator(self, taskList, aggregation):
@@ -140,8 +165,8 @@ class EffortViewer(base.ListViewer,
         return aggregator
             
     def createWidget(self):
-        imageList = self.createImageList() # Has side-effects
-        self._columns = self._createColumns()
+        imageList = self.createImageList()  # Has side-effects
+        self._columns = self._createColumns()  # pylint: disable-msg=W0201
         itemPopupMenu = menu.EffortPopupMenu(self.parent, self.taskFile.tasks(),
             self.taskFile.efforts(), self.settings, self)
         columnPopupMenu = menu.EffortViewerColumnPopupMenu(self)
@@ -150,7 +175,7 @@ class EffortViewer(base.ListViewer,
             uicommand.Edit(viewer=self),
             itemPopupMenu, columnPopupMenu,
             resizeableColumn=1, **self.widgetCreationKeywordArguments())
-        widget.AssignImageList(imageList, wx.IMAGE_LIST_SMALL) # pylint: disable-msg=E1101
+        widget.AssignImageList(imageList, wx.IMAGE_LIST_SMALL)  # pylint: disable-msg=E1101
         return widget
     
     def _createColumns(self):
@@ -162,7 +187,8 @@ class EffortViewer(base.ListViewer,
                 sortCallback=sortCallback,
                 width=self.getColumnWidth(name), **kwargs) \
             for name, columnHeader, eventType, renderCallback, sortCallback in \
-            ('period', _('Period'), 'effort.duration', self.renderPeriod, 
+            ('period', _('Period'), effort.Effort.durationChangedEventType(), 
+             self.__renderPeriod, 
              uicommand.ViewerSortByCommand(viewer=self, value='period')),
             ('task', _('Task'), effort.Effort.taskChangedEventType(), lambda effort: effort.task().subject(recursive=True), None),
             ('description', _('Description'), effort.Effort.descriptionChangedEventType(), lambda effort: effort.description(), None)] + \
@@ -174,32 +200,40 @@ class EffortViewer(base.ListViewer,
              renderCallback=renderCallback, alignment=wx.LIST_FORMAT_RIGHT,
              **kwargs) \
             for name, columnHeader, eventType, renderCallback in \
-            ('timeSpent', _('Time spent'), 'effort.duration', 
-                lambda effort: render.timeSpent(effort.duration())),
-            ('totalTimeSpent', _('Total time spent'), 'effort.duration',
-                lambda effort: render.timeSpent(effort.duration(recursive=True))),
-            ('revenue', _('Revenue'), 'effort.revenue', 
-                lambda effort: render.monetaryAmount(effort.revenue())),
-            ('totalRevenue', _('Total revenue'), 'effort.revenue',
-                lambda effort: render.monetaryAmount(effort.revenue(recursive=True)))] + \
+            ('timeSpent', _('Time spent'), 
+             effort.Effort.durationChangedEventType(), self.__renderTimeSpent),
+            ('totalTimeSpent', _('Total time spent'), 
+             effort.Effort.durationChangedEventType(), 
+             self.__renderTotalTimeSpent),
+            ('revenue', _('Revenue'), effort.Effort.revenueChangedEventType(), 
+             self.__renderRevenue),
+            ('totalRevenue', _('Total revenue'), 
+             effort.Effort.revenueChangedEventType(), self.__renderTotalRevenue)] + \
              [widgets.Column(name, columnHeader, eventType, 
               renderCallback=renderCallback, alignment=wx.LIST_FORMAT_RIGHT,
               width=self.getColumnWidth(name), **kwargs) \
              for name, columnHeader, eventType, renderCallback in \
-                ('monday', _('Monday'), 'effort.duration',  
-                 lambda effort: self.renderTimeSpentOnDay(effort, 0)),                             
-                ('tuesday', _('Tuesday'), 'effort.duration',  
-                 lambda effort: self.renderTimeSpentOnDay(effort, 1)),
-                ('wednesday', _('Wednesday'), 'effort.duration',  
-                 lambda effort: self.renderTimeSpentOnDay(effort, 2)),
-                ('thursday', _('Thursday'), 'effort.duration',  
-                 lambda effort: self.renderTimeSpentOnDay(effort, 3)),
-                ('friday', _('Friday'), 'effort.duration',  
-                 lambda effort: self.renderTimeSpentOnDay(effort, 4)),
-                ('saturday', _('Saturday'), 'effort.duration',  
-                 lambda effort: self.renderTimeSpentOnDay(effort, 5)),
-                ('sunday', _('Sunday'), 'effort.duration',  
-                 lambda effort: self.renderTimeSpentOnDay(effort, 6))      
+                ('monday', _('Monday'), 
+                 effort.Effort.durationChangedEventType(),  
+                 lambda effort: self.__renderTimeSpentOnDay(effort, 0)),
+                ('tuesday', _('Tuesday'), 
+                 effort.Effort.durationChangedEventType(),
+                 lambda effort: self.__renderTimeSpentOnDay(effort, 1)),
+                ('wednesday', _('Wednesday'), 
+                 effort.Effort.durationChangedEventType(),  
+                 lambda effort: self.__renderTimeSpentOnDay(effort, 2)),
+                ('thursday', _('Thursday'), 
+                 effort.Effort.durationChangedEventType(),  
+                 lambda effort: self.__renderTimeSpentOnDay(effort, 3)),
+                ('friday', _('Friday'), 
+                 effort.Effort.durationChangedEventType(),  
+                 lambda effort: self.__renderTimeSpentOnDay(effort, 4)),
+                ('saturday', _('Saturday'), 
+                 effort.Effort.durationChangedEventType(),  
+                 lambda effort: self.__renderTimeSpentOnDay(effort, 5)),
+                ('sunday', _('Sunday'), 
+                 effort.Effort.durationChangedEventType(),  
+                 lambda effort: self.__renderTimeSpentOnDay(effort, 6))      
              ]
 
     def _showWeekdayColumns(self, show=True):
@@ -263,31 +297,48 @@ class EffortViewer(base.ListViewer,
         return columnUICommands
     
     def createCreationToolBarUICommands(self):
-        return [uicommand.EffortNew(viewer=self, effortList=self.presentation(),
+        return (uicommand.EffortNew(viewer=self, effortList=self.presentation(),
                                     taskList=self.taskFile.tasks(), 
-                                    settings=self.settings)]
+                                    settings=self.settings),)
         
     def createActionToolBarUICommands(self):
         tasks = self.taskFile.tasks()
-        return [uicommand.EffortStartForEffort(viewer=self, taskList=tasks),
+        return (uicommand.EffortStartForEffort(viewer=self, taskList=tasks),
                 uicommand.EffortStop(effortList=self.taskFile.efforts(), 
-                                     taskList=tasks)]
+                                     taskList=tasks))
                 
     def createModeToolBarUICommands(self):
         # This is an instance variable so that the choice can be changed 
         # programmatically
+        # pylint: disable-msg=W0201
         self.aggregationUICommand = \
             uicommand.EffortViewerAggregationChoice(viewer=self)
-        return [self.aggregationUICommand]
+        self.roundingUICommand = uicommand.RoundingPrecision(viewer=self, 
+                                                             settings=self.settings)
+        self.alwaysRoundUpUICommand = uicommand.AlwaysRoundUp(viewer=self, 
+                                                              settings=self.settings)
+        return (self.aggregationUICommand, self.roundingUICommand, 
+                self.alwaysRoundUpUICommand)
 
-    def getItemImages(self, index, column=0): # pylint: disable-msg=W0613
+    def supportsRounding(self):
+        return True
+    
+    def getRoundingUICommands(self):
+        return [uicommand.AlwaysRoundUp(viewer=self, settings=self.settings), 
+                None] + \
+               [uicommand.RoundBy(menuText=menuText, value=value, viewer=self, 
+                                  settings=self.settings) \
+                for (menuText, value) in zip(uicommand.RoundingPrecision.choiceLabels, 
+                                             uicommand.RoundingPrecision.choiceData)]
+
+    def getItemImages(self, index, column=0):  # pylint: disable-msg=W0613
         return {wx.TreeItemIcon_Normal: -1}
     
     def curselection(self):
         selection = super(EffortViewer, self).curselection()
         if self.aggregation != 'details':
-            selection = [anEffort for compositeEffort in selection\
-                                for anEffort in compositeEffort]
+            selection = [anEffort for compositeEffort in selection \
+                                  for anEffort in compositeEffort]
         return selection
     
     def getIndexOfItem(self, item):
@@ -304,53 +355,28 @@ class EffortViewer(base.ListViewer,
             aggregates. This is a problem e.g. when exporting only a
             selection, since items we're iterating over (aggregates) are
             never in curselection(). This method is used instead. It just
-            ignores the overriden version of curselection. '''
+            ignores the overridden version of curselection. '''
 
         return item in super(EffortViewer, self).curselection()
 
     def statusMessages(self):
-        status1 = _('Effort: %d selected, %d visible, %d total')%\
+        status1 = _('Effort: %d selected, %d visible, %d total') % \
             (len(self.curselection()), len(self.presentation()), 
              len(self.taskFile.efforts()))         
-        status2 = _('Status: %d tracking')% self.presentation().nrBeingTracked()
+        status2 = _('Status: %d tracking') % \
+            self.presentation().nrBeingTracked()
         return status1, status2
-    
-    renderers = dict(details=lambda anEffort: render.dateTimePeriod(anEffort.getStart(), anEffort.getStop()),
-                     day=lambda anEffort: render.date(anEffort.getStart().date()),
-                     week=lambda anEffort: render.weekNumber(anEffort.getStart()),
-                     month=lambda anEffort: render.month(anEffort.getStart()))
-
-    def renderPeriod(self, anEffort):
-        return '' if self._hasRepeatedPeriod(anEffort) else self.renderers[self.aggregation](anEffort)
-                    
-    def _hasRepeatedPeriod(self, anEffort):
-        ''' Return whether the effort has the same period as the previous 
-            effort record. '''
-        index = self.presentation().index(anEffort)
-        previousEffort = index > 0 and self.presentation()[index-1] or None
-        if not previousEffort:
-            return False
-        if anEffort.getStart() != previousEffort.getStart():
-            return False # Starts are not equal, so period cannot be repeated
-        if self.isShowingAggregatedEffort():
-            return True # Starts are equal and length of period is equal, so period is repeated
-        # If we get here, we are in details mode and the starts are equal 
-        # Period can only be repeated when the stop times are also equal
-        return anEffort.getStop() == previousEffort.getStop()
-
-    def renderTimeSpentOnDay(self, anEffort, dayOffset):
-        duration = anEffort.durationDay(dayOffset) if self.aggregation == 'week' else date.TimeDelta()
-        return render.timeSpent(duration)
-    
+   
     def newItemDialog(self, *args, **kwargs):
         selectedTasks = kwargs.get('selectedTasks', [])
         bitmap = kwargs.get('bitmap', 'new')
         if not selectedTasks:
             subjectDecoratedTaskList = [(task.subject(recursive=True), task) \
-                                        for task in self.tasksToShowEffortFor]
+                                        for task in self.__tasksToShowEffortFor]
             subjectDecoratedTaskList.sort() # Sort by subject
             selectedTasks = [subjectDecoratedTaskList[0][1]]
-        return super(EffortViewer, self).newItemDialog(selectedTasks, bitmap=bitmap)
+        return super(EffortViewer, self).newItemDialog(selectedTasks, 
+                                                       bitmap=bitmap)
         
     def itemEditorClass(self):
         return dialog.editor.EffortEditor
@@ -359,8 +385,97 @@ class EffortViewer(base.ListViewer,
         return command.NewEffortCommand
     
     def newSubItemCommandClass(self):
-        pass # efforts are not composite.
+        pass  # efforts are not composite.
 
     def deleteItemCommandClass(self):
         return command.DeleteEffortCommand
     
+    # Rendering
+    
+    periodRenderers = dict( \
+        details=lambda anEffort: render.dateTimePeriod(anEffort.getStart(), 
+                                                       anEffort.getStop()),
+        day=lambda anEffort: render.date(anEffort.getStart().date()),
+        week=lambda anEffort: render.weekNumber(anEffort.getStart()),
+        month=lambda anEffort: render.month(anEffort.getStart()))
+
+    def __renderPeriod(self, anEffort):
+        ''' Return the period the effort belongs to. This depends on the
+            current aggregation. If this period is the same as the previous
+            period, an empty string is returned. '''
+        return '' if self.__hasRepeatedPeriod(anEffort) else \
+            self.periodRenderers[self.aggregation](anEffort)
+                    
+    def __hasRepeatedPeriod(self, anEffort):
+        ''' Return whether the effort has the same period as the previous 
+            effort record. '''
+        index = self.presentation().index(anEffort)
+        previousEffort = index > 0 and self.presentation()[index-1] or None
+        if not previousEffort:
+            return False
+        if anEffort.getStart() != previousEffort.getStart():
+            # Starts are not equal, so period cannot be repeated
+            return False  
+        if self.isShowingAggregatedEffort():
+            # Starts and length of period are equal, so period is repeated
+            return True  
+        # If we get here, we are in details mode and the starts are equal 
+        # Period can only be repeated when the stop times are also equal
+        return anEffort.getStop() == previousEffort.getStop()
+    
+    def __renderTimeSpent(self, anEffort):
+        ''' Return a rendered version of the effort duration. '''
+        duration = anEffort.duration()
+        # Check for aggregation because we never round in details mode
+        if self.isShowingAggregatedEffort():
+            duration = self.__round_duration(duration)
+            showSeconds = self.__show_seconds()
+        else:
+            showSeconds = True
+        return render.timeSpent(duration, showSeconds=showSeconds)
+
+    def __renderTotalTimeSpent(self, anEffort):
+        ''' Return a rendered version of the effort total duration (of 
+            composite efforts). '''
+        # No need to check for aggregation because this method is only used
+        # in aggregated mode
+        total_duration = anEffort.duration(recursive=True)
+        return render.timeSpent(self.__round_duration(total_duration), 
+                                showSeconds=self.__show_seconds())
+    
+    def __renderTimeSpentOnDay(self, anEffort, dayOffset):
+        ''' Return a rendered version of the duration of the effort on a
+            specific day. '''
+        duration = anEffort.durationDay(dayOffset) \
+            if self.aggregation == 'week' else date.TimeDelta()
+        return render.timeSpent(self.__round_duration(duration), 
+                                showSeconds=self.__show_seconds())
+    
+    @staticmethod
+    def __renderRevenue(anEffort):
+        ''' Return the revenue of the effort as a monetary value. '''
+        return render.monetaryAmount(anEffort.revenue())
+    
+    @staticmethod
+    def __renderTotalRevenue(anEffort):
+        ''' Return the total revenue of the effort as a monetary value. '''
+        return render.monetaryAmount(anEffort.revenue(recursive=True))
+    
+    def __round_duration(self, duration):
+        ''' Round a duration with the current precision and direction (i.e.
+            always up or not). '''
+        return duration.round(seconds=self.__round_precision(), 
+                              alwaysUp=self.__always_round_up())
+    
+    def __show_seconds(self):
+        ''' Return whether the viewer is showing seconds as part of 
+            durations. '''
+        return self.__round_precision() == 0
+     
+    def __round_precision(self):
+        ''' Return with what precision the viewer is rounding durations. '''
+        return self.settings.getint(self.settingsSection(), 'round')
+
+    def __always_round_up(self):
+        ''' Return whether durations are always rounded up or not. '''
+        return self.settings.getboolean(self.settingsSection(), 'alwaysroundup')

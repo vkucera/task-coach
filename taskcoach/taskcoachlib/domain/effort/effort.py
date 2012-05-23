@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -19,8 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 from taskcoachlib.domain import date, base, task
+from taskcoachlib.thirdparty.pubsub import pub
 import base as baseeffort
-    
+
 
 class Effort(baseeffort.BaseEffort, base.Object):
     def __init__(self, task=None, start=None, stop=None, *args, **kwargs):
@@ -28,8 +29,7 @@ class Effort(baseeffort.BaseEffort, base.Object):
             *args, **kwargs)
         self.__updateDurationCache()
         
-    @patterns.eventSource
-    def setTask(self, task, event=None):
+    def setTask(self, task):
         if self._task is None: 
             # We haven't been fully initialised yet, so allow setting of the
             # task, without notifying observers. Also, don't call addEffort()
@@ -40,12 +40,14 @@ class Effort(baseeffort.BaseEffort, base.Object):
         if task in (self._task, None): 
             # command.PasteCommand may try to set the parent to None
             return
-        self._task.removeEffort(self, event=event)
+        event = patterns.Event()  # Change monitor needs one event to detect task change
+        self._task.removeEffort(self)
         self._task = task
-        self._task.addEffort(self, event=event)
-        event.addSource(self, task, type=self.taskChangedEventType())
+        self._task.addEffort(self)
+        event.send()
+        pub.sendMessage(self.taskChangedEventType(), newValue=task, sender=self)
         
-    setParent = setTask # FIXME: should we create a common superclass for Effort and Task?
+    setParent = setTask  # FIXME: should we create a common superclass for Effort and Task?
 
     @classmethod
     def monitoredAttributes(class_):
@@ -56,10 +58,10 @@ class Effort(baseeffort.BaseEffort, base.Object):
 
     @classmethod
     def taskChangedEventType(class_):
-        return '%s.task'%class_
+        return 'pubsub.effort.task'
     
     def __str__(self):
-        return 'Effort(%s, %s, %s)'%(self._task, self._start, self._stop)
+        return 'Effort(%s, %s, %s)' % (self._task, self._start, self._stop)
     
     __repr__ = __str__
         
@@ -71,9 +73,9 @@ class Effort(baseeffort.BaseEffort, base.Object):
     @patterns.eventSource
     def __setstate__(self, state, event=None):
         super(Effort, self).__setstate__(state, event=event)
-        self.setTask(state['task'], event=event)
-        self.setStart(state['start'], event=event)
-        self.setStop(state['stop'], event=event)
+        self.setTask(state['task'])
+        self.setStart(state['start'])
+        self.setStop(state['stop'])
 
     def __getcopystate__(self):
         state = super(Effort, self).__getcopystate__()
@@ -83,24 +85,23 @@ class Effort(baseeffort.BaseEffort, base.Object):
     def duration(self, now=date.DateTime.now):
         return now() - self._start if self.__cachedDuration is None else self.__cachedDuration
      
-    @patterns.eventSource   
-    def setStart(self, startDateTime, event=None):
+    def setStart(self, startDateTime):
         if startDateTime == self._start:
             return
         self._start = startDateTime
         self.__updateDurationCache()
-        self.task().timeSpentEvent(event, self)
-        event.addSource(self, self._start, type=self.startChangedEventType())
-        event.addSource(self, self.duration(), type='effort.duration')
+        pub.sendMessage(self.startChangedEventType(), newValue=startDateTime,
+                        sender=self)
+        self.task().sendTimeSpentChangedMessage()
+        self.sendDurationChangedMessage()
         if self.task().hourlyFee():
-            self.revenueEvent(event)
+            self.sendRevenueChangedMessage()
 
     @classmethod
     def startChangedEventType(class_):
-        return 'effort.start'
+        return 'pubsub.effort.start'
 
-    @patterns.eventSource        
-    def setStop(self, newStop=None, event=None):
+    def setStop(self, newStop=None):
         if newStop is None:
             newStop = date.DateTime.now()
         elif newStop == date.DateTime.max:
@@ -111,32 +112,32 @@ class Effort(baseeffort.BaseEffort, base.Object):
         self._stop = newStop
         self.__updateDurationCache()
         if newStop == None:
-            event.addSource(self, type=self.trackStartEventType())
-            self.task().startTrackingEvent(event, self)
+            pub.sendMessage(self.trackingChangedEventType(), newValue=True, 
+                            sender=self)
+            self.task().sendTrackingChangedMessage(tracking=True)
         elif previousStop == None:
-            event.addSource(self, type=self.trackStopEventType())
-            self.task().stopTrackingEvent(event, self)
-        self.task().timeSpentEvent(event, self)
-        event.addSource(self, newStop, type=self.stopChangedEventType())
-        event.addSource(self, self.duration(), type='effort.duration')
+            pub.sendMessage(self.trackingChangedEventType(), newValue=False,
+                            sender=self)
+            self.task().sendTrackingChangedMessage(tracking=False)
+        self.task().sendTimeSpentChangedMessage()
+        pub.sendMessage(self.stopChangedEventType(), newValue=self._stop,
+                           sender=self)
+        self.sendDurationChangedMessage()
         if self.task().hourlyFee():
-            self.revenueEvent(event)
-
+            self.sendRevenueChangedMessage()
+            
     @classmethod
     def stopChangedEventType(class_):
-        return 'effort.stop'
-
+        return 'pubsub.effort.stop'
+        
     def __updateDurationCache(self):
         self.__cachedDuration = self._stop - self._start if self._stop else None
         
-    def isBeingTracked(self, recursive=False): # pylint: disable-msg=W0613
+    def isBeingTracked(self, recursive=False):  # pylint: disable-msg=W0613
         return self._stop is None
 
     def revenue(self):
         return self.duration().hours() * self.task().hourlyFee()
-        
-    def revenueEvent(self, event):
-        event.addSource(self, self.revenue(), type='effort.revenue')
 
     @staticmethod
     def periodSortFunction(**kwargs):
@@ -155,5 +156,5 @@ class Effort(baseeffort.BaseEffort, base.Object):
     def modificationEventTypes(class_):
         eventTypes = super(Effort, class_).modificationEventTypes()
         return eventTypes + [class_.taskChangedEventType(), 
-                             class_.startChangedEventType(), class_.stopChangedEventType()]
- 
+                             class_.startChangedEventType(), 
+                             class_.stopChangedEventType()]

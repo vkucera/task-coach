@@ -180,14 +180,7 @@ class AuiDefaultDockArt(object):
     def Init(self):
         """ Initializes the dock art. """
 
-        base_colour = GetBaseColour()
-        darker1_colour = StepColour(base_colour, 85)
-        darker2_colour = StepColour(base_colour, 75)
-        darker3_colour = StepColour(base_colour, 60)
-        darker4_colour = StepColour(base_colour, 40)
-
-        self._background_colour = base_colour
-        self._background_gradient_colour = StepColour(base_colour, 180)
+        self.SetDefaultColours()
 
         isMac = wx.Platform == "__WXMAC__"
 
@@ -198,10 +191,31 @@ class AuiDefaultDockArt(object):
 
         self._active_caption_gradient_colour = LightContrastColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT))
         self._active_caption_text_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT)
-        self._inactive_caption_colour = darker1_colour
-        self._inactive_caption_gradient_colour = StepColour(base_colour, 97)
         self._inactive_caption_text_colour = wx.BLACK
     
+
+    def SetDefaultColours(self, base_colour=None):
+        """
+        Sets the default colours, which are calculated from the given base colour.
+
+        :param `base_colour`: an instance of `wx.Colour`. If defaulted to ``None``, a colour
+         is generated accordingly to the platform and theme.
+        """
+
+        if base_colour is None:
+            base_colour = GetBaseColour()
+
+        darker1_colour = StepColour(base_colour, 85)
+        darker2_colour = StepColour(base_colour, 75)
+        darker3_colour = StepColour(base_colour, 60)
+        darker4_colour = StepColour(base_colour, 40)
+
+        self._background_colour = base_colour
+        self._background_gradient_colour = StepColour(base_colour, 180)
+
+        self._inactive_caption_colour = darker1_colour
+        self._inactive_caption_gradient_colour = StepColour(base_colour, 97)
+
         self._sash_brush = wx.Brush(base_colour)
         self._background_brush = wx.Brush(base_colour)
         self._border_pen = wx.Pen(darker2_colour)
@@ -915,10 +929,11 @@ class ModernDockArt(AuiDefaultDockArt):
 
         # Get the size of a small close button (themed)
         hwnd = self.win.GetHandle()
+        self.usingTheme = False
         
-        self.hTheme1 = winxptheme.OpenThemeData(hwnd, "Window")
-        
-        self.usingTheme = True
+        if _ctypes:
+            self.hTheme1 = winxptheme.OpenThemeData(hwnd, "Window")        
+            self.usingTheme = True
         
         if not self.hTheme1:
             self.usingTheme = False

@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, StringIO # We cannot use CStringIO since unicode strings are used below.
 import test
-from taskcoachlib import persistence, config
+from taskcoachlib import persistence, config, meta
 from taskcoachlib.domain import base, task, effort, date, category, note, attachment
 from taskcoachlib.syncml.config import SyncMLConfigNode
 
@@ -57,7 +57,6 @@ class XMLWriterTest(test.TestCase):
     # tests
         
     def testVersion(self):
-        from taskcoachlib import meta
         self.expectInXML('<?taskcoach release="%s"'%meta.data.version)
 
     def testGUID(self):
@@ -82,14 +81,22 @@ class XMLWriterTest(test.TestCase):
     def testEmptyTaskDescriptionIsNotWritten(self):
         self.expectNotInXML('<description>')
         
-    def testTaskStartDateTime(self):
-        self.task.setStartDateTime(date.DateTime(2004,1,1,11,0,0))
-        self.expectInXML('startdate="%s"'%str(self.task.startDateTime()))
+    def testTaskPlannedStartDateTime(self):
+        self.task.setPlannedStartDateTime(date.DateTime(2004,1,1,11,0,0))
+        self.expectInXML('plannedstartdate="%s"'%str(self.task.plannedStartDateTime()))
         
-    def testNoStartDateTime(self):
-        self.task.setStartDateTime(date.DateTime())
-        self.expectNotInXML('startdate=')
+    def testNoPlannedStartDateTime(self):
+        self.task.setPlannedStartDateTime(date.DateTime())
+        self.expectNotInXML('plannedstartdate=')
         
+    def testTaskActualStartDateTime(self):
+        self.task.setActualStartDateTime(date.DateTime(2007,12,31,9,0,0))
+        self.expectInXML('actualstartdate="%s"'%str(self.task.actualStartDateTime()))
+
+    def testNoActualStartDateTime(self):
+        self.task.setActualStartDateTime(date.DateTime())
+        self.expectNotInXML('actualstartdate=')
+         
     def testTaskDueDateTime(self):
         self.task.setDueDateTime(date.DateTime(2004,1,1,10,5,5))
         self.expectInXML('duedate="%s"'%str(self.task.dueDateTime()))
@@ -355,7 +362,7 @@ class XMLWriterTest(test.TestCase):
     def testDontWriteInheritedTaskForegroundColor(self):
         self.task.setForegroundColor(wx.RED)
         child = task.Task(subject='child', id='id',
-                          startDateTime=date.DateTime())
+                          plannedStartDateTime=date.DateTime())
         self.task.addChild(child)
         self.taskList.append(child)
         self.expectInXML('<task id="id" status="1" subject="child" />')
@@ -363,7 +370,7 @@ class XMLWriterTest(test.TestCase):
     def testDontWriteInheritedTaskBackgroundColor(self):
         self.task.setBackgroundColor(wx.RED)
         child = task.Task(subject='child', id='id', 
-                          startDateTime=date.DateTime())
+                          plannedStartDateTime=date.DateTime())
         self.task.addChild(child)
         self.taskList.append(child)
         self.expectInXML('<task id="id" status="1" subject="child" />')
@@ -404,6 +411,10 @@ class XMLWriterTest(test.TestCase):
     def testMonthlyRecurrence(self):
         self.task.setRecurrence(date.Recurrence('monthly'))
         self.expectInXML('<recurrence unit="monthly" />')
+        
+    def testMonthlyRecurrenceOnSameWeekday(self):
+        self.task.setRecurrence(date.Recurrence('monthly', sameWeekday=True))
+        self.expectInXML('<recurrence sameWeekday="True" unit="monthly" />')
 
     def testYearlyRecurrence(self):
         self.task.setRecurrence(date.Recurrence('yearly'))
@@ -478,6 +489,24 @@ class XMLWriterTest(test.TestCase):
         self.expectInXML('>\n<note id="%s" status="1">\n'
             '<note id="id" status="1" subject="Subnote" />\n</note>\n</task>'%self.note.id())
 
+    def testTaskWithNoteWithCategory(self):
+        newNote = note.Note()
+        self.task.addNote(newNote)
+        newNote.addCategory(self.category)
+        self.category.addCategorizable(newNote)
+        self.expectInXML('<category categorizables="%s" id="%s" status="1" subject="%s" />'%\
+                         (newNote.id(), self.category.id(), self.category.subject()))
+  
+    def testTaskWithNoteWithSubNoteWithCategory(self):
+        newNote = note.Note()
+        newSubNote = note.Note()
+        newNote.addChild(newSubNote)
+        self.task.addNote(newNote)
+        newSubNote.addCategory(self.category)
+        self.category.addCategorizable(newSubNote)
+        self.expectInXML('<category categorizables="%s" id="%s" status="1" subject="%s" />'%\
+                         (newSubNote.id(), self.category.id(), self.category.subject()))
+        
     def testCategoryWithNote(self):
         self.category.addNote(self.note)
         self.expectInXML('>\n<note id="%s" status="1" />\n</category>'%self.note.id())

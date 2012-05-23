@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
@@ -43,8 +43,8 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W022
         super(BaseNoteViewer, self).__init__(*args, **kwargs)
         for eventType in (note.Note.appearanceChangedEventType(), 
                           note.Note.subjectChangedEventType()):
-            patterns.Publisher().registerObserver(self.onAttributeChanged, 
-                                                  eventType)
+            self.registerObserver(self.onAttributeChanged_Deprecated, 
+                                  eventType)
 
     def domainObjectsToView(self):
         return self.taskFile.notes() if self.notesToShow is None else self.notesToShow
@@ -72,9 +72,9 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W022
         return domain.base.DeletedFilter(notes)
     
     def createCreationToolBarUICommands(self):
-        return [uicommand.NoteNew(notes=self.presentation(),
+        return (uicommand.NoteNew(notes=self.presentation(),
                                   settings=self.settings, viewer=self),
-                uicommand.NewSubItem(viewer=self)] + \
+                uicommand.NewSubItem(viewer=self),) + \
             super(BaseNoteViewer, self).createCreationToolBarUICommands()
         
     def createColumnUICommands(self):
@@ -85,9 +85,6 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W022
             uicommand.ViewColumn(menuText=_('&Description'),
                 helpText=_('Show/hide description column'),
                 setting='description', viewer=self),
-            ## uicommand.ViewColumn(menuText=_('&Manual ordering'),
-            ##     helpText=_('Show/hide the manual ordering column'),
-            ##     setting='ordering', viewer=self),
             uicommand.ViewColumn(menuText=_('&Attachments'),
                 helpText=_('Show/hide attachments column'),
                 setting='attachments', viewer=self),
@@ -106,14 +103,6 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W022
             imageIndicesCallback=self.subjectImageIndices,
             editCallback=self.onEditSubject,
             editControl=inplace_editor.SubjectCtrl)
-        ## orderingColumn = widgets.Column('ordering', _('Manual ordering'),
-        ##     note.Note.orderingChangedEventType(),
-        ##     width=self.getColumnWidth('ordering'),
-        ##     resizeCallback=self.onResizeColumn,
-        ##     renderCallback=lambda note: '',
-        ##     sortCallback=uicommand.ViewerSortByCommand(viewer=self,
-        ##         value='ordering', menuText=_('&Ordering'),
-        ##         helpText=_('Sort notes manually')))
         descriptionColumn = widgets.Column('description', _('Description'),
             note.Note.descriptionChangedEventType(),
             width=self.getColumnWidth('description'), 
@@ -142,7 +131,6 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W022
             sortCallback=uicommand.ViewerSortByCommand(viewer=self, 
                 value='categories', menuText=_('&Categories'), 
                 helpText=_('Sort notes by categories')))
-        ## return [subjectColumn, descriptionColumn, orderingColumn, attachmentsColumn, categoriesColumn]
         return [subjectColumn, descriptionColumn, attachmentsColumn, categoriesColumn]
 
     def getItemTooltipData(self, item, column=0):

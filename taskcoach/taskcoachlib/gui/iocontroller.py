@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,10 +23,10 @@ from taskcoachlib import meta, persistence, patterns, operating_system
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty import lockfile
 from taskcoachlib.widgets import GetPassword
+from taskcoachlib.workarounds import ExceptionAsUnicode
 
 try:
     from taskcoachlib.syncml import sync
-    from taskcoachlib.widgets import conflict
 except ImportError: # pragma: no cover
     # Unsupported platform.
     pass
@@ -133,18 +133,10 @@ class IOController(object):
                 else:
                     return
             except persistence.xml.reader.XMLReaderTooNewException:
-                showerror(_('Cannot open %(filename)s\n'
-                            'because it was created by a newer version of %(name)s.\n'
-                            'Please upgrade %(name)s.')%\
-                          dict(filename=filename, name=meta.name))
+                self.__showTooNewErrorMessage(filename, showerror)
                 return
             except Exception:
-                # pylint: disable-msg=W0142
-                print ''.join(traceback.format_exception(*sys.exc_info()))
-                showerror(_('Error while reading %s:\n')%filename + \
-                    ''.join(traceback.format_exception(*sys.exc_info())) + \
-                    _('Are you sure it is a %s-file?')%meta.name, 
-                    **self.__errorMessageOptions)
+                self.__showGenericErrorMessage(filename, showerror)
                 return
             self.__messageCallback(_('Loaded %(nrtasks)d tasks from %(filename)s')%\
                 {'nrtasks': len(self.__taskFile.tasks()), 
@@ -170,16 +162,10 @@ class IOController(object):
                           **self.__errorMessageOptions)
                 return
             except persistence.xml.reader.XMLReaderTooNewException:
-                showerror(_('Cannot open %(filename)s\n'
-                            'because it was created by a newer version of %(name)s.\n'
-                            'Please upgrade %(name)s.')%\
-                          dict(filename=filename, name=meta.name))
+                self.__showTooNewErrorMessage(filename, showerror)
                 return
             except Exception:
-                showerror(_('Error while reading %s:\n')%filename + \
-                    ''.join(traceback.format_exception(*sys.exc_info())) + \
-                    _('Are you sure it is a %s-file?')%meta.name, 
-                    **self.__errorMessageOptions)
+                self.__showGenericErrorMessage(filename, showerror)
                 return                
             self.__messageCallback(_('Merged %(filename)s')%{'filename': filename}) 
             self.__addRecentFile(filename)
@@ -251,8 +237,8 @@ class IOController(object):
                 'It is locked by another instance of %s.\n')%(filename, meta.name)
             showerror(errorMessage, **self.__errorMessageOptions)
             return False
-        except IOError, reason:
-            errorMessage = _('Cannot save %s\n%s')%(filename, reason)
+        except (OSError, IOError, lockfile.LockFailed), reason:
+            errorMessage = _('Cannot save %s\n%s')%(filename, ExceptionAsUnicode(reason))
             showerror(errorMessage, **self.__errorMessageOptions)
             return False
         
@@ -270,7 +256,7 @@ class IOController(object):
             try:
                 templates.copyTemplate(filename)
             except Exception, reason: # pylint: disable-msg=W0703
-                errorMessage = _('Cannot import template %s\n%s')%(filename, reason)
+                errorMessage = _('Cannot import template %s\n%s')%(filename, ExceptionAsUnicode(reason))
                 showerror(errorMessage, **self.__errorMessageOptions)
             
     def close(self, force=False):
@@ -306,18 +292,19 @@ class IOController(object):
             return False
 
     def exportAsHTML(self, viewer, selectionOnly=False, separateCSS=False,
-                     openfile=codecs.open, showerror=wx.MessageBox, 
+                     columns=None, openfile=codecs.open, showerror=wx.MessageBox, 
                      filename=None, fileExists=os.path.exists):
         return self.export(_('Export as HTML'), self.__htmlFileDialogOpts, 
             persistence.HTMLWriter, viewer, selectionOnly, openfile, showerror, 
-            filename, fileExists, separateCSS=separateCSS)
+            filename, fileExists, separateCSS=separateCSS, columns=columns)
 
     def exportAsCSV(self, viewer, selectionOnly=False, 
-                    separateDateAndTimeColumns=False, fileExists=os.path.exists):
+                    separateDateAndTimeColumns=False, columns=None,
+                    fileExists=os.path.exists):
         return self.export(_('Export as CSV'), self.__csvFileDialogOpts, 
             persistence.CSVWriter, viewer, selectionOnly, 
             separateDateAndTimeColumns=separateDateAndTimeColumns, 
-            fileExists=fileExists)
+            columns=columns, fileExists=fileExists)
         
     def exportAsICalendar(self, viewer, selectionOnly=False, 
                           fileExists=os.path.exists):
@@ -346,7 +333,7 @@ class IOController(object):
             if not password:
                 break
 
-            synchronizer = sync.Synchronizer(self.__syncReport, self, 
+            synchronizer = sync.Synchronizer(self.__syncReport,
                                          self.__taskFile, password)
             try:
                 synchronizer.synchronize()
@@ -361,33 +348,16 @@ class IOController(object):
     def filename(self):
         return self.__taskFile.filename()
 
-    def resolveNoteConflict(self, flags, local, remote):
-        return self.resolveConflict(conflict.NoteConflictPanel, 
-                                    flags, local, remote, _('Note conflict'))
-
-    def resolveTaskConflict(self, flags, local, remote):
-        return self.resolveConflict(conflict.TaskConflictPanel, 
-                                    flags, local, remote, _('Task conflict'))
-    
-    def resolveConflict(self, panel, flags, local, remote, title):
-        dialog = conflict.ConflictDialog(panel, flags, local, remote, None, 
-                                         wx.ID_ANY, title)
-        try:
-            dialog.ShowModal()
-        finally:
-            dialog.Destroy()
-        return dialog.resolved
-
     def __syncReport(self, msg):
         wx.MessageBox(msg, _('Synchronization status'), 
                       style=wx.OK|wx.ICON_ERROR)
 
     def __openFileForWriting(self, filename, openfile, showerror, mode='w', 
-                             encoding='utf-8',):
+                             encoding='utf-8'):
         try:
             return openfile(filename, mode, encoding)
         except IOError, reason:
-            errorMessage = _('Cannot open %s\n%s')%(filename, reason)
+            errorMessage = _('Cannot open %s\n%s')%(filename, ExceptionAsUnicode(reason))
             showerror(errorMessage, **self.__errorMessageOptions)
             return None
         
@@ -472,6 +442,19 @@ Break the lock?''') % filename,
         self.__messageCallback(_('Saved %(nrtasks)d tasks to %(filename)s')%\
             {'nrtasks': len(savedFile.tasks()), 
              'filename': savedFile.filename()})
+        
+    def __showTooNewErrorMessage(self, filename, showerror):
+        showerror(_('Cannot open %(filename)s\n'
+                    'because it was created by a newer version of %(name)s.\n'
+                    'Please upgrade %(name)s.')%\
+            dict(filename=filename, name=meta.name),
+            **self.__errorMessageOptions)
+        
+    def __showGenericErrorMessage(self, filename, showerror):
+        sys.stderr.write(''.join(traceback.format_exception(*sys.exc_info())))
+        limitedException = ''.join(traceback.format_exception(*sys.exc_info(), limit=10))
+        showerror(_('Error while reading %s:\n')%filename + \
+                    limitedException, **self.__errorMessageOptions)
 
     def __updateDefaultPath(self, filename):
         for options in [self.__tskFileOpenDialogOpts, 

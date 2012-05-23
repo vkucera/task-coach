@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ class LoadTest(test.TestCase):
 
     def tearDown(self):
         wx.CallAfter = self.oldCallAfter
-        self.mockApp.quit()
+        self.mockApp.quitApplication()
         if os.path.isfile(self.filename):
             os.remove(self.filename)
         mock.App.deleteInstance()

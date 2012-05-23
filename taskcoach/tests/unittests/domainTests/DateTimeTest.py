@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -90,6 +90,10 @@ class DateTimeTest(test.TestCase):
         endOfMonth = date.DateTime(2005,4,30).endOfDay()
         midMonth = date.DateTime(2005,4,15,12,45,1,999999)
         self.assertEqual(endOfMonth, midMonth.endOfMonth())
+        
+    def testStartOfYear(self):
+        self.assertEqual(date.DateTime(2010,1,1,0,0,0), 
+                         date.DateTime(2010,12,31,11,4,5).startOfYear())
 
     def testEndOfYear_AtMidYear(self):
         endOfYear = date.DateTime(2010,12,31,23,59,59,999999)
@@ -107,29 +111,3 @@ class DateTimeTest(test.TestCase):
     def testOrdinalOfDateTimeAtNoon(self):
         self.assertEqual(date.Date(2000, 1, 1).toordinal() + 0.5, 
                          date.DateTime(2000, 1, 1, 12, 0, 0).toordinal())
-
-
-class TimeDeltaTest(test.TestCase):
-    def testHours(self):
-        timedelta = date.TimeDelta(hours=2, minutes=15)
-        self.assertEqual(2.25, timedelta.hours())
-        
-    def testMillisecondsInOneSecond(self):
-        timedelta = date.TimeDelta(seconds=1)
-        self.assertEqual(1000, timedelta.milliseconds())
-
-    def testMillisecondsInOneHour(self):
-        timedelta = date.TimeDelta(hours=1)
-        self.assertEqual(60*60*1000, timedelta.milliseconds())
-
-    def testMillisecondsInOneDay(self):
-        timedelta = date.TimeDelta(days=1)
-        self.assertEqual(24*60*60*1000, timedelta.milliseconds())
-
-    def testMillisecondsInOneMicrosecond(self):
-        timedelta = date.TimeDelta(microseconds=1)
-        self.assertEqual(0, timedelta.milliseconds())
-
-    def testMillisecondsIn500Microseconds(self):
-        timedelta = date.TimeDelta(microseconds=500)
-        self.assertEqual(1, timedelta.milliseconds())

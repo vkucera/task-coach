@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,9 +27,11 @@ if not hasattr(sys, 'frozen'):
     sys.path.insert(0, os.path.join(os.path.split(__file__)[0],
                                     '..', '..', 'extension', 'macos', 'bin-%s' % _subdir))
 
-import _powermgt # pylint: disable-msg=F0401
+import _powermgt  # pylint: disable-msg=F0401
 import threading
+import wx
 from taskcoachlib.powermgt.base import PowerStateMixinBase
+
 
 class PowerStateMixin(PowerStateMixinBase):
     POWERON = _powermgt.POWERON
@@ -45,15 +47,15 @@ class PowerStateMixin(PowerStateMixinBase):
                 self.__callback = cb
 
             def PowerNotification(self, state):
-                self.__callback(state)
+                wx.CallAfter(self.__callback, state)
 
         self.__observer = Observer(self.__OnPowerState)
-        self.__thread = threading.Thread(target=self.__observer.run) # pylint: disable-msg=E1101
+        self.__thread = threading.Thread(target=self.__observer.run)  # pylint: disable-msg=E1101
         self.__thread.start()
 
     def __OnPowerState(self, state):
         self.OnPowerState(state)
 
     def OnQuit(self):
-        self.__observer.stop() # pylint: disable-msg=E1101
+        self.__observer.stop()  # pylint: disable-msg=E1101
         self.__thread.join()

@@ -16,19 +16,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-
-import wx
-from taskcoachlib.powermgt import IdleNotifier
-from taskcoachlib.patterns import Observer
+from taskcoachlib.command import NewEffortCommand, EditEffortStopDateTimeCommand
 from taskcoachlib.domain import effort, date
-from taskcoachlib.command import NewEffortCommand, ChangeEffortStopDateTimeCommand
-from taskcoachlib.notify import NotificationFrameBase, NotificationCenter
 from taskcoachlib.i18n import _
+from taskcoachlib.notify import NotificationFrameBase, NotificationCenter
+from taskcoachlib.patterns import Observer
+from taskcoachlib.powermgt import IdleNotifier
+from taskcoachlib.thirdparty.pubsub import pub
+import wx
+
 
 class WakeFromIdleFrame(NotificationFrameBase):
-    def __init__(self, idleTime, effort, *args, **kwargs):
+    def __init__(self, idleTime, effort, displayedEfforts, *args, **kwargs):
         self._idleTime = idleTime
         self._effort = effort
+        self._displayed = displayedEfforts
         super(WakeFromIdleFrame, self).__init__(*args, **kwargs)
 
     def AddInnerContent(self, sizer, panel):
@@ -42,9 +44,9 @@ class WakeFromIdleFrame(NotificationFrameBase):
         btnStopAt = wx.Button(panel, wx.ID_ANY, _('Stop it at %s') % self._idleTime)
         btnStopResume = wx.Button(panel, wx.ID_ANY, _('Stop it at %s and resume now') % self._idleTime)
 
-        sizer.Add(btnNothing, 0, wx.EXPAND|wx.ALL, 1)
-        sizer.Add(btnStopAt, 0, wx.EXPAND|wx.ALL, 1)
-        sizer.Add(btnStopResume, 0, wx.EXPAND|wx.ALL, 1)
+        sizer.Add(btnNothing, 0, wx.EXPAND | wx.ALL, 1)
+        sizer.Add(btnStopAt, 0, wx.EXPAND | wx.ALL, 1)
+        sizer.Add(btnStopResume, 0, wx.EXPAND | wx.ALL, 1)
 
         wx.EVT_BUTTON(btnNothing, wx.ID_ANY, self.DoNothing)
         wx.EVT_BUTTON(btnStopAt, wx.ID_ANY, self.DoStopAt)
@@ -54,14 +56,17 @@ class WakeFromIdleFrame(NotificationFrameBase):
         return None
 
     def DoNothing(self, event):
+        self._displayed.remove(self._effort)
         self.DoClose()
 
     def DoStopAt(self, event):
-        ChangeEffortStopDateTimeCommand(datetime=self._idleTime, items=[self._effort]).do()
+        self._displayed.remove(self._effort)
+        EditEffortStopDateTimeCommand(newValue=self._idleTime, items=[self._effort]).do()
         self.DoClose()
 
     def DoStopResume(self, event):
-        ChangeEffortStopDateTimeCommand(datetime=self._idleTime, items=[self._effort]).do()
+        self._displayed.remove(self._effort)
+        EditEffortStopDateTimeCommand(newValue=self._idleTime, items=[self._effort]).do()
         NewEffortCommand(items=[self._effort.task()]).do()
         self.DoClose()
 
@@ -72,6 +77,7 @@ class IdleController(Observer, IdleNotifier):
         self._settings = settings
         self._effortList = effortList
         self._wentIdle = None
+        self._displayed = set()
 
         super(IdleController, self).__init__()
 
@@ -83,10 +89,7 @@ class IdleController(Observer, IdleNotifier):
         self.registerObserver(self.onEffortRemoved, 
                               eventType=self._effortList.removeItemEventType(),
                               eventSource=self._effortList)
-        self.registerObserver(self.onStartTracking,  
-                              eventType=effort.Effort.trackStartEventType())
-        self.registerObserver(self.onStopTracking, 
-                              eventType=effort.Effort.trackStopEventType())
+        pub.subscribe(self.onTrackingChanged, effort.Effort.trackingChangedEventType())
     
     @staticmethod
     def __filterTrackedEfforts(efforts):
@@ -101,13 +104,12 @@ class IdleController(Observer, IdleNotifier):
             if effort in self.__trackedEfforts:
                 self.__trackedEfforts.remove(effort)
         
-    def onStartTracking(self, event):
-        self.__trackedEfforts.extend(self.__filterTrackedEfforts(event.sources()))
-        
-    def onStopTracking(self, event):
-        for effort in event.sources():
-            if effort in self.__trackedEfforts:
-                self.__trackedEfforts.remove(effort) 
+    def onTrackingChanged(self, newValue, sender):
+        if newValue:
+            self.__trackedEfforts.extend(self.__filterTrackedEfforts([sender]))
+        else:
+            if sender in self.__trackedEfforts:
+                self.__trackedEfforts.remove(sender) 
 
     def getMinIdleTime(self):
         return self._settings.getint('feature', 'minidletime') * 60
@@ -123,6 +125,8 @@ class IdleController(Observer, IdleNotifier):
 
     def OnWake(self):
         for effort in self.__trackedEfforts:
-            frm = WakeFromIdleFrame(self._wentIdle, effort, _('Notification'),
-                                    icon=wx.ArtProvider.GetBitmap('taskcoach', wx.ART_FRAME_ICON, (16, 16)))
-            NotificationCenter().NotifyFrame(frm)
+            if effort not in self._displayed:
+                self._displayed.add(effort)
+                frm = WakeFromIdleFrame(self._wentIdle, effort, self._displayed, _('Notification'),
+                                        icon=wx.ArtProvider.GetBitmap('taskcoach', wx.ART_FRAME_ICON, (16, 16)))
+                NotificationCenter().NotifyFrame(frm)

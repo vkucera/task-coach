@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,13 +23,21 @@ from taskcoachlib import persistence, gui, config, meta
 from taskcoachlib.domain import task, effort, date
 
 
+class UTF8StringIO(StringIO.StringIO):
+    """
+    Mimic codecs.open; encodes on the fly in UTF-8
+    """
+    def write(self, u):
+        StringIO.StringIO.write(self, u.encode('UTF-8'))
+
+
 class VCalTestCase(test.wxTestCase):
     selectionOnly = 'Subclass responsibility'
     
     def setUp(self):
         super(VCalTestCase, self).setUp()
         task.Task.settings = self.settings = config.Settings(load=False)
-        self.fd = StringIO.StringIO()
+        self.fd = UTF8StringIO()
         self.writer = persistence.iCalendarWriter(self.fd)
         self.taskFile = persistence.TaskFile()
 
@@ -40,7 +48,7 @@ class VCalTestCase(test.wxTestCase):
 
     def writeAndRead(self):
         self.writer.write(self.viewer, self.settings, self.selectionOnly)
-        return self.fd.getvalue()
+        return self.fd.getvalue().decode('utf-8')
 
     def selectItems(self, items):
         self.viewer.select(items)
@@ -71,8 +79,8 @@ class VCalendarCommonTestsMixin(object):
 class VCalEffortWriterTestCase(VCalTestCase):
     def setUp(self):
         super(VCalEffortWriterTestCase, self).setUp()        
-        self.task1 = task.Task(u'Ta?k 1')
-        self.effort1 = effort.Effort(self.task1, description=u'De?cription',
+        self.task1 = task.Task(u'Task 1')
+        self.effort1 = effort.Effort(self.task1, description=u'Description',
                                      start=date.DateTime(2000,1,1,1,1,1),
                                      stop=date.DateTime(2000,2,2,2,2,2))
         self.effort2 = effort.Effort(self.task1)
@@ -96,10 +104,10 @@ class VCalEffortCommonTestsMixin(VCalendarCommonTestsMixin):
                          self.vcalFile.count('END:VEVENT'))
         
     def testEffortSubject(self):
-        self.failUnless(u'SUMMARY:Ta?k 1' in self.vcalFile)
+        self.failUnless(u'SUMMARY:Task 1' in self.vcalFile)
 
     def testEffortDescription(self):
-        self.failUnless(u'DESCRIPTION:De?cription' in self.vcalFile)
+        self.failUnless(u'DESCRIPTION:Description' in self.vcalFile)
         
     def testEffortStart(self):
         self.failUnless('DTSTART:20000101T010101' in self.vcalFile)
@@ -132,8 +140,9 @@ class VCalTaskWriterTestCase(VCalTestCase):
     
     def setUp(self):
         super(VCalTaskWriterTestCase, self).setUp() 
-        self.task1 = task.Task('Task subject 1', description='Task description 1')
-        self.task2 = task.Task(u'Task ?ubject 2', description=u'Task description 2\nwith newline\n微软雅黑')
+        self.task1 = task.Task(u'Task subject 1', description='Task description 1',
+                               percentageComplete=56)
+        self.task2 = task.Task(u'Task subject 2黑', description=u'Task description 2\nwith newline\n微软雅黑')
         self.taskFile.tasks().extend([self.task1, self.task2])
         self.settings.set('taskviewer', 'treemode', self.treeMode)
         self.viewer = gui.viewer.TaskViewer(self.frame, self.taskFile,
@@ -144,18 +153,18 @@ class VCalTaskWriterTestCase(VCalTestCase):
         
 class VCalTaskCommonTestsMixin(VCalendarCommonTestsMixin):
     def testTaskSubject(self):
-        self.failUnless(u'SUMMARY:Task ?ubject 2' in self.vcalFile)
+        self.failUnless(u'SUMMARY:Task subject 2' in self.vcalFile)
         
     def testTaskDescription(self):
         self.failUnless(u'DESCRIPTION:Task description 2\r\n with newline\r\n 微软雅黑' in self.vcalFile, self.vcalFile)
 
     def testNumber(self):
         self.assertEqual(self.expectedNumberOfItems(),
-                         self.vcalFile.count('BEGIN:VTODO'))
+                         self.vcalFile.count('BEGIN:VTODO')) # pylint: disable-msg=W0511
 
     def testTaskId(self):
         self.failUnless('UID:%s'%self.task2.id() in self.vcalFile)
-
+        
 
 class TestSelectionOnlyMixin(VCalTaskCommonTestsMixin):
     selectionOnly = True
@@ -176,6 +185,9 @@ class TestNotSelectionOnlyMixin(VCalTaskCommonTestsMixin):
 
     def expectedNumberOfItems(self):
         return self.numberOfVisibleItems()
+
+    def testPercentageComplete(self):
+        self.failUnless('PERCENT-COMPLETE:56' in self.vcalFile)
 
 
 class TestNotSelectionList(TestNotSelectionOnlyMixin, VCalTaskWriterTestCase):

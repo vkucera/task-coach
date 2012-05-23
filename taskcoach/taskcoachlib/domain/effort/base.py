@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -16,6 +16,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
+
+from taskcoachlib.thirdparty.pubsub import pub
 
 
 class BaseEffort(object):
@@ -56,20 +58,30 @@ class BaseEffort(object):
         return self.task().font(recursive)
     
     def duration(self, recursive=False):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
+    
+    def revenue(self, recursive=False):
+        raise NotImplementedError  # pragma: no cover
 
     def isTotal(self):
-        return False # Are we a detail effort or a total effort? For sorting.
+        return False  # Are we a detail effort or a total effort? For sorting.
 
     @classmethod
-    def trackStartEventType(class_):
-        return 'effort.track.start' 
-        # We don't use '%s.effort...'%class_ because we need Effort and 
-        # CompositeEffort to use the same event types. This is needed to make
-        # SecondRefresher work regardless whether EffortViewer is in aggregate 
-        # mode or not.
-    
+    def trackingChangedEventType(class_):
+        return 'pubsub.effort.track'
+
+    def sendDurationChangedMessage(self):
+        pub.sendMessage(self.durationChangedEventType(), 
+                        newValue=self.duration(), sender=self)
+        
     @classmethod
-    def trackStopEventType(class_):
-        return 'effort.track.stop'
+    def durationChangedEventType(class_):
+        return 'pubsub.effort.duration'
     
+    def sendRevenueChangedMessage(self):
+        pub.sendMessage(self.revenueChangedEventType(), 
+                        newValue=self.revenue(), sender=self)
+
+    @classmethod
+    def revenueChangedEventType(class_):
+        return 'pubsub.effort.revenue'

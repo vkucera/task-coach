@@ -1,5 +1,5 @@
 # Task Coach - Your friendly task manager
-# Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+# Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 # 
 # Task Coach is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,7 +30,6 @@ else
     EPYDOC="epydoc"
 endif
 
-PYTHONVERSION=$(shell python -c "import sys; print '%d.%d'%sys.version_info[:2]")
 TCVERSION=$(shell python -c "import taskcoachlib.meta.data as data; print data.version")
 TCPORTABLE=$(shell python -c "import os; print \"'\" + os.path.join(os.getcwd(), 'build', 'TaskCoachPortable') + \"'\"")
 
@@ -64,15 +63,10 @@ sdist_ubuntu: sdist_linux
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu10~maverick.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu11~natty.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu11~oneiric.tar.gz
-
-ifeq ("2.5","$(PYTHONVERSION)")
-    template="build.in/debian/MANIFEST-2.5.in"
-else
-    template="build.in/debian/MANIFEST.in"
-endif
+	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu12~precise.tar.gz
 
 dist/TaskCoach-$(TCVERSION).tar.gz:
-	$(PYTHON) make.py sdist --formats=gztar --no-prune --template=$(template)
+	$(PYTHON) make.py sdist --formats=gztar --no-prune --template=build.in/debian/MANIFEST.in
 
 rpm: prepare changes templates
 	cp build.in/debian/MANIFEST.in .
@@ -85,48 +79,55 @@ fedora: prepare changes templates
 	rm MANIFEST.in
 
 opensuse: sdist_linux
+	cp build.in/debian/MANIFEST.in .
 	$(PYTHON) make.py bdist_rpm_opensuse 
 	mv dist/taskcoach-$(TCVERSION)-1.noarch.rpm dist/taskcoach-$(TCVERSION)-1.opensuse.i386.rpm
 	mv dist/taskcoach-$(TCVERSION)-1.src.rpm dist/taskcoach-$(TCVERSION)-1.opensuse.src.rpm
 
 deb: sdist_linux
 	mv dist/TaskCoach-$(TCVERSION).tar.gz dist/TaskCoach_$(TCVERSION).tar.gz
-	$(PYTHON) make.py bdist_deb --sdist=dist/TaskCoach_$(TCVERSION).tar.gz
+	LC_ALL=C $(PYTHON) make.py bdist_deb --sdist=dist/TaskCoach_$(TCVERSION).tar.gz
 	mv dist/taskcoach_$(TCVERSION)-1_all.deb dist/taskcoach_$(TCVERSION)-1.deb
 
 ubuntu: sdist_ubuntu
-	$(PYTHON) make.py bdist_ubuntu lucid 10 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu10~lucid.tar.gz
+	LC_ALL=C $(PYTHON) make.py bdist_ubuntu lucid 10 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu10~lucid.tar.gz
 	mv build build-lucid
-	$(PYTHON) make.py bdist_ubuntu maverick 10 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu10~maverick.tar.gz
+	LC_ALL=C $(PYTHON) make.py bdist_ubuntu maverick 10 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu10~maverick.tar.gz
 	mv build build-maverick
-	$(PYTHON) make.py bdist_ubuntu natty 11 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu11~natty.tar.gz
+	LC_ALL=C $(PYTHON) make.py bdist_ubuntu natty 11 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu11~natty.tar.gz
 	mv build build-natty
-	$(PYTHON) make.py bdist_ubuntu oneiric 11 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu11~oneiric.tar.gz
+	LC_ALL=C $(PYTHON) make.py bdist_ubuntu oneiric 11 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu11~oneiric.tar.gz
 	mv build build-oneiric
+	LC_ALL=C $(PYTHON) make.py bdist_ubuntu precise 12 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu12~precise.tar.gz
+	mv build build-precise
 
 ppa-sign: ubuntu
 	cd build-lucid; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
 	cd build-maverick; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu10~maverick-1_source.changes
 	cd build-natty; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu11~natty-1_source.changes
 	cd build-oneiric; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu11~oneiric-1_source.changes
-
+	cd build-precise; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
+	
 ppa-rel: ppa-sign
 	cd build-lucid; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
 	cd build-maverick; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu10~maverick-1_source.changes
 	cd build-natty; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu11~natty-1_source.changes
 	cd build-oneiric; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu11~oneiric-1_source.changes
+	cd build-precise; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
 
 ppa-relnext: ppa-sign
 	cd build-lucid; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
 	cd build-maverick; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu10~maverick-1_source.changes
 	cd build-natty; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu11~natty-1_source.changes
 	cd build-oneiric; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu11~oneiric-1_source.changes
+	cd build-precise; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
 
 ppa-release: ppa-sign
 	cd build-lucid; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
 	cd build-maverick; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu10~maverick-1_source.changes
 	cd build-natty; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu11~natty-1_source.changes
 	cd build-oneiric; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu11~oneiric-1_source.changes
+	cd build-precise; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
 
 dmg: prepare
 	$(PYTHON) make.py py2app
@@ -139,7 +140,6 @@ dmg: prepare
 
 winpenpack: py2exe 
 	$(PYTHON) make.py bdist_winpenpack
-
 
 portableapps: py2exe
 	$(PYTHON) make.py bdist_portableapps
@@ -164,9 +164,9 @@ epydoc:
 	$(EPYDOC) --parse-only -v --simple-term -o epydoc.out taskcoachlib taskcoach.py
 
 dot:
-	$(PYTHON) dot.py taskcoachlib/gui/viewer > dot.out/viewer.dot
-	$(PYTHON) dot.py taskcoachlib/gui/dialog > dot.out/dialog.dot
-	$(DOT) -Tpng -Kdot -O dot.out/*.dot
+	$(PYTHON) tools/dot.py taskcoachlib/gui/viewer > doc/viewer.dot
+	$(PYTHON) tools/dot.py taskcoachlib/gui/dialog > doc/dialog.dot
+	$(DOT) -Tpng -Kdot -O doc/*.dot
 
 i18n: templates taskcoachlib/i18n/nl.py
 
@@ -209,7 +209,7 @@ coverage_run:
 coverage_report:
 	cd tests; coverage html -d coverage.out --omit=../taskcoachlib/i18n/po2dict.py,../taskcoachlib/i18n/??.py,../taskcoachlib/i18n/???.py,../taskcoachlib/i18n/??_??.py,../taskcoachlib/thirdparty/*.py,../taskcoachlib/meta/debug.py,test.py
 
-CLEANFILES=build build-* website.out dot.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle .profile tests/.coverage tests/coverage.out
+CLEANFILES=build build-* website.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle .profile tests/.coverage tests/coverage.out
 REALLYCLEANFILES=dist taskcoachlib/gui/icons.py taskcoachlib/persistence/templates.py \
 	taskcoachlib/i18n/??.py taskcoachlib/i18n/???.py taskcoachlib/i18n/??_??.py .\#* */.\#* */*/.\#*
 

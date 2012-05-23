@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import patterns
+from taskcoachlib.thirdparty.pubsub import pub
 
 
 class Sorter(patterns.ListDecorator):
@@ -32,7 +33,7 @@ class Sorter(patterns.ListDecorator):
 
     @classmethod        
     def sortEventType(class_):
-        return '%s.sorted'%class_
+        return '%s.sorted' % class_
     
     @patterns.eventSource
     def extendSelf(self, items, event=None):
@@ -45,7 +46,7 @@ class Sorter(patterns.ListDecorator):
 
     def sortBy(self, sortKey):
         if sortKey == self._sortKey:
-            return # no need to sort
+            return  # No need to sort
         self._removeObserverForAttribute(self._sortKey)
         self._registerObserverForAttribute(sortKey)
         self._sortKey = sortKey
@@ -55,8 +56,8 @@ class Sorter(patterns.ListDecorator):
         self._sortAscending = ascending
         self.reset()
         
-    def sortCaseSensitive(self, caseSensitive):
-        self._sortCaseSensitive = caseSensitive
+    def sortCaseSensitive(self, sortCaseSensitive):
+        self._sortCaseSensitive = sortCaseSensitive
         self.reset()
     
     @patterns.eventSource
@@ -66,8 +67,6 @@ class Sorter(patterns.ListDecorator):
         oldSelf = self[:]
         self.sort(key=self.createSortKeyFunction(), 
                   reverse=not self._sortAscending)
-        # Then sort by 'ordering' attribute; this assumes that list.sort is stable
-        self.sort(lambda x, y: cmp(x.ordering(), y.ordering()))
         if self != oldSelf:
             event.addSource(self, type=self.sortEventType())
 
@@ -77,38 +76,48 @@ class Sorter(patterns.ListDecorator):
             in the list. We expect the domain object class to provide a
             <sortKey>SortFunction(sortCaseSensitive) method that returns the
             sortKeyFunction for the sortKey. '''
-        return self._getSortKeyFunction()(caseSensitive=self._sortCaseSensitive)
+        return self._getSortKeyFunction()(sortCaseSensitive=self._sortCaseSensitive)
             
     def _getSortKeyFunction(self):
         try:
-            return getattr(self.DomainObjectClass, '%sSortFunction'%self._sortKey)
+            return getattr(self.DomainObjectClass, 
+                           '%sSortFunction' % self._sortKey)
         except AttributeError:
             self._sortKey = 'subject'
             return self._getSortKeyFunction()
 
     def _registerObserverForAttribute(self, attribute):
         for eventType in self._getSortEventTypes(attribute):
-            patterns.Publisher().registerObserver(self.onAttributeChanged, 
-                                                  eventType=eventType)
+            if eventType.startswith('pubsub'):
+                pub.subscribe(self.onAttributeChanged, eventType)
+            else:
+                patterns.Publisher().registerObserver(self.onAttributeChanged_Deprecated, 
+                                                      eventType=eventType)
             
     def _removeObserverForAttribute(self, attribute):
         for eventType in self._getSortEventTypes(attribute):
-            patterns.Publisher().removeObserver(self.onAttributeChanged, 
-                                                eventType=eventType)
-        
-    def onAttributeChanged(self, event): # pylint: disable-msg=W0613
+            if eventType.startswith('pubsub'):
+                pub.unsubscribe(self.onAttributeChanged, eventType)
+            else:
+                patterns.Publisher().removeObserver(self.onAttributeChanged_Deprecated, 
+                                                    eventType=eventType)
+     
+    def onAttributeChanged(self, newValue, sender):  # pylint: disable-msg=W0613
+        self.reset()
+           
+    def onAttributeChanged_Deprecated(self, event):  # pylint: disable-msg=W0613
         self.reset()
 
     def _getSortEventTypes(self, attribute):
         try:
-            return getattr(self.DomainObjectClass, '%sSortEventTypes'%attribute)()
+            return getattr(self.DomainObjectClass, '%sSortEventTypes' % attribute)()
         except AttributeError:
             return []
 
 
 class TreeSorter(Sorter):
     def __init__(self, *args, **kwargs):
-        self.__rootItems = None # Cached root items
+        self.__rootItems = None  # Cached root items
         super(TreeSorter, self).__init__(*args, **kwargs)
 
     def treeMode(self):
@@ -120,11 +129,11 @@ class TreeSorter(Sorter):
             in the list. We expect the domain object class to provide a
             <sortKey>SortFunction(sortCaseSensitive, treeMode) method that 
             returns the sortKeyFunction for the sortKey. '''            
-        return self._getSortKeyFunction()(caseSensitive=self._sortCaseSensitive, 
+        return self._getSortKeyFunction()(sortCaseSensitive=self._sortCaseSensitive, 
                                           treeMode=self.treeMode())
 
     @patterns.eventSource
-    def reset(self, *args, **kwargs): # pylint: disable-msg=W0221
+    def reset(self, *args, **kwargs):  # pylint: disable-msg=W0221
         self.__invalidateRootItemCache()
         return super(TreeSorter, self).reset(*args, **kwargs)
 

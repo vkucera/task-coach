@@ -57,6 +57,7 @@ class wxSchedulerPaint( object ):
 		self._bitmap = None
 		self._minSize = None
 		self._drawHeaders = True
+		self._guardRedraw = False
 
 		self._periodWidth = 150
 		self._headerBounds = []
@@ -97,7 +98,10 @@ class wxSchedulerPaint( object ):
 			self._scheduleDraggingOrigin = self._computeCoords(point, 0, 0)
 			self._scheduleDraggingStick = shiftDown
 		else:
-			pMin, pMax, sch = self._findSchedule( point )
+			try:
+				pMin, pMax, sch = self._findSchedule( point )
+			except TypeError: # returned None
+				return
 			if isinstance( sch, wxSchedule ):
 				self._scheduleDragged = pMin, pMax, sch
 				self._scheduleDraggingState = 1
@@ -477,18 +481,19 @@ class wxSchedulerPaint( object ):
 				theDay.SetHour(hour.GetHour())
 				theDay.SetMinute(hour.GetMinute())
 
-				if self._style == wxSCHEDULER_VERTICAL:
-					self._datetimeCoords.append((utils.copyDateTime(theDay),
-								     wx.Point(x + 1.0 * width * dayN / daysCount,
-									      y + 1.0 * height * idx / nbHours),
-								     wx.Point(x + 1.0 * width * (dayN + 1) / daysCount,
-									      y + 1.0 * height * (idx + 1) / nbHours)))
-				else:
-					self._datetimeCoords.append((utils.copyDateTime(theDay),
-								     wx.Point(x + 1.0 * width * (nbHours * dayN + idx) / (nbHours * daysCount),
-									      y),
-								     wx.Point(x + 1.0 * width * (nbHours * dayN + idx + 1) / (nbHours * daysCount),
-									      y + height)))
+				if self._minSize is None or not self._resizable:
+					if self._style == wxSCHEDULER_VERTICAL:
+						self._datetimeCoords.append((utils.copyDateTime(theDay),
+									     wx.Point(x + 1.0 * width * dayN / daysCount,
+										      y + 1.0 * height * idx / nbHours),
+									     wx.Point(x + 1.0 * width * (dayN + 1) / daysCount,
+										      y + 1.0 * height * (idx + 1) / nbHours)))
+					else:
+						self._datetimeCoords.append((utils.copyDateTime(theDay),
+									     wx.Point(x + 1.0 * width * (nbHours * dayN + idx) / (nbHours * daysCount),
+										      y),
+									     wx.Point(x + 1.0 * width * (nbHours * dayN + idx + 1) / (nbHours * daysCount),
+										      y + height)))
 
 		if isinstance(self, wx.ScrolledWindow) and self._showNow:
 			now = wx.DateTime.Now()
@@ -774,9 +779,10 @@ class wxSchedulerPaint( object ):
 
 						schedules = self._getSchedInPeriod(self._schedules, theDay, end)
 
-						self._datetimeCoords.append((utils.copyDateTime(theDay),
-									     wx.Point(d * cellW, w * cellH),
-									     wx.Point(d * cellW + cellW, w * cellH + cellH)))
+						if self._minSize is None or not self._resizable:
+							self._datetimeCoords.append((utils.copyDateTime(theDay),
+										     wx.Point(d * cellW, w * cellH),
+										     wx.Point(d * cellW + cellW, w * cellH + cellH)))
 
 					displayed = drawer.DrawSchedulesCompact(theDay, schedules, d * cellW,
 										w * cellH + y, cellW, cellH,
@@ -826,7 +832,6 @@ class wxSchedulerPaint( object ):
 			schedule.Destroy()
 
 		self._schedulesCoords = list()
-		self._datetimeCoords = list()
 
 		day = utils.copyDate(self.GetDate())
 
@@ -869,14 +874,9 @@ class wxSchedulerPaint( object ):
 				else:
 					size = self.GetSize()
 
-				# XXXFIXME: find a better way not to alter coordinates...
-				tmpCoords = self._datetimeCoords[:]
-
 				# Actually, only the min height may vary...
 				_, minH = self.DoPaint(self._drawerClass(context, self._lstDisplayedHours),
 						       0, 0, size.GetWidth(), 0)
-
-				self._datetimeCoords = tmpCoords
 
 				if self._style == wxSCHEDULER_HORIZONTAL:
 					if self._viewType == wxSCHEDULER_DAILY:
@@ -901,6 +901,7 @@ class wxSchedulerPaint( object ):
 
 	def InvalidateMinSize(self):
 		self._minSize = None
+		self._datetimeCoords = list()
 
 	def DrawBuffer( self ):
 		if isinstance(self, wx.ScrolledWindow):
@@ -936,10 +937,14 @@ class wxSchedulerPaint( object ):
 
 		# Bad things may happen here from time to time.
 		if isinstance(self, wx.ScrolledWindow):
-			if self._resizable:
-				if int(width) > size.GetWidth() or int(height) > size.GetHeight():
-					self.SetVirtualSize(wx.Size(int(width), int(height)))
-					self.DrawBuffer()
+			if self._resizable and not self._guardRedraw:
+				self._guardRedraw = True
+				try:
+					if int(width) > size.GetWidth() or int(height) > size.GetHeight():
+						self.SetVirtualSize(wx.Size(int(width), int(height)))
+						self.DrawBuffer()
+				finally:
+					self._guardRedraw = False
 
 	def RefreshSchedule( self, schedule ):
 		if schedule.bounds is not None:

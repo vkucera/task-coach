@@ -17,13 +17,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import sys, threading, time
+from taskcoachlib import operating_system
 from ctypes import *
 
 
 #==============================================================================
-# Linux
+# Linux/BSD
 
-if sys.platform == 'linux2':
+if operating_system.isGTK():
     class XScreenSaverInfo(Structure):
         _fields_ = [('window', c_ulong),
                     ('state', c_int),
@@ -58,7 +59,7 @@ if sys.platform == 'linux2':
 
     IdleQuery = LinuxIdleQuery
 
-elif sys.platform == 'win32':
+elif operating_system.isWindows():
     class LASTINPUTINFO(Structure):
         _fields_ = [('cbSize', c_uint), ('dwTime', c_uint)]
 
@@ -76,8 +77,7 @@ elif sys.platform == 'win32':
 
     IdleQuery = WindowsIdleQuery
 
-elif sys.platform == 'darwin':
-
+elif operating_system.isMac():
     # When running from source, select the right binary...
 
     if not hasattr(sys, 'frozen'):

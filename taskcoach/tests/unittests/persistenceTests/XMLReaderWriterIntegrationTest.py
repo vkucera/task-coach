@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -72,8 +72,9 @@ class IntegrationTest(IntegrationTestCase):
         # pylint: disable-msg=W0201
         self.description = 'Description\nLine 2'
         self.task = task.Task(subject='Subject', description=self.description, 
-            startDateTime=date.Now() - date.TimeDelta(days=1), 
+            plannedStartDateTime=date.Now() - date.TimeDelta(days=1), 
             dueDateTime=date.Now() + date.TimeDelta(days=1), 
+            actualStartDateTime=date.Now() - date.TimeDelta(hours=4),
             completionDateTime=date.Now() - date.TimeDelta(days=1), 
             budget=date.TimeDelta(hours=1), 
             priority=4, hourlyFee=100.5, fixedFee=1000, 
@@ -138,12 +139,15 @@ class IntegrationTest(IntegrationTestCase):
     def testExpansionState(self):
         self.assertAttributeWrittenAndRead(self.task, 'isExpanded')
          
-    def testStartDateTime(self):
-        self.assertAttributeWrittenAndRead(self.task, 'startDateTime')
+    def testPlannedStartDateTime(self):
+        self.assertAttributeWrittenAndRead(self.task, 'plannedStartDateTime')
                 
     def testDueDateTime(self):
         self.assertAttributeWrittenAndRead(self.task, 'dueDateTime')
- 
+
+    def testActualStartDateTime(self):
+        self.assertAttributeWrittenAndRead(self.task, 'actualStartDateTime')
+  
     def testCompletionDateTime(self):
         self.assertAttributeWrittenAndRead(self.task, 'completionDateTime')
         

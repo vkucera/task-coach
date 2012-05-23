@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,44 +21,57 @@ from taskcoachlib.i18n import _
 from tips import showTips
 from uicommand import *
 
+
 _MSURL = "http://www.microsoft.com/downloadS/details.aspx?familyid=200B2FD9-AE1A-4A14-984D-389C36F85647&displaylang=en"
+
 
 def sequence(*text):
     return ''.join(text)
 
+
 def a_href(text, name):
-    return '<a href="#%s">%s</a>'%(name, text)
+    return '<a href="#%s">%s</a>' % (name, text)
+
 
 def a_name(text, name):
-    return '<a name="%s">%s</a>'%(name, text)
+    return '<a name="%s">%s</a>' % (name, text)
+
 
 def h(level, text):
-    return '<h%d>%s</h%d>'%(level, text, level)
+    return '<h%d>%s</h%d>' % (level, text, level)
+
 
 def h3(text):
     return h(3, text)
 
+
 def h4(text):
     return h(4, text)
 
+
 def h5(text):
     return h(5, text)
+
     
 def p(*text):
-    return '<p>%s</p>'%'\n'.join(text)
+    return '<p>%s</p>' % '\n'.join(text)
 
-def ul(*li): # pylint: disable-msg=W0621
-    return '<ul>%s</ul>'%'\n'.join(li)
+
+def ul(*li):  # pylint: disable-msg=W0621
+    return '<ul>%s</ul>' % '\n'.join(li)
+
 
 def li(*text):
-    return '<li>%s</li>'%'\n'.join(text)
+    return '<li>%s</li>' % '\n'.join(text)
 
-def table(*tr): # pylint: disable-msg=W0621
-    return '<table border=1>%s</table>'%'\n'.join(tr)
+
+def table(*tr):  # pylint: disable-msg=W0621
+    return '<table border=1>%s</table>' % '\n'.join(tr)
+
 
 def tr(*td):
-    td = '\n'.join(['<td>%s</td>'%td for td in td]) 
-    return '<tr>%s</tr>\n'%td
+    td = '\n'.join(['<td>%s</td>' % td for td in td]) 
+    return '<tr>%s</tr>\n' % td
 
 
 _TOC = sequence(
@@ -70,7 +83,8 @@ _TOC = sequence(
                 li(a_href(_('About tasks'), 'abouttasks')),
                 li(a_href(_('Task properties'), 'taskproperties')),
                 li(a_href(_('Task states'), 'taskstates')),
-                li(a_href(_('Task colors'), 'taskcolor')))),
+                li(a_href(_('Task colors'), 'taskcolor')),
+                li(a_href(_('Reminders'), 'reminders')))),
         li(
             a_href(_('Effort'), 'effort'),
             ul(
@@ -115,13 +129,13 @@ _TOC = sequence(
         li(
             a_href(_('iPhone and iPod Touch'), 'iphone'),
             ul(
-                li(a_href(_('%(name)s on the iPhone')%meta.metaDict, 'taskcoachiphone')),
+                li(a_href(_('%(name)s on the iPhone') % meta.metaDict, 'taskcoachiphone')),
                 li(a_href(_('Configuration'), 'iphoneconf')),
                 li(a_href(_('Troubleshooting'), 'iphonetrouble')))),
         li(
             a_href(_('Android'), 'android'),
             ul(
-                li(a_href(_('%(name)s on Android?')%meta.metaDict, 'taskcoachandroid')),
+                li(a_href(_('%(name)s on Android?') % meta.metaDict, 'taskcoachandroid')),
                 li(a_href(_('Todo.txt and Todo.txt Touch'), 'todotxt')),
                 li(a_href(_('Importing todo.txt'), 'todotxtimporting')),
                 li(a_href(_('Exporting todo.txt'), 'todotxtexporting')))),
@@ -152,20 +166,24 @@ project consisting of different phases and numerous activities.''')),
         ul(
             li(_('Subject: a single line that summarizes the task.')),
             li(_('Description: a multi-line description of the task.')),
-            li(_('''Due date: the date the task should be finished. 
-This can be 'None' indicating that this task has no fixed due date.''')),
-            li(_('''Start date: the first date on which the task can be started. 
-The start date defaults to the date the task is created. It can also be 'None' 
+            li(_('''Planned start date: the first date on which the task can be started. 
+The planned start date defaults to the date the task is created. It can also be 'None' 
 indicating that you don't really want to start this task. This can be convenient 
 for e.g. registering sick leave.''')),
+           li(_('''Due date: the date the task should be finished. 
+This can be 'None' indicating that this task has no fixed due date.''')),
+           li(_('''Actual start date: the date the task was actually started.
+The actual start date can be edited directly, but it is also set when you 
+track effort for the task or when you set the percentage completed of a task
+to a value between 0% and 100%.''')),
             li(_('''Completion date: this date is 'None' as long as the task has 
 not been completed. It is set to the current date when you mark the task as 
 completed. The completion date can also be entered manually.''')),
             li(_('''Prerequisites: other tasks that need to be completed before
-a task can be started. The task is inactive until the last prerequisite task is 
-completed. Note that if the task has a specific start date set, that start
+a task can be started. The task remains inactive until the last prerequisite task is 
+completed. Note that if the task has a specific planned start date set, that
 date has to be in the past <em>and</em> all prerequisite tasks need to be
-completed before the task becomes active.''')),
+completed before the task becomes late.''')),
             li(_('Budget: amount of hours available for the task.')),
             li(_('Hourly fee: the amount of money earned with the task per hour.')),
             li(_('''Fixed fee: the amount of money earned with the task 
@@ -184,8 +202,8 @@ prerequisite task has been completed.''')),
     p(
         _('Tasks always have exactly one of the following states:'),
         ul(
-            li(_('Active: the start date is in the past and the due date in the future;')),
-            li(_('''Inactive: the start date is in the future, and/or not all 
+            li(_('Active: the actual start date is in the past;')),
+            li(_('''Inactive: the task has not been started and/or not all 
 prerequisite tasks have been completed;''')),
             li(_('Completed: the task has been completed.')))),
     p(
@@ -194,6 +212,8 @@ prerequisite tasks have been completed;''')),
             li(_('Overdue: the due date is in the past;')),
             li(_('''Due soon: the due date is soon (what 'soon' is, can be 
 changed in the preferences);''')),
+            li(_('''Late: the planned start is in the past and the task has 
+not been started;''')),
             li(_('Over budget: no budget left;')),
             li(_('Under budget: still budget left;')),
             li(_('No budget: the task has no budget.')))),
@@ -205,6 +225,7 @@ changed in the preferences);''')),
             li(_('Overdue tasks are red;')),
             li(_('Tasks due soon are orange;')),
             li(_('Active tasks are black text with a blue icon;')),
+            li(_('Late tasks are purple;')),
             li(_('Future tasks are gray, and')),
             li(_('Completed tasks are green.'))),   
         _('''This all assumes you have not changed the text colors through the 
@@ -212,7 +233,17 @@ preferences dialog, of course.''')),
     p(
         _('''The background color of tasks is determined by the categories the 
 task belongs to. See the section about 
-<a href="#categoryproperties">category properties</a> below.''')))
+<a href="#categoryproperties">category properties</a> below.''')),
+    h4(
+        a_name(_('Reminders'), 'reminders')),
+    p(
+        _('''You can set a reminder for a specific date and time. %(name)s will
+show a reminder message at that date and time. From the reminder dialog
+you can open the task, start tracking effort for the task, or mark the task
+completed. It is also possible to snooze the reminder.''') % meta.metaDict),
+    p(
+        _('''If you have Growl or Snarl installed, you can instruct
+%(name)s to use these for reminders in the preferences dialog.''') % meta.metaDict))
 
 _effortSection = sequence(
     h3(
@@ -536,7 +567,7 @@ recurrence)...''')),
 Settings application:'''),
         ul(
             li(_('Show completed: whether to show completed tasks.')),
-            li(_('''Show inactive: whether to show inactive tasks (start date 
+            li(_('''Show inactive: whether to show inactive tasks (planned start date 
 in the future).''')),
             li(_('''Icon position: the LED icon may show up either on the 
 left side or the right side of the screen.''')),
@@ -630,7 +661,7 @@ todo.txt file in sync.''')%meta.metaDict),
     h4(
         a_name(_('Importing todo.txt'), 'todotxtimporting')),
     p(
-        _('''%(name)s imports task subjects, start date, due date, completion 
+        _('''%(name)s imports task subjects, planned start date, due date, completion 
 date, priority, contexts and projects. Contexts and projects are both 
 transformed into categories in %(name)s. Projects cannot be transformed into 
 parent tasks because Todo.txt allows tasks to belong to multiple projects, 
@@ -639,11 +670,11 @@ while %(name)s only allows one parent task per task.''')%meta.metaDict),
         _('''When importing, %(name)s tries to find matching tasks and 
 categories and update those instead of creating new ones. It does the matching
 by looking at the subject of the task (or project, or context) and the parent
-item if any.''')),
+item if any.''')%meta.metaDict),
     h4(
         a_name(_('Exporting todo.txt'), 'todotxtexporting')),
     p(
-        _('''%(name)s exports task subjects, start date, due date, completion 
+        _('''%(name)s exports task subjects, planned start date, due date, completion 
 date, priority and categories to the Todo.txt format. Other attributes are not
 exported.''')%meta.metaDict),
     p(
@@ -651,7 +682,7 @@ exported.''')%meta.metaDict),
 dates, so the time part of start, due, and completion date/times is not
 exported.''')%meta.metaDict),
     p(
-        _('''The default Todo.txt format only supports start dates and 
+        _('''The default Todo.txt format only supports planned start dates and 
 completion dates, but no due dates. Therefore, %(name)s uses an extension to
 export the due date of tasks. Due dates are shown as "due:YYYY-MM-DD" in the
 todo.txt file.''')%meta.metaDict),
@@ -684,7 +715,7 @@ on the "Save task as template" item in the File menu. All subtasks, notes and
 attachments are part of the template. Only categories are not saved.''')),
     p(
         _('''You can also create a new template from a pre-made template file 
-(.tsktmpl); just select "Add template" in the File menu and select the file. 
+(.tsktmpl); just select "Import template" in the File menu and select the file. 
 Template files are stored in a subdirectory of the directory where TaskCoach.ini 
 is.''')),
     p(
@@ -693,7 +724,7 @@ template" menu in the Task menu, or the equivalent toolbar button. When the
 task is created, the due, start and completion dates, if applicable, are 
 reevaluated relatively to the current date. That means that if you create a 
 template from a task starting today and due tomorrow, every time the template 
-is instantiated, the start date will be replaced by the current date and the 
+is instantiated, the planned start date will be replaced by the current date and the 
 due date by the current date plus one day.''')),
     p(
         _('''You can also add templates from the template editor (File/Edit
@@ -756,7 +787,9 @@ shortcuts are not configurable at the moment.''')%meta.metaDict),
             tr(_('Ctrl-I'), taskIncreasePriority),
             tr(_('Shift-Ctrl-I'), taskMaxPriority),
             tr(_('Ctrl-J'), noteNew),
-            tr(_('Ctrl-M'), mailItem),
+            tr(_('Ctrl-M (Linux and Windows)'), mailItem),
+            tr(_('Shift-Ctrl-M (Mac OS X)'), mailItem),
+            tr(_('Shift-Ctrl-M'), fileMergeDiskChanges),
             tr(_('Ctrl-N (Linux and Mac OS X)'), taskNew),
             tr(_('Shift-Ctrl-N (Linux and Mac OS X)'), _('Insert a new subitem')),
             tr(_('Ctrl-O'), fileOpen),
@@ -768,7 +801,6 @@ shortcuts are not configurable at the moment.''')%meta.metaDict),
             tr(_('Ctrl-R'), resetCategoryFilter),
             tr(_('Shift-Ctrl-R'), resetFilter),
             tr(_('Ctrl-S'), fileSave),
-            tr(_('Ctrl+D'), fileMergeDiskChanges),
             tr(_('Shift-Ctrl-S'), fileSaveAs),
             tr(_('Ctrl-T'), effortStart),
             tr(_('Shift-Ctrl-T'), effortStopOrResume),
@@ -807,74 +839,3 @@ aboutHTML = _('''<h4>%(name)s - %(description)s</h4>
 <p>%(copyright)s</p>
 <p>%(license_notice_html)s</p>
 ''')%meta.metaDict
-
-doubleline = '================================================================\n'
-
-header = doubleline + '%(name)s - %(description)s\n'%meta.metaDict + doubleline
-
-aboutText = header + _('''
-Version %(version)s, %(date)s
-
-By %(author)s <%(author_email)s>
-
-%(url)s
-
-%(copyright)s
-%(license)s
-
-''')%meta.metaDict + doubleline
-
-installText = header + '''
-
---- Prerequisites ----------------------------------------------
-
-You need Python version %(pythonversion)s or higher and wxPython 
-version %(wxpythonversion)s or higher.
-
-
---- Testing ----------------------------------------------------
-
-Before installing, you may want to run the unittests included.
-Issue the following command:
-
-  cd tests; python test.py
-
-If all goes well, you should see a number of dots appearing and
-the message 'Ran X tests in Y seconds. OK'. If not, you'll get
-one or more failed tests. In that case, please run the tests
-again, redirecting the output to a textfile, like this:
-
-  python test.py 2> errors.txt
-
-Please mail me the errors.txt file and your platform information
-(operating system version, Python version and wxPython version).
-
-
---- Installation -----------------------------------------------
-
-There are two options to install %(name)s: 
-
-First, you can simply move this directory to some suitable 
-location and run taskcoach.py (or taskcoach.pyw if you are on 
-the Windows platform) from there.
-
-Alternatively, you can use the Python distutils setup script
-to let Python install %(name)s for you. In that case run the
-following command:
-
-  python setup.py install
-
-If you have a previous version of %(name)s installed, you may
-need to force old files to be overwritten, like this:
-
-  python setup.py install --force
-
-'''%meta.metaDict + doubleline
-
-buildText = header + '''
-
---- Building ---------------------------------------------------
-
-To be done.
-
-'''%meta.metaDict + doubleline

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -85,7 +85,7 @@ class ChangeToDebianConverter(ChangeToTextConverter):
 
 class ChangeToHTMLConverter(ChangeConverter):
 
-    LinkToSourceForge = '<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=%%(id)s&group_id=130831&atid=%(atid)s">%%(id)s</A>'
+    LinkToSourceForge = '<a href="https://sourceforge.net/tracker/index.php?func=detail&aid=%%(id)s&group_id=130831&atid=%(atid)s">%%(id)s</a>'
     LinkToSourceForgeBugReport = LinkToSourceForge%{'atid': '719134'}
     LinkToSourceForgeFeatureRequest = LinkToSourceForge%{'atid': '719137'}
     NoConversion = '%(id)s'
@@ -103,7 +103,7 @@ class ChangeToHTMLConverter(ChangeConverter):
                 fragment = self.convertURL(fragment)
             listOfConvertedUrlsAndTextFragments.append(fragment)
         convertedChange = ''.join(listOfConvertedUrlsAndTextFragments)
-        return '<LI>%s</LI>'%convertedChange
+        return '<li>%s</li>'%convertedChange
 
     def convertChangeId(self, change, changeId):
         template = self.NoConversion # URL's will be converted in postProcess()
@@ -115,7 +115,7 @@ class ChangeToHTMLConverter(ChangeConverter):
         return template%{'id': changeId}
 
     def convertURL(self, url):
-        return '<A HREF="%s">%s</A>'%(url, url)
+        return '<a href="%s">%s</a>'%(url, url)
 
 
 # Release converters:
@@ -194,18 +194,18 @@ class ReleaseToHTMLConverter(ReleaseConverter):
     ChangeConverterClass = ChangeToHTMLConverter
 
     def header(self, release):
-        return '<H4>%s</H4>'%super(ReleaseToHTMLConverter, self).header(release)
+        return '<h2>Release %s <small>%s</small></h2>'%(release.number, release.date)
 
     def sectionHeader(self, section, list):
         return super(ReleaseToHTMLConverter, self).sectionHeader(section, 
-            list) + '\n<UL>'
+            list) + '\n<ul>'
 
     def sectionFooter(self, section, list):
-        return '</UL>'
+        return '</ul>'
 
     def summary(self, release, greeting=''):
         summaryText = super(ReleaseToHTMLConverter, self).summary(release)
         if summaryText:
-            return '<P>%s</P>'%summaryText
+            return '<p>%s</p>'%summaryText
         else:
             return ''

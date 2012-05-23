@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -66,7 +66,7 @@ class AutoColumnWidthMixin(object):
             self.__oldResizeColumnWidth = self.GetColumnWidth(self.ResizeColumn)
         # Temporarily unbind the EVT_SIZE to prevent resizing during dragging
         self.Unbind(wx.EVT_SIZE)
-        if not operating_system.isMac():
+	if operating_system.isWindows(): 
             event.Skip()
         
     def OnEndColumnDrag(self, event):

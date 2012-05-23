@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,16 +17,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, os, sys, imp, tempfile, locale, gettext
-from taskcoachlib import patterns
+from taskcoachlib import patterns, operating_system
 import po2dict
 
 
 class Translator:
     __metaclass__ = patterns.Singleton
     
-    def __init__(self, language=None):
-        if not language:
-            return
+    def __init__(self, language):
         load = self._loadPoFile if language.endswith('.po') else self._loadModule
         module, language = load(language) 
         self._installModule(module)
@@ -62,19 +60,20 @@ class Translator:
 
     def _installModule(self, module):
         ''' Make the module's translation dictionary and encoding available. '''
+        # pylint: disable-msg=W0201
         if module:
             self.__language = module.dict
             self.__encoding = module.encoding
 
     def _setLocale(self, language):
         ''' Try to set the locale, trying possibly multiple localeStrings. '''
-        # This is necessary for standard dialog texts to be translated:
-        locale.setlocale(locale.LC_ALL, '')
+        if not operating_system.isGTK():
+            locale.setlocale(locale.LC_ALL, '')
         # Set the wxPython locale:
         for localeString in self._localeStrings(language):
             languageInfo = wx.Locale.FindLanguageInfo(localeString)
             if languageInfo:
-                self.__locale = wx.Locale(languageInfo.Language)
+                self.__locale = wx.Locale(languageInfo.Language) # pylint: disable-msg=W0201
                 # Add the wxWidgets message catalog. This is really only for 
                 # py2exe'ified versions, but it doesn't seem to hurt on other
                 # platforms...
@@ -82,12 +81,39 @@ class Translator:
                 self.__locale.AddCatalogLookupPathPrefix(localeDir)
                 self.__locale.AddCatalog('wxstd')
                 break
+        if operating_system.isGTK():
+            locale.setlocale(locale.LC_ALL, '')
+        self._fixBrokenLocales()
+            
+    def _fixBrokenLocales(self):
+        current_language = locale.getlocale(locale.LC_TIME)[0]
+        if current_language and '_NO' in current_language:
+            # nb_BO and ny_NO cause crashes in the wx.DatePicker. Set the
+            # time part of the locale to some other locale. Since we don't
+            # know which ones are available we try a few. First we try the
+            # default locale of the user (''). It's probably *_NO, but it 
+            # might be some other language so we try just in case. Then we try 
+            # English (GB) so the user at least gets a European date and time 
+            # format if that works. If all else fails we use the default 
+            # 'C' locale.
+            for lang in ['', 'en_GB.utf8', 'C']:
+                try:
+                    locale.setlocale(locale.LC_TIME, lang)
+                except locale.Error:
+                    continue
+                current_language = locale.getlocale(locale.LC_TIME)[0]
+                if current_language and '_NO' in current_language:
+                    continue
+                else: 
+                    break
 
     def _localeStrings(self, language):
         ''' Extract language and language_country from language if possible. '''
-        localeStrings = [language]
-        if '_' in language:
-            localeStrings.append(language.split('_')[0])
+        localeStrings = []
+        if language:
+            localeStrings.append(language)
+            if '_' in language:
+                localeStrings.append(language.split('_')[0])
         return localeStrings
     
     def _languageFromPoFilename(self, poFilename):

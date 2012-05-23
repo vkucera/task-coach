@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,21 +16,25 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import ConfigParser, os, sys, wx
 from taskcoachlib import meta, patterns, operating_system
 from taskcoachlib.i18n import _
+from taskcoachlib.thirdparty.pubsub import pub
+import ConfigParser
+import os
+import sys
+import wx
 import defaults
 
 
 class UnicodeAwareConfigParser(ConfigParser.RawConfigParser):
-    def set(self, section, setting, value): # pylint: disable-msg=W0222
+    def set(self, section, setting, value):  # pylint: disable-msg=W0222
         if type(value) == type(u''):
             value = value.encode('utf-8')
         ConfigParser.RawConfigParser.set(self, section, setting, value)
 
-    def get(self, section, setting): # pylint: disable-msg=W0221
+    def get(self, section, setting):  # pylint: disable-msg=W0221
         value = ConfigParser.RawConfigParser.get(self, section, setting)
-        return value.decode('utf-8') # pylint: disable-msg=E1103
+        return value.decode('utf-8')  # pylint: disable-msg=E1103
 
 
 class CachingConfigParser(UnicodeAwareConfigParser):
@@ -50,15 +54,14 @@ class CachingConfigParser(UnicodeAwareConfigParser):
     def get(self, section, setting):
         cache, key = self.__cachedValues, (section, setting)
         if key not in cache:
-            cache[key] = UnicodeAwareConfigParser.get(self, *key) # pylint: disable-msg=W0142
+            cache[key] = UnicodeAwareConfigParser.get(self, *key)  # pylint: disable-msg=W0142
         return cache[key]
         
         
-class Settings(patterns.Observer, CachingConfigParser):
+class Settings(object, CachingConfigParser):
     def __init__(self, load=True, iniFile=None, *args, **kwargs):
         # Sigh, ConfigParser.SafeConfigParser is an old-style class, so we 
         # have to call the superclass __init__ explicitly:
-        super(Settings, self).__init__(*args, **kwargs)
         CachingConfigParser.__init__(self, *args, **kwargs) 
         self.initializeWithDefaults()
         self.__loadAndSave = load
@@ -79,16 +82,16 @@ class Settings(patterns.Observer, CachingConfigParser):
             # Assume that if the settings are not to be loaded, we also 
             # should be quiet (i.e. we are probably in test mode):
             self.__beQuiet()
-        self.registerObserver(self.onSettingsFileLocationChanged, 
-                              'file.saveinifileinprogramdir')
+        pub.subscribe(self.onSettingsFileLocationChanged, 
+                      'settings.file.saveinifileinprogramdir')
         
-    def onSettingsFileLocationChanged(self, event):
-        saveIniFileInProgramDir = event.value() == 'True'
+    def onSettingsFileLocationChanged(self, value):
+        saveIniFileInProgramDir = value
         if not saveIniFileInProgramDir:
             try:
                 os.remove(self.generatedIniFilename(forceProgramDir=True))
             except: 
-                return # pylint: disable-msg=W0702
+                return  # pylint: disable-msg=W0702
             
     def initializeWithDefaults(self):
         for section in self.sections():
@@ -106,7 +109,7 @@ class Settings(patterns.Observer, CachingConfigParser):
     def __beQuiet(self):
         noisySettings = [('window', 'splash', 'False'), 
                          ('window', 'tips', 'False'), 
-                         ('window', 'starticonized', 'True')]
+                         ('window', 'starticonized', 'Always')]
         for section, setting, value in noisySettings:
             self.set(section, setting, value)
             
@@ -138,7 +141,7 @@ class Settings(patterns.Observer, CachingConfigParser):
         try:
             return defaultSection[option]
         except KeyError:
-            raise ConfigParser.NoOptionError, (defaultSection, option)
+            raise ConfigParser.NoOptionError, (option, defaultSection)
             
     def _ensureMinimum(self, section, option, result):
         # Some settings may have a minimum value, make sure we return at 
@@ -178,7 +181,7 @@ class Settings(patterns.Observer, CachingConfigParser):
             super(Settings, self).set(section, option, result)
         return result
 
-    def set(self, section, option, value, new=False): # pylint: disable-msg=W0221
+    def set(self, section, option, value, new=False):  # pylint: disable-msg=W0221
         if new:
             currentValue = 'a new option, so use something as current value'\
                 ' that is unlikely to be equal to the new value'
@@ -186,54 +189,60 @@ class Settings(patterns.Observer, CachingConfigParser):
             currentValue = self.get(section, option)
         if value != currentValue:
             super(Settings, self).set(section, option, value)
-            patterns.Event('%s.%s'%(section, option), self, value).send()
+            patterns.Event('%s.%s' % (section, option), self, value).send()
+            return True
+        else:
+            return False
             
     def setboolean(self, section, option, value):
-        self.set(section, option, str(value))
-        # We must do this here because it is a global option
-        if section == 'editor' and option == 'maccheckspelling':
-            wx.SystemOptions.SetOptionInt("mac.textcontrol-use-spell-checker", value)
+        if self.set(section, option, str(value)):
+            pub.sendMessage('settings.%s.%s' % (section, option), value=value)
 
+    setvalue = settuple = setlist = setdict = setint = setboolean
+            
+    def settext(self, section, option, value):
+        if self.set(section, option, value):
+            pub.sendMessage('settings.%s.%s' % (section, option), value=value)
+                
     def getlist(self, section, option):
         return self.getEvaluatedValue(section, option, eval)
-    
-    def setlist(self, section, option, value):
-        self.set(section, option, str(value))
         
-    getdict = getlist
-    setdict = setlist
+    getvalue = gettuple = getdict = getlist
 
     def getint(self, section, option):
         return self.getEvaluatedValue(section, option, int)
     
     def getboolean(self, section, option):
         return self.getEvaluatedValue(section, option, self.evalBoolean)
+    
+    def gettext(self, section, option):
+        return self.get(section, option)
 
     @staticmethod
     def evalBoolean(stringValue):
         if stringValue in ('True', 'False'):
             return 'True' == stringValue
         else:
-            raise ValueError, "invalid literal for Boolean value: '%s'"%stringValue
+            raise ValueError("invalid literal for Boolean value: '%s'" % stringValue)
          
     def getEvaluatedValue(self, section, option, evaluate=eval, showerror=wx.MessageBox):
         stringValue = self.get(section, option)
         try:
             return evaluate(stringValue)
-        except Exception, exceptionMessage: # pylint: disable-msg=W0703
+        except Exception, exceptionMessage:  # pylint: disable-msg=W0703
             message = '\n'.join([ \
-                _('Error while reading the %s-%s setting from %s.ini.')%(section, option, meta.filename),
-                _('The value is: %s')%stringValue,
-                _('The error is: %s')%exceptionMessage,
-                _('%s will use the default value for the setting and should proceed normally.')%meta.name])
+                _('Error while reading the %s-%s setting from %s.ini.') % (section, option, meta.filename),
+                _('The value is: %s') % stringValue,
+                _('The error is: %s') % exceptionMessage,
+                _('%s will use the default value for the setting and should proceed normally.') % meta.name])
             showerror(message, caption=_('Settings error'), style=wx.ICON_ERROR)
             defaultValue = self.getDefault(section, option)
-            self.set(section, option, defaultValue, new=True) # Ignore current value
+            self.set(section, option, defaultValue, new=True)  # Ignore current value
             return evaluate(defaultValue)
         
-    def save(self, showerror=wx.MessageBox, file=file): # pylint: disable-msg=W0622
+    def save(self, showerror=wx.MessageBox, file=file):  # pylint: disable-msg=W0622
         self.set('version', 'python', sys.version)
-        self.set('version', 'wxpython', '%s-%s @ %s'%(wx.VERSION_STRING, wx.PlatformInfo[2], wx.PlatformInfo[1]))
+        self.set('version', 'wxpython', '%s-%s @ %s' % (wx.VERSION_STRING, wx.PlatformInfo[2], wx.PlatformInfo[1]))
         self.set('version', 'pythonfrozen', str(hasattr(sys, 'frozen')))
         self.set('version', 'current', meta.data.version)
         if not self.__loadAndSave:
@@ -242,11 +251,14 @@ class Settings(patterns.Observer, CachingConfigParser):
             path = self.path()
             if not os.path.exists(path):
                 os.mkdir(path)
-            iniFile = file(self.filename(), 'w')
-            self.write(iniFile)
-            iniFile.close()
-        except Exception, message: # pylint: disable-msg=W0703
-            showerror(_('Error while saving %s.ini:\n%s\n')% \
+            tmpFile = file(self.filename() + '.tmp', 'w')
+            self.write(tmpFile)
+            tmpFile.close()
+            if os.path.exists(self.filename()):
+                os.remove(self.filename())
+            os.rename(self.filename() + '.tmp', self.filename())
+        except Exception, message:  # pylint: disable-msg=W0703
+            showerror(_('Error while saving %s.ini:\n%s\n') % \
                       (meta.filename, message), caption=_('Save error'), 
                       style=wx.ICON_ERROR)
 
@@ -256,7 +268,7 @@ class Settings(patterns.Observer, CachingConfigParser):
         else:
             return self.generatedIniFilename(forceProgramDir) 
     
-    def path(self, forceProgramDir=False, environ=os.environ): # pylint: disable-msg=W0102
+    def path(self, forceProgramDir=False, environ=os.environ):  # pylint: disable-msg=W0102
         if self.__iniFileSpecifiedOnCommandLine:
             return self.pathToIniFileSpecifiedOnCommandLine()
         elif forceProgramDir or self.getboolean('file', 
@@ -275,11 +287,11 @@ class Settings(patterns.Observer, CachingConfigParser):
         try:
             path = os.path.join(environ['APPDATA'], meta.filename)
         except Exception:
-            path = os.path.expanduser("~") # pylint: disable-msg=W0702
+            path = os.path.expanduser("~")  # pylint: disable-msg=W0702
             if path == "~":
                 # path not expanded: apparently, there is no home dir
                 path = os.getcwd()
-            path = os.path.join(path, '.%s'%meta.filename)
+            path = os.path.join(path, '.%s' % meta.filename)
         return path
 
     def pathToTemplatesDir(self):
@@ -290,7 +302,7 @@ class Settings(patterns.Observer, CachingConfigParser):
             # exists.
 
             if os.path.exists(path + '.lnk'):
-                from win32com.client import Dispatch # pylint: disable-msg=F0401
+                from win32com.client import Dispatch  # pylint: disable-msg=F0401
 
                 shell = Dispatch('WScript.Shell')
                 shortcut = shell.CreateShortcut(path + '.lnk')
@@ -306,4 +318,4 @@ class Settings(patterns.Observer, CachingConfigParser):
         return os.path.dirname(self.__iniFileSpecifiedOnCommandLine) or '.'
     
     def generatedIniFilename(self, forceProgramDir):
-        return os.path.join(self.path(forceProgramDir), '%s.ini'%meta.filename)
+        return os.path.join(self.path(forceProgramDir), '%s.ini' % meta.filename)

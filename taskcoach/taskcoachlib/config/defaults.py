@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -33,10 +33,12 @@ defaults = { \
     'squaretaskviewercount': '0',
     'timelineviewercount': '0',
     'calendarviewercount': '0',
+    'taskstatsviewercount': '0',
     'language': '',                  # Language and locale, maybe set externally (e.g. by PortableApps)
     'language_set_by_user': '',      # Language and locale as set by user via preferences, overrides language
     'categoryfiltermatchall': 'False',
     'descriptionpopups': 'True',
+    'weekstart': 'monday',           # Start of work week, 'monday' or 'sunday'
     # The next three options are used in the effort dialog to populate the
     # drop down menu with start and stop times.
     'efforthourstart': '8',          # Earliest time, i.e. start of working day
@@ -45,11 +47,12 @@ defaults = { \
     'snoozetimes': "[5, 10, 15, 30, 60, 120, 1440]",
     'defaultsnoozetime': '5',        # Default snooze time
     'perspective': '',               # The layout of the viewers in the main window
-    'datestied': '',                 # What to do when changing the start date or due date
+    'datestied': '',                 # What to do when changing the planned start date or due date
     # Default date and times to offer in the task dialog, see preferences for
     # possible values.
-    'defaultstartdatetime': 'preset_today_currenttime',
+    'defaultplannedstartdatetime': 'preset_today_currenttime',
     'defaultduedatetime': 'propose_tomorrow_endofworkingday',
+    'defaultactualstartdatetime': 'preset_today_currenttime',
     'defaultcompletiondatetime': 'propose_today_currenttime',
     'defaultreminderdatetime': 'propose_tomorrow_startofworkingday',
 },
@@ -64,16 +67,33 @@ defaults = { \
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
     'searchdescription': 'False',
-    'columns': "['startDateTime', 'dueDateTime']",
+    'columns': "['plannedStartDateTime', 'dueDateTime']",
     'columnsalwaysvisible': "['subject']",
-    'columnwidths': "{'attachments': 28, 'notes': 28, 'ordering': 38}",
+    'columnwidths': "{'attachments': 28, 'notes': 28}",
     'columnautoresizing': 'True',
-    'tasksdue': 'Never',             # Show tasks when they're due today, tomorrow, etc.
-    'taskscompleted': 'Never',       # Show tasks completed today, yesterday, etc.
-    'tasksinactive': 'Never',        # Show tasks when they'll be active today, tomorrow, etc.   
+    'hideinactivetasks': 'False',
+    'hidelatetasks': 'False',
     'hideactivetasks': 'False',
+    'hideduesoontasks': 'False',
+    'hideoverduetasks': 'False',
+    'hidecompletedtasks': 'False',
     'hidecompositetasks': 'False',
 },              
+'taskstatsviewer': { \
+    'title': '',
+    'searchfilterstring': '',
+    'searchfiltermatchcase': 'False',
+    'searchfilterincludesubitems': 'False',
+    'searchdescription': 'False',
+    'hideinactivetasks': 'False',
+    'hidelatetasks': 'False',
+    'hideactivetasks': 'False',
+    'hideduesoontasks': 'False',
+    'hideoverduetasks': 'False',
+    'hidecompletedtasks': 'False',
+    'hidecompositetasks': 'False',
+    'piechartangle': '30',
+},
 'prerequisiteviewerintaskeditor': { \
     'title': '',                     # User supplied viewer title 
     'treemode': 'True',              # True = tree mode, False = list mode
@@ -85,13 +105,15 @@ defaults = { \
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
     'searchdescription': 'False',
-    'columns': "['prerequisites', 'dependencies', 'startDateTime', 'dueDateTime']",
+    'columns': "['prerequisites', 'dependencies', 'plannedStartDateTime', 'dueDateTime']",
     'columnsalwaysvisible': "['subject']",
     'columnwidths': "{'attachments': 28, 'notes': 28}",
     'columnautoresizing': 'True',
-    'tasksdue': 'Never',             # Show tasks when they're due today, tomorrow, etc.
-    'taskscompleted': 'Never',       # Show tasks completed today, yesterday, etc.   
-    'tasksinactive': 'Never',        # Show tasks when they'll be active today, tomorrow, etc.   
+    'hideinactivetasks': 'False',
+    'hidelatetasks': 'False',
+    'hideduesoontasks': 'False',
+    'hideoverduetasks': 'False',
+    'hidecompletedtasks': 'False',
     'hideactivetasks': 'False',
     'hidecompositetasks': 'False' },
 'squaretaskviewer': { \
@@ -101,10 +123,12 @@ defaults = { \
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
     'searchdescription': 'False',
-    'tasksdue': 'Never',             # Show tasks when they're due today, tomorrow, etc.
-    'taskscompleted': 'Never',       # Show tasks completed today, yesterday, etc.   
-    'tasksinactive': 'Never',        # Show tasks when they'll be active today, tomorrow, etc.   
+    'hideinactivetasks': 'False',
+    'hidelatetasks': 'False',
     'hideactivetasks': 'False',
+    'hideduesoontasks': 'False',
+    'hideoverduetasks': 'False',
+    'hidecompletedtasks': 'False',
     'hidecompositetasks': 'False' },
 'timelineviewer': { \
     'title': '',
@@ -112,10 +136,12 @@ defaults = { \
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
     'searchdescription': 'False',
-    'tasksdue': 'Never',             # Show tasks when they're due today, tomorrow, etc.
-    'taskscompleted': 'Never',       # Show tasks completed today, yesterday, etc.   
-    'tasksinactive': 'Never',        # Show tasks when they'll be active today, tomorrow, etc.   
+    'hideinactivetasks': 'False',
+    'hidelatetasks': 'False',
+    'hideduesoontasks': 'False',
+    'hideoverduetasks': 'False',
     'hideactivetasks': 'False',
+    'hidecompletedtasks': 'False',
     'hidecompositetasks': 'False' },
 'calendarviewer': { \
     'title': '',
@@ -132,10 +158,12 @@ defaults = { \
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
     'searchdescription': 'False',
-    'tasksdue': 'Never',             # Show tasks when they're due today, tomorrow, etc.
-    'taskscompleted': 'Never',       # Show tasks completed today, yesterday, etc.   
-    'tasksinactive': 'Never',        # Show tasks when they'll be active today, tomorrow, etc.   
+    'hideinactivetasks': 'False',
+    'hidelatetasks': 'False',
     'hideactivetasks': 'False',
+    'hideduesoontasks': 'False',
+    'hideoverduetasks': 'False',
+    'hidecompletedtasks': 'False',
     'hidecompositetasks': 'False',
     'sortby': 'subject',
     'sortascending': 'True',
@@ -244,7 +272,10 @@ defaults = { \
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
-    'searchdescription': 'False' },
+    'searchdescription': 'False',
+    'round': '0', # round effort to this number of seconds, 0 = no rounding
+    'alwaysroundup': 'False',
+},
 'effortviewerintaskeditor': { \
     'aggregation': 'details', # 'details' (default), 'day', 'week', or 'month'
     'sortby': 'period',
@@ -257,7 +288,10 @@ defaults = { \
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
-    'searchdescription': 'False' },
+    'searchdescription': 'False',
+    'round': '0', # round effort to this number of seconds, 0 = no rounding
+    'alwaysroundup': 'False', 
+},
 'attachmentviewer': { \
     'title': '',
     'sortby': 'subject',
@@ -323,30 +357,30 @@ defaults = { \
     'tipsindex': '0', # Start at the first tip
     'blinktaskbariconwhentrackingeffort': 'True' },
 'taskdialog': { \
-    'size': '(600, 400)',   # Default size of the dialogs
+    'size': '(-1, -1)',     # Size of the dialogs, calculated by default
     'position': '(-1, -1)', # Position of the dialog, undefined by default
     'maximized': 'False',   # Don't open the dialog maximized by default
     'perspectives': '{}'    # The layout of the tabs in the dialog
     },
 'categorydialog': { \
-    'size': '(500, 300)',   # Default size of the dialogs
+    'size': '(-1, -1)',     # Size of the dialogs, calculated by default
     'position': '(-1, -1)', # Position of the dialog, undefined by default
     'maximized': 'False',   # Don't open the dialog maximized by default
     'perspectives': '{}'    # The layout of the tabs in the dialog
     },
 'effortdialog': { \
-    'size': '(500, 300)',   # Default size of the dialogs
+    'size': '(-1, -1)',     # Size of the dialogs, calculated by default
     'position': '(-1, -1)', # Position of the dialog, undefined by default
     'maximized': 'False'    # Don't open the dialog maximized by default
     },
 'notedialog': { \
-    'size': '(500, 300)',   # Default size of the dialogs
+    'size': '(-1, -1)',     # Size of the dialogs, calculated by default
     'position': '(-1, -1)', # Position of the dialog, undefined by default
     'maximized': 'False',   # Don't open the dialog maximized by default
     'perspectives': '{}'    # The layout of the tabs in the dialog
     },
 'attachmentdialog': { \
-    'size': '(500, 300)',   # Default size of the dialogs
+    'size': '(-1, -1)',     # Size of the dialogs, calculated by default
     'position': '(-1, -1)', # Position of the dialog, undefined by default
     'maximized': 'False',   # Don't open the dialog maximized by default
     'perspectives': '{}'    # The layout of the tabs in the dialog
@@ -368,24 +402,28 @@ defaults = { \
     'inifileloaderror': '' },
 'fgcolor': { \
     'activetasks': '(0, 0, 0, 255)',
+    'latetasks': '(160, 32, 240, 255)',
     'completedtasks': '(0, 255, 0, 255)',
     'overduetasks': '(255, 0, 0, 255)',
     'inactivetasks': '(192, 192, 192, 255)',
     'duesoontasks': '(255, 128, 0, 255)' },
 'bgcolor': { \
     'activetasks': '(255, 255, 255, 255)',
+    'latetasks': '(255, 255, 255, 255)',
     'completedtasks': '(255, 255, 255, 255)',
     'overduetasks': '(255, 255, 255, 255)',
     'inactivetasks': '(255, 255, 255, 255)',
     'duesoontasks': '(255, 255, 255, 255)' },
 'font': { \
     'activetasks': '',
+    'latetasks': '',
     'completedtasks': '',
     'overduetasks': '',
     'inactivetasks': '',
     'duesoontasks': '' },
 'icon': { \
     'activetasks': 'led_blue_icon',
+    'latetasks': 'led_purple_icon',
     'completedtasks': 'led_green_icon',
     'overduetasks': 'led_red_icon',
     'inactivetasks': 'led_grey_icon',
@@ -413,7 +451,10 @@ defaults = { \
     'syncml': 'False',
     'iphone': 'False',
     'notifier': 'Task Coach',
-    'minidletime': '0' },
+    'minidletime': '0',
+    'usesm2': 'False',
+    'showsmwarning': 'True',
+    'sayreminder': 'False' },
 'syncml': { \
     'url': '',
     'username': '',

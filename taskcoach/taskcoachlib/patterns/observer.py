@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -182,7 +182,7 @@ class MethodProxy(object):
         self.method = method
         
     def __repr__(self):
-        return 'MethodProxy(%s)'%self.method
+        return 'MethodProxy(%s)'%self.method # pragma: no cover
         
     def __call__(self, *args, **kwargs):
         return self.method(*args, **kwargs)
@@ -258,11 +258,7 @@ class Publisher(object):
             event originates from the specified eventSource. '''
             
         observers = self.__observers.setdefault((eventType, eventSource), set())
-        if observers:
-            observers.add(observer)
-        else:
-            observers.add(observer)
-            self.notifyObserversOfFirstObserverRegistered(eventType)
+        observers.add(observer)
     
     @wrapObserver    
     def removeObserver(self, observer, eventType=None, eventSource=None):
@@ -295,30 +291,6 @@ class Publisher(object):
         matchingKeys = [key for key in self.__observers if match(*key)]
         for key in matchingKeys:
             self.__observers[key].discard(observer)
-        self.notifyObserversOfLastObserverRemoved()
-                
-    def removeInstance(self, instance):
-        ''' Remove all observers that are methods of instance. '''
-        for observers in self.__observers.itervalues():
-            for observer in observers.copy():
-                if observer.im_self is instance:
-                    observers.discard(observer)
-        self.notifyObserversOfLastObserverRemoved()
-        
-    @eventSource
-    def notifyObserversOfFirstObserverRegistered(self, eventType, event=None):
-        event.addSource(self, eventType, 
-                        type='publisher.firstObserverRegisteredFor')
-        event.addSource(self, eventType, 
-                        type='publisher.firstObserverRegisteredFor.%s'%eventType)
-    
-    @eventSource                
-    def notifyObserversOfLastObserverRemoved(self, event=None):
-        for eventType, eventSource in self.__observers.keys():
-            if self.__observers[(eventType, eventSource)]:
-                continue
-            del self.__observers[(eventType, eventSource)]
-            event.addSource(self, eventType, type='publisher.lastObserverRemovedFor')
                         
     def notifyObservers(self, event):
         ''' Notify observers of the event. The event type and sources are 
@@ -353,14 +325,21 @@ class Publisher(object):
     
 
 class Observer(object):
-    def registerObserver(self, *args, **kwargs):
-        Publisher().registerObserver(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        self.__observers = set()
+        super(Observer, self).__init__(*args, **kwargs)
         
-    def removeObserver(self, *args, **kwargs):
-        Publisher().removeObserver(*args, **kwargs)
+    def registerObserver(self, observer, *args, **kwargs):
+        self.__observers.add(observer)
+        Publisher().registerObserver(observer, *args, **kwargs)
+        
+    def removeObserver(self, observer, *args, **kwargs):
+        self.__observers.discard(observer)
+        Publisher().removeObserver(observer, *args, **kwargs)
         
     def removeInstance(self):
-        Publisher().removeInstance(self)
+        for observer in self.__observers.copy():
+            self.removeObserver(observer)
 
 
 class Decorator(Observer):
@@ -368,8 +347,13 @@ class Decorator(Observer):
         self.__observable = observable
         super(Decorator, self).__init__(*args, **kwargs)
 
-    def observable(self):
-        return self.__observable 
+    def observable(self, recursive=False):
+        if recursive:
+            try:
+                return self.__observable.observable(recursive=True)
+            except AttributeError:
+                pass
+        return self.__observable
 
     def __getattr__(self, attribute):
         return getattr(self.observable(), attribute)

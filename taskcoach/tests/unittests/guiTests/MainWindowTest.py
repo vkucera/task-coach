@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ class MockViewer(wx.Frame):
         return 'taskviewer'
     
     def viewerStatusEventType(self):
-        return ''
+        return 'mockviewer.status'
 
 
 class MainWindowUnderTest(gui.MainWindow):
@@ -55,7 +55,7 @@ class MainWindowTestCase(test.wxTestCase):
         self.taskFile = persistence.TaskFile()
         self.mainwindow = MainWindowUnderTest(DummyIOController(),
             self.taskFile, self.settings)
-        
+            
     def setSettings(self):
         pass
 
@@ -72,11 +72,11 @@ class MainWindowTestCase(test.wxTestCase):
         
 class MainWindowTest(MainWindowTestCase):
     def testStatusBar_Show(self):
-        self.settings.set('view', 'statusbar', 'True')
+        self.settings.setboolean('view', 'statusbar', True)
         self.failUnless(self.mainwindow.GetStatusBar().IsShown())
 
     def testStatusBar_Hide(self):
-        self.settings.set('view', 'statusbar', 'False')
+        self.settings.setboolean('view', 'statusbar', False)
         self.failIf(self.mainwindow.GetStatusBar().IsShown())
 
     def testTitle_Default(self):
@@ -86,7 +86,6 @@ class MainWindowTest(MainWindowTestCase):
         self.taskFile.setFilename('New filename')
         self.assertEqual('%s - %s'%(meta.name, self.taskFile.filename()), 
             self.mainwindow.GetTitle())
-
         
 
 class MainWindowMaximizeTestCase(MainWindowTestCase):
@@ -94,7 +93,8 @@ class MainWindowMaximizeTestCase(MainWindowTestCase):
     
     def setUp(self):
         super(MainWindowMaximizeTestCase, self).setUp()
-        self.mainwindow.Show() # Or IsMaximized() returns always False...
+        if not operating_system.isMac():
+            self.mainwindow.Show() # Or IsMaximized() returns always False...
         
     def setSettings(self):
         self.settings.setboolean('window', 'maximized', self.maximized)
@@ -113,7 +113,8 @@ class MainWindowNotMaximizedTest(MainWindowMaximizeTestCase):
         # http://trac.wxwidgets.org/ticket/9167 and to my own tests,
         # EVT_MAXIMIZE is a noop under this platform.
         self.mainwindow.Maximize()
-        wx.Yield()
+        if operating_system.isWindows():
+            wx.Yield()
         self.failUnless(self.settings.getboolean('window', 'maximized'))
 
 

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,7 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, wx
+import test
+import wx
 from taskcoachlib import meta, application, config
 
 
@@ -47,7 +48,8 @@ class AppTests(test.TestCase):
         self.assertEqual(meta.name, wxApp.GetAppName())
         self.assertEqual(meta.author, wxApp.GetVendorName())
         app.mainwindow._idleController.stop()
-        app.quit()
+        app.quitApplication()
+        app.mainwindow.Destroy()
         application.Application.deleteInstance()
         
     def assertLanguage(self, expectedLanguage, locale=None):
@@ -55,7 +57,7 @@ class AppTests(test.TestCase):
         if locale:
             args.append(locale)
         self.assertEqual(expectedLanguage, 
-                         application.Application.determineLanguage(*args))
+                         application.Application.determineLanguage(*args))  # pylint: disable-msg=W0142
         
     def testLanguageViaCommandLineOption(self):
         self.options.language = 'fi_FI'

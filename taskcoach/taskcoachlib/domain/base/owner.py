@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -75,10 +75,14 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
     
     klass.modificationEventTypes = classmethod(modificationEventTypes)
 
-    def objects(instance):
+    def objects(instance, recursive=False):
         ownedObjects = getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower()))
-        return [ownedObject for ownedObject in ownedObjects \
+        result = [ownedObject for ownedObject in ownedObjects \
                 if not ownedObject.isDeleted()]
+        if recursive:
+            for ownedObject in result[:]:
+                result.extend(ownedObject.children(recursive=True))
+        return result
 
     setattr(klass, '%ss' % klass.__ownedType__.lower(), objects)
 

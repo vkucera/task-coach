@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -55,29 +55,53 @@ class CSVReaderTestCase(test.TestCase):
                               ('Subject 2', 'Description 2\n')]), 
                          set([(t.subject(), t.description()) for t in self.taskList]))
 
-    def testTaskWithStartDate(self):
+    def testTaskWithPlannedStartDate(self):
         filename = self.createCSVFile('Subject,2011-6-30\n')
         self.reader.read(filename=filename,
-                         mappings={0: 'Subject', 1: 'Start date'},
+                         mappings={0: 'Subject', 1: 'Planned start date'},
                          **self.defaultReaderKwArgs)
         self.assertEqual(date.DateTime(2011, 6, 30, 0, 0, 0), 
-                         list(self.taskList)[0].startDateTime())
+                         list(self.taskList)[0].plannedStartDateTime())
         
-    def testTaskWithStartDateTime(self):
+    def testTaskWithPlannedStartDateTime(self):
         filename = self.createCSVFile('Subject,2011-6-30 12:00\n')
         self.reader.read(filename=filename,
-                         mappings={0: 'Subject', 1: 'Start date'},
+                         mappings={0: 'Subject', 1: 'Planned start date'},
                          **self.defaultReaderKwArgs)
         self.assertEqual(date.DateTime(2011, 6, 30, 12, 0, 0), 
-                         list(self.taskList)[0].startDateTime())
+                         list(self.taskList)[0].plannedStartDateTime())
         
-    def testTaskWithEmptyStartDate(self):
+    def testTaskWithEmptyPlannedStartDate(self):
         filename = self.createCSVFile('Subject,\n')
         self.reader.read(filename=filename,
-                         mappings={0: 'Subject', 1: 'Start date'},
+                         mappings={0: 'Subject', 1: 'Planned start date'},
                          **self.defaultReaderKwArgs)
         self.assertEqual(date.DateTime(), 
-                         list(self.taskList)[0].startDateTime())
+                         list(self.taskList)[0].plannedStartDateTime())
+  
+    def testTaskWithActualStartDate(self):
+        filename = self.createCSVFile('Subject,2011-6-30\n')
+        self.reader.read(filename=filename,
+                         mappings={0: 'Subject', 1: 'Actual start date'},
+                         **self.defaultReaderKwArgs)
+        self.assertEqual(date.DateTime(2011, 6, 30, 0, 0, 0), 
+                         list(self.taskList)[0].actualStartDateTime())
+        
+    def testTaskWithActualStartDateTime(self):
+        filename = self.createCSVFile('Subject,2011-6-30 12:00\n')
+        self.reader.read(filename=filename,
+                         mappings={0: 'Subject', 1: 'Actual start date'},
+                         **self.defaultReaderKwArgs)
+        self.assertEqual(date.DateTime(2011, 6, 30, 12, 0, 0), 
+                         list(self.taskList)[0].actualStartDateTime())
+        
+    def testTaskWithEmptyActualStartDate(self):
+        filename = self.createCSVFile('Subject,\n')
+        self.reader.read(filename=filename,
+                         mappings={0: 'Subject', 1: 'Actual start date'},
+                         **self.defaultReaderKwArgs)
+        self.assertEqual(date.DateTime(), 
+                         list(self.taskList)[0].actualStartDateTime())
         
     def testTaskWithDueDate(self):
         filename = self.createCSVFile('Subject,2011-6-30\n')
@@ -111,6 +135,22 @@ class CSVReaderTestCase(test.TestCase):
         self.assertEqual(date.DateTime(2011, 6, 30, 1, 33, 0), 
                          list(self.taskList)[0].completionDateTime())
 
+    def testTaskWithReminderDate(self):
+        filename = self.createCSVFile('Subject,2012-6-30\n')
+        self.reader.read(filename=filename,
+                         mappings={0: 'Subject', 1: 'Reminder date'},
+                         **self.defaultReaderKwArgs)
+        self.assertEqual(date.DateTime(2012, 6, 30, 0, 0, 0),
+                         list(self.taskList)[0].reminder())
+        
+    def testTaskWithReminderDateTime(self):
+        filename = self.createCSVFile('Subject,12:31 2012-6-30\n')
+        self.reader.read(filename=filename,
+                         mappings={0: 'Subject', 1: 'Reminder date'},
+                         **self.defaultReaderKwArgs)
+        self.assertEqual(date.DateTime(2012, 6, 30, 12, 31, 0),
+                         list(self.taskList)[0].reminder())
+        
     def testTaskWithHourMinuteBudget(self):
         filename = self.createCSVFile('Subject,60:30\n')
         self.reader.read(filename=filename,

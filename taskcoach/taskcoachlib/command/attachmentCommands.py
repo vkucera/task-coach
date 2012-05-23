@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -53,19 +53,19 @@ class EditAttachmentLocationCommand(base.BaseCommand):
     singular_name = _('Edit attachment "%s" location')
 
     def __init__(self, *args, **kwargs):
-        self.__newLocation = kwargs.pop('location')
+        self.__newLocation = kwargs.pop('newValue')
         super(EditAttachmentLocationCommand, self).__init__(*args, **kwargs)
         self.__oldLocations = [item.location() for item in self.items]
     
     @patterns.eventSource
     def do_command(self, event=None):
         for item in self.items:
-            item.setLocation(self.__newLocation, event=event)
+            item.setLocation(self.__newLocation)
             
     @patterns.eventSource
     def undo_command(self, event=None):
         for item, oldLocation in zip(self.items, self.__oldLocations):
-            item.setLocation(oldLocation, event=event)
+            item.setLocation(oldLocation)
             
     def redo_command(self):
         self.do_command()

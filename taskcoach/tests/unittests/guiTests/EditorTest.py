@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -42,9 +42,8 @@ class EditorTestCase(test.wxTestCase):
         self.items = base.filter.SearchFilter(self.taskFile.notes())
         self.item = note.Note(subject='item')
         self.items.append(self.item)
-        self.editor = EditorUnderTest(self.frame, [self.item], 
-                                      self.settings, self.items, 
-                                      self.taskFile, raiseDialog=False)
+        self.editor = EditorUnderTest(self.frame, [self.item], self.settings, 
+                                      self.items, self.taskFile)
         self.appearance = self.editor._interior[-1]
 
     def tearDown(self):

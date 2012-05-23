@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 João Alexandre de Toledo <jtoledo@griffo.com.br>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -21,50 +21,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import categorizable
-from taskcoachlib import help, operating_system # pylint: disable-msg=W0622
+from taskcoachlib import help, operating_system  # pylint: disable-msg=W0622
 import task
 
 
-class TaskList(categorizable.CategorizableContainer):
+class TaskListQueryMixin(object):
+    def nrOfTasksPerStatus(self):
+        statuses = [eachTask.status() for eachTask in self if not eachTask.isDeleted()]
+        count = dict()
+        for status in task.Task.possibleStatuses():
+            count[status] = statuses.count(status)
+        return count
+    
+    
+class TaskList(TaskListQueryMixin, categorizable.CategorizableContainer):
     # FIXME: TaskList should be called TaskCollection or TaskSet
 
     newItemMenuText = _('&New task...') + ('\tINSERT' if not operating_system.isMac() else '\tCtrl+N')
     newItemHelpText = help.taskNew
-    
-    def _nrInterestingTasks(self, isInteresting):
-        return len(self._getInterestingTasks(isInteresting))
-    
-    def _getInterestingTasks(self, isInteresting):
-        return [task for task in self if isInteresting(task)] # pylint: disable-msg=W0621
-
-    def nrCompleted(self):
-        return self._nrInterestingTasks(task.Task.completed)
-
-    def nrOverdue(self):
-        return self._nrInterestingTasks(task.Task.overdue)
-    
-    def nrActive(self):
-        return self._nrInterestingTasks(task.Task.active)
-
-    def nrInactive(self):
-        return self._nrInterestingTasks(task.Task.inactive)
-
-    def nrDueSoon(self):
-        return self._nrInterestingTasks(task.Task.dueSoon)
-    
+       
     def nrBeingTracked(self):
-        return self._nrInterestingTasks(task.Task.isBeingTracked)
+        return len(self.tasksBeingTracked())
     
     def tasksBeingTracked(self):
-        return self._getInterestingTasks(task.Task.isBeingTracked)        
+        return [eachTask for eachTask in self if eachTask.isBeingTracked()]    
 
-    def allCompleted(self):
-        nrCompleted = self.nrCompleted()
-        return nrCompleted > 0 and nrCompleted == len(self)
-            
     def efforts(self):
         result = []
-        for task in self: # pylint: disable-msg=W0621
+        for task in self:  # pylint: disable-msg=W0621
             result.extend(task.efforts())
         return result
         
@@ -79,4 +63,4 @@ class TaskList(categorizable.CategorizableContainer):
         return max(self.__allPriorities())
         
     def __allPriorities(self):
-        return [task.priority() for task in self if not task.isDeleted()] or (0,) # pylint: disable-msg=W0621
+        return [task.priority() for task in self if not task.isDeleted()] or (0,)  # pylint: disable-msg=W0621

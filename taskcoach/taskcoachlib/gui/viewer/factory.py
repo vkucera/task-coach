@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ import effort, task, category, note
 
 
 def viewerTypes():
-    return 'timelineviewer', 'squaretaskviewer', 'taskviewer', 'noteviewer', 'categoryviewer', 'effortviewer', 'calendarviewer'
+    return 'timelineviewer', 'squaretaskviewer', 'taskviewer', 'taskstatsviewer', 'noteviewer', 'categoryviewer', 'effortviewer', 'calendarviewer'
 
 
 class addViewers(object):
@@ -37,6 +37,7 @@ class addViewers(object):
         
     def addAllViewers(self):
         self.addViewers(task.TaskViewer)
+        self.addViewers(task.TaskStatsViewer)
         self.addViewers(task.SquareTaskViewer)
         self.addViewers(task.TimelineViewer)
         self.addViewers(task.CalendarViewer)

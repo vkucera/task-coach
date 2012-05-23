@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,9 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
 from taskcoachlib import config
 from taskcoachlib.domain import task, effort, date
+from taskcoachlib.thirdparty.pubsub import pub
+import EffortCompositeTest
+import test
 
 
 class CompositeEffortPerPeriodTest(test.TestCase):
@@ -29,17 +31,21 @@ class CompositeEffortPerPeriodTest(test.TestCase):
         self.task = task.Task(subject='task')
         self.taskList.append(self.task)
         self.effort1 = effort.Effort(self.task, 
-            date.DateTime(2004,1,1,11,0,0), date.DateTime(2004,1,1,12,0,0))
+            date.DateTime(2004, 1, 1, 11, 0, 0), 
+            date.DateTime(2004, 1, 1, 12, 0, 0))
         self.effort2 = effort.Effort(self.task, 
-            date.DateTime(2004,1,1,13,0,0), date.DateTime(2004,1,1,14,0,0))
+            date.DateTime(2004, 1, 1, 13, 0, 0), 
+            date.DateTime(2004, 1, 1, 14, 0, 0))
         self.effort3 = effort.Effort(self.task, 
-            date.DateTime(2004,1,11,13,0,0), date.DateTime(2004,1,11,14,0,0))
+            date.DateTime(2004, 1, 11, 13, 0, 0), 
+            date.DateTime(2004, 1, 11, 14, 0, 0))
         self.trackedEffort = effort.Effort(self.task, 
-            date.DateTime(2004,1,1,9,0,0))
+            date.DateTime(2004, 1, 1, 9, 0, 0))
         self.composite = effort.CompositeEffortPerPeriod(\
-            date.DateTime(2004,1,1,0,0,0), date.DateTime(2004,1,1,23,59,59),
-            self.taskList)
-
+            date.DateTime(2004, 1, 1, 0, 0, 0), 
+            date.DateTime(2004, 1, 1, 23, 59, 59), self.taskList)
+        self.reducer = EffortCompositeTest.FakeEffortAggregator(self.composite)
+        
     def testInitialLength(self):
         self.assertEqual(0, len(self.composite))
         
@@ -62,20 +68,23 @@ class CompositeEffortPerPeriodTest(test.TestCase):
 
     def testAddEffortOutsidePeriodToTask(self):
         effortOutsidePeriod = effort.Effort(self.task, 
-            date.DateTime(2004,1,11,13,0,0), date.DateTime(2004,1,11,14,0,0))
+            date.DateTime(2004, 1, 11, 13, 0, 0), 
+            date.DateTime(2004, 1, 11, 14, 0, 0))
         self.task.addEffort(effortOutsidePeriod)
         self.assertEqual(date.TimeDelta(), self.composite.duration())
 
     def testAddEffortWithStartTimeEqualToStartOfPeriodToTask(self):
         effortSameStartTime = effort.Effort(self.task, 
-            date.DateTime(2004,1,1,0,0,0), date.DateTime(2004,1,1,14,0,0))
+            date.DateTime(2004, 1, 1, 0, 0, 0), 
+            date.DateTime(2004, 1, 1, 14, 0, 0))
         self.task.addEffort(effortSameStartTime)
         self.assertEqual(effortSameStartTime.duration(), 
             self.composite.duration())
 
     def testAddEffortWithStartTimeEqualToEndOfPeriodToTask(self):
         effortSameStopTime = effort.Effort(self.task, 
-            date.DateTime(2004,1,1,23,59,59), date.DateTime(2004,1,2,1,0,0))
+            date.DateTime(2004, 1, 1, 23, 59, 59), 
+            date.DateTime(2004, 1, 2, 1, 0, 0))
         self.task.addEffort(effortSameStopTime)
         self.assertEqual(effortSameStopTime.duration(), 
             self.composite.duration())
@@ -86,15 +95,25 @@ class CompositeEffortPerPeriodTest(test.TestCase):
         self.assertEqual(date.TimeDelta(), self.composite.duration())
 
     def testRemoveMultipleEffortsFromSamePeriodFromTask(self):
-        self.registerObserver('effort.composite.empty')
+        events = []
+        
+        def onEvent(sender):
+            events.append(sender)
+            
+        pub.subscribe(onEvent, effort.CompositeEffort.compositeEmptyEventType())
         self.task.addEffort(self.effort1)
         self.task.addEffort(self.effort2)
         self.task.setEfforts([])
-        self.failUnless(self.events)
+        self.failUnless(events)
         
     def testRemoveMultipleEffortsFromDifferentPeriodsFromTask(self):
-        self.registerObserver('effort.composite.empty')
+        events = []
+        
+        def onEvent(sender):
+            events.append(sender)
+            
+        pub.subscribe(onEvent, effort.CompositeEffort.compositeEmptyEventType())
         self.task.addEffort(self.effort3)
         self.task.addEffort(self.effort1)
         self.task.setEfforts([])
-        self.failUnless(self.events)
+        self.failUnless(events)

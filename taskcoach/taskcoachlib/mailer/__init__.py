@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ import wx, os, re, tempfile, urllib, email, email.header
 from taskcoachlib.thirdparty import desktop, chardet
 from taskcoachlib.mailer.macmail import getSubjectOfMail
 from taskcoachlib.i18n import _
+from taskcoachlib import operating_system
 
 
 def readMail(filename, readContent=True):
@@ -107,11 +108,13 @@ def sendMail(to, subject, body, openURL=desktop.open):
         # which urllib.quote does not support.
         chars = [c if ord(c) >= 128 else urllib.quote(c) for c in s]
         return ''.join(chars)
-
+    
     # FIXME: Very  strange things happen on  MacOS X. If  there is one
     # non-ASCII character in the body, it works. If there is more than
     # one, it fails.  Maybe we should use Mail.app  directly ? What if
     # the user uses something else ?
 
-    openURL(u'mailto:%s?subject=%s&body=%s' % (to, unicode_quote(subject),
-                                               unicode_quote(body)))
+    if not operating_system.isMac():
+        body = unicode_quote(body) # Otherwise newlines disappear
+
+    openURL(u'mailto:%s?subject=%s&body=%s' % (to, subject, body))

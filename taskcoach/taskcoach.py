@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,7 +18,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import sys, os
+import os
+import sys
+
 # Workaround for a bug in Ubuntu 10.10
 os.environ['XLIB_SKIP_ARGB_VISUALS'] = '1'
 
@@ -28,14 +30,24 @@ if not hasattr(sys, "frozen"):
     import wxversion
     wxversion.ensureMinimal("2.8-unicode", optionsRequired=True)
     try:
-        import taskcoachlib # pylint: disable-msg=W0611
+        import taskcoachlib  # pylint: disable-msg=W0611
     except ImportError:
-        sys.stderr.write('''ERROR: cannot import the library 'taskcoachlib'.
+        # On Ubuntu 12.04, taskcoachlib is installed in /usr/share/pyshared,
+        # but that folder is not on the python path. Don't understand why. 
+        # We'll add it manually so the application can find it.
+        sys.path.insert(0, '/usr/share/pyshared')
+        try:
+            import taskcoachlib  # pylint: disable-msg=W0611
+        except ImportError:
+            sys.stderr.write('''ERROR: cannot import the library 'taskcoachlib'.
 Please see https://answers.launchpad.net/taskcoach/+faq/1063 
-for more information and possible resolutions.''')
-        sys.exit(1)
+for more information and possible resolutions.
+''')
+            sys.exit(1)
+
 
 def start():
+    ''' Process command line options and start the application. '''
     # pylint: disable-msg=W0404
     from taskcoachlib import config, application 
     options, args = config.ApplicationOptionParser().parse_args()

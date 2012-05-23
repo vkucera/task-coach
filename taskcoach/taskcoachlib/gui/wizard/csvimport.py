@@ -17,13 +17,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 
-import wx, csv, tempfile
+from taskcoachlib import meta
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty import chardet
-from taskcoachlib import meta
-
-import wx.wizard as wiz
+import wx
+import csv
+import tempfile
 import wx.grid as gridlib
+import wx.wizard as wiz
 
 
 class CSVDialect(csv.Dialect):
@@ -48,6 +49,7 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
         self.delimiter.Append(_('Space'))
         self.delimiter.Append(_('Colon'))
         self.delimiter.Append(_('Semicolon'))
+        self.delimiter.Append(_('Pipe'))
         self.delimiter.SetSelection(0)
 
         self.date = wx.Choice(self)
@@ -90,16 +92,20 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
         vsizer = wx.BoxSizer(wx.VERTICAL)
         gridSizer = wx.FlexGridSizer(0, 2)
 
-        gridSizer.Add(wx.StaticText(self, wx.ID_ANY, _('Delimiter')), 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALL, 3)
+        gridSizer.Add(wx.StaticText(self, wx.ID_ANY, _('Delimiter')), 0, 
+                      wx.ALIGN_CENTRE_VERTICAL | wx.ALL, 3)
         gridSizer.Add(self.delimiter, 0, wx.ALL, 3)
         
-        gridSizer.Add(wx.StaticText(self, wx.ID_ANY, _('Date format')), 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 3)
+        gridSizer.Add(wx.StaticText(self, wx.ID_ANY, _('Date format')), 0, 
+                      wx.ALIGN_CENTER_VERTICAL | wx.ALL, 3)
         gridSizer.Add(self.date, 0, wx.ALL, 3)
         
-        gridSizer.Add(wx.StaticText(self, wx.ID_ANY, _('Quote character')), 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALL, 3)
+        gridSizer.Add(wx.StaticText(self, wx.ID_ANY, _('Quote character')), 0, 
+                      wx.ALIGN_CENTRE_VERTICAL | wx.ALL, 3)
         gridSizer.Add(self.quoteChar, 0, wx.ALL, 3)
 
-        gridSizer.Add(wx.StaticText(self, wx.ID_ANY, _('Escape quote')), 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALL, 3)
+        gridSizer.Add(wx.StaticText(self, wx.ID_ANY, _('Escape quote')), 0, 
+                      wx.ALIGN_CENTRE_VERTICAL | wx.ALL, 3)
         gridSizer.Add(self.quotePanel, 0, wx.ALL, 3)
 
         gridSizer.Add(self.importSelectedRowsOnly, 0, wx.ALL, 3)
@@ -109,9 +115,9 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
         gridSizer.Add((0, 0))
 
         gridSizer.AddGrowableCol(1)
-        vsizer.Add(gridSizer, 0, wx.EXPAND|wx.ALL, 3)
+        vsizer.Add(gridSizer, 0, wx.EXPAND | wx.ALL, 3)
 
-        vsizer.Add(self.grid, 1, wx.EXPAND|wx.ALL, 3)
+        vsizer.Add(self.grid, 1, wx.EXPAND | wx.ALL, 3)
 
         self.SetSizer(vsizer)
 
@@ -129,7 +135,7 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
         wx.EVT_RADIOBUTTON(self.escapeQuote, wx.ID_ANY, self.OnOptionChanged)
         wx.EVT_TEXT(self.escapeChar, wx.ID_ANY, self.OnOptionChanged)
 
-    def OnOptionChanged(self, event): # pylint: disable-msg=W0613
+    def OnOptionChanged(self, event):  # pylint: disable-msg=W0613
         self.escapeChar.Enable(self.escapeQuote.GetValue())
 
         if self.filename is None:
@@ -145,7 +151,7 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
             else:
                 doublequote = False
                 escapechar = self.escapeChar.GetValue().encode('UTF-8')
-            self.dialect = CSVDialect(delimiter={0: ',', 1: '\t', 2: ' ', 3: ':', 4: ';'}[self.delimiter.GetSelection()],
+            self.dialect = CSVDialect(delimiter={0: ',', 1: '\t', 2: ' ', 3: ':', 4: ';', 5: '|'}[self.delimiter.GetSelection()],
                                       quotechar={0: "'", 1: '"'}[self.quoteChar.GetSelection()],
                                       doublequote=doublequote, escapechar=escapechar)
 
@@ -197,11 +203,11 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
                     fields=self.headers)
         
     def GetSelectedRows(self):
-        startRows = [row for row, column in self.grid.GetSelectionBlockTopLeft()]
-        stopRows = [row for row, column in self.grid.GetSelectionBlockBottomRight()]
+        startRows = [row for row, dummy_column in self.grid.GetSelectionBlockTopLeft()]
+        stopRows = [row for row, dummy_column in self.grid.GetSelectionBlockBottomRight()]
         selectedRows = []
         for startRow, stopRow in zip(startRows, stopRows):
-            selectedRows.extend(range(startRow, stopRow+1))
+            selectedRows.extend(range(startRow, stopRow + 1))
         return selectedRows
 
     def CanGoNext(self):
@@ -209,7 +215,7 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
             self.GetNext().SetOptions(self.GetOptions())
             return True, None
         return False, _('Please select a file.')
-    
+
 
 class CSVImportMappingPage(wiz.WizardPageSimple):
     def __init__(self, *args, **kwargs):
@@ -224,9 +230,11 @@ class CSVImportMappingPage(wiz.WizardPageSimple):
             (_('Description'), True),
             (_('Category'), True),
             (_('Priority'), False),
-            (_('Start date'), False),
+            (_('Planned start date'), False),
             (_('Due date'), False),
+            (_('Actual start date'), False),
             (_('Completion date'), False),
+            (_('Reminder date'), False),
             (_('Budget'), False),
             (_('Fixed fee'), False),
             (_('Hourly fee'), False),
@@ -254,9 +262,9 @@ class CSVImportMappingPage(wiz.WizardPageSimple):
         gsz = wx.FlexGridSizer(0, 2, 4, 2)
         
         gsz.Add(wx.StaticText(self.interior, wx.ID_ANY, _('Column header in CSV file')))
-        gsz.Add(wx.StaticText(self.interior, wx.ID_ANY, _('%s attribute')%meta.name))
-        gsz.AddSpacer((3,3))
-        gsz.AddSpacer((3,3))
+        gsz.Add(wx.StaticText(self.interior, wx.ID_ANY, _('%s attribute') % meta.name))
+        gsz.AddSpacer((3, 3))
+        gsz.AddSpacer((3, 3))
         tcFieldNames = [field[0] for field in self.fields]
         for fieldName in options['fields']:
             gsz.Add(wx.StaticText(self.interior, wx.ID_ANY, fieldName), flag=wx.ALIGN_CENTER_VERTICAL)
@@ -321,7 +329,7 @@ class CSVImportWizard(wiz.Wizard):
         self.optionsPage.SetNext(self.mappingPage)
         self.mappingPage.SetPrev(self.optionsPage)
 
-        self.SetPageSize((600, -1)) # I know this is obsolete but it's the only one that works...
+        self.SetPageSize((600, -1))  # I know this is obsolete but it's the only one that works...
 
         wiz.EVT_WIZARD_PAGE_CHANGING(self, wx.ID_ANY, self.OnPageChanging)
         wiz.EVT_WIZARD_PAGE_CHANGED(self, wx.ID_ANY, self.OnPageChanged)
@@ -335,7 +343,7 @@ class CSVImportWizard(wiz.Wizard):
 
     def OnPageChanged(self, event):
         if event.GetPage() == self.optionsPage:
-            pass # XXXTODO
+            pass  # XXXTODO
 
     def RunWizard(self):
         return super(CSVImportWizard, self).RunWizard(self.optionsPage)

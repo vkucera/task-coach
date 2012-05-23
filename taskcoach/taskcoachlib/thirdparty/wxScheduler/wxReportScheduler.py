@@ -22,9 +22,18 @@ class wxReportScheduler( wx.Printout ):
 		self._schedules	= schedules
 		self._weekstart = weekstart
 		self._periodCount = periodCount
-		self.pages		= 1
-		
+		self.pages		= None
+		self._bitmaps = []
+
 		wx.Printout.__init__( self )
+
+	def _DrawPages(self, dc):
+		scheduler = self._GetScheduler( dc, self._day )
+		scheduler.Draw( None )
+		self.pages = scheduler.pageCount
+
+		for idx in xrange( scheduler.pageCount ):
+			self._bitmaps.append( scheduler.Draw( idx + 1 ) )
 
 	def _GetScheduler( self, dc, day ):
 		"""
@@ -54,22 +63,20 @@ class wxReportScheduler( wx.Printout ):
 		"""
 
 		dc = self.GetDC()
-		scheduler = self._GetScheduler( dc, self._day )
+		if self.pages is None:
+			self._DrawPages( dc )
 
-		scheduler.Draw( None )
-		scheduler.Draw( page )
+		dc.DrawBitmap(self._bitmaps[page - 1], 0, 0, False)
 
 		return True
 
 	def HasPage( self, page ):
+		if self.pages is None:
+			self._DrawPages( self.GetDC() )
 		return page <= self.pages
 
 	def GetPageInfo( self ):
-		dc = self.GetDC()
-		scheduler = self._GetScheduler( dc, self._day )
-
-		scheduler.Draw( None )
-
-		self.pages = scheduler.pageCount
+		if self.pages is None:
+			self._DrawPages( self.GetDC() )
 
 		return ( 1, self.pages, 1, 1 )
