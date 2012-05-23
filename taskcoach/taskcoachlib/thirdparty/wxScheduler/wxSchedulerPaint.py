@@ -481,7 +481,7 @@ class wxSchedulerPaint( object ):
 				theDay.SetHour(hour.GetHour())
 				theDay.SetMinute(hour.GetMinute())
 
-				if self._minSize is None:
+				if self._minSize is None or not self._resizable:
 					if self._style == wxSCHEDULER_VERTICAL:
 						self._datetimeCoords.append((utils.copyDateTime(theDay),
 									     wx.Point(x + 1.0 * width * dayN / daysCount,
@@ -779,7 +779,7 @@ class wxSchedulerPaint( object ):
 
 						schedules = self._getSchedInPeriod(self._schedules, theDay, end)
 
-						if self._minSize is None:
+						if self._minSize is None or not self._resizable:
 							self._datetimeCoords.append((utils.copyDateTime(theDay),
 										     wx.Point(d * cellW, w * cellH),
 										     wx.Point(d * cellW + cellW, w * cellH + cellH)))
