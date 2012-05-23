@@ -52,10 +52,7 @@ class BaseCompositeEffort(base.BaseEffort):  # pylint: disable-msg=W0223
                     self._getEfforts(recursive)), date.TimeDelta())
 
     def isBeingTracked(self, recursive=False):  # pylint: disable-msg=W0613
-        for effort in self._getEfforts():
-            if effort.isBeingTracked():
-                return True
-        return False
+        return any(effort.isBeingTracked() for effort in self._getEfforts())
 
     def durationDay(self, dayOffset):
         ''' Return the duration of this composite effort on a specific day. '''
@@ -87,17 +84,7 @@ class BaseCompositeEffort(base.BaseEffort):  # pylint: disable-msg=W0223
 
     def onRevenueChanged(self, newValue, sender):  # pylint: disable-msg=W0613
         self.sendRevenueChangedMessage()
-
-    def onTrackingChanged(self, newValue, sender):  # pylint: disable-msg=W0613
-        wasBeingTracked = self._isBeingTracked
-        self._invalidateCache()
-        if not wasBeingTracked and self._isBeingTracked:
-            pub.sendMessage(self.trackingChangedEventType(), 
-                            newValue=True, sender=self)
-        elif wasBeingTracked and not self._isBeingTracked:
-            pub.sendMessage(self.trackingChangedEventType(),
-                            newValue=False, sender=self)
-            
+           
     def revenue(self, recursive=False):
         raise NotImplementedError  # pragma: no cover
     
@@ -114,7 +101,9 @@ class CompositeEffort(BaseCompositeEffort):
     
     def __init__(self, task, start, stop):  # pylint: disable-msg=W0621
         super(CompositeEffort, self).__init__(task, start, stop)
-        self.__effortCache = {}  # {True: [efforts recursively], False: [efforts]}
+        self.__hash_value = hash((task, start))
+        # Effort cache: {True: [efforts recursively], False: [efforts]}
+        self.__effortCache = dict()  
         self._invalidateCache()
         '''
         FIMXE! CompositeEffort does not derive from base.Object
@@ -123,7 +112,7 @@ class CompositeEffort(BaseCompositeEffort):
         '''
 
     def __hash__(self):
-        return hash((self.task(), self.getStart()))
+        return self.__hash_value
 
     def __repr__(self):
         return 'CompositeEffort(task=%s, start=%s, stop=%s, efforts=%s)' % \
@@ -134,14 +123,16 @@ class CompositeEffort(BaseCompositeEffort):
         return sum(effort.revenue() for effort in self._getEfforts(recursive))
     
     def _invalidateCache(self):
-        for recursive in False, True:
-            self.__effortCache[recursive] = \
-                [effort for effort in self.task().efforts(recursive=recursive) \
-                 if self._inPeriod(effort)]
-        self._isBeingTracked = self.isBeingTracked()
+        self.__effortCache = dict()
                 
     def _getEfforts(self, recursive=True):  # pylint: disable-msg=W0221
-        return self.__effortCache[recursive]
+        try:
+            return self.__effortCache[recursive]
+        except KeyError:
+            result = self.__effortCache[recursive] = \
+                [effort for effort in self.task().efforts(recursive=recursive) \
+                 if self._inPeriod(effort)]
+            return result
         
     def mayContain(self, effort):
         ''' Return whether effort would be contained in this composite effort 
@@ -165,7 +156,6 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
         if initialEffort:
             assert self._inPeriod(initialEffort)
             self.__effortCache = [initialEffort]
-            self._isBeingTracked = initialEffort.isBeingTracked()
         else:
             self._invalidateCache()
             
@@ -211,11 +201,12 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
     # Cache handling:
 
     def _getEfforts(self, recursive=False):  # pylint: disable-msg=W0613,W0221
+        if self.__effortCache is None:
+            self.__effortCache = []
+            for eachTask in self.taskList:
+                self.__effortCache.extend([effort for effort in eachTask.efforts() \
+                                           if self._inPeriod(effort)])
         return self.__effortCache
     
     def _invalidateCache(self):
-        self.__effortCache = []  # pylint: disable-msg=W0201
-        for eachTask in self.taskList:
-            self.__effortCache.extend([effort for effort in eachTask.efforts() \
-                                       if self._inPeriod(effort)])
-        self._isBeingTracked = self.isBeingTracked()
+        self.__effortCache = None

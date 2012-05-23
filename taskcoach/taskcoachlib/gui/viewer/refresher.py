@@ -74,6 +74,7 @@ class SecondRefresher(patterns.Observer):
 
     def onTrackingChanged(self, newValue, sender):
         if sender not in self.__presentation:
+            self.setTrackedItems(self.trackedItems(self.__presentation))
             return
         if newValue:
             self.addTrackedItems([sender])

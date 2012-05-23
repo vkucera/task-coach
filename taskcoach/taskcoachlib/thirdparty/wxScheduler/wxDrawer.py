@@ -76,91 +76,92 @@ class wxDrawer(object):
 		Draws a schedule in the specified rectangle.
 		"""
 
+		offsetY = SCHEDULE_INSIDE_MARGIN
+		offsetX = SCHEDULE_INSIDE_MARGIN
+
 		if self.use_gc:
-			pen = wx.Pen(schedule.color)
-			self.context.SetPen(self.context.CreatePen(pen))
+			if h is not None:
+				pen = wx.Pen(schedule.color)
+				self.context.SetPen(self.context.CreatePen(pen))
 
-			brush = self.context.CreateLinearGradientBrush(x, y, x + w, y + h, schedule.color, SCHEDULER_BACKGROUND_BRUSH())
-			self.context.SetBrush(brush)
-			self.context.DrawRoundedRectangle(x, y, w, h, SCHEDULE_INSIDE_MARGIN)
-
-			offsetY = SCHEDULE_INSIDE_MARGIN
+				brush = self.context.CreateLinearGradientBrush(x, y, x + w, y + h, schedule.color, SCHEDULER_BACKGROUND_BRUSH())
+				self.context.SetBrush(brush)
+				self.context.DrawRoundedRectangle(x, y, w, h, SCHEDULE_INSIDE_MARGIN)
 
 			if schedule.complete is not None:
-				self.context.SetPen(self.context.CreatePen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_SCROLLBAR))))
-				self.context.SetBrush(self.context.CreateBrush(wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_SCROLLBAR))))
-				self.context.DrawRoundedRectangle(x + 5, y + offsetY, w - 10, 10, 5)
+				if h is not None:
+					self.context.SetPen(self.context.CreatePen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_SCROLLBAR))))
+					self.context.SetBrush(self.context.CreateBrush(wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_SCROLLBAR))))
+					self.context.DrawRoundedRectangle(x + SCHEDULE_INSIDE_MARGIN, y + offsetY,
+									  w - 2 * SCHEDULE_INSIDE_MARGIN, 2 * SCHEDULE_INSIDE_MARGIN, SCHEDULE_INSIDE_MARGIN)
 
-				if schedule.complete:
-					self.context.SetBrush(self.context.CreateLinearGradientBrush(x + 5, y + offsetY,
-												     x + (w - 10) * schedule.complete,
-												     y + offsetY + 10,
-												     wx.Colour(0, 0, 255),
-												     wx.Colour(0, 255, 255)))
-					self.context.DrawRoundedRectangle(x + 5, y + offsetY, (w - 10) * schedule.complete, 10, 5)
+					if schedule.complete:
+						self.context.SetBrush(self.context.CreateLinearGradientBrush(x + SCHEDULE_INSIDE_MARGIN, y + offsetY,
+													     x + (w - 2 * SCHEDULE_INSIDE_MARGIN) * schedule.complete,
+													     y + offsetY + 10,
+													     wx.Colour(0, 0, 255),
+													     wx.Colour(0, 255, 255)))
+						self.context.DrawRoundedRectangle(x + SCHEDULE_INSIDE_MARGIN, y + offsetY,
+										  (w - 2 * SCHEDULE_INSIDE_MARGIN) * schedule.complete, 10, 5)
 
-				offsetY += 10 + 2 * SCHEDULE_INSIDE_MARGIN
+				offsetY += 10 + SCHEDULE_INSIDE_MARGIN
 
 			if schedule.icons:
-				offsetX = 5
 				for icon in schedule.icons:
-					bitmap = wx.ArtProvider.GetBitmap( icon, wx.ART_FRAME_ICON, (16, 16) )
-					self.context.DrawBitmap( bitmap, x + offsetX, y + offsetY, 16, 16 )
+					if h is not None:
+						bitmap = wx.ArtProvider.GetBitmap( icon, wx.ART_FRAME_ICON, (16, 16) )
+						self.context.DrawBitmap( bitmap, x + offsetX, y + offsetY, 16, 16 )
 					offsetX += 20
 					if offsetX > w - SCHEDULE_INSIDE_MARGIN:
+						offsetY += 20
+						offsetX = SCHEDULE_INSIDE_MARGIN
 						break
-				offsetY += 20
 
 			font = schedule.font
 			self.context.SetFont(font, schedule.foreground)
-
-			description = self._shrinkText( self.context, schedule.description, w - 2 * SCHEDULE_INSIDE_MARGIN, h )
-
-			for line in description:
-				self.context.DrawText( line, x + SCHEDULE_INSIDE_MARGIN, y + offsetY )
-				offsetY += self.context.GetTextExtent( line )[1]
-				if offsetY + SCHEDULE_INSIDE_MARGIN >= h:
-					break
+			offsetY += self._drawTextInRect( self.context, schedule.description, offsetX,
+							 x, y + offsetY, w - 2 * SCHEDULE_INSIDE_MARGIN, None if h is None else h - offsetY - SCHEDULE_INSIDE_MARGIN )
 		else:
-			self.context.SetBrush(wx.Brush(schedule.color))
-			self.context.DrawRectangle(x, y, w, h)
-
-			offsetY = SCHEDULE_INSIDE_MARGIN
+			if h is not None:
+				self.context.SetBrush(wx.Brush(schedule.color))
+				self.context.DrawRectangle(x, y, w, h)
 
 			if schedule.complete is not None:
-				self.context.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_SCROLLBAR)))
-				self.context.SetBrush(wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_SCROLLBAR)))
-				self.context.DrawRectangle(x + 5, y + offsetY, w - 10, 10)
-				if schedule.complete:
-					self.context.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)))
-					self.context.SetBrush(wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)))
-					self.context.DrawRectangle(x + 5, y + offsetY, int((w - 10) * schedule.complete), 10)
+				if h is not None:
+					self.context.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_SCROLLBAR)))
+					self.context.SetBrush(wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_SCROLLBAR)))
+					self.context.DrawRectangle(x + SCHEDULE_INSIDE_MARGIN, y + offsetY,
+								   w - 2 * SCHEDULE_INSIDE_MARGIN, 10)
+					if schedule.complete:
+						self.context.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)))
+						self.context.SetBrush(wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)))
+						self.context.DrawRectangle(x + SCHEDULE_INSIDE_MARGIN, y + offsetY,
+									   int((w - 2 * SCHEDULE_INSIDE_MARGIN) * schedule.complete), 10)
 
-				offsetY += 10 + 2 * SCHEDULE_INSIDE_MARGIN
+				offsetY += 10 + SCHEDULE_INSIDE_MARGIN
 
 			if schedule.icons:
-				offsetX = 5
 				for icon in schedule.icons:
-					bitmap = wx.ArtProvider.GetBitmap( icon, wx.ART_FRAME_ICON, (16, 16) )
-					self.context.DrawBitmap( bitmap, x + offsetX, y + offsetY, True )
+					if h is not None:
+						bitmap = wx.ArtProvider.GetBitmap( icon, wx.ART_FRAME_ICON, (16, 16) )
+						self.context.DrawBitmap( bitmap, x + offsetX, y + offsetY, True )
 					offsetX += 20
 					if offsetX > w - SCHEDULE_INSIDE_MARGIN:
+						offsetY += 20
+						offsetX = SCHEDULE_INSIDE_MARGIN
 						break
-				offsetY += 20
 
 			font = schedule.font
 			self.context.SetFont(font)
 
 			self.context.SetTextForeground( schedule.foreground )
-			description = self._shrinkText( self.context, schedule.description, w - 2 * SCHEDULE_INSIDE_MARGIN, h )
+			offsetY += self._drawTextInRect( self.context, schedule.description, offsetX,
+							 x, y + offsetY, w - 2 * SCHEDULE_INSIDE_MARGIN, None if h is None else h - offsetY - SCHEDULE_INSIDE_MARGIN )
 
-			for line in description:
-				self.context.DrawText( line, x + SCHEDULE_INSIDE_MARGIN, y + offsetY )
-				offsetY += self.context.GetTextExtent( line )[1]
-				if offsetY + SCHEDULE_INSIDE_MARGIN >= h:
-					break
+		if h is not None:
+			schedule.clientdata.bounds = (x, y, w, h)
 
-		schedule.clientdata.bounds = (x, y, w, h)
+		return offsetY
 
 	def DrawScheduleVertical(self, schedule, day, workingHours, x, y, width, height):
 		"""Draws a schedule vertically."""
@@ -197,28 +198,11 @@ class wxDrawer(object):
 			self.context.SetTextForeground( schedule.color )
 			self.context.SetFont(font)
 
-		# Height is variable
-
-		actualHeight = SCHEDULE_INSIDE_MARGIN * 2
-
-		if schedule.complete is not None:
-			actualHeight += 10 + 2 * SCHEDULE_INSIDE_MARGIN
-
-		if schedule.icons:
-			actualHeight += 20
-
 		x = x + position * width / total + SCHEDULE_OUTSIDE_MARGIN
 		width = width * size / total - 2 * SCHEDULE_OUTSIDE_MARGIN
 
-		lines = self._shrinkText( self.context, schedule.description, width - 2 * SCHEDULE_INSIDE_MARGIN, 65536 )
-		for line in lines:
-			textW, textH = self.context.GetTextExtent(line)
-			if actualHeight + textH >= SCHEDULE_MAX_HEIGHT:
-				break
-			actualHeight += textH
-
-		height = actualHeight
-
+		# Height is variable
+		height = self._DrawSchedule( schedule, x, y, width, None )
 		self._DrawSchedule(schedule, x, y, width, height)
 
 		return (x - SCHEDULE_OUTSIDE_MARGIN, y - SCHEDULE_OUTSIDE_MARGIN,
@@ -287,6 +271,59 @@ class wxDrawer(object):
 		return dayCount * totalTime * scheduleSpan / totalSpan, dayCount * totalTime * position / totalSpan, totalTime * dayCount
 
 	ScheduleSize = staticmethod(ScheduleSize)
+
+	def _drawTextInRect( self, context, text, offsetX, x, y, w, h ):
+		words = text.split()
+		tw, th = context.GetTextExtent( u' '.join(words) )
+
+		if h is not None and th > h:
+			return SCHEDULE_INSIDE_MARGIN
+
+		if tw <= w - offsetX:
+			context.DrawText( u' '.join(words), x + offsetX, y )
+			return th + SCHEDULE_INSIDE_MARGIN
+
+		dpyWords = []
+		remaining = w - offsetX
+		totalW = 0
+		spaceW, _ = context.GetTextExtent(u' ')
+
+		for idx, word in enumerate(words):
+			tw, _ = context.GetTextExtent(word)
+			if remaining - tw - spaceW <= 0:
+				break
+			totalW += tw
+			remaining -= tw + spaceW
+			dpyWords.append(word)
+
+		if dpyWords:
+			words = words[idx:]
+
+			currentX = 1.0 * offsetX
+			if len(dpyWords) > 1:
+				if words:
+					spacing = (1.0 * (w - offsetX) - totalW) / (len(dpyWords) - 1)
+				else:
+					spacing = spaceW
+			else:
+				spacing = 0.0
+
+			for word in dpyWords:
+				tw, _ = context.GetTextExtent(word)
+				context.DrawText(word, int(x + currentX), y)
+				currentX += spacing + tw
+		else:
+			if offsetX == SCHEDULE_INSIDE_MARGIN:
+				# Can't display anything...
+				return SCHEDULE_INSIDE_MARGIN
+
+		if words:
+			ny = y + SCHEDULE_INSIDE_MARGIN + th
+			if h is not None and ny > y + h:
+				return SCHEDULE_INSIDE_MARGIN
+			th += self._drawTextInRect( context, u' '.join(words), SCHEDULE_INSIDE_MARGIN, x, ny, w, None if h is None else h - (ny - y) )
+
+		return th + SCHEDULE_INSIDE_MARGIN
 
 	def _shrinkText( self, dc, text, width, height ):
 		"""

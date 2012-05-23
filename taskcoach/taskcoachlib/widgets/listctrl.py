@@ -16,7 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx.lib.mixins.listctrl, itemctrl
+import wx.lib.mixins.listctrl
+import itemctrl
 
 
 class _ListCtrl(wx.ListCtrl):
@@ -47,7 +48,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
                  itemPopupMenu=None, columnPopupMenu=None, resizeableColumn=0, 
                  *args, **kwargs):
         super(VirtualListCtrl, self).__init__(parent,
-            style=wx.LC_REPORT|wx.LC_VIRTUAL, columns=columns, 
+            style=wx.LC_REPORT | wx.LC_VIRTUAL, columns=columns, 
             resizeableColumn=resizeableColumn, itemPopupMenu=itemPopupMenu, 
             columnPopupMenu=columnPopupMenu, *args, **kwargs)
         self.__parent = parent
@@ -65,7 +66,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
             self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.onItemActivated)
         self.Bind(wx.EVT_SET_FOCUS, self.onSetFocus)
         
-    def onSetFocus(self, event): # pylint: disable-msg=W0613
+    def onSetFocus(self, event):  # pylint: disable-msg=W0613
         # Send a child focus event to let the AuiManager know we received focus
         # so it will activate our pane
         wx.PostEvent(self, wx.ChildFocusEvent(self))
@@ -110,7 +111,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
             itemAttrArgs.append(font)
         # We need to keep a reference to the item attribute to prevent it
         # from being garbage collected too soon:
-        self.__itemAttribute = wx.ListItemAttr(*itemAttrArgs) # pylint: disable-msg=W0142,W0201
+        self.__itemAttribute = wx.ListItemAttr(*itemAttrArgs)  # pylint: disable-msg=W0142,W0201
         return self.__itemAttribute
         
     def onSelect(self, event):
@@ -126,8 +127,8 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
             # Only get the column name if the hittest returned an item,
             # otherwise the item was activated from the menu or by double 
             # clicking on a portion of the tree view not containing an item.
-            column = max(0, column) # FIXME: Why can the column be -1?
-            event.columnName = self._getColumn(column).name() # pylint: disable-msg=E1101
+            column = max(0, column)  # FIXME: Why can the column be -1?
+            event.columnName = self._getColumn(column).name()  # pylint: disable-msg=E1101
         self.editCommand(event)
 
     def RefreshAllItems(self, count):
@@ -136,7 +137,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
             self.DeleteAllItems()
         else:
             # The VirtualListCtrl makes sure only visible items are updated
-            super(VirtualListCtrl, self).RefreshItems(0, count-1)
+            super(VirtualListCtrl, self).RefreshItems(0, count - 1)
         self.selectCommand()
 
     def RefreshItems(self, *items):
@@ -171,4 +172,3 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
 
 class ListCtrl(VirtualListCtrl):
     pass
-    

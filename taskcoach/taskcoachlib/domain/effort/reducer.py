@@ -51,8 +51,6 @@ class EffortAggregator(patterns.SetDecorator,
                                                   eventSource=self.observable())
         pub.subscribe(self.onEffortStartChanged, 
                       effort.Effort.startChangedEventType())
-        pub.subscribe(self.onTrackingChanged,
-                      task.Task.trackingChangedEventType())
         pub.subscribe(self.onTimeSpentChanged,
                       task.Task.timeSpentChangedEventType())
         pub.subscribe(self.onRevenueChanged,
@@ -136,10 +134,6 @@ class EffortAggregator(patterns.SetDecorator,
         for affectedComposite in self.getCompositesForTask(sender):
             affectedComposite.onTimeSpentChanged(newValue, sender)
             
-    def onTrackingChanged(self, newValue, sender):
-        for affectedComposite in self.getCompositesForTask(sender):
-            affectedComposite.onTrackingChanged(newValue, sender)
-            
     def onRevenueChanged(self, newValue, sender):
         for affectedComposite in self.getCompositesForTask(sender):
             affectedComposite.onRevenueChanged(newValue, sender)
@@ -148,7 +142,7 @@ class EffortAggregator(patterns.SetDecorator,
         return [eachComposite for eachComposite in self \
                 if theTask == eachComposite.task() or \
                 eachComposite.task().__class__.__name__ == 'Total']
- 
+        
     def createComposites(self, task, efforts):  # pylint: disable-msg=W0621
         newComposites = []
         for effort in efforts:
