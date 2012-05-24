@@ -131,7 +131,7 @@ class Application(object):
         self.iocontroller = gui.IOController(self.taskFile, self.displayMessage, 
                                              self.settings, splash)
         self.mainwindow = gui.MainWindow(self.iocontroller, self.taskFile, 
-                                         self.settings)
+                                         self.settings, splash=splash)
         self.wxApp.SetTopWindow(self.mainwindow)
         self.initSpellChecking()
         if not self.settings.getboolean('file', 'inifileloaded'):

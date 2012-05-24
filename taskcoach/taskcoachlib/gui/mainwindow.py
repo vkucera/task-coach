@@ -18,21 +18,28 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
-from taskcoachlib import application, meta, patterns, widgets, operating_system # pylint: disable-msg=W0622
-from taskcoachlib.i18n import _
-from taskcoachlib.gui.threads import DeferredCallMixin, synchronized
+from taskcoachlib import application, meta, widgets, \
+    operating_system  # pylint: disable-msg=W0622
 from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog
 from taskcoachlib.gui.dialog.xfce4warning import XFCE4WarningDialog
 from taskcoachlib.gui.iphone import IPhoneSyncFrame
+from taskcoachlib.gui.threads import DeferredCallMixin, synchronized
+from taskcoachlib.i18n import _
 from taskcoachlib.powermgt import PowerStateMixin
-import taskcoachlib.thirdparty.aui as aui
 from taskcoachlib.thirdparty.pubsub import pub
-import viewer, toolbar, uicommand, remindercontroller, artprovider, windowdimensionstracker, idlecontroller
+import taskcoachlib.thirdparty.aui as aui
+import viewer
+import toolbar
+import uicommand
+import remindercontroller
+import artprovider
+import windowdimensionstracker
+import idlecontroller
+import wx
 
 
 def turnOnDoubleBufferingOnWindows(window):
-    import win32gui, win32con # pylint: disable-msg=F0401
+    import win32gui, win32con  # pylint: disable-msg=F0401
     exstyle = win32gui.GetWindowLong(window.GetHandle(), win32con.GWL_EXSTYLE)
     exstyle |= win32con.WS_EX_COMPOSITED
     win32gui.SetWindowLong(window.GetHandle(), win32con.GWL_EXSTYLE, exstyle)
@@ -41,6 +48,7 @@ def turnOnDoubleBufferingOnWindows(window):
 class MainWindow(DeferredCallMixin, PowerStateMixin, 
                  widgets.AuiManagedFrameWithDynamicCenterPane):
     def __init__(self, iocontroller, taskFile, settings, *args, **kwargs):
+        self.__splash = kwargs.pop('splash', None)
         super(MainWindow, self).__init__(None, -1, '', *args, **kwargs)
         # This prevents the viewers from flickering on Windows 7 when refreshed:
         if operating_system.isWindows7_OrNewer():
@@ -58,7 +66,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         
         if settings.getboolean('feature', 'syncml'):
             try:
-                import taskcoachlib.syncml.core # pylint: disable-msg=W0612,W0404
+                import taskcoachlib.syncml.core  # pylint: disable-msg=W0612,W0404
             except ImportError:
                 if settings.getboolean('syncml', 'showwarning'):
                     dlg = widgets.SyncMLWarningDialog(self)
@@ -115,11 +123,11 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         self.viewer = viewer.ViewerContainer(self, self.settings) 
         
     def createStatusBar(self):
-        import status # pylint: disable-msg=W0404
+        import status  # pylint: disable-msg=W0404
         self.SetStatusBar(status.StatusBar(self, self.viewer))
         
     def createMenuBar(self):
-        import menu # pylint: disable-msg=W0404
+        import menu  # pylint: disable-msg=W0404
         self.SetMenuBar(menu.MainMenu(self, self.settings, self.iocontroller, 
                                       self.viewer, self.taskFile))
     
@@ -129,21 +137,22 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
             remindercontroller.ReminderController(self, self.taskFile.tasks(),
                 self.taskFile.efforts(), self.settings)
         
-    def addPane(self, page, caption): # pylint: disable-msg=W0221
+    def addPane(self, page, caption):  # pylint: disable-msg=W0221
         name = page.settingsSection()
         super(MainWindow, self).addPane(page, caption, name)
         
     def initWindow(self):
         self.setTitle(self.taskFile.filename())
         self.SetIcons(artprovider.iconBundle('taskcoach'))
-        self.displayMessage(_('Welcome to %(name)s version %(version)s')% \
+        self.displayMessage(_('Welcome to %(name)s version %(version)s') % \
             {'name': meta.name, 'version': meta.version}, pane=1)
 
     def initWindowComponents(self):
         self.showToolBar(self.settings.getvalue('view', 'toolbar'))
         # We use CallAfter because otherwise the statusbar will appear at the 
         # top of the window when it is initially hidden and later shown.
-        wx.CallAfter(self.showStatusBar, self.settings.getboolean('view', 'statusbar'))
+        wx.CallAfter(self.showStatusBar, 
+                     self.settings.getboolean('view', 'statusbar'))
         self.restorePerspective()
             
     def restorePerspective(self):
@@ -156,7 +165,24 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
                 perspective = ''
                 break
 
-        self.manager.LoadPerspective(perspective)
+        try:
+            self.manager.LoadPerspective(perspective)
+        except ValueError, reason:
+            # This has been reported to happen. Don't know why. Keep going
+            # if it does.
+            if self.__splash:
+                self.__splash.Destroy()
+            wx.MessageBox(_('''Couldn't restore the pane layout from TaskCoach.ini:
+%s
+
+The default pane layout will be used.
+
+If this happens again, please make a copy of your TaskCoach.ini file '''
+'''before closing the program, open a bug report, and attach the '''
+'''copied TaskCoach.ini file to the bug report.''') % reason,
+            _('%s settings error') % meta.name, style=wx.OK | wx.ICON_ERROR)
+            self.manager.LoadPerspective('')
+        
         for pane in self.manager.GetAllPanes():
             # Prevent zombie panes by making sure all panes are visible
             if not pane.IsShown():
@@ -169,8 +195,9 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         
     def perspectiveAndSettingsHaveDifferentViewerCount(self, viewerType):
         perspective = self.settings.get('view', 'perspective')
-        perspectiveViewerCount = perspective.count('name=%s'%viewerType)
-        settingsViewerCount = self.settings.getint('view', '%scount'%viewerType)
+        perspectiveViewerCount = perspective.count('name=%s' % viewerType)
+        settingsViewerCount = self.settings.getint('view', 
+                                                   '%scount' % viewerType)
         return perspectiveViewerCount != settingsViewerCount
     
     def registerForWindowComponentChanges(self):
@@ -182,7 +209,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
     def setTitle(self, filename):
         title = meta.name
         if filename:
-            title += ' - %s'%filename
+            title += ' - %s' % filename
         self.SetTitle(title)
         
     def displayMessage(self, message, pane=0):
@@ -302,13 +329,14 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
     @synchronized
     def createIPhoneProgressFrame(self):
         return IPhoneSyncFrame(self.settings, _('iPhone/iPod'),
-                               icon=wx.ArtProvider.GetBitmap('taskcoach', wx.ART_FRAME_ICON, (16, 16)),
-                               parent=self)
+            icon=wx.ArtProvider.GetBitmap('taskcoach', wx.ART_FRAME_ICON, 
+                                          (16, 16)),
+            parent=self)
 
     @synchronized
     def getIPhoneSyncType(self, guid):
         if guid == self.taskFile.guid():
-            return 0 # two-ways
+            return 0  # two-way
 
         dlg = IPhoneSyncTypeDialog(self, wx.ID_ANY, _('Synchronization type'))
         try:
@@ -385,7 +413,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         task.setRecurrence(recurrence)
         task.setPriority(priority)
 
-        if categories is not None: # Protocol v2
+        if categories is not None:  # Protocol v2
             for category in task.categories():
                 task.removeCategory(category)
                 category.removeCategorizable(task)
