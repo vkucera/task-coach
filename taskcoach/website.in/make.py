@@ -70,30 +70,32 @@ pages['index'] = u'''
                 <div class="span10">
                     <p><img src="images/banner.png" alt="Banner image"></p>
                     <div class="row">
+                        <p align=center><a class="btn btn-primary btn-large" href="download.html">Download Task Coach, it's free!</a></p>
+                    </div>
+                    <div class="row">
                         <div class="span5">
                             <h3>What is %(name)s?</h3>  
                             <p>%(name)s is a simple open source todo manager to keep track of
                             personal tasks and todo lists. It is designed for composite tasks,
                             and also offers effort tracking, categories, notes and more.</p>
                             <p><a class="btn" href="features.html">Read more &raquo;</a></p>
-                            <h3>What does it cost?</h3>
-                            The desktop versions of %(name)s are completely free. The iOS versions
-                            of %(name)s come with a small price tag because it costs us money to make them 
-                            available.</p>
-                            <p><a class="btn" href="license.html">Read license &raquo;</a></p>
-                            <h3>What support is available?</h3>
-                            <p>We offer support for free. You can contact us by e-mail, 
-                            via our support request tracker, and via our bug tracker.</p>
-                            <p><a class="btn" href="getsupport.html">Get support &raquo;</a></p>
-                        </div>
-                        <div class="span5">  
                             <h3>What platforms are supported?</h3>
                             <p>%(name)s is available for 
                             <a href="download_for_windows.html">Windows</a>,
                             <a href="download_for_mac.html">Mac OS X</a>, <a href="download_for_linux.html">Linux</a>, 
                             <a href="download_for_bsd.html">BSD</a>, <a href="download_for_iphone.html">iPhone, 
                             iPad, and iPod Touch</a>.</p>
-                            <p><a class="btn btn-primary" href="download.html">Download &raquo;</a></p>
+                            <h3>What does it cost?</h3>
+                            The desktop versions of %(name)s are completely free. The iOS versions
+                            of %(name)s come with a small price tag because it costs us money to make them 
+                            available.</p>
+                            <p><a class="btn" href="license.html">Read license &raquo;</a></p>
+                        </div>
+                        <div class="span5">  
+                            <h3>What support is available?</h3>
+                            <p>We offer support for free. You can contact us by e-mail, 
+                            via our support request tracker, and via our bug tracker.</p>
+                            <p><a class="btn" href="getsupport.html">Get support &raquo;</a></p>
                             <h3>How can I help?</h3>
                             <p>Glad you asked! The easiest way is to help spread the word. Improving 
                             a translation is also an easy way to help. Patches are very welcome. 
