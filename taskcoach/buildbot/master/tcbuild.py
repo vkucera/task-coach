@@ -262,7 +262,7 @@ class UploadChangelog(FileUpload):
 class BuildDMG(DistCompile):
     filename_rx = re.compile(r'^created: (.*)')
 
-    name = 'dmg'
+    name = 'dmg-signed'
     description = ['Generating', 'MacOS', 'binary']
     descriptionDone = ['MacOS', 'binary']
 
