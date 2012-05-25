@@ -107,7 +107,7 @@ ppa-sign: ubuntu
 	cd build-natty; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu11~natty-1_source.changes
 	cd build-oneiric; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu11~oneiric-1_source.changes
 	cd build-precise; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
-	
+
 ppa-rel: ppa-sign
 	cd build-lucid; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
 	cd build-maverick; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu10~maverick-1_source.changes
@@ -129,14 +129,24 @@ ppa-release: ppa-sign
 	cd build-oneiric; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu11~oneiric-1_source.changes
 	cd build-precise; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
 
-dmg: prepare
+app: prepare
 	$(PYTHON) make.py py2app
+	chmod 644 "build/Task Coach/TaskCoach.app/Contents/Resources/taskcoach.py"
+
+dmg-goodies: app
 	mkdir "build/Task Coach/.Resources"
 	cp -f dist.in/macos/dmg-background.png "build/Task Coach/.Resources/"
 	cp -f dist.in/macos/config "build/Task Coach/.DS_Store"
 	ln -s /Applications "build/Task Coach/Applications"
-	chmod 644 "build/Task Coach/TaskCoach.app/Contents/Resources/taskcoach.py"
+
+dmgbase:
 	hdiutil create -ov -imagekey zlib-level=9 -fs "HFS+" -srcfolder "build/Task Coach" dist/TaskCoach-$(TCVERSION).dmg
+
+dmg: dmg-goodies dmgbase
+
+dmg-signed: dmg-goodies
+	codesign -s "DQ65E4R93Z" "build/Task Coach/TaskCoach.app"
+	make dmgbase
 
 winpenpack: py2exe 
 	$(PYTHON) make.py bdist_winpenpack
