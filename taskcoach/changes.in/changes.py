@@ -21,6 +21,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
+
+Release('1.3.16', 'Jun ??, 2012',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Fix a crash during iPhone synchronization if a category associated
+with a modified task has been deleted on the desktop'''),
+        ],
+    ),
             
 Release('1.3.15', 'May 24, 2012',
     summary='''This is a mixed feature and bugfix release.''',
