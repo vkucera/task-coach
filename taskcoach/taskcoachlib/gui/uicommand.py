@@ -87,10 +87,7 @@ class UICommand(object):
         self.menuItems = []  # uiCommands can be used in multiple menu's
 
     def __eq__(self, other):
-        try:
-            return self.menuText == other.menuText
-        except AttributeError:
-            return False
+        return self is other
 
     def addToMenu(self, menu, window, position=None):
         menuItem = wx.MenuItem(menu, self.id, self.menuText, self.helpText, 
