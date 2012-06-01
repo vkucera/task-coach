@@ -34,6 +34,7 @@ class EffortAggregator(patterns.SetDecorator,
         
     def __init__(self, *args, **kwargs):
         self.__composites = {}
+        self.__trackedComposites = set()
         aggregation = kwargs.pop('aggregation')
         assert aggregation in ('day', 'week', 'month')
         aggregation = aggregation.capitalize()
@@ -64,6 +65,7 @@ class EffortAggregator(patterns.SetDecorator,
         for effort in efforts:
             effort.task().removeEffort(effort)
             
+    @patterns.eventSource
     def extendSelf(self, tasks, event=None):
         ''' extendSelf is called when an item is added to the observed
             list. The default behavior of extendSelf is to add the item
@@ -73,7 +75,17 @@ class EffortAggregator(patterns.SetDecorator,
         newComposites = []
         for task in tasks:  # pylint: disable-msg=W0621
             newComposites.extend(self.createComposites(task, task.efforts()))
-        super(EffortAggregator, self).extendSelf(newComposites, event)
+        self.__extendSelfWithComposites(newComposites, event=event)
+        
+    @patterns.eventSource
+    def __extendSelfWithComposites(self, newComposites, event=None):
+        ''' Add composites to the aggregator. '''
+        super(EffortAggregator, self).extendSelf(newComposites, event=event)
+        for newComposite in newComposites:
+            if newComposite.isBeingTracked():
+                self.__trackedComposites.add(newComposite)
+                pub.sendMessage(effort.Effort.trackingChangedEventType(),
+                                newValue=True, sender=newComposite)
 
     @patterns.eventSource
     def removeItemsFromSelf(self, tasks, event=None):
@@ -85,6 +97,12 @@ class EffortAggregator(patterns.SetDecorator,
         compositesToRemove = []
         for task in tasks:  # pylint: disable-msg=W0621
             compositesToRemove.extend(self.compositesToRemove(task))
+        self.__removeCompositesFromSelf(compositesToRemove, event=event)
+         
+    @patterns.eventSource
+    def __removeCompositesFromSelf(self, compositesToRemove, event=None):
+        ''' Remove composites from the aggregator. '''
+        self.__trackedComposites.difference_update(set(compositesToRemove))
         super(EffortAggregator, self).removeItemsFromSelf(compositesToRemove, 
                                                           event=event)
         
@@ -100,7 +118,7 @@ class EffortAggregator(patterns.SetDecorator,
         newComposites = []
         effortsAdded = [effort for effort in newValue if effort not in oldValue]
         newComposites.extend(self.createComposites(sender, effortsAdded))
-        super(EffortAggregator, self).extendSelf(newComposites)
+        self.__extendSelfWithComposites(newComposites)
         
     def onChildAddedToTask(self, event):
         newComposites = []
@@ -109,7 +127,7 @@ class EffortAggregator(patterns.SetDecorator,
                 child = event.value(task)
                 newComposites.extend(self.createComposites(task,
                     child.efforts(recursive=True)))
-        super(EffortAggregator, self).extendSelf(newComposites)
+        self.__extendSelfWithComposites(newComposites)
 
     def onCompositeEmpty(self, sender):
         # pylint: disable-msg=W0621
@@ -120,7 +138,7 @@ class EffortAggregator(patterns.SetDecorator,
             # A composite may already have been removed, e.g. when a
             # parent and child task have effort in the same period
             del self.__composites[key]
-        super(EffortAggregator, self).removeItemsFromSelf([sender])
+        self.__removeCompositesFromSelf([sender])
         
     def onEffortStartChanged(self, newValue, sender):  # pylint: disable-msg=W0613
         newComposites = []
@@ -128,10 +146,20 @@ class EffortAggregator(patterns.SetDecorator,
         task = sender.task()  # pylint: disable-msg=W0621
         if (task in self.observable()) and (key not in self.__composites):
             newComposites.extend(self.createComposites(task, [sender]))
-        super(EffortAggregator, self).extendSelf(newComposites)
+        self.__extendSelfWithComposites(newComposites)
             
     def onTimeSpentChanged(self, newValue, sender):
         for affectedComposite in self.getCompositesForTask(sender):
+            isTracked = affectedComposite.isBeingTracked()
+            wasTracked = affectedComposite in self.__trackedComposites
+            if isTracked and not wasTracked:
+                self.__trackedComposites.add(affectedComposite)
+                pub.sendMessage(effort.Effort.trackingChangedEventType(),
+                                newValue=True, sender=affectedComposite)
+            elif not isTracked and wasTracked:
+                self.__trackedComposites.remove(affectedComposite)
+                pub.sendMessage(effort.Effort.trackingChangedEventType(),
+                                newValue=False, sender=affectedComposite)
             affectedComposite.onTimeSpentChanged(newValue, sender)
             
     def onRevenueChanged(self, newValue, sender):
@@ -155,6 +183,7 @@ class EffortAggregator(patterns.SetDecorator,
         for eachTask in [task] + task.ancestors():
             key = self.keyForEffort(anEffort, eachTask)
             if key in self.__composites:
+                self.__composites[key].addEffort(anEffort)
                 continue
             newComposite = composite.CompositeEffort(*key)  # pylint: disable-msg=W0142
             self.__composites[key] = newComposite

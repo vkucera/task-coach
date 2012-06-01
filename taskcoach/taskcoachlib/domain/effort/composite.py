@@ -119,6 +119,12 @@ class CompositeEffort(BaseCompositeEffort):
             (self.task(), self.getStart(), self.getStop(),
             str([e for e in self._getEfforts()]))
 
+    def addEffort(self, anEffort):
+        assert self._inPeriod(anEffort)
+        self.__effortCache.setdefault(True, []).append(anEffort)
+        if anEffort.task() == self.task():
+            self.__effortCache.setdefault(False, []).append(anEffort)
+            
     def revenue(self, recursive=False):
         return sum(effort.revenue() for effort in self._getEfforts(recursive))
     
@@ -185,7 +191,8 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
         return True
 
     def description(self, *args, **kwargs):  # pylint: disable-msg=W0613
-        return _('Total for %s') % render.dateTimePeriod(self.getStart(), self.getStop())
+        return _('Total for %s') % render.dateTimePeriod(self.getStart(), 
+                                                         self.getStop())
 
     def revenue(self, recursive=False):  # pylint: disable-msg=W0613
         return sum(effort.revenue() for effort in self._getEfforts())
