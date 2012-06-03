@@ -205,10 +205,14 @@ class EffortViewerAggregationTestCase(test.wxTestCase):
 
     def setUp(self):
         super(EffortViewerAggregationTestCase, self).setUp()
-        self.settings = config.Settings(load=False)
+        task.Task.settings = self.settings = config.Settings(load=False)
         self.settings.set('effortviewer', 'aggregation', self.aggregation)
 
+        self.taskFile = persistence.TaskFile()
+        self.viewer = self.createViewer()
         self.task = task.Task('Task')
+        self.task2 = task.Task('Task2')
+        self.taskFile.tasks().extend([self.task, self.task2])
         self.task.addEffort(effort.Effort(self.task, 
             date.DateTime(2008, 7, 16, 10, 0, 0), 
             date.DateTime(2008, 7, 16, 11, 0, 0)))
@@ -220,14 +224,10 @@ class EffortViewerAggregationTestCase(test.wxTestCase):
             date.DateTime(2008, 7, 17, 2, 0, 0)))
         mostRecentPeriod = (date.DateTime(2008, 7, 23, 1, 0, 0), 
                             date.DateTime(2008, 7, 23, 2, 0, 0))
-        self.task2 = task.Task('Task2')
         # pylint: disable-msg=W0142
         self.task.addEffort(effort.Effort(self.task, *mostRecentPeriod))
         self.task2.addEffort(effort.Effort(self.task2, *mostRecentPeriod))
         
-        self.taskFile = persistence.TaskFile()
-        self.taskFile.tasks().extend([self.task, self.task2])
-        self.viewer = self.createViewer()
 
     def tearDown(self):
         super(EffortViewerAggregationTestCase, self).tearDown()
