@@ -28,7 +28,7 @@
 @synthesize descriptionLabel;
 @synthesize description;
 @synthesize categoriesButton;
-@synthesize priorityLabel;
+@synthesize priorityValue;
 @synthesize incPriorityButton;
 @synthesize decPriorityButton;
 
@@ -52,7 +52,7 @@
 
 	self.descriptionLabel.text = _("Description");
 	self.categoriesButton.titleLabel.text = _("Categories");
-	self.priorityLabel.text = [NSString stringWithFormat:_("Priority: %@"), task.priority];
+	self.priorityValue.text = [NSString stringWithFormat:_("%@"), task.priority];
 
 	if (![task.name length])
 		[subject becomeFirstResponder];
@@ -64,7 +64,7 @@
 	self.descriptionLabel = nil;
 	self.description = nil;
 	self.categoriesButton = nil;
-	self.priorityLabel = nil;
+	self.priorityValue = nil;
 	self.incPriorityButton = nil;
 	self.decPriorityButton = nil;
 }
@@ -89,7 +89,7 @@
 	else
 		task.priority = [NSNumber numberWithInt:[task.priority intValue] - 1];
 
-	self.priorityLabel.text = [NSString stringWithFormat:_("Priority: %@"), task.priority];
+	self.priorityValue.text = [NSString stringWithFormat:_("%@"), task.priority];
 	
 	[task markDirty];
 	[task save];
@@ -107,6 +107,11 @@
 	[categoryPicker release];
 }
 
+- (void)onEditingPriorityDone:(id)sender
+{
+    [priorityValue resignFirstResponder];
+}
+
 #pragma mark UITextFieldDelegate protocol
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -115,22 +120,52 @@
 	return NO;
 }
 
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    if (textField == priorityValue)
+    {
+        self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(onEditingPriorityDone:)] autorelease];
+    }
+}
+
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-	if ([textField.text length])
-	{
-		task.name = textField.text;
-	}
-	else
-	{
-		task.name = _("New task");
-		textField.text = task.name;
-	}
+    if (textField == subject)
+    {
+        if ([textField.text length])
+        {
+            task.name = textField.text;
+        }
+        else
+        {
+            task.name = _("New task");
+            textField.text = task.name;
+        }
+    }
+    else if (textField == priorityValue)
+    {
+        task.priority = [NSNumber numberWithInt:[textField.text intValue]];
+        self.navigationItem.rightBarButtonItem = nil;
+    }
 	
 	[task markDirty];
 	[task save];
 	
 	self.navigationItem.title = task.name;
+}
+
+- (BOOL)textFieldShouldClear:(UITextField *)textField
+
+{
+    if (textField == priorityValue)
+    {
+        priorityValue.text = @"0";
+        return NO;
+    }
+    else
+    {
+        return YES;
+    }
 }
 
 #pragma mark UITextViewDelegate protocol

@@ -21,7 +21,7 @@
 	UILabel *descriptionLabel;
 	UITextView *description;
 	UIButton *categoriesButton;
-	UILabel *priorityLabel;
+	UITextField *priorityValue;
 	UIButton *incPriorityButton;
 	UIButton *decPriorityButton;
 }
@@ -30,7 +30,7 @@
 @property (nonatomic, retain) IBOutlet UILabel *descriptionLabel;
 @property (nonatomic, retain) IBOutlet UITextView *description;
 @property (nonatomic, retain) IBOutlet UIButton *categoriesButton;
-@property (nonatomic, retain) IBOutlet UILabel *priorityLabel;
+@property (nonatomic, retain) IBOutlet UITextField *priorityValue;
 @property (nonatomic, retain) IBOutlet UIButton *incPriorityButton;
 @property (nonatomic, retain) IBOutlet UIButton *decPriorityButton;
 
