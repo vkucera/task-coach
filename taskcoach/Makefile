@@ -19,8 +19,17 @@
 # simple website (intermediate files are in ./build, distributions are
 # put in ./dist, the files for the website end up in ./website.out)
 
-PYTHON="python" # python should be on the path
 DOT="dot"       # dot should be on the path
+
+# Python should be on the path. On 64 bits Mac OS X, use the 32-bits version
+# (wx only works in 32 bits mode and the environment/default write trick to
+# make it the default does not seem to work on Lion).
+
+ifeq "$(shell uname -sm)" "Darwin x86_64"
+    PYTHON="python-32"
+else
+    PYTHON="python"
+endif
 
 ifeq (CYGWIN_NT,$(findstring CYGWIN_NT,$(shell uname)))
     INNOSETUP="/cygdrive/c/Program Files/Inno Setup 5/ISCC.exe"
