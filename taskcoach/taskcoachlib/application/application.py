@@ -27,6 +27,7 @@ import sys
 import time
 from taskcoachlib import patterns, operating_system
 from taskcoachlib.thirdparty.pubsub import pub
+from taskcoachlib.i18n import _
 
 # pylint: disable-msg=W0404
 
@@ -60,13 +61,13 @@ class wxApp(wx.App):
                         self.__handle.close()
                         self.__handle = None
 
+                def summary(self):
+                    sys.stdout.close()
+                    wx.MessageBox(_('Errors have occured. Please see "%s"') % os.path.expanduser('~/taskcoachlog.txt'), _('Error'), wx.OK)
+
             sys.stdout = sys.stderr = RedirectedOutput()
 
         return True
-
-    def summary(self):
-        sys.stdout.close()
-        wx.MessageBox(_('Errors have occured. Please see "%s"') % os.path.expanduser('~/taskcoachlog.txt'), _('Error'), wx.OK)
 
     def onQueryEndSession(self, event=None):
         self.sessionCallback()
