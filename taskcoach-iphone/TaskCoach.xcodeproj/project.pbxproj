@@ -110,32 +110,6 @@
 		A6782E7C11CCBD35005ADB23 /* TaskDetailsEffortsBase.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6782E7B11CCBD35005ADB23 /* TaskDetailsEffortsBase.xib */; };
 		A6796F1F11E8467A00C38043 /* LogUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A6796F1E11E8467A00C38043 /* LogUtils.m */; };
 		A679701D11E85A0700C38043 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A679701C11E85A0700C38043 /* MessageUI.framework */; };
-		A67B05DD1417CF6E003F669F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A680C0C40F47366900A8D18B /* Localizable.strings */; };
-		A67B05DE1417CF6E003F669F /* TaskDetailsControlleriPad.strings in Resources */ = {isa = PBXBuildFile; fileRef = A6E8F66411CD02800087DDF3 /* TaskDetailsControlleriPad.strings */; };
-		A67B05DF1417CF6E003F669F /* TaskView.strings in Resources */ = {isa = PBXBuildFile; fileRef = A6832036102EB499002A7083 /* TaskView.strings */; };
-		A67B05E01417CF6E003F669F /* DatePickerView.strings in Resources */ = {isa = PBXBuildFile; fileRef = A680C0D50F47368E00A8D18B /* DatePickerView.strings */; };
-		A67B05E11417CF6E003F669F /* MainWindow.strings in Resources */ = {isa = PBXBuildFile; fileRef = A680C0D70F47368E00A8D18B /* MainWindow.strings */; };
-		A67B05E21417CF6E003F669F /* MainWindow-iPad.strings in Resources */ = {isa = PBXBuildFile; fileRef = A6D5FFBB11C4C43D0030502F /* MainWindow-iPad.strings */; };
-		A67B05E91417CF84003F669F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A680C0C40F47366900A8D18B /* Localizable.strings */; };
-		A67B05EA1417CF84003F669F /* TaskDetailsControlleriPad.strings in Resources */ = {isa = PBXBuildFile; fileRef = A6E8F66411CD02800087DDF3 /* TaskDetailsControlleriPad.strings */; };
-		A67B05EB1417CF84003F669F /* TaskView.strings in Resources */ = {isa = PBXBuildFile; fileRef = A6832036102EB499002A7083 /* TaskView.strings */; };
-		A67B05EC1417CF84003F669F /* DatePickerView.strings in Resources */ = {isa = PBXBuildFile; fileRef = A680C0D50F47368E00A8D18B /* DatePickerView.strings */; };
-		A67B05ED1417CF84003F669F /* MainWindow.strings in Resources */ = {isa = PBXBuildFile; fileRef = A680C0D70F47368E00A8D18B /* MainWindow.strings */; };
-		A67B05EE1417CF84003F669F /* MainWindow-iPad.strings in Resources */ = {isa = PBXBuildFile; fileRef = A6D5FFBB11C4C43D0030502F /* MainWindow-iPad.strings */; };
-		A67B05F01417CFB8003F669F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A680C0C40F47366900A8D18B /* Localizable.strings */; };
-		A67B05F21417CFC1003F669F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A680C0C40F47366900A8D18B /* Localizable.strings */; };
-		A67B05F81417CFCE003F669F /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A68B5E0F11C4B799009AE2F1 /* MainWindow-iPad.xib */; };
-		A67B05F91417CFCE003F669F /* TaskDetailsControlleriPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6E8F66111CD02670087DDF3 /* TaskDetailsControlleriPad.xib */; };
-		A67B05FA1417CFCE003F669F /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = A68EDEC30F1E1F1700F51FF2 /* MainWindow.xib */; };
-		A67B05FB1417CFCE003F669F /* TaskView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6831FFC102EB057002A7083 /* TaskView.xib */; };
-		A67B05FC1417CFCE003F669F /* DatePickerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6D386880F24B4450097F0F6 /* DatePickerView.xib */; };
-		A67B06021417CFD8003F669F /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A68B5E0F11C4B799009AE2F1 /* MainWindow-iPad.xib */; };
-		A67B06031417CFD8003F669F /* TaskDetailsControlleriPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6E8F66111CD02670087DDF3 /* TaskDetailsControlleriPad.xib */; };
-		A67B06041417CFD8003F669F /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = A68EDEC30F1E1F1700F51FF2 /* MainWindow.xib */; };
-		A67B06051417CFD8003F669F /* TaskView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6831FFC102EB057002A7083 /* TaskView.xib */; };
-		A67B06061417CFD8003F669F /* DatePickerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6D386880F24B4450097F0F6 /* DatePickerView.xib */; };
-		A67B06081417CFE4003F669F /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A68B5E0F11C4B799009AE2F1 /* MainWindow-iPad.xib */; };
-		A67B060A1417CFED003F669F /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A68B5E0F11C4B799009AE2F1 /* MainWindow-iPad.xib */; };
 		A67E47E60F5A938F00000A24 /* BonjourBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = A67E47DF0F5A938F00000A24 /* BonjourBrowser.m */; };
 		A67E47E70F5A938F00000A24 /* BrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A67E47E10F5A938F00000A24 /* BrowserViewController.m */; };
 		A67E47E80F5A938F00000A24 /* DomainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A67E47E30F5A938F00000A24 /* DomainViewController.m */; };
@@ -1174,7 +1148,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 				ORGANIZATIONNAME = "Jérôme Laheurte";
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "TaskCoach" */;
@@ -1298,32 +1272,6 @@
 				A64C0E36128FED8C00E8A126 /* folderorangebig.png in Resources */,
 				A64C0E37128FED8C00E8A126 /* folderred.png in Resources */,
 				A64C0E38128FED8C00E8A126 /* folderredbig.png in Resources */,
-				A67B05DD1417CF6E003F669F /* Localizable.strings in Resources */,
-				A67B05DE1417CF6E003F669F /* TaskDetailsControlleriPad.strings in Resources */,
-				A67B05DF1417CF6E003F669F /* TaskView.strings in Resources */,
-				A67B05E01417CF6E003F669F /* DatePickerView.strings in Resources */,
-				A67B05E11417CF6E003F669F /* MainWindow.strings in Resources */,
-				A67B05E21417CF6E003F669F /* MainWindow-iPad.strings in Resources */,
-				A67B05E91417CF84003F669F /* Localizable.strings in Resources */,
-				A67B05EA1417CF84003F669F /* TaskDetailsControlleriPad.strings in Resources */,
-				A67B05EB1417CF84003F669F /* TaskView.strings in Resources */,
-				A67B05EC1417CF84003F669F /* DatePickerView.strings in Resources */,
-				A67B05ED1417CF84003F669F /* MainWindow.strings in Resources */,
-				A67B05EE1417CF84003F669F /* MainWindow-iPad.strings in Resources */,
-				A67B05F01417CFB8003F669F /* Localizable.strings in Resources */,
-				A67B05F21417CFC1003F669F /* Localizable.strings in Resources */,
-				A67B05F81417CFCE003F669F /* MainWindow-iPad.xib in Resources */,
-				A67B05F91417CFCE003F669F /* TaskDetailsControlleriPad.xib in Resources */,
-				A67B05FA1417CFCE003F669F /* MainWindow.xib in Resources */,
-				A67B05FB1417CFCE003F669F /* TaskView.xib in Resources */,
-				A67B05FC1417CFCE003F669F /* DatePickerView.xib in Resources */,
-				A67B06021417CFD8003F669F /* MainWindow-iPad.xib in Resources */,
-				A67B06031417CFD8003F669F /* TaskDetailsControlleriPad.xib in Resources */,
-				A67B06041417CFD8003F669F /* MainWindow.xib in Resources */,
-				A67B06051417CFD8003F669F /* TaskView.xib in Resources */,
-				A67B06061417CFD8003F669F /* DatePickerView.xib in Resources */,
-				A67B06081417CFE4003F669F /* MainWindow-iPad.xib in Resources */,
-				A67B060A1417CFED003F669F /* MainWindow-iPad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1664,7 +1612,8 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = TaskCoach_Prefix.pch;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_THUMB_SUPPORT = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = TaskCoach;
@@ -1687,7 +1636,8 @@
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = TaskCoach_Prefix.pch;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_THUMB_SUPPORT = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = TaskCoach;
@@ -1708,6 +1658,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jérôme Laheurte";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -1747,7 +1698,8 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = TaskCoach_Prefix.pch;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_THUMB_SUPPORT = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = TaskCoach;
@@ -1766,6 +1718,7 @@
 				);
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jérôme Laheurte (DQ65E4R93Z)";
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
@@ -1801,7 +1754,8 @@
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = TaskCoach_Prefix.pch;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_THUMB_SUPPORT = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = TaskCoach;
@@ -1820,6 +1774,7 @@
 				);
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jérôme Laheurte";
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
@@ -1856,7 +1811,8 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = TaskCoach_Prefix.pch;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_THUMB_SUPPORT = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = TaskCoach;
@@ -1876,6 +1832,7 @@
 				CODE_SIGN_ENTITLEMENTS = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jérôme Laheurte (DQ65E4R93Z)";
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
@@ -1911,7 +1868,8 @@
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = TaskCoach_Prefix.pch;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_THUMB_SUPPORT = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = TaskCoach;
@@ -1932,6 +1890,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jérôme Laheurte";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
@@ -1967,7 +1926,8 @@
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = TaskCoach_Prefix.pch;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_THUMB_SUPPORT = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = TaskCoach;
@@ -1987,6 +1947,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jérôme Laheurte (DQ65E4R93Z)";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -2020,6 +1981,7 @@
 				);
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jérôme Laheurte (DQ65E4R93Z)";
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;

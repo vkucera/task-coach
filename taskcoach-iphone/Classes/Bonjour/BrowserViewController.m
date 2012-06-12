@@ -199,8 +199,9 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 	
 	static NSString *tableCellIdentifier = @"UITableViewCell";
 	UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:tableCellIdentifier];
-	if (cell == nil) {
-		cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:tableCellIdentifier] autorelease];
+	if (cell == nil)
+    {
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:tableCellIdentifier] autorelease];
 	}
 	
 	NSUInteger count = [self.services count];

@@ -519,7 +519,7 @@ static void deleteTask(CDTask *task)
 
 - (void)onToggleTaskCompletion:(UITableViewCell *)cell
 {
-	currentCell = [cell retain];
+	currentCell = (TaskCell *)[cell retain];
 	CDTask *task;
 	
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
@@ -648,7 +648,7 @@ static void deleteTask(CDTask *task)
 
 		if (cell == nil)
 		{
-			cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"Cell"] autorelease];
+            cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"] autorelease];
 		}
 
 		cell.textLabel.text = _("Add task...");
