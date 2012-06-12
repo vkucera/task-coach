@@ -24,6 +24,7 @@ import wx
 import os
 import locale
 import sys
+import time
 from taskcoachlib import patterns, operating_system
 from taskcoachlib.thirdparty.pubsub import pub
 
@@ -39,8 +40,34 @@ class wxApp(wx.App):
         if operating_system.isWindows():
             self.Bind(wx.EVT_QUERY_END_SESSION, self.onQueryEndSession)
 
+        if operating_system.isMac() and hasattr(sys, 'frozen'):
+            class RedirectedOutput(object):
+                def __init__(self):
+                    self.__handle = None
+
+                def write(self, bf):
+                    if self.__handle is None:
+                        self.__handle = file(os.path.expanduser('~/taskcoachlog.txt'), 'a+')
+                        self.__handle.write('============= %s\n' % time.ctime())
+                        self.__seen = True
+                    self.__handle.write(bf)
+
+                def flush(self):
+                    pass
+
+                def close(self):
+                    if self.__handle is not None:
+                        self.__handle.close()
+                        self.__handle = None
+
+            sys.stdout = sys.stderr = RedirectedOutput()
+
         return True
-    
+
+    def summary(self):
+        sys.stdout.close()
+        wx.MessageBox(_('Errors have occured. Please see "%s"') % os.path.expanduser('~/taskcoachlog.txt'), _('Error'), wx.OK)
+
     def onQueryEndSession(self, event=None):
         self.sessionCallback()
 
@@ -286,3 +313,6 @@ class Application(object):
 
         if operating_system.isGTK() and self.sessionMonitor is not None:
             self.sessionMonitor.stop()
+
+        if operating_system.isMac() and hasattr(sys, 'frozen') and self.__handle is not None:
+            sys.stdout.summary()
