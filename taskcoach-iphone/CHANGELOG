@@ -1,4 +1,8 @@
 
+2012-06-12  Jérôme Laheurte  <fraca7@users.sourceforge.net>
+    * Make the priority directly editable on iPhone/iPod. Patch contributed by
+      Andy Hendrickson (see https://sourceforge.net/tracker/index.php?func=detail&aid=3532821&group_id=130831&atid=719136#)
+
 2011-09-07  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
     * Actually works on iOS 3.x
     * Added Swedish and Italian translations
