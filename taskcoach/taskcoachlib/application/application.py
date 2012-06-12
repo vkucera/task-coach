@@ -62,8 +62,9 @@ class wxApp(wx.App):
                         self.__handle = None
 
                 def summary(self):
-                    sys.stdout.close()
-                    wx.MessageBox(_('Errors have occured. Please see "%s"') % os.path.expanduser('~/taskcoachlog.txt'), _('Error'), wx.OK)
+                    if self.__handle is not None:
+                        self.close()
+                        wx.MessageBox(_('Errors have occured. Please see "%s"') % os.path.expanduser('~/taskcoachlog.txt'), _('Error'), wx.OK)
 
             sys.stdout = sys.stderr = RedirectedOutput()
 
@@ -315,5 +316,5 @@ class Application(object):
         if operating_system.isGTK() and self.sessionMonitor is not None:
             self.sessionMonitor.stop()
 
-        if operating_system.isMac() and hasattr(sys, 'frozen') and self.__handle is not None:
+        if operating_system.isMac() and hasattr(sys, 'frozen'):
             sys.stdout.summary()
