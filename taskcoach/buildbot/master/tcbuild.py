@@ -435,3 +435,24 @@ zip release.zip *'''
     def start(self):
         MasterShellCommand.start(self)
         self.addURL('Download release', 'http://www.fraca7.net/TaskCoach-packages/release/release.zip')
+
+# Pylint
+
+class PylintStep(Compile):
+    name = 'pylint'
+    description = ['Running', 'pylint']
+    descriptionDone = ['pylint']
+    command = ['make', 'pylint']
+
+
+class PylintUploadStep(FileUpload):
+    def __init__(self, **kwargs):
+        kwargs['slavesrc'] = 'pylint.html'
+        kwargs['masterdest'] = WithProperties('/var/www/pylint-%s.html', 'branch')
+        kwargs['mode'] = 0644
+        FileUpload.__init__(self, **kwargs)
+
+    def start(self):
+        FileUpload.start(self)
+
+        self.addURL('See', 'http://www.fraca7.net/pylint-%s.html' % self.getProperty('branch'))
