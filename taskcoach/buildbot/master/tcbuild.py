@@ -448,11 +448,11 @@ class PylintStep(Compile):
 class PylintUploadStep(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = 'pylint.html'
-        kwargs['masterdest'] = WithProperties('/var/www/pylint-%s.html', 'branch')
+        kwargs['masterdest'] = WithProperties('/var/www/pylint-%s.html', 'buildername')
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
 
     def start(self):
         FileUpload.start(self)
 
-        self.addURL('See', 'http://www.fraca7.net/pylint-%s.html' % self.getProperty('branch'))
+        self.addURL('See', 'http://www.fraca7.net/pylint-%s.html' % self.getProperty('buildername'))
