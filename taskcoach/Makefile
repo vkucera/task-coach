@@ -154,7 +154,7 @@ dmgbase:
 dmg: dmg-goodies dmgbase
 
 dmg-signed: dmg-goodies
-	codesign -s "DQ65E4R93Z" "build/Task Coach/TaskCoach.app"
+	codesign -s "Developer ID Application" "build/Task Coach/TaskCoach.app"
 	make dmgbase
 
 winpenpack: py2exe 
