@@ -22,11 +22,11 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.16', 'June 2, 2012',
+Release('1.3.16', 'June 16, 2012',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug('''Fix a crash during iPhone synchronization if a category associated
-with a modified task has been deleted on the desktop'''),
+        Bug('''Fix a crash during iPhone synchronization if a category 
+associated with a modified task has been deleted on the desktop'''),
         Bug('''The stop/resume effort tracking button on the toolbar wasn't
 working correctly.'''),
         Bug('''When tracking effort, the time spent in the effort viewer was
