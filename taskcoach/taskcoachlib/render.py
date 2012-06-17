@@ -23,6 +23,8 @@ etc. '''  # pylint: disable-msg=W0105
 
 from taskcoachlib.domain import date as datemodule
 from taskcoachlib.i18n import _
+from taskcoachlib import operating_system
+import datetime
 import codecs
 import locale
 import re
@@ -99,14 +101,21 @@ try:
 except UnicodeDecodeError:
     dateFormat = '%Y-%m-%d'
 
-language_and_country = locale.getlocale()[0]
-if language_and_country and ('_US' in language_and_country or 
-                             '_United States' in language_and_country):
-    timeFormat = '%I:%M %p'
-else: 
-    timeFormat = '%H:%M'  # Alas, %X includes seconds (see http://stackoverflow.com/questions/2507726)
+dateFunc = lambda dt=None: datetime.datetime.strftime(dt, dateFormat) # datemodule.Date is not a class
 
-dateTimeFormat = ' '.join([dateFormat, timeFormat])
+if operating_system.isWindows():
+    import pywintypes, win32api
+    timeFunc = lambda dt=None: win32api.GetTimeFormat(0x400, 0x02, None if dt is None else pywintypes.Time(dt), None)
+else:
+    language_and_country = locale.getlocale()[0]
+    if language_and_country and ('_US' in language_and_country or 
+                                 '_United States' in language_and_country):
+        timeFormat = '%I:%M %p'
+    else: 
+        timeFormat = '%H:%M'  # Alas, %X includes seconds (see http://stackoverflow.com/questions/2507726)
+    timeFunc = lambda dt=None: datemodule.DateTime.strftime(dt, timeFormat)
+
+dateTimeFunc = lambda dt=None: u'%s %s' % (dateFunc(dt), timeFunc(dt))
 
 
 def date(aDate): 
@@ -115,7 +124,7 @@ def date(aDate):
         return ''
     year = aDate.year
     if year >= 1900:
-        return aDate.strftime(dateFormat)
+        return dateFunc(aDate)
     else:
         result = date(datemodule.Date(year + 1900, aDate.month, aDate.day))
         return re.sub(str(year + 1900), str(year), result)
@@ -127,7 +136,7 @@ def dateTime(aDateTime):
     timeIsMidnight = (aDateTime.hour, aDateTime.minute) in ((0, 0), (23, 59))
     year = aDateTime.year
     if year >= 1900:
-        return aDateTime.strftime(dateFormat if timeIsMidnight else dateTimeFormat)
+        return dateFunc(aDateTime) if timeIsMidnight else dateTimeFunc(aDateTime)
     else:
         result = dateTime(aDateTime.replace(year=year + 1900))
         return re.sub(str(year + 1900), str(year), result)
@@ -144,7 +153,7 @@ def dateTimePeriod(start, stop):
     
 def time(dateTime):
     dateTime = dateTime.replace(year=2000)  # strftime doesn't handle years before 1900
-    return dateTime.strftime(timeFormat)
+    return timeFunc(dateTime)
 
     
 def month(dateTime):
