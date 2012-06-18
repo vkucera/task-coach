@@ -27,6 +27,7 @@ Release('1.3.17', 'July ??, 2012',
     bugsFixed=[
         Bug('''Use the user-specified time format on Windows.''',
             '3530080'),
+        Bug('''Loading a big task file is now much faster.'''),
         ],
     ),
 

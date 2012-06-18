@@ -67,7 +67,9 @@ class Topic(PublisherMixin):
         PublisherMixin.__init__(self)
 
         self.__validator    = None
-        self.__listeners    = []
+        # dict() and not set() because of the Listener.__eq__ trick: this structure
+        # stores Listener instances but we lookup actual callbacks.
+        self.__listeners    = dict()
 
         # specification:
         self.__description  = None
@@ -226,12 +228,12 @@ class Topic(PublisherMixin):
     def hasListeners(self):
         '''Return true if there are any listeners subscribed to
         this topic, false otherwise.'''
-        return self.__listeners != []
+        return len(self.__listeners) != 0
 
     def getListeners(self):
         '''Get a **copy** of Listener objects for listeners
         subscribed to this topic.'''
-        return self.__listeners[:]
+        return self.__listeners.keys()
 
     def validate(self, listener):
         '''Checks whether listener could be subscribed to this topic:
@@ -256,8 +258,7 @@ class Topic(PublisherMixin):
         was not already subscribed and is now subscribed. '''
         if listener in self.__listeners:
             assert self.isSendable()
-            idx = self.__listeners.index(listener)
-            subdLisnr, newSub = self.__listeners[idx], False
+            subdLisnr, newSub = self.__listeners[listener], False
 
         else:
             if self.__validator is None:
@@ -266,7 +267,7 @@ class Topic(PublisherMixin):
             argsInfo = self.__validator.validate(listener)
             weakListener = Listener(
                 listener, argsInfo, onDead=self.__onDeadListener)
-            self.__listeners.append(weakListener)
+            self.__listeners[weakListener] = weakListener
             subdLisnr, newSub = weakListener, True
 
         # notify of subscription
@@ -282,12 +283,12 @@ class Topic(PublisherMixin):
         notifyUnsubscribe(listener, self) on all registered notification
         handlers (see pub.addNotificationHandler)'''
         try:
-            idx = self.__listeners.index(listener)
-        except ValueError:
+            unsubdLisnr = self.__listeners[listener]
+        except KeyError:
             return None
 
-        unsubdLisnr = self.__listeners.pop(idx)
         unsubdLisnr._unlinkFromTopic_()
+        del self.__listeners[unsubdLisnr]
         assert listener == unsubdLisnr.getCallable()
 
         # notify of unsubscription
@@ -300,16 +301,13 @@ class Topic(PublisherMixin):
         be a function that takes a listener and returns true if the listener
         should be unsubscribed. Returns the list of listeners that were
         unsubscribed.'''
-        index = 0
         unsubd = []
-        for listener in self.__listeners[:] :
+        for listener in self.__listeners.keys() :
             if filter is None or filter(listener):
                 listener._unlinkFromTopic_()
-                assert listener is self.__listeners[index]
-                del self.__listeners[index]
+                assert listener is self.__listeners[listener]
+                del self.__listeners[listener]
                 unsubd.append(listener)
-            else:
-                index += 1
 
         # send notification regarding all listeners actually unsubscribed
         notificationMgr = self._treeConfig.notificationMgr
@@ -423,10 +421,9 @@ class Topic(PublisherMixin):
     def __onDeadListener(self, weakListener):
         '''One of our subscribed listeners has died, so remove it and notify others'''
         # remove:
-        ll = self.__listeners.index(weakListener)
-        pubListener = self.__listeners[ll]
+        pubListener = self.__listeners[weakListener]
         #llID = str(listener)
-        del self.__listeners[ll]
+        del self.__listeners[weakListener]
 
         # notify:
         self._treeConfig.notificationMgr.notifyDeadListener(pubListener, self)
