@@ -41,11 +41,11 @@ class RenderDateTime(test.TestCase):
             
     @staticmethod
     def expectedDateTime(*dateTimeArgs):
-        return date.DateTime(*dateTimeArgs).strftime(render.dateTimeFormat)
+        return render.dateTimeFunc(date.DateTime(*dateTimeArgs))
 
     @staticmethod
     def expectedDate(*dateTimeArgs):
-        return date.DateTime(*dateTimeArgs).strftime(render.dateFormat)
+        return render.dateFunc(date.DateTime(*dateTimeArgs))
         
     def testSomeRandomDateTime(self):
         expectedDateTime = self.expectedDateTime(2010, 4, 5, 12, 54)
