@@ -32,13 +32,13 @@ class Sorter(patterns.ListDecorator):
         self.reset()
 
     @classmethod        
-    def sortEventType(class_):
-        return '%s.sorted' % class_
+    def sortEventType(cls):
+        return 'pubsub.%s.sorted' % cls.__name__
     
     @patterns.eventSource
     def extendSelf(self, items, event=None):
         super(Sorter, self).extendSelf(items, event)
-        self.reset(event=event)
+        self.reset()
 
     # We don't implement removeItemsFromSelf() because there is no need 
     # to resort when items are removed since after removing items the 
@@ -60,15 +60,14 @@ class Sorter(patterns.ListDecorator):
         self._sortCaseSensitive = sortCaseSensitive
         self.reset()
     
-    @patterns.eventSource
-    def reset(self, event=None):
+    def reset(self, forceEvent=False):
         ''' reset does the actual sorting. If the order of the list changes, 
             observers are notified by means of the list-sorted event. '''
         oldSelf = self[:]
         self.sort(key=self.createSortKeyFunction(), 
                   reverse=not self._sortAscending)
-        if self != oldSelf:
-            event.addSource(self, type=self.sortEventType())
+        if forceEvent or self != oldSelf:
+            pub.sendMessage(self.sortEventType(), sender=self)
 
     def createSortKeyFunction(self):
         ''' createSortKeyFunction returns a function that is passed to the 
@@ -132,7 +131,6 @@ class TreeSorter(Sorter):
         return self._getSortKeyFunction()(sortCaseSensitive=self._sortCaseSensitive, 
                                           treeMode=self.treeMode())
 
-    @patterns.eventSource
     def reset(self, *args, **kwargs):  # pylint: disable-msg=W0221
         self.__invalidateRootItemCache()
         return super(TreeSorter, self).reset(*args, **kwargs)

@@ -173,8 +173,8 @@ class Viewer(patterns.Observer, wx.Panel):
         self.select([item for item in event.values() if item in self.presentation()]) 
         
     def onPresentationChanged(self, event):  # pylint: disable-msg=W0613
-        ''' Whenever our presentation is changed (items added, items removed,
-            order changed) the viewer refreshes itself. '''
+        ''' Whenever our presentation is changed (items added, items removed) 
+            the viewer refreshes itself. '''
         def itemsRemoved():
             return event.type() == self.presentation().removeItemEventType()
         
@@ -186,7 +186,7 @@ class Viewer(patterns.Observer, wx.Panel):
             self.selectNextItemsAfterRemoval(event.values())
         self.updateSelection(sendViewerStatusEvent=False)
         self.sendViewerStatusEvent()
-            
+        
     def selectNextItemsAfterRemoval(self, removedItems):
         raise NotImplementedError        
         
