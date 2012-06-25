@@ -97,6 +97,15 @@ class CommonTestsMixin(object):
         self.taskList.append(self.task1)
         self.assertEqual(2, len(self.effortAggregator))
         
+    def testAddTaskWithTwoEffortsOnSameDayAndCheckTotalEffort(self):
+        self.task1.addEffort(self.effort1period1a)
+        self.task1.addEffort(self.effort1period1b)
+        self.taskList.append(self.task1)
+        expectedDuration = self.effort1period1a.duration() + \
+                           self.effort1period1b.duration()
+        self.assertEqual(expectedDuration, 
+                         list(self.effortAggregator)[0].duration())
+        
     def testAddTwoEffortsInDifferentPeriods(self):
         self.taskList.append(self.task1)
         self.task1.addEffort(self.effort1period1a)

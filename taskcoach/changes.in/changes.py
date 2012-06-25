@@ -22,11 +22,13 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.17', 'July ??, 2012',
+Release('1.3.17', 'June 25, 2012',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Use the user-specified time format on Windows.''',
             '3530080'),
+        Bug('''In the effort viewer, when calculating total effort for tasks in 
+a certain period, one effort would be skipped.''', '3537707'),
         Bug('''Loading a big task file is now much faster.'''),
         ],
     ),

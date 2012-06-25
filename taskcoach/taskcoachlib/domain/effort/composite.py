@@ -121,9 +121,9 @@ class CompositeEffort(BaseCompositeEffort):
 
     def addEffort(self, anEffort):
         assert self._inPeriod(anEffort)
-        self.__effortCache.setdefault(True, []).append(anEffort)
+        self.__effortCache.setdefault(True, set()).add(anEffort)
         if anEffort.task() == self.task():
-            self.__effortCache.setdefault(False, []).append(anEffort)
+            self.__effortCache.setdefault(False, set()).add(anEffort)
             
     def revenue(self, recursive=False):
         return sum(effort.revenue() for effort in self._getEfforts(recursive))
@@ -133,12 +133,13 @@ class CompositeEffort(BaseCompositeEffort):
                 
     def _getEfforts(self, recursive=True):  # pylint: disable-msg=W0221
         try:
-            return self.__effortCache[recursive]
+            return list(self.__effortCache[recursive])
         except KeyError:
             result = self.__effortCache[recursive] = \
-                [effort for effort in self.task().efforts(recursive=recursive) \
-                 if self._inPeriod(effort)]
-            return result
+                set([effort for effort in \
+                     self.task().efforts(recursive=recursive) if \
+                     self._inPeriod(effort)])
+            return list(result)
         
     def mayContain(self, effort):
         ''' Return whether effort would be contained in this composite effort 
