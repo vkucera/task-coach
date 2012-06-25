@@ -18,10 +18,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import uuid
 from taskcoachlib import patterns
-import attribute
 from taskcoachlib.domain.attribute import icon
+from taskcoachlib.thirdparty.pubsub import pub
+import attribute
+import uuid
 
 
 class SynchronizedObject(object):
@@ -385,8 +386,7 @@ class CompositeObject(Object, patterns.ObservableComposite):
             expanded. ''' 
         return list(self.__expandedContexts)
     
-    @patterns.eventSource
-    def expand(self, expand=True, context='None', event=None):
+    def expand(self, expand=True, context='None', notify=True):
         ''' Expands (or collapses) the composite object in the specified 
             context. ''' 
         if expand == self.isExpanded(context):
@@ -395,15 +395,16 @@ class CompositeObject(Object, patterns.ObservableComposite):
             self.__expandedContexts.add(context)
         else:
             self.__expandedContexts.discard(context)
-        self.expansionChangedEvent(event)
+        if notify:
+            pub.sendMessage(self.expansionChangedEventType(), newValue=expand,
+                            sender=self)
 
     @classmethod
-    def expansionChangedEventType(class_):
-        return '%s.expanded'%class_
+    def expansionChangedEventType(cls):
+        ''' The event type used for notifying changes in the expansion state
+            of a composite object. '''
+        return 'pubsub.%s.expanded' % cls.__name__.lower()
 
-    def expansionChangedEvent(self, event):
-        event.addSource(self, type=self.expansionChangedEventType())
-    
     # Appearance:
 
     def appearanceChangedEvent(self, event):

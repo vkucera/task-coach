@@ -583,9 +583,8 @@ class LocalCategoryViewer(viewer.BaseCategoryViewer):  # pylint: disable-msg=W02
     def __init__(self, items, *args, **kwargs):
         self.__items = items
         super(LocalCategoryViewer, self).__init__(*args, **kwargs)
-        event = patterns.Event()  # Make sure item.expand doesn't send events
         for item in self.domainObjectsToView():
-            item.expand(context=self.settingsSection(), event=event)
+            item.expand(context=self.settingsSection(), notify=False)
 
     def getIsItemChecked(self, category):  # pylint: disable-msg=W0621
         for item in self.__items:
