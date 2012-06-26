@@ -22,13 +22,16 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.17', 'June 25, 2012',
+Release('1.3.17', 'June 26, 2012',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Use the user-specified time format on Windows.''',
             '3530080'),
         Bug('''In the effort viewer, when calculating total effort for tasks in 
 a certain period, one effort would be skipped.''', '3537707'),
+        Bug('''When tracking effort for one task, don't show "Stop tracking
+multiple tasks" as the menu label for the "Stop tracking" menu item in the 
+action menu.''', '3536577'),
         Bug('''Loading a big task file is now much faster.'''),
         ],
     ),

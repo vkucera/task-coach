@@ -434,7 +434,8 @@ class EffortStopTest(test.TestCase):
         self.effort1 = effort.Effort(self.task)
         self.effort2 = effort.Effort(self.task)
         self.taskList.append(self.task)
-        self.effortStop = gui.uicommand.EffortStop(effortList=effort.EffortList(self.taskList),
+        self.effortList = effort.EffortList(self.taskList)
+        self.effortStop = gui.uicommand.EffortStop(effortList=self.effortList, 
                                                    taskList=self.taskList)
     
     # Tests of EffortStop.enabled()
@@ -509,6 +510,11 @@ class EffortStopTest(test.TestCase):
         self.taskList.append(self.task2)
         self.effort1.setTask(self.task2)
         self.failUnless(self.effortStop.enabled())
+        
+    def testIgnoreCompositeEfforts(self):
+        effort.reducer.EffortAggregator(self.taskList, aggregation='day')
+        self.task.addEffort(self.effort1)
+        self.failIf('multiple tasks' in self.effortStop.getMenuText())
         
     # Tests of EffortStop.doCommand()
 
