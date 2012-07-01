@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.17', 'June 26, 2012',
+Release('1.3.17', 'July 1, 2012',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Use the user-specified time format on Windows.''',
@@ -32,6 +32,8 @@ a certain period, one effort would be skipped.''', '3537707'),
         Bug('''When tracking effort for one task, don't show "Stop tracking
 multiple tasks" as the menu label for the "Stop tracking" menu item in the 
 action menu.''', '3536577'),
+        Bug('''On Windows, use a more recent Python27.dll to satisfy Secunia 
+PSI.''', '3539139'),
         Bug('''Loading a big task file is now much faster.'''),
         ],
     ),
