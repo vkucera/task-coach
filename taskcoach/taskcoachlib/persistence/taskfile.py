@@ -105,9 +105,14 @@ class TaskFile(patterns.Observer):
         for eventType in effort.Effort.modificationEventTypes():
             self.registerObserver(self.onEffortChanged, eventType)
         for eventType in note.Note.modificationEventTypes():
-            self.registerObserver(self.onNoteChanged, eventType)
+            if not eventType.startswith('pubsub'):
+                self.registerObserver(self.onNoteChanged_Deprecated, eventType)
+        pub.subscribe(self.onNoteChanged, 'pubsub.note')
         for eventType in category.Category.modificationEventTypes():
-            self.registerObserver(self.onCategoryChanged, eventType)
+            if not eventType.startswith('pubsub'):
+                self.registerObserver(self.onCategoryChanged_Deprecated, 
+                                      eventType)
+        pub.subscribe(self.onCategoryChanged, 'pubsub.category')
         for eventType in attachment.FileAttachment.modificationEventTypes() + \
                          attachment.URIAttachment.modificationEventTypes() + \
                          attachment.MailAttachment.modificationEventTypes():
@@ -183,8 +188,8 @@ class TaskFile(patterns.Observer):
             self.markDirty()
             for changedEffort in changedEfforts:
                 changedEffort.markDirty()
-            
-    def onCategoryChanged(self, event):
+                
+    def onCategoryChanged_Deprecated(self, event):
         if self.__loading or self.__saving:
             return
         changedCategories = [changedCategory for changedCategory in event.sources() if \
@@ -201,14 +206,39 @@ class TaskFile(patterns.Observer):
                 for categorizable in changedCategory.categorizables():
                     categorizable.markDirty()
             
-    def onNoteChanged(self, event):
+    def onCategoryChanged(self, newValue, sender):
         if self.__loading or self.__saving:
+            return
+        changedCategories = [changedCategory for changedCategory in [sender] if \
+                             changedCategory in self.categories()]
+        if changedCategories:
+            self.markDirty()
+            # Mark all categorizables belonging to the changed category dirty; 
+            # this is needed because in SyncML/vcard world, categories are not 
+            # first-class objects. Instead, each task/contact/etc has a 
+            # categories property which is a comma-separated list of category
+            # names. So, when a category name changes, every associated
+            # categorizable changes.
+            for changedCategory in changedCategories:
+                for categorizable in changedCategory.categorizables():
+                    categorizable.markDirty()
+            
+    def onNoteChanged_Deprecated(self, event):
+        if self.__loading:
             return
         # A note may be in self.notes() or it may be a note of another 
         # domain object.
         self.markDirty()
         for changedNote in event.sources():
             changedNote.markDirty()
+            
+    def onNoteChanged(self, newValue, sender):
+        if self.__loading:
+            return
+        # A note may be in self.notes() or it may be a note of another 
+        # domain object.
+        self.markDirty()
+        sender.markDirty()
             
     def onAttachmentChanged(self, newValue, sender):
         if self.__loading or self.__saving:

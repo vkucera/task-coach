@@ -20,11 +20,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
 from taskcoachlib import command
 from taskcoachlib.domain import base, task, category, attachment
-from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand
+from taskcoachlib.i18n import _
+from taskcoachlib.thirdparty.pubsub import pub
+import wx
 
 
 class SearchableViewerMixin(object):
@@ -185,10 +186,20 @@ class SortableViewerMixin(object):
 
     def registerPresentationObservers(self):
         super(SortableViewerMixin, self).registerPresentationObservers()
-        self.registerObserver(self.onPresentationChanged, 
-            eventType=self.presentation().sortEventType(),
-            eventSource=self.presentation())
-
+        pub.subscribe(self.onSortOrderChanged,
+                      self.presentation().sortEventType())
+        
+    def detach(self):
+        super(SortableViewerMixin, self).detach()
+        pub.unsubscribe(self.onSortOrderChanged,
+                        self.presentation().sortEventType())
+        
+    def onSortOrderChanged(self, sender):
+        if sender == self.presentation():
+            self.refresh()
+            self.updateSelection(sendViewerStatusEvent=False)
+            self.sendViewerStatusEvent()
+        
     def createSorter(self, presentation):
         return self.SorterClass(presentation, **self.sorterOptions())
     

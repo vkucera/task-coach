@@ -1104,10 +1104,12 @@ class EditSyncPreferences(IOCommand):
 
 
 class SelectAll(NeedsItemsMixin, ViewerCommand):
+    ''' Action for selecting all items in a viewer. '''
+    
     def __init__(self, *args, **kwargs):
         super(SelectAll, self).__init__(menuText=_('&All\tCtrl+A'),
-            helpText=help.editSelectAll, bitmap='selectall', id=wx.ID_SELECTALL, 
-            *args, **kwargs)
+            helpText=help.editSelectAll, bitmap='selectall', 
+            id=wx.ID_SELECTALL, *args, **kwargs)
         
     def doCommand(self, event):
         windowWithFocus = wx.Window.FindFocus()
@@ -1118,11 +1120,14 @@ class SelectAll(NeedsItemsMixin, ViewerCommand):
             
     @staticmethod
     def windowIsTextCtrl(window):
+        ''' Return whether the window is a text control. '''
         return isinstance(window, wx.TextCtrl) or \
                isinstance(window, hypertreelist.EditCtrl)
 
 
 class ClearSelection(NeedsSelectionMixin, ViewerCommand):
+    ''' Action for unselecting all items in a viewer. '''
+    
     def __init__(self, *args, **kwargs):
         super(ClearSelection, self).__init__(menuText=_('&Clear selection'), 
             helpText=_('Unselect all items'), *args, **kwargs)
@@ -1132,8 +1137,12 @@ class ClearSelection(NeedsSelectionMixin, ViewerCommand):
 
 
 class ResetFilter(ViewerCommand):
+    ''' Action for resetting all filters so that all items in all viewers
+        become visible. '''
+    
     def __init__(self, *args, **kwargs):
-        super(ResetFilter, self).__init__(menuText=_('&Clear all filters\tShift-Ctrl-R'),
+        super(ResetFilter, self).__init__( \
+            menuText=_('&Clear all filters\tShift-Ctrl-R'),
             helpText=help.resetFilter, bitmap='viewalltasks', *args, **kwargs)
     
     def doCommand(self, event):
@@ -1141,8 +1150,12 @@ class ResetFilter(ViewerCommand):
         
         
 class ResetCategoryFilter(NeedsAtLeastOneCategoryMixin, CategoriesCommand):
+    ''' Action for resetting all category filters so that items are no longer
+        hidden if the don't belong to a certain category. '''
+    
     def __init__(self, *args, **kwargs):
-        super(ResetCategoryFilter, self).__init__(menuText=_('&Reset all categories\tCtrl-R'),
+        super(ResetCategoryFilter, self).__init__( \
+            menuText=_('&Reset all categories\tCtrl-R'),
             helpText=help.resetCategoryFilter, *args, **kwargs)
 
     def doCommand(self, event):
@@ -1150,6 +1163,8 @@ class ResetCategoryFilter(NeedsAtLeastOneCategoryMixin, CategoriesCommand):
         
         
 class ToggleCategoryFilter(UICommand):
+    ''' Action for toggling filtering on a specific category. '''
+    
     def __init__(self, *args, **kwargs):
         self.category = kwargs.pop('category')
         subject = self.category.subject()
@@ -1173,6 +1188,8 @@ class ToggleCategoryFilter(UICommand):
         
 
 class ViewViewer(SettingsCommand, ViewerCommand):
+    ''' Action for opening a new viewer of a specific class. '''
+    
     def __init__(self, *args, **kwargs):
         self.taskFile = kwargs.pop('taskFile')
         self.viewerClass = kwargs.pop('viewerClass')
@@ -1180,16 +1197,20 @@ class ViewViewer(SettingsCommand, ViewerCommand):
         super(ViewViewer, self).__init__(*args, **kwargs)
         
     def doCommand(self, event):
-        viewer.addOneViewer(self.viewer, self.taskFile, self.settings, self.viewerClass)
+        viewer.addOneViewer(self.viewer, self.taskFile, self.settings, 
+                            self.viewerClass)
         self.increaseViewerCount()
         
     def increaseViewerCount(self):
+        ''' Increase the viewer count for the viewer class this command is
+            opening and store the viewer count in the settings. '''
         setting = self.viewerClass.__name__.lower() + 'count'
         viewerCount = self.settings.getint('view', setting)
         self.settings.set('view', setting, str(viewerCount + 1))
         
         
-class ViewEffortViewerForSelectedTask(NeedsOneSelectedTaskMixin, SettingsCommand, ViewerCommand):
+class ViewEffortViewerForSelectedTask(NeedsOneSelectedTaskMixin, 
+                                      SettingsCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         self.viewerClass = viewer.EffortViewer
         self.taskFile = kwargs.pop('taskFile')
@@ -1198,7 +1219,8 @@ class ViewEffortViewerForSelectedTask(NeedsOneSelectedTaskMixin, SettingsCommand
         
     def doCommand(self, event):
         viewer.addOneViewer(self.viewer, self.taskFile, self.settings, 
-                            self.viewerClass, tasksToShowEffortFor=task.TaskList(self.viewer.curselection()))
+            self.viewerClass, 
+            tasksToShowEffortFor=task.TaskList(self.viewer.curselection()))
         
 
 class RenameViewer(ViewerCommand):
@@ -1330,7 +1352,8 @@ class ViewerSortCaseSensitive(ViewerCommand, UICheckCommand):
     def __init__(self, *args, **kwargs):
         super(ViewerSortCaseSensitive, self).__init__(\
             menuText=_('Sort &case sensitive'),
-            helpText=_('When comparing text, sorting is case sensitive (checked) or insensitive (unchecked)'),
+            helpText=_('When comparing text, sorting is case sensitive '
+                       '(checked) or insensitive (unchecked)'),
             *args, **kwargs)
 
     def isSettingChecked(self):
@@ -1344,7 +1367,8 @@ class ViewerSortByTaskStatusFirst(ViewerCommand, UICheckCommand):
     def __init__(self, *args, **kwargs):
         super(ViewerSortByTaskStatusFirst, self).__init__(\
             menuText=_('Sort by status &first'),
-            helpText=_('Sort tasks by status (active/inactive/completed) first'),
+            helpText=_('Sort tasks by status (active/inactive/completed) '
+                       'first'),
             *args, **kwargs)
 
     def isSettingChecked(self):
@@ -1366,12 +1390,14 @@ class ViewerHideTasks(ViewerCommand, UICheckCommand):
         return self.viewer.isHidingTaskStatus(self.__taskStatus)
         
     def doCommand(self, event):
-        self.viewer.hideTaskStatus(self.__taskStatus, self._isMenuItemChecked(event))
+        self.viewer.hideTaskStatus(self.__taskStatus, 
+                                   self._isMenuItemChecked(event))
     
 
 class ViewerHideCompositeTasks(ViewerCommand, UICheckCommand):
     def __init__(self, *args, **kwargs):
-        super(ViewerHideCompositeTasks, self).__init__(menuText=_('Hide c&omposite tasks'),
+        super(ViewerHideCompositeTasks, self).__init__( \
+            menuText=_('Hide c&omposite tasks'),
             helpText=_('Show/hide tasks with subtasks in list mode'), 
             *args, **kwargs)
             
@@ -2046,6 +2072,8 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
                 self.__trackedEfforts.remove(effort)
         
     def onTrackingChanged(self, newValue, sender):
+        if sender.parent() is None:
+            return  # Ignore composite efforts
         if newValue:
             self.__trackedEfforts.extend([sender])
         else:        
@@ -2059,13 +2087,13 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
         else:
             # Resume tracking the last task
             effortCommand = command.StartEffortCommand(self.taskList, 
-                                                       [self.mostRecentTrackedTask()])
+                                [self.mostRecentTrackedTask()])
         effortCommand.do()
         
     def enabled(self, event=None):
         # If there are tracked efforts this command will stop them. If there are
-        # untracked efforts this command will resume them. Otherwise this command
-        # is disabled.
+        # untracked efforts this command will resume them. Otherwise this 
+        # command is disabled.
         return self.anyTrackedEfforts() or self.anyStoppedEfforts()
     
     @staticmethod
@@ -2088,12 +2116,14 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
             self.updateMenuItems(paused)
     
     def updateToolState(self, paused):
-        if not self.toolbar: return  # Toolbar is hidden        
+        if not self.toolbar: 
+            return  # Toolbar is hidden        
         if paused != self.toolbar.GetToolState(self.id): 
             self.toolbar.ToggleTool(self.id, paused)
 
     def updateToolBitmap(self, bitmapName):
-        if not self.toolbar: return  # Toolbar is hidden
+        if not self.toolbar: 
+            return  # Toolbar is hidden
         bitmap = wx.ArtProvider_GetBitmap(bitmapName, wx.ART_TOOLBAR, 
                                           self.toolbar.GetToolBitmapSize())
         # On wxGTK, changing the bitmap doesn't work when the tool is 
@@ -2117,12 +2147,14 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
         
     def getMenuText(self, paused=None):  # pylint: disable-msg=W0221
         if self.anyTrackedEfforts():
-            subject = _('multiple tasks') if len(self.__trackedEfforts) > 1 else self.__trackedEfforts[0].task().subject()
+            subject = _('multiple tasks') if len(self.__trackedEfforts) > 1 \
+                      else self.__trackedEfforts[0].task().subject()
             return self.stopMenuText % self.trimmedSubject(subject)
         if paused is None:
             paused = self.anyStoppedEfforts()
         if paused:
-            return self.resumeMenuText % self.trimmedSubject(self.mostRecentTrackedTask().subject())
+            return self.resumeMenuText % \
+                self.trimmedSubject(self.mostRecentTrackedTask().subject())
         else:
             return self.defaultMenuText
         
@@ -2224,7 +2256,8 @@ class AttachmentNew(AttachmentsCommand, ViewerCommand, SettingsCommand):
         return attachmentDialog  # for testing purposes
 
 
-class AddAttachment(NeedsSelectedAttachmentOwnersMixin, ViewerCommand, SettingsCommand):
+class AddAttachment(NeedsSelectedAttachmentOwnersMixin, ViewerCommand, 
+                    SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(AddAttachment, self).__init__( \
             menuText=_('&Add attachment...\tShift-Ctrl-A'),
@@ -2335,7 +2368,7 @@ class Tips(SettingsCommand):
 class Anonymize(IOCommand):
     def __init__(self, *args, **kwargs):
         super(Anonymize, self).__init__(menuText=_('Anonymize'),
-             helpText = _('Anonymize a task file to attach it to a bug report'),
+             helpText=_('Anonymize a task file to attach it to a bug report'),
              *args, **kwargs)
 
     def doCommand(self, event):
@@ -2391,7 +2424,8 @@ class FAQ(URLCommand):
     def __init__(self, *args, **kwargs):
         super(FAQ, self).__init__(menuText=_('&Frequently asked questions'),
             helpText=_('Browse the frequently asked questions and answers'),
-            bitmap='led_blue_questionmark_icon', url=meta.faq_url, *args, **kwargs)
+            bitmap='led_blue_questionmark_icon', url=meta.faq_url, 
+            *args, **kwargs)
 
 
 class ReportBug(URLCommand):
@@ -2403,16 +2437,19 @@ class ReportBug(URLCommand):
         
 class RequestFeature(URLCommand):
     def __init__(self, *args, **kwargs):
-        super(RequestFeature, self).__init__(menuText=_('Request a &feature...'),
+        super(RequestFeature, self).__init__( \
+            menuText=_('Request a &feature...'),
             helpText=_('Request a new feature or vote for existing requests'),
-            bitmap='cogwheel_icon', url=meta.feature_request_url, *args, **kwargs)
+            bitmap='cogwheel_icon', url=meta.feature_request_url, 
+            *args, **kwargs)
 
 
 class RequestSupport(URLCommand):
     def __init__(self, *args, **kwargs):
         super(RequestSupport, self).__init__(menuText=_('Request &support...'),
             helpText=_('Request user support from the developers'),
-            bitmap='life_ring_icon', url=meta.support_request_url, *args, **kwargs)
+            bitmap='life_ring_icon', url=meta.support_request_url, 
+            *args, **kwargs)
         
 
 class HelpTranslate(URLCommand):
@@ -2420,7 +2457,8 @@ class HelpTranslate(URLCommand):
         super(HelpTranslate, self).__init__( \
             menuText=_('Help improve &translations...'),
             helpText=_('Help improve the translations of %s') % meta.name,
-            bitmap='person_talking_icon', url=meta.translations_url, *args, **kwargs)
+            bitmap='person_talking_icon', url=meta.translations_url, 
+            *args, **kwargs)
         
 
 class Donate(URLCommand):
@@ -2452,12 +2490,13 @@ class Search(ViewerCommand, SettingsCommand):
                                     searchDescription)
 
     def appendToToolBar(self, toolbar):
-        searchString, matchCase, includeSubItems, searchDescription = self.viewer.getSearchFilter()
+        searchString, matchCase, includeSubItems, searchDescription = \
+            self.viewer.getSearchFilter()
         # pylint: disable-msg=W0201
         self.searchControl = widgets.SearchCtrl(toolbar, value=searchString,
             style=wx.TE_PROCESS_ENTER, matchCase=matchCase, 
-            includeSubItems=includeSubItems, searchDescription=searchDescription,
-            callback=self.onFind)
+            includeSubItems=includeSubItems, 
+            searchDescription=searchDescription, callback=self.onFind)
         toolbar.AddControl(self.searchControl)
         self.bindKeyDownInViewer()
         self.bindKeyDownInSearchCtrl()
@@ -2480,7 +2519,8 @@ class Search(ViewerCommand, SettingsCommand):
 
     def onViewerKeyDown(self, event):
         ''' On Ctrl-F, move focus to the search control. '''
-        if event.KeyCode == ord('F') and event.CmdDown() and not event.AltDown():
+        if event.KeyCode == ord('F') and event.CmdDown() and \
+                not event.AltDown():
             self.searchControl.SetFocus()
         else:
             event.Skip()
@@ -2559,7 +2599,8 @@ class CategoryViewerFilterChoice(ToolbarChoiceCommandMixin, SettingsCommand):
 
 
 class SquareTaskViewerOrderChoice(ToolbarChoiceCommandMixin, ViewerCommand):
-    choiceLabels = [_('Budget'), _('Time spent'), _('Fixed fee'), _('Revenue'), _('Priority')]
+    choiceLabels = [_('Budget'), _('Time spent'), _('Fixed fee'), _('Revenue'), 
+                    _('Priority')]
     choiceData = ['budget', 'timeSpent', 'fixedFee', 'revenue', 'priority']
     
     def doChoice(self, choice):
@@ -2663,10 +2704,12 @@ class ViewerPieChartAngle(ViewerCommand, SettingsCommand):
                              self.sliderCtrl.GetValue())
    
 
-class RoundingPrecision(ToolbarChoiceCommandMixin, ViewerCommand, SettingsCommand):
-    roundingChoices =  (0, 1, 3, 5, 6, 10, 15, 20, 30, 60)  # Minutes
+class RoundingPrecision(ToolbarChoiceCommandMixin, ViewerCommand, 
+                        SettingsCommand):
+    roundingChoices = (0, 1, 3, 5, 6, 10, 15, 20, 30, 60)  # Minutes
     choiceData = [minutes * 60 for minutes in roundingChoices]  # Seconds
-    choiceLabels = [_('No rounding'), _('1 minute')] + [_('%d minutes') % minutes for minutes in roundingChoices[2:]]
+    choiceLabels = [_('No rounding'), _('1 minute')] + \
+        [_('%d minutes') % minutes for minutes in roundingChoices[2:]]
 
     def doChoice(self, choice):
         self.settings.setint(self.viewer.settingsSection(), 'round', choice)
@@ -2674,7 +2717,8 @@ class RoundingPrecision(ToolbarChoiceCommandMixin, ViewerCommand, SettingsComman
 
 class RoundBy(UIRadioCommand, ViewerCommand, SettingsCommand):        
     def isSettingChecked(self):
-        return self.settings.getint(self.viewer.settingsSection(), 'round') == self.value
+        return self.settings.getint(self.viewer.settingsSection(), 
+                                    'round') == self.value
     
     def doCommand(self, event):
         self.settings.setint(self.viewer.settingsSection(), 'round', self.value)

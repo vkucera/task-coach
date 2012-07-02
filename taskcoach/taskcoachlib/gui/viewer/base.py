@@ -173,8 +173,8 @@ class Viewer(patterns.Observer, wx.Panel):
         self.select([item for item in event.values() if item in self.presentation()]) 
         
     def onPresentationChanged(self, event):  # pylint: disable-msg=W0613
-        ''' Whenever our presentation is changed (items added, items removed,
-            order changed) the viewer refreshes itself. '''
+        ''' Whenever our presentation is changed (items added, items removed) 
+            the viewer refreshes itself. '''
         def itemsRemoved():
             return event.type() == self.presentation().removeItemEventType()
         
@@ -186,7 +186,7 @@ class Viewer(patterns.Observer, wx.Panel):
             self.selectNextItemsAfterRemoval(event.values())
         self.updateSelection(sendViewerStatusEvent=False)
         self.sendViewerStatusEvent()
-            
+        
     def selectNextItemsAfterRemoval(self, removedItems):
         raise NotImplementedError        
         
@@ -510,18 +510,19 @@ class TreeViewer(Viewer):  # pylint: disable-msg=W0223
         item.expand(expanded, context=self.settingsSection())
             
     def expandAll(self):
+        ''' Expand all items, recursively. '''
         # Since the widget does not send EVT_TREE_ITEM_EXPANDED when expanding
         # all items, we have to do the bookkeeping ourselves:
-        event = patterns.Event()
         for item in self.visibleItems():
-            item.expand(True, context=self.settingsSection(), event=event)
+            item.expand(True, context=self.settingsSection(), notify=False)
         self.refresh()
-        # Don't send the event, since the viewer has already been updated. 
 
     def collapseAll(self):
-        event = patterns.Event()
+        ''' Collapse all items, recursively. '''
+        # Since the widget does not send EVT_TREE_ITEM_COLLAPSED when collapsing
+        # all items, we have to do the bookkeeping ourselves:
         for item in self.visibleItems():
-            item.expand(False, context=self.settingsSection(), event=event)
+            item.expand(False, context=self.settingsSection(), notify=False)
         self.refresh()
                 
     def isAnyItemExpandable(self):
@@ -535,15 +536,15 @@ class TreeViewer(Viewer):  # pylint: disable-msg=W0223
     
     def select(self, items):
         for item in items:
-            self.expandItemRecursively(item)
+            self.__expandItemRecursively(item)
         self.refresh()
         super(TreeViewer, self).select(items)
         
-    def expandItemRecursively(self, item):
+    def __expandItemRecursively(self, item):
         parent = self.getItemParent(item)
         if parent:
-            parent.expand(True, context=self.settingsSection())
-            self.expandItemRecursively(parent)
+            parent.expand(True, context=self.settingsSection(), notify=False)
+            self.__expandItemRecursively(parent)
 
     def selectNextItemsAfterRemoval(self, removedItems):
         parents = [self.getItemParent(item) for item in removedItems]

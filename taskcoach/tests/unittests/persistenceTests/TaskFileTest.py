@@ -75,10 +75,10 @@ class TaskFileTestCase(test.TestCase):
         for filename in filenames:
             tries = 0
             while os.path.exists(filename) and tries < 3:
-                try: # Don't fail on random 'Access denied' errors.
+                try:  # Don't fail on random 'Access denied' errors.
                     os.remove(filename)
                     break
-                except WindowsError: # pragma: no cover pylint: disable-msg=E0602
+                except WindowsError:  # pragma: no cover pylint: disable-msg=E0602
                     tries += 1 
 
 

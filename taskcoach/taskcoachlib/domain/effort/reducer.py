@@ -186,6 +186,7 @@ class EffortAggregator(patterns.SetDecorator,
                 self.__composites[key].addEffort(anEffort)
                 continue
             newComposite = composite.CompositeEffort(*key)  # pylint: disable-msg=W0142
+            newComposite.addEffort(anEffort)
             self.__composites[key] = newComposite
             newComposites.append(newComposite)
         return newComposites
