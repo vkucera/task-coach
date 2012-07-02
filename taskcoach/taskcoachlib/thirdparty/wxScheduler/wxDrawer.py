@@ -276,7 +276,7 @@ class wxDrawer(object):
 		words = text.split()
 		tw, th = context.GetTextExtent( u' '.join(words) )
 
-		if h is not None and th > h:
+		if h is not None and th > h + SCHEDULE_INSIDE_MARGIN:
 			return SCHEDULE_INSIDE_MARGIN
 
 		if tw <= w - offsetX:
