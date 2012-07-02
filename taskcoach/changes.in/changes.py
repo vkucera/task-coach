@@ -35,6 +35,7 @@ action menu.''', '3536577'),
         Bug('''On Windows, use a more recent Python27.dll to satisfy Secunia 
 PSI.''', '3539139'),
         Bug('''Loading a big task file is now much faster.'''),
+        Bug('''The calendar view would not react to changes to tasks.''', '3539402'),
         ],
     ),
 
