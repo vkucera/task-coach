@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.17', 'July 1, 2012',
+Release('1.3.17', 'July 2, 2012',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Use the user-specified time format on Windows.''',
@@ -35,6 +35,8 @@ action menu.''', '3536577'),
         Bug('''On Windows, use a more recent Python27.dll to satisfy Secunia 
 PSI.''', '3539139'),
         Bug('''Loading a big task file is now much faster.'''),
+        Bug('''The calendar view would not react to changes to tasks.''', 
+            '3539402'),
         ],
     ),
 
