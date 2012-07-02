@@ -411,7 +411,7 @@ class CompositeObject(Object, patterns.ObservableComposite):
     def expansionChangedEventType(cls):
         ''' The event type used for notifying changes in the expansion state
             of a composite object. '''
-        return 'pubsub.%s.expanded' % cls.__name__.lower()
+        return 'pubsub.%s.expandedContexts' % cls.__name__.lower()
 
     def expansionChangedEvent(self, event):
         event.addSource(self, type=self.expansionChangedEventType())
