@@ -27,7 +27,7 @@ Release('1.3.18', 'July ??, 2012',
     bugsFixed=[
 #        Bug('''Fix slowness when viewing aggregated efforts.''',
 #            '3538310', '3537702'),
-#        ],
+        ],
     ),
 
 Release('1.3.17', 'July 2, 2012',
