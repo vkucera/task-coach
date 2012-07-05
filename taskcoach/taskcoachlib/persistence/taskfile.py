@@ -283,7 +283,7 @@ class TaskFile(patterns.Observer):
         if not self.__saving:
             import wx # Not really clean but we're in another thread...
             self.__changedOnDisk = True
-            wx.CallAfter(pub.sendMessage, 'taskfile.changed', self)
+            wx.CallAfter(pub.sendMessage, 'taskfile.changed', taskFile=self)
 
     @patterns.eventSource
     def clear(self, regenerate=True, event=None):
