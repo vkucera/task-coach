@@ -169,7 +169,9 @@ class EffortAggregator(patterns.SetDecorator,
     def getCompositesForTask(self, theTask):
         return [eachComposite for eachComposite in self \
                 if theTask == eachComposite.task() or \
-                eachComposite.task().__class__.__name__ == 'Total']
+                (eachComposite.task().__class__.__name__ == 'Total' and \
+                 theTask is not None and \
+                 any([effort in eachComposite for effort in theTask.efforts()]))]
         
     def createComposites(self, task, efforts):  # pylint: disable-msg=W0621
         newComposites = []
