@@ -50,7 +50,7 @@ class WindowSizeAndPositionTracker(Tracker):
         # EVT_SIZE.
         maximized = self._window.IsMaximized()
         if not maximized and not self._window.IsIconized():
-            self.setSetting('size', event.GetSize())
+            self.setSetting('size', self._window.GetClientSize())
         # Jerome, 2008/07/12: On my system (KDE 3.5.7), EVT_MAXIMIZE
         # is not triggered, so set 'maximized' to True here as well as in 
         # onMaximize:
@@ -77,14 +77,16 @@ class WindowSizeAndPositionTracker(Tracker):
             # is increased by 40 pixels. Dunno why, but it's highly annoying. This doesn't
             # hold for dialogs though. Sigh.
             if not isinstance(self._window, wx.Dialog):
-                height -= 40
+                height += 18
         x, y = self.getSetting('position')
         self._window.SetDimensions(x, y, width, height)
+        self._window.SetClientSize((width, height))
         if self.getSetting('maximized'):
             self._window.Maximize()
         # Check that the window is on a valid display and move if necessary:
         if wx.Display.GetFromWindow(self._window) == wx.NOT_FOUND:
             self._window.SetDimensions(0, 0, width, height)
+            self._window.SetClientSize((width, height))
 
                 
 class WindowDimensionsTracker(WindowSizeAndPositionTracker):
