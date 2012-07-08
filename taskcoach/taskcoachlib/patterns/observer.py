@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import singleton
 import functools
+from taskcoachlib.thirdparty.pubsub import pub
 
 # Ignore these pylint messages:
 # - W0142: * or ** magic
@@ -340,6 +341,8 @@ class Observer(object):
     def removeInstance(self):
         for observer in self.__observers.copy():
             self.removeObserver(observer)
+        pub.unsubAll(listenerFilter=lambda listener: hasattr(listener.getCallable(), 'im_self') and \
+                     listener.getCallable().im_self is self)
 
 
 class Decorator(Observer):

@@ -138,7 +138,7 @@ class MainWindowIconizedTest(MainWindowTestCase):
     def expectedHeight(self):
         height = 500
         if operating_system.isMac():
-            height -= 40 # pragma: no cover
+            height += 18 # pragma: no cover
         return height
     
     @test.skipOnPlatform('__WXGTK__') # Test fails on Fedora, don't know why nor how to fix it    

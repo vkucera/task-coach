@@ -518,15 +518,15 @@ class CompositeObjectTest(test.TestCase):
         self.assertEqual('books_icon', self.compositeObject.selectedIcon(recursive=True))
         self.assertEqual('book_icon', self.compositeObject.selectedIcon(recursive=False)) 
 
-    def testCompositeWithoutChildrenUsesSingularIconIfAvailable(self):
+    def testCompositeWithoutChildrenDoesNotUseSingularIconIfAvailable(self):
         self.compositeObject.setIcon('books_icon')
         self.assertEqual('books_icon', self.compositeObject.icon(recursive=False))
-        self.assertEqual('book_icon', self.compositeObject.icon(recursive=True))
+        self.assertEqual('books_icon', self.compositeObject.icon(recursive=True))
 
-    def testCompositeWithoutChildrenUsesSingularSelectedIconIfAvailable(self):
+    def testCompositeWithoutChildrenDoesNotUseSingularSelectedIconIfAvailable(self):
         self.compositeObject.setSelectedIcon('books_icon')
         self.assertEqual('books_icon', self.compositeObject.selectedIcon(recursive=False))
-        self.assertEqual('book_icon', self.compositeObject.selectedIcon(recursive=True))
+        self.assertEqual('books_icon', self.compositeObject.selectedIcon(recursive=True))
 
     def testChildOfCompositeUsesSingularIconIfAvailable(self):
         self.compositeObject.setIcon('books_icon')
