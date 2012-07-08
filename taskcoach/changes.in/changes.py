@@ -27,6 +27,7 @@ Release('1.3.18', 'July ??, 2012',
     bugsFixed=[
         Bug('''On Mac OS X, the window would shrink at each launch.
 Tested on 10.5, 10.7 and 10.8DP4.'''),
+        Bug('''Do not singularize user-set icons.''', '3539824'),
 #        Bug('''Fix slowness when viewing aggregated efforts.''',
 #            '3538310', '3537702'),
         ],

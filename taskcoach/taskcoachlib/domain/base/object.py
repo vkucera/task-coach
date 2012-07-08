@@ -440,7 +440,7 @@ class CompositeObject(Object, patterns.ObservableComposite):
             return myIcon
         if not myIcon and self.parent():
             myIcon = self.parent().icon(recursive=True)
-        return self.pluralOrSingularIcon(myIcon)
+        return self.pluralOrSingularIcon(myIcon, native=super(CompositeObject, self).icon() == '')
 
     def selectedIcon(self, recursive=False):
         myIcon = super(CompositeObject, self).selectedIcon()
@@ -448,12 +448,16 @@ class CompositeObject(Object, patterns.ObservableComposite):
             return myIcon
         if not myIcon and self.parent():
             myIcon = self.parent().selectedIcon(recursive=True)
-        return self.pluralOrSingularIcon(myIcon)
+        return self.pluralOrSingularIcon(myIcon, native=super(CompositeObject, self).selectedIcon() == '')
 
-    def pluralOrSingularIcon(self, myIcon):
+    def pluralOrSingularIcon(self, myIcon, native=True):
         hasChildren = any(child for child in self.children() if not child.isDeleted())
         mapping = icon.itemImagePlural if hasChildren else icon.itemImageSingular
-        return mapping.get(myIcon, myIcon)
+        # If the icon comes from the user settings, only pluralize it; this is probably
+        # the Way of the Least Astonishment
+        if native or hasChildren:
+            return mapping.get(myIcon, myIcon)
+        return myIcon
     
     # Event types:
 
