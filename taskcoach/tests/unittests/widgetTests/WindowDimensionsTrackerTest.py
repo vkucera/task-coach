@@ -37,7 +37,8 @@ class WindowTest(test.wxTestCase):
         # See MainWindowTest...
         w, h = self.frame.GetSizeTuple()
         if operating_system.isMac():
-            h += 40 # pragma: no cover
+            w, h = self.frame.GetClientSize()
+            h -= 18 # pragma: no cover
         self.assertEqual((w, h), self.settings.getvalue(self.section, 'size'))
      
     @test.skipOnPlatform('__WXGTK__')
@@ -49,7 +50,10 @@ class WindowTest(test.wxTestCase):
             
     def testChangeSize(self):
         self.frame.Maximize(False)
-        self.frame.ProcessEvent(wx.SizeEvent((123, 200)))
+        if operating_system.isMac():
+            self.frame.SetClientSize((123, 200))
+        else:
+            self.frame.ProcessEvent(wx.SizeEvent((123, 200)))
         self.assertEqual((123, 200), self.settings.getvalue(self.section, 'size'))
         
     def testMove(self):
