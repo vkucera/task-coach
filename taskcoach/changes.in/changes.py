@@ -23,13 +23,17 @@ from changetypes import *
 releases = [
 
 Release('1.3.18', 'July ??, 2012',
-    summary='''This is a bugfix release.''',
+    summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
         Bug('''On Mac OS X, the window would shrink at each launch.
 Tested on 10.5, 10.7 and 10.8DP4.'''),
         Bug('''Do not singularize user-set icons.''', '3539824'),
 #        Bug('''Fix slowness when viewing aggregated efforts.''',
 #            '3538310', '3537702'),
+        ],
+    featuresAdded=[
+        Feature('''In the calendar view, unplanned dates are now cropped
+to the current day.'''),
         ],
     ),
 
