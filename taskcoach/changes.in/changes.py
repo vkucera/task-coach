@@ -33,7 +33,7 @@ Tested on 10.5, 10.7 and 10.8DP4.'''),
         ],
     featuresAdded=[
         Feature('''In the calendar view, unplanned dates are now cropped
-to the current day.'''),
+to the current day.'''), # Close bug report 3539404 when 1.3.18 is released.
         ],
     ),
 
