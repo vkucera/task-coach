@@ -133,13 +133,13 @@ class CompositeEffort(BaseCompositeEffort):
                 
     def _getEfforts(self, recursive=True):  # pylint: disable-msg=W0221
         try:
-            return list(self.__effortCache[recursive])
+            result = self.__effortCache[recursive]
         except KeyError:
             result = self.__effortCache[recursive] = \
                 set([effort for effort in \
                      self.task().efforts(recursive=recursive) if \
                      self._inPeriod(effort)])
-            return list(result)
+        return list(result)
         
     def mayContain(self, effort):
         ''' Return whether effort would be contained in this composite effort 
@@ -148,7 +148,8 @@ class CompositeEffort(BaseCompositeEffort):
             
     def description(self):
         effortDescriptions = [effort.description() for effort in \
-                              self._getEfforts(False) if effort.description()]
+                              sorted(self._getEfforts(False), 
+                                     key=lambda effort: effort.getStart()) if effort.description()]
         return '\n'.join(effortDescriptions)
     
     def onAppearanceChanged(self, event):    
