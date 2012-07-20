@@ -21,44 +21,52 @@ import test
 from taskcoachlib import gui, config, operating_system
 
 
-class WindowTest(test.wxTestCase):
+class WindowDimensionsTrackerTest(test.wxTestCase):
     def setUp(self):
-        super(WindowTest, self).setUp()
+        super(WindowDimensionsTrackerTest, self).setUp()
         self.settings = config.Settings(load=False)
-        self.settings.setvalue('window', 'position', (50, 50))
-        self.tracker = gui.windowdimensionstracker.WindowDimensionsTracker(self.frame, self.settings)
         self.section = 'window'
+        self.settings.setvalue(self.section, 'position', (50, 50))
+        self.settings.setvalue(self.section, 'starticonized', 'Never')
+        if operating_system.isWindows():
+            self.frame.Show()
+        self.tracker = gui.windowdimensionstracker.WindowDimensionsTracker( \
+                           self.frame, self.settings)
         
-    def testInitialPosition(self):
+    def test_initial_position(self):
         self.assertEqual(self.settings.getvalue(self.section, 'position'), 
                          self.frame.GetPositionTuple())
-         
-    def testInitialSize(self):
+    
+    def test_initial_size(self):
         # See MainWindowTest...
-        w, h = self.frame.GetSizeTuple()
-        if operating_system.isMac():
-            w, h = self.frame.GetClientSize()
-            h -= 18 # pragma: no cover
-        self.assertEqual((w, h), self.settings.getvalue(self.section, 'size'))
+        width, height = self.frame.GetSizeTuple()
+        if operating_system.isMac():  # pragma: no cover
+            width, height = self.frame.GetClientSize()
+            height -= 18 
+        self.assertEqual((width, height), 
+                         self.settings.getvalue(self.section, 'size'))
      
     @test.skipOnPlatform('__WXGTK__')
-    def testMaximize(self):
+    def test_maximize(self):
         for maximized in [True, False]:
             self.frame.Maximize(maximized)
             self.assertEqual(maximized, self.frame.IsMaximized())
-            self.assertEqual(maximized, self.settings.getboolean(self.section, 'maximized'))
+            self.assertEqual(maximized, 
+                             self.settings.getboolean(self.section, 
+                                                      'maximized'))
             
-    def testChangeSize(self):
+    def test_change_size(self):
         self.frame.Maximize(False)
         if operating_system.isMac():
             self.frame.SetClientSize((123, 200))
         else:
             self.frame.ProcessEvent(wx.SizeEvent((123, 200)))
-        self.assertEqual((123, 200), self.settings.getvalue(self.section, 'size'))
+        self.assertEqual((123, 200), 
+                         self.settings.getvalue(self.section, 'size'))
         
-    def testMove(self):
+    def test_move(self):
         self.frame.Maximize(False)
         self.frame.Iconize(False)
         self.frame.ProcessEvent(wx.MoveEvent((200, 200)))
-        self.assertEqual((200, 200), self.settings.getvalue(self.section, 'position'))
-
+        self.assertEqual((200, 200), 
+                         self.settings.getvalue(self.section, 'position'))

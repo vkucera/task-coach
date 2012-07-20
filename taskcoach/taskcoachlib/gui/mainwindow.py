@@ -231,7 +231,7 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
         self.settings.set('view', 'perspective', perspective)
         
     def savePosition(self):
-        self.dimensionsTracker.savePosition()
+        self.dimensionsTracker.save_position()
         
     def onClose(self, event):
         if event.CanVeto() and self.settings.getboolean('window', 

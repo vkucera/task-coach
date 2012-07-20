@@ -52,27 +52,24 @@ class Page(widgets.BookPage):
             theEntry = self.entries()[columnName]
         except KeyError:
             theEntry = self.entries()['firstEntry']
-        theEntry.SetFocus()
-        self.__setSelection(theEntry)
+        self.__setSelectionAndFocus(theEntry)
 
-    def __setSelection(self, theEntry):
+    def __setSelectionAndFocus(self, theEntry):
         ''' If the entry has selectable text, select the text so that the user
-            can start typing over it immediately. '''
-        try:
-            if operating_system.isWindows():
-                # This ensures that if the TextCtrl value is more than can be 
-                # displayed, it will display the start instead of the end:
-                from taskcoachlib.thirdparty import SendKeys  # pylint: disable-msg=W0404
-                SendKeys.SendKeys('{END}+{HOME}')
-            elif operating_system.isGTK() and isinstance(theEntry, wx.TextCtrl):
-                # This ensures that if the TextCtrl value is more than can be 
-                # displayed, it will display the start instead of the end:
-                wx.Yield()
-                theEntry.SetSelection(len(theEntry.GetValue()), 0)
-            else:
-                theEntry.SetSelection(-1, -1)
-        except (AttributeError, TypeError):
-            pass  # Not a TextCtrl
+            can start typing over it immediately, except on Linux because it
+            overwrites the X clipboard. '''
+        if not operating_system.isGTK():
+            theEntry.SetFocus()
+            try:
+                if operating_system.isWindows():
+                    # This ensures that if the TextCtrl value is more than can be 
+                    # displayed, it will display the start instead of the end:
+                    from taskcoachlib.thirdparty import SendKeys  # pylint: disable-msg=W0404
+                    SendKeys.SendKeys('{END}+{HOME}')
+                else:
+                    theEntry.SetSelection(-1, -1)
+            except (AttributeError, TypeError):
+                pass  # Not a TextCtrl
         
     def registerObserver(self, observer, eventType, eventSource=None):
         patterns.Publisher().registerObserver(observer, eventType, eventSource)

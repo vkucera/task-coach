@@ -22,14 +22,21 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.18', 'July ??, 2012',
-    summary='''This is a bugfix release.''',
+Release('1.3.18', 'July 9, 2012',
+    summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
+        Bug('''Do not automatically give focus to the subject field
+in the task editor on Linux (it overwrites the X clipboard).''',
+            '3539452'),
         Bug('''On Mac OS X, the window would shrink at each launch.
 Tested on 10.5, 10.7 and 10.8DP4.'''),
         Bug('''Do not singularize user-set icons.''', '3539824'),
 #        Bug('''Fix slowness when viewing aggregated efforts.''',
 #            '3538310', '3537702'),
+        ],
+    featuresAdded=[
+        Feature('''In the calendar view, unplanned dates are now cropped
+to the current day.'''), # Close bug report 3539404 when 1.3.18 is released.
         ],
     ),
 

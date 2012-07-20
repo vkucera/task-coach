@@ -357,8 +357,11 @@ class FocusTest(TaskEditorTestCase):
     def testFocus(self):
         if operating_system.isGTK():
             wx.Yield() # pragma: no cover
-        # pylint: disable-msg=W0212
-        self.assertEqual(self.editor._interior[0]._subjectEntry, wx.Window_FindFocus())
+            # pylint: disable-msg=W0212
+            self.assertNotEqual(self.editor._interior[0]._subjectEntry, wx.Window_FindFocus())
+        else:
+            # pylint: disable-msg=W0212
+            self.assertEqual(self.editor._interior[0]._subjectEntry, wx.Window_FindFocus())
 
 
 class DatesTestBase(TaskEditorSetterBase, TaskEditorTestCase):

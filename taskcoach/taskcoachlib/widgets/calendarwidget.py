@@ -198,7 +198,7 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
         for task in args:
             doShow = True
 
-            if task.plannedStartDateTime() == date.DateTime() and task.dueDateTime() == date.DateTime():
+            if task.plannedStartDateTime() == date.DateTime() and task.dueDateTime() == date.DateTime() and not self.__showUnplanned:
                 doShow = False
 
             if task.plannedStartDateTime() == date.DateTime() and not self.__showNoPlannedStartDate:
@@ -392,9 +392,11 @@ class TaskSchedule(wxSchedule):
         try:
             self.description = self.task.subject()
 
-            self.start = self.wxDateTime(self.task.plannedStartDateTime(), (1, 1, 0))
+            self.start = self.wxDateTime(self.task.plannedStartDateTime(),
+                                         self.tupleFromDateTime(date.Now().startOfDay()))
             end = self.task.completionDateTime() if self.task.completed() else self.task.dueDateTime()
-            self.end = self.wxDateTime(end, (1, 1, 9999))
+            self.end = self.wxDateTime(end,
+                                       self.tupleFromDateTime(date.Now().endOfDay()))
             
             if self.task.completed():
                 self.done = True
@@ -415,7 +417,16 @@ class TaskSchedule(wxSchedule):
                 self.complete = 1.0 * self.task.percentageComplete(recursive=True) / 100
         finally:
             self.Thaw()
-            
+
+    @staticmethod
+    def tupleFromDateTime(dateTime):
+        return (dateTime.day,
+                dateTime.month - 1,
+                dateTime.year,
+                dateTime.hour,
+                dateTime.minute,
+                dateTime.second)
+
     @staticmethod
     def wxDateTime(dateTime, default):
         args = default if dateTime == date.DateTime() else \
