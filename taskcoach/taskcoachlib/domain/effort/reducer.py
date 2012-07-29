@@ -48,7 +48,8 @@ class EffortAggregator(patterns.SetDecorator,
         patterns.Publisher().registerObserver(self.onChildAddedToTask,
             eventType=task.Task.addChildEventType())
         for eventType in self.observable().modificationEventTypes():
-            patterns.Publisher().registerObserver(self.onTaskAddedOrRemoved, eventType,
+            patterns.Publisher().registerObserver(self.onTaskAddedOrRemoved, 
+                                                  eventType,
                                                   eventSource=self.observable())
         pub.subscribe(self.onEffortStartChanged, 
                       effort.Effort.startChangedEventType())
@@ -107,10 +108,15 @@ class EffortAggregator(patterns.SetDecorator,
                                                           event=event)
         
     def onTaskAddedOrRemoved(self, event):
-        if any(task.efforts() for task in event.values()):
-            for eachComposite in self.getCompositesForTask(None):
-                eachComposite._invalidateCache()
-                eachComposite.notifyObserversOfDurationOrEmpty()
+        ''' Whenever tasks are added or removed, find the composites that 
+            (did/should) contain effort of those tasks and update them. '''
+        affectedComposites = set()
+        for addedOrRemovedTask in event.values():
+            for affectedComposite in self.getCompositesForTask(addedOrRemovedTask):
+                affectedComposites.add(affectedComposite)
+        for affectedComposite in affectedComposites:
+            affectedComposite._invalidateCache()
+            affectedComposite.notifyObserversOfDurationOrEmpty()
             
     def onEffortAddedToTask(self, newValue, oldValue, sender):
         if sender not in self.observable():
@@ -169,10 +175,8 @@ class EffortAggregator(patterns.SetDecorator,
     def getCompositesForTask(self, theTask):
         return [eachComposite for eachComposite in self \
                 if theTask == eachComposite.task() or \
-                eachComposite.task().__class__.__name__ == 'Total']
-                ## (eachComposite.task().__class__.__name__ == 'Total' and \
-                ##  theTask is not None and \
-                ##  any([effort in eachComposite for effort in theTask.efforts()]))]
+                (eachComposite.task().__class__.__name__ == 'Total' and \
+                 theTask in eachComposite.tasks())]
         
     def createComposites(self, task, efforts):  # pylint: disable-msg=W0621
         newComposites = []
