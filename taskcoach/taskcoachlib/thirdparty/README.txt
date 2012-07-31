@@ -40,4 +40,12 @@ Copied on: 2012-03-10
 Changes for Task Coach: partial highlighting of items 
 Patch file: hypertreelist.py.patch
 
-
+Component: ntlm
+Name: python-ntlm
+Author: Ben Dyer <ben.dyer@taguchimail.com>
+Version: no version number
+Date: 2011-06-09
+Licence: GPL v3
+Source: https://github.com/bendyer/python-ntlm
+Copied on: 2012-07-31
+Changes for Task Coach: none

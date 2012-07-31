@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.18', 'July 29, 2012',
+Release('1.3.18', 'July 31, 2012',
     summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
         Bug('''Do not automatically give focus to the subject field
@@ -37,6 +37,8 @@ Tested on 10.5, 10.7 and 10.8DP4.'''),
     featuresAdded=[
         Feature('''In the calendar view, unplanned dates are now cropped
 to the current day.'''), # Close bug report 3539404 when 1.3.18 is released.
+        Feature('''Add support for Thunderbird IMAP accounts that use
+NTLM authentication (typically Exchange accounts).'''),
         ],
     ),
 

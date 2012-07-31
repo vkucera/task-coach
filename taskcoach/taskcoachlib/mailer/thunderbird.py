@@ -16,9 +16,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, stat, re, imaplib, ConfigParser, wx, socket, mailbox
-from taskcoachlib.i18n import _
 from taskcoachlib import persistence, operating_system
+from taskcoachlib.thirdparty import ntlm
+from taskcoachlib.i18n import _
+import os
+import stat
+import re
+import imaplib
+import ConfigParser
+import wx
+import socket
+import mailbox
 
 
 _RX_MAILBOX_MESSAGE = re.compile(r'mailbox-message://(.*)@(.*)/(.*)#((?:-)?\d+)')
@@ -26,11 +34,14 @@ _RX_IMAP_MESSAGE = re.compile(r'imap-message://([^@]+)@([^/]+)/(.*)#(\d+)')
 _RX_IMAP = re.compile(r'imap://([^@]+)@([^/]+)/fetch%3EUID%3E(?:/|\.)(.*)%3E(\d+)')
 _RX_MAILBOX = re.compile(r'mailbox://([^?]+)\?number=(\d+)')
 
+
 class ThunderbirdError(Exception):
     pass
 
+
 class ThunderbirdCancelled(ThunderbirdError):
     pass
+
 
 def unquote(s):
     """Converts %nn sequences into corresponding characters. I
@@ -303,7 +314,12 @@ class ThunderbirdImapReader(object):
         while True:
             try:
                 if 'AUTH=CRAM-MD5' in cn.capabilities:
-                    response, params = cn.login_cram_md5(str(self.user), str(pwd))
+                    response, params = cn.login_cram_md5(str(self.user), 
+                                                         str(pwd))
+                elif 'AUTH=NTLM' in cn.capabilities:
+                    response, params = cn.authenticate('NTLM', 
+                        ntlm.IMAPNtlmAuthHandler.IMAPNtlmAuthHandler( \
+                            str(self.user), str(pwd)))
                 else:
                     response, params = cn.login(self.user, pwd)
             except cn.error, e:
