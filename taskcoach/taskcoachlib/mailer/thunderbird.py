@@ -98,10 +98,11 @@ def getThunderbirdDir():
 
 _PORTABLECACHE = None
 
+
 def getDefaultProfileDir():
     """Returns Thunderbird's default profile directory"""
 
-    global _PORTABLECACHE # pylint: disable-msg=W0603
+    global _PORTABLECACHE  # pylint: disable-msg=W0603
 
     path = getThunderbirdDir()
 
@@ -113,7 +114,7 @@ def getDefaultProfileDir():
         if _PORTABLECACHE is not None:
             return _PORTABLECACHE
 
-        from taskcoachlib.thirdparty import wmi # pylint: disable-msg=W0404
+        from taskcoachlib.thirdparty import wmi  # pylint: disable-msg=W0404
 
         for process in wmi.WMI().Win32_Process():
             if process.ExecutablePath and process.ExecutablePath.lower().endswith('thunderbirdportable.exe'):
@@ -317,6 +318,8 @@ class ThunderbirdImapReader(object):
                     response, params = cn.login_cram_md5(str(self.user), 
                                                          str(pwd))
                 elif 'AUTH=NTLM' in cn.capabilities:
+                    wx.MessageBox(self.url, 'Dropped URL', 
+                                  wx.OK | wx.ICON_INFORMATION)
                     response, params = cn.authenticate('NTLM', 
                         ntlm.IMAPNtlmAuthHandler.IMAPNtlmAuthHandler( \
                             str(self.user), str(pwd)))
@@ -371,7 +374,7 @@ class ThunderbirdLocalMailboxReader(object):
         # So we skip the first offset bytes before reading the contents:
         with file(path, 'rb') as mbox:
             mbox.seek(offset)
-            contents = mbox.read(4*1024*1024) # Assume message size <= 4MB
+            contents = mbox.read(4 * 1024 * 1024)  # Assume message size <= 4MB
         # Then we get a filename for a temporary file...
         filename = persistence.get_temp_file()
         # And save the remaining contents of the original mbox file: 
