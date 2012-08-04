@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 
-helpText = '''
+HELP_TEXT = '''
 Release steps:
   - Get latest translations from Launchpad:
     * Go to https://translations.launchpad.net/taskcoach/<major.minor>/+export
@@ -68,22 +68,23 @@ def progress(func):
         step = func.__name__.replace('_', ' ')
         print step[0].upper() + step[1:] + '...'
         func(*args, **kwargs)
-        print 'Done %s.'%step
+        print 'Done %s.' % step
     return inner
 
 
 class Settings(ConfigParser.SafeConfigParser, object):
     def __init__(self):
         super(Settings, self).__init__()
-        self.setDefaults()
+        self.set_defaults()
         self.filename = os.path.expanduser('~/.tcreleaserc')
         self.read(self.filename)
 
-    def setDefaults(self):
+    def set_defaults(self):
         defaults = dict(sourceforge=['username', 'password'],
                         smtp=['hostname', 'port', 'username', 'password',
                               'sender_name', 'sender_email_address'],
-                        dreamhost=['hostname', 'username', 'password', 'folder'],
+                        dreamhost=['hostname', 'username', 'password', 
+                                   'folder'],
                         hostland=['hostname', 'username', 'password', 'folder'],
                         pypi=['username', 'password'],
                         twitter=['consumer_key', 'consumer_secret',
@@ -95,14 +96,11 @@ class Settings(ConfigParser.SafeConfigParser, object):
             for option in defaults[section]:
                 self.set(section, option, 'ask')
 
-    def get(self, section, option): # pylint: disable-msg=W0221
+    def get(self, section, option):  # pylint: disable-msg=W0221
         value = super(Settings, self).get(section, option)
         if value == 'ask':
-            if option == 'password':
-                get_input = getpass.getpass
-            else:
-                get_input = raw_input
-            value = get_input('%s %s: '%(section, option)).strip()
+            get_input = getpass.getpass if option == 'password' else raw_input
+            value = get_input('%s %s: ' % (section, option)).strip()
             self.set(section, option, value)
             self.write(file(self.filename, 'w'))
         return value
@@ -114,24 +112,25 @@ class HelpFormatter(optparse.IndentedHelpFormatter):
         return epilog
     
 
-def sourceForgeLocation(settings):
+def sourceforge_location(settings):
     metadata = taskcoachlib.meta.data.metaDict
     project = metadata['filename_lower']
-    pr = project[:2]
-    p = project[0]
-    username = '%s,%s'%(settings.get('sourceforge', 'username'), project)
+    project_first_two_letters = project[:2]
+    project_first_letter = project[0]
+    username = '%s,%s' % (settings.get('sourceforge', 'username'), project)
     folder = '/home/frs/project/%(p)s/%(pr)s/%(project)s/%(project)s/Release-%(version)s/'%\
-             dict(project=project, pr=pr, p=p, version=metadata['version'])
-    return '%s@frs.sourceforge.net:%s'%(username, folder)
+             dict(project=project, pr=project_first_two_letters, 
+                  p=project_first_letter, version=metadata['version'])
+    return '%s@frs.sourceforge.net:%s' % (username, folder)
 
 
-def rsync(settings, options, rsyncCommand):
-    location = sourceForgeLocation(settings)
-    rsyncCommand = rsyncCommand%location
+def rsync(settings, options, rsync_command):
+    location = sourceforge_location(settings)
+    rsync_command = rsync_command % location
     if options.dry_run:
-        print 'Skipping %s.'%rsyncCommand
+        print 'Skipping %s.' % rsync_command
     else:
-        os.system(rsyncCommand)
+        os.system(rsync_command)
 
 
 @progress
@@ -149,17 +148,17 @@ def generating_MD5_digests(settings, options):
     contents = '''md5digests = {\n'''
     for filename in glob.glob(os.path.join('dist', '*')):
         
-        md5digest = hashlib.md5(file(filename, 'rb').read()) # pylint: disable-msg=E1101
+        md5digest = hashlib.md5(file(filename, 'rb').read())  # pylint: disable-msg=E1101
         filename = os.path.basename(filename)
         hexdigest = md5digest.hexdigest()
-        contents += '''    "%s": "%s",\n'''%(filename, hexdigest)
+        contents += '''    "%s": "%s",\n''' % (filename, hexdigest)
         if options.verbose:
-            print '%40s -> %s'%(filename, hexdigest)
+            print '%40s -> %s' % (filename, hexdigest)
     contents += '}\n'
     
-    md5digestsFile = file(os.path.join('website.in', 'md5digests.py'), 'w')
-    md5digestsFile.write(contents)
-    md5digestsFile.close()
+    md5digests_file = file(os.path.join('website.in', 'md5digests.py'), 'w')
+    md5digests_file.write(contents)
+    md5digests_file.close()
 
 
 @progress
@@ -182,43 +181,48 @@ class SimpleFTP(ftplib.FTP, object):
             self.mkd(folder)
             self.cwd(folder)    
             
-    def put(self, folder):
+    def put(self, folder, *filename_whitelist):
         for root, subfolders, filenames in os.walk(folder):
             if root != folder:
-                print 'Change into %s'%root
+                print 'Change into %s' % root
                 for part in root.split(os.sep):
                     self.cwd(part)
             for subfolder in subfolders:
-                print 'Create %s'%os.path.join(root, subfolder)
+                print 'Create %s' % os.path.join(root, subfolder)
                 try:
                     self.mkd(subfolder)
                 except ftplib.error_perm, info:
                     print info
             for filename in filenames:
-                print 'Store %s'%os.path.join(root, filename)
+                if filename_whitelist and filename not in filename_whitelist:
+                    print 'Skipping %s' % os.path.join(root, filename)
+                    continue
+                print 'Store %s' % os.path.join(root, filename)
                 try:
-                    self.storbinary('STOR %s'%filename, 
+                    self.storbinary('STOR %s' % filename, 
                                     file(os.path.join(root, filename), 'rb'))
                 except ftplib.error_perm, info:
                     if str(info).endswith('Overwrite permission denied'):
                         self.delete(filename)
-                        self.storbinary('STOR %s'%filename, 
-                                        file(os.path.join(root, filename), 'rb'))
+                        self.storbinary('STOR %s' % filename, 
+                                        file(os.path.join(root, filename), 
+                                             'rb'))
                     else:
                         raise
             self.cwd(self.remote_root)
 
     def get(self, filename):
-        print 'Retrieve %s'%filename
-        self.retrbinary('RETR %s'%filename, open(filename, 'wb').write)
+        print 'Retrieve %s' % filename
+        self.retrbinary('RETR %s' % filename, open(filename, 'wb').write)
 
 
-def uploading_website_to_website_host(settings, options, websiteHost):
-    settingsSection = websiteHost.lower()
-    hostname = settings.get(settingsSection, 'hostname')
-    username = settings.get(settingsSection, 'username')
-    password = settings.get(settingsSection, 'password')
-    folder = settings.get(settingsSection, 'folder')
+def uploading_website_to_website_host(settings, options, website_host, 
+                                      *filename_whitelist):
+    settings_section = website_host.lower()
+    hostname = settings.get(settings_section, 'hostname')
+    username = settings.get(settings_section, 'username')
+    password = settings.get(settings_section, 'password')
+    folder = settings.get(settings_section, 'folder')
     
     if hostname and username and password and folder:
         ftp = SimpleFTP(hostname, username, password, folder)
@@ -226,21 +230,22 @@ def uploading_website_to_website_host(settings, options, websiteHost):
         if options.dry_run:
             print 'Skipping ftp.put(website.out).'
         else:
-            ftp.put('.')
+            ftp.put('.', *filename_whitelist)
         ftp.quit()
         os.chdir('..')
     else:
-        print 'Warning: cannot upload website to %s; missing credentials'%websiteHost
+        print 'Warning: cannot upload website to %s; missing credentials' % \
+            website_host
 
 
 @progress
-def uploading_website_to_Dreamhost(settings, options):
-    uploading_website_to_website_host(settings, options, 'Dreamhost')
+def uploading_website_to_Dreamhost(settings, options, *args):
+    uploading_website_to_website_host(settings, options, 'Dreamhost', *args)
  
 
 @progress
-def uploading_website_to_Hostland(settings, options):
-    uploading_website_to_website_host(settings, options, 'Hostland')
+def uploading_website_to_Hostland(settings, options, *args):
+    uploading_website_to_website_host(settings, options, 'Hostland', *args)
 
 
 @progress
@@ -248,16 +253,16 @@ def registering_with_PyPI(settings, options):
     username = settings.get('pypi', 'username')
     password = settings.get('pypi', 'password')
     pypirc = file('.pypirc', 'w')
-    pypirc.write('[server-login]\nusername = %s\npassword = %s\n'%\
+    pypirc.write('[server-login]\nusername = %s\npassword = %s\n' % \
                  (username, password))
     pypirc.close()
     # pylint: disable-msg=W0404
     from setup import setupOptions
-    languagesThatPyPIDoesNotRecognize = ['Basque', 'Breton', 'Estonian', 
+    languages_pypi_does_not_know = ['Basque', 'Breton', 'Estonian', 
         'Galician', 'Lithuanian', 'Norwegian (Bokmal)', 'Norwegian (Nynorsk)', 
         'Occitan', 'Papiamento', 'Slovene', 'German (Low)', 'Mongolian']
-    for language in languagesThatPyPIDoesNotRecognize:
-        setupOptions['classifiers'].remove('Natural Language :: %s'%language)
+    for language in languages_pypi_does_not_know:
+        setupOptions['classifiers'].remove('Natural Language :: %s' % language)
     from distutils.core import setup
     del sys.argv[1:]
     os.environ['HOME'] = '.'
@@ -265,7 +270,7 @@ def registering_with_PyPI(settings, options):
     if options.dry_run:
         print 'Skipping PyPI registration.'
     else:
-        setup(**setupOptions) # pylint: disable-msg=W0142
+        setup(**setupOptions)  # pylint: disable-msg=W0142
     os.remove('.pypirc')
 
 
@@ -275,15 +280,15 @@ def httpPostRequest(host, api_call, body, contentType, ok=200, **headers):
     connection.request('POST', api_call, body, headers)
     response = connection.getresponse()
     if response.status != ok:
-        print 'Request failed: %d %s'%(response.status, response.reason)
+        print 'Request failed: %d %s' % (response.status, response.reason)
 
 
 @progress
 def announcing_on_Freecode(settings, options):
     auth_code = settings.get('freecode', 'auth_code')
     metadata = taskcoachlib.meta.data.metaDict
-    version = '%(version)s'%metadata
-    changelog = latest_release(metadata, summaryOnly=True)
+    version = '%(version)s' % metadata
+    changelog = latest_release(metadata, summary_only=True)
     tag = 'Feature enhancements' if version.endswith('.0') else 'Bug fixes'
     release = dict(version=version, changelog=changelog, tag_list=tag)
     body = codecs.encode(simplejson.dumps(dict(auth_code=auth_code, 
@@ -291,18 +296,20 @@ def announcing_on_Freecode(settings, options):
     path = '/projects/taskcoach/releases.json'
     host = 'freecode.com'
     if options.dry_run:
-        print 'Skipping announcing "%s" on %s.'%(release, host)
+        print 'Skipping announcing "%s" on %s.' % (release, host)
     else:
         httpPostRequest(host, path, body, 'application/json', ok=201)
 
 
 def status_message():
+    ''' Return a brief status message for e.g. Twitter. '''
     metadata = taskcoachlib.meta.data.metaDict
     return "Release %(version)s of %(name)s is available from %(url)s. " \
-           "See what's new at %(url)schanges.html."%metadata
+           "See what's new at %(url)schanges.html." % metadata
 
 
-def announcing_via_Basic_Auth_Api(settings, options, section, host, api_prefix=''):
+def announcing_via_Basic_Auth_Api(settings, options, section, host, 
+                                  api_prefix=''):
     credentials = ':'.join(settings.get(section, credential) \
                            for credential in ('username', 'password'))
     basic_auth = base64.encodestring(credentials)[:-1]
@@ -311,7 +318,7 @@ def announcing_via_Basic_Auth_Api(settings, options, section, host, api_prefix='
     body = '='.join((urllib.quote(body_part.encode('utf-8')) \
                      for body_part in ('status', status)))
     if options.dry_run:
-        print 'Skipping announcing "%s" on %s.'%(status, host)
+        print 'Skipping announcing "%s" on %s.' % (status, host)
     else:
         httpPostRequest(host, api_call, body, 
                         'application/x-www-form-urlencoded; charset=utf-8',
@@ -328,12 +335,13 @@ def announcing_via_OAuth_Api(settings, options, section, host):
     client = oauth.Client(consumer, token)
     status = status_message()
     if options.dry_run:
-        print 'Skipping announcing "%s" on %s.'%(status, host)
+        print 'Skipping announcing "%s" on %s.' % (status, host)
     else: 
-        response, dummy_content = client.request('http://api.%s/1/statuses/update.json'%host,
-            method='POST', body='status=%s'%status, headers=None)
+        response, dummy_content = client.request( \
+            'http://api.%s/1/statuses/update.json' % host, method='POST', 
+            body='status=%s' % status, headers=None)
         if response.status != 200:
-            print 'Request failed: %d %s'%(response.status, response.reason)
+            print 'Request failed: %d %s' % (response.status, response.reason)
 
 
 @progress
@@ -343,12 +351,13 @@ def announcing_on_Twitter(settings, options):
 
 @progress
 def announcing_on_Identica(settings, options):
-    announcing_via_Basic_Auth_Api(settings, options, 'identica', 'identi.ca', '/api')
+    announcing_via_Basic_Auth_Api(settings, options, 'identica', 'identi.ca', 
+                                  '/api')
 
 
-def uploading_website(settings, options):
-    uploading_website_to_Dreamhost(settings, options)
-    uploading_website_to_Hostland(settings, options)
+def uploading_website(settings, options, *args):
+    uploading_website_to_Dreamhost(settings, options, *args)
+    uploading_website_to_Hostland(settings, options, *args)
     
 
 def announcing(settings, options):
@@ -365,20 +374,20 @@ def releasing(settings, options):
     generating_website(settings, options)
     uploading_website(settings, options)
     announcing(settings, options)
-    tagging_release_in_Subversion(settings, options)
+    tagging_release_in_subversion(settings, options)
 
 
-def latest_release(metadata, summaryOnly=False):
+def latest_release(metadata, summary_only=False):
     sys.path.insert(0, 'changes.in')
-    import changes, converter # pylint: disable-msg=F0401
+    import changes, converter  # pylint: disable-msg=F0401
     del sys.path[0]
-    greeting = 'release %(version)s of %(name)s.'%metadata
-    if summaryOnly:
+    greeting = 'release %(version)s of %(name)s.' % metadata
+    if summary_only:
         greeting = greeting[0].upper() + greeting[1:] 
     else:
         greeting = "We're happy to announce " + greeting
-    textConverter = converter.ReleaseToTextConverter()
-    convert = textConverter.summary if summaryOnly else textConverter.convert
+    text_converter = converter.ReleaseToTextConverter()
+    convert = text_converter.summary if summary_only else text_converter.convert
     return convert(changes.releases[0], greeting)
 
 
@@ -418,7 +427,7 @@ Regards,
 %(author)s
 Task Coach development team
 
-'''%metadata
+''' % metadata
 
     recipients = metadata['announcement_addresses']
     server = settings.get('smtp', 'hostname')
@@ -451,20 +460,21 @@ Server said: %s
 
 
 @progress
-def tagging_release_in_Subversion(settings, options):
+def tagging_release_in_subversion(settings, options):
     metadata = taskcoachlib.meta.data.metaDict
     version = metadata['version']
-    releaseTag = 'Release' + version.replace('.', '_')
-    targetUrl =  'https://taskcoach.svn.sourceforge.net/svnroot/taskcoach/tags/' + releaseTag
-    commitMessage = 'Tag for release %s.'%version
-    svnCopy = 'svn copy -m "%s" . %s'%(commitMessage, targetUrl)
+    release_tag = 'Release' + version.replace('.', '_')
+    target_url =  'https://taskcoach.svn.sourceforge.net/svnroot/' \
+                  'taskcoach/tags/' + release_tag
+    commit_message = 'Tag for release %s.' % version
+    svn_copy = 'svn copy -m "%s" . %s' % (commit_message, target_url)
     if options.dry_run:
-        print 'Skipping %s.'%svnCopy
+        print 'Skipping %s.' % svn_copy
     else:
-        os.system(svnCopy)
+        os.system(svn_copy)
      
    
-commands = dict(release=releasing,
+COMMANDS = dict(release=releasing,
                 upload=uploading_distributions_to_SourceForge, 
                 download=downloading_distributions_from_SourceForge, 
                 md5=generating_MD5_digests,
@@ -477,13 +487,13 @@ commands = dict(release=releasing,
                 pypi=registering_with_PyPI, 
                 mail=mailing_announcement,
                 announce=announcing,
-                tag=tagging_release_in_Subversion)
+                tag=tagging_release_in_subversion)
 
-usage = 'Usage: %%prog [options] [%s]'%'|'.join(sorted(commands.keys()))
+USAGE = 'Usage: %%prog [options] [%s]' % '|'.join(sorted(COMMANDS.keys()))
 
-settings = Settings()
+SETTINGS = Settings()
 
-parser = optparse.OptionParser(usage=usage, epilog=helpText, 
+parser = optparse.OptionParser(usage=USAGE, epilog=HELP_TEXT, 
                                formatter=HelpFormatter())
 parser.add_option('-n', '--dry-run', action='store_true', dest='dry_run', 
                   help="don't make permanent changes")
@@ -492,6 +502,9 @@ parser.add_option('-v', '--verbose', action='store_true', dest='verbose',
 options, args = parser.parse_args()
 
 try:
-    commands[args[0]](settings, options)
+    if len(args) > 1:
+        COMMANDS[args[0]](SETTINGS, options, *args[1:])  # pylint: disable=W0142
+    else:
+        COMMANDS[args[0]](SETTINGS, options)
 except (KeyError, IndexError):
     parser.print_help()
