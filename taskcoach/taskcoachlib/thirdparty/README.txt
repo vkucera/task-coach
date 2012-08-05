@@ -29,6 +29,17 @@ Copied on: 2012-03-10
 Changes for Task Coach: partial highlighting of items
 Patch file: customtreectrl.py.patch
 
+Component: desktop
+Name: desktop
+Author: Paul Boddie <paul@boddie.org.uk>
+Version: 0.4
+Date: 2009-06-21
+License: GPL v3
+Source: http://pypi.python.org/pypi/desktop/
+Copied on: 2012-08-05
+Changes for Task Coach: fixes for KDE4
+Patch file: to be done
+
 Component: hypertreelist.py
 Name: HyperTreeList
 Author: Andrea Gavana <andrea.gavana@gmail.com>
