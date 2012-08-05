@@ -29,6 +29,7 @@ Release('1.3.19', 'August ??, 2012',
             '3554534'),
         Bug('''Fix the About dialog on Kubuntu.''',
             '3554534'),
+        ],
     ),
 
 Release('1.3.18', 'August 4, 2012',
