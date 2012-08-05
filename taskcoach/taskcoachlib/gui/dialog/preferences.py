@@ -648,7 +648,7 @@ class Preferences(widgets.NotebookDialog):
         if pageName == 'iphone':
             return self.settings.getboolean('feature', 'iphone')
         elif pageName == 'editor':
-            return operating_system.isMac()
+            return operating_system.isMac() and not operating_system.isMacOsXMountainLion_OrNewer()
         else:
             return True
 

@@ -25,6 +25,9 @@ releases = [
 Release('1.3.19', 'August ??, 2012',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bug('''Disable spell checking on Mountain Lion because
+it makes Task Coach crash.''',
+            '3554534'),
         Bug('''Fix opening URLs from the Help menu on KDE4.''',
             '3554534'),
         Bug('''Fix the About dialog on Kubuntu.''',

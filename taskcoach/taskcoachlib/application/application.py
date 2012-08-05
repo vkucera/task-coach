@@ -232,7 +232,8 @@ class Application(object):
         pub.subscribe(self.onSpellChecking, 'settings.editor.maccheckspelling')
         
     def onSpellChecking(self, value):
-        wx.SystemOptions.SetOptionInt("mac.textcontrol-use-spell-checker", value)
+        if operating_system.isMac() and not operating_system.isMacOsXMountainLion_OrNewer():
+            wx.SystemOptions.SetOptionInt("mac.textcontrol-use-spell-checker", value)
         
     def registerSignalHandlers(self):
         quitAdapter = lambda *args: self.quitApplication()
