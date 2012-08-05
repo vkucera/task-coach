@@ -16,9 +16,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, stat, re, imaplib, ConfigParser, wx, socket, mailbox
-from taskcoachlib.i18n import _
 from taskcoachlib import persistence, operating_system
+from taskcoachlib.thirdparty import ntlm
+from taskcoachlib.i18n import _
+import os
+import stat
+import re
+import imaplib
+import ConfigParser
+import wx
+import socket
+import mailbox
 
 
 _RX_MAILBOX_MESSAGE = re.compile(r'mailbox-message://(.*)@(.*)/(.*)#((?:-)?\d+)')
@@ -26,11 +34,14 @@ _RX_IMAP_MESSAGE = re.compile(r'imap-message://([^@]+)@([^/]+)/(.*)#(\d+)')
 _RX_IMAP = re.compile(r'imap://([^@]+)@([^/]+)/fetch%3EUID%3E(?:/|\.)(.*)%3E(\d+)')
 _RX_MAILBOX = re.compile(r'mailbox://([^?]+)\?number=(\d+)')
 
+
 class ThunderbirdError(Exception):
     pass
 
+
 class ThunderbirdCancelled(ThunderbirdError):
     pass
+
 
 def unquote(s):
     """Converts %nn sequences into corresponding characters. I
@@ -87,10 +98,11 @@ def getThunderbirdDir():
 
 _PORTABLECACHE = None
 
+
 def getDefaultProfileDir():
     """Returns Thunderbird's default profile directory"""
 
-    global _PORTABLECACHE # pylint: disable-msg=W0603
+    global _PORTABLECACHE  # pylint: disable-msg=W0603
 
     path = getThunderbirdDir()
 
@@ -102,7 +114,7 @@ def getDefaultProfileDir():
         if _PORTABLECACHE is not None:
             return _PORTABLECACHE
 
-        from taskcoachlib.thirdparty import wmi # pylint: disable-msg=W0404
+        from taskcoachlib.thirdparty import wmi  # pylint: disable-msg=W0404
 
         for process in wmi.WMI().Win32_Process():
             if process.ExecutablePath and process.ExecutablePath.lower().endswith('thunderbirdportable.exe'):
@@ -257,8 +269,8 @@ class ThunderbirdImapReader(object):
         for serverIndex in range(100): 
             name = 'mail.server.server%d' % serverIndex
             if config.has_key(name + '.hostname') and \
-               self._equalServers(config[name + '.hostname'], self.server) and \
-               config[name + '.type'] == 'imap':
+                self.__equal_servers(config[name + '.hostname'], self.server) \
+                and config[name + '.type'] == 'imap':
                 if config.has_key(name + '.port'):
                     port = int(config[name + '.port'])
                 if config.has_key(name + '.socketType'):
@@ -275,45 +287,64 @@ class ThunderbirdImapReader(object):
             self.server = config[name + '.realhostname']
         self.port = port or {True: 993, False: 143}[self.ssl]
         
-    def _equalServers(self, server1, server2):
-        gmailServers = ('imap.gmail.com', 'imap.google.com', 'imap.googlemail.com')
-        if server1 in gmailServers and server2 in gmailServers:
+    @staticmethod
+    def __equal_servers(server1, server2):
+        ''' Return whether the servers are the same. '''
+        gmail_servers = ('imap.gmail.com', 'imap.google.com', 
+                         'imap.googlemail.com')
+        if server1 in gmail_servers and server2 in gmail_servers:
             return True
         else:
             return server1 == server2
 
     def _getMail(self):
-        imapClass = imaplib.IMAP4_SSL if self.ssl else imaplib.IMAP4
+        ''' Retrieve the email message from the IMAP server as specified by
+            the dropped URL. '''
+        imap_class = imaplib.IMAP4_SSL if self.ssl else imaplib.IMAP4
         try:
-            cn = imapClass(self.server, self.port)
-        except socket.gaierror, exceptionMessage:
-            errorMessage = _('Could not open an IMAP connection to %(server)s:%(port)s\n'
-                             'to retrieve Thunderbird email message:\n%(error)s')%\
-                             dict(server=self.server, port=self.port, error=exceptionMessage)
-            raise ThunderbirdError(errorMessage)
+            imap = imap_class(self.server, self.port)
+        except socket.gaierror, reason:
+            error_message = _('Could not open an IMAP connection to '
+                              '%(server)s:%(port)s\nto retrieve Thunderbird '
+                              'email message:\n%(reason)s') % \
+                              dict(server=self.server, port=self.port, 
+                                   reason=reason)
+            raise ThunderbirdError(error_message)
 
         if self._PASSWORDS.has_key((self.server, self.user, self.port)):
             pwd = self._PASSWORDS[(self.server, self.user, self.port)]
         else:
-            pwd = wx.GetPasswordFromUser(_('Please enter password for user %(user)s on %(server)s:%(port)d') % \
-                                         dict(user=self.user, server=self.server, port=self.port))
+            pwd = wx.GetPasswordFromUser( \
+                _('Please enter password for user %(user)s on ' \
+                  '%(server)s:%(port)d') % dict(user=self.user, 
+                                                server=self.server, 
+                                                port=self.port))
             if pwd == '':
                 raise ThunderbirdCancelled('User canceled')
 
         while True:
             try:
-                if 'AUTH=CRAM-MD5' in cn.capabilities:
-                    response, params = cn.login_cram_md5(str(self.user), str(pwd))
+                if 'AUTH=CRAM-MD5' in imap.capabilities:
+                    response, dummy = imap.login_cram_md5(str(self.user), 
+                                                         str(pwd))
+                elif 'AUTH=NTLM' in imap.capabilities:
+                    domain = wx.GetTextFromUser( \
+                        _('Please enter the domain for user %s' % self.user))
+                    domain_username = '\\'.join(domain.upper(), str(self.user))
+                    response, dummy_parameters = imap.authenticate('NTLM', 
+                        ntlm.IMAPNtlmAuthHandler.IMAPNtlmAuthHandler( \
+                            domain_username, str(pwd)))
                 else:
-                    response, params = cn.login(self.user, pwd)
-            except cn.error, e:
+                    response, dummy_parameters = imap.login(self.user, pwd)
+            except imap.error, reason:
                 response = 'KO'
-                errmsg, = e.args
+                error_message, = reason.args
 
             if response == 'OK':
                 break
 
-            pwd = wx.GetPasswordFromUser(_('Login failed (%s). Please try again.') % errmsg)
+            pwd = wx.GetPasswordFromUser( \
+                _('Login failed (%s). Please try again.') % error_message)
             if pwd == '':
                 raise ThunderbirdCancelled('User canceled')
 
@@ -321,19 +352,20 @@ class ThunderbirdImapReader(object):
 
         # Two possibilities for separator...
 
-        response, params = cn.select(self.box)
+        response, dummy_parameters = imap.select(self.box)
 
         if response != 'OK':
-            response, params = cn.select(self.box.replace('/', '.'))
+            response, dummy_parameters = imap.select(self.box.replace('/', '.'))
             if response != 'OK':
-                raise ThunderbirdError(_('Could not select inbox "%s"\n(%s)') % (self.box, response))
+                raise ThunderbirdError(_('Could not select inbox "%s"\n(%s)') \
+                                       % (self.box, response))
 
-        response, params = cn.uid('FETCH', str(self.uid), '(RFC822)')
+        response, parameters = imap.uid('FETCH', str(self.uid), '(RFC822)')
 
         if response != 'OK':
             raise ThunderbirdError(_('No such mail: %d') % self.uid)
 
-        return params[0][1]
+        return parameters[0][1]
 
     def saveToFile(self, fp):
         fp.write(self._getMail())
@@ -355,7 +387,7 @@ class ThunderbirdLocalMailboxReader(object):
         # So we skip the first offset bytes before reading the contents:
         with file(path, 'rb') as mbox:
             mbox.seek(offset)
-            contents = mbox.read(4*1024*1024) # Assume message size <= 4MB
+            contents = mbox.read(4 * 1024 * 1024)  # Assume message size <= 4MB
         # Then we get a filename for a temporary file...
         filename = persistence.get_temp_file()
         # And save the remaining contents of the original mbox file: 

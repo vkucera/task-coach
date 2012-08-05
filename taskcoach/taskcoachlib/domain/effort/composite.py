@@ -201,6 +201,10 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
 
     def categories(self, *args, **kwargs):
         return [] 
+    
+    def tasks(self):
+        ''' Return the tasks that have effort in this period. '''
+        return set([effort.task() for effort in self._getEfforts()])
         
     def __repr__(self):
         return 'CompositeEffortPerPeriod(start=%s, stop=%s, efforts=%s)' % \

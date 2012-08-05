@@ -5,21 +5,20 @@ Simple desktop integration for Python. This module provides desktop environment
 detection and resource opening support for a selection of common and
 standardised desktop environments.
 
-Copyright (C) 2005, 2006, 2007 Paul Boddie <paul@boddie.org.uk>
+Copyright (C) 2005, 2006, 2007, 2008, 2009 Paul Boddie <paul@boddie.org.uk>
 
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free
+Software Foundation; either version 3 of the License, or (at your option) any
+later version.
 
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+details.
 
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+You should have received a copy of the GNU Lesser General Public License along
+with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 --------
 
@@ -66,9 +65,15 @@ DESKTOP_LAUNCH="my\ opener --url"       Should run the "my opener" program to
 
 Details of the DESKTOP_LAUNCH environment variable convention can be found here:
 http://lists.freedesktop.org/archives/xdg/2004-August/004489.html
+
+Other Modules
+-------------
+
+The desktop.dialog module provides support for opening dialogue boxes.
+The desktop.windows module permits the inspection of desktop windows.
 """
 
-__version__ = "0.3"
+__version__ = "0.4"
 
 import os
 import sys
@@ -151,12 +156,11 @@ def get_desktop():
 
     if os.environ.has_key("KDE_FULL_SESSION") or \
         os.environ.has_key("KDE_MULTIHEAD"):
+        if int(os.environ.get("KDE_SESSION_VERSION", "3")) >= 4:
+            return "KDE4"
         return "KDE"
     elif os.environ.has_key("GNOME_DESKTOP_SESSION_ID") or \
         os.environ.has_key("GNOME_KEYRING_SOCKET"):
-        return "GNOME"
-    elif os.environ.has_key('DESKTOP_SESSION') and \
-            os.environ['DESKTOP_SESSION'].lower() == 'lubuntu':
         return "GNOME"
     elif sys.platform == "darwin":
         return "Mac OS X"
@@ -194,6 +198,8 @@ def use_desktop(desktop):
 
     # Test for desktops where the overriding is not verified.
 
+    elif (desktop or detected) == "KDE4":
+        return "KDE4"
     elif (desktop or detected) == "KDE":
         return "KDE"
     elif (desktop or detected) == "GNOME":
@@ -253,6 +259,9 @@ def open(url, desktop=None, wait=0):
     elif desktop_in_use == "Windows":
         # NOTE: This returns None in current implementations.
         return os.startfile(url)
+
+    elif desktop_in_use == "KDE4":
+        cmd = ["kioclient", "exec", url]
 
     elif desktop_in_use == "KDE":
         cmd = ["kfmclient", "exec", url]

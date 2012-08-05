@@ -55,8 +55,8 @@ class ListenerBase:
         self.acceptsAllKwargs = argsInfo.acceptsAllKwargs
         
         self._autoTopicArgName = argsInfo.autoTopicArgName
-        self._callable = weakmethod.getWeakRef(callable_, self.__notifyOnDead)
         self.__onDead = onDead
+        self._callable = weakmethod.getWeakRef(callable_, self.__notifyOnDead)
         
         # save identity now in case callable dies:
         name, mod = getID(callable_)   #

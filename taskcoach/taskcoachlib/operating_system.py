@@ -45,18 +45,25 @@ def isWindows7_OrNewer(): # pragma: no cover
         return (major, minor) >= (6, 1)
     else:
         return False
-    
+
+
+def _platformVersion():
+    return tuple(map(int, platform.release().split('.')))
 
 def isMacOsXLion_OrNewer(): # pragma: no cover
     if isMac():
-        return platform.release() >= '11.1.0'
+        return _platformVersion() >= (11, 1)
     else:
         return False
-
 
 def isMacOsXTiger_OrOlder(): # pragma no cover
     if isMac():
-        return platform.release() <= '8.11.1' # Darwin release number for Tiger
+        return _platformVersion() <= (8, 11, 1) # Darwin release number for Tiger
     else:
         return False
 
+def isMacOsXMountainLion_OrNewer(): # pragma no cover
+    if isMac():
+        return _platformVersion() >= (12,)
+    else:
+        return False

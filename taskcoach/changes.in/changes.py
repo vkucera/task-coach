@@ -22,7 +22,20 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.18', 'July 9, 2012',
+Release('1.3.19', 'August ??, 2012',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Disable spell checking on Mountain Lion because
+it makes Task Coach crash.''',
+            '3554534'),
+        Bug('''Fix opening URLs from the Help menu on KDE4.''',
+            '3542487'),
+        Bug('''Fix the About dialog on Kubuntu.''',
+            '3542487'),
+        ],
+    ),
+
+Release('1.3.18', 'August 4, 2012',
     summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
         Bug('''Do not automatically give focus to the subject field
@@ -37,6 +50,8 @@ Tested on 10.5, 10.7 and 10.8DP4.'''),
     featuresAdded=[
         Feature('''In the calendar view, unplanned dates are now cropped
 to the current day.'''), # Close bug report 3539404 when 1.3.18 is released.
+        Feature('''Add support for Thunderbird IMAP accounts that use
+NTLM authentication (typically Exchange accounts).'''),
         ],
     ),
 

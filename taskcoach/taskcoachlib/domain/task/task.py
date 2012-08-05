@@ -823,7 +823,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 myIcon = self.__recursiveIcon
             except AttributeError:
                 myIcon = self.__computeRecursiveIcon()
-        return self.pluralOrSingularIcon(myIcon)
+        return self.pluralOrSingularIcon(myIcon, native=super(Task, self).icon() == '')
     
     def __computeRecursiveIcon(self, *args, **kwargs):  # pylint: disable-msg=W0613
         # pylint: disable-msg=W0201
@@ -838,8 +838,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             try:
                 myIcon = self.__recursiveSelectedIcon
             except AttributeError:
-                myIcon = self.__computeRecursiveSelectedIcon() 
-        return self.pluralOrSingularIcon(myIcon)
+                myIcon = self.__computeRecursiveSelectedIcon()
+        return self.pluralOrSingularIcon(myIcon, native=super(Task, self).selectedIcon == '')
         
     def __computeRecursiveSelectedIcon(self, *args, **kwargs):  # pylint: disable-msg=W0613
         # pylint: disable-msg=W0201
