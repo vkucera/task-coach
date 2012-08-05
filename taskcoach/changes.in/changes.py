@@ -25,7 +25,9 @@ releases = [
 Release('1.3.19', 'August ??, 2012',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug('''Fix the About dialog on Ubuntu.''',
+        Bug('''Fix opening URLs from the Help menu on KDE4.''',
+            '3554534'),
+        Bug('''Fix the About dialog on Kubuntu.''',
             '3554534'),
     ),
 

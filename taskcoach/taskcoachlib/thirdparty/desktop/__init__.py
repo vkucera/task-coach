@@ -156,6 +156,8 @@ def get_desktop():
 
     if os.environ.has_key("KDE_FULL_SESSION") or \
         os.environ.has_key("KDE_MULTIHEAD"):
+        if int(os.environ.get("KDE_SESSION_VERSION", "3")) >= 4:
+            return "KDE4"
         return "KDE"
     elif os.environ.has_key("GNOME_DESKTOP_SESSION_ID") or \
         os.environ.has_key("GNOME_KEYRING_SOCKET"):
@@ -196,6 +198,8 @@ def use_desktop(desktop):
 
     # Test for desktops where the overriding is not verified.
 
+    elif (desktop or detected) == "KDE4":
+        return "KDE4"
     elif (desktop or detected) == "KDE":
         return "KDE"
     elif (desktop or detected) == "GNOME":
@@ -255,6 +259,9 @@ def open(url, desktop=None, wait=0):
     elif desktop_in_use == "Windows":
         # NOTE: This returns None in current implementations.
         return os.startfile(url)
+
+    elif desktop_in_use == "KDE4":
+        cmd = ["kioclient", "exec", url]
 
     elif desktop_in_use == "KDE":
         cmd = ["kfmclient", "exec", url]
