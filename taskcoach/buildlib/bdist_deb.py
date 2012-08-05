@@ -251,7 +251,7 @@ Homepage: %(url)s
 
 Package: %(package)s
 Architecture: %(architecture)s
-Depends: python, python-wxgtk2.8 (>= %(wxpythonversion)s), python-wxversion, libxss1
+Depends: python, python-wxgtk2.8 (>= %(wxpythonversion)s), python-wxversion, libxss1, ttf-dejavu
 Recommends: python-notify, libgnome2-0
 Description: %(description)s.
 %(long_description)s
