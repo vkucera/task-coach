@@ -38,7 +38,7 @@ License: GPL v3
 Source: http://pypi.python.org/pypi/desktop/
 Copied on: 2012-08-05
 Changes for Task Coach: fixes for KDE4
-Patch file: to be done
+Patch files: patch01-lubuntu.diff, patch02-kde4.diff
 
 Component: hypertreelist.py
 Name: HyperTreeList
