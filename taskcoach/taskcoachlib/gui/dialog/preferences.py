@@ -495,7 +495,7 @@ class FeaturesPage(SettingsPage):
         self.addChoiceSetting('view', 'effortminuteinterval',
             _('Minutes between task start/end times'), ' ',
             [(minutes, minutes) for minutes in ('5', '6', '10', '15', '20', '30')])
-        self.addIntegerSetting('feature', 'minidletime', _('Minimum idle time'),
+        self.addIntegerSetting('feature', 'minidletime', _('Idle time notice'),
             helpText=_('If there is no user input for at least this amount of\nminutes, Task Coach will ask what to do about current efforts.'))
         self.fit()
         
