@@ -69,7 +69,7 @@ def loadPreferences():
     for line in file(os.path.join(getDefaultProfileDir(), 'prefs.js'), 'r'):
         if line.startswith('user_pref('):
             # pylint: disable-msg=W0122
-            exec line in { 'user_pref': user_pref, 'true': True, 'false': False }
+            exec line in {'user_pref': user_pref, 'true': True, 'false': False}
 
     return config
 
@@ -311,8 +311,9 @@ class ThunderbirdImapReader(object):
                                    reason=reason)
             raise ThunderbirdError(error_message)
 
-        if self._PASSWORDS.has_key((self.server, self.user, self.port)):
-            pwd = self._PASSWORDS[(self.server, self.user, self.port)]
+        password_key = (self.server, self.user, self.port)
+        if password_key in self._PASSWORDS:
+            pwd = self._PASSWORDS[password_key]
         else:
             pwd = wx.GetPasswordFromUser( \
                 _('Please enter password for user %(user)s on ' \
@@ -330,7 +331,8 @@ class ThunderbirdImapReader(object):
                 elif 'AUTH=NTLM' in imap.capabilities:
                     domain = wx.GetTextFromUser( \
                         _('Please enter the domain for user %s' % self.user))
-                    domain_username = '\\'.join(domain.upper(), str(self.user))
+                    domain_username = '\\'.join([domain.upper(), 
+                                                 str(self.user)])
                     response, dummy_parameters = imap.authenticate('NTLM', 
                         ntlm.IMAPNtlmAuthHandler.IMAPNtlmAuthHandler( \
                             domain_username, str(pwd)))
@@ -348,7 +350,7 @@ class ThunderbirdImapReader(object):
             if pwd == '':
                 raise ThunderbirdCancelled('User canceled')
 
-        self._PASSWORDS[(self.server, self.user, self.port)] = pwd
+        self._PASSWORDS[password_key] = pwd
 
         # Two possibilities for separator...
 
