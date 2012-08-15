@@ -330,7 +330,7 @@ class ThunderbirdImapReader(object):
                                                          str(pwd))
                 elif 'AUTH=NTLM' in imap.capabilities:
                     domain = wx.GetTextFromUser( \
-                        _('Please enter the domain for user %s' % self.user))
+                        _('Please enter the domain for user %s') % self.user)
                     domain_username = '\\'.join([domain.upper(), 
                                                  str(self.user)])
                     response, dummy_parameters = imap.authenticate('NTLM', 
