@@ -23,6 +23,7 @@ from taskcoachlib.notify import NotificationFrameBase, NotificationCenter
 from taskcoachlib.patterns import Observer
 from taskcoachlib.powermgt import IdleNotifier
 from taskcoachlib.thirdparty.pubsub import pub
+from taskcoachlib import render
 import wx
 
 
@@ -35,15 +36,16 @@ class WakeFromIdleFrame(NotificationFrameBase):
         super(WakeFromIdleFrame, self).__init__(*args, **kwargs)
 
     def AddInnerContent(self, sizer, panel):
+        idleTimeFormatted = render.dateTime(self._idleTime)
         sizer.Add(wx.StaticText(panel, wx.ID_ANY,
             _('No user input since %s. The following task was\nbeing tracked:') % \
-                                self._idleTime))
+                                idleTimeFormatted))
         sizer.Add(wx.StaticText(panel, wx.ID_ANY,
             self._effort.task().subject()))
 
         btnNothing = wx.Button(panel, wx.ID_ANY, _('Do nothing'))
-        btnStopAt = wx.Button(panel, wx.ID_ANY, _('Stop it at %s') % self._idleTime)
-        btnStopResume = wx.Button(panel, wx.ID_ANY, _('Stop it at %s and resume now') % self._idleTime)
+        btnStopAt = wx.Button(panel, wx.ID_ANY, _('Stop it at %s') % idleTimeFormatted)
+        btnStopResume = wx.Button(panel, wx.ID_ANY, _('Stop it at %s and resume now') % idleTimeFormatted)
 
         sizer.Add(btnNothing, 0, wx.EXPAND | wx.ALL, 1)
         sizer.Add(btnStopAt, 0, wx.EXPAND | wx.ALL, 1)
