@@ -78,7 +78,10 @@ class Scheduler(apscheduler.scheduler.Scheduler):
 
     def unschedule(self, function):
         if function in self.__jobs:
-            self.unschedule_job(self.__jobs[function])
+            try:
+                self.unschedule_job(self.__jobs[function])
+            except KeyError:
+                pass
             del self.__jobs[function]
 
     def is_scheduled(self, function):
