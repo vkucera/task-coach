@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from data import *
+from debug import log_call, time_call, profile_call
+from developermessagechecker import DeveloperMessageChecker
 from gpl import licenseText, licenseHTML
 from versionchecker import VersionChecker
-from debug import log_call, time_call, profile_call

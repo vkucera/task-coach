@@ -28,20 +28,21 @@ class VersionCheckerUnderTest(meta.VersionChecker):
         self.userNotified = False
         super(VersionCheckerUnderTest, self).__init__(*args, **kwargs)
         
-    def retrieveVersionFile(self):
+    def retrieveVersionFile(self):  # pylint: disable=W0221
         if self.retrievalException:
             raise self.retrievalException
         else:
             import StringIO
-            return StringIO.StringIO('%s\n'%self.version)
+            return StringIO.StringIO('%s\n' % self.version)
             
-    def parseVersionFile(self, versionFile):
+    def parseVersionFile(self, versionFile):  # pylint: disable=W0221
         if self.parseException:
             raise self.parseException
         else:
-            return super(VersionCheckerUnderTest, self).parseVersionFile(versionFile)
+            return super(VersionCheckerUnderTest, 
+                         self).parseVersionFile(versionFile)
             
-    def notifyUser(self, *args, **kwargs): # pylint: disable-msg=W0221,W0613
+    def notifyUser(self, *args, **kwargs):  # pylint: disable=W0221,W0613
         self.userNotified = True
     
 
@@ -49,14 +50,16 @@ class VersionCheckerTest(test.TestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
         
-    def checkVersion(self, version, retrievalException=None, parseException=None):
+    def checkVersion(self, version, retrievalException=None, 
+                     parseException=None):
         checker = VersionCheckerUnderTest(self.settings, version=version, 
                                           retrievalException=retrievalException, 
                                           parseException=parseException)
         checker.run()
         return checker
         
-    def assertLastVersionNotified(self, version, retrievalException=None, parseException=None):
+    def assertLastVersionNotified(self, version, retrievalException=None, 
+                                  parseException=None):
         self.checkVersion(version, retrievalException, parseException)
         self.assertEqual(version, self.settings.get('version', 'notified'))
         
@@ -74,7 +77,8 @@ class VersionCheckerTest(test.TestCase):
     def testExpatParsingError(self):
         import xml.parsers.expat as expat
         exception = expat.error
-        self.assertLastVersionNotified(meta.data.version, parseException=exception)
+        self.assertLastVersionNotified(meta.data.version, 
+                                       parseException=exception)
         
     def testDontNotifyWhenCurrentVersionIsNewerThanLastVersionNotified(self):
         self.settings.set('version', 'notified', '0.0')
@@ -91,11 +95,12 @@ class VersionCheckerTest(test.TestCase):
 
     def testShowDialog(self):
         class DummyDialog(object):
-            def __init__(self, *args, **kwargs):
+            def __init__(self, *args, **kwargs):  # pylint: disable=W0613
                 self.shown = False
+                
             def Show(self):
                 self.shown = True
+                
         checker = meta.VersionChecker(self.settings)
         dialog = checker.showDialog(DummyDialog, '1.0')
         self.failUnless(dialog.shown)
-

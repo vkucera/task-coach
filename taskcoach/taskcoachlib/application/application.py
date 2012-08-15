@@ -120,11 +120,14 @@ class Application(object):
 
     def start(self):
         ''' Call this to start the Application. '''
+        # pylint: disable=W0201
+        from taskcoachlib import meta
         if self.settings.getboolean('version', 'notify'):
-            from taskcoachlib import meta
-            # pylint: disable-msg=W0201
-            self.vc = meta.VersionChecker(self.settings)
-            self.vc.start()
+            self.__version_checker = meta.VersionChecker(self.settings)  
+            self.__version_checker.start()
+        if self.settings.getboolean('view', 'developermessages'):
+            self.__message_checker = meta.DeveloperMessageChecker(self.settings)
+            self.__message_checker.start()
         self.copyDefaultTemplates()
         self.mainwindow.Show()
         self.wxApp.MainLoop()

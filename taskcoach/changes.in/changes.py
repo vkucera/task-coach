@@ -44,6 +44,11 @@ it makes Task Coach crash.''', '3554534'),
 to the current day.'''), # Close bug report 3539404 when 1.3.18 is released.
         Feature('''Add support for Thunderbird IMAP accounts that use
 NTLM authentication (typically Exchange accounts).'''),
+        Feature('''When starting up, Task Coach checks for messages from the 
+Task Coach developers. This allows us to reach all users for e.g. notifications 
+on critical bugs or requests for support. Each message is displayed only once
+and the display of messages can be turned off completely. This feature will be
+used sparingly, of course.'''),
         ],
     ),
 
