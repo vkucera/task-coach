@@ -146,7 +146,8 @@ class ReminderController(object):
         if reminderDateTime < now:
             reminderDateTime = now + date.TimeDelta(seconds=10)
         self.__tasksWithReminders[taskWithReminder] = date.Scheduler().schedule(self.onReminder, 
-                                                                                reminderDateTime)
+                                                                                reminderDateTime,
+                                                                                allowMisfire=True)
             
     def __removeReminder(self, taskWithReminder):
         scheduler = date.Scheduler()
