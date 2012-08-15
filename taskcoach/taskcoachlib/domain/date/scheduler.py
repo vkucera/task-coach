@@ -73,7 +73,8 @@ class Scheduler(apscheduler.scheduler.Scheduler):
         if function not in self.__jobs:
             start_date = dateandtime.Now().endOfDay() if days > 0 else None
             self.__jobs[function] = job = self.add_interval_job(callback, days=days, 
-                minutes=minutes, seconds=seconds, start_date=start_date)
+                minutes=minutes, seconds=seconds, start_date=start_date, misfire_grace_time=0,
+                coalesce=True)
             return job
 
     def unschedule(self, function):
