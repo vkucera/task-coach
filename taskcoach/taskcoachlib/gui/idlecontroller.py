@@ -31,6 +31,7 @@ class WakeFromIdleFrame(NotificationFrameBase):
         self._idleTime = idleTime
         self._effort = effort
         self._displayed = displayedEfforts
+        self._lastActivity = 0
         super(WakeFromIdleFrame, self).__init__(*args, **kwargs)
 
     def AddInnerContent(self, sizer, panel):
@@ -76,7 +77,6 @@ class IdleController(Observer, IdleNotifier):
         self._mainWindow = mainWindow
         self._settings = settings
         self._effortList = effortList
-        self._wentIdle = None
         self._displayed = set()
 
         super(IdleController, self).__init__()
@@ -90,12 +90,14 @@ class IdleController(Observer, IdleNotifier):
                               eventType=self._effortList.removeItemEventType(),
                               eventSource=self._effortList)
         pub.subscribe(self.onTrackingChanged, effort.Effort.trackingChangedEventType())
-    
+        pub.subscribe(self.poweroff, 'powermgt.off')
+        pub.subscribe(self.poweron, 'powermgt.on')
+
     @staticmethod
     def __filterTrackedEfforts(efforts):
         return [anEffort for anEffort in efforts if anEffort.isBeingTracked() \
                 and not isinstance(anEffort, effort.BaseCompositeEffort)]
-                
+
     def onEffortAdded(self, event):
         self.__trackedEfforts.extend(self.__filterTrackedEfforts(event.values()))
 
@@ -114,19 +116,14 @@ class IdleController(Observer, IdleNotifier):
     def getMinIdleTime(self):
         return self._settings.getint('feature', 'minidletime') * 60
 
-    def sleep(self):
-        now = date.Now()
-        self._wentIdle = date.DateTime(now.year, now.month, now.day,
-                                       now.hour, now.minute)
-        self._wentIdle -= date.TimeDelta(minutes=self._settings.getint('feature', 'minidletime'))
-
     def wake(self):
+        self._lastActivity = self.lastActivity # Because it is reset before OnWake is actually called
         wx.CallAfter(self.OnWake)
 
     def OnWake(self):
         for effort in self.__trackedEfforts:
             if effort not in self._displayed:
                 self._displayed.add(effort)
-                frm = WakeFromIdleFrame(self._wentIdle, effort, self._displayed, _('Notification'),
+                frm = WakeFromIdleFrame(date.DateTime.fromtimestamp(self._lastActivity), effort, self._displayed, _('Notification'),
                                         icon=wx.ArtProvider.GetBitmap('taskcoach', wx.ART_FRAME_ICON, (16, 16)))
                 NotificationCenter().NotifyFrame(frm)
