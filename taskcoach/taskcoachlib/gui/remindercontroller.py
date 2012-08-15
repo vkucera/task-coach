@@ -34,7 +34,6 @@ class ReminderController(object):
         patterns.Publisher().registerObserver(self.onRemoveTask,
             eventType=taskList.removeItemEventType(),
             eventSource=taskList)
-        pub.subscribe(self.onReminder, 'powermgt.on')
         self.__tasksWithReminders = {}  # {task: reminderDateTime}
         self.__mainWindow = mainWindow
         self.__mainWindowWasHidden = False
