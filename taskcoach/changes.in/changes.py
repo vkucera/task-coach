@@ -36,6 +36,9 @@ it makes Task Coach crash.''', '3554534'),
         Bug('''Fix the About dialog on Kubuntu.''', '3542487'),
         Bug('''Reminders sometimes wouldn't fire.''', '3554603'),
         Bug('''Idle time notifications would not work on OSX.''', '3554603'),
+        Bug('''On OS X Snow Leopard (10.6) and earlier, the system would
+ask the user to allow Task coach use a port (firewall) or the keychain
+on every launch.''', '3556753'),
 #        Bug('''Fix slowness when viewing aggregated efforts.''',
 #            '3538310', '3537702'),
         ],
@@ -44,6 +47,11 @@ it makes Task Coach crash.''', '3554534'),
 to the current day.'''), # Close bug report 3539404 when 1.3.18 is released.
         Feature('''Add support for Thunderbird IMAP accounts that use
 NTLM authentication (typically Exchange accounts).'''),
+        Feature('''When starting up, Task Coach checks for messages from the 
+Task Coach developers. This allows us to reach all users for e.g. notifications 
+on critical bugs or requests for support. Each message is displayed only once
+and the display of messages can be turned off completely. This feature will be
+used sparingly, of course.'''),
         ],
     ),
 

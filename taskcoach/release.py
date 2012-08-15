@@ -55,11 +55,25 @@ Release steps:
   - If new release branch, update the buildbot masters configuration.
 '''
 
-import ftplib, smtplib, httplib, urllib, os, glob, sys, getpass, hashlib, \
-    base64, ConfigParser, simplejson, codecs, optparse, taskcoachlib.meta
+import ftplib
+import smtplib
+import httplib
+import urllib
+import os
+import glob
+import sys
+import getpass
+import hashlib
+import base64
+import ConfigParser
+import simplejson
+import codecs
+import optparse
+import taskcoachlib.meta
 import oauth2 as oauth
 
 # pylint: disable-msg=W0621,W0613
+
 
 def progress(func):
     ''' Decorator to print out a message when a release step starts and print
@@ -118,9 +132,11 @@ def sourceforge_location(settings):
     project_first_two_letters = project[:2]
     project_first_letter = project[0]
     username = '%s,%s' % (settings.get('sourceforge', 'username'), project)
-    folder = '/home/frs/project/%(p)s/%(pr)s/%(project)s/%(project)s/Release-%(version)s/'%\
-             dict(project=project, pr=project_first_two_letters, 
-                  p=project_first_letter, version=metadata['version'])
+    folder = '/home/frs/project/%(p)s/%(pr)s/%(project)s/%(project)s/' \
+             'Release-%(version)s/' % dict(project=project, 
+                                           pr=project_first_two_letters, 
+                                           p=project_first_letter, 
+                                           version=metadata['version'])
     return '%s@frs.sourceforge.net:%s' % (username, folder)
 
 
@@ -148,7 +164,7 @@ def generating_MD5_digests(settings, options):
     contents = '''md5digests = {\n'''
     for filename in glob.glob(os.path.join('dist', '*')):
         
-        md5digest = hashlib.md5(file(filename, 'rb').read())  # pylint: disable-msg=E1101
+        md5digest = hashlib.md5(file(filename, 'rb').read())  # pylint: disable=E1101
         filename = os.path.basename(filename)
         hexdigest = md5digest.hexdigest()
         contents += '''    "%s": "%s",\n''' % (filename, hexdigest)
@@ -276,7 +292,7 @@ def registering_with_PyPI(settings, options):
 
 def httpPostRequest(host, api_call, body, contentType, ok=200, **headers):
     headers['Content-Type'] = contentType
-    connection = httplib.HTTPConnection('%s:80'%host)
+    connection = httplib.HTTPConnection('%s:80' % host)
     connection.request('POST', api_call, body, headers)
     response = connection.getresponse()
     if response.status != ok:
@@ -322,7 +338,7 @@ def announcing_via_Basic_Auth_Api(settings, options, section, host,
     else:
         httpPostRequest(host, api_call, body, 
                         'application/x-www-form-urlencoded; charset=utf-8',
-                        Authorization='Basic %s'%basic_auth)
+                        Authorization='Basic %s' % basic_auth)
 
 
 def announcing_via_OAuth_Api(settings, options, section, host):
@@ -356,6 +372,8 @@ def announcing_on_Identica(settings, options):
 
 
 def uploading_website(settings, options, *args):
+    ''' Upload the website contents to the website(s). If args is present
+        only the files specified in args are uploaded. '''
     uploading_website_to_Dreamhost(settings, options, *args)
     uploading_website_to_Hostland(settings, options, *args)
     
@@ -379,7 +397,9 @@ def releasing(settings, options):
 
 def latest_release(metadata, summary_only=False):
     sys.path.insert(0, 'changes.in')
-    import changes, converter  # pylint: disable-msg=F0401
+    # pylint: disable-msg=F0401
+    import changes 
+    import converter  
     del sys.path[0]
     greeting = 'release %(version)s of %(name)s.' % metadata
     if summary_only:
@@ -441,7 +461,7 @@ Task Coach development team
     session.helo()
     session.ehlo()
     session.starttls()
-    session.esmtp_features["auth"] = "LOGIN" # Needed for Gmail SMTP.
+    session.esmtp_features["auth"] = "LOGIN"  # Needed for Gmail SMTP.
     session.login(username, password)
     if options.dry_run:
         print 'Skipping sending mail.'
@@ -464,8 +484,8 @@ def tagging_release_in_subversion(settings, options):
     metadata = taskcoachlib.meta.data.metaDict
     version = metadata['version']
     release_tag = 'Release' + version.replace('.', '_')
-    target_url =  'https://taskcoach.svn.sourceforge.net/svnroot/' \
-                  'taskcoach/tags/' + release_tag
+    target_url = 'https://taskcoach.svn.sourceforge.net/svnroot/' \
+                 'taskcoach/tags/' + release_tag
     commit_message = 'Tag for release %s.' % version
     svn_copy = 'svn copy -m "%s" . %s' % (commit_message, target_url)
     if options.dry_run:

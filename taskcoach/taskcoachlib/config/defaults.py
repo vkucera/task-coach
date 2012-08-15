@@ -21,44 +21,51 @@ import wx
 from taskcoachlib import meta
 
 
-defaults = { \
-'view': { \
+defaults = {
+'view': {
     'statusbar': 'True',
     'toolbar': '(22, 22)',
-    'effortviewerintaskeditor': '0', # Index of active effort viewer in task editor
-    'taskviewercount': '1',          # Number of task viewers in main window
-    'categoryviewercount': '1',      # Number of category viewers in main window
-    'noteviewercount': '0',          # Number of note viewers in main window
-    'effortviewercount': '0',        # Number of effort viewers in main window
+    # Index of the active effort viewer in task editor:
+    'effortviewerintaskeditor': '0',  
+    'taskviewercount': '1',  # Number of task viewers in main window
+    'categoryviewercount': '1',  # Number of category viewers in main window
+    'noteviewercount': '0',  # Number of note viewers in main window
+    'effortviewercount': '0',  # Number of effort viewers in main window
     'squaretaskviewercount': '0',
     'timelineviewercount': '0',
     'calendarviewercount': '0',
     'taskstatsviewercount': '0',
-    'language': '',                  # Language and locale, maybe set externally (e.g. by PortableApps)
-    'language_set_by_user': '',      # Language and locale as set by user via preferences, overrides language
+    # Language and locale, maybe set externally (e.g. by PortableApps):
+    'language': '',  
+    # Language and locale as set by user via preferences, overrides language:
+    'language_set_by_user': '',  
     'categoryfiltermatchall': 'False',
     'descriptionpopups': 'True',
-    'weekstart': 'monday',           # Start of work week, 'monday' or 'sunday'
+    'weekstart': 'monday',  # Start of work week, 'monday' or 'sunday'
     # The next three options are used in the effort dialog to populate the
     # drop down menu with start and stop times.
-    'efforthourstart': '8',          # Earliest time, i.e. start of working day
-    'efforthourend': '18',           # Last time, i.e. end of working day
-    'effortminuteinterval': '15',    # Generate times with this interval
+    'efforthourstart': '8',  # Earliest time, i.e. start of working day
+    'efforthourend': '18',  # Last time, i.e. end of working day
+    'effortminuteinterval': '15',  # Generate times with this interval
     'snoozetimes': "[5, 10, 15, 30, 60, 120, 1440]",
-    'defaultsnoozetime': '5',        # Default snooze time
-    'perspective': '',               # The layout of the viewers in the main window
-    'datestied': '',                 # What to do when changing the planned start date or due date
+    'defaultsnoozetime': '5',  # Default snooze time
+    'perspective': '',  # The layout of the viewers in the main window
+    # What to do when changing the planned start date or due date:
+    'datestied': '',  
     # Default date and times to offer in the task dialog, see preferences for
-    # possible values.
+    # possible values:
     'defaultplannedstartdatetime': 'preset_today_currenttime',
     'defaultduedatetime': 'propose_tomorrow_endofworkingday',
     'defaultactualstartdatetime': 'preset_today_currenttime',
     'defaultcompletiondatetime': 'propose_today_currenttime',
     'defaultreminderdatetime': 'propose_tomorrow_startofworkingday',
-},
-'taskviewer': { \
-    'title': '',                     # User supplied viewer title 
-    'treemode': 'True',              # True = tree mode, False = list mode
+    # Show messages from the developers downloaded from the website:
+    'developermessages': 'True',
+    'lastdevelopermessage': '',
+    },
+'taskviewer': {
+    'title': '',  # User supplied viewer title 
+    'treemode': 'True',  # True = tree mode, False = list mode
     'sortby': 'dueDateTime',
     'sortascending': 'True',
     'sortbystatusfirst': 'True',
@@ -78,8 +85,8 @@ defaults = { \
     'hideoverduetasks': 'False',
     'hidecompletedtasks': 'False',
     'hidecompositetasks': 'False',
-},              
-'taskstatsviewer': { \
+    },              
+'taskstatsviewer': {
     'title': '',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
@@ -93,10 +100,10 @@ defaults = { \
     'hidecompletedtasks': 'False',
     'hidecompositetasks': 'False',
     'piechartangle': '30',
-},
-'prerequisiteviewerintaskeditor': { \
-    'title': '',                     # User supplied viewer title 
-    'treemode': 'True',              # True = tree mode, False = list mode
+    },
+'prerequisiteviewerintaskeditor': {
+    'title': '',  # User supplied viewer title 
+    'treemode': 'True',  # True = tree mode, False = list mode
     'sortby': 'subject',
     'sortascending': 'True',
     'sortbystatusfirst': 'True',
@@ -105,7 +112,8 @@ defaults = { \
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
     'searchdescription': 'False',
-    'columns': "['prerequisites', 'dependencies', 'plannedStartDateTime', 'dueDateTime']",
+    'columns': "['prerequisites', 'dependencies', 'plannedStartDateTime', "
+               "'dueDateTime']",
     'columnsalwaysvisible': "['subject']",
     'columnwidths': "{'attachments': 28, 'notes': 28}",
     'columnautoresizing': 'True',
@@ -115,8 +123,9 @@ defaults = { \
     'hideoverduetasks': 'False',
     'hidecompletedtasks': 'False',
     'hideactivetasks': 'False',
-    'hidecompositetasks': 'False' },
-'squaretaskviewer': { \
+    'hidecompositetasks': 'False'
+    },
+'squaretaskviewer': {
     'title': '',
     'sortby': 'budget',
     'searchfilterstring': '',
@@ -129,8 +138,9 @@ defaults = { \
     'hideduesoontasks': 'False',
     'hideoverduetasks': 'False',
     'hidecompletedtasks': 'False',
-    'hidecompositetasks': 'False' },
-'timelineviewer': { \
+    'hidecompositetasks': 'False'
+    },
+'timelineviewer': {
     'title': '',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
@@ -142,8 +152,9 @@ defaults = { \
     'hideoverduetasks': 'False',
     'hideactivetasks': 'False',
     'hidecompletedtasks': 'False',
-    'hidecompositetasks': 'False' },
-'calendarviewer': { \
+    'hidecompositetasks': 'False'
+    },
+'calendarviewer': {
     'title': '',
     'viewtype': '1',
     'periodcount': '1',
@@ -170,8 +181,9 @@ defaults = { \
     'sortcasesensitive': 'False',
     'sortbystatusfirst': 'True',
     'highlightcolor': '',
-    'shownow': 'True' },
-'categoryviewer': { \
+    'shownow': 'True' 
+    },
+'categoryviewer': {
     'title': '',
     'sortby': 'subject',
     'sortascending': 'True',
@@ -183,8 +195,9 @@ defaults = { \
     'columns': "[]",
     'columnsalwaysvisible': "['subject']",
     'columnwidths': "{'attachments': 28, 'notes': 28}",
-    'columnautoresizing': 'True' },
-'categoryviewerintaskeditor': { \
+    'columnautoresizing': 'True'
+    },
+'categoryviewerintaskeditor': {
     'title': '',
     'sortby': 'subject',
     'sortascending': 'True',
@@ -196,8 +209,9 @@ defaults = { \
     'columns': "[]",
     'columnsalwaysvisible': "['subject']",
     'columnwidths': "{'attachments': 28, 'notes': 28}",
-    'columnautoresizing': 'True' },
-'categoryviewerinnoteeditor': { \
+    'columnautoresizing': 'True'
+    },
+'categoryviewerinnoteeditor': {
     'title': '',
     'sortby': 'subject',
     'sortascending': 'True',
@@ -209,8 +223,9 @@ defaults = { \
     'columns': "[]",
     'columnsalwaysvisible': "['subject']",
     'columnwidths': "{'attachments': 28, 'notes': 28}",
-    'columnautoresizing': 'True' },
-'noteviewer': { \
+    'columnautoresizing': 'True'
+    },
+'noteviewer': {
     'title': '',
     'sortby': 'subject',
     'sortascending': 'True',
@@ -222,7 +237,8 @@ defaults = { \
     'columns': "[]",
     'columnsalwaysvisible': "['subject']",
     'columnwidths': "{'attachments': 28}",
-    'columnautoresizing': 'True' },
+    'columnautoresizing': 'True'
+    },
 'noteviewerintaskeditor': {
     'sortby': 'subject',
     'sortascending': 'True',
@@ -234,7 +250,8 @@ defaults = { \
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
-    'searchdescription': 'False' },
+    'searchdescription': 'False'
+    },
 'noteviewerincategoryeditor': {
     'sortby': 'subject',
     'sortascending': 'True',
@@ -246,7 +263,8 @@ defaults = { \
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
-    'searchdescription': 'False' },
+    'searchdescription': 'False'
+    },
 'noteviewerinattachmenteditor': {
     'sortby': 'subject',
     'sortascending': 'True',
@@ -258,26 +276,29 @@ defaults = { \
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
-    'searchdescription': 'False' },
-'effortviewer': { \
+    'searchdescription': 'False'
+    },
+'effortviewer': {
     'title': '',
-    'aggregation': 'details', # 'details' (default), 'day', 'week', or 'month'
+    'aggregation': 'details',  # 'details' (default), 'day', 'week', or 'month'
     'sortby': 'period',
     'sortascending': 'False',
     'sortcasesensitive': 'True',
     'columns': "['timeSpent', 'revenue']",
     'columnsalwaysvisible': "['period', 'task']",
-    'columnwidths': "{'period': 160, 'monday': 70, 'tuesday': 70, 'wednesday': 70, 'thursday': 70, 'friday': 70, 'saturday': 70, 'sunday': 70}",
+    'columnwidths': "{'period': 160, 'monday': 70, 'tuesday': 70, "
+                     "'wednesday': 70, 'thursday': 70, 'friday': 70, "
+                     "'saturday': 70, 'sunday': 70}",
     'columnautoresizing': 'True',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
     'searchdescription': 'False',
-    'round': '0', # round effort to this number of seconds, 0 = no rounding
+    'round': '0',  # round effort to this number of seconds, 0 = no rounding
     'alwaysroundup': 'False',
-},
-'effortviewerintaskeditor': { \
-    'aggregation': 'details', # 'details' (default), 'day', 'week', or 'month'
+    },
+'effortviewerintaskeditor': {
+    'aggregation': 'details',  # 'details' (default), 'day', 'week', or 'month'
     'sortby': 'period',
     'sortascending': 'False',
     'sortcasesensitive': 'True',
@@ -289,10 +310,10 @@ defaults = { \
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
     'searchdescription': 'False',
-    'round': '0', # round effort to this number of seconds, 0 = no rounding
+    'round': '0',  # round effort to this number of seconds, 0 = no rounding
     'alwaysroundup': 'False', 
-},
-'attachmentviewer': { \
+    },
+'attachmentviewer': {
     'title': '',
     'sortby': 'subject',
     'sortascending': 'True',
@@ -304,8 +325,9 @@ defaults = { \
     'columns': "[]",
     'columnsalwaysvisible': "['type', 'subject']",
     'columnwidths': "{'notes': 28, 'type': 28}",
-    'columnautoresizing': 'True' },
-'attachmentviewerintaskeditor': { \
+    'columnautoresizing': 'True'
+    },
+'attachmentviewerintaskeditor': {
     'title': '',
     'sortby': 'subject',
     'sortascending': 'True',
@@ -317,8 +339,9 @@ defaults = { \
     'columns': "[]",
     'columnsalwaysvisible': "['type', 'subject']",
     'columnwidths': "{'notes': 28, 'type': 28}",
-    'columnautoresizing': 'True' },
-'attachmentviewerinnoteeditor': { \
+    'columnautoresizing': 'True'
+    },
+'attachmentviewerinnoteeditor': {
     'title': '',
     'sortby': 'subject',
     'sortascending': 'True',
@@ -330,8 +353,9 @@ defaults = { \
     'columns': "[]",
     'columnsalwaysvisible': "['type', 'subject']",
     'columnwidths': "{'notes': 28, 'type': 28}",
-    'columnautoresizing': 'True' },
-'attachmentviewerincategoryeditor': { \
+    'columnautoresizing': 'True'
+    },
+'attachmentviewerincategoryeditor': {
     'title': '',
     'sortby': 'subject',
     'sortascending': 'True',
@@ -343,109 +367,124 @@ defaults = { \
     'columns': "[]",
     'columnsalwaysvisible': "['type', 'subject']",
     'columnwidths': "{'notes': 28, 'type': 28}",
-    'columnautoresizing': 'True' },
-'window': { \
-    'size': '(700, 500)', # Default size of the main window
-    'position': '(-1, -1)', # Position of the main window, undefined by default
-    'iconized': 'False', # Don't start up iconized by default
-    'maximized': 'False', # Don't start up maximized by default
-    'starticonized': 'WhenClosedIconized', # 'Never', 'Always', 'WhenClosedIconized'
-    'splash': 'True', # Show a splash screen while starting up
-    'hidewheniconized': 'False', # Don't hide the window from the task bar
-    'hidewhenclosed': 'False', # Close window quits the application
-    'tips': 'True', # Show tips after starting up
-    'tipsindex': '0', # Start at the first tip
-    'blinktaskbariconwhentrackingeffort': 'True' },
-'taskdialog': { \
-    'size': '(-1, -1)',     # Size of the dialogs, calculated by default
-    'position': '(-1, -1)', # Position of the dialog, undefined by default
-    'maximized': 'False',   # Don't open the dialog maximized by default
-    'perspectives': '{}'    # The layout of the tabs in the dialog
+    'columnautoresizing': 'True' 
     },
-'categorydialog': { \
-    'size': '(-1, -1)',     # Size of the dialogs, calculated by default
-    'position': '(-1, -1)', # Position of the dialog, undefined by default
-    'maximized': 'False',   # Don't open the dialog maximized by default
-    'perspectives': '{}'    # The layout of the tabs in the dialog
+'window': {
+    'size': '(700, 500)',  # Default size of the main window
+    'position': '(-1, -1)',  # Position of the main window, undefined by default
+    'iconized': 'False',  # Don't start up iconized by default
+    'maximized': 'False',  # Don't start up maximized by default
+    # Possible strticonized values: 'Never', 'Always', 'WhenClosedIconized'
+    'starticonized': 'WhenClosedIconized',  
+    'splash': 'True',  # Show a splash screen while starting up
+    'hidewheniconized': 'False',  # Don't hide the window from the task bar
+    'hidewhenclosed': 'False',  # Close window quits the application
+    'tips': 'True',  # Show tips after starting up
+    'tipsindex': '0',  # Start at the first tip
+    'blinktaskbariconwhentrackingeffort': 'True'
     },
-'effortdialog': { \
-    'size': '(-1, -1)',     # Size of the dialogs, calculated by default
-    'position': '(-1, -1)', # Position of the dialog, undefined by default
-    'maximized': 'False'    # Don't open the dialog maximized by default
+'taskdialog': {
+    'size': '(-1, -1)',  # Size of the dialogs, calculated by default
+    'position': '(-1, -1)',  # Position of the dialog, undefined by default
+    'maximized': 'False',  # Don't open the dialog maximized by default
+    'perspectives': '{}'  # The layout of the tabs in the dialog
     },
-'notedialog': { \
-    'size': '(-1, -1)',     # Size of the dialogs, calculated by default
-    'position': '(-1, -1)', # Position of the dialog, undefined by default
-    'maximized': 'False',   # Don't open the dialog maximized by default
-    'perspectives': '{}'    # The layout of the tabs in the dialog
+'categorydialog': {
+    'size': '(-1, -1)',  # Size of the dialogs, calculated by default
+    'position': '(-1, -1)',  # Position of the dialog, undefined by default
+    'maximized': 'False',  # Don't open the dialog maximized by default
+    'perspectives': '{}'  # The layout of the tabs in the dialog
     },
-'attachmentdialog': { \
-    'size': '(-1, -1)',     # Size of the dialogs, calculated by default
-    'position': '(-1, -1)', # Position of the dialog, undefined by default
-    'maximized': 'False',   # Don't open the dialog maximized by default
-    'perspectives': '{}'    # The layout of the tabs in the dialog
+'effortdialog': {
+    'size': '(-1, -1)',  # Size of the dialogs, calculated by default
+    'position': '(-1, -1)',  # Position of the dialog, undefined by default
+    'maximized': 'False'  # Don't open the dialog maximized by default
     },
-'file': { \
+'notedialog': {
+    'size': '(-1, -1)',  # Size of the dialogs, calculated by default
+    'position': '(-1, -1)',  # Position of the dialog, undefined by default
+    'maximized': 'False',  # Don't open the dialog maximized by default
+    'perspectives': '{}'  # The layout of the tabs in the dialog
+    },
+'attachmentdialog': {
+    'size': '(-1, -1)',  # Size of the dialogs, calculated by default
+    'position': '(-1, -1)',  # Position of the dialog, undefined by default
+    'maximized': 'False',  # Don't open the dialog maximized by default
+    'perspectives': '{}'  # The layout of the tabs in the dialog
+    },
+'file': {
     'recentfiles': '[]',
     'maxrecentfiles': '9',
     'lastfile': '',
     'autosave': 'False',
     'autoload': 'False',
-    'autoimport': '[]',     # Formats to automatically import from, only "Todo.txt" supported at this time
-    'autoexport': '[]',     # Formats to automatically export to, only "Todo.txt" supported at this time
+    # Formats to automatically import from, only "Todo.txt" supported at this 
+    # time:
+    'autoimport': '[]',  
+    # Formats to automatically export to, only "Todo.txt" supported at this 
+    # time:
+    'autoexport': '[]',  
     'nopoll': 'False',
     'backup': 'False',
     'saveinifileinprogramdir': 'False',
     'attachmentbase': '',
     'lastattachmentpath': '',
     'inifileloaded': 'True',
-    'inifileloaderror': '' },
-'fgcolor': { \
+    'inifileloaderror': ''
+    },
+'fgcolor': {
     'activetasks': '(0, 0, 0, 255)',
     'latetasks': '(160, 32, 240, 255)',
     'completedtasks': '(0, 255, 0, 255)',
     'overduetasks': '(255, 0, 0, 255)',
     'inactivetasks': '(192, 192, 192, 255)',
-    'duesoontasks': '(255, 128, 0, 255)' },
-'bgcolor': { \
+    'duesoontasks': '(255, 128, 0, 255)' 
+    },
+'bgcolor': {
     'activetasks': '(255, 255, 255, 255)',
     'latetasks': '(255, 255, 255, 255)',
     'completedtasks': '(255, 255, 255, 255)',
     'overduetasks': '(255, 255, 255, 255)',
     'inactivetasks': '(255, 255, 255, 255)',
-    'duesoontasks': '(255, 255, 255, 255)' },
-'font': { \
+    'duesoontasks': '(255, 255, 255, 255)'
+    },
+'font': {
     'activetasks': '',
     'latetasks': '',
     'completedtasks': '',
     'overduetasks': '',
     'inactivetasks': '',
-    'duesoontasks': '' },
-'icon': { \
+    'duesoontasks': '' 
+    },
+'icon': { 
     'activetasks': 'led_blue_icon',
     'latetasks': 'led_purple_icon',
     'completedtasks': 'led_green_icon',
     'overduetasks': 'led_red_icon',
     'inactivetasks': 'led_grey_icon',
-    'duesoontasks': 'led_orange_icon' },
-'editor': { \
-    'taskpages': '[]',        # Order of tabs in the task editor
-    'categorypages': '[]',    # Order of tabs in the category editor
-    'notepages': '[]',        # Order of tabs in the note editor
+    'duesoontasks': 'led_orange_icon' 
+    },
+'editor': {
+    'taskpages': '[]',  # Order of tabs in the task editor
+    'categorypages': '[]',  # Order of tabs in the category editor
+    'notepages': '[]',  # Order of tabs in the note editor
     'attachmentpages': '[]',  # Order of tabs in the attachment editor
-    'preferencespages': '[]', # Order of tabs in the preferences dialog
-    'maccheckspelling': 'True' },
-'version': { \
-    'python': '', # Filled in by the Settings class when saving the settings
-    'wxpython': '', # Idem
-    'pythonfrozen': '', # Idem
+    'preferencespages': '[]',  # Order of tabs in the preferences dialog
+    'maccheckspelling': 'True' 
+    },
+'version': {
+    'python': '',  # Filled in by the Settings class when saving the settings
+    'wxpython': '',  # Idem
+    'pythonfrozen': '',  # Idem
     'current': meta.data.version,
     'notified': meta.data.version,
-    'notify': 'True' },
-'behavior': { \
+    'notify': 'True' 
+    },
+'behavior': {
     'markparentcompletedwhenallchildrencompleted': 'True',
-    'duesoonhours': '24' }, # When a task is considered to be "due soon"
-'feature': { \
+    'duesoonhours': '24'  # When a task is considered to be "due soon"
+    }, 
+'feature': {
     'notes': 'True',
     'effort': 'True',
     'syncml': 'False',
@@ -454,8 +493,9 @@ defaults = { \
     'minidletime': '0',
     'usesm2': 'False',
     'showsmwarning': 'True',
-    'sayreminder': 'False' },
-'syncml': { \
+    'sayreminder': 'False' 
+    },
+'syncml': { 
     'url': '',
     'username': '',
     'preferredsyncmode': 'TWO_WAY',
@@ -464,29 +504,34 @@ defaults = { \
     'notedbname': 'note',
     'synctasks': 'True',
     'syncnotes': 'True',
-    'showwarning': 'True' },
-'iphone': { \
+    'showwarning': 'True' 
+    },
+'iphone': {
     'password': '',
     'service': '',
     'synccompleted': 'True',
-    'showlog': 'False' },
-'printer': { \
+    'showlog': 'False' 
+    },
+'printer': {
     'margin_left': '0',
     'margin_top': '0',
     'margin_bottom': '0',
     'margin_right': '0',
     'paper_id': '0',
-    'orientation': str(wx.PORTRAIT) },
-'export': { \
+    'orientation': str(wx.PORTRAIT) 
+    },
+'export': {
     'html_selectiononly': 'False',
     'html_separatecss': 'False',
     'csv_selectiononly': 'False',
     'csv_separatedateandtimecolumns': 'False',
     'ical_selectiononly': 'False',
-    'todotxt_selectiononly': 'False' }
+    'todotxt_selectiononly': 'False' 
+    }
 }
 
-minimum = { \
-'view': { \
-    'taskviewercount': '1' }
+minimum = { 
+'view': { 
+    'taskviewercount': '1' 
+    }
 }

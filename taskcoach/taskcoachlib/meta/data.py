@@ -86,6 +86,7 @@ screenshot = url + 'screenshots/Windows/0.71.2-Windows_XP-Tasks_categories_and_e
 icon = url + 'taskcoach.png'
 pad = url + 'pad.xml'
 version_url = url + 'version.txt'
+message_url = url + 'messages.txt'
 download = url + 'download.html'
 dist_download_prefix = 'http://downloads.sourceforge.net/%s' % filename_lower
 faq_url = 'https://answers.launchpad.net/taskcoach/+faqs'
