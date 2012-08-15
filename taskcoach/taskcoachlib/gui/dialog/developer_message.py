@@ -39,6 +39,7 @@ class MessageDialog(sized_controls.SizedDialog):  # pylint: disable=R0904,R0901
         button_sizer = self.CreateStdDialogButtonSizer(wx.OK)
         self.SetButtonSizer(button_sizer)
         self.Fit()
+        self.CentreOnParent()
         button_sizer.GetAffirmativeButton().Bind(wx.EVT_BUTTON, self.on_close)
         self.Bind(wx.EVT_CLOSE, self.on_close)
         
