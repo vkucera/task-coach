@@ -6,7 +6,7 @@ Date: 2011-07-09
 License: MIT
 Source: http://pypi.python.org/packages/source/A/APScheduler/APScheduler-2.0.2.tar.gz#md5=204009e9c2a3dd9c7bbe12d314a9f415
 Copied on: 2012-03-12
-Changes for Task Coach: none
+Changes for Task Coach: misfire.diff
 
 Component: aui
 Name: Advanced User Interface (AUI)
