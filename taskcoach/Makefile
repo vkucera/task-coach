@@ -154,7 +154,7 @@ dmgbase:
 dmg: dmg-goodies dmgbase
 
 dmg-signed: dmg-goodies
-	codesign -s "Developer ID Application" "build/Task Coach/TaskCoach.app"
+	codesign -f -s "Developer ID Application" -r='designated => certificate leaf[field.1.2.840.113635.100.6.1.13] and identifier "org.pythonmac.unspecified.TaskCoach"' "build/Task Coach/TaskCoach.app"
 	make dmgbase
 
 winpenpack: py2exe 
