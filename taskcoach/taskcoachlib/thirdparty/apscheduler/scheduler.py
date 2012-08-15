@@ -282,7 +282,7 @@ class Scheduler(object):
         :param name: name of the job
         :param jobstore: stored the job in the named (or given) job store
         :param misfire_grace_time: seconds after the designated run time that
-            the job is still allowed to be run, or -1 if it must always be
+            the job is still allowed to be run, or 0 if it must always be
             allowed to run.
         :type date: :class:`datetime.date`
         :rtype: :class:`~apscheduler.job.Job`
@@ -309,7 +309,7 @@ class Scheduler(object):
         :param name: name of the job
         :param jobstore: alias of the job store to add the job to
         :param misfire_grace_time: seconds after the designated run time that
-            the job is still allowed to be run, or -1 if it must always be
+            the job is still allowed to be run, or 0 if it must always be
             allowed to run.
         :rtype: :class:`~apscheduler.job.Job`
         """
@@ -338,7 +338,7 @@ class Scheduler(object):
         :param name: name of the job
         :param jobstore: alias of the job store to add the job to
         :param misfire_grace_time: seconds after the designated run time that
-            the job is still allowed to be run, or -1 if it must always be
+            the job is still allowed to be run, or 0 if it must always be
             allowed to run.
         :return: the scheduled job
         :rtype: :class:`~apscheduler.job.Job`
@@ -454,7 +454,7 @@ class Scheduler(object):
             # See if the job missed its run time window, and handle possible
             # misfires accordingly
             difference = datetime.now() - run_time
-	    if job.misfire_grace_time != -1 and timedelta(seconds=job.misfire_grace_time) < difference:
+	    if job.misfire_grace_time != 0 and timedelta(seconds=job.misfire_grace_time) < difference:
                 # Notify listeners about a missed run
                 event = JobEvent(EVENT_JOB_MISSED, job, run_time)
                 self._notify_listeners(event)
