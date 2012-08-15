@@ -25,7 +25,8 @@ class Job(object):
     :param kwargs: dict of keyword arguments to call func with
     :param name: name of the job (optional)
     :param misfire_grace_time: seconds after the designated run time that
-        the job is still allowed to be run
+        the job is still allowed to be run, or 0 if it must always be
+        allowed to run.
     :param coalesce: run once instead of many times if the scheduler determines
         that the job should be run more than once in succession
     :param max_runs: maximum number of times this job is allowed to be
@@ -46,8 +47,8 @@ class Job(object):
             raise TypeError('args must be a list-like object')
         if not hasattr(kwargs, '__getitem__'):
             raise TypeError('kwargs must be a dict-like object')
-        if misfire_grace_time <= 0:
-            raise ValueError('misfire_grace_time must be a positive value')
+        if misfire_grace_time < 0:
+            raise ValueError('misfire_grace_time must be a positive value or 0')
         if max_runs is not None and max_runs <= 0:
             raise ValueError('max_runs must be a positive value')
         if max_instances <= 0:

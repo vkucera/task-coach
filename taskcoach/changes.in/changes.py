@@ -22,28 +22,20 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.19', 'August ??, 2012',
-    summary='''This is a bugfix release.''',
-    bugsFixed=[
-        Bug('''Disable spell checking on Mountain Lion because
-it makes Task Coach crash.''',
-            '3554534'),
-        Bug('''Fix opening URLs from the Help menu on KDE4.''',
-            '3542487'),
-        Bug('''Fix the About dialog on Kubuntu.''',
-            '3542487'),
-        ],
-    ),
-
-Release('1.3.18', 'August 4, 2012',
+Release('1.3.18', 'August ??, 2012',
     summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
         Bug('''Do not automatically give focus to the subject field
-in the task editor on Linux (it overwrites the X clipboard).''',
-            '3539452'),
+in the task editor on Linux (it overwrites the X clipboard).''', '3539452'),
         Bug('''On Mac OS X, the window would shrink at each launch.
 Tested on 10.5, 10.7 and 10.8DP4.'''),
         Bug('''Do not singularize user-set icons.''', '3539824'),
+        Bug('''Disable spell checking on Mountain Lion because
+it makes Task Coach crash.''', '3554534'),
+        Bug('''Fix opening URLs from the Help menu on KDE4.''', '3542487'),
+        Bug('''Fix the About dialog on Kubuntu.''', '3542487'),
+        Bug('''Reminders sometimes wouldn't fire.''', '3554603'),
+        Bug('''Idle time notifications would not work on OSX.''', '3554603'),
 #        Bug('''Fix slowness when viewing aggregated efforts.''',
 #            '3538310', '3537702'),
         ],

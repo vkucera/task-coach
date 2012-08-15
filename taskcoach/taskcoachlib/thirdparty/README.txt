@@ -6,7 +6,7 @@ Date: 2011-07-09
 License: MIT
 Source: http://pypi.python.org/packages/source/A/APScheduler/APScheduler-2.0.2.tar.gz#md5=204009e9c2a3dd9c7bbe12d314a9f415
 Copied on: 2012-03-12
-Changes for Task Coach: none
+Changes for Task Coach: misfire.diff
 
 Component: aui
 Name: Advanced User Interface (AUI)
@@ -28,6 +28,17 @@ Source: http://svn.wxwidgets.org/viewvc/wx/wxPython/3rdParty/AGW/agw/customtreec
 Copied on: 2012-03-10
 Changes for Task Coach: partial highlighting of items
 Patch file: customtreectrl.py.patch
+
+Component: desktop
+Name: desktop
+Author: Paul Boddie <paul@boddie.org.uk>
+Version: 0.4
+Date: 2009-06-21
+License: GPL v3
+Source: http://pypi.python.org/pypi/desktop/
+Copied on: 2012-08-05
+Changes for Task Coach: fixes for KDE4
+Patch files: patch01-lubuntu.diff, patch02-kde4.diff
 
 Component: hypertreelist.py
 Name: HyperTreeList
