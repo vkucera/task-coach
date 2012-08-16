@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, re, sre_constants
 from taskcoachlib.widgets import tooltip
-from taskcoachlib.i18n import _, operating_system
+from taskcoachlib.i18n import _
 
 
 class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
