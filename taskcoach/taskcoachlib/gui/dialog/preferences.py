@@ -514,8 +514,8 @@ class FeaturesPage(SettingsPage):
             [(minutes, minutes) for minutes in ('5', '6', '10', '15', '20', 
                                                 '30')])
         self.addIntegerSetting('feature', 'minidletime', _('Idle time notice'),
-            helpText=_('If there is no user input for at least this amount of\n'
-                       'minutes, %(name)s will ask what to do about current '
+            helpText=_('If there is no user input for this amount of time\n'
+                       '(in minutes), %(name)s will ask what to do about current '
                        'efforts.') % meta.data.metaDict)
         self.fit()
         
