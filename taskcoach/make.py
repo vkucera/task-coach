@@ -158,7 +158,7 @@ def createDebianChangelog():
 
 if sys.argv[1] == 'py2exe':
     from distutils.core import setup
-    import py2exe  # pylint: disable-msg=F0401
+    import py2exe  # pylint: disable=F0401
     py2exeDistdir = '%s-%s-win32exe' % (meta.filename, meta.version)
     # Get .mo files for wxWidgets:
     locale_dir = os.path.join(os.path.dirname(wx.__file__), 'locale')

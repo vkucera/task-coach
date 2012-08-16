@@ -9,15 +9,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sv\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-07-02 09:21+0000\n"
+"POT-Creation-Date: 2012-08-15 23:21+0000\n"
 "PO-Revision-Date: 2012-03-11 07:10+0000\n"
 "Last-Translator: Rikard Edgren <Unknown>\n"
 "Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-15 21:56+0000\n"
-"X-Generator: Launchpad (build 15801)\n"
+"X-Launchpad-Export-Date: 2012-08-16 15:41+0000\n"
+"X-Generator: Launchpad (build 15810)\n"
 
 #: taskcoachlib/application/application.py:67
 msgid "Errors have occured. Please see \"%s\""
@@ -31,7 +31,7 @@ msgstr ""
 msgid "Error"
 msgstr "Fel"
 
-#: taskcoachlib/application/application.py:287
+#: taskcoachlib/application/application.py:291
 msgid ""
 "Couldn't load settings from TaskCoach.ini:\n"
 "%s"
@@ -39,7 +39,7 @@ msgstr ""
 "Kunde inte ladda inställningarna från Taskcoach.ini:\n"
 "%s"
 
-#: taskcoachlib/application/application.py:288
+#: taskcoachlib/application/application.py:292
 #: taskcoachlib/gui/iocontroller.py:65
 msgid "%s file error"
 msgstr "%s filfel"
@@ -666,11 +666,11 @@ msgstr "1 vecka"
 msgid "2 weeks"
 msgstr "2 veckor"
 
-#: taskcoachlib/domain/effort/composite.py:178
+#: taskcoachlib/domain/effort/composite.py:179
 msgid "Total"
 msgstr "Summa"
 
-#: taskcoachlib/domain/effort/composite.py:195
+#: taskcoachlib/domain/effort/composite.py:196
 msgid "Total for %s"
 msgstr "Summa för %s"
 
@@ -1136,8 +1136,21 @@ msgstr "Skiftnyckel"
 msgid "No icon"
 msgstr "Ingen ikon"
 
-#: taskcoachlib/gui/dialog/editor.py:92 taskcoachlib/gui/dialog/editor.py:121
-#: taskcoachlib/gui/dialog/editor.py:1056
+#: taskcoachlib/gui/dialog/developer_message.py:32
+msgid "Message from the %s developers"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/developer_message.py:51
+msgid "See:"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/developer_message.py:57
+#: taskcoachlib/gui/dialog/preferences.py:354
+msgid "Check for messages from the %(name)s developers on startup"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/editor.py:89 taskcoachlib/gui/dialog/editor.py:118
+#: taskcoachlib/gui/dialog/editor.py:1053
 #: taskcoachlib/gui/viewer/attachment.py:85
 #: taskcoachlib/gui/viewer/category.py:90
 #: taskcoachlib/gui/viewer/effort.py:194 taskcoachlib/gui/viewer/note.py:106
@@ -1147,11 +1160,11 @@ msgstr "Ingen ikon"
 msgid "Description"
 msgstr "Beskrivning"
 
-#: taskcoachlib/gui/dialog/editor.py:101
+#: taskcoachlib/gui/dialog/editor.py:98
 msgid "Edit to change all subjects"
 msgstr "Redigera alla ämnen"
 
-#: taskcoachlib/gui/dialog/editor.py:107
+#: taskcoachlib/gui/dialog/editor.py:104
 #: taskcoachlib/gui/dialog/templates.py:109
 #: taskcoachlib/gui/viewer/attachment.py:75
 #: taskcoachlib/gui/viewer/base.py:300 taskcoachlib/gui/viewer/category.py:82
@@ -1161,67 +1174,67 @@ msgstr "Redigera alla ämnen"
 msgid "Subject"
 msgstr "Ämne"
 
-#: taskcoachlib/gui/dialog/editor.py:112
-#: taskcoachlib/gui/dialog/editor.py:1046
+#: taskcoachlib/gui/dialog/editor.py:109
+#: taskcoachlib/gui/dialog/editor.py:1043
 msgid "Edit to change all descriptions"
 msgstr "Redigera alla beskrivningar"
 
-#: taskcoachlib/gui/dialog/editor.py:143 taskcoachlib/gui/uicommand.py:2590
+#: taskcoachlib/gui/dialog/editor.py:140 taskcoachlib/gui/uicommand.py:2590
 #: taskcoachlib/gui/viewer/task.py:871
 #: taskcoachlib/gui/wizard/csvimport.py:232
 #: taskcoachlib/persistence/csv/reader.py:89
 msgid "Priority"
 msgstr "Prioritet"
 
-#: taskcoachlib/gui/dialog/editor.py:159
+#: taskcoachlib/gui/dialog/editor.py:156
 msgid "Mutually exclusive"
 msgstr "Ömsesidigt uteslutande"
 
-#: taskcoachlib/gui/dialog/editor.py:166
+#: taskcoachlib/gui/dialog/editor.py:163
 msgid "Subcategories"
 msgstr "Underkategorier"
 
-#: taskcoachlib/gui/dialog/editor.py:187
+#: taskcoachlib/gui/dialog/editor.py:184
 msgid "Edit to change location of all attachments"
 msgstr "Ändra sökväg för alla bifogade filer"
 
-#: taskcoachlib/gui/dialog/editor.py:195
+#: taskcoachlib/gui/dialog/editor.py:192
 msgid "Browse"
 msgstr "Bläddra"
 
-#: taskcoachlib/gui/dialog/editor.py:199
+#: taskcoachlib/gui/dialog/editor.py:196
 msgid "Location"
 msgstr "Sökväg"
 
-#: taskcoachlib/gui/dialog/editor.py:220
+#: taskcoachlib/gui/dialog/editor.py:217
 msgid "Appearance"
 msgstr "Visning"
 
-#: taskcoachlib/gui/dialog/editor.py:230
-#: taskcoachlib/gui/dialog/preferences.py:119
+#: taskcoachlib/gui/dialog/editor.py:227
+#: taskcoachlib/gui/dialog/preferences.py:121
 msgid "Foreground color"
 msgstr "Förgrundsfärg"
 
-#: taskcoachlib/gui/dialog/editor.py:231
-#: taskcoachlib/gui/dialog/preferences.py:119
+#: taskcoachlib/gui/dialog/editor.py:228
+#: taskcoachlib/gui/dialog/preferences.py:121
 msgid "Background color"
 msgstr "Bakgrundsfärg"
 
-#: taskcoachlib/gui/dialog/editor.py:256
-#: taskcoachlib/gui/dialog/preferences.py:120
+#: taskcoachlib/gui/dialog/editor.py:253
+#: taskcoachlib/gui/dialog/preferences.py:122
 msgid "Font"
 msgstr "Teckensnitt"
 
-#: taskcoachlib/gui/dialog/editor.py:265
-#: taskcoachlib/gui/dialog/preferences.py:120
+#: taskcoachlib/gui/dialog/editor.py:262
+#: taskcoachlib/gui/dialog/preferences.py:122
 msgid "Icon"
 msgstr "Ikon"
 
-#: taskcoachlib/gui/dialog/editor.py:273
+#: taskcoachlib/gui/dialog/editor.py:270
 msgid "Dates"
 msgstr "Tider"
 
-#: taskcoachlib/gui/dialog/editor.py:290
+#: taskcoachlib/gui/dialog/editor.py:287
 #: taskcoachlib/gui/dialog/templates.py:112
 #: taskcoachlib/gui/viewer/task.py:844
 #: taskcoachlib/gui/wizard/csvimport.py:233
@@ -1230,7 +1243,7 @@ msgstr "Tider"
 msgid "Planned start date"
 msgstr "Planerat startdatum"
 
-#: taskcoachlib/gui/dialog/editor.py:291
+#: taskcoachlib/gui/dialog/editor.py:288
 #: taskcoachlib/gui/dialog/templates.py:115
 #: taskcoachlib/gui/viewer/task.py:845
 #: taskcoachlib/gui/wizard/csvimport.py:234
@@ -1239,14 +1252,14 @@ msgstr "Planerat startdatum"
 msgid "Due date"
 msgstr "Deadline"
 
-#: taskcoachlib/gui/dialog/editor.py:293 taskcoachlib/gui/viewer/task.py:846
+#: taskcoachlib/gui/dialog/editor.py:290 taskcoachlib/gui/viewer/task.py:846
 #: taskcoachlib/gui/wizard/csvimport.py:235
 #: taskcoachlib/persistence/csv/generator.py:34
 #: taskcoachlib/persistence/csv/reader.py:94
 msgid "Actual start date"
 msgstr "Verkligt startdatum"
 
-#: taskcoachlib/gui/dialog/editor.py:294
+#: taskcoachlib/gui/dialog/editor.py:291
 #: taskcoachlib/gui/dialog/templates.py:118
 #: taskcoachlib/gui/viewer/task.py:847
 #: taskcoachlib/gui/wizard/csvimport.py:236
@@ -1255,7 +1268,7 @@ msgstr "Verkligt startdatum"
 msgid "Completion date"
 msgstr "Klarskriven"
 
-#: taskcoachlib/gui/dialog/editor.py:330
+#: taskcoachlib/gui/dialog/editor.py:327
 #: taskcoachlib/gui/dialog/reminder.py:98
 #: taskcoachlib/gui/dialog/reminder.py:101
 #: taskcoachlib/gui/dialog/templates.py:121
@@ -1263,74 +1276,74 @@ msgstr "Klarskriven"
 msgid "Reminder"
 msgstr "Påminnelse"
 
-#: taskcoachlib/gui/dialog/editor.py:340 taskcoachlib/gui/viewer/task.py:863
+#: taskcoachlib/gui/dialog/editor.py:337 taskcoachlib/gui/viewer/task.py:863
 msgid "Recurrence"
 msgstr "Återkommande"
 
-#: taskcoachlib/gui/dialog/editor.py:356
+#: taskcoachlib/gui/dialog/editor.py:353
 msgid "Progress"
 msgstr "Progress"
 
-#: taskcoachlib/gui/dialog/editor.py:373
+#: taskcoachlib/gui/dialog/editor.py:370
 msgid "Percentage complete"
 msgstr "Progress"
 
-#: taskcoachlib/gui/dialog/editor.py:382
+#: taskcoachlib/gui/dialog/editor.py:379
 msgid "Use application-wide setting"
 msgstr "Använd applikationens inställningar"
 
-#: taskcoachlib/gui/dialog/editor.py:383
+#: taskcoachlib/gui/dialog/editor.py:380
 msgid "No"
 msgstr "Nej"
 
-#: taskcoachlib/gui/dialog/editor.py:383
+#: taskcoachlib/gui/dialog/editor.py:380
 msgid "Yes"
 msgstr "Ja"
 
-#: taskcoachlib/gui/dialog/editor.py:393
+#: taskcoachlib/gui/dialog/editor.py:390
 msgid "Mark task completed when all children are completed?"
 msgstr "Klarskriv uppgift när deluppgifter är klara?"
 
-#: taskcoachlib/gui/dialog/editor.py:403 taskcoachlib/gui/dialog/editor.py:426
+#: taskcoachlib/gui/dialog/editor.py:400 taskcoachlib/gui/dialog/editor.py:423
 #: taskcoachlib/gui/uicommand.py:2589 taskcoachlib/gui/viewer/task.py:865
 #: taskcoachlib/gui/wizard/csvimport.py:238
 #: taskcoachlib/persistence/csv/reader.py:104
 msgid "Budget"
 msgstr "Planerad tidsåtgång"
 
-#: taskcoachlib/gui/dialog/editor.py:434 taskcoachlib/gui/uicommand.py:2589
+#: taskcoachlib/gui/dialog/editor.py:431 taskcoachlib/gui/uicommand.py:2589
 #: taskcoachlib/gui/viewer/effort.py:203 taskcoachlib/gui/viewer/task.py:867
 msgid "Time spent"
 msgstr "Förbrukad tid"
 
-#: taskcoachlib/gui/dialog/editor.py:450 taskcoachlib/gui/viewer/task.py:869
+#: taskcoachlib/gui/dialog/editor.py:447 taskcoachlib/gui/viewer/task.py:869
 msgid "Budget left"
 msgstr "Återstående tid"
 
-#: taskcoachlib/gui/dialog/editor.py:474 taskcoachlib/gui/viewer/task.py:873
+#: taskcoachlib/gui/dialog/editor.py:471 taskcoachlib/gui/viewer/task.py:873
 #: taskcoachlib/gui/wizard/csvimport.py:240
 #: taskcoachlib/persistence/csv/reader.py:123
 msgid "Hourly fee"
 msgstr "Timpris"
 
-#: taskcoachlib/gui/dialog/editor.py:484 taskcoachlib/gui/uicommand.py:2589
+#: taskcoachlib/gui/dialog/editor.py:481 taskcoachlib/gui/uicommand.py:2589
 #: taskcoachlib/gui/viewer/task.py:874
 #: taskcoachlib/gui/wizard/csvimport.py:239
 #: taskcoachlib/persistence/csv/reader.py:118
 msgid "Fixed fee"
 msgstr "Fast pris"
 
-#: taskcoachlib/gui/dialog/editor.py:490 taskcoachlib/gui/uicommand.py:2589
+#: taskcoachlib/gui/dialog/editor.py:487 taskcoachlib/gui/uicommand.py:2589
 #: taskcoachlib/gui/viewer/effort.py:208 taskcoachlib/gui/viewer/task.py:876
 msgid "Revenue"
 msgstr "Inkomst"
 
-#: taskcoachlib/gui/dialog/editor.py:569 taskcoachlib/gui/viewer/effort.py:39
+#: taskcoachlib/gui/dialog/editor.py:566 taskcoachlib/gui/viewer/effort.py:39
 #: taskcoachlib/help/__init__.py:89 taskcoachlib/help/__init__.py:245
 msgid "Effort"
 msgstr "Insats"
 
-#: taskcoachlib/gui/dialog/editor.py:607
+#: taskcoachlib/gui/dialog/editor.py:604
 #: taskcoachlib/gui/viewer/category.py:40
 #: taskcoachlib/gui/viewer/effort.py:195 taskcoachlib/gui/viewer/note.py:123
 #: taskcoachlib/gui/viewer/task.py:819 taskcoachlib/help/__init__.py:94
@@ -1338,86 +1351,86 @@ msgstr "Insats"
 msgid "Categories"
 msgstr "Kategorier"
 
-#: taskcoachlib/gui/dialog/editor.py:642
+#: taskcoachlib/gui/dialog/editor.py:639
 msgid "Attachments"
 msgstr "Bilagor"
 
-#: taskcoachlib/gui/dialog/editor.py:680 taskcoachlib/gui/viewer/note.py:37
+#: taskcoachlib/gui/dialog/editor.py:677 taskcoachlib/gui/viewer/note.py:37
 #: taskcoachlib/help/__init__.py:99 taskcoachlib/help/__init__.py:306
 msgid "Notes"
 msgstr "Anteckningar"
 
-#: taskcoachlib/gui/dialog/editor.py:722 taskcoachlib/gui/viewer/task.py:828
+#: taskcoachlib/gui/dialog/editor.py:719 taskcoachlib/gui/viewer/task.py:828
 msgid "Prerequisites"
 msgstr "Förutsättningar"
 
-#: taskcoachlib/gui/dialog/editor.py:947
+#: taskcoachlib/gui/dialog/editor.py:944
 msgid "Edit task"
 msgstr "Redigera uppgift"
 
-#: taskcoachlib/gui/dialog/editor.py:956
+#: taskcoachlib/gui/dialog/editor.py:953
 #: taskcoachlib/gui/dialog/reminder.py:49
 #: taskcoachlib/gui/viewer/effort.py:193
 msgid "Task"
 msgstr "Uppgift"
 
-#: taskcoachlib/gui/dialog/editor.py:972
+#: taskcoachlib/gui/dialog/editor.py:969
 msgid "Start"
 msgstr "Starta"
 
-#: taskcoachlib/gui/dialog/editor.py:985
+#: taskcoachlib/gui/dialog/editor.py:982
 msgid "Stop"
 msgstr "Avbryt"
 
-#: taskcoachlib/gui/dialog/editor.py:991
+#: taskcoachlib/gui/dialog/editor.py:988
 msgid "Start tracking from last stop time"
 msgstr "Starta tidtagning från senaste stopptid"
 
-#: taskcoachlib/gui/dialog/editor.py:998
+#: taskcoachlib/gui/dialog/editor.py:995
 msgid "Stop tracking now"
 msgstr "Stoppa tidtagning nu"
 
-#: taskcoachlib/gui/dialog/editor.py:1029
+#: taskcoachlib/gui/dialog/editor.py:1026
 msgid "Warning: start must be earlier than stop"
 msgstr "Varning: start måste komma före stopp"
 
-#: taskcoachlib/gui/dialog/editor.py:1172
+#: taskcoachlib/gui/dialog/editor.py:1169
 msgid "Multiple tasks"
 msgstr "Flera uppgifter"
 
-#: taskcoachlib/gui/dialog/editor.py:1173
+#: taskcoachlib/gui/dialog/editor.py:1170
 msgid "%s (task)"
 msgstr "%s (uppgift)"
 
-#: taskcoachlib/gui/dialog/editor.py:1178
+#: taskcoachlib/gui/dialog/editor.py:1175
 msgid "Multiple categories"
 msgstr "Flera kategorier"
 
-#: taskcoachlib/gui/dialog/editor.py:1179
+#: taskcoachlib/gui/dialog/editor.py:1176
 msgid "%s (category)"
 msgstr "%s (kategori)"
 
-#: taskcoachlib/gui/dialog/editor.py:1184
+#: taskcoachlib/gui/dialog/editor.py:1181
 msgid "Multiple notes"
 msgstr "Flera anteckningar"
 
-#: taskcoachlib/gui/dialog/editor.py:1185
+#: taskcoachlib/gui/dialog/editor.py:1182
 msgid "%s (note)"
 msgstr "%s (anteckning)"
 
-#: taskcoachlib/gui/dialog/editor.py:1190
+#: taskcoachlib/gui/dialog/editor.py:1187
 msgid "Multiple attachments"
 msgstr "Flera bilagor"
 
-#: taskcoachlib/gui/dialog/editor.py:1191
+#: taskcoachlib/gui/dialog/editor.py:1188
 msgid "%s (attachment)"
 msgstr "%s (bilaga)"
 
-#: taskcoachlib/gui/dialog/editor.py:1196
+#: taskcoachlib/gui/dialog/editor.py:1193
 msgid "Multiple efforts"
 msgstr "Flera insatser"
 
-#: taskcoachlib/gui/dialog/editor.py:1197
+#: taskcoachlib/gui/dialog/editor.py:1194
 msgid "%s (effort)"
 msgstr "%s (insats)"
 
@@ -1622,7 +1635,7 @@ msgstr ""
 msgid "OK"
 msgstr "OK"
 
-#: taskcoachlib/gui/dialog/preferences.py:253
+#: taskcoachlib/gui/dialog/preferences.py:259
 msgid ""
 "This setting will take effect\n"
 "after you restart %s"
@@ -1630,15 +1643,15 @@ msgstr ""
 "Inställningarna kommer att fungera\n"
 "när du startat om %s"
 
-#: taskcoachlib/gui/dialog/preferences.py:299
+#: taskcoachlib/gui/dialog/preferences.py:305
 msgid "Files"
 msgstr "Filer"
 
-#: taskcoachlib/gui/dialog/preferences.py:305
+#: taskcoachlib/gui/dialog/preferences.py:311
 msgid "Auto save after every change"
 msgstr "Autospara efter varje ändring"
 
-#: taskcoachlib/gui/dialog/preferences.py:307
+#: taskcoachlib/gui/dialog/preferences.py:313
 msgid ""
 "Create a backup copy before\n"
 "overwriting a %s file"
@@ -1646,7 +1659,7 @@ msgstr ""
 "Skapa en backup-kopia innan\n"
 "en %s fil skrivs över"
 
-#: taskcoachlib/gui/dialog/preferences.py:309
+#: taskcoachlib/gui/dialog/preferences.py:315
 msgid ""
 "Save settings (%s.ini) in the same\n"
 "directory as the program"
@@ -1654,15 +1667,15 @@ msgstr ""
 "Spara inställningar (%s.ini) i samma\n"
 "katalog som programmet"
 
-#: taskcoachlib/gui/dialog/preferences.py:311
+#: taskcoachlib/gui/dialog/preferences.py:317
 msgid "For running %s from a removable medium"
 msgstr "För att köra %s från en flyttbar enhet"
 
-#: taskcoachlib/gui/dialog/preferences.py:312
+#: taskcoachlib/gui/dialog/preferences.py:318
 msgid "Attachment base directory"
 msgstr "Huvudkatalog för bifogade filer"
 
-#: taskcoachlib/gui/dialog/preferences.py:313
+#: taskcoachlib/gui/dialog/preferences.py:319
 msgid ""
 "When adding an attachment, try to make\n"
 "its path relative to this one."
@@ -1670,16 +1683,16 @@ msgstr ""
 "Försök att utgå från den här katalogen\n"
 "när du lägger till en bifogad fil."
 
-#: taskcoachlib/gui/dialog/preferences.py:315
+#: taskcoachlib/gui/dialog/preferences.py:321
 msgid "Before saving, automatically import from"
 msgstr "Innan sparning, importera automatiskt från"
 
-#: taskcoachlib/gui/dialog/preferences.py:316
 #: taskcoachlib/gui/dialog/preferences.py:322
+#: taskcoachlib/gui/dialog/preferences.py:328
 msgid "Todo.txt format"
 msgstr "Todo.txt-format"
 
-#: taskcoachlib/gui/dialog/preferences.py:317
+#: taskcoachlib/gui/dialog/preferences.py:323
 msgid ""
 "Before saving, %s automatically imports tasks\n"
 "from a Todo.txt file with the same name as the task file,\n"
@@ -1689,11 +1702,11 @@ msgstr ""
 "uppgifter från en Todo.txt-fil med samma namn som aktivitetsfilen,\n"
 "men med filändelsen .txt"
 
-#: taskcoachlib/gui/dialog/preferences.py:321
+#: taskcoachlib/gui/dialog/preferences.py:327
 msgid "When saving, automatically export to"
 msgstr "I samband med sparning, exportera automatiskt till"
 
-#: taskcoachlib/gui/dialog/preferences.py:323
+#: taskcoachlib/gui/dialog/preferences.py:329
 msgid ""
 "When saving, %s automatically exports tasks\n"
 "to a Todo.txt file with the same name as the task file,\n"
@@ -1703,53 +1716,53 @@ msgstr ""
 "uppgifter till en Todo.txt-fil med samma namn som aktivitetsfilen,\n"
 "men med filändelsen .txt"
 
-#: taskcoachlib/gui/dialog/preferences.py:331
+#: taskcoachlib/gui/dialog/preferences.py:337
 msgid "Window behavior"
 msgstr "Fönsterhantering"
 
-#: taskcoachlib/gui/dialog/preferences.py:337
+#: taskcoachlib/gui/dialog/preferences.py:344
 msgid "Show splash screen on startup"
 msgstr "Visa uppstartsbild"
 
-#: taskcoachlib/gui/dialog/preferences.py:339
+#: taskcoachlib/gui/dialog/preferences.py:346
 msgid "Show tips window on startup"
 msgstr "Visa tipsfönstret vid uppstart"
 
-#: taskcoachlib/gui/dialog/preferences.py:341
+#: taskcoachlib/gui/dialog/preferences.py:348
 msgid "Start with the main window iconized"
 msgstr "Starta programmet i minimerat läge"
 
-#: taskcoachlib/gui/dialog/preferences.py:342
+#: taskcoachlib/gui/dialog/preferences.py:349
 msgid "Always"
 msgstr "Alltid"
 
-#: taskcoachlib/gui/dialog/preferences.py:342
+#: taskcoachlib/gui/dialog/preferences.py:349
 msgid "Never"
 msgstr "Aldrig"
 
-#: taskcoachlib/gui/dialog/preferences.py:344
+#: taskcoachlib/gui/dialog/preferences.py:351
 msgid "If it was iconized last session"
 msgstr "om det senast var minimerat vid förra sessionen"
 
-#: taskcoachlib/gui/dialog/preferences.py:346
+#: taskcoachlib/gui/dialog/preferences.py:352
 msgid "Check for new version of %(name)s on startup"
 msgstr "Sök efter ny version av %(name)s vid uppstart"
 
-#: taskcoachlib/gui/dialog/preferences.py:348
+#: taskcoachlib/gui/dialog/preferences.py:358
 msgid "Hide main window when iconized"
 msgstr "Dölj huvudfönstret vid minimering"
 
-#: taskcoachlib/gui/dialog/preferences.py:350
+#: taskcoachlib/gui/dialog/preferences.py:360
 msgid "Minimize main window when closed"
 msgstr "Minimera huvudfönstret vid stängning"
 
-#: taskcoachlib/gui/dialog/preferences.py:352
+#: taskcoachlib/gui/dialog/preferences.py:362
 msgid "Make clock in the task bar tick when tracking effort"
 msgstr ""
 "Gör så att klockan i aktivitetsfältet tickar\r\n"
 "vid tidtagning."
 
-#: taskcoachlib/gui/dialog/preferences.py:354
+#: taskcoachlib/gui/dialog/preferences.py:364
 msgid ""
 "Show a popup with the description of an item\n"
 "when hovering over it"
@@ -1757,78 +1770,76 @@ msgstr ""
 "Visa en popup med beskrivning av elementet\n"
 "när muspekaren svävar över det"
 
-#: taskcoachlib/gui/dialog/preferences.py:360
-#: taskcoachlib/gui/dialog/preferences.py:422
+#: taskcoachlib/gui/dialog/preferences.py:371
+#: taskcoachlib/gui/dialog/preferences.py:433
 msgid "Language"
 msgstr "Språk"
 
-#: taskcoachlib/gui/dialog/preferences.py:366
+#: taskcoachlib/gui/dialog/preferences.py:377
 msgid "Let the system determine the language"
 msgstr "Låt systemet välja språk"
 
-#: taskcoachlib/gui/dialog/preferences.py:430
+#: taskcoachlib/gui/dialog/preferences.py:441
 msgid ""
-"If your language is not available, or the translation needs \n"
-"improving, please consider helping. See:"
+"If your language is not available, or the translation needs improving, "
+"please consider helping. See:"
 msgstr ""
-"Om ditt språk saknas, eller översättningen behöver\n"
-"förbättras, kan du bidra. Se:"
 
-#: taskcoachlib/gui/dialog/preferences.py:437
+#: taskcoachlib/gui/dialog/preferences.py:449
 msgid "Language not found?"
 msgstr "Hittar inte språket?"
 
-#: taskcoachlib/gui/dialog/preferences.py:447
+#: taskcoachlib/gui/dialog/preferences.py:459
 msgid "Task appearance"
 msgstr "Visning av uppgifter"
 
-#: taskcoachlib/gui/dialog/preferences.py:465
+#: taskcoachlib/gui/dialog/preferences.py:478
 msgid "Features"
 msgstr "Funktioner"
 
-#: taskcoachlib/gui/dialog/preferences.py:471
+#: taskcoachlib/gui/dialog/preferences.py:485
 msgid "Allow for tracking effort"
 msgstr "Aktivera tidtagning"
 
-#: taskcoachlib/gui/dialog/preferences.py:472
+#: taskcoachlib/gui/dialog/preferences.py:486
 msgid "Allow for taking notes"
 msgstr "Aktivera anteckningar"
 
-#: taskcoachlib/gui/dialog/preferences.py:479
+#: taskcoachlib/gui/dialog/preferences.py:493
 msgid "Enable SyncML"
 msgstr "Aktivera SyncML"
 
-#: taskcoachlib/gui/dialog/preferences.py:481
+#: taskcoachlib/gui/dialog/preferences.py:496
 msgid "Enable iPhone synchronization"
 msgstr "Aktivera iPhone-synkronisering"
 
-#: taskcoachlib/gui/dialog/preferences.py:484
+#: taskcoachlib/gui/dialog/preferences.py:500
 msgid "Use X11 session management"
 msgstr "Använd X11 sessionshantering"
 
-#: taskcoachlib/gui/dialog/preferences.py:486
+#: taskcoachlib/gui/dialog/preferences.py:502
 msgid "Start of work week"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:487
+#: taskcoachlib/gui/dialog/preferences.py:503
 #: taskcoachlib/gui/viewer/effort.py:216
 msgid "Monday"
 msgstr "Måndag"
 
-#: taskcoachlib/gui/dialog/preferences.py:487
+#: taskcoachlib/gui/dialog/preferences.py:503
 #: taskcoachlib/gui/viewer/effort.py:234
 msgid "Sunday"
 msgstr "Söndag"
 
-#: taskcoachlib/gui/dialog/preferences.py:489
+#: taskcoachlib/gui/dialog/preferences.py:505
 msgid "Hour of start of work day"
 msgstr "Klockslag när arbetsdagen startar"
 
-#: taskcoachlib/gui/dialog/preferences.py:491
+#: taskcoachlib/gui/dialog/preferences.py:507
 msgid "Hour of end of work day"
 msgstr "Klockslag när arbetsdagen slutar"
 
-#: taskcoachlib/gui/dialog/preferences.py:493
+#: taskcoachlib/gui/dialog/preferences.py:509
 msgid ""
 "Use gradients in calendar views.\n"
 "This may slow down Task Coach."
@@ -1836,173 +1847,172 @@ msgstr ""
 "Aktivera färgmarkeringar i kalendervyer.\n"
 "Detta kan göra Task Coach långsammare."
 
-#: taskcoachlib/gui/dialog/preferences.py:496
+#: taskcoachlib/gui/dialog/preferences.py:513
 msgid "Minutes between task start/end times"
 msgstr "Uppgiftens varaktighet (min)"
 
-#: taskcoachlib/gui/dialog/preferences.py:498
-msgid "Minimum idle time"
-msgstr "Minimal tid i viloläge"
+#: taskcoachlib/gui/dialog/preferences.py:516
+msgid "Idle time notice"
+msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:499
+#: taskcoachlib/gui/dialog/preferences.py:517
 msgid ""
 "If there is no user input for at least this amount of\n"
-"minutes, Task Coach will ask what to do about current efforts."
+"minutes, %(name)s will ask what to do about current efforts."
 msgstr ""
-"Om det inte är någon användaraktivitet under detta antal minuter, \n"
-"så kommer Task Coach fråga vad som ska göras med pågående insatser."
 
-#: taskcoachlib/gui/dialog/preferences.py:505
+#: taskcoachlib/gui/dialog/preferences.py:525
 msgid "Task dates"
 msgstr "Datum för uppgifter"
 
-#: taskcoachlib/gui/dialog/preferences.py:511
+#: taskcoachlib/gui/dialog/preferences.py:533
 msgid "Mark parent task completed when all children are completed"
 msgstr "Klarskriv överordnad uppgift när alla underuppgifter är klara"
 
-#: taskcoachlib/gui/dialog/preferences.py:513
+#: taskcoachlib/gui/dialog/preferences.py:535
 msgid "Number of hours that tasks are considered to be 'due soon'"
 msgstr "Återstående tid (tim) för att uppgiften ska vara \"på gång\""
 
-#: taskcoachlib/gui/dialog/preferences.py:515
+#: taskcoachlib/gui/dialog/preferences.py:537
 msgid "Nothing"
 msgstr "Inget"
 
-#: taskcoachlib/gui/dialog/preferences.py:516
+#: taskcoachlib/gui/dialog/preferences.py:539
 msgid "Changing the planned start date changes the due date"
 msgstr "Att ändra planerat startdatum ändrar deadline"
 
-#: taskcoachlib/gui/dialog/preferences.py:517
+#: taskcoachlib/gui/dialog/preferences.py:541
 msgid "Changing the due date changes the planned start date"
 msgstr "Att ändra deadline ändrar planerat startdatum"
 
-#: taskcoachlib/gui/dialog/preferences.py:519
+#: taskcoachlib/gui/dialog/preferences.py:543
 msgid ""
 "What to do with planned start and due date if the other one is changed"
 msgstr ""
 "Vad som ska göras med planerat startdatum och deadline om den ena ändras"
 
-#: taskcoachlib/gui/dialog/preferences.py:522
+#: taskcoachlib/gui/dialog/preferences.py:546
 msgid "Preset"
 msgstr "Förinställningar"
 
-#: taskcoachlib/gui/dialog/preferences.py:523
+#: taskcoachlib/gui/dialog/preferences.py:547
 msgid "Propose"
 msgstr "Föreslå"
 
-#: taskcoachlib/gui/dialog/preferences.py:524
+#: taskcoachlib/gui/dialog/preferences.py:548
 msgid "Today"
 msgstr "Idag"
 
-#: taskcoachlib/gui/dialog/preferences.py:525
+#: taskcoachlib/gui/dialog/preferences.py:549
 msgid "Tomorrow"
 msgstr "Imorgon"
 
-#: taskcoachlib/gui/dialog/preferences.py:526
+#: taskcoachlib/gui/dialog/preferences.py:550
 msgid "Day after tomorrow"
 msgstr "I övermorgon"
 
-#: taskcoachlib/gui/dialog/preferences.py:527
+#: taskcoachlib/gui/dialog/preferences.py:551
 msgid "Next Friday"
 msgstr "Nästa fredag"
 
-#: taskcoachlib/gui/dialog/preferences.py:528
+#: taskcoachlib/gui/dialog/preferences.py:552
 msgid "Next Monday"
 msgstr "Nästa måndag"
 
-#: taskcoachlib/gui/dialog/preferences.py:529
+#: taskcoachlib/gui/dialog/preferences.py:553
 msgid "Start of day"
 msgstr "Dagens början"
 
-#: taskcoachlib/gui/dialog/preferences.py:530
+#: taskcoachlib/gui/dialog/preferences.py:554
 msgid "Start of working day"
 msgstr "Arbetsdagens början"
 
-#: taskcoachlib/gui/dialog/preferences.py:531
+#: taskcoachlib/gui/dialog/preferences.py:555
 msgid "Current time"
 msgstr "Nuvarande tid"
 
-#: taskcoachlib/gui/dialog/preferences.py:532
+#: taskcoachlib/gui/dialog/preferences.py:556
 msgid "End of working day"
 msgstr "Arbetsdagens slut"
 
-#: taskcoachlib/gui/dialog/preferences.py:533
+#: taskcoachlib/gui/dialog/preferences.py:557
 msgid "End of day"
 msgstr "Dagens slut"
 
-#: taskcoachlib/gui/dialog/preferences.py:535
+#: taskcoachlib/gui/dialog/preferences.py:559
 msgid "Default planned start date and time"
 msgstr "Förinställt startdatum och tid"
 
-#: taskcoachlib/gui/dialog/preferences.py:538
+#: taskcoachlib/gui/dialog/preferences.py:562
 msgid "Default due date and time"
 msgstr "Förinställt slutdatum och tid"
 
-#: taskcoachlib/gui/dialog/preferences.py:541
+#: taskcoachlib/gui/dialog/preferences.py:565
 msgid "Default actual start date and time"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:544
+#: taskcoachlib/gui/dialog/preferences.py:568
 msgid "Default completion date and time"
 msgstr "Förinställt slutdatum och tid"
 
-#: taskcoachlib/gui/dialog/preferences.py:547
+#: taskcoachlib/gui/dialog/preferences.py:571
 msgid "Default reminder date and time"
 msgstr "Förinställt påminnelsedatum och tid"
 
-#: taskcoachlib/gui/dialog/preferences.py:554
+#: taskcoachlib/gui/dialog/preferences.py:578
 msgid "Task reminders"
 msgstr "Påminnelse för uppgifter"
 
-#: taskcoachlib/gui/dialog/preferences.py:563
+#: taskcoachlib/gui/dialog/preferences.py:588
 msgid "Notification system to use for reminders"
 msgstr "Meddelandesätt för påminnelser"
 
-#: taskcoachlib/gui/dialog/preferences.py:567
+#: taskcoachlib/gui/dialog/preferences.py:592
 msgid "Let the computer say the reminder"
 msgstr "Låt datorn säga påminnelsen"
 
-#: taskcoachlib/gui/dialog/preferences.py:568
+#: taskcoachlib/gui/dialog/preferences.py:593
 msgid "(Needs espeak)"
 msgstr "(Kräver espeak)"
 
-#: taskcoachlib/gui/dialog/preferences.py:572
+#: taskcoachlib/gui/dialog/preferences.py:598
 msgid "Default snooze time to use after reminder"
 msgstr "Förvald slummertid efter påminnelse"
 
-#: taskcoachlib/gui/dialog/preferences.py:575
+#: taskcoachlib/gui/dialog/preferences.py:602
 msgid "Snooze times to offer in task reminder dialog"
 msgstr "Tillgängliga slummertider i dialogrutan Påminnelse"
 
-#: taskcoachlib/gui/dialog/preferences.py:582
+#: taskcoachlib/gui/dialog/preferences.py:610
 msgid "iPhone"
 msgstr "iPhone"
 
-#: taskcoachlib/gui/dialog/preferences.py:588
+#: taskcoachlib/gui/dialog/preferences.py:616
 msgid "Password for synchronization with iPhone"
 msgstr "Lösenord för synkronisering med iPhone"
 
-#: taskcoachlib/gui/dialog/preferences.py:590
+#: taskcoachlib/gui/dialog/preferences.py:618
 msgid "Bonjour service name"
 msgstr "Namn i Bonjour"
 
-#: taskcoachlib/gui/dialog/preferences.py:592
+#: taskcoachlib/gui/dialog/preferences.py:620
+#: taskcoachlib/gui/dialog/preferences.py:621
 msgid "Upload completed tasks to device"
 msgstr "Ladda upp klara uppgifter till enhet"
 
-#: taskcoachlib/gui/dialog/preferences.py:594
+#: taskcoachlib/gui/dialog/preferences.py:623
 msgid "Show sync log"
 msgstr "Visa synk-logg"
 
-#: taskcoachlib/gui/dialog/preferences.py:594
+#: taskcoachlib/gui/dialog/preferences.py:623
 msgid "Show the synchronization log"
 msgstr "Visa synkroniseringsloggen"
 
-#: taskcoachlib/gui/dialog/preferences.py:600
+#: taskcoachlib/gui/dialog/preferences.py:629
 msgid "Editor"
 msgstr "Textredigerare"
 
-#: taskcoachlib/gui/dialog/preferences.py:606
+#: taskcoachlib/gui/dialog/preferences.py:635
 msgid "Check spelling in editors"
 msgstr "Kontrollera stavning i textredigerare"
 
@@ -2108,47 +2118,47 @@ msgstr "Access"
 msgid "New task template"
 msgstr "Ny uppgiftsmall"
 
-#: taskcoachlib/gui/dialog/version.py:39
+#: taskcoachlib/gui/dialog/version.py:41
 msgid "Notify me of new versions."
 msgstr "Informera mig om nya versioner."
 
-#: taskcoachlib/gui/dialog/version.py:56
+#: taskcoachlib/gui/dialog/version.py:62
 msgid "New version of %(name)s available"
 msgstr "Ny version av %(name)s är tillgänglig"
 
-#: taskcoachlib/gui/dialog/version.py:59
+#: taskcoachlib/gui/dialog/version.py:66
 msgid "You are using %(name)s version %(currentVersion)s."
 msgstr "Du kör %(name)s version %(currentVersion)s"
 
-#: taskcoachlib/gui/dialog/version.py:62
+#: taskcoachlib/gui/dialog/version.py:71
 msgid "Version %(version)s of %(name)s is available from"
 msgstr "Version %(version)s av %(name)s kan hämtas från"
 
-#: taskcoachlib/gui/dialog/version.py:67
+#: taskcoachlib/gui/dialog/version.py:77
 msgid "%(name)s is up to date"
 msgstr "Du kör senaste versionen av %(name)s"
 
-#: taskcoachlib/gui/dialog/version.py:70
+#: taskcoachlib/gui/dialog/version.py:81
 msgid "%(name)s is up to date at version %(version)s."
 msgstr "Du kör senaste versionen av %(name)s, %(version)s."
 
-#: taskcoachlib/gui/dialog/version.py:74
+#: taskcoachlib/gui/dialog/version.py:86
 msgid "Couldn't find out latest version"
 msgstr "Hittade inte senaste version"
 
-#: taskcoachlib/gui/dialog/version.py:77
+#: taskcoachlib/gui/dialog/version.py:89
 msgid "Couldn't find out what the latest version of %(name)s is."
 msgstr "Hittade inte vad senaste version av %(name)s är."
 
-#: taskcoachlib/gui/dialog/version.py:82
+#: taskcoachlib/gui/dialog/version.py:95
 msgid "Prerelease version"
 msgstr "Betaversion"
 
-#: taskcoachlib/gui/dialog/version.py:85
+#: taskcoachlib/gui/dialog/version.py:98
 msgid "You are using %(name)s prerelease version %(currentVersion)s."
 msgstr "Du kör betaversion av %(name)s, %(currentVersion)s."
 
-#: taskcoachlib/gui/dialog/version.py:86
+#: taskcoachlib/gui/dialog/version.py:100
 msgid "The latest released version of %(name)s is %(version)s."
 msgstr "Den senaste utgivna versionen av %(name)s är %(version)s."
 
@@ -2171,7 +2181,7 @@ msgstr ""
 msgid "Do not show this dialog at startup"
 msgstr "Visa inte denna dialog vid programstart"
 
-#: taskcoachlib/gui/idlecontroller.py:38
+#: taskcoachlib/gui/idlecontroller.py:41
 msgid ""
 "No user input since %s. The following task was\n"
 "being tracked:"
@@ -2179,19 +2189,19 @@ msgstr ""
 "Ingen användaraktivitet sedan %s. Följande uppgift \n"
 "hade tidtagning igång:"
 
-#: taskcoachlib/gui/idlecontroller.py:43
+#: taskcoachlib/gui/idlecontroller.py:46
 msgid "Do nothing"
 msgstr "Gör inget"
 
-#: taskcoachlib/gui/idlecontroller.py:44
+#: taskcoachlib/gui/idlecontroller.py:47
 msgid "Stop it at %s"
 msgstr "Stanna vid %s"
 
-#: taskcoachlib/gui/idlecontroller.py:45
+#: taskcoachlib/gui/idlecontroller.py:48
 msgid "Stop it at %s and resume now"
 msgstr "Stoppa vid %s och återuppta nu"
 
-#: taskcoachlib/gui/idlecontroller.py:130
+#: taskcoachlib/gui/idlecontroller.py:129
 msgid "Notification"
 msgstr "Meddelande"
 
@@ -2654,7 +2664,7 @@ msgstr "&Prioritet"
 msgid "Page"
 msgstr "Sida"
 
-#: taskcoachlib/gui/remindercontroller.py:92
+#: taskcoachlib/gui/remindercontroller.py:91
 msgid "%s Reminder"
 msgstr "%s Påminnelse"
 
@@ -6101,19 +6111,19 @@ msgstr "Skickar GUID: %s"
 msgid "Mail.app message"
 msgstr "Meddelande från e-postklienten"
 
-#: taskcoachlib/mailer/thunderbird.py:84
+#: taskcoachlib/mailer/thunderbird.py:95
 msgid "Could not find Thunderbird data dir"
 msgstr "Hittade inte Thunderbird-data"
 
-#: taskcoachlib/mailer/thunderbird.py:112
+#: taskcoachlib/mailer/thunderbird.py:124
 msgid "Could not find Thunderbird profile."
 msgstr "Hittade inte Thunderbird-profil."
 
-#: taskcoachlib/mailer/thunderbird.py:131
+#: taskcoachlib/mailer/thunderbird.py:143
 msgid "No default section in profiles.ini"
 msgstr "Ingen förvald sektion i profiles.ini"
 
-#: taskcoachlib/mailer/thunderbird.py:144
+#: taskcoachlib/mailer/thunderbird.py:156
 msgid ""
 "Malformed Thunderbird internal ID:\n"
 "%s. Please file a bug report."
@@ -6121,7 +6131,7 @@ msgstr ""
 "Ogiltigt format på Thunderbird internt ID:\n"
 "%s. Skicka vänligen en buggrapport."
 
-#: taskcoachlib/mailer/thunderbird.py:176
+#: taskcoachlib/mailer/thunderbird.py:188
 msgid ""
 "Could not find directory for ID\n"
 "%s.\n"
@@ -6131,30 +6141,31 @@ msgstr ""
 "%s.\n"
 "Skicka vänligen en buggraport."
 
-#: taskcoachlib/mailer/thunderbird.py:237
-#: taskcoachlib/mailer/thunderbird.py:350
+#: taskcoachlib/mailer/thunderbird.py:249
+#: taskcoachlib/mailer/thunderbird.py:384
 msgid "Unrecognized URL scheme: \"%s\""
 msgstr "Känner inte igen URL-schema: \"%s\""
 
-#: taskcoachlib/mailer/thunderbird.py:290
+#: taskcoachlib/mailer/thunderbird.py:307
 msgid ""
 "Could not open an IMAP connection to %(server)s:%(port)s\n"
 "to retrieve Thunderbird email message:\n"
-"%(error)s"
+"%(reason)s"
 msgstr ""
-"Kunde inte skapa IMAP-koppling till %(server)s:%(port)s\n"
-"för att hämta Thunderbird e-postmeddelande:\n"
-"%(error)s"
 
-#: taskcoachlib/mailer/thunderbird.py:298
+#: taskcoachlib/mailer/thunderbird.py:319
 msgid "Please enter password for user %(user)s on %(server)s:%(port)d"
 msgstr "Ange lösenord för användare %(user)s på %(server)s:%(port)d"
 
-#: taskcoachlib/mailer/thunderbird.py:316
+#: taskcoachlib/mailer/thunderbird.py:333
+msgid "Please enter the domain for user %s"
+msgstr ""
+
+#: taskcoachlib/mailer/thunderbird.py:349
 msgid "Login failed (%s). Please try again."
 msgstr "Inloggning misslyckades (%s). Försök igen."
 
-#: taskcoachlib/mailer/thunderbird.py:329
+#: taskcoachlib/mailer/thunderbird.py:362
 msgid ""
 "Could not select inbox \"%s\"\n"
 "(%s)"
@@ -6162,7 +6173,7 @@ msgstr ""
 "Kunde inte välja inkorgen \"%s\"\n"
 "(%s)"
 
-#: taskcoachlib/mailer/thunderbird.py:334
+#: taskcoachlib/mailer/thunderbird.py:368
 msgid "No such mail: %d"
 msgstr "Ingen sådan e-post: %d"
 
@@ -6555,6 +6566,13 @@ msgstr "Fel när webbadressen skulle öppnas"
 
 #~ msgid "Start date"
 #~ msgstr "Starttidpunkt"
+
+#~ msgid ""
+#~ "If your language is not available, or the translation needs \n"
+#~ "improving, please consider helping. See:"
+#~ msgstr ""
+#~ "Om ditt språk saknas, eller översättningen behöver\n"
+#~ "förbättras, kan du bidra. Se:"
 
 #~ msgid "Tasks due soon"
 #~ msgstr "Uppgifter på gång"
@@ -6969,6 +6987,16 @@ msgstr "Fel när webbadressen skulle öppnas"
 #~ msgid "Tasks with a start date and a due date"
 #~ msgstr "Aktiviteter med start- och slutdatum"
 
+#~ msgid "Minimum idle time"
+#~ msgstr "Minimal tid i viloläge"
+
+#~ msgid ""
+#~ "If there is no user input for at least this amount of\n"
+#~ "minutes, Task Coach will ask what to do about current efforts."
+#~ msgstr ""
+#~ "Om det inte är någon användaraktivitet under detta antal minuter, \n"
+#~ "så kommer Task Coach fråga vad som ska göras med pågående insatser."
+
 #~ msgid "Task conflict"
 #~ msgstr "Konflikt mellan aktiviteter"
 
@@ -6981,6 +7009,15 @@ msgstr "Fel när webbadressen skulle öppnas"
 
 #~ msgid "Sort notes manually"
 #~ msgstr "Sortera anteckningar manuellt"
+
+#~ msgid ""
+#~ "Could not open an IMAP connection to %(server)s:%(port)s\n"
+#~ "to retrieve Thunderbird email message:\n"
+#~ "%(error)s"
+#~ msgstr ""
+#~ "Kunde inte skapa IMAP-koppling till %(server)s:%(port)s\n"
+#~ "för att hämta Thunderbird e-postmeddelande:\n"
+#~ "%(error)s"
 
 #~ msgid "Sort tasks manually"
 #~ msgstr "Sortera uppgifter manuellt"

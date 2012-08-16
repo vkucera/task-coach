@@ -53,6 +53,8 @@ Task Coach developers. This allows us to reach all users for e.g. notifications
 on critical bugs or requests for support. Each message is displayed only once
 and the display of messages can be turned off completely. This feature will be
 used sparingly, of course.'''),
+        Feature('''Added almost complete Belarusian translation thanks to 
+Korney San.'''),
         ],
     ),
 

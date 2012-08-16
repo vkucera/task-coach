@@ -134,6 +134,7 @@ languages = {
     'English': None, 
     'Arabic': 'ar',
     'Basque': 'eu',
+    'Belarusian': 'be',
     'Bosnian': 'bs',
     'Breton': 'br',
     'Bulgarian': 'bg',
