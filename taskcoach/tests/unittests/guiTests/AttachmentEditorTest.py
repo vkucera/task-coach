@@ -56,7 +56,7 @@ class AttachmentEditorTest(test.wxTestCase):
             page._subjectEntry.SetFocus()
         
     def testCreate(self):
-        # pylint: disable-msg=W0212
+        # pylint: disable=W0212
         self.assertEqual('Attachment', self.editor._interior[0]._subjectEntry.GetValue())
 
     def testEditSubject(self):
@@ -70,4 +70,4 @@ class AttachmentEditorTest(test.wxTestCase):
     def testAddNote(self):
         viewer = self.editor._interior[1].viewer
         viewer.newItemCommand(viewer.presentation()).do()
-        self.assertEqual(1, len(self.attachment.notes())) # pylint: disable-msg=E1101
+        self.assertEqual(1, len(self.attachment.notes())) # pylint: disable=E1101

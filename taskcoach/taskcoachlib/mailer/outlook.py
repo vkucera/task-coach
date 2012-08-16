@@ -21,7 +21,7 @@ from taskcoachlib import persistence
 
 
 if os.name == 'nt':
-    from win32com.client import GetActiveObject # pylint: disable-msg=F0401
+    from win32com.client import GetActiveObject # pylint: disable=F0401
 
     def getCurrentSelection():
         selection = GetActiveObject('Outlook.Application').ActiveExplorer().Selection

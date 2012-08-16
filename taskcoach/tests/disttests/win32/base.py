@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 ''' These tests actually assume a fresh configuration (new .ini file, 
-nothing changed). ''' # pylint: disable-msg=W0105
+nothing changed). ''' # pylint: disable=W0105
 
 import sys, os, time, re, shutil, unittest
 import win32process, win32event, win32gui, win32con
@@ -42,13 +42,13 @@ class Window(object):
 
     def _get_children(self):
         result = []
-        def cb(hwnd, lparam): # pylint: disable-msg=W0613
+        def cb(hwnd, lparam): # pylint: disable=W0613
             result.append(Window(hwnd))
             return True
         try:
             win32gui.EnumChildWindows(self.hwnd, cb, None)
         except:
-            result = [] # pylint: disable-msg=W0702
+            result = [] # pylint: disable=W0702
         return result
     children = property(_get_children, doc="The window direct children")
 
@@ -190,12 +190,12 @@ class Win32TestCase(unittest.TestCase):
         for _ in xrange(tries):
             windows = []
 
-            def enumCb(hwnd, lparam): # pylint: disable-msg=W0613
+            def enumCb(hwnd, lparam): # pylint: disable=W0613
                 try:
                     if titleRegex.search(win32gui.GetWindowText(hwnd)):
                         windows.append(hwnd)
                 except:
-                    pass # pylint: disable-msg=W0702
+                    pass # pylint: disable=W0702
                 return True
 
             win32gui.EnumWindows(enumCb, None)

@@ -37,7 +37,7 @@ class TempFiles(object):
                     os.chmod(name, stat.S_IREAD|stat.S_IWRITE)
                 os.remove(name)
             except:
-                pass # pylint: disable-msg=W0702
+                pass # pylint: disable=W0702
 
 
 def get_temp_file(**kwargs):

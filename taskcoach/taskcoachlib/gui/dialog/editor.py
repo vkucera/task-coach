@@ -64,7 +64,7 @@ class Page(widgets.BookPage):
                 if operating_system.isWindows():
                     # This ensures that if the TextCtrl value is more than can be 
                     # displayed, it will display the start instead of the end:
-                    from taskcoachlib.thirdparty import SendKeys  # pylint: disable-msg=W0404
+                    from taskcoachlib.thirdparty import SendKeys  # pylint: disable=W0404
                     SendKeys.SendKeys('{END}+{HOME}')
                 else:
                     theEntry.SetSelection(-1, -1)
@@ -94,7 +94,7 @@ class SubjectPage(Page):
         self.addDescriptionEntry()
         
     def addSubjectEntry(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         currentSubject = self.items[0].subject() if len(self.items) == 1 else _('Edit to change all subjects')
         self._subjectEntry = widgets.SingleLineTextCtrl(self, currentSubject)
         self._subjectSync = attributesync.AttributeSync('subject', 
@@ -104,7 +104,7 @@ class SubjectPage(Page):
         self.addEntry(_('Subject'), self._subjectEntry)
 
     def addDescriptionEntry(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         def combinedDescription(items):
             return u'[%s]\n\n' % _('Edit to change all descriptions') + \
                 '\n\n'.join(item.description() for item in items)
@@ -129,7 +129,7 @@ class TaskSubjectPage(SubjectPage):
         self.addPriorityEntry()
          
     def addPriorityEntry(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         currentPriority = self.items[0].priority() if len(self.items) == 1 else 0
         self._priorityEntry = widgets.SpinCtrl(self, size=(100, -1),
             value=currentPriority)
@@ -151,7 +151,7 @@ class CategorySubjectPage(SubjectPage):
         self.addExclusiveSubcategoriesEntry()
        
     def addExclusiveSubcategoriesEntry(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         currentExclusivity = self.items[0].hasExclusiveSubcategories() if len(self.items) == 1 else False
         self._exclusiveSubcategoriesCheckBox = wx.CheckBox(self, label=_('Mutually exclusive')) 
         self._exclusiveSubcategoriesCheckBox.SetValue(currentExclusivity)
@@ -180,7 +180,7 @@ class AttachmentSubjectPage(SubjectPage):
     def addLocationEntry(self):
         panel = wx.Panel(self)
         sizer = wx.BoxSizer(wx.HORIZONTAL)
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         currentLocation = self.items[0].location() if len(self.items) == 1 else _('Edit to change location of all attachments')
         self._locationEntry = widgets.SingleLineTextCtrl(panel, currentLocation)
         self._locationSync = attributesync.AttributeSync('location', 
@@ -195,7 +195,7 @@ class AttachmentSubjectPage(SubjectPage):
         panel.SetSizer(sizer)
         self.addEntry(_('Location'), panel, flags=[None, wx.ALL | wx.EXPAND])
 
-    def onSelectLocation(self, event):  # pylint: disable-msg=W0613
+    def onSelectLocation(self, event):  # pylint: disable=W0613
         basePath = self.settings.get('file', 'lastattachmentpath')
         if not basePath:
             basePath = os.getcwd()
@@ -239,7 +239,7 @@ class TaskAppearancePage(Page):
         self.addEntry(labelText, colorEntry, flags=[None, wx.ALL])
             
     def addFontEntry(self):
-        # pylint: disable-msg=W0201,E1101
+        # pylint: disable=W0201,E1101
         currentFont = self.items[0].font() if len(self.items) == 1 else None
         currentColor = self._foregroundColorEntry.GetValue()
         self._fontEntry = entry.FontEntry(self, currentFont, currentColor)
@@ -253,7 +253,7 @@ class TaskAppearancePage(Page):
         self.addEntry(_('Font'), self._fontEntry, flags=[None, wx.ALL])
                     
     def addIconEntry(self):
-        # pylint: disable-msg=W0201,E1101
+        # pylint: disable=W0201,E1101
         currentIcon = self.items[0].icon() if len(self.items) == 1 else ''
         self._iconEntry = entry.IconEntry(self, currentIcon)
         self._iconSync = attributesync.AttributeSync('icon', self._iconEntry, 
@@ -262,7 +262,7 @@ class TaskAppearancePage(Page):
         self.addEntry(_('Icon'), self._iconEntry, flags=[None, wx.ALL])
 
     def entries(self):
-        return dict(firstEntry=self._foregroundColorEntry)  # pylint: disable-msg=E1101
+        return dict(firstEntry=self._foregroundColorEntry)  # pylint: disable=E1101
     
 
 class DatesPage(Page):
@@ -314,7 +314,7 @@ class DatesPage(Page):
                (datesTied == 'duestart' and taskMethodName == 'dueDateTime')
                
     def addReminderEntry(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         reminderDateTime = self.items[0].reminder() if len(self.items) == 1 else date.DateTime()
         suggestedDateTime = self.items[0].suggestedReminderDateTime()
         self._reminderDateTimeEntry = entry.DateTimeEntry(self, self.__settings,
@@ -327,7 +327,7 @@ class DatesPage(Page):
         self.addEntry(_('Reminder'), self._reminderDateTimeEntry)
         
     def addRecurrenceEntry(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         currentRecurrence = self.items[0].recurrence() if len(self.items) == 1 else date.Recurrence()
         self._recurrenceEntry = entry.RecurrenceEntry(self, currentRecurrence)
         self._recurrenceSync = attributesync.AttributeSync('recurrence',
@@ -337,7 +337,7 @@ class DatesPage(Page):
         self.addEntry(_('Recurrence'), self._recurrenceEntry)
             
     def entries(self):
-        # pylint: disable-msg=E1101
+        # pylint: disable=E1101
         return dict(firstEntry=self._plannedStartDateTimeEntry,
                     plannedStartDateTime=self._plannedStartDateTimeEntry,
                     dueDateTime=self._dueDateTimeEntry,
@@ -358,7 +358,7 @@ class ProgressPage(Page):
         self.addBehaviorEntry()
         
     def addProgressEntry(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         currentPercentageComplete = self.items[0].percentageComplete() if len(self.items) == 1 else self.averagePercentageComplete(self.items)
         self._percentageCompleteEntry = entry.PercentageEntry(self, 
             currentPercentageComplete)
@@ -375,7 +375,7 @@ class ProgressPage(Page):
                     / float(len(items)) if items else 0
         
     def addBehaviorEntry(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         choices = [(None, _('Use application-wide setting')),
                    (False, _('No')), (True, _('Yes'))]
         currentChoice = self.items[0].shouldMarkCompletedWhenAllChildrenCompleted() \
@@ -413,7 +413,7 @@ class BudgetPage(Page):
             self.addBudgetLeftEntry()
             
     def addBudgetEntry(self):
-        # pylint: disable-msg=W0201,W0212
+        # pylint: disable=W0201,W0212
         currentBudget = self.items[0].budget() if len(self.items) == 1 else date.TimeDelta()
         self._budgetEntry = entry.TimeDeltaEntry(self, currentBudget)
         self._budgetSync = attributesync.AttributeSync('budget', 
@@ -424,7 +424,7 @@ class BudgetPage(Page):
                     
     def addTimeSpentEntry(self):
         assert len(self.items) == 1
-        # pylint: disable-msg=W0201 
+        # pylint: disable=W0201 
         self._timeSpentEntry = entry.TimeDeltaEntry(self, 
                                                     self.items[0].timeSpent(), 
                                                     readonly=True)
@@ -440,7 +440,7 @@ class BudgetPage(Page):
             
     def addBudgetLeftEntry(self):
         assert len(self.items) == 1
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self._budgetLeftEntry = entry.TimeDeltaEntry(self, 
                                                      self.items[0].budgetLeft(), 
                                                      readonly=True)
@@ -449,7 +449,7 @@ class BudgetPage(Page):
         pub.subscribe(self.onBudgetLeftChanged, 
                       self.items[0].budgetLeftChangedEventType())
         
-    def onBudgetLeftChanged(self, newValue, sender):  # pylint: disable-msg=W0613
+    def onBudgetLeftChanged(self, newValue, sender):  # pylint: disable=W0613
         if sender == self.items[0]:
             if newValue != self._budgetLeftEntry.GetValue():
                 self._budgetLeftEntry.SetValue(newValue)
@@ -461,7 +461,7 @@ class BudgetPage(Page):
             self.addRevenueEntry()
             
     def addHourlyFeeEntry(self):
-        # pylint: disable-msg=W0201,W0212
+        # pylint: disable=W0201,W0212
         currentHourlyFee = self.items[0].hourlyFee() if len(self.items) == 1 else 0
         self._hourlyFeeEntry = entry.AmountEntry(self, currentHourlyFee)
         self._hourlyFeeSync = attributesync.AttributeSync('hourlyFee',
@@ -471,7 +471,7 @@ class BudgetPage(Page):
         self.addEntry(_('Hourly fee'), self._hourlyFeeEntry, flags=[None, wx.ALL])
         
     def addFixedFeeEntry(self):
-        # pylint: disable-msg=W0201,W0212
+        # pylint: disable=W0201,W0212
         currentFixedFee = self.items[0].fixedFee() if len(self.items) == 1 else 0
         self._fixedFeeEntry = entry.AmountEntry(self, currentFixedFee)
         self._fixedFeeSync = attributesync.AttributeSync('fixedFee',
@@ -483,7 +483,7 @@ class BudgetPage(Page):
     def addRevenueEntry(self):
         assert len(self.items) == 1
         revenue = self.items[0].revenue()
-        self._revenueEntry = entry.AmountEntry(self, revenue, readonly=True)  # pylint: disable-msg=W0201
+        self._revenueEntry = entry.AmountEntry(self, revenue, readonly=True)  # pylint: disable=W0201
         self.addEntry(_('Revenue'), self._revenueEntry, flags=[None, wx.ALL])
         pub.subscribe(self.onRevenueChanged, 
                       self.items[0].revenueChangedEventType())
@@ -541,7 +541,7 @@ class PageWithViewer(Page):
         self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
         
     def addEntries(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.viewer = self.createViewer(self.__taskFile, self.__settings,
                                         self.__settingsSection) 
         self.addEntry(self.viewer, growable=True)
@@ -576,14 +576,14 @@ class EffortPage(PageWithViewer):
                     timeSpent=self.viewer)
         
 
-class LocalCategoryViewer(viewer.BaseCategoryViewer):  # pylint: disable-msg=W0223
+class LocalCategoryViewer(viewer.BaseCategoryViewer):  # pylint: disable=W0223
     def __init__(self, items, *args, **kwargs):
         self.__items = items
         super(LocalCategoryViewer, self).__init__(*args, **kwargs)
         for item in self.domainObjectsToView():
             item.expand(context=self.settingsSection(), notify=False)
 
-    def getIsItemChecked(self, category):  # pylint: disable-msg=W0621
+    def getIsItemChecked(self, category):  # pylint: disable=W0621
         for item in self.__items:
             if category in item.categories():
                 return True
@@ -595,7 +595,7 @@ class LocalCategoryViewer(viewer.BaseCategoryViewer):  # pylint: disable-msg=W02
         category = self.widget.GetItemPyData(event.GetItem())
         command.ToggleCategoryCommand(None, self.__items, category=category).do()
 
-    def createCategoryPopupMenu(self):  # pylint: disable-msg=W0221
+    def createCategoryPopupMenu(self):  # pylint: disable=W0221
         return super(LocalCategoryViewer, self).createCategoryPopupMenu(True)            
 
 
@@ -621,7 +621,7 @@ class CategoriesPage(PageWithViewer):
         return dict(firstEntry=self.viewer, categories=self.viewer) 
 
 
-class LocalAttachmentViewer(viewer.AttachmentViewer):  # pylint: disable-msg=W0223
+class LocalAttachmentViewer(viewer.AttachmentViewer):  # pylint: disable=W0223
     def __init__(self, *args, **kwargs):
         self.attachmentOwner = kwargs.pop('owner')
         attachments = attachment.AttachmentList(self.attachmentOwner.attachments())
@@ -648,7 +648,7 @@ class AttachmentsPage(PageWithViewer):
         return LocalAttachmentViewer(self, taskFile, settings,
             settingsSection=settingsSection, owner=item)
 
-    def onAttachmentsChanged(self, event):  # pylint: disable-msg=W0613
+    def onAttachmentsChanged(self, event):  # pylint: disable=W0613
         self.viewer.domainObjectsToView().clear()
         self.viewer.domainObjectsToView().extend(self.items[0].attachments())
         
@@ -656,7 +656,7 @@ class AttachmentsPage(PageWithViewer):
         return dict(firstEntry=self.viewer, attachments=self.viewer)
 
 
-class LocalNoteViewer(viewer.BaseNoteViewer):  # pylint: disable-msg=W0223
+class LocalNoteViewer(viewer.BaseNoteViewer):  # pylint: disable=W0223
     def __init__(self, *args, **kwargs):
         self.noteOwner = kwargs.pop('owner')
         notes = note.NoteContainer(self.noteOwner.notes())
@@ -686,7 +686,7 @@ class NotesPage(PageWithViewer):
         return LocalNoteViewer(self, taskFile, settings, 
                                settingsSection=settingsSection, owner=item)
 
-    def onNotesChanged(self, event):  # pylint: disable-msg=W0613
+    def onNotesChanged(self, event):  # pylint: disable=W0613
         self.viewer.domainObjectsToView().clear()
         self.viewer.domainObjectsToView().extend(self.items[0].notes())
 
@@ -694,7 +694,7 @@ class NotesPage(PageWithViewer):
         return dict(firstEntry=self.viewer, notes=self.viewer)
     
 
-class LocalPrerequisiteViewer(viewer.CheckableTaskViewer):  # pylint: disable-msg=W0223
+class LocalPrerequisiteViewer(viewer.CheckableTaskViewer):  # pylint: disable=W0223
     def __init__(self, items, *args, **kwargs):
         self.__items = items
         super(LocalPrerequisiteViewer, self).__init__(*args, **kwargs)
@@ -854,7 +854,7 @@ class EditBook(widgets.Notebook):
             try:
                 self.LoadPerspective(perspective)
             except:
-                pass  # pylint: disable-msg=W0702
+                pass  # pylint: disable=W0702
 
     def savePerspective(self, pageNames):
         perspectives = self.settings.getdict('%sdialog' % self.domainObject, 'perspectives')
@@ -913,7 +913,7 @@ class EffortEditBook(Page):
     domainObject = 'effort'
     columns = 3
     
-    def __init__(self, parent, efforts, taskFile, settings, itemsAreNew, *args, **kwargs):  # pylint: disable-msg=W0613
+    def __init__(self, parent, efforts, taskFile, settings, itemsAreNew, *args, **kwargs):  # pylint: disable=W0613
         self._effortList = taskFile.efforts()
         taskList = taskFile.tasks()
         self._taskList = task.TaskList(taskList)
@@ -922,7 +922,7 @@ class EffortEditBook(Page):
         self._taskFile = taskFile
         super(EffortEditBook, self).__init__(efforts, parent, *args, **kwargs)
         
-    def getPage(self, pageName):  # pylint: disable-msg=W0613
+    def getPage(self, pageName):  # pylint: disable=W0613
         return None  # An EffortEditBook is not really a notebook...
         
     def addEntries(self):
@@ -933,7 +933,7 @@ class EffortEditBook(Page):
     def addTaskEntry(self):
         ''' Add an entry for changing the task that this effort record
             belongs to. '''
-        # pylint: disable-msg=W0201,W0212
+        # pylint: disable=W0201,W0212
         panel = wx.Panel(self)
         currentTask = self.items[0].task()
         self._taskEntry = entry.TaskEntry(panel,
@@ -953,7 +953,7 @@ class EffortEditBook(Page):
         self.addEntry(_('Task'), panel, flags=[None, wx.ALL | wx.EXPAND])
 
     def addStartAndStopEntries(self):
-        # pylint: disable-msg=W0201,W0142
+        # pylint: disable=W0201,W0142
         dateTimeEntryKwArgs = dict(showSeconds=True)
         flags = [None, wx.ALIGN_RIGHT | wx.ALL, wx.ALIGN_LEFT | wx.ALL | wx.ALIGN_CENTER_VERTICAL, None]
         
@@ -1003,7 +1003,7 @@ class EffortEditBook(Page):
         text.SetFont(font)
         return text
 
-    def onStartFromLastEffort(self, event):  # pylint: disable-msg=W0613
+    def onStartFromLastEffort(self, event):  # pylint: disable=W0613
         maxDateTime = self._effortList.maxDateTime()
         if self._startDateTimeEntry.GetValue() != maxDateTime:
             self._startDateTimeEntry.SetValue(self._effortList.maxDateTime())
@@ -1032,13 +1032,13 @@ class EffortEditBook(Page):
         except AttributeError:
             return True  # Entries not created yet
 
-    def onEditTask(self, event):  # pylint: disable-msg=W0613
+    def onEditTask(self, event):  # pylint: disable=W0613
         taskToEdit = self._taskEntry.GetValue()
         TaskEditor(None, [taskToEdit], self._settings, self._taskFile.tasks(), 
             self._taskFile).Show()
 
     def addDescriptionEntry(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         def combinedDescription(items):
             return u'[%s]\n\n' % _('Edit to change all descriptions') + \
                 '\n\n'.join(item.description() for item in items)
@@ -1117,7 +1117,7 @@ class Editor(widgets.Dialog):
                                      (wx.ACCEL_CMD, ord('Y'), wx.ID_REDO),
                                      (wx.ACCEL_CMD, ord('E'), newEffortId)])
         self._interior.SetAcceleratorTable(table)
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.undoCommand = uicommand.EditUndo()
         self.redoCommand = uicommand.EditRedo()
         effortPage = self._interior.getPage('effort') 
@@ -1157,7 +1157,7 @@ class Editor(widgets.Dialog):
                 self.Close()
                 break            
 
-    def onSubjectChanged(self, event):  # pylint: disable-msg=W0613
+    def onSubjectChanged(self, event):  # pylint: disable=W0613
         self.SetTitle(self.title())
         
     def title(self):

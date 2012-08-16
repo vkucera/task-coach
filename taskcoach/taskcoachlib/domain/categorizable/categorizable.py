@@ -191,7 +191,7 @@ class CategorizableCompositeObject(base.CompositeObject):
             font is mixed. If a categorizable composite object has no font of 
             its own, it uses its parent's font. '''
         fonts = [category.font(recursive=True) for category in self.categories()]
-        return font.FontMixer.mix(*fonts) # pylint: disable-msg=W0142
+        return font.FontMixer.mix(*fonts) # pylint: disable=W0142
 
     def icon(self, recursive=False):
         icon = super(CategorizableCompositeObject, self).icon()

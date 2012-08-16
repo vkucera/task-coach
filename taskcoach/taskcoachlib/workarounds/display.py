@@ -21,7 +21,7 @@ from taskcoachlib import operating_system
 
 
 if operating_system.isWindows():
-    import win32api # pylint: disable-msg=F0401
+    import win32api # pylint: disable=F0401
 
     class Display(object):
         """

@@ -298,7 +298,7 @@ class EffortTest(test.TestCase, asserts.Mixin):
         self.task.addCategory(category.Category('C'))
         self.assertEqual(self.task.categories(), self.effort.categories())
 
-    def testModificationEventTypes(self):  # pylint: disable-msg=E1003
+    def testModificationEventTypes(self):  # pylint: disable=E1003
         self.assertEqual(super(effort.Effort, self.effort).modificationEventTypes() + \
                          [self.effort.taskChangedEventType(), 
                           self.effort.startChangedEventType(), 

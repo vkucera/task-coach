@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # This modules works around bugs in third party modules, mostly by
 # monkey-patching so import it first
-from taskcoachlib import workarounds  # pylint: disable-msg=W0611
+from taskcoachlib import workarounds  # pylint: disable=W0611
 
 import wx
 import os
@@ -29,7 +29,7 @@ from taskcoachlib import patterns, operating_system
 from taskcoachlib.thirdparty.pubsub import pub
 from taskcoachlib.i18n import _
 
-# pylint: disable-msg=W0404
+# pylint: disable=W0404
 
         
 class wxApp(wx.App):
@@ -100,7 +100,7 @@ class Application(object):
                         self.setProperty(xsm.SmProgram, sys.argv[0])
                         self.setProperty(xsm.SmRestartStyleHint, xsm.SmRestartNever)
                         
-                    def saveYourself(self, saveType, shutdown, interactStyle, fast):  # pylint: disable-msg=W0613
+                    def saveYourself(self, saveType, shutdown, interactStyle, fast):  # pylint: disable=W0613
                         if shutdown:
                             self._callback()
                         self.saveYourselfDone(True)
@@ -114,7 +114,7 @@ class Application(object):
                     def shutdownCancelled(self):
                         pass
                     
-                self.sessionMonitor = LinuxSessionMonitor(self.onEndSession)  # pylint: disable-msg=W0201
+                self.sessionMonitor = LinuxSessionMonitor(self.onEndSession)  # pylint: disable=W0201
             else:
                 self.sessionMonitor = None
 
@@ -155,7 +155,7 @@ class Application(object):
         gui.init()
         showSplashScreen = self.settings.getboolean('window', 'splash')
         splash = gui.SplashScreen() if showSplashScreen else None
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.taskFile = persistence.LockedTaskFile()
         self.autoSaver = persistence.AutoSaver(self.settings)
         self.autoExporter = persistence.AutoImporterExporter(self.settings)
@@ -180,7 +180,7 @@ class Application(object):
     def initConfig(self, loadSettings):
         from taskcoachlib import config
         iniFile = self._options.inifile if self._options else None
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.settings = config.Settings(loadSettings, iniFile)
         
     def initLanguage(self):
@@ -189,7 +189,7 @@ class Application(object):
         i18n.Translator(self.determineLanguage(self._options, self.settings))
         
     @staticmethod
-    def determineLanguage(options, settings, locale=locale): # pylint: disable-msg=W0621
+    def determineLanguage(options, settings, locale=locale): # pylint: disable=W0621
         language = None
         if options: 
             # User specified language or .po file on command line
@@ -215,7 +215,7 @@ class Application(object):
         # On Jolicloud, printing crashes unless we do this:
         if operating_system.isGTK():
             try:
-                import gtk # pylint: disable-msg=F0401
+                import gtk # pylint: disable=F0401
                 gtk.remove_log_handlers()
             except ImportError:
                 pass
@@ -241,14 +241,14 @@ class Application(object):
     def registerSignalHandlers(self):
         quitAdapter = lambda *args: self.quitApplication()
         if operating_system.isWindows():
-            import win32api  # pylint: disable-msg=F0401
+            import win32api  # pylint: disable=F0401
             win32api.SetConsoleCtrlHandler(quitAdapter, True)
         else:
             import signal
             signal.signal(signal.SIGTERM, quitAdapter)
             if hasattr(signal, 'SIGHUP'):
                 forcedQuit = lambda *args: self.quitApplication(force=True)
-                signal.signal(signal.SIGHUP, forcedQuit)  # pylint: disable-msg=E1101
+                signal.signal(signal.SIGHUP, forcedQuit)  # pylint: disable=E1101
         
     def createMutex(self):
         ''' On Windows, create a mutex so that InnoSetup can check whether the
@@ -261,17 +261,17 @@ class Application(object):
     def createTaskBarIcon(self):
         if self.canCreateTaskBarIcon():
             from taskcoachlib.gui import taskbaricon, menu
-            self.taskBarIcon = taskbaricon.TaskBarIcon(self.mainwindow,  # pylint: disable-msg=W0201
+            self.taskBarIcon = taskbaricon.TaskBarIcon(self.mainwindow,  # pylint: disable=W0201
                 self.taskFile.tasks(), self.settings)
             self.taskBarIcon.setPopupMenu(menu.TaskBarMenu(self.taskBarIcon, 
                 self.settings, self.taskFile))
 
     def canCreateTaskBarIcon(self):
         try:
-            from taskcoachlib.gui import taskbaricon  # pylint: disable-msg=W0612
+            from taskcoachlib.gui import taskbaricon  # pylint: disable=W0612
             return True
         except:
-            return False  # pylint: disable-msg=W0702
+            return False  # pylint: disable=W0702
                     
     @staticmethod
     def closeSplash(splash):
@@ -280,7 +280,7 @@ class Application(object):
             
     def showTips(self):
         if self.settings.getboolean('window', 'tips'):
-            from taskcoachlib import help  # pylint: disable-msg=W0622
+            from taskcoachlib import help  # pylint: disable=W0622
             help.showTips(self.mainwindow, self.settings)
 
     def warnUserThatIniFileWasNotLoaded(self):

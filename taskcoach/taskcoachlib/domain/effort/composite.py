@@ -24,7 +24,7 @@ from taskcoachlib.thirdparty.pubsub import pub
 import base
 
 
-class BaseCompositeEffort(base.BaseEffort):  # pylint: disable-msg=W0223        
+class BaseCompositeEffort(base.BaseEffort):  # pylint: disable=W0223        
     def parent(self):
         # Composite efforts don't have a parent.
         return None
@@ -51,7 +51,7 @@ class BaseCompositeEffort(base.BaseEffort):  # pylint: disable-msg=W0223
         return sum((effort.duration() for effort in \
                     self._getEfforts(recursive)), date.TimeDelta())
 
-    def isBeingTracked(self, recursive=False):  # pylint: disable-msg=W0613
+    def isBeingTracked(self, recursive=False):  # pylint: disable=W0613
         return any(effort.isBeingTracked() for effort in self._getEfforts())
 
     def durationDay(self, dayOffset):
@@ -78,11 +78,11 @@ class BaseCompositeEffort(base.BaseEffort):  # pylint: disable-msg=W0223
         return []  # A composite effort cannot be 'dirty' since its contents
         # are determined by the contained efforts.
 
-    def onTimeSpentChanged(self, newValue, sender):  # pylint: disable-msg=W0613
+    def onTimeSpentChanged(self, newValue, sender):  # pylint: disable=W0613
         self._invalidateCache()
         self.notifyObserversOfDurationOrEmpty()
 
-    def onRevenueChanged(self, newValue, sender):  # pylint: disable-msg=W0613
+    def onRevenueChanged(self, newValue, sender):  # pylint: disable=W0613
         self.sendRevenueChangedMessage()
            
     def revenue(self, recursive=False):
@@ -99,7 +99,7 @@ class CompositeEffort(BaseCompositeEffort):
         initializing the CompositeEffort and cannot be changed
         afterwards. '''
     
-    def __init__(self, task, start, stop):  # pylint: disable-msg=W0621
+    def __init__(self, task, start, stop):  # pylint: disable=W0621
         super(CompositeEffort, self).__init__(task, start, stop)
         self.__hash_value = hash((task, start))
         # Effort cache: {True: [efforts recursively], False: [efforts]}
@@ -131,7 +131,7 @@ class CompositeEffort(BaseCompositeEffort):
     def _invalidateCache(self):
         self.__effortCache = dict()
                 
-    def _getEfforts(self, recursive=True):  # pylint: disable-msg=W0221
+    def _getEfforts(self, recursive=True):  # pylint: disable=W0221
         try:
             result = self.__effortCache[recursive]
         except KeyError:
@@ -174,7 +174,7 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
 
     def task(self):
         class Total(object):
-            # pylint: disable-msg=W0613
+            # pylint: disable=W0613
             def subject(self, *args, **kwargs): 
                 return _('Total')
             
@@ -192,11 +192,11 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
     def isTotal(self):
         return True
 
-    def description(self, *args, **kwargs):  # pylint: disable-msg=W0613
+    def description(self, *args, **kwargs):  # pylint: disable=W0613
         return _('Total for %s') % render.dateTimePeriod(self.getStart(), 
                                                          self.getStop())
 
-    def revenue(self, recursive=False):  # pylint: disable-msg=W0613
+    def revenue(self, recursive=False):  # pylint: disable=W0613
         return sum(effort.revenue() for effort in self._getEfforts())
 
     def categories(self, *args, **kwargs):
@@ -213,7 +213,7 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
 
     # Cache handling:
 
-    def _getEfforts(self, recursive=False):  # pylint: disable-msg=W0613,W0221
+    def _getEfforts(self, recursive=False):  # pylint: disable=W0613,W0221
         if self.__effortCache is None:
             self.__effortCache = []
             for eachTask in self.taskList:

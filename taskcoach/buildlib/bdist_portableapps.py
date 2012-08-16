@@ -37,7 +37,7 @@ class bdist_portableapps(bdist_portable_base.bdist_portable_base):
         ('date=', None, 'the release date')]
     
     def initialize_options(self): 
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.bdist_base = 'build'
         self.dist_dir = 'dist'
         self.bdist_base_pa = os.path.join(self.bdist_base, 'TaskCoachPortable')

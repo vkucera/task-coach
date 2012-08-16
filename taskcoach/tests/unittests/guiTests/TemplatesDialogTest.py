@@ -46,4 +46,4 @@ class TemplatesDialogTestCase(test.wxTestCase):
             pass
 
     def testTwoDefaultTemplates(self):
-        self.assertEqual(0, len(self.editor._templates.tasks())) # pylint: disable-msg=W0212
+        self.assertEqual(0, len(self.editor._templates.tasks())) # pylint: disable=W0212

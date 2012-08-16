@@ -35,7 +35,7 @@ class PrinterTest(test.TestCase):
         self.resetPrinterSettings()
         
     def resetPrinterSettings(self):
-        gui.printer.PrinterSettings.deleteInstance() # pylint: disable-msg=E1101
+        gui.printer.PrinterSettings.deleteInstance() # pylint: disable=E1101
  
     def testInitialSettings(self):
         printerSettings = self.printerSettings

@@ -86,13 +86,13 @@ class AddAttachmentCommand(base.BaseCommand):
     def addAttachments(self, event=None):
         kwargs = dict(event=event)
         for owner in self.owners:
-            owner.addAttachments(*self.__attachments, **kwargs) # pylint: disable-msg=W0142
+            owner.addAttachments(*self.__attachments, **kwargs) # pylint: disable=W0142
 
     @patterns.eventSource
     def removeAttachments(self, event=None):
         kwargs = dict(event=event)
         for owner in self.owners:
-            owner.removeAttachments(*self.__attachments, **kwargs) # pylint: disable-msg=W0142
+            owner.removeAttachments(*self.__attachments, **kwargs) # pylint: disable=W0142
                          
     def do_command(self):
         self.addAttachments()
@@ -116,13 +116,13 @@ class RemoveAttachmentCommand(base.BaseCommand):
     def addAttachments(self, event=None):
         kwargs = dict(event=event)
         for item in self.items:
-            item.addAttachments(*self.__attachments, **kwargs) # pylint: disable-msg=W0142
+            item.addAttachments(*self.__attachments, **kwargs) # pylint: disable=W0142
         
     @patterns.eventSource
     def removeAttachments(self, event=None):
         kwargs = dict(event=event)
         for item in self.items:
-            item.removeAttachments(*self.__attachments, **kwargs) # pylint: disable-msg=W0142
+            item.removeAttachments(*self.__attachments, **kwargs) # pylint: disable=W0142
                 
     def do_command(self):
         self.removeAttachments()

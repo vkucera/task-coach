@@ -28,7 +28,7 @@ class clean(BaseCleanCommand, object):
 
     def initialize_options(self):
         super(clean, self).initialize_options()
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.really_clean = False
         self.cleaning_patterns = ['*.pyc']
         self.really_clean_patterns = ['*.bak']

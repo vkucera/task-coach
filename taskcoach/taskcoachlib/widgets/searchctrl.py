@@ -52,7 +52,7 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
                                         self.__bitmapSize)
 
     def createMenu(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         menu = wx.Menu()
         self.__matchCaseMenuItem = menu.AppendCheckItem(wx.ID_ANY, 
             _('&Match case'), _('Match case when filtering'))
@@ -67,13 +67,13 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
         self.__searchDescriptionMenuItem.Check(self.__searchDescription)
         self.SetMenu(menu)
         
-    def PopupMenu(self): # pylint: disable-msg=W0221
+    def PopupMenu(self): # pylint: disable=W0221
         rect = self.GetClientRect()
         x, y = rect[0], rect[1] + rect[3] + 3
         self.PopupMenuXY(self.GetMenu(), x, y)
         
     def bindEventHandlers(self):
-        # pylint: disable-msg=W0142,W0612,W0201
+        # pylint: disable=W0142,W0612,W0201
         for args in [(wx.EVT_TIMER, self.onFind, self.__timer),
                      (wx.EVT_TEXT_ENTER, self.onFind),
                      (wx.EVT_TEXT, self.onFindLater),
@@ -113,12 +113,12 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
             return False
         return True
 
-    def onFindLater(self, event): # pylint: disable-msg=W0613
+    def onFindLater(self, event): # pylint: disable=W0613
         # Start the timer so that the actual filtering will be done
         # only when the user pauses typing (at least 0.5 second)
         self.__timer.Start(500, oneShot=True)
 
-    def onFind(self, event): # pylint: disable-msg=W0613
+    def onFind(self, event): # pylint: disable=W0613
         if self.__timer.IsRunning():
             self.__timer.Stop()
         if not self.IsEnabled():
@@ -192,7 +192,7 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
         for index, searchString in enumerate(self.__recentSearches):
             menu.Append(self.__recentSearchMenuItemIds[index], searchString)
             
-    def Enable(self, enable=True): # pylint: disable-msg=W0221
+    def Enable(self, enable=True): # pylint: disable=W0221
         ''' When wx.SearchCtrl is disabled it doesn't grey out the buttons,
             so we remove those. '''
         self.SetValue('' if enable else _('Viewer not searchable'))

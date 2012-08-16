@@ -41,18 +41,18 @@ class MockWxApp(object):
     
     
 class App(application.Application):
-    def __init__(self, args=None): # pylint: disable-msg=W0231
+    def __init__(self, args=None): # pylint: disable=W0231
         self._options = None
         self._args = args or []
         self.wxApp = MockWxApp()
         self.init()
         self.sessionMonitor = None
 
-    def init(self): # pylint: disable-msg=W0221
+    def init(self): # pylint: disable=W0221
         super(App, self).init(loadSettings=False, loadTaskFile=False)
 
     def addTasks(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.parent = task.Task('Parent')
         self.child = task.Task('Child')
         self.parent.addChild(self.child)

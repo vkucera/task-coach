@@ -72,7 +72,7 @@ import optparse
 import taskcoachlib.meta
 import oauth2 as oauth
 
-# pylint: disable-msg=W0621,W0613
+# pylint: disable=W0621,W0613
 
 
 def progress(func):
@@ -110,7 +110,7 @@ class Settings(ConfigParser.SafeConfigParser, object):
             for option in defaults[section]:
                 self.set(section, option, 'ask')
 
-    def get(self, section, option):  # pylint: disable-msg=W0221
+    def get(self, section, option):  # pylint: disable=W0221
         value = super(Settings, self).get(section, option)
         if value == 'ask':
             get_input = getpass.getpass if option == 'password' else raw_input
@@ -272,7 +272,7 @@ def registering_with_PyPI(settings, options):
     pypirc.write('[server-login]\nusername = %s\npassword = %s\n' % \
                  (username, password))
     pypirc.close()
-    # pylint: disable-msg=W0404
+    # pylint: disable=W0404
     from setup import setupOptions
     languages_pypi_does_not_know = ['Basque', 'Breton', 'Estonian', 
         'Galician', 'Lithuanian', 'Norwegian (Bokmal)', 'Norwegian (Nynorsk)', 
@@ -286,7 +286,7 @@ def registering_with_PyPI(settings, options):
     if options.dry_run:
         print 'Skipping PyPI registration.'
     else:
-        setup(**setupOptions)  # pylint: disable-msg=W0142
+        setup(**setupOptions)  # pylint: disable=W0142
     os.remove('.pypirc')
 
 
@@ -397,7 +397,7 @@ def releasing(settings, options):
 
 def latest_release(metadata, summary_only=False):
     sys.path.insert(0, 'changes.in')
-    # pylint: disable-msg=F0401
+    # pylint: disable=F0401
     import changes 
     import converter  
     del sys.path[0]

@@ -30,14 +30,14 @@ if not hasattr(sys, "frozen"):
     import wxversion
     wxversion.ensureMinimal("2.8-unicode", optionsRequired=True)
     try:
-        import taskcoachlib  # pylint: disable-msg=W0611
+        import taskcoachlib  # pylint: disable=W0611
     except ImportError:
         # On Ubuntu 12.04, taskcoachlib is installed in /usr/share/pyshared,
         # but that folder is not on the python path. Don't understand why. 
         # We'll add it manually so the application can find it.
         sys.path.insert(0, '/usr/share/pyshared')
         try:
-            import taskcoachlib  # pylint: disable-msg=W0611
+            import taskcoachlib  # pylint: disable=W0611
         except ImportError:
             sys.stderr.write('''ERROR: cannot import the library 'taskcoachlib'.
 Please see https://answers.launchpad.net/taskcoach/+faq/1063 
@@ -48,7 +48,7 @@ for more information and possible resolutions.
 
 def start():
     ''' Process command line options and start the application. '''
-    # pylint: disable-msg=W0404
+    # pylint: disable=W0404
     from taskcoachlib import config, application 
     options, args = config.ApplicationOptionParser().parse_args()
     app = application.Application(options, args)

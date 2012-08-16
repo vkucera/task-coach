@@ -28,7 +28,7 @@ class RecurringTaskTestCase(test.TestCase):
         self.yesterday = self.now - date.oneDay
         self.tomorrow = self.now + date.oneDay
         kwargs_list = self.taskCreationKeywordArguments()
-        self.tasks = [task.Task(**kwargs) for kwargs in kwargs_list] # pylint: disable-msg=W0142
+        self.tasks = [task.Task(**kwargs) for kwargs in kwargs_list] # pylint: disable=W0142
         self.task = self.tasks[0]
         for index, eachTask in enumerate(self.tasks):
             taskLabel = 'task%d'%(index+1)
@@ -246,7 +246,7 @@ class TaskWithDailyRecurrenceBasedOnCompletionFixture(RecurringTaskTestCase,
 
 
 class CommonRecurrenceTestsMixinWithChild(CommonRecurrenceTestsMixin):
-    # pylint: disable-msg=E1101
+    # pylint: disable=E1101
     
     def testChildPlannedStartDateRecursToo(self):    
         self.task.setCompletionDateTime()
@@ -276,7 +276,7 @@ class CommonRecurrenceTestsMixinWithChild(CommonRecurrenceTestsMixin):
 
 
 class CommonRecurrenceTestsMixinWithRecurringChild(CommonRecurrenceTestsMixin):
-    # pylint: disable-msg=E1101
+    # pylint: disable=E1101
     
     def testChildDoesNotRecurWhenParentDoes(self):
         origPlannedStartDateTime = self.task.children()[0].plannedStartDateTime()

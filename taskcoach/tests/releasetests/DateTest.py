@@ -26,5 +26,5 @@ class DateTest(test.TestCase):
     def testNoQuestionMarkInChangeLog(self):
         import sys, os.path
         sys.path.insert(0, os.path.join(test.projectRoot, 'changes.in'))
-        import changes # pylint: disable-msg=F0401
+        import changes # pylint: disable=F0401
         self.failIf('?' in changes.releases[0].date)

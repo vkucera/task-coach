@@ -39,7 +39,7 @@ class OwnerTest(test.TestCase):
     def onEvent(self, event):
         self.events.append(event) 
     
-    # pylint: disable-msg=E1101
+    # pylint: disable=E1101
     
     def testSetObjects_NoNotificationWhenUnchanged(self):
         patterns.Publisher().registerObserver(self.onEvent, 

@@ -122,7 +122,7 @@ class Viewer(patterns.Observer, wx.Panel):
         self.parent.manager.Update()
 
     def initLayout(self):
-        self._sizer = wx.BoxSizer(wx.VERTICAL)  # pylint: disable-msg=W0201
+        self._sizer = wx.BoxSizer(wx.VERTICAL)  # pylint: disable=W0201
         self._sizer.Add(self.toolbar, flag=wx.EXPAND)
         self._sizer.Add(self.widget, proportion=1, flag=wx.EXPAND)
         self.SetSizerAndFit(self._sizer)
@@ -132,8 +132,8 @@ class Viewer(patterns.Observer, wx.Panel):
     
     def createImageList(self):
         size = (16, 16)
-        imageList = wx.ImageList(*size)  # pylint: disable-msg=W0142
-        self.imageIndex = {}  # pylint: disable-msg=W0201
+        imageList = wx.ImageList(*size)  # pylint: disable=W0142
+        self.imageIndex = {}  # pylint: disable=W0201
         for index, image in enumerate(self.viewerImages):
             try:
                 imageList.Add(wx.ArtProvider_GetBitmap(image, wx.ART_MENU, size))
@@ -162,7 +162,7 @@ class Viewer(patterns.Observer, wx.Panel):
             filter. '''
         return collection
 
-    def onAttributeChanged(self, newValue, sender):  # pylint: disable-msg=W0613
+    def onAttributeChanged(self, newValue, sender):  # pylint: disable=W0613
         if self:
             self.refreshItems(sender)
         
@@ -172,7 +172,7 @@ class Viewer(patterns.Observer, wx.Panel):
     def onNewItem(self, event):
         self.select([item for item in event.values() if item in self.presentation()]) 
         
-    def onPresentationChanged(self, event):  # pylint: disable-msg=W0613
+    def onPresentationChanged(self, event):  # pylint: disable=W0613
         ''' Whenever our presentation is changed (items added, items removed) 
             the viewer refreshes itself. '''
         def itemsRemoved():
@@ -190,7 +190,7 @@ class Viewer(patterns.Observer, wx.Panel):
     def selectNextItemsAfterRemoval(self, removedItems):
         raise NotImplementedError        
         
-    def onSelect(self, event=None):  # pylint: disable-msg=W0613
+    def onSelect(self, event=None):  # pylint: disable=W0613
         ''' The selection of items in the widget has been changed. Notify 
             our observers. '''
         if self.IsBeingDeleted() or self.__selectingAllItems:
@@ -220,7 +220,7 @@ class Viewer(patterns.Observer, wx.Panel):
     
     def refreshItems(self, *items):
         items = [item for item in items if item in self.presentation()]
-        self.widget.RefreshItems(*items)  # pylint: disable-msg=W0142
+        self.widget.RefreshItems(*items)  # pylint: disable=W0142
         
     def select(self, items):
         self.__curselection = items
@@ -409,7 +409,7 @@ class Viewer(patterns.Observer, wx.Panel):
     def createEditToolBarUICommands(self):
         ''' UI commands for editing items. '''
         editCommand = uicommand.Edit(viewer=self)
-        self.deleteUICommand = uicommand.Delete(viewer=self)  # For unittests pylint: disable-msg=W0201
+        self.deleteUICommand = uicommand.Delete(viewer=self)  # For unittests pylint: disable=W0201
         editCommand.bind(self, wx.ID_EDIT)
         self.deleteUICommand.bind(self, wx.ID_DELETE)
         return editCommand, self.deleteUICommand
@@ -468,7 +468,7 @@ class Viewer(patterns.Observer, wx.Panel):
         command.EditDescriptionCommand(items=[item], newValue=newValue).do()
     
 
-class ListViewer(Viewer):  # pylint: disable-msg=W0223
+class ListViewer(Viewer):  # pylint: disable=W0223
     def isTreeViewer(self):
         return False
 
@@ -487,7 +487,7 @@ class ListViewer(Viewer):  # pylint: disable-msg=W0223
         pass  # Done automatically by list controls        
         
 
-class TreeViewer(Viewer):  # pylint: disable-msg=W0223
+class TreeViewer(Viewer):  # pylint: disable=W0223
     def __init__(self, *args, **kwargs):
         self.__selectionIndex = 0
         super(TreeViewer, self).__init__(*args, **kwargs)
@@ -604,7 +604,7 @@ class TreeViewer(Viewer):  # pylint: disable-msg=W0223
         return item.subject()
 
             
-class ViewerWithColumns(Viewer):  # pylint: disable-msg=W0223
+class ViewerWithColumns(Viewer):  # pylint: disable=W0223
     def __init__(self, *args, **kwargs):
         self.__initDone = False
         self._columns = []
@@ -700,7 +700,7 @@ class ViewerWithColumns(Viewer):  # pylint: disable-msg=W0223
     def getColumnWidth(self, columnName):
         columnWidths = self.settings.getdict(self.settingsSection(),
                                              'columnwidths')
-        defaultWidth = hypertreelist._DEFAULT_COL_WIDTH  # pylint: disable-msg=W0212
+        defaultWidth = hypertreelist._DEFAULT_COL_WIDTH  # pylint: disable=W0212
         return columnWidths.get(columnName, defaultWidth)
 
     def onResizeColumn(self, column, width):
@@ -775,7 +775,7 @@ class ViewerWithColumns(Viewer):  # pylint: disable-msg=W0223
         ownItems = getItems(recursive=False)
         if ownItems:
             subjects.append(self.renderSubjects(ownItems))
-        isListViewer = not self.isTreeViewer()  # pylint: disable-msg=E1101
+        isListViewer = not self.isTreeViewer()  # pylint: disable=E1101
         if isListViewer or self.isItemCollapsed(item):
             childItems = [theItem for theItem in getItems(recursive=True, upwards=isListViewer) if theItem not in ownItems]
             if childItems:
@@ -788,23 +788,23 @@ class ViewerWithColumns(Viewer):  # pylint: disable-msg=W0223
         return ', '.join(sorted(subjects))
             
     def isItemCollapsed(self, item):
-        # pylint: disable-msg=E1101
+        # pylint: disable=E1101
         return not self.getItemExpanded(item) \
             if self.isTreeViewer() and item.children() else False
 
 
-class SortableViewerWithColumns(mixin.SortableViewerMixin, ViewerWithColumns):  # pylint: disable-msg=W0223
+class SortableViewerWithColumns(mixin.SortableViewerMixin, ViewerWithColumns):  # pylint: disable=W0223
     def initColumn(self, column):
         super(SortableViewerWithColumns, self).initColumn(column)
         if self.isSortedBy(column.name()):
             self.widget.showSortColumn(column)
             self.showSortOrder()
 
-    def setSortOrderAscending(self, *args, **kwargs):  # pylint: disable-msg=W0221
+    def setSortOrderAscending(self, *args, **kwargs):  # pylint: disable=W0221
         super(SortableViewerWithColumns, self).setSortOrderAscending(*args, **kwargs)
         self.showSortOrder()
         
-    def sortBy(self, *args, **kwargs):  # pylint: disable-msg=W0221
+    def sortBy(self, *args, **kwargs):  # pylint: disable=W0221
         super(SortableViewerWithColumns, self).sortBy(*args, **kwargs)
         self.showSortColumn()
 

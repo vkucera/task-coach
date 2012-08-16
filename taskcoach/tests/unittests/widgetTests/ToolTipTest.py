@@ -20,7 +20,7 @@ import test, wx
 from taskcoachlib.widgets import tooltip
 
 
-class ToolTipUnderTest(tooltip.ToolTipMixin, wx.Frame): # pylint: disable-msg=W0223
+class ToolTipUnderTest(tooltip.ToolTipMixin, wx.Frame): # pylint: disable=W0223
     def GetMainWindow(self):
         return self
 

@@ -39,7 +39,7 @@ class TimeExpressionEntry(wx.TextCtrl):
             try:
                 res = nlTimeExpression.parseString(value)
             except:
-                return False # pylint: disable-msg=W0702
+                return False # pylint: disable=W0702
             return 'calculatedTime' in res
         return True # Empty is valid.
 
@@ -154,7 +154,7 @@ class TemplatesDialog(sized_controls.SizedDialog):
     def _GetSelection(self):
         return self._templateList.GetSelection()
 
-    def OnSelectionChanged(self, event): # pylint: disable-msg=W0613
+    def OnSelectionChanged(self, event): # pylint: disable=W0613
         self._changing = True
         try:
             selection = self._GetSelection()
@@ -183,13 +183,13 @@ class TemplatesDialog(sized_controls.SizedDialog):
         finally:
             self._changing = False
 
-    def OnDelete(self, event): # pylint: disable-msg=W0613
+    def OnDelete(self, event): # pylint: disable=W0613
         task = self._templateList.GetItemData(self._GetSelection()).GetData()
         index = self._templates.tasks().index(task)
         self._templates.deleteTemplate(index)
         self._templateList.Delete(self._GetSelection())
 
-    def OnUp(self, event): # pylint: disable-msg=W0613
+    def OnUp(self, event): # pylint: disable=W0613
         selection = self._GetSelection()
         prev = self._templateList.GetPrevSibling(selection)
         prev = self._templateList.GetPrevSibling(prev)
@@ -205,7 +205,7 @@ class TemplatesDialog(sized_controls.SizedDialog):
         self._templates.swapTemplates(index - 1, index)
         self._templateList.SelectItem(item)
 
-    def OnDown(self, event): # pylint: disable-msg=W0613
+    def OnDown(self, event): # pylint: disable=W0613
         selection = self._GetSelection()
         next = self._templateList.GetNextSibling(selection)
         task = self._templateList.GetItemData(selection).GetData()
@@ -217,7 +217,7 @@ class TemplatesDialog(sized_controls.SizedDialog):
         self._templates.swapTemplates(index, index + 1)
         self._templateList.SelectItem(item)
 
-    def OnAdd(self, event): # pylint: disable-msg=W0613
+    def OnAdd(self, event): # pylint: disable=W0613
         template = Task(subject=_('New task template'))
         for name in ('plannedstartdatetmpl', 'duedatetmpl', 'completiondatetmpl', 
                      'remindertmpl'):

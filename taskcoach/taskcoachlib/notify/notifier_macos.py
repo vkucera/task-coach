@@ -38,11 +38,11 @@ class GrowlNotifier(AbstractNotifier):
     def __init__(self):
         super(GrowlNotifier, self).__init__()
         try:
-            # pylint: disable-msg=E1101
+            # pylint: disable=E1101
             self._notifier = TaskCoachGrowlNotifier(applicationIcon=Growl.Image.imageWithIconForCurrentApplication())
             self._notifier.register()
         except:
-            self._available = False  # pylint: disable-msg=W0702
+            self._available = False  # pylint: disable=W0702
         else:
             self._available = True
 

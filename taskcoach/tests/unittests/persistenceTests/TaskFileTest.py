@@ -57,7 +57,7 @@ class TaskFileTestCase(test.TestCase):
         self.filename2 = 'test2.tsk'
         
     def createTaskFiles(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.taskFile = persistence.TaskFile()
         self.emptyTaskFile = persistence.TaskFile()
         
@@ -74,7 +74,7 @@ class TaskFileTestCase(test.TestCase):
                 try:  # Don't fail on random 'Access denied' errors.
                     os.remove(filename)
                     break
-                except WindowsError:  # pragma: no cover pylint: disable-msg=E0602
+                except WindowsError:  # pragma: no cover pylint: disable=E0602
                     tries += 1 
 
 
@@ -362,13 +362,13 @@ class DirtyTaskFileTest(TaskFileTestCase):
     def testNeedSave_AfterAddingNoteToTask(self):
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()
-        self.task.addNote(note.Note(subject='Note')) # pylint: disable-msg=E1101
+        self.task.addNote(note.Note(subject='Note')) # pylint: disable=E1101
         self.failUnless(self.taskFile.needSave())
         
     def testNeedSave_AfterTaskNoteChanged(self):
         self.taskFile.setFilename(self.filename)
         newNote = note.Note(subject='Note')
-        self.task.addNote(newNote) # pylint: disable-msg=E1101
+        self.task.addNote(newNote) # pylint: disable=E1101
         self.taskFile.save()
         newNote.setSubject('New subject')
         self.failUnless(self.taskFile.needSave())
@@ -582,7 +582,7 @@ class ChangingAttachmentsTestsMixin(object):
         self.taskFile.save()
                
     def addFileAttachment(self):
-        self.fileAttachment = attachment.FileAttachment('Old location') # pylint: disable-msg=W0201
+        self.fileAttachment = attachment.FileAttachment('Old location') # pylint: disable=W0201
         self.addAttachment(self.fileAttachment)
 
     def testNeedSave_AfterFileAttachmentLocationChanged(self):
@@ -612,11 +612,11 @@ class ChangingAttachmentsTestsMixin(object):
 
     def testNeedSave_AfterFileAttachmentNoteAdded(self):
         self.addFileAttachment()
-        self.fileAttachment.addNote(note.Note(subject='Note')) # pylint: disable-msg=E1101
+        self.fileAttachment.addNote(note.Note(subject='Note')) # pylint: disable=E1101
         self.failUnless(self.taskFile.needSave())
 
     def addURIAttachment(self):
-        self.uriAttachment = attachment.URIAttachment('Old location') # pylint: disable-msg=W0201
+        self.uriAttachment = attachment.URIAttachment('Old location') # pylint: disable=W0201
         self.addAttachment(self.uriAttachment)
 
     def testNeedSave_AfterURIAttachmentLocationChanged(self):
@@ -646,11 +646,11 @@ class ChangingAttachmentsTestsMixin(object):
 
     def testNeedSave_AfterURIAttachmentNoteAdded(self):
         self.addURIAttachment()
-        self.uriAttachment.addNote(note.Note(subject='Note')) # pylint: disable-msg=E1101
+        self.uriAttachment.addNote(note.Note(subject='Note')) # pylint: disable=E1101
         self.failUnless(self.taskFile.needSave())
 
     def addMailAttachment(self):
-        self.mailAttachment = attachment.MailAttachment(self.filename, # pylint: disable-msg=W0201
+        self.mailAttachment = attachment.MailAttachment(self.filename, # pylint: disable=W0201
                                   readMail=lambda location: ('', ''))
         self.addAttachment(self.mailAttachment)
         
@@ -681,7 +681,7 @@ class ChangingAttachmentsTestsMixin(object):
 
     def testNeedSave_AfterMailAttachmentNoteAdded(self):
         self.addMailAttachment()
-        self.mailAttachment.addNote(note.Note(subject='Note')) # pylint: disable-msg=E1101
+        self.mailAttachment.addNote(note.Note(subject='Note')) # pylint: disable=E1101
         self.failUnless(self.taskFile.needSave())
 
 
@@ -877,7 +877,7 @@ class TaskFileMergeTest(TaskFileTestCase):
         
 class LockedTaskFileLockTest(TaskFileTestCase):
     def createTaskFiles(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.taskFile = persistence.LockedTaskFile()
         self.emptyTaskFile = persistence.LockedTaskFile()
         

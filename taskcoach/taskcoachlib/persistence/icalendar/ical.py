@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 This module defines classes and functions to handle the VCalendar
 format.
-''' # pylint: disable-msg=W0105
+''' # pylint: disable=W0105
 
 from taskcoachlib.domain.base import Object
 from taskcoachlib.domain import date
@@ -87,7 +87,7 @@ class VCalendarParser(object):
         domain object creation for the current (parsed) object.
     @ivar tasks: A list of dictionaries suitable to use as
         keyword arguments for task creation, representing all
-        VTODO object in the parsed file. ''' # pylint: disable-msg=W0511
+        VTODO object in the parsed file. ''' # pylint: disable=W0511
 
     def __init__(self, *args, **kwargs):
         super(VCalendarParser, self).__init__(*args, **kwargs)
@@ -100,7 +100,7 @@ class VCalendarParser(object):
 
     def init(self):
         ''' Called after a state change. '''
-        self.kwargs = {} # pylint: disable-msg=W0201
+        self.kwargs = {} # pylint: disable=W0201
 
     def setState(self, state):
         ''' Sets the state (class) of the parser object. '''
@@ -189,7 +189,7 @@ class VCalendarParser(object):
 
 
 class VTodoParser(VCalendarParser):
-    ''' This is the state responsible for parsing VTODO objects. ''' # pylint: disable-msg=W0511
+    ''' This is the state responsible for parsing VTODO objects. ''' # pylint: disable=W0511
 
     def onFinish(self):
         if not self.kwargs.has_key('plannedStartDateTime'):
@@ -272,7 +272,7 @@ def VCalFromTask(task, encoding=True, doFold=True):
     quote = quoteString if encoding else lambda s: s
 
     components = []
-    components.append('BEGIN:VTODO') # pylint: disable-msg=W0511
+    components.append('BEGIN:VTODO') # pylint: disable=W0511
     components.append('UID:%s' % task.id().encode('UTF-8'))
 
     if task.plannedStartDateTime() != date.DateTime():
@@ -299,7 +299,7 @@ def VCalFromTask(task, encoding=True, doFold=True):
     components.append('PRIORITY:%d'%min(3, task.priority() + 1))
     components.append('PERCENT-COMPLETE:%d'%task.percentageComplete())
     components.append('SUMMARY%s:%s'%(encoding, quote(task.subject())))
-    components.append('END:VTODO') # pylint: disable-msg=W0511
+    components.append('END:VTODO') # pylint: disable=W0511
     if doFold:
         return fold(components)
     return '\r\n'.join(components) + '\r\n'

@@ -133,7 +133,7 @@ To be done.
 ''' % meta.metaDict + doubleline
 
 
-def writeFile(filename, text, directory='.'):  # pylint: disable-msg=W0621
+def writeFile(filename, text, directory='.'):  # pylint: disable=W0621
     if not os.path.exists(directory):
         os.mkdir(directory)
     with file(os.path.join(directory, filename), 'w') as textFile:
@@ -196,7 +196,7 @@ if sys.argv[1] == 'py2exe':
     os.environ['PATH'] = 'dist.in;' + os.environ['PATH']
  
 elif sys.argv[1] == 'py2app':
-    from setuptools import setup  # pylint: disable-msg=W0404
+    from setuptools import setup  # pylint: disable=W0404
     setupOptions.update(dict(app=['taskcoach.py'], 
         setup_requires=['py2app'],
         options=dict(py2app=dict(argv_emulation=True, compressed=True,
@@ -293,6 +293,6 @@ if __name__ == '__main__':
         if not os.path.exists(directory):
             os.mkdir(directory)
     createDocumentation()
-    setup(**setupOptions)  # pylint: disable-msg=W0142
+    setup(**setupOptions)  # pylint: disable=W0142
     if sys.argv[1] == 'py2exe':
         createInnoSetupScript()

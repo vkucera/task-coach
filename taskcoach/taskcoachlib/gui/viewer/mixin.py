@@ -441,7 +441,7 @@ class NoteColumnMixin(object):
     
 
 class AttachmentColumnMixin(object):    
-    def attachmentImageIndices(self, item): # pylint: disable-msg=W0613
+    def attachmentImageIndices(self, item): # pylint: disable=W0613
         index = self.imageIndex['paperclip_icon'] if item.attachments() else -1
         return {wx.TreeItemIcon_Normal: index}
 

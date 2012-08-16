@@ -54,7 +54,7 @@ class AddNoteCommandTest(NoteCommandTestCase):
     def testAddedNoteIsRootItem(self):
         owner = note.NoteOwner()
         command.AddNoteCommand([owner], [owner]).do()
-        self.failUnless(owner.notes()[0].parent() is None) # pylint: disable-msg=E1101
+        self.failUnless(owner.notes()[0].parent() is None) # pylint: disable=E1101
         
 
 class NewSubNoteCommandTest(NoteCommandTestCase):

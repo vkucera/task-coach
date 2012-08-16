@@ -21,11 +21,11 @@ from taskcoachlib.thirdparty import hypertreelist
 from taskcoachlib.thirdparty import customtreectrl as customtree
 from taskcoachlib import operating_system
 
-# pylint: disable-msg=E1101,E1103
+# pylint: disable=E1101,E1103
 
 class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin, 
                     hypertreelist.HyperTreeList):
-    # pylint: disable-msg=W0223
+    # pylint: disable=W0223
 
     def __init__(self, *args, **kwargs):
         super(HyperTreeList, self).__init__(*args, **kwargs)
@@ -57,7 +57,7 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
     
     MainWindow = property(fget=GetMainWindow)
     
-    def HitTest(self, point): # pylint: disable-msg=W0221
+    def HitTest(self, point): # pylint: disable=W0221
         ''' Always return a three-tuple (item, flags, column). '''
         if type(point) == type(()):
             point = wx.Point(point[0], point[1])
@@ -120,7 +120,7 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
             self.GetLabelTextCtrl().StopEditing()
             
     def GetLabelTextCtrl(self):
-        return self.GetMainWindow()._editCtrl # pylint: disable-msg=W0212
+        return self.GetMainWindow()._editCtrl # pylint: disable=W0212
     
     def GetItemCount(self):
         rootItem = self.GetRootItem()
@@ -156,7 +156,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         self.bindEventHandlers(selectCommand, editCommand, dragAndDropCommand)
 
     def bindEventHandlers(self, selectCommand, editCommand, dragAndDropCommand):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.selectCommand = selectCommand
         self.editCommand = editCommand
         self.dragAndDropCommand = dragAndDropCommand
@@ -173,13 +173,13 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
     def getItemTooltipData(self, item, column):
         return self.__adapter.getItemTooltipData(item, column)
     
-    def getItemCTType(self, item): # pylint: disable-msg=W0613
+    def getItemCTType(self, item): # pylint: disable=W0613
         return self.ct_type
     
     def curselection(self):
         return [self.GetItemPyData(item) for item in self.GetSelections()]
     
-    def RefreshAllItems(self, count=0): # pylint: disable-msg=W0613
+    def RefreshAllItems(self, count=0): # pylint: disable=W0613
         self.Freeze()
         self.StopEditing()
         self.__selection = self.curselection()
@@ -352,7 +352,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
             event.Skip()
         
     def onEndEdit(self, event):
-        if event._editCancelled: # pylint: disable-msg=W0212
+        if event._editCancelled: # pylint: disable=W0212
             event.Skip()
             return
         event.Veto() # Let us update the tree
@@ -388,7 +388,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         agwStyle &= ~hypertreelist.TR_NO_HEADER
         return agwStyle
 
-    # pylint: disable-msg=W0221
+    # pylint: disable=W0221
     
     def DeleteColumn(self, columnIndex):
         self.RemoveColumn(columnIndex)

@@ -60,7 +60,7 @@ def getRelativePath(path, basePath=os.getcwd()):
         path1.insert(0, '..')
         path2.pop(0)
 
-    return os.path.join(*path1)  # pylint: disable-msg=W0142
+    return os.path.join(*path1)  # pylint: disable=W0142
 
 
 class Attachment(base.Object, NoteOwner):
@@ -136,7 +136,7 @@ class Attachment(base.Object, NoteOwner):
 class FileAttachment(Attachment):
     type_ = 'file'
 
-    def open(self, workingDir=None, openAttachment=desktop.open):  # pylint: disable-msg=W0221
+    def open(self, workingDir=None, openAttachment=desktop.open):  # pylint: disable=W0221
         return openAttachment(self.normalizedLocation(workingDir))
 
     def normalizedLocation(self, workingDir=None):

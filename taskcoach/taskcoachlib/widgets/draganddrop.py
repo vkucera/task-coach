@@ -28,17 +28,17 @@ class FileDropTarget(wx.FileDropTarget):
         self.__onDropCallback = onDropCallback
         self.__onDragOverCallback = onDragOverCallback or self.__defaultDragOverCallback
         
-    def OnDropFiles(self, x, y, filenames): # pylint: disable-msg=W0221
+    def OnDropFiles(self, x, y, filenames): # pylint: disable=W0221
         if self.__onDropCallback:
             self.__onDropCallback(x, y, filenames)
             return True
         else:
             return False
 
-    def OnDragOver(self, x, y, defaultResult): # pylint: disable-msg=W0221
+    def OnDragOver(self, x, y, defaultResult): # pylint: disable=W0221
         return self.__onDragOverCallback(x, y, defaultResult)
     
-    def __defaultDragOverCallback(self, x, y, defaultResult): # pylint: disable-msg=W0613
+    def __defaultDragOverCallback(self, x, y, defaultResult): # pylint: disable=W0613
         return defaultResult
     
     
@@ -47,7 +47,7 @@ class TextDropTarget(wx.TextDropTarget):
         wx.TextDropTarget.__init__(self)
         self.__onDropCallback = onDropCallback
         
-    def OnDropText(self, x, y, text): # pylint: disable-msg=W0613,W0221
+    def OnDropText(self, x, y, text): # pylint: disable=W0613,W0221
         self.__onDropCallback(text)
 
 
@@ -62,7 +62,7 @@ class DropTarget(wx.DropTarget):
         self.reinit()
 
     def reinit(self): 
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.__compositeDataObject = wx.DataObjectComposite()
         self.__urlDataObject = wx.TextDataObject()
         self.__fileDataObject = wx.FileDataObject()
@@ -80,16 +80,16 @@ class DropTarget(wx.DropTarget):
             self.__compositeDataObject.Add(dataObject)
         self.SetDataObject(self.__compositeDataObject)
 
-    def OnDragOver(self, x, y, result): # pylint: disable-msg=W0221
+    def OnDragOver(self, x, y, result): # pylint: disable=W0221
         if self.__onDragOverCallback is None:
             return result
         self.__onDragOverCallback(x, y, result)
         return wx.DragCopy
 
-    def OnDrop(self, x, y): # pylint: disable-msg=W0613,W0221
+    def OnDrop(self, x, y): # pylint: disable=W0613,W0221
         return True
     
-    def OnData(self, x, y, result): # pylint: disable-msg=W0613
+    def OnData(self, x, y, result): # pylint: disable=W0613
         self.GetData()
         formatType, formatId = self.getReceivedFormatTypeAndId()
 
@@ -126,7 +126,7 @@ class DropTarget(wx.DropTarget):
         try:
             formatId = receivedFormat.GetId() 
         except:
-            formatId = None # pylint: disable-msg=W0702
+            formatId = None # pylint: disable=W0702
         return formatType, formatId
     
     def onThunderbirdDrop(self, x, y):

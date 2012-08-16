@@ -23,7 +23,7 @@ from taskcoachlib.thirdparty.pubsub import pub
 # Ignore these pylint messages:
 # - W0142: * or ** magic
 # - W0622: Redefining builtin types
-# pylint: disable-msg=W0142,W0622
+# pylint: disable=W0142,W0622
 
 class List(list):
     def __eq__(self, other):
@@ -148,7 +148,7 @@ class Event(object):
                 sourcesToAdd &= set([source])
             kwargs = dict(type=type) # Python doesn't allow type=type after *values 
             for eachSource in sourcesToAdd:
-                subEvent.addSource(eachSource, *self.values(eachSource, type), **kwargs) # pylint: disable-msg=W0142
+                subEvent.addSource(eachSource, *self.values(eachSource, type), **kwargs) # pylint: disable=W0142
         return subEvent
     
     def send(self):
@@ -248,7 +248,7 @@ class Publisher(object):
     def clear(self):
         ''' Clear the registry of observers. Mainly for testing purposes. '''
         # observers = {(eventType, eventSource): set(callbacks)}
-        self.__observers = {} # pylint: disable-msg=W0201
+        self.__observers = {} # pylint: disable=W0201
     
     @wrapObserver
     def registerObserver(self, observer, eventType, eventSource=None):
@@ -272,7 +272,7 @@ class Publisher(object):
             specified, the observer is removed for the combination of that
             specific event type and event source only. '''
         
-        # pylint: disable-msg=W0613
+        # pylint: disable=W0613
             
         # First, create a match function that will select the combination of
         # event source and event type we're looking for:
@@ -452,7 +452,7 @@ class ObservableList(ObservableCollection, List):
         event.addSource(self, item, type=self.removeItemEventType())
 
     @eventSource    
-    def removeItems(self, items, event=None): # pylint: disable-msg=W0221
+    def removeItems(self, items, event=None): # pylint: disable=W0221
         if not items:
             return
         super(ObservableList, self).removeItems(items)

@@ -127,7 +127,7 @@ class Effort(baseeffort.BaseEffort, base.Object):
     def __updateDurationCache(self):
         self.__cachedDuration = self._stop - self._start if self._stop else None
         
-    def isBeingTracked(self, recursive=False):  # pylint: disable-msg=W0613
+    def isBeingTracked(self, recursive=False):  # pylint: disable=W0613
         return self._stop is None
 
     def revenue(self):

@@ -142,7 +142,7 @@ class SyncMLPreferences(widgets.NotebookDialog):
         self._interior.SetMinSize((550, 400))
         kwargs = dict(parent=self._interior, columns=3,
                       iocontroller=self.iocontroller)
-        # pylint: disable-msg=W0142
+        # pylint: disable=W0142
         pages = [(SyncMLAccessPage(growableColumn=1, **kwargs), _('Access'), 'earth_blue_icon')]
 
         for page, title, bitmap in pages:

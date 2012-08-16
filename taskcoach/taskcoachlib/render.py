@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 ''' render.py - functions to render various objects, like date, time, 
-etc. '''  # pylint: disable-msg=W0105
+etc. '''  # pylint: disable=W0105
 
 from taskcoachlib.domain import date as datemodule
 from taskcoachlib.i18n import _
@@ -29,7 +29,7 @@ import codecs
 import locale
 import re
 
-# pylint: disable-msg=W0621
+# pylint: disable=W0621
 
 
 def priority(priority):

@@ -43,14 +43,14 @@ class TipProvider(wx.PyTipProvider):
         super(TipProvider, self).__init__(tipIndex)
         self.__tipIndex = tipIndex
         
-    def GetTip(self): # pylint: disable-msg=W0221
+    def GetTip(self): # pylint: disable=W0221
         tip = tips[self.__tipIndex]
         self.__tipIndex += 1
         if self.__tipIndex >= len(tips):
             self.__tipIndex = 0
         return tip
     
-    def GetCurrentTip(self): # pylint: disable-msg=W0221
+    def GetCurrentTip(self): # pylint: disable=W0221
         return self.__tipIndex
 
         

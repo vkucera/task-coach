@@ -224,7 +224,7 @@ class SearchableViewerTest(test.TestCase):
         
     def createViewer(self):
         viewer = SearchableViewerUnderTest()
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         viewer.settings = self.settings
         viewer.settingsSection = lambda: 'taskviewer'
         presentation = viewer.createFilter(task.TaskList())
@@ -310,7 +310,7 @@ class FilterableViewerForTasks(test.TestCase):
         
     def createViewer(self):
         viewer = FilterableViewerForTasksUnderTest()
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         viewer.taskFile = persistence.TaskFile()
         viewer.settings = self.settings
         viewer.settingsSection = lambda: 'taskviewer'
@@ -507,7 +507,7 @@ class ViewerIteratorTestCase(test.wxTestCase):
         self.viewer.sortBy('subject')
 
     def getItemsFromIterator(self):
-        return list(self.viewer.visibleItems()) # pylint: disable-msg=E1101
+        return list(self.viewer.visibleItems()) # pylint: disable=E1101
 
 
 class ViewerIteratorTestsMixin(object):
@@ -565,6 +565,6 @@ class ViewerWithColumnsTest(test.wxTestCase):
         self.viewer = gui.viewer.TaskViewer(self.frame, self.taskFile, self.settings)
         
     def testDefaultColumnWidth(self):
-        expectedWidth = hypertreelist._DEFAULT_COL_WIDTH # pylint: disable-msg=W0212
+        expectedWidth = hypertreelist._DEFAULT_COL_WIDTH # pylint: disable=W0212
         self.assertEqual(expectedWidth, self.viewer.getColumnWidth('subject'))
         

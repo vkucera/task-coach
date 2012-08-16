@@ -36,7 +36,7 @@ class TreeListCtrlTestCase(TreeCtrlTest.TreeCtrlTestCase):
         for bitmapName in ['led_blue_icon', 'folder_blue_icon']:
             imageList.Add(wx.ArtProvider_GetBitmap(bitmapName, wx.ART_MENU, 
                           (16,16)))
-        self.treeCtrl.AssignImageList(imageList) # pylint: disable-msg=E1101
+        self.treeCtrl.AssignImageList(imageList) # pylint: disable=E1101
 
     def createColumns(self):
         names = ['treeColumn'] + ['column%d'%index for index in range(1, 5)]
@@ -58,7 +58,7 @@ class TreeListCtrlColumnsTest(TreeListCtrlTestCase):
         self.visibleColumns = self.columns()[1:]
         
     def assertColumns(self):
-        # pylint: disable-msg=E1101
+        # pylint: disable=E1101
         self.assertEqual(len(self.visibleColumns)+1, self.treeCtrl.GetColumnCount())
         item = self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())[0]
         for columnIndex in range(1, len(self.visibleColumns)):

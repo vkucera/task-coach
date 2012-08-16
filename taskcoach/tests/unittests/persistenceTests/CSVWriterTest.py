@@ -37,7 +37,7 @@ class CSVWriterTestCase(test.wxTestCase):
         
     def createViewer(self):
         self.settings.set('taskviewer', 'treemode', self.treeMode)
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.viewer = gui.viewer.TaskViewer(self.frame, self.taskFile,
             self.settings)
 
@@ -141,7 +141,7 @@ class EffortWriterTest(CSVWriterTestCase):
                                           stop=now + date.TimeDelta(seconds=1)))
 
     def createViewer(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.viewer = gui.viewer.EffortViewer(self.frame, self.taskFile,
             self.settings)
 

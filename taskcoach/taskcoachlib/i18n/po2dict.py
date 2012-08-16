@@ -14,7 +14,7 @@ import sys, re, os
 
 MESSAGES = {}
 
-# pylint: disable-msg=W0602,W0603
+# pylint: disable=W0602,W0603
 
 def add(id_, string, fuzzy):
     "Add a non-fuzzy translation to the dictionary."
@@ -61,7 +61,7 @@ def make(filename, outfile=None):
         lno += 1
         # If we get a comment line after a msgstr, this is a new entry
         if l[0] == '#' and section == STR:
-            add(msgid, msgstr, fuzzy) # pylint: disable-msg=E0601
+            add(msgid, msgstr, fuzzy) # pylint: disable=E0601
             section = None
             fuzzy = 0
         # Record a fuzzy mark
@@ -85,7 +85,7 @@ def make(filename, outfile=None):
         l = l.strip()
         if not l:
             continue
-        # XXX: Does this always follow Python escape semantics? # pylint: disable-msg=W0511
+        # XXX: Does this always follow Python escape semantics? # pylint: disable=W0511
         l = eval(l)
         if section == ID:
             msgid += l

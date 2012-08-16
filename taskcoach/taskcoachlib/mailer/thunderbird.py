@@ -68,7 +68,7 @@ def loadPreferences():
 
     for line in file(os.path.join(getDefaultProfileDir(), 'prefs.js'), 'r'):
         if line.startswith('user_pref('):
-            # pylint: disable-msg=W0122
+            # pylint: disable=W0122
             exec line in {'user_pref': user_pref, 'true': True, 'false': False}
 
     return config
@@ -102,7 +102,7 @@ _PORTABLECACHE = None
 def getDefaultProfileDir():
     """Returns Thunderbird's default profile directory"""
 
-    global _PORTABLECACHE  # pylint: disable-msg=W0603
+    global _PORTABLECACHE  # pylint: disable=W0603
 
     path = getThunderbirdDir()
 
@@ -114,7 +114,7 @@ def getDefaultProfileDir():
         if _PORTABLECACHE is not None:
             return _PORTABLECACHE
 
-        from taskcoachlib.thirdparty import wmi  # pylint: disable-msg=W0404
+        from taskcoachlib.thirdparty import wmi  # pylint: disable=W0404
 
         for process in wmi.WMI().Win32_Process():
             if process.ExecutablePath and process.ExecutablePath.lower().endswith('thunderbirdportable.exe'):

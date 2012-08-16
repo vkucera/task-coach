@@ -30,7 +30,7 @@ import mixin
 import inplace_editor
 
 
-class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable-msg=W0223
+class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                          mixin.FilterableViewerMixin,
                          mixin.SortableViewerForCategoriesMixin, 
                          mixin.SearchableViewerMixin, 
@@ -68,7 +68,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable-msg
             uicommand.CategoryDragAndDrop(viewer=self, categories=self.presentation()),
             itemPopupMenu, columnPopupMenu,
             **self.widgetCreationKeywordArguments())
-        widget.AssignImageList(imageList)  # pylint: disable-msg=E1101
+        widget.AssignImageList(imageList)  # pylint: disable=E1101
         return widget
 
     def createCategoryPopupMenu(self, localOnly=False):
@@ -76,7 +76,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable-msg
                                       self, localOnly)
 
     def _createColumns(self):
-        # pylint: disable-msg=W0142,E1101
+        # pylint: disable=W0142,E1101
         kwargs = dict(renderDescriptionCallback=lambda category: category.description(),
                       resizeCallback=self.onResizeColumn)
         columns = [widgets.Column('subject', _('Subject'), 
@@ -96,7 +96,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable-msg
                        editCallback=self.onEditDescription,
                        editControl=inplace_editor.DescriptionCtrl, **kwargs),
                    widgets.Column('attachments', '', 
-                       category.Category.attachmentsChangedEventType(),  # pylint: disable-msg=E1101
+                       category.Category.attachmentsChangedEventType(),  # pylint: disable=E1101
                        width=self.getColumnWidth('attachments'),
                        alignment=wx.LIST_FORMAT_LEFT,
                        imageIndicesCallback=self.attachmentImageIndices,
@@ -104,7 +104,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable-msg
                        renderCallback=lambda category: '', **kwargs)]
         if self.settings.getboolean('feature', 'notes'):
             columns.append(widgets.Column('notes', '', 
-                       category.Category.notesChangedEventType(),  # pylint: disable-msg=E1101
+                       category.Category.notesChangedEventType(),  # pylint: disable=E1101
                        width=self.getColumnWidth('notes'),
                        alignment=wx.LIST_FORMAT_LEFT,
                        imageIndicesCallback=self.noteImageIndices,
@@ -145,7 +145,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable-msg
             items = event.sources()
             for item in items.copy():
                 items |= set(item.children())
-            self.widget.RefreshItems(*items)  # pylint: disable-msg=W0142
+            self.widget.RefreshItems(*items)  # pylint: disable=W0142
         else:
             super(BaseCategoryViewer, self).onAttributeChanged_Deprecated(event)
         
@@ -186,14 +186,14 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable-msg
         return command.DeleteCategoryCommand
     
 
-class CategoryViewer(BaseCategoryViewer):  # pylint: disable-msg=W0223 
+class CategoryViewer(BaseCategoryViewer):  # pylint: disable=W0223 
     def __init__(self, *args, **kwargs):
         super(CategoryViewer, self).__init__(*args, **kwargs)
         self.filterUICommand.setChoice(self.settings.getboolean('view',
             'categoryfiltermatchall'))
 
     def createModeToolBarUICommands(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.filterUICommand = \
             uicommand.CategoryViewerFilterChoice(settings=self.settings)
         return super(CategoryViewer, self).createModeToolBarUICommands() + \

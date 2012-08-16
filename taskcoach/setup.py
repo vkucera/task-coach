@@ -91,10 +91,10 @@ elif system == 'Darwin':
     wordSize = '32' if struct.calcsize('L') == 4 else '64'
     sys.path.insert(0, os.path.join('taskcoachlib', 'bin.in', 'macos', 'IA%s' % wordSize))
     sys.path.insert(0, os.path.join('extension', 'macos', 'bin-ia32'))
-    # pylint: disable-msg=F0401,W0611
+    # pylint: disable=F0401,W0611
     import _growl, _growlImage, _powermgt
     import _idle
 
 
 if __name__ == '__main__':
-    setup(**setupOptions)  # pylint: disable-msg=W0142
+    setup(**setupOptions)  # pylint: disable=W0142

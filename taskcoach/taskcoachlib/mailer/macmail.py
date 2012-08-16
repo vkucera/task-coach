@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib.i18n import _
 
 
-def getSubjectOfMail(messageId): # pylint: disable-msg=W0613
+def getSubjectOfMail(messageId): # pylint: disable=W0613
     """This should return the subject of the mail having the specified
     message-id. Unfortunately, until I find an Applescript guru, it
     will only return the subject of the currently selected mail in
@@ -42,7 +42,7 @@ end tell
     if sp.returncode:
         return ''
 
-    return out.strip()""" # pylint: disable-msg=W0105
+    return out.strip()""" # pylint: disable=W0105
 
     # The above code is slow, wrong and dangerous. I'll try to fix it some day.
 

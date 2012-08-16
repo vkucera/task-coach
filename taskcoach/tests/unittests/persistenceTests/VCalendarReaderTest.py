@@ -22,7 +22,7 @@ from taskcoachlib.domain import date
 
 
 class VCalendarParserTest(test.TestCase):
-    # pylint: disable-msg=W0511
+    # pylint: disable=W0511
 
     def setUp(self):
         self.parser = persistence.icalendar.ical.VCalendarParser()

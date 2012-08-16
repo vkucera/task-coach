@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from .. import sessiontempfile  # pylint: disable-msg=F0401
+from .. import sessiontempfile  # pylint: disable=F0401
 from taskcoachlib import meta
 from taskcoachlib.domain import date, effort, task, category, note, attachment
 from taskcoachlib.i18n import translate
@@ -67,7 +67,7 @@ class XMLReader(object):
         parser = PIParser()
         tree = ET.parse(self.__fd, parser)
         root = tree.getroot()
-        self.__tskversion = parser.tskversion  # pylint: disable-msg=W0201
+        self.__tskversion = parser.tskversion  # pylint: disable=W0201
         if self.__tskversion > meta.data.tskversion:
             raise XMLReaderTooNewException  # Version number of task file is too high
         tasks = self._parseTaskNodes(root)
@@ -102,7 +102,7 @@ class XMLReader(object):
     
     def _fixBrokenLines(self):
         ''' Remove spurious newlines from element tags. '''
-        self.__origFd = self.__fd  # pylint: disable-msg=W0201
+        self.__origFd = self.__fd  # pylint: disable=W0201
         self.__fd = StringIO.StringIO()
         lines = self.__origFd.readlines()
         for index in xrange(len(lines)):
@@ -177,7 +177,7 @@ class XMLReader(object):
         kwargs['categorizables'] = categorizables
         if self.__tskversion > 20:
             kwargs['attachments'] = self._parseAttachmentNodes(categoryNode)
-        return category.Category(**kwargs)  # pylint: disable-msg=W0142
+        return category.Category(**kwargs)  # pylint: disable=W0142
                       
     def _parseCategoryNodesFromTaskNodes(self, root, tasks):
         ''' In tskversion <=13 category nodes were subnodes of task nodes. '''
@@ -241,7 +241,7 @@ class XMLReader(object):
             recurrence=self._parseRecurrence(taskNode)))
         if self.__tskversion > 20:
             kwargs['attachments'] = self._parseAttachmentNodes(taskNode)
-        return task.Task(**kwargs)  # pylint: disable-msg=W0142
+        return task.Task(**kwargs)  # pylint: disable=W0142
         
     def _parseRecurrence(self, taskNode):
         if self.__tskversion <= 19:
@@ -277,7 +277,7 @@ class XMLReader(object):
         kwargs = self._parseBaseCompositeAttributes(noteNode, self._parseNoteNodes)
         if self.__tskversion > 20:
             kwargs['attachments'] = self._parseAttachmentNodes(noteNode)
-        return note.Note(**kwargs) # pylint: disable-msg=W0142
+        return note.Note(**kwargs) # pylint: disable=W0142
     
     def _parseBaseAttributes(self, node):
         ''' Parse the attributes all composite domain objects share, such as
@@ -309,7 +309,7 @@ class XMLReader(object):
         return kwargs
 
     def _parseAttachmentsBeforeVersion21(self, parent):
-        path, name = os.path.split(os.path.abspath(self.__fd.name)) # pylint: disable-msg=E1103
+        path, name = os.path.split(os.path.abspath(self.__fd.name)) # pylint: disable=E1103
         name = os.path.splitext(name)[0]
         attdir = os.path.normpath(os.path.join(path, name + '_attachments'))
 
@@ -324,7 +324,7 @@ class XMLReader(object):
                 kwargs = dict(subject=description,
                               description=description)
             try:
-                attachments.append(attachment.AttachmentFactory(*args, **kwargs)) # pylint: disable-msg=W0142
+                attachments.append(attachment.AttachmentFactory(*args, **kwargs)) # pylint: disable=W0142
             except IOError:
                 # Mail attachment, file doesn't exist. Ignore this.
                 pass
@@ -345,7 +345,7 @@ class XMLReader(object):
         # task=None because it is set when the effort is actually added to the
         # task by the task itself. This way no events are sent for changing the
         # effort owner, which is good.
-        # pylint: disable-msg=W0142 
+        # pylint: disable=W0142 
         return effort.Effort(task=None, start=date.parseDateTime(start),
             stop=date.parseDateTime(stop), description=description, **kwargs)
 
@@ -373,7 +373,7 @@ class XMLReader(object):
                     tag = node.tag
                     childCfgNode = SyncMLConfigNode(tag)
                     cfgNode.addChild(childCfgNode)
-                self._parseSyncMLNodes(node, childCfgNode) # pylint: disable-msg=W0631
+                self._parseSyncMLNodes(node, childCfgNode) # pylint: disable=W0631
 
     def __parseGUIDNode(self, node):
         guid = self._parseText(node).strip()
@@ -393,7 +393,7 @@ class XMLReader(object):
         kwargs['notes'] = self._parseNoteNodes(attachmentNode)
 
         if self.__tskversion <= 22:
-            path, name = os.path.split(os.path.abspath(self.__fd.name)) # pylint: disable-msg=E1103
+            path, name = os.path.split(os.path.abspath(self.__fd.name)) # pylint: disable=E1103
             name, ext = os.path.splitext(name)
             attdir = os.path.normpath(os.path.join(path, name + '_attachments'))
             location = os.path.join(attdir, attachmentNode.attrib['location'])
@@ -415,7 +415,7 @@ class XMLReader(object):
                 if os.name == 'nt':
                     os.chmod(location, stat.S_IREAD)
 
-        return attachment.AttachmentFactory(location,  # pylint: disable-msg=W0142
+        return attachment.AttachmentFactory(location,  # pylint: disable=W0142
                                             attachmentNode.attrib['type'],
                                             **kwargs)
 

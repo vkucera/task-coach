@@ -26,7 +26,7 @@ import test
 import wx
 
 
-class TaskViewerUnderTest(gui.viewer.task.TaskViewer):  # pylint: disable-msg=W0223
+class TaskViewerUnderTest(gui.viewer.task.TaskViewer):  # pylint: disable=W0223
     def __init__(self, *args, **kwargs):
         super(TaskViewerUnderTest, self).__init__(*args, **kwargs)
         self.events = []
@@ -78,7 +78,7 @@ class TaskViewerTestCase(test.wxTestCase):
             os.remove('test.mail')
 
     def assertItems(self, *tasks):
-        self.viewer.expandAll()  # pylint: disable-msg=E1101
+        self.viewer.expandAll()  # pylint: disable=E1101
         self.assertEqual(self.viewer.size(), len(tasks))
         for index, eachTask in enumerate(tasks):
             self.assertItem(index, eachTask)
@@ -585,7 +585,7 @@ class CommonTestsMixin(object):
     def testNewItem(self):
         self.taskFile.categories().append(category.Category('cat', filtered=True))
         dialog = self.viewer.newItemDialog(bitmap='new')
-        tree = dialog._interior[4].viewer.widget  # pylint: disable-msg=W0212
+        tree = dialog._interior[4].viewer.widget  # pylint: disable=W0212
         firstChild = tree.GetFirstChild(tree.GetRootItem())[0]
         self.failUnless(firstChild.IsChecked())
         

@@ -271,7 +271,7 @@ class Object(SynchronizedObject):
     def setForegroundColor(self, color, event=None):
         self.__fgColor.set(color, event=event)
     
-    def foregroundColor(self, recursive=False): # pylint: disable-msg=W0613
+    def foregroundColor(self, recursive=False): # pylint: disable=W0613
         # The 'recursive' argument isn't actually used here, but some
         # code assumes composite objects where there aren't. This is
         # the simplest workaround.
@@ -280,7 +280,7 @@ class Object(SynchronizedObject):
     def setBackgroundColor(self, color, event=None):
         self.__bgColor.set(color, event=event)
         
-    def backgroundColor(self, recursive=False): # pylint: disable-msg=W0613
+    def backgroundColor(self, recursive=False): # pylint: disable=W0613
         # The 'recursive' argument isn't actually used here, but some
         # code assumes composite objects where there aren't. This is
         # the simplest workaround.
@@ -288,7 +288,7 @@ class Object(SynchronizedObject):
     
     # Font:
     
-    def font(self, recursive=False): # pylint: disable-msg=W0613
+    def font(self, recursive=False): # pylint: disable=W0613
         # The 'recursive' argument isn't actually used here, but some
         # code assumes composite objects where there aren't. This is
         # the simplest workaround.
@@ -343,7 +343,7 @@ class CompositeObject(Object, patterns.ObservableComposite):
 
     # Subject:
     
-    def subject(self, recursive=False): # pylint: disable-msg=W0221
+    def subject(self, recursive=False): # pylint: disable=W0221
         subject = super(CompositeObject, self).subject()
         if recursive and self.parent():
             subject = u'%s -> %s'%(self.parent().subject(recursive=True), subject)
@@ -365,7 +365,7 @@ class CompositeObject(Object, patterns.ObservableComposite):
         
     # Description:
         
-    def description(self, recursive=False): # pylint: disable-msg=W0221,W0613
+    def description(self, recursive=False): # pylint: disable=W0221,W0613
         # Allow for the recursive flag, but ignore it
         return super(CompositeObject, self).description()
         

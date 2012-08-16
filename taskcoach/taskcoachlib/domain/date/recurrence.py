@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-''' Utilities for recurring dates. ''' # pylint: disable-msg=W0105
+''' Utilities for recurring dates. ''' # pylint: disable=W0105
 
 import calendar
 import timedelta
@@ -27,7 +27,7 @@ class Recurrence(object):
     units = ('daily', 'weekly', 'monthly', 'yearly', '')
     
     def __init__(self, unit='', amount=1, sameWeekday=False, max=0, count=0,
-                 recurBasedOnCompletion=False): # pylint: disable-msg=W0622
+                 recurBasedOnCompletion=False): # pylint: disable=W0622
         assert unit in self.units
         assert amount >= 1
         self.unit = unit

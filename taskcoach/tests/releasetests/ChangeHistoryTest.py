@@ -20,7 +20,7 @@ import sys, os
 import test
 from taskcoachlib import meta
 sys.path.append(os.path.join(test.projectRoot, 'changes.in'))
-import changes # pylint: disable-msg=F0401
+import changes # pylint: disable=F0401
 
 
 class ChangeHistoryTestCase(test.TestCase):

@@ -34,7 +34,7 @@ class XFCE4WarningDialog(dialog.Dialog):
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(wx.StaticText(self._interior, label=_('Task Coach has known issues with XFCE4 session management.\n') + \
                                 _('If you experience random freeze at startup, please uncheck\nthe "Use X11 session management" in the Features tab of the preferences.\n')))
-        self._checkbox = wx.CheckBox(self._interior, label=_('Do not show this dialog at startup')) # pylint: disable-msg=W0201
+        self._checkbox = wx.CheckBox(self._interior, label=_('Do not show this dialog at startup')) # pylint: disable=W0201
         self._checkbox.SetValue(True)
         sizer.Add(self._checkbox)
         self._interior.SetSizer(sizer)

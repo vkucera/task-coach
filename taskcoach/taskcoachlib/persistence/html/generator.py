@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, cgi
 from taskcoachlib.domain import task
 
-# pylint: disable-msg=W0142
+# pylint: disable=W0142
 
 css = '''
 body {

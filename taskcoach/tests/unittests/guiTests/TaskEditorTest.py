@@ -121,7 +121,7 @@ class EditorDisplayTest(TaskEditorTestCase):
         return [self.task]
     
     def createTasks(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.task = task.Task('Task to edit')
         self.task.setRecurrence(date.Recurrence('daily', amount=1))
         return [self.task]
@@ -152,10 +152,10 @@ class EditTaskTestBase(object):
         return [self.task]
 
     def createTasks(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.task = task.Task('Task to edit')
         self.attachment = attachment.FileAttachment('some attachment')
-        self.task.addAttachments(self.attachment) # pylint: disable-msg=E1101
+        self.task.addAttachments(self.attachment) # pylint: disable=E1101
         return [self.task]
 
     def testEditSubject(self):
@@ -166,7 +166,7 @@ class EditTaskTestBase(object):
         self.setDescription('Description')
         self.assertEqual('Description', self.task.description())
 
-    # pylint: disable-msg=W0212
+    # pylint: disable=W0212
    
     def testSetPlannedStartDateTime(self):
         self.setPlannedStartDateTime(self.tomorrow)
@@ -255,18 +255,18 @@ class EditTaskTestBase(object):
 
     def testAddAttachment(self):
         self.editor._interior[8].viewer.onDropFiles(self.task, ['filename'])
-        # pylint: disable-msg=E1101
+        # pylint: disable=E1101
         self.failUnless('filename' in [att.location() for att in self.task.attachments()])
         self.failUnless('filename' in [att.subject() for att in self.task.attachments()])
         
     def testRemoveAttachment(self):
         self.editor._interior[8].viewer.select(self.task.attachments())
         self.editor._interior[8].viewer.deleteItemCommand().do()
-        self.assertEqual([], self.task.attachments()) # pylint: disable-msg=E1101
+        self.assertEqual([], self.task.attachments()) # pylint: disable=E1101
 
     def testOpenAttachmentWithNonAsciiFileName(self):
-        self.errorMessage = ''  # pylint: disable-msg=W0201
-        def onError(*args, **kwargs): # pylint: disable-msg=W0613
+        self.errorMessage = ''  # pylint: disable=W0201
+        def onError(*args, **kwargs): # pylint: disable=W0613
             self.errorMessage = args[0]  # pragma: no cover
         att = attachment.FileAttachment(u'tÃƒÂ©st.ÃƒÂ©')
         openAttachment = uicommand.AttachmentOpen(\
@@ -303,7 +303,7 @@ class EditTaskWithChildrenTestBase(object):
         return [self.parent]
 
     def createTasks(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.parent = task.Task('Parent', plannedStartDateTime=date.Now())
         self.child = task.Task('Child', plannedStartDateTime=date.Now())
         self.parent.addChild(self.child)
@@ -313,7 +313,7 @@ class EditTaskWithChildrenTestBase(object):
         self.setSubject('New Parent Subject')
         self.assertEqual('New Parent Subject', self.parent.subject())
 
-    # pylint: disable-msg=W0212
+    # pylint: disable=W0212
 
     def testChangeDueDateTimeOfParentAffectsChildToo(self):
         self.setDueDateTime(self.yesterday)
@@ -336,7 +336,7 @@ class EditTaskWithEffortTest(TaskEditorTestCase):
         return [self.task]
 
     def createTasks(self):
-        self.task = task.Task('task') # pylint: disable-msg=W0201
+        self.task = task.Task('task') # pylint: disable=W0201
         self.task.addEffort(effort.Effort(self.task))
         return [self.task]
     
@@ -355,16 +355,16 @@ class FocusTest(TaskEditorTestCase):
     def testFocus(self):
         if operating_system.isGTK():
             wx.Yield() # pragma: no cover
-            # pylint: disable-msg=W0212
+            # pylint: disable=W0212
             self.assertNotEqual(self.editor._interior[0]._subjectEntry, wx.Window_FindFocus())
         else:
-            # pylint: disable-msg=W0212
+            # pylint: disable=W0212
             self.assertEqual(self.editor._interior[0]._subjectEntry, wx.Window_FindFocus())
 
 
 class DatesTestBase(TaskEditorSetterBase, TaskEditorTestCase):
     def createTasks(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.task = task.Task('Task to edit')
         return [self.task]
 

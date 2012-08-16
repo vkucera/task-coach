@@ -27,14 +27,14 @@ import defaults
 
 
 class UnicodeAwareConfigParser(ConfigParser.RawConfigParser):
-    def set(self, section, setting, value):  # pylint: disable-msg=W0222
+    def set(self, section, setting, value):  # pylint: disable=W0222
         if type(value) == type(u''):
             value = value.encode('utf-8')
         ConfigParser.RawConfigParser.set(self, section, setting, value)
 
-    def get(self, section, setting):  # pylint: disable-msg=W0221
+    def get(self, section, setting):  # pylint: disable=W0221
         value = ConfigParser.RawConfigParser.get(self, section, setting)
-        return value.decode('utf-8')  # pylint: disable-msg=E1103
+        return value.decode('utf-8')  # pylint: disable=E1103
 
 
 class CachingConfigParser(UnicodeAwareConfigParser):
@@ -54,7 +54,7 @@ class CachingConfigParser(UnicodeAwareConfigParser):
     def get(self, section, setting):
         cache, key = self.__cachedValues, (section, setting)
         if key not in cache:
-            cache[key] = UnicodeAwareConfigParser.get(self, *key)  # pylint: disable-msg=W0142
+            cache[key] = UnicodeAwareConfigParser.get(self, *key)  # pylint: disable=W0142
         return cache[key]
         
         
@@ -91,7 +91,7 @@ class Settings(object, CachingConfigParser):
             try:
                 os.remove(self.generatedIniFilename(forceProgramDir=True))
             except: 
-                return  # pylint: disable-msg=W0702
+                return  # pylint: disable=W0702
             
     def initializeWithDefaults(self):
         for section in self.sections():
@@ -113,7 +113,7 @@ class Settings(object, CachingConfigParser):
         for section, setting, value in noisySettings:
             self.set(section, setting, value)
             
-    def add_section(self, section, copyFromSection=None):  # pylint: disable-msg=W0221
+    def add_section(self, section, copyFromSection=None):  # pylint: disable=W0221
         result = super(Settings, self).add_section(section)
         if copyFromSection:
             for name, value in self.items(copyFromSection):
@@ -181,7 +181,7 @@ class Settings(object, CachingConfigParser):
             super(Settings, self).set(section, option, result)
         return result
 
-    def set(self, section, option, value, new=False):  # pylint: disable-msg=W0221
+    def set(self, section, option, value, new=False):  # pylint: disable=W0221
         if new:
             currentValue = 'a new option, so use something as current value'\
                 ' that is unlikely to be equal to the new value'
@@ -229,7 +229,7 @@ class Settings(object, CachingConfigParser):
         stringValue = self.get(section, option)
         try:
             return evaluate(stringValue)
-        except Exception, exceptionMessage:  # pylint: disable-msg=W0703
+        except Exception, exceptionMessage:  # pylint: disable=W0703
             message = '\n'.join([ \
                 _('Error while reading the %s-%s setting from %s.ini.') % (section, option, meta.filename),
                 _('The value is: %s') % stringValue,
@@ -240,7 +240,7 @@ class Settings(object, CachingConfigParser):
             self.set(section, option, defaultValue, new=True)  # Ignore current value
             return evaluate(defaultValue)
         
-    def save(self, showerror=wx.MessageBox, file=file):  # pylint: disable-msg=W0622
+    def save(self, showerror=wx.MessageBox, file=file):  # pylint: disable=W0622
         self.set('version', 'python', sys.version)
         self.set('version', 'wxpython', '%s-%s @ %s' % (wx.VERSION_STRING, wx.PlatformInfo[2], wx.PlatformInfo[1]))
         self.set('version', 'pythonfrozen', str(hasattr(sys, 'frozen')))
@@ -257,7 +257,7 @@ class Settings(object, CachingConfigParser):
             if os.path.exists(self.filename()):
                 os.remove(self.filename())
             os.rename(self.filename() + '.tmp', self.filename())
-        except Exception, message:  # pylint: disable-msg=W0703
+        except Exception, message:  # pylint: disable=W0703
             showerror(_('Error while saving %s.ini:\n%s\n') % \
                       (meta.filename, message), caption=_('Save error'), 
                       style=wx.ICON_ERROR)
@@ -268,7 +268,7 @@ class Settings(object, CachingConfigParser):
         else:
             return self.generatedIniFilename(forceProgramDir) 
     
-    def path(self, forceProgramDir=False, environ=os.environ):  # pylint: disable-msg=W0102
+    def path(self, forceProgramDir=False, environ=os.environ):  # pylint: disable=W0102
         if self.__iniFileSpecifiedOnCommandLine:
             return self.pathToIniFileSpecifiedOnCommandLine()
         elif forceProgramDir or self.getboolean('file', 
@@ -287,7 +287,7 @@ class Settings(object, CachingConfigParser):
         try:
             path = os.path.join(environ['APPDATA'], meta.filename)
         except Exception:
-            path = os.path.expanduser("~")  # pylint: disable-msg=W0702
+            path = os.path.expanduser("~")  # pylint: disable=W0702
             if path == "~":
                 # path not expanded: apparently, there is no home dir
                 path = os.getcwd()
@@ -302,7 +302,7 @@ class Settings(object, CachingConfigParser):
             # exists.
 
             if os.path.exists(path + '.lnk'):
-                from win32com.client import Dispatch  # pylint: disable-msg=F0401
+                from win32com.client import Dispatch  # pylint: disable=F0401
 
                 shell = Dispatch('WScript.Shell')
                 shortcut = shell.CreateShortcut(path + '.lnk')

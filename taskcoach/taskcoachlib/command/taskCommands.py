@@ -30,9 +30,9 @@ class SaveTaskStateMixin(base.SaveStateMixin, base.CompositeMixin):
     pass
 
 
-class EffortCommand(base.BaseCommand):  # pylint: disable-msg=W0223
+class EffortCommand(base.BaseCommand):  # pylint: disable=W0223
     def stopTracking(self):
-        self.stoppedEfforts = []  # pylint: disable-msg=W0201
+        self.stoppedEfforts = []  # pylint: disable=W0201
         for taskToStop in self.tasksToStopTracking():
             self.stoppedEfforts.extend(taskToStop.activeEfforts())
             taskToStop.stopTracking()
@@ -134,7 +134,7 @@ class DeleteTaskCommand(base.DeleteCommand, EffortCommand):
         self.__removePrerequisites()
     
     def __removePrerequisites(self):
-        self.__relationsToRestore = dict()  # pylint: disable-msg=W0201
+        self.__relationsToRestore = dict()  # pylint: disable=W0201
         for eachTask in self.items:
             prerequisites, dependencies = eachTask.prerequisites(), eachTask.dependencies()
             self.__relationsToRestore[eachTask] = prerequisites, dependencies
@@ -192,7 +192,7 @@ class NewTaskCommand(base.NewItemCommand):
 class NewSubTaskCommand(base.NewSubItemCommand, SaveTaskStateMixin):
     plural_name = _('New subtasks')
     singular_name = _('New subtask of "%s"')
-    # pylint: disable-msg=E1101
+    # pylint: disable=E1101
     
     def __init__(self, *args, **kwargs):
         super(NewSubTaskCommand, self).__init__(*args, **kwargs)
@@ -342,10 +342,10 @@ class StopEffortCommand(EffortCommand):
     
     def tasksToStopTracking(self):
         stoppable = lambda effort: effort.isBeingTracked() and not effort.isTotal()
-        return set([effort.task() for effort in self.list if stoppable(effort)])  # pylint: disable-msg=W0621 
+        return set([effort.task() for effort in self.list if stoppable(effort)])  # pylint: disable=W0621 
 
 
-class ExtremePriorityCommand(base.BaseCommand):  # pylint: disable-msg=W0223
+class ExtremePriorityCommand(base.BaseCommand):  # pylint: disable=W0223
     delta = 'Subclass responsibility'
     
     def __init__(self, *args, **kwargs):
@@ -398,7 +398,7 @@ class MinPriorityCommand(ExtremePriorityCommand):
         return self.list.minPriority()
     
 
-class ChangePriorityCommand(base.BaseCommand):  # pylint: disable-msg=W0223
+class ChangePriorityCommand(base.BaseCommand):  # pylint: disable=W0223
     delta = 'Subclass responsibility'
     
     def changePriorities(self, delta):

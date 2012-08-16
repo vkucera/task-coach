@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 '''
 In place editors for viewers.
-''' # pylint: disable-msg=W0105
+''' # pylint: disable=W0105
 
 import wx
 from taskcoachlib.thirdparty import hypertreelist
@@ -76,7 +76,7 @@ class PercentageCtrl(_SpinCtrl):
 
 class Panel(wx.Panel):
     ''' Panel class for inline controls that need to be put into a panel. '''
-    def __init__(self, parent, wxId, value, *args, **kwargs): # pylint: disable-msg=W0613
+    def __init__(self, parent, wxId, value, *args, **kwargs): # pylint: disable=W0613
         # Don't pass the value argument to the wx.Panel since it doesn't take 
         # a value argument
         super(Panel, self).__init__(parent, wxId, *args, **kwargs)      

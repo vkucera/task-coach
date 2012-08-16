@@ -35,7 +35,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def __init__(self, subject='', description='', 
                  dueDateTime=None, plannedStartDateTime=None, 
                  actualStartDateTime=None, completionDateTime=None,
-                 budget=None, priority=0, id=None, hourlyFee=0,  # pylint: disable-msg=W0622
+                 budget=None, priority=0, id=None, hourlyFee=0,  # pylint: disable=W0622
                  fixedFee=0, reminder=None, reminderBeforeSnooze=None, categories=None,
                  efforts=None, shouldMarkCompletedWhenAllChildrenCompleted=None, 
                  recurrence=None, percentageComplete=0, prerequisites=None,
@@ -46,7 +46,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         kwargs['categories'] = categories
         super(Task, self).__init__(*args, **kwargs)
         self.__status = None  # status cache
-        self.__dueSoonHours = self.settings.getint('behavior', 'duesoonhours')  # pylint: disable-msg=E1101
+        self.__dueSoonHours = self.settings.getint('behavior', 'duesoonhours')  # pylint: disable=E1101
         maxDateTime = self.maxDateTime    
         self.__dueDateTime = dueDateTime or maxDateTime
         self.__plannedStartDateTime = plannedStartDateTime or maxDateTime
@@ -441,7 +441,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             are completed, 3) its setting says it should be completed when
             all of its children are completed. '''
         shouldMarkCompletedAccordingToSetting = \
-            self.settings.getboolean('behavior',  # pylint: disable-msg=E1101
+            self.settings.getboolean('behavior',  # pylint: disable=E1101
                 'markparentcompletedwhenallchildrencompleted')
         shouldMarkCompletedAccordingToTask = \
             self.shouldMarkCompletedWhenAllChildrenCompleted()
@@ -717,7 +717,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         except AttributeError:
             return self.__computeRecursiveForegroundColor()
         
-    def __computeRecursiveForegroundColor(self, value=None):  # pylint: disable-msg=W0613
+    def __computeRecursiveForegroundColor(self, value=None):  # pylint: disable=W0613
         fgColor = super(Task, self).foregroundColor(recursive=True)
         statusColor = self.statusFgColor()
         if statusColor == wx.BLACK:
@@ -726,7 +726,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             recursiveColor = statusColor
         else:
             recursiveColor = color.ColorMixer.mix((fgColor, statusColor))
-        self.__recursiveForegroundColor = recursiveColor  # pylint: disable-msg=W0201
+        self.__recursiveForegroundColor = recursiveColor  # pylint: disable=W0201
         return recursiveColor
     
     def statusFgColor(self):
@@ -736,7 +736,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     
     @classmethod
     def fgColorForStatus(class_, taskStatus):
-        return wx.Colour(*eval(class_.settings.get('fgcolor', '%stasks' % taskStatus)))  # pylint: disable-msg=E1101
+        return wx.Colour(*eval(class_.settings.get('fgcolor', '%stasks' % taskStatus)))  # pylint: disable=E1101
 
     def appearanceChangedEvent(self, event):
         self.__computeRecursiveForegroundColor()
@@ -761,7 +761,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         except AttributeError:
             return self.__computeRecursiveBackgroundColor()
         
-    def __computeRecursiveBackgroundColor(self, *args, **kwargs):  # pylint: disable-msg=W0613
+    def __computeRecursiveBackgroundColor(self, *args, **kwargs):  # pylint: disable=W0613
         bgColor = super(Task, self).backgroundColor(recursive=True)
         statusColor = self.statusBgColor()
         if statusColor == wx.WHITE:
@@ -770,7 +770,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             recursiveColor = statusColor
         else:
             recursiveColor = color.ColorMixer.mix((bgColor, statusColor))
-        self.__recursiveBackgroundColor = recursiveColor  # pylint: disable-msg=W0201
+        self.__recursiveBackgroundColor = recursiveColor  # pylint: disable=W0201
         return recursiveColor
     
     def statusBgColor(self):
@@ -780,7 +780,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     
     @classmethod
     def bgColorForStatus(class_, taskStatus):
-        return wx.Colour(*eval(class_.settings.get('bgcolor', '%stasks' % taskStatus)))  # pylint: disable-msg=E1101
+        return wx.Colour(*eval(class_.settings.get('bgcolor', '%stasks' % taskStatus)))  # pylint: disable=E1101
     
     # Font
 
@@ -801,7 +801,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     @classmethod
     def fontForStatus(class_, taskStatus):
-        nativeInfoString = class_.settings.get('font', '%stasks' % taskStatus)  # pylint: disable-msg=E1101
+        nativeInfoString = class_.settings.get('font', '%stasks' % taskStatus)  # pylint: disable=E1101
         return wx.FontFromNativeInfoString(nativeInfoString) if nativeInfoString else None
                 
     # Icon
@@ -817,8 +817,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 myIcon = self.__computeRecursiveIcon()
         return self.pluralOrSingularIcon(myIcon, native=super(Task, self).icon() == '')
     
-    def __computeRecursiveIcon(self, *args, **kwargs):  # pylint: disable-msg=W0613
-        # pylint: disable-msg=W0201
+    def __computeRecursiveIcon(self, *args, **kwargs):  # pylint: disable=W0613
+        # pylint: disable=W0201
         self.__recursiveIcon = self.categoryIcon() or self.statusIcon()
         return self.__recursiveIcon
 
@@ -833,8 +833,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 myIcon = self.__computeRecursiveSelectedIcon()
         return self.pluralOrSingularIcon(myIcon, native=super(Task, self).selectedIcon == '')
         
-    def __computeRecursiveSelectedIcon(self, *args, **kwargs):  # pylint: disable-msg=W0613
-        # pylint: disable-msg=W0201
+    def __computeRecursiveSelectedIcon(self, *args, **kwargs):  # pylint: disable=W0613
+        # pylint: disable=W0201
         self.__recursiveSelectedIcon = self.categorySelectedIcon() or self.statusIcon(selected=True)
         return self.__recursiveSelectedIcon
 
@@ -843,7 +843,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return self.iconForStatus(self.status(), selected)            
 
     def iconForStatus(self, taskStatus, selected=False):
-        iconName = self.settings.get('icon', '%stasks' % taskStatus)  # pylint: disable-msg=E1101
+        iconName = self.settings.get('icon', '%stasks' % taskStatus)  # pylint: disable=E1101
         iconName = self.pluralOrSingularIcon(iconName)
         if selected and iconName.startswith('folder'):
             iconName = iconName[:-len('_icon')] + '_open_icon' 
@@ -964,7 +964,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     
     # Hourly fee
     
-    def hourlyFee(self, recursive=False):  # pylint: disable-msg=W0613
+    def hourlyFee(self, recursive=False):  # pylint: disable=W0613
         return self.__hourlyFee
     
     def setHourlyFee(self, hourlyFee):
@@ -982,7 +982,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def hourlyFeeChangedEventType(class_):
         return 'pubsub.task.hourlyFee'
     
-    @staticmethod  # pylint: disable-msg=W0613
+    @staticmethod  # pylint: disable=W0613
     def hourlyFeeSortFunction(**kwargs): 
         return lambda task: task.hourlyFee()
 
@@ -1056,7 +1056,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     
     # reminder
     
-    def reminder(self, recursive=False, includeSnooze=True):  # pylint: disable-msg=W0613
+    def reminder(self, recursive=False, includeSnooze=True):  # pylint: disable=W0613
         if recursive:
             reminders = [child.reminder(recursive=True) for child in \
                          self.children()] + [self.__reminder]
@@ -1368,7 +1368,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     
     @classmethod    
     def suggestedDateTime(cls, defaultDateTimeSetting, now=date.Now):
-        # pylint: disable-msg=E1101,W0142
+        # pylint: disable=E1101,W0142
         defaultDateTime = cls.settings.get('view', defaultDateTimeSetting)
         dummy_prefix, defaultDate, defaultTime = defaultDateTime.split('_')
         dateTime = now()

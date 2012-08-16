@@ -46,9 +46,9 @@ class AttributeSync(object):
         if newValue != self._currentValue:
             self._currentValue = newValue
             commandKwArgs = self.commandKwArgs(newValue)
-            self._commandClass(None, self._items, **commandKwArgs).do()  # pylint: disable-msg=W0142
+            self._commandClass(None, self._items, **commandKwArgs).do()  # pylint: disable=W0142
             
-    def onAttributeChanged_Deprecated(self, event):  # pylint: disable-msg=W0613
+    def onAttributeChanged_Deprecated(self, event):  # pylint: disable=W0613
         if self._entry: 
             newValue = getattr(self._items[0], self._getter)()
             if newValue != self._currentValue:

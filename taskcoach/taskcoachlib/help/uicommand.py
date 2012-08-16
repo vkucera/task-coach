@@ -42,7 +42,7 @@ fileQuit = _('Exit %s')%meta.name
 fileOpen = _('Open a %s file')%meta.name
 fileSave = _('Save the current file')
 fileSaveAs = _('Save the current file under a new name')
-help = _('Help about the program') # pylint: disable-msg=W0622
+help = _('Help about the program') # pylint: disable=W0622
 mailItem = _('Mail the selected item(s), using your default mailer')
 noteNew = _('Insert a new note')
 openAllAttachments = _('Open all attachments of the selected item(s)')

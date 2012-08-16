@@ -40,7 +40,7 @@ class _BetterDatePickerCtrl(wx.DatePickerCtrl):
             # that might be edited by the user, are updated by the datepicker:
             self.GetParent().Navigate() 
             # Next, click the default button of the dialog:
-            button = self.getTopLevelWindow().GetDefaultItem() # pylint: disable-msg=E1103
+            button = self.getTopLevelWindow().GetDefaultItem() # pylint: disable=E1103
             click = wx.CommandEvent()
             click.SetEventType(wx.EVT_BUTTON.typeId)
             wx.PostEvent(button, click)
@@ -55,12 +55,12 @@ class _BetterDatePickerCtrl(wx.DatePickerCtrl):
             window = window.GetParent()
         return window
 
-    def Disable(self): # pylint: disable-msg=W0221
+    def Disable(self): # pylint: disable=W0221
         super(_BetterDatePickerCtrl, self).Disable()
         for child in self.Children:
             child.Disable()
             
-    def Enable(self, enable=True): # pylint: disable-msg=W0221
+    def Enable(self, enable=True): # pylint: disable=W0221
         super(_BetterDatePickerCtrl, self).Enable(enable)
         for child in self.Children:
             child.Enable(enable)
@@ -79,7 +79,7 @@ class _DatePickerCtrlThatFixesAllowNoneStyle(wx.Panel):
             self.Bind(wx.EVT_CHILD_FOCUS, lambda event: None)
             
     def _createControls(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.__check = wx.CheckBox(self)
         self.__check.Bind(wx.EVT_CHECKBOX, self.onCheck)
         self.__datePicker = _BetterDatePickerCtrl(self, *self.__args, 
@@ -109,7 +109,7 @@ class _DatePickerCtrlThatFixesAllowNoneStyle(wx.Panel):
             self.__datePicker.Disable()
             self.__check.SetValue(False)
 
-    def IsEnabled(self): # pylint: disable-msg=W0221
+    def IsEnabled(self): # pylint: disable=W0221
         return self.__datePicker.IsEnabled()
 
     def __getattr__(self, attr):
@@ -174,8 +174,8 @@ class DateTimeCtrl(wx.Panel):
             self.Bind(wx.EVT_CHILD_FOCUS, lambda event: None)
 
     def _createControls(self): 
-        # pylint: disable-msg=W0201
-        self._dateCtrl = DatePickerCtrl(self, **self._datePickerOptions()) # pylint: disable-msg=W0142
+        # pylint: disable=W0201
+        self._dateCtrl = DatePickerCtrl(self, **self._datePickerOptions()) # pylint: disable=W0142
         self._dateCtrl.Bind(wx.EVT_DATE_CHANGED, self._dateCtrlCallback)
         self._dateCtrl.Bind(wx.EVT_CHECKBOX, self.onEnableDatePicker)
         self._timeCtrl = wx.ComboBox(self, choices=self._timeChoices(),
@@ -274,7 +274,7 @@ class DateTimeCtrl(wx.Panel):
             timeText = self._timeCtrl.GetValue()
             try:
                 timeComponents = [int(component) for component in timeText.split(':')]
-                timeValue = date.Time(*timeComponents) # pylint: disable-msg=W0142
+                timeValue = date.Time(*timeComponents) # pylint: disable=W0142
             except ValueError:
                 timeValue = date.Time()
             return date.DateTime.combine(dateValue, timeValue)

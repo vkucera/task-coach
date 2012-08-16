@@ -79,7 +79,7 @@ class XMLReaderTestCase(test.TestCase):
         task.Task.settings = config.Settings(load=False)
             
     def writeAndRead(self, xmlContents):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.fd = StringIO.StringIO()
         self.fd.name = 'testfile.tsk'
         self.reader = persistence.XMLReader(self.fd)
@@ -124,7 +124,7 @@ class TempFileLockTest(XMLReaderTestCase):
         
         def newMkstemp(*args, **kwargs):  # pragma: no cover
             handle, name = self.oldMkstemp(*args, **kwargs)
-            self.__filename = name  # pylint: disable-msg=W0201
+            self.__filename = name  # pylint: disable=W0201
             return handle, name
         
         tempfile.mkstemp = newMkstemp
@@ -144,7 +144,7 @@ class TempFileLockTest(XMLReaderTestCase):
             try:
                 os.remove(self.__filename)
             except:
-                pass  # pylint: disable-msg=W0702
+                pass  # pylint: disable=W0702
 
             self.assert_(os.path.exists(self.__filename))
 

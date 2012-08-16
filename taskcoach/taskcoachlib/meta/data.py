@@ -44,7 +44,7 @@ if revision:  # Buildbot sets revision
     # Decrement version because this version isn't released yet. This
     # assumes that version components are < 100; 99 will actually mean
     # pre-major release
-    # pylint: disable-msg=W0141
+    # pylint: disable=W0141
     major, inter, minor = map(int, version.split('.'))
     numversion = major * 10000 + inter * 100 + minor
     numversion -= 1
@@ -102,11 +102,11 @@ i18n_url = url + 'i18n.html'
 announcement_addresses = 'taskcoach@yahoogroups.com, python-announce-list@python.org'
 bcc_announcement_addresses = 'johnhaller@portableapps.com'
 
-copyright = 'Copyright (C) 2004-%s %s'%(release_year, author)  # pylint: disable-msg=W0622
+copyright = 'Copyright (C) 2004-%s %s'%(release_year, author)  # pylint: disable=W0622
 license_title = 'GNU General Public License'
 license_version = '3'
 license_title_and_version = '%s version %s'%(license_title, license_version) 
-license = '%s or any later version'%license_title_and_version  # pylint: disable-msg=W0622
+license = '%s or any later version'%license_title_and_version  # pylint: disable=W0622
 license_title_and_version_abbrev = 'GPLv%s'%license_version
 license_abbrev = '%s+'%license_title_and_version_abbrev
 license_notice = '''%(name)s is free software: you can redistribute it and/or modify
@@ -187,7 +187,7 @@ languages_list = ','.join(languages.keys())
 def __createDict(localsDict):
     ''' Provide the local variables as a dictionary for use in string
         formatting. '''
-    metaDict = {}  # pylint: disable-msg=W0621
+    metaDict = {}  # pylint: disable=W0621
     for key in localsDict:
         if not key.startswith('__'):
             metaDict[key] = localsDict[key]

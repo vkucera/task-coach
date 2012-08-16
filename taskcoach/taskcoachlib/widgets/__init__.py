@@ -42,6 +42,6 @@ try:
     from wx.lib import sized_controls
 except ImportError:
     try:
-        from wxaddons import sized_controls # pylint: disable-msg=F0401
+        from wxaddons import sized_controls # pylint: disable=F0401
     except ImportError:
-        from taskcoachlib.thirdparty import sized_controls # pylint: disable-msg=W0404
+        from taskcoachlib.thirdparty import sized_controls # pylint: disable=W0404

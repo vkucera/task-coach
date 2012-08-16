@@ -57,7 +57,7 @@ class AppTests(test.TestCase):
         if locale:
             args.append(locale)
         self.assertEqual(expectedLanguage, 
-                         application.Application.determineLanguage(*args))  # pylint: disable-msg=W0142
+                         application.Application.determineLanguage(*args))  # pylint: disable=W0142
         
     def testLanguageViaCommandLineOption(self):
         self.options.language = 'fi_FI'

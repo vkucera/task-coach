@@ -92,7 +92,7 @@ class NoteTest(test.TestCase):
         
     def testNewChild(self):
         child = self.note.newChild(subject='child')
-        self.assertEqual('child', child.subject())  # pylint: disable-msg=E1101
+        self.assertEqual('child', child.subject())  # pylint: disable=E1101
         
     def testGetState(self):
         self.assertEqual(dict(id=self.note.id(), subject='', description='', parent=None,
@@ -118,9 +118,9 @@ class NoteOwnerTest(test.TestCase):
     def onEvent(self, event):
         self.events.append(event)
     
-    # pylint: disable-msg=E1101
+    # pylint: disable=E1101
         
-    def registerObserver(self):  # pylint: disable-msg=W0221
+    def registerObserver(self):  # pylint: disable=W0221
         patterns.Publisher().registerObserver(self.onEvent,
             note.NoteOwner.notesChangedEventType())
         

@@ -117,7 +117,7 @@ class TaskFile(patterns.Observer):
     def isEmpty(self):
         return 0 == len(self.categories()) == len(self.tasks()) == len(self.notes())
             
-    def onDomainObjectAddedOrRemoved(self, event):  # pylint: disable-msg=W0613
+    def onDomainObjectAddedOrRemoved(self, event):  # pylint: disable=W0613
         self.markDirty()
 
     def onTaskChanged(self, newValue, sender):
@@ -395,7 +395,7 @@ class LockedTaskFile(TaskFile):
         self.__lock = lockfile.FileLock(filename)
         self.__lock.break_lock()
             
-    def load(self, filename=None, lock=True, breakLock=False): # pylint: disable-msg=W0221
+    def load(self, filename=None, lock=True, breakLock=False): # pylint: disable=W0221
         ''' Lock the file before we load, if not already locked. '''
         filename = filename or self.filename()
         if lock and filename:

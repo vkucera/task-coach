@@ -60,7 +60,7 @@ class HTMLWriter(object):
             self._writeCSS()
         return count
     
-    def _writeCSS(self, open=open): # pylint: disable-msg=W0622
+    def _writeCSS(self, open=open): # pylint: disable=W0622
         if not self.__cssFilename or os.path.exists(self.__cssFilename):
             return
         try:

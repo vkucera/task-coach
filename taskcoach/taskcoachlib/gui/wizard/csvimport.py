@@ -135,7 +135,7 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
         wx.EVT_RADIOBUTTON(self.escapeQuote, wx.ID_ANY, self.OnOptionChanged)
         wx.EVT_TEXT(self.escapeChar, wx.ID_ANY, self.OnOptionChanged)
 
-    def OnOptionChanged(self, event):  # pylint: disable-msg=W0613
+    def OnOptionChanged(self, event):  # pylint: disable=W0613
         self.escapeChar.Enable(self.escapeQuote.GetValue())
 
         if self.filename is None:

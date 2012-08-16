@@ -67,7 +67,7 @@ class IntegrationTest_EmptyList(IntegrationTestCase):
         
 class IntegrationTest(IntegrationTestCase):
     def fillContainers(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.description = 'Description\nLine 2'
         self.task = task.Task(subject='Subject', description=self.description, 
             plannedStartDateTime=date.Now() - date.TimeDelta(days=1), 
@@ -92,7 +92,7 @@ class IntegrationTest(IntegrationTestCase):
                                           description='Description', 
                                           exclusiveSubcategories=True)
         self.categories.append(self.category)
-        # pylint: disable-msg=E1101
+        # pylint: disable=E1101
         self.task.addAttachments(attachment.FileAttachment('/home/frank/whatever.txt'))
         self.task.addNote(note.Note(subject='Task note'))
         self.task2 = task.Task('Task 2', priority=-1954)
@@ -103,7 +103,7 @@ class IntegrationTest(IntegrationTestCase):
         self.category.addCategorizable(self.note)
 
     def getTaskWrittenAndRead(self, targetId):
-        # pylint: disable-msg=W0621
+        # pylint: disable=W0621
         return [task for task in self.tasksWrittenAndRead if task.id() == targetId][0]
 
     def assertAttributeWrittenAndRead(self, aTask, attribute):
