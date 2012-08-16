@@ -34,7 +34,7 @@ class iCalendarWriter(object):
     def __init__(self, fd, filename=None):
         self.__fd = fd
 
-    def write(self, viewer, settings, selectionOnly=False): # pylint: disable-msg=W0613
+    def write(self, viewer, settings, selectionOnly=False): # pylint: disable=W0613
         items = viewer.visibleItems()
         if selectionOnly:
             selection = viewer.curselection()

@@ -92,7 +92,7 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
             return
         setattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower()), 
                                         newObjects)
-        changedEvent(instance, event, *newObjects) # pylint: disable-msg=W0142
+        changedEvent(instance, event, *newObjects) # pylint: disable=W0142
 
     setattr(klass, 'set%ss' % klass.__ownedType__, setObjects)
 

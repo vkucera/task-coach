@@ -57,7 +57,7 @@ def p(*text):
     return '<p>%s</p>' % '\n'.join(text)
 
 
-def ul(*li):  # pylint: disable-msg=W0621
+def ul(*li):  # pylint: disable=W0621
     return '<ul>%s</ul>' % '\n'.join(li)
 
 
@@ -65,7 +65,7 @@ def li(*text):
     return '<li>%s</li>' % '\n'.join(text)
 
 
-def table(*tr):  # pylint: disable-msg=W0621
+def table(*tr):  # pylint: disable=W0621
     return '<table border=1>%s</table>' % '\n'.join(tr)
 
 

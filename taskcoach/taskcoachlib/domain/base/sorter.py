@@ -101,10 +101,10 @@ class Sorter(patterns.ListDecorator):
                 patterns.Publisher().removeObserver(self.onAttributeChanged_Deprecated, 
                                                     eventType=eventType)
      
-    def onAttributeChanged(self, newValue, sender):  # pylint: disable-msg=W0613
+    def onAttributeChanged(self, newValue, sender):  # pylint: disable=W0613
         self.reset()
            
-    def onAttributeChanged_Deprecated(self, event):  # pylint: disable-msg=W0613
+    def onAttributeChanged_Deprecated(self, event):  # pylint: disable=W0613
         self.reset()
 
     def _getSortEventTypes(self, attribute):
@@ -131,7 +131,7 @@ class TreeSorter(Sorter):
         return self._getSortKeyFunction()(sortCaseSensitive=self._sortCaseSensitive, 
                                           treeMode=self.treeMode())
 
-    def reset(self, *args, **kwargs):  # pylint: disable-msg=W0221
+    def reset(self, *args, **kwargs):  # pylint: disable=W0221
         self.__invalidateRootItemCache()
         return super(TreeSorter, self).reset(*args, **kwargs)
 

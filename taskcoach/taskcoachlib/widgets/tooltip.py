@@ -100,7 +100,7 @@ class ToolTipMixin(object):
 
         event.Skip()
 
-    def __OnTipMotion(self, event): # pylint: disable-msg=W0613
+    def __OnTipMotion(self, event): # pylint: disable=W0613
         self.HideTip()
 
     def __OnLeave(self, event):
@@ -112,7 +112,7 @@ class ToolTipMixin(object):
 
         event.Skip()
 
-    def __OnTimer(self, event): # pylint: disable-msg=W0613
+    def __OnTimer(self, event): # pylint: disable=W0613
         self.ShowTip(*self.GetMainWindow().ClientToScreenXY(*self.__position))
 
 
@@ -123,13 +123,13 @@ if operating_system.isWindows():
             super(ToolTipBase, self).__init__(parent, wx.ID_ANY, 'Tooltip',
                                               style=style)
 
-        def Show(self, x, y, w, h): # pylint: disable-msg=W0221
+        def Show(self, x, y, w, h): # pylint: disable=W0221
             self.SetDimensions(x, y, w, h)
             super(ToolTipBase, self).Show()
 
 elif operating_system.isMac():
     class ToolTipBase(wx.Frame):
-        def __init__(self, parent): # pylint: disable-msg=E1003
+        def __init__(self, parent): # pylint: disable=E1003
             style = wx.FRAME_NO_TASKBAR | wx.FRAME_FLOAT_ON_PARENT | wx.NO_BORDER
             super(ToolTipBase, self).__init__(parent, wx.ID_ANY, 'ToolTip',
                                               style=style)
@@ -146,15 +146,15 @@ elif operating_system.isMac():
             self.MoveXY(self.__maxWidth, self.__maxHeight)
             super(ToolTipBase, self).Show()
 
-        def Show(self, x, y, width, height): # pylint: disable-msg=W0221
+        def Show(self, x, y, width, height): # pylint: disable=W0221
             self.SetDimensions(x, y, width, height)
 
-        def Hide(self):  # pylint: disable-msg=W0221
+        def Hide(self):  # pylint: disable=W0221
             self.MoveXY(self.__maxWidth, self.__maxHeight)
 
 else:
     class ToolTipBase(wx.PopupWindow):
-        def Show(self, x, y, width, height): # pylint: disable-msg=E1003,W0221
+        def Show(self, x, y, width, height): # pylint: disable=E1003,W0221
             self.SetDimensions(x, y, width, height)
             super(ToolTipBase, self).Show()
 
@@ -206,7 +206,7 @@ class SimpleToolTip(ToolTipBase):
     def _calculateLineSize(self, dc, line):
         return dc.GetTextExtent(line)
 
-    def OnPaint(self, event): # pylint: disable-msg=W0613
+    def OnPaint(self, event): # pylint: disable=W0613
         dc = wx.PaintDC(self)
         dc.BeginDrawing()
         try:

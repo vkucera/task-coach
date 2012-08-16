@@ -53,7 +53,7 @@ class TaskTestCase(test.TestCase):
             self.labelTaskChildrenAndEffort(eachTask, taskLabel)
             self.labelEfforts(eachTask, taskLabel)
         for eventType in self.eventTypes:
-            self.registerObserver(eventType)  # pylint: disable-msg=W0201
+            self.registerObserver(eventType)  # pylint: disable=W0201
             
     def createTasks(self):
         def createAttachments(kwargs):
@@ -791,7 +791,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.assertEqual([aNote], self.task.notes())
 
     def testAddNoteCausesNotification(self):
-        eventType = task.Task.notesChangedEventType()  # pylint: disable-msg=E1101
+        eventType = task.Task.notesChangedEventType()  # pylint: disable=E1101
         self.registerObserver(eventType)
         aNote = note.Note()
         self.task.addNote(aNote)
@@ -934,7 +934,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.task.__setstate__(state)
         self.assertEqual(previousDependencies, self.task.dependencies())
 
-    def testModificationEventTypes(self):  # pylint: disable-msg=E1003
+    def testModificationEventTypes(self):  # pylint: disable=E1003
         self.assertEqual(super(task.Task, self.task).modificationEventTypes() +\
              [task.Task.plannedStartDateTimeChangedEventType(),
               task.Task.dueDateTimeChangedEventType(),
@@ -956,7 +956,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
 
 class TaskDueTodayTest(TaskTestCase, CommonTaskTestsMixin):
     def taskCreationKeywordArguments(self):
-        self.dueDateTime = date.Now() + date.oneHour  # pylint: disable-msg=W0201
+        self.dueDateTime = date.Now() + date.oneHour  # pylint: disable=W0201
         return [{'dueDateTime': self.dueDateTime}]
     
     def testIsDueSoon(self):
@@ -1196,7 +1196,7 @@ class TaskWithPlannedStartDateInTheFutureTest(TaskTestCase, CommonTaskTestsMixin
         self.failUnless(self.task.inactive())
         
     def testTaskWithPlannedStartDateInTheFutureIsInactiveEvenWhenAllPrerequisitesAreCompleted(self):
-        # pylint: disable-msg=E1101
+        # pylint: disable=E1101
         self.task.addPrerequisites([self.task2])
         self.task2.addDependencies([self.task])
         self.task2.setCompletionDateTime()
@@ -1236,7 +1236,7 @@ class TaskWithPlannedStartDateInTheFutureTest(TaskTestCase, CommonTaskTestsMixin
         now = self.task.plannedStartDateTime() + date.oneSecond
         oldNow = date.Now
         date.Now = lambda: now
-        date.Scheduler()._process_jobs(now)  # pylint: disable-msg=W0212
+        date.Scheduler()._process_jobs(now)  # pylint: disable=W0212
         self.assertEqual('led_purple_icon', self.task.icon(recursive=True))
         date.Now = oldNow
         
@@ -1285,27 +1285,27 @@ class TaskWithPlannedStartDateInThePastTest(TaskTestCase, CommonTaskTestsMixin):
         self.failIf(self.task.inactive())
 
     def testTaskBecomesInactiveWhenAddingAnUncompletedPrerequisite(self):
-        # pylint: disable-msg=E1101
+        # pylint: disable=E1101
         self.task.addPrerequisites([self.task2])
         self.task2.addDependencies([self.task])
         self.failUnless(self.task.inactive())
         
     def testAppearanceNotificationWhenAddingAnUncompletedPrerequisite(self):
-        # pylint: disable-msg=E1101
+        # pylint: disable=E1101
         self.registerObserver(self.task.appearanceChangedEventType())
         self.task.addPrerequisites([self.task2])
         self.task2.addDependencies([self.task])
         self.assertEvent(self.task.appearanceChangedEventType(), self.task)
 
     def testTaskBecomesActiveWhenUncompletedPrerequisiteIsCompleted(self):
-        # pylint: disable-msg=E1101
+        # pylint: disable=E1101
         self.task.addPrerequisites([self.task2])
         self.task2.addDependencies([self.task])
         self.task2.setCompletionDateTime()
         self.failIf(self.task.inactive())
         
     def testAppearanceNotificationWhenUncompletedPrerequisiteIsCompleted(self):
-        # pylint: disable-msg=E1101
+        # pylint: disable=E1101
         self.task.addPrerequisites([self.task2])
         self.task2.addDependencies([self.task])
         self.registerObserver(self.task.appearanceChangedEventType(), eventSource=self.task)
@@ -1322,7 +1322,7 @@ class TaskWithoutPlannedStartDateTimeTest(TaskTestCase, CommonTaskTestsMixin):
         self.failUnless(self.task.inactive())
 
     def testTaskStaysInactiveWhenUncompletedPrerequisiteIsCompleted(self):
-        # pylint: disable-msg=E1101
+        # pylint: disable=E1101
         self.task.addPrerequisites([self.task2])
         self.task2.addDependencies([self.task])
         self.task2.setCompletionDateTime()
@@ -1330,7 +1330,7 @@ class TaskWithoutPlannedStartDateTimeTest(TaskTestCase, CommonTaskTestsMixin):
         self.assertEqual('led_grey_icon', self.task.icon(recursive=True))
 
     def testNoAppearanceNotificationWhenUncompletedPrerequisiteIsCompleted(self):
-        # pylint: disable-msg=E1101
+        # pylint: disable=E1101
         self.task.addPrerequisites([self.task2])
         self.task2.addDependencies([self.task])
         self.registerObserver(self.task.appearanceChangedEventType(), eventSource=self.task)
@@ -1388,7 +1388,7 @@ class TaskWithDescriptionTest(TaskTestCase, CommonTaskTestsMixin):
         self.assertEqual('New description', self.task.description())
 
 
-# pylint: disable-msg=E1101
+# pylint: disable=E1101
 
 class TwoTasksTest(TaskTestCase):
     def taskCreationKeywordArguments(self):
@@ -2677,7 +2677,7 @@ class TaskWithHourlyFeeFixture(TaskTestCase, CommonTaskTestsMixin):
 
 class TaskWithCategoryTestCase(TaskTestCase):
     def taskCreationKeywordArguments(self):
-        self.category = category.Category('category')  # pylint: disable-msg=W0201
+        self.category = category.Category('category')  # pylint: disable=W0201
         return [dict(categories=set([self.category]))]
 
     def setUp(self):
@@ -2738,7 +2738,7 @@ class TaskColorTest(test.TestCase):
 
 class TaskWithPrerequisite(TaskTestCase):
     def taskCreationKeywordArguments(self):
-        self.prerequisite = task.Task(subject='prerequisite')  # pylint: disable-msg=W0201
+        self.prerequisite = task.Task(subject='prerequisite')  # pylint: disable=W0201
         return [dict(subject='task', prerequisites=[self.prerequisite])]
     
     def testTaskHasPrerequisite(self):
@@ -2794,7 +2794,7 @@ class TaskWithPrerequisite(TaskTestCase):
 
 class TaskWithDependency(TaskTestCase):
     def taskCreationKeywordArguments(self):
-        self.dependency = task.Task(subject='dependency')  # pylint: disable-msg=W0201
+        self.dependency = task.Task(subject='dependency')  # pylint: disable=W0201
         return [dict(subject='task', dependencies=[self.dependency])]
     
     def testTaskHasDependency(self):
@@ -2843,7 +2843,7 @@ class TaskWithDependency(TaskTestCase):
 
 class TaskSuggestedDateTimeBaseSetupAndTests(object):
     def setUp(self):
-        # pylint: disable-msg=W0142
+        # pylint: disable=W0142
         self.settings = task.Task.settings = config.Settings(load=False)
         self.changeSettings()
         self.now = now = date.Now()

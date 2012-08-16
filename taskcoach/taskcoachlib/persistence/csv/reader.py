@@ -205,5 +205,5 @@ class CSVReader(object):
                 second = defaultSecond
             return DateTime(dateTime.year, dateTime.month, dateTime.day,
                             hour, minute, second)
-        except:  # pylint: disable-msg=W0702
+        except:  # pylint: disable=W0702
             return None  

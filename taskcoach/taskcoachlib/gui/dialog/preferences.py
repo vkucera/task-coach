@@ -19,14 +19,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
 from taskcoachlib import meta, widgets, notify, operating_system
-from taskcoachlib.gui import artprovider
 from taskcoachlib.domain import date, task
+from taskcoachlib.gui import artprovider
 from taskcoachlib.i18n import _
+import wx
 
 
 class FontColorSyncer(object):
+    ''' The font color can be changed via the font color buttons and via the
+        font button. The FontColorSyncer updates the one when the font color
+        is changed via the other and vice versa. ''' 
+    
     def __init__(self, fgColorButton, bgColorButton, fontButton):
         self._fgColorButton = fgColorButton
         self._bgColorButton = bgColorButton
@@ -119,7 +123,8 @@ class SettingsPageBase(widgets.BookPage):
 
     def addAppearanceHeader(self):
         self.addEntry('', _('Foreground color'), _('Background color'),
-                      _('Font'), _('Icon'), flags=[wx.ALL|wx.ALIGN_CENTER] * 5)
+                      _('Font'), _('Icon'), 
+                      flags=[wx.ALL | wx.ALIGN_CENTER] * 5)
 
     def addAppearanceSetting(self, fgColorSection, fgColorSetting, 
                              bgColorSection, bgColorSetting, fontSection, 
@@ -256,7 +261,8 @@ class SettingsPage(SettingsPageBase):
     def addEntry(self, text, *controls, **kwargs):  # pylint: disable=W0221
         helpText = kwargs.pop('helpText', '')
         if helpText == 'restart':
-            helpText = _('This setting will take effect\nafter you restart %s') % meta.name
+            helpText = _('This setting will take effect\n'
+                         'after you restart %s') % meta.name
         if helpText:
             controls = controls + (helpText,)
         super(SettingsPage, self).addEntry(text, *controls, **kwargs)
@@ -317,23 +323,25 @@ class SavePage(SettingsPage):
         self.addBooleanSetting('file', 'backup', 
             _('Create a backup copy before\noverwriting a %s file') % meta.name)
         self.addBooleanSetting('file', 'saveinifileinprogramdir',
-            _('Save settings (%s.ini) in the same\ndirectory as the program') \
-              % meta.filename, 
+            _('Save settings (%s.ini) in the same\n'
+              'directory as the program') % meta.filename, 
             _('For running %s from a removable medium') % meta.name)
-        self.addPathSetting('file', 'attachmentbase', _('Attachment base directory'),
-                            _('When adding an attachment, try to make\nits path relative to this one.'))
+        self.addPathSetting('file', 'attachmentbase', 
+                            _('Attachment base directory'),
+                            _('When adding an attachment, try to make\n'
+                              'its path relative to this one.'))
         self.addMultipleChoiceSettings('file', 'autoimport', 
-                                       _('Before saving, automatically import from'), 
-                                       [('Todo.txt', _('Todo.txt format'))],
-                                       helpText=_('Before saving, %s automatically imports tasks\n'
-                                                  'from a Todo.txt file with the same name as the task file,\n'
-                                                  'but with extension .txt') % meta.name)
+            _('Before saving, automatically import from'), 
+            [('Todo.txt', _('Todo.txt format'))],
+            helpText=_('Before saving, %s automatically imports tasks\n'
+                       'from a Todo.txt file with the same name as the task file,\n'
+                       'but with extension .txt') % meta.name)
         self.addMultipleChoiceSettings('file', 'autoexport', 
-                                       _('When saving, automatically export to'), 
-                                       [('Todo.txt', _('Todo.txt format'))],
-                                       helpText=_('When saving, %s automatically exports tasks\n'
-                                                  'to a Todo.txt file with the same name as the task file,\n'
-                                                  'but with extension .txt') % meta.name)
+            _('When saving, automatically export to'), 
+            [('Todo.txt', _('Todo.txt format'))],
+            helpText=_('When saving, %s automatically exports tasks\n'
+                       'to a Todo.txt file with the same name as the task file,\n'
+                       'but with extension .txt') % meta.name)
         self.fit()
             
                
@@ -382,6 +390,7 @@ class LanguagePage(SettingsPage):
             [('', _('Let the system determine the language')),
              ('ar', u'الْعَرَبيّة (Arabic)'),
              ('eu_ES', 'Euskal Herria (Basque)'),
+             ('be_BY', 'беларуская мова (Belarusian)'),
              ('bs_BA', u'босански (Bosnian)'),
              ('pt_BR', u'Português brasileiro (Brazilian Portuguese)'),
              ('br_FR', 'Brezhoneg (Breton)'),
@@ -505,7 +514,8 @@ class FeaturesPage(SettingsPage):
                                    _('Use X11 session management'),
                   helpText='restart')
         self.addChoiceSetting('view', 'weekstart', _('Start of work week'), ' ',
-                              [('monday', _('Monday')), ('sunday', _('Sunday'))])
+                              [('monday', _('Monday')), 
+                               ('sunday', _('Sunday'))])
         self.addIntegerSetting('view', 'efforthourstart',
             _('Hour of start of work day'), minimum=0, maximum=23, helpText=' ')
         self.addIntegerSetting('view', 'efforthourend',
@@ -519,8 +529,8 @@ class FeaturesPage(SettingsPage):
             [(minutes, minutes) for minutes in ('5', '6', '10', '15', '20', 
                                                 '30')])
         self.addIntegerSetting('feature', 'minidletime', _('Idle time notice'),
-            helpText=_('If there is no user input for at least this amount of\n'
-                       'minutes, %(name)s will ask what to do about current '
+            helpText=_('If there is no user input for this amount of time\n'
+                       '(in minutes), %(name)s will ask what to do about current '
                        'efforts.') % meta.data.metaDict)
         self.fit()
         

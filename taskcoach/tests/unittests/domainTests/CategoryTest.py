@@ -198,7 +198,7 @@ class CategoryTest(test.TestCase):
         copy = self.category.copy()
         self.assertEqual(copy.getStatus(), copy.STATUS_NEW)
 
-    # pylint: disable-msg=E1101
+    # pylint: disable=E1101
         
     def testCopy_SubjectIsDifferentFromOriginalSubject(self):
         self.subCategory.setSubject('New subject')
@@ -385,7 +385,7 @@ class CategoryTest(test.TestCase):
         
     # Event types:
         
-    def testModificationEventTypes(self): # pylint: disable-msg=E1003
+    def testModificationEventTypes(self): # pylint: disable=E1003
         self.assertEqual(super(category.Category,
                                self.category).modificationEventTypes() + \
                          [self.category.filterChangedEventType(), 

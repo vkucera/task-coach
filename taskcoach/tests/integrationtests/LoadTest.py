@@ -32,7 +32,7 @@ class LoadTest(test.TestCase):
         # On MacOS, wx.Yield doesn't seem to be enough, so while
         # running the tests, just short-circuit this:
         self.oldCallAfter = wx.CallAfter
-        # pylint: disable-msg=W0142
+        # pylint: disable=W0142
         wx.CallAfter = lambda func, *args, **kwargs: func(*args, **kwargs)
 
     def tearDown(self):
@@ -43,7 +43,7 @@ class LoadTest(test.TestCase):
         mock.App.deleteInstance()
         super(LoadTest, self).tearDown()
 
-    def mockErrorDialog(self, *args, **kwargs): # pylint: disable-msg=W0613
+    def mockErrorDialog(self, *args, **kwargs): # pylint: disable=W0613
         self.errorDialogCalled = True
 
     def testLoadInvalidFileDoesNotAffectFile(self):

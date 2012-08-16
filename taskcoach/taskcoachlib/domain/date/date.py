@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import time, string, datetime, timedelta # pylint: disable-msg=W0402
+import time, string, datetime, timedelta # pylint: disable=W0402
 from taskcoachlib import patterns
 
 

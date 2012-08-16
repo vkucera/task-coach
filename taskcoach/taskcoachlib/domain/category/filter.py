@@ -69,5 +69,5 @@ class CategoryFilter(base.Filter):
         self.__filterOnlyWhenAllCategoriesMatch = value
         self.reset()
 
-    def onCategoryChanged(self, event): # pylint: disable-msg=W0613
+    def onCategoryChanged(self, event): # pylint: disable=W0613
         self.reset()

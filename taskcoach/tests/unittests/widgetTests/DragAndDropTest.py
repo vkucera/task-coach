@@ -36,7 +36,7 @@ class DummyEvent(object):
     
     
 class TreeCtrlDragAndDropMixinTest(test.wxTestCase):
-    # pylint: disable-msg=E1101
+    # pylint: disable=E1101
     
     def setUp(self):
         self.treeCtrl = treectrl.HyperTreeList(self.frame)

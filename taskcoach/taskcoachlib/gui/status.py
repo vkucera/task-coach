@@ -52,7 +52,7 @@ class StatusBar(wx.StatusBar):
         # hasn't changed status for 0.5 seconds.
         self.__timer.Start(500, oneShot=True)
               
-    def onUpdateStatus(self, event): # pylint: disable-msg=W0613
+    def onUpdateStatus(self, event): # pylint: disable=W0613
         if self.__timer:
             self.__timer.Stop()
         self._displayStatus()
@@ -65,13 +65,13 @@ class StatusBar(wx.StatusBar):
         super(StatusBar, self).SetStatusText(status1, 0)
         super(StatusBar, self).SetStatusText(status2, 1)
 
-    def SetStatusText(self, message, pane=0, delay=3000): # pylint: disable-msg=W0221
+    def SetStatusText(self, message, pane=0, delay=3000): # pylint: disable=W0221
         if self.scheduledStatusDisplay:
             self.scheduledStatusDisplay.Stop()
         super(StatusBar, self).SetStatusText(message, pane)
         self.scheduledStatusDisplay = wx.FutureCall(delay, self._displayStatus)
 
-    def Destroy(self): # pylint: disable-msg=W0221
+    def Destroy(self): # pylint: disable=W0221
         for eventType in self.wxEventTypes:
             self.parent.Unbind(eventType)
         if self.scheduledStatusDisplay:

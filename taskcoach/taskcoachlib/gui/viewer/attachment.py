@@ -28,7 +28,7 @@ from taskcoachlib.gui import uicommand, menu, dialog
 import base, mixin
 
 
-class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
+class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable=W0223
                        base.SortableViewerWithColumns,
                        mixin.SortableViewerForAttachmentsMixin, 
                        mixin.SearchableViewerMixin, mixin.NoteColumnMixin,
@@ -93,12 +93,12 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0
                                renderCallback=lambda item: item.description(),
                                resizeCallback=self.onResizeColumn),
                 widgets.Column('notes', '', 
-                               attachment.FileAttachment.notesChangedEventType(), # pylint: disable-msg=E1101
-                               attachment.URIAttachment.notesChangedEventType(), # pylint: disable-msg=E1101
-                               attachment.MailAttachment.notesChangedEventType(), # pylint: disable-msg=E1101
+                               attachment.FileAttachment.notesChangedEventType(), # pylint: disable=E1101
+                               attachment.URIAttachment.notesChangedEventType(), # pylint: disable=E1101
+                               attachment.MailAttachment.notesChangedEventType(), # pylint: disable=E1101
                                width=self.getColumnWidth('notes'),
                                alignment=wx.LIST_FORMAT_LEFT,
-                               imageIndicesCallback=self.noteImageIndices, # pylint: disable-msg=E1101
+                               imageIndicesCallback=self.noteImageIndices, # pylint: disable=E1101
                                headerImageIndex=self.imageIndex['note_icon'],
                                renderCallback=lambda item: '',
                                resizeCallback=self.onResizeColumn),
@@ -127,7 +127,7 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0
                                          viewer=self, settings=self.settings),) + \
            super(AttachmentViewer, self).createActionToolBarUICommands()
     
-    def typeImageIndices(self, anAttachment, exists=os.path.exists): # pylint: disable-msg=W0613
+    def typeImageIndices(self, anAttachment, exists=os.path.exists): # pylint: disable=W0613
         if anAttachment.type_ == 'file':
             attachmentBase = self.settings.get('file', 'attachmentbase')
             if exists(anAttachment.normalizedLocation(attachmentBase)):

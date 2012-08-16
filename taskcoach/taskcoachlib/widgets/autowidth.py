@@ -61,7 +61,7 @@ class AutoColumnWidthMixin(object):
         return self._isAutoResizing
             
     def OnBeginColumnDrag(self, event):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         if event.Column == self.ResizeColumn:
             self.__oldResizeColumnWidth = self.GetColumnWidth(self.ResizeColumn)
         # Temporarily unbind the EVT_SIZE to prevent resizing during dragging
@@ -120,7 +120,7 @@ class AutoColumnWidthMixin(object):
             return self._resizeColumn
         
     def SetResizeColumn(self, columnIndex):
-        self._resizeColumn = columnIndex # pylint: disable-msg=W0201
+        self._resizeColumn = columnIndex # pylint: disable=W0201
 
     ResizeColumn = property(GetResizeColumn, SetResizeColumn)
     

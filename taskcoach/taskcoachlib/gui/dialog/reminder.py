@@ -69,7 +69,7 @@ class ReminderDialog(patterns.Observer, sized_controls.SizedDialog):
         snoozeTimesUserWantsToSee = [0] + self.settings.getlist('view', 'snoozetimes')
         defaultSnoozeTime = self.settings.getint('view', 'defaultsnoozetime')
         selectionIndex = 1  # Use the 1st non-zero option if we don't find the last snooze time
-        # pylint: disable-msg=E1101
+        # pylint: disable=E1101
         for minutes, label in date.snoozeChoices:
             if minutes in snoozeTimesUserWantsToSee:
                 self.snoozeOptions.Append(label, date.TimeDelta(minutes=minutes))
@@ -101,18 +101,18 @@ class ReminderDialog(patterns.Observer, sized_controls.SizedDialog):
                 subprocess.Popen(('espeak', '"%s: %s"' % (_('Reminder'), 
                                                           task.subject())))
 
-    def onOpenTask(self, event):  # pylint: disable-msg=W0613
+    def onOpenTask(self, event):  # pylint: disable=W0613
         self.openTaskAfterClose = True
         self.Close()
         
-    def onStartOrStopTracking(self, event):  # pylint: disable-msg=W0613
+    def onStartOrStopTracking(self, event):  # pylint: disable=W0613
         if self.task.isBeingTracked():
             command.StopEffortCommand(self.effortList).do()
         else:
             command.StartEffortCommand(self.taskList, [self.task]).do()
         self.setTrackingIcon()
         
-    def onTrackingChanged(self, newValue, sender):  # pylint: disable-msg=W0613
+    def onTrackingChanged(self, newValue, sender):  # pylint: disable=W0613
         self.setTrackingIcon()
         
     def setTrackingIcon(self):
@@ -120,7 +120,7 @@ class ReminderDialog(patterns.Observer, sized_controls.SizedDialog):
         self.startTracking.SetBitmapLabel(wx.ArtProvider_GetBitmap(icon, 
             wx.ART_TOOLBAR, (16, 16)))
         
-    def onMarkTaskCompleted(self, event):  # pylint: disable-msg=W0613
+    def onMarkTaskCompleted(self, event):  # pylint: disable=W0613
         self.ignoreSnoozeOption = True
         self.Close()
         command.MarkCompletedCommand(self.taskList, [self.task]).do()
@@ -129,7 +129,7 @@ class ReminderDialog(patterns.Observer, sized_controls.SizedDialog):
         if self.task in event.values():
             self.Close()
             
-    def onTaskCompletionDateChanged(self, newValue, sender):  # pylint: disable-msg=W0613
+    def onTaskCompletionDateChanged(self, newValue, sender):  # pylint: disable=W0613
         if sender == self.task:
             if self.task.completed():
                 self.Close()
@@ -139,7 +139,7 @@ class ReminderDialog(patterns.Observer, sized_controls.SizedDialog):
     def onClose(self, event):
         event.Skip()
         if self.replaceDefaultSnoozeTime.GetValue():
-            # pylint: disable-msg=E1101
+            # pylint: disable=E1101
             selection = self.snoozeOptions.Selection
             minutes = self.snoozeOptions.GetClientData(selection).minutes()
             self.settings.set('view', 'defaultsnoozetime', str(int(minutes)))

@@ -71,7 +71,7 @@ class AddNoteCommand(base.BaseCommand):
         self.items = self.__notes = [note.Note(subject=_('New note')) \
                                    for dummy in self.items]
 
-    def name_subject(self, newNote): # pylint: disable-msg=W0613
+    def name_subject(self, newNote): # pylint: disable=W0613
         # Override to use the subject of the owner of the new note instead
         # of the subject of the new note itself, which wouldn't be very
         # interesting because it's something like 'New note'.
@@ -79,12 +79,12 @@ class AddNoteCommand(base.BaseCommand):
     
     @patterns.eventSource
     def addNotes(self, event=None):
-        for owner, note in zip(self.owners, self.__notes): # pylint: disable-msg=W0621
+        for owner, note in zip(self.owners, self.__notes): # pylint: disable=W0621
             owner.addNote(note, event=event)
 
     @patterns.eventSource
     def removeNotes(self, event=None):
-        for owner, note in zip(self.owners, self.__notes): # pylint: disable-msg=W0621
+        for owner, note in zip(self.owners, self.__notes): # pylint: disable=W0621
             owner.removeNote(note, event=event)
     
     def do_command(self):
@@ -144,11 +144,11 @@ class RemoveNoteCommand(base.BaseCommand):
     def addNotes(self, event=None):
         kwargs = dict(event=event)
         for item in self.items:
-            item.addNotes(*self.__notes, **kwargs) # pylint: disable-msg=W0142
+            item.addNotes(*self.__notes, **kwargs) # pylint: disable=W0142
         
     @patterns.eventSource
     def removeNotes(self, event=None):
-        # pylint: disable-msg=W0142
+        # pylint: disable=W0142
         kwargs = dict(event=event)
         for item in self.items:
             for eachNote in self.__notes:

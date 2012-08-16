@@ -24,7 +24,7 @@ from clipboard import Clipboard
  
 
 class BaseCommand(patterns.Command):
-    def __init__(self, list=None, items=None, *args, **kwargs): # pylint: disable-msg=W0622
+    def __init__(self, list=None, items=None, *args, **kwargs): # pylint: disable=W0622
         super(BaseCommand, self).__init__(*args, **kwargs)
         self.list = list
         self.items = [item for item in items] if items else []
@@ -86,7 +86,7 @@ class SaveStateMixin(object):
     ''' Mixin class for commands that need to keep the states of objects. 
         Objects should provide __getstate__ and __setstate__ methods. '''
     
-    # pylint: disable-msg=W0201
+    # pylint: disable=W0201
     
     def saveStates(self, objects):
         self.objectsToBeSaved = objects
@@ -167,7 +167,7 @@ class CopyCommand(BaseCommand):
     singular_name = _('Copy "%s"')
 
     def do_command(self):
-        self.__copies = [item.copy() for item in self.items] # pylint: disable-msg=W0201
+        self.__copies = [item.copy() for item in self.items] # pylint: disable=W0201
         Clipboard().put(self.__copies, self.list)
 
     def undo_command(self):
@@ -213,7 +213,7 @@ class CutCommand(DeleteCommand):
 
     def __putItemsOnClipboard(self):
         cb = Clipboard()
-        self.__previousClipboardContents = cb.get() # pylint: disable-msg=W0201
+        self.__previousClipboardContents = cb.get() # pylint: disable=W0201
         cb.put(self.items, self.list)
 
     def __removeItemsFromClipboard(self):
@@ -273,7 +273,7 @@ class PasteAsSubItemCommand(PasteCommand, CompositeMixin):
     plural_name = _('Paste as subitem')
     singular_name = _('Paste as subitem of "%s"')
 
-    def setParentOfPastedItems(self): # pylint: disable-msg=W0221
+    def setParentOfPastedItems(self): # pylint: disable=W0221
         newParent = self.items[0]
         super(PasteAsSubItemCommand, self).setParentOfPastedItems(newParent)
 

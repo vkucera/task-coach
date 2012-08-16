@@ -28,7 +28,7 @@ from taskcoachlib.gui import uicommand, menu, dialog
 import base, mixin, inplace_editor
 
 
-class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
+class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable=W0223
                      mixin.SearchableViewerMixin, 
                      mixin.SortableViewerForNotesMixin,
                      mixin.AttachmentColumnMixin, 
@@ -64,7 +64,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W022
             uicommand.NoteDragAndDrop(viewer=self, notes=self.presentation()),
             itemPopupMenu, columnPopupMenu,
             **self.widgetCreationKeywordArguments())
-        widget.AssignImageList(imageList) # pylint: disable-msg=E1101
+        widget.AssignImageList(imageList) # pylint: disable=E1101
         return widget
     
     def createFilter(self, notes):
@@ -114,10 +114,10 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W022
             editCallback=self.onEditDescription,
             editControl=inplace_editor.DescriptionCtrl)
         attachmentsColumn = widgets.Column('attachments', '', 
-            note.Note.attachmentsChangedEventType(), # pylint: disable-msg=E1101
+            note.Note.attachmentsChangedEventType(), # pylint: disable=E1101
             width=self.getColumnWidth('attachments'),
             alignment=wx.LIST_FORMAT_LEFT,
-            imageIndicesCallback=self.attachmentImageIndices, # pylint: disable-msg=E1101
+            imageIndicesCallback=self.attachmentImageIndices, # pylint: disable=E1101
             headerImageIndex=self.imageIndex['paperclip_icon'],
             renderCallback=lambda note: '')
         categoriesColumn = widgets.Column('categories', _('Categories'),
@@ -169,5 +169,5 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W022
         return command.NewSubNoteCommand
 
 
-class NoteViewer(mixin.FilterableViewerForCategorizablesMixin, BaseNoteViewer): # pylint: disable-msg=W0223
+class NoteViewer(mixin.FilterableViewerForCategorizablesMixin, BaseNoteViewer): # pylint: disable=W0223
     pass

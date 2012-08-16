@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import command, widgets, domain, render
 from taskcoachlib.domain import effort, date
-from taskcoachlib.domain.base import filter  # pylint: disable-msg=W0622
+from taskcoachlib.domain.base import filter  # pylint: disable=W0622
 from taskcoachlib.gui import uicommand, menu, dialog
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty.pubsub import pub
@@ -61,7 +61,7 @@ class EffortViewer(base.ListViewer,
         pub.subscribe(self.onRoundingChanged, 
                       'settings.%s.alwaysroundup' % self.settingsSection())
         
-    def onRoundingChanged(self, value):  # pylint: disable-msg=W0613
+    def onRoundingChanged(self, value):  # pylint: disable=W0613
         self.__initRoundingToolBarUICommands()
         self.refresh()
         
@@ -166,7 +166,7 @@ class EffortViewer(base.ListViewer,
             
     def createWidget(self):
         imageList = self.createImageList()  # Has side-effects
-        self._columns = self._createColumns()  # pylint: disable-msg=W0201
+        self._columns = self._createColumns()  # pylint: disable=W0201
         itemPopupMenu = menu.EffortPopupMenu(self.parent, self.taskFile.tasks(),
             self.taskFile.efforts(), self.settings, self)
         columnPopupMenu = menu.EffortViewerColumnPopupMenu(self)
@@ -175,11 +175,11 @@ class EffortViewer(base.ListViewer,
             uicommand.Edit(viewer=self),
             itemPopupMenu, columnPopupMenu,
             resizeableColumn=1, **self.widgetCreationKeywordArguments())
-        widget.AssignImageList(imageList, wx.IMAGE_LIST_SMALL)  # pylint: disable-msg=E1101
+        widget.AssignImageList(imageList, wx.IMAGE_LIST_SMALL)  # pylint: disable=E1101
         return widget
     
     def _createColumns(self):
-        # pylint: disable-msg=W0142
+        # pylint: disable=W0142
         kwargs = dict(renderDescriptionCallback=lambda effort: effort.description(),
                       resizeCallback=self.onResizeColumn)
         return [widgets.Column(name, columnHeader, eventType, 
@@ -310,7 +310,7 @@ class EffortViewer(base.ListViewer,
     def createModeToolBarUICommands(self):
         # This is an instance variable so that the choice can be changed 
         # programmatically
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.aggregationUICommand = \
             uicommand.EffortViewerAggregationChoice(viewer=self)
         self.roundingUICommand = uicommand.RoundingPrecision(viewer=self, 
@@ -331,7 +331,7 @@ class EffortViewer(base.ListViewer,
                 for (menuText, value) in zip(uicommand.RoundingPrecision.choiceLabels, 
                                              uicommand.RoundingPrecision.choiceData)]
 
-    def getItemImages(self, index, column=0):  # pylint: disable-msg=W0613
+    def getItemImages(self, index, column=0):  # pylint: disable=W0613
         return {wx.TreeItemIcon_Normal: -1}
     
     def curselection(self):

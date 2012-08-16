@@ -57,7 +57,7 @@ class addViewers(object):
     def numberOfViewersToAdd(self, viewerClass):
         return self.settings.getint('view', viewerClass.__name__.lower() + 'count')
 
-    def viewerKwargs(self, viewerClass): # pylint: disable-msg=W0613
+    def viewerKwargs(self, viewerClass): # pylint: disable=W0613
         return dict()
     
 

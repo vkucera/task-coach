@@ -39,6 +39,7 @@ it makes Task Coach crash.''', '3554534'),
         Bug('''On OS X Snow Leopard (10.6) and earlier, the system would
 ask the user to allow Task coach use a port (firewall) or the keychain
 on every launch.''', '3556753'),
+        Bug('''The search options menu wouldn't work on OSX.''', '3558511'),
 #        Bug('''Fix slowness when viewing aggregated efforts.''',
 #            '3538310', '3537702'),
         ],
@@ -52,6 +53,8 @@ Task Coach developers. This allows us to reach all users for e.g. notifications
 on critical bugs or requests for support. Each message is displayed only once
 and the display of messages can be turned off completely. This feature will be
 used sparingly, of course.'''),
+        Feature('''Added almost complete Belarusian translation thanks to 
+Korney San.'''),
         ],
     ),
 

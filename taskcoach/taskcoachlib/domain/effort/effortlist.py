@@ -81,7 +81,7 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
             records.'''
         return len(self)
         
-    def removeItems(self, efforts):  # pylint: disable-msg=W0221
+    def removeItems(self, efforts):  # pylint: disable=W0221
         ''' We override ObservableListObserver.removeItems because the default
             implementation is to remove the arguments from the original list,
             which in this case would mean removing efforts from a task list.
@@ -90,7 +90,7 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
         for effort in efforts:
             effort.task().removeEffort(effort)
 
-    def extend(self, efforts):  # pylint: disable-msg=W0221
+    def extend(self, efforts):  # pylint: disable=W0221
         ''' We override ObservableListObserver.extend because the default
             implementation is to add the arguments to the original list,
             which in this case would mean adding efforts to a task list.

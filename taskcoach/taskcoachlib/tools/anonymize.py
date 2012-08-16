@@ -38,7 +38,7 @@ def _anonymize(filename):
                 node.attrib['extension'] = 'X' * len(node.attrib['extension'])
 
         if node.tag == 'property' and node.attrib.has_key('name') and node.attrib['name'] == 'username':
-            node.text = 'XXX' # pylint: disable-msg=W0511
+            node.text = 'XXX' # pylint: disable=W0511
 
         if node.tag == 'attachment':
             if node.attrib.has_key('location'):

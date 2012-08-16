@@ -26,7 +26,7 @@ class Clipboard:
         self.clear()
 
     def put(self, items, source):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self._contents = items
         self._source = source
 

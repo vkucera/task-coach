@@ -137,17 +137,17 @@ class SettingsIOTest(SettingsTestCase):
         self.failUnless(self.settings.has_section('testing'))
         
     def testIOErrorWhileSaving(self):
-        def file(*args): # pylint: disable-msg=W0613,W0622
+        def file(*args): # pylint: disable=W0613,W0622
             raise IOError
-        def showerror(*args, **kwargs): # pylint: disable-msg=W0613
-            self.showerror_args = args # pylint: disable-msg=W0201
+        def showerror(*args, **kwargs): # pylint: disable=W0613
+            self.showerror_args = args # pylint: disable=W0201
         settings = config.Settings()
         settings.save(showerror=showerror, file=file)
         self.failUnless(self.showerror_args)
 
     def testIOErrorWhileReading(self):
         class SettingsThatThrowsParsingError(config.Settings):
-            def read(self, *args, **kwargs): # pylint: disable-msg=W0613
+            def read(self, *args, **kwargs): # pylint: disable=W0613
                 self.remove_section('file')
                 raise ConfigParser.ParsingError, 'Testing'
         self.failIf(SettingsThatThrowsParsingError().getboolean('file', 'inifileloaded'))
@@ -257,7 +257,7 @@ class SettingsFileLocationTest(SettingsTestCase):
     def testSettingSaveIniFileInProgramDirToFalseRemovesIniFile(self):
         class SettingsUnderTest(config.Settings):
             def onSettingsFileLocationChanged(self, value):
-                self.onSettingsFileLocationChangedCalled = value # pylint: disable-msg=W0201
+                self.onSettingsFileLocationChangedCalled = value # pylint: disable=W0201
         settings = SettingsUnderTest(load=False)
         settings.setboolean('file', 'saveinifileinprogramdir', True)
         settings.setboolean('file', 'saveinifileinprogramdir', False)

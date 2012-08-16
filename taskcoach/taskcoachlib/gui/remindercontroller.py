@@ -48,7 +48,7 @@ class ReminderController(object):
     def onRemoveTask(self, event):
         self.__removeRemindersForTasks(event.values())
                 
-    def onSetReminder(self, newValue, sender):  # pylint: disable-msg=W0613
+    def onSetReminder(self, newValue, sender):  # pylint: disable=W0613
         self.__removeRemindersForTasks([sender])
         self.__registerRemindersForTasks([sender])
         

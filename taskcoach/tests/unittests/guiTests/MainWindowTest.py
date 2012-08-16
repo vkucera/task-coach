@@ -40,7 +40,7 @@ class MainWindowUnderTest(gui.MainWindow):
     
 
 class DummyIOController(object):
-    def needSave(self, *args, **kwargs): # pylint: disable-msg=W0613
+    def needSave(self, *args, **kwargs): # pylint: disable=W0613
         return False # pragma: no cover
 
     def changedOnDisk(self):

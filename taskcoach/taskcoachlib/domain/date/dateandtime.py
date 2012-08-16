@@ -28,7 +28,7 @@ class DateTime(datetime.datetime):
 
     def __new__(class_, *args, **kwargs):
         if not args and not kwargs:
-            max = datetime.datetime.max # pylint: disable-msg=W0622
+            max = datetime.datetime.max # pylint: disable=W0622
             args = (max.year, max.month, max.day, 
                     max.hour, max.minute, max.second, max.microsecond)
         return datetime.datetime.__new__(class_, *args, **kwargs)
@@ -101,7 +101,7 @@ class DateTime(datetime.datetime):
     def __sub__(self, other):
         ''' Make sure substraction returns instances of the right classes. '''
         if self == DateTime() and isinstance(other, datetime.datetime):
-            max = timedelta.TimeDelta.max # pylint: disable-msg=W0622
+            max = timedelta.TimeDelta.max # pylint: disable=W0622
             return timedelta.TimeDelta(max.days, max.seconds, max.microseconds)
         result = super(DateTime, self).__sub__(other)
         if isinstance(result, datetime.timedelta):
@@ -130,7 +130,7 @@ def parseDateTime(string, *timeDefaults):
         args = [int(arg) for arg in re.split('[-:. ]', string)]
         if len(args) == 3:  # We parsed a date, no time
             args.extend(timeDefaults)
-        return DateTime(*args)  # pylint: disable-msg=W0142
+        return DateTime(*args)  # pylint: disable=W0142
         
 
 def Now():

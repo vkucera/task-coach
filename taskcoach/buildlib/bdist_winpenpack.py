@@ -36,7 +36,7 @@ class bdist_winpenpack(bdist_portable_base.bdist_portable_base):
         ('date=', None, 'the release date')]
     
     def initialize_options(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.bdist_base = 'build'
         self.dist_dir = 'dist'
         self.version = self.license = self.url = self.filename = self.date = None
@@ -66,7 +66,7 @@ class bdist_winpenpack(bdist_portable_base.bdist_portable_base):
                                ('Documents', 'TaskCoach'),
                                ('ReadMe',), 
                                ('User', 'TaskCoach')]:
-            path = os.path.join(self.bdist_base_wpp, *pathComponents) # pylint: disable-msg=W0142
+            path = os.path.join(self.bdist_base_wpp, *pathComponents) # pylint: disable=W0142
             if not os.path.exists(path):
                 os.makedirs(path)
                     

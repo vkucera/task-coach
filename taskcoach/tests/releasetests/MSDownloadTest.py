@@ -17,15 +17,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test, urllib, re
-from taskcoachlib import help # pylint: disable-msg=W0622
+from taskcoachlib import help # pylint: disable=W0622
 
 
 class MSDownloadTest(test.TestCase):
     def testExeInPage(self):
-        url = help._MSURL # pylint: disable-msg=W0212
+        url = help._MSURL # pylint: disable=W0212
         try:
             content = urllib.urlopen(url).read() 
-        except Exception, message: # pylint: disable-msg=W0703
+        except Exception, message: # pylint: disable=W0703
             self.fail('Could not download page: %s' % str(message))
 
         self.failUnless(re.search('vcredist[a-zA-Z0-9_-]*\.exe', content))

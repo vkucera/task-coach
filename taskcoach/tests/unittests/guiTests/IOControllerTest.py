@@ -45,7 +45,7 @@ class IOControllerTest(test.TestCase):
                 os.remove(filename + '.delta')
         super(IOControllerTest, self).tearDown()
         
-    def doIOAndCheckRecentFiles(self, open=None, saveas=None, # pylint: disable-msg=W0622
+    def doIOAndCheckRecentFiles(self, open=None, saveas=None, # pylint: disable=W0622
             saveselection=None, merge=None, expectedFilenames=None):
         open = open or []
         saveas = saveas or []
@@ -55,7 +55,7 @@ class IOControllerTest(test.TestCase):
         self.checkRecentFiles(expectedFilenames or \
             open+saveas+saveselection+merge)
     
-    def doIO(self, open, saveas, saveselection, merge): # pylint: disable-msg=W0622
+    def doIO(self, open, saveas, saveselection, merge): # pylint: disable=W0622
         for filename in open:
             self.iocontroller.open(filename, fileExists=lambda filename: True)
         for filename in saveas:
@@ -101,8 +101,8 @@ class IOControllerTest(test.TestCase):
         
     def testSaveTaskFileWithoutTasksButWithNotes(self):
         self.taskFile.notes().append(note.Note(subject='Note'))
-        def saveasReplacement(*args, **kwargs): # pylint: disable-msg=W0613
-            self.saveAsCalled = True # pylint: disable-msg=W0201
+        def saveasReplacement(*args, **kwargs): # pylint: disable=W0613
+            self.saveAsCalled = True # pylint: disable=W0201
         originalSaveAs = self.iocontroller.__class__.saveas
         self.iocontroller.__class__.saveas = saveasReplacement
         self.iocontroller.save()
@@ -111,23 +111,23 @@ class IOControllerTest(test.TestCase):
     
     def testIOErrorOnSave(self):
         self.taskFile.setFilename(self.filename1)
-        def saveasReplacement(*args, **kwargs): # pylint: disable-msg=W0613
+        def saveasReplacement(*args, **kwargs): # pylint: disable=W0613
             self.saveAsCalled = True
         originalSaveAs = self.iocontroller.__class__.saveas
         self.iocontroller.__class__.saveas = saveasReplacement
         self.taskFile.raiseError = IOError
-        def showerror(*args, **kwargs): # pylint: disable-msg=W0613
-            self.showerrorCalled = True # pylint: disable-msg=W0201
+        def showerror(*args, **kwargs): # pylint: disable=W0613
+            self.showerrorCalled = True # pylint: disable=W0201
         self.iocontroller.save(showerror=showerror)
         self.failUnless(self.showerrorCalled and self.saveAsCalled)
         self.iocontroller.__class__.saveas = originalSaveAs
 
     def testIOErrorOnSaveAs(self):
         self.taskFile.raiseError = IOError
-        def saveasReplacement(*args, **kwargs): # pylint: disable-msg=W0613
+        def saveasReplacement(*args, **kwargs): # pylint: disable=W0613
             self.saveAsCalled = True
         originalSaveAs = self.iocontroller.__class__.saveas
-        def showerror(*args, **kwargs): # pylint: disable-msg=W0613
+        def showerror(*args, **kwargs): # pylint: disable=W0613
             self.showerrorCalled = True 
             # Prevent the recursive call of saveas:
             self.iocontroller.__class__.saveas = saveasReplacement
@@ -158,16 +158,16 @@ class IOControllerTest(test.TestCase):
     def testIOErrorOnSaveSave(self):
         self.taskFile.raiseError = IOError
         self.taskFile.setFilename(self.filename1)
-        def showerror(*args, **kwargs): # pylint: disable-msg=W0613
+        def showerror(*args, **kwargs): # pylint: disable=W0613
             self.showerrorCalled = True
         self.taskFile.tasks().append(task.Task())
-        self.iocontroller._saveSave(self.taskFile, showerror) # pylint: disable-msg=W0212
+        self.iocontroller._saveSave(self.taskFile, showerror) # pylint: disable=W0212
         self.failUnless(self.showerrorCalled)
 
     def testIOErrorOnExport(self):
         self.taskFile.setFilename(self.filename1)
         self.taskFile.tasks().append(task.Task())
-        def showerror(*args, **kwargs): # pylint: disable-msg=W0613
+        def showerror(*args, **kwargs): # pylint: disable=W0613
             self.showerrorCalled = True
         def openfile(*args, **kwargs):
             raise IOError
@@ -243,7 +243,7 @@ class IOControllerTest(test.TestCase):
         
     def testOpenWhenLockFailed(self):
         self.taskFile.raiseError = lockfile.LockFailed
-        def askOpenUnlocked(*args, **kwargs): # pylint: disable-msg=W0613
+        def askOpenUnlocked(*args, **kwargs): # pylint: disable=W0613
             self.askOpenUnlockedCalled = True 
         self.iocontroller._IOController__askOpenUnlocked = askOpenUnlocked
         self.iocontroller.open(self.filename1, fileExists=lambda filename: True)
@@ -251,7 +251,7 @@ class IOControllerTest(test.TestCase):
 
     def testOpenWhenAlreadyLocked(self):
         self.taskFile.raiseError = lockfile.LockTimeout
-        def askBreakLock(*args, **kwargs):  # pylint: disable-msg=W0613
+        def askBreakLock(*args, **kwargs):  # pylint: disable=W0613
             self.askBreakLockCalled = True
         self.iocontroller._IOController__askBreakLock = askBreakLock
         self.iocontroller.open(self.filename1, fileExists=lambda filename: True)

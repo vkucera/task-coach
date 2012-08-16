@@ -18,5 +18,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from task import Task
 from tasklist import TaskList
-import filter  # pylint: disable-msg=W0622
+import filter  # pylint: disable=W0622
 import sorter

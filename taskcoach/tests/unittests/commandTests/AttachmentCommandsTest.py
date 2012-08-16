@@ -23,7 +23,7 @@ from CommandTestCase import CommandTestCase
 
 class AddAttachmentTestsMixin(object):
     def addAttachment(self, selectedItems=None):
-        self.attachment = attachment.FileAttachment('attachment') # pylint: disable-msg=W0201
+        self.attachment = attachment.FileAttachment('attachment') # pylint: disable=W0201
         addAttachmentCommand = command.AddAttachmentCommand(self.container,
             selectedItems or [], attachments=[self.attachment])
         addAttachmentCommand.do()

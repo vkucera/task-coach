@@ -70,7 +70,7 @@ class VirtualListCtrlTestCase(test.wxTestCase):
         self.listctrl.showColumn(self.columns[2], False)
         self.listctrl.showColumn(self.columns[1], True)
         self.listctrl.showColumn(self.columns[2], True)
-        # pylint: disable-msg=W0212
+        # pylint: disable=W0212
         self.assertEqual(self.columns[1].header(), 
                          self.listctrl._getColumnHeader(1))
         self.assertEqual(self.columns[2].header(), 

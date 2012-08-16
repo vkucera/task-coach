@@ -30,7 +30,7 @@ class SingletonTest(test.TestCase):
         self.resetSingleton()
         
     def resetSingleton(self):
-        Singleton.deleteInstance() # pylint: disable-msg=E1101
+        Singleton.deleteInstance() # pylint: disable=E1101
         
     def testCreation(self):
         singleton = Singleton()
@@ -65,7 +65,7 @@ class SingletonTest(test.TestCase):
                 SingletonWithInit._count += 1
         SingletonWithInit()
         SingletonWithInit()
-        self.assertEqual(1, SingletonWithInit._count) # pylint: disable-msg=W0212
+        self.assertEqual(1, SingletonWithInit._count) # pylint: disable=W0212
         
     def testDeleteInstance(self):
         singleton1 = Singleton()
@@ -74,21 +74,21 @@ class SingletonTest(test.TestCase):
         self.failIf(singleton1 is singleton2)
         
     def testSingletonHasNoInstanceBeforeFirstCreation(self):
-        self.failIf(Singleton.hasInstance()) # pylint: disable-msg=E1101
+        self.failIf(Singleton.hasInstance()) # pylint: disable=E1101
         
     def testSingletonHasInstanceAfterFirstCreation(self):
         Singleton()
-        self.failUnless(Singleton.hasInstance()) # pylint: disable-msg=E1101
+        self.failUnless(Singleton.hasInstance()) # pylint: disable=E1101
         
     def testSingletonHasInstanceAfterSecondCreation(self):
         Singleton()
         Singleton()
-        self.failUnless(Singleton.hasInstance()) # pylint: disable-msg=E1101
+        self.failUnless(Singleton.hasInstance()) # pylint: disable=E1101
         
     def testSingletonHasNoInstanceAfterDeletion(self):
         Singleton()
         self.resetSingleton()
-        self.failIf(Singleton.hasInstance()) # pylint: disable-msg=E1101
+        self.failIf(Singleton.hasInstance()) # pylint: disable=E1101
 
 
 class SingletonSubclassTest(test.TestCase):
@@ -131,5 +131,5 @@ class SingletonSubclassTest(test.TestCase):
                 Sub._count += 1
         Sub()
         Sub()
-        self.assertEqual(1, Sub._count) # pylint: disable-msg=W0212
+        self.assertEqual(1, Sub._count) # pylint: disable=W0212
 

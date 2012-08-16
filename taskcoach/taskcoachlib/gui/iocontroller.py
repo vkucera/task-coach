@@ -255,7 +255,7 @@ class IOController(object):
             templates = persistence.TemplateList(self.__settings.pathToTemplatesDir())
             try:
                 templates.copyTemplate(filename)
-            except Exception, reason: # pylint: disable-msg=W0703
+            except Exception, reason: # pylint: disable=W0703
                 errorMessage = _('Cannot import template %s\n%s')%(filename, ExceptionAsUnicode(reason))
                 showerror(errorMessage, **self.__errorMessageOptions)
             
@@ -378,7 +378,7 @@ class IOController(object):
         
     def __askUserForFile(self, title, fileDialogOpts, flag=wx.FD_OPEN, 
                          fileExists=os.path.exists):
-        filename = wx.FileSelector(title, flags=flag, **fileDialogOpts) # pylint: disable-msg=W0142
+        filename = wx.FileSelector(title, flags=flag, **fileDialogOpts) # pylint: disable=W0142
         if filename and (flag & wx.FD_SAVE):
             # On Ubuntu, the default extension is not added automatically to
             # a filename typed by the user. Add the extension if necessary.

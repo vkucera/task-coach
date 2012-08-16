@@ -36,10 +36,10 @@ class SquareMap(tooltip.ToolTipMixin, squaremap.SquareMap):
         self.popupMenu = popupMenu
         self.Bind(wx.EVT_RIGHT_DOWN, self.onPopup)
         
-    def RefreshAllItems(self, count): # pylint: disable-msg=W0613
+    def RefreshAllItems(self, count): # pylint: disable=W0613
         self.UpdateDrawing()
         
-    def RefreshItems(self, *args): # pylint: disable-msg=W0613
+    def RefreshItems(self, *args): # pylint: disable=W0613
         self.UpdateDrawing()
         
     def onSelect(self, event):

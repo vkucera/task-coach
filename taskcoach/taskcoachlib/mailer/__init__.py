@@ -76,7 +76,7 @@ def openMailWithOutlook(filename):
     if id_ is None:
         return False
 
-    from win32com.client import GetActiveObject # pylint: disable-msg=F0401
+    from win32com.client import GetActiveObject # pylint: disable=F0401
     app = GetActiveObject('Outlook.Application')
     app.ActiveExplorer().Session.GetItemFromID(id_).Display()
 
@@ -85,7 +85,7 @@ def openMailWithOutlook(filename):
 def openMail(filename):
     if os.name == 'nt':
         # Find out if Outlook is the so-called 'default' mailer.
-        import _winreg # pylint: disable-msg=F0401
+        import _winreg # pylint: disable=F0401
         key = _winreg.OpenKey(_winreg.HKEY_CLASSES_ROOT,
                               r'mailto\shell\open\command')
         try:

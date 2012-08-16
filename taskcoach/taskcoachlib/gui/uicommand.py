@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import patterns, meta, command, help, widgets, persistence, \
-    thirdparty, render, operating_system  # pylint: disable-msg=W0622
+    thirdparty, render, operating_system  # pylint: disable=W0622
 from taskcoachlib.domain import base, task, note, category, attachment, \
     effort, date
 from taskcoachlib.gui.wizard import CSVImportWizard
@@ -42,7 +42,7 @@ import wx
     be invoked by the user via the user interface (menu's, toolbar, etc.).
     See the Taskmaster pattern described here: 
     http://www.objectmentor.com/resources/articles/taskmast.pdf 
-'''  # pylint: disable-msg=W0105
+'''  # pylint: disable=W0105
 
 
 class UICommandContainerMixin(object):
@@ -62,7 +62,7 @@ class UICommandContainerMixin(object):
         import menu
         subMenu = menu.Menu(self._window)
         self.appendMenu(menuTitle, subMenu)
-        subMenu.appendUICommands(*uiCommands)  # pylint: disable-msg=W0142
+        subMenu.appendUICommands(*uiCommands)  # pylint: disable=W0142
         
 
 class UICommand(object):
@@ -74,7 +74,7 @@ class UICommand(object):
     
     def __init__(self, menuText='', helpText='', bitmap='nobitmap', 
              kind=wx.ITEM_NORMAL, id=None, bitmap2=None, 
-             *args, **kwargs):  # pylint: disable-msg=W0622
+             *args, **kwargs):  # pylint: disable=W0622
         super(UICommand, self).__init__()
         menuText = menuText or '<%s>' % _('None')
         self.menuText = menuText if '&' in menuText else '&' + menuText
@@ -159,7 +159,7 @@ class UICommand(object):
         if self.toolbar and (not self.helpText or self.menuText == '?'):
             self.updateToolHelp()
         
-    def enabled(self, event):  # pylint: disable-msg=W0613
+    def enabled(self, event):  # pylint: disable=W0613
         ''' Can be overridden in a subclass. '''
         return True
 
@@ -202,7 +202,7 @@ class UICommand(object):
         return wx.ArtProvider_GetBitmap(bitmapName, bitmapType, bitmapSize)
     
 
-class SettingsCommand(UICommand):  # pylint: disable-msg=W0223
+class SettingsCommand(UICommand):  # pylint: disable=W0223
     ''' SettingsCommands are saved in the settings (a ConfigParser). '''
 
     def __init__(self, settings=None, setting=None, section='view', 
@@ -213,7 +213,7 @@ class SettingsCommand(UICommand):  # pylint: disable-msg=W0223
         super(SettingsCommand, self).__init__(*args, **kwargs)
 
 
-class BooleanSettingsCommand(SettingsCommand):  # pylint: disable-msg=W0223
+class BooleanSettingsCommand(SettingsCommand):  # pylint: disable=W0223
     ''' Bae class for commands that change a boolean setting. 
         Whenever the setting is changed, the user interface 
         representation is changed as well. E.g. a menu gets 
@@ -286,43 +286,43 @@ class UIRadioCommand(BooleanSettingsCommand):
         self.settings.setvalue(self.section, self.setting, self.value)
 
 
-class IOCommand(UICommand):  # pylint: disable-msg=W0223
+class IOCommand(UICommand):  # pylint: disable=W0223
     def __init__(self, *args, **kwargs):
         self.iocontroller = kwargs.pop('iocontroller', None)
         super(IOCommand, self).__init__(*args, **kwargs)
 
 
-class TaskListCommand(UICommand):  # pylint: disable-msg=W0223
+class TaskListCommand(UICommand):  # pylint: disable=W0223
     def __init__(self, *args, **kwargs):
         self.taskList = kwargs.pop('taskList', None)
         super(TaskListCommand, self).__init__(*args, **kwargs)
         
         
-class EffortListCommand(UICommand):  # pylint: disable-msg=W0223
+class EffortListCommand(UICommand):  # pylint: disable=W0223
     def __init__(self, *args, **kwargs):
         self.effortList = kwargs.pop('effortList', None)
         super(EffortListCommand, self).__init__(*args, **kwargs)
 
 
-class CategoriesCommand(UICommand):  # pylint: disable-msg=W0223
+class CategoriesCommand(UICommand):  # pylint: disable=W0223
     def __init__(self, *args, **kwargs):
         self.categories = kwargs.pop('categories', None)
         super(CategoriesCommand, self).__init__(*args, **kwargs)
 
 
-class NotesCommand(UICommand):  # pylint: disable-msg=W0223
+class NotesCommand(UICommand):  # pylint: disable=W0223
     def __init__(self, *args, **kwargs):
         self.notes = kwargs.pop('notes', None)
         super(NotesCommand, self).__init__(*args, **kwargs)
 
 
-class AttachmentsCommand(UICommand):  # pylint: disable-msg=W0223
+class AttachmentsCommand(UICommand):  # pylint: disable=W0223
     def __init__(self, *args, **kwargs):
         self.attachments = kwargs.pop('attachments', None)
         super(AttachmentsCommand, self).__init__(*args, **kwargs)
 
 
-class ViewerCommand(UICommand):  # pylint: disable-msg=W0223
+class ViewerCommand(UICommand):  # pylint: disable=W0223
     def __init__(self, *args, **kwargs):
         self.viewer = kwargs.pop('viewer', None)
         super(ViewerCommand, self).__init__(*args, **kwargs)
@@ -337,15 +337,15 @@ class ViewerCommand(UICommand):  # pylint: disable-msg=W0223
 class PopupButtonMixin(object):
     ''' Mix this with a UICommand for a toolbar pop-up menu. '''
 
-    def doCommand(self, event):  # pylint: disable-msg=W0613
+    def doCommand(self, event):  # pylint: disable=W0613
         try:
             args = [self.__menu]
         except AttributeError:
-            self.__menu = self.createPopupMenu()  # pylint: disable-msg=W0201
+            self.__menu = self.createPopupMenu()  # pylint: disable=W0201
             args = [self.__menu]
         if self.toolbar:
             args.append(self.menuXY())
-        self.mainWindow().PopupMenu(*args)  # pylint: disable-msg=W0142
+        self.mainWindow().PopupMenu(*args)  # pylint: disable=W0142
 
     def menuXY(self):
         ''' Location to pop up the menu. '''
@@ -432,7 +432,7 @@ class NeedsSelectedNoteOwnersMixin(NeedsSelectionMixin):
 
 class NeedsSelectedNoteOwnersMixinWithNotes(NeedsSelectedNoteOwnersMixin):
     def enabled(self, event):
-        # pylint: disable-msg=E1101
+        # pylint: disable=E1101
         return super(NeedsSelectedNoteOwnersMixinWithNotes, self).enabled(event) and \
             any([item.notes() for item in self.viewer.curselection()])
             
@@ -466,17 +466,17 @@ class NeedsSelectedAttachmentsMixin(NeedsAttachmentViewerMixin, NeedsSelectionMi
 
 
 class NeedsAtLeastOneTaskMixin(object):
-    def enabled(self, event):  # pylint: disable-msg=W0613
+    def enabled(self, event):  # pylint: disable=W0613
         return len(self.taskList) > 0
     
     
 class NeedsAtLeastOneCategoryMixin(object):
-    def enabled(self, event):  # pylint: disable-msg=W0613
+    def enabled(self, event):  # pylint: disable=W0613
         return len(self.categories) > 0
         
         
 class NeedsItemsMixin(object):
-    def enabled(self, event):  # pylint: disable-msg=W0613
+    def enabled(self, event):  # pylint: disable=W0613
         return self.viewer.size() 
 
 
@@ -711,11 +711,11 @@ class FileExportCommand(IOCommand, SettingsCommand):
     
     def doCommand(self, event):
         exportDialog = self.getExportDialogClass()(self.mainWindow(), 
-            settings=self.settings)  # pylint: disable-msg=E1101
+            settings=self.settings)  # pylint: disable=E1101
         if wx.ID_OK == exportDialog.ShowModal():
             exportOptions = exportDialog.options()
             selectedViewer = exportOptions.pop('selectedViewer')
-            # pylint: disable-msg=W0142
+            # pylint: disable=W0142
             self.exportFunction()(selectedViewer, **exportOptions)  
         exportDialog.Destroy()
         
@@ -1081,7 +1081,7 @@ class EditPreferences(SettingsCommand):
             helpText=help.editPreferences, bitmap='wrench_icon',
             id=wx.ID_PREFERENCES, *args, **kwargs)
             
-    def doCommand(self, event, show=True):  # pylint: disable-msg=W0221
+    def doCommand(self, event, show=True):  # pylint: disable=W0221
         editor = dialog.preferences.Preferences(parent=self.mainWindow(), 
             title=_('Preferences'), settings=self.settings)
         editor.Show(show=show)
@@ -1096,7 +1096,7 @@ class EditSyncPreferences(IOCommand):
             helpText=_('Edit SyncML preferences'), bitmap='arrows_looped_icon',
             *args, **kwargs)
 
-    def doCommand(self, event, show=True):  # pylint: disable-msg=W0221
+    def doCommand(self, event, show=True):  # pylint: disable=W0221
         editor = dialog.syncpreferences.SyncMLPreferences( \
             parent=self.mainWindow(), iocontroller=self.iocontroller,
             title=_('SyncML preferences'))
@@ -1417,7 +1417,7 @@ class Edit(NeedsSelectionMixin, ViewerCommand):
             helpText=_('Edit the selected item(s)'), bitmap='edit', 
             *args, **kwargs)
 
-    def doCommand(self, event, show=True):  # pylint: disable-msg=W0221
+    def doCommand(self, event, show=True):  # pylint: disable=W0221
         windowWithFocus = wx.Window.FindFocus()
         editCtrl = self.findEditCtrl(windowWithFocus)
         if editCtrl:
@@ -1509,7 +1509,7 @@ class TaskNew(TaskListCommand, SettingsCommand):
             kwargs['helpText'] = taskList.newItemHelpText
         super(TaskNew, self).__init__(bitmap='new', *args, **kwargs)
 
-    def doCommand(self, event, show=True):  # pylint: disable-msg=W0221
+    def doCommand(self, event, show=True):  # pylint: disable=W0221
         kwargs = self.taskKeywords.copy()
         if self.__shouldPresetPlannedStartDateTime():
             kwargs['plannedStartDateTime'] = task.Task.suggestedPlannedStartDateTime()
@@ -1568,22 +1568,22 @@ class TaskNewFromTemplate(TaskNew):
         super(TaskNewFromTemplate, self).__init__(*args, **kwargs)
         self.__filename = filename
         templateTask = self.__readTemplate()
-        self.menuText = '&' + templateTask.subject().replace('&', '&&')  # pylint: disable-msg=E1103
+        self.menuText = '&' + templateTask.subject().replace('&', '&&')  # pylint: disable=E1103
 
     def __readTemplate(self):
         return persistence.TemplateXMLReader(file(self.__filename,
                                                   'rU')).read()
 
-    def doCommand(self, event, show=True):  # pylint: disable-msg=W0221
+    def doCommand(self, event, show=True):  # pylint: disable=W0221
         # The task template is read every time because it's the
         # TemplateXMLReader that evaluates dynamic values (Now()
         # should be evaluated at task creation for instance).
         templateTask = self.__readTemplate()
-        kwargs = templateTask.__getcopystate__()  # pylint: disable-msg=E1103
+        kwargs = templateTask.__getcopystate__()  # pylint: disable=E1103
         kwargs['categories'] = self.categoriesForTheNewTask()
         newTaskCommand = command.NewTaskCommand(self.taskList, **kwargs)
         newTaskCommand.do()
-        # pylint: disable-msg=W0142
+        # pylint: disable=W0142
         newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(), 
             newTaskCommand.items, self.settings, self.taskList, 
             self.mainWindow().taskFile, bitmap=self.bitmap, itemsAreNew=True)
@@ -1651,7 +1651,7 @@ class NewSubItem(NeedsOneSelectedCompositeItemMixin, ViewerCommand):
             helpText=_('Insert a new subitem of the selected item'),
             bitmap='newsub', *args, **kwargs)
     
-    def doCommand(self, event, show=True):  # pylint: disable-msg=W0221
+    def doCommand(self, event, show=True):  # pylint: disable=W0221
         self.viewer.newSubItemDialog(bitmap=self.bitmap).Show(show)
         
     def onUpdateUI(self, event):
@@ -1776,12 +1776,12 @@ class TaskDecPriority(NeedsSelectedTasksMixin, TaskListCommand, ViewerCommand):
 
 
 class DragAndDropCommand(ViewerCommand):
-    def onCommandActivate(self, dropItem, dragItems, part):  # pylint: disable-msg=W0221
+    def onCommandActivate(self, dropItem, dragItems, part):  # pylint: disable=W0221
         ''' Override onCommandActivate to be able to accept two items instead
             of one event. '''
         self.doCommand(dropItem, dragItems, part)
 
-    def doCommand(self, dropItem, dragItems, part):  # pylint: disable-msg=W0221
+    def doCommand(self, dropItem, dragItems, part):  # pylint: disable=W0221
         dragAndDropCommand = self.createCommand(dropItem=dropItem, dragItems=dragItems, part=part)
         if dragAndDropCommand.canDo():
             dragAndDropCommand.do()
@@ -1842,7 +1842,7 @@ class Mail(NeedsSelectionMixin, ViewerCommand):
         super(Mail, self).__init__(menuText=menuText,
            helpText=help.mailItem, bitmap='envelope_icon', *args, **kwargs)
 
-    def doCommand(self, event, mail=sendMail, showerror=wx.MessageBox):  # pylint: disable-msg=W0221
+    def doCommand(self, event, mail=sendMail, showerror=wx.MessageBox):  # pylint: disable=W0221
         items = self.viewer.curselection()
         subject = self.subject(items)
         body = self.body(items)
@@ -1883,7 +1883,7 @@ class Mail(NeedsSelectionMixin, ViewerCommand):
             # Try again with a dummy recipient:
             try:
                 mail('recipient@domain.com', subject, body)
-            except Exception, reason:  # pylint: disable-msg=W0703
+            except Exception, reason:  # pylint: disable=W0703
                 showerror(_('Cannot send email:\n%s') % ExceptionAsUnicode(reason), 
                       caption=_('%s mail error') % meta.name, 
                       style=wx.ICON_ERROR)        
@@ -1894,7 +1894,7 @@ class AddNote(NeedsSelectedNoteOwnersMixin, ViewerCommand, SettingsCommand):
         super(AddNote, self).__init__(menuText=_('Add &note...\tCtrl+B'),
             helpText=help.addNote, bitmap='new', *args, **kwargs)
             
-    def doCommand(self, event, show=True):  # pylint: disable-msg=W0221
+    def doCommand(self, event, show=True):  # pylint: disable=W0221
         addNoteCommand = command.AddNoteCommand(self.viewer.presentation(), 
                                                 self.viewer.curselection())
         addNoteCommand.do()
@@ -2145,7 +2145,7 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
             menuItem.SetItemLabel(menuText)
             menuItem.SetHelp(helpText)
         
-    def getMenuText(self, paused=None):  # pylint: disable-msg=W0221
+    def getMenuText(self, paused=None):  # pylint: disable=W0221
         if self.anyTrackedEfforts():
             subject = _('multiple tasks') if len(self.__trackedEfforts) > 1 \
                       else self.__trackedEfforts[0].task().subject()
@@ -2158,7 +2158,7 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
         else:
             return self.defaultMenuText
         
-    def getHelpText(self, paused=None):  # pylint: disable-msg=W0221
+    def getHelpText(self, paused=None):  # pylint: disable=W0221
         if self.anyTrackedEfforts():
             return self.stopHelpText
         if paused is None:
@@ -2187,7 +2187,7 @@ class CategoryNew(CategoriesCommand, SettingsCommand):
             menuText=_('New category...\tCtrl-G'),
             helpText=help.categoryNew, *args, **kwargs)
 
-    def doCommand(self, event, show=True):  # pylint: disable-msg=W0221
+    def doCommand(self, event, show=True):  # pylint: disable=W0221
         newCategoryCommand = command.NewCategoryCommand(self.categories)
         newCategoryCommand.do()
         taskFile = self.mainWindow().taskFile
@@ -2211,7 +2211,7 @@ class NoteNew(NotesCommand, SettingsCommand, ViewerCommand):
         super(NoteNew, self).__init__(menuText=self.menuText,
             helpText=self.helpText, bitmap='new', *args, **kwargs)
 
-    def doCommand(self, event, show=True):  # pylint: disable-msg=W0221
+    def doCommand(self, event, show=True):  # pylint: disable=W0221
         if self.viewer:
             noteDialog = self.viewer.newItemDialog(bitmap=self.bitmap)
         else: 
@@ -2250,7 +2250,7 @@ class AttachmentNew(AttachmentsCommand, ViewerCommand, SettingsCommand):
             kwargs['helpText'] = attachments.newItemHelpText
         super(AttachmentNew, self).__init__(bitmap='new', *args, **kwargs)
 
-    def doCommand(self, event, show=True):  # pylint: disable-msg=W0221
+    def doCommand(self, event, show=True):  # pylint: disable=W0221
         attachmentDialog = self.viewer.newItemDialog(bitmap=self.bitmap)
         attachmentDialog.Show(show)
         return attachmentDialog  # for testing purposes
@@ -2282,7 +2282,7 @@ def openAttachments(attachments, settings, showerror):
     for eachAttachment in attachments:
         try:
             eachAttachment.open(attachmentBase)
-        except Exception, instance:  # pylint: disable-msg=W0703
+        except Exception, instance:  # pylint: disable=W0703
             showerror(render.exception(Exception, instance), 
                       caption=_('Error opening attachment'), 
                       style=wx.ICON_ERROR)
@@ -2296,7 +2296,7 @@ class AttachmentOpen(NeedsSelectedAttachmentsMixin, ViewerCommand,
             menuText=attachments.openItemMenuText,
             helpText=attachments.openItemHelpText, *args, **kwargs)
 
-    def doCommand(self, event, showerror=wx.MessageBox):  # pylint: disable-msg=W0221
+    def doCommand(self, event, showerror=wx.MessageBox):  # pylint: disable=W0221
         openAttachments(self.viewer.curselection(), self.settings, showerror)
 
 
@@ -2308,7 +2308,7 @@ class OpenAllAttachments(NeedsSelectionWithAttachmentsMixin, ViewerCommand,
            helpText=help.openAllAttachments, bitmap='paperclip_icon', 
            *args, **kwargs)
         
-    def doCommand(self, event, showerror=wx.MessageBox):  # pylint: disable-msg=W0221
+    def doCommand(self, event, showerror=wx.MessageBox):  # pylint: disable=W0221
         allAttachments = []
         for item in self.viewer.curselection():
             allAttachments.extend(item.attachments())
@@ -2325,7 +2325,7 @@ class DialogCommand(UICommand):
         
     def doCommand(self, event):
         self.closed = False
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.dialog = widgets.HTMLDialog(self._dialogTitle, self._dialogText, 
                                     bitmap=self.bitmap, 
                                     direction=self._direction)
@@ -2492,7 +2492,7 @@ class Search(ViewerCommand, SettingsCommand):
     def appendToToolBar(self, toolbar):
         searchString, matchCase, includeSubItems, searchDescription = \
             self.viewer.getSearchFilter()
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.searchControl = widgets.SearchCtrl(toolbar, value=searchString,
             style=wx.TE_PROCESS_ENTER, matchCase=matchCase, 
             includeSubItems=includeSubItems, 
@@ -2542,7 +2542,7 @@ class Search(ViewerCommand, SettingsCommand):
 class ToolbarChoiceCommandMixin(object):
     def appendToToolBar(self, toolbar):
         ''' Add our choice control to the toolbar. '''
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.choiceCtrl = wx.Choice(toolbar, choices=self.choiceLabels)
         self.currentChoice = self.choiceCtrl.Selection
         self.choiceCtrl.Bind(wx.EVT_CHOICE, self.onChoice)
@@ -2630,7 +2630,7 @@ class CalendarViewerNavigationCommand(ViewerCommand):
     def doCommand(self, event):
         self.viewer.freeze()
         try:
-            self.viewer.SetViewType(self.calendarViewType)  # pylint: disable-msg=E1101
+            self.viewer.SetViewType(self.calendarViewType)  # pylint: disable=E1101
         finally:
             self.viewer.thaw()
 
@@ -2681,7 +2681,7 @@ class ToggleAutoColumnResizing(UICheckCommand, ViewerCommand, SettingsCommand):
 class ViewerPieChartAngle(ViewerCommand, SettingsCommand):        
     def appendToToolBar(self, toolbar):
         ''' Add our slider control to the toolbar. '''
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.sliderCtrl = wx.Slider(toolbar, minValue=0, maxValue=90,
                                     value=self.getCurrentAngle())
         self.sliderCtrl.Bind(wx.EVT_SLIDER, self.onSlider)
@@ -2733,7 +2733,7 @@ class AlwaysRoundUp(UICheckCommand, ViewerCommand, SettingsCommand):
 
     def appendToToolBar(self, toolbar):
         ''' Add a checkbox control to the toolbar. '''
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.checkboxCtrl = wx.CheckBox(toolbar, label=self.menuText)
         self.checkboxCtrl.Bind(wx.EVT_CHECKBOX, self.onCheck)
         toolbar.AddControl(self.checkboxCtrl)

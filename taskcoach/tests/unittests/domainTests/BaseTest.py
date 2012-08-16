@@ -32,7 +32,7 @@ class SynchronizedObjectTest(test.TestCase):
     def onEvent(self, event):
         self.events.append(event)
         
-    def registerObserver(self, eventType):  # pylint: disable-msg=W0221
+    def registerObserver(self, eventType):  # pylint: disable=W0221
         patterns.Publisher().registerObserver(self.onEvent, eventType)
         
     def assertObjectStatus(self, expectedStatus):
@@ -555,7 +555,7 @@ class CompositeObjectTest(test.TestCase):
     def testCopy(self):
         self.compositeObject.expand(context='some_viewer')
         copy = self.compositeObject.copy()
-        # pylint: disable-msg=E1101
+        # pylint: disable=E1101
         self.assertEqual(copy.expandedContexts(),
                          self.compositeObject.expandedContexts())
         self.compositeObject.expand(context='another_viewer')

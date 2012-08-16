@@ -160,7 +160,7 @@ class VCalTaskCommonTestsMixin(VCalendarCommonTestsMixin):
 
     def testNumber(self):
         self.assertEqual(self.expectedNumberOfItems(),
-                         self.vcalFile.count('BEGIN:VTODO')) # pylint: disable-msg=W0511
+                         self.vcalFile.count('BEGIN:VTODO')) # pylint: disable=W0511
 
     def testTaskId(self):
         self.failUnless('UID:%s'%self.task2.id() in self.vcalFile)

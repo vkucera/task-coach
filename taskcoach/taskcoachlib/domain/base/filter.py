@@ -110,7 +110,7 @@ class SearchFilter(Filter):
     def setSearchFilter(self, searchString, matchCase=False, 
                         includeSubItems=False, searchDescription=False, 
                         doReset=True):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.__includeSubItems = includeSubItems
         self.__searchDescription = searchDescription
         self.__searchPredicate = self.__compileSearchPredicate(searchString, matchCase)
@@ -165,7 +165,7 @@ class DeletedFilter(Filter):
             patterns.Publisher().registerObserver(self.onObjectMarkedDeletedOrNot,
                           eventType=eventType)
 
-    def onObjectMarkedDeletedOrNot(self, event):  # pylint: disable-msg=W0613
+    def onObjectMarkedDeletedOrNot(self, event):  # pylint: disable=W0613
         self.reset()
 
     def filterItems(self, items):

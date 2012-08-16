@@ -140,7 +140,7 @@ class EventTest(test.TestCase):
     def testSubEventForTwoTypesWhenEventHasTwoTypes(self):
         self.event.addSource('source', type='another eventtype')
         args = [('eventtype', self), ('another eventtype', 'source')]
-        self.assertEqual(self.event, self.event.subEvent(*args)) # pylint: disable-msg=W0142
+        self.assertEqual(self.event, self.event.subEvent(*args)) # pylint: disable=W0142
 
     def testSubEventForTypeThatIsNotPresent(self):
         self.assertEqual(patterns.Event(), 

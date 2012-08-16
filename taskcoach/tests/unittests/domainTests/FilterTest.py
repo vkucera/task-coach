@@ -62,7 +62,7 @@ class DummyFilter(base.Filter):
         return items
     
     def test(self):
-        self.testcalled = 1  # pylint: disable-msg=W0201
+        self.testcalled = 1  # pylint: disable=W0201
 
 
 class DummyItem(str):

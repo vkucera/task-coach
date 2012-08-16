@@ -58,7 +58,7 @@ class EffortEditorTest(test.wxTestCase):
             list(self.taskFile.efforts()), self.settings, 
             self.taskFile.efforts(), self.taskFile)        
 
-    # pylint: disable-msg=W0201,W0212
+    # pylint: disable=W0201,W0212
         
     def testCreate(self):
         self.assertEqual(self.task, self.editor._interior._taskEntry.GetValue())

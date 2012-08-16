@@ -52,10 +52,10 @@ class ViewFilter(tasklist.TaskListQueryMixin, base.Filter):
             midnight. '''
         self.reset()
 
-    def onTaskStatusChange(self, newValue, sender):  # pylint: disable-msg=W0613
+    def onTaskStatusChange(self, newValue, sender):  # pylint: disable=W0613
         self.reset()
         
-    def onTaskStatusChange_Deprecated(self, event=None):  # pylint: disable-msg=W0613
+    def onTaskStatusChange_Deprecated(self, event=None):  # pylint: disable=W0613
         self.reset()
         
     def hideTaskStatus(self, status, hide=True):
@@ -70,9 +70,9 @@ class ViewFilter(tasklist.TaskListQueryMixin, base.Filter):
         self.reset()
         
     def filterItems(self, tasks):
-        return [task for task in tasks if self.filterTask(task)]  # pylint: disable-msg=W0621
+        return [task for task in tasks if self.filterTask(task)]  # pylint: disable=W0621
     
-    def filterTask(self, task):  # pylint: disable-msg=W0621
+    def filterTask(self, task):  # pylint: disable=W0621
         result = True
         if task.status() in self.__statusesToHide:
             result = False

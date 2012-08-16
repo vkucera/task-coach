@@ -126,7 +126,7 @@ class PasteCommandWithTasksTest(TaskCommandTestCase):
     def testClipboardIsNotEmptyAfterPaste(self):
         self.cut([self.task1])
         self.paste()
-        # pylint: disable-msg=W0212
+        # pylint: disable=W0212
         self.assertDoUndoRedo(
             lambda: self.assertEqual(1, len(command.Clipboard()._contents)))
 
@@ -157,7 +157,7 @@ class PasteCommandWithEffortTest(CommandWithEffortTestCase):
     def testClipboardIsNotEmptyAfterPaste(self):
         self.cut([self.effort1])
         self.paste()
-        # pylint: disable-msg=W0212
+        # pylint: disable=W0212
         self.assertDoUndoRedo(
             lambda: self.assertEqual([self.effort1], command.Clipboard()._contents))
         
@@ -327,7 +327,7 @@ class CopyCommandWithEffortTest(CommandWithEffortTestCase):
      
         
 class DragAndDropWithTasksTest(CommandWithChildrenTestCase):
-    def dragAndDrop(self, draggedItems, dropItem): # pylint: disable-msg=W0222
+    def dragAndDrop(self, draggedItems, dropItem): # pylint: disable=W0222
         command.DragAndDropTaskCommand(self.taskList, draggedItems, drop=[dropItem]).do()
         
     def testDragAndDropRootTask(self):

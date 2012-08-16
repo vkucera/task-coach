@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, os
-from taskcoachlib import patterns, persistence, help # pylint: disable-msg=W0622
+from taskcoachlib import patterns, persistence, help # pylint: disable=W0622
 from taskcoachlib.domain import task, base, category
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty.pubsub import pub
@@ -147,7 +147,7 @@ class DynamicMenu(Menu):
 
             
 class DynamicMenuThatGetsUICommandsFromViewer(DynamicMenu):
-    def __init__(self, viewer, parentMenu=None, labelInParentMenu=''): # pylint: disable-msg=W0621
+    def __init__(self, viewer, parentMenu=None, labelInParentMenu=''): # pylint: disable=W0621
         self._uiCommands = None
         super(DynamicMenuThatGetsUICommandsFromViewer, self).__init__(\
             viewer, parentMenu, labelInParentMenu)
@@ -162,14 +162,14 @@ class DynamicMenuThatGetsUICommandsFromViewer(DynamicMenu):
         try:
             if newCommands == self._uiCommands:
                 return
-        except wx._core.PyDeadObjectError: # pylint: disable-msg=W0212
+        except wx._core.PyDeadObjectError: # pylint: disable=W0212
             pass  # Old viewer was closed
         self.clearMenu()
         self.fillMenu(newCommands)
         self._uiCommands = newCommands
             
     def fillMenu(self, uiCommands):
-        self.appendUICommands(*uiCommands) # pylint: disable-msg=W0142
+        self.appendUICommands(*uiCommands) # pylint: disable=W0142
         
     def getUICommands(self):
         raise NotImplementedError
@@ -227,7 +227,7 @@ class FileMenu(Menu):
                         'export')
         if settings.getboolean('feature', 'syncml'):
             try:
-                import taskcoachlib.syncml.core # pylint: disable-msg=W0612,W0404
+                import taskcoachlib.syncml.core # pylint: disable=W0612,W0404
             except ImportError:
                 pass
             else:
@@ -272,7 +272,7 @@ class ExportMenu(Menu):
     def __init__(self, mainwindow, iocontroller, settings):
         super(ExportMenu, self).__init__(mainwindow)
         kwargs = dict(iocontroller=iocontroller, settings=settings)
-        # pylint: disable-msg=W0142
+        # pylint: disable=W0142
         self.appendUICommands(
             uicommand.FileExportAsHTML(**kwargs),
             uicommand.FileExportAsCSV(**kwargs),
@@ -305,7 +305,7 @@ class TaskTemplateMenu(DynamicMenu):
         self.fillMenu(self.getUICommands())
      
     def fillMenu(self, uiCommands):
-        self.appendUICommands(*uiCommands) # pylint: disable-msg=W0142
+        self.appendUICommands(*uiCommands) # pylint: disable=W0142
 
     def getUICommands(self):
         path = self.settings.pathToTemplatesDir()
@@ -336,7 +336,7 @@ class EditMenu(Menu):
         self.appendUICommands(None, uicommand.EditPreferences(settings))
         if settings.getboolean('feature', 'syncml'):
             try:
-                import taskcoachlib.syncml.core # pylint: disable-msg=W0612,W0404
+                import taskcoachlib.syncml.core # pylint: disable=W0612,W0404
             except ImportError:
                 pass
             else:
@@ -348,7 +348,7 @@ class SelectMenu(Menu):
     def __init__(self, mainwindow, viewerContainer):
         super(SelectMenu, self).__init__(mainwindow)
         kwargs = dict(viewer=viewerContainer)
-        # pylint: disable-msg=W0142
+        # pylint: disable=W0142
         self.appendUICommands(uicommand.SelectAll(**kwargs),
                               uicommand.ClearSelection(**kwargs))
 
@@ -400,7 +400,7 @@ class ViewViewerMenu(Menu):
         super(ViewViewerMenu, self).__init__(mainwindow)
         ViewViewer = uicommand.ViewViewer
         kwargs = dict(viewer=viewerContainer, taskFile=taskFile, settings=settings)
-        # pylint: disable-msg=W0142
+        # pylint: disable=W0142
         viewViewerCommands = [\
             ViewViewer(menuText=_('&Task'),
                        helpText=_('Open a new tab with a viewer that displays tasks'),
@@ -490,7 +490,7 @@ class ToolBarMenu(Menu):
             toolbarCommands.append(uicommand.UIRadioCommand(settings=settings,
                 setting='toolbar', value=value, menuText=menuText,
                 helpText=helpText))
-        # pylint: disable-msg=W0142
+        # pylint: disable=W0142
         self.appendUICommands(*toolbarCommands)
 
 
@@ -570,7 +570,7 @@ class TaskPriorityMenu(Menu):
     def __init__(self, mainwindow, taskList, viewerContainer):
         super(TaskPriorityMenu, self).__init__(mainwindow)
         kwargs = dict(taskList=taskList, viewer=viewerContainer)
-        # pylint: disable-msg=W0142
+        # pylint: disable=W0142
         self.appendUICommands(
             uicommand.TaskIncPriority(**kwargs),
             uicommand.TaskDecPriority(**kwargs),
@@ -636,7 +636,7 @@ class TaskBarMenu(Menu):
         
 
 class ToggleCategoryMenu(DynamicMenu):
-    def __init__(self, mainwindow, categories, viewer): # pylint: disable-msg=W0621
+    def __init__(self, mainwindow, categories, viewer): # pylint: disable=W0621
         self.categories = categories
         self.viewer = viewer
         super(ToggleCategoryMenu, self).__init__(mainwindow)
@@ -655,7 +655,7 @@ class ToggleCategoryMenu(DynamicMenu):
         self.addMenuItemsForCategories(self.categories.rootItems(), self)
             
     def addMenuItemsForCategories(self, categories, menu):
-        # pylint: disable-msg=W0621
+        # pylint: disable=W0621
         categories = categories[:]
         categories.sort(key=lambda category: category.subject())
         for category in categories:
@@ -670,7 +670,7 @@ class ToggleCategoryMenu(DynamicMenu):
                 menu.AppendSubMenu(subMenu, self.subMenuLabel(category))            
     
     @staticmethod
-    def subMenuLabel(category): # pylint: disable-msg=W0621
+    def subMenuLabel(category): # pylint: disable=W0621
         return _('%s (subcategories)')%category.subject()
     
     def enabled(self):
@@ -708,7 +708,7 @@ class StartEffortForTaskMenu(DynamicMenu):
         for trackableRootTask in trackableRootTasks:
             self.addMenuItemForTask(trackableRootTask, self)
                 
-    def addMenuItemForTask(self, task, menu):  # pylint: disable-msg=W0621
+    def addMenuItemForTask(self, task, menu):  # pylint: disable=W0621
         uiCommand = uicommand.EffortStartForTask(task=task, taskList=self.tasks)
         uiCommand.addToMenu(menu, self._window)
         trackableChildren = [child for child in task.children() if \
@@ -872,7 +872,7 @@ class ColumnPopupMenuMixin(object):
         widgets._CtrlWithColumnPopupMenuMixin. '''
 
     def __setColumn(self, columnIndex):
-        self.__columnIndex = columnIndex # pylint: disable-msg=W0201
+        self.__columnIndex = columnIndex # pylint: disable=W0201
 
     def __getColumn(self):
         return self.__columnIndex

@@ -94,10 +94,10 @@ class DCPrintout(wx.Printout):
         self.widget = widget
         super(DCPrintout, self).__init__()
         
-    def OnPrintPage(self, page): # pylint: disable-msg=W0613
+    def OnPrintPage(self, page): # pylint: disable=W0613
         self.widget.Draw(self.GetDC())
         
-    def GetPageInfo(self): # pylint: disable-msg=W0221
+    def GetPageInfo(self): # pylint: disable=W0221
         return (1, 1, 1, 1)
 
         

@@ -49,7 +49,7 @@ class AnimatedShow(wx.Timer):
         else:
             frame.Show(show)
 
-    def __OnTick(self, event): # pylint: disable-msg=W0613
+    def __OnTick(self, event): # pylint: disable=W0613
         self.__step += 1
 
         if self.__show:
@@ -84,7 +84,7 @@ class AnimatedMove(wx.Timer):
         wx.EVT_TIMER(self, id_, self.__OnTick)
         self.Start(100)
 
-    def __OnTick(self, event): # pylint: disable-msg=W0613
+    def __OnTick(self, event): # pylint: disable=W0613
         x0, y0 = self.__origin
         x1, y1 = self.__destination
         self.__step += 1
@@ -106,10 +106,10 @@ if operating_system.isWindows():
         pass
 elif operating_system.isGTK():
     class _NotifyBase(wx.PopupWindow):
-        def __init__(self, parent, id_, title, style=0): # pylint: disable-msg=W0613,E1003
+        def __init__(self, parent, id_, title, style=0): # pylint: disable=W0613,E1003
             super(_NotifyBase, self).__init__(parent, id_) # No style
 
-        def Close(self): # pylint: disable-msg=W0221,E1003
+        def Close(self): # pylint: disable=W0221,E1003
             # Strange...
             super(_NotifyBase, self).Close()
             self.Destroy()
@@ -214,10 +214,10 @@ class NotificationFrameBase(_NotifyBase):
 
         return style
 
-    def DoClose(self, event=None): # pylint: disable-msg=W0613
+    def DoClose(self, event=None): # pylint: disable=W0613
         """Use this method instead of Close. Never use Close directly."""
 
-        NotificationCenter().HideFrame(self) # pylint: disable-msg=E1101
+        NotificationCenter().HideFrame(self) # pylint: disable=E1101
 
 
 class NotificationFrame(NotificationFrameBase):
@@ -351,7 +351,7 @@ class _NotificationCenter(wx.EvtHandler):
             return wx.ClientDisplayRect()
         return wx.Display(dpyIndex).GetClientArea()
 
-    def __OnTick(self, event): # pylint: disable-msg=W0613
+    def __OnTick(self, event): # pylint: disable=W0613
         s = 0
         newList = []
 
@@ -402,7 +402,7 @@ class UniversalNotifier(AbstractNotifier):
         return True
 
     def notify(self, title, summary, bitmap, **kwargs):
-        NotificationCenter().Notify(title, summary, icon=bitmap) # pylint: disable-msg=E1101
+        NotificationCenter().Notify(title, summary, icon=bitmap) # pylint: disable=E1101
 
 
 AbstractNotifier.register(UniversalNotifier())
@@ -429,7 +429,7 @@ if __name__ == '__main__':
     class TestFrame(wx.Frame):
         def __init__(self):
             super(TestFrame, self).__init__(None, wx.ID_ANY, 'Test frame')
-            # pylint: disable-msg=E1101
+            # pylint: disable=E1101
             NotificationCenter().Notify('Sample title', 'Sample content', timeout=3)
             NotificationCenter().Notify('Other sample', 'Multi-line sample content\nfor example\nDont try this at home', timeout=3,
                                         icon=wx.ArtProvider.GetBitmap('taskcoach', wx.ART_FRAME_ICON, (16, 16)))
@@ -441,7 +441,7 @@ if __name__ == '__main__':
             wx.EVT_CLOSE(self, self.OnClose)
 
         def OnClose(self, evt):
-            NotificationCenter().HideAll() # pylint: disable-msg=E1101
+            NotificationCenter().HideAll() # pylint: disable=E1101
             evt.Skip()
 
 

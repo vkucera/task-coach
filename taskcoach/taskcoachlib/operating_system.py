@@ -41,7 +41,7 @@ def isPlatform(threeLetterPlatformAbbreviation, wxPlatform=wx.Platform):
 
 def isWindows7_OrNewer(): # pragma: no cover
     if isWindows(): 
-        major, minor = sys.getwindowsversion()[:2] # pylint: disable-msg=E1101
+        major, minor = sys.getwindowsversion()[:2] # pylint: disable=E1101
         return (major, minor) >= (6, 1)
     else:
         return False

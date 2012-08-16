@@ -109,7 +109,7 @@ class NewTaskWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
 
 
 class DummyTask(object):
-    def subject(self, *args, **kwargs): # pylint: disable-msg=W0613
+    def subject(self, *args, **kwargs): # pylint: disable=W0613
         return 'subject'
     
     def description(self):
@@ -141,11 +141,11 @@ class DummyViewer(object):
 
 class MailTaskTest(test.TestCase):
     def testException(self):
-        def mail(*args): # pylint: disable-msg=W0613
+        def mail(*args): # pylint: disable=W0613
             raise RuntimeError, 'message'
         
-        def showerror(*args, **kwargs): # pylint: disable-msg=W0613
-            self.showerror = args # pylint: disable-msg=W0201
+        def showerror(*args, **kwargs): # pylint: disable=W0613
+            self.showerror = args # pylint: disable=W0201
             
         mailTask = gui.uicommand.Mail(viewer=DummyViewer([DummyTask()]))
         mailTask.doCommand(None, mail=mail, showerror=showerror)
@@ -399,7 +399,7 @@ class OpenAllAttachmentsTest(test.TestCase):
         class DummyAttachment(object):
             def __init__(self):
                 self.openCalled = False
-            def open(self, attachmentBase): # pylint: disable-msg=W0613
+            def open(self, attachmentBase): # pylint: disable=W0613
                 self.openCalled = True
             def isDeleted(self):
                 return False

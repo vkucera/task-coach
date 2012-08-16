@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 ''' Base classes for controls with items, such as ListCtrl, TreeCtrl, 
-    and TreeListCtrl. ''' # pylint: disable-msg=W0105
+    and TreeListCtrl. ''' # pylint: disable=W0105
 
 
 import wx, draganddrop, autowidth, tooltip
@@ -195,7 +195,7 @@ class Column(object):
     def __init__(self, name, columnHeader, *eventTypes, **kwargs):
         self.__name = name
         self.__columnHeader = columnHeader
-        self.width = kwargs.pop('width', hypertreelist._DEFAULT_COL_WIDTH) # pylint: disable-msg=W0212
+        self.width = kwargs.pop('width', hypertreelist._DEFAULT_COL_WIDTH) # pylint: disable=W0212
         # The event types to use for registering an observer that is
         # interested in changes that affect this column:
         self.__eventTypes = eventTypes
@@ -244,16 +244,16 @@ class Column(object):
     def renderDescription(self, *args, **kwargs):
         return self.__renderDescriptionCallback(*args, **kwargs)
 
-    def defaultRenderer(self, *args, **kwargs): # pylint: disable-msg=W0613
+    def defaultRenderer(self, *args, **kwargs): # pylint: disable=W0613
         return unicode(args[0])
 
-    def defaultDescriptionRenderer(self, *args, **kwargs): # pylint: disable-msg=W0613
+    def defaultDescriptionRenderer(self, *args, **kwargs): # pylint: disable=W0613
         return None
 
     def alignment(self):
         return self.__alignment
     
-    def defaultImageIndices(self, *args, **kwargs): # pylint: disable-msg=W0613
+    def defaultImageIndices(self, *args, **kwargs): # pylint: disable=W0613
         return {wx.TreeItemIcon_Normal: -1}
         
     def imageIndices(self, *args, **kwargs):
@@ -271,7 +271,7 @@ class Column(object):
     def editControl(self, parent, item, columnIndex, domainObject):
         value = self.value(domainObject)
         kwargs = dict(settings=self.__settings) if self.__settings else dict()
-        # pylint: disable-msg=W0142
+        # pylint: disable=W0142
         return self.__editControlClass(parent, wx.ID_ANY, item, columnIndex,
                                        parent, value, **kwargs)
     

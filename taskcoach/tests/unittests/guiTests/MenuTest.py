@@ -49,7 +49,7 @@ class MockViewerContainer(object):
     def isSortedBy(self, sortKey):
         return sortKey == self.__sortBy
 
-    def isSortOrderAscending(self, *args, **kwargs): # pylint: disable-msg=W0613
+    def isSortOrderAscending(self, *args, **kwargs): # pylint: disable=W0613
         return self.__ascending
     
     def setSortOrderAscending(self, ascending=True):
@@ -146,7 +146,7 @@ class MockIOController:
     def __init__(self):
         self.openCalled = False
         
-    def open(self, *args, **kwargs): # pylint: disable-msg=W0613
+    def open(self, *args, **kwargs): # pylint: disable=W0613
         self.openCalled = True
 
 
@@ -166,7 +166,7 @@ class RecentFilesMenuTest(test.wxTestCase):
         
     def setRecentFilesAndCreateMenu(self, *filenames):
         self.addRecentFiles(*filenames)
-        self.menu = self.createFileMenu() # pylint: disable-msg=W0201
+        self.menu = self.createFileMenu() # pylint: disable=W0201
     
     def addRecentFiles(self, *filenames):
         self.filenames.extend(filenames)

@@ -45,7 +45,7 @@ class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
             items = list(self.list)
         command.DeleteTaskCommand(self.list, items or [], shadow=shadow).do()
  
-    def paste(self, items=None):  # pylint: disable-msg=W0221
+    def paste(self, items=None):  # pylint: disable=W0221
         if items:
             command.PasteAsSubItemCommand(self.taskList, items).do()
         else:
@@ -561,7 +561,7 @@ class PriorityCommandTestCase(TaskCommandTestCase):
         super(PriorityCommandTestCase, self).setUp()
         self.taskList.append(self.task2)
 
-    def assertDoUndoRedo(self, priority1do, priority2do, priority1undo, priority2undo):  # pylint: disable-msg=W0221
+    def assertDoUndoRedo(self, priority1do, priority2do, priority1undo, priority2undo):  # pylint: disable=W0221
         super(PriorityCommandTestCase, self).assertDoUndoRedo(
             lambda: self.failUnless(priority1do == self.task1.priority() and
                     priority2do == self.task2.priority()),
@@ -672,7 +672,7 @@ class AddNoteCommandTest(TaskCommandTestCase):
     def addNote(self, tasks=None):
         command.AddNoteCommand(self.taskList, tasks or []).do()
     
-    # pylint: disable-msg=E1101
+    # pylint: disable=E1101
     
     def testEmptySelection(self):
         self.addNote()

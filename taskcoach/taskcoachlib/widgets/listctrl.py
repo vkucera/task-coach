@@ -55,7 +55,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
         self.bindEventHandlers(selectCommand, editCommand)
             
     def bindEventHandlers(self, selectCommand, editCommand):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         if selectCommand:
             self.selectCommand = selectCommand
             self.Bind(wx.EVT_LIST_ITEM_FOCUSED, self.onSelect)
@@ -66,7 +66,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
             self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.onItemActivated)
         self.Bind(wx.EVT_SET_FOCUS, self.onSetFocus)
         
-    def onSetFocus(self, event):  # pylint: disable-msg=W0613
+    def onSetFocus(self, event):  # pylint: disable=W0613
         # Send a child focus event to let the AuiManager know we received focus
         # so it will activate our pane
         wx.PostEvent(self, wx.ChildFocusEvent(self))
@@ -111,7 +111,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
             itemAttrArgs.append(font)
         # We need to keep a reference to the item attribute to prevent it
         # from being garbage collected too soon:
-        self.__itemAttribute = wx.ListItemAttr(*itemAttrArgs)  # pylint: disable-msg=W0142,W0201
+        self.__itemAttribute = wx.ListItemAttr(*itemAttrArgs)  # pylint: disable=W0142,W0201
         return self.__itemAttribute
         
     def onSelect(self, event):
@@ -128,7 +128,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
             # otherwise the item was activated from the menu or by double 
             # clicking on a portion of the tree view not containing an item.
             column = max(0, column)  # FIXME: Why can the column be -1?
-            event.columnName = self._getColumn(column).name()  # pylint: disable-msg=E1101
+            event.columnName = self._getColumn(column).name()  # pylint: disable=E1101
         self.editCommand(event)
 
     def RefreshAllItems(self, count):

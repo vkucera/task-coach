@@ -23,7 +23,7 @@ import test
 import wx
 
 
-class EffortViewerUnderTest(gui.viewer.EffortViewer):  # pylint: disable-msg=W0223
+class EffortViewerUnderTest(gui.viewer.EffortViewer):  # pylint: disable=W0223
     def createWidget(self):
         return dummy.DummyWidget(self)
     
@@ -59,7 +59,7 @@ class EffortViewerForSpecificTasksTest(test.wxTestCase):
         
     def testEffortEditorDoesUseAllTasks(self):
         dialog = self.viewer.newItemDialog()
-        self.assertEqual(2, len(dialog._taskFile.tasks()))  # pylint: disable-msg=W0212
+        self.assertEqual(2, len(dialog._taskFile.tasks()))  # pylint: disable=W0212
         
     def testViewerKeepsShowingOnlyEffortForSpecifiedTasksWhenSwitchingAggregation(self):
         self.viewer.showEffortAggregation('week')
@@ -224,7 +224,7 @@ class EffortViewerAggregationTestCase(test.wxTestCase):
             date.DateTime(2008, 7, 17, 2, 0, 0)))
         mostRecentPeriod = (date.DateTime(2008, 7, 23, 1, 0, 0), 
                             date.DateTime(2008, 7, 23, 2, 0, 0))
-        # pylint: disable-msg=W0142
+        # pylint: disable=W0142
         self.task.addEffort(effort.Effort(self.task, *mostRecentPeriod))
         self.task2.addEffort(effort.Effort(self.task2, *mostRecentPeriod))
         
@@ -297,7 +297,7 @@ class CommonTestsMixin(object):
         self.viewer.updateSelection()
         dialog = self.viewer.newItemDialog(selectedTasks=[self.task2], 
                                            bitmap='new')
-        for newEffort in dialog._items:  # pylint: disable-msg=W0212
+        for newEffort in dialog._items:  # pylint: disable=W0212
             self.assertEqual(self.task2, newEffort.task())
         
     def testColumnUICommands(self):

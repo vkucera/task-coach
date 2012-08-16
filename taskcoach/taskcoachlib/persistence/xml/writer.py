@@ -47,7 +47,7 @@ class PIElementTree(ET.ElementTree):
             if encoding in ['us-ascii', 'utf-8']:
                 file.write('<?xml version="1.0" encoding="%s"?>\n' % encoding)
             file.write(self.__pi.encode(encoding) + '\n')
-        ET.ElementTree._write(self, file, node, encoding, namespaces) # pylint: disable-msg=E1101
+        ET.ElementTree._write(self, file, node, encoding, namespaces) # pylint: disable=E1101
 
     def write(self, file, encoding, *args, **kwargs):
         if encoding is None:
@@ -103,7 +103,7 @@ class XMLWriter(object):
                 notes.extend(noteOwner.notes(recursive=True))
         return notes
     
-    def taskNode(self, parentNode, task): # pylint: disable-msg=W0621
+    def taskNode(self, parentNode, task): # pylint: disable=W0621
         maxDateTime = self.maxDateTime
         node = self.baseCompositeNode(parentNode, task, 'task', self.taskNode)
         node.attrib['status'] = str(task.getStatus())
@@ -177,7 +177,7 @@ class XMLWriter(object):
             ET.SubElement(node, 'description').text = effort.description()
         return node
     
-    def categoryNode(self, parentNode, category, *categorizableContainers): # pylint: disable-msg=W0621
+    def categoryNode(self, parentNode, category, *categorizableContainers): # pylint: disable=W0621
         def inCategorizableContainer(categorizable):
             for container in categorizableContainers:
                 if categorizable in container:
@@ -201,7 +201,7 @@ class XMLWriter(object):
             node.attrib['categorizables'] = categorizableIds
         return node
     
-    def noteNode(self, parentNode, note): # pylint: disable-msg=W0621
+    def noteNode(self, parentNode, note): # pylint: disable=W0621
         node = self.baseCompositeNode(parentNode, note, 'note', self.noteNode)
         for attachment in sortedById(note.attachments()):
             self.attachmentNode(node, attachment)
@@ -250,7 +250,7 @@ class XMLWriter(object):
             node.attrib['expandedContexts'] = \
                      str(tuple(sorted(item.expandedContexts())))
         for child in sortedById(item.children()):
-            childNodeFactory(node, child, *childNodeFactoryArgs) # pylint: disable-msg=W0142
+            childNodeFactory(node, child, *childNodeFactoryArgs) # pylint: disable=W0142
         return node
 
     def attachmentNode(self, parentNode, attachment):
@@ -307,13 +307,13 @@ class ChangesXMLWriter(object):
 
 
 class TemplateXMLWriter(XMLWriter):
-    def write(self, tsk): # pylint: disable-msg=W0221
+    def write(self, tsk): # pylint: disable=W0221
         super(TemplateXMLWriter, self).write(task.TaskList([tsk]),
                    category.CategoryList(),
                    note.NoteContainer(),
                    None, None)
 
-    def taskNode(self, parentNode, task): # pylint: disable-msg=W0621
+    def taskNode(self, parentNode, task): # pylint: disable=W0621
         node = super(TemplateXMLWriter, self).taskNode(parentNode, task)
 
         for name, getter in [('plannedstartdate', 'plannedStartDateTime'),

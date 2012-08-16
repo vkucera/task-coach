@@ -25,7 +25,7 @@ class ViewFilterTestCase(test.TestCase):
     def setUp(self):
         task.Task.settings = config.Settings(load=False)
         self.list = task.TaskList()
-        self.filter = task.filter.ViewFilter(self.list, treeMode=self.treeMode) # pylint: disable-msg=E1101
+        self.filter = task.filter.ViewFilter(self.list, treeMode=self.treeMode) # pylint: disable=E1101
         self.task = task.Task(subject='task')
         self.dueToday = task.Task(subject='due today', dueDateTime=date.Now().endOfDay())
         self.dueTomorrow = task.Task(subject='due tomorrow', 
@@ -186,14 +186,14 @@ class HideCompositeTasksTestCase(ViewFilterTestCase):
     def setUp(self):
         task.Task.settings = config.Settings(load=False)
         self.list = task.TaskList()
-        self.filter = task.filter.ViewFilter(self.list, treeMode=self.treeMode) # pylint: disable-msg=E1101
+        self.filter = task.filter.ViewFilter(self.list, treeMode=self.treeMode) # pylint: disable=E1101
         self.task = task.Task(subject='task')
         self.child = task.Task(subject='child')
         self.task.addChild(self.child)
         self.filter.append(self.task)
 
     def _addTwoGrandChildren(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.grandChild1 = task.Task(subject='grandchild 1')
         self.grandChild2 = task.Task(subject='grandchild 2')
         self.child.addChild(self.grandChild1)
@@ -205,7 +205,7 @@ class HideCompositeTasksTestsMixin(object):
     def testTurnOn(self):
         self.filter.hideCompositeTasks()
         expectedTasks = (self.task, self.child) if self.filter.treeMode() else (self.child,)
-        self.assertFilterShows(*expectedTasks) # pylint: disable-msg=W0142
+        self.assertFilterShows(*expectedTasks) # pylint: disable=W0142
 
     def testTurnOff(self):
         self.filter.hideCompositeTasks()
@@ -218,7 +218,7 @@ class HideCompositeTasksTestsMixin(object):
         self.list.append(grandChild)
         self.child.addChild(grandChild)
         expectedTasks = (self.task, self.child, grandChild) if self.filter.treeMode() else (grandChild,)
-        self.assertFilterShows(*expectedTasks) # pylint: disable-msg=W0142
+        self.assertFilterShows(*expectedTasks) # pylint: disable=W0142
 
     def testRemoveChild(self):
         self.filter.hideCompositeTasks()
@@ -231,14 +231,14 @@ class HideCompositeTasksTestsMixin(object):
         expectedTasks = (self.task, self.child, self.grandChild1, 
                          self.grandChild2) if self.filter.treeMode() else \
                         (self.grandChild1, self.grandChild2)
-        self.assertFilterShows(*expectedTasks) # pylint: disable-msg=W0142
+        self.assertFilterShows(*expectedTasks) # pylint: disable=W0142
 
     def testRemoveTwoChildren(self):
         self._addTwoGrandChildren()
         self.filter.hideCompositeTasks()
         self.list.removeItems([self.grandChild1, self.grandChild2])
         expectedTasks = (self.task, self.child) if self.filter.treeMode() else (self.child,)
-        self.assertFilterShows(*expectedTasks) # pylint: disable-msg=W0142
+        self.assertFilterShows(*expectedTasks) # pylint: disable=W0142
 
 
 class HideCompositeTasksInListModeTest(HideCompositeTasksTestsMixin, 

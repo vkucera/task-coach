@@ -58,11 +58,11 @@ class EffortAggregator(patterns.SetDecorator,
         pub.subscribe(self.onRevenueChanged,
                       task.Task.hourlyFeeChangedEventType())
     
-    def extend(self, efforts):  # pylint: disable-msg=W0221
+    def extend(self, efforts):  # pylint: disable=W0221
         for effort in efforts:
             effort.task().addEffort(effort)
 
-    def removeItems(self, efforts):  # pylint: disable-msg=W0221
+    def removeItems(self, efforts):  # pylint: disable=W0221
         for effort in efforts:
             effort.task().removeEffort(effort)
             
@@ -74,7 +74,7 @@ class EffortAggregator(patterns.SetDecorator,
             the default behavior to first get the efforts from the task
             and then group the efforts by time period. '''
         newComposites = []
-        for task in tasks:  # pylint: disable-msg=W0621
+        for task in tasks:  # pylint: disable=W0621
             newComposites.extend(self.createComposites(task, task.efforts()))
         self.__extendSelfWithComposites(newComposites, event=event)
         
@@ -96,7 +96,7 @@ class EffortAggregator(patterns.SetDecorator,
             unchanged. We override the default behavior to remove the 
             tasks' efforts from the CompositeEfforts they are part of. '''
         compositesToRemove = []
-        for task in tasks:  # pylint: disable-msg=W0621
+        for task in tasks:  # pylint: disable=W0621
             compositesToRemove.extend(self.compositesToRemove(task))
         self.__removeCompositesFromSelf(compositesToRemove, event=event)
          
@@ -128,7 +128,7 @@ class EffortAggregator(patterns.SetDecorator,
         
     def onChildAddedToTask(self, event):
         newComposites = []
-        for task in event.sources():  # pylint: disable-msg=W0621
+        for task in event.sources():  # pylint: disable=W0621
             if task in self.observable():
                 child = event.value(task)
                 newComposites.extend(self.createComposites(task,
@@ -136,7 +136,7 @@ class EffortAggregator(patterns.SetDecorator,
         self.__extendSelfWithComposites(newComposites)
 
     def onCompositeEmpty(self, sender):
-        # pylint: disable-msg=W0621
+        # pylint: disable=W0621
         if sender not in self:
             return
         key = self.keyForComposite(sender)
@@ -146,10 +146,10 @@ class EffortAggregator(patterns.SetDecorator,
             del self.__composites[key]
         self.__removeCompositesFromSelf([sender])
         
-    def onEffortStartChanged(self, newValue, sender):  # pylint: disable-msg=W0613
+    def onEffortStartChanged(self, newValue, sender):  # pylint: disable=W0613
         newComposites = []
         key = self.keyForEffort(sender)
-        task = sender.task()  # pylint: disable-msg=W0621
+        task = sender.task()  # pylint: disable=W0621
         if (task in self.observable()) and (key not in self.__composites):
             newComposites.extend(self.createComposites(task, [sender]))
         self.__extendSelfWithComposites(newComposites)
@@ -178,21 +178,21 @@ class EffortAggregator(patterns.SetDecorator,
                 (eachComposite.task().__class__.__name__ == 'Total' and \
                  theTask in eachComposite.tasks())]
         
-    def createComposites(self, task, efforts):  # pylint: disable-msg=W0621
+    def createComposites(self, task, efforts):  # pylint: disable=W0621
         newComposites = []
         for effort in efforts:
             newComposites.extend(self.createCompositesForTask(effort, task))
             newComposites.extend(self.createCompositeForPeriod(effort))
         return newComposites
 
-    def createCompositesForTask(self, anEffort, task):  # pylint: disable-msg=W0621
+    def createCompositesForTask(self, anEffort, task):  # pylint: disable=W0621
         newComposites = []
         for eachTask in [task] + task.ancestors():
             key = self.keyForEffort(anEffort, eachTask)
             if key in self.__composites:
                 self.__composites[key].addEffort(anEffort)
                 continue
-            newComposite = composite.CompositeEffort(*key)  # pylint: disable-msg=W0142
+            newComposite = composite.CompositeEffort(*key)  # pylint: disable=W0142
             newComposite.addEffort(anEffort)
             self.__composites[key] = newComposite
             newComposites.append(newComposite)
@@ -207,7 +207,7 @@ class EffortAggregator(patterns.SetDecorator,
         self.__composites[key] = newCompositePerPeriod
         return [newCompositePerPeriod]
 
-    def compositesToRemove(self, task):  # pylint: disable-msg=W0621
+    def compositesToRemove(self, task):  # pylint: disable=W0621
         efforts = task.efforts()
         taskAndAncestors = [task] + task.ancestors()
         compositesToRemove = []
@@ -216,7 +216,7 @@ class EffortAggregator(patterns.SetDecorator,
                 compositesToRemove.extend(self.compositeToRemove(effort, task))
         return compositesToRemove
         
-    def compositeToRemove(self, anEffort, task):  # pylint: disable-msg=W0613,W0621
+    def compositeToRemove(self, anEffort, task):  # pylint: disable=W0613,W0621
         key = self.keyForEffort(anEffort, task)
         # A composite may already have been removed, e.g. when a
         # parent and child task have effort in the same period
@@ -235,7 +235,7 @@ class EffortAggregator(patterns.SetDecorator,
             return (compositeEffort.task(), compositeEffort.getStart(), 
                     compositeEffort.getStop())
     
-    def keyForEffort(self, effort, task=None):  # pylint: disable-msg=W0621
+    def keyForEffort(self, effort, task=None):  # pylint: disable=W0621
         task = task or effort.task()
         effortStart = effort.getStart()
         return (task, self.startOfPeriod(effortStart), 
