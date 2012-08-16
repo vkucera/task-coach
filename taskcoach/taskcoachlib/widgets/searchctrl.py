@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, re, sre_constants
 from taskcoachlib.widgets import tooltip
-from taskcoachlib.i18n import _
+from taskcoachlib.i18n import _, operating_system
 
 
 class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
@@ -147,17 +147,18 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
     def onMatchCaseMenuItem(self, event):
         self.__matchCase = self._isMenuItemChecked(event)
         self.onFind(event)
-        event.Skip()
-        
+        # XXXFIXME: when skipping on OS X, we receive several events with different
+        # IsChecked(), the last one being False. I can't reproduce this in a unit
+        # test. Not skipping the event doesn't harm on other platforms (tested by
+        # hand)
+
     def onIncludeSubItemsMenuItem(self, event):
         self.__includeSubItems = self._isMenuItemChecked(event)
         self.onFind(event)
-        event.Skip()
         
     def onSearchDescriptionMenuItem(self, event):
         self.__searchDescription = self._isMenuItemChecked(event)
         self.onFind(event)
-        event.Skip()
         
     def onRecentSearchMenuItem(self, event):
         self.SetValue(self.__recentSearches[event.GetId()-self.__recentSearchMenuItemIds[0]])
