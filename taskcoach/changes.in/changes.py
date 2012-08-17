@@ -56,6 +56,11 @@ used sparingly, of course.'''),
         Feature('''Added almost complete Belarusian translation thanks to 
 Korney San.'''),
         ],
+    featuresChanged=[
+        Feature('''When a task has no due date, instead of displaying 
+"Infinite" for the time left in the task viewer, Task Coach now displays blank 
+space.'''),
+        ],
     ),
 
 Release('1.3.17', 'July 2, 2012',

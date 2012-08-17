@@ -39,12 +39,10 @@ def priority(priority):
  
 def timeLeft(time_left, completed_task):
     ''' Render time left as a text string. Returns an empty string for 
-        completed tasks and "Infinite" for tasks without planned due date. 
-        Otherwise it returns the number of days, hours, and minutes left. '''
-    if completed_task:
+        completed tasks and for tasks without planned due date. Otherwise it 
+        returns the number of days, hours, and minutes left. '''
+    if completed_task or time_left == datemodule.TimeDelta.max:
         return ''
-    if time_left == datemodule.TimeDelta.max:
-        return _('Infinite')
     sign = '-' if time_left.days < 0 else ''
     time_left = abs(time_left)
     if time_left.days > 0:
@@ -101,7 +99,7 @@ try:
 except UnicodeDecodeError:
     dateFormat = '%Y-%m-%d'
 
-dateFunc = lambda dt=None: datetime.datetime.strftime(dt, dateFormat) # datemodule.Date is not a class
+dateFunc = lambda dt=None: datetime.datetime.strftime(dt, dateFormat)  # datemodule.Date is not a class
 
 if operating_system.isWindows():
     import pywintypes, win32api
