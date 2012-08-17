@@ -23,28 +23,28 @@ from taskcoachlib.domain import date
 
 class CommonTestsMixin(object):
     def testGetValue(self):
-        oneHour = date.DateTime(2000,1,1,hour=1)
+        oneHour = date.DateTime(2000, 1, 1, hour=1)
         self.dateTimeCtrl.SetValue(oneHour)
         self.assertEqual(oneHour, self.dateTimeCtrl.GetValue())
 
     def testChoicesStartTime(self):
-        self.assertEqual('08:00:00' if self.showSeconds else '08:00', 
+        self.assertEqual('08:00:00 AM' if self.showSeconds else '08:00 AM', 
                          self.dateTimeCtrl._timeChoices()[0])
         
     def testChoicesEndTime(self):
-        self.assertEqual('18:00:00' if self.showSeconds else '18:00', 
+        self.assertEqual('06:00:00 PM' if self.showSeconds else '06:00 PM', 
                          self.dateTimeCtrl._timeChoices()[-1])
         
     def testChoicesEndTime24(self):
         dateTimeCtrl = widgets.datectrl.DateTimeCtrl(self.frame, endhour=24, 
                                                      showSeconds=self.showSeconds)
-        self.assertEqual('23:45:00' if self.showSeconds else '23:45', 
+        self.assertEqual('11:45:00 PM' if self.showSeconds else '11:45 PM', 
                          dateTimeCtrl._timeChoices()[-1])
 
     def testChoicesStartTime0(self):
         dateTimeCtrl = widgets.datectrl.DateTimeCtrl(self.frame, starthour=0, 
                                                      showSeconds=self.showSeconds)
-        self.assertEqual('00:00:00' if self.showSeconds else '00:00', 
+        self.assertEqual('12:00:00 AM' if self.showSeconds else '12:00 AM', 
                          dateTimeCtrl._timeChoices()[0])
 
         

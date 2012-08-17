@@ -955,7 +955,8 @@ class EffortEditBook(Page):
     def addStartAndStopEntries(self):
         # pylint: disable=W0201,W0142
         dateTimeEntryKwArgs = dict(showSeconds=True)
-        flags = [None, wx.ALIGN_RIGHT | wx.ALL, wx.ALIGN_LEFT | wx.ALL | wx.ALIGN_CENTER_VERTICAL, None]
+        flags = [None, wx.ALIGN_RIGHT | wx.ALL, wx.ALIGN_LEFT | wx.ALL | 
+                 wx.ALIGN_CENTER_VERTICAL, None]
         
         currentStartDateTime = self.items[0].getStart()
         self._startDateTimeEntry = entry.DateTimeEntry(self, self._settings,
@@ -964,7 +965,8 @@ class EffortEditBook(Page):
             self._startDateTimeEntry, currentStartDateTime, self.items,
             command.EditEffortStartDateTimeCommand, entry.EVT_DATETIMEENTRY,
             self.items[0].startChangedEventType())
-        self._startDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onDateTimeChanged)        
+        self._startDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, 
+                                      self.onDateTimeChanged)        
         startFromLastEffortButton = self._createStartFromLastEffortButton()
         self.addEntry(_('Start'), self._startDateTimeEntry,
             startFromLastEffortButton, flags=flags)
@@ -976,7 +978,8 @@ class EffortEditBook(Page):
             self._stopDateTimeEntry, currentStopDateTime, self.items,
             command.EditEffortStopDateTimeCommand, entry.EVT_DATETIMEENTRY,
             self.items[0].stopChangedEventType())
-        self._stopDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onStopDateTimeChanged)
+        self._stopDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, 
+                                     self.onStopDateTimeChanged)
         stopNowButton = self._createStopNowButton()
         self._invalidPeriodMessage = self._createInvalidPeriodMessage()
         self.addEntry(_('Stop'), self._stopDateTimeEntry, 

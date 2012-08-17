@@ -40,6 +40,8 @@ it makes Task Coach crash.''', '3554534'),
 ask the user to allow Task coach use a port (firewall) or the keychain
 on every launch.''', '3556753'),
         Bug('''The search options menu wouldn't work on OSX.''', '3558511'),
+        Bug('''When the language is set to English/US, use 12 hour clock in 
+task and effort dialogs instead of 24 hour clock.'''),
 #        Bug('''Fix slowness when viewing aggregated efforts.''',
 #            '3538310', '3537702'),
         ],
