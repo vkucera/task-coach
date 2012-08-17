@@ -207,7 +207,7 @@ class DateTimeCtrl(wx.Panel):
         if operating_system.isWindows():
             return (self.__adjustForDPI(100 if self.__showSeconds else 80), -1)
         elif operating_system.isGTK():
-            return (135 if self.__showSeconds else 110, -1)
+            return (125 if self.__showSeconds else 105, -1)
         else:
             return (125 if self.__showSeconds else 100, 
                     self._dateCtrl.GetSize()[1])
