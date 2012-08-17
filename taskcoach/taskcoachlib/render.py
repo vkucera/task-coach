@@ -104,7 +104,7 @@ dateFunc = lambda dt=None: datetime.datetime.strftime(dt, dateFormat)  # datemod
 if operating_system.isWindows():
     import pywintypes, win32api
     timeFunc = lambda dt=None: win32api.GetTimeFormat(0x400, 0x02, None if dt is None else pywintypes.Time(dt), None)
-    timeWithSecondsFunc = lambda dt=None: win32api.GetTimeFormat(0x400, None, None if dt is None else pywintypes.Time(dt), None)
+    timeWithSecondsFunc = lambda dt=None: win32api.GetTimeFormat(0x400, 0x0, None if dt is None else pywintypes.Time(dt), None)
 else:
     language_and_country = locale.getlocale()[0]
     if language_and_country and ('_US' in language_and_country or 

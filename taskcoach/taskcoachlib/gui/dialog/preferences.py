@@ -385,7 +385,7 @@ class LanguagePage(SettingsPage):
             [('', _('Let the system determine the language')),
              ('ar', u'الْعَرَبيّة (Arabic)'),
              ('eu_ES', 'Euskal Herria (Basque)'),
-             ('be_BY', 'беларуская мова (Belarusian)'),
+             ('be_BY', u'беларуская мова (Belarusian)'),
              ('bs_BA', u'босански (Bosnian)'),
              ('pt_BR', u'Português brasileiro (Brazilian Portuguese)'),
              ('br_FR', 'Brezhoneg (Breton)'),
