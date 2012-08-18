@@ -16,35 +16,55 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
-from taskcoachlib import widgets
+import test, locale
+from taskcoachlib import widgets, render
 from taskcoachlib.domain import date
 
 
 class CommonTestsMixin(object):
+    def setUp(self):
+        super(CommonTestsMixin, self).setUp()
+        locale.setlocale(locale.LC_ALL, 'en_US.utf8' if self.ampm else 'fr_FR.utf8')
+        reload(render) # To execute module-level code every time
+
+    def _format(self, hour, minute, second):
+        if self.ampm:
+            dpyHour = hour % 12
+            if dpyHour == 0:
+                dpyHour = 12
+            r = '%02d:%02d' % (dpyHour, minute)
+            if self.showSeconds:
+                r += ':%02d' % second
+            r += ' AM' if hour <= 12 else ' PM'
+        else:
+            r = '%02d:%02d' % (hour, minute)
+            if self.showSeconds:
+                r += ':%02d' % second
+        return r
+
     def testGetValue(self):
         oneHour = date.DateTime(2000, 1, 1, hour=1)
         self.dateTimeCtrl.SetValue(oneHour)
         self.assertEqual(oneHour, self.dateTimeCtrl.GetValue())
 
     def testChoicesStartTime(self):
-        self.assertEqual('08:00:00 AM' if self.showSeconds else '08:00 AM', 
+        self.assertEqual(self._format(8, 0, 0), 
                          self.dateTimeCtrl._timeChoices()[0])
         
     def testChoicesEndTime(self):
-        self.assertEqual('06:00:00 PM' if self.showSeconds else '06:00 PM', 
+        self.assertEqual(self._format(18, 0, 0), 
                          self.dateTimeCtrl._timeChoices()[-1])
         
     def testChoicesEndTime24(self):
         dateTimeCtrl = widgets.datectrl.DateTimeCtrl(self.frame, endhour=24, 
                                                      showSeconds=self.showSeconds)
-        self.assertEqual('11:45:00 PM' if self.showSeconds else '11:45 PM', 
+        self.assertEqual(self._format(23, 45, 0), 
                          dateTimeCtrl._timeChoices()[-1])
 
     def testChoicesStartTime0(self):
         dateTimeCtrl = widgets.datectrl.DateTimeCtrl(self.frame, starthour=0, 
                                                      showSeconds=self.showSeconds)
-        self.assertEqual('12:00:00 AM' if self.showSeconds else '12:00 AM', 
+        self.assertEqual(self._format(0, 0, 0), 
                          dateTimeCtrl._timeChoices()[0])
 
         
@@ -53,18 +73,26 @@ class DateTimeCtrlTestCase(test.wxTestCase):
         super(DateTimeCtrlTestCase, self).setUp()
         self.dateTimeCtrl = widgets.datectrl.DateTimeCtrl(self.frame, 
                                                           showSeconds=self.showSeconds)
-        
 
-class DateTimeCtrlTest_Seconds(CommonTestsMixin, DateTimeCtrlTestCase):
+
+class DateTimeCtrlTest_Seconds_Base(CommonTestsMixin):
     showSeconds = True
-        
+
     def testGetValue_SecondPrecision(self):
         oneHourAndTenSeconds = date.DateTime(2000, 1, 1, hour=1, second=10)
         self.dateTimeCtrl.SetValue(oneHourAndTenSeconds)
         self.assertEqual(oneHourAndTenSeconds, self.dateTimeCtrl.GetValue())
 
 
-class DateTimeCtrlTest_NoSeconds(CommonTestsMixin, DateTimeCtrlTestCase):
+class DateTimeCtrlTest_Seconds(DateTimeCtrlTest_Seconds_Base, DateTimeCtrlTestCase):
+    ampm = False
+
+
+class DateTimeCtrlTest_Seconds_AMPM(DateTimeCtrlTest_Seconds_Base, DateTimeCtrlTestCase):
+    ampm = True
+
+
+class DateTimeCtrlTest_NoSeconds_Base(CommonTestsMixin):
     showSeconds = False
 
     def testGetValue_SecondPrecision(self):
@@ -72,3 +100,11 @@ class DateTimeCtrlTest_NoSeconds(CommonTestsMixin, DateTimeCtrlTestCase):
         oneHourAndTenSeconds = date.DateTime(2000, 1, 1, hour=1, second=10)
         self.dateTimeCtrl.SetValue(oneHourAndTenSeconds)
         self.assertEqual(oneHour, self.dateTimeCtrl.GetValue())
+
+
+class DateTimeCtrlTest_NoSeconds(DateTimeCtrlTest_NoSeconds_Base, DateTimeCtrlTestCase):
+    ampm = False
+
+
+class DateTimeCtrlTest_NoSeconds_AMPM(DateTimeCtrlTest_NoSeconds_Base, DateTimeCtrlTestCase):
+    ampm = True
