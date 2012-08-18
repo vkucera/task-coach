@@ -24,8 +24,14 @@ from taskcoachlib.domain import date
 class CommonTestsMixin(object):
     def setUp(self):
         super(CommonTestsMixin, self).setUp()
+        self.__oldLocale = locale.getlocale(locale.LC_ALL)
         locale.setlocale(locale.LC_ALL, 'en_US.utf8' if self.ampm else 'fr_FR.utf8')
         reload(render) # To execute module-level code every time
+
+    def tearDown(self):
+        locale.setlocale(locale.LC_ALL, self.__oldLocale)
+        reload(render)
+        super(CommonTestsMixin, self).tearDown()
 
     def _format(self, hour, minute, second):
         if self.ampm:
