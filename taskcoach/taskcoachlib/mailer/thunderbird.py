@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import persistence, operating_system
-from taskcoachlib.thirdparty import ntlm
+from taskcoachlib.thirdparty.ntlm import IMAPNtlmAuthHandler
 from taskcoachlib.i18n import _
 import os
 import stat
@@ -334,7 +334,7 @@ class ThunderbirdImapReader(object):
                     domain_username = '\\'.join([domain.upper(), 
                                                  str(self.user)])
                     response, dummy_parameters = imap.authenticate('NTLM', 
-                        ntlm.IMAPNtlmAuthHandler.IMAPNtlmAuthHandler( \
+                        IMAPNtlmAuthHandler.IMAPNtlmAuthHandler( \
                             domain_username, str(pwd)))
                 else:
                     response, dummy_parameters = imap.login(self.user, pwd)
