@@ -42,6 +42,8 @@ on every launch.''', '3556753'),
         Bug('''The search options menu wouldn't work on OSX.''', '3558511'),
         Bug('''When the language is set to English/US, use 12 hour clock in 
 task and effort dialogs instead of 24 hour clock.'''),
+        Bug('''Don't reset the edit dialog layout for editing single items
+after editing multiple items at the same time.''', '3559292'),
 #        Bug('''Fix slowness when viewing aggregated efforts.''',
 #            '3538310', '3537702'),
         ],

@@ -745,7 +745,7 @@ class EditBook(widgets.Notebook):
         super(EditBook, self).__init__(parent)
         self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
         pageNames = self.addPages(taskFile, itemsAreNew)
-        self.loadPerspective(pageNames)
+        self.__load_perspective(pageNames)
         
     def addPages(self, taskFile, itemsAreNew):
         pageNames = []
@@ -847,32 +847,51 @@ class EditBook(widgets.Notebook):
             ancestors.extend(item.ancestors())
         return targetItem in self.items + ancestors
     
-    def loadPerspective(self, pageNames):
-        perspectiveKey = self.perspectiveKey(pageNames) 
-        perspective = self.settings.getdict('%sdialog' % self.domainObject, 'perspectives').get(perspectiveKey, '')
+    def __load_perspective(self, pageNames):
+        ''' load the perspective (layout) for the current combination of visible
+            pages from the settings. '''
+        perspectives = self.__get_perspectives()
+        perspective_key = self.__perspective_key(pageNames) 
+        perspective = perspectives.get(perspective_key, '')
         if perspective:
             try:
                 self.LoadPerspective(perspective)
-            except:
-                pass  # pylint: disable=W0702
+            except:  # pylint: disable=W0702
+                pass  
 
-    def savePerspective(self, pageNames):
-        perspectives = self.settings.getdict('%sdialog' % self.domainObject, 'perspectives')
-        perspectiveKey = self.perspectiveKey(pageNames)
-        perspectives[perspectiveKey] = self.SavePerspective() 
-        self.settings.setdict('%sdialog' % self.domainObject, 'perspectives', perspectives)
+    def __save_perspective(self, pageNames):
+        ''' Save the current perspective of the editor in the settings. 
+            Multiple perspectives are supported, for each set of visible pages.
+            This allows different perspectives for e.g. single item editors and
+            multi item editors. '''
+        perspectives = self.__get_perspectives()
+        perspective_key = self.__perspective_key(pageNames)
+        perspectives[perspective_key] = self.SavePerspective() 
+        self.settings.setdict('%sdialog' % self.domainObject, 'perspectives', 
+                              perspectives)
+        
+    def __get_perspectives(self):
+        ''' Return the current set (dict actually) of perspectives for this 
+            edit dialog. '''
+        return self.settings.getdict('%sdialog' % self.domainObject, 
+                                     'perspectives')
         
     @staticmethod
-    def perspectiveKey(pageNames):
-        return '_'.join(pageNames + ['perspective'])
+    def __perspective_key(page_names):
+        ''' Generate a stable key that only depends on the visible tabs for 
+            storing perspectives in the settings file. '''
+        # Sort the page names so that the key doesn't depend on the order of
+        # the page names
+        return '_'.join(sorted(page_names) + ['perspective'])
     
     def onClose(self, event):
         event.Skip()
         for page in self:
             page.close()
         pageNames = [self[index].pageName for index in range(self.GetPageCount())]
-        self.settings.setlist('editor', '%spages' % self.domainObject, pageNames)
-        self.savePerspective(pageNames)
+        self.settings.setlist('editor', '%spages' % self.domainObject, 
+                              pageNames)
+        self.__save_perspective(pageNames)
 
 
 class TaskEditBook(EditBook):
