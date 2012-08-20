@@ -75,6 +75,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         pub.subscribe(self.__computeRecursiveIcon, 'settings.icon')
         pub.subscribe(self.__computeRecursiveSelectedIcon, 'settings.icon')
         pub.subscribe(self.onDueSoonHoursChanged, 'settings.behavior.duesoonhours')
+        pub.subscribe(self.onMarkParentCompletedWhenAllChildrenCompletedChanged,
+                      'settings.behavior.markparentcompletedwhenallchildrencompleted')
 
         now = date.Now()
         if now < self.__dueDateTime < maxDateTime:
@@ -460,6 +462,14 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def completionDateTimeSortEventTypes(class_):
         ''' The event types that influence the completion date time sort order. '''
         return (class_.completionDateTimeChangedEventType(),)
+    
+    def onMarkParentCompletedWhenAllChildrenCompletedChanged(self, value):
+        ''' When the global setting changes, send a percentage completed 
+            changed if necessary. '''
+        if self.shouldMarkCompletedWhenAllChildrenCompleted() is None and \
+            any([child.percentageComplete(True) for child in self.children()]):
+            pub.sendMessage(self.percentageCompleteChangedEventType(),
+                            newValue=self.percentageComplete(), sender=self)
 
     # Task state
     
@@ -882,10 +892,14 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     
     def percentageComplete(self, recursive=False):
         if recursive:
-            # We ignore our own percentageComplete when we are marked complete
-            # when all children are completed *and* our percentageComplete is 0
+            if self.shouldMarkCompletedWhenAllChildrenCompleted() is None:
+                # pylint: disable=E1101    
+                ignore_me = self.settings.getboolean('behavior', 
+                                'markparentcompletedwhenallchildrencompleted')
+            else:
+                ignore_me = self.shouldMarkCompletedWhenAllChildrenCompleted()
             percentages = []
-            if self.__percentageComplete > 0 or not self.shouldMarkCompletedWhenAllChildrenCompleted():
+            if self.__percentageComplete > 0 or not ignore_me:
                 percentages.append(self.__percentageComplete)
             percentages.extend([child.percentageComplete(recursive) for child in self.children()])
             return sum(percentages) / len(percentages) if percentages else 0
