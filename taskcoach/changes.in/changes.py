@@ -44,6 +44,11 @@ on every launch.''', '3556753'),
 task and effort dialogs instead of 24 hour clock.'''),
         Bug('''Don't reset the edit dialog layout for editing single items
 after editing multiple items at the same time.''', '3559292'),
+        Bug('''When changing the "Mark task completed when all children are 
+completed?"-setting in the "Progress" tab of the task edit dialog, Task Coach
+would set the percentage complete slider in the "Progress" tab to the 
+recursive percentage complete while the slider is meant to only display and
+change the percentage complete of the task itself.''', '3559740'),
 #        Bug('''Fix slowness when viewing aggregated efforts.''',
 #            '3538310', '3537702'),
         ],

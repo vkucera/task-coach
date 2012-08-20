@@ -1337,8 +1337,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         pub.sendMessage(self.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType(),
                         newValue=newValue, sender=self)
         pub.sendMessage(self.percentageCompleteChangedEventType(), 
-                        newValue=self.percentageComplete(recursive=True), 
-                        sender=self)
+                        newValue=self.percentageComplete(), sender=self)
     
     @classmethod
     def shouldMarkCompletedWhenAllChildrenCompletedChangedEventType(class_):

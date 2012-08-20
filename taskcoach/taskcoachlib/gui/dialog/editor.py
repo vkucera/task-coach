@@ -362,10 +362,10 @@ class ProgressPage(Page):
         currentPercentageComplete = self.items[0].percentageComplete() if len(self.items) == 1 else self.averagePercentageComplete(self.items)
         self._percentageCompleteEntry = entry.PercentageEntry(self, 
             currentPercentageComplete)
-        self._percentageCompleteSync = attributesync.AttributeSync('percentageComplete', 
-            self._percentageCompleteEntry, currentPercentageComplete, 
-            self.items, command.EditPercentageCompleteCommand, 
-            entry.EVT_PERCENTAGEENTRY, 
+        self._percentageCompleteSync = attributesync.AttributeSync( \
+            'percentageComplete', self._percentageCompleteEntry, 
+            currentPercentageComplete, self.items, 
+            command.EditPercentageCompleteCommand, entry.EVT_PERCENTAGEENTRY, 
             self.items[0].percentageCompleteChangedEventType())
         self.addEntry(_('Percentage complete'), self._percentageCompleteEntry)
 
@@ -383,11 +383,11 @@ class ProgressPage(Page):
         self._shouldMarkCompletedEntry = entry.ChoiceEntry(self, choices,
                                                            currentChoice)
         self._shouldMarkCompletedSync = attributesync.AttributeSync( \
-            'shouldMarkCompletedWhenAllChildrenCompleted', self._shouldMarkCompletedEntry, 
-            currentChoice, self.items, command.EditShouldMarkCompletedCommand, 
-            entry.EVT_CHOICEENTRY,
+            'shouldMarkCompletedWhenAllChildrenCompleted', 
+            self._shouldMarkCompletedEntry, currentChoice, self.items, 
+            command.EditShouldMarkCompletedCommand, entry.EVT_CHOICEENTRY,
             task.Task.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType())                                                       
-        self.addEntry(_('Mark task completed when all children are completed?'), 
+        self.addEntry(_('Mark task completed when all children are completed?'),
                       self._shouldMarkCompletedEntry, flags=[None, wx.ALL])
         
     def entries(self):
