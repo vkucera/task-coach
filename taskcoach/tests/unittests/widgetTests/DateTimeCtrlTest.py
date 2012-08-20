@@ -25,7 +25,17 @@ class CommonTestsMixin(object):
     def setUp(self):
         super(CommonTestsMixin, self).setUp()
         self.__oldLocale = locale.getlocale(locale.LC_ALL)
-        locale.setlocale(locale.LC_ALL, 'en_US.utf8' if self.ampm else 'fr_FR.utf8')
+        localeName = 'en_US' if self.ampm else 'fr_FR'
+        # OS X and Linux don't agree on encoding names...
+        for encodingName in ['utf8', 'UTF-8']:
+            try:
+                locale.setlocale(locale.LC_ALL, '%s.%s' % (localeName, encodingName))
+            except locale.Error:
+                pass
+            else:
+                break
+        else:
+            self.fail('No supported locale found. Try "locale -a" and add a supported locale.')
         reload(render) # To execute module-level code every time
 
     def tearDown(self):
