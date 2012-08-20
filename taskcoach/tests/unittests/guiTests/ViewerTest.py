@@ -101,7 +101,7 @@ class ViewerTest(test.wxTestCase):
         
     def testSecondViewerInstanceHasAnotherSettingsSection(self):
         viewer2 = self.createViewer()
-        self.assertEqual(self.viewer.settingsSection()+'1', 
+        self.assertEqual(self.viewer.settingsSection() + '1', 
                          viewer2.settingsSection())
         
     def testTitle(self):

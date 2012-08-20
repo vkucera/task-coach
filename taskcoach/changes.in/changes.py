@@ -53,6 +53,9 @@ change the percentage complete of the task itself.''', '3559740'),
 for marking a task completed when all of its subtasks are completed, actually
 use that setting when displaying the percentage complete of the parent task
 in the task viewer.''', '3559740'),
+        Bug('''The settings for the viewers in the edit dialogs (such as the
+visible columns in the effort tab and the notes tab) wouldn't be consistently 
+applied to each edit dialog.''', '3559057'),
 #        Bug('''Fix slowness when viewing aggregated efforts.''',
 #            '3538310', '3537702'),
         ],

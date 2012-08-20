@@ -533,7 +533,8 @@ class BudgetPage(Page):
 class PageWithViewer(Page):
     columns = 1
     
-    def __init__(self, items, parent, taskFile, settings, settingsSection, *args, **kwargs):
+    def __init__(self, items, parent, taskFile, settings, settingsSection, 
+                 *args, **kwargs):
         self.__taskFile = taskFile
         self.__settings = settings
         self.__settingsSection = settingsSection
@@ -569,6 +570,7 @@ class EffortPage(PageWithViewer):
     def createViewer(self, taskFile, settings, settingsSection):
         return viewer.EffortViewer(self, taskFile, settings,
             settingsSection=settingsSection,
+            use_separate_settings_section=False,
             tasksToShowEffortFor=task.TaskList(self.items))
 
     def entries(self):
@@ -612,7 +614,8 @@ class CategoriesPage(PageWithViewer):
             self.registerObserver(self.onCategoryChanged, eventType=eventType,
                                   eventSource=item)
         return LocalCategoryViewer(self.items, self, taskFile, settings,
-                                   settingsSection=settingsSection)
+                                   settingsSection=settingsSection,
+                                   use_separate_settings_section=False)
         
     def onCategoryChanged(self, event):
         self.viewer.refreshItems(*event.values())
@@ -646,7 +649,8 @@ class AttachmentsPage(PageWithViewer):
             eventType=item.attachmentsChangedEventType(), 
             eventSource=item)    
         return LocalAttachmentViewer(self, taskFile, settings,
-            settingsSection=settingsSection, owner=item)
+            settingsSection=settingsSection, 
+            use_separate_settings_section=False, owner=item)
 
     def onAttachmentsChanged(self, event):  # pylint: disable=W0613
         self.viewer.domainObjectsToView().clear()
@@ -684,7 +688,8 @@ class NotesPage(PageWithViewer):
                               eventType=item.notesChangedEventType(),
                               eventSource=item)
         return LocalNoteViewer(self, taskFile, settings, 
-                               settingsSection=settingsSection, owner=item)
+                               settingsSection=settingsSection, 
+                               use_separate_settings_section=False, owner=item)
 
     def onNotesChanged(self, event):  # pylint: disable=W0613
         self.viewer.domainObjectsToView().clear()
@@ -724,7 +729,8 @@ class PrerequisitesPage(PageWithViewer):
         pub.subscribe(self.onPrerequisitesChanged, 
                       self.items[0].prerequisitesChangedEventType())
         return LocalPrerequisiteViewer(self.items, self, taskFile, settings,
-                                       settingsSection=settingsSection)
+                                       settingsSection=settingsSection,
+                                       use_separate_settings_section=False)
         
     def onPrerequisitesChanged(self, newValue, sender):
         if sender == self.items[0]:
