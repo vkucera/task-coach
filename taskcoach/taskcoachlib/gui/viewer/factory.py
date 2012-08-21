@@ -16,59 +16,79 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import effort, task, category, note
+import effort
+import task
+import category
+import note
 
 
 def viewerTypes():
-    return 'timelineviewer', 'squaretaskviewer', 'taskviewer', 'taskstatsviewer', 'noteviewer', 'categoryviewer', 'effortviewer', 'calendarviewer'
+    ''' Return the available viewer types, using the names as used in the 
+        settings. '''
+    return ('timelineviewer', 'squaretaskviewer', 'taskviewer', 
+        'taskstatsviewer', 'noteviewer', 'categoryviewer', 'effortviewer', 
+        'calendarviewer')
 
 
-class addViewers(object):
+class addViewers(object):  # pylint: disable=C0103, R0903
     ''' addViewers is a class masquerading as a method. It's a class because
         that makes it easier to split the work over different methods that
         use the same instance variables. '''  
     
-    def __init__(self, viewerContainer, taskFile, settings):
-        self.viewerContainer = viewerContainer
-        self.settings = settings
-        self.viewerInitArgs = (viewerContainer.containerWidget, taskFile, 
-                               settings)
-        self.addAllViewers()
+    def __init__(self, viewer_container, task_file, settings):
+        self.__viewer_container = viewer_container
+        self.__settings = settings
+        self.__viewer_init_args = (viewer_container.containerWidget, task_file, 
+                                   settings)
+        self.__add_all_viewers()
         
-    def addAllViewers(self):
-        self.addViewers(task.TaskViewer)
-        self.addViewers(task.TaskStatsViewer)
-        self.addViewers(task.SquareTaskViewer)
-        self.addViewers(task.TimelineViewer)
-        self.addViewers(task.CalendarViewer)
-        if self.settings.getboolean('feature', 'effort'):
-            self.addViewers(effort.EffortViewer)
-        self.addViewers(category.CategoryViewer)
-        if self.settings.getboolean('feature', 'notes'):
-            self.addViewers(note.NoteViewer)
+    def __add_all_viewers(self):
+        ''' Open viewers as saved previously in the settings. '''
+        self.__add_viewers(task.TaskViewer)
+        self.__add_viewers(task.TaskStatsViewer)
+        self.__add_viewers(task.SquareTaskViewer)
+        self.__add_viewers(task.TimelineViewer)
+        self.__add_viewers(task.CalendarViewer)
+        if self.__settings.getboolean('feature', 'effort'):
+            self.__add_viewers(effort.EffortViewer)
+        self.__add_viewers(category.CategoryViewer)
+        if self.__settings.getboolean('feature', 'notes'):
+            self.__add_viewers(note.NoteViewer)
 
-    def addViewers(self, viewerClass):
-        numberOfViewersToAdd = self.numberOfViewersToAdd(viewerClass)
-        for _ in range(numberOfViewersToAdd):
-            viewerInstance = viewerClass(*self.viewerInitArgs, 
-                                         **self.viewerKwargs(viewerClass))
-            self.viewerContainer.addViewer(viewerInstance)
+    def __add_viewers(self, viewer_class):
+        ''' Open viewers of the specified viewer class as saved previously in
+            the settings. '''
+        number_of_viewers_to_add = self._number_of_viewers_to_add(viewer_class)
+        for _ in range(number_of_viewers_to_add):
+            viewer_instance = viewer_class(*self.__viewer_init_args, 
+                                           **self._viewer_kwargs())
+            self.__viewer_container.addViewer(viewer_instance)
     
-    def numberOfViewersToAdd(self, viewerClass):
-        return self.settings.getint('view', viewerClass.__name__.lower() + 'count')
+    def _number_of_viewers_to_add(self, viewer_class):
+        ''' Return the number of viewers of the specified viewer class the 
+            user has opened previously. '''
+        return self.__settings.getint('view', 
+                                      viewer_class.__name__.lower() + 'count')
 
-    def viewerKwargs(self, viewerClass): # pylint: disable=W0613
+    def _viewer_kwargs(self):  # pylint: disable=R0201
+        ''' Return the keyword arguments to be passed to the viewer 
+            initializer. '''
         return dict()
     
 
-class addOneViewer(addViewers):
-    def __init__(self, viewerContainer, taskFile, settings, viewerClass, **kwargs):
-        self.viewerClass = viewerClass
-        self.kwargs = kwargs
-        super(addOneViewer, self).__init__(viewerContainer, taskFile, settings)
+class addOneViewer(addViewers):  # pylint: disable=C0103, R0903
+    ''' addOneViewer is a class masquerading as a method to add one viewer
+        of a specified viewer class. '''
+    
+    def __init__(self, viewer_container, task_file, settings, viewer_class, 
+                 **kwargs):
+        self.__viewer_class = viewer_class
+        self.__kwargs = kwargs
+        super(addOneViewer, self).__init__(viewer_container, task_file, 
+                                           settings)
         
-    def numberOfViewersToAdd(self, viewerClass):
-        return 1 if viewerClass == self.viewerClass else 0
+    def _number_of_viewers_to_add(self, viewer_class):
+        return 1 if viewer_class == self.__viewer_class else 0
         
-    def viewerKwargs(self, viewerClass):
-        return self.kwargs
+    def _viewer_kwargs(self):
+        return self.__kwargs
