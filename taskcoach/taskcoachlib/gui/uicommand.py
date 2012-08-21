@@ -461,7 +461,8 @@ class NeedsSelectedEffortMixin(NeedsSelectionMixin):
             self.viewer.curselectionIsInstanceOf(effort.Effort)
 
 
-class NeedsSelectedAttachmentsMixin(NeedsAttachmentViewerMixin, NeedsSelectionMixin):
+class NeedsSelectedAttachmentsMixin(NeedsAttachmentViewerMixin, 
+                                    NeedsSelectionMixin):
     pass
 
 
@@ -1424,7 +1425,8 @@ class Edit(NeedsSelectionMixin, ViewerCommand):
         windowWithFocus = wx.Window.FindFocus()
         if self.findEditCtrl(windowWithFocus):
             return True
-        elif operating_system.isMac() and isinstance(windowWithFocus, wx.TextCtrl):
+        elif operating_system.isMac() and isinstance(windowWithFocus, 
+                                                     wx.TextCtrl):
             return False
         else:
             return super(Edit, self).enabled(event)        

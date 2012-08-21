@@ -35,11 +35,13 @@ it makes Task Coach crash.''', '3554534'),
         Bug('''Fix opening URLs from the Help menu on KDE4.''', '3542487'),
         Bug('''Fix the About dialog on Kubuntu.''', '3542487'),
         Bug('''Reminders sometimes wouldn't fire.''', '3554603'),
-        Bug('''Idle time notifications would not work on OSX.''', '3554603'),
-        Bug('''On OS X Snow Leopard (10.6) and earlier, the system would
+        Bug('''On Mac OS X, idle time notifications would not work.''', 
+            '3554603'),
+        Bug('''On Mac OS X Snow Leopard (10.6) and earlier, the system would
 ask the user to allow Task coach use a port (firewall) or the keychain
 on every launch.''', '3556753'),
-        Bug('''The search options menu wouldn't work on OSX.''', '3558511'),
+        Bug('''On Mac OS X, the search options menu wouldn't work.''', 
+            '3558511'),
         Bug('''When the language is set to English/US, use 12 hour clock in 
 task and effort dialogs instead of 24 hour clock.'''),
         Bug('''Don't reset the edit dialog layout for editing single items
@@ -56,6 +58,8 @@ in the task viewer.''', '3559740'),
         Bug('''The settings for the viewers in the edit dialogs (such as the
 visible columns in the effort tab and the notes tab) wouldn't be consistently 
 applied to each edit dialog.''', '3559057'),
+        Bug('''On Mac OS X, the button in the effort edit dialog for dropping
+down the tree of tasks didn't work.''', '3560296'),
 #        Bug('''Fix slowness when viewing aggregated efforts.''',
 #            '3538310', '3537702'),
         ],

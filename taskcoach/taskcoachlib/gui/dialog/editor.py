@@ -1139,7 +1139,8 @@ class Editor(widgets.Dialog):
     def createUICommands(self):
         # FIXME: keyboard shortcuts are hardcoded here, but they can be 
         # changed in the translations
-        # FIXME: there are more keyboard shortcuts that don't work in dialogs atm 
+        # FIXME: there are more keyboard shortcuts that don't work in dialogs 
+        # at the moment, like DELETE 
         newEffortId = wx.NewId()
         table = wx.AcceleratorTable([(wx.ACCEL_CMD, ord('Z'), wx.ID_UNDO),
                                      (wx.ACCEL_CMD, ord('Y'), wx.ID_REDO),
@@ -1159,8 +1160,8 @@ class Editor(widgets.Dialog):
         self.newEffortCommand.bind(self._interior, newEffortId)
 
     def createInterior(self):
-        return self.EditBookClass(self._panel, self._items, 
-                                  self._taskFile, self._settings, self.__itemsAreNew)
+        return self.EditBookClass(self._panel, self._items, self._taskFile, 
+                                  self._settings, self.__itemsAreNew)
 
     def onClose(self, event):
         event.Skip()
@@ -1170,7 +1171,7 @@ class Editor(widgets.Dialog):
         # destroyed...
         if operating_system.isMac():
             self._interior.SetFocusIgnoringChildren()
-                        
+            
     def onItemRemoved(self, event):
         ''' The item we're editing or one of its ancestors has been removed or 
             is hidden by a filter. If the item is really removed, close the tab 

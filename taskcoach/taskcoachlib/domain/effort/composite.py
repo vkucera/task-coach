@@ -31,6 +31,11 @@ class BaseCompositeEffort(base.BaseEffort):  # pylint: disable=W0223
         
     def _inPeriod(self, effort):
         return self.getStart() <= effort.getStart() <= self.getStop()
+    
+    def mayContain(self, effort):
+        ''' Return whether effort would be contained in this composite effort 
+            if it existed. '''
+        return self._inPeriod(effort)
 
     def __contains__(self, effort):
         return effort in self._getEfforts()
@@ -144,7 +149,8 @@ class CompositeEffort(BaseCompositeEffort):
     def mayContain(self, effort):
         ''' Return whether effort would be contained in this composite effort 
             if it existed. '''
-        return effort.task() == self.task() and self._inPeriod(effort)
+        return effort.task() == self.task() and \
+            super(CompositeEffort, self).mayContain(effort)
             
     def description(self):
         effortDescriptions = [effort.description() for effort in \
@@ -210,7 +216,7 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
         return 'CompositeEffortPerPeriod(start=%s, stop=%s, efforts=%s)' % \
             (self.getStart(), self.getStop(),
             str([e for e in self._getEfforts()]))
-
+            
     # Cache handling:
 
     def _getEfforts(self, recursive=False):  # pylint: disable=W0613,W0221
