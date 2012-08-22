@@ -60,6 +60,7 @@ visible columns in the effort tab and the notes tab) wouldn't be consistently
 applied to each edit dialog.''', '3559057'),
         Bug('''On Mac OS X, the button in the effort edit dialog for dropping
 down the tree of tasks didn't work.''', '3560296'),
+        Bug('''Make recurrence label clearer.''', '3560420'),
 #        Bug('''Fix slowness when viewing aggregated efforts.''',
 #            '3538310', '3537702'),
         ],

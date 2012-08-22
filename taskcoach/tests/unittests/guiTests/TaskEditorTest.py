@@ -216,7 +216,7 @@ class EditTaskTestBase(object):
         self.assertEqual('yearly', self.task.recurrence().unit)
         
     def testSetMaxRecurrence(self):
-        self.setRecurrence(date.Recurrence('weekly', max=10))
+        self.setRecurrence(date.Recurrence('weekly', maximum=10))
         self.assertEqual(10, self.task.recurrence().max)
         
     def testSetRecurrenceFrequency(self):

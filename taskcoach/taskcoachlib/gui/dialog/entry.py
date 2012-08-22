@@ -469,7 +469,7 @@ class RecurrenceEntry(wx.Panel):
         panelSizer.Add(label, flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add((3, -1))
         self._scheduleChoice = wx.Choice(schedulePanel,
-            choices=[_('previous start and/or due date and time'),
+            choices=[_('previous planned start and/or due date and time'),
                      _('last completion date and time')])
         self._scheduleChoice.Bind(wx.EVT_CHOICE, self.onRecurrenceEdited)
         if operating_system.isMac():
@@ -537,7 +537,7 @@ class RecurrenceEntry(wx.Panel):
                           4: 'yearly'}
         kwargs = dict(unit=recurrenceDict[self._recurrencePeriodEntry.Selection])
         if self._maxRecurrenceCheckBox.IsChecked():
-            kwargs['max'] = self._maxRecurrenceCountEntry.Value
+            kwargs['maximum'] = self._maxRecurrenceCountEntry.Value
         kwargs['amount'] = self._recurrenceFrequencyEntry.Value
         kwargs['sameWeekday'] = self._recurrenceSameWeekdayCheckBox.IsChecked()
         kwargs['recurBasedOnCompletion'] = bool(self._scheduleChoice.Selection)

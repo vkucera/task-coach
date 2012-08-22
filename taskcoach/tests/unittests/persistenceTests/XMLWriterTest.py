@@ -424,7 +424,7 @@ class XMLWriterTest(test.TestCase):
         self.expectInXML('count="5"')
 
     def testMaxRecurrenceCount(self):
-        self.task.setRecurrence(date.Recurrence('daily', max=5))
+        self.task.setRecurrence(date.Recurrence('daily', maximum=5))
         self.expectInXML('max="5"')
         
     def testRecurrenceFrequency(self):
