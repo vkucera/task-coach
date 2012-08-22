@@ -61,6 +61,9 @@ applied to each edit dialog.''', '3559057'),
         Bug('''On Mac OS X, the button in the effort edit dialog for dropping
 down the tree of tasks didn't work.''', '3560296'),
         Bug('''Make recurrence label clearer.''', '3560420'),
+        Bug('''The combobox for selecting the snooze time in the reminder
+dialog was not read only. This suggested that one could type in custom snooze 
+times while that is not supported (yet).''', '3560416'),
 #        Bug('''Fix slowness when viewing aggregated efforts.''',
 #            '3538310', '3537702'),
         ],
