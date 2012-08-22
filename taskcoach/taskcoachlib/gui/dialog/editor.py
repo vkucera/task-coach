@@ -3,6 +3,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2012 Nicola Chiapolini <nicola.chiapolini@physik.uzh.ch>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Carl Zmola <zmola@acm.org>
 
@@ -89,6 +90,10 @@ class SubjectPage(Page):
     pageTitle = _('Description')
     pageIcon = 'pencil_icon'
     
+    def __init__(self, items, parent, settings, *args, **kwargs):
+        self._settings = settings
+        super(SubjectPage, self).__init__(items, parent, *args, **kwargs)
+    
     def addEntries(self):
         self.addSubjectEntry()
         self.addDescriptionEntry()
@@ -111,6 +116,10 @@ class SubjectPage(Page):
 
         currentDescription = self.items[0].description() if len(self.items) == 1 else combinedDescription(self.items)
         self._descriptionEntry = widgets.MultiLineTextCtrl(self, currentDescription)
+        native_info_string = self._settings.get('editor', 'descriptionfont')
+        font = wx.FontFromNativeInfoString(native_info_string) if native_info_string else None
+        if font:
+            self._descriptionEntry.SetFont(font)
         self._descriptionSync = attributesync.AttributeSync('description', 
             self._descriptionEntry, currentDescription, self.items,
             command.EditDescriptionCommand, wx.EVT_KILL_FOCUS,
@@ -153,7 +162,8 @@ class CategorySubjectPage(SubjectPage):
     def addExclusiveSubcategoriesEntry(self):
         # pylint: disable=W0201
         currentExclusivity = self.items[0].hasExclusiveSubcategories() if len(self.items) == 1 else False
-        self._exclusiveSubcategoriesCheckBox = wx.CheckBox(self, label=_('Mutually exclusive')) 
+        self._exclusiveSubcategoriesCheckBox = wx.CheckBox(self, 
+                                                           label=_('Mutually exclusive')) 
         self._exclusiveSubcategoriesCheckBox.SetValue(currentExclusivity)
         self._exclusiveSubcategoriesSync = attributesync.AttributeSync( \
             'hasExclusiveSubcategories', self._exclusiveSubcategoriesCheckBox, 
@@ -165,11 +175,6 @@ class CategorySubjectPage(SubjectPage):
             
 
 class AttachmentSubjectPage(SubjectPage):
-    def __init__(self, attachments, parent, settings, *args, **kwargs):
-        super(AttachmentSubjectPage, self).__init__(attachments, parent,
-                                                    *args, **kwargs)
-        self.settings = settings
-        
     def addEntries(self):
         # Override addEntries to insert a location entry between the subject
         # and description entries 
@@ -196,16 +201,18 @@ class AttachmentSubjectPage(SubjectPage):
         self.addEntry(_('Location'), panel, flags=[None, wx.ALL | wx.EXPAND])
 
     def onSelectLocation(self, event):  # pylint: disable=W0613
-        basePath = self.settings.get('file', 'lastattachmentpath')
+        basePath = self._settings.get('file', 'lastattachmentpath')
         if not basePath:
             basePath = os.getcwd()
 
         filename = widgets.AttachmentSelector(default_path=basePath)
 
         if filename:
-            self.settings.set('file', 'lastattachmentpath', os.path.abspath(os.path.split(filename)[0]))
-            if self.settings.get('file', 'attachmentbase'):
-                filename = attachment.getRelativePath(filename, self.settings.get('file', 'attachmentbase'))
+            self._settings.set('file', 'lastattachmentpath', 
+                               os.path.abspath(os.path.split(filename)[0]))
+            if self._settings.get('file', 'attachmentbase'):
+                filename = attachment.getRelativePath(filename, 
+                                                      self._settings.get('file', 'attachmentbase'))
             self._subjectEntry.SetValue(os.path.split(filename)[-1])
             self._locationEntry.SetValue(filename)
             self._subjectSync.onAttributeEdited(event)
@@ -231,10 +238,11 @@ class TaskAppearancePage(Page):
         currentColor = getattr(self.items[0], '%sColor' % colorType)(recursive=False) if len(self.items) == 1 else None
         colorEntry = entry.ColorEntry(self, currentColor, defaultColor)
         setattr(self, '_%sColorEntry' % colorType, colorEntry)        
-        commandClass = getattr(command, 'Edit%sColorCommand' % colorType.capitalize())
-        colorSync = attributesync.AttributeSync('%sColor' % colorType, colorEntry, currentColor, 
-            self.items, commandClass, entry.EVT_COLORENTRY, 
-            self.items[0].appearanceChangedEventType())
+        commandClass = getattr(command, 
+                               'Edit%sColorCommand' % colorType.capitalize())
+        colorSync = attributesync.AttributeSync('%sColor' % colorType, 
+            colorEntry, currentColor, self.items, commandClass, 
+            entry.EVT_COLORENTRY, self.items[0].appearanceChangedEventType())
         setattr(self, '_%sColorSync' % colorType, colorSync)
         self.addEntry(labelText, colorEntry, flags=[None, wx.ALL])
             
@@ -300,11 +308,12 @@ class DatesPage(Page):
                                             suggestedDateTime=suggestedDateTime)
         setattr(self, '_%sEntry' % taskMethodName, dateTimeEntry)
         commandClass = getattr(command, 'Edit%sCommand' % TaskMethodName)
-        eventType = getattr(self.items[0], '%sChangedEventType' % taskMethodName)()
+        eventType = getattr(self.items[0], 
+                            '%sChangedEventType' % taskMethodName)()
         keep_delta = self.__keep_delta(taskMethodName)
-        datetimeSync = attributesync.AttributeSync(taskMethodName, dateTimeEntry, 
-            dateTime, self.items, commandClass, entry.EVT_DATETIMEENTRY, 
-            eventType, keep_delta=keep_delta)
+        datetimeSync = attributesync.AttributeSync(taskMethodName, 
+            dateTimeEntry, dateTime, self.items, commandClass, 
+            entry.EVT_DATETIMEENTRY, eventType, keep_delta=keep_delta)
         setattr(self, '_%sSync' % taskMethodName, datetimeSync) 
         self.addEntry(label, dateTimeEntry)
             
@@ -318,8 +327,7 @@ class DatesPage(Page):
         reminderDateTime = self.items[0].reminder() if len(self.items) == 1 else date.DateTime()
         suggestedDateTime = self.items[0].suggestedReminderDateTime()
         self._reminderDateTimeEntry = entry.DateTimeEntry(self, self.__settings,
-                                                          reminderDateTime, 
-                                                          suggestedDateTime=suggestedDateTime)
+            reminderDateTime, suggestedDateTime=suggestedDateTime)
         self._reminderDateTimeSync = attributesync.AttributeSync('reminder', 
             self._reminderDateTimeEntry, reminderDateTime, self.items, 
             command.EditReminderDateTimeCommand, entry.EVT_DATETIMEENTRY, 
@@ -631,10 +639,12 @@ class LocalAttachmentViewer(viewer.AttachmentViewer):  # pylint: disable=W0223
         super(LocalAttachmentViewer, self).__init__(attachmentsToShow=attachments, *args, **kwargs)
 
     def newItemCommand(self, *args, **kwargs):
-        return command.AddAttachmentCommand(None, [self.attachmentOwner], *args, **kwargs)
+        return command.AddAttachmentCommand(None, [self.attachmentOwner], 
+                                            *args, **kwargs)
     
     def deleteItemCommand(self):
-        return command.RemoveAttachmentCommand(None, [self.attachmentOwner], attachments=self.curselection())
+        return command.RemoveAttachmentCommand(None, [self.attachmentOwner], 
+                                               attachments=self.curselection())
 
 
 class AttachmentsPage(PageWithViewer):
@@ -664,16 +674,19 @@ class LocalNoteViewer(viewer.BaseNoteViewer):  # pylint: disable=W0223
     def __init__(self, *args, **kwargs):
         self.noteOwner = kwargs.pop('owner')
         notes = note.NoteContainer(self.noteOwner.notes())
-        super(LocalNoteViewer, self).__init__(notesToShow=notes, *args, **kwargs)
+        super(LocalNoteViewer, self).__init__(notesToShow=notes, 
+                                              *args, **kwargs)
 
     def newItemCommand(self, *args, **kwargs):
         return command.AddNoteCommand(None, [self.noteOwner])
     
     def newSubItemCommand(self):
-        return command.AddSubNoteCommand(None, self.curselection(), owner=self.noteOwner)
+        return command.AddSubNoteCommand(None, self.curselection(), 
+                                         owner=self.noteOwner)
     
     def deleteItemCommand(self):
-        return command.RemoveNoteCommand(None, [self.noteOwner], notes=self.curselection())
+        return command.RemoveNoteCommand(None, [self.noteOwner], 
+                                         notes=self.curselection())
 
 
 class NotesPage(PageWithViewer):
@@ -716,7 +729,8 @@ class LocalPrerequisiteViewer(viewer.CheckableTaskViewer):  # pylint: disable=W0
         if isChecked != self.getIsItemChecked(item):
             checked, unchecked = ([item], []) if isChecked else ([], [item])            
             command.TogglePrerequisiteCommand(None, self.__items, 
-                checkedPrerequisites=checked, uncheckedPrerequisites=unchecked).do()
+                checkedPrerequisites=checked, 
+                uncheckedPrerequisites=unchecked).do()
     
     
 class PrerequisitesPage(PageWithViewer):
@@ -781,8 +795,10 @@ class EditBook(widgets.Notebook):
     def allPageNamesInUserOrder(self):
         ''' Return all pages names in the order stored in the settings. The
             settings may not contain all pages (e.g. because a feature was
-            turned off by the user) so we add the missing pages if necessary. '''
-        pageNamesInUserOrder = self.settings.getlist('editor', '%spages' % self.domainObject)
+            turned off by the user) so we add the missing pages if necessary. 
+        '''
+        pageNamesInUserOrder = self.settings.getlist('editor', 
+                                                     '%spages' % self.domainObject)
         remainingPageNames = self.allPageNames[:]
         for pageName in pageNamesInUserOrder:
             try:
@@ -804,7 +820,8 @@ class EditBook(widgets.Notebook):
             return False
         
     def pageSupportsMassEditing(self, pageName):
-        return pageName in ('subject', 'dates', 'progress', 'budget', 'appearance')
+        return pageName in ('subject', 'dates', 'progress', 'budget', 
+                            'appearance')
 
     def createPage(self, pageName, taskFile, itemsAreNew):
         if pageName == 'subject':
@@ -834,7 +851,7 @@ class EditBook(widgets.Notebook):
             return TaskAppearancePage(self.items, self)
         
     def createSubjectPage(self):
-        return SubjectPage(self.items, self)
+        return SubjectPage(self.items, self, self.settings)
     
     def setFocus(self, columnName):
         ''' Select the correct page of the editor and correct control on a page
@@ -907,7 +924,7 @@ class TaskEditBook(EditBook):
     domainObject = 'task'
 
     def createSubjectPage(self):    
-        return TaskSubjectPage(self.items, self)
+        return TaskSubjectPage(self.items, self, self.settings)
 
 
 class CategoryEditBook(EditBook):
@@ -915,7 +932,7 @@ class CategoryEditBook(EditBook):
     domainObject = 'category'
 
     def createSubjectPage(self):
-        return CategorySubjectPage(self.items, self)
+        return CategorySubjectPage(self.items, self, self.settings)
 
 
 class NoteEditBook(EditBook):
@@ -938,7 +955,8 @@ class EffortEditBook(Page):
     domainObject = 'effort'
     columns = 3
     
-    def __init__(self, parent, efforts, taskFile, settings, itemsAreNew, *args, **kwargs):  # pylint: disable=W0613
+    def __init__(self, parent, efforts, taskFile, settings, itemsAreNew, 
+                 *args, **kwargs):  # pylint: disable=W0613
         self._effortList = taskFile.efforts()
         taskList = taskFile.tasks()
         self._taskList = task.TaskList(taskList)
@@ -1073,6 +1091,10 @@ class EffortEditBook(Page):
                 
         currentDescription = self.items[0].description() if len(self.items) == 1 else combinedDescription(self.items)
         self._descriptionEntry = widgets.MultiLineTextCtrl(self, currentDescription)
+        native_info_string = self._settings.get('editor', 'descriptionfont')
+        font = wx.FontFromNativeInfoString(native_info_string) if native_info_string else None
+        if font:
+            self._descriptionEntry.SetFont(font) 
         self._descriptionEntry.SetSizeHints(300, 150)
         self._descriptionSync = attributesync.AttributeSync('description', 
             self._descriptionEntry, currentDescription, self.items,
@@ -1152,9 +1174,8 @@ class Editor(widgets.Dialog):
         effortPage = self._interior.getPage('effort') 
         effortViewer = effortPage.viewer if effortPage else None 
         self.newEffortCommand = uicommand.EffortNew(viewer=effortViewer,
-                                                    taskList=self._taskFile.tasks(),
-                                                    effortList=self._taskFile.efforts(),
-                                                    settings=self._settings)
+            taskList=self._taskFile.tasks(), 
+            effortList=self._taskFile.efforts(), settings=self._settings)
         self.undoCommand.bind(self._interior, wx.ID_UNDO)
         self.redoCommand.bind(self._interior, wx.ID_REDO)
         self.newEffortCommand.bind(self._interior, newEffortId)

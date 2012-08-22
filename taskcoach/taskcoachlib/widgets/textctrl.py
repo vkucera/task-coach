@@ -16,9 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, webbrowser
 from taskcoachlib import i18n
-import draganddrop
+import wx
+import webbrowser
 
 
 UNICODE_CONTROL_CHARACTERS_TO_WEED = {}
@@ -57,7 +57,7 @@ class MultiLineTextCtrl(BaseTextCtrl):
             # Using wx.TE_RICH will remove the RTL specific menu items
             # from the right-click menu in the TextCtrl, so we don't use 
             # wx.TE_RICH if the language is RTL.
-            kwargs['style'] |= wx.TE_RICH|wx.TE_AUTO_URL
+            kwargs['style'] |= wx.TE_RICH | wx.TE_AUTO_URL
         super(MultiLineTextCtrl, self).__init__(parent, *args, **kwargs)
         self.__initializeText(text)
         self.Bind(wx.EVT_TEXT_URL, self.onURLClicked)

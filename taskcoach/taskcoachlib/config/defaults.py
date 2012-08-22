@@ -1,6 +1,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2012 Nicola Chiapolini <nicola.chiapolini@physik.uzh.ch>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -452,7 +453,7 @@ defaults = {
     'completedtasks': '',
     'overduetasks': '',
     'inactivetasks': '',
-    'duesoontasks': '' 
+    'duesoontasks': ''
     },
 'icon': { 
     'activetasks': 'led_blue_icon',
@@ -468,6 +469,7 @@ defaults = {
     'notepages': '[]',  # Order of tabs in the note editor
     'attachmentpages': '[]',  # Order of tabs in the attachment editor
     'preferencespages': '[]',  # Order of tabs in the preferences dialog
+    'descriptionfont': '',  # Font to use in the desciption field of editors
     'maccheckspelling': 'True' 
     },
 'version': {

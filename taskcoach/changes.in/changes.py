@@ -79,6 +79,9 @@ and the display of messages can be turned off completely. This feature will be
 used sparingly, of course.'''),
         Feature('''Added almost complete Belarusian translation thanks to 
 Korney San.'''),
+        Feature('''Allow for changing the font used in the description field
+of edit dialogs. The font can be changed in the editor tab of the preferences 
+dialog. Patch supplied by Nicola Chiapolini.'''),
         ],
     featuresChanged=[
         Feature('''When a task has no due date, instead of displaying 

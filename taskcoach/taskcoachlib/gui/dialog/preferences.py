@@ -3,6 +3,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2012 Nicola Chiapolini <nicola.chiapolini@physik.uzh.ch>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -74,11 +75,13 @@ class SettingsPageBase(widgets.BookPage):
         self._booleanSettings.append((section, setting, checkBox))
         return checkBox
 
-    def addChoiceSetting(self, section, setting, text, helpText, *listsOfChoices, **kwargs):
+    def addChoiceSetting(self, section, setting, text, helpText, 
+                         *listsOfChoices, **kwargs):
         choiceCtrls = []
         currentValue = self.gettext(section, setting)
         sep = kwargs.pop('sep', '_')
-        for choices, currentValuePart in zip(listsOfChoices, currentValue.split(sep)):
+        for choices, currentValuePart in zip(listsOfChoices, 
+                                             currentValue.split(sep)):
             choiceCtrl = wx.Choice(self)
             choiceCtrls.append(choiceCtrl)
             for choiceValue, choiceText in choices:
@@ -120,6 +123,21 @@ class SettingsPageBase(widgets.BookPage):
             value=intValue)
         self.addEntry(text, spin, helpText=helpText, flags=flags)
         self._integerSettings.append((section, setting, spin))
+        
+    def addFontSetting(self, section, setting, text):
+        default_font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        native_info_string = self.gettext(section, setting)
+        current_font = wx.FontFromNativeInfoString(native_info_string) \
+                       if native_info_string else None
+        font_button = widgets.FontPickerCtrl(self, 
+                                             font=current_font or default_font, 
+                                             colour=(0, 0, 0, 255))
+        font_button.SetBackgroundColour((255, 255, 255, 255))
+        self.addEntry(text, font_button, 
+                      flags=(wx.ALL | wx.ALIGN_CENTER_VERTICAL, 
+                             wx.ALL | wx.ALIGN_CENTER_VERTICAL  # wx.EXPAND causes the button to be top aligned on Mac OS X
+                             ))
+        self._fontSettings.append((section, setting, font_button)) 
 
     def addAppearanceHeader(self):
         self.addEntry('', _('Foreground color'), _('Background color'),
@@ -641,8 +659,12 @@ class EditorPage(SettingsPage):
     
     def __init__(self, *args, **kwargs):
         super(EditorPage, self).__init__(columns=2, *args, **kwargs)
-        self.addBooleanSetting('editor', 'maccheckspelling',
-            _('Check spelling in editors'))
+        if operating_system.isMac() and \
+                not operating_system.isMacOsXMountainLion_OrNewer():
+            self.addBooleanSetting('editor', 'maccheckspelling',
+                                   _('Check spelling in editors'))
+        self.addFontSetting('editor', 'descriptionfont', 
+            _('Font to use in the description field of edit dialogs'))
         self.fit()
         
     def ok(self):
@@ -687,9 +709,6 @@ class Preferences(widgets.NotebookDialog):
     def shouldCreatePage(self, pageName):
         if pageName == 'iphone':
             return self.settings.getboolean('feature', 'iphone')
-        elif pageName == 'editor':
-            return operating_system.isMac() and \
-                not operating_system.isMacOsXMountainLion_OrNewer()
         else:
             return True
 
