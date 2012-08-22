@@ -46,6 +46,8 @@ class Viewer(patterns.Observer, wx.Panel):
         self.__settingsSection = kwargs.pop('settingsSection')
         # The how maniest of this viewer type are we? Used for settings
         self.__instanceNumber = kwargs.pop('instanceNumber')
+        self.__use_separate_settings_section = kwargs.pop('use_separate_settings_section', 
+                                                          True)
         # Selection cache:
         self.__curselection = [] 
         # Flag so that we don't notify observers while we're selecting all items
@@ -307,7 +309,7 @@ class Viewer(patterns.Observer, wx.Panel):
     def settingsSection(self):
         ''' Return the settings section of this viewer. '''
         section = self.__settingsSection
-        if self.__instanceNumber > 0:
+        if self.__use_separate_settings_section and self.__instanceNumber > 0:
             # We're not the first viewer of our class, so we need a different
             # settings section than the default one.
             section += str(self.__instanceNumber)

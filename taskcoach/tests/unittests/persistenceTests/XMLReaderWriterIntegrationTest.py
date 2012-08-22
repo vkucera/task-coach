@@ -78,8 +78,8 @@ class IntegrationTest(IntegrationTestCase):
             completionDateTime=date.Now() - date.TimeDelta(days=1), 
             budget=date.TimeDelta(hours=1), 
             priority=4, hourlyFee=100.5, fixedFee=1000, 
-            recurrence=date.Recurrence('weekly', max=10, count=5, amount=2),
-            reminder=date.DateTime(2004,1,1), fgColor=wx.BLUE, bgColor=wx.RED,
+            recurrence=date.Recurrence('weekly', maximum=10, count=5, amount=2),
+            reminder=date.DateTime(2004, 1, 1), fgColor=wx.BLUE, bgColor=wx.RED,
             font=wx.NORMAL_FONT, expandedContexts=['viewer1'], icon='icon',
             selectedIcon='selectedIcon',
             shouldMarkCompletedWhenAllChildrenCompleted=True,
@@ -88,8 +88,8 @@ class IntegrationTest(IntegrationTestCase):
         self.task.addChild(self.child)
         self.grandChild = task.Task()
         self.child.addChild(self.grandChild)
-        self.task.addEffort(effort.Effort(self.task, start=date.DateTime(2004,1,1), 
-            stop=date.DateTime(2004,1,2), description=self.description))
+        self.task.addEffort(effort.Effort(self.task, start=date.DateTime(2004, 1, 1), 
+            stop=date.DateTime(2004, 1, 2), description=self.description))
         self.category = category.Category('test', [self.task], filtered=True,
                                           description='Description', 
                                           exclusiveSubcategories=True)

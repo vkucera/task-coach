@@ -162,7 +162,7 @@ class TaskWithDailyRecurrenceThatHasMaxRecurrenceCountFixture( \
     maxRecurrenceCount = 2
     
     def createRecurrence(self):
-        return date.Recurrence('daily', max=self.maxRecurrenceCount)
+        return date.Recurrence('daily', maximum=self.maxRecurrenceCount)
 
     def testRecurLessThanMaxRecurrenceCount(self):
         for _ in range(self.maxRecurrenceCount):

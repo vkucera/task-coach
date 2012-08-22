@@ -25,6 +25,8 @@ from unittests import asserts
 import test
 import wx
 
+# pylint: disable=C0103,C0111
+
 
 class TaskTestCase(test.TestCase):
     eventTypes = []
@@ -58,13 +60,14 @@ class TaskTestCase(test.TestCase):
     def createTasks(self):
         def createAttachments(kwargs):
             if 'attachments' in kwargs:
-                kwargs['attachments'] = [attachment.FileAttachment(filename) for filename in kwargs['attachments']]
+                kwargs['attachments'] = [attachment.FileAttachment(filename) \
+                                         for filename in kwargs['attachments']]
             return kwargs
 
         return [task.Task(**createAttachments(kwargs)) for kwargs in \
                 self.taskCreationKeywordArguments()]
 
-    def taskCreationKeywordArguments(self):
+    def taskCreationKeywordArguments(self):  # pylint: disable=R0201
         return [dict(subject='Task')]
 
     def addEffort(self, hours, taskToAddEffortTo=None):
@@ -112,7 +115,8 @@ class NoBudgetTestsMixin(object):
         self.assertEqual(date.TimeDelta(), self.task.budgetLeft(recursive=True))
 
 
-class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
+class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, 
+                           NoBudgetTestsMixin):
 
     # Getters
 
@@ -199,7 +203,8 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.assertEqual('', self.task.selectedIcon(recursive=False))
 
     def testDefaultRecursiveSelectedIcon(self):
-        self.assertEqual('led_grey_icon', self.task.selectedIcon(recursive=True))
+        self.assertEqual('led_grey_icon', 
+                         self.task.selectedIcon(recursive=True))
         
     def testDefaultPrerequisites(self):
         self.failIf(self.task.prerequisites())
@@ -235,7 +240,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         def onEvent(newValue, sender):
             events.append((newValue, sender))
             
-        pub.subscribe(onEvent, task.Task.plannedStartDateTimeChangedEventType())        
+        pub.subscribe(onEvent, task.Task.plannedStartDateTimeChangedEventType())
         self.task.setPlannedStartDateTime(self.task.plannedStartDateTime())
         self.failIf(events)
         
@@ -902,21 +907,23 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         state = self.task.__getstate__()
         self.task.setActualStartDateTime(self.yesterday) 
         self.task.__setstate__(state)
-        self.assertEqual(previousActualStartDateTime, self.task.actualStartDateTime())                    
+        self.assertEqual(previousActualStartDateTime, 
+                         self.task.actualStartDateTime())                    
 
     def testTaskStateIncludesDueDateTime(self):
         previousDueDateTime = self.task.dueDateTime()
         state = self.task.__getstate__()
         self.task.setDueDateTime(self.yesterday) 
         self.task.__setstate__(state)
-        self.assertEqual(previousDueDateTime, self.task.dueDateTime())                    
+        self.assertEqual(previousDueDateTime, self.task.dueDateTime())
 
     def testTaskStateIncludesCompletionDateTime(self):
         previousCompletionDateTime = self.task.completionDateTime()
         state = self.task.__getstate__()
         self.task.setCompletionDateTime(self.yesterday) 
         self.task.__setstate__(state)
-        self.assertEqual(previousCompletionDateTime, self.task.completionDateTime())                    
+        self.assertEqual(previousCompletionDateTime, 
+                         self.task.completionDateTime())                    
 
     def testTaskStateIncludesPrerequisites(self):
         self.task.addPrerequisites([task.Task(subject='prerequisite1')])
@@ -1774,7 +1781,8 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
             
         pub.subscribe(onEvent, task.Task.timeSpentChangedEventType())
         childEffort.setStop(date.DateTime(2005, 1, 1, 12, 0, 0))
-        self.failUnless((self.task1.timeSpent(recursive=True), self.task1) in events)
+        self.failUnless((self.task1.timeSpent(recursive=True), 
+                         self.task1) in events)
 
     def testRecursivePriorityNotification(self):
         events = []
@@ -1907,12 +1915,19 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
 
     def testPercentageCompletedWhenChildIs50ProcentComplete(self):
         self.task1_1.setPercentageComplete(50)
+        self.assertEqual(50, self.task.percentageComplete(recursive=True))
+        
+    def testPercentageCompletedWhenChildIs50ProcentCompleteAndMarkCompletedWhenChildrenAreCompletedIsTurnedOff(self):
+        self.task.setShouldMarkCompletedWhenAllChildrenCompleted(False)
+        self.task1_1.setPercentageComplete(50)
         self.assertEqual(25, self.task.percentageComplete(recursive=True))
         
-    def testPercentageCompletedWhenChildIs50ProcentCompleteAndMarkCompletedWhenChildrenAreCompletedIsTurnedOn(self):
-        self.task.setShouldMarkCompletedWhenAllChildrenCompleted(True)
+    def testPercentageCompletedWhenChildIs50ProcentCompleteAndGlobalMarkCompletedWhenChildrenAreCompletedIsTurnedOff(self):
+        self.settings.setboolean('behavior', 
+                                 'markparentcompletedwhenallchildrencompleted', 
+                                 False)
         self.task1_1.setPercentageComplete(50)
-        self.assertEqual(50, self.task.percentageComplete(recursive=True))
+        self.assertEqual(25, self.task.percentageComplete(recursive=True))
         
     def testPercentageCompletedNotificationWhenChildPercentageChanges(self):
         events = []
@@ -1922,19 +1937,34 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
             
         pub.subscribe(onEvent, task.Task.percentageCompleteChangedEventType())
         self.task1_1.setPercentageComplete(50)
-        self.assertEqual([(50, self.task1_1), (25, self.task)], events)
-
+        self.assertEqual([(50, self.task1_1), (50, self.task)], events)
+        
+    def testPercentageCompletedNotificationWhenMarkCompletedSettingChanges(self):
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        self.task1_1.setPercentageComplete(50)
+        pub.subscribe(onEvent, task.Task.percentageCompleteChangedEventType())
+        self.settings.setboolean('behavior', 
+                                 'markparentcompletedwhenallchildrencompleted', 
+                                 False)
+        self.assertEqual([(0, self.task)], events)
+        
     def testIcon(self):
         self.assertEqual('folder_blue_icon', self.task.icon(recursive=True))
 
     def testSelectedIcon(self):
-        self.assertEqual('folder_blue_open_icon', self.task.selectedIcon(recursive=True))
+        self.assertEqual('folder_blue_open_icon', 
+                         self.task.selectedIcon(recursive=True))
 
     def testChildIcon(self):
         self.assertEqual('led_blue_icon', self.task1_1.icon(recursive=True))
 
     def testChildSelectedIcon(self):
-        self.assertEqual('led_blue_icon', self.task1_1.selectedIcon(recursive=True))
+        self.assertEqual('led_blue_icon', 
+                         self.task1_1.selectedIcon(recursive=True))
 
     def testIconWithPluralVersion(self):
         self.task.setIcon('books_icon')
@@ -1986,7 +2016,8 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
         self.assertEqual('led_purple_icon', self.task1_1.icon(recursive=True))
 
 
-class TaskWithTwoChildrenTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
+class TaskWithTwoChildrenTest(TaskTestCase, CommonTaskTestsMixin, 
+                              NoBudgetTestsMixin):
     def taskCreationKeywordArguments(self):
         return [{'children': [task.Task(subject='child1'), 
                               task.Task(subject='child2')]}]
@@ -1999,22 +2030,22 @@ class TaskWithTwoChildrenTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsM
 
     def testPercentageCompletedWhenOneChildIs50ProcentComplete(self):
         self.task1_1.setPercentageComplete(50)
+        self.assertEqual(25, self.task.percentageComplete(recursive=True))
+
+    def testPercentageCompletedWhenOneChildIs50ProcentCompleteAndMarkCompletedWhenChildrenAreCompletedIsTurnedOff(self):
+        self.task.setShouldMarkCompletedWhenAllChildrenCompleted(False)
+        self.task1_1.setPercentageComplete(50)
         self.assertEqual(int(100 / 6.), 
                          self.task.percentageComplete(recursive=True))
 
-    def testPercentageCompletedWhenOneChildIs50ProcentCompleteAndMarkCompletedWhenChildrenAreCompletedIsTurnedOn(self):
-        self.task.setShouldMarkCompletedWhenAllChildrenCompleted(True)
-        self.task1_1.setPercentageComplete(50)
-        self.assertEqual(25, self.task.percentageComplete(recursive=True))
-
     def testPercentageCompletedWhenOneChildIsComplete(self):
         self.task1_1.setPercentageComplete(100)
-        self.assertEqual(33, self.task.percentageComplete(recursive=True))
-    
-    def testPercentageCompletedWhenOneChildCompleteAndMarkCompletedWhenChildrenAreCompletedIsTurnedOn(self):
-        self.task.setShouldMarkCompletedWhenAllChildrenCompleted(True)
-        self.task1_1.setPercentageComplete(100)
         self.assertEqual(50, self.task.percentageComplete(recursive=True))
+    
+    def testPercentageCompletedWhenOneChildCompleteAndMarkCompletedWhenChildrenAreCompletedIsTurnedOff(self):
+        self.task.setShouldMarkCompletedWhenAllChildrenCompleted(False)
+        self.task1_1.setPercentageComplete(100)
+        self.assertEqual(33, self.task.percentageComplete(recursive=True))
 
 
 class CompletedTaskWithChildTest(TaskTestCase):
@@ -2056,7 +2087,8 @@ class DuesoonTaskWithChildTest(TaskTestCase):
                          self.task.selectedIcon(recursive=True))
 
 
-class TaskWithGrandChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
+class TaskWithGrandChildTest(TaskTestCase, CommonTaskTestsMixin, 
+                             NoBudgetTestsMixin):
     def taskCreationKeywordArguments(self):
         return [{}, {}, {}]
     
@@ -2134,7 +2166,8 @@ class TaskWithTwoEffortsTest(TaskTestCase, CommonTaskTestsMixin):
         self.assertEqual(self.totalDuration, self.task.timeSpent())
 
     def testTimeSpentRecursivelyOnTaskEqualsEffortDuration(self):
-        self.assertEqual(self.totalDuration, self.task.timeSpent(recursive=True))
+        self.assertEqual(self.totalDuration, 
+                         self.task.timeSpent(recursive=True))
 
 
 class TaskWithActiveEffort(TaskTestCase, CommonTaskTestsMixin):
@@ -2213,7 +2246,8 @@ class TaskWithActiveEffort(TaskTestCase, CommonTaskTestsMixin):
 
     def testSelectedIconAfterStopTracking(self):
         self.task.stopTracking()
-        self.assertNotEqual('clock_icon', self.task.selectedIcon(recursive=True))
+        self.assertNotEqual('clock_icon', 
+                            self.task.selectedIcon(recursive=True))
 
 
 class TaskWithChildAndEffortTest(TaskTestCase, CommonTaskTestsMixin):
@@ -2227,7 +2261,8 @@ class TaskWithChildAndEffortTest(TaskTestCase, CommonTaskTestsMixin):
         self.assertEqual(self.task1effort1.duration(), self.task1.timeSpent())
 
     def testTimeSpentRecursivelyOnTaskEqualsTotalEffortDuration(self):
-        self.assertEqual(self.task1effort1.duration() + self.task1_1effort1.duration(), 
+        self.assertEqual(self.task1effort1.duration() + \
+                         self.task1_1effort1.duration(), 
                          self.task1.timeSpent(recursive=True))
 
     def testEffortsRecursive(self):
@@ -2256,12 +2291,14 @@ class TaskWithGrandChildAndEffortTest(TaskTestCase, CommonTaskTestsMixin):
             date.DateTime(2005, 1, 2))]}]
 
     def testTimeSpentRecursivelyOnTaskEqualsTotalEffortDuration(self):
-        self.assertEqual(self.task1effort1.duration() + self.task1_1effort1.duration() + \
+        self.assertEqual(self.task1effort1.duration() + \
+                         self.task1_1effort1.duration() + \
                          self.task1_1_1effort1.duration(), 
                          self.task1.timeSpent(recursive=True))
 
     def testEffortsRecursive(self):
-        self.assertEqual([self.task1effort1, self.task1_1effort1, self.task1_1_1effort1],
+        self.assertEqual([self.task1effort1, self.task1_1effort1, 
+                          self.task1_1_1effort1],
             self.task1.efforts(recursive=True))
 
     
@@ -2368,16 +2405,19 @@ class TaskReminderTestCase(TaskTestCase, CommonTaskTestsMixin):
         self.assertEqual(None, self.task.reminder(includeSnooze=False))
         
     def testOriginalReminder(self):
-        self.assertEqual(self.initialReminder(), self.task.reminder(includeSnooze=False))
+        self.assertEqual(self.initialReminder(), 
+                         self.task.reminder(includeSnooze=False))
         
     def testOriginalReminderAfterSnooze(self):
         self.task.snoozeReminder(date.TimeDelta(hours=1))
-        self.assertEqual(self.initialReminder(), self.task.reminder(includeSnooze=False))
+        self.assertEqual(self.initialReminder(), 
+                         self.task.reminder(includeSnooze=False))
         
     def testOriginalReminderAfterTwoSnoozes(self):
         self.task.snoozeReminder(date.TimeDelta(hours=1))
         self.task.snoozeReminder(date.TimeDelta(hours=1))
-        self.assertEqual(self.initialReminder(), self.task.reminder(includeSnooze=False))
+        self.assertEqual(self.initialReminder(), 
+                         self.task.reminder(includeSnooze=False))
         
     def testOriginalReminderAfterCancel(self):
         self.task.setReminder(None)
@@ -2506,14 +2546,16 @@ class TaskWithAttachmentFixture(AttachmentTestCase):
         return [{'attachments': ['/home/frank/attachment.txt']}]
 
     def testAttachments(self):
-        for idx, name in enumerate(self.taskCreationKeywordArguments()[0]['attachments']):
-            self.assertEqual(attachment.FileAttachment(name), self.task.attachments()[idx])
+        for index, name in enumerate(self.taskCreationKeywordArguments()[0]['attachments']):
+            self.assertEqual(attachment.FileAttachment(name), 
+                             self.task.attachments()[index])
                                  
     def testRemoveNonExistingAttachment(self):
         self.task.removeAttachments('Non-existing attachment')
 
-        for idx, name in enumerate(self.taskCreationKeywordArguments()[0]['attachments']):
-            self.assertEqual(attachment.FileAttachment(name), self.task.attachments()[idx])
+        for index, name in enumerate(self.taskCreationKeywordArguments()[0]['attachments']):
+            self.assertEqual(attachment.FileAttachment(name), 
+                             self.task.attachments()[index])
 
     def testCopy_CreatesNewListOfAttachments(self):
         copy = self.task.copy()
@@ -2699,7 +2741,7 @@ class TaskWithCategoryTestCase(TaskTestCase):
 class TaskColorTest(test.TestCase):
     def setUp(self):
         super(TaskColorTest, self).setUp()
-        task.Task.settings = config.Settings(load=False)
+        self.settings = task.Task.settings = config.Settings(load=False)
         self.yesterday = date.Now() - date.oneDay
         self.tomorrow = date.Now() + date.oneDay
         
@@ -2725,7 +2767,7 @@ class TaskColorTest(test.TestCase):
 
     def testActive(self):
         active = task.Task(actualStartDateTime=date.Now())
-        self.assertEqual(wx.Colour(*eval(task.Task.settings.get('fgcolor', 
+        self.assertEqual(wx.Colour(*eval(self.settings.get('fgcolor', 
                          'activetasks'))), active.statusFgColor())
 
     def testActiveTaskWithCategory(self):
@@ -2908,34 +2950,40 @@ class TaskSuggestedDateTimeBaseSetupAndTests(object):
 
     def testSuggestedPlannedStartDateTime(self):
         for timeValue, expectedDateTime in self.times.items():
-            self.settings.set('view', 'defaultplannedstartdatetime', 'preset_' + timeValue)
+            self.settings.set('view', 'defaultplannedstartdatetime', 
+                              'preset_' + timeValue)
             self.assertEqual(expectedDateTime,
                              task.Task.suggestedPlannedStartDateTime(lambda: self.now))
 
     def testSuggestedActualStartDateTime(self):
         for timeValue, expectedDateTime in self.times.items():
-            self.settings.set('view', 'defaultactualstartdatetime', 'preset_' + timeValue)
+            self.settings.set('view', 'defaultactualstartdatetime', 
+                              'preset_' + timeValue)
             self.assertEqual(expectedDateTime,
                              task.Task.suggestedActualStartDateTime(lambda: self.now))
 
     def testSuggestedDueDateTime(self):
         for timeValue, expectedDateTime in self.times.items():
-            self.settings.set('view', 'defaultduedatetime', 'propose_' + timeValue) 
+            self.settings.set('view', 'defaultduedatetime', 
+                              'propose_' + timeValue) 
             self.assertEqual(expectedDateTime,
                              task.Task.suggestedDueDateTime(lambda: self.now))
                
     def testSuggestedCompletionDateTime(self):
         for timeValue, expectedDateTime in self.times.items():
-            self.settings.set('view', 'defaultcompletiondatetime', 'preset_' + timeValue) 
+            self.settings.set('view', 'defaultcompletiondatetime', 
+                              'preset_' + timeValue) 
             self.assertEqual(expectedDateTime,
-                             task.Task.suggestedCompletionDateTime(lambda: self.now),
-                             'Expected %s, but got %s, with default completion date time set to %s' % (expectedDateTime, 
-                                                        task.Task.suggestedCompletionDateTime(lambda: self.now),
-                                                        'preset_' + timeValue))
+                task.Task.suggestedCompletionDateTime(lambda: self.now),
+                'Expected %s, but got %s, with default completion date time '
+                'set to %s' % (expectedDateTime, 
+                               task.Task.suggestedCompletionDateTime(lambda: self.now),
+                               'preset_' + timeValue))
             
     def testSuggestedReminderDateTime(self):
         for timeValue, expectedDateTime in self.times.items():
-            self.settings.set('view', 'defaultreminderdatetime', 'propose_' + timeValue)
+            self.settings.set('view', 'defaultreminderdatetime', 
+                              'propose_' + timeValue)
             self.assertEqual(expectedDateTime,
                              task.Task.suggestedReminderDateTime(lambda: self.now))
 

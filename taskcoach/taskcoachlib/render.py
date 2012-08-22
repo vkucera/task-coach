@@ -39,12 +39,10 @@ def priority(priority):
  
 def timeLeft(time_left, completed_task):
     ''' Render time left as a text string. Returns an empty string for 
-        completed tasks and "Infinite" for tasks without planned due date. 
-        Otherwise it returns the number of days, hours, and minutes left. '''
-    if completed_task:
+        completed tasks and for tasks without planned due date. Otherwise it 
+        returns the number of days, hours, and minutes left. '''
+    if completed_task or time_left == datemodule.TimeDelta.max:
         return ''
-    if time_left == datemodule.TimeDelta.max:
-        return _('Infinite')
     sign = '-' if time_left.days < 0 else ''
     time_left = abs(time_left)
     if time_left.days > 0:
@@ -101,19 +99,23 @@ try:
 except UnicodeDecodeError:
     dateFormat = '%Y-%m-%d'
 
-dateFunc = lambda dt=None: datetime.datetime.strftime(dt, dateFormat) # datemodule.Date is not a class
+dateFunc = lambda dt=None: datetime.datetime.strftime(dt, dateFormat)  # datemodule.Date is not a class
 
 if operating_system.isWindows():
     import pywintypes, win32api
     timeFunc = lambda dt=None: win32api.GetTimeFormat(0x400, 0x02, None if dt is None else pywintypes.Time(dt), None)
+    timeWithSecondsFunc = lambda dt=None: win32api.GetTimeFormat(0x400, 0x0, None if dt is None else pywintypes.Time(dt), None)
 else:
     language_and_country = locale.getlocale()[0]
     if language_and_country and ('_US' in language_and_country or 
                                  '_United States' in language_and_country):
         timeFormat = '%I:%M %p'
+        timeWithSecondsFormat = '%I:%M:%S %p'
     else: 
-        timeFormat = '%H:%M'  # Alas, %X includes seconds (see http://stackoverflow.com/questions/2507726)
+        timeFormat = '%H:%M'  # %X includes seconds (see http://stackoverflow.com/questions/2507726)
+        timeWithSecondsFormat = '%X'
     timeFunc = lambda dt=None: datemodule.DateTime.strftime(dt, timeFormat)
+    timeWithSecondsFunc = lambda dt=None: datemodule.DateTime.strftime(dt, timeWithSecondsFormat)
 
 dateTimeFunc = lambda dt=None: u'%s %s' % (dateFunc(dt), timeFunc(dt))
 
@@ -151,11 +153,17 @@ def dateTimePeriod(start, stop):
         return '%s - %s' % (dateTime(start), dateTime(stop))
     
     
-def time(dateTime):
-    dateTime = dateTime.replace(year=2000)  # strftime doesn't handle years before 1900
-    return timeFunc(dateTime)
+def time(dateTime, seconds=False):
+    try:
+        # strftime doesn't handle years before 1900, be prepared:
+        dateTime = dateTime.replace(year=2000)  
+    except TypeError:  # We got a time instead of a dateTime
+        dateTime = datemodule.Now().replace(hour=dateTime.hour, 
+                                            minute=dateTime.minute,
+                                            second=dateTime.second) 
+    return timeWithSecondsFunc(dateTime) if seconds else timeFunc(dateTime)
 
-    
+
 def month(dateTime):
     return dateTime.strftime('%Y %B')
 

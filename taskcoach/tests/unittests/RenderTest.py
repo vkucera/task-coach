@@ -96,8 +96,8 @@ class RenderTimeLeftTest(test.TestCase):
     def testNoTimeLeftWhenCompleted(self):
         self.assertEqual('', render.timeLeft(date.TimeDelta(), True))
 
-    def testInfiniteTimeLeftWhenActive(self):
-        self.assertEqual('Infinite', render.timeLeft(date.TimeDelta.max, False))
+    def testNoTimeLeftWhenNoDueDate(self):
+        self.assertEqual('', render.timeLeft(date.TimeDelta.max, False))
 
     def testInfiniteTimeLeftWhenCompleted(self):
         self.assertEqual('', render.timeLeft(date.TimeDelta.max, True))

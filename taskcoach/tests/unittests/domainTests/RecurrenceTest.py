@@ -374,7 +374,7 @@ class YearlySameWeekDayRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
         
 class MaxRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin):
     def setUp(self):
-        self.recur = date.Recurrence('daily', max=4)
+        self.recur = date.Recurrence('daily', maximum=4)
         
     def testFirst(self):
         self.assertEqual(date.DateTime(2000,1,2), 

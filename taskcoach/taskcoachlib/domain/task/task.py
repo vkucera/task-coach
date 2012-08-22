@@ -75,12 +75,14 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         pub.subscribe(self.__computeRecursiveIcon, 'settings.icon')
         pub.subscribe(self.__computeRecursiveSelectedIcon, 'settings.icon')
         pub.subscribe(self.onDueSoonHoursChanged, 'settings.behavior.duesoonhours')
+        pub.subscribe(self.onMarkParentCompletedWhenAllChildrenCompletedChanged,
+                      'settings.behavior.markparentcompletedwhenallchildrencompleted')
 
         now = date.Now()
         if now < self.__dueDateTime < maxDateTime:
-            date.Scheduler().schedule(self.onOverDue, self.__dueDateTime + date.oneSecond)
+            date.Scheduler().schedule(self.onOverDue, self.__dueDateTime + date.oneSecond, allowMisfire=True)
         if now < self.__plannedStartDateTime < maxDateTime:
-            date.Scheduler().schedule(self.onTimeToStart, self.__plannedStartDateTime + date.oneSecond)
+            date.Scheduler().schedule(self.onTimeToStart, self.__plannedStartDateTime + date.oneSecond, allowMisfire=True)
 
     @patterns.eventSource
     def __setstate__(self, state, event=None):
@@ -259,11 +261,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 if dueDateTime > parent.dueDateTime():
                     parent.setDueDateTime(dueDateTime)
         if date.Now() <= dueDateTime < self.maxDateTime:
-            date.Scheduler().schedule(self.onOverDue, dueDateTime + date.oneSecond)
+            date.Scheduler().schedule(self.onOverDue, dueDateTime + date.oneSecond, allowMisfire=True)
             if self.__dueSoonHours > 0:
                 dueSoonDateTime = dueDateTime + date.oneSecond - date.TimeDelta(hours=self.__dueSoonHours)
                 if dueSoonDateTime > date.Now():
-                    date.Scheduler().schedule(self.onDueSoon, dueSoonDateTime)
+                    date.Scheduler().schedule(self.onDueSoon, dueSoonDateTime, allowMisfire=True)
         self.markDirty()
         self.recomputeAppearance()
         pub.sendMessage(self.dueDateTimeChangedEventType(), 
@@ -316,7 +318,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.recomputeAppearance()
         if plannedStartDateTime < self.maxDateTime:
             date.Scheduler().schedule(self.onTimeToStart, 
-                                      plannedStartDateTime + date.oneSecond)
+                                      plannedStartDateTime + date.oneSecond,
+                                      allowMisfire=True)
         pub.sendMessage(self.plannedStartDateTimeChangedEventType(), 
                         newValue=plannedStartDateTime, sender=self)
 
@@ -467,6 +470,14 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def completionDateTimeSortEventTypes(class_):
         ''' The event types that influence the completion date time sort order. '''
         return (class_.completionDateTimeChangedEventType(),)
+    
+    def onMarkParentCompletedWhenAllChildrenCompletedChanged(self, value):
+        ''' When the global setting changes, send a percentage completed 
+            changed if necessary. '''
+        if self.shouldMarkCompletedWhenAllChildrenCompleted() is None and \
+            any([child.percentageComplete(True) for child in self.children()]):
+            pub.sendMessage(self.percentageCompleteChangedEventType(),
+                            newValue=self.percentageComplete(), sender=self)
 
     # Task state
     
@@ -540,7 +551,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         dueDateTime = self.dueDateTime()
         if dueDateTime < self.maxDateTime:
             newDueSoonDateTime = dueDateTime + date.oneSecond - date.TimeDelta(hours=self.__dueSoonHours)
-            date.Scheduler().schedule(self.onDueSoon, newDueSoonDateTime)
+            date.Scheduler().schedule(self.onDueSoon, newDueSoonDateTime, allowMisfire=True)
         self.recomputeAppearance()
             
     # effort related methods:
@@ -889,10 +900,14 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     
     def percentageComplete(self, recursive=False):
         if recursive:
-            # We ignore our own percentageComplete when we are marked complete
-            # when all children are completed *and* our percentageComplete is 0
+            if self.shouldMarkCompletedWhenAllChildrenCompleted() is None:
+                # pylint: disable=E1101    
+                ignore_me = self.settings.getboolean('behavior', 
+                                'markparentcompletedwhenallchildrencompleted')
+            else:
+                ignore_me = self.shouldMarkCompletedWhenAllChildrenCompleted()
             percentages = []
-            if self.__percentageComplete > 0 or not self.shouldMarkCompletedWhenAllChildrenCompleted():
+            if self.__percentageComplete > 0 or not ignore_me:
                 percentages.append(self.__percentageComplete)
             percentages.extend([child.percentageComplete(recursive) for child in self.children()])
             return sum(percentages) / len(percentages) if percentages else 0
@@ -1344,8 +1359,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         pub.sendMessage(self.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType(),
                         newValue=newValue, sender=self)
         pub.sendMessage(self.percentageCompleteChangedEventType(), 
-                        newValue=self.percentageComplete(recursive=True), 
-                        sender=self)
+                        newValue=self.percentageComplete(), sender=self)
     
     @classmethod
     def shouldMarkCompletedWhenAllChildrenCompletedChangedEventType(class_):

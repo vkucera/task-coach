@@ -362,10 +362,10 @@ class ProgressPage(Page):
         currentPercentageComplete = self.items[0].percentageComplete() if len(self.items) == 1 else self.averagePercentageComplete(self.items)
         self._percentageCompleteEntry = entry.PercentageEntry(self, 
             currentPercentageComplete)
-        self._percentageCompleteSync = attributesync.AttributeSync('percentageComplete', 
-            self._percentageCompleteEntry, currentPercentageComplete, 
-            self.items, command.EditPercentageCompleteCommand, 
-            entry.EVT_PERCENTAGEENTRY, 
+        self._percentageCompleteSync = attributesync.AttributeSync( \
+            'percentageComplete', self._percentageCompleteEntry, 
+            currentPercentageComplete, self.items, 
+            command.EditPercentageCompleteCommand, entry.EVT_PERCENTAGEENTRY, 
             self.items[0].percentageCompleteChangedEventType())
         self.addEntry(_('Percentage complete'), self._percentageCompleteEntry)
 
@@ -383,11 +383,11 @@ class ProgressPage(Page):
         self._shouldMarkCompletedEntry = entry.ChoiceEntry(self, choices,
                                                            currentChoice)
         self._shouldMarkCompletedSync = attributesync.AttributeSync( \
-            'shouldMarkCompletedWhenAllChildrenCompleted', self._shouldMarkCompletedEntry, 
-            currentChoice, self.items, command.EditShouldMarkCompletedCommand, 
-            entry.EVT_CHOICEENTRY,
+            'shouldMarkCompletedWhenAllChildrenCompleted', 
+            self._shouldMarkCompletedEntry, currentChoice, self.items, 
+            command.EditShouldMarkCompletedCommand, entry.EVT_CHOICEENTRY,
             task.Task.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType())                                                       
-        self.addEntry(_('Mark task completed when all children are completed?'), 
+        self.addEntry(_('Mark task completed when all children are completed?'),
                       self._shouldMarkCompletedEntry, flags=[None, wx.ALL])
         
     def entries(self):
@@ -533,7 +533,8 @@ class BudgetPage(Page):
 class PageWithViewer(Page):
     columns = 1
     
-    def __init__(self, items, parent, taskFile, settings, settingsSection, *args, **kwargs):
+    def __init__(self, items, parent, taskFile, settings, settingsSection, 
+                 *args, **kwargs):
         self.__taskFile = taskFile
         self.__settings = settings
         self.__settingsSection = settingsSection
@@ -569,6 +570,7 @@ class EffortPage(PageWithViewer):
     def createViewer(self, taskFile, settings, settingsSection):
         return viewer.EffortViewer(self, taskFile, settings,
             settingsSection=settingsSection,
+            use_separate_settings_section=False,
             tasksToShowEffortFor=task.TaskList(self.items))
 
     def entries(self):
@@ -612,7 +614,8 @@ class CategoriesPage(PageWithViewer):
             self.registerObserver(self.onCategoryChanged, eventType=eventType,
                                   eventSource=item)
         return LocalCategoryViewer(self.items, self, taskFile, settings,
-                                   settingsSection=settingsSection)
+                                   settingsSection=settingsSection,
+                                   use_separate_settings_section=False)
         
     def onCategoryChanged(self, event):
         self.viewer.refreshItems(*event.values())
@@ -646,7 +649,8 @@ class AttachmentsPage(PageWithViewer):
             eventType=item.attachmentsChangedEventType(), 
             eventSource=item)    
         return LocalAttachmentViewer(self, taskFile, settings,
-            settingsSection=settingsSection, owner=item)
+            settingsSection=settingsSection, 
+            use_separate_settings_section=False, owner=item)
 
     def onAttachmentsChanged(self, event):  # pylint: disable=W0613
         self.viewer.domainObjectsToView().clear()
@@ -684,7 +688,8 @@ class NotesPage(PageWithViewer):
                               eventType=item.notesChangedEventType(),
                               eventSource=item)
         return LocalNoteViewer(self, taskFile, settings, 
-                               settingsSection=settingsSection, owner=item)
+                               settingsSection=settingsSection, 
+                               use_separate_settings_section=False, owner=item)
 
     def onNotesChanged(self, event):  # pylint: disable=W0613
         self.viewer.domainObjectsToView().clear()
@@ -724,7 +729,8 @@ class PrerequisitesPage(PageWithViewer):
         pub.subscribe(self.onPrerequisitesChanged, 
                       self.items[0].prerequisitesChangedEventType())
         return LocalPrerequisiteViewer(self.items, self, taskFile, settings,
-                                       settingsSection=settingsSection)
+                                       settingsSection=settingsSection,
+                                       use_separate_settings_section=False)
         
     def onPrerequisitesChanged(self, newValue, sender):
         if sender == self.items[0]:
@@ -745,7 +751,7 @@ class EditBook(widgets.Notebook):
         super(EditBook, self).__init__(parent)
         self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
         pageNames = self.addPages(taskFile, itemsAreNew)
-        self.loadPerspective(pageNames)
+        self.__load_perspective(pageNames)
         
     def addPages(self, taskFile, itemsAreNew):
         pageNames = []
@@ -847,32 +853,51 @@ class EditBook(widgets.Notebook):
             ancestors.extend(item.ancestors())
         return targetItem in self.items + ancestors
     
-    def loadPerspective(self, pageNames):
-        perspectiveKey = self.perspectiveKey(pageNames) 
-        perspective = self.settings.getdict('%sdialog' % self.domainObject, 'perspectives').get(perspectiveKey, '')
+    def __load_perspective(self, pageNames):
+        ''' load the perspective (layout) for the current combination of visible
+            pages from the settings. '''
+        perspectives = self.__get_perspectives()
+        perspective_key = self.__perspective_key(pageNames) 
+        perspective = perspectives.get(perspective_key, '')
         if perspective:
             try:
                 self.LoadPerspective(perspective)
-            except:
-                pass  # pylint: disable=W0702
+            except:  # pylint: disable=W0702
+                pass  
 
-    def savePerspective(self, pageNames):
-        perspectives = self.settings.getdict('%sdialog' % self.domainObject, 'perspectives')
-        perspectiveKey = self.perspectiveKey(pageNames)
-        perspectives[perspectiveKey] = self.SavePerspective() 
-        self.settings.setdict('%sdialog' % self.domainObject, 'perspectives', perspectives)
+    def __save_perspective(self, pageNames):
+        ''' Save the current perspective of the editor in the settings. 
+            Multiple perspectives are supported, for each set of visible pages.
+            This allows different perspectives for e.g. single item editors and
+            multi item editors. '''
+        perspectives = self.__get_perspectives()
+        perspective_key = self.__perspective_key(pageNames)
+        perspectives[perspective_key] = self.SavePerspective() 
+        self.settings.setdict('%sdialog' % self.domainObject, 'perspectives', 
+                              perspectives)
+        
+    def __get_perspectives(self):
+        ''' Return the current set (dict actually) of perspectives for this 
+            edit dialog. '''
+        return self.settings.getdict('%sdialog' % self.domainObject, 
+                                     'perspectives')
         
     @staticmethod
-    def perspectiveKey(pageNames):
-        return '_'.join(pageNames + ['perspective'])
+    def __perspective_key(page_names):
+        ''' Generate a stable key that only depends on the visible tabs for 
+            storing perspectives in the settings file. '''
+        # Sort the page names so that the key doesn't depend on the order of
+        # the page names
+        return '_'.join(sorted(page_names) + ['perspective'])
     
     def onClose(self, event):
         event.Skip()
         for page in self:
             page.close()
         pageNames = [self[index].pageName for index in range(self.GetPageCount())]
-        self.settings.setlist('editor', '%spages' % self.domainObject, pageNames)
-        self.savePerspective(pageNames)
+        self.settings.setlist('editor', '%spages' % self.domainObject, 
+                              pageNames)
+        self.__save_perspective(pageNames)
 
 
 class TaskEditBook(EditBook):
@@ -955,7 +980,8 @@ class EffortEditBook(Page):
     def addStartAndStopEntries(self):
         # pylint: disable=W0201,W0142
         dateTimeEntryKwArgs = dict(showSeconds=True)
-        flags = [None, wx.ALIGN_RIGHT | wx.ALL, wx.ALIGN_LEFT | wx.ALL | wx.ALIGN_CENTER_VERTICAL, None]
+        flags = [None, wx.ALIGN_RIGHT | wx.ALL, wx.ALIGN_LEFT | wx.ALL | 
+                 wx.ALIGN_CENTER_VERTICAL, None]
         
         currentStartDateTime = self.items[0].getStart()
         self._startDateTimeEntry = entry.DateTimeEntry(self, self._settings,
@@ -964,7 +990,8 @@ class EffortEditBook(Page):
             self._startDateTimeEntry, currentStartDateTime, self.items,
             command.EditEffortStartDateTimeCommand, entry.EVT_DATETIMEENTRY,
             self.items[0].startChangedEventType())
-        self._startDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onDateTimeChanged)        
+        self._startDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, 
+                                      self.onDateTimeChanged)        
         startFromLastEffortButton = self._createStartFromLastEffortButton()
         self.addEntry(_('Start'), self._startDateTimeEntry,
             startFromLastEffortButton, flags=flags)
@@ -976,7 +1003,8 @@ class EffortEditBook(Page):
             self._stopDateTimeEntry, currentStopDateTime, self.items,
             command.EditEffortStopDateTimeCommand, entry.EVT_DATETIMEENTRY,
             self.items[0].stopChangedEventType())
-        self._stopDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onStopDateTimeChanged)
+        self._stopDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, 
+                                     self.onStopDateTimeChanged)
         stopNowButton = self._createStopNowButton()
         self._invalidPeriodMessage = self._createInvalidPeriodMessage()
         self.addEntry(_('Stop'), self._stopDateTimeEntry, 
@@ -1111,7 +1139,8 @@ class Editor(widgets.Dialog):
     def createUICommands(self):
         # FIXME: keyboard shortcuts are hardcoded here, but they can be 
         # changed in the translations
-        # FIXME: there are more keyboard shortcuts that don't work in dialogs atm 
+        # FIXME: there are more keyboard shortcuts that don't work in dialogs 
+        # at the moment, like DELETE 
         newEffortId = wx.NewId()
         table = wx.AcceleratorTable([(wx.ACCEL_CMD, ord('Z'), wx.ID_UNDO),
                                      (wx.ACCEL_CMD, ord('Y'), wx.ID_REDO),
@@ -1131,8 +1160,8 @@ class Editor(widgets.Dialog):
         self.newEffortCommand.bind(self._interior, newEffortId)
 
     def createInterior(self):
-        return self.EditBookClass(self._panel, self._items, 
-                                  self._taskFile, self._settings, self.__itemsAreNew)
+        return self.EditBookClass(self._panel, self._items, self._taskFile, 
+                                  self._settings, self.__itemsAreNew)
 
     def onClose(self, event):
         event.Skip()
@@ -1142,7 +1171,7 @@ class Editor(widgets.Dialog):
         # destroyed...
         if operating_system.isMac():
             self._interior.SetFocusIgnoringChildren()
-                        
+            
     def onItemRemoved(self, event):
         ''' The item we're editing or one of its ancestors has been removed or 
             is hidden by a filter. If the item is really removed, close the tab 
