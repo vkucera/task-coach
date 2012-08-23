@@ -327,7 +327,7 @@ class ThunderbirdImapReader(object):
             try:
                 if 'AUTH=CRAM-MD5' in imap.capabilities:
                     response, dummy = imap.login_cram_md5(str(self.user), 
-                                                         str(pwd))
+                                                          str(pwd))
                 elif 'AUTH=NTLM' in imap.capabilities:
                     domain = wx.GetTextFromUser( \
                         _('Please enter the domain for user %s') % self.user)

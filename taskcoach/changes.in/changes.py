@@ -67,6 +67,10 @@ clearer.''', '3555498'),
         Bug('''The combobox for selecting the snooze time in the reminder
 dialog was not read only. This suggested that one could type in custom snooze 
 times while that is not supported (yet).''', '3560416'),
+        Bug('''The "Filter on all checked categories/Filter on any checked
+category" option was only available via the toolbar of the category viewer. 
+Due to the width of the option, it could be difficult to access. The option
+is now also available as menu item in the View->Filter menu.''', '3554627'),
 #        Bug('''Fix slowness when viewing aggregated efforts.''',
 #            '3538310', '3537702'),
         ],

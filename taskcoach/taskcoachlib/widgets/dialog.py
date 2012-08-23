@@ -16,19 +16,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, wx.html, os
 from taskcoachlib import operating_system
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty import aui, sized_controls
 import notebook
+import wx
+import wx.html
+import os
 
 
 class Dialog(sized_controls.SizedDialog):
     def __init__(self, parent, title, bitmap='edit', 
                  direction=None, *args, **kwargs):
-        self._buttonTypes = kwargs.get('buttonTypes', wx.OK|wx.CANCEL)
+        self._buttonTypes = kwargs.get('buttonTypes', wx.OK | wx.CANCEL)
         super(Dialog, self).__init__(parent, -1, title,
-            style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER|wx.MAXIMIZE_BOX|wx.MINIMIZE_BOX)
+            style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER | wx.MAXIMIZE_BOX | wx.MINIMIZE_BOX)
         self.SetIcon(wx.ArtProvider_GetIcon(bitmap, wx.ART_FRAME_ICON,
             (16, 16)))
         self._panel = self.GetContentsPane()
@@ -53,7 +55,8 @@ class Dialog(sized_controls.SizedDialog):
         pass
     
     def createButtons(self):
-        buttonSizer = self.CreateStdDialogButtonSizer(wx.OK if self._buttonTypes == wx.ID_CLOSE else self._buttonTypes)
+        buttonTypes = wx.OK if self._buttonTypes == wx.ID_CLOSE else self._buttonTypes
+        buttonSizer = self.CreateStdDialogButtonSizer(buttonTypes)
         if self._buttonTypes & wx.OK or self._buttonTypes & wx.ID_CLOSE:
             buttonSizer.GetAffirmativeButton().Bind(wx.EVT_BUTTON, self.ok)
         if self._buttonTypes & wx.CANCEL:
@@ -114,10 +117,10 @@ class NotebookDialog(Dialog):
 
         
 class HtmlWindowThatUsesWebBrowserForExternalLinks(wx.html.HtmlWindow):
-    def OnLinkClicked(self, linkInfo): # pylint: disable=W0221
+    def OnLinkClicked(self, linkInfo):  # pylint: disable=W0221
         openedLinkInExternalBrowser = False
         if linkInfo.GetTarget() == '_blank':
-            import webbrowser # pylint: disable=W0404
+            import webbrowser  # pylint: disable=W0404
             try:
                 webbrowser.open(linkInfo.GetHref())
                 openedLinkInExternalBrowser = True
@@ -136,7 +139,7 @@ class HTMLDialog(Dialog):
         
     def createInterior(self):
         interior = HtmlWindowThatUsesWebBrowserForExternalLinks(self._panel, 
-            -1, size=(550,400))
+            -1, size=(550, 400))
         if self._direction:
             interior.SetLayoutDirection(self._direction)
         return interior
@@ -150,8 +153,8 @@ class HTMLDialog(Dialog):
         
 def AttachmentSelector(**callerKeywordArguments):
     kwargs = {'message': _('Add attachment'),
-              'default_path' : os.getcwd(), 
-              'wildcard' : _('All files (*.*)|*'), 
+              'default_path': os.getcwd(), 
+              'wildcard': _('All files (*.*)|*'), 
               'flags': wx.OPEN}
     kwargs.update(callerKeywordArguments)
-    return wx.FileSelector(**kwargs) # pylint: disable=W0142
+    return wx.FileSelector(**kwargs)  # pylint: disable=W0142

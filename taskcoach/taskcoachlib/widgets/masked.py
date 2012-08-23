@@ -16,14 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import locale
-from wx.lib import masked
 from taskcoachlib import operating_system
+from wx.lib import masked
+import locale
 
 
 class FixOverwriteSelectionMixin(object):
     def _SetSelection(self, start, end):
-        if operating_system.isGTK(): # pragma: no cover
+        if operating_system.isGTK():  # pragma: no cover
             # By exchanging the start and end parameters we make sure that the 
             # cursor is at the start of the field so that typing overwrites the 
             # current field instead of moving to the next field:
@@ -50,10 +50,10 @@ class AmountCtrl(FixOverwriteSelectionMixin, masked.NumCtrl):
         # Prevent decimalChar and groupChar from being the same:
         if groupChar == decimalChar:
             groupChar = '.' if decimalChar == ',' else ','
-        super(AmountCtrl, self).__init__(parent, value=value, allowNegative=False,
-                                         fractionWidth=2, selectOnEntry=True,
-                                         decimalChar=decimalChar, groupChar=groupChar,
-                                         groupDigits=groupDigits)
+        super(AmountCtrl, self).__init__(parent, value=value, 
+            allowNegative=False, fractionWidth=2, selectOnEntry=True, 
+            decimalChar=decimalChar, groupChar=groupChar, 
+            groupDigits=groupDigits)
         
 
 class TimeDeltaCtrl(TextCtrl):
@@ -61,7 +61,8 @@ class TimeDeltaCtrl(TextCtrl):
         mask = kwargs.pop('mask', '#{8}:##:##')
         super(TimeDeltaCtrl, self).__init__(parent, mask=mask,
             formatcodes='FS',
-            fields=[masked.Field(formatcodes='r', defaultValue='%8d'%hours),
-                    masked.Field(defaultValue='%02d'%minutes),
-                    masked.Field(defaultValue='%02d'%seconds)], *args, **kwargs)
-        
+            fields=[masked.Field(formatcodes='r', defaultValue='%8d' % hours),
+                    masked.Field(defaultValue='%02d' % minutes),
+                    masked.Field(defaultValue='%02d' % seconds)], 
+            *args, **kwargs)
+ 

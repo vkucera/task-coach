@@ -90,7 +90,9 @@ class FilterableViewerMixin(object):
         return self.__filterUICommands[:2] + self.createCategoryFilterCommands() + self.__filterUICommands[2:]
 
     def createFilterUICommands(self):
-        return [uicommand.ResetFilter(viewer=self), None]
+        return [uicommand.ResetFilter(viewer=self), 
+                uicommand.CategoryViewerFilterChoice(settings=self.settings),
+                None]
 
     def resetFilter(self):
         self.taskFile.categories().resetAllFilteredCategories()
