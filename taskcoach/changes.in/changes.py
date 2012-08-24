@@ -71,6 +71,8 @@ times while that is not supported (yet).''', '3560416'),
 category" option was only available via the toolbar of the category viewer. 
 Due to the width of the option, it could be difficult to access. The option
 is now also available as menu item in the View->Filter menu.''', '3554627'),
+        Bug('''When the budget left is negative, the budget left field in the
+task edit dialog would not show a minus sign.''', '3554616'),
 #        Bug('''Fix slowness when viewing aggregated efforts.''',
 #            '3538310', '3537702'),
         ],

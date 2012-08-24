@@ -57,11 +57,23 @@ class AmountCtrl(FixOverwriteSelectionMixin, masked.NumCtrl):
         
 
 class TimeDeltaCtrl(TextCtrl):
-    def __init__(self, parent, hours, minutes, seconds, *args, **kwargs):
-        mask = kwargs.pop('mask', '#{8}:##:##')
-        super(TimeDeltaCtrl, self).__init__(parent, mask=mask,
-            formatcodes='FS',
-            fields=[masked.Field(formatcodes='r', defaultValue='%8d' % hours),
+    ''' Masked edit control for entering or displaying time deltas of the
+        form <hour>:<minute>:<second>. Entering negative time deltas is not
+        allowed, displaying negative time deltas is allowed if the control
+        is read only. '''
+    def __init__(self, parent, hours, minutes, seconds, readonly=False, 
+                 negative_value=False, *args, **kwargs):
+        # If the control is read only (meaning it could potentially have to 
+        # show negative values) or if the value is actually negative, allow
+        # the minus sign in the mask. Otherwise only allow for numbers.
+        mask = 'X{9}:##:##' if negative_value or readonly else '#{9}:##:##'
+        # If the value is negative (e.g. over budget), place a minus sign 
+        # before the hours number and make sure the field has the appropriate
+        # width.
+        hours = '%9s' % ('-' + '%d' % hours) if negative_value else \
+                '%9d' % hours 
+        super(TimeDeltaCtrl, self).__init__(parent, mask=mask, formatcodes='FS',
+            fields=[masked.Field(formatcodes='r', defaultValue=hours),
                     masked.Field(defaultValue='%02d' % minutes),
                     masked.Field(defaultValue='%02d' % seconds)], 
             *args, **kwargs)
