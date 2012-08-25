@@ -189,7 +189,7 @@ class Application(object):
         i18n.Translator(self.determineLanguage(self._options, self.settings))
         
     @staticmethod
-    def determineLanguage(options, settings, locale=locale): # pylint: disable=W0621
+    def determineLanguage(options, settings, locale=locale):  # pylint: disable=W0621
         language = None
         if options: 
             # User specified language or .po file on command line
@@ -215,7 +215,7 @@ class Application(object):
         # On Jolicloud, printing crashes unless we do this:
         if operating_system.isGTK():
             try:
-                import gtk # pylint: disable=F0401
+                import gtk  # pylint: disable=F0401
                 gtk.remove_log_handlers()
             except ImportError:
                 pass
@@ -231,12 +231,14 @@ class Application(object):
         self.wxApp.SetVendorName(meta.author)
         
     def initSpellChecking(self):
-        self.onSpellChecking(self.settings.getboolean('editor', 'maccheckspelling'))
+        self.onSpellChecking(self.settings.getboolean('editor', 
+                                                      'maccheckspelling'))
         pub.subscribe(self.onSpellChecking, 'settings.editor.maccheckspelling')
         
     def onSpellChecking(self, value):
         if operating_system.isMac() and not operating_system.isMacOsXMountainLion_OrNewer():
-            wx.SystemOptions.SetOptionInt("mac.textcontrol-use-spell-checker", value)
+            wx.SystemOptions.SetOptionInt("mac.textcontrol-use-spell-checker", 
+                                          value)
         
     def registerSignalHandlers(self):
         quitAdapter = lambda *args: self.quitApplication()
