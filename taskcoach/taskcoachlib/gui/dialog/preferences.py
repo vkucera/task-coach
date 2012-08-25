@@ -538,9 +538,16 @@ class FeaturesPage(SettingsPage):
               'This may slow down Task Coach.'),
             helpText='restart')
         self.addChoiceSetting('view', 'effortminuteinterval',
-            _('Minutes between task start/end times'), ' ',
+            _('Minutes between suggested times'), 
+            _('In popup-menus for time selection (e.g. for setting the start \n'
+              'time of an effort) %(name)s will suggest times using this \n'
+              'setting. The smaller the number of minutes, the more times \n'
+              'are suggested. Of course, you can also enter any time you \n'
+              'want beside the suggested times.') % meta.data.metaDict,
             [(minutes, minutes) for minutes in ('5', '6', '10', '15', '20', 
-                                                '30')])
+                                                '30')],
+            flags=(None, wx.ALL | wx.ALIGN_CENTER_VERTICAL,
+                   wx.ALL | wx.ALIGN_CENTER_VERTICAL))
         self.addIntegerSetting('feature', 'minidletime', _('Idle time notice'),
             helpText=_('If there is no user input for this amount of time\n'
                        '(in minutes), %(name)s will ask what to do about current '
@@ -689,7 +696,7 @@ class Preferences(widgets.NotebookDialog):
             self.CentreOnParent()
 
     def addPages(self):
-        self._interior.SetMinSize((950, 450))
+        self._interior.SetMinSize((950, 550))
         for pageName in self.allPageNamesInUserOrder():
             if self.shouldCreatePage(pageName):
                 page = self.createPage(pageName)
