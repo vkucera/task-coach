@@ -2361,7 +2361,9 @@ class Anonymize(IOCommand):
              *args, **kwargs)
 
     def doCommand(self, event):
-        anonymize(self.iocontroller.filename())
+        anonymized_filename = anonymize(self.iocontroller.filename())
+        wx.MessageBox(_('Your task file has been anonymized and saved to:') \
+                  + '\n' + anonymized_filename, _('Finished'), wx.OK)
 
     def enabled(self, event):
         return bool(self.iocontroller.filename())
