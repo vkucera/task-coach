@@ -1133,7 +1133,7 @@ class Editor(widgets.Dialog):
         self._callAfter = kwargs.get('callAfter', wx.CallAfter)
         super(Editor, self).__init__(parent, self.title(), 
                                      buttonTypes=wx.ID_CLOSE, *args, **kwargs)
-        columnName = kwargs.get('columnName', '')
+        columnName = kwargs.get('columnName', 'subject')
         self._interior.setFocus(columnName)
         patterns.Publisher().registerObserver(self.onItemRemoved,
             eventType=container.removeItemEventType(), eventSource=container)
