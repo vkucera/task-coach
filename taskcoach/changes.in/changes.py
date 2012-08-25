@@ -77,6 +77,9 @@ is now also available as menu item in the View->Filter menu.''', '3554627'),
 task edit dialog would not show a minus sign.''', '3554616'),
         Bug('''On Mac OS X, the tip of the day window would block the dialog 
 for unlocking a locked task file.''', '3561499'),
+        Bug('''When saving selected tasks, not only include the categories
+the selected tasks belong to, but also the parent categories of the used
+categories, even though they may not have been used themselves.''', '3561159'),
 #        Bug('''Fix slowness when viewing aggregated efforts.''',
 #            '3538310', '3537702'),
         ],
