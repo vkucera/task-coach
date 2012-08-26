@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-08-15 23:21+0000\n"
-"PO-Revision-Date: 2012-01-28 22:28+0000\n"
+"POT-Creation-Date: 2012-08-21 06:47+0000\n"
+"PO-Revision-Date: 2012-08-16 23:31+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-16 15:41+0000\n"
-"X-Generator: Launchpad (build 15810)\n"
+"X-Launchpad-Export-Date: 2012-08-26 21:52+0000\n"
+"X-Generator: Launchpad (build 15843)\n"
 
 #: taskcoachlib/application/application.py:67
 msgid "Errors have occured. Please see \"%s\""
@@ -1136,17 +1136,17 @@ msgstr "Без піктограми"
 msgid "Message from the %s developers"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/developer_message.py:51
+#: taskcoachlib/gui/dialog/developer_message.py:52
 msgid "See:"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/developer_message.py:57
-#: taskcoachlib/gui/dialog/preferences.py:354
+#: taskcoachlib/gui/dialog/developer_message.py:58
+#: taskcoachlib/gui/dialog/preferences.py:362
 msgid "Check for messages from the %(name)s developers on startup"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:89 taskcoachlib/gui/dialog/editor.py:118
-#: taskcoachlib/gui/dialog/editor.py:1053
+#: taskcoachlib/gui/dialog/editor.py:1056
 #: taskcoachlib/gui/viewer/attachment.py:85
 #: taskcoachlib/gui/viewer/category.py:90
 #: taskcoachlib/gui/viewer/effort.py:194 taskcoachlib/gui/viewer/note.py:106
@@ -1171,7 +1171,7 @@ msgid "Subject"
 msgstr "Тема"
 
 #: taskcoachlib/gui/dialog/editor.py:109
-#: taskcoachlib/gui/dialog/editor.py:1043
+#: taskcoachlib/gui/dialog/editor.py:1046
 msgid "Edit to change all descriptions"
 msgstr "Редагувати для зміни всіх описів"
 
@@ -1207,22 +1207,22 @@ msgid "Appearance"
 msgstr "Зовнішній вид"
 
 #: taskcoachlib/gui/dialog/editor.py:227
-#: taskcoachlib/gui/dialog/preferences.py:121
+#: taskcoachlib/gui/dialog/preferences.py:125
 msgid "Foreground color"
 msgstr "Головний колір"
 
 #: taskcoachlib/gui/dialog/editor.py:228
-#: taskcoachlib/gui/dialog/preferences.py:121
+#: taskcoachlib/gui/dialog/preferences.py:125
 msgid "Background color"
 msgstr "Колір тла"
 
 #: taskcoachlib/gui/dialog/editor.py:253
-#: taskcoachlib/gui/dialog/preferences.py:122
+#: taskcoachlib/gui/dialog/preferences.py:126
 msgid "Font"
 msgstr "Шрифт"
 
 #: taskcoachlib/gui/dialog/editor.py:262
-#: taskcoachlib/gui/dialog/preferences.py:122
+#: taskcoachlib/gui/dialog/preferences.py:126
 msgid "Icon"
 msgstr "Піктограма"
 
@@ -1371,141 +1371,141 @@ msgstr "Редагувати завдання"
 msgid "Task"
 msgstr "Завдання"
 
-#: taskcoachlib/gui/dialog/editor.py:969
+#: taskcoachlib/gui/dialog/editor.py:971
 msgid "Start"
 msgstr "Почати"
 
-#: taskcoachlib/gui/dialog/editor.py:982
+#: taskcoachlib/gui/dialog/editor.py:985
 msgid "Stop"
 msgstr "Зупинити"
 
-#: taskcoachlib/gui/dialog/editor.py:988
+#: taskcoachlib/gui/dialog/editor.py:991
 msgid "Start tracking from last stop time"
 msgstr "Почати відстеження часу від останньої зупинки"
 
-#: taskcoachlib/gui/dialog/editor.py:995
+#: taskcoachlib/gui/dialog/editor.py:998
 msgid "Stop tracking now"
 msgstr "Припинити відстеження"
 
-#: taskcoachlib/gui/dialog/editor.py:1026
+#: taskcoachlib/gui/dialog/editor.py:1029
 msgid "Warning: start must be earlier than stop"
 msgstr "Увага: початок має бути раніше закінчення"
 
-#: taskcoachlib/gui/dialog/editor.py:1169
+#: taskcoachlib/gui/dialog/editor.py:1172
 msgid "Multiple tasks"
 msgstr "Кілька завдань"
 
-#: taskcoachlib/gui/dialog/editor.py:1170
+#: taskcoachlib/gui/dialog/editor.py:1173
 msgid "%s (task)"
 msgstr "%s (завдання)"
 
-#: taskcoachlib/gui/dialog/editor.py:1175
+#: taskcoachlib/gui/dialog/editor.py:1178
 msgid "Multiple categories"
 msgstr "Кілька категорій"
 
-#: taskcoachlib/gui/dialog/editor.py:1176
+#: taskcoachlib/gui/dialog/editor.py:1179
 msgid "%s (category)"
 msgstr "%s (категорія)"
 
-#: taskcoachlib/gui/dialog/editor.py:1181
+#: taskcoachlib/gui/dialog/editor.py:1184
 msgid "Multiple notes"
 msgstr "Кілька приміток"
 
-#: taskcoachlib/gui/dialog/editor.py:1182
+#: taskcoachlib/gui/dialog/editor.py:1185
 msgid "%s (note)"
 msgstr "%s (примітка)"
 
-#: taskcoachlib/gui/dialog/editor.py:1187
+#: taskcoachlib/gui/dialog/editor.py:1190
 msgid "Multiple attachments"
 msgstr "Кілька приєднаних файлів"
 
-#: taskcoachlib/gui/dialog/editor.py:1188
+#: taskcoachlib/gui/dialog/editor.py:1191
 msgid "%s (attachment)"
 msgstr "%s (приєднаний файл)"
 
-#: taskcoachlib/gui/dialog/editor.py:1193
+#: taskcoachlib/gui/dialog/editor.py:1196
 msgid "Multiple efforts"
 msgstr "Кілька об'ємів робіт"
 
-#: taskcoachlib/gui/dialog/editor.py:1194
+#: taskcoachlib/gui/dialog/editor.py:1197
 msgid "%s (effort)"
 msgstr "%s (об'єм роботи)"
 
-#: taskcoachlib/gui/dialog/entry.py:185
+#: taskcoachlib/gui/dialog/entry.py:192
 msgid "Use font:"
 msgstr "Використати шрифт:"
 
-#: taskcoachlib/gui/dialog/entry.py:236
+#: taskcoachlib/gui/dialog/entry.py:246
 msgid "Use color:"
 msgstr "Використати колір:"
 
-#: taskcoachlib/gui/dialog/entry.py:395 taskcoachlib/gui/dialog/entry.py:475
+#: taskcoachlib/gui/dialog/entry.py:409 taskcoachlib/gui/dialog/entry.py:501
 #: taskcoachlib/gui/uicommand.py:79 taskcoachlib/gui/wizard/csvimport.py:227
 #: taskcoachlib/widgets/dirchooser.py:28
 msgid "None"
 msgstr "Немає"
 
-#: taskcoachlib/gui/dialog/entry.py:395 taskcoachlib/render.py:87
+#: taskcoachlib/gui/dialog/entry.py:409 taskcoachlib/render.py:85
 msgid "Daily"
 msgstr "Щодня"
 
-#: taskcoachlib/gui/dialog/entry.py:395 taskcoachlib/render.py:87
+#: taskcoachlib/gui/dialog/entry.py:409 taskcoachlib/render.py:85
 msgid "Monthly"
 msgstr "Щомісячно"
 
-#: taskcoachlib/gui/dialog/entry.py:395 taskcoachlib/render.py:87
+#: taskcoachlib/gui/dialog/entry.py:409 taskcoachlib/render.py:85
 msgid "Weekly"
 msgstr "Щотижня"
 
-#: taskcoachlib/gui/dialog/entry.py:395 taskcoachlib/render.py:87
+#: taskcoachlib/gui/dialog/entry.py:410 taskcoachlib/render.py:85
 msgid "Yearly"
 msgstr "Щорічно"
 
-#: taskcoachlib/gui/dialog/entry.py:404
+#: taskcoachlib/gui/dialog/entry.py:419
 msgid "keeping dates on the same weekday"
 msgstr "зберігати дати тогож робочого дня"
 
-#: taskcoachlib/gui/dialog/entry.py:409
+#: taskcoachlib/gui/dialog/entry.py:427
 msgid ", every"
 msgstr ", кожні"
 
-#: taskcoachlib/gui/dialog/entry.py:431
+#: taskcoachlib/gui/dialog/entry.py:455
 msgid "Stop after"
 msgstr "Зупинити після"
 
-#: taskcoachlib/gui/dialog/entry.py:437
+#: taskcoachlib/gui/dialog/entry.py:461
 msgid "recurrences"
 msgstr "повторення"
 
-#: taskcoachlib/gui/dialog/entry.py:443
+#: taskcoachlib/gui/dialog/entry.py:468
 msgid "Schedule each next recurrence based on"
 msgstr "Плануйте кожне наступне повторення на основі"
 
-#: taskcoachlib/gui/dialog/entry.py:447
+#: taskcoachlib/gui/dialog/entry.py:472
 msgid "previous start and/or due date and time"
 msgstr "попередні  дата початку і/або виконання та час"
 
-#: taskcoachlib/gui/dialog/entry.py:448
+#: taskcoachlib/gui/dialog/entry.py:473
 msgid "last completion date and time"
 msgstr "останні дата закінчення та час"
 
-#: taskcoachlib/gui/dialog/entry.py:467
+#: taskcoachlib/gui/dialog/entry.py:493
 msgid "day(s),"
 msgstr "день(днів)"
 
-#: taskcoachlib/gui/dialog/entry.py:467
+#: taskcoachlib/gui/dialog/entry.py:493
 msgid "period,"
 msgstr "період"
 
-#: taskcoachlib/gui/dialog/entry.py:467
+#: taskcoachlib/gui/dialog/entry.py:493
 msgid "week(s),"
 msgstr "тиждень(тижнів)"
 
-#: taskcoachlib/gui/dialog/entry.py:468
+#: taskcoachlib/gui/dialog/entry.py:494
 msgid "month(s),"
 msgstr "місяць(місяців)"
 
-#: taskcoachlib/gui/dialog/entry.py:468
+#: taskcoachlib/gui/dialog/entry.py:494
 msgid "year(s),"
 msgstr "рік(років)"
 
@@ -1631,7 +1631,7 @@ msgstr ""
 msgid "OK"
 msgstr "Гаразд"
 
-#: taskcoachlib/gui/dialog/preferences.py:259
+#: taskcoachlib/gui/dialog/preferences.py:264
 msgid ""
 "This setting will take effect\n"
 "after you restart %s"
@@ -1639,15 +1639,15 @@ msgstr ""
 "Ця опція запрацює\n"
 "лише після перезапуску %s"
 
-#: taskcoachlib/gui/dialog/preferences.py:305
+#: taskcoachlib/gui/dialog/preferences.py:311
 msgid "Files"
 msgstr "Файли"
 
-#: taskcoachlib/gui/dialog/preferences.py:311
+#: taskcoachlib/gui/dialog/preferences.py:317
 msgid "Auto save after every change"
 msgstr "Автоматично зберігати після кожної зміни"
 
-#: taskcoachlib/gui/dialog/preferences.py:313
+#: taskcoachlib/gui/dialog/preferences.py:319
 msgid ""
 "Create a backup copy before\n"
 "overwriting a %s file"
@@ -1655,7 +1655,7 @@ msgstr ""
 "Створити резервну копію перед\n"
 "перезаписом файла %s"
 
-#: taskcoachlib/gui/dialog/preferences.py:315
+#: taskcoachlib/gui/dialog/preferences.py:321
 msgid ""
 "Save settings (%s.ini) in the same\n"
 "directory as the program"
@@ -1663,15 +1663,15 @@ msgstr ""
 "Зберегти файл налаштувань (%s.ini)\n"
 "у каталозі  програми"
 
-#: taskcoachlib/gui/dialog/preferences.py:317
+#: taskcoachlib/gui/dialog/preferences.py:323
 msgid "For running %s from a removable medium"
 msgstr "Для запуску %s зі з'ємного носія"
 
-#: taskcoachlib/gui/dialog/preferences.py:318
+#: taskcoachlib/gui/dialog/preferences.py:325
 msgid "Attachment base directory"
 msgstr "Каталог для приєднаних файлів"
 
-#: taskcoachlib/gui/dialog/preferences.py:319
+#: taskcoachlib/gui/dialog/preferences.py:326
 msgid ""
 "When adding an attachment, try to make\n"
 "its path relative to this one."
@@ -1679,27 +1679,27 @@ msgstr ""
 "При додаванні приєднаних файлів спробуйте створити шлях до них у "
 "відповідності до"
 
-#: taskcoachlib/gui/dialog/preferences.py:321
+#: taskcoachlib/gui/dialog/preferences.py:329
 msgid "Before saving, automatically import from"
 msgstr "Перед збереженням автоматично імпортуйте з"
 
-#: taskcoachlib/gui/dialog/preferences.py:322
-#: taskcoachlib/gui/dialog/preferences.py:328
+#: taskcoachlib/gui/dialog/preferences.py:330
+#: taskcoachlib/gui/dialog/preferences.py:336
 msgid "Todo.txt format"
 msgstr "Todo.txt формат"
 
-#: taskcoachlib/gui/dialog/preferences.py:323
+#: taskcoachlib/gui/dialog/preferences.py:331
 msgid ""
 "Before saving, %s automatically imports tasks\n"
 "from a Todo.txt file with the same name as the task file,\n"
 "but with extension .txt"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:327
+#: taskcoachlib/gui/dialog/preferences.py:335
 msgid "When saving, automatically export to"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:329
+#: taskcoachlib/gui/dialog/preferences.py:337
 msgid ""
 "When saving, %s automatically exports tasks\n"
 "to a Todo.txt file with the same name as the task file,\n"
@@ -1708,51 +1708,51 @@ msgstr ""
 "Перед збереженням, %s автоматично імпортує завдання з Todo.txt файлу з тієї "
 "ж назви, що і файл завдання, але з розширенням.txt"
 
-#: taskcoachlib/gui/dialog/preferences.py:337
+#: taskcoachlib/gui/dialog/preferences.py:345
 msgid "Window behavior"
 msgstr "Поведінка вікна"
 
-#: taskcoachlib/gui/dialog/preferences.py:344
+#: taskcoachlib/gui/dialog/preferences.py:352
 msgid "Show splash screen on startup"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:346
+#: taskcoachlib/gui/dialog/preferences.py:354
 msgid "Show tips window on startup"
 msgstr "Показувати підказку під час запуску"
 
-#: taskcoachlib/gui/dialog/preferences.py:348
+#: taskcoachlib/gui/dialog/preferences.py:356
 msgid "Start with the main window iconized"
 msgstr "Запускати мінімізованим"
 
-#: taskcoachlib/gui/dialog/preferences.py:349
+#: taskcoachlib/gui/dialog/preferences.py:357
 msgid "Always"
 msgstr "Завжди"
 
-#: taskcoachlib/gui/dialog/preferences.py:349
+#: taskcoachlib/gui/dialog/preferences.py:357
 msgid "Never"
 msgstr "Ніколи"
 
-#: taskcoachlib/gui/dialog/preferences.py:351
+#: taskcoachlib/gui/dialog/preferences.py:359
 msgid "If it was iconized last session"
 msgstr "Якщо було мінімізовано останнього разу"
 
-#: taskcoachlib/gui/dialog/preferences.py:352
+#: taskcoachlib/gui/dialog/preferences.py:360
 msgid "Check for new version of %(name)s on startup"
 msgstr "Перевіряти наявність нової версії %(name)s під час запуску"
 
-#: taskcoachlib/gui/dialog/preferences.py:358
+#: taskcoachlib/gui/dialog/preferences.py:366
 msgid "Hide main window when iconized"
 msgstr "Сховати головне вікно коли мінімізовано"
 
-#: taskcoachlib/gui/dialog/preferences.py:360
+#: taskcoachlib/gui/dialog/preferences.py:368
 msgid "Minimize main window when closed"
 msgstr "Згортати у трей замість закриття"
 
-#: taskcoachlib/gui/dialog/preferences.py:362
+#: taskcoachlib/gui/dialog/preferences.py:370
 msgid "Make clock in the task bar tick when tracking effort"
 msgstr "Годинник йде у трею завдань при відстеженні об'єму робіт"
 
-#: taskcoachlib/gui/dialog/preferences.py:364
+#: taskcoachlib/gui/dialog/preferences.py:372
 msgid ""
 "Show a popup with the description of an item\n"
 "when hovering over it"
@@ -1760,76 +1760,76 @@ msgstr ""
 "Показувати підказку з описом пункту при\n"
 "наведенні курсору"
 
-#: taskcoachlib/gui/dialog/preferences.py:371
-#: taskcoachlib/gui/dialog/preferences.py:433
+#: taskcoachlib/gui/dialog/preferences.py:379
+#: taskcoachlib/gui/dialog/preferences.py:442
 msgid "Language"
 msgstr "Мова"
 
-#: taskcoachlib/gui/dialog/preferences.py:377
+#: taskcoachlib/gui/dialog/preferences.py:385
 msgid "Let the system determine the language"
 msgstr "Система визначає мову"
 
-#: taskcoachlib/gui/dialog/preferences.py:441
+#: taskcoachlib/gui/dialog/preferences.py:450
 msgid ""
 "If your language is not available, or the translation needs improving, "
 "please consider helping. See:"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:449
+#: taskcoachlib/gui/dialog/preferences.py:458
 msgid "Language not found?"
 msgstr "Мову не знайдено?"
 
-#: taskcoachlib/gui/dialog/preferences.py:459
+#: taskcoachlib/gui/dialog/preferences.py:468
 msgid "Task appearance"
 msgstr "Вигляд завдання"
 
-#: taskcoachlib/gui/dialog/preferences.py:478
+#: taskcoachlib/gui/dialog/preferences.py:487
 msgid "Features"
 msgstr "Особливі можливості"
 
-#: taskcoachlib/gui/dialog/preferences.py:485
+#: taskcoachlib/gui/dialog/preferences.py:494
 msgid "Allow for tracking effort"
 msgstr "Дозволити відстеження об'єму робіт"
 
-#: taskcoachlib/gui/dialog/preferences.py:486
+#: taskcoachlib/gui/dialog/preferences.py:495
 msgid "Allow for taking notes"
 msgstr "Дозволити примітки"
 
-#: taskcoachlib/gui/dialog/preferences.py:493
+#: taskcoachlib/gui/dialog/preferences.py:502
 msgid "Enable SyncML"
 msgstr "Активувати SyncML"
 
-#: taskcoachlib/gui/dialog/preferences.py:496
+#: taskcoachlib/gui/dialog/preferences.py:505
 msgid "Enable iPhone synchronization"
 msgstr "Активувати синхронізацію з iPhone"
 
-#: taskcoachlib/gui/dialog/preferences.py:500
+#: taskcoachlib/gui/dialog/preferences.py:509
 msgid "Use X11 session management"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:502
+#: taskcoachlib/gui/dialog/preferences.py:511
 msgid "Start of work week"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:503
+#: taskcoachlib/gui/dialog/preferences.py:512
 #: taskcoachlib/gui/viewer/effort.py:216
 msgid "Monday"
 msgstr "Понеділок"
 
-#: taskcoachlib/gui/dialog/preferences.py:503
+#: taskcoachlib/gui/dialog/preferences.py:513
 #: taskcoachlib/gui/viewer/effort.py:234
 msgid "Sunday"
 msgstr "Неділя"
 
-#: taskcoachlib/gui/dialog/preferences.py:505
+#: taskcoachlib/gui/dialog/preferences.py:515
 msgid "Hour of start of work day"
 msgstr "Час початку робочого дня"
 
-#: taskcoachlib/gui/dialog/preferences.py:507
+#: taskcoachlib/gui/dialog/preferences.py:517
 msgid "Hour of end of work day"
 msgstr "Час закінчення робочого дня"
 
-#: taskcoachlib/gui/dialog/preferences.py:509
+#: taskcoachlib/gui/dialog/preferences.py:519
 msgid ""
 "Use gradients in calendar views.\n"
 "This may slow down Task Coach."
@@ -1837,175 +1837,175 @@ msgstr ""
 "Застосувати градієнт для календаря.\n"
 "Це може сповільнити  Task Coach."
 
-#: taskcoachlib/gui/dialog/preferences.py:513
+#: taskcoachlib/gui/dialog/preferences.py:523
 msgid "Minutes between task start/end times"
 msgstr "Хвилин між початком-закінченням завдання"
 
-#: taskcoachlib/gui/dialog/preferences.py:516
+#: taskcoachlib/gui/dialog/preferences.py:526
 msgid "Idle time notice"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:517
+#: taskcoachlib/gui/dialog/preferences.py:527
 msgid ""
-"If there is no user input for at least this amount of\n"
-"minutes, %(name)s will ask what to do about current efforts."
+"If there is no user input for this amount of time\n"
+"(in minutes), %(name)s will ask what to do about current efforts."
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:525
+#: taskcoachlib/gui/dialog/preferences.py:535
 msgid "Task dates"
 msgstr "Дати завдання"
 
-#: taskcoachlib/gui/dialog/preferences.py:533
+#: taskcoachlib/gui/dialog/preferences.py:543
 msgid "Mark parent task completed when all children are completed"
 msgstr "Помітити завдання як виконане після виконання усіх підзавдань"
 
-#: taskcoachlib/gui/dialog/preferences.py:535
+#: taskcoachlib/gui/dialog/preferences.py:545
 msgid "Number of hours that tasks are considered to be 'due soon'"
 msgstr ""
 "Кількість годин до встановлення статусу завдань \"закінчиться найближчим "
 "часом\""
 
-#: taskcoachlib/gui/dialog/preferences.py:537
+#: taskcoachlib/gui/dialog/preferences.py:547
 msgid "Nothing"
 msgstr "Нічого"
 
-#: taskcoachlib/gui/dialog/preferences.py:539
+#: taskcoachlib/gui/dialog/preferences.py:549
 msgid "Changing the planned start date changes the due date"
 msgstr "Зміна запланованої початкової дати змінить дату виконання"
 
-#: taskcoachlib/gui/dialog/preferences.py:541
+#: taskcoachlib/gui/dialog/preferences.py:551
 msgid "Changing the due date changes the planned start date"
 msgstr "Зміна дати виконання змінить заплановану початкову дату"
 
-#: taskcoachlib/gui/dialog/preferences.py:543
+#: taskcoachlib/gui/dialog/preferences.py:553
 msgid ""
 "What to do with planned start and due date if the other one is changed"
 msgstr ""
 "Що робити з запланованою початковою датою і  датою виконання у разі змін "
 "інших?"
 
-#: taskcoachlib/gui/dialog/preferences.py:546
+#: taskcoachlib/gui/dialog/preferences.py:556
 msgid "Preset"
 msgstr "Фіксовані налаштування"
 
-#: taskcoachlib/gui/dialog/preferences.py:547
+#: taskcoachlib/gui/dialog/preferences.py:557
 msgid "Propose"
 msgstr "Пропонувати"
 
-#: taskcoachlib/gui/dialog/preferences.py:548
+#: taskcoachlib/gui/dialog/preferences.py:558
 msgid "Today"
 msgstr "Сьогодні"
 
-#: taskcoachlib/gui/dialog/preferences.py:549
+#: taskcoachlib/gui/dialog/preferences.py:559
 msgid "Tomorrow"
 msgstr "Завтра"
 
-#: taskcoachlib/gui/dialog/preferences.py:550
+#: taskcoachlib/gui/dialog/preferences.py:560
 msgid "Day after tomorrow"
 msgstr "Післязавтра"
 
-#: taskcoachlib/gui/dialog/preferences.py:551
+#: taskcoachlib/gui/dialog/preferences.py:561
 msgid "Next Friday"
 msgstr "Наступна П'ятниця"
 
-#: taskcoachlib/gui/dialog/preferences.py:552
+#: taskcoachlib/gui/dialog/preferences.py:562
 msgid "Next Monday"
 msgstr "Наступний Понеділок"
 
-#: taskcoachlib/gui/dialog/preferences.py:553
+#: taskcoachlib/gui/dialog/preferences.py:563
 msgid "Start of day"
 msgstr "Початок дня"
 
-#: taskcoachlib/gui/dialog/preferences.py:554
+#: taskcoachlib/gui/dialog/preferences.py:564
 msgid "Start of working day"
 msgstr "Початок робочого дня"
 
-#: taskcoachlib/gui/dialog/preferences.py:555
+#: taskcoachlib/gui/dialog/preferences.py:565
 msgid "Current time"
 msgstr "Поточний час"
 
-#: taskcoachlib/gui/dialog/preferences.py:556
+#: taskcoachlib/gui/dialog/preferences.py:566
 msgid "End of working day"
 msgstr "Кінець робочого дня"
 
-#: taskcoachlib/gui/dialog/preferences.py:557
+#: taskcoachlib/gui/dialog/preferences.py:567
 msgid "End of day"
 msgstr "Кінець дня"
 
-#: taskcoachlib/gui/dialog/preferences.py:559
+#: taskcoachlib/gui/dialog/preferences.py:569
 msgid "Default planned start date and time"
 msgstr "За замовчуванням запланована початкова дата та час"
 
-#: taskcoachlib/gui/dialog/preferences.py:562
+#: taskcoachlib/gui/dialog/preferences.py:572
 msgid "Default due date and time"
 msgstr "За замовчуванням дата виконання та час"
 
-#: taskcoachlib/gui/dialog/preferences.py:565
+#: taskcoachlib/gui/dialog/preferences.py:575
 msgid "Default actual start date and time"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:568
+#: taskcoachlib/gui/dialog/preferences.py:578
 msgid "Default completion date and time"
 msgstr "За замовчуванням кінцева дата та час"
 
-#: taskcoachlib/gui/dialog/preferences.py:571
+#: taskcoachlib/gui/dialog/preferences.py:581
 msgid "Default reminder date and time"
 msgstr "За замовчуванням нагадування дати та часу"
 
-#: taskcoachlib/gui/dialog/preferences.py:578
+#: taskcoachlib/gui/dialog/preferences.py:588
 msgid "Task reminders"
 msgstr "Нагадувачі завдання"
 
-#: taskcoachlib/gui/dialog/preferences.py:588
+#: taskcoachlib/gui/dialog/preferences.py:598
 msgid "Notification system to use for reminders"
 msgstr "Система повідомлень для нагадувачів"
 
-#: taskcoachlib/gui/dialog/preferences.py:592
+#: taskcoachlib/gui/dialog/preferences.py:602
 msgid "Let the computer say the reminder"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:593
+#: taskcoachlib/gui/dialog/preferences.py:603
 msgid "(Needs espeak)"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:598
+#: taskcoachlib/gui/dialog/preferences.py:608
 msgid "Default snooze time to use after reminder"
 msgstr "За замовчуванням проміжок часу для повторень повідомлень нагадувача"
 
-#: taskcoachlib/gui/dialog/preferences.py:602
+#: taskcoachlib/gui/dialog/preferences.py:612
 msgid "Snooze times to offer in task reminder dialog"
 msgstr "Проміжок часу для повторень повідомлень у меню нагадувача"
 
-#: taskcoachlib/gui/dialog/preferences.py:610
+#: taskcoachlib/gui/dialog/preferences.py:620
 msgid "iPhone"
 msgstr "iPhone"
 
-#: taskcoachlib/gui/dialog/preferences.py:616
+#: taskcoachlib/gui/dialog/preferences.py:626
 msgid "Password for synchronization with iPhone"
 msgstr "Пароль для синхронізації з iPhone"
 
-#: taskcoachlib/gui/dialog/preferences.py:618
+#: taskcoachlib/gui/dialog/preferences.py:628
 msgid "Bonjour service name"
 msgstr "Назва сервісу Bonjour"
 
-#: taskcoachlib/gui/dialog/preferences.py:620
-#: taskcoachlib/gui/dialog/preferences.py:621
+#: taskcoachlib/gui/dialog/preferences.py:630
+#: taskcoachlib/gui/dialog/preferences.py:631
 msgid "Upload completed tasks to device"
 msgstr "Експорт виконаних завдань до пристрою"
 
-#: taskcoachlib/gui/dialog/preferences.py:623
+#: taskcoachlib/gui/dialog/preferences.py:633
 msgid "Show sync log"
 msgstr "Показати журнал синхронізації"
 
-#: taskcoachlib/gui/dialog/preferences.py:623
+#: taskcoachlib/gui/dialog/preferences.py:633
 msgid "Show the synchronization log"
 msgstr "Показати журнал синхронізації"
 
-#: taskcoachlib/gui/dialog/preferences.py:629
+#: taskcoachlib/gui/dialog/preferences.py:639
 msgid "Editor"
 msgstr "Редактор"
 
-#: taskcoachlib/gui/dialog/preferences.py:635
+#: taskcoachlib/gui/dialog/preferences.py:645
 msgid "Check spelling in editors"
 msgstr "Перевіряти правопис у редакторах"
 
@@ -5951,51 +5951,47 @@ msgstr "Термін нового завдання заінчується сьо
 msgid "New task due tomorrow"
 msgstr "Завтра закінчується термін нового завдання"
 
-#: taskcoachlib/render.py:47
-msgid "Infinite"
-msgstr "Нескінченний"
-
-#: taskcoachlib/render.py:51
+#: taskcoachlib/render.py:49
 msgid "%d days"
 msgstr "%d днів"
 
-#: taskcoachlib/render.py:52
+#: taskcoachlib/render.py:50
 msgid "1 day"
 msgstr "1 день"
 
-#: taskcoachlib/render.py:79
+#: taskcoachlib/render.py:77
 msgid "Every %(frequency)d days"
 msgstr "Кожні %(frequency)d дні"
 
-#: taskcoachlib/render.py:80
+#: taskcoachlib/render.py:78
 msgid "Every %(frequency)d weeks"
 msgstr "Кожних %(frequency)d тижнів"
 
-#: taskcoachlib/render.py:81
+#: taskcoachlib/render.py:79
 msgid "Every %(frequency)d months"
 msgstr "Кожних %(frequency)d місяців"
 
-#: taskcoachlib/render.py:82
+#: taskcoachlib/render.py:80
 msgid "Every %(frequency)d years"
 msgstr "Кожних %(frequency)d років"
 
-#: taskcoachlib/render.py:84
+#: taskcoachlib/render.py:82
 msgid "Every other day"
 msgstr "Через день"
 
-#: taskcoachlib/render.py:84
+#: taskcoachlib/render.py:82
 msgid "Every other week"
 msgstr "Через тиждень"
 
-#: taskcoachlib/render.py:85
+#: taskcoachlib/render.py:83
 msgid "Every other month"
 msgstr "Через місяць"
 
-#: taskcoachlib/render.py:85
+#: taskcoachlib/render.py:83
 msgid "Every other year"
 msgstr "Через рік"
 
-#: taskcoachlib/render.py:147
+#: taskcoachlib/render.py:149
 msgid "now"
 msgstr "тепер"
 
@@ -6242,11 +6238,11 @@ msgstr "Це хибний регулярний вираз"
 msgid "Defaulting to substring search."
 msgstr ""
 
-#: taskcoachlib/widgets/searchctrl.py:189
+#: taskcoachlib/widgets/searchctrl.py:190
 msgid "Recent searches"
 msgstr "Недавно шукали"
 
-#: taskcoachlib/widgets/searchctrl.py:197
+#: taskcoachlib/widgets/searchctrl.py:198
 msgid "Viewer not searchable"
 msgstr "Вигляд не є пошуково здатним"
 
@@ -6288,6 +6284,9 @@ msgstr "Помилка під час відкриття URL адреси"
 
 #~ msgid "Task conflict"
 #~ msgstr "Конфлікт завдань"
+
+#~ msgid "Infinite"
+#~ msgstr "Нескінченний"
 
 #~ msgid "Show/hide inactive tasks (tasks with a start date in the future)"
 #~ msgstr ""
@@ -6424,13 +6423,3 @@ msgstr "Помилка під час відкриття URL адреси"
 
 #~ msgid "Tasks due soon"
 #~ msgstr "Найближчі завдання"
-
-#~ msgid "Minimum idle time"
-#~ msgstr "Мінімальний час простою"
-
-#~ msgid ""
-#~ "If there is no user input for at least this amount of\n"
-#~ "minutes, Task Coach will ask what to do about current efforts."
-#~ msgstr ""
-#~ "Якщо немає введення користувачем хоча б цієї кількості хвилин, Task Coach  "
-#~ "запитає що робити з поточним об'ємом робіт."
