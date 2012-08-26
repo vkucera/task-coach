@@ -31,7 +31,7 @@ import os.path
 import wx
 
 
-class Page(widgets.BookPage):
+class Page(patterns.Observer, widgets.BookPage):
     columns = 2
     
     def __init__(self, items, *args, **kwargs):
@@ -72,18 +72,9 @@ class Page(widgets.BookPage):
             except (AttributeError, TypeError):
                 pass  # Not a TextCtrl
         
-    def registerObserver(self, observer, eventType, eventSource=None):
-        patterns.Publisher().registerObserver(observer, eventType, eventSource)
-        self.__observers.append(observer)
-        
-    def removeObserver(self, observer, eventType):
-        patterns.Publisher().removeObserver(observer, eventType)
-        
     def close(self):
-        removeObserver = patterns.Publisher().removeObserver
-        for observer in self.__observers:
-            removeObserver(observer)
-
+        self.removeInstance()
+        
                         
 class SubjectPage(Page):
     pageName = 'subject'
