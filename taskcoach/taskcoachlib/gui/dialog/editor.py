@@ -758,16 +758,15 @@ class EditBook(widgets.Notebook):
         pageNames = self.addPages(taskFile, itemsAreNew)
         self.__load_perspective(pageNames)
         
-    def addPages(self, taskFile, itemsAreNew):
-        pageNames = []
-        for pageName in self.allPageNamesInUserOrder():
-            if self.shouldCreatePage(pageName):
-                page = self.createPage(pageName, taskFile, itemsAreNew)
-                self.AddPage(page, page.pageTitle, page.pageIcon)
-                pageNames.append(pageName)
+    def addPages(self, task_file, items_are_new):
+        page_names = [page_name for page_name in self.allPageNames if self.shouldCreatePage(page_name)]
+        page_names = self.__pages_names_in_user_order(page_names)
+        for page_name in page_names:  
+            page = self.createPage(page_name, task_file, items_are_new)
+            self.AddPage(page, page.pageTitle, page.pageIcon)
         width, height = self.getMinPageSize()
         self.SetMinSize((width, self.GetHeightForPageHeight(height)))
-        return pageNames
+        return page_names
 
     def getPage(self, pageName):
         for index in range(self.GetPageCount()):
@@ -783,21 +782,6 @@ class EditBook(widgets.Notebook):
             minHeights.append(minHeight)
         return max(minWidths), max(minHeights) 
         
-    def allPageNamesInUserOrder(self):
-        ''' Return all pages names in the order stored in the settings. The
-            settings may not contain all pages (e.g. because a feature was
-            turned off by the user) so we add the missing pages if necessary. 
-        '''
-        pageNamesInUserOrder = self.settings.getlist('editor', 
-                                                     '%spages' % self.domainObject)
-        remainingPageNames = self.allPageNames[:]
-        for pageName in pageNamesInUserOrder:
-            try:
-                remainingPageNames.remove(pageName)
-            except ValueError:
-                pass  # Page doesn't exist anymore
-        return pageNamesInUserOrder + remainingPageNames
-                    
     def shouldCreatePage(self, pageName):
         if self.pageFeatureDisabled(pageName):
             return False
@@ -861,28 +845,41 @@ class EditBook(widgets.Notebook):
             ancestors.extend(item.ancestors())
         return targetItem in self.items + ancestors
     
-    def __load_perspective(self, pageNames):
+    def __load_perspective(self, page_names):
         ''' load the perspective (layout) for the current combination of visible
             pages from the settings. '''
         perspectives = self.__get_perspectives()
-        perspective_key = self.__perspective_key(pageNames) 
+        perspective_key = self.__perspective_key(page_names) 
         perspective = perspectives.get(perspective_key, '')
         if perspective:
             try:
                 self.LoadPerspective(perspective)
             except:  # pylint: disable=W0702
                 pass  
+            
+    def __pages_names_in_user_order(self, page_names):
+        ''' Return the order in which the pages have been last stored in the 
+            settings. '''
+        perspective_key = self.__perspective_key(page_names)
+        page_orders = self.__get_page_orders()
+        return page_orders.get(perspective_key, page_names)
 
-    def __save_perspective(self, pageNames):
+    def __save_perspective(self):
         ''' Save the current perspective of the editor in the settings. 
             Multiple perspectives are supported, for each set of visible pages.
             This allows different perspectives for e.g. single item editors and
             multi item editors. '''
         perspectives = self.__get_perspectives()
-        perspective_key = self.__perspective_key(pageNames)
+        page_names = [self[index].pageName for index in \
+                      range(self.GetPageCount())]
+        perspective_key = self.__perspective_key(page_names)
         perspectives[perspective_key] = self.SavePerspective() 
         self.settings.setdict('%sdialog' % self.domainObject, 'perspectives', 
                               perspectives)
+        page_orders = self.__get_page_orders()
+        page_orders[perspective_key] = page_names
+        self.settings.setdict('%sdialog' % self.domainObject, 'pages',
+                              page_orders)
         
     def __get_perspectives(self):
         ''' Return the current set (dict actually) of perspectives for this 
@@ -890,6 +887,11 @@ class EditBook(widgets.Notebook):
         return self.settings.getdict('%sdialog' % self.domainObject, 
                                      'perspectives')
         
+    def __get_page_orders(self):
+        ''' Return the current set (dict actually) of page orders for this
+            edit dialog. '''
+        return self.settings.getdict('%sdialog' % self.domainObject, 'pages')
+    
     @staticmethod
     def __perspective_key(page_names):
         ''' Generate a stable key that only depends on the visible tabs for 
@@ -902,10 +904,7 @@ class EditBook(widgets.Notebook):
         event.Skip()
         for page in self:
             page.close()
-        pageNames = [self[index].pageName for index in range(self.GetPageCount())]
-        self.settings.setlist('editor', '%spages' % self.domainObject, 
-                              pageNames)
-        self.__save_perspective(pageNames)
+        self.__save_perspective()
 
 
 class TaskEditBook(EditBook):

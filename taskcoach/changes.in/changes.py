@@ -94,6 +94,8 @@ that the description tab is raised if needed.''', '3561515'),
 ('http:', 'https:', 'ftp:', etc.) would result in attachments that couldn't be
 opened.''', '3561889'),
         Bug('''On Linux, dropping of URLs didn't work.''', '3561889'),
+        Bug('''The order of tabs in edit dialogs wouldn't be restored 
+correctly after it had been changed by the user.''', '3562239'),
 #        Bug('''Fix slowness when viewing aggregated efforts.''',
 #            '3538310', '3537702'),
         ],

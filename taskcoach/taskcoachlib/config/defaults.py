@@ -388,13 +388,15 @@ defaults = {
     'size': '(-1, -1)',  # Size of the dialogs, calculated by default
     'position': '(-1, -1)',  # Position of the dialog, undefined by default
     'maximized': 'False',  # Don't open the dialog maximized by default
-    'perspectives': '{}'  # The layout of the tabs in the dialog
+    'perspectives': '{}',  # The layout of the tabs in the dialog
+    'pages': '{}',  # Order of tabs in the editor
     },
 'categorydialog': {
     'size': '(-1, -1)',  # Size of the dialogs, calculated by default
     'position': '(-1, -1)',  # Position of the dialog, undefined by default
     'maximized': 'False',  # Don't open the dialog maximized by default
-    'perspectives': '{}'  # The layout of the tabs in the dialog
+    'perspectives': '{}',  # The layout of the tabs in the dialog
+    'pages': '{}',  # Order of tabs in the editor
     },
 'effortdialog': {
     'size': '(-1, -1)',  # Size of the dialogs, calculated by default
@@ -405,13 +407,15 @@ defaults = {
     'size': '(-1, -1)',  # Size of the dialogs, calculated by default
     'position': '(-1, -1)',  # Position of the dialog, undefined by default
     'maximized': 'False',  # Don't open the dialog maximized by default
-    'perspectives': '{}'  # The layout of the tabs in the dialog
+    'perspectives': '{}',  # The layout of the tabs in the dialog
+    'pages': '{}',  # Order of tabs in the editor
     },
 'attachmentdialog': {
     'size': '(-1, -1)',  # Size of the dialogs, calculated by default
     'position': '(-1, -1)',  # Position of the dialog, undefined by default
     'maximized': 'False',  # Don't open the dialog maximized by default
-    'perspectives': '{}'  # The layout of the tabs in the dialog
+    'perspectives': '{}',  # The layout of the tabs in the dialog
+    'pages': '{}',  # Order of tabs in the editor
     },
 'file': {
     'recentfiles': '[]',
@@ -464,11 +468,6 @@ defaults = {
     'duesoontasks': 'led_orange_icon' 
     },
 'editor': {
-    'taskpages': '[]',  # Order of tabs in the task editor
-    'categorypages': '[]',  # Order of tabs in the category editor
-    'notepages': '[]',  # Order of tabs in the note editor
-    'attachmentpages': '[]',  # Order of tabs in the attachment editor
-    'preferencespages': '[]',  # Order of tabs in the preferences dialog
     'descriptionfont': '',  # Font to use in the desciption field of editors
     'maccheckspelling': 'True' 
     },

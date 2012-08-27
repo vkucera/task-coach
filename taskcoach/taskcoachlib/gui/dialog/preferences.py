@@ -691,28 +691,16 @@ class Preferences(widgets.NotebookDialog):
     def __init__(self, settings=None, *args, **kwargs):
         self.settings = settings
         super(Preferences, self).__init__(bitmap='wrench_icon', *args, **kwargs)
-        self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)        
         if operating_system.isMac():
             self.CentreOnParent()
 
     def addPages(self):
         self._interior.SetMinSize((950, 550))
-        for pageName in self.allPageNamesInUserOrder():
+        for pageName in self.allPageNames:
             if self.shouldCreatePage(pageName):
                 page = self.createPage(pageName)
                 self._interior.AddPage(page, page.pageTitle, page.pageIcon)
 
-    def allPageNamesInUserOrder(self):
-        ''' Return all pages names in the order stored in the settings. The
-            settings may not contain all pages (e.g. because a feature was
-            turned off by the user) so we add the missing pages if necessary. 
-            '''
-        pageNamesInUserOrder = []
-        remainingPageNames = self.allPageNames[:]
-        for pageName in pageNamesInUserOrder:
-            remainingPageNames.remove(pageName)
-        return pageNamesInUserOrder + remainingPageNames
-                    
     def shouldCreatePage(self, pageName):
         if pageName == 'iphone':
             return self.settings.getboolean('feature', 'iphone')
@@ -722,8 +710,3 @@ class Preferences(widgets.NotebookDialog):
     def createPage(self, pageName):
         return self.pages[pageName](parent=self._interior, 
                                     settings=self.settings)
-
-    def onClose(self, event):
-        event.Skip()
-        pageNames = [page.pageName for page in self]
-        self.settings.setlist('editor', 'preferencespages', pageNames)
