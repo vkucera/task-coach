@@ -112,7 +112,7 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
         self.__showUnplanned = doShow
         self.RefreshAllItems(0)
 
-    def OnChangeConfig(self, event): # pylint: disable=W0613
+    def OnChangeConfig(self, event):  # pylint: disable=W0613
         self.changeConfigCb()
 
     def Select(self, schedule=None):
@@ -151,7 +151,7 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
         else:
             self.editCommand(event.schedule.task)
 
-    def RefreshAllItems(self, count): # pylint: disable=W0613
+    def RefreshAllItems(self, count):  # pylint: disable=W0613
         x, y = self.GetViewStart()
         selectionId = None
         if self.__selection:
@@ -161,7 +161,7 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
         self.DeleteAll()
 
         schedules = []
-        self.taskMap = {} # pylint: disable=W0201
+        self.taskMap = {}  # pylint: disable=W0201
         maxDateTime = date.DateTime()
 
         for task in self.taskList:

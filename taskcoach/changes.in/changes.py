@@ -82,6 +82,9 @@ the selected tasks belong to, but also the parent categories of the used
 categories, even though they may not have been used themselves.''', '3561159'),
         Bug('''When creating a new item, set focus to the subject field so 
 that the description tab is raised if needed.''', '3561515'),
+        Bug('''On Mac OS X, dropping of URLs without a protocol specification
+('http:', 'https:', 'ftp:', etc.) would result in attachments that couldn't be
+opened.''', '3561889'),
 #        Bug('''Fix slowness when viewing aggregated efforts.''',
 #            '3538310', '3537702'),
         ],

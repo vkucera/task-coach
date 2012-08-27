@@ -28,17 +28,17 @@ class FileDropTarget(wx.FileDropTarget):
         self.__onDropCallback = onDropCallback
         self.__onDragOverCallback = onDragOverCallback or self.__defaultDragOverCallback
         
-    def OnDropFiles(self, x, y, filenames): # pylint: disable=W0221
+    def OnDropFiles(self, x, y, filenames):  # pylint: disable=W0221
         if self.__onDropCallback:
             self.__onDropCallback(x, y, filenames)
             return True
         else:
             return False
 
-    def OnDragOver(self, x, y, defaultResult): # pylint: disable=W0221
+    def OnDragOver(self, x, y, defaultResult):  # pylint: disable=W0221
         return self.__onDragOverCallback(x, y, defaultResult)
     
-    def __defaultDragOverCallback(self, x, y, defaultResult): # pylint: disable=W0613
+    def __defaultDragOverCallback(self, x, y, defaultResult):  # pylint: disable=W0613
         return defaultResult
     
     
@@ -47,7 +47,7 @@ class TextDropTarget(wx.TextDropTarget):
         wx.TextDropTarget.__init__(self)
         self.__onDropCallback = onDropCallback
         
-    def OnDropText(self, x, y, text): # pylint: disable=W0613,W0221
+    def OnDropText(self, x, y, text):  # pylint: disable=W0613,W0221
         self.__onDropCallback(text)
 
 
@@ -80,19 +80,19 @@ class DropTarget(wx.DropTarget):
             self.__compositeDataObject.Add(dataObject)
         self.SetDataObject(self.__compositeDataObject)
 
-    def OnDragOver(self, x, y, result): # pylint: disable=W0221
+    def OnDragOver(self, x, y, result):  # pylint: disable=W0221
         if self.__onDragOverCallback is None:
             return result
         self.__onDragOverCallback(x, y, result)
         return wx.DragCopy
 
-    def OnDrop(self, x, y): # pylint: disable=W0613,W0221
+    def OnDrop(self, x, y):  # pylint: disable=W0613,W0221
         return True
     
-    def OnData(self, x, y, result): # pylint: disable=W0613
+    def OnData(self, x, y, result):  # pylint: disable=W0613
         self.GetData()
         formatType, formatId = self.getReceivedFormatTypeAndId()
-
+        
         if formatId == 'text/x-moz-message':
             self.onThunderbirdDrop(x, y)
         elif formatId == 'text/uri-list' and formatType == wx.DF_FILENAME:
@@ -101,9 +101,7 @@ class DropTarget(wx.DropTarget):
             self.onOutlookDrop(x, y)
         elif formatId == 'public.url':
             url = self.__macMailObject.GetData()
-            if url.startswith('message:') and self.__onDropURLCallback:
-                self.__onDropURLCallback(x, y, url)
-            elif (url.startswith('imap:') or url.startswith('mailbox:')) and self.__onDropMailCallback:
+            if (url.startswith('imap:') or url.startswith('mailbox:')) and self.__onDropMailCallback:
                 try:
                     self.__onDropMailCallback(x, y, thunderbird.getMail(url))
                 except thunderbird.ThunderbirdCancelled:
@@ -111,7 +109,7 @@ class DropTarget(wx.DropTarget):
                 except thunderbird.ThunderbirdError, e:
                     wx.MessageBox(unicode(e), _('Error'), wx.OK)
             elif self.__onDropURLCallback:
-                wx.MessageBox(_('Unrecognized URL scheme:\n"%s"') % url, _('Error'), wx.OK)
+                self.__onDropURLCallback(x, y, url)
         elif formatType in (wx.DF_TEXT, wx.DF_UNICODETEXT):
             self.onUrlDrop(x, y)
         elif formatType == wx.DF_FILENAME:
@@ -126,7 +124,7 @@ class DropTarget(wx.DropTarget):
         try:
             formatId = receivedFormat.GetId() 
         except:
-            formatId = None # pylint: disable=W0702
+            formatId = None  # pylint: disable=W0702
         return formatType, formatId
     
     def onThunderbirdDrop(self, x, y):
@@ -144,7 +142,7 @@ class DropTarget(wx.DropTarget):
             except thunderbird.ThunderbirdCancelled:
                 pass
             except thunderbird.ThunderbirdError, e:
-                wx.MessageBox(e.args[0], _('Error'), wx.OK|wx.ICON_ERROR)
+                wx.MessageBox(e.args[0], _('Error'), wx.OK | wx.ICON_ERROR)
             else:
                 self.__onDropMailCallback(x, y, email)
 
@@ -160,7 +158,10 @@ class DropTarget(wx.DropTarget):
 
     def onUrlDrop(self, x, y):
         if self.__onDropURLCallback:
-            self.__onDropURLCallback(x, y, self.__urlDataObject.GetText())
+            url = self.__urlDataObject.GetText()
+            if ':' not in url:  # No protocol; assume http
+                url = 'http://' + url
+            self.__onDropURLCallback(x, y, url)
 
     def onFileDrop(self, x, y):
         if self.__onDropFileCallback:
@@ -241,7 +242,7 @@ class TreeCtrlDragAndDropMixin(TreeHelperMixin):
             self.UnselectAll()
             if dropTarget != self.GetRootItem():
                 self.SelectItem(dropTarget)
-            item, flags, column = self.HitTest(event.GetPoint())
+            dummy_item, flags, dummy_column = self.HitTest(event.GetPoint())
             part = 0
             if flags & wx.TREE_HITTEST_ONITEMUPPERPART:
                 part = -1

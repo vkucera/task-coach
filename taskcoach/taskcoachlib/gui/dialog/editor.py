@@ -63,8 +63,9 @@ class Page(patterns.Observer, widgets.BookPage):
             theEntry.SetFocus()
             try:
                 if operating_system.isWindows():
-                    # This ensures that if the TextCtrl value is more than can be 
-                    # displayed, it will display the start instead of the end:
+                    # This ensures that if the TextCtrl value is more than can 
+                    # be displayed, it will display the start instead of the 
+                    # end:
                     from taskcoachlib.thirdparty import SendKeys  # pylint: disable=W0404
                     SendKeys.SendKeys('{END}+{HOME}')
                 else:
@@ -538,7 +539,6 @@ class PageWithViewer(Page):
         self.__settings = settings
         self.__settingsSection = settingsSection
         super(PageWithViewer, self).__init__(items, parent, *args, **kwargs)
-        self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
         
     def addEntries(self):
         # pylint: disable=W0201
@@ -549,12 +549,12 @@ class PageWithViewer(Page):
     def createViewer(self, taskFile, settings, settingsSection):
         raise NotImplementedError
         
-    def onClose(self, event):
+    def close(self):
         self.viewer.detach()
         # Don't notify the viewer about any changes anymore, it's about
         # to be deleted, but don't delete it too soon.
         wx.CallAfter(self.deleteViewer)
-        event.Skip()        
+        super(PageWithViewer, self).close()
         
     def deleteViewer(self):
         if hasattr(self, 'viewer'):
