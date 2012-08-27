@@ -848,9 +848,8 @@ class EditBook(widgets.Notebook):
     def __load_perspective(self, page_names):
         ''' load the perspective (layout) for the current combination of visible
             pages from the settings. '''
-        perspectives = self.__get_perspectives()
-        perspective_key = self.__perspective_key(page_names) 
-        perspective = perspectives.get(perspective_key, '')
+        section = self.__perspective_section(page_names)
+        perspective = self.settings.gettext(section, 'perspective')
         if perspective:
             try:
                 self.LoadPerspective(perspective)
@@ -860,46 +859,29 @@ class EditBook(widgets.Notebook):
     def __pages_names_in_user_order(self, page_names):
         ''' Return the order in which the pages have been last stored in the 
             settings. '''
-        perspective_key = self.__perspective_key(page_names)
-        page_orders = self.__get_page_orders()
-        return page_orders.get(perspective_key, page_names)
+        section = self.__perspective_section(page_names)
+        return self.settings.getlist(section, 'pages') or page_names
 
     def __save_perspective(self):
         ''' Save the current perspective of the editor in the settings. 
             Multiple perspectives are supported, for each set of visible pages.
             This allows different perspectives for e.g. single item editors and
             multi item editors. '''
-        perspectives = self.__get_perspectives()
         page_names = [self[index].pageName for index in \
                       range(self.GetPageCount())]
-        perspective_key = self.__perspective_key(page_names)
-        perspectives[perspective_key] = self.SavePerspective() 
-        self.settings.setdict('%sdialog' % self.domainObject, 'perspectives', 
-                              perspectives)
-        page_orders = self.__get_page_orders()
-        page_orders[perspective_key] = page_names
-        self.settings.setdict('%sdialog' % self.domainObject, 'pages',
-                              page_orders)
+        section = self.__perspective_section(page_names)
+        self.settings.settext(section, 'perspective', self.SavePerspective())
+        self.settings.setlist(section, 'pages', page_names)
         
-    def __get_perspectives(self):
-        ''' Return the current set (dict actually) of perspectives for this 
-            edit dialog. '''
-        return self.settings.getdict('%sdialog' % self.domainObject, 
-                                     'perspectives')
+    def __perspective_section(self, page_names):
+        sorted_page_names = '_'.join(sorted(page_names)) 
+        section = '%sdialog_with_%s' % (self.domainObject, sorted_page_names)
+        if not self.settings.has_section(section):
+            self.settings.add_section(section)
+            self.settings.init(section, 'perspective', '')
+            self.settings.init(section, 'pages', '[]')
+        return section
         
-    def __get_page_orders(self):
-        ''' Return the current set (dict actually) of page orders for this
-            edit dialog. '''
-        return self.settings.getdict('%sdialog' % self.domainObject, 'pages')
-    
-    @staticmethod
-    def __perspective_key(page_names):
-        ''' Generate a stable key that only depends on the visible tabs for 
-            storing perspectives in the settings file. '''
-        # Sort the page names so that the key doesn't depend on the order of
-        # the page names
-        return '_'.join(sorted(page_names) + ['perspective'])
-    
     def onClose(self, event):
         event.Skip()
         for page in self:

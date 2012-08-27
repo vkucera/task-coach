@@ -387,16 +387,12 @@ defaults = {
 'taskdialog': {
     'size': '(-1, -1)',  # Size of the dialogs, calculated by default
     'position': '(-1, -1)',  # Position of the dialog, undefined by default
-    'maximized': 'False',  # Don't open the dialog maximized by default
-    'perspectives': '{}',  # The layout of the tabs in the dialog
-    'pages': '{}',  # Order of tabs in the editor
+    'maximized': 'False'  # Don't open the dialog maximized by default
     },
 'categorydialog': {
     'size': '(-1, -1)',  # Size of the dialogs, calculated by default
     'position': '(-1, -1)',  # Position of the dialog, undefined by default
-    'maximized': 'False',  # Don't open the dialog maximized by default
-    'perspectives': '{}',  # The layout of the tabs in the dialog
-    'pages': '{}',  # Order of tabs in the editor
+    'maximized': 'False'  # Don't open the dialog maximized by default
     },
 'effortdialog': {
     'size': '(-1, -1)',  # Size of the dialogs, calculated by default
@@ -406,16 +402,12 @@ defaults = {
 'notedialog': {
     'size': '(-1, -1)',  # Size of the dialogs, calculated by default
     'position': '(-1, -1)',  # Position of the dialog, undefined by default
-    'maximized': 'False',  # Don't open the dialog maximized by default
-    'perspectives': '{}',  # The layout of the tabs in the dialog
-    'pages': '{}',  # Order of tabs in the editor
+    'maximized': 'False'  # Don't open the dialog maximized by default
     },
 'attachmentdialog': {
     'size': '(-1, -1)',  # Size of the dialogs, calculated by default
     'position': '(-1, -1)',  # Position of the dialog, undefined by default
-    'maximized': 'False',  # Don't open the dialog maximized by default
-    'perspectives': '{}',  # The layout of the tabs in the dialog
-    'pages': '{}',  # Order of tabs in the editor
+    'maximized': 'False'  # Don't open the dialog maximized by default
     },
 'file': {
     'recentfiles': '[]',
