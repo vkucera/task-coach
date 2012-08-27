@@ -67,15 +67,16 @@ class DropTarget(wx.DropTarget):
         self.__urlDataObject = wx.TextDataObject()
         self.__fileDataObject = wx.FileDataObject()
         self.__thunderbirdMailDataObject = wx.CustomDataObject('text/x-moz-message')
-        self.__clawsMailDataObject = wx.CustomDataObject('text/uri-list')
+        self.__urilistDataObject = wx.CustomDataObject('text/uri-list')
         self.__outlookDataObject = wx.CustomDataObject('Object Descriptor')
         # Starting with Snow Leopard, mail.app supports the message: protocol
         self.__macMailObject = wx.CustomDataObject('public.url')
         for dataObject in (self.__thunderbirdMailDataObject, 
+                           self.__urilistDataObject,
                            self.__macMailObject, self.__outlookDataObject,
                            self.__urlDataObject, self.__fileDataObject): 
             # Note: The first data object added is the preferred data object.
-            # We add urlData as last so that Outlook messages are not 
+            # We add urlData after outlookData so that Outlook messages are not 
             # interpreted as text objects.
             self.__compositeDataObject.Add(dataObject)
         self.SetDataObject(self.__compositeDataObject)
@@ -92,11 +93,16 @@ class DropTarget(wx.DropTarget):
     def OnData(self, x, y, result):  # pylint: disable=W0613
         self.GetData()
         formatType, formatId = self.getReceivedFormatTypeAndId()
-        
+
         if formatId == 'text/x-moz-message':
             self.onThunderbirdDrop(x, y)
         elif formatId == 'text/uri-list' and formatType == wx.DF_FILENAME:
-            self.onClawsDrop(x, y)
+            if self.__fileDataObject.GetFilenames():
+                self.onClawsDrop(x, y)
+            elif self.__onDropURLCallback:
+                urls = self.__urilistDataObject.GetData().strip().split('\n')
+                for url in urls:
+                    self.__onDropURLCallback(x, y, url.strip())
         elif formatId == 'Object Descriptor':
             self.onOutlookDrop(x, y)
         elif formatId == 'public.url':
