@@ -22,7 +22,8 @@ class Release:
     def __init__(self, number, date, bugsFixed=None, featuresAdded=None,
             featuresRemoved=None, featuresChanged=None, 
             dependenciesChanged=None, implementationChanged=None,
-            websiteChanges=None, distributionsChanged=None, summary=''):
+            websiteChanges=None, distributionsChanged=None, teamChanges=None,
+            summary=''):
         self.number = number
         self.date = date
         self.summary = summary
@@ -34,6 +35,7 @@ class Release:
         self.implementationChanged = implementationChanged or []
         self.websiteChanges = websiteChanges or []
         self.distributionsChanged = distributionsChanged or []
+        self.teamChanges = teamChanges or []
 
 
 class Change(object):
@@ -67,4 +69,5 @@ class Website(Change):
         super(Website, self).__init__(description, *changeIds)
         self.url = url
 
-
+class Team(Change):
+    pass

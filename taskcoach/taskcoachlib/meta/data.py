@@ -74,8 +74,8 @@ long_description = '%(name)s is a friendly open source todo manager to manage ' 
 '%(name)s is available for Windows, Mac OS X, BSD, Linux, iPhone and iPad.' % dict(name=name)
 keywords = 'task manager, todo list, pim, time registration, track effort'
 author_first, author_last = 'Frank', 'Niessink'  # Needed for PAD file
-author = '%s %s and Jerome Laheurte' % (author_first, author_last)
-author_unicode = u'%s %s and Jérôme Laheurte' % (author_first, author_last)
+author = '%s %s, Jerome Laheurte, and Aaron Wolf' % (author_first, author_last)
+author_unicode = u'%s %s, Jérôme Laheurte, and Aaron Wolf' % (author_first, author_last)
 author_email = 'developers@taskcoach.org'
 
 filename = name.replace(' ', '')

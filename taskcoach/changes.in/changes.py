@@ -24,6 +24,14 @@ releases = [
 
 Release('1.3.18', 'August ??, 2012',
     summary='''This is a mixed feature and bugfix release.''',
+    teamChanges=[
+        Team('''We're happy to announce that Aaron Wolf joined the Task Coach
+team. Aaron is already doing a great job scrutinizing the large number of 
+feature requests we have open on http://taskcoach.uservoice.com. In addition,
+he is helping us testing Task Coach and ironing out as many bugs as we can, see
+the first results below. Furthermore, he is planning to develop an in-app 
+tutorial for Task Coach so we're glad to have him on board. Welcome, Aaron!'''),
+    ],
     bugsFixed=[
         Bug('''Do not automatically give focus to the subject field
 in the task editor on Linux (it overwrites the X clipboard).''', '3539452'),
