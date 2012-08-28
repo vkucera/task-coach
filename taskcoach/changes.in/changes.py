@@ -104,6 +104,8 @@ for single-item and multi-item dialogs.''', '3562239'),
 #            '3538310', '3537702'),
         ],
     featuresAdded=[
+        Feature('''Increase font size in the calendar view's header.''',
+                '3558650'),
         Feature('''In the calendar view, unplanned dates are now cropped
 to the current day.'''), # Close bug report 3539404 when 1.3.18 is released.
         Feature('''Add support for Thunderbird IMAP accounts that use
