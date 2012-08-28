@@ -757,9 +757,7 @@ pages['license'] = '''
                 <h1>License</h1>
             </div>
             <div class="row">
-                <div class="span10">
-                    <pre style="background-color: white; border: none;">''' + meta.licenseText + '''
-                    </pre>
+                <div class="span10">''' + meta.licenseHTML + '''
                 </div>
                 <div class="span2">''' + ads + '''
                 </div>
