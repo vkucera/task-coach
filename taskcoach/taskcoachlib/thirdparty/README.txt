@@ -60,3 +60,13 @@ Licence: GPL v3
 Source: https://github.com/bendyer/python-ntlm
 Copied on: 2012-07-31
 Changes for Task Coach: none
+
+Component: pubsub
+Name: PyPubSub
+Author: Oliver Schoenborn <oliver.schoenborn@gmail.com>
+Version: 3.1.2
+Date: 2012-08-28
+License: BSD
+Source: http://pypi.python.org/pypi/PyPubSub
+Copied on: 2012-08-28
+Changes for Task Coach: pubsub.diff
