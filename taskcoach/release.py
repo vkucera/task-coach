@@ -274,9 +274,10 @@ def registering_with_PyPI(settings, options):
     pypirc.close()
     # pylint: disable=W0404
     from setup import setupOptions
-    languages_pypi_does_not_know = ['Basque', 'Breton', 'Estonian', 
-        'Galician', 'Lithuanian', 'Norwegian (Bokmal)', 'Norwegian (Nynorsk)', 
-        'Occitan', 'Papiamento', 'Slovene', 'German (Low)', 'Mongolian']
+    languages_pypi_does_not_know = ['Basque', 'Belarusian', 'Breton', 
+        'Estonian', 'Galician', 'Lithuanian', 'Norwegian (Bokmal)', 
+        'Norwegian (Nynorsk)', 'Occitan', 'Papiamento', 'Slovene', 
+        'German (Low)', 'Mongolian']
     for language in languages_pypi_does_not_know:
         setupOptions['classifiers'].remove('Natural Language :: %s' % language)
     from distutils.core import setup
