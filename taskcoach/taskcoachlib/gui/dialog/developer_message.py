@@ -35,7 +35,6 @@ class MessageDialog(sized_controls.SizedDialog):  # pylint: disable=R0904,R0901
         pane = self.GetContentsPane()
         pane.SetSizerType("vertical")
         self.__create_message(pane)
-        self.__check = self.__create_checkbox(pane)
         button_sizer = self.CreateStdDialogButtonSizer(wx.OK)
         self.SetButtonSizer(button_sizer)
         self.Fit()
@@ -53,19 +52,6 @@ class MessageDialog(sized_controls.SizedDialog):  # pylint: disable=R0904,R0901
         wx.StaticText(url_panel, label=_('See:'))
         hyperlink.HyperLinkCtrl(url_panel, label=self.__url)
         
-    def __create_checkbox(self, pane):
-        ''' Create a check box for the user to indicate whether he/she wants to
-            see developer messages. '''
-        checkbox = wx.CheckBox(pane, label=_('Check for messages from the '
-            '%(name)s developers on startup') % meta.data.metaDict)
-        checkbox.SetValue(self.__settings.getboolean('view', 
-                                                     'developermessages'))
-        return checkbox
-        
-    def check_view_developer_messages(self, value=True):
-        ''' Check or uncheck the "view developer messages" check box. '''
-        self.__check.SetValue(value)
-        
     def current_message(self):
         ''' Return the currently displayed message. '''
         return self.__message
@@ -75,9 +61,7 @@ class MessageDialog(sized_controls.SizedDialog):  # pylint: disable=R0904,R0901
         return self.__url
         
     def on_close(self, event):
-        ''' When the user closes the dialog, remember whether he/she wants to
-            see developer messages and what the last displayed message was. '''
+        ''' When the user closes the dialog, remember what the last displayed 
+            message was. '''
         event.Skip()
         self.__settings.settext('view', 'lastdevelopermessage', self.__message)
-        self.__settings.setboolean('view', 'developermessages', 
-                                 str(self.__check.GetValue()))

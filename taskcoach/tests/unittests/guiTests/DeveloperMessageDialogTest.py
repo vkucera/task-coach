@@ -18,7 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import config
 from taskcoachlib.gui.dialog import developer_message
-from unittests import dummy
 import test
 
 
@@ -28,11 +27,6 @@ class DeveloperMessageDialogTest(test.TestCase):
         self.dialog = developer_message.MessageDialog(None, message='Message',
                                                       url='http://a.b',
                                                       settings=self.settings)
-        
-    def testUserPreferenceForMessagesIsSavedInTheSettings(self):
-        self.dialog.check_view_developer_messages(False)
-        self.dialog.on_close(dummy.Event())
-        self.failIf(self.settings.getboolean('view', 'developermessages'))
         
     def testDialogContainsMessage(self):
         self.assertEqual('Message', 
