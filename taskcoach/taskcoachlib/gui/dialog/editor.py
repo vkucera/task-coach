@@ -851,16 +851,28 @@ class EditBook(widgets.Notebook):
             ancestors.extend(item.ancestors())
         return targetItem in self.items + ancestors
     
+    def perspective(self):
+        ''' Return the perspective for the notebook. '''
+        return self.settings.gettext(self.settings_section(), 'perspective')
+    
     def __load_perspective(self):
-        ''' load the perspective (layout) for the current combination of visible
+        ''' Load the perspective (layout) for the current combination of visible
             pages from the settings. '''
-        perspective = self.settings.gettext(self.settings_section(), 
-                                            'perspective')
+        perspective = self.perspective()
         if perspective:
             try:
                 self.LoadPerspective(perspective)
             except:  # pylint: disable=W0702
-                pass  
+                pass
+        # Although the active/current page is written in the perspective string 
+        # (a + before the number of the active page), the current page is not
+        # set when restoring the perspective. This does it by hand:
+        try:
+            current_page = int(perspective.split('@')[0].split('+')[1].split(',')[0])
+        except (IndexError, ValueError):
+            current_page = 0
+        self.SetSelection(current_page)
+        self.GetPage(current_page).SetFocus()
 
     def __save_perspective(self):
         ''' Save the current perspective of the editor in the settings. 
@@ -961,6 +973,12 @@ class EffortEditBook(Page):
         # Since the effort dialog has no tabs, the settings section does not 
         # depend on the visible tabs.
         return 'effortdialog'
+    
+    def perspective(self):
+        ''' Return the perspective for the effort dialog. '''
+        # Since the effort dialog has no tabs, the perspective is always the
+        # same and the value does not matter.
+        return 'effort dialog perspective'
     
     def addEntries(self):
         self.addTaskEntry()
@@ -1123,12 +1141,16 @@ class Editor(widgets.Dialog):
         self._items = items
         self._settings = settings
         self._taskFile = taskFile
-        self.__itemsAreNew = kwargs.get('itemsAreNew', False)
+        self.__itemsAreNew = kwargs.pop('itemsAreNew', False)
+        column_name = kwargs.pop('columnName', '') 
         self._callAfter = kwargs.get('callAfter', wx.CallAfter)
         super(Editor, self).__init__(parent, self.title(), 
                                      buttonTypes=wx.ID_CLOSE, *args, **kwargs)
-        columnName = kwargs.get('columnName', 'subject') or 'subject'
-        self._interior.setFocus(columnName)
+        if not column_name and not self._interior.perspective():
+            column_name = 'subject'
+        if column_name:
+            self._interior.setFocus(column_name)
+        
         patterns.Publisher().registerObserver(self.onItemRemoved,
             eventType=container.removeItemEventType(), eventSource=container)
         if len(self._items) == 1:
