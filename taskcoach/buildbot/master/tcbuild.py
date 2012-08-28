@@ -111,6 +111,7 @@ class DistributionTests(Compile):
     name = 'distribution tests'
     description = ['Running', 'distribution', 'tests']
     descriptionDone = ['Distribution', 'tests']
+    haltOnFailure = False
 
     def __init__(self, **kwargs):
         kwargs['command'] = ['make', 'disttests']
