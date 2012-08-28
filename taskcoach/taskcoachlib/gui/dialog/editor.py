@@ -755,18 +755,16 @@ class EditBook(widgets.Notebook):
         self.settings = settings
         super(EditBook, self).__init__(parent)
         self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
-        pageNames = self.addPages(taskFile, itemsAreNew)
-        self.__load_perspective(pageNames)
+        self.addPages(taskFile, itemsAreNew)
+        self.__load_perspective()
         
     def addPages(self, task_file, items_are_new):
-        page_names = [page_name for page_name in self.allPageNames if self.shouldCreatePage(page_name)]
-        page_names = self.__pages_names_in_user_order(page_names)
+        page_names = self.settings.getlist(self.settings_section(), 'pages') 
         for page_name in page_names:  
             page = self.createPage(page_name, task_file, items_are_new)
             self.AddPage(page, page.pageTitle, page.pageIcon)
         width, height = self.getMinPageSize()
         self.SetMinSize((width, self.GetHeightForPageHeight(height)))
-        return page_names
 
     def getPage(self, pageName):
         for index in range(self.GetPageCount()):
@@ -780,23 +778,31 @@ class EditBook(widgets.Notebook):
             minWidth, minHeight = page.GetMinSize()
             minWidths.append(minWidth)
             minHeights.append(minHeight)
-        return max(minWidths), max(minHeights) 
+        return max(minWidths), max(minHeights)
+    
+    def pages_to_create(self):
+        return [page_name for page_name in self.allPageNames if self.__should_create_page(page_name)]
         
-    def shouldCreatePage(self, pageName):
-        if self.pageFeatureDisabled(pageName):
+    def __should_create_page(self, page_name):
+        if self.__page_feature_is_disabled(page_name):
             return False
-        return self.pageSupportsMassEditing(pageName) if len(self.items) > 1 else True
+        return self.__page_supports_mass_editing(page_name) if len(self.items) > 1 else True
 
-    def pageFeatureDisabled(self, pageName):
-        if pageName in ('budget', 'effort', 'notes'):
-            feature = 'effort' if pageName == 'budget' else pageName
+    def __page_feature_is_disabled(self, page_name):
+        ''' Return whether the feature that the page is displaying has been 
+            disabled by the user. '''
+        if page_name in ('budget', 'effort', 'notes'):
+            feature = 'effort' if page_name == 'budget' else page_name
             return not self.settings.getboolean('feature', feature)
         else:
             return False
         
-    def pageSupportsMassEditing(self, pageName):
-        return pageName in ('subject', 'dates', 'progress', 'budget', 
-                            'appearance')
+    @staticmethod
+    def __page_supports_mass_editing(page_name):
+        ''' Return whether the_module page supports editing multiple items 
+            at once. '''
+        return page_name in ('subject', 'dates', 'progress', 'budget', 
+                             'appearance')
 
     def createPage(self, pageName, taskFile, itemsAreNew):
         if pageName == 'subject':
@@ -845,22 +851,16 @@ class EditBook(widgets.Notebook):
             ancestors.extend(item.ancestors())
         return targetItem in self.items + ancestors
     
-    def __load_perspective(self, page_names):
+    def __load_perspective(self):
         ''' load the perspective (layout) for the current combination of visible
             pages from the settings. '''
-        section = self.__perspective_section(page_names)
-        perspective = self.settings.gettext(section, 'perspective')
+        perspective = self.settings.gettext(self.settings_section(), 
+                                            'perspective')
         if perspective:
             try:
                 self.LoadPerspective(perspective)
             except:  # pylint: disable=W0702
                 pass  
-            
-    def __pages_names_in_user_order(self, page_names):
-        ''' Return the order in which the pages have been last stored in the 
-            settings. '''
-        section = self.__perspective_section(page_names)
-        return self.settings.getlist(section, 'pages') or page_names
 
     def __save_perspective(self):
         ''' Save the current perspective of the editor in the settings. 
@@ -869,18 +869,34 @@ class EditBook(widgets.Notebook):
             multi item editors. '''
         page_names = [self[index].pageName for index in \
                       range(self.GetPageCount())]
-        section = self.__perspective_section(page_names)
+        section = self.settings_section()
         self.settings.settext(section, 'perspective', self.SavePerspective())
         self.settings.setlist(section, 'pages', page_names)
         
-    def __perspective_section(self, page_names):
-        sorted_page_names = '_'.join(sorted(page_names)) 
-        section = '%sdialog_with_%s' % (self.domainObject, sorted_page_names)
+    def settings_section(self):
+        ''' Create the settings section for this dialog if necessary and 
+            return it. '''
+        section = self.__settings_section_name()
         if not self.settings.has_section(section):
-            self.settings.add_section(section)
-            self.settings.init(section, 'perspective', '')
-            self.settings.init(section, 'pages', '[]')
+            self.__create_settings_section(section)
         return section
+    
+    def __settings_section_name(self):
+        ''' Return the section name of this notebook. The name of the section
+            depends on the visible pages so that different variants of the
+            notebook store their settings in different sections. '''
+        page_names = self.pages_to_create()
+        sorted_page_names = '_'.join(sorted(page_names)) 
+        return '%sdialog_with_%s' % (self.domainObject, sorted_page_names)
+    
+    def __create_settings_section(self, section):
+        ''' Create the section and initialize the options in the section. '''
+        self.settings.add_section(section)
+        for option, value in dict(perspective='', 
+                                  pages=str(self.pages_to_create()),
+                                  size='(-1, -1)', position='(-1, -1)',
+                                  maximized='False').items():
+            self.settings.init(section, option, value)
         
     def onClose(self, event):
         event.Skip()
@@ -940,6 +956,12 @@ class EffortEditBook(Page):
     def getPage(self, pageName):  # pylint: disable=W0613
         return None  # An EffortEditBook is not really a notebook...
         
+    def settings_section(self):
+        ''' Return the settings section for the effort dialog. '''
+        # Since the effort dialog has no tabs, the settings section does not 
+        # depend on the visible tabs.
+        return 'effortdialog'
+    
     def addEntries(self):
         self.addTaskEntry()
         self.addStartAndStopEntries()
@@ -1128,7 +1150,7 @@ class Editor(widgets.Dialog):
         self.CentreOnParent()
         self.createUICommands()
         self._dimensionsTracker = windowdimensionstracker.WindowSizeAndPositionTracker(
-            self, settings, '%sdialog' % self.EditBookClass.domainObject)
+            self, settings, self._interior.settings_section())
         
     def createUICommands(self):
         # FIXME: keyboard shortcuts are hardcoded here, but they can be 

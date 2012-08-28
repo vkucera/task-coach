@@ -96,6 +96,8 @@ opened.''', '3561889'),
         Bug('''On Linux, dropping of URLs didn't work.''', '3561889'),
         Bug('''The order of tabs in edit dialogs wouldn't be restored 
 correctly after it had been changed by the user.''', '3562239'),
+        Bug('''Save size, position and maximization state of dialogs separately
+for single-item and multi-item dialogs.''', '3562239'),
 #        Bug('''Fix slowness when viewing aggregated efforts.''',
 #            '3538310', '3537702'),
         ],

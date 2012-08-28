@@ -696,13 +696,13 @@ class Preferences(widgets.NotebookDialog):
 
     def addPages(self):
         self._interior.SetMinSize((950, 550))
-        for pageName in self.allPageNames:
-            if self.shouldCreatePage(pageName):
-                page = self.createPage(pageName)
+        for page_name in self.allPageNames:
+            if self.__should_create_page(page_name):
+                page = self.createPage(page_name)
                 self._interior.AddPage(page, page.pageTitle, page.pageIcon)
 
-    def shouldCreatePage(self, pageName):
-        if pageName == 'iphone':
+    def __should_create_page(self, page_name):
+        if page_name == 'iphone':
             return self.settings.getboolean('feature', 'iphone')
         else:
             return True
