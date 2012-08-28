@@ -157,7 +157,7 @@ class Win32TestCase(unittest.TestCase):
             window.close()
             self.fail("Errors occurred. The log content was:\n" + file(self.logfilename, 'rb').read())
 
-        window = self.findWindow(r'^Tip of the Day$')
+        window = self.findWindow(r'^Tip of the day$')
         if window is None:
             self.fail("Tip window didn't appear")
         window.close()
