@@ -1061,7 +1061,7 @@ websiteFolder = os.path.join('..', 'website.out')
 createHTMLPages(websiteFolder, pages)
 createPAD(websiteFolder)
 createVersionFile(websiteFolder)
-copyFiles(websiteFolder, 'robots.txt', '*.ico')
+copyFiles(websiteFolder, 'messages.txt', 'robots.txt', '*.ico')
 for subFolder in 'images', 'js', 'css':
     copyDir(websiteFolder, subFolder)
 for subFolder in os.listdir('screenshots'):
