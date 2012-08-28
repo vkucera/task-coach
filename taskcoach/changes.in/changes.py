@@ -33,7 +33,8 @@ the first results below. Furthermore, he is planning to develop an in-app
 tutorial for Task Coach so we're glad to have him on board. Welcome, Aaron!'''),
     ],
     bugsFixed=[
-        Bug('''Get rid of the infamous "AttributeError: __onDead" error'''),
+        Bug('''Get rid of the infamous "AttributeError: __onDead" error''',
+            '3546400'),
         Bug('''Do not automatically give focus to the subject field
 in the task editor on Linux (it overwrites the X clipboard).''', '3539452'),
         Bug('''On Mac OS X, the window would shrink at each launch.
