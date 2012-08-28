@@ -384,27 +384,7 @@ defaults = {
     'tipsindex': '0',  # Start at the first tip
     'blinktaskbariconwhentrackingeffort': 'True'
     },
-'taskdialog': {
-    'size': '(-1, -1)',  # Size of the dialogs, calculated by default
-    'position': '(-1, -1)',  # Position of the dialog, undefined by default
-    'maximized': 'False'  # Don't open the dialog maximized by default
-    },
-'categorydialog': {
-    'size': '(-1, -1)',  # Size of the dialogs, calculated by default
-    'position': '(-1, -1)',  # Position of the dialog, undefined by default
-    'maximized': 'False'  # Don't open the dialog maximized by default
-    },
 'effortdialog': {
-    'size': '(-1, -1)',  # Size of the dialogs, calculated by default
-    'position': '(-1, -1)',  # Position of the dialog, undefined by default
-    'maximized': 'False'  # Don't open the dialog maximized by default
-    },
-'notedialog': {
-    'size': '(-1, -1)',  # Size of the dialogs, calculated by default
-    'position': '(-1, -1)',  # Position of the dialog, undefined by default
-    'maximized': 'False'  # Don't open the dialog maximized by default
-    },
-'attachmentdialog': {
     'size': '(-1, -1)',  # Size of the dialogs, calculated by default
     'position': '(-1, -1)',  # Position of the dialog, undefined by default
     'maximized': 'False'  # Don't open the dialog maximized by default
