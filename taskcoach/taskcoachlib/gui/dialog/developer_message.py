@@ -46,7 +46,8 @@ class MessageDialog(sized_controls.SizedDialog):  # pylint: disable=R0904,R0901
     def __create_message(self, pane):
         ''' Create the interior parts of the dialog, i.e. the message for the
             user. '''
-        wx.StaticText(pane, label=self.__message)
+        message = wx.StaticText(pane, label=self.__message)
+        message.Wrap(500)
         url_panel = sized_controls.SizedPanel(pane)
         url_panel.SetSizerType('horizontal')
         wx.StaticText(url_panel, label=_('See:'))
