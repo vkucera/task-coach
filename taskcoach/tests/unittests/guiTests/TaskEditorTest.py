@@ -82,8 +82,19 @@ class TaskEditorBySettingFocusMixin(TaskEditorSetterBase):
             page._subjectEntry.SetFocus() # pragma: no cover
 
 
+class TaskEditBookWithPerspective(gui.dialog.editor.TaskEditBook):
+    testPerspective = '503e3c7d0000018300000002=+0,1,2,3,4,5,6,7,8,9@layout2|name=dummy;caption=;state=67372030;dir=3;layer=0;row=0;pos=0;prop=100000;bestw=381;besth=173;minw=381;minh=173;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1;notebookid=-1;transparent=255|name=503e3c7d0000018300000002;caption=;state=67372028;dir=5;layer=0;row=0;pos=0;prop=100000;bestw=200;besth=200;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1;notebookid=-1;transparent=255|dock_size(5,0,0)=202|'
+
+    def perspective(self):
+        return self.testPerspective
+
+class TaskEditorWithPerspective(gui.dialog.editor.TaskEditor):
+    EditBookClass = TaskEditBookWithPerspective
+
+
 class TaskEditorTestCase(test.wxTestCase):
     extraSettings = list()
+    editorClass = gui.dialog.editor.TaskEditor
 
     def setUp(self):
         super(TaskEditorTestCase, self).setUp()
@@ -97,7 +108,7 @@ class TaskEditorTestCase(test.wxTestCase):
         self.taskFile = persistence.TaskFile()
         self.taskList = self.taskFile.tasks()
         self.taskList.extend(self.createTasks())
-        self.editor = gui.dialog.editor.TaskEditor(self.frame, self.getItems(),
+        self.editor = self.editorClass(self.frame, self.getItems(),
             self.settings, self.taskList, self.taskFile)
 
     def tearDown(self):
@@ -360,6 +371,20 @@ class FocusTest(TaskEditorTestCase):
         else:
             # pylint: disable=W0212
             self.assertEqual(self.editor._interior[0]._subjectEntry, wx.Window_FindFocus())
+
+    def testSelection(self):
+        if operating_system.isGTK():
+            wx.Yield() # pragma: no cover
+            # pylint: disable=W0212
+            self.assertEqual(self.editor._interior[0]._subjectEntry.GetStringSelection(), u'')
+        else:
+            # pylint: disable=W0212
+            self.assertEqual(self.editor._interior[0]._subjectEntry.GetStringSelection(),
+                             self.editor._interior[0]._subjectEntry.GetValue())
+
+
+class FocusTestWithPerspective(FocusTest):
+    editorClass = TaskEditorWithPerspective
 
 
 class DatesTestBase(TaskEditorSetterBase, TaskEditorTestCase):
