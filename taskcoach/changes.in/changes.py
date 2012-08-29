@@ -27,6 +27,8 @@ Release('1.3.19', 'September ??, 2012',
     bugsFixed=[
         Bug('''On OS X, the first entry in an editor page would not be
 automatically selected.''', '3562922'),
+        Bug('''On Linux, drag and drop of email messages from Evolution didn't
+work.''', '3562808'),
     ],
 ),
 
