@@ -1146,8 +1146,11 @@ class Editor(widgets.Dialog):
         self._callAfter = kwargs.get('callAfter', wx.CallAfter)
         super(Editor, self).__init__(parent, self.title(), 
                                      buttonTypes=wx.ID_CLOSE, *args, **kwargs)
-        if not column_name and not self._interior.perspective():
-            column_name = 'subject'
+        if not column_name:
+            if self._interior.perspective():
+                column_name = self._interior[self._interior.GetSelection()].pageName
+            else:
+                column_name = 'subject'
         if column_name:
             self._interior.setFocus(column_name)
         

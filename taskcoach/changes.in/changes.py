@@ -25,7 +25,8 @@ releases = [
 Release('1.3.19', 'September ??, 2012',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug('''...''', ''),
+        Bug('''On OS X, the first entry in an editor page would not be
+automatically selected.''', '3562922'),
     ],
 ),
 
