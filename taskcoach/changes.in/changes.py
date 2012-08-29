@@ -29,6 +29,8 @@ Release('1.3.19', 'September ??, 2012',
 automatically selected.''', '3562922'),
         Bug('''On Linux, drag and drop of email messages from Evolution didn't
 work.''', '3562808'),
+        Bug('''With autosaving on, Task Coach would actually save too often.''', 
+            '3562836'),
     ],
 ),
 
