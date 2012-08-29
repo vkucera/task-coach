@@ -1147,7 +1147,7 @@ class Editor(widgets.Dialog):
         super(Editor, self).__init__(parent, self.title(), 
                                      buttonTypes=wx.ID_CLOSE, *args, **kwargs)
         if not column_name:
-            if self._interior.perspective():
+            if self._interior.perspective() and hasattr(self._interior, 'GetSelection'):
                 column_name = self._interior[self._interior.GetSelection()].pageName
             else:
                 column_name = 'subject'
