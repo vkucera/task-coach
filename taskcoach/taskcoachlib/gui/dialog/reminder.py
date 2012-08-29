@@ -49,7 +49,8 @@ class ReminderDialog(patterns.Observer, sized_controls.SizedDialog):
         wx.StaticText(pane, label=_('Task') + ':')
         panel = wx.Panel(pane)
         sizer = wx.BoxSizer(wx.HORIZONTAL)
-        self.openTask = wx.Button(panel, label=self.task.subject(recursive=True))
+        self.openTask = wx.Button(panel, 
+                                  label=self.task.subject(recursive=True))
         self.openTask.Bind(wx.EVT_BUTTON, self.onOpenTask)
         sizer.Add(self.openTask, flag=wx.ALIGN_CENTER_VERTICAL)
         if self.settings.getboolean('feature', 'effort'):
@@ -64,22 +65,27 @@ class ReminderDialog(patterns.Observer, sized_controls.SizedDialog):
             render.dateTime(self.task.reminder()), _('Snooze') + ':':
             wx.StaticText(pane, label=label)
             
-        self.snoozeOptions = wx.ComboBox(pane)
+        self.snoozeOptions = wx.ComboBox(pane, style=wx.CB_READONLY)
         sizer.Add(self.snoozeOptions, flag=wx.ALIGN_CENTER_VERTICAL)
-        snoozeTimesUserWantsToSee = [0] + self.settings.getlist('view', 'snoozetimes')
+        snoozeTimesUserWantsToSee = [0] + self.settings.getlist('view', 
+                                                                'snoozetimes')
         defaultSnoozeTime = self.settings.getint('view', 'defaultsnoozetime')
-        selectionIndex = 1  # Use the 1st non-zero option if we don't find the last snooze time
+        # Use the 1st non-zero option if we don't find the last snooze time:
+        selectionIndex = 1  
         # pylint: disable=E1101
         for minutes, label in date.snoozeChoices:
             if minutes in snoozeTimesUserWantsToSee:
-                self.snoozeOptions.Append(label, date.TimeDelta(minutes=minutes))
+                self.snoozeOptions.Append(label, 
+                                          date.TimeDelta(minutes=minutes))
                 if minutes == defaultSnoozeTime:
                     selectionIndex = self.snoozeOptions.Count - 1
-        self.snoozeOptions.SetSelection(min(selectionIndex, self.snoozeOptions.Count - 1))
+        self.snoozeOptions.SetSelection(min(selectionIndex, 
+                                            self.snoozeOptions.Count - 1))
         
         wx.StaticText(pane, label='')
         self.replaceDefaultSnoozeTime = wx.CheckBox(pane, 
-            label=_('Also use the selected snooze time as default snooze time for future reminders'))
+            label=_('Also use the selected snooze time as default snooze time '
+                    'for future reminders'))
         self.replaceDefaultSnoozeTime.SetValue(True)
         
         buttonSizer = self.CreateStdDialogButtonSizer(wx.OK)

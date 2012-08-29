@@ -12,10 +12,10 @@ Component: aui
 Name: Advanced User Interface (AUI)
 Author: Andrea Gavana <andrea.gavana@gmail.com>
 Version: 1.3
-Date: 2012-03-07
+Date: 2012-08-09
 License: wxPython license
-Source: http://svn.wxwidgets.org/viewvc/wx/wxPython/3rdParty/AGW/agw/aui/?pathrev=70836
-Copied on: 2012-03-10
+Source: http://svn.wxwidgets.org/viewvc/wx/wxPython/3rdParty/AGW/agw/aui/?pathrev=72315
+Copied on: 2012-08-28
 Changes for Task Coach: none
 
 Component: customtreectrl.py
@@ -60,3 +60,13 @@ Licence: GPL v3
 Source: https://github.com/bendyer/python-ntlm
 Copied on: 2012-07-31
 Changes for Task Coach: none
+
+Component: pubsub
+Name: PyPubSub
+Author: Oliver Schoenborn <oliver.schoenborn@gmail.com>
+Version: 3.1.2
+Date: 2012-08-28
+License: BSD
+Source: http://pypi.python.org/pypi/PyPubSub
+Copied on: 2012-08-28
+Changes for Task Coach: pubsub.diff

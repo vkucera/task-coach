@@ -3,6 +3,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2012 Nicola Chiapolini <nicola.chiapolini@physik.uzh.ch>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -74,11 +75,13 @@ class SettingsPageBase(widgets.BookPage):
         self._booleanSettings.append((section, setting, checkBox))
         return checkBox
 
-    def addChoiceSetting(self, section, setting, text, helpText, *listsOfChoices, **kwargs):
+    def addChoiceSetting(self, section, setting, text, helpText, 
+                         *listsOfChoices, **kwargs):
         choiceCtrls = []
         currentValue = self.gettext(section, setting)
         sep = kwargs.pop('sep', '_')
-        for choices, currentValuePart in zip(listsOfChoices, currentValue.split(sep)):
+        for choices, currentValuePart in zip(listsOfChoices, 
+                                             currentValue.split(sep)):
             choiceCtrl = wx.Choice(self)
             choiceCtrls.append(choiceCtrl)
             for choiceValue, choiceText in choices:
@@ -120,6 +123,21 @@ class SettingsPageBase(widgets.BookPage):
             value=intValue)
         self.addEntry(text, spin, helpText=helpText, flags=flags)
         self._integerSettings.append((section, setting, spin))
+        
+    def addFontSetting(self, section, setting, text):
+        default_font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        native_info_string = self.gettext(section, setting)
+        current_font = wx.FontFromNativeInfoString(native_info_string) \
+                       if native_info_string else None
+        font_button = widgets.FontPickerCtrl(self, 
+                                             font=current_font or default_font, 
+                                             colour=(0, 0, 0, 255))
+        font_button.SetBackgroundColour((255, 255, 255, 255))
+        self.addEntry(text, font_button, 
+                      flags=(wx.ALL | wx.ALIGN_CENTER_VERTICAL, 
+                             wx.ALL | wx.ALIGN_CENTER_VERTICAL  # wx.EXPAND causes the button to be top aligned on Mac OS X
+                             ))
+        self._fontSettings.append((section, setting, font_button)) 
 
     def addAppearanceHeader(self):
         self.addEntry('', _('Foreground color'), _('Background color'),
@@ -525,9 +543,16 @@ class FeaturesPage(SettingsPage):
               'This may slow down Task Coach.'),
             helpText='restart')
         self.addChoiceSetting('view', 'effortminuteinterval',
-            _('Minutes between task start/end times'), ' ',
+            _('Minutes between suggested times'), 
+            _('In popup-menus for time selection (e.g. for setting the start \n'
+              'time of an effort) %(name)s will suggest times using this \n'
+              'setting. The smaller the number of minutes, the more times \n'
+              'are suggested. Of course, you can also enter any time you \n'
+              'want beside the suggested times.') % meta.data.metaDict,
             [(minutes, minutes) for minutes in ('5', '6', '10', '15', '20', 
-                                                '30')])
+                                                '30')],
+            flags=(None, wx.ALL | wx.ALIGN_CENTER_VERTICAL,
+                   wx.ALL | wx.ALIGN_CENTER_VERTICAL))
         self.addIntegerSetting('feature', 'minidletime', _('Idle time notice'),
             helpText=_('If there is no user input for this amount of time\n'
                        '(in minutes), %(name)s will ask what to do about current '
@@ -646,8 +671,12 @@ class EditorPage(SettingsPage):
     
     def __init__(self, *args, **kwargs):
         super(EditorPage, self).__init__(columns=2, *args, **kwargs)
-        self.addBooleanSetting('editor', 'maccheckspelling',
-            _('Check spelling in editors'))
+        if operating_system.isMac() and \
+                not operating_system.isMacOsXMountainLion_OrNewer():
+            self.addBooleanSetting('editor', 'maccheckspelling',
+                                   _('Check spelling in editors'))
+        self.addFontSetting('editor', 'descriptionfont', 
+            _('Font to use in the description field of edit dialogs'))
         self.fit()
         
     def ok(self):
@@ -667,42 +696,22 @@ class Preferences(widgets.NotebookDialog):
     def __init__(self, settings=None, *args, **kwargs):
         self.settings = settings
         super(Preferences, self).__init__(bitmap='wrench_icon', *args, **kwargs)
-        self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)        
         if operating_system.isMac():
             self.CentreOnParent()
 
     def addPages(self):
-        self._interior.SetMinSize((950, 450))
-        for pageName in self.allPageNamesInUserOrder():
-            if self.shouldCreatePage(pageName):
-                page = self.createPage(pageName)
+        self._interior.SetMinSize((950, 550))
+        for page_name in self.allPageNames:
+            if self.__should_create_page(page_name):
+                page = self.createPage(page_name)
                 self._interior.AddPage(page, page.pageTitle, page.pageIcon)
 
-    def allPageNamesInUserOrder(self):
-        ''' Return all pages names in the order stored in the settings. The
-            settings may not contain all pages (e.g. because a feature was
-            turned off by the user) so we add the missing pages if necessary. 
-            '''
-        pageNamesInUserOrder = []
-        remainingPageNames = self.allPageNames[:]
-        for pageName in pageNamesInUserOrder:
-            remainingPageNames.remove(pageName)
-        return pageNamesInUserOrder + remainingPageNames
-                    
-    def shouldCreatePage(self, pageName):
-        if pageName == 'iphone':
+    def __should_create_page(self, page_name):
+        if page_name == 'iphone':
             return self.settings.getboolean('feature', 'iphone')
-        elif pageName == 'editor':
-            return operating_system.isMac() and \
-                not operating_system.isMacOsXMountainLion_OrNewer()
         else:
             return True
 
     def createPage(self, pageName):
         return self.pages[pageName](parent=self._interior, 
                                     settings=self.settings)
-
-    def onClose(self, event):
-        event.Skip()
-        pageNames = [page.pageName for page in self]
-        self.settings.setlist('editor', 'preferencespages', pageNames)

@@ -400,7 +400,7 @@ class HeaderDrawerDCMixin(object):
 	A mixin to draw headers with a regular DC.
 	"""
 
-	def _DrawHeader(self, text, x, y, w, h, pointSize=8, weight=wx.FONTWEIGHT_BOLD,
+	def _DrawHeader(self, text, x, y, w, h, pointSize=12, weight=wx.FONTWEIGHT_BOLD,
 			alignRight=False, highlight=None):
 		font = self.context.GetFont()
 		font.SetPointSize( pointSize )
@@ -502,7 +502,7 @@ class HeaderDrawerGCMixin(object):
 	A mixin to draw headers with a GraphicsContext.
 	"""
 
-	def _DrawHeader(self, text, x, y, w, h, pointSize=10, weight=wx.FONTWEIGHT_BOLD,
+	def _DrawHeader(self, text, x, y, w, h, pointSize=12, weight=wx.FONTWEIGHT_BOLD,
 			alignRight=False, highlight=None):
 		font = wx.NORMAL_FONT
 		fsize = font.GetPointSize()

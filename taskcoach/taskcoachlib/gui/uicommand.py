@@ -2374,7 +2374,9 @@ class Anonymize(IOCommand):
              *args, **kwargs)
 
     def doCommand(self, event):
-        anonymize(self.iocontroller.filename())
+        anonymized_filename = anonymize(self.iocontroller.filename())
+        wx.MessageBox(_('Your task file has been anonymized and saved to:') \
+                  + '\n' + anonymized_filename, _('Finished'), wx.OK)
 
     def enabled(self, event):
         return bool(self.iocontroller.filename())
@@ -2591,14 +2593,36 @@ class TaskViewerTreeOrListChoice(ToolbarChoiceCommandMixin, ViewerCommand):
         self.viewer.showTree(choice)
         
 
-class CategoryViewerFilterChoice(ToolbarChoiceCommandMixin, SettingsCommand):
+class CategoryViewerFilterChoice(ToolbarChoiceCommandMixin, UICheckCommand,
+                                 SettingsCommand):
     choiceLabels = [_('Filter on all checked categories'),
                     _('Filter on any checked category')]
     choiceData = [True, False]
+    
+    def __init__(self, *args, **kwargs):
+        super(CategoryViewerFilterChoice, self).__init__( \
+            menuText=self.choiceLabels[0],
+            helpText=_('When checked, filter on all checked categories, '
+                       'otherwise on any checked category'), *args, **kwargs)
+        
+    def appendToToolBar(self, *args, **kwargs):
+        super(CategoryViewerFilterChoice, self).appendToToolBar(*args, **kwargs)
+        pub.subscribe(self.on_setting_changed, 
+                      'settings.view.categoryfiltermatchall')
+                      
+    def isSettingChecked(self):
+        return self.settings.getboolean('view', 'categoryfiltermatchall')
 
     def doChoice(self, choice):
         self.settings.setboolean('view', 'categoryfiltermatchall', choice)
-
+        
+    def doCommand(self, event):
+        self.settings.setboolean('view', 'categoryfiltermatchall', 
+                                 self._isMenuItemChecked(event))
+        
+    def on_setting_changed(self, value):
+        self.setChoice(value)
+        
 
 class SquareTaskViewerOrderChoice(ToolbarChoiceCommandMixin, ViewerCommand):
     choiceLabels = [_('Budget'), _('Time spent'), _('Fixed fee'), _('Revenue'), 

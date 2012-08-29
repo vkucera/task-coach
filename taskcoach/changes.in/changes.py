@@ -21,10 +21,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
-
-Release('1.3.18', 'August ??, 2012',
-    summary='''This is a mixed feature and bugfix release.''',
+            
+Release('1.3.19', 'September ??, 2012',
+    summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bug('''...''', ''),
+    ],
+),
+
+Release('1.3.18', 'August 28, 2012',
+    summary='''This is a mixed feature and bugfix release.''',
+    teamChanges=[
+        Team('''We're happy to announce that Aaron Wolf joined the Task Coach
+team. Aaron is already doing a great job scrutinizing the large number of 
+feature requests we have open on http://taskcoach.uservoice.com. In addition,
+he is helping us testing Task Coach and ironing out as many bugs as we can, see
+the first results below. Furthermore, he is planning to develop an in-app 
+tutorial for Task Coach so we're glad to have him on board. Welcome, Aaron!'''),
+    ],
+    bugsFixed=[
+        Bug('''Get rid of the infamous "AttributeError: __onDead" error''',
+            '3546400'),
         Bug('''Do not automatically give focus to the subject field
 in the task editor on Linux (it overwrites the X clipboard).''', '3539452'),
         Bug('''On Mac OS X, the window would shrink at each launch.
@@ -60,11 +77,42 @@ visible columns in the effort tab and the notes tab) wouldn't be consistently
 applied to each edit dialog.''', '3559057'),
         Bug('''On Mac OS X, the button in the effort edit dialog for dropping
 down the tree of tasks didn't work.''', '3560296'),
-        Bug('''Make recurrence label clearer.''', '3560420'),
+        Bug('''Make recurrence label in the task edit dialog clearer.''', 
+            '3560420'),
+        Bug('''Make the description of the "idle time notice" setting in the 
+preferences clearer.''', '3555498'),
+        Bug('''Make the description of the "minutes between suggested
+times" setting in the preferences clearer.''', '3556765'),
+        Bug('''The combobox for selecting the snooze time in the reminder
+dialog was not read only. This suggested that one could type in custom snooze 
+times while that is not supported (yet).''', '3560416'),
+        Bug('''The "Filter on all checked categories/Filter on any checked
+category" option was only available via the toolbar of the category viewer. 
+Due to the width of the option, it could be difficult to access. The option
+is now also available as menu item in the View->Filter menu.''', '3554627'),
+        Bug('''When the budget left is negative, the budget left field in the
+task edit dialog would not show a minus sign.''', '3554616'),
+        Bug('''On Mac OS X, the tip of the day window would block the dialog 
+for unlocking a locked task file.''', '3561499'),
+        Bug('''When saving selected tasks, not only include the categories
+the selected tasks belong to, but also the parent categories of the used
+categories, even though they may not have been used themselves.''', '3561159'),
+        Bug('''When creating a new item, set focus to the subject field so 
+that the description tab is raised if needed.''', '3561515'),
+        Bug('''On Mac OS X, dropping of URLs without a protocol specification
+('http:', 'https:', 'ftp:', etc.) would result in attachments that couldn't be
+opened.''', '3561889'),
+        Bug('''On Linux, dropping of URLs didn't work.''', '3561889'),
+        Bug('''The order of tabs in edit dialogs wouldn't be restored 
+correctly after it had been changed by the user.''', '3562239'),
+        Bug('''Save size, position and maximization state of dialogs separately
+for single-item and multi-item dialogs.''', '3562239'),
 #        Bug('''Fix slowness when viewing aggregated efforts.''',
 #            '3538310', '3537702'),
         ],
     featuresAdded=[
+        Feature('''Increase font size in the calendar view's header.''',
+                '3558650'),
         Feature('''In the calendar view, unplanned dates are now cropped
 to the current day.'''), # Close bug report 3539404 when 1.3.18 is released.
         Feature('''Add support for Thunderbird IMAP accounts that use
@@ -76,6 +124,9 @@ and the display of messages can be turned off completely. This feature will be
 used sparingly, of course.'''),
         Feature('''Added almost complete Belarusian translation thanks to 
 Korney San.'''),
+        Feature('''Allow for changing the font used in the description field
+of edit dialogs. The font can be changed in the editor tab of the preferences 
+dialog. Patch supplied by Nicola Chiapolini.'''),
         ],
     featuresChanged=[
         Feature('''When a task has no due date, instead of displaying 

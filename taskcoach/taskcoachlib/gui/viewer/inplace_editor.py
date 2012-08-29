@@ -95,7 +95,8 @@ class BudgetCtrl(hypertreelist.EditCtrl, Panel):
         hours, minutes, seconds = value.hoursMinutesSeconds()
         # Can't inherit from TimeDeltaCtrl because we need to override GetValue,
         # so we use composition instead
-        self.__timeDeltaCtrl = widgets.masked.TimeDeltaCtrl(self, hours, minutes, seconds)
+        self.__timeDeltaCtrl = widgets.masked.TimeDeltaCtrl(self, hours, 
+                                                            minutes, seconds)
         self.makeSizer(self.__timeDeltaCtrl)
         
     def GetValue(self):

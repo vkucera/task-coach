@@ -1,4 +1,4 @@
 # This file contains at most one message for users of Task Coach. 
 # Format of the message and url, without the # of course:
 # Message text|url
-Love Task Coach? Please support our work.|http://taskcoach.org/givesupport.html
+Welcome to Task Coach! We hope you enjoy it. If you need help, we provide free support.|http://taskcoach.org/getsupport.html

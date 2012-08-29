@@ -122,6 +122,9 @@ class Settings(object, CachingConfigParser):
     
     def getRawValue(self, section, option):
         return super(Settings, self).get(section, option)
+    
+    def init(self, section, option, value):
+        return super(Settings, self).set(section, option, value)
 
     def get(self, section, option):
         try:

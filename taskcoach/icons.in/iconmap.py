@@ -127,7 +127,7 @@ iconlist = [
 ('house_red_icon', 'apps', 'kfm_home', [16]),
 ('key_icon', 'actions', 'kgpg_key1', [16]),
 ('keys_icon', 'actions', 'kgpg_key3', [16]),
-('lamp_icon', 'apps', 'ktip', [16]),
+('lamp_icon', 'apps', 'ktip', [16, 32]),
 ('led_blue_icon', 'actions', 'ledblue', [16]),
 ('led_blue_light_icon', 'actions', 'ledlightblue', [16]),
 ('led_blue_questionmark_icon', 'actions', 'help', [16]),

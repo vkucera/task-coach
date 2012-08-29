@@ -90,7 +90,9 @@ class FilterableViewerMixin(object):
         return self.__filterUICommands[:2] + self.createCategoryFilterCommands() + self.__filterUICommands[2:]
 
     def createFilterUICommands(self):
-        return [uicommand.ResetFilter(viewer=self), None]
+        return [uicommand.ResetFilter(viewer=self), 
+                uicommand.CategoryViewerFilterChoice(settings=self.settings),
+                None]
 
     def resetFilter(self):
         self.taskFile.categories().resetAllFilteredCategories()
@@ -139,11 +141,11 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
                     statusesToHide=self.hiddenTaskStatuses())
    
     def hideTaskStatus(self, status, hide=True):
-        self.__setBooleanSetting('hide%stasks'%status, hide)
+        self.__setBooleanSetting('hide%stasks' % status, hide)
         self.presentation().hideTaskStatus(status, hide)
 
     def isHidingTaskStatus(self, status):
-        return self.__getBooleanSetting('hide%stasks'%status)
+        return self.__getBooleanSetting('hide%stasks' % status)
     
     def hiddenTaskStatuses(self):
         return [status for status in task.Task.possibleStatuses() if self.isHidingTaskStatus(status)]
@@ -251,7 +253,7 @@ class SortableViewerMixin(object):
         self._sortUICommands = self.createSortOrderUICommands()
         sortByCommands = self.createSortByUICommands()
         if sortByCommands:
-            self._sortUICommands.append(None) # Separator
+            self._sortUICommands.append(None)  # Separator
             self._sortUICommands.extend(sortByCommands)
         
     def createSortOrderUICommands(self):
@@ -431,7 +433,8 @@ class AttachmentDropTargetMixin(object):
             on an item. '''
         att = attachment.MailAttachment(mail)
         subject, content = att.read()
-        self._addAttachments([att], item, subject=subject, description=content, **kwargs)
+        self._addAttachments([att], item, subject=subject, description=content, 
+                             **kwargs)
 
 
 class NoteColumnMixin(object):
@@ -441,7 +444,6 @@ class NoteColumnMixin(object):
     
 
 class AttachmentColumnMixin(object):    
-    def attachmentImageIndices(self, item): # pylint: disable=W0613
+    def attachmentImageIndices(self, item):  # pylint: disable=W0613
         index = self.imageIndex['paperclip_icon'] if item.attachments() else -1
         return {wx.TreeItemIcon_Normal: index}
-

@@ -133,7 +133,8 @@ class ReleaseConverter(object):
         result = [self.summary(release, greeting)]
         if not greeting:
             result.insert(0, self.header(release))
-        for section, list in [('Bug%(s)s fixed', release.bugsFixed),
+        for section, list in [('Team change%(s)s', release.teamChanges),
+                ('Bug%(s)s fixed', release.bugsFixed),
                 ('Feature%(s)s added', release.featuresAdded),
                 ('Feature%(s)s changed', release.featuresChanged),
                 ('Feature%(s)s removed', release.featuresRemoved),

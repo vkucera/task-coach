@@ -274,9 +274,10 @@ def registering_with_PyPI(settings, options):
     pypirc.close()
     # pylint: disable=W0404
     from setup import setupOptions
-    languages_pypi_does_not_know = ['Basque', 'Breton', 'Estonian', 
-        'Galician', 'Lithuanian', 'Norwegian (Bokmal)', 'Norwegian (Nynorsk)', 
-        'Occitan', 'Papiamento', 'Slovene', 'German (Low)', 'Mongolian']
+    languages_pypi_does_not_know = ['Basque', 'Belarusian', 'Breton', 
+        'Estonian', 'Galician', 'Lithuanian', 'Norwegian (Bokmal)', 
+        'Norwegian (Nynorsk)', 'Occitan', 'Papiamento', 'Slovene', 
+        'German (Low)', 'Mongolian']
     for language in languages_pypi_does_not_know:
         setupOptions['classifiers'].remove('Natural Language :: %s' % language)
     from distutils.core import setup
@@ -290,13 +291,22 @@ def registering_with_PyPI(settings, options):
     os.remove('.pypirc')
 
 
-def httpPostRequest(host, api_call, body, contentType, ok=200, **headers):
+def postRequest(connection, api_call, body, contentType, ok=200, **headers):
     headers['Content-Type'] = contentType
-    connection = httplib.HTTPConnection('%s:80' % host)
     connection.request('POST', api_call, body, headers)
     response = connection.getresponse()
     if response.status != ok:
         print 'Request failed: %d %s' % (response.status, response.reason)
+
+
+def httpPostRequest(host, api_call, body, contentType, ok=200, **headers):
+    connection = httplib.HTTPConnection(host)
+    postRequest(connection, api_call, body, contentType, ok, **headers)
+
+
+def httpsPostRequest(host, api_call, body, contentType, ok=200, **headers):
+    connection = httplib.HTTPSConnection(host)
+    postRequest(connection, api_call, body, contentType, ok, **headers)
 
 
 @progress
@@ -314,7 +324,7 @@ def announcing_on_Freecode(settings, options):
     if options.dry_run:
         print 'Skipping announcing "%s" on %s.' % (release, host)
     else:
-        httpPostRequest(host, path, body, 'application/json', ok=201)
+        httpsPostRequest(host, path, body, 'application/json', ok=201)
 
 
 def status_message():

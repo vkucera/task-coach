@@ -55,8 +55,8 @@ class ListenerBase:
         self.acceptsAllKwargs = argsInfo.acceptsAllKwargs
         
         self._autoTopicArgName = argsInfo.autoTopicArgName
-        self.__onDead = onDead
         self._callable = weakmethod.getWeakRef(callable_, self.__notifyOnDead)
+        self.__onDead = onDead
         
         # save identity now in case callable dies:
         name, mod = getID(callable_)   #
@@ -112,10 +112,14 @@ class ListenerBase:
     def __notifyOnDead(self, ref):
         '''This gets called when listener weak ref has died. Propagate 
         info to Topic).'''
-        notifyDeath = self.__onDead
-        self._unlinkFromTopic_()
-        if notifyDeath is not None:
-            notifyDeath(self)
+        try:
+            notifyDeath = self.__onDead
+        except AttributeError:
+            pass
+        else:
+            self._unlinkFromTopic_()
+            if notifyDeath is not None:
+                notifyDeath(self)
 
     def __eq__(self, rhs):
         '''Compare for equality to rhs. This returns true if rhs has our id id(rhs) is

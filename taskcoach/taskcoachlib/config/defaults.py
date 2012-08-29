@@ -1,6 +1,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2012 Nicola Chiapolini <nicola.chiapolini@physik.uzh.ch>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -383,34 +384,10 @@ defaults = {
     'tipsindex': '0',  # Start at the first tip
     'blinktaskbariconwhentrackingeffort': 'True'
     },
-'taskdialog': {
-    'size': '(-1, -1)',  # Size of the dialogs, calculated by default
-    'position': '(-1, -1)',  # Position of the dialog, undefined by default
-    'maximized': 'False',  # Don't open the dialog maximized by default
-    'perspectives': '{}'  # The layout of the tabs in the dialog
-    },
-'categorydialog': {
-    'size': '(-1, -1)',  # Size of the dialogs, calculated by default
-    'position': '(-1, -1)',  # Position of the dialog, undefined by default
-    'maximized': 'False',  # Don't open the dialog maximized by default
-    'perspectives': '{}'  # The layout of the tabs in the dialog
-    },
 'effortdialog': {
     'size': '(-1, -1)',  # Size of the dialogs, calculated by default
     'position': '(-1, -1)',  # Position of the dialog, undefined by default
     'maximized': 'False'  # Don't open the dialog maximized by default
-    },
-'notedialog': {
-    'size': '(-1, -1)',  # Size of the dialogs, calculated by default
-    'position': '(-1, -1)',  # Position of the dialog, undefined by default
-    'maximized': 'False',  # Don't open the dialog maximized by default
-    'perspectives': '{}'  # The layout of the tabs in the dialog
-    },
-'attachmentdialog': {
-    'size': '(-1, -1)',  # Size of the dialogs, calculated by default
-    'position': '(-1, -1)',  # Position of the dialog, undefined by default
-    'maximized': 'False',  # Don't open the dialog maximized by default
-    'perspectives': '{}'  # The layout of the tabs in the dialog
     },
 'file': {
     'recentfiles': '[]',
@@ -454,7 +431,7 @@ defaults = {
     'completedtasks': '',
     'overduetasks': '',
     'inactivetasks': '',
-    'duesoontasks': '' 
+    'duesoontasks': ''
     },
 'icon': { 
     'activetasks': 'led_blue_icon',
@@ -465,11 +442,7 @@ defaults = {
     'duesoontasks': 'led_orange_icon' 
     },
 'editor': {
-    'taskpages': '[]',  # Order of tabs in the task editor
-    'categorypages': '[]',  # Order of tabs in the category editor
-    'notepages': '[]',  # Order of tabs in the note editor
-    'attachmentpages': '[]',  # Order of tabs in the attachment editor
-    'preferencespages': '[]',  # Order of tabs in the preferences dialog
+    'descriptionfont': '',  # Font to use in the desciption field of editors
     'maccheckspelling': 'True' 
     },
 'version': {

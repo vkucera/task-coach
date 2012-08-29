@@ -16,14 +16,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, icons
 from taskcoachlib import patterns, operating_system
 from taskcoachlib.i18n import _
+import wx
+import icons
 
 
 class ArtProvider(wx.ArtProvider):
     def CreateBitmap(self, artId, artClient, size):
-        catalogKey = '%s%dx%d'%(artId, size[0], size[1])
+        catalogKey = '%s%dx%d' % (artId, size[0], size[1])
         if catalogKey in icons.catalog.keys():
             bitmap = icons.catalog[catalogKey].getBitmap()
             if artClient == wx.ART_FRAME_ICON:
@@ -83,9 +84,9 @@ def getIcon(iconTitle):
 
 def init():
     if operating_system.isWindows() and wx.DisplayDepth() >= 32:
-        wx.SystemOptions_SetOption("msw.remap", "0") # pragma: no cover
+        wx.SystemOptions_SetOption("msw.remap", "0")  # pragma: no cover
     try:
-        wx.ArtProvider_PushProvider(ArtProvider()) # pylint: disable=E1101
+        wx.ArtProvider_PushProvider(ArtProvider())  # pylint: disable=E1101
     except AttributeError:
         wx.ArtProvider.Push(ArtProvider())
 
@@ -185,4 +186,3 @@ itemImages = chooseableItemImages.keys() + ['folder_blue_open_icon',
     'folder_blue_light_open_icon']
 
 chooseableItemImages[''] = _('No icon')
-
