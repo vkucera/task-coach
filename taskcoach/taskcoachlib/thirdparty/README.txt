@@ -59,7 +59,7 @@ Date: 2011-06-09
 Licence: GPL v3
 Source: https://github.com/bendyer/python-ntlm
 Copied on: 2012-07-31
-Changes for Task Coach: none
+Changes for Task Coach: make __init__.py non-empty so that it gets packaged
 
 Component: pubsub
 Name: PyPubSub

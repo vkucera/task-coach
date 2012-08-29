@@ -31,6 +31,8 @@ automatically selected.''', '3562922'),
 work.''', '3562808'),
         Bug('''With autosaving on, Task Coach would actually save too often.''', 
             '3562836'),
+        Bug('''On Ubuntu, a file was missing causing Task Coach not to
+start.''', '3562695'),
     ],
 ),
 
