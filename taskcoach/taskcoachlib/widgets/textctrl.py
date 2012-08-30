@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib import i18n
+from taskcoachlib import i18n, operating_system
 import wx
 import webbrowser
 
@@ -31,17 +31,47 @@ class BaseTextCtrl(wx.TextCtrl):
     def __init__(self, parent, *args, **kwargs):
         super(BaseTextCtrl, self).__init__(parent, -1, *args, **kwargs)
         self.__data = None
+        if operating_system.isGTK():
+            self.Bind(wx.EVT_KEY_DOWN, self.on_key_down)
+            self.__initial_value = self.GetValue()
+            self.__undone_value = None
 
     def GetValue(self, *args, **kwargs):
         value = super(BaseTextCtrl, self).GetValue(*args, **kwargs)
         # Don't allow unicode control characters:
         return value.translate(UNICODE_CONTROL_CHARACTERS_TO_WEED)
 
+    def SetValue(self, *args, **kwargs):
+        super(BaseTextCtrl, self).SetValue(*args, **kwargs)
+        if operating_system.isGTK():
+            self.__initial_value = self.GetValue()
+
     def SetData(self, data):
         self.__data = data
 
     def GetData(self):
         return self.__data
+
+    def on_key_down(self, event):
+        ''' Check whether the user is pressing Ctrl-Z (or Ctrl-Y) and if so, 
+            undo (or redo) the editing. '''
+        if event.GetKeyCode() == ord('Z') and event.ControlDown() and \
+           self.GetValue() != self.__initial_value:
+            insertion_point = self.GetInsertionPoint()
+            self.__undone_value = self.GetValue()
+            super(BaseTextCtrl, self).SetValue(self.__initial_value)
+            insertion_point = min(insertion_point, self.GetLastPosition())
+            self.SetInsertionPoint(insertion_point)
+        elif event.GetKeyCode() == ord('Y') and event.ControlDown() and \
+           self.GetValue() != self.__undone_value and \
+           (self.__undone_value is not None):
+            insertion_point = self.GetInsertionPoint()
+            super(BaseTextCtrl, self).SetValue(self.__undone_value)
+            self.__undone_value = None
+            insertion_point = min(insertion_point, self.GetLastPosition())
+            self.SetInsertionPoint(insertion_point)
+        else:
+            event.Skip()
 
 
 class SingleLineTextCtrl(BaseTextCtrl):

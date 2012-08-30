@@ -33,6 +33,8 @@ work.''', '3562808'),
             '3562836'),
         Bug('''On Ubuntu, a file was missing causing Task Coach not to
 start.''', '3562695'),
+        Bug('''On Ubuntu, the native text control doesn't support undo and 
+redo, added a home grown version.''', '3563376'),
     ],
 ),
 
