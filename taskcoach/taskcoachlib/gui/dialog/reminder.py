@@ -84,8 +84,8 @@ class ReminderDialog(patterns.Observer, sized_controls.SizedDialog):
         
         wx.StaticText(pane, label='')
         self.replaceDefaultSnoozeTime = wx.CheckBox(pane, 
-            label=_('Also use the selected snooze time as default snooze time '
-                    'for future reminders'))
+            label=_('Also make this the default snooze time for future '
+                    'reminders'))
         self.replaceDefaultSnoozeTime.SetValue(True)
         
         buttonSizer = self.CreateStdDialogButtonSizer(wx.OK)
