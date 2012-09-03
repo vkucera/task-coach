@@ -107,6 +107,17 @@ class LanguageTests(Compile):
         Compile.__init__(self, **kwargs)
 
 
+class ReleaseTests(Compile):
+    name = 'release tests'
+    description = ['Running', 'release', 'tests']
+    descriptionDone = ['Release', 'tests']
+    haltOnFailure = False
+
+    def __init__(self, **kwargs):
+        kwargs['command'] = ['make', 'releasetests']
+        Compile.__init__(self, **kwargs)
+
+
 class DistributionTests(Compile):
     name = 'distribution tests'
     description = ['Running', 'distribution', 'tests']
