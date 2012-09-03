@@ -18,15 +18,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
-import test
 from taskcoachlib import gui, config, persistence, operating_system
 from taskcoachlib.domain import task, effort, date, note, attachment
 from taskcoachlib.gui import uicommand
 from unittests import dummy
+import test
+import wx
 
 
-class TaskEditorSetterBase(object):
+class TaskEditorSetterMixin(object):
     def setSubject(self, newSubject):
         page = self.editor._interior[0]
         page._subjectEntry.SetFocus()
@@ -40,19 +40,23 @@ class TaskEditorSetterBase(object):
         return page
     
     def setPlannedStartDateTime(self, dateTime):
-        self.setDateTime(self.editor._interior[1]._plannedStartDateTimeEntry, dateTime)
+        self.setDateTime(self.editor._interior[1]._plannedStartDateTimeEntry, 
+                         dateTime)
         
     def setDueDateTime(self, dateTime):
         self.setDateTime(self.editor._interior[1]._dueDateTimeEntry, dateTime)
 
     def setActualStartDateTime(self, dateTime):
-        self.setDateTime(self.editor._interior[1]._actualStartDateTimeEntry, dateTime)
+        self.setDateTime(self.editor._interior[1]._actualStartDateTimeEntry, 
+                         dateTime)
 
     def setCompletionDateTime(self, dateTime):
-        self.setDateTime(self.editor._interior[1]._completionDateTimeEntry, dateTime)
+        self.setDateTime(self.editor._interior[1]._completionDateTimeEntry, 
+                         dateTime)
 
     def setReminder(self, dateTime):
-        self.setDateTime(self.editor._interior[1]._reminderDateTimeEntry, dateTime)
+        self.setDateTime(self.editor._interior[1]._reminderDateTimeEntry, 
+                         dateTime)
         
     def setDateTime(self, entry, dateTime):
         entry.SetValue(dateTime)
@@ -66,20 +70,20 @@ class TaskEditorSetterBase(object):
         wx.YieldIfNeeded()
 
 
-class TaskEditorBySettingFocusMixin(TaskEditorSetterBase):
+class TaskEditorBySettingFocusMixin(TaskEditorSetterMixin):
     def setSubject(self, newSubject):
         page = super(TaskEditorBySettingFocusMixin, self).setSubject(newSubject)
         if operating_system.isGTK(): 
-            page._subjectSync.onAttributeEdited(dummy.Event()) # pragma: no cover
+            page._subjectSync.onAttributeEdited(dummy.Event())  # pragma: no cover
         else:
-            page._descriptionEntry.SetFocus() # pragma: no cover
+            page._descriptionEntry.SetFocus()  # pragma: no cover
         
     def setDescription(self, newDescription):
         page = super(TaskEditorBySettingFocusMixin, self).setDescription(newDescription)
         if operating_system.isGTK(): 
-            page._descriptionSync.onAttributeEdited(dummy.Event()) # pragma: no cover
+            page._descriptionSync.onAttributeEdited(dummy.Event())  # pragma: no cover
         else:
-            page._subjectEntry.SetFocus() # pragma: no cover
+            page._subjectEntry.SetFocus()  # pragma: no cover
 
 
 class TaskEditBookWithPerspective(gui.dialog.editor.TaskEditBook):
@@ -87,6 +91,7 @@ class TaskEditBookWithPerspective(gui.dialog.editor.TaskEditBook):
 
     def perspective(self):
         return self.testPerspective
+
 
 class TaskEditorWithPerspective(gui.dialog.editor.TaskEditor):
     EditBookClass = TaskEditBookWithPerspective
@@ -115,14 +120,14 @@ class TaskEditorTestCase(test.wxTestCase):
         # TaskEditor uses CallAfter for setting the focus, make sure those 
         # calls are dealt with, otherwise they'll turn up in other tests
         if operating_system.isGTK():
-            wx.Yield() # pragma: no cover 
+            wx.Yield()  # pragma: no cover 
         super(TaskEditorTestCase, self).tearDown()
         
     def createTasks(self):
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
     
     def getItems(self):
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
 
 class EditorDisplayTest(TaskEditorTestCase):
@@ -139,7 +144,7 @@ class EditorDisplayTest(TaskEditorTestCase):
     
     def testSubject(self):
         self.assertEqual('Task to edit',
-			 self.editor._interior[0]._subjectEntry.GetValue())
+                         self.editor._interior[0]._subjectEntry.GetValue())
 
     def testDueDateTime(self):
         self.assertEqual(date.DateTime(),
@@ -158,7 +163,7 @@ class EditorDisplayTest(TaskEditorTestCase):
         self.assertEqual(1, freq.GetValue())    
 
 
-class EditTaskTestBase(object):
+class EditTaskTestMixin(object):
     def getItems(self):
         return [self.task]
 
@@ -166,7 +171,7 @@ class EditTaskTestBase(object):
         # pylint: disable=W0201
         self.task = task.Task('Task to edit')
         self.attachment = attachment.FileAttachment('some attachment')
-        self.task.addAttachments(self.attachment) # pylint: disable=E1101
+        self.task.addAttachments(self.attachment)  # pylint: disable=E1101
         return [self.task]
 
     def testEditSubject(self):
@@ -273,12 +278,14 @@ class EditTaskTestBase(object):
     def testRemoveAttachment(self):
         self.editor._interior[8].viewer.select(self.task.attachments())
         self.editor._interior[8].viewer.deleteItemCommand().do()
-        self.assertEqual([], self.task.attachments()) # pylint: disable=E1101
+        self.assertEqual([], self.task.attachments())  # pylint: disable=E1101
 
     def testOpenAttachmentWithNonAsciiFileName(self):
         self.errorMessage = ''  # pylint: disable=W0201
-        def onError(*args, **kwargs): # pylint: disable=W0613
+        
+        def onError(*args, **kwargs):  # pylint: disable=W0613
             self.errorMessage = args[0]  # pragma: no cover
+            
         att = attachment.FileAttachment(u'tÃƒÂ©st.ÃƒÂ©')
         openAttachment = uicommand.AttachmentOpen(\
             viewer=self.editor._interior[6].viewer,
@@ -305,11 +312,12 @@ class EditTaskTestBase(object):
         self.assertEqual(1, len(self.task.notes())) 
 
 
-class EditTaskTestBySettingFocus(TaskEditorBySettingFocusMixin, EditTaskTestBase, TaskEditorTestCase):
+class EditTaskTestBySettingFocus(TaskEditorBySettingFocusMixin, 
+                                 EditTaskTestMixin, TaskEditorTestCase):
     pass
 
 
-class EditTaskWithChildrenTestBase(object):
+class EditTaskWithChildrenMixin(object):
     def getItems(self):
         return [self.parent]
 
@@ -318,27 +326,16 @@ class EditTaskWithChildrenTestBase(object):
         self.parent = task.Task('Parent', plannedStartDateTime=date.Now())
         self.child = task.Task('Child', plannedStartDateTime=date.Now())
         self.parent.addChild(self.child)
-        return [self.parent] # self.child is added to tasklist automatically
+        return [self.parent]  # self.child is added to tasklist automatically
 
     def testEditSubject(self):
         self.setSubject('New Parent Subject')
         self.assertEqual('New Parent Subject', self.parent.subject())
 
-    # pylint: disable=W0212
 
-    def testChangeDueDateTimeOfParentAffectsChildToo(self):
-        self.setDueDateTime(self.yesterday)
-        self.assertAlmostEqual(self.yesterday.toordinal(), 
-                               self.child.dueDateTime().toordinal(), places=2)
-
-    def testChangePlannedStartDateTimeOfParentHasNoEffectOnChild(self):
-        self.setPlannedStartDateTime(self.tomorrow)
-        self.assertAlmostEqual(self.tomorrow.toordinal(), 
-                               self.child.plannedStartDateTime().toordinal(),
-                               places=2)
-
-
-class EditTaskWithChildrenTestBySettingFocus(TaskEditorBySettingFocusMixin, EditTaskWithChildrenTestBase, TaskEditorTestCase):
+class EditTaskWithChildrenTestBySettingFocus(TaskEditorBySettingFocusMixin, 
+                                             EditTaskWithChildrenMixin, 
+                                             TaskEditorTestCase):
     pass
 
 
@@ -347,12 +344,13 @@ class EditTaskWithEffortTest(TaskEditorTestCase):
         return [self.task]
 
     def createTasks(self):
-        self.task = task.Task('task') # pylint: disable=W0201
+        self.task = task.Task('task')  # pylint: disable=W0201
         self.task.addEffort(effort.Effort(self.task))
         return [self.task]
     
     def testEffortIsShown(self):
-        self.assertEqual(1, self.editor._interior[6].viewer.widget.GetItemCount())
+        self.assertEqual(1, 
+                         self.editor._interior[6].viewer.widget.GetItemCount())
                            
         
 class FocusTest(TaskEditorTestCase):
@@ -365,16 +363,18 @@ class FocusTest(TaskEditorTestCase):
 
     def testFocus(self):
         if operating_system.isGTK():
-            wx.Yield() # pragma: no cover
+            wx.Yield()  # pragma: no cover
             # pylint: disable=W0212
-            self.assertNotEqual(self.editor._interior[0]._subjectEntry, wx.Window_FindFocus())
+            self.assertNotEqual(self.editor._interior[0]._subjectEntry, 
+                                wx.Window_FindFocus())
         else:
             # pylint: disable=W0212
-            self.assertEqual(self.editor._interior[0]._subjectEntry, wx.Window_FindFocus())
+            self.assertEqual(self.editor._interior[0]._subjectEntry, 
+                             wx.Window_FindFocus())
 
     def testSelection(self):
         if operating_system.isGTK():
-            wx.Yield() # pragma: no cover
+            wx.Yield()  # pragma: no cover
             # pylint: disable=W0212
             self.assertEqual(self.editor._interior[0]._subjectEntry.GetStringSelection(), u'')
         else:
@@ -387,7 +387,7 @@ class FocusTestWithPerspective(FocusTest):
     editorClass = TaskEditorWithPerspective
 
 
-class DatesTestBase(TaskEditorSetterBase, TaskEditorTestCase):
+class DatesTestBase(TaskEditorSetterMixin, TaskEditorTestCase):
     def createTasks(self):
         # pylint: disable=W0201
         self.task = task.Task('Task to edit')

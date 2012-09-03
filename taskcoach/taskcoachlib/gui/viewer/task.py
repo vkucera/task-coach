@@ -1019,25 +1019,20 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
     def renderSubject(self, task):
         return task.subject(recursive=not self.isTreeViewer())
     
-    @staticmethod
-    def renderPlannedStartDateTime(task):
-        # The rendering of the planned start date time doesn't depend on whether 
-        # the task is collapsed since the planned start date time of a parent is 
-        # always <= planned start date times of all children. 
-        return render.dateTime(task.plannedStartDateTime())
+    def renderPlannedStartDateTime(self, task):
+        return self.renderedValue(task, task.plannedStartDateTime, 
+                                  render.dateTime)
     
     def renderDueDateTime(self, task):
         return self.renderedValue(task, task.dueDateTime, render.dateTime)
 
-    @staticmethod
-    def renderActualStartDateTime(task):
-        # The rendering of the actual start date time doesn't depend on whether 
-        # the task is collapsed since the actual start date time of a parent is 
-        # always <= actual start date times of all children. 
-        return render.dateTime(task.actualStartDateTime())
+    def renderActualStartDateTime(self, task):
+        return self.renderedValue(task, task.actualStartDateTime, 
+                                  render.dateTime)
 
     def renderCompletionDateTime(self, task):
-        return self.renderedValue(task, task.completionDateTime, render.dateTime)
+        return self.renderedValue(task, task.completionDateTime, 
+                                  render.dateTime)
 
     def renderRecurrence(self, task):
         return self.renderedValue(task, task.recurrence, render.recurrence)

@@ -23,7 +23,7 @@ from changetypes import *
 releases = [
             
 Release('1.3.19', 'September ??, 2012',
-    summary='''This is a bugfix release.''',
+    summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
         Bug('''On OS X, the first entry in an editor page would not be
 automatically selected.''', '3562922'),
@@ -35,6 +35,34 @@ work.''', '3562808'),
 start.''', '3562695'),
         Bug('''On Ubuntu, the native text control doesn't support undo and 
 redo, added a home grown version.''', '3563376'),
+        Bug('''Don't silently adjust dates of parent and child tasks. See 
+also the changed feature below.''', '3561465'),
+    ],
+    featuresChanged=[
+        Feature('''Task Coach no longer enforces that the dates of child tasks
+lie between the dates of its parent task. Previously, if the start date of a 
+child task would be made earlier than the start date of its parent task, 
+Task Coach would silently make the start of the parent task equal to the 
+start date of the child task. The same for the due date: setting the due
+date of the parent task earlier than the due date of a child task would 
+silently change the due date of the child tasks if their due date would 
+otherwise become later than the due date of the parent task.
+
+When viewing tasks in the task tree viewer, collapsing a task with child tasks 
+will show recursive dates when relevant. This means that the planned start 
+date column will show the earliest start date of the task itself and all of
+its child tasks. If the earliest start date is the start date of one of the 
+child tasks, the date will be shown between brackets. Likewise, the actual 
+start date column will show the earliest actual start date of the task and all 
+of its child tasks. The due date column and the completion date column will 
+show the latest date of the parent and child tasks combined. 
+
+When sorting on a date column, the recursive value is used for sorting. So when
+sorting ascending by due date a parent task without due date but with a child
+task due today will sort before a task that is due tomorrow.
+
+This change makes the date behavior consistent with priorities and other 
+attributes.'''),
     ],
 ),
 
