@@ -170,7 +170,7 @@ def dateTimePeriod(start, stop):
         return '%s - %s' % (dateTime(start), dateTime(stop))
     
     
-def time(dateTime, minutes=True, seconds=False):
+def time(dateTime, seconds=False, minutes=True):
     try:
         # strftime doesn't handle years before 1900, be prepared:
         dateTime = dateTime.replace(year=2000)  
