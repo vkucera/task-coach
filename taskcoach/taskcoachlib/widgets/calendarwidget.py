@@ -20,12 +20,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 from taskcoachlib.thirdparty.wxScheduler import wxScheduler, wxSchedule, \
     EVT_SCHEDULE_ACTIVATED, EVT_SCHEDULE_RIGHT_CLICK, \
-    EVT_SCHEDULE_DCLICK, EVT_PERIODWIDTH_CHANGED, wxReportScheduler
+    EVT_SCHEDULE_DCLICK, EVT_PERIODWIDTH_CHANGED, wxReportScheduler, wxTimeFormat
 from taskcoachlib.thirdparty.wxScheduler.wxSchedulerConstants import wxSCHEDULER_WEEKSTART_MONDAY,\
     wxSCHEDULER_WEEKSTART_SUNDAY
 from taskcoachlib.domain import date
 from taskcoachlib.widgets import draganddrop
-from taskcoachlib import command
+from taskcoachlib import command, render
 import tooltip
 
 
@@ -70,6 +70,11 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
         EVT_SCHEDULE_RIGHT_CLICK(self, self.OnPopup)
         EVT_SCHEDULE_DCLICK(self, self.OnEdit)
         EVT_PERIODWIDTH_CHANGED(self, self.OnChangeConfig)
+
+        wxTimeFormat.SetFormatFunction(self.__formatTime)
+
+    def __formatTime(self, dateTime, includeMinutes=False):
+        return render.time(TaskSchedule.tcDateTime(dateTime), minutes=includeMinutes)
 
     def _handleDrop(self, x, y, droppedObject, cb):
         if cb is not None:

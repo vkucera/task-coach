@@ -25,6 +25,8 @@ releases = [
 Release('1.3.19', 'September ??, 2012',
     summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
+        Bug('''Format times in the calendar view according to the user's
+preferences.''', '3563441'),
         Bug('''Do not automatically give focus to the subject field
 in the task editor on Linux (it overwrites the X clipboard).''', '3539452'),
         Bug('''After loading a task file, tasks would not become due soon
