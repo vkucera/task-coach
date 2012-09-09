@@ -25,6 +25,8 @@ releases = [
 Release('1.3.19', 'September ??, 2012',
     summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
+        Bug('''Do not automatically give focus to the subject field
+in the task editor on Linux (it overwrites the X clipboard).''', '3539452'),
         Bug('''After loading a task file, tasks would not become due soon
 on time.''', '3562925'),
         Bug('''On OS X, the first entry in an editor page would not be

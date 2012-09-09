@@ -85,7 +85,14 @@ class SubjectPage(Page):
     def __init__(self, items, parent, settings, *args, **kwargs):
         self._settings = settings
         super(SubjectPage, self).__init__(items, parent, *args, **kwargs)
-    
+
+    def SetFocus(self):
+        # Skip this on GTK because it selects the control's text, which overrides the X selection.
+        # Simply commenting out the SetFocus() in __load_perspective is not enought because the
+        # aui notebook calls this when the user selects a tab.
+        if not operating_system.isGTK():
+            super(SubjectPage, self).SetFocus()
+
     def addEntries(self):
         self.addSubjectEntry()
         self.addDescriptionEntry()
