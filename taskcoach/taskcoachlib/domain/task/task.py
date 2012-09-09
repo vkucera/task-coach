@@ -522,9 +522,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 self.__status = status.active
             # Don't call prerequisite.completed() because it will lead to infinite
             # recursion in the case of circular dependencies:
-            elif any([prerequisite.completionDateTime() == self.maxDateTime for prerequisite in self.prerequisites()]):
-                self.__status = status.inactive
-            elif self.parent() and self.parent().inactive():
+            elif any([prerequisite.completionDateTime() == self.maxDateTime \
+                      for prerequisite in self.prerequisites(recursive=True, 
+                                                             upwards=True)]):
                 self.__status = status.inactive
             elif self.plannedStartDateTime() < now:
                 self.__status = status.late

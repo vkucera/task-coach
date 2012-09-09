@@ -42,7 +42,7 @@ start.''', '3562695'),
         Bug('''On Ubuntu, the native text control doesn't support undo and 
 redo, added a home grown version.''', '3563376'),
         Bug('''Don't silently adjust dates of parent and child tasks. See 
-also the changed feature below.''', '3561465'),
+also the changed feature below.''', '3561465', '3564794'),
     ],
     featuresChanged=[
         Feature('''Task Coach no longer enforces that the dates of child tasks
