@@ -81,6 +81,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         now = date.Now()
         if now < self.__dueDateTime < maxDateTime:
             date.Scheduler().schedule(self.onOverDue, self.__dueDateTime + date.oneSecond, allowMisfire=True)
+            if self.__dueSoonHours:
+                dueSoonDateTime = self.__dueDateTime + date.oneSecond - date.TimeDelta(hours=self.__dueSoonHours)
+                if dueSoonDateTime > date.Now():
+                    date.Scheduler().schedule(self.onDueSoon, dueSoonDateTime)
         if now < self.__plannedStartDateTime < maxDateTime:
             date.Scheduler().schedule(self.onTimeToStart, self.__plannedStartDateTime + date.oneSecond, allowMisfire=True)
             

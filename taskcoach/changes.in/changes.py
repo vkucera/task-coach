@@ -25,6 +25,8 @@ releases = [
 Release('1.3.19', 'September ??, 2012',
     summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
+        Bug('''After loading a task file, tasks would not become due soon
+on time.''', '3562925'),
         Bug('''On OS X, the first entry in an editor page would not be
 automatically selected.''', '3562922'),
         Bug('''On Linux, drag and drop of email messages from Evolution didn't

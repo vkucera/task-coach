@@ -43,8 +43,12 @@ class TaskTestCase(test.TestCase):
             effortLabel = '%seffort%d' % (taskLabel, effortIndex + 1)
             setattr(self, effortLabel, eachEffort)
             
-    def setUp(self):
+    def setUp(self, settings=None):
         self.settings = task.Task.settings = config.Settings(load=False)
+        if settings is not None:
+            for section, name, value in settings:
+                # XXXTODO: other types ? Not needed right now
+                self.settings.setint(section, name, value)
         self.yesterday = date.Now() - date.oneDay
         self.tomorrow = date.Now() + date.oneDay
         self.tasks = self.createTasks()
@@ -3145,3 +3149,41 @@ class TaskConstructionTest(test.TestCase):
                                                    date.DateTime(2000, 1, 1))])
         self.assertEqual(date.DateTime(2010, 1, 1), 
                          newTask.actualStartDateTime())
+
+
+class TaskScheduledTest(TaskTestCase):
+    def setUp(self):
+        super(TaskScheduledTest, self).setUp([('behavior', 'duesoonhours', 1)])
+
+    def taskCreationKeywordArguments(self):
+        return [{'dueDateTime': date.Now() + date.TimeDelta(hours=2),
+                 'plannedStartDateTime': date.Now() + date.oneHour}]
+
+    def testOverDueIsScheduled(self):
+        self.failUnless(date.Scheduler().is_scheduled(self.task.onOverDue))
+
+    def testStartedIsScheduled(self):
+        self.failUnless(date.Scheduler().is_scheduled(self.task.onTimeToStart))
+
+    def testDueSoonIsScheduled(self):
+        self.failUnless(date.Scheduler().is_scheduled(self.task.onDueSoon))
+
+
+class TaskNotScheduledTest(TaskTestCase):
+    def setUp(self):
+        super(TaskNotScheduledTest, self).setUp([('behavior', 'duesoonhours', 1)])
+
+    def taskCreationKeywordArguments(self):
+        return [{'subject': 'Task'}, {'dueDateTime': date.Now() - date.oneHour}]
+
+    def testOverDueIsNotScheduled(self):
+        self.failIf(date.Scheduler().is_scheduled(self.task.onOverDue))
+
+    def testOverdueIsNotScheduledBecauseTooLate(self):
+        self.failIf(date.Scheduler().is_scheduled(self.tasks[1].onOverDue))
+
+    def testStartedIsNotScheduled(self):
+        self.failIf(date.Scheduler().is_scheduled(self.task.onTimeToStart))
+
+    def testDueSoonIsNotScheduled(self):
+        self.failIf(date.Scheduler().is_scheduled(self.task.onDueSoon))
