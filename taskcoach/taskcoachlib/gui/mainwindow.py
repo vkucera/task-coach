@@ -137,9 +137,9 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
             remindercontroller.ReminderController(self, self.taskFile.tasks(),
                 self.taskFile.efforts(), self.settings)
         
-    def addPane(self, page, caption):  # pylint: disable=W0221
+    def addPane(self, page, caption, floating=False):  # pylint: disable=W0221
         name = page.settingsSection()
-        super(MainWindow, self).addPane(page, caption, name)
+        super(MainWindow, self).addPane(page, caption, name, floating=floating)
         
     def initWindow(self):
         self.setTitle(self.taskFile.filename())

@@ -23,8 +23,8 @@ from taskcoachlib.thirdparty import hypertreelist
 
 
 class Window(widgets.AuiManagedFrameWithDynamicCenterPane):
-    def addPane(self, viewer, title, name='name'):
-        super(Window, self).addPane(viewer, title, name)
+    def addPane(self, viewer, title, name='name', floating=False):
+        super(Window, self).addPane(viewer, title, name, floating)
         
 
 class ViewerTest(test.wxTestCase):

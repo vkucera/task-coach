@@ -49,12 +49,14 @@ class AuiManagedFrameWithDynamicCenterPane(wx.Frame):
                     dockedPanes.remove(pane)
                 dockedPanes[0].Center()
                 
-    def addPane(self, window, caption, name):
+    def addPane(self, window, caption, name, floating=False):
         paneInfo = aui.AuiPaneInfo()
         paneInfo = paneInfo.CloseButton(True).Floatable(True).\
             Name(name).Caption(caption).Right().\
             FloatingSize((300, 200)).BestSize((200, 200)).\
             CaptionVisible().MaximizeButton().DestroyOnClose()
+        if floating:
+            paneInfo.Float()
         if not self.dockedPanes():
             paneInfo = paneInfo.Center()
         self.manager.AddPane(window, paneInfo)
@@ -67,6 +69,9 @@ class AuiManagedFrameWithDynamicCenterPane(wx.Frame):
         return [pane for pane in self.manager.GetAllPanes() \
                 if not pane.IsToolbar() and not pane.IsFloating() \
                 and not pane.IsNotebookPage()]
+        
+    def float(self, window):
+        self.manager.GetPane(window).Float()
 
     @staticmethod
     def isCenterPane(pane):

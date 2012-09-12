@@ -43,7 +43,7 @@ start.''', '3562695'),
 redo, added a home grown version.''', '3563376'),
         Bug('''Don't silently adjust dates of parent and child tasks. See 
 also the changed feature below.''', '3561465', '3564794'),
-    ],
+        ],
     featuresChanged=[
         Feature('''Task Coach no longer enforces that the dates of child tasks
 lie between the dates of its parent task. Previously, if the start date of a 
@@ -69,8 +69,12 @@ task due today will sort before a task that is due tomorrow.
 
 This change makes the date behavior consistent with priorities and other 
 attributes.'''),
-    ],
-),
+        Feature('''New viewers will open floating so that is easier to put them
+in the position you want. Hopefully this will also make it more obvious for 
+new users that viewers can be reordered any way they like since moving a 
+floating viewer will show the docking guides.''')
+        ],
+    ),
 
 Release('1.3.18', 'August 28, 2012',
     summary='''This is a mixed feature and bugfix release.''',

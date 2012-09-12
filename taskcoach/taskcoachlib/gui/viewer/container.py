@@ -70,9 +70,9 @@ class ViewerContainer(object):
     def __len__(self):
         return len(self.viewers)
 
-    def addViewer(self, viewer):
+    def addViewer(self, viewer, floating=False):
         ''' Add a new pane with the specified viewer. '''
-        self.containerWidget.addPane(viewer, viewer.title())
+        self.containerWidget.addPane(viewer, viewer.title(), floating=floating)
         self.viewers.append(viewer)
         if len(self.viewers) == 1:
             self.activateViewer(viewer)
