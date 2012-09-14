@@ -75,7 +75,12 @@ attributes.'''),
         Feature('''New viewers will open floating so that is easier to put them
 in the position you want. Hopefully this will also make it more obvious for 
 new users that viewers can be reordered any way they like since moving a 
-floating viewer will show the docking guides.''')
+floating viewer will show the docking guides.'''),
+        Feature('''On Windows, both left clicking and left double clicking the 
+Task Coach icon in the notification area (often called the system tray) will 
+raise or minimize the main window (in accordance with 
+http://msdn.microsoft.com/en-us/library/windows/desktop/aa511448.aspx#interaction).''',
+        'http://uservoice.com/a/m3P6j'),
         ],
     ),
 
