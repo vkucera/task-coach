@@ -43,6 +43,9 @@ start.''', '3562695'),
 redo, added a home grown version.''', '3563376'),
         Bug('''Don't silently adjust dates of parent and child tasks. See 
 also the changed feature below.''', '3561465', '3564794'),
+        Bug('''Remember whether the "make this snooze time the default snooze
+time for future reminders" check box was checked in the reminder dialog.''',
+'3567139'),
         ],
     featuresChanged=[
         Feature('''Task Coach no longer enforces that the dates of child tasks
