@@ -468,8 +468,8 @@ would contain a "recurrence edited" action even though the recurrence was
 not changed.''', '3453625'),
         Bug('''On Ubuntu, the date controls in the effort edit dialog would
 be invisible.''', '3452446'),
-        Bug('''On Windows, when the user tries to save the task file in a 
-folder where she doesn't have permission, Task Coach would not give a proper
+        Bug('''On Windows, when users try to save the task file in a 
+folder where they don't have permission, Task Coach would not give a proper
 warning.'''),
         Bug('''When editing multiple items at once, show all descriptions in the
 description field for easier editing and/or copying.''', '3446417'),
@@ -498,8 +498,8 @@ display its start instead of its end.''', '3433481'),
 Release('1.3.1', 'November 27, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug('''Don't turn off the start date on new tasks when the user
-has indicated in the preferences that she wants a default start date.''', 
+        Bug('''Don't turn off the start date on new tasks when users
+have indicated in the preferences that they want a default start date.''', 
             '3440634'),
         Bug('''The "Start tracking from last effort" button in the effort
 dialog didn't work.''', '3440794'),
@@ -1600,8 +1600,8 @@ note and category viewers.'''),
 the appearance tab of edit dialogs.''', '2992006', '3021759'),
         Bug('''Don't display long descriptions in an inline text control,
 it's too buggy.''', '2992853', '2992850', '2992848'),
-        Bug('''On Mac OS X, don't cut text in text controls when the user
-types <cmd><shift>X, only when she types <cmd>X.''', '2942288'),
+        Bug('''On Mac OS X, don't cut text in text controls when users
+type <cmd><shift>X, only when they type <cmd>X.''', '2942288'),
         Bug('''Properly save the task file when the font name contains
 non-ascii characters.''', '3014110'),
         Bug('''Correctly export tasks and effort to vCalendar (.ics) when they
@@ -2646,9 +2646,9 @@ that Task Coach is started automatically when the user logs on
         Feature('''Made (right-click) context menu's more consistent.''')],
     featuresRemoved=[
         Feature('''Don't supply the dummy recipient 'Please enter recipient' to 
-the email program when mailing a task. This only forces the user to perform 
+the email program when mailing a task. This only forces users to perform 
 an extra action to remove that dummy text, while most if not all email 
-programs will warn the user when she forgets to enter a recipient. ''', 
+programs will warn users when they forget to enter a recipient. ''', 
 '2026833')]),
 
 Release('0.70.1', 'June 28, 2008',

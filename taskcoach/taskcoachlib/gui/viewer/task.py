@@ -767,9 +767,9 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
             edited inline. '''
         event.Skip()
         if not self.isTreeViewer():
-            # Restore the recursive subject. Here we don't care whether the user
-            # actually changed the subject. If she did, the subject will updated
-            # via the regular notification mechanism.
+            # Restore the recursive subject. Here we don't care whether users
+            # actually changed the subject. If they did, the subject will 
+            # be updated via the regular notification mechanism.
             treeItem = event.GetItem()
             editedTask = self.widget.GetItemPyData(treeItem)
             self.widget.SetItemText(treeItem, editedTask.subject(recursive=True))

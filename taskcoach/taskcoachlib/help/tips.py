@@ -88,7 +88,7 @@ class TipDialog(sized_controls.SizedDialog):
         self.__tip.Wrap(500)
         
     def __create_checkbox(self, pane):
-        ''' Create a check box for the user to indicate whether he/she wants to
+        ''' Create a check box for users to indicate whether they want to
             see tips on startup. '''
         checkbox = wx.CheckBox(pane, label=_('Show tips on startup'))
         checkbox.SetValue(self.__settings.getboolean('window', 'tips'))
@@ -101,7 +101,7 @@ class TipDialog(sized_controls.SizedDialog):
         event.Skip(False)
     
     def on_close(self, event):
-        ''' When the user closes the dialog, remember whether he/she wants to
+        ''' When users close the dialog, remember whether they want to
             see tips and what the last displayed tip was. '''
         event.Skip()
         self.__settings.setboolean('window', 'tips', self.__check.GetValue())
