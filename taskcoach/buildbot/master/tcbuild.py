@@ -174,8 +174,7 @@ class DistCompile(Compile):
         if self.getProperty('release'):
             self.command = ['make', self.target or self.name]
         else:
-            self.command = ['make', self.target or self.name,
-                            WithProperties('TCREV=%s', 'got_revision')]
+            self.command = ['make', self.target or self.name, 'TCREV=%s' % self.getProperty('got_revision')]
 
         Compile.start(self)
 
