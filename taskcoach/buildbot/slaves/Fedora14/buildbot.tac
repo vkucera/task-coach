@@ -1,6 +1,6 @@
 
 from twisted.application import service
-from buildbot.slave.bot import BuildSlave
+from buildslave.bot import BuildSlave
 
 basedir = r'/home/jerome/Buildslave'
 host = '192.168.1.2'

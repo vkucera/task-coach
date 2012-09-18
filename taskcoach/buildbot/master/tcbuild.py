@@ -45,10 +45,7 @@ class Cleanup(Compile):
     name = 'Cleanup'
     description = ['Deleting', 'unversioned', 'files']
     descriptionDone = ['Unversioned', 'files', 'deleted']
-
-    def __init__(self, **kwargs):
-        kwargs['command'] = ['make', 'nuke']
-        Compile.__init__(self, **kwargs)
+    command = ['make', 'nuke']
 
     def start(self):
         try:
@@ -63,11 +60,7 @@ class Revision(Compile):
     name = 'Revision'
     description = ['Generating', 'revision', 'file']
     descriptionDone = ['Revision', 'file', 'generated']
-
-    def __init__(self, **kwargs):
-        kwargs['command'] = ['make', 'revision', WithProperties('TCREV=%s',
-                                                                'got_revision')]
-        Compile.__init__(self, **kwargs)
+    command = ['make', 'revision', WithProperties('TCREV=%s', 'got_revision')]
 
 
 #==============================================================================
@@ -77,23 +70,15 @@ class UnitTests(Compile):
     name = 'unit tests'
     description = ['Running', 'unit', 'tests']
     descriptionDone = ['Unit', 'tests']
-
-    def __init__(self, **kwargs):
-        kwargs['command'] = ['make', 'unittests']
-        # On several distros, some tests fail randomly. Just make sure
-        # we still build the package and so on.
-        kwargs['haltOnFailure'] = False
-        Compile.__init__(self, **kwargs)
+    haltOnFailure = False
+    command = ['make', 'unittests']
 
 
 class IntegrationTests(Compile):
     name = 'integration tests'
     description = ['Running', 'integration', 'tests']
     descriptionDone = ['Integration', 'tests']
-
-    def __init__(self, **kwargs):
-        kwargs['command'] = ['make', 'integrationtests']
-        Compile.__init__(self, **kwargs)
+    command = ['make', 'integrationtests']
 
 
 class LanguageTests(Compile):
@@ -101,10 +86,7 @@ class LanguageTests(Compile):
     description = ['Running', 'language', 'tests']
     descriptionDone = ['Language', 'tests']
     haltOnFailure = False
-
-    def __init__(self, **kwargs):
-        kwargs['command'] = ['make', 'languagetests']
-        Compile.__init__(self, **kwargs)
+    command = ['make', 'languagetests']
 
 
 class ReleaseTests(Compile):
@@ -112,10 +94,7 @@ class ReleaseTests(Compile):
     description = ['Running', 'release', 'tests']
     descriptionDone = ['Release', 'tests']
     haltOnFailure = False
-
-    def __init__(self, **kwargs):
-        kwargs['command'] = ['make', 'releasetests']
-        Compile.__init__(self, **kwargs)
+    command = ['make', 'releasetests']
 
 
 class DistributionTests(Compile):
@@ -123,10 +102,7 @@ class DistributionTests(Compile):
     description = ['Running', 'distribution', 'tests']
     descriptionDone = ['Distribution', 'tests']
     haltOnFailure = False
-
-    def __init__(self, **kwargs):
-        kwargs['command'] = ['make', 'disttests']
-        Compile.__init__(self, **kwargs)
+    command = ['make', 'disttests']
 
 
 class KillEXE(ShellCommand):
@@ -145,12 +121,8 @@ class Coverage(Compile):
     name = 'coverage'
     description = ['Running', 'coverage']
     descriptionDone = ['Coverage']
-
-    def __init__(self, **kwargs):
-        kwargs['command'] = ['make', 'coverage']
-        # Same remark as for UnitTests
-        kwargs['haltOnFailure'] = False
-        Compile.__init__(self, **kwargs)
+    haltOnFailure = False
+    command = ['make', 'coverage']
 
     def createSummary(self, log):
         Compile.createSummary(self, log)
@@ -162,10 +134,7 @@ class Coverage(Compile):
 class UploadCoverage(DirectoryUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = 'tests/coverage.out'
-        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-coverage/%s',
-                                              'buildername')
-        kwargs['mode'] = 0755
-        kwargs['compress'] = None
+        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-coverage/%s', 'buildername')
         DirectoryUpload.__init__(self, **kwargs)
 
 
@@ -174,19 +143,13 @@ class Epydoc(Compile):
     description = ['Generating', 'documentation']
     descriptionDone = ['Documentation']
     warningPattern = '.*Warning:.*'
-
-    def __init__(self, **kwargs):
-        kwargs['command'] = ['make', 'epydoc']
-        Compile.__init__(self, **kwargs)
+    command = ['make', 'epydoc']
 
 
 class UploadDoc(DirectoryUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = 'epydoc.out'
-        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-doc/%s',
-                                              'buildername')
-        kwargs['mode'] = 0755
-        kwargs['compress'] = None
+        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-doc/%s', 'buildername')
         DirectoryUpload.__init__(self, **kwargs)
 
     def start(self):
@@ -241,8 +204,7 @@ class DistCompile(Compile):
 class UploadBase(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = WithProperties('%s', 'filename')
-        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-packages/%s/%s',
-                                              'branch', 'basefilename')
+        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-packages/%s/%s', 'branch', 'basefilename')
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
 
@@ -262,11 +224,9 @@ class UploadBase(FileUpload):
 class UploadChangelog(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = 'changelog_content'
-        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-packages/%s/changelog_content',
-                                              'branch')
+        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-packages/%s/changelog_content', 'branch')
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
-
 
 
 # Mac OS X
@@ -379,8 +339,10 @@ class PPA(Compile):
     description_done = ['PPA', 'uploaded']
 
     def __init__(self, **kwargs):
-        kwargs['command'] = ['make', 'ppa-' + kwargs.pop('name')]
+        name = kwargs.pop('name')
+        kwargs['command'] = ['make', 'ppa-' + name]
         Compile.__init__(self, **kwargs)
+        self.addFactoryArguments(name=name)
 
 
 # Generic RPM
@@ -431,7 +393,7 @@ class CleanupReleaseStep(MasterShellCommand):
     description = ['Cleanup']
 
     def __init__(self, **kwargs):
-        kwargs['command'] = 'rm -f /var/www/TaskCoach-packages/release/*'
+        kwargs['command'] = 'rm -rf /var/www/TaskCoach-packages/release/*'
         MasterShellCommand.__init__(self, **kwargs)
 
 
@@ -440,8 +402,7 @@ class ZipReleaseStep(MasterShellCommand):
     description = ['Zip']
 
     def __init__(self, **kwargs):
-        kwargs['command'] = '''cd /var/www/TaskCoach-packages/release
-zip release.zip *'''
+        kwargs['command'] = 'cd /var/www/TaskCoach-packages/release\nzip release.zip *'
         MasterShellCommand.__init__(self, **kwargs)
 
     def start(self):

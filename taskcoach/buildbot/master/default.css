@@ -1,128 +1,183 @@
 body {
-    color:#333;
-    background-color:white;
-    margin:20px;
-    padding:0px;
-    font:11px verdana, arial, helvetica, sans-serif;
-    }
+	margin-bottom:50px;
+}
 
-h1 {
-    margin:0px 0px 5px 0px;
-    padding:0px;
-    font-size:22px;
-    font-weight:900;
-    color:#778;
-    }
+body, td {
+	font-family: Verdana, Cursor;
+	font-size: 10px;
+	font-weight: bold;
+}
 
-h2 {
-    font:bold 12px/14px verdana, arial, helvetica, sans-serif;
-    margin:0px 0px 5px 0px;
-    padding:0px;
-    }
+a:link,a:visited,a:active {
+	color: #444;
+}
+a:hover {
+	color: #000000;
+}
 
-p {
-    font:11px/20px verdana, arial, helvetica, sans-serif;
-    margin:0px 0px 16px 0px;
-    padding:0px;
-    overflow:hidden;
-    }
-.Content>p {margin:0px;}
-.Content>p+p {text-indent:30px;}
+table {
+	border-spacing: 1px 1px;
+}
 
-a {
-    color:#09c;
-    font-size:11px;
-    font-family:verdana, arial, helvetica, sans-serif;
-    font-weight:600;
-    text-decoration:none;
-    }
-a:link {color:#09c;}
-a:visited {color:#07a;}
-a:hover {background-color:#eee;}
+table td {
+	padding: 3px 0px 3px 0px;
+	text-align: center;
+}
 
+.Project {
+	width: 100px;
+}
 
-#twitter_update_list {
-	padding: 0;
-	margin: 0;
-	}
-#twitter_update_list li {
-    list-style-type: none;
-    margin-left: .8em;
-    text-indent: -.8em;
-    line-height: 1.5em;
-    padding-bottom: 0.5em;
-    }  
-#twitter_update_list li:before { 
-    content: "\00BB";  /* >> */
-    display: inline;
-    padding-right: 0.3em;
-    }
+.LastBuild, .Activity {
+	padding: 0 0 0 4px;
+}
 
+.LastBuild, .Activity, .Builder, .BuildStep {
+  width: 155px;
+  max-width: 155px;
+}
 
-/* All the content boxes belong to the content class. */
-.content {
-    position:relative; /* Position is declared "relative" to gain control
-of stacking order (z-index). */
-    width:auto;
-    min-width:120px;
-    margin:0px 210px 20px 210px;
-    background-color:#eee;
-    padding:10px;
-    overflow: auto;
-    z-index:1; /* This allows the content to overlap the right menu in
-narrow windows in good browsers. */
-	-moz-border-radius: 2em;
-	border-radius: 2em;
-    }
+div.BuildResultInfo {
+  color: #444;
+}
 
-#navAlpha {
-    position:absolute;
-    width:190px;
-    top:20px;
-    left:20px;
-    z-index:3;
-    }
-body>#navAlpha {width:190px;}
-        
-#navBeta {
-    position:absolute;
-    width:190px;
-    top:20px;
-    right:20px;
-    z-index:2;
-    }
-body>#navBeta {width:190px;}
+div.Announcement {
+  margin-bottom: 1em;
+}
 
- 
-.navbox {
-    position:relative;
-    background-color:#ebedff;
-    padding:10px;
-    margin:0px 0px 20px 0px;
-    -moz-border-radius: 2em;
-	border-radius: 2em;
-    }
+div.Announcement > a:hover {
+  color: black;
+}
 
-.navbox p {
-    margin:0px 0px 8px 0px;
-    line-height: 1.5em;
-    }
-    
-.navbox ul {
-	padding: 0;
-	margin: 0;
-    }
+div.Announcement > div.Notice {
+  background-color: #afdaff;
+  padding: 0.5em;
+	font-size: 16px;
+  text-align: center;
+}
 
-.navbox li {    
-    list-style-type: none;
-    margin-left: .8em;
-    text-indent: -.8em;
-    line-height: 1.0em;
-    padding-bottom: 0.5em;
-    }  
+div.Announcement > div.Open {
+  border: 3px solid #8fdf5f;
+  padding: 0.5em;
+	font-size: 16px;
+  text-align: center;
+}
 
-.navbox li:before { 
-    content: "\00BB"; /* >> */
-    display: inline;
-    padding-right: 0.3em;
-    }
+div.Announcement > div.Closed {
+  border: 5px solid #e98080;
+  padding: 0.5em;
+	font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+}
+
+td.Time {
+	color: #000;
+	border-bottom: 1px solid #aaa;
+	background-color: #eee;
+}
+
+td.Activity, td.Change, td.Builder {
+	color: #333333;
+	background-color: #CCCCCC;
+}
+
+td.Change {
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+}
+td.Event {
+	color: #777;
+	background-color: #ddd;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+}
+
+td.Activity {
+	border-top-left-radius: 10px;
+	-webkit-border-top-left-radius: 10px;
+	min-height: 20px;
+	padding: 2px 0 2px 0;
+}
+
+td.idle, td.waiting, td.offline, td.building {
+	border-top-left-radius: 0px;
+	-webkit-border-top-left-radius: 0px;
+}
+
+.LastBuild {
+	border-top-left-radius: 5px;
+	-webkit-border-top-left-radius: 5px;
+	border-top-right-radius: 5px;	
+	-webkit-border-top-right-radius: 5px;	
+}
+
+/* LastBuild, BuildStep states */
+.success {
+	color: #FFFFFF;
+	background-color: #8fdf5f;
+}
+
+.failure {
+	color: #FFFFFF;
+	background-color: #e98080;
+}
+
+.warnings {
+	color: #FFFFFF;
+	background-color: #ffc343;
+}
+
+.exception, td.offline {
+	color: #FFFFFF;
+	background-color: #e0b0ff;
+}
+
+.start,.running, td.building {
+	color: #666666;
+	background-color: #fffc6c;
+}
+
+.start {
+	border-bottom-left-radius: 10px;
+	-webkit-border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+	-webkit-border-bottom-right-radius: 10px;
+}
+
+.closed {
+  background-color: #ff0000;
+}
+
+.closed .large {
+  font-size: 1.5em;
+  font-weight: bolder;
+}
+
+td.Project a:hover, td.start a:hover {
+	color: #000;
+}
+
+.mini-box {
+  text-align:center;
+  height:20px;
+  padding:0 2px;
+  line-height:0;
+  white-space:nowrap;
+}
+
+.mini-box a {
+  border-radius:0;
+  -webkit-border-radius:0;
+  display:block;
+  width:100%;
+  height:20px;
+  line-height:20px;
+  margin-top:-30px;
+}
+
+.mini-closed {
+  -box-sizing:border-box;
+  -webkit-box-sizing:border-box;
+  border:4px solid red;
+}
