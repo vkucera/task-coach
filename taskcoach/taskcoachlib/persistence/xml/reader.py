@@ -285,13 +285,15 @@ class XMLReader(object):
     def __parse_recurrence_node(self, task_node):
         ''' Since tskversion >= 20, recurrence information is stored in a 
             separate node. '''
-        kwargs = dict(unit='', amount=1, count=0, maximum=0, sameWeekday=False)
+        kwargs = dict(unit='', amount=1, count=0, maximum=0, stop_datetime=None,
+                      sameWeekday=False)
         node = task_node.find('recurrence')
         if node is not None:
             kwargs = dict(unit=node.attrib.get('unit', ''),
                 amount=int(node.attrib.get('amount', '1')),
                 count=int(node.attrib.get('count', '0')),
                 maximum=int(node.attrib.get('max', '0')),
+                stop_datetime=self.__parse_datetime(node.attrib.get('stop_datetime', '')),
                 sameWeekday=self.__parse_boolean(node.attrib.get('sameWeekday', 
                                                                  'False')),
                 recurBasedOnCompletion=self.__parse_boolean(node.attrib.get('recurBasedOnCompletion', 'False')))

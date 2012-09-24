@@ -1639,3 +1639,18 @@ class XMLReaderVersion34Test(XMLReaderTestCase):
         </tasks>\n''')
         self.assertEqual(list(tasks[0].notes())[0], 
                          list(categories[0].categorizables())[0])
+
+
+class XMLReaderVersion35Test(XMLReaderTestCase):
+    tskversion = 35  # New in release 1.3.19.
+
+    def testRecurrenceStopDateTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task>
+                <recurrence stop_datetime="2000-01-10 13:13:13"/>
+            </task>
+        </tasks>''')
+        self.assertEqual(date.DateTime(2000, 1, 10, 13, 13, 13), 
+                         tasks[0].recurrence().stop_datetime)
+

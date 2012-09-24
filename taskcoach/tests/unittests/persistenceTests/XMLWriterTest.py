@@ -426,6 +426,12 @@ class XMLWriterTest(test.TestCase):
     def testMaxRecurrenceCount(self):
         self.task.setRecurrence(date.Recurrence('daily', maximum=5))
         self.expectInXML('max="5"')
+
+    def testRecurrenceStopDateTime(self):
+        stop_datetime = date.DateTime(2000,1,1, 10, 9, 8)
+        self.task.setRecurrence(date.Recurrence('daily', 
+                                stop_datetime=stop_datetime))
+        self.expectInXML('stop_datetime="%s"' % str(stop_datetime))
         
     def testRecurrenceFrequency(self):
         self.task.setRecurrence(date.Recurrence('daily', amount=2))
@@ -657,3 +663,4 @@ class XMLWriterTest(test.TestCase):
         
     def testEncodingAttribute(self):
         self.expectInXML('encoding="utf-8"')
+

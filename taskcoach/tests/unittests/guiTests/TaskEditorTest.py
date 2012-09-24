@@ -139,7 +139,10 @@ class EditorDisplayTest(TaskEditorTestCase):
     def createTasks(self):
         # pylint: disable=W0201
         self.task = task.Task('Task to edit')
-        self.task.setRecurrence(date.Recurrence('daily', amount=1))
+        self.stop_datetime = date.DateTime(2012, 12, 12, 12, 12)
+        self.task.setRecurrence( \
+            date.Recurrence('daily', amount=1, 
+                            stop_datetime=self.stop_datetime))
         return [self.task]
     
     def testSubject(self):
@@ -161,6 +164,10 @@ class EditorDisplayTest(TaskEditorTestCase):
     def testRecurrenceFrequency(self):
         freq = self.editor._interior[1]._recurrenceEntry._recurrenceFrequencyEntry
         self.assertEqual(1, freq.GetValue())    
+
+    def testRecurrenceStopDateTime(self):
+        stop = self.editor._interior[1]._recurrenceEntry._recurrenceStopDateTimeEntry
+        self.assertEqual(self.stop_datetime, stop.GetValue())    
 
 
 class EditTaskTestMixin(object):
@@ -234,6 +241,11 @@ class EditTaskTestMixin(object):
     def testSetMaxRecurrence(self):
         self.setRecurrence(date.Recurrence('weekly', maximum=10))
         self.assertEqual(10, self.task.recurrence().max)
+
+    def testSetRecurrenceStopDateTime(self):
+        stop = date.DateTime(2012, 3, 4, 10, 0)
+        self.setRecurrence(date.Recurrence('weekly', stop_datetime=stop))
+        self.assertEqual(stop, self.task.recurrence().stop_datetime)
         
     def testSetRecurrenceFrequency(self):
         self.setRecurrence(date.Recurrence('weekly', amount=3))

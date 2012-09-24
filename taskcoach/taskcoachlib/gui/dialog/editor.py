@@ -336,7 +336,8 @@ class DatesPage(Page):
     def addRecurrenceEntry(self):
         # pylint: disable=W0201
         currentRecurrence = self.items[0].recurrence() if len(self.items) == 1 else date.Recurrence()
-        self._recurrenceEntry = entry.RecurrenceEntry(self, currentRecurrence)
+        self._recurrenceEntry = entry.RecurrenceEntry(self, currentRecurrence,
+                                                      self.__settings)
         self._recurrenceSync = attributesync.AttributeSync('recurrence',
             self._recurrenceEntry, currentRecurrence, self.items,
             command.EditRecurrenceCommand, entry.EVT_RECURRENCEENTRY,

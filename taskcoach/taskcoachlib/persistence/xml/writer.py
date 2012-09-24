@@ -155,6 +155,8 @@ class XMLWriter(object):
             attrs['count'] = str(recurrence.count)
         if recurrence.max > 0:
             attrs['max'] = str(recurrence.max)
+        if recurrence.stop_datetime != self.maxDateTime:
+            attrs['stop_datetime'] = str(recurrence.stop_datetime)
         if recurrence.sameWeekday:
             attrs['sameWeekday'] = 'True'
         if recurrence.recurBasedOnCompletion:
