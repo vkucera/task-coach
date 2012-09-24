@@ -27,6 +27,7 @@ from taskcoachlib.gui import uicommand, menu, dialog
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty.pubsub import pub
 import base
+import inplace_editor
 import mixin
 import refresher
 import wx
@@ -185,13 +186,18 @@ class EffortViewer(base.ListViewer,
         return [widgets.Column(name, columnHeader, eventType, 
                 renderCallback=renderCallback,
                 sortCallback=sortCallback,
-                width=self.getColumnWidth(name), **kwargs) \
-            for name, columnHeader, eventType, renderCallback, sortCallback in \
+                width=self.getColumnWidth(name), 
+                editControl=editControl, **kwargs) \
+            for name, columnHeader, eventType, renderCallback, sortCallback, editControl in \
             ('period', _('Period'), effort.Effort.durationChangedEventType(), 
              self.__renderPeriod, 
-             uicommand.ViewerSortByCommand(viewer=self, value='period')),
-            ('task', _('Task'), effort.Effort.taskChangedEventType(), lambda effort: effort.task().subject(recursive=True), None),
-            ('description', _('Description'), effort.Effort.descriptionChangedEventType(), lambda effort: effort.description(), None)] + \
+             uicommand.ViewerSortByCommand(viewer=self, value='period'), None),
+            ('task', _('Task'), effort.Effort.taskChangedEventType(), 
+             lambda effort: effort.task().subject(recursive=True), None, None),
+            ('description', _('Description'), 
+             effort.Effort.descriptionChangedEventType(), 
+             lambda effort: effort.description(), None, 
+             inplace_editor.DescriptionCtrl)] + \
             [widgets.Column('categories', _('Categories'),
              width=self.getColumnWidth('categories'),
              renderCallback=self.renderCategories, **kwargs)] + \

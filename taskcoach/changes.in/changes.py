@@ -51,7 +51,7 @@ time for future reminders" check box was checked in the reminder dialog.''',
         Feature('''In addition to specifying a maximum number of recurrences,
 it is now also possible to specify an end date for recurrence. If both an end
 date and a maximum number of recurrences are specified, recurrence stops when
-the first of both conditions is met.'''
+the first of both conditions is met.'''),
         ],
     featuresChanged=[
         Feature('''Task Coach no longer enforces that the dates of child tasks
