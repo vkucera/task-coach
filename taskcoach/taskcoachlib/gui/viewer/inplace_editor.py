@@ -26,12 +26,39 @@ from taskcoachlib import widgets
 from taskcoachlib.domain import date
 
 
-class SubjectCtrl(hypertreelist.EditTextCtrl):
+class KillFocusAcceptsEditsMixin(object):
+    ''' Mixin class to let in place editors accept changes whenever the user
+        clicks outside the edit control instead of cancelling the changes. '''
+    def StopEditing(self):
+        try:
+            if self.__has_focus():
+                # User hit Escape
+                super(KillFocusAcceptsEditsMixin, self).StopEditing()
+            else:
+                # User clicked outside edit window
+                self.AcceptChanges()
+                self.Finish()
+        except wx.PyDeadObjectError:
+            pass
+
+    def __has_focus(self):
+        ''' Return whether this control has the focus. '''
+
+        def window_and_all_children(window):
+            window_and_children = [window]
+            for child in window.GetChildren():
+                window_and_children.extend(window_and_all_children(child))
+            return window_and_children
+
+        return wx.Window.FindFocus() in window_and_all_children(self)
+
+
+class SubjectCtrl(KillFocusAcceptsEditsMixin, hypertreelist.EditTextCtrl):
     ''' Single line inline control for editing item subjects. '''
     pass
 
 
-class DescriptionCtrl(hypertreelist.EditTextCtrl):
+class DescriptionCtrl(KillFocusAcceptsEditsMixin, hypertreelist.EditTextCtrl):
     ''' Multiline inline text control for editing item descriptions. '''
     def __init__(self, *args, **kwargs):
         kwargs['style'] = kwargs.get('style', 0) | wx.TE_MULTILINE
@@ -55,10 +82,13 @@ class EscapeKeyMixin(object):
             event.Skip()
       
 
-class _SpinCtrl(EscapeKeyMixin, hypertreelist.EditCtrl, widgets.SpinCtrl):
+class _SpinCtrl(EscapeKeyMixin, KillFocusAcceptsEditsMixin, 
+                hypertreelist.EditCtrl, widgets.SpinCtrl):
     ''' Base spin control class. '''
-    def __init__(self, parent, wxId, item, column, owner, value, *args, **kwargs):
-        super(_SpinCtrl, self).__init__(parent, wxId, item, column, owner, str(value), *args, **kwargs)
+    def __init__(self, parent, wxId, item, column, owner, value, 
+                 *args, **kwargs):
+        super(_SpinCtrl, self).__init__(parent, wxId, item, column, owner, 
+                                        str(value), *args, **kwargs)
         self._textCtrl.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
 
         
@@ -87,7 +117,8 @@ class Panel(wx.Panel):
         self.SetSizerAndFit(sizer)
 
 
-class BudgetCtrl(hypertreelist.EditCtrl, Panel):
+class BudgetCtrl(EscapeKeyMixin, KillFocusAcceptsEditsMixin, 
+                 hypertreelist.EditCtrl, Panel):
     ''' Masked inline text control for editing budgets: 
         <hours>:<minutes>:<seconds>. '''
     def __init__(self, parent, wxId, item, column, owner, value):
@@ -97,13 +128,15 @@ class BudgetCtrl(hypertreelist.EditCtrl, Panel):
         # so we use composition instead
         self.__timeDeltaCtrl = widgets.masked.TimeDeltaCtrl(self, hours, 
                                                             minutes, seconds)
+        self.__timeDeltaCtrl.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
         self.makeSizer(self.__timeDeltaCtrl)
         
     def GetValue(self):
         return date.parseTimeDelta(self.__timeDeltaCtrl.GetValue())
 
 
-class AmountCtrl(EscapeKeyMixin, hypertreelist.EditCtrl, Panel):
+class AmountCtrl(EscapeKeyMixin, KillFocusAcceptsEditsMixin, 
+                 hypertreelist.EditCtrl, Panel):
     ''' Masked inline text control for editing amounts (floats >= 0). '''
     def __init__(self, parent, wxId, item, column, owner, value):
         super(AmountCtrl, self).__init__(parent, wxId, item, column, owner)
@@ -115,7 +148,7 @@ class AmountCtrl(EscapeKeyMixin, hypertreelist.EditCtrl, Panel):
         return self.__floatCtrl.GetValue()
  
     
-class DateTimeCtrl(hypertreelist.EditCtrl, Panel):
+class DateTimeCtrl(KillFocusAcceptsEditsMixin, hypertreelist.EditCtrl, Panel):
     ''' Inline date and time picker control. '''
     def __init__(self, parent, wxId, item, column, owner, value, **kwargs):
         super(DateTimeCtrl, self).__init__(parent, wxId, item, column, owner)
@@ -131,3 +164,4 @@ class DateTimeCtrl(hypertreelist.EditCtrl, Panel):
                 
     def GetValue(self):
         return self.__dateTimeCtrl.GetValue()
+

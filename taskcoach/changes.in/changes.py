@@ -82,6 +82,8 @@ attributes.'''),
 in the position you want. Hopefully this will also make it more obvious for 
 new users that viewers can be reordered any way they like since moving a 
 floating viewer will show the docking guides.'''),
+        Feature('''Clicking outside an inplace editor now accepts the changes
+instead of discarding them.'''),
         Feature('''On Windows, both left clicking and left double clicking the 
 Task Coach icon in the notification area (often called the system tray) will 
 raise or minimize the main window (in accordance with 

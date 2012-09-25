@@ -352,10 +352,10 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
             event.Skip()
         
     def onEndEdit(self, event):
-        if event._editCancelled: # pylint: disable=W0212
+        if event._editCancelled:  # pylint: disable=W0212
             event.Skip()
             return
-        event.Veto() # Let us update the tree
+        event.Veto()  # Let us update the tree
         domainObject = self.GetItemPyData(event.GetItem())
         newValue = event.GetLabel()
         column = self._getColumn(event.GetInt())
@@ -364,7 +364,8 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
     def CreateEditCtrl(self, item, columnIndex):
         column = self._getColumn(columnIndex)
         domainObject = self.GetItemPyData(item)
-        return column.editControl(self.GetMainWindow(), item, columnIndex, domainObject)
+        return column.editControl(self.GetMainWindow(), item, columnIndex, 
+                                  domainObject)
             
     # Override CtrlWithColumnsMixin with TreeListCtrl specific behaviour:
         
@@ -372,7 +373,8 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         super(TreeListCtrl, self)._setColumns(*args, **kwargs)
         self.SetMainColumn(0)
         for columnIndex in range(self.GetColumnCount()):
-            self.SetColumnEditable(columnIndex, self._getColumn(columnIndex).isEditable())
+            self.SetColumnEditable(columnIndex, 
+                                   self._getColumn(columnIndex).isEditable())
                         
     # Extend TreeMixin with TreeListCtrl specific behaviour:
 
