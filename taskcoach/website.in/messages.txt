@@ -1,4 +1,5 @@
 # This file contains at most one message for users of Task Coach. 
 # Format of the message and url, without the # of course:
 # Message text|url
-Welcome to Task Coach! We hope you enjoy it. If you need help, we provide free support.|http://taskcoach.org/getsupport.html
+Would you like to be able to re-arrange columns with drag and drop? Please help fund this feature. But be quick - the campaign ends on Tuesday, October 23.|http://indiegogo.com/taskcoach
+
