@@ -578,6 +578,7 @@ class TaskDatesPage(SettingsPage):
             _('What to do with planned start and due date if the other one is changed'), 
             '', choices, flags=(None, wx.ALL | wx.ALIGN_LEFT))
 
+        self.addLine()
         check_choices = [('preset', _('Preset')),
                          ('propose', _('Propose'))]
         day_choices = [('today', _('Today')),
@@ -605,7 +606,16 @@ class TaskDatesPage(SettingsPage):
         self.addChoiceSetting('view', 'defaultreminderdatetime', 
                               _('Default reminder date and time'), 
                               '', check_choices, day_choices, time_choices)
+        self.__add_help_text()
         self.fit()
+
+    def __add_help_text(self):
+        ''' Add help text for the default date and time settings. '''
+        help_text = wx.StaticText(self, label=_('''The settings above determine the default dates and times for tasks. "Start of day" is midnight and "End of day" is right before midnight. Use these if you don't want to see times in the task viewers. "Start of working day" and "End of working day" are the times set in the Features tab of this preference dialog. "Current time" is the time at the moment you create the task.
+
+If you let %(name)s "Propose" a date and time, the date and time will be shown in the task dialog, but not set. If you let %(name)s "Preset" the date and time, a new task will have the date and time preset when you create it.''') % meta.data.metaDict)
+        help_text.Wrap(460)
+        self.addText('', help_text)
 
 
 class TaskReminderPage(SettingsPage):
