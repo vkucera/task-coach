@@ -279,8 +279,7 @@ class SettingsPage(SettingsPageBase):
     def addEntry(self, text, *controls, **kwargs):  # pylint: disable=W0221
         helpText = kwargs.pop('helpText', '')
         if helpText == 'restart':
-            helpText = _('This setting will take effect\n'
-                         'after you restart %s') % meta.name
+            helpText = _('This setting will take effect after you restart %s') % meta.name
         if helpText:
             controls = controls + (helpText,)
         super(SettingsPage, self).addEntry(text, *controls, **kwargs)
@@ -565,7 +564,9 @@ class TaskDatesPage(SettingsPage):
                                             *args, **kwargs)
         self.addBooleanSetting('behavior', 
             'markparentcompletedwhenallchildrencompleted',
-            _('Mark parent task completed when all children are completed'))
+            _('Mark parent task completed when all children are completed'),
+            helpText=_('This setting can be overridden for individual tasks\n'
+            'in the task edit dialog.'))
         self.addIntegerSetting('behavior', 'duesoonhours', 
             _("Number of hours that tasks are considered to be 'due soon'"), 
             minimum=0, maximum=9999, flags=(None, wx.ALL | wx.ALIGN_LEFT))
