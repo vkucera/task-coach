@@ -280,6 +280,9 @@ class SettingsPage(SettingsPageBase):
         helpText = kwargs.pop('helpText', '')
         if helpText == 'restart':
             helpText = _('This setting will take effect after you restart %s') % meta.name
+        elif helpText == 'override':
+            helpText = _('This setting can be overridden for individual tasks\n'
+                         'in the task edit dialog.')
         if helpText:
             controls = controls + (helpText,)
         super(SettingsPage, self).addEntry(text, *controls, **kwargs)
@@ -490,12 +493,13 @@ class TaskAppearancePage(SettingsPage):
                                                  *args, **kwargs)
         self.addAppearanceHeader()
         for status in task.Task.possibleStatuses():
-            self.addLine()
             setting = '%stasks' % status
             self.addAppearanceSetting('fgcolor', setting, 
                                       'bgcolor', setting, 
                                       'font', setting, 
                                       'icon', setting, status.pluralLabel)
+        self.addText('', _('These appearance settings can be overridden '
+                           'for individual tasks in the task edit dialog.'))
         self.fit()
 
 
@@ -565,8 +569,7 @@ class TaskDatesPage(SettingsPage):
         self.addBooleanSetting('behavior', 
             'markparentcompletedwhenallchildrencompleted',
             _('Mark parent task completed when all children are completed'),
-            helpText=_('This setting can be overridden for individual tasks\n'
-            'in the task edit dialog.'))
+            helpText='override')
         self.addIntegerSetting('behavior', 'duesoonhours', 
             _("Number of hours that tasks are considered to be 'due soon'"), 
             minimum=0, maximum=9999, flags=(None, wx.ALL | wx.ALIGN_LEFT))
@@ -579,7 +582,6 @@ class TaskDatesPage(SettingsPage):
             _('What to do with planned start and due date if the other one is changed'), 
             '', choices, flags=(None, wx.ALL | wx.ALIGN_LEFT))
 
-        self.addLine()
         check_choices = [('preset', _('Preset')),
                          ('propose', _('Propose'))]
         day_choices = [('today', _('Today')),
@@ -612,7 +614,7 @@ class TaskDatesPage(SettingsPage):
 
     def __add_help_text(self):
         ''' Add help text for the default date and time settings. '''
-        help_text = wx.StaticText(self, label=_('''The settings above determine the default dates and times for tasks. "Start of day" is midnight and "End of day" is right before midnight. Use these if you don't want to see times in the task viewers. "Start of working day" and "End of working day" are the times set in the Features tab of this preference dialog. "Current time" is the time at the moment you create the task.
+        help_text = wx.StaticText(self, label=_('''The above default date and times settings determine what dates and times are used for new tasks. "Start of day" is midnight and "End of day" is right before midnight. Use these if you don't want to see times in the task viewers. "Start of working day" and "End of working day" are the times set in the Features tab of this preference dialog. "Current time" is the time at the moment you create the new task.
 
 If you let %(name)s "Propose" a date and time, the date and time will be shown in the task dialog, but not set. If you let %(name)s "Preset" the date and time, a new task will have the date and time preset when you create it.
 
