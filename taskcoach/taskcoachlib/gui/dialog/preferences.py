@@ -613,7 +613,10 @@ class TaskDatesPage(SettingsPage):
         ''' Add help text for the default date and time settings. '''
         help_text = wx.StaticText(self, label=_('''The settings above determine the default dates and times for tasks. "Start of day" is midnight and "End of day" is right before midnight. Use these if you don't want to see times in the task viewers. "Start of working day" and "End of working day" are the times set in the Features tab of this preference dialog. "Current time" is the time at the moment you create the task.
 
-If you let %(name)s "Propose" a date and time, the date and time will be shown in the task dialog, but not set. If you let %(name)s "Preset" the date and time, a new task will have the date and time preset when you create it.''') % meta.data.metaDict)
+If you let %(name)s "Propose" a date and time, the date and time will be shown in the task dialog, but not set. If you let %(name)s "Preset" the date and time, a new task will have the date and time preset when you create it.
+
+Note, whether you let %(name)s preset or propose dates and times, you can always change them later.''') % meta.data.metaDict)
+
         help_text.Wrap(460)
         self.addText('', help_text)
 
