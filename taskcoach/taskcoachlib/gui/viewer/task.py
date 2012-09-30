@@ -591,7 +591,7 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
             else:
                 self.registerObserver(self.onAttributeChanged_Deprecated, 
                                       eventType)
-        date.Scheduler().add_interval_job(self.atMidnight, days=1, misfire_grace_time=0)
+        date.Scheduler().schedule_interval(self.atMidnight, days=1)
 
     def isTreeViewer(self):
         return False

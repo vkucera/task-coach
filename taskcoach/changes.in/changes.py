@@ -46,6 +46,7 @@ also the changed feature below.''', '3561465', '3564794'),
         Bug('''Remember whether the "make this snooze time the default snooze
 time for future reminders" check box was checked in the reminder dialog.''',
 '3567139'),
+        Bug('''The task viewer would not refresh at midnight.'''),
         ],
     featuresAdded=[
         Feature('''In addition to specifying a maximum number of recurrences,
