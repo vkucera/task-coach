@@ -339,23 +339,26 @@ class wxSchedulerPaint( object ):
 		results = []
 
 		for schedule in schedules:
-			schedule.bounds = None
+			try:
+				schedule.bounds = None
 
-			if schedule.start.IsLaterThan(end) or schedule.start.IsEqualTo(end):
-				continue
-			if start.IsLaterThan(schedule.end):
-				continue
+				if schedule.start.IsLaterThan(end) or schedule.start.IsEqualTo(end):
+					continue
+				if start.IsLaterThan(schedule.end):
+					continue
 
-			newSchedule = schedule.Clone()
-			# This is used to find the original schedule object in _findSchedule.
-			newSchedule.clientdata	= schedule
+				newSchedule = schedule.Clone()
+				# This is used to find the original schedule object in _findSchedule.
+				newSchedule.clientdata	= schedule
 
-			if start.IsLaterThan(schedule.start):
-				newSchedule.start = utils.copyDateTime(start)
-			if schedule.end.IsLaterThan(end):
-				newSchedule.end = utils.copyDateTime(end)
+				if start.IsLaterThan(schedule.start):
+					newSchedule.start = utils.copyDateTime(start)
+				if schedule.end.IsLaterThan(end):
+					newSchedule.end = utils.copyDateTime(end)
 
-                        results.append(newSchedule)
+				results.append(newSchedule)
+			except wx.PyDeadObjectError:
+				pass
 
 		return results
 
