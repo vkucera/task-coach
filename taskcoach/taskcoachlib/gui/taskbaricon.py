@@ -57,8 +57,15 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
         # we would use the wrong status count.
         self.registerObserver(self.onChangeDueDateTime_Deprecated,
             eventType=task.Task.appearanceChangedEventType()) 
-        event = wx.EVT_TASKBAR_LEFT_DOWN if operating_system.isGTK() else wx.EVT_TASKBAR_LEFT_DCLICK    
-        self.Bind(event, self.onTaskbarClick)
+        if operating_system.isGTK():
+            events = [wx.EVT_TASKBAR_LEFT_DOWN]
+        elif operating_system.isWindows():
+            # See http://msdn.microsoft.com/en-us/library/windows/desktop/aa511448.aspx#interaction
+            events = [wx.EVT_TASKBAR_LEFT_DOWN, wx.EVT_TASKBAR_LEFT_DCLICK]
+        else:
+            events = [wx.EVT_TASKBAR_LEFT_DCLICK]
+        for event in events:
+            self.Bind(event, self.onTaskbarClick)
         self.__setTooltipText()
         self.__setIcon()
 

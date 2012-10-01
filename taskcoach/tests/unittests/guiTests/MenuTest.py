@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
@@ -35,10 +37,10 @@ class MockViewerContainer(object):
         return 'section'
     
     def curselection(self):
-        return self.selection # pragma: no cover
+        return self.selection  # pragma: no cover
     
     def isShowingCategories(self):
-        return self.showingCategories # pragma: no cover
+        return self.showingCategories  # pragma: no cover
     
     def isSortable(self):
         return True
@@ -49,7 +51,7 @@ class MockViewerContainer(object):
     def isSortedBy(self, sortKey):
         return sortKey == self.__sortBy
 
-    def isSortOrderAscending(self, *args, **kwargs): # pylint: disable=W0613
+    def isSortOrderAscending(self, *args, **kwargs):  # pylint: disable=W0613
         return self.__ascending
     
     def setSortOrderAscending(self, ascending=True):
@@ -98,7 +100,7 @@ class MenuWithBooleanMenuItemsTestCase(MenuTestCase):
         self.commands = self.createCommands()
 
     def createCommands(self):
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
     
     def assertMenuItemsChecked(self, *expectedStates):
         for command in self.commands:
@@ -146,7 +148,7 @@ class MockIOController:
     def __init__(self):
         self.openCalled = False
         
-    def open(self, *args, **kwargs): # pylint: disable=W0613
+    def open(self, *args, **kwargs):  # pylint: disable=W0613
         self.openCalled = True
 
 
@@ -166,7 +168,7 @@ class RecentFilesMenuTest(test.wxTestCase):
         
     def setRecentFilesAndCreateMenu(self, *filenames):
         self.addRecentFiles(*filenames)
-        self.menu = self.createFileMenu() # pylint: disable=W0201
+        self.menu = self.createFileMenu()  # pylint: disable=W0201
     
     def addRecentFiles(self, *filenames):
         self.filenames.extend(filenames)
@@ -177,12 +179,12 @@ class RecentFilesMenuTest(test.wxTestCase):
         self.openMenu()
         numberOfMenuItemsAdded = len(expectedFilenames)
         if numberOfMenuItemsAdded > 0:
-            numberOfMenuItemsAdded += 1 # the extra separator
+            numberOfMenuItemsAdded += 1  # the extra separator
         self.assertEqual(self.initialFileMenuLength + numberOfMenuItemsAdded, len(self.menu))
         for index, expectedFilename in enumerate(expectedFilenames):
-            menuItem = self.menu.FindItemByPosition(self.initialFileMenuLength-1+index)
+            menuItem = self.menu.FindItemByPosition(self.initialFileMenuLength-1 + index)
             # Apparently the '&' can also be a '_' (seen on Ubuntu)
-            expectedLabel = u'&%d %s'%(index+1, expectedFilename)
+            expectedLabel = u'&%d %s' % (index + 1, expectedFilename)
             self.assertEqual(expectedLabel[1:], menuItem.GetText()[1:])
     
     def openMenu(self):
@@ -213,7 +215,7 @@ class RecentFilesMenuTest(test.wxTestCase):
     def testOpenARecentFile(self):
         self.setRecentFilesAndCreateMenu(self.filename1)
         self.openMenu()
-        menuItem = self.menu.FindItemByPosition(self.initialFileMenuLength-1)
+        menuItem = self.menu.FindItemByPosition(self.initialFileMenuLength - 1)
         self.menu.invokeMenuItem(menuItem)
         self.failUnless(self.ioController.openCalled)
         
@@ -274,14 +276,15 @@ class StartEffortForTaskMenuTest(test.wxTestCase):
         self.tasks = task.TaskList()
         self.menu = gui.menu.StartEffortForTaskMenu(self.frame, self.tasks)
         
-    def addTask(self):
-        newTask = task.Task(subject='Subject', plannedStartDateTime=date.Now())
+    def addTask(self, subject='Subject'):
+        newTask = task.Task(subject=subject, plannedStartDateTime=date.Now())
         self.tasks.append(newTask)
         return newTask
     
-    def addParentAndChild(self):
-        parent = self.addTask()
-        child = self.addTask()
+    def addParentAndChild(self, parentSubject='Subject', 
+                          childSubject='Subject'):
+        parent = self.addTask(parentSubject)
+        child = self.addTask(childSubject)
         parent.addChild(child)
         return parent, child
     
@@ -305,6 +308,11 @@ class StartEffortForTaskMenuTest(test.wxTestCase):
         child = self.addParentAndChild()[1]
         self.tasks.remove(child)
         self.assertEqual(1, len(self.menu))
+        
+    def testTaskWithNonAsciiSubject(self):
+        self.addParentAndChild(u'Jérôme', u'Jîrôme')
+        self.menu.updateMenuItems()
+        self.assertEqual(2, len(self.menu))
 
 
 class ToggleCategoryMenuTest(test.wxTestCase):
@@ -378,7 +386,8 @@ class ToggleCategoryMenuTest(test.wxTestCase):
 
 class TaskTemplateMenuTest(test.wxTestCase):
     def testMenuIsUpdatedWhenTemplatesAreSaved(self):
-        uicommands = [None] # Just a separator for testing purposes
+        uicommands = [None]  # Just a separator for testing purposes
+        
         class TaskTemplateMenu(gui.menu.TaskTemplateMenu):
             def getUICommands(self):
                 return uicommands
@@ -387,8 +396,7 @@ class TaskTemplateMenuTest(test.wxTestCase):
         taskList = task.TaskList()
         menu = TaskTemplateMenu(self.frame, taskList, settings)
         self.assertEqual(1, len(menu))
-        uicommands.append(None) # Add another separator
+        uicommands.append(None)  # Add another separator
         pub.sendMessage('templates.saved')
         self.assertEqual(2, len(menu))
-        
         

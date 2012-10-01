@@ -16,9 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
 from taskcoachlib import config
 from taskcoachlib.domain import task, date, effort
+import test
 
  
 class CommonTaskRelationshipManagerTestsMixin(object):
@@ -35,7 +35,8 @@ class CommonTaskRelationshipManagerTestsMixin(object):
         self.grandchild = task.Task('grandchild', plannedStartDateTime=now)
         settings.set('behavior', 'markparentcompletedwhenallchildrencompleted', 
             str(self.markParentCompletedWhenAllChildrenCompleted))
-        self.taskList = task.TaskList([self.parent, self.child2, self.grandchild])
+        self.taskList = task.TaskList([self.parent, self.child2, 
+                                       self.grandchild])
         
     # completion date
     
@@ -143,6 +144,7 @@ class CommonTaskRelationshipManagerTestsMixin(object):
 
     def testMarkLastGrandChildCompletedMakesParentRecur(self):
         self.parent.setRecurrence(date.Recurrence('weekly'))
+        self.parent.setPlannedStartDateTime(self.now)
         self.child.addChild(self.grandchild)
         self.grandchild.setParent(self.child)
         self.grandchild.setCompletionDateTime(self.now)
@@ -172,98 +174,6 @@ class CommonTaskRelationshipManagerTestsMixin(object):
             self.failIf(self.grandchild.completed())
         else:
             self.failUnless(self.grandchild.completed())
-
-    # due date
-        
-    def testAddChildWithoutDueDateToParentWithoutDueDate(self):
-        self.assertEqual(date.DateTime(), self.child.dueDateTime())
-        self.assertEqual(date.DateTime(), self.parent.dueDateTime())
-
-    def testAddChildWithDueDateToParentWithoutDueDate(self):
-        self.child2.setDueDateTime(self.now.endOfDay())
-        self.parent.addChild(self.child2)
-        self.assertEqual(date.DateTime(), self.parent.dueDateTime())
-        
-    def testAddChildWithoutDueDateToParentWithDueDate(self):
-        self.parent.setDueDateTime(self.tomorrow)
-        self.parent.addChild(self.child2)
-        self.assertEqual(self.tomorrow, self.parent.dueDateTime())
-        
-    def testAddChildWithDueDateSmallerThanParentDueDate(self):
-        self.parent.setDueDateTime(self.tomorrow)
-        self.child2.setDueDateTime(self.now.endOfDay())
-        self.parent.addChild(self.child2)
-        self.assertEqual(self.tomorrow, self.parent.dueDateTime())
-        
-    def testAddChildWithDueDateLargerThanParentDueDate(self):
-        self.parent.setDueDateTime(self.now.endOfDay())
-        self.child2.setDueDateTime(self.tomorrow)
-        self.parent.addChild(self.child2)
-        self.assertEqual(self.tomorrow, self.parent.dueDateTime())
-        
-    def testSetDueDateChildSmallerThanParent(self):
-        self.child.setDueDateTime(self.now.endOfDay())
-        self.assertEqual(date.DateTime(), self.parent.dueDateTime())
-        
-    def testSetDueDateParent(self):
-        self.parent.setDueDateTime(self.now.endOfDay())
-        self.assertEqual(self.parent.dueDateTime(), self.child.dueDateTime())
-        
-    def testSetDueDateParentLargerThanChild(self):
-        self.parent.setDueDateTime(self.now.endOfDay())
-        self.parent.setDueDateTime(date.DateTime())
-        self.assertEqual(self.now.endOfDay(), self.child.dueDateTime())
-        
-    def testSetDueDateChildLargerThanParent(self):
-        self.parent.setDueDateTime(self.now.endOfDay())
-        self.child.setDueDateTime(self.tomorrow)
-        self.assertEqual(self.tomorrow, self.parent.dueDateTime())
-
-    # Planned start date
-
-    def testAddChildWithPlannedStartDateToParentWithPlannedStartDate(self):
-        self.assertAlmostEqual(self.parent.plannedStartDateTime().toordinal(), 
-                               self.child.plannedStartDateTime().toordinal())
-        
-    def testAddChildWithBiggerPlannedStartDateThanParent(self):
-        self.parent.setPlannedStartDateTime(self.now)
-        self.child2.setPlannedStartDateTime(self.tomorrow)
-        self.parent.addChild(self.child2)
-        self.assertAlmostEqual(self.now.toordinal(), 
-                               self.parent.plannedStartDateTime().toordinal())
-        
-    def testAddChildWithSmallerPlannedStartDateThanParent(self):
-        self.child2.setPlannedStartDateTime(self.yesterday)
-        self.parent.addChild(self.child2)
-        self.assertEqual(self.child2.plannedStartDateTime(), self.parent.plannedStartDateTime())
-        
-    def testSetPlannedStartDateParentInfinite(self):
-        self.parent.setPlannedStartDateTime(date.DateTime())
-        self.assertEqual(date.DateTime(), self.child.plannedStartDateTime())
-        
-    def testSetPlannedStartDateParentBiggerThanChildPlannedStartDate(self):
-        self.child.setPlannedStartDateTime(self.now)
-        self.parent.setPlannedStartDateTime(self.tomorrow)
-        self.assertEqual(self.tomorrow, self.child.plannedStartDateTime())
-        
-    def testSetChildPlannedStartDateInfinite(self):
-        self.parent.setPlannedStartDateTime(self.now)
-        self.child.setPlannedStartDateTime(date.DateTime())
-        self.assertAlmostEqual(self.now.toordinal(), 
-                               self.parent.plannedStartDateTime().toordinal())
-        
-    def testSetChildPlannedStartDateEarlierThanParentPlannedStartDate(self):
-        self.child.setPlannedStartDateTime(self.yesterday)
-        self.assertEqual(self.yesterday, self.parent.plannedStartDateTime())
-        
-    def testSetChildActualStartDateEarlierThanParentActualStartDate(self):
-        self.parent.setActualStartDateTime(self.now)
-        self.child.setActualStartDateTime(self.yesterday)
-        self.assertEqual(self.yesterday, self.parent.actualStartDateTime())
-
-    def testSetChildActualStartDateWhenParentHasNoActualStartDate(self):
-        self.child.setActualStartDateTime(self.yesterday)
-        self.assertEqual(self.yesterday, self.parent.actualStartDateTime())
 
 
 class MarkParentTaskCompletedTestsMixin(object):

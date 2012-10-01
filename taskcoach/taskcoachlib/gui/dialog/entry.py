@@ -402,7 +402,7 @@ class RecurrenceEntry(wx.Panel):
     horizontalSpace = (3, -1)
     verticalSpace = (-1, 3)
 
-    def __init__(self, parent, recurrence, *args, **kwargs):
+    def __init__(self, parent, recurrence, settings, *args, **kwargs):
         super(RecurrenceEntry, self).__init__(parent, *args, **kwargs)
         recurrenceFrequencyPanel = wx.Panel(self)
         self._recurrencePeriodEntry = wx.Choice(recurrenceFrequencyPanel, 
@@ -479,6 +479,27 @@ class RecurrenceEntry(wx.Panel):
             self._scheduleChoice.SetMinSize((size[0], size[1] + 1))
         panelSizer.Add(self._scheduleChoice, flag=wx.ALIGN_CENTER_VERTICAL)
         schedulePanel.SetSizerAndFit(panelSizer)
+
+        stopPanel = wx.Panel(self)
+        panelSizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        self._stopDateTimeCheckBox = wx.CheckBox(stopPanel)
+        self._stopDateTimeCheckBox.Bind(wx.EVT_CHECKBOX, 
+                                        self.onRecurrenceStopDateTimeChecked)
+        self._recurrenceStopDateTimeEntry = DateTimeEntry(stopPanel, settings,
+                                                          noneAllowed=False)
+        self._recurrenceStopDateTimeEntry.Bind(EVT_DATETIMEENTRY,
+                                               self.onRecurrenceEdited)
+        panelSizer.Add(self._stopDateTimeCheckBox, 
+                       flag=wx.ALIGN_CENTER_VERTICAL)
+        panelSizer.Add(self.horizontalSpace)
+        panelSizer.Add(wx.StaticText(stopPanel, label=_('Stop after')),
+                       flag=wx.ALIGN_CENTER_VERTICAL)
+        panelSizer.Add(self.horizontalSpace)
+        panelSizer.Add(self._recurrenceStopDateTimeEntry,
+                       flag=wx.ALIGN_CENTER_VERTICAL)
+        panelSizer.Add(self.horizontalSpace)
+        stopPanel.SetSizerAndFit(panelSizer)
         
         panelSizer = wx.BoxSizer(wx.VERTICAL)
         panelSizer.Add(recurrenceFrequencyPanel)
@@ -486,6 +507,7 @@ class RecurrenceEntry(wx.Panel):
         panelSizer.Add(schedulePanel)
         panelSizer.Add(self.verticalSpace)
         panelSizer.Add(maxPanel)
+        panelSizer.Add(stopPanel)
         self.SetSizerAndFit(panelSizer)
         self.SetValue(recurrence)
 
@@ -500,16 +522,24 @@ class RecurrenceEntry(wx.Panel):
     def onRecurrencePeriodEdited(self, event):
         recurrenceOn = event.String != _('None')
         self._maxRecurrenceCheckBox.Enable(recurrenceOn)
+        self._stopDateTimeCheckBox.Enable(recurrenceOn)
         self._recurrenceFrequencyEntry.Enable(recurrenceOn)
         self._scheduleChoice.Enable(recurrenceOn)
         self._maxRecurrenceCountEntry.Enable(recurrenceOn and \
             self._maxRecurrenceCheckBox.IsChecked())
+        self._recurrenceStopDateTimeEntry.Enable(recurrenceOn and \
+            self._stopDateTimeCheckBox.IsChecked())
         self.updateRecurrenceLabel()
         self.onRecurrenceEdited()
 
     def onMaxRecurrenceChecked(self, event):
         maxRecurrenceOn = event.IsChecked()
         self._maxRecurrenceCountEntry.Enable(maxRecurrenceOn)
+        self.onRecurrenceEdited()
+
+    def onRecurrenceStopDateTimeChecked(self, event):
+        stopRecurrenceOn = event.IsChecked()
+        self._recurrenceStopDateTimeEntry.Enable(stopRecurrenceOn)
         self.onRecurrenceEdited()
 
     def onRecurrenceEdited(self, event=None):  # pylint: disable=W0613
@@ -530,6 +560,12 @@ class RecurrenceEntry(wx.Panel):
             if recurrence.unit in ('monthly', 'yearly') else False
         self._scheduleChoice.Selection = 1 if recurrence.recurBasedOnCompletion else 0
         self._scheduleChoice.Enable(bool(recurrence))
+        self._stopDateTimeCheckBox.Enable(bool(recurrence))
+        has_stop_datetime = recurrence.stop_datetime != date.DateTime()
+        self._stopDateTimeCheckBox.SetValue(has_stop_datetime)
+        self._recurrenceStopDateTimeEntry.Enable(has_stop_datetime)
+        if has_stop_datetime:
+            self._recurrenceStopDateTimeEntry.SetValue(recurrence.stop_datetime)
         self.updateRecurrenceLabel()
 
     def GetValue(self):
@@ -541,4 +577,7 @@ class RecurrenceEntry(wx.Panel):
         kwargs['amount'] = self._recurrenceFrequencyEntry.Value
         kwargs['sameWeekday'] = self._recurrenceSameWeekdayCheckBox.IsChecked()
         kwargs['recurBasedOnCompletion'] = bool(self._scheduleChoice.Selection)
+        if self._stopDateTimeCheckBox.IsChecked():
+            kwargs['stop_datetime'] = self._recurrenceStopDateTimeEntry.GetValue()
         return date.Recurrence(**kwargs)  # pylint: disable=W0142
+

@@ -27,11 +27,12 @@ class Recurrence(object):
     units = ('daily', 'weekly', 'monthly', 'yearly', '')
     
     def __init__(self, unit='', amount=1, sameWeekday=False, maximum=0, count=0,
-                 recurBasedOnCompletion=False):  
+                 stop_datetime=None, recurBasedOnCompletion=False):  
         assert unit in self.units
         assert amount >= 1
         self.unit = unit
         self.amount = amount
+        self.stop_datetime = stop_datetime or date.DateTime()
         self.sameWeekday = sameWeekday
         # Maximum number of recurrences we give out, 0 == infinite:
         self.max = maximum  
@@ -44,7 +45,7 @@ class Recurrence(object):
             # By default we expect our clients to call us once, but we allow
             # the client to tell us to expect more calls
             self.count += 1
-            if self.count >= self.max and self.max != 0:
+            if self.__finished_recurring():
                 self.unit = ''  # We're done with recurring
                 return
         if len(result) > 1:
@@ -53,6 +54,13 @@ class Recurrence(object):
             return result[0]
         else:
             return
+
+    def __finished_recurring(self):
+        ''' Return whether this recurrence is finished, either because the
+            maximum number of recurrences has happened or because the end date
+            for the reccurences has passed. '''
+        return self.max != 0 and self.count >= self.max or \
+            date.Now() > self.stop_datetime
         
     def _nextDateTime(self, dateTime, amount=0):
         if date.DateTime() == dateTime or not self.unit:
@@ -120,7 +128,7 @@ class Recurrence(object):
 
     def copy(self):
         return self.__class__(self.unit, self.amount, self.sameWeekday, 
-                              self.max, 
+                              self.max, stop_datetime=self.stop_datetime,
                               recurBasedOnCompletion=self.recurBasedOnCompletion)
     
     def __eq__(self, other):
@@ -128,6 +136,7 @@ class Recurrence(object):
             return self.unit == other.unit and self.amount == other.amount and \
                    self.sameWeekday == other.sameWeekday and \
                    self.max == other.max and \
+                   self.stop_datetime == other.stop_datetime and \
                    self.recurBasedOnCompletion == other.recurBasedOnCompletion
         except AttributeError:
             return False

@@ -190,8 +190,11 @@ class EffortViewer(base.ListViewer,
             ('period', _('Period'), effort.Effort.durationChangedEventType(), 
              self.__renderPeriod, 
              uicommand.ViewerSortByCommand(viewer=self, value='period')),
-            ('task', _('Task'), effort.Effort.taskChangedEventType(), lambda effort: effort.task().subject(recursive=True), None),
-            ('description', _('Description'), effort.Effort.descriptionChangedEventType(), lambda effort: effort.description(), None)] + \
+            ('task', _('Task'), effort.Effort.taskChangedEventType(), 
+             lambda effort: effort.task().subject(recursive=True), None),
+            ('description', _('Description'), 
+             effort.Effort.descriptionChangedEventType(), 
+             lambda effort: effort.description(), None)] + \
             [widgets.Column('categories', _('Categories'),
              width=self.getColumnWidth('categories'),
              renderCallback=self.renderCategories, **kwargs)] + \

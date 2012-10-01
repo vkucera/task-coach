@@ -85,7 +85,14 @@ class SubjectPage(Page):
     def __init__(self, items, parent, settings, *args, **kwargs):
         self._settings = settings
         super(SubjectPage, self).__init__(items, parent, *args, **kwargs)
-    
+
+    def SetFocus(self):
+        # Skip this on GTK because it selects the control's text, which overrides the X selection.
+        # Simply commenting out the SetFocus() in __load_perspective is not enought because the
+        # aui notebook calls this when the user selects a tab.
+        if not operating_system.isGTK():
+            super(SubjectPage, self).SetFocus()
+
     def addEntries(self):
         self.addSubjectEntry()
         self.addDescriptionEntry()
@@ -329,7 +336,8 @@ class DatesPage(Page):
     def addRecurrenceEntry(self):
         # pylint: disable=W0201
         currentRecurrence = self.items[0].recurrence() if len(self.items) == 1 else date.Recurrence()
-        self._recurrenceEntry = entry.RecurrenceEntry(self, currentRecurrence)
+        self._recurrenceEntry = entry.RecurrenceEntry(self, currentRecurrence,
+                                                      self.__settings)
         self._recurrenceSync = attributesync.AttributeSync('recurrence',
             self._recurrenceEntry, currentRecurrence, self.items,
             command.EditRecurrenceCommand, entry.EVT_RECURRENCEENTRY,
@@ -1146,8 +1154,11 @@ class Editor(widgets.Dialog):
         self._callAfter = kwargs.get('callAfter', wx.CallAfter)
         super(Editor, self).__init__(parent, self.title(), 
                                      buttonTypes=wx.ID_CLOSE, *args, **kwargs)
-        if not column_name and not self._interior.perspective():
-            column_name = 'subject'
+        if not column_name:
+            if self._interior.perspective() and hasattr(self._interior, 'GetSelection'):
+                column_name = self._interior[self._interior.GetSelection()].pageName
+            else:
+                column_name = 'subject'
         if column_name:
             self._interior.setFocus(column_name)
         

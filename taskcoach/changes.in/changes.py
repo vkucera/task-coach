@@ -23,11 +23,75 @@ from changetypes import *
 releases = [
             
 Release('1.3.19', 'September ??, 2012',
-    summary='''This is a bugfix release.''',
+    summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
-        Bug('''...''', ''),
-    ],
-),
+        Bug('''Format times in the calendar view according to the user's
+preferences.''', '3563441'),
+        Bug('''Do not automatically give focus to the subject field
+in the task editor on Linux (it overwrites the X clipboard).''', '3539452'),
+        Bug('''After loading a task file, tasks would not become due soon
+on time.''', '3562925'),
+        Bug('''On OS X, the first entry in an editor page would not be
+automatically selected.''', '3562922'),
+        Bug('''On Linux, drag and drop of email messages from Evolution didn't
+work.''', '3562808'),
+        Bug('''With autosaving on, Task Coach would actually save too often.''', 
+            '3562836'),
+        Bug('''On Ubuntu, a file was missing causing Task Coach not to
+start.''', '3562695'),
+        Bug('''On Ubuntu, the native text control doesn't support undo and 
+redo, added a home grown version.''', '3563376'),
+        Bug('''Don't silently adjust dates of parent and child tasks. See 
+also the changed feature below.''', '3561465', '3564794'),
+        Bug('''Remember whether the "make this snooze time the default snooze
+time for future reminders" check box was checked in the reminder dialog.''',
+'3567139'),
+        Bug('''The task viewer would not refresh at midnight.'''),
+        ],
+    featuresAdded=[
+        Feature('''In addition to specifying a maximum number of recurrences,
+it is now also possible to specify an end date for recurrence. If both an end
+date and a maximum number of recurrences are specified, recurrence stops when
+the first of both conditions is met.'''),
+        ],
+    featuresChanged=[
+        Feature('''Task Coach no longer enforces that the dates of child tasks
+lie between the dates of its parent task. Previously, if the start date of a 
+child task would be made earlier than the start date of its parent task, 
+Task Coach would silently make the start of the parent task equal to the 
+start date of the child task. The same for the due date: setting the due
+date of the parent task earlier than the due date of a child task would 
+silently change the due date of the child tasks if their due date would 
+otherwise become later than the due date of the parent task.
+
+When viewing tasks in the task tree viewer, collapsing a task with child tasks 
+will show recursive dates when relevant. This means that the planned start 
+date column will show the earliest start date of the task itself and all of
+its child tasks. If the earliest start date is the start date of one of the 
+child tasks, the date will be shown between brackets. Likewise, the actual 
+start date column will show the earliest actual start date of the task and all 
+of its child tasks. The due date column and the completion date column will 
+show the latest date of the parent and child tasks combined. 
+
+When sorting on a date column, the recursive value is used for sorting. So when
+sorting ascending by due date a parent task without due date but with a child
+task due today will sort before a task that is due tomorrow.
+
+This change makes the date behavior consistent with priorities and other 
+attributes.'''),
+        Feature('''New viewers will open floating so that is easier to put them
+in the position you want. Hopefully this will also make it more obvious for 
+new users that viewers can be reordered any way they like since moving a 
+floating viewer will show the docking guides.'''),
+        Feature('''Clicking outside an inplace editor now accepts the changes
+instead of discarding them.'''),
+        Feature('''On Windows, both left clicking and left double clicking the 
+Task Coach icon in the notification area (often called the system tray) will 
+raise or minimize the main window (in accordance with 
+http://msdn.microsoft.com/en-us/library/windows/desktop/aa511448.aspx#interaction).''',
+        'http://uservoice.com/a/m3P6j'),
+        ],
+    ),
 
 Release('1.3.18', 'August 28, 2012',
     summary='''This is a mixed feature and bugfix release.''',
@@ -413,8 +477,8 @@ would contain a "recurrence edited" action even though the recurrence was
 not changed.''', '3453625'),
         Bug('''On Ubuntu, the date controls in the effort edit dialog would
 be invisible.''', '3452446'),
-        Bug('''On Windows, when the user tries to save the task file in a 
-folder where she doesn't have permission, Task Coach would not give a proper
+        Bug('''On Windows, when users try to save the task file in a 
+folder where they don't have permission, Task Coach would not give a proper
 warning.'''),
         Bug('''When editing multiple items at once, show all descriptions in the
 description field for easier editing and/or copying.''', '3446417'),
@@ -443,8 +507,8 @@ display its start instead of its end.''', '3433481'),
 Release('1.3.1', 'November 27, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug('''Don't turn off the start date on new tasks when the user
-has indicated in the preferences that she wants a default start date.''', 
+        Bug('''Don't turn off the start date on new tasks when users
+have indicated in the preferences that they want a default start date.''', 
             '3440634'),
         Bug('''The "Start tracking from last effort" button in the effort
 dialog didn't work.''', '3440794'),
@@ -1545,8 +1609,8 @@ note and category viewers.'''),
 the appearance tab of edit dialogs.''', '2992006', '3021759'),
         Bug('''Don't display long descriptions in an inline text control,
 it's too buggy.''', '2992853', '2992850', '2992848'),
-        Bug('''On Mac OS X, don't cut text in text controls when the user
-types <cmd><shift>X, only when she types <cmd>X.''', '2942288'),
+        Bug('''On Mac OS X, don't cut text in text controls when users
+type <cmd><shift>X, only when they type <cmd>X.''', '2942288'),
         Bug('''Properly save the task file when the font name contains
 non-ascii characters.''', '3014110'),
         Bug('''Correctly export tasks and effort to vCalendar (.ics) when they
@@ -2591,9 +2655,9 @@ that Task Coach is started automatically when the user logs on
         Feature('''Made (right-click) context menu's more consistent.''')],
     featuresRemoved=[
         Feature('''Don't supply the dummy recipient 'Please enter recipient' to 
-the email program when mailing a task. This only forces the user to perform 
+the email program when mailing a task. This only forces users to perform 
 an extra action to remove that dummy text, while most if not all email 
-programs will warn the user when she forgets to enter a recipient. ''', 
+programs will warn users when they forget to enter a recipient. ''', 
 '2026833')]),
 
 Release('0.70.1', 'June 28, 2008',

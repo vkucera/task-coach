@@ -103,19 +103,36 @@ dateFunc = lambda dt=None: datetime.datetime.strftime(dt, dateFormat)  # datemod
 
 if operating_system.isWindows():
     import pywintypes, win32api
-    timeFunc = lambda dt=None: win32api.GetTimeFormat(0x400, 0x02, None if dt is None else pywintypes.Time(dt), None)
-    timeWithSecondsFunc = lambda dt=None: win32api.GetTimeFormat(0x400, 0x0, None if dt is None else pywintypes.Time(dt), None)
+    def timeFunc(dt, minutes=True, seconds=False):
+        if seconds:
+            # You can't include seconds without minutes
+            flags = 0x0
+        else:
+            if minutes:
+                flags = 0x2
+            else:
+                flags = 0x1
+        return win32api.GetTimeFormat(0x400, flags, None if dt is None else pywintypes.Time(dt), None)
 else:
     language_and_country = locale.getlocale()[0]
     if language_and_country and ('_US' in language_and_country or 
                                  '_United States' in language_and_country):
-        timeFormat = '%I:%M %p'
+        timeFormat = '%I %p'
+        timeWithMinutesFormat = '%I:%M %p'
         timeWithSecondsFormat = '%I:%M:%S %p'
-    else: 
-        timeFormat = '%H:%M'  # %X includes seconds (see http://stackoverflow.com/questions/2507726)
+    else:
+        timeFormat = '%H'
+        timeWithMinutesFormat = '%H:%M'  # %X includes seconds (see http://stackoverflow.com/questions/2507726)
         timeWithSecondsFormat = '%X'
-    timeFunc = lambda dt=None: datemodule.DateTime.strftime(dt, timeFormat)
-    timeWithSecondsFunc = lambda dt=None: datemodule.DateTime.strftime(dt, timeWithSecondsFormat)
+    def timeFunc(dt, minutes=True, seconds=False):
+        if seconds:
+            fmt = timeWithSecondsFormat
+        else:
+            if minutes:
+                fmt = timeWithMinutesFormat
+            else:
+                fmt = timeFormat
+        return datemodule.DateTime.strftime(dt, fmt)
 
 dateTimeFunc = lambda dt=None: u'%s %s' % (dateFunc(dt), timeFunc(dt))
 
@@ -153,7 +170,7 @@ def dateTimePeriod(start, stop):
         return '%s - %s' % (dateTime(start), dateTime(stop))
     
     
-def time(dateTime, seconds=False):
+def time(dateTime, seconds=False, minutes=True):
     try:
         # strftime doesn't handle years before 1900, be prepared:
         dateTime = dateTime.replace(year=2000)  
@@ -161,7 +178,7 @@ def time(dateTime, seconds=False):
         dateTime = datemodule.Now().replace(hour=dateTime.hour, 
                                             minute=dateTime.minute,
                                             second=dateTime.second) 
-    return timeWithSecondsFunc(dateTime) if seconds else timeFunc(dateTime)
+    return timeFunc(dateTime, minutes=minutes, seconds=seconds)
 
 
 def month(dateTime):

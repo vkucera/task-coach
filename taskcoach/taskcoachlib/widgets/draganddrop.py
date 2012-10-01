@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
+import urllib
 from taskcoachlib.mailer import thunderbird, outlook
 from taskcoachlib.i18n import _
 
@@ -97,12 +98,16 @@ class DropTarget(wx.DropTarget):
         if formatId == 'text/x-moz-message':
             self.onThunderbirdDrop(x, y)
         elif formatId == 'text/uri-list' and formatType == wx.DF_FILENAME:
-            if self.__fileDataObject.GetFilenames():
-                self.onClawsDrop(x, y)
-            elif self.__onDropURLCallback:
-                urls = self.__urilistDataObject.GetData().strip().split('\n')
-                for url in urls:
-                    self.__onDropURLCallback(x, y, url.strip())
+            urls = self.__urilistDataObject.GetData().strip().split('\n')
+            for url in urls:
+                url = url.strip()
+                if url.startswith('#'):
+                    continue
+                if self.__tmp_mail_file_url(url) and self.__onDropMailCallback:
+                    filename = urllib.unquote(url[len('file://'):])
+                    self.__onDropMailCallback(x, y, filename)
+                elif self.__onDropURLCallback:
+                    self.__onDropURLCallback(x, y, url)
         elif formatId == 'Object Descriptor':
             self.onOutlookDrop(x, y)
         elif formatId == 'public.url':
@@ -132,6 +137,13 @@ class DropTarget(wx.DropTarget):
         except:
             formatId = None  # pylint: disable=W0702
         return formatType, formatId
+
+    @staticmethod
+    def __tmp_mail_file_url(url):
+        ''' Return whether the url is a dropped mail message. '''
+        return url.startswith('file:') and \
+            ('/.cache/evolution/tmp/drag-n-drop' in url or \
+             '/.claws-mail/tmp/' in url)
     
     def onThunderbirdDrop(self, x, y):
         if self.__onDropMailCallback:

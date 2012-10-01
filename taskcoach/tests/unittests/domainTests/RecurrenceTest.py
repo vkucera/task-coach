@@ -41,6 +41,11 @@ class CommonRecurrenceTestsMixin(object):
         self.recur(date.Now(), next=False)
         self.failUnless(self.recur)
 
+    def testSetStopDateTime(self):
+        self.recur.stop_datetime = date.Now() - date.oneDay
+        self.recur(date.Now())
+        self.failIf(self.recur)
+
     def testCount(self):
         self.assertEqual(0, self.recur.count)
 

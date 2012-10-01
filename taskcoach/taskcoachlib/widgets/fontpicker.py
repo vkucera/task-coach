@@ -42,6 +42,7 @@ class FontPickerCtrl(wx.Button):
         self.__updateButton()
 
     def onClick(self, event):
+        event.Skip(False)
         dialog = wx.FontDialog(self, self.__newFontData())
         if wx.ID_OK == dialog.ShowModal():
             self.__readFontData(dialog.GetFontData())
@@ -66,4 +67,3 @@ class FontPickerCtrl(wx.Button):
     def __sendPickerEvent(self):
         event = wx.FontPickerEvent(self, self.GetId(), self.__font)
         self.GetEventHandler().ProcessEvent(event)
-

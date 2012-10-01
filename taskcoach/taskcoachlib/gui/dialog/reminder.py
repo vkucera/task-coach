@@ -84,9 +84,10 @@ class ReminderDialog(patterns.Observer, sized_controls.SizedDialog):
         
         wx.StaticText(pane, label='')
         self.replaceDefaultSnoozeTime = wx.CheckBox(pane, 
-            label=_('Also use the selected snooze time as default snooze time '
-                    'for future reminders'))
-        self.replaceDefaultSnoozeTime.SetValue(True)
+            label=_('Also make this the default snooze time for future '
+                    'reminders'))
+        self.replaceDefaultSnoozeTime.SetValue(self.settings.getboolean('view', 
+                                               'replacedefaultsnoozetime'))
         
         buttonSizer = self.CreateStdDialogButtonSizer(wx.OK)
         self.markCompleted = wx.Button(self, label=_('Mark task completed'))
@@ -144,11 +145,14 @@ class ReminderDialog(patterns.Observer, sized_controls.SizedDialog):
     
     def onClose(self, event):
         event.Skip()
-        if self.replaceDefaultSnoozeTime.GetValue():
+        replace_default_snooze_time = self.replaceDefaultSnoozeTime.GetValue()
+        if replace_default_snooze_time:
             # pylint: disable=E1101
             selection = self.snoozeOptions.Selection
             minutes = self.snoozeOptions.GetClientData(selection).minutes()
             self.settings.set('view', 'defaultsnoozetime', str(int(minutes)))
+        self.settings.setboolean('view', 'replacedefaultsnoozetime', 
+                                 replace_default_snooze_time)
         self.removeInstance()
         
     def onOK(self, event):

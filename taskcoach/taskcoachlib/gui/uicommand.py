@@ -577,8 +577,8 @@ class FileSaveAs(IOCommand):
 class FileSaveSelection(NeedsSelectedTasksMixin, IOCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(FileSaveSelection, self).__init__( \
-            menuText=_('Sa&ve selection...'),
-            helpText=_('Save the selected tasks to a separate file'), 
+            menuText=_('Sa&ve selected tasks to new taskfile...'),
+            helpText=_('Save the selected tasks to a separate taskfile'), 
             bitmap='saveselection', *args, **kwargs)
     
     def doCommand(self, event):

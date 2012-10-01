@@ -81,6 +81,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         now = date.Now()
         if now < self.__dueDateTime < maxDateTime:
             date.Scheduler().schedule(self.onOverDue, self.__dueDateTime + date.oneSecond, allowMisfire=True)
+            if self.__dueSoonHours:
+                dueSoonDateTime = self.__dueDateTime + date.oneSecond - date.TimeDelta(hours=self.__dueSoonHours)
+                if dueSoonDateTime > date.Now():
+                    date.Scheduler().schedule(self.onDueSoon, dueSoonDateTime)
         if now < self.__plannedStartDateTime < maxDateTime:
             date.Scheduler().schedule(self.onTimeToStart, self.__plannedStartDateTime + date.oneSecond, allowMisfire=True)
 
@@ -177,12 +181,6 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             self.setCompletionDateTime(child.completionDateTime())
         elif self.completed() and not child.completed():
             self.setCompletionDateTime(self.maxDateTime)
-        if self.maxDateTime > child.dueDateTime() > self.dueDateTime():
-            self.setDueDateTime(child.dueDateTime())           
-        if child.plannedStartDateTime() < self.plannedStartDateTime():
-            self.setPlannedStartDateTime(child.plannedStartDateTime())
-        if child.actualStartDateTime() < self.actualStartDateTime():
-            self.setActualStartDateTime(child.actualStartDateTime())
         self.recomputeAppearance(recursive=False, event=event)
         child.recomputeAppearance(recursive=True, event=event)
 
@@ -252,24 +250,23 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__dueDateTime = dueDateTime
         date.Scheduler().unschedule(self.onOverDue)
         date.Scheduler().unschedule(self.onDueSoon)
-        if dueDateTime != self.maxDateTime:
-            for child in self.children():
-                if child.dueDateTime() > dueDateTime:
-                    child.setDueDateTime(dueDateTime)
-            if self.parent():
-                parent = self.parent()
-                if dueDateTime > parent.dueDateTime():
-                    parent.setDueDateTime(dueDateTime)
         if date.Now() <= dueDateTime < self.maxDateTime:
-            date.Scheduler().schedule(self.onOverDue, dueDateTime + date.oneSecond, allowMisfire=True)
+            date.Scheduler().schedule(self.onOverDue, 
+                                      dueDateTime + date.oneSecond, 
+                                      allowMisfire=True)
             if self.__dueSoonHours > 0:
-                dueSoonDateTime = dueDateTime + date.oneSecond - date.TimeDelta(hours=self.__dueSoonHours)
+                dueSoonDateTime = dueDateTime + date.oneSecond - \
+                    date.TimeDelta(hours=self.__dueSoonHours)
                 if dueSoonDateTime > date.Now():
-                    date.Scheduler().schedule(self.onDueSoon, dueSoonDateTime, allowMisfire=True)
+                    date.Scheduler().schedule(self.onDueSoon, dueSoonDateTime, 
+                                              allowMisfire=True)
         self.markDirty()
         self.recomputeAppearance()
         pub.sendMessage(self.dueDateTimeChangedEventType(), 
                         newValue=dueDateTime, sender=self)
+        for ancestor in self.ancestors():
+            pub.sendMessage(ancestor.dueDateTimeChangedEventType(),
+                            newValue=dueDateTime, sender=ancestor)
 
     @classmethod
     def dueDateTimeChangedEventType(class_):
@@ -306,14 +303,6 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             return
         self.__plannedStartDateTime = plannedStartDateTime
         date.Scheduler().unschedule(self.onTimeToStart)
-        if plannedStartDateTime != self.maxDateTime:
-            if not self.recurrence(recursive=True, upwards=True):
-                for child in self.children():
-                    if plannedStartDateTime > child.plannedStartDateTime():
-                        child.setPlannedStartDateTime(plannedStartDateTime)
-            parent = self.parent()
-            if parent and plannedStartDateTime < parent.plannedStartDateTime():
-                parent.setPlannedStartDateTime(plannedStartDateTime)
         self.markDirty()
         self.recomputeAppearance()
         if plannedStartDateTime < self.maxDateTime:
@@ -322,6 +311,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                                       allowMisfire=True)
         pub.sendMessage(self.plannedStartDateTimeChangedEventType(), 
                         newValue=plannedStartDateTime, sender=self)
+        for ancestor in self.ancestors():
+            pub.sendMessage(ancestor.plannedStartDateTimeChangedEventType(),
+                            newValue=plannedStartDateTime, sender=ancestor)
 
     @classmethod
     def plannedStartDateTimeChangedEventType(class_):
@@ -371,13 +363,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if recursive:
             for child in self.children(recursive=True):
                 child.setActualStartDateTime(actualStartDateTime)
-        parent = self.parent()
-        if parent and actualStartDateTime < parent.actualStartDateTime():
-            parent.setActualStartDateTime(actualStartDateTime)
         self.markDirty()
         self.recomputeAppearance()
         pub.sendMessage(self.actualStartDateTimeChangedEventType(), 
                         newValue=actualStartDateTime, sender=self)
+        for ancestor in self.ancestors():
+            pub.sendMessage(ancestor.actualStartDateTimeChangedEventType(),
+                            newValue=actualStartDateTime, sender=ancestor)
 
     @classmethod
     def actualStartDateTimeChangedEventType(class_):
@@ -441,6 +433,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 dependency.recomputeAppearance(recursive=True)
             pub.sendMessage(self.completionDateTimeChangedEventType(), 
                         newValue=completionDateTime, sender=self)
+            for ancestor in self.ancestors():
+                pub.sendMessage(ancestor.completionDateTimeChangedEventType(),
+                                newValue=completionDateTime, sender=ancestor)
             
     @classmethod
     def completionDateTimeChangedEventType(class_):
@@ -535,9 +530,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 self.__status = status.active
             # Don't call prerequisite.completed() because it will lead to infinite
             # recursion in the case of circular dependencies:
-            elif any([prerequisite.completionDateTime() == self.maxDateTime for prerequisite in self.prerequisites()]):
-                self.__status = status.inactive
-            elif self.parent() and self.parent().inactive():
+            elif any([prerequisite.completionDateTime() == self.maxDateTime \
+                      for prerequisite in self.prerequisites(recursive=True, 
+                                                             upwards=True)]):
                 self.__status = status.inactive
             elif self.plannedStartDateTime() < now:
                 self.__status = status.late
@@ -1097,6 +1092,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__reminderBeforeSnooze = reminderDateTime
         pub.sendMessage(self.reminderChangedEventType(), 
                         newValue=reminderDateTime, sender=self)
+        for ancestor in self.ancestors():
+            pub.sendMessage(ancestor.reminderChangedEventType(),
+                            newValue=reminderDateTime, sender=ancestor)
         
     def snoozeReminder(self, timeDelta, now=date.Now):
         if timeDelta:

@@ -827,6 +827,18 @@ class CommonTestsMixin(object):
         expectedAmount = "(%s)" % locale.currency(300, False) if self.treeMode else locale.currency(100, False)
         self.task.expand(False, context=self.viewer.settingsSection())
         self.assertEqual(expectedAmount, self.getItemText(0, 3))
+        
+    def testCollapsedCompositeTaskShowsRecursivePlannedStartDateTime(self):
+        self.taskList.extend([self.task, self.child])
+        self.task.addChild(self.child)
+        now = date.Now()
+        self.child.setPlannedStartDateTime(now)
+        self.task.setPlannedStartDateTime(date.DateTime())
+        self.viewer.setSortByTaskStatusFirst(False)
+        self.viewer.setSortOrderAscending(False)
+        expectedDateTime = "(%s)" % render.dateTime(now) if self.treeMode else ''
+        self.task.expand(False, context=self.viewer.settingsSection())
+        self.assertEqual(expectedDateTime, self.getItemText(0, 1))
 
     def testChangePrerequisiteSubject(self):
         self.showColumn('prerequisites')

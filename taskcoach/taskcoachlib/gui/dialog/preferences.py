@@ -279,8 +279,10 @@ class SettingsPage(SettingsPageBase):
     def addEntry(self, text, *controls, **kwargs):  # pylint: disable=W0221
         helpText = kwargs.pop('helpText', '')
         if helpText == 'restart':
-            helpText = _('This setting will take effect\n'
-                         'after you restart %s') % meta.name
+            helpText = _('This setting will take effect after you restart %s') % meta.name
+        elif helpText == 'override':
+            helpText = _('This setting can be overridden for individual tasks\n'
+                         'in the task edit dialog.')
         if helpText:
             controls = controls + (helpText,)
         super(SettingsPage, self).addEntry(text, *controls, **kwargs)
@@ -496,12 +498,13 @@ class TaskAppearancePage(SettingsPage):
                                                  *args, **kwargs)
         self.addAppearanceHeader()
         for status in task.Task.possibleStatuses():
-            self.addLine()
             setting = '%stasks' % status
             self.addAppearanceSetting('fgcolor', setting, 
                                       'bgcolor', setting, 
                                       'font', setting, 
                                       'icon', setting, status.pluralLabel)
+        self.addText('', _('These appearance settings can be overridden '
+                           'for individual tasks in the task edit dialog.'))
         self.fit()
 
 
@@ -570,7 +573,8 @@ class TaskDatesPage(SettingsPage):
                                             *args, **kwargs)
         self.addBooleanSetting('behavior', 
             'markparentcompletedwhenallchildrencompleted',
-            _('Mark parent task completed when all children are completed'))
+            _('Mark parent task completed when all children are completed'),
+            helpText='override')
         self.addIntegerSetting('behavior', 'duesoonhours', 
             _("Number of hours that tasks are considered to be 'due soon'"), 
             minimum=0, maximum=9999, flags=(None, wx.ALL | wx.ALIGN_LEFT))
@@ -610,7 +614,18 @@ class TaskDatesPage(SettingsPage):
         self.addChoiceSetting('view', 'defaultreminderdatetime', 
                               _('Default reminder date and time'), 
                               '', check_choices, day_choices, time_choices)
+        self.__add_help_text()
         self.fit()
+
+    def __add_help_text(self):
+        ''' Add help text for the default date and time settings. '''
+        help_text = wx.StaticText(self, label=_('''New tasks start with "Preset" dates and times filled in and checked. "Proposed" dates and times are filled in, but not checked.
+
+"Start of day" is midnight and "End of day" is just before midnight. When using these, task viewers hide the time and show only the date.
+
+"Start of working day" and "End of working day" use the working day as set in the Features tab of this preferences dialog.''') % meta.data.metaDict)
+        help_text.Wrap(460)
+        self.addText('', help_text)
 
 
 class TaskReminderPage(SettingsPage):

@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib.thirdparty.pubsub import pub
+import wx
 
 
 class AutoSaver(object):
@@ -26,23 +27,29 @@ class AutoSaver(object):
     def __init__(self, settings, *args, **kwargs):
         super(AutoSaver, self).__init__(*args, **kwargs)
         self.__settings = settings
+        self.__task_files = set()
         pub.subscribe(self.onTaskFileDirty, 'taskfile.dirty')
-        pub.subscribe(self.onTaskFileChanged, 'taskfile.changed')
+        wx.GetApp().Bind(wx.EVT_IDLE, self.on_idle)
             
     def onTaskFileDirty(self, taskFile):
-        ''' When a task file gets dirty and auto save is on, save it. '''
+        ''' When a task file gets dirty and auto save is on, note it so 
+            it can be saved during idle time. '''
         if self._needSave(taskFile):
-            taskFile.save()
+            self.__task_files.add(taskFile)
 
-    def onTaskFileChanged(self, taskFile):
-        ''' When a task file changed on disk and auto load is on, save it '''
-        if self._needLoad(taskFile):
-            taskFile.save()
-
-    def _needSave(self, taskFile):
-        return taskFile.filename() and taskFile.needSave() and \
+    def _needSave(self, task_file):
+        ''' Return whether the task file needs to be saved. '''
+        return task_file.filename() and task_file.needSave() and \
             self.__settings.getboolean('file', 'autosave')
 
     def _needLoad(self, taskFile):
         return taskFile.changedOnDisk() and \
             self.__settings.getboolean('file', 'autoload')
+
+    def on_idle(self, event):
+        ''' Actually save the dirty files during idle time. '''
+        event.Skip()
+        while self.__task_files:
+            task_file = self.__task_files.pop()
+            if self._needSave(task_file):
+                task_file.save()

@@ -33,7 +33,9 @@ def viewerTypes():
 class addViewers(object):  # pylint: disable=C0103, R0903
     ''' addViewers is a class masquerading as a method. It's a class because
         that makes it easier to split the work over different methods that
-        use the same instance variables. '''  
+        use the same instance variables. '''
+    
+    floating = False  # Start viewers floating? Not when restoring layout
     
     def __init__(self, viewer_container, task_file, settings):
         self.__viewer_container = viewer_container
@@ -62,7 +64,8 @@ class addViewers(object):  # pylint: disable=C0103, R0903
         for _ in range(number_of_viewers_to_add):
             viewer_instance = viewer_class(*self.__viewer_init_args, 
                                            **self._viewer_kwargs())
-            self.__viewer_container.addViewer(viewer_instance)
+            self.__viewer_container.addViewer(viewer_instance, 
+                                              floating=self.floating)
     
     def _number_of_viewers_to_add(self, viewer_class):
         ''' Return the number of viewers of the specified viewer class the 
@@ -79,6 +82,8 @@ class addViewers(object):  # pylint: disable=C0103, R0903
 class addOneViewer(addViewers):  # pylint: disable=C0103, R0903
     ''' addOneViewer is a class masquerading as a method to add one viewer
         of a specified viewer class. '''
+    
+    floating = True  # Start viewer floating? Yes when opening a new viewer
     
     def __init__(self, viewer_container, task_file, settings, viewer_class, 
                  **kwargs):

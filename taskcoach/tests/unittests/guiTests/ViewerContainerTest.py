@@ -29,9 +29,10 @@ class DummyMainWindow(widgets.AuiManagedFrameWithDynamicCenterPane):
     def __init__(self):
         super(DummyMainWindow, self).__init__(None)
 
-    def addPane(self, pane, title):
+    def addPane(self, window, caption, floating=False):
         self.count += 1
-        super(DummyMainWindow, self).addPane(pane, title, str('name%d'%self.count))
+        super(DummyMainWindow, self).addPane(window, caption, 
+                                             str('name%d'%self.count))
 
 
 class DummyPane(object):

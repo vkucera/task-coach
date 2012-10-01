@@ -591,7 +591,7 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
             else:
                 self.registerObserver(self.onAttributeChanged_Deprecated, 
                                       eventType)
-        date.Scheduler().add_interval_job(self.atMidnight, days=1)
+        date.Scheduler().schedule_interval(self.atMidnight, days=1)
 
     def isTreeViewer(self):
         return False
@@ -767,9 +767,9 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
             edited inline. '''
         event.Skip()
         if not self.isTreeViewer():
-            # Restore the recursive subject. Here we don't care whether the user
-            # actually changed the subject. If she did, the subject will updated
-            # via the regular notification mechanism.
+            # Restore the recursive subject. Here we don't care whether users
+            # actually changed the subject. If they did, the subject will 
+            # be updated via the regular notification mechanism.
             treeItem = event.GetItem()
             editedTask = self.widget.GetItemPyData(treeItem)
             self.widget.SetItemText(treeItem, editedTask.subject(recursive=True))
@@ -1019,25 +1019,20 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
     def renderSubject(self, task):
         return task.subject(recursive=not self.isTreeViewer())
     
-    @staticmethod
-    def renderPlannedStartDateTime(task):
-        # The rendering of the planned start date time doesn't depend on whether 
-        # the task is collapsed since the planned start date time of a parent is 
-        # always <= planned start date times of all children. 
-        return render.dateTime(task.plannedStartDateTime())
+    def renderPlannedStartDateTime(self, task):
+        return self.renderedValue(task, task.plannedStartDateTime, 
+                                  render.dateTime)
     
     def renderDueDateTime(self, task):
         return self.renderedValue(task, task.dueDateTime, render.dateTime)
 
-    @staticmethod
-    def renderActualStartDateTime(task):
-        # The rendering of the actual start date time doesn't depend on whether 
-        # the task is collapsed since the actual start date time of a parent is 
-        # always <= actual start date times of all children. 
-        return render.dateTime(task.actualStartDateTime())
+    def renderActualStartDateTime(self, task):
+        return self.renderedValue(task, task.actualStartDateTime, 
+                                  render.dateTime)
 
     def renderCompletionDateTime(self, task):
-        return self.renderedValue(task, task.completionDateTime, render.dateTime)
+        return self.renderedValue(task, task.completionDateTime, 
+                                  render.dateTime)
 
     def renderRecurrence(self, task):
         return self.renderedValue(task, task.recurrence, render.recurrence)

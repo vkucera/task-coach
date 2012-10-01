@@ -28,7 +28,7 @@ def DAY_BACKGROUND_BRUSH():
     return wx.Color( _r, _g, _b )
 FOREGROUND_PEN				= wx.LIGHT_GREY_PEN
 
-LEFT_COLUMN_SIZE		= 35
+LEFT_COLUMN_SIZE		= 50
 HEADER_COLUMN_SIZE		= 20
 DAY_SIZE_MIN			= wx.Size( 400, 400 )
 WEEK_SIZE_MIN			= wx.Size( 980, 400 )
