@@ -263,7 +263,7 @@ class Column(object):
         return self.__hasImages
     
     def isEditable(self):
-        return self.__editCallback != None
+        return self.__editControlClass != None and self.__editCallback != None
     
     def onEndEdit(self, item, newValue):
         self.__editCallback(item, newValue)
