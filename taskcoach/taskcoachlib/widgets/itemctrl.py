@@ -122,7 +122,7 @@ class _CtrlWithColumnPopupMenuMixin(_CtrlWithPopupMenuMixin):
             window = event.GetEventObject()
         window.SetFocus()
         self.PopupMenuXY(self.__popupMenu, *event.GetPosition())
-        event.Skip()
+        event.Skip(False)
         
 
 class _CtrlWithDropTargetMixin(_CtrlWithItemsMixin):
