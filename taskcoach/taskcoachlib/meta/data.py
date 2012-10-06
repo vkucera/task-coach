@@ -67,11 +67,14 @@ date = release_month + ' ' + release_day + ', ' + release_year
 
 name = 'Task Coach'
 description = 'Your friendly task manager'
-long_description = '%(name)s is a friendly open source todo manager to manage ' \
-'personal tasks and todo lists. It supports composite tasks, i.e. tasks ' \
-'within tasks. In addition, %(name)s allows you to categorize your tasks, ' \
-'track effort against a budget per task, and much more. ' \
-'%(name)s is available for Windows, Mac OS X, BSD, Linux, iPhone and iPad.' % dict(name=name)
+long_description = '%(name)s is a free open source todo manager. It grew ' \
+'out of frustration about other programs not handling composite tasks well. ' \
+'In addition to flexible composite tasks, %(name)s has grown to include ' \
+'prerequisites, prioritizing, effort tracking, category tags, budgets, ' \
+'notes, and many other features. However, users are not forced to use all ' \
+'these features; %(name)s can be as simple or complex as you need it to be. ' \
+'%(name)s is available for Windows, Mac OS X, and GNU/Linux; and there is a ' \
+'companion iOS app.' % dict(name=name)
 keywords = 'task manager, todo list, pim, time registration, track effort'
 author_first, author_last = 'Frank', 'Niessink'  # Needed for PAD file
 author = '%s %s, Jerome Laheurte, and Aaron Wolf' % (author_first, author_last)
