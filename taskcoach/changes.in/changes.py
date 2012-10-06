@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.19', 'September ??, 2012',
+Release('1.3.19', 'October 6, 2012',
     summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
         Bug('''Format times in the calendar view according to the user's
@@ -53,6 +53,8 @@ time for future reminders" check box was checked in the reminder dialog.''',
 it is now also possible to specify an end date for recurrence. If both an end
 date and a maximum number of recurrences are specified, recurrence stops when
 the first of both conditions is met.'''),
+        Feature('''Put a link to our IndieGoGo campaign on the toolbar of the
+main window. The link will disappear when the campaign is over.'''),
         ],
     featuresChanged=[
         Feature('''Task Coach no longer enforces that the dates of child tasks
