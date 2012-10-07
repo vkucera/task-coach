@@ -93,13 +93,9 @@ def budget(aBudget):
     return timeSpent(aBudget)
 
 
-try:
-    dateFormat = '%x'  # Apparently, this may produce invalid utf-8 so test
-    codecs.utf_8_decode(datemodule.Now().strftime(dateFormat))
-except UnicodeDecodeError:
-    dateFormat = '%Y-%m-%d'
-
-dateFunc = lambda dt=None: datetime.datetime.strftime(dt, dateFormat)  # datemodule.Date is not a class
+dateFormat = '%x'
+#dateFunc = lambda dt=None: datetime.datetime.strftime(dt, dateFormat)  # datemodule.Date is not a class
+dateFunc = lambda dt=None: datemodule.DateTime.strftime(dt, dateFormat)
 
 if operating_system.isWindows():
     import pywintypes, win32api

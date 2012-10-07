@@ -67,3 +67,7 @@ def isMacOsXMountainLion_OrNewer(): # pragma no cover
         return _platformVersion() >= (12,)
     else:
         return False
+
+
+def defaultEncodingName():
+    return wx.Locale.GetSystemEncodingName()

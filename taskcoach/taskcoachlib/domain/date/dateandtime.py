@@ -17,6 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import datetime, timedelta, re
+from taskcoachlib import operating_system
+
 
 class DateTime(datetime.datetime):
     
@@ -32,7 +34,10 @@ class DateTime(datetime.datetime):
             args = (max.year, max.month, max.day, 
                     max.hour, max.minute, max.second, max.microsecond)
         return datetime.datetime.__new__(class_, *args, **kwargs)
-    
+
+    def strftime(self, *args):
+        return super(DateTime, self).strftime(*args).decode(operating_system.defaultEncodingName(), 'ignore')
+
     def weeknumber(self):
         return self.isocalendar()[1]
 
