@@ -70,4 +70,4 @@ def isMacOsXMountainLion_OrNewer(): # pragma no cover
 
 
 def defaultEncodingName():
-    return wx.Locale.GetSystemEncodingName()
+    return wx.Locale.GetSystemEncodingName() or 'utf-8'
