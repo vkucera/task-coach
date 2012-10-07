@@ -494,8 +494,8 @@ def tagging_release_in_subversion(settings, options):
     metadata = taskcoachlib.meta.data.metaDict
     version = metadata['version']
     release_tag = 'Release' + version.replace('.', '_')
-    target_url = 'https://taskcoach.svn.sourceforge.net/svnroot/' \
-                 'taskcoach/tags/' + release_tag
+    target_url = 'https://svn.code.sf.net/p/' \
+                 'taskcoach/code/tags/' + release_tag
     commit_message = 'Tag for release %s.' % version
     svn_copy = 'svn copy -m "%s" . %s' % (commit_message, target_url)
     if options.dry_run:
