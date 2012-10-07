@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.19', 'October 6, 2012',
+Release('1.3.19', 'October 7, 2012',
     summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
         Bug('''Format times in the calendar view according to the user's
