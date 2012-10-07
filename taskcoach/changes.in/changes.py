@@ -47,8 +47,8 @@ also the changed feature below.''', '3561465', '3564794'),
 time for future reminders" check box was checked in the reminder dialog.''',
 '3567139'),
         Bug('''The task viewer would not refresh at midnight.'''),
-        Bug('''On Windows with some locale settings, Task Coach would crash
-trying to render dates.'''),
+        Bugv2('''On Windows with some locale settings, Task Coach would crash
+trying to render dates.''', '1306'),
         ],
     featuresAdded=[
         Feature('''In addition to specifying a maximum number of recurrences,
