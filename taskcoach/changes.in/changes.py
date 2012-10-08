@@ -27,6 +27,9 @@ Release('1.3.20', 'October ??, 2012',
     bugsFixed=[
         Bugv2('''Fix an encoding problem on Windows non-European locales''',
               '1306'),
+        Bugv2('''On Linux, Ctrl-Z in a text control would always remove the
+whole contents of the text control instead of undoing the recent 
+changes.''', '1267'),
         ],
     ),
 
