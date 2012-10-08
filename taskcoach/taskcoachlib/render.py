@@ -94,7 +94,8 @@ def budget(aBudget):
 
 
 dateFormat = '%x'
-dateFunc = lambda dt=None: datetime.datetime.strftime(dt, dateFormat).decode(operating_system.defaultEncodingName() or 'utf-8', 'ignore')  # datemodule.Date is not a class
+# datemodule.Date is not a class
+dateFunc = lambda dt=None: operating_system.decodeSystemString(datetime.datetime.strftime(dt, dateFormat))
 
 if operating_system.isWindows():
     import pywintypes, win32api

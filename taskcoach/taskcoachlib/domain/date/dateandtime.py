@@ -36,7 +36,7 @@ class DateTime(datetime.datetime):
         return datetime.datetime.__new__(class_, *args, **kwargs)
 
     def strftime(self, *args):
-        return super(DateTime, self).strftime(*args).decode(operating_system.defaultEncodingName(), 'ignore')
+        return operating_system.decodeSystemString(super(DateTime, self).strftime(*args))
 
     def weeknumber(self):
         return self.isocalendar()[1]

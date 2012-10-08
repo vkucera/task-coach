@@ -71,3 +71,12 @@ def isMacOsXMountainLion_OrNewer(): # pragma no cover
 
 def defaultEncodingName():
     return wx.Locale.GetSystemEncodingName() or 'utf-8'
+
+def decodeSystemString(s):
+    encoding = defaultEncodingName()
+    # Python does not define the windows_XXX aliases for every code page...
+    if encoding.startswith('windows-'):
+        encoding = 'cp' + encoding[8:]
+    if not encoding:
+        encoding = 'utf-8'
+    return s.decode(encoding, 'ignore')
