@@ -764,7 +764,7 @@ class EditBook(widgets.Notebook):
         super(EditBook, self).__init__(parent)
         self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
         self.addPages(taskFile, itemsAreNew)
-        self.__load_perspective()
+        self.__load_perspective(itemsAreNew)
         
     def addPages(self, task_file, items_are_new):
         page_names = self.settings.getlist(self.settings_section(), 'pages') 
@@ -863,7 +863,7 @@ class EditBook(widgets.Notebook):
         ''' Return the perspective for the notebook. '''
         return self.settings.gettext(self.settings_section(), 'perspective')
     
-    def __load_perspective(self):
+    def __load_perspective(self, itemsAreNew=False):
         ''' Load the perspective (layout) for the current combination of visible
             pages from the settings. '''
         perspective = self.perspective()
@@ -872,21 +872,25 @@ class EditBook(widgets.Notebook):
                 self.LoadPerspective(perspective)
             except:  # pylint: disable=W0702
                 pass
-        # Although the active/current page is written in the perspective string 
-        # (a + before the number of the active page), the current page is not
-        # set when restoring the perspective. This does it by hand:
-        try:
-            current_page = int(perspective.split('@')[0].split('+')[1].split(',')[0])
-        except (IndexError, ValueError):
-            current_page = 0
+        if itemsAreNew:
+            current_page = 0  # For new items, start at the subject page.
+        else:
+            # Although the active/current page is written in the perspective 
+            # string (a + before the number of the active page), the current 
+            # page is not set when restoring the perspective. This does it by 
+            # hand:
+            try:
+                current_page = int(perspective.split('@')[0].split('+')[1].split(',')[0])
+            except (IndexError, ValueError):
+                current_page = 0
         self.SetSelection(current_page)
         self.GetPage(current_page).SetFocus()
-
+        
     def __save_perspective(self):
         ''' Save the current perspective of the editor in the settings. 
             Multiple perspectives are supported, for each set of visible pages.
             This allows different perspectives for e.g. single item editors and
-            multi item editors. '''
+            multi-item editors. '''
         page_names = [self[index].pageName for index in \
                       range(self.GetPageCount())]
         section = self.settings_section()
@@ -1132,7 +1136,7 @@ class EffortEditBook(Page):
             return item.mayContain(self.items[0])  # Composite effort
     
     def entries(self):
-        return dict(firstEntry=self._taskEntry, task=self._taskEntry,
+        return dict(firstEntry=self._startDateTimeEntry, task=self._taskEntry,
                     period=self._stopDateTimeEntry,
                     description=self._descriptionEntry,
                     timeSpent=self._stopDateTimeEntry,

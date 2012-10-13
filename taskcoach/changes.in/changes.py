@@ -30,6 +30,8 @@ Release('1.3.20', 'October ??, 2012',
         Bugv2('''On Linux, Ctrl-Z in a text control would always remove the
 whole contents of the text control instead of undoing the recent 
 changes.''', '1267'),
+        Bugv2('''When adding a new item, always start the edit dialog with the 
+description tab raised and focus on the item subject.''', '1263'),
         ],
     ),
 
