@@ -121,7 +121,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
     def onItemActivated(self, event):
         ''' Override default behavior to attach the column clicked on
             to the event so we can use it elsewhere. '''
-        mousePosition = self.GetMainWindow().ScreenToClient(wx.GetMousePosition())
+        mousePosition = self.GetMainWindow().GetChildren()[0].ScreenToClient(wx.GetMousePosition())
         index, dummy_flags, column = self.HitTest(mousePosition)
         if index >= 0:
             # Only get the column name if the hittest returned an item,
