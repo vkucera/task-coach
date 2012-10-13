@@ -47,6 +47,11 @@ class BaseTextCtrl(wx.TextCtrl):
         if operating_system.isGTK():
             self.__initial_value = self.GetValue()
 
+    def AppendText(self, *args, **kwargs):
+        super(BaseTextCtrl, self).AppendText(*args, **kwargs)
+        if operating_system.isGTK():
+            self.__initial_value = self.GetValue()
+
     def SetData(self, data):
         self.__data = data
 
