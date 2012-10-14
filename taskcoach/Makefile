@@ -171,7 +171,7 @@ templates: taskcoachlib/persistence/xml/templates.py
 
 thirdpartymodules:
 	cd thirdparty; tar xzf APScheduler-2.0.3.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty APScheduler-2.0.3/apscheduler
-	cd thirdparty; tar xzf chardet-1.0.1.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty chardet-1.0.1/chardet
+	cd thirdparty; tar xzf chardet-2.1.1.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty chardet-2.1.1/chardet
 	cd thirdparty; tar xzf python-dateutil-1.5.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty python-dateutil-1.5/dateutil
 	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/APScheduler.diff
 
