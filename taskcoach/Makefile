@@ -182,6 +182,8 @@ thirdpartymodules:
 	cd thirdparty; tar xzf wxScheduler-r144.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty wxScheduler/wxScheduler
 	cd thirdparty; tar xzf aui-r72315.tar.gz -C ../taskcoachlib/thirdparty
 	cd thirdparty; tar xzf WMI-1.4.9.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty WMI-1.4.9/wmi.py
+	cd thirdparty; tar xzf pyparsing-1.5.5.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty pyparsing-1.5.5/pyparsing_py2.py
+	mv taskcoachlib/thirdparty/pyparsing_py2.py taskcoachlib/thirdparty/pyparsing.py
 	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/APScheduler.diff
 	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/lockfile.diff
 	cd taskcoachlib/thirdparty/pubsub; patch -p1 < ../../../thirdparty/patches/pubsub.diff
