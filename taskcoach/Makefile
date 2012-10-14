@@ -49,7 +49,7 @@ endif
 revision:
 	echo "revision='$(TCREV)'" > taskcoachlib/meta/revision.py
 
-prepare: icons i18n templates thirdpartymodules
+prepare: thirdpartymodules icons i18n templates
 
 windists: windist winpenpack portableapps sdist_windows
 
@@ -171,7 +171,7 @@ templates: taskcoachlib/persistence/xml/templates.py
 
 thirdpartymodules:
 	tar xzf thirdparty/APScheduler-2.0.2.tgz -C taskcoachlib/thirdparty
-	cd taskcoachlib/thirdparty/APScheduler-2.0.2; patch -p0 < ../../../thirdparty/patches/APScheduler.diff
+	cd taskcoachlib/thirdparty/APScheduler-2.0.2; patch -p1 < ../../../thirdparty/patches/APScheduler.diff
 
 taskcoachlib/gui/icons.py: icons.in/iconmap.py icons.in/nuvola.zip icons.in/splash.png
 	cd icons.in; $(PYTHON) make.py
@@ -205,16 +205,16 @@ changes:
 	$(PYTHON) changes.in/make.py html 7 > website.in/changes.html
 	$(PYTHON) changes.in/make.py html > website.in/all_changes.html
 
-unittests: icons templates
+unittests: thirdpartymodules icons templates
 	cd tests; $(PYTHON) test.py --unittests
 
-integrationtests: icons templates
+integrationtests: thirdpartymodules icons templates
 	cd tests; $(PYTHON) test.py --integrationtests
 
-languagetests: icons i18n
+languagetests: thirdpartymodules icons i18n
 	cd tests; $(PYTHON) test.py --languagetests
 
-releasetests: icons i18n sdist_linux
+releasetests: thirdpartymodules icons i18n sdist_linux
 	cd tests; $(PYTHON) test.py --releasetests
 
 # FIXME: disttests should depend on either windist, deb, rpm or dmg...
