@@ -178,6 +178,7 @@ thirdpartymodules:
 	cd thirdparty; tar xzf lockfile-0.8.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty lockfile-0.8/lockfile.py
 	cd thirdparty; tar xzf PyPubSub-3.1.2.tar.gz --strip-components=2 -C ../taskcoachlib/thirdparty PyPubSub-3.1.2/src/pubsub
 	cd thirdparty; tar xzf SquareMap-1.0.1b3.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty SquareMap-1.0.1b3/squaremap
+	cd thirdparty; tar xzf python-ntlm-40080cff37ab32570f9bb50bad0a46b957409c18.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty python-ntlm/ntlm
 	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/APScheduler.diff
 	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/lockfile.diff
 	cd taskcoachlib/thirdparty/pubsub; patch -p1 < ../../../thirdparty/patches/pubsub.diff
