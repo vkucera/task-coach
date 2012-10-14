@@ -1158,15 +1158,15 @@ class Editor(widgets.Dialog):
     singular_title = 'Subclass responsibility %s'
     plural_title = 'Subclass responsibility'
     
-    def __init__(self, parent, items, settings, container, taskFile, 
+    def __init__(self, parent, items, settings, container, task_file, 
                  *args, **kwargs):
         self._items = items
         self._settings = settings
-        self._taskFile = taskFile
+        self._taskFile = task_file
         self.__items_are_new = kwargs.pop('items_are_new', False)
         column_name = kwargs.pop('columnName', '') 
         self.__call_after = kwargs.get('call_after', wx.CallAfter)
-        super(Editor, self).__init__(parent, self.title(), 
+        super(Editor, self).__init__(parent, self.__title(), 
                                      buttonTypes=wx.ID_CLOSE, *args, **kwargs)
         if not column_name:
             if self._interior.perspective() and hasattr(self._interior, 'GetSelection'):
@@ -1179,9 +1179,9 @@ class Editor(widgets.Dialog):
         patterns.Publisher().registerObserver(self.on_item_removed,
             eventType=container.removeItemEventType(), eventSource=container)
         if len(self._items) == 1:
-            patterns.Publisher().registerObserver(self.onSubjectChanged,
-                                                  eventType=self._items[0].subjectChangedEventType(),
-                                                  eventSource=self._items[0])
+            patterns.Publisher().registerObserver(self.on_subject_changed,
+                eventType=self._items[0].subjectChangedEventType(),
+                eventSource=self._items[0])
         self.Bind(wx.EVT_CLOSE, self.on_close_editor)
 
         # On Mac OS X, the frame opens by default in the top-left
@@ -1195,11 +1195,11 @@ class Editor(widgets.Dialog):
 
         # On Linux this is not needed but doesn't do any harm.
         self.CentreOnParent()
-        self.createUICommands()
-        self._dimensionsTracker = windowdimensionstracker.WindowSizeAndPositionTracker(
+        self.__create_ui_commands()
+        self.__dimensions_tracker = windowdimensionstracker.WindowSizeAndPositionTracker(
             self, settings, self._interior.settings_section())
         
-    def createUICommands(self):
+    def __create_ui_commands(self):
         # FIXME: keyboard shortcuts are hardcoded here, but they can be 
         # changed in the translations
         # FIXME: there are more keyboard shortcuts that don't work in dialogs 
@@ -1210,16 +1210,16 @@ class Editor(widgets.Dialog):
                                      (wx.ACCEL_CMD, ord('E'), new_effort_id)])
         self._interior.SetAcceleratorTable(table)
         # pylint: disable=W0201
-        self.undoCommand = uicommand.EditUndo()
-        self.redoCommand = uicommand.EditRedo()
+        self.__undo_command = uicommand.EditUndo()
+        self.__redo_command = uicommand.EditRedo()
         effort_page = self._interior.getPage('effort') 
         effort_viewer = effort_page.viewer if effort_page else None 
-        self.newEffortCommand = uicommand.EffortNew(viewer=effort_viewer,
+        self.__new_effort_command = uicommand.EffortNew(viewer=effort_viewer,
             taskList=self._taskFile.tasks(), 
             effortList=self._taskFile.efforts(), settings=self._settings)
-        self.undoCommand.bind(self._interior, wx.ID_UNDO)
-        self.redoCommand.bind(self._interior, wx.ID_REDO)
-        self.newEffortCommand.bind(self._interior, new_effort_id)
+        self.__undo_command.bind(self._interior, wx.ID_UNDO)
+        self.__redo_command.bind(self._interior, wx.ID_REDO)
+        self.__new_effort_command.bind(self._interior, new_effort_id)
 
     def createInterior(self):
         return self.EditBookClass(self._panel, self._items, self._taskFile, 
@@ -1229,7 +1229,7 @@ class Editor(widgets.Dialog):
         event.Skip()
         self._interior.close_edit_book()
         patterns.Publisher().removeObserver(self.on_item_removed)
-        patterns.Publisher().removeObserver(self.onSubjectChanged)
+        patterns.Publisher().removeObserver(self.on_subject_changed)
         # On Mac OS X, the text control does not lose focus when
         # destroyed...
         if operating_system.isMac():
@@ -1250,10 +1250,10 @@ class Editor(widgets.Dialog):
                 self.Close()
                 break            
 
-    def onSubjectChanged(self, event):
-        self.SetTitle(self.title())
+    def on_subject_changed(self, event):  # pylint: disable=W0613
+        self.SetTitle(self.__title())
         
-    def title(self):
+    def __title(self):
         return self.plural_title if len(self._items) > 1 else \
                self.singular_title % self._items[0].subject()
     
