@@ -149,7 +149,6 @@ class Application(object):
             Application.start(). ''' 
         self.__init_config(loadSettings)
         self.__init_language()
-        self.__init_printing()
         self.__init_domain_objects()
         self.__init_application()
         from taskcoachlib import gui, persistence
@@ -211,17 +210,6 @@ class Application(object):
             language = 'en_US'
         return language
     
-    @staticmethod    
-    def __init_printing():
-        ''' Prepare for printing. '''
-        # On Jolicloud, printing crashes unless we do this:
-        if operating_system.isGTK():
-            try:
-                import gtk  # pylint: disable=F0401
-                gtk.remove_log_handlers()
-            except ImportError:
-                pass
-
     def __init_domain_objects(self):
         ''' Provide relevant domain objects with access to the settings. '''
         from taskcoachlib.domain import task
