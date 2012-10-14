@@ -180,6 +180,7 @@ thirdpartymodules:
 	cd thirdparty; tar xzf SquareMap-1.0.1b3.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty SquareMap-1.0.1b3/squaremap
 	cd thirdparty; tar xzf python-ntlm-40080cff37ab32570f9bb50bad0a46b957409c18.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty python-ntlm/ntlm
 	cd thirdparty; tar xzf wxScheduler-r144.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty wxScheduler/wxScheduler
+	cd thirdparty; tar xzf aui-r72315.tar.gz -C ../taskcoachlib/thirdparty
 	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/APScheduler.diff
 	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/lockfile.diff
 	cd taskcoachlib/thirdparty/pubsub; patch -p1 < ../../../thirdparty/patches/pubsub.diff
