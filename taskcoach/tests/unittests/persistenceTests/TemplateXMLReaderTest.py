@@ -18,13 +18,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import StringIO
 import test
-from taskcoachlib import persistence
+from taskcoachlib import persistence, config
+from taskcoachlib.domain import task
 
 
 class TemplateXMLReaderTestCase(test.TestCase):
-    tskversion = 24
-    
+    tskversion = 33
+
     def setUp(self):
+        super(TemplateXMLReaderTestCase, self).setUp()
+        task.Task.settings = config.Settings(load=False)
+
         self.fd = StringIO.StringIO()
         self.fd.name = 'testfile.tsk'
         self.reader = persistence.TemplateXMLReader(self.fd)
@@ -42,3 +46,35 @@ class TemplateXMLReaderTestCase(test.TestCase):
     def testSubject(self):
         template = self.writeAndRead('<tasks><task status="0" subject="Subject"/></tasks>')
         self.assertEqual('Subject', template.subject())    
+
+    def testPlannedStartDateTmpl(self):
+        template = self.writeAndRead('<tasks><task status="0" subject="Subject" startdatetmpl="11:00 AM today" /></tasks>')
+        self.assertEqual(template.plannedstartdatetmpl, '11:00 AM today')
+
+    def testPlannedStartDateTmplEmpty(self):
+        template = self.writeAndRead('<tasks><task status="0" subject="Subject" /></tasks>')
+        self.assertEqual(template.plannedstartdatetmpl, None)
+
+    def testDueDateTmpl(self):
+        template = self.writeAndRead('<tasks><task status="0" subject="Subject" duedatetmpl="11:00 AM today" /></tasks>')
+        self.assertEqual(template.duedatetmpl, '11:00 AM today')
+
+    def testDueDateTmplEmpty(self):
+        template = self.writeAndRead('<tasks><task status="0" subject="Subject" /></tasks>')
+        self.assertEqual(template.duedatetmpl, None)
+
+    def testCompletionDate(self):
+        template = self.writeAndRead('<tasks><task status="0" subject="Subject" completiondatetmpl="11:00 AM today" /></tasks>')
+        self.assertEqual(template.completiondatetmpl, '11:00 AM today')
+
+    def testCompletionDateTmplEmpty(self):
+        template = self.writeAndRead('<tasks><task status="0" subject="Subject" /></tasks>')
+        self.assertEqual(template.completiondatetmpl, None)
+
+    def testReminderTmpl(self):
+        template = self.writeAndRead('<tasks><task status="0" subject="Subject" remindertmpl="11:00 AM today" /></tasks>')
+        self.assertEqual(template.remindertmpl, '11:00 AM today')
+
+    def testReminderTmplEmpty(self):
+        template = self.writeAndRead('<tasks><task status="0" subject="Subject" /></tasks>')
+        self.assertEqual(template.remindertmpl, None)

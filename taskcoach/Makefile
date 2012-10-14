@@ -49,7 +49,7 @@ endif
 revision:
 	echo "revision='$(TCREV)'" > taskcoachlib/meta/revision.py
 
-prepare: icons i18n templates
+prepare: thirdpartymodules icons i18n templates
 
 windists: windist winpenpack portableapps sdist_windows
 
@@ -169,6 +169,34 @@ icons: taskcoachlib/gui/icons.py
 
 templates: taskcoachlib/persistence/xml/templates.py
 
+thirdpartymodules:
+	cd thirdparty; tar xzf APScheduler-2.0.3.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty APScheduler-2.0.3/apscheduler
+	cd thirdparty; tar xzf chardet-2.1.1.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty chardet-2.1.1/chardet
+	cd thirdparty; tar xzf python-dateutil-1.5.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty python-dateutil-1.5/dateutil
+	cd thirdparty; tar xzf desktop-0.4.1.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty desktop-0.4.1/desktop
+	cd thirdparty; tar xzf keyring-0.9.2.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty keyring-0.9.2/keyring
+	cd thirdparty; tar xzf lockfile-0.8.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty lockfile-0.8/lockfile.py
+	cd thirdparty; tar xzf PyPubSub-3.1.2.tar.gz --strip-components=2 -C ../taskcoachlib/thirdparty PyPubSub-3.1.2/src/pubsub
+	cd thirdparty; tar xzf SquareMap-1.0.1b3.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty SquareMap-1.0.1b3/squaremap
+	cd thirdparty; tar xzf python-ntlm-40080cff37ab32570f9bb50bad0a46b957409c18.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty python-ntlm/ntlm
+	cd thirdparty; tar xzf wxScheduler-r144.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty wxScheduler/wxScheduler
+	cd thirdparty; tar xzf aui-r72315.tar.gz -C ../taskcoachlib/thirdparty
+	cd thirdparty; tar xzf WMI-1.4.9.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty WMI-1.4.9/wmi.py
+	cd thirdparty; tar xzf pyparsing-1.5.5.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty pyparsing-1.5.5/pyparsing_py2.py
+	mv taskcoachlib/thirdparty/pyparsing_py2.py taskcoachlib/thirdparty/pyparsing.py
+	cd thirdparty; tar xzf pybonjour-1.1.1.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty pybonjour-1.1.1/pybonjour.py
+	cd thirdparty; tar xzf SendKeys-ctypes-0.2.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty SendKeys-ctypes-0.2/SendKeys.py
+	cd thirdparty; tar xzf SendKeys-ctypes-0.2.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty SendKeys-ctypes-0.2/_sendkeys.py
+	cd thirdparty; tar xzf agw-r70845.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty agw/customtreectrl.py
+	cd thirdparty; tar xzf agw-r70819.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty agw/hypertreelist.py
+	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/APScheduler.diff
+	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/lockfile.diff
+	cd taskcoachlib/thirdparty/pubsub; patch -p1 < ../../../thirdparty/patches/pubsub.diff
+	cd taskcoachlib/thirdparty/squaremap; patch -p1 < ../../../thirdparty/patches/squaremap.diff
+	cd taskcoachlib/thirdparty; patch -p0 < ../../thirdparty/patches/customtreectrl.diff
+	cd taskcoachlib/thirdparty; patch -p0 < ../../thirdparty/patches/hypertreelist.diff
+	$(PYTHON) fixinit.py
+
 taskcoachlib/gui/icons.py: icons.in/iconmap.py icons.in/nuvola.zip icons.in/splash.png
 	cd icons.in; $(PYTHON) make.py
 
@@ -201,16 +229,16 @@ changes:
 	$(PYTHON) changes.in/make.py html 7 > website.in/changes.html
 	$(PYTHON) changes.in/make.py html > website.in/all_changes.html
 
-unittests: icons templates
+unittests: thirdpartymodules icons templates
 	cd tests; $(PYTHON) test.py --unittests
 
-integrationtests: icons templates
+integrationtests: thirdpartymodules icons templates
 	cd tests; $(PYTHON) test.py --integrationtests
 
-languagetests: icons i18n
+languagetests: thirdpartymodules icons i18n
 	cd tests; $(PYTHON) test.py --languagetests
 
-releasetests: icons i18n sdist_linux
+releasetests: thirdpartymodules icons i18n sdist_linux
 	cd tests; $(PYTHON) test.py --releasetests
 
 # FIXME: disttests should depend on either windist, deb, rpm or dmg...

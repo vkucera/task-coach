@@ -602,13 +602,13 @@ class TemplateXMLReader(XMLReader):
                     value = task_node.attrib[template_name]
                 attrs[new_name] = value
                 task_node.attrib[new_name] = str(nlTimeExpression.parseString(value).calculatedTime)
-            else:
+            elif new_name not in attrs:
                 attrs[new_name] = None
         if 'subject' in task_node.attrib:
             task_node.attrib['subject'] = translate(task_node.attrib['subject'])
         parsed_task = super(TemplateXMLReader, self)._parse_task_node(task_node)
         for name, value in attrs.items():
-            setattr(parsed_task, template_name, value)
+            setattr(parsed_task, name + 'tmpl', value)
         return parsed_task
 
     @staticmethod

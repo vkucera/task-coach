@@ -44,7 +44,7 @@ class App(application.Application):
     def __init__(self, args=None): # pylint: disable=W0231
         self._options = None
         self._args = args or []
-        self.wxApp = MockWxApp()
+        self._Application__wx_app = MockWxApp()
         self.init()
         self.sessionMonitor = None
 

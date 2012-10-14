@@ -32,11 +32,11 @@ class MockViewer(wx.Frame):
 
 
 class MainWindowUnderTest(gui.MainWindow):
-    def createWindowComponents(self):
+    def _create_window_components(self):
         # Create only the window components we really need for the tests
-        self.createViewerContainer()
+        self._create_viewer_container()
         self.viewer.addViewer(MockViewer(None))
-        self.createStatusBar()
+        self._create_status_bar()
     
 
 class DummyIOController(object):
