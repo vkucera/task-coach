@@ -26,11 +26,6 @@ diff -r -U 4 APScheduler-2.0.3/apscheduler/job.py APScheduler-2.0.3-taskcoach/ap
              raise ValueError('max_runs must be a positive value')
          if max_instances <= 0:
              raise ValueError('max_instances must be a positive value')
-diff -r -U 4 APScheduler-2.0.3/apscheduler/jobstores/__init__.py APScheduler-2.0.3-taskcoach/apscheduler/jobstores/__init__.py
---- APScheduler-2.0.3/apscheduler/jobstores/__init__.py	2012-04-02 10:26:54.000000000 +0200
-+++ APScheduler-2.0.3-taskcoach/apscheduler/jobstores/__init__.py	2012-10-14 12:36:26.000000000 +0200
-@@ -0,0 +1 @@
-+# Make this a package.
 diff -r -U 4 APScheduler-2.0.3/apscheduler/scheduler.py APScheduler-2.0.3-taskcoach/apscheduler/scheduler.py
 --- APScheduler-2.0.3/apscheduler/scheduler.py	2012-04-02 10:26:54.000000000 +0200
 +++ APScheduler-2.0.3-taskcoach/apscheduler/scheduler.py	2012-10-14 12:36:26.000000000 +0200
