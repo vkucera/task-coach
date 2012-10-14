@@ -16,7 +16,16 @@ Name: python-ntlm
 Author: Ben Dyer <ben.dyer@taguchimail.com>
 Version: no version number
 Date: 2011-06-09
-Licence: GPL v3
+License: GPL v3
 Source: https://github.com/bendyer/python-ntlm
 Copied on: 2012-07-31
+Changes for Task Coach: none
+
+Component: SendKeys-ctypes
+Name: SendKeys-ctypes
+Author: Ollie Rutherfurd <oliver@rutherfurd.net>, Igor S. Mandrigin, Agnitum Ltd.
+Version: 0.2
+License: Python license
+Source: http://code.google.com/p/sendkeys-ctypes/
+Copied on: 2012-10-14
 Changes for Task Coach: none
