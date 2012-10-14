@@ -49,7 +49,7 @@ endif
 revision:
 	echo "revision='$(TCREV)'" > taskcoachlib/meta/revision.py
 
-prepare: icons i18n templates
+prepare: icons i18n templates thirdpartymodules
 
 windists: windist winpenpack portableapps sdist_windows
 
@@ -168,6 +168,10 @@ portableapps: py2exe
 icons: taskcoachlib/gui/icons.py
 
 templates: taskcoachlib/persistence/xml/templates.py
+
+thirdpartymodules:
+	tar xzf thirdparty/APScheduler-2.0.2.tgz -C taskcoachlib/thirdparty
+	cd taskcoachlib/thirdparty/APScheduler-2.0.2; patch -p0 < ../../../thirdparty/patches/APScheduler.diff
 
 taskcoachlib/gui/icons.py: icons.in/iconmap.py icons.in/nuvola.zip icons.in/splash.png
 	cd icons.in; $(PYTHON) make.py
