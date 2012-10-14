@@ -903,6 +903,13 @@ class ColumnPopupMenu(ColumnPopupMenuMixin, Menu):
         super(ColumnPopupMenu, self).__init__(window)
         wx.CallAfter(self.appendUICommands, *self.getUICommands())
 
+    def appendUICommands(self, *args, **kwargs):
+        # Prepare for PyDeadObjectError since we're called from wx.CallAfter
+        try:
+            super(ColumnPopupMenu, self).appendUICommands(*args, **kwargs)
+        except wx.PyDeadObjectError:
+            pass
+
 
 class EffortViewerColumnPopupMenu(ColumnPopupMenuMixin,
                                   DynamicMenuThatGetsUICommandsFromViewer):

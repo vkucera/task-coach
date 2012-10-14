@@ -21,8 +21,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
-            
-Release('1.3.19', 'September ??, 2012',
+
+Release('1.3.20', 'October ??, 2012',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bugv2('''Fix an encoding problem on Windows non-European locales''',
+              '1306'),
+        Bugv2('''On Linux, Ctrl-Z in a text control would always remove the
+whole contents of the text control instead of undoing the recent 
+changes.''', '1267'),
+        Bugv2('''When adding a new item, always start the edit dialog with the 
+description tab raised and focus on the item subject.''', '1263'),
+        ],
+    ),
+
+Release('1.3.19', 'October 7, 2012',
     summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
         Bug('''Format times in the calendar view according to the user's
@@ -47,12 +60,16 @@ also the changed feature below.''', '3561465', '3564794'),
 time for future reminders" check box was checked in the reminder dialog.''',
 '3567139'),
         Bug('''The task viewer would not refresh at midnight.'''),
+        Bugv2('''On Windows with some locale settings, Task Coach would crash
+trying to render dates.''', '1306'),
         ],
     featuresAdded=[
         Feature('''In addition to specifying a maximum number of recurrences,
 it is now also possible to specify an end date for recurrence. If both an end
 date and a maximum number of recurrences are specified, recurrence stops when
 the first of both conditions is met.'''),
+        Feature('''Put a link to our IndieGoGo campaign on the toolbar of the
+main window. The link will disappear when the campaign is over.'''),
         ],
     featuresChanged=[
         Feature('''Task Coach no longer enforces that the dates of child tasks

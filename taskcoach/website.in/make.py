@@ -336,15 +336,31 @@ def download_footer(ads=ads):
             </div>'''
 
 def download_table(**kwargs):
-    filename = kwargs['download_url'].split('/')[-1]%meta.metaDict
+    filename = kwargs['download_urls'].values()[0].split('/')[-1]%meta.metaDict
     md5 = md5digests.get(filename, '')
     kwargs['rows'] = 5 if md5 else 4
     kwargs['md5'] = '\n            <dt>MD5 digest</dt><dd>%s.</dd>'%md5 if md5 else ''
     # Deal with platforms that are not a name but 'all platforms':
-    platform = kwargs['platform']
     if 'prerequisites' not in kwargs:
         kwargs['prerequisites'] = 'None'
-    kwargs['platform_versions'] = 'Platforms' if platform == 'all platforms' else platform + ' versions'
+    if 'action' not in kwargs:
+        kwargs['action'] = 'Download'
+    if 'platform' in kwargs:
+        download_url_template = '%(action)s <a href="%(url)s">%(package_type)s</a> for %(platform)s from %(source)s'
+        platform = kwargs['platform']
+        kwargs['platform_versions'] = 'Platforms' if platform == 'all platforms' else platform + ' versions'
+    else:
+        download_url_template = '%(action)s <a href="%(url)s">%(package_type)s</a> from %(source)s'
+        kwargs['platform_versions'] = 'Platforms' 
+    urls = []
+    for source, url in kwargs['download_urls'].items():
+        parameters = kwargs.copy() 
+        parameters['url'] = url
+        parameters['source'] = source
+        urls.append((source, download_url_template % parameters))
+    urls.sort()
+    urls = [url[1] for url in urls]
+    kwargs['download_urls'] = '<br>\n'.join(urls)
     return '''        <p>
           <table width="100%%%%" class="table table-striped">
             <tbody>
@@ -354,7 +370,7 @@ def download_table(**kwargs):
               </td>
               <td>
                 <h3>
-                  <a href="%(download_url)s">%(package_type)s</a> for %(platform)s
+                  %(download_urls)s
                 </h3>
               </td>
             </tr>
@@ -367,41 +383,45 @@ def download_table(**kwargs):
         </p>'''%kwargs
 
 
-windowsOptions = dict(platform='Microsoft Windows',
-                      platform_lower='windows',
-                      platform_versions_supported='Windows 2000, XP, Vista, Windows 7, Windows 8')
+windowsOptions = dict(platform_lower='windows',
+    platform_versions_supported='Windows 2000, XP, Vista, Windows 7, Windows 8')
+
+bestsoft_url = 'http://www.downloadbestsoft.com/Task-Coach.html'
 
 windowsInstaller = download_table(image='windows',
-                                  download_url='%(dist_download_prefix)s/%(filename)s-%(version)s-win32.exe',
-                                  package_type='%(name)s Installer',
-                                  installation='Run the installer; it will guide you through the installation process',
-                                  **windowsOptions)
+    download_urls=dict(Sourceforge='%(dist_download_prefix)s/%(filename)s-%(version)s-win32.exe',
+                       DownloadBestSoft=bestsoft_url),
+    package_type='%(name)s Installer',
+    installation='Run the installer; it will guide you through the installation process',
+    **windowsOptions)
  
 windowsPortableApp = download_table(image='portableApps',
-                                    download_url='%(dist_download_prefix)s/%(filename)sPortable_%(version)s.paf.exe',
-                                    package_type='%(name)s Portable (PortableApps.com Format)',
-                                    installation='Run the installer; it will guide you through the installation process',
-                                    **windowsOptions)
+    download_urls=dict(Sourceforge='%(dist_download_prefix)s/%(filename)sPortable_%(version)s.paf.exe',
+                       DownloadBestSoft=bestsoft_url),
+    package_type='%(name)s in PortableApps Format',
+    installation='Run the installer; it will guide you through the installation process',
+    **windowsOptions)
 
 windowsPenPack = download_table(image='winPenPack',
-                                download_url='%(dist_download_prefix)s/X-%(filename)s_%(version)s_rev1.zip',
-                                package_type='%(name)s Portable (winPenPack Format)',
-                                installation='Unzip the archive contents in the location where you want %(name)s to be installed',
-                                **windowsOptions) 
+    download_urls=dict(Sourceforge='%(dist_download_prefix)s/X-%(filename)s_%(version)s_rev1.zip',
+                       DownloadBestSoft=bestsoft_url),
+    package_type='%(name)s in winPenPack Format',
+    installation='Unzip the archive contents in the location where you want %(name)s to be installed',
+    **windowsOptions) 
   
 sep = '\n'
 
-pages['download_for_windows'] = sep.join([download_header(platform='Microsoft Windows',
-                                                          release='%(version)s'), 
+pages['download_for_windows'] = sep.join([download_header(platform='Microsoft Windows', 
+                                          release='%(version)s'), 
                                           windowsInstaller, windowsPortableApp, 
                                           windowsPenPack,
                                           download_footer()]) 
 
 
 macDMG = download_table(image='mac',
-                        download_url='%(dist_download_prefix)s/%(filename)s-%(version)s.dmg',
+                        download_urls=dict(Sourceforge='%(dist_download_prefix)s/%(filename)s-%(version)s.dmg'),
                         package_type='Disk image (dmg)',
-                        platform='Mac OS X', platform_lower='macosx',
+                        platform_lower='macosx',
                         platform_versions_supported='Mac OS X Tiger/10.4 (Universal) and newer',
                         installation='Double click the package and drop the %(name)s application in your Applications folder')
 
@@ -412,7 +432,7 @@ pages['download_for_mac'] = sep.join([download_header(platform='Mac OS X',
 
 
 debian = download_table(image='debian', 
-                        download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1.deb',
+                        download_urls=dict(Sourceforge='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1.deb'),
                         package_type='Debian package (deb)',
                         platform='Debian', platform_lower='debian',
                         platform_versions_supported='Debian GNU/Linux 6.0 ("squeeze") and newer',
@@ -424,7 +444,7 @@ debian = download_table(image='debian',
                         installation='Double click the package to start the installer')
 
 ubuntu = download_table(image='ubuntu',
-                        download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1.deb',
+                        download_urls=dict(Sourceforge='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1.deb'),
                         package_type='Debian package (deb)',
                         platform='Ubuntu', platform_lower='ubuntu',
                         platform_versions_supported='Ubuntu 10.04 LTS ("Lucid Lynx") and newer',
@@ -432,8 +452,8 @@ ubuntu = download_table(image='ubuntu',
                         installation='''Double click the package to start the 
 installer. You can also use the PPA (<a href="https://answers.launchpad.net/taskcoach/+faq/1615">see the FAQ</a>)''')
 
-gentoo = download_table(image='gentoo',
-                        download_url='http://packages.gentoo.org/package/app-office/taskcoach',
+gentoo = download_table(image='gentoo', action='Install',
+                        download_urls={'Gentoo.org': 'http://packages.gentoo.org/package/app-office/taskcoach'},
                         package_type='Ebuild',
                         platform='Gentoo', platform_lower='gentoo',
                         platform_versions_supported='Gentoo 2008.0 and newer',
@@ -441,7 +461,7 @@ gentoo = download_table(image='gentoo',
                         installation='%(name)s is included in Gentoo Portage. Install with emerge: <tt>$ emerge taskcoach</tt>')
 
 opensuse = download_table(image='opensuse',
-                          download_url='%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.opensuse.i386.rpm',
+                          download_urls=dict(Sourceforge='%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.opensuse.i386.rpm'),
                           package_type='RPM package',
                           platform='OpenSuse', platform_lower='opensuse',
                           platform_versions_supported='OpenSuse 11.4 and newer',
@@ -449,15 +469,15 @@ opensuse = download_table(image='opensuse',
                           installation='Double click the package to start the installer')
 
 fedora14 = download_table(image='fedora',
-                          download_url='%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.fc14.noarch.rpm',
+                          download_urls=dict(Sourceforge='%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.fc14.noarch.rpm'),
                           package_type='RPM package',
                           platform='Fedora', platform_lower='fedora',
                           platform_versions_supported='Fedora 14 and newer',
                           prerequisites=prerequisites27,
                           installation='<code>sudo yum install --nogpgcheck %(filename_lower)s-%(version)s-1.fc*.noarch.rpm</code>')
 
-archlinux = download_table(image='archlinux',
-                           download_url='http://aur.archlinux.org/packages.php?ID=6005',
+archlinux = download_table(image='archlinux', action='Install', 
+                           download_urls={'ArchLinux.org': 'http://aur.archlinux.org/packages.php?ID=6005'},
                            package_type='Source tar archive',
                            platform='Arch', platform_lower='arch',
                            platform_versions_supported='Not applicable (Arch uses a rolling release)',
@@ -468,7 +488,7 @@ User Repository. See the
 guidelines</a>''')
 
 redhat_el4and5 = download_table(image='redhat',
-                                download_url='%(dist_download_prefix)s/%(filename)s-%(version)s.tar.gz',
+                                download_urls=dict(Sourceforge='%(dist_download_prefix)s/%(filename)s-%(version)s.tar.gz'),
                                 package_type='Source tar archive',
                                 platform='Red Hat Enterprise Linux', platform_lower='redhat',
                                 platform_versions_supported='Red Hat Enterprise Linux 4 and 5',
@@ -478,7 +498,7 @@ redhat_el4and5 = download_table(image='redhat',
 Max Baker's blog</a>''')
                             
 linux = download_table(image='linux',
-                       download_url='%(dist_download_prefix)s/%(filename)s-%(version)s-1.noarch.rpm',
+                       download_urls=dict(Sourceforge='%(dist_download_prefix)s/%(filename)s-%(version)s-1.noarch.rpm'),
                        package_type='RPM package',
                        platform='Linux', platform_lower='rpm',
                        platform_versions_supported='All Linux versions that support RPM and the prerequisites',
@@ -492,9 +512,9 @@ pages['download_for_linux'] = sep.join([download_header(platform='Linux',
                                         linux, download_footer()])
 
 
-freeBSD = download_table(image='freebsd',
-                        download_url='http://www.freebsd.org/cgi/cvsweb.cgi/ports/deskutils/taskcoach/',
-                        package_type='Port',
+freeBSD = download_table(image='freebsd', action='Install', 
+                        download_urls={'FreeBSD.org': 'http://www.freebsd.org/cgi/cvsweb.cgi/ports/deskutils/taskcoach/'},
+                        package_type='%(name)s Port',
                         platform='FreeBSD', platform_lower='freebsd',
                         platform_versions_supported='FreeBSD 8.2 and newer',
                         installation='Update your ports collection and then run: <code>cd /usr/ports/deskutils/taskcoach &amp;&amp; make install clean</code>')
@@ -505,8 +525,8 @@ pages['download_for_bsd'] = sep.join([download_header(platform='FreeBSD',
                                                       download_footer(one_ad)])
 
 
-iphone = download_table(image='appstore',
-                        download_url='http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=311403563&mt=8',
+iphone = download_table(image='appstore', action='Install',
+                        download_urls=dict(iTunes='http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=311403563&mt=8'),
                         package_type='%(name)s App',
                         platform='iPhone and iPod Touch', platform_lower='appstore',
                         platform_versions_supported='iPhone or iPod Touch with iPhone OS 2.2.1 or newer',
@@ -524,26 +544,26 @@ sourceOptions = dict(image='source', prerequisites=prerequisites,
               installed, you may need to force old files to be overwritten: 
               <code>python setup.py install --force</code>''')
 
-source_rpm = download_table(download_url='%(dist_download_prefix)s/%(filename)s-%(version)s-1.src.rpm',
+source_rpm = download_table(download_urls=dict(Sourceforge='%(dist_download_prefix)s/%(filename)s-%(version)s-1.src.rpm'),
                             package_type='Source RPM package',
                             platform='Linux', platform_lower='source_rpm',
                             platform_versions_supported='All Linux platforms that support RPM and the prerequisites',
                             **sourceOptions)
 
-source_tgz = download_table(download_url='%(dist_download_prefix)s/%(filename)s-%(version)s.tar.gz',
+source_tgz = download_table(download_urls=dict(Sourceforge='%(dist_download_prefix)s/%(filename)s-%(version)s.tar.gz'),
                             package_type='Source tar archive',
                             platform='Linux', platform_lower='source_gz',
                             platform_versions_supported='All Linux platforms that support the prerequisites',
                             **sourceOptions)
 
-source_zip = download_table(download_url='%(dist_download_prefix)s/%(filename)s-%(version)s.zip',
+source_zip = download_table(download_urls=dict(Sourceforge='%(dist_download_prefix)s/%(filename)s-%(version)s.zip'),
                             package_type='Source zip archive',
                             platform='Windows', platform_lower='source_zip',
                             platform_versions_supported='All Windows platforms that support the prerequisites',
                             **sourceOptions)
 
 subversion = download_table(image='sources',
-                            download_url='http://sourceforge.net/projects/taskcoach/develop',
+                            download_urls=dict(Sourceforge='http://sourceforge.net/projects/taskcoach/develop'),
                             package_type='Sources from Subversion',
                             platform='all platforms', platform_lower='subversion',
                             platform_versions_supported='All platforms that support the prerequisites',
@@ -565,13 +585,13 @@ buildbotOptions = dict(platform='all platforms',
                        installation='See the different download sections')
 
 latest_bugfixes = download_table(image='bug',
-                                 download_url='http://www.fraca7.net/TaskCoach-packages/latest_bugfixes.py',
+                                 download_urls=dict(Buildbot='http://www.fraca7.net/TaskCoach-packages/latest_bugfixes.py'),
                                  package_type='Latest bugfixes',
                                  platform_lower='latest_bugfixes',
                                  **buildbotOptions)
 
 latest_features = download_table(image='latest_features', 
-                                 download_url='http://www.fraca7.net/TaskCoach-packages/latest_features.py',
+                                 download_urls=dict(Buildbot='http://www.fraca7.net/TaskCoach-packages/latest_features.py'),
                                  package_type='Latest features',
                                  platform_lower='latest_features',
                                  **buildbotOptions)
@@ -586,7 +606,7 @@ pages['download_daily_build'] = sep.join([download_header(warning=warning),
                                           download_footer(one_ad)])
 
 old_releases = download_table(image='archive',
-                              download_url='http://sourceforge.net/projects/taskcoach/files/taskcoach/',
+                              download_urls=dict(Sourceforge='http://sourceforge.net/projects/taskcoach/files/taskcoach/'),
                               package_type='Old releases',
                               platform='all platforms', platform_lower='old_releases',
                               platform_versions_supported='See the different download sections',

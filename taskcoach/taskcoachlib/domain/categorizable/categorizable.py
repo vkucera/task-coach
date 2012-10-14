@@ -161,8 +161,12 @@ class CategorizableCompositeObject(base.CompositeObject):
             multiple categories, the color is mixed. If a categorizable 
             composite object has no foreground color of its own, it uses its 
             parent's foreground color. '''
-        colors = [category.foregroundColor(recursive=True) for category in self.categories()]
-        return color.ColorMixer.mix(colors)
+        colors = [category.foregroundColor(recursive=True) \
+                  for category in self.categories()]
+        if not colors and self.parent():
+            return self.parent()._categoryForegroundColor()
+        else:
+            return color.ColorMixer.mix(colors)
 
     def _categoryBackgroundColor(self):
         ''' If a categorizable object belongs to a category that has a 
@@ -171,8 +175,12 @@ class CategorizableCompositeObject(base.CompositeObject):
             multiple categories, the color is mixed. If a categorizable 
             composite object has no background color of its own, it uses its 
             parent's background color. '''
-        colors = [category.backgroundColor(recursive=True) for category in self.categories()]
-        return color.ColorMixer.mix(colors)
+        colors = [category.backgroundColor(recursive=True) \
+                  for category in self.categories()]
+        if not colors and self.parent():
+            return self.parent()._categoryBackgroundColor()
+        else:
+            return color.ColorMixer.mix(colors)
     
     def font(self, recursive=False):
         myFont = super(CategorizableCompositeObject, self).font()
@@ -190,8 +198,12 @@ class CategorizableCompositeObject(base.CompositeObject):
             When a categorizable object belongs to multiple categories, the 
             font is mixed. If a categorizable composite object has no font of 
             its own, it uses its parent's font. '''
-        fonts = [category.font(recursive=True) for category in self.categories()]
-        return font.FontMixer.mix(*fonts) # pylint: disable=W0142
+        fonts = [category.font(recursive=True) \
+                 for category in self.categories()]
+        if not fonts and self.parent():
+            return self.parent()._categoryFont()
+        else:
+            return font.FontMixer.mix(*fonts) # pylint: disable=W0142
 
     def icon(self, recursive=False):
         icon = super(CategorizableCompositeObject, self).icon()
@@ -200,11 +212,15 @@ class CategorizableCompositeObject(base.CompositeObject):
         return icon
 
     def categoryIcon(self):
+        icon = ''
         for category in self.categories():
             icon = category.icon(recursive=True)
             if icon:
                 return icon
-        return ''
+        if self.parent():
+            return self.parent().categoryIcon()
+        else:
+            return ''
 
     def selectedIcon(self, recursive=False):
         icon = super(CategorizableCompositeObject, self).selectedIcon()
@@ -213,11 +229,15 @@ class CategorizableCompositeObject(base.CompositeObject):
         return icon
 
     def categorySelectedIcon(self):
+        icon = ''
         for category in self.categories():
             icon = category.selectedIcon(recursive=True)
             if icon:
                 return icon
-        return ''
+        if self.parent():
+            return self.parent().categorySelectedIcon()
+        else:
+            return ''
         
     @classmethod
     def categorySubjectChangedEventType(class_):

@@ -39,7 +39,15 @@ class ManifestTest(test.TestCase):
         return missing
 
     def testAllSourcePyFilesAreInManifest(self):
-        self.assertEqual([], self.missingPyFiles('taskcoachlib'))
+        missing_files = self.missingPyFiles('taskcoachlib')
+        # The pubsub2 folder in the pubsub package has no __init__.py file
+        # so it doesn't get included in the Manifest. Since we're using v3
+        # of the pubsub protocol, that's no problem and we ignore the missing
+        # pubsub2 files.
+        for filename in missing_files[:]:
+            if 'pubsub/pubsub2' in filename:
+                missing_files.remove(filename)
+        self.assertEqual([], missing_files)
 
     def testAllUnittestPyFilesAreInManifest(self):
         self.assertEqual([], self.missingPyFiles('tests', 'unittests'))
@@ -49,3 +57,4 @@ class ManifestTest(test.TestCase):
 
     def testAllIntegrationtestPyFilesAreInManifest(self):
         self.assertEqual([], self.missingPyFiles('tests', 'integrationtests'))
+

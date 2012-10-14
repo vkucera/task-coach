@@ -27,9 +27,6 @@ class ChangeHistoryTestCase(test.TestCase):
     def setUp(self):
         self.latestRelease = changes.releases[0]
         
-    def testRevisionIsRelease(self):
-        self.assertEqual(meta.data.revision, 'release')
-
     def testLatestReleaseNumberEqualsMetaDataReleaseNumber(self):
         self.assertEqual(self.latestRelease.number, meta.data.version)
 

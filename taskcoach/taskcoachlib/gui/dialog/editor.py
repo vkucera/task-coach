@@ -48,28 +48,29 @@ class Page(patterns.Observer, widgets.BookPage):
         ''' A mapping of names of columns to entries on this editor page. '''
         return dict()
     
-    def setFocusOnEntry(self, columnName):
+    def setFocusOnEntry(self, column_name):
         try:
-            theEntry = self.entries()[columnName]
+            the_entry = self.entries()[column_name]
         except KeyError:
-            theEntry = self.entries()['firstEntry']
-        self.__setSelectionAndFocus(theEntry)
+            the_entry = self.entries()['firstEntry']
+        self.__set_selection_and_focus(the_entry)
 
-    def __setSelectionAndFocus(self, theEntry):
+    def __set_selection_and_focus(self, the_entry):
         ''' If the entry has selectable text, select the text so that the user
             can start typing over it immediately, except on Linux because it
             overwrites the X clipboard. '''
         if not operating_system.isGTK():
-            theEntry.SetFocus()
+            the_entry.SetFocus()
             try:
-                if operating_system.isWindows():
+                if operating_system.isWindows() and \
+                    isinstance(the_entry, wx.TextCtrl):
                     # This ensures that if the TextCtrl value is more than can 
                     # be displayed, it will display the start instead of the 
                     # end:
                     from taskcoachlib.thirdparty import SendKeys  # pylint: disable=W0404
                     SendKeys.SendKeys('{END}+{HOME}')
                 else:
-                    theEntry.SetSelection(-1, -1)
+                    the_entry.SetSelection(-1, -1)  # Select all text
             except (AttributeError, TypeError):
                 pass  # Not a TextCtrl
         
@@ -99,28 +100,32 @@ class SubjectPage(Page):
         
     def addSubjectEntry(self):
         # pylint: disable=W0201
-        currentSubject = self.items[0].subject() if len(self.items) == 1 else _('Edit to change all subjects')
-        self._subjectEntry = widgets.SingleLineTextCtrl(self, currentSubject)
+        current_subject = self.items[0].subject() if len(self.items) == 1 \
+                          else _('Edit to change all subjects')
+        self._subjectEntry = widgets.SingleLineTextCtrl(self, current_subject)
         self._subjectSync = attributesync.AttributeSync('subject', 
-            self._subjectEntry, currentSubject, self.items,
+            self._subjectEntry, current_subject, self.items,
             command.EditSubjectCommand, wx.EVT_KILL_FOCUS,
             self.items[0].subjectChangedEventType())
         self.addEntry(_('Subject'), self._subjectEntry)
 
     def addDescriptionEntry(self):
         # pylint: disable=W0201
-        def combinedDescription(items):
+        def combined_description(items):
             return u'[%s]\n\n' % _('Edit to change all descriptions') + \
                 '\n\n'.join(item.description() for item in items)
 
-        currentDescription = self.items[0].description() if len(self.items) == 1 else combinedDescription(self.items)
-        self._descriptionEntry = widgets.MultiLineTextCtrl(self, currentDescription)
+        current_description = self.items[0].description() \
+            if len(self.items) == 1 else combined_description(self.items)
+        self._descriptionEntry = widgets.MultiLineTextCtrl(self, 
+                                                           current_description)
         native_info_string = self._settings.get('editor', 'descriptionfont')
-        font = wx.FontFromNativeInfoString(native_info_string) if native_info_string else None
+        font = wx.FontFromNativeInfoString(native_info_string) \
+               if native_info_string else None
         if font:
             self._descriptionEntry.SetFont(font)
         self._descriptionSync = attributesync.AttributeSync('description', 
-            self._descriptionEntry, currentDescription, self.items,
+            self._descriptionEntry, current_description, self.items,
             command.EditDescriptionCommand, wx.EVT_KILL_FOCUS,
             self.items[0].descriptionChangedEventType())
         self.addEntry(_('Description'), self._descriptionEntry, growable=True)
@@ -138,11 +143,11 @@ class TaskSubjectPage(SubjectPage):
          
     def addPriorityEntry(self):
         # pylint: disable=W0201
-        currentPriority = self.items[0].priority() if len(self.items) == 1 else 0
+        current_priority = self.items[0].priority() if len(self.items) == 1 else 0
         self._priorityEntry = widgets.SpinCtrl(self, size=(100, -1),
-            value=currentPriority)
+            value=current_priority)
         self._prioritySync = attributesync.AttributeSync('priority', 
-            self._priorityEntry, currentPriority, self.items,
+            self._priorityEntry, current_priority, self.items,
             command.EditPriorityCommand, wx.EVT_SPINCTRL, 
             self.items[0].priorityChangedEventType())
         self.addEntry(_('Priority'), self._priorityEntry, flags=[None, wx.ALL])
@@ -185,10 +190,10 @@ class AttachmentSubjectPage(SubjectPage):
         panel = wx.Panel(self)
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         # pylint: disable=W0201
-        currentLocation = self.items[0].location() if len(self.items) == 1 else _('Edit to change location of all attachments')
-        self._locationEntry = widgets.SingleLineTextCtrl(panel, currentLocation)
+        current_location = self.items[0].location() if len(self.items) == 1 else _('Edit to change location of all attachments')
+        self._locationEntry = widgets.SingleLineTextCtrl(panel, current_location)
         self._locationSync = attributesync.AttributeSync('location', 
-            self._locationEntry, currentLocation, self.items,
+            self._locationEntry, current_location, self.items,
             command.EditAttachmentLocationCommand, wx.EVT_KILL_FOCUS, 
             self.items[0].locationChangedEventType())
         sizer.Add(self._locationEntry, 1, wx.ALL, 3)
@@ -200,18 +205,17 @@ class AttachmentSubjectPage(SubjectPage):
         self.addEntry(_('Location'), panel, flags=[None, wx.ALL | wx.EXPAND])
 
     def onSelectLocation(self, event):  # pylint: disable=W0613
-        basePath = self._settings.get('file', 'lastattachmentpath')
-        if not basePath:
-            basePath = os.getcwd()
-
-        filename = widgets.AttachmentSelector(default_path=basePath)
+        base_path = self._settings.get('file', 'lastattachmentpath')
+        if not base_path:
+            base_path = os.getcwd()
+        filename = widgets.AttachmentSelector(default_path=base_path)
 
         if filename:
             self._settings.set('file', 'lastattachmentpath', 
                                os.path.abspath(os.path.split(filename)[0]))
             if self._settings.get('file', 'attachmentbase'):
                 filename = attachment.getRelativePath(filename, 
-                                                      self._settings.get('file', 'attachmentbase'))
+                    self._settings.get('file', 'attachmentbase'))
             self._subjectEntry.SetValue(os.path.split(filename)[-1])
             self._locationEntry.SetValue(filename)
             self._subjectSync.onAttributeEdited(event)
@@ -764,7 +768,7 @@ class EditBook(widgets.Notebook):
         super(EditBook, self).__init__(parent)
         self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
         self.addPages(taskFile, itemsAreNew)
-        self.__load_perspective()
+        self.__load_perspective(itemsAreNew)
         
     def addPages(self, task_file, items_are_new):
         page_names = self.settings.getlist(self.settings_section(), 'pages') 
@@ -863,7 +867,7 @@ class EditBook(widgets.Notebook):
         ''' Return the perspective for the notebook. '''
         return self.settings.gettext(self.settings_section(), 'perspective')
     
-    def __load_perspective(self):
+    def __load_perspective(self, itemsAreNew=False):
         ''' Load the perspective (layout) for the current combination of visible
             pages from the settings. '''
         perspective = self.perspective()
@@ -872,21 +876,25 @@ class EditBook(widgets.Notebook):
                 self.LoadPerspective(perspective)
             except:  # pylint: disable=W0702
                 pass
-        # Although the active/current page is written in the perspective string 
-        # (a + before the number of the active page), the current page is not
-        # set when restoring the perspective. This does it by hand:
-        try:
-            current_page = int(perspective.split('@')[0].split('+')[1].split(',')[0])
-        except (IndexError, ValueError):
-            current_page = 0
+        if itemsAreNew:
+            current_page = 0  # For new items, start at the subject page.
+        else:
+            # Although the active/current page is written in the perspective 
+            # string (a + before the number of the active page), the current 
+            # page is not set when restoring the perspective. This does it by 
+            # hand:
+            try:
+                current_page = int(perspective.split('@')[0].split('+')[1].split(',')[0])
+            except (IndexError, ValueError):
+                current_page = 0
         self.SetSelection(current_page)
         self.GetPage(current_page).SetFocus()
-
+        
     def __save_perspective(self):
         ''' Save the current perspective of the editor in the settings. 
             Multiple perspectives are supported, for each set of visible pages.
             This allows different perspectives for e.g. single item editors and
-            multi item editors. '''
+            multi-item editors. '''
         page_names = [self[index].pageName for index in \
                       range(self.GetPageCount())]
         section = self.settings_section()
@@ -1132,7 +1140,7 @@ class EffortEditBook(Page):
             return item.mayContain(self.items[0])  # Composite effort
     
     def entries(self):
-        return dict(firstEntry=self._taskEntry, task=self._taskEntry,
+        return dict(firstEntry=self._startDateTimeEntry, task=self._taskEntry,
                     period=self._stopDateTimeEntry,
                     description=self._descriptionEntry,
                     timeSpent=self._stopDateTimeEntry,

@@ -16,8 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+from taskcoachlib import operating_system
+from taskcoachlib.widgets import itemctrl
 import wx.lib.mixins.listctrl
-import itemctrl
 
 
 class _ListCtrl(wx.ListCtrl):
@@ -29,17 +30,17 @@ class _ListCtrl(wx.ListCtrl):
         column = 0
         if self.InReportView():
             # Determine the column in which the user clicked
-            cumulativeColumnWidth = 0
+            cumulative_column_width = 0
             for columnIndex in range(self.GetColumnCount()):
-                cumulativeColumnWidth += self.GetColumnWidth(columnIndex)
-                if x <= cumulativeColumnWidth:
+                cumulative_column_width += self.GetColumnWidth(columnIndex)
+                if x <= cumulative_column_width:
                     column = columnIndex
                     break
         return index, flags, column
 
     def ToggleItemSelection(self, index):
-        currentState = self.GetItemState(index, wx.LIST_STATE_SELECTED)
-        self.SetItemState(index, ~currentState, wx.LIST_STATE_SELECTED)
+        current_state = self.GetItemState(index, wx.LIST_STATE_SELECTED)
+        self.SetItemState(index, ~current_state, wx.LIST_STATE_SELECTED)
      
         
 class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin, 
@@ -103,16 +104,16 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
 
     def OnGetItemAttr(self, rowIndex):
         item = self.getItemWithIndex(rowIndex)
-        foregroundColor = item.foregroundColor(recursive=True)
-        backgroundColor = item.backgroundColor(recursive=True)
-        itemAttrArgs = [foregroundColor, backgroundColor] 
+        foreground_color = item.foregroundColor(recursive=True)
+        background_color = item.backgroundColor(recursive=True)
+        item_attribute_arguments = [foreground_color, background_color] 
         font = item.font(recursive=True)
         if font:
-            itemAttrArgs.append(font)
+            item_attribute_arguments.append(font)
         # We need to keep a reference to the item attribute to prevent it
         # from being garbage collected too soon:
-        self.__itemAttribute = wx.ListItemAttr(*itemAttrArgs)  # pylint: disable=W0142,W0201
-        return self.__itemAttribute
+        self.__item_attribute = wx.ListItemAttr(*item_attribute_arguments)  # pylint: disable=W0142,W0201
+        return self.__item_attribute
         
     def onSelect(self, event):
         event.Skip()
@@ -121,8 +122,11 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
     def onItemActivated(self, event):
         ''' Override default behavior to attach the column clicked on
             to the event so we can use it elsewhere. '''
-        mousePosition = self.GetMainWindow().ScreenToClient(wx.GetMousePosition())
-        index, dummy_flags, column = self.HitTest(mousePosition)
+        window = self.GetMainWindow()
+        if operating_system.isMac():
+            window = window.GetChildren()[0]
+        mouse_position = window.ScreenToClient(wx.GetMousePosition())
+        index, dummy_flags, column = self.HitTest(mouse_position)
         if index >= 0:
             # Only get the column name if the hittest returned an item,
             # otherwise the item was activated from the menu or by double 
@@ -149,7 +153,8 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
             self.RefreshAllItems(self.GetItemCount())
         
     def curselection(self):
-        return [self.getItemWithIndex(index) for index in self.curselectionIndices()]
+        return [self.getItemWithIndex(index) \
+                for index in self.curselectionIndices()]
     
     def curselectionIndices(self):
         return wx.lib.mixins.listctrl.getListCtrlSelection(self)

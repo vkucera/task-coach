@@ -280,6 +280,8 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
                 uicommand.EffortStartButton(taskList=self.taskFile.tasks()), 
                 uicommand.EffortStop(effortList=self.taskFile.efforts(),
                                      taskList=self.taskFile.tasks())])
+        if uicommand.LinkToCampaign.campaign_is_running():
+            uiCommands.extend([None, uicommand.LinkToCampaign()])
         return uiCommands
         
     def showToolBar(self, value):

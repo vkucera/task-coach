@@ -32,7 +32,8 @@ class BaseTextCtrl(wx.TextCtrl):
         super(BaseTextCtrl, self).__init__(parent, -1, *args, **kwargs)
         self.__data = None
         if operating_system.isGTK():
-            self.Bind(wx.EVT_KEY_DOWN, self.on_key_down)
+            self.Bind(wx.EVT_KEY_DOWN, self.__on_key_down)
+            self.Bind(wx.EVT_KILL_FOCUS, self.__on_kill_focus)
             self.__initial_value = self.GetValue()
             self.__undone_value = None
 
@@ -46,32 +47,65 @@ class BaseTextCtrl(wx.TextCtrl):
         if operating_system.isGTK():
             self.__initial_value = self.GetValue()
 
+    def AppendText(self, *args, **kwargs):
+        super(BaseTextCtrl, self).AppendText(*args, **kwargs)
+        if operating_system.isGTK():
+            self.__initial_value = self.GetValue()
+
     def SetData(self, data):
         self.__data = data
 
     def GetData(self):
         return self.__data
 
-    def on_key_down(self, event):
-        ''' Check whether the user is pressing Ctrl-Z (or Ctrl-Y) and if so, 
+    def __on_key_down(self, event):
+        ''' Check whether the user pressed Ctrl-Z (or Ctrl-Y) and if so, 
             undo (or redo) the editing. '''
-        if event.GetKeyCode() == ord('Z') and event.ControlDown() and \
-           self.GetValue() != self.__initial_value:
-            insertion_point = self.GetInsertionPoint()
-            self.__undone_value = self.GetValue()
-            super(BaseTextCtrl, self).SetValue(self.__initial_value)
-            insertion_point = min(insertion_point, self.GetLastPosition())
-            self.SetInsertionPoint(insertion_point)
-        elif event.GetKeyCode() == ord('Y') and event.ControlDown() and \
-           self.GetValue() != self.__undone_value and \
-           (self.__undone_value is not None):
-            insertion_point = self.GetInsertionPoint()
-            super(BaseTextCtrl, self).SetValue(self.__undone_value)
-            self.__undone_value = None
-            insertion_point = min(insertion_point, self.GetLastPosition())
-            self.SetInsertionPoint(insertion_point)
+        if self.__ctrl_z_pressed(event) and self.__can_undo():
+            self.__undo()
+        elif self.__ctrl_y_pressed(event) and self.__can_redo():
+            self.__redo()
         else:
             event.Skip()
+
+    @staticmethod
+    def __ctrl_z_pressed(event):
+        ''' Did the user press Ctrl-Z (for undo)? '''
+        return event.GetKeyCode() == ord('Z') and event.ControlDown()
+
+    def __can_undo(self):
+        ''' Is there a change to be undone? '''
+        return self.GetValue() != self.__initial_value
+
+    def __undo(self):
+        ''' Undo the last change. '''
+        insertion_point = self.GetInsertionPoint()
+        self.__undone_value = self.GetValue()
+        super(BaseTextCtrl, self).SetValue(self.__initial_value)
+        insertion_point = min(insertion_point, self.GetLastPosition())
+        self.SetInsertionPoint(insertion_point)
+
+    @staticmethod
+    def __ctrl_y_pressed(event):
+        ''' Did the user press Ctrl-Y (for redo)? '''
+        return event.GetKeyCode() == ord('Y') and event.ControlDown()
+
+    def __can_redo(self):
+        ''' Is there an undone change to be redone? '''
+        return self.__undone_value not in (self.GetValue(), None)
+
+    def __redo(self):
+        ''' Redo the last undone change. '''
+        insertion_point = self.GetInsertionPoint()
+        super(BaseTextCtrl, self).SetValue(self.__undone_value)
+        self.__undone_value = None
+        insertion_point = min(insertion_point, self.GetLastPosition())
+        self.SetInsertionPoint(insertion_point)
+
+    def __on_kill_focus(self, event):
+        ''' Reset the edit history. '''
+        self.__initial_value = self.GetValue()
+        self.__undone_value = None
 
 
 class SingleLineTextCtrl(BaseTextCtrl):

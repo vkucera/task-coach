@@ -229,7 +229,7 @@ class Viewer2HTMLConverter(object):
         ''' Determine the background color for the item. Returns a CSS style
             specification or a HTML style specification when printing. '''
         bgColor = item.backgroundColor(recursive=True)
-        if bgColor:
+        if bgColor and bgColor != wx.WHITE:
             bgColor = self.cssColorSyntax(bgColor)
         else:
             return dict()
