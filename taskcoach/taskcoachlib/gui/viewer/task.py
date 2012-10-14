@@ -120,15 +120,15 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable=W0223
         kwargs['categories'] = self.taskFile.categories().filteredCategories()
         return super(BaseTaskTreeViewer, self).newItemDialog(*args, **kwargs)
     
-    def editItemDialog(self, items, bitmap, columnName='', itemsAreNew=False):
+    def editItemDialog(self, items, bitmap, columnName='', 
+                       items_are_new=False):
         if isinstance(items[0], task.Task):
             return super(BaseTaskTreeViewer, self).editItemDialog(items, bitmap, 
-                                                              columnName=columnName, 
-                                                              itemsAreNew=itemsAreNew)
+                columnName=columnName, items_are_new=items_are_new)
         else:
             return dialog.editor.EffortEditor(wx.GetTopLevelParent(self),
                 items, self.settings, self.taskFile.efforts(), self.taskFile,  
-                bitmap=bitmap, itemsAreNew=itemsAreNew)
+                bitmap=bitmap, items_are_new=items_are_new)
             
     def itemEditorClass(self):
         return dialog.editor.TaskEditor

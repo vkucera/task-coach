@@ -428,18 +428,21 @@ class Viewer(patterns.Observer, wx.Panel):
         bitmap = kwargs.pop('bitmap')
         newItemCommand = self.newItemCommand(*args, **kwargs)
         newItemCommand.do()
-        return self.editItemDialog(newItemCommand.items, bitmap, itemsAreNew=True)
+        return self.editItemDialog(newItemCommand.items, bitmap, 
+                                   items_are_new=True)
 
     def newSubItemDialog(self, bitmap):
         newSubItemCommand = self.newSubItemCommand()
         newSubItemCommand.do()
-        return self.editItemDialog(newSubItemCommand.items, bitmap, itemsAreNew=True)   
+        return self.editItemDialog(newSubItemCommand.items, bitmap, 
+                                   items_are_new=True)   
     
-    def editItemDialog(self, items, bitmap, columnName='', itemsAreNew=False):
+    def editItemDialog(self, items, bitmap, columnName='', items_are_new=False):
         Editor = self.itemEditorClass()
         return Editor(wx.GetTopLevelParent(self), items, 
                       self.settings, self.presentation(), self.taskFile, 
-                      bitmap=bitmap, columnName=columnName, itemsAreNew=itemsAreNew)
+                      bitmap=bitmap, columnName=columnName, 
+                      items_are_new=items_are_new)
         
     def itemEditorClass(self):
         raise NotImplementedError

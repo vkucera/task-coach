@@ -1518,7 +1518,7 @@ class TaskNew(TaskListCommand, SettingsCommand):
         newTaskCommand.do() 
         newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(),
             newTaskCommand.items, self.settings, self.taskList, 
-            self.mainWindow().taskFile, bitmap=self.bitmap, itemsAreNew=True)
+            self.mainWindow().taskFile, bitmap=self.bitmap, items_are_new=True)
         newTaskDialog.Show(show)
         return newTaskDialog  # for testing purposes
 
@@ -1575,7 +1575,7 @@ class TaskNewFromTemplate(TaskNew):
         # pylint: disable=W0142
         newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(), 
             newTaskCommand.items, self.settings, self.taskList, 
-            self.mainWindow().taskFile, bitmap=self.bitmap, itemsAreNew=True)
+            self.mainWindow().taskFile, bitmap=self.bitmap, items_are_new=True)
         newTaskDialog.Show(show)
         return newTaskDialog  # for testing purposes
    

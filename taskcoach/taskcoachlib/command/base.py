@@ -42,7 +42,7 @@ class BaseCommand(patterns.Command):
         subject = item.subject()
         return subject if len(subject) < 60 else subject[:57] + '...'
     
-    def itemsAreNew(self):
+    def items_are_new(self):
         return False
     
     def getItems(self):
@@ -136,12 +136,12 @@ class NewItemCommand(BaseCommand):
         # subject would be something like "New task", so not very interesting.
         return self.singular_name
     
-    def itemsAreNew(self):
+    def items_are_new(self):
         return True
 
     @patterns.eventSource
     def do_command(self, event=None):
-        self.list.extend(self.items) # Don't use the event to force this change to be notified first
+        self.list.extend(self.items)  # Don't use the event to force this change to be notified first
         event.addSource(self, type='newitem', *self.items)
 
     @patterns.eventSource
@@ -150,7 +150,7 @@ class NewItemCommand(BaseCommand):
 
     @patterns.eventSource
     def redo_command(self, event=None):
-        self.list.extend(self.items) # Don't use the event to force this change to be notified first
+        self.list.extend(self.items)  # Don't use the event to force this change to be notified first
         event.addSource(self, type='newitem', *self.items)
 
 

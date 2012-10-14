@@ -281,10 +281,10 @@ class DatesPage(Page):
     pageTitle = _('Dates') 
     pageIcon = 'calendar_icon'
     
-    def __init__(self, theTask, parent, settings, itemsAreNew, *args, **kwargs):
+    def __init__(self, theTask, parent, settings, items_are_new, *args, **kwargs):
         self.__settings = settings
         self._duration = None
-        self.__itemsAreNew = itemsAreNew
+        self.__items_are_new = items_are_new
         super(DatesPage, self).__init__(theTask, parent, *args, **kwargs)
         
     def addEntries(self):
@@ -763,13 +763,12 @@ class EditBook(widgets.Notebook):
     allPageNames = ['subclass responsibility']
     domainObject = 'subclass responsibility'
     
-    def __init__(self, parent, items, taskFile, settings, itemsAreNew):
+    def __init__(self, parent, items, taskFile, settings, items_are_new):
         self.items = items
         self.settings = settings
         super(EditBook, self).__init__(parent)
-        self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
-        self.addPages(taskFile, itemsAreNew)
-        self.__load_perspective(itemsAreNew)
+        self.addPages(taskFile, items_are_new)
+        self.__load_perspective(items_are_new)
         
     def addPages(self, task_file, items_are_new):
         page_names = self.settings.getlist(self.settings_section(), 'pages') 
@@ -869,7 +868,7 @@ class EditBook(widgets.Notebook):
         ''' Return the perspective for the notebook. '''
         return self.settings.gettext(self.settings_section(), 'perspective')
     
-    def __load_perspective(self, itemsAreNew=False):
+    def __load_perspective(self, items_are_new=False):
         ''' Load the perspective (layout) for the current combination of visible
             pages from the settings. '''
         perspective = self.perspective()
@@ -878,7 +877,7 @@ class EditBook(widgets.Notebook):
                 self.LoadPerspective(perspective)
             except:  # pylint: disable=W0702
                 pass
-        if itemsAreNew:
+        if items_are_new:
             current_page = 0  # For new items, start at the subject page.
         else:
             # Although the active/current page is written in the perspective 
@@ -928,8 +927,9 @@ class EditBook(widgets.Notebook):
                                   maximized='False').items():
             self.settings.init(section, option, value)
         
-    def onClose(self, event):
-        event.Skip()
+    def close_edit_book(self):
+        ''' Close all pages in the edit book and save the current layout in 
+            the settings. '''
         for page in self:
             page.close()
         self.__save_perspective()
@@ -973,12 +973,12 @@ class EffortEditBook(Page):
     domainObject = 'effort'
     columns = 3
     
-    def __init__(self, parent, efforts, taskFile, settings, itemsAreNew, 
+    def __init__(self, parent, efforts, taskFile, settings, items_are_new, 
                  *args, **kwargs):  # pylint: disable=W0613
         self._effortList = taskFile.efforts()
-        taskList = taskFile.tasks()
-        self._taskList = task.TaskList(taskList)
-        self._taskList.extend([effort.task() for effort in efforts if effort.task() not in taskList])
+        task_list = taskFile.tasks()
+        self._taskList = task.TaskList(task_list)
+        self._taskList.extend([effort.task() for effort in efforts if effort.task() not in task_list])
         self._settings = settings
         self._taskFile = taskFile
         super(EffortEditBook, self).__init__(efforts, parent, *args, **kwargs)
@@ -1027,52 +1027,52 @@ class EffortEditBook(Page):
 
     def addStartAndStopEntries(self):
         # pylint: disable=W0201,W0142
-        dateTimeEntryKwArgs = dict(showSeconds=True)
+        date_time_entry_kw_args = dict(showSeconds=True)
         flags = [None, wx.ALIGN_RIGHT | wx.ALL, wx.ALIGN_LEFT | wx.ALL | 
                  wx.ALIGN_CENTER_VERTICAL, None]
         
-        currentStartDateTime = self.items[0].getStart()
+        current_start_date_time = self.items[0].getStart()
         self._startDateTimeEntry = entry.DateTimeEntry(self, self._settings,
-            currentStartDateTime, noneAllowed=False, **dateTimeEntryKwArgs)
+            current_start_date_time, noneAllowed=False, **date_time_entry_kw_args)
         self._startDateTimeSync = attributesync.AttributeSync('getStart',
-            self._startDateTimeEntry, currentStartDateTime, self.items,
+            self._startDateTimeEntry, current_start_date_time, self.items,
             command.EditEffortStartDateTimeCommand, entry.EVT_DATETIMEENTRY,
             self.items[0].startChangedEventType())
         self._startDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, 
                                       self.onDateTimeChanged)        
-        startFromLastEffortButton = self._createStartFromLastEffortButton()
+        start_from_last_effort_button = self.__create_start_from_last_effort_button()
         self.addEntry(_('Start'), self._startDateTimeEntry,
-            startFromLastEffortButton, flags=flags)
+            start_from_last_effort_button, flags=flags)
 
-        currentStopDateTime = self.items[0].getStop()
+        current_stop_date_time = self.items[0].getStop()
         self._stopDateTimeEntry = entry.DateTimeEntry(self, self._settings, 
-            currentStopDateTime, noneAllowed=True, **dateTimeEntryKwArgs)
+            current_stop_date_time, noneAllowed=True, **date_time_entry_kw_args)
         self._stopDateTimeSync = attributesync.AttributeSync('getStop',
-            self._stopDateTimeEntry, currentStopDateTime, self.items,
+            self._stopDateTimeEntry, current_stop_date_time, self.items,
             command.EditEffortStopDateTimeCommand, entry.EVT_DATETIMEENTRY,
             self.items[0].stopChangedEventType())
         self._stopDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, 
                                      self.onStopDateTimeChanged)
-        stopNowButton = self._createStopNowButton()
-        self._invalidPeriodMessage = self._createInvalidPeriodMessage()
+        stop_now_button = self.__create_stop_now_button()
+        self._invalidPeriodMessage = self.__create_invalid_period_message()
         self.addEntry(_('Stop'), self._stopDateTimeEntry, 
-                      stopNowButton, flags=flags)
+                      stop_now_button, flags=flags)
         
         self.addEntry('', self._invalidPeriodMessage)
             
-    def _createStartFromLastEffortButton(self):
+    def __create_start_from_last_effort_button(self):
         button = wx.Button(self, label=_('Start tracking from last stop time'))
         self.Bind(wx.EVT_BUTTON, self.onStartFromLastEffort, button)
         if self._effortList.maxDateTime() is None:
             button.Disable()
         return button
     
-    def _createStopNowButton(self):
+    def __create_stop_now_button(self):
         button = wx.Button(self, label=_('Stop tracking now'))
         self.Bind(wx.EVT_BUTTON, self.onStopNow, button)
         return button
     
-    def _createInvalidPeriodMessage(self):
+    def __create_invalid_period_message(self):
         text = wx.StaticText(self, label='')
         font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
         font.SetWeight(wx.FONTWEIGHT_BOLD)
@@ -1096,44 +1096,48 @@ class EffortEditBook(Page):
 
     def onDateTimeChanged(self, event):
         event.Skip()
-        self.updateInvalidPeriodMessage()
+        self.__update_invalid_period_message()
                     
-    def updateInvalidPeriodMessage(self):
-        message = '' if self.validPeriod() else _('Warning: start must be earlier than stop')
+    def __update_invalid_period_message(self):
+        message = '' if self.__is_period_valid() else \
+                  _('Warning: start must be earlier than stop')
         self._invalidPeriodMessage.SetLabel(message)
                 
-    def validPeriod(self):
+    def __is_period_valid(self):
+        ''' Return whether the current period is valid, i.e. the start date
+            and time is earlier than the stop date and time. '''
         try:
-            return self._startDateTimeEntry.GetValue() < self._stopDateTimeEntry.GetValue()
+            return self._startDateTimeEntry.GetValue() < \
+                   self._stopDateTimeEntry.GetValue()
         except AttributeError:
             return True  # Entries not created yet
 
     def onEditTask(self, event):  # pylint: disable=W0613
-        taskToEdit = self._taskEntry.GetValue()
-        TaskEditor(None, [taskToEdit], self._settings, self._taskFile.tasks(), 
+        task_to_edit = self._taskEntry.GetValue()
+        TaskEditor(None, [task_to_edit], self._settings, self._taskFile.tasks(), 
             self._taskFile).Show()
 
     def addDescriptionEntry(self):
         # pylint: disable=W0201
-        def combinedDescription(items):
+        def combined_description(items):
             return u'[%s]\n\n' % _('Edit to change all descriptions') + \
                 '\n\n'.join(item.description() for item in items)
                 
-        currentDescription = self.items[0].description() if len(self.items) == 1 else combinedDescription(self.items)
-        self._descriptionEntry = widgets.MultiLineTextCtrl(self, currentDescription)
+        current_description = self.items[0].description() if len(self.items) == 1 else combined_description(self.items)
+        self._descriptionEntry = widgets.MultiLineTextCtrl(self, current_description)
         native_info_string = self._settings.get('editor', 'descriptionfont')
         font = wx.FontFromNativeInfoString(native_info_string) if native_info_string else None
         if font:
             self._descriptionEntry.SetFont(font) 
         self._descriptionEntry.SetSizeHints(300, 150)
         self._descriptionSync = attributesync.AttributeSync('description', 
-            self._descriptionEntry, currentDescription, self.items,
+            self._descriptionEntry, current_description, self.items,
             command.EditDescriptionCommand, wx.EVT_KILL_FOCUS,
             self.items[0].descriptionChangedEventType())
         self.addEntry(_('Description'), self._descriptionEntry, growable=True)
         
-    def setFocus(self, columnName):
-        self.setFocusOnEntry(columnName)
+    def setFocus(self, column_name):
+        self.setFocusOnEntry(column_name)
         
     def isDisplayingItemOrChildOfItem(self, item):
         if hasattr(item, 'setTask'):
@@ -1159,9 +1163,9 @@ class Editor(widgets.Dialog):
         self._items = items
         self._settings = settings
         self._taskFile = taskFile
-        self.__itemsAreNew = kwargs.pop('itemsAreNew', False)
+        self.__items_are_new = kwargs.pop('items_are_new', False)
         column_name = kwargs.pop('columnName', '') 
-        self._callAfter = kwargs.get('callAfter', wx.CallAfter)
+        self.__call_after = kwargs.get('call_after', wx.CallAfter)
         super(Editor, self).__init__(parent, self.title(), 
                                      buttonTypes=wx.ID_CLOSE, *args, **kwargs)
         if not column_name:
@@ -1172,13 +1176,13 @@ class Editor(widgets.Dialog):
         if column_name:
             self._interior.setFocus(column_name)
         
-        patterns.Publisher().registerObserver(self.onItemRemoved,
+        patterns.Publisher().registerObserver(self.on_item_removed,
             eventType=container.removeItemEventType(), eventSource=container)
         if len(self._items) == 1:
             patterns.Publisher().registerObserver(self.onSubjectChanged,
                                                   eventType=self._items[0].subjectChangedEventType(),
                                                   eventSource=self._items[0])
-        self.Bind(wx.EVT_CLOSE, self.onClose)
+        self.Bind(wx.EVT_CLOSE, self.on_close_editor)
 
         # On Mac OS X, the frame opens by default in the top-left
         # corner of the first display. This gets annoying on a
@@ -1200,51 +1204,53 @@ class Editor(widgets.Dialog):
         # changed in the translations
         # FIXME: there are more keyboard shortcuts that don't work in dialogs 
         # at the moment, like DELETE 
-        newEffortId = wx.NewId()
+        new_effort_id = wx.NewId()
         table = wx.AcceleratorTable([(wx.ACCEL_CMD, ord('Z'), wx.ID_UNDO),
                                      (wx.ACCEL_CMD, ord('Y'), wx.ID_REDO),
-                                     (wx.ACCEL_CMD, ord('E'), newEffortId)])
+                                     (wx.ACCEL_CMD, ord('E'), new_effort_id)])
         self._interior.SetAcceleratorTable(table)
         # pylint: disable=W0201
         self.undoCommand = uicommand.EditUndo()
         self.redoCommand = uicommand.EditRedo()
-        effortPage = self._interior.getPage('effort') 
-        effortViewer = effortPage.viewer if effortPage else None 
-        self.newEffortCommand = uicommand.EffortNew(viewer=effortViewer,
+        effort_page = self._interior.getPage('effort') 
+        effort_viewer = effort_page.viewer if effort_page else None 
+        self.newEffortCommand = uicommand.EffortNew(viewer=effort_viewer,
             taskList=self._taskFile.tasks(), 
             effortList=self._taskFile.efforts(), settings=self._settings)
         self.undoCommand.bind(self._interior, wx.ID_UNDO)
         self.redoCommand.bind(self._interior, wx.ID_REDO)
-        self.newEffortCommand.bind(self._interior, newEffortId)
+        self.newEffortCommand.bind(self._interior, new_effort_id)
 
     def createInterior(self):
         return self.EditBookClass(self._panel, self._items, self._taskFile, 
-                                  self._settings, self.__itemsAreNew)
+                                  self._settings, self.__items_are_new)
 
-    def onClose(self, event):
+    def on_close_editor(self, event):
         event.Skip()
-        patterns.Publisher().removeObserver(self.onItemRemoved)
+        self._interior.close_edit_book()
+        patterns.Publisher().removeObserver(self.on_item_removed)
         patterns.Publisher().removeObserver(self.onSubjectChanged)
         # On Mac OS X, the text control does not lose focus when
         # destroyed...
         if operating_system.isMac():
             self._interior.SetFocusIgnoringChildren()
             
-    def onItemRemoved(self, event):
+    def on_item_removed(self, event):
         ''' The item we're editing or one of its ancestors has been removed or 
             is hidden by a filter. If the item is really removed, close the tab 
             of the item involved and close the whole editor if there are no 
             tabs left. '''
         if self:  # Prevent _wxPyDeadObject TypeError
-            self._callAfter(self.closeIfItemIsDeleted, event.values())
+            self.__call_after(self.__close_if_item_is_deleted, event.values())
         
-    def closeIfItemIsDeleted(self, items):
+    def __close_if_item_is_deleted(self, items):
         for item in items:
-            if self._interior.isDisplayingItemOrChildOfItem(item) and not item in self._taskFile:
+            if self._interior.isDisplayingItemOrChildOfItem(item) and \
+               not item in self._taskFile:
                 self.Close()
                 break            
 
-    def onSubjectChanged(self, event):  # pylint: disable=W0613
+    def onSubjectChanged(self, event):
         self.SetTitle(self.title())
         
     def title(self):

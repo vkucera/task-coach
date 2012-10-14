@@ -322,7 +322,7 @@ class NewTaskCommandTest(TaskCommandTestCase):
         self.assertEqual(dateTime, newTask.plannedStartDateTime())
         
     def testItemsAreNew(self):
-        self.failUnless(command.NewTaskCommand(self.taskList).itemsAreNew())
+        self.failUnless(command.NewTaskCommand(self.taskList).items_are_new())
 
 
 class NewSubTaskCommandTest(TaskCommandTestCase):
@@ -362,10 +362,12 @@ class NewSubTaskCommandTest(TaskCommandTestCase):
         dueDateTime = date.Now() + date.TimeDelta(hours=2)
         self.task1.setDueDateTime(dueDateTime)
         self.newSubTask([self.task1])
-        self.assertDoUndoRedo(lambda: self.assertEqual(dueDateTime, self.task1.dueDateTime()))
+        self.assertDoUndoRedo(lambda: self.assertEqual(dueDateTime, 
+                                      self.task1.dueDateTime()))
 
     def testItemsAreNew(self):
-        self.failUnless(command.NewSubTaskCommand(self.taskList, []).itemsAreNew())
+        self.failUnless(command.NewSubTaskCommand(self.taskList, 
+                                                  []).items_are_new())
 
 
 class MarkCompletedCommandTest(CommandWithChildrenTestCase):
