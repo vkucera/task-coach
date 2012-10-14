@@ -176,8 +176,10 @@ thirdpartymodules:
 	cd thirdparty; tar xzf desktop-0.4.1.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty desktop-0.4.1/desktop
 	cd thirdparty; tar xzf keyring-0.9.2.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty keyring-0.9.2/keyring
 	cd thirdparty; tar xzf lockfile-0.8.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty lockfile-0.8/lockfile.py
+	cd thirdparty; tar xzf PyPubSub-3.1.2.tar.gz --strip-components=2 -C ../taskcoachlib/thirdparty PyPubSub-3.1.2/src/pubsub
 	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/APScheduler.diff
 	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/lockfile.diff
+	cd taskcoachlib/thirdparty/pubsub; patch -p1 < ../../thirdparty/patches/pubsub.diff
 
 taskcoachlib/gui/icons.py: icons.in/iconmap.py icons.in/nuvola.zip icons.in/splash.png
 	cd icons.in; $(PYTHON) make.py
