@@ -1,6 +1,6 @@
-diff -U 4 -r APScheduler-2.0.2/apscheduler/job.py APScheduler-2.0.2-taskcoach/apscheduler/job.py
---- APScheduler-2.0.2/apscheduler/job.py	2011-04-11 01:22:23.000000000 +0200
-+++ APScheduler-2.0.2-taskcoach/apscheduler/job.py	2012-10-14 11:34:01.000000000 +0200
+diff -r -U 4 APScheduler-2.0.3/apscheduler/job.py APScheduler-2.0.3-taskcoach/apscheduler/job.py
+--- APScheduler-2.0.3/apscheduler/job.py	2012-04-02 10:26:54.000000000 +0200
++++ APScheduler-2.0.3-taskcoach/apscheduler/job.py	2012-10-14 12:36:26.000000000 +0200
 @@ -24,9 +24,10 @@
      :param args: list of positional arguments to call func with
      :param kwargs: dict of keyword arguments to call func with
@@ -26,15 +26,15 @@ diff -U 4 -r APScheduler-2.0.2/apscheduler/job.py APScheduler-2.0.2-taskcoach/ap
              raise ValueError('max_runs must be a positive value')
          if max_instances <= 0:
              raise ValueError('max_instances must be a positive value')
-diff -U 4 -r APScheduler-2.0.2/apscheduler/jobstores/__init__.py APScheduler-2.0.2-taskcoach/apscheduler/jobstores/__init__.py
---- APScheduler-2.0.2/apscheduler/jobstores/__init__.py	2010-06-23 03:01:45.000000000 +0200
-+++ APScheduler-2.0.2-taskcoach/apscheduler/jobstores/__init__.py	2012-10-14 11:34:01.000000000 +0200
+diff -r -U 4 APScheduler-2.0.3/apscheduler/jobstores/__init__.py APScheduler-2.0.3-taskcoach/apscheduler/jobstores/__init__.py
+--- APScheduler-2.0.3/apscheduler/jobstores/__init__.py	2012-04-02 10:26:54.000000000 +0200
++++ APScheduler-2.0.3-taskcoach/apscheduler/jobstores/__init__.py	2012-10-14 12:36:26.000000000 +0200
 @@ -0,0 +1 @@
 +# Make this a package.
-diff -U 4 -r APScheduler-2.0.2/apscheduler/scheduler.py APScheduler-2.0.2-taskcoach/apscheduler/scheduler.py
---- APScheduler-2.0.2/apscheduler/scheduler.py	2011-05-30 10:40:57.000000000 +0200
-+++ APScheduler-2.0.2-taskcoach/apscheduler/scheduler.py	2012-10-14 11:34:01.000000000 +0200
-@@ -281,9 +281,10 @@
+diff -r -U 4 APScheduler-2.0.3/apscheduler/scheduler.py APScheduler-2.0.3-taskcoach/apscheduler/scheduler.py
+--- APScheduler-2.0.3/apscheduler/scheduler.py	2012-04-02 10:26:54.000000000 +0200
++++ APScheduler-2.0.3-taskcoach/apscheduler/scheduler.py	2012-10-14 12:36:26.000000000 +0200
+@@ -291,9 +291,10 @@
          :param date: the date/time to run the job at
          :param name: name of the job
          :param jobstore: stored the job in the named (or given) job store
@@ -46,7 +46,7 @@ diff -U 4 -r APScheduler-2.0.2/apscheduler/scheduler.py APScheduler-2.0.2-taskco
          :rtype: :class:`~apscheduler.job.Job`
          """
          trigger = SimpleTrigger(date)
-@@ -307,9 +308,10 @@
+@@ -317,9 +318,10 @@
          :param kwargs: dict of keyword arguments to call func with
          :param name: name of the job
          :param jobstore: alias of the job store to add the job to
@@ -58,7 +58,7 @@ diff -U 4 -r APScheduler-2.0.2/apscheduler/scheduler.py APScheduler-2.0.2-taskco
          """
          interval = timedelta(weeks=weeks, days=days, hours=hours,
                               minutes=minutes, seconds=seconds)
-@@ -335,9 +337,10 @@
+@@ -345,9 +347,10 @@
          :param kwargs: dict of keyword arguments to call func with
          :param name: name of the job
          :param jobstore: alias of the job store to add the job to
@@ -70,7 +70,7 @@ diff -U 4 -r APScheduler-2.0.2/apscheduler/scheduler.py APScheduler-2.0.2-taskco
          :rtype: :class:`~apscheduler.job.Job`
          """
          trigger = CronTrigger(year=year, month=month, day=day, week=week,
-@@ -450,10 +453,9 @@
+@@ -460,10 +463,9 @@
          for run_time in run_times:
              # See if the job missed its run time window, and handle possible
              # misfires accordingly
@@ -82,3 +82,4 @@ diff -U 4 -r APScheduler-2.0.2/apscheduler/scheduler.py APScheduler-2.0.2-taskco
                  event = JobEvent(EVENT_JOB_MISSED, job, run_time)
                  self._notify_listeners(event)
                  logger.warning('Run time of job "%s" was missed by %s',
+Only in APScheduler-2.0.3-taskcoach/apscheduler: scheduler.py.orig
