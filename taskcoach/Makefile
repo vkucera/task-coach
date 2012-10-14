@@ -184,6 +184,7 @@ thirdpartymodules:
 	cd thirdparty; tar xzf WMI-1.4.9.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty WMI-1.4.9/wmi.py
 	cd thirdparty; tar xzf pyparsing-1.5.5.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty pyparsing-1.5.5/pyparsing_py2.py
 	mv taskcoachlib/thirdparty/pyparsing_py2.py taskcoachlib/thirdparty/pyparsing.py
+	cd thirdparty; tar xzf pybonjour-1.1.1.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty pybonjour-1.1.1/pybonjour.py
 	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/APScheduler.diff
 	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/lockfile.diff
 	cd taskcoachlib/thirdparty/pubsub; patch -p1 < ../../../thirdparty/patches/pubsub.diff
