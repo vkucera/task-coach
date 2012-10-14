@@ -170,9 +170,9 @@ icons: taskcoachlib/gui/icons.py
 templates: taskcoachlib/persistence/xml/templates.py
 
 thirdpartymodules:
-	tar xzf thirdparty/APScheduler-2.0.2.tgz -C taskcoachlib/thirdparty
-	tar xzf thirdparty/chardet-1.0.1.tar.gz -C taskcoachlib/thirdparty
-	cd taskcoachlib/thirdparty/APScheduler-2.0.2; patch -p1 < ../../../thirdparty/patches/APScheduler.diff
+	cd thirdparty; tar xzf APScheduler-2.0.2.tgz --strip-components=1 -C ../taskcoachlib/thirdparty APScheduler-2.0.2/apscheduler
+	cd thirdparty; tar xzf chardet-1.0.1.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty chardet-1.0.1/chardet
+	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/APScheduler.diff
 
 taskcoachlib/gui/icons.py: icons.in/iconmap.py icons.in/nuvola.zip icons.in/splash.png
 	cd icons.in; $(PYTHON) make.py
