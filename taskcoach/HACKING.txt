@@ -37,8 +37,8 @@ to build distributions. So, if you don't have make installed you can
 still build the distributions by running the commands from the 
 Makefile by hand.
 
-Since 2012/10/14 you will also need tar and gzip to unpack the
-third party modules.
+Since 2012/10/14 you will also need tar, gzip and patch to unpack the
+third party modules. Those are part of Cygwin.
 
 --- Preparation -----------------------------------------------------
 
