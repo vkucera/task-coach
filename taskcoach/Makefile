@@ -171,6 +171,7 @@ templates: taskcoachlib/persistence/xml/templates.py
 
 thirdpartymodules:
 	tar xzf thirdparty/APScheduler-2.0.2.tgz -C taskcoachlib/thirdparty
+	tar xzf thirdparty/chardet-1.0.1.tar.gz -C taskcoachlib/thirdparty
 	cd taskcoachlib/thirdparty/APScheduler-2.0.2; patch -p1 < ../../../thirdparty/patches/APScheduler.diff
 
 taskcoachlib/gui/icons.py: icons.in/iconmap.py icons.in/nuvola.zip icons.in/splash.png

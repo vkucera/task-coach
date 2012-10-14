@@ -25,3 +25,6 @@ def _addPath(path):
 
 _addPath('APScheduler-2.0.2')
 import apscheduler.scheduler
+
+_addPath('chardet-1.0.1')
+import chardet
