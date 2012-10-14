@@ -606,7 +606,8 @@ class LocalCategoryViewer(viewer.BaseCategoryViewer):  # pylint: disable=W0223
         ''' Here we keep track of the items checked by the user so that these 
             items remain checked when refreshing the viewer. ''' 
         category = self.widget.GetItemPyData(event.GetItem())
-        command.ToggleCategoryCommand(None, self.__items, category=category).do()
+        command.ToggleCategoryCommand(None, self.__items, 
+                                      category=category).do()
 
     def createCategoryPopupMenu(self):  # pylint: disable=W0221
         return super(LocalCategoryViewer, self).createCategoryPopupMenu(True)            
@@ -675,20 +676,20 @@ class AttachmentsPage(PageWithViewer):
 
 class LocalNoteViewer(viewer.BaseNoteViewer):  # pylint: disable=W0223
     def __init__(self, *args, **kwargs):
-        self.noteOwner = kwargs.pop('owner')
-        notes = note.NoteContainer(self.noteOwner.notes())
+        self.__note_owner = kwargs.pop('owner')
+        notes = note.NoteContainer(self.__note_owner.notes())
         super(LocalNoteViewer, self).__init__(notesToShow=notes, 
                                               *args, **kwargs)
 
     def newItemCommand(self, *args, **kwargs):
-        return command.AddNoteCommand(None, [self.noteOwner])
+        return command.AddNoteCommand(None, [self.__note_owner])
     
     def newSubItemCommand(self):
         return command.AddSubNoteCommand(None, self.curselection(), 
-                                         owner=self.noteOwner)
+                                         owner=self.__note_owner)
     
     def deleteItemCommand(self):
-        return command.RemoveNoteCommand(None, [self.noteOwner], 
+        return command.RemoveNoteCommand(None, [self.__note_owner], 
                                          notes=self.curselection())
 
 
@@ -728,9 +729,9 @@ class LocalPrerequisiteViewer(viewer.CheckableTaskViewer):  # pylint: disable=W0
     
     def onCheck(self, event):
         item = self.widget.GetItemPyData(event.GetItem())
-        isChecked = event.GetItem().IsChecked()
-        if isChecked != self.getIsItemChecked(item):
-            checked, unchecked = ([item], []) if isChecked else ([], [item])            
+        is_checked = event.GetItem().IsChecked()
+        if is_checked != self.getIsItemChecked(item):
+            checked, unchecked = ([item], []) if is_checked else ([], [item])
             command.TogglePrerequisiteCommand(None, self.__items, 
                 checkedPrerequisites=checked, 
                 uncheckedPrerequisites=unchecked).do()
@@ -775,25 +776,26 @@ class EditBook(widgets.Notebook):
         for page_name in page_names:  
             page = self.createPage(page_name, task_file, items_are_new)
             self.AddPage(page, page.pageTitle, page.pageIcon)
-        width, height = self.getMinPageSize()
+        width, height = self.__get_minimum_page_size()
         self.SetMinSize((width, self.GetHeightForPageHeight(height)))
 
-    def getPage(self, pageName):
+    def getPage(self, page_name):
         for index in range(self.GetPageCount()):
-            if pageName == self[index].pageName:
+            if page_name == self[index].pageName:
                 return self[index]
         return None
     
-    def getMinPageSize(self):
-        minWidths, minHeights = [], []
+    def __get_minimum_page_size(self):
+        min_widths, min_heights = [], []
         for page in self:
-            minWidth, minHeight = page.GetMinSize()
-            minWidths.append(minWidth)
-            minHeights.append(minHeight)
-        return max(minWidths), max(minHeights)
+            min_width, min_height = page.GetMinSize()
+            min_widths.append(min_width)
+            min_heights.append(min_height)
+        return max(min_widths), max(min_heights)
     
-    def pages_to_create(self):
-        return [page_name for page_name in self.allPageNames if self.__should_create_page(page_name)]
+    def __pages_to_create(self):
+        return [page_name for page_name in self.allPageNames \
+                if self.__should_create_page(page_name)]
         
     def __should_create_page(self, page_name):
         if self.__page_feature_is_disabled(page_name):
@@ -816,43 +818,43 @@ class EditBook(widgets.Notebook):
         return page_name in ('subject', 'dates', 'progress', 'budget', 
                              'appearance')
 
-    def createPage(self, pageName, taskFile, itemsAreNew):
-        if pageName == 'subject':
-            return self.createSubjectPage()
-        elif pageName == 'dates':
-            return DatesPage(self.items, self, self.settings, itemsAreNew) 
-        elif pageName == 'prerequisites':
-            return PrerequisitesPage(self.items, self, taskFile, self.settings,
+    def createPage(self, page_name, task_file, items_are_new):
+        if page_name == 'subject':
+            return self.create_subject_page()
+        elif page_name == 'dates':
+            return DatesPage(self.items, self, self.settings, items_are_new) 
+        elif page_name == 'prerequisites':
+            return PrerequisitesPage(self.items, self, task_file, self.settings,
                                      settingsSection='prerequisiteviewerin%seditor' % self.domainObject)
-        elif pageName == 'progress':    
+        elif page_name == 'progress':    
             return ProgressPage(self.items, self)
-        elif pageName == 'categories':
-            return CategoriesPage(self.items, self, taskFile, self.settings,
+        elif page_name == 'categories':
+            return CategoriesPage(self.items, self, task_file, self.settings,
                                   settingsSection='categoryviewerin%seditor' % self.domainObject)
-        elif pageName == 'budget':                 
+        elif page_name == 'budget':                 
             return BudgetPage(self.items, self)
-        elif pageName == 'effort':        
-            return EffortPage(self.items, self, taskFile, self.settings,
+        elif page_name == 'effort':        
+            return EffortPage(self.items, self, task_file, self.settings,
                               settingsSection='effortviewerin%seditor' % self.domainObject)
-        elif pageName == 'notes':
-            return NotesPage(self.items, self, taskFile, self.settings,
+        elif page_name == 'notes':
+            return NotesPage(self.items, self, task_file, self.settings,
                              settingsSection='noteviewerin%seditor' % self.domainObject)
-        elif pageName == 'attachments':
-            return AttachmentsPage(self.items, self, taskFile, self.settings,
+        elif page_name == 'attachments':
+            return AttachmentsPage(self.items, self, task_file, self.settings,
                                    settingsSection='attachmentviewerin%seditor' % self.domainObject)
-        elif pageName == 'appearance':
+        elif page_name == 'appearance':
             return TaskAppearancePage(self.items, self)
         
-    def createSubjectPage(self):
+    def create_subject_page(self):
         return SubjectPage(self.items, self, self.settings)
     
     def setFocus(self, columnName):
         ''' Select the correct page of the editor and correct control on a page
             based on the column that the user double clicked. '''
         page = 0
-        for pageIndex in range(self.GetPageCount()):
-            if columnName in self[pageIndex].entries():
-                page = pageIndex
+        for page_index in range(self.GetPageCount()):
+            if columnName in self[page_index].entries():
+                page = page_index
                 break
         self.SetSelection(page)
         self[page].setFocusOnEntry(columnName)
@@ -913,7 +915,7 @@ class EditBook(widgets.Notebook):
         ''' Return the section name of this notebook. The name of the section
             depends on the visible pages so that different variants of the
             notebook store their settings in different sections. '''
-        page_names = self.pages_to_create()
+        page_names = self.__pages_to_create()
         sorted_page_names = '_'.join(sorted(page_names)) 
         return '%sdialog_with_%s' % (self.domainObject, sorted_page_names)
     
@@ -921,7 +923,7 @@ class EditBook(widgets.Notebook):
         ''' Create the section and initialize the options in the section. '''
         self.settings.add_section(section)
         for option, value in dict(perspective='', 
-                                  pages=str(self.pages_to_create()),
+                                  pages=str(self.__pages_to_create()),
                                   size='(-1, -1)', position='(-1, -1)',
                                   maximized='False').items():
             self.settings.init(section, option, value)
@@ -939,7 +941,7 @@ class TaskEditBook(EditBook):
                     'appearance']
     domainObject = 'task'
 
-    def createSubjectPage(self):    
+    def create_subject_page(self):    
         return TaskSubjectPage(self.items, self, self.settings)
 
 
@@ -947,7 +949,7 @@ class CategoryEditBook(EditBook):
     allPageNames = ['subject', 'notes', 'attachments', 'appearance']
     domainObject = 'category'
 
-    def createSubjectPage(self):
+    def create_subject_page(self):
         return CategorySubjectPage(self.items, self, self.settings)
 
 
@@ -960,7 +962,7 @@ class AttachmentEditBook(EditBook):
     allPageNames = ['subject', 'notes', 'appearance']
     domainObject = 'attachment'
             
-    def createSubjectPage(self):
+    def create_subject_page(self):
         return AttachmentSubjectPage(self.items, self, self.settings)
     
     def isDisplayingItemOrChildOfItem(self, targetItem):
