@@ -33,6 +33,8 @@ changes.''', '1267'),
         Bugv2('''When adding a new item, always start the edit dialog with the 
 description tab raised and focus on the item subject.''', '1263'),
         Bugv2('''Editing templates would not work.'''),
+        Bugv2('''The effort dialog wouldn't function properly when the time
+format contained dots, like in Italian.''', '1307'),
         ],
     ),
 

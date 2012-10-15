@@ -999,33 +999,33 @@ class EffortEditBook(Page):
         return 'effort dialog perspective'
     
     def addEntries(self):
-        self.addTaskEntry()
-        self.addStartAndStopEntries()
+        self.__add_task_entry()
+        self.__add_start_and_stop_entries()
         self.addDescriptionEntry()
 
-    def addTaskEntry(self):
+    def __add_task_entry(self):
         ''' Add an entry for changing the task that this effort record
             belongs to. '''
         # pylint: disable=W0201,W0212
         panel = wx.Panel(self)
-        currentTask = self.items[0].task()
+        current_task = self.items[0].task()
         self._taskEntry = entry.TaskEntry(panel,
-            rootTasks=self._taskList.rootItems(), selectedTask=currentTask)
+            rootTasks=self._taskList.rootItems(), selectedTask=current_task)
         self._taskSync = attributesync.AttributeSync('task', self._taskEntry,
-            currentTask, self.items, command.EditTaskCommand,
+            current_task, self.items, command.EditTaskCommand,
             entry.EVT_TASKENTRY, self.items[0].taskChangedEventType())
-        editTaskButton = wx.Button(panel, label=_('Edit task'))
-        editTaskButton.Bind(wx.EVT_BUTTON, self.onEditTask)
-        panelSizer = wx.BoxSizer(wx.HORIZONTAL)
-        panelSizer.Add(self._taskEntry, proportion=1,
+        edit_task_button = wx.Button(panel, label=_('Edit task'))
+        edit_task_button.Bind(wx.EVT_BUTTON, self.onEditTask)
+        panel_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        panel_sizer.Add(self._taskEntry, proportion=1,
                        flag=wx.EXPAND | wx.ALIGN_CENTER_VERTICAL)
-        panelSizer.Add((3, -1))
-        panelSizer.Add(editTaskButton, proportion=0,
+        panel_sizer.Add((3, -1))
+        panel_sizer.Add(edit_task_button, proportion=0,
                        flag=wx.ALIGN_CENTER_VERTICAL)
-        panel.SetSizerAndFit(panelSizer)
+        panel.SetSizerAndFit(panel_sizer)
         self.addEntry(_('Task'), panel, flags=[None, wx.ALL | wx.EXPAND])
 
-    def addStartAndStopEntries(self):
+    def __add_start_and_stop_entries(self):
         # pylint: disable=W0201,W0142
         date_time_entry_kw_args = dict(showSeconds=True)
         flags = [None, wx.ALIGN_RIGHT | wx.ALL, wx.ALIGN_LEFT | wx.ALL | 
