@@ -1151,6 +1151,9 @@ class EffortEditBook(Page):
                     description=self._descriptionEntry,
                     timeSpent=self._stopDateTimeEntry,
                     revenue=self._taskEntry)
+        
+    def close_edit_book(self):
+        pass
     
     
 class Editor(widgets.Dialog):
