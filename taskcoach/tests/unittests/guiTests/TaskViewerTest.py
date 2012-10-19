@@ -161,7 +161,7 @@ class CommonTestsMixin(object):
 
     def testDeleteSelectedTask(self):
         self.taskList.append(self.task)
-        self.viewer.widget.selectall()
+        self.viewer.widget.select_all()
         self.viewer.updateSelection()
         self.taskList.removeItems(self.viewer.curselection())
         self.assertItems()

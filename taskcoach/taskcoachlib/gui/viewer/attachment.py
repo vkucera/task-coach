@@ -57,7 +57,7 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable=W0223
         columnPopupMenu = menu.ColumnPopupMenu(self)
         self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
         self._columns = self._createColumns()
-        widget = widgets.ListCtrl(self, self.columns(), self.onSelect,
+        widget = widgets.VirtualListCtrl(self, self.columns(), self.onSelect,
             uicommand.Edit(viewer=self),
             itemPopupMenu, columnPopupMenu,
             resizeableColumn=1, **self.widgetCreationKeywordArguments())

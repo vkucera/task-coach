@@ -161,6 +161,6 @@ class EffortWriterTest(CSVWriterTestCase):
 
     def testEffortPerDay_SelectionOnly_SelectAll(self):
         self.viewer.showEffortAggregation('day')
-        self.viewer.widget.selectall()
+        self.viewer.widget.select_all()
         self.viewer.updateSelection()
         self.expectInCSV('Total', selectionOnly=True)

@@ -45,24 +45,24 @@ class ViewerTest(test.wxTestCase):
             self.settings)
 
     def testSelectAllViaWidget(self):
-        self.viewer.widget.selectall()
+        self.viewer.widget.select_all()
         self.viewer.updateSelection()
         self.assertEqual([self.task], self.viewer.curselection())
         
     def testSelectAllViaWidgetWithMultipleItems(self):
         self.taskFile.tasks().append(task.Task('second'))
-        self.viewer.widget.selectall()
+        self.viewer.widget.select_all()
         self.viewer.updateSelection()
         self.assertEqual(2, len(self.viewer.curselection()))
         
     def testSelectAll(self):
-        self.viewer.selectall()
+        self.viewer.select_all()
         self.viewer.endOfSelectAll()
         self.assertEqual([self.task], self.viewer.curselection())
         
     def testSelectAllWithMultipleItems(self):
         self.taskFile.tasks().append(task.Task('second'))
-        self.viewer.selectall()
+        self.viewer.select_all()
         self.viewer.endOfSelectAll()
         self.assertEqual(2, len(self.viewer.curselection()))
         

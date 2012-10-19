@@ -21,30 +21,8 @@ from taskcoachlib.widgets import itemctrl
 import wx.lib.mixins.listctrl
 
 
-class _ListCtrl(wx.ListCtrl):
-    ''' Make ListCtrl API more like the TreeList and TreeListCtrl API '''
-    
-    def HitTest(self, (x, y), *args, **kwargs):
-        ''' Always return a three-tuple (item, flag, column). '''
-        index, flags = super(_ListCtrl, self).HitTest((x, y), *args, **kwargs)
-        column = 0
-        if self.InReportView():
-            # Determine the column in which the user clicked
-            cumulative_column_width = 0
-            for columnIndex in range(self.GetColumnCount()):
-                cumulative_column_width += self.GetColumnWidth(columnIndex)
-                if x <= cumulative_column_width:
-                    column = columnIndex
-                    break
-        return index, flags, column
-
-    def ToggleItemSelection(self, index):
-        current_state = self.GetItemState(index, wx.LIST_STATE_SELECTED)
-        self.SetItemState(index, ~current_state, wx.LIST_STATE_SELECTED)
-     
-        
 class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin, 
-                      itemctrl.CtrlWithToolTipMixin, _ListCtrl):
+                      itemctrl.CtrlWithToolTipMixin, wx.ListCtrl):
     def __init__(self, parent, columns, selectCommand=None, editCommand=None, 
                  itemPopupMenu=None, columnPopupMenu=None, resizeableColumn=0, 
                  *args, **kwargs):
@@ -151,14 +129,26 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
                 self.RefreshItem(self.__parent.getIndexOfItem(item))
         else:
             self.RefreshAllItems(self.GetItemCount())
-        
+            
+    def HitTest(self, (x, y), *args, **kwargs):
+        ''' Always return a three-tuple (item, flag, column). '''
+        index, flags = super(VirtualListCtrl, self).HitTest((x, y), 
+                                                            *args, **kwargs)
+        column = 0
+        if self.InReportView():
+            # Determine the column in which the user clicked
+            cumulative_column_width = 0
+            for column_index in range(self.GetColumnCount()):
+                cumulative_column_width += self.GetColumnWidth(column_index)
+                if x <= cumulative_column_width:
+                    column = column_index
+                    break
+        return index, flags, column
+
     def curselection(self):
         return [self.getItemWithIndex(index) \
-                for index in self.curselectionIndices()]
+                for index in self.__curselection_indices()]
     
-    def curselectionIndices(self):
-        return wx.lib.mixins.listctrl.getListCtrlSelection(self)
-
     def select(self, items):
         indices = [self.__parent.getIndexOfItem(item) for item in items]
         for index in range(self.GetItemCount()):
@@ -166,14 +156,16 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
         if self.curselection():
             self.Focus(self.GetFirstSelected())        
     
-    def clearselection(self):
-        for index in self.curselectionIndices():
+    def clear_selection(self):
+        ''' Unselect all selected items. '''
+        for index in self.__curselection_indices():
             self.Select(index, False)
 
-    def selectall(self):
+    def select_all(self):
+        ''' Select all items. '''
         for index in range(self.GetItemCount()):
             self.Select(index)
 
-
-class ListCtrl(VirtualListCtrl):
-    pass
+    def __curselection_indices(self):
+        ''' Return the indices of the currently selected items. '''
+        return wx.lib.mixins.listctrl.getListCtrlSelection(self)

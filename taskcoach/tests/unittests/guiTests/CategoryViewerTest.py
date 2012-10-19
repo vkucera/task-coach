@@ -55,7 +55,7 @@ class CategoryViewerTest(test.wxTestCase):
             
     def testSelectAll(self):
         self.addTwoCategories()
-        self.viewer.widget.selectall()
+        self.viewer.widget.select_all()
         self.viewer.updateSelection()
         self.assertEqual(2, len(self.viewer.curselection()))
         

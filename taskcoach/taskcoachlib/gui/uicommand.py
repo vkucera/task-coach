@@ -1104,7 +1104,7 @@ class SelectAll(NeedsItemsMixin, ViewerCommand):
         if self.windowIsTextCtrl(windowWithFocus):
             windowWithFocus.SetSelection(-1, -1)  # Select all text
         else:
-            self.viewer.selectall()
+            self.viewer.select_all()
             
     @staticmethod
     def windowIsTextCtrl(window):
@@ -1121,7 +1121,7 @@ class ClearSelection(NeedsSelectionMixin, ViewerCommand):
             helpText=_('Unselect all items'), *args, **kwargs)
 
     def doCommand(self, event):
-        self.viewer.clearselection()
+        self.viewer.clear_selection()
 
 
 class ResetFilter(ViewerCommand):

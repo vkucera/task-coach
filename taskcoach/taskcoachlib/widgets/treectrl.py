@@ -82,11 +82,11 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
         for item in self.GetItemChildren(recursively=True):
             self.SelectItem(item, self.GetItemPyData(item) in selection)
         
-    def clearselection(self):
+    def clear_selection(self):
         self.UnselectAll()
         self.selectCommand()
 
-    def selectall(self):
+    def select_all(self):
         if self.GetItemCount() > 0:
             self.SelectAll()
         self.selectCommand()
