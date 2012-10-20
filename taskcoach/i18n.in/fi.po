@@ -8,29 +8,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-08-21 06:47+0000\n"
+"POT-Creation-Date: 2012-10-19 23:51+0000\n"
 "PO-Revision-Date: 2012-08-16 23:29+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-26 21:52+0000\n"
-"X-Generator: Launchpad (build 15843)\n"
+"X-Launchpad-Export-Date: 2012-10-20 15:52+0000\n"
+"X-Generator: Launchpad (build 16165)\n"
 
-#: taskcoachlib/application/application.py:67
+#: taskcoachlib/application/application.py:66
 msgid "Errors have occured. Please see \"%s\""
 msgstr ""
 
-#: taskcoachlib/application/application.py:67
-#: taskcoachlib/gui/mainwindow.py:354 taskcoachlib/iphone/protocol.py:482
-#: taskcoachlib/widgets/draganddrop.py:112
-#: taskcoachlib/widgets/draganddrop.py:114
-#: taskcoachlib/widgets/draganddrop.py:147
+#: taskcoachlib/application/application.py:66
+#: taskcoachlib/gui/mainwindow.py:350 taskcoachlib/iphone/protocol.py:482
+#: taskcoachlib/widgets/draganddrop.py:121
+#: taskcoachlib/widgets/draganddrop.py:163
 msgid "Error"
 msgstr "Virhe"
 
-#: taskcoachlib/application/application.py:291
+#: taskcoachlib/application/application.py:284
 msgid ""
 "Couldn't load settings from TaskCoach.ini:\n"
 "%s"
@@ -38,8 +37,8 @@ msgstr ""
 "Ei voitu ladata asetuksia tiedostosta TaskCoach.ini:\n"
 "%s"
 
-#: taskcoachlib/application/application.py:292
-#: taskcoachlib/gui/iocontroller.py:65
+#: taskcoachlib/application/application.py:285
+#: taskcoachlib/gui/iocontroller.py:71
 msgid "%s file error"
 msgstr "%s tiedostovirhe"
 
@@ -70,7 +69,7 @@ msgid "Edit attachment \"%s\" location"
 msgstr "Muuta liitteeen \"%s\" paikkaa"
 
 #: taskcoachlib/command/attachmentCommands.py:75
-#: taskcoachlib/widgets/dialog.py:152
+#: taskcoachlib/widgets/dialog.py:148
 msgid "Add attachment"
 msgstr "Lisää liite"
 
@@ -227,43 +226,43 @@ msgstr "Poista luokka \"%s\""
 msgid "Drag and drop categories"
 msgstr "Raahaa ja pudota luokat"
 
-#: taskcoachlib/command/effortCommands.py:26
+#: taskcoachlib/command/effortCommands.py:25
 msgid "New efforts"
 msgstr "Uudet työmäärät"
 
-#: taskcoachlib/command/effortCommands.py:27
+#: taskcoachlib/command/effortCommands.py:26
 msgid "New effort of \"%s\""
 msgstr "Uusi työmäärä \"%s\""
 
-#: taskcoachlib/command/effortCommands.py:57
+#: taskcoachlib/command/effortCommands.py:56
 msgid "Delete efforts"
 msgstr "Poista työmäärät"
 
-#: taskcoachlib/command/effortCommands.py:58
+#: taskcoachlib/command/effortCommands.py:57
 msgid "Delete effort \"%s\""
 msgstr "Poista työmäärä \"%s\""
 
-#: taskcoachlib/command/effortCommands.py:62
+#: taskcoachlib/command/effortCommands.py:61
 msgid "Change task of effort"
 msgstr "Vaihda työmäärän tehtävä"
 
-#: taskcoachlib/command/effortCommands.py:63
+#: taskcoachlib/command/effortCommands.py:62
 msgid "Change task of \"%s\" effort"
 msgstr "Vaihda työmäärän \"%s\" tehtävä"
 
-#: taskcoachlib/command/effortCommands.py:83
+#: taskcoachlib/command/effortCommands.py:82
 msgid "Change effort start date and time"
 msgstr "Vaihda työmäärän aloituspäivä ja -aika"
 
-#: taskcoachlib/command/effortCommands.py:84
+#: taskcoachlib/command/effortCommands.py:83
 msgid "Change effort start date and time of \"%s\""
 msgstr "Vaihda työmäärän \"%s\" aloituspäivä ja -aika"
 
-#: taskcoachlib/command/effortCommands.py:118
+#: taskcoachlib/command/effortCommands.py:117
 msgid "Change effort stop date and time"
 msgstr "Vaihda työmäärän lopetuspäivä ja -aika"
 
-#: taskcoachlib/command/effortCommands.py:119
+#: taskcoachlib/command/effortCommands.py:118
 msgid "Change effort stop date and time of \"%s\""
 msgstr "Vaihda työmäärän \"%s\" lopetuspäivä ja -aika"
 
@@ -531,30 +530,30 @@ msgstr "Vaihda vaatimus"
 msgid "Toggle prerequisite of \"%s\""
 msgstr "Vaihda  \"%s\":n vaatimus"
 
-#: taskcoachlib/config/settings.py:234
+#: taskcoachlib/config/settings.py:237
 msgid "Error while reading the %s-%s setting from %s.ini."
 msgstr "Virhe luettaessa %s-%s asetusta tiedostosta %s.ini."
 
-#: taskcoachlib/config/settings.py:235
+#: taskcoachlib/config/settings.py:238
 msgid "The value is: %s"
 msgstr "Arvo on: %s"
 
-#: taskcoachlib/config/settings.py:236
+#: taskcoachlib/config/settings.py:239
 msgid "The error is: %s"
 msgstr "Virhe on: %s"
 
-#: taskcoachlib/config/settings.py:237
+#: taskcoachlib/config/settings.py:240
 msgid ""
 "%s will use the default value for the setting and should proceed normally."
 msgstr ""
 "%s:lle käytetään asetuksen oletusarvoa ja käsittelyn pitäisi edetä "
 "normaalisti."
 
-#: taskcoachlib/config/settings.py:238
+#: taskcoachlib/config/settings.py:241
 msgid "Settings error"
 msgstr "Asetusvirhe"
 
-#: taskcoachlib/config/settings.py:261
+#: taskcoachlib/config/settings.py:264
 msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
@@ -562,7 +561,7 @@ msgstr ""
 "Virhe tallennettaessa tiedostoon %s.ini\n"
 "%s\n"
 
-#: taskcoachlib/config/settings.py:262
+#: taskcoachlib/config/settings.py:265
 msgid "Save error"
 msgstr "Virhe tallentaessa"
 
@@ -666,11 +665,11 @@ msgstr "1 viikko"
 msgid "2 weeks"
 msgstr "2 viikkoa"
 
-#: taskcoachlib/domain/effort/composite.py:179
+#: taskcoachlib/domain/effort/composite.py:185
 msgid "Total"
 msgstr "Yhteensä"
 
-#: taskcoachlib/domain/effort/composite.py:196
+#: taskcoachlib/domain/effort/composite.py:202
 msgid "Total for %s"
 msgstr "Yhteensä: %s"
 
@@ -795,352 +794,352 @@ msgstr "Näytä/piilota valmiit tehtävät"
 msgid "&New task..."
 msgstr "&Uusi tehtävä..."
 
-#: taskcoachlib/gui/artprovider.py:94
+#: taskcoachlib/gui/artprovider.py:95
 msgid "Arrow down"
 msgstr "Nuoli alas"
 
-#: taskcoachlib/gui/artprovider.py:95
+#: taskcoachlib/gui/artprovider.py:96
 msgid "Arrow down with status"
 msgstr "Nuoli alas tilatiedolla"
 
-#: taskcoachlib/gui/artprovider.py:96
+#: taskcoachlib/gui/artprovider.py:97
 msgid "Blue arrows looped"
 msgstr "Siniset nuolet kierretty"
 
-#: taskcoachlib/gui/artprovider.py:97
+#: taskcoachlib/gui/artprovider.py:98
 msgid "Green arrows looped"
 msgstr "Vihreät nuolet kierretty"
 
-#: taskcoachlib/gui/artprovider.py:98
+#: taskcoachlib/gui/artprovider.py:99
 msgid "Arrow up"
 msgstr "Nuoli ylös"
 
-#: taskcoachlib/gui/artprovider.py:99
+#: taskcoachlib/gui/artprovider.py:100
 msgid "Arrow up with status"
 msgstr "Nuoli ylös tilatiedolla"
 
-#: taskcoachlib/gui/artprovider.py:100
+#: taskcoachlib/gui/artprovider.py:101
 msgid "Bomb"
 msgstr "Pommi"
 
-#: taskcoachlib/gui/artprovider.py:101
+#: taskcoachlib/gui/artprovider.py:102
 msgid "Book"
 msgstr "Kirja"
 
-#: taskcoachlib/gui/artprovider.py:102
+#: taskcoachlib/gui/artprovider.py:103
 msgid "Books"
 msgstr "Kirjat"
 
-#: taskcoachlib/gui/artprovider.py:103
+#: taskcoachlib/gui/artprovider.py:104
 msgid "Box"
 msgstr "Laatikko"
 
-#: taskcoachlib/gui/artprovider.py:104
+#: taskcoachlib/gui/artprovider.py:105
 msgid "Ladybug"
 msgstr "Leppäkerttu"
 
-#: taskcoachlib/gui/artprovider.py:105
+#: taskcoachlib/gui/artprovider.py:106
 msgid "Cake"
 msgstr "Kakku"
 
-#: taskcoachlib/gui/artprovider.py:106
+#: taskcoachlib/gui/artprovider.py:107
 msgid "Calculator"
 msgstr "Laskin"
 
-#: taskcoachlib/gui/artprovider.py:107 taskcoachlib/gui/viewer/task.py:557
+#: taskcoachlib/gui/artprovider.py:108 taskcoachlib/gui/viewer/task.py:557
 msgid "Calendar"
 msgstr "Kalenteri"
 
-#: taskcoachlib/gui/artprovider.py:108
+#: taskcoachlib/gui/artprovider.py:109
 msgid "Cat"
 msgstr "Kissa"
 
-#: taskcoachlib/gui/artprovider.py:109
+#: taskcoachlib/gui/artprovider.py:110
 msgid "Compact disc (CD)"
 msgstr "CD-levy"
 
-#: taskcoachlib/gui/artprovider.py:110
+#: taskcoachlib/gui/artprovider.py:111
 msgid "Charts"
 msgstr "Kaaviot"
 
-#: taskcoachlib/gui/artprovider.py:111
+#: taskcoachlib/gui/artprovider.py:112
 msgid "Chatting"
 msgstr "Keskustelu"
 
-#: taskcoachlib/gui/artprovider.py:112
+#: taskcoachlib/gui/artprovider.py:113
 msgid "Check mark"
 msgstr "Tarkistusmerkki"
 
-#: taskcoachlib/gui/artprovider.py:113
+#: taskcoachlib/gui/artprovider.py:114
 msgid "Clock"
 msgstr "Kello"
 
-#: taskcoachlib/gui/artprovider.py:114
+#: taskcoachlib/gui/artprovider.py:115
 msgid "Alarm clock"
 msgstr "Herätyskello"
 
-#: taskcoachlib/gui/artprovider.py:115
+#: taskcoachlib/gui/artprovider.py:116
 msgid "Stopwatch"
 msgstr "Sekuntikello"
 
-#: taskcoachlib/gui/artprovider.py:116
+#: taskcoachlib/gui/artprovider.py:117
 msgid "Cogwheel"
 msgstr "Hammaspyörä"
 
-#: taskcoachlib/gui/artprovider.py:117
+#: taskcoachlib/gui/artprovider.py:118
 msgid "Cogwheels"
 msgstr "Hammaspyörät"
 
-#: taskcoachlib/gui/artprovider.py:118
+#: taskcoachlib/gui/artprovider.py:119
 msgid "Desktop computer"
 msgstr "Pöytätietokone"
 
-#: taskcoachlib/gui/artprovider.py:119
+#: taskcoachlib/gui/artprovider.py:120
 msgid "Laptop computer"
 msgstr "Kannettava tietokone"
 
-#: taskcoachlib/gui/artprovider.py:120
+#: taskcoachlib/gui/artprovider.py:121
 msgid "Handheld computer"
 msgstr "Käsitietokone"
 
-#: taskcoachlib/gui/artprovider.py:121
+#: taskcoachlib/gui/artprovider.py:122
 msgid "Red cross"
 msgstr "Punainen risti"
 
-#: taskcoachlib/gui/artprovider.py:122
+#: taskcoachlib/gui/artprovider.py:123
 msgid "Die"
 msgstr "Arpakuutio"
 
-#: taskcoachlib/gui/artprovider.py:123
+#: taskcoachlib/gui/artprovider.py:124
 msgid "Document"
 msgstr "Dokumentti"
 
-#: taskcoachlib/gui/artprovider.py:124
+#: taskcoachlib/gui/artprovider.py:125
 msgid "Blue earth"
 msgstr "Sininen maa"
 
-#: taskcoachlib/gui/artprovider.py:125
+#: taskcoachlib/gui/artprovider.py:126
 msgid "Green earth"
 msgstr "Vihreä maa"
 
-#: taskcoachlib/gui/artprovider.py:126
+#: taskcoachlib/gui/artprovider.py:127
 msgid "Envelope"
 msgstr "Kirjekuori"
 
-#: taskcoachlib/gui/artprovider.py:127
+#: taskcoachlib/gui/artprovider.py:128
 msgid "Envelopes"
 msgstr "Kirjekuoret"
 
-#: taskcoachlib/gui/artprovider.py:128
+#: taskcoachlib/gui/artprovider.py:129
 msgid "Blue folder"
 msgstr "Sininen kansio"
 
-#: taskcoachlib/gui/artprovider.py:129
+#: taskcoachlib/gui/artprovider.py:130
 msgid "Light blue folder"
 msgstr "Vaalean sininen kansio"
 
-#: taskcoachlib/gui/artprovider.py:130
+#: taskcoachlib/gui/artprovider.py:131
 msgid "Green folder"
 msgstr "Vihreä kansio"
 
-#: taskcoachlib/gui/artprovider.py:131
+#: taskcoachlib/gui/artprovider.py:132
 msgid "Grey folder"
 msgstr "Harmaa kansio"
 
-#: taskcoachlib/gui/artprovider.py:132
+#: taskcoachlib/gui/artprovider.py:133
 msgid "Orange folder"
 msgstr "Oranssi kansio"
 
-#: taskcoachlib/gui/artprovider.py:133
+#: taskcoachlib/gui/artprovider.py:134
 msgid "Purple folder"
 msgstr "Violetti kansio"
 
-#: taskcoachlib/gui/artprovider.py:134
+#: taskcoachlib/gui/artprovider.py:135
 msgid "Red folder"
 msgstr "Punainen kansio"
 
-#: taskcoachlib/gui/artprovider.py:135
+#: taskcoachlib/gui/artprovider.py:136
 msgid "Yellow folder"
 msgstr "Keltainen kansio"
 
-#: taskcoachlib/gui/artprovider.py:136
+#: taskcoachlib/gui/artprovider.py:137
 msgid "Blue folder with arrow"
 msgstr "Sininen kansio nuolella"
 
-#: taskcoachlib/gui/artprovider.py:137
+#: taskcoachlib/gui/artprovider.py:138
 msgid "Heart"
 msgstr "Sydän"
 
-#: taskcoachlib/gui/artprovider.py:138
+#: taskcoachlib/gui/artprovider.py:139
 msgid "Hearts"
 msgstr "Sydämet"
 
-#: taskcoachlib/gui/artprovider.py:139
+#: taskcoachlib/gui/artprovider.py:140
 msgid "Green house"
 msgstr "Vihreä talo"
 
-#: taskcoachlib/gui/artprovider.py:140
+#: taskcoachlib/gui/artprovider.py:141
 msgid "Red house"
 msgstr "Punainen talo"
 
-#: taskcoachlib/gui/artprovider.py:141
+#: taskcoachlib/gui/artprovider.py:142
 msgid "Key"
 msgstr "Avain"
 
-#: taskcoachlib/gui/artprovider.py:142
+#: taskcoachlib/gui/artprovider.py:143
 msgid "Keys"
 msgstr "Avaimet"
 
-#: taskcoachlib/gui/artprovider.py:143
+#: taskcoachlib/gui/artprovider.py:144
 msgid "Lamp"
 msgstr "Lamppu"
 
-#: taskcoachlib/gui/artprovider.py:144
+#: taskcoachlib/gui/artprovider.py:145
 msgid "Question mark"
 msgstr "Kysymysmerkki"
 
-#: taskcoachlib/gui/artprovider.py:145
+#: taskcoachlib/gui/artprovider.py:146
 #: taskcoachlib/gui/wizard/csvimport.py:341
 msgid "Information"
 msgstr "Tiedonanto"
 
-#: taskcoachlib/gui/artprovider.py:146
+#: taskcoachlib/gui/artprovider.py:147
 msgid "Blue led"
 msgstr "Sininen led"
 
-#: taskcoachlib/gui/artprovider.py:147
+#: taskcoachlib/gui/artprovider.py:148
 msgid "Light blue led"
 msgstr "Vaalean sininen led"
 
-#: taskcoachlib/gui/artprovider.py:148
+#: taskcoachlib/gui/artprovider.py:149
 msgid "Grey led"
 msgstr "Harmaa led"
 
-#: taskcoachlib/gui/artprovider.py:149
+#: taskcoachlib/gui/artprovider.py:150
 msgid "Green led"
 msgstr "Vihreä led"
 
-#: taskcoachlib/gui/artprovider.py:150
+#: taskcoachlib/gui/artprovider.py:151
 msgid "Light green led"
 msgstr "Vaalean vihreä led"
 
-#: taskcoachlib/gui/artprovider.py:151
+#: taskcoachlib/gui/artprovider.py:152
 msgid "Orange led"
 msgstr "Oranssi led"
 
-#: taskcoachlib/gui/artprovider.py:152
+#: taskcoachlib/gui/artprovider.py:153
 msgid "Purple led"
 msgstr "Violetti led"
 
-#: taskcoachlib/gui/artprovider.py:153
+#: taskcoachlib/gui/artprovider.py:154
 msgid "Red led"
 msgstr "Punainen led"
 
-#: taskcoachlib/gui/artprovider.py:154
+#: taskcoachlib/gui/artprovider.py:155
 msgid "Yellow led"
 msgstr "Keltainen led"
 
-#: taskcoachlib/gui/artprovider.py:155
+#: taskcoachlib/gui/artprovider.py:156
 msgid "Life ring"
 msgstr "Pelastusrengas"
 
-#: taskcoachlib/gui/artprovider.py:156
+#: taskcoachlib/gui/artprovider.py:157
 msgid "Locked lock"
 msgstr "Lukittu lukko"
 
-#: taskcoachlib/gui/artprovider.py:157
+#: taskcoachlib/gui/artprovider.py:158
 msgid "Unlocked lock"
 msgstr "Avattu lukko"
 
-#: taskcoachlib/gui/artprovider.py:158
+#: taskcoachlib/gui/artprovider.py:159
 msgid "Magnifier glass"
 msgstr "Suurennuslasi"
 
-#: taskcoachlib/gui/artprovider.py:159
+#: taskcoachlib/gui/artprovider.py:160
 msgid "Piano"
 msgstr "Piano"
 
-#: taskcoachlib/gui/artprovider.py:160
+#: taskcoachlib/gui/artprovider.py:161
 msgid "Music note"
 msgstr "Nuotti"
 
-#: taskcoachlib/gui/artprovider.py:161
+#: taskcoachlib/gui/artprovider.py:162
 msgid "Note"
 msgstr "Muistilappu"
 
-#: taskcoachlib/gui/artprovider.py:162
+#: taskcoachlib/gui/artprovider.py:163
 msgid "Palette"
 msgstr "Paletti"
 
-#: taskcoachlib/gui/artprovider.py:163
+#: taskcoachlib/gui/artprovider.py:164
 msgid "Paperclip"
 msgstr "Klemmari"
 
-#: taskcoachlib/gui/artprovider.py:164
+#: taskcoachlib/gui/artprovider.py:165
 msgid "Pencil"
 msgstr "Kynä"
 
-#: taskcoachlib/gui/artprovider.py:165
+#: taskcoachlib/gui/artprovider.py:166
 msgid "Person"
 msgstr "Henkilö"
 
-#: taskcoachlib/gui/artprovider.py:166
+#: taskcoachlib/gui/artprovider.py:167
 msgid "People"
 msgstr "Ihmiset"
 
-#: taskcoachlib/gui/artprovider.py:167
+#: taskcoachlib/gui/artprovider.py:168
 msgid "Identification"
 msgstr "Henkilökortti"
 
-#: taskcoachlib/gui/artprovider.py:168
+#: taskcoachlib/gui/artprovider.py:169
 msgid "Person talking"
 msgstr "Puhuva henkilö"
 
-#: taskcoachlib/gui/artprovider.py:169
+#: taskcoachlib/gui/artprovider.py:170
 msgid "Warning sign"
 msgstr "Varoitusmerkki"
 
-#: taskcoachlib/gui/artprovider.py:170
+#: taskcoachlib/gui/artprovider.py:171
 msgid "Minus"
 msgstr "Miinus"
 
-#: taskcoachlib/gui/artprovider.py:171
+#: taskcoachlib/gui/artprovider.py:172
 msgid "Plus"
 msgstr "Plus"
 
-#: taskcoachlib/gui/artprovider.py:172
+#: taskcoachlib/gui/artprovider.py:173
 msgid "Red star"
 msgstr "Punainen tähti"
 
-#: taskcoachlib/gui/artprovider.py:173
+#: taskcoachlib/gui/artprovider.py:174
 msgid "Yellow star"
 msgstr "Keltainen tähti"
 
-#: taskcoachlib/gui/artprovider.py:174
+#: taskcoachlib/gui/artprovider.py:175
 msgid "Traffic light"
 msgstr "Liikennevalo"
 
-#: taskcoachlib/gui/artprovider.py:175
+#: taskcoachlib/gui/artprovider.py:176
 msgid "Trashcan"
 msgstr "Roskakori"
 
-#: taskcoachlib/gui/artprovider.py:176
+#: taskcoachlib/gui/artprovider.py:177
 msgid "Lightning"
 msgstr "Salama"
 
-#: taskcoachlib/gui/artprovider.py:177
+#: taskcoachlib/gui/artprovider.py:178
 msgid "Umbrella"
 msgstr "Sateenvarjo"
 
-#: taskcoachlib/gui/artprovider.py:178
+#: taskcoachlib/gui/artprovider.py:179
 msgid "Partly sunny"
 msgstr "Puolipouta"
 
-#: taskcoachlib/gui/artprovider.py:179
+#: taskcoachlib/gui/artprovider.py:180
 msgid "Wrench"
 msgstr "Jakoavain"
 
-#: taskcoachlib/gui/artprovider.py:187
+#: taskcoachlib/gui/artprovider.py:188
 msgid "No icon"
 msgstr "Ei kuvaketta"
 
@@ -1152,97 +1151,92 @@ msgstr ""
 msgid "See:"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/developer_message.py:58
-#: taskcoachlib/gui/dialog/preferences.py:362
-msgid "Check for messages from the %(name)s developers on startup"
-msgstr ""
-
-#: taskcoachlib/gui/dialog/editor.py:89 taskcoachlib/gui/dialog/editor.py:118
-#: taskcoachlib/gui/dialog/editor.py:1056
+#: taskcoachlib/gui/dialog/editor.py:83 taskcoachlib/gui/dialog/editor.py:131
+#: taskcoachlib/gui/dialog/editor.py:1137
 #: taskcoachlib/gui/viewer/attachment.py:85
 #: taskcoachlib/gui/viewer/category.py:90
-#: taskcoachlib/gui/viewer/effort.py:194 taskcoachlib/gui/viewer/note.py:106
+#: taskcoachlib/gui/viewer/effort.py:195 taskcoachlib/gui/viewer/note.py:108
 #: taskcoachlib/gui/viewer/task.py:795
 #: taskcoachlib/gui/wizard/csvimport.py:230
 #: taskcoachlib/persistence/csv/reader.py:78
 msgid "Description"
 msgstr "Selite"
 
-#: taskcoachlib/gui/dialog/editor.py:98
+#: taskcoachlib/gui/dialog/editor.py:104
 msgid "Edit to change all subjects"
 msgstr "Muuta vaihtaaksesi kaikki otsikot"
 
-#: taskcoachlib/gui/dialog/editor.py:104
+#: taskcoachlib/gui/dialog/editor.py:110
 #: taskcoachlib/gui/dialog/templates.py:109
 #: taskcoachlib/gui/viewer/attachment.py:75
-#: taskcoachlib/gui/viewer/base.py:300 taskcoachlib/gui/viewer/category.py:82
-#: taskcoachlib/gui/viewer/note.py:96 taskcoachlib/gui/viewer/task.py:781
+#: taskcoachlib/gui/viewer/base.py:302 taskcoachlib/gui/viewer/category.py:82
+#: taskcoachlib/gui/viewer/note.py:98 taskcoachlib/gui/viewer/task.py:781
 #: taskcoachlib/gui/wizard/csvimport.py:229
 #: taskcoachlib/persistence/csv/reader.py:76
 msgid "Subject"
 msgstr "Aihe"
 
-#: taskcoachlib/gui/dialog/editor.py:109
-#: taskcoachlib/gui/dialog/editor.py:1046
+#: taskcoachlib/gui/dialog/editor.py:115
+#: taskcoachlib/gui/dialog/editor.py:1123
 msgid "Edit to change all descriptions"
 msgstr "Muuta vaihtaaksesi kaikki selitteet"
 
-#: taskcoachlib/gui/dialog/editor.py:140 taskcoachlib/gui/uicommand.py:2590
+#: taskcoachlib/gui/dialog/editor.py:153 taskcoachlib/gui/uicommand.py:2616
 #: taskcoachlib/gui/viewer/task.py:871
 #: taskcoachlib/gui/wizard/csvimport.py:232
 #: taskcoachlib/persistence/csv/reader.py:89
 msgid "Priority"
 msgstr "Tärkeys"
 
-#: taskcoachlib/gui/dialog/editor.py:156
+#: taskcoachlib/gui/dialog/editor.py:170
 msgid "Mutually exclusive"
 msgstr "Toisensa poissulkeva"
 
-#: taskcoachlib/gui/dialog/editor.py:163
+#: taskcoachlib/gui/dialog/editor.py:177
 msgid "Subcategories"
 msgstr "Aliluokat"
 
-#: taskcoachlib/gui/dialog/editor.py:184
+#: taskcoachlib/gui/dialog/editor.py:193
 msgid "Edit to change location of all attachments"
 msgstr "Muuta vaihtaaksesi kaikkien liitteiden paikat"
 
-#: taskcoachlib/gui/dialog/editor.py:192
+#: taskcoachlib/gui/dialog/editor.py:201
 msgid "Browse"
 msgstr "Selaa"
 
-#: taskcoachlib/gui/dialog/editor.py:196
+#: taskcoachlib/gui/dialog/editor.py:205
 msgid "Location"
 msgstr "Paikka"
 
-#: taskcoachlib/gui/dialog/editor.py:217
+#: taskcoachlib/gui/dialog/editor.py:227
 msgid "Appearance"
 msgstr "Ulkonäkö"
 
-#: taskcoachlib/gui/dialog/editor.py:227
-#: taskcoachlib/gui/dialog/preferences.py:125
+#: taskcoachlib/gui/dialog/editor.py:237
+#: taskcoachlib/gui/dialog/preferences.py:143
 msgid "Foreground color"
 msgstr "Edustaväri"
 
-#: taskcoachlib/gui/dialog/editor.py:228
-#: taskcoachlib/gui/dialog/preferences.py:125
+#: taskcoachlib/gui/dialog/editor.py:238
+#: taskcoachlib/gui/dialog/preferences.py:143
 msgid "Background color"
 msgstr "Taustaväri"
 
-#: taskcoachlib/gui/dialog/editor.py:253
-#: taskcoachlib/gui/dialog/preferences.py:126
+#: taskcoachlib/gui/dialog/editor.py:264
+#: taskcoachlib/gui/dialog/preferences.py:144
 msgid "Font"
 msgstr "Kirjasin"
 
-#: taskcoachlib/gui/dialog/editor.py:262
-#: taskcoachlib/gui/dialog/preferences.py:126
+#: taskcoachlib/gui/dialog/editor.py:273
+#: taskcoachlib/gui/dialog/preferences.py:144
 msgid "Icon"
 msgstr "Kuvake"
 
-#: taskcoachlib/gui/dialog/editor.py:270
+#: taskcoachlib/gui/dialog/editor.py:281
 msgid "Dates"
 msgstr "Päiväykset"
 
-#: taskcoachlib/gui/dialog/editor.py:287
+#: taskcoachlib/gui/dialog/editor.py:298
 #: taskcoachlib/gui/dialog/templates.py:112
 #: taskcoachlib/gui/viewer/task.py:844
 #: taskcoachlib/gui/wizard/csvimport.py:233
@@ -1251,7 +1245,7 @@ msgstr "Päiväykset"
 msgid "Planned start date"
 msgstr "Suunniteltu aloitupäivä"
 
-#: taskcoachlib/gui/dialog/editor.py:288
+#: taskcoachlib/gui/dialog/editor.py:299
 #: taskcoachlib/gui/dialog/templates.py:115
 #: taskcoachlib/gui/viewer/task.py:845
 #: taskcoachlib/gui/wizard/csvimport.py:234
@@ -1260,14 +1254,14 @@ msgstr "Suunniteltu aloitupäivä"
 msgid "Due date"
 msgstr "Päättymispäivä"
 
-#: taskcoachlib/gui/dialog/editor.py:290 taskcoachlib/gui/viewer/task.py:846
+#: taskcoachlib/gui/dialog/editor.py:301 taskcoachlib/gui/viewer/task.py:846
 #: taskcoachlib/gui/wizard/csvimport.py:235
 #: taskcoachlib/persistence/csv/generator.py:34
 #: taskcoachlib/persistence/csv/reader.py:94
 msgid "Actual start date"
 msgstr "Varsinainen aloituspäivä"
 
-#: taskcoachlib/gui/dialog/editor.py:291
+#: taskcoachlib/gui/dialog/editor.py:302
 #: taskcoachlib/gui/dialog/templates.py:118
 #: taskcoachlib/gui/viewer/task.py:847
 #: taskcoachlib/gui/wizard/csvimport.py:236
@@ -1276,169 +1270,169 @@ msgstr "Varsinainen aloituspäivä"
 msgid "Completion date"
 msgstr "Valmistumispäivä"
 
-#: taskcoachlib/gui/dialog/editor.py:327
-#: taskcoachlib/gui/dialog/reminder.py:98
-#: taskcoachlib/gui/dialog/reminder.py:101
+#: taskcoachlib/gui/dialog/editor.py:338
+#: taskcoachlib/gui/dialog/reminder.py:105
+#: taskcoachlib/gui/dialog/reminder.py:108
 #: taskcoachlib/gui/dialog/templates.py:121
 #: taskcoachlib/gui/viewer/task.py:886
 msgid "Reminder"
 msgstr "Muistuttaja"
 
-#: taskcoachlib/gui/dialog/editor.py:337 taskcoachlib/gui/viewer/task.py:863
+#: taskcoachlib/gui/dialog/editor.py:349 taskcoachlib/gui/viewer/task.py:863
 msgid "Recurrence"
 msgstr "Toistettavuus"
 
-#: taskcoachlib/gui/dialog/editor.py:353
+#: taskcoachlib/gui/dialog/editor.py:365
 msgid "Progress"
 msgstr "Edistyminen"
 
-#: taskcoachlib/gui/dialog/editor.py:370
+#: taskcoachlib/gui/dialog/editor.py:382
 msgid "Percentage complete"
 msgstr "Prosenttia valmiina"
 
-#: taskcoachlib/gui/dialog/editor.py:379
+#: taskcoachlib/gui/dialog/editor.py:391
 msgid "Use application-wide setting"
 msgstr "Käytä sovelluksen asetuksia"
 
-#: taskcoachlib/gui/dialog/editor.py:380
+#: taskcoachlib/gui/dialog/editor.py:392
 msgid "No"
 msgstr "Ei"
 
-#: taskcoachlib/gui/dialog/editor.py:380
+#: taskcoachlib/gui/dialog/editor.py:392
 msgid "Yes"
 msgstr "Kyllä"
 
-#: taskcoachlib/gui/dialog/editor.py:390
+#: taskcoachlib/gui/dialog/editor.py:402
 msgid "Mark task completed when all children are completed?"
 msgstr "Merkitse tehtävä suoritetuksi, kun kaikki alitehtävät ovat valmiita?"
 
-#: taskcoachlib/gui/dialog/editor.py:400 taskcoachlib/gui/dialog/editor.py:423
-#: taskcoachlib/gui/uicommand.py:2589 taskcoachlib/gui/viewer/task.py:865
+#: taskcoachlib/gui/dialog/editor.py:412 taskcoachlib/gui/dialog/editor.py:435
+#: taskcoachlib/gui/uicommand.py:2615 taskcoachlib/gui/viewer/task.py:865
 #: taskcoachlib/gui/wizard/csvimport.py:238
 #: taskcoachlib/persistence/csv/reader.py:104
 msgid "Budget"
 msgstr "Arvioitu aika"
 
-#: taskcoachlib/gui/dialog/editor.py:431 taskcoachlib/gui/uicommand.py:2589
-#: taskcoachlib/gui/viewer/effort.py:203 taskcoachlib/gui/viewer/task.py:867
+#: taskcoachlib/gui/dialog/editor.py:443 taskcoachlib/gui/uicommand.py:2615
+#: taskcoachlib/gui/viewer/effort.py:206 taskcoachlib/gui/viewer/task.py:867
 msgid "Time spent"
 msgstr "Kulutettu aika"
 
-#: taskcoachlib/gui/dialog/editor.py:447 taskcoachlib/gui/viewer/task.py:869
+#: taskcoachlib/gui/dialog/editor.py:459 taskcoachlib/gui/viewer/task.py:869
 msgid "Budget left"
 msgstr "Arvioitua aikaa jäljellä"
 
-#: taskcoachlib/gui/dialog/editor.py:471 taskcoachlib/gui/viewer/task.py:873
+#: taskcoachlib/gui/dialog/editor.py:483 taskcoachlib/gui/viewer/task.py:873
 #: taskcoachlib/gui/wizard/csvimport.py:240
 #: taskcoachlib/persistence/csv/reader.py:123
 msgid "Hourly fee"
 msgstr "Tuntitaksa"
 
-#: taskcoachlib/gui/dialog/editor.py:481 taskcoachlib/gui/uicommand.py:2589
+#: taskcoachlib/gui/dialog/editor.py:493 taskcoachlib/gui/uicommand.py:2615
 #: taskcoachlib/gui/viewer/task.py:874
 #: taskcoachlib/gui/wizard/csvimport.py:239
 #: taskcoachlib/persistence/csv/reader.py:118
 msgid "Fixed fee"
 msgstr "Kiinteä taksa"
 
-#: taskcoachlib/gui/dialog/editor.py:487 taskcoachlib/gui/uicommand.py:2589
-#: taskcoachlib/gui/viewer/effort.py:208 taskcoachlib/gui/viewer/task.py:876
+#: taskcoachlib/gui/dialog/editor.py:499 taskcoachlib/gui/uicommand.py:2615
+#: taskcoachlib/gui/viewer/effort.py:211 taskcoachlib/gui/viewer/task.py:876
 msgid "Revenue"
 msgstr "Tulot"
 
-#: taskcoachlib/gui/dialog/editor.py:566 taskcoachlib/gui/viewer/effort.py:39
+#: taskcoachlib/gui/dialog/editor.py:578 taskcoachlib/gui/viewer/effort.py:39
 #: taskcoachlib/help/__init__.py:89 taskcoachlib/help/__init__.py:245
 msgid "Effort"
 msgstr "Työmäärä"
 
-#: taskcoachlib/gui/dialog/editor.py:604
+#: taskcoachlib/gui/dialog/editor.py:618
 #: taskcoachlib/gui/viewer/category.py:40
-#: taskcoachlib/gui/viewer/effort.py:195 taskcoachlib/gui/viewer/note.py:123
+#: taskcoachlib/gui/viewer/effort.py:198 taskcoachlib/gui/viewer/note.py:125
 #: taskcoachlib/gui/viewer/task.py:819 taskcoachlib/help/__init__.py:94
 #: taskcoachlib/help/__init__.py:271
 msgid "Categories"
 msgstr "Luokat"
 
-#: taskcoachlib/gui/dialog/editor.py:639
+#: taskcoachlib/gui/dialog/editor.py:656
 msgid "Attachments"
 msgstr "Liitteet"
 
-#: taskcoachlib/gui/dialog/editor.py:677 taskcoachlib/gui/viewer/note.py:37
+#: taskcoachlib/gui/dialog/editor.py:698 taskcoachlib/gui/viewer/note.py:39
 #: taskcoachlib/help/__init__.py:99 taskcoachlib/help/__init__.py:306
 msgid "Notes"
 msgstr "Huomautukset"
 
-#: taskcoachlib/gui/dialog/editor.py:719 taskcoachlib/gui/viewer/task.py:828
+#: taskcoachlib/gui/dialog/editor.py:742 taskcoachlib/gui/viewer/task.py:828
 msgid "Prerequisites"
 msgstr "Vaatimukset"
 
-#: taskcoachlib/gui/dialog/editor.py:944
+#: taskcoachlib/gui/dialog/editor.py:1017
 msgid "Edit task"
 msgstr "Muokkaa tehtävää"
 
-#: taskcoachlib/gui/dialog/editor.py:953
+#: taskcoachlib/gui/dialog/editor.py:1026
 #: taskcoachlib/gui/dialog/reminder.py:49
 #: taskcoachlib/gui/viewer/effort.py:193
 msgid "Task"
 msgstr "Tehtävä"
 
-#: taskcoachlib/gui/dialog/editor.py:971
+#: taskcoachlib/gui/dialog/editor.py:1044
 msgid "Start"
 msgstr "Aloita"
 
-#: taskcoachlib/gui/dialog/editor.py:985
+#: taskcoachlib/gui/dialog/editor.py:1058
 msgid "Stop"
 msgstr "Lopeta"
 
-#: taskcoachlib/gui/dialog/editor.py:991
+#: taskcoachlib/gui/dialog/editor.py:1064
 msgid "Start tracking from last stop time"
 msgstr "Aloita seuranta viimeisestä lopetusajasta"
 
-#: taskcoachlib/gui/dialog/editor.py:998
+#: taskcoachlib/gui/dialog/editor.py:1071
 msgid "Stop tracking now"
 msgstr "Lopeta seuranta nyt"
 
-#: taskcoachlib/gui/dialog/editor.py:1029
+#: taskcoachlib/gui/dialog/editor.py:1103
 msgid "Warning: start must be earlier than stop"
 msgstr "Varoitus: aloituksen täytyy olla ennen lopetusta"
 
-#: taskcoachlib/gui/dialog/editor.py:1172
+#: taskcoachlib/gui/dialog/editor.py:1265
 msgid "Multiple tasks"
 msgstr "Useita tehtäviä"
 
-#: taskcoachlib/gui/dialog/editor.py:1173
+#: taskcoachlib/gui/dialog/editor.py:1266
 msgid "%s (task)"
 msgstr "%s (tehtävä)"
 
-#: taskcoachlib/gui/dialog/editor.py:1178
+#: taskcoachlib/gui/dialog/editor.py:1271
 msgid "Multiple categories"
 msgstr "Uiseta luokkia"
 
-#: taskcoachlib/gui/dialog/editor.py:1179
+#: taskcoachlib/gui/dialog/editor.py:1272
 msgid "%s (category)"
 msgstr "%s (luokka)"
 
-#: taskcoachlib/gui/dialog/editor.py:1184
+#: taskcoachlib/gui/dialog/editor.py:1277
 msgid "Multiple notes"
 msgstr "Useita huomautuksia"
 
-#: taskcoachlib/gui/dialog/editor.py:1185
+#: taskcoachlib/gui/dialog/editor.py:1278
 msgid "%s (note)"
 msgstr "%s (huomautus)"
 
-#: taskcoachlib/gui/dialog/editor.py:1190
+#: taskcoachlib/gui/dialog/editor.py:1283
 msgid "Multiple attachments"
 msgstr "Useita liitteitä"
 
-#: taskcoachlib/gui/dialog/editor.py:1191
+#: taskcoachlib/gui/dialog/editor.py:1284
 msgid "%s (attachment)"
 msgstr "%s (liite)"
 
-#: taskcoachlib/gui/dialog/editor.py:1196
+#: taskcoachlib/gui/dialog/editor.py:1289
 msgid "Multiple efforts"
 msgstr "Useita työmääriä"
 
-#: taskcoachlib/gui/dialog/editor.py:1197
+#: taskcoachlib/gui/dialog/editor.py:1290
 msgid "%s (effort)"
 msgstr "%s (työmäärä)"
 
@@ -1450,7 +1444,7 @@ msgstr "Käytä kirjasinta:"
 msgid "Use color:"
 msgstr "Käytä väriä:"
 
-#: taskcoachlib/gui/dialog/entry.py:409 taskcoachlib/gui/dialog/entry.py:501
+#: taskcoachlib/gui/dialog/entry.py:409 taskcoachlib/gui/dialog/entry.py:523
 #: taskcoachlib/gui/uicommand.py:79 taskcoachlib/gui/wizard/csvimport.py:227
 #: taskcoachlib/widgets/dirchooser.py:28
 msgid "None"
@@ -1480,7 +1474,7 @@ msgstr "pitäen päiväykset samalla viikon päivällä"
 msgid ", every"
 msgstr ", joka"
 
-#: taskcoachlib/gui/dialog/entry.py:455
+#: taskcoachlib/gui/dialog/entry.py:455 taskcoachlib/gui/dialog/entry.py:496
 msgid "Stop after"
 msgstr "Keskeytä"
 
@@ -1493,30 +1487,30 @@ msgid "Schedule each next recurrence based on"
 msgstr "Aikatauluta jokainen seuraava toisto, joka perustuu:"
 
 #: taskcoachlib/gui/dialog/entry.py:472
-msgid "previous start and/or due date and time"
-msgstr "edellinen aloitus ja/tai lopetuspäivä ja -aika"
+msgid "previous planned start and/or due date and time"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/entry.py:473
 msgid "last completion date and time"
 msgstr "viimeinen päättymispäivä ja -aika"
 
-#: taskcoachlib/gui/dialog/entry.py:493
+#: taskcoachlib/gui/dialog/entry.py:515
 msgid "day(s),"
 msgstr "päivä,"
 
-#: taskcoachlib/gui/dialog/entry.py:493
+#: taskcoachlib/gui/dialog/entry.py:515
 msgid "period,"
 msgstr "jakso,"
 
-#: taskcoachlib/gui/dialog/entry.py:493
+#: taskcoachlib/gui/dialog/entry.py:515
 msgid "week(s),"
 msgstr "viikko"
 
-#: taskcoachlib/gui/dialog/entry.py:494
+#: taskcoachlib/gui/dialog/entry.py:516
 msgid "month(s),"
 msgstr "kuukausi"
 
-#: taskcoachlib/gui/dialog/entry.py:494
+#: taskcoachlib/gui/dialog/entry.py:516
 msgid "year(s),"
 msgstr "vuosi"
 
@@ -1550,19 +1544,19 @@ msgstr ""
 "sitä. Tämä mahdollistaa tyylitietojen muuttamisen ilman että menetät "
 "muutoksesi seuraavalla vientikerralla."
 
-#: taskcoachlib/gui/dialog/export.py:238 taskcoachlib/gui/iocontroller.py:298
+#: taskcoachlib/gui/dialog/export.py:238 taskcoachlib/gui/iocontroller.py:320
 msgid "Export as CSV"
 msgstr "Vie CSV-formaattiin"
 
-#: taskcoachlib/gui/dialog/export.py:259 taskcoachlib/gui/iocontroller.py:305
+#: taskcoachlib/gui/dialog/export.py:259 taskcoachlib/gui/iocontroller.py:327
 msgid "Export as iCalendar"
 msgstr "Vie iCalendar-formaattiin"
 
-#: taskcoachlib/gui/dialog/export.py:275 taskcoachlib/gui/iocontroller.py:291
+#: taskcoachlib/gui/dialog/export.py:275 taskcoachlib/gui/iocontroller.py:313
 msgid "Export as HTML"
 msgstr "Vie HTML-formaattiin"
 
-#: taskcoachlib/gui/dialog/export.py:291 taskcoachlib/gui/iocontroller.py:311
+#: taskcoachlib/gui/dialog/export.py:291 taskcoachlib/gui/iocontroller.py:333
 msgid "Export as Todo.txt"
 msgstr "Vie Todo.txt-formaattiin"
 
@@ -1641,23 +1635,25 @@ msgstr ""
 msgid "OK"
 msgstr "OK"
 
-#: taskcoachlib/gui/dialog/preferences.py:264
-msgid ""
-"This setting will take effect\n"
-"after you restart %s"
+#: taskcoachlib/gui/dialog/preferences.py:282
+msgid "This setting will take effect after you restart %s"
 msgstr ""
-"Tämä asetus tulee voimaan,\n"
-"kun olet käynnistänyt %s:n."
 
-#: taskcoachlib/gui/dialog/preferences.py:311
+#: taskcoachlib/gui/dialog/preferences.py:284
+msgid ""
+"This setting can be overridden for individual tasks\n"
+"in the task edit dialog."
+msgstr ""
+
+#: taskcoachlib/gui/dialog/preferences.py:331
 msgid "Files"
 msgstr "Tiedostot"
 
-#: taskcoachlib/gui/dialog/preferences.py:317
+#: taskcoachlib/gui/dialog/preferences.py:337
 msgid "Auto save after every change"
 msgstr "Automaattitallennus joka muutoksen jälkeen"
 
-#: taskcoachlib/gui/dialog/preferences.py:319
+#: taskcoachlib/gui/dialog/preferences.py:339
 msgid ""
 "Create a backup copy before\n"
 "overwriting a %s file"
@@ -1665,7 +1661,7 @@ msgstr ""
 "Luo varmuuskopio ennen\n"
 "tiedoston %s ylikirjoitusta"
 
-#: taskcoachlib/gui/dialog/preferences.py:321
+#: taskcoachlib/gui/dialog/preferences.py:341
 msgid ""
 "Save settings (%s.ini) in the same\n"
 "directory as the program"
@@ -1673,15 +1669,15 @@ msgstr ""
 "Tallenna asetukset (%s.ini) samaan\n"
 "hakemistoon kuin itse ohjelma"
 
-#: taskcoachlib/gui/dialog/preferences.py:323
+#: taskcoachlib/gui/dialog/preferences.py:343
 msgid "For running %s from a removable medium"
 msgstr "Ohjelman %s ajamiseksi siirrettävältä medialta"
 
-#: taskcoachlib/gui/dialog/preferences.py:325
+#: taskcoachlib/gui/dialog/preferences.py:345
 msgid "Attachment base directory"
 msgstr "Liitteiden perushakemisto"
 
-#: taskcoachlib/gui/dialog/preferences.py:326
+#: taskcoachlib/gui/dialog/preferences.py:346
 msgid ""
 "When adding an attachment, try to make\n"
 "its path relative to this one."
@@ -1689,16 +1685,16 @@ msgstr ""
 "Liitettä lisättäessä yritä tehdä\n"
 "polku suhteelliseksi."
 
-#: taskcoachlib/gui/dialog/preferences.py:329
+#: taskcoachlib/gui/dialog/preferences.py:349
 msgid "Before saving, automatically import from"
 msgstr "Ennen tallennusta automaattisesti tuo:"
 
-#: taskcoachlib/gui/dialog/preferences.py:330
-#: taskcoachlib/gui/dialog/preferences.py:336
+#: taskcoachlib/gui/dialog/preferences.py:350
+#: taskcoachlib/gui/dialog/preferences.py:356
 msgid "Todo.txt format"
 msgstr "Todo.txt-formaatti"
 
-#: taskcoachlib/gui/dialog/preferences.py:331
+#: taskcoachlib/gui/dialog/preferences.py:351
 msgid ""
 "Before saving, %s automatically imports tasks\n"
 "from a Todo.txt file with the same name as the task file,\n"
@@ -1708,11 +1704,11 @@ msgstr ""
 "Todo.txt-tiedostosta samalla nimellä kuten tehtävätiedosto,\n"
 "mutta päätteellä .txt"
 
-#: taskcoachlib/gui/dialog/preferences.py:335
+#: taskcoachlib/gui/dialog/preferences.py:355
 msgid "When saving, automatically export to"
 msgstr "Tallennuksen yhteydessä vie:"
 
-#: taskcoachlib/gui/dialog/preferences.py:337
+#: taskcoachlib/gui/dialog/preferences.py:357
 msgid ""
 "When saving, %s automatically exports tasks\n"
 "to a Todo.txt file with the same name as the task file,\n"
@@ -1722,51 +1718,55 @@ msgstr ""
 "Todo.txt-tiedostostoon samalla nimellä kuten tehtävätiedosto,\n"
 "mutta päätteellä .txt"
 
-#: taskcoachlib/gui/dialog/preferences.py:345
+#: taskcoachlib/gui/dialog/preferences.py:365
 msgid "Window behavior"
 msgstr "Ikkunan toiminta"
 
-#: taskcoachlib/gui/dialog/preferences.py:352
+#: taskcoachlib/gui/dialog/preferences.py:372
 msgid "Show splash screen on startup"
 msgstr "Näytä käynnistysruutu ohjelman käynnistyessä"
 
-#: taskcoachlib/gui/dialog/preferences.py:354
+#: taskcoachlib/gui/dialog/preferences.py:374
 msgid "Show tips window on startup"
 msgstr "Näytä vinkki-ikkuna ohjelman käynnistyessä"
 
-#: taskcoachlib/gui/dialog/preferences.py:356
+#: taskcoachlib/gui/dialog/preferences.py:376
 msgid "Start with the main window iconized"
 msgstr "Käynnistä pääikuna pienennettynä"
 
-#: taskcoachlib/gui/dialog/preferences.py:357
+#: taskcoachlib/gui/dialog/preferences.py:377
 msgid "Always"
 msgstr "Aina"
 
-#: taskcoachlib/gui/dialog/preferences.py:357
+#: taskcoachlib/gui/dialog/preferences.py:377
 msgid "Never"
 msgstr "Ei koskaan"
 
-#: taskcoachlib/gui/dialog/preferences.py:359
+#: taskcoachlib/gui/dialog/preferences.py:379
 msgid "If it was iconized last session"
 msgstr "Jos se oli pienennettynä edellisellä käyttökerralla"
 
-#: taskcoachlib/gui/dialog/preferences.py:360
+#: taskcoachlib/gui/dialog/preferences.py:380
 msgid "Check for new version of %(name)s on startup"
 msgstr "Tarkista käynnistyessä, onko %(name)s:sta uutta versiota"
 
-#: taskcoachlib/gui/dialog/preferences.py:366
+#: taskcoachlib/gui/dialog/preferences.py:382
+msgid "Check for messages from the %(name)s developers on startup"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/preferences.py:386
 msgid "Hide main window when iconized"
 msgstr "Piilota pääikkuna, kun se on pienennetty"
 
-#: taskcoachlib/gui/dialog/preferences.py:368
+#: taskcoachlib/gui/dialog/preferences.py:388
 msgid "Minimize main window when closed"
 msgstr "Pienennä pääikkuna, kun se suljetaan"
 
-#: taskcoachlib/gui/dialog/preferences.py:370
+#: taskcoachlib/gui/dialog/preferences.py:390
 msgid "Make clock in the task bar tick when tracking effort"
 msgstr "Näytä kello tehtävärivillä työmääriä seurattaessa"
 
-#: taskcoachlib/gui/dialog/preferences.py:372
+#: taskcoachlib/gui/dialog/preferences.py:392
 msgid ""
 "Show a popup with the description of an item\n"
 "when hovering over it"
@@ -1774,76 +1774,82 @@ msgstr ""
 "Näytä ponnahdusikkuna selitteen kanssa,\n"
 "kun tietoa osoitetaan hiirellä"
 
-#: taskcoachlib/gui/dialog/preferences.py:379
-#: taskcoachlib/gui/dialog/preferences.py:442
+#: taskcoachlib/gui/dialog/preferences.py:399
+#: taskcoachlib/gui/dialog/preferences.py:462
 msgid "Language"
 msgstr "Kieli"
 
-#: taskcoachlib/gui/dialog/preferences.py:385
+#: taskcoachlib/gui/dialog/preferences.py:405
 msgid "Let the system determine the language"
 msgstr "Anna järjestelmän määrittää kieli"
 
-#: taskcoachlib/gui/dialog/preferences.py:450
+#: taskcoachlib/gui/dialog/preferences.py:470
 msgid ""
 "If your language is not available, or the translation needs improving, "
 "please consider helping. See:"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:458
+#: taskcoachlib/gui/dialog/preferences.py:478
 msgid "Language not found?"
 msgstr "Kieltä ei löydy?"
 
-#: taskcoachlib/gui/dialog/preferences.py:468
+#: taskcoachlib/gui/dialog/preferences.py:488
 msgid "Task appearance"
 msgstr "Tehtävän ulkonäkö"
 
-#: taskcoachlib/gui/dialog/preferences.py:487
+#: taskcoachlib/gui/dialog/preferences.py:501
+msgid ""
+"These appearance settings can be overridden for individual tasks in the task "
+"edit dialog."
+msgstr ""
+
+#: taskcoachlib/gui/dialog/preferences.py:508
 msgid "Features"
 msgstr "Ominaisuudet"
 
-#: taskcoachlib/gui/dialog/preferences.py:494
+#: taskcoachlib/gui/dialog/preferences.py:515
 msgid "Allow for tracking effort"
 msgstr "Salli työmäärien seuranta"
 
-#: taskcoachlib/gui/dialog/preferences.py:495
+#: taskcoachlib/gui/dialog/preferences.py:516
 msgid "Allow for taking notes"
 msgstr "Salli huomautusten otto"
 
-#: taskcoachlib/gui/dialog/preferences.py:502
+#: taskcoachlib/gui/dialog/preferences.py:523
 msgid "Enable SyncML"
 msgstr "Salli SyncML"
 
-#: taskcoachlib/gui/dialog/preferences.py:505
+#: taskcoachlib/gui/dialog/preferences.py:526
 msgid "Enable iPhone synchronization"
 msgstr "Salli iPhone syknronointi"
 
-#: taskcoachlib/gui/dialog/preferences.py:509
+#: taskcoachlib/gui/dialog/preferences.py:530
 msgid "Use X11 session management"
 msgstr "Käytä X11 istunnon hallintaa"
 
-#: taskcoachlib/gui/dialog/preferences.py:511
+#: taskcoachlib/gui/dialog/preferences.py:532
 msgid "Start of work week"
 msgstr "Työviikon aloitus"
 
-#: taskcoachlib/gui/dialog/preferences.py:512
-#: taskcoachlib/gui/viewer/effort.py:216
+#: taskcoachlib/gui/dialog/preferences.py:533
+#: taskcoachlib/gui/viewer/effort.py:219
 msgid "Monday"
 msgstr "Maanantai"
 
-#: taskcoachlib/gui/dialog/preferences.py:513
-#: taskcoachlib/gui/viewer/effort.py:234
+#: taskcoachlib/gui/dialog/preferences.py:534
+#: taskcoachlib/gui/viewer/effort.py:237
 msgid "Sunday"
 msgstr "Sunnuntai"
 
-#: taskcoachlib/gui/dialog/preferences.py:515
+#: taskcoachlib/gui/dialog/preferences.py:536
 msgid "Hour of start of work day"
 msgstr "Työpäivän aloitustunti"
 
-#: taskcoachlib/gui/dialog/preferences.py:517
+#: taskcoachlib/gui/dialog/preferences.py:538
 msgid "Hour of end of work day"
 msgstr "Työpäivän lopetustunti"
 
-#: taskcoachlib/gui/dialog/preferences.py:519
+#: taskcoachlib/gui/dialog/preferences.py:540
 msgid ""
 "Use gradients in calendar views.\n"
 "This may slow down Task Coach."
@@ -1851,196 +1857,219 @@ msgstr ""
 "Käytä häivytystä kalenterinäkymässä.\n"
 "Tämä voi hidastaa Task Coach:ia."
 
-#: taskcoachlib/gui/dialog/preferences.py:523
-msgid "Minutes between task start/end times"
-msgstr "Minuutit tehtävän aloitus/lopetusajan välillä"
+#: taskcoachlib/gui/dialog/preferences.py:544
+msgid "Minutes between suggested times"
+msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:526
+#: taskcoachlib/gui/dialog/preferences.py:545
+msgid ""
+"In popup-menus for time selection (e.g. for setting the start \n"
+"time of an effort) %(name)s will suggest times using this \n"
+"setting. The smaller the number of minutes, the more times \n"
+"are suggested. Of course, you can also enter any time you \n"
+"want beside the suggested times."
+msgstr ""
+
+#: taskcoachlib/gui/dialog/preferences.py:554
 msgid "Idle time notice"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:527
+#: taskcoachlib/gui/dialog/preferences.py:555
 msgid ""
 "If there is no user input for this amount of time\n"
 "(in minutes), %(name)s will ask what to do about current efforts."
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:535
+#: taskcoachlib/gui/dialog/preferences.py:563
 msgid "Task dates"
 msgstr "Tehtäväpäivät"
 
-#: taskcoachlib/gui/dialog/preferences.py:543
+#: taskcoachlib/gui/dialog/preferences.py:571
 msgid "Mark parent task completed when all children are completed"
 msgstr ""
 "Merkitse päätehtävä suoritetuksi, kun kaikki alitehtävät on suoritettu"
 
-#: taskcoachlib/gui/dialog/preferences.py:545
+#: taskcoachlib/gui/dialog/preferences.py:574
 msgid "Number of hours that tasks are considered to be 'due soon'"
 msgstr "Tuntien lukumäärä, jolloin tehtävät 'vanhenevat pian'"
 
-#: taskcoachlib/gui/dialog/preferences.py:547
+#: taskcoachlib/gui/dialog/preferences.py:576
 msgid "Nothing"
 msgstr "Ei mitään"
 
-#: taskcoachlib/gui/dialog/preferences.py:549
+#: taskcoachlib/gui/dialog/preferences.py:578
 msgid "Changing the planned start date changes the due date"
 msgstr "Suunnitellun aloitupäivän muuttaminen muuttaa päättymisaikaa"
 
-#: taskcoachlib/gui/dialog/preferences.py:551
+#: taskcoachlib/gui/dialog/preferences.py:580
 msgid "Changing the due date changes the planned start date"
 msgstr "Päättymispäivän muuttaminen muuttaa suunniteltua aloituspäivää"
 
-#: taskcoachlib/gui/dialog/preferences.py:553
+#: taskcoachlib/gui/dialog/preferences.py:582
 msgid ""
 "What to do with planned start and due date if the other one is changed"
 msgstr ""
 "Mitä tehdään suunnitellulla aloitus- ja päättymispäivällä, jos toista "
 "muutetaan"
 
-#: taskcoachlib/gui/dialog/preferences.py:556
+#: taskcoachlib/gui/dialog/preferences.py:585
 msgid "Preset"
 msgstr "Esiasetus"
 
-#: taskcoachlib/gui/dialog/preferences.py:557
+#: taskcoachlib/gui/dialog/preferences.py:586
 msgid "Propose"
 msgstr "Ehdotus"
 
-#: taskcoachlib/gui/dialog/preferences.py:558
+#: taskcoachlib/gui/dialog/preferences.py:587
 msgid "Today"
 msgstr "Tänään"
 
-#: taskcoachlib/gui/dialog/preferences.py:559
+#: taskcoachlib/gui/dialog/preferences.py:588
 msgid "Tomorrow"
 msgstr "Huomenna"
 
-#: taskcoachlib/gui/dialog/preferences.py:560
+#: taskcoachlib/gui/dialog/preferences.py:589
 msgid "Day after tomorrow"
 msgstr "Ylihuomenna"
 
-#: taskcoachlib/gui/dialog/preferences.py:561
+#: taskcoachlib/gui/dialog/preferences.py:590
 msgid "Next Friday"
 msgstr "Seuraava perjantai"
 
-#: taskcoachlib/gui/dialog/preferences.py:562
+#: taskcoachlib/gui/dialog/preferences.py:591
 msgid "Next Monday"
 msgstr "Seuraava maanantai"
 
-#: taskcoachlib/gui/dialog/preferences.py:563
+#: taskcoachlib/gui/dialog/preferences.py:592
 msgid "Start of day"
 msgstr "Päivän alku"
 
-#: taskcoachlib/gui/dialog/preferences.py:564
+#: taskcoachlib/gui/dialog/preferences.py:593
 msgid "Start of working day"
 msgstr "Työpäivän alku"
 
-#: taskcoachlib/gui/dialog/preferences.py:565
+#: taskcoachlib/gui/dialog/preferences.py:594
 msgid "Current time"
 msgstr "Nykyinen aika"
 
-#: taskcoachlib/gui/dialog/preferences.py:566
+#: taskcoachlib/gui/dialog/preferences.py:595
 msgid "End of working day"
 msgstr "Työpäivä loppu"
 
-#: taskcoachlib/gui/dialog/preferences.py:567
+#: taskcoachlib/gui/dialog/preferences.py:596
 msgid "End of day"
 msgstr "Päivän loppu"
 
-#: taskcoachlib/gui/dialog/preferences.py:569
+#: taskcoachlib/gui/dialog/preferences.py:598
 msgid "Default planned start date and time"
 msgstr "Oletus suunniteltu alkupäivä ja -aika"
 
-#: taskcoachlib/gui/dialog/preferences.py:572
+#: taskcoachlib/gui/dialog/preferences.py:601
 msgid "Default due date and time"
 msgstr "Oletus lopetuspäivä ja -aika"
 
-#: taskcoachlib/gui/dialog/preferences.py:575
+#: taskcoachlib/gui/dialog/preferences.py:604
 msgid "Default actual start date and time"
 msgstr "Oletus todellinen alkupäivä ja -aika"
 
-#: taskcoachlib/gui/dialog/preferences.py:578
+#: taskcoachlib/gui/dialog/preferences.py:607
 msgid "Default completion date and time"
 msgstr "Oletus valmistumispäivä ja -aika"
 
-#: taskcoachlib/gui/dialog/preferences.py:581
+#: taskcoachlib/gui/dialog/preferences.py:610
 msgid "Default reminder date and time"
 msgstr "Oletus muistutuspäivä ja -aika"
 
-#: taskcoachlib/gui/dialog/preferences.py:588
+#: taskcoachlib/gui/dialog/preferences.py:617
+msgid ""
+"New tasks start with \"Preset\" dates and times filled in and checked. "
+"\"Proposed\" dates and times are filled in, but not checked.\n"
+"\n"
+"\"Start of day\" is midnight and \"End of day\" is just before midnight. "
+"When using these, task viewers hide the time and show only the date.\n"
+"\n"
+"\"Start of working day\" and \"End of working day\" use the working day as "
+"set in the Features tab of this preferences dialog."
+msgstr ""
+
+#: taskcoachlib/gui/dialog/preferences.py:628
 msgid "Task reminders"
 msgstr "Tehtävämuistuttajat"
 
-#: taskcoachlib/gui/dialog/preferences.py:598
+#: taskcoachlib/gui/dialog/preferences.py:638
 msgid "Notification system to use for reminders"
 msgstr "Ilmoitusjärjestelmä muistuttajille"
 
-#: taskcoachlib/gui/dialog/preferences.py:602
+#: taskcoachlib/gui/dialog/preferences.py:642
 msgid "Let the computer say the reminder"
 msgstr "Anna tietokoneen sanoa muistutus"
 
-#: taskcoachlib/gui/dialog/preferences.py:603
+#: taskcoachlib/gui/dialog/preferences.py:643
 msgid "(Needs espeak)"
 msgstr "(Tarvitaan 'espeak')"
 
-#: taskcoachlib/gui/dialog/preferences.py:608
+#: taskcoachlib/gui/dialog/preferences.py:648
 msgid "Default snooze time to use after reminder"
 msgstr "Oletus torkkuaika muistutuksen jälkeen"
 
-#: taskcoachlib/gui/dialog/preferences.py:612
+#: taskcoachlib/gui/dialog/preferences.py:652
 msgid "Snooze times to offer in task reminder dialog"
 msgstr "Tehtävän muistutusdialogissa olevat torkkuajat"
 
-#: taskcoachlib/gui/dialog/preferences.py:620
+#: taskcoachlib/gui/dialog/preferences.py:660
 msgid "iPhone"
 msgstr "iPhone"
 
-#: taskcoachlib/gui/dialog/preferences.py:626
+#: taskcoachlib/gui/dialog/preferences.py:666
 msgid "Password for synchronization with iPhone"
 msgstr "Salasana iPhone synkronointia varten"
 
-#: taskcoachlib/gui/dialog/preferences.py:628
+#: taskcoachlib/gui/dialog/preferences.py:668
 msgid "Bonjour service name"
 msgstr "Bonjour-palvelun nimi"
 
-#: taskcoachlib/gui/dialog/preferences.py:630
-#: taskcoachlib/gui/dialog/preferences.py:631
+#: taskcoachlib/gui/dialog/preferences.py:670
+#: taskcoachlib/gui/dialog/preferences.py:671
 msgid "Upload completed tasks to device"
 msgstr "Lataa valmiit tehtävät laitteelle"
 
-#: taskcoachlib/gui/dialog/preferences.py:633
+#: taskcoachlib/gui/dialog/preferences.py:673
 msgid "Show sync log"
 msgstr "Näytä synkronointiloki"
 
-#: taskcoachlib/gui/dialog/preferences.py:633
+#: taskcoachlib/gui/dialog/preferences.py:673
 msgid "Show the synchronization log"
 msgstr "Näytä synkronointiloki"
 
-#: taskcoachlib/gui/dialog/preferences.py:639
+#: taskcoachlib/gui/dialog/preferences.py:679
 msgid "Editor"
 msgstr "Editori"
 
-#: taskcoachlib/gui/dialog/preferences.py:645
+#: taskcoachlib/gui/dialog/preferences.py:687
 msgid "Check spelling in editors"
 msgstr "Tarkista kieliasu editoreissa"
+
+#: taskcoachlib/gui/dialog/preferences.py:689
+msgid "Font to use in the description field of edit dialogs"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/reminder.py:30
 msgid "%(name)s reminder - %(task)s"
 msgstr "%(name)s muistuttaja - %(task)s"
 
-#: taskcoachlib/gui/dialog/reminder.py:63
+#: taskcoachlib/gui/dialog/reminder.py:64
 msgid "Reminder date/time"
 msgstr "Muistuttajan päiväys/aika"
 
-#: taskcoachlib/gui/dialog/reminder.py:64
+#: taskcoachlib/gui/dialog/reminder.py:65
 msgid "Snooze"
 msgstr "Torkku"
 
-#: taskcoachlib/gui/dialog/reminder.py:82
-msgid ""
-"Also use the selected snooze time as default snooze time for future reminders"
+#: taskcoachlib/gui/dialog/reminder.py:87
+msgid "Also make this the default snooze time for future reminders"
 msgstr ""
-"Käytä valittua torkkuaikaa oletustorkkuaikana myös tuleville muistuttajille"
 
-#: taskcoachlib/gui/dialog/reminder.py:86
+#: taskcoachlib/gui/dialog/reminder.py:93
 msgid "Mark task completed"
 msgstr "Merkitse tehtävä valmiiksi"
 
@@ -2169,7 +2198,7 @@ msgid "The latest released version of %(name)s is %(version)s."
 msgstr "Viimeisin virallinen %(name)s:n versio on %(version)s."
 
 #: taskcoachlib/gui/dialog/xfce4warning.py:27
-#: taskcoachlib/gui/mainwindow.py:92 taskcoachlib/gui/uicommand.py:625
+#: taskcoachlib/gui/mainwindow.py:87 taskcoachlib/gui/uicommand.py:626
 msgid "Warning"
 msgstr "Varoitus"
 
@@ -2216,52 +2245,52 @@ msgstr "Pysäytä hetkellä %s ja jatka nyt"
 msgid "Notification"
 msgstr "Ilmoitus"
 
-#: taskcoachlib/gui/iocontroller.py:49
+#: taskcoachlib/gui/iocontroller.py:53
 msgid "%s files (*.tsk)|*.tsk|All files (*.*)|*"
 msgstr "%s tiedostot (*.tsk)|*.tsk|Kaikki tiedostot (*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:52
+#: taskcoachlib/gui/iocontroller.py:56
 msgid ""
 "%s files (*.tsk)|*.tsk|Backup files (*.tsk.bak)|*.tsk.bak|All files (*.*)|*"
 msgstr ""
 "%s-tiedostot (*.tsk)|*.tsk|Varmuuskopiotiedostot "
 "(*.tsk.bak)|*.tsk.bak|Kaikki tiedostot (*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:55
+#: taskcoachlib/gui/iocontroller.py:60
 msgid "iCalendar files (*.ics)|*.ics|All files (*.*)|*"
 msgstr "iCalendar-tiedostot (*.ics)|*.ics|Kaikki tiedostot (*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:58
+#: taskcoachlib/gui/iocontroller.py:63
 msgid "HTML files (*.html)|*.html|All files (*.*)|*"
 msgstr "HTML-tiedostot (*.html)|*.html|Kaikki tiedostot (*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:61
+#: taskcoachlib/gui/iocontroller.py:66
 msgid "CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt|All files (*.*)|*"
 msgstr ""
 "CSV-tiedostot (*.csv)|*.csv|Tekstitiedostot (*.txt)|*.txt|Kaikki tiedostot "
 "(*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:64
+#: taskcoachlib/gui/iocontroller.py:70
 msgid "Todo.txt files (*.txt)|*.txt|All files (*.*)|*"
 msgstr "Todo.txt-tiedostot (*.txt)|*.txt|Kaikki tiedostot (*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:103
+#: taskcoachlib/gui/iocontroller.py:109
 msgid "Open"
 msgstr "Avaa"
 
-#: taskcoachlib/gui/iocontroller.py:138
+#: taskcoachlib/gui/iocontroller.py:146
 msgid "Loaded %(nrtasks)d tasks from %(filename)s"
 msgstr "Ladattu %(nrtasks)d tehtävää tiedostosta %(filename)s"
 
-#: taskcoachlib/gui/iocontroller.py:142
+#: taskcoachlib/gui/iocontroller.py:150
 msgid "Cannot open %s because it doesn't exist"
 msgstr "Ei voida avata %s, koska sitä ei ole olemassa"
 
-#: taskcoachlib/gui/iocontroller.py:152
+#: taskcoachlib/gui/iocontroller.py:160
 msgid "Merge"
 msgstr "Yhdistä"
 
-#: taskcoachlib/gui/iocontroller.py:157
+#: taskcoachlib/gui/iocontroller.py:166
 msgid ""
 "Cannot open %(filename)s\n"
 "because it is locked."
@@ -2269,19 +2298,19 @@ msgstr ""
 "Ei voitu avata tiedostoa %(filename)s,\n"
 "koska se on lukittu."
 
-#: taskcoachlib/gui/iocontroller.py:167
+#: taskcoachlib/gui/iocontroller.py:176
 msgid "Merged %(filename)s"
 msgstr "Yhdistetty %(filename)s"
 
-#: taskcoachlib/gui/iocontroller.py:184
+#: taskcoachlib/gui/iocontroller.py:194
 msgid "Save as"
 msgstr "Tallenna nimellä"
 
-#: taskcoachlib/gui/iocontroller.py:197
+#: taskcoachlib/gui/iocontroller.py:208
 msgid "Save selection"
 msgstr "Tallenna valinta"
 
-#: taskcoachlib/gui/iocontroller.py:230
+#: taskcoachlib/gui/iocontroller.py:246
 msgid ""
 "Cannot save %s\n"
 "It is locked by another instance of %s.\n"
@@ -2289,7 +2318,7 @@ msgstr ""
 "Ei voida tallentaa %s\n"
 ",koska %s on lukinnut sen.\n"
 
-#: taskcoachlib/gui/iocontroller.py:235
+#: taskcoachlib/gui/iocontroller.py:251
 msgid ""
 "Cannot save %s\n"
 "%s"
@@ -2297,15 +2326,15 @@ msgstr ""
 "Ei voida tallentaa %s\n"
 "%s"
 
-#: taskcoachlib/gui/iocontroller.py:245
+#: taskcoachlib/gui/iocontroller.py:262
 msgid "Import template"
 msgstr "Tuo mallipohja"
 
-#: taskcoachlib/gui/iocontroller.py:247
+#: taskcoachlib/gui/iocontroller.py:264
 msgid "%s template files (*.tsktmpl)|*.tsktmpl"
 msgstr "%s mallipohjatiedostot (*.tsktmpl)|*.tsktmpl"
 
-#: taskcoachlib/gui/iocontroller.py:253
+#: taskcoachlib/gui/iocontroller.py:271
 msgid ""
 "Cannot import template %s\n"
 "%s"
@@ -2313,19 +2342,19 @@ msgstr ""
 "Ei voida tuoda mallipohjaa %s\n"
 "%s"
 
-#: taskcoachlib/gui/iocontroller.py:282
+#: taskcoachlib/gui/iocontroller.py:302
 msgid "Exported %(count)d items to %(filename)s"
 msgstr "Viety %(count)d tietoa tiedostoon %(filename)s"
 
-#: taskcoachlib/gui/iocontroller.py:337
+#: taskcoachlib/gui/iocontroller.py:359
 msgid "Finished synchronization"
 msgstr "Synkronointi päättynyt"
 
-#: taskcoachlib/gui/iocontroller.py:346
+#: taskcoachlib/gui/iocontroller.py:368
 msgid "Synchronization status"
 msgstr "Synkronoinnin tila"
 
-#: taskcoachlib/gui/iocontroller.py:354
+#: taskcoachlib/gui/iocontroller.py:376
 msgid ""
 "Cannot open %s\n"
 "%s"
@@ -2333,7 +2362,7 @@ msgstr ""
 "Ei voi avata %s\n"
 "%s"
 
-#: taskcoachlib/gui/iocontroller.py:388
+#: taskcoachlib/gui/iocontroller.py:414
 msgid ""
 "A file named %s already exists.\n"
 "Do you want to replace it?"
@@ -2341,7 +2370,7 @@ msgstr ""
 "Tiedosto: %s on jo olemassa.\n"
 "Haluatko korvata sen?"
 
-#: taskcoachlib/gui/iocontroller.py:400
+#: taskcoachlib/gui/iocontroller.py:428
 msgid ""
 "You have unsaved changes.\n"
 "Save before closing?"
@@ -2349,11 +2378,11 @@ msgstr ""
 "Sinulla on tallentamattomia muutoksia.\n"
 "Tallennetaanko ennen sulkemista?"
 
-#: taskcoachlib/gui/iocontroller.py:401
+#: taskcoachlib/gui/iocontroller.py:429
 msgid "%s: save changes?"
 msgstr "%s: tallennetaanko muutokset?"
 
-#: taskcoachlib/gui/iocontroller.py:411
+#: taskcoachlib/gui/iocontroller.py:439
 msgid ""
 "Cannot open %s because it is locked.\n"
 "\n"
@@ -2373,11 +2402,11 @@ msgstr ""
 "\n"
 "Rikotaanko lukitus?"
 
-#: taskcoachlib/gui/iocontroller.py:419 taskcoachlib/gui/iocontroller.py:426
+#: taskcoachlib/gui/iocontroller.py:447 taskcoachlib/gui/iocontroller.py:455
 msgid "%s: file locked"
 msgstr "%s: tiedosto lukittu"
 
-#: taskcoachlib/gui/iocontroller.py:424
+#: taskcoachlib/gui/iocontroller.py:452
 msgid ""
 "Cannot acquire a lock because locking is not supported\n"
 "on the location of %s.\n"
@@ -2387,15 +2416,15 @@ msgstr ""
 "%s.\n"
 "Avataanko %s lukitsemattomana?"
 
-#: taskcoachlib/gui/iocontroller.py:431
+#: taskcoachlib/gui/iocontroller.py:460
 msgid "Closed %s"
 msgstr "Suljettu %s"
 
-#: taskcoachlib/gui/iocontroller.py:436
+#: taskcoachlib/gui/iocontroller.py:465
 msgid "Saved %(nrtasks)d tasks to %(filename)s"
 msgstr "Tallennettu %(nrtasks)d tehtävää tiedostoon %(filename)s"
 
-#: taskcoachlib/gui/iocontroller.py:441
+#: taskcoachlib/gui/iocontroller.py:470
 msgid ""
 "Cannot open %(filename)s\n"
 "because it was created by a newer version of %(name)s.\n"
@@ -2405,7 +2434,7 @@ msgstr ""
 "koska se on luotu %(name)s:n uudemmalla versiolla.\n"
 "Ole hyvä ja päivä päivitä %(name)s."
 
-#: taskcoachlib/gui/iocontroller.py:450
+#: taskcoachlib/gui/iocontroller.py:480
 msgid "Error while reading %s:\n"
 msgstr "Virhe luettaessa %s:\n"
 
@@ -2417,11 +2446,11 @@ msgstr "Synkronoidaan..."
 msgid "Synchronizing with %s..."
 msgstr "Synkronoidaan %s..."
 
-#: taskcoachlib/gui/mainwindow.py:147
+#: taskcoachlib/gui/mainwindow.py:142
 msgid "Welcome to %(name)s version %(version)s"
 msgstr "Tervetuloa ohjelmaan %(name)s versio %(version)s"
 
-#: taskcoachlib/gui/mainwindow.py:175
+#: taskcoachlib/gui/mainwindow.py:169
 msgid ""
 "Couldn't restore the pane layout from TaskCoach.ini:\n"
 "%s\n"
@@ -2433,19 +2462,19 @@ msgid ""
 "file to the bug report."
 msgstr ""
 
-#: taskcoachlib/gui/mainwindow.py:183
+#: taskcoachlib/gui/mainwindow.py:177
 msgid "%s settings error"
 msgstr ""
 
-#: taskcoachlib/gui/mainwindow.py:331
+#: taskcoachlib/gui/mainwindow.py:327
 msgid "iPhone/iPod"
 msgstr "iPhone/iPod"
 
-#: taskcoachlib/gui/mainwindow.py:341
+#: taskcoachlib/gui/mainwindow.py:337
 msgid "Synchronization type"
 msgstr "Synkronoinnin tyyppi"
 
-#: taskcoachlib/gui/mainwindow.py:351
+#: taskcoachlib/gui/mainwindow.py:347
 msgid ""
 "An iPhone or iPod Touch device tried to synchronize with this\n"
 "task file, but the protocol negotiation failed. Please file a\n"
@@ -2455,226 +2484,226 @@ msgstr ""
 "tehtävätiedoston, mutta yhteydenmuodostus epäonnistui.\n"
 "Ole hyvä ja tee virheraportti."
 
-#: taskcoachlib/gui/menu.py:183
+#: taskcoachlib/gui/menu.py:186
 msgid "&File"
 msgstr "&Tiedosto"
 
-#: taskcoachlib/gui/menu.py:185
+#: taskcoachlib/gui/menu.py:188
 msgid "&Edit"
 msgstr "&Muokkaa"
 
-#: taskcoachlib/gui/menu.py:187
+#: taskcoachlib/gui/menu.py:190
 msgid "&View"
 msgstr "&Näytä"
 
-#: taskcoachlib/gui/menu.py:188
+#: taskcoachlib/gui/menu.py:191
 msgid "&New"
 msgstr "Uusi"
 
-#: taskcoachlib/gui/menu.py:189
+#: taskcoachlib/gui/menu.py:192
 msgid "&Actions"
 msgstr "Toimenpiteet"
 
-#: taskcoachlib/gui/menu.py:190
+#: taskcoachlib/gui/menu.py:193
 msgid "&Help"
 msgstr "&Ohje"
 
-#: taskcoachlib/gui/menu.py:222
+#: taskcoachlib/gui/menu.py:225
 msgid "&Import"
 msgstr "Tuo"
 
-#: taskcoachlib/gui/menu.py:224
+#: taskcoachlib/gui/menu.py:227
 msgid "&Export"
 msgstr "&Vie"
 
-#: taskcoachlib/gui/menu.py:333
+#: taskcoachlib/gui/menu.py:338
 msgid "&Select"
 msgstr "&Valitse"
 
-#: taskcoachlib/gui/menu.py:361
+#: taskcoachlib/gui/menu.py:367
 msgid "&New viewer"
 msgstr "&Uusi näkymä"
 
-#: taskcoachlib/gui/menu.py:365
+#: taskcoachlib/gui/menu.py:371
 msgid "&Activate next viewer\tCtrl+PgDn"
 msgstr "&Aktivoi seuraava näkymä\tCtrl+PgDn"
 
-#: taskcoachlib/gui/menu.py:369
+#: taskcoachlib/gui/menu.py:375
 msgid "Activate &previous viewer\tCtrl+PgUp"
 msgstr "Aktivoi &edellinen näkymä\tCtrl+PgUp"
 
-#: taskcoachlib/gui/menu.py:377 taskcoachlib/gui/menu.py:378
+#: taskcoachlib/gui/menu.py:383 taskcoachlib/gui/menu.py:384
 msgid "&Filter"
 msgstr "S&uodin"
 
-#: taskcoachlib/gui/menu.py:379 taskcoachlib/gui/menu.py:380
+#: taskcoachlib/gui/menu.py:385 taskcoachlib/gui/menu.py:386
 msgid "&Sort"
 msgstr "&Lajittele"
 
-#: taskcoachlib/gui/menu.py:381 taskcoachlib/gui/menu.py:382
+#: taskcoachlib/gui/menu.py:387 taskcoachlib/gui/menu.py:388
 msgid "&Columns"
 msgstr "&Sarakkeet"
 
-#: taskcoachlib/gui/menu.py:384 taskcoachlib/gui/menu.py:385
+#: taskcoachlib/gui/menu.py:390 taskcoachlib/gui/menu.py:391
 msgid "&Rounding"
 msgstr "Pyöristys"
 
-#: taskcoachlib/gui/menu.py:387
+#: taskcoachlib/gui/menu.py:393
 msgid "&Tree options"
 msgstr "&Puurakenteen asetukset"
 
-#: taskcoachlib/gui/menu.py:391
+#: taskcoachlib/gui/menu.py:397
 msgid "T&oolbar"
 msgstr "T&yökalurivi"
 
-#: taskcoachlib/gui/menu.py:393
+#: taskcoachlib/gui/menu.py:399
 msgid "Show/hide status bar"
 msgstr "Näytä/piilota tilarivi"
 
-#: taskcoachlib/gui/menu.py:393
+#: taskcoachlib/gui/menu.py:399
 msgid "Status&bar"
 msgstr "&Tilarivi"
 
-#: taskcoachlib/gui/menu.py:404
+#: taskcoachlib/gui/menu.py:410
 msgid "&Task"
 msgstr "T&ehtävä"
 
-#: taskcoachlib/gui/menu.py:405
+#: taskcoachlib/gui/menu.py:411
 msgid "Open a new tab with a viewer that displays tasks"
 msgstr "Avaa uusi välilehti tehtävänäkymällä"
 
-#: taskcoachlib/gui/menu.py:407
+#: taskcoachlib/gui/menu.py:413
 msgid "Task &statistics"
 msgstr "Tehtävätilastot"
 
-#: taskcoachlib/gui/menu.py:408
+#: taskcoachlib/gui/menu.py:414
 msgid "Open a new tab with a viewer that displays task statistics"
 msgstr ""
 "Avaa uusi välilehti uudella näkymällä, joka näyttää tehtävän tilastot"
 
-#: taskcoachlib/gui/menu.py:410
+#: taskcoachlib/gui/menu.py:416
 msgid "Task &square map"
 msgstr "&Tehtävien laatikkonäyttö"
 
-#: taskcoachlib/gui/menu.py:411
+#: taskcoachlib/gui/menu.py:417
 msgid "Open a new tab with a viewer that displays tasks in a square map"
 msgstr "Avaa uuden näkymän välilehteen, jossa tehtävät ovat laatikoissa"
 
-#: taskcoachlib/gui/menu.py:413
+#: taskcoachlib/gui/menu.py:419
 msgid "T&imeline"
 msgstr "A&ikajana"
 
-#: taskcoachlib/gui/menu.py:414
+#: taskcoachlib/gui/menu.py:420
 msgid ""
 "Open a new tab with a viewer that displays a timeline of tasks and effort"
 msgstr "Avaa uuden välilehden tehtävien ja työmäärien aikajananäkymällä"
 
-#: taskcoachlib/gui/menu.py:416
+#: taskcoachlib/gui/menu.py:422
 msgid "&Calendar"
 msgstr "&Kalenteri"
 
-#: taskcoachlib/gui/menu.py:417
+#: taskcoachlib/gui/menu.py:423
 msgid "Open a new tab with a viewer that displays tasks in a calendar"
 msgstr "Avaa uusi näkymä välilehdessä, jossa on tehtävät kalenterissa"
 
-#: taskcoachlib/gui/menu.py:419 taskcoachlib/gui/viewer/mixin.py:301
+#: taskcoachlib/gui/menu.py:425 taskcoachlib/gui/viewer/mixin.py:303
 msgid "&Category"
 msgstr "&Luokka"
 
-#: taskcoachlib/gui/menu.py:420
+#: taskcoachlib/gui/menu.py:426
 msgid "Open a new tab with a viewer that displays categories"
 msgstr "Avaa uuden välilehden luokkanäkymällä"
 
-#: taskcoachlib/gui/menu.py:424
+#: taskcoachlib/gui/menu.py:430
 msgid "&Effort"
 msgstr "T&yömäärä"
 
-#: taskcoachlib/gui/menu.py:425
+#: taskcoachlib/gui/menu.py:431
 msgid "Open a new tab with a viewer that displays efforts"
 msgstr "Avaa uuden välilehden työmääränäkymällä"
 
-#: taskcoachlib/gui/menu.py:428
+#: taskcoachlib/gui/menu.py:434
 msgid "Effort for &one task"
 msgstr "Työ&määrä yhdelle tehtävälle"
 
-#: taskcoachlib/gui/menu.py:429
+#: taskcoachlib/gui/menu.py:435
 msgid ""
 "Open a new tab with a viewer that displays efforts for the selected task"
 msgstr "Avaa uuden välilehden valitun tehtävän työmääränäkymällä"
 
-#: taskcoachlib/gui/menu.py:433
+#: taskcoachlib/gui/menu.py:439
 msgid "&Note"
 msgstr "&Huomautus"
 
-#: taskcoachlib/gui/menu.py:434
+#: taskcoachlib/gui/menu.py:440
 msgid "Open a new tab with a viewer that displays notes"
 msgstr "Avaa uuden välilehden huomautusnäkymällä"
 
-#: taskcoachlib/gui/menu.py:485
+#: taskcoachlib/gui/menu.py:491
 msgid "&Hide"
 msgstr "Piilota"
 
-#: taskcoachlib/gui/menu.py:485
+#: taskcoachlib/gui/menu.py:491
 msgid "Hide the toolbar"
 msgstr "Piilota työkalurivi"
 
-#: taskcoachlib/gui/menu.py:486
+#: taskcoachlib/gui/menu.py:492
 msgid "&Small images"
 msgstr "Pienet kuvakkeet"
 
-#: taskcoachlib/gui/menu.py:486
+#: taskcoachlib/gui/menu.py:492
 msgid "Small images (16x16) on the toolbar"
 msgstr "Pienet kuvakkeet (16x16) työkalurivillä"
 
-#: taskcoachlib/gui/menu.py:487
+#: taskcoachlib/gui/menu.py:493
 msgid "&Medium-sized images"
 msgstr "Keskikokoiset kuvakkeet"
 
-#: taskcoachlib/gui/menu.py:487
+#: taskcoachlib/gui/menu.py:493
 msgid "Medium-sized images (22x22) on the toolbar"
 msgstr "Keskikokoiset kuvakkeet (22x22) työkalurivillä"
 
-#: taskcoachlib/gui/menu.py:488
+#: taskcoachlib/gui/menu.py:494
 msgid "&Large images"
 msgstr "Isot kuvakkeet"
 
-#: taskcoachlib/gui/menu.py:488
+#: taskcoachlib/gui/menu.py:494
 msgid "Large images (32x32) on the toolbar"
 msgstr "Isot kuvakkeet (32x32) työkalurivillä"
 
-#: taskcoachlib/gui/menu.py:506 taskcoachlib/gui/menu.py:608
-#: taskcoachlib/gui/uicommand.py:1588
+#: taskcoachlib/gui/menu.py:512 taskcoachlib/gui/menu.py:615
+#: taskcoachlib/gui/uicommand.py:1590
 msgid "New task from &template"
 msgstr "Uusi tehtävä mallipohjasta"
 
-#: taskcoachlib/gui/menu.py:546 taskcoachlib/gui/menu.py:755
-#: taskcoachlib/gui/menu.py:858
+#: taskcoachlib/gui/menu.py:553 taskcoachlib/gui/menu.py:764
+#: taskcoachlib/gui/menu.py:868
 msgid "&Toggle category"
 msgstr "Vaih&da luokka"
 
-#: taskcoachlib/gui/menu.py:557
+#: taskcoachlib/gui/menu.py:564
 msgid "Change task &priority"
 msgstr "Muuta tehtävän tärkeyttä"
 
-#: taskcoachlib/gui/menu.py:624 taskcoachlib/gui/uicommand.py:1971
-#: taskcoachlib/gui/uicommand.py:2013
+#: taskcoachlib/gui/menu.py:631 taskcoachlib/gui/uicommand.py:1973
+#: taskcoachlib/gui/uicommand.py:2015
 msgid "&Start tracking effort"
 msgstr "Aloita työmäärän &seuranta"
 
-#: taskcoachlib/gui/menu.py:673 taskcoachlib/gui/viewer/mixin.py:115
+#: taskcoachlib/gui/menu.py:681 taskcoachlib/gui/viewer/mixin.py:117
 msgid "%s (subcategories)"
 msgstr "%s (aliluokat)"
 
-#: taskcoachlib/gui/menu.py:720
+#: taskcoachlib/gui/menu.py:729
 msgid "%s (subtasks)"
 msgstr "%s (alitehtävät)"
 
-#: taskcoachlib/gui/menu.py:765 taskcoachlib/gui/viewer/mixin.py:377
+#: taskcoachlib/gui/menu.py:774 taskcoachlib/gui/viewer/mixin.py:379
 #: taskcoachlib/gui/viewer/task.py:982
 msgid "&Priority"
 msgstr "Tärkeys"
 
-#: taskcoachlib/gui/printer.py:84
+#: taskcoachlib/gui/printer.py:93
 msgid "Page"
 msgstr "Sivu"
 
@@ -2682,106 +2711,106 @@ msgstr "Sivu"
 msgid "%s Reminder"
 msgstr "%s Muistuttaja"
 
-#: taskcoachlib/gui/taskbaricon.py:154
+#: taskcoachlib/gui/taskbaricon.py:161
 msgid "%d tasks overdue"
 msgstr "%d tehtävää myöhästyy"
 
-#: taskcoachlib/gui/taskbaricon.py:154
+#: taskcoachlib/gui/taskbaricon.py:161
 msgid "one task overdue"
 msgstr "yksi tehtävä myöhästyy"
 
-#: taskcoachlib/gui/taskbaricon.py:155
+#: taskcoachlib/gui/taskbaricon.py:162
 msgid "%d tasks due soon"
 msgstr "%d tehtävää päättyy pian"
 
-#: taskcoachlib/gui/taskbaricon.py:155
+#: taskcoachlib/gui/taskbaricon.py:162
 msgid "one task due soon"
 msgstr "yksi tehtävä päättyy pian"
 
-#: taskcoachlib/gui/taskbaricon.py:166
+#: taskcoachlib/gui/taskbaricon.py:173
 msgid "tracking \"%s\""
 msgstr "seurataan \"%s\""
 
-#: taskcoachlib/gui/taskbaricon.py:168
+#: taskcoachlib/gui/taskbaricon.py:175
 msgid "tracking effort for %d tasks"
 msgstr "seurataan työmäärää %d tehtävälle"
 
-#: taskcoachlib/gui/uicommand.py:499
+#: taskcoachlib/gui/uicommand.py:500
 msgid "&Open...\tCtrl+O"
 msgstr "&Avaa...\tCtrl+A"
 
-#: taskcoachlib/gui/uicommand.py:513
+#: taskcoachlib/gui/uicommand.py:514
 msgid "Open %s"
 msgstr "Avaa %s"
 
-#: taskcoachlib/gui/uicommand.py:521
+#: taskcoachlib/gui/uicommand.py:522
 msgid "&Merge..."
 msgstr "&Yhdistä..."
 
-#: taskcoachlib/gui/uicommand.py:522
+#: taskcoachlib/gui/uicommand.py:523
 msgid "Merge tasks from another file with the current file"
 msgstr "Yhdistä tehtävät toisesta tiedostosta nykyisen tiedoston kanssa"
 
-#: taskcoachlib/gui/uicommand.py:531
+#: taskcoachlib/gui/uicommand.py:532
 msgid "&Close\tCtrl+W"
 msgstr "&Sulje\tCtrl+S"
 
-#: taskcoachlib/gui/uicommand.py:541
+#: taskcoachlib/gui/uicommand.py:542
 msgid "&Save\tCtrl+S"
 msgstr "&Tallenna\tCtrl+T"
 
-#: taskcoachlib/gui/uicommand.py:555
+#: taskcoachlib/gui/uicommand.py:556
 msgid "S&ave as...\tShift+Ctrl+S"
 msgstr "Tallenna &nimellä...\tShift+Ctrl+T"
 
-#: taskcoachlib/gui/uicommand.py:566
-msgid "Sa&ve selection..."
-msgstr "Ta&llenna valinta..."
-
 #: taskcoachlib/gui/uicommand.py:567
-msgid "Save the selected tasks to a separate file"
-msgstr "Tallenna valittu tehtävä erilliseen tiedostoon"
+msgid "Sa&ve selected tasks to new taskfile..."
+msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:578
+#: taskcoachlib/gui/uicommand.py:568
+msgid "Save the selected tasks to a separate taskfile"
+msgstr ""
+
+#: taskcoachlib/gui/uicommand.py:579
 msgid "Save selected task as &template"
 msgstr "Tallenna valittu tehtävä &mallipohjaksi"
 
-#: taskcoachlib/gui/uicommand.py:579
+#: taskcoachlib/gui/uicommand.py:580
 msgid "Save the selected task as a task template"
 msgstr "Tallenna valittu tehtävä tehtävän mallipohjaksi"
 
-#: taskcoachlib/gui/uicommand.py:589
+#: taskcoachlib/gui/uicommand.py:590
 msgid "&Import template..."
 msgstr "Tuo mallipohja..."
 
-#: taskcoachlib/gui/uicommand.py:590
+#: taskcoachlib/gui/uicommand.py:591
 msgid "Import a new template from a template file"
 msgstr "Tuo uusi mallipohja tiedostosta"
 
-#: taskcoachlib/gui/uicommand.py:600
+#: taskcoachlib/gui/uicommand.py:601
 msgid "Edit templates..."
 msgstr "Muokkaa mallipohjia..."
 
-#: taskcoachlib/gui/uicommand.py:601
+#: taskcoachlib/gui/uicommand.py:602
 msgid "Edit existing templates"
 msgstr "Muokkaa olemassaolevia mallipohjia"
 
-#: taskcoachlib/gui/uicommand.py:605
+#: taskcoachlib/gui/uicommand.py:606
 msgid "Edit templates"
 msgstr "Muokkaa mallipohjia"
 
-#: taskcoachlib/gui/uicommand.py:612
+#: taskcoachlib/gui/uicommand.py:613
 msgid "&Purge deleted items"
 msgstr "Tyhjennä poistetut tiedot"
 
-#: taskcoachlib/gui/uicommand.py:613
+#: taskcoachlib/gui/uicommand.py:614
 msgid ""
 "Actually delete deleted tasks and notes (see the SyncML chapter in Help)"
 msgstr ""
 "Poistaa lopullisesti poistetut tehtävät ja huomautukset (katso SyncML-"
 "kappale avusteessa)"
 
-#: taskcoachlib/gui/uicommand.py:618
+#: taskcoachlib/gui/uicommand.py:619
 msgid ""
 "Purging deleted items is undoable.\n"
 "If you're planning on enabling\n"
@@ -2798,213 +2827,213 @@ msgstr ""
 "\n"
 "Haluatko edelleen tyhjentää?"
 
-#: taskcoachlib/gui/uicommand.py:635
+#: taskcoachlib/gui/uicommand.py:636
 msgid "&Page setup...\tShift+Ctrl+P"
 msgstr "&Sivun asetukset...\tShift+Ctrl+P"
 
-#: taskcoachlib/gui/uicommand.py:655
+#: taskcoachlib/gui/uicommand.py:656
 msgid "&Print preview..."
 msgstr "Tulostuksen &esikatselu..."
 
-#: taskcoachlib/gui/uicommand.py:656
+#: taskcoachlib/gui/uicommand.py:657
 msgid "Show a preview of what the print will look like"
 msgstr "Näytä, miltä sivu näyttää esikatselussa"
 
-#: taskcoachlib/gui/uicommand.py:666
+#: taskcoachlib/gui/uicommand.py:667
 msgid "Print preview"
 msgstr "Tulostuksen esikatselu"
 
-#: taskcoachlib/gui/uicommand.py:675
+#: taskcoachlib/gui/uicommand.py:676
 msgid "&Print...\tCtrl+P"
 msgstr "T&ulosta...\tCtrl+P"
 
-#: taskcoachlib/gui/uicommand.py:726
+#: taskcoachlib/gui/uicommand.py:727
 msgid "Export as &HTML..."
 msgstr "&HTML-tiedostoon..."
 
-#: taskcoachlib/gui/uicommand.py:727
+#: taskcoachlib/gui/uicommand.py:728
 msgid "Export items from a viewer in HTML format"
 msgstr "Vie tiedot näkymältä HTML-formaatissa"
 
-#: taskcoachlib/gui/uicommand.py:742
+#: taskcoachlib/gui/uicommand.py:743
 msgid "Export as &CSV..."
 msgstr "Vie &CSV-tiedostoon..."
 
-#: taskcoachlib/gui/uicommand.py:743
+#: taskcoachlib/gui/uicommand.py:744
 msgid "Export items from a viewer in Comma Separated Values (CSV) format"
 msgstr "Vie tiedot näkymältä CSV-formaatissa (Comma Separated Values)"
 
-#: taskcoachlib/gui/uicommand.py:760
+#: taskcoachlib/gui/uicommand.py:761
 msgid "Export as &iCalendar..."
 msgstr "&iCalendar-tiedostoon..."
 
-#: taskcoachlib/gui/uicommand.py:761
+#: taskcoachlib/gui/uicommand.py:762
 msgid "Export items from a viewer in iCalendar format"
 msgstr "Vie tiedot näkymältä iCalendar-formaatissa"
 
-#: taskcoachlib/gui/uicommand.py:787
+#: taskcoachlib/gui/uicommand.py:788
 msgid "Export as &Todo.txt..."
 msgstr "Vie Todo.txt-formaattiin..."
 
-#: taskcoachlib/gui/uicommand.py:788
+#: taskcoachlib/gui/uicommand.py:789
 msgid "Export items from a viewer in Todo.txt format (see todotxt.com)"
 msgstr "Vie tiedot näkymästä Todo.txt formaattiin (katso todotxt.com)"
 
-#: taskcoachlib/gui/uicommand.py:814
+#: taskcoachlib/gui/uicommand.py:815
 msgid "&Import CSV..."
 msgstr "Tuo CSV..."
 
-#: taskcoachlib/gui/uicommand.py:815
+#: taskcoachlib/gui/uicommand.py:816
 msgid "Import tasks from a Comma Separated Values (CSV) file"
 msgstr "Tuo tehtävät CSV (Comma Separated Values) -tiedostosta"
 
-#: taskcoachlib/gui/uicommand.py:820 taskcoachlib/gui/uicommand.py:825
-#: taskcoachlib/gui/uicommand.py:828
+#: taskcoachlib/gui/uicommand.py:821 taskcoachlib/gui/uicommand.py:826
+#: taskcoachlib/gui/uicommand.py:829
 msgid "Import CSV"
 msgstr "Tuo CSV-formaatista"
 
-#: taskcoachlib/gui/uicommand.py:823
+#: taskcoachlib/gui/uicommand.py:824
 msgid "The selected file is empty. Please select a different file."
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:842
+#: taskcoachlib/gui/uicommand.py:843
 msgid "&Import Todo.txt..."
 msgstr "Tuo Todo.txt-formaatista..."
 
-#: taskcoachlib/gui/uicommand.py:843
+#: taskcoachlib/gui/uicommand.py:844
 msgid "Import tasks from a Todo.txt (see todotxt.com) file"
 msgstr "Tuo tehtävät Todo.txt (katso todotxt.com) -tiedostosta"
 
-#: taskcoachlib/gui/uicommand.py:847
+#: taskcoachlib/gui/uicommand.py:848
 msgid "Import Todo.txt"
 msgstr "Tuo Todo.txt"
 
-#: taskcoachlib/gui/uicommand.py:858
+#: taskcoachlib/gui/uicommand.py:859
 msgid "S&yncML synchronization..."
 msgstr "S&yncML synkronointi..."
 
-#: taskcoachlib/gui/uicommand.py:859
+#: taskcoachlib/gui/uicommand.py:860
 msgid "Synchronize with a SyncML server"
 msgstr "Synkronoi SyncML palvelimen kanssa"
 
-#: taskcoachlib/gui/uicommand.py:870
+#: taskcoachlib/gui/uicommand.py:871
 msgid "&Quit\tCtrl+Q"
 msgstr "&Lopeta\tCtrl+Q"
 
-#: taskcoachlib/gui/uicommand.py:890
+#: taskcoachlib/gui/uicommand.py:891
 msgid "&Undo"
 msgstr "K&umoa"
 
-#: taskcoachlib/gui/uicommand.py:924
+#: taskcoachlib/gui/uicommand.py:925
 msgid "&Redo"
 msgstr "&Tee uudelleen"
 
-#: taskcoachlib/gui/uicommand.py:951
+#: taskcoachlib/gui/uicommand.py:952
 msgid "Cu&t\tCtrl+X"
 msgstr "&Leikkaa\tCtrl+X"
 
-#: taskcoachlib/gui/uicommand.py:976
+#: taskcoachlib/gui/uicommand.py:977
 msgid "&Copy\tCtrl+C"
 msgstr "&Kopioi\tCtrl+C"
 
-#: taskcoachlib/gui/uicommand.py:1001
+#: taskcoachlib/gui/uicommand.py:1002
 msgid "&Paste\tCtrl+V"
 msgstr "L&iitä\tCtrl+V"
 
-#: taskcoachlib/gui/uicommand.py:1027
+#: taskcoachlib/gui/uicommand.py:1028
 msgid "P&aste as subitem\tShift+Ctrl+V"
 msgstr "Liitä alitietona\tShift+Ctrl+V"
 
-#: taskcoachlib/gui/uicommand.py:1067
+#: taskcoachlib/gui/uicommand.py:1068
 msgid "&Preferences...\tAlt+P"
 msgstr "&Asetukset...\tAlt+A"
 
-#: taskcoachlib/gui/uicommand.py:1073
+#: taskcoachlib/gui/uicommand.py:1074
 msgid "Preferences"
 msgstr "Asetukset"
 
-#: taskcoachlib/gui/uicommand.py:1082
+#: taskcoachlib/gui/uicommand.py:1083
 msgid "&SyncML preferences..."
 msgstr "SyncML asetukset..."
 
-#: taskcoachlib/gui/uicommand.py:1083
+#: taskcoachlib/gui/uicommand.py:1084
 msgid "Edit SyncML preferences"
 msgstr "Muokkaa SyncML asetuksia"
 
-#: taskcoachlib/gui/uicommand.py:1089
+#: taskcoachlib/gui/uicommand.py:1090
 msgid "SyncML preferences"
 msgstr "SyncML asetukset"
 
-#: taskcoachlib/gui/uicommand.py:1097
+#: taskcoachlib/gui/uicommand.py:1098
 msgid "&All\tCtrl+A"
 msgstr "&Kaikki\tCtrl+A"
 
-#: taskcoachlib/gui/uicommand.py:1119
+#: taskcoachlib/gui/uicommand.py:1120
 msgid "&Clear selection"
 msgstr "&Peru valinta"
 
-#: taskcoachlib/gui/uicommand.py:1120
+#: taskcoachlib/gui/uicommand.py:1121
 msgid "Unselect all items"
 msgstr "Peru kaikkien tietojen valinnan"
 
-#: taskcoachlib/gui/uicommand.py:1132
+#: taskcoachlib/gui/uicommand.py:1133
 msgid "&Clear all filters\tShift-Ctrl-R"
 msgstr "&Tyhjennä kaikki suodattimet\tShift-Ctrl-R"
 
-#: taskcoachlib/gui/uicommand.py:1145
+#: taskcoachlib/gui/uicommand.py:1146
 msgid "&Reset all categories\tCtrl-R"
 msgstr "Poista kaikki valinnat\tCtrl-R"
 
-#: taskcoachlib/gui/uicommand.py:1170
+#: taskcoachlib/gui/uicommand.py:1171
 msgid "Show/hide items belonging to %s"
 msgstr "Näytä/piilota tiedot, jotka kuuluvat: %s"
 
-#: taskcoachlib/gui/uicommand.py:1215
+#: taskcoachlib/gui/uicommand.py:1216
 msgid "&Rename viewer..."
 msgstr "Nimeä näkymä..."
 
-#: taskcoachlib/gui/uicommand.py:1216
+#: taskcoachlib/gui/uicommand.py:1217
 msgid "Rename the selected viewer"
 msgstr "Nimeä valittu näkymä"
 
-#: taskcoachlib/gui/uicommand.py:1221
+#: taskcoachlib/gui/uicommand.py:1222
 msgid "New title for the viewer:"
 msgstr "Uusi otsikko näkymälle:"
 
-#: taskcoachlib/gui/uicommand.py:1221
+#: taskcoachlib/gui/uicommand.py:1222
 msgid "Rename viewer"
 msgstr "Nimeä näkymä"
 
-#: taskcoachlib/gui/uicommand.py:1245
+#: taskcoachlib/gui/uicommand.py:1246
 msgid "&Hide this column"
 msgstr "Piilota tämä sarake"
 
-#: taskcoachlib/gui/uicommand.py:1246
+#: taskcoachlib/gui/uicommand.py:1247
 msgid "Hide the selected column"
 msgstr "Piilota valittu sarake"
 
-#: taskcoachlib/gui/uicommand.py:1292
+#: taskcoachlib/gui/uicommand.py:1293
 msgid "&Expand all items\tShift+Ctrl+E"
 msgstr "L&aajenna kaikki tiedot\tShift+Ctrl+E"
 
-#: taskcoachlib/gui/uicommand.py:1306
+#: taskcoachlib/gui/uicommand.py:1307
 msgid "&Collapse all items\tShift+Ctrl+C"
 msgstr "S&upista kaikki tiedot\tShift+Ctrl+C"
 
-#: taskcoachlib/gui/uicommand.py:1327
+#: taskcoachlib/gui/uicommand.py:1328
 msgid "&Ascending"
 msgstr "Nouseva"
 
-#: taskcoachlib/gui/uicommand.py:1328
+#: taskcoachlib/gui/uicommand.py:1329
 msgid "Sort ascending (checked) or descending (unchecked)"
 msgstr ""
 "Lajittele nousevaan (valittu) tai laskevaan (ei-valittu) järjestykseen"
 
-#: taskcoachlib/gui/uicommand.py:1341
+#: taskcoachlib/gui/uicommand.py:1342
 msgid "Sort &case sensitive"
 msgstr "Lajittele ja ota kirjainkoko huomioon"
 
-#: taskcoachlib/gui/uicommand.py:1342
+#: taskcoachlib/gui/uicommand.py:1343
 msgid ""
 "When comparing text, sorting is case sensitive (checked) or insensitive "
 "(unchecked)"
@@ -3012,155 +3041,155 @@ msgstr ""
 "Verrattaessa tekstiä lajittelussa otetaan huomioon kirjainkoko (valittu)\n"
 "tai ei oteta huomioon kirjainkokoa (ei-valittu)"
 
-#: taskcoachlib/gui/uicommand.py:1356
+#: taskcoachlib/gui/uicommand.py:1357
 msgid "Sort by status &first"
 msgstr "Lajittele tilan mukaan"
 
-#: taskcoachlib/gui/uicommand.py:1357
+#: taskcoachlib/gui/uicommand.py:1358
 msgid "Sort tasks by status (active/inactive/completed) first"
 msgstr "Lajittele tehtävät tilan (aktiivinen/ei-aktiivinen/valmis) mukaan"
 
-#: taskcoachlib/gui/uicommand.py:1387
+#: taskcoachlib/gui/uicommand.py:1388
 msgid "Hide c&omposite tasks"
 msgstr "Piilota koostetut tehtävät"
 
-#: taskcoachlib/gui/uicommand.py:1388
+#: taskcoachlib/gui/uicommand.py:1389
 msgid "Show/hide tasks with subtasks in list mode"
 msgstr "Näytä/piilota tehtävät alitehtävineen listassa"
 
-#: taskcoachlib/gui/uicommand.py:1403
+#: taskcoachlib/gui/uicommand.py:1404
 msgid "&Edit...\tRETURN"
 msgstr "Muuta...\tRETURN"
 
-#: taskcoachlib/gui/uicommand.py:1404
+#: taskcoachlib/gui/uicommand.py:1405
 msgid "Edit the selected item(s)"
 msgstr "Muuta valittuja tietoja"
 
-#: taskcoachlib/gui/uicommand.py:1443
+#: taskcoachlib/gui/uicommand.py:1445
 msgid "Edit &tracked task...\tShift-Alt-T"
 msgstr "Muuta seurattavaa tehtävää...\tShift-Alt-T"
 
-#: taskcoachlib/gui/uicommand.py:1444
+#: taskcoachlib/gui/uicommand.py:1446
 msgid "Edit the currently tracked task(s)"
 msgstr "Muuta tällä hetkellä seurattavia tehtäviä"
 
-#: taskcoachlib/gui/uicommand.py:1460
+#: taskcoachlib/gui/uicommand.py:1462
 msgid "&Delete\tDEL"
 msgstr "Poista\tDEL"
 
-#: taskcoachlib/gui/uicommand.py:1461 taskcoachlib/help/__init__.py:771
+#: taskcoachlib/gui/uicommand.py:1463 taskcoachlib/help/__init__.py:771
 msgid "Delete the selected item(s)"
 msgstr "Poista valitut tiedot"
 
-#: taskcoachlib/gui/uicommand.py:1591
+#: taskcoachlib/gui/uicommand.py:1593
 msgid "Create a new task from a template"
 msgstr "Luo uusi tehtävä mallipohjasta"
 
-#: taskcoachlib/gui/uicommand.py:1597
+#: taskcoachlib/gui/uicommand.py:1599
 msgid "New task with selected &categories..."
 msgstr "Uusi tehtävä valituilla luokilla..."
 
-#: taskcoachlib/gui/uicommand.py:1598
+#: taskcoachlib/gui/uicommand.py:1600
 msgid "Insert a new task with the selected categories checked"
 msgstr "Lisää uusi tehtävä valitut luokat asetettuna"
 
-#: taskcoachlib/gui/uicommand.py:1609
+#: taskcoachlib/gui/uicommand.py:1611
 msgid "New task with selected tasks as &prerequisites..."
 msgstr "Uusi tehtävä valituilla tehtävillä, joista tulee vaatimuksia..."
 
-#: taskcoachlib/gui/uicommand.py:1610
+#: taskcoachlib/gui/uicommand.py:1612
 msgid "Insert a new task with the selected tasks as prerequisite tasks"
 msgstr "Lisää uusi tehtävä valituilla tehtävillä, joista tulee vaatimuksia"
 
-#: taskcoachlib/gui/uicommand.py:1621
+#: taskcoachlib/gui/uicommand.py:1623
 msgid "New task with selected tasks as &dependencies..."
 msgstr "Uusi tehtävä valituilla tehtävillä, joista tulee riippuvuuksia..."
 
-#: taskcoachlib/gui/uicommand.py:1622
+#: taskcoachlib/gui/uicommand.py:1624
 msgid "Insert a new task with the selected tasks as dependent tasks"
 msgstr "Lisää uusi tehtävä valituista tehtävistä, joista tulee alitehtäviä"
 
-#: taskcoachlib/gui/uicommand.py:1631
+#: taskcoachlib/gui/uicommand.py:1633
 msgid "New &subitem..."
 msgstr "Uusi alitieto..."
 
-#: taskcoachlib/gui/uicommand.py:1632
+#: taskcoachlib/gui/uicommand.py:1634
 msgid "New &subtask..."
 msgstr "Uusi &alitehtävä..."
 
-#: taskcoachlib/gui/uicommand.py:1633
+#: taskcoachlib/gui/uicommand.py:1635
 msgid "New &subnote..."
 msgstr "Uusi alihuomautus..."
 
-#: taskcoachlib/gui/uicommand.py:1634
+#: taskcoachlib/gui/uicommand.py:1636
 msgid "New &subcategory..."
 msgstr "Uusi aliluokka..."
 
-#: taskcoachlib/gui/uicommand.py:1638
+#: taskcoachlib/gui/uicommand.py:1640
 msgid "Insert a new subitem of the selected item"
 msgstr "Sijoita uusi alitieto valittuun tietoon"
 
-#: taskcoachlib/gui/uicommand.py:1658
+#: taskcoachlib/gui/uicommand.py:1660
 msgid "Mark task &active\tAlt+RETURN"
 msgstr "Merkitse tehtävät aktiiviseksi\tAlt+RETURN"
 
-#: taskcoachlib/gui/uicommand.py:1659
+#: taskcoachlib/gui/uicommand.py:1661
 msgid "Mark the selected task(s) active"
 msgstr "Merkitse valitut tehtävät aktiivisiksi"
 
-#: taskcoachlib/gui/uicommand.py:1677
+#: taskcoachlib/gui/uicommand.py:1679
 msgid "Mark task &inactive\tCtrl+Alt+RETURN"
 msgstr "Merkitse tehtävät ei-aktiiviseksi\tCtrl+Alt+RETURN"
 
-#: taskcoachlib/gui/uicommand.py:1678
+#: taskcoachlib/gui/uicommand.py:1680
 msgid "Mark the selected task(s) inactive"
 msgstr "Merkitse valitut tehtävät ei-aktiivisiksi"
 
-#: taskcoachlib/gui/uicommand.py:1696
+#: taskcoachlib/gui/uicommand.py:1698
 msgid "Mark task &completed\tCtrl+RETURN"
 msgstr "Merkitse tehtävä valmiiksi\tCtrl+RETURN"
 
-#: taskcoachlib/gui/uicommand.py:1697
+#: taskcoachlib/gui/uicommand.py:1699
 msgid "Mark the selected task(s) completed"
 msgstr "Merkitse valitut tehtävät valmiiksi"
 
-#: taskcoachlib/gui/uicommand.py:1716
+#: taskcoachlib/gui/uicommand.py:1718
 msgid "&Maximize priority\tShift+Ctrl+I"
 msgstr "M&aksimoi tärkeys\tShift+Ctrl+I"
 
-#: taskcoachlib/gui/uicommand.py:1729
+#: taskcoachlib/gui/uicommand.py:1731
 msgid "&Minimize priority\tShift+Ctrl+D"
 msgstr "M&inimoi tärkeys\tShift+Ctrl+D"
 
-#: taskcoachlib/gui/uicommand.py:1742
+#: taskcoachlib/gui/uicommand.py:1744
 msgid "&Increase priority\tCtrl+I"
 msgstr "&Lisää tärkeyttä\tCtrl+I"
 
-#: taskcoachlib/gui/uicommand.py:1755
+#: taskcoachlib/gui/uicommand.py:1757
 msgid "&Decrease priority\tCtrl+D"
 msgstr "&Vähennä tärkeyttä\tCtrl+D"
 
-#: taskcoachlib/gui/uicommand.py:1801
+#: taskcoachlib/gui/uicommand.py:1803
 msgid "Toggle %s"
 msgstr "Vaihda: %s"
 
-#: taskcoachlib/gui/uicommand.py:1828
+#: taskcoachlib/gui/uicommand.py:1830
 msgid "&Mail...\tCtrl-M"
 msgstr "Sähköposti...\tCtrl-M"
 
-#: taskcoachlib/gui/uicommand.py:1828
+#: taskcoachlib/gui/uicommand.py:1830
 msgid "&Mail...\tShift-Ctrl-M"
 msgstr "Lähetä sähköposti...\tShift-Ctrl-M"
 
-#: taskcoachlib/gui/uicommand.py:1841
+#: taskcoachlib/gui/uicommand.py:1843
 msgid "Several things"
 msgstr "Useita asioita"
 
-#: taskcoachlib/gui/uicommand.py:1844
+#: taskcoachlib/gui/uicommand.py:1846
 msgid "and"
 msgstr "ja"
 
-#: taskcoachlib/gui/uicommand.py:1874
+#: taskcoachlib/gui/uicommand.py:1876
 msgid ""
 "Cannot send email:\n"
 "%s"
@@ -3168,149 +3197,157 @@ msgstr ""
 "Sähköpostia ei voi lähettää:\n"
 "%s"
 
-#: taskcoachlib/gui/uicommand.py:1875
+#: taskcoachlib/gui/uicommand.py:1877
 msgid "%s mail error"
 msgstr "%s sähköpostivirhe"
 
-#: taskcoachlib/gui/uicommand.py:1881
+#: taskcoachlib/gui/uicommand.py:1883
 msgid "Add &note...\tCtrl+B"
 msgstr "Lisää huomautus...\tCtrl+B"
 
-#: taskcoachlib/gui/uicommand.py:1897
+#: taskcoachlib/gui/uicommand.py:1899
 msgid "Open all notes...\tShift+Ctrl+B"
 msgstr "Avaa kaikki huomautukset...\tShift+Ctrl+B"
 
-#: taskcoachlib/gui/uicommand.py:1951
+#: taskcoachlib/gui/uicommand.py:1953
 msgid "&Start tracking effort\tCtrl-T"
 msgstr "Aloita työmäärän seuranta\tCtrl-T"
 
-#: taskcoachlib/gui/uicommand.py:1972
+#: taskcoachlib/gui/uicommand.py:1974
 msgid "Start tracking effort for the task(s) of the selected effort(s)"
 msgstr "Aloita työmäärän seuranta valittujen työmäärien tehtäville"
 
-#: taskcoachlib/gui/uicommand.py:1995
+#: taskcoachlib/gui/uicommand.py:1997
 msgid "(No subject)"
 msgstr "(Ei otsikkoa)"
 
-#: taskcoachlib/gui/uicommand.py:1998
+#: taskcoachlib/gui/uicommand.py:2000
 msgid "Start tracking effort for %s"
 msgstr "Aloita seuranta työmäärälle %s"
 
-#: taskcoachlib/gui/uicommand.py:2014
+#: taskcoachlib/gui/uicommand.py:2016
 msgid "Select a task via the menu and start tracking effort for it"
 msgstr "Valitse tehtävä menusta ja aloita sen työmäärän seuranta"
 
-#: taskcoachlib/gui/uicommand.py:2026
+#: taskcoachlib/gui/uicommand.py:2028
 msgid "Stop tracking or resume tracking effort\tShift+Ctrl+T"
 msgstr "Lopeta työmäärän seuranta tai jatka seurantaa\tShift+Ctrl+T"
 
-#: taskcoachlib/gui/uicommand.py:2028
+#: taskcoachlib/gui/uicommand.py:2030
 msgid "St&op tracking %s\tShift+Ctrl+T"
 msgstr "Lopeta seuranta: %s\tShift+Ctrl+T"
 
-#: taskcoachlib/gui/uicommand.py:2029
+#: taskcoachlib/gui/uicommand.py:2031
 msgid "Stop tracking effort for the active task(s)"
 msgstr "Lopeta aktiivisten tehtävien työmäärien seuranta"
 
-#: taskcoachlib/gui/uicommand.py:2030
+#: taskcoachlib/gui/uicommand.py:2032
 msgid "&Resume tracking %s\tShift+Ctrl+T"
 msgstr "Jatka seurantaa: %s\tShift+Ctrl+T"
 
-#: taskcoachlib/gui/uicommand.py:2031
+#: taskcoachlib/gui/uicommand.py:2033
 msgid "Resume tracking effort for the last tracked task"
 msgstr "Jatka työmäärän seurantaa edelliselle seuratulle tehtävälle"
 
-#: taskcoachlib/gui/uicommand.py:2137
+#: taskcoachlib/gui/uicommand.py:2139
 msgid "multiple tasks"
 msgstr "useita tehtäviä"
 
-#: taskcoachlib/gui/uicommand.py:2174
+#: taskcoachlib/gui/uicommand.py:2176
 msgid "New category...\tCtrl-G"
 msgstr "Uusi luokka...\tCtrl-G"
 
-#: taskcoachlib/gui/uicommand.py:2194
+#: taskcoachlib/gui/uicommand.py:2196
 msgid "New note...\tCtrl-J"
 msgstr "Uusi huomautus...\tCtrl-J"
 
-#: taskcoachlib/gui/uicommand.py:2219
+#: taskcoachlib/gui/uicommand.py:2221
 msgid "New &note with selected categories..."
 msgstr "Uusi huomautus valituilla luokilla..."
 
-#: taskcoachlib/gui/uicommand.py:2220
+#: taskcoachlib/gui/uicommand.py:2222
 msgid "Insert a new note with the selected categories checked"
 msgstr "Lisää uusi huomautus uudet luokat asetettuna"
 
-#: taskcoachlib/gui/uicommand.py:2250
+#: taskcoachlib/gui/uicommand.py:2252
 msgid "&Add attachment...\tShift-Ctrl-A"
 msgstr "Li&sää liite...\tShift-Ctrl-A"
 
-#: taskcoachlib/gui/uicommand.py:2274
+#: taskcoachlib/gui/uicommand.py:2276
 msgid "Error opening attachment"
 msgstr "Virhe liitteen aukaisussa"
 
-#: taskcoachlib/gui/uicommand.py:2294
+#: taskcoachlib/gui/uicommand.py:2296
 msgid "&Open all attachments...\tShift+Ctrl+O"
 msgstr "Avaa kaikki liitteet...\tShift+Ctrl+O"
 
-#: taskcoachlib/gui/uicommand.py:2336
+#: taskcoachlib/gui/uicommand.py:2338
 msgid "&Help contents\tCtrl+?"
 msgstr "Ohjeen &sisältö\tCtrl+?"
 
-#: taskcoachlib/gui/uicommand.py:2339
+#: taskcoachlib/gui/uicommand.py:2341
 msgid "&Help contents\tCtrl+H"
 msgstr "Ohjeen &sisältö\tCtrl+H"
 
-#: taskcoachlib/gui/uicommand.py:2341
+#: taskcoachlib/gui/uicommand.py:2343
 msgid "Help"
 msgstr "Ohje"
 
-#: taskcoachlib/gui/uicommand.py:2347
+#: taskcoachlib/gui/uicommand.py:2349
 msgid "&Tips"
 msgstr "&Vihjeet"
 
-#: taskcoachlib/gui/uicommand.py:2348
+#: taskcoachlib/gui/uicommand.py:2350
 msgid "Tips about the program"
 msgstr "Vihjeitä ohjelmasta"
 
-#: taskcoachlib/gui/uicommand.py:2357
+#: taskcoachlib/gui/uicommand.py:2359
 msgid "Anonymize"
 msgstr "Tee tunnistamattomaksi"
 
-#: taskcoachlib/gui/uicommand.py:2358
+#: taskcoachlib/gui/uicommand.py:2360
 msgid "Anonymize a task file to attach it to a bug report"
 msgstr ""
 "Tee tehtävätiedosto tunnistamattomaksi, jotta se voidaan liittää "
 "virheraporttiin"
 
-#: taskcoachlib/gui/uicommand.py:2370
+#: taskcoachlib/gui/uicommand.py:2365
+msgid "Your task file has been anonymized and saved to:"
+msgstr "Tehtävätiedostosi on tehty tunnistamattomaksi ja on tallennettu:"
+
+#: taskcoachlib/gui/uicommand.py:2366
+msgid "Finished"
+msgstr "Valmis"
+
+#: taskcoachlib/gui/uicommand.py:2374
 msgid "&About %s"
 msgstr "&Tietoja %s:sta"
 
-#: taskcoachlib/gui/uicommand.py:2371
+#: taskcoachlib/gui/uicommand.py:2375
 msgid "Version and contact information about %s"
 msgstr "Versio- ja yhteystietoja: %s"
 
-#: taskcoachlib/gui/uicommand.py:2372
+#: taskcoachlib/gui/uicommand.py:2376
 msgid "About %s"
 msgstr "Tietoja %s"
 
-#: taskcoachlib/gui/uicommand.py:2379
+#: taskcoachlib/gui/uicommand.py:2383
 msgid "&License"
 msgstr "&Lisenssi"
 
-#: taskcoachlib/gui/uicommand.py:2380 taskcoachlib/gui/uicommand.py:2381
+#: taskcoachlib/gui/uicommand.py:2384 taskcoachlib/gui/uicommand.py:2385
 msgid "%s license"
 msgstr "%s:n lisenssi"
 
-#: taskcoachlib/gui/uicommand.py:2388
+#: taskcoachlib/gui/uicommand.py:2392
 msgid "Check for update"
 msgstr "Tarkista päivitykset"
 
-#: taskcoachlib/gui/uicommand.py:2389
+#: taskcoachlib/gui/uicommand.py:2393
 msgid "Check for the availability of a new version of %s"
 msgstr "Tarkista %s:n uuden version saatavuus"
 
-#: taskcoachlib/gui/uicommand.py:2405
+#: taskcoachlib/gui/uicommand.py:2409
 msgid ""
 "Cannot open URL:\n"
 "%s"
@@ -3318,159 +3355,169 @@ msgstr ""
 "Ei voida avata osoitetta:\n"
 "%s"
 
-#: taskcoachlib/gui/uicommand.py:2406
+#: taskcoachlib/gui/uicommand.py:2410
 msgid "%s URL error"
 msgstr "%s osoitevirhe"
 
-#: taskcoachlib/gui/uicommand.py:2412
+#: taskcoachlib/gui/uicommand.py:2416
 msgid "&Frequently asked questions"
 msgstr "Usein kysyttyjä kysymyksiä (ENG)"
 
-#: taskcoachlib/gui/uicommand.py:2413
+#: taskcoachlib/gui/uicommand.py:2417
 msgid "Browse the frequently asked questions and answers"
 msgstr "Selaa usein kysyttyjä kysymyksiä ja vastauksia (ENG)"
 
-#: taskcoachlib/gui/uicommand.py:2420
+#: taskcoachlib/gui/uicommand.py:2424
 msgid "Report a &bug..."
 msgstr "Raportoi virheestä (ENG)..."
 
-#: taskcoachlib/gui/uicommand.py:2421
+#: taskcoachlib/gui/uicommand.py:2425
 msgid "Report a bug or browse known bugs"
 msgstr "Raportoi virheestä ja selaa tiedossa olevia virheitä (ENG)"
 
-#: taskcoachlib/gui/uicommand.py:2428
+#: taskcoachlib/gui/uicommand.py:2432
 msgid "Request a &feature..."
 msgstr "Ehdota ominaisuutta (ENG)..."
 
-#: taskcoachlib/gui/uicommand.py:2429
+#: taskcoachlib/gui/uicommand.py:2433
 msgid "Request a new feature or vote for existing requests"
 msgstr "Ehdota ominaisuutta tai äänestä ominaisuuksia (ENG)"
 
-#: taskcoachlib/gui/uicommand.py:2436
+#: taskcoachlib/gui/uicommand.py:2440
 msgid "Request &support..."
 msgstr "Pyydä tukea (ENG)..."
 
-#: taskcoachlib/gui/uicommand.py:2437
+#: taskcoachlib/gui/uicommand.py:2441
 msgid "Request user support from the developers"
 msgstr "Pyydä käyttäjätukea kehittäjiltä (ENG)"
 
-#: taskcoachlib/gui/uicommand.py:2445
+#: taskcoachlib/gui/uicommand.py:2449
 msgid "Help improve &translations..."
 msgstr "Avusta parantamaan käännöksiä (ENG)..."
 
-#: taskcoachlib/gui/uicommand.py:2446
+#: taskcoachlib/gui/uicommand.py:2450
 msgid "Help improve the translations of %s"
 msgstr "Avusta parantamaan %s:n käännöksiä (ENG)"
 
-#: taskcoachlib/gui/uicommand.py:2453
+#: taskcoachlib/gui/uicommand.py:2457
 msgid "&Donate..."
 msgstr "Lahjoita..."
 
-#: taskcoachlib/gui/uicommand.py:2454
+#: taskcoachlib/gui/uicommand.py:2458
 msgid "Donate to support the development of %s"
 msgstr "Tee lahjoitus %s:n kehittämiseksi"
 
-#: taskcoachlib/gui/uicommand.py:2460
+#: taskcoachlib/gui/uicommand.py:2464
 msgid "&Restore"
 msgstr "&Palauta"
 
-#: taskcoachlib/gui/uicommand.py:2461
+#: taskcoachlib/gui/uicommand.py:2465
 msgid "Restore the window to its previous state"
 msgstr "Palauta ikkuna aikaisempaan tilaansa"
 
-#: taskcoachlib/gui/uicommand.py:2563
+#: taskcoachlib/gui/uicommand.py:2567
 msgid "Effort details"
 msgstr "Työmäärän tiedot"
 
-#: taskcoachlib/gui/uicommand.py:2563
+#: taskcoachlib/gui/uicommand.py:2567
 msgid "Effort per day"
 msgstr "Päivän työmäärä"
 
-#: taskcoachlib/gui/uicommand.py:2564
+#: taskcoachlib/gui/uicommand.py:2568
 msgid "Effort per month"
 msgstr "Kuukauden työmäärä"
 
-#: taskcoachlib/gui/uicommand.py:2564
+#: taskcoachlib/gui/uicommand.py:2568
 msgid "Effort per week"
 msgstr "Viikon työmäärä"
 
-#: taskcoachlib/gui/uicommand.py:2572
+#: taskcoachlib/gui/uicommand.py:2576
 msgid "List of tasks"
 msgstr "Tehtävälista"
 
-#: taskcoachlib/gui/uicommand.py:2572
+#: taskcoachlib/gui/uicommand.py:2576
 msgid "Tree of tasks"
 msgstr "Tehtävien puunäkymä"
 
-#: taskcoachlib/gui/uicommand.py:2580
+#: taskcoachlib/gui/uicommand.py:2585
 msgid "Filter on all checked categories"
 msgstr "Suodatus kaikille valituille luokille"
 
-#: taskcoachlib/gui/uicommand.py:2581
+#: taskcoachlib/gui/uicommand.py:2586
 msgid "Filter on any checked category"
 msgstr "Suodatus mille tahansa valitulle luokalle"
 
-#: taskcoachlib/gui/uicommand.py:2598
+#: taskcoachlib/gui/uicommand.py:2592
+msgid ""
+"When checked, filter on all checked categories, otherwise on any checked "
+"category"
+msgstr ""
+
+#: taskcoachlib/gui/uicommand.py:2624
 msgid "&Configure"
 msgstr "Asetukset"
 
-#: taskcoachlib/gui/uicommand.py:2599
+#: taskcoachlib/gui/uicommand.py:2625
 msgid "Configure the calendar viewer"
 msgstr "Asetukset kalenterinäkymälle"
 
-#: taskcoachlib/gui/uicommand.py:2626
+#: taskcoachlib/gui/uicommand.py:2652
 msgid "&Next period"
 msgstr "&Seuraava jakso"
 
-#: taskcoachlib/gui/uicommand.py:2627
+#: taskcoachlib/gui/uicommand.py:2653
 msgid "Show next period"
 msgstr "Näytä seuraava jakso"
 
-#: taskcoachlib/gui/uicommand.py:2633
+#: taskcoachlib/gui/uicommand.py:2659
 msgid "&Previous period"
 msgstr "Edellinen jakso"
 
-#: taskcoachlib/gui/uicommand.py:2634
+#: taskcoachlib/gui/uicommand.py:2660
 msgid "Show previous period"
 msgstr "Näytä edellinen jakso"
 
-#: taskcoachlib/gui/uicommand.py:2640
+#: taskcoachlib/gui/uicommand.py:2666
 msgid "&Today"
 msgstr "Tätä päivää"
 
-#: taskcoachlib/gui/uicommand.py:2641
+#: taskcoachlib/gui/uicommand.py:2667
 msgid "Show today"
 msgstr "Näytä tämä päivä"
 
-#: taskcoachlib/gui/uicommand.py:2649
+#: taskcoachlib/gui/uicommand.py:2675
 msgid "&Automatic column resizing"
 msgstr "&Automaattinen sarakkeiden koon muutos"
 
-#: taskcoachlib/gui/uicommand.py:2650
+#: taskcoachlib/gui/uicommand.py:2676
 msgid "When checked, automatically resize columns to fill available space"
 msgstr ""
 "Kun valittuna, muuttaa sarakkeiden kokoa automaattisesti täyttämään koko "
 "tilan"
 
-#: taskcoachlib/gui/uicommand.py:2698
+#: taskcoachlib/gui/uicommand.py:2724
 msgid "1 minute"
 msgstr "1 minuutti"
 
-#: taskcoachlib/gui/uicommand.py:2698
+#: taskcoachlib/gui/uicommand.py:2724
 msgid "No rounding"
 msgstr "Ei pyöristystä"
 
-#: taskcoachlib/gui/uicommand.py:2699
+#: taskcoachlib/gui/uicommand.py:2725
 msgid "%d minutes"
 msgstr "%d minuuttia"
 
-#: taskcoachlib/gui/uicommand.py:2717
+#: taskcoachlib/gui/uicommand.py:2743
 msgid "&Always round up"
 msgstr "Pyöristä aina ylöspäin"
 
-#: taskcoachlib/gui/uicommand.py:2718
+#: taskcoachlib/gui/uicommand.py:2744
 msgid "Always round up to the next rounding increment"
 msgstr "Pyöristä aina ylöspäin lähimpään pyöristyskohtaan"
+
+#: taskcoachlib/gui/uicommand.py:2784
+msgid "Help fund drag and drop of columns"
+msgstr ""
 
 #: taskcoachlib/gui/viewer/attachment.py:69
 msgid "Type"
@@ -3481,7 +3528,7 @@ msgid "Sort by subject"
 msgstr "Lajittele otsikon mukaan"
 
 #: taskcoachlib/gui/viewer/attachment.py:81
-#: taskcoachlib/gui/viewer/mixin.py:267
+#: taskcoachlib/gui/viewer/mixin.py:269
 msgid "Sub&ject"
 msgstr "Otsikko"
 
@@ -3492,15 +3539,15 @@ msgstr "Lajittele selitteen mukaan"
 #: taskcoachlib/gui/viewer/attachment.py:91
 #: taskcoachlib/gui/viewer/attachment.py:112
 #: taskcoachlib/gui/viewer/category.py:125
-#: taskcoachlib/gui/viewer/effort.py:269 taskcoachlib/gui/viewer/mixin.py:270
-#: taskcoachlib/gui/viewer/note.py:85 taskcoachlib/gui/viewer/note.py:112
+#: taskcoachlib/gui/viewer/effort.py:272 taskcoachlib/gui/viewer/mixin.py:272
+#: taskcoachlib/gui/viewer/note.py:87 taskcoachlib/gui/viewer/note.py:114
 #: taskcoachlib/gui/viewer/task.py:958
 msgid "&Description"
 msgstr "Selite"
 
 #: taskcoachlib/gui/viewer/attachment.py:113
 #: taskcoachlib/gui/viewer/category.py:126
-#: taskcoachlib/gui/viewer/effort.py:270 taskcoachlib/gui/viewer/note.py:86
+#: taskcoachlib/gui/viewer/effort.py:273 taskcoachlib/gui/viewer/note.py:88
 #: taskcoachlib/gui/viewer/task.py:959
 msgid "Show/hide description column"
 msgstr "Näytä/piilota selitesarake"
@@ -3515,12 +3562,12 @@ msgstr "Huomautukset"
 msgid "Show/hide notes column"
 msgstr "Näytä/piilota huomautussarake"
 
-#: taskcoachlib/gui/viewer/category.py:128 taskcoachlib/gui/viewer/note.py:88
+#: taskcoachlib/gui/viewer/category.py:128 taskcoachlib/gui/viewer/note.py:90
 #: taskcoachlib/gui/viewer/task.py:970
 msgid "&Attachments"
 msgstr "Liitteet"
 
-#: taskcoachlib/gui/viewer/category.py:129 taskcoachlib/gui/viewer/note.py:89
+#: taskcoachlib/gui/viewer/category.py:129 taskcoachlib/gui/viewer/note.py:91
 msgid "Show/hide attachments column"
 msgstr "Näytä/piilota liitteiden sarake"
 
@@ -3536,269 +3583,269 @@ msgstr "Tila: %d suodatettu"
 msgid "Period"
 msgstr "Aikajakso"
 
-#: taskcoachlib/gui/viewer/effort.py:205
+#: taskcoachlib/gui/viewer/effort.py:208
 msgid "Total time spent"
 msgstr "Kulutettu kokonaisaika"
 
-#: taskcoachlib/gui/viewer/effort.py:210
+#: taskcoachlib/gui/viewer/effort.py:213
 msgid "Total revenue"
 msgstr "Kokonaistuotto"
 
-#: taskcoachlib/gui/viewer/effort.py:219
+#: taskcoachlib/gui/viewer/effort.py:222
 msgid "Tuesday"
 msgstr "Tiistai"
 
-#: taskcoachlib/gui/viewer/effort.py:222
+#: taskcoachlib/gui/viewer/effort.py:225
 msgid "Wednesday"
 msgstr "Keskiviikko"
 
-#: taskcoachlib/gui/viewer/effort.py:225
+#: taskcoachlib/gui/viewer/effort.py:228
 msgid "Thursday"
 msgstr "Torstai"
 
-#: taskcoachlib/gui/viewer/effort.py:228
+#: taskcoachlib/gui/viewer/effort.py:231
 msgid "Friday"
 msgstr "Perjantai"
 
-#: taskcoachlib/gui/viewer/effort.py:231
+#: taskcoachlib/gui/viewer/effort.py:234
 msgid "Saturday"
 msgstr "Lauantai"
 
-#: taskcoachlib/gui/viewer/effort.py:272 taskcoachlib/gui/viewer/mixin.py:100
-#: taskcoachlib/gui/viewer/note.py:91 taskcoachlib/gui/viewer/note.py:132
+#: taskcoachlib/gui/viewer/effort.py:275 taskcoachlib/gui/viewer/mixin.py:102
+#: taskcoachlib/gui/viewer/note.py:93 taskcoachlib/gui/viewer/note.py:134
 #: taskcoachlib/gui/viewer/task.py:979
 msgid "&Categories"
 msgstr "Luokat"
 
-#: taskcoachlib/gui/viewer/effort.py:273 taskcoachlib/gui/viewer/note.py:92
+#: taskcoachlib/gui/viewer/effort.py:276 taskcoachlib/gui/viewer/note.py:94
 #: taskcoachlib/gui/viewer/task.py:980
 msgid "Show/hide categories column"
 msgstr "Näytä/piilota luokkien sarake"
 
-#: taskcoachlib/gui/viewer/effort.py:275 taskcoachlib/gui/viewer/mixin.py:375
+#: taskcoachlib/gui/viewer/effort.py:278 taskcoachlib/gui/viewer/mixin.py:377
 #: taskcoachlib/gui/viewer/task.py:935
 msgid "&Time spent"
 msgstr "Kulutettu aika"
 
-#: taskcoachlib/gui/viewer/effort.py:276 taskcoachlib/gui/viewer/task.py:936
+#: taskcoachlib/gui/viewer/effort.py:279 taskcoachlib/gui/viewer/task.py:936
 msgid "Show/hide time spent column"
 msgstr "Näytä/piilota kulutetun ajan sarake"
 
-#: taskcoachlib/gui/viewer/effort.py:278 taskcoachlib/gui/viewer/mixin.py:380
+#: taskcoachlib/gui/viewer/effort.py:281 taskcoachlib/gui/viewer/mixin.py:382
 #: taskcoachlib/gui/viewer/task.py:954
 msgid "&Revenue"
 msgstr "Tuotto"
 
-#: taskcoachlib/gui/viewer/effort.py:279 taskcoachlib/gui/viewer/task.py:955
+#: taskcoachlib/gui/viewer/effort.py:282 taskcoachlib/gui/viewer/task.py:955
 msgid "Show/hide revenue column"
 msgstr "Näytä/piilota tuottosarake"
 
-#: taskcoachlib/gui/viewer/effort.py:283
+#: taskcoachlib/gui/viewer/effort.py:286
 msgid "&Total time spent"
 msgstr "Kulutettu kokonaisaika"
 
-#: taskcoachlib/gui/viewer/effort.py:284
+#: taskcoachlib/gui/viewer/effort.py:287
 msgid "Show/hide total time spent column"
 msgstr "Näytä/piilota kulutetun kokonaisajan sarake"
 
-#: taskcoachlib/gui/viewer/effort.py:287
+#: taskcoachlib/gui/viewer/effort.py:290
 msgid "&Total revenue"
 msgstr "Kokonaistuotto"
 
-#: taskcoachlib/gui/viewer/effort.py:288
+#: taskcoachlib/gui/viewer/effort.py:291
 msgid "Show/hide total revenue column"
 msgstr "Näytä/piilota kokonaistuoton sarake"
 
-#: taskcoachlib/gui/viewer/effort.py:292
+#: taskcoachlib/gui/viewer/effort.py:295
 msgid "Effort per weekday"
 msgstr "Työmäärä viikossa"
 
-#: taskcoachlib/gui/viewer/effort.py:293
+#: taskcoachlib/gui/viewer/effort.py:296
 msgid "Show/hide time spent per weekday columns"
 msgstr "Näytä/piilota viikossa käytetyn ajan sarakkeet"
 
-#: taskcoachlib/gui/viewer/effort.py:363
+#: taskcoachlib/gui/viewer/effort.py:366
 msgid "Effort: %d selected, %d visible, %d total"
 msgstr "Työmäärä: %d valittu, %d näkyvissä, %d yhteensä"
 
-#: taskcoachlib/gui/viewer/effort.py:366
+#: taskcoachlib/gui/viewer/effort.py:369
 msgid "Status: %d tracking"
 msgstr "Tila: %d seurannassa"
 
-#: taskcoachlib/gui/viewer/mixin.py:291
+#: taskcoachlib/gui/viewer/mixin.py:293
 msgid "Sort categories by subject"
 msgstr "Lajittele luokat otsikon mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:292
+#: taskcoachlib/gui/viewer/mixin.py:294
 msgid "Sort categories by description"
 msgstr "Lajittele luokat selitteen mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:307
+#: taskcoachlib/gui/viewer/mixin.py:309
 msgid "Sort attachments by subject"
 msgstr "Lajittele liitteet otsikon mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:308
+#: taskcoachlib/gui/viewer/mixin.py:310
 msgid "Sort attachments by description"
 msgstr "Lajittele liitteet selitteen mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:309
+#: taskcoachlib/gui/viewer/mixin.py:311
 msgid "Sort attachments by category"
 msgstr "Lajittele liitteet luokan mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:313 taskcoachlib/gui/viewer/note.py:102
+#: taskcoachlib/gui/viewer/mixin.py:315 taskcoachlib/gui/viewer/note.py:104
 msgid "Sort notes by subject"
 msgstr "Lajittele huomautukset otsikon mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:314 taskcoachlib/gui/viewer/note.py:113
+#: taskcoachlib/gui/viewer/mixin.py:316 taskcoachlib/gui/viewer/note.py:115
 msgid "Sort notes by description"
 msgstr "Lajittele huomautukset selitteen mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:315
+#: taskcoachlib/gui/viewer/mixin.py:317
 msgid "Sort notes by category"
 msgstr "Lajittele huomautukset luokan mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:320
+#: taskcoachlib/gui/viewer/mixin.py:322
 msgid "Sort tasks by subject"
 msgstr "Lajittele tehtävät otsikon mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:321
+#: taskcoachlib/gui/viewer/mixin.py:323
 msgid "Sort tasks by description"
 msgstr "Lajittele tehtävät selitteen mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:322
+#: taskcoachlib/gui/viewer/mixin.py:324
 msgid "Sort tasks by category"
 msgstr "Lajittele tehtävät luokan mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:366
+#: taskcoachlib/gui/viewer/mixin.py:368
 msgid "Sort tasks by planned start date"
 msgstr "Lajittele suunnitellun aloituspäivän mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:366 taskcoachlib/gui/viewer/task.py:906
+#: taskcoachlib/gui/viewer/mixin.py:368 taskcoachlib/gui/viewer/task.py:906
 msgid "&Planned start date"
 msgstr "Suunniteltu aloituspäivä"
 
-#: taskcoachlib/gui/viewer/mixin.py:367
+#: taskcoachlib/gui/viewer/mixin.py:369
 msgid "Sort tasks by due date"
 msgstr "Lajittele päättymispäivän mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:367 taskcoachlib/gui/viewer/task.py:909
+#: taskcoachlib/gui/viewer/mixin.py:369 taskcoachlib/gui/viewer/task.py:909
 msgid "&Due date"
 msgstr "Päättymispäivä"
 
-#: taskcoachlib/gui/viewer/mixin.py:368
+#: taskcoachlib/gui/viewer/mixin.py:370
 msgid "Sort tasks by completion date"
 msgstr "Lajittele tehtävät valmistumispäivän mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:368 taskcoachlib/gui/viewer/task.py:915
+#: taskcoachlib/gui/viewer/mixin.py:370 taskcoachlib/gui/viewer/task.py:915
 msgid "&Completion date"
 msgstr "Valmistumispäivä"
 
-#: taskcoachlib/gui/viewer/mixin.py:369
+#: taskcoachlib/gui/viewer/mixin.py:371
 msgid "Sort tasks by prerequisite tasks"
 msgstr "Lajittele tehtävät vaadittavien tehtävien mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:369 taskcoachlib/gui/viewer/task.py:961
+#: taskcoachlib/gui/viewer/mixin.py:371 taskcoachlib/gui/viewer/task.py:961
 msgid "&Prerequisites"
 msgstr "Vaatimukset"
 
-#: taskcoachlib/gui/viewer/mixin.py:370
+#: taskcoachlib/gui/viewer/mixin.py:372
 msgid "Sort tasks by dependent tasks"
 msgstr "Lajittele tehtävät riippuvien tehtävien mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:370 taskcoachlib/gui/viewer/task.py:964
+#: taskcoachlib/gui/viewer/mixin.py:372 taskcoachlib/gui/viewer/task.py:964
 msgid "&Dependencies"
 msgstr "Riippuvuudet"
 
-#: taskcoachlib/gui/viewer/mixin.py:371
+#: taskcoachlib/gui/viewer/mixin.py:373
 msgid "Sort tasks by time left"
 msgstr "Lajittele tehtävät jäljellä olevan ajan mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:371 taskcoachlib/gui/viewer/task.py:918
+#: taskcoachlib/gui/viewer/mixin.py:373 taskcoachlib/gui/viewer/task.py:918
 msgid "&Time left"
 msgstr "Aikaa jäljellä"
 
-#: taskcoachlib/gui/viewer/mixin.py:372
+#: taskcoachlib/gui/viewer/mixin.py:374
 msgid "Sort tasks by percentage complete"
 msgstr "Lajittele tehtävät valmiusaste prosentteina mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:372 taskcoachlib/gui/viewer/task.py:967
+#: taskcoachlib/gui/viewer/mixin.py:374 taskcoachlib/gui/viewer/task.py:967
 msgid "&Percentage complete"
 msgstr "Valmiusaste &prosentteina"
 
-#: taskcoachlib/gui/viewer/mixin.py:373
+#: taskcoachlib/gui/viewer/mixin.py:375
 msgid "Sort tasks by recurrence"
 msgstr "Lajittele tehtävät toiston mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:373 taskcoachlib/gui/viewer/task.py:921
+#: taskcoachlib/gui/viewer/mixin.py:375 taskcoachlib/gui/viewer/task.py:921
 msgid "&Recurrence"
 msgstr "Toisto"
 
-#: taskcoachlib/gui/viewer/mixin.py:374
+#: taskcoachlib/gui/viewer/mixin.py:376
 msgid "Sort tasks by budget"
 msgstr "Lajittele arvioidun ajan mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:374 taskcoachlib/gui/viewer/task.py:926
+#: taskcoachlib/gui/viewer/mixin.py:376 taskcoachlib/gui/viewer/task.py:926
 #: taskcoachlib/gui/viewer/task.py:932
 msgid "&Budget"
 msgstr "Arvioitu aika"
 
-#: taskcoachlib/gui/viewer/mixin.py:375
+#: taskcoachlib/gui/viewer/mixin.py:377
 msgid "Sort tasks by time spent"
 msgstr "Lajittele tehtävät kulutetun ajan mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:376
+#: taskcoachlib/gui/viewer/mixin.py:378
 msgid "Budget &left"
 msgstr "Jäljellä oleva arvioitu aika"
 
-#: taskcoachlib/gui/viewer/mixin.py:376
+#: taskcoachlib/gui/viewer/mixin.py:378
 msgid "Sort tasks by budget left"
 msgstr "Lajittele tehtävät jäljellä olevan arvioidun ajan mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:377
+#: taskcoachlib/gui/viewer/mixin.py:379
 msgid "Sort tasks by priority"
 msgstr "Lajittele tehtävät tärkeyden mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:378
+#: taskcoachlib/gui/viewer/mixin.py:380
 msgid "Sort tasks by hourly fee"
 msgstr "Lajittele tehtävät tuntitaksan mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:378 taskcoachlib/gui/viewer/task.py:948
+#: taskcoachlib/gui/viewer/mixin.py:380 taskcoachlib/gui/viewer/task.py:948
 msgid "&Hourly fee"
 msgstr "Tuntitaksa"
 
-#: taskcoachlib/gui/viewer/mixin.py:379
+#: taskcoachlib/gui/viewer/mixin.py:381
 msgid "Sort tasks by fixed fee"
 msgstr "Lajittele tehtävät kiinteän taksan mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:379 taskcoachlib/gui/viewer/task.py:951
+#: taskcoachlib/gui/viewer/mixin.py:381 taskcoachlib/gui/viewer/task.py:951
 msgid "&Fixed fee"
 msgstr "Kiinteä taksa"
 
-#: taskcoachlib/gui/viewer/mixin.py:380
+#: taskcoachlib/gui/viewer/mixin.py:382
 msgid "Sort tasks by revenue"
 msgstr "Lajittele tehtävät tuoton mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:381
+#: taskcoachlib/gui/viewer/mixin.py:383
 msgid "Sort tasks by reminder date and time"
 msgstr "Lajittele tehtävät muituttajan päiväyksen ja kellonajan mukaan"
 
-#: taskcoachlib/gui/viewer/mixin.py:381 taskcoachlib/gui/viewer/task.py:985
+#: taskcoachlib/gui/viewer/mixin.py:383 taskcoachlib/gui/viewer/task.py:985
 msgid "&Reminder"
 msgstr "Muistuttaja"
 
-#: taskcoachlib/gui/viewer/note.py:101
+#: taskcoachlib/gui/viewer/note.py:103
 msgid "&Subject"
 msgstr "Otsikko"
 
-#: taskcoachlib/gui/viewer/note.py:133
+#: taskcoachlib/gui/viewer/note.py:135
 msgid "Sort notes by categories"
 msgstr "Lajittele huomautukset luokkien mukaan"
 
-#: taskcoachlib/gui/viewer/note.py:149
+#: taskcoachlib/gui/viewer/note.py:152
 msgid "Notes: %d selected, %d total"
 msgstr "Huomautukset: %d valittu, %d yhteensä"
 
-#: taskcoachlib/gui/viewer/note.py:151
+#: taskcoachlib/gui/viewer/note.py:154
 msgid "Status: n/a"
 msgstr "Tila: (ei tiedossa)"
 
@@ -3947,7 +3994,7 @@ msgstr "Näytä/piilota tärkeyssarake"
 msgid "Show/hide reminder column"
 msgstr "Näytä/piilota muistuttajan sarake"
 
-#: taskcoachlib/gui/viewer/task.py:1173
+#: taskcoachlib/gui/viewer/task.py:1168
 msgid "Task statistics"
 msgstr "Tehtävän tilastot"
 
@@ -5775,7 +5822,7 @@ msgstr ""
 "<p>%(copyright)s</p>\n"
 "<p>%(license_notice_html)s</p>\n"
 
-#: taskcoachlib/help/tips.py:25
+#: taskcoachlib/help/tips.py:26
 msgid ""
 "%(name)s is actively developed. Although the %(name)s developers try hard to "
 "prevent them, bugs do happen. So, backing up your work on a regular basis is "
@@ -5785,7 +5832,7 @@ msgstr ""
 "estää, virheitä tapahtuu. Joten merkintöjesi varmuuskopioiminen "
 "säännöllisesti on erittäin suositeltavaa."
 
-#: taskcoachlib/help/tips.py:26
+#: taskcoachlib/help/tips.py:27
 msgid ""
 "%(name)s has a mailing list where you can discuss usage of %(name)s with "
 "fellow users, discuss and request features and complain about bugs. Go to "
@@ -5796,7 +5843,7 @@ msgstr ""
 "ominaisuuksia ja tehdä bugiraportin. Mene osoitteeseen %(url)s ja liity "
 "tänään!"
 
-#: taskcoachlib/help/tips.py:27
+#: taskcoachlib/help/tips.py:28
 msgid ""
 "%(name)s has unlimited undo and redo. Any change that you make, be it "
 "editing a task description, or deleting an effort record, is undoable. "
@@ -5809,7 +5856,7 @@ msgstr ""
 "'Muokkaa' -> 'Tee uudelleen' mennäksesi taakse- tai eteenpäin "
 "muutoshistoriassa."
 
-#: taskcoachlib/help/tips.py:28
+#: taskcoachlib/help/tips.py:29
 msgid ""
 "%(name)s is available in a number of different languages. Select 'Edit' -> "
 "'Preferences' to see whether your language is one of them. If your language "
@@ -5822,7 +5869,7 @@ msgstr ""
 "tarvitsee parannusta, harkitse avustamista käännöksessä %(name)s. Vieraile "
 "osoitteessa %(url)s saadaksesi lisätietoa kuinka voit auttaa."
 
-#: taskcoachlib/help/tips.py:29
+#: taskcoachlib/help/tips.py:30
 msgid ""
 "If you enter a URL (e.g. %(url)s) in a task or effort description, it "
 "becomes a link. Clicking on the link will open the URL in your default web "
@@ -5832,7 +5879,7 @@ msgstr ""
 "selitteessä, osoitteesta tulee linkki. Valitsemalla linkin hiirellä linkki "
 "avautuu oletusselaimessasi."
 
-#: taskcoachlib/help/tips.py:30
+#: taskcoachlib/help/tips.py:31
 msgid ""
 "You can drag and drop tasks in the tree view to rearrange parent-child "
 "relationships between tasks. The same goes for categories."
@@ -5840,7 +5887,7 @@ msgstr ""
 "Voit raahata ja pudottaa tehtäviä puunäkymässä järjestääksesi uudelleen "
 "pää/alitaso-yhteyksiä tehtävien välillä. Sama koskee luokkia."
 
-#: taskcoachlib/help/tips.py:31
+#: taskcoachlib/help/tips.py:32
 msgid ""
 "You can drag files from a file browser onto a task to create attachments. "
 "Dragging the files over a tab will raise the appropriate page, dragging the "
@@ -5852,7 +5899,7 @@ msgstr ""
 "tiedostoja suljetun tehtävärakennenäkymän päälle (neliöity plus-merkki), "
 "puunäkymä avautuu ja se näyttää alitehtävät."
 
-#: taskcoachlib/help/tips.py:32
+#: taskcoachlib/help/tips.py:33
 msgid ""
 "You can create any viewer layout you want by dragging and dropping the tabs. "
 "The layout is saved and reused in the next session."
@@ -5860,7 +5907,7 @@ msgstr ""
 "Voit luoda erilaisia näkymiä raahaamalla ja pudottamalla välilehtiä. Näkymä "
 "tallennetaan ja käytetään uudelleen seuravalla käyttökerralla."
 
-#: taskcoachlib/help/tips.py:33
+#: taskcoachlib/help/tips.py:34
 msgid ""
 "What is actually printed when you select 'File' -> 'Print' depends on the "
 "current view. If the current view shows the task list, a list of tasks will "
@@ -5873,7 +5920,7 @@ msgstr ""
 "ryhmiteltynä kuukausittain, se tulostetaan. Sama pätee näkyville "
 "sarakkeille, lajittelyjärjestykselle, suodatetuille tehtäville jne."
 
-#: taskcoachlib/help/tips.py:34
+#: taskcoachlib/help/tips.py:35
 msgid ""
 "Left-click a column header to sort by that column. Click the column header "
 "again to change the sort order from ascending to descending and back again. "
@@ -5886,7 +5933,7 @@ msgstr ""
 "sarakkeen otsikko hiiren oikealla painikkeella, niin sarake häviää näkyvistä "
 "tai tee ylimääräisiä sarakkeita näkyväksi."
 
-#: taskcoachlib/help/tips.py:35
+#: taskcoachlib/help/tips.py:36
 msgid ""
 "You can turn off some features, such as notes and effort tracking, in the "
 "Preferences dialog. Features turned off are not accessible via the user "
@@ -5897,7 +5944,7 @@ msgstr ""
 "päältä, eivät ole käsiteltävissä käyttöliittymässä. Tällöin tuloksena on "
 "pienempi käyttöliittymä."
 
-#: taskcoachlib/help/tips.py:36
+#: taskcoachlib/help/tips.py:37
 msgid ""
 "You can create a template from a task in order to reduce typing when "
 "repetitive patterns emerge."
@@ -5905,9 +5952,21 @@ msgstr ""
 "Voit luoda mallipohjan tehtävästä vähentääksesi kirjoitusvaivaa, kun "
 "toistettava malli tulee esille."
 
-#: taskcoachlib/help/tips.py:37
+#: taskcoachlib/help/tips.py:38
 msgid "Ctrl-Tab switches between tabs in edit dialogs."
 msgstr "Ctrl-Tab vaihtaa välilehtien välillä editointi-ikkunoissa."
+
+#: taskcoachlib/help/tips.py:64
+msgid "Tip of the day"
+msgstr ""
+
+#: taskcoachlib/help/tips.py:75
+msgid "Next tip"
+msgstr ""
+
+#: taskcoachlib/help/tips.py:93
+msgid "Show tips on startup"
+msgstr ""
 
 #: taskcoachlib/help/uicommand.py:26
 msgid "Browse for files to add as attachment to the selected item(s)"
@@ -6358,7 +6417,7 @@ msgstr "Joka muu kuukausi"
 msgid "Every other year"
 msgstr "Joka muu vuosi"
 
-#: taskcoachlib/render.py:149
+#: taskcoachlib/render.py:162
 msgid "now"
 msgstr "nyt"
 
@@ -6419,35 +6478,35 @@ msgid "You must first edit your SyncML Settings, in Edit/SyncML preferences."
 msgstr ""
 "Sinun täytyy muokata ensin SyncML Asetuksia (ks. Muokkaa/SyncML asetukset)."
 
-#: taskcoachlib/thirdparty/aui/aui_switcherdialog.py:1053
+#: taskcoachlib/thirdparty/aui/aui_switcherdialog.py:1052
 msgid "Pane Switcher"
 msgstr "Panelin vaihtaja"
 
-#: taskcoachlib/thirdparty/aui/aui_switcherdialog.py:1178
+#: taskcoachlib/thirdparty/aui/aui_switcherdialog.py:1177
 msgid "\"><b>"
 msgstr "\"><b>"
 
-#: taskcoachlib/thirdparty/aui/aui_switcherdialog.py:1178
+#: taskcoachlib/thirdparty/aui/aui_switcherdialog.py:1177
 msgid "</b>"
 msgstr "</b>"
 
-#: taskcoachlib/thirdparty/aui/aui_switcherdialog.py:1178
+#: taskcoachlib/thirdparty/aui/aui_switcherdialog.py:1177
 msgid "<body bgcolor=\"#"
 msgstr "<body bgcolor=\"#"
 
-#: taskcoachlib/thirdparty/aui/aui_switcherdialog.py:1181
+#: taskcoachlib/thirdparty/aui/aui_switcherdialog.py:1180
 msgid "<p>"
 msgstr "<p>"
 
-#: taskcoachlib/thirdparty/aui/aui_switcherdialog.py:1184
+#: taskcoachlib/thirdparty/aui/aui_switcherdialog.py:1183
 msgid "</body>"
 msgstr "</body>"
 
-#: taskcoachlib/thirdparty/aui/framemanager.py:9911
+#: taskcoachlib/thirdparty/aui/framemanager.py:10128
 msgid "Restore %s"
 msgstr "Palauta %s"
 
-#: taskcoachlib/thirdparty/aui/framemanager.py:10341
+#: taskcoachlib/thirdparty/aui/framemanager.py:10561
 msgid "Pane Preview"
 msgstr "Paneeliesikatselu"
 
@@ -6472,14 +6531,6 @@ msgstr "&Edellinen"
 #: taskcoachlib/thirdparty/aui/tabmdi.py:216
 msgid "&Window"
 msgstr "&Ikkuna"
-
-#: taskcoachlib/tools/anonymize.py:56
-msgid "Your task file has been anonymized and saved to:"
-msgstr "Tehtävätiedostosi on tehty tunnistamattomaksi ja on tallennettu:"
-
-#: taskcoachlib/tools/anonymize.py:57
-msgid "Finished"
-msgstr "Valmis"
 
 #: taskcoachlib/widgets/calendarconfig.py:52
 msgid "Kind of period displayed and its count"
@@ -6541,21 +6592,13 @@ msgstr "Piirrä jana näyttäen tämänhetkinen aika"
 msgid "Color used to highlight the current day"
 msgstr "Tämänhetkisen päivän korostamiseen käytettävä väri"
 
-#: taskcoachlib/widgets/dialog.py:62
+#: taskcoachlib/widgets/dialog.py:65
 msgid "Close"
 msgstr "Sulje"
 
-#: taskcoachlib/widgets/dialog.py:154
+#: taskcoachlib/widgets/dialog.py:150
 msgid "All files (*.*)|*"
 msgstr "Kaikki tiedostot (*.*)|*"
-
-#: taskcoachlib/widgets/draganddrop.py:114
-msgid ""
-"Unrecognized URL scheme:\n"
-"\"%s\""
-msgstr ""
-"Tunnistamaton URL-osoite:\n"
-"\"%s\""
 
 #: taskcoachlib/widgets/password.py:32
 msgid "Password:"
@@ -6635,7 +6678,7 @@ msgstr ""
 msgid "Never show this dialog again"
 msgstr "Älä näytä tätä ikkunaa enää"
 
-#: taskcoachlib/widgets/textctrl.py:77
+#: taskcoachlib/widgets/textctrl.py:141
 msgid "Error opening URL"
 msgstr "Virhe avattaessa URL-osoitetta"
 
@@ -6643,11 +6686,21 @@ msgstr "Virhe avattaessa URL-osoitetta"
 #~ msgstr "Aloituspäivä"
 
 #~ msgid ""
+#~ "This setting will take effect\n"
+#~ "after you restart %s"
+#~ msgstr ""
+#~ "Tämä asetus tulee voimaan,\n"
+#~ "kun olet käynnistänyt %s:n."
+
+#~ msgid ""
 #~ "If your language is not available, or the translation needs \n"
 #~ "improving, please consider helping. See:"
 #~ msgstr ""
 #~ "Jos kieltäsi ei ole saatavilla tai käännös tarvitsee\n"
 #~ "parantamista, harkitse avustamista. Katso:"
+
+#~ msgid "Minutes between task start/end times"
+#~ msgstr "Minuutit tehtävän aloitus/lopetusajan välillä"
 
 #~ msgid "Are you sure it is a %s-file?"
 #~ msgstr "Oletko varma, että se on %s-tiedosto?"
@@ -6660,6 +6713,12 @@ msgstr "Virhe avattaessa URL-osoitetta"
 
 #~ msgid "Infinite"
 #~ msgstr "Määrittelemätön"
+
+#~ msgid "Sa&ve selection..."
+#~ msgstr "Ta&llenna valinta..."
+
+#~ msgid "Save the selected tasks to a separate file"
+#~ msgstr "Tallenna valittu tehtävä erilliseen tiedostoon"
 
 #~ msgid "Show/hide inactive tasks (tasks with a start date in the future)"
 #~ msgstr "Näytä/piilota passiiviset tehtävät (aloituspäivä tulevaisuudessa)"
@@ -7047,6 +7106,13 @@ msgstr "Virhe avattaessa URL-osoitetta"
 #~ msgid "Ctrl-M"
 #~ msgstr "Ctrl-M"
 
+#~ msgid ""
+#~ "Unrecognized URL scheme:\n"
+#~ "\"%s\""
+#~ msgstr ""
+#~ "Tunnistamaton URL-osoite:\n"
+#~ "\"%s\""
+
 #~ msgid "Only show tasks due this wo&rkweek"
 #~ msgstr "Näytä pelkästään tehtävät, jotka päättyvät tällä työviikolla"
 
@@ -7109,6 +7175,9 @@ msgstr "Virhe avattaessa URL-osoitetta"
 #~ msgid "What to do with start and due date if the other one is changed"
 #~ msgstr "Mitä tehdään aloitus- ja päättymispäivillä, jos toista muutetaan"
 
+#~ msgid "previous start and/or due date and time"
+#~ msgstr "edellinen aloitus ja/tai lopetuspäivä ja -aika"
+
 #~ msgid "Default start date and time"
 #~ msgstr "Oletusalkupäivä ja -aika"
 
@@ -7120,3 +7189,8 @@ msgstr "Virhe avattaessa URL-osoitetta"
 #~ "Ei voitu avata IMAP-yhteyttä palvelimelle %(server)s:%(port)s\n"
 #~ "Thunderbird-sähköpostin noutamiseksi. Viesti:\n"
 #~ "%(error)s"
+
+#~ msgid ""
+#~ "Also use the selected snooze time as default snooze time for future reminders"
+#~ msgstr ""
+#~ "Käytä valittua torkkuaikaa oletustorkkuaikana myös tuleville muistuttajille"
