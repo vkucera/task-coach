@@ -35,6 +35,8 @@ description tab raised and focus on the item subject.''', '1263'),
         Bugv2('''Editing templates would not work.'''),
         Bugv2('''The effort dialog wouldn't function properly when the time
 format contained dots, like in Italian.''', '1307'),
+        Bugv2('''Moving efforts between tasks would sometimes trigger an 
+exception, resulting in lost efforts.''', '1203'),
         ],
     ),
 

@@ -27,8 +27,8 @@ class AttributeSync(object):
         attribute of the domain object is changed (e.g. in another dialog) the 
         value of the control is updated. '''
         
-    def __init__(self, attributeGetterName, entry, currentValue, items, commandClass, 
-                 editedEventType, changedEventType, **kwargs):
+    def __init__(self, attributeGetterName, entry, currentValue, items, 
+                 commandClass, editedEventType, changedEventType, **kwargs):
         self._getter = attributeGetterName
         self._entry = entry
         self._currentValue = currentValue
@@ -38,24 +38,24 @@ class AttributeSync(object):
         self.__changedEventType = changedEventType
         entry.Bind(editedEventType, self.onAttributeEdited)
         if len(items) == 1:
-            self.startObservingAttribute(changedEventType, items[0])
+            self.__start_observing_attribute(changedEventType, items[0])
         
     def onAttributeEdited(self, event):
         event.Skip()
-        newValue = self.getValue()
-        if newValue != self._currentValue:
-            self._currentValue = newValue
-            commandKwArgs = self.commandKwArgs(newValue)
+        new_value = self.getValue()
+        if new_value != self._currentValue:
+            self._currentValue = new_value
+            commandKwArgs = self.commandKwArgs(new_value)
             self._commandClass(None, self._items, **commandKwArgs).do()  # pylint: disable=W0142
             
     def onAttributeChanged_Deprecated(self, event):  # pylint: disable=W0613
         if self._entry: 
-            newValue = getattr(self._items[0], self._getter)()
-            if newValue != self._currentValue:
-                self._currentValue = newValue
-                self.setValue(newValue)
+            new_value = getattr(self._items[0], self._getter)()
+            if new_value != self._currentValue:
+                self._currentValue = new_value
+                self.setValue(new_value)
         else:
-            self.stopObservingAttribute()
+            self.__stop_observing_attribute()
             
     def onAttributeChanged(self, newValue, sender):
         if sender in self._items:
@@ -64,19 +64,19 @@ class AttributeSync(object):
                     self._currentValue = newValue
                     self.setValue(newValue)
             else:
-                self.stopObservingAttribute()
+                self.__stop_observing_attribute()
             
-    def commandKwArgs(self, newValue):
-        self.__commandKwArgs['newValue'] = newValue
+    def commandKwArgs(self, new_value):
+        self.__commandKwArgs['newValue'] = new_value
         return self.__commandKwArgs
     
-    def setValue(self, newValue):
-        self._entry.SetValue(newValue)
+    def setValue(self, new_value):
+        self._entry.SetValue(new_value)
             
     def getValue(self):
         return self._entry.GetValue()
     
-    def startObservingAttribute(self, eventType, eventSource):
+    def __start_observing_attribute(self, eventType, eventSource):
         if eventType.startswith('pubsub'):
             pub.subscribe(self.onAttributeChanged, eventType)
         else:
@@ -84,7 +84,7 @@ class AttributeSync(object):
                                                   eventType=eventType,
                                                   eventSource=eventSource)
     
-    def stopObservingAttribute(self):
+    def __stop_observing_attribute(self):
         try:
             pub.unsubscribe(self.onAttributeChanged, self.__changedEventType)
         except pub.UndefinedTopic:

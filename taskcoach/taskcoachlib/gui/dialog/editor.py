@@ -447,8 +447,9 @@ class BudgetPage(Page):
 
     def onTimeSpentChanged(self, newValue, sender):
         if sender == self.items[0]:
-            if newValue != self._timeSpentEntry.GetValue():
-                self._timeSpentEntry.SetValue(newValue)
+            time_spent = sender.timeSpent()
+            if time_spent != self._timeSpentEntry.GetValue():
+                self._timeSpentEntry.SetValue(time_spent)
             
     def addBudgetLeftEntry(self):
         assert len(self.items) == 1
@@ -463,8 +464,9 @@ class BudgetPage(Page):
         
     def onBudgetLeftChanged(self, newValue, sender):  # pylint: disable=W0613
         if sender == self.items[0]:
-            if newValue != self._budgetLeftEntry.GetValue():
-                self._budgetLeftEntry.SetValue(newValue)
+            budget_left = sender.budgetLeft()
+            if budget_left != self._budgetLeftEntry.GetValue():
+                self._budgetLeftEntry.SetValue(budget_left)
             
     def addRevenueEntries(self):
         self.addHourlyFeeEntry()

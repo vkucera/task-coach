@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 from taskcoachlib.domain import date, categorizable, note, attachment
-from taskcoachlib.domain.attribute import color
 from taskcoachlib.thirdparty.pubsub import pub
 import status
 import wx
@@ -622,7 +621,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                         newValue=self.timeSpent(), sender=self)
         for ancestor in self.ancestors():
             pub.sendMessage(ancestor.timeSpentChangedEventType(), 
-                            newValue=ancestor.timeSpent(recursive=True),
+                            newValue=ancestor.timeSpent(),
                             sender=ancestor)
         if self.budget(recursive=True):
             self.sendBudgetLeftChangedMessage()
