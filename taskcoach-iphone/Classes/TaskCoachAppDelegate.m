@@ -69,7 +69,17 @@ NSManagedObjectContext *getManagedObjectContext(void)
 
 	JLINFO("Started.");
 
-	[window addSubview:mainController.view];
+    NSString *strVersion = [UIDevice currentDevice].systemVersion;
+    NSRange rg = [strVersion rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"."]];
+    NSInteger intVersion = [[strVersion substringToIndex:rg.location] integerValue];
+    if (intVersion <= 5)
+    {
+        [window addSubview:mainController.view];
+    }
+    else
+    {
+        [window setRootViewController:mainController];
+    }
 	[window makeKeyAndVisible];
 }
 
