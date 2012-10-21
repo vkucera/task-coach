@@ -37,6 +37,8 @@ description tab raised and focus on the item subject.''', '1263'),
 format contained dots, like in Italian.''', '1307'),
         Bugv2('''Moving efforts between tasks would sometimes trigger an 
 exception, resulting in lost efforts.''', '1203'),
+        Bugv2('''When there are multiple reminders and speech is on, don't
+say all the reminders simultaneously, but one at a time.''', '1313'),
         ],
     ),
 
