@@ -22,9 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Edit these for every release:
 
-version = '1.3.20'  # Current version number of the application
+version = '1.3.21'  # Current version number of the application
 tskversion = 35  # Current version number of the task file format, changed to 35 for release 1.3.19.
-release_day = '21'  # Day number of the release, 1-31, as string
+release_day = '22'  # Day number of the release, 1-31, as string
 release_month = 'October'  # Month of the release in plain English
 release_year = '2012'  # Year of the release as string
 release_status = 'stable'  # One of 'alpha', 'beta', 'stable'
