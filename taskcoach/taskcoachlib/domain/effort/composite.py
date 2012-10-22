@@ -179,6 +179,22 @@ class CompositeEffort(BaseCompositeEffort):
 
 
 class CompositeEffortPerPeriod(BaseCompositeEffort):
+    class Total(object):
+        # pylint: disable=W0613
+        def subject(self, *args, **kwargs): 
+            return _('Total')
+        
+        def foregroundColor(self, *args, **kwargs):
+            return None
+        
+        def backgroundColor(self, *args, **kwargs):
+            return None
+        
+        def font(self, *args, **kwargs):
+            return None
+        
+    total = Total()
+        
     def __init__(self, start, stop, taskList, initialEffort=None):
         self.taskList = taskList
         super(CompositeEffortPerPeriod, self).__init__(None, start, stop)
@@ -193,22 +209,9 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
         if anEffort not in self.__effort_cache:
             self.__effort_cache.append(anEffort)
 
-    def task(self):
-        class Total(object):
-            # pylint: disable=W0613
-            def subject(self, *args, **kwargs): 
-                return _('Total')
-            
-            def foregroundColor(self, *args, **kwargs):
-                return None
-            
-            def backgroundColor(self, *args, **kwargs):
-                return None
-            
-            def font(self, *args, **kwargs):
-                return None
-        
-        return Total()
+    @classmethod
+    def task(cls):
+        return cls.total
 
     def isTotal(self):
         return True
