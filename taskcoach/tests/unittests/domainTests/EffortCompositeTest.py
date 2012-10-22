@@ -180,7 +180,7 @@ class CompositeEffortTest(test.TestCase):
         self.effort1.setStart(self.effort1.getStart() + date.TimeDelta(hours=1))
         self.assertEqual(self.effort1.duration(), self.composite.duration())
 
-    def testChangeStartTimeOfEffort_KeepWithinPeriod_Notification(self):
+    def testChangeStartTimeOfEffort_KeepWithinPeriod_NoNotification(self):
         self.task.addEffort(self.effort1)
         events = []
         
@@ -189,7 +189,7 @@ class CompositeEffortTest(test.TestCase):
             
         pub.subscribe(onEvent, effort.Effort.durationChangedEventType())
         self.effort1.setStart(self.effort1.getStart() + date.TimeDelta(hours=1))
-        self.failUnless((self.composite.duration(), self.composite) in events)
+        self.failIf((self.composite.duration(), self.composite) in events)
 
     def testChangeStartTimeOfEffort_MoveOutsidePeriode(self):
         self.task.addEffort(self.effort1)
@@ -206,7 +206,18 @@ class CompositeEffortTest(test.TestCase):
         self.effort1.setStop(self.effort1.getStop() + date.TimeDelta(days=2))
         self.assertEqual(self.effort1.duration(), self.composite.duration())
 
-    def testChangeStartTimeOfEffort_Notification(self):
+    def testChangeStopTimeOfEffort_MoveOutsidePeriod_Notification(self):
+        self.task.addEffort(self.effort1)
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, effort.Effort.durationChangedEventType())
+        self.effort1.setStop(self.effort1.getStop() + date.TimeDelta(days=2))
+        self.failIf((self.composite.duration(), self.composite) in events)
+        
+    def testChangeStopTimeOfEffort_NoNotification(self):
         self.task.addEffort(self.effort1)
         events = []
         
@@ -215,7 +226,7 @@ class CompositeEffortTest(test.TestCase):
             
         pub.subscribe(onEvent, effort.Effort.durationChangedEventType())
         self.effort1.setStop(self.effort1.getStop() + date.TimeDelta(hours=1))
-        self.failUnless((self.composite.duration(), self.composite) in events)
+        self.failIf((self.composite.duration(), self.composite) in events)
 
     def testChangeStartTimeOfEffort_MoveInsidePeriod(self):
         self.task.addEffort(self.effort3)
@@ -247,9 +258,7 @@ class CompositeEffortTest(test.TestCase):
         pub.subscribe(onEvent, effort.CompositeEffort.compositeEmptyEventType())
         self.task.addEffort(self.effort1)
         self.effort1.setTask(task.Task())
-        # We get the event twice: once because of setTask, second from the 
-        # changed duration 
-        self.assertEqual([self.composite, self.composite], events)
+        self.assertEqual([self.composite], events)
 
     def testGetDescription_ZeroEfforts(self):
         self.assertEqual('', self.composite.description())
@@ -323,9 +332,7 @@ class CompositeEffortWithSubTasksTest(test.TestCase):
             
         pub.subscribe(onEvent, effort.CompositeEffort.compositeEmptyEventType())
         self.child.removeEffort(self.childEffort)
-        # We get the event twice: once because of setTask, second from the 
-        # changed duration 
-        self.assertEqual([self.composite, self.composite], events)
+        self.assertEqual([self.composite], events)
 
     def testDuration(self):
         self.child.addEffort(self.childEffort)
