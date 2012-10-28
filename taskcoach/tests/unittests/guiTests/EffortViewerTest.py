@@ -261,7 +261,7 @@ class CommonTestsMixin(object):
         self.assertEqual(1, self.viewer.size())
         
     def testDelete(self):
-        self.viewer.widget.select([self.task.efforts()[-1]])
+        self.viewer.widget.Select(0)
         self.viewer.updateSelection()
         self.viewer.deleteUICommand.doCommand(None)
         expectedNumberOfItems = self.expectedNumberOfItems - (1 if self.aggregation == 'details' else 3)
@@ -273,8 +273,6 @@ class CommonTestsMixin(object):
         self.assertEqual(expectedNumberOfItems, self.viewer.size())
         
     def testNewEffortUsesSameTaskAsSelectedEffort(self):
-        self.viewer.widget.select([self.task2.efforts()[-1]])
-        self.viewer.updateSelection()
         dialog = self.viewer.newItemDialog(selectedTasks=[self.task2], 
                                            bitmap='new')
         for newEffort in dialog._items:  # pylint: disable=W0212
