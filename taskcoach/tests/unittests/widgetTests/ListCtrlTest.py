@@ -31,7 +31,7 @@ class VirtualListCtrlTestCase(test.wxTestCase):
         self.frame.getItemText = lambda item, column: ''
         self.frame.getItemTooltipData = lambda item: []
         self.frame.getItemImages = lambda item, column: {wx.TreeItemIcon_Normal: -1}
-        return widgets.ListCtrl(self.frame, self.columns, self.onSelect, 
+        return widgets.VirtualListCtrl(self.frame, self.columns, self.onSelect, 
             dummy.DummyUICommand())
 
     def createColumns(self, nrColumns):

@@ -16,7 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib import meta, patterns, command, render, operating_system
+from taskcoachlib import meta, patterns, command, render, operating_system, \
+    speak
 from taskcoachlib.domain import date
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty.pubsub import pub
@@ -101,12 +102,7 @@ class ReminderDialog(patterns.Observer, sized_controls.SizedDialog):
         self.Fit()
         self.RequestUserAttention()
         if self.settings.getboolean('feature', 'sayreminder'):
-            if operating_system.isMac():
-                subprocess.Popen(('say', '"%s: %s"' % (_('Reminder'), 
-                                                       task.subject())))
-            elif operating_system.isGTK():
-                subprocess.Popen(('espeak', '"%s: %s"' % (_('Reminder'), 
-                                                          task.subject())))
+            speak.Speaker().say('"%s: %s"' % (_('Reminder'), task.subject()))
 
     def onOpenTask(self, event):  # pylint: disable=W0613
         self.openTaskAfterClose = True

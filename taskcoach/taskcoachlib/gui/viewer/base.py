@@ -245,12 +245,12 @@ class Viewer(patterns.Observer, wx.Panel):
             different than 'if item in viewer.curselection()'. '''
         return item in self.curselection()
 
-    def selectall(self):
+    def select_all(self):
         ''' Select all items in the presentation. Since some of the widgets we
             use may send events for each individual item (!) we stop processing
             selection events while we select all items. '''
         self.__selectingAllItems = True
-        self.widget.selectall()
+        self.widget.select_all()
         # Use CallAfter to make sure we start processing selection events 
         # after all selection events have been fired (and ignored):
         wx.CallAfter(self.endOfSelectAll)
@@ -258,12 +258,12 @@ class Viewer(patterns.Observer, wx.Panel):
     def endOfSelectAll(self):
         self.__curselection = self.presentation()
         self.__selectingAllItems = False
-        # Pretend we received one selection event for the selectall() call:
+        # Pretend we received one selection event for the select_all() call:
         self.onSelect()
 
-    def clearselection(self):
+    def clear_selection(self):
         self.__curselection = []
-        self.widget.clearselection()
+        self.widget.clear_selection()
         
     def size(self):
         return self.widget.GetItemCount()
@@ -428,18 +428,21 @@ class Viewer(patterns.Observer, wx.Panel):
         bitmap = kwargs.pop('bitmap')
         newItemCommand = self.newItemCommand(*args, **kwargs)
         newItemCommand.do()
-        return self.editItemDialog(newItemCommand.items, bitmap, itemsAreNew=True)
+        return self.editItemDialog(newItemCommand.items, bitmap, 
+                                   items_are_new=True)
 
     def newSubItemDialog(self, bitmap):
         newSubItemCommand = self.newSubItemCommand()
         newSubItemCommand.do()
-        return self.editItemDialog(newSubItemCommand.items, bitmap, itemsAreNew=True)   
+        return self.editItemDialog(newSubItemCommand.items, bitmap, 
+                                   items_are_new=True)   
     
-    def editItemDialog(self, items, bitmap, columnName='', itemsAreNew=False):
+    def editItemDialog(self, items, bitmap, columnName='', items_are_new=False):
         Editor = self.itemEditorClass()
         return Editor(wx.GetTopLevelParent(self), items, 
                       self.settings, self.presentation(), self.taskFile, 
-                      bitmap=bitmap, columnName=columnName, itemsAreNew=itemsAreNew)
+                      bitmap=bitmap, columnName=columnName, 
+                      items_are_new=items_are_new)
         
     def itemEditorClass(self):
         raise NotImplementedError

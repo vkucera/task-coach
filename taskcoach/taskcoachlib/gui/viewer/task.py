@@ -120,15 +120,15 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable=W0223
         kwargs['categories'] = self.taskFile.categories().filteredCategories()
         return super(BaseTaskTreeViewer, self).newItemDialog(*args, **kwargs)
     
-    def editItemDialog(self, items, bitmap, columnName='', itemsAreNew=False):
+    def editItemDialog(self, items, bitmap, columnName='', 
+                       items_are_new=False):
         if isinstance(items[0], task.Task):
             return super(BaseTaskTreeViewer, self).editItemDialog(items, bitmap, 
-                                                              columnName=columnName, 
-                                                              itemsAreNew=itemsAreNew)
+                columnName=columnName, items_are_new=items_are_new)
         else:
             return dialog.editor.EffortEditor(wx.GetTopLevelParent(self),
                 items, self.settings, self.taskFile.efforts(), self.taskFile,  
-                bitmap=bitmap, itemsAreNew=itemsAreNew)
+                bitmap=bitmap, items_are_new=items_are_new)
             
     def itemEditorClass(self):
         return dialog.editor.TaskEditor
@@ -572,10 +572,12 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         self.onWorkingHourChanged()
 
         self.reconfig()
-        self.widget.SetPeriodWidth(self.settings.getint(self.settingsSection(), 'periodwidth'))
+        self.widget.SetPeriodWidth(self.settings.getint(self.settingsSection(), 
+                                                        'periodwidth'))
 
         for eventType in ('start', 'end'):
-            pub.subscribe(self.onWorkingHourChanged, 'settings.view.efforthour%s' % eventType)
+            pub.subscribe(self.onWorkingHourChanged, 
+                          'settings.view.efforthour%s' % eventType)
         pub.subscribe(self.onWeekStartChanged, 'settings.view.weekstartmonday')
 
         # pylint: disable=E1101
@@ -619,8 +621,9 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
     def createWidget(self):
         itemPopupMenu = self.createTaskPopupMenu()
         self._popupMenus.append(itemPopupMenu)
-        widget = widgets.Calendar(self, self.presentation(), self.iconName, self.onSelect,
-                                  self.onEdit, self.onCreate, self.onChangeConfig, itemPopupMenu,
+        widget = widgets.Calendar(self, self.presentation(), self.iconName, 
+                                  self.onSelect, self.onEdit, self.onCreate, 
+                                  self.onChangeConfig, itemPopupMenu,
                                   **self.widgetCreationKeywordArguments())
 
         if self.settings.getboolean('calendarviewer', 'gradient'):
@@ -630,7 +633,8 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         return widget
 
     def onChangeConfig(self):
-        self.settings.set(self.settingsSection(), 'periodwidth', str(self.widget.GetPeriodWidth()))
+        self.settings.set(self.settingsSection(), 'periodwidth', 
+                          str(self.widget.GetPeriodWidth()))
 
     def onEdit(self, item):
         edit = uicommand.Edit(viewer=self)
@@ -691,9 +695,11 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
             self.widget.Thaw()
 
     def configure(self):
-        dlg = CalendarConfigDialog(self.settings, self.settingsSection(), self, title=_('Calendar viewer configuration'))
-        dlg.CentreOnParent()
-        if dlg.ShowModal() == wx.ID_OK:
+        dialog = CalendarConfigDialog(self.settings, self.settingsSection(), 
+                                      self, 
+                                      title=_('Calendar viewer configuration'))
+        dialog.CentreOnParent()
+        if dialog.ShowModal() == wx.ID_OK:
             self.reconfig()
 
     def GetPrintout(self):
@@ -741,7 +747,8 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
         self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
         widget = widgets.TreeListCtrl(self, self.columns(), self.onSelect, 
             uicommand.Edit(viewer=self),
-            uicommand.TaskDragAndDrop(taskList=self.presentation(), viewer=self),
+            uicommand.TaskDragAndDrop(taskList=self.presentation(), 
+                                      viewer=self),
             itemPopupMenu, columnPopupMenu,
             **self.widgetCreationKeywordArguments())
         widget.AssignImageList(imageList)  # pylint: disable=E1101
@@ -772,7 +779,8 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
             # be updated via the regular notification mechanism.
             treeItem = event.GetItem()
             editedTask = self.widget.GetItemPyData(treeItem)
-            self.widget.SetItemText(treeItem, editedTask.subject(recursive=True))
+            self.widget.SetItemText(treeItem, 
+                                    editedTask.subject(recursive=True))
     
     def _createColumns(self):
         kwargs = dict(renderDescriptionCallback=lambda task: task.description(),
@@ -841,54 +849,81 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                 width=self.getColumnWidth('dependencies'), **kwargs)])
 
         for name, columnHeader, editCtrl, editCallback, eventTypes in [
-            ('plannedStartDateTime', _('Planned start date'), inplace_editor.DateTimeCtrl, self.onEditPlannedStartDateTime, []),
-            ('dueDateTime', _('Due date'), inplace_editor.DateTimeCtrl, self.onEditDueDateTime, [task.Task.expansionChangedEventType()]),
-            ('actualStartDateTime', _('Actual start date'), inplace_editor.DateTimeCtrl, self.onEditActualStartDateTime, [task.Task.expansionChangedEventType()]),
-            ('completionDateTime', _('Completion date'), inplace_editor.DateTimeCtrl, self.onEditCompletionDateTime, [task.Task.expansionChangedEventType()])]:
-            renderCallback = getattr(self, 'render%s' % (name[0].capitalize() + name[1:]))
+            ('plannedStartDateTime', _('Planned start date'), 
+             inplace_editor.DateTimeCtrl, self.onEditPlannedStartDateTime, []),
+            ('dueDateTime', _('Due date'), inplace_editor.DateTimeCtrl, 
+             self.onEditDueDateTime, [task.Task.expansionChangedEventType()]),
+            ('actualStartDateTime', _('Actual start date'), 
+             inplace_editor.DateTimeCtrl, self.onEditActualStartDateTime, 
+             [task.Task.expansionChangedEventType()]),
+            ('completionDateTime', _('Completion date'), 
+             inplace_editor.DateTimeCtrl, self.onEditCompletionDateTime, 
+             [task.Task.expansionChangedEventType()])]:
+            renderCallback = getattr(self, 'render%s' % \
+                                     (name[0].capitalize() + name[1:]))
             columns.append(widgets.Column(name, columnHeader,  
-                sortCallback=uicommand.ViewerSortByCommand(viewer=self, value=name),
+                sortCallback=uicommand.ViewerSortByCommand(viewer=self, 
+                                                           value=name),
                 renderCallback=renderCallback, width=self.getColumnWidth(name),
                 alignment=wx.LIST_FORMAT_RIGHT, editControl=editCtrl, 
-                editCallback=editCallback, settings=self.settings, *eventTypes, **kwargs))
+                editCallback=editCallback, settings=self.settings, *eventTypes, 
+                **kwargs))
 
         effortOn = self.settings.getboolean('feature', 'effort')
         dependsOnEffortFeature = ['budget', 'timeSpent', 'budgetLeft',
                                   'hourlyFee', 'fixedFee', 'revenue']
             
         for name, columnHeader, editCtrl, editCallback, eventTypes in [        
-            ('percentageComplete', _('% complete'), inplace_editor.PercentageCtrl, self.onEditPercentageComplete, 
-                 [task.Task.expansionChangedEventType(), task.Task.percentageCompleteChangedEventType()]),
-            ('timeLeft', _('Time left'), None, None, [task.Task.expansionChangedEventType(), 'task.timeLeft']),
+            ('percentageComplete', _('% complete'), 
+             inplace_editor.PercentageCtrl, self.onEditPercentageComplete, 
+             [task.Task.expansionChangedEventType(), 
+              task.Task.percentageCompleteChangedEventType()]),
+            ('timeLeft', _('Time left'), None, None, 
+             [task.Task.expansionChangedEventType(), 'task.timeLeft']),
             ('recurrence', _('Recurrence'), None, None, 
-                 [task.Task.expansionChangedEventType(), task.Task.recurrenceChangedEventType()]),
-            ('budget', _('Budget'), inplace_editor.BudgetCtrl, self.onEditBudget, 
-                 [task.Task.expansionChangedEventType(), task.Task.budgetChangedEventType()]),            
+             [task.Task.expansionChangedEventType(), 
+              task.Task.recurrenceChangedEventType()]),
+            ('budget', _('Budget'), inplace_editor.BudgetCtrl, 
+             self.onEditBudget, [task.Task.expansionChangedEventType(), 
+                                 task.Task.budgetChangedEventType()]),
             ('timeSpent', _('Time spent'), None, None, 
-                 [task.Task.expansionChangedEventType(), task.Task.timeSpentChangedEventType()]),
+             [task.Task.expansionChangedEventType(), 
+              task.Task.timeSpentChangedEventType()]),
             ('budgetLeft', _('Budget left'), None, None, 
-                 [task.Task.expansionChangedEventType(), task.Task.budgetLeftChangedEventType()]),            
-            ('priority', _('Priority'), inplace_editor.PriorityCtrl, self.onEditPriority, 
-                 [task.Task.expansionChangedEventType(), task.Task.priorityChangedEventType()]),
-            ('hourlyFee', _('Hourly fee'), inplace_editor.AmountCtrl, self.onEditHourlyFee, [task.Task.hourlyFeeChangedEventType()]),
-            ('fixedFee', _('Fixed fee'), inplace_editor.AmountCtrl, self.onEditFixedFee, 
-                 [task.Task.expansionChangedEventType(), task.Task.fixedFeeChangedEventType()]),            
+             [task.Task.expansionChangedEventType(), 
+              task.Task.budgetLeftChangedEventType()]),            
+            ('priority', _('Priority'), inplace_editor.PriorityCtrl, 
+             self.onEditPriority, [task.Task.expansionChangedEventType(), 
+                                   task.Task.priorityChangedEventType()]),
+            ('hourlyFee', _('Hourly fee'), inplace_editor.AmountCtrl, 
+             self.onEditHourlyFee, [task.Task.hourlyFeeChangedEventType()]),
+            ('fixedFee', _('Fixed fee'), inplace_editor.AmountCtrl, 
+             self.onEditFixedFee, [task.Task.expansionChangedEventType(), 
+                                   task.Task.fixedFeeChangedEventType()]),
             ('revenue', _('Revenue'), None, None, 
-                [task.Task.expansionChangedEventType(), task.Task.revenueChangedEventType()])]:
+             [task.Task.expansionChangedEventType(), 
+              task.Task.revenueChangedEventType()])]:
             if (name in dependsOnEffortFeature and effortOn) or name not in dependsOnEffortFeature:
-                renderCallback = getattr(self, 'render%s' % (name[0].capitalize() + name[1:]))
+                renderCallback = getattr(self, 'render%s' % \
+                                         (name[0].capitalize() + name[1:]))
                 columns.append(widgets.Column(name, columnHeader,  
-                    sortCallback=uicommand.ViewerSortByCommand(viewer=self, value=name),
-                    renderCallback=renderCallback, width=self.getColumnWidth(name),
+                    sortCallback=uicommand.ViewerSortByCommand(viewer=self, 
+                                                               value=name),
+                    renderCallback=renderCallback, 
+                    width=self.getColumnWidth(name),
                     alignment=wx.LIST_FORMAT_RIGHT, editControl=editCtrl, 
                     editCallback=editCallback, *eventTypes, **kwargs))
                 
         columns.append(widgets.Column('reminder', _('Reminder'), 
-            sortCallback=uicommand.ViewerSortByCommand(viewer=self, value='reminder'),
-            renderCallback=self.renderReminder, width=self.getColumnWidth('reminder'),
-            alignment=wx.LIST_FORMAT_RIGHT, editControl=inplace_editor.DateTimeCtrl,
+            sortCallback=uicommand.ViewerSortByCommand(viewer=self, 
+                                                       value='reminder'),
+            renderCallback=self.renderReminder, 
+            width=self.getColumnWidth('reminder'),
+            alignment=wx.LIST_FORMAT_RIGHT, 
+            editControl=inplace_editor.DateTimeCtrl,
             editCallback=self.onEditReminderDateTime, settings=self.settings,
-            *[task.Task.expansionChangedEventType(), task.Task.reminderChangedEventType()], **kwargs))
+            *[task.Task.expansionChangedEventType(), 
+              task.Task.reminderChangedEventType()], **kwargs))
         return columns
     
     def createColumnUICommands(self):
@@ -900,7 +935,8 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
              uicommand.ViewColumns(menuText=_('&All date columns'),
                 helpText=_('Show/hide all date-related columns'),
                 setting=['plannedStartDateTime', 'dueDateTime', 'timeLeft', 
-                         'actualStartDateTime', 'completionDateTime', 'recurrence'],
+                         'actualStartDateTime', 'completionDateTime', 
+                         'recurrence'],
                 viewer=self),
              None,
              uicommand.ViewColumn(menuText=_('&Planned start date'),
@@ -1044,7 +1080,8 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
         return self.renderSubjectsOfRelatedItems(task, task.dependencies)
     
     def renderTimeLeft(self, task):
-        return self.renderedValue(task, task.timeLeft, render.timeLeft, task.completed())
+        return self.renderedValue(task, task.timeLeft, render.timeLeft, 
+                                  task.completed())
         
     def renderTimeSpent(self, task):
         return self.renderedValue(task, task.timeSpent, render.timeSpent)
@@ -1059,13 +1096,15 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
         return self.renderedValue(task, task.revenue, render.monetaryAmount)
     
     def renderHourlyFee(self, task):
-        return render.monetaryAmount(task.hourlyFee())  # hourlyFee has no recursive value
+        # hourlyFee has no recursive value
+        return render.monetaryAmount(task.hourlyFee())  
     
     def renderFixedFee(self, task):
         return self.renderedValue(task, task.fixedFee, render.monetaryAmount)
 
     def renderPercentageComplete(self, task):
-        return self.renderedValue(task, task.percentageComplete, render.percentage)
+        return self.renderedValue(task, task.percentageComplete, 
+                                  render.percentage)
 
     def renderPriority(self, task):
         return self.renderedValue(task, task.priority, render.priority) + ' '
@@ -1085,7 +1124,8 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
     
     def onEditPlannedStartDateTime(self, item, newValue):
         keep_delta = self.settings.get('view', 'datestied') == 'startdue'
-        command.EditPlannedStartDateTimeCommand(items=[item], newValue=newValue, 
+        command.EditPlannedStartDateTimeCommand(items=[item], 
+                                                newValue=newValue, 
                                                 keep_delta=keep_delta).do()
         
     def onEditDueDateTime(self, item, newValue):       
@@ -1094,13 +1134,16 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                                        keep_delta=keep_delta).do()
 
     def onEditActualStartDateTime(self, item, newValue):
-        command.EditActualStartDateTimeCommand(items=[item], newValue=newValue).do()
+        command.EditActualStartDateTimeCommand(items=[item], 
+                                               newValue=newValue).do()
         
     def onEditCompletionDateTime(self, item, newValue):
-        command.EditCompletionDateTimeCommand(items=[item], newValue=newValue).do()
+        command.EditCompletionDateTimeCommand(items=[item], 
+                                              newValue=newValue).do()
         
     def onEditPercentageComplete(self, item, newValue):
-        command.EditPercentageCompleteCommand(items=[item], newValue=newValue).do()  # pylint: disable=E1101
+        command.EditPercentageCompleteCommand(items=[item], 
+                                              newValue=newValue).do()  # pylint: disable=E1101
         
     def onEditBudget(self, item, newValue):
         command.EditBudgetCommand(items=[item], newValue=newValue).do()
@@ -1109,7 +1152,8 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
         command.EditPriorityCommand(items=[item], newValue=newValue).do()
         
     def onEditReminderDateTime(self, item, newValue):
-        command.EditReminderDateTimeCommand(items=[item], newValue=newValue).do()
+        command.EditReminderDateTimeCommand(items=[item], 
+                                            newValue=newValue).do()
         
     def onEditHourlyFee(self, item, newValue):
         command.EditHourlyFeeCommand(items=[item], newValue=newValue).do()
@@ -1146,9 +1190,9 @@ class CheckableTaskViewer(TaskViewer):  # pylint: disable=W0223
         columnPopupMenu = self.createColumnPopupMenu()
         self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
         widget = widgets.CheckTreeCtrl(self, self.columns(), self.onSelect,
-            self.onCheck, 
-            uicommand.Edit(viewer=self),
-            uicommand.TaskDragAndDrop(taskList=self.presentation(), viewer=self),
+            self.onCheck, uicommand.Edit(viewer=self),
+            uicommand.TaskDragAndDrop(taskList=self.presentation(), 
+                                      viewer=self),
             itemPopupMenu, columnPopupMenu,
             **self.widgetCreationKeywordArguments())
         widget.AssignImageList(imageList)  # pylint: disable=E1101
@@ -1201,8 +1245,9 @@ class TaskStatsViewer(BaseTaskViewer):  # pylint: disable=W0223
                                           viewer=self),
                 uicommand.ViewerHideTasks(taskStatus=task.status.inactive,
                                           viewer=self),
-                uicommand.ViewerPieChartAngle(viewer=self, settings=self.settings))            
-        
+                uicommand.ViewerPieChartAngle(viewer=self, 
+                                              settings=self.settings))
+
     def initLegend(self, widget):
         legend = widget.GetLegend()
         legend.SetTransparent(False)
@@ -1211,7 +1256,8 @@ class TaskStatsViewer(BaseTaskViewer):  # pylint: disable=W0223
         legend.Show()
     
     def refresh(self):
-        self.widget.SetAngle(self.settings.getint(self.settingsSection(), 'piechartangle') / 180. * math.pi)
+        self.widget.SetAngle(self.settings.getint(self.settingsSection(), 
+                             'piechartangle') / 180. * math.pi)
         self.refreshParts()
         self.widget.Refresh()
         
@@ -1231,7 +1277,8 @@ class TaskStatsViewer(BaseTaskViewer):  # pylint: disable=W0223
             series[0].SetValue(1)
        
     def getFgColor(self, status):
-        color = wx.Colour(*eval(self.settings.get('fgcolor', '%stasks' % status)))
+        color = wx.Colour(*eval(self.settings.get('fgcolor', 
+                                                  '%stasks' % status)))
         if status == task.status.active and color == wx.BLACK:
             color = wx.BLUE
         return color
@@ -1250,3 +1297,4 @@ class TaskStatsViewer(BaseTaskViewer):  # pylint: disable=W0223
 
     def onPieChartAngleChanged(self, value):  # pylint: disable=W0613
         self.refresh()
+

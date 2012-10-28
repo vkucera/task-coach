@@ -76,8 +76,8 @@ class TimeDeltaEntryTest(test.wxTestCase):
                          self.timeDeltaEntry._entry.GetValue())
     
     def testOverflow(self):
-        self.timeDeltaEntry.SetValue(date.TimeDelta(hours=1000000000))
-        self.assertEqual('        0:00:00', 
+        self.timeDeltaEntry.SetValue(date.TimeDelta(hours=12345678912))
+        self.assertEqual('123456789:00:00', 
                          self.timeDeltaEntry._entry.GetValue())
     
     

@@ -48,28 +48,29 @@ class Page(patterns.Observer, widgets.BookPage):
         ''' A mapping of names of columns to entries on this editor page. '''
         return dict()
     
-    def setFocusOnEntry(self, columnName):
+    def setFocusOnEntry(self, column_name):
         try:
-            theEntry = self.entries()[columnName]
+            the_entry = self.entries()[column_name]
         except KeyError:
-            theEntry = self.entries()['firstEntry']
-        self.__setSelectionAndFocus(theEntry)
+            the_entry = self.entries()['firstEntry']
+        self.__set_selection_and_focus(the_entry)
 
-    def __setSelectionAndFocus(self, theEntry):
+    def __set_selection_and_focus(self, the_entry):
         ''' If the entry has selectable text, select the text so that the user
             can start typing over it immediately, except on Linux because it
             overwrites the X clipboard. '''
         if not operating_system.isGTK():
-            theEntry.SetFocus()
+            the_entry.SetFocus()
             try:
-                if operating_system.isWindows():
+                if operating_system.isWindows() and \
+                    isinstance(the_entry, wx.TextCtrl):
                     # This ensures that if the TextCtrl value is more than can 
                     # be displayed, it will display the start instead of the 
                     # end:
                     from taskcoachlib.thirdparty import SendKeys  # pylint: disable=W0404
                     SendKeys.SendKeys('{END}+{HOME}')
                 else:
-                    theEntry.SetSelection(-1, -1)
+                    the_entry.SetSelection(-1, -1)  # Select all text
             except (AttributeError, TypeError):
                 pass  # Not a TextCtrl
         
@@ -99,28 +100,32 @@ class SubjectPage(Page):
         
     def addSubjectEntry(self):
         # pylint: disable=W0201
-        currentSubject = self.items[0].subject() if len(self.items) == 1 else _('Edit to change all subjects')
-        self._subjectEntry = widgets.SingleLineTextCtrl(self, currentSubject)
+        current_subject = self.items[0].subject() if len(self.items) == 1 \
+                          else _('Edit to change all subjects')
+        self._subjectEntry = widgets.SingleLineTextCtrl(self, current_subject)
         self._subjectSync = attributesync.AttributeSync('subject', 
-            self._subjectEntry, currentSubject, self.items,
+            self._subjectEntry, current_subject, self.items,
             command.EditSubjectCommand, wx.EVT_KILL_FOCUS,
             self.items[0].subjectChangedEventType())
         self.addEntry(_('Subject'), self._subjectEntry)
 
     def addDescriptionEntry(self):
         # pylint: disable=W0201
-        def combinedDescription(items):
+        def combined_description(items):
             return u'[%s]\n\n' % _('Edit to change all descriptions') + \
                 '\n\n'.join(item.description() for item in items)
 
-        currentDescription = self.items[0].description() if len(self.items) == 1 else combinedDescription(self.items)
-        self._descriptionEntry = widgets.MultiLineTextCtrl(self, currentDescription)
+        current_description = self.items[0].description() \
+            if len(self.items) == 1 else combined_description(self.items)
+        self._descriptionEntry = widgets.MultiLineTextCtrl(self, 
+                                                           current_description)
         native_info_string = self._settings.get('editor', 'descriptionfont')
-        font = wx.FontFromNativeInfoString(native_info_string) if native_info_string else None
+        font = wx.FontFromNativeInfoString(native_info_string) \
+               if native_info_string else None
         if font:
             self._descriptionEntry.SetFont(font)
         self._descriptionSync = attributesync.AttributeSync('description', 
-            self._descriptionEntry, currentDescription, self.items,
+            self._descriptionEntry, current_description, self.items,
             command.EditDescriptionCommand, wx.EVT_KILL_FOCUS,
             self.items[0].descriptionChangedEventType())
         self.addEntry(_('Description'), self._descriptionEntry, growable=True)
@@ -138,11 +143,11 @@ class TaskSubjectPage(SubjectPage):
          
     def addPriorityEntry(self):
         # pylint: disable=W0201
-        currentPriority = self.items[0].priority() if len(self.items) == 1 else 0
+        current_priority = self.items[0].priority() if len(self.items) == 1 else 0
         self._priorityEntry = widgets.SpinCtrl(self, size=(100, -1),
-            value=currentPriority)
+            value=current_priority)
         self._prioritySync = attributesync.AttributeSync('priority', 
-            self._priorityEntry, currentPriority, self.items,
+            self._priorityEntry, current_priority, self.items,
             command.EditPriorityCommand, wx.EVT_SPINCTRL, 
             self.items[0].priorityChangedEventType())
         self.addEntry(_('Priority'), self._priorityEntry, flags=[None, wx.ALL])
@@ -185,10 +190,10 @@ class AttachmentSubjectPage(SubjectPage):
         panel = wx.Panel(self)
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         # pylint: disable=W0201
-        currentLocation = self.items[0].location() if len(self.items) == 1 else _('Edit to change location of all attachments')
-        self._locationEntry = widgets.SingleLineTextCtrl(panel, currentLocation)
+        current_location = self.items[0].location() if len(self.items) == 1 else _('Edit to change location of all attachments')
+        self._locationEntry = widgets.SingleLineTextCtrl(panel, current_location)
         self._locationSync = attributesync.AttributeSync('location', 
-            self._locationEntry, currentLocation, self.items,
+            self._locationEntry, current_location, self.items,
             command.EditAttachmentLocationCommand, wx.EVT_KILL_FOCUS, 
             self.items[0].locationChangedEventType())
         sizer.Add(self._locationEntry, 1, wx.ALL, 3)
@@ -200,18 +205,17 @@ class AttachmentSubjectPage(SubjectPage):
         self.addEntry(_('Location'), panel, flags=[None, wx.ALL | wx.EXPAND])
 
     def onSelectLocation(self, event):  # pylint: disable=W0613
-        basePath = self._settings.get('file', 'lastattachmentpath')
-        if not basePath:
-            basePath = os.getcwd()
-
-        filename = widgets.AttachmentSelector(default_path=basePath)
+        base_path = self._settings.get('file', 'lastattachmentpath')
+        if not base_path:
+            base_path = os.getcwd()
+        filename = widgets.AttachmentSelector(default_path=base_path)
 
         if filename:
             self._settings.set('file', 'lastattachmentpath', 
                                os.path.abspath(os.path.split(filename)[0]))
             if self._settings.get('file', 'attachmentbase'):
                 filename = attachment.getRelativePath(filename, 
-                                                      self._settings.get('file', 'attachmentbase'))
+                    self._settings.get('file', 'attachmentbase'))
             self._subjectEntry.SetValue(os.path.split(filename)[-1])
             self._locationEntry.SetValue(filename)
             self._subjectSync.onAttributeEdited(event)
@@ -277,10 +281,10 @@ class DatesPage(Page):
     pageTitle = _('Dates') 
     pageIcon = 'calendar_icon'
     
-    def __init__(self, theTask, parent, settings, itemsAreNew, *args, **kwargs):
+    def __init__(self, theTask, parent, settings, items_are_new, *args, **kwargs):
         self.__settings = settings
         self._duration = None
-        self.__itemsAreNew = itemsAreNew
+        self.__items_are_new = items_are_new
         super(DatesPage, self).__init__(theTask, parent, *args, **kwargs)
         
     def addEntries(self):
@@ -443,8 +447,9 @@ class BudgetPage(Page):
 
     def onTimeSpentChanged(self, newValue, sender):
         if sender == self.items[0]:
-            if newValue != self._timeSpentEntry.GetValue():
-                self._timeSpentEntry.SetValue(newValue)
+            time_spent = sender.timeSpent()
+            if time_spent != self._timeSpentEntry.GetValue():
+                self._timeSpentEntry.SetValue(time_spent)
             
     def addBudgetLeftEntry(self):
         assert len(self.items) == 1
@@ -459,8 +464,9 @@ class BudgetPage(Page):
         
     def onBudgetLeftChanged(self, newValue, sender):  # pylint: disable=W0613
         if sender == self.items[0]:
-            if newValue != self._budgetLeftEntry.GetValue():
-                self._budgetLeftEntry.SetValue(newValue)
+            budget_left = sender.budgetLeft()
+            if budget_left != self._budgetLeftEntry.GetValue():
+                self._budgetLeftEntry.SetValue(budget_left)
             
     def addRevenueEntries(self):
         self.addHourlyFeeEntry()
@@ -602,7 +608,8 @@ class LocalCategoryViewer(viewer.BaseCategoryViewer):  # pylint: disable=W0223
         ''' Here we keep track of the items checked by the user so that these 
             items remain checked when refreshing the viewer. ''' 
         category = self.widget.GetItemPyData(event.GetItem())
-        command.ToggleCategoryCommand(None, self.__items, category=category).do()
+        command.ToggleCategoryCommand(None, self.__items, 
+                                      category=category).do()
 
     def createCategoryPopupMenu(self):  # pylint: disable=W0221
         return super(LocalCategoryViewer, self).createCategoryPopupMenu(True)            
@@ -671,20 +678,20 @@ class AttachmentsPage(PageWithViewer):
 
 class LocalNoteViewer(viewer.BaseNoteViewer):  # pylint: disable=W0223
     def __init__(self, *args, **kwargs):
-        self.noteOwner = kwargs.pop('owner')
-        notes = note.NoteContainer(self.noteOwner.notes())
+        self.__note_owner = kwargs.pop('owner')
+        notes = note.NoteContainer(self.__note_owner.notes())
         super(LocalNoteViewer, self).__init__(notesToShow=notes, 
                                               *args, **kwargs)
 
     def newItemCommand(self, *args, **kwargs):
-        return command.AddNoteCommand(None, [self.noteOwner])
+        return command.AddNoteCommand(None, [self.__note_owner])
     
     def newSubItemCommand(self):
         return command.AddSubNoteCommand(None, self.curselection(), 
-                                         owner=self.noteOwner)
+                                         owner=self.__note_owner)
     
     def deleteItemCommand(self):
-        return command.RemoveNoteCommand(None, [self.noteOwner], 
+        return command.RemoveNoteCommand(None, [self.__note_owner], 
                                          notes=self.curselection())
 
 
@@ -724,9 +731,9 @@ class LocalPrerequisiteViewer(viewer.CheckableTaskViewer):  # pylint: disable=W0
     
     def onCheck(self, event):
         item = self.widget.GetItemPyData(event.GetItem())
-        isChecked = event.GetItem().IsChecked()
-        if isChecked != self.getIsItemChecked(item):
-            checked, unchecked = ([item], []) if isChecked else ([], [item])            
+        is_checked = event.GetItem().IsChecked()
+        if is_checked != self.getIsItemChecked(item):
+            checked, unchecked = ([item], []) if is_checked else ([], [item])
             command.TogglePrerequisiteCommand(None, self.__items, 
                 checkedPrerequisites=checked, 
                 uncheckedPrerequisites=unchecked).do()
@@ -758,38 +765,38 @@ class EditBook(widgets.Notebook):
     allPageNames = ['subclass responsibility']
     domainObject = 'subclass responsibility'
     
-    def __init__(self, parent, items, taskFile, settings, itemsAreNew):
+    def __init__(self, parent, items, taskFile, settings, items_are_new):
         self.items = items
         self.settings = settings
         super(EditBook, self).__init__(parent)
-        self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
-        self.addPages(taskFile, itemsAreNew)
-        self.__load_perspective()
+        self.addPages(taskFile, items_are_new)
+        self.__load_perspective(items_are_new)
         
     def addPages(self, task_file, items_are_new):
         page_names = self.settings.getlist(self.settings_section(), 'pages') 
         for page_name in page_names:  
             page = self.createPage(page_name, task_file, items_are_new)
             self.AddPage(page, page.pageTitle, page.pageIcon)
-        width, height = self.getMinPageSize()
+        width, height = self.__get_minimum_page_size()
         self.SetMinSize((width, self.GetHeightForPageHeight(height)))
 
-    def getPage(self, pageName):
+    def getPage(self, page_name):
         for index in range(self.GetPageCount()):
-            if pageName == self[index].pageName:
+            if page_name == self[index].pageName:
                 return self[index]
         return None
     
-    def getMinPageSize(self):
-        minWidths, minHeights = [], []
+    def __get_minimum_page_size(self):
+        min_widths, min_heights = [], []
         for page in self:
-            minWidth, minHeight = page.GetMinSize()
-            minWidths.append(minWidth)
-            minHeights.append(minHeight)
-        return max(minWidths), max(minHeights)
+            min_width, min_height = page.GetMinSize()
+            min_widths.append(min_width)
+            min_heights.append(min_height)
+        return max(min_widths), max(min_heights)
     
-    def pages_to_create(self):
-        return [page_name for page_name in self.allPageNames if self.__should_create_page(page_name)]
+    def __pages_to_create(self):
+        return [page_name for page_name in self.allPageNames \
+                if self.__should_create_page(page_name)]
         
     def __should_create_page(self, page_name):
         if self.__page_feature_is_disabled(page_name):
@@ -812,43 +819,43 @@ class EditBook(widgets.Notebook):
         return page_name in ('subject', 'dates', 'progress', 'budget', 
                              'appearance')
 
-    def createPage(self, pageName, taskFile, itemsAreNew):
-        if pageName == 'subject':
-            return self.createSubjectPage()
-        elif pageName == 'dates':
-            return DatesPage(self.items, self, self.settings, itemsAreNew) 
-        elif pageName == 'prerequisites':
-            return PrerequisitesPage(self.items, self, taskFile, self.settings,
+    def createPage(self, page_name, task_file, items_are_new):
+        if page_name == 'subject':
+            return self.create_subject_page()
+        elif page_name == 'dates':
+            return DatesPage(self.items, self, self.settings, items_are_new) 
+        elif page_name == 'prerequisites':
+            return PrerequisitesPage(self.items, self, task_file, self.settings,
                                      settingsSection='prerequisiteviewerin%seditor' % self.domainObject)
-        elif pageName == 'progress':    
+        elif page_name == 'progress':    
             return ProgressPage(self.items, self)
-        elif pageName == 'categories':
-            return CategoriesPage(self.items, self, taskFile, self.settings,
+        elif page_name == 'categories':
+            return CategoriesPage(self.items, self, task_file, self.settings,
                                   settingsSection='categoryviewerin%seditor' % self.domainObject)
-        elif pageName == 'budget':                 
+        elif page_name == 'budget':                 
             return BudgetPage(self.items, self)
-        elif pageName == 'effort':        
-            return EffortPage(self.items, self, taskFile, self.settings,
+        elif page_name == 'effort':        
+            return EffortPage(self.items, self, task_file, self.settings,
                               settingsSection='effortviewerin%seditor' % self.domainObject)
-        elif pageName == 'notes':
-            return NotesPage(self.items, self, taskFile, self.settings,
+        elif page_name == 'notes':
+            return NotesPage(self.items, self, task_file, self.settings,
                              settingsSection='noteviewerin%seditor' % self.domainObject)
-        elif pageName == 'attachments':
-            return AttachmentsPage(self.items, self, taskFile, self.settings,
+        elif page_name == 'attachments':
+            return AttachmentsPage(self.items, self, task_file, self.settings,
                                    settingsSection='attachmentviewerin%seditor' % self.domainObject)
-        elif pageName == 'appearance':
+        elif page_name == 'appearance':
             return TaskAppearancePage(self.items, self)
         
-    def createSubjectPage(self):
+    def create_subject_page(self):
         return SubjectPage(self.items, self, self.settings)
     
     def setFocus(self, columnName):
         ''' Select the correct page of the editor and correct control on a page
             based on the column that the user double clicked. '''
         page = 0
-        for pageIndex in range(self.GetPageCount()):
-            if columnName in self[pageIndex].entries():
-                page = pageIndex
+        for page_index in range(self.GetPageCount()):
+            if columnName in self[page_index].entries():
+                page = page_index
                 break
         self.SetSelection(page)
         self[page].setFocusOnEntry(columnName)
@@ -863,7 +870,7 @@ class EditBook(widgets.Notebook):
         ''' Return the perspective for the notebook. '''
         return self.settings.gettext(self.settings_section(), 'perspective')
     
-    def __load_perspective(self):
+    def __load_perspective(self, items_are_new=False):
         ''' Load the perspective (layout) for the current combination of visible
             pages from the settings. '''
         perspective = self.perspective()
@@ -872,21 +879,25 @@ class EditBook(widgets.Notebook):
                 self.LoadPerspective(perspective)
             except:  # pylint: disable=W0702
                 pass
-        # Although the active/current page is written in the perspective string 
-        # (a + before the number of the active page), the current page is not
-        # set when restoring the perspective. This does it by hand:
-        try:
-            current_page = int(perspective.split('@')[0].split('+')[1].split(',')[0])
-        except (IndexError, ValueError):
-            current_page = 0
+        if items_are_new:
+            current_page = 0  # For new items, start at the subject page.
+        else:
+            # Although the active/current page is written in the perspective 
+            # string (a + before the number of the active page), the current 
+            # page is not set when restoring the perspective. This does it by 
+            # hand:
+            try:
+                current_page = int(perspective.split('@')[0].split('+')[1].split(',')[0])
+            except (IndexError, ValueError):
+                current_page = 0
         self.SetSelection(current_page)
         self.GetPage(current_page).SetFocus()
-
+        
     def __save_perspective(self):
         ''' Save the current perspective of the editor in the settings. 
             Multiple perspectives are supported, for each set of visible pages.
             This allows different perspectives for e.g. single item editors and
-            multi item editors. '''
+            multi-item editors. '''
         page_names = [self[index].pageName for index in \
                       range(self.GetPageCount())]
         section = self.settings_section()
@@ -905,7 +916,7 @@ class EditBook(widgets.Notebook):
         ''' Return the section name of this notebook. The name of the section
             depends on the visible pages so that different variants of the
             notebook store their settings in different sections. '''
-        page_names = self.pages_to_create()
+        page_names = self.__pages_to_create()
         sorted_page_names = '_'.join(sorted(page_names)) 
         return '%sdialog_with_%s' % (self.domainObject, sorted_page_names)
     
@@ -913,13 +924,14 @@ class EditBook(widgets.Notebook):
         ''' Create the section and initialize the options in the section. '''
         self.settings.add_section(section)
         for option, value in dict(perspective='', 
-                                  pages=str(self.pages_to_create()),
+                                  pages=str(self.__pages_to_create()),
                                   size='(-1, -1)', position='(-1, -1)',
                                   maximized='False').items():
             self.settings.init(section, option, value)
         
-    def onClose(self, event):
-        event.Skip()
+    def close_edit_book(self):
+        ''' Close all pages in the edit book and save the current layout in 
+            the settings. '''
         for page in self:
             page.close()
         self.__save_perspective()
@@ -931,7 +943,7 @@ class TaskEditBook(EditBook):
                     'appearance']
     domainObject = 'task'
 
-    def createSubjectPage(self):    
+    def create_subject_page(self):    
         return TaskSubjectPage(self.items, self, self.settings)
 
 
@@ -939,7 +951,7 @@ class CategoryEditBook(EditBook):
     allPageNames = ['subject', 'notes', 'attachments', 'appearance']
     domainObject = 'category'
 
-    def createSubjectPage(self):
+    def create_subject_page(self):
         return CategorySubjectPage(self.items, self, self.settings)
 
 
@@ -952,7 +964,7 @@ class AttachmentEditBook(EditBook):
     allPageNames = ['subject', 'notes', 'appearance']
     domainObject = 'attachment'
             
-    def createSubjectPage(self):
+    def create_subject_page(self):
         return AttachmentSubjectPage(self.items, self, self.settings)
     
     def isDisplayingItemOrChildOfItem(self, targetItem):
@@ -963,12 +975,12 @@ class EffortEditBook(Page):
     domainObject = 'effort'
     columns = 3
     
-    def __init__(self, parent, efforts, taskFile, settings, itemsAreNew, 
+    def __init__(self, parent, efforts, taskFile, settings, items_are_new, 
                  *args, **kwargs):  # pylint: disable=W0613
         self._effortList = taskFile.efforts()
-        taskList = taskFile.tasks()
-        self._taskList = task.TaskList(taskList)
-        self._taskList.extend([effort.task() for effort in efforts if effort.task() not in taskList])
+        task_list = taskFile.tasks()
+        self._taskList = task.TaskList(task_list)
+        self._taskList.extend([effort.task() for effort in efforts if effort.task() not in task_list])
         self._settings = settings
         self._taskFile = taskFile
         super(EffortEditBook, self).__init__(efforts, parent, *args, **kwargs)
@@ -989,80 +1001,80 @@ class EffortEditBook(Page):
         return 'effort dialog perspective'
     
     def addEntries(self):
-        self.addTaskEntry()
-        self.addStartAndStopEntries()
+        self.__add_task_entry()
+        self.__add_start_and_stop_entries()
         self.addDescriptionEntry()
 
-    def addTaskEntry(self):
+    def __add_task_entry(self):
         ''' Add an entry for changing the task that this effort record
             belongs to. '''
         # pylint: disable=W0201,W0212
         panel = wx.Panel(self)
-        currentTask = self.items[0].task()
+        current_task = self.items[0].task()
         self._taskEntry = entry.TaskEntry(panel,
-            rootTasks=self._taskList.rootItems(), selectedTask=currentTask)
+            rootTasks=self._taskList.rootItems(), selectedTask=current_task)
         self._taskSync = attributesync.AttributeSync('task', self._taskEntry,
-            currentTask, self.items, command.EditTaskCommand,
+            current_task, self.items, command.EditTaskCommand,
             entry.EVT_TASKENTRY, self.items[0].taskChangedEventType())
-        editTaskButton = wx.Button(panel, label=_('Edit task'))
-        editTaskButton.Bind(wx.EVT_BUTTON, self.onEditTask)
-        panelSizer = wx.BoxSizer(wx.HORIZONTAL)
-        panelSizer.Add(self._taskEntry, proportion=1,
+        edit_task_button = wx.Button(panel, label=_('Edit task'))
+        edit_task_button.Bind(wx.EVT_BUTTON, self.onEditTask)
+        panel_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        panel_sizer.Add(self._taskEntry, proportion=1,
                        flag=wx.EXPAND | wx.ALIGN_CENTER_VERTICAL)
-        panelSizer.Add((3, -1))
-        panelSizer.Add(editTaskButton, proportion=0,
+        panel_sizer.Add((3, -1))
+        panel_sizer.Add(edit_task_button, proportion=0,
                        flag=wx.ALIGN_CENTER_VERTICAL)
-        panel.SetSizerAndFit(panelSizer)
+        panel.SetSizerAndFit(panel_sizer)
         self.addEntry(_('Task'), panel, flags=[None, wx.ALL | wx.EXPAND])
 
-    def addStartAndStopEntries(self):
+    def __add_start_and_stop_entries(self):
         # pylint: disable=W0201,W0142
-        dateTimeEntryKwArgs = dict(showSeconds=True)
+        date_time_entry_kw_args = dict(showSeconds=True)
         flags = [None, wx.ALIGN_RIGHT | wx.ALL, wx.ALIGN_LEFT | wx.ALL | 
                  wx.ALIGN_CENTER_VERTICAL, None]
         
-        currentStartDateTime = self.items[0].getStart()
+        current_start_date_time = self.items[0].getStart()
         self._startDateTimeEntry = entry.DateTimeEntry(self, self._settings,
-            currentStartDateTime, noneAllowed=False, **dateTimeEntryKwArgs)
+            current_start_date_time, noneAllowed=False, **date_time_entry_kw_args)
         self._startDateTimeSync = attributesync.AttributeSync('getStart',
-            self._startDateTimeEntry, currentStartDateTime, self.items,
+            self._startDateTimeEntry, current_start_date_time, self.items,
             command.EditEffortStartDateTimeCommand, entry.EVT_DATETIMEENTRY,
             self.items[0].startChangedEventType())
         self._startDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, 
                                       self.onDateTimeChanged)        
-        startFromLastEffortButton = self._createStartFromLastEffortButton()
+        start_from_last_effort_button = self.__create_start_from_last_effort_button()
         self.addEntry(_('Start'), self._startDateTimeEntry,
-            startFromLastEffortButton, flags=flags)
+            start_from_last_effort_button, flags=flags)
 
-        currentStopDateTime = self.items[0].getStop()
+        current_stop_date_time = self.items[0].getStop()
         self._stopDateTimeEntry = entry.DateTimeEntry(self, self._settings, 
-            currentStopDateTime, noneAllowed=True, **dateTimeEntryKwArgs)
+            current_stop_date_time, noneAllowed=True, **date_time_entry_kw_args)
         self._stopDateTimeSync = attributesync.AttributeSync('getStop',
-            self._stopDateTimeEntry, currentStopDateTime, self.items,
+            self._stopDateTimeEntry, current_stop_date_time, self.items,
             command.EditEffortStopDateTimeCommand, entry.EVT_DATETIMEENTRY,
             self.items[0].stopChangedEventType())
         self._stopDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, 
                                      self.onStopDateTimeChanged)
-        stopNowButton = self._createStopNowButton()
-        self._invalidPeriodMessage = self._createInvalidPeriodMessage()
+        stop_now_button = self.__create_stop_now_button()
+        self._invalidPeriodMessage = self.__create_invalid_period_message()
         self.addEntry(_('Stop'), self._stopDateTimeEntry, 
-                      stopNowButton, flags=flags)
+                      stop_now_button, flags=flags)
         
         self.addEntry('', self._invalidPeriodMessage)
             
-    def _createStartFromLastEffortButton(self):
+    def __create_start_from_last_effort_button(self):
         button = wx.Button(self, label=_('Start tracking from last stop time'))
         self.Bind(wx.EVT_BUTTON, self.onStartFromLastEffort, button)
         if self._effortList.maxDateTime() is None:
             button.Disable()
         return button
     
-    def _createStopNowButton(self):
+    def __create_stop_now_button(self):
         button = wx.Button(self, label=_('Stop tracking now'))
         self.Bind(wx.EVT_BUTTON, self.onStopNow, button)
         return button
     
-    def _createInvalidPeriodMessage(self):
+    def __create_invalid_period_message(self):
         text = wx.StaticText(self, label='')
         font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
         font.SetWeight(wx.FONTWEIGHT_BOLD)
@@ -1086,44 +1098,48 @@ class EffortEditBook(Page):
 
     def onDateTimeChanged(self, event):
         event.Skip()
-        self.updateInvalidPeriodMessage()
+        self.__update_invalid_period_message()
                     
-    def updateInvalidPeriodMessage(self):
-        message = '' if self.validPeriod() else _('Warning: start must be earlier than stop')
+    def __update_invalid_period_message(self):
+        message = '' if self.__is_period_valid() else \
+                  _('Warning: start must be earlier than stop')
         self._invalidPeriodMessage.SetLabel(message)
                 
-    def validPeriod(self):
+    def __is_period_valid(self):
+        ''' Return whether the current period is valid, i.e. the start date
+            and time is earlier than the stop date and time. '''
         try:
-            return self._startDateTimeEntry.GetValue() < self._stopDateTimeEntry.GetValue()
+            return self._startDateTimeEntry.GetValue() < \
+                   self._stopDateTimeEntry.GetValue()
         except AttributeError:
             return True  # Entries not created yet
 
     def onEditTask(self, event):  # pylint: disable=W0613
-        taskToEdit = self._taskEntry.GetValue()
-        TaskEditor(None, [taskToEdit], self._settings, self._taskFile.tasks(), 
+        task_to_edit = self._taskEntry.GetValue()
+        TaskEditor(None, [task_to_edit], self._settings, self._taskFile.tasks(), 
             self._taskFile).Show()
 
     def addDescriptionEntry(self):
         # pylint: disable=W0201
-        def combinedDescription(items):
+        def combined_description(items):
             return u'[%s]\n\n' % _('Edit to change all descriptions') + \
                 '\n\n'.join(item.description() for item in items)
                 
-        currentDescription = self.items[0].description() if len(self.items) == 1 else combinedDescription(self.items)
-        self._descriptionEntry = widgets.MultiLineTextCtrl(self, currentDescription)
+        current_description = self.items[0].description() if len(self.items) == 1 else combined_description(self.items)
+        self._descriptionEntry = widgets.MultiLineTextCtrl(self, current_description)
         native_info_string = self._settings.get('editor', 'descriptionfont')
         font = wx.FontFromNativeInfoString(native_info_string) if native_info_string else None
         if font:
             self._descriptionEntry.SetFont(font) 
         self._descriptionEntry.SetSizeHints(300, 150)
         self._descriptionSync = attributesync.AttributeSync('description', 
-            self._descriptionEntry, currentDescription, self.items,
+            self._descriptionEntry, current_description, self.items,
             command.EditDescriptionCommand, wx.EVT_KILL_FOCUS,
             self.items[0].descriptionChangedEventType())
         self.addEntry(_('Description'), self._descriptionEntry, growable=True)
         
-    def setFocus(self, columnName):
-        self.setFocusOnEntry(columnName)
+    def setFocus(self, column_name):
+        self.setFocusOnEntry(column_name)
         
     def isDisplayingItemOrChildOfItem(self, item):
         if hasattr(item, 'setTask'):
@@ -1132,11 +1148,14 @@ class EffortEditBook(Page):
             return item.mayContain(self.items[0])  # Composite effort
     
     def entries(self):
-        return dict(firstEntry=self._taskEntry, task=self._taskEntry,
+        return dict(firstEntry=self._startDateTimeEntry, task=self._taskEntry,
                     period=self._stopDateTimeEntry,
                     description=self._descriptionEntry,
                     timeSpent=self._stopDateTimeEntry,
                     revenue=self._taskEntry)
+        
+    def close_edit_book(self):
+        pass
     
     
 class Editor(widgets.Dialog):
@@ -1144,15 +1163,15 @@ class Editor(widgets.Dialog):
     singular_title = 'Subclass responsibility %s'
     plural_title = 'Subclass responsibility'
     
-    def __init__(self, parent, items, settings, container, taskFile, 
+    def __init__(self, parent, items, settings, container, task_file, 
                  *args, **kwargs):
         self._items = items
         self._settings = settings
-        self._taskFile = taskFile
-        self.__itemsAreNew = kwargs.pop('itemsAreNew', False)
+        self._taskFile = task_file
+        self.__items_are_new = kwargs.pop('items_are_new', False)
         column_name = kwargs.pop('columnName', '') 
-        self._callAfter = kwargs.get('callAfter', wx.CallAfter)
-        super(Editor, self).__init__(parent, self.title(), 
+        self.__call_after = kwargs.get('call_after', wx.CallAfter)
+        super(Editor, self).__init__(parent, self.__title(), 
                                      buttonTypes=wx.ID_CLOSE, *args, **kwargs)
         if not column_name:
             if self._interior.perspective() and hasattr(self._interior, 'GetSelection'):
@@ -1162,13 +1181,13 @@ class Editor(widgets.Dialog):
         if column_name:
             self._interior.setFocus(column_name)
         
-        patterns.Publisher().registerObserver(self.onItemRemoved,
+        patterns.Publisher().registerObserver(self.on_item_removed,
             eventType=container.removeItemEventType(), eventSource=container)
         if len(self._items) == 1:
-            patterns.Publisher().registerObserver(self.onSubjectChanged,
-                                                  eventType=self._items[0].subjectChangedEventType(),
-                                                  eventSource=self._items[0])
-        self.Bind(wx.EVT_CLOSE, self.onClose)
+            patterns.Publisher().registerObserver(self.on_subject_changed,
+                eventType=self._items[0].subjectChangedEventType(),
+                eventSource=self._items[0])
+        self.Bind(wx.EVT_CLOSE, self.on_close_editor)
 
         # On Mac OS X, the frame opens by default in the top-left
         # corner of the first display. This gets annoying on a
@@ -1181,63 +1200,65 @@ class Editor(widgets.Dialog):
 
         # On Linux this is not needed but doesn't do any harm.
         self.CentreOnParent()
-        self.createUICommands()
-        self._dimensionsTracker = windowdimensionstracker.WindowSizeAndPositionTracker(
+        self.__create_ui_commands()
+        self.__dimensions_tracker = windowdimensionstracker.WindowSizeAndPositionTracker(
             self, settings, self._interior.settings_section())
         
-    def createUICommands(self):
+    def __create_ui_commands(self):
         # FIXME: keyboard shortcuts are hardcoded here, but they can be 
         # changed in the translations
         # FIXME: there are more keyboard shortcuts that don't work in dialogs 
         # at the moment, like DELETE 
-        newEffortId = wx.NewId()
+        new_effort_id = wx.NewId()
         table = wx.AcceleratorTable([(wx.ACCEL_CMD, ord('Z'), wx.ID_UNDO),
                                      (wx.ACCEL_CMD, ord('Y'), wx.ID_REDO),
-                                     (wx.ACCEL_CMD, ord('E'), newEffortId)])
+                                     (wx.ACCEL_CMD, ord('E'), new_effort_id)])
         self._interior.SetAcceleratorTable(table)
         # pylint: disable=W0201
-        self.undoCommand = uicommand.EditUndo()
-        self.redoCommand = uicommand.EditRedo()
-        effortPage = self._interior.getPage('effort') 
-        effortViewer = effortPage.viewer if effortPage else None 
-        self.newEffortCommand = uicommand.EffortNew(viewer=effortViewer,
+        self.__undo_command = uicommand.EditUndo()
+        self.__redo_command = uicommand.EditRedo()
+        effort_page = self._interior.getPage('effort') 
+        effort_viewer = effort_page.viewer if effort_page else None 
+        self.__new_effort_command = uicommand.EffortNew(viewer=effort_viewer,
             taskList=self._taskFile.tasks(), 
             effortList=self._taskFile.efforts(), settings=self._settings)
-        self.undoCommand.bind(self._interior, wx.ID_UNDO)
-        self.redoCommand.bind(self._interior, wx.ID_REDO)
-        self.newEffortCommand.bind(self._interior, newEffortId)
+        self.__undo_command.bind(self._interior, wx.ID_UNDO)
+        self.__redo_command.bind(self._interior, wx.ID_REDO)
+        self.__new_effort_command.bind(self._interior, new_effort_id)
 
     def createInterior(self):
         return self.EditBookClass(self._panel, self._items, self._taskFile, 
-                                  self._settings, self.__itemsAreNew)
+                                  self._settings, self.__items_are_new)
 
-    def onClose(self, event):
+    def on_close_editor(self, event):
         event.Skip()
-        patterns.Publisher().removeObserver(self.onItemRemoved)
-        patterns.Publisher().removeObserver(self.onSubjectChanged)
+        self._interior.close_edit_book()
+        patterns.Publisher().removeObserver(self.on_item_removed)
+        patterns.Publisher().removeObserver(self.on_subject_changed)
         # On Mac OS X, the text control does not lose focus when
         # destroyed...
         if operating_system.isMac():
             self._interior.SetFocusIgnoringChildren()
             
-    def onItemRemoved(self, event):
+    def on_item_removed(self, event):
         ''' The item we're editing or one of its ancestors has been removed or 
             is hidden by a filter. If the item is really removed, close the tab 
             of the item involved and close the whole editor if there are no 
             tabs left. '''
         if self:  # Prevent _wxPyDeadObject TypeError
-            self._callAfter(self.closeIfItemIsDeleted, event.values())
+            self.__call_after(self.__close_if_item_is_deleted, event.values())
         
-    def closeIfItemIsDeleted(self, items):
+    def __close_if_item_is_deleted(self, items):
         for item in items:
-            if self._interior.isDisplayingItemOrChildOfItem(item) and not item in self._taskFile:
+            if self._interior.isDisplayingItemOrChildOfItem(item) and \
+               not item in self._taskFile:
                 self.Close()
                 break            
 
-    def onSubjectChanged(self, event):  # pylint: disable=W0613
-        self.SetTitle(self.title())
+    def on_subject_changed(self, event):  # pylint: disable=W0613
+        self.SetTitle(self.__title())
         
-    def title(self):
+    def __title(self):
         return self.plural_title if len(self._items) > 1 else \
                self.singular_title % self._items[0].subject()
     

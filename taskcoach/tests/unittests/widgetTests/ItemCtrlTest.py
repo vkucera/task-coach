@@ -102,7 +102,7 @@ class DummyEvent(object):
     def __init__(self, eventObject):
         self.eventObject = eventObject
         
-    def Skip(self):
+    def Skip(self, *args):
         pass
     
     def GetColumn(self):

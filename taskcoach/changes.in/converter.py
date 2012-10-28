@@ -87,6 +87,7 @@ class ChangeToHTMLConverter(ChangeConverter):
 
     LinkToSourceForge = '<a href="https://sourceforge.net/tracker/index.php?func=detail&aid=%%(id)s&group_id=130831&atid=%(atid)s">%%(id)s</a>'
     LinkToSourceForgeBugReport = LinkToSourceForge%{'atid': '719134'}
+    LinkToSourceForgeBugReportv2 = '<a href="https://sourceforge.net/p/taskcoach/bugs/%(id)s/">%(id)s</a>'
     LinkToSourceForgeFeatureRequest = LinkToSourceForge%{'atid': '719137'}
     NoConversion = '%(id)s'
 
@@ -108,7 +109,9 @@ class ChangeToHTMLConverter(ChangeConverter):
     def convertChangeId(self, change, changeId):
         template = self.NoConversion # URL's will be converted in postProcess()
         if not changeId.startswith('http'):
-            if isinstance(change, changetypes.Bug):
+            if isinstance(change, changetypes.Bugv2):
+                template = self.LinkToSourceForgeBugReportv2
+            elif isinstance(change, changetypes.Bug):
                 template = self.LinkToSourceForgeBugReport    
             elif isinstance(change, changetypes.Feature):
                 template = self.LinkToSourceForgeFeatureRequest

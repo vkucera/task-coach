@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 from taskcoachlib.domain import date, categorizable, note, attachment
-from taskcoachlib.domain.attribute import color
 from taskcoachlib.thirdparty.pubsub import pub
 import status
 import wx
@@ -622,7 +621,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                         newValue=self.timeSpent(), sender=self)
         for ancestor in self.ancestors():
             pub.sendMessage(ancestor.timeSpentChangedEventType(), 
-                            newValue=ancestor.timeSpent(recursive=True),
+                            newValue=ancestor.timeSpent(),
                             sender=ancestor)
         if self.budget(recursive=True):
             self.sendBudgetLeftChangedMessage()
@@ -724,14 +723,15 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             return self.__computeRecursiveForegroundColor()
         
     def __computeRecursiveForegroundColor(self, value=None):  # pylint: disable=W0613
-        fgColor = super(Task, self).foregroundColor(recursive=True)
-        statusColor = self.statusFgColor()
-        if statusColor == wx.BLACK:
-            recursiveColor = fgColor
-        elif fgColor == None:
-            recursiveColor = statusColor
+        ownColor = super(Task, self).foregroundColor(False)
+        if ownColor:
+            recursiveColor = ownColor
         else:
-            recursiveColor = color.ColorMixer.mix((fgColor, statusColor))
+            categoryColor = self._categoryForegroundColor()
+            if categoryColor:
+                recursiveColor = categoryColor
+            else:
+                recursiveColor = self.statusFgColor()
         self.__recursiveForegroundColor = recursiveColor  # pylint: disable=W0201
         return recursiveColor
     
@@ -768,21 +768,29 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             return self.__computeRecursiveBackgroundColor()
         
     def __computeRecursiveBackgroundColor(self, *args, **kwargs):  # pylint: disable=W0613
-        bgColor = super(Task, self).backgroundColor(recursive=True)
-        statusColor = self.statusBgColor()
-        if statusColor == wx.WHITE:
-            recursiveColor = bgColor
-        elif bgColor == None:
-            recursiveColor = statusColor
+        ownColor = super(Task, self).backgroundColor(recursive=False)
+        if ownColor:
+            recursiveColor = ownColor
         else:
-            recursiveColor = color.ColorMixer.mix((bgColor, statusColor))
+            categoryColor = self._categoryBackgroundColor()
+            if categoryColor:
+                recursiveColor = categoryColor
+            else:
+                statusColor = self.statusBgColor()
+                if statusColor:
+                    recursiveColor = statusColor
+                elif self.parent():
+                    recursiveColor = self.parent().backgroundColor(recursive=True)
+                else:
+                    recursiveColor = None
         self.__recursiveBackgroundColor = recursiveColor  # pylint: disable=W0201
         return recursiveColor
     
     def statusBgColor(self):
         ''' Return the current color of task, based on its status (completed,
             overdue, duesoon, inactive, or active). '''            
-        return self.bgColorForStatus(self.status())
+        color = self.bgColorForStatus(self.status())
+        return None if color == wx.WHITE else color
     
     @classmethod
     def bgColorForStatus(class_, taskStatus):
@@ -791,14 +799,15 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     # Font
 
     def font(self, recursive=False):
-        myFont = super(Task, self).font()
-        if myFont or not recursive:
-            return myFont
-        recursiveFont = super(Task, self).font(recursive=True)
-        if recursiveFont:
-            return recursiveFont
+        ownFont = super(Task, self).font(recursive=False)
+        if ownFont or not recursive:
+            return ownFont
         else:
-            return self.statusFont()
+            categoryFont = self._categoryFont()
+            if categoryFont:
+                return categoryFont
+            else:
+                return self.statusFont()
 
     def statusFont(self):
         ''' Return the current font of task, based on its status (completed,

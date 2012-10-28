@@ -116,7 +116,7 @@ class EffortViewer(base.ListViewer,
         # Invalidate the UICommands used for the column popup menu:
         self.__columnUICommands = None
         # Clear the selection to remove the cached selection
-        self.clearselection()
+        self.clear_selection()
         # If the widget is auto-resizing columns, turn it off temporarily to 
         # make removing/adding columns faster
         autoResizing = self.widget.IsAutoResizing()
@@ -171,7 +171,7 @@ class EffortViewer(base.ListViewer,
             self.taskFile.efforts(), self.settings, self)
         columnPopupMenu = menu.EffortViewerColumnPopupMenu(self)
         self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
-        widget = widgets.ListCtrl(self, self.columns(), self.onSelect,
+        widget = widgets.VirtualListCtrl(self, self.columns(), self.onSelect,
             uicommand.Edit(viewer=self),
             itemPopupMenu, columnPopupMenu,
             resizeableColumn=1, **self.widgetCreationKeywordArguments())

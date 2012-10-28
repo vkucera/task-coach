@@ -19,7 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import application, meta, widgets, \
-    operating_system  # pylint: disable=W0622
+    operating_system # pylint: disable=W0622
+from taskcoachlib.gui import viewer, toolbar, uicommand, remindercontroller, \
+    artprovider, windowdimensionstracker, idlecontroller
 from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog
 from taskcoachlib.gui.dialog.xfce4warning import XFCE4WarningDialog
 from taskcoachlib.gui.iphone import IPhoneSyncFrame
@@ -28,17 +30,10 @@ from taskcoachlib.i18n import _
 from taskcoachlib.powermgt import PowerStateMixin
 from taskcoachlib.thirdparty.pubsub import pub
 import taskcoachlib.thirdparty.aui as aui
-import viewer
-import toolbar
-import uicommand
-import remindercontroller
-import artprovider
-import windowdimensionstracker
-import idlecontroller
 import wx
 
 
-def turnOnDoubleBufferingOnWindows(window):
+def turn_on_double_buffering_on_windows(window):
     import win32gui, win32con  # pylint: disable=F0401
     exstyle = win32gui.GetWindowLong(window.GetHandle(), win32con.GWL_EXSTYLE)
     exstyle |= win32con.WS_EX_COMPOSITED
@@ -52,17 +47,17 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         super(MainWindow, self).__init__(None, -1, '', *args, **kwargs)
         # This prevents the viewers from flickering on Windows 7 when refreshed:
         if operating_system.isWindows7_OrNewer():
-            turnOnDoubleBufferingOnWindows(self)
-        self.dimensionsTracker = windowdimensionstracker.WindowDimensionsTracker(self, settings)
+            turn_on_double_buffering_on_windows(self)
+        self.__dimensions_tracker = windowdimensionstracker.WindowDimensionsTracker(self, settings)
         self.iocontroller = iocontroller
         self.taskFile = taskFile
         self.settings = settings
         self.Bind(wx.EVT_CLOSE, self.onClose)
         self.Bind(wx.EVT_ICONIZE, self.onIconify)
-        self.createWindowComponents()
-        self.initWindowComponents()
-        self.initWindow()
-        self.registerForWindowComponentChanges()
+        self._create_window_components()  # Not private for test purposes
+        self.__init_window_components()
+        self.__init_window()
+        self.__register_for_window_component_changes()
         
         if settings.getboolean('feature', 'syncml'):
             try:
@@ -111,27 +106,27 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
                 dlg = XFCE4WarningDialog(self, self.settings)
                 dlg.Show()
 
-    def createWindowComponents(self):
-        self.createViewerContainer()
+    def _create_window_components(self):  # Not private for test purposes
+        self._create_viewer_container()
         viewer.addViewers(self.viewer, self.taskFile, self.settings)
-        self.createStatusBar()
-        self.createMenuBar()
-        self.createReminderController()
+        self._create_status_bar()
+        self.__create_menu_bar()
+        self.__create_reminder_controller()
         
-    def createViewerContainer(self):
+    def _create_viewer_container(self):  # Not private for test purposes
         # pylint: disable=W0201
         self.viewer = viewer.ViewerContainer(self, self.settings) 
         
-    def createStatusBar(self):
-        import status  # pylint: disable=W0404
+    def _create_status_bar(self):
+        from taskcoachlib.gui import status  # pylint: disable=W0404
         self.SetStatusBar(status.StatusBar(self, self.viewer))
         
-    def createMenuBar(self):
-        import menu  # pylint: disable=W0404
+    def __create_menu_bar(self):
+        from taskcoachlib.gui import menu  # pylint: disable=W0404
         self.SetMenuBar(menu.MainMenu(self, self.settings, self.iocontroller, 
                                       self.viewer, self.taskFile))
     
-    def createReminderController(self):
+    def __create_reminder_controller(self):
         # pylint: disable=W0201
         self.reminderController = \
             remindercontroller.ReminderController(self, self.taskFile.tasks(),
@@ -141,25 +136,24 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         name = page.settingsSection()
         super(MainWindow, self).addPane(page, caption, name, floating=floating)
         
-    def initWindow(self):
+    def __init_window(self):
         self.setTitle(self.taskFile.filename())
         self.SetIcons(artprovider.iconBundle('taskcoach'))
         self.displayMessage(_('Welcome to %(name)s version %(version)s') % \
             {'name': meta.name, 'version': meta.version}, pane=1)
 
-    def initWindowComponents(self):
+    def __init_window_components(self):
         self.showToolBar(self.settings.getvalue('view', 'toolbar'))
         # We use CallAfter because otherwise the statusbar will appear at the 
         # top of the window when it is initially hidden and later shown.
         wx.CallAfter(self.showStatusBar, 
                      self.settings.getboolean('view', 'statusbar'))
-        self.restorePerspective()
+        self.__restore_perspective()
             
-    def restorePerspective(self):
+    def __restore_perspective(self):
         perspective = self.settings.get('view', 'perspective')
-        viewerTypes = viewer.viewerTypes()
-        for viewerType in viewerTypes:
-            if self.perspectiveAndSettingsHaveDifferentViewerCount(viewerType):
+        for viewer_type in viewer.viewerTypes():
+            if self.__perspective_and_settings_viewer_count_differ(viewer_type):
                 # Different viewer counts may happen when the name of a viewer 
                 # is changed between versions
                 perspective = ''
@@ -193,14 +187,14 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
                 pane.Caption(pane.window.title())
         self.manager.Update()
         
-    def perspectiveAndSettingsHaveDifferentViewerCount(self, viewerType):
+    def __perspective_and_settings_viewer_count_differ(self, viewer_type):
         perspective = self.settings.get('view', 'perspective')
-        perspectiveViewerCount = perspective.count('name=%s' % viewerType)
-        settingsViewerCount = self.settings.getint('view', 
-                                                   '%scount' % viewerType)
-        return perspectiveViewerCount != settingsViewerCount
+        perspective_viewer_count = perspective.count('name=%s' % viewer_type)
+        settings_viewer_count = self.settings.getint('view', 
+                                                     '%scount' % viewer_type)
+        return perspective_viewer_count != settings_viewer_count
     
-    def registerForWindowComponentChanges(self):
+    def __register_for_window_component_changes(self):
         pub.subscribe(self.setTitle, 'taskfile.filenameChanged')
         pub.subscribe(self.showStatusBar, 'settings.view.statusbar')
         pub.subscribe(self.showToolBar, 'settings.view.toolbar')
@@ -215,23 +209,23 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
     def displayMessage(self, message, pane=0):
         self.GetStatusBar().SetStatusText(message, pane)
         
-    def saveSettings(self):
-        self.saveViewerCounts()
-        self.savePerspective()
-        self.savePosition()
+    def save_settings(self):
+        self.__save_viewer_counts()
+        self.__save_perspective()
+        self.__save_position()
 
-    def saveViewerCounts(self):
+    def __save_viewer_counts(self):
         ''' Save the number of viewers for each viewer type. '''
-        for viewerType in viewer.viewerTypes():
-            count = len([v for v in self.viewer if v.__class__.__name__.lower() == viewerType])
-            self.settings.set('view', viewerType + 'count', str(count))
+        for viewer_type in viewer.viewerTypes():
+            count = len([v for v in self.viewer if v.__class__.__name__.lower() == viewer_type])
+            self.settings.set('view', viewer_type + 'count', str(count))
             
-    def savePerspective(self):
+    def __save_perspective(self):
         perspective = self.manager.SavePerspective()
         self.settings.set('view', 'perspective', perspective)
         
-    def savePosition(self):
-        self.dimensionsTracker.save_position()
+    def __save_position(self):
+        self.__dimensions_tracker.save_position()
         
     def onClose(self, event):
         if event.CanVeto() and self.settings.getboolean('window', 
@@ -278,6 +272,8 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
                 uicommand.EffortStartButton(taskList=self.taskFile.tasks()), 
                 uicommand.EffortStop(effortList=self.taskFile.efforts(),
                                      taskList=self.taskFile.tasks())])
+        if uicommand.LinkToCampaign.campaign_is_running():
+            uiCommands.extend([None, uicommand.LinkToCampaign()])
         return uiCommands
         
     def showToolBar(self, value):

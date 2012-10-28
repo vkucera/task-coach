@@ -16,18 +16,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-# This modules works around bugs in third party modules, mostly by
+# This module works around bugs in third party modules, mostly by
 # monkey-patching so import it first
 from taskcoachlib import workarounds  # pylint: disable=W0611
-
-import wx
-import os
+from taskcoachlib import patterns, operating_system
+from taskcoachlib.i18n import _
+from taskcoachlib.thirdparty.pubsub import pub
 import locale
+import os
 import sys
 import time
-from taskcoachlib import patterns, operating_system
-from taskcoachlib.thirdparty.pubsub import pub
-from taskcoachlib.i18n import _
+import wx
+
 
 # pylint: disable=W0404
 
@@ -50,7 +50,6 @@ class wxApp(wx.App):
                     if self.__handle is None:
                         self.__handle = file(os.path.expanduser('~/taskcoachlog.txt'), 'a+')
                         self.__handle.write('============= %s\n' % time.ctime())
-                        self.__seen = True
                     self.__handle.write(bf)
 
                 def flush(self):
@@ -83,7 +82,7 @@ class Application(object):
     def __init__(self, options=None, args=None, **kwargs):
         self._options = options
         self._args = args
-        self.wxApp = wxApp(self.onEndSession, redirect=False)
+        self.__wx_app = wxApp(self.on_end_session, redirect=False)
         self.init(**kwargs)
 
         if operating_system.isGTK():
@@ -98,9 +97,11 @@ class Application(object):
                         self.setProperty(xsm.SmRestartCommand, sys.argv)
                         self.setProperty(xsm.SmCurrentDirectory, os.getcwd())
                         self.setProperty(xsm.SmProgram, sys.argv[0])
-                        self.setProperty(xsm.SmRestartStyleHint, xsm.SmRestartNever)
+                        self.setProperty(xsm.SmRestartStyleHint, 
+                                         xsm.SmRestartNever)
                         
-                    def saveYourself(self, saveType, shutdown, interactStyle, fast):  # pylint: disable=W0613
+                    def saveYourself(self, saveType, shutdown, interactStyle, 
+                                     fast):  # pylint: disable=W0613
                         if shutdown:
                             self._callback()
                         self.saveYourselfDone(True)
@@ -114,7 +115,7 @@ class Application(object):
                     def shutdownCancelled(self):
                         pass
                     
-                self.sessionMonitor = LinuxSessionMonitor(self.onEndSession)  # pylint: disable=W0201
+                self.sessionMonitor = LinuxSessionMonitor(self.on_end_session)  # pylint: disable=W0201
             else:
                 self.sessionMonitor = None
 
@@ -128,68 +129,67 @@ class Application(object):
         if self.settings.getboolean('view', 'developermessages'):
             self.__message_checker = meta.DeveloperMessageChecker(self.settings)
             self.__message_checker.start()
-        self.copyDefaultTemplates()
+        self.__copy_default_templates()
         self.mainwindow.Show()
-        self.wxApp.MainLoop()
+        self.__wx_app.MainLoop()
         
-    def copyDefaultTemplates(self):
+    def __copy_default_templates(self):
         ''' Copy default templates that don't exist yet in the user's
             template directory. '''
         from taskcoachlib.persistence import getDefaultTemplates
-        templateDir = self.settings.pathToTemplatesDir()
-        if len([name for name in os.listdir(templateDir) if name.endswith('.tsktmpl')]) == 0:
+        template_dir = self.settings.pathToTemplatesDir()
+        if len([name for name in os.listdir(template_dir) if name.endswith('.tsktmpl')]) == 0:
             for name, template in getDefaultTemplates():
-                filename = os.path.join(templateDir, name + '.tsktmpl')
+                filename = os.path.join(template_dir, name + '.tsktmpl')
                 if not os.path.exists(filename):
                     file(filename, 'wb').write(template)
         
     def init(self, loadSettings=True, loadTaskFile=True):
         ''' Initialize the application. Needs to be called before 
             Application.start(). ''' 
-        self.initConfig(loadSettings)
-        self.initLanguage()
-        self.initPrinting()
-        self.initDomainObjects()
-        self.initApplication()
+        self.__init_config(loadSettings)
+        self.__init_language()
+        self.__init_domain_objects()
+        self.__init_application()
         from taskcoachlib import gui, persistence
         gui.init()
-        showSplashScreen = self.settings.getboolean('window', 'splash')
-        splash = gui.SplashScreen() if showSplashScreen else None
+        show_splash_screen = self.settings.getboolean('window', 'splash')
+        splash = gui.SplashScreen() if show_splash_screen else None
         # pylint: disable=W0201
         self.taskFile = persistence.LockedTaskFile()
-        self.autoSaver = persistence.AutoSaver(self.settings)
-        self.autoExporter = persistence.AutoImporterExporter(self.settings)
-        self.autoBackup = persistence.AutoBackup(self.settings)
+        self.__auto_saver = persistence.AutoSaver(self.settings)
+        self.__auto_exporter = persistence.AutoImporterExporter(self.settings)
+        self.__auto_backup = persistence.AutoBackup(self.settings)
         self.iocontroller = gui.IOController(self.taskFile, self.displayMessage, 
                                              self.settings, splash)
         self.mainwindow = gui.MainWindow(self.iocontroller, self.taskFile, 
                                          self.settings, splash=splash)
-        self.wxApp.SetTopWindow(self.mainwindow)
-        self.initSpellChecking()
+        self.__wx_app.SetTopWindow(self.mainwindow)
+        self.__init_spell_checking()
         if not self.settings.getboolean('file', 'inifileloaded'):
-            self.closeSplash(splash)
-            self.warnUserThatIniFileWasNotLoaded()
+            self.__close_splash(splash)
+            self.__warn_user_that_ini_file_was_not_loaded()
         if loadTaskFile:
             self.iocontroller.openAfterStart(self._args)
-        self.registerSignalHandlers()
-        self.createMutex()
-        self.createTaskBarIcon()
-        wx.CallAfter(self.closeSplash, splash)
-        wx.CallAfter(self.showTips)
+        self.__register_signal_handlers()
+        self.__create_mutex()
+        self.__create_task_bar_icon()
+        wx.CallAfter(self.__close_splash, splash)
+        wx.CallAfter(self.__show_tips)
                 
-    def initConfig(self, loadSettings):
+    def __init_config(self, load_settings):
         from taskcoachlib import config
-        iniFile = self._options.inifile if self._options else None
+        ini_file = self._options.inifile if self._options else None
         # pylint: disable=W0201
-        self.settings = config.Settings(loadSettings, iniFile)
+        self.settings = config.Settings(load_settings, ini_file)
         
-    def initLanguage(self):
+    def __init_language(self):
         ''' Initialize the current translation. '''
         from taskcoachlib import i18n
-        i18n.Translator(self.determineLanguage(self._options, self.settings))
+        i18n.Translator(self.determine_language(self._options, self.settings))
         
     @staticmethod
-    def determineLanguage(options, settings, locale=locale):  # pylint: disable=W0621
+    def determine_language(options, settings, locale=locale):  # pylint: disable=W0621
         language = None
         if options: 
             # User specified language or .po file on command line
@@ -209,50 +209,42 @@ class Application(object):
             # Fall back on what the majority of our users use
             language = 'en_US'
         return language
-        
-    def initPrinting(self):
-        ''' Prepare for printing. '''
-        # On Jolicloud, printing crashes unless we do this:
-        if operating_system.isGTK():
-            try:
-                import gtk  # pylint: disable=F0401
-                gtk.remove_log_handlers()
-            except ImportError:
-                pass
-
-    def initDomainObjects(self):
+    
+    def __init_domain_objects(self):
         ''' Provide relevant domain objects with access to the settings. '''
         from taskcoachlib.domain import task
         task.Task.settings = self.settings
         
-    def initApplication(self):
+    def __init_application(self):
         from taskcoachlib import meta
-        self.wxApp.SetAppName(meta.name)
-        self.wxApp.SetVendorName(meta.author)
+        self.__wx_app.SetAppName(meta.name)
+        self.__wx_app.SetVendorName(meta.author)
         
-    def initSpellChecking(self):
-        self.onSpellChecking(self.settings.getboolean('editor', 
+    def __init_spell_checking(self):
+        self.on_spell_checking(self.settings.getboolean('editor', 
                                                       'maccheckspelling'))
-        pub.subscribe(self.onSpellChecking, 'settings.editor.maccheckspelling')
-        
-    def onSpellChecking(self, value):
+        pub.subscribe(self.on_spell_checking, 
+                      'settings.editor.maccheckspelling')
+    
+    def on_spell_checking(self, value):
         if operating_system.isMac() and not operating_system.isMacOsXMountainLion_OrNewer():
             wx.SystemOptions.SetOptionInt("mac.textcontrol-use-spell-checker", 
                                           value)
         
-    def registerSignalHandlers(self):
-        quitAdapter = lambda *args: self.quitApplication()
+    def __register_signal_handlers(self):
+        quit_adapter = lambda *args: self.quitApplication()
         if operating_system.isWindows():
             import win32api  # pylint: disable=F0401
-            win32api.SetConsoleCtrlHandler(quitAdapter, True)
+            win32api.SetConsoleCtrlHandler(quit_adapter, True)
         else:
             import signal
-            signal.signal(signal.SIGTERM, quitAdapter)
+            signal.signal(signal.SIGTERM, quit_adapter)
             if hasattr(signal, 'SIGHUP'):
-                forcedQuit = lambda *args: self.quitApplication(force=True)
-                signal.signal(signal.SIGHUP, forcedQuit)  # pylint: disable=E1101
-        
-    def createMutex(self):
+                forced_quit = lambda *args: self.quitApplication(force=True)
+                signal.signal(signal.SIGHUP, forced_quit)  # pylint: disable=E1101
+      
+    @staticmethod  
+    def __create_mutex():
         ''' On Windows, create a mutex so that InnoSetup can check whether the
             application is running. '''
         if operating_system.isWindows():
@@ -260,15 +252,15 @@ class Application(object):
             from taskcoachlib import meta
             ctypes.windll.kernel32.CreateMutexA(None, False, meta.filename)
 
-    def createTaskBarIcon(self):
-        if self.canCreateTaskBarIcon():
+    def __create_task_bar_icon(self):
+        if self.__can_create_task_bar_icon():
             from taskcoachlib.gui import taskbaricon, menu
             self.taskBarIcon = taskbaricon.TaskBarIcon(self.mainwindow,  # pylint: disable=W0201
                 self.taskFile.tasks(), self.settings)
             self.taskBarIcon.setPopupMenu(menu.TaskBarMenu(self.taskBarIcon, 
                 self.settings, self.taskFile))
 
-    def canCreateTaskBarIcon(self):
+    def __can_create_task_bar_icon(self):
         try:
             from taskcoachlib.gui import taskbaricon  # pylint: disable=W0612
             return True
@@ -276,18 +268,17 @@ class Application(object):
             return False  # pylint: disable=W0702
                     
     @staticmethod
-    def closeSplash(splash):
+    def __close_splash(splash):
         if splash:
             splash.Destroy()
             
-    def showTips(self):
+    def __show_tips(self):
         if self.settings.getboolean('window', 'tips'):
             from taskcoachlib import help  # pylint: disable=W0622
             help.showTips(self.mainwindow, self.settings)
 
-    def warnUserThatIniFileWasNotLoaded(self):
+    def __warn_user_that_ini_file_was_not_loaded(self):
         from taskcoachlib import meta
-        from taskcoachlib.i18n import _
         reason = self.settings.get('file', 'inifileloaderror')
         wx.MessageBox(\
             _("Couldn't load settings from TaskCoach.ini:\n%s") % reason,
@@ -297,7 +288,7 @@ class Application(object):
     def displayMessage(self, message):
         self.mainwindow.displayMessage(message)
 
-    def onEndSession(self):
+    def on_end_session(self):
         wx.CallAfter(self.quitApplication, force=True)
 
     def quitApplication(self, force=False):
@@ -305,7 +296,7 @@ class Application(object):
             return
         # Remember what the user was working on: 
         self.settings.set('file', 'lastfile', self.taskFile.lastFilename())
-        self.mainwindow.saveSettings()
+        self.mainwindow.save_settings()
         self.settings.save()
         if hasattr(self, 'taskBarIcon'):
             self.taskBarIcon.RemoveIcon()
@@ -313,8 +304,8 @@ class Application(object):
             self.mainwindow.bonjourRegister.stop()
         from taskcoachlib.domain import date 
         date.Scheduler().shutdown()
-        self.wxApp.ProcessIdle()
-        self.wxApp.ExitMainLoop()
+        self.__wx_app.ProcessIdle()
+        self.__wx_app.ExitMainLoop()
 
         # For PowerStateMixin
         self.mainwindow.OnQuit()

@@ -16,10 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, itemctrl, draganddrop
-from taskcoachlib.thirdparty import hypertreelist
-from taskcoachlib.thirdparty import customtreectrl as customtree
 from taskcoachlib import operating_system
+from taskcoachlib.thirdparty import customtreectrl as customtree, hypertreelist
+from taskcoachlib.widgets import itemctrl, draganddrop
+import wx
+
 
 # pylint: disable=E1101,E1103
 
@@ -30,86 +31,82 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
     def __init__(self, *args, **kwargs):
         super(HyperTreeList, self).__init__(*args, **kwargs)
         if operating_system.isGTK():
-            self.Bind(wx.EVT_TREE_ITEM_COLLAPSED, self.onItemCollapsed)
+            self.Bind(wx.EVT_TREE_ITEM_COLLAPSED, self.__on_item_collapsed)
 
-    def onItemCollapsed(self, event):
+    def __on_item_collapsed(self, event):
         event.Skip()
         # On Ubuntu, when the user has scrolled to the bottom of the tree
         # and collapses an item, the tree is not redrawn correctly. Refreshing
         # solves this. See http://trac.wxwidgets.org/ticket/11704
         wx.CallAfter(self.MainWindow.Refresh) 
 
-    def GetSelections(self):
-        ''' If the root item is hidden, it should never be selected, 
-        unfortunately, CustomTreeCtrl and HyperTreeList allow it to be 
-        selected. Override GetSelections to fix that. '''
+    def GetSelections(self):  # pylint: disable=C0103
+        ''' If the root item is hidden, it should never be selected. 
+            Unfortunately, CustomTreeCtrl and HyperTreeList allow it to be 
+            selected. Override GetSelections to fix that. '''
         selections = super(HyperTreeList, self).GetSelections()
         if self.HasFlag(wx.TR_HIDE_ROOT):
-            rootItem = self.GetRootItem()
-            if rootItem and rootItem in selections:
-                selections.remove(rootItem)
+            root_item = self.GetRootItem()
+            if root_item and root_item in selections:
+                selections.remove(root_item)
         return selections
 
-    def GetMainWindow(self, *args, **kwargs):
+    def GetMainWindow(self, *args, **kwargs):  # pylint: disable=C0103
         ''' Have a local GetMainWindow so we can create a MainWindow 
         property. '''
         return super(HyperTreeList, self).GetMainWindow(*args, **kwargs)
     
     MainWindow = property(fget=GetMainWindow)
     
-    def HitTest(self, point): # pylint: disable=W0221
+    def HitTest(self, point): # pylint: disable=W0221, C0103
         ''' Always return a three-tuple (item, flags, column). '''
         if type(point) == type(()):
             point = wx.Point(point[0], point[1])
-        hitTestResult = super(HyperTreeList, self).HitTest(point)
-        if len(hitTestResult) == 2:
-            hitTestResult += (0,)
-        if hitTestResult[0] is None:
-            hitTestResult = (wx.TreeItemId(),) + hitTestResult[1:]
-        return hitTestResult
+        hit_test_result = super(HyperTreeList, self).HitTest(point)
+        if len(hit_test_result) == 2:
+            hit_test_result += (0,)
+        if hit_test_result[0] is None:
+            hit_test_result = (wx.TreeItemId(),) + hit_test_result[1:]
+        return hit_test_result
     
     def isClickablePartOfNodeClicked(self, event):
         ''' Return whether the user double clicked some part of the node that
             can also receive regular mouse clicks. '''
-        return self.isCollapseExpandButtonClicked(event)
+        return self.__is_collapse_expand_button_clicked(event)
     
-    def isCollapseExpandButtonClicked(self, event):
+    def __is_collapse_expand_button_clicked(self, event):
         flags = self.HitTest(event.GetPosition())[1]
         return flags & wx.TREE_HITTEST_ONITEMBUTTON
-            
-    def isCheckBoxClicked(self, event):
-        flags = self.HitTest(event.GetPosition())[1]
-        return flags & customtree.TREE_HITTEST_ONITEMCHECKICON
 
     def select(self, selection):
         for item in self.GetItemChildren(recursively=True):
             self.SelectItem(item, self.GetItemPyData(item) in selection)
         
-    def clearselection(self):
+    def clear_selection(self):
         self.UnselectAll()
         self.selectCommand()
 
-    def selectall(self):
+    def select_all(self):
         if self.GetItemCount() > 0:
             self.SelectAll()
         self.selectCommand()
                 
     def isAnyItemCollapsable(self):
         for item in self.GetItemChildren():
-            if self.isItemCollapsable(item): 
+            if self.__is_item_collapsable(item): 
                 return True
         return False
     
     def isAnyItemExpandable(self):
         for item in self.GetItemChildren():
-            if self.isItemExpandable(item): 
+            if self.__is_item_expandable(item): 
                 return True
         return False
     
-    def isItemExpandable(self, item):
+    def __is_item_expandable(self, item):
         return self.ItemHasChildren(item) and not self.IsExpanded(item)
     
-    def isItemCollapsable(self, item):
+    def __is_item_collapsable(self, item):
         return self.ItemHasChildren(item) and self.IsExpanded(item)
     
     def IsLabelBeingEdited(self):
@@ -120,18 +117,18 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
             self.GetLabelTextCtrl().StopEditing()
             
     def GetLabelTextCtrl(self):
-        return self.GetMainWindow()._editCtrl # pylint: disable=W0212
+        return self.GetMainWindow()._editCtrl  # pylint: disable=W0212
     
     def GetItemCount(self):
-        rootItem = self.GetRootItem()
-        return self.GetChildrenCount(rootItem, recursively=True) \
-            if rootItem else 0
+        root_item = self.GetRootItem()
+        return self.GetChildrenCount(root_item, recursively=True) \
+            if root_item else 0
     
 
 class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin, 
                    itemctrl.CtrlWithToolTipMixin, HyperTreeList):
     # TreeListCtrl uses ALIGN_LEFT, ..., ListCtrl uses LIST_FORMAT_LEFT, ... for
-    # specifying alignment of columns. This dictionary allows us to map from the 
+    # specifying alignment of columns. This dictionary allows us to map from the
     # ListCtrl constants to the TreeListCtrl constants:
     alignmentMap = {wx.LIST_FORMAT_LEFT: wx.ALIGN_LEFT, 
                     wx.LIST_FORMAT_CENTRE: wx.ALIGN_CENTRE,
@@ -144,13 +141,12 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
                  *args, **kwargs):    
         self.__adapter = parent
         self.__selection = []
-        self.__dontStartEditingLabelBecauseUserDoubleClicked = False
-        self.__columnsWithImages = []
-        self.__defaultFont = wx.NORMAL_FONT
+        self.__user_double_clicked = False
+        self.__columns_with_images = []
+        self.__default_font = wx.NORMAL_FONT
         kwargs.setdefault('resizeableColumn', 0)
-        super(TreeListCtrl, self).__init__(parent, style=self.getStyle(), 
-            agwStyle=self.getAgwStyle(),
-            columns=columns,  
+        super(TreeListCtrl, self).__init__(parent, style=self.__get_style(), 
+            agwStyle=self.__get_agw_style(), columns=columns,  
             itemPopupMenu=itemPopupMenu,
             columnPopupMenu=columnPopupMenu, *args, **kwargs)
         self.bindEventHandlers(selectCommand, editCommand, dragAndDropCommand)
@@ -184,11 +180,11 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         self.StopEditing()
         self.__selection = self.curselection()
         self.DeleteAllItems()
-        self.__columnsWithImages = [index for index in range(self.GetColumnCount()) if self.__adapter.hasColumnImages(index)]
-        rootItem = self.GetRootItem()
-        if not rootItem:
-            rootItem = self.AddRoot('Hidden root')
-        self._addObjectRecursively(rootItem)
+        self.__columns_with_images = [index for index in range(self.GetColumnCount()) if self.__adapter.hasColumnImages(index)]
+        root_item = self.GetRootItem()
+        if not root_item:
+            root_item = self.AddRoot('Hidden root')
+        self._addObjectRecursively(root_item)
         selections = self.GetSelections()
         if selections:
             self.GetMainWindow()._current = self.GetMainWindow()._key_current = selections[0]
@@ -199,87 +195,90 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         self.__selection = self.curselection()
         self._refreshTargetObjects(self.GetRootItem(), *objects)
             
-    def _refreshTargetObjects(self, parentItem, *targetObjects):
-        childItem, cookie = self.GetFirstChild(parentItem)
-        while childItem:
-            itemObject = self.GetItemPyData(childItem) 
-            if itemObject in targetObjects:
-                self._refreshObjectCompletely(childItem, itemObject)
-            self._refreshTargetObjects(childItem, *targetObjects)
-            childItem, cookie = self.GetNextChild(parentItem, cookie)
+    def _refreshTargetObjects(self, parent_item, *target_objects):
+        child_item, cookie = self.GetFirstChild(parent_item)
+        while child_item:
+            item_object = self.GetItemPyData(child_item) 
+            if item_object in target_objects:
+                self._refreshObjectCompletely(child_item, item_object)
+            self._refreshTargetObjects(child_item, *target_objects)
+            child_item, cookie = self.GetNextChild(parent_item, cookie)
             
     def _refreshObjectCompletely(self, item, *args):
-        self._refreshAspects(('ItemType', 'Columns', 'Font', 'Colors',
+        self.__refresh_aspects(('ItemType', 'Columns', 'Font', 'Colors',
                               'Selection'), item, check=True, *args)
         self.GetMainWindow().RefreshLine(item)
         
-    def _addObjectRecursively(self, parentItem, parentObject=None):
-        for childObject in self.__adapter.children(parentObject):
-            childItem = self.AppendItem(parentItem, '', 
-                                        self.getItemCTType(childObject), 
-                                        data=childObject)
-            self._refreshObjectMinimally(childItem, childObject)
-            expanded = self.__adapter.getItemExpanded(childObject)
+    def _addObjectRecursively(self, parent_item, parent_object=None):
+        for child_object in self.__adapter.children(parent_object):
+            child_item = self.AppendItem(parent_item, '', 
+                                         self.getItemCTType(child_object), 
+                                         data=child_object)
+            self._refreshObjectMinimally(child_item, child_object)
+            expanded = self.__adapter.getItemExpanded(child_object)
             if expanded:
-                self._addObjectRecursively(childItem, childObject)
+                self._addObjectRecursively(child_item, child_object)
                 # Call Expand on the item instead of on the tree
                 # (self.Expand(childItem)) to prevent lots of events
                 # (EVT_TREE_ITEM_EXPANDING/EXPANDED) being sent
-                childItem.Expand()
+                child_item.Expand()
             else:
-                self.SetItemHasChildren(childItem,
-                                        self.__adapter.children(childObject))
+                self.SetItemHasChildren(child_item,
+                                        self.__adapter.children(child_object))
 
     def _refreshObjectMinimally(self, *args, **kwargs):
-        self._refreshAspects(('Columns', 'Colors', 'Font', 'Selection'), *args, **kwargs)
+        self.__refresh_aspects(('Columns', 'Colors', 'Font', 'Selection'), 
+                             *args, **kwargs)
 
-    def _refreshAspects(self, aspects, *args, **kwargs):
+    def __refresh_aspects(self, aspects, *args, **kwargs):
         for aspect in aspects:
-            refreshAspect = getattr(self, '_refresh%s'%aspect)
-            refreshAspect(*args, **kwargs)
+            refresh_aspect = getattr(self, '_refresh%s' % aspect)
+            refresh_aspect(*args, **kwargs)
         
-    def _refreshItemType(self, item, domainObject, check=False):
-        ctType = self.getItemCTType(domainObject)
-        if not check or (check and ctType != self.GetItemType(item)):
-            self.SetItemType(item, ctType)
+    def _refreshItemType(self, item, domain_object, check=False):
+        ct_type = self.getItemCTType(domain_object)
+        if not check or (check and ct_type != self.GetItemType(item)):
+            self.SetItemType(item, ct_type)
         
-    def _refreshColumns(self, item, domainObject, check=False):
-        for columnIndex in range(self.GetColumnCount()):
-            self._refreshColumn(item, domainObject, columnIndex, check=check)
+    def _refreshColumns(self, item, domain_object, check=False):
+        for column_index in range(self.GetColumnCount()):
+            self._refreshColumn(item, domain_object, column_index, check=check)
                 
-    def _refreshColumn(self, item, domainObject, columnIndex, check=False):
-        aspects = ('Text', 'Image') if columnIndex in self.__columnsWithImages else ('Text',)
-        self._refreshAspects(aspects, item, domainObject, columnIndex, check=check)
+    def _refreshColumn(self, item, domain_object, column_index, check=False):
+        aspects = ('Text', 'Image') if column_index in self.__columns_with_images else ('Text',)
+        self.__refresh_aspects(aspects, item, domain_object, column_index, 
+                             check=check)
             
-    def _refreshText(self, item, domainObject, columnIndex, check=False):
-        text = self.__adapter.getItemText(domainObject, columnIndex)
+    def _refreshText(self, item, domain_object, column_index, check=False):
+        text = self.__adapter.getItemText(domain_object, column_index)
         if text.count('\n') > 3:
             text = '\n'.join(text.split('\n')[:4]) + u' ...'
-        if not check or (check and text != item.GetText(columnIndex)):
-            item.SetText(columnIndex, text)
+        if not check or (check and text != item.GetText(column_index)):
+            item.SetText(column_index, text)
                 
-    def _refreshImage(self, item, domainObject, columnIndex, check=False):
-        images = self.__adapter.getItemImages(domainObject, columnIndex)
+    def _refreshImage(self, item, domain_object, column_index, check=False):
+        images = self.__adapter.getItemImages(domain_object, column_index)
         for which, image in images.items():
             image = image if image >= 0 else -1
-            if not check or (check and image != item.GetImage(which, columnIndex)):
-                item.SetImage(columnIndex, image, which)
+            if not check or (check and image != item.GetImage(which, 
+                                                              column_index)):
+                item.SetImage(column_index, image, which)
 
-    def _refreshColors(self, item, domainObject, check=False):
-        bgColor = domainObject.backgroundColor(recursive=True) or wx.NullColour
-        if not check or (check and bgColor != self.GetItemBackgroundColour(item)):
-            self.SetItemBackgroundColour(item, bgColor)
-        fgColor = domainObject.foregroundColor(recursive=True) or wx.NullColour
-        if not check or (check and fgColor != self.GetItemTextColour(item)):
-            self.SetItemTextColour(item, fgColor)
+    def _refreshColors(self, item, domain_object, check=False):
+        bg_color = domain_object.backgroundColor(recursive=True) or wx.NullColour
+        if not check or (check and bg_color != self.GetItemBackgroundColour(item)):
+            self.SetItemBackgroundColour(item, bg_color)
+        fg_color = domain_object.foregroundColor(recursive=True) or wx.NullColour
+        if not check or (check and fg_color != self.GetItemTextColour(item)):
+            self.SetItemTextColour(item, fg_color)
         
-    def _refreshFont(self, item, domainObject, check=False):
-        font = domainObject.font(recursive=True) or self.__defaultFont
+    def _refreshFont(self, item, domain_object, check=False):
+        font = domain_object.font(recursive=True) or self.__default_font
         if not check or (check and font != self.GetItemFont(item)):
             self.SetItemFont(item, font)
         
-    def _refreshSelection(self, item, domainObject, check=False):
-        select = domainObject in self.__selection
+    def _refreshSelection(self, item, domain_object, check=False):
+        select = domain_object in self.__selection
         if not check or (check and select != item.IsSelected()):
             item.SetHilight(select)
 
@@ -299,37 +298,38 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         else:
             event.Skip()
          
-    def OnDrop(self, dropItem, dragItems, part):
-        dropItem = None if dropItem == self.GetRootItem() else \
-                   self.GetItemPyData(dropItem)
-        dragItems = list(self.GetItemPyData(dragItem) for dragItem in dragItems)
-        wx.CallAfter(self.dragAndDropCommand, dropItem, dragItems, part)
+    def OnDrop(self, drop_item, drag_items, part):
+        drop_item = None if drop_item == self.GetRootItem() else \
+                   self.GetItemPyData(drop_item)
+        drag_items = list(self.GetItemPyData(drag_item) for drag_item in drag_items)
+        wx.CallAfter(self.dragAndDropCommand, drop_item, drag_items, part)
         
     def onItemExpanding(self, event):
         event.Skip()
         item = event.GetItem()
         if self.GetChildrenCount(item, recursively=False) == 0:
-            domainObject = self.GetItemPyData(item)
-            self._addObjectRecursively(item, domainObject)
+            domain_object = self.GetItemPyData(item)
+            self._addObjectRecursively(item, domain_object)
                 
     def onDoubleClick(self, event):
-        self.__dontStartEditingLabelBecauseUserDoubleClicked = True
+        self.__user_double_clicked = True
         if self.isClickablePartOfNodeClicked(event):
             event.Skip(False)
         else:
             self.onItemActivated(event)
         
     def onItemActivated(self, event):
-        ''' Attach the column clicked on to the event so we can use it elsewhere. '''
-        columnIndex = self.columnUnderMouse()
-        if columnIndex >= 0:
-            event.columnName = self._getColumn(columnIndex).name()
+        ''' Attach the column clicked on to the event so we can use it 
+            elsewhere. '''
+        column_index = self.__column_under_mouse()
+        if column_index >= 0:
+            event.columnName = self._getColumn(column_index).name()
         self.editCommand(event)
         event.Skip(False)
         
-    def columnUnderMouse(self):
-        mousePosition = self.GetMainWindow().ScreenToClient(wx.GetMousePosition())
-        item, _, column = self.HitTest(mousePosition)
+    def __column_under_mouse(self):
+        mouse_position = self.GetMainWindow().ScreenToClient(wx.GetMousePosition())
+        item, _, column = self.HitTest(mouse_position)
         if item:
             # Only get the column name if the hittest returned an item,
             # otherwise the item was activated from the menu or by double 
@@ -341,9 +341,9 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
     # Inline editing
         
     def onBeginEdit(self, event):
-        if self.__dontStartEditingLabelBecauseUserDoubleClicked:
+        if self.__user_double_clicked:
             event.Veto()
-            self.__dontStartEditingLabelBecauseUserDoubleClicked = False
+            self.__user_double_clicked = False
         elif self.IsLabelBeingEdited():
             # Don't start editing another label when the user is still editing
             # a label. This prevents left-over text controls in the tree.
@@ -356,54 +356,57 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
             event.Skip()
             return
         event.Veto()  # Let us update the tree
-        domainObject = self.GetItemPyData(event.GetItem())
-        newValue = event.GetLabel()
+        domain_object = self.GetItemPyData(event.GetItem())
+        new_value = event.GetLabel()
         column = self._getColumn(event.GetInt())
-        column.onEndEdit(domainObject, newValue)
+        column.onEndEdit(domain_object, new_value)
         
-    def CreateEditCtrl(self, item, columnIndex):
-        column = self._getColumn(columnIndex)
-        domainObject = self.GetItemPyData(item)
-        return column.editControl(self.GetMainWindow(), item, columnIndex, 
-                                  domainObject)
+    def CreateEditCtrl(self, item, column_index):
+        column = self._getColumn(column_index)
+        domain_object = self.GetItemPyData(item)
+        return column.editControl(self.GetMainWindow(), item, column_index, 
+                                  domain_object)
             
     # Override CtrlWithColumnsMixin with TreeListCtrl specific behaviour:
         
     def _setColumns(self, *args, **kwargs):
         super(TreeListCtrl, self)._setColumns(*args, **kwargs)
         self.SetMainColumn(0)
-        for columnIndex in range(self.GetColumnCount()):
-            self.SetColumnEditable(columnIndex, 
-                                   self._getColumn(columnIndex).isEditable())
+        for column_index in range(self.GetColumnCount()):
+            self.SetColumnEditable(column_index, 
+                                   self._getColumn(column_index).isEditable())
                         
     # Extend TreeMixin with TreeListCtrl specific behaviour:
 
-    def getStyle(self):
+    @staticmethod
+    def __get_style():
         return wx.WANTS_CHARS 
-            
-    def getAgwStyle(self):
-        agwStyle = wx.TR_DEFAULT_STYLE | wx.TR_HIDE_ROOT | wx.TR_MULTIPLE \
+    
+    @staticmethod        
+    def __get_agw_style():
+        agw_style = wx.TR_DEFAULT_STYLE | wx.TR_HIDE_ROOT | wx.TR_MULTIPLE \
             | wx.TR_EDIT_LABELS | wx.TR_HAS_BUTTONS | wx.TR_FULL_ROW_HIGHLIGHT \
             | customtree.TR_HAS_VARIABLE_ROW_HEIGHT
         if operating_system.isMac():
-            agwStyle |= wx.TR_NO_LINES
-        agwStyle &= ~hypertreelist.TR_NO_HEADER
-        return agwStyle
+            agw_style |= wx.TR_NO_LINES
+        agw_style &= ~hypertreelist.TR_NO_HEADER
+        return agw_style
 
     # pylint: disable=W0221
     
-    def DeleteColumn(self, columnIndex):
-        self.RemoveColumn(columnIndex)
+    def DeleteColumn(self, column_index):
+        self.RemoveColumn(column_index)
         
-    def InsertColumn(self, columnIndex, columnHeader, *args, **kwargs):
+    def InsertColumn(self, column_index, column_header, *args, **kwargs):
         alignment = self.alignmentMap[kwargs.pop('format', wx.LIST_FORMAT_LEFT)]
-        if columnIndex == self.GetColumnCount():
-            self.AddColumn(columnHeader, *args, **kwargs)
+        if column_index == self.GetColumnCount():
+            self.AddColumn(column_header, *args, **kwargs)
         else:
-            super(TreeListCtrl, self).InsertColumn(columnIndex, columnHeader, 
-                *args, **kwargs)
-        self.SetColumnAlignment(columnIndex, alignment)
-        self.SetColumnEditable(columnIndex, self._getColumn(columnIndex).isEditable())
+            super(TreeListCtrl, self).InsertColumn(column_index, column_header, 
+                                                   *args, **kwargs)
+        self.SetColumnAlignment(column_index, alignment)
+        self.SetColumnEditable(column_index, 
+                               self._getColumn(column_index).isEditable())
 
     def showColumn(self, *args, **kwargs):
         ''' Stop editing before we hide or show a column to prevent problems
@@ -427,12 +430,12 @@ class CheckTreeCtrl(TreeListCtrl):
         self.getIsItemChecked = parent.getIsItemChecked
         self.getItemParentHasExclusiveChildren = parent.getItemParentHasExclusiveChildren
         
-    def getItemCTType(self, domainObject):
+    def getItemCTType(self, domain_object):
         ''' Use radio buttons (ct_type == 2) when the object has "exclusive" 
             children, meaning that only one child can be checked at a time. Use
             check boxes (ct_type == 1) otherwise. '''
-        if self.getIsItemCheckable(domainObject):
-            return 2 if self.getItemParentHasExclusiveChildren(domainObject) else 1
+        if self.getIsItemCheckable(domain_object):
+            return 2 if self.getItemParentHasExclusiveChildren(domain_object) else 1
         else:
             return 0
     
@@ -448,43 +451,50 @@ class CheckTreeCtrl(TreeListCtrl):
         ''' By default, the HyperTreeList widget doesn't allow for unchecking
             a radio item. Since we do want to support unchecking a radio 
             item, we look for mouse left down and uncheck the item and all of
-            its children if the user clicks on an already selected radio item. '''
+            its children if the user clicks on an already selected radio 
+            item. '''
         position = self.GetMainWindow().CalcUnscrolledPosition(event.GetPosition())
         item, flags, dummy_column = self.HitTest(position)
-        if item and item.GetType() == 2 and (flags & customtree.TREE_HITTEST_ONITEMCHECKICON) and self.IsItemChecked(item):
-            self.uncheckItemRecursively(item)
+        if item and item.GetType() == 2 and \
+           (flags & customtree.TREE_HITTEST_ONITEMCHECKICON) and \
+           self.IsItemChecked(item):
+            self.__uncheck_item_recursively(item)
         else:
             event.Skip()
             
-    def uncheckItemRecursively(self, item, parentIsExpanded=True, disableItem=False):
+    def __uncheck_item_recursively(self, item, parent_is_expanded=True, 
+                                   disable_item=False):
         if item.GetType():
-            self.uncheckItem(item, torefresh=parentIsExpanded)
-        if disableItem:
-            self.EnableItem(item, False, torefresh=parentIsExpanded)
-        parentIsExpanded = item.IsExpanded()
+            self.__uncheck_item(item, torefresh=parent_is_expanded)
+        if disable_item:
+            self.EnableItem(item, False, torefresh=parent_is_expanded)
+        parent_is_expanded = item.IsExpanded()
         child, cookie = self.GetFirstChild(item)    
         while child:
-            self.uncheckItemRecursively(child, parentIsExpanded, disableItem=True)
+            self.__uncheck_item_recursively(child, parent_is_expanded, 
+                                            disable_item=True)
             child, cookie = self.GetNextChild(item, cookie)
             
-    def uncheckItem(self, item, torefresh):
-        self.GetMainWindow().CheckItem2(item, checked=False, torefresh=torefresh)
-        event = customtree.TreeEvent(customtree.wxEVT_TREE_ITEM_CHECKED, self.GetId())
+    def __uncheck_item(self, item, torefresh):
+        self.GetMainWindow().CheckItem2(item, checked=False, 
+                                        torefresh=torefresh)
+        event = customtree.TreeEvent(customtree.wxEVT_TREE_ITEM_CHECKED, 
+                                     self.GetId())
         event.SetItem(item)
         event.SetEventObject(self)
         self.GetEventHandler().ProcessEvent(event)
         
-    def _refreshObjectCompletely(self, item, domainObject):
-        super(CheckTreeCtrl, self)._refreshObjectCompletely(item, domainObject)
-        self._refreshCheckState(item, domainObject)
+    def _refreshObjectCompletely(self, item, domain_object):
+        super(CheckTreeCtrl, self)._refreshObjectCompletely(item, domain_object)
+        self._refreshCheckState(item, domain_object)
         
-    def _refreshObjectMinimally(self, item, domainObject):
-        super(CheckTreeCtrl, self)._refreshObjectMinimally(item, domainObject)
-        self._refreshCheckState(item, domainObject)
+    def _refreshObjectMinimally(self, item, domain_object):
+        super(CheckTreeCtrl, self)._refreshObjectMinimally(item, domain_object)
+        self._refreshCheckState(item, domain_object)
     
-    def _refreshCheckState(self, item, domainObject):
+    def _refreshCheckState(self, item, domain_object):
         # Use CheckItem2 so no events get sent:
-        self.CheckItem2(item, self.getIsItemChecked(domainObject))
+        self.CheckItem2(item, self.getIsItemChecked(domain_object))
         parent = item.GetParent()
         while parent:
             if self.GetItemType(parent) == 2:
@@ -507,7 +517,8 @@ class CheckTreeCtrl(TreeListCtrl):
                 # Recursively uncheck children of mutually exclusive children:
                 for grandchild in self.GetItemChildren(child, recursively=True):
                     self.CheckItem(grandchild, False)
-        # If this item is mutually exclusive, recursively uncheck siblings and parent:
+        # If this item is mutually exclusive, recursively uncheck siblings 
+        # and parent:
         parent = item.GetParent()
         if parent and self.GetItemType(item) == 2:
             for child in self.GetItemChildren(parent):
@@ -522,13 +533,13 @@ class CheckTreeCtrl(TreeListCtrl):
         self.checkCommand(event)
         
     def onItemActivated(self, event):
-        if self.isDoubleClicked(event):
+        if self.__is_double_clicked(event):
             # Invoke super.onItemActivated to edit the item
             super(CheckTreeCtrl, self).onItemActivated(event)
         else:
             # Item is activated, let another event handler deal with the event 
             event.Skip()
-            
-    def isDoubleClicked(self, event):
-        return hasattr(event, 'LeftDClick') and event.LeftDClick()
     
+    @staticmethod        
+    def __is_double_clicked(event):
+        return hasattr(event, 'LeftDClick') and event.LeftDClick()

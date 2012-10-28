@@ -274,14 +274,13 @@ class DateTimeCtrl(wx.Panel):
         if dateValue == date.Date():
             return date.DateTime()
         else:
-            timeText = self._timeCtrl.GetValue().strip().lower()
+            timeText = self._timeCtrl.GetValue().strip().lower().replace('.', ':')
             try:
                 dateTime = dparser.parse(timeText, ignoretz=True, fuzzy=True)
                 timeValue = date.Time(hour=dateTime.hour, 
                                       minute=dateTime.minute,
                                       second=dateTime.second)
             except ValueError:
-                print 'ValueError'
                 timeValue = date.Time()
             return date.DateTime.combine(dateValue, timeValue)
 

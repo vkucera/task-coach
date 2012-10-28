@@ -48,6 +48,10 @@ class Bug(Change):
     pass
 
 
+class Bugv2(Bug):
+    pass
+
+
 class Feature(Change):
     pass
 

@@ -1,3 +1,13 @@
+Component: guid.py
+Name: GUID
+Author: Conan C. Albrecht
+Version: 2.6
+Date: 2012-10-14
+License: see guid.py
+Source: http://code.activestate.com/recipes/163604-guid/
+Copied on: 2012-10-14
+Changes for Task Coach: none
+
 Component: apscheduler
 Name: Advanced Python Scheduler (APscheduler)
 Author: Alex Gronholm <apscheduler@nextday.fi>

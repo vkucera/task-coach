@@ -1031,15 +1031,16 @@ class TaskDueTodayTest(TaskTestCase, CommonTaskTestsMixin):
         self.assertEqual(expectedColor, self.task.foregroundColor(recursive=True))
         
     def testColorWhenTaskHasOwnColor(self):
-        expectedColor = wx.Colour(191, 128, 64, 255)
-        self.task.setForegroundColor((128, 128, 128, 255))
-        self.assertEqual(expectedColor, self.task.foregroundColor(recursive=True))
+        color = wx.Colour(191, 128, 64, 255)
+        self.task.setForegroundColor(color)
+        self.assertEqual(color, self.task.foregroundColor(recursive=True))
 
     def testIcon(self):
         self.assertEqual('led_orange_icon', self.task.icon(recursive=True))
 
     def testSelectedIcon(self):
-        self.assertEqual('led_orange_icon', self.task.selectedIcon(recursive=True))
+        self.assertEqual('led_orange_icon', 
+                         self.task.selectedIcon(recursive=True))
         
     def testIconAfterChangingDueSoonHours(self):
         self.settings.setint('behavior', 'duesoonhours', 0)
@@ -1127,9 +1128,9 @@ class OverdueTaskTest(TaskTestCase, CommonTaskTestsMixin):
         self.assertEqual(expectedColor, self.task.foregroundColor(recursive=True))
         
     def testColorWhenTaskHasOwnColor(self):
-        expectedColor = wx.Colour(191, 64, 64, 255)
-        self.task.setForegroundColor((128, 128, 128, 255))
-        self.assertEqual(expectedColor, self.task.foregroundColor(recursive=True))
+        color = wx.Colour(191, 64, 64, 255)
+        self.task.setForegroundColor(color)
+        self.assertEqual(color, self.task.foregroundColor(recursive=True))
 
     def testIcon(self):
         self.assertEqual('led_red_icon', self.task.icon(recursive=True))
@@ -1203,9 +1204,9 @@ class CompletedTaskTest(TaskTestCase, CommonTaskTestsMixin):
         self.assertEqual(expectedColor, self.task.foregroundColor(recursive=True))
         
     def testColorWhenTaskHasOwnColor(self):
-        expectedColor = wx.Colour(64, 191, 64, 255)
-        self.task.setForegroundColor((128, 128, 128, 255))
-        self.assertEqual(expectedColor, self.task.foregroundColor(recursive=True))
+        color = wx.Colour(64, 191, 64, 255)
+        self.task.setForegroundColor(color)
+        self.assertEqual(color, self.task.foregroundColor(recursive=True))
 
     def testIcon(self):
         self.assertEqual('led_green_icon', self.task.icon(recursive=True))
@@ -1277,10 +1278,9 @@ class TaskWithPlannedStartDateInTheFutureTest(TaskTestCase, CommonTaskTestsMixin
                          self.task.foregroundColor(recursive=True))
         
     def testColorWhenTaskHasOwnColor(self):
-        expectedColor = wx.Colour(160, 160, 160, 255)
-        self.task.setForegroundColor((128, 128, 128, 255))
-        self.assertEqual(expectedColor,
-                         self.task.foregroundColor(recursive=True))
+        color = wx.Colour(160, 160, 160, 255)
+        self.task.setForegroundColor(color)
+        self.assertEqual(color, self.task.foregroundColor(recursive=True))
 
     def testIcon(self):
         self.assertEqual('led_grey_icon', self.task.icon(recursive=True))
@@ -1912,8 +1912,7 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
             
         pub.subscribe(onEvent, task.Task.timeSpentChangedEventType())
         childEffort.setStop(date.DateTime(2005, 1, 1, 12, 0, 0))
-        self.failUnless((self.task1.timeSpent(recursive=True), 
-                         self.task1) in events)
+        self.failUnless((self.task1.timeSpent(), self.task1) in events)
 
     def testRecursivePriorityNotification(self):
         events = []
