@@ -116,7 +116,6 @@ class CompositeEffort(BaseCompositeEffort):
         self.__hash_value = hash((task, start))
         # Effort cache: {True: [efforts recursively], False: [efforts]}
         self.__effort_cache = dict()  
-        self._invalidateCache()
         '''
         FIMXE! CompositeEffort does not derive from base.Object
         patterns.Publisher().registerObserver(self.onAppearanceChanged,

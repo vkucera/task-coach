@@ -110,10 +110,7 @@ class EffortAggregator(patterns.SetDecorator,
     def onTaskAddedOrRemoved(self, event):
         ''' Whenever tasks are added or removed, find the composites that 
             (did/should) contain effort of those tasks and update them. '''
-        affected_composites = set()
-        for added_or_removed_task in event.values():
-            for affected_composite in self.__get_composites_for_task(added_or_removed_task):
-                affected_composites.add(affected_composite)
+        affected_composites = self.__get_composites_for_tasks(event.values())
         for affected_composite in affected_composites:
             affected_composite._invalidateCache()
             affected_composite.notifyObserversOfDurationOrEmpty()
@@ -155,7 +152,7 @@ class EffortAggregator(patterns.SetDecorator,
         self.__extend_self_with_composites(new_composites)
             
     def onTimeSpentChanged(self, newValue, sender):
-        for affected_composite in self.__get_composites_for_task(sender):
+        for affected_composite in self.__get_composites_for_tasks([sender]):
             is_tracked = affected_composite.isBeingTracked()
             was_tracked = affected_composite in self.__trackedComposites
             if is_tracked and not was_tracked:
@@ -169,14 +166,15 @@ class EffortAggregator(patterns.SetDecorator,
             affected_composite.onTimeSpentChanged(newValue, sender)
             
     def onRevenueChanged(self, newValue, sender):
-        for affected_composite in self.__get_composites_for_task(sender):
+        for affected_composite in self.__get_composites_for_tasks([sender]):
             affected_composite.onRevenueChanged(newValue, sender)
             
-    def __get_composites_for_task(self, the_task):
+    def __get_composites_for_tasks(self, tasks):
+        tasks = set(tasks)
         return [each_composite for each_composite in self \
-                if the_task == each_composite.task() or \
+                if each_composite.task() in tasks or \
                 (each_composite.task().__class__.__name__ == 'Total' and \
-                 the_task in each_composite.tasks())]
+                 tasks & each_composite.tasks())]
         
     def __create_composites(self, task, efforts):  # pylint: disable=W0621
         new_composites = []
