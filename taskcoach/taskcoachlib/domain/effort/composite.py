@@ -159,7 +159,7 @@ class CompositeEffort(BaseCompositeEffort):
         if recursive not in self.__effort_cache:
             self._refreshCache(recursive=recursive)
         return list(self.__effort_cache[recursive])
-        
+    
     def mayContain(self, effort):
         ''' Return whether effort would be contained in this composite effort 
             if it existed. '''
@@ -247,7 +247,13 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
     def _refreshCache(self):
         previous_cache = [] if self.__effort_cache is None else self.__effort_cache[:]
         self.__effort_cache = []
-        for eachTask in self.taskList:
-            self.__effort_cache.extend([effort for effort in eachTask.efforts() \
-                                       if self._inPeriod(effort)])
+        self.__add_task_effort_to_cache(self.taskList)
         return previous_cache != self.__effort_cache
+
+    def __add_task_effort_to_cache(self, tasks):
+        ''' Add the effort of the tasks to the cache. '''
+        for task in tasks:
+            effort_in_period = [effort for effort in task.efforts() if \
+                                self._inPeriod(effort)]
+            self.__effort_cache.extend(effort_in_period)
+           

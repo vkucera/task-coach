@@ -47,10 +47,9 @@ class EffortAggregator(patterns.SetDecorator,
                       task.Task.effortsChangedEventType())
         patterns.Publisher().registerObserver(self.onChildAddedToTask,
             eventType=task.Task.addChildEventType())
-        for eventType in self.observable().modificationEventTypes():
-            patterns.Publisher().registerObserver(self.onTaskAddedOrRemoved, 
-                                                  eventType,
-                                                  eventSource=self.observable())
+        patterns.Publisher().registerObserver(self.onTaskRemoved, 
+                                              self.observable().removeItemEventType(),
+                                              eventSource=self.observable())
         pub.subscribe(self.onEffortStartChanged, 
                       effort.Effort.startChangedEventType())
         pub.subscribe(self.onTimeSpentChanged,
@@ -107,9 +106,9 @@ class EffortAggregator(patterns.SetDecorator,
         super(EffortAggregator, self).removeItemsFromSelf(composites_to_remove, 
                                                           event=event)
         
-    def onTaskAddedOrRemoved(self, event):
-        ''' Whenever tasks are added or removed, find the composites that 
-            (did/should) contain effort of those tasks and update them. '''
+    def onTaskRemoved(self, event):
+        ''' Whenever tasks are removed, find the composites that 
+            (did) contain effort of those tasks and update them. '''
         affected_composites = self.__get_composites_for_tasks(event.values())
         for affected_composite in affected_composites:
             affected_composite._invalidateCache()
