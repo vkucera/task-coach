@@ -54,7 +54,7 @@ class Scheduler(apscheduler.scheduler.Scheduler):
                                         shutdown_threadpool=shutdown_threadpool)
         self.removeLogHandler()
 
-    def schedule(self, function, dateTime, allowMisfire=False):
+    def schedule(self, function, dateTime):
         def callback():
             if function in self.__jobs:
                 del self.__jobs[function]
@@ -63,7 +63,7 @@ class Scheduler(apscheduler.scheduler.Scheduler):
         if dateTime <= dateandtime.Now() + timedelta.TimeDelta(milliseconds=500):
             callback()
         else:
-            self.__jobs[function] = job = self.add_date_job(callback, dateTime, misfire_grace_time=0 if allowMisfire else 1)
+            self.__jobs[function] = job = self.add_date_job(callback, dateTime, misfire_grace_time=0)
             return job
         
     def schedule_interval(self, function, days=0, minutes=0, seconds=0):
