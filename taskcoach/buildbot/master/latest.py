@@ -76,10 +76,13 @@ def main(path):
 
     if path != '.':
         for name in os.listdir(path):
-            if name.startswith('Release'):
+            if name.startswith('Release') or name.startswith('Feature'):
                 fname = os.path.join(path, name)
                 if os.path.isdir(fname):
-                    print '<h1>Bug fixes (from %s)</h1>' % name
+                    if name.startswith('Release'):
+                        print '<h1>Bug fixes (from %s)</h1>' % name
+                    else:
+                        print '<h1>Experimental features (from %s)</h1>' % name
                     listPath(fname)
 
     print '<a href="http://www.taskcoach.org/download.html>Back to Task Coach downloads</a>'
