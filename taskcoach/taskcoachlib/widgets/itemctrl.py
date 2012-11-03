@@ -394,7 +394,7 @@ class _CtrlWithSortableColumnsMixin(_BaseCtrlWithColumnsMixin):
         self.__currentSortImageIndex = -1
                 
     def onColumnClick(self, event):
-        event.Skip()
+        event.Skip(False)
         # Make sure the window this control is in has focus:
         try:
             window = event.GetEventObject().GetMainWindow()

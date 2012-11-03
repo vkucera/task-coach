@@ -124,7 +124,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
 
     def RefreshItems(self, *items):
         ''' Refresh specific items. '''
-        if len(items) <= 5:
+        if len(items) <= 7:
             for item in items:
                 self.RefreshItem(self.__parent.getIndexOfItem(item))
         else:

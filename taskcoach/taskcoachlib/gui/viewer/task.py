@@ -587,7 +587,8 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
                           task.Task.completionDateTimeChangedEventType(),
                           task.Task.attachmentsChangedEventType(),
                           task.Task.notesChangedEventType(),
-                          task.Task.trackingChangedEventType()):
+                          task.Task.trackingChangedEventType(),
+                          task.Task.percentageCompleteChangedEventType()):
             if eventType.startswith('pubsub'):
                 pub.subscribe(self.onAttributeChanged, eventType)
             else:

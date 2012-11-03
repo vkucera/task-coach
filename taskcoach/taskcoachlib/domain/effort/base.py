@@ -32,7 +32,7 @@ class BaseEffort(object):
     
     def parent(self):
         # Efforts don't have real parents since they are not composite. 
-        # However, we present the parent of an effort is its task for the 
+        # However, we pretend the parent of an effort is its task for the 
         # benefit of the search filter.
         return self._task 
 

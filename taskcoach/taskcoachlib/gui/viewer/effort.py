@@ -344,14 +344,6 @@ class EffortViewer(base.ListViewer,
                                   for anEffort in compositeEffort]
         return selection
     
-    def getIndexOfItem(self, item):
-        if self.aggregation == 'details':
-            return super(EffortViewer, self).getIndexOfItem(item)
-        for index, compositeEffort in enumerate(self.presentation()):
-            if item == compositeEffort or item in compositeEffort:
-                return index
-        return -1
-
     def isselected(self, item):
         ''' When this viewer is in aggregation mode, L{curselection}
             returns the actual underlying L{Effort} objects instead of
