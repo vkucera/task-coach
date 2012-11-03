@@ -47,7 +47,8 @@ class DateTimeCtrl(wx.Panel):
 
     def __OnChange(self, event):
         self.__value = event.GetValue()
-        self.__callback()
+        if self.__callback is not None:
+            self.__callback()
 
     def GetValue(self):
         return date.DateTime() if self.__value is None else date.DateTime.fromDateTime(self.__value)
