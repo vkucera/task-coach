@@ -80,3 +80,13 @@ License: BSD
 Source: http://pypi.python.org/pypi/PyPubSub
 Copied on: 2012-08-28
 Changes for Task Coach: pubsub.diff
+
+Component: smartdatetimectrl.py
+Name: SmartDateTimeCtrl
+Author: Jerome Laheurte <fraca7@free.fr>, Frank Niessink <frank@niessink.com>
+Version: 1.0
+Date: 2012-11-03
+License: GPL v3
+Source: https://bitbucket.org/fraca7/smartdatetimectrl
+Copied on 2012-11-03
+Changes for Task Coach: none

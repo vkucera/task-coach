@@ -35,6 +35,12 @@ class DateTime(datetime.datetime):
                     max.hour, max.minute, max.second, max.microsecond)
         return datetime.datetime.__new__(class_, *args, **kwargs)
 
+    @staticmethod
+    def fromDateTime(dateTime):
+        return DateTime(year=dateTime.year, month=dateTime.month, day=dateTime.day,
+                        hour=dateTime.hour, minute=dateTime.minute, second=dateTime.second,
+                        microsecond=dateTime.microsecond)
+
     def strftime(self, *args):
         return operating_system.decodeSystemString(super(DateTime, self).strftime(*args))
 
