@@ -19,6 +19,13 @@ import wx, math, time, re, datetime, calendar
 import wx.lib.platebtn as pbtn
 
 
+# We expect the user application to inject _ into __builtins__
+try:
+    _
+except NameError:
+    _ = lambda x: x
+
+
 class NullField(object):
     def __getattr__(self, name):
         return self
@@ -1196,7 +1203,7 @@ class _RelativeChoicePopup(_PopupWindow):
 
     def __Populate(self):
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
-        self.__btnEdit = wx.Button(self.__interior, wx.ID_ANY, u'Edit')
+        self.__btnEdit = wx.Button(self.__interior, wx.ID_ANY, _('Edit'))
         wx.EVT_BUTTON(self.__btnEdit, wx.ID_ANY, self.OnEdit)
         hsizer.Add(self.__btnEdit, 0, wx.ALL|wx.ALIGN_CENTRE, 2)
 
@@ -1204,10 +1211,10 @@ class _RelativeChoicePopup(_PopupWindow):
         hsizer.Add(self.__amountCtrl, 0, wx.ALL, 2)
 
         self.__unitCtrl = wx.Choice(self.__interior, wx.ID_ANY)
-        self.__unitCtrl.Append(u'Week(s)')
-        self.__unitCtrl.Append(u'Day(s)')
-        self.__unitCtrl.Append(u'Hour(s)')
-        self.__unitCtrl.Append(u'Minute(s)')
+        self.__unitCtrl.Append(_('Week(s)'))
+        self.__unitCtrl.Append(_('Day(s)'))
+        self.__unitCtrl.Append(_('Hour(s)'))
+        self.__unitCtrl.Append(_('Minute(s)'))
         self.__unitCtrl.SetSelection(0)
         hsizer.Add(self.__unitCtrl, 1, wx.ALL|wx.ALIGN_CENTRE, 2)
 
@@ -1242,26 +1249,26 @@ class _RelativeChoicePopup(_PopupWindow):
         days = delta.days
         if days // 7:
             if days // 7 == 1:
-                values.append(u'%d week' % (days // 7))
+                values.append(_('1 week'))
             else:
-                values.append(u'%d weeks' % (days // 7))
+                values.append(_('%d weeks') % (days // 7))
         if days % 7:
             if days % 7 == 1:
-                values.append(u'%d day' % (days % 7))
+                values.append(_('1 day'))
             else:
-                values.append(u'%d days' % (days % 7))
+                values.append(_('%d days') % (days % 7))
 
         minutes = delta.seconds // 60
         if minutes // 60:
             if minutes // 60 == 1:
-                values.append(u'%d hour' % (minutes // 60))
+                values.append(_('1 hour'))
             else:
-                values.append(u'%d hours' % (minutes // 60))
+                values.append(_('%d hours') % (minutes // 60))
         if minutes % 60:
             if minutes % 60 == 1:
-                values.append(u'%d minute' % (minutes % 60))
+                values.append(_('1 minute'))
             else:
-                values.append(u'%d minutes' % (minutes % 60))
+                values.append(_('%d minutes') % (minutes % 60))
         return u', '.join(values) + (self.__start + delta).strftime(' (%c)')
 
     def __Empty(self):
@@ -1308,7 +1315,7 @@ class _RelativeChoicePopup(_PopupWindow):
 
     def SetEditing(self, editing):
         self.__editing = editing
-        self.__btnEdit.SetLabel(u'Done' if self.__editing else u'Edit')
+        self.__btnEdit.SetLabel(_('Done') if self.__editing else _('Edit'))
         self.__amountCtrl.Show(self.__editing)
         self.__unitCtrl.Show(self.__editing)
         self.__btnAdd.Show(self.__editing)
