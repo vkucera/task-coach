@@ -164,7 +164,8 @@ class DateTimeCtrl(KillFocusAcceptsEditsMixin, hypertreelist.EditCtrl, Panel):
                                                    interval=interval)
         self._dateTimeCtrl.SetValue(value)
         if relative:
-            self._dateTimeCtrl.SetMode(self._dateTimeCtrl.CHOICEMODE_RELATIVE, start=start)
+            self._dateTimeCtrl.SetMode(self._dateTimeCtrl.CHOICEMODE_RELATIVE,
+                start=None if start == date.DateTime() else start)
         self.makeSizer(self._dateTimeCtrl)
                 
     def GetValue(self):

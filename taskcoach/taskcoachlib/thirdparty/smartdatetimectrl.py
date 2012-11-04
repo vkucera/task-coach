@@ -652,6 +652,8 @@ class TimeEntry(Entry):
 
     def EnableChoices(self, mode=CHOICEMODE_ABSOLUTE, start=None):
         self.__choiceStart = start
+        if start is None:
+            mode = CHOICEMODE_ABSOLUTE
         self.__choiceMode = mode
 
         if mode == CHOICEMODE_ABSOLUTE:
