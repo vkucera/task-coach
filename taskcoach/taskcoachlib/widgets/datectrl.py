@@ -39,7 +39,8 @@ class DateTimeCtrl(wx.Panel):
         self.__ctrl = sdtc.SmartDateTimeCtrl(self, enableNone=noneAllowed,
                                              dateFormat=render.date,
                                              timeFormat=lambda x: render.time(x, seconds=showSeconds),
-                                             startHour=starthour, endHour=endhour)
+                                             startHour=starthour, endHour=endhour,
+                                             minuteDelta=interval, secondDelta=interval)
         self.__ctrl.EnableChoices()
 
         # When the widget fires its event, its value has not changed yet (because it can be vetoed).

@@ -1595,6 +1595,8 @@ class SmartDateTimeCtrl(wx.Panel):
         timeFormat = kwargs.pop('timeFormat', lambda x: x.strftime('%H:%M:%S'))
         startHour = kwargs.pop('startHour', 0)
         endHour = kwargs.pop('endHour', 24)
+        minuteDelta = kwargs.pop('minuteDelta', 10)
+        secondDelta = kwargs.pop('secondDelta', 10)
 
         super(SmartDateTimeCtrl, self).__init__(*args, **kwargs)
 
@@ -1615,7 +1617,7 @@ class SmartDateTimeCtrl(wx.Panel):
         sizer.Add(self.__dateCtrl, 0, wx.ALL|wx.ALIGN_CENTRE, 3)
 
         self.__timeCtrl = TimeEntry(self, hour=dateTime.hour, minute=dateTime.minute, second=dateTime.second, format=timeFormat,
-                                    startHour=startHour, endHour=endHour)
+                                    startHour=startHour, endHour=endHour, minuteDelta=minuteDelta, secondDelta=secondDelta)
         sizer.Add(self.__timeCtrl, 0, wx.ALL|wx.ALIGN_CENTRE, 3)
 
         self.SetSizer(sizer)
