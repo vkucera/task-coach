@@ -43,17 +43,17 @@ class EffortAggregator(patterns.SetDecorator,
         super(EffortAggregator, self).__init__(*args, **kwargs)
         pub.subscribe(self.onCompositeEmpty, 
                       composite.CompositeEffort.compositeEmptyEventType())
-        pub.subscribe(self.onEffortAddedToTask, 
+        pub.subscribe(self.onTaskEffortChanged, 
                       task.Task.effortsChangedEventType())
         patterns.Publisher().registerObserver(self.onChildAddedToTask,
             eventType=task.Task.addChildEventType())
+        patterns.Publisher().registerObserver(self.onChildRemovedFromTask,
+            eventType=task.Task.removeChildEventType())
         patterns.Publisher().registerObserver(self.onTaskRemoved, 
                                               self.observable().removeItemEventType(),
                                               eventSource=self.observable())
         pub.subscribe(self.onEffortStartChanged, 
                       effort.Effort.startChangedEventType())
-        pub.subscribe(self.onTimeSpentChanged,
-                      task.Task.timeSpentChangedEventType())
         pub.subscribe(self.onRevenueChanged,
                       task.Task.hourlyFeeChangedEventType())
     
@@ -114,13 +114,22 @@ class EffortAggregator(patterns.SetDecorator,
             affected_composite._invalidateCache()
             affected_composite.notifyObserversOfDurationOrEmpty()
             
-    def onEffortAddedToTask(self, newValue, oldValue, sender):
+    def onTaskEffortChanged(self, newValue, oldValue, sender):
         if sender not in self.observable():
             return
         new_composites = []
         efforts_added = [effort for effort in newValue if effort not in oldValue]
+        efforts_removed = [effort for effort in oldValue if effort not in newValue]
         new_composites.extend(self.__create_composites(sender, efforts_added))
         self.__extend_self_with_composites(new_composites)
+        for affected_composite in self.__get_composites_for_efforts(efforts_added + efforts_removed):
+            is_tracked = affected_composite.isBeingTracked()
+            was_tracked = affected_composite in self.__trackedComposites
+            if is_tracked and not was_tracked:
+                self.__trackedComposites.add(affected_composite)
+            elif not is_tracked and was_tracked:
+                self.__trackedComposites.remove(affected_composite)
+            affected_composite.onTimeSpentChanged(newValue, sender)
         
     def onChildAddedToTask(self, event):
         new_composites = []
@@ -130,6 +139,12 @@ class EffortAggregator(patterns.SetDecorator,
                 new_composites.extend(self.__create_composites(task,
                     child.efforts(recursive=True)))
         self.__extend_self_with_composites(new_composites)
+        
+    def onChildRemovedFromTask(self, event):
+        affected_composites = self.__get_composites_for_tasks(event.sources() | set(event.values()))
+        for affected_composite in affected_composites:
+            affected_composite._invalidateCache()
+            affected_composite.notifyObserversOfDurationOrEmpty()
 
     def onCompositeEmpty(self, sender):
         # pylint: disable=W0621
@@ -149,19 +164,13 @@ class EffortAggregator(patterns.SetDecorator,
         if (task in self.observable()) and (key not in self.__composites):
             new_composites.extend(self.__create_composites(task, [sender]))
         self.__extend_self_with_composites(new_composites)
-            
-    def onTimeSpentChanged(self, newValue, sender):
-        for affected_composite in self.__get_composites_for_tasks([sender]):
+        for affected_composite in self.__get_composites_for_efforts([sender]):
             is_tracked = affected_composite.isBeingTracked()
             was_tracked = affected_composite in self.__trackedComposites
             if is_tracked and not was_tracked:
                 self.__trackedComposites.add(affected_composite)
-                pub.sendMessage(effort.Effort.trackingChangedEventType(),
-                                newValue=True, sender=affected_composite)
             elif not is_tracked and was_tracked:
                 self.__trackedComposites.remove(affected_composite)
-                pub.sendMessage(effort.Effort.trackingChangedEventType(),
-                                newValue=False, sender=affected_composite)
             affected_composite.onTimeSpentChanged(newValue, sender)
             
     def onRevenueChanged(self, newValue, sender):
@@ -174,6 +183,11 @@ class EffortAggregator(patterns.SetDecorator,
                 if each_composite.task() in tasks or \
                 (each_composite.task().__class__.__name__ == 'Total' and \
                  tasks & each_composite.tasks())]
+        
+    def __get_composites_for_efforts(self, efforts):
+        efforts = set(efforts)
+        return [each_composite for each_composite in self \
+                if set(each_composite._getEfforts()) & efforts]
         
     def __create_composites(self, task, efforts):  # pylint: disable=W0621
         new_composites = []
