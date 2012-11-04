@@ -95,7 +95,16 @@ def budget(aBudget):
 
 dateFormat = '%x'
 # datemodule.Date is not a class
-dateFunc = lambda dt=None: operating_system.decodeSystemString(datetime.datetime.strftime(dt, dateFormat))
+def dateFunc(dt=None, humanReadable=False):
+    if humanReadable:
+        if dt.date() == datetime.datetime.now().date():
+            return _('Today')
+        elif dt.date() == (datetime.datetime.now() - datetime.timedelta(days=1)).date():
+            return _('Yesterday')
+        elif dt.date() == (datetime.datetime.now() + datetime.timedelta(days=1)).date():
+            return _('Tomorrow')
+    return operating_system.decodeSystemString(datetime.datetime.strftime(dt, dateFormat))
+
 
 if operating_system.isWindows():
     import pywintypes, win32api
@@ -130,40 +139,41 @@ else:
                 fmt = timeFormat
         return datemodule.DateTime.strftime(dt, fmt)
 
-dateTimeFunc = lambda dt=None: u'%s %s' % (dateFunc(dt), timeFunc(dt))
+dateTimeFunc = lambda dt=None, humanReadable=False: u'%s %s' % (dateFunc(dt, humanReadable=humanReadable), timeFunc(dt))
 
 
-def date(aDate): 
+def date(aDate, humanReadable=False):
     ''' Render a date (of type date.Date) '''
     if str(aDate) == '':
         return ''
     year = aDate.year
     if year >= 1900:
-        return dateFunc(aDate)
+        return dateFunc(aDate, humanReadable=humanReadable)
     else:
-        result = date(datemodule.Date(year + 1900, aDate.month, aDate.day))
+        result = date(datemodule.Date(year + 1900, aDate.month, aDate.day), humanReadable=humanReadable)
         return re.sub(str(year + 1900), str(year), result)
 
 
-def dateTime(aDateTime):
+def dateTime(aDateTime, humanReadable=False):
     if not aDateTime or aDateTime == datemodule.DateTime():
         return ''
     timeIsMidnight = (aDateTime.hour, aDateTime.minute) in ((0, 0), (23, 59))
     year = aDateTime.year
     if year >= 1900:
-        return dateFunc(aDateTime) if timeIsMidnight else dateTimeFunc(aDateTime)
+        return dateFunc(aDateTime, humanReadable=humanReadable) if timeIsMidnight else \
+            dateTimeFunc(aDateTime, humanReadable=humanReadable)
     else:
-        result = dateTime(aDateTime.replace(year=year + 1900))
+        result = dateTime(aDateTime.replace(year=year + 1900), humanReadable=humanReadable)
         return re.sub(str(year + 1900), str(year), result)
 
    
-def dateTimePeriod(start, stop):
+def dateTimePeriod(start, stop, humanReadable=False):
     if stop is None:
-        return '%s - %s' % (dateTime(start), _('now'))
+        return '%s - %s' % (dateTime(start, humanReadable=humanReadable), _('now'))
     elif start.date() == stop.date():
-        return '%s %s - %s' % (date(start.date()), time(start), time(stop))
+        return '%s %s - %s' % (date(start.date(), humanReadable=humanReadable), time(start), time(stop))
     else:
-        return '%s - %s' % (dateTime(start), dateTime(stop))
+        return '%s - %s' % (dateTime(start, humanReadable=humanReadable), dateTime(stop, humanReadable=humanReadable))
     
     
 def time(dateTime, seconds=False, minutes=True):

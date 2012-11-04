@@ -32,6 +32,8 @@ change the sort order didn't work.'''),
         ],
     featuresAdded=[
         Feature('''New, hopefully more intuitive date/time control.'''),
+        Feature('''Display dates in human-readable form in viewers (today,
+yesterday, tomorrow).'''),
         ],
     ),
 
