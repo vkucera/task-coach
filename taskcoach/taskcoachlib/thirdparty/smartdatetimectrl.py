@@ -1625,7 +1625,7 @@ class SmartDateTimeCtrl(wx.Panel):
 
         EVT_DATE_CHANGE(self, self.OnDateChange)
         EVT_TIME_CHANGE(self, self.OnTimeChange)
-        EVT_TIME_CHOICES_CHANGE(self, self.OnChoicesChange)
+        EVT_TIME_CHOICES_CHANGE(self.__timeCtrl, self.__OnChoicesChange)
         EVT_TIME_NEXT_DAY(self, self.OnNextDay)
         EVT_TIME_PREV_DAY(self, self.OnPrevDay)
 
@@ -1719,7 +1719,7 @@ class SmartDateTimeCtrl(wx.Panel):
         else:
             self.SetDateTime(evt.GetValue())
 
-    def OnChoicesChange(self, event):
+    def __OnChoicesChange(self, event):
         self.ProcessEvent(TimeChoicesChangedEvent(self, event.GetValue()))
 
 #}

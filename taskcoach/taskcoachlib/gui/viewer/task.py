@@ -28,11 +28,24 @@ from taskcoachlib.gui import uicommand, menu, dialog
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty.pubsub import pub
 from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_TODAY, wxFancyDrawer
+from taskcoachlib.thirdparty import smartdatetimectrl as sdtc
 from taskcoachlib.widgets import CalendarConfigDialog
 import base
 import inplace_editor
 import mixin
 import refresher 
+
+
+class DueDateTimeCtrl(inplace_editor.DateTimeCtrl):
+    def __init__(self, parent, wxId, item, column, owner, value, **kwargs):
+        kwargs['relative'] = True
+        kwargs['startDateTime'] = item.GetData().plannedStartDateTime()
+        super(DueDateTimeCtrl, self).__init__(parent, wxId, item, column, owner, value, **kwargs)
+        sdtc.EVT_TIME_CHOICES_CHANGE(self._dateTimeCtrl, self.OnChoicesChange)
+        self._dateTimeCtrl.LoadChoices(item.GetData().settings.get('feature', 'sdtcspans'))
+
+    def OnChoicesChange(self, event):
+        self.item().GetData().settings.set('feature', 'sdtcspans', event.GetValue())
 
 
 class TaskViewerStatusMessages(object):
@@ -852,7 +865,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
         for name, columnHeader, editCtrl, editCallback, eventTypes in [
             ('plannedStartDateTime', _('Planned start date'), 
              inplace_editor.DateTimeCtrl, self.onEditPlannedStartDateTime, []),
-            ('dueDateTime', _('Due date'), inplace_editor.DateTimeCtrl, 
+            ('dueDateTime', _('Due date'), DueDateTimeCtrl, 
              self.onEditDueDateTime, [task.Task.expansionChangedEventType()]),
             ('actualStartDateTime', _('Actual start date'), 
              inplace_editor.DateTimeCtrl, self.onEditActualStartDateTime, 

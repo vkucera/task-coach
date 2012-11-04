@@ -26,6 +26,10 @@ import wx
 
 
 class DateTimeCtrl(wx.Panel):
+    CHOICEMODE_NONE     = sdtc.CHOICEMODE_NONE
+    CHOICEMODE_ABSOLUTE = sdtc.CHOICEMODE_ABSOLUTE
+    CHOICEMODE_RELATIVE = sdtc.CHOICEMODE_RELATIVE
+
     def __init__(self, parent, callback=None, noneAllowed=True,
                  starthour=8, endhour=18, interval=15, showSeconds=False,
                  *args, **kwargs):
@@ -36,6 +40,7 @@ class DateTimeCtrl(wx.Panel):
                                              dateFormat=render.date,
                                              timeFormat=lambda x: render.time(x, seconds=showSeconds),
                                              startHour=starthour, endHour=endhour)
+        self.__ctrl.EnableChoices()
 
         # When the widget fires its event, its value has not changed yet (because it can be vetoed).
         # We need to store the new value so that GetValue() returns the right thing when called from event processing.
@@ -51,6 +56,12 @@ class DateTimeCtrl(wx.Panel):
         self.__value = event.GetValue()
         if self.__callback is not None:
             self.__callback()
+
+    def SetMode(self, mode, start=None):
+        self.__ctrl.EnableChoices(mode, start=start)
+
+    def LoadChoices(self, choices):
+        self.__ctrl.LoadChoices(choices)
 
     def GetValue(self):
         return date.DateTime() if self.__value is None else date.DateTime.fromDateTime(self.__value)
