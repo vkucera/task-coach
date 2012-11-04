@@ -28,7 +28,7 @@ class AttributeSync(object):
         value of the control is updated. '''
         
     def __init__(self, attributeGetterName, entry, currentValue, items, 
-                 commandClass, editedEventType, changedEventType, **kwargs):
+                 commandClass, editedEventType, changedEventType, callback=None, **kwargs):
         self._getter = attributeGetterName
         self._entry = entry
         self._currentValue = currentValue
@@ -36,6 +36,7 @@ class AttributeSync(object):
         self._commandClass = commandClass
         self.__commandKwArgs = kwargs
         self.__changedEventType = changedEventType
+        self.__callback = callback
         entry.Bind(editedEventType, self.onAttributeEdited)
         if len(items) == 1:
             self.__start_observing_attribute(changedEventType, items[0])
@@ -45,6 +46,8 @@ class AttributeSync(object):
         new_value = self.getValue()
         if new_value != self._currentValue:
             self._currentValue = new_value
+            if self.__callback is not None:
+                self.__callback(new_value)
             commandKwArgs = self.commandKwArgs(new_value)
             self._commandClass(None, self._items, **commandKwArgs).do()  # pylint: disable=W0142
             
@@ -54,6 +57,8 @@ class AttributeSync(object):
             if new_value != self._currentValue:
                 self._currentValue = new_value
                 self.setValue(new_value)
+                if self.__callback is not None:
+                    self.__callback(new_value)
         else:
             self.__stop_observing_attribute()
             
@@ -63,6 +68,8 @@ class AttributeSync(object):
                 if newValue != self._currentValue:
                     self._currentValue = newValue
                     self.setValue(newValue)
+                    if self.__callback is not None:
+                        self.__callback(newValue)
             else:
                 self.__stop_observing_attribute()
             

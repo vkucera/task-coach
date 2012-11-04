@@ -27,6 +27,7 @@ from taskcoachlib.gui import viewer, uicommand, windowdimensionstracker
 from taskcoachlib.gui.dialog import entry, attributesync
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty.pubsub import pub
+from taskcoachlib.thirdparty import smartdatetimectrl as sdtc
 import os.path
 import wx
 
@@ -286,7 +287,14 @@ class DatesPage(Page):
         self._duration = None
         self.__items_are_new = items_are_new
         super(DatesPage, self).__init__(theTask, parent, *args, **kwargs)
-        
+
+    def __onTimeChoicesChange(self, event):
+        self.__settings.set('feature', 'sdtcspans', event.GetValue())
+
+    def __onPlannedStartDateTimeChanged(self, value):
+        self._dueDateTimeEntry.SetMode(self._dueDateTimeEntry.CHOICEMODE_RELATIVE,
+                                       None if value == date.DateTime() else value)
+
     def addEntries(self):
         self.addDateEntries()
         self.addLine()
@@ -300,6 +308,12 @@ class DatesPage(Page):
         self.addLine()
         self.addDateEntry(_('Actual start date'), 'actualStartDateTime')
         self.addDateEntry(_('Completion date'), 'completionDateTime')
+
+        start = self._plannedStartDateTimeEntry.GetValue()
+        self._dueDateTimeEntry.SetMode(self._dueDateTimeEntry.CHOICEMODE_RELATIVE,
+                                       start=None if start == date.DateTime() else start)
+        self._dueDateTimeEntry.LoadChoices(self.__settings.get('feature', 'sdtcspans'))
+        sdtc.EVT_TIME_CHOICES_CHANGE(self._dueDateTimeEntry, self.__onTimeChoicesChange)
 
     def addDateEntry(self, label, taskMethodName):
         TaskMethodName = taskMethodName[0].capitalize() + taskMethodName[1:]
@@ -316,10 +330,11 @@ class DatesPage(Page):
         keep_delta = self.__keep_delta(taskMethodName)
         datetimeSync = attributesync.AttributeSync(taskMethodName, 
             dateTimeEntry, dateTime, self.items, commandClass, 
-            entry.EVT_DATETIMEENTRY, eventType, keep_delta=keep_delta)
+            entry.EVT_DATETIMEENTRY, eventType, keep_delta=keep_delta,
+            callback=self.__onPlannedStartDateTimeChanged if taskMethodName == 'plannedStartDateTime' else None)
         setattr(self, '_%sSync' % taskMethodName, datetimeSync) 
         self.addEntry(label, dateTimeEntry)
-            
+
     def __keep_delta(self, taskMethodName):
         datesTied = self.__settings.get('view', 'datestied')
         return (datesTied == 'startdue' and taskMethodName == 'plannedStartDateTime') or \
