@@ -45,7 +45,7 @@ class DueDateTimeCtrl(inplace_editor.DateTimeCtrl):
         self._dateTimeCtrl.LoadChoices(item.GetData().settings.get('feature', 'sdtcspans'))
 
     def OnChoicesChange(self, event):
-        self.item().GetData().settings.set('feature', 'sdtcspans', event.GetValue())
+        self.item().GetData().settings.settext('feature', 'sdtcspans', event.GetValue())
 
 
 class TaskViewerStatusMessages(object):

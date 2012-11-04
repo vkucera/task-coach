@@ -287,9 +287,13 @@ class DatesPage(Page):
         self._duration = None
         self.__items_are_new = items_are_new
         super(DatesPage, self).__init__(theTask, parent, *args, **kwargs)
+        pub.subscribe(self.__onChoicesConfigChanged, 'settings.feature.sdtcspans')
+
+    def __onChoicesConfigChanged(self, value=''):
+        self._dueDateTimeEntry.LoadChoices(value)
 
     def __onTimeChoicesChange(self, event):
-        self.__settings.set('feature', 'sdtcspans', event.GetValue())
+        self.__settings.settext('feature', 'sdtcspans', event.GetValue())
 
     def __onPlannedStartDateTimeChanged(self, value):
         self._dueDateTimeEntry.SetMode(self._dueDateTimeEntry.CHOICEMODE_RELATIVE,
@@ -999,7 +1003,11 @@ class EffortEditBook(Page):
         self._settings = settings
         self._taskFile = taskFile
         super(EffortEditBook, self).__init__(efforts, parent, *args, **kwargs)
-        
+        pub.subscribe(self.__onChoicesConfigChanged, 'settings.feature.sdtcspans')
+
+    def __onChoicesConfigChanged(self, value=''):
+        self._stopDateTimeEntry.LoadChoices(value)
+
     def getPage(self, pageName):  # pylint: disable=W0613
         return None  # An EffortEditBook is not really a notebook...
         
@@ -1047,7 +1055,7 @@ class EffortEditBook(Page):
                                         start=value)
 
     def __onChoicesChanged(self, event):
-        self._settings.set('feature', 'sdtcspans', event.GetValue())
+        self._settings.settext('feature', 'sdtcspans', event.GetValue())
 
     def __add_start_and_stop_entries(self):
         # pylint: disable=W0201,W0142
