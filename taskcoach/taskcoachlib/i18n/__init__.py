@@ -138,6 +138,5 @@ def translate(string):
 _ = translate # This prevents a warning from pygettext.py
 
 # Inject into builtins for 3rdparty packages
-print 'INST'
 import __builtin__
 __builtin__.__dict__['_'] = _
