@@ -1042,6 +1042,13 @@ class EffortEditBook(Page):
         panel.SetSizerAndFit(panel_sizer)
         self.addEntry(_('Task'), panel, flags=[None, wx.ALL | wx.EXPAND])
 
+    def __onStartDateTimeChanged(self, value):
+        self._stopDateTimeEntry.SetMode(self._stopDateTimeEntry.CHOICEMODE_RELATIVE,
+                                        start=value)
+
+    def __onChoicesChanged(self, event):
+        self._settings.set('feature', 'sdtcspans', event.GetValue())
+
     def __add_start_and_stop_entries(self):
         # pylint: disable=W0201,W0142
         date_time_entry_kw_args = dict(showSeconds=True)
@@ -1067,13 +1074,17 @@ class EffortEditBook(Page):
         self._stopDateTimeSync = attributesync.AttributeSync('getStop',
             self._stopDateTimeEntry, current_stop_date_time, self.items,
             command.EditEffortStopDateTimeCommand, entry.EVT_DATETIMEENTRY,
-            self.items[0].stopChangedEventType())
+            self.items[0].stopChangedEventType(),
+            callback=self.__onStartDateTimeChanged)
         self._stopDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, 
                                      self.onStopDateTimeChanged)
         stop_now_button = self.__create_stop_now_button()
         self._invalidPeriodMessage = self.__create_invalid_period_message()
         self.addEntry(_('Stop'), self._stopDateTimeEntry, 
                       stop_now_button, flags=flags)
+        self.__onStartDateTimeChanged(current_start_date_time)
+        self._stopDateTimeEntry.LoadChoices(self._settings.get('feature', 'sdtcspans'))
+        sdtc.EVT_TIME_CHOICES_CHANGE(self._stopDateTimeEntry, self.__onChoicesChanged)
         
         self.addEntry('', self._invalidPeriodMessage)
             
