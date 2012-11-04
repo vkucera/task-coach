@@ -77,6 +77,9 @@ class Page(patterns.Observer, widgets.BookPage):
         
     def close(self):
         self.removeInstance()
+        for entry in self.entries().values():
+            if isinstance(entry, widgets.DateTimeCtrl):
+                entry.Cleanup()
         
                         
 class SubjectPage(Page):

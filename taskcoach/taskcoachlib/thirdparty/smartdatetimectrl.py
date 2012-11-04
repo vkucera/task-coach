@@ -251,6 +251,9 @@ class Entry(wx.Panel):
         wx.EVT_KILL_FOCUS(self, self.OnKillFocus)
         wx.EVT_SET_FOCUS(self, self.OnSetFocus)
 
+    def Cleanup(self):
+        self.DismissPopup()
+
     def ForceFocus(self, force=True):
         self.__forceFocus = force
         self.Refresh()
@@ -650,6 +653,11 @@ class TimeEntry(Entry):
         kwargs['format'] = fmt
         super(TimeEntry, self).__init__(*args, **kwargs)
 
+    def DismissPopup(self):
+        super(TimeEntry, self).DismissPopup()
+        if self.__choicePopup is not None:
+            self.__choicePopup.Dismiss()
+
     def EnableChoices(self, mode=CHOICEMODE_ABSOLUTE, start=None):
         self.__choiceStart = start
         if start is None:
@@ -908,9 +916,13 @@ class DateEntry(Entry):
         if '__WXMAC__' in wx.PlatformInfo:
             wx.EVT_KILL_FOCUS(self, self.__OnKillFocus)
 
-    def __OnKillFocus(self, event):
+    def DismissPopup(self):
+        super(DateEntry, self).DismissPopup()
         if self.__calendar is not None:
             self.__calendar.Dismiss()
+
+    def __OnKillFocus(self, event):
+        self.DismissPopup()
         event.Skip()
 
     def OnKeyDown(self, event):
@@ -1632,6 +1644,10 @@ class SmartDateTimeCtrl(wx.Panel):
         EVT_TIME_CHOICES_CHANGE(self.__timeCtrl, self.__OnChoicesChange)
         EVT_TIME_NEXT_DAY(self, self.OnNextDay)
         EVT_TIME_PREV_DAY(self, self.OnPrevDay)
+
+    def Cleanup(self):
+        self.__dateCtrl.Cleanup()
+        self.__timeCtrl.Cleanup()
 
     def GetLabelWidth(self):
         if self.__label is not None:

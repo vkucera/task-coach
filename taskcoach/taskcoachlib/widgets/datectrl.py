@@ -79,3 +79,6 @@ class DateTimeCtrl(wx.Panel):
 
     def setCallback(self, callback):
         self.__callback = callback
+
+    def Cleanup(self):
+        self.__ctrl.Cleanup()
