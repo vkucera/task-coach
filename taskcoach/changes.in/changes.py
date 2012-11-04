@@ -23,12 +23,16 @@ from changetypes import *
 releases = [
             
 Release('1.3.21', 'October ??, 2012',
-    summary='''This is a bugfix release.''',
+    summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
         Bugv2('''Changing the percentage complete would not cause the
 calendar viewer to refresh.'''),
         Bugv2('''On Mac OS X, clicking the period column in effort viewers to 
 change the sort order didn't work.'''),
+        ],
+    featuresAdded=[
+        Feature('''Display dates in human-readable form in viewers (today,
+yesterday, tomorrow).'''),
         ],
     ),
 
