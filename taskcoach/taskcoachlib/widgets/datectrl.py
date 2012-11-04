@@ -22,7 +22,20 @@ from taskcoachlib.thirdparty import smartdatetimectrl as sdtc
 from taskcoachlib.domain import date
 from taskcoachlib import render
 
-import wx
+import wx, datetime
+
+
+class _SmartDateTimeCtrl(sdtc.SmartDateTimeCtrl):
+    def HandleKey(self, event):
+        if not super(_SmartDateTimeCtrl, self).HandleKey(event) and self.GetDateTime() is not None:
+            if event.GetUnicodeKey() == ord('s'):
+                self.SetDateTime(datetime.datetime.combine(self.GetDateTime().date(), datetime.time(0, 0, 0, 0)), notify=True)
+                return True
+            elif event.GetUnicodeKey() == ord('e'):
+                self.SetDateTime(datetime.datetime.combine(self.GetDateTime().date(), datetime.time(23, 59, 0, 0)), notify=True)
+                return True
+            return False
+        return True
 
 
 class DateTimeCtrl(wx.Panel):
@@ -36,11 +49,11 @@ class DateTimeCtrl(wx.Panel):
         super(DateTimeCtrl, self).__init__(parent, *args, **kwargs)
 
         self.__callback = callback
-        self.__ctrl = sdtc.SmartDateTimeCtrl(self, enableNone=noneAllowed,
-                                             dateFormat=render.date,
-                                             timeFormat=lambda x: render.time(x, seconds=showSeconds),
-                                             startHour=starthour, endHour=endhour,
-                                             minuteDelta=interval, secondDelta=interval)
+        self.__ctrl = _SmartDateTimeCtrl(self, enableNone=noneAllowed,
+                                         dateFormat=render.date,
+                                         timeFormat=lambda x: render.time(x, seconds=showSeconds),
+                                         startHour=starthour, endHour=endhour,
+                                         minuteDelta=interval, secondDelta=interval)
         self.__ctrl.EnableChoices()
 
         # When the widget fires its event, its value has not changed yet (because it can be vetoed).

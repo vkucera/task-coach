@@ -388,11 +388,10 @@ class Entry(wx.Panel):
             self.PopupChoices(self.__focus)
             self.ForceFocus()
         else:
-            if self.__focus is not None:
-                if self.__focus.HandleKey(event):
-                    self.StartTimer()
-                    return
-            event.Skip()
+            if self.__focus is not None and self.__focus.HandleKey(event):
+                self.StartTimer()
+                return
+            self.GetParent().HandleKey(event)
 
     def OnLeftUp(self, event):
         for widget, x, y, w, h in self.__widgets:
@@ -1644,6 +1643,19 @@ class SmartDateTimeCtrl(wx.Panel):
         EVT_TIME_CHOICES_CHANGE(self.__timeCtrl, self.__OnChoicesChange)
         EVT_TIME_NEXT_DAY(self, self.OnNextDay)
         EVT_TIME_PREV_DAY(self, self.OnPrevDay)
+
+    def HandleKey(self, event):
+        if self.GetDateTime() is not None:
+            if event.GetUnicodeKey() == ord('t'):
+                # Today, same time
+                self.SetDateTime(datetime.datetime.combine(datetime.datetime.now().date(), self.GetDateTime().time()),
+                                 notify=True)
+                return True
+            elif event.GetUnicodeKey() == ord('n'):
+                # Now
+                self.SetDateTime(datetime.datetime.now())
+                return True
+        return False
 
     def Cleanup(self):
         self.__dateCtrl.Cleanup()
