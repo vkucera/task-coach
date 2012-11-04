@@ -59,6 +59,9 @@ class RowBuilder(object):
         for column in self.__columns:
             if self.shouldSplitDateAndTime(column):
                 row.extend(self.splitDateAndTime(column, item))
+            elif column.name() in self.dateAndTimeColumnHeaders:
+                # don't render date/times in human readable form because CSV is typically re-parsed
+                row.append(render.dateTime(getattr(item, column.name())()))
             else:
                 row.append(column.render(item))
         row[0] = self.indent(item) + row[0]

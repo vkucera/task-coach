@@ -412,7 +412,7 @@ class TimelineViewer(BaseTaskTreeViewer):
         elif isinstance(item, task.Task):
             result = super(TimelineViewer, self).getItemTooltipData(item)
         else:
-            result = [(None, [render.dateTimePeriod(item.getStart(), item.getStop())])]
+            result = [(None, [render.dateTimePeriod(item.getStart(), item.getStop(), humanReadable=True)])]
             if item.description(): 
                 result.append((None, [line.rstrip('\n') for line in item.description().split('\n')]))     
         return result
@@ -1057,19 +1057,20 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
         return task.subject(recursive=not self.isTreeViewer())
     
     def renderPlannedStartDateTime(self, task):
-        return self.renderedValue(task, task.plannedStartDateTime, 
-                                  render.dateTime)
+        return self.renderedValue(task, task.plannedStartDateTime,
+                                  lambda x: render.dateTime(x, humanReadable=True))
     
     def renderDueDateTime(self, task):
-        return self.renderedValue(task, task.dueDateTime, render.dateTime)
+        return self.renderedValue(task, task.dueDateTime,
+                                  lambda x: render.dateTime(x, humanReadable=True))
 
     def renderActualStartDateTime(self, task):
         return self.renderedValue(task, task.actualStartDateTime, 
-                                  render.dateTime)
+                                  lambda x: render.dateTime(x, humanReadable=True))
 
     def renderCompletionDateTime(self, task):
         return self.renderedValue(task, task.completionDateTime, 
-                                  render.dateTime)
+                                  lambda x: render.dateTime(x, humanReadable=True))
 
     def renderRecurrence(self, task):
         return self.renderedValue(task, task.recurrence, render.recurrence)
@@ -1111,7 +1112,8 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
         return self.renderedValue(task, task.priority, render.priority) + ' '
     
     def renderReminder(self, task):
-        return self.renderedValue(task, task.reminder, render.dateTime)
+        return self.renderedValue(task, task.reminder,
+                                  lambda x: render.dateTime(x, humanReadable=True))
     
     def renderedValue(self, item, getValue, renderValue, *extraRenderArgs):
         value = getValue(recursive=False)
