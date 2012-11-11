@@ -29,6 +29,7 @@ Release('1.3.21', 'October ??, 2012',
 calendar viewer to refresh.'''),
         Bugv2('''On Mac OS X, clicking the period column in effort viewers to 
 change the sort order didn't work.'''),
+        Bugv2('''Adapt font size to available space in calendar view.''', '1039'),
         ],
     featuresAdded=[
         Feature('''Display dates in human-readable form in viewers (today,
