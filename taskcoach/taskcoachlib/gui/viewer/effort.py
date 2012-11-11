@@ -388,18 +388,19 @@ class EffortViewer(base.ListViewer,
     # Rendering
     
     periodRenderers = dict( \
-        details=lambda anEffort: render.dateTimePeriod(anEffort.getStart(), 
-                                                       anEffort.getStop()),
-        day=lambda anEffort: render.date(anEffort.getStart().date()),
-        week=lambda anEffort: render.weekNumber(anEffort.getStart()),
-        month=lambda anEffort: render.month(anEffort.getStart()))
+        details=lambda anEffort, humanReadable=True: render.dateTimePeriod(anEffort.getStart(), 
+                                                       anEffort.getStop(), humanReadable=humanReadable),
+        day=lambda anEffort, humanReadable=True: render.date(anEffort.getStart().date(),
+                                                             humanReadable=humanReadable),
+        week=lambda anEffort, humanReadable=True: render.weekNumber(anEffort.getStart()),
+        month=lambda anEffort, humanReadable=True: render.month(anEffort.getStart()))
 
-    def __renderPeriod(self, anEffort):
+    def __renderPeriod(self, anEffort, humanReadable=True):
         ''' Return the period the effort belongs to. This depends on the
             current aggregation. If this period is the same as the previous
             period, an empty string is returned. '''
         return '' if self.__hasRepeatedPeriod(anEffort) else \
-            self.periodRenderers[self.aggregation](anEffort)
+            self.periodRenderers[self.aggregation](anEffort, humanReadable=humanReadable)
                     
     def __hasRepeatedPeriod(self, anEffort):
         ''' Return whether the effort has the same period as the previous 
