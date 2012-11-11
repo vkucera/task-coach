@@ -38,15 +38,15 @@ class AutoColumnWidthMixin(object):
                  OnResize method is called.
     """
     def __init__(self, *args, **kwargs):
-        self._isAutoResizing = False
+        self.__is_auto_resizing = False
         self.ResizeColumn = kwargs.pop('resizeableColumn', -1)
         self.ResizeColumnMinWidth = kwargs.pop('resizeableColumnMinWidth', 50)
         super(AutoColumnWidthMixin, self).__init__(*args, **kwargs)
         
     def ToggleAutoResizing(self, on):
-        if on == self._isAutoResizing:
+        if on == self.__is_auto_resizing:
             return
-        self._isAutoResizing = on
+        self.__is_auto_resizing = on
         if on:
             self.Bind(wx.EVT_SIZE, self.OnResize)
             self.Bind(wx.EVT_LIST_COL_BEGIN_DRAG, self.OnBeginColumnDrag)
@@ -58,7 +58,7 @@ class AutoColumnWidthMixin(object):
             self.Unbind(wx.EVT_LIST_COL_END_DRAG)
 
     def IsAutoResizing(self):
-        return self._isAutoResizing
+        return self.__is_auto_resizing
             
     def OnBeginColumnDrag(self, event):
         # pylint: disable=W0201
@@ -66,14 +66,14 @@ class AutoColumnWidthMixin(object):
             self.__oldResizeColumnWidth = self.GetColumnWidth(self.ResizeColumn)
         # Temporarily unbind the EVT_SIZE to prevent resizing during dragging
         self.Unbind(wx.EVT_SIZE)
-	if operating_system.isWindows(): 
+        if operating_system.isWindows(): 
             event.Skip()
         
     def OnEndColumnDrag(self, event):
         if event.Column == self.ResizeColumn and self.GetColumnCount() > 1:
-            extraWidth = self.__oldResizeColumnWidth - \
-                             self.GetColumnWidth(self.ResizeColumn)
-            self.DistributeWidthAcrossColumns(extraWidth)
+            extra_width = self.__oldResizeColumnWidth - \
+                              self.GetColumnWidth(self.ResizeColumn)
+            self.DistributeWidthAcrossColumns(extra_width)
         self.Bind(wx.EVT_SIZE, self.OnResize)
         wx.CallAfter(self.DoResize)
         event.Skip()
@@ -95,52 +95,52 @@ class AutoColumnWidthMixin(object):
         if self.GetColumnCount() <= self.ResizeColumn:
             return # Nothing to resize.
 
-        unusedWidth = max(self.AvailableWidth - self.NecessaryWidth, 0)
-        resizeColumnWidth = self.ResizeColumnMinWidth + unusedWidth
-        self.SetColumnWidth(self.ResizeColumn, resizeColumnWidth)
+        unused_width = max(self.AvailableWidth - self.NecessaryWidth, 0)
+        resize_column_width = self.ResizeColumnMinWidth + unused_width
+        self.SetColumnWidth(self.ResizeColumn, resize_column_width)
         
-    def DistributeWidthAcrossColumns(self, extraWidth):
+    def DistributeWidthAcrossColumns(self, extra_width):
         # When the user resizes the ResizeColumn distribute the extra available
         # space across the other columns, or get the extra needed space from
         # the other columns. The other columns are resized proportionally to 
         # their previous width.
-        otherColumns = [index for index in range(self.GetColumnCount())
-                        if index != self.ResizeColumn]
-        totalWidth = float(sum(self.GetColumnWidth(index) for index in 
-                               otherColumns))
-        for columnIndex in otherColumns:
-            thisColumnWidth = self.GetColumnWidth(columnIndex)
-            thisColumnWidth += thisColumnWidth / totalWidth * extraWidth
-            self.SetColumnWidth(columnIndex, thisColumnWidth)
+        other_columns = [index for index in range(self.GetColumnCount())
+                         if index != self.ResizeColumn]
+        total_width = float(sum(self.GetColumnWidth(index) for index in 
+                                other_columns))
+        for column_index in other_columns:
+            this_column_width = self.GetColumnWidth(column_index)
+            this_column_width += this_column_width / total_width * extra_width
+            self.SetColumnWidth(column_index, this_column_width)
         
     def GetResizeColumn(self):
-        if self._resizeColumn == -1:
+        if self.__resize_column == -1:
             return self.GetColumnCount() - 1
         else:
-            return self._resizeColumn
+            return self.__resize_column
         
-    def SetResizeColumn(self, columnIndex):
-        self._resizeColumn = columnIndex # pylint: disable=W0201
+    def SetResizeColumn(self, column_index):
+        self.__resize_column = column_index  # pylint: disable=W0201
 
     ResizeColumn = property(GetResizeColumn, SetResizeColumn)
     
     def GetAvailableWidth(self):
-        availableWidth = self.GetClientSize().width
-        if self.__isScrollbarVisible() and self.__isScrollbarIncludedInClientSize():
-            scrollbarWidth = wx.SystemSettings_GetMetric(wx.SYS_VSCROLL_X)
-            availableWidth -= scrollbarWidth
-        return availableWidth
+        available_width = self.GetClientSize().width
+        if self.__is_scrollbar_visible() and self.__is_scrollbar_included_in_client_size():
+            scrollbar_width = wx.SystemSettings_GetMetric(wx.SYS_VSCROLL_X)
+            available_width -= scrollbar_width
+        return available_width
 
     AvailableWidth = property(GetAvailableWidth)
 
     def GetNecessaryWidth(self):
-        necessaryWidth = 0
-        for columnIndex in range(self.GetColumnCount()):
-            if columnIndex == self.ResizeColumn:
-                necessaryWidth += self.ResizeColumnMinWidth
+        necessary_width = 0
+        for column_index in range(self.GetColumnCount()):
+            if column_index == self.ResizeColumn:
+                necessary_width += self.ResizeColumnMinWidth
             else:
-                necessaryWidth += self.GetColumnWidth(columnIndex)
-        return necessaryWidth
+                necessary_width += self.GetColumnWidth(column_index)
+        return necessary_width
     
     NecessaryWidth = property(GetNecessaryWidth)
    
@@ -173,10 +173,10 @@ class AutoColumnWidthMixin(object):
 
     # Private helper methods:
 
-    def __isScrollbarVisible(self):
+    def __is_scrollbar_visible(self):
         return self.MainWindow.HasScrollbar(wx.VERTICAL)
 
-    def __isScrollbarIncludedInClientSize(self):
+    def __is_scrollbar_included_in_client_size(self):
         # NOTE: on GTK, the scrollbar is included in the client size, but on
         # Windows it is not included
         if operating_system.isWindows():

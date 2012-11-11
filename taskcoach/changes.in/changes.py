@@ -21,8 +21,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
+            
+Release('1.3.21', 'October ??, 2012',
+    summary='''This is a mixed feature and bugfix release.''',
+    bugsFixed=[
+        Bugv2('''Changing the percentage complete would not cause the
+calendar viewer to refresh.'''),
+        Bugv2('''On Mac OS X, clicking the period column in effort viewers to 
+change the sort order didn't work.'''),
+        ],
+    featuresAdded=[
+        Feature('''Display dates in human-readable form in viewers (today,
+yesterday, tomorrow).'''),
+        ],
+    ),
 
-Release('1.3.20', 'October ??, 2012',
+Release('1.3.20', 'October 21, 2012',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bugv2('''Fix an encoding problem on Windows non-European locales''',
@@ -33,6 +47,12 @@ changes.''', '1267'),
         Bugv2('''When adding a new item, always start the edit dialog with the 
 description tab raised and focus on the item subject.''', '1263'),
         Bugv2('''Editing templates would not work.'''),
+        Bugv2('''The effort dialog wouldn't function properly when the time
+format contained dots, like in Italian.''', '1307'),
+        Bugv2('''Moving efforts between tasks would sometimes trigger an 
+exception, resulting in lost efforts.''', '1203'),
+        Bugv2('''When there are multiple reminders and speech is on, don't
+say all the reminders simultaneously, but one at a time.''', '1313'),
         ],
     ),
 

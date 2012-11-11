@@ -1912,8 +1912,7 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
             
         pub.subscribe(onEvent, task.Task.timeSpentChangedEventType())
         childEffort.setStop(date.DateTime(2005, 1, 1, 12, 0, 0))
-        self.failUnless((self.task1.timeSpent(recursive=True), 
-                         self.task1) in events)
+        self.failUnless((self.task1.timeSpent(), self.task1) in events)
 
     def testRecursivePriorityNotification(self):
         events = []

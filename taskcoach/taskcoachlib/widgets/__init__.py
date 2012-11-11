@@ -20,7 +20,7 @@ from notebook import Notebook, BookPage
 from frame import AuiManagedFrameWithDynamicCenterPane
 from dialog import Dialog, NotebookDialog, HTMLDialog, AttachmentSelector
 from itemctrl import Column
-from listctrl import ListCtrl
+from listctrl import VirtualListCtrl
 from checklistbox import CheckListBox
 from treectrl import CheckTreeCtrl, TreeListCtrl
 from squaremap import SquareMap

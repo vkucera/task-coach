@@ -36,7 +36,7 @@ class DummyWidget(wx.Frame):
     def select(self, *args):
         pass
     
-    def clearselection(self):
+    def clear_selection(self):
         pass
 
     def GetItemCount(self):

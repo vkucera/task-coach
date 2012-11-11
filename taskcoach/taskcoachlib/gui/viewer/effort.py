@@ -116,7 +116,7 @@ class EffortViewer(base.ListViewer,
         # Invalidate the UICommands used for the column popup menu:
         self.__columnUICommands = None
         # Clear the selection to remove the cached selection
-        self.clearselection()
+        self.clear_selection()
         # If the widget is auto-resizing columns, turn it off temporarily to 
         # make removing/adding columns faster
         autoResizing = self.widget.IsAutoResizing()
@@ -171,7 +171,7 @@ class EffortViewer(base.ListViewer,
             self.taskFile.efforts(), self.settings, self)
         columnPopupMenu = menu.EffortViewerColumnPopupMenu(self)
         self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
-        widget = widgets.ListCtrl(self, self.columns(), self.onSelect,
+        widget = widgets.VirtualListCtrl(self, self.columns(), self.onSelect,
             uicommand.Edit(viewer=self),
             itemPopupMenu, columnPopupMenu,
             resizeableColumn=1, **self.widgetCreationKeywordArguments())
@@ -344,14 +344,6 @@ class EffortViewer(base.ListViewer,
                                   for anEffort in compositeEffort]
         return selection
     
-    def getIndexOfItem(self, item):
-        if self.aggregation == 'details':
-            return super(EffortViewer, self).getIndexOfItem(item)
-        for index, compositeEffort in enumerate(self.presentation()):
-            if item == compositeEffort or item in compositeEffort:
-                return index
-        return -1
-
     def isselected(self, item):
         ''' When this viewer is in aggregation mode, L{curselection}
             returns the actual underlying L{Effort} objects instead of
@@ -396,18 +388,19 @@ class EffortViewer(base.ListViewer,
     # Rendering
     
     periodRenderers = dict( \
-        details=lambda anEffort: render.dateTimePeriod(anEffort.getStart(), 
-                                                       anEffort.getStop()),
-        day=lambda anEffort: render.date(anEffort.getStart().date()),
-        week=lambda anEffort: render.weekNumber(anEffort.getStart()),
-        month=lambda anEffort: render.month(anEffort.getStart()))
+        details=lambda anEffort, humanReadable=True: render.dateTimePeriod(anEffort.getStart(), 
+                                                       anEffort.getStop(), humanReadable=humanReadable),
+        day=lambda anEffort, humanReadable=True: render.date(anEffort.getStart().date(),
+                                                             humanReadable=humanReadable),
+        week=lambda anEffort, humanReadable=True: render.weekNumber(anEffort.getStart()),
+        month=lambda anEffort, humanReadable=True: render.month(anEffort.getStart()))
 
-    def __renderPeriod(self, anEffort):
+    def __renderPeriod(self, anEffort, humanReadable=True):
         ''' Return the period the effort belongs to. This depends on the
             current aggregation. If this period is the same as the previous
             period, an empty string is returned. '''
         return '' if self.__hasRepeatedPeriod(anEffort) else \
-            self.periodRenderers[self.aggregation](anEffort)
+            self.periodRenderers[self.aggregation](anEffort, humanReadable=humanReadable)
                     
     def __hasRepeatedPeriod(self, anEffort):
         ''' Return whether the effort has the same period as the previous 

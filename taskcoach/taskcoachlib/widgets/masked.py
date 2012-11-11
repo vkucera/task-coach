@@ -67,14 +67,25 @@ class TimeDeltaCtrl(TextCtrl):
         # show negative values) or if the value is actually negative, allow
         # the minus sign in the mask. Otherwise only allow for numbers.
         mask = 'X{9}:##:##' if negative_value or readonly else '#{9}:##:##'
-        # If the value is negative (e.g. over budget), place a minus sign 
-        # before the hours number and make sure the field has the appropriate
-        # width.
-        hours = '%9s' % ('-' + '%d' % hours) if negative_value else \
-                '%9d' % hours 
+        hours = self.__hour_string(hours, negative_value) 
         super(TimeDeltaCtrl, self).__init__(parent, mask=mask, formatcodes='FS',
-            fields=[masked.Field(formatcodes='r', defaultValue=hours),
+            fields=[masked.Field(formatcodes='Rr', defaultValue=hours),
                     masked.Field(defaultValue='%02d' % minutes),
                     masked.Field(defaultValue='%02d' % seconds)], 
             *args, **kwargs)
- 
+               
+    def set_value(self, hours, minutes, seconds, negative_value=False):
+        hours = self.__hour_string(hours, negative_value)
+        self.SetCtrlParameters(formatcodes='FS',
+            fields=[masked.Field(formatcodes='Rr', defaultValue=hours),
+                    masked.Field(defaultValue='%02d' % minutes),
+                    masked.Field(defaultValue='%02d' % seconds)])
+        self.Refresh()
+        
+    @staticmethod
+    def __hour_string(hours, negative_value):
+        ''' If the value is negative (e.g. over budget), place a minus sign 
+            before the hours number and make sure the field has the appropriate
+            width. '''
+        return '%9s' % ('-' + '%d' % hours) if negative_value else \
+               '%9d' % hours

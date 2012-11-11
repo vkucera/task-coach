@@ -25,13 +25,13 @@ from unittests import dummy
 
 class EditorUnderTest(gui.dialog.editor.NoteEditor):        
     def __init__(self, *args, **kwargs):
-        kwargs['callAfter'] = lambda f, *args, **kwargs: f(*args, **kwargs)
+        kwargs['call_after'] = lambda f, *args, **kwargs: f(*args, **kwargs)
         super(EditorUnderTest, self).__init__(*args, **kwargs)
         self.editorClosed = False
                 
-    def onClose(self, event):
+    def on_close_editor(self, event):
         self.editorClosed = True
-        super(EditorUnderTest, self).onClose(event)
+        super(EditorUnderTest, self).on_close_editor(event)
 
 
 class EditorTestCase(test.wxTestCase):

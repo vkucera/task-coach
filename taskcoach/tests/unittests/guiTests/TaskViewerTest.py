@@ -163,7 +163,7 @@ class CommonTestsMixin(object):
 
     def testDeleteSelectedTask(self):
         self.taskList.append(self.task)
-        self.viewer.widget.selectall()
+        self.viewer.widget.select_all()
         self.viewer.updateSelection()
         self.taskList.removeItems(self.viewer.curselection())
         self.assertItems()
@@ -836,7 +836,7 @@ class CommonTestsMixin(object):
         self.task.setPlannedStartDateTime(date.DateTime())
         self.viewer.setSortByTaskStatusFirst(False)
         self.viewer.setSortOrderAscending(False)
-        expectedDateTime = "(%s)" % render.dateTime(now) if self.treeMode else ''
+        expectedDateTime = "(%s)" % render.dateTime(now, humanReadable=True) if self.treeMode else ''
         self.task.expand(False, context=self.viewer.settingsSection())
         self.assertEqual(expectedDateTime, self.getItemText(0, 1))
 
@@ -861,7 +861,175 @@ class CommonTestsMixin(object):
         self.assertEqual('dependency', self.getItemText(0, 1))
         dependency.setSubject('new')
         self.assertEqual('new', self.getItemText(0, 1))
-  
+
+    def testPlannedStartDateTimeToday(self):
+        today = date.Now()
+        self.task.setPlannedStartDateTime(today)
+        self.taskList.append(self.task)
+        self.showColumn('plannedStartDateTime')
+        self.assertEqual(_('Today %s') % render.time(today.time()), self.getItemText(0, 1))
+
+    def testPlannedStartDateTimeYesterday(self):
+        yesterday = date.Now() - date.TimeDelta(days=1)
+        self.task.setPlannedStartDateTime(yesterday)
+        self.taskList.append(self.task)
+        self.showColumn('plannedStartDateTime')
+        self.assertEqual(_('Yesterday %s') % render.time(yesterday.time()), self.getItemText(0, 1))
+
+    def testPlannedStartDateTimeTomorrow(self):
+        tomorrow = date.Now() + date.TimeDelta(days=1)
+        self.task.setPlannedStartDateTime(tomorrow)
+        self.taskList.append(self.task)
+        self.showColumn('plannedStartDateTime')
+        self.assertEqual(_('Tomorrow %s') % render.time(tomorrow.time()), self.getItemText(0, 1))
+
+    def testPlannedStartDateToday(self):
+        today = date.Now().startOfDay()
+        self.task.setPlannedStartDateTime(today)
+        self.taskList.append(self.task)
+        self.showColumn('plannedStartDateTime')
+        self.assertEqual(_('Today'), self.getItemText(0, 1))
+
+    def testPlannedStartDateYesterday(self):
+        yesterday = date.Now().startOfDay() - date.TimeDelta(days=1)
+        self.task.setPlannedStartDateTime(yesterday)
+        self.taskList.append(self.task)
+        self.showColumn('plannedStartDateTime')
+        self.assertEqual(_('Yesterday'), self.getItemText(0, 1))
+
+    def testPlannedStartDateTomorrow(self):
+        tomorrow = date.Now().startOfDay() + date.TimeDelta(days=1)
+        self.task.setPlannedStartDateTime(tomorrow)
+        self.taskList.append(self.task)
+        self.showColumn('plannedStartDateTime')
+        self.assertEqual(_('Tomorrow'), self.getItemText(0, 1))
+
+    def testDueDateTimeToday(self):
+        today = date.Now()
+        self.task.setDueDateTime(today)
+        self.taskList.append(self.task)
+        self.showColumn('dueDateTime')
+        self.assertEqual(_('Today %s') % render.time(today.time()), self.getItemText(0, 2))
+
+    def testDueDateTimeYesterday(self):
+        yesterday = date.Now() - date.TimeDelta(days=1)
+        self.task.setDueDateTime(yesterday)
+        self.taskList.append(self.task)
+        self.showColumn('dueDateTime')
+        self.assertEqual(_('Yesterday %s') % render.time(yesterday.time()), self.getItemText(0, 2))
+
+    def testDueDateTimeTomorrow(self):
+        tomorrow = date.Now() + date.TimeDelta(days=1)
+        self.task.setDueDateTime(tomorrow)
+        self.taskList.append(self.task)
+        self.showColumn('dueDateTime')
+        self.assertEqual(_('Tomorrow %s') % render.time(tomorrow.time()), self.getItemText(0, 2))
+
+    def testDueDateToday(self):
+        today = date.Now().startOfDay()
+        self.task.setDueDateTime(today)
+        self.taskList.append(self.task)
+        self.showColumn('dueDateTime')
+        self.assertEqual(_('Today'), self.getItemText(0, 2))
+
+    def testDueDateYesterday(self):
+        yesterday = date.Now().startOfDay() - date.TimeDelta(days=1)
+        self.task.setDueDateTime(yesterday)
+        self.taskList.append(self.task)
+        self.showColumn('dueDateTime')
+        self.assertEqual(_('Yesterday'), self.getItemText(0, 2))
+
+    def testDueDateTomorrow(self):
+        tomorrow = date.Now().startOfDay() + date.TimeDelta(days=1)
+        self.task.setDueDateTime(tomorrow)
+        self.taskList.append(self.task)
+        self.showColumn('dueDateTime')
+        self.assertEqual(_('Tomorrow'), self.getItemText(0, 2))
+
+    def testActualStartDateTimeToday(self):
+        today = date.Now()
+        self.task.setActualStartDateTime(today)
+        self.taskList.append(self.task)
+        self.showColumn('actualStartDateTime')
+        self.assertEqual(_('Today %s') % render.time(today.time()), self.getItemText(0, 3))
+
+    def testActualStartDateTimeYesterday(self):
+        yesterday = date.Now() - date.TimeDelta(days=1)
+        self.task.setActualStartDateTime(yesterday)
+        self.taskList.append(self.task)
+        self.showColumn('actualStartDateTime')
+        self.assertEqual(_('Yesterday %s') % render.time(yesterday.time()), self.getItemText(0, 3))
+
+    def testActualStartDateTimeTomorrow(self):
+        tomorrow = date.Now() + date.TimeDelta(days=1)
+        self.task.setActualStartDateTime(tomorrow)
+        self.taskList.append(self.task)
+        self.showColumn('actualStartDateTime')
+        self.assertEqual(_('Tomorrow %s') % render.time(tomorrow.time()), self.getItemText(0, 3))
+
+    def testActualStartDateToday(self):
+        today = date.Now().startOfDay()
+        self.task.setActualStartDateTime(today)
+        self.taskList.append(self.task)
+        self.showColumn('actualStartDateTime')
+        self.assertEqual(_('Today'), self.getItemText(0, 3))
+
+    def testActualStartDateYesterday(self):
+        yesterday = date.Now().startOfDay() - date.TimeDelta(days=1)
+        self.task.setActualStartDateTime(yesterday)
+        self.taskList.append(self.task)
+        self.showColumn('actualStartDateTime')
+        self.assertEqual(_('Yesterday'), self.getItemText(0, 3))
+
+    def testActualStartDateTomorrow(self):
+        tomorrow = date.Now().startOfDay() + date.TimeDelta(days=1)
+        self.task.setActualStartDateTime(tomorrow)
+        self.taskList.append(self.task)
+        self.showColumn('actualStartDateTime')
+        self.assertEqual(_('Tomorrow'), self.getItemText(0, 3))
+
+    def testCompletionDateTimeToday(self):
+        today = date.Now()
+        self.task.setCompletionDateTime(today)
+        self.taskList.append(self.task)
+        self.showColumn('completionDateTime')
+        self.assertEqual(_('Today %s') % render.time(today.time()), self.getItemText(0, 3))
+
+    def testCompletionDateTimeYesterday(self):
+        yesterday = date.Now() - date.TimeDelta(days=1)
+        self.task.setCompletionDateTime(yesterday)
+        self.taskList.append(self.task)
+        self.showColumn('completionDateTime')
+        self.assertEqual(_('Yesterday %s') % render.time(yesterday.time()), self.getItemText(0, 3))
+
+    def testCompletionDateTimeTomorrow(self):
+        tomorrow = date.Now() + date.TimeDelta(days=1)
+        self.task.setCompletionDateTime(tomorrow)
+        self.taskList.append(self.task)
+        self.showColumn('completionDateTime')
+        self.assertEqual(_('Tomorrow %s') % render.time(tomorrow.time()), self.getItemText(0, 3))
+
+    def testCompletionDateToday(self):
+        today = date.Now().startOfDay()
+        self.task.setCompletionDateTime(today)
+        self.taskList.append(self.task)
+        self.showColumn('completionDateTime')
+        self.assertEqual(_('Today'), self.getItemText(0, 3))
+
+    def testCompletionDateYesterday(self):
+        yesterday = date.Now().startOfDay() - date.TimeDelta(days=1)
+        self.task.setCompletionDateTime(yesterday)
+        self.taskList.append(self.task)
+        self.showColumn('completionDateTime')
+        self.assertEqual(_('Yesterday'), self.getItemText(0, 3))
+
+    def testCompletionDateTomorrow(self):
+        tomorrow = date.Now().startOfDay() + date.TimeDelta(days=1)
+        self.task.setCompletionDateTime(tomorrow)
+        self.taskList.append(self.task)
+        self.showColumn('completionDateTime')
+        self.assertEqual(_('Tomorrow'), self.getItemText(0, 3))
+
     # Test all attributes...
 
 

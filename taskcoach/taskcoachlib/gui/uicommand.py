@@ -1117,7 +1117,7 @@ class SelectAll(NeedsItemsMixin, ViewerCommand):
         if self.windowIsTextCtrl(windowWithFocus):
             windowWithFocus.SetSelection(-1, -1)  # Select all text
         else:
-            self.viewer.selectall()
+            self.viewer.select_all()
             
     @staticmethod
     def windowIsTextCtrl(window):
@@ -1134,7 +1134,7 @@ class ClearSelection(NeedsSelectionMixin, ViewerCommand):
             helpText=_('Unselect all items'), *args, **kwargs)
 
     def doCommand(self, event):
-        self.viewer.clearselection()
+        self.viewer.clear_selection()
 
 
 class ResetFilter(ViewerCommand):
@@ -1531,7 +1531,7 @@ class TaskNew(TaskListCommand, SettingsCommand):
         newTaskCommand.do() 
         newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(),
             newTaskCommand.items, self.settings, self.taskList, 
-            self.mainWindow().taskFile, bitmap=self.bitmap, itemsAreNew=True)
+            self.mainWindow().taskFile, bitmap=self.bitmap, items_are_new=True)
         newTaskDialog.Show(show)
         return newTaskDialog  # for testing purposes
 
@@ -1588,7 +1588,7 @@ class TaskNewFromTemplate(TaskNew):
         # pylint: disable=W0142
         newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(), 
             newTaskCommand.items, self.settings, self.taskList, 
-            self.mainWindow().taskFile, bitmap=self.bitmap, itemsAreNew=True)
+            self.mainWindow().taskFile, bitmap=self.bitmap, items_are_new=True)
         newTaskDialog.Show(show)
         return newTaskDialog  # for testing purposes
    

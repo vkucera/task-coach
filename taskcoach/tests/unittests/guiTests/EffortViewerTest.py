@@ -281,7 +281,7 @@ class CommonTestsMixin(object):
         self.assertEqual(1, self.viewer.size())
         
     def testDelete(self):
-        self.viewer.widget.select([self.task.efforts()[-1]])
+        self.viewer.widget.Select(0)
         self.viewer.updateSelection()
         self.viewer.deleteUICommand.doCommand(None)
         expectedNumberOfItems = self.expectedNumberOfItems - (1 if self.aggregation == 'details' else 3)
@@ -293,8 +293,6 @@ class CommonTestsMixin(object):
         self.assertEqual(expectedNumberOfItems, self.viewer.size())
         
     def testNewEffortUsesSameTaskAsSelectedEffort(self):
-        self.viewer.widget.select([self.task2.efforts()[-1]])
-        self.viewer.updateSelection()
         dialog = self.viewer.newItemDialog(selectedTasks=[self.task2], 
                                            bitmap='new')
         for newEffort in dialog._items:  # pylint: disable=W0212
@@ -400,3 +398,49 @@ class EffortViewerWithAggregationPerMonthTest(CommonTestsMixin,
     aggregation = 'month'
     expectedNumberOfItems = 3  # 2 month/task combinations in 1 month (== 1 total row)
     expectedPeriodRendering = render.month(date.DateTime(2008, 07, 01))
+
+
+class EffortViewerRenderTestMixin(object):
+    aggregation = 'Subclass responsibility'
+
+    def createViewer(self):
+        return gui.viewer.EffortViewer(self.frame, self.taskFile, self.settings)
+
+    def setUp(self):
+        super(EffortViewerRenderTestMixin, self).setUp()
+        task.Task.settings = self.settings = config.Settings(load=False)
+        self.settings.set('effortviewer', 'aggregation', self.aggregation)
+
+        self.taskFile = persistence.TaskFile()
+        self.task = task.Task('task')
+        self.taskFile.tasks().append(self.task)
+        self.midnight = date.Now().startOfDay()
+        self.viewer = self.createViewer()
+
+    def testToday(self):
+        theEffort = effort.Effort(self.task, self.midnight, self.midnight + date.TimeDelta(hours=2))
+        self.task.addEffort(theEffort)
+        text = self.viewer.widget.GetItemText(0)
+        self.failUnless(text.startswith('Today'), '"Today" not in %s' % text)
+
+    def testTomorrow(self):
+        theEffort = effort.Effort(self.task, self.midnight + date.TimeDelta(days=1),
+                                  self.midnight + date.TimeDelta(hours=2, days=1))
+        self.task.addEffort(theEffort)
+        text = self.viewer.widget.GetItemText(0)
+        self.failUnless(text.startswith('Tomorrow'), '"Tomorrow" not in %s' % text)
+
+    def testYesterday(self):
+        theEffort = effort.Effort(self.task, self.midnight - date.TimeDelta(days=1),
+                                  self.midnight - date.TimeDelta(hours=22))
+        self.task.addEffort(theEffort)
+        text = self.viewer.widget.GetItemText(0)
+        self.failUnless(text.startswith('Yesterday'), '"Yesterday" not in %s' % text)
+
+
+class EffortViewerRenderDetailsTest(EffortViewerRenderTestMixin, test.wxTestCase):
+    aggregation = 'details'
+
+
+class EffortViewerRenderPerDayTest(EffortViewerRenderTestMixin, test.wxTestCase):
+    aggregation = 'day'

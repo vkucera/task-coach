@@ -42,7 +42,7 @@ class DeleteCommandTest(CommandTestCase):
                               lambda: self.assertEqual([self.item], self.items))
 
     def testItemsAreNotNew(self):
-        self.failIf(command.DeleteCommand(self.items, []).itemsAreNew())
+        self.failIf(command.DeleteCommand(self.items, []).items_are_new())
 
 
 class EditSubjectTestCase(CommandTestCase):
@@ -75,5 +75,5 @@ class EditSubjectTestCase(CommandTestCase):
 
     def testItemsAreNotNew(self):
         self.failIf(command.EditSubjectCommand(self.container, [], 
-                                               newValue='New subject').itemsAreNew())
+                    newValue='New subject').items_are_new())
 

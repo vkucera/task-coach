@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 from taskcoachlib.domain import date, categorizable, note, attachment
-from taskcoachlib.domain.attribute import color
 from taskcoachlib.thirdparty.pubsub import pub
 import status
 import wx
@@ -80,13 +79,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
         now = date.Now()
         if now < self.__dueDateTime < maxDateTime:
-            date.Scheduler().schedule(self.onOverDue, self.__dueDateTime + date.oneSecond, allowMisfire=True)
+            date.Scheduler().schedule(self.onOverDue, self.__dueDateTime + date.oneSecond)
             if self.__dueSoonHours:
                 dueSoonDateTime = self.__dueDateTime + date.oneSecond - date.TimeDelta(hours=self.__dueSoonHours)
                 if dueSoonDateTime > date.Now():
                     date.Scheduler().schedule(self.onDueSoon, dueSoonDateTime)
         if now < self.__plannedStartDateTime < maxDateTime:
-            date.Scheduler().schedule(self.onTimeToStart, self.__plannedStartDateTime + date.oneSecond, allowMisfire=True)
+            date.Scheduler().schedule(self.onTimeToStart, self.__plannedStartDateTime + date.oneSecond)
 
     @patterns.eventSource
     def __setstate__(self, state, event=None):
@@ -252,14 +251,12 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         date.Scheduler().unschedule(self.onDueSoon)
         if date.Now() <= dueDateTime < self.maxDateTime:
             date.Scheduler().schedule(self.onOverDue, 
-                                      dueDateTime + date.oneSecond, 
-                                      allowMisfire=True)
+                                      dueDateTime + date.oneSecond)
             if self.__dueSoonHours > 0:
                 dueSoonDateTime = dueDateTime + date.oneSecond - \
                     date.TimeDelta(hours=self.__dueSoonHours)
                 if dueSoonDateTime > date.Now():
-                    date.Scheduler().schedule(self.onDueSoon, dueSoonDateTime, 
-                                              allowMisfire=True)
+                    date.Scheduler().schedule(self.onDueSoon, dueSoonDateTime)
         self.markDirty()
         self.recomputeAppearance()
         pub.sendMessage(self.dueDateTimeChangedEventType(), 
@@ -307,8 +304,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.recomputeAppearance()
         if plannedStartDateTime < self.maxDateTime:
             date.Scheduler().schedule(self.onTimeToStart, 
-                                      plannedStartDateTime + date.oneSecond,
-                                      allowMisfire=True)
+                                      plannedStartDateTime + date.oneSecond)
         pub.sendMessage(self.plannedStartDateTimeChangedEventType(), 
                         newValue=plannedStartDateTime, sender=self)
         for ancestor in self.ancestors():
@@ -546,7 +542,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         dueDateTime = self.dueDateTime()
         if dueDateTime < self.maxDateTime:
             newDueSoonDateTime = dueDateTime + date.oneSecond - date.TimeDelta(hours=self.__dueSoonHours)
-            date.Scheduler().schedule(self.onDueSoon, newDueSoonDateTime, allowMisfire=True)
+            date.Scheduler().schedule(self.onDueSoon, newDueSoonDateTime)
         self.recomputeAppearance()
             
     # effort related methods:
@@ -630,7 +626,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                         newValue=self.timeSpent(), sender=self)
         for ancestor in self.ancestors():
             pub.sendMessage(ancestor.timeSpentChangedEventType(), 
-                            newValue=ancestor.timeSpent(recursive=True),
+                            newValue=ancestor.timeSpent(),
                             sender=ancestor)
         if self.budget(recursive=True):
             self.sendBudgetLeftChangedMessage()

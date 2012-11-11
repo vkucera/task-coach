@@ -84,8 +84,9 @@ class BaseCompositeEffort(base.BaseEffort):  # pylint: disable=W0223
         # are determined by the contained efforts.
 
     def onTimeSpentChanged(self, newValue, sender):  # pylint: disable=W0613
-        self._invalidateCache()
-        self.notifyObserversOfDurationOrEmpty()
+        if self._refreshCache():
+            # Only need to notify if our time spent actually changed
+            self.notifyObserversOfDurationOrEmpty()
 
     def onRevenueChanged(self, newValue, sender):  # pylint: disable=W0613
         self.sendRevenueChangedMessage()
@@ -94,6 +95,12 @@ class BaseCompositeEffort(base.BaseEffort):  # pylint: disable=W0223
         raise NotImplementedError  # pragma: no cover
     
     def _invalidateCache(self):
+        ''' Empty the cache so that it will be filled when accessed. '''
+        raise NotImplementedError  # pragma: no cover
+    
+    def _refreshCache(self):
+        ''' Refresh the cache right away and return whether the cache was 
+            actually changed. '''
         raise NotImplementedError  # pragma: no cover
     
 
@@ -108,8 +115,7 @@ class CompositeEffort(BaseCompositeEffort):
         super(CompositeEffort, self).__init__(task, start, stop)
         self.__hash_value = hash((task, start))
         # Effort cache: {True: [efforts recursively], False: [efforts]}
-        self.__effortCache = dict()  
-        self._invalidateCache()
+        self.__effort_cache = dict()  
         '''
         FIMXE! CompositeEffort does not derive from base.Object
         patterns.Publisher().registerObserver(self.onAppearanceChanged,
@@ -126,26 +132,34 @@ class CompositeEffort(BaseCompositeEffort):
 
     def addEffort(self, anEffort):
         assert self._inPeriod(anEffort)
-        self.__effortCache.setdefault(True, set()).add(anEffort)
+        self.__effort_cache.setdefault(True, set()).add(anEffort)
         if anEffort.task() == self.task():
-            self.__effortCache.setdefault(False, set()).add(anEffort)
+            self.__effort_cache.setdefault(False, set()).add(anEffort)
             
     def revenue(self, recursive=False):
         return sum(effort.revenue() for effort in self._getEfforts(recursive))
     
     def _invalidateCache(self):
-        self.__effortCache = dict()
-                
-    def _getEfforts(self, recursive=True):  # pylint: disable=W0221
-        try:
-            result = self.__effortCache[recursive]
-        except KeyError:
-            result = self.__effortCache[recursive] = \
+        self.__effort_cache = dict()
+        
+    def _refreshCache(self, recursive=None):
+        recursive_values = (False, True) if recursive is None else (recursive,)
+        previous_cache = self.__effort_cache.copy()
+        cache_changed = False
+        for recursive in recursive_values:
+            cache = self.__effort_cache[recursive] = \
                 set([effort for effort in \
                      self.task().efforts(recursive=recursive) if \
                      self._inPeriod(effort)])
-        return list(result)
-        
+            if cache != previous_cache.get(recursive, set()):
+                cache_changed = True
+        return cache_changed
+                
+    def _getEfforts(self, recursive=True):  # pylint: disable=W0221
+        if recursive not in self.__effort_cache:
+            self._refreshCache(recursive=recursive)
+        return list(self.__effort_cache[recursive])
+    
     def mayContain(self, effort):
         ''' Return whether effort would be contained in this composite effort 
             if it existed. '''
@@ -164,36 +178,39 @@ class CompositeEffort(BaseCompositeEffort):
 
 
 class CompositeEffortPerPeriod(BaseCompositeEffort):
+    class Total(object):
+        # pylint: disable=W0613
+        def subject(self, *args, **kwargs): 
+            return _('Total')
+        
+        def foregroundColor(self, *args, **kwargs):
+            return None
+        
+        def backgroundColor(self, *args, **kwargs):
+            return None
+        
+        def font(self, *args, **kwargs):
+            return None
+        
+    total = Total()
+        
     def __init__(self, start, stop, taskList, initialEffort=None):
         self.taskList = taskList
         super(CompositeEffortPerPeriod, self).__init__(None, start, stop)
         if initialEffort:
             assert self._inPeriod(initialEffort)
-            self.__effortCache = [initialEffort]
+            self.__effort_cache = [initialEffort]
         else:
             self._invalidateCache()
             
     def addEffort(self, anEffort):
         assert self._inPeriod(anEffort)
-        if anEffort not in self.__effortCache:
-            self.__effortCache.append(anEffort)
+        if anEffort not in self.__effort_cache:
+            self.__effort_cache.append(anEffort)
 
-    def task(self):
-        class Total(object):
-            # pylint: disable=W0613
-            def subject(self, *args, **kwargs): 
-                return _('Total')
-            
-            def foregroundColor(self, *args, **kwargs):
-                return None
-            
-            def backgroundColor(self, *args, **kwargs):
-                return None
-            
-            def font(self, *args, **kwargs):
-                return None
-        
-        return Total()
+    @classmethod
+    def task(cls):
+        return cls.total
 
     def isTotal(self):
         return True
@@ -220,12 +237,23 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
     # Cache handling:
 
     def _getEfforts(self, recursive=False):  # pylint: disable=W0613,W0221
-        if self.__effortCache is None:
-            self.__effortCache = []
-            for eachTask in self.taskList:
-                self.__effortCache.extend([effort for effort in eachTask.efforts() \
-                                           if self._inPeriod(effort)])
-        return self.__effortCache
+        if self.__effort_cache is None:
+            self._refreshCache()
+        return self.__effort_cache
     
     def _invalidateCache(self):
-        self.__effortCache = None
+        self.__effort_cache = None
+
+    def _refreshCache(self):
+        previous_cache = [] if self.__effort_cache is None else self.__effort_cache[:]
+        self.__effort_cache = []
+        self.__add_task_effort_to_cache(self.taskList)
+        return previous_cache != self.__effort_cache
+
+    def __add_task_effort_to_cache(self, tasks):
+        ''' Add the effort of the tasks to the cache. '''
+        for task in tasks:
+            effort_in_period = [effort for effort in task.efforts() if \
+                                self._inPeriod(effort)]
+            self.__effort_cache.extend(effort_in_period)
+           
