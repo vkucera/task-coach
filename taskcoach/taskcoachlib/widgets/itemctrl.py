@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     and TreeListCtrl. ''' # pylint: disable=W0105
 
 
-import wx, draganddrop, autowidth, tooltip
+import wx, draganddrop, autowidth, tooltip, inspect
 from taskcoachlib.thirdparty import hypertreelist
 
 
@@ -237,12 +237,17 @@ class Column(object):
     def sort(self, *args, **kwargs):
         if self.__sortCallback:
             self.__sortCallback(*args, **kwargs)
-        
+
+    def __filterArgs(self, func, kwargs):
+        actualKwargs = dict()
+        argNames = inspect.getargspec(func).args
+        return dict([(name, value) for name, value in kwargs.items() if name in argNames])
+
     def render(self, *args, **kwargs):
-        return self.__renderCallback(*args, **kwargs)
+        return self.__renderCallback(*args, **self.__filterArgs(self.__renderCallback, kwargs))
 
     def renderDescription(self, *args, **kwargs):
-        return self.__renderDescriptionCallback(*args, **kwargs)
+        return self.__renderDescriptionCallback(*args, **self.__filterArgs(self.__renderDescriptionCallback, kwargs))
 
     def defaultRenderer(self, *args, **kwargs): # pylint: disable=W0613
         return unicode(args[0])

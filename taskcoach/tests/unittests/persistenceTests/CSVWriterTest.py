@@ -261,12 +261,12 @@ class TaskTestsMixin(object):
 
 class CSVListWriterTest(TaskTestsMixin, CSVWriterTestCase):
     treeMode = 'False'
-        
+     
     def testTaskDescription(self):
         self.task.setDescription('Task description')
         self.viewer.showColumnByName('description')
         self.expectInCSV(',Task description,')
-    
+ 
     def testTaskDescriptionWithNewLine(self):
         self.task.setDescription('Line1\nLine2')
         self.viewer.showColumnByName('description')
