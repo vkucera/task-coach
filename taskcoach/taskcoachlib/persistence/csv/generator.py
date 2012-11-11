@@ -35,7 +35,8 @@ class RowBuilder(object):
                                     plannedStartDateTime=[_('Planned start date'), _('Planned start time')],
                                     dueDateTime=[_('Due date'), _('Due time')],
                                     completionDateTime=[_('Completion date'), _('Completion time')],
-                                    reminder=[_('Reminder date'), _('Reminder time')])
+                                    reminder=[_('Reminder date'), _('Reminder time')],
+                                    period=[_('Period')])
     
     def __init__(self, columns, isTree, separateDateAndTimeColumns):
         self.__columns = columns
@@ -59,11 +60,8 @@ class RowBuilder(object):
         for column in self.__columns:
             if self.shouldSplitDateAndTime(column):
                 row.extend(self.splitDateAndTime(column, item))
-            elif column.name() in self.dateAndTimeColumnHeaders:
-                # don't render date/times in human readable form because CSV is typically re-parsed
-                row.append(render.dateTime(getattr(item, column.name())()))
             else:
-                row.append(column.render(item))
+                row.append(column.render(item, humanReadable=False))
         row[0] = self.indent(item) + row[0]
         return row
 

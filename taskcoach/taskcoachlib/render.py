@@ -97,11 +97,12 @@ dateFormat = '%x'
 # datemodule.Date is not a class
 def dateFunc(dt=None, humanReadable=False):
     if humanReadable:
-        if dt.date() == datetime.datetime.now().date():
+        theDate = dt.date() if isinstance(dt, datetime.datetime) else dt
+        if theDate == datetime.datetime.now().date():
             return _('Today')
-        elif dt.date() == (datetime.datetime.now() - datetime.timedelta(days=1)).date():
+        elif theDate == (datetime.datetime.now() - datetime.timedelta(days=1)).date():
             return _('Yesterday')
-        elif dt.date() == (datetime.datetime.now() + datetime.timedelta(days=1)).date():
+        elif theDate == (datetime.datetime.now() + datetime.timedelta(days=1)).date():
             return _('Tomorrow')
     return operating_system.decodeSystemString(datetime.datetime.strftime(dt, dateFormat))
 

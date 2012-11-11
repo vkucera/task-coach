@@ -261,12 +261,12 @@ class TaskTestsMixin(object):
 
 class CSVListWriterTest(TaskTestsMixin, CSVWriterTestCase):
     treeMode = 'False'
-        
+     
     def testTaskDescription(self):
         self.task.setDescription('Task description')
         self.viewer.showColumnByName('description')
         self.expectInCSV(',Task description,')
-    
+ 
     def testTaskDescriptionWithNewLine(self):
         self.task.setDescription('Line1\nLine2')
         self.viewer.showColumnByName('description')
@@ -308,3 +308,28 @@ class EffortWriterTest(CSVWriterTestCase):
         self.viewer.widget.select_all()
         self.viewer.updateSelection()
         self.expectInCSV('Total', selectionOnly=True)
+
+
+class EffortWriterRenderTest(CSVWriterTestCase):
+    def createViewer(self):
+        # pylint: disable=W0201
+        self.viewer = gui.viewer.EffortViewer(self.frame, self.taskFile,
+            self.settings)
+
+    def testToday(self):
+        midnight = date.Now().startOfDay()
+        self.task.addEffort(effort.Effort(self.task, start=midnight,
+                            stop=midnight + date.TimeDelta(hours=2)))
+        self.expectNotInCSV('Today')
+
+    def testTomorrow(self):
+        midnight = date.Now().startOfDay() + date.TimeDelta(days=1)
+        self.task.addEffort(effort.Effort(self.task, start=midnight,
+                            stop=midnight + date.TimeDelta(hours=2)))
+        self.expectNotInCSV('Tomorrow')
+
+    def testYesterday(self):
+        midnight = date.Now().startOfDay() - date.TimeDelta(days=1)
+        self.task.addEffort(effort.Effort(self.task, start=midnight,
+                            stop=midnight + date.TimeDelta(hours=2)))
+        self.expectNotInCSV('Today')
