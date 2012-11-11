@@ -1380,12 +1380,16 @@ class _CalendarPopup(_PopupWindow):
                 tw, th = dc.GetTextExtent('%d' % day)
                 self.__maxDim = max(self.__maxDim, tw, th)
 
+        for header in calendar.weekheader(2).split():
+            tw, th = dc.GetTextExtent(header)
+            self.__maxDim = max(self.__maxDim, tw, th)
+
         if '__WXMSW__' in wx.PlatformInfo:
             # WTF ?
             self.__maxDim += 10
         else:
             self.__maxDim += 4
-        return wx.Size(max(W + 48 + 4, self.__maxDim * len(lines[0])), H + 2 + self.__maxDim * len(lines))
+        return wx.Size(max(W + 48 + 4, self.__maxDim * len(lines[0])), H + 2 + self.__maxDim * (len(lines) + 1))
 
     def SetSelection(self, selection):
         self.__selection = selection
@@ -1447,18 +1451,30 @@ class _CalendarPopup(_PopupWindow):
 
         y = th + 2
 
+        # Weekday first letters
+
+        dc.SetPen(wx.LIGHT_GREY_PEN)
+        dc.SetBrush(wx.LIGHT_GREY_BRUSH)
+        dc.DrawRectangle(0, y, self.__maxDim * 7, self.__maxDim)
+        dc.SetTextForeground(wx.BLUE)
+        for idx, header in enumerate(calendar.weekheader(2).split()):
+            tw, th = dc.GetTextExtent(header)
+            dc.DrawText(header, self.__maxDim * idx + int((self.__maxDim - tw) / 2), y + int((self.__maxDim - th) / 2))
+
+        y += self.__maxDim
+
         # Days
 
         self.__days = list()
         for line in calendar.monthcalendar(self.__year, self.__month):
             x = 0
-            for day in line:
+            for dayIndex, day in enumerate(line):
                 if day != 0:
                     dt = datetime.date(year=self.__year, month=self.__month, day=day)
                     active = (self.__minDate is None or dt >= self.__minDate) and (self.__maxDate is None or dt <= self.__maxDate)
 
                     dc.SetPen(wx.BLACK_PEN)
-                    dc.SetTextForeground(wx.BLACK)
+                    dc.SetTextForeground(wx.RED if dayIndex + calendar.firstweekday() in [5, 6] else wx.BLACK)
 
                     if dt == self.__selection:
                         color = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
