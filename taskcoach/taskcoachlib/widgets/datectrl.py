@@ -28,10 +28,10 @@ import wx, datetime
 class _SmartDateTimeCtrl(sdtc.SmartDateTimeCtrl):
     def HandleKey(self, event):
         if not super(_SmartDateTimeCtrl, self).HandleKey(event) and self.GetDateTime() is not None:
-            if event.GetUnicodeKey() == ord('s'):
+            if event.GetUnicodeKey() in [ord('s'), ord('S')]:
                 self.SetDateTime(datetime.datetime.combine(self.GetDateTime().date(), datetime.time(0, 0, 0, 0)), notify=True)
                 return True
-            elif event.GetUnicodeKey() == ord('e'):
+            elif event.GetUnicodeKey() in [ord('e'), ord('E')]:
                 self.SetDateTime(datetime.datetime.combine(self.GetDateTime().date(), datetime.time(23, 59, 0, 0)), notify=True)
                 return True
             return False

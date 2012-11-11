@@ -511,10 +511,10 @@ class EnumerationField(Field):
 
     def HandleKey(self, event):
         if event.GetKeyCode() == wx.WXK_UP:
-            self.SetValue((self.GetValue() + 1) % len(self.__choices), notify=True)
+            self.SetValue((self.GetValue() - 1 + len(self.__choices)) % len(self.__choices), notify=True)
             return True
         if event.GetKeyCode() == wx.WXK_DOWN:
-            self.SetValue((self.GetValue() - 1 + len(self.__choices)) % len(self.__choices), notify=True)
+            self.SetValue((self.GetValue() + 1) % len(self.__choices), notify=True)
             return True
         return False
 
@@ -628,12 +628,21 @@ class TimeEntry(Entry):
 
     def __init__(self, *args, **kwargs):
         fmt = kwargs.pop('format', lambda x: x.strftime('%H:%M:%S'))
-        fmt = fmt(datetime.time(hour=11, minute=33, second=44))
-        fmt = re.sub('3+', 'M', fmt)
-        fmt = re.sub('1+', 'H', fmt)
-        fmt = re.sub('4+', 'S', fmt)
-        ampm = fmt.lower().find('am') != -1
-        fmt = re.sub('(?i)am', 'p', fmt)
+        pattern = fmt(datetime.time(hour=11, minute=33, second=44))
+        pattern = re.sub('3+', 'M', pattern)
+        pattern = re.sub('1+', 'H', pattern)
+        pattern = re.sub('4+', 'S', pattern)
+
+        # Work around a bug in wx...
+        if time.strftime('%p') == '' and fmt(datetime.time(hour=1, minute=0)) == fmt(datetime.time(hour=13, minute=0)):
+            ampm = True
+            # We can't actually guess where it should be so put it at the end.
+            if not pattern.endswith(' '):
+                pattern += ' '
+            pattern += 'p'
+        else:
+            ampm = pattern.lower().find('am') != -1
+            pattern = re.sub('(?i)am', 'p', pattern)
 
         self.__value = datetime.time(hour=kwargs.get('hour', 0), minute=kwargs.get('minute', 0), second=kwargs.get('second', 0))
         self.__minuteDelta = kwargs.pop('minuteDelta', 10)
@@ -649,7 +658,7 @@ class TimeEntry(Entry):
         if ampm:
             kwargs['hour'], kwargs['ampm'] = Convert24To12(kwargs['hour'])
 
-        kwargs['format'] = fmt
+        kwargs['format'] = pattern
         super(TimeEntry, self).__init__(*args, **kwargs)
 
     def DismissPopup(self):
@@ -1562,12 +1571,12 @@ class _MultipleChoicesPopup(_PopupWindow):
 
     def HandleKey(self, event):
         if event.GetKeyCode() == wx.WXK_UP:
-            self.__selection = (self.__selection + 1) % len(self.__choices)
+            self.__selection = (self.__selection + len(self.__choices) - 1) % len(self.__choices)
             self.Refresh()
             return True
 
         if event.GetKeyCode() == wx.WXK_DOWN:
-            self.__selection = (self.__selection + len(self.__choices) - 1) % len(self.__choices)
+            self.__selection = (self.__selection + 1) % len(self.__choices)
             self.Refresh()
             return True
 
@@ -1646,12 +1655,12 @@ class SmartDateTimeCtrl(wx.Panel):
 
     def HandleKey(self, event):
         if self.GetDateTime() is not None:
-            if event.GetUnicodeKey() == ord('t'):
+            if event.GetUnicodeKey() in [ord('t'), ord('T')]:
                 # Today, same time
                 self.SetDateTime(datetime.datetime.combine(datetime.datetime.now().date(), self.GetDateTime().time()),
                                  notify=True)
                 return True
-            elif event.GetUnicodeKey() == ord('n'):
+            elif event.GetUnicodeKey() in [ord('n'), ord('N')]:
                 # Now
                 self.SetDateTime(datetime.datetime.now())
                 return True
