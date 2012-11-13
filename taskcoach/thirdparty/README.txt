@@ -11,16 +11,6 @@ Source: http://svn.wxwidgets.org/viewvc/wx/wxPython/3rdParty/AGW/agw/aui/?pathre
 Copied on: 2012-08-28
 Changes for Task Coach: none
 
-Component: ntlm
-Name: python-ntlm
-Author: Ben Dyer <ben.dyer@taguchimail.com>
-Version: no version number
-Date: 2011-06-09
-License: GPL v3
-Source: https://github.com/bendyer/python-ntlm
-Copied on: 2012-07-31
-Changes for Task Coach: none
-
 Component: customtreectrl.py
 Name: CustomTreeCtrl
 Author: Andrea Gavana <andrea.gavana@gmail.com>
