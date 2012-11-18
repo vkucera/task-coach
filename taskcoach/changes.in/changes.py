@@ -33,6 +33,7 @@ change the sort order didn't work.'''),
         Bugv2('''Using Shift+Enter key on the number keypad woud not work on OS X
 nor Linux.''', '1285'),
         Bugv2('''Search defaults to simple substring matching.''', '1286'),
+        Bugv2('''Growl notifications didn't work with Growl 2.0.''', '1324'),
         ],
     featuresAdded=[
         Feature('''New, hopefully more intuitive date/time control.'''),
