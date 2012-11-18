@@ -38,10 +38,4 @@ from calendarwidget import Calendar
 from calendarconfig import CalendarConfigDialog
 from password import GetPassword
 import masked
-try:
-    from wx.lib import sized_controls
-except ImportError:
-    try:
-        from wxaddons import sized_controls # pylint: disable=F0401
-    except ImportError:
-        from taskcoachlib.thirdparty import sized_controls # pylint: disable=W0404
+from wx.lib import sized_controls

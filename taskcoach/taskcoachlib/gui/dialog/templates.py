@@ -21,7 +21,7 @@ from taskcoachlib.domain.task import Task
 from taskcoachlib import persistence, operating_system
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty.deltaTime import nlTimeExpression
-from taskcoachlib.thirdparty import sized_controls
+from wx.lib import sized_controls
 
 
 class TimeExpressionEntry(wx.TextCtrl):

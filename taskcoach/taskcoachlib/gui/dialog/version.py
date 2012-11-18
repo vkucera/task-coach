@@ -20,7 +20,7 @@ import wx
 from wx.lib import hyperlink
 from taskcoachlib import meta
 from taskcoachlib.i18n import _
-from taskcoachlib.widgets import sized_controls
+from wx.lib import sized_controls
 
 
 class VersionDialog(sized_controls.SizedDialog):  # pylint: disable=R0904,R0901
