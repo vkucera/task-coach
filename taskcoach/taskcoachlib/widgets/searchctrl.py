@@ -27,6 +27,7 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
         self.__matchCase = kwargs.pop('matchCase', False)
         self.__includeSubItems = kwargs.pop('includeSubItems', False)
         self.__searchDescription = kwargs.pop('searchDescription', False)
+        self.__regularExpression = kwargs.pop('regularExpression', False)
         self.__bitmapSize = kwargs.pop('size', (16, 16))
         super(SearchCtrl, self).__init__(*args, **kwargs)
         self.SetSearchMenuBitmap(self.getBitmap('magnifier_glass_dropdown_icon'))
@@ -65,6 +66,10 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
             _('&Search description too'),
             _('Search both subject and description'))
         self.__searchDescriptionMenuItem.Check(self.__searchDescription)
+        self.__regularExpressionMenuItem = menu.AppendCheckItem(wx.ID_ANY,
+            _('&Regular Expression'),
+            _('Consider search text as a regular expression'))
+        self.__regularExpressionMenuItem.Check(self.__regularExpression)
         self.SetMenu(menu)
         
     def PopupMenu(self): # pylint: disable=W0221
@@ -83,7 +88,9 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
                      (wx.EVT_MENU, self.onIncludeSubItemsMenuItem, 
                          self.__includeSubItemsMenuItem),
                      (wx.EVT_MENU, self.onSearchDescriptionMenuItem,
-                         self.__searchDescriptionMenuItem)]:
+                         self.__searchDescriptionMenuItem),
+                     (wx.EVT_MENU, self.onRegularExpressionMenuItem,
+                         self.__regularExpressionMenuItem)]:
             self.Bind(*args) 
         # Precreate menu item ids for the recent searches and bind the event
         # handler for those menu item ids. It's no problem that the actual menu
@@ -105,12 +112,17 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
     def setSearchDescription(self, searchDescription):
         self.__searchDescription = searchDescription
         self.__searchDescriptionMenuItem.Check(searchDescription)
-        
+
+    def setRegularExpression(self, regularExpression):
+        self.__regularExpression = regularExpression
+        self.__regularExpressionMenuItem.Check(regularExpression)
+
     def isValid(self):
-        try:
-            re.compile(self.GetValue())
-        except sre_constants.error:
-            return False
+        if self.__regularExpression:
+            try:
+                re.compile(self.GetValue())
+            except sre_constants.error:
+                return False
         return True
 
     def onFindLater(self, event): # pylint: disable=W0613
@@ -137,7 +149,7 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
             self.rememberSearchString(searchString)
         self.ShowCancelButton(bool(searchString))
         self.__callback(searchString, self.__matchCase, self.__includeSubItems,
-                        self.__searchDescription)
+                        self.__searchDescription, self.__regularExpression)
 
     def onCancel(self, event):
         self.SetValue('')
@@ -159,7 +171,11 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
     def onSearchDescriptionMenuItem(self, event):
         self.__searchDescription = self._isMenuItemChecked(event)
         self.onFind(event)
-        
+
+    def onRegularExpressionMenuItem(self, event):
+        self.__regularExpression = self._isMenuItemChecked(event)
+        self.onFind(event)
+
     def onRecentSearchMenuItem(self, event):
         self.SetValue(self.__recentSearches[event.GetId()-self.__recentSearchMenuItemIds[0]])
         self.onFind(event)
@@ -181,8 +197,8 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
         self.addRecentSearches(menu)
         
     def removeRecentSearches(self, menu):
-        while menu.GetMenuItemCount() > 3:
-            item = menu.FindItemByPosition(3)
+        while menu.GetMenuItemCount() > 4:
+            item = menu.FindItemByPosition(4)
             menu.DestroyItem(item)
 
     def addRecentSearches(self, menu):

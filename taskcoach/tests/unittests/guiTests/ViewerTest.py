@@ -235,7 +235,7 @@ class SearchableViewerTest(test.TestCase):
         self.failUnless(self.viewer.isSearchable())
         
     def testDefaultSearchFilter(self):
-        self.assertEqual(('', False, False, False), self.viewer.getSearchFilter())
+        self.assertEqual(('', False, False, False, False), self.viewer.getSearchFilter())
         
     def testSetSearchFilterString(self):
         self.viewer.setSearchFilter('bla', matchCase=True)

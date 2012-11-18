@@ -39,23 +39,27 @@ class SearchableViewerMixin(object):
         return base.SearchFilter(presentation, **self.searchOptions())
 
     def searchOptions(self):
-        searchString, matchCase, includeSubItems, searchDescription = self.getSearchFilter()
+        searchString, matchCase, includeSubItems, searchDescription, regularExpression = self.getSearchFilter()
         return dict(searchString=searchString, 
                     matchCase=matchCase, 
                     includeSubItems=includeSubItems, 
                     searchDescription=searchDescription,
+                    regularExpression=regularExpression,
                     treeMode=self.isTreeViewer())
     
     def setSearchFilter(self, searchString, matchCase=False, 
-                        includeSubItems=False, searchDescription=False):
+                        includeSubItems=False, searchDescription=False,
+                        regularExpression=False):
         section = self.settingsSection()
         self.settings.set(section, 'searchfilterstring', searchString)
         self.settings.set(section, 'searchfiltermatchcase', str(matchCase))
         self.settings.set(section, 'searchfilterincludesubitems', str(includeSubItems))
         self.settings.set(section, 'searchdescription', str(searchDescription))
+        self.settings.set(section, 'regularexpression', str(regularExpression))
         self.presentation().setSearchFilter(searchString, matchCase=matchCase, 
                                             includeSubItems=includeSubItems,
-                                            searchDescription=searchDescription)
+                                            searchDescription=searchDescription,
+                                            regularExpression=regularExpression)
         
     def getSearchFilter(self):
         section = self.settingsSection()
@@ -63,7 +67,8 @@ class SearchableViewerMixin(object):
         matchCase = self.settings.getboolean(section, 'searchfiltermatchcase')
         includeSubItems = self.settings.getboolean(section, 'searchfilterincludesubitems')
         searchDescription = self.settings.getboolean(section, 'searchdescription')
-        return searchString, matchCase, includeSubItems, searchDescription
+        regularExpression = self.settings.getboolean(section, 'regularexpression')
+        return searchString, matchCase, includeSubItems, searchDescription, regularExpression
     
     def createToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''

@@ -100,37 +100,45 @@ class SearchFilter(Filter):
         matchCase = kwargs.pop('matchCase', False)
         includeSubItems = kwargs.pop('includeSubItems', False)
         searchDescription = kwargs.pop('searchDescription', False)
+        regularExpression = kwargs.pop('regularExpression', False)
 
         self.setSearchFilter(searchString, matchCase=matchCase, 
                              includeSubItems=includeSubItems, 
-                             searchDescription=searchDescription, doReset=False)
+                             searchDescription=searchDescription,
+                             regularExpression=regularExpression, doReset=False)
 
         super(SearchFilter, self).__init__(*args, **kwargs)
 
     def setSearchFilter(self, searchString, matchCase=False, 
                         includeSubItems=False, searchDescription=False, 
-                        doReset=True):
+                        regularExpression=False, doReset=True):
         # pylint: disable=W0201
         self.__includeSubItems = includeSubItems
         self.__searchDescription = searchDescription
-        self.__searchPredicate = self.__compileSearchPredicate(searchString, matchCase)
+        self.__regularExpression = regularExpression
+        self.__searchPredicate = self.__compileSearchPredicate(searchString, matchCase, regularExpression)
         if doReset:
             self.reset()
 
     @staticmethod
-    def __compileSearchPredicate(searchString, matchCase):
+    def __compileSearchPredicate(searchString, matchCase, regularExpression):
         if not searchString:
             return ''
         flag = 0 if matchCase else re.IGNORECASE | re.UNICODE
-        try:    
-            rx = re.compile(searchString, flag)
-        except sre_constants.error:
-            if matchCase:
-                return lambda x: x.find(searchString) != -1
+        if regularExpression:
+            try:    
+                rx = re.compile(searchString, flag)
+            except sre_constants.error:
+                if matchCase:
+                    return lambda x: x.find(searchString) != -1
+                else:
+                    return lambda x: x.lower().find(searchString.lower()) != -1
             else:
-                return lambda x: x.lower().find(searchString.lower()) != -1
+                return rx.search
+        elif matchCase:
+            return lambda x: x.find(searchString) != -1
         else:
-            return rx.search
+            return lambda x: x.lower().find(searchString.lower()) != -1
 
     def filterItems(self, items):
         return [item for item in items if \

@@ -2490,18 +2490,19 @@ class Search(ViewerCommand, SettingsCommand):
         assert self.viewer.isSearchable()
                            
     def onFind(self, searchString, matchCase, includeSubItems, 
-               searchDescription):
+               searchDescription, regularExpression):
         self.viewer.setSearchFilter(searchString, matchCase, includeSubItems, 
-                                    searchDescription)
+                                    searchDescription, regularExpression)
 
     def appendToToolBar(self, toolbar):
-        searchString, matchCase, includeSubItems, searchDescription = \
+        searchString, matchCase, includeSubItems, searchDescription, regularExpression = \
             self.viewer.getSearchFilter()
         # pylint: disable=W0201
         self.searchControl = widgets.SearchCtrl(toolbar, value=searchString,
             style=wx.TE_PROCESS_ENTER, matchCase=matchCase, 
             includeSubItems=includeSubItems, 
-            searchDescription=searchDescription, callback=self.onFind)
+            searchDescription=searchDescription, regularExpression=regularExpression,
+            callback=self.onFind)
         toolbar.AddControl(self.searchControl)
         self.bindKeyDownInViewer()
         self.bindKeyDownInSearchCtrl()
