@@ -92,7 +92,7 @@ elif system == 'Darwin':
     sys.path.insert(0, os.path.join('taskcoachlib', 'bin.in', 'macos', 'IA%s' % wordSize))
     sys.path.insert(0, os.path.join('extension', 'macos', 'bin-ia32'))
     # pylint: disable=F0401,W0611
-    import _growl, _growlImage, _powermgt
+    import _powermgt
     import _idle
 
 
