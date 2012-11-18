@@ -19,19 +19,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
 import struct
 import sys
+import tempfile
+import wx
 
-_subdir = 'IA64' if struct.calcsize('L') == 8 else 'IA32'
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'bin.in', 'macos', _subdir))
-
-from taskcoachlib.thirdparty import Growl
+import taskcoachlib.thirdparty.gntp.notifier as Growl
 from taskcoachlib import meta
 from notifier import AbstractNotifier
-
-
-class TaskCoachGrowlNotifier(Growl.GrowlNotifier):
-    applicationName = meta.name
-    notifications = [u'Reminder']
 
 
 class GrowlNotifier(AbstractNotifier):
@@ -39,7 +32,7 @@ class GrowlNotifier(AbstractNotifier):
         super(GrowlNotifier, self).__init__()
         try:
             # pylint: disable=E1101
-            self._notifier = TaskCoachGrowlNotifier(applicationIcon=Growl.Image.imageWithIconForCurrentApplication())
+            self._notifier = Growl.GrowlNotifier(applicationName=meta.name, notifications=[u'Reminder'])
             self._notifier.register()
         except:
             self._available = False  # pylint: disable=W0702
@@ -53,9 +46,15 @@ class GrowlNotifier(AbstractNotifier):
         return self._available
 
     def notify(self, title, summary, bitmap, **kwargs):
-        # The bitmap is not actually used here...
-        self._notifier.notify(noteType=u'Reminder', title=title, description=summary,
-                              sticky=True)
+        # Not really efficient...
+        fd, filename = tempfile.mkstemp('.png')
+        os.close(fd)
+        try:
+            bitmap.SaveFile(filename, wx.BITMAP_TYPE_PNG)
+            self._notifier.notify(noteType=u'Reminder', icon=file(filename, 'rb').read(), title=title, description=summary,
+                                  sticky=True)
+        finally:
+            os.remove(filename)
 
 
 AbstractNotifier.register(GrowlNotifier())
