@@ -30,19 +30,26 @@ class Menu(wx.Menu, uicommand.UICommandContainerMixin):
     def __init__(self, window):
         super(Menu, self).__init__()
         self._window = window
+        self._accels = list()
         
     def __len__(self):
         return self.GetMenuItemCount()
 
+    def accelerators(self):
+        return self._accels
+
     def appendUICommand(self, uiCommand):
-        return uiCommand.addToMenu(self, self._window)
-    
+        cmd = uiCommand.addToMenu(self, self._window)
+        self._accels.extend(uiCommand.accelerators())
+        return cmd
+
     def appendMenu(self, text, subMenu, bitmap=None):
         subMenuItem = wx.MenuItem(self, id=wx.NewId(), text=text, 
                                   subMenu=subMenu)
         if bitmap:
             subMenuItem.SetBitmap(wx.ArtProvider_GetBitmap(bitmap, 
                 wx.ART_MENU, (16, 16)))
+        self._accels.extend(subMenu.accelerators())
         self.AppendItem(subMenuItem)
 
     def invokeMenuItem(self, menuItem):
@@ -182,15 +189,23 @@ class MainMenu(wx.MenuBar):
     def __init__(self, mainwindow, settings, iocontroller, viewerContainer,
                  taskFile):
         super(MainMenu, self).__init__()
-        self.Append(FileMenu(mainwindow, settings, iocontroller,
-                             viewerContainer), _('&File'))
-        self.Append(EditMenu(mainwindow, settings, iocontroller, 
-                             viewerContainer), _('&Edit'))
-        self.Append(ViewMenu(mainwindow, settings, viewerContainer, taskFile),
-                    _('&View'))
-        self.Append(NewMenu(mainwindow, settings, taskFile, viewerContainer), _('&New'))
-        self.Append(ActionMenu(mainwindow, settings, taskFile, viewerContainer), _('&Actions'))
-        self.Append(HelpMenu(mainwindow, settings, iocontroller), _('&Help'))
+        accels = list()
+        for menu, text in [
+                (FileMenu(mainwindow, settings, iocontroller,
+                          viewerContainer), _('&File')),
+                (EditMenu(mainwindow, settings, iocontroller,
+                          viewerContainer), _('&Edit')),
+                (ViewMenu(mainwindow, settings, viewerContainer,
+                          taskFile), _('&View')),
+                (NewMenu(mainwindow, settings, taskFile,
+                         viewerContainer), _('&New')),
+                (ActionMenu(mainwindow, settings, taskFile,
+                            viewerContainer), _('&Actions')),
+                (HelpMenu(mainwindow, settings, iocontroller), _('&Help'))
+                ]:
+            self.Append(menu, text)
+            accels.extend(menu.accelerators())
+        mainwindow.SetAcceleratorTable(wx.AcceleratorTable(accels))
 
        
 class FileMenu(Menu):

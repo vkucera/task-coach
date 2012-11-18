@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import test
 from taskcoachlib.gui import dialog
 from taskcoachlib import config
-from taskcoachlib.thirdparty import sized_controls
+from wx.lib import sized_controls
 
 
 class DummyColumn(object):

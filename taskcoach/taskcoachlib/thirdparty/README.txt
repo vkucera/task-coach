@@ -3,7 +3,7 @@ Name: GUID
 Author: Conan C. Albrecht
 Version: 2.6
 Date: 2012-10-14
-License: see guid.py
+License: MIT
 Source: http://code.activestate.com/recipes/163604-guid/
 Copied on: 2012-10-14
 Changes for Task Coach: none
@@ -63,10 +63,10 @@ Patch file: hypertreelist.py.patch
 
 Component: ntlm
 Name: python-ntlm
-Author: Ben Dyer <ben.dyer@taguchimail.com>
+Author: Ben Dyer <ben.dyer@taguchimail.com>, Dmitry A. Rozmanov <dima@xenon.spb.ru>, Matthijs Mullender <info@zopyx.org>
 Version: no version number
 Date: 2011-06-09
-Licence: GPL v3
+Licence: LGPL v3 or later
 Source: https://github.com/bendyer/python-ntlm
 Copied on: 2012-07-31
 Changes for Task Coach: make __init__.py non-empty so that it gets packaged

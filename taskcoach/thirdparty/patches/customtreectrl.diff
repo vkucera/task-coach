@@ -1,7 +1,5 @@
-Index: customtreectrl.py
-===================================================================
---- customtreectrl.py	(revision 5199)
-+++ customtreectrl.py	(working copy)
+--- a/customtreectrl.py	2012-11-18 15:11:07.000000000 +0100
++++ b/customtreectrl.py	2012-11-18 15:08:42.000000000 +0100
 @@ -1601,6 +1601,7 @@
  
          self._isCollapsed = True
@@ -32,7 +30,7 @@ Index: customtreectrl.py
      def HasChildren(self):
          """
          Returns whether the item has children or not.
-@@ -2120,7 +2132,13 @@
+@@ -2120,6 +2132,12 @@
  
          return self._hasHilight != 0 
  
@@ -40,9 +38,17 @@ Index: customtreectrl.py
 +        """
 +        Returns the hilight style.
 +        """
- 
-+        return self._hilightPart
 +
++        return self._hilightPart
+ 
      def IsExpanded(self):
          """
-         Returns whether the item is expanded or not.
+@@ -7125,7 +7143,7 @@
+                 event.Skip()
+                 return
+             
+-            if not event.HasModifiers():
++            if not (event.HasModifiers() or event.CmdDown()):
+                 event = TreeEvent(wxEVT_TREE_ITEM_ACTIVATED, self.GetId())
+                 event._item = self._current
+                 event.SetEventObject(self)

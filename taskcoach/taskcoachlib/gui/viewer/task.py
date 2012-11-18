@@ -609,6 +609,10 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
                                       eventType)
         date.Scheduler().schedule_interval(self.atMidnight, days=1)
 
+    def detach(self):
+        super(CalendarViewer, self).detach()
+        date.Scheduler().unschedule(self.atMidnight)
+
     def isTreeViewer(self):
         return False
 

@@ -93,17 +93,18 @@ class StackedFilterTest(test.TestCase):
 class SearchFilterTest(test.TestCase):
     def setUp(self):
         task.Task.settings = config.Settings(load=False)
-        self.parent = task.Task(subject='*ABC', description='Parent description')
+        self.parent = task.Task(subject='*ABC$D', description='Parent description')
         self.child = task.Task(subject='DEF', description='Child description')
         self.parent.addChild(self.child)
         self.list = task.TaskList([self.parent, self.child])
         self.filter = base.SearchFilter(self.list)
 
     def setSearchString(self, searchString, matchCase=False,
-                        includeSubItems=False, searchDescription=False):
+                        includeSubItems=False, searchDescription=False, regularExpression=True):
         self.filter.setSearchFilter(searchString, matchCase=matchCase, 
                                     includeSubItems=includeSubItems,
-                                    searchDescription=searchDescription)
+                                    searchDescription=searchDescription,
+                                    regularExpression=regularExpression)
         
     def testNoMatch(self):
         self.setSearchString('XYZ')
@@ -123,6 +124,10 @@ class SearchFilterTest(test.TestCase):
 
     def testMatchWithRE(self):
         self.setSearchString('a.c')
+        self.assertEqual(1, len(self.filter))
+
+    def testMatchWithoutRE(self):
+        self.setSearchString('$D', regularExpression=False)
         self.assertEqual(1, len(self.filter))
 
     def testMatchWithEmptyString(self):

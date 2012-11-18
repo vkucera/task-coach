@@ -89,6 +89,20 @@ class UICommand(object):
     def __eq__(self, other):
         return self is other
 
+    def accelerators(self):
+        # The ENTER and NUMPAD_ENTER keys are treated differently between platforms...
+        if '\t' in self.menuText and ('ENTER' in self.menuText or 'RETURN' in self.menuText):
+            flags = wx.ACCEL_NORMAL
+            for key in self.menuText.split('\t')[1].split('+'):
+                if key == 'Ctrl':
+                    flags |= wx.ACCEL_CMD if operating_system.isMac() else wx.ACCEL_CTRL
+                elif key in ['Shift', 'Alt']:
+                    flags |= dict(Shift=wx.ACCEL_SHIFT, Alt=wx.ACCEL_ALT)[key]
+                else:
+                    assert key in ['ENTER', 'RETURN'], key
+            return [(flags, wx.WXK_NUMPAD_ENTER, self.id)]
+        return []
+
     def addToMenu(self, menu, window, position=None):
         menuItem = wx.MenuItem(menu, self.id, self.menuText, self.helpText, 
             self.kind)
@@ -2476,18 +2490,19 @@ class Search(ViewerCommand, SettingsCommand):
         assert self.viewer.isSearchable()
                            
     def onFind(self, searchString, matchCase, includeSubItems, 
-               searchDescription):
+               searchDescription, regularExpression):
         self.viewer.setSearchFilter(searchString, matchCase, includeSubItems, 
-                                    searchDescription)
+                                    searchDescription, regularExpression)
 
     def appendToToolBar(self, toolbar):
-        searchString, matchCase, includeSubItems, searchDescription = \
+        searchString, matchCase, includeSubItems, searchDescription, regularExpression = \
             self.viewer.getSearchFilter()
         # pylint: disable=W0201
         self.searchControl = widgets.SearchCtrl(toolbar, value=searchString,
             style=wx.TE_PROCESS_ENTER, matchCase=matchCase, 
             includeSubItems=includeSubItems, 
-            searchDescription=searchDescription, callback=self.onFind)
+            searchDescription=searchDescription, regularExpression=regularExpression,
+            callback=self.onFind)
         toolbar.AddControl(self.searchControl)
         self.bindKeyDownInViewer()
         self.bindKeyDownInSearchCtrl()
