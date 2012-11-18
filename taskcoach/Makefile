@@ -179,7 +179,7 @@ thirdpartymodules:
 	cd thirdparty; tar xzf PyPubSub-3.1.2.tar.gz --strip-components=2 -C ../taskcoachlib/thirdparty PyPubSub-3.1.2/src/pubsub
 	cd thirdparty; tar xzf SquareMap-1.0.1b3.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty SquareMap-1.0.1b3/squaremap
 	cd thirdparty; tar xzf python-ntlm-40080cff37ab32570f9bb50bad0a46b957409c18.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty python-ntlm/ntlm
-	cd thirdparty; tar xzf wxScheduler-r144.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty wxScheduler/wxScheduler
+	cd thirdparty; tar xzf wxScheduler-r146.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty wxScheduler/wxScheduler
 	cd thirdparty; tar xzf aui-r72315.tar.gz -C ../taskcoachlib/thirdparty
 	cd thirdparty; tar xzf WMI-1.4.9.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty WMI-1.4.9/wmi.py
 	cd thirdparty; tar xzf pyparsing-1.5.5.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty pyparsing-1.5.5/pyparsing_py2.py
@@ -189,11 +189,12 @@ thirdpartymodules:
 	cd thirdparty; tar xzf SendKeys-ctypes-0.2.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty SendKeys-ctypes-0.2/_sendkeys.py
 	cd thirdparty; tar xzf agw-r70845.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty agw/customtreectrl.py
 	cd thirdparty; tar xzf agw-r70819.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty agw/hypertreelist.py
+	cd thirdparty; tar xzf gntp-d639fa2e981fe41196a5115ad64320b5061f004b.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty gntp/gntp
 	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/APScheduler.diff
 	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/lockfile.diff
 	cd taskcoachlib/thirdparty/pubsub; patch -p1 < ../../../thirdparty/patches/pubsub.diff
 	cd taskcoachlib/thirdparty/squaremap; patch -p1 < ../../../thirdparty/patches/squaremap.diff
-	cd taskcoachlib/thirdparty; patch -p0 < ../../thirdparty/patches/customtreectrl.diff
+	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/customtreectrl.diff
 	cd taskcoachlib/thirdparty; patch -p0 < ../../thirdparty/patches/hypertreelist.diff
 	$(PYTHON) fixinit.py
 

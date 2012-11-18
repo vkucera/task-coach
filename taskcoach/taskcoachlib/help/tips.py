@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import meta
 from taskcoachlib.i18n import _
-from taskcoachlib.thirdparty import sized_controls
+from wx.lib import sized_controls
 import wx
 
 

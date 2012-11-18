@@ -29,6 +29,11 @@ Release('1.3.21', 'October ??, 2012',
 calendar viewer to refresh.'''),
         Bugv2('''On Mac OS X, clicking the period column in effort viewers to 
 change the sort order didn't work.'''),
+        Bugv2('''Adapt font size to available space in calendar view.''', '1039'),
+        Bugv2('''Using Shift+Enter key on the number keypad woud not work on OS X
+nor Linux.''', '1285'),
+        Bugv2('''Search defaults to simple substring matching.''', '1286'),
+        Bugv2('''Growl notifications didn't work with Growl 2.0.''', '1324'),
         ],
     featuresAdded=[
         Feature('''Display dates in human-readable form in viewers (today,
