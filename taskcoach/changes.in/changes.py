@@ -30,6 +30,8 @@ calendar viewer to refresh.'''),
         Bugv2('''On Mac OS X, clicking the period column in effort viewers to 
 change the sort order didn't work.'''),
         Bugv2('''Adapt font size to available space in calendar view.''', '1039'),
+        Bugv2('''Using Shift+Enter key on the number keypad woud not work on OS X
+nor Linux.''', '1285'),
         ],
     featuresAdded=[
         Feature('''Display dates in human-readable form in viewers (today,
