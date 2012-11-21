@@ -22,7 +22,8 @@
 
 	UILabel *subject;
 	UILabel *priority;
-	UILabel *infos;
+	UILabel *categoryInfos;
+    IBOutlet UILabel *dateInfos;
 	UITextView *description;
 	UIImageView *tracking;
 	CheckView *check;
@@ -32,7 +33,7 @@
 
 @property (nonatomic, retain) IBOutlet UILabel *subject;
 @property (nonatomic, retain) IBOutlet UILabel *priority;
-@property (nonatomic, retain) IBOutlet UILabel *infos;
+@property (nonatomic, retain) IBOutlet UILabel *categoryInfos;
 @property (nonatomic, retain) IBOutlet UITextView *description;
 @property (nonatomic, retain) IBOutlet UIImageView *tracking;
 @property (nonatomic, retain) IBOutlet CheckView *check;

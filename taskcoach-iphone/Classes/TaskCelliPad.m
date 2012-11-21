@@ -13,6 +13,7 @@
 #import "String+Utils.h"
 #import "CheckView.h"
 #import "Configuration.h"
+#import "DateUtils.h"
 #import "i18n.h"
 
 @implementation TaskCelliPad
@@ -21,7 +22,7 @@
 
 @synthesize subject;
 @synthesize priority;
-@synthesize infos;
+@synthesize categoryInfos;
 @synthesize description;
 @synthesize tracking;
 @synthesize check;
@@ -43,11 +44,12 @@
 
 	self.subject = nil;
 	self.priority = nil;
-	self.infos = nil;
+	self.categoryInfos = nil;
 	self.description = nil;
 	self.tracking = nil;
 	self.check = nil;
 
+    [dateInfos release];
 	[super dealloc];
 }
 
@@ -75,7 +77,7 @@
 	NSMutableArray *cats = [[NSMutableArray alloc] init];
 	for (CDCategory *cat in task.categories)
 		[cats addObject:cat.name];
-	infos.text = [@", " stringByJoiningStrings:cats];
+	categoryInfos.text = [@", " stringByJoiningStrings:cats];
 	[cats release];
 	
 	NSInteger prio = [task.priority intValue];
@@ -84,23 +86,31 @@
 	priority.textColor = [UIColor colorWithRed:1.0 * prio / 15 green:1.0 - 1.0 * prio / 15 blue:0 alpha:1.0];
 
 	UIColor *textColor = nil;
+    dateInfos.text = @"";
 
 	switch ([[task dateStatus] intValue])
 	{
 		case TASKSTATUS_COMPLETED:
 			textColor = [UIColor greenColor];
+            dateInfos.text = [NSString stringWithFormat:_("Completed %@"), [[UserTimeUtils instance] stringFromDate:task.completionDate]];
 			break;
 		case TASKSTATUS_OVERDUE:
 			textColor = [UIColor redColor];
+			dateInfos.text = [NSString stringWithFormat:_("Due %@"), [[UserTimeUtils instance] stringFromDate:task.dueDate]];
 			break;
 		case TASKSTATUS_DUESOON:
 			textColor = [UIColor orangeColor];
+			dateInfos.text = [NSString stringWithFormat:_("Due %@"), [[UserTimeUtils instance] stringFromDate:task.dueDate]];
 			break;
 		case TASKSTATUS_STARTED:
 			textColor = [UIColor blueColor];
+			if (task.dueDate)
+				dateInfos.text = [NSString stringWithFormat:_("Due %@"), [[UserTimeUtils instance] stringFromDate:task.dueDate]];
 			break;
 		case TASKSTATUS_NOTSTARTED:
 			textColor = [UIColor grayColor];
+			if (task.startDate)
+				dateInfos.text = [NSString stringWithFormat:_("Start %@"), [[UserTimeUtils instance] stringFromDate:task.startDate]];
 			break;
 		default:
 			break;
