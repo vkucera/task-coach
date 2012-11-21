@@ -1786,6 +1786,7 @@
 					armv7,
 					armv7s,
 				);
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Jérôme Laheurte";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jérôme Laheurte";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_THUMB_SUPPORT = NO;
@@ -1805,6 +1806,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "";
+				PROVISIONING_PROFILE = "93C7517E-59A7-4068-B721-AAD1E9920E2C";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "01836BBC-8D22-45E5-8E12-826820722B18";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
