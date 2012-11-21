@@ -39,6 +39,8 @@
 		date = [[NSDate dateRounded] retain];
 	}
 
+    // Setting this to nil as the doc suggests makes the iOS 5.0 simulator crash
+    [self.picker setLocale:[NSLocale currentLocale]];
 	[self.picker setDate:date animated:NO];
 }
 
