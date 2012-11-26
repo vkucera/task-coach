@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-11-18 16:56+CET\n"
+"POT-Creation-Date: 2012-11-25 11:29+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -5727,6 +5727,14 @@ msgstr ""
 msgid "No subject"
 msgstr ""
 
+#: taskcoachlib/persistence/xml/templates.py:8
+msgid "New task due today"
+msgstr ""
+
+#: taskcoachlib/persistence/xml/templates.py:10
+msgid "New task due tomorrow"
+msgstr ""
+
 #: taskcoachlib/render.py:49 taskcoachlib/thirdparty/smartdatetimectrl.py:1281
 msgid "%d days"
 msgstr ""
@@ -5817,6 +5825,60 @@ msgstr ""
 
 #: taskcoachlib/syncml/sync.py:216
 msgid "You must first edit your SyncML Settings, in Edit/SyncML preferences."
+msgstr ""
+
+#: taskcoachlib/thirdparty/aui/aui_switcherdialog.py:1052
+msgid "Pane Switcher"
+msgstr ""
+
+#: taskcoachlib/thirdparty/aui/aui_switcherdialog.py:1177
+msgid "\"><b>"
+msgstr ""
+
+#: taskcoachlib/thirdparty/aui/aui_switcherdialog.py:1177
+msgid "</b>"
+msgstr ""
+
+#: taskcoachlib/thirdparty/aui/aui_switcherdialog.py:1177
+msgid "<body bgcolor=\"#"
+msgstr ""
+
+#: taskcoachlib/thirdparty/aui/aui_switcherdialog.py:1180
+msgid "<p>"
+msgstr ""
+
+#: taskcoachlib/thirdparty/aui/aui_switcherdialog.py:1183
+msgid "</body>"
+msgstr ""
+
+#: taskcoachlib/thirdparty/aui/framemanager.py:10128
+msgid "Restore %s"
+msgstr ""
+
+#: taskcoachlib/thirdparty/aui/framemanager.py:10561
+msgid "Pane Preview"
+msgstr ""
+
+#: taskcoachlib/thirdparty/aui/tabmdi.py:32
+msgid "Cl&ose"
+msgstr ""
+
+#: taskcoachlib/thirdparty/aui/tabmdi.py:33
+msgid "Close All"
+msgstr ""
+
+#: taskcoachlib/thirdparty/aui/tabmdi.py:35
+msgid "&Next"
+msgstr ""
+
+#: taskcoachlib/thirdparty/aui/tabmdi.py:36
+msgid "&Previous"
+msgstr ""
+
+#: taskcoachlib/thirdparty/aui/tabmdi.py:203
+#: taskcoachlib/thirdparty/aui/tabmdi.py:214
+#: taskcoachlib/thirdparty/aui/tabmdi.py:216
+msgid "&Window"
 msgstr ""
 
 #: taskcoachlib/thirdparty/smartdatetimectrl.py:1228

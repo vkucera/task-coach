@@ -76,6 +76,7 @@ sdist_ubuntu: sdist_linux
 
 dist/TaskCoach-$(TCVERSION).tar.gz:
 	$(PYTHON) make.py sdist --formats=gztar --no-prune --template=build.in/debian/MANIFEST.in
+	echo Created dist/TaskCoach-$(TCVERSION).tar.gz
 
 rpm: prepare changes templates
 	cp build.in/debian/MANIFEST.in .

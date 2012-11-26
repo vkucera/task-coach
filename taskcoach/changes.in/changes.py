@@ -34,11 +34,13 @@ change the sort order didn't work.'''),
 nor Linux.''', '1285'),
         Bugv2('''Search defaults to simple substring matching.''', '1286'),
         Bugv2('''Growl notifications didn't work with Growl 2.0.''', '1324'),
+        Bugv2('''Fix another encoding problem on some locales (Windows)'''),
         ],
     featuresAdded=[
         Feature('''New, hopefully more intuitive date/time control.'''),
         Feature('''Display dates in human-readable form in viewers (today,
 yesterday, tomorrow).'''),
+        Feature('''Startup and shutdown performance improvements'''),
         ],
     ),
 
