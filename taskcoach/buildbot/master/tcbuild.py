@@ -286,8 +286,7 @@ class UploadPortableApps(UploadBase):
 # Source
 
 class BuildSourceTar(DistCompile):
-    filename_rx = re.compile(r'tar -cf (.*\.tar)')
-    filesuffix = '.gz'
+    filename_rx = re.compile('^Created (.*)$')
 
     name = 'sdist_linux'
     description = ['Generating', 'source', 'distribution']
