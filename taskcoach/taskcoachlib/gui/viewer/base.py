@@ -44,6 +44,7 @@ class Viewer(patterns.Observer, wx.Panel):
         self.taskFile = taskFile
         self.settings = settings
         self.__settingsSection = kwargs.pop('settingsSection')
+        self.__freezeCount = 0
         # The how maniest of this viewer type are we? Used for settings
         self.__instanceNumber = kwargs.pop('instanceNumber')
         self.__use_separate_settings_section = kwargs.pop('use_separate_settings_section', 
@@ -64,6 +65,19 @@ class Viewer(patterns.Observer, wx.Panel):
         self.initLayout()
         self.registerPresentationObservers()
         self.refresh()
+
+        pub.subscribe(self.onBeginIO, 'taskfile.aboutToRead')
+        pub.subscribe(self.onBeginIO, 'taskfile.aboutToClear')
+        pub.subscribe(self.onEndIO, 'taskfile.justRead')
+        pub.subscribe(self.onEndIO, 'taskfile.justCleared')
+
+    def onBeginIO(self, taskFile):
+        self.__freezeCount += 1
+
+    def onEndIO(self, taskFile):
+        self.__freezeCount -= 1
+        if self.__freezeCount == 0:
+            self.refresh()
         
     def domainObjectsToView(self):
         ''' Return the domain objects that this viewer should display. For
@@ -104,7 +118,12 @@ class Viewer(patterns.Observer, wx.Panel):
                 popupMenu.Destroy()
             except wx.PyDeadObjectError:
                 pass
-    
+
+        pub.unsubscribe(self.onBeginIO, 'taskfile.aboutToRead')
+        pub.unsubscribe(self.onBeginIO, 'taskfile.aboutToClear')
+        pub.unsubscribe(self.onEndIO, 'taskfile.justRead')
+        pub.unsubscribe(self.onEndIO, 'taskfile.justCleared')
+
     def viewerStatusEventType(self):
         return 'viewer%s.status' % id(self)
     
@@ -217,12 +236,13 @@ class Viewer(patterns.Observer, wx.Panel):
         self.widget.Thaw()
 
     def refresh(self):
-        if self:
+        if self and not self.__freezeCount:
             self.widget.RefreshAllItems(len(self.presentation()))
     
     def refreshItems(self, *items):
-        items = [item for item in items if item in self.presentation()]
-        self.widget.RefreshItems(*items)  # pylint: disable=W0142
+        if not self.__freezeCount:
+            items = [item for item in items if item in self.presentation()]
+            self.widget.RefreshItems(*items)  # pylint: disable=W0142
         
     def select(self, items):
         self.__curselection = items

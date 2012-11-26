@@ -287,12 +287,16 @@ class TaskFile(patterns.Observer):
 
     @patterns.eventSource
     def clear(self, regenerate=True, event=None):
-        self.tasks().clear(event=event)
-        self.categories().clear(event=event)
-        self.notes().clear(event=event)
-        if regenerate:
-            self.__guid = generate()
-            self.__syncMLConfig = createDefaultSyncConfig(self.__guid)
+        pub.sendMessage('taskfile.aboutToClear', taskFile=self)
+        try:
+            self.tasks().clear(event=event)
+            self.categories().clear(event=event)
+            self.notes().clear(event=event)
+            if regenerate:
+                self.__guid = generate()
+                self.__syncMLConfig = createDefaultSyncConfig(self.__guid)
+        finally:
+            pub.sendMessage('taskfile.justCleared', taskFile=self)
 
     def close(self):
         if os.path.exists(self.filename()):
@@ -324,6 +328,7 @@ class TaskFile(patterns.Observer):
         return name, file(name, 'w')
     
     def load(self, filename=None):
+        pub.sendMessage('taskfile.aboutToRead', taskFile=self)
         self.__loading = True
         if filename:
             self.setFilename(filename)

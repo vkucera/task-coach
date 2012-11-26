@@ -109,7 +109,7 @@ def dateFunc(dt=None, humanReadable=False):
 
 if operating_system.isWindows():
     import pywintypes, win32api
-    def timeFunc(dt, minutes=True, seconds=False):
+    def rawTimeFunc(dt, minutes=True, seconds=False):
         if seconds:
             # You can't include seconds without minutes
             flags = 0x0
@@ -130,7 +130,7 @@ else:
         timeFormat = '%H'
         timeWithMinutesFormat = '%H:%M'  # %X includes seconds (see http://stackoverflow.com/questions/2507726)
         timeWithSecondsFormat = '%X'
-    def timeFunc(dt, minutes=True, seconds=False):
+    def rawTimeFunc(dt, minutes=True, seconds=False):
         if seconds:
             fmt = timeWithSecondsFormat
         else:
@@ -139,6 +139,8 @@ else:
             else:
                 fmt = timeFormat
         return datemodule.DateTime.strftime(dt, fmt)
+
+timeFunc = lambda dt, minutes=True, seconds=False: operating_system.decodeSystemString(rawTimeFunc(dt, minutes=minutes, seconds=seconds))
 
 dateTimeFunc = lambda dt=None, humanReadable=False: u'%s %s' % (dateFunc(dt, humanReadable=humanReadable), timeFunc(dt))
 
