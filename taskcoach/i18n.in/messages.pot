@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-11-25 11:29+CET\n"
+"POT-Creation-Date: 2012-11-26 15:48+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1144,7 +1144,7 @@ msgstr ""
 #: taskcoachlib/gui/dialog/editor.py:114
 #: taskcoachlib/gui/dialog/templates.py:109
 #: taskcoachlib/gui/viewer/attachment.py:75
-#: taskcoachlib/gui/viewer/base.py:302 taskcoachlib/gui/viewer/category.py:82
+#: taskcoachlib/gui/viewer/base.py:322 taskcoachlib/gui/viewer/category.py:82
 #: taskcoachlib/gui/viewer/note.py:98 taskcoachlib/gui/viewer/task.py:807
 #: taskcoachlib/gui/wizard/csvimport.py:229
 #: taskcoachlib/persistence/csv/reader.py:76
@@ -5779,7 +5779,7 @@ msgstr ""
 msgid "Yesterday"
 msgstr ""
 
-#: taskcoachlib/render.py:173
+#: taskcoachlib/render.py:175
 msgid "now"
 msgstr ""
 
