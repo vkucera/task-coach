@@ -63,7 +63,8 @@ class TestWithTaskFile(base.Win32TestCase):
         mainwindow.waitFocus()
         mainwindow.clickAt(58, 15) # Save button
 
-        time.sleep(2)
+        # Give some time to write the file...
+        time.sleep(15)
 
         if os.path.exists(self.logfilename):
             self.fail('Exception occurred while saving:\n' + \
