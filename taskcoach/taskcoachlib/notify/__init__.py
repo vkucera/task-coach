@@ -21,8 +21,9 @@ from taskcoachlib import operating_system
 
 if operating_system.isWindows():
     from notifier_windows import *
+    from notifier_growl import *
 elif operating_system.isMac():
-    from notifier_macos import *
+    from notifier_growl import *
 else:
     from notifier_libnotify import *
 
