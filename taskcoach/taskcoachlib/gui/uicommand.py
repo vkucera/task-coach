@@ -1634,7 +1634,7 @@ class NewTaskWithSelectedTasksAsDependencies(NeedsSelectedTasksMixin, TaskNew,
                                              ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(NewTaskWithSelectedTasksAsDependencies, self).__init__(
-            menuText=_('New task with selected tasks as &dependencies...'),
+            menuText=_('New task with selected tasks as &dependents...'),
             helpText=_('Insert a new task with the selected tasks as dependent tasks'),
             *args, **kwargs)
 

@@ -187,7 +187,7 @@ regardless of the time spent.''')))),
         _('The following properties are calculated from the properties above:'),
         ul(
             li(_('Days left: the number of days left until the due date.')),
-            li(_('''Dependencies: other tasks that can be started when the 
+            li(_('''Dependents: other tasks that can be started when the 
 prerequisite task has been completed.''')),
             li(_('Time spent: effort spent on the task.')),
             li(_('Budget left: task budget minus time spent on the task.')),
