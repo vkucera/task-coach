@@ -302,7 +302,7 @@ class CommonTestsMixin(object):
                        revenue=(3, _('Revenue')),
                        priority=(3, _('Priority')),
                        prerequisites=(1, _('Prerequisites')),
-                       dependencies=(1, _('Dependencies')),
+                       dependencies=(1, _('Dependents')),
                        categories=(1, _('Categories')),
                        percentageComplete=(3, _('% complete')),
                        recurrence=(3, _('Recurrence')),
