@@ -40,6 +40,8 @@ nor Linux.''', '1285'),
         Feature('''Display dates in human-readable form in viewers (today,
 yesterday, tomorrow).'''),
         Feature('''Startup and shutdown performance improvements'''),
+        Feature('''Autosave is now on by default.'''),
+        Feature('''Support for Growl on Windows.'''),
         ],
     ),
 

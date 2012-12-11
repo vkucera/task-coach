@@ -86,6 +86,7 @@ class AutoSaverTestCase(test.TestCase):
         self.failIf(self.taskFile.saveCalled)
         
     def testFileChanged_ButAutoSaveOff(self):
+        self.settings.set('file', 'autosave', 'False')
         self.taskFile.setFilename('whatever.tsk')
         self.taskFile.tasks().append(task.Task())
         self.autoSaver.on_idle(dummy.Event())
