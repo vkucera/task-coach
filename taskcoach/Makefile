@@ -73,6 +73,7 @@ sdist_ubuntu: sdist_linux
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu11~natty.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu11~oneiric.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu12~precise.tar.gz
+	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu12~quantal.tar.gz
 
 dist/TaskCoach-$(TCVERSION).tar.gz:
 	$(PYTHON) make.py sdist --formats=gztar --no-prune --template=build.in/debian/MANIFEST.in
@@ -110,6 +111,8 @@ ubuntu: sdist_ubuntu
 	mv build build-oneiric
 	LC_ALL=C $(PYTHON) make.py bdist_ubuntu precise 12 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu12~precise.tar.gz
 	mv build build-precise
+	LC_ALL=C $(PYTHON) make.py bdist_ubuntu quantal 12 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu12~quantal.tar.gz
+	mv build build-quantal
 
 ppa-sign: ubuntu
 	cd build-lucid; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
@@ -117,6 +120,7 @@ ppa-sign: ubuntu
 	cd build-natty; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu11~natty-1_source.changes
 	cd build-oneiric; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu11~oneiric-1_source.changes
 	cd build-precise; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
+	cd build-quantal; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes
 
 ppa-rel: ppa-sign
 	cd build-lucid; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
@@ -124,6 +128,7 @@ ppa-rel: ppa-sign
 	cd build-natty; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu11~natty-1_source.changes
 	cd build-oneiric; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu11~oneiric-1_source.changes
 	cd build-precise; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
+	cd build-quantal; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes
 
 ppa-relnext: ppa-sign
 	cd build-lucid; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
@@ -131,6 +136,7 @@ ppa-relnext: ppa-sign
 	cd build-natty; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu11~natty-1_source.changes
 	cd build-oneiric; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu11~oneiric-1_source.changes
 	cd build-precise; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
+	cd build-quantal; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes
 
 ppa-release: ppa-sign
 	cd build-lucid; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
@@ -138,6 +144,7 @@ ppa-release: ppa-sign
 	cd build-natty; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu11~natty-1_source.changes
 	cd build-oneiric; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu11~oneiric-1_source.changes
 	cd build-precise; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
+	cd build-quantal; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes
 
 app: prepare
 	$(PYTHON) make.py py2app
