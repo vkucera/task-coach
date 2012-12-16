@@ -260,7 +260,7 @@ alltests: prepare sdist_linux
 coverage: coverage_run coverage_report
 
 coverage_run:
-	cd tests; coverage run --source=../taskcoachlib,unittests test.py
+	cd tests; coverage run --source=../taskcoachlib,unittests test.py -v
 
 coverage_report:
 	cd tests; coverage html -d coverage.out --omit=../taskcoachlib/i18n/po2dict.py,../taskcoachlib/i18n/??.py,../taskcoachlib/i18n/???.py,../taskcoachlib/i18n/??_??.py,../taskcoachlib/thirdparty/*.py,../taskcoachlib/meta/debug.py,test.py
