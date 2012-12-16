@@ -169,6 +169,7 @@ class Win32TestCase(unittest.TestCase):
     def tearDown(self):
         if self.processHandle is not None:
             win32process.TerminateProcess(self.processHandle, 0)
+            win32event.WaitForSingleObject(self.processHandle, win32event.INFINITE)
         os.remove(os.path.join(self.basepath, 'testfile.tsk'))
         lockdir = os.path.join(self.basepath, 'testfile.tsk.lock')
         if os.path.exists(lockdir):
