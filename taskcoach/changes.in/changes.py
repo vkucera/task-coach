@@ -35,6 +35,8 @@ nor Linux.''', '1285'),
         Bugv2('''Search defaults to simple substring matching.''', '1286'),
         Bugv2('''Growl notifications didn't work with Growl 2.0.''', '1324'),
         Bugv2('''Fix another encoding problem on some locales (Windows)'''),
+        Bugv2('''Performance improvement in the edit dialogs.'''),
+        Bugv2('''Fix icon size in Unity.''', '1329'),
         ],
     featuresAdded=[
         Feature('''Display dates in human-readable form in viewers (today,
