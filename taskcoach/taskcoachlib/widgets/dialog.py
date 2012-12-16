@@ -48,7 +48,13 @@ class Dialog(sized_controls.SizedDialog):
         if not operating_system.isGTK():
             wx.CallAfter(self.Raise)
         wx.CallAfter(self._panel.SetFocus)
-        
+
+    def SetExtraStyle(self, exstyle):
+        # SizedDialog's constructor calls this to set WS_EX_VALIDATE_RECURSIVELY. We don't need
+        # it, it makes the dialog appear in about 7 seconds, and it makes switching focus
+        # between two controls take up to 5 seconds.
+        pass
+
     def createInterior(self):
         raise NotImplementedError
 
