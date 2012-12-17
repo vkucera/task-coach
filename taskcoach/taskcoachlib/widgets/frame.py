@@ -18,15 +18,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 import taskcoachlib.thirdparty.aui as aui
+from taskcoachlib import operating_system
 
 
 class AuiManagedFrameWithDynamicCenterPane(wx.Frame):
     def __init__(self, *args, **kwargs):
         super(AuiManagedFrameWithDynamicCenterPane, self).__init__(*args, 
                                                                    **kwargs)
-        self.manager = aui.AuiManager(self, aui.AUI_MGR_DEFAULT | \
-                                      aui.AUI_MGR_ALLOW_ACTIVE_PANE | \
-                                      aui.AUI_MGR_USE_NATIVE_MINIFRAMES)
+        agwStyle = aui.AUI_MGR_DEFAULT | aui.AUI_MGR_ALLOW_ACTIVE_PANE
+        if not operating_system.isWindows():
+            # With this style on Windows, you can't dock back floating frames
+            agwStyle |= aui.AUI_MGR_USE_NATIVE_MINIFRAMES
+        self.manager = aui.AuiManager(self, agwStyle)
         self.manager.SetAutoNotebookStyle(aui.AUI_NB_TOP | \
                                           aui.AUI_NB_CLOSE_BUTTON | \
                                           aui.AUI_NB_SUB_NOTEBOOK | \

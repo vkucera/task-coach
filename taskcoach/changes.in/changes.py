@@ -37,6 +37,7 @@ nor Linux.''', '1285'),
         Bugv2('''Fix another encoding problem on some locales (Windows)'''),
         Bugv2('''Performance improvement in the edit dialogs.'''),
         Bugv2('''Fix icon size in Unity.''', '1329'),
+        Bugv2('''Fix docking of floating viewers on Windows'''),
         ],
     featuresAdded=[
         Feature('''Display dates in human-readable form in viewers (today,
