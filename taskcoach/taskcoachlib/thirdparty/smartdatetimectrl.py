@@ -369,15 +369,18 @@ class Entry(wx.Panel):
             dc.SetTextForeground(wx.LIGHT_GREY)
             dc.DrawText(text, (w - tw) / 2, (h - th) / 2)
 
+    def FocusNext(self):
+        if self.__focus is not None:
+            self.__SetFocus(self.__fields[(self.__fields.index(self.__focus) + 1) % len(self.__fields)])
+
     def OnKeyDown(self, event):
         if event.GetKeyCode() == wx.WXK_TAB:
             self.DismissPopup()
             self.Navigate(not event.ShiftDown())
             return
 
-        if event.GetKeyCode() == wx.WXK_RIGHT:
-            if self.__focus is not None:
-                self.__SetFocus(self.__fields[(self.__fields.index(self.__focus) + 1) % len(self.__fields)])
+        if event.GetKeyCode() in [wx.WXK_RIGHT, wx.WXK_DECIMAL, wx.WXK_NUMPAD_DECIMAL] or event.GetUnicodeKey() == ord('.'):
+            self.FocusNext()
         elif event.GetKeyCode() == wx.WXK_LEFT:
             if self.__focus is not None:
                 self.__SetFocus(self.__fields[(self.__fields.index(self.__focus) + len(self.__fields) - 1) % len(self.__fields)])
@@ -661,6 +664,13 @@ class TimeEntry(Entry):
         kwargs['format'] = pattern
         super(TimeEntry, self).__init__(*args, **kwargs)
 
+    def OnKeyDown(self, event):
+        if event.GetUnicodeKey() == ord(':'):
+            self.FocusNext()
+            event.Skip()
+        else:
+            return super(TimeEntry, self).OnKeyDown(event)
+
     def DismissPopup(self):
         super(TimeEntry, self).DismissPopup()
         if self.__choicePopup is not None:
@@ -937,6 +947,13 @@ class DateEntry(Entry):
         if event.GetKeyCode() == wx.WXK_TAB and self.__calendar is not None:
             self.__calendar.Dismiss()
         super(DateEntry, self).OnKeyDown(event)
+
+    def OnKeyDown(self, event):
+        if event.GetUnicodeKey() == ord('/'):
+            self.FocusNext()
+            event.Skip()
+        else:
+            return super(DateEntry, self).OnKeyDown(event)
 
     def GetDate(self):
         return datetime.date(year=self.Field('year').GetValue(),
