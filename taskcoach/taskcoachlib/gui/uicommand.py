@@ -1824,18 +1824,25 @@ class ToggleCategory(NeedsSelectedCategorizableMixin, ViewerCommand):
     def onUpdateUI(self, event):
         super(ToggleCategory, self).onUpdateUI(event)
         if self.enabled(event):
-            check = self.category in self.viewer.curselection()[0].categories()
+            check = self.__all_selected_items_are_in_category()
             for menuItem in self.menuItems:
                 menuItem.Check(check)
+                
+    def __all_selected_items_are_in_category(self):
+        selected_items_in_category = [item for item in self.viewer.curselection() \
+                                      if self.category in item.categories()]
+        return selected_items_in_category == self.viewer.curselection()
 
     def enabled(self, event):
         viewerHasSelection = super(ToggleCategory, self).enabled(event)
         if not viewerHasSelection or self.viewer.isShowingCategories():
             return False
-        selectionCategories = self.viewer.curselection()[0].categories()
-        for ancestor in self.category.ancestors():
-            if ancestor.isMutualExclusive() and ancestor not in selectionCategories:
-                return False  # Not all mutually exclusive ancestors are checked
+        mutual_exclusive_ancestors = [ancestor for ancestor in self.category.ancestors() \
+                                      if ancestor.isMutualExclusive()]
+        for categorizable in self.viewer.curselection():
+            for ancestor in mutual_exclusive_ancestors:
+                if ancestor not in categorizable.categories():
+                    return False  # Not all mutually exclusive ancestors are checked
         return True  # All mutually exclusive ancestors are checked
     
 

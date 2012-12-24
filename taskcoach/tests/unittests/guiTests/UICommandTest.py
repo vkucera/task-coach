@@ -422,6 +422,28 @@ class ToggleCategoryTest(test.TestCase):
         uiCommand = gui.uicommand.ToggleCategory(viewer=viewer,
                                                  category=self.category)
         self.failIf(uiCommand.enabled(None))
+        
+    def testDisableWhenSelectionIsEmpty(self):
+        viewer = DummyViewer(selection=[])
+        uiCommand = gui.uicommand.ToggleCategory(viewer=viewer,
+                                                 category=self.category)
+        self.failIf(uiCommand.enabled(None))
+        
+    def testDisableWhenCategoryHasMutualExclusiveAncestorThatIsNotChecked(self):
+        parent_category = category.Category('Parent of mutual exclusive categories', 
+                                            exclusiveSubcategories=True)
+        child_category = category.Category('Mutual exclusive category')
+        parent_category.addChild(child_category)
+        child_category.setParent(parent_category)
+        child_category.addChild(self.category)
+        self.category.setParent(child_category)
+        task_with_category = task.Task('Task')
+        task_with_category.addCategory(self.category)
+        self.category.addCategorizable(task_with_category)
+        viewer = DummyViewer(selection=[task_with_category])
+        uiCommand = gui.uicommand.ToggleCategory(viewer=viewer,
+                                                 category=self.category)
+        self.failIf(uiCommand.enabled(None))
 
 
 class EffortStopTest(test.TestCase):

@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.21', 'December 23, 2012',
+Release('1.3.21', 'December 24, 2012',
     summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
         Bugv2('''Changing the percentage complete would not cause the
@@ -38,6 +38,9 @@ Mac OS X nor Linux.''', '1285'),
         Bugv2('''Performance improvement in the edit dialogs.'''),
         Bugv2('''Fix icon size in Unity.''', '1329'),
         Bugv2('''Fix docking of floating viewers on Windows.'''),
+        Bugv2('''When toggling the category of multiple items, not all of which 
+are in the selected category, don't remove the items from the category that 
+already belonged to that category.''', '1271'),
         ],
     featuresAdded=[
         Feature('''New, hopefully more intuitive date/time control.'''),
