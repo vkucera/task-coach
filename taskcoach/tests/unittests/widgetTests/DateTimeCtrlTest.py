@@ -63,26 +63,6 @@ class CommonTestsMixin(object):
         self.dateTimeCtrl.SetValue(oneHour)
         self.assertEqual(oneHour, self.dateTimeCtrl.GetValue())
 
-    def testChoicesStartTime(self):
-        self.assertEqual(self._format(8, 0, 0), 
-                         self.dateTimeCtrl._timeChoices()[0])
-        
-    def testChoicesEndTime(self):
-        self.assertEqual(self._format(18, 0, 0), 
-                         self.dateTimeCtrl._timeChoices()[-1])
-        
-    def testChoicesEndTime24(self):
-        dateTimeCtrl = widgets.datectrl.DateTimeCtrl(self.frame, endhour=24, 
-                                                     showSeconds=self.showSeconds)
-        self.assertEqual(self._format(23, 45, 0), 
-                         dateTimeCtrl._timeChoices()[-1])
-
-    def testChoicesStartTime0(self):
-        dateTimeCtrl = widgets.datectrl.DateTimeCtrl(self.frame, starthour=0, 
-                                                     showSeconds=self.showSeconds)
-        self.assertEqual(self._format(0, 0, 0), 
-                         dateTimeCtrl._timeChoices()[0])
-
         
 class DateTimeCtrlTestCase(test.wxTestCase):
     def setUp(self):

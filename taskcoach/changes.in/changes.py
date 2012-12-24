@@ -40,6 +40,7 @@ Mac OS X nor Linux.''', '1285'),
         Bugv2('''Fix docking of floating viewers on Windows.'''),
         ],
     featuresAdded=[
+        Feature('''New, hopefully more intuitive date/time control.'''),
         Feature('''Display dates in human-readable form in viewers (today,
 yesterday, tomorrow).'''),
         Feature('''Startup and shutdown performance improvements.'''),

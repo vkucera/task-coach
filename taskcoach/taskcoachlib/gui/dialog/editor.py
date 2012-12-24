@@ -27,6 +27,7 @@ from taskcoachlib.gui import viewer, uicommand, windowdimensionstracker
 from taskcoachlib.gui.dialog import entry, attributesync
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty.pubsub import pub
+from taskcoachlib.thirdparty import smartdatetimectrl as sdtc
 import os.path
 import wx
 
@@ -76,6 +77,9 @@ class Page(patterns.Observer, widgets.BookPage):
         
     def close(self):
         self.removeInstance()
+        for entry in self.entries().values():
+            if isinstance(entry, widgets.DateTimeCtrl):
+                entry.Cleanup()
         
                         
 class SubjectPage(Page):
@@ -286,7 +290,18 @@ class DatesPage(Page):
         self._duration = None
         self.__items_are_new = items_are_new
         super(DatesPage, self).__init__(theTask, parent, *args, **kwargs)
-        
+        pub.subscribe(self.__onChoicesConfigChanged, 'settings.feature.sdtcspans')
+
+    def __onChoicesConfigChanged(self, value=''):
+        self._dueDateTimeEntry.LoadChoices(value)
+
+    def __onTimeChoicesChange(self, event):
+        self.__settings.settext('feature', 'sdtcspans', event.GetValue())
+
+    def __onPlannedStartDateTimeChanged(self, value):
+        self._dueDateTimeEntry.SetMode(self._dueDateTimeEntry.CHOICEMODE_RELATIVE,
+                                       None if value == date.DateTime() else value)
+
     def addEntries(self):
         self.addDateEntries()
         self.addLine()
@@ -300,6 +315,12 @@ class DatesPage(Page):
         self.addLine()
         self.addDateEntry(_('Actual start date'), 'actualStartDateTime')
         self.addDateEntry(_('Completion date'), 'completionDateTime')
+
+        start = self._plannedStartDateTimeEntry.GetValue()
+        self._dueDateTimeEntry.SetMode(self._dueDateTimeEntry.CHOICEMODE_RELATIVE,
+                                       start=None if start == date.DateTime() else start)
+        self._dueDateTimeEntry.LoadChoices(self.__settings.get('feature', 'sdtcspans'))
+        sdtc.EVT_TIME_CHOICES_CHANGE(self._dueDateTimeEntry, self.__onTimeChoicesChange)
 
     def addDateEntry(self, label, taskMethodName):
         TaskMethodName = taskMethodName[0].capitalize() + taskMethodName[1:]
@@ -316,10 +337,11 @@ class DatesPage(Page):
         keep_delta = self.__keep_delta(taskMethodName)
         datetimeSync = attributesync.AttributeSync(taskMethodName, 
             dateTimeEntry, dateTime, self.items, commandClass, 
-            entry.EVT_DATETIMEENTRY, eventType, keep_delta=keep_delta)
+            entry.EVT_DATETIMEENTRY, eventType, keep_delta=keep_delta,
+            callback=self.__onPlannedStartDateTimeChanged if taskMethodName == 'plannedStartDateTime' else None)
         setattr(self, '_%sSync' % taskMethodName, datetimeSync) 
         self.addEntry(label, dateTimeEntry)
-            
+
     def __keep_delta(self, taskMethodName):
         datesTied = self.__settings.get('view', 'datestied')
         return (datesTied == 'startdue' and taskMethodName == 'plannedStartDateTime') or \
@@ -984,7 +1006,11 @@ class EffortEditBook(Page):
         self._settings = settings
         self._taskFile = taskFile
         super(EffortEditBook, self).__init__(efforts, parent, *args, **kwargs)
-        
+        pub.subscribe(self.__onChoicesConfigChanged, 'settings.feature.sdtcspans')
+
+    def __onChoicesConfigChanged(self, value=''):
+        self._stopDateTimeEntry.LoadChoices(value)
+
     def getPage(self, pageName):  # pylint: disable=W0613
         return None  # An EffortEditBook is not really a notebook...
         
@@ -1027,6 +1053,13 @@ class EffortEditBook(Page):
         panel.SetSizerAndFit(panel_sizer)
         self.addEntry(_('Task'), panel, flags=[None, wx.ALL | wx.EXPAND])
 
+    def __onStartDateTimeChanged(self, value):
+        self._stopDateTimeEntry.SetMode(self._stopDateTimeEntry.CHOICEMODE_RELATIVE,
+                                        start=value)
+
+    def __onChoicesChanged(self, event):
+        self._settings.settext('feature', 'sdtcspans', event.GetValue())
+
     def __add_start_and_stop_entries(self):
         # pylint: disable=W0201,W0142
         date_time_entry_kw_args = dict(showSeconds=True)
@@ -1052,13 +1085,17 @@ class EffortEditBook(Page):
         self._stopDateTimeSync = attributesync.AttributeSync('getStop',
             self._stopDateTimeEntry, current_stop_date_time, self.items,
             command.EditEffortStopDateTimeCommand, entry.EVT_DATETIMEENTRY,
-            self.items[0].stopChangedEventType())
+            self.items[0].stopChangedEventType(),
+            callback=self.__onStartDateTimeChanged)
         self._stopDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, 
                                      self.onStopDateTimeChanged)
         stop_now_button = self.__create_stop_now_button()
         self._invalidPeriodMessage = self.__create_invalid_period_message()
         self.addEntry(_('Stop'), self._stopDateTimeEntry, 
                       stop_now_button, flags=flags)
+        self.__onStartDateTimeChanged(current_start_date_time)
+        self._stopDateTimeEntry.LoadChoices(self._settings.get('feature', 'sdtcspans'))
+        sdtc.EVT_TIME_CHOICES_CHANGE(self._stopDateTimeEntry, self.__onChoicesChanged)
         
         self.addEntry('', self._invalidPeriodMessage)
             

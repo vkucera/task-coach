@@ -484,7 +484,8 @@ defaults = {
     'minidletime': '0',
     'usesm2': 'False',
     'showsmwarning': 'True',
-    'sayreminder': 'False' 
+    'sayreminder': 'False',
+    'sdtcspans': '60,120,1440,2880'
     },
 'syncml': { 
     'url': '',
