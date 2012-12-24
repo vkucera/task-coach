@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-11-26 15:48+CET\n"
+"POT-Creation-Date: 2012-12-24 14:37+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -64,7 +64,7 @@ msgid "Edit attachment \"%s\" location"
 msgstr ""
 
 #: taskcoachlib/command/attachmentCommands.py:75
-#: taskcoachlib/widgets/dialog.py:149
+#: taskcoachlib/widgets/dialog.py:155
 msgid "Add attachment"
 msgstr ""
 
@@ -604,7 +604,7 @@ msgid "45 minutes"
 msgstr ""
 
 #: taskcoachlib/domain/date/snooze.py:25
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1286
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1303
 msgid "1 hour"
 msgstr ""
 
@@ -653,7 +653,7 @@ msgid "2 weeks"
 msgstr ""
 
 #: taskcoachlib/domain/date/snooze.py:30
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1274
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1291
 msgid "1 week"
 msgstr ""
 
@@ -2971,7 +2971,7 @@ msgid "Insert a new task with the selected tasks as prerequisite tasks"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1637
-msgid "New task with selected tasks as &dependencies..."
+msgid "New task with selected tasks as &dependents..."
 msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1638
@@ -3359,12 +3359,12 @@ msgid "No rounding"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:2739
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1291
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1308
 msgid "1 minute"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:2740
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1293
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1310
 msgid "%d minutes"
 msgstr ""
 
@@ -3617,7 +3617,7 @@ msgid "Sort tasks by dependent tasks"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/mixin.py:377 taskcoachlib/gui/viewer/task.py:1018
-msgid "&Dependencies"
+msgid "&Dependents"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/mixin.py:378
@@ -3743,7 +3743,7 @@ msgid "Calendar viewer configuration"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/task.py:861
-msgid "Dependencies"
+msgid "Dependents"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/task.py:895
@@ -3839,7 +3839,7 @@ msgid "Show/hide prerequisites column"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/task.py:1019
-msgid "Show/hide dependencies column"
+msgid "Show/hide dependents column"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/task.py:1022
@@ -4221,7 +4221,7 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:190
 msgid ""
-"Dependencies: other tasks that can be started when the \n"
+"Dependents: other tasks that can be started when the \n"
 "prerequisite task has been completed."
 msgstr ""
 
@@ -5735,11 +5735,11 @@ msgstr ""
 msgid "New task due tomorrow"
 msgstr ""
 
-#: taskcoachlib/render.py:49 taskcoachlib/thirdparty/smartdatetimectrl.py:1281
+#: taskcoachlib/render.py:49 taskcoachlib/thirdparty/smartdatetimectrl.py:1298
 msgid "%d days"
 msgstr ""
 
-#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1279
+#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1296
 msgid "1 day"
 msgstr ""
 
@@ -5881,38 +5881,38 @@ msgstr ""
 msgid "&Window"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1228
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1340
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1245
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1357
 msgid "Edit"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1236
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1253
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Week(s)"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1237
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1254
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Day(s)"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1238
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1255
 msgid "Hour(s)"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1239
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1256
 msgid "Minute(s)"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1276
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1293
 msgid "%d weeks"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1288
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1305
 msgid "%d hours"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1340
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1357
 msgid "Done"
 msgstr ""
 
@@ -5968,11 +5968,11 @@ msgstr ""
 msgid "Color used to highlight the current day"
 msgstr ""
 
-#: taskcoachlib/widgets/dialog.py:66
+#: taskcoachlib/widgets/dialog.py:72
 msgid "Close"
 msgstr ""
 
-#: taskcoachlib/widgets/dialog.py:151
+#: taskcoachlib/widgets/dialog.py:157
 msgid "All files (*.*)|*"
 msgstr ""
 
