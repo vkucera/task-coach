@@ -1066,7 +1066,8 @@ class EffortEditBook(Page):
         
         current_start_date_time = self.items[0].getStart()
         self._startDateTimeEntry = entry.DateTimeEntry(self, self._settings,
-            current_start_date_time, noneAllowed=False, **date_time_entry_kw_args)
+            current_start_date_time, noneAllowed=False, showRelative=True, **date_time_entry_kw_args)
+        wx.CallAfter(self._startDateTimeEntry.HideRelativeButton)
         self._startDateTimeSync = attributesync.AttributeSync('getStart',
             self._startDateTimeEntry, current_start_date_time, self.items,
             command.EditEffortStartDateTimeCommand, entry.EVT_DATETIMEENTRY,
@@ -1079,7 +1080,7 @@ class EffortEditBook(Page):
 
         current_stop_date_time = self.items[0].getStop()
         self._stopDateTimeEntry = entry.DateTimeEntry(self, self._settings, 
-            current_stop_date_time, noneAllowed=True, **date_time_entry_kw_args)
+            current_stop_date_time, noneAllowed=True, showRelative=True, **date_time_entry_kw_args)
         self._stopDateTimeSync = attributesync.AttributeSync('getStop',
             self._stopDateTimeEntry, current_stop_date_time, self.items,
             command.EditEffortStopDateTimeCommand, entry.EVT_DATETIMEENTRY,

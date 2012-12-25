@@ -72,6 +72,9 @@ class DateTimeCtrl(wx.Panel):
     def SetRelativeChoicesStart(self, start=None):
         self.__ctrl.SetRelativeChoicesStart(start=start)
 
+    def HideRelativeButton(self):
+        self.__ctrl.HideRelativeButton()
+
     def LoadChoices(self, choices):
         self.__ctrl.LoadChoices(choices)
 
