@@ -387,8 +387,7 @@ class Entry(wx.Panel):
                         dc.SetPen(wx.Pen(color))
                         dc.SetBrush(wx.Brush(color))
                         dc.DrawRoundedRectangle(x, y, w, h, 3)
-                        fg = wx.Colour(color.Red() ^ 0xFF, color.Green() ^ 0xFF, color.Blue() ^ 0xFF)
-                        dc.SetTextForeground(fg)
+                        dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT))
                     else:
                         dc.SetTextForeground(wx.BLACK)
                     widget.PaintValue(dc, x, y, w, h)
@@ -1566,8 +1565,7 @@ class _CalendarPopup(_PopupWindow):
                         dc.SetPen(wx.Pen(color))
                         dc.SetBrush(wx.Brush(color))
                         dc.DrawRectangle(x, y, self.__maxDim, self.__maxDim)
-                        fg = wx.Colour(color.Red() ^ 0xFF, color.Green() ^ 0xFF, color.Blue() ^ 0xFF)
-                        dc.SetTextForeground(fg)
+                        dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT))
 
                     if not active:
                         dc.SetPen(wx.LIGHT_GREY_PEN)
@@ -1663,8 +1661,7 @@ class _MultipleChoicesPopup(_PopupWindow):
                 dc.SetPen(wx.Pen(color))
                 dc.SetBrush(wx.Brush(color))
                 dc.DrawRoundedRectangle(1, y, w - 2, th, 3)
-                fg = wx.Colour(color.Red() ^ 0xFF, color.Green() ^ 0xFF, color.Blue() ^ 0xFF)
-                dc.SetTextForeground(fg)
+                dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT))
             else:
                 dc.SetTextForeground(wx.BLACK)
             dc.DrawText(unicode(choice), 2 + (w - 4 - tw) // 2, y)
@@ -1767,6 +1764,10 @@ class SmartDateTimeCtrl(wx.Panel):
 
     def __OnPopupRelativeChoices(self, event):
         self.__timeCtrl.PopupRelativeChoices()
+
+    def HideRelativeButton(self):
+        # For alignment purposes...
+        self.__relButton.Hide()
 
     def HandleKey(self, event):
         if self.GetDateTime() is not None:
