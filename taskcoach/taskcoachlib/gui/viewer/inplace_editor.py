@@ -161,11 +161,10 @@ class DateTimeCtrl(KillFocusAcceptsEditsMixin, hypertreelist.EditCtrl, Panel):
         interval = settings.getint('view', 'effortminuteinterval')
         self._dateTimeCtrl = widgets.DateTimeCtrl(self, starthour=starthour,
                                                    endhour=endhour, 
-                                                   interval=interval)
+                                                   interval=interval, showRelative=relative)
         self._dateTimeCtrl.SetValue(value)
         if relative:
-            self._dateTimeCtrl.SetMode(self._dateTimeCtrl.CHOICEMODE_RELATIVE,
-                start=None if start == date.DateTime() else start)
+            self._dateTimeCtrl.SetRelativeChoicesStart(start=None if start == date.DateTime() else start)
         self.makeSizer(self._dateTimeCtrl)
                 
     def GetValue(self):

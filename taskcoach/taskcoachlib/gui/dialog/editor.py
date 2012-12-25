@@ -299,8 +299,7 @@ class DatesPage(Page):
         self.__settings.settext('feature', 'sdtcspans', event.GetValue())
 
     def __onPlannedStartDateTimeChanged(self, value):
-        self._dueDateTimeEntry.SetMode(self._dueDateTimeEntry.CHOICEMODE_RELATIVE,
-                                       None if value == date.DateTime() else value)
+        self._dueDateTimeEntry.SetRelativeChoicesStart(None if value == date.DateTime() else value)
 
     def addEntries(self):
         self.addDateEntries()
@@ -317,8 +316,7 @@ class DatesPage(Page):
         self.addDateEntry(_('Completion date'), 'completionDateTime')
 
         start = self._plannedStartDateTimeEntry.GetValue()
-        self._dueDateTimeEntry.SetMode(self._dueDateTimeEntry.CHOICEMODE_RELATIVE,
-                                       start=None if start == date.DateTime() else start)
+        self._dueDateTimeEntry.SetRelativeChoicesStart(start=None if start == date.DateTime() else start)
         self._dueDateTimeEntry.LoadChoices(self.__settings.get('feature', 'sdtcspans'))
         sdtc.EVT_TIME_CHOICES_CHANGE(self._dueDateTimeEntry, self.__onTimeChoicesChange)
 
@@ -329,7 +327,8 @@ class DatesPage(Page):
         suggestedDateTimeMethodName = 'suggested' + TaskMethodName
         suggestedDateTime = getattr(self.items[0], suggestedDateTimeMethodName)()
         dateTimeEntry = entry.DateTimeEntry(self, self.__settings, dateTime,
-                                            suggestedDateTime=suggestedDateTime)
+                                            suggestedDateTime=suggestedDateTime,
+                                            showRelative=taskMethodName == 'dueDateTime')
         setattr(self, '_%sEntry' % taskMethodName, dateTimeEntry)
         commandClass = getattr(command, 'Edit%sCommand' % TaskMethodName)
         eventType = getattr(self.items[0], 
@@ -1054,8 +1053,7 @@ class EffortEditBook(Page):
         self.addEntry(_('Task'), panel, flags=[None, wx.ALL | wx.EXPAND])
 
     def __onStartDateTimeChanged(self, value):
-        self._stopDateTimeEntry.SetMode(self._stopDateTimeEntry.CHOICEMODE_RELATIVE,
-                                        start=value)
+        self._stopDateTimeEntry.SetRelativeChoicesStart(start=value)
 
     def __onChoicesChanged(self, event):
         self._settings.settext('feature', 'sdtcspans', event.GetValue())

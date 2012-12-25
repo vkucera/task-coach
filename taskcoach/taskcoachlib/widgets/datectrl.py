@@ -38,21 +38,17 @@ class _SmartDateTimeCtrl(sdtc.SmartDateTimeCtrl):
 
 
 class DateTimeCtrl(wx.Panel):
-    CHOICEMODE_NONE     = sdtc.CHOICEMODE_NONE
-    CHOICEMODE_ABSOLUTE = sdtc.CHOICEMODE_ABSOLUTE
-    CHOICEMODE_RELATIVE = sdtc.CHOICEMODE_RELATIVE
-
     def __init__(self, parent, callback=None, noneAllowed=True,
                  starthour=8, endhour=18, interval=15, showSeconds=False,
-                 *args, **kwargs):
-        super(DateTimeCtrl, self).__init__(parent, *args, **kwargs)
+                 showRelative=False, **kwargs):
+        super(DateTimeCtrl, self).__init__(parent, **kwargs)
 
         self.__callback = callback
         self.__ctrl = _SmartDateTimeCtrl(self, enableNone=noneAllowed,
                                          dateFormat=render.date,
                                          timeFormat=lambda x: render.time(x, seconds=showSeconds),
                                          startHour=starthour, endHour=endhour,
-                                         minuteDelta=interval, secondDelta=interval)
+                                         minuteDelta=interval, secondDelta=interval, showRelative=showRelative)
         self.__ctrl.EnableChoices()
 
         # When the widget fires its event, its value has not changed yet (because it can be vetoed).
@@ -70,8 +66,11 @@ class DateTimeCtrl(wx.Panel):
         if self.__callback is not None:
             self.__callback()
 
-    def SetMode(self, mode, start=None):
-        self.__ctrl.EnableChoices(mode, start=start)
+    def EnableChoices(self, enabled=True):
+        self.__ctrl.EnableChoices(enabled=enabled)
+
+    def SetRelativeChoicesStart(self, start=None):
+        self.__ctrl.SetRelativeChoicesStart(start=start)
 
     def LoadChoices(self, choices):
         self.__ctrl.LoadChoices(choices)

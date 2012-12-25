@@ -37,14 +37,15 @@ class DateTimeEntry(widgets.DateTimeCtrl):
 
     def __init__(self, parent, settings, initialDateTime=defaultDateTime, 
                  readonly=False, noneAllowed=True, showSeconds=False, 
-                 suggestedDateTime=None, *args, **kwargs):
+                 suggestedDateTime=None, showRelative=False, *args, **kwargs):
         starthour = settings.getint('view', 'efforthourstart')
         endhour = settings.getint('view', 'efforthourend')
         interval = settings.getint('view', 'effortminuteinterval')
         super(DateTimeEntry, self).__init__(parent, noneAllowed=noneAllowed, 
                                             starthour=starthour, 
                                             endhour=endhour, interval=interval, 
-                                            showSeconds=showSeconds)
+                                            showSeconds=showSeconds,
+                                            showRelative=showRelative)
         if readonly:
             self.Disable()
         # First set the initial value and then set the callback so that the
