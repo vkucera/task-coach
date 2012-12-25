@@ -280,7 +280,11 @@ class Entry(wx.Panel):
         wx.EVT_SET_FOCUS(self, self.OnSetFocus)
 
     def Cleanup(self):
-        self.DismissPopup()
+        # It's complicated.
+        try:
+            self.DismissPopup()
+        except wx.PyDeadObjectError:
+            pass
 
     def ForceFocus(self, force=True):
         self.__forceFocus = force
@@ -628,11 +632,6 @@ class TimeChoicesChangedEvent(FieldValueChangeEvent):
     type_ = wxEVT_TIME_CHOICES_CHANGE
 
 
-CHOICEMODE_NONE     = 0
-CHOICEMODE_ABSOLUTE = 1
-CHOICEMODE_RELATIVE = 2
-
-
 class TimeEntry(Entry):
     class HourFormatCharacter(SingleFormatCharacter):
         character = 'H'
@@ -687,7 +686,6 @@ class TimeEntry(Entry):
         self.__endHour = kwargs.pop('endHour', 24)
 
         self.__relChoices = '60,120,180'
-        self.__choiceMode = CHOICEMODE_ABSOLUTE
         self.__choiceStart = None
         self.__choicePopup = None
 
@@ -711,13 +709,8 @@ class TimeEntry(Entry):
         if self.__choicePopup is not None:
             self.__choicePopup.Dismiss()
 
-    def EnableChoices(self, mode=CHOICEMODE_ABSOLUTE, start=None):
-        self.__choiceStart = start
-        if start is None:
-            mode = CHOICEMODE_ABSOLUTE
-        self.__choiceMode = mode
-
-        if mode == CHOICEMODE_ABSOLUTE:
+    def EnableChoices(self, enabled=True):
+        if enabled:
             if self.Field('ampm') is NullField:
                 hours = range(self.__startHour, min(self.__endHour + 1, 24))
             else:
@@ -744,16 +737,20 @@ class TimeEntry(Entry):
     def LoadChoices(self, choices):
         self.__relChoices = choices
 
-    def PopupChoices(self, widget):
-        if self.__choiceMode == CHOICEMODE_RELATIVE:
-            self.__choicePopup = _RelativeChoicePopup(self.__choiceStart, self, wx.ID_ANY, choices=self.__relChoices)
-            w, h = self.GetClientSizeTuple()
-            self.__choicePopup.Popup(self.ClientToScreen(wx.Point(0, h)))
-        else:
-            super(TimeEntry, self).PopupChoices(widget)
+    def SetRelativeChoicesStart(self, start=None):
+        self.__choiceStart = start
+
+    def GetRelativeChoicesStart(self):
+        return self.__choiceStart
+
+    def PopupRelativeChoices(self):
+        self.__choicePopup = _RelativeChoicePopup(self.__choiceStart, self, wx.ID_ANY, choices=self.__relChoices)
+        w, h = self.GetClientSizeTuple()
+        self.__choicePopup.Popup(self.ClientToScreen(wx.Point(0, h)))
 
     def OnChoicesChanged(self, sender):
-        self.ProcessEvent(TimeChoicesChangedEvent(self, sender.SaveChoices()))
+        self.__relChoices = sender.SaveChoices()
+        self.ProcessEvent(TimeChoicesChangedEvent(self, self.__relChoices))
 
     def SetDateTime(self, dateTime, notify=False):
         self.GetParent().SetDateTime(dateTime, notify=notify)
@@ -1723,6 +1720,7 @@ class SmartDateTimeCtrl(wx.Panel):
         endHour = kwargs.pop('endHour', 24)
         minuteDelta = kwargs.pop('minuteDelta', 10)
         secondDelta = kwargs.pop('secondDelta', 10)
+        showRelative = kwargs.pop('showRelative', False)
 
         super(SmartDateTimeCtrl, self).__init__(*args, **kwargs)
 
@@ -1746,6 +1744,14 @@ class SmartDateTimeCtrl(wx.Panel):
                                     startHour=startHour, endHour=endHour, minuteDelta=minuteDelta, secondDelta=secondDelta)
         sizer.Add(self.__timeCtrl, 0, wx.ALL|wx.ALIGN_CENTRE, 3)
 
+        if showRelative:
+            self.__relButton = wx.BitmapButton(self, wx.ID_ANY, wx.ArtProvider.GetBitmap(wx.ART_LIST_VIEW, wx.ART_BUTTON, (16, 16)))
+            wx.EVT_BUTTON(self.__relButton, wx.ID_ANY, self.__OnPopupRelativeChoices)
+            sizer.Add(self.__relButton, 0, wx.ALL|wx.ALIGN_CENTRE, 1)
+            self.__relButton.Enable(False)
+        else:
+            self.__relButton = None
+
         self.SetSizer(sizer)
 
         if self.__enableNone and value is None:
@@ -1756,6 +1762,9 @@ class SmartDateTimeCtrl(wx.Panel):
         EVT_TIME_CHOICES_CHANGE(self.__timeCtrl, self.__OnChoicesChange)
         EVT_TIME_NEXT_DAY(self, self.OnNextDay)
         EVT_TIME_PREV_DAY(self, self.OnPrevDay)
+
+    def __OnPopupRelativeChoices(self, event):
+        self.__timeCtrl.PopupRelativeChoices()
 
     def HandleKey(self, event):
         if self.GetDateTime() is not None:
@@ -1782,8 +1791,13 @@ class SmartDateTimeCtrl(wx.Panel):
         if self.__label is not None:
             self.__label.SetMinSize(wx.Size(width, -1))
 
-    def EnableChoices(self, mode=CHOICEMODE_ABSOLUTE, start=None):
-        self.__timeCtrl.EnableChoices(mode, start=start)
+    def EnableChoices(self, enabled=True):
+        self.__timeCtrl.EnableChoices(enabled=enabled)
+
+    def SetRelativeChoicesStart(self, start=None):
+        self.__timeCtrl.SetRelativeChoicesStart(start)
+        if self.__relButton is not None:
+            self.__relButton.Enable(self.__timeCtrl.IsEnabled() and start is not None)
 
     def LoadChoices(self, choices):
         self.__timeCtrl.LoadChoices(choices)
@@ -1815,6 +1829,8 @@ class SmartDateTimeCtrl(wx.Panel):
     def Enable(self, enabled=True):
         self.__dateCtrl.Enable(enabled)
         self.__timeCtrl.Enable(enabled)
+        if self.__relButton is not None:
+            self.__relButton.Enable(enabled and self.__timeCtrl.GetRelativeChoicesStart() is not None)
 
     def OnToggleNone(self, event):
         if event.IsChecked():
@@ -1888,10 +1904,8 @@ class DateTimeSpanCtrl(wx.EvtHandler):
         self.__minSpan = minSpan
 
         self.__ctrlStart.EnableChoices()
-        if self.__ctrlStart.GetDateTime() is None:
-            self.__ctrlEnd.EnableChoices()
-        else:
-            self.__ctrlEnd.EnableChoices(CHOICEMODE_RELATIVE, start=self.__ctrlStart.GetDateTime())
+        self.__ctrlEnd.EnableChoices()
+        self.__ctrlEnd.SetRelativeChoicesStart(self.__ctrlStart.GetDateTime())
 
         EVT_DATETIME_CHANGE(self.__ctrlStart, self.OnStartChange)
         EVT_DATETIME_CHANGE(self.__ctrlEnd, self.OnEndChange)
@@ -1906,7 +1920,7 @@ class DateTimeSpanCtrl(wx.EvtHandler):
             if self.__ctrlStart.GetDateTime() is None:
                 raise RuntimeError('WTF?')
             # Start control disabled. Nothing to do.
-            self.__ctrlEnd.EnableChoices()
+            self.__ctrlEnd.SetRelativeChoicesStart(None)
         else:
             if self.__minSpan is not None:
                 if self.__ctrlStart.GetDateTime() is None:
@@ -1918,7 +1932,7 @@ class DateTimeSpanCtrl(wx.EvtHandler):
                     # Start changed => keep difference
                     if self.__ctrlEnd.GetDateTime() is not None:
                         self.__ctrlEnd.SetDateTime(self.__ctrlEnd.GetDateTime() + (event.GetValue() - self.__ctrlStart.GetDateTime()))
-            self.__ctrlEnd.EnableChoices(CHOICEMODE_RELATIVE, start=event.GetValue())
+            self.__ctrlEnd.SetRelativeChoicesStart(event.GetValue())
 
         self.ProcessEvent(DateTimeSpanChangeEvent(self, (event.GetValue(), self.__ctrlEnd.GetDateTime())))
 
@@ -1952,7 +1966,7 @@ if __name__ == '__main__':
             pnl1.EnableChoices()
             sz.Add(pnl1, 0, wx.ALL|wx.ALIGN_LEFT, 3)
 
-            pnl2 = SmartDateTimeCtrl(self, label='End', enableNone=True, timeFormat=lambda x: x.strftime('%H:%M:%S'))
+            pnl2 = SmartDateTimeCtrl(self, label='End', enableNone=True, timeFormat=lambda x: x.strftime('%H:%M:%S'), showRelative=True)
             pnl2.EnableChoices()
             sz.Add(pnl2, 0, wx.ALL|wx.ALIGN_LEFT, 3)
 
