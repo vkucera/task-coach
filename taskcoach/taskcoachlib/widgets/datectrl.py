@@ -34,8 +34,7 @@ class _SmartDateTimeCtrl(sdtc.SmartDateTimeCtrl):
             elif event.GetUnicodeKey() in [ord('e'), ord('E')]:
                 self.SetDateTime(datetime.datetime.combine(self.GetDateTime().date(), datetime.time(23, 59, 0, 0)), notify=True)
                 return True
-            return False
-        return True
+        return False
 
 
 class DateTimeCtrl(wx.Panel):
