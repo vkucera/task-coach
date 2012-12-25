@@ -31,6 +31,8 @@ def defaultEncodingName():
 
 
 def decodeSystemString(s):
+    if isinstance(s, unicode):
+        return s
     encoding = defaultEncodingName()
     # Python does not define the windows_XXX aliases for every code page...
     if encoding.startswith('windows-'):
