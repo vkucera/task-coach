@@ -2792,28 +2792,3 @@ class AlwaysRoundUp(UICheckCommand, ViewerCommand, SettingsCommand):
        
     def enable(self, enable=True):
         self.checkboxCtrl.Enable(enable)
-
-
-class LinkToCampaign(UICommand):
-    ''' UICommand for a campaign button. '''
-
-    url = 'http://indiegogo.com/taskcoach'
-
-    def appendToToolBar(self, toolbar):
-        ''' Add a button to the toolbar that takes the user to the IndieGoGo
-            campaign when clicked. '''
-        self.link = wx.HyperlinkCtrl(toolbar, wx.ID_ANY, 
-            _('Help fund drag and drop of columns'), self.url)
-        self.link.Bind(wx.EVT_HYPERLINK, self.on_click)
-        toolbar.AddControl(self.link)
-
-    def on_click(self, event):
-        ''' Handle the button click event by opening a browser. '''
-        desktop.open(self.url)
-
-    @staticmethod
-    def campaign_is_running():
-        ''' Return whether the campaign for drag and drop of columns is still
-            running. '''
-        return date.Now() < date.DateTime(2012, 10, 22, 0, 0, 0)
-
