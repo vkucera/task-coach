@@ -26,6 +26,20 @@ except NameError:
     _ = lambda x: x
 
 
+def defaultEncodingName():
+    return wx.Locale.GetSystemEncodingName() or 'utf-8'
+
+
+def decodeSystemString(s):
+    encoding = defaultEncodingName()
+    # Python does not define the windows_XXX aliases for every code page...
+    if encoding.startswith('windows-'):
+        encoding = 'cp' + encoding[8:]
+    if not encoding:
+        encoding = 'utf-8'
+    return s.decode(encoding, 'ignore')
+
+
 class NullField(object):
     def __getattr__(self, name):
         return self
@@ -172,6 +186,20 @@ class FieldValueChangeEvent(wx.PyCommandEvent):
         return self.__vetoed
 
 
+wxEVT_ENTRY_CHOICE_SELECTED = wx.NewEventType()
+EVT_ENTRY_CHOICE_SELECTED = wx.PyEventBinder(wxEVT_ENTRY_CHOICE_SELECTED)
+
+class EntryChoiceSelectedEvent(FieldValueChangeEvent):
+    type_ = wxEVT_ENTRY_CHOICE_SELECTED
+
+    def __init__(self, owner, value, field=None, **kwargs):
+        super(EntryChoiceSelectedEvent, self).__init__(owner, value, **kwargs)
+        self.__field = field
+
+    def GetField(self):
+        return self.__field
+
+
 class Entry(wx.Panel):
     MARGIN = 3
     formats = [AnyFormatCharacter]
@@ -275,11 +303,6 @@ class Entry(wx.Panel):
 
         self.__focus = field
         self.Refresh()
-
-    def SetChoice(self, choice):
-        popup, field = self.__popup
-        field.SetCurrentChoice(choice)
-        popup.Dismiss()
 
     def DismissPopup(self):
         if self.__popup is not None:
@@ -394,7 +417,8 @@ class Entry(wx.Panel):
             if self.__focus is not None and self.__focus.HandleKey(event):
                 self.StartTimer()
                 return
-            self.GetParent().HandleKey(event)
+            if not self.GetParent().HandleKey(event):
+                event.Skip()
 
     def OnLeftUp(self, event):
         for widget, x, y, w, h in self.__widgets:
@@ -421,6 +445,15 @@ class Entry(wx.Panel):
                 self), widget)
             self.__popup[0].Popup(self.ClientToScreen(wx.Point(x, y + h)))
             EVT_POPUP_DISMISS(self.__popup[0], self.OnPopupDismiss)
+            EVT_ENTRY_CHOICE_SELECTED(self.__popup[0], self.__OnChoiceSelected)
+
+    def __OnChoiceSelected(self, event):
+        popup, field = self.__popup
+        evt = EntryChoiceSelectedEvent(self, event.GetValue(), field=field)
+        self.ProcessEvent(evt)
+        if not evt.IsVetoed():
+            field.SetCurrentChoice(evt.GetValue())
+        popup.Dismiss()
 
 
 class NumericField(Field):
@@ -664,6 +697,8 @@ class TimeEntry(Entry):
         kwargs['format'] = pattern
         super(TimeEntry, self).__init__(*args, **kwargs)
 
+        EVT_ENTRY_CHOICE_SELECTED(self, self.__OnHourSelected)
+
     def OnKeyDown(self, event):
         if event.GetUnicodeKey() == ord(':'):
             self.FocusNext()
@@ -684,9 +719,12 @@ class TimeEntry(Entry):
 
         if mode == CHOICEMODE_ABSOLUTE:
             if self.Field('ampm') is NullField:
-                hours = range(self.__startHour, self.__endHour)
+                hours = range(self.__startHour, min(self.__endHour + 1, 24))
             else:
-                hours = range(self.__startHour, min(12, self.__endHour))
+                hours = list()
+                for hour in xrange(self.__startHour, min(self.__endHour + 1, 24)):
+                    hr, ampm = Convert24To12(hour)
+                    hours.append('%02d %s' % (hr, ['AM', 'PM'][ampm]))
             self.Field('hour').SetChoices(hours)
             self.Field('minute').SetChoices(range(0, 60, self.__minuteDelta))
             self.Field('second').SetChoices(range(0, 60, self.__secondDelta))
@@ -695,6 +733,13 @@ class TimeEntry(Entry):
             self.Field('minute').SetChoices(None)
             self.Field('second').SetChoices(None)
             self.DismissPopup()
+
+    def __OnHourSelected(self, event):
+        if self.Field('ampm') is not NullField and event.GetField() is self.Field('hour'):
+            hour, ampm = event.GetValue().split()
+            self.Field('hour').SetValue(int(hour))
+            self.Field('ampm').SetValue(dict(am=0, pm=1)[ampm.lower()])
+            event.Veto()
 
     def LoadChoices(self, choices):
         self.__relChoices = choices
@@ -1222,6 +1267,7 @@ class _RelativeChoicePopup(_PopupWindow):
     def __init__(self, start, *args, **kwargs):
         self.__start = start
         self.__editing = False
+        self.__comboState = 0
         self.LoadChoices(kwargs.pop('choices', '60,120,180'))
         super(_RelativeChoicePopup, self).__init__(*args, **kwargs)
 
@@ -1240,6 +1286,24 @@ class _RelativeChoicePopup(_PopupWindow):
     def LoadChoices(self, choices):
         self.__choices = [datetime.timedelta(minutes=m) for m in map(int, choices.split(','))]
 
+    def __OnComboLeftDown(self, event):
+        self.__comboState = 1
+        event.Skip()
+
+    def __OnComboFocus(self, event):
+        if self.__comboState == 1:
+            # Focus after click => popup
+            self.__comboState = 2
+        else:
+            # Popup dismissed
+            self.__comboState = 0
+
+    def OnActivate(self, event):
+        if self.__comboState != 0 and not event.GetActive():
+            event.Skip()
+        else:
+            super(_RelativeChoicePopup, self).OnActivate(event)
+
     def __Populate(self):
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
         self.__btnEdit = wx.Button(self.__interior, wx.ID_ANY, _('Edit'))
@@ -1256,6 +1320,10 @@ class _RelativeChoicePopup(_PopupWindow):
         self.__unitCtrl.Append(_('Minute(s)'))
         self.__unitCtrl.SetSelection(0)
         hsizer.Add(self.__unitCtrl, 1, wx.ALL|wx.ALIGN_CENTRE, 2)
+
+        if '__WXGTK__' in wx.PlatformInfo:
+            wx.EVT_SET_FOCUS(self.__unitCtrl, self.__OnComboFocus)
+            wx.EVT_LEFT_DOWN(self.__unitCtrl, self.__OnComboLeftDown)
 
         self.__sizer.Add(hsizer, flag=wx.EXPAND)
 
@@ -1308,7 +1376,7 @@ class _RelativeChoicePopup(_PopupWindow):
                 values.append(_('1 minute'))
             else:
                 values.append(_('%d minutes') % (minutes % 60))
-        return u', '.join(values) + (self.__start + delta).strftime(' (%c)')
+        return u', '.join(values) + decodeSystemString((self.__start + delta).strftime(' (%c)'))
 
     def __Empty(self):
         while len(self.__sizer.GetChildren()):
@@ -1360,7 +1428,8 @@ class _RelativeChoicePopup(_PopupWindow):
         self.__btnAdd.Show(self.__editing)
         for delta, idSpan, idDel, btn in self.__lines:
             btn.Show(self.__editing)
-        self.Fit()
+        wx.CallAfter(self.Fit)
+        wx.CallAfter(self.Refresh)
 
 #=======================================
 #{ Calendar popup
@@ -1614,7 +1683,8 @@ class _MultipleChoicesPopup(_PopupWindow):
             return True
 
         if event.GetKeyCode() == wx.WXK_RETURN:
-            self.GetParent().SetChoice(self.__choices[self.__selection])
+            evt = EntryChoiceSelectedEvent(self, self.__choices[self.__selection])
+            self.ProcessEvent(evt)
             return True
 
         return False
@@ -1625,7 +1695,8 @@ class _MultipleChoicesPopup(_PopupWindow):
         for choice in self.__choices:
             tw, th = dc.GetTextExtent(unicode(choice))
             if event.GetY() >= y and event.GetY() < y + th:
-                self.GetParent().SetChoice(choice)
+                evt = EntryChoiceSelectedEvent(self, choice)
+                self.ProcessEvent(evt)
                 break
             y += th + 2
 
@@ -1877,7 +1948,7 @@ if __name__ == '__main__':
             super(Dialog, self).__init__(None, wx.ID_ANY, 'Test', style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER)
             sz = wx.BoxSizer(wx.VERTICAL)
 
-            pnl1 = SmartDateTimeCtrl(self, label='Start', enableNone=True, timeFormat=lambda x: x.strftime('%I:%M %p'))
+            pnl1 = SmartDateTimeCtrl(self, label='Start', enableNone=True, timeFormat=lambda x: x.strftime('%I:%M %p'), startHour=8, endHour=18)
             pnl1.EnableChoices()
             sz.Add(pnl1, 0, wx.ALL|wx.ALIGN_LEFT, 3)
 
