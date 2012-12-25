@@ -512,7 +512,7 @@ class FeaturesPage(SettingsPage):
         super(FeaturesPage, self).__init__(columns=3, growableColumn=-1, 
                                            *args, **kwargs)
         self.addEntry(_('All settings on this tab require a restart of %s ' \
-                        'to take effect' % meta.name))
+                        'to take effect') % meta.name)
         self.addBooleanSetting('feature', 'effort', 
             _('Allow for tracking effort'))
         self.addBooleanSetting('feature', 'notes', _('Allow for taking notes'))
