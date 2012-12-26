@@ -731,9 +731,14 @@ class TimeEntry(Entry):
     def __OnHourSelected(self, event):
         if self.Field('ampm') is not NullField and event.GetField() is self.Field('hour'):
             hour, ampm = event.GetValue().split()
-            self.Field('hour').SetValue(int(hour))
-            self.Field('ampm').SetValue(dict(am=0, pm=1)[ampm.lower()])
             event.Veto()
+
+            evt = TimeChangeEvent(self, self.__NewValue(hour=Convert12To24(int(hour), ampm=dict(am=0, pm=1)[ampm.lower()])))
+            self.ProcessEvent(evt)
+            if evt.IsVetoed():
+                wx.Bell()
+            else:
+                self.SetTime(evt.GetValue())
 
     def LoadChoices(self, choices):
         self.__relChoices = choices
