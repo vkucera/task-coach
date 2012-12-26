@@ -23,7 +23,7 @@ from taskcoachlib.thirdparty import aui
 
 class _Toolbar(aui.AuiToolBar):
     def __init__(self, parent, style):
-        super(_Toolbar, self).__init__(parent)
+        super(_Toolbar, self).__init__(parent, agwStyle=aui.AUI_TB_NO_AUTORESIZE)
 
     def AddLabelTool(self, id, label, bitmap1, bitmap2, kind, **kwargs):
         long_help_string = kwargs.pop('longHelp', '')
@@ -72,6 +72,9 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
         ''' This little adapter is needed for 
         uicommand.UICommandContainerMixin.appendUICommands'''
         self.AddSeparator()
+
+    def AppendStretchSpacer(self, proportion):
+        self.AddStretchSpacer(proportion)
 
     def appendUICommand(self, uiCommand):
         return uiCommand.appendToToolBar(self)
