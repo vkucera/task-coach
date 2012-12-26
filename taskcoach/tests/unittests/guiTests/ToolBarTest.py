@@ -57,3 +57,35 @@ class ToolBarSizeTest(test.wxTestCase):
         if not expectedSize:
             expectedSize = size
         self.assertEqual(wx.Size(*expectedSize), toolbar.GetToolBitmapSize())
+
+
+class ToolBarPerspectiveTest(test.wxTestCase):
+    def setUp(self):
+        class NoBitmapUICommand(dummy.DummyUICommand):
+            def appendToToolBar(self, toolbar):
+                pass
+        class TestFrame(test.TestCaseFrame):
+            def createToolBarUICommands(self):
+                class Test1(NoBitmapUICommand):
+                    pass
+                class Test2(NoBitmapUICommand):
+                    pass
+                return [Test1(), None, Test2(), 1]
+        self.tbFrame = TestFrame()
+
+    def tearDown(self):
+        self.tbFrame.Close()
+
+    def test_empty(self):
+        bar = gui.toolbar.ToolBar(self.tbFrame)
+        self.assertEqual(bar.savePerspective(), 'Test1,Separator,Test2,Spacer')
+
+    def test_restrict(self):
+        self.tbFrame.toolbarPerspective = 'Test1,Spacer'
+        bar = gui.toolbar.ToolBar(self.tbFrame)
+        self.assertEqual(bar.savePerspective(), 'Test1,Spacer')
+
+    def test_does_not_exist(self):
+        self.tbFrame.toolbarPerspective = 'Test1,Spacer,Test3'
+        bar = gui.toolbar.ToolBar(self.tbFrame)
+        self.assertEqual(bar.savePerspective(), 'Test1,Spacer')

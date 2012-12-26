@@ -84,6 +84,17 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
         self.appendUICommands(*commands)
         self.Realize()
 
+    def savePerspective(self):
+        classes = list()
+        for uiCommand in self.__visibleUICommands:
+            if uiCommand is None:
+                classes.append('Separator')
+            elif isinstance(uiCommand, int):
+                classes.append('Spacer')
+            else:
+                classes.append(uiCommand.__class__.__name__)
+        return ','.join(classes)
+
     def uiCommands(self):
         return self.__window.createToolBarUICommands()
 
