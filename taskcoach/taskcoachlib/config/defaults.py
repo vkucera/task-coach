@@ -26,6 +26,7 @@ defaults = {
 'view': {
     'statusbar': 'True',
     'toolbar': '(22, 22)',
+    'toolbarperspective': '',
     # Index of the active effort viewer in task editor:
     'effortviewerintaskeditor': '0',  
     'taskviewercount': '1',  # Number of task viewers in main window
@@ -66,7 +67,8 @@ defaults = {
     'lastdevelopermessage': '',
     },
 'taskviewer': {
-    'title': '',  # User supplied viewer title 
+    'title': '',  # User supplied viewer title
+    'toolbarperspective': '',
     'treemode': 'True',  # True = tree mode, False = list mode
     'sortby': 'dueDateTime',
     'sortascending': 'True',
@@ -91,6 +93,7 @@ defaults = {
     },              
 'taskstatsviewer': {
     'title': '',
+    'toolbarperspective': '',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
@@ -106,7 +109,8 @@ defaults = {
     'piechartangle': '30',
     },
 'prerequisiteviewerintaskeditor': {
-    'title': '',  # User supplied viewer title 
+    'title': '',  # User supplied viewer title
+    'toolbarperspective': '',
     'treemode': 'True',  # True = tree mode, False = list mode
     'sortby': 'subject',
     'sortascending': 'True',
@@ -132,6 +136,7 @@ defaults = {
     },
 'squaretaskviewer': {
     'title': '',
+    'toolbarperspective': '',
     'sortby': 'budget',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
@@ -148,6 +153,7 @@ defaults = {
     },
 'timelineviewer': {
     'title': '',
+    'toolbarperspective': '',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
@@ -163,6 +169,7 @@ defaults = {
     },
 'calendarviewer': {
     'title': '',
+    'toolbarperspective': '',
     'viewtype': '1',
     'periodcount': '1',
     'periodwidth': '150',
@@ -193,6 +200,7 @@ defaults = {
     },
 'categoryviewer': {
     'title': '',
+    'toolbarperspective': '',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -208,6 +216,7 @@ defaults = {
     },
 'categoryviewerintaskeditor': {
     'title': '',
+    'toolbarperspective': '',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -223,6 +232,7 @@ defaults = {
     },
 'categoryviewerinnoteeditor': {
     'title': '',
+    'toolbarperspective': '',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -238,6 +248,7 @@ defaults = {
     },
 'noteviewer': {
     'title': '',
+    'toolbarperspective': '',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -252,6 +263,7 @@ defaults = {
     'columnautoresizing': 'True'
     },
 'noteviewerintaskeditor': {
+    'toolbarperspective': '',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -266,6 +278,7 @@ defaults = {
     'regularexpression': 'False',
     },
 'noteviewerincategoryeditor': {
+    'toolbarperspective': '',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -280,6 +293,7 @@ defaults = {
     'regularexpression': 'False',
     },
 'noteviewerinattachmenteditor': {
+    'toolbarperspective': '',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -295,6 +309,7 @@ defaults = {
     },
 'effortviewer': {
     'title': '',
+    'toolbarperspective': '',
     'aggregation': 'details',  # 'details' (default), 'day', 'week', or 'month'
     'sortby': 'period',
     'sortascending': 'False',
@@ -314,6 +329,7 @@ defaults = {
     'alwaysroundup': 'False',
     },
 'effortviewerintaskeditor': {
+    'toolbarperspective': '',
     'aggregation': 'details',  # 'details' (default), 'day', 'week', or 'month'
     'sortby': 'period',
     'sortascending': 'False',
@@ -332,6 +348,7 @@ defaults = {
     },
 'attachmentviewer': {
     'title': '',
+    'toolbarperspective': '',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -347,6 +364,7 @@ defaults = {
     },
 'attachmentviewerintaskeditor': {
     'title': '',
+    'toolbarperspective': '',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -362,6 +380,7 @@ defaults = {
     },
 'attachmentviewerinnoteeditor': {
     'title': '',
+    'toolbarperspective': '',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -377,6 +396,7 @@ defaults = {
     },
 'attachmentviewerincategoryeditor': {
     'title': '',
+    'toolbarperspective': '',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',

@@ -57,14 +57,33 @@ class _Toolbar(aui.AuiToolBar):
 class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
     def __init__(self, window, size=(32, 32)):
         self.__window = window
+        self.__visibleUICommands = list()
         super(ToolBar, self).__init__(window, style=wx.TB_FLAT|wx.TB_NODIVIDER)
         self.SetToolBitmapSize(size) 
         if operating_system.isMac():
             # Extra margin needed because the search control is too high
             self.SetMargins(0, 7)
-        self.appendUICommands(*self.uiCommands())
-        self.Realize()
+        self.loadPerspective(window.getToolBarPerspective())
         
+    def loadPerspective(self, perspective):
+        for uiCommand in self.__visibleUICommands:
+            if uiCommand is not None and not isinstance(uiCommand, int):
+                uiCommand.unbind(self, uiCommand.id)
+        self.Clear()
+        commands = list()
+        if perspective:
+            index = dict([(command.__class__.__name__, command) for command in self.uiCommands()])
+            index['Separator'] = None
+            index['Spacer'] = 1
+            for className in perspective.split(','):
+                if className in index:
+                    commands.append(index[className])
+        else:
+            commands = self.uiCommands()
+        self.__visibleUICommands = commands[:]
+        self.appendUICommands(*commands)
+        self.Realize()
+
     def uiCommands(self):
         return self.__window.createToolBarUICommands()
 

@@ -413,7 +413,13 @@ class Viewer(patterns.Observer, wx.Panel):
             editToolBarUICommands + editSeparator + \
             actionToolBarUICommands + actionSeparator + \
             modeToolBarUICommands
-        
+
+    def getToolBarPerspective(self):
+        return self.settings.get(self.settingsSection(), 'toolbarperspective')
+
+    def setToolBarPerspective(self, perspective):
+        self.settings.set(self.settingsSection(), 'toolbarperspective', perspective)
+
     def createClipboardToolBarUICommands(self):
         ''' UI commands for manipulating the clipboard (cut, copy, paste). '''
         cutCommand = uicommand.EditCut(viewer=self)

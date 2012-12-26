@@ -2555,6 +2555,10 @@ class Search(ViewerCommand, SettingsCommand):
     
 
 class ToolbarChoiceCommandMixin(object):
+    def __init__(self, *args, **kwargs):
+        self.choiceCtrl = None
+        super(ToolbarChoiceCommandMixin, self).__init__(*args, **kwargs)
+
     def appendToToolBar(self, toolbar):
         ''' Add our choice control to the toolbar. '''
         # pylint: disable=W0201
@@ -2579,9 +2583,10 @@ class ToolbarChoiceCommandMixin(object):
         
     def setChoice(self, choice):
         ''' Programmatically set the current choice in the choice control. '''
-        index = self.choiceData.index(choice)
-        self.choiceCtrl.Selection = index
-        self.currentChoice = index
+        if self.choiceCtrl is not None:
+            index = self.choiceData.index(choice)
+            self.choiceCtrl.Selection = index
+            self.currentChoice = index
         
     def enable(self, enable=True):
         self.choiceCtrl.Enable(enable)

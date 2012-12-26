@@ -275,7 +275,10 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
         # XXXFIXME: the last element disappears, don't know why yet...
         uiCommands.append(1)
         return uiCommands
-        
+
+    def getToolBarPerspective(self):
+        return self.settings.get('view', 'toolbarperspective')
+
     def showToolBar(self, value):
         currentToolbar = self.manager.GetPane('toolbar')
         if currentToolbar.IsOk():
