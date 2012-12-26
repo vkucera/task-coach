@@ -272,6 +272,8 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
                 uicommand.EffortStartButton(taskList=self.taskFile.tasks()), 
                 uicommand.EffortStop(effortList=self.taskFile.efforts(),
                                      taskList=self.taskFile.tasks())])
+        # XXXFIXME: the last element disappears, don't know why yet...
+        uiCommands.append(1)
         return uiCommands
         
     def showToolBar(self, value):
