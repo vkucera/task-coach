@@ -748,6 +748,11 @@ class TimeEntry(Entry):
         self.__choicePopup = _RelativeChoicePopup(self.__choiceStart, self, wx.ID_ANY, choices=self.__relChoices)
         w, h = self.GetClientSizeTuple()
         self.__choicePopup.Popup(self.ClientToScreen(wx.Point(0, h)))
+        EVT_POPUP_DISMISS(self.__choicePopup, self.OnRelativePopupDismiss)
+
+    def OnRelativePopupDismiss(self, event):
+        self.__choicePopup = None
+        event.Skip()
 
     def OnChoicesChanged(self, sender):
         self.__relChoices = sender.SaveChoices()
