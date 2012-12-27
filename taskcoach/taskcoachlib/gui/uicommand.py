@@ -2527,6 +2527,7 @@ class Search(ViewerCommand, SettingsCommand):
                                         searchDescription, regularExpression)
 
     def appendToToolBar(self, toolbar):
+        self.__bound = True
         searchString, matchCase, includeSubItems, searchDescription, regularExpression = \
             self.viewer.getSearchFilter()
         # pylint: disable=W0201
@@ -2554,10 +2555,6 @@ class Search(ViewerCommand, SettingsCommand):
             the Escape key and drop down the menu on Ctrl-Down. '''
         self.searchControl.getTextCtrl().Bind(wx.EVT_KEY_DOWN,
                                               self.onSearchCtrlKeyDown)
-
-    def bind(self, window, id_):
-        self.__bound = True
-        super(Search, self).bind(window, id_)
 
     def unbind(self, window, id_):
         self.__bound = False
