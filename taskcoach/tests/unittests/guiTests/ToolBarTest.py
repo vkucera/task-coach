@@ -78,14 +78,14 @@ class ToolBarPerspectiveTest(test.wxTestCase):
 
     def test_empty(self):
         bar = gui.toolbar.ToolBar(self.tbFrame)
-        self.assertEqual(bar.savePerspective(), 'Test1,Separator,Test2,Spacer')
+        self.assertEqual(bar.perspective(), 'Test1,Separator,Test2,Spacer')
 
     def test_restrict(self):
         self.tbFrame.toolbarPerspective = 'Test1,Spacer'
         bar = gui.toolbar.ToolBar(self.tbFrame)
-        self.assertEqual(bar.savePerspective(), 'Test1,Spacer')
+        self.assertEqual(bar.perspective(), 'Test1,Spacer')
 
     def test_does_not_exist(self):
         self.tbFrame.toolbarPerspective = 'Test1,Spacer,Test3'
         bar = gui.toolbar.ToolBar(self.tbFrame)
-        self.assertEqual(bar.savePerspective(), 'Test1,Spacer')
+        self.assertEqual(bar.perspective(), 'Test1,Spacer')

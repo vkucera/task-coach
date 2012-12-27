@@ -91,7 +91,7 @@ iconlist = [
 ('clock_stop_icon', 'actions', 'history_stop', [16, 22, 32]),
 ('clock_resume_icon', 'actions', 'history_resume', [16, 22, 32]),
 ('clock_menu_icon', 'actions', 'historymenu', [16, 22, 32]),
-('cogwheel_icon', 'actions', 'misc', [16, 22]),
+('cogwheel_icon', 'actions', 'misc', [16, 22, 32]),
 ('cogwheels_icon', 'apps', 'kcmsystem', [16]),
 ('computer_desktop_icon', 'apps', 'mycomputer', [16]),
 ('computer_handheld_icon', 'devices', 'pda', [16, 22]),
@@ -164,7 +164,7 @@ iconlist = [
 ('weather_lightning_icon', 'apps', 'cache', [16]),
 ('weather_sunny_icon', 'apps', 'kweather', [16]),
 ('weather_umbrella_icon', 'apps', 'colors', [16]),
-('wrench_icon', 'actions', 'configure', [16]),
+('wrench_icon', 'actions', 'configure', [16, 22, 32]),
 ]
 
 icons = {}

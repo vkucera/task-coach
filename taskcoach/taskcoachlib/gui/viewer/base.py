@@ -417,7 +417,7 @@ class Viewer(patterns.Observer, wx.Panel):
     def getToolBarPerspective(self):
         return self.settings.get(self.settingsSection(), 'toolbarperspective')
 
-    def setToolBarPerspective(self, perspective):
+    def saveToolBarPerspective(self, perspective):
         self.settings.set(self.settingsSection(), 'toolbarperspective', perspective)
 
     def createClipboardToolBarUICommands(self):

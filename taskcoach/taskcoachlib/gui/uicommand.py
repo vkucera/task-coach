@@ -1107,6 +1107,21 @@ class EditSyncPreferences(IOCommand):
         editor.Show(show=show)
 
 
+class EditToolBarPerspective(UICommand):
+    ''' Action for editing a customizable toolbar '''
+
+    def __init__(self, toolbar, editorClass, *args, **kwargs):
+        self.__toolbar = toolbar
+        self.__editorClass = editorClass
+        super(EditToolBarPerspective, self).__init__( \
+            helpText=_('Customize toolbar'), bitmap='cogwheel_icon',
+            menuText=_('Customize'),
+            *args, **kwargs)
+
+    def doCommand(self, event):
+        self.__editorClass(self.__toolbar, self.mainWindow(), _('Customize toolbar')).ShowModal()
+
+
 class SelectAll(NeedsItemsMixin, ViewerCommand):
     ''' Action for selecting all items in a viewer. '''
     
@@ -2495,13 +2510,15 @@ class MainWindowRestore(UICommand):
 class Search(ViewerCommand, SettingsCommand):
     # Search can only be attached to a real viewer, not to a viewercontainer
     def __init__(self, *args, **kwargs):
-        super(Search, self).__init__(*args, **kwargs)
+        self.__bound = False
+        super(Search, self).__init__(*args, helpText=_('Search'), **kwargs)
         assert self.viewer.isSearchable()
                            
     def onFind(self, searchString, matchCase, includeSubItems, 
                searchDescription, regularExpression):
-        self.viewer.setSearchFilter(searchString, matchCase, includeSubItems, 
-                                    searchDescription, regularExpression)
+        if self.__bound:
+            self.viewer.setSearchFilter(searchString, matchCase, includeSubItems, 
+                                        searchDescription, regularExpression)
 
     def appendToToolBar(self, toolbar):
         searchString, matchCase, includeSubItems, searchDescription, regularExpression = \
@@ -2529,8 +2546,16 @@ class Search(ViewerCommand, SettingsCommand):
     def bindKeyDownInSearchCtrl(self):
         ''' Bind wx.EVT_KEY_DOWN to self.onSearchCtrlKeyDown so we can catch 
             the Escape key and drop down the menu on Ctrl-Down. '''
-        self.searchControl.getTextCtrl().Bind(wx.EVT_KEY_DOWN, 
+        self.searchControl.getTextCtrl().Bind(wx.EVT_KEY_DOWN,
                                               self.onSearchCtrlKeyDown)
+
+    def bind(self, window, id_):
+        self.__bound = True
+        super(Search, self).bind(window, id_)
+
+    def unbind(self, window, id_):
+        self.__bound = False
+        super(Search, self).unbind(window, id_)
 
     def onViewerKeyDown(self, event):
         ''' On Ctrl-F, move focus to the search control. '''
@@ -2566,7 +2591,11 @@ class ToolbarChoiceCommandMixin(object):
         self.currentChoice = self.choiceCtrl.Selection
         self.choiceCtrl.Bind(wx.EVT_CHOICE, self.onChoice)
         toolbar.AddControl(self.choiceCtrl)
-        
+
+    def unbind(self, window, id_):
+        self.choiceCtrl.Unbind(wx.EVT_CHOICE)
+        super(ToolbarChoiceCommandMixin, self).unbind(window, id_)
+
     def onChoice(self, event):
         ''' The user selected a choice from the choice control. '''
         choiceIndex = event.GetInt()

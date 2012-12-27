@@ -272,12 +272,13 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
                 uicommand.EffortStartButton(taskList=self.taskFile.tasks()), 
                 uicommand.EffortStop(effortList=self.taskFile.efforts(),
                                      taskList=self.taskFile.tasks())])
-        # XXXFIXME: the last element disappears, don't know why yet...
-        uiCommands.append(1)
         return uiCommands
 
     def getToolBarPerspective(self):
         return self.settings.get('view', 'toolbarperspective')
+
+    def saveToolBarPerspective(self, perspective):
+        self.settings.set('view', 'toolbarperspective', perspective)
 
     def showToolBar(self, value):
         currentToolbar = self.manager.GetPane('toolbar')
