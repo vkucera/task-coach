@@ -48,7 +48,7 @@ class TaskStatus(object):
 inactive = TaskStatus('inactive', _('Inactive tasks'), 
     _('Inactive tasks: %d (%d%%)'), _('Hide &inactive tasks'),
     _('Show/hide inactive tasks (uncompleted tasks without actual start date)'),
-    hideBitmap='filterinactivetasks')
+    hideBitmap='led_grey_icon+cross_red_icon')
 
 late = TaskStatus('late', _('Late tasks'), 
     _('Late tasks: %d (%d%%)'), _('Hide &late tasks'), 
@@ -68,4 +68,4 @@ overdue = TaskStatus('overdue', _('Overdue tasks'),
 
 completed = TaskStatus('completed', _('Completed tasks'), 
     _('Completed tasks: %d (%d%%)'), _('Hide &completed tasks'),
-    _('Show/hide completed tasks'), hideBitmap='filtercompletedtasks')
+    _('Show/hide completed tasks'), hideBitmap='led_green_icon+cross_red_icon')

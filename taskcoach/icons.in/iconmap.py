@@ -45,8 +45,6 @@ iconlist = [
 ('taskcoach', 'apps', 'korganizer_todo', [16, 22, 32, 48, 64, 128]),
 ('listview', 'actions', 'view_detailed', [16, 22, 32]),
 ('treeview', 'actions', 'view_tree', [16, 22, 32]),
-('filtercompletedtasks', 'actions', 'ledgreen_faded', [16]),
-('filterinactivetasks', 'actions', 'ledgrey_faded', [16]),
 ('restore', 'apps', 'kcmkwm', [16]),
 ('progress', 'actions', 'finish', [16, 22, 32]),
 ('viewalltasks', 'apps', 'kreversi', [16]),

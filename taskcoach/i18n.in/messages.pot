@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-12-27 19:41+CET\n"
+"POT-Creation-Date: 2012-12-27 19:50+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -769,352 +769,352 @@ msgstr ""
 msgid "&New task..."
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:113
+#: taskcoachlib/gui/artprovider.py:111
 msgid "Arrow down"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:114
+#: taskcoachlib/gui/artprovider.py:112
 msgid "Arrow down with status"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:115
+#: taskcoachlib/gui/artprovider.py:113
 msgid "Blue arrows looped"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:116
+#: taskcoachlib/gui/artprovider.py:114
 msgid "Green arrows looped"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:117
+#: taskcoachlib/gui/artprovider.py:115
 msgid "Arrow up"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:118
+#: taskcoachlib/gui/artprovider.py:116
 msgid "Arrow up with status"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:119
+#: taskcoachlib/gui/artprovider.py:117
 msgid "Bomb"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:120
+#: taskcoachlib/gui/artprovider.py:118
 msgid "Book"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:121
+#: taskcoachlib/gui/artprovider.py:119
 msgid "Books"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:122
+#: taskcoachlib/gui/artprovider.py:120
 msgid "Box"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:123
+#: taskcoachlib/gui/artprovider.py:121
 msgid "Ladybug"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:124
+#: taskcoachlib/gui/artprovider.py:122
 msgid "Cake"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:125
+#: taskcoachlib/gui/artprovider.py:123
 msgid "Calculator"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:126 taskcoachlib/gui/viewer/task.py:570
+#: taskcoachlib/gui/artprovider.py:124 taskcoachlib/gui/viewer/task.py:570
 msgid "Calendar"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:127
+#: taskcoachlib/gui/artprovider.py:125
 msgid "Cat"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:128
+#: taskcoachlib/gui/artprovider.py:126
 msgid "Compact disc (CD)"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:129
+#: taskcoachlib/gui/artprovider.py:127
 msgid "Charts"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:130
+#: taskcoachlib/gui/artprovider.py:128
 msgid "Chatting"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:131
+#: taskcoachlib/gui/artprovider.py:129
 msgid "Check mark"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:132
+#: taskcoachlib/gui/artprovider.py:130
 msgid "Clock"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:133
+#: taskcoachlib/gui/artprovider.py:131
 msgid "Alarm clock"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:134
+#: taskcoachlib/gui/artprovider.py:132
 msgid "Stopwatch"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:135
+#: taskcoachlib/gui/artprovider.py:133
 msgid "Cogwheel"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:136
+#: taskcoachlib/gui/artprovider.py:134
 msgid "Cogwheels"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:137
+#: taskcoachlib/gui/artprovider.py:135
 msgid "Desktop computer"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:138
+#: taskcoachlib/gui/artprovider.py:136
 msgid "Laptop computer"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:139
+#: taskcoachlib/gui/artprovider.py:137
 msgid "Handheld computer"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:140
+#: taskcoachlib/gui/artprovider.py:138
 msgid "Red cross"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:141
+#: taskcoachlib/gui/artprovider.py:139
 msgid "Die"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:142
+#: taskcoachlib/gui/artprovider.py:140
 msgid "Document"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:143
+#: taskcoachlib/gui/artprovider.py:141
 msgid "Blue earth"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:144
+#: taskcoachlib/gui/artprovider.py:142
 msgid "Green earth"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:145
+#: taskcoachlib/gui/artprovider.py:143
 msgid "Envelope"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:146
+#: taskcoachlib/gui/artprovider.py:144
 msgid "Envelopes"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:147
+#: taskcoachlib/gui/artprovider.py:145
 msgid "Blue folder"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:148
+#: taskcoachlib/gui/artprovider.py:146
 msgid "Light blue folder"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:149
+#: taskcoachlib/gui/artprovider.py:147
 msgid "Green folder"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:150
+#: taskcoachlib/gui/artprovider.py:148
 msgid "Grey folder"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:151
+#: taskcoachlib/gui/artprovider.py:149
 msgid "Orange folder"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:152
+#: taskcoachlib/gui/artprovider.py:150
 msgid "Purple folder"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:153
+#: taskcoachlib/gui/artprovider.py:151
 msgid "Red folder"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:154
+#: taskcoachlib/gui/artprovider.py:152
 msgid "Yellow folder"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:155
+#: taskcoachlib/gui/artprovider.py:153
 msgid "Blue folder with arrow"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:156
+#: taskcoachlib/gui/artprovider.py:154
 msgid "Heart"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:157
+#: taskcoachlib/gui/artprovider.py:155
 msgid "Hearts"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:158
+#: taskcoachlib/gui/artprovider.py:156
 msgid "Green house"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:159
+#: taskcoachlib/gui/artprovider.py:157
 msgid "Red house"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:160
+#: taskcoachlib/gui/artprovider.py:158
 msgid "Key"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:161
+#: taskcoachlib/gui/artprovider.py:159
 msgid "Keys"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:162
+#: taskcoachlib/gui/artprovider.py:160
 msgid "Lamp"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:163
+#: taskcoachlib/gui/artprovider.py:161
 msgid "Question mark"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:164
+#: taskcoachlib/gui/artprovider.py:162
 #: taskcoachlib/gui/wizard/csvimport.py:341
 msgid "Information"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:165
+#: taskcoachlib/gui/artprovider.py:163
 msgid "Blue led"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:166
+#: taskcoachlib/gui/artprovider.py:164
 msgid "Light blue led"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:167
+#: taskcoachlib/gui/artprovider.py:165
 msgid "Grey led"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:168
+#: taskcoachlib/gui/artprovider.py:166
 msgid "Green led"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:169
+#: taskcoachlib/gui/artprovider.py:167
 msgid "Light green led"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:170
+#: taskcoachlib/gui/artprovider.py:168
 msgid "Orange led"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:171
+#: taskcoachlib/gui/artprovider.py:169
 msgid "Purple led"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:172
+#: taskcoachlib/gui/artprovider.py:170
 msgid "Red led"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:173
+#: taskcoachlib/gui/artprovider.py:171
 msgid "Yellow led"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:174
+#: taskcoachlib/gui/artprovider.py:172
 msgid "Life ring"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:175
+#: taskcoachlib/gui/artprovider.py:173
 msgid "Locked lock"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:176
+#: taskcoachlib/gui/artprovider.py:174
 msgid "Unlocked lock"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:177
+#: taskcoachlib/gui/artprovider.py:175
 msgid "Magnifier glass"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:178
+#: taskcoachlib/gui/artprovider.py:176
 msgid "Piano"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:179
+#: taskcoachlib/gui/artprovider.py:177
 msgid "Music note"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:180
+#: taskcoachlib/gui/artprovider.py:178
 msgid "Note"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:181
+#: taskcoachlib/gui/artprovider.py:179
 msgid "Palette"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:182
+#: taskcoachlib/gui/artprovider.py:180
 msgid "Paperclip"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:183
+#: taskcoachlib/gui/artprovider.py:181
 msgid "Pencil"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:184
+#: taskcoachlib/gui/artprovider.py:182
 msgid "Person"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:185
+#: taskcoachlib/gui/artprovider.py:183
 msgid "People"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:186
+#: taskcoachlib/gui/artprovider.py:184
 msgid "Identification"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:187
+#: taskcoachlib/gui/artprovider.py:185
 msgid "Person talking"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:188
+#: taskcoachlib/gui/artprovider.py:186
 msgid "Warning sign"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:189
+#: taskcoachlib/gui/artprovider.py:187
 msgid "Minus"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:190
+#: taskcoachlib/gui/artprovider.py:188
 msgid "Plus"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:191
+#: taskcoachlib/gui/artprovider.py:189
 msgid "Red star"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:192
+#: taskcoachlib/gui/artprovider.py:190
 msgid "Yellow star"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:193
+#: taskcoachlib/gui/artprovider.py:191
 msgid "Traffic light"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:194
+#: taskcoachlib/gui/artprovider.py:192
 msgid "Trashcan"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:195
+#: taskcoachlib/gui/artprovider.py:193
 msgid "Lightning"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:196
+#: taskcoachlib/gui/artprovider.py:194
 msgid "Umbrella"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:197
+#: taskcoachlib/gui/artprovider.py:195
 msgid "Partly sunny"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:198
+#: taskcoachlib/gui/artprovider.py:196
 msgid "Wrench"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:206
+#: taskcoachlib/gui/artprovider.py:204
 msgid "No icon"
 msgstr ""
 
