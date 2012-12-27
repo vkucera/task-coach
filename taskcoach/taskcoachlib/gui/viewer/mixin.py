@@ -99,6 +99,11 @@ class FilterableViewerMixin(object):
                 uicommand.CategoryViewerFilterChoice(settings=self.settings),
                 None]
 
+    def createToolBarUICommands(self):
+        clearUICommand = uicommand.ResetFilter(viewer=self)
+        return super(FilterableViewerMixin, self).createToolBarUICommands() + \
+            (clearUICommand,)
+
     def resetFilter(self):
         self.taskFile.categories().resetAllFilteredCategories()
 
