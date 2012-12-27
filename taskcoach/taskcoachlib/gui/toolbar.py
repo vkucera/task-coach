@@ -218,7 +218,7 @@ class _ToolBarEditorInterior(wx.Panel):
             elif isinstance(uiCommand, int):
                 names.append('Spacer')
             else:
-                names.append(uiCommand.__class__.__name__)
+                names.append(uiCommand.uniqueName())
         return ','.join(names)
 
     def createToolBarUICommands(self):
@@ -300,7 +300,7 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
     def _filterCommands(self, perspective):
         commands = list()
         if perspective:
-            index = dict([(command.__class__.__name__, command) for command in self.uiCommands()])
+            index = dict([(command.uniqueName(), command) for command in self.uiCommands() if command is not None and not isinstance(command, int)])
             index['Separator'] = None
             index['Spacer'] = 1
             for className in perspective.split(','):
@@ -332,7 +332,7 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
             elif isinstance(uiCommand, int):
                 names.append('Spacer')
             else:
-                names.append(uiCommand.__class__.__name__)
+                names.append(uiCommand.uniqueName())
         return ','.join(names)
 
     def savePerspective(self, perspective):

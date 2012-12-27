@@ -91,6 +91,9 @@ class UICommand(object):
     def __eq__(self, other):
         return self is other
 
+    def uniqueName(self):
+        return self.__class__.__name__
+
     def accelerators(self):
         # The ENTER and NUMPAD_ENTER keys are treated differently between platforms...
         if '\t' in self.menuText and ('ENTER' in self.menuText or 'RETURN' in self.menuText):
@@ -1404,7 +1407,10 @@ class ViewerHideTasks(ViewerCommand, UICheckCommand):
                                               helpText=taskStatus.hideHelpText,
                                               bitmap=taskStatus.hideBitmap,
                                               *args, **kwargs)
-    
+
+    def uniqueName(self):
+        return super(ViewerHideTasks, self).uniqueName() + '_' + unicode(self.__taskStatus)
+
     def isSettingChecked(self):
         return self.viewer.isHidingTaskStatus(self.__taskStatus)
         
