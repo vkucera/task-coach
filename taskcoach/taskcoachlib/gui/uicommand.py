@@ -286,7 +286,7 @@ class UICheckCommand(BooleanSettingsCommand):
         # all platforms, most notably Gtk where providing our own bitmap causes
         # "(python:8569): Gtk-CRITICAL **: gtk_check_menu_item_set_active: 
         # assertion `GTK_IS_CHECK_MENU_ITEM (check_menu_item)' failed"
-        return None
+        return 'nobitmap'
 
 
 class UIRadioCommand(BooleanSettingsCommand):
@@ -2632,6 +2632,9 @@ class EffortViewerAggregationChoice(ToolbarChoiceCommandMixin, ViewerCommand):
                     _('Effort per week'), _('Effort per month')]
     choiceData = ['details', 'day', 'week', 'month']
 
+    def __init__(self, **kwargs):
+        super(EffortViewerAggregationChoice, self).__init__(helpText=_('Aggregation mode'), **kwargs)
+
     def doChoice(self, choice):
         self.viewer.showEffortAggregation(choice)
         
@@ -2639,7 +2642,11 @@ class EffortViewerAggregationChoice(ToolbarChoiceCommandMixin, ViewerCommand):
 class TaskViewerTreeOrListChoice(ToolbarChoiceCommandMixin, ViewerCommand):
     choiceLabels = [_('Tree of tasks'), _('List of tasks')]
     choiceData = [True, False]
-    
+
+    def __init__(self, **kwargs):
+        super(TaskViewerTreeOrListChoice, self).__init__(helpText=_('Task viewer mode choice'),
+                                                     **kwargs)
+
     def doChoice(self, choice):
         self.viewer.showTree(choice)
         
@@ -2679,7 +2686,10 @@ class SquareTaskViewerOrderChoice(ToolbarChoiceCommandMixin, ViewerCommand):
     choiceLabels = [_('Budget'), _('Time spent'), _('Fixed fee'), _('Revenue'), 
                     _('Priority')]
     choiceData = ['budget', 'timeSpent', 'fixedFee', 'revenue', 'priority']
-    
+
+    def __init__(self, **kwargs):
+        super(SquareTaskViewerOrderChoice, self).__init__(helpText=_('Order choice'), **kwargs)
+
     def doChoice(self, choice):
         self.viewer.orderBy(choice)
 
@@ -2787,6 +2797,9 @@ class RoundingPrecision(ToolbarChoiceCommandMixin, ViewerCommand,
     choiceData = [minutes * 60 for minutes in roundingChoices]  # Seconds
     choiceLabels = [_('No rounding'), _('1 minute')] + \
         [_('%d minutes') % minutes for minutes in roundingChoices[2:]]
+
+    def __init__(self, **kwargs):
+        super(RoundingPrecision, self).__init__(helpText=_('Rounding precision'), **kwargs)
 
     def doChoice(self, choice):
         self.settings.setint(self.viewer.settingsSection(), 'round', choice)
