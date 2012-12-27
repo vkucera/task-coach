@@ -96,7 +96,7 @@ iconlist = [
 ('computer_desktop_icon', 'apps', 'mycomputer', [16]),
 ('computer_handheld_icon', 'devices', 'pda', [16, 22]),
 ('computer_laptop_icon', 'apps', 'laptop_pcmcia', [16]),
-('cross_red_icon', 'actions', 'cancel', [16, 32]),
+('cross_red_icon', 'actions', 'cancel', [16, 22, 32]),
 ('die_icon', 'actions', 'roll', [16]),
 ('document_icon', 'mimetypes', 'dvi', [16]),
 ('earth_blue_icon', 'filesystems', 'www', [16, 22]),

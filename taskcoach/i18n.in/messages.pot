@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-12-25 22:51+CET\n"
+"POT-Creation-Date: 2012-12-27 19:41+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -604,7 +604,7 @@ msgid "45 minutes"
 msgstr ""
 
 #: taskcoachlib/domain/date/snooze.py:25
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1369
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1379
 msgid "1 hour"
 msgstr ""
 
@@ -653,7 +653,7 @@ msgid "2 weeks"
 msgstr ""
 
 #: taskcoachlib/domain/date/snooze.py:30
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1357
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1367
 msgid "1 week"
 msgstr ""
 
@@ -769,352 +769,352 @@ msgstr ""
 msgid "&New task..."
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:95
+#: taskcoachlib/gui/artprovider.py:113
 msgid "Arrow down"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:96
+#: taskcoachlib/gui/artprovider.py:114
 msgid "Arrow down with status"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:97
+#: taskcoachlib/gui/artprovider.py:115
 msgid "Blue arrows looped"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:98
+#: taskcoachlib/gui/artprovider.py:116
 msgid "Green arrows looped"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:99
+#: taskcoachlib/gui/artprovider.py:117
 msgid "Arrow up"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:100
+#: taskcoachlib/gui/artprovider.py:118
 msgid "Arrow up with status"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:101
+#: taskcoachlib/gui/artprovider.py:119
 msgid "Bomb"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:102
+#: taskcoachlib/gui/artprovider.py:120
 msgid "Book"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:103
+#: taskcoachlib/gui/artprovider.py:121
 msgid "Books"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:104
+#: taskcoachlib/gui/artprovider.py:122
 msgid "Box"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:105
+#: taskcoachlib/gui/artprovider.py:123
 msgid "Ladybug"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:106
+#: taskcoachlib/gui/artprovider.py:124
 msgid "Cake"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:107
+#: taskcoachlib/gui/artprovider.py:125
 msgid "Calculator"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:108 taskcoachlib/gui/viewer/task.py:570
+#: taskcoachlib/gui/artprovider.py:126 taskcoachlib/gui/viewer/task.py:570
 msgid "Calendar"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:109
+#: taskcoachlib/gui/artprovider.py:127
 msgid "Cat"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:110
+#: taskcoachlib/gui/artprovider.py:128
 msgid "Compact disc (CD)"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:111
+#: taskcoachlib/gui/artprovider.py:129
 msgid "Charts"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:112
+#: taskcoachlib/gui/artprovider.py:130
 msgid "Chatting"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:113
+#: taskcoachlib/gui/artprovider.py:131
 msgid "Check mark"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:114
+#: taskcoachlib/gui/artprovider.py:132
 msgid "Clock"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:115
+#: taskcoachlib/gui/artprovider.py:133
 msgid "Alarm clock"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:116
+#: taskcoachlib/gui/artprovider.py:134
 msgid "Stopwatch"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:117
+#: taskcoachlib/gui/artprovider.py:135
 msgid "Cogwheel"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:118
+#: taskcoachlib/gui/artprovider.py:136
 msgid "Cogwheels"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:119
+#: taskcoachlib/gui/artprovider.py:137
 msgid "Desktop computer"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:120
+#: taskcoachlib/gui/artprovider.py:138
 msgid "Laptop computer"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:121
+#: taskcoachlib/gui/artprovider.py:139
 msgid "Handheld computer"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:122
+#: taskcoachlib/gui/artprovider.py:140
 msgid "Red cross"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:123
+#: taskcoachlib/gui/artprovider.py:141
 msgid "Die"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:124
+#: taskcoachlib/gui/artprovider.py:142
 msgid "Document"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:125
+#: taskcoachlib/gui/artprovider.py:143
 msgid "Blue earth"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:126
+#: taskcoachlib/gui/artprovider.py:144
 msgid "Green earth"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:127
+#: taskcoachlib/gui/artprovider.py:145
 msgid "Envelope"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:128
+#: taskcoachlib/gui/artprovider.py:146
 msgid "Envelopes"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:129
+#: taskcoachlib/gui/artprovider.py:147
 msgid "Blue folder"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:130
+#: taskcoachlib/gui/artprovider.py:148
 msgid "Light blue folder"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:131
+#: taskcoachlib/gui/artprovider.py:149
 msgid "Green folder"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:132
+#: taskcoachlib/gui/artprovider.py:150
 msgid "Grey folder"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:133
+#: taskcoachlib/gui/artprovider.py:151
 msgid "Orange folder"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:134
+#: taskcoachlib/gui/artprovider.py:152
 msgid "Purple folder"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:135
+#: taskcoachlib/gui/artprovider.py:153
 msgid "Red folder"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:136
+#: taskcoachlib/gui/artprovider.py:154
 msgid "Yellow folder"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:137
+#: taskcoachlib/gui/artprovider.py:155
 msgid "Blue folder with arrow"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:138
+#: taskcoachlib/gui/artprovider.py:156
 msgid "Heart"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:139
+#: taskcoachlib/gui/artprovider.py:157
 msgid "Hearts"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:140
+#: taskcoachlib/gui/artprovider.py:158
 msgid "Green house"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:141
+#: taskcoachlib/gui/artprovider.py:159
 msgid "Red house"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:142
+#: taskcoachlib/gui/artprovider.py:160
 msgid "Key"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:143
+#: taskcoachlib/gui/artprovider.py:161
 msgid "Keys"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:144
+#: taskcoachlib/gui/artprovider.py:162
 msgid "Lamp"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:145
+#: taskcoachlib/gui/artprovider.py:163
 msgid "Question mark"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:146
+#: taskcoachlib/gui/artprovider.py:164
 #: taskcoachlib/gui/wizard/csvimport.py:341
 msgid "Information"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:147
+#: taskcoachlib/gui/artprovider.py:165
 msgid "Blue led"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:148
+#: taskcoachlib/gui/artprovider.py:166
 msgid "Light blue led"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:149
+#: taskcoachlib/gui/artprovider.py:167
 msgid "Grey led"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:150
+#: taskcoachlib/gui/artprovider.py:168
 msgid "Green led"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:151
+#: taskcoachlib/gui/artprovider.py:169
 msgid "Light green led"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:152
+#: taskcoachlib/gui/artprovider.py:170
 msgid "Orange led"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:153
+#: taskcoachlib/gui/artprovider.py:171
 msgid "Purple led"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:154
+#: taskcoachlib/gui/artprovider.py:172
 msgid "Red led"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:155
+#: taskcoachlib/gui/artprovider.py:173
 msgid "Yellow led"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:156
+#: taskcoachlib/gui/artprovider.py:174
 msgid "Life ring"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:157
+#: taskcoachlib/gui/artprovider.py:175
 msgid "Locked lock"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:158
+#: taskcoachlib/gui/artprovider.py:176
 msgid "Unlocked lock"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:159
+#: taskcoachlib/gui/artprovider.py:177
 msgid "Magnifier glass"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:160
+#: taskcoachlib/gui/artprovider.py:178
 msgid "Piano"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:161
+#: taskcoachlib/gui/artprovider.py:179
 msgid "Music note"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:162
+#: taskcoachlib/gui/artprovider.py:180
 msgid "Note"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:163
+#: taskcoachlib/gui/artprovider.py:181
 msgid "Palette"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:164
+#: taskcoachlib/gui/artprovider.py:182
 msgid "Paperclip"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:165
+#: taskcoachlib/gui/artprovider.py:183
 msgid "Pencil"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:166
+#: taskcoachlib/gui/artprovider.py:184
 msgid "Person"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:167
+#: taskcoachlib/gui/artprovider.py:185
 msgid "People"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:168
+#: taskcoachlib/gui/artprovider.py:186
 msgid "Identification"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:169
+#: taskcoachlib/gui/artprovider.py:187
 msgid "Person talking"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:170
+#: taskcoachlib/gui/artprovider.py:188
 msgid "Warning sign"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:171
+#: taskcoachlib/gui/artprovider.py:189
 msgid "Minus"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:172
+#: taskcoachlib/gui/artprovider.py:190
 msgid "Plus"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:173
+#: taskcoachlib/gui/artprovider.py:191
 msgid "Red star"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:174
+#: taskcoachlib/gui/artprovider.py:192
 msgid "Yellow star"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:175
+#: taskcoachlib/gui/artprovider.py:193
 msgid "Traffic light"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:176
+#: taskcoachlib/gui/artprovider.py:194
 msgid "Trashcan"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:177
+#: taskcoachlib/gui/artprovider.py:195
 msgid "Lightning"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:178
+#: taskcoachlib/gui/artprovider.py:196
 msgid "Umbrella"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:179
+#: taskcoachlib/gui/artprovider.py:197
 msgid "Partly sunny"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:180
+#: taskcoachlib/gui/artprovider.py:198
 msgid "Wrench"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:188
+#: taskcoachlib/gui/artprovider.py:206
 msgid "No icon"
 msgstr ""
 
@@ -1350,7 +1350,7 @@ msgstr ""
 msgid "Task"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1078
+#: taskcoachlib/gui/dialog/editor.py:1079
 msgid "Start"
 msgstr ""
 
@@ -1743,6 +1743,10 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:508
 msgid "Features"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/preferences.py:514
+msgid "All settings on this tab require a restart of %s to take effect"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:517
@@ -3358,12 +3362,12 @@ msgid "No rounding"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:2746
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1374
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1384
 msgid "1 minute"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:2747
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1376
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1386
 msgid "%d minutes"
 msgstr ""
 
@@ -5730,11 +5734,11 @@ msgstr ""
 msgid "New task due tomorrow"
 msgstr ""
 
-#: taskcoachlib/render.py:49 taskcoachlib/thirdparty/smartdatetimectrl.py:1364
+#: taskcoachlib/render.py:49 taskcoachlib/thirdparty/smartdatetimectrl.py:1374
 msgid "%d days"
 msgstr ""
 
-#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1362
+#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1372
 msgid "1 day"
 msgstr ""
 
@@ -5876,38 +5880,38 @@ msgstr ""
 msgid "&Window"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1307
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1423
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1317
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1433
 msgid "Edit"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1315
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1325
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Week(s)"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1316
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1326
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Day(s)"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1317
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1327
 msgid "Hour(s)"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1318
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1328
 msgid "Minute(s)"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1359
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1369
 msgid "%d weeks"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1371
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1381
 msgid "%d hours"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1423
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1433
 msgid "Done"
 msgstr ""
 
