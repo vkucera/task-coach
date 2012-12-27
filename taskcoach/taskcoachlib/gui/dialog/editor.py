@@ -1071,7 +1071,8 @@ class EffortEditBook(Page):
         self._startDateTimeSync = attributesync.AttributeSync('getStart',
             self._startDateTimeEntry, current_start_date_time, self.items,
             command.EditEffortStartDateTimeCommand, entry.EVT_DATETIMEENTRY,
-            self.items[0].startChangedEventType())
+            self.items[0].startChangedEventType(),
+            callback=self.__onStartDateTimeChanged)
         self._startDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, 
                                       self.onDateTimeChanged)        
         start_from_last_effort_button = self.__create_start_from_last_effort_button()
@@ -1084,8 +1085,7 @@ class EffortEditBook(Page):
         self._stopDateTimeSync = attributesync.AttributeSync('getStop',
             self._stopDateTimeEntry, current_stop_date_time, self.items,
             command.EditEffortStopDateTimeCommand, entry.EVT_DATETIMEENTRY,
-            self.items[0].stopChangedEventType(),
-            callback=self.__onStartDateTimeChanged)
+            self.items[0].stopChangedEventType())
         self._stopDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, 
                                      self.onStopDateTimeChanged)
         stop_now_button = self.__create_stop_now_button()
