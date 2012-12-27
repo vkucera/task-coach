@@ -23,6 +23,16 @@ from taskcoachlib.thirdparty import hypertreelist as htl
 from taskcoachlib.i18n import _
 
 
+class _AutoWidthTree(widgets.autowidth.AutoColumnWidthMixin, htl.HyperTreeList):
+    def __init__(self, *args, **kwargs):
+        super(_AutoWidthTree, self).__init__(*args, **kwargs)
+        self.ToggleAutoResizing(True)
+
+    def _get_MainWindow(self):
+        return self.GetMainWindow()
+    MainWindow = property(_get_MainWindow)
+
+
 class _ToolBarEditorInterior(wx.Panel):
     def __init__(self, toolbar, parent):
         self.__toolbar = toolbar
@@ -53,7 +63,7 @@ class _ToolBarEditorInterior(wx.Panel):
 
         # Remaining commands list
         sb = wx.StaticBox(self, wx.ID_ANY, _('Commands'))
-        self.__remainingCommands = htl.HyperTreeList(self,
+        self.__remainingCommands = _AutoWidthTree(self,
                     agwStyle=htl.TR_NO_BUTTONS|htl.TR_SINGLE|htl.TR_NO_LINES|htl.TR_HIDE_ROOT|htl.TR_NO_HEADER|htl.TR_FULL_ROW_HIGHLIGHT)
         self.__remainingCommands.AddColumn('Command')
         self.__remainingCommands.SetImageList(self.__imgList)
@@ -76,7 +86,7 @@ class _ToolBarEditorInterior(wx.Panel):
 
         # Visible commands list
         sb = wx.StaticBox(self, wx.ID_ANY, _('Visible commands'))
-        self.__visibleCommands = htl.HyperTreeList(self,
+        self.__visibleCommands = _AutoWidthTree(self,
                     agwStyle=htl.TR_NO_BUTTONS|htl.TR_SINGLE|htl.TR_NO_LINES|htl.TR_HIDE_ROOT|htl.TR_NO_HEADER|htl.TR_FULL_ROW_HIGHLIGHT)
         self.__visibleCommands.AddColumn('Command')
         self.__visibleCommands.SetImageList(self.__imgList)
@@ -197,8 +207,6 @@ class _ToolBarEditorInterior(wx.Panel):
                     tree.SetItemImage(item, self.__imgListIndex.get(uiCommand.bitmap, -1))
                     tree.EnableItem(item, enableCallback(uiCommand))
                 tree.SetItemPyData(item, uiCommand)
-
-            tree.SetColumnWidth(0, -1)
         finally:
             tree.Thaw()
 
