@@ -44,6 +44,9 @@ class _ToolBarEditorInterior(wx.Panel):
 
         self.__imgList = wx.ImageList(16, 16)
         self.__imgListIndex = dict()
+        empty = wx.EmptyImage(16, 16)
+        empty.Replace(0, 0, 0, 255, 255, 255)
+        self.__imgListIndex['nobitmap'] = self.__imgList.Add(empty.ConvertToBitmap())
         for uiCommand in toolbar.uiCommands():
             if uiCommand is not None and not isinstance(uiCommand, int) and uiCommand.bitmap != 'nobitmap':
                 self.__imgListIndex[uiCommand.bitmap] = self.__imgList.Add(wx.ArtProvider.GetBitmap(uiCommand.bitmap, wx.ART_MENU, (16, 16)))
