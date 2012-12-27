@@ -49,6 +49,7 @@ yesterday, tomorrow).'''),
         Feature('''Startup and shutdown performance improvements.'''),
         Feature('''Autosave is now on by default.'''),
         Feature('''Support for Growl on Windows.'''),
+        Feature('''Toolbars are now customizable.'''),
         ],
     ),
 
