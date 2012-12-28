@@ -732,10 +732,11 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'taskviewer')
         super(TaskViewer, self).__init__(*args, **kwargs)
-        self.treeOrListUICommand.setChoice(self.isTreeViewer())
         if self.isVisibleColumnByName('timeLeft'):
             self.minuteRefresher.startClock()
-    
+        pub.subscribe(self.onTreeListModeChanged, 
+                      'settings.%s.treemode' % self.settingsSection())
+          
     def isTreeViewer(self):
         # We first ask our presentation what the mode is because 
         # ConfigParser.getboolean is a relatively expensive method. However,
@@ -1051,9 +1052,10 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
         return commands
 
     def createModeToolBarUICommands(self):
-        self.treeOrListUICommand = uicommand.TaskViewerTreeOrListChoice(viewer=self)  # pylint: disable=W0201 
+        treeOrListUICommand = uicommand.TaskViewerTreeOrListChoice(viewer=self,
+                                                                   settings=self.settings)  # pylint: disable=W0201 
         return super(TaskViewer, self).createModeToolBarUICommands() + \
-            (self.treeOrListUICommand,)
+            (treeOrListUICommand,)
 
     def createColumnPopupMenu(self):
         return menu.ColumnPopupMenu(self)
@@ -1073,9 +1075,8 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
         if searchString:
             self.expandAll()  # pylint: disable=E1101      
 
-    def showTree(self, treeMode):
-        self.settings.set(self.settingsSection(), 'treemode', str(treeMode))
-        self.presentation().setTreeMode(treeMode)
+    def onTreeListModeChanged(self, value):
+        self.presentation().setTreeMode(value)
         
     # pylint: disable=W0621
     

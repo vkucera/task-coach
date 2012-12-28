@@ -57,7 +57,8 @@ class TaskViewerTestCase(test.wxTestCase):
         self.viewer.sortBy('subject')
         self.viewer.setSortOrderAscending()
         self.viewer.setSortByTaskStatusFirst(True)
-        self.viewer.showTree(self.treeMode)
+        self.settings.setboolean(self.viewer.settingsSection(), 'treemode', 
+                                 self.treeMode)
         self.newColor = (100, 200, 100, 255)
         attachment.Attachment.attdir = os.getcwd()
         if not operating_system.isGTK():
@@ -667,7 +668,8 @@ class CommonTestsMixin(object):
     def testItemOrderAfterSwitch(self):
         self.task.addChild(self.child)
         self.taskList.append(self.task)
-        self.viewer.showTree(not self.treeMode)
+        self.settings.setboolean(self.viewer.settingsSection(), 'treemode',
+                                 not self.treeMode)
         if self.treeMode:
             self.assertItems(self.child, self.task)
         else:
@@ -677,7 +679,8 @@ class CommonTestsMixin(object):
         self.task.addChild(self.child)
         self.taskList.append(self.task)
         self.task.setSubject('a')  # task comes before child
-        self.viewer.showTree(not self.treeMode)
+        self.settings.setboolean(self.viewer.settingsSection(), 'treemode',
+                                 not self.treeMode)
         if self.treeMode:
             self.assertItems(self.task, self.child)
         else:

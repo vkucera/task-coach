@@ -2594,12 +2594,22 @@ class EffortViewerAggregationChoice(ToolbarChoiceCommandMixin, ViewerCommand):
         self.viewer.showEffortAggregation(choice)
         
 
-class TaskViewerTreeOrListChoice(ToolbarChoiceCommandMixin, ViewerCommand):
+class TaskViewerTreeOrListChoice(ToolbarChoiceCommandMixin, ViewerCommand,
+                                 SettingsCommand):
     choiceLabels = [_('Tree of tasks'), _('List of tasks')]
     choiceData = [True, False]
     
+    def __init__(self, *args, **kwargs):
+        super(TaskViewerTreeOrListChoice, self).__init__(*args, **kwargs)
+        
+    def appendToToolBar(self, *args, **kwargs):
+        super(TaskViewerTreeOrListChoice, self).appendToToolBar(*args, **kwargs)
+        self.setChoice(self.settings.getboolean(self.viewer.settingsSection(), 
+                                                'treemode'))
+    
     def doChoice(self, choice):
-        self.viewer.showTree(choice)
+        self.settings.setboolean(self.viewer.settingsSection(), 'treemode', 
+                                 choice)
         
 
 class CategoryViewerFilterChoice(ToolbarChoiceCommandMixin, UICheckCommand,

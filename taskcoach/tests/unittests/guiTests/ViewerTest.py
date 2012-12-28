@@ -503,7 +503,8 @@ class ViewerIteratorTestCase(test.wxTestCase):
         self.taskList = self.taskFile.tasks()
         self.window = widgets.AuiManagedFrameWithDynamicCenterPane(self.frame)
         self.viewer = self.createViewer()
-        self.viewer.showTree(self.treeMode == 'True')
+        self.settings.setboolean(self.viewer.settingsSection(), 'treemode',
+                                 self.treeMode == 'True')
         self.viewer.sortBy('subject')
 
     def getItemsFromIterator(self):
