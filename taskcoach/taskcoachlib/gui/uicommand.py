@@ -2599,7 +2599,8 @@ class ToolbarChoiceCommandMixin(object):
         toolbar.AddControl(self.choiceCtrl)
 
     def unbind(self, window, id_):
-        self.choiceCtrl.Unbind(wx.EVT_CHOICE)
+        if self.choiceCtrl is not None:
+            self.choiceCtrl.Unbind(wx.EVT_CHOICE)
         super(ToolbarChoiceCommandMixin, self).unbind(window, id_)
 
     def onChoice(self, event):
@@ -2624,7 +2625,8 @@ class ToolbarChoiceCommandMixin(object):
             self.currentChoice = index
         
     def enable(self, enable=True):
-        self.choiceCtrl.Enable(enable)
+        if self.choiceCtrl is not None:
+            self.choiceCtrl.Enable(enable)
 
 
 class EffortViewerAggregationChoice(ToolbarChoiceCommandMixin, ViewerCommand):
@@ -2816,6 +2818,7 @@ class RoundBy(UIRadioCommand, ViewerCommand, SettingsCommand):
   
 class AlwaysRoundUp(UICheckCommand, ViewerCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
+        self.checkboxCtrl = None
         super(AlwaysRoundUp, self).__init__(\
             menuText=_('&Always round up'),
             helpText=_('Always round up to the next rounding increment'), 
@@ -2843,7 +2846,9 @@ class AlwaysRoundUp(UICheckCommand, ViewerCommand, SettingsCommand):
                                  alwaysRoundUp)
         
     def setValue(self, value):
-        self.checkboxCtrl.SetValue(value)
+        if self.checkboxCtrl is not None:
+            self.checkboxCtrl.SetValue(value)
        
     def enable(self, enable=True):
-        self.checkboxCtrl.Enable(enable)
+        if self.checkboxCtrl is not None:
+            self.checkboxCtrl.Enable(enable)
