@@ -32,12 +32,15 @@ class BalloonTip(wx.Frame):
 
         super(BalloonTip, self).__init__(parent,
             style=wx.NO_BORDER|wx.FRAME_FLOAT_ON_PARENT|wx.FRAME_NO_TASKBAR|wx.FRAME_SHAPED|wx.POPUP_WINDOW)
-        self.SetBackgroundColour(wx.ColourDatabase().Find('WHEAT'))
+
+        wheat = wx.ColourDatabase().Find('WHEAT')
+        self.SetBackgroundColour(wheat)
 
         self._target = target
         self._getRect = getRect
         self._interior = wx.Panel(self)
         self._interior.Bind(wx.EVT_LEFT_DOWN, self.DoClose)
+        self._interior.SetBackgroundColour(wheat)
         vsizer = wx.BoxSizer(wx.VERTICAL)
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
         if bitmap is not None:
@@ -120,6 +123,10 @@ class BalloonTip(wx.Frame):
         memDC = wx.MemoryDC()
         memDC.SelectObject(mask)
         try:
+            memDC.SetBrush(wx.BLACK_BRUSH)
+            memDC.SetPen(wx.BLACK_PEN)
+            memDC.DrawRectangle(0, 0, w, h)
+
             memDC.SetBrush(wx.WHITE_BRUSH)
             memDC.SetPen(wx.WHITE_PEN)
             if direction == 'bottom':
