@@ -55,6 +55,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, BalloonTipManager,
         self.settings = settings
         self.Bind(wx.EVT_CLOSE, self.onClose)
         self.Bind(wx.EVT_ICONIZE, self.onIconify)
+        self.Bind(wx.EVT_SIZE, self.onResize)
         self._create_window_components()  # Not private for test purposes
         self.__init_window_components()
         self.__init_window()
@@ -252,7 +253,13 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
             self.Hide()
         else:
             event.Skip()
-            
+
+    def onResize(self, event):
+        currentToolbar = self.manager.GetPane('toolbar')
+        if currentToolbar.IsOk():
+            currentToolbar.window.SetSize((event.GetSize().GetWidth(), -1))
+        event.Skip()
+
     def showStatusBar(self, value=True):
         # FIXME: First hiding the statusbar, then hiding the toolbar, then
         # showing the statusbar puts it in the wrong place (only on Linux?)

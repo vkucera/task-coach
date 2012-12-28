@@ -337,7 +337,8 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
         self.__visibleUICommands = commands[:]
 
         if customizable:
-            commands.append(None)
+            if 1 not in commands:
+                commands.append(1)
             uiCommand = uicommand.EditToolBarPerspective(self, ToolBarEditor, settings=self.__settings)
             commands.append(uiCommand)
             self.customizeId = uiCommand.id
