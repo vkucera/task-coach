@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, StringIO, os
 import test
-from taskcoachlib import persistence, gui, config
+from taskcoachlib import persistence, gui, config, render
 from taskcoachlib.domain import task, category, effort, date
     
     
@@ -186,6 +186,17 @@ class TaskListTestsMixin(object):
         self.task.setDescription('Line1\nLine2')
         self.viewer.showColumnByName('description')
         self.expectInHTML('>Line1<br>Line2<')
+        
+    def testCreationDateTime(self):
+        self.viewer.showColumnByName('creationDateTime')
+        self.expectInHTML(render.dateTime(self.task.creationDateTime(), 
+                                          humanReadable=False))
+        
+    def testMissingCreationDateTime(self):
+        self.viewer.showColumnByName('creationDateTime')
+        self.taskFile.tasks().append(task.Task(creationDateTime=date.DateTime.min))
+        self.taskFile.tasks().remove(self.task)
+        self.expectNotInHTML('1/1/1')
         
         
 class TaskListExportTest(TaskTestsMixin, TaskListTestsMixin, TaskWriterTestCase):

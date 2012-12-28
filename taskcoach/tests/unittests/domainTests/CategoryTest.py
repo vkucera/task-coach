@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test, wx
 from taskcoachlib import patterns
-from taskcoachlib.domain import category, categorizable, note
+from taskcoachlib.domain import category, categorizable, note, date
 
 
 class CategoryTest(test.TestCase):
@@ -58,7 +58,8 @@ class CategoryTest(test.TestCase):
                         parent=None, children=[self.subCategory], id=self.category.id(),
                         categorizables=[self.categorizable], notes=[],
                         attachments=[], filtered=True, exclusiveSubcategories=True,
-                        icon='icon', selectedIcon='selected')
+                        icon='icon', selectedIcon='selected',
+                        creationDateTime=date.Now())
         for eventType in self.category.modificationEventTypes():
             self.registerObserver(eventType)
         self.category.__setstate__(newState)

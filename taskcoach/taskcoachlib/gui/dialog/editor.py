@@ -1006,7 +1006,7 @@ class EffortEditBook(Page):
         self._settings = settings
         self._taskFile = taskFile
         super(EffortEditBook, self).__init__(efforts, parent, *args, **kwargs)
-        pub.subscribe(self.__onChoicesConfigChanged, 'settings.feature.sdtcspans')
+        pub.subscribe(self.__onChoicesConfigChanged, 'settings.feature.sdtcspans_effort')
 
     def __onChoicesConfigChanged(self, value=''):
         self._stopDateTimeEntry.LoadChoices(value)
@@ -1057,7 +1057,7 @@ class EffortEditBook(Page):
         self._stopDateTimeEntry.SetRelativeChoicesStart(start=value)
 
     def __onChoicesChanged(self, event):
-        self._settings.settext('feature', 'sdtcspans', event.GetValue())
+        self._settings.settext('feature', 'sdtcspans_effort', event.GetValue())
 
     def __add_start_and_stop_entries(self):
         # pylint: disable=W0201,W0142
@@ -1094,7 +1094,7 @@ class EffortEditBook(Page):
         self.addEntry(_('Stop'), self._stopDateTimeEntry, 
                       stop_now_button, flags=flags)
         self.__onStartDateTimeChanged(current_start_date_time)
-        self._stopDateTimeEntry.LoadChoices(self._settings.get('feature', 'sdtcspans'))
+        self._stopDateTimeEntry.LoadChoices(self._settings.get('feature', 'sdtcspans_effort'))
         sdtc.EVT_TIME_CHOICES_CHANGE(self._stopDateTimeEntry, self.__onChoicesChanged)
         
         self.addEntry('', self._invalidPeriodMessage)

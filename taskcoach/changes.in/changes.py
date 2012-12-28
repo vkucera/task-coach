@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.21', 'December 24, 2012',
+Release('1.3.21', 'December 28, 2012',
     summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
         Bugv2('''Changing the percentage complete would not cause the
@@ -50,6 +50,8 @@ yesterday, tomorrow).'''),
         Feature('''Autosave is now on by default.'''),
         Feature('''Support for Growl on Windows.'''),
         Feature('''Toolbars are now customizable.'''),
+        Feature('''Add a creation date attribute to tasks, notes, attachments,
+and categories.''', 'http://uservoice.com/a/-2HX-'),
         ],
     ),
 

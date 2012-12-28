@@ -92,7 +92,10 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                 setting='attachments', viewer=self),
             uicommand.ViewColumn(menuText=_('&Categories'),
                 helpText=_('Show/hide categories column'),
-                setting='categories', viewer=self)]
+                setting='categories', viewer=self),
+            uicommand.ViewColumn(menuText=_('&Creation date'),
+                helpText=_('Show/hide creation date column'),
+                setting='creationDateTime', viewer=self)]
 
     def _createColumns(self):
         subjectColumn = widgets.Column('subject', _('Subject'), 
@@ -133,8 +136,15 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
             sortCallback=uicommand.ViewerSortByCommand(viewer=self, 
                 value='categories', menuText=_('&Categories'), 
                 helpText=_('Sort notes by categories')))
+        creationDateTimeColumn = widgets.Column('creationDateTime', 
+            _('Creation date'), width=self.getColumnWidth('creationDateTime'),
+            resizeCallback=self.onResizeColumn,
+            renderCallback=self.renderCreationDateTime,
+            sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                value='creationDateTime', menuText=_('&Creation date'),
+                helpText=_('Sort notes by creation date')))
         return [subjectColumn, descriptionColumn, attachmentsColumn, 
-                categoriesColumn]
+                categoriesColumn, creationDateTimeColumn]
 
     def getItemTooltipData(self, item, column=0):
         if self.settings.getboolean('view', 'descriptionpopups'):

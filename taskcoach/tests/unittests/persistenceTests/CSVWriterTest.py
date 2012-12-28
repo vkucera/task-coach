@@ -257,6 +257,17 @@ class TaskTestsMixin(object):
         self.viewer.showColumnByName('completionDateTime')
         self.task.setCompletionDateTime(tomorrow)
         self.expectInCSV(render.dateTime(tomorrow, humanReadable=False))
+        
+    def testCreationDateTime(self):
+        self.viewer.showColumnByName('creationDateTime')
+        self.expectInCSV(render.dateTime(self.task.creationDateTime(), 
+                                         humanReadable=False))
+        
+    def testMissingCreationDateTime(self):
+        self.viewer.showColumnByName('creationDateTime')
+        self.taskFile.tasks().append(task.Task(creationDateTime=date.DateTime.min))
+        self.taskFile.tasks().remove(self.task)
+        self.expectInCSV(',,,')  # No 1/1/1 for the missing creation date
 
 
 class CSVListWriterTest(TaskTestsMixin, CSVWriterTestCase):

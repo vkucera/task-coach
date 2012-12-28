@@ -110,6 +110,12 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
                        imageIndicesCallback=self.noteImageIndices,
                        headerImageIndex=self.imageIndex['note_icon'],
                        renderCallback=lambda category: '', **kwargs))
+        columns.append(widgets.Column('creationDateTime', _('Creation date'),
+                       width=self.getColumnWidth('creationDateTime'),
+                       renderCallback=self.renderCreationDateTime,
+                       sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                                                                  value='creationDateTime'),
+                       **kwargs))
         return columns
     
     def createCreationToolBarUICommands(self):
@@ -132,6 +138,9 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
             commands.append(uicommand.ViewColumn(menuText=_('&Notes'),
                 helpText=_('Show/hide notes column'),
                 setting='notes', viewer=self))
+        commands.append(uicommand.ViewColumn(menuText=_('&Creation date'),
+            helpText=_('Show/hide creation date column'), 
+            setting='creationDateTime', viewer=self))
         return commands
 
     def onAttributeChanged(self, newValue, sender):

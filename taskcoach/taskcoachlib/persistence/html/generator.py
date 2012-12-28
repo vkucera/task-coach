@@ -288,7 +288,8 @@ class Viewer2HTMLConverter(object):
         ''' Render the item based on the column, escape HTML and indent
             the item with non-breaking spaces, if indent == True. '''
         # Escape the rendered item and then replace newlines with <br>. 
-        renderedItem = cgi.escape(column.render(item)).replace('\n', '<br>')
+        renderedItem = cgi.escape(column.render(item, 
+                                  humanReadable=False)).replace('\n', '<br>')
         if indent:
             # Indent the subject with whitespace
             renderedItem = '&nbsp;' * len(item.ancestors()) * 3 + renderedItem

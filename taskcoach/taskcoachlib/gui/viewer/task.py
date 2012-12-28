@@ -942,6 +942,12 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
             editCallback=self.onEditReminderDateTime, settings=self.settings,
             *[task.Task.expansionChangedEventType(), 
               task.Task.reminderChangedEventType()], **kwargs))
+        columns.append(widgets.Column('creationDateTime', _('Creation date'),
+            width=self.getColumnWidth('creationDateTime'),
+            renderCallback=self.renderCreationDateTime,
+            sortCallback=uicommand.ViewerSortByCommand(viewer=self, 
+                                                       value='creationDateTime'),
+            **kwargs))
         return columns
     
     def createColumnUICommands(self):
@@ -1038,7 +1044,10 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                 setting='priority', viewer=self),
             uicommand.ViewColumn(menuText=_('&Reminder'),
                 helpText=_('Show/hide reminder column'),
-                setting='reminder', viewer=self)])
+                setting='reminder', viewer=self),
+            uicommand.ViewColumn(menuText=_('&Creation date'),
+                helpText=_('Show/hide creation date column'),
+                setting='creationDateTime', viewer=self)])
         return commands
 
     def createModeToolBarUICommands(self):

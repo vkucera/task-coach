@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 from taskcoachlib.domain.attribute import icon
+from taskcoachlib.domain.date import Now
 from taskcoachlib.thirdparty.pubsub import pub
 import attribute
 import uuid
@@ -131,6 +132,7 @@ class SynchronizedObject(object):
 class Object(SynchronizedObject):
     def __init__(self, *args, **kwargs):
         Attribute = attribute.Attribute
+        self.__creationDateTime = kwargs.pop('creationDateTime', None) or Now() 
         self.__subject = Attribute(kwargs.pop('subject', ''), self, 
                                    self.subjectChangedEvent)
         self.__description = Attribute(kwargs.pop('description', ''), self,
@@ -156,7 +158,9 @@ class Object(SynchronizedObject):
             state = super(Object, self).__getstate__()
         except AttributeError:
             state = dict()
-        state.update(dict(id=self.__id, subject=self.__subject.get(), 
+        state.update(dict(id=self.__id, 
+                          creationDateTime=self.__creationDateTime,
+                          subject=self.__subject.get(), 
                           description=self.__description.get(),
                           fgColor=self.__fgColor.get(),
                           bgColor=self.__bgColor.get(),
@@ -171,7 +175,8 @@ class Object(SynchronizedObject):
             super(Object, self).__setstate__(state, event=event)
         except AttributeError:
             pass
-        self.setId(state['id'])
+        self.__id = state['id']
+        self.__creationDateTime = state['creationDateTime']
         self.setSubject(state['subject'], event=event)
         self.setDescription(state['description'], event=event)
         self.setForegroundColor(state['fgColor'], event=event)
@@ -189,8 +194,8 @@ class Object(SynchronizedObject):
             state = super(Object, self).__getcopystate__()
         except AttributeError:
             state = dict()
-        # Note: we don't put the id in the state dict, because a copy should
-        # get a new id:
+        # Note that we don't put the id and the creation date/time in the state 
+        # dict, because a copy should get a new id and a new creation date/time
         state.update(dict(\
             subject=self.__subject.get(), description=self.__description.get(),
             fgColor=self.__fgColor.get(), bgColor=self.__bgColor.get(),
@@ -205,9 +210,11 @@ class Object(SynchronizedObject):
        
     def id(self):
         return self.__id
+            
+    # Creation date/time:
     
-    def setId(self, id_):
-        self.__id = id_
+    def creationDateTime(self):
+        return self.__creationDateTime
         
     # Subject:
     
