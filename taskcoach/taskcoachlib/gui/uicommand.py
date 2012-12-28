@@ -1110,7 +1110,7 @@ class EditSyncPreferences(IOCommand):
         editor.Show(show=show)
 
 
-class EditToolBarPerspective(UICommand):
+class EditToolBarPerspective(SettingsCommand):
     ''' Action for editing a customizable toolbar '''
 
     def __init__(self, toolbar, editorClass, *args, **kwargs):
@@ -1122,7 +1122,7 @@ class EditToolBarPerspective(UICommand):
             *args, **kwargs)
 
     def doCommand(self, event):
-        self.__editorClass(self.__toolbar, self.mainWindow(), _('Customize toolbar')).ShowModal()
+        self.__editorClass(self.__toolbar, self.settings, self.mainWindow(), _('Customize toolbar')).ShowModal()
 
 
 class SelectAll(NeedsItemsMixin, ViewerCommand):

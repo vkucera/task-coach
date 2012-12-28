@@ -20,6 +20,7 @@ import wx, uicommand
 from taskcoachlib import operating_system, widgets
 from taskcoachlib.thirdparty import aui
 from taskcoachlib.thirdparty import hypertreelist as htl
+from taskcoachlib.help.balloontips import BalloonTipManager
 from taskcoachlib.i18n import _
 
 
@@ -34,7 +35,7 @@ class _AutoWidthTree(widgets.autowidth.AutoColumnWidthMixin, htl.HyperTreeList):
 
 
 class _ToolBarEditorInterior(wx.Panel):
-    def __init__(self, toolbar, parent):
+    def __init__(self, toolbar, settings, parent):
         self.__toolbar = toolbar
         self.__visible = toolbar.visibleUICommands()
 
@@ -44,7 +45,7 @@ class _ToolBarEditorInterior(wx.Panel):
 
         # Toolbar preview
         sb = wx.StaticBox(self, wx.ID_ANY, _('Preview'))
-        self.__preview = ToolBar(self, self.__toolbar.GetToolBitmapSize())
+        self.__preview = ToolBar(self, settings, self.__toolbar.GetToolBitmapSize())
         sbsz = wx.StaticBoxSizer(sb)
         sbsz.Add(self.__preview, 1)
         vsizer.Add(sbsz, 0, wx.EXPAND|wx.ALL, 3)
@@ -109,6 +110,9 @@ class _ToolBarEditorInterior(wx.Panel):
         wx.EVT_BUTTON(self.__showButton, wx.ID_ANY, self.__OnShow)
         wx.EVT_TREE_BEGIN_DRAG(self.__visibleCommands, wx.ID_ANY, self.__OnBeginDrag)
         wx.EVT_TREE_END_DRAG(self.__visibleCommands, wx.ID_ANY, self.__OnEndDrag)
+
+        wx.CallAfter(wx.GetTopLevelParent(self).AddBalloonTip, settings, 'customizabletoolbars_dnd', self.__visibleCommands,
+                  title=_('Drag and drop'), message=_('''Reorder toolbar buttons by drag and dropping them in this list.'''))
 
     def __OnRemainingSelectionChanged(self, event):
         self.__remainingSelection = event.GetItem()
@@ -236,13 +240,14 @@ class _ToolBarEditorInterior(wx.Panel):
         return self.__toolbar.uiCommands()
 
 
-class ToolBarEditor(widgets.Dialog):
-    def __init__(self, toolbar, *args, **kwargs):
+class ToolBarEditor(BalloonTipManager, widgets.Dialog):
+    def __init__(self, toolbar, settings, *args, **kwargs):
         self.__toolbar = toolbar
+        self.__settings = settings
         super(ToolBarEditor, self).__init__(*args, **kwargs)
 
     def createInterior(self):
-        return _ToolBarEditorInterior(self.__toolbar, self._panel)
+        return _ToolBarEditorInterior(self.__toolbar, self.__settings, self._panel)
 
     def ok(self, event=None):
         self.__toolbar.savePerspective(self._interior.getToolBarPerspective())
@@ -283,8 +288,9 @@ class _Toolbar(aui.AuiToolBar):
         
     
 class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
-    def __init__(self, window, size=(32, 32)):
+    def __init__(self, window, settings, size=(32, 32)):
         self.__window = window
+        self.__settings = settings
         self.__visibleUICommands = list()
         self.__cache = None
         super(ToolBar, self).__init__(window, style=wx.TB_FLAT|wx.TB_NODIVIDER)
@@ -329,7 +335,9 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
 
         if customizable:
             commands.append(None)
-            commands.append(uicommand.EditToolBarPerspective(self, ToolBarEditor))
+            uiCommand = uicommand.EditToolBarPerspective(self, ToolBarEditor, settings=self.__settings)
+            commands.append(uiCommand)
+            self.customizeId = uiCommand.id
         commands.append(None) # Errr...
 
         self.appendUICommands(*commands)

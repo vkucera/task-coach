@@ -23,6 +23,10 @@ from taskcoachlib import meta
 
 
 defaults = {
+'balloontips': {
+    'customizabletoolbars': 'True',
+    'customizabletoolbars_dnd': 'True',
+    },
 'view': {
     'statusbar': 'True',
     'toolbar': '(22, 22)',

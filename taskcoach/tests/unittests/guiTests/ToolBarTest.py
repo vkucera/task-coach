@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 import test
 from unittests import dummy
-from taskcoachlib import gui
+from taskcoachlib import gui, config
  
 
 class ToolBar(gui.toolbar.ToolBar):
@@ -30,7 +30,8 @@ class ToolBar(gui.toolbar.ToolBar):
 class ToolBarTest(test.wxTestCase):
     def testAppendUICommand(self):
         gui.init()
-        toolbar = ToolBar(self.frame)
+        settings = config.Settings(load=False)
+        toolbar = ToolBar(self.frame, settings)
         uiCommand = dummy.DummyUICommand(menuText='undo', bitmap='undo')
         toolId = toolbar.appendUICommand(uiCommand)
         self.assertNotEqual(wx.NOT_FOUND, toolbar.GetToolPos(toolId))
@@ -50,7 +51,8 @@ class ToolBarSizeTest(test.wxTestCase):
         self.createToolBarAndTestSize((32, 32))
 
     def createToolBarAndTestSize(self, size, expectedSize=None):
-        toolbarArgs = [self.frame]
+        settings = config.Settings(load=False)
+        toolbarArgs = [self.frame, settings]
         if size:
             toolbarArgs.append(size)
         toolbar = ToolBar(*toolbarArgs)
@@ -72,20 +74,21 @@ class ToolBarPerspectiveTest(test.wxTestCase):
                     pass
                 return [Test1(), None, Test2(), 1]
         self.tbFrame = TestFrame()
+        self.settings = config.Settings(load=False)
 
     def tearDown(self):
         self.tbFrame.Close()
 
     def test_empty(self):
-        bar = gui.toolbar.ToolBar(self.tbFrame)
+        bar = gui.toolbar.ToolBar(self.tbFrame, self.settings)
         self.assertEqual(bar.perspective(), 'Test1,Separator,Test2,Spacer')
 
     def test_restrict(self):
         self.tbFrame.toolbarPerspective = 'Test1,Spacer'
-        bar = gui.toolbar.ToolBar(self.tbFrame)
+        bar = gui.toolbar.ToolBar(self.tbFrame, self.settings)
         self.assertEqual(bar.perspective(), 'Test1,Spacer')
 
     def test_does_not_exist(self):
         self.tbFrame.toolbarPerspective = 'Test1,Spacer,Test3'
-        bar = gui.toolbar.ToolBar(self.tbFrame)
+        bar = gui.toolbar.ToolBar(self.tbFrame, self.settings)
         self.assertEqual(bar.perspective(), 'Test1,Spacer')

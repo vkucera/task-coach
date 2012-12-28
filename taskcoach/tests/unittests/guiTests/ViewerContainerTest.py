@@ -34,6 +34,9 @@ class DummyMainWindow(widgets.AuiManagedFrameWithDynamicCenterPane):
         super(DummyMainWindow, self).addPane(window, caption, 
                                              str('name%d'%self.count))
 
+    def AddBalloonTip(self, *args, **kwargs):
+        pass
+
 
 class DummyPane(object):
     optionActive = False

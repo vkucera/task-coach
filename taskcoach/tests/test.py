@@ -85,6 +85,9 @@ class TestCaseFrame(wx.Frame):
     def getToolBarPerspective(self):
         return self.toolbarPerspective
 
+    def AddBalloonTip(self, *args, **kwargs):
+        pass
+
 
 class wxTestCase(TestCase):
     # pylint: disable=W0404

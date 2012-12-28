@@ -28,6 +28,7 @@ from taskcoachlib.gui.iphone import IPhoneSyncFrame
 from taskcoachlib.gui.threads import DeferredCallMixin, synchronized
 from taskcoachlib.i18n import _
 from taskcoachlib.powermgt import PowerStateMixin
+from taskcoachlib.help.balloontips import BalloonTipManager
 from taskcoachlib.thirdparty.pubsub import pub
 import taskcoachlib.thirdparty.aui as aui
 import wx
@@ -40,7 +41,7 @@ def turn_on_double_buffering_on_windows(window):
     win32gui.SetWindowLong(window.GetHandle(), win32con.GWL_EXSTYLE, exstyle)
 
 
-class MainWindow(DeferredCallMixin, PowerStateMixin, 
+class MainWindow(DeferredCallMixin, PowerStateMixin, BalloonTipManager,
                  widgets.AuiManagedFrameWithDynamicCenterPane):
     def __init__(self, iocontroller, taskFile, settings, *args, **kwargs):
         self.__splash = kwargs.pop('splash', None)
@@ -233,6 +234,7 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
             event.Veto()
             self.Iconize()
         else:
+            event.Skip()
             self._idleController.stop()
             application.Application().quitApplication()
 
@@ -286,7 +288,7 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
             self.manager.DetachPane(currentToolbar.window)
             currentToolbar.window.Destroy()
         if value:
-            bar = toolbar.ToolBar(self, size=value)
+            bar = toolbar.ToolBar(self, self.settings, size=value)
             self.manager.AddPane(bar, aui.AuiPaneInfo().Name('toolbar').
                                  Caption('Toolbar').ToolbarPane().Top().DestroyOnClose().
                                  LeftDockable(False).RightDockable(False))
