@@ -72,7 +72,7 @@ defaults = {
     },
 'taskviewer': {
     'title': '',  # User supplied viewer title
-    'toolbarperspective': 'EditCut,EditCopy,EditPaste,Separator,TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,ViewerHideTasks_completed,ViewerHideTasks_inactive,TaskViewerTreeOrListChoice,Spacer,ResetFilter,Search',
+    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,ViewerHideTasks_completed,ViewerHideTasks_inactive,TaskViewerTreeOrListChoice,Spacer,ResetFilter,Search',
     'treemode': 'True',  # True = tree mode, False = list mode
     'sortby': 'dueDateTime',
     'sortascending': 'True',
@@ -114,7 +114,7 @@ defaults = {
     },
 'prerequisiteviewerintaskeditor': {
     'title': '',  # User supplied viewer title
-    'toolbarperspective': 'EditCut,EditCopy,EditPaste,Separator,TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,ViewerHideTasks_completed,ViewerHideTasks_inactive,TaskViewerTreeOrListChoice,Spacer,ResetFilter,Search',
+    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,ViewerHideTasks_completed,ViewerHideTasks_inactive,TaskViewerTreeOrListChoice,Spacer,ResetFilter,Search',
     'treemode': 'True',  # True = tree mode, False = list mode
     'sortby': 'subject',
     'sortascending': 'True',
@@ -140,7 +140,7 @@ defaults = {
     },
 'squaretaskviewer': {
     'title': '',
-    'toolbarperspective': 'EditCut,EditCopy,EditPaste,Separator,TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,ViewerHideTasks_completed,ViewerHideTasks_inactive,SquareTaskViewerOrderChoice,Spacer,ResetFilter,Search',
+    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,ViewerHideTasks_completed,ViewerHideTasks_inactive,SquareTaskViewerOrderChoice,Spacer,ResetFilter,Search',
     'sortby': 'budget',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
@@ -157,7 +157,7 @@ defaults = {
     },
 'timelineviewer': {
     'title': '',
-    'toolbarperspective': 'EditCut,EditCopy,EditPaste,Separator,TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,ViewerHideTasks_completed,ViewerHideTasks_inactive,Spacer,ResetFilter,Search',
+    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,ViewerHideTasks_completed,ViewerHideTasks_inactive,Spacer,ResetFilter,Search',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
@@ -173,7 +173,7 @@ defaults = {
     },
 'calendarviewer': {
     'title': '',
-    'toolbarperspective': 'EditCut,EditCopy,EditPaste,Separator,TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,ViewerHideTasks_completed,ViewerHideTasks_inactive,Separator,CalendarViewerConfigure,CalendarViewerPreviousPeriod,CalendarViewerToday,CalendarViewerNextPeriod,Spacer,ResetFilter,Search',
+    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,ViewerHideTasks_completed,ViewerHideTasks_inactive,Separator,CalendarViewerConfigure,CalendarViewerPreviousPeriod,CalendarViewerToday,CalendarViewerNextPeriod,Spacer,ResetFilter,Search',
     'viewtype': '1',
     'periodcount': '1',
     'periodwidth': '150',
@@ -204,7 +204,7 @@ defaults = {
     },
 'categoryviewer': {
     'title': '',
-    'toolbarperspective': 'EditCut,EditCopy,EditPaste,Separator,CategoryNew,NewSubItem,Separator,Edit,Delete,Separator,CategoryViewerFilterChoice,Spacer,ResetFilter,Search',
+    'toolbarperspective': 'CategoryNew,NewSubItem,Separator,Edit,Delete,Separator,CategoryViewerFilterChoice,Spacer,ResetFilter,Search',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -220,7 +220,7 @@ defaults = {
     },
 'categoryviewerintaskeditor': {
     'title': '',
-    'toolbarperspective': 'EditCut,EditCopy,EditPaste,Separator,CategoryNew,NewSubItem,Separator,Edit,Delete,Separator,CategoryViewerFilterChoice,Spacer,Search,ResetFilter',
+    'toolbarperspective': 'CategoryNew,NewSubItem,Separator,Edit,Delete,Separator,CategoryViewerFilterChoice,Spacer,Search,ResetFilter',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -236,7 +236,7 @@ defaults = {
     },
 'categoryviewerinnoteeditor': {
     'title': '',
-    'toolbarperspective': 'EditCut,EditCopy,EditPaste,Separator,CategoryNew,NewSubItem,Separator,Edit,Delete,Separator,CategoryViewerFilterChoice,Spacer,Search,ResetFilter',
+    'toolbarperspective': 'CategoryNew,NewSubItem,Separator,Edit,Delete,Separator,CategoryViewerFilterChoice,Spacer,Search,ResetFilter',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -252,7 +252,7 @@ defaults = {
     },
 'noteviewer': {
     'title': '',
-    'toolbarperspective': 'EditCut,EditCopy,EditPaste,Separator,NoteNew,NewSubItem,Separator,Edit,Delete,Spacer,ResetFilter,Search',
+    'toolbarperspective': 'NoteNew,NewSubItem,Separator,Edit,Delete,Spacer,ResetFilter,Search',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -267,7 +267,7 @@ defaults = {
     'columnautoresizing': 'True'
     },
 'noteviewerintaskeditor': {
-    'toolbarperspective': 'EditCut,EditCopy,EditPaste,Separator,NoteNew,NewSubItem,Separator,Edit,Delete,Spacer,ResetFilter,Search',
+    'toolbarperspective': 'NoteNew,NewSubItem,Separator,Edit,Delete,Spacer,ResetFilter,Search',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -282,7 +282,7 @@ defaults = {
     'regularexpression': 'False',
     },
 'noteviewerincategoryeditor': {
-    'toolbarperspective': 'EditCut,EditCopy,EditPaste,Separator,NoteNew,NewSubItem,Separator,Edit,Delete,Spacer,ResetFilter,Search',
+    'toolbarperspective': 'NoteNew,NewSubItem,Separator,Edit,Delete,Spacer,ResetFilter,Search',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -297,7 +297,7 @@ defaults = {
     'regularexpression': 'False',
     },
 'noteviewerinattachmenteditor': {
-    'toolbarperspective': 'EditCut,EditCopy,EditPaste,Separator,NoteNew,NewSubItem,Separator,Edit,Delete,Spacer,ResetFilter,Search',
+    'toolbarperspective': 'NoteNew,NewSubItem,Separator,Edit,Delete,Spacer,ResetFilter,Search',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -313,7 +313,7 @@ defaults = {
     },
 'effortviewer': {
     'title': '',
-    'toolbarperspective': 'EditCut,EditCopy,EditPaste,Separator,EffortNew,Separator,Edit,Delete,Separator,EffortStartForEffort,EffortStop,Separator,EffortViewerAggregationChoice,RoundingPrecision,AlwaysRoundUp,Spacer,ResetFilter,Search',
+    'toolbarperspective': 'EffortNew,Separator,Edit,Delete,Separator,EffortStartForEffort,EffortStop,Separator,EffortViewerAggregationChoice,RoundingPrecision,AlwaysRoundUp,Spacer,ResetFilter,Search',
     'aggregation': 'details',  # 'details' (default), 'day', 'week', or 'month'
     'sortby': 'period',
     'sortascending': 'False',
@@ -333,7 +333,7 @@ defaults = {
     'alwaysroundup': 'False',
     },
 'effortviewerintaskeditor': {
-    'toolbarperspective': 'EditCut,EditCopy,EditPaste,Separator,EffortNew,Separator,Edit,Delete,Separator,EffortStartForEffort,EffortStop,Separator,EffortViewerAggregationChoice,RoundingPrecision,AlwaysRoundUp,Spacer,ResetFilter,Search',
+    'toolbarperspective': 'EffortNew,Separator,Edit,Delete,Separator,EffortStartForEffort,EffortStop,Separator,EffortViewerAggregationChoice,RoundingPrecision,AlwaysRoundUp,Spacer,ResetFilter,Search',
     'aggregation': 'details',  # 'details' (default), 'day', 'week', or 'month'
     'sortby': 'period',
     'sortascending': 'False',
@@ -352,7 +352,7 @@ defaults = {
     },
 'attachmentviewer': {
     'title': '',
-    'toolbarperspective': 'EditCut,EditCopy,EditPaste,Separator,AttachmentNew,Separator,Edit,Delete,Separator,AttachmentOpen,Spacer,Search',
+    'toolbarperspective': 'AttachmentNew,Separator,Edit,Delete,Separator,AttachmentOpen,Spacer,Search',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -368,7 +368,7 @@ defaults = {
     },
 'attachmentviewerintaskeditor': {
     'title': '',
-    'toolbarperspective': 'EditCut,EditCopy,EditPaste,Separator,AttachmentNew,Separator,Edit,Delete,Separator,AttachmentOpen,Spacer,Search',
+    'toolbarperspective': 'AttachmentNew,Separator,Edit,Delete,Separator,AttachmentOpen,Spacer,Search',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -384,7 +384,7 @@ defaults = {
     },
 'attachmentviewerinnoteeditor': {
     'title': '',
-    'toolbarperspective': 'EditCut,EditCopy,EditPaste,Separator,AttachmentNew,Separator,Edit,Delete,Separator,AttachmentOpen,Spacer,Search',
+    'toolbarperspective': 'AttachmentNew,Separator,Edit,Delete,Separator,AttachmentOpen,Spacer,Search',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -400,7 +400,7 @@ defaults = {
     },
 'attachmentviewerincategoryeditor': {
     'title': '',
-    'toolbarperspective': 'EditCut,EditCopy,EditPaste,Separator,AttachmentNew,Separator,Edit,Delete,Separator,AttachmentOpen,Spacer,Search',
+    'toolbarperspective': 'AttachmentNew,Separator,Edit,Delete,Separator,AttachmentOpen,Spacer,Search',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
