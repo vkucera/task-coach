@@ -72,7 +72,7 @@ defaults = {
     },
 'taskviewer': {
     'title': '',  # User supplied viewer title
-    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,ViewerHideTasks_completed,ViewerHideTasks_inactive,Spacer,ResetFilter,Search',
+    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,ViewerHideTasks_completed,ViewerHideTasks_inactive,TaskViewerTreeOrListChoice,Spacer,ResetFilter,Search',
     'treemode': 'True',  # True = tree mode, False = list mode
     'sortby': 'dueDateTime',
     'sortascending': 'True',
