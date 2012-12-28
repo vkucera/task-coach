@@ -341,7 +341,8 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
             uiCommand = uicommand.EditToolBarPerspective(self, ToolBarEditor, settings=self.__settings)
             commands.append(uiCommand)
             self.customizeId = uiCommand.id
-        commands.append(None) # Errr...
+        if operating_system.isMac():
+            commands.append(None) # Errr...
 
         self.appendUICommands(*commands)
         self.Realize()
