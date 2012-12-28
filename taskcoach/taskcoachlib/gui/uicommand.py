@@ -1169,7 +1169,10 @@ class ResetFilter(ViewerCommand):
     
     def doCommand(self, event):
         self.viewer.resetFilter()
-        
+
+    def enabled(self, event):
+        return self.viewer.hasFilter()
+
         
 class ResetCategoryFilter(NeedsAtLeastOneCategoryMixin, CategoriesCommand):
     ''' Action for resetting all category filters so that items are no longer

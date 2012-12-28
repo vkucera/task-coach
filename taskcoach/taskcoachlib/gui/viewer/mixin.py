@@ -107,6 +107,9 @@ class FilterableViewerMixin(object):
     def resetFilter(self):
         self.taskFile.categories().resetAllFilteredCategories()
 
+    def hasFilter(self):
+        return bool(self.taskFile.categories().filteredCategories())
+
     def createCategoryFilterCommands(self):
         categories = self.taskFile.categories()
         commands = [_('&Categories'), 
@@ -172,6 +175,10 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
         for status in task.Task.possibleStatuses():
             self.hideTaskStatus(status, False)
         self.hideCompositeTasks(False)
+
+    def hasFilter(self):
+        return super(FilterableViewerForTasksMixin, self).hasFilter() or \
+            self.presentation().hasFilter()
 
     def createFilterUICommands(self):
         return super(FilterableViewerForTasksMixin, 
