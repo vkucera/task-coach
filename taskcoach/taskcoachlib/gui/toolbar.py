@@ -320,9 +320,12 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
             index = dict([(command.uniqueName(), command) for command in self.uiCommands() if command is not None and not isinstance(command, int)])
             index['Separator'] = None
             index['Spacer'] = 1
+            afterSeparator = True
             for className in perspective.split(','):
                 if className in index:
-                    commands.append(index[className])
+                    if className not in ['Spacer', 'Separator'] or not afterSeparator:
+                        commands.append(index[className])
+                    afterSeparator = className in ['Spacer', 'Separator']
         else:
             commands = list(self.uiCommands())
         return commands
