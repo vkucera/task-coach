@@ -204,7 +204,7 @@ defaults = {
     },
 'categoryviewer': {
     'title': '',
-    'toolbarperspective': 'CategoryNew,NewSubItem,Separator,Edit,Delete,Separator,Spacer,ResetFilter,Search',
+    'toolbarperspective': 'CategoryNew,NewSubItem,Separator,Edit,Delete,Spacer,ResetFilter,Search',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -220,7 +220,7 @@ defaults = {
     },
 'categoryviewerintaskeditor': {
     'title': '',
-    'toolbarperspective': 'CategoryNew,NewSubItem,Separator,Edit,Delete,Separator,Spacer,Search,ResetFilter',
+    'toolbarperspective': 'CategoryNew,NewSubItem,Separator,Edit,Delete,Spacer,ResetFilter,Search',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -236,7 +236,7 @@ defaults = {
     },
 'categoryviewerinnoteeditor': {
     'title': '',
-    'toolbarperspective': 'CategoryNew,NewSubItem,Separator,Edit,Delete,Separator,Spacer,Search,ResetFilter',
+    'toolbarperspective': 'CategoryNew,NewSubItem,Separator,Edit,Delete,Spacer,ResetFilter,Search',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
