@@ -275,7 +275,10 @@ class SortableViewerMixin(object):
                     helpText=self.sortBySubjectHelpText),
                 uicommand.ViewerSortByCommand(viewer=self, value='description',
                     menuText=_('&Description'),
-                    helpText=self.sortByDescriptionHelpText)]
+                    helpText=self.sortByDescriptionHelpText),
+                uicommand.ViewerSortByCommand(viewer=self, 
+                    value='creationDateTime', menuText=_('&Creation date'),
+                    helpText=self.sortByCreationDateTimeHelpText)]
 
 
 class SortableViewerForEffortMixin(SortableViewerMixin):
@@ -297,6 +300,7 @@ class SortableViewerForEffortMixin(SortableViewerMixin):
 class SortableViewerForCategoriesMixin(SortableViewerMixin):
     sortBySubjectHelpText = _('Sort categories by subject')
     sortByDescriptionHelpText = _('Sort categories by description')
+    sortByCreationDateTimeHelpText = _('Sort categories by creation date')
 
 
 class SortableViewerForCategorizablesMixin(SortableViewerMixin):
@@ -314,12 +318,14 @@ class SortableViewerForAttachmentsMixin(SortableViewerForCategorizablesMixin):
     sortBySubjectHelpText = _('Sort attachments by subject')
     sortByDescriptionHelpText = _('Sort attachments by description')
     sortByCategoryHelpText = _('Sort attachments by category')
-    
+    sortByCreationDateTimeHelpText = _('Sort attachments by creation date')
+
 
 class SortableViewerForNotesMixin(SortableViewerForCategorizablesMixin):
     sortBySubjectHelpText = _('Sort notes by subject')
     sortByDescriptionHelpText = _('Sort notes by description')
     sortByCategoryHelpText = _('Sort notes by category')
+    sortByCreationDateTimeHelpText = _('Sort notes by creation date')
 
 
 class SortableViewerForTasksMixin(SortableViewerForCategorizablesMixin):
@@ -327,7 +333,8 @@ class SortableViewerForTasksMixin(SortableViewerForCategorizablesMixin):
     sortBySubjectHelpText = _('Sort tasks by subject')
     sortByDescriptionHelpText = _('Sort tasks by description')
     sortByCategoryHelpText = _('Sort tasks by category')
-    
+    sortByCreationDateTimeHelpText = _('Sort tasks by creation date')
+
     def __init__(self, *args, **kwargs):
         self.__sortKeyUnchangedCount = 0
         super(SortableViewerForTasksMixin, self).__init__(*args, **kwargs)
