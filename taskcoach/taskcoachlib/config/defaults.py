@@ -72,7 +72,7 @@ defaults = {
     },
 'taskviewer': {
     'title': '',  # User supplied viewer title
-    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,ViewerHideTasks_completed,ViewerHideTasks_inactive,TaskViewerTreeOrListChoice,Spacer,ResetFilter,Search',
+    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,ViewerHideTasks_completed,ViewerHideTasks_inactive,Spacer,ResetFilter,Search',
     'treemode': 'True',  # True = tree mode, False = list mode
     'sortby': 'dueDateTime',
     'sortascending': 'True',
@@ -114,7 +114,7 @@ defaults = {
     },
 'prerequisiteviewerintaskeditor': {
     'title': '',  # User supplied viewer title
-    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,ViewerHideTasks_completed,ViewerHideTasks_inactive,TaskViewerTreeOrListChoice,Spacer,ResetFilter,Search',
+    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,ViewerHideTasks_completed,ViewerHideTasks_inactive,Spacer,ResetFilter,Search',
     'treemode': 'True',  # True = tree mode, False = list mode
     'sortby': 'subject',
     'sortascending': 'True',
@@ -204,7 +204,7 @@ defaults = {
     },
 'categoryviewer': {
     'title': '',
-    'toolbarperspective': 'CategoryNew,NewSubItem,Separator,Edit,Delete,Separator,CategoryViewerFilterChoice,Spacer,ResetFilter,Search',
+    'toolbarperspective': 'CategoryNew,NewSubItem,Separator,Edit,Delete,Separator,Spacer,ResetFilter,Search',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -220,7 +220,7 @@ defaults = {
     },
 'categoryviewerintaskeditor': {
     'title': '',
-    'toolbarperspective': 'CategoryNew,NewSubItem,Separator,Edit,Delete,Separator,CategoryViewerFilterChoice,Spacer,Search,ResetFilter',
+    'toolbarperspective': 'CategoryNew,NewSubItem,Separator,Edit,Delete,Separator,Spacer,Search,ResetFilter',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -236,7 +236,7 @@ defaults = {
     },
 'categoryviewerinnoteeditor': {
     'title': '',
-    'toolbarperspective': 'CategoryNew,NewSubItem,Separator,Edit,Delete,Separator,CategoryViewerFilterChoice,Spacer,Search,ResetFilter',
+    'toolbarperspective': 'CategoryNew,NewSubItem,Separator,Edit,Delete,Separator,Spacer,Search,ResetFilter',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -313,7 +313,7 @@ defaults = {
     },
 'effortviewer': {
     'title': '',
-    'toolbarperspective': 'EffortNew,Separator,Edit,Delete,Separator,EffortStartForEffort,EffortStop,Separator,EffortViewerAggregationChoice,RoundingPrecision,AlwaysRoundUp,Spacer,ResetFilter,Search',
+    'toolbarperspective': 'EffortNew,Separator,Edit,Delete,Separator,EffortStartForEffort,EffortStop,Separator,EffortViewerAggregationChoice,Spacer,ResetFilter,Search',
     'aggregation': 'details',  # 'details' (default), 'day', 'week', or 'month'
     'sortby': 'period',
     'sortascending': 'False',
@@ -333,7 +333,7 @@ defaults = {
     'alwaysroundup': 'False',
     },
 'effortviewerintaskeditor': {
-    'toolbarperspective': 'EffortNew,Separator,Edit,Delete,Separator,EffortStartForEffort,EffortStop,Separator,EffortViewerAggregationChoice,RoundingPrecision,AlwaysRoundUp,Spacer,ResetFilter,Search',
+    'toolbarperspective': 'EffortNew,Separator,Edit,Delete,Separator,EffortStartForEffort,EffortStop,Separator,EffortViewerAggregationChoice,Spacer,ResetFilter,Search',
     'aggregation': 'details',  # 'details' (default), 'day', 'week', or 'month'
     'sortby': 'period',
     'sortascending': 'False',
