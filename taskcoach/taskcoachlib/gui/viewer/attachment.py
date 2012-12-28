@@ -102,6 +102,14 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable=W0223
                                headerImageIndex=self.imageIndex['note_icon'],
                                renderCallback=lambda item: '',
                                resizeCallback=self.onResizeColumn),
+                widgets.Column('creationDateTime', _('Creation date'),
+                               width=self.getColumnWidth('creationDateTime'),
+                               renderCallback=self.renderCreationDateTime,
+                               sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                                                                          value='creationDateTime',
+                                                                          menuText=_('&Creation date'),
+                                                                          helpText=_('Sort by creation date')),
+                               resizeCallback=self.onResizeColumn)
                 ]
 
     def createColumnUICommands(self):
@@ -114,7 +122,10 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable=W0223
                 setting='description', viewer=self),
             uicommand.ViewColumn(menuText=_('&Notes'),
                 helpText=_('Show/hide notes column'),
-                setting='notes', viewer=self)]
+                setting='notes', viewer=self),
+            uicommand.ViewColumn(menuText=_('&Creation date'),
+                helpText=_('Show/hide creation date column'),
+                setting='creationDateTime', viewer=self)]
     
     def createCreationToolBarUICommands(self):
         return (uicommand.AttachmentNew(attachments=self.presentation(),

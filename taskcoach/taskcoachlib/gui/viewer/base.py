@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import patterns, widgets, command
+from taskcoachlib import patterns, widgets, command, render
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, toolbar, artprovider
 from taskcoachlib.thirdparty import hypertreelist
@@ -811,6 +811,11 @@ class ViewerWithColumns(Viewer):  # pylint: disable=W0223
     def renderSubjects(items):
         subjects = [item.subject(recursive=True) for item in items]
         return ', '.join(sorted(subjects))
+    
+    @staticmethod
+    def renderCreationDateTime(item, humanReadable=True):
+        return render.dateTime(item.creationDateTime(), 
+                               humanReadable=humanReadable)
             
     def isItemCollapsed(self, item):
         # pylint: disable=E1101

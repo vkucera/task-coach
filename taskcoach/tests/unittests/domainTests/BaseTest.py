@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 import test
 from taskcoachlib import patterns
-from taskcoachlib.domain import base
+from taskcoachlib.domain import base, date
 
 
 class SynchronizedObjectTest(test.TestCase):
@@ -122,6 +122,19 @@ class ObjectTest(test.TestCase):
         objectId = self.object.id()  # Force generation of id
         copy = self.object.copy()
         self.assertNotEqual(copy.id(), objectId)
+    
+    # Creation date/time tests:
+    
+    def testSetCreationDateTimeOnCreation(self):
+        creation_datetime = date.DateTime(2012, 12, 12, 10, 0, 0)
+        domain_object = base.Object(creationDateTime=creation_datetime)
+        self.assertEqual(creation_datetime, domain_object.creationDateTime())
+        
+    def testCreationDateTimeIsSetWhenNotPassed(self):
+        now = date.Now()
+        creation_datetime = self.object.creationDateTime()
+        minute = date.TimeDelta(seconds=60)
+        self.failUnless(now - minute < creation_datetime < now + minute)
                 
     # Subject tests:
         
@@ -183,15 +196,16 @@ class ObjectTest(test.TestCase):
     def testGetState(self):
         self.assertEqual(dict(subject='', description='', id=self.object.id(),
                               status=self.object.getStatus(), fgColor=None,
-                              bgColor=None, font=None, icon='', 
-                              selectedIcon=''),
+                              bgColor=None, font=None, icon='', selectedIcon='', 
+                              creationDateTime=self.object.creationDateTime()),
                          self.object.__getstate__())
 
     def testSetState(self):
         newState = dict(subject='New', description='New', id=None,
                         status=self.object.STATUS_DELETED, 
                         fgColor=wx.GREEN, bgColor=wx.RED, font=wx.SWISS_FONT,
-                        icon='icon', selectedIcon='selectedIcon')
+                        icon='icon', selectedIcon='selectedIcon',
+                        creationDateTime=date.DateTime(2012, 12, 12, 12, 0, 0))
         self.object.__setstate__(newState)
         self.assertEqual(newState, self.object.__getstate__())
         
@@ -199,11 +213,21 @@ class ObjectTest(test.TestCase):
         newState = dict(subject='New', description='New', id=None,
                         status=self.object.STATUS_DELETED, 
                         fgColor=wx.GREEN, bgColor=wx.RED, font=wx.SWISS_FONT,
-                        icon='icon', selectedIcon='selectedIcon')
+                        icon='icon', selectedIcon='selectedIcon',
+                        creationDateTime=date.DateTime(2013, 1, 1, 0, 0, 0))
         self.object.__setstate__(newState)
         self.assertEqual(1, len(self.eventsReceived))
         
     # Copy tests:
+    
+    def testCopy_IdIsNotCopied(self):
+        copy = self.object.copy()
+        self.assertNotEqual(copy.id(), self.object.id())
+    
+    def testCopy_CreationDateTimeIsNotCopied(self):
+        copy = self.object.copy()
+        # Use >= to prevent failures on fast computers with low time granularity
+        self.failUnless(copy.creationDateTime() >= self.object.creationDateTime())
         
     def testCopy_SubjectIsCopied(self):
         self.object.setSubject('New subject')

@@ -1653,4 +1653,22 @@ class XMLReaderVersion35Test(XMLReaderTestCase):
         </tasks>''')
         self.assertEqual(date.DateTime(2000, 1, 10, 13, 13, 13), 
                          tasks[0].recurrence().stop_datetime)
+        
+    def testCreationDateTimeIsSetToMinDateTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task/>
+        </tasks>''')
+        self.assertEqual(date.DateTime.min, tasks[0].creationDateTime())
 
+
+class XMLReaderVersion36Test(XMLReaderTestCase):
+    tskversion = 36 # New in release 1.3.21
+    
+    def testCreationDateTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task creationDateTime="2012-12-12 12:00:00.12345"/>
+        </tasks>''')
+        self.assertEqual(date.DateTime(2012, 12, 12, 12, 0, 0, 12345),
+                         tasks[0].creationDateTime())

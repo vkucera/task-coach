@@ -257,6 +257,11 @@ class TaskTestsMixin(object):
         self.viewer.showColumnByName('completionDateTime')
         self.task.setCompletionDateTime(tomorrow)
         self.expectInCSV(render.dateTime(tomorrow, humanReadable=False))
+        
+    def testCreationDateTime(self):
+        self.viewer.showColumnByName('creationDateTime')
+        self.expectInCSV(render.dateTime(self.task.creationDateTime(), 
+                                         humanReadable=False))
 
 
 class CSVListWriterTest(TaskTestsMixin, CSVWriterTestCase):

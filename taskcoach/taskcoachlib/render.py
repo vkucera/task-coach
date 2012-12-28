@@ -158,7 +158,7 @@ def date(aDate, humanReadable=False):
 
 
 def dateTime(aDateTime, humanReadable=False):
-    if not aDateTime or aDateTime == datemodule.DateTime():
+    if not aDateTime or aDateTime == datemodule.DateTime() or aDateTime == datemodule.DateTime.min:
         return ''
     timeIsMidnight = (aDateTime.hour, aDateTime.minute) in ((0, 0), (23, 59))
     year = aDateTime.year
