@@ -93,7 +93,6 @@ class BalloonTip(wx.Frame):
         event.Skip()
 
     def DoClose(self, event, unbind=True):
-        print 'CLOSE'
         if unbind:
             self._Unbind()
         self.Close()
