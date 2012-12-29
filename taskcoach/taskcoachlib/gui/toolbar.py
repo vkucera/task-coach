@@ -314,10 +314,10 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
                 item.window.Destroy()
         super(ToolBar, self).Clear()
 
-    def _filterCommands(self, perspective):
+    def _filterCommands(self, perspective, cache=True):
         commands = list()
         if perspective:
-            index = dict([(command.uniqueName(), command) for command in self.uiCommands() if command is not None and not isinstance(command, int)])
+            index = dict([(command.uniqueName(), command) for command in self.uiCommands(cache=cache) if command is not None and not isinstance(command, int)])
             index['Separator'] = None
             index['Spacer'] = 1
             afterSeparator = True
@@ -327,13 +327,13 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
                         commands.append(index[className])
                     afterSeparator = className in ['Spacer', 'Separator']
         else:
-            commands = list(self.uiCommands())
+            commands = list(self.uiCommands(cache=cache))
         return commands
 
-    def loadPerspective(self, perspective, customizable=True):
+    def loadPerspective(self, perspective, customizable=True, cache=True):
         self.Clear()
 
-        commands = self._filterCommands(perspective)
+        commands = self._filterCommands(perspective, cache=cache)
         self.__visibleUICommands = commands[:]
 
         if customizable:
@@ -363,8 +363,8 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
         self.loadPerspective(perspective)
         self.__window.saveToolBarPerspective(perspective)
 
-    def uiCommands(self):
-        if self.__cache is None:
+    def uiCommands(self, cache=True):
+        if self.__cache is None or not cache:
             self.__cache = self.__window.createToolBarUICommands()
         return self.__cache
 

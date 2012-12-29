@@ -90,6 +90,8 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,  # pylint: disable=W0223
     def onAppearanceSettingChange(self, value):  # pylint: disable=W0613
         if self:
             wx.CallAfter(self.refresh)  # Let domain objects update appearance first
+        # Show/hide status in toolbar may change too
+        self.toolbar.loadPerspective(self.toolbar.perspective(), cache=False)
 
     def domainObjectsToView(self):
         return self.taskFile.tasks()
@@ -220,8 +222,10 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable=W0223
     
     def createModeToolBarUICommands(self):
         hideUICommands = (uicommand.ViewerHideTasks(taskStatus=task.status.completed,
+                                                    settings=self.settings,
                                                     viewer=self),
                           uicommand.ViewerHideTasks(taskStatus=task.status.inactive,
+                                                    settings=self.settings,
                                                     viewer=self))
         otherModeUICommands = super(BaseTaskTreeViewer, self).createModeToolBarUICommands()
         separator = (None,) if otherModeUICommands else ()
@@ -1271,8 +1275,10 @@ class TaskStatsViewer(BaseTaskViewer):  # pylint: disable=W0223
         
     def createActionToolBarUICommands(self):
         return (uicommand.ViewerHideTasks(taskStatus=task.status.completed,
+                                          settings=self.settings,
                                           viewer=self),
                 uicommand.ViewerHideTasks(taskStatus=task.status.inactive,
+                                          settings=self.settings,
                                           viewer=self),
                 uicommand.ViewerPieChartAngle(viewer=self, 
                                               settings=self.settings))

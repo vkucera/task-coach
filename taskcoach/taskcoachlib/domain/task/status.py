@@ -21,14 +21,16 @@ from taskcoachlib.i18n import _
 
 class TaskStatus(object):
     def __init__(self, statusString, pluralLabel, countLabel, hideMenuText,
-                 hideHelpText, hideBitmap=None):
+                 hideHelpText):
         self.statusString = statusString
         self.pluralLabel = pluralLabel
         self.countLabel = countLabel
         self.hideMenuText = hideMenuText
         self.hideHelpText = hideHelpText
-        self.hideBitmap = hideBitmap
-        
+
+    def getHideBitmap(self, settings):
+        return '%s+cross_red_icon' % settings.get('icon', '%stasks' % self.statusString)
+
     def __repr__(self):
         return '%s(%s)' % (self.__class__.__name__, self.statusString)
         
@@ -47,8 +49,7 @@ class TaskStatus(object):
 
 inactive = TaskStatus('inactive', _('Inactive tasks'), 
     _('Inactive tasks: %d (%d%%)'), _('Hide &inactive tasks'),
-    _('Show/hide inactive tasks (uncompleted tasks without actual start date)'),
-    hideBitmap='led_grey_icon+cross_red_icon')
+    _('Show/hide inactive tasks (uncompleted tasks without actual start date)'))
 
 late = TaskStatus('late', _('Late tasks'), 
     _('Late tasks: %d (%d%%)'), _('Hide &late tasks'), 
@@ -68,4 +69,4 @@ overdue = TaskStatus('overdue', _('Overdue tasks'),
 
 completed = TaskStatus('completed', _('Completed tasks'), 
     _('Completed tasks: %d (%d%%)'), _('Hide &completed tasks'),
-    _('Show/hide completed tasks'), hideBitmap='led_green_icon+cross_red_icon')
+    _('Show/hide completed tasks'))

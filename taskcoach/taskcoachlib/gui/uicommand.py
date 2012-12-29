@@ -1408,7 +1408,7 @@ class ViewerHideTasks(ViewerCommand, UICheckCommand):
         self.__taskStatus = taskStatus
         super(ViewerHideTasks, self).__init__(menuText=taskStatus.hideMenuText,
                                               helpText=taskStatus.hideHelpText,
-                                              bitmap=taskStatus.hideBitmap,
+                                              bitmap=taskStatus.getHideBitmap(kwargs['settings']),
                                               *args, **kwargs)
 
     def uniqueName(self):

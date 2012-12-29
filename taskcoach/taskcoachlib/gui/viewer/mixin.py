@@ -183,7 +183,7 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
     def createFilterUICommands(self):
         return super(FilterableViewerForTasksMixin, 
                      self).createFilterUICommands() + \
-            [uicommand.ViewerHideTasks(taskStatus, viewer=self) for taskStatus in task.Task.possibleStatuses()] + \
+            [uicommand.ViewerHideTasks(taskStatus, viewer=self, settings=self.settings) for taskStatus in task.Task.possibleStatuses()] + \
             [uicommand.ViewerHideCompositeTasks(viewer=self)]
             
     def __getBooleanSetting(self, setting):
