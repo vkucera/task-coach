@@ -72,7 +72,7 @@ defaults = {
     },
 'taskviewer': {
     'title': '',  # User supplied viewer title
-    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,ViewerHideTasks_completed,ViewerHideTasks_inactive,TaskViewerTreeOrListChoice,Spacer,ResetFilter,Search',
+    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,TaskViewerTreeOrListChoice,Spacer,ViewerHideTasks_completed,ViewerHideTasks_inactive,ResetFilter,Search',
     'treemode': 'True',  # True = tree mode, False = list mode
     'sortby': 'dueDateTime',
     'sortascending': 'True',
@@ -97,7 +97,7 @@ defaults = {
     },              
 'taskstatsviewer': {
     'title': '',
-    'toolbarperspective': 'TaskNew,TaskNewFromTemplateButton,Separator,ViewerHideTasks_completed,ViewerHideTasks_inactive,ViewerPieChartAngle,Spacer,ResetFilter,Search',
+    'toolbarperspective': 'TaskNew,TaskNewFromTemplateButton,Separator,ViewerPieChartAngle,Spacer,ViewerHideTasks_completed,ViewerHideTasks_inactive,ResetFilter,Search',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
@@ -114,7 +114,7 @@ defaults = {
     },
 'prerequisiteviewerintaskeditor': {
     'title': '',  # User supplied viewer title
-    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,ViewerHideTasks_completed,ViewerHideTasks_inactive,Spacer,ResetFilter,Search',
+    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Spacer,ViewerHideTasks_completed,ViewerHideTasks_inactive,ResetFilter,Search',
     'treemode': 'True',  # True = tree mode, False = list mode
     'sortby': 'subject',
     'sortascending': 'True',
@@ -140,7 +140,7 @@ defaults = {
     },
 'squaretaskviewer': {
     'title': '',
-    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,ViewerHideTasks_completed,ViewerHideTasks_inactive,SquareTaskViewerOrderChoice,Spacer,ResetFilter,Search',
+    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,SquareTaskViewerOrderChoice,Spacer,ViewerHideTasks_completed,ViewerHideTasks_inactive,ResetFilter,Search',
     'sortby': 'budget',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
@@ -157,7 +157,7 @@ defaults = {
     },
 'timelineviewer': {
     'title': '',
-    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,ViewerHideTasks_completed,ViewerHideTasks_inactive,Spacer,ResetFilter,Search',
+    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Spacer,ViewerHideTasks_completed,ViewerHideTasks_inactive,ResetFilter,Search',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
@@ -173,7 +173,7 @@ defaults = {
     },
 'calendarviewer': {
     'title': '',
-    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,ViewerHideTasks_completed,ViewerHideTasks_inactive,Separator,CalendarViewerConfigure,CalendarViewerPreviousPeriod,CalendarViewerToday,CalendarViewerNextPeriod,Spacer,ResetFilter,Search',
+    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,Separator,CalendarViewerConfigure,CalendarViewerPreviousPeriod,CalendarViewerToday,CalendarViewerNextPeriod,Spacer,ViewerHideTasks_completed,ViewerHideTasks_inactive,ResetFilter,Search',
     'viewtype': '1',
     'periodcount': '1',
     'periodwidth': '150',
