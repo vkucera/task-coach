@@ -41,6 +41,8 @@ Mac OS X nor Linux.''', '1285'),
         Bugv2('''When toggling the category of multiple items, not all of which 
 are in the selected category, don't remove the items from the category that 
 already belonged to that category.''', '1271'),
+        Bugv2('''Toolbar icons to show/hide tasks according to status now respect
+appearance settings.''', '1104'),
         ],
     featuresAdded=[
         Feature('''New, hopefully more intuitive date/time control.'''),
