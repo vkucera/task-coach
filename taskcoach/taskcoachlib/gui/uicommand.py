@@ -2637,17 +2637,42 @@ class ToolbarChoiceCommandMixin(object):
             self.choiceCtrl.Enable(enable)
 
 
-class EffortViewerAggregationChoice(ToolbarChoiceCommandMixin, ViewerCommand):
+class EffortViewerAggregationChoice(ToolbarChoiceCommandMixin, SettingsCommand,
+                                    ViewerCommand):
     choiceLabels = [_('Effort details'), _('Effort per day'), 
                     _('Effort per week'), _('Effort per month')]
     choiceData = ['details', 'day', 'week', 'month']
 
     def __init__(self, **kwargs):
-        super(EffortViewerAggregationChoice, self).__init__(helpText=_('Aggregation mode'), **kwargs)
+        super(EffortViewerAggregationChoice, self).__init__(helpText=_('Aggregation mode'), 
+                                                            **kwargs)
 
-    def doChoice(self, choice):
-        self.viewer.showEffortAggregation(choice)
+    def appendToToolBar(self, *args, **kwargs):
+        super(EffortViewerAggregationChoice, self).appendToToolBar(*args, 
+                                                                   **kwargs)
+        self.setChoice(self.settings.gettext(self.viewer.settingsSection(), 
+                                             'aggregation'))
+        pub.subscribe(self.on_setting_changed, 
+                      'settings.%s.aggregation' % self.viewer.settingsSection())
         
+    def doChoice(self, choice):
+        self.settings.settext(self.viewer.settingsSection(), 'aggregation', 
+                              choice)
+
+    def on_setting_changed(self, value):
+        self.setChoice(value)
+                
+        
+class EffortViewerAggregationOption(UIRadioCommand, ViewerCommand, 
+                                    SettingsCommand):
+    def isSettingChecked(self):
+        return self.settings.gettext(self.viewer.settingsSection(), 
+                                     'aggregation') == self.value
+    
+    def doCommand(self, event):
+        self.settings.settext(self.viewer.settingsSection(), 'aggregation', 
+                              self.value)        
+
 
 class TaskViewerTreeOrListChoice(ToolbarChoiceCommandMixin, UICheckCommand,
                                  ViewerCommand, SettingsCommand):

@@ -307,15 +307,18 @@ class EffortWriterTest(CSVWriterTestCase):
         self.expectInCSV(',0:00:01,')
         
     def testEffortPerDay(self):
-        self.viewer.showEffortAggregation('day')
+        self.settings.settext(self.viewer.settingsSection(), 'aggregation',
+                              'day')
         self.expectInCSV('Total')
 
     def testEffortPerDay_SelectionOnly_EmptySelection(self):
-        self.viewer.showEffortAggregation('day')
+        self.settings.settext(self.viewer.settingsSection(), 'aggregation',
+                              'day')
         self.expectNotInCSV('Total', selectionOnly=True)
 
     def testEffortPerDay_SelectionOnly_SelectAll(self):
-        self.viewer.showEffortAggregation('day')
+        self.settings.settext(self.viewer.settingsSection(), 'aggregation',
+                              'day')
         self.viewer.widget.select_all()
         self.viewer.updateSelection()
         self.expectInCSV('Total', selectionOnly=True)

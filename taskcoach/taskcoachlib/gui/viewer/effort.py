@@ -60,6 +60,8 @@ class EffortViewer(base.ListViewer,
                       'settings.%s.round' % self.settingsSection())
         pub.subscribe(self.onRoundingChanged, 
                       'settings.%s.alwaysroundup' % self.settingsSection())
+        pub.subscribe(self.on_aggregation_changed, 
+                      'settings.%s.aggregation' % self.settingsSection())
         
     def onRoundingChanged(self, value):  # pylint: disable=W0613
         self.__initRoundingToolBarUICommands()
@@ -103,12 +105,14 @@ class EffortViewer(base.ListViewer,
     def curselectionIsInstanceOf(self, class_):
         return class_ == effort.Effort
     
-    def showEffortAggregation(self, aggregation):
+    def on_aggregation_changed(self, value):
+        self.__show_effort_aggregation(value)
+    
+    def __show_effort_aggregation(self, aggregation):
         ''' Change the aggregation mode. Can be one of 'details', 'day', 'week'
             and 'month'. '''
         assert aggregation in ('details', 'day', 'week', 'month')
         self.aggregation = aggregation
-        self.settings.set(self.settingsSection(), 'aggregation', aggregation)
         self.setPresentation(self.createSorter(self.createFilter(\
                              self.domainObjectsToView())))
         self.secondRefresher.updatePresentation()
@@ -315,7 +319,8 @@ class EffortViewer(base.ListViewer,
         # programmatically
         # pylint: disable=W0201
         self.aggregationUICommand = \
-            uicommand.EffortViewerAggregationChoice(viewer=self)
+            uicommand.EffortViewerAggregationChoice(viewer=self, 
+                                                    settings=self.settings)
         self.roundingUICommand = uicommand.RoundingPrecision(viewer=self, 
                                                              settings=self.settings)
         self.alwaysRoundUpUICommand = uicommand.AlwaysRoundUp(viewer=self, 
@@ -333,6 +338,18 @@ class EffortViewer(base.ListViewer,
                                   settings=self.settings) \
                 for (menuText, value) in zip(uicommand.RoundingPrecision.choiceLabels, 
                                              uicommand.RoundingPrecision.choiceData)]
+               
+    def hasModes(self):
+        return True
+    
+    def getModeUICommands(self):
+        return [_('Aggregate effort by'), None] + \
+            [uicommand.EffortViewerAggregationOption(menuText=menuText, 
+                                                     value=value,
+                                                     viewer=self,
+                                                     settings=self.settings)
+             for (menuText, value) in zip(uicommand.EffortViewerAggregationChoice.choiceLabels,
+                                          uicommand.EffortViewerAggregationChoice.choiceData)]
 
     def getItemImages(self, index, column=0):  # pylint: disable=W0613
         return {wx.TreeItemIcon_Normal: -1}
