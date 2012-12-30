@@ -2604,6 +2604,7 @@ class ToolbarChoiceCommandMixin(object):
     def unbind(self, window, id_):
         if self.choiceCtrl is not None:
             self.choiceCtrl.Unbind(wx.EVT_CHOICE)
+            self.choiceCtrl = None
         super(ToolbarChoiceCommandMixin, self).unbind(window, id_)
 
     def onChoice(self, event):
