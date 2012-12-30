@@ -74,7 +74,7 @@ class SearchableViewerMixin(object):
         ''' UI commands to put on the toolbar of this viewer. '''
         searchUICommand = uicommand.Search(viewer=self, settings=self.settings)
         return super(SearchableViewerMixin, self).createToolBarUICommands() + \
-            (None, searchUICommand)
+            (1, searchUICommand)
             
 
 class FilterableViewerMixin(object):
@@ -99,8 +99,16 @@ class FilterableViewerMixin(object):
                 uicommand.CategoryViewerFilterChoice(settings=self.settings),
                 None]
 
+    def createToolBarUICommands(self):
+        clearUICommand = uicommand.ResetFilter(viewer=self)
+        return super(FilterableViewerMixin, self).createToolBarUICommands() + \
+            (clearUICommand,)
+
     def resetFilter(self):
         self.taskFile.categories().resetAllFilteredCategories()
+
+    def hasFilter(self):
+        return bool(self.taskFile.categories().filteredCategories())
 
     def createCategoryFilterCommands(self):
         categories = self.taskFile.categories()
@@ -149,6 +157,10 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
         self.__setBooleanSetting('hide%stasks' % status, hide)
         self.presentation().hideTaskStatus(status, hide)
 
+    def showOnlyTaskStatus(self, status):
+        for taskStatus in task.Task.possibleStatuses():
+            self.hideTaskStatus(taskStatus, hide=status != taskStatus)
+
     def isHidingTaskStatus(self, status):
         return self.__getBooleanSetting('hide%stasks' % status)
     
@@ -168,10 +180,14 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
             self.hideTaskStatus(status, False)
         self.hideCompositeTasks(False)
 
+    def hasFilter(self):
+        return super(FilterableViewerForTasksMixin, self).hasFilter() or \
+            self.presentation().hasFilter()
+
     def createFilterUICommands(self):
         return super(FilterableViewerForTasksMixin, 
                      self).createFilterUICommands() + \
-            [uicommand.ViewerHideTasks(taskStatus, viewer=self) for taskStatus in task.Task.possibleStatuses()] + \
+            [uicommand.ViewerHideTasks(taskStatus, viewer=self, settings=self.settings) for taskStatus in task.Task.possibleStatuses()] + \
             [uicommand.ViewerHideCompositeTasks(viewer=self)]
             
     def __getBooleanSetting(self, setting):

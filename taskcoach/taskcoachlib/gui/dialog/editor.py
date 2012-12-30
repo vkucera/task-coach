@@ -28,6 +28,7 @@ from taskcoachlib.gui.dialog import entry, attributesync
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty.pubsub import pub
 from taskcoachlib.thirdparty import smartdatetimectrl as sdtc
+from taskcoachlib.help.balloontips import BalloonTipManager
 import os.path
 import wx
 
@@ -1194,7 +1195,7 @@ class EffortEditBook(Page):
         pass
     
     
-class Editor(widgets.Dialog):
+class Editor(BalloonTipManager, widgets.Dialog):
     EditBookClass = lambda *args: 'Subclass responsibility'
     singular_title = 'Subclass responsibility %s'
     plural_title = 'Subclass responsibility'

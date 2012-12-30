@@ -61,7 +61,7 @@ class Viewer(patterns.Observer, wx.Panel):
         # The widget used to present the presentation:
         self.widget = self.createWidget()
         self.widget.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOW))
-        self.toolbar = toolbar.ToolBar(self, (16, 16))
+        self.toolbar = toolbar.ToolBar(self, settings, (16, 16))
         self.initLayout()
         self.registerPresentationObservers()
         self.refresh()
@@ -70,6 +70,11 @@ class Viewer(patterns.Observer, wx.Panel):
         pub.subscribe(self.onBeginIO, 'taskfile.aboutToClear')
         pub.subscribe(self.onEndIO, 'taskfile.justRead')
         pub.subscribe(self.onEndIO, 'taskfile.justCleared')
+
+        wx.GetTopLevelParent(self).AddBalloonTip(settings, 'customizabletoolbars', self.toolbar,
+            title=_('Toolbars are customizable'),
+            getRect=lambda: self.toolbar.GetToolRect(self.toolbar.customizeId),
+            message=_('''Click on the gear icon on the right to add buttons and rearrange them.'''))
 
     def onBeginIO(self, taskFile):
         self.__freezeCount += 1
@@ -413,7 +418,13 @@ class Viewer(patterns.Observer, wx.Panel):
             editToolBarUICommands + editSeparator + \
             actionToolBarUICommands + actionSeparator + \
             modeToolBarUICommands
-        
+
+    def getToolBarPerspective(self):
+        return self.settings.get(self.settingsSection(), 'toolbarperspective')
+
+    def saveToolBarPerspective(self, perspective):
+        self.settings.set(self.settingsSection(), 'toolbarperspective', perspective)
+
     def createClipboardToolBarUICommands(self):
         ''' UI commands for manipulating the clipboard (cut, copy, paste). '''
         cutCommand = uicommand.EditCut(viewer=self)

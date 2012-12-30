@@ -22,10 +22,15 @@ from taskcoachlib.domain import task, date
 from taskcoachlib.thirdparty import hypertreelist
 
 
-class Window(widgets.AuiManagedFrameWithDynamicCenterPane):
+class AuiManagedFrameWithDynamicCenterPane(widgets.AuiManagedFrameWithDynamicCenterPane):
+    def AddBalloonTip(self, *args, **kwargs):
+        pass
+
+
+class Window(AuiManagedFrameWithDynamicCenterPane):
     def addPane(self, viewer, title, name='name', floating=False):
         super(Window, self).addPane(viewer, title, name, floating)
-        
+
 
 class ViewerTest(test.wxTestCase):
     def setUp(self):
@@ -501,7 +506,7 @@ class ViewerIteratorTestCase(test.wxTestCase):
         task.Task.settings = self.settings
         self.taskFile = persistence.TaskFile()
         self.taskList = self.taskFile.tasks()
-        self.window = widgets.AuiManagedFrameWithDynamicCenterPane(self.frame)
+        self.window = AuiManagedFrameWithDynamicCenterPane(self.frame)
         self.viewer = self.createViewer()
         self.settings.setboolean(self.viewer.settingsSection(), 'treemode',
                                  self.treeMode == 'True')

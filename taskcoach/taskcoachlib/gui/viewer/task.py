@@ -90,6 +90,8 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,  # pylint: disable=W0223
     def onAppearanceSettingChange(self, value):  # pylint: disable=W0613
         if self:
             wx.CallAfter(self.refresh)  # Let domain objects update appearance first
+        # Show/hide status in toolbar may change too
+        self.toolbar.loadPerspective(self.toolbar.perspective(), cache=False)
 
     def domainObjectsToView(self):
         return self.taskFile.tasks()
@@ -219,10 +221,10 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable=W0223
         return uiCommands + super(BaseTaskTreeViewer, self).createActionToolBarUICommands()
     
     def createModeToolBarUICommands(self):
-        hideUICommands = (uicommand.ViewerHideTasks(taskStatus=task.status.completed,
-                                                    viewer=self),
-                          uicommand.ViewerHideTasks(taskStatus=task.status.inactive,
-                                                    viewer=self))
+        hideUICommands = tuple([uicommand.ViewerHideTasks(taskStatus=status,
+                                                          settings=self.settings,
+                                                          viewer=self) \
+                                for status in task.Task.possibleStatuses()])
         otherModeUICommands = super(BaseTaskTreeViewer, self).createModeToolBarUICommands()
         separator = (None,) if otherModeUICommands else ()
         return hideUICommands + separator + otherModeUICommands
@@ -1271,12 +1273,12 @@ class TaskStatsViewer(BaseTaskViewer):  # pylint: disable=W0223
                                                     bitmap='newtmpl'))
         
     def createActionToolBarUICommands(self):
-        return (uicommand.ViewerHideTasks(taskStatus=task.status.completed,
-                                          viewer=self),
-                uicommand.ViewerHideTasks(taskStatus=task.status.inactive,
-                                          viewer=self),
-                uicommand.ViewerPieChartAngle(viewer=self, 
-                                              settings=self.settings))
+        return tuple([uicommand.ViewerHideTasks(taskStatus=status,
+                                                settings=self.settings,
+                                                viewer=self) \
+                            for status in task.Task.possibleStatuses()]) + \
+               (uicommand.ViewerPieChartAngle(viewer=self, 
+                                              settings=self.settings),)
 
     def initLegend(self, widget):
         legend = widget.GetLegend()

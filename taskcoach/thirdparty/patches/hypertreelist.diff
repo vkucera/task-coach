@@ -1,8 +1,7 @@
-Index: hypertreelist.py
-===================================================================
---- hypertreelist.py	(revision 5255)
-+++ hypertreelist.py	(working copy)
-@@ -1404,9 +1404,11 @@
+--- agw-old/hypertreelist.py	2012-10-14 17:49:22.000000000 +0200
++++ agw-new/hypertreelist.py	2012-12-27 16:20:40.000000000 +0100
+@@ -1403,11 +1403,13 @@
+                 maincol = theCtrl.GetMainColumn()
  
                  # check for above/below middle
                  y_mid = self._y + h/2
@@ -16,7 +15,20 @@ Index: hypertreelist.py
                      flags |= wx.TREE_HITTEST_ONITEMLOWERPART
                  
                  # check for button hit
-@@ -2796,7 +2798,21 @@
+                 if self.HasPlus() and theCtrl.HasButtons():
+@@ -2349,9 +2351,9 @@
+ # ----------------------------------------------------------------------------
+ # operations
+ # ----------------------------------------------------------------------------
+ 
+-    def DoInsertItem(self, parent, previous, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None):
++    def DoInsertItem(self, parent, previous, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None, separator=False):
+         """
+         Actually inserts an item in the tree.
+ 
+         :param `parentId`: an instance of L{TreeListItem} representing the
+@@ -2795,9 +2797,23 @@
+                 wndx = 0
                  if wnd:
                      wndx, wndy = item.GetWindowSize(self._main_column)
  
@@ -39,22 +51,25 @@ Index: hypertreelist.py
                  
                  if self._usegradients:
                      if self._gradientstyle == 0:   # Horizontal
-@@ -2814,9 +2830,12 @@
+                         self.DrawHorizontalGradient(dc, itemrect, self._hasFocus)
+@@ -2813,10 +2829,13 @@
+                     else:
                          dc.SetBrush((self._hasFocus and [self._hilightBrush] or [self._hilightUnfocusedBrush])[0])
                          dc.SetPen((self._hasFocus and [self._borderPen] or [wx.TRANSPARENT_PEN])[0])
                          dc.DrawRectangleRect(itemrect)
 -                
 -                dc.SetTextForeground(colTextHilight)
- 
++
 +                if item.PartialHilight():
 +                    dc.SetTextForeground(colText)
 +                else:
 +                    dc.SetTextForeground(colTextHilight)
-+
+ 
              # On GTK+ 2, drawing a 'normal' background is wrong for themes that
              # don't allow backgrounds to be customized. Not drawing the background,
              # except for custom item backgrounds, works for both kinds of theme.
-@@ -2922,7 +2941,10 @@
+@@ -2921,9 +2940,12 @@
+                                 wx.RendererNative.Get().DrawItemSelectionRect(self._owner, dc, itemrect, flags) 
                              else:
                                  dc.DrawRectangleRect(itemrect)
  
@@ -66,7 +81,9 @@ Index: hypertreelist.py
  
                      elif item == self._current:
                          dc.SetPen((self._hasFocus and [wx.BLACK_PEN] or [wx.TRANSPARENT_PEN])[0])
-@@ -2996,7 +3018,7 @@
+                     
+@@ -2995,9 +3017,9 @@
+                 dc.SetTextForeground(self._disabledColour)
                  _paintText(text, textrect, alignment)
                  dc.SetTextForeground(foreground)
              else:
@@ -75,7 +92,9 @@ Index: hypertreelist.py
                      dc.SetTextForeground(wx.WHITE)
                  _paintText(text, textrect, alignment)
  
-@@ -3513,6 +3535,8 @@
+             wnd = item.GetWindow(i)            
+@@ -3512,21 +3534,27 @@
+                 if self._countDrag == 0 and item:
                      self._oldItem = self._current
                      self._oldSelection = self._current
  
@@ -84,7 +103,8 @@ Index: hypertreelist.py
                  if item != self._dropTarget:
                          
                      # unhighlight the previous drop target
-@@ -3521,11 +3545,15 @@
+                     if self._dropTarget:
+                         self._dropTarget.SetHilight(False)
                          self.RefreshLine(self._dropTarget)
                      if item:
                          item.SetHilight(True)
@@ -100,3 +120,4 @@ Index: hypertreelist.py
  
                  if self._countDrag >= 3 and self._oldItem is not None:
                      # Here I am trying to avoid ugly repainting problems... hope it works
+                     self.RefreshLine(self._oldItem)

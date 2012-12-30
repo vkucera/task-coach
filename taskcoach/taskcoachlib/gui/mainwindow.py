@@ -28,6 +28,7 @@ from taskcoachlib.gui.iphone import IPhoneSyncFrame
 from taskcoachlib.gui.threads import DeferredCallMixin, synchronized
 from taskcoachlib.i18n import _
 from taskcoachlib.powermgt import PowerStateMixin
+from taskcoachlib.help.balloontips import BalloonTipManager
 from taskcoachlib.thirdparty.pubsub import pub
 import taskcoachlib.thirdparty.aui as aui
 import wx
@@ -40,7 +41,7 @@ def turn_on_double_buffering_on_windows(window):
     win32gui.SetWindowLong(window.GetHandle(), win32con.GWL_EXSTYLE, exstyle)
 
 
-class MainWindow(DeferredCallMixin, PowerStateMixin, 
+class MainWindow(DeferredCallMixin, PowerStateMixin, BalloonTipManager,
                  widgets.AuiManagedFrameWithDynamicCenterPane):
     def __init__(self, iocontroller, taskFile, settings, *args, **kwargs):
         self.__splash = kwargs.pop('splash', None)
@@ -54,6 +55,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         self.settings = settings
         self.Bind(wx.EVT_CLOSE, self.onClose)
         self.Bind(wx.EVT_ICONIZE, self.onIconify)
+        self.Bind(wx.EVT_SIZE, self.onResize)
         self._create_window_components()  # Not private for test purposes
         self.__init_window_components()
         self.__init_window()
@@ -233,6 +235,7 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
             event.Veto()
             self.Iconize()
         else:
+            event.Skip()
             self._idleController.stop()
             application.Application().quitApplication()
 
@@ -250,7 +253,13 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
             self.Hide()
         else:
             event.Skip()
-            
+
+    def onResize(self, event):
+        currentToolbar = self.manager.GetPane('toolbar')
+        if currentToolbar.IsOk():
+            currentToolbar.window.SetSize((event.GetSize().GetWidth(), -1))
+        event.Skip()
+
     def showStatusBar(self, value=True):
         # FIXME: First hiding the statusbar, then hiding the toolbar, then
         # showing the statusbar puts it in the wrong place (only on Linux?)
@@ -273,32 +282,26 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
                 uicommand.EffortStop(effortList=self.taskFile.efforts(),
                                      taskList=self.taskFile.tasks())])
         return uiCommands
-        
+
+    def getToolBarPerspective(self):
+        return self.settings.get('view', 'toolbarperspective')
+
+    def saveToolBarPerspective(self, perspective):
+        self.settings.set('view', 'toolbarperspective', perspective)
+
     def showToolBar(self, value):
-        # Current version of wxPython (2.7.8.1) has a bug 
-        # (https://sourceforge.net/tracker/?func=detail&atid=109863&aid=1742682&group_id=9863)
-        # that makes adding controls to a toolbar not working. Also, when the 
-        # toolbar is visible it's nearly impossible to enter text into text
-        # controls. Immediately after you click on a text control the focus
-        # is removed. We work around it by not having AUI manage the toolbar
-        # on Mac OS X:
-        if operating_system.isMac():
-            if self.GetToolBar():
-                self.GetToolBar().Destroy()
-            if value is not None:
-                self.SetToolBar(toolbar.ToolBar(self, size=value))
-            self.SendSizeEvent()
-        else:
-            currentToolbar = self.manager.GetPane('toolbar')
-            if currentToolbar.IsOk():
-                self.manager.DetachPane(currentToolbar.window)
-                currentToolbar.window.Destroy()
-            if value:
-                bar = toolbar.ToolBar(self, size=value)
-                self.manager.AddPane(bar, aui.AuiPaneInfo().Name('toolbar').
-                                     Caption('Toolbar').ToolbarPane().Top().DestroyOnClose().
-                                     LeftDockable(False).RightDockable(False))
-            self.manager.Update()
+        currentToolbar = self.manager.GetPane('toolbar')
+        if currentToolbar.IsOk():
+            self.manager.DetachPane(currentToolbar.window)
+            currentToolbar.window.Destroy()
+        if value:
+            bar = toolbar.ToolBar(self, self.settings, size=value)
+            self.manager.AddPane(bar, aui.AuiPaneInfo().Name('toolbar').
+                                 Caption('Toolbar').ToolbarPane().Top().DestroyOnClose().
+                                 LeftDockable(False).RightDockable(False))
+            # Using .Gripper(False) does not work here
+            wx.CallAfter(bar.SetGripperVisible, False)
+        self.manager.Update()
 
     def onCloseToolBar(self, event):
         if event.GetPane().IsToolbar():

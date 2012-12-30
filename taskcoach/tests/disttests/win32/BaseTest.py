@@ -50,6 +50,7 @@ class TestWithTaskFile(base.Win32TestCase):
         # Double-click the first task to open the task edit dialog:
         for _ in range(2):
             w[1].clickAt(5, 30)
+            time.sleep(0.1)
 
         editor = self.findWindow(r'\(task\)$')
         self.failIf(editor is None, 'Task editor not found')
