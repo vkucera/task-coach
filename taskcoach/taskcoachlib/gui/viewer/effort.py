@@ -311,7 +311,7 @@ class EffortViewer(base.ListViewer,
                                      taskList=tasks))
                 
     def createModeToolBarUICommands(self):
-        # This is an instance variable so that the choice can be changed 
+        # These are instance variables so that the choice can be changed 
         # programmatically
         # pylint: disable=W0201
         self.aggregationUICommand = \
