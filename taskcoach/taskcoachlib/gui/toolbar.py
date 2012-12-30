@@ -183,8 +183,6 @@ class _ToolBarEditorInterior(wx.Panel):
         self.__visibleCommands.SetItemPyData(item, data)
         if isinstance(data, uicommand.UICommand):
             self.__visibleCommands.SetItemImage(item, self.__imgListIndex.get(data.bitmap, -1))
-        else:
-            self.__visibleCommands.SetItemImage(item, self.__imgListIndex['nobitmap'])
         self.__visibleCommands.SelectItem(item)
         self.__visible[index], self.__visible[index + delta] = self.__visible[index + delta], self.__visible[index]
         self.__HackPreview()
