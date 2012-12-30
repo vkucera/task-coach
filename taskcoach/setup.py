@@ -26,6 +26,9 @@ import sys
 
 
 def findPackages(base):
+    if not os.path.exists(base):
+        return list()
+
     result = [base.replace('/', '.')]
 
     for name in os.listdir(base):
