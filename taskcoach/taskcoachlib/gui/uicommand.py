@@ -1419,9 +1419,10 @@ class ViewerHideTasks(ViewerCommand, UICheckCommand):
         
     def doCommand(self, event):
         if wx.GetKeyState(wx.WXK_ALT):
-            self.viewer.resetFilter()
-        self.viewer.hideTaskStatus(self.__taskStatus, 
-                                   self._isMenuItemChecked(event))
+            self.viewer.showOnlyTaskStatus(self.__taskStatus)
+        else:
+            self.viewer.hideTaskStatus(self.__taskStatus, 
+                                       self._isMenuItemChecked(event))
     
 
 class ViewerHideCompositeTasks(ViewerCommand, UICheckCommand):

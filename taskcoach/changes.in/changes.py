@@ -54,6 +54,8 @@ yesterday, tomorrow).'''),
         Feature('''Toolbars are now customizable.'''),
         Feature('''Add a creation date attribute to tasks, notes, attachments,
 and categories.''', 'http://uservoice.com/a/-2HX-'),
+        Feature('''Alt+Click on a filter button in the toolbar shows only the
+corresponding task status'''),
         ],
     ),
 

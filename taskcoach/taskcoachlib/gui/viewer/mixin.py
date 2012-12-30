@@ -157,6 +157,10 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
         self.__setBooleanSetting('hide%stasks' % status, hide)
         self.presentation().hideTaskStatus(status, hide)
 
+    def showOnlyTaskStatus(self, status):
+        for taskStatus in task.Task.possibleStatuses():
+            self.hideTaskStatus(taskStatus, hide=status != taskStatus)
+
     def isHidingTaskStatus(self, status):
         return self.__getBooleanSetting('hide%stasks' % status)
     
