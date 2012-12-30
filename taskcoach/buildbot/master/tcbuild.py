@@ -384,6 +384,21 @@ class BuildFedora14(DistCompile):
 class UploadFedora14(UploadBase):
     pass
 
+# OpenSuse
+
+class BuildOpenSuse(DistCompile):
+    filename_rx = re.compile(r'([^/]*).noarch.rpm -> dist')
+    fileprefix = 'dist/'
+    filesuffix = '.opensuse.i386.rpm'
+
+    name = 'opensuse'
+    description = ['Generating', 'OpenSuse', 'package']
+    descriptionDone = ['OpenSuse', 'package']
+
+
+class UploadOpenSuse(UploadBase):
+    pass
+
 # Release
 
 class CleanupReleaseStep(MasterShellCommand):
