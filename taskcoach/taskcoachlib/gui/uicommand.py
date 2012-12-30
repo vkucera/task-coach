@@ -2652,9 +2652,6 @@ class TaskViewerTreeOrListChoice(ToolbarChoiceCommandMixin, ViewerCommand,
     def __init__(self, **kwargs):
         super(TaskViewerTreeOrListChoice, self).__init__(helpText=_('Task viewer mode choice'),
                                                      **kwargs)
-
-    def __init__(self, *args, **kwargs):
-        super(TaskViewerTreeOrListChoice, self).__init__(*args, **kwargs)
         
     def appendToToolBar(self, *args, **kwargs):
         super(TaskViewerTreeOrListChoice, self).appendToToolBar(*args, **kwargs)
