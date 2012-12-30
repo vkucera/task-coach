@@ -54,6 +54,10 @@ class UICommandContainerMixin(object):
                 self.AppendSeparator()
             elif isinstance(uiCommand, int): # Toolbars only
                 self.AppendStretchSpacer(uiCommand)
+            elif isinstance(uiCommand, str):
+                label = wx.MenuItem(self, wx.NewId(), uiCommand)
+                label.Enable(False)
+                self.AppendItem(label)
             elif type(uiCommand) == type(()):  # This only works for menu's
                 menuTitle, menuUICommands = uiCommand[0], uiCommand[1:]
                 self.appendSubMenuWithUICommands(menuTitle, menuUICommands)
@@ -2645,24 +2649,42 @@ class EffortViewerAggregationChoice(ToolbarChoiceCommandMixin, ViewerCommand):
         self.viewer.showEffortAggregation(choice)
         
 
-class TaskViewerTreeOrListChoice(ToolbarChoiceCommandMixin, ViewerCommand,
-                                 SettingsCommand):
+class TaskViewerTreeOrListChoice(ToolbarChoiceCommandMixin, UICheckCommand,
+                                 ViewerCommand, SettingsCommand):
     choiceLabels = [_('Tree of tasks'), _('List of tasks')]
     choiceData = [True, False]
 
-    def __init__(self, **kwargs):
-        super(TaskViewerTreeOrListChoice, self).__init__(helpText=_('Task viewer mode choice'),
-                                                     **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(TaskViewerTreeOrListChoice, self).__init__( \
+            menuText=self.choiceLabels[0], 
+            helpText=_('When checked, show tasks as tree, '
+                       'otherwise show tasks as list'), *args, **kwargs)
         
     def appendToToolBar(self, *args, **kwargs):
         super(TaskViewerTreeOrListChoice, self).appendToToolBar(*args, **kwargs)
         self.setChoice(self.settings.getboolean(self.viewer.settingsSection(), 
                                                 'treemode'))
-    
+        pub.subscribe(self.on_setting_changed, 
+                      'settings.%s.treemode' % self.viewer.settingsSection())
+        
     def doChoice(self, choice):
         self.settings.setboolean(self.viewer.settingsSection(), 'treemode', 
                                  choice)
         
+    def on_setting_changed(self, value):
+        self.setChoice(value)
+        
+        
+class TaskViewerTreeOrListOption(UIRadioCommand, ViewerCommand, 
+                                 SettingsCommand):
+    def isSettingChecked(self):
+        return self.settings.getboolean(self.viewer.settingsSection(), 
+                                        'treemode') == self.value
+    
+    def doCommand(self, event):
+        self.settings.setboolean(self.viewer.settingsSection(), 'treemode', 
+                                 self.value)
+
 
 class CategoryViewerFilterChoice(ToolbarChoiceCommandMixin, UICheckCommand,
                                  SettingsCommand):
@@ -2695,7 +2717,8 @@ class CategoryViewerFilterChoice(ToolbarChoiceCommandMixin, UICheckCommand,
         self.setChoice(value)
         
 
-class SquareTaskViewerOrderChoice(ToolbarChoiceCommandMixin, ViewerCommand):
+class SquareTaskViewerOrderChoice(ToolbarChoiceCommandMixin, SettingsCommand,
+                                  ViewerCommand):
     choiceLabels = [_('Budget'), _('Time spent'), _('Fixed fee'), _('Revenue'), 
                     _('Priority')]
     choiceData = ['budget', 'timeSpent', 'fixedFee', 'revenue', 'priority']
@@ -2703,8 +2726,28 @@ class SquareTaskViewerOrderChoice(ToolbarChoiceCommandMixin, ViewerCommand):
     def __init__(self, **kwargs):
         super(SquareTaskViewerOrderChoice, self).__init__(helpText=_('Order choice'), **kwargs)
 
+    def appendToToolBar(self, *args, **kwargs):
+        super(SquareTaskViewerOrderChoice, self).appendToToolBar(*args, 
+                                                                 **kwargs)
+        pub.subscribe(self.on_setting_changed, 
+                      'settings.%s.sortby' % self.viewer.settingsSection())
+                      
     def doChoice(self, choice):
-        self.viewer.orderBy(choice)
+        self.settings.settext(self.viewer.settingsSection(), 'sortby', choice)
+
+    def on_setting_changed(self, value):
+        self.setChoice(value)
+
+
+class SquareTaskViewerOrderByOption(UIRadioCommand, SettingsCommand, 
+                                    ViewerCommand):        
+    def isSettingChecked(self):
+        return self.settings.gettext(self.viewer.settingsSection(), 
+                                    'sortby') == self.value
+    
+    def doCommand(self, event):
+        self.settings.settext(self.viewer.settingsSection(), 'sortby', 
+                              self.value)
 
 
 class CalendarViewerConfigure(ViewerCommand):

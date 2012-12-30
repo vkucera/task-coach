@@ -359,6 +359,12 @@ class Viewer(patterns.Observer, wx.Panel):
             previousSectionNumber -= 1
         return self.__settingsSection
     
+    def hasModes(self):
+        return False
+    
+    def getModeUICommands(self):
+        return []
+    
     def isSortable(self):
         return False
 

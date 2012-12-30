@@ -444,6 +444,8 @@ class SquareTaskViewer(BaseTaskTreeViewer):
         self.__zero = 0
         super(SquareTaskViewer, self).__init__(*args, **kwargs)
         self.orderBy(self.settings.get(self.settingsSection(), 'sortby'))
+        pub.subscribe(self.on_order_by_changed, 
+                      'settings.%s.sortby' % self.settingsSection())
         self.orderUICommand.setChoice(self.__orderBy)
         for eventType in (task.Task.subjectChangedEventType(),
             task.Task.dueDateTimeChangedEventType(),
@@ -464,16 +466,30 @@ class SquareTaskViewer(BaseTaskTreeViewer):
             self.onSelect, uicommand.Edit(viewer=self), itemPopupMenu)
         
     def createModeToolBarUICommands(self):
-        self.orderUICommand = uicommand.SquareTaskViewerOrderChoice(viewer=self)  # pylint: disable=W0201
+        self.orderUICommand = uicommand.SquareTaskViewerOrderChoice(viewer=self,
+                                                                    settings=self.settings)  # pylint: disable=W0201
         return super(SquareTaskViewer, self).createModeToolBarUICommands() + \
             (self.orderUICommand,)
+        
+    def hasModes(self):
+        return True
+    
+    def getModeUICommands(self):
+        return [_('Lay out tasks by'), None] + \
+            [uicommand.SquareTaskViewerOrderByOption(menuText=menuText,
+                                                     value=value, viewer=self, 
+                                                     settings=self.settings)
+             for (menuText, value) in zip(uicommand.SquareTaskViewerOrderChoice.choiceLabels,
+                                          uicommand.SquareTaskViewerOrderChoice.choiceData)]
+    
+    def on_order_by_changed(self, value):
+        self.orderBy(value)
         
     def orderBy(self, choice):
         if choice == self.__orderBy:
             return
         oldChoice = self.__orderBy
         self.__orderBy = choice
-        self.settings.set(self.settingsSection(), 'sortby', choice)
         try:
             oldEventType = getattr(task.Task, '%sChangedEventType' % oldChoice)()
         except AttributeError:
@@ -1058,6 +1074,16 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                                                                    settings=self.settings)  # pylint: disable=W0201 
         return super(TaskViewer, self).createModeToolBarUICommands() + \
             (treeOrListUICommand,)
+            
+    def hasModes(self):
+        return True
+    
+    def getModeUICommands(self):
+        return [_('Show tasks as'), None] + \
+            [uicommand.TaskViewerTreeOrListOption(menuText=menuText, value=value,
+                                                  viewer=self, settings=self.settings)
+             for (menuText, value) in zip(uicommand.TaskViewerTreeOrListChoice.choiceLabels,
+                                          uicommand.TaskViewerTreeOrListChoice.choiceData)]
 
     def createColumnPopupMenu(self):
         return menu.ColumnPopupMenu(self)
