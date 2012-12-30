@@ -178,7 +178,10 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
         super(FilterableViewerForTasksMixin, self).resetFilter()
         for status in task.Task.possibleStatuses():
             self.hideTaskStatus(status, False)
-        self.hideCompositeTasks(False)
+        if not self.isTreeViewer():
+            # Only reset this filter when in list mode, since it only applies
+            # to list mode
+            self.hideCompositeTasks(False)
 
     def hasFilter(self):
         return super(FilterableViewerForTasksMixin, self).hasFilter() or \
