@@ -1082,7 +1082,9 @@ class EffortEditBook(Page):
 
         current_stop_date_time = self.items[0].getStop()
         self._stopDateTimeEntry = entry.DateTimeEntry(self, self._settings, 
-            current_stop_date_time, noneAllowed=True, showRelative=True, **date_time_entry_kw_args)
+            current_stop_date_time, noneAllowed=True, showRelative=True,
+            units=[(_('Minute(s)'), 60), (_('Hour(s)'), 3600), (_('Day(s)'), 24 * 3600), (_('Week(s)'), 7*24*3600)],
+            **date_time_entry_kw_args)
         self._stopDateTimeSync = attributesync.AttributeSync('getStop',
             self._stopDateTimeEntry, current_stop_date_time, self.items,
             command.EditEffortStopDateTimeCommand, entry.EVT_DATETIMEENTRY,

@@ -40,7 +40,7 @@ class _SmartDateTimeCtrl(sdtc.SmartDateTimeCtrl):
 class DateTimeCtrl(wx.Panel):
     def __init__(self, parent, callback=None, noneAllowed=True,
                  starthour=8, endhour=18, interval=15, showSeconds=False,
-                 showRelative=False, **kwargs):
+                 showRelative=False, units=None, **kwargs):
         super(DateTimeCtrl, self).__init__(parent, **kwargs)
 
         self.__callback = callback
@@ -48,7 +48,8 @@ class DateTimeCtrl(wx.Panel):
                                          dateFormat=render.date,
                                          timeFormat=lambda x: render.time(x, seconds=showSeconds),
                                          startHour=starthour, endHour=endhour,
-                                         minuteDelta=interval, secondDelta=interval, showRelative=showRelative)
+                                         minuteDelta=interval, secondDelta=interval, showRelative=showRelative,
+                                         units=units)
         self.__ctrl.EnableChoices()
 
         # When the widget fires its event, its value has not changed yet (because it can be vetoed).

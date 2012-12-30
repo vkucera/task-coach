@@ -685,6 +685,7 @@ class TimeEntry(Entry):
         self.__secondDelta = kwargs.pop('secondDelta', 10)
         self.__startHour = kwargs.pop('startHour', 0)
         self.__endHour = kwargs.pop('endHour', 24)
+        self.__units = kwargs.pop('units', None)
 
         self.__relChoices = '60,120,180'
         self.__choiceStart = None
@@ -750,7 +751,7 @@ class TimeEntry(Entry):
         return self.__choiceStart
 
     def PopupRelativeChoices(self):
-        self.__choicePopup = _RelativeChoicePopup(self.__choiceStart, self, wx.ID_ANY, choices=self.__relChoices)
+        self.__choicePopup = _RelativeChoicePopup(self.__choiceStart, self, wx.ID_ANY, choices=self.__relChoices, units=self.__units)
         w, h = self.GetClientSizeTuple()
         self.__choicePopup.Popup(self.ClientToScreen(wx.Point(0, h)))
         EVT_POPUP_DISMISS(self.__choicePopup, self.OnRelativePopupDismiss)
@@ -1276,6 +1277,16 @@ class _RelativeChoicePopup(_PopupWindow):
         self.__start = start
         self.__editing = False
         self.__comboState = 0
+        self.__units = [
+            (_('Week(s)'), 7 * 24 * 3600),
+            (_('Day(s)'), 24 * 3600),
+            (_('Hour(s)'), 3600),
+            (_('Minute(s)'), 60),
+            ]
+        if 'units' in kwargs:
+            units = kwargs.pop('units')
+            if units:
+                self.__units = units
         self.LoadChoices(kwargs.pop('choices', '60,120,180'))
         super(_RelativeChoicePopup, self).__init__(*args, **kwargs)
 
@@ -1324,10 +1335,9 @@ class _RelativeChoicePopup(_PopupWindow):
         hsizer.Add(self.__amountCtrl, 0, wx.ALL, 2)
 
         self.__unitCtrl = wx.Choice(self.__interior, wx.ID_ANY)
-        self.__unitCtrl.Append(_('Week(s)'))
-        self.__unitCtrl.Append(_('Day(s)'))
-        self.__unitCtrl.Append(_('Hour(s)'))
-        self.__unitCtrl.Append(_('Minute(s)'))
+        for name, duration in self.__units:
+            idx = self.__unitCtrl.Append(name)
+            self.__unitCtrl.SetClientData(idx, duration)
         self.__unitCtrl.SetSelection(0)
         hsizer.Add(self.__unitCtrl, 1, wx.ALL|wx.ALIGN_CENTRE, 2)
 
@@ -1416,15 +1426,7 @@ class _RelativeChoicePopup(_PopupWindow):
 
     def OnAdd(self, event):
         amount = self.__amountCtrl.GetValue()
-        if self.__unitCtrl.GetSelection() == 0:
-            ns = dict(days=amount * 7)
-        elif self.__unitCtrl.GetSelection() == 1:
-            ns = dict(days=amount)
-        elif self.__unitCtrl.GetSelection() == 2:
-            ns = dict(hours=amount)
-        else:
-            ns = dict(minutes=amount)
-        self.__choices.append(datetime.timedelta(**ns))
+        self.__choices.append(datetime.timedelta(seconds=amount * self.__unitCtrl.GetClientData(self.__unitCtrl.GetSelection())))
         self.__choices.sort()
         self.__Empty()
         self.__Populate()
@@ -1732,6 +1734,7 @@ class SmartDateTimeCtrl(wx.Panel):
         minuteDelta = kwargs.pop('minuteDelta', 10)
         secondDelta = kwargs.pop('secondDelta', 10)
         showRelative = kwargs.pop('showRelative', False)
+        units = kwargs.pop('units', None)
 
         super(SmartDateTimeCtrl, self).__init__(*args, **kwargs)
 
@@ -1752,7 +1755,7 @@ class SmartDateTimeCtrl(wx.Panel):
         sizer.Add(self.__dateCtrl, 0, wx.ALL|wx.ALIGN_CENTRE, 3)
 
         self.__timeCtrl = TimeEntry(self, hour=dateTime.hour, minute=dateTime.minute, second=dateTime.second, format=timeFormat,
-                                    startHour=startHour, endHour=endHour, minuteDelta=minuteDelta, secondDelta=secondDelta)
+                                    startHour=startHour, endHour=endHour, minuteDelta=minuteDelta, secondDelta=secondDelta, units=units)
         sizer.Add(self.__timeCtrl, 0, wx.ALL|wx.ALIGN_CENTRE, 3)
 
         if showRelative:
