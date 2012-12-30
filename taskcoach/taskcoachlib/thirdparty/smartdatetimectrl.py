@@ -1289,7 +1289,9 @@ class _RelativeChoicePopup(_PopupWindow):
         self.SetEditing(False)
 
     def SaveChoices(self):
-        return ','.join(map(lambda x: str(int(x.total_seconds() / 60)), self.__choices))
+        def total_seconds(dt):
+            return dt.seconds + dt.days * 24 * 3600
+        return ','.join(map(lambda x: str(int(total_seconds(x) / 60)), self.__choices))
 
     def LoadChoices(self, choices):
         self.__choices = [datetime.timedelta(minutes=m) for m in map(int, choices.split(','))]
