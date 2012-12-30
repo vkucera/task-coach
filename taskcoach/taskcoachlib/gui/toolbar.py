@@ -114,6 +114,7 @@ class _ToolBarEditorInterior(wx.Panel):
         self.__remainingSelection = None
         self.__visibleSelection = None
         self.__draggedItem = None
+        self.__draggingFromAvailable = False
         wx.EVT_TREE_SEL_CHANGED(self.__remainingCommands, wx.ID_ANY, self.__OnRemainingSelectionChanged)
         wx.EVT_TREE_SEL_CHANGED(self.__visibleCommands, wx.ID_ANY, self.__OnVisibleSelectionChanged)
         wx.EVT_BUTTON(self.__hideButton, wx.ID_ANY, self.__OnHide)
@@ -122,6 +123,7 @@ class _ToolBarEditorInterior(wx.Panel):
         wx.EVT_BUTTON(self.__moveDownButton, wx.ID_ANY, self.__OnMoveDown)
         wx.EVT_TREE_BEGIN_DRAG(self.__visibleCommands, wx.ID_ANY, self.__OnBeginDrag)
         wx.EVT_TREE_END_DRAG(self.__visibleCommands, wx.ID_ANY, self.__OnEndDrag)
+        wx.EVT_TREE_BEGIN_DRAG(self.__remainingCommands, wx.ID_ANY, self.__OnBeginDrag2)
 
         wx.CallAfter(wx.GetTopLevelParent(self).AddBalloonTip, settings, 'customizabletoolbars_dnd', self.__visibleCommands,
                   title=_('Drag and drop'), message=_('''Reorder toolbar buttons by drag and dropping them in this list.'''))
@@ -192,9 +194,17 @@ class _ToolBarEditorInterior(wx.Panel):
     def __OnMoveDown(self, event):
         self.__Swap(1)
 
+    def __OnBeginDrag2(self, event):
+        self.__draggingFromAvailable = True
+        event.Veto()
+
     def __OnBeginDrag(self, event):
-        self.__draggedItem = event.GetItem()
-        event.Allow()
+        if self.__draggingFromAvailable or event.GetItem() == self.__visibleCommands.GetRootItem():
+            event.Veto()
+        else:
+            self.__draggedItem = event.GetItem()
+            event.Allow()
+        self.__draggingFromAvailable = False
 
     def __OnEndDrag(self, event):
         if event.GetItem() is not None and event.GetItem() != self.__draggedItem:
