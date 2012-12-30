@@ -187,6 +187,7 @@ class _ToolBarEditorInterior(wx.Panel):
             self.__visibleCommands.SetItemImage(item, self.__imgListIndex['nobitmap'])
         self.__visibleCommands.SelectItem(item)
         self.__visible[index], self.__visible[index + delta] = self.__visible[index + delta], self.__visible[index]
+        self.__HackPreview()
 
     def __OnMoveUp(self, event):
         self.__Swap(-1)
