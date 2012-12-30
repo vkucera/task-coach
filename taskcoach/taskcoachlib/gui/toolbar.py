@@ -75,7 +75,7 @@ class _ToolBarEditorInterior(wx.Panel):
 
         self.__PopulateRemainingCommands()
 
-        # Buttons
+        # Show/hide buttons
         btnSizer = wx.BoxSizer(wx.VERTICAL)
         self.__showButton = wx.BitmapButton(self, wx.ID_ANY, wx.ArtProvider.GetBitmap('next', wx.ART_BUTTON, (16, 16)))
         self.__showButton.Enable(False)
@@ -96,6 +96,16 @@ class _ToolBarEditorInterior(wx.Panel):
         sbsz.Add(self.__visibleCommands, 1, wx.EXPAND)
         hsizer.Add(sbsz, 1, wx.EXPAND|wx.ALL, 3)
 
+        # Move buttons
+        btnSizer = wx.BoxSizer(wx.VERTICAL)
+        self.__moveUpButton = wx.BitmapButton(self, wx.ID_ANY, wx.ArtProvider.GetBitmap('up', wx.ART_BUTTON, (16, 16)))
+        self.__moveUpButton.Enable(False)
+        btnSizer.Add(self.__moveUpButton, wx.ALL, 3)
+        self.__moveDownButton = wx.BitmapButton(self, wx.ID_ANY, wx.ArtProvider.GetBitmap('down', wx.ART_BUTTON, (16, 16)))
+        self.__moveDownButton.Enable(False)
+        btnSizer.Add(self.__moveDownButton, wx.ALL, 3)
+        hsizer.Add(btnSizer, 0, wx.ALIGN_CENTRE)
+
         self.__PopulateVisibleCommands()
 
         vsizer.Add(hsizer, 1, wx.EXPAND|wx.ALL, 3)
@@ -108,6 +118,8 @@ class _ToolBarEditorInterior(wx.Panel):
         wx.EVT_TREE_SEL_CHANGED(self.__visibleCommands, wx.ID_ANY, self.__OnVisibleSelectionChanged)
         wx.EVT_BUTTON(self.__hideButton, wx.ID_ANY, self.__OnHide)
         wx.EVT_BUTTON(self.__showButton, wx.ID_ANY, self.__OnShow)
+        wx.EVT_BUTTON(self.__moveUpButton, wx.ID_ANY, self.__OnMoveUp)
+        wx.EVT_BUTTON(self.__moveDownButton, wx.ID_ANY, self.__OnMoveDown)
         wx.EVT_TREE_BEGIN_DRAG(self.__visibleCommands, wx.ID_ANY, self.__OnBeginDrag)
         wx.EVT_TREE_END_DRAG(self.__visibleCommands, wx.ID_ANY, self.__OnEndDrag)
 
@@ -122,6 +134,10 @@ class _ToolBarEditorInterior(wx.Panel):
     def __OnVisibleSelectionChanged(self, event):
         self.__visibleSelection = event.GetItem()
         self.__hideButton.Enable(self.__visibleSelection is not None)
+        items = self.__visibleCommands.GetRootItem().GetChildren()
+        idx = items.index(event.GetItem())
+        self.__moveUpButton.Enable(idx != 0)
+        self.__moveDownButton.Enable(idx != len(items) - 1)
         event.Skip()
 
     def __OnHide(self, event):
@@ -154,6 +170,27 @@ class _ToolBarEditorInterior(wx.Panel):
             self.__remainingSelection = None
             self.__showButton.Enable(False)
         self.__HackPreview()
+
+    def __Swap(self, delta):
+        items = self.__visibleCommands.GetRootItem().GetChildren()
+        index = items.index(self.__visibleSelection)
+        text = self.__visibleSelection.GetText()
+        data = self.__visibleSelection.GetData()
+        self.__visibleCommands.Delete(self.__visibleSelection)
+        item = self.__visibleCommands.InsertItem(self.__visibleCommands.GetRootItem(), index + delta, text)
+        self.__visibleCommands.SetItemPyData(item, data)
+        if isinstance(data, uicommand.UICommand):
+            self.__visibleCommands.SetItemImage(item, self.__imgListIndex.get(data.bitmap, -1))
+        else:
+            self.__visibleCommands.SetItemImage(item, self.__imgListIndex['nobitmap'])
+        self.__visibleCommands.SelectItem(item)
+        self.__visible[index], self.__visible[index + delta] = self.__visible[index + delta], self.__visible[index]
+
+    def __OnMoveUp(self, event):
+        self.__Swap(-1)
+
+    def __OnMoveDown(self, event):
+        self.__Swap(1)
 
     def __OnBeginDrag(self, event):
         self.__draggedItem = event.GetItem()

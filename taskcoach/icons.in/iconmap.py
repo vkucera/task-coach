@@ -60,6 +60,8 @@ iconlist = [
 ('decpriority', 'actions', '1downarrow', [16]),
 ('prev', 'actions', '1leftarrow', [16, 22]),
 ('next', 'actions', '1rightarrow', [16, 22]),
+('up', 'actions', '1uparrow', [16]),
+('down', 'actions', '1downarrow', [16]),
 
 # These icons are named after what they display:
 ('arrow_up_icon', 'actions', 'up', [16, 32]),
