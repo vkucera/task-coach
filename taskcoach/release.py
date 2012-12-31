@@ -29,24 +29,15 @@ Release steps:
     * When all tests pass, run 'svn commit -m "Updated translations"' 
   - Run 'make reallyclean' to remove old packages.
   - Run 'make alltests'.
-  - Go to http://www.fraca7.net:8010/builders/Release to build releases.
-  - For platforms not supported by the release builder, create and upload the 
-    packages manually:
-    * Mac OS X 10.4:        'make dmg; release.py upload'
-    * Ubuntu 10.04:         'make deb; release.py upload'
-    * Fedora 14:            'make fedora; release.py upload'
-                            'make rpm; release.py upload'
-    * OpenSuse:             'make opensuse; release.py upload'
-    * Windows:              'make windists; release.py upload'
+  - Run 'python release.py release' to build the distributions, upload and download them
+    to/from Sourceforge, generate MD5 digests, generate the website, upload the 
+    website to the Dreamhost and Hostland websites, announce the release on 
+    Twitter, Identi.ca, Freecode and PyPI (Python Package Index), send the 
+    announcement email, and to tag the release in Subversion.
   - Mark the Windows and Mac OS X distributions as defaults for their platform:
     https://sourceforge.net/project/admin/explorer.php?group_id=130831#
     Navigate into the folder of the latest release and click on the Windows
     and Mac OS X distributions to set them as default download.
-  - Run 'python release.py release' to download the distributions from
-    Sourceforge, generate MD5 digests, generate the website, upload the 
-    website to the Dreamhost and Hostland websites, announce the release on 
-    Twitter, Identi.ca, Freecode and PyPI (Python Package Index), send the 
-    announcement email, and to tag the release in Subversion.
   - Create branch if feature release.
   - Merge recent changes to the trunk.
   - Add release to Sourceforge bug tracker and support request groups.
@@ -469,6 +460,8 @@ def announcing(settings, options):
 
 
 def releasing(settings, options):
+    building_packages(settings, options)
+    uploading_distributions_to_SourceForge(settings, options)
     downloading_distributions_from_SourceForge(settings, options)
     generating_MD5_digests(settings, options)
     generating_website(settings, options)
