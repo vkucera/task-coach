@@ -2846,7 +2846,11 @@ class ToggleAutoColumnResizing(UICheckCommand, ViewerCommand, SettingsCommand):
         self.updateWidget()
 
 
-class ViewerPieChartAngle(ViewerCommand, SettingsCommand):        
+class ViewerPieChartAngle(ViewerCommand, SettingsCommand):
+    def __init__(self, *args, **kwargs):
+        super(ViewerPieChartAngle, self).__init__( \
+            helpText=_('Set pie chart angle'), *args, **kwargs)
+
     def appendToToolBar(self, toolbar):
         ''' Add our slider control to the toolbar. '''
         # pylint: disable=W0201
