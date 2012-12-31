@@ -2848,6 +2848,7 @@ class ToggleAutoColumnResizing(UICheckCommand, ViewerCommand, SettingsCommand):
 
 class ViewerPieChartAngle(ViewerCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
+        self.sliderCtrl = None
         super(ViewerPieChartAngle, self).__init__( \
             helpText=_('Set pie chart angle'), *args, **kwargs)
 
@@ -2858,7 +2859,13 @@ class ViewerPieChartAngle(ViewerCommand, SettingsCommand):
                                     value=self.getCurrentAngle())
         self.sliderCtrl.Bind(wx.EVT_SLIDER, self.onSlider)
         toolbar.AddControl(self.sliderCtrl)
-        
+
+    def unbind(self, window, itemId):
+        if self.sliderCtrl is not None:
+            self.sliderCtrl.Unbind(wx.EVT_SLIDER)
+            self.sliderCtrl = None
+        super(ViewerPieChartAngle, self).unbind(window, itemId)
+
     def onSlider(self, event):
         ''' The user picked a new angle. '''
         event.Skip()
@@ -2872,8 +2879,9 @@ class ViewerPieChartAngle(ViewerCommand, SettingsCommand):
                                     'piechartangle')
 
     def setCurrentAngle(self):
-        self.settings.setint(self.viewer.settingsSection(), 'piechartangle', 
-                             self.sliderCtrl.GetValue())
+        if self.sliderCtrl is not None:
+            self.settings.setint(self.viewer.settingsSection(), 'piechartangle', 
+                                 self.sliderCtrl.GetValue())
    
 
 class RoundingPrecision(ToolbarChoiceCommandMixin, ViewerCommand, 
