@@ -75,6 +75,13 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,  # pylint: disable=W0223
         super(BaseTaskViewer, self).__init__(*args, **kwargs)
         self.statusMessages = TaskViewerStatusMessages(self)
         self.__registerForAppearanceChanges()
+        wx.CallAfter(self.__DisplayBalloon)
+
+    def __DisplayBalloon(self):
+        if self.toolbar.getToolIdByCommand('ViewerHideTasks_completed') != wx.ID_ANY and self.toolbar.IsShownOnScreen():
+            wx.GetTopLevelParent(self).AddBalloonTip(self.settings, 'filtershiftclick', self.toolbar,
+                        getRect=lambda: self.toolbar.GetToolRect(self.toolbar.getToolIdByCommand('ViewerHideTasks_completed')),
+                        message=_('''Shift-click on a filter tool to see only tasks belonging to the correspondig status'''))
 
     def __registerForAppearanceChanges(self):
         for appearance in ('font', 'fgcolor', 'bgcolor', 'icon'):
@@ -754,7 +761,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
             self.minuteRefresher.startClock()
         pub.subscribe(self.onTreeListModeChanged, 
                       'settings.%s.treemode' % self.settingsSection())
-          
+
     def isTreeViewer(self):
         # We first ask our presentation what the mode is because 
         # ConfigParser.getboolean is a relatively expensive method. However,

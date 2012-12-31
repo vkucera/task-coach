@@ -71,10 +71,14 @@ class Viewer(patterns.Observer, wx.Panel):
         pub.subscribe(self.onEndIO, 'taskfile.justRead')
         pub.subscribe(self.onEndIO, 'taskfile.justCleared')
 
-        wx.GetTopLevelParent(self).AddBalloonTip(settings, 'customizabletoolbars', self.toolbar,
-            title=_('Toolbars are customizable'),
-            getRect=lambda: self.toolbar.GetToolRect(self.toolbar.customizeId),
-            message=_('''Click on the gear icon on the right to add buttons and rearrange them.'''))
+        wx.CallAfter(self.__DisplayBalloon)
+
+    def __DisplayBalloon(self):
+        if self.toolbar.IsShownOnScreen():
+            wx.GetTopLevelParent(self).AddBalloonTip(self.settings, 'customizabletoolbars', self.toolbar,
+                title=_('Toolbars are customizable'),
+                getRect=lambda: self.toolbar.GetToolRect(self.toolbar.getToolIdByCommand('EditToolBarPerspective')),
+                message=_('''Click on the gear icon on the right to add buttons and rearrange them.'''))
 
     def onBeginIO(self, taskFile):
         self.__freezeCount += 1

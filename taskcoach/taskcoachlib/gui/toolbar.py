@@ -360,6 +360,15 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
                 item.window.Destroy()
         super(ToolBar, self).Clear()
 
+    def getToolIdByCommand(self, commandName):
+        if commandName == 'EditToolBarPerspective':
+            return self.__customizeId
+
+        for uiCommand in self.__visibleUICommands:
+            if isinstance(uiCommand, uicommand.UICommand) and uiCommand.uniqueName() == commandName:
+                return uiCommand.id
+        return wx.ID_ANY
+
     def _filterCommands(self, perspective, cache=True):
         commands = list()
         if perspective:
@@ -387,7 +396,7 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
                 commands.append(1)
             uiCommand = uicommand.EditToolBarPerspective(self, ToolBarEditor, settings=self.__settings)
             commands.append(uiCommand)
-            self.customizeId = uiCommand.id
+            self.__customizeId = uiCommand.id
         if operating_system.isMac():
             commands.append(None) # Errr...
 

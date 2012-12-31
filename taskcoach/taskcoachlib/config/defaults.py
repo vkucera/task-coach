@@ -26,6 +26,7 @@ defaults = {
 'balloontips': {
     'customizabletoolbars': 'True',
     'customizabletoolbars_dnd': 'True',
+    'filtershiftclick': 'True',
     },
 'view': {
     'statusbar': 'True',

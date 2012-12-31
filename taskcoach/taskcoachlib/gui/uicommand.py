@@ -1422,7 +1422,7 @@ class ViewerHideTasks(ViewerCommand, UICheckCommand):
         return self.viewer.isHidingTaskStatus(self.__taskStatus)
         
     def doCommand(self, event):
-        if wx.GetKeyState(wx.WXK_ALT):
+        if wx.GetKeyState(wx.WXK_SHIFT):
             self.viewer.showOnlyTaskStatus(self.__taskStatus)
         else:
             self.viewer.hideTaskStatus(self.__taskStatus, 
