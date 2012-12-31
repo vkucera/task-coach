@@ -343,7 +343,7 @@ class EffortViewer(base.ListViewer,
         return True
     
     def getModeUICommands(self):
-        return [_('Aggregate effort by'), None] + \
+        return [_('Effort aggregation'), None] + \
             [uicommand.EffortViewerAggregationOption(menuText=menuText, 
                                                      value=value,
                                                      viewer=self,
