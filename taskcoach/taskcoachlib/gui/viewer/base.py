@@ -74,7 +74,8 @@ class Viewer(patterns.Observer, wx.Panel):
         wx.CallAfter(self.__DisplayBalloon)
 
     def __DisplayBalloon(self):
-        if self.toolbar.IsShownOnScreen():
+        # AuiFloatingFrame is instantiated from framemanager, we can't derive it from BalloonTipManager
+        if self.toolbar.IsShownOnScreen() and hasattr(wx.GetTopLevelParent(self), 'AddBalloonTip'):
             wx.GetTopLevelParent(self).AddBalloonTip(self.settings, 'customizabletoolbars', self.toolbar,
                 title=_('Toolbars are customizable'),
                 getRect=lambda: self.toolbar.GetToolRect(self.toolbar.getToolIdByCommand('EditToolBarPerspective')),

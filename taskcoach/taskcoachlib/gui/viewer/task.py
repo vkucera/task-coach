@@ -78,7 +78,8 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,  # pylint: disable=W0223
         wx.CallAfter(self.__DisplayBalloon)
 
     def __DisplayBalloon(self):
-        if self.toolbar.getToolIdByCommand('ViewerHideTasks_completed') != wx.ID_ANY and self.toolbar.IsShownOnScreen():
+        if self.toolbar.getToolIdByCommand('ViewerHideTasks_completed') != wx.ID_ANY and self.toolbar.IsShownOnScreen() and \
+            hasattr(wx.GetTopLevelParent(self), 'AddBalloonTip'):
             wx.GetTopLevelParent(self).AddBalloonTip(self.settings, 'filtershiftclick', self.toolbar,
                         getRect=lambda: self.toolbar.GetToolRect(self.toolbar.getToolIdByCommand('ViewerHideTasks_completed')),
                         message=_('''Shift-click on a filter tool to see only tasks belonging to the correspondig status'''))
