@@ -66,11 +66,19 @@ import getpass
 import hashlib
 import base64
 import ConfigParser
-import simplejson
 import codecs
 import optparse
 import taskcoachlib.meta
 import oauth2 as oauth
+import time
+import shutil
+import zipfile
+
+try:
+    import simplejson as json
+except ImportError:
+    import json
+
 
 # pylint: disable=W0621,W0613
 
@@ -147,6 +155,68 @@ def rsync(settings, options, rsync_command):
         print 'Skipping %s.' % rsync_command
     else:
         os.system(rsync_command)
+
+
+@progress
+def building_packages(settings, options):
+    metadata = taskcoachlib.meta.data.metaDict
+    branch = 'branches/Release%s_Branch' % '_'.join(metadata['version'].split('.')[:2])
+    if options.dry_run:
+        print 'Skipping force build on branch "%s"' % branch
+    else:
+        status = json.load(urllib.urlopen('http://www.fraca7.net:8010/json/builders/Release'))
+        if status['state'] != 'idle':
+            raise RuntimeError('Builder Release is not idle.')
+
+        if not httpPostRequest('www.fraca7.net', '/builders/Release/force',
+                               urllib.urlencode([('forcescheduler', 'Force'),
+                                                 ('branch', branch),
+                                                 ('username', 'release'),
+                                                 ('reason', 'release')]),
+                               'application/x-www-form-urlencoded; charset=utf-8', port=8010, ok=302):
+            raise RuntimeError('Force request failed')
+
+        if options.verbose:
+            print 'Build forced.'
+
+    if options.verbose:
+        print 'Waiting for completion.'
+
+    while True:
+        time.sleep(60)
+        status = json.load(urllib.urlopen('http://www.fraca7.net:8010/json/builders/Release'))
+        if status['state'] == 'idle':
+            break
+
+    if options.verbose:
+        print 'Build finished.'
+        print 'Downloading release.zip'
+
+    buildno = status['cachedBuilds'][-1]
+    status = json.load(urllib.urlopen('http://www.fraca7.net:8010/json/builders/Release/builds/%d' % buildno))
+    try:
+        zipurl = status['steps'][-1]['urls']['Download release']
+    except:
+        raise RuntimeError('release.zip URL not found. Build failed.')
+
+    if os.path.exists('dist'):
+        shutil.rmtree('dist')
+    os.mkdir('dist')
+
+    shutil.copyfileobj(urllib.urlopen(zipurl), file(os.path.join('dist', 'release.zip'), 'wb'))
+
+    try:
+        zipFile = zipfile.ZipFile(os.path.join('dist', 'release.zip'), 'r')
+        try:
+            for info in zipFile.infolist():
+                if options.verbose:
+                    print 'Extracting "%s"' % info.filename
+                shutil.copyfileobj(zipFile.open(info, 'r'),
+                                   file(os.path.join('dist', info.filename), 'wb'))
+        finally:
+            zipFile.close()
+    finally:
+        os.remove(os.path.join('dist', 'release.zip'))
 
 
 @progress
@@ -297,16 +367,18 @@ def postRequest(connection, api_call, body, contentType, ok=200, **headers):
     response = connection.getresponse()
     if response.status != ok:
         print 'Request failed: %d %s' % (response.status, response.reason)
+        return False
+    return True
 
 
-def httpPostRequest(host, api_call, body, contentType, ok=200, **headers):
-    connection = httplib.HTTPConnection(host)
-    postRequest(connection, api_call, body, contentType, ok, **headers)
+def httpPostRequest(host, api_call, body, contentType, ok=200, port=80, **headers):
+    connection = httplib.HTTPConnection(host, port)
+    return postRequest(connection, api_call, body, contentType, ok, **headers)
 
 
 def httpsPostRequest(host, api_call, body, contentType, ok=200, **headers):
     connection = httplib.HTTPSConnection(host)
-    postRequest(connection, api_call, body, contentType, ok, **headers)
+    return postRequest(connection, api_call, body, contentType, ok, **headers)
 
 
 @progress
@@ -317,8 +389,8 @@ def announcing_on_Freecode(settings, options):
     changelog = latest_release(metadata, summary_only=True)
     tag = 'Feature enhancements' if version.endswith('.0') else 'Bug fixes'
     release = dict(version=version, changelog=changelog, tag_list=tag)
-    body = codecs.encode(simplejson.dumps(dict(auth_code=auth_code, 
-                                               release=release)))
+    body = codecs.encode(json.dumps(dict(auth_code=auth_code, 
+                                         release=release)))
     path = '/projects/taskcoach/releases.json'
     host = 'freecode.com'
     if options.dry_run:
@@ -506,6 +578,7 @@ def tagging_release_in_subversion(settings, options):
      
    
 COMMANDS = dict(release=releasing,
+                build=building_packages,
                 upload=uploading_distributions_to_SourceForge, 
                 download=downloading_distributions_from_SourceForge, 
                 md5=generating_MD5_digests,
