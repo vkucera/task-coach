@@ -45,6 +45,7 @@ already belonged to that category.''', '1271'),
 appearance settings, and are overlayed with a red cross.''', '1104', '1323'),
         Bugv2('''New date/time picker should fix most existing problems with the
 old one.''', '702', '1089', '1212', '1266', '1233'),
+        Bugv2('''Fix wording for task statuses.''', '1333'),
         ],
     featuresAdded=[
         Feature('''New, hopefully more intuitive date/time control.'''),
