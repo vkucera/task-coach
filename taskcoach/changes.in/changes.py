@@ -43,6 +43,8 @@ are in the selected category, don't remove the items from the category that
 already belonged to that category.''', '1271'),
         Bugv2('''Toolbar icons to show/hide tasks according to status now respect
 appearance settings.''', '1104'),
+        Bugv2('''New date/time picker should fix most existing problems with the
+old one.''', '702', '1089', '1212', '1266'),
         ],
     featuresAdded=[
         Feature('''New, hopefully more intuitive date/time control.'''),
