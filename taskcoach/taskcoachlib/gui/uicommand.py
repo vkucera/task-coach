@@ -2856,7 +2856,7 @@ class ViewerPieChartAngle(ViewerCommand, SettingsCommand):
         ''' Add our slider control to the toolbar. '''
         # pylint: disable=W0201
         self.sliderCtrl = wx.Slider(toolbar, minValue=0, maxValue=90,
-                                    value=self.getCurrentAngle())
+                                    value=self.getCurrentAngle(), size=(120, -1))
         self.sliderCtrl.Bind(wx.EVT_SLIDER, self.onSlider)
         toolbar.AddControl(self.sliderCtrl)
 
