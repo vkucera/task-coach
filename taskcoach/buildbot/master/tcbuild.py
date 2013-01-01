@@ -41,6 +41,13 @@ class TaskCoachEmailLookup(object):
             return None
 
 
+class Revert(Compile):
+    name = 'Revert'
+    description = ['Reverting', 'locally', 'modified', 'files']
+    descriptionDone = ['Local', 'changes', 'reverted']
+    command = ['svn', 'revert', '-R', '.']
+
+
 class Cleanup(Compile):
     name = 'Cleanup'
     description = ['Deleting', 'unversioned', 'files']
