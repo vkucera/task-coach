@@ -351,13 +351,11 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
 
         for uiCommand in self.__visibleUICommands:
             if uiCommand is not None and not isinstance(uiCommand, int):
+                item = self.FindTool(uiCommand.id)
                 uiCommand.unbind(self, uiCommand.id)
-
-        for idx in xrange(self.GetToolCount()):
-            item = self.FindToolByIndex(self.GetToolCount() - 1 - idx)
-            if item is not None and item.GetKind() == aui.ITEM_CONTROL:
-                self.DeleteTool(item.GetId())
-                item.window.Destroy()
+                if item.GetKind() == aui.ITEM_CONTROL:
+                    self.DeleteTool(item.GetId())
+                    item.window.Destroy()
         super(ToolBar, self).Clear()
 
     def getToolIdByCommand(self, commandName):
