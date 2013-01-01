@@ -29,12 +29,12 @@ Release('1.3.21', 'January 1, 2013',
 calendar viewer to refresh.'''),
         Bugv2('''On Mac OS X, clicking the period column in effort viewers to 
 change the sort order didn't work.'''),
-        Bugv2('''Adapt font size to available space in calendar view.''', '1039'),
+        Bugv2('''Adapt font size to available space in calendar view.''', '1309'),
         Bugv2('''Using Shift+Enter key on the number keypad would not work on 
 Mac OS X nor Linux.''', '1285'),
         Bugv2('''Search defaults to simple substring matching.''', '1286'),
         Bugv2('''Growl notifications didn't work with Growl 2.0.''', '1324'),
-        Bugv2('''Fix another encoding problem on some locales (Windows).'''),
+        Bugv2('''Fix another encoding problem on some locales (Windows).''', '1310'),
         Bugv2('''Performance improvement in the edit dialogs.'''),
         Bugv2('''Fix icon size in Unity.''', '1329'),
         Bugv2('''Fix docking of floating viewers on Windows.'''),
@@ -42,9 +42,9 @@ Mac OS X nor Linux.''', '1285'),
 are in the selected category, don't remove the items from the category that 
 already belonged to that category.''', '1271'),
         Bugv2('''Toolbar icons to show/hide tasks according to status now respect
-appearance settings.''', '1104'),
+appearance settings, and are overlayed with a red cross.''', '1104', '1323'),
         Bugv2('''New date/time picker should fix most existing problems with the
-old one.''', '702', '1089', '1212', '1266'),
+old one.''', '702', '1089', '1212', '1266', '1233'),
         ],
     featuresAdded=[
         Feature('''New, hopefully more intuitive date/time control.'''),
