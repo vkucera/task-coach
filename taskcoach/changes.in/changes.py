@@ -35,7 +35,7 @@ Mac OS X nor Linux.''', '1285'),
         Bugv2('''Search defaults to simple substring matching.''', '1286'),
         Bugv2('''Growl notifications didn't work with Growl 2.0.''', '1324'),
         Bugv2('''Fix another encoding problem on some locales (Windows).''', '1310'),
-        Bugv2('''Performance improvement in the edit dialogs.'''),
+        Bugv2('''Performance improvement in the edit dialogs.''', '991'),
         Bugv2('''Fix icon size in Unity.''', '1329'),
         Bugv2('''Fix docking of floating viewers on Windows.'''),
         Bugv2('''When toggling the category of multiple items, not all of which 
