@@ -41,7 +41,7 @@ class TranslationIntegrityTestsMixin(object):
         regex = self.conversionSpecificationRE
         matches_english = self.countMatches(regex, self.englishString)
         matches_translation = self.countMatches(regex, self.translatedString)
-        self.assertEqual(matches_english, matches_translation)
+        self.assertEqual(matches_english, matches_translation, self.englishString)
             
     def testMatchingNonLiterals(self):
         for symbol in '\t', '|', '%s', '%d', '%.2f':

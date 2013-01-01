@@ -75,12 +75,24 @@ class TestCase(unittest.TestCase, object):
         from taskcoachlib.thirdparty.pubsub import pub
         pub.unsubAll()
         super(TestCase, self).tearDown()
-        
+
+
+class TestCaseFrame(wx.Frame):
+    def __init__(self):
+        super(TestCaseFrame, self).__init__(None, wx.ID_ANY, 'Frame')
+        self.toolbarPerspective = ''
+
+    def getToolBarPerspective(self):
+        return self.toolbarPerspective
+
+    def AddBalloonTip(self, *args, **kwargs):
+        pass
+
 
 class wxTestCase(TestCase):
     # pylint: disable=W0404
     app = wx.App(0)
-    frame = wx.Frame(None, -1, 'Frame')
+    frame = TestCaseFrame()
     from taskcoachlib import i18n
     i18n.Translator('en_US')
     from taskcoachlib import gui

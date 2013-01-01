@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import patterns, widgets, command
+from taskcoachlib import patterns, widgets, command, render
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, toolbar, artprovider
 from taskcoachlib.thirdparty import hypertreelist
@@ -61,7 +61,7 @@ class Viewer(patterns.Observer, wx.Panel):
         # The widget used to present the presentation:
         self.widget = self.createWidget()
         self.widget.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOW))
-        self.toolbar = toolbar.ToolBar(self, (16, 16))
+        self.toolbar = toolbar.ToolBar(self, settings, (16, 16))
         self.initLayout()
         self.registerPresentationObservers()
         self.refresh()
@@ -70,6 +70,16 @@ class Viewer(patterns.Observer, wx.Panel):
         pub.subscribe(self.onBeginIO, 'taskfile.aboutToClear')
         pub.subscribe(self.onEndIO, 'taskfile.justRead')
         pub.subscribe(self.onEndIO, 'taskfile.justCleared')
+
+        wx.CallAfter(self.__DisplayBalloon)
+
+    def __DisplayBalloon(self):
+        # AuiFloatingFrame is instantiated from framemanager, we can't derive it from BalloonTipManager
+        if self.toolbar.IsShownOnScreen() and hasattr(wx.GetTopLevelParent(self), 'AddBalloonTip'):
+            wx.GetTopLevelParent(self).AddBalloonTip(self.settings, 'customizabletoolbars', self.toolbar,
+                title=_('Toolbars are customizable'),
+                getRect=lambda: self.toolbar.GetToolRect(self.toolbar.getToolIdByCommand('EditToolBarPerspective')),
+                message=_('''Click on the gear icon on the right to add buttons and rearrange them.'''))
 
     def onBeginIO(self, taskFile):
         self.__freezeCount += 1
@@ -354,6 +364,12 @@ class Viewer(patterns.Observer, wx.Panel):
             previousSectionNumber -= 1
         return self.__settingsSection
     
+    def hasModes(self):
+        return False
+    
+    def getModeUICommands(self):
+        return []
+    
     def isSortable(self):
         return False
 
@@ -413,7 +429,13 @@ class Viewer(patterns.Observer, wx.Panel):
             editToolBarUICommands + editSeparator + \
             actionToolBarUICommands + actionSeparator + \
             modeToolBarUICommands
-        
+
+    def getToolBarPerspective(self):
+        return self.settings.get(self.settingsSection(), 'toolbarperspective')
+
+    def saveToolBarPerspective(self, perspective):
+        self.settings.set(self.settingsSection(), 'toolbarperspective', perspective)
+
     def createClipboardToolBarUICommands(self):
         ''' UI commands for manipulating the clipboard (cut, copy, paste). '''
         cutCommand = uicommand.EditCut(viewer=self)
@@ -811,6 +833,11 @@ class ViewerWithColumns(Viewer):  # pylint: disable=W0223
     def renderSubjects(items):
         subjects = [item.subject(recursive=True) for item in items]
         return ', '.join(sorted(subjects))
+    
+    @staticmethod
+    def renderCreationDateTime(item, humanReadable=True):
+        return render.dateTime(item.creationDateTime(), 
+                               humanReadable=humanReadable)
             
     def isItemCollapsed(self, item): 
         # pylint: disable=E1101

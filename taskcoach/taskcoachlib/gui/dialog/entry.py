@@ -23,6 +23,7 @@ from taskcoachlib.domain import date
 from taskcoachlib.gui import artprovider
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty import combotreebox
+import datetime
 from wx.lib import newevent
 import wx
 import wx.combo
@@ -36,14 +37,15 @@ class DateTimeEntry(widgets.DateTimeCtrl):
 
     def __init__(self, parent, settings, initialDateTime=defaultDateTime, 
                  readonly=False, noneAllowed=True, showSeconds=False, 
-                 suggestedDateTime=None, *args, **kwargs):
+                 suggestedDateTime=None, showRelative=False, units=None, *args, **kwargs):
         starthour = settings.getint('view', 'efforthourstart')
         endhour = settings.getint('view', 'efforthourend')
         interval = settings.getint('view', 'effortminuteinterval')
         super(DateTimeEntry, self).__init__(parent, noneAllowed=noneAllowed, 
                                             starthour=starthour, 
                                             endhour=endhour, interval=interval, 
-                                            showSeconds=showSeconds)
+                                            showSeconds=showSeconds,
+                                            showRelative=showRelative, units=units)
         if readonly:
             self.Disable()
         # First set the initial value and then set the callback so that the
@@ -480,8 +482,11 @@ class RecurrenceEntry(wx.Panel):
         self._stopDateTimeCheckBox = wx.CheckBox(stopPanel)
         self._stopDateTimeCheckBox.Bind(wx.EVT_CHECKBOX, 
                                         self.onRecurrenceStopDateTimeChecked)
+        # Since None is not allowed, we need an initial value...
         self._recurrenceStopDateTimeEntry = DateTimeEntry(stopPanel, settings,
-                                                          noneAllowed=False)
+                                                          noneAllowed=False,
+            initialDateTime=datetime.datetime.combine(date.LastDayOfCurrentMonth(),
+                                                      datetime.time(0, 0, 0)))
         self._recurrenceStopDateTimeEntry.Bind(EVT_DATETIMEENTRY,
                                                self.onRecurrenceEdited)
         panelSizer.Add(self._stopDateTimeCheckBox, 

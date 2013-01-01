@@ -253,7 +253,8 @@ elif sys.argv[1] in ['bdist_deb', 'bdist_ubuntu']:
         wxpythonversion=meta.data.wxpythonversionnumber,
         subsection='Office', url=meta.data.url,
         command='/usr/bin/taskcoach.py',
-        changelog_content=file('changelog_content', 'rb').read().rstrip())
+        changelog_content=file('changelog_content', 'rb').read().rstrip(),
+        sdist_exclude='buildlib')
 
     if sys.argv[1] == 'bdist_ubuntu':
         bdist_deb['distribution'] = sys.argv[2]

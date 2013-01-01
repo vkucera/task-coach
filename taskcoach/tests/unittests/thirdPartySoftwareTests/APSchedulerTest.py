@@ -32,7 +32,7 @@ class APSchedulerTest(test.TestCase):
         self.jobCalled += 1
         
     def testScheduleJob(self):
-        self.scheduler.add_date_job(self.job, date.Now() + date.TimeDelta(microseconds=650))
+        self.scheduler.add_date_job(self.job, date.Now() + date.TimeDelta(microseconds=650), misfire_grace_time=0)
         while self.jobCalled == 0:
             pass
         self.assertEqual(1, self.jobCalled)

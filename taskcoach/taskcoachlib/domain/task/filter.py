@@ -79,3 +79,6 @@ class ViewFilter(tasklist.TaskListQueryMixin, base.Filter):
         elif self.__hideCompositeTasks and not self.treeMode() and task.children():
             result = False  # Hide composite task
         return result
+
+    def hasFilter(self):
+        return self.__hideCompositeTasks or len(self.__statusesToHide)

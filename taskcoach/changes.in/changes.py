@@ -22,28 +22,44 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.21', 'October ??, 2012',
+Release('1.3.21', 'January 1, 2013',
     summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
         Bugv2('''Changing the percentage complete would not cause the
 calendar viewer to refresh.'''),
         Bugv2('''On Mac OS X, clicking the period column in effort viewers to 
 change the sort order didn't work.'''),
-        Bugv2('''Adapt font size to available space in calendar view.''', '1039'),
-        Bugv2('''Using Shift+Enter key on the number keypad woud not work on OS X
-nor Linux.''', '1285'),
+        Bugv2('''Adapt font size to available space in calendar view.''', '1309'),
+        Bugv2('''Using Shift+Enter key on the number keypad would not work on 
+Mac OS X nor Linux.''', '1285'),
         Bugv2('''Search defaults to simple substring matching.''', '1286'),
         Bugv2('''Growl notifications didn't work with Growl 2.0.''', '1324'),
-        Bugv2('''Fix another encoding problem on some locales (Windows)'''),
-        Bugv2('''Performance improvement in the edit dialogs.'''),
+        Bugv2('''Fix another encoding problem on some locales (Windows).''', '1310',
+              '1321'),
+        Bugv2('''Performance improvement in the edit dialogs.''', '991'),
         Bugv2('''Fix icon size in Unity.''', '1329'),
+        Bugv2('''Fix docking of floating viewers on Windows.'''),
+        Bugv2('''When toggling the category of multiple items, not all of which 
+are in the selected category, don't remove the items from the category that 
+already belonged to that category.''', '1271'),
+        Bugv2('''Toolbar icons to show/hide tasks according to status now respect
+appearance settings, and are overlayed with a red cross.''', '1104', '1323'),
+        Bugv2('''New date/time picker should fix most existing problems with the
+old one.''', '702', '1089', '1212', '1266', '1233'),
+        Bugv2('''Fix wording for task statuses.''', '1333'),
         ],
     featuresAdded=[
+        Feature('''New, hopefully more intuitive date/time control.'''),
         Feature('''Display dates in human-readable form in viewers (today,
 yesterday, tomorrow).'''),
-        Feature('''Startup and shutdown performance improvements'''),
+        Feature('''Startup and shutdown performance improvements.'''),
         Feature('''Autosave is now on by default.'''),
         Feature('''Support for Growl on Windows.'''),
+        Feature('''Toolbars are now customizable.'''),
+        Feature('''Add a creation date attribute to tasks, notes, attachments,
+and categories.''', 'http://uservoice.com/a/-2HX-'),
+        Feature('''Shift+Click on a filter button in the toolbar shows only the
+corresponding task status'''),
         ],
     ),
 

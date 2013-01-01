@@ -24,6 +24,22 @@ import icons
 
 class ArtProvider(wx.ArtProvider):
     def CreateBitmap(self, artId, artClient, size):
+        if artId.find('+') != -1:
+            main, overlay = artId.split('+')
+            overlayImage = self._CreateBitmap(overlay, artClient, size).ConvertToImage()
+            w, h = size
+            overlayBitmap = overlayImage.Scale(int(w / 2), int(h / 2), wx.IMAGE_QUALITY_HIGH).ConvertToBitmap()
+            mainBitmap = self._CreateBitmap(main, artClient, size)
+            dstDC = wx.MemoryDC()
+            dstDC.SelectObject(mainBitmap)
+            try:
+                dstDC.DrawBitmap(overlayBitmap, w - int(w / 2), h - int(h / 2), True)
+            finally:
+                dstDC.SelectObject(wx.NullBitmap)
+            return mainBitmap
+        return self._CreateBitmap(artId, artClient, size)
+
+    def _CreateBitmap(self, artId, artClient, size):
         catalogKey = '%s%dx%d' % (artId, size[0], size[1])
         if catalogKey in icons.catalog.keys():
             bitmap = icons.catalog[catalogKey].getBitmap()

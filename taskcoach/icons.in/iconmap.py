@@ -46,8 +46,6 @@ iconlist = [
 ('taskcoach', 'apps', 'korganizer_todo', [16, 22, 32, 48, 64, 128]),
 ('listview', 'actions', 'view_detailed', [16, 22, 32]),
 ('treeview', 'actions', 'view_tree', [16, 22, 32]),
-('filtercompletedtasks', 'actions', 'ledgreen_faded', [16]),
-('filterinactivetasks', 'actions', 'ledgrey_faded', [16]),
 ('restore', 'apps', 'kcmkwm', [16]),
 ('progress', 'actions', 'finish', [16, 22, 32]),
 ('viewalltasks', 'apps', 'kreversi', [16]),
@@ -63,6 +61,8 @@ iconlist = [
 ('decpriority', 'actions', '1downarrow', [16]),
 ('prev', 'actions', '1leftarrow', [16, 22]),
 ('next', 'actions', '1rightarrow', [16, 22]),
+('up', 'actions', '1uparrow', [16]),
+('down', 'actions', '1downarrow', [16]),
 
 # These icons are named after what they display:
 ('arrow_up_icon', 'actions', 'up', [16, 32]),
@@ -92,12 +92,12 @@ iconlist = [
 ('clock_stop_icon', 'actions', 'history_stop', [16, 22, 32]),
 ('clock_resume_icon', 'actions', 'history_resume', [16, 22, 32]),
 ('clock_menu_icon', 'actions', 'historymenu', [16, 22, 32]),
-('cogwheel_icon', 'actions', 'misc', [16, 22]),
+('cogwheel_icon', 'actions', 'misc', [16, 22, 32]),
 ('cogwheels_icon', 'apps', 'kcmsystem', [16]),
 ('computer_desktop_icon', 'apps', 'mycomputer', [16]),
 ('computer_handheld_icon', 'devices', 'pda', [16, 22]),
 ('computer_laptop_icon', 'apps', 'laptop_pcmcia', [16]),
-('cross_red_icon', 'actions', 'cancel', [16, 32]),
+('cross_red_icon', 'actions', 'cancel', [16, 22, 32]),
 ('die_icon', 'actions', 'roll', [16]),
 ('document_icon', 'mimetypes', 'dvi', [16]),
 ('earth_blue_icon', 'filesystems', 'www', [16, 22]),
@@ -165,7 +165,7 @@ iconlist = [
 ('weather_lightning_icon', 'apps', 'cache', [16]),
 ('weather_sunny_icon', 'apps', 'kweather', [16]),
 ('weather_umbrella_icon', 'apps', 'colors', [16]),
-('wrench_icon', 'actions', 'configure', [16]),
+('wrench_icon', 'actions', 'configure', [16, 22, 32]),
 ]
 
 icons = {}

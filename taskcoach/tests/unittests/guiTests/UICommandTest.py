@@ -321,9 +321,9 @@ class EditPreferencesTest(test.TestCase):
         
 class EffortViewerAggregationChoiceTest(test.TestCase):
     def setUp(self):
-        self.selectedAggregation = 'details'
-        self.showAggregationCalled = False
-        self.choice = gui.uicommand.EffortViewerAggregationChoice(viewer=self)
+        self.settings = config.Settings(load=False)
+        self.choice = gui.uicommand.EffortViewerAggregationChoice(viewer=self,
+            settings=self.settings)
         self.choice.currentChoice = 0
         class DummyEvent(object):
             def __init__(self, selection):
@@ -332,31 +332,23 @@ class EffortViewerAggregationChoiceTest(test.TestCase):
                 return self.selection
         self.DummyEvent = DummyEvent
         
-    def showEffortAggregation(self, aggregation):
-        self.selectedAggregation = aggregation
-        self.showAggregationCalled = True
-    
-    def testUserPicksCurrentChoice(self):
-        self.choice.onChoice(self.DummyEvent(0))
-        self.failIf(self.showAggregationCalled)
-
-    def testUserPicksSameChoiceTwice(self):
-        self.choice.onChoice(self.DummyEvent(1))
-        self.showAggregationCalled = False
-        self.choice.onChoice(self.DummyEvent(1))
-        self.failIf(self.showAggregationCalled)
+    def settingsSection(self):
+        return 'effortviewer'
     
     def testUserPicksEffortPerDay(self):
         self.choice.onChoice(self.DummyEvent(1))
-        self.assertEqual('day', self.selectedAggregation)
+        self.assertEqual('day', self.settings.gettext(self.settingsSection(),
+                                                      'aggregation'))
 
     def testUserPicksEffortPerWeek(self):
         self.choice.onChoice(self.DummyEvent(2))
-        self.assertEqual('week', self.selectedAggregation)
+        self.assertEqual('week', self.settings.gettext(self.settingsSection(),
+                                                       'aggregation'))
 
     def testUserPicksEffortPerMonth(self):
         self.choice.onChoice(self.DummyEvent(3))
-        self.assertEqual('month', self.selectedAggregation)
+        self.assertEqual('month', self.settings.gettext(self.settingsSection(),
+                                                        'aggregation'))
 
     def testSetChoice(self):
         class DummyToolBar(wx.Frame):
@@ -424,6 +416,28 @@ class ToggleCategoryTest(test.TestCase):
         
     def testDisableWhenViewerIsShowingCategories(self):
         viewer = DummyViewer(selection=[self.category])
+        uiCommand = gui.uicommand.ToggleCategory(viewer=viewer,
+                                                 category=self.category)
+        self.failIf(uiCommand.enabled(None))
+        
+    def testDisableWhenSelectionIsEmpty(self):
+        viewer = DummyViewer(selection=[])
+        uiCommand = gui.uicommand.ToggleCategory(viewer=viewer,
+                                                 category=self.category)
+        self.failIf(uiCommand.enabled(None))
+        
+    def testDisableWhenCategoryHasMutualExclusiveAncestorThatIsNotChecked(self):
+        parent_category = category.Category('Parent of mutual exclusive categories', 
+                                            exclusiveSubcategories=True)
+        child_category = category.Category('Mutual exclusive category')
+        parent_category.addChild(child_category)
+        child_category.setParent(parent_category)
+        child_category.addChild(self.category)
+        self.category.setParent(child_category)
+        task_with_category = task.Task('Task')
+        task_with_category.addCategory(self.category)
+        self.category.addCategorizable(task_with_category)
+        viewer = DummyViewer(selection=[task_with_category])
         uiCommand = gui.uicommand.ToggleCategory(viewer=viewer,
                                                  category=self.category)
         self.failIf(uiCommand.enabled(None))

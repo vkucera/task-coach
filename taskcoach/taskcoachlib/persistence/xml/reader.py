@@ -331,6 +331,8 @@ class XMLReader(object):
             object constructor. '''
         bg_color_attribute = 'color' if self.__tskversion <= 27 else 'bgColor'
         attributes = dict(id=node.attrib.get('id', ''),
+            creationDateTime=self.__parse_datetime(node.attrib.get('creationDateTime', 
+                                                                   '1-1-1 0:0')),
             subject=node.attrib.get('subject', ''),
             description=self.__parse_description(node),
             fgColor=self.__parse_tuple(node.attrib.get('fgColor', ''), None),
@@ -510,9 +512,9 @@ class XMLReader(object):
         return cls.__parse(text, int, default_value)
         
     @classmethod
-    def __parse_datetime(cls, text, *time_defaults):
+    def __parse_datetime(cls, text):
         ''' Parse a datetime from the text. '''
-        return cls.__parse(text, date.parseDateTime, None, *time_defaults)
+        return cls.__parse(text, date.parseDateTime, None)
     
     def __parse_font_description(self, text, default_value=None):
         ''' Parse a font from the text. In case of failure, return the default
@@ -554,12 +556,11 @@ class XMLReader(object):
             return default_value
     
     @staticmethod
-    def __parse(text, parse_function, default_value, *parse_args):
+    def __parse(text, parse_function, default_value):
         ''' Parse the text using the parse function. In case of failure, return
             the default value. '''
         try:
-            return parse_function(text, *parse_args) if parse_args \
-                else parse_function(text) 
+            return parse_function(text)
         except ValueError:
             return default_value
 

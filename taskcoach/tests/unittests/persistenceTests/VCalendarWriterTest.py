@@ -140,9 +140,12 @@ class VCalTaskWriterTestCase(VCalTestCase):
     
     def setUp(self):
         super(VCalTaskWriterTestCase, self).setUp() 
-        self.task1 = task.Task(u'Task subject 1', description='Task description 1',
-                               percentageComplete=56)
-        self.task2 = task.Task(u'Task subject 2黑', description=u'Task description 2\nwith newline\n微软雅黑')
+        self.task1 = task.Task(u'Task subject 1', 
+                               description='Task description 1',
+                               percentageComplete=56,
+                               creationDateTime=date.DateTime.min)
+        self.task2 = task.Task(u'Task subject 2黑', 
+                               description=u'Task description 2\nwith newline\n微软雅黑')
         self.taskFile.tasks().extend([self.task1, self.task2])
         self.settings.set('taskviewer', 'treemode', self.treeMode)
         self.viewer = gui.viewer.TaskViewer(self.frame, self.taskFile,
@@ -163,8 +166,15 @@ class VCalTaskCommonTestsMixin(VCalendarCommonTestsMixin):
                          self.vcalFile.count('BEGIN:VTODO')) # pylint: disable=W0511
 
     def testTaskId(self):
-        self.failUnless('UID:%s'%self.task2.id() in self.vcalFile)
+        self.failUnless('UID:%s' % self.task2.id() in self.vcalFile)
         
+    def testCreationDateTime(self):
+        creation_datetime = persistence.icalendar.ical.fmtDateTime(self.task2.creationDateTime())
+        self.failUnless('CREATED:%s' % creation_datetime in self.vcalFile)
+        
+    def testMissingCreationDateTime(self):
+        self.assertEqual(1, self.vcalFile.count('CREATED:'))
+
 
 class TestSelectionOnlyMixin(VCalTaskCommonTestsMixin):
     selectionOnly = True

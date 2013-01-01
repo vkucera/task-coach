@@ -396,6 +396,8 @@ class ViewMenu(Menu):
             activatePreviousViewer,
             uicommand.RenameViewer(viewer=viewerContainer),
             None)
+        self.appendMenu(_('&Mode'),
+                        ModeMenu(mainwindow, self, _('&Mode')))
         self.appendMenu(_('&Filter'), 
                         FilterMenu(mainwindow, self, _('&Filter')))
         self.appendMenu(_('&Sort'),
@@ -465,6 +467,15 @@ class ViewTreeOptionsMenu(Menu):
             uicommand.ViewExpandAll(viewer=viewerContainer),
             uicommand.ViewCollapseAll(viewer=viewerContainer))
 
+
+class ModeMenu(DynamicMenuThatGetsUICommandsFromViewer):
+    def enabled(self):
+        return self._window.viewer.hasModes() and \
+            bool(self._window.viewer.getModeUICommands())
+    
+    def getUICommands(self):
+        return self._window.viewer.getModeUICommands()
+    
 
 class FilterMenu(DynamicMenuThatGetsUICommandsFromViewer):
     def enabled(self):

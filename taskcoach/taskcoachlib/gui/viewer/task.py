@@ -28,11 +28,24 @@ from taskcoachlib.gui import uicommand, menu, dialog
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty.pubsub import pub
 from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_TODAY, wxFancyDrawer
+from taskcoachlib.thirdparty import smartdatetimectrl as sdtc
 from taskcoachlib.widgets import CalendarConfigDialog
 import base
 import inplace_editor
 import mixin
 import refresher 
+
+
+class DueDateTimeCtrl(inplace_editor.DateTimeCtrl):
+    def __init__(self, parent, wxId, item, column, owner, value, **kwargs):
+        kwargs['relative'] = True
+        kwargs['startDateTime'] = item.GetData().plannedStartDateTime()
+        super(DueDateTimeCtrl, self).__init__(parent, wxId, item, column, owner, value, **kwargs)
+        sdtc.EVT_TIME_CHOICES_CHANGE(self._dateTimeCtrl, self.OnChoicesChange)
+        self._dateTimeCtrl.LoadChoices(item.GetData().settings.get('feature', 'sdtcspans'))
+
+    def OnChoicesChange(self, event):
+        self.item().GetData().settings.settext('feature', 'sdtcspans', event.GetValue())
 
 
 class TaskViewerStatusMessages(object):
@@ -62,6 +75,14 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,  # pylint: disable=W0223
         super(BaseTaskViewer, self).__init__(*args, **kwargs)
         self.statusMessages = TaskViewerStatusMessages(self)
         self.__registerForAppearanceChanges()
+        wx.CallAfter(self.__DisplayBalloon)
+
+    def __DisplayBalloon(self):
+        if self.toolbar.getToolIdByCommand('ViewerHideTasks_completed') != wx.ID_ANY and self.toolbar.IsShownOnScreen() and \
+            hasattr(wx.GetTopLevelParent(self), 'AddBalloonTip'):
+            wx.GetTopLevelParent(self).AddBalloonTip(self.settings, 'filtershiftclick', self.toolbar,
+                        getRect=lambda: self.toolbar.GetToolRect(self.toolbar.getToolIdByCommand('ViewerHideTasks_completed')),
+                        message=_('''Shift-click on a filter tool to see only tasks belonging to the correspondig status'''))
 
     def __registerForAppearanceChanges(self):
         for appearance in ('font', 'fgcolor', 'bgcolor', 'icon'):
@@ -77,6 +98,8 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,  # pylint: disable=W0223
     def onAppearanceSettingChange(self, value):  # pylint: disable=W0613
         if self:
             wx.CallAfter(self.refresh)  # Let domain objects update appearance first
+        # Show/hide status in toolbar may change too
+        self.toolbar.loadPerspective(self.toolbar.perspective(), cache=False)
 
     def domainObjectsToView(self):
         return self.taskFile.tasks()
@@ -206,10 +229,10 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable=W0223
         return uiCommands + super(BaseTaskTreeViewer, self).createActionToolBarUICommands()
     
     def createModeToolBarUICommands(self):
-        hideUICommands = (uicommand.ViewerHideTasks(taskStatus=task.status.completed,
-                                                    viewer=self),
-                          uicommand.ViewerHideTasks(taskStatus=task.status.inactive,
-                                                    viewer=self))
+        hideUICommands = tuple([uicommand.ViewerHideTasks(taskStatus=status,
+                                                          settings=self.settings,
+                                                          viewer=self) \
+                                for status in task.Task.possibleStatuses()])
         otherModeUICommands = super(BaseTaskTreeViewer, self).createModeToolBarUICommands()
         separator = (None,) if otherModeUICommands else ()
         return hideUICommands + separator + otherModeUICommands
@@ -429,6 +452,8 @@ class SquareTaskViewer(BaseTaskTreeViewer):
         self.__zero = 0
         super(SquareTaskViewer, self).__init__(*args, **kwargs)
         self.orderBy(self.settings.get(self.settingsSection(), 'sortby'))
+        pub.subscribe(self.on_order_by_changed, 
+                      'settings.%s.sortby' % self.settingsSection())
         self.orderUICommand.setChoice(self.__orderBy)
         for eventType in (task.Task.subjectChangedEventType(),
                           task.Task.dueDateTimeChangedEventType(),
@@ -449,16 +474,30 @@ class SquareTaskViewer(BaseTaskTreeViewer):
             self.onSelect, uicommand.Edit(viewer=self), itemPopupMenu)
         
     def createModeToolBarUICommands(self):
-        self.orderUICommand = uicommand.SquareTaskViewerOrderChoice(viewer=self)  # pylint: disable=W0201
+        self.orderUICommand = uicommand.SquareTaskViewerOrderChoice(viewer=self,
+                                                                    settings=self.settings)  # pylint: disable=W0201
         return super(SquareTaskViewer, self).createModeToolBarUICommands() + \
             (self.orderUICommand,)
+        
+    def hasModes(self):
+        return True
+    
+    def getModeUICommands(self):
+        return [_('Lay out tasks by'), None] + \
+            [uicommand.SquareTaskViewerOrderByOption(menuText=menuText,
+                                                     value=value, viewer=self, 
+                                                     settings=self.settings)
+             for (menuText, value) in zip(uicommand.SquareTaskViewerOrderChoice.choiceLabels,
+                                          uicommand.SquareTaskViewerOrderChoice.choiceData)]
+    
+    def on_order_by_changed(self, value):
+        self.orderBy(value)
         
     def orderBy(self, choice):
         if choice == self.__orderBy:
             return
         oldChoice = self.__orderBy
         self.__orderBy = choice
-        self.settings.set(self.settingsSection(), 'sortby', choice)
         try:
             oldEventType = getattr(task.Task, '%sChangedEventType' % oldChoice)()
         except AttributeError:
@@ -719,10 +758,11 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'taskviewer')
         super(TaskViewer, self).__init__(*args, **kwargs)
-        self.treeOrListUICommand.setChoice(self.isTreeViewer())
         if self.isVisibleColumnByName('timeLeft'):
             self.minuteRefresher.startClock()
-    
+        pub.subscribe(self.onTreeListModeChanged, 
+                      'settings.%s.treemode' % self.settingsSection())
+
     def isTreeViewer(self):
         # We first ask our presentation what the mode is because 
         # ConfigParser.getboolean is a relatively expensive method. However,
@@ -856,7 +896,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
         for name, columnHeader, editCtrl, editCallback, eventTypes in [
             ('plannedStartDateTime', _('Planned start date'), 
              inplace_editor.DateTimeCtrl, self.onEditPlannedStartDateTime, []),
-            ('dueDateTime', _('Due date'), inplace_editor.DateTimeCtrl, 
+            ('dueDateTime', _('Due date'), DueDateTimeCtrl, 
              self.onEditDueDateTime, [task.Task.expansionChangedEventType()]),
             ('actualStartDateTime', _('Actual start date'), 
              inplace_editor.DateTimeCtrl, self.onEditActualStartDateTime, 
@@ -929,6 +969,12 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
             editCallback=self.onEditReminderDateTime, settings=self.settings,
             *[task.Task.expansionChangedEventType(), 
               task.Task.reminderChangedEventType()], **kwargs))
+        columns.append(widgets.Column('creationDateTime', _('Creation date'),
+            width=self.getColumnWidth('creationDateTime'),
+            renderCallback=self.renderCreationDateTime,
+            sortCallback=uicommand.ViewerSortByCommand(viewer=self, 
+                                                       value='creationDateTime'),
+            **kwargs))
         return columns
     
     def createColumnUICommands(self):
@@ -1025,13 +1071,27 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                 setting='priority', viewer=self),
             uicommand.ViewColumn(menuText=_('&Reminder'),
                 helpText=_('Show/hide reminder column'),
-                setting='reminder', viewer=self)])
+                setting='reminder', viewer=self),
+            uicommand.ViewColumn(menuText=_('&Creation date'),
+                helpText=_('Show/hide creation date column'),
+                setting='creationDateTime', viewer=self)])
         return commands
 
     def createModeToolBarUICommands(self):
-        self.treeOrListUICommand = uicommand.TaskViewerTreeOrListChoice(viewer=self)  # pylint: disable=W0201 
+        treeOrListUICommand = uicommand.TaskViewerTreeOrListChoice(viewer=self,
+                                                                   settings=self.settings)  # pylint: disable=W0201 
         return super(TaskViewer, self).createModeToolBarUICommands() + \
-            (self.treeOrListUICommand,)
+            (treeOrListUICommand,)
+            
+    def hasModes(self):
+        return True
+    
+    def getModeUICommands(self):
+        return [_('Show tasks as'), None] + \
+            [uicommand.TaskViewerTreeOrListOption(menuText=menuText, value=value,
+                                                  viewer=self, settings=self.settings)
+             for (menuText, value) in zip(uicommand.TaskViewerTreeOrListChoice.choiceLabels,
+                                          uicommand.TaskViewerTreeOrListChoice.choiceData)]
 
     def createColumnPopupMenu(self):
         return menu.ColumnPopupMenu(self)
@@ -1051,9 +1111,8 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
         if searchString:
             self.expandAll()  # pylint: disable=E1101      
 
-    def showTree(self, treeMode):
-        self.settings.set(self.settingsSection(), 'treemode', str(treeMode))
-        self.presentation().setTreeMode(treeMode)
+    def onTreeListModeChanged(self, value):
+        self.presentation().setTreeMode(value)
         
     # pylint: disable=W0621
     
@@ -1248,12 +1307,12 @@ class TaskStatsViewer(BaseTaskViewer):  # pylint: disable=W0223
                                                     bitmap='newtmpl'))
         
     def createActionToolBarUICommands(self):
-        return (uicommand.ViewerHideTasks(taskStatus=task.status.completed,
-                                          viewer=self),
-                uicommand.ViewerHideTasks(taskStatus=task.status.inactive,
-                                          viewer=self),
-                uicommand.ViewerPieChartAngle(viewer=self, 
-                                              settings=self.settings))
+        return tuple([uicommand.ViewerHideTasks(taskStatus=status,
+                                                settings=self.settings,
+                                                viewer=self) \
+                            for status in task.Task.possibleStatuses()]) + \
+               (uicommand.ViewerPieChartAngle(viewer=self, 
+                                              settings=self.settings),)
 
     def initLegend(self, widget):
         legend = widget.GetLegend()

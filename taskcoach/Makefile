@@ -203,7 +203,7 @@ thirdpartymodules:
 	cd taskcoachlib/thirdparty/pubsub; patch -p1 < ../../../thirdparty/patches/pubsub.diff
 	cd taskcoachlib/thirdparty/squaremap; patch -p1 < ../../../thirdparty/patches/squaremap.diff
 	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/customtreectrl.diff
-	cd taskcoachlib/thirdparty; patch -p0 < ../../thirdparty/patches/hypertreelist.diff
+	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/hypertreelist.diff
 	$(PYTHON) fixinit.py
 
 taskcoachlib/gui/icons.py: icons.in/iconmap.py icons.in/nuvola.zip icons.in/splash.png

@@ -262,6 +262,17 @@ class TaskTestsMixin(object):
         self.viewer.showColumnByName('completionDateTime')
         self.task.setCompletionDateTime(tomorrow)
         self.expectInCSV(render.dateTime(tomorrow, humanReadable=False))
+        
+    def testCreationDateTime(self):
+        self.viewer.showColumnByName('creationDateTime')
+        self.expectInCSV(render.dateTime(self.task.creationDateTime(), 
+                                         humanReadable=False))
+        
+    def testMissingCreationDateTime(self):
+        self.viewer.showColumnByName('creationDateTime')
+        self.taskFile.tasks().append(task.Task(creationDateTime=date.DateTime.min))
+        self.taskFile.tasks().remove(self.task)
+        self.expectInCSV(',,,')  # No 1/1/1 for the missing creation date
 
 
 class CSVListWriterTest(TaskTestsMixin, CSVWriterTestCase):
@@ -301,15 +312,18 @@ class EffortWriterTest(CSVWriterTestCase):
         self.expectInCSV(',0:00:01,')
         
     def testEffortPerDay(self):
-        self.viewer.showEffortAggregation('day')
+        self.settings.settext(self.viewer.settingsSection(), 'aggregation',
+                              'day')
         self.expectInCSV('Total')
 
     def testEffortPerDay_SelectionOnly_EmptySelection(self):
-        self.viewer.showEffortAggregation('day')
+        self.settings.settext(self.viewer.settingsSection(), 'aggregation',
+                              'day')
         self.expectNotInCSV('Total', selectionOnly=True)
 
     def testEffortPerDay_SelectionOnly_SelectAll(self):
-        self.viewer.showEffortAggregation('day')
+        self.settings.settext(self.viewer.settingsSection(), 'aggregation',
+                              'day')
         self.viewer.widget.select_all()
         self.viewer.updateSelection()
         self.expectInCSV('Total', selectionOnly=True)

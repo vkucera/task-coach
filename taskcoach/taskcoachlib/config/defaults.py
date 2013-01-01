@@ -23,9 +23,15 @@ from taskcoachlib import meta
 
 
 defaults = {
+'balloontips': {
+    'customizabletoolbars': 'True',
+    'customizabletoolbars_dnd': 'True',
+    'filtershiftclick': 'True',
+    },
 'view': {
     'statusbar': 'True',
     'toolbar': '(22, 22)',
+    'toolbarperspective': 'FileOpen,FileSave,Print,Separator,EditUndo,EditRedo,Separator,EffortStartButton,EffortStop',
     # Index of the active effort viewer in task editor:
     'effortviewerintaskeditor': '0',  
     'taskviewercount': '1',  # Number of task viewers in main window
@@ -66,7 +72,8 @@ defaults = {
     'lastdevelopermessage': '',
     },
 'taskviewer': {
-    'title': '',  # User supplied viewer title 
+    'title': '',  # User supplied viewer title
+    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,TaskViewerTreeOrListChoice,Spacer,ViewerHideTasks_completed,ViewerHideTasks_inactive,ResetFilter,Search',
     'treemode': 'True',  # True = tree mode, False = list mode
     'sortby': 'dueDateTime',
     'sortascending': 'True',
@@ -91,6 +98,7 @@ defaults = {
     },              
 'taskstatsviewer': {
     'title': '',
+    'toolbarperspective': 'TaskNew,TaskNewFromTemplateButton,Separator,ViewerPieChartAngle,Spacer,ViewerHideTasks_completed,ViewerHideTasks_inactive,ResetFilter,Search',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
@@ -106,7 +114,8 @@ defaults = {
     'piechartangle': '30',
     },
 'prerequisiteviewerintaskeditor': {
-    'title': '',  # User supplied viewer title 
+    'title': '',  # User supplied viewer title
+    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Spacer,ViewerHideTasks_completed,ViewerHideTasks_inactive,ResetFilter,Search',
     'treemode': 'True',  # True = tree mode, False = list mode
     'sortby': 'subject',
     'sortascending': 'True',
@@ -132,6 +141,7 @@ defaults = {
     },
 'squaretaskviewer': {
     'title': '',
+    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,SquareTaskViewerOrderChoice,Spacer,ViewerHideTasks_completed,ViewerHideTasks_inactive,ResetFilter,Search',
     'sortby': 'budget',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
@@ -148,6 +158,7 @@ defaults = {
     },
 'timelineviewer': {
     'title': '',
+    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Spacer,ViewerHideTasks_completed,ViewerHideTasks_inactive,ResetFilter,Search',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
@@ -163,6 +174,7 @@ defaults = {
     },
 'calendarviewer': {
     'title': '',
+    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,Separator,CalendarViewerConfigure,CalendarViewerPreviousPeriod,CalendarViewerToday,CalendarViewerNextPeriod,Spacer,ViewerHideTasks_completed,ViewerHideTasks_inactive,ResetFilter,Search',
     'viewtype': '1',
     'periodcount': '1',
     'periodwidth': '150',
@@ -193,6 +205,7 @@ defaults = {
     },
 'categoryviewer': {
     'title': '',
+    'toolbarperspective': 'CategoryNew,NewSubItem,Separator,Edit,Delete,Spacer,ResetFilter,Search',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -208,6 +221,7 @@ defaults = {
     },
 'categoryviewerintaskeditor': {
     'title': '',
+    'toolbarperspective': 'CategoryNew,NewSubItem,Separator,Edit,Delete,Spacer,ResetFilter,Search',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -223,6 +237,7 @@ defaults = {
     },
 'categoryviewerinnoteeditor': {
     'title': '',
+    'toolbarperspective': 'CategoryNew,NewSubItem,Separator,Edit,Delete,Spacer,ResetFilter,Search',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -238,6 +253,7 @@ defaults = {
     },
 'noteviewer': {
     'title': '',
+    'toolbarperspective': 'NoteNew,NewSubItem,Separator,Edit,Delete,Spacer,ResetFilter,Search',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -252,6 +268,7 @@ defaults = {
     'columnautoresizing': 'True'
     },
 'noteviewerintaskeditor': {
+    'toolbarperspective': 'NoteNew,NewSubItem,Separator,Edit,Delete,Spacer,ResetFilter,Search',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -266,6 +283,7 @@ defaults = {
     'regularexpression': 'False',
     },
 'noteviewerincategoryeditor': {
+    'toolbarperspective': 'NoteNew,NewSubItem,Separator,Edit,Delete,Spacer,ResetFilter,Search',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -280,6 +298,7 @@ defaults = {
     'regularexpression': 'False',
     },
 'noteviewerinattachmenteditor': {
+    'toolbarperspective': 'NoteNew,NewSubItem,Separator,Edit,Delete,Spacer,ResetFilter,Search',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -295,6 +314,7 @@ defaults = {
     },
 'effortviewer': {
     'title': '',
+    'toolbarperspective': 'EffortNew,Separator,Edit,Delete,Separator,EffortStartForEffort,EffortStop,Separator,EffortViewerAggregationChoice,Spacer,ResetFilter,Search',
     'aggregation': 'details',  # 'details' (default), 'day', 'week', or 'month'
     'sortby': 'period',
     'sortascending': 'False',
@@ -314,6 +334,7 @@ defaults = {
     'alwaysroundup': 'False',
     },
 'effortviewerintaskeditor': {
+    'toolbarperspective': 'EffortNew,Separator,Edit,Delete,Separator,EffortStartForEffort,EffortStop,Separator,EffortViewerAggregationChoice,Spacer,ResetFilter,Search',
     'aggregation': 'details',  # 'details' (default), 'day', 'week', or 'month'
     'sortby': 'period',
     'sortascending': 'False',
@@ -332,6 +353,7 @@ defaults = {
     },
 'attachmentviewer': {
     'title': '',
+    'toolbarperspective': 'AttachmentNew,Separator,Edit,Delete,Separator,AttachmentOpen,Spacer,Search',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -347,6 +369,7 @@ defaults = {
     },
 'attachmentviewerintaskeditor': {
     'title': '',
+    'toolbarperspective': 'AttachmentNew,Separator,Edit,Delete,Separator,AttachmentOpen,Spacer,Search',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -362,6 +385,7 @@ defaults = {
     },
 'attachmentviewerinnoteeditor': {
     'title': '',
+    'toolbarperspective': 'AttachmentNew,Separator,Edit,Delete,Separator,AttachmentOpen,Spacer,Search',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -377,6 +401,7 @@ defaults = {
     },
 'attachmentviewerincategoryeditor': {
     'title': '',
+    'toolbarperspective': 'AttachmentNew,Separator,Edit,Delete,Separator,AttachmentOpen,Spacer,Search',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
@@ -486,7 +511,9 @@ defaults = {
     'minidletime': '0',
     'usesm2': 'False',
     'showsmwarning': 'True',
-    'sayreminder': 'False' 
+    'sayreminder': 'False',
+    'sdtcspans': '60,120,1440,2880',
+    'sdtcspans_effort': '60,120,180,240'
     },
 'syncml': { 
     'url': '',

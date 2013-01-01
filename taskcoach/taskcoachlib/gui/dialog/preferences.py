@@ -516,24 +516,22 @@ class FeaturesPage(SettingsPage):
     def __init__(self, *args, **kwargs):
         super(FeaturesPage, self).__init__(columns=3, growableColumn=-1, 
                                            *args, **kwargs)
+        self.addEntry(_('All settings on this tab require a restart of %s ' \
+                        'to take effect') % meta.name)
         self.addBooleanSetting('feature', 'effort', 
-            _('Allow for tracking effort'), helpText='restart')
-        self.addBooleanSetting('feature', 'notes', _('Allow for taking notes'),
-            helpText='restart')
+            _('Allow for tracking effort'))
+        self.addBooleanSetting('feature', 'notes', _('Allow for taking notes'))
         try:
             import taskcoachlib.syncml.core  # pylint: disable=W0404,W0612
         except ImportError:
             pass
         else:
-            self.addBooleanSetting('feature', 'syncml', _('Enable SyncML'),
-                helpText='restart')
+            self.addBooleanSetting('feature', 'syncml', _('Enable SyncML'))
         self.addBooleanSetting('feature', 'iphone', 
-                               _('Enable iPhone synchronization'),
-            helpText='restart')
+                               _('Enable iPhone synchronization'))
         if operating_system.isGTK():
             self.addBooleanSetting('feature', 'usesm2', 
-                                   _('Use X11 session management'),
-                  helpText='restart')
+                                   _('Use X11 session management'))
         self.addChoiceSetting('view', 'weekstart', _('Start of work week'), ' ',
                               [('monday', _('Monday')), 
                                ('sunday', _('Sunday'))])
@@ -543,8 +541,7 @@ class FeaturesPage(SettingsPage):
             _('Hour of end of work day'), minimum=1, maximum=24, helpText=' ')
         self.addBooleanSetting('calendarviewer', 'gradient',
             _('Use gradients in calendar views.\n'
-              'This may slow down Task Coach.'),
-            helpText='restart')
+              'This may slow down Task Coach.'))
         self.addChoiceSetting('view', 'effortminuteinterval',
             _('Minutes between suggested times'), 
             _('In popup-menus for time selection (e.g. for setting the start \n'
@@ -668,14 +665,14 @@ class IPhonePage(SettingsPage):
     def __init__(self, *args, **kwargs):
         super(IPhonePage, self).__init__(columns=3, *args, **kwargs)
         self.addTextSetting('iphone', 'password',
-            _('Password for synchronization with iPhone'))
+            _('Password for synchronization with iPhone'),
+            helpText=_('When synchronizing, enter this password on the iPhone to authorize it'))
         self.addTextSetting('iphone', 'service',
             _('Bonjour service name'), helpText='restart')
         self.addBooleanSetting('iphone', 'synccompleted',
-            _('Upload completed tasks to device'), 
-            helpText=_('Upload completed tasks to device'))
+            _('Upload completed tasks to device'))
         self.addBooleanSetting('iphone', 'showlog',
-            _('Show sync log'), helpText=_('Show the synchronization log'))
+            _('Show the synchronization log'))
         self.fit()
 
         

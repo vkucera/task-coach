@@ -151,17 +151,21 @@ class AmountCtrl(EscapeKeyMixin, KillFocusAcceptsEditsMixin,
 class DateTimeCtrl(KillFocusAcceptsEditsMixin, hypertreelist.EditCtrl, Panel):
     ''' Inline date and time picker control. '''
     def __init__(self, parent, wxId, item, column, owner, value, **kwargs):
+        relative = kwargs.pop('relative', False)
+        if relative:
+            start = kwargs.pop('startDateTime', date.Now())
         super(DateTimeCtrl, self).__init__(parent, wxId, item, column, owner)
         settings = kwargs['settings']
         starthour = settings.getint('view', 'efforthourstart')
         endhour = settings.getint('view', 'efforthourend')
         interval = settings.getint('view', 'effortminuteinterval')
-        self.__dateTimeCtrl = widgets.DateTimeCtrl(self, starthour=starthour,
+        self._dateTimeCtrl = widgets.DateTimeCtrl(self, starthour=starthour,
                                                    endhour=endhour, 
-                                                   interval=interval)
-        self.__dateTimeCtrl.SetValue(value)
-        self.makeSizer(self.__dateTimeCtrl)
+                                                   interval=interval, showRelative=relative)
+        self._dateTimeCtrl.SetValue(value)
+        if relative:
+            self._dateTimeCtrl.SetRelativeChoicesStart(start=None if start == date.DateTime() else start)
+        self.makeSizer(self._dateTimeCtrl)
                 
     def GetValue(self):
-        return self.__dateTimeCtrl.GetValue()
-
+        return self._dateTimeCtrl.GetValue()

@@ -74,7 +74,7 @@ class SearchableViewerMixin(object):
         ''' UI commands to put on the toolbar of this viewer. '''
         searchUICommand = uicommand.Search(viewer=self, settings=self.settings)
         return super(SearchableViewerMixin, self).createToolBarUICommands() + \
-            (None, searchUICommand)
+            (1, searchUICommand)
             
 
 class FilterableViewerMixin(object):
@@ -99,8 +99,16 @@ class FilterableViewerMixin(object):
                 uicommand.CategoryViewerFilterChoice(settings=self.settings),
                 None]
 
+    def createToolBarUICommands(self):
+        clearUICommand = uicommand.ResetFilter(viewer=self)
+        return super(FilterableViewerMixin, self).createToolBarUICommands() + \
+            (clearUICommand,)
+
     def resetFilter(self):
         self.taskFile.categories().resetAllFilteredCategories()
+
+    def hasFilter(self):
+        return bool(self.taskFile.categories().filteredCategories())
 
     def createCategoryFilterCommands(self):
         categories = self.taskFile.categories()
@@ -149,6 +157,10 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
         self.__setBooleanSetting('hide%stasks' % status, hide)
         self.presentation().hideTaskStatus(status, hide)
 
+    def showOnlyTaskStatus(self, status):
+        for taskStatus in task.Task.possibleStatuses():
+            self.hideTaskStatus(taskStatus, hide=status != taskStatus)
+
     def isHidingTaskStatus(self, status):
         return self.__getBooleanSetting('hide%stasks' % status)
     
@@ -166,12 +178,19 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
         super(FilterableViewerForTasksMixin, self).resetFilter()
         for status in task.Task.possibleStatuses():
             self.hideTaskStatus(status, False)
-        self.hideCompositeTasks(False)
+        if not self.isTreeViewer():
+            # Only reset this filter when in list mode, since it only applies
+            # to list mode
+            self.hideCompositeTasks(False)
+
+    def hasFilter(self):
+        return super(FilterableViewerForTasksMixin, self).hasFilter() or \
+            self.presentation().hasFilter()
 
     def createFilterUICommands(self):
         return super(FilterableViewerForTasksMixin, 
                      self).createFilterUICommands() + \
-            [uicommand.ViewerHideTasks(taskStatus, viewer=self) for taskStatus in task.Task.possibleStatuses()] + \
+            [uicommand.ViewerHideTasks(taskStatus, viewer=self, settings=self.settings) for taskStatus in task.Task.possibleStatuses()] + \
             [uicommand.ViewerHideCompositeTasks(viewer=self)]
             
     def __getBooleanSetting(self, setting):
@@ -275,7 +294,10 @@ class SortableViewerMixin(object):
                     helpText=self.sortBySubjectHelpText),
                 uicommand.ViewerSortByCommand(viewer=self, value='description',
                     menuText=_('&Description'),
-                    helpText=self.sortByDescriptionHelpText)]
+                    helpText=self.sortByDescriptionHelpText),
+                uicommand.ViewerSortByCommand(viewer=self, 
+                    value='creationDateTime', menuText=_('&Creation date'),
+                    helpText=self.sortByCreationDateTimeHelpText)]
 
 
 class SortableViewerForEffortMixin(SortableViewerMixin):
@@ -297,6 +319,7 @@ class SortableViewerForEffortMixin(SortableViewerMixin):
 class SortableViewerForCategoriesMixin(SortableViewerMixin):
     sortBySubjectHelpText = _('Sort categories by subject')
     sortByDescriptionHelpText = _('Sort categories by description')
+    sortByCreationDateTimeHelpText = _('Sort categories by creation date')
 
 
 class SortableViewerForCategorizablesMixin(SortableViewerMixin):
@@ -314,12 +337,14 @@ class SortableViewerForAttachmentsMixin(SortableViewerForCategorizablesMixin):
     sortBySubjectHelpText = _('Sort attachments by subject')
     sortByDescriptionHelpText = _('Sort attachments by description')
     sortByCategoryHelpText = _('Sort attachments by category')
-    
+    sortByCreationDateTimeHelpText = _('Sort attachments by creation date')
+
 
 class SortableViewerForNotesMixin(SortableViewerForCategorizablesMixin):
     sortBySubjectHelpText = _('Sort notes by subject')
     sortByDescriptionHelpText = _('Sort notes by description')
     sortByCategoryHelpText = _('Sort notes by category')
+    sortByCreationDateTimeHelpText = _('Sort notes by creation date')
 
 
 class SortableViewerForTasksMixin(SortableViewerForCategorizablesMixin):
@@ -327,7 +352,8 @@ class SortableViewerForTasksMixin(SortableViewerForCategorizablesMixin):
     sortBySubjectHelpText = _('Sort tasks by subject')
     sortByDescriptionHelpText = _('Sort tasks by description')
     sortByCategoryHelpText = _('Sort tasks by category')
-    
+    sortByCreationDateTimeHelpText = _('Sort tasks by creation date')
+
     def __init__(self, *args, **kwargs):
         self.__sortKeyUnchangedCount = 0
         super(SortableViewerForTasksMixin, self).__init__(*args, **kwargs)

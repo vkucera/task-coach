@@ -62,7 +62,8 @@ class EffortViewerForSpecificTasksTest(test.wxTestCase):
         self.assertEqual(2, len(dialog._taskFile.tasks()))  # pylint: disable=W0212
         
     def testViewerKeepsShowingOnlyEffortForSpecifiedTasksWhenSwitchingAggregation(self):
-        self.viewer.showEffortAggregation('week')
+        self.settings.settext(self.viewer.settingsSection(), 'aggregation', 
+                              'week')
         self.assertEqual(2, len(self.viewer.presentation()))
         
         
@@ -114,18 +115,21 @@ class EffortViewerStatusMessageTest(test.wxTestCase):
             'Status: 1 tracking')
         
     def testStatusMessageInAggregatedMode_OneTaskNoEffort(self):
-        self.viewer.showEffortAggregation('day')
+        self.settings.settext(self.viewer.settingsSection(), 'aggregation', 
+                              'day')
         self.assertStatusMessages('Effort: 0 selected, 0 visible, 0 total', 
             'Status: 0 tracking')
 
     def testStatusMessageInAggregateMode_OneTaskOneEffort(self):
-        self.viewer.showEffortAggregation('day')
+        self.settings.settext(self.viewer.settingsSection(), 'aggregation', 
+                              'day')
         self.task.addEffort(self.effort1)
         self.assertStatusMessages('Effort: 0 selected, 2 visible, 1 total', 
             'Status: 0 tracking')
 
     def testStatusMessageInAggregateMode_OneTaskTwoEfforts(self):
-        self.viewer.showEffortAggregation('day')
+        self.settings.settext(self.viewer.settingsSection(), 'aggregation', 
+                              'day')
         self.task.addEffort(self.effort1)
         self.task.addEffort(self.effort2)
         self.assertStatusMessages('Effort: 0 selected, 4 visible, 2 total', 
@@ -237,7 +241,8 @@ class EffortViewerAggregationTestCase(test.wxTestCase):
     def switchAggregation(self):
         aggregations = ['details', 'day', 'week', 'month']
         aggregations.remove(self.aggregation)
-        self.viewer.showEffortAggregation(aggregations[0])
+        self.settings.settext(self.viewer.settingsSection(), 'aggregation', 
+                              aggregations[0])
     
 
 class CommonTestsMixin(object):
@@ -252,8 +257,9 @@ class CommonTestsMixin(object):
         self.assertEqual('', self.viewer.widget.GetItemText(1))
 
     def testSwitchAggregation(self):
-        self.switchAggregation()    
-        self.viewer.showEffortAggregation(self.aggregation)
+        self.switchAggregation()
+        self.settings.settext(self.viewer.settingsSection(), 'aggregation', 
+                              self.aggregation)
         self.assertEqual(self.expectedNumberOfItems, self.viewer.size())
 
     def testAggregationIsSavedInSettings(self):

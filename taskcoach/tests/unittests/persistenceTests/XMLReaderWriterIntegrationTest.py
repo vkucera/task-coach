@@ -118,6 +118,9 @@ class IntegrationTest(IntegrationTestCase):
         taskWrittenAndRead = self.getTaskWrittenAndRead(aTask.id())
         self.assertEqual([obj.id() for obj in getattr(aTask, attribute)()], 
                          [obj.id() for obj in getattr(taskWrittenAndRead, attribute)()])
+        
+    def testCreationDateTime(self):
+        self.assertAttributeWrittenAndRead(self.task, 'creationDateTime')
                
     def testSubject(self):
         self.assertAttributeWrittenAndRead(self.task, 'subject')

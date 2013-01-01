@@ -52,6 +52,12 @@ class UICommandContainerMixin(object):
         for uiCommand in uiCommands:
             if uiCommand is None:
                 self.AppendSeparator()
+            elif isinstance(uiCommand, int): # Toolbars only
+                self.AppendStretchSpacer(uiCommand)
+            elif isinstance(uiCommand, (str, unicode)):
+                label = wx.MenuItem(self, wx.NewId(), uiCommand)
+                label.Enable(False)
+                self.AppendItem(label)
             elif type(uiCommand) == type(()):  # This only works for menu's
                 menuTitle, menuUICommands = uiCommand[0], uiCommand[1:]
                 self.appendSubMenuWithUICommands(menuTitle, menuUICommands)
@@ -88,6 +94,9 @@ class UICommand(object):
 
     def __eq__(self, other):
         return self is other
+
+    def uniqueName(self):
+        return self.__class__.__name__
 
     def accelerators(self):
         # The ENTER and NUMPAD_ENTER keys are treated differently between platforms...
@@ -281,7 +290,7 @@ class UICheckCommand(BooleanSettingsCommand):
         # all platforms, most notably Gtk where providing our own bitmap causes
         # "(python:8569): Gtk-CRITICAL **: gtk_check_menu_item_set_active: 
         # assertion `GTK_IS_CHECK_MENU_ITEM (check_menu_item)' failed"
-        return None
+        return 'nobitmap'
 
 
 class UIRadioCommand(BooleanSettingsCommand):
@@ -1118,6 +1127,21 @@ class EditSyncPreferences(IOCommand):
         editor.Show(show=show)
 
 
+class EditToolBarPerspective(SettingsCommand):
+    ''' Action for editing a customizable toolbar '''
+
+    def __init__(self, toolbar, editorClass, *args, **kwargs):
+        self.__toolbar = toolbar
+        self.__editorClass = editorClass
+        super(EditToolBarPerspective, self).__init__( \
+            helpText=_('Customize toolbar'), bitmap='cogwheel_icon',
+            menuText=_('Customize'),
+            *args, **kwargs)
+
+    def doCommand(self, event):
+        self.__editorClass(self.__toolbar, self.settings, self.mainWindow(), _('Customize toolbar')).ShowModal()
+
+
 class SelectAll(NeedsItemsMixin, ViewerCommand):
     ''' Action for selecting all items in a viewer. '''
     
@@ -1162,7 +1186,10 @@ class ResetFilter(ViewerCommand):
     
     def doCommand(self, event):
         self.viewer.resetFilter()
-        
+
+    def enabled(self, event):
+        return self.viewer.hasFilter()
+
         
 class ResetCategoryFilter(NeedsAtLeastOneCategoryMixin, CategoriesCommand):
     ''' Action for resetting all category filters so that items are no longer
@@ -1398,15 +1425,21 @@ class ViewerHideTasks(ViewerCommand, UICheckCommand):
         self.__taskStatus = taskStatus
         super(ViewerHideTasks, self).__init__(menuText=taskStatus.hideMenuText,
                                               helpText=taskStatus.hideHelpText,
-                                              bitmap=taskStatus.hideBitmap,
+                                              bitmap=taskStatus.getHideBitmap(kwargs['settings']),
                                               *args, **kwargs)
-    
+
+    def uniqueName(self):
+        return super(ViewerHideTasks, self).uniqueName() + '_' + unicode(self.__taskStatus)
+
     def isSettingChecked(self):
         return self.viewer.isHidingTaskStatus(self.__taskStatus)
         
     def doCommand(self, event):
-        self.viewer.hideTaskStatus(self.__taskStatus, 
-                                   self._isMenuItemChecked(event))
+        if wx.GetKeyState(wx.WXK_SHIFT):
+            self.viewer.showOnlyTaskStatus(self.__taskStatus)
+        else:
+            self.viewer.hideTaskStatus(self.__taskStatus, 
+                                       self._isMenuItemChecked(event))
     
 
 class ViewerHideCompositeTasks(ViewerCommand, UICheckCommand):
@@ -1837,18 +1870,25 @@ class ToggleCategory(NeedsSelectedCategorizableMixin, ViewerCommand):
     def onUpdateUI(self, event):
         super(ToggleCategory, self).onUpdateUI(event)
         if self.enabled(event):
-            check = self.category in self.viewer.curselection()[0].categories()
+            check = self.__all_selected_items_are_in_category()
             for menuItem in self.menuItems:
                 menuItem.Check(check)
+                
+    def __all_selected_items_are_in_category(self):
+        selected_items_in_category = [item for item in self.viewer.curselection() \
+                                      if self.category in item.categories()]
+        return selected_items_in_category == self.viewer.curselection()
 
     def enabled(self, event):
         viewerHasSelection = super(ToggleCategory, self).enabled(event)
         if not viewerHasSelection or self.viewer.isShowingCategories():
             return False
-        selectionCategories = self.viewer.curselection()[0].categories()
-        for ancestor in self.category.ancestors():
-            if ancestor.isMutualExclusive() and ancestor not in selectionCategories:
-                return False  # Not all mutually exclusive ancestors are checked
+        mutual_exclusive_ancestors = [ancestor for ancestor in self.category.ancestors() \
+                                      if ancestor.isMutualExclusive()]
+        for categorizable in self.viewer.curselection():
+            for ancestor in mutual_exclusive_ancestors:
+                if ancestor not in categorizable.categories():
+                    return False  # Not all mutually exclusive ancestors are checked
         return True  # All mutually exclusive ancestors are checked
     
 
@@ -2499,19 +2539,22 @@ class MainWindowRestore(UICommand):
 class Search(ViewerCommand, SettingsCommand):
     # Search can only be attached to a real viewer, not to a viewercontainer
     def __init__(self, *args, **kwargs):
-        super(Search, self).__init__(*args, **kwargs)
+        self.__bound = False
+        super(Search, self).__init__(*args, helpText=_('Search'), **kwargs)
         assert self.viewer.isSearchable()
                            
     def onFind(self, searchString, matchCase, includeSubItems, 
                searchDescription, regularExpression):
-        self.viewer.setSearchFilter(searchString, matchCase, includeSubItems, 
-                                    searchDescription, regularExpression)
+        if self.__bound:
+            self.viewer.setSearchFilter(searchString, matchCase, includeSubItems, 
+                                        searchDescription, regularExpression)
 
     def appendToToolBar(self, toolbar):
+        self.__bound = True
         searchString, matchCase, includeSubItems, searchDescription, regularExpression = \
             self.viewer.getSearchFilter()
         # pylint: disable=W0201
-        self.searchControl = widgets.SearchCtrl(toolbar, value=searchString,
+        self.searchControl = widgets.SearchCtrl(toolbar, self.id, value=searchString,
             style=wx.TE_PROCESS_ENTER, matchCase=matchCase, 
             includeSubItems=includeSubItems, 
             searchDescription=searchDescription, regularExpression=regularExpression,
@@ -2533,8 +2576,12 @@ class Search(ViewerCommand, SettingsCommand):
     def bindKeyDownInSearchCtrl(self):
         ''' Bind wx.EVT_KEY_DOWN to self.onSearchCtrlKeyDown so we can catch 
             the Escape key and drop down the menu on Ctrl-Down. '''
-        self.searchControl.getTextCtrl().Bind(wx.EVT_KEY_DOWN, 
+        self.searchControl.getTextCtrl().Bind(wx.EVT_KEY_DOWN,
                                               self.onSearchCtrlKeyDown)
+
+    def unbind(self, window, id_):
+        self.__bound = False
+        super(Search, self).unbind(window, id_)
 
     def onViewerKeyDown(self, event):
         ''' On Ctrl-F, move focus to the search control. '''
@@ -2559,14 +2606,24 @@ class Search(ViewerCommand, SettingsCommand):
     
 
 class ToolbarChoiceCommandMixin(object):
+    def __init__(self, *args, **kwargs):
+        self.choiceCtrl = None
+        super(ToolbarChoiceCommandMixin, self).__init__(*args, **kwargs)
+
     def appendToToolBar(self, toolbar):
         ''' Add our choice control to the toolbar. '''
         # pylint: disable=W0201
-        self.choiceCtrl = wx.Choice(toolbar, choices=self.choiceLabels)
+        self.choiceCtrl = wx.Choice(toolbar, self.id, choices=self.choiceLabels)
         self.currentChoice = self.choiceCtrl.Selection
         self.choiceCtrl.Bind(wx.EVT_CHOICE, self.onChoice)
         toolbar.AddControl(self.choiceCtrl)
-        
+
+    def unbind(self, window, id_):
+        if self.choiceCtrl is not None:
+            self.choiceCtrl.Unbind(wx.EVT_CHOICE)
+            self.choiceCtrl = None
+        super(ToolbarChoiceCommandMixin, self).unbind(window, id_)
+
     def onChoice(self, event):
         ''' The user selected a choice from the choice control. '''
         choiceIndex = event.GetInt()
@@ -2583,30 +2640,89 @@ class ToolbarChoiceCommandMixin(object):
         
     def setChoice(self, choice):
         ''' Programmatically set the current choice in the choice control. '''
-        index = self.choiceData.index(choice)
-        self.choiceCtrl.Selection = index
-        self.currentChoice = index
+        if self.choiceCtrl is not None:
+            index = self.choiceData.index(choice)
+            self.choiceCtrl.Selection = index
+            self.currentChoice = index
         
     def enable(self, enable=True):
-        self.choiceCtrl.Enable(enable)
+        if self.choiceCtrl is not None:
+            self.choiceCtrl.Enable(enable)
 
 
-class EffortViewerAggregationChoice(ToolbarChoiceCommandMixin, ViewerCommand):
+class EffortViewerAggregationChoice(ToolbarChoiceCommandMixin, SettingsCommand,
+                                    ViewerCommand):
     choiceLabels = [_('Effort details'), _('Effort per day'), 
                     _('Effort per week'), _('Effort per month')]
     choiceData = ['details', 'day', 'week', 'month']
 
-    def doChoice(self, choice):
-        self.viewer.showEffortAggregation(choice)
-        
+    def __init__(self, **kwargs):
+        super(EffortViewerAggregationChoice, self).__init__(helpText=_('Aggregation mode'), 
+                                                            **kwargs)
 
-class TaskViewerTreeOrListChoice(ToolbarChoiceCommandMixin, ViewerCommand):
+    def appendToToolBar(self, *args, **kwargs):
+        super(EffortViewerAggregationChoice, self).appendToToolBar(*args, 
+                                                                   **kwargs)
+        self.setChoice(self.settings.gettext(self.viewer.settingsSection(), 
+                                             'aggregation'))
+        pub.subscribe(self.on_setting_changed, 
+                      'settings.%s.aggregation' % self.viewer.settingsSection())
+        
+    def doChoice(self, choice):
+        self.settings.settext(self.viewer.settingsSection(), 'aggregation', 
+                              choice)
+
+    def on_setting_changed(self, value):
+        self.setChoice(value)
+                
+        
+class EffortViewerAggregationOption(UIRadioCommand, ViewerCommand, 
+                                    SettingsCommand):
+    def isSettingChecked(self):
+        return self.settings.gettext(self.viewer.settingsSection(), 
+                                     'aggregation') == self.value
+    
+    def doCommand(self, event):
+        self.settings.settext(self.viewer.settingsSection(), 'aggregation', 
+                              self.value)        
+
+
+class TaskViewerTreeOrListChoice(ToolbarChoiceCommandMixin, UICheckCommand,
+                                 ViewerCommand, SettingsCommand):
     choiceLabels = [_('Tree of tasks'), _('List of tasks')]
     choiceData = [True, False]
-    
-    def doChoice(self, choice):
-        self.viewer.showTree(choice)
+
+    def __init__(self, *args, **kwargs):
+        super(TaskViewerTreeOrListChoice, self).__init__( \
+            menuText=self.choiceLabels[0], 
+            helpText=_('When checked, show tasks as tree, '
+                       'otherwise show tasks as list'), *args, **kwargs)
         
+    def appendToToolBar(self, *args, **kwargs):
+        super(TaskViewerTreeOrListChoice, self).appendToToolBar(*args, **kwargs)
+        self.setChoice(self.settings.getboolean(self.viewer.settingsSection(), 
+                                                'treemode'))
+        pub.subscribe(self.on_setting_changed, 
+                      'settings.%s.treemode' % self.viewer.settingsSection())
+        
+    def doChoice(self, choice):
+        self.settings.setboolean(self.viewer.settingsSection(), 'treemode', 
+                                 choice)
+        
+    def on_setting_changed(self, value):
+        self.setChoice(value)
+        
+        
+class TaskViewerTreeOrListOption(UIRadioCommand, ViewerCommand, 
+                                 SettingsCommand):
+    def isSettingChecked(self):
+        return self.settings.getboolean(self.viewer.settingsSection(), 
+                                        'treemode') == self.value
+    
+    def doCommand(self, event):
+        self.settings.setboolean(self.viewer.settingsSection(), 'treemode', 
+                                 self.value)
+
 
 class CategoryViewerFilterChoice(ToolbarChoiceCommandMixin, UICheckCommand,
                                  SettingsCommand):
@@ -2639,13 +2755,37 @@ class CategoryViewerFilterChoice(ToolbarChoiceCommandMixin, UICheckCommand,
         self.setChoice(value)
         
 
-class SquareTaskViewerOrderChoice(ToolbarChoiceCommandMixin, ViewerCommand):
+class SquareTaskViewerOrderChoice(ToolbarChoiceCommandMixin, SettingsCommand,
+                                  ViewerCommand):
     choiceLabels = [_('Budget'), _('Time spent'), _('Fixed fee'), _('Revenue'), 
                     _('Priority')]
     choiceData = ['budget', 'timeSpent', 'fixedFee', 'revenue', 'priority']
-    
+
+    def __init__(self, **kwargs):
+        super(SquareTaskViewerOrderChoice, self).__init__(helpText=_('Order choice'), **kwargs)
+
+    def appendToToolBar(self, *args, **kwargs):
+        super(SquareTaskViewerOrderChoice, self).appendToToolBar(*args, 
+                                                                 **kwargs)
+        pub.subscribe(self.on_setting_changed, 
+                      'settings.%s.sortby' % self.viewer.settingsSection())
+                      
     def doChoice(self, choice):
-        self.viewer.orderBy(choice)
+        self.settings.settext(self.viewer.settingsSection(), 'sortby', choice)
+
+    def on_setting_changed(self, value):
+        self.setChoice(value)
+
+
+class SquareTaskViewerOrderByOption(UIRadioCommand, SettingsCommand, 
+                                    ViewerCommand):        
+    def isSettingChecked(self):
+        return self.settings.gettext(self.viewer.settingsSection(), 
+                                    'sortby') == self.value
+    
+    def doCommand(self, event):
+        self.settings.settext(self.viewer.settingsSection(), 'sortby', 
+                              self.value)
 
 
 class CalendarViewerConfigure(ViewerCommand):
@@ -2719,15 +2859,26 @@ class ToggleAutoColumnResizing(UICheckCommand, ViewerCommand, SettingsCommand):
         self.updateWidget()
 
 
-class ViewerPieChartAngle(ViewerCommand, SettingsCommand):        
+class ViewerPieChartAngle(ViewerCommand, SettingsCommand):
+    def __init__(self, *args, **kwargs):
+        self.sliderCtrl = None
+        super(ViewerPieChartAngle, self).__init__( \
+            helpText=_('Set pie chart angle'), *args, **kwargs)
+
     def appendToToolBar(self, toolbar):
         ''' Add our slider control to the toolbar. '''
         # pylint: disable=W0201
-        self.sliderCtrl = wx.Slider(toolbar, minValue=0, maxValue=90,
-                                    value=self.getCurrentAngle())
+        self.sliderCtrl = wx.Slider(toolbar, self.id, minValue=0, maxValue=90,
+                                    value=self.getCurrentAngle(), size=(120, -1))
         self.sliderCtrl.Bind(wx.EVT_SLIDER, self.onSlider)
         toolbar.AddControl(self.sliderCtrl)
-        
+
+    def unbind(self, window, itemId):
+        if self.sliderCtrl is not None:
+            self.sliderCtrl.Unbind(wx.EVT_SLIDER)
+            self.sliderCtrl = None
+        super(ViewerPieChartAngle, self).unbind(window, itemId)
+
     def onSlider(self, event):
         ''' The user picked a new angle. '''
         event.Skip()
@@ -2741,8 +2892,9 @@ class ViewerPieChartAngle(ViewerCommand, SettingsCommand):
                                     'piechartangle')
 
     def setCurrentAngle(self):
-        self.settings.setint(self.viewer.settingsSection(), 'piechartangle', 
-                             self.sliderCtrl.GetValue())
+        if self.sliderCtrl is not None:
+            self.settings.setint(self.viewer.settingsSection(), 'piechartangle', 
+                                 self.sliderCtrl.GetValue())
    
 
 class RoundingPrecision(ToolbarChoiceCommandMixin, ViewerCommand, 
@@ -2751,6 +2903,9 @@ class RoundingPrecision(ToolbarChoiceCommandMixin, ViewerCommand,
     choiceData = [minutes * 60 for minutes in roundingChoices]  # Seconds
     choiceLabels = [_('No rounding'), _('1 minute')] + \
         [_('%d minutes') % minutes for minutes in roundingChoices[2:]]
+
+    def __init__(self, **kwargs):
+        super(RoundingPrecision, self).__init__(helpText=_('Rounding precision'), **kwargs)
 
     def doChoice(self, choice):
         self.settings.setint(self.viewer.settingsSection(), 'round', choice)
@@ -2767,6 +2922,7 @@ class RoundBy(UIRadioCommand, ViewerCommand, SettingsCommand):
   
 class AlwaysRoundUp(UICheckCommand, ViewerCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
+        self.checkboxCtrl = None
         super(AlwaysRoundUp, self).__init__(\
             menuText=_('&Always round up'),
             helpText=_('Always round up to the next rounding increment'), 
@@ -2775,9 +2931,15 @@ class AlwaysRoundUp(UICheckCommand, ViewerCommand, SettingsCommand):
     def appendToToolBar(self, toolbar):
         ''' Add a checkbox control to the toolbar. '''
         # pylint: disable=W0201
-        self.checkboxCtrl = wx.CheckBox(toolbar, label=self.menuText)
+        self.checkboxCtrl = wx.CheckBox(toolbar, self.id, label=self.menuText)
         self.checkboxCtrl.Bind(wx.EVT_CHECKBOX, self.onCheck)
         toolbar.AddControl(self.checkboxCtrl)
+
+    def unbind(self, window, itemId):
+        if self.checkboxCtrl is not None:
+            self.checkboxCtrl.Unbind(wx.EVT_CHECKBOX)
+            self.checkboxCtrl = None
+        super(AlwaysRoundUp, self).unbind(window, itemId)
 
     def isSettingChecked(self):
         return self.settings.getboolean(self.viewer.settingsSection(),
@@ -2794,32 +2956,9 @@ class AlwaysRoundUp(UICheckCommand, ViewerCommand, SettingsCommand):
                                  alwaysRoundUp)
         
     def setValue(self, value):
-        self.checkboxCtrl.SetValue(value)
+        if self.checkboxCtrl is not None:
+            self.checkboxCtrl.SetValue(value)
        
     def enable(self, enable=True):
-        self.checkboxCtrl.Enable(enable)
-
-
-class LinkToCampaign(UICommand):
-    ''' UICommand for a campaign button. '''
-
-    url = 'http://indiegogo.com/taskcoach'
-
-    def appendToToolBar(self, toolbar):
-        ''' Add a button to the toolbar that takes the user to the IndieGoGo
-            campaign when clicked. '''
-        self.link = wx.HyperlinkCtrl(toolbar, wx.ID_ANY, 
-            _('Help fund drag and drop of columns'), self.url)
-        self.link.Bind(wx.EVT_HYPERLINK, self.on_click)
-        toolbar.AddControl(self.link)
-
-    def on_click(self, event):
-        ''' Handle the button click event by opening a browser. '''
-        desktop.open(self.url)
-
-    @staticmethod
-    def campaign_is_running():
-        ''' Return whether the campaign for drag and drop of columns is still
-            running. '''
-        return date.Now() < date.DateTime(2012, 10, 22, 0, 0, 0)
-
+        if self.checkboxCtrl is not None:
+            self.checkboxCtrl.Enable(enable)

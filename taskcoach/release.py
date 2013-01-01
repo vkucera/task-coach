@@ -29,28 +29,19 @@ Release steps:
     * When all tests pass, run 'svn commit -m "Updated translations"' 
   - Run 'make reallyclean' to remove old packages.
   - Run 'make alltests'.
-  - Go to http://www.fraca7.net:8010/builders/Release to build releases.
-  - For platforms not supported by the release builder, create and upload the 
-    packages manually:
-    * Mac OS X 10.4:        'make dmg; release.py upload'
-    * Ubuntu 10.04:         'make deb; release.py upload'
-    * Fedora 14:            'make fedora; release.py upload'
-                            'make rpm; release.py upload'
-    * OpenSuse:             'make opensuse; release.py upload'
-    * Windows:              'make windists; release.py upload'
+  - Run 'python release.py release' to build the distributions, upload and download them
+    to/from Sourceforge, generate MD5 digests, generate the website, upload the 
+    website to the Dreamhost and Hostland websites, announce the release on 
+    Twitter, Identi.ca, Freecode and PyPI (Python Package Index), mark the bug reports
+    on SourceForge fixed-and-released, send the 
+    announcement email, and to tag the release in Subversion.
   - Mark the Windows and Mac OS X distributions as defaults for their platform:
     https://sourceforge.net/project/admin/explorer.php?group_id=130831#
     Navigate into the folder of the latest release and click on the Windows
     and Mac OS X distributions to set them as default download.
-  - Run 'python release.py release' to download the distributions from
-    Sourceforge, generate MD5 digests, generate the website, upload the 
-    website to the Dreamhost and Hostland websites, announce the release on 
-    Twitter, Identi.ca, Freecode and PyPI (Python Package Index), send the 
-    announcement email, and to tag the release in Subversion.
   - Create branch if feature release.
   - Merge recent changes to the trunk.
   - Add release to Sourceforge bug tracker and support request groups.
-  - Set bug reports on Sourceforge to Pending state.
   - Mark feature requests on Uservoice completed.
   - If new release branch, update the buildbot masters configuration.
 '''
@@ -66,11 +57,19 @@ import getpass
 import hashlib
 import base64
 import ConfigParser
-import simplejson
 import codecs
 import optparse
 import taskcoachlib.meta
 import oauth2 as oauth
+import time
+import shutil
+import zipfile
+
+try:
+    import simplejson as json
+except ImportError:
+    import json
+
 
 # pylint: disable=W0621,W0613
 
@@ -94,7 +93,9 @@ class Settings(ConfigParser.SafeConfigParser, object):
         self.read(self.filename)
 
     def set_defaults(self):
-        defaults = dict(sourceforge=['username', 'password'],
+        defaults = dict(sourceforge=['username', 'password', 'consumer_key',
+                                     'consumer_secret', 'oauth_token',
+                                     'oauth_token_secret'],
                         smtp=['hostname', 'port', 'username', 'password',
                               'sender_name', 'sender_email_address'],
                         dreamhost=['hostname', 'username', 'password', 
@@ -150,6 +151,68 @@ def rsync(settings, options, rsync_command):
 
 
 @progress
+def building_packages(settings, options):
+    metadata = taskcoachlib.meta.data.metaDict
+    branch = 'branches/Release%s_Branch' % '_'.join(metadata['version'].split('.')[:2])
+    if options.dry_run:
+        print 'Skipping force build on branch "%s"' % branch
+    else:
+        status = json.load(urllib.urlopen('http://www.fraca7.net:8010/json/builders/Release'))
+        if status['state'] != 'idle':
+            raise RuntimeError('Builder Release is not idle.')
+
+        if not httpPostRequest('www.fraca7.net', '/builders/Release/force',
+                               urllib.urlencode([('forcescheduler', 'Force'),
+                                                 ('branch', branch),
+                                                 ('username', 'release'),
+                                                 ('reason', 'release')]),
+                               'application/x-www-form-urlencoded; charset=utf-8', port=8010, ok=302):
+            raise RuntimeError('Force request failed')
+
+        if options.verbose:
+            print 'Build forced.'
+
+    if options.verbose:
+        print 'Waiting for completion.'
+
+    while True:
+        time.sleep(60)
+        status = json.load(urllib.urlopen('http://www.fraca7.net:8010/json/builders/Release'))
+        if status['state'] == 'idle':
+            break
+
+    if options.verbose:
+        print 'Build finished.'
+        print 'Downloading release.zip'
+
+    buildno = status['cachedBuilds'][-1]
+    status = json.load(urllib.urlopen('http://www.fraca7.net:8010/json/builders/Release/builds/%d' % buildno))
+    try:
+        zipurl = status['steps'][-1]['urls']['Download release']
+    except:
+        raise RuntimeError('release.zip URL not found. Build failed.')
+
+    if os.path.exists('dist'):
+        shutil.rmtree('dist')
+    os.mkdir('dist')
+
+    shutil.copyfileobj(urllib.urlopen(zipurl), file(os.path.join('dist', 'release.zip'), 'wb'))
+
+    try:
+        zipFile = zipfile.ZipFile(os.path.join('dist', 'release.zip'), 'r')
+        try:
+            for info in zipFile.infolist():
+                if options.verbose:
+                    print 'Extracting "%s"' % info.filename
+                shutil.copyfileobj(zipFile.open(info, 'r'),
+                                   file(os.path.join('dist', info.filename), 'wb'))
+        finally:
+            zipFile.close()
+    finally:
+        os.remove(os.path.join('dist', 'release.zip'))
+
+
+@progress
 def uploading_distributions_to_SourceForge(settings, options):
     rsync(settings, options, 'rsync -avP -e ssh dist/* %s')
 
@@ -180,7 +243,7 @@ def generating_MD5_digests(settings, options):
 @progress
 def generating_website(settings, options):
     os.chdir('website.in')
-    os.system('python make.py')
+    os.system('"%s" make.py' % sys.executable)
     os.chdir('..')
 
 
@@ -297,16 +360,18 @@ def postRequest(connection, api_call, body, contentType, ok=200, **headers):
     response = connection.getresponse()
     if response.status != ok:
         print 'Request failed: %d %s' % (response.status, response.reason)
+        return False
+    return True
 
 
-def httpPostRequest(host, api_call, body, contentType, ok=200, **headers):
-    connection = httplib.HTTPConnection(host)
-    postRequest(connection, api_call, body, contentType, ok, **headers)
+def httpPostRequest(host, api_call, body, contentType, ok=200, port=80, **headers):
+    connection = httplib.HTTPConnection(host, port)
+    return postRequest(connection, api_call, body, contentType, ok, **headers)
 
 
 def httpsPostRequest(host, api_call, body, contentType, ok=200, **headers):
     connection = httplib.HTTPSConnection(host)
-    postRequest(connection, api_call, body, contentType, ok, **headers)
+    return postRequest(connection, api_call, body, contentType, ok, **headers)
 
 
 @progress
@@ -317,8 +382,8 @@ def announcing_on_Freecode(settings, options):
     changelog = latest_release(metadata, summary_only=True)
     tag = 'Feature enhancements' if version.endswith('.0') else 'Bug fixes'
     release = dict(version=version, changelog=changelog, tag_list=tag)
-    body = codecs.encode(simplejson.dumps(dict(auth_code=auth_code, 
-                                               release=release)))
+    body = codecs.encode(json.dumps(dict(auth_code=auth_code, 
+                                         release=release)))
     path = '/projects/taskcoach/releases.json'
     host = 'freecode.com'
     if options.dry_run:
@@ -396,12 +461,48 @@ def announcing(settings, options):
     mailing_announcement(settings, options)
 
 
+def updating_Sourceforge_trackers(settings, options):
+    sys.path.insert(0, 'changes.in')
+    import changes, changetypes
+
+    consumer_key = settings.get('sourceforge', 'consumer_key')
+    consumer_secret = settings.get('sourceforge', 'consumer_secret')
+    consumer = oauth.Consumer(key=consumer_key, secret=consumer_secret)
+    oauth_token = settings.get('sourceforge', 'oauth_token')
+    oauth_token_secret = settings.get('sourceforge', 'oauth_token_secret')
+    token = oauth.Token(key=oauth_token, secret=oauth_token_secret)
+    client = oauth.Client(consumer, token)
+
+    for release in changes.releases:
+        if release.number == taskcoachlib.meta.version:
+            break
+    else:
+        raise RuntimeError('Could not find version "%s" in changelog' % taskcoachlib.meta.version)
+
+    for bugFixed in release.bugsFixed:
+        if isinstance(bugFixed, changetypes.Bugv2):
+            for id_ in bugFixed.changeIds:
+                if options.dry_run:
+                    print 'Skipping mark bug #%s released' % id_
+                else:
+                    response, content = client.request('https://sourceforge.net/rest/p/taskcoach/bugs/%s/save' % id_,
+                                                       method='POST',
+                                                       body=urllib.urlencode(dict([('ticket_form.status', 'fixed-and-released')])))
+                    if response.status != 302:
+                        print 'WARNING: could not update bug #%s (%d)' % (id_, response.status)
+                    elif options.verbose:
+                        print 'Bug #%s updated.' % id_
+
+
 def releasing(settings, options):
+    building_packages(settings, options)
+    uploading_distributions_to_SourceForge(settings, options)
     downloading_distributions_from_SourceForge(settings, options)
     generating_MD5_digests(settings, options)
     generating_website(settings, options)
     uploading_website(settings, options)
     announcing(settings, options)
+    updating_Sourceforge_trackers(settings, options)
     tagging_release_in_subversion(settings, options)
 
 
@@ -506,6 +607,7 @@ def tagging_release_in_subversion(settings, options):
      
    
 COMMANDS = dict(release=releasing,
+                build=building_packages,
                 upload=uploading_distributions_to_SourceForge, 
                 download=downloading_distributions_from_SourceForge, 
                 md5=generating_MD5_digests,
@@ -518,6 +620,7 @@ COMMANDS = dict(release=releasing,
                 pypi=registering_with_PyPI, 
                 mail=mailing_announcement,
                 announce=announcing,
+                update=updating_Sourceforge_trackers,
                 tag=tagging_release_in_subversion)
 
 USAGE = 'Usage: %%prog [options] [%s]' % '|'.join(sorted(COMMANDS.keys()))
