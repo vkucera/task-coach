@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.21', 'December 28, 2012',
+Release('1.3.21', 'January 1, 2013',
     summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
         Bugv2('''Changing the percentage complete would not cause the
