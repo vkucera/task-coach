@@ -243,7 +243,7 @@ def generating_MD5_digests(settings, options):
 @progress
 def generating_website(settings, options):
     os.chdir('website.in')
-    os.system('python make.py')
+    os.system('"%s" make.py' % sys.executable)
     os.chdir('..')
 
 
