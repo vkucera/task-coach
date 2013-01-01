@@ -32,7 +32,8 @@ Release steps:
   - Run 'python release.py release' to build the distributions, upload and download them
     to/from Sourceforge, generate MD5 digests, generate the website, upload the 
     website to the Dreamhost and Hostland websites, announce the release on 
-    Twitter, Identi.ca, Freecode and PyPI (Python Package Index), send the 
+    Twitter, Identi.ca, Freecode and PyPI (Python Package Index), mark the bug reports
+    on SourceForge fixed-and-released, send the 
     announcement email, and to tag the release in Subversion.
   - Mark the Windows and Mac OS X distributions as defaults for their platform:
     https://sourceforge.net/project/admin/explorer.php?group_id=130831#
@@ -41,7 +42,6 @@ Release steps:
   - Create branch if feature release.
   - Merge recent changes to the trunk.
   - Add release to Sourceforge bug tracker and support request groups.
-  - Set bug reports on Sourceforge to Pending state.
   - Mark feature requests on Uservoice completed.
   - If new release branch, update the buildbot masters configuration.
 '''
@@ -93,7 +93,9 @@ class Settings(ConfigParser.SafeConfigParser, object):
         self.read(self.filename)
 
     def set_defaults(self):
-        defaults = dict(sourceforge=['username', 'password'],
+        defaults = dict(sourceforge=['username', 'password', 'consumer_key',
+                                     'consumer_secret', 'oauth_token',
+                                     'oauth_token_secret'],
                         smtp=['hostname', 'port', 'username', 'password',
                               'sender_name', 'sender_email_address'],
                         dreamhost=['hostname', 'username', 'password', 
@@ -459,6 +461,39 @@ def announcing(settings, options):
     mailing_announcement(settings, options)
 
 
+def updating_Sourceforge_trackers(settings, options):
+    sys.path.insert(0, 'changes.in')
+    import changes, changetypes
+
+    consumer_key = settings.get('sourceforge', 'consumer_key')
+    consumer_secret = settings.get('sourceforge', 'consumer_secret')
+    consumer = oauth.Consumer(key=consumer_key, secret=consumer_secret)
+    oauth_token = settings.get('sourceforge', 'oauth_token')
+    oauth_token_secret = settings.get('sourceforge', 'oauth_token_secret')
+    token = oauth.Token(key=oauth_token, secret=oauth_token_secret)
+    client = oauth.Client(consumer, token)
+
+    for release in changes.releases:
+        if release.number == taskcoachlib.meta.version:
+            break
+    else:
+        raise RuntimeError('Could not find version "%s" in changelog' % taskcoachlib.meta.version)
+
+    for bugFixed in release.bugsFixed:
+        if isinstance(bugFixed, changetypes.Bugv2):
+            for id_ in bugFixed.changeIds:
+                if options.dry_run:
+                    print 'Skipping mark bug #%s released' % id_
+                else:
+                    response, content = client.request('https://sourceforge.net/rest/p/taskcoach/bugs/%s/save' % id_,
+                                                       method='POST',
+                                                       body=urllib.urlencode(dict([('ticket_form.status', 'fixed-and-released')])))
+                    if response.status != 302:
+                        print 'WARNING: could not update bug #%s (%d)' % (id_, response.status)
+                    elif options.verbose:
+                        print 'Bug #%s updated.' % id_
+
+
 def releasing(settings, options):
     building_packages(settings, options)
     uploading_distributions_to_SourceForge(settings, options)
@@ -467,6 +502,7 @@ def releasing(settings, options):
     generating_website(settings, options)
     uploading_website(settings, options)
     announcing(settings, options)
+    updating_Sourceforge_trackers(settings, options)
     tagging_release_in_subversion(settings, options)
 
 
@@ -584,6 +620,7 @@ COMMANDS = dict(release=releasing,
                 pypi=registering_with_PyPI, 
                 mail=mailing_announcement,
                 announce=announcing,
+                update=updating_Sourceforge_trackers,
                 tag=tagging_release_in_subversion)
 
 USAGE = 'Usage: %%prog [options] [%s]' % '|'.join(sorted(COMMANDS.keys()))
