@@ -54,7 +54,7 @@ class UICommandContainerMixin(object):
                 self.AppendSeparator()
             elif isinstance(uiCommand, int): # Toolbars only
                 self.AppendStretchSpacer(uiCommand)
-            elif isinstance(uiCommand, str):
+            elif isinstance(uiCommand, (str, unicode)):
                 label = wx.MenuItem(self, wx.NewId(), uiCommand)
                 label.Enable(False)
                 self.AppendItem(label)
