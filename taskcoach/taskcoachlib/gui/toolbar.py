@@ -436,3 +436,9 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
 
     def appendUICommand(self, uiCommand):
         return uiCommand.appendToToolBar(self)
+
+
+class MainToolBar(ToolBar):
+    def Realize(self):
+        super(MainToolBar, self).Realize()
+        wx.CallAfter(self.SetMinSize, self.GetClientSize())

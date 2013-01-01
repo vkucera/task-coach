@@ -258,6 +258,7 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
         currentToolbar = self.manager.GetPane('toolbar')
         if currentToolbar.IsOk():
             currentToolbar.window.SetSize((event.GetSize().GetWidth(), -1))
+            currentToolbar.window.SetMinSize((event.GetSize().GetWidth(), 42))
         event.Skip()
 
     def showStatusBar(self, value=True):
@@ -295,7 +296,7 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
             self.manager.DetachPane(currentToolbar.window)
             currentToolbar.window.Destroy()
         if value:
-            bar = toolbar.ToolBar(self, self.settings, size=value)
+            bar = toolbar.MainToolBar(self, self.settings, size=value)
             self.manager.AddPane(bar, aui.AuiPaneInfo().Name('toolbar').
                                  Caption('Toolbar').ToolbarPane().Top().DestroyOnClose().
                                  LeftDockable(False).RightDockable(False))

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-01-01 01:52+CET\n"
+"POT-Creation-Date: 2013-01-01 12:43+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,7 +20,7 @@ msgid "Errors have occured. Please see \"%s\""
 msgstr ""
 
 #: taskcoachlib/application/application.py:66
-#: taskcoachlib/gui/mainwindow.py:351 taskcoachlib/iphone/protocol.py:482
+#: taskcoachlib/gui/mainwindow.py:352 taskcoachlib/iphone/protocol.py:482
 #: taskcoachlib/widgets/draganddrop.py:121
 #: taskcoachlib/widgets/draganddrop.py:163
 msgid "Error"
@@ -2380,15 +2380,15 @@ msgstr ""
 msgid "%s settings error"
 msgstr ""
 
-#: taskcoachlib/gui/mainwindow.py:328
+#: taskcoachlib/gui/mainwindow.py:329
 msgid "iPhone/iPod"
 msgstr ""
 
-#: taskcoachlib/gui/mainwindow.py:338
+#: taskcoachlib/gui/mainwindow.py:339
 msgid "Synchronization type"
 msgstr ""
 
-#: taskcoachlib/gui/mainwindow.py:348
+#: taskcoachlib/gui/mainwindow.py:349
 msgid ""
 "An iPhone or iPod Touch device tried to synchronize with this\n"
 "task file, but the protocol negotiation failed. Please file a\n"
