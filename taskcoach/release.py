@@ -636,6 +636,11 @@ parser.add_option('-v', '--verbose', action='store_true', dest='verbose',
                   help='provide more detailed progress information')
 options, args = parser.parse_args()
 
+# Sanity check
+import struct
+if sys.platform == 'darwin' and len(struct.pack('L', 0)) == 8:
+    raise RuntimeError('Please use python-32 to run this script')
+
 try:
     if len(args) > 1:
         COMMANDS[args[0]](SETTINGS, options, *args[1:])  # pylint: disable=W0142
