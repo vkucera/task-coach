@@ -2541,7 +2541,7 @@ class Search(ViewerCommand, SettingsCommand):
         searchString, matchCase, includeSubItems, searchDescription, regularExpression = \
             self.viewer.getSearchFilter()
         # pylint: disable=W0201
-        self.searchControl = widgets.SearchCtrl(toolbar, self.id, value=searchString,
+        self.searchControl = widgets.SearchCtrl(toolbar, value=searchString,
             style=wx.TE_PROCESS_ENTER, matchCase=matchCase, 
             includeSubItems=includeSubItems, 
             searchDescription=searchDescription, regularExpression=regularExpression,
@@ -2600,7 +2600,7 @@ class ToolbarChoiceCommandMixin(object):
     def appendToToolBar(self, toolbar):
         ''' Add our choice control to the toolbar. '''
         # pylint: disable=W0201
-        self.choiceCtrl = wx.Choice(toolbar, self.id, choices=self.choiceLabels)
+        self.choiceCtrl = wx.Choice(toolbar, choices=self.choiceLabels)
         self.currentChoice = self.choiceCtrl.Selection
         self.choiceCtrl.Bind(wx.EVT_CHOICE, self.onChoice)
         toolbar.AddControl(self.choiceCtrl)
@@ -2855,7 +2855,7 @@ class ViewerPieChartAngle(ViewerCommand, SettingsCommand):
     def appendToToolBar(self, toolbar):
         ''' Add our slider control to the toolbar. '''
         # pylint: disable=W0201
-        self.sliderCtrl = wx.Slider(toolbar, self.id, minValue=0, maxValue=90,
+        self.sliderCtrl = wx.Slider(toolbar, minValue=0, maxValue=90,
                                     value=self.getCurrentAngle(), size=(120, -1))
         self.sliderCtrl.Bind(wx.EVT_SLIDER, self.onSlider)
         toolbar.AddControl(self.sliderCtrl)
@@ -2918,7 +2918,7 @@ class AlwaysRoundUp(UICheckCommand, ViewerCommand, SettingsCommand):
     def appendToToolBar(self, toolbar):
         ''' Add a checkbox control to the toolbar. '''
         # pylint: disable=W0201
-        self.checkboxCtrl = wx.CheckBox(toolbar, self.id, label=self.menuText)
+        self.checkboxCtrl = wx.CheckBox(toolbar, label=self.menuText)
         self.checkboxCtrl.Bind(wx.EVT_CHECKBOX, self.onCheck)
         toolbar.AddControl(self.checkboxCtrl)
 
