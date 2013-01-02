@@ -571,9 +571,10 @@ Task Coach development team
         session.set_debuglevel(1)
     session.helo()
     session.ehlo()
-    session.starttls()
-    session.esmtp_features["auth"] = "LOGIN"  # Needed for Gmail SMTP.
-    session.login(username, password)
+    if password:
+        session.starttls()
+        session.esmtp_features["auth"] = "LOGIN"  # Needed for Gmail SMTP.
+        session.login(username, password)
     if options.dry_run:
         print 'Skipping sending mail.'
         smtpresult = None
