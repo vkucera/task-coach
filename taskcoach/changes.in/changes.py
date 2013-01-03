@@ -21,6 +21,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
+
+Release('1.3.23', 'January ??, 2013',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bugv2('''Some navigation shortcuts in the date/time picker
+would not work on Windows or Linux.''', '1340'),
+        Bugv2('''Typing would not do anything on Windows in the
+date/time picker if the calendar is shown.''', '1340'),
+        ],
+    ),
             
 Release('1.3.22', 'January 2, 2013',
     summary='''This is a bugfix release.''',

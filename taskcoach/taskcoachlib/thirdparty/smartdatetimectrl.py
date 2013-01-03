@@ -276,7 +276,7 @@ class Entry(wx.Panel):
         wx.EVT_TIMER(self, timerId, self.OnTimer)
 
         wx.EVT_PAINT(self, self.OnPaint)
-        wx.EVT_KEY_DOWN(self, self.OnKeyDown)
+        wx.EVT_CHAR(self, self.OnChar)
         wx.EVT_LEFT_UP(self, self.OnLeftUp)
         wx.EVT_KILL_FOCUS(self, self.OnKillFocus)
         wx.EVT_SET_FOCUS(self, self.OnSetFocus)
@@ -401,13 +401,13 @@ class Entry(wx.Panel):
         if self.__focus is not None:
             self.__SetFocus(self.__fields[(self.__fields.index(self.__focus) + 1) % len(self.__fields)])
 
-    def OnKeyDown(self, event):
+    def OnChar(self, event):
         if event.GetKeyCode() == wx.WXK_TAB:
             self.DismissPopup()
             self.Navigate(not event.ShiftDown())
             return
 
-        if event.GetKeyCode() in [wx.WXK_RIGHT, wx.WXK_DECIMAL, wx.WXK_NUMPAD_DECIMAL] or event.GetUnicodeKey() == ord('.'):
+        if event.GetKeyCode() in [wx.WXK_RIGHT, wx.WXK_DECIMAL, wx.WXK_NUMPAD_DECIMAL, ord('.'), ord(',')]:
             self.FocusNext()
         elif event.GetKeyCode() == wx.WXK_LEFT:
             if self.__focus is not None:
@@ -515,7 +515,7 @@ class NumericField(Field):
         if event.GetKeyCode() >= wx.WXK_NUMPAD0 and event.GetKeyCode() <= wx.WXK_NUMPAD9:
             number = event.GetKeyCode() - wx.WXK_NUMPAD0
         else:
-            number = event.GetUnicodeKey() - ord('0')
+            number = event.GetKeyCode() - ord('0')
 
         if number >= 0 and number <= 9:
             if self.__state == 0:
@@ -699,12 +699,12 @@ class TimeEntry(Entry):
 
         EVT_ENTRY_CHOICE_SELECTED(self, self.__OnHourSelected)
 
-    def OnKeyDown(self, event):
-        if event.GetUnicodeKey() == ord(':'):
+    def OnChar(self, event):
+        if event.GetKeyCode() == ord(':'):
             self.FocusNext()
             event.Skip()
         else:
-            return super(TimeEntry, self).OnKeyDown(event)
+            return super(TimeEntry, self).OnChar(event)
 
     def DismissPopup(self):
         super(TimeEntry, self).DismissPopup()
@@ -997,17 +997,17 @@ class DateEntry(Entry):
         self.DismissPopup()
         event.Skip()
 
-    def OnKeyDown(self, event):
+    def OnChar(self, event):
         if event.GetKeyCode() == wx.WXK_TAB and self.__calendar is not None:
             self.__calendar.Dismiss()
-        super(DateEntry, self).OnKeyDown(event)
+        super(DateEntry, self).OnChar(event)
 
-    def OnKeyDown(self, event):
-        if event.GetUnicodeKey() == ord('/'):
+    def OnChar(self, event):
+        if event.GetKeyCode() == ord('/'):
             self.FocusNext()
             event.Skip()
         else:
-            return super(DateEntry, self).OnKeyDown(event)
+            return super(DateEntry, self).OnChar(event)
 
     def GetDate(self):
         return datetime.date(year=self.Field('year').GetValue(),
@@ -1233,13 +1233,13 @@ class _PopupWindow(wx.Dialog):
             kwargs['style'] |= wx.WANTS_CHARS
         super(_PopupWindow, self).__init__(*args, **kwargs)
 
-        self.__interior = wx.Panel(self)
+        self.__interior = wx.Panel(self, style=wx.WANTS_CHARS if '__WXMSW__' in wx.PlatformInfo else 0)
 
         wx.EVT_ACTIVATE(self, self.OnActivate)
-        if '__WXGTK__' in wx.PlatformInfo:
-            wx.EVT_KEY_DOWN(self.__interior, self.OnKeyDown)
+        if '__WXMAC__' in wx.PlatformInfo:
+            wx.EVT_CHAR(self, self.OnChar)
         else:
-            wx.EVT_KEY_DOWN(self, self.OnKeyDown)
+            wx.EVT_CHAR(self.__interior, self.OnChar)
 
         self.Fill(self.__interior)
 
@@ -1257,9 +1257,9 @@ class _PopupWindow(wx.Dialog):
         self.ProcessEvent(PopupDismissEvent(self))
         self.Destroy()
 
-    def OnKeyDown(self, event):
+    def OnChar(self, event):
         if not self.HandleKey(event):
-            self.GetParent().OnKeyDown(event)
+            self.GetParent().OnChar(event)
 
     def HandleKey(self, event):
         return False
@@ -1786,12 +1786,12 @@ class SmartDateTimeCtrl(wx.Panel):
 
     def HandleKey(self, event):
         if self.GetDateTime() is not None:
-            if event.GetUnicodeKey() in [ord('t'), ord('T')]:
+            if event.GetKeyCode() in [ord('t'), ord('T')]:
                 # Today, same time
                 self.SetDateTime(datetime.datetime.combine(datetime.datetime.now().date(), self.GetDateTime().time()),
                                  notify=True)
                 return True
-            elif event.GetUnicodeKey() in [ord('n'), ord('N')]:
+            elif event.GetKeyCode() in [ord('n'), ord('N')]:
                 # Now
                 self.SetDateTime(datetime.datetime.now())
                 return True
