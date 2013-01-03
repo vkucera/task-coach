@@ -29,6 +29,8 @@ Release('1.3.23', 'January ??, 2013',
 would not work on Windows or Linux.''', '1340'),
         Bugv2('''Typing would not do anything on Windows in the
 date/time picker if the calendar is shown.''', '1340'),
+        Bugv2('''The calendar popup from the date/time picker
+would not show all days.''', '1340'),
         ],
     ),
             

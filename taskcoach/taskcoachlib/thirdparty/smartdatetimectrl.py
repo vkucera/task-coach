@@ -1247,6 +1247,9 @@ class _PopupWindow(wx.Dialog):
         sizer.Add(self.__interior, 1, wx.EXPAND)
         self.SetSizer(sizer)
 
+    def interior(self):
+        return self.__interior
+
     def Popup(self, position):
         self.Move(position)
         self.Show()
@@ -1622,6 +1625,7 @@ class _CalendarPopup(_PopupWindow):
                     self.__month = 1
                 else:
                     self.__month += 1
+            self.SetClientSize(self.GetExtent(wx.ClientDC(self.interior())))
             self.Refresh()
             return
 
