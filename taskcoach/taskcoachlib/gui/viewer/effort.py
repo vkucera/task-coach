@@ -407,7 +407,7 @@ class EffortViewer(base.ListViewer,
     periodRenderers = dict( \
         details=lambda anEffort, humanReadable=True: render.dateTimePeriod(anEffort.getStart(), 
                                                        anEffort.getStop(), humanReadable=humanReadable),
-        day=lambda anEffort, humanReadable=True: render.date(anEffort.getStart().date(),
+        day=lambda anEffort, humanReadable=True: render.date(anEffort.getStart(),
                                                              humanReadable=humanReadable),
         week=lambda anEffort, humanReadable=True: render.weekNumber(anEffort.getStart()),
         month=lambda anEffort, humanReadable=True: render.month(anEffort.getStart()))

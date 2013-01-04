@@ -84,7 +84,7 @@ class RenderDateTime(test.TestCase):
                          
 class RenderDate(test.TestCase):
     def testRenderDateWithDateTime(self):
-        self.assertEqual(render.date(date.Date(2000, 1, 1)), 
+        self.assertEqual(render.date(date.DateTime(2000, 1, 1)), 
                          render.date(date.DateTime(2000, 1, 1, 10, 11, 12)))
         
 
@@ -127,11 +127,11 @@ class RenderTimeLeftTest(test.TestCase):
         self.assertEqual('', render.timeLeft(timeLeft, True))
 
     def testOneHourLateWhenActive(self):
-        timeLeft = -date.TimeDelta(hours=1)
+        timeLeft = -date.ONE_HOUR
         self.assertEqual('-1:00', render.timeLeft(timeLeft, False))
 
     def testOneDayHourWhenCompleted(self):
-        timeLeft = date.TimeDelta(hours=-1)
+        timeLeft = -date.ONE_HOUR
         self.assertEqual('', render.timeLeft(timeLeft, True))
 
 
@@ -140,26 +140,29 @@ class RenderTimeSpentTest(test.TestCase):
         self.assertEqual('', render.timeSpent(date.TimeDelta()))
         
     def testOneSecond(self):
-        self.assertEqual('0:00:01', 
-            render.timeSpent(date.TimeDelta(seconds=1)))
+        self.assertEqual('0:00:01', render.timeSpent(date.ONE_SECOND))
             
     def testTenHours(self):
         self.assertEqual('10:00:00', 
             render.timeSpent(date.TimeDelta(hours=10)))
             
     def testNegativeHours(self):
-        self.assertEqual('-1:00:00', render.timeSpent(date.TimeDelta(hours=-1)))
+        self.assertEqual('-1:00:00', 
+                         render.timeSpent(date.TimeDelta(hours=-1)))
         
     def testNegativeSeconds(self):
-        self.assertEqual('-0:00:01', render.timeSpent(date.TimeDelta(seconds=-1)))
+        self.assertEqual('-0:00:01', 
+                         render.timeSpent(date.TimeDelta(seconds=-1)))
 
 
 class RenderWeekNumberTest(test.TestCase):
     def testWeek1(self):
-        self.assertEqual('2005-1', render.weekNumber(date.DateTime(2005,1,3)))
+        self.assertEqual('2005-1', 
+                         render.weekNumber(date.DateTime(2005, 1, 3)))
         
     def testWeek53(self):
-        self.assertEqual('2004-53', render.weekNumber(date.DateTime(2004,12,31)))
+        self.assertEqual('2004-53', 
+                         render.weekNumber(date.DateTime(2004, 12, 31)))
         
         
 class RenderRecurrenceTest(test.TestCase):
@@ -167,16 +170,20 @@ class RenderRecurrenceTest(test.TestCase):
         self.assertEqual('', render.recurrence(date.Recurrence()))
         
     def testDailyRecurrence(self):
-        self.assertEqual(_('Daily'), render.recurrence(date.Recurrence('daily')))
+        self.assertEqual(_('Daily'), 
+                         render.recurrence(date.Recurrence('daily')))
         
     def testWeeklyRecurrence(self):
-        self.assertEqual(_('Weekly'), render.recurrence(date.Recurrence('weekly')))
+        self.assertEqual(_('Weekly'), 
+                         render.recurrence(date.Recurrence('weekly')))
         
     def testMonthlyRecurrence(self):
-        self.assertEqual(_('Monthly'), render.recurrence(date.Recurrence('monthly')))
+        self.assertEqual(_('Monthly'), 
+                         render.recurrence(date.Recurrence('monthly')))
 
     def testYearlyRecurrence(self):
-        self.assertEqual(_('Yearly'), render.recurrence(date.Recurrence('yearly')))
+        self.assertEqual(_('Yearly'), 
+                         render.recurrence(date.Recurrence('yearly')))
 
     def testEveryOtherDay(self):
         self.assertEqual(_('Every other day'), 
@@ -234,6 +241,5 @@ class RenderException(test.TestCase):
         e = Exception(u'é')
         try:
             render.exception(Exception, e)
-        except UnicodeEncodeError: # pragma: no cover
+        except UnicodeEncodeError:  # pragma: no cover
             self.fail() 
-

@@ -49,7 +49,7 @@ class DateTimeEntryTest(test.wxTestCase):
 
 class DateEntryConstructorTest(test.wxTestCase):
     def testCreateWithDate(self):
-        tomorrow = date.Now() + date.oneDay
+        tomorrow = date.Tomorrow()
         dateTimeEntry = entry.DateTimeEntry(self.frame, 
                                             config.Settings(load=False), 
                                             tomorrow)

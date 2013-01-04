@@ -404,13 +404,13 @@ class EffortViewerRenderTestMixin(object):
         self.viewer = self.createViewer()
 
     def testToday(self):
-        theEffort = effort.Effort(self.task, self.midnight, self.midnight + date.TimeDelta(hours=2))
+        theEffort = effort.Effort(self.task, self.midnight, self.midnight + date.TWO_HOURS)
         self.task.addEffort(theEffort)
         text = self.viewer.widget.GetItemText(0)
         self.failUnless(text.startswith('Today'), '"Today" not in %s' % text)
 
     def testTomorrow(self):
-        theEffort = effort.Effort(self.task, self.midnight + date.TimeDelta(days=1),
+        theEffort = effort.Effort(self.task, self.midnight + date.ONE_DAY,
                                   self.midnight + date.TimeDelta(hours=2, days=1))
         self.task.addEffort(theEffort)
         text = self.viewer.widget.GetItemText(0)

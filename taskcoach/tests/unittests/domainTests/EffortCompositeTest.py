@@ -177,7 +177,7 @@ class CompositeEffortTest(test.TestCase):
 
     def testChangeStartTimeOfEffort_KeepWithinPeriod(self):
         self.task.addEffort(self.effort1)
-        self.effort1.setStart(self.effort1.getStart() + date.TimeDelta(hours=1))
+        self.effort1.setStart(self.effort1.getStart() + date.ONE_HOUR)
         self.assertEqual(self.effort1.duration(), self.composite.duration())
 
     def testChangeStartTimeOfEffort_KeepWithinPeriod_NoNotification(self):
@@ -188,7 +188,7 @@ class CompositeEffortTest(test.TestCase):
             events.append((newValue, sender))
             
         pub.subscribe(onEvent, effort.Effort.durationChangedEventType())
-        self.effort1.setStart(self.effort1.getStart() + date.TimeDelta(hours=1))
+        self.effort1.setStart(self.effort1.getStart() + date.ONE_HOUR)
         self.failIf((self.composite.duration(), self.composite) in events)
 
     def testChangeStartTimeOfEffort_MoveOutsidePeriode(self):
@@ -198,7 +198,7 @@ class CompositeEffortTest(test.TestCase):
 
     def testChangeStopTimeOfEffort_KeepWithinPeriod(self):
         self.task.addEffort(self.effort1)
-        self.effort1.setStop(self.effort1.getStop() + date.TimeDelta(hours=1))
+        self.effort1.setStop(self.effort1.getStop() + date.ONE_HOUR)
         self.assertEqual(self.effort1.duration(), self.composite.duration())
 
     def testChangeStopTimeOfEffort_MoveOutsidePeriod(self):
@@ -225,7 +225,7 @@ class CompositeEffortTest(test.TestCase):
             events.append((newValue, sender))
             
         pub.subscribe(onEvent, effort.Effort.durationChangedEventType())
-        self.effort1.setStop(self.effort1.getStop() + date.TimeDelta(hours=1))
+        self.effort1.setStop(self.effort1.getStop() + date.ONE_HOUR)
         self.failIf((self.composite.duration(), self.composite) in events)
 
     def testChangeStartTimeOfEffort_MoveInsidePeriod(self):
@@ -367,7 +367,7 @@ class CompositeEffortWithSubTasksTest(test.TestCase):
         grandChild = task.Task(subject='grandchild')
         self.child2.addChild(grandChild)
         grandChildEffort = effort.Effort(grandChild, self.composite.getStart(), 
-            self.composite.getStart() + date.TimeDelta(hours=1))
+            self.composite.getStart() + date.ONE_HOUR)
         grandChild.addEffort(grandChildEffort)
         self.assertEqual(grandChildEffort.duration(),
             self.composite.duration(recursive=True))
@@ -376,7 +376,7 @@ class CompositeEffortWithSubTasksTest(test.TestCase):
         self.task.addChild(self.child2)
         grandChild = task.Task(subject='grandchild')
         grandChildEffort = effort.Effort(grandChild, self.composite.getStart(),
-            self.composite.getStart() + date.TimeDelta(hours=1))
+            self.composite.getStart() + date.ONE_HOUR)
         grandChild.addEffort(grandChildEffort)
         self.child2.addChild(grandChild)
         self.assertEqual(grandChildEffort.duration(),

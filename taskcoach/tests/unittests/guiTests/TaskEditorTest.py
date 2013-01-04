@@ -107,9 +107,9 @@ class TaskEditorTestCase(test.wxTestCase):
         for section, name, value in self.extraSettings:
             self.settings.set(section, name, value)
         self.today = date.Now()
-        self.tomorrow = self.today + date.oneDay
-        self.yesterday = self.today - date.oneDay
-        self.twodaysago = self.yesterday - date.oneDay
+        self.tomorrow = self.today + date.ONE_DAY
+        self.yesterday = self.today - date.ONE_DAY
+        self.twodaysago = self.yesterday - date.ONE_DAY
         self.taskFile = persistence.TaskFile()
         self.taskList = self.taskFile.tasks()
         self.taskList.extend(self.createTasks())

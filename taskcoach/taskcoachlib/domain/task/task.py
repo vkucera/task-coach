@@ -79,13 +79,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
         now = date.Now()
         if now < self.__dueDateTime < maxDateTime:
-            date.Scheduler().schedule(self.onOverDue, self.__dueDateTime + date.oneSecond)
+            date.Scheduler().schedule(self.onOverDue, self.__dueDateTime + date.ONE_SECOND)
             if self.__dueSoonHours:
-                dueSoonDateTime = self.__dueDateTime + date.oneSecond - date.TimeDelta(hours=self.__dueSoonHours)
+                dueSoonDateTime = self.__dueDateTime + date.ONE_SECOND - date.TimeDelta(hours=self.__dueSoonHours)
                 if dueSoonDateTime > date.Now():
                     date.Scheduler().schedule(self.onDueSoon, dueSoonDateTime)
         if now < self.__plannedStartDateTime < maxDateTime:
-            date.Scheduler().schedule(self.onTimeToStart, self.__plannedStartDateTime + date.oneSecond)
+            date.Scheduler().schedule(self.onTimeToStart, self.__plannedStartDateTime + date.ONE_SECOND)
             
     @patterns.eventSource
     def __setstate__(self, state, event=None):
@@ -243,9 +243,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         date.Scheduler().unschedule(self.onDueSoon)
         if date.Now() <= dueDateTime < self.maxDateTime:
             date.Scheduler().schedule(self.onOverDue, 
-                                      dueDateTime + date.oneSecond)
+                                      dueDateTime + date.ONE_SECOND)
             if self.__dueSoonHours > 0:
-                dueSoonDateTime = dueDateTime + date.oneSecond - \
+                dueSoonDateTime = dueDateTime + date.ONE_SECOND - \
                     date.TimeDelta(hours=self.__dueSoonHours)
                 if dueSoonDateTime > date.Now():
                     date.Scheduler().schedule(self.onDueSoon, dueSoonDateTime)
@@ -296,7 +296,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.recomputeAppearance()
         if plannedStartDateTime < self.maxDateTime:
             date.Scheduler().schedule(self.onTimeToStart, 
-                                      plannedStartDateTime + date.oneSecond)
+                                      plannedStartDateTime + date.ONE_SECOND)
         pub.sendMessage(self.plannedStartDateTimeChangedEventType(), 
                         newValue=plannedStartDateTime, sender=self)
         for ancestor in self.ancestors():
@@ -533,7 +533,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__dueSoonHours = value
         dueDateTime = self.dueDateTime()
         if dueDateTime < self.maxDateTime:
-            newDueSoonDateTime = dueDateTime + date.oneSecond - date.TimeDelta(hours=self.__dueSoonHours)
+            newDueSoonDateTime = dueDateTime + date.ONE_SECOND - date.TimeDelta(hours=self.__dueSoonHours)
             date.Scheduler().schedule(self.onDueSoon, newDueSoonDateTime)
         self.recomputeAppearance()
             
@@ -1393,13 +1393,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         currentTime = dict(hour=dateTime.hour, minute=dateTime.minute,
                            second=dateTime.second, microsecond=dateTime.microsecond)
         if defaultDate == 'tomorrow':
-            dateTime += date.oneDay
+            dateTime += date.ONE_DAY
         elif defaultDate == 'dayaftertomorrow':
-            dateTime += (date.oneDay + date.oneDay)
+            dateTime += (date.ONE_DAY + date.ONE_DAY)
         elif defaultDate == 'nextfriday':
-            dateTime = (dateTime + date.oneDay).endOfWorkWeek().replace(**currentTime)
+            dateTime = (dateTime + date.ONE_DAY).endOfWorkWeek().replace(**currentTime)
         elif defaultDate == 'nextmonday':
-            dateTime = (dateTime + date.oneWeek).startOfWorkWeek().replace(**currentTime)
+            dateTime = (dateTime + date.ONE_WEEK).startOfWorkWeek().replace(**currentTime)
             
         if defaultTime == 'startofday':
             return dateTime.startOfDay()

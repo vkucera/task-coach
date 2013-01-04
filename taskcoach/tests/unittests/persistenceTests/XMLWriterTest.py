@@ -150,7 +150,7 @@ class XMLWriterTest(test.TestCase):
         self.expectNotInXML('<efforts>')
         
     def testBudget(self):
-        self.task.setBudget(date.TimeDelta(hours=1))
+        self.task.setBudget(date.ONE_HOUR)
         self.expectInXML('budget="%s"'%str(self.task.budget()))
         
     def testNoBudget(self):

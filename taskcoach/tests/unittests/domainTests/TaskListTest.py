@@ -54,7 +54,7 @@ class TaskListTest(test.TestCase):
 
     def testNrDueSoon(self):
         self.assertEqual(0, self.nrStatus(task.status.duesoon))
-        self.taskList.append(task.Task(dueDateTime=date.Now() + date.oneHour))
+        self.taskList.append(task.Task(dueDateTime=date.Now() + date.ONE_HOUR))
         self.assertEqual(1, self.nrStatus(task.status.duesoon))
         
     def testNrBeingTracked(self):

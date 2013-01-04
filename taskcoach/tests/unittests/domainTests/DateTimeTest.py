@@ -46,16 +46,6 @@ class DateTimeTest(test.TestCase):
         noonish = date.DateTime(2005,1,1,12,30,15,400)
         self.assertEqual(endOfDay, noonish.endOfDay())
         
-    def testStartOfWeek(self):
-        startOfWeek = date.DateTime(2005,3,28,0,0,0,0)
-        midweek = date.DateTime(2005,3,31,12,30,15,400)
-        self.assertEqual(startOfWeek, midweek.startOfWeek())
-
-    def testEndOfWeek(self):
-        endOfWeek = date.DateTime(2005,4,3,23,59,59,999999)
-        midweek = date.DateTime(2005,3,31,12,30,15,400)
-        self.assertEqual(endOfWeek, midweek.endOfWeek())
-        
     def testStartOfWorkWeekOnWednesday(self):
         startOfWorkWeek = date.DateTime(2011,7,25,0,0,0,0)
         wednesday = date.DateTime(2011,7,27,8,39,10)
@@ -81,33 +71,12 @@ class DateTimeTest(test.TestCase):
         midweek = date.DateTime(2010,5,1,12,30,15,200000)
         self.assertEqual(endOfWorkWeek, midweek.endOfWorkWeek())
         
-    def testStartOfMonth(self):
-        startOfMonth = date.DateTime(2005,4,1)
-        midMonth = date.DateTime(2005,4,15,12,45,1,999999)
-        self.assertEqual(startOfMonth, midMonth.startOfMonth())
-        
-    def testEndOfMonth(self):
-        endOfMonth = date.DateTime(2005,4,30).endOfDay()
-        midMonth = date.DateTime(2005,4,15,12,45,1,999999)
-        self.assertEqual(endOfMonth, midMonth.endOfMonth())
-        
-    def testStartOfYear(self):
-        self.assertEqual(date.DateTime(2010,1,1,0,0,0), 
-                         date.DateTime(2010,12,31,11,4,5).startOfYear())
+    def testLastDayOfCurrentMonth_InFebruary2004(self):
+        expected = date.DateTime(2004, 2, 29)
+        actual = date.LastDayOfCurrentMonth(localtime=lambda: (2004, 2, 1))
+        self.assertEqual(expected, actual)
 
-    def testEndOfYear_AtMidYear(self):
-        endOfYear = date.DateTime(2010,12,31,23,59,59,999999)
-        midYear = date.DateTime(2010,6,30,0,0,0)
-        self.assertEqual(endOfYear, midYear.endOfYear())
-
-    def testEndOfYear_AtEndOfYear(self):
-        endOfYear = date.DateTime(2010,12,31,23,59,59,999999)
-        self.assertEqual(endOfYear, endOfYear.endOfYear())
-        
-    def testOrdinalOfDateTimeAtMidnightEqualsOrdinalOfDate(self):
-        self.assertEqual(date.Date(2000, 1, 1).toordinal(), 
-                         date.DateTime(2000, 1, 1).toordinal())
-
-    def testOrdinalOfDateTimeAtNoon(self):
-        self.assertEqual(date.Date(2000, 1, 1).toordinal() + 0.5, 
-                         date.DateTime(2000, 1, 1, 12, 0, 0).toordinal())
+    def testLastDayOfCurrentMonth_InDecember(self):
+        expected = date.DateTime(2003, 12, 31)
+        actual = date.LastDayOfCurrentMonth(localtime=lambda: (2003, 12, 1))
+        self.assertEqual(expected, actual)

@@ -25,10 +25,10 @@ class TaskStatusTest(test.TestCase):
     def setUp(self):
         self.settings = task.Task.settings = config.Settings(load=False)
         self.now = date.Now()
-        self.yesterday = self.now - date.oneDay
-        self.nearFuture = self.now + date.oneDay - date.oneHour
+        self.yesterday = self.now - date.ONE_DAY
+        self.nearFuture = self.now + date.ONE_DAY - date.ONE_HOUR
         self.dates = (self.yesterday, self.nearFuture)
-        self.farFuture = self.now + date.oneDay + date.oneDay
+        self.farFuture = self.now + date.ONE_DAY + date.ONE_DAY
 
     def assertTaskStatus(self, status, **taskKwArgs):
         self.assertEqual(status, task.Task(**taskKwArgs).status())

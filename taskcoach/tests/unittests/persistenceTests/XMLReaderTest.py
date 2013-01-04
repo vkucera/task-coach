@@ -59,7 +59,7 @@ class XMLTemplateReaderTestCase(test.TestCase):
 
     def testConvertTodayAndPositiveTimeDelta(self):
         now = date.Now()
-        expectedDate = date.Today() + date.TimeDelta(17)
+        expectedDate = date.Now() + date.TimeDelta(17)
         expectedDateTime = date.DateTime(expectedDate.year, expectedDate.month, 
                                          expectedDate.day)
         expectedMinutes = (expectedDateTime - now).minutes() 

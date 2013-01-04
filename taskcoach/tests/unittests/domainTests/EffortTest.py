@@ -226,7 +226,8 @@ class EffortTest(test.TestCase, asserts.Mixin):
         
     def testSetStop_None(self):
         self.effort.setStop()
-        self.assertEqual(date.Today(), self.effort.getStop().date())
+        now = date.Now()
+        self.failUnless(now - date.ONE_SECOND < self.effort.getStop() < now + date.ONE_SECOND)
         
     def testSetStop_Infinite(self):
         self.effort.setStop(date.DateTime.max)

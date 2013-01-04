@@ -88,14 +88,13 @@ class TimeDelta(datetime.timedelta):
                               timeDelta.seconds, 
                               timeDelta.microseconds)
 
-oneSecond = TimeDelta(seconds=1)
-zeroHour = TimeDelta(hours=0)
-oneHour = TimeDelta(hours=1)
-twoHours = TimeDelta(hours=2)
-threeHours = TimeDelta(hours=3)
-oneDay = TimeDelta(days=1)
-oneWeek = TimeDelta(days=7)
-oneYear = TimeDelta(days=365)
+ONE_SECOND = TimeDelta(seconds=1)
+ONE_MINUTE = TimeDelta(minutes=1)
+ONE_HOUR = TimeDelta(hours=1)
+TWO_HOURS = TimeDelta(hours=2)
+ONE_DAY = TimeDelta(days=1)
+ONE_WEEK = TimeDelta(days=7)
+ONE_YEAR = TimeDelta(days=365)
 
 def parseTimeDelta(string):
     try:

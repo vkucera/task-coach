@@ -21,28 +21,9 @@ from taskcoachlib import patterns
 
 
 infinite = datetime.date.max
-minimumDate = datetime.date.min
     
 class RealDate(datetime.date):
 
-    def weekday(self):
-        return self.isoweekday()
-
-    def weeknumber(self):
-        return self.isocalendar()[1]
-
-    def nextWeekday(self, weekday):
-        result = self
-        while result.weekday() != weekday:
-            result = result + timedelta.oneDay
-        return result
-
-    def nextSunday(self):
-        return self.nextWeekday(7)
-
-    def nextFriday(self):
-        return self.nextWeekday(5)
-        
     def __add__(self, delta):
         newdate = super(RealDate, self).__add__(delta)
         return RealDate(newdate.year, newdate.month, newdate.day)
@@ -80,12 +61,6 @@ class InfiniteDate(datetime.date):
     def __str__(self):
         return ''
 
-    def weekday(self):
-        return None
-
-    def weeknumber(self):
-        return None
-
     def __sub__(self, other):
         if isinstance(other, InfiniteDate):
             return timedelta.TimeDelta()
@@ -112,34 +87,3 @@ def Date(year=infinite.year, month=infinite.month, day=infinite.day):
         return InfiniteDate()
     else:
         return RealDate(year, month, day)
-
-def Today():
-    today = datetime.date.today()
-    return RealDate(today.year, today.month, today.day)
-
-def Tomorrow():
-    tomorrow = datetime.date.today() + timedelta.oneDay
-    return RealDate(tomorrow.year, tomorrow.month, tomorrow.day)
-
-def Yesterday():
-    yesterday = datetime.date.today() - timedelta.oneDay
-    return RealDate(yesterday.year, yesterday.month, yesterday.day)
-
-def NextSunday():
-    return Today().nextSunday()
-
-def NextFriday():
-    return Today().nextFriday()
-
-def LastDayOfCurrentMonth(localtime=time.localtime):
-    now = localtime()
-    year, nextMonth = now[0], now[1]+1
-    if nextMonth > 12:
-        nextMonth = 1
-        year += 1
-    return Date(year, nextMonth, 1) - timedelta.oneDay 
-
-def LastDayOfCurrentYear():
-    now = time.localtime()
-    return Date(now[0], 12, 31)
-

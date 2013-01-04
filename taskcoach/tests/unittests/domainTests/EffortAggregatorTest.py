@@ -232,7 +232,7 @@ class CommonTestsMixin(object):
         self.taskList.append(self.task1)
         self.task1.addEffort(self.effort1period1a)
         self.effort1period1a.setStart(self.effort1period1a.getStart() + \
-            date.TimeDelta(seconds=1))
+            date.ONE_SECOND)
         self.assertEqual(2, len(self.effortAggregator))
 
     def testChangeStopDoesNotAffectPeriod(self):

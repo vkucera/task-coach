@@ -21,7 +21,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib import widgets, patterns, command, operating_system
+from taskcoachlib import widgets, patterns, command, operating_system, render
 from taskcoachlib.domain import task, date, note, attachment
 from taskcoachlib.gui import viewer, uicommand, windowdimensionstracker
 from taskcoachlib.gui.dialog import entry, attributesync
@@ -93,15 +93,17 @@ class SubjectPage(Page):
         super(SubjectPage, self).__init__(items, parent, *args, **kwargs)
 
     def SetFocus(self):
-        # Skip this on GTK because it selects the control's text, which overrides the X selection.
-        # Simply commenting out the SetFocus() in __load_perspective is not enought because the
-        # aui notebook calls this when the user selects a tab.
+        # Skip this on GTK because it selects the control's text, which 
+        # overrides the X selection. Simply commenting out the SetFocus() in 
+        # __load_perspective is not enough because the aui notebook calls this 
+        # when the user selects a tab.
         if not operating_system.isGTK():
             super(SubjectPage, self).SetFocus()
 
     def addEntries(self):
         self.addSubjectEntry()
         self.addDescriptionEntry()
+        self.addCreationDateTimeEntry()
         
     def addSubjectEntry(self):
         # pylint: disable=W0201
@@ -134,18 +136,34 @@ class SubjectPage(Page):
             command.EditDescriptionCommand, wx.EVT_KILL_FOCUS,
             self.items[0].descriptionChangedEventType())
         self.addEntry(_('Description'), self._descriptionEntry, growable=True)
-                        
+
+    def addCreationDateTimeEntry(self):
+        creation_datetimes = [item.creationDateTime() for item in self.items]
+        min_creation_datetime = min(creation_datetimes)
+        max_creation_datetime = max(creation_datetimes)
+        creation_text = render.dateTime(min_creation_datetime, 
+                                        humanReadable=True)
+        if max_creation_datetime - min_creation_datetime > date.ONE_MINUTE:
+            creation_text += ' - %s' % render.dateTime(max_creation_datetime,
+                                                       humanReadable=True)
+        self.addEntry(_('Creation date'), creation_text)
+              
     def entries(self):
         return dict(firstEntry=self._subjectEntry,
                     subject=self._subjectEntry,
-                    description=self._descriptionEntry)        
+                    description=self._descriptionEntry,
+                    creationDateTime=self._subjectEntry)
 
     
 class TaskSubjectPage(SubjectPage):
     def addEntries(self):
-        super(TaskSubjectPage, self).addEntries()
+        # Override to insert a priority entry between the description and the 
+        # creation date/time entry
+        self.addSubjectEntry()
+        self.addDescriptionEntry()
         self.addPriorityEntry()
-         
+        self.addCreationDateTimeEntry()
+
     def addPriorityEntry(self):
         # pylint: disable=W0201
         current_priority = self.items[0].priority() if len(self.items) == 1 else 0
@@ -165,9 +183,13 @@ class TaskSubjectPage(SubjectPage):
 
 class CategorySubjectPage(SubjectPage):
     def addEntries(self):
-        super(CategorySubjectPage, self).addEntries()
+        # Override to insert an exclusive subcategories entry 
+        # between the description and the creation date/time entry
+        self.addSubjectEntry()
+        self.addDescriptionEntry()
         self.addExclusiveSubcategoriesEntry()
-       
+        self.addCreationDateTimeEntry()
+
     def addExclusiveSubcategoriesEntry(self):
         # pylint: disable=W0201
         currentExclusivity = self.items[0].hasExclusiveSubcategories() if len(self.items) == 1 else False
@@ -185,11 +207,12 @@ class CategorySubjectPage(SubjectPage):
 
 class AttachmentSubjectPage(SubjectPage):
     def addEntries(self):
-        # Override addEntries to insert a location entry between the subject
-        # and description entries 
+        # Override to insert a location entry between the subject and 
+        # description entry
         self.addSubjectEntry()
         self.addLocationEntry()
         self.addDescriptionEntry()
+        self.addCreationDateTimeEntry()
 
     def addLocationEntry(self):
         panel = wx.Panel(self)

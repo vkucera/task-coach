@@ -60,7 +60,7 @@ class TaskViewerStatusMessagesTest(test.TestCase):
         self.taskList.append(self.task)
         
     def addOverdueTask(self):
-        self.task.setDueDateTime(date.Now() - date.TimeDelta(hours=1))
+        self.task.setDueDateTime(date.Now() - date.ONE_HOUR)
         self.taskList.append(self.task)
 
     def addInactiveTask(self):
@@ -71,7 +71,7 @@ class TaskViewerStatusMessagesTest(test.TestCase):
         self.taskList.append(self.task)
         
     def addLateTask(self):
-        self.task.setPlannedStartDateTime(date.Now() - date.oneDay)
+        self.task.setPlannedStartDateTime(date.Yesterday())
         self.taskList.append(self.task)
         
     def removeTask(self):
