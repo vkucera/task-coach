@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.23', 'January ??, 2013',
+Release('1.3.23', 'January 4, 2013',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bugv2('''Some navigation shortcuts in the date/time picker
@@ -31,6 +31,8 @@ would not work on Windows or Linux.''', '1340'),
 date/time picker if the calendar is shown.''', '1340'),
         Bugv2('''The calendar popup from the date/time picker
 would not show all days.''', '1340'),
+        Bugv2('''Task Coach would fail to start when the user had selected an 
+empty bitmap for one of the task statuses.'''),
         ],
     ),
             
