@@ -126,7 +126,73 @@ class HelpFormatter(optparse.IndentedHelpFormatter):
     ''' Don't mess up the help text formatting. '''
     def format_epilog(self, epilog):
         return epilog
-    
+
+
+class SFAPIError(Exception):
+    pass
+
+
+class SourceforgeAPI(object):
+    def __init__(self, settings, options):
+        consumer_key = settings.get('sourceforge', 'consumer_key')
+        consumer_secret = settings.get('sourceforge', 'consumer_secret')
+        consumer = oauth.Consumer(key=consumer_key, secret=consumer_secret)
+        oauth_token = settings.get('sourceforge', 'oauth_token')
+        oauth_token_secret = settings.get('sourceforge', 'oauth_token_secret')
+        token = oauth.Token(key=oauth_token, secret=oauth_token_secret)
+        self.client = oauth.Client(consumer, token)
+        self.verbose = options.verbose
+        self.dry_run = options.dry_run
+
+    def __apply(self, func, data=None):
+        url = 'https://sourceforge.net/rest/p/taskcoach/' + func
+        if data is None:
+            response, content = self.client.request(url)
+            ok = 200
+        else:
+            response, content = self.client.request(url, method='POST', body=urllib.urlencode(data))
+            ok = 302
+        if response.status != ok:
+            raise SFAPIError(response.status)
+        if data is None:
+            return json.loads(content)
+
+    def fix(self, id_):
+        if self.dry_run:
+            print 'Skipping marking #%s fixed' % id_
+        else:
+            ticketData = self.__apply('bugs/%s' % id_)['ticket']
+            # Status: fixed; priority: 1
+            self.__apply('bugs/%s/save' % id_,
+                         data=[('ticket_form.status', 'fixed'),
+                         ('ticket_form.custom_fields._priority', '1')])
+
+            # Canned response
+            self.__apply('bugs/_discuss/thread/%s/new' % ticketData['discussion_thread']['_id'],
+                         data=[('text', '''A fix was made and checked into the source code repository of Task Coach. The fix will be part of the next release. You will get another notification when that release is available with the request to install the new release and confirm that your issue has indeed been fixed.
+
+If you like, you can download a recent build from http://www.fraca7.net/TaskCoach-packages/latest_bugfixes.py to test the fix.
+
+Because a fix has been made for this bug report, the priority of this report has been lowered to 1 and its resolution has been set to 'Fixed'.
+Thanks, Task Coach development team''')])
+
+            if self.verbose:
+                print 'Bug #%s fixed.' % id_
+
+    def release(self, id_):
+        if self.dry_run:
+            print 'Skipping marking #%s released.' % id_
+        else:
+            try:
+                ticketData = self.__apply('bugs/%s' % id_)['ticket']
+                self.__apply('bugs/%s/save' % id_, data=[('ticket_form.status', 'fixed-and-released')])
+                self.__apply('bugs/_discuss/thread/%s/new' % ticketData['discussion_thread']['_id'],
+                             data=[('text', '''This bug should be fixed in the latest release of Task Coach. Can you please install the latest release of Task Coach and confirm that this bug has indeed been fixed?
+
+Thanks, Task Coach development team''')])
+            except SFAPIError:
+                print 'Warning: could not marking fix #%s released.' % id_
+
 
 def sourceforge_location(settings):
     metadata = taskcoachlib.meta.data.metaDict
@@ -216,6 +282,18 @@ def building_packages(settings, options):
 @progress
 def uploading_distributions_to_SourceForge(settings, options):
     rsync(settings, options, 'rsync -avP -e ssh dist/* %s')
+
+
+@progress
+def marking_bug_fixed(settings, options, bugId):
+    api = SourceforgeAPI(settings, options)
+    api.fix(bugId)
+
+
+@progress
+def marking_bug_released(settings, options, bugId):
+    api = SourceforgeAPI(settings, options)
+    api.release(bugId)
 
 
 @progress
@@ -466,14 +544,6 @@ def updating_Sourceforge_trackers(settings, options):
     sys.path.insert(0, 'changes.in')
     import changes, changetypes
 
-    consumer_key = settings.get('sourceforge', 'consumer_key')
-    consumer_secret = settings.get('sourceforge', 'consumer_secret')
-    consumer = oauth.Consumer(key=consumer_key, secret=consumer_secret)
-    oauth_token = settings.get('sourceforge', 'oauth_token')
-    oauth_token_secret = settings.get('sourceforge', 'oauth_token_secret')
-    token = oauth.Token(key=oauth_token, secret=oauth_token_secret)
-    client = oauth.Client(consumer, token)
-
     for release in changes.releases:
         if release.number == taskcoachlib.meta.version:
             break
@@ -486,13 +556,8 @@ def updating_Sourceforge_trackers(settings, options):
                 if options.dry_run:
                     print 'Skipping mark bug #%s released' % id_
                 else:
-                    response, content = client.request('https://sourceforge.net/rest/p/taskcoach/bugs/%s/save' % id_,
-                                                       method='POST',
-                                                       body=urllib.urlencode(dict([('ticket_form.status', 'fixed-and-released')])))
-                    if response.status != 302:
-                        print 'WARNING: could not update bug #%s (%d)' % (id_, response.status)
-                    elif options.verbose:
-                        print 'Bug #%s updated.' % id_
+                    api = SourceforgeAPI(settings, options)
+                    api.release(id_)
 
 
 def releasing(settings, options):
@@ -634,7 +699,9 @@ COMMANDS = dict(release=releasing,
                 mail=mailing_announcement,
                 announce=announcing,
                 update=updating_Sourceforge_trackers,
-                tag=tagging_release_in_subversion)
+                tag=tagging_release_in_subversion,
+                markfixed=marking_bug_fixed,
+                markreleased=marking_bug_released)
 
 USAGE = 'Usage: %%prog [options] [%s]' % '|'.join(sorted(COMMANDS.keys()))
 
