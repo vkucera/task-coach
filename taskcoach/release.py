@@ -34,11 +34,8 @@ Release steps:
     website to the Dreamhost and Hostland websites, announce the release on 
     Twitter, Identi.ca, Freecode and PyPI (Python Package Index), mark the bug reports
     on SourceForge fixed-and-released, send the 
-    announcement email, and to tag the release in Subversion.
-  - Mark the Windows and Mac OS X distributions as defaults for their platform:
-    https://sourceforge.net/project/admin/explorer.php?group_id=130831#
-    Navigate into the folder of the latest release and click on the Windows
-    and Mac OS X distributions to set them as default download.
+    announcement email, mark .dmg and .exe files as default downloads for their
+    platforms, and to tag the release in Subversion.
   - Create branch if feature release.
   - Merge recent changes to the trunk.
   - Add release to Sourceforge bug tracker and support request groups.
@@ -50,6 +47,7 @@ import ftplib
 import smtplib
 import httplib
 import urllib
+import urllib2
 import os
 import glob
 import sys
@@ -96,7 +94,7 @@ class Settings(ConfigParser.SafeConfigParser, object):
     def set_defaults(self):
         defaults = dict(sourceforge=['username', 'password', 'consumer_key',
                                      'consumer_secret', 'oauth_token',
-                                     'oauth_token_secret'],
+                                     'oauth_token_secret', 'api_key'],
                         smtp=['hostname', 'port', 'username', 'password',
                               'sender_name', 'sender_email_address'],
                         dreamhost=['hostname', 'username', 'password', 
@@ -282,6 +280,36 @@ def building_packages(settings, options):
 @progress
 def uploading_distributions_to_SourceForge(settings, options):
     rsync(settings, options, 'rsync -avP -e ssh dist/* %s')
+
+
+@progress
+def marking_default_downloads(settings, options):
+    defaults = list()
+    for name in os.listdir('dist'):
+        if name.endswith('.dmg'):
+            defaults.append(('mac', name))
+        elif name.endswith('-win32.exe'):
+            defaults.append(('windows', name))
+
+    for platform, name in defaults:
+        if options.dry_run:
+            print 'Skipping marking "%s" as default for %s' % (name, platform)
+        else:
+            # httplib does not seem to handle PUT very well
+            # See http://stackoverflow.com/questions/111945/is-there-any-way-to-do-http-put-in-python
+            opener = urllib2.build_opener(urllib2.HTTPSHandler)
+            url = 'https://sourceforge.net/projects/taskcoach/files/taskcoach/Release-%s/%s' % (meta.version, name)
+            req = urllib2.Request(url,
+                                  data=urllib.urlencode(dict(default=platform, api_key=settings.get('sourceforge', 'api_key'))))
+            req.add_header('Content-Type', 'application/x-www-form-urlencoded')
+            req.get_method = lambda: 'PUT'
+            try:
+                opener.open(req)
+            except urllib2.HTTPError as e:
+                print 'Warning: could not mark "%s" as default download for %s (%s)' % (name, platform, e)
+            else:
+                if options.verbose:
+                    print 'Marked "%s" as default download for %s' % (name, platform)
 
 
 @progress
@@ -570,6 +598,7 @@ def releasing(settings, options):
     announcing(settings, options)
     updating_Sourceforge_trackers(settings, options)
     tagging_release_in_subversion(settings, options)
+    marking_default_downloads(settings, options)
 
 
 def latest_release(metadata, summary_only=False):
@@ -700,6 +729,7 @@ COMMANDS = dict(release=releasing,
                 announce=announcing,
                 update=updating_Sourceforge_trackers,
                 tag=tagging_release_in_subversion,
+                markdefault=marking_default_downloads,
                 markfixed=marking_bug_fixed,
                 markreleased=marking_bug_released)
 
