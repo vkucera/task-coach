@@ -64,6 +64,7 @@ import oauth2 as oauth
 import time
 import shutil
 import zipfile
+import subprocess
 
 try:
     import simplejson as json
@@ -597,16 +598,27 @@ def tagging_release_in_subversion(settings, options):
     version = metadata['version']
     username = settings.get('sourceforge', 'username') 
     release_tag = 'Release' + version.replace('.', '_')
-    target_url = 'svn+ssh://%s@svn.code.sf.net/p/taskcoach/code/tags/' % \
-                 username + release_tag
+    output = subprocess.check_output(['svn', 'info'])
+    for line in output.split('\n'):
+        if line.startswith('URL: '):
+            source_url = line[5:].strip()
+            break
+    else:
+        raise RuntimeError('Could not find source URL')
+
+    if source_url.startswith('https://'):
+        tag_url = 'https://svn.code.sf.net/p/taskcoach/code/tags/'
+    else:
+        tag_url = 'svn+ssh://%s@svn.code.sf.net/p/taskcoach/code/tags/' % username
+    target_url = tag_url + release_tag
     commit_message = 'Tag for release %s.' % version
-    svn_copy = 'svn copy -m "%s" . %s' % (commit_message, target_url)
+    svn_copy = 'svn copy -m "%s" %s %s' % (commit_message, source_url, target_url)
     if options.dry_run:
         print 'Skipping %s.' % svn_copy
     else:
         os.system(svn_copy)
-     
-   
+
+
 COMMANDS = dict(release=releasing,
                 build=building_packages,
                 upload=uploading_distributions_to_SourceForge, 
