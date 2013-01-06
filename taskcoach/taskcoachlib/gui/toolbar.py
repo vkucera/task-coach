@@ -445,5 +445,9 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
 
 class MainToolBar(ToolBar):
     def Realize(self):
+        self._agwStyle &= ~aui.AUI_TB_NO_AUTORESIZE
         super(MainToolBar, self).Realize()
-        wx.CallAfter(self.SetMinSize, self.GetClientSize())
+        self._agwStyle |= aui.AUI_TB_NO_AUTORESIZE
+        wx.CallAfter(self.GetParent().SendSizeEvent)
+        w, h = self.GetParent().GetClientSizeTuple()
+        wx.CallAfter(self.SetMinSize, (w, -1))
