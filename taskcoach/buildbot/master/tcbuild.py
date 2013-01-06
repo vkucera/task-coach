@@ -310,11 +310,24 @@ class BuildSourceZip(DistCompile):
     descriptionDone = ['Source', 'distribution']
 
 
+class BuildSourceRaw(DistCompile):
+    filename_rx = re.compile(r'tar czf (TaskCoach-.*-raw.tgz)')
+    fileprefix = 'dist/'
+
+    name = 'sdist_raw'
+    description = ['Generating', 'raw', 'source', 'distribution']
+    descriptionDone = ['Raw', 'source', 'distribution']
+
+
 class UploadSourceTar(UploadBase):
     pass
 
 
 class UploadSourceZip(UploadBase):
+    pass
+
+
+class UploadSourceRaw(UploadBase):
     pass
 
 # Debian
