@@ -38,6 +38,7 @@ on OS X.'''),
         Bugv2('''Start/end of day choice in preferences now follow the user's
 format preferences.''', '1331'),
         Bugv2('''Resizing the toolbar would truncate it.''', '1341'),
+        Bugv2('''Try to fetch Mail.app message subject.''', '1342', '1003'),
         ],
     ),
             
