@@ -114,12 +114,11 @@ class Recurrence(object):
             # Find the nearest date in newDate's year that is on the right 
             # weekday:
             weekday, year = dateTime.weekday(), newDateTime.year
-            oneDay = timedelta.TimeDelta(days=1)
             newEarlierDateTime = newLaterDateTime = newDateTime
             while newEarlierDateTime.weekday() != weekday:
-                newEarlierDateTime = newEarlierDateTime - oneDay
+                newEarlierDateTime = newEarlierDateTime - timedelta.ONE_DAY
             while newLaterDateTime.weekday() != weekday:
-                newLaterDateTime = newLaterDateTime + oneDay
+                newLaterDateTime = newLaterDateTime + timedelta.ONE_DAY
             if newEarlierDateTime.year != year:
                 newDateTime = newLaterDateTime
             else:

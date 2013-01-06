@@ -21,7 +21,36 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
+
+Release('1.3.23', 'January 4, 2013',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bugv2('''Some navigation shortcuts in the date/time picker
+would not work on Windows or Linux.''', '1340'),
+        Bugv2('''Typing would not do anything on Windows in the
+date/time picker if the calendar is shown.''', '1340'),
+        Bugv2('''The calendar popup from the date/time picker
+would not show all days.''', '1340'),
+        Bugv2('''Task Coach would fail to start when the user had selected an 
+empty bitmap for one of the task statuses.'''),
+        Bugv2('''Non-ASCII characters would display wrong in the calendar popup
+on OS X.'''),
+        Bugv2('''Start/end of day choice in preferences now follow the user's
+format preferences.''', '1331'),
+        Bugv2('''Resizing the toolbar would truncate it.''', '1341'),
+        Bugv2('''Try to fetch Mail.app message subject.''', '1342', '1003'),
+        Bugv2('''Don't let the user pick columns that cannot be exported'''),
+        ],
+    ),
             
+Release('1.3.22', 'January 2, 2013',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bugv2('''The task editor would not open after some time on Windows and
+OS X.''', '1338'),
+        ],
+    ),
+ 
 Release('1.3.21', 'January 1, 2013',
     summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[

@@ -325,7 +325,7 @@ class TimelineRootNode(RootNode):
         dueDateTimes = [item.dueDateTime(recursive=True) for item in self.parallel_children()]
         dueDateTimes = [dt for dt in dueDateTimes if dt != date.DateTime()]
         if not dueDateTimes:
-            dueDateTimes.append(date.Now() + date.oneDay)    
+            dueDateTimes.append(date.Tomorrow())    
         return max(dueDateTimes)
     
 
@@ -388,7 +388,7 @@ class TimelineViewer(BaseTaskTreeViewer):
             if stop == date.DateTime():
                 return None   
             else:
-                stop += date.oneDay
+                stop += date.ONE_DAY
         except AttributeError:
             stop = item.getStop()
             if not stop:

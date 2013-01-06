@@ -276,7 +276,7 @@ class Entry(wx.Panel):
         wx.EVT_TIMER(self, timerId, self.OnTimer)
 
         wx.EVT_PAINT(self, self.OnPaint)
-        wx.EVT_KEY_DOWN(self, self.OnKeyDown)
+        wx.EVT_CHAR(self, self.OnChar)
         wx.EVT_LEFT_UP(self, self.OnLeftUp)
         wx.EVT_KILL_FOCUS(self, self.OnKillFocus)
         wx.EVT_SET_FOCUS(self, self.OnSetFocus)
@@ -401,13 +401,13 @@ class Entry(wx.Panel):
         if self.__focus is not None:
             self.__SetFocus(self.__fields[(self.__fields.index(self.__focus) + 1) % len(self.__fields)])
 
-    def OnKeyDown(self, event):
+    def OnChar(self, event):
         if event.GetKeyCode() == wx.WXK_TAB:
             self.DismissPopup()
             self.Navigate(not event.ShiftDown())
             return
 
-        if event.GetKeyCode() in [wx.WXK_RIGHT, wx.WXK_DECIMAL, wx.WXK_NUMPAD_DECIMAL] or event.GetUnicodeKey() == ord('.'):
+        if event.GetKeyCode() in [wx.WXK_RIGHT, wx.WXK_DECIMAL, wx.WXK_NUMPAD_DECIMAL, ord('.'), ord(',')]:
             self.FocusNext()
         elif event.GetKeyCode() == wx.WXK_LEFT:
             if self.__focus is not None:
@@ -422,7 +422,7 @@ class Entry(wx.Panel):
             if self.__focus is not None and self.__focus.HandleKey(event):
                 self.StartTimer()
                 return
-            if not self.GetParent().HandleKey(event):
+            if not hasattr(self.GetParent(), 'HandleKey') or not self.GetParent().HandleKey(event):
                 event.Skip()
 
     def OnLeftUp(self, event):
@@ -515,7 +515,7 @@ class NumericField(Field):
         if event.GetKeyCode() >= wx.WXK_NUMPAD0 and event.GetKeyCode() <= wx.WXK_NUMPAD9:
             number = event.GetKeyCode() - wx.WXK_NUMPAD0
         else:
-            number = event.GetUnicodeKey() - ord('0')
+            number = event.GetKeyCode() - ord('0')
 
         if number >= 0 and number <= 9:
             if self.__state == 0:
@@ -664,7 +664,7 @@ class TimeEntry(Entry):
 
     def __init__(self, *args, **kwargs):
         fmt = kwargs.pop('format', lambda x: x.strftime('%H:%M:%S'))
-        pattern = fmt(datetime.time(hour=11, minute=33, second=44))
+        pattern = decodeSystemString(fmt(datetime.time(hour=11, minute=33, second=44)))
         pattern = re.sub('3+', 'M', pattern)
         pattern = re.sub('1+', 'H', pattern)
         pattern = re.sub('4+', 'S', pattern)
@@ -699,12 +699,12 @@ class TimeEntry(Entry):
 
         EVT_ENTRY_CHOICE_SELECTED(self, self.__OnHourSelected)
 
-    def OnKeyDown(self, event):
-        if event.GetUnicodeKey() == ord(':'):
+    def OnChar(self, event):
+        if event.GetKeyCode() == ord(':'):
             self.FocusNext()
             event.Skip()
         else:
-            return super(TimeEntry, self).OnKeyDown(event)
+            return super(TimeEntry, self).OnChar(event)
 
     def DismissPopup(self):
         super(TimeEntry, self).DismissPopup()
@@ -972,7 +972,7 @@ class DateEntry(Entry):
 
     def __init__(self, *args, **kwargs):
         fmt = kwargs.pop('format', lambda x: x.strftime('%x'))
-        fmt = fmt(datetime.date(year=3333, day=22, month=11))
+        fmt = decodeSystemString(fmt(datetime.date(year=3333, day=22, month=11)))
         fmt = re.sub('1+', 'm', fmt)
         fmt = re.sub('2+', 'd', fmt)
         fmt = re.sub('3+', 'y', fmt)
@@ -997,17 +997,17 @@ class DateEntry(Entry):
         self.DismissPopup()
         event.Skip()
 
-    def OnKeyDown(self, event):
+    def OnChar(self, event):
         if event.GetKeyCode() == wx.WXK_TAB and self.__calendar is not None:
             self.__calendar.Dismiss()
-        super(DateEntry, self).OnKeyDown(event)
+        super(DateEntry, self).OnChar(event)
 
-    def OnKeyDown(self, event):
-        if event.GetUnicodeKey() == ord('/'):
+    def OnChar(self, event):
+        if event.GetKeyCode() == ord('/'):
             self.FocusNext()
             event.Skip()
         else:
-            return super(DateEntry, self).OnKeyDown(event)
+            return super(DateEntry, self).OnChar(event)
 
     def GetDate(self):
         return datetime.date(year=self.Field('year').GetValue(),
@@ -1233,19 +1233,22 @@ class _PopupWindow(wx.Dialog):
             kwargs['style'] |= wx.WANTS_CHARS
         super(_PopupWindow, self).__init__(*args, **kwargs)
 
-        self.__interior = wx.Panel(self)
+        self.__interior = wx.Panel(self, style=wx.WANTS_CHARS if '__WXMSW__' in wx.PlatformInfo else 0)
 
         wx.EVT_ACTIVATE(self, self.OnActivate)
-        if '__WXGTK__' in wx.PlatformInfo:
-            wx.EVT_KEY_DOWN(self.__interior, self.OnKeyDown)
+        if '__WXMAC__' in wx.PlatformInfo:
+            wx.EVT_CHAR(self, self.OnChar)
         else:
-            wx.EVT_KEY_DOWN(self, self.OnKeyDown)
+            wx.EVT_CHAR(self.__interior, self.OnChar)
 
         self.Fill(self.__interior)
 
         sizer = wx.BoxSizer()
         sizer.Add(self.__interior, 1, wx.EXPAND)
         self.SetSizer(sizer)
+
+    def interior(self):
+        return self.__interior
 
     def Popup(self, position):
         self.Move(position)
@@ -1257,9 +1260,9 @@ class _PopupWindow(wx.Dialog):
         self.ProcessEvent(PopupDismissEvent(self))
         self.Destroy()
 
-    def OnKeyDown(self, event):
+    def OnChar(self, event):
         if not self.HandleKey(event):
-            self.GetParent().OnKeyDown(event)
+            self.GetParent().OnChar(event)
 
     def HandleKey(self, event):
         return False
@@ -1465,11 +1468,11 @@ class _CalendarPopup(_PopupWindow):
     def GetExtent(self, dc):
         W, H = 0, 0
         for month in xrange(1, 13):
-            header = datetime.date(year=self.__year, month=month, day=11).strftime('%B %Y')
+            header = decodeSystemString(datetime.date(year=self.__year, month=month, day=11).strftime('%B %Y'))
             tw, th = dc.GetTextExtent(header)
             W = max(W, tw)
             H = max(H, th)
-        header = datetime.date(year=self.__year, month=self.__month, day=1).strftime('%B %Y')
+        header = decodeSystemString(datetime.date(year=self.__year, month=self.__month, day=1).strftime('%B %Y'))
 
         lines = calendar.monthcalendar(self.__year, self.__month)
         self.__maxDim = 0
@@ -1505,7 +1508,7 @@ class _CalendarPopup(_PopupWindow):
         dc.SetPen(wx.BLACK_PEN)
         dc.SetBrush(wx.BLACK_BRUSH)
 
-        header = datetime.date(year=self.__year, month=self.__month, day=1).strftime('%B %Y')
+        header = decodeSystemString(datetime.date(year=self.__year, month=self.__month, day=1).strftime('%B %Y'))
         tw, th = dc.GetTextExtent(header)
         dc.DrawText(header, (w - 48 - tw) / 2, 1)
 
@@ -1622,6 +1625,7 @@ class _CalendarPopup(_PopupWindow):
                     self.__month = 1
                 else:
                     self.__month += 1
+            self.SetClientSize(self.GetExtent(wx.ClientDC(self.interior())))
             self.Refresh()
             return
 
@@ -1786,12 +1790,12 @@ class SmartDateTimeCtrl(wx.Panel):
 
     def HandleKey(self, event):
         if self.GetDateTime() is not None:
-            if event.GetUnicodeKey() in [ord('t'), ord('T')]:
+            if event.GetKeyCode() in [ord('t'), ord('T')]:
                 # Today, same time
                 self.SetDateTime(datetime.datetime.combine(datetime.datetime.now().date(), self.GetDateTime().time()),
                                  notify=True)
                 return True
-            elif event.GetUnicodeKey() in [ord('n'), ord('N')]:
+            elif event.GetKeyCode() in [ord('n'), ord('N')]:
                 # Now
                 self.SetDateTime(datetime.datetime.now())
                 return True

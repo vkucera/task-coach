@@ -29,15 +29,15 @@ class SchedulerTest(test.TestCase):
         pass
         
     def testScheduleAtDateTime(self):
-        futureDate = date.Now() + date.oneDay
+        futureDate = date.Tomorrow()
         self.scheduler.schedule(self.callback, futureDate)
         self.failUnless(self.scheduler.get_jobs())
         self.scheduler._process_jobs(futureDate)
         self.failIf(self.scheduler.get_jobs())
 
     def testScheduleAtPastDateTime(self):
-        pastDate = date.Now() + date.oneDay
+        pastDate = date.Yesterday()
         self.scheduler.schedule(self.callback, pastDate)
-        self.failUnless(self.scheduler.get_jobs())
+        self.failIf(self.scheduler.get_jobs())
         self.scheduler._process_jobs(pastDate)
         self.failIf(self.scheduler.get_jobs())

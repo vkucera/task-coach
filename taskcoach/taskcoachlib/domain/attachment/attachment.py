@@ -159,7 +159,7 @@ class URIAttachment(Attachment):
     type_ = 'uri'
 
     def __init__(self, location, *args, **kwargs):
-        if location.startswith('message:'):
+        if location.startswith('message:') and 'subject' not in kwargs:
             subject = mailer.getSubjectOfMail(location[8:])
             if subject:
                 kwargs['subject'] = subject

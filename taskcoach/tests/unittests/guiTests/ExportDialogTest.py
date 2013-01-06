@@ -23,11 +23,21 @@ from wx.lib import sized_controls
 
 
 class DummyColumn(object):
+    def __init__(self, name):
+        self.__name = name
+
+    def name(self):
+        return self.__name
+
     def header(self):
-        return 'dummy column'
+        return 'dummy column "%s"' % self.__name
 
 
 class DummyViewer(object):
+    def __init__(self):
+        self.col1 = DummyColumn('one')
+        self.col2 = DummyColumn('two')
+
     def title(self):
         return 'viewer'
     
@@ -38,7 +48,10 @@ class DummyViewer(object):
         return []
     
     def columns(self):
-        return [DummyColumn()]
+        return [self.col1, self.col2]
+
+    def selectableColumns(self):
+        return [self.col2]
 
 
 class DummyViewerContainer(object):
@@ -64,3 +77,8 @@ class ColumnPickerTest(test.wxTestCase):
         panel = sized_controls.SizedPanel(self.frame)
         dialog.export.ColumnPicker(panel, DummyViewer())
         
+    def testOnlySelectableColumns(self):
+        panel = sized_controls.SizedPanel(self.frame)
+        dlg = dialog.export.ColumnPicker(panel, DummyViewer())
+        self.assertEqual(dlg.columnPicker.GetCount(), 1)
+        self.assertEqual(dlg.columnPicker.GetClientData(0).name(), 'two')

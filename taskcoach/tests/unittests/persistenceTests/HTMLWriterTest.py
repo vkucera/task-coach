@@ -118,7 +118,7 @@ class TaskTestsMixin(CommonTestsMixin):
         self.expectInHTML('      .completed {color: #FF0000}\n')
         
     def testOverdueTask(self):
-        self.task.setDueDateTime(date.Now() - date.oneDay)
+        self.task.setDueDateTime(date.Yesterday())
         fragment = '<tr class="overdue">' if self.filename else '<font color="#FF0000">Task subject</font>'
         self.expectInHTML(fragment)
 
@@ -130,17 +130,17 @@ class TaskTestsMixin(CommonTestsMixin):
             self.expectInHTML('<font color="#00FF00">Task subject</font>')
 
     def testTaskDueSoon(self):
-        self.task.setDueDateTime(date.Now() + date.oneHour)
+        self.task.setDueDateTime(date.Now() + date.ONE_HOUR)
         fragment = '<tr class="duesoon">' if self.filename else '<font color="#FF8000">Task subject</font>' 
         self.expectInHTML(fragment)
         
     def testInactiveTask(self):
-        self.task.setPlannedStartDateTime(date.Now() + date.oneDay)
+        self.task.setPlannedStartDateTime(date.Tomorrow())
         fragment = '<tr class="inactive">' if self.filename else '<font color="#C0C0C0">Task subject</font>'
         self.expectInHTML(fragment)
         
     def testLateTask(self):
-        self.task.setPlannedStartDateTime(date.Now() - date.oneDay)
+        self.task.setPlannedStartDateTime(date.Yesterday())
         fragment = '<tr class="late">' if self.filename else '<font color="#A020F0">Task subject</font>'
         self.expectInHTML(fragment)
 
@@ -228,7 +228,7 @@ class EffortWriterTestCase(CommonTestsMixin, HTMLWriterTestCase):
         super(EffortWriterTestCase, self).setUp()
         now = date.DateTime.now()
         self.task.addEffort(effort.Effort(self.task, start=now,
-                                          stop=now + date.TimeDelta(seconds=1)))
+                                          stop=now + date.ONE_SECOND))
 
     def createViewer(self):
         return gui.viewer.EffortViewer(self.frame, self.taskFile, self.settings)

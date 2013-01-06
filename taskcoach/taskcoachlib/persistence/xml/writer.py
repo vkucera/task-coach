@@ -172,7 +172,7 @@ class XMLWriter(object):
             formattedStop = self.formatDateTime(stop)
             if formattedStop == formattedStart:
                 # Make sure the effort duration is at least one second
-                formattedStop = self.formatDateTime(stop + date.TimeDelta(seconds=1))
+                formattedStop = self.formatDateTime(stop + date.ONE_SECOND)
             attrs['stop'] = formattedStop
         node = ET.SubElement(parentNode, 'effort', attrs)
         if effort.description():

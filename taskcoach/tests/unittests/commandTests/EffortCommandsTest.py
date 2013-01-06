@@ -30,7 +30,7 @@ class EffortCommandTestCase(CommandTestCase, asserts.CommandAssertsMixin):
         self.originalTask = task.Task()
         self.taskList.append(self.originalTask)
         self.originalStop = date.DateTime.now() 
-        self.originalStart = self.originalStop - date.TimeDelta(hours=1) 
+        self.originalStart = self.originalStop - date.ONE_HOUR 
         self.effort = effort.Effort(self.originalTask, self.originalStart, 
                                     self.originalStop)
         self.originalTask.addEffort(self.effort)
@@ -100,17 +100,19 @@ class StartAndStopEffortCommandTest(EffortCommandTestCase):
     def testStartTrackingInactiveTaskSetsActualStartDate(self):
         start = command.StartEffortCommand(self.taskList, [self.task2])
         start.do()
+        now = date.Now()
         self.assertDoUndoRedo(
-            lambda: self.assertEqual(date.Today(), self.task2.actualStartDateTime().date()),
+            lambda: self.failUnless(now - date.ONE_SECOND < self.task2.actualStartDateTime() < now + date.ONE_SECOND),
             lambda: self.assertEqual(date.DateTime(), self.task2.actualStartDateTime()))
         
     def testStartTrackingInactiveTaskWithFutureActualStartDate(self):
-        futureStartDateTime = date.Now() + date.TimeDelta(days=1)
+        futureStartDateTime = date.Tomorrow()
         self.task2.setActualStartDateTime(futureStartDateTime)
         start = command.StartEffortCommand(self.taskList, [self.task2])
         start.do()
+        now = date.Now()
         self.assertDoUndoRedo(
-            lambda: self.assertEqual(date.Today(), self.task2.actualStartDateTime().date()),
+            lambda: self.failUnless(now - date.ONE_SECOND < self.task2.actualStartDateTime() < now + date.ONE_SECOND),
             lambda: self.assertEqual(futureStartDateTime, self.task2.actualStartDateTime()))
 
 
@@ -139,7 +141,7 @@ class EditEffortStartDateTimeCommandTest(EffortCommandTestCase):
 class EditEffortStopDateTimeCommandTest(EffortCommandTestCase):
     def testNewStopDateTime(self):
         oldStop = self.effort.getStop()
-        newStop = oldStop + date.TimeDelta(hours=1)
+        newStop = oldStop + date.ONE_HOUR
         edit = command.EditEffortStopDateTimeCommand(self.effortList,
                                                      [self.effort], newValue=newStop)
         edit.do()

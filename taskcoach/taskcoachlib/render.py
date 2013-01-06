@@ -94,15 +94,14 @@ def budget(aBudget):
 
 
 dateFormat = '%x'
-# datemodule.Date is not a class
 def dateFunc(dt=None, humanReadable=False):
     if humanReadable:
-        theDate = dt.date() if isinstance(dt, datetime.datetime) else dt
-        if theDate == datetime.datetime.now().date():
+        theDate = dt.date()
+        if theDate == datemodule.Now().date():
             return _('Today')
-        elif theDate == (datetime.datetime.now() - datetime.timedelta(days=1)).date():
+        elif theDate == datemodule.Yesterday().date():
             return _('Yesterday')
-        elif theDate == (datetime.datetime.now() + datetime.timedelta(days=1)).date():
+        elif theDate == datemodule.Tomorrow().date():
             return _('Tomorrow')
     return operating_system.decodeSystemString(datetime.datetime.strftime(dt, dateFormat))
 
@@ -145,15 +144,17 @@ timeFunc = lambda dt, minutes=True, seconds=False: operating_system.decodeSystem
 dateTimeFunc = lambda dt=None, humanReadable=False: u'%s %s' % (dateFunc(dt, humanReadable=humanReadable), timeFunc(dt))
 
 
-def date(aDate, humanReadable=False):
-    ''' Render a date (of type date.Date) '''
-    if str(aDate) == '':
+def date(aDateTime, humanReadable=False):
+    ''' Render a date/time as date. '''
+    if str(aDateTime) == '':
         return ''
-    year = aDate.year
+    year = aDateTime.year
     if year >= 1900:
-        return dateFunc(aDate, humanReadable=humanReadable)
+        return dateFunc(aDateTime, humanReadable=humanReadable)
     else:
-        result = date(datemodule.Date(year + 1900, aDate.month, aDate.day), humanReadable=humanReadable)
+        result = date(datemodule.DateTime(year + 1900, aDateTime.month, 
+                                          aDateTime.day), 
+                      humanReadable=humanReadable)
         return re.sub(str(year + 1900), str(year), result)
 
 
@@ -174,7 +175,8 @@ def dateTimePeriod(start, stop, humanReadable=False):
     if stop is None:
         return '%s - %s' % (dateTime(start, humanReadable=humanReadable), _('now'))
     elif start.date() == stop.date():
-        return '%s %s - %s' % (date(start.date(), humanReadable=humanReadable), time(start), time(stop))
+        return '%s %s - %s' % (date(start, humanReadable=humanReadable), 
+                               time(start), time(stop))
     else:
         return '%s - %s' % (dateTime(start, humanReadable=humanReadable), dateTime(stop, humanReadable=humanReadable))
     

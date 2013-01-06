@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import datetime, timedelta, re
+import datetime, timedelta, re, time
 from taskcoachlib import operating_system
 
 
@@ -64,12 +64,6 @@ class DateTime(datetime.datetime):
         
     def endOfDay(self):
         return self.replace(hour=23, minute=59, second=59, microsecond=999999)
-    
-    def endOfTomorrow(self):
-        return self.endOfDay() + timedelta.TimeDelta(days=1)
-
-    def endOfYesterday(self):
-        return self.endOfDay() - timedelta.TimeDelta(days=1)
 
     def startOfWeek(self):
         days = self.weekday()
@@ -146,3 +140,22 @@ def parseDateTime(string, *timeDefaults):
 
 def Now():
     return DateTime.now()
+
+def Today():
+    # For backwards compatibility: "Today()" may be used in templates
+    return Now().replace(hour=0, minute=0, second=0, microsecond=0)
+
+def Tomorrow():
+    return Now() + timedelta.ONE_DAY
+
+def Yesterday():
+    return Now() - timedelta.ONE_DAY
+
+def LastDayOfCurrentMonth(localtime=time.localtime):
+    now = localtime()
+    year, nextMonth = now[0], now[1]+1
+    if nextMonth > 12:
+        nextMonth = 1
+        year += 1
+    return DateTime(year, nextMonth, 1) - timedelta.ONE_DAY 
+

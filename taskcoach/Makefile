@@ -75,6 +75,13 @@ sdist_ubuntu: sdist_linux
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu12~precise.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu12~quantal.tar.gz
 
+sdist_raw:
+	mkdir -p dist
+	cp -a . ../tmp-sdist
+	cd ../tmp-sdist; make nuke; find . -name ".svn" | xargs rm -rf
+	mv ../tmp-sdist dist/TaskCoach-$(TCVERSION)
+	cd dist; tar czf TaskCoach-$(TCVERSION)-raw.tgz TaskCoach-$(TCVERSION); rm -rf TaskCoach-$(TCVERSION)
+
 dist/TaskCoach-$(TCVERSION).tar.gz:
 	$(PYTHON) make.py sdist --formats=gztar --no-prune --template=build.in/debian/MANIFEST.in
 	echo Created dist/TaskCoach-$(TCVERSION).tar.gz

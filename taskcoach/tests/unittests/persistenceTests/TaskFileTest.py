@@ -280,11 +280,11 @@ class DirtyTaskFileTest(TaskFileTestCase):
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterEditTaskPlannedStartDateTime(self):
-        self.task.setPlannedStartDateTime(date.Now() + date.oneHour)
+        self.task.setPlannedStartDateTime(date.Now() + date.ONE_HOUR)
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterEditTaskDueDate(self):
-        self.task.setDueDateTime(date.Now() + date.oneDay)
+        self.task.setDueDateTime(date.Tomorrow())
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterEditTaskCompletionDate(self):
@@ -744,7 +744,7 @@ class TaskFileSaveAndLoadTest(TaskFileTestCase):
 
     def testSaveAndLoad(self):
         self.saveAndLoad([task.Task(subject='ABC'), 
-            task.Task(dueDateTime=date.Now() + date.oneDay)])
+            task.Task(dueDateTime=date.Tomorrow())])
 
     def testSaveAndLoadTaskWithChild(self):
         parentTask = task.Task()

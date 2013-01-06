@@ -34,11 +34,8 @@ Release steps:
     website to the Dreamhost and Hostland websites, announce the release on 
     Twitter, Identi.ca, Freecode and PyPI (Python Package Index), mark the bug reports
     on SourceForge fixed-and-released, send the 
-    announcement email, and to tag the release in Subversion.
-  - Mark the Windows and Mac OS X distributions as defaults for their platform:
-    https://sourceforge.net/project/admin/explorer.php?group_id=130831#
-    Navigate into the folder of the latest release and click on the Windows
-    and Mac OS X distributions to set them as default download.
+    announcement email, mark .dmg and .exe files as default downloads for their
+    platforms, and to tag the release in Subversion.
   - Create branch if feature release.
   - Merge recent changes to the trunk.
   - Add release to Sourceforge bug tracker and support request groups.
@@ -50,6 +47,7 @@ import ftplib
 import smtplib
 import httplib
 import urllib
+import urllib2
 import os
 import glob
 import sys
@@ -64,6 +62,7 @@ import oauth2 as oauth
 import time
 import shutil
 import zipfile
+import subprocess
 
 try:
     import simplejson as json
@@ -95,7 +94,7 @@ class Settings(ConfigParser.SafeConfigParser, object):
     def set_defaults(self):
         defaults = dict(sourceforge=['username', 'password', 'consumer_key',
                                      'consumer_secret', 'oauth_token',
-                                     'oauth_token_secret'],
+                                     'oauth_token_secret', 'api_key'],
                         smtp=['hostname', 'port', 'username', 'password',
                               'sender_name', 'sender_email_address'],
                         dreamhost=['hostname', 'username', 'password', 
@@ -125,7 +124,73 @@ class HelpFormatter(optparse.IndentedHelpFormatter):
     ''' Don't mess up the help text formatting. '''
     def format_epilog(self, epilog):
         return epilog
-    
+
+
+class SFAPIError(Exception):
+    pass
+
+
+class SourceforgeAPI(object):
+    def __init__(self, settings, options):
+        consumer_key = settings.get('sourceforge', 'consumer_key')
+        consumer_secret = settings.get('sourceforge', 'consumer_secret')
+        consumer = oauth.Consumer(key=consumer_key, secret=consumer_secret)
+        oauth_token = settings.get('sourceforge', 'oauth_token')
+        oauth_token_secret = settings.get('sourceforge', 'oauth_token_secret')
+        token = oauth.Token(key=oauth_token, secret=oauth_token_secret)
+        self.client = oauth.Client(consumer, token)
+        self.verbose = options.verbose
+        self.dry_run = options.dry_run
+
+    def __apply(self, func, data=None):
+        url = 'https://sourceforge.net/rest/p/taskcoach/' + func
+        if data is None:
+            response, content = self.client.request(url)
+            ok = 200
+        else:
+            response, content = self.client.request(url, method='POST', body=urllib.urlencode(data))
+            ok = 302
+        if response.status != ok:
+            raise SFAPIError(response.status)
+        if data is None:
+            return json.loads(content)
+
+    def fix(self, id_):
+        if self.dry_run:
+            print 'Skipping marking #%s fixed' % id_
+        else:
+            ticketData = self.__apply('bugs/%s' % id_)['ticket']
+            # Status: fixed; priority: 1
+            self.__apply('bugs/%s/save' % id_,
+                         data=[('ticket_form.status', 'fixed'),
+                         ('ticket_form.custom_fields._priority', '1')])
+
+            # Canned response
+            self.__apply('bugs/_discuss/thread/%s/new' % ticketData['discussion_thread']['_id'],
+                         data=[('text', '''A fix was made and checked into the source code repository of Task Coach. The fix will be part of the next release. You will get another notification when that release is available with the request to install the new release and confirm that your issue has indeed been fixed.
+
+If you like, you can download a recent build from http://www.fraca7.net/TaskCoach-packages/latest_bugfixes.py to test the fix.
+
+Because a fix has been made for this bug report, the priority of this report has been lowered to 1 and its resolution has been set to 'Fixed'.
+Thanks, Task Coach development team''')])
+
+            if self.verbose:
+                print 'Bug #%s fixed.' % id_
+
+    def release(self, id_):
+        if self.dry_run:
+            print 'Skipping marking #%s released.' % id_
+        else:
+            try:
+                ticketData = self.__apply('bugs/%s' % id_)['ticket']
+                self.__apply('bugs/%s/save' % id_, data=[('ticket_form.status', 'fixed-and-released')])
+                self.__apply('bugs/_discuss/thread/%s/new' % ticketData['discussion_thread']['_id'],
+                             data=[('text', '''This bug should be fixed in the latest release of Task Coach. Can you please install the latest release of Task Coach and confirm that this bug has indeed been fixed?
+
+Thanks, Task Coach development team''')])
+            except SFAPIError:
+                print 'Warning: could not marking fix #%s released.' % id_
+
 
 def sourceforge_location(settings):
     metadata = taskcoachlib.meta.data.metaDict
@@ -215,6 +280,50 @@ def building_packages(settings, options):
 @progress
 def uploading_distributions_to_SourceForge(settings, options):
     rsync(settings, options, 'rsync -avP -e ssh dist/* %s')
+
+
+@progress
+def marking_default_downloads(settings, options):
+    defaults = list()
+    for name in os.listdir('dist'):
+        if name.endswith('.dmg'):
+            defaults.append(('mac', name))
+        elif name.endswith('-win32.exe'):
+            defaults.append(('windows', name))
+
+    for platform, name in defaults:
+        if options.dry_run:
+            print 'Skipping marking "%s" as default for %s' % (name, platform)
+        else:
+            # httplib does not seem to handle PUT very well
+            # See http://stackoverflow.com/questions/111945/is-there-any-way-to-do-http-put-in-python
+            opener = urllib2.build_opener(urllib2.HTTPSHandler)
+            url = 'https://sourceforge.net/projects/taskcoach/files/taskcoach/Release-%s/%s' % (meta.version, name)
+            req = urllib2.Request(url,
+                                  data=urllib.urlencode(dict(default=platform, api_key=settings.get('sourceforge', 'api_key'))))
+            req.add_header('Content-Type', 'application/x-www-form-urlencoded')
+            req.get_method = lambda: 'PUT'
+            try:
+                opener.open(req)
+            except urllib2.HTTPError as e:
+                print 'Warning: could not mark "%s" as default download for %s (%s)' % (name, platform, e)
+            else:
+                if options.verbose:
+                    print 'Marked "%s" as default download for %s' % (name, platform)
+
+
+@progress
+def marking_bug_fixed(settings, options, *bugIds):
+    api = SourceforgeAPI(settings, options)
+    for bugId in bugIds:
+        api.fix(bugId)
+
+
+@progress
+def marking_bug_released(settings, options, *bugIds):
+    api = SourceforgeAPI(settings, options)
+    for bugId in bugIds:
+        api.release(bugId)
 
 
 @progress
@@ -465,14 +574,6 @@ def updating_Sourceforge_trackers(settings, options):
     sys.path.insert(0, 'changes.in')
     import changes, changetypes
 
-    consumer_key = settings.get('sourceforge', 'consumer_key')
-    consumer_secret = settings.get('sourceforge', 'consumer_secret')
-    consumer = oauth.Consumer(key=consumer_key, secret=consumer_secret)
-    oauth_token = settings.get('sourceforge', 'oauth_token')
-    oauth_token_secret = settings.get('sourceforge', 'oauth_token_secret')
-    token = oauth.Token(key=oauth_token, secret=oauth_token_secret)
-    client = oauth.Client(consumer, token)
-
     for release in changes.releases:
         if release.number == taskcoachlib.meta.version:
             break
@@ -485,13 +586,8 @@ def updating_Sourceforge_trackers(settings, options):
                 if options.dry_run:
                     print 'Skipping mark bug #%s released' % id_
                 else:
-                    response, content = client.request('https://sourceforge.net/rest/p/taskcoach/bugs/%s/save' % id_,
-                                                       method='POST',
-                                                       body=urllib.urlencode(dict([('ticket_form.status', 'fixed-and-released')])))
-                    if response.status != 302:
-                        print 'WARNING: could not update bug #%s (%d)' % (id_, response.status)
-                    elif options.verbose:
-                        print 'Bug #%s updated.' % id_
+                    api = SourceforgeAPI(settings, options)
+                    api.release(id_)
 
 
 def releasing(settings, options):
@@ -504,6 +600,7 @@ def releasing(settings, options):
     announcing(settings, options)
     updating_Sourceforge_trackers(settings, options)
     tagging_release_in_subversion(settings, options)
+    marking_default_downloads(settings, options)
 
 
 def latest_release(metadata, summary_only=False):
@@ -571,9 +668,10 @@ Task Coach development team
         session.set_debuglevel(1)
     session.helo()
     session.ehlo()
-    session.starttls()
-    session.esmtp_features["auth"] = "LOGIN"  # Needed for Gmail SMTP.
-    session.login(username, password)
+    if password:
+        session.starttls()
+        session.esmtp_features["auth"] = "LOGIN"  # Needed for Gmail SMTP.
+        session.login(username, password)
     if options.dry_run:
         print 'Skipping sending mail.'
         smtpresult = None
@@ -596,16 +694,27 @@ def tagging_release_in_subversion(settings, options):
     version = metadata['version']
     username = settings.get('sourceforge', 'username') 
     release_tag = 'Release' + version.replace('.', '_')
-    target_url = 'svn+ssh://%s@svn.code.sf.net/p/taskcoach/code/tags/' % \
-                 username + release_tag
+    output = subprocess.check_output(['svn', 'info'])
+    for line in output.split('\n'):
+        if line.startswith('URL: '):
+            source_url = line[5:].strip()
+            break
+    else:
+        raise RuntimeError('Could not find source URL')
+
+    if source_url.startswith('https://'):
+        tag_url = 'https://svn.code.sf.net/p/taskcoach/code/tags/'
+    else:
+        tag_url = 'svn+ssh://%s@svn.code.sf.net/p/taskcoach/code/tags/' % username
+    target_url = tag_url + release_tag
     commit_message = 'Tag for release %s.' % version
-    svn_copy = 'svn copy -m "%s" . %s' % (commit_message, target_url)
+    svn_copy = 'svn copy -m "%s" %s %s' % (commit_message, source_url, target_url)
     if options.dry_run:
         print 'Skipping %s.' % svn_copy
     else:
         os.system(svn_copy)
-     
-   
+
+
 COMMANDS = dict(release=releasing,
                 build=building_packages,
                 upload=uploading_distributions_to_SourceForge, 
@@ -621,7 +730,10 @@ COMMANDS = dict(release=releasing,
                 mail=mailing_announcement,
                 announce=announcing,
                 update=updating_Sourceforge_trackers,
-                tag=tagging_release_in_subversion)
+                tag=tagging_release_in_subversion,
+                markdefault=marking_default_downloads,
+                markfixed=marking_bug_fixed,
+                markreleased=marking_bug_released)
 
 USAGE = 'Usage: %%prog [options] [%s]' % '|'.join(sorted(COMMANDS.keys()))
 
@@ -634,6 +746,11 @@ parser.add_option('-n', '--dry-run', action='store_true', dest='dry_run',
 parser.add_option('-v', '--verbose', action='store_true', dest='verbose',
                   help='provide more detailed progress information')
 options, args = parser.parse_args()
+
+# Sanity check
+import struct
+if sys.platform == 'darwin' and len(struct.pack('L', 0)) == 8:
+    raise RuntimeError('Please use python-32 to run this script')
 
 try:
     if len(args) > 1:

@@ -351,11 +351,21 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
 
         for uiCommand in self.__visibleUICommands:
             if uiCommand is not None and not isinstance(uiCommand, int):
-                item = self.FindTool(uiCommand.id)
+                ## item = self.FindTool(uiCommand.id)
                 uiCommand.unbind(self, uiCommand.id)
-                if item.GetKind() == aui.ITEM_CONTROL:
-                    self.DeleteTool(item.GetId())
-                    item.window.Destroy()
+                ## if item.GetKind() == aui.ITEM_CONTROL:
+                ##     self.DeleteTool(item.GetId())
+                ##     item.window.Destroy()
+
+        idx = 0
+        while idx < self.GetToolCount():
+            item = self.FindToolByIndex(idx)
+            if item is not None and item.GetKind() == aui.ITEM_CONTROL:
+                item.window.Destroy()
+                self.DeleteToolByPos(idx)
+            else:
+                idx += 1
+
         super(ToolBar, self).Clear()
 
     def getToolIdByCommand(self, commandName):
@@ -435,5 +445,9 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
 
 class MainToolBar(ToolBar):
     def Realize(self):
+        self._agwStyle &= ~aui.AUI_TB_NO_AUTORESIZE
         super(MainToolBar, self).Realize()
-        wx.CallAfter(self.SetMinSize, self.GetClientSize())
+        self._agwStyle |= aui.AUI_TB_NO_AUTORESIZE
+        wx.CallAfter(self.GetParent().SendSizeEvent)
+        w, h = self.GetParent().GetClientSizeTuple()
+        wx.CallAfter(self.SetMinSize, (w, -1))
