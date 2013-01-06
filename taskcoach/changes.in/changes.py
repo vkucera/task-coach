@@ -33,6 +33,8 @@ date/time picker if the calendar is shown.''', '1340'),
 would not show all days.''', '1340'),
         Bugv2('''Task Coach would fail to start when the user had selected an 
 empty bitmap for one of the task statuses.'''),
+        Bugv2('''Non-ASCII characters would display wrong in the calendar popup
+on OS X.'''),
         ],
     ),
             

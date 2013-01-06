@@ -664,7 +664,7 @@ class TimeEntry(Entry):
 
     def __init__(self, *args, **kwargs):
         fmt = kwargs.pop('format', lambda x: x.strftime('%H:%M:%S'))
-        pattern = fmt(datetime.time(hour=11, minute=33, second=44))
+        pattern = decodeSystemString(fmt(datetime.time(hour=11, minute=33, second=44)))
         pattern = re.sub('3+', 'M', pattern)
         pattern = re.sub('1+', 'H', pattern)
         pattern = re.sub('4+', 'S', pattern)
@@ -972,7 +972,7 @@ class DateEntry(Entry):
 
     def __init__(self, *args, **kwargs):
         fmt = kwargs.pop('format', lambda x: x.strftime('%x'))
-        fmt = fmt(datetime.date(year=3333, day=22, month=11))
+        fmt = decodeSystemString(fmt(datetime.date(year=3333, day=22, month=11)))
         fmt = re.sub('1+', 'm', fmt)
         fmt = re.sub('2+', 'd', fmt)
         fmt = re.sub('3+', 'y', fmt)
@@ -1468,11 +1468,11 @@ class _CalendarPopup(_PopupWindow):
     def GetExtent(self, dc):
         W, H = 0, 0
         for month in xrange(1, 13):
-            header = datetime.date(year=self.__year, month=month, day=11).strftime('%B %Y')
+            header = decodeSystemString(datetime.date(year=self.__year, month=month, day=11).strftime('%B %Y'))
             tw, th = dc.GetTextExtent(header)
             W = max(W, tw)
             H = max(H, th)
-        header = datetime.date(year=self.__year, month=self.__month, day=1).strftime('%B %Y')
+        header = decodeSystemString(datetime.date(year=self.__year, month=self.__month, day=1).strftime('%B %Y'))
 
         lines = calendar.monthcalendar(self.__year, self.__month)
         self.__maxDim = 0
@@ -1508,7 +1508,7 @@ class _CalendarPopup(_PopupWindow):
         dc.SetPen(wx.BLACK_PEN)
         dc.SetBrush(wx.BLACK_BRUSH)
 
-        header = datetime.date(year=self.__year, month=self.__month, day=1).strftime('%B %Y')
+        header = decodeSystemString(datetime.date(year=self.__year, month=self.__month, day=1).strftime('%B %Y'))
         tw, th = dc.GetTextExtent(header)
         dc.DrawText(header, (w - 48 - tw) / 2, 1)
 
