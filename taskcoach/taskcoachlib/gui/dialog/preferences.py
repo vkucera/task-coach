@@ -20,10 +20,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib import meta, widgets, notify, operating_system
+from taskcoachlib import meta, widgets, notify, operating_system, render
 from taskcoachlib.domain import date, task
 from taskcoachlib.gui import artprovider
 from taskcoachlib.i18n import _
+from taskcoachlib.thirdparty import smartdatetimectrl as sdtc
 import wx
 
 
@@ -61,6 +62,7 @@ class SettingsPageBase(widgets.BookPage):
         self._choiceSettings = []
         self._multipleChoiceSettings = []
         self._integerSettings = []
+        self._timeSettings = []
         self._colorSettings = []
         self._fontSettings = []
         self._iconSettings = []
@@ -123,7 +125,17 @@ class SettingsPageBase(widgets.BookPage):
             value=intValue)
         self.addEntry(text, spin, helpText=helpText, flags=flags)
         self._integerSettings.append((section, setting, spin))
-        
+
+    def addTimeSetting(self, section, setting, text, helpText=''):
+        hourValue = self.getint(section, setting)
+        timeCtrl = sdtc.TimeEntry(self, format=lambda x: render.time(x, minutes=False), hour=hourValue,
+                                  minute=0, second=0)
+        timeCtrl.EnableChoices()
+        self.addEntry(text, timeCtrl, helpText=helpText, flags=(wx.ALL|wx.ALIGN_CENTER_VERTICAL,
+                                                                wx.ALL|wx.ALIGN_CENTER_VERTICAL,
+                                                                wx.ALL|wx.ALIGN_CENTER_VERTICAL))
+        self._timeSettings.append((section, setting, timeCtrl))
+
     def addFontSetting(self, section, setting, text):
         default_font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
         native_info_string = self.gettext(section, setting)
@@ -219,6 +231,8 @@ class SettingsPageBase(widgets.BookPage):
                          [choices[index] for index in range(len(choices)) if multipleChoice.IsChecked(index)])
         for section, setting, spin in self._integerSettings:
             self.setint(section, setting, spin.GetValue())
+        for section, setting, timeCtrl in self._timeSettings:
+            self.setint(section, setting, timeCtrl.GetTime().hour)
         for section, setting, colorButton in self._colorSettings:
             self.setvalue(section, setting, colorButton.GetColour())
         for section, setting, fontButton in self._fontSettings:
@@ -530,10 +544,10 @@ class FeaturesPage(SettingsPage):
         self.addChoiceSetting('view', 'weekstart', _('Start of work week'), ' ',
                               [('monday', _('Monday')), 
                                ('sunday', _('Sunday'))])
-        self.addIntegerSetting('view', 'efforthourstart',
-            _('Hour of start of work day'), minimum=0, maximum=23, helpText=' ')
-        self.addIntegerSetting('view', 'efforthourend',
-            _('Hour of end of work day'), minimum=1, maximum=24, helpText=' ')
+        self.addTimeSetting('view', 'efforthourstart',
+            _('Hour of start of work day'), helpText=' ')
+        self.addTimeSetting('view', 'efforthourend',
+            _('Hour of end of work day'), helpText=' ')
         self.addBooleanSetting('calendarviewer', 'gradient',
             _('Use gradients in calendar views.\n'
               'This may slow down Task Coach.'))

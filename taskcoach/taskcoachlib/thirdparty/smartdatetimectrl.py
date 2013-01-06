@@ -422,7 +422,7 @@ class Entry(wx.Panel):
             if self.__focus is not None and self.__focus.HandleKey(event):
                 self.StartTimer()
                 return
-            if not self.GetParent().HandleKey(event):
+            if not hasattr(self.GetParent(), 'HandleKey') or not self.GetParent().HandleKey(event):
                 event.Skip()
 
     def OnLeftUp(self, event):

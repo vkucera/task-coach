@@ -35,6 +35,8 @@ would not show all days.''', '1340'),
 empty bitmap for one of the task statuses.'''),
         Bugv2('''Non-ASCII characters would display wrong in the calendar popup
 on OS X.'''),
+        Bugv2('''Start/end of day choice in preferences now follow the user's
+format preferences.''', '1331'),
         ],
     ),
             
