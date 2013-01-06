@@ -159,7 +159,7 @@ class ColumnPicker(sized_controls.SizedPanel):
         if not viewer.hasHideableColumns():
             return
         visibleColumns = viewer.visibleColumns()
-        for column in viewer.columns():
+        for column in viewer.selectableColumns():
             if column.header():
                 index = self.columnPicker.Append(column.header(), clientData=column)
                 self.columnPicker.Check(index, column in visibleColumns)

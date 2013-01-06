@@ -723,7 +723,10 @@ class ViewerWithColumns(Viewer):  # pylint: disable=W0223
                 
     def columns(self):
         return self._columns
-    
+
+    def selectableColumns(self):
+        return self._columns
+
     def isVisibleColumnByName(self, columnName):
         return columnName in [column.name() for column in self.__visibleColumns]
         

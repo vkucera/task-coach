@@ -62,11 +62,22 @@ class EffortViewer(base.ListViewer,
                       'settings.%s.alwaysroundup' % self.settingsSection())
         pub.subscribe(self.on_aggregation_changed, 
                       'settings.%s.aggregation' % self.settingsSection())
-        
+
+    def selectableColumns(self):
+        columns = list()
+        for column in self.columns():
+            if column.name().startswith('total') and self.aggregation == 'details':
+                continue
+            if column.name() in ['monday', 'tuesday', 'wednesday', 
+                 'thursday', 'friday', 'saturday', 'sunday'] and self.aggregation != 'week':
+                continue
+            columns.append(column)
+        return columns
+
     def onRoundingChanged(self, value):  # pylint: disable=W0613
         self.__initRoundingToolBarUICommands()
         self.refresh()
-        
+
     def __initModeToolBarUICommands(self):
         self.aggregationUICommand.setChoice(self.aggregation)
         self.__initRoundingToolBarUICommands()

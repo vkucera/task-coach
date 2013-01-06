@@ -39,6 +39,7 @@ on OS X.'''),
 format preferences.''', '1331'),
         Bugv2('''Resizing the toolbar would truncate it.''', '1341'),
         Bugv2('''Try to fetch Mail.app message subject.''', '1342', '1003'),
+        Bugv2('''Don't let the user pick columns that cannot be exported'''),
         ],
     ),
             
