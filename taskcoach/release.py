@@ -313,15 +313,17 @@ def marking_default_downloads(settings, options):
 
 
 @progress
-def marking_bug_fixed(settings, options, bugId):
+def marking_bug_fixed(settings, options, *bugIds):
     api = SourceforgeAPI(settings, options)
-    api.fix(bugId)
+    for bugId in bugIds:
+        api.fix(bugId)
 
 
 @progress
-def marking_bug_released(settings, options, bugId):
+def marking_bug_released(settings, options, *bugIds):
     api = SourceforgeAPI(settings, options)
-    api.release(bugId)
+    for bugId in bugIds:
+        api.release(bugId)
 
 
 @progress
