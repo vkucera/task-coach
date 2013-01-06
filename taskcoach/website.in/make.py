@@ -556,6 +556,16 @@ source_tgz = download_table(download_urls=dict(Sourceforge='%(dist_download_pref
                             platform_versions_supported='All Linux platforms that support the prerequisites',
                             **sourceOptions)
 
+source_raw = download_table(download_urls=dict(Sourceforge='%(dist_download_prefix)s/%(filename)s-%(version)s-raw.tar.gz'),
+                            package_type='Raw source tar archive',
+                            platform='Linux', platform_lower='source_raw',
+                            platform_versions_supported='All Linux platforms that support the prerequisites',
+                            image='source', prerequisites=prerequisites + ', GNU make and patch',
+                            installation='''Decompress the archive, run <code>make prepare</code> and then
+               <code>python setup.py install</code>. If you have a previous version of %(name)s 
+               installed, you may need to force old files to be overwritten: 
+               <code>python setup.py install --force</code>''')
+
 source_zip = download_table(download_urls=dict(Sourceforge='%(dist_download_prefix)s/%(filename)s-%(version)s.zip'),
                             package_type='Source zip archive',
                             platform='Windows', platform_lower='source_zip',
@@ -575,7 +585,7 @@ subversion = download_table(image='sources',
 
 pages['download_sources'] = sep.join([download_header(release='%(version)s'), 
                                       source_rpm, source_zip, 
-                                      source_tgz, subversion,
+                                      source_tgz, source_raw, subversion,
                                       download_footer()])
 
 
