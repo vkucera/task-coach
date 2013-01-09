@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import patterns, command
-from taskcoachlib.domain import task
+from taskcoachlib.domain import task, date
 from CommandTestCase import CommandTestCase
 
 
@@ -25,7 +25,7 @@ from CommandTestCase import CommandTestCase
 class DeleteCommandTest(CommandTestCase):
     def setUp(self):
         super(DeleteCommandTest, self).setUp()
-        self.item = 'Item'
+        self.item = task.Task()
         self.items = patterns.List([self.item])
         
     def deleteItem(self, items=None):
@@ -77,3 +77,44 @@ class EditSubjectTestCase(CommandTestCase):
         self.failIf(command.EditSubjectCommand(self.container, [], 
                     newValue='New subject').items_are_new())
 
+    def testModificationDateTime(self):
+        self.editSubject('new', self.item1)
+        self.assertDoUndoRedo(lambda: self.failUnless(self.item1.modificationDateTime() > date.DateTime.min),
+                              lambda: self.assertEqual(date.DateTime.min, self.item1.modificationDateTime()))
+
+
+class EditDescriptionTestCase(CommandTestCase):
+    ItemClass = task.Task
+    ContainerClass = task.TaskList
+    
+    def setUp(self):
+        super(EditDescriptionTestCase, self).setUp()
+        self.item1 = self.ItemClass(description='item1')
+        self.item2 = self.ItemClass(description='item2')
+        self.container = self.ContainerClass([self.item1, self.item2])
+        
+    def edit_description(self, new_description, *items):
+        edit_subject = command.EditDescriptionCommand(self.container, items, 
+                                                      newValue=new_description)
+        edit_subject.do()
+        
+    def testEditSubject(self):
+        self.edit_description('new', self.item1)
+        self.assertDoUndoRedo(lambda: self.assertEqual('new', self.item1.description()),
+                              lambda: self.assertEqual('item1', self.item1.description()))
+        
+    def testEditMultipleDescriptions(self):
+        self.edit_description('new', self.item1, self.item2)
+        self.assertDoUndoRedo(lambda: self.assertEqual('newnew', 
+                                      self.item1.description() + self.item2.description()),
+                              lambda: self.assertEqual('item1item2', 
+                                      self.item1.description() + self.item2.description()))
+
+    def testItemsAreNotNew(self):
+        self.failIf(command.EditDescriptionCommand(self.container, [], 
+                    newValue='New description').items_are_new())
+
+    def testModificationDateTime(self):
+        self.edit_description('new', self.item1)
+        self.assertDoUndoRedo(lambda: self.failUnless(self.item1.modificationDateTime() > date.DateTime.min),
+                              lambda: self.assertEqual(date.DateTime.min, self.item1.modificationDateTime()))

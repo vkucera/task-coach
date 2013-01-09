@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.23', 'January 4, 2013',
+Release('1.3.23', 'January 6, 2013',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bugv2('''Some navigation shortcuts in the date/time picker
@@ -41,7 +41,11 @@ format preferences.''', '1331'),
         Bugv2('''Try to fetch Mail.app message subject.''', '1342', '1003'),
         Bugv2('''Don't let the user pick columns that cannot be exported'''),
         ],
-    ),
+    featuresAdded=[
+        Feature('''Add a modification date attribute to tasks, notes, 
+attachments, and categories.''', 'http://uservoice.com/a/-2HX-'),
+        ],
+    ),  
             
 Release('1.3.22', 'January 2, 2013',
     summary='''This is a bugfix release.''',

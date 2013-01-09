@@ -109,7 +109,16 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable=W0223
                                                                           value='creationDateTime',
                                                                           menuText=_('&Creation date'),
                                                                           helpText=_('Sort by creation date')),
-                               resizeCallback=self.onResizeColumn)
+                               resizeCallback=self.onResizeColumn),
+                widgets.Column('modificationDateTime', _('Modification date'),
+                               width=self.getColumnWidth('modificationDateTime'),
+                               renderCallback=self.renderModificationDateTime,
+                               sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                                                                          value='modificationDateTime',
+                                                                          menuText=_('&Modification date'),
+                                                                          helpText=_('Sort by last modification date')),
+                               resizeCallback=self.onResizeColumn,
+                               *attachment.Attachment.modificationEventTypes())
                 ]
 
     def createColumnUICommands(self):
@@ -125,7 +134,10 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable=W0223
                 setting='notes', viewer=self),
             uicommand.ViewColumn(menuText=_('&Creation date'),
                 helpText=_('Show/hide creation date column'),
-                setting='creationDateTime', viewer=self)]
+                setting='creationDateTime', viewer=self),
+            uicommand.ViewColumn(menuText=_('&Modification date'),
+                helpText=_('Show/hide last modification date column'),
+                setting='modificationDateTime', viewer=self)]
     
     def createCreationToolBarUICommands(self):
         return (uicommand.AttachmentNew(attachments=self.presentation(),
@@ -157,10 +169,10 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable=W0223
         return dialog.editor.AttachmentEditor
 
     def newItemCommandClass(self):
-        return command.NewAttachmentCommand
-    
+        raise NotImplementedError  # pragma: no cover
+     
     def newSubItemCommandClass(self):
         return None
 
     def deleteItemCommandClass(self):
-        return command.DeleteAttachmentCommand
+        raise NotImplementedError  # pragma: no cover

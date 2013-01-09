@@ -26,14 +26,21 @@ class NewEffortCommand(base.BaseCommand):
     singular_name = _('New effort of "%s"')
     
     def __init__(self, *args, **kwargs):
+        self.__tasks = []
         super(NewEffortCommand, self).__init__(*args, **kwargs)
+        self.__tasks = self.items
         self.items = self.efforts = [effort.Effort(task) for task in self.items]
         self.__oldActualStartDateTimes = {}
+        self.save_modification_datetimes()
+        
+    def modified_items(self):
+        return self.__tasks
 
     def name_subject(self, effort):  # pylint: disable=W0621
         return effort.task().subject()
         
     def do_command(self):
+        super(NewEffortCommand, self).do_command()
         for effort in self.efforts:  # pylint: disable=W0621
             task = effort.task()
             if task not in self.__oldActualStartDateTimes and effort.getStart() < task.actualStartDateTime():
@@ -42,6 +49,7 @@ class NewEffortCommand(base.BaseCommand):
             task.addEffort(effort)
             
     def undo_command(self):
+        super(NewEffortCommand, self).undo_command()
         for effort in self.efforts:  # pylint: disable=W0621
             task = effort.task()
             task.removeEffort(effort)
@@ -56,6 +64,9 @@ class DeleteEffortCommand(base.DeleteCommand):
     plural_name = _('Delete efforts')
     singular_name = _('Delete effort "%s"')
     
+    def modified_items(self):
+        return [item.task() for item in self.items]
+    
     
 class EditTaskCommand(base.BaseCommand):
     plural_name = _('Change task of effort')
@@ -63,14 +74,21 @@ class EditTaskCommand(base.BaseCommand):
     
     def __init__(self, *args, **kwargs):
         self.__task = kwargs.pop('newValue')
+        self.__oldTasks = []
         super(EditTaskCommand, self).__init__(*args, **kwargs)
         self.__oldTasks = [item.task() for item in self.items]
+        self.save_modification_datetimes()
+        
+    def modified_items(self):
+        return [self.__task] + self.__oldTasks
         
     def do_command(self):
+        super(EditTaskCommand, self).do_command()
         for item in self.items:
             item.setTask(self.__task)
             
     def undo_command(self):
+        super(EditTaskCommand, self).undo_command()
         for item, oldTask in zip(self.items, self.__oldTasks):
             item.setTask(oldTask)
 

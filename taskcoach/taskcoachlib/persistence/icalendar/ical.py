@@ -187,6 +187,8 @@ class VCalendarParser(object):
         variable (which is emptied in L{init}). '''
         if name in ('CREATED', 'DCREATED'):
             self.kwargs['creationDateTime'] = parseDateTime(value)
+        elif name == 'LAST-MODIFIED':
+            self.kwargs['modificationDateTime'] = parseDateTime(value)
         elif name == 'SUMMARY':
             self.kwargs['subject'] = value
         elif name == 'CATEGORIES':
@@ -256,7 +258,7 @@ class VNoteParser(VCalendarParser):
             self.kwargs['id'] = value.decode('UTF-8')
         elif name == 'BODY':
             self.kwargs['description'] = value
-        elif name in ['LAST-MODIFIED', 'CLASS']:
+        elif name == 'CLASS':
             pass
         else:
             super(VNoteParser, self).acceptItem(name, value)
@@ -277,8 +279,11 @@ def VCalFromTask(task, encoding=True, doFold=True):
     components.append('BEGIN:VTODO') # pylint: disable=W0511
     components.append('UID:%s' % task.id().encode('UTF-8'))
     
-    if task.creationDateTime() != date.DateTime.min:
+    if task.creationDateTime() > date.DateTime.min:
         components.append('CREATED:%s' % fmtDateTime(task.creationDateTime()))
+        
+    if task.modificationDateTime() > date.DateTime.min:
+        components.append('LAST-MODIFIED:%s' % fmtDateTime(task.modificationDateTime()))
 
     if task.plannedStartDateTime() != date.DateTime():
         components.append('DTSTART:%s' % fmtDateTime(task.plannedStartDateTime()))

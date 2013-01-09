@@ -334,7 +334,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin,
         pub.subscribe(onEvent, task.Task.dueDateTimeChangedEventType())        
         self.task.setDueDateTime(self.task.dueDateTime())
         self.failIf(events)
-
+        
     def testIconChangedAfterSetDueDateTimeHasPassed(self):
         self.task.setDueDateTime(self.tomorrow)
         now = self.tomorrow + date.ONE_SECOND
@@ -391,7 +391,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin,
         pub.subscribe(onEvent, task.Task.completionDateTimeChangedEventType())
         self.task.setCompletionDateTime(date.DateTime())
         self.failIf(events)
-
+      
     def testSetCompletionDateTimeMakesTaskCompleted(self):
         self.task.setCompletionDateTime()
         self.failUnless(self.task.completed())
@@ -423,7 +423,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin,
         pub.subscribe(onEvent, task.Task.percentageCompleteChangedEventType())
         self.task.setCompletionDateTime()
         self.assertEqual([(100, self.task)], events)
-
+        
     def testSetPercentageCompleteSetsActualStartDateTime(self):
         self.task.setPercentageComplete(50)
         self.assertNotEqual(date.DateTime(), self.task.actualStartDateTime())
@@ -473,7 +473,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin,
         pub.subscribe(onEvent, task.Task.budgetChangedEventType())
         self.task.setBudget(self.task.budget())
         self.failIf(events)
-
+        
     def testSetPriority(self):
         self.task.setPriority(10)
         self.assertEqual(10, self.task.priority())
@@ -497,7 +497,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin,
         pub.subscribe(onEvent, task.Task.priorityChangedEventType())
         self.task.setPriority(self.task.priority())
         self.failIf(events)
-
+        
     def testNegativePriority(self):
         self.task.setPriority(-1)
         self.assertEqual(-1, self.task.priority())
@@ -549,7 +549,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin,
         pub.subscribe(onEvent, task.Task.hourlyFeeChangedEventType())
         self.task.setHourlyFee(100)
         self.assertEqual([(100, self.task)], events)
-  
+          
     def testSetRecurrence(self):
         self.task.setRecurrence(date.Recurrence('weekly'))
         self.assertEqual(date.Recurrence('weekly'), self.task.recurrence())
@@ -851,7 +851,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin,
         aNote = note.Note()
         self.task.addNote(aNote)
         self.assertEvent(eventType, self.task, aNote)
-        
+  
     # Prerequisites
     
     def testAddOnePrerequisite(self):
@@ -874,7 +874,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin,
         prerequisite = task.Task()
         self.task.addPrerequisites([prerequisite])
         self.assertEqual([(set([prerequisite]), self.task)], events)
-        
+         
     def testRemovePrerequisiteThatHasNotBeenAdded(self):
         prerequisite = task.Task()
         self.task.removePrerequisites([prerequisite])
@@ -887,8 +887,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin,
         
     def testAddPrerequisiteResetsActualStartDateTime(self):
         self.task.setActualStartDateTime(date.Now())
-        prerequisites = set([task.Task()])
-        self.task.addPrerequisites(prerequisites)
+        self.task.addPrerequisites([task.Task()])
         self.assertEqual(date.DateTime(), self.task.actualStartDateTime())
         
     # Dependencies
@@ -2510,7 +2509,7 @@ class TaskReminderTestCase(TaskTestCase, CommonTaskTestsMixin):
         self.task.setReminder(someOtherTime)
         for recursive in (False, True):
             self.assertReminder(someOtherTime, recursive=recursive)
-
+            
     def testCancelReminder(self):
         self.task.setReminder()
         self.assertReminder(None)
@@ -2648,7 +2647,7 @@ class MarkTaskCompletedWhenAllChildrenCompletedSettingIsTrueFixture(TaskSettingT
         # a task is marked completed when all its children are completed        
         self.task.setShouldMarkCompletedWhenAllChildrenCompleted(False)
         self.assertEqual([(0, self.task)], events)
-                 
+
 
 class MarkTaskCompletedWhenAllChildrenCompletedSettingIsFalseFixture(TaskTestCase):
     def taskCreationKeywordArguments(self):

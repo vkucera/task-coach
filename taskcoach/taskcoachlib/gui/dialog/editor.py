@@ -104,6 +104,7 @@ class SubjectPage(Page):
         self.addSubjectEntry()
         self.addDescriptionEntry()
         self.addCreationDateTimeEntry()
+        self.addModificationDateTimeEntry()
         
     def addSubjectEntry(self):
         # pylint: disable=W0201
@@ -147,12 +148,51 @@ class SubjectPage(Page):
             creation_text += ' - %s' % render.dateTime(max_creation_datetime,
                                                        humanReadable=True)
         self.addEntry(_('Creation date'), creation_text)
-              
+        
+    def addModificationDateTimeEntry(self):
+        self._modificationTextEntry = wx.StaticText(self, 
+            label=self.__modification_text())
+        self.addEntry(_('Modification date'), self._modificationTextEntry)
+        for eventType in self.items[0].modificationEventTypes():
+            if eventType.startswith('pubsub'):
+                pub.subscribe(self.onAttributeChanged, eventType)
+            else:
+                patterns.Publisher().registerObserver(self.onAttributeChanged_Deprecated,
+                                                      eventType=eventType,
+                                                      eventSource=self.items[0])
+                          
+    def __modification_text(self):
+        modification_datetimes = [item.modificationDateTime() for item in self.items]
+        min_modification_datetime = min(modification_datetimes)
+        max_modification_datetime = max(modification_datetimes)
+        modification_text = render.dateTime(min_modification_datetime, 
+                                            humanReadable=True)
+        if max_modification_datetime - min_modification_datetime > date.ONE_MINUTE:
+            modification_text += ' - %s' % render.dateTime(max_modification_datetime,
+                                                           humanReadable=True)
+        return modification_text
+            
+    def onAttributeChanged(self, newValue, sender):
+        self._modificationTextEntry.SetLabel(self.__modification_text())
+        
+    def onAttributeChanged_Deprecated(self, *args, **kwargs):
+        self._modificationTextEntry.SetLabel(self.__modification_text())
+        
+    def close(self):
+        super(SubjectPage, self).close()
+        for eventType in self.items[0].modificationEventTypes():
+            try:
+                pub.unsubscribe(self.onAttributeChanged, eventType)
+            except pub.UndefinedTopic:
+                pass
+        patterns.Publisher().removeObserver(self.onAttributeChanged_Deprecated)
+                 
     def entries(self):
         return dict(firstEntry=self._subjectEntry,
                     subject=self._subjectEntry,
                     description=self._descriptionEntry,
-                    creationDateTime=self._subjectEntry)
+                    creationDateTime=self._subjectEntry,
+                    modificationDateTime=self._subjectEntry)
 
     
 class TaskSubjectPage(SubjectPage):
@@ -163,6 +203,7 @@ class TaskSubjectPage(SubjectPage):
         self.addDescriptionEntry()
         self.addPriorityEntry()
         self.addCreationDateTimeEntry()
+        self.addModificationDateTimeEntry()
 
     def addPriorityEntry(self):
         # pylint: disable=W0201
@@ -189,6 +230,7 @@ class CategorySubjectPage(SubjectPage):
         self.addDescriptionEntry()
         self.addExclusiveSubcategoriesEntry()
         self.addCreationDateTimeEntry()
+        self.addModificationDateTimeEntry()
 
     def addExclusiveSubcategoriesEntry(self):
         # pylint: disable=W0201
@@ -213,6 +255,7 @@ class AttachmentSubjectPage(SubjectPage):
         self.addLocationEntry()
         self.addDescriptionEntry()
         self.addCreationDateTimeEntry()
+        self.addModificationDateTimeEntry()
 
     def addLocationEntry(self):
         panel = wx.Panel(self)

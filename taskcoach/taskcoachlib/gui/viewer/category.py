@@ -116,6 +116,12 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
                        sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                                                                   value='creationDateTime'),
                        **kwargs))
+        columns.append(widgets.Column('modificationDateTime', _('Modification date'),
+                       width=self.getColumnWidth('modificationDateTime'),
+                       renderCallback=self.renderModificationDateTime,
+                       sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                                                                  value='modificationDateTime'),
+                       *category.Category.modificationEventTypes(), **kwargs))
         return columns
     
     def createCreationToolBarUICommands(self):
@@ -141,6 +147,9 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
         commands.append(uicommand.ViewColumn(menuText=_('&Creation date'),
             helpText=_('Show/hide creation date column'), 
             setting='creationDateTime', viewer=self))
+        commands.append(uicommand.ViewColumn(menuText=_('&Modification date'),
+            helpText=_('Show/hide last modification date column'), 
+            setting='modificationDateTime', viewer=self))
         return commands
 
     def onAttributeChanged(self, newValue, sender):

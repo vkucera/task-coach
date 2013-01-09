@@ -841,6 +841,11 @@ class ViewerWithColumns(Viewer):  # pylint: disable=W0223
     def renderCreationDateTime(item, humanReadable=True):
         return render.dateTime(item.creationDateTime(), 
                                humanReadable=humanReadable)
+        
+    @staticmethod
+    def renderModificationDateTime(item, humanReadable=True):
+        return render.dateTime(item.modificationDateTime(),
+                               humanReadable=humanReadable)
             
     def isItemCollapsed(self, item):
         # pylint: disable=E1101

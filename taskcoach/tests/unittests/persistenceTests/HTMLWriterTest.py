@@ -198,6 +198,18 @@ class TaskListTestsMixin(object):
         self.taskFile.tasks().remove(self.task)
         self.expectNotInHTML('1/1/1')
         
+    def testModificationDateTime(self):
+        self.task.setModificationDateTime(date.DateTime(2012, 1, 1, 10, 0, 0))
+        self.viewer.showColumnByName('modificationDateTime')
+        self.expectInHTML(render.dateTime(self.task.modificationDateTime(),
+                                          humanReadable=False))
+        
+    def testMissingModificationDateTime(self):
+        self.viewer.showColumnByName('modificationDateTime')
+        self.expectInHTML(render.dateTime(self.task.modificationDateTime(),
+                                          humanReadable=False))
+        self.expectNotInHTML('1/1/1')
+
         
 class TaskListExportTest(TaskTestsMixin, TaskListTestsMixin, TaskWriterTestCase):
     treeMode = 'False'

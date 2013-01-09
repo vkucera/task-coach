@@ -39,9 +39,14 @@ class ToggleCategoryCommand(base.BaseCommand):
             self.items = items_not_in_category
         
     def do_command(self):
+        super(ToggleCategoryCommand, self).do_command()
         self.toggle_category()
         
-    undo_command = redo_command = do_command
+    def undo_command(self):
+        super(ToggleCategoryCommand, self).undo_command()
+        self.toggle_category()
+        
+    redo_command = do_command
     
     @patterns.eventSource    
     def toggle_category(self, event=None):

@@ -58,7 +58,8 @@ class XMLReader(object):
     def __init__(self, fd):
         self.__fd = fd
         self.__default_font_size = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT).GetPointSize()
-
+        self.__modification_datetimes = {}
+        
     def tskversion(self):
         ''' Return the version of the current task file. Note that this is not
             the version of the application. The task file has its own version
@@ -76,7 +77,7 @@ class XMLReader(object):
         self.__tskversion = parser.tskversion  # pylint: disable=W0201
         if self.__tskversion > meta.data.tskversion:
             # Version number of task file is too high
-            raise XMLReaderTooNewException  
+            raise XMLReaderTooNewException
         tasks = self.__parse_task_nodes(root)
         self.__resolve_prerequisites_and_dependencies(tasks)
         categorizables = tasks[:]
@@ -98,6 +99,9 @@ class XMLReader(object):
 
         guid = self.__parse_guid_node(root.find('guid'))
         syncml_config = self.__parse_syncml_node(root, guid)
+        
+        for object, modification_datetime in self.__modification_datetimes.iteritems():
+            object.setModificationDateTime(modification_datetime)
 
         return tasks, categories, notes, syncml_config, guid
     
@@ -200,7 +204,7 @@ class XMLReader(object):
         kwargs['categorizables'] = categorizables
         if self.__tskversion > 20:
             kwargs['attachments'] = self.__parse_attachments(category_node)
-        return category.Category(**kwargs)  # pylint: disable=W0142
+        return self.__save_modification_datetime(category.Category(**kwargs))  # pylint: disable=W0142
                       
     def __parse_category_nodes_from_task_nodes(self, root, tasks):
         ''' In tskversion <=13 category nodes were subnodes of task nodes. '''
@@ -271,7 +275,7 @@ class XMLReader(object):
             recurrence=self.__parse_recurrence(task_node)))
         if self.__tskversion > 20:
             kwargs['attachments'] = self.__parse_attachments(task_node)
-        return task.Task(**kwargs)  # pylint: disable=W0142
+        return self.__save_modification_datetime(task.Task(**kwargs))  # pylint: disable=W0142
         
     def __parse_recurrence(self, task_node):
         ''' Parse the recurrence from the node and return a recurrence 
@@ -314,7 +318,7 @@ class XMLReader(object):
                                                     self.__parse_note_nodes)
         if self.__tskversion > 20:
             kwargs['attachments'] = self.__parse_attachments(note_node)
-        return note.Note(**kwargs)  # pylint: disable=W0142
+        return self.__save_modification_datetime(note.Note(**kwargs))  # pylint: disable=W0142
     
     def __parse_base_attributes(self, node):
         ''' Parse the attributes all composite domain objects share, such as
@@ -325,6 +329,8 @@ class XMLReader(object):
         attributes = dict(id=node.attrib.get('id', ''),
             creationDateTime=self.__parse_datetime(node.attrib.get('creationDateTime', 
                                                                    '1-1-1 0:0')),
+            modificationDateTime=self.__parse_datetime(node.attrib.get('modificationDateTime',
+                                                                       '1-1-1 0:0')),
             subject=node.attrib.get('subject', ''),
             description=self.__parse_description(node),
             fgColor=self.__parse_tuple(node.attrib.get('fgColor', ''), None),
@@ -474,8 +480,8 @@ class XMLReader(object):
                 if os.name == 'nt':
                     os.chmod(location, stat.S_IREAD)
 
-        return attachment.AttachmentFactory(location,  # pylint: disable=W0142
-                                            node.attrib['type'], **kwargs)
+        return self.__save_modification_datetime(attachment.AttachmentFactory(location,  # pylint: disable=W0142
+                                                                              node.attrib['type'], **kwargs))
 
     def __parse_description(self, node):
         ''' Parse the description from the node. '''
@@ -521,7 +527,7 @@ class XMLReader(object):
     
     @staticmethod
     def __parse_icon(text):
-        ''' Parse an icon name from the tet. '''
+        ''' Parse an icon name from the text. '''
         # Parse is a big word, we just need to fix one particular icon
         return 'clock_alarm_icon' if text == 'clock_alarm' else text
     
@@ -555,6 +561,11 @@ class XMLReader(object):
             return parse_function(text)
         except ValueError:
             return default_value
+        
+    def __save_modification_datetime(self, item):
+        ''' Save the modification date time of the item for later restore. '''
+        self.__modification_datetimes[item] = item.modificationDateTime()
+        return item
 
 
 class TemplateXMLReader(XMLReader):

@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test, wx
 from taskcoachlib import patterns
-from taskcoachlib.domain import category, categorizable
+from taskcoachlib.domain import category, categorizable, date
 
 
 
@@ -697,9 +697,9 @@ class CategorizableCompositeObjectTest(test.TestCase):
     def testCopy(self):
         self.categorizable.addCategory(self.category)
         copy = self.categorizable.copy()
-        self.assertEqual(copy.categories(), self.categorizable.categories()) # pylint: disable=E1101
+        self.assertEqual(copy.categories(), self.categorizable.categories())  # pylint: disable=E1101
         
-    def testModificationEventTypes(self): # pylint: disable=E1003
+    def testModificationEventTypes(self):  # pylint: disable=E1003
         self.assertEqual(super(categorizable.CategorizableCompositeObject,
                                self.categorizable).modificationEventTypes() + \
                          [self.categoryAddedEventType, 

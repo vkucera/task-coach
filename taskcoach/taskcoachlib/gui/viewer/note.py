@@ -95,7 +95,10 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                 setting='categories', viewer=self),
             uicommand.ViewColumn(menuText=_('&Creation date'),
                 helpText=_('Show/hide creation date column'),
-                setting='creationDateTime', viewer=self)]
+                setting='creationDateTime', viewer=self),
+            uicommand.ViewColumn(menuText=_('&Modification date'),
+                helpText=_('Show/hide last modification date column'),
+                setting='modificationDateTime', viewer=self)]
 
     def _createColumns(self):
         subjectColumn = widgets.Column('subject', _('Subject'), 
@@ -143,8 +146,18 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
             sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                 value='creationDateTime', menuText=_('&Creation date'),
                 helpText=_('Sort notes by creation date')))
+        modificationDateTimeColumn = widgets.Column('modificationDateTime', 
+            _('Modification date'), 
+            width=self.getColumnWidth('modificationDateTime'),
+            resizeCallback=self.onResizeColumn,
+            renderCallback=self.renderModificationDateTime,
+            sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                value='modificationDateTime', menuText=_('&Modification date'),
+                helpText=_('Sort notes by last modification date')),
+            *note.Note.modificationEventTypes())
         return [subjectColumn, descriptionColumn, attachmentsColumn, 
-                categoriesColumn, creationDateTimeColumn]
+                categoriesColumn, creationDateTimeColumn, 
+                modificationDateTimeColumn]
 
     def getItemTooltipData(self, item, column=0):
         if self.settings.getboolean('view', 'descriptionpopups'):

@@ -45,12 +45,15 @@ class EffortCommand(base.BaseCommand):  # pylint: disable=W0223
         return self.list
            
     def do_command(self):
+        super(EffortCommand, self).do_command()
         self.stopTracking()
     
     def undo_command(self):
+        super(EffortCommand, self).undo_command()
         self.startTracking()
     
     def redo_command(self):
+        super(EffortCommand, self).redo_command()
         self.stopTracking()
 
 
@@ -195,15 +198,16 @@ class NewSubTaskCommand(base.NewSubItemCommand, SaveTaskStateMixin):
     # pylint: disable=E1101
     
     def __init__(self, *args, **kwargs):
-        super(NewSubTaskCommand, self).__init__(*args, **kwargs)
         subject = kwargs.pop('subject', _('New subtask'))
         plannedStartDateTime = kwargs.pop('plannedStartDateTime', date.DateTime())
         dueDateTime = kwargs.pop('dueDateTime', date.DateTime())
+        super(NewSubTaskCommand, self).__init__(*args, **kwargs)
         self.items = [parent.newChild(subject=subject, 
                                       plannedStartDateTime=max([parent.plannedStartDateTime(), plannedStartDateTime]),
                                       dueDateTime=min([parent.dueDateTime(), dueDateTime]), 
                                       **kwargs) for parent in self.items]
         self.saveStates(self.getTasksToSave())
+        self.save_modification_datetimes()
     
     def getTasksToSave(self):
         # FIXME: can be simplified to: return self.getAncestors(self.items) ?
@@ -440,10 +444,12 @@ class EditPriorityCommand(base.BaseCommand):
         self.__oldPriorities = [item.priority() for item in self.items]
 
     def do_command(self):
+        super(EditPriorityCommand, self).do_command()
         for item in self.items:
             item.setPriority(self.__newPriority)
 
     def undo_command(self):
+        super(EditPriorityCommand, self).undo_command()
         for item, oldPriority in zip(self.items, self.__oldPriorities):
             item.setPriority(oldPriority)
 
@@ -643,10 +649,12 @@ class EditRecurrenceCommand(base.BaseCommand):
         self.__oldRecurrences = [item.recurrence() for item in self.items]
 
     def do_command(self):
+        super(EditRecurrenceCommand, self).do_command()
         for item in self.items:
             item.setRecurrence(self.__newRecurrence)
 
     def undo_command(self):
+        super(EditRecurrenceCommand, self).undo_command()
         for item, oldRecurrence in zip(self.items, self.__oldRecurrences):
             item.setRecurrence(oldRecurrence)
 
@@ -691,10 +699,12 @@ class EditShouldMarkCompletedCommand(base.BaseCommand):
         self.__oldShouldMarkCompleted = [item.shouldMarkCompletedWhenAllChildrenCompleted() for item in self.items]
         
     def do_command(self):
+        super(EditShouldMarkCompletedCommand, self).do_command()
         for item in self.items:
             item.setShouldMarkCompletedWhenAllChildrenCompleted(self.__newShouldMarkCompleted)
             
     def undo_command(self):
+        super(EditShouldMarkCompletedCommand, self).undo_command()
         for item, oldShouldMarkCompleted in zip(self.items, self.__oldShouldMarkCompleted):
             item.setShouldMarkCompletedWhenAllChildrenCompleted(oldShouldMarkCompleted)
             
@@ -712,10 +722,12 @@ class EditBudgetCommand(base.BaseCommand):
         self.__oldBudgets = [item.budget() for item in self.items]
         
     def do_command(self):
+        super(EditBudgetCommand, self).do_command()
         for item in self.items:
             item.setBudget(self.__newBudget)
             
     def undo_command(self):
+        super(EditBudgetCommand, self).undo_command()
         for item, oldBudget in zip(self.items, self.__oldBudgets):
             item.setBudget(oldBudget)
             
@@ -733,10 +745,12 @@ class EditHourlyFeeCommand(base.BaseCommand):
         self.__oldHourlyFees = [item.hourlyFee() for item in self.items]
         
     def do_command(self):
+        super(EditHourlyFeeCommand, self).do_command()
         for item in self.items:
             item.setHourlyFee(self.__newHourlyFee)
             
     def undo_command(self):
+        super(EditHourlyFeeCommand, self).undo_command()
         for item, oldHourlyFee in zip(self.items, self.__oldHourlyFees):
             item.setHourlyFee(oldHourlyFee)
             
@@ -754,10 +768,12 @@ class EditFixedFeeCommand(base.BaseCommand):
         self.__oldFixedFees = [item.fixedFee() for item in self.items]
         
     def do_command(self):
+        super(EditFixedFeeCommand, self).do_command()
         for item in self.items:
             item.setFixedFee(self.__newFixedFee)
             
     def undo_command(self):
+        super(EditFixedFeeCommand, self).undo_command()
         for item, oldFixedFee in zip(self.items, self.__oldFixedFees):
             item.setFixedFee(oldFixedFee)
             
@@ -775,6 +791,7 @@ class TogglePrerequisiteCommand(base.BaseCommand):
         super(TogglePrerequisiteCommand, self).__init__(*args, **kwargs)
     
     def do_command(self):
+        super(TogglePrerequisiteCommand, self).do_command()
         for item in self.items:
             item.addPrerequisites(self.__checkedPrerequisites)
             item.addTaskAsDependencyOf(self.__checkedPrerequisites)
@@ -782,6 +799,7 @@ class TogglePrerequisiteCommand(base.BaseCommand):
             item.removeTaskAsDependencyOf(self.__uncheckedPrerequisites)
 
     def undo_command(self):
+        super(TogglePrerequisiteCommand, self).undo_command()
         for item in self.items:
             item.removePrerequisites(self.__checkedPrerequisites)
             item.removeTaskAsDependencyOf(self.__checkedPrerequisites)

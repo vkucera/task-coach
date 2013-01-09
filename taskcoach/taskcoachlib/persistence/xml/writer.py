@@ -213,6 +213,8 @@ class XMLWriter(object):
                              dict(id=item.id(), status=str(item.getStatus())))
         if item.creationDateTime() > date.DateTime.min:
             node.attrib['creationDateTime'] = str(item.creationDateTime())
+        if item.modificationDateTime() > date.DateTime.min:
+            node.attrib['modificationDateTime'] = str(item.modificationDateTime())
         if item.subject():
             node.attrib['subject'] = item.subject()
         if item.description():

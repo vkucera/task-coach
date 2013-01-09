@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import patterns
-from taskcoachlib.domain import date, categorizable, note, attachment
+from taskcoachlib.domain import date, categorizable, note, attachment, base
 from taskcoachlib.thirdparty.pubsub import pub
 import status
 import wx
@@ -561,8 +561,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self._efforts.append(effort)
         if effort.getStart() < self.actualStartDateTime():
             self.setActualStartDateTime(effort.getStart())
-        pub.sendMessage(self.effortsChangedEventType(), newValue=self._efforts,
-                        oldValue=oldValue, sender=self)
+        pub.sendMessage(self.effortsChangedEventType(), newValue=(self._efforts,
+                        oldValue), sender=self)
         if effort.isBeingTracked() and not wasTracking:
             self.sendTrackingChangedMessage(tracking=True)
         self.sendTimeSpentChangedMessage()
@@ -576,16 +576,16 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         pub.sendMessage(self.trackingChangedEventType(), newValue=tracking,
                         sender=self)  
         for ancestor in self.ancestors():
-            pub.sendMessage(ancestor.trackingChangedEventType(), newValue=tracking,
-                            sender=ancestor)
+            pub.sendMessage(ancestor.trackingChangedEventType(), 
+                            newValue=tracking, sender=ancestor)
 
     def removeEffort(self, effort):
         if effort not in self._efforts:
             return
         oldValue = self._efforts[:]
         self._efforts.remove(effort)
-        pub.sendMessage(self.effortsChangedEventType(), newValue=self._efforts,
-                        oldValue=oldValue, sender=self)
+        pub.sendMessage(self.effortsChangedEventType(), newValue=(self._efforts,
+                        oldValue), sender=self)
         if effort.isBeingTracked() and not self.isBeingTracked():
             self.sendTrackingChangedMessage(tracking=False)
         self.sendTimeSpentChangedMessage()
@@ -599,8 +599,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             return
         oldValue = self._efforts[:]
         self._efforts = efforts
-        pub.sendMessage(self.effortsChangedEventType(), newValue=self._efforts,
-                        oldValue=oldValue, sender=self)
+        pub.sendMessage(self.effortsChangedEventType(), newValue=(self._efforts,
+                        oldValue), sender=self)
         self.sendTimeSpentChangedMessage()
         
     @classmethod
@@ -647,7 +647,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             for task in self.children():
                 result += task.budget(recursive)
         return result
-        
+    
     def setBudget(self, budget):
         if budget == self.__budget:
             return
@@ -906,7 +906,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             return sum(percentages) / len(percentages) if percentages else 0
         else:
             return self.__percentageComplete
-        
+    
     def setPercentageComplete(self, percentage):
         if percentage == self.__percentageComplete:
             return
@@ -1217,7 +1217,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.recomputeAppearance(recursive=True)
         pub.sendMessage(self.prerequisitesChangedEventType(), 
                         newValue=self.__prerequisites, sender=self)
-        
+  
     def addPrerequisites(self, prerequisites):
         prerequisites = set(prerequisites)
         if prerequisites <= self.__prerequisites:
@@ -1300,7 +1300,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__dependencies |= dependencies
         pub.sendMessage(self.dependenciesChangedEventType(),
                         newValue=self.__dependencies, sender=self)
-        
+
     def removeDependencies(self, dependencies):
         dependencies = set(dependencies)
         if self.__dependencies.isdisjoint(dependencies):

@@ -48,6 +48,7 @@ class NewSubCategoryCommand(base.NewSubItemCommand):
         super(NewSubCategoryCommand, self).__init__(*args, **kwargs)
         self.items = self.createNewCategories(subject=subject,
             description=description, attachments=attachments)
+        self.save_modification_datetimes()
 
     def createNewCategories(self, **kwargs):
         return [parent.newChild(**kwargs) for parent in self.items]
@@ -64,11 +65,13 @@ class EditExclusiveSubcategoriesCommand(base.BaseCommand):
         
     @patterns.eventSource
     def do_command(self, event=None):
+        super(EditExclusiveSubcategoriesCommand, self).do_command()
         for item in self.items:
             item.makeSubcategoriesExclusive(self.__newExclusivity, event=event)
 
     @patterns.eventSource
     def undo_command(self, event=None):
+        super(EditExclusiveSubcategoriesCommand, self).undo_command()
         for item, oldExclusivity in zip(self.items, self.__oldExclusivities):
             item.makeSubcategoriesExclusive(oldExclusivity, event=event)
 

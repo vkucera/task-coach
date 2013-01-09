@@ -26,7 +26,7 @@ class CategoryList(base.Collection):
         super(CategoryList, self).extend(categories, event=event)
         for category in self._compositesAndAllChildren(categories):
             for categorizable in category.categorizables():
-                categorizable.addCategory(category, event=event)
+                categorizable.addCategory(category, event=event, modify=False)
 
     @patterns.eventSource                
     def removeItems(self, categories, event=None):

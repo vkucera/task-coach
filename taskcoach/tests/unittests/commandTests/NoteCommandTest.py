@@ -19,7 +19,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from unittests import asserts
 from CommandTestCase import CommandTestCase
 from taskcoachlib import command, patterns
-from taskcoachlib.domain import note, category, task
+from taskcoachlib.domain import base, note, category, task
+
+
+class NoteOwnerUnderTest(note.NoteOwner, base.Object):
+    pass
 
 
 class NoteCommandTestCase(CommandTestCase, asserts.CommandAssertsMixin):
@@ -52,7 +56,7 @@ class NewNoteCommandTest(NoteCommandTestCase):
 
 class AddNoteCommandTest(NoteCommandTestCase):
     def testAddedNoteIsRootItem(self):
-        owner = note.NoteOwner()
+        owner = NoteOwnerUnderTest()
         command.AddNoteCommand([owner], [owner]).do()
         self.failUnless(owner.notes()[0].parent() is None) # pylint: disable=E1101
         
