@@ -43,7 +43,7 @@ format preferences.''', '1331'),
         Bugv2('''When cancelling application shutdown, the window would
 close nonetheless.''', '1346'),
         Bugv2('''The calendar popup in the date picker would not use the
-first week day setting.', '1348'),
+first week day setting.''', '1348'),
         ],
     featuresAdded=[
         Feature('''Add a modification date attribute to tasks, notes, 
