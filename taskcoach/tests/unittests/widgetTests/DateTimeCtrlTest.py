@@ -28,7 +28,7 @@ class CommonTestsMixin(object):
         try:
             self.__oldLocale = locale.getlocale(locale.LC_ALL)
             self.__localeDomain = locale.LC_ALL
-        except AssertionError:
+        except TypeError:
             self.__oldLocale = locale.getlocale(locale.LC_TIME)
             self.__localeDomain = locale.LC_TIME
         localeName = 'en_US' if self.ampm else 'fr_FR'
