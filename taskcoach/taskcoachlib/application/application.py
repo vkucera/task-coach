@@ -27,6 +27,7 @@ import os
 import sys
 import time
 import wx
+import calendar
 
 
 # pylint: disable=W0404
@@ -118,6 +119,8 @@ class Application(object):
                 self.sessionMonitor = LinuxSessionMonitor(self.on_end_session)  # pylint: disable=W0201
             else:
                 self.sessionMonitor = None
+
+        calendar.setfirstweekday(dict(monday=0, sunday=6)[self.settings.get('view', 'weekstart')])
 
     def start(self):
         ''' Call this to start the Application. '''

@@ -25,7 +25,7 @@ from taskcoachlib.domain import date, task
 from taskcoachlib.gui import artprovider
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty import smartdatetimectrl as sdtc
-import wx
+import wx, calendar
 
 
 class FontColorSyncer(object):
@@ -567,7 +567,11 @@ class FeaturesPage(SettingsPage):
                        '(in minutes), %(name)s will ask what to do about current '
                        'efforts.') % meta.data.metaDict)
         self.fit()
-        
+
+    def ok(self):
+        super(FeaturesPage, self).ok()
+        calendar.setfirstweekday(dict(monday=0, sunday=6)[self.get('view', 'weekstart')])
+
 
 class TaskDatesPage(SettingsPage):
     pageName = 'task'

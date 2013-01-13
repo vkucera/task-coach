@@ -1575,7 +1575,7 @@ class _CalendarPopup(_PopupWindow):
                     active = (self.__minDate is None or dt >= self.__minDate) and (self.__maxDate is None or dt <= self.__maxDate)
 
                     dc.SetPen(wx.BLACK_PEN)
-                    dc.SetTextForeground(wx.RED if dayIndex + calendar.firstweekday() in [5, 6] else wx.BLACK)
+                    dc.SetTextForeground(wx.RED if (dayIndex + calendar.firstweekday()) % 7 in [5, 6] else wx.BLACK)
 
                     if dt == self.__selection:
                         color = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
