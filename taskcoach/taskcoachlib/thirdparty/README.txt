@@ -8,16 +8,6 @@ Source: http://code.activestate.com/recipes/163604-guid/
 Copied on: 2012-10-14
 Changes for Task Coach: none
 
-Component: apscheduler
-Name: Advanced Python Scheduler (APscheduler)
-Author: Alex Gronholm <apscheduler@nextday.fi>
-Version: 2.0.2
-Date: 2011-07-09
-License: MIT
-Source: http://pypi.python.org/packages/source/A/APScheduler/APScheduler-2.0.2.tar.gz#md5=204009e9c2a3dd9c7bbe12d314a9f415
-Copied on: 2012-03-12
-Changes for Task Coach: misfire.diff
-
 Component: customtreectrl.py
 Name: CustomTreeCtrl
 Author: Andrea Gavana <andrea.gavana@gmail.com>
