@@ -293,7 +293,7 @@ class Application(object):
 
     def quitApplication(self, force=False):
         if not self.iocontroller.close(force=force):
-            return
+            return False
         # Remember what the user was working on: 
         self.settings.set('file', 'lastfile', self.taskFile.lastFilename())
         self.mainwindow.save_settings()
@@ -315,3 +315,5 @@ class Application(object):
 
         if operating_system.isMac() and hasattr(sys, 'frozen'):
             sys.stdout.summary()
+
+        return True
