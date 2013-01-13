@@ -51,7 +51,8 @@ filter is "hide composite tasks".''', '1351'),
         Feature('''Add a modification date attribute to tasks, notes, 
 attachments, and categories.''', 'http://uservoice.com/a/-2HX-'),
         Feature('''Hitting Ctrl+V (or Cmd+V on OS X) while the date or time
-picker has focus will try to interpret the clipboard's content.'''),
+picker has focus will try to interpret the clipboard's content. Ctrl+C
+stores the current value in the clipboard.''', '1352'),
         ],
     ),  
             

@@ -15,7 +15,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with smartdatetimectrl.  If not, see <http://www.gnu.org/licenses/>.
 
-import wx, math, time, re, datetime, calendar
+import wx, math, time, re, datetime, calendar, StringIO
 import wx.lib.platebtn as pbtn
 
 
@@ -289,6 +289,15 @@ class Entry(wx.Panel):
         except wx.PyDeadObjectError:
             pass
 
+    def Format(self):
+        bf = StringIO.StringIO()
+        for field, x, margin, w, h in self.__widgets:
+            if isinstace(field, (str, unicode)):
+                bf.write(field)
+            else:
+                bf.write('%s' % field.GetValue())
+        return bf.getvalue()
+
     def ForceFocus(self, force=True):
         self.__forceFocus = force
         self.Refresh()
@@ -423,6 +432,13 @@ class Entry(wx.Panel):
                     for idx, mt in enumerate(self._rx_paste.finditer(data.GetText())):
                         values.append((mt.group(0), self.__fields[idx] if idx < len(self.__fields) else NullField))
                     self.OnPaste(values)
+                finally:
+                    wx.TheClipboard.Close()
+
+        if event.GetKeyCode() in [ord('c'), ord('C')] and event.CmdDown():
+            if wx.TheClipboard.Open():
+                try:
+                    wx.TheClipboard.SetData(wx.TextDataObject(self.Format()))
                 finally:
                     wx.TheClipboard.Close()
 
@@ -686,6 +702,7 @@ class TimeEntry(Entry):
 
     def __init__(self, *args, **kwargs):
         fmt = kwargs.pop('format', lambda x: x.strftime('%H:%M:%S'))
+        self.__formatter = fmt
         pattern = decodeSystemString(fmt(datetime.time(hour=11, minute=33, second=44)))
         pattern = re.sub('3+', 'M', pattern)
         pattern = re.sub('1+', 'H', pattern)
@@ -720,6 +737,9 @@ class TimeEntry(Entry):
         super(TimeEntry, self).__init__(*args, **kwargs)
 
         EVT_ENTRY_CHOICE_SELECTED(self, self.__OnHourSelected)
+
+    def Format(self):
+        return self.__formatter(self.GetTime())
 
     def OnChar(self, event):
         if event.GetKeyCode() == ord(':'):
@@ -1025,6 +1045,7 @@ class DateEntry(Entry):
 
     def __init__(self, *args, **kwargs):
         fmt = kwargs.pop('format', lambda x: x.strftime('%x'))
+        self.__formatter = fmt
         fmt = decodeSystemString(fmt(datetime.date(year=3333, day=22, month=11)))
         fmt = re.sub('1+', 'm', fmt)
         fmt = re.sub('2+', 'd', fmt)
@@ -1040,6 +1061,9 @@ class DateEntry(Entry):
         wx.EVT_LEFT_UP(self, self.__OnLeftUp)
         if '__WXMAC__' in wx.PlatformInfo:
             wx.EVT_KILL_FOCUS(self, self.__OnKillFocus)
+
+    def Format(self):
+        return self.__formatter(self.GetDate())
 
     def DismissPopup(self):
         super(DateEntry, self).DismissPopup()
