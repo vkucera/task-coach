@@ -44,6 +44,8 @@ format preferences.''', '1331'),
 close nonetheless.''', '1346'),
         Bugv2('''The calendar popup in the date picker would not use the
 first week day setting.''', '1348'),
+        Bugv2('''Disable hide all filters when in tree mode and the only
+filter is "hide composite tasks".''', '1351'),
         ],
     featuresAdded=[
         Feature('''Add a modification date attribute to tasks, notes, 
