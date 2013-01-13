@@ -205,6 +205,7 @@ class EntryChoiceSelectedEvent(FieldValueChangeEvent):
 class Entry(wx.Panel):
     MARGIN = 3
     formats = [AnyFormatCharacter]
+    _rx_paste = re.compile(r'(?i)\d+|am|pm')
 
     def __init__(self, *args, **kwargs):
         fmt = kwargs.pop('format')
@@ -338,6 +339,12 @@ class Entry(wx.Panel):
     def Field(self, name):
         return self.__namedFields.get(name, NullField)
 
+    def FieldName(self, field):
+        for name, theField in self.__namedFields.items():
+            if theField == field:
+                return name
+        return None
+
     def Position(self, field):
         for widget, x, y, w, h in self.__widgets:
             if widget == field:
@@ -407,6 +414,18 @@ class Entry(wx.Panel):
             self.Navigate(not event.ShiftDown())
             return
 
+        if event.GetKeyCode() in [ord('v'), ord('V')] and event.CmdDown():
+            if wx.TheClipboard.Open():
+                try:
+                    data = wx.TextDataObject()
+                    wx.TheClipboard.GetData(data)
+                    values = list()
+                    for idx, mt in enumerate(self._rx_paste.finditer(data.GetText())):
+                        values.append((mt.group(0), self.__fields[idx] if idx < len(self.__fields) else NullField))
+                    self.OnPaste(values)
+                finally:
+                    wx.TheClipboard.Close()
+
         if event.GetKeyCode() in [wx.WXK_RIGHT, wx.WXK_DECIMAL, wx.WXK_NUMPAD_DECIMAL, ord('.'), ord(',')]:
             self.FocusNext()
         elif event.GetKeyCode() == wx.WXK_LEFT:
@@ -424,6 +443,9 @@ class Entry(wx.Panel):
                 return
             if not hasattr(self.GetParent(), 'HandleKey') or not self.GetParent().HandleKey(event):
                 event.Skip()
+
+    def OnPaste(self, values):
+        raise NotImplementedError
 
     def OnLeftUp(self, event):
         for widget, x, y, w, h in self.__widgets:
@@ -777,7 +799,13 @@ class TimeEntry(Entry):
 
         return datetime.time(hour=hour, minute=minute, second=second)
 
-    def SetTime(self, value):
+    def SetTime(self, value, notify=False):
+        if notify:
+            evt = TimeChangeEvent(self, value)
+            self.ProcessEvent(evt)
+            if evt.IsVetoed():
+                wx.Bell()
+                return
         hour = value.hour
         if self.Field('ampm') is not NullField:
             hour, ampm = Convert24To12(value.hour)
@@ -913,6 +941,31 @@ class TimeEntry(Entry):
             self.SetTime(evt.GetValue())
         return None
 
+    def OnPaste(self, values):
+        kwargs = dict(hour=self.Field('hour').GetValue(),
+                      minute=self.Field('minute').GetValue())
+        for value, field in values:
+            try:
+                if value.lower() in ['am', 'pm'] and (field == self.Field('ampm') or self.Field('ampm') is NullField):
+                    kwargs['ampm'] = value
+                else:
+                    kwargs[self.FieldName(field)] = int(value)
+            except ValueError:
+                wx.Bell()
+                return
+
+        if kwargs.has_key('ampm'):
+            kwargs['hour'] = Convert12To24(kwargs['hour'], dict(am=0, pm=1)[kwargs['ampm'].lower()])
+            del kwargs['ampm']
+
+        try:
+            dt = datetime.time(**kwargs)
+        except:
+            wx.Bell()
+            return
+
+        self.SetTime(dt, notify=True)
+
 #}
 
 #=======================================
@@ -996,11 +1049,6 @@ class DateEntry(Entry):
     def __OnKillFocus(self, event):
         self.DismissPopup()
         event.Skip()
-
-    def OnChar(self, event):
-        if event.GetKeyCode() == wx.WXK_TAB and self.__calendar is not None:
-            self.__calendar.Dismiss()
-        super(DateEntry, self).OnChar(event)
 
     def OnChar(self, event):
         if event.GetKeyCode() == ord('/'):
@@ -1209,6 +1257,24 @@ class DateEntry(Entry):
         self.ForceFocus(False)
         event.Skip()
 
+    def OnPaste(self, values):
+        kwargs = dict(year=self.Field('year').GetValue(),
+                      month=self.Field('month').GetValue(),
+                      day=self.Field('day').GetValue())
+        for value, field in values:
+            try:
+                kwargs[self.FieldName(field)] = int(value)
+            except ValueError:
+                wx.Bell()
+                return
+
+        try:
+            dt = datetime.date(**kwargs)
+        except:
+            wx.Bell()
+            return
+
+        self.SetDate(dt, notify=True)
 
 #}
 
