@@ -78,7 +78,7 @@ sdist_ubuntu: sdist_linux
 sdist_raw:
 	mkdir -p dist
 	cp -a . ../tmp-sdist
-	cd ../tmp-sdist; make nuke; find . -name ".svn" | xargs rm -rf
+	cd ../tmp-sdist; make nuke; find . -name ".svn" | xargs -d '\n' rm -rf
 	mv ../tmp-sdist dist/TaskCoach-$(TCVERSION)
 	cd dist; tar czf TaskCoach-$(TCVERSION)-raw.tgz TaskCoach-$(TCVERSION); rm -rf TaskCoach-$(TCVERSION)
 
