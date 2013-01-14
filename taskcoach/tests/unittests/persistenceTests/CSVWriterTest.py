@@ -315,7 +315,7 @@ class EffortWriterTest(CSVWriterTestCase):
         self.expectInCSV('Task subject,')
         
     def testEffortDuration(self):
-        self.expectInCSV(',0:00:01,')
+        self.expectInCSV(',0:00:01')
         
     def testEffortPerDay(self):
         self.settings.settext(self.viewer.settingsSection(), 'aggregation',

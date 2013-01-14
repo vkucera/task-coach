@@ -262,9 +262,10 @@ defaults = {
     'searchfilterincludesubitems': 'False',
     'searchdescription': 'False',
     'regularexpression': 'False',
-    'columns': "[]",
+    'columns': "['attachments', 'description', 'creationDateTime', \
+                 'modificationDateTime']",
     'columnsalwaysvisible': "['subject']",
-    'columnwidths': "{'attachments': 28}",
+    'columnwidths': "{'attachments': 28, 'description': 200}",
     'columnautoresizing': 'True'
     },
 'noteviewerintaskeditor': {
@@ -272,9 +273,10 @@ defaults = {
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
-    'columns': "['subject']",
+    'columns': "['attachments', 'description', 'creationDateTime', \
+                 'modificationDateTime']",
     'columnsalwaysvisible': "['subject']",
-    'columnwidths': "{}",
+    'columnwidths': "{'attachments': 28, 'description': 200}",
     'columnautoresizing': 'True',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
@@ -319,11 +321,11 @@ defaults = {
     'sortby': 'period',
     'sortascending': 'False',
     'sortcasesensitive': 'False',
-    'columns': "['timeSpent', 'revenue']",
+    'columns': "['description', 'timeSpent']",
     'columnsalwaysvisible': "['period', 'task']",
     'columnwidths': "{'period': 160, 'monday': 70, 'tuesday': 70, "
                      "'wednesday': 70, 'thursday': 70, 'friday': 70, "
-                     "'saturday': 70, 'sunday': 70}",
+                     "'saturday': 70, 'sunday': 70, 'description': 200}",
     'columnautoresizing': 'True',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
@@ -339,9 +341,11 @@ defaults = {
     'sortby': 'period',
     'sortascending': 'False',
     'sortcasesensitive': 'False',
-    'columns': "['timeSpent', 'revenue']",
+    'columns': "['description', 'timeSpent']",
     'columnsalwaysvisible': "['period', 'task']",
-    'columnwidths': "{}",
+    'columnwidths': "{'period': 160, 'monday': 70, 'tuesday': 70, "
+                     "'wednesday': 70, 'thursday': 70, 'friday': 70, "
+                     "'saturday': 70, 'sunday': 70, 'description': 200}",
     'columnautoresizing': 'True',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
