@@ -423,7 +423,12 @@ class Entry(wx.Panel):
             self.Navigate(not event.ShiftDown())
             return
 
-        if event.GetKeyCode() in [ord('v'), ord('V')] and event.CmdDown():
+        # Windows has remains of the old DOS ways it seems. But why Linux ? Why ?
+        isPaste = event.GetKeyCode() in [ord('v'), ord('V')]
+        if '__WXMSW__' in wx.PlatformInfo or '__WXGTK__' in wx.PlatformInfo:
+            isPaste = event.GetKeyCode() == 22
+
+        if isPaste and event.CmdDown():
             if wx.TheClipboard.Open():
                 try:
                     data = wx.TextDataObject()
@@ -435,7 +440,11 @@ class Entry(wx.Panel):
                 finally:
                     wx.TheClipboard.Close()
 
-        if event.GetKeyCode() in [ord('c'), ord('C')] and event.CmdDown():
+        isCopy = event.GetKeyCode() in [ord('c'), ord('C')]
+        if '__WXMSW__' in wx.PlatformInfo or '__WXGTK__' in wx.PlatformInfo:
+            isCopy = event.GetKeyCode() == 3
+
+        if isCopy and event.CmdDown():
             if wx.TheClipboard.Open():
                 try:
                     wx.TheClipboard.SetData(wx.TextDataObject(self.Format()))
