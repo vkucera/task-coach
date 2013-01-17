@@ -46,6 +46,9 @@ close nonetheless.''', '1346'),
 first week day setting.''', '1348'),
         Bugv2('''Disable hide all filters when in tree mode and the only
 filter is "hide composite tasks".''', '1351'),
+        Bugv2('''The task editor would not open on Windows if the user's short
+date format used abbreviated or full month name.''', '1338'),
+
         ],
     featuresAdded=[
         Feature('''Add a modification date attribute to tasks, notes, 
