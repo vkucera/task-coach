@@ -48,7 +48,9 @@ first week day setting.''', '1348'),
 filter is "hide composite tasks".''', '1351'),
         Bugv2('''The task editor would not open on Windows if the user's short
 date format used abbreviated or full month name.''', '1338'),
-
+        Bugv2('''Increase timer value for the date picker.''', '1354'),
+        Bugv2('''Backspace/delete removes the last digit in the date
+picker.''', '1354'),
         ],
     featuresAdded=[
         Feature('''Add a modification date attribute to tasks, notes, 

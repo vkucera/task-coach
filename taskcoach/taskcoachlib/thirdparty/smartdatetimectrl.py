@@ -304,7 +304,7 @@ class Entry(wx.Panel):
             self.__focus.ResetState()
 
     def StartTimer(self):
-        self.__timer.Start(750, True)
+        self.__timer.Start(2000, True)
 
     def __SetFocus(self, field):
         if self.__popup is not None:
@@ -567,6 +567,10 @@ class NumericField(Field):
                 self.SetValue(number, notify=True)
             elif self.__state == 1:
                 self.SetValue((self.GetValue() * 10 + number) % int(math.pow(10, self.__width)), notify=True)
+            return True
+
+        if event.GetKeyCode() in [wx.WXK_BACK, wx.WXK_DELETE, wx.WXK_NUMPAD_DELETE]:
+            self.SetValue(int(self.GetValue() / 10), notify=True)
             return True
 
         return False
