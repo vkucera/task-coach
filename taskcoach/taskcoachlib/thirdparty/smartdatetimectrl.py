@@ -112,7 +112,7 @@ class Field(object):
     def __init__(self, *args, **kwargs):
         self.__value = kwargs.pop('value')
         self.__observer = kwargs.pop('observer')
-        self.__choices = kwargs.pop('choices', None)
+        self.__choices = kwargs.pop('choices', None) # 2-tuples [(label, value)]
 
         super(Field, self).__init__(*args, **kwargs)
 
@@ -138,13 +138,10 @@ class Field(object):
         self.__choices = choices
 
     def GetCurrentChoice(self):
-        for idx, choice in enumerate(self.__choices):
-            if choice == self.GetValue():
-                return idx
-        return None
-
-    def SetCurrentChoice(self, value):
-        self.SetValue(value, notify=True)
+        for idx, (label, value) in enumerate(self.__choices):
+            if value == self.GetValue():
+                return value
+        return self.__choices[0][1]
 
     # Methods to override
 
@@ -504,7 +501,7 @@ class Entry(wx.Panel):
         evt = EntryChoiceSelectedEvent(self, event.GetValue(), field=field)
         self.ProcessEvent(evt)
         if not evt.IsVetoed():
-            field.SetCurrentChoice(evt.GetValue())
+            field.SetValue(evt.GetValue(), notify=True)
         popup.Dismiss()
 
 
@@ -527,19 +524,19 @@ class NumericField(Field):
     Entry.addFormat(NumericFormatCharacter)
 
     def __init__(self, *args, **kwargs):
-        self.__width = kwargs.pop('width')
+        self.__width = kwargs.pop('width', 0)
         self.__state = 0
 
         super(NumericField, self).__init__(*args, **kwargs)
 
     def GetExtent(self, dc):
-        return dc.GetTextExtent('0' * self.__width)
+        return dc.GetTextExtent('0' * max(self.__width, 1))
 
-    def SetCurrentChoice(self, choice):
-        super(NumericField, self).SetCurrentChoice(int(choice))
+    def SetValue(self, value, notify=False):
+        super(NumericField, self).SetValue(int(value), notify=notify)
 
     def PaintValue(self, dc, x, y, w, h):
-        dc.DrawText(('%%0%dd' % self.__width) % self.GetValue(), x, y)
+        dc.DrawText(('%%0%dd' % max(self.__width, 1)) % self.GetValue(), x, y)
 
     def ResetState(self):
         self.__state = 0
@@ -575,36 +572,42 @@ class NumericField(Field):
         return False
 
 
-class EnumerationField(Field):
+class EnumerationField(NumericField):
     def __init__(self, *args, **kwargs):
-        self.__choices = kwargs['choices']
+        self.__enablePopup = kwargs.pop('enablePopup', True)
         super(EnumerationField, self).__init__(*args, **kwargs)
 
-    def SetCurrentChoice(self, value):
-        super(EnumerationField, self).SetCurrentChoice(['AM', 'PM'].index(value))
-
-    def GetCurrentChoice(self):
-        return self.GetValue()
+    def PopupChoices(self, widget):
+        if self.__enablePopup:
+            super(EnumerationField, self).PopupChoices(widget)
 
     def GetExtent(self, dc):
         maxW = maxH = 0
-        for choice in self.__choices:
-            tw, th = dc.GetTextExtent(choice)
+        for label, value in self.GetChoices():
+            tw, th = dc.GetTextExtent(label)
             maxW = max(maxW, tw)
             maxH = max(maxH, th)
         return maxW, maxH
 
     def PaintValue(self, dc, x, y, w, h):
-        dc.DrawText(self.__choices[self.GetValue()], x, y)
+        for label, value in self.GetChoices():
+            if value == self.GetValue():
+                dc.DrawText(label, x, y)
+
+    def __index(self):
+        for idx, (label, value) in enumerate(self.GetChoices()):
+            if value == self.GetValue():
+                return idx
+        return 0
 
     def HandleKey(self, event):
         if event.GetKeyCode() == wx.WXK_UP:
-            self.SetValue((self.GetValue() - 1 + len(self.__choices)) % len(self.__choices), notify=True)
+            self.SetValue(self.GetChoices()[(self.__index() + len(self.GetChoices()) - 1) % len(self.GetChoices())][1])
             return True
         if event.GetKeyCode() == wx.WXK_DOWN:
-            self.SetValue((self.GetValue() + 1) % len(self.__choices), notify=True)
+            self.SetValue(self.GetChoices()[(self.__index() + 1) % len(self.GetChoices())][1])
             return True
-        return False
+        return super(EnumerationField, self).HandleKey(event)
 
 
 #=======================================
@@ -639,7 +642,7 @@ class AMPMField(EnumerationField):
         valueName = 'ampm'
 
         def createField(self, *args, **kwargs):
-            kwargs['choices'] = ['AM', 'PM']
+            kwargs['choices'] = [('AM', 0), ('PM', 1)]
             return AMPMField(*args, **kwargs)
 
     Entry.addFormat(AMPMFormatCharacter)
@@ -765,15 +768,15 @@ class TimeEntry(Entry):
     def EnableChoices(self, enabled=True):
         if enabled:
             if self.Field('ampm') is NullField:
-                hours = range(self.__startHour, min(self.__endHour + 1, 24))
+                hours = [('%d' % hour, hour) for hour in xrange(self.__startHour, min(self.__endHour + 1, 24))]
             else:
                 hours = list()
                 for hour in xrange(self.__startHour, min(self.__endHour + 1, 24)):
                     hr, ampm = Convert24To12(hour)
-                    hours.append('%02d %s' % (hr, ['AM', 'PM'][ampm]))
+                    hours.append(('%02d %s' % (hr, ['AM', 'PM'][ampm]), hour))
             self.Field('hour').SetChoices(hours)
-            self.Field('minute').SetChoices(range(0, 60, self.__minuteDelta))
-            self.Field('second').SetChoices(range(0, 60, self.__secondDelta))
+            self.Field('minute').SetChoices([('%d' % minute, minute) for minute in xrange(0, 60, self.__minuteDelta)])
+            self.Field('second').SetChoices([('%d' % second, second) for second in xrange(0, 60, self.__secondDelta)])
         else:
             self.Field('hour').SetChoices(None)
             self.Field('minute').SetChoices(None)
@@ -782,10 +785,8 @@ class TimeEntry(Entry):
 
     def __OnHourSelected(self, event):
         if self.Field('ampm') is not NullField and event.GetField() is self.Field('hour'):
-            hour, ampm = event.GetValue().split()
             event.Veto()
-
-            evt = TimeChangeEvent(self, self.__NewValue(hour=Convert12To24(int(hour), ampm=dict(am=0, pm=1)[ampm.lower()])))
+            evt = TimeChangeEvent(self, self.__NewValue(hour=event.GetValue()))
             self.ProcessEvent(evt)
             if evt.IsVetoed():
                 wx.Bell()
@@ -1019,6 +1020,22 @@ class MonthField(NumericField):
     pass
 
 
+class AbbreviatedMonthField(EnumerationField):
+    def __init__(self, **kwargs):
+        kwargs['choices'] = list(reversed([(datetime.date(year=2012, month=month, day=1).strftime('%b'), month) for month in xrange(1, 13)]))
+        kwargs['enablePopup'] = False
+        kwargs['width'] = 2
+        super(AbbreviatedMonthField, self).__init__(**kwargs)
+
+
+class FullMonthField(EnumerationField):
+    def __init__(self, **kwargs):
+        kwargs['choices'] = list(reversed([(datetime.date(year=2012, month=month, day=1).strftime('%B'), month) for month in xrange(1, 13)]))
+        kwargs['enablePopup'] = False
+        kwargs['width'] = 2
+        super(AbbreviatedMonthField, self).__init__(**kwargs)
+
+
 class DayField(NumericField):
     pass
 
@@ -1040,6 +1057,20 @@ class DateEntry(Entry):
             kwargs['width'] = 2
             return MonthField(*args, **kwargs)
 
+    class AbbreviatedMonthFormatCharacter(SingleFormatCharacter):
+        character = 'b'
+        valueName = 'month'
+
+        def createField(self, *args, **kwargs):
+            return AbbreviatedMonthField(*args, **kwargs)
+
+    class FullMonthFormatCharacter(SingleFormatCharacter):
+        character = 'B'
+        valueName = 'month'
+
+        def createField(self, *args, **kwargs):
+            return FullMonthField(*args, **kwargs)
+
     class DayFormatCharacter(SingleFormatCharacter):
         character = 'd'
         valueName = 'day'
@@ -1050,12 +1081,21 @@ class DateEntry(Entry):
 
     Entry.addFormat(YearFormatCharacter)
     Entry.addFormat(MonthFormatCharacter)
+    Entry.addFormat(AbbreviatedMonthFormatCharacter)
+    Entry.addFormat(FullMonthFormatCharacter)
     Entry.addFormat(DayFormatCharacter)
 
     def __init__(self, *args, **kwargs):
         fmt = kwargs.pop('format', lambda x: x.strftime('%x'))
         self.__formatter = fmt
         fmt = decodeSystemString(fmt(datetime.date(year=3333, day=22, month=11)))
+
+        for fmtChar in ['B', 'b']:
+            substring = datetime.date(year=3333, day=22, month=11).strftime('%%%s' % fmtChar)
+            if fmt.find(substring) != -1:
+                fmt = fmt.replace(substring, fmtChar)
+                break
+
         fmt = re.sub('1+', 'm', fmt)
         fmt = re.sub('2+', 'd', fmt)
         fmt = re.sub('3+', 'y', fmt)
@@ -1741,9 +1781,9 @@ class _CalendarPopup(_PopupWindow):
 #{ Multiple choices popup
 
 class _MultipleChoicesPopup(_PopupWindow):
-    def __init__(self, choices, selection, *args, **kwargs):
+    def __init__(self, choices, value, *args, **kwargs):
         self.__choices = choices
-        self.__selection = selection or 0
+        self.__value = value
         super(_MultipleChoicesPopup, self).__init__(*args, **kwargs)
 
     def Fill(self, interior):
@@ -1755,8 +1795,8 @@ class _MultipleChoicesPopup(_PopupWindow):
         maxW = 0
         totH = 0
 
-        for choice in self.__choices:
-            tw, th = dc.GetTextExtent(unicode(choice))
+        for label, value in self.__choices:
+            tw, th = dc.GetTextExtent(unicode(label))
             maxW = max(tw, maxW)
             totH += th
 
@@ -1771,9 +1811,9 @@ class _MultipleChoicesPopup(_PopupWindow):
         y = 2
         w, h = self.GetClientSize()
 
-        for index, choice in enumerate(self.__choices):
-            tw, th = dc.GetTextExtent(unicode(choice))
-            if index == self.__selection:
+        for label, value in self.__choices:
+            tw, th = dc.GetTextExtent(label)
+            if value == self.__value:
                 color = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
                 dc.SetPen(wx.Pen(color))
                 dc.SetBrush(wx.Brush(color))
@@ -1781,22 +1821,28 @@ class _MultipleChoicesPopup(_PopupWindow):
                 dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT))
             else:
                 dc.SetTextForeground(wx.BLACK)
-            dc.DrawText(unicode(choice), 2 + (w - 4 - tw) // 2, y)
+            dc.DrawText(label, 2 + (w - 4 - tw) // 2, y)
             y += th + 2
+
+    def __index(self):
+        for idx, (label, value) in enumerate(self.__choices):
+            if value == self.__value:
+                return idx
+        return 0
 
     def HandleKey(self, event):
         if event.GetKeyCode() == wx.WXK_UP:
-            self.__selection = (self.__selection + len(self.__choices) - 1) % len(self.__choices)
+            self.__value = self.__choices[(self.__index() + len(self.__choices) - 1) % len(self.__choices)][1]
             self.Refresh()
             return True
 
         if event.GetKeyCode() == wx.WXK_DOWN:
-            self.__selection = (self.__selection + 1) % len(self.__choices)
+            self.__value = self.__choices[(self.__index() + 1) % len(self.__choices)][1]
             self.Refresh()
             return True
 
         if event.GetKeyCode() == wx.WXK_RETURN:
-            evt = EntryChoiceSelectedEvent(self, self.__choices[self.__selection])
+            evt = EntryChoiceSelectedEvent(self, self.__value)
             self.ProcessEvent(evt)
             return True
 
@@ -1805,10 +1851,10 @@ class _MultipleChoicesPopup(_PopupWindow):
     def OnLeftUp(self, event):
         y = 2
         dc = wx.ClientDC(event.GetEventObject())
-        for choice in self.__choices:
-            tw, th = dc.GetTextExtent(unicode(choice))
+        for label, value in self.__choices:
+            tw, th = dc.GetTextExtent(label)
             if event.GetY() >= y and event.GetY() < y + th:
-                evt = EntryChoiceSelectedEvent(self, choice)
+                evt = EntryChoiceSelectedEvent(self, value)
                 self.ProcessEvent(evt)
                 break
             y += th + 2
@@ -2083,7 +2129,7 @@ if __name__ == '__main__':
             super(Dialog, self).__init__(None, wx.ID_ANY, 'Test', style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER)
             sz = wx.BoxSizer(wx.VERTICAL)
 
-            pnl1 = SmartDateTimeCtrl(self, label='Start', enableNone=True, timeFormat=lambda x: x.strftime('%I:%M %p'), startHour=8, endHour=18)
+            pnl1 = SmartDateTimeCtrl(self, label='Start', enableNone=True, timeFormat=lambda x: x.strftime('%I:%M %p'), dateFormat=lambda x: x.strftime('%Y %b %d'), startHour=8, endHour=18)
             pnl1.EnableChoices()
             sz.Add(pnl1, 0, wx.ALL|wx.ALIGN_LEFT, 3)
 
