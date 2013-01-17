@@ -602,10 +602,10 @@ class EnumerationField(NumericField):
 
     def HandleKey(self, event):
         if event.GetKeyCode() == wx.WXK_UP:
-            self.SetValue(self.GetChoices()[(self.__index() + len(self.GetChoices()) - 1) % len(self.GetChoices())][1])
+            self.SetValue(self.GetChoices()[(self.__index() + len(self.GetChoices()) - 1) % len(self.GetChoices())][1], notify=True)
             return True
         if event.GetKeyCode() == wx.WXK_DOWN:
-            self.SetValue(self.GetChoices()[(self.__index() + 1) % len(self.GetChoices())][1])
+            self.SetValue(self.GetChoices()[(self.__index() + 1) % len(self.GetChoices())][1], notify=True)
             return True
         return super(EnumerationField, self).HandleKey(event)
 
