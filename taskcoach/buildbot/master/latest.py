@@ -28,39 +28,56 @@ def findLatest(path, valid):
 
 def listPath(path):
     def isSource(name):
-        if name.endswith('.tar.gz') or name.endswith('.src.rpm'):
+        if name.endswith('.tar.gz') or name.endswith('.src.rpm') or name.endswith('.tgz'):
             return True
         if name.endswith('.zip'):
             return not name.endswith('_rev1.zip')
         return False
 
+
+    print '<table border="0">'
+
     changelog = os.path.join(path, 'changelog_content')
     if os.path.exists(changelog):
-        print '<pre>'
+        print '<tr><td colspan="2"><pre>'
         print file(changelog, 'rb').read()
-        print '</pre>'
+        print '</td></tr></pre>'
 
-    print '<h2>Sources</h2>'
-    print '<ul>'
+    print '<tr><th colspan="2"><h2>Sources</h2></th></tr>'
 
     for pkgname in findLatest(path, isSource):
+        print '<tr>'
+        print '<td><img src="source.png" /></td>'
+        print '<td>'
         if path == '.' or path == 'all':
-            print '<li><a href="http://www.fraca7.net/TaskCoach-packages/%s">%s</a></li>' % (pkgname, pkgname)
+            print '<a href="http://www.fraca7.net/TaskCoach-packages/%s">%s</a>' % (pkgname, pkgname)
         else:
-            print '<li><a href="http://www.fraca7.net/TaskCoach-packages/%s/%s">%s</a></li>' % (path, pkgname, pkgname)
+            print '<a href="http://www.fraca7.net/TaskCoach-packages/%s/%s">%s</a>' % (path, pkgname, pkgname)
+        print '</td>'
+        print '</tr>'
 
-    print '</ul>'
-
-    print '<h2>Binaries</h2>'
-    print '<ul>'
+    print '<tr><th colspan="2"><h2>Binaries</h2></th></tr>'
 
     for pkgname in findLatest(path, lambda x: not isSource(x)):
+        print '<tr>'
+        img = 'binary.png'
+        if pkgname.endswith('.dmg'):
+            img = 'mac.png'
+        elif pkgname.endswith('.exe'):
+            img = 'windows.png'
+        elif pkgname.endswith('.rpm') or pkgname.endswith('.deb'):
+            img = 'linux.png'
+        print '<td><img src="%s" /></td>' % img
+        print '<td>'
         if path == '.' or path == 'all':
-            print '<li><a href="http://www.fraca7.net/TaskCoach-packages/%s">%s</a></li>' % (pkgname, pkgname)
+            print '<a href="http://www.fraca7.net/TaskCoach-packages/%s">%s</a>' % (pkgname, pkgname)
         else:
-            print '<li><a href="http://www.fraca7.net/TaskCoach-packages/%s/%s">%s</a></li>' % (path, pkgname, pkgname)
+            print '<a href="http://www.fraca7.net/TaskCoach-packages/%s/%s">%s</a>' % (path, pkgname, pkgname)
+        print '</td>'
+        print '</tr>'
 
-    print '</ul>'
+    print '</table>'
+    print '<hr />'
 
 def main(path):
     print 'Content-type: text/html'
@@ -68,7 +85,7 @@ def main(path):
 
     print '<html><head><title>Latest Task Coach builds</title>'
     print '<style type="text/css" media="screen">@import "default.css";</style>'
-    print '</head></body>'
+    print '</head><body><center>'
 
     if path == '.' or path == 'all':
         print '<h1>New developments (from trunk)</h1>'
@@ -87,7 +104,7 @@ def main(path):
 
     print '<a href="http://www.taskcoach.org/download.html>Back to Task Coach downloads</a>'
 
-    print '</body></html>'
+    print '</center></body></html>'
 
 if __name__ == '__main__':
     if sys.argv[0].endswith('latest_features.py'):
