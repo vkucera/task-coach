@@ -276,7 +276,7 @@ pylint:
 	-pylint --rcfile=.pylintrc -f html taskcoachlib > pylint.html
 
 CLEANFILES=build build-* website.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle .profile tests/.coverage tests/coverage.out
-REALLYCLEANFILES=dist taskcoachlib/gui/icons.py taskcoachlib/persistence/templates.py \
+REALLYCLEANFILES=dist taskcoachlib/gui/icons.py taskcoachlib/persistence/xml/templates.py \
 	taskcoachlib/i18n/??.py taskcoachlib/i18n/???.py taskcoachlib/i18n/??_??.py .\#* */.\#* */*/.\#*
 
 clean:
