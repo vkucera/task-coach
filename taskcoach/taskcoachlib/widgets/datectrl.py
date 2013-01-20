@@ -33,11 +33,11 @@ class _SmartDateTimeCtrl(sdtc.SmartDateTimeCtrl):
     def HandleKey(self, event):
         if not super(_SmartDateTimeCtrl, self).HandleKey(event) and self.GetDateTime() is not None:
             startHour, endHour = self.__interval
-            if event.GetUnicodeKey() in [ord('s'), ord('S')]:
+            if event.GetKeyCode() in [ord('s'), ord('S')]:
                 hour = datetime.time(startHour, 0, 0, 0) if event.ShiftDown() else datetime.time(0, 0, 0, 0)
                 self.SetDateTime(datetime.datetime.combine(self.GetDateTime().date(), hour), notify=True)
                 return True
-            elif event.GetUnicodeKey() in [ord('e'), ord('E')]:
+            elif event.GetKeyCode() in [ord('e'), ord('E')]:
                 hour = datetime.time(endHour, 0, 0, 0) if event.ShiftDown() else datetime.time(23, 59, 0, 0)
                 self.SetDateTime(datetime.datetime.combine(self.GetDateTime().date(), hour), notify=True)
                 return True
