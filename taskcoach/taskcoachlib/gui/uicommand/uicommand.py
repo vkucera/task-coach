@@ -1630,7 +1630,7 @@ class TaskNewFromTemplate(TaskNew):
    
 class TaskNewFromTemplateButton(PopupButtonMixin, TaskListCommand, SettingsCommand):
     def createPopupMenu(self):
-        import menu
+        from taskcoachlib.gui import menu
         return menu.TaskTemplateMenu(self.mainWindow(), self.taskList, 
                                      self.settings)
 
@@ -2072,7 +2072,7 @@ class EffortStartButton(PopupButtonMixin, TaskListCommand):
             *args, **kwargs)
 
     def createPopupMenu(self):
-        import menu
+        from taskcoachlib.gui import menu
         return menu.StartEffortForTaskMenu(self.mainWindow(), self.taskList)
 
     def enabled(self, event):
