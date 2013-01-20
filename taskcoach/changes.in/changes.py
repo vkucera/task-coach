@@ -51,6 +51,8 @@ date format used abbreviated or full month name.''', '1338'),
         Bugv2('''Increase timer value for the date picker.''', '1354'),
         Bugv2('''Backspace/delete removes the last digit in the date
 picker.''', '1354'),
+        Bugv2('''Fix Shift-S and Shift-E shortcuts in date picker on
+Linux.''', '1358'),
         ],
     featuresAdded=[
         Feature('''Add a modification date attribute to tasks, notes, 
