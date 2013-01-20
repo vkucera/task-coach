@@ -36,90 +36,7 @@ from taskcoachlib.workarounds import ExceptionAsUnicode
 import wx
 import base_uicommand
 import mixin_uicommand
-
-
-class SettingsCommand(base_uicommand.UICommand):  # pylint: disable=W0223
-    ''' SettingsCommands are saved in the settings (a ConfigParser). '''
-
-    def __init__(self, settings=None, setting=None, section='view', 
-                 *args, **kwargs):
-        self.settings = settings
-        self.section = section
-        self.setting = setting
-        super(SettingsCommand, self).__init__(*args, **kwargs)
-
-
-class BooleanSettingsCommand(SettingsCommand):  # pylint: disable=W0223
-    ''' Bae class for commands that change a boolean setting. 
-        Whenever the setting is changed, the user interface 
-        representation is changed as well. E.g. a menu gets 
-        a checkmark. '''
-
-    def __init__(self, value=None, *args, **kwargs):
-        self.value = value
-        super(BooleanSettingsCommand, self).__init__(*args, **kwargs)
-        
-    def onUpdateUI(self, event):
-        event.Check(self.isSettingChecked())
-        super(BooleanSettingsCommand, self).onUpdateUI(event)
-
-    def addToMenu(self, menu, window, position=None):
-        menuId = super(BooleanSettingsCommand, self).addToMenu(menu, window, 
-                                                              position)
-        menuItem = menu.FindItemById(menuId)
-        menuItem.Check(self.isSettingChecked())
-        
-    def isSettingChecked(self):
-        raise NotImplementedError  # pragma: no cover
-    
-
-class UICheckCommand(BooleanSettingsCommand):
-    def __init__(self, *args, **kwargs):
-        kwargs['bitmap'] = kwargs.get('bitmap', self.getBitmap())
-        super(UICheckCommand, self).__init__(kind=wx.ITEM_CHECK, 
-            *args, **kwargs)
-        
-    def isSettingChecked(self):
-        return self.settings.getboolean(self.section, self.setting)
-
-    def _isMenuItemChecked(self, event):
-        # There's a bug in wxPython 2.8.3 on Windows XP that causes 
-        # event.IsChecked() to return the wrong value in the context menu.
-        # The menu on the main window works fine. So we first try to access the
-        # context menu to get the checked state from the menu item itself.
-        # This will fail if the event is coming from the window, but in that
-        # case we can event.IsChecked() expect to work so we use that.
-        try:
-            return event.GetEventObject().FindItemById(event.GetId()).IsChecked()
-        except AttributeError:
-            return event.IsChecked()
-        
-    def doCommand(self, event):
-        self.settings.setboolean(self.section, self.setting, 
-            self._isMenuItemChecked(event))
-        
-    def getBitmap(self):
-        # Using our own bitmap for checkable menu items does not work on
-        # all platforms, most notably Gtk where providing our own bitmap causes
-        # "(python:8569): Gtk-CRITICAL **: gtk_check_menu_item_set_active: 
-        # assertion `GTK_IS_CHECK_MENU_ITEM (check_menu_item)' failed"
-        return 'nobitmap'
-
-
-class UIRadioCommand(BooleanSettingsCommand):
-    def __init__(self, *args, **kwargs):
-        super(UIRadioCommand, self).__init__(kind=wx.ITEM_RADIO, bitmap='', 
-                                             *args, **kwargs)
-        
-    def onUpdateUI(self, event):
-        if self.isSettingChecked():
-            super(UIRadioCommand, self).onUpdateUI(event)
-
-    def isSettingChecked(self):
-        return self.settings.get(self.section, self.setting) == str(self.value)
-
-    def doCommand(self, event):
-        self.settings.setvalue(self.section, self.setting, self.value)
+import settings_uicommand
 
 
 class IOCommand(base_uicommand.UICommand):  # pylint: disable=W0223
@@ -270,7 +187,8 @@ class FileImportTemplate(IOCommand):
         self.iocontroller.importTemplate()
 
 
-class FileEditTemplates(SettingsCommand, base_uicommand.UICommand):
+class FileEditTemplates(settings_uicommand.SettingsCommand, 
+                        base_uicommand.UICommand):
     def __init__(self, *args, **kwargs):
         super(FileEditTemplates, self).__init__(\
             menuText=_('Edit templates...'),
@@ -302,7 +220,8 @@ Do you still want to purge?'''),
             self.iocontroller.purgeDeletedItems()
 
 
-class PrintPageSetup(SettingsCommand, base_uicommand.UICommand):
+class PrintPageSetup(settings_uicommand.SettingsCommand, 
+                     base_uicommand.UICommand):
     ''' Action for changing page settings. The page settings are saved in the
         application wide settings. '''
     
@@ -323,7 +242,7 @@ class PrintPageSetup(SettingsCommand, base_uicommand.UICommand):
         pageSetupDialog.Destroy()
 
 
-class PrintPreview(ViewerCommand, SettingsCommand):
+class PrintPreview(ViewerCommand, settings_uicommand.SettingsCommand):
     ''' Action for previewing a print of the current viewer. '''
     
     def __init__(self, *args, **kwargs):
@@ -344,7 +263,7 @@ class PrintPreview(ViewerCommand, SettingsCommand):
         previewFrame.Show()
       
 
-class Print(ViewerCommand, SettingsCommand):
+class Print(ViewerCommand, settings_uicommand.SettingsCommand):
     ''' Action for printing the contents of the current viewer. '''
     
     def __init__(self, *args, **kwargs):
@@ -369,7 +288,7 @@ class Print(ViewerCommand, SettingsCommand):
         wxPrinter.Print(self.mainWindow(), printout, prompt=False)
  
  
-class FileExportCommand(IOCommand, SettingsCommand):
+class FileExportCommand(IOCommand, settings_uicommand.SettingsCommand):
     ''' Base class for export actions. '''
     
     def doCommand(self, event):
@@ -525,7 +444,7 @@ class FileImportTodoTxt(IOCommand):
             self.iocontroller.importTodoTxt(filename)
             
 
-class FileSynchronize(IOCommand, SettingsCommand):
+class FileSynchronize(IOCommand, settings_uicommand.SettingsCommand):
     ''' Action for synchronizing the current task file with a SyncML 
         server. '''
     
@@ -736,7 +655,7 @@ class EditPasteAsSubItem(mixin_uicommand.NeedsSelectedCompositeMixin,
         return True
     
 
-class EditPreferences(SettingsCommand):
+class EditPreferences(settings_uicommand.SettingsCommand):
     ''' Action for bringing up the preferences dialog. '''
     
     def __init__(self, *args, **kwargs):
@@ -767,7 +686,7 @@ class EditSyncPreferences(IOCommand):
         editor.Show(show=show)
 
 
-class EditToolBarPerspective(SettingsCommand):
+class EditToolBarPerspective(settings_uicommand.SettingsCommand):
     ''' Action for editing a customizable toolbar '''
 
     def __init__(self, toolbar, editorClass, *args, **kwargs):
@@ -870,7 +789,7 @@ class ToggleCategoryFilter(base_uicommand.UICommand):
         self.category.setFiltered(event.IsChecked())
         
 
-class ViewViewer(SettingsCommand, ViewerCommand):
+class ViewViewer(settings_uicommand.SettingsCommand, ViewerCommand):
     ''' Action for opening a new viewer of a specific class. '''
     
     def __init__(self, *args, **kwargs):
@@ -894,7 +813,8 @@ class ViewViewer(SettingsCommand, ViewerCommand):
         
         
 class ViewEffortViewerForSelectedTask(mixin_uicommand.NeedsOneSelectedTaskMixin, 
-                                      SettingsCommand, ViewerCommand):
+                                      settings_uicommand.SettingsCommand, 
+                                      ViewerCommand):
     def __init__(self, *args, **kwargs):
         from taskcoachlib.gui import viewer
         self.viewerClass = viewer.EffortViewer
@@ -963,7 +883,7 @@ class HideCurrentColumn(ViewerCommand):
         return self.viewer.isHideableColumn(columnIndex)
 
 
-class ViewColumn(ViewerCommand, UICheckCommand):
+class ViewColumn(ViewerCommand, settings_uicommand.UICheckCommand):
     def isSettingChecked(self):
         return self.viewer.isVisibleColumnByName(self.setting)
     
@@ -972,7 +892,7 @@ class ViewColumn(ViewerCommand, UICheckCommand):
                                      self._isMenuItemChecked(event))
 
 
-class ViewColumns(ViewerCommand, UICheckCommand):
+class ViewColumns(ViewerCommand, settings_uicommand.UICheckCommand):
     def isSettingChecked(self):
         for columnName in self.setting:
             if not self.viewer.isVisibleColumnByName(columnName):
@@ -1013,7 +933,7 @@ class ViewCollapseAll(mixin_uicommand.NeedsTreeViewerMixin, ViewerCommand):
         self.viewer.collapseAll()
 
 
-class ViewerSortByCommand(ViewerCommand, UIRadioCommand):        
+class ViewerSortByCommand(ViewerCommand, settings_uicommand.UIRadioCommand):        
     def isSettingChecked(self):
         return self.viewer.isSortedBy(self.value)
     
@@ -1021,7 +941,7 @@ class ViewerSortByCommand(ViewerCommand, UIRadioCommand):
         self.viewer.sortBy(self.value)
 
 
-class ViewerSortOrderCommand(ViewerCommand, UICheckCommand):
+class ViewerSortOrderCommand(ViewerCommand, settings_uicommand.UICheckCommand):
     def __init__(self, *args, **kwargs):
         super(ViewerSortOrderCommand, self).__init__(menuText=_('&Ascending'),
             helpText=_('Sort ascending (checked) or descending (unchecked)'),
@@ -1034,7 +954,7 @@ class ViewerSortOrderCommand(ViewerCommand, UICheckCommand):
         self.viewer.setSortOrderAscending(self._isMenuItemChecked(event))
     
     
-class ViewerSortCaseSensitive(ViewerCommand, UICheckCommand):
+class ViewerSortCaseSensitive(ViewerCommand, settings_uicommand.UICheckCommand):
     def __init__(self, *args, **kwargs):
         super(ViewerSortCaseSensitive, self).__init__(\
             menuText=_('Sort &case sensitive'),
@@ -1049,7 +969,8 @@ class ViewerSortCaseSensitive(ViewerCommand, UICheckCommand):
         self.viewer.setSortCaseSensitive(self._isMenuItemChecked(event))
 
 
-class ViewerSortByTaskStatusFirst(ViewerCommand, UICheckCommand):
+class ViewerSortByTaskStatusFirst(ViewerCommand, 
+                                  settings_uicommand.UICheckCommand):
     def __init__(self, *args, **kwargs):
         super(ViewerSortByTaskStatusFirst, self).__init__(\
             menuText=_('Sort by status &first'),
@@ -1064,7 +985,7 @@ class ViewerSortByTaskStatusFirst(ViewerCommand, UICheckCommand):
         self.viewer.setSortByTaskStatusFirst(self._isMenuItemChecked(event))
 
 
-class ViewerHideTasks(ViewerCommand, UICheckCommand):
+class ViewerHideTasks(ViewerCommand, settings_uicommand.UICheckCommand):
     def __init__(self, taskStatus, *args, **kwargs):
         self.__taskStatus = taskStatus
         super(ViewerHideTasks, self).__init__(menuText=taskStatus.hideMenuText,
@@ -1086,7 +1007,8 @@ class ViewerHideTasks(ViewerCommand, UICheckCommand):
                                        self._isMenuItemChecked(event))
     
 
-class ViewerHideCompositeTasks(ViewerCommand, UICheckCommand):
+class ViewerHideCompositeTasks(ViewerCommand, 
+                               settings_uicommand.UICheckCommand):
     def __init__(self, *args, **kwargs):
         super(ViewerHideCompositeTasks, self).__init__( \
             menuText=_('Hide c&omposite tasks'),
@@ -1143,7 +1065,7 @@ class Edit(mixin_uicommand.NeedsSelectionMixin, ViewerCommand):
         return windowWithFocus
 
 
-class EditTrackedTasks(TaskListCommand, SettingsCommand):
+class EditTrackedTasks(TaskListCommand, settings_uicommand.SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(EditTrackedTasks, self).__init__( \
             menuText=_('Edit &tracked task...\tShift-Alt-T'),
@@ -1193,7 +1115,7 @@ class Delete(mixin_uicommand.NeedsSelectionMixin, ViewerCommand):
                isinstance(window, hypertreelist.EditCtrl)
 
 
-class TaskNew(TaskListCommand, SettingsCommand):
+class TaskNew(TaskListCommand, settings_uicommand.SettingsCommand):
     def __init__(self, *args, **kwargs):
         self.taskKeywords = kwargs.pop('taskKeywords', dict())
         taskList = kwargs['taskList']
@@ -1284,7 +1206,9 @@ class TaskNewFromTemplate(TaskNew):
         return newTaskDialog  # for testing purposes
    
    
-class TaskNewFromTemplateButton(mixin_uicommand.PopupButtonMixin, TaskListCommand, SettingsCommand):
+class TaskNewFromTemplateButton(mixin_uicommand.PopupButtonMixin, 
+                                TaskListCommand, 
+                                settings_uicommand.SettingsCommand):
     def createPopupMenu(self):
         from taskcoachlib.gui import menu
         return menu.TaskTemplateMenu(self.mainWindow(), self.taskList, 
@@ -1596,7 +1520,7 @@ class Mail(mixin_uicommand.NeedsSelectionMixin, ViewerCommand):
  
 
 class AddNote(mixin_uicommand.NeedsSelectedNoteOwnersMixin, ViewerCommand, 
-              SettingsCommand):
+              settings_uicommand.SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(AddNote, self).__init__(menuText=_('Add &note...\tCtrl+B'),
             helpText=help.addNote, bitmap='new', *args, **kwargs)
@@ -1613,7 +1537,7 @@ class AddNote(mixin_uicommand.NeedsSelectedNoteOwnersMixin, ViewerCommand,
     
     
 class OpenAllNotes(mixin_uicommand.NeedsSelectedNoteOwnersMixinWithNotes, 
-                   ViewerCommand, SettingsCommand):
+                   ViewerCommand, settings_uicommand.SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(OpenAllNotes, self).__init__(menuText=_('Open all notes...\tShift+Ctrl+B'),
             helpText=help.openAllNotes, bitmap='edit', *args, **kwargs)
@@ -1628,7 +1552,8 @@ class OpenAllNotes(mixin_uicommand.NeedsSelectedNoteOwnersMixinWithNotes,
 
 
 class EffortNew(mixin_uicommand.NeedsAtLeastOneTaskMixin, ViewerCommand, 
-                EffortListCommand, TaskListCommand, SettingsCommand):
+                EffortListCommand, TaskListCommand, 
+                settings_uicommand.SettingsCommand):
     def __init__(self, *args, **kwargs):
         effortList = kwargs['effortList']
         super(EffortNew, self).__init__(bitmap='new',  
@@ -1890,7 +1815,7 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
         return subject[:maxLength - len(postFix)] + postFix if trim else subject
         
 
-class CategoryNew(CategoriesCommand, SettingsCommand):
+class CategoryNew(CategoriesCommand, settings_uicommand.SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(CategoryNew, self).__init__(bitmap='new', 
             menuText=_('New category...\tCtrl-G'),
@@ -1912,7 +1837,7 @@ class CategoryDragAndDrop(DragAndDropCommand, CategoriesCommand):
                                                   drop=[dropItem], part=part)
 
 
-class NoteNew(NotesCommand, SettingsCommand, ViewerCommand):
+class NoteNew(NotesCommand, settings_uicommand.SettingsCommand, ViewerCommand):
     menuText = _('New note...\tCtrl-J')
     helpText = help.noteNew
     
@@ -1951,7 +1876,8 @@ class NoteDragAndDrop(DragAndDropCommand, NotesCommand):
                                               drop=[dropItem], part=part)
  
                                                         
-class AttachmentNew(AttachmentsCommand, ViewerCommand, SettingsCommand):
+class AttachmentNew(AttachmentsCommand, ViewerCommand, 
+                    settings_uicommand.SettingsCommand):
     def __init__(self, *args, **kwargs):
         attachments = kwargs['attachments']
         if 'menuText' not in kwargs:
@@ -1966,7 +1892,7 @@ class AttachmentNew(AttachmentsCommand, ViewerCommand, SettingsCommand):
 
 
 class AddAttachment(mixin_uicommand.NeedsSelectedAttachmentOwnersMixin, 
-                    ViewerCommand, SettingsCommand):
+                    ViewerCommand, settings_uicommand.SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(AddAttachment, self).__init__( \
             menuText=_('&Add attachment...\tShift-Ctrl-A'),
@@ -1998,7 +1924,8 @@ def openAttachments(attachments, settings, showerror):
 
 
 class AttachmentOpen(mixin_uicommand.NeedsSelectedAttachmentsMixin, 
-                     ViewerCommand, AttachmentsCommand, SettingsCommand):
+                     ViewerCommand, AttachmentsCommand, 
+                     settings_uicommand.SettingsCommand):
     def __init__(self, *args, **kwargs):
         attachments = kwargs['attachments']
         super(AttachmentOpen, self).__init__(bitmap='fileopen',
@@ -2010,7 +1937,7 @@ class AttachmentOpen(mixin_uicommand.NeedsSelectedAttachmentsMixin,
 
 
 class OpenAllAttachments(mixin_uicommand.NeedsSelectionWithAttachmentsMixin, 
-                         ViewerCommand, SettingsCommand):
+                         ViewerCommand, settings_uicommand.SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(OpenAllAttachments, self).__init__(\
            menuText=_('&Open all attachments...\tShift+Ctrl+O'), 
@@ -2064,7 +1991,7 @@ class Help(DialogCommand):
             dialogText=help.helpHTML, id=wx.ID_HELP, *args, **kwargs)
 
 
-class Tips(SettingsCommand):
+class Tips(settings_uicommand.SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(Tips, self).__init__(menuText=_('&Tips'),
             helpText=_('Tips about the program'),
@@ -2107,7 +2034,7 @@ class HelpLicense(DialogCommand):
             bitmap='document_icon', *args, **kwargs)
         
         
-class CheckForUpdate(SettingsCommand):
+class CheckForUpdate(settings_uicommand.SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(CheckForUpdate, self).__init__(menuText=_('Check for update'),
             helpText=_('Check for the availability of a new version of %s') % meta.name,
@@ -2189,7 +2116,7 @@ class MainWindowRestore(base_uicommand.UICommand):
         self.mainWindow().restore(event)
     
 
-class Search(ViewerCommand, SettingsCommand):
+class Search(ViewerCommand, settings_uicommand.SettingsCommand):
     # Search can only be attached to a real viewer, not to a viewercontainer
     def __init__(self, *args, **kwargs):
         self.__bound = False
@@ -2303,7 +2230,8 @@ class ToolbarChoiceCommandMixin(object):
             self.choiceCtrl.Enable(enable)
 
 
-class EffortViewerAggregationChoice(ToolbarChoiceCommandMixin, SettingsCommand,
+class EffortViewerAggregationChoice(ToolbarChoiceCommandMixin, 
+                                    settings_uicommand.SettingsCommand,
                                     ViewerCommand):
     choiceLabels = [_('Effort details'), _('Effort per day'), 
                     _('Effort per week'), _('Effort per month')]
@@ -2329,8 +2257,8 @@ class EffortViewerAggregationChoice(ToolbarChoiceCommandMixin, SettingsCommand,
         self.setChoice(value)
                 
         
-class EffortViewerAggregationOption(UIRadioCommand, ViewerCommand, 
-                                    SettingsCommand):
+class EffortViewerAggregationOption(settings_uicommand.UIRadioCommand, 
+                                    ViewerCommand):
     def isSettingChecked(self):
         return self.settings.gettext(self.viewer.settingsSection(), 
                                      'aggregation') == self.value
@@ -2340,8 +2268,9 @@ class EffortViewerAggregationOption(UIRadioCommand, ViewerCommand,
                               self.value)        
 
 
-class TaskViewerTreeOrListChoice(ToolbarChoiceCommandMixin, UICheckCommand,
-                                 ViewerCommand, SettingsCommand):
+class TaskViewerTreeOrListChoice(ToolbarChoiceCommandMixin, 
+                                 settings_uicommand.UICheckCommand,
+                                 ViewerCommand):
     choiceLabels = [_('Tree of tasks'), _('List of tasks')]
     choiceData = [True, False]
 
@@ -2366,8 +2295,8 @@ class TaskViewerTreeOrListChoice(ToolbarChoiceCommandMixin, UICheckCommand,
         self.setChoice(value)
         
         
-class TaskViewerTreeOrListOption(UIRadioCommand, ViewerCommand, 
-                                 SettingsCommand):
+class TaskViewerTreeOrListOption(settings_uicommand.UIRadioCommand, 
+                                 ViewerCommand):
     def isSettingChecked(self):
         return self.settings.getboolean(self.viewer.settingsSection(), 
                                         'treemode') == self.value
@@ -2377,8 +2306,8 @@ class TaskViewerTreeOrListOption(UIRadioCommand, ViewerCommand,
                                  self.value)
 
 
-class CategoryViewerFilterChoice(ToolbarChoiceCommandMixin, UICheckCommand,
-                                 SettingsCommand):
+class CategoryViewerFilterChoice(ToolbarChoiceCommandMixin, 
+                                 settings_uicommand.UICheckCommand):
     choiceLabels = [_('Filter on all checked categories'),
                     _('Filter on any checked category')]
     choiceData = [True, False]
@@ -2408,7 +2337,8 @@ class CategoryViewerFilterChoice(ToolbarChoiceCommandMixin, UICheckCommand,
         self.setChoice(value)
         
 
-class SquareTaskViewerOrderChoice(ToolbarChoiceCommandMixin, SettingsCommand,
+class SquareTaskViewerOrderChoice(ToolbarChoiceCommandMixin, 
+                                  settings_uicommand.SettingsCommand,
                                   ViewerCommand):
     choiceLabels = [_('Budget'), _('Time spent'), _('Fixed fee'), _('Revenue'), 
                     _('Priority')]
@@ -2430,7 +2360,7 @@ class SquareTaskViewerOrderChoice(ToolbarChoiceCommandMixin, SettingsCommand,
         self.setChoice(value)
 
 
-class SquareTaskViewerOrderByOption(UIRadioCommand, SettingsCommand, 
+class SquareTaskViewerOrderByOption(settings_uicommand.UIRadioCommand, 
                                     ViewerCommand):        
     def isSettingChecked(self):
         return self.settings.gettext(self.viewer.settingsSection(), 
@@ -2490,7 +2420,8 @@ class CalendarViewerToday(CalendarViewerNavigationCommand):
     calendarViewType = wxSCHEDULER_TODAY
 
 
-class ToggleAutoColumnResizing(UICheckCommand, ViewerCommand, SettingsCommand):
+class ToggleAutoColumnResizing(settings_uicommand.UICheckCommand, 
+                               ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(ToggleAutoColumnResizing, self).__init__(\
             menuText=_('&Automatic column resizing'),
@@ -2512,7 +2443,7 @@ class ToggleAutoColumnResizing(UICheckCommand, ViewerCommand, SettingsCommand):
         self.updateWidget()
 
 
-class ViewerPieChartAngle(ViewerCommand, SettingsCommand):
+class ViewerPieChartAngle(ViewerCommand, settings_uicommand.SettingsCommand):
     def __init__(self, *args, **kwargs):
         self.sliderCtrl = None
         super(ViewerPieChartAngle, self).__init__( \
@@ -2551,7 +2482,7 @@ class ViewerPieChartAngle(ViewerCommand, SettingsCommand):
    
 
 class RoundingPrecision(ToolbarChoiceCommandMixin, ViewerCommand, 
-                        SettingsCommand):
+                        settings_uicommand.SettingsCommand):
     roundingChoices = (0, 1, 3, 5, 6, 10, 15, 20, 30, 60)  # Minutes
     choiceData = [minutes * 60 for minutes in roundingChoices]  # Seconds
     choiceLabels = [_('No rounding'), _('1 minute')] + \
@@ -2564,7 +2495,7 @@ class RoundingPrecision(ToolbarChoiceCommandMixin, ViewerCommand,
         self.settings.setint(self.viewer.settingsSection(), 'round', choice)
 
 
-class RoundBy(UIRadioCommand, ViewerCommand, SettingsCommand):        
+class RoundBy(settings_uicommand.UIRadioCommand, ViewerCommand):        
     def isSettingChecked(self):
         return self.settings.getint(self.viewer.settingsSection(), 
                                     'round') == self.value
@@ -2573,7 +2504,7 @@ class RoundBy(UIRadioCommand, ViewerCommand, SettingsCommand):
         self.settings.setint(self.viewer.settingsSection(), 'round', self.value)
 
   
-class AlwaysRoundUp(UICheckCommand, ViewerCommand, SettingsCommand):
+class AlwaysRoundUp(settings_uicommand.UICheckCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         self.checkboxCtrl = None
         super(AlwaysRoundUp, self).__init__(\
