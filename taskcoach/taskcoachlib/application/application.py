@@ -42,7 +42,8 @@ class wxApp(wx.App):
         if operating_system.isWindows():
             self.Bind(wx.EVT_QUERY_END_SESSION, self.onQueryEndSession)
 
-        if operating_system.isMac() and hasattr(sys, 'frozen'):
+        if (operating_system.isMac() and hasattr(sys, 'frozen')) or \
+            (operating_system.isGTK() and not sys.stdout.isatty()):
             class RedirectedOutput(object):
                 def __init__(self):
                     self.__handle = None
