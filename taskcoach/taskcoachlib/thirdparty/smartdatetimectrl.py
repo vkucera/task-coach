@@ -1896,6 +1896,7 @@ class SmartDateTimeCtrl(wx.Panel):
         if self.__enableNone:
             self.__checkbox = wx.CheckBox(self, wx.ID_ANY, label)
             wx.EVT_CHECKBOX(self.__checkbox, wx.ID_ANY, self.OnToggleNone)
+            wx.EVT_SET_FOCUS(self.__checkbox, self.__OnFirstFocus)
             sizer.Add(self.__checkbox, 0, wx.ALL|wx.ALIGN_CENTRE, 3)
             self.__label = self.__checkbox
         elif label:
@@ -1929,6 +1930,10 @@ class SmartDateTimeCtrl(wx.Panel):
         EVT_TIME_CHOICES_CHANGE(self.__timeCtrl, self.__OnChoicesChange)
         EVT_TIME_NEXT_DAY(self, self.OnNextDay)
         EVT_TIME_PREV_DAY(self, self.OnPrevDay)
+
+    def __OnFirstFocus(self, event):
+        self.__dateCtrl.SetFocus()
+        self.__checkbox.Unbind(wx.EVT_SET_FOCUS)
 
     def __OnPopupRelativeChoices(self, event):
         self.__timeCtrl.PopupRelativeChoices()
