@@ -17,3 +17,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from uicommand import *
+from base_uicommand import UICommand
+from uicommandcontainer import UICommandContainerMixin
