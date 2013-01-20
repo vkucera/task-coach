@@ -24,12 +24,18 @@ from taskcoachlib.domain import date
 class CommonTestsMixin(object):
     def setUp(self):
         super(CommonTestsMixin, self).setUp()
-        self.__oldLocale = locale.getlocale(locale.LC_ALL)
+        # LC_ALL does not work on Slackware or Arch, but LC_TIME crashes on Fedora...
+        try:
+            self.__oldLocale = locale.getlocale(locale.LC_ALL)
+            self.__localeDomain = locale.LC_ALL
+        except TypeError:
+            self.__oldLocale = locale.getlocale(locale.LC_TIME)
+            self.__localeDomain = locale.LC_TIME
         localeName = 'en_US' if self.ampm else 'fr_FR'
         # OS X and Linux don't agree on encoding names...
         for encodingName in ['utf8', 'UTF-8']:
             try:
-                locale.setlocale(locale.LC_ALL, '%s.%s' % (localeName, encodingName))
+                locale.setlocale(self.__localeDomain, '%s.%s' % (localeName, encodingName))
             except locale.Error:
                 pass
             else:
@@ -39,7 +45,7 @@ class CommonTestsMixin(object):
         reload(render) # To execute module-level code every time
 
     def tearDown(self):
-        locale.setlocale(locale.LC_ALL, self.__oldLocale)
+        locale.setlocale(self.__localeDomain, self.__oldLocale)
         reload(render)
         super(CommonTestsMixin, self).tearDown()
 

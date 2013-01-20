@@ -28,7 +28,8 @@ class AttributeSync(object):
         value of the control is updated. '''
         
     def __init__(self, attributeGetterName, entry, currentValue, items, 
-                 commandClass, editedEventType, changedEventType, callback=None, **kwargs):
+                 commandClass, editedEventType, changedEventType, callback=None, 
+                 **kwargs):
         self._getter = attributeGetterName
         self._entry = entry
         self._currentValue = currentValue

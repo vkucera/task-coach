@@ -328,7 +328,7 @@ class CommonTestsMixin(object):
         
     def testHideRevenueColumn(self):
         self.viewer.showColumnByName('revenue', False)
-        self.assertEqual(3, self.viewer.widget.GetColumnCount())
+        self.assertEqual(4, self.viewer.widget.GetColumnCount())
         
     def testShowTotalTimeSpentColumn(self):
         self.viewer.showColumnByName('totalTimeSpent', True)

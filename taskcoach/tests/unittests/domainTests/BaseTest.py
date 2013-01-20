@@ -135,7 +135,18 @@ class ObjectTest(test.TestCase):
         creation_datetime = self.object.creationDateTime()
         minute = date.TimeDelta(seconds=60)
         self.failUnless(now - minute < creation_datetime < now + minute)
-                
+        
+    # Modification date/time tests:
+    
+    def testSetModificationDateTimeOnCreation(self):
+        modification_datetime = date.DateTime(2012, 12, 12, 10, 0, 0)
+        domain_object = base.Object(modificationDateTime=modification_datetime)
+        self.assertEqual(modification_datetime, 
+                         domain_object.modificationDateTime())
+        
+    def testModificationDateTimeIsNotSetWhenNotPassed(self):
+        self.assertEqual(date.DateTime.min, self.object.modificationDateTime())
+        
     # Subject tests:
         
     def testSubjectIsEmptyByDefault(self):
@@ -162,7 +173,7 @@ class ObjectTest(test.TestCase):
     def testSubjectChangedNotificationIsDifferentForSubclass(self):
         self.subclassObject.setSubject('New')
         self.failIf(self.eventsReceived)
-    
+        
     # Description tests:
     
     def testDescriptionIsEmptyByDefault(self):
@@ -197,7 +208,8 @@ class ObjectTest(test.TestCase):
         self.assertEqual(dict(subject='', description='', id=self.object.id(),
                               status=self.object.getStatus(), fgColor=None,
                               bgColor=None, font=None, icon='', selectedIcon='', 
-                              creationDateTime=self.object.creationDateTime()),
+                              creationDateTime=self.object.creationDateTime(),
+                              modificationDateTime=self.object.modificationDateTime()),
                          self.object.__getstate__())
 
     def testSetState(self):
@@ -205,7 +217,8 @@ class ObjectTest(test.TestCase):
                         status=self.object.STATUS_DELETED, 
                         fgColor=wx.GREEN, bgColor=wx.RED, font=wx.SWISS_FONT,
                         icon='icon', selectedIcon='selectedIcon',
-                        creationDateTime=date.DateTime(2012, 12, 12, 12, 0, 0))
+                        creationDateTime=date.DateTime(2012, 12, 12, 12, 0, 0),
+                        modificationDateTime=date.DateTime(2012, 12, 12, 12, 1, 0))
         self.object.__setstate__(newState)
         self.assertEqual(newState, self.object.__getstate__())
         
@@ -214,7 +227,8 @@ class ObjectTest(test.TestCase):
                         status=self.object.STATUS_DELETED, 
                         fgColor=wx.GREEN, bgColor=wx.RED, font=wx.SWISS_FONT,
                         icon='icon', selectedIcon='selectedIcon',
-                        creationDateTime=date.DateTime(2013, 1, 1, 0, 0, 0))
+                        creationDateTime=date.DateTime(2013, 1, 1, 0, 0, 0),
+                        modificationDateTime=date.DateTime(2013, 1, 1, 1, 0, 0))
         self.object.__setstate__(newState)
         self.assertEqual(1, len(self.eventsReceived))
         
@@ -228,6 +242,11 @@ class ObjectTest(test.TestCase):
         copy = self.object.copy()
         # Use >= to prevent failures on fast computers with low time granularity
         self.failUnless(copy.creationDateTime() >= self.object.creationDateTime())
+        
+    def testCopy_ModificationDateTimeIsNotCopied(self):
+        self.object.setModificationDateTime(date.DateTime(2013, 1, 1, 1, 0, 0))
+        copy = self.object.copy()
+        self.assertEqual(date.DateTime.min, copy.modificationDateTime())
         
     def testCopy_SubjectIsCopied(self):
         self.object.setSubject('New subject')
@@ -301,7 +320,7 @@ class ObjectTest(test.TestCase):
     
     def testBackgroundColorChangedNotification(self):
         self.object.setBackgroundColor(wx.BLACK)
-        self.assertEqual(1, len(self.eventsReceived))
+        self.assertEqual(1, len(self.eventsReceived))      
         
     # Font tests:
     
@@ -381,7 +400,7 @@ class CompositeObjectTest(test.TestCase):
         
     def removeChild(self):
         self.compositeObject.removeChild(self.child)
-        
+
     def testIsExpanded(self):
         self.failIf(self.compositeObject.isExpanded())
         

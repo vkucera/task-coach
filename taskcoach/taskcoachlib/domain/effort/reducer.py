@@ -114,10 +114,11 @@ class EffortAggregator(patterns.SetDecorator,
             affected_composite._invalidateCache()
             affected_composite.notifyObserversOfDurationOrEmpty()
             
-    def onTaskEffortChanged(self, newValue, oldValue, sender):
+    def onTaskEffortChanged(self, newValue, sender):
         if sender not in self.observable():
             return
         new_composites = []
+        newValue, oldValue = newValue
         efforts_added = [effort for effort in newValue if effort not in oldValue]
         efforts_removed = [effort for effort in oldValue if effort not in newValue]
         new_composites.extend(self.__create_composites(sender, efforts_added))

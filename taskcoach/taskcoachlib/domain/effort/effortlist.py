@@ -67,9 +67,10 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
             effortsToRemove.extend(task.efforts())
         super(EffortList, self).removeItemsFromSelf(effortsToRemove, event)
 
-    def onAddEffortToOrRemoveEffortFromTask(self, newValue, oldValue, sender):
+    def onAddEffortToOrRemoveEffortFromTask(self, newValue, sender):
         if sender not in self.observable():
             return
+        newValue, oldValue = newValue
         effortsToAdd = [effort for effort in newValue if not effort in oldValue]
         effortsToRemove = [effort for effort in oldValue if not effort in newValue]
         super(EffortList, self).extendSelf(effortsToAdd)

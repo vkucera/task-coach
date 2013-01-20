@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.23', 'January 4, 2013',
+Release('1.3.23', 'January 6, 2013',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bugv2('''Some navigation shortcuts in the date/time picker
@@ -40,8 +40,28 @@ format preferences.''', '1331'),
         Bugv2('''Resizing the toolbar would truncate it.''', '1341'),
         Bugv2('''Try to fetch Mail.app message subject.''', '1342', '1003'),
         Bugv2('''Don't let the user pick columns that cannot be exported'''),
+        Bugv2('''When cancelling application shutdown, the window would
+close nonetheless.''', '1346'),
+        Bugv2('''The calendar popup in the date picker would not use the
+first week day setting.''', '1348'),
+        Bugv2('''Disable hide all filters when in tree mode and the only
+filter is "hide composite tasks".''', '1351'),
+        Bugv2('''The task editor would not open on Windows if the user's short
+date format used abbreviated or full month name.''', '1338'),
+        Bugv2('''Increase timer value for the date picker.''', '1354'),
+        Bugv2('''Backspace/delete removes the last digit in the date
+picker.''', '1354'),
+        Bugv2('''Fix Shift-S and Shift-E shortcuts in date picker on
+Linux.''', '1358'),
         ],
-    ),
+    featuresAdded=[
+        Feature('''Add a modification date attribute to tasks, notes, 
+attachments, and categories.''', 'http://uservoice.com/a/-2HX-'),
+        Feature('''Hitting Ctrl+V (or Cmd+V on OS X) while the date or time
+picker has focus will try to interpret the clipboard's content. Ctrl+C
+stores the current value in the clipboard.''', '1352'),
+        ],
+    ),  
             
 Release('1.3.22', 'January 2, 2013',
     summary='''This is a bugfix release.''',

@@ -235,10 +235,10 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
             event.Veto()
             self.Iconize()
         else:
-            event.Skip()
-            self._idleController.stop()
-            self.taskFile.stop()
-            application.Application().quitApplication()
+            if application.Application().quitApplication():
+                event.Skip()
+                self.taskFile.stop()
+                self._idleController.stop()
 
     def restore(self, event):  # pylint: disable=W0613
         if self.settings.getboolean('window', 'maximized'):

@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import taskcoachlib.i18n
 from taskcoachlib.thirdparty import smartdatetimectrl as sdtc
 from taskcoachlib.domain import date
-from taskcoachlib import render
+from taskcoachlib import render, operating_system
 
 import wx, datetime
 
@@ -30,15 +30,20 @@ class _SmartDateTimeCtrl(sdtc.SmartDateTimeCtrl):
         self.__interval = (kwargs.get('startHour', 8), kwargs.get('endHour', 18))
         super(_SmartDateTimeCtrl, self).__init__(*args, **kwargs)
 
+    def __shiftDown(self, event):
+        if operating_system.isGTK():
+            return ord('A') <= event.GetKeyCode() <= ord('Z')
+        return event.ShiftDown()
+
     def HandleKey(self, event):
         if not super(_SmartDateTimeCtrl, self).HandleKey(event) and self.GetDateTime() is not None:
             startHour, endHour = self.__interval
-            if event.GetUnicodeKey() in [ord('s'), ord('S')]:
-                hour = datetime.time(startHour, 0, 0, 0) if event.ShiftDown() else datetime.time(0, 0, 0, 0)
+            if event.GetKeyCode() in [ord('s'), ord('S')]:
+                hour = datetime.time(startHour, 0, 0, 0) if self.__shiftDown(event) else datetime.time(0, 0, 0, 0)
                 self.SetDateTime(datetime.datetime.combine(self.GetDateTime().date(), hour), notify=True)
                 return True
-            elif event.GetUnicodeKey() in [ord('e'), ord('E')]:
-                hour = datetime.time(endHour, 0, 0, 0) if event.ShiftDown() else datetime.time(23, 59, 0, 0)
+            elif event.GetKeyCode() in [ord('e'), ord('E')]:
+                hour = datetime.time(endHour, 0, 0, 0) if self.__shiftDown(event) else datetime.time(23, 59, 0, 0)
                 self.SetDateTime(datetime.datetime.combine(self.GetDateTime().date(), hour), notify=True)
                 return True
         return False

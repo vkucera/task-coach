@@ -145,7 +145,8 @@ class VCalTaskWriterTestCase(VCalTestCase):
                                percentageComplete=56,
                                creationDateTime=date.DateTime.min)
         self.task2 = task.Task(u'Task subject 2黑', 
-                               description=u'Task description 2\nwith newline\n微软雅黑')
+                               description=u'Task description 2\nwith newline\n微软雅黑',
+                               modificationDateTime=date.DateTime(2012, 1, 1))
         self.taskFile.tasks().extend([self.task1, self.task2])
         self.settings.set('taskviewer', 'treemode', self.treeMode)
         self.viewer = gui.viewer.TaskViewer(self.frame, self.taskFile,
@@ -163,7 +164,7 @@ class VCalTaskCommonTestsMixin(VCalendarCommonTestsMixin):
 
     def testNumber(self):
         self.assertEqual(self.expectedNumberOfItems(),
-                         self.vcalFile.count('BEGIN:VTODO')) # pylint: disable=W0511
+                         self.vcalFile.count('BEGIN:VTODO'))  # pylint: disable=W0511
 
     def testTaskId(self):
         self.failUnless('UID:%s' % self.task2.id() in self.vcalFile)
@@ -174,6 +175,13 @@ class VCalTaskCommonTestsMixin(VCalendarCommonTestsMixin):
         
     def testMissingCreationDateTime(self):
         self.assertEqual(1, self.vcalFile.count('CREATED:'))
+        
+    def testModificationDateTime(self):
+        modification_datetime = persistence.icalendar.ical.fmtDateTime(date.DateTime(2012, 1, 1))
+        self.failUnless('LAST-MODIFIED:%s' % modification_datetime in self.vcalFile)
+        
+    def testMissingModificationDateTime(self):
+        self.assertEqual(1, self.vcalFile.count('LAST-MODIFIED'))
 
 
 class TestSelectionOnlyMixin(VCalTaskCommonTestsMixin):

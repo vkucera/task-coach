@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import meta, patterns, operating_system
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty.pubsub import pub
+from taskcoachlib.workarounds import ExceptionAsUnicode
 import ConfigParser
 import os
 import sys
@@ -77,7 +78,7 @@ class Settings(object, CachingConfigParser):
                 # Ignore exceptions and simply use default values. 
                 # Also record the failure in the settings:
                 self.initializeWithDefaults()
-            self.setLoadStatus(unicode(errorMessage))
+            self.setLoadStatus(ExceptionAsUnicode(errorMessage))
         else:
             # Assume that if the settings are not to be loaded, we also 
             # should be quiet (i.e. we are probably in test mode):

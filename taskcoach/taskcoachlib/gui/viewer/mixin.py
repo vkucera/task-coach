@@ -297,7 +297,11 @@ class SortableViewerMixin(object):
                     helpText=self.sortByDescriptionHelpText),
                 uicommand.ViewerSortByCommand(viewer=self, 
                     value='creationDateTime', menuText=_('&Creation date'),
-                    helpText=self.sortByCreationDateTimeHelpText)]
+                    helpText=self.sortByCreationDateTimeHelpText),
+                uicommand.ViewerSortByCommand(viewer=self,
+                    value='modificationDateTime', 
+                    menuText=_('&Modification date'),
+                    helpText=self.sortByModificationDateTimeHelpText)]
 
 
 class SortableViewerForEffortMixin(SortableViewerMixin):
@@ -320,6 +324,7 @@ class SortableViewerForCategoriesMixin(SortableViewerMixin):
     sortBySubjectHelpText = _('Sort categories by subject')
     sortByDescriptionHelpText = _('Sort categories by description')
     sortByCreationDateTimeHelpText = _('Sort categories by creation date')
+    sortByModificationDateTimeHelpText = _('Sort categories by last modification date')
 
 
 class SortableViewerForCategorizablesMixin(SortableViewerMixin):
@@ -338,6 +343,7 @@ class SortableViewerForAttachmentsMixin(SortableViewerForCategorizablesMixin):
     sortByDescriptionHelpText = _('Sort attachments by description')
     sortByCategoryHelpText = _('Sort attachments by category')
     sortByCreationDateTimeHelpText = _('Sort attachments by creation date')
+    sortByModificationDateTimeHelpText = _('Sort attachments by last modification date')
 
 
 class SortableViewerForNotesMixin(SortableViewerForCategorizablesMixin):
@@ -345,6 +351,7 @@ class SortableViewerForNotesMixin(SortableViewerForCategorizablesMixin):
     sortByDescriptionHelpText = _('Sort notes by description')
     sortByCategoryHelpText = _('Sort notes by category')
     sortByCreationDateTimeHelpText = _('Sort notes by creation date')
+    sortByModificationDateTimeHelpText = _('Sort notes by last modification date')
 
 
 class SortableViewerForTasksMixin(SortableViewerForCategorizablesMixin):
@@ -353,6 +360,7 @@ class SortableViewerForTasksMixin(SortableViewerForCategorizablesMixin):
     sortByDescriptionHelpText = _('Sort tasks by description')
     sortByCategoryHelpText = _('Sort tasks by category')
     sortByCreationDateTimeHelpText = _('Sort tasks by creation date')
+    sortByModificationDateTimeHelpText = _('Sort tasks by last modification date')
 
     def __init__(self, *args, **kwargs):
         self.__sortKeyUnchangedCount = 0

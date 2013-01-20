@@ -1664,7 +1664,7 @@ class XMLReaderVersion35Test(XMLReaderTestCase):
 
 
 class XMLReaderVersion36Test(XMLReaderTestCase):
-    tskversion = 36 # New in release 1.3.21
+    tskversion = 36  # New in release 1.3.21
     
     def testCreationDateTime(self):
         tasks = self.writeAndReadTasks('''
@@ -1673,3 +1673,23 @@ class XMLReaderVersion36Test(XMLReaderTestCase):
         </tasks>''')
         self.assertEqual(date.DateTime(2012, 12, 12, 12, 0, 0, 12345),
                          tasks[0].creationDateTime())
+        
+        
+class XMLReaderVersion37Test(XMLReaderTestCase):
+    tskversion = 37  # New in release 1.3.23
+    
+    def testModificationDateTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task modificationDateTime="2012-12-12 12:00:00.12345"/>
+        </tasks>''')
+        self.assertEqual(date.DateTime(2012, 12, 12, 12, 0, 0, 12345),
+                         tasks[0].modificationDateTime())
+        
+    def testModificationDateTimeWithOtherAttributes(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task modificationDateTime="2012-12-12 12:00:00.12345"/>
+        </tasks>''')
+        self.assertEqual(date.DateTime(2012, 12, 12, 12, 0, 0, 12345),
+                         tasks[0].modificationDateTime())

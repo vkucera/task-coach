@@ -54,7 +54,8 @@ class IntegrationTestCase(test.TestCase):
 
     def readAndWrite(self):
         self.fd.seek(0)
-        self.writer.write(self.taskList, self.categories, self.notes, self.syncMLConfig, self.guid)
+        self.writer.write(self.taskList, self.categories, self.notes, 
+                          self.syncMLConfig, self.guid)
         self.fd.seek(0)
         return self.reader.read()
 
@@ -80,9 +81,8 @@ class IntegrationTest(IntegrationTestCase):
                                        stop_datetime=date.Now()),
             reminder=date.DateTime(2004, 1, 1), fgColor=wx.BLUE, bgColor=wx.RED,
             font=wx.NORMAL_FONT, expandedContexts=['viewer1'], icon='icon',
-            selectedIcon='selectedIcon',
-            shouldMarkCompletedWhenAllChildrenCompleted=True,
-            percentageComplete=67)
+            selectedIcon='selectedIcon', percentageComplete=67,
+            shouldMarkCompletedWhenAllChildrenCompleted=True)
         self.child = task.Task()
         self.task.addChild(self.child)
         self.grandChild = task.Task()
@@ -102,6 +102,7 @@ class IntegrationTest(IntegrationTestCase):
                               children=[note.Note(subject='Child')])
         self.notes.append(self.note)
         self.category.addCategorizable(self.note)
+        self.task.setModificationDateTime(date.DateTime(2012, 1, 1, 10, 9, 8))
 
     def getTaskWrittenAndRead(self, targetId):
         # pylint: disable=W0621
@@ -119,6 +120,9 @@ class IntegrationTest(IntegrationTestCase):
         
     def testCreationDateTime(self):
         self.assertAttributeWrittenAndRead(self.task, 'creationDateTime')
+        
+    def testModificationDateTime(self):
+        self.assertAttributeWrittenAndRead(self.task, 'modificationDateTime')
                
     def testSubject(self):
         self.assertAttributeWrittenAndRead(self.task, 'subject')

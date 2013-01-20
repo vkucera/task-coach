@@ -27,6 +27,7 @@ import os
 import sys
 import time
 import wx
+import calendar
 
 
 # pylint: disable=W0404
@@ -118,6 +119,8 @@ class Application(object):
                 self.sessionMonitor = LinuxSessionMonitor(self.on_end_session)  # pylint: disable=W0201
             else:
                 self.sessionMonitor = None
+
+        calendar.setfirstweekday(dict(monday=0, sunday=6)[self.settings.get('view', 'weekstart')])
 
     def start(self):
         ''' Call this to start the Application. '''
@@ -293,7 +296,7 @@ class Application(object):
 
     def quitApplication(self, force=False):
         if not self.iocontroller.close(force=force):
-            return
+            return False
         # Remember what the user was working on: 
         self.settings.set('file', 'lastfile', self.taskFile.lastFilename())
         self.mainwindow.save_settings()
@@ -315,3 +318,5 @@ class Application(object):
 
         if operating_system.isMac() and hasattr(sys, 'frozen'):
             sys.stdout.summary()
+
+        return True

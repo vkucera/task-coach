@@ -59,7 +59,8 @@ class CategoryTest(test.TestCase):
                         categorizables=[self.categorizable], notes=[],
                         attachments=[], filtered=True, exclusiveSubcategories=True,
                         icon='icon', selectedIcon='selected',
-                        creationDateTime=date.Now())
+                        creationDateTime=date.Now(), 
+                        modificationDateTime=date.Now())
         for eventType in self.category.modificationEventTypes():
             self.registerObserver(eventType)
         self.category.__setstate__(newState)
@@ -100,7 +101,8 @@ class CategoryTest(test.TestCase):
       
     def testAddCategorizable(self):
         self.category.addCategorizable(self.categorizable)
-        self.assertEqual(set([self.categorizable]), self.category.categorizables())
+        self.assertEqual(set([self.categorizable]), 
+                         self.category.categorizables())
         
     def testAddCategorizableDoesNotAddCategoryToCategorizable(self):
         self.category.addCategorizable(self.categorizable)
@@ -109,7 +111,8 @@ class CategoryTest(test.TestCase):
     def testAddCategorizableTwice(self):
         self.category.addCategorizable(self.categorizable)
         self.category.addCategorizable(self.categorizable)
-        self.assertEqual(set([self.categorizable]), self.category.categorizables())
+        self.assertEqual(set([self.categorizable]), 
+                         self.category.categorizables())
         
     def testRemoveCategorizable(self):
         self.category.addCategorizable(self.categorizable)

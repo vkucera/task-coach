@@ -20,9 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 from taskcoachlib.domain.attribute import icon
-from taskcoachlib.domain.date import Now
+from taskcoachlib.domain.date import DateTime, Now
 from taskcoachlib.thirdparty.pubsub import pub
 import attribute
+import functools
 import uuid
 
 
@@ -132,7 +133,9 @@ class SynchronizedObject(object):
 class Object(SynchronizedObject):
     def __init__(self, *args, **kwargs):
         Attribute = attribute.Attribute
-        self.__creationDateTime = kwargs.pop('creationDateTime', None) or Now() 
+        self.__creationDateTime = kwargs.pop('creationDateTime', None) or Now()
+        self.__modificationDateTime = kwargs.pop('modificationDateTime', 
+                                                 DateTime.min)
         self.__subject = Attribute(kwargs.pop('subject', ''), self, 
                                    self.subjectChangedEvent)
         self.__description = Attribute(kwargs.pop('description', ''), self,
@@ -149,7 +152,7 @@ class Object(SynchronizedObject):
                                         self.appearanceChangedEvent)
         self.__id = kwargs.pop('id', None) or str(uuid.uuid1())
         super(Object, self).__init__(*args, **kwargs)
-        
+    
     def __repr__(self):
         return self.subject()
 
@@ -160,6 +163,7 @@ class Object(SynchronizedObject):
             state = dict()
         state.update(dict(id=self.__id, 
                           creationDateTime=self.__creationDateTime,
+                          modificationDateTime=self.__modificationDateTime,
                           subject=self.__subject.get(), 
                           description=self.__description.get(),
                           fgColor=self.__fgColor.get(),
@@ -176,7 +180,6 @@ class Object(SynchronizedObject):
         except AttributeError:
             pass
         self.__id = state['id']
-        self.__creationDateTime = state['creationDateTime']
         self.setSubject(state['subject'], event=event)
         self.setDescription(state['description'], event=event)
         self.setForegroundColor(state['fgColor'], event=event)
@@ -184,6 +187,10 @@ class Object(SynchronizedObject):
         self.setFont(state['font'], event=event)
         self.setIcon(state['icon'], event=event)
         self.setSelectedIcon(state['selectedIcon'], event=event)
+        self.__creationDateTime = state['creationDateTime']
+        # Set modification date/time last to overwrite changes made by the 
+        # setters above
+        self.__modificationDateTime = state['modificationDateTime']
 
     def __getcopystate__(self):
         ''' Return a dictionary that can be passed to __init__ when creating
@@ -215,10 +222,16 @@ class Object(SynchronizedObject):
     def id(self):
         return self.__id
             
-    # Creation date/time:
+    # Editing date/time:
     
     def creationDateTime(self):
         return self.__creationDateTime
+    
+    def modificationDateTime(self):
+        return self.__modificationDateTime
+    
+    def setModificationDateTime(self, dateTime):
+        self.__modificationDateTime = dateTime
         
     # Subject:
     
