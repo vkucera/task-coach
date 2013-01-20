@@ -53,6 +53,7 @@ date format used abbreviated or full month name.''', '1338'),
 picker.''', '1354'),
         Bugv2('''Fix Shift-S and Shift-E shortcuts in date picker on
 Linux.''', '1358'),
+        Bugv2('''Fix overlay in toolbar icons.''', '1356'),
         ],
     featuresAdded=[
         Feature('''Add a modification date attribute to tasks, notes, 

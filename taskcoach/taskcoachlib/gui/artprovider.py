@@ -25,18 +25,39 @@ import icons
 class ArtProvider(wx.ArtProvider):
     def CreateBitmap(self, artId, artClient, size):
         if '+' in artId:
-            main, overlay = artId.split('+')
-            overlayImage = self._CreateBitmap(overlay, artClient, size).ConvertToImage()
             w, h = size
-            overlayBitmap = overlayImage.Scale(int(w / 2), int(h / 2), wx.IMAGE_QUALITY_HIGH).ConvertToBitmap()
-            mainBitmap = self._CreateBitmap(main, artClient, size)
+            main, overlay = artId.split('+')
+
+            overlayImage = self._CreateBitmap(overlay, artClient, size).ConvertToImage()
+            overlayImage.Rescale(int(w / 2), int(h / 2), wx.IMAGE_QUALITY_HIGH)
+            overlayAlpha = overlayImage.GetAlphaData()
+            overlayBitmap = overlayImage.ConvertToBitmap()
+
+            mainImage = self._CreateBitmap(main, artClient, size).ConvertToImage()
+            mainAlpha = mainImage.GetAlphaData()
+            mainImage.SetAlphaData(chr(255) * len(mainAlpha))
+            mainBitmap = mainImage.ConvertToBitmap()
+
             dstDC = wx.MemoryDC()
             dstDC.SelectObject(mainBitmap)
             try:
                 dstDC.DrawBitmap(overlayBitmap, w - int(w / 2), h - int(h / 2), True)
             finally:
                 dstDC.SelectObject(wx.NullBitmap)
-            return mainBitmap
+            mainImage = mainBitmap.ConvertToImage()
+
+            # Just drawing works fine on OS X but clips to the destination bitmap on
+            # other platforms. There doesn't seem to be anything better than this.
+            resultAlpha = list()
+            for y in xrange(h):
+                for x in xrange(w):
+                    alpha = mainAlpha[y * w + x]
+                    if x >= w / 2 and y >= h / 2:
+                        alpha = max(alpha, overlayAlpha[(y - h / 2) * w / 2 + x - w / 2])
+                    resultAlpha.append(alpha)
+            mainImage.SetAlphaData(''.join(resultAlpha))
+
+            return mainImage.ConvertToBitmap()
         else:
             return self._CreateBitmap(artId, artClient, size)
 
