@@ -202,9 +202,10 @@ class ChangeMonitor(Observer):
 
         self._objectsRemoved(event)
 
-    def onEffortAddedOrRemoved(self, newValue, oldValue, sender):
-        effortsToAdd = [effort for effort in newValue if effort not in oldValue]
-        effortsToRemove = [effort for effort in oldValue if effort not in newValue]
+    def onEffortAddedOrRemoved(self, newValue, sender):
+        efforts, oldValue = newValue
+        effortsToAdd = [effort for effort in efforts if effort not in oldValue]
+        effortsToRemove = [effort for effort in oldValue if effort not in efforts]
         for effort in effortsToAdd:
             self._objectAdded(effort)
         for effort in effortsToRemove:
