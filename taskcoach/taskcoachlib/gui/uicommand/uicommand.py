@@ -23,6 +23,7 @@ from taskcoachlib import patterns, meta, command, help, widgets, persistence, \
     thirdparty, render, operating_system  # pylint: disable=W0622
 from taskcoachlib.domain import base, task, note, category, attachment, \
     effort, date
+from taskcoachlib.gui import dialog, printer
 from taskcoachlib.gui.wizard import CSVImportWizard
 from taskcoachlib.i18n import _
 from taskcoachlib.mailer import sendMail
@@ -32,9 +33,6 @@ from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_NEXT, \
     wxSCHEDULER_PREV, wxSCHEDULER_TODAY
 from taskcoachlib.tools import anonymize
 from taskcoachlib.workarounds import ExceptionAsUnicode
-import dialog
-import printer
-import viewer
 import wx
 
 
@@ -65,7 +63,7 @@ class UICommandContainerMixin(object):
                 self.appendUICommand(uiCommand)
 
     def appendSubMenuWithUICommands(self, menuTitle, uiCommands):
-        import menu
+        from taskcoachlib.gui import menu
         subMenu = menu.Menu(self._window)
         self.appendMenu(menuTitle, subMenu)
         subMenu.appendUICommands(*uiCommands)  # pylint: disable=W0142
@@ -1226,6 +1224,7 @@ class ViewViewer(SettingsCommand, ViewerCommand):
         super(ViewViewer, self).__init__(*args, **kwargs)
         
     def doCommand(self, event):
+        from taskcoachlib.gui import viewer
         viewer.addOneViewer(self.viewer, self.taskFile, self.settings, 
                             self.viewerClass)
         self.increaseViewerCount()
@@ -1241,12 +1240,14 @@ class ViewViewer(SettingsCommand, ViewerCommand):
 class ViewEffortViewerForSelectedTask(NeedsOneSelectedTaskMixin, 
                                       SettingsCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
+        from taskcoachlib.gui import viewer
         self.viewerClass = viewer.EffortViewer
         self.taskFile = kwargs.pop('taskFile')
         kwargs['bitmap'] = viewer.EffortViewer.defaultBitmap
         super(ViewEffortViewerForSelectedTask, self).__init__(*args, **kwargs)
         
     def doCommand(self, event):
+        from taskcoachlib.gui import viewer
         viewer.addOneViewer(self.viewer, self.taskFile, self.settings, 
             self.viewerClass, 
             tasksToShowEffortFor=task.TaskList(self.viewer.curselection()))

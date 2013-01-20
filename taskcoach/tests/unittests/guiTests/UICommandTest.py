@@ -242,6 +242,7 @@ class TaskNewTest(wxTestCaseWithFrameAsTopLevelWindow):
         self.failUnless(firstChild.IsChecked())
         
     def testNewTaskWithPresetPlannedStartDateTime(self):
+        self.settings.set('view', 'defaultplannedstartdatetime', 'preset_tomorrow_endofworkingday')
         taskNew = gui.uicommand.TaskNew(taskList=self.taskFile.tasks(),
                                         settings=self.settings)
         taskNew.doCommand(None, show=False)

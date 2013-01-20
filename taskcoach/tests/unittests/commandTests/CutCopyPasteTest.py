@@ -204,6 +204,9 @@ class PasteIntoTaskCommandTest(CommandWithChildrenTestCase):
                                           self.grandchild])))
 
     def testPasteChild_MarksNewParentAsNotCompleted(self):
+        self.settings.setboolean('behavior', 
+                                 'markparentcompletedwhenallchildrencompleted', 
+                                 True)
         self.markCompleted([self.parent])
         self.cut([self.task1])
         self.paste([self.parent])

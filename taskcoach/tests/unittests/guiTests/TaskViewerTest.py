@@ -229,6 +229,9 @@ class CommonTestsMixin(object):
             self.assertItems(notCompletedChild, self.task)
             
     def testUndoMarkCompletedWhenFilteringCompletedTasks(self):
+        self.settings.setboolean('behavior', 
+                                 'markparentcompletedwhenallchildrencompleted', 
+                                 True)
         self.viewer.hideTaskStatus(task.status.completed)
         child1 = task.Task('child1')
         child2 = task.Task('child2')
