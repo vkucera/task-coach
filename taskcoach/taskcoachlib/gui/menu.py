@@ -85,6 +85,10 @@ class DynamicMenu(Menu):
             that the menu gets a chance to update itself at the right time. '''
         raise NotImplementedError
 
+    def unregisterMenuUpdate(self):
+        ''' Cleanly unregister what was done in registerForMenuUpdate. '''
+        raise NotImplementedError
+
     def onUpdateMenu(self, newValue, sender):
         ''' This event handler should be called at the right times so that
             the menu has a chance to update itself. '''
@@ -114,6 +118,7 @@ class DynamicMenu(Menu):
         
     def clearMenu(self):
         ''' Remove all menu items. '''
+        self.unregisterMenuUpdate()
         for menuItem in self.MenuItems:
             self.DestroyItem(menuItem)       
             
@@ -166,7 +171,10 @@ class DynamicMenuThatGetsUICommandsFromViewer(DynamicMenu):
         # Refill the menu whenever the menu is opened, because the menu might 
         # depend on the status of the viewer:
         self._window.Bind(wx.EVT_MENU_OPEN, self.onUpdateMenu_Deprecated)
-        
+
+    def unregisterMenuUpdate(self):
+        self._window.Unbind(wx.EVT_MENU_OPEN)
+
     def updateMenuItems(self):
         newCommands = self.getUICommands()
         try:
@@ -314,7 +322,10 @@ class TaskTemplateMenu(DynamicMenu):
 
     def registerForMenuUpdate(self):
         pub.subscribe(self.onTemplatesSaved, 'templates.saved')
-        
+
+    def unregisterMenuUpdate(self):
+        pub.unsubscribe(self.onTemplatesSaved, 'templates.saved')
+
     def onTemplatesSaved(self):
         self.onUpdateMenu(None, None)
     
@@ -681,7 +692,10 @@ class ToggleCategoryMenu(DynamicMenu):
                                                   eventSource=self.categories)
         patterns.Publisher().registerObserver(self.onUpdateMenu_Deprecated, 
             eventType=category.Category.subjectChangedEventType())
-           
+
+    def unregisterMenuUpdate(self):
+        patterns.Publisher().removeObserver(self.onUpdateMenu_Deprecated)
+
     def updateMenuItems(self):
         self.clearMenu()
         self.addMenuItemsForCategories(self.categories.rootItems(), self)
@@ -734,7 +748,18 @@ class StartEffortForTaskMenu(DynamicMenu):
             else:
                 patterns.Publisher().registerObserver(self.onUpdateMenu_Deprecated, 
                                                       eventType)
-    
+
+    def unregisterMenuUpdate(self):
+        patterns.Publisher().removeObserver(self.onUpdateMenu_Deprecated)
+        for eventType in (task.Task.subjectChangedEventType(),
+                          task.Task.trackingChangedEventType(), 
+                          task.Task.plannedStartDateTimeChangedEventType(),
+                          task.Task.dueDateTimeChangedEventType(), 
+                          task.Task.actualStartDateTimeChangedEventType(),
+                          task.Task.completionDateTimeChangedEventType()):
+            if eventType.startswith('pubsub'):
+                pub.unsubscribe(self.onUpdateMenu, eventType)
+
     def updateMenuItems(self):
         self.clearMenu()
         trackableRootTasks = self._trackableRootTasks()
@@ -942,7 +967,10 @@ class EffortViewerColumnPopupMenu(ColumnPopupMenuMixin,
     
     def registerForMenuUpdate(self):
         pub.subscribe(self.onChangeAggregation, 'effortviewer.aggregation')
-            
+
+    def unregisterMenuUpdate(self):
+        pub.unsubscribe(self.onChangeAggregation, 'effortviewer.aggregation')
+
     def onChangeAggregation(self):
         self.onUpdateMenu(None, None)
         

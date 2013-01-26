@@ -51,6 +51,10 @@ class App(application.Application):
     def init(self): # pylint: disable=W0221
         super(App, self).init(loadSettings=False, loadTaskFile=False)
 
+    def addTask(self):
+        self.task = task.Task('Task')
+        self.taskFile.tasks().extend([self.task])
+
     def addTasks(self):
         # pylint: disable=W0201
         self.parent = task.Task('Parent')
