@@ -118,7 +118,7 @@ class DynamicMenu(Menu):
         
     def clearMenu(self):
         ''' Remove all menu items. '''
-        self.unregisterMenuUpdate()
+        #self.unregisterMenuUpdate()
         for menuItem in self.MenuItems:
             self.DestroyItem(menuItem)       
             
