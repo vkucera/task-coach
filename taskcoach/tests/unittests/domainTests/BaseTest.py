@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 import test
+import weakref
 from taskcoachlib import patterns
 from taskcoachlib.domain import base, date
 
@@ -105,6 +106,14 @@ class ObjectTest(test.TestCase):
 
     def onEvent(self, event):
         self.eventsReceived.append(event)
+
+    # Basic tests:
+
+    def testCyclicReference(self):
+        domainObject = base.Object()
+        weak = weakref.ref(domainObject)
+        del domainObject # Assuming CPython
+        self.failUnless(weak() is None)
 
     # Id tests:
         
