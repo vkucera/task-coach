@@ -26,6 +26,7 @@ class LeakTest(test.TestCase):
         self.mockApp.addTask()
 
     def tearDown(self):
+        self.mockApp.iocontroller.saveas('Test.tsk')
         self.mockApp.quitApplication()
         mock.App.deleteInstance()
         super(LeakTest, self).tearDown()
