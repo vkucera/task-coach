@@ -197,7 +197,8 @@ class EffortTest(test.TestCase, asserts.Mixin):
      
     def testState(self):
         state = self.effort.__getstate__()
-        newEffort = effort.Effort(task.Task())
+        theTask = task.Task()
+        newEffort = effort.Effort(theTask)
         newEffort.__setstate__(state)
         self.assertEqualEfforts(newEffort, self.effort)
         
