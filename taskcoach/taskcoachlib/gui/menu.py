@@ -35,6 +35,18 @@ class Menu(wx.Menu, uicommand.UICommandContainerMixin):
     def __len__(self):
         return self.GetMenuItemCount()
 
+    def DestroyItem(self, menuItem):
+        if menuItem.GetSubMenu():
+            menuItem.GetSubMenu().clearMenu()
+        self._window.Unbind(wx.EVT_MENU, id=menuItem.GetId())
+        self._window.Unbind(wx.EVT_UPDATE_UI, id=menuItem.GetId())
+        super(Menu, self).DestroyItem(menuItem)
+
+    def clearMenu(self):
+        ''' Remove all menu items. '''
+        for menuItem in self.MenuItems:
+            self.DestroyItem(menuItem)       
+
     def accelerators(self):
         return self._accels
 
@@ -111,11 +123,6 @@ class DynamicMenu(Menu):
             updating the menu items of this menu. '''
         self.updateMenuItemInParentMenu()
         self.updateMenuItems()
-        
-    def clearMenu(self):
-        ''' Remove all menu items. '''
-        for menuItem in self.MenuItems:
-            self.DestroyItem(menuItem)       
             
     def updateMenuItemInParentMenu(self):
         ''' Enable or disable the menu item in the parent menu, depending on
@@ -698,7 +705,7 @@ class ToggleCategoryMenu(DynamicMenu):
         if categoriesWithChildren:
             menu.AppendSeparator()
             for category in categoriesWithChildren:
-                subMenu = wx.Menu()
+                subMenu = Menu(self._window)
                 self.addMenuItemsForCategories(category.children(), subMenu)
                 menu.AppendSubMenu(subMenu, self.subMenuLabel(category))            
     
@@ -749,7 +756,7 @@ class StartEffortForTaskMenu(DynamicMenu):
                              child in self.tasks and not child.completed()]
         if trackableChildren:
             trackableChildren.sort(key=lambda child: child.subject())
-            subMenu = wx.Menu()
+            subMenu = Menu(self._window)
             for child in trackableChildren:
                 self.addMenuItemForTask(child, subMenu)
             menu.AppendSubMenu(subMenu, _('%s (subtasks)') % task.subject())
