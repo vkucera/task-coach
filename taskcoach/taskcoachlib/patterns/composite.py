@@ -17,22 +17,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import observer
+import weakref
 
 
 class Composite(object):
     def __init__(self, children=None, parent=None):
         super(Composite, self).__init__()
-        self.__parent = parent
+        self.__parent = parent if parent is None else weakref.ref(parent)
         self.__children = children or []
         for child in self.__children:
             child.setParent(self)
         
     def __getstate__(self):
         return dict(children=self.__children[:], 
-                    parent=self.__parent)
+                    parent=self.parent())
     
     def __setstate__(self, state):
-        self.__parent = state['parent']
+        self.__parent = None if state['parent'] is None else weakref.ref(state['parent'])
         self.__children = state['children']
 
     def __getcopystate__(self):
@@ -42,11 +43,11 @@ class Composite(object):
         except AttributeError:
             state = dict()
         state.update(dict(children=[child.copy() for child in self.__children], 
-                          parent=self.__parent))
+                          parent=self.parent()))
         return state
     
     def parent(self):
-        return self.__parent
+        return None if self.__parent is None else self.__parent()
     
     def ancestors(self):
         ''' Return the parent, and its parent, etc., as a list. '''
@@ -59,8 +60,8 @@ class Composite(object):
         return self.ancestors() + [self] + self.children(recursive=True)
     
     def setParent(self, parent):
-        self.__parent = parent
-    
+        self.__parent = None if parent is None else weakref.ref(parent)
+
     def children(self, recursive=False):
         # Warning: this must satisfy the same condition as
         # allItemsSorted() below.
