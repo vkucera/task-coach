@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import test, weakref
 from taskcoachlib import patterns, config
 from taskcoachlib.domain import task, base
 
@@ -88,7 +88,14 @@ class StackedFilterTest(test.TestCase):
     def testSetTreeMode_False(self):
         self.filter2.setTreeMode(False)
         self.failIf(self.filter1.treeMode())
-        
+
+    def testFiltersAreCollected(self):
+        filterRef = weakref.ref(self.filter1)
+        self.filter2.detach()
+        del self.filter1
+        del self.filter2
+        self.failUnless(filterRef() is None)
+
 
 class SearchFilterTest(test.TestCase):
     def setUp(self):

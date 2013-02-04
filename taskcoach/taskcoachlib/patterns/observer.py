@@ -292,6 +292,8 @@ class Publisher(object):
         matchingKeys = [key for key in self.__observers if match(*key)]
         for key in matchingKeys:
             self.__observers[key].discard(observer)
+            if not self.__observers[key]:
+                del self.__observers[key]
                         
     def notifyObservers(self, event):
         ''' Notify observers of the event. The event type and sources are 
