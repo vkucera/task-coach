@@ -125,6 +125,7 @@ class Viewer(patterns.Observer, wx.Panel):
 
         for popupMenu in self._popupMenus:
             try:
+                popupMenu.clearMenu()
                 popupMenu.Destroy()
             except wx.PyDeadObjectError:
                 pass
