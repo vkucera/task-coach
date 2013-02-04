@@ -30,7 +30,7 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
         self.__categorizables = base.SetAttribute(set(categorizables or []),
                                                   self,
                                                   self.categorizableAddedEvent,
-                                                  self.categorizableRemovedEvent)
+                                                  self.categorizableRemovedEvent, weak=True)
         self.__filtered = filtered
         self.__exclusiveSubcategories = exclusiveSubcategories
             

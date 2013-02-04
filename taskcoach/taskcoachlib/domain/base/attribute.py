@@ -45,55 +45,56 @@ class Attribute(object):
 
 class SetAttribute(object):
     __slots__ = ('__set', '__owner', '__addEvent', '__removeEvent', 
-                 '__changeEvent')
+                 '__changeEvent', '__setClass')
     
-    def __init__(self, values, owner, addEvent=None, removeEvent=None, changeEvent=None):
-        self.__set = set(values) if values else set()
+    def __init__(self, values, owner, addEvent=None, removeEvent=None, changeEvent=None, weak=False):
+        self.__setClass = weakref.WeakSet if weak else set
+        self.__set = self.__setClass(values) if values else self.__setClass()
         self.__owner = weakref.ref(owner)
         self.__addEvent = (addEvent or self.__nullEvent).im_func
         self.__removeEvent = (removeEvent or self.__nullEvent).im_func
         self.__changeEvent = (changeEvent or self.__nullEvent).im_func
         
     def get(self):
-        return self.__set.copy()
+        return set(self.__set)
     
     @patterns.eventSource
     def set(self, values, event=None):
         owner = self.__owner()
         if owner is not None:
-            if values == self.__set:
+            if values == set(self.__set):
                 return False
-            added = values - self.__set
-            removed = self.__set - values
-            self.__set = values
+            added = values - set(self.__set)
+            removed = set(self.__set) - values
+            self.__set = self.__setClass(values)
             if added:
                 self.__addEvent(owner, event, *added) # pylint: disable=W0142
             if removed:
                 self.__removeEvent(owner, event, *removed) # pylint: disable=W0142
             if added or removed:
-                self.__changeEvent(owner, event, *self.__set)
+                self.__changeEvent(owner, event, *set(self.__set))
             return True
     
     @patterns.eventSource            
     def add(self, values, event=None):
         owner = self.__owner()
         if owner is not None:
-            if values <= self.__set:
+            if values <= set(self.__set):
                 return False
-            self.__set |= values
+            self.__set = self.__setClass(set(self.__set) | values)
             self.__addEvent(owner, event, *values) # pylint: disable=W0142
-            self.__changeEvent(owner, event, *self.__set)
+            self.__changeEvent(owner, event, *set(self.__set))
             return True
     
     @patterns.eventSource                    
     def remove(self, values, event=None):
         owner = self.__owner()
         if owner is not None:
-            if values & self.__set == set():
+            if values & set(self.__set) == set():
                 return False
-            self.__set -= values
+            self.__set = self.__setClass(set(self.__set) - values)
             self.__removeEvent(owner, event, *values) # pylint: disable=W0142
-            self.__changeEvent(owner, event, *self.__set)
+            self.__changeEvent(owner, event, *set(self.__set))
             return True
 
     def __nullEvent(self, *args, **kwargs):
