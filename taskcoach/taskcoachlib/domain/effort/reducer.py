@@ -56,7 +56,13 @@ class EffortAggregator(patterns.SetDecorator,
                       effort.Effort.startChangedEventType())
         pub.subscribe(self.onRevenueChanged,
                       task.Task.hourlyFeeChangedEventType())
-    
+
+    def detach(self):
+        super(EffortAggregator, self).detach()
+        patterns.Publisher().removeObserver(self.onChildAddedToTask)
+        patterns.Publisher().removeObserver(self.onChildRemovedFromTask)
+        patterns.Publisher().removeObserver(self.onTaskRemoved)
+
     def extend(self, efforts):  # pylint: disable=W0221
         for effort in efforts:
             effort.task().addEffort(effort)

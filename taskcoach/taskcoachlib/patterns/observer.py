@@ -492,8 +492,8 @@ class CollectionDecorator(Decorator, ObservableCollection):
     def detach(self):
         self.removeObserver(self.onAddItem)
         self.removeObserver(self.onRemoveItem)
-        super(CollectionDecorator, self).detach()
         self.observable().detach()
+        super(CollectionDecorator, self).detach()
 
     def onAddItem(self, event):
         ''' The default behaviour is to simply add the items that are

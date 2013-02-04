@@ -31,6 +31,10 @@ class Sorter(patterns.ListDecorator):
         self._registerObserverForAttribute(self._sortKey)
         self.reset()
 
+    def detach(self):
+        super(Sorter, self).detach()
+        self._removeObserverForAttribute(self._sortKey)
+
     @classmethod        
     def sortEventType(cls):
         return 'pubsub.%s.sorted' % cls.__name__

@@ -40,7 +40,11 @@ class CategoryFilter(base.Filter):
                                                   eventType=eventType)
         pub.subscribe(self.onFilterMatchingChanged, 'settings.view.categoryfiltermatchall')
         super(CategoryFilter, self).__init__(*args, **kwargs)
-    
+
+    def detach(self):
+        super(CategoryFilter, self).detach()
+        self.removeObserver(self.onCategoryChanged)
+
     def filterItems(self, categorizables):
         filteredCategories = self.__categories.filteredCategories()
         if not filteredCategories:

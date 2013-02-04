@@ -46,7 +46,11 @@ class ViewFilter(tasklist.TaskListQueryMixin, base.Filter):
                 registerObserver(self.onTaskStatusChange_Deprecated, 
                                  eventType=eventType)
         date.Scheduler().schedule_interval(self.atMidnight, days=1)
-        
+
+    def detach(self):
+        super(ViewFilter, self).detach()
+        patterns.Publisher().removeObserver(self.onTaskStatusChange_Deprecated)
+
     def atMidnight(self):
         ''' Whether tasks are included in the filter or not may change at
             midnight. '''
