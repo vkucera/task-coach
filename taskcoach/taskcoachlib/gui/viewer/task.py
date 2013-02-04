@@ -138,6 +138,7 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable=W0223
         super(BaseTaskTreeViewer, self).detach()
         if self.secondRefresher:
             self.secondRefresher.stopClock()
+            self.secondRefresher.removeInstance()
             del self.secondRefresher
         if self.minuteRefresher:
             self.minuteRefresher.stopClock()
