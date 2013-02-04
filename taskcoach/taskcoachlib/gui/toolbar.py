@@ -90,6 +90,10 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
 
         super(ToolBar, self).Clear()
 
+    def detach(self):
+        self.Clear()
+        self.__visibleUICommands = self.__cache = None
+
     def getToolIdByCommand(self, commandName):
         if commandName == 'EditToolBarPerspective':
             return self.__customizeId

@@ -136,6 +136,7 @@ class Viewer(patterns.Observer, wx.Panel):
         pub.unsubscribe(self.onEndIO, 'taskfile.justCleared')
 
         self.presentation().detach()
+        self.toolbar.detach()
 
     def viewerStatusEventType(self):
         return 'viewer%s.status' % id(self)
