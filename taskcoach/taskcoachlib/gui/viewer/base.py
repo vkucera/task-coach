@@ -134,6 +134,11 @@ class Viewer(patterns.Observer, wx.Panel):
         pub.unsubscribe(self.onEndIO, 'taskfile.justRead')
         pub.unsubscribe(self.onEndIO, 'taskfile.justCleared')
 
+        try:
+            self.__presentation.detach() # Filters, sorters
+        except AttributeError:
+            pass
+
     def viewerStatusEventType(self):
         return 'viewer%s.status' % id(self)
     

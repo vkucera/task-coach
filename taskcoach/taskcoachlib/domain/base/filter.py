@@ -27,7 +27,13 @@ class Filter(patterns.SetDecorator):
         self.__treeMode = kwargs.pop('treeMode', False)        
         super(Filter, self).__init__(*args, **kwargs)
         self.reset()
-        
+
+    def detach(self):
+        try:
+            self.observable().detach()
+        except AttributeError:
+            pass
+
     def setTreeMode(self, treeMode):
         self.__treeMode = treeMode
         try:
@@ -172,6 +178,10 @@ class DeletedFilter(Filter):
                           domainobject.Object.markNotDeletedEventType()]:
             patterns.Publisher().registerObserver(self.onObjectMarkedDeletedOrNot,
                           eventType=eventType)
+
+    def detach(self):
+        patterns.Publisher().removeObserver(self.onObjectMarkedDeletedOrNot)
+        super(DeletedFilter, self).detach()
 
     def onObjectMarkedDeletedOrNot(self, event):  # pylint: disable=W0613
         self.reset()
