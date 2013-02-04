@@ -94,7 +94,11 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,  # pylint: disable=W0223
                               eventType=task.Task.appearanceChangedEventType())
         pub.subscribe(self.onAttributeChanged, task.Task.prerequisitesChangedEventType())
         pub.subscribe(self.refresh, 'powermgt.on')
-        
+
+    def detach(self):
+        super(BaseTaskViewer, self).detach()
+        self.statusMessages = None # Break cycle
+
     def onAppearanceSettingChange(self, value):  # pylint: disable=W0613
         if self:
             wx.CallAfter(self.refresh)  # Let domain objects update appearance first
