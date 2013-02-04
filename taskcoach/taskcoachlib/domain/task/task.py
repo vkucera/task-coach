@@ -23,6 +23,7 @@ from taskcoachlib import patterns
 from taskcoachlib.domain import date, categorizable, note, attachment, base
 from taskcoachlib.thirdparty.pubsub import pub
 import status
+import weakref
 import wx
 
 
@@ -63,8 +64,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__reminder = reminder or maxDateTime
         self.__reminderBeforeSnooze = reminderBeforeSnooze or self.__reminder
         self.__recurrence = date.Recurrence() if recurrence is None else recurrence
-        self.__prerequisites = set(prerequisites or [])
-        self.__dependencies = set(dependencies or [])
+        self.__prerequisites = weakref.WeakSet(prerequisites or [])
+        self.__dependencies = weakref.WeakSet(dependencies or [])
         self.__shouldMarkCompletedWhenAllChildrenCompleted = \
             shouldMarkCompletedWhenAllChildrenCompleted
         for effort in self._efforts:
@@ -120,8 +121,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             hourlyFee=self.__hourlyFee, fixedFee=self.__fixedFee, 
             recurrence=self.__recurrence.copy(),
             reminder=self.__reminder,
-            prerequisites=self.__prerequisites.copy(),
-            dependencies=self.__dependencies.copy(),
+            prerequisites=set(self.__prerequisites),
+            dependencies=set(self.__dependencies),
             shouldMarkCompletedWhenAllChildrenCompleted=self.__shouldMarkCompletedWhenAllChildrenCompleted))
         return state
 
@@ -1200,7 +1201,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     # Prerequisites
     
     def prerequisites(self, recursive=False, upwards=False):
-        prerequisites = self.__prerequisites.copy()
+        prerequisites = set(self.__prerequisites)
         if recursive and upwards and self.parent() is not None:
             prerequisites |= self.parent().prerequisites(recursive=True, upwards=True)
         elif recursive and not upwards:
@@ -1210,32 +1211,32 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     
     def setPrerequisites(self, prerequisites):
         prerequisites = set(prerequisites)
-        if prerequisites == self.__prerequisites:
+        if prerequisites == self.prerequisites():
             return
-        self.__prerequisites = prerequisites
+        self.__prerequisites = weakref.WeakSet(prerequisites)
         self.setActualStartDateTime(self.maxDateTime, recursive=True)
         self.recomputeAppearance(recursive=True)
         pub.sendMessage(self.prerequisitesChangedEventType(), 
-                        newValue=self.__prerequisites, sender=self)
+                        newValue=self.prerequisites(), sender=self)
   
     def addPrerequisites(self, prerequisites):
         prerequisites = set(prerequisites)
-        if prerequisites <= self.__prerequisites:
+        if prerequisites <= self.prerequisites():
             return
-        self.__prerequisites |= prerequisites
+        self.__prerequisites = weakref.WeakSet(prerequisites | self.prerequisites())
         self.setActualStartDateTime(self.maxDateTime, recursive=True)
         self.recomputeAppearance(recursive=True)
         pub.sendMessage(self.prerequisitesChangedEventType(), 
-                        newValue=self.__prerequisites, sender=self)
+                        newValue=self.prerequisites(), sender=self)
         
     def removePrerequisites(self, prerequisites):
         prerequisites = set(prerequisites)
-        if self.__prerequisites.isdisjoint(prerequisites):
+        if self.prerequisites().isdisjoint(prerequisites):
             return
-        self.__prerequisites -= prerequisites
+        self.__prerequisites = weakref.WeakSet(self.prerequisites() - prerequisites)
         self.recomputeAppearance(recursive=True)
         pub.sendMessage(self.prerequisitesChangedEventType(), 
-                        newValue=self.__prerequisites, sender=self)
+                        newValue=self.prerequisites(), sender=self)
         
     def addTaskAsDependencyOf(self, prerequisites):
         for prerequisite in prerequisites:
@@ -1277,7 +1278,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     # Dependencies
     
     def dependencies(self, recursive=False, upwards=False):
-        dependencies = self.__dependencies.copy()
+        dependencies = set(self.__dependencies)
         if recursive and upwards and self.parent() is not None:
             dependencies |= self.parent().dependencies(recursive=True, upwards=True)
         elif recursive and not upwards:
@@ -1287,27 +1288,27 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     def setDependencies(self, dependencies):
         dependencies = set(dependencies)
-        if dependencies == self.__dependencies:
+        if dependencies == self.dependencies():
             return
-        self.__dependencies = dependencies
+        self.__dependencies = weakref.WeakSet(dependencies)
         pub.sendMessage(self.dependenciesChangedEventType(),
-                        newValue=self.__dependencies, sender=self)
+                        newValue=self.dependencies(), sender=self)
     
     def addDependencies(self, dependencies):
         dependencies = set(dependencies)
-        if dependencies <= self.__dependencies:
+        if dependencies <= self.dependencies():
             return
-        self.__dependencies |= dependencies
+        self.__dependencies = weakref.WeakSet(self.dependencies() | dependencies)
         pub.sendMessage(self.dependenciesChangedEventType(),
-                        newValue=self.__dependencies, sender=self)
+                        newValue=self.dependencies(), sender=self)
 
     def removeDependencies(self, dependencies):
         dependencies = set(dependencies)
-        if self.__dependencies.isdisjoint(dependencies):
+        if self.dependencies().isdisjoint(dependencies):
             return
-        self.__dependencies -= dependencies
+        self.__dependencies = weakref.WeakSet(self.dependencies() - dependencies)
         pub.sendMessage(self.dependenciesChangedEventType(),
-                        newValue=self.__dependencies, sender=self)
+                        newValue=self.dependencies(), sender=self)
         
     def addTaskAsPrerequisiteOf(self, dependencies):
         for dependency in dependencies:
