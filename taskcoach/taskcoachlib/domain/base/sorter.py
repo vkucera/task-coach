@@ -31,12 +31,6 @@ class Sorter(patterns.ListDecorator):
         self._registerObserverForAttribute(self._sortKey)
         self.reset()
 
-    def detach(self):
-        try:
-            self.observable().detach()
-        except AttributeError:
-            pass
-
     @classmethod        
     def sortEventType(cls):
         return 'pubsub.%s.sorted' % cls.__name__

@@ -28,12 +28,6 @@ class Filter(patterns.SetDecorator):
         super(Filter, self).__init__(*args, **kwargs)
         self.reset()
 
-    def detach(self):
-        try:
-            self.observable().detach()
-        except AttributeError:
-            pass
-
     def setTreeMode(self, treeMode):
         self.__treeMode = treeMode
         try:

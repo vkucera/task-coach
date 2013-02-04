@@ -367,6 +367,9 @@ class ObservableCollection(object):
         ''' Make ObservableCollections suitable as keys in dictionaries. '''
         return hash(id(self))
 
+    def detach(self):
+        ''' Break cycles '''
+
     @classmethod
     def addItemEventType(class_):
         ''' The event type used to notify observers that one or more items
@@ -485,6 +488,12 @@ class CollectionDecorator(Decorator, ObservableCollection):
 
     def __repr__(self): # pragma: no cover
         return '%s(%s)'%(self.__class__, super(CollectionDecorator, self).__repr__())
+
+    def detach(self):
+        self.removeObserver(self.onAddItem)
+        self.removeObserver(self.onRemoveItem)
+        super(CollectionDecorator, self).detach()
+        self.observable().detach()
 
     def onAddItem(self, event):
         ''' The default behaviour is to simply add the items that are
