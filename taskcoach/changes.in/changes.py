@@ -56,6 +56,7 @@ Linux.''', '1358'),
         Bugv2('''Fix overlay in toolbar icons.''', '1356'),
         Bugv2('''Performance improvement when closing the editor.'''),
         Bugv2('''Use system default GUI font in date picker.''', '1361'),
+        Bugv2('''Add shortcuts for AM/PM in date picker.''', '1362'),
         ],
     featuresAdded=[
         Feature('''Add a modification date attribute to tasks, notes, 

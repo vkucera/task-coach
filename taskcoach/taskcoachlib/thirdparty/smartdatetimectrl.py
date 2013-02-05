@@ -654,6 +654,15 @@ class AMPMField(EnumerationField):
 
     Entry.addFormat(AMPMFormatCharacter)
 
+    def HandleKey(self, event):
+        if event.GetKeyCode() in [ord('a'), ord('A')]:
+            self.SetValue(0, notify=True)
+            return True
+        elif event.GetKeyCode() in [ord('p'), ord('P')]:
+            self.SetValue(1, notify=True)
+            return True
+        return super(AMPMField, self).HandleKey(event)
+
 
 class HourField(NumericField):
     pass
