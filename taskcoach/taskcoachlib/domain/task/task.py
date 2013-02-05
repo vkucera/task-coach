@@ -70,13 +70,12 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             shouldMarkCompletedWhenAllChildrenCompleted
         for effort in self._efforts:
             effort.setTask(self)
-        pub.subscribe(self.__computeRecursiveForegroundColor, 'settings.fgcolor')
-        pub.subscribe(self.__computeRecursiveBackgroundColor, 'settings.bgcolor')
-        pub.subscribe(self.__computeRecursiveIcon, 'settings.icon')
-        pub.subscribe(self.__computeRecursiveSelectedIcon, 'settings.icon')
-        pub.subscribe(self.onDueSoonHoursChanged, 'settings.behavior.duesoonhours')
-        pub.subscribe(self.onMarkParentCompletedWhenAllChildrenCompletedChanged,
-                      'settings.behavior.markparentcompletedwhenallchildrencompleted')
+
+        # Only subscribe to global settings change instead of individual ones, because the less
+        # events we subscribe to, the less objects Observer.removeInstance() has to walk through
+        # in unsubAll(). This makes closing the task editor dialog go down from 1300ms to 270ms
+        # in my setup.
+        pub.subscribe(self.__onSettingsChanged, 'settings')
 
         now = date.Now()
         if now < self.__dueDateTime < maxDateTime:
@@ -87,7 +86,15 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                     date.Scheduler().schedule(self.onDueSoon, dueSoonDateTime)
         if now < self.__plannedStartDateTime < maxDateTime:
             date.Scheduler().schedule(self.onTimeToStart, self.__plannedStartDateTime + date.ONE_SECOND)
-            
+
+    def __onSettingsChanged(self, value=None):
+        self.__computeRecursiveForegroundColor()
+        self.__computeRecursiveBackgroundColor()
+        self.__computeRecursiveIcon()
+        self.__computeRecursiveSelectedIcon()
+        self.onDueSoonHoursChanged(self.settings.getint('behavior', 'duesoonhours'))
+        self.onMarkParentCompletedWhenAllChildrenCompletedChanged(self.settings.getboolean('behavior', 'markparentcompletedwhenallchildrencompleted'))
+
     @patterns.eventSource
     def __setstate__(self, state, event=None):
         super(Task, self).__setstate__(state, event=event)

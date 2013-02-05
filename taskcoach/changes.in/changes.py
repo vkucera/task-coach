@@ -54,6 +54,7 @@ picker.''', '1354'),
         Bugv2('''Fix Shift-S and Shift-E shortcuts in date picker on
 Linux.''', '1358'),
         Bugv2('''Fix overlay in toolbar icons.''', '1356'),
+        Bugv2('''Performance improvement when closing the editor.'''),
         ],
     featuresAdded=[
         Feature('''Add a modification date attribute to tasks, notes, 
