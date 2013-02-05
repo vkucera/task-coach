@@ -388,6 +388,7 @@ class Entry(wx.Panel):
         dc.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW), width=3))
         dc.DrawLine(w, 0, w, h)
         dc.DrawLine(0, h, w, h)
+        dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
 
         if self.IsEnabled():
             for widget, x, y, w, h in self.__widgets:
@@ -536,6 +537,7 @@ class NumericField(Field):
         super(NumericField, self).SetValue(int(value), notify=notify)
 
     def PaintValue(self, dc, x, y, w, h):
+        dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
         dc.DrawText(('%%0%dd' % max(self.__width, 1)) % self.GetValue(), x, y)
 
     def ResetState(self):
@@ -594,6 +596,7 @@ class EnumerationField(NumericField):
         return maxW, maxH
 
     def PaintValue(self, dc, x, y, w, h):
+        dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
         for label, value in self.GetChoices():
             if value == self.GetValue():
                 dc.DrawText(label, x, y)
@@ -1643,6 +1646,7 @@ class _CalendarPopup(_PopupWindow):
         dc = wx.PaintDC(event.GetEventObject())
         dc.SetBackground(wx.WHITE_BRUSH)
         dc.Clear()
+        dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
 
         w, h = self.GetClientSizeTuple()
 
@@ -1811,6 +1815,7 @@ class _MultipleChoicesPopup(_PopupWindow):
 
         dc.SetBackground(wx.WHITE_BRUSH)
         dc.Clear()
+        dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
 
         y = 2
         w, h = self.GetClientSize()
