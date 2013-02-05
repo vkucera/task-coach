@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib.i18n import _
+from taskcoachlib.config import defaults
 
 
 class TaskStatus(object):
@@ -29,7 +30,11 @@ class TaskStatus(object):
         self.hideHelpText = hideHelpText
 
     def getHideBitmap(self, settings):
-        return '%s+cross_red_icon' % settings.get('icon', '%stasks' % self.statusString)
+        # This is only used by uicommands so use default if the user configured 'no bitmap', because we
+        # need one for the toolbar...
+        if settings.get('icon', '%stasks' % self.statusString):
+            return '%s+cross_red_icon' % settings.get('icon', '%stasks' % self.statusString)
+        return '%s+cross_red_icon' % defaults.defaults['icon']['%stasks' % self.statusString]
 
     def __repr__(self):
         return '%s(%s)' % (self.__class__.__name__, self.statusString)

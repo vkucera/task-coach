@@ -58,6 +58,8 @@ Linux.''', '1358'),
         Bugv2('''Use system default GUI font in date picker.''', '1361'),
         Bugv2('''Add shortcuts for AM/PM in date picker.''', '1362'),
         Bugv2('''Escape now dismisses calendar popup in date picker.''', '1362'),
+        Bugv2('''Fix crash when a task status icon has been set to
+"No icon".''', '1364'),
         ],
     featuresAdded=[
         Feature('''Add a modification date attribute to tasks, notes, 
