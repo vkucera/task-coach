@@ -216,11 +216,7 @@ class Column(object):
         self.__editControlClass = kwargs.get('editControl', None)
         self.__parse = kwargs.get('parse', lambda value: value)
         self.__settings = kwargs.get('settings', None) # FIXME: Column shouldn't need to know about settings
-
-    def detach(self):
-        self.__sortCallback = self.__renderCallback = self.__renderDescriptionCallback = self.__resizeCallback = \
-            self.__editCallback = None
-
+        
     def name(self):
         return self.__name
         
@@ -308,13 +304,6 @@ class _BaseCtrlWithColumnsMixin(object):
         # have the same header. It's a list of (index, column) tuples.
         self.__indexMap = []
         self._setColumns()
-        wx.GetTopLevelParent(self).Bind(wx.EVT_CLOSE, self.__onParentClose)
-
-    def __onParentClose(self, event):
-        for column in self.__allColumns:
-            column.detach()
-        self.__allColumns = self.__indexMap = None
-        event.Skip()
 
     def _setColumns(self):
         for columnIndex, column in enumerate(self.__allColumns):
