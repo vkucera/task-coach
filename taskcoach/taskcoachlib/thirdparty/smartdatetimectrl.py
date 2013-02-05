@@ -1143,6 +1143,8 @@ class DateEntry(Entry):
         if event.GetKeyCode() == ord('/'):
             self.FocusNext()
             event.Skip()
+        elif event.GetKeyCode() == wx.WXK_ESCAPE and self.__calendar is not None:
+            self.DismissPopup()
         else:
             return super(DateEntry, self).OnChar(event)
 

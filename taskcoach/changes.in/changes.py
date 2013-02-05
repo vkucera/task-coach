@@ -57,6 +57,7 @@ Linux.''', '1358'),
         Bugv2('''Performance improvement when closing the editor.'''),
         Bugv2('''Use system default GUI font in date picker.''', '1361'),
         Bugv2('''Add shortcuts for AM/PM in date picker.''', '1362'),
+        Bugv2('''Escape now dismisses calendar popup in date picker.''', '1362'),
         ],
     featuresAdded=[
         Feature('''Add a modification date attribute to tasks, notes, 
