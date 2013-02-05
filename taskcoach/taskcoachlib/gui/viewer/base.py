@@ -665,7 +665,11 @@ class ViewerWithColumns(Viewer):  # pylint: disable=W0223
         self.initColumns()
         self.__initDone = True
         self.refresh()
-        
+
+    def detach(self):
+        super(ViewerWithColumns, self).detach()
+        self.__columnUICommands = self._columns = self.__visibleColumns = None
+
     def hasHideableColumns(self):
         return True
     
