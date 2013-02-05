@@ -531,6 +531,7 @@ class NumericField(Field):
         super(NumericField, self).__init__(*args, **kwargs)
 
     def GetExtent(self, dc):
+        dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
         return dc.GetTextExtent('0' * max(self.__width, 1))
 
     def SetValue(self, value, notify=False):
@@ -538,6 +539,9 @@ class NumericField(Field):
 
     def PaintValue(self, dc, x, y, w, h):
         dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
+        txt = ('%%0%dd' % max(self.__width, 1)) % self.GetValue()
+        tw, th = dc.GetTextExtent(txt)
+        dc.DrawText(txt, x + int((w - tw) / 2), y + int((h - th) / 2))
         dc.DrawText(('%%0%dd' % max(self.__width, 1)) % self.GetValue(), x, y)
 
     def ResetState(self):
@@ -588,6 +592,7 @@ class EnumerationField(NumericField):
             super(EnumerationField, self).PopupChoices(widget)
 
     def GetExtent(self, dc):
+        dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
         maxW = maxH = 0
         for label, value in self.GetChoices():
             tw, th = dc.GetTextExtent(label)
@@ -599,7 +604,8 @@ class EnumerationField(NumericField):
         dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
         for label, value in self.GetChoices():
             if value == self.GetValue():
-                dc.DrawText(label, x, y)
+                tw, th = dc.GetTextExtent(label)
+                dc.DrawText(label, x + int((w - tw) / 2), y + int((h - th) / 2))
 
     def __index(self):
         for idx, (label, value) in enumerate(self.GetChoices()):
@@ -1623,6 +1629,7 @@ class _CalendarPopup(_PopupWindow):
         self.SetClientSize(self.GetExtent(wx.ClientDC(interior)))
 
     def GetExtent(self, dc):
+        dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
         W, H = 0, 0
         for month in xrange(1, 13):
             header = decodeSystemString(datetime.date(year=self.__year, month=month, day=11).strftime('%B %Y'))
@@ -1813,6 +1820,7 @@ class _MultipleChoicesPopup(_PopupWindow):
     def GetExtent(self, dc):
         maxW = 0
         totH = 0
+        dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
 
         for label, value in self.__choices:
             tw, th = dc.GetTextExtent(unicode(label))
