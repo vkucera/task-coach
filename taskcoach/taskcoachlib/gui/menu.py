@@ -31,6 +31,7 @@ class Menu(wx.Menu, uicommand.UICommandContainerMixin):
         super(Menu, self).__init__()
         self._window = window
         self._accels = list()
+        self._observers = list()
         
     def __len__(self):
         return self.GetMenuItemCount()
@@ -45,7 +46,10 @@ class Menu(wx.Menu, uicommand.UICommandContainerMixin):
     def clearMenu(self):
         ''' Remove all menu items. '''
         for menuItem in self.MenuItems:
-            self.DestroyItem(menuItem)       
+            self.DestroyItem(menuItem)
+        for observer in self._observers:
+            observer.removeInstance()
+        self._observers = list()
 
     def accelerators(self):
         return self._accels
@@ -53,6 +57,8 @@ class Menu(wx.Menu, uicommand.UICommandContainerMixin):
     def appendUICommand(self, uiCommand):
         cmd = uiCommand.addToMenu(self, self._window)
         self._accels.extend(uiCommand.accelerators())
+        if isinstance(uiCommand, patterns.Observer):
+            self._observers.append(uiCommand)
         return cmd
 
     def appendMenu(self, text, subMenu, bitmap=None):
