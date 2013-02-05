@@ -165,7 +165,12 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         self.Bind(wx.EVT_TREE_BEGIN_LABEL_EDIT, self.onBeginEdit)
         self.Bind(wx.EVT_TREE_END_LABEL_EDIT, self.onEndEdit)
         self.Bind(wx.EVT_TREE_ITEM_EXPANDING, self.onItemExpanding)
-        
+        wx.GetTopLevelParent(self).Bind(wx.EVT_CLOSE, self.onParentClose)
+
+    def onParentClose(self, event):
+        self.selectCommand = self.editCommand = self.dragAndDropCommand = None
+        event.Skip()
+
     def getItemTooltipData(self, item, column):
         return self.__adapter.getItemTooltipData(item, column)
     
