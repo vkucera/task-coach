@@ -60,6 +60,7 @@ Linux.''', '1358'),
         Bugv2('''Escape now dismisses calendar popup in date picker.''', '1362'),
         Bugv2('''Fix crash when a task status icon has been set to
 "No icon".''', '1364'),
+        Bugv2('''Fix refreshing of spent time in effort viewer''', '1363'),
         ],
     featuresAdded=[
         Feature('''Add a modification date attribute to tasks, notes, 

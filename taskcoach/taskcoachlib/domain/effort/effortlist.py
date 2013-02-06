@@ -75,6 +75,11 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
         effortsToRemove = [effort for effort in oldValue if not effort in newValue]
         super(EffortList, self).extendSelf(effortsToAdd)
         super(EffortList, self).removeItemsFromSelf(effortsToRemove)
+        for effort in effortsToAdd + effortsToRemove:
+            if effort.getStop() is None:
+                pub.sendMessage(effort.trackingChangedEventType(),
+                                newValue=effort in effortsToAdd,
+                                sender=effort)
 
     def originalLength(self):
         ''' Do not delegate originalLength to the underlying TaskList because
