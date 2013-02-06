@@ -1709,8 +1709,9 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
         if sender.parent() is None:
             return  # Ignore composite efforts
         if newValue:
-            self.__trackedEfforts.extend([sender])
-        else:        
+            if sender not in self.__trackedEfforts:
+                self.__trackedEfforts.extend([sender])
+        else:
             if sender in self.__trackedEfforts:
                 self.__trackedEfforts.remove(sender) 
                         
