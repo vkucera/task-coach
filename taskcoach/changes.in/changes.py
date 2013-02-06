@@ -54,7 +54,6 @@ picker.''', '1354'),
         Bugv2('''Fix Shift-S and Shift-E shortcuts in date picker on
 Linux.''', '1358'),
         Bugv2('''Fix overlay in toolbar icons.''', '1356'),
-        Bugv2('''Performance improvement when closing the editor.'''),
         Bugv2('''Use system default GUI font in date picker.''', '1361'),
         Bugv2('''Add shortcuts for AM/PM in date picker.''', '1362'),
         Bugv2('''Escape now dismisses calendar popup in date picker.''', '1362'),
