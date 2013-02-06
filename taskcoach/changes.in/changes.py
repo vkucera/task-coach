@@ -68,6 +68,8 @@ attachments, and categories.''', 'http://uservoice.com/a/-2HX-'),
 picker has focus will try to interpret the clipboard's content. Ctrl+C
 stores the current value in the clipboard.''', '1352'),
         ],
+    dependenciesChanged=[
+        Dependency('''Task Coach now needs Python 2.7.''')],
     ),  
             
 Release('1.3.22', 'January 2, 2013',
