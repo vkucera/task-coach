@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ from taskcoachlib.domain import task, effort, date, category, attachment
 class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
     def setUp(self):
         super(TaskCommandTestCase, self).setUp()
-        task.Task.settings = config.Settings(load=False)
+        self.settings = task.Task.settings = config.Settings(load=False)
         self.list = self.taskList = task.TaskList()
         self.categories = category.CategoryList()
         self.category = category.Category('cat')
@@ -212,6 +212,9 @@ class DeleteCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):
         self.assertDeleteWorks()
 
     def testDeleteLastNotCompletedChildMarksParentAsCompleted(self):
+        self.settings.setboolean('behavior', 
+                                 'markparentcompletedwhenallchildrencompleted', 
+                                 True)
         self.markCompleted([self.child2])
         self.delete([self.child])
         self.assertDoUndoRedo(
@@ -354,6 +357,9 @@ class NewSubTaskCommandTest(TaskCommandTestCase):
             lambda: self.failUnless(self.task1.completed()))
 
     def testNewCompletedSubTask(self):
+        self.settings.setboolean('behavior', 
+                                 'markparentcompletedwhenallchildrencompleted', 
+                                 True)
         self.newSubTask([self.task1], markCompleted=True)
         self.assertDoUndoRedo(lambda: self.failUnless(self.task1.completed()),
             lambda: self.failIf(self.task1.completed()))
@@ -396,6 +402,9 @@ class MarkCompletedCommandTest(CommandWithChildrenTestCase):
         self.assertDoUndoRedo(lambda: self.failUnless(self.child.completed()))
 
     def testMarkCompletedGrandChild(self):
+        self.settings.setboolean('behavior', 
+                                 'markparentcompletedwhenallchildrencompleted', 
+                                 True)
         self.markCompleted([self.grandchild])
         self.assertDoUndoRedo(
             lambda: self.failUnless(self.child.completed() and 

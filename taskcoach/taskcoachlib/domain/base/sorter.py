@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,6 +30,10 @@ class Sorter(patterns.ListDecorator):
         super(Sorter, self).__init__(*args, **kwargs)
         self._registerObserverForAttribute(self._sortKey)
         self.reset()
+
+    def detach(self):
+        super(Sorter, self).detach()
+        self._removeObserverForAttribute(self._sortKey)
 
     @classmethod        
     def sortEventType(cls):

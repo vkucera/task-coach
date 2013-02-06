@@ -388,6 +388,7 @@ class Entry(wx.Panel):
         dc.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW), width=3))
         dc.DrawLine(w, 0, w, h)
         dc.DrawLine(0, h, w, h)
+        dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
 
         if self.IsEnabled():
             for widget, x, y, w, h in self.__widgets:
@@ -530,12 +531,17 @@ class NumericField(Field):
         super(NumericField, self).__init__(*args, **kwargs)
 
     def GetExtent(self, dc):
+        dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
         return dc.GetTextExtent('0' * max(self.__width, 1))
 
     def SetValue(self, value, notify=False):
         super(NumericField, self).SetValue(int(value), notify=notify)
 
     def PaintValue(self, dc, x, y, w, h):
+        dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
+        txt = ('%%0%dd' % max(self.__width, 1)) % self.GetValue()
+        tw, th = dc.GetTextExtent(txt)
+        dc.DrawText(txt, x + int((w - tw) / 2), y + int((h - th) / 2))
         dc.DrawText(('%%0%dd' % max(self.__width, 1)) % self.GetValue(), x, y)
 
     def ResetState(self):
@@ -586,6 +592,7 @@ class EnumerationField(NumericField):
             super(EnumerationField, self).PopupChoices(widget)
 
     def GetExtent(self, dc):
+        dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
         maxW = maxH = 0
         for label, value in self.GetChoices():
             tw, th = dc.GetTextExtent(label)
@@ -594,9 +601,11 @@ class EnumerationField(NumericField):
         return maxW, maxH
 
     def PaintValue(self, dc, x, y, w, h):
+        dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
         for label, value in self.GetChoices():
             if value == self.GetValue():
-                dc.DrawText(label, x, y)
+                tw, th = dc.GetTextExtent(label)
+                dc.DrawText(label, x + int((w - tw) / 2), y + int((h - th) / 2))
 
     def __index(self):
         for idx, (label, value) in enumerate(self.GetChoices()):
@@ -650,6 +659,15 @@ class AMPMField(EnumerationField):
             return AMPMField(*args, **kwargs)
 
     Entry.addFormat(AMPMFormatCharacter)
+
+    def HandleKey(self, event):
+        if event.GetKeyCode() in [ord('a'), ord('A')]:
+            self.SetValue(0, notify=True)
+            return True
+        elif event.GetKeyCode() in [ord('p'), ord('P')]:
+            self.SetValue(1, notify=True)
+            return True
+        return super(AMPMField, self).HandleKey(event)
 
 
 class HourField(NumericField):
@@ -1131,6 +1149,8 @@ class DateEntry(Entry):
         if event.GetKeyCode() == ord('/'):
             self.FocusNext()
             event.Skip()
+        elif event.GetKeyCode() == wx.WXK_ESCAPE and self.__calendar is not None:
+            self.DismissPopup()
         else:
             return super(DateEntry, self).OnChar(event)
 
@@ -1609,6 +1629,7 @@ class _CalendarPopup(_PopupWindow):
         self.SetClientSize(self.GetExtent(wx.ClientDC(interior)))
 
     def GetExtent(self, dc):
+        dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
         W, H = 0, 0
         for month in xrange(1, 13):
             header = decodeSystemString(datetime.date(year=self.__year, month=month, day=11).strftime('%B %Y'))
@@ -1643,6 +1664,7 @@ class _CalendarPopup(_PopupWindow):
         dc = wx.PaintDC(event.GetEventObject())
         dc.SetBackground(wx.WHITE_BRUSH)
         dc.Clear()
+        dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
 
         w, h = self.GetClientSizeTuple()
 
@@ -1798,6 +1820,7 @@ class _MultipleChoicesPopup(_PopupWindow):
     def GetExtent(self, dc):
         maxW = 0
         totH = 0
+        dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
 
         for label, value in self.__choices:
             tw, th = dc.GetTextExtent(unicode(label))
@@ -1811,6 +1834,7 @@ class _MultipleChoicesPopup(_PopupWindow):
 
         dc.SetBackground(wx.WHITE_BRUSH)
         dc.Clear()
+        dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
 
         y = 2
         w, h = self.GetClientSize()

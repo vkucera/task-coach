@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ class Filter(patterns.SetDecorator):
         self.__treeMode = kwargs.pop('treeMode', False)        
         super(Filter, self).__init__(*args, **kwargs)
         self.reset()
-        
+
     def setTreeMode(self, treeMode):
         self.__treeMode = treeMode
         try:
@@ -172,6 +172,10 @@ class DeletedFilter(Filter):
                           domainobject.Object.markNotDeletedEventType()]:
             patterns.Publisher().registerObserver(self.onObjectMarkedDeletedOrNot,
                           eventType=eventType)
+
+    def detach(self):
+        patterns.Publisher().removeObserver(self.onObjectMarkedDeletedOrNot)
+        super(DeletedFilter, self).detach()
 
     def onObjectMarkedDeletedOrNot(self, event):  # pylint: disable=W0613
         self.reset()

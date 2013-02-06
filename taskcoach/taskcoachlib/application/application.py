@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -42,7 +42,8 @@ class wxApp(wx.App):
         if operating_system.isWindows():
             self.Bind(wx.EVT_QUERY_END_SESSION, self.onQueryEndSession)
 
-        if operating_system.isMac() and hasattr(sys, 'frozen'):
+        if (operating_system.isMac() and hasattr(sys, 'frozen')) or \
+            (operating_system.isGTK() and not sys.stdout.isatty()):
             class RedirectedOutput(object):
                 def __init__(self):
                     self.__handle = None

@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
@@ -48,7 +48,6 @@ class EffortViewer(base.ListViewer,
         self.__hiddenTotalColumns = []
         self.__columnUICommands = None
         self.__domainObjectsToView = None
-        self.__observersToDetach = []
         super(EffortViewer, self).__init__(parent, taskFile, settings, *args, **kwargs)
         self.secondRefresher = refresher.SecondRefresher(self,
             effort.Effort.trackingChangedEventType())
@@ -95,9 +94,8 @@ class EffortViewer(base.ListViewer,
             if self.__displayingNewTasks():
                 tasks = self.__tasksToShowEffortFor
             else:
-                tasks = selectedItemsFilter = domain.base.SelectedItemsFilter(self.taskFile.tasks(), 
-                                                                              selectedItems=self.__tasksToShowEffortFor)
-                self.__observersToDetach.append(selectedItemsFilter)
+                tasks = domain.base.SelectedItemsFilter(self.taskFile.tasks(), 
+                                                        selectedItems=self.__tasksToShowEffortFor)
             self.__domainObjectsToView = tasks
         return self.__domainObjectsToView
     
@@ -107,8 +105,6 @@ class EffortViewer(base.ListViewer,
     def detach(self):
         super(EffortViewer, self).detach()
         self.secondRefresher.removeInstance()
-        for observer in self.__observersToDetach:
-            observer.removeInstance()    
             
     def isShowingEffort(self):
         return True
@@ -161,8 +157,6 @@ class EffortViewer(base.ListViewer,
         categoryFilter = super(EffortViewer, self).createFilter(deletedFilter)
         searchFilter = filter.SearchFilter(self.createAggregator(categoryFilter,
                                                                  aggregation))
-        self.__observersToDetach.extend([deletedFilter, categoryFilter, 
-                                         searchFilter])
         return searchFilter
     
     def createAggregator(self, taskList, aggregation):
@@ -176,7 +170,6 @@ class EffortViewer(base.ListViewer,
             aggregator = effort.EffortList(taskList)
         else:
             aggregator = effort.EffortAggregator(taskList, aggregation=aggregation)
-        self.__observersToDetach.append(aggregator)
         return aggregator
             
     def createWidget(self):

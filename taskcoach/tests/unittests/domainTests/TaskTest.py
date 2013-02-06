@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -573,6 +573,9 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin,
         self.assertEqual(child, self.events[0].value())
         
     def testAddCompletedChildAsOnlyChildMakesParentCompleted(self):
+        self.settings.setboolean('behavior', 
+                                 'markparentcompletedwhenallchildrencompleted', 
+                                 True)
         child = task.Task(completionDateTime=self.yesterday)
         self.task.addChild(child)
         self.failUnless(self.task.completed())
@@ -1758,6 +1761,9 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
                          self.task1.actualStartDateTime(recursive=True))
         
     def testRecursiveCompletionDateTime(self):
+        self.settings.setboolean('behavior', 
+                                 'markparentcompletedwhenallchildrencompleted', 
+                                 True)
         self.task1_1.setCompletionDateTime(self.tomorrow)
         self.assertEqual(self.tomorrow, 
                          self.task1.completionDateTime(recursive=True)) 
@@ -2043,6 +2049,9 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
         self.assertEqual(0, self.task.percentageComplete(recursive=True))
 
     def testPercentageCompletedWhenChildIs50ProcentComplete(self):
+        self.settings.setboolean('behavior', 
+                                 'markparentcompletedwhenallchildrencompleted', 
+                                 True)
         self.task1_1.setPercentageComplete(50)
         self.assertEqual(50, self.task.percentageComplete(recursive=True))
         
@@ -2059,6 +2068,9 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
         self.assertEqual(25, self.task.percentageComplete(recursive=True))
         
     def testPercentageCompletedNotificationWhenChildPercentageChanges(self):
+        self.settings.setboolean('behavior', 
+                                 'markparentcompletedwhenallchildrencompleted', 
+                                 True)
         events = []
         
         def onEvent(newValue, sender):
@@ -2069,6 +2081,9 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
         self.assertEqual([(50, self.task1_1), (50, self.task)], events)
         
     def testPercentageCompletedNotificationWhenMarkCompletedSettingChanges(self):
+        self.settings.setboolean('behavior', 
+                                 'markparentcompletedwhenallchildrencompleted', 
+                                 True)
         events = []
         
         def onEvent(newValue, sender):
@@ -2158,6 +2173,9 @@ class TaskWithTwoChildrenTest(TaskTestCase, CommonTaskTestsMixin,
         self.failUnless(self.task.completed())
 
     def testPercentageCompletedWhenOneChildIs50ProcentComplete(self):
+        self.settings.setboolean('behavior', 
+                                 'markparentcompletedwhenallchildrencompleted', 
+                                 True)
         self.task1_1.setPercentageComplete(50)
         self.assertEqual(25, self.task.percentageComplete(recursive=True))
 
@@ -2168,6 +2186,9 @@ class TaskWithTwoChildrenTest(TaskTestCase, CommonTaskTestsMixin,
                          self.task.percentageComplete(recursive=True))
 
     def testPercentageCompletedWhenOneChildIsComplete(self):
+        self.settings.setboolean('behavior', 
+                                 'markparentcompletedwhenallchildrencompleted', 
+                                 True)
         self.task1_1.setPercentageComplete(100)
         self.assertEqual(50, self.task.percentageComplete(recursive=True))
     

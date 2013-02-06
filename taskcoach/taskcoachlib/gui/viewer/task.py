@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
@@ -82,7 +82,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,  # pylint: disable=W0223
             hasattr(wx.GetTopLevelParent(self), 'AddBalloonTip'):
             wx.GetTopLevelParent(self).AddBalloonTip(self.settings, 'filtershiftclick', self.toolbar,
                         getRect=lambda: self.toolbar.GetToolRect(self.toolbar.getToolIdByCommand('ViewerHideTasks_completed')),
-                        message=_('''Shift-click on a filter tool to see only tasks belonging to the correspondig status'''))
+                        message=_('''Shift-click on a filter tool to see only tasks belonging to the corresponding status'''))
 
     def __registerForAppearanceChanges(self):
         for appearance in ('font', 'fgcolor', 'bgcolor', 'icon'):
@@ -94,7 +94,11 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,  # pylint: disable=W0223
                               eventType=task.Task.appearanceChangedEventType())
         pub.subscribe(self.onAttributeChanged, task.Task.prerequisitesChangedEventType())
         pub.subscribe(self.refresh, 'powermgt.on')
-        
+
+    def detach(self):
+        super(BaseTaskViewer, self).detach()
+        self.statusMessages = None # Break cycle
+
     def onAppearanceSettingChange(self, value):  # pylint: disable=W0613
         if self:
             wx.CallAfter(self.refresh)  # Let domain objects update appearance first
@@ -134,6 +138,7 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable=W0223
         super(BaseTaskTreeViewer, self).detach()
         if self.secondRefresher:
             self.secondRefresher.stopClock()
+            self.secondRefresher.removeInstance()
             del self.secondRefresher
         if self.minuteRefresher:
             self.minuteRefresher.stopClock()

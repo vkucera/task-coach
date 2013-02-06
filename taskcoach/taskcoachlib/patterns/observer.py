@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -292,6 +292,8 @@ class Publisher(object):
         matchingKeys = [key for key in self.__observers if match(*key)]
         for key in matchingKeys:
             self.__observers[key].discard(observer)
+            if not self.__observers[key]:
+                del self.__observers[key]
                         
     def notifyObservers(self, event):
         ''' Notify observers of the event. The event type and sources are 
@@ -366,6 +368,9 @@ class ObservableCollection(object):
     def __hash__(self):
         ''' Make ObservableCollections suitable as keys in dictionaries. '''
         return hash(id(self))
+
+    def detach(self):
+        ''' Break cycles '''
 
     @classmethod
     def addItemEventType(class_):
@@ -485,6 +490,12 @@ class CollectionDecorator(Decorator, ObservableCollection):
 
     def __repr__(self): # pragma: no cover
         return '%s(%s)'%(self.__class__, super(CollectionDecorator, self).__repr__())
+
+    def detach(self):
+        self.removeObserver(self.onAddItem)
+        self.removeObserver(self.onRemoveItem)
+        self.observable().detach()
+        super(CollectionDecorator, self).detach()
 
     def onAddItem(self, event):
         ''' The default behaviour is to simply add the items that are

@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -60,7 +60,8 @@ class XMLReader(object):
         self.__fd = fd
         self.__default_font_size = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT).GetPointSize()
         self.__modification_datetimes = {}
-        
+        self.__prerequisites = {}
+
     def tskversion(self):
         ''' Return the version of the current task file. Note that this is not
             the version of the application. The task file has its own version
@@ -137,9 +138,8 @@ class XMLReader(object):
             task instances. '''
         return [self._parse_task_node(child) for child in node.findall('task')]
                 
-    @staticmethod
-    def __resolve_prerequisites_and_dependencies(tasks):
-        ''' Replace all dummy prerequisites with the actual task instances
+    def __resolve_prerequisites_and_dependencies(self, tasks):
+        ''' Replace all prerequisites with the actual task instances
             and set the dependencies. '''
         tasks_by_id = dict()
         
@@ -160,11 +160,10 @@ class XMLReader(object):
                                         each_task.children(recursive=True):
                         deleted_task.setPrerequisites([])
                     continue
-                dummy_prerequisites = each_task.prerequisites()
                 prerequisites = set()
-                for dummy_prerequisite in dummy_prerequisites:
+                for prerequisiteId in self.__prerequisites.get(each_task.id(), []):
                     try:
-                        prerequisites.add(tasks_by_id[dummy_prerequisite.id])
+                        prerequisites.add(tasks_by_id[prerequisiteId])
                     except KeyError:
                         # Release 1.2.11 and older have a bug where tasks can
                         # have prerequisites listed that don't exist anymore
@@ -243,17 +242,6 @@ class XMLReader(object):
         
     def _parse_task_node(self, task_node):
         '''Recursively parse the node and return a task instance. '''
-        
-        class DummyPrerequisite(object):
-            ''' Until we have instantiated all tasks we cannot link 
-                prerequisites and dependencies so we use temporarily use a
-                dummy prerequisite object. '''
-            def __init__(self, prerequisite_id):
-                self.id = prerequisite_id
-                
-            def __getattr__(self, attr):
-                ''' Ignore all method calls. '''
-                return lambda *args, **kwargs: None
             
         planned_start_datetime_attribute_name = 'startdate' if self.tskversion() <= 33 else 'plannedstartdate'
         kwargs = self.__parse_base_composite_attributes(task_node,
@@ -275,12 +263,13 @@ class XMLReader(object):
             fixedFee=float(task_node.attrib.get('fixedFee', '0')),
             reminder=self.__parse_datetime(task_node.attrib.get('reminder', '')),
             reminderBeforeSnooze=self.__parse_datetime(task_node.attrib.get('reminderBeforeSnooze', '')),
-            # Here we just add the ids, they will be converted to object references later on:
-            prerequisites=[DummyPrerequisite(prerequisite_id) for prerequisite_id in task_node.attrib.get('prerequisites', '').split(' ') if prerequisite_id], 
+            # Ignore prerequisites for now, they'll be resolved later
+            prerequisites=[],
             shouldMarkCompletedWhenAllChildrenCompleted=self.__parse_boolean(task_node.attrib.get('shouldMarkCompletedWhenAllChildrenCompleted', '')),
             efforts=self.__parse_effort_nodes(task_node),
             notes=self.__parse_note_nodes(task_node),
             recurrence=self.__parse_recurrence(task_node)))
+        self.__prerequisites[kwargs['id']] = [id_ for id_ in task_node.attrib.get('prerequisites', '').split(' ') if id_]
         if self.__tskversion > 20:
             kwargs['attachments'] = self.__parse_attachments(task_node)
         return self.__save_modification_datetime(task.Task(**kwargs))  # pylint: disable=W0142

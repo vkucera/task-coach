@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -18,23 +18,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib.thirdparty.pubsub import pub
+import weakref
 
 
 class BaseEffort(object):
     def __init__(self, task, start, stop, *args, **kwargs):
-        self._task = task
+        self._task = None if task is None else weakref.ref(task)
         self._start = start
         self._stop = stop
         super(BaseEffort, self).__init__(*args, **kwargs)
       
     def task(self):
-        return self._task
+        return None if self._task is None else self._task()
     
     def parent(self):
         # Efforts don't have real parents since they are not composite. 
         # However, we pretend the parent of an effort is its task for the 
         # benefit of the search filter.
-        return self._task 
+        return self.task()
 
     def getStart(self):
         return self._start

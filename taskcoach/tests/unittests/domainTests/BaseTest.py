@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 import test
+import weakref
 from taskcoachlib import patterns
 from taskcoachlib.domain import base, date
 
@@ -105,6 +106,14 @@ class ObjectTest(test.TestCase):
 
     def onEvent(self, event):
         self.eventsReceived.append(event)
+
+    # Basic tests:
+
+    def testCyclicReference(self):
+        domainObject = base.Object()
+        weak = weakref.ref(domainObject)
+        del domainObject # Assuming CPython
+        self.failUnless(weak() is None)
 
     # Id tests:
         

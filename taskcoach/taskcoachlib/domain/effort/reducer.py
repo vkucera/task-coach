@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -56,7 +56,13 @@ class EffortAggregator(patterns.SetDecorator,
                       effort.Effort.startChangedEventType())
         pub.subscribe(self.onRevenueChanged,
                       task.Task.hourlyFeeChangedEventType())
-    
+
+    def detach(self):
+        super(EffortAggregator, self).detach()
+        patterns.Publisher().removeObserver(self.onChildAddedToTask)
+        patterns.Publisher().removeObserver(self.onChildRemovedFromTask)
+        patterns.Publisher().removeObserver(self.onTaskRemoved)
+
     def extend(self, efforts):  # pylint: disable=W0221
         for effort in efforts:
             effort.task().addEffort(effort)

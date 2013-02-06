@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
@@ -125,6 +125,7 @@ class Viewer(patterns.Observer, wx.Panel):
 
         for popupMenu in self._popupMenus:
             try:
+                popupMenu.clearMenu()
                 popupMenu.Destroy()
             except wx.PyDeadObjectError:
                 pass
@@ -133,6 +134,9 @@ class Viewer(patterns.Observer, wx.Panel):
         pub.unsubscribe(self.onBeginIO, 'taskfile.aboutToClear')
         pub.unsubscribe(self.onEndIO, 'taskfile.justRead')
         pub.unsubscribe(self.onEndIO, 'taskfile.justCleared')
+
+        self.presentation().detach()
+        self.toolbar.detach()
 
     def viewerStatusEventType(self):
         return 'viewer%s.status' % id(self)

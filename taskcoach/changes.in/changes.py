@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -53,6 +53,13 @@ date format used abbreviated or full month name.''', '1338'),
 picker.''', '1354'),
         Bugv2('''Fix Shift-S and Shift-E shortcuts in date picker on
 Linux.''', '1358'),
+        Bugv2('''Fix overlay in toolbar icons.''', '1356'),
+        Bugv2('''Performance improvement when closing the editor.'''),
+        Bugv2('''Use system default GUI font in date picker.''', '1361'),
+        Bugv2('''Add shortcuts for AM/PM in date picker.''', '1362'),
+        Bugv2('''Escape now dismisses calendar popup in date picker.''', '1362'),
+        Bugv2('''Fix crash when a task status icon has been set to
+"No icon".''', '1364'),
         ],
     featuresAdded=[
         Feature('''Add a modification date attribute to tasks, notes, 

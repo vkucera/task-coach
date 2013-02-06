@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -165,7 +165,12 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         self.Bind(wx.EVT_TREE_BEGIN_LABEL_EDIT, self.onBeginEdit)
         self.Bind(wx.EVT_TREE_END_LABEL_EDIT, self.onEndEdit)
         self.Bind(wx.EVT_TREE_ITEM_EXPANDING, self.onItemExpanding)
-        
+        wx.GetTopLevelParent(self).Bind(wx.EVT_CLOSE, self.onParentClose)
+
+    def onParentClose(self, event):
+        self.selectCommand = self.editCommand = self.dragAndDropCommand = None
+        event.Skip()
+
     def getItemTooltipData(self, item, column):
         return self.__adapter.getItemTooltipData(item, column)
     

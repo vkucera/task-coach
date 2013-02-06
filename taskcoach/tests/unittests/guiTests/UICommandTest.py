@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -247,6 +247,7 @@ class TaskNewTest(wxTestCaseWithFrameAsTopLevelWindow):
         self.failUnless(firstChild.IsChecked())
         
     def testNewTaskWithPresetPlannedStartDateTime(self):
+        self.settings.set('view', 'defaultplannedstartdatetime', 'preset_tomorrow_endofworkingday')
         taskNew = gui.uicommand.TaskNew(taskList=self.taskFile.tasks(),
                                         settings=self.settings)
         taskNew.doCommand(None, show=False)

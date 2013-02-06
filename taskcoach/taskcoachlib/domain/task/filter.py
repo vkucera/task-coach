@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -46,7 +46,11 @@ class ViewFilter(tasklist.TaskListQueryMixin, base.Filter):
                 registerObserver(self.onTaskStatusChange_Deprecated, 
                                  eventType=eventType)
         date.Scheduler().schedule_interval(self.atMidnight, days=1)
-        
+
+    def detach(self):
+        super(ViewFilter, self).detach()
+        patterns.Publisher().removeObserver(self.onTaskStatusChange_Deprecated)
+
     def atMidnight(self):
         ''' Whether tasks are included in the filter or not may change at
             midnight. '''

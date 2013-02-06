@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ import locale
 import os
 import test
 import wx
+import weakref
 
 
 class TaskViewerUnderTest(gui.viewer.task.TaskViewer):  # pylint: disable=W0223
@@ -52,7 +53,8 @@ class TaskViewerTestCase(test.wxTestCase):
         self.child.setParent(self.task)
         self.taskFile = persistence.TaskFile()
         self.taskList = self.taskFile.tasks()
-        self.viewer = TaskViewerUnderTest(self.frame, self.taskFile, 
+        self.parentFrame = wx.Frame(self.frame, wx.ID_ANY, '')
+        self.viewer = TaskViewerUnderTest(self.parentFrame, self.taskFile, 
                                           self.settings)
         self.viewer.sortBy('subject')
         self.viewer.setSortOrderAscending()
@@ -79,6 +81,14 @@ class TaskViewerTestCase(test.wxTestCase):
                 os.rmdir(name)  # pragma: no cover
         if os.path.isfile('test.mail'):
             os.remove('test.mail')
+
+        if self.viewer:
+            self.viewer.detach()
+            self.viewer = None
+
+        if self.parentFrame:
+            self.parentFrame.Close()
+            wx.Yield()
 
     def assertItems(self, *tasks):
         self.viewer.expandAll()  # pylint: disable=E1101
@@ -139,7 +149,30 @@ class TaskViewerTestCase(test.wxTestCase):
 class CommonTestsMixin(object):
     def testCreate(self):
         self.assertItems()
-        
+
+    ## def testCollected(self):
+    ##     filterRef = weakref.ref(self.viewer.presentation())
+    ##     self.viewer.detach()
+    ##     self.viewer = None
+    ##     self.parentFrame.Close()
+    ##     wx.Yield()
+    ##     self.parentFrame = None
+
+    ##     ## import gc
+    ##     ## def printRef(obj, indent=0):
+    ##     ##     if indent == 3:
+    ##     ##         return
+    ##     ##     if obj.__class__.__name__ in ['frame']:
+    ##     ##         return
+    ##     ##     print (' ' * indent), obj.__class__.__name__
+    ##     ##     for ref in gc.get_referrers(obj):
+    ##     ##         printRef(ref, indent + 1)
+    ##     ## print
+    ##     ## printRef(filterRef())
+    ##     ## print '===', len(gc.get_referrers(filterRef()))
+
+    ##     self.failUnless(filterRef() is None)
+
     def testAddTask(self):
         self.taskList.append(self.task)
         self.assertItems(self.task)
@@ -231,6 +264,9 @@ class CommonTestsMixin(object):
             self.assertItems(notCompletedChild, self.task)
             
     def testUndoMarkCompletedWhenFilteringCompletedTasks(self):
+        self.settings.setboolean('behavior', 
+                                 'markparentcompletedwhenallchildrencompleted', 
+                                 True)
         self.viewer.hideTaskStatus(task.status.completed)
         child1 = task.Task('child1')
         child2 = task.Task('child2')

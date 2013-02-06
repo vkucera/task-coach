@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -197,7 +197,8 @@ class EffortTest(test.TestCase, asserts.Mixin):
      
     def testState(self):
         state = self.effort.__getstate__()
-        newEffort = effort.Effort(task.Task())
+        theTask = task.Task()
+        newEffort = effort.Effort(theTask)
         newEffort.__setstate__(state)
         self.assertEqualEfforts(newEffort, self.effort)
         

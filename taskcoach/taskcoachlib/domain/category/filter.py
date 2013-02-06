@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -40,7 +40,11 @@ class CategoryFilter(base.Filter):
                                                   eventType=eventType)
         pub.subscribe(self.onFilterMatchingChanged, 'settings.view.categoryfiltermatchall')
         super(CategoryFilter, self).__init__(*args, **kwargs)
-    
+
+    def detach(self):
+        super(CategoryFilter, self).detach()
+        self.removeObserver(self.onCategoryChanged)
+
     def filterItems(self, categorizables):
         filteredCategories = self.__categories.filteredCategories()
         if not filteredCategories:

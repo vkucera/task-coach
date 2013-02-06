@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,9 +31,25 @@ class Menu(wx.Menu, uicommand.UICommandContainerMixin):
         super(Menu, self).__init__()
         self._window = window
         self._accels = list()
+        self._observers = list()
         
     def __len__(self):
         return self.GetMenuItemCount()
+
+    def DestroyItem(self, menuItem):
+        if menuItem.GetSubMenu():
+            menuItem.GetSubMenu().clearMenu()
+        self._window.Unbind(wx.EVT_MENU, id=menuItem.GetId())
+        self._window.Unbind(wx.EVT_UPDATE_UI, id=menuItem.GetId())
+        super(Menu, self).DestroyItem(menuItem)
+
+    def clearMenu(self):
+        ''' Remove all menu items. '''
+        for menuItem in self.MenuItems:
+            self.DestroyItem(menuItem)
+        for observer in self._observers:
+            observer.removeInstance()
+        self._observers = list()
 
     def accelerators(self):
         return self._accels
@@ -41,6 +57,8 @@ class Menu(wx.Menu, uicommand.UICommandContainerMixin):
     def appendUICommand(self, uiCommand):
         cmd = uiCommand.addToMenu(self, self._window)
         self._accels.extend(uiCommand.accelerators())
+        if isinstance(uiCommand, patterns.Observer):
+            self._observers.append(uiCommand)
         return cmd
 
     def appendMenu(self, text, subMenu, bitmap=None):
@@ -111,11 +129,6 @@ class DynamicMenu(Menu):
             updating the menu items of this menu. '''
         self.updateMenuItemInParentMenu()
         self.updateMenuItems()
-        
-    def clearMenu(self):
-        ''' Remove all menu items. '''
-        for menuItem in self.MenuItems:
-            self.DestroyItem(menuItem)       
             
     def updateMenuItemInParentMenu(self):
         ''' Enable or disable the menu item in the parent menu, depending on
@@ -166,7 +179,7 @@ class DynamicMenuThatGetsUICommandsFromViewer(DynamicMenu):
         # Refill the menu whenever the menu is opened, because the menu might 
         # depend on the status of the viewer:
         self._window.Bind(wx.EVT_MENU_OPEN, self.onUpdateMenu_Deprecated)
-        
+
     def updateMenuItems(self):
         newCommands = self.getUICommands()
         try:
@@ -315,7 +328,7 @@ class TaskTemplateMenu(DynamicMenu):
 
     def registerForMenuUpdate(self):
         pub.subscribe(self.onTemplatesSaved, 'templates.saved')
-        
+
     def onTemplatesSaved(self):
         self.onUpdateMenu(None, None)
     
@@ -682,7 +695,7 @@ class ToggleCategoryMenu(DynamicMenu):
                                                   eventSource=self.categories)
         patterns.Publisher().registerObserver(self.onUpdateMenu_Deprecated, 
             eventType=category.Category.subjectChangedEventType())
-           
+
     def updateMenuItems(self):
         self.clearMenu()
         self.addMenuItemsForCategories(self.categories.rootItems(), self)
@@ -699,7 +712,7 @@ class ToggleCategoryMenu(DynamicMenu):
         if categoriesWithChildren:
             menu.AppendSeparator()
             for category in categoriesWithChildren:
-                subMenu = wx.Menu()
+                subMenu = Menu(self._window)
                 self.addMenuItemsForCategories(category.children(), subMenu)
                 menu.AppendSubMenu(subMenu, self.subMenuLabel(category))            
     
@@ -735,7 +748,7 @@ class StartEffortForTaskMenu(DynamicMenu):
             else:
                 patterns.Publisher().registerObserver(self.onUpdateMenu_Deprecated, 
                                                       eventType)
-    
+
     def updateMenuItems(self):
         self.clearMenu()
         trackableRootTasks = self._trackableRootTasks()
@@ -750,7 +763,7 @@ class StartEffortForTaskMenu(DynamicMenu):
                              child in self.tasks and not child.completed()]
         if trackableChildren:
             trackableChildren.sort(key=lambda child: child.subject())
-            subMenu = wx.Menu()
+            subMenu = Menu(self._window)
             for child in trackableChildren:
                 self.addMenuItemForTask(child, subMenu)
             menu.AppendSubMenu(subMenu, _('%s (subtasks)') % task.subject())
@@ -943,7 +956,7 @@ class EffortViewerColumnPopupMenu(ColumnPopupMenuMixin,
     
     def registerForMenuUpdate(self):
         pub.subscribe(self.onChangeAggregation, 'effortviewer.aggregation')
-            
+
     def onChangeAggregation(self):
         self.onUpdateMenu(None, None)
         

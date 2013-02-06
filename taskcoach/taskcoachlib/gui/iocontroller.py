@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ from taskcoachlib.widgets import GetPassword
 from taskcoachlib.workarounds import ExceptionAsUnicode
 import wx
 import os
+import gc
 import sys
 import codecs
 import traceback
@@ -466,7 +467,8 @@ Break the lock?''') % filename,
         self.__messageCallback(_('Closed %s') % self.__taskFile.filename())
         self.__taskFile.close()
         patterns.CommandHistory().clear()
-    
+        gc.collect()
+
     def __showSaveMessage(self, savedFile):    
         self.__messageCallback(_('Saved %(nrtasks)d tasks to %(filename)s') % \
             {'nrtasks': len(savedFile.tasks()), 
