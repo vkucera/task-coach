@@ -38,31 +38,31 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TaskCoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-01-01 12:51+0000\n"
+"POT-Creation-Date: 2013-01-28 14:01+0000\n"
 "PO-Revision-Date: 2012-08-16 23:18+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Romanian <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-01 14:56+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-02-06 20:36+0000\n"
+"X-Generator: Launchpad (build 16477)\n"
 "X-Poedit-Country: ROMANIA\n"
 "X-Poedit-Language: Romanian\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: taskcoachlib/application/application.py:66
+#: taskcoachlib/application/application.py:68
 msgid "Errors have occured. Please see \"%s\""
 msgstr ""
 
-#: taskcoachlib/application/application.py:66
+#: taskcoachlib/application/application.py:68
 #: taskcoachlib/gui/mainwindow.py:352 taskcoachlib/iphone/protocol.py:482
 #: taskcoachlib/widgets/draganddrop.py:121
 #: taskcoachlib/widgets/draganddrop.py:163
 msgid "Error"
 msgstr "Eroare"
 
-#: taskcoachlib/application/application.py:284
+#: taskcoachlib/application/application.py:288
 msgid ""
 "Couldn't load settings from TaskCoach.ini:\n"
 "%s"
@@ -70,147 +70,133 @@ msgstr ""
 "Nu s-au putut încărca configurările din TaskCoach.ini:\n"
 "%s"
 
-#: taskcoachlib/application/application.py:285
+#: taskcoachlib/application/application.py:289
 #: taskcoachlib/gui/iocontroller.py:71
 msgid "%s file error"
 msgstr "%s eroare  de fișier"
 
 #: taskcoachlib/command/attachmentCommands.py:28
-#: taskcoachlib/command/attachmentCommands.py:31
-#: taskcoachlib/command/attachmentCommands.py:80
-msgid "New attachment"
-msgstr "Atașament nou"
-
-#: taskcoachlib/command/attachmentCommands.py:43
-msgid "Delete attachments"
-msgstr "Șterge atașamentele"
-
-#: taskcoachlib/command/attachmentCommands.py:44
-msgid "Delete attachment \"%s\""
-msgstr "Șterge atașamentul „%s”"
-
-#: taskcoachlib/command/attachmentCommands.py:48
-msgid "Add note to attachments"
-msgstr "Adaugă o notiță la atașamente"
-
-#: taskcoachlib/command/attachmentCommands.py:52
 msgid "Edit location of attachments"
 msgstr "Editează locația atașamentelor"
 
-#: taskcoachlib/command/attachmentCommands.py:53
+#: taskcoachlib/command/attachmentCommands.py:29
 msgid "Edit attachment \"%s\" location"
 msgstr "Editează locația atașamentului „%s”"
 
-#: taskcoachlib/command/attachmentCommands.py:75
+#: taskcoachlib/command/attachmentCommands.py:53
 #: taskcoachlib/widgets/dialog.py:155
 msgid "Add attachment"
 msgstr "Adaugă un atașament"
 
-#: taskcoachlib/command/attachmentCommands.py:76
+#: taskcoachlib/command/attachmentCommands.py:54
 msgid "Add attachment to \"%s\""
 msgstr "Adaugă atașament la „%s”"
 
-#: taskcoachlib/command/attachmentCommands.py:108
+#: taskcoachlib/command/attachmentCommands.py:59
+msgid "New attachment"
+msgstr "Atașament nou"
+
+#: taskcoachlib/command/attachmentCommands.py:94
 msgid "Remove attachment"
 msgstr "Înlătură atașamentul"
 
-#: taskcoachlib/command/attachmentCommands.py:109
+#: taskcoachlib/command/attachmentCommands.py:95
 msgid "Remove attachment to \"%s\""
 msgstr "Înlătură atașamentul de la „%s”"
 
-#: taskcoachlib/command/base.py:166
+#: taskcoachlib/command/base.py:192
 msgid "Copy"
 msgstr "Copiază"
 
-#: taskcoachlib/command/base.py:167
+#: taskcoachlib/command/base.py:193
 msgid "Copy \"%s\""
 msgstr "Copiază „%s”"
 
-#: taskcoachlib/command/base.py:181
+#: taskcoachlib/command/base.py:207
 msgid "Delete"
 msgstr "Șterge"
 
-#: taskcoachlib/command/base.py:182
+#: taskcoachlib/command/base.py:208
 msgid "Delete \"%s\""
 msgstr "Șterge „%s”"
 
-#: taskcoachlib/command/base.py:211
+#: taskcoachlib/command/base.py:243
 msgid "Cut"
 msgstr "Taie"
 
-#: taskcoachlib/command/base.py:212
+#: taskcoachlib/command/base.py:244
 msgid "Cut \"%s\""
 msgstr "Taie „%s”"
 
-#: taskcoachlib/command/base.py:237
+#: taskcoachlib/command/base.py:269
 msgid "Paste"
 msgstr "Lipește"
 
-#: taskcoachlib/command/base.py:238
+#: taskcoachlib/command/base.py:270
 msgid "Paste \"%s\""
 msgstr "Lipește „%s”"
 
-#: taskcoachlib/command/base.py:273
+#: taskcoachlib/command/base.py:305
 msgid "Paste as subitem"
 msgstr "Lipește ca subelement"
 
-#: taskcoachlib/command/base.py:274
+#: taskcoachlib/command/base.py:306
 msgid "Paste as subitem of \"%s\""
 msgstr "Lipește ca subelement al lui „%s”"
 
-#: taskcoachlib/command/base.py:286 taskcoachlib/gui/toolbar.py:129
+#: taskcoachlib/command/base.py:318 taskcoachlib/gui/dialog/toolbar.py:130
 msgid "Drag and drop"
 msgstr "Trage și pune"
 
-#: taskcoachlib/command/base.py:287
+#: taskcoachlib/command/base.py:319
 msgid "Drag and drop \"%s\""
 msgstr "Trage și pune „%s”"
 
-#: taskcoachlib/command/base.py:323
+#: taskcoachlib/command/base.py:362
 msgid "Edit subjects"
 msgstr "Editează subiectele"
 
-#: taskcoachlib/command/base.py:324
+#: taskcoachlib/command/base.py:363
 msgid "Edit subject \"%s\""
 msgstr "Editează subiecturl „%s”"
 
-#: taskcoachlib/command/base.py:346
+#: taskcoachlib/command/base.py:387
 msgid "Edit descriptions"
 msgstr "Editează descrierile"
 
-#: taskcoachlib/command/base.py:347
+#: taskcoachlib/command/base.py:388
 msgid "Edit description \"%s\""
 msgstr "Editează descrierea „%s”"
 
-#: taskcoachlib/command/base.py:369
+#: taskcoachlib/command/base.py:412
 msgid "Change icons"
 msgstr "Schimbă pictogramele"
 
-#: taskcoachlib/command/base.py:370
+#: taskcoachlib/command/base.py:413
 msgid "Change icon \"%s\""
 msgstr "Schimbă pictograma „%s”"
 
-#: taskcoachlib/command/base.py:397
+#: taskcoachlib/command/base.py:442
 msgid "Change fonts"
 msgstr "Schimbă fonturile"
 
-#: taskcoachlib/command/base.py:398
+#: taskcoachlib/command/base.py:443
 msgid "Change font \"%s\""
 msgstr "Schimbă fontul „%s”"
 
-#: taskcoachlib/command/base.py:448
+#: taskcoachlib/command/base.py:497
 msgid "Change foreground colors"
 msgstr "Schimbă culorile de prim-plan"
 
-#: taskcoachlib/command/base.py:449
+#: taskcoachlib/command/base.py:498
 msgid "Change foreground color \"%s\""
 msgstr "Schimbă culoarea „%s” de prim-plan"
 
-#: taskcoachlib/command/base.py:461
+#: taskcoachlib/command/base.py:510
 msgid "Change background colors"
 msgstr "Schimbă culorile de fundal"
 
-#: taskcoachlib/command/base.py:462
+#: taskcoachlib/command/base.py:511
 msgid "Change background color \"%s\""
 msgstr "Schimbă culoarea „%s” de fundal"
 
@@ -239,23 +225,23 @@ msgstr "Subcategorie nouă a lui „%s”"
 msgid "New subcategory"
 msgstr "Subcategorie nouă"
 
-#: taskcoachlib/command/categoryCommands.py:57
+#: taskcoachlib/command/categoryCommands.py:58
 msgid "Edit exclusive subcategories"
 msgstr "Editează categoriile exclusive"
 
-#: taskcoachlib/command/categoryCommands.py:58
+#: taskcoachlib/command/categoryCommands.py:59
 msgid "Edit exclusive subcategories of \"%s\""
 msgstr "Editează categoriile exclusive ale lui „%s”"
 
-#: taskcoachlib/command/categoryCommands.py:80
+#: taskcoachlib/command/categoryCommands.py:83
 msgid "Delete categories"
 msgstr "Șterge categoriile"
 
-#: taskcoachlib/command/categoryCommands.py:81
+#: taskcoachlib/command/categoryCommands.py:84
 msgid "Delete category \"%s\""
 msgstr "Șterge categoria „%s”"
 
-#: taskcoachlib/command/categoryCommands.py:85
+#: taskcoachlib/command/categoryCommands.py:88
 msgid "Drag and drop categories"
 msgstr "Trage și pune categoriile"
 
@@ -267,41 +253,41 @@ msgstr "Eforturi noi"
 msgid "New effort of \"%s\""
 msgstr "Efort nou al lui „%s”"
 
-#: taskcoachlib/command/effortCommands.py:56
+#: taskcoachlib/command/effortCommands.py:64
 msgid "Delete efforts"
 msgstr "Șterge eforturile"
 
-#: taskcoachlib/command/effortCommands.py:57
+#: taskcoachlib/command/effortCommands.py:65
 msgid "Delete effort \"%s\""
 msgstr "Șterge efortul „%s”"
 
-#: taskcoachlib/command/effortCommands.py:61
+#: taskcoachlib/command/effortCommands.py:72
 msgid "Change task of effort"
 msgstr "Schimbă sarcina efortului"
 
-#: taskcoachlib/command/effortCommands.py:62
+#: taskcoachlib/command/effortCommands.py:73
 msgid "Change task of \"%s\" effort"
 msgstr "Schimbă sarcina efortului „%s”"
 
-#: taskcoachlib/command/effortCommands.py:82
+#: taskcoachlib/command/effortCommands.py:100
 msgid "Change effort start date and time"
 msgstr "Schimbă data/ora de început a efortului"
 
-#: taskcoachlib/command/effortCommands.py:83
+#: taskcoachlib/command/effortCommands.py:101
 msgid "Change effort start date and time of \"%s\""
 msgstr "Schimbă data/ora de început a efortului „%s”"
 
-#: taskcoachlib/command/effortCommands.py:117
+#: taskcoachlib/command/effortCommands.py:135
 msgid "Change effort stop date and time"
 msgstr "Schimbă data/ora de sfîrșit a efortului"
 
-#: taskcoachlib/command/effortCommands.py:118
+#: taskcoachlib/command/effortCommands.py:136
 msgid "Change effort stop date and time of \"%s\""
 msgstr "Schimbă data/ora de sfîrșit a efortului „%s”"
 
 #: taskcoachlib/command/noteCommands.py:26
 #: taskcoachlib/command/noteCommands.py:29
-#: taskcoachlib/command/noteCommands.py:71
+#: taskcoachlib/command/noteCommands.py:73
 msgid "New note"
 msgstr "Notiță nouă"
 
@@ -314,279 +300,279 @@ msgid "New subnote of \"%s\""
 msgstr "Subnotiță nouă a lui „%s”"
 
 #: taskcoachlib/command/noteCommands.py:44
-#: taskcoachlib/command/noteCommands.py:108
+#: taskcoachlib/command/noteCommands.py:118
 msgid "New subnote"
 msgstr "Subnotiță nouă"
 
-#: taskcoachlib/command/noteCommands.py:55
+#: taskcoachlib/command/noteCommands.py:56
 msgid "Delete notes"
 msgstr "Șterge notițele"
 
-#: taskcoachlib/command/noteCommands.py:56
+#: taskcoachlib/command/noteCommands.py:57
 msgid "Delete note \"%s\""
 msgstr "Șterge notița „%s”"
 
-#: taskcoachlib/command/noteCommands.py:60
+#: taskcoachlib/command/noteCommands.py:61
 msgid "Drag and drop notes"
 msgstr "Trage și pune notițele"
 
-#: taskcoachlib/command/noteCommands.py:61
+#: taskcoachlib/command/noteCommands.py:62
 msgid "Drag and drop note \"%s\""
 msgstr "Trage și pune notița „%s”"
 
-#: taskcoachlib/command/noteCommands.py:65
+#: taskcoachlib/command/noteCommands.py:66
 msgid "Add note"
 msgstr "Adaugă notiță"
 
-#: taskcoachlib/command/noteCommands.py:66
+#: taskcoachlib/command/noteCommands.py:67
 msgid "Add note to \"%s\""
 msgstr "Adaugă notiță la „%s”"
 
-#: taskcoachlib/command/noteCommands.py:101
+#: taskcoachlib/command/noteCommands.py:110
 msgid "Add subnote"
 msgstr "Adaugă subnotiță"
 
-#: taskcoachlib/command/noteCommands.py:102
+#: taskcoachlib/command/noteCommands.py:111
 msgid "Add subnote to \"%s\""
 msgstr "Adaugă subnotiță la „%s”"
 
-#: taskcoachlib/command/noteCommands.py:136
+#: taskcoachlib/command/noteCommands.py:153
 msgid "Remove note"
 msgstr "Înlătură notița"
 
-#: taskcoachlib/command/noteCommands.py:137
+#: taskcoachlib/command/noteCommands.py:154
 msgid "Remove note from \"%s\""
 msgstr "Înlătură notița din „%s”"
 
-#: taskcoachlib/command/taskCommands.py:58
+#: taskcoachlib/command/taskCommands.py:61
 msgid "Drag and drop tasks"
 msgstr "Trage și pune sarcinile"
 
-#: taskcoachlib/command/taskCommands.py:115
+#: taskcoachlib/command/taskCommands.py:118
 msgid "Delete tasks"
 msgstr "Șterge sarcinile"
 
-#: taskcoachlib/command/taskCommands.py:116
+#: taskcoachlib/command/taskCommands.py:119
 msgid "Delete task \"%s\""
 msgstr "Șterge sarcina „%s”"
 
-#: taskcoachlib/command/taskCommands.py:155
 #: taskcoachlib/command/taskCommands.py:158
+#: taskcoachlib/command/taskCommands.py:161
 msgid "New task"
 msgstr "Sarcină nouă"
 
-#: taskcoachlib/command/taskCommands.py:193
+#: taskcoachlib/command/taskCommands.py:196
 msgid "New subtasks"
 msgstr "Subsarcini noi"
 
-#: taskcoachlib/command/taskCommands.py:194
+#: taskcoachlib/command/taskCommands.py:197
 msgid "New subtask of \"%s\""
 msgstr "Subsarcină nouă a lui „%s”"
 
-#: taskcoachlib/command/taskCommands.py:199
+#: taskcoachlib/command/taskCommands.py:201
 msgid "New subtask"
 msgstr "Subsarcină nouă"
 
-#: taskcoachlib/command/taskCommands.py:225
+#: taskcoachlib/command/taskCommands.py:229
 msgid "Mark tasks completed"
 msgstr "Marchează sarcinile ca încheiate"
 
-#: taskcoachlib/command/taskCommands.py:226
+#: taskcoachlib/command/taskCommands.py:230
 msgid "Mark \"%s\" completed"
 msgstr "Marchează „%s” ca încheiată"
 
-#: taskcoachlib/command/taskCommands.py:252
+#: taskcoachlib/command/taskCommands.py:256
 msgid "Mark task active"
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:253
+#: taskcoachlib/command/taskCommands.py:257
 msgid "Mark \"%s\" active"
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:277
+#: taskcoachlib/command/taskCommands.py:281
 msgid "Mark task inactive"
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:278
+#: taskcoachlib/command/taskCommands.py:282
 msgid "Mark \"%s\" inactive"
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:302
+#: taskcoachlib/command/taskCommands.py:306
 msgid "Start tracking"
 msgstr "Pornește urmărirea"
 
-#: taskcoachlib/command/taskCommands.py:303
+#: taskcoachlib/command/taskCommands.py:307
 msgid "Start tracking \"%s\""
 msgstr "Pornește urmărirea lui „%s”"
 
-#: taskcoachlib/command/taskCommands.py:337
+#: taskcoachlib/command/taskCommands.py:341
 msgid "Stop tracking"
 msgstr "Oprește urmărirea"
 
-#: taskcoachlib/command/taskCommands.py:338
+#: taskcoachlib/command/taskCommands.py:342
 msgid "Stop tracking \"%s\""
 msgstr "Oprește urmărirea lui „%s”"
 
-#: taskcoachlib/command/taskCommands.py:382
+#: taskcoachlib/command/taskCommands.py:386
 msgid "Maximize priority"
 msgstr "Maximizează prioritatea"
 
-#: taskcoachlib/command/taskCommands.py:383
+#: taskcoachlib/command/taskCommands.py:387
 msgid "Maximize priority of \"%s\""
 msgstr "Maximizează prioritatea lui „%s”"
 
-#: taskcoachlib/command/taskCommands.py:392
+#: taskcoachlib/command/taskCommands.py:396
 msgid "Minimize priority"
 msgstr "Minimizează prioritatea"
 
-#: taskcoachlib/command/taskCommands.py:393
+#: taskcoachlib/command/taskCommands.py:397
 msgid "Minimize priority of \"%s\""
 msgstr "Minimizează prioritatea lui „%s”"
 
-#: taskcoachlib/command/taskCommands.py:422
+#: taskcoachlib/command/taskCommands.py:426
 msgid "Increase priority"
 msgstr "Incrementează prioritatea"
 
-#: taskcoachlib/command/taskCommands.py:423
+#: taskcoachlib/command/taskCommands.py:427
 msgid "Increase priority of \"%s\""
 msgstr "Incrementează prioritatea lui „%s”"
 
-#: taskcoachlib/command/taskCommands.py:428
+#: taskcoachlib/command/taskCommands.py:432
 msgid "Decrease priority"
 msgstr "Decrementează prioritatea"
 
-#: taskcoachlib/command/taskCommands.py:429
+#: taskcoachlib/command/taskCommands.py:433
 msgid "Decrease priority of \"%s\""
 msgstr "Decrementează prioritatea lui „%s”"
 
-#: taskcoachlib/command/taskCommands.py:434
+#: taskcoachlib/command/taskCommands.py:438
 msgid "Change priority"
 msgstr "Schimbă prioritatea"
 
-#: taskcoachlib/command/taskCommands.py:435
+#: taskcoachlib/command/taskCommands.py:439
 msgid "Change priority of \"%s\""
 msgstr "Schimbă prioritatea lui „%s”"
 
-#: taskcoachlib/command/taskCommands.py:455
+#: taskcoachlib/command/taskCommands.py:461
 msgid "Add note to tasks"
 msgstr "Adaugă notiță la sarcini"
 
-#: taskcoachlib/command/taskCommands.py:537
+#: taskcoachlib/command/taskCommands.py:543
 msgid "Change planned start date"
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:538
+#: taskcoachlib/command/taskCommands.py:544
 msgid "Change planned start date of \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:558
+#: taskcoachlib/command/taskCommands.py:564
 msgid "Change due date"
 msgstr "Schimbă data scadentă"
 
-#: taskcoachlib/command/taskCommands.py:559
+#: taskcoachlib/command/taskCommands.py:565
 msgid "Change due date of \"%s\""
 msgstr "Schimbă data scadentă a lui „%s”"
 
-#: taskcoachlib/command/taskCommands.py:579
+#: taskcoachlib/command/taskCommands.py:585
 msgid "Change actual start date"
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:580
+#: taskcoachlib/command/taskCommands.py:586
 msgid "Change actual start date of \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/taskCommands.py:600
+#: taskcoachlib/command/taskCommands.py:606
 msgid "Change completion date"
 msgstr "Schimbă data de terminare"
 
-#: taskcoachlib/command/taskCommands.py:601
+#: taskcoachlib/command/taskCommands.py:607
 msgid "Change completion date of \"%s\""
 msgstr "Schimbă data de terminare a lui „%s”"
 
-#: taskcoachlib/command/taskCommands.py:624
+#: taskcoachlib/command/taskCommands.py:630
 msgid "Change reminder dates/times"
 msgstr "Schimbă datele/orele rapelului"
 
-#: taskcoachlib/command/taskCommands.py:625
+#: taskcoachlib/command/taskCommands.py:631
 msgid "Change reminder date/time of \"%s\""
 msgstr "Schimbă data/ora rapelului lui „%s”"
 
-#: taskcoachlib/command/taskCommands.py:637
+#: taskcoachlib/command/taskCommands.py:643
 msgid "Change recurrences"
 msgstr "Schimbă recurențele"
 
-#: taskcoachlib/command/taskCommands.py:638
+#: taskcoachlib/command/taskCommands.py:644
 msgid "Change recurrence of \"%s\""
 msgstr "Schimbă recurența lui „%s”"
 
-#: taskcoachlib/command/taskCommands.py:659
+#: taskcoachlib/command/taskCommands.py:667
 msgid "Change percentage complete of \"%s\""
 msgstr "Schimbă procentajul de terminare a lui „%s”"
 
-#: taskcoachlib/command/taskCommands.py:685
+#: taskcoachlib/command/taskCommands.py:693
 msgid "Change when tasks are marked completed"
 msgstr "Schimbă cînd sarcinile sînt marcate ca terminate"
 
-#: taskcoachlib/command/taskCommands.py:686
+#: taskcoachlib/command/taskCommands.py:694
 msgid "Change when \"%s\" is marked completed"
 msgstr "Schimbă cînd „%s” este marcată ca terminată"
 
-#: taskcoachlib/command/taskCommands.py:706
+#: taskcoachlib/command/taskCommands.py:716
 msgid "Change budgets"
 msgstr "Schimbă bugetele"
 
-#: taskcoachlib/command/taskCommands.py:707
+#: taskcoachlib/command/taskCommands.py:717
 msgid "Change budget of \"%s\""
 msgstr "Schimbă bugetul lui „%s”"
 
-#: taskcoachlib/command/taskCommands.py:727
+#: taskcoachlib/command/taskCommands.py:739
 msgid "Change hourly fees"
 msgstr "Schimbă tariful orar"
 
-#: taskcoachlib/command/taskCommands.py:728
+#: taskcoachlib/command/taskCommands.py:740
 msgid "Change hourly fee of \"%s\""
 msgstr "Schimbă tariful orar al lui „%s”"
 
-#: taskcoachlib/command/taskCommands.py:748
+#: taskcoachlib/command/taskCommands.py:762
 msgid "Change fixed fees"
 msgstr "Schimbă tarifele fixe"
 
-#: taskcoachlib/command/taskCommands.py:749
+#: taskcoachlib/command/taskCommands.py:763
 msgid "Change fixed fee of \"%s\""
 msgstr "Schimbă tariful fix al lui „%s”"
 
-#: taskcoachlib/command/taskCommands.py:769
+#: taskcoachlib/command/taskCommands.py:785
 msgid "Toggle prerequisite"
 msgstr "Schimbă precerințele"
 
-#: taskcoachlib/command/taskCommands.py:770
+#: taskcoachlib/command/taskCommands.py:786
 msgid "Toggle prerequisite of \"%s\""
 msgstr "Schimbă precerințele lui „%s”"
 
-#: taskcoachlib/config/settings.py:237
+#: taskcoachlib/config/settings.py:238
 msgid "Error while reading the %s-%s setting from %s.ini."
 msgstr "Eroare la citirea setărilor%s-%s de la %s.ini."
 
-#: taskcoachlib/config/settings.py:238
+#: taskcoachlib/config/settings.py:239
 msgid "The value is: %s"
 msgstr "Valoarea este: %s"
 
-#: taskcoachlib/config/settings.py:239
+#: taskcoachlib/config/settings.py:240
 msgid "The error is: %s"
 msgstr "Valoarea este: %s"
 
-#: taskcoachlib/config/settings.py:240
+#: taskcoachlib/config/settings.py:241
 msgid ""
 "%s will use the default value for the setting and should proceed normally."
 msgstr ""
 "%s va utiliza valoarea implicită pentru setare și ar trebui să se desfășoare "
 "normal."
 
-#: taskcoachlib/config/settings.py:241
+#: taskcoachlib/config/settings.py:242
 msgid "Settings error"
 msgstr "Eroare de setări"
 
-#: taskcoachlib/config/settings.py:264
+#: taskcoachlib/config/settings.py:265
 msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
@@ -594,7 +580,7 @@ msgstr ""
 "Eroare la salvarea %s.ini:\n"
 "%s\n"
 
-#: taskcoachlib/config/settings.py:265
+#: taskcoachlib/config/settings.py:266
 msgid "Save error"
 msgstr "Eroare la salvare"
 
@@ -647,7 +633,7 @@ msgid "45 minutes"
 msgstr "45 de minute"
 
 #: taskcoachlib/domain/date/snooze.py:25
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1391
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1537
 msgid "1 hour"
 msgstr "1 oră"
 
@@ -696,7 +682,7 @@ msgid "2 weeks"
 msgstr "2 săptămîni"
 
 #: taskcoachlib/domain/date/snooze.py:30
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1379
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1525
 msgid "1 week"
 msgstr "1 săptămînă"
 
@@ -725,8 +711,7 @@ msgid "Inactive tasks: %d (%d%%)"
 msgstr ""
 
 #: taskcoachlib/domain/task/status.py:52
-msgid ""
-"Show/hide inactive tasks (uncompleted tasks without actual start date)"
+msgid "Show/hide inactive tasks (incomplete tasks without actual start date)"
 msgstr ""
 
 #: taskcoachlib/domain/task/status.py:54
@@ -760,7 +745,7 @@ msgstr "Ascunde sarcinile &active"
 
 #: taskcoachlib/domain/task/status.py:60
 msgid ""
-"Show/hide active tasks (uncompleted tasks with an actual start date in the "
+"Show/hide active tasks (incomplete tasks with an actual start date in the "
 "past)"
 msgstr ""
 
@@ -778,7 +763,7 @@ msgstr ""
 
 #: taskcoachlib/domain/task/status.py:64
 msgid ""
-"Show/hide due soon tasks (uncompleted tasks with a due date in the near "
+"Show/hide due soon tasks (incomplete tasks with a due date in the near "
 "future)"
 msgstr ""
 
@@ -796,7 +781,7 @@ msgstr ""
 
 #: taskcoachlib/domain/task/status.py:68
 msgid ""
-"Show/hide over due tasks (uncompleted tasks with a due date in the past)"
+"Show/hide over due tasks (incomplete tasks with a due date in the past)"
 msgstr ""
 
 #: taskcoachlib/domain/task/status.py:70
@@ -819,352 +804,352 @@ msgstr "Afișează/ascunde sarcinile terminate"
 msgid "&New task..."
 msgstr "Sarcină &nouă..."
 
-#: taskcoachlib/gui/artprovider.py:111
+#: taskcoachlib/gui/artprovider.py:135
 msgid "Arrow down"
 msgstr "Săgeată jos"
 
-#: taskcoachlib/gui/artprovider.py:112
+#: taskcoachlib/gui/artprovider.py:136
 msgid "Arrow down with status"
 msgstr "Săgeată jos cu stare"
 
-#: taskcoachlib/gui/artprovider.py:113
+#: taskcoachlib/gui/artprovider.py:137
 msgid "Blue arrows looped"
 msgstr "Săgeți albastre circulare"
 
-#: taskcoachlib/gui/artprovider.py:114
+#: taskcoachlib/gui/artprovider.py:138
 msgid "Green arrows looped"
 msgstr "Săgeți verzi circulare"
 
-#: taskcoachlib/gui/artprovider.py:115
+#: taskcoachlib/gui/artprovider.py:139
 msgid "Arrow up"
 msgstr "Săgeată sus"
 
-#: taskcoachlib/gui/artprovider.py:116
+#: taskcoachlib/gui/artprovider.py:140
 msgid "Arrow up with status"
 msgstr "Săgeată sus cu stare"
 
-#: taskcoachlib/gui/artprovider.py:117
+#: taskcoachlib/gui/artprovider.py:141
 msgid "Bomb"
 msgstr "Bombă"
 
-#: taskcoachlib/gui/artprovider.py:118
+#: taskcoachlib/gui/artprovider.py:142
 msgid "Book"
 msgstr "Carte"
 
-#: taskcoachlib/gui/artprovider.py:119
+#: taskcoachlib/gui/artprovider.py:143
 msgid "Books"
 msgstr "Cărți"
 
-#: taskcoachlib/gui/artprovider.py:120
+#: taskcoachlib/gui/artprovider.py:144
 msgid "Box"
 msgstr "Căsuță"
 
-#: taskcoachlib/gui/artprovider.py:121
+#: taskcoachlib/gui/artprovider.py:145
 msgid "Ladybug"
 msgstr "Gărgăriță"
 
-#: taskcoachlib/gui/artprovider.py:122
+#: taskcoachlib/gui/artprovider.py:146
 msgid "Cake"
 msgstr "Prăjitură"
 
-#: taskcoachlib/gui/artprovider.py:123
+#: taskcoachlib/gui/artprovider.py:147
 msgid "Calculator"
 msgstr "Calculator"
 
-#: taskcoachlib/gui/artprovider.py:124 taskcoachlib/gui/viewer/task.py:596
+#: taskcoachlib/gui/artprovider.py:148 taskcoachlib/gui/viewer/task.py:596
 msgid "Calendar"
 msgstr "Calendar"
 
-#: taskcoachlib/gui/artprovider.py:125
+#: taskcoachlib/gui/artprovider.py:149
 msgid "Cat"
 msgstr "Pisică"
 
-#: taskcoachlib/gui/artprovider.py:126
+#: taskcoachlib/gui/artprovider.py:150
 msgid "Compact disc (CD)"
 msgstr "Compact disc (CD)"
 
-#: taskcoachlib/gui/artprovider.py:127
+#: taskcoachlib/gui/artprovider.py:151
 msgid "Charts"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:128
+#: taskcoachlib/gui/artprovider.py:152
 msgid "Chatting"
 msgstr "Discuții"
 
-#: taskcoachlib/gui/artprovider.py:129
+#: taskcoachlib/gui/artprovider.py:153
 msgid "Check mark"
 msgstr "Bifare"
 
-#: taskcoachlib/gui/artprovider.py:130
+#: taskcoachlib/gui/artprovider.py:154
 msgid "Clock"
 msgstr "Ceas"
 
-#: taskcoachlib/gui/artprovider.py:131
+#: taskcoachlib/gui/artprovider.py:155
 msgid "Alarm clock"
 msgstr "Ceas cu alarmă"
 
-#: taskcoachlib/gui/artprovider.py:132
+#: taskcoachlib/gui/artprovider.py:156
 msgid "Stopwatch"
 msgstr "Cronometru"
 
-#: taskcoachlib/gui/artprovider.py:133
+#: taskcoachlib/gui/artprovider.py:157
 msgid "Cogwheel"
 msgstr "Roată dințată"
 
-#: taskcoachlib/gui/artprovider.py:134
+#: taskcoachlib/gui/artprovider.py:158
 msgid "Cogwheels"
 msgstr "Roți dințate"
 
-#: taskcoachlib/gui/artprovider.py:135
+#: taskcoachlib/gui/artprovider.py:159
 msgid "Desktop computer"
 msgstr "Calculator de birou"
 
-#: taskcoachlib/gui/artprovider.py:136
+#: taskcoachlib/gui/artprovider.py:160
 msgid "Laptop computer"
 msgstr "Calculator portabil"
 
-#: taskcoachlib/gui/artprovider.py:137
+#: taskcoachlib/gui/artprovider.py:161
 msgid "Handheld computer"
 msgstr "Calculator de buzunar"
 
-#: taskcoachlib/gui/artprovider.py:138
+#: taskcoachlib/gui/artprovider.py:162
 msgid "Red cross"
 msgstr "Cruce roșie"
 
-#: taskcoachlib/gui/artprovider.py:139
+#: taskcoachlib/gui/artprovider.py:163
 msgid "Die"
 msgstr "Zar"
 
-#: taskcoachlib/gui/artprovider.py:140
+#: taskcoachlib/gui/artprovider.py:164
 msgid "Document"
 msgstr "Document"
 
-#: taskcoachlib/gui/artprovider.py:141
+#: taskcoachlib/gui/artprovider.py:165
 msgid "Blue earth"
 msgstr "Pămînt albastru"
 
-#: taskcoachlib/gui/artprovider.py:142
+#: taskcoachlib/gui/artprovider.py:166
 msgid "Green earth"
 msgstr "Părmînt verde"
 
-#: taskcoachlib/gui/artprovider.py:143
+#: taskcoachlib/gui/artprovider.py:167
 msgid "Envelope"
 msgstr "Plic"
 
-#: taskcoachlib/gui/artprovider.py:144
+#: taskcoachlib/gui/artprovider.py:168
 msgid "Envelopes"
 msgstr "Plicuri"
 
-#: taskcoachlib/gui/artprovider.py:145
+#: taskcoachlib/gui/artprovider.py:169
 msgid "Blue folder"
 msgstr "Dosar albastru"
 
-#: taskcoachlib/gui/artprovider.py:146
+#: taskcoachlib/gui/artprovider.py:170
 msgid "Light blue folder"
 msgstr ""
 
-#: taskcoachlib/gui/artprovider.py:147
+#: taskcoachlib/gui/artprovider.py:171
 msgid "Green folder"
 msgstr "Dosar verde"
 
-#: taskcoachlib/gui/artprovider.py:148
+#: taskcoachlib/gui/artprovider.py:172
 msgid "Grey folder"
 msgstr "Dosar gri"
 
-#: taskcoachlib/gui/artprovider.py:149
+#: taskcoachlib/gui/artprovider.py:173
 msgid "Orange folder"
 msgstr "Dosar portocaliu"
 
-#: taskcoachlib/gui/artprovider.py:150
+#: taskcoachlib/gui/artprovider.py:174
 msgid "Purple folder"
 msgstr "Dosar purpuriu"
 
-#: taskcoachlib/gui/artprovider.py:151
+#: taskcoachlib/gui/artprovider.py:175
 msgid "Red folder"
 msgstr "Dosar roșu"
 
-#: taskcoachlib/gui/artprovider.py:152
+#: taskcoachlib/gui/artprovider.py:176
 msgid "Yellow folder"
 msgstr "Dosar galben"
 
-#: taskcoachlib/gui/artprovider.py:153
+#: taskcoachlib/gui/artprovider.py:177
 msgid "Blue folder with arrow"
 msgstr "Dosar albastru cu săgeată"
 
-#: taskcoachlib/gui/artprovider.py:154
+#: taskcoachlib/gui/artprovider.py:178
 msgid "Heart"
 msgstr "Inimă"
 
-#: taskcoachlib/gui/artprovider.py:155
+#: taskcoachlib/gui/artprovider.py:179
 msgid "Hearts"
 msgstr "Inimi"
 
-#: taskcoachlib/gui/artprovider.py:156
+#: taskcoachlib/gui/artprovider.py:180
 msgid "Green house"
 msgstr "Casă verde"
 
-#: taskcoachlib/gui/artprovider.py:157
+#: taskcoachlib/gui/artprovider.py:181
 msgid "Red house"
 msgstr "Casă roșie"
 
-#: taskcoachlib/gui/artprovider.py:158
+#: taskcoachlib/gui/artprovider.py:182
 msgid "Key"
 msgstr "Cheie"
 
-#: taskcoachlib/gui/artprovider.py:159
+#: taskcoachlib/gui/artprovider.py:183
 msgid "Keys"
 msgstr "Chei"
 
-#: taskcoachlib/gui/artprovider.py:160
+#: taskcoachlib/gui/artprovider.py:184
 msgid "Lamp"
 msgstr "Lampă"
 
-#: taskcoachlib/gui/artprovider.py:161
+#: taskcoachlib/gui/artprovider.py:185
 msgid "Question mark"
 msgstr "Semn de întrebare"
 
-#: taskcoachlib/gui/artprovider.py:162
+#: taskcoachlib/gui/artprovider.py:186
 #: taskcoachlib/gui/wizard/csvimport.py:341
 msgid "Information"
 msgstr "Informație"
 
-#: taskcoachlib/gui/artprovider.py:163
+#: taskcoachlib/gui/artprovider.py:187
 msgid "Blue led"
 msgstr "Led albastru"
 
-#: taskcoachlib/gui/artprovider.py:164
+#: taskcoachlib/gui/artprovider.py:188
 msgid "Light blue led"
 msgstr "Led albastru aprins"
 
-#: taskcoachlib/gui/artprovider.py:165
+#: taskcoachlib/gui/artprovider.py:189
 msgid "Grey led"
 msgstr "Led gri"
 
-#: taskcoachlib/gui/artprovider.py:166
+#: taskcoachlib/gui/artprovider.py:190
 msgid "Green led"
 msgstr "Led verde"
 
-#: taskcoachlib/gui/artprovider.py:167
+#: taskcoachlib/gui/artprovider.py:191
 msgid "Light green led"
 msgstr "Led verde aprins"
 
-#: taskcoachlib/gui/artprovider.py:168
+#: taskcoachlib/gui/artprovider.py:192
 msgid "Orange led"
 msgstr "Led portocaliu"
 
-#: taskcoachlib/gui/artprovider.py:169
+#: taskcoachlib/gui/artprovider.py:193
 msgid "Purple led"
 msgstr "Led purpuriu"
 
-#: taskcoachlib/gui/artprovider.py:170
+#: taskcoachlib/gui/artprovider.py:194
 msgid "Red led"
 msgstr "Led roșu"
 
-#: taskcoachlib/gui/artprovider.py:171
+#: taskcoachlib/gui/artprovider.py:195
 msgid "Yellow led"
 msgstr "Led galben"
 
-#: taskcoachlib/gui/artprovider.py:172
+#: taskcoachlib/gui/artprovider.py:196
 msgid "Life ring"
 msgstr "Cerc vital"
 
-#: taskcoachlib/gui/artprovider.py:173
+#: taskcoachlib/gui/artprovider.py:197
 msgid "Locked lock"
 msgstr "Lacăt închis"
 
-#: taskcoachlib/gui/artprovider.py:174
+#: taskcoachlib/gui/artprovider.py:198
 msgid "Unlocked lock"
 msgstr "Lacăt deschis"
 
-#: taskcoachlib/gui/artprovider.py:175
+#: taskcoachlib/gui/artprovider.py:199
 msgid "Magnifier glass"
 msgstr "Lupă de mărit"
 
-#: taskcoachlib/gui/artprovider.py:176
+#: taskcoachlib/gui/artprovider.py:200
 msgid "Piano"
 msgstr "Pian"
 
-#: taskcoachlib/gui/artprovider.py:177
+#: taskcoachlib/gui/artprovider.py:201
 msgid "Music note"
 msgstr "Notă muzicală"
 
-#: taskcoachlib/gui/artprovider.py:178
+#: taskcoachlib/gui/artprovider.py:202
 msgid "Note"
 msgstr "Notiță"
 
-#: taskcoachlib/gui/artprovider.py:179
+#: taskcoachlib/gui/artprovider.py:203
 msgid "Palette"
 msgstr "Paletă"
 
-#: taskcoachlib/gui/artprovider.py:180
+#: taskcoachlib/gui/artprovider.py:204
 msgid "Paperclip"
 msgstr "Agrafă"
 
-#: taskcoachlib/gui/artprovider.py:181
+#: taskcoachlib/gui/artprovider.py:205
 msgid "Pencil"
 msgstr "Creion"
 
-#: taskcoachlib/gui/artprovider.py:182
+#: taskcoachlib/gui/artprovider.py:206
 msgid "Person"
 msgstr "Persoană"
 
-#: taskcoachlib/gui/artprovider.py:183
+#: taskcoachlib/gui/artprovider.py:207
 msgid "People"
 msgstr "Persoane"
 
-#: taskcoachlib/gui/artprovider.py:184
+#: taskcoachlib/gui/artprovider.py:208
 msgid "Identification"
 msgstr "Identificare"
 
-#: taskcoachlib/gui/artprovider.py:185
+#: taskcoachlib/gui/artprovider.py:209
 msgid "Person talking"
 msgstr "Persoană vorbind"
 
-#: taskcoachlib/gui/artprovider.py:186
+#: taskcoachlib/gui/artprovider.py:210
 msgid "Warning sign"
 msgstr "Semn de avertizare"
 
-#: taskcoachlib/gui/artprovider.py:187
+#: taskcoachlib/gui/artprovider.py:211
 msgid "Minus"
 msgstr "Minus"
 
-#: taskcoachlib/gui/artprovider.py:188
+#: taskcoachlib/gui/artprovider.py:212
 msgid "Plus"
 msgstr "Plus"
 
-#: taskcoachlib/gui/artprovider.py:189
+#: taskcoachlib/gui/artprovider.py:213
 msgid "Red star"
 msgstr "Stea roșie"
 
-#: taskcoachlib/gui/artprovider.py:190
+#: taskcoachlib/gui/artprovider.py:214
 msgid "Yellow star"
 msgstr "Stea galbenă"
 
-#: taskcoachlib/gui/artprovider.py:191
+#: taskcoachlib/gui/artprovider.py:215
 msgid "Traffic light"
 msgstr "Semafor"
 
-#: taskcoachlib/gui/artprovider.py:192
+#: taskcoachlib/gui/artprovider.py:216
 msgid "Trashcan"
 msgstr "Coș de gunoi"
 
-#: taskcoachlib/gui/artprovider.py:193
+#: taskcoachlib/gui/artprovider.py:217
 msgid "Lightning"
 msgstr "Fulger"
 
-#: taskcoachlib/gui/artprovider.py:194
+#: taskcoachlib/gui/artprovider.py:218
 msgid "Umbrella"
 msgstr "Umbrelă"
 
-#: taskcoachlib/gui/artprovider.py:195
+#: taskcoachlib/gui/artprovider.py:219
 msgid "Partly sunny"
 msgstr "Parțial însorit"
 
-#: taskcoachlib/gui/artprovider.py:196
+#: taskcoachlib/gui/artprovider.py:220
 msgid "Wrench"
 msgstr "Cheie"
 
-#: taskcoachlib/gui/artprovider.py:204
+#: taskcoachlib/gui/artprovider.py:228
 msgid "No icon"
 msgstr "Fără pictogramă"
 
@@ -1176,92 +1161,108 @@ msgstr ""
 msgid "See:"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:88 taskcoachlib/gui/dialog/editor.py:136
-#: taskcoachlib/gui/dialog/editor.py:1178
+#: taskcoachlib/gui/dialog/editor.py:88 taskcoachlib/gui/dialog/editor.py:139
+#: taskcoachlib/gui/dialog/editor.py:1244
 #: taskcoachlib/gui/viewer/attachment.py:85
 #: taskcoachlib/gui/viewer/category.py:90
-#: taskcoachlib/gui/viewer/effort.py:199 taskcoachlib/gui/viewer/note.py:111
+#: taskcoachlib/gui/viewer/effort.py:210 taskcoachlib/gui/viewer/note.py:114
 #: taskcoachlib/gui/viewer/task.py:848
 #: taskcoachlib/gui/wizard/csvimport.py:230
 #: taskcoachlib/persistence/csv/reader.py:78
 msgid "Description"
 msgstr "Descriere"
 
-#: taskcoachlib/gui/dialog/editor.py:109
+#: taskcoachlib/gui/dialog/editor.py:112
 msgid "Edit to change all subjects"
 msgstr "Editează pentru a schimba toate subiectele"
 
-#: taskcoachlib/gui/dialog/editor.py:115
+#: taskcoachlib/gui/dialog/editor.py:118
 #: taskcoachlib/gui/dialog/templates.py:109
 #: taskcoachlib/gui/viewer/attachment.py:75
 #: taskcoachlib/gui/viewer/base.py:332 taskcoachlib/gui/viewer/category.py:82
-#: taskcoachlib/gui/viewer/note.py:101 taskcoachlib/gui/viewer/task.py:834
+#: taskcoachlib/gui/viewer/note.py:104 taskcoachlib/gui/viewer/task.py:834
 #: taskcoachlib/gui/wizard/csvimport.py:229
 #: taskcoachlib/persistence/csv/reader.py:76
 msgid "Subject"
 msgstr "Subiect"
 
-#: taskcoachlib/gui/dialog/editor.py:120
-#: taskcoachlib/gui/dialog/editor.py:1164
+#: taskcoachlib/gui/dialog/editor.py:123
+#: taskcoachlib/gui/dialog/editor.py:1230
 msgid "Edit to change all descriptions"
 msgstr "Editează pentru a schimba toate descrierile"
 
-#: taskcoachlib/gui/dialog/editor.py:158 taskcoachlib/gui/uicommand.py:2748
+#: taskcoachlib/gui/dialog/editor.py:150
+#: taskcoachlib/gui/viewer/attachment.py:105
+#: taskcoachlib/gui/viewer/category.py:113 taskcoachlib/gui/viewer/note.py:143
+#: taskcoachlib/gui/viewer/task.py:972
+#: taskcoachlib/persistence/csv/generator.py:39
+msgid "Creation date"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/editor.py:155
+#: taskcoachlib/gui/viewer/attachment.py:113
+#: taskcoachlib/gui/viewer/category.py:119 taskcoachlib/gui/viewer/note.py:150
+#: taskcoachlib/gui/viewer/task.py:979
+msgid "Modification date"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/editor.py:217
+#: taskcoachlib/gui/uicommand/uicommand.py:2344
 #: taskcoachlib/gui/viewer/task.py:940
 #: taskcoachlib/gui/wizard/csvimport.py:232
 #: taskcoachlib/persistence/csv/reader.py:89
 msgid "Priority"
 msgstr "Prioritate"
 
-#: taskcoachlib/gui/dialog/editor.py:175
+#: taskcoachlib/gui/dialog/editor.py:239
 msgid "Mutually exclusive"
 msgstr "Excludere reciprocă"
 
-#: taskcoachlib/gui/dialog/editor.py:182
+#: taskcoachlib/gui/dialog/editor.py:246
 msgid "Subcategories"
 msgstr "Subcategorii"
 
-#: taskcoachlib/gui/dialog/editor.py:198
+#: taskcoachlib/gui/dialog/editor.py:264
 msgid "Edit to change location of all attachments"
 msgstr "Editează pentru a schimba locația tuturor atașamentelor"
 
-#: taskcoachlib/gui/dialog/editor.py:206
+#: taskcoachlib/gui/dialog/editor.py:272
 msgid "Browse"
 msgstr "Răsfoiește"
 
-#: taskcoachlib/gui/dialog/editor.py:210
+#: taskcoachlib/gui/dialog/editor.py:276
 msgid "Location"
 msgstr "Locație"
 
-#: taskcoachlib/gui/dialog/editor.py:232
+#: taskcoachlib/gui/dialog/editor.py:298
 msgid "Appearance"
 msgstr "Aspect"
 
-#: taskcoachlib/gui/dialog/editor.py:242
-#: taskcoachlib/gui/dialog/preferences.py:143
+#: taskcoachlib/gui/dialog/editor.py:308
+#: taskcoachlib/gui/dialog/preferences.py:155
 msgid "Foreground color"
 msgstr "Culoare de prim plan"
 
-#: taskcoachlib/gui/dialog/editor.py:243
-#: taskcoachlib/gui/dialog/preferences.py:143
+#: taskcoachlib/gui/dialog/editor.py:309
+#: taskcoachlib/gui/dialog/preferences.py:155
 msgid "Background color"
 msgstr "Culoare de fundal"
 
-#: taskcoachlib/gui/dialog/editor.py:269
-#: taskcoachlib/gui/dialog/preferences.py:144
+#: taskcoachlib/gui/dialog/editor.py:335
+#: taskcoachlib/gui/dialog/preferences.py:156
 msgid "Font"
 msgstr "Font"
 
-#: taskcoachlib/gui/dialog/editor.py:278
-#: taskcoachlib/gui/dialog/preferences.py:144
+#: taskcoachlib/gui/dialog/editor.py:344
+#: taskcoachlib/gui/dialog/preferences.py:156
 msgid "Icon"
 msgstr "Pictogramă"
 
-#: taskcoachlib/gui/dialog/editor.py:286
+#: taskcoachlib/gui/dialog/editor.py:352
 msgid "Dates"
 msgstr "Date"
 
-#: taskcoachlib/gui/dialog/editor.py:313
+#: taskcoachlib/gui/dialog/editor.py:379
 #: taskcoachlib/gui/dialog/templates.py:112
 #: taskcoachlib/gui/viewer/task.py:897
 #: taskcoachlib/gui/wizard/csvimport.py:233
@@ -1270,7 +1271,7 @@ msgstr "Date"
 msgid "Planned start date"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:314
+#: taskcoachlib/gui/dialog/editor.py:380
 #: taskcoachlib/gui/dialog/templates.py:115
 #: taskcoachlib/gui/viewer/task.py:899
 #: taskcoachlib/gui/wizard/csvimport.py:234
@@ -1279,14 +1280,14 @@ msgstr ""
 msgid "Due date"
 msgstr "Data scadentă"
 
-#: taskcoachlib/gui/dialog/editor.py:316 taskcoachlib/gui/viewer/task.py:901
+#: taskcoachlib/gui/dialog/editor.py:382 taskcoachlib/gui/viewer/task.py:901
 #: taskcoachlib/gui/wizard/csvimport.py:235
 #: taskcoachlib/persistence/csv/generator.py:34
 #: taskcoachlib/persistence/csv/reader.py:94
 msgid "Actual start date"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:317
+#: taskcoachlib/gui/dialog/editor.py:383
 #: taskcoachlib/gui/dialog/templates.py:118
 #: taskcoachlib/gui/viewer/task.py:904
 #: taskcoachlib/gui/wizard/csvimport.py:236
@@ -1295,191 +1296,195 @@ msgstr ""
 msgid "Completion date"
 msgstr "Data de terminare"
 
-#: taskcoachlib/gui/dialog/editor.py:360
+#: taskcoachlib/gui/dialog/editor.py:426
 #: taskcoachlib/gui/dialog/reminder.py:105
 #: taskcoachlib/gui/dialog/templates.py:121
 #: taskcoachlib/gui/viewer/task.py:962
 msgid "Reminder"
 msgstr "Rapel"
 
-#: taskcoachlib/gui/dialog/editor.py:371 taskcoachlib/gui/viewer/task.py:928
+#: taskcoachlib/gui/dialog/editor.py:437 taskcoachlib/gui/viewer/task.py:928
 msgid "Recurrence"
 msgstr "Recurență"
 
-#: taskcoachlib/gui/dialog/editor.py:387
+#: taskcoachlib/gui/dialog/editor.py:453
 msgid "Progress"
 msgstr "Progres"
 
-#: taskcoachlib/gui/dialog/editor.py:404
+#: taskcoachlib/gui/dialog/editor.py:470
 msgid "Percentage complete"
 msgstr "Procentaj terminat"
 
-#: taskcoachlib/gui/dialog/editor.py:413
+#: taskcoachlib/gui/dialog/editor.py:479
 msgid "Use application-wide setting"
 msgstr "Utilizează configurația globală a aplicației"
 
-#: taskcoachlib/gui/dialog/editor.py:414
+#: taskcoachlib/gui/dialog/editor.py:480
 msgid "No"
 msgstr "Nu"
 
-#: taskcoachlib/gui/dialog/editor.py:414
+#: taskcoachlib/gui/dialog/editor.py:480
 msgid "Yes"
 msgstr "Da"
 
-#: taskcoachlib/gui/dialog/editor.py:424
+#: taskcoachlib/gui/dialog/editor.py:490
 msgid "Mark task completed when all children are completed?"
 msgstr ""
 "Se marchează sarcina ca terminată cînd toate subsarcinile sînt terminate?"
 
-#: taskcoachlib/gui/dialog/editor.py:434 taskcoachlib/gui/dialog/editor.py:457
-#: taskcoachlib/gui/uicommand.py:2747 taskcoachlib/gui/viewer/task.py:931
+#: taskcoachlib/gui/dialog/editor.py:500 taskcoachlib/gui/dialog/editor.py:523
+#: taskcoachlib/gui/uicommand/uicommand.py:2343
+#: taskcoachlib/gui/viewer/task.py:931
 #: taskcoachlib/gui/wizard/csvimport.py:238
 #: taskcoachlib/persistence/csv/reader.py:104
 msgid "Budget"
 msgstr "Buget"
 
-#: taskcoachlib/gui/dialog/editor.py:465 taskcoachlib/gui/uicommand.py:2747
-#: taskcoachlib/gui/viewer/effort.py:210 taskcoachlib/gui/viewer/task.py:934
+#: taskcoachlib/gui/dialog/editor.py:531
+#: taskcoachlib/gui/uicommand/uicommand.py:2343
+#: taskcoachlib/gui/viewer/effort.py:221 taskcoachlib/gui/viewer/task.py:934
 msgid "Time spent"
 msgstr "Timp consumat"
 
-#: taskcoachlib/gui/dialog/editor.py:482 taskcoachlib/gui/viewer/task.py:937
+#: taskcoachlib/gui/dialog/editor.py:548 taskcoachlib/gui/viewer/task.py:937
 msgid "Budget left"
 msgstr "Buget rămas"
 
-#: taskcoachlib/gui/dialog/editor.py:507 taskcoachlib/gui/viewer/task.py:943
+#: taskcoachlib/gui/dialog/editor.py:573 taskcoachlib/gui/viewer/task.py:943
 #: taskcoachlib/gui/wizard/csvimport.py:240
 #: taskcoachlib/persistence/csv/reader.py:123
 msgid "Hourly fee"
 msgstr "Tarif orar"
 
-#: taskcoachlib/gui/dialog/editor.py:517 taskcoachlib/gui/uicommand.py:2747
+#: taskcoachlib/gui/dialog/editor.py:583
+#: taskcoachlib/gui/uicommand/uicommand.py:2343
 #: taskcoachlib/gui/viewer/task.py:945
 #: taskcoachlib/gui/wizard/csvimport.py:239
 #: taskcoachlib/persistence/csv/reader.py:118
 msgid "Fixed fee"
 msgstr "Tarif fix"
 
-#: taskcoachlib/gui/dialog/editor.py:523 taskcoachlib/gui/uicommand.py:2747
-#: taskcoachlib/gui/viewer/effort.py:215 taskcoachlib/gui/viewer/task.py:948
+#: taskcoachlib/gui/dialog/editor.py:589
+#: taskcoachlib/gui/uicommand/uicommand.py:2343
+#: taskcoachlib/gui/viewer/effort.py:226 taskcoachlib/gui/viewer/task.py:948
 msgid "Revenue"
 msgstr "Venit"
 
-#: taskcoachlib/gui/dialog/editor.py:602 taskcoachlib/gui/viewer/effort.py:39
+#: taskcoachlib/gui/dialog/editor.py:668 taskcoachlib/gui/viewer/effort.py:39
 #: taskcoachlib/help/__init__.py:89 taskcoachlib/help/__init__.py:245
 msgid "Effort"
 msgstr "Efort"
 
-#: taskcoachlib/gui/dialog/editor.py:642
+#: taskcoachlib/gui/dialog/editor.py:708
 #: taskcoachlib/gui/viewer/category.py:40
-#: taskcoachlib/gui/viewer/effort.py:202 taskcoachlib/gui/viewer/note.py:128
+#: taskcoachlib/gui/viewer/effort.py:213 taskcoachlib/gui/viewer/note.py:131
 #: taskcoachlib/gui/viewer/task.py:872 taskcoachlib/help/__init__.py:94
 #: taskcoachlib/help/__init__.py:271
 msgid "Categories"
 msgstr "Categorii"
 
-#: taskcoachlib/gui/dialog/editor.py:680
+#: taskcoachlib/gui/dialog/editor.py:746
 msgid "Attachments"
 msgstr "Atașamente"
 
-#: taskcoachlib/gui/dialog/editor.py:722 taskcoachlib/gui/viewer/note.py:39
+#: taskcoachlib/gui/dialog/editor.py:788 taskcoachlib/gui/viewer/note.py:39
 #: taskcoachlib/help/__init__.py:99 taskcoachlib/help/__init__.py:306
 msgid "Notes"
 msgstr "Notițe"
 
-#: taskcoachlib/gui/dialog/editor.py:766 taskcoachlib/gui/viewer/task.py:881
+#: taskcoachlib/gui/dialog/editor.py:832 taskcoachlib/gui/viewer/task.py:881
 msgid "Prerequisites"
 msgstr "Precerințe"
 
-#: taskcoachlib/gui/dialog/editor.py:1045
+#: taskcoachlib/gui/dialog/editor.py:1111
 msgid "Edit task"
 msgstr "Editează sarcina"
 
-#: taskcoachlib/gui/dialog/editor.py:1054
+#: taskcoachlib/gui/dialog/editor.py:1120
 #: taskcoachlib/gui/dialog/reminder.py:50
-#: taskcoachlib/gui/viewer/effort.py:197
+#: taskcoachlib/gui/viewer/effort.py:208
 msgid "Task"
 msgstr "Sarcină"
 
-#: taskcoachlib/gui/dialog/editor.py:1080
+#: taskcoachlib/gui/dialog/editor.py:1146
 msgid "Start"
 msgstr "Pornește"
 
-#: taskcoachlib/gui/dialog/editor.py:1086
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1281
+#: taskcoachlib/gui/dialog/editor.py:1152
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1427
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Week(s)"
 msgstr "Săptămîni"
 
-#: taskcoachlib/gui/dialog/editor.py:1086
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1282
+#: taskcoachlib/gui/dialog/editor.py:1152
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1428
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Day(s)"
 msgstr "Zile"
 
-#: taskcoachlib/gui/dialog/editor.py:1086
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1283
+#: taskcoachlib/gui/dialog/editor.py:1152
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1429
 msgid "Hour(s)"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1086
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1284
+#: taskcoachlib/gui/dialog/editor.py:1152
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1430
 msgid "Minute(s)"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1096
+#: taskcoachlib/gui/dialog/editor.py:1162
 msgid "Stop"
 msgstr "Sfîrșit"
 
-#: taskcoachlib/gui/dialog/editor.py:1105
+#: taskcoachlib/gui/dialog/editor.py:1171
 msgid "Start tracking from last stop time"
 msgstr "Reia urmărirea de la ultima dată de oprire"
 
-#: taskcoachlib/gui/dialog/editor.py:1112
+#: taskcoachlib/gui/dialog/editor.py:1178
 msgid "Stop tracking now"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1144
+#: taskcoachlib/gui/dialog/editor.py:1210
 msgid "Warning: start must be earlier than stop"
 msgstr "Avertisment: începutul trebuie să fie anterior sfîrșitului"
 
-#: taskcoachlib/gui/dialog/editor.py:1306
+#: taskcoachlib/gui/dialog/editor.py:1372
 msgid "Multiple tasks"
 msgstr "Sarcini multiple"
 
-#: taskcoachlib/gui/dialog/editor.py:1307
+#: taskcoachlib/gui/dialog/editor.py:1373
 msgid "%s (task)"
 msgstr "%s (sarcină)"
 
-#: taskcoachlib/gui/dialog/editor.py:1312
+#: taskcoachlib/gui/dialog/editor.py:1378
 msgid "Multiple categories"
 msgstr "Categorii multiple"
 
-#: taskcoachlib/gui/dialog/editor.py:1313
+#: taskcoachlib/gui/dialog/editor.py:1379
 msgid "%s (category)"
 msgstr "%s (categorie)"
 
-#: taskcoachlib/gui/dialog/editor.py:1318
+#: taskcoachlib/gui/dialog/editor.py:1384
 msgid "Multiple notes"
 msgstr "Notițe multiple"
 
-#: taskcoachlib/gui/dialog/editor.py:1319
+#: taskcoachlib/gui/dialog/editor.py:1385
 msgid "%s (note)"
 msgstr "%s (notiță)"
 
-#: taskcoachlib/gui/dialog/editor.py:1324
+#: taskcoachlib/gui/dialog/editor.py:1390
 msgid "Multiple attachments"
 msgstr "Atașamente multiple"
 
-#: taskcoachlib/gui/dialog/editor.py:1325
+#: taskcoachlib/gui/dialog/editor.py:1391
 msgid "%s (attachment)"
 msgstr "%s (atașament)"
 
-#: taskcoachlib/gui/dialog/editor.py:1330
+#: taskcoachlib/gui/dialog/editor.py:1396
 msgid "Multiple efforts"
 msgstr "Eforturi multiple"
 
-#: taskcoachlib/gui/dialog/editor.py:1331
+#: taskcoachlib/gui/dialog/editor.py:1397
 msgid "%s (effort)"
 msgstr "%s (efort)"
 
@@ -1492,7 +1497,8 @@ msgid "Use color:"
 msgstr "Utilizează culoarea:"
 
 #: taskcoachlib/gui/dialog/entry.py:405 taskcoachlib/gui/dialog/entry.py:522
-#: taskcoachlib/gui/uicommand.py:85 taskcoachlib/gui/wizard/csvimport.py:227
+#: taskcoachlib/gui/uicommand/base_uicommand.py:42
+#: taskcoachlib/gui/wizard/csvimport.py:227
 #: taskcoachlib/widgets/dirchooser.py:28
 msgid "None"
 msgstr "Neant"
@@ -1684,25 +1690,25 @@ msgstr ""
 msgid "OK"
 msgstr "OK"
 
-#: taskcoachlib/gui/dialog/preferences.py:282
+#: taskcoachlib/gui/dialog/preferences.py:296
 msgid "This setting will take effect after you restart %s"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:284
+#: taskcoachlib/gui/dialog/preferences.py:298
 msgid ""
 "This setting can be overridden for individual tasks\n"
 "in the task edit dialog."
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:331
+#: taskcoachlib/gui/dialog/preferences.py:345
 msgid "Files"
 msgstr "Fișiere"
 
-#: taskcoachlib/gui/dialog/preferences.py:337
+#: taskcoachlib/gui/dialog/preferences.py:351
 msgid "Auto save after every change"
 msgstr "Salvează automat după fiecare modificare"
 
-#: taskcoachlib/gui/dialog/preferences.py:339
+#: taskcoachlib/gui/dialog/preferences.py:353
 msgid ""
 "Create a backup copy before\n"
 "overwriting a %s file"
@@ -1710,7 +1716,7 @@ msgstr ""
 "Creează o copie de siguranță înainte\n"
 "de suprascrierea unui fișier %s"
 
-#: taskcoachlib/gui/dialog/preferences.py:341
+#: taskcoachlib/gui/dialog/preferences.py:355
 msgid ""
 "Save settings (%s.ini) in the same\n"
 "directory as the program"
@@ -1718,15 +1724,15 @@ msgstr ""
 "Salvează configurările (%s.ini) în același\n"
 "director cu programul"
 
-#: taskcoachlib/gui/dialog/preferences.py:343
+#: taskcoachlib/gui/dialog/preferences.py:357
 msgid "For running %s from a removable medium"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:345
+#: taskcoachlib/gui/dialog/preferences.py:359
 msgid "Attachment base directory"
 msgstr "Directorul de bază al atașamentului"
 
-#: taskcoachlib/gui/dialog/preferences.py:346
+#: taskcoachlib/gui/dialog/preferences.py:360
 msgid ""
 "When adding an attachment, try to make\n"
 "its path relative to this one."
@@ -1734,82 +1740,82 @@ msgstr ""
 "Cînd se adaugă un atașament, se creează\n"
 "calea sa relativă la acesta."
 
-#: taskcoachlib/gui/dialog/preferences.py:349
+#: taskcoachlib/gui/dialog/preferences.py:363
 msgid "Before saving, automatically import from"
 msgstr "Înainte de a salva, importați automat din"
 
-#: taskcoachlib/gui/dialog/preferences.py:350
-#: taskcoachlib/gui/dialog/preferences.py:356
+#: taskcoachlib/gui/dialog/preferences.py:364
+#: taskcoachlib/gui/dialog/preferences.py:370
 msgid "Todo.txt format"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:351
+#: taskcoachlib/gui/dialog/preferences.py:365
 msgid ""
 "Before saving, %s automatically imports tasks\n"
 "from a Todo.txt file with the same name as the task file,\n"
 "but with extension .txt"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:355
+#: taskcoachlib/gui/dialog/preferences.py:369
 msgid "When saving, automatically export to"
 msgstr "La salvare, exportați automat în"
 
-#: taskcoachlib/gui/dialog/preferences.py:357
+#: taskcoachlib/gui/dialog/preferences.py:371
 msgid ""
 "When saving, %s automatically exports tasks\n"
 "to a Todo.txt file with the same name as the task file,\n"
 "but with extension .txt"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:365
+#: taskcoachlib/gui/dialog/preferences.py:379
 msgid "Window behavior"
 msgstr "Comportament fereastră"
 
-#: taskcoachlib/gui/dialog/preferences.py:372
+#: taskcoachlib/gui/dialog/preferences.py:386
 msgid "Show splash screen on startup"
 msgstr "Afișează imaginea de pornire"
 
-#: taskcoachlib/gui/dialog/preferences.py:374
+#: taskcoachlib/gui/dialog/preferences.py:388
 msgid "Show tips window on startup"
 msgstr "Afișează fereastra cu sfaturi la pornire"
 
-#: taskcoachlib/gui/dialog/preferences.py:376
+#: taskcoachlib/gui/dialog/preferences.py:390
 msgid "Start with the main window iconized"
 msgstr "Pornește cu fereastra principală iconizată"
 
-#: taskcoachlib/gui/dialog/preferences.py:377
+#: taskcoachlib/gui/dialog/preferences.py:391
 msgid "Always"
 msgstr "Totdeauna"
 
-#: taskcoachlib/gui/dialog/preferences.py:377
+#: taskcoachlib/gui/dialog/preferences.py:391
 msgid "Never"
 msgstr "Niciodată"
 
-#: taskcoachlib/gui/dialog/preferences.py:379
+#: taskcoachlib/gui/dialog/preferences.py:393
 msgid "If it was iconized last session"
 msgstr "Dacă a fost iconizat ultima sesiune"
 
-#: taskcoachlib/gui/dialog/preferences.py:380
+#: taskcoachlib/gui/dialog/preferences.py:394
 msgid "Check for new version of %(name)s on startup"
 msgstr "Verifică la pornire pentru noi versiuni de %(name)s"
 
-#: taskcoachlib/gui/dialog/preferences.py:382
+#: taskcoachlib/gui/dialog/preferences.py:396
 msgid "Check for messages from the %(name)s developers on startup"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:386
+#: taskcoachlib/gui/dialog/preferences.py:400
 msgid "Hide main window when iconized"
 msgstr "Ascunde fereastra principală la iconizare"
 
-#: taskcoachlib/gui/dialog/preferences.py:388
+#: taskcoachlib/gui/dialog/preferences.py:402
 msgid "Minimize main window when closed"
 msgstr "Minimizează fereastra principală la închidere"
 
-#: taskcoachlib/gui/dialog/preferences.py:390
+#: taskcoachlib/gui/dialog/preferences.py:404
 msgid "Make clock in the task bar tick when tracking effort"
 msgstr "Fă să ticăie ceasul din bara de sarcini cînd se urmărește efortul"
 
-#: taskcoachlib/gui/dialog/preferences.py:392
+#: taskcoachlib/gui/dialog/preferences.py:406
 msgid ""
 "Show a popup with the description of an item\n"
 "when hovering over it"
@@ -1817,86 +1823,86 @@ msgstr ""
 "Afișează o fereastră cu descrierea unui element\n"
 "cînd este planat"
 
-#: taskcoachlib/gui/dialog/preferences.py:399
-#: taskcoachlib/gui/dialog/preferences.py:462
+#: taskcoachlib/gui/dialog/preferences.py:413
+#: taskcoachlib/gui/dialog/preferences.py:476
 msgid "Language"
 msgstr "Limbă"
 
-#: taskcoachlib/gui/dialog/preferences.py:405
+#: taskcoachlib/gui/dialog/preferences.py:419
 msgid "Let the system determine the language"
 msgstr "Lăsați sistemul să determine limba"
 
-#: taskcoachlib/gui/dialog/preferences.py:470
+#: taskcoachlib/gui/dialog/preferences.py:484
 msgid ""
 "If your language is not available, or the translation needs improving, "
 "please consider helping. See:"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:478
+#: taskcoachlib/gui/dialog/preferences.py:492
 msgid "Language not found?"
 msgstr "Limbă negăsită?"
 
-#: taskcoachlib/gui/dialog/preferences.py:488
+#: taskcoachlib/gui/dialog/preferences.py:502
 msgid "Task appearance"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:501
+#: taskcoachlib/gui/dialog/preferences.py:515
 msgid ""
 "These appearance settings can be overridden for individual tasks in the task "
 "edit dialog."
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:508
+#: taskcoachlib/gui/dialog/preferences.py:522
 msgid "Features"
 msgstr "Funcționalități"
 
-#: taskcoachlib/gui/dialog/preferences.py:514
+#: taskcoachlib/gui/dialog/preferences.py:528
 msgid "All settings on this tab require a restart of %s to take effect"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:517
+#: taskcoachlib/gui/dialog/preferences.py:531
 msgid "Allow for tracking effort"
 msgstr "Permite urmărirea efortului"
 
-#: taskcoachlib/gui/dialog/preferences.py:518
+#: taskcoachlib/gui/dialog/preferences.py:532
 msgid "Allow for taking notes"
 msgstr "Permite luarea de notițe"
 
-#: taskcoachlib/gui/dialog/preferences.py:524
+#: taskcoachlib/gui/dialog/preferences.py:538
 msgid "Enable SyncML"
 msgstr "Activează SyncML"
 
-#: taskcoachlib/gui/dialog/preferences.py:526
+#: taskcoachlib/gui/dialog/preferences.py:540
 msgid "Enable iPhone synchronization"
 msgstr "Activează sincronizarea iPhone"
 
-#: taskcoachlib/gui/dialog/preferences.py:529
+#: taskcoachlib/gui/dialog/preferences.py:543
 msgid "Use X11 session management"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:530
+#: taskcoachlib/gui/dialog/preferences.py:544
 msgid "Start of work week"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:531
-#: taskcoachlib/gui/viewer/effort.py:223
+#: taskcoachlib/gui/dialog/preferences.py:545
+#: taskcoachlib/gui/viewer/effort.py:234
 msgid "Monday"
 msgstr "Luni"
 
-#: taskcoachlib/gui/dialog/preferences.py:532
-#: taskcoachlib/gui/viewer/effort.py:241
+#: taskcoachlib/gui/dialog/preferences.py:546
+#: taskcoachlib/gui/viewer/effort.py:252
 msgid "Sunday"
 msgstr "Duminică"
 
-#: taskcoachlib/gui/dialog/preferences.py:534
+#: taskcoachlib/gui/dialog/preferences.py:548
 msgid "Hour of start of work day"
 msgstr "Ora de început a zilei de lucru"
 
-#: taskcoachlib/gui/dialog/preferences.py:536
+#: taskcoachlib/gui/dialog/preferences.py:550
 msgid "Hour of end of work day"
 msgstr "Ora de sfîrșit a zilei de lucru"
 
-#: taskcoachlib/gui/dialog/preferences.py:538
+#: taskcoachlib/gui/dialog/preferences.py:552
 msgid ""
 "Use gradients in calendar views.\n"
 "This may slow down Task Coach."
@@ -1904,11 +1910,11 @@ msgstr ""
 "Utilizează gradienți în vederile de calendar.\n"
 "Aceasta poate încetini Task Coach."
 
-#: taskcoachlib/gui/dialog/preferences.py:541
+#: taskcoachlib/gui/dialog/preferences.py:555
 msgid "Minutes between suggested times"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:542
+#: taskcoachlib/gui/dialog/preferences.py:556
 msgid ""
 "In popup-menus for time selection (e.g. for setting the start \n"
 "time of an effort) %(name)s will suggest times using this \n"
@@ -1917,115 +1923,115 @@ msgid ""
 "want beside the suggested times."
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:551
+#: taskcoachlib/gui/dialog/preferences.py:565
 msgid "Idle time notice"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:552
+#: taskcoachlib/gui/dialog/preferences.py:566
 msgid ""
 "If there is no user input for this amount of time\n"
 "(in minutes), %(name)s will ask what to do about current efforts."
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:560
+#: taskcoachlib/gui/dialog/preferences.py:578
 msgid "Task dates"
 msgstr "Data operațiilor"
 
-#: taskcoachlib/gui/dialog/preferences.py:568
+#: taskcoachlib/gui/dialog/preferences.py:586
 msgid "Mark parent task completed when all children are completed"
 msgstr ""
 "Marchează terminată sarcina părinte cînd toate sarcinile copil sînt terminate"
 
-#: taskcoachlib/gui/dialog/preferences.py:571
+#: taskcoachlib/gui/dialog/preferences.py:589
 msgid "Number of hours that tasks are considered to be 'due soon'"
 msgstr "Numărul de ore în care sarcinile sînt considerate „scadente curînd”"
 
-#: taskcoachlib/gui/dialog/preferences.py:573
+#: taskcoachlib/gui/dialog/preferences.py:591
 msgid "Nothing"
 msgstr "Nimic"
 
-#: taskcoachlib/gui/dialog/preferences.py:575
+#: taskcoachlib/gui/dialog/preferences.py:593
 msgid "Changing the planned start date changes the due date"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:577
+#: taskcoachlib/gui/dialog/preferences.py:595
 msgid "Changing the due date changes the planned start date"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:579
+#: taskcoachlib/gui/dialog/preferences.py:597
 msgid ""
 "What to do with planned start and due date if the other one is changed"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:582
+#: taskcoachlib/gui/dialog/preferences.py:600
 msgid "Preset"
 msgstr "Prestabilit"
 
-#: taskcoachlib/gui/dialog/preferences.py:583
+#: taskcoachlib/gui/dialog/preferences.py:601
 msgid "Propose"
 msgstr "Scop"
 
-#: taskcoachlib/gui/dialog/preferences.py:584 taskcoachlib/render.py:102
+#: taskcoachlib/gui/dialog/preferences.py:602 taskcoachlib/render.py:101
 msgid "Today"
 msgstr "Astăzi"
 
-#: taskcoachlib/gui/dialog/preferences.py:585 taskcoachlib/render.py:106
+#: taskcoachlib/gui/dialog/preferences.py:603 taskcoachlib/render.py:105
 msgid "Tomorrow"
 msgstr "Mâine"
 
-#: taskcoachlib/gui/dialog/preferences.py:586
+#: taskcoachlib/gui/dialog/preferences.py:604
 msgid "Day after tomorrow"
 msgstr "Poimâine"
 
-#: taskcoachlib/gui/dialog/preferences.py:587
+#: taskcoachlib/gui/dialog/preferences.py:605
 msgid "Next Friday"
 msgstr "Vinerea viitoare"
 
-#: taskcoachlib/gui/dialog/preferences.py:588
+#: taskcoachlib/gui/dialog/preferences.py:606
 msgid "Next Monday"
 msgstr "Lunea viitoare"
 
-#: taskcoachlib/gui/dialog/preferences.py:589
+#: taskcoachlib/gui/dialog/preferences.py:607
 msgid "Start of day"
 msgstr "Începutul zilei"
 
-#: taskcoachlib/gui/dialog/preferences.py:590
+#: taskcoachlib/gui/dialog/preferences.py:608
 msgid "Start of working day"
 msgstr "Începutul zilei de lucru"
 
-#: taskcoachlib/gui/dialog/preferences.py:591
+#: taskcoachlib/gui/dialog/preferences.py:609
 msgid "Current time"
 msgstr "Ora curentă"
 
-#: taskcoachlib/gui/dialog/preferences.py:592
+#: taskcoachlib/gui/dialog/preferences.py:610
 msgid "End of working day"
 msgstr "sfârșitul zilei de lucru"
 
-#: taskcoachlib/gui/dialog/preferences.py:593
+#: taskcoachlib/gui/dialog/preferences.py:611
 msgid "End of day"
 msgstr "Sfârșitul zilei"
 
-#: taskcoachlib/gui/dialog/preferences.py:595
+#: taskcoachlib/gui/dialog/preferences.py:613
 msgid "Default planned start date and time"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:598
+#: taskcoachlib/gui/dialog/preferences.py:616
 msgid "Default due date and time"
 msgstr "Data și ora scadente implicite"
 
-#: taskcoachlib/gui/dialog/preferences.py:601
+#: taskcoachlib/gui/dialog/preferences.py:619
 msgid "Default actual start date and time"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:604
+#: taskcoachlib/gui/dialog/preferences.py:622
 msgid "Default completion date and time"
 msgstr "Dat și ora finalizării implicite"
 
-#: taskcoachlib/gui/dialog/preferences.py:607
+#: taskcoachlib/gui/dialog/preferences.py:625
 msgid "Default reminder date and time"
 msgstr "Data și ora implicite pentru memento"
 
-#: taskcoachlib/gui/dialog/preferences.py:614
+#: taskcoachlib/gui/dialog/preferences.py:632
 msgid ""
 "New tasks start with \"Preset\" dates and times filled in and checked. "
 "\"Proposed\" dates and times are filled in, but not checked.\n"
@@ -2037,63 +2043,63 @@ msgid ""
 "set in the Features tab of this preferences dialog."
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:625
+#: taskcoachlib/gui/dialog/preferences.py:643
 msgid "Task reminders"
 msgstr "Memento-uri pentru operații"
 
-#: taskcoachlib/gui/dialog/preferences.py:635
+#: taskcoachlib/gui/dialog/preferences.py:653
 msgid "Notification system to use for reminders"
 msgstr "sistemul de notificare utilizat pentru memento-uri"
 
-#: taskcoachlib/gui/dialog/preferences.py:639
+#: taskcoachlib/gui/dialog/preferences.py:657
 msgid "Let the computer say the reminder"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:640
+#: taskcoachlib/gui/dialog/preferences.py:658
 msgid "(Needs espeak)"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:645
+#: taskcoachlib/gui/dialog/preferences.py:663
 msgid "Default snooze time to use after reminder"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:649
+#: taskcoachlib/gui/dialog/preferences.py:667
 msgid "Snooze times to offer in task reminder dialog"
 msgstr "Duratele de repetiție propuse în dialogul de rapel"
 
-#: taskcoachlib/gui/dialog/preferences.py:657
+#: taskcoachlib/gui/dialog/preferences.py:675
 msgid "iPhone"
 msgstr "iPhone"
 
-#: taskcoachlib/gui/dialog/preferences.py:663
+#: taskcoachlib/gui/dialog/preferences.py:681
 msgid "Password for synchronization with iPhone"
 msgstr "Parola pentru sincronizarea cu iPhone"
 
-#: taskcoachlib/gui/dialog/preferences.py:664
+#: taskcoachlib/gui/dialog/preferences.py:682
 msgid "When synchronizing, enter this password on the iPhone to authorize it"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:666
+#: taskcoachlib/gui/dialog/preferences.py:684
 msgid "Bonjour service name"
 msgstr "Serviciul de nume Bonjour"
 
-#: taskcoachlib/gui/dialog/preferences.py:668
+#: taskcoachlib/gui/dialog/preferences.py:686
 msgid "Upload completed tasks to device"
 msgstr "Încarcă pe dispozitiv sarcinile complete"
 
-#: taskcoachlib/gui/dialog/preferences.py:670
+#: taskcoachlib/gui/dialog/preferences.py:688
 msgid "Show the synchronization log"
 msgstr "Afișează jurnalul de sincronizare"
 
-#: taskcoachlib/gui/dialog/preferences.py:676
+#: taskcoachlib/gui/dialog/preferences.py:694
 msgid "Editor"
 msgstr "Editor"
 
-#: taskcoachlib/gui/dialog/preferences.py:684
+#: taskcoachlib/gui/dialog/preferences.py:702
 msgid "Check spelling in editors"
 msgstr "Verificare ortografică în editoare"
 
-#: taskcoachlib/gui/dialog/preferences.py:686
+#: taskcoachlib/gui/dialog/preferences.py:704
 msgid "Font to use in the description field of edit dialogs"
 msgstr ""
 
@@ -2197,6 +2203,34 @@ msgstr "Acces"
 msgid "New task template"
 msgstr "Șablon de operație nou"
 
+#: taskcoachlib/gui/dialog/toolbar.py:47
+msgid "Preview"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/toolbar.py:67
+msgid "Commands"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/toolbar.py:90
+msgid "Visible commands"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/toolbar.py:130
+msgid "Reorder toolbar buttons by drag and dropping them in this list."
+msgstr ""
+
+#: taskcoachlib/gui/dialog/toolbar.py:163
+#: taskcoachlib/gui/dialog/toolbar.py:221
+#: taskcoachlib/gui/dialog/toolbar.py:250
+msgid "Separator"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/toolbar.py:165
+#: taskcoachlib/gui/dialog/toolbar.py:224
+#: taskcoachlib/gui/dialog/toolbar.py:252
+msgid "Spacer"
+msgstr ""
+
 #: taskcoachlib/gui/dialog/version.py:41
 msgid "Notify me of new versions."
 msgstr "Anunță-mă de noi versiuni."
@@ -2242,7 +2276,8 @@ msgid "The latest released version of %(name)s is %(version)s."
 msgstr "Ultima veriune lansată a %(name)s este %(version)s."
 
 #: taskcoachlib/gui/dialog/xfce4warning.py:27
-#: taskcoachlib/gui/mainwindow.py:89 taskcoachlib/gui/uicommand.py:649
+#: taskcoachlib/gui/mainwindow.py:89
+#: taskcoachlib/gui/uicommand/uicommand.py:219
 msgid "Warning"
 msgstr "Avertisment"
 
@@ -2522,230 +2557,230 @@ msgstr ""
 "acest fișier de sarcini, dar protocolul de negociere a eșuat.\n"
 "Trimiteți un raport de eroare."
 
-#: taskcoachlib/gui/menu.py:195
+#: taskcoachlib/gui/menu.py:203
 msgid "&File"
 msgstr "&Fișier"
 
-#: taskcoachlib/gui/menu.py:197
+#: taskcoachlib/gui/menu.py:205
 msgid "&Edit"
 msgstr "&Editează"
 
-#: taskcoachlib/gui/menu.py:199
+#: taskcoachlib/gui/menu.py:207
 msgid "&View"
 msgstr "&Vizualizare"
 
-#: taskcoachlib/gui/menu.py:201
+#: taskcoachlib/gui/menu.py:209
 msgid "&New"
 msgstr "&Nou"
 
-#: taskcoachlib/gui/menu.py:203
+#: taskcoachlib/gui/menu.py:211
 msgid "&Actions"
 msgstr "&Acțiuni"
 
-#: taskcoachlib/gui/menu.py:204
+#: taskcoachlib/gui/menu.py:212
 msgid "&Help"
 msgstr "&Ajutor"
 
-#: taskcoachlib/gui/menu.py:240
+#: taskcoachlib/gui/menu.py:248
 msgid "&Import"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:242
+#: taskcoachlib/gui/menu.py:250
 msgid "&Export"
 msgstr "&Exportă"
 
-#: taskcoachlib/gui/menu.py:353
+#: taskcoachlib/gui/menu.py:364
 msgid "&Select"
 msgstr "&Selectează"
 
-#: taskcoachlib/gui/menu.py:382
+#: taskcoachlib/gui/menu.py:393
 msgid "&New viewer"
 msgstr "Vedere &nouă"
 
-#: taskcoachlib/gui/menu.py:386
+#: taskcoachlib/gui/menu.py:397
 msgid "&Activate next viewer\tCtrl+PgDn"
 msgstr "&Activează vederea următoare\tCtrl+PgDn"
 
-#: taskcoachlib/gui/menu.py:390
+#: taskcoachlib/gui/menu.py:401
 msgid "Activate &previous viewer\tCtrl+PgUp"
 msgstr "Activează vederea &precedentă\tCtrl+PgUp"
 
-#: taskcoachlib/gui/menu.py:398 taskcoachlib/gui/menu.py:399
+#: taskcoachlib/gui/menu.py:409 taskcoachlib/gui/menu.py:410
 msgid "&Mode"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:400 taskcoachlib/gui/menu.py:401
+#: taskcoachlib/gui/menu.py:411 taskcoachlib/gui/menu.py:412
 msgid "&Filter"
 msgstr "&Filtrează"
 
-#: taskcoachlib/gui/menu.py:402 taskcoachlib/gui/menu.py:403
+#: taskcoachlib/gui/menu.py:413 taskcoachlib/gui/menu.py:414
 msgid "&Sort"
 msgstr "&Sortează"
 
-#: taskcoachlib/gui/menu.py:404 taskcoachlib/gui/menu.py:405
+#: taskcoachlib/gui/menu.py:415 taskcoachlib/gui/menu.py:416
 msgid "&Columns"
 msgstr "&Coloane"
 
-#: taskcoachlib/gui/menu.py:407 taskcoachlib/gui/menu.py:408
+#: taskcoachlib/gui/menu.py:418 taskcoachlib/gui/menu.py:419
 msgid "&Rounding"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:410
+#: taskcoachlib/gui/menu.py:421
 msgid "&Tree options"
 msgstr "Opțiuni &arborescență"
 
-#: taskcoachlib/gui/menu.py:414
+#: taskcoachlib/gui/menu.py:425
 msgid "T&oolbar"
 msgstr "Bara de &unelte"
 
-#: taskcoachlib/gui/menu.py:416
+#: taskcoachlib/gui/menu.py:427
 msgid "Show/hide status bar"
 msgstr "Afișează/ascunde bara de stare"
 
-#: taskcoachlib/gui/menu.py:416
+#: taskcoachlib/gui/menu.py:427
 msgid "Status&bar"
 msgstr "&Bara de stare"
 
-#: taskcoachlib/gui/menu.py:427
+#: taskcoachlib/gui/menu.py:438
 msgid "&Task"
 msgstr "&Sarcină"
 
-#: taskcoachlib/gui/menu.py:428
+#: taskcoachlib/gui/menu.py:439
 msgid "Open a new tab with a viewer that displays tasks"
 msgstr "Deschide un tab nou cu o vedere ce afișează sarcinile"
 
-#: taskcoachlib/gui/menu.py:430
+#: taskcoachlib/gui/menu.py:441
 msgid "Task &statistics"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:431
+#: taskcoachlib/gui/menu.py:442
 msgid "Open a new tab with a viewer that displays task statistics"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:433
+#: taskcoachlib/gui/menu.py:444
 msgid "Task &square map"
 msgstr "&Sarcini în pătrat"
 
-#: taskcoachlib/gui/menu.py:434
+#: taskcoachlib/gui/menu.py:445
 msgid "Open a new tab with a viewer that displays tasks in a square map"
 msgstr "Deschide un tab nou cu o vedere ce afișează sarcinile în pătrat"
 
-#: taskcoachlib/gui/menu.py:436
+#: taskcoachlib/gui/menu.py:447
 msgid "T&imeline"
 msgstr "Cronolog&ie"
 
-#: taskcoachlib/gui/menu.py:437
+#: taskcoachlib/gui/menu.py:448
 msgid ""
 "Open a new tab with a viewer that displays a timeline of tasks and effort"
 msgstr ""
 "Deschide un tab nou cu o vedere ce afișează o cronologie a sarcinilor și "
 "efortului"
 
-#: taskcoachlib/gui/menu.py:439
+#: taskcoachlib/gui/menu.py:450
 msgid "&Calendar"
 msgstr "&Calendar"
 
-#: taskcoachlib/gui/menu.py:440
+#: taskcoachlib/gui/menu.py:451
 msgid "Open a new tab with a viewer that displays tasks in a calendar"
 msgstr ""
 "Deschide un tab nou cu o vedere ce afișează sarcinile într-un calendar"
 
-#: taskcoachlib/gui/menu.py:442 taskcoachlib/gui/viewer/mixin.py:331
+#: taskcoachlib/gui/menu.py:453 taskcoachlib/gui/viewer/mixin.py:336
 msgid "&Category"
 msgstr "&Categorie"
 
-#: taskcoachlib/gui/menu.py:443
+#: taskcoachlib/gui/menu.py:454
 msgid "Open a new tab with a viewer that displays categories"
 msgstr "Deschide un tab nou cu o vedere ce afișează categoriile"
 
-#: taskcoachlib/gui/menu.py:447
+#: taskcoachlib/gui/menu.py:458
 msgid "&Effort"
 msgstr "&Efort"
 
-#: taskcoachlib/gui/menu.py:448
+#: taskcoachlib/gui/menu.py:459
 msgid "Open a new tab with a viewer that displays efforts"
 msgstr "Deschide un tab nou cu o vedere ce afișează eforturile"
 
-#: taskcoachlib/gui/menu.py:451
+#: taskcoachlib/gui/menu.py:462
 msgid "Effort for &one task"
 msgstr "Efortul pentru &o sarcină"
 
-#: taskcoachlib/gui/menu.py:452
+#: taskcoachlib/gui/menu.py:463
 msgid ""
 "Open a new tab with a viewer that displays efforts for the selected task"
 msgstr ""
 "Deschide un tab nou cu o vedere ce afișează eforturile pentru sarcinile "
 "selectate"
 
-#: taskcoachlib/gui/menu.py:456
+#: taskcoachlib/gui/menu.py:467
 msgid "&Note"
 msgstr "&Notiță"
 
-#: taskcoachlib/gui/menu.py:457
+#: taskcoachlib/gui/menu.py:468
 msgid "Open a new tab with a viewer that displays notes"
 msgstr "Deschide un tab nou cu o vedere ce afișează notițele"
 
-#: taskcoachlib/gui/menu.py:517
+#: taskcoachlib/gui/menu.py:528
 msgid "&Hide"
 msgstr "&Ascunde"
 
-#: taskcoachlib/gui/menu.py:517
+#: taskcoachlib/gui/menu.py:528
 msgid "Hide the toolbar"
 msgstr "Ascunde bara de unelte"
 
-#: taskcoachlib/gui/menu.py:518
+#: taskcoachlib/gui/menu.py:529
 msgid "&Small images"
 msgstr "Imagini mi&ci"
 
-#: taskcoachlib/gui/menu.py:518
+#: taskcoachlib/gui/menu.py:529
 msgid "Small images (16x16) on the toolbar"
 msgstr "Imagini mici (16x16) în bara de unelte"
 
-#: taskcoachlib/gui/menu.py:519
+#: taskcoachlib/gui/menu.py:530
 msgid "&Medium-sized images"
 msgstr "Imagini &medii"
 
-#: taskcoachlib/gui/menu.py:519
+#: taskcoachlib/gui/menu.py:530
 msgid "Medium-sized images (22x22) on the toolbar"
 msgstr "Imagini medii (22x22) în bara de unelte"
 
-#: taskcoachlib/gui/menu.py:520
+#: taskcoachlib/gui/menu.py:531
 msgid "&Large images"
 msgstr "Imagini &largi"
 
-#: taskcoachlib/gui/menu.py:520
+#: taskcoachlib/gui/menu.py:531
 msgid "Large images (32x32) on the toolbar"
 msgstr "Imagini largi (32x32) în bara de unelte"
 
-#: taskcoachlib/gui/menu.py:538 taskcoachlib/gui/menu.py:641
-#: taskcoachlib/gui/uicommand.py:1637
+#: taskcoachlib/gui/menu.py:549 taskcoachlib/gui/menu.py:652
+#: taskcoachlib/gui/uicommand/uicommand.py:1218
 msgid "New task from &template"
 msgstr "Sarcină nouă din șablon"
 
-#: taskcoachlib/gui/menu.py:579 taskcoachlib/gui/menu.py:790
-#: taskcoachlib/gui/menu.py:894
+#: taskcoachlib/gui/menu.py:590 taskcoachlib/gui/menu.py:815
+#: taskcoachlib/gui/menu.py:919
 msgid "&Toggle category"
 msgstr "Schimbă ca&tegoria"
 
-#: taskcoachlib/gui/menu.py:590
+#: taskcoachlib/gui/menu.py:601
 msgid "Change task &priority"
 msgstr "Schimbă &prioritatea sarcinii"
 
-#: taskcoachlib/gui/menu.py:657 taskcoachlib/gui/uicommand.py:2027
-#: taskcoachlib/gui/uicommand.py:2069
+#: taskcoachlib/gui/menu.py:668 taskcoachlib/gui/uicommand/uicommand.py:1618
+#: taskcoachlib/gui/uicommand/uicommand.py:1660
 msgid "&Start tracking effort"
 msgstr "&Pornește urmărirea efortului"
 
-#: taskcoachlib/gui/menu.py:707 taskcoachlib/gui/viewer/mixin.py:130
+#: taskcoachlib/gui/menu.py:721 taskcoachlib/gui/viewer/mixin.py:130
 msgid "%s (subcategories)"
 msgstr "%s (subcategorii)"
 
-#: taskcoachlib/gui/menu.py:755
+#: taskcoachlib/gui/menu.py:780
 msgid "%s (subtasks)"
 msgstr "%s (subsarcini)"
 
-#: taskcoachlib/gui/menu.py:800 taskcoachlib/gui/viewer/mixin.py:410
-#: taskcoachlib/gui/viewer/task.py:1069
+#: taskcoachlib/gui/menu.py:825 taskcoachlib/gui/viewer/mixin.py:418
+#: taskcoachlib/gui/viewer/task.py:1076
 msgid "&Priority"
 msgstr "&Prioritate"
 
@@ -2781,106 +2816,80 @@ msgstr "urmărire „%s”"
 msgid "tracking effort for %d tasks"
 msgstr "urmărire efort pentru %d sarcini"
 
-#: taskcoachlib/gui/toolbar.py:47
-msgid "Preview"
-msgstr ""
-
-#: taskcoachlib/gui/toolbar.py:66
-msgid "Commands"
-msgstr ""
-
-#: taskcoachlib/gui/toolbar.py:89
-msgid "Visible commands"
-msgstr ""
-
-#: taskcoachlib/gui/toolbar.py:129
-msgid "Reorder toolbar buttons by drag and dropping them in this list."
-msgstr ""
-
-#: taskcoachlib/gui/toolbar.py:162 taskcoachlib/gui/toolbar.py:220
-#: taskcoachlib/gui/toolbar.py:249
-msgid "Separator"
-msgstr ""
-
-#: taskcoachlib/gui/toolbar.py:164 taskcoachlib/gui/toolbar.py:223
-#: taskcoachlib/gui/toolbar.py:251
-msgid "Spacer"
-msgstr ""
-
-#: taskcoachlib/gui/uicommand.py:523
+#: taskcoachlib/gui/uicommand/uicommand.py:91
 msgid "&Open...\tCtrl+O"
 msgstr "&Deschide...\tCtrl+O"
 
-#: taskcoachlib/gui/uicommand.py:537
+#: taskcoachlib/gui/uicommand/uicommand.py:105
 msgid "Open %s"
 msgstr "Deschide %s"
 
-#: taskcoachlib/gui/uicommand.py:545
+#: taskcoachlib/gui/uicommand/uicommand.py:113
 msgid "&Merge..."
 msgstr "%Unește..."
 
-#: taskcoachlib/gui/uicommand.py:546
+#: taskcoachlib/gui/uicommand/uicommand.py:114
 msgid "Merge tasks from another file with the current file"
 msgstr "Unește sarcinile dintr-un alt fișier cu fișierul curent"
 
-#: taskcoachlib/gui/uicommand.py:555
+#: taskcoachlib/gui/uicommand/uicommand.py:123
 msgid "&Close\tCtrl+W"
 msgstr "În&chide\tCtrl+W"
 
-#: taskcoachlib/gui/uicommand.py:565
+#: taskcoachlib/gui/uicommand/uicommand.py:133
 msgid "&Save\tCtrl+S"
 msgstr "&Salvează\tCtrl+S"
 
-#: taskcoachlib/gui/uicommand.py:579
+#: taskcoachlib/gui/uicommand/uicommand.py:147
 msgid "S&ave as...\tShift+Ctrl+S"
 msgstr "S&alvează ca...\tShift+Ctrl+S"
 
-#: taskcoachlib/gui/uicommand.py:590
+#: taskcoachlib/gui/uicommand/uicommand.py:159
 msgid "Sa&ve selected tasks to new taskfile..."
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:591
+#: taskcoachlib/gui/uicommand/uicommand.py:160
 msgid "Save the selected tasks to a separate taskfile"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:602
+#: taskcoachlib/gui/uicommand/uicommand.py:171
 msgid "Save selected task as &template"
 msgstr "Salvează ca șablon sarcina selectată"
 
-#: taskcoachlib/gui/uicommand.py:603
+#: taskcoachlib/gui/uicommand/uicommand.py:172
 msgid "Save the selected task as a task template"
 msgstr "Salvează sarcina selectată ca un șablon de sarcină"
 
-#: taskcoachlib/gui/uicommand.py:613
+#: taskcoachlib/gui/uicommand/uicommand.py:182
 msgid "&Import template..."
 msgstr "&Se importă șablonul..."
 
-#: taskcoachlib/gui/uicommand.py:614
+#: taskcoachlib/gui/uicommand/uicommand.py:183
 msgid "Import a new template from a template file"
 msgstr "Importați un șablon dintr-un fișier șablon"
 
-#: taskcoachlib/gui/uicommand.py:624
+#: taskcoachlib/gui/uicommand/uicommand.py:194
 msgid "Edit templates..."
 msgstr "Editare șabloane..."
 
-#: taskcoachlib/gui/uicommand.py:625
+#: taskcoachlib/gui/uicommand/uicommand.py:195
 msgid "Edit existing templates"
 msgstr "Editează șabloanele existente"
 
-#: taskcoachlib/gui/uicommand.py:629
+#: taskcoachlib/gui/uicommand/uicommand.py:199
 msgid "Edit templates"
 msgstr "Editează șabloanele"
 
-#: taskcoachlib/gui/uicommand.py:636
+#: taskcoachlib/gui/uicommand/uicommand.py:206
 msgid "&Purge deleted items"
 msgstr "Curăță elementele șterse"
 
-#: taskcoachlib/gui/uicommand.py:637
+#: taskcoachlib/gui/uicommand/uicommand.py:207
 msgid ""
 "Actually delete deleted tasks and notes (see the SyncML chapter in Help)"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:642
+#: taskcoachlib/gui/uicommand/uicommand.py:212
 msgid ""
 "Purging deleted items is undoable.\n"
 "If you're planning on enabling\n"
@@ -2898,224 +2907,226 @@ msgstr ""
 "\n"
 "Doriți totuși curățarea?"
 
-#: taskcoachlib/gui/uicommand.py:659
+#: taskcoachlib/gui/uicommand/uicommand.py:230
 msgid "&Page setup...\tShift+Ctrl+P"
 msgstr "Configurare pagină...\tShift+Ctrl+P"
 
-#: taskcoachlib/gui/uicommand.py:679
+#: taskcoachlib/gui/uicommand/uicommand.py:250
 msgid "&Print preview..."
 msgstr "&Previzualizare tipărire..."
 
-#: taskcoachlib/gui/uicommand.py:680
+#: taskcoachlib/gui/uicommand/uicommand.py:251
 msgid "Show a preview of what the print will look like"
 msgstr "Afișează o previzualizare a cum va arăta tipărirea"
 
-#: taskcoachlib/gui/uicommand.py:690
+#: taskcoachlib/gui/uicommand/uicommand.py:261
 msgid "Print preview"
 msgstr "Pevizualizare tipărire"
 
-#: taskcoachlib/gui/uicommand.py:699
+#: taskcoachlib/gui/uicommand/uicommand.py:270
 msgid "&Print...\tCtrl+P"
 msgstr "Ti&părire...\tCtrl+P"
 
-#: taskcoachlib/gui/uicommand.py:750
+#: taskcoachlib/gui/uicommand/uicommand.py:321
 msgid "Export as &HTML..."
 msgstr "Exportă ca &HTML..."
 
-#: taskcoachlib/gui/uicommand.py:751
+#: taskcoachlib/gui/uicommand/uicommand.py:322
 msgid "Export items from a viewer in HTML format"
 msgstr "Exportați elemente dintr-un vizualizator în format HTML"
 
-#: taskcoachlib/gui/uicommand.py:766
+#: taskcoachlib/gui/uicommand/uicommand.py:337
 msgid "Export as &CSV..."
 msgstr "Exportă ca &CSV..."
 
-#: taskcoachlib/gui/uicommand.py:767
+#: taskcoachlib/gui/uicommand/uicommand.py:338
 msgid "Export items from a viewer in Comma Separated Values (CSV) format"
 msgstr ""
 "Exportați elemente dintr-un vizualizator în format CSV (Valori separate prin "
 "virgulă)"
 
-#: taskcoachlib/gui/uicommand.py:784
+#: taskcoachlib/gui/uicommand/uicommand.py:355
 msgid "Export as &iCalendar..."
 msgstr "Exportă ca &iCalendar..."
 
-#: taskcoachlib/gui/uicommand.py:785
+#: taskcoachlib/gui/uicommand/uicommand.py:356
 msgid "Export items from a viewer in iCalendar format"
 msgstr "Exportați elemente dintr-un vizualizator în format iCalendar"
 
-#: taskcoachlib/gui/uicommand.py:811
+#: taskcoachlib/gui/uicommand/uicommand.py:382
 msgid "Export as &Todo.txt..."
 msgstr "Se exportă ca și &Deefectuat.txt..."
 
-#: taskcoachlib/gui/uicommand.py:812
+#: taskcoachlib/gui/uicommand/uicommand.py:383
 msgid "Export items from a viewer in Todo.txt format (see todotxt.com)"
 msgstr ""
 "Exportați elemente dintr-un vizualizator în format Deefectuat.txt (vezi "
 "todotxt.com)"
 
-#: taskcoachlib/gui/uicommand.py:838
+#: taskcoachlib/gui/uicommand/uicommand.py:409
 msgid "&Import CSV..."
 msgstr "&Import CSV..."
 
-#: taskcoachlib/gui/uicommand.py:839
+#: taskcoachlib/gui/uicommand/uicommand.py:410
 msgid "Import tasks from a Comma Separated Values (CSV) file"
 msgstr "Importă sarcini dintr-un fișier CSV (Comma Separated Values)"
 
-#: taskcoachlib/gui/uicommand.py:844 taskcoachlib/gui/uicommand.py:849
-#: taskcoachlib/gui/uicommand.py:852
+#: taskcoachlib/gui/uicommand/uicommand.py:415
+#: taskcoachlib/gui/uicommand/uicommand.py:420
+#: taskcoachlib/gui/uicommand/uicommand.py:423
 msgid "Import CSV"
 msgstr "Importă CSV"
 
-#: taskcoachlib/gui/uicommand.py:847
+#: taskcoachlib/gui/uicommand/uicommand.py:418
 msgid "The selected file is empty. Please select a different file."
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:866
+#: taskcoachlib/gui/uicommand/uicommand.py:437
 msgid "&Import Todo.txt..."
 msgstr "Se importă Deefectuat.txt..."
 
-#: taskcoachlib/gui/uicommand.py:867
+#: taskcoachlib/gui/uicommand/uicommand.py:438
 msgid "Import tasks from a Todo.txt (see todotxt.com) file"
 msgstr "importați operații dintr-un fișier Deefectuat.txt (vezi todotxt.com)"
 
-#: taskcoachlib/gui/uicommand.py:871
+#: taskcoachlib/gui/uicommand/uicommand.py:442
 msgid "Import Todo.txt"
 msgstr "Importați Deefectuat.txt"
 
-#: taskcoachlib/gui/uicommand.py:882
+#: taskcoachlib/gui/uicommand/uicommand.py:453
 msgid "S&yncML synchronization..."
 msgstr "Sincronizare S&yncML..."
 
-#: taskcoachlib/gui/uicommand.py:883
+#: taskcoachlib/gui/uicommand/uicommand.py:454
 msgid "Synchronize with a SyncML server"
 msgstr "Sincronizează cu un server SyncML"
 
-#: taskcoachlib/gui/uicommand.py:894
+#: taskcoachlib/gui/uicommand/uicommand.py:465
 msgid "&Quit\tCtrl+Q"
 msgstr "&Terminare\tCtrl+Q"
 
-#: taskcoachlib/gui/uicommand.py:914
+#: taskcoachlib/gui/uicommand/uicommand.py:485
 msgid "&Undo"
 msgstr "&Desfă"
 
-#: taskcoachlib/gui/uicommand.py:948
+#: taskcoachlib/gui/uicommand/uicommand.py:519
 msgid "&Redo"
 msgstr "&Refă"
 
-#: taskcoachlib/gui/uicommand.py:975
+#: taskcoachlib/gui/uicommand/uicommand.py:546
 msgid "Cu&t\tCtrl+X"
 msgstr "&Taie\tCtrl+X"
 
-#: taskcoachlib/gui/uicommand.py:1000
+#: taskcoachlib/gui/uicommand/uicommand.py:571
 msgid "&Copy\tCtrl+C"
 msgstr "&Copiază\tCtrl+C"
 
-#: taskcoachlib/gui/uicommand.py:1025
+#: taskcoachlib/gui/uicommand/uicommand.py:596
 msgid "&Paste\tCtrl+V"
 msgstr "&Inserează\tCtrl+V"
 
-#: taskcoachlib/gui/uicommand.py:1051
+#: taskcoachlib/gui/uicommand/uicommand.py:623
 msgid "P&aste as subitem\tShift+Ctrl+V"
 msgstr "Lipește c&a subelement\tShift+Ctrl+V"
 
-#: taskcoachlib/gui/uicommand.py:1091
+#: taskcoachlib/gui/uicommand/uicommand.py:663
 msgid "&Preferences...\tAlt+P"
 msgstr "&Preferințe...\tAlt+P"
 
-#: taskcoachlib/gui/uicommand.py:1097
+#: taskcoachlib/gui/uicommand/uicommand.py:669
 msgid "Preferences"
 msgstr "Preferinţe"
 
-#: taskcoachlib/gui/uicommand.py:1106
+#: taskcoachlib/gui/uicommand/uicommand.py:678
 msgid "&SyncML preferences..."
 msgstr "Preferințe &SyncML..."
 
-#: taskcoachlib/gui/uicommand.py:1107
+#: taskcoachlib/gui/uicommand/uicommand.py:679
 msgid "Edit SyncML preferences"
 msgstr "Editează preferințele SyncML"
 
-#: taskcoachlib/gui/uicommand.py:1113
+#: taskcoachlib/gui/uicommand/uicommand.py:685
 msgid "SyncML preferences"
 msgstr "SyncML preferinţe"
 
-#: taskcoachlib/gui/uicommand.py:1124 taskcoachlib/gui/uicommand.py:1129
+#: taskcoachlib/gui/uicommand/uicommand.py:696
+#: taskcoachlib/gui/uicommand/uicommand.py:701
 msgid "Customize toolbar"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:1125
+#: taskcoachlib/gui/uicommand/uicommand.py:697
 msgid "Customize"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:1136
+#: taskcoachlib/gui/uicommand/uicommand.py:708
 msgid "&All\tCtrl+A"
 msgstr "To&ate\tCtrl+A"
 
-#: taskcoachlib/gui/uicommand.py:1158
+#: taskcoachlib/gui/uicommand/uicommand.py:730
 msgid "&Clear selection"
 msgstr "&Curăță selecția"
 
-#: taskcoachlib/gui/uicommand.py:1159
+#: taskcoachlib/gui/uicommand/uicommand.py:731
 msgid "Unselect all items"
 msgstr "Deselectează toate elementele"
 
-#: taskcoachlib/gui/uicommand.py:1171
+#: taskcoachlib/gui/uicommand/uicommand.py:743
 msgid "&Clear all filters\tShift-Ctrl-R"
 msgstr "&Curăță toate filtrele\tShift-Ctrl-R"
 
-#: taskcoachlib/gui/uicommand.py:1187
+#: taskcoachlib/gui/uicommand/uicommand.py:760
 msgid "&Reset all categories\tCtrl-R"
 msgstr "&Reinițializează toate categoriile\tCtrl-R"
 
-#: taskcoachlib/gui/uicommand.py:1212
+#: taskcoachlib/gui/uicommand/uicommand.py:785
 msgid "Show/hide items belonging to %s"
 msgstr "Afișează/ascunde elementele aparținînd lui %s"
 
-#: taskcoachlib/gui/uicommand.py:1257
+#: taskcoachlib/gui/uicommand/uicommand.py:834
 msgid "&Rename viewer..."
 msgstr "&Redenumește afișarea..."
 
-#: taskcoachlib/gui/uicommand.py:1258
+#: taskcoachlib/gui/uicommand/uicommand.py:835
 msgid "Rename the selected viewer"
 msgstr "Redenumește afișarea selectată"
 
-#: taskcoachlib/gui/uicommand.py:1263
+#: taskcoachlib/gui/uicommand/uicommand.py:840
 msgid "New title for the viewer:"
 msgstr "Titlu nou pentru afișare:"
 
-#: taskcoachlib/gui/uicommand.py:1263
+#: taskcoachlib/gui/uicommand/uicommand.py:840
 msgid "Rename viewer"
 msgstr "Redenumește afișarea"
 
-#: taskcoachlib/gui/uicommand.py:1287
+#: taskcoachlib/gui/uicommand/uicommand.py:864
 msgid "&Hide this column"
 msgstr "&Ascunde coloana aceasta"
 
-#: taskcoachlib/gui/uicommand.py:1288
+#: taskcoachlib/gui/uicommand/uicommand.py:865
 msgid "Hide the selected column"
 msgstr "Ascunde coloana selectată"
 
-#: taskcoachlib/gui/uicommand.py:1334
+#: taskcoachlib/gui/uicommand/uicommand.py:911
 msgid "&Expand all items\tShift+Ctrl+E"
 msgstr "&Expandează toate elementele\tShift+Ctrl+E"
 
-#: taskcoachlib/gui/uicommand.py:1348
+#: taskcoachlib/gui/uicommand/uicommand.py:925
 msgid "&Collapse all items\tShift+Ctrl+C"
 msgstr "&Colbatează toate elementele\tShift+Ctrl+C"
 
-#: taskcoachlib/gui/uicommand.py:1369
+#: taskcoachlib/gui/uicommand/uicommand.py:946
 msgid "&Ascending"
 msgstr "&Ascendent"
 
-#: taskcoachlib/gui/uicommand.py:1370
+#: taskcoachlib/gui/uicommand/uicommand.py:947
 msgid "Sort ascending (checked) or descending (unchecked)"
 msgstr "Sortare ascendentă (bifat) sau descendentă (nebifat)"
 
-#: taskcoachlib/gui/uicommand.py:1383
+#: taskcoachlib/gui/uicommand/uicommand.py:960
 msgid "Sort &case sensitive"
 msgstr "Sortare sensibilă la majus&cule"
 
-#: taskcoachlib/gui/uicommand.py:1384
+#: taskcoachlib/gui/uicommand/uicommand.py:961
 msgid ""
 "When comparing text, sorting is case sensitive (checked) or insensitive "
 "(unchecked)"
@@ -3123,157 +3134,158 @@ msgstr ""
 "Cînd se compară textul, sortarea este sensibilă la majuscule (bifat) sau "
 "insensibilă (nebifat)"
 
-#: taskcoachlib/gui/uicommand.py:1398
+#: taskcoachlib/gui/uicommand/uicommand.py:976
 msgid "Sort by status &first"
 msgstr "Sortează mai întîi după stare"
 
-#: taskcoachlib/gui/uicommand.py:1399
+#: taskcoachlib/gui/uicommand/uicommand.py:977
 msgid "Sort tasks by status (active/inactive/completed) first"
 msgstr "Sortează sarcinile mai întîi după stare (active/inactive/terminate)"
 
-#: taskcoachlib/gui/uicommand.py:1435
+#: taskcoachlib/gui/uicommand/uicommand.py:1014
 msgid "Hide c&omposite tasks"
 msgstr "Ascunde sarcinile c&ompuse"
 
-#: taskcoachlib/gui/uicommand.py:1436
+#: taskcoachlib/gui/uicommand/uicommand.py:1015
 msgid "Show/hide tasks with subtasks in list mode"
 msgstr "Afișează/ascunde sarcinile cu subsarcini în modul listă"
 
-#: taskcoachlib/gui/uicommand.py:1451
+#: taskcoachlib/gui/uicommand/uicommand.py:1030
 msgid "&Edit...\tRETURN"
 msgstr "&Editare...\tRETURN"
 
-#: taskcoachlib/gui/uicommand.py:1452
+#: taskcoachlib/gui/uicommand/uicommand.py:1031
 msgid "Edit the selected item(s)"
 msgstr "Editează elementele selectare"
 
-#: taskcoachlib/gui/uicommand.py:1492
+#: taskcoachlib/gui/uicommand/uicommand.py:1071
 msgid "Edit &tracked task...\tShift-Alt-T"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:1493
+#: taskcoachlib/gui/uicommand/uicommand.py:1072
 msgid "Edit the currently tracked task(s)"
 msgstr "Editați operația(ile) urmărite"
 
-#: taskcoachlib/gui/uicommand.py:1509
+#: taskcoachlib/gui/uicommand/uicommand.py:1088
 msgid "&Delete\tDEL"
 msgstr "&Șterge\tDEL"
 
-#: taskcoachlib/gui/uicommand.py:1510 taskcoachlib/help/__init__.py:771
+#: taskcoachlib/gui/uicommand/uicommand.py:1089
+#: taskcoachlib/help/__init__.py:771
 msgid "Delete the selected item(s)"
 msgstr "Șterge elementele selectate"
 
-#: taskcoachlib/gui/uicommand.py:1640
+#: taskcoachlib/gui/uicommand/uicommand.py:1221
 msgid "Create a new task from a template"
 msgstr "Creează o sarcină nouă dintr-un șablon"
 
-#: taskcoachlib/gui/uicommand.py:1646
+#: taskcoachlib/gui/uicommand/uicommand.py:1227
 msgid "New task with selected &categories..."
 msgstr "Sarcină nouă cu &categoriile selectate..."
 
-#: taskcoachlib/gui/uicommand.py:1647
+#: taskcoachlib/gui/uicommand/uicommand.py:1228
 msgid "Insert a new task with the selected categories checked"
 msgstr "Creează o sarcină nouă aparținînd categoriilor selecționate"
 
-#: taskcoachlib/gui/uicommand.py:1658
+#: taskcoachlib/gui/uicommand/uicommand.py:1239
 msgid "New task with selected tasks as &prerequisites..."
 msgstr "Sarcină nouă cu sarcinile selectare ca cerințe obligatorii..."
 
-#: taskcoachlib/gui/uicommand.py:1659
+#: taskcoachlib/gui/uicommand/uicommand.py:1240
 msgid "Insert a new task with the selected tasks as prerequisite tasks"
 msgstr ""
 "Inserează o sarcină nouă cu sarcinile selectate ca sarcini obligatorii"
 
-#: taskcoachlib/gui/uicommand.py:1670
+#: taskcoachlib/gui/uicommand/uicommand.py:1251
 msgid "New task with selected tasks as &dependents..."
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:1671
+#: taskcoachlib/gui/uicommand/uicommand.py:1252
 msgid "Insert a new task with the selected tasks as dependent tasks"
 msgstr ""
 "Inserează o sarcină nouă cu sarcinile selectate ca sarcini dependente"
 
-#: taskcoachlib/gui/uicommand.py:1680
+#: taskcoachlib/gui/uicommand/uicommand.py:1262
 msgid "New &subitem..."
 msgstr "&Subelement nou..."
 
-#: taskcoachlib/gui/uicommand.py:1681
+#: taskcoachlib/gui/uicommand/uicommand.py:1263
 msgid "New &subtask..."
 msgstr "&Subsarcină nouă..."
 
-#: taskcoachlib/gui/uicommand.py:1682
+#: taskcoachlib/gui/uicommand/uicommand.py:1264
 msgid "New &subnote..."
 msgstr "&Subnotă nouă..."
 
-#: taskcoachlib/gui/uicommand.py:1683
+#: taskcoachlib/gui/uicommand/uicommand.py:1265
 msgid "New &subcategory..."
 msgstr "&Subcategorie nouă..."
 
-#: taskcoachlib/gui/uicommand.py:1687
+#: taskcoachlib/gui/uicommand/uicommand.py:1269
 msgid "Insert a new subitem of the selected item"
 msgstr "Inserează un subelement nou pentru elementul selectat"
 
-#: taskcoachlib/gui/uicommand.py:1707
+#: taskcoachlib/gui/uicommand/uicommand.py:1289
 msgid "Mark task &active\tAlt+RETURN"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:1708
+#: taskcoachlib/gui/uicommand/uicommand.py:1290
 msgid "Mark the selected task(s) active"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:1726
+#: taskcoachlib/gui/uicommand/uicommand.py:1308
 msgid "Mark task &inactive\tCtrl+Alt+RETURN"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:1727
+#: taskcoachlib/gui/uicommand/uicommand.py:1309
 msgid "Mark the selected task(s) inactive"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:1745
+#: taskcoachlib/gui/uicommand/uicommand.py:1327
 msgid "Mark task &completed\tCtrl+RETURN"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:1746
+#: taskcoachlib/gui/uicommand/uicommand.py:1328
 msgid "Mark the selected task(s) completed"
 msgstr "Marchează sarcinile selectate ca terminate"
 
-#: taskcoachlib/gui/uicommand.py:1765
+#: taskcoachlib/gui/uicommand/uicommand.py:1348
 msgid "&Maximize priority\tShift+Ctrl+I"
 msgstr "&Maximizează prioritatea\tShift+Ctrl+I"
 
-#: taskcoachlib/gui/uicommand.py:1778
+#: taskcoachlib/gui/uicommand/uicommand.py:1362
 msgid "&Minimize priority\tShift+Ctrl+D"
 msgstr "&Minimizează prioritatea\tShift+Ctrl+D"
 
-#: taskcoachlib/gui/uicommand.py:1791
+#: taskcoachlib/gui/uicommand/uicommand.py:1376
 msgid "&Increase priority\tCtrl+I"
 msgstr "&Incrementează prioritatea\tCtrl+I"
 
-#: taskcoachlib/gui/uicommand.py:1804
+#: taskcoachlib/gui/uicommand/uicommand.py:1390
 msgid "&Decrease priority\tCtrl+D"
 msgstr "&Decrementează prioritatea\tCtrl+D"
 
-#: taskcoachlib/gui/uicommand.py:1850
+#: taskcoachlib/gui/uicommand/uicommand.py:1437
 msgid "Toggle %s"
 msgstr "Schimbă %s"
 
-#: taskcoachlib/gui/uicommand.py:1884
+#: taskcoachlib/gui/uicommand/uicommand.py:1471
 msgid "&Mail...\tCtrl-M"
 msgstr "e-&Mail...\tCtrl-M"
 
-#: taskcoachlib/gui/uicommand.py:1884
+#: taskcoachlib/gui/uicommand/uicommand.py:1471
 msgid "&Mail...\tShift-Ctrl-M"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:1897
+#: taskcoachlib/gui/uicommand/uicommand.py:1484
 msgid "Several things"
 msgstr "Cîteva lucruri"
 
-#: taskcoachlib/gui/uicommand.py:1900
+#: taskcoachlib/gui/uicommand/uicommand.py:1487
 msgid "and"
 msgstr "și"
 
-#: taskcoachlib/gui/uicommand.py:1930
+#: taskcoachlib/gui/uicommand/uicommand.py:1517
 msgid ""
 "Cannot send email:\n"
 "%s"
@@ -3281,345 +3293,346 @@ msgstr ""
 "Imposibil de trimis e-mail:\n"
 "%s"
 
-#: taskcoachlib/gui/uicommand.py:1931
+#: taskcoachlib/gui/uicommand/uicommand.py:1518
 msgid "%s mail error"
 msgstr "Eroare de e-mail %s"
 
-#: taskcoachlib/gui/uicommand.py:1937
+#: taskcoachlib/gui/uicommand/uicommand.py:1525
 msgid "Add &note...\tCtrl+B"
 msgstr "Adaugă &notiță...\tCtrl+B"
 
-#: taskcoachlib/gui/uicommand.py:1953
+#: taskcoachlib/gui/uicommand/uicommand.py:1542
 msgid "Open all notes...\tShift+Ctrl+B"
 msgstr "Deschide toate notițele...\tShift+Ctrl+B"
 
-#: taskcoachlib/gui/uicommand.py:2007
+#: taskcoachlib/gui/uicommand/uicommand.py:1598
 msgid "&Start tracking effort\tCtrl-T"
 msgstr "Pornește înregi&strarea efortului\tCtrl-T"
 
-#: taskcoachlib/gui/uicommand.py:2028
+#: taskcoachlib/gui/uicommand/uicommand.py:1619
 msgid "Start tracking effort for the task(s) of the selected effort(s)"
 msgstr ""
 "Pornește înregistrarea efortului pentru sarcinile eforturilor selectate"
 
-#: taskcoachlib/gui/uicommand.py:2051
+#: taskcoachlib/gui/uicommand/uicommand.py:1642
 msgid "(No subject)"
 msgstr "(Fără subiect)"
 
-#: taskcoachlib/gui/uicommand.py:2054
+#: taskcoachlib/gui/uicommand/uicommand.py:1645
 msgid "Start tracking effort for %s"
 msgstr "Pornește urmărirea efortului pentru %s"
 
-#: taskcoachlib/gui/uicommand.py:2070
+#: taskcoachlib/gui/uicommand/uicommand.py:1661
 msgid "Select a task via the menu and start tracking effort for it"
 msgstr ""
 "Selectați o sarcină din meniu și porniți urmărirea efortului pentru ea"
 
-#: taskcoachlib/gui/uicommand.py:2082
+#: taskcoachlib/gui/uicommand/uicommand.py:1673
 msgid "Stop tracking or resume tracking effort\tShift+Ctrl+T"
 msgstr "Oprește urmărirea sau reia urmărirea efortului\tShift+Ctrl+T"
 
-#: taskcoachlib/gui/uicommand.py:2084
+#: taskcoachlib/gui/uicommand/uicommand.py:1675
 msgid "St&op tracking %s\tShift+Ctrl+T"
 msgstr "&Oprește urmărirea %s\tShift+Ctrl+T"
 
-#: taskcoachlib/gui/uicommand.py:2085
+#: taskcoachlib/gui/uicommand/uicommand.py:1676
 msgid "Stop tracking effort for the active task(s)"
 msgstr "Oprește urmărirea efortului pentru sarcinile active"
 
-#: taskcoachlib/gui/uicommand.py:2086
+#: taskcoachlib/gui/uicommand/uicommand.py:1677
 msgid "&Resume tracking %s\tShift+Ctrl+T"
 msgstr "&Rreia urmărirea %s\tShift+Ctrl+T"
 
-#: taskcoachlib/gui/uicommand.py:2087
+#: taskcoachlib/gui/uicommand/uicommand.py:1678
 msgid "Resume tracking effort for the last tracked task"
 msgstr "Reia înregistrarea efortului pentru ultima sarcină urmărită"
 
-#: taskcoachlib/gui/uicommand.py:2193
+#: taskcoachlib/gui/uicommand/uicommand.py:1784
 msgid "multiple tasks"
 msgstr "sarcini multiple"
 
-#: taskcoachlib/gui/uicommand.py:2230
+#: taskcoachlib/gui/uicommand/uicommand.py:1821
 msgid "New category...\tCtrl-G"
 msgstr "Categorie nouă...\tCtrl-G"
 
-#: taskcoachlib/gui/uicommand.py:2250
+#: taskcoachlib/gui/uicommand/uicommand.py:1841
 msgid "New note...\tCtrl-J"
 msgstr "Notiță nouă...\tCtrl-J"
 
-#: taskcoachlib/gui/uicommand.py:2275
+#: taskcoachlib/gui/uicommand/uicommand.py:1866
 msgid "New &note with selected categories..."
 msgstr "&Notiță nouă cu categoriile selectate..."
 
-#: taskcoachlib/gui/uicommand.py:2276
+#: taskcoachlib/gui/uicommand/uicommand.py:1867
 msgid "Insert a new note with the selected categories checked"
 msgstr "Creează o notiță nouă aparținînd categoriilor selectate"
 
-#: taskcoachlib/gui/uicommand.py:2306
+#: taskcoachlib/gui/uicommand/uicommand.py:1898
 msgid "&Add attachment...\tShift-Ctrl-A"
 msgstr "&Adaugă atașament...\tShift-Ctrl-A"
 
-#: taskcoachlib/gui/uicommand.py:2330
+#: taskcoachlib/gui/uicommand/uicommand.py:1922
 msgid "Error opening attachment"
 msgstr "Eroare la deschiderea atașamentului"
 
-#: taskcoachlib/gui/uicommand.py:2350
+#: taskcoachlib/gui/uicommand/uicommand.py:1943
 msgid "&Open all attachments...\tShift+Ctrl+O"
 msgstr "Deschide t&oate atașamentele...\tShift+Ctrl+O"
 
-#: taskcoachlib/gui/uicommand.py:2392
+#: taskcoachlib/gui/uicommand/uicommand.py:1985
 msgid "&Help contents\tCtrl+?"
 msgstr "&Cuprins ajutor\tCtrl+?"
 
-#: taskcoachlib/gui/uicommand.py:2395
+#: taskcoachlib/gui/uicommand/uicommand.py:1988
 msgid "&Help contents\tCtrl+H"
 msgstr "&Cuprins ajutor\tCtrl+H"
 
-#: taskcoachlib/gui/uicommand.py:2397
+#: taskcoachlib/gui/uicommand/uicommand.py:1990
 msgid "Help"
 msgstr "Ajutor"
 
-#: taskcoachlib/gui/uicommand.py:2403
+#: taskcoachlib/gui/uicommand/uicommand.py:1996
 msgid "&Tips"
 msgstr "Sfa&turi"
 
-#: taskcoachlib/gui/uicommand.py:2404
+#: taskcoachlib/gui/uicommand/uicommand.py:1997
 msgid "Tips about the program"
 msgstr "Sfaturi despre program"
 
-#: taskcoachlib/gui/uicommand.py:2413
+#: taskcoachlib/gui/uicommand/uicommand.py:2006
 msgid "Anonymize"
 msgstr "Anonimizați"
 
-#: taskcoachlib/gui/uicommand.py:2414
+#: taskcoachlib/gui/uicommand/uicommand.py:2007
 msgid "Anonymize a task file to attach it to a bug report"
 msgstr "Anonimizați un fișier operație pentru a-l atașa unui bug report"
 
-#: taskcoachlib/gui/uicommand.py:2419
+#: taskcoachlib/gui/uicommand/uicommand.py:2012
 msgid "Your task file has been anonymized and saved to:"
 msgstr "Fișierul de sarcini a fost anonimizat și salvat în:"
 
-#: taskcoachlib/gui/uicommand.py:2420
+#: taskcoachlib/gui/uicommand/uicommand.py:2013
 msgid "Finished"
 msgstr "Terminat"
 
-#: taskcoachlib/gui/uicommand.py:2428
+#: taskcoachlib/gui/uicommand/uicommand.py:2021
 msgid "&About %s"
 msgstr "&Despre %s"
 
-#: taskcoachlib/gui/uicommand.py:2429
+#: taskcoachlib/gui/uicommand/uicommand.py:2022
 msgid "Version and contact information about %s"
 msgstr "Versiune și informații de contact despre %s"
 
-#: taskcoachlib/gui/uicommand.py:2430
+#: taskcoachlib/gui/uicommand/uicommand.py:2023
 msgid "About %s"
 msgstr "Despre %s"
 
-#: taskcoachlib/gui/uicommand.py:2437
+#: taskcoachlib/gui/uicommand/uicommand.py:2030
 msgid "&License"
 msgstr "&Licență"
 
-#: taskcoachlib/gui/uicommand.py:2438 taskcoachlib/gui/uicommand.py:2439
+#: taskcoachlib/gui/uicommand/uicommand.py:2031
+#: taskcoachlib/gui/uicommand/uicommand.py:2032
 msgid "%s license"
 msgstr "Licență %s"
 
-#: taskcoachlib/gui/uicommand.py:2446
+#: taskcoachlib/gui/uicommand/uicommand.py:2039
 msgid "Check for update"
 msgstr "Verificaţi dacă există actualizări"
 
-#: taskcoachlib/gui/uicommand.py:2447
+#: taskcoachlib/gui/uicommand/uicommand.py:2040
 msgid "Check for the availability of a new version of %s"
 msgstr "Verificați disponibilitatea unei noi veriuni de %s"
 
-#: taskcoachlib/gui/uicommand.py:2463
+#: taskcoachlib/gui/uicommand/uicommand.py:2056
 msgid ""
 "Cannot open URL:\n"
 "%s"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:2464
+#: taskcoachlib/gui/uicommand/uicommand.py:2057
 msgid "%s URL error"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:2470
+#: taskcoachlib/gui/uicommand/uicommand.py:2063
 msgid "&Frequently asked questions"
 msgstr "&Întrebări adresate frecvent"
 
-#: taskcoachlib/gui/uicommand.py:2471
+#: taskcoachlib/gui/uicommand/uicommand.py:2064
 msgid "Browse the frequently asked questions and answers"
 msgstr "Explorați întrebările frecvente și răspunsurile"
 
-#: taskcoachlib/gui/uicommand.py:2478
+#: taskcoachlib/gui/uicommand/uicommand.py:2071
 msgid "Report a &bug..."
 msgstr "Raportați o eroare..."
 
-#: taskcoachlib/gui/uicommand.py:2479
+#: taskcoachlib/gui/uicommand/uicommand.py:2072
 msgid "Report a bug or browse known bugs"
 msgstr "Raportați o eroare sau consultați pe cele știute"
 
-#: taskcoachlib/gui/uicommand.py:2486
+#: taskcoachlib/gui/uicommand/uicommand.py:2079
 msgid "Request a &feature..."
 msgstr "Cereți o &funcționalitate..."
 
-#: taskcoachlib/gui/uicommand.py:2487
+#: taskcoachlib/gui/uicommand/uicommand.py:2080
 msgid "Request a new feature or vote for existing requests"
 msgstr "Cereți o funcționalitate nouă sau votați cererile existente"
 
-#: taskcoachlib/gui/uicommand.py:2494
+#: taskcoachlib/gui/uicommand/uicommand.py:2087
 msgid "Request &support..."
 msgstr "Cereți &suport..."
 
-#: taskcoachlib/gui/uicommand.py:2495
+#: taskcoachlib/gui/uicommand/uicommand.py:2088
 msgid "Request user support from the developers"
 msgstr "Cereți suport utilizator de la dezvoltatori"
 
-#: taskcoachlib/gui/uicommand.py:2503
+#: taskcoachlib/gui/uicommand/uicommand.py:2096
 msgid "Help improve &translations..."
 msgstr "Ajutați la îmbunătățirea &translations..."
 
-#: taskcoachlib/gui/uicommand.py:2504
+#: taskcoachlib/gui/uicommand/uicommand.py:2097
 msgid "Help improve the translations of %s"
 msgstr "Ajutați la îmbunătățirea traducerilor %s"
 
-#: taskcoachlib/gui/uicommand.py:2511
+#: taskcoachlib/gui/uicommand/uicommand.py:2104
 msgid "&Donate..."
 msgstr "&Donați..."
 
-#: taskcoachlib/gui/uicommand.py:2512
+#: taskcoachlib/gui/uicommand/uicommand.py:2105
 msgid "Donate to support the development of %s"
 msgstr "Donați pentru a susține dezvoltarea lui %s"
 
-#: taskcoachlib/gui/uicommand.py:2518
+#: taskcoachlib/gui/uicommand/uicommand.py:2111
 msgid "&Restore"
 msgstr "&Restaurează"
 
-#: taskcoachlib/gui/uicommand.py:2519
+#: taskcoachlib/gui/uicommand/uicommand.py:2112
 msgid "Restore the window to its previous state"
 msgstr "Restaurează fereastra la starea sa precedentă"
 
-#: taskcoachlib/gui/uicommand.py:2530
+#: taskcoachlib/gui/uicommand/uicommand.py:2123
 msgid "Search"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:2642
+#: taskcoachlib/gui/uicommand/uicommand.py:2236
 msgid "Effort details"
 msgstr "Detalii efort"
 
-#: taskcoachlib/gui/uicommand.py:2642
+#: taskcoachlib/gui/uicommand/uicommand.py:2236
 msgid "Effort per day"
 msgstr "Efort pe zi"
 
-#: taskcoachlib/gui/uicommand.py:2643
+#: taskcoachlib/gui/uicommand/uicommand.py:2237
 msgid "Effort per month"
 msgstr "Efort pe lună"
 
-#: taskcoachlib/gui/uicommand.py:2643
+#: taskcoachlib/gui/uicommand/uicommand.py:2237
 msgid "Effort per week"
 msgstr "Efort pe săptămînă"
 
-#: taskcoachlib/gui/uicommand.py:2647
+#: taskcoachlib/gui/uicommand/uicommand.py:2241
 msgid "Aggregation mode"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:2679
+#: taskcoachlib/gui/uicommand/uicommand.py:2274
 msgid "List of tasks"
 msgstr "Lista de sarcini"
 
-#: taskcoachlib/gui/uicommand.py:2679
+#: taskcoachlib/gui/uicommand/uicommand.py:2274
 msgid "Tree of tasks"
 msgstr "Arbore de sarcini"
 
-#: taskcoachlib/gui/uicommand.py:2685
+#: taskcoachlib/gui/uicommand/uicommand.py:2280
 msgid "When checked, show tasks as tree, otherwise show tasks as list"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:2716
+#: taskcoachlib/gui/uicommand/uicommand.py:2311
 msgid "Filter on all checked categories"
 msgstr "Filtrează pe toate categoriile bifate"
 
-#: taskcoachlib/gui/uicommand.py:2717
+#: taskcoachlib/gui/uicommand/uicommand.py:2312
 msgid "Filter on any checked category"
 msgstr "Filtrează pe oricare din categoriile bifate"
 
-#: taskcoachlib/gui/uicommand.py:2723
+#: taskcoachlib/gui/uicommand/uicommand.py:2318
 msgid ""
 "When checked, filter on all checked categories, otherwise on any checked "
 "category"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:2752
+#: taskcoachlib/gui/uicommand/uicommand.py:2348
 msgid "Order choice"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:2779
+#: taskcoachlib/gui/uicommand/uicommand.py:2375
 msgid "&Configure"
 msgstr "&Configurează"
 
-#: taskcoachlib/gui/uicommand.py:2780
+#: taskcoachlib/gui/uicommand/uicommand.py:2376
 msgid "Configure the calendar viewer"
 msgstr "Configurează vederea calendar"
 
-#: taskcoachlib/gui/uicommand.py:2807
+#: taskcoachlib/gui/uicommand/uicommand.py:2403
 msgid "&Next period"
 msgstr "Perioada &următoare"
 
-#: taskcoachlib/gui/uicommand.py:2808
+#: taskcoachlib/gui/uicommand/uicommand.py:2404
 msgid "Show next period"
 msgstr "Afișează perioada următoare"
 
-#: taskcoachlib/gui/uicommand.py:2814
+#: taskcoachlib/gui/uicommand/uicommand.py:2410
 msgid "&Previous period"
 msgstr "Perioada &precedentă"
 
-#: taskcoachlib/gui/uicommand.py:2815
+#: taskcoachlib/gui/uicommand/uicommand.py:2411
 msgid "Show previous period"
 msgstr "Afișează perioada precedentă"
 
-#: taskcoachlib/gui/uicommand.py:2821
+#: taskcoachlib/gui/uicommand/uicommand.py:2417
 msgid "&Today"
 msgstr "&Astăzi"
 
-#: taskcoachlib/gui/uicommand.py:2822
+#: taskcoachlib/gui/uicommand/uicommand.py:2418
 msgid "Show today"
 msgstr "Afișează astăzi"
 
-#: taskcoachlib/gui/uicommand.py:2830
+#: taskcoachlib/gui/uicommand/uicommand.py:2427
 msgid "&Automatic column resizing"
 msgstr "Redimensionare &automată de coloane"
 
-#: taskcoachlib/gui/uicommand.py:2831
+#: taskcoachlib/gui/uicommand/uicommand.py:2428
 msgid "When checked, automatically resize columns to fill available space"
 msgstr ""
 "Dacă bifată, coloanele vor fi redimensionate automat spre ocuparea spațiului "
 "disponibil"
 
-#: taskcoachlib/gui/uicommand.py:2853
+#: taskcoachlib/gui/uicommand/uicommand.py:2450
 msgid "Set pie chart angle"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:2891
+#: taskcoachlib/gui/uicommand/uicommand.py:2488
 msgid "No rounding"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:2891
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1396
+#: taskcoachlib/gui/uicommand/uicommand.py:2488
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1542
 msgid "1 minute"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:2892
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1398
+#: taskcoachlib/gui/uicommand/uicommand.py:2489
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1544
 msgid "%d minutes"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:2895
+#: taskcoachlib/gui/uicommand/uicommand.py:2492
 msgid "Rounding precision"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:2914
+#: taskcoachlib/gui/uicommand/uicommand.py:2511
 msgid "&Always round up"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:2915
+#: taskcoachlib/gui/uicommand/uicommand.py:2512
 msgid "Always round up to the next rounding increment"
 msgstr ""
 
@@ -3641,26 +3654,19 @@ msgid "Sort by description"
 msgstr "Sortează după descriere"
 
 #: taskcoachlib/gui/viewer/attachment.py:91
-#: taskcoachlib/gui/viewer/attachment.py:120
-#: taskcoachlib/gui/viewer/category.py:131
-#: taskcoachlib/gui/viewer/effort.py:276 taskcoachlib/gui/viewer/mixin.py:296
-#: taskcoachlib/gui/viewer/note.py:87 taskcoachlib/gui/viewer/note.py:117
-#: taskcoachlib/gui/viewer/task.py:1045
+#: taskcoachlib/gui/viewer/attachment.py:129
+#: taskcoachlib/gui/viewer/category.py:137
+#: taskcoachlib/gui/viewer/effort.py:287 taskcoachlib/gui/viewer/mixin.py:296
+#: taskcoachlib/gui/viewer/note.py:87 taskcoachlib/gui/viewer/note.py:120
+#: taskcoachlib/gui/viewer/task.py:1052
 msgid "&Description"
 msgstr "&Descriere"
 
-#: taskcoachlib/gui/viewer/attachment.py:105
-#: taskcoachlib/gui/viewer/category.py:113 taskcoachlib/gui/viewer/note.py:140
-#: taskcoachlib/gui/viewer/task.py:972
-#: taskcoachlib/persistence/csv/generator.py:39
-msgid "Creation date"
-msgstr ""
-
 #: taskcoachlib/gui/viewer/attachment.py:110
-#: taskcoachlib/gui/viewer/attachment.py:126
-#: taskcoachlib/gui/viewer/category.py:141
+#: taskcoachlib/gui/viewer/attachment.py:135
+#: taskcoachlib/gui/viewer/category.py:147
 #: taskcoachlib/gui/viewer/mixin.py:299 taskcoachlib/gui/viewer/note.py:96
-#: taskcoachlib/gui/viewer/note.py:144 taskcoachlib/gui/viewer/task.py:1075
+#: taskcoachlib/gui/viewer/note.py:147 taskcoachlib/gui/viewer/task.py:1082
 msgid "&Creation date"
 msgstr ""
 
@@ -3668,29 +3674,47 @@ msgstr ""
 msgid "Sort by creation date"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/attachment.py:121
-#: taskcoachlib/gui/viewer/category.py:132
-#: taskcoachlib/gui/viewer/effort.py:277 taskcoachlib/gui/viewer/note.py:88
-#: taskcoachlib/gui/viewer/task.py:1046
+#: taskcoachlib/gui/viewer/attachment.py:118
+#: taskcoachlib/gui/viewer/attachment.py:138
+#: taskcoachlib/gui/viewer/category.py:150
+#: taskcoachlib/gui/viewer/mixin.py:303 taskcoachlib/gui/viewer/note.py:99
+#: taskcoachlib/gui/viewer/note.py:155 taskcoachlib/gui/viewer/task.py:1085
+msgid "&Modification date"
+msgstr ""
+
+#: taskcoachlib/gui/viewer/attachment.py:119
+msgid "Sort by last modification date"
+msgstr ""
+
+#: taskcoachlib/gui/viewer/attachment.py:130
+#: taskcoachlib/gui/viewer/category.py:138
+#: taskcoachlib/gui/viewer/effort.py:288 taskcoachlib/gui/viewer/note.py:88
+#: taskcoachlib/gui/viewer/task.py:1053
 msgid "Show/hide description column"
 msgstr "Afișează/ascunde coloana descrierii"
 
-#: taskcoachlib/gui/viewer/attachment.py:123
-#: taskcoachlib/gui/viewer/category.py:138
-#: taskcoachlib/gui/viewer/task.py:1062
+#: taskcoachlib/gui/viewer/attachment.py:132
+#: taskcoachlib/gui/viewer/category.py:144
+#: taskcoachlib/gui/viewer/task.py:1069
 msgid "&Notes"
 msgstr "&Notițe"
 
-#: taskcoachlib/gui/viewer/attachment.py:124
-#: taskcoachlib/gui/viewer/category.py:139
-#: taskcoachlib/gui/viewer/task.py:1063
+#: taskcoachlib/gui/viewer/attachment.py:133
+#: taskcoachlib/gui/viewer/category.py:145
+#: taskcoachlib/gui/viewer/task.py:1070
 msgid "Show/hide notes column"
 msgstr "Afișează/ascunde coloana notițelor"
 
-#: taskcoachlib/gui/viewer/attachment.py:127
-#: taskcoachlib/gui/viewer/category.py:142 taskcoachlib/gui/viewer/note.py:97
-#: taskcoachlib/gui/viewer/task.py:1076
+#: taskcoachlib/gui/viewer/attachment.py:136
+#: taskcoachlib/gui/viewer/category.py:148 taskcoachlib/gui/viewer/note.py:97
+#: taskcoachlib/gui/viewer/task.py:1083
 msgid "Show/hide creation date column"
+msgstr ""
+
+#: taskcoachlib/gui/viewer/attachment.py:139
+#: taskcoachlib/gui/viewer/category.py:151 taskcoachlib/gui/viewer/note.py:100
+#: taskcoachlib/gui/viewer/task.py:1086
+msgid "Show/hide last modification date column"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/base.py:80
@@ -3702,311 +3726,327 @@ msgid ""
 "Click on the gear icon on the right to add buttons and rearrange them."
 msgstr ""
 
-#: taskcoachlib/gui/viewer/category.py:134 taskcoachlib/gui/viewer/note.py:90
-#: taskcoachlib/gui/viewer/task.py:1057
+#: taskcoachlib/gui/viewer/category.py:140 taskcoachlib/gui/viewer/note.py:90
+#: taskcoachlib/gui/viewer/task.py:1064
 msgid "&Attachments"
 msgstr "&Atașamente"
 
-#: taskcoachlib/gui/viewer/category.py:135 taskcoachlib/gui/viewer/note.py:91
+#: taskcoachlib/gui/viewer/category.py:141 taskcoachlib/gui/viewer/note.py:91
 msgid "Show/hide attachments column"
 msgstr "Afișează/ascunde coloana atașamentelor"
 
-#: taskcoachlib/gui/viewer/category.py:179
+#: taskcoachlib/gui/viewer/category.py:188
 msgid "Categories: %d selected, %d total"
 msgstr "Categorii: %d selectate din %d"
 
-#: taskcoachlib/gui/viewer/category.py:182
+#: taskcoachlib/gui/viewer/category.py:191
 msgid "Status: %d filtered"
 msgstr "Stare: %d filtrate"
 
-#: taskcoachlib/gui/viewer/effort.py:194
+#: taskcoachlib/gui/viewer/effort.py:205
 #: taskcoachlib/persistence/csv/generator.py:40
 msgid "Period"
 msgstr "Perioadă"
 
-#: taskcoachlib/gui/viewer/effort.py:212
+#: taskcoachlib/gui/viewer/effort.py:223
 msgid "Total time spent"
 msgstr "Timp total consumat"
 
-#: taskcoachlib/gui/viewer/effort.py:217
+#: taskcoachlib/gui/viewer/effort.py:228
 msgid "Total revenue"
 msgstr "Venit total"
 
-#: taskcoachlib/gui/viewer/effort.py:226
+#: taskcoachlib/gui/viewer/effort.py:237
 msgid "Tuesday"
 msgstr "Marți"
 
-#: taskcoachlib/gui/viewer/effort.py:229
+#: taskcoachlib/gui/viewer/effort.py:240
 msgid "Wednesday"
 msgstr "Miercuri"
 
-#: taskcoachlib/gui/viewer/effort.py:232
+#: taskcoachlib/gui/viewer/effort.py:243
 msgid "Thursday"
 msgstr "Joi"
 
-#: taskcoachlib/gui/viewer/effort.py:235
+#: taskcoachlib/gui/viewer/effort.py:246
 msgid "Friday"
 msgstr "Vineri"
 
-#: taskcoachlib/gui/viewer/effort.py:238
+#: taskcoachlib/gui/viewer/effort.py:249
 msgid "Saturday"
 msgstr "Sîmbătă"
 
-#: taskcoachlib/gui/viewer/effort.py:279 taskcoachlib/gui/viewer/mixin.py:115
-#: taskcoachlib/gui/viewer/note.py:93 taskcoachlib/gui/viewer/note.py:137
-#: taskcoachlib/gui/viewer/task.py:1066
+#: taskcoachlib/gui/viewer/effort.py:290 taskcoachlib/gui/viewer/mixin.py:115
+#: taskcoachlib/gui/viewer/note.py:93 taskcoachlib/gui/viewer/note.py:140
+#: taskcoachlib/gui/viewer/task.py:1073
 msgid "&Categories"
 msgstr "&Categorii"
 
-#: taskcoachlib/gui/viewer/effort.py:280 taskcoachlib/gui/viewer/note.py:94
-#: taskcoachlib/gui/viewer/task.py:1067
+#: taskcoachlib/gui/viewer/effort.py:291 taskcoachlib/gui/viewer/note.py:94
+#: taskcoachlib/gui/viewer/task.py:1074
 msgid "Show/hide categories column"
 msgstr "Afișează/ascunde coloana categoriilor"
 
-#: taskcoachlib/gui/viewer/effort.py:282 taskcoachlib/gui/viewer/mixin.py:408
-#: taskcoachlib/gui/viewer/task.py:1022
+#: taskcoachlib/gui/viewer/effort.py:293 taskcoachlib/gui/viewer/mixin.py:416
+#: taskcoachlib/gui/viewer/task.py:1029
 msgid "&Time spent"
 msgstr "&Timp consumat"
 
-#: taskcoachlib/gui/viewer/effort.py:283 taskcoachlib/gui/viewer/task.py:1023
+#: taskcoachlib/gui/viewer/effort.py:294 taskcoachlib/gui/viewer/task.py:1030
 msgid "Show/hide time spent column"
 msgstr "Afișează/ascunde coloana timpului consumat"
 
-#: taskcoachlib/gui/viewer/effort.py:285 taskcoachlib/gui/viewer/mixin.py:413
-#: taskcoachlib/gui/viewer/task.py:1041
+#: taskcoachlib/gui/viewer/effort.py:296 taskcoachlib/gui/viewer/mixin.py:421
+#: taskcoachlib/gui/viewer/task.py:1048
 msgid "&Revenue"
 msgstr "&Venit"
 
-#: taskcoachlib/gui/viewer/effort.py:286 taskcoachlib/gui/viewer/task.py:1042
+#: taskcoachlib/gui/viewer/effort.py:297 taskcoachlib/gui/viewer/task.py:1049
 msgid "Show/hide revenue column"
 msgstr "Afișează/ascunde coloana venitului"
 
-#: taskcoachlib/gui/viewer/effort.py:290
+#: taskcoachlib/gui/viewer/effort.py:301
 msgid "&Total time spent"
 msgstr "&Timp total consumat"
 
-#: taskcoachlib/gui/viewer/effort.py:291
+#: taskcoachlib/gui/viewer/effort.py:302
 msgid "Show/hide total time spent column"
 msgstr "Afișează/ascunde coloana timpului total consumat"
 
-#: taskcoachlib/gui/viewer/effort.py:294
+#: taskcoachlib/gui/viewer/effort.py:305
 msgid "&Total revenue"
 msgstr "Venit &total"
 
-#: taskcoachlib/gui/viewer/effort.py:295
+#: taskcoachlib/gui/viewer/effort.py:306
 msgid "Show/hide total revenue column"
 msgstr "Afișează/ascunde coloana venitului total"
 
-#: taskcoachlib/gui/viewer/effort.py:299
+#: taskcoachlib/gui/viewer/effort.py:310
 msgid "Effort per weekday"
 msgstr "Efort pe zi a săptămînii"
 
-#: taskcoachlib/gui/viewer/effort.py:300
+#: taskcoachlib/gui/viewer/effort.py:311
 msgid "Show/hide time spent per weekday columns"
 msgstr "Afișează/ascunde coloana timpului consumat pe zi a săptămînii"
 
-#: taskcoachlib/gui/viewer/effort.py:346
+#: taskcoachlib/gui/viewer/effort.py:357
 msgid "Effort aggregation"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/effort.py:375
+#: taskcoachlib/gui/viewer/effort.py:386
 msgid "Effort: %d selected, %d visible, %d total"
 msgstr "Efort: %d selectate, %d vizibile, %d în total"
 
-#: taskcoachlib/gui/viewer/effort.py:378
+#: taskcoachlib/gui/viewer/effort.py:389
 msgid "Status: %d tracking"
 msgstr "Stare: urmărirea lui %d"
 
-#: taskcoachlib/gui/viewer/mixin.py:320
+#: taskcoachlib/gui/viewer/mixin.py:324
 msgid "Sort categories by subject"
 msgstr "Sortează categoriile după subiect"
 
-#: taskcoachlib/gui/viewer/mixin.py:321
+#: taskcoachlib/gui/viewer/mixin.py:325
 msgid "Sort categories by description"
 msgstr "Sortează categoriile după descriere"
 
-#: taskcoachlib/gui/viewer/mixin.py:322
+#: taskcoachlib/gui/viewer/mixin.py:326
 msgid "Sort categories by creation date"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:337
+#: taskcoachlib/gui/viewer/mixin.py:327
+msgid "Sort categories by last modification date"
+msgstr ""
+
+#: taskcoachlib/gui/viewer/mixin.py:342
 msgid "Sort attachments by subject"
 msgstr "Sortează atașamentele după subiect"
 
-#: taskcoachlib/gui/viewer/mixin.py:338
+#: taskcoachlib/gui/viewer/mixin.py:343
 msgid "Sort attachments by description"
 msgstr "Sortează atașamentele după descriere"
 
-#: taskcoachlib/gui/viewer/mixin.py:339
+#: taskcoachlib/gui/viewer/mixin.py:344
 msgid "Sort attachments by category"
 msgstr "Sortează atașamentele după categorie"
 
-#: taskcoachlib/gui/viewer/mixin.py:340
+#: taskcoachlib/gui/viewer/mixin.py:345
 msgid "Sort attachments by creation date"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:344 taskcoachlib/gui/viewer/note.py:107
+#: taskcoachlib/gui/viewer/mixin.py:346
+msgid "Sort attachments by last modification date"
+msgstr ""
+
+#: taskcoachlib/gui/viewer/mixin.py:350 taskcoachlib/gui/viewer/note.py:110
 msgid "Sort notes by subject"
 msgstr "Sortează notițele după subiect"
 
-#: taskcoachlib/gui/viewer/mixin.py:345 taskcoachlib/gui/viewer/note.py:118
+#: taskcoachlib/gui/viewer/mixin.py:351 taskcoachlib/gui/viewer/note.py:121
 msgid "Sort notes by description"
 msgstr "Sortează notițele după descriere"
 
-#: taskcoachlib/gui/viewer/mixin.py:346
+#: taskcoachlib/gui/viewer/mixin.py:352
 msgid "Sort notes by category"
 msgstr "Sortează notițele după categorie"
 
-#: taskcoachlib/gui/viewer/mixin.py:347 taskcoachlib/gui/viewer/note.py:145
+#: taskcoachlib/gui/viewer/mixin.py:353 taskcoachlib/gui/viewer/note.py:148
 msgid "Sort notes by creation date"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:352
+#: taskcoachlib/gui/viewer/mixin.py:354 taskcoachlib/gui/viewer/note.py:156
+msgid "Sort notes by last modification date"
+msgstr ""
+
+#: taskcoachlib/gui/viewer/mixin.py:359
 msgid "Sort tasks by subject"
 msgstr "Sortează sarcinile după subiect"
 
-#: taskcoachlib/gui/viewer/mixin.py:353
+#: taskcoachlib/gui/viewer/mixin.py:360
 msgid "Sort tasks by description"
 msgstr "Sortează sarcinile după descriere"
 
-#: taskcoachlib/gui/viewer/mixin.py:354
+#: taskcoachlib/gui/viewer/mixin.py:361
 msgid "Sort tasks by category"
 msgstr "Sortează sarcinile după categorie"
 
-#: taskcoachlib/gui/viewer/mixin.py:355
+#: taskcoachlib/gui/viewer/mixin.py:362
 msgid "Sort tasks by creation date"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:399
+#: taskcoachlib/gui/viewer/mixin.py:363
+msgid "Sort tasks by last modification date"
+msgstr ""
+
+#: taskcoachlib/gui/viewer/mixin.py:407
 msgid "Sort tasks by planned start date"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:399 taskcoachlib/gui/viewer/task.py:993
+#: taskcoachlib/gui/viewer/mixin.py:407 taskcoachlib/gui/viewer/task.py:1000
 msgid "&Planned start date"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:400
+#: taskcoachlib/gui/viewer/mixin.py:408
 msgid "Sort tasks by due date"
 msgstr "Sortează sarcinile după data scadentă"
 
-#: taskcoachlib/gui/viewer/mixin.py:400 taskcoachlib/gui/viewer/task.py:996
+#: taskcoachlib/gui/viewer/mixin.py:408 taskcoachlib/gui/viewer/task.py:1003
 msgid "&Due date"
 msgstr "Data sca&dentă"
 
-#: taskcoachlib/gui/viewer/mixin.py:401
+#: taskcoachlib/gui/viewer/mixin.py:409
 msgid "Sort tasks by completion date"
 msgstr "Sortează sarcinile după data de terminare"
 
-#: taskcoachlib/gui/viewer/mixin.py:401 taskcoachlib/gui/viewer/task.py:1002
+#: taskcoachlib/gui/viewer/mixin.py:409 taskcoachlib/gui/viewer/task.py:1009
 msgid "&Completion date"
 msgstr "Data de &terminare"
 
-#: taskcoachlib/gui/viewer/mixin.py:402
+#: taskcoachlib/gui/viewer/mixin.py:410
 msgid "Sort tasks by prerequisite tasks"
 msgstr "Sortează sarcinile după sarcinile obligatorii"
 
-#: taskcoachlib/gui/viewer/mixin.py:402 taskcoachlib/gui/viewer/task.py:1048
+#: taskcoachlib/gui/viewer/mixin.py:410 taskcoachlib/gui/viewer/task.py:1055
 msgid "&Prerequisites"
 msgstr "&Precerințe"
 
-#: taskcoachlib/gui/viewer/mixin.py:403
+#: taskcoachlib/gui/viewer/mixin.py:411
 msgid "Sort tasks by dependent tasks"
 msgstr "Sortează sarcinile după sarcinile dependente"
 
-#: taskcoachlib/gui/viewer/mixin.py:403 taskcoachlib/gui/viewer/task.py:1051
+#: taskcoachlib/gui/viewer/mixin.py:411 taskcoachlib/gui/viewer/task.py:1058
 msgid "&Dependents"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:404
+#: taskcoachlib/gui/viewer/mixin.py:412
 msgid "Sort tasks by time left"
 msgstr "Sortează sarcinile după timpul rămas"
 
-#: taskcoachlib/gui/viewer/mixin.py:404 taskcoachlib/gui/viewer/task.py:1005
+#: taskcoachlib/gui/viewer/mixin.py:412 taskcoachlib/gui/viewer/task.py:1012
 msgid "&Time left"
 msgstr "&Timp rămas"
 
-#: taskcoachlib/gui/viewer/mixin.py:405
+#: taskcoachlib/gui/viewer/mixin.py:413
 msgid "Sort tasks by percentage complete"
 msgstr "Sortează sarcinile după procentajul terminat"
 
-#: taskcoachlib/gui/viewer/mixin.py:405 taskcoachlib/gui/viewer/task.py:1054
+#: taskcoachlib/gui/viewer/mixin.py:413 taskcoachlib/gui/viewer/task.py:1061
 msgid "&Percentage complete"
 msgstr "&Procentaj terminat"
 
-#: taskcoachlib/gui/viewer/mixin.py:406
+#: taskcoachlib/gui/viewer/mixin.py:414
 msgid "Sort tasks by recurrence"
 msgstr "Sortează sarcinile după recurență"
 
-#: taskcoachlib/gui/viewer/mixin.py:406 taskcoachlib/gui/viewer/task.py:1008
+#: taskcoachlib/gui/viewer/mixin.py:414 taskcoachlib/gui/viewer/task.py:1015
 msgid "&Recurrence"
 msgstr "&Recurență"
 
-#: taskcoachlib/gui/viewer/mixin.py:407
+#: taskcoachlib/gui/viewer/mixin.py:415
 msgid "Sort tasks by budget"
 msgstr "Sortează sarcinile după buget"
 
-#: taskcoachlib/gui/viewer/mixin.py:407 taskcoachlib/gui/viewer/task.py:1013
-#: taskcoachlib/gui/viewer/task.py:1019
+#: taskcoachlib/gui/viewer/mixin.py:415 taskcoachlib/gui/viewer/task.py:1020
+#: taskcoachlib/gui/viewer/task.py:1026
 msgid "&Budget"
 msgstr "&Buget"
 
-#: taskcoachlib/gui/viewer/mixin.py:408
+#: taskcoachlib/gui/viewer/mixin.py:416
 msgid "Sort tasks by time spent"
 msgstr "Sortează sarcinile după timpul consumat"
 
-#: taskcoachlib/gui/viewer/mixin.py:409
+#: taskcoachlib/gui/viewer/mixin.py:417
 msgid "Budget &left"
 msgstr "Buget &rămas"
 
-#: taskcoachlib/gui/viewer/mixin.py:409
+#: taskcoachlib/gui/viewer/mixin.py:417
 msgid "Sort tasks by budget left"
 msgstr "Sortează sarcinile după bugetul rămas"
 
-#: taskcoachlib/gui/viewer/mixin.py:410
+#: taskcoachlib/gui/viewer/mixin.py:418
 msgid "Sort tasks by priority"
 msgstr "Sortează sarcinile după prioritate"
 
-#: taskcoachlib/gui/viewer/mixin.py:411
+#: taskcoachlib/gui/viewer/mixin.py:419
 msgid "Sort tasks by hourly fee"
 msgstr "Sortează sarcinile după tariful orar"
 
-#: taskcoachlib/gui/viewer/mixin.py:411 taskcoachlib/gui/viewer/task.py:1035
+#: taskcoachlib/gui/viewer/mixin.py:419 taskcoachlib/gui/viewer/task.py:1042
 msgid "&Hourly fee"
 msgstr "Tarif &orar"
 
-#: taskcoachlib/gui/viewer/mixin.py:412
+#: taskcoachlib/gui/viewer/mixin.py:420
 msgid "Sort tasks by fixed fee"
 msgstr "Sortează sarcinile după tariful fix"
 
-#: taskcoachlib/gui/viewer/mixin.py:412 taskcoachlib/gui/viewer/task.py:1038
+#: taskcoachlib/gui/viewer/mixin.py:420 taskcoachlib/gui/viewer/task.py:1045
 msgid "&Fixed fee"
 msgstr "Tarif &fix"
 
-#: taskcoachlib/gui/viewer/mixin.py:413
+#: taskcoachlib/gui/viewer/mixin.py:421
 msgid "Sort tasks by revenue"
 msgstr "Sortează sarcinile după venit"
 
-#: taskcoachlib/gui/viewer/mixin.py:414
+#: taskcoachlib/gui/viewer/mixin.py:422
 msgid "Sort tasks by reminder date and time"
 msgstr "Sortează sarcinile după data și ora rapelului"
 
-#: taskcoachlib/gui/viewer/mixin.py:414 taskcoachlib/gui/viewer/task.py:1072
+#: taskcoachlib/gui/viewer/mixin.py:422 taskcoachlib/gui/viewer/task.py:1079
 msgid "&Reminder"
 msgstr "&Rapel"
 
-#: taskcoachlib/gui/viewer/note.py:106
+#: taskcoachlib/gui/viewer/note.py:109
 msgid "&Subject"
 msgstr "&Subiect"
 
-#: taskcoachlib/gui/viewer/note.py:138
+#: taskcoachlib/gui/viewer/note.py:141
 msgid "Sort notes by categories"
 msgstr "Sortează notițele după categorii"
 
-#: taskcoachlib/gui/viewer/note.py:162
+#: taskcoachlib/gui/viewer/note.py:175
 msgid "Notes: %d selected, %d total"
 msgstr "Notițe: %d selectate din %d"
 
-#: taskcoachlib/gui/viewer/note.py:164
+#: taskcoachlib/gui/viewer/note.py:177
 msgid "Status: n/a"
 msgstr "Stare: n/d"
 
@@ -4020,8 +4060,8 @@ msgstr ""
 
 #: taskcoachlib/gui/viewer/task.py:85
 msgid ""
-"Shift-click on a filter tool to see only tasks belonging to the correspondig "
-"status"
+"Shift-click on a filter tool to see only tasks belonging to the "
+"corresponding status"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/task.py:121 taskcoachlib/help/__init__.py:81
@@ -4061,115 +4101,115 @@ msgstr "% terminată"
 msgid "Time left"
 msgstr "Timp rămas"
 
-#: taskcoachlib/gui/viewer/task.py:985
+#: taskcoachlib/gui/viewer/task.py:992
 msgid "&Dates"
 msgstr "&Date"
 
-#: taskcoachlib/gui/viewer/task.py:986
+#: taskcoachlib/gui/viewer/task.py:993
 msgid "&All date columns"
 msgstr "To&ate coloanele dată"
 
-#: taskcoachlib/gui/viewer/task.py:987
+#: taskcoachlib/gui/viewer/task.py:994
 msgid "Show/hide all date-related columns"
 msgstr "Afișează/ascunde toate coloanele dată"
 
-#: taskcoachlib/gui/viewer/task.py:994
+#: taskcoachlib/gui/viewer/task.py:1001
 msgid "Show/hide planned start date column"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:997
+#: taskcoachlib/gui/viewer/task.py:1004
 msgid "Show/hide due date column"
 msgstr "Afișează/ascunde coloana datei scadente"
 
-#: taskcoachlib/gui/viewer/task.py:999
+#: taskcoachlib/gui/viewer/task.py:1006
 msgid "&Actual start date"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1000
+#: taskcoachlib/gui/viewer/task.py:1007
 msgid "Show/hide actual start date column"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1003
+#: taskcoachlib/gui/viewer/task.py:1010
 msgid "Show/hide completion date column"
 msgstr "Afișează/ascunde coloana datei de terminare"
 
-#: taskcoachlib/gui/viewer/task.py:1006
+#: taskcoachlib/gui/viewer/task.py:1013
 msgid "Show/hide time left column"
 msgstr "Afișează/ascunde coloana timpului rămas"
 
-#: taskcoachlib/gui/viewer/task.py:1009
+#: taskcoachlib/gui/viewer/task.py:1016
 msgid "Show/hide recurrence column"
 msgstr "Afișează/ascunde coloana recurenței"
 
-#: taskcoachlib/gui/viewer/task.py:1014
+#: taskcoachlib/gui/viewer/task.py:1021
 msgid "&All budget columns"
 msgstr "To&ate coloanele buget"
 
-#: taskcoachlib/gui/viewer/task.py:1015
+#: taskcoachlib/gui/viewer/task.py:1022
 msgid "Show/hide all budget-related columns"
 msgstr "Afișează/ascunde toate coloanele buget"
 
-#: taskcoachlib/gui/viewer/task.py:1020
+#: taskcoachlib/gui/viewer/task.py:1027
 msgid "Show/hide budget column"
 msgstr "Afișează/ascunde coloana buget"
 
-#: taskcoachlib/gui/viewer/task.py:1025
+#: taskcoachlib/gui/viewer/task.py:1032
 msgid "&Budget left"
 msgstr "&Buget rămas"
 
-#: taskcoachlib/gui/viewer/task.py:1026
+#: taskcoachlib/gui/viewer/task.py:1033
 msgid "Show/hide budget left column"
 msgstr "Afișează/ascunde coloana bugetului rămas"
 
-#: taskcoachlib/gui/viewer/task.py:1029
+#: taskcoachlib/gui/viewer/task.py:1036
 msgid "&Financial"
 msgstr "&Finanțe"
 
-#: taskcoachlib/gui/viewer/task.py:1030
+#: taskcoachlib/gui/viewer/task.py:1037
 msgid "&All financial columns"
 msgstr "To&ate coloanele financiare"
 
-#: taskcoachlib/gui/viewer/task.py:1031
+#: taskcoachlib/gui/viewer/task.py:1038
 msgid "Show/hide all finance-related columns"
 msgstr "Afișează/ascunde toate coloanele financiare"
 
-#: taskcoachlib/gui/viewer/task.py:1036
+#: taskcoachlib/gui/viewer/task.py:1043
 msgid "Show/hide hourly fee column"
 msgstr "Afișează/ascunde coloana tarifului orar"
 
-#: taskcoachlib/gui/viewer/task.py:1039
+#: taskcoachlib/gui/viewer/task.py:1046
 msgid "Show/hide fixed fee column"
 msgstr "Afișează/ascunde coloana tarifului fix"
 
-#: taskcoachlib/gui/viewer/task.py:1049
+#: taskcoachlib/gui/viewer/task.py:1056
 msgid "Show/hide prerequisites column"
 msgstr "Afișează/ascunde coloana de precerințe"
 
-#: taskcoachlib/gui/viewer/task.py:1052
+#: taskcoachlib/gui/viewer/task.py:1059
 msgid "Show/hide dependents column"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1055
+#: taskcoachlib/gui/viewer/task.py:1062
 msgid "Show/hide percentage complete column"
 msgstr "Afișează/ascunde coloana procentajului terminat"
 
-#: taskcoachlib/gui/viewer/task.py:1058
+#: taskcoachlib/gui/viewer/task.py:1065
 msgid "Show/hide attachment column"
 msgstr "Afișează/ascunde coloana atașamentului"
 
-#: taskcoachlib/gui/viewer/task.py:1070
+#: taskcoachlib/gui/viewer/task.py:1077
 msgid "Show/hide priority column"
 msgstr "Afișează/ascunde coloana priorității"
 
-#: taskcoachlib/gui/viewer/task.py:1073
+#: taskcoachlib/gui/viewer/task.py:1080
 msgid "Show/hide reminder column"
 msgstr "Afișează/ascunde coloana rapelului"
 
-#: taskcoachlib/gui/viewer/task.py:1090
+#: taskcoachlib/gui/viewer/task.py:1100
 msgid "Show tasks as"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1278
+#: taskcoachlib/gui/viewer/task.py:1288
 msgid "Task statistics"
 msgstr ""
 
@@ -6403,7 +6443,15 @@ msgstr "Modifică efortul %s"
 msgid "Sending GUID: %s"
 msgstr "Trimitere GUID: %s"
 
-#: taskcoachlib/mailer/macmail.py:49
+#: taskcoachlib/mailer/macmail.py:26
+msgid "Reading mail info..."
+msgstr ""
+
+#: taskcoachlib/mailer/macmail.py:27
+msgid "Reading mail information. Please wait."
+msgstr ""
+
+#: taskcoachlib/mailer/macmail.py:50 taskcoachlib/mailer/macmail.py:69
 msgid "Mail.app message"
 msgstr "Mesaj Mail.app"
 
@@ -6505,11 +6553,11 @@ msgstr "Sarcină nouă scadentă astăzi"
 msgid "New task due tomorrow"
 msgstr "Sarcină nouă scadentă mîine"
 
-#: taskcoachlib/render.py:49 taskcoachlib/thirdparty/smartdatetimectrl.py:1386
+#: taskcoachlib/render.py:49 taskcoachlib/thirdparty/smartdatetimectrl.py:1532
 msgid "%d days"
 msgstr "%d zile"
 
-#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1384
+#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1530
 msgid "1 day"
 msgstr "1 zi"
 
@@ -6545,11 +6593,11 @@ msgstr "Orice altă lună"
 msgid "Every other year"
 msgstr "Orice alt an"
 
-#: taskcoachlib/render.py:104
+#: taskcoachlib/render.py:103
 msgid "Yesterday"
 msgstr ""
 
-#: taskcoachlib/render.py:175
+#: taskcoachlib/render.py:176
 msgid "now"
 msgstr "acum"
 
@@ -6665,20 +6713,20 @@ msgstr "Îna&poi"
 msgid "&Window"
 msgstr "&Fereastră"
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1330
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1437
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1476
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1583
 msgid "Edit"
 msgstr "Editează"
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1381
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1527
 msgid "%d weeks"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1393
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1539
 msgid "%d hours"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1437
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1583
 msgid "Done"
 msgstr ""
 
@@ -6832,6 +6880,9 @@ msgstr "Nu mai arăta deloc acest dialog"
 #: taskcoachlib/widgets/textctrl.py:141
 msgid "Error opening URL"
 msgstr "Eroare la deschiderea URL"
+
+#~ msgid "Delete attachments"
+#~ msgstr "Șterge atașamentele"
 
 #~ msgid "Start date"
 #~ msgstr "Data de început"
@@ -7023,6 +7074,9 @@ msgstr "Eroare la deschiderea URL"
 #~ msgstr ""
 #~ "Schemă URL nerecunoscută:\n"
 #~ "„%s”"
+
+#~ msgid "Delete attachment \"%s\""
+#~ msgstr "Șterge atașamentul „%s”"
 
 #~ msgid "Show/hide inactive tasks (tasks with a start date in the future)"
 #~ msgstr ""
