@@ -92,7 +92,7 @@ def main(path):
         listPath('.')
 
     if path != '.':
-        for name in os.listdir(path):
+        for name in sorted(os.listdir(path), cmp=lambda x, y: cmp(y, x)): # Feature should come first
             if name.startswith('Release') or name.startswith('Feature'):
                 fname = os.path.join(path, name)
                 if os.path.isdir(fname):
