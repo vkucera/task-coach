@@ -30,12 +30,6 @@ import sys
 import codecs
 import traceback
 
-try:
-    from taskcoachlib.syncml import sync
-except ImportError:  # pragma: no cover
-    # Unsupported platform.
-    pass
-
 
 class IOController(object): 
     ''' IOController is responsible for opening, closing, loading,
@@ -72,25 +66,11 @@ class IOController(object):
         self.__errorMessageOptions = dict(caption=_('%s file error') % \
                                           meta.name, style=wx.ICON_ERROR)
 
-    def syncMLConfig(self):
-        return self.__taskFile.syncMLConfig()
-
-    def setSyncMLConfig(self, config):
-        self.__taskFile.setSyncMLConfig(config)
-
     def needSave(self):
         return self.__taskFile.needSave()
 
     def changedOnDisk(self):
         return self.__taskFile.changedOnDisk()
-
-    def hasDeletedItems(self):
-        return bool([task for task in self.__taskFile.tasks() if task.isDeleted()] + \
-                    [note for note in self.__taskFile.notes() if note.isDeleted()])
-
-    def purgeDeletedItems(self):
-        self.__taskFile.tasks().removeItems([task for task in self.__taskFile.tasks() if task.isDeleted()])
-        self.__taskFile.notes().removeItems([note for note in self.__taskFile.notes() if note.isDeleted()])
 
     def openAfterStart(self, commandLineArgs):
         ''' Open either the file specified on the command line, or the file
@@ -349,31 +329,8 @@ class IOController(object):
         persistence.TodoTxtReader(self.__taskFile.tasks(),
                                   self.__taskFile.categories()).read(filename)
 
-    def synchronize(self):
-        doReset = False
-        while True:
-            password = GetPassword('Task Coach', 'SyncML', reset=doReset)
-            if not password:
-                break
-
-            synchronizer = sync.Synchronizer(self.__syncReport,
-                                         self.__taskFile, password)
-            try:
-                synchronizer.synchronize()
-            except sync.AuthenticationFailure:
-                doReset = True
-            else:
-                self.__messageCallback(_('Finished synchronization'))
-                break
-            finally:
-                synchronizer.Destroy()
-
     def filename(self):
         return self.__taskFile.filename()
-
-    def __syncReport(self, msg):
-        wx.MessageBox(msg, _('Synchronization status'), 
-                      style=wx.OK | wx.ICON_ERROR)
 
     def __openFileForWriting(self, filename, openfile, showerror, mode='w', 
                              encoding='utf-8'):

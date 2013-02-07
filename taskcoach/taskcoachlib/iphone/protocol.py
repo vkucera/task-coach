@@ -556,9 +556,6 @@ class BaseState(State): # pylint: disable=W0223
         if task.completed() and not self.syncCompleted:
             return False
 
-        if task.isDeleted():
-            return False
-
         if len(task.children()) == 0:
             return True
 
@@ -717,16 +714,16 @@ class FullFromDesktopState(BaseState):
             allEfforts = self.disp().window.taskFile.efforts()
 
             if self.syncCompleted:
-                self.tasks = list([task for task in self.disp().window.taskFile.tasks().allItemsSorted() if not task.isDeleted()])
+                self.tasks = list(self.disp().window.taskFile.tasks().allItemsSorted())
                 self.efforts = list([effort for effort in  allEfforts \
-                                  if effort.task() is None or not effort.task().isDeleted()])
+                                  if effort.task() is None])
             else:
-                self.tasks = list([task for task in self.disp().window.taskFile.tasks().allItemsSorted() if not (task.isDeleted() or task.completed())])
+                self.tasks = list([task for task in self.disp().window.taskFile.tasks().allItemsSorted() if not task.completed()])
                 self.efforts = list([effort for effort in allEfforts \
-                                  if effort.task() is None or not (effort.task().isDeleted() or effort.task().completed())])
+                                  if effort.task() is None or not effort.task().completed()])
         else:
             self.tasks = filter(self.isTaskEligible, self.disp().window.taskFile.tasks()) # pylint: disable=W0141
-        self.categories = list([cat for cat in self.disp().window.taskFile.categories().allItemsSorted() if not cat.isDeleted()])
+        self.categories = list(self.disp().window.taskFile.categories().allItemsSorted())
 
         if self.version >= 4:
             self.pack('iii', len(self.categories), len(self.tasks), len(self.efforts))

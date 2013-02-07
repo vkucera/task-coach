@@ -33,41 +33,38 @@ class VCalendarParserTest(test.TestCase):
            
     def testEmptyVTodo(self):
         self.parser.parse(['BEGIN:VTODO', 'END:VTODO'])
-        self.assertEqual(dict(status=0, plannedStartDateTime=date.DateTime()), 
+        self.assertEqual(dict(plannedStartDateTime=date.DateTime()), 
                          self.parser.tasks[0])
         
     def testSubject(self):
         self.parser.parse(['BEGIN:VTODO', 'SUBJECT:Test', 'END:VTODO'])
-        self.assertEqual(dict(status=0, subject='Test', 
+        self.assertEqual(dict(subject='Test', 
                               plannedStartDateTime=date.DateTime()), 
                          self.parser.tasks[0])
         
     def testDueDate(self):
         self.parser.parse(['BEGIN:VTODO', 'DUE:20100101T120000', 'END:VTODO'])
-        self.assertEqual(dict(status=0, 
-                              dueDateTime=date.DateTime(2010, 1, 1, 12, 0, 0), 
+        self.assertEqual(dict(dueDateTime=date.DateTime(2010, 1, 1, 12, 0, 0), 
                               plannedStartDateTime=date.DateTime()), 
                          self.parser.tasks[0])
 
     def testPercentageComplete(self):
         self.parser.parse(['BEGIN:VTODO', 'PERCENT-COMPLETE:56', 'END:VTODO'])
-        self.assertEqual(dict(status=0, percentageComplete=56, 
+        self.assertEqual(dict(percentageComplete=56, 
                               plannedStartDateTime=date.DateTime()), 
                          self.parser.tasks[0])
         
     def testCreationDateTime(self):
         self.parser.parse(['BEGIN:VTODO', 'CREATED:20100101T120000', 
                            'END:VTODO'])
-        self.assertEqual(dict(status=0,
-                              creationDateTime=date.DateTime(2010, 1, 1, 12, 0, 0),
+        self.assertEqual(dict(creationDateTime=date.DateTime(2010, 1, 1, 12, 0, 0),
                               plannedStartDateTime=date.DateTime()),
                          self.parser.tasks[0])
         
     def testModificationDateTime(self):
         self.parser.parse(['BEGIN:VTODO', 'LAST-MODIFIED:20100101T120000', 
                            'END:VTODO'])
-        self.assertEqual(dict(status=0,
-                              modificationDateTime=date.DateTime(2010, 1, 1, 12, 0, 0),
+        self.assertEqual(dict(modificationDateTime=date.DateTime(2010, 1, 1, 12, 0, 0),
                               plannedStartDateTime=date.DateTime()),
                          self.parser.tasks[0])
 
@@ -82,23 +79,23 @@ class VNoteParserTest(test.TestCase):
     
     def testEmptyVNote(self):
         self.parser.parse(['BEGIN:VNOTE', 'END:VNOTE'])
-        self.assertEqual(dict(status=0, subject=''), self.parser.notes[0])
+        self.assertEqual(dict(subject=''), self.parser.notes[0])
 
     def testSubject(self):
         self.parser.parse(['BEGIN:VNOTE', 'SUMMARY:Subject', 'END:VNOTE'])
-        self.assertEqual(dict(status=0, subject='Subject'), 
+        self.assertEqual(dict(subject='Subject'), 
                          self.parser.notes[0])
     
     def testCreationDateTime(self):
         self.parser.parse(['BEGIN:VNOTE', 'CREATED:20100101T120000', 
                            'END:VNOTE'])
-        self.assertEqual(dict(status=0, subject='', 
+        self.assertEqual(dict(subject='', 
                               creationDateTime=date.DateTime(2010, 1, 1, 12, 0, 0)), 
                          self.parser.notes[0])
     
     def testModificationDateTime(self):
         self.parser.parse(['BEGIN:VNOTE', 'LAST-MODIFIED:20100101T120000', 
                            'END:VNOTE'])
-        self.assertEqual(dict(status=0, subject='', 
+        self.assertEqual(dict(subject='', 
                               modificationDateTime=date.DateTime(2010, 1, 1, 12, 0, 0)), 
                          self.parser.notes[0])

@@ -215,10 +215,6 @@ class DirtyTaskFileTest(TaskFileTestCase):
         self.emptyTaskFile.tasks().append(newTask)
         self.failUnless(self.emptyTaskFile.needSave())
 
-    def testNeedSave_AfterTaskMarkedDeleted(self):
-        self.task.markDeleted()
-        self.failUnless(self.taskFile.needSave())
-
     def testNeedSave_AfterNewNoteAdded(self):
         newNote = note.Note(subject='Note')
         self.emptyTaskFile.notes().append(newNote)
@@ -521,21 +517,6 @@ class DirtyTaskFileTest(TaskFileTestCase):
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()        
         self.note.expand()
-        self.failUnless(self.taskFile.needSave())
-
-    def testNeedSave_AfterMarkDeleted(self):
-        self.taskFile.notes().append(self.note)
-        self.taskFile.setFilename(self.filename)
-        self.taskFile.save()        
-        self.note.markDeleted()
-        self.failUnless(self.taskFile.needSave())
-
-    def testNeedSave_AfterMarkNotDeleted(self):
-        self.taskFile.notes().append(self.note)
-        self.note.markDeleted()
-        self.taskFile.setFilename(self.filename)
-        self.taskFile.save()        
-        self.note.cleanDirty()
         self.failUnless(self.taskFile.needSave())
 
     def testLastFilename_EqualsCurrentFilenameAfterSetFilename(self):

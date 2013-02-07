@@ -54,7 +54,6 @@ class CategoryTest(test.TestCase):
     def testSetState_OneNotification(self):
         newState = dict(subject='New subject', description='New description',
                         fgColor=wx.WHITE, bgColor=wx.RED, font=wx.SWISS_FONT,
-                        status=self.category.STATUS_DELETED,
                         parent=None, children=[self.subCategory], id=self.category.id(),
                         categorizables=[self.categorizable], notes=[],
                         attachments=[], filtered=True, exclusiveSubcategories=True,
@@ -196,11 +195,6 @@ class CategoryTest(test.TestCase):
     def testCopy_IdIsDifferent(self):
         copy = self.category.copy()
         self.assertNotEqual(copy.id(), self.category.id())
-
-    def testCopy_StatusIsNew(self):
-        self.category.markDeleted()
-        copy = self.category.copy()
-        self.assertEqual(copy.getStatus(), copy.STATUS_NEW)
 
     # pylint: disable=E1101
         

@@ -21,5 +21,4 @@ import developer_message
 import entry
 import export
 import preferences
-import syncpreferences
 import templates

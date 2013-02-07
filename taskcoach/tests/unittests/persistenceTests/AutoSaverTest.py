@@ -44,7 +44,7 @@ class DummyTaskFile(persistence.TaskFile):
         if self._throw:
             raise IOError
         else:
-            return [task.Task()], [category.Category('category')], [], None, {self.monitor().guid(): self.monitor()}, None
+            return [task.Task()], [category.Category('category')], [], {self.monitor().guid(): self.monitor()}, None
 
     def exists(self, *args, **kwargs):  # pylint: disable=W0613
         return True

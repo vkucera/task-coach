@@ -100,11 +100,6 @@ class CommonTaskTestsMixin(asserts.TaskAssertsMixin):
         copy = self.task.copy()
         self.assertNotEqual(copy.id(), self.task.id())
 
-    def testCopy_statusIsNew(self):
-        self.task.markDeleted()
-        copy = self.task.copy()
-        self.assertEqual(copy.getStatus(), copy.STATUS_NEW)
-
 
 class NoBudgetTestsMixin(object):
     ''' These tests should succeed for all tasks without budget. '''

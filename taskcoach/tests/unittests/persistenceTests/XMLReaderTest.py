@@ -100,22 +100,19 @@ class XMLReaderTestCase(test.TestCase):
     def writeAndReadNotes(self, xml_contents):
         return self.writeAndRead(xml_contents)[2]
 
-    def writeAndReadSyncMLConfig(self, xml_contents):
-        return self.writeAndRead(xml_contents)[3]
-
     def writeAndReadGUID(self, xml_contents):
-        return self.writeAndRead(xml_contents)[5]
+        return self.writeAndRead(xml_contents)[4]
 
     def writeAndReadTasksAndCategories(self, xml_contents):
-        tasks, categories, _, _, _, _ = self.writeAndRead(xml_contents)
+        tasks, categories, _, _, _ = self.writeAndRead(xml_contents)
         return tasks, categories
 
     def writeAndReadTasksAndCategoriesAndNotes(self, xml_contents):
-        tasks, categories, notes, _, _, _ = self.writeAndRead(xml_contents)
+        tasks, categories, notes, _, _ = self.writeAndRead(xml_contents)
         return tasks, categories, notes
 
     def writeAndReadCategoriesAndNotes(self, xml_contents):
-        _, categories, notes, _, _, _ = self.writeAndRead(xml_contents)
+        _, categories, notes, _, _ = self.writeAndRead(xml_contents)
         return categories, notes
     
 
@@ -140,8 +137,8 @@ class TempFileLockTest(XMLReaderTestCase):
     def testLock(self):
         if os.name == 'nt':  # pragma: no cover
             self.writeAndReadTasks(\
-                '<tasks>\n<task status="0">\n'
-                '<attachment type="mail" status="0">\n'
+                '<tasks>\n<task>\n'
+                '<attachment type="mail">\n'
                 '<data extension="eml">%s</data>\n'
                 '</attachment>\n</task>\n</tasks>\n' % base64.encodestring('Data'))
             try:
@@ -1044,29 +1041,20 @@ class XMLReaderVersion21Test(XMLReaderTestCase):
         self.assertEqual(['location'], [os.path.split(att.location())[-1] for att in categories[0].attachments()])
 
 
-class XMLReaderVersion22Test(XMLReaderTestCase):
-    tskversion = 22
-
-    def testStatus(self):
-        tasks = self.writeAndReadTasks(\
-            '<tasks><task subject="Task" status="2"></task></tasks>')
-        self.assertEqual(2, tasks[0].getStatus())
-
-
 class XMLReaderVersion23Test(XMLReaderTestCase):
     tskversion = 23
 
     def testDescription(self):
         tasks = self.writeAndReadTasks(\
-            '<tasks><task subject="Task" status="0">'
+            '<tasks><task subject="Task">'
             '<description>\nDescription\n</description>'
             '</task></tasks>')
         self.assertEqual('\nDescription\n', tasks[0].description())
 
     def testAttachmentData(self):
         tasks = self.writeAndReadTasks(\
-            '<tasks>\n<task status="0">\n'
-            '<attachment type="mail" status="0">\n'
+            '<tasks>\n<task>\n'
+            '<attachment type="mail">\n'
             '<data extension="eml">%s</data>\n'
             '</attachment>\n</task>\n</tasks>\n' % base64.encodestring('Data'))
         self.assertEqual('Data', tasks[0].attachments()[0].data())
@@ -1074,10 +1062,6 @@ class XMLReaderVersion23Test(XMLReaderTestCase):
     def testGUID(self):
         guid = self.writeAndReadGUID('<tasks><guid>GUID</guid></tasks>')
         self.assertEqual('GUID', guid)
-
-    def testSyncMLConfig(self):
-        syncmlConfig = self.writeAndReadSyncMLConfig('<tasks><syncml><property name="name">value</property></syncml></tasks>')
-        self.assertEqual('value', syncmlConfig.get('name'))
         
         
 class XMLReaderVersion24Test(XMLReaderTestCase):
@@ -1089,15 +1073,15 @@ class XMLReaderVersion24Test(XMLReaderTestCase):
 
     def testDescription(self):
         tasks = self.writeAndReadTasks(\
-            '<tasks>\n<task subject="Task" status="0">\n'
+            '<tasks>\n<task subject="Task">\n'
             '<description>\nDescription\n</description>\n'
             '</task>\n</tasks>\n')
         self.assertEqual('Description', tasks[0].description())
         
     def testAttachmentData(self):
         tasks = self.writeAndReadTasks(\
-            '<tasks>\n<task status="0">\n'
-            '<attachment type="mail" status="0">\n'
+            '<tasks>\n<task>\n'
+            '<attachment type="mail">\n'
             '<data extension="eml">\n%s\n</data>\n'
             '</attachment>\n</task>\n</tasks>\n' % base64.encodestring('Data'))
         self.assertEqual('Data', tasks[0].attachments()[0].data())
@@ -1105,32 +1089,6 @@ class XMLReaderVersion24Test(XMLReaderTestCase):
     def testGUID(self):
         guid = self.writeAndReadGUID('<tasks>\n<guid>\nGUID\n</guid>\n</tasks>')
         self.assertEqual('GUID', guid)
-
-    def testSyncMLConfig(self):
-        syncmlConfig = self.writeAndReadSyncMLConfig(\
-            '<tasks>\n<syncml>\n'
-            '<property name="name">\nvalue\n</property>\n'
-            '</syncml>\n</tasks>\n')
-        self.assertEqual('value', syncmlConfig.get('name'))
-        
-    def testSyncMLConfigWithNewLinesInXMLNodes(self):
-        ''' Release 0.72.9 (and earlier?) had a bug where tags in the syncml
-            config information would be split across multiple lines. Fixed in
-            release 0.72.10. ''' 
-        expectedGUID = '0000011d209a4b6c3f9f7c32000a00b100240032'
-        actualGUID = self.writeAndReadGUID(\
-            '<tasks>\n<syncml><TaskCoach-\n'
-            '0000011d209a4b6c3f9f7c32000a00b100240032\n'
-            '><spds><sources><TaskCoach-\n'
-            '0000011d209a4b6c3f9f7c32000a00b100240032\n'
-            '.Tasks/><TaskCoach-\n'
-            '0000011d209a4b6c3f9f7c32000a00b100240032\n'
-            '.Notes/></sources><syncml><Auth/><Conn/></syncml></spds></TaskCoach-\n'
-            '0000011d209a4b6c3f9f7c32000a00b100240032\n'
-            '><TaskCoach-0000011d209a4b6c3f9f7c32000a00b100240032><spds><sources><TaskCoach-0000011d209a4b6c3f9f7c32000a00b100240032.Tasks/><TaskCoach-0000011d209a4b6c3f9f7c32000a00b100240032.Notes/></sources><syncml><Auth/><Conn/></syncml></spds></TaskCoach-0000011d209a4b6c3f9f7c32000a00b100240032></syncml><guid>\n'
-            '0000011d209a4b6c3f9f7c32000a00b100240032\n'
-            '</guid></tasks>')
-        self.assertEqual(expectedGUID, actualGUID)
         
 
 class XMLReaderVersion26Test(XMLReaderTestCase):
@@ -1140,7 +1098,7 @@ class XMLReaderVersion26Test(XMLReaderTestCase):
     
     def testPercentageComplete(self):   
         tasks = self.writeAndReadTasks(\
-            '<tasks>\n<task subject="Task" status="0" percentageComplete="50"/>\n'
+            '<tasks>\n<task subject="Task" percentageComplete="50"/>\n'
             '</tasks>\n')
         self.assertEqual(50, tasks[0].percentageComplete())
 
@@ -1153,15 +1111,14 @@ class XMLReaderVersion27Test(XMLReaderTestCase):
     def testExclusiveSubcategories(self):
         categories = self.writeAndReadCategories(\
             '<categories>\n'
-            '<category subject="Category" exclusiveSubcategories="True"'
-            ' status="0"/>\n'
+            '<category subject="Category" exclusiveSubcategories="True" />\n'
             '</categories>\n')
         self.failUnless(categories[0].hasExclusiveSubcategories())
         
     def testNoExclusiveSubcategoriesByDefault(self):
         categories = self.writeAndReadCategories(\
             '<categories>\n'
-            '<category subject="Category" status="0"/>\n'
+            '<category subject="Category" />\n'
             '</categories>\n')
         self.failIf(categories[0].hasExclusiveSubcategories())
         
@@ -1247,7 +1204,6 @@ class XMLReaderVersion29Test(XMLReaderTestCase):
             <task id="foo">
                 <effort id="foobar" start="2004-01-01 10:00:00.123000" 
                         stop="2004-01-01 10:30:00.123000"
-                        status="1"
                         description="Yo"/>
             </task>
         </tasks>''')

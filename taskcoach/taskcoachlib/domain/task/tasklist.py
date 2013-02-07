@@ -27,7 +27,7 @@ import task
 
 class TaskListQueryMixin(object):
     def nrOfTasksPerStatus(self):
-        statuses = [eachTask.status() for eachTask in self if not eachTask.isDeleted()]
+        statuses = [eachTask.status() for eachTask in self]
         count = dict()
         for status in task.Task.possibleStatuses():
             count[status] = statuses.count(status)
@@ -54,7 +54,7 @@ class TaskList(TaskListQueryMixin, categorizable.CategorizableContainer):
         
     def originalLength(self):
         ''' Provide a way for bypassing the __len__ method of decorators. '''
-        return len([t for t in self if not t.isDeleted()])
+        return len(self)
     
     def minPriority(self):
         return min(self.__allPriorities())
@@ -63,4 +63,4 @@ class TaskList(TaskListQueryMixin, categorizable.CategorizableContainer):
         return max(self.__allPriorities())
         
     def __allPriorities(self):
-        return [task.priority() for task in self if not task.isDeleted()] or (0,)  # pylint: disable=W0621
+        return [task.priority() for task in self] or (0,)  # pylint: disable=W0621

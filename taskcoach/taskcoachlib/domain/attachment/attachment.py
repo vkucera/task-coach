@@ -88,7 +88,6 @@ class Attachment(base.Object, NoteOwner):
     def setLocation(self, location):
         if location != self.__location:
             self.__location = location
-            self.markDirty()
             pub.sendMessage(self.locationChangedEventType(), newValue=location,
                             sender=self)
 

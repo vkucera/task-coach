@@ -258,7 +258,6 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                     date.TimeDelta(hours=self.__dueSoonHours)
                 if dueSoonDateTime > date.Now():
                     date.Scheduler().schedule(self.onDueSoon, dueSoonDateTime)
-        self.markDirty()
         self.recomputeAppearance()
         pub.sendMessage(self.dueDateTimeChangedEventType(), 
                         newValue=dueDateTime, sender=self)
@@ -301,7 +300,6 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             return
         self.__plannedStartDateTime = plannedStartDateTime
         date.Scheduler().unschedule(self.onTimeToStart)
-        self.markDirty()
         self.recomputeAppearance()
         if plannedStartDateTime < self.maxDateTime:
             date.Scheduler().schedule(self.onTimeToStart, 
@@ -360,7 +358,6 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if recursive:
             for child in self.children(recursive=True):
                 child.setActualStartDateTime(actualStartDateTime)
-        self.markDirty()
         self.recomputeAppearance()
         pub.sendMessage(self.actualStartDateTimeChangedEventType(), 
                         newValue=actualStartDateTime, sender=self)

@@ -162,23 +162,3 @@ class SearchFilter(Filter):
         if self.__searchDescription:
             text += item.description()
         return text 
-
-
-class DeletedFilter(Filter):
-    def __init__(self, *args, **kwargs):
-        super(DeletedFilter, self).__init__(*args, **kwargs)
-
-        for eventType in [domainobject.Object.markDeletedEventType(),
-                          domainobject.Object.markNotDeletedEventType()]:
-            patterns.Publisher().registerObserver(self.onObjectMarkedDeletedOrNot,
-                          eventType=eventType)
-
-    def detach(self):
-        patterns.Publisher().removeObserver(self.onObjectMarkedDeletedOrNot)
-        super(DeletedFilter, self).detach()
-
-    def onObjectMarkedDeletedOrNot(self, event):  # pylint: disable=W0613
-        self.reset()
-
-    def filterItems(self, items):
-        return [item for item in items if not item.isDeleted()]

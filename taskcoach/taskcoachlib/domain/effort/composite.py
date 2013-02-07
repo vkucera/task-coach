@@ -48,9 +48,6 @@ class BaseCompositeEffort(base.BaseEffort):  # pylint: disable=W0223
     
     def _getEfforts(self):
         raise NotImplementedError
-
-    def markDirty(self):
-        pass  # CompositeEfforts cannot be dirty
     
     def duration(self, recursive=False):
         return sum((effort.duration() for effort in \

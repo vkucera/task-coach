@@ -509,7 +509,6 @@ defaults = {
 'feature': {
     'notes': 'True',
     'effort': 'True',
-    'syncml': 'False',
     'iphone': 'False',
     'notifier': 'Task Coach',
     'minidletime': '0',
@@ -518,17 +517,6 @@ defaults = {
     'sayreminder': 'False',
     'sdtcspans': '60,120,1440,2880',
     'sdtcspans_effort': '60,120,180,240'
-    },
-'syncml': { 
-    'url': '',
-    'username': '',
-    'preferredsyncmode': 'TWO_WAY',
-    'verbose': 'True',
-    'taskdbname': 'task',
-    'notedbname': 'note',
-    'synctasks': 'True',
-    'syncnotes': 'True',
-    'showwarning': 'True' 
     },
 'iphone': {
     'password': '',

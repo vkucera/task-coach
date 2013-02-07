@@ -159,13 +159,6 @@ class NeedsTreeViewerMixin(object):
             self.viewer.isTreeViewer()
 
 
-class NeedsDeletedItemsMixin(object):
-    ''' Mixin class for UI commands that need deleted items to be present. '''
-    def enabled(self, event):
-        return super(NeedsDeletedItemsMixin, self).enabled(event) and \
-               self.iocontroller.hasDeletedItems()
-
-
 class PopupButtonMixin(object):
     ''' Mix this with a UICommand for a toolbar pop-up menu. '''
 

@@ -111,10 +111,6 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,  # pylint: disable=W0223
     def isShowingTasks(self): 
         return True
 
-    def createFilter(self, taskList):
-        tasks = domain.base.DeletedFilter(taskList)
-        return super(BaseTaskViewer, self).createFilter(tasks)
-
     def nrOfVisibleTasks(self):
         # Make this overridable for viewers where the widget does not show all
         # items in the presentation, i.e. the widget does filtering on its own.
@@ -199,8 +195,7 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable=W0223
         return self.settings.get('view', 'defaultreminderdatetime').startswith('preset')
            
     def deleteItemCommand(self):
-        return command.DeleteTaskCommand(self.presentation(), self.curselection(),
-                  shadow=self.settings.getboolean('feature', 'syncml'))    
+        return command.DeleteTaskCommand(self.presentation(), self.curselection())
 
     def createTaskPopupMenu(self):
         return menu.TaskPopupMenu(self.parent, self.settings,

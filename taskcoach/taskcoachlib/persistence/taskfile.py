@@ -20,7 +20,6 @@ import os
 import xml
 from taskcoachlib import patterns
 from taskcoachlib.domain import base, task, category, note, effort, attachment
-from taskcoachlib.syncml.config import createDefaultSyncConfig
 from taskcoachlib.thirdparty.guid import generate
 from taskcoachlib.thirdparty import lockfile
 from taskcoachlib.changes import ChangeMonitor, ChangeSynchronizer
@@ -70,7 +69,6 @@ class TaskFile(patterns.Observer):
         self.__notes = note.NoteContainer()
         self.__efforts = effort.EffortList(self.tasks())
         self.__guid = generate()
-        self.__syncMLConfig = createDefaultSyncConfig(self.__guid)
         self.__monitor = ChangeMonitor()
         self.__changes = dict()
         self.__changes[self.__monitor.guid()] = self.__monitor
@@ -93,10 +91,6 @@ class TaskFile(patterns.Observer):
             for eventType in container.modificationEventTypes():
                 self.registerObserver(self.onDomainObjectAddedOrRemoved,
                                       eventType, eventSource=container)
-            
-        for eventType in (base.Object.markDeletedEventType(),
-                          base.Object.markNotDeletedEventType()):
-            self.registerObserver(self.onDomainObjectAddedOrRemoved, eventType)
             
         for eventType in task.Task.modificationEventTypes():
             if not eventType.startswith('pubsub'):
@@ -142,18 +136,11 @@ class TaskFile(patterns.Observer):
     def efforts(self):
         return self.__efforts
 
-    def syncMLConfig(self):
-        return self.__syncMLConfig
-
     def guid(self):
         return self.__guid
 
     def changes(self):
         return self.__changes
-
-    def setSyncMLConfig(self, config):
-        self.__syncMLConfig = config
-        self.markDirty()
 
     def isEmpty(self):
         return 0 == len(self.categories()) == len(self.tasks()) == len(self.notes())
@@ -176,8 +163,6 @@ class TaskFile(patterns.Observer):
                         if changedTask in self.tasks()]
         if changedTasks:
             self.markDirty()
-            for changedTask in changedTasks:
-                changedTask.markDirty()
             
     def onEffortChanged(self, event):
         if self.__loading or self.__saving:
@@ -186,8 +171,6 @@ class TaskFile(patterns.Observer):
                           changedEffort.task() in self.tasks()]
         if changedEfforts:
             self.markDirty()
-            for changedEffort in changedEfforts:
-                changedEffort.markDirty()
                 
     def onCategoryChanged_Deprecated(self, event):
         if self.__loading or self.__saving:
@@ -196,15 +179,6 @@ class TaskFile(patterns.Observer):
                              changedCategory in self.categories()]
         if changedCategories:
             self.markDirty()
-            # Mark all categorizables belonging to the changed category dirty; 
-            # this is needed because in SyncML/vcard world, categories are not 
-            # first-class objects. Instead, each task/contact/etc has a 
-            # categories property which is a comma-separated list of category
-            # names. So, when a category name changes, every associated
-            # categorizable changes.
-            for changedCategory in changedCategories:
-                for categorizable in changedCategory.categorizables():
-                    categorizable.markDirty()
             
     def onCategoryChanged(self, newValue, sender):
         if self.__loading or self.__saving:
@@ -213,15 +187,6 @@ class TaskFile(patterns.Observer):
                              changedCategory in self.categories()]
         if changedCategories:
             self.markDirty()
-            # Mark all categorizables belonging to the changed category dirty; 
-            # this is needed because in SyncML/vcard world, categories are not 
-            # first-class objects. Instead, each task/contact/etc has a 
-            # categories property which is a comma-separated list of category
-            # names. So, when a category name changes, every associated
-            # categorizable changes.
-            for changedCategory in changedCategories:
-                for categorizable in changedCategory.categorizables():
-                    categorizable.markDirty()
             
     def onNoteChanged_Deprecated(self, event):
         if self.__loading:
@@ -229,8 +194,6 @@ class TaskFile(patterns.Observer):
         # A note may be in self.notes() or it may be a note of another 
         # domain object.
         self.markDirty()
-        for changedNote in event.sources():
-            changedNote.markDirty()
             
     def onNoteChanged(self, newValue, sender):
         if self.__loading:
@@ -238,7 +201,6 @@ class TaskFile(patterns.Observer):
         # A note may be in self.notes() or it may be a note of another 
         # domain object.
         self.markDirty()
-        sender.markDirty()
             
     def onAttachmentChanged(self, newValue, sender):
         if self.__loading or self.__saving:
@@ -253,8 +215,6 @@ class TaskFile(patterns.Observer):
         # Attachments don't know their owner, so we can't check whether the
         # attachment is actually in the task file. Assume it is.
         self.markDirty()
-        for changedAttachment in event.sources():
-            changedAttachment.markDirty()
 
     def setFilename(self, filename):
         if filename == self.__filename:
@@ -294,7 +254,6 @@ class TaskFile(patterns.Observer):
             self.notes().clear(event=event)
             if regenerate:
                 self.__guid = generate()
-                self.__syncMLConfig = createDefaultSyncConfig(self.__guid)
         finally:
             pub.sendMessage('taskfile.justCleared', taskFile=self)
 
@@ -335,7 +294,7 @@ class TaskFile(patterns.Observer):
         try:
             if self.exists():
                 fd = self._openForRead()
-                tasks, categories, notes, syncMLConfig, changes, guid = self._read(fd)
+                tasks, categories, notes, changes, guid = self._read(fd)
                 fd.close()
             else:
                 tasks = []
@@ -343,7 +302,6 @@ class TaskFile(patterns.Observer):
                 notes = []
                 changes = dict()
                 guid = generate()
-                syncMLConfig = createDefaultSyncConfig(guid)
             self.clear()
             self.__monitor.reset()
             self.__changes = changes
@@ -369,7 +327,6 @@ class TaskFile(patterns.Observer):
             registerOtherObjects(self.tasks().rootItems())
             registerOtherObjects(self.notes().rootItems())
             self.__monitor.resetAllChanges()
-            self.__syncMLConfig = syncMLConfig
             self.__guid = guid
 
             if os.path.exists(self.filename()):
@@ -397,7 +354,7 @@ class TaskFile(patterns.Observer):
             if self.__needSave or not os.path.exists(self.__filename):
                 name, fd = self._openForWrite()
                 xml.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes(),
-                                        self.syncMLConfig(), self.guid())
+                                        self.guid())
                 fd.close()
                 if os.path.exists(self.__filename):  # Not using self.exists() because DummyFile.exists returns True
                     os.remove(self.__filename)
@@ -418,7 +375,7 @@ class TaskFile(patterns.Observer):
                 self.__monitor.freeze()
                 try:
                     fd = self._openForRead()
-                    tasks, categories, notes, syncMLConfig, allChanges, guid = self._read(fd)
+                    tasks, categories, notes, allChanges, guid = self._read(fd)
                     fd.close()
 
                     self.__changes = allChanges

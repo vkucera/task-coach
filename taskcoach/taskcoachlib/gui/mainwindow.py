@@ -60,18 +60,6 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, BalloonTipManager,
         self.__init_window_components()
         self.__init_window()
         self.__register_for_window_component_changes()
-        
-        if settings.getboolean('feature', 'syncml'):
-            try:
-                import taskcoachlib.syncml.core  # pylint: disable=W0612,W0404
-            except ImportError:
-                if settings.getboolean('syncml', 'showwarning'):
-                    dlg = widgets.SyncMLWarningDialog(self)
-                    try:
-                        if dlg.ShowModal() == wx.ID_OK:
-                            settings.setboolean('syncml', 'showwarning', False)
-                    finally:
-                        dlg.Destroy()
 
         self.bonjourRegister = None
 

@@ -535,12 +535,6 @@ class FeaturesPage(SettingsPage):
         self.addBooleanSetting('feature', 'effort', 
             _('Allow for tracking effort'))
         self.addBooleanSetting('feature', 'notes', _('Allow for taking notes'))
-        try:
-            import taskcoachlib.syncml.core  # pylint: disable=W0404,W0612
-        except ImportError:
-            pass
-        else:
-            self.addBooleanSetting('feature', 'syncml', _('Enable SyncML'))
         self.addBooleanSetting('feature', 'iphone', 
                                _('Enable iPhone synchronization'))
         if operating_system.isGTK():

@@ -42,7 +42,7 @@ class TemplateXMLWriterTestCase(test.TestCase):
     
     def testDefaultTask(self):
         self.expectInXML('<tasks>\n<task creationDateTime="%s" id="%s" '
-                         'status="1" />\n</tasks>' % (self.task.creationDateTime(),
+                         '/>\n</tasks>' % (self.task.creationDateTime(),
                                                       self.task.id()))
         
     def testTaskWithPlannedStartDateTime(self):

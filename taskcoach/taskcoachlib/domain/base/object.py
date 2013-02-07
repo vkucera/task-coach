@@ -26,111 +26,8 @@ import attribute
 import functools
 import uuid
 
-
-class SynchronizedObject(object):
-    STATUS_NONE    = 0
-    STATUS_NEW     = 1
-    STATUS_CHANGED = 2
-    STATUS_DELETED = 3
-
-    def __init__(self, *args, **kwargs):
-        self.__status = kwargs.pop('status', self.STATUS_NEW)
-        super(SynchronizedObject, self).__init__(*args, **kwargs)
-
-    @classmethod
-    def markDeletedEventType(class_):
-        return 'object.markdeleted'
-
-    @classmethod
-    def markNotDeletedEventType(class_):
-        return 'object.marknotdeleted'
         
-    def __getstate__(self):
-        try:
-            state = super(SynchronizedObject, self).__getstate__()
-        except AttributeError:
-            state = dict()
-
-        state['status'] = self.__status
-        return state
-
-    @patterns.eventSource
-    def __setstate__(self, state, event=None):
-        try:
-            super(SynchronizedObject, self).__setstate__(state, event=event)
-        except AttributeError:
-            pass
-        if state['status'] != self.__status:
-            if state['status'] == self.STATUS_CHANGED:
-                self.markDirty(event=event)
-            elif state['status'] == self.STATUS_DELETED:
-                self.markDeleted(event=event)
-            elif state['status'] == self.STATUS_NEW:
-                self.markNew(event=event)
-            elif state['status'] == self.STATUS_NONE:
-                self.cleanDirty(event=event)
-
-    def getStatus(self):
-        return self.__status
-        
-    @patterns.eventSource
-    def markDirty(self, force=False, event=None):
-        if not self.setStatusDirty(force):
-            return
-        event.addSource(self, self.__status, 
-                        type=self.markNotDeletedEventType())
-
-    def setStatusDirty(self, force=False):
-        oldStatus = self.__status
-        if self.__status == self.STATUS_NONE or force:
-            self.__status = self.STATUS_CHANGED
-            return oldStatus == self.STATUS_DELETED
-        else:
-            return False
-
-    @patterns.eventSource
-    def markNew(self, event=None):
-        if not self.setStatusNew():
-            return
-        event.addSource(self, self.__status,
-                        type=self.markNotDeletedEventType())
-            
-    def setStatusNew(self):
-        oldStatus = self.__status
-        self.__status = self.STATUS_NEW
-        return oldStatus == self.STATUS_DELETED
-
-    @patterns.eventSource
-    def markDeleted(self, event=None):
-        self.setStatusDeleted()
-        event.addSource(self, self.__status, type=self.markDeletedEventType())
-
-    def setStatusDeleted(self):
-        self.__status = self.STATUS_DELETED
-
-    @patterns.eventSource
-    def cleanDirty(self, event=None):
-        if not self.setStatusNone():
-            return
-        event.addSource(self, self.__status, 
-                        type=self.markNotDeletedEventType())
-            
-    def setStatusNone(self):
-        oldStatus = self.__status
-        self.__status = self.STATUS_NONE
-        return oldStatus == self.STATUS_DELETED
-
-    def isNew(self):
-        return self.__status == self.STATUS_NEW
-
-    def isModified(self):
-        return self.__status == self.STATUS_CHANGED
-
-    def isDeleted(self):
-        return self.__status == self.STATUS_DELETED
-
-        
-class Object(SynchronizedObject):
+class Object(object):
     def __init__(self, *args, **kwargs):
         Attribute = attribute.Attribute
         self.__creationDateTime = kwargs.pop('creationDateTime', None) or Now()
@@ -487,11 +384,10 @@ class CompositeObject(Object, patterns.ObservableComposite):
         return self.pluralOrSingularIcon(myIcon, native=super(CompositeObject, self).selectedIcon() == '')
 
     def pluralOrSingularIcon(self, myIcon, native=True):
-        hasChildren = any(child for child in self.children() if not child.isDeleted())
-        mapping = icon.itemImagePlural if hasChildren else icon.itemImageSingular
+        mapping = icon.itemImagePlural if self.children() else icon.itemImageSingular
         # If the icon comes from the user settings, only pluralize it; this is probably
         # the Way of the Least Astonishment
-        if native or hasChildren:
+        if native or self.children():
             return mapping.get(myIcon, myIcon)
         return myIcon
     
@@ -501,29 +397,3 @@ class CompositeObject(Object, patterns.ObservableComposite):
     def modificationEventTypes(class_):
         return super(CompositeObject, class_).modificationEventTypes() + \
             [class_.expansionChangedEventType()]
-
-    # Override SynchronizedObject methods to also mark child objects
-
-    @patterns.eventSource
-    def markDeleted(self, event=None):
-        super(CompositeObject, self).markDeleted(event=event)
-        for child in self.children():
-            child.markDeleted(event=event)
-
-    @patterns.eventSource
-    def markNew(self, event=None):
-        super(CompositeObject, self).markNew(event=event)
-        for child in self.children():
-            child.markNew(event=event)
-
-    @patterns.eventSource
-    def markDirty(self, force=False, event=None):
-        super(CompositeObject, self).markDirty(force, event=event)
-        for child in self.children():
-            child.markDirty(force, event=event)
-
-    @patterns.eventSource            
-    def cleanDirty(self, event=None):
-        super(CompositeObject, self).cleanDirty(event=event)
-        for child in self.children():
-            child.cleanDirty(event=event)

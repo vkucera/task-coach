@@ -208,7 +208,6 @@ class DeleteCommand(BaseCommand, SaveStateMixin):
     singular_name = _('Delete "%s"')
 
     def __init__(self, *args, **kwargs):
-        self.__shadow = kwargs.pop('shadow', False)
         super(DeleteCommand, self).__init__(*args, **kwargs)
         
     def modified_items(self):
@@ -216,27 +215,15 @@ class DeleteCommand(BaseCommand, SaveStateMixin):
 
     def do_command(self):
         super(DeleteCommand, self).do_command()
-        if self.__shadow:
-            self.saveStates(self.items)
-
-            for item in self.items:
-                item.markDeleted()
-        else:
-            self.list.removeItems(self.items)
+        self.list.removeItems(self.items)
 
     def undo_command(self):
         super(DeleteCommand, self).undo_command()
-        if self.__shadow:
-            self.undoStates()
-        else:
-            self.list.extend(self.items)
+        self.list.extend(self.items)
 
     def redo_command(self):
         super(DeleteCommand, self).redo_command()
-        if self.__shadow:
-            self.redoStates()
-        else:
-            self.list.removeItems(self.items)
+        self.list.removeItems(self.items)
 
 
 class CutCommand(DeleteCommand):

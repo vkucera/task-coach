@@ -69,10 +69,6 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
         widget.AssignImageList(imageList)  # pylint: disable=E1101
         return widget
     
-    def createFilter(self, notes):
-        notes = super(BaseNoteViewer, self).createFilter(notes)
-        return domain.base.DeletedFilter(notes)
-    
     def createCreationToolBarUICommands(self):
         return (uicommand.NoteNew(notes=self.presentation(),
                                   settings=self.settings, viewer=self),
@@ -183,8 +179,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
     
     def deleteItemCommand(self):
         return command.DeleteNoteCommand(self.presentation(), 
-            self.curselection(), 
-            shadow=self.settings.getboolean('feature', 'syncml'))
+            self.curselection())
         
     def itemEditorClass(self):
         return dialog.editor.NoteEditor

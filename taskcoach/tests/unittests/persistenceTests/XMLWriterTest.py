@@ -22,7 +22,6 @@ import wx, StringIO # We cannot use CStringIO since unicode strings are used bel
 import test
 from taskcoachlib import persistence, config, meta
 from taskcoachlib.domain import base, task, effort, date, category, note, attachment
-from taskcoachlib.syncml.config import SyncMLConfigNode
 
 
 class XMLWriterTest(test.TestCase):
@@ -42,7 +41,7 @@ class XMLWriterTest(test.TestCase):
             
     def __writeAndRead(self):
         self.writer.write(self.taskList, self.categoryContainer, 
-            self.noteContainer, SyncMLConfigNode('root'), u'GUID')
+            self.noteContainer, u'GUID')
         return self.fd.getvalue().decode(self.fd.encoding)
     
     def expectInXML(self, xmlFragment):
@@ -65,10 +64,6 @@ class XMLWriterTest(test.TestCase):
     def testTaskSubject(self):
         self.task.setSubject('Subject')
         self.expectInXML('subject="Subject"')
-
-    def testTaskMarkedDeleted(self):
-        self.task.markDeleted()
-        self.expectInXML('status="3"')
 
     def testTaskSubjectWithUnicode(self):
         self.task.setSubject(u'ï¬Ÿï­Žï­–')
@@ -119,10 +114,10 @@ class XMLWriterTest(test.TestCase):
         taskEffort = effort.Effort(self.task, date.DateTime(2004,1,1),
             date.DateTime(2004,1,2), description='description\nline 2')
         self.task.addEffort(taskEffort)
-        self.expectInXML('<effort id="%s" start="%s" status="%d" stop="%s">\n'
+        self.expectInXML('<effort id="%s" start="%s" stop="%s">\n'
                          '<description>\ndescription\nline 2\n</description>\n'
                          '</effort>'% \
-            (taskEffort.id(), taskEffort.getStart(), base.SynchronizedObject.STATUS_NEW, taskEffort.getStop()))
+            (taskEffort.id(), taskEffort.getStart(), taskEffort.getStop()))
         
     def testThatEffortTimesDoNotContainMilliseconds(self):
         self.task.addEffort(effort.Effort(self.task, 
@@ -145,7 +140,7 @@ class XMLWriterTest(test.TestCase):
         
     def testActiveEffort(self):
         self.task.addEffort(effort.Effort(self.task, date.DateTime(2004,1,1)))
-        self.expectInXML('<effort id="%s" start="%s" status="%d" />'%(self.task.efforts()[0].id(), self.task.efforts()[0].getStart(), base.SynchronizedObject.STATUS_NEW))
+        self.expectInXML('<effort id="%s" start="%s" />'%(self.task.efforts()[0].id(), self.task.efforts()[0].getStart()))
                 
     def testNoEffortByDefault(self):
         self.expectNotInXML('<efforts>')
@@ -164,7 +159,7 @@ class XMLWriterTest(test.TestCase):
     def testOneCategoryWithoutTask(self):
         aCategory = category.Category('test', id="id")
         self.categoryContainer.append(aCategory)
-        self.expectInXML('<category creationDateTime="%s" id="id" status="1" '
+        self.expectInXML('<category creationDateTime="%s" id="id" '
                          'subject="test" />' % aCategory.creationDateTime())
     
     def testOneCategoryWithOneTask(self):
@@ -178,7 +173,7 @@ class XMLWriterTest(test.TestCase):
             cat = category.Category(subject, [self.task])
             self.categoryContainer.append(cat)
             expectedResults.append('<category categorizables="%s" '
-                                   'creationDateTime="%s" id="%s" status="1" '
+                                   'creationDateTime="%s" id="%s" '
                                    'subject="%s" />' % (self.task.id(), 
                                                         cat.creationDateTime(), 
                                                         cat.id(), subject))
@@ -198,8 +193,8 @@ class XMLWriterTest(test.TestCase):
         parent.addChild(child)
         self.categoryContainer.extend([parent, child])
         self.expectInXML('<category creationDateTime="%s" id="%s" '
-                         'status="1" subject="parent">\n'
-                         '<category creationDateTime="%s" id="%s" status="1" '
+                         'subject="parent">\n'
+                         '<category creationDateTime="%s" id="%s" '
                          'subject="child" />\n</category>'%\
                          (parent.creationDateTime(), parent.id(), 
                           child.creationDateTime(), child.id()))
@@ -210,9 +205,9 @@ class XMLWriterTest(test.TestCase):
         parent.addChild(child)
         self.categoryContainer.extend([parent, child])
         self.expectInXML('<category creationDateTime="%s" id="%s" '
-                         'status="1" subject="parent">\n'
+                         'subject="parent">\n'
                          '<category categorizables="%s" creationDateTime="%s" '
-                         'id="%s" status="1" subject="child" />\n'
+                         'id="%s" subject="child" />\n'
                          '</category>' % (parent.creationDateTime(), parent.id(), 
                                           self.task.id(), child.creationDateTime(),
                                           child.id()))
@@ -225,7 +220,7 @@ class XMLWriterTest(test.TestCase):
     def testCategoryWithDescription(self):
         aCategory = category.Category(subject='subject', description='Description', id='id')
         self.categoryContainer.append(aCategory)
-        self.expectInXML('<category creationDateTime="%s" id="id" status="1" subject="subject">\n'
+        self.expectInXML('<category creationDateTime="%s" id="id" subject="subject">\n'
                          '<description>\nDescription\n</description>\n'
                          '</category>' % str(aCategory.creationDateTime()))
         
@@ -239,7 +234,7 @@ class XMLWriterTest(test.TestCase):
                                       categorizables=[self.task], id='id')
         self.categoryContainer.append(aCategory)
         self.taskList.remove(self.task)
-        self.expectInXML('<category creationDateTime="%s" id="id" status="1" '
+        self.expectInXML('<category creationDateTime="%s" id="id" '
                          'subject="category" />' % str(aCategory.creationDateTime()))
  
     def testDefaultPriority(self):
@@ -315,9 +310,8 @@ class XMLWriterTest(test.TestCase):
     def testNote(self):
         aNote = note.Note(id='id')
         self.noteContainer.append(aNote)
-        self.expectInXML('<note creationDateTime="%s" id="id" status="%d" '
-                         '/>' % (aNote.creationDateTime(), 
-                                 base.SynchronizedObject.STATUS_NEW))
+        self.expectInXML('<note creationDateTime="%s" id="id" '
+                         '/>' % (aNote.creationDateTime(), ))
         
     def testNoteWithSubject(self):
         self.noteContainer.append(note.Note(subject='Note'))
@@ -331,13 +325,11 @@ class XMLWriterTest(test.TestCase):
         child = note.Note(id='child')
         self.note.addChild(child)
         self.noteContainer.append(child)
-        self.expectInXML('<note creationDateTime="%s" id="%s" status="%d">\n'
-                         '<note creationDateTime="%s" id="child" status="%d" />\n'
+        self.expectInXML('<note creationDateTime="%s" id="%s">\n'
+                         '<note creationDateTime="%s" id="child" />\n'
                          '</note>' % (self.note.creationDateTime(), 
                                       self.note.id(),
-                                      base.SynchronizedObject.STATUS_NEW,
-                                      child.creationDateTime(),
-                                      base.SynchronizedObject.STATUS_NEW))
+                                      child.creationDateTime()))
         
     def testNoteWithCategory(self):
         cat = category.Category(subject='cat')
@@ -359,7 +351,7 @@ class XMLWriterTest(test.TestCase):
         child = category.Category(subject='child', id='id')
         parent.addChild(child)
         self.categoryContainer.append(parent)
-        self.expectInXML('<category creationDateTime="%s" id="id" status="1" '
+        self.expectInXML('<category creationDateTime="%s" id="id" '
                          'subject="child" />' % child.creationDateTime())
 
     def testDontWriteInheritedCategoryBackgroundColor(self):
@@ -367,7 +359,7 @@ class XMLWriterTest(test.TestCase):
         child = category.Category(subject='child', id='id')
         parent.addChild(child)
         self.categoryContainer.append(parent)
-        self.expectInXML('<category creationDateTime="%s" id="id" status="1" '
+        self.expectInXML('<category creationDateTime="%s" id="id" '
                          'subject="child" />' % child.creationDateTime())
 
     def testTaskForegroundColor(self):
@@ -384,7 +376,7 @@ class XMLWriterTest(test.TestCase):
                           plannedStartDateTime=date.DateTime())
         self.task.addChild(child)
         self.taskList.append(child)
-        self.expectInXML('<task creationDateTime="%s" id="id" status="1" '
+        self.expectInXML('<task creationDateTime="%s" id="id" '
                          'subject="child" />' % child.creationDateTime())
         
     def testDontWriteInheritedTaskBackgroundColor(self):
@@ -393,7 +385,7 @@ class XMLWriterTest(test.TestCase):
                           plannedStartDateTime=date.DateTime())
         self.task.addChild(child)
         self.taskList.append(child)
-        self.expectInXML('<task creationDateTime="%s" id="id" status="1" '
+        self.expectInXML('<task creationDateTime="%s" id="id" '
                          'subject="child" />' % child.creationDateTime())
 
     def testNoteForegroundColor(self):
@@ -409,7 +401,7 @@ class XMLWriterTest(test.TestCase):
         child = note.Note(subject='child', id='id')
         parent.addChild(child)
         self.noteContainer.append(parent)
-        self.expectInXML('<note creationDateTime="%s" id="id" status="1" '
+        self.expectInXML('<note creationDateTime="%s" id="id" '
                          'subject="child" />' % child.creationDateTime())
         
     def testDontWriteInheritedNoteBackgroundColor(self):
@@ -417,7 +409,7 @@ class XMLWriterTest(test.TestCase):
         child = note.Note(subject='child', id='id')
         parent.addChild(child)
         self.noteContainer.append(parent)
-        self.expectInXML('<note creationDateTime="%s" id="id" status="1" '
+        self.expectInXML('<note creationDateTime="%s" id="id" '
                          'subject="child" />' % child.creationDateTime())
         
     def testNoRecurencce(self):
@@ -476,7 +468,7 @@ class XMLWriterTest(test.TestCase):
         task_attachment = attachment.FileAttachment('whatever.txt', id='foo')
         self.task.addAttachments(task_attachment)
         self.expectInXML('<attachment creationDateTime="%s" id="foo" '
-                         'location="whatever.txt" status="1" '
+                         'location="whatever.txt" '
                          'subject="whatever.txt" type="file" '
                          '/>' % task_attachment.creationDateTime())
 
@@ -487,14 +479,14 @@ class XMLWriterTest(test.TestCase):
         att.addNote(attachment_note)
         self.expectInXML('<attachment creationDateTime="%s" id="foo" '
                          'location="whatever.txt" '
-                         'status="1" subject="whatever.txt" type="file">\n'
+                         'subject="whatever.txt" type="file">\n'
                          '<note' % att.creationDateTime())
 
     def testNoteWithOneAttachment(self):
         note_attachment = attachment.FileAttachment('whatever.txt', id='foo')
         self.note.addAttachments(note_attachment)
         self.expectInXML('<attachment creationDateTime="%s" id="foo" '
-                         'location="whatever.txt" status="1" '
+                         'location="whatever.txt" '
                          'subject="whatever.txt" type="file" '
                          '/>' % note_attachment.creationDateTime())
 
@@ -504,7 +496,7 @@ class XMLWriterTest(test.TestCase):
         category_attachment = attachment.FileAttachment('whatever.txt', id='foo')
         cat.addAttachments(category_attachment)
         self.expectInXML('<attachment creationDateTime="%s" id="foo" '
-                         'location="whatever.txt" status="1" '
+                         'location="whatever.txt" '
                          'subject="whatever.txt" type="file" '
                          '/>' % category_attachment.creationDateTime())
         
@@ -515,13 +507,13 @@ class XMLWriterTest(test.TestCase):
             self.task.addAttachments(a)
         for att in attachments:
             self.expectInXML('<attachment creationDateTime="%s" id="%s" '
-                             'location="%s" status="1" subject="%s" type="file" '
+                             'location="%s" subject="%s" type="file" '
                              '/>' % (att.creationDateTime(), att.id(), 
                                      att.location(), att.location()))
         
     def testTaskWithNote(self):
         self.task.addNote(self.note)
-        self.expectInXML('>\n<note creationDateTime="%s" id="%s" status="1" '
+        self.expectInXML('>\n<note creationDateTime="%s" id="%s" '
                          '/>\n</task>' % (self.note.creationDateTime(),
                                           self.note.id()))
 
@@ -529,8 +521,8 @@ class XMLWriterTest(test.TestCase):
         anotherNote = note.Note(subject='Another note', id='id')
         self.task.addNote(self.note)
         self.task.addNote(anotherNote)
-        self.expectInXML('>\n<note creationDateTime="%s" id="%s" status="1" />\n'
-            '<note creationDateTime="%s" id="id" status="1" subject="Another note" '
+        self.expectInXML('>\n<note creationDateTime="%s" id="%s" />\n'
+            '<note creationDateTime="%s" id="id" subject="Another note" '
             '/>\n</task>' % (self.note.creationDateTime(), self.note.id(),
                              anotherNote.creationDateTime()))
         
@@ -538,8 +530,8 @@ class XMLWriterTest(test.TestCase):
         subNote = note.Note(subject='Subnote', id='id')
         self.note.addChild(subNote)
         self.task.addNote(self.note)
-        self.expectInXML('>\n<note creationDateTime="%s" id="%s" status="1">\n'
-            '<note creationDateTime="%s" id="id" status="1" subject="Subnote" '
+        self.expectInXML('>\n<note creationDateTime="%s" id="%s">\n'
+            '<note creationDateTime="%s" id="id" subject="Subnote" '
             '/>\n</note>\n</task>' % (self.note.creationDateTime(), 
                                       self.note.id(), 
                                       subNote.creationDateTime()))
@@ -562,7 +554,7 @@ class XMLWriterTest(test.TestCase):
         
     def testCategoryWithNote(self):
         self.category.addNote(self.note)
-        self.expectInXML('>\n<note creationDateTime="%s" id="%s" status="1" '
+        self.expectInXML('>\n<note creationDateTime="%s" id="%s" '
                          '/>\n</category>' % (self.note.creationDateTime(), 
                                               self.note.id()))
 
@@ -570,8 +562,8 @@ class XMLWriterTest(test.TestCase):
         anotherNote = note.Note(subject='Another note', id='id')
         self.category.addNote(self.note)
         self.category.addNote(anotherNote)
-        self.expectInXML('>\n<note creationDateTime="%s" id="%s" status="1" />\n'
-            '<note creationDateTime="%s" id="id" status="1" subject="Another '
+        self.expectInXML('>\n<note creationDateTime="%s" id="%s" />\n'
+            '<note creationDateTime="%s" id="id" subject="Another '
             'note" />\n</category>' % (self.note.creationDateTime(), 
                                        self.note.id(),
                                        anotherNote.creationDateTime()))
@@ -580,8 +572,8 @@ class XMLWriterTest(test.TestCase):
         subNote = note.Note(subject='Subnote', id='id')
         self.note.addChild(subNote)
         self.category.addNote(self.note)
-        self.expectInXML('>\n<note creationDateTime="%s" id="%s" status="1">\n'
-            '<note creationDateTime="%s" id="id" status="1" subject="Subnote" '
+        self.expectInXML('>\n<note creationDateTime="%s" id="%s">\n'
+            '<note creationDateTime="%s" id="id" subject="Subnote" '
             '/>\n</note>\n</category>' % (self.note.creationDateTime(), 
                                           self.note.id(), 
                                           subNote.creationDateTime()))

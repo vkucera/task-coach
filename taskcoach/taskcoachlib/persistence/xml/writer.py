@@ -73,7 +73,7 @@ class XMLWriter(object):
         self.__versionnr = versionnr
 
     def write(self, taskList, categoryContainer,
-              noteContainer, syncMLConfig, guid):
+              noteContainer, guid):
         root = ET.Element('tasks')
 
         for rootTask in sortedById(taskList.rootItems()):
@@ -86,8 +86,6 @@ class XMLWriter(object):
         for rootNote in sortedById(noteContainer.rootItems()):
             self.noteNode(root, rootNote)
         
-        if syncMLConfig:
-            self.syncMLNode(root, syncMLConfig)
         if guid:
             ET.SubElement(root, 'guid').text = guid
 
@@ -106,7 +104,6 @@ class XMLWriter(object):
     def taskNode(self, parentNode, task):  # pylint: disable=W0621
         maxDateTime = self.maxDateTime
         node = self.baseCompositeNode(parentNode, task, 'task', self.taskNode)
-        node.attrib['status'] = str(task.getStatus())
         if task.plannedStartDateTime() != maxDateTime:
             node.attrib['plannedstartdate'] = str(task.plannedStartDateTime())
         if task.dueDateTime() != maxDateTime:
@@ -166,7 +163,7 @@ class XMLWriter(object):
 
     def effortNode(self, parentNode, effort):
         formattedStart = self.formatDateTime(effort.getStart())
-        attrs = dict(id=effort.id(), status=str(effort.getStatus()), start=formattedStart)
+        attrs = dict(id=effort.id(), start=formattedStart)
         stop = effort.getStop()
         if stop != None:
             formattedStop = self.formatDateTime(stop)
@@ -211,7 +208,7 @@ class XMLWriter(object):
 
     def __baseNode(self, parentNode, item, nodeName):
         node = ET.SubElement(parentNode, nodeName,
-                             dict(id=item.id(), status=str(item.getStatus())))
+                             dict(id=item.id()))
         if item.creationDateTime() > date.DateTime.min:
             node.attrib['creationDateTime'] = str(item.creationDateTime())
         if item.modificationDateTime() > date.DateTime.min:
@@ -272,19 +269,6 @@ class XMLWriter(object):
             self.noteNode(node, eachNote)
         return node
 
-    def syncMLNode(self, parentNode, syncMLConfig):
-        node = ET.SubElement(parentNode, 'syncmlconfig')
-        self.__syncMLNode(syncMLConfig, node)
-        return node
-
-    def __syncMLNode(self, cfg, node):
-        for name, value in cfg.properties():
-            ET.SubElement(node, 'property', dict(name=name)).text = value
-
-        for childCfg in cfg.children():
-            child = ET.SubElement(node, childCfg.name)
-            self.__syncMLNode(childCfg, child)
-
     def budgetAsAttribute(self, budget):
         return '%d:%02d:%02d' % budget.hoursMinutesSeconds()
 
@@ -317,7 +301,7 @@ class TemplateXMLWriter(XMLWriter):
         super(TemplateXMLWriter, self).write(task.TaskList([tsk]),
                    category.CategoryList(),
                    note.NoteContainer(),
-                   None, None)
+                   None)
 
     def taskNode(self, parentNode, task):  # pylint: disable=W0621
         node = super(TemplateXMLWriter, self).taskNode(parentNode, task)

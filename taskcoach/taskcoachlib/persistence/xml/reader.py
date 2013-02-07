@@ -23,7 +23,6 @@ from taskcoachlib import meta
 from taskcoachlib.changes import ChangeMonitor
 from taskcoachlib.domain import date, effort, task, category, note, attachment
 from taskcoachlib.i18n import translate
-from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
 from taskcoachlib.thirdparty.deltaTime import nlTimeExpression
 from taskcoachlib.thirdparty.guid import generate
 import StringIO
@@ -69,8 +68,7 @@ class XMLReader(object):
         return self.__tskversion
 
     def read(self):
-        ''' Read the task file and return the tasks, categories, notes, SyncML
-            configuration and GUID. '''
+        ''' Read the task file and return the tasks, categories, notes and GUID. '''
         if self.__has_broken_lines():
             self.__fix_broken_lines()
         parser = PIParser()
@@ -100,7 +98,6 @@ class XMLReader(object):
             categories = self.__parse_category_nodes(root, categorizables_by_id)
 
         guid = self.__parse_guid_node(root.find('guid'))
-        syncml_config = self.__parse_syncml_node(root, guid)
         
         for object, modification_datetime in self.__modification_datetimes.iteritems():
             object.setModificationDateTime(modification_datetime)
@@ -111,7 +108,7 @@ class XMLReader(object):
         else:
             changes = dict()
 
-        return tasks, categories, notes, syncml_config, changes, guid
+        return tasks, categories, notes, changes, guid
 
     def __has_broken_lines(self):
         ''' tskversion 24 may contain newlines in element tags. '''
@@ -153,13 +150,6 @@ class XMLReader(object):
             ''' Replace all prerequisites ids with actual task instances and 
                 set the dependencies. '''
             for each_task in tasks:
-                if each_task.isDeleted():
-                    # Don't restore prerequisites and dependencies for deleted
-                    # tasks
-                    for deleted_task in [each_task] + \
-                                        each_task.children(recursive=True):
-                        deleted_task.setPrerequisites([])
-                    continue
                 prerequisites = set()
                 for prerequisiteId in self.__prerequisites.get(each_task.id(), []):
                     try:
@@ -340,8 +330,6 @@ class XMLReader(object):
         if self.__tskversion <= 20:
             attributes['attachments'] = \
                 self.__parse_attachments_before_version21(node)
-        if self.__tskversion >= 22:
-            attributes['status'] = int(node.attrib.get('status', '1'))
 
         return attributes
     
@@ -390,8 +378,6 @@ class XMLReader(object):
     def __parse_effort_node(self, node):
         ''' Parse an effort record from the node. '''
         kwargs = {}
-        if self.__tskversion >= 22:
-            kwargs['status'] = int(node.attrib['status'])
         if self.__tskversion >= 29:
             kwargs['id'] = node.attrib['id']
         start = node.attrib.get('start', '')
@@ -403,34 +389,6 @@ class XMLReader(object):
         # pylint: disable=W0142 
         return effort.Effort(task=None, start=date.parseDateTime(start),
             stop=date.parseDateTime(stop), description=description, **kwargs)
-
-    def __parse_syncml_node(self, nodes, guid):
-        ''' Parse the SyncML node from the nodes. '''
-        syncml_config = createDefaultSyncConfig(guid)
-
-        node_name = 'syncmlconfig'
-        if self.__tskversion < 25:
-            node_name = 'syncml'
-
-        for node in nodes.findall(node_name):
-            self.__parse_syncml_nodes(node, syncml_config)
-        return syncml_config
-
-    def __parse_syncml_nodes(self, node, config_node):
-        ''' Parse the SyncML nodes from the node. '''
-        for child_node in node:
-            if child_node.tag == 'property':
-                config_node.set(child_node.attrib['name'], 
-                                self.__parse_text(child_node))
-            else:
-                for child_config_node in config_node.children():
-                    if child_config_node.name == child_node.tag:
-                        break
-                else:
-                    tag = child_node.tag
-                    child_config_node = SyncMLConfigNode(tag)
-                    config_node.addChild(child_config_node)
-                self.__parse_syncml_nodes(child_node, child_config_node) 
 
     def __parse_guid_node(self, node):
         ''' Parse the GUID from the node. '''

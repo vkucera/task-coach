@@ -213,26 +213,6 @@ class FileEditTemplates(settings_uicommand.SettingsCommand,
         templateDialog.Show()
 
 
-class FilePurgeDeletedItems(mixin_uicommand.NeedsDeletedItemsMixin, IOCommand):
-    def __init__(self, *args, **kwargs):
-        super(FilePurgeDeletedItems, self).__init__(\
-            menuText=_('&Purge deleted items'),
-            helpText=_('Actually delete deleted tasks and notes '
-                       '(see the SyncML chapter in Help)'),
-            bitmap='delete', *args, **kwargs)
-
-    def doCommand(self, event):
-        if (wx.MessageBox(_('''Purging deleted items is undoable.
-If you're planning on enabling
-the SyncML feature again with the
-same server you used previously,
-these items will probably come back.
-
-Do you still want to purge?'''),
-                          _('Warning'), wx.YES_NO) == wx.YES):
-            self.iocontroller.purgeDeletedItems()
-
-
 class PrintPageSetup(settings_uicommand.SettingsCommand, 
                      base_uicommand.UICommand):
     ''' Action for changing page settings. The page settings are saved in the
@@ -455,20 +435,6 @@ class FileImportTodoTxt(IOCommand):
         filename = wx.FileSelector(_('Import Todo.txt'), wildcard='*.txt')
         if filename:
             self.iocontroller.importTodoTxt(filename)
-            
-
-class FileSynchronize(IOCommand, settings_uicommand.SettingsCommand):
-    ''' Action for synchronizing the current task file with a SyncML 
-        server. '''
-    
-    def __init__(self, *args, **kwargs):
-        super(FileSynchronize, self).__init__( \
-            menuText=_('S&yncML synchronization...'),
-            helpText=_('Synchronize with a SyncML server'),
-            bitmap='arrows_looped_icon', *args, **kwargs)
-
-    def doCommand(self, event):
-        self.iocontroller.synchronize()
 
 
 class FileQuit(base_uicommand.UICommand):
@@ -680,22 +646,6 @@ class EditPreferences(settings_uicommand.SettingsCommand):
     def doCommand(self, event, show=True):  # pylint: disable=W0221
         editor = dialog.preferences.Preferences(parent=self.mainWindow(), 
             title=_('Preferences'), settings=self.settings)
-        editor.Show(show=show)
-
-
-class EditSyncPreferences(IOCommand):
-    ''' Action for bringing up the synchronization preferences dialog. '''
-    
-    def __init__(self, *args, **kwargs):
-        super(EditSyncPreferences, self).__init__( \
-            menuText=_('&SyncML preferences...'),
-            helpText=_('Edit SyncML preferences'), bitmap='arrows_looped_icon',
-            *args, **kwargs)
-
-    def doCommand(self, event, show=True):  # pylint: disable=W0221
-        editor = dialog.syncpreferences.SyncMLPreferences( \
-            parent=self.mainWindow(), iocontroller=self.iocontroller,
-            title=_('SyncML preferences'))
         editor.Show(show=show)
 
 
@@ -1668,7 +1618,6 @@ class EffortStartForTask(TaskListCommand):
 
 class EffortStartButton(mixin_uicommand.PopupButtonMixin, TaskListCommand):
     def __init__(self, *args, **kwargs):
-        kwargs['taskList'] = base.filter.DeletedFilter(kwargs['taskList'])
         super(EffortStartButton, self).__init__(bitmap='clock_menu_icon',
             menuText=_('&Start tracking effort'),
             helpText=_('Select a task via the menu and start tracking effort for it'),

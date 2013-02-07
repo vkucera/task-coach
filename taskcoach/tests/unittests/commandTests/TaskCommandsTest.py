@@ -190,18 +190,10 @@ class DeleteCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):
         self.assertTaskList(self.originalList)
         self.failUnlessParentAndChild(self.parent, self.child)
         self.failUnlessParentAndChild(self.child, self.grandchild)
-
-    def assertShadowed(self, *shadowedTasks):
-        for shadowedTask in shadowedTasks:
-            self.failUnless(shadowedTask.isDeleted())
         
     def testDeleteParent(self):
         self.delete([self.parent])
         self.assertDeleteWorks()
-        
-    def testDeleteParentWhileShadowing(self):
-        self.delete([self.parent], shadow=True)
-        self.assertShadowed(self.parent, *self.parent.children())
         
     def testDeleteParentAndChild(self):
         self.delete([self.parent, self.child])

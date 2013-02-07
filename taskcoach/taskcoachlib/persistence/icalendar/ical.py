@@ -215,7 +215,6 @@ class VTodoParser(VCalendarParser):
                 else:
                     self.kwargs['completionDateTime'] = date.Now()
 
-        self.kwargs['status'] = Object.STATUS_NONE
         self.tasks.append(self.kwargs)
 
     def acceptItem(self, name, value):
@@ -250,7 +249,6 @@ class VNoteParser(VCalendarParser):
                 self.kwargs['subject'] = self.kwargs['description'].split('\n')[0]
             else:
                 self.kwargs['subject'] = ''
-        self.kwargs['status'] = Object.STATUS_NONE
         self.notes.append(self.kwargs)
 
     def acceptItem(self, name, value):

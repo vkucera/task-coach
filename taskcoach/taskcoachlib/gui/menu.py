@@ -238,8 +238,6 @@ class FileMenu(Menu):
             uicommand.FileSaveAs(iocontroller=iocontroller),
             uicommand.FileSaveSelection(iocontroller=iocontroller,
                                         viewer=viewerContainer))
-        if not settings.getboolean('feature', 'syncml'):
-            self.appendUICommands(uicommand.FilePurgeDeletedItems(iocontroller=iocontroller))
         self.appendUICommands(
             None,
             uicommand.FileSaveSelectedTaskAsTemplate(iocontroller=iocontroller,
@@ -256,14 +254,6 @@ class FileMenu(Menu):
         self.appendMenu(_('&Export'),
                         ExportMenu(mainwindow, iocontroller, settings),
                         'export')
-        if settings.getboolean('feature', 'syncml'):
-            try:
-                import taskcoachlib.syncml.core  # pylint: disable=W0612,W0404
-            except ImportError:
-                pass
-            else:
-                self.appendUICommands(uicommand.FileSynchronize(iocontroller=iocontroller, 
-                                                                settings=settings))
         self.__recentFilesStartPosition = len(self) 
         self.appendUICommands(None, uicommand.FileQuit())
         self._window.Bind(wx.EVT_MENU_OPEN, self.onOpenMenu)
@@ -367,14 +357,6 @@ class EditMenu(Menu):
         self.appendMenu(_('&Select') + ' ' * 50,
                         SelectMenu(mainwindow, viewerContainer))
         self.appendUICommands(None, uicommand.EditPreferences(settings))
-        if settings.getboolean('feature', 'syncml'):
-            try:
-                import taskcoachlib.syncml.core  # pylint: disable=W0612,W0404
-            except ImportError:
-                pass
-            else:
-                self.appendUICommands(uicommand.EditSyncPreferences(mainwindow=mainwindow,
-                                                                    iocontroller=iocontroller))
 
 
 class SelectMenu(Menu):
@@ -671,7 +653,7 @@ class TaskBarMenu(Menu):
             label = _('&Start tracking effort')
             self.appendMenu(label,
                 StartEffortForTaskMenu(taskBarIcon, 
-                                       base.filter.DeletedFilter(tasks), 
+                                       tasks, 
                                        self, label), 'clock_icon')
             self.appendUICommands(uicommand.EffortStop(effortList=efforts,
                                                        taskList=tasks))
