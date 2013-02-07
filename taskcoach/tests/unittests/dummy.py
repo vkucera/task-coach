@@ -30,6 +30,9 @@ class DummyWidget(wx.Frame):
         super(DummyWidget, self).__init__(viewer)
         self.viewer = viewer
 
+    def RefreshItems(self, *items):
+        pass
+
     def curselection(self):
         return []
     

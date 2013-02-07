@@ -24,7 +24,7 @@ developing Task Coach.
 
 --- Prerequisites ---------------------------------------------------
 
-You need Python version 2.6 or higher and wxPython version 
+You need Python version 2.7 or higher and wxPython version 
 2.8.9.2-unicode or higher. See http://www.taskcoach.org/devinfo.html 
 for more details and platform specific notes. 
     

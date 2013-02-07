@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.23', 'January 6, 2013',
+Release('1.3.23', 'February 7, 2013',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bugv2('''Some navigation shortcuts in the date/time picker
@@ -54,12 +54,12 @@ picker.''', '1354'),
         Bugv2('''Fix Shift-S and Shift-E shortcuts in date picker on
 Linux.''', '1358'),
         Bugv2('''Fix overlay in toolbar icons.''', '1356'),
-        Bugv2('''Performance improvement when closing the editor.'''),
         Bugv2('''Use system default GUI font in date picker.''', '1361'),
         Bugv2('''Add shortcuts for AM/PM in date picker.''', '1362'),
         Bugv2('''Escape now dismisses calendar popup in date picker.''', '1362'),
         Bugv2('''Fix crash when a task status icon has been set to
 "No icon".''', '1364'),
+        Bugv2('''Fix refreshing of spent time in effort viewer''', '1363'),
         ],
     featuresAdded=[
         Feature('''Add a modification date attribute to tasks, notes, 
@@ -68,6 +68,8 @@ attachments, and categories.''', 'http://uservoice.com/a/-2HX-'),
 picker has focus will try to interpret the clipboard's content. Ctrl+C
 stores the current value in the clipboard.''', '1352'),
         ],
+    dependenciesChanged=[
+        Dependency('''Task Coach now needs Python 2.7.''')],
     ),  
             
 Release('1.3.22', 'January 2, 2013',

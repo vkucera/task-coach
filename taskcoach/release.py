@@ -18,6 +18,23 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+# Sanity check
+import sys
+PYTHONEXE = 'python'
+
+if sys.platform == 'darwin':
+    import struct, os, subprocess
+    if len(struct.pack('L', 0)) == 8:
+        print 'Running 64-bits Python on Darwin; relaunching with 32-bits Python.'
+        sys.exit(os.system('python-32 %s' % ' '.join(sys.argv)))
+    output = subprocess.check_output(['getconf', 'LONG_BIT']).strip()
+    if output == '64':
+        PYTHONEXE = 'python-32'
+
+import struct
+if sys.platform == 'darwin' and len(struct.pack('L', 0)) == 8:
+    raise RuntimeError('Please use python-32 to run this script')
+
 
 HELP_TEXT = '''
 Release steps:
@@ -298,7 +315,7 @@ def marking_default_downloads(settings, options):
             # httplib does not seem to handle PUT very well
             # See http://stackoverflow.com/questions/111945/is-there-any-way-to-do-http-put-in-python
             opener = urllib2.build_opener(urllib2.HTTPSHandler)
-            url = 'https://sourceforge.net/projects/taskcoach/files/taskcoach/Release-%s/%s' % (meta.version, name)
+            url = 'https://sourceforge.net/projects/taskcoach/files/taskcoach/Release-%s/%s' % (taskcoachlib.meta.version, name)
             req = urllib2.Request(url,
                                   data=urllib.urlencode(dict(default=platform, api_key=settings.get('sourceforge', 'api_key'))))
             req.add_header('Content-Type', 'application/x-www-form-urlencoded')
@@ -351,8 +368,9 @@ def generating_MD5_digests(settings, options):
 
 @progress
 def generating_website(settings, options):
+    os.system('make changes')
     os.chdir('website.in')
-    os.system('"%s" make.py' % sys.executable)
+    os.system('"%s" make.py' % PYTHONEXE)
     os.chdir('..')
 
 
@@ -580,14 +598,17 @@ def updating_Sourceforge_trackers(settings, options):
     else:
         raise RuntimeError('Could not find version "%s" in changelog' % taskcoachlib.meta.version)
 
+    alreadyDone = set()
     for bugFixed in release.bugsFixed:
         if isinstance(bugFixed, changetypes.Bugv2):
             for id_ in bugFixed.changeIds:
-                if options.dry_run:
-                    print 'Skipping mark bug #%s released' % id_
-                else:
-                    api = SourceforgeAPI(settings, options)
-                    api.release(id_)
+                if id_ not in alreadyDone:
+                    alreadyDone.add(id_)
+                    if options.dry_run:
+                        print 'Skipping mark bug #%s released' % id_
+                    else:
+                        api = SourceforgeAPI(settings, options)
+                        api.release(id_)
 
 
 def releasing(settings, options):
@@ -720,6 +741,7 @@ COMMANDS = dict(release=releasing,
                 upload=uploading_distributions_to_SourceForge, 
                 download=downloading_distributions_from_SourceForge, 
                 md5=generating_MD5_digests,
+                websitegen=generating_website,
                 website=uploading_website,
                 websiteDH=uploading_website_to_Dreamhost,
                 websiteHL=uploading_website_to_Hostland,
@@ -746,11 +768,6 @@ parser.add_option('-n', '--dry-run', action='store_true', dest='dry_run',
 parser.add_option('-v', '--verbose', action='store_true', dest='verbose',
                   help='provide more detailed progress information')
 options, args = parser.parse_args()
-
-# Sanity check
-import struct
-if sys.platform == 'darwin' and len(struct.pack('L', 0)) == 8:
-    raise RuntimeError('Please use python-32 to run this script')
 
 try:
     if len(args) > 1:

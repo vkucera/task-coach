@@ -53,6 +53,9 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
         effortsToAdd = []
         for task in tasks:
             effortsToAdd.extend(task.efforts())
+        for effort in effortsToAdd:
+            if effort.getStop() is None:
+                pub.sendMessage(effort.trackingChangedEventType(), newValue=True, sender=effort)
         super(EffortList, self).extendSelf(effortsToAdd, event)
         
     def removeItemsFromSelf(self, tasks, event=None):
@@ -65,6 +68,9 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
         effortsToRemove = []
         for task in tasks:
             effortsToRemove.extend(task.efforts())
+        for effort in effortsToRemove:
+            if effort.getStop() is None:
+                pub.sendMessage(effort.trackingChangedEventType(), newValue=False, sender=effort)
         super(EffortList, self).removeItemsFromSelf(effortsToRemove, event)
 
     def onAddEffortToOrRemoveEffortFromTask(self, newValue, sender):
@@ -75,6 +81,11 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
         effortsToRemove = [effort for effort in oldValue if not effort in newValue]
         super(EffortList, self).extendSelf(effortsToAdd)
         super(EffortList, self).removeItemsFromSelf(effortsToRemove)
+        for effort in effortsToAdd + effortsToRemove:
+            if effort.getStop() is None:
+                pub.sendMessage(effort.trackingChangedEventType(),
+                                newValue=effort in effortsToAdd,
+                                sender=effort)
 
     def originalLength(self):
         ''' Do not delegate originalLength to the underlying TaskList because
