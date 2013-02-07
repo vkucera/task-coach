@@ -598,14 +598,17 @@ def updating_Sourceforge_trackers(settings, options):
     else:
         raise RuntimeError('Could not find version "%s" in changelog' % taskcoachlib.meta.version)
 
+    alreadyDone = set()
     for bugFixed in release.bugsFixed:
         if isinstance(bugFixed, changetypes.Bugv2):
             for id_ in bugFixed.changeIds:
-                if options.dry_run:
-                    print 'Skipping mark bug #%s released' % id_
-                else:
-                    api = SourceforgeAPI(settings, options)
-                    api.release(id_)
+                if id_ not in alreadyDone:
+                    alreadyDone.add(id_)
+                    if options.dry_run:
+                        print 'Skipping mark bug #%s released' % id_
+                    else:
+                        api = SourceforgeAPI(settings, options)
+                        api.release(id_)
 
 
 def releasing(settings, options):
