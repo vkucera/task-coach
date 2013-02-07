@@ -233,6 +233,7 @@ class Entry(wx.Panel):
         super(Entry, self).__init__(*args, **kwargs)
 
         dc = wx.ClientDC(self)
+        dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
 
         self.__focus = None
         self.__forceFocus = False
@@ -1879,6 +1880,7 @@ class _MultipleChoicesPopup(_PopupWindow):
     def OnLeftUp(self, event):
         y = 2
         dc = wx.ClientDC(event.GetEventObject())
+        dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
         for label, value in self.__choices:
             tw, th = dc.GetTextExtent(label)
             if event.GetY() >= y and event.GetY() < y + th:
