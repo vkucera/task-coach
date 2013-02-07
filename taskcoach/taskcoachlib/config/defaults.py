@@ -444,12 +444,6 @@ defaults = {
     'lastfile': '',
     'autosave': 'True',
     'autoload': 'False',
-    # Formats to automatically import from, only "Todo.txt" supported at this 
-    # time:
-    'autoimport': '[]',  
-    # Formats to automatically export to, only "Todo.txt" supported at this 
-    # time:
-    'autoexport': '[]',  
     'nopoll': 'False',
     'backup': 'False',
     'saveinifileinprogramdir': 'False',

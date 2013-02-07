@@ -162,7 +162,6 @@ class Application(object):
         # pylint: disable=W0201
         self.taskFile = persistence.LockedTaskFile(poll=not self.settings.getboolean('file', 'nopoll'))
         self.__auto_saver = persistence.AutoSaver(self.settings)
-        self.__auto_exporter = persistence.AutoImporterExporter(self.settings)
         self.__auto_backup = persistence.AutoBackup(self.settings)
         self.iocontroller = gui.IOController(self.taskFile, self.displayMessage, 
                                              self.settings, splash)
