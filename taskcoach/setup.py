@@ -83,15 +83,12 @@ if system == 'Linux':
 elif system == 'Windows':
     setupOptions['scripts'].append('taskcoach.pyw')
     major, minor = majorAndMinorPythonVersion()
-    sys.path.insert(0, os.path.join('taskcoachlib', 'bin.in', 'windows', 'py%d%d' % (major, minor)))
-    import _pysyncml
 elif system == 'Darwin':
     # When packaging for MacOS, choose the right binary depending on
     # the platform word size. Actually, we're always packaging on 32
     # bits.
     import struct
     wordSize = '32' if struct.calcsize('L') == 4 else '64'
-    sys.path.insert(0, os.path.join('taskcoachlib', 'bin.in', 'macos', 'IA%s' % wordSize))
     sys.path.insert(0, os.path.join('extension', 'macos', 'bin-ia32'))
     # pylint: disable=F0401,W0611
     import _powermgt
