@@ -18,6 +18,23 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+# Sanity check
+import sys
+PYTHONEXE = 'python'
+
+if sys.platform == 'darwin':
+    import struct, os, subprocess
+    if len(struct.pack('L', 0)) == 8:
+        print 'Running 64-bits Python on Darwin; relaunching with 32-bits Python.'
+        sys.exit(os.system('python-32 %s' % ' '.join(sys.argv)))
+    output = subprocess.check_output(['getconf', 'LONG_BIT']).strip()
+    if output == '64':
+        PYTHONEXE = 'python-32'
+
+import struct
+if sys.platform == 'darwin' and len(struct.pack('L', 0)) == 8:
+    raise RuntimeError('Please use python-32 to run this script')
+
 
 HELP_TEXT = '''
 Release steps:
@@ -351,8 +368,9 @@ def generating_MD5_digests(settings, options):
 
 @progress
 def generating_website(settings, options):
+    os.system('make changes')
     os.chdir('website.in')
-    os.system('"%s" make.py' % sys.executable)
+    os.system('"%s" make.py' % PYTHONEXE)
     os.chdir('..')
 
 
@@ -720,6 +738,7 @@ COMMANDS = dict(release=releasing,
                 upload=uploading_distributions_to_SourceForge, 
                 download=downloading_distributions_from_SourceForge, 
                 md5=generating_MD5_digests,
+                websitegen=generating_website,
                 website=uploading_website,
                 websiteDH=uploading_website_to_Dreamhost,
                 websiteHL=uploading_website_to_Hostland,
@@ -746,11 +765,6 @@ parser.add_option('-n', '--dry-run', action='store_true', dest='dry_run',
 parser.add_option('-v', '--verbose', action='store_true', dest='verbose',
                   help='provide more detailed progress information')
 options, args = parser.parse_args()
-
-# Sanity check
-import struct
-if sys.platform == 'darwin' and len(struct.pack('L', 0)) == 8:
-    raise RuntimeError('Please use python-32 to run this script')
 
 try:
     if len(args) > 1:
