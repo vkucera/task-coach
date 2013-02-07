@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ class Filter(patterns.SetDecorator):
         self.__treeMode = kwargs.pop('treeMode', False)        
         super(Filter, self).__init__(*args, **kwargs)
         self.reset()
-        
+
     def setTreeMode(self, treeMode):
         self.__treeMode = treeMode
         try:
@@ -100,37 +100,45 @@ class SearchFilter(Filter):
         matchCase = kwargs.pop('matchCase', False)
         includeSubItems = kwargs.pop('includeSubItems', False)
         searchDescription = kwargs.pop('searchDescription', False)
+        regularExpression = kwargs.pop('regularExpression', False)
 
         self.setSearchFilter(searchString, matchCase=matchCase, 
                              includeSubItems=includeSubItems, 
-                             searchDescription=searchDescription, doReset=False)
+                             searchDescription=searchDescription,
+                             regularExpression=regularExpression, doReset=False)
 
         super(SearchFilter, self).__init__(*args, **kwargs)
 
     def setSearchFilter(self, searchString, matchCase=False, 
                         includeSubItems=False, searchDescription=False, 
-                        doReset=True):
-        # pylint: disable-msg=W0201
+                        regularExpression=False, doReset=True):
+        # pylint: disable=W0201
         self.__includeSubItems = includeSubItems
         self.__searchDescription = searchDescription
-        self.__searchPredicate = self.__compileSearchPredicate(searchString, matchCase)
+        self.__regularExpression = regularExpression
+        self.__searchPredicate = self.__compileSearchPredicate(searchString, matchCase, regularExpression)
         if doReset:
             self.reset()
 
     @staticmethod
-    def __compileSearchPredicate(searchString, matchCase):
+    def __compileSearchPredicate(searchString, matchCase, regularExpression):
         if not searchString:
             return ''
         flag = 0 if matchCase else re.IGNORECASE | re.UNICODE
-        try:    
-            rx = re.compile(searchString, flag)
-        except sre_constants.error:
-            if matchCase:
-                return lambda x: x.find(searchString) != -1
+        if regularExpression:
+            try:    
+                rx = re.compile(searchString, flag)
+            except sre_constants.error:
+                if matchCase:
+                    return lambda x: x.find(searchString) != -1
+                else:
+                    return lambda x: x.lower().find(searchString.lower()) != -1
             else:
-                return lambda x: x.lower().find(searchString.lower()) != -1
+                return rx.search
+        elif matchCase:
+            return lambda x: x.find(searchString) != -1
         else:
-            return rx.search
+            return lambda x: x.lower().find(searchString.lower()) != -1
 
     def filterItems(self, items):
         return [item for item in items if \
@@ -165,7 +173,11 @@ class DeletedFilter(Filter):
             patterns.Publisher().registerObserver(self.onObjectMarkedDeletedOrNot,
                           eventType=eventType)
 
-    def onObjectMarkedDeletedOrNot(self, event):  # pylint: disable-msg=W0613
+    def detach(self):
+        patterns.Publisher().removeObserver(self.onObjectMarkedDeletedOrNot)
+        super(DeletedFilter, self).detach()
+
+    def onObjectMarkedDeletedOrNot(self, event):  # pylint: disable=W0613
         self.reset()
 
     def filterItems(self, items):

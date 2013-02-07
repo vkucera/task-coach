@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -60,7 +60,7 @@ class TaskViewerStatusMessagesTest(test.TestCase):
         self.taskList.append(self.task)
         
     def addOverdueTask(self):
-        self.task.setDueDateTime(date.Now() - date.TimeDelta(hours=1))
+        self.task.setDueDateTime(date.Now() - date.ONE_HOUR)
         self.taskList.append(self.task)
 
     def addInactiveTask(self):
@@ -71,7 +71,7 @@ class TaskViewerStatusMessagesTest(test.TestCase):
         self.taskList.append(self.task)
         
     def addLateTask(self):
-        self.task.setPlannedStartDateTime(date.Now() - date.oneDay)
+        self.task.setPlannedStartDateTime(date.Yesterday())
         self.taskList.append(self.task)
         
     def removeTask(self):

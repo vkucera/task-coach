@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, cgi
 from taskcoachlib.domain import task
 
-# pylint: disable-msg=W0142
+# pylint: disable=W0142
 
 css = '''
 body {
@@ -229,7 +229,7 @@ class Viewer2HTMLConverter(object):
         ''' Determine the background color for the item. Returns a CSS style
             specification or a HTML style specification when printing. '''
         bgColor = item.backgroundColor(recursive=True)
-        if bgColor:
+        if bgColor and bgColor != wx.WHITE:
             bgColor = self.cssColorSyntax(bgColor)
         else:
             return dict()
@@ -288,7 +288,8 @@ class Viewer2HTMLConverter(object):
         ''' Render the item based on the column, escape HTML and indent
             the item with non-breaking spaces, if indent == True. '''
         # Escape the rendered item and then replace newlines with <br>. 
-        renderedItem = cgi.escape(column.render(item)).replace('\n', '<br>')
+        renderedItem = cgi.escape(column.render(item, 
+                                  humanReadable=False)).replace('\n', '<br>')
         if indent:
             # Indent the subject with whitespace
             renderedItem = '&nbsp;' * len(item.ancestors()) * 3 + renderedItem

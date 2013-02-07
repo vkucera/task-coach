@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test, wx
 from taskcoachlib import patterns
-from taskcoachlib.domain import category, categorizable
+from taskcoachlib.domain import category, categorizable, date
 
 
 
@@ -697,9 +697,9 @@ class CategorizableCompositeObjectTest(test.TestCase):
     def testCopy(self):
         self.categorizable.addCategory(self.category)
         copy = self.categorizable.copy()
-        self.assertEqual(copy.categories(), self.categorizable.categories()) # pylint: disable-msg=E1101
+        self.assertEqual(copy.categories(), self.categorizable.categories())  # pylint: disable=E1101
         
-    def testModificationEventTypes(self): # pylint: disable-msg=E1003
+    def testModificationEventTypes(self):  # pylint: disable=E1003
         self.assertEqual(super(categorizable.CategorizableCompositeObject,
                                self.categorizable).modificationEventTypes() + \
                          [self.categoryAddedEventType, 

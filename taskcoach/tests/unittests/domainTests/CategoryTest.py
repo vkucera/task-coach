@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test, wx
 from taskcoachlib import patterns
-from taskcoachlib.domain import category, categorizable, note
+from taskcoachlib.domain import category, categorizable, note, date
 
 
 class CategoryTest(test.TestCase):
@@ -58,7 +58,9 @@ class CategoryTest(test.TestCase):
                         parent=None, children=[self.subCategory], id=self.category.id(),
                         categorizables=[self.categorizable], notes=[],
                         attachments=[], filtered=True, exclusiveSubcategories=True,
-                        icon='icon', selectedIcon='selected')
+                        icon='icon', selectedIcon='selected',
+                        creationDateTime=date.Now(), 
+                        modificationDateTime=date.Now())
         for eventType in self.category.modificationEventTypes():
             self.registerObserver(eventType)
         self.category.__setstate__(newState)
@@ -99,7 +101,8 @@ class CategoryTest(test.TestCase):
       
     def testAddCategorizable(self):
         self.category.addCategorizable(self.categorizable)
-        self.assertEqual(set([self.categorizable]), self.category.categorizables())
+        self.assertEqual(set([self.categorizable]), 
+                         self.category.categorizables())
         
     def testAddCategorizableDoesNotAddCategoryToCategorizable(self):
         self.category.addCategorizable(self.categorizable)
@@ -108,7 +111,8 @@ class CategoryTest(test.TestCase):
     def testAddCategorizableTwice(self):
         self.category.addCategorizable(self.categorizable)
         self.category.addCategorizable(self.categorizable)
-        self.assertEqual(set([self.categorizable]), self.category.categorizables())
+        self.assertEqual(set([self.categorizable]), 
+                         self.category.categorizables())
         
     def testRemoveCategorizable(self):
         self.category.addCategorizable(self.categorizable)
@@ -198,7 +202,7 @@ class CategoryTest(test.TestCase):
         copy = self.category.copy()
         self.assertEqual(copy.getStatus(), copy.STATUS_NEW)
 
-    # pylint: disable-msg=E1101
+    # pylint: disable=E1101
         
     def testCopy_SubjectIsDifferentFromOriginalSubject(self):
         self.subCategory.setSubject('New subject')
@@ -385,7 +389,7 @@ class CategoryTest(test.TestCase):
         
     # Event types:
         
-    def testModificationEventTypes(self): # pylint: disable-msg=E1003
+    def testModificationEventTypes(self): # pylint: disable=E1003
         self.assertEqual(super(category.Category,
                                self.category).modificationEventTypes() + \
                          [self.category.filterChangedEventType(), 

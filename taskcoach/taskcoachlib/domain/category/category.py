@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
         self.__categorizables = base.SetAttribute(set(categorizables or []),
                                                   self,
                                                   self.categorizableAddedEvent,
-                                                  self.categorizableRemovedEvent)
+                                                  self.categorizableRemovedEvent, weak=True)
         self.__filtered = filtered
         self.__exclusiveSubcategories = exclusiveSubcategories
 

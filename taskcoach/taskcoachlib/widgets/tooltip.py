@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,8 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, textwrap
 from taskcoachlib import operating_system
+import wx
+import textwrap
 
 
 class ToolTipMixin(object):
@@ -80,7 +81,7 @@ class ToolTipMixin(object):
     def OnBeforeShowToolTip(self, x, y):
         """Should return a wx.Frame instance that will be displayed as
         the tooltip, or None."""
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
     def __OnMotion(self, event):
         x, y = event.GetPosition()
@@ -100,7 +101,7 @@ class ToolTipMixin(object):
 
         event.Skip()
 
-    def __OnTipMotion(self, event): # pylint: disable-msg=W0613
+    def __OnTipMotion(self, event):  # pylint: disable=W0613
         self.HideTip()
 
     def __OnLeave(self, event):
@@ -112,7 +113,7 @@ class ToolTipMixin(object):
 
         event.Skip()
 
-    def __OnTimer(self, event): # pylint: disable-msg=W0613
+    def __OnTimer(self, event):  # pylint: disable=W0613
         self.ShowTip(*self.GetMainWindow().ClientToScreenXY(*self.__position))
 
 
@@ -123,13 +124,13 @@ if operating_system.isWindows():
             super(ToolTipBase, self).__init__(parent, wx.ID_ANY, 'Tooltip',
                                               style=style)
 
-        def Show(self, x, y, w, h): # pylint: disable-msg=W0221
+        def Show(self, x, y, w, h):  # pylint: disable=W0221
             self.SetDimensions(x, y, w, h)
             super(ToolTipBase, self).Show()
 
 elif operating_system.isMac():
     class ToolTipBase(wx.Frame):
-        def __init__(self, parent): # pylint: disable-msg=E1003
+        def __init__(self, parent):  # pylint: disable=E1003
             style = wx.FRAME_NO_TASKBAR | wx.FRAME_FLOAT_ON_PARENT | wx.NO_BORDER
             super(ToolTipBase, self).__init__(parent, wx.ID_ANY, 'ToolTip',
                                               style=style)
@@ -146,15 +147,15 @@ elif operating_system.isMac():
             self.MoveXY(self.__maxWidth, self.__maxHeight)
             super(ToolTipBase, self).Show()
 
-        def Show(self, x, y, width, height): # pylint: disable-msg=W0221
+        def Show(self, x, y, width, height):  # pylint: disable=W0221
             self.SetDimensions(x, y, width, height)
 
-        def Hide(self):  # pylint: disable-msg=W0221
+        def Hide(self):  # pylint: disable=W0221
             self.MoveXY(self.__maxWidth, self.__maxHeight)
 
 else:
     class ToolTipBase(wx.PopupWindow):
-        def Show(self, x, y, width, height): # pylint: disable-msg=E1003,W0221
+        def Show(self, x, y, width, height):  # pylint: disable=E1003,W0221
             self.SetDimensions(x, y, width, height)
             super(ToolTipBase, self).Show()
 
@@ -168,7 +169,7 @@ class SimpleToolTip(ToolTipBase):
     def SetData(self, data):
         self.data = self._wrapLongLines(data)
         self.SetSize(self._calculateSize())
-        self.Refresh() # Needed on Mac OS X
+        self.Refresh()  # Needed on Mac OS X
         
     def _wrapLongLines(self, data):
         wrappedData = []
@@ -188,7 +189,7 @@ class SimpleToolTip(ToolTipBase):
             sectionWidth, sectionHeight = self._calculateSectionSize(dc, sectionIndex)
             width = max(width, sectionWidth)
             height += sectionHeight
-        return wx.Size(width+6, height+6)
+        return wx.Size(width + 6, height + 6)
     
     def _calculateSectionSize(self, dc, sectionIndex):
         icon, lines = self.data[sectionIndex]
@@ -198,15 +199,15 @@ class SimpleToolTip(ToolTipBase):
             sectionHeight += lineHeight + 1
             sectionWidth = max(sectionWidth, lineWidth)
         if 0 < sectionIndex < len(self.data) - 1:
-            sectionHeight += 3 # Horizontal space between sections
+            sectionHeight += 3  # Horizontal space between sections
         if icon:
-            sectionWidth += 24 # Reserve width for icon(s)
+            sectionWidth += 24  # Reserve width for icon(s)
         return sectionWidth, sectionHeight
     
     def _calculateLineSize(self, dc, line):
         return dc.GetTextExtent(line)
 
-    def OnPaint(self, event): # pylint: disable-msg=W0613
+    def OnPaint(self, event):  # pylint: disable=W0613
         dc = wx.PaintDC(self)
         dc.BeginDrawing()
         try:
@@ -258,7 +259,7 @@ class SimpleToolTip(ToolTipBase):
     def _drawIcon(self, dc, icon, x, y):
         bitmap = wx.ArtProvider.GetBitmap(icon, wx.ART_FRAME_ICON, (16, 16))
         dc.DrawBitmap(bitmap, x, y, True)
-        return 23 # New x
+        return 23  # New x
         
     def _drawTextLines(self, dc, textLines, x, y):
         for textLine in textLines:
@@ -266,11 +267,13 @@ class SimpleToolTip(ToolTipBase):
         return y
         
     def _drawTextLine(self, dc, textLine, x, y):
-        dc.DrawText(textLine, x, y)
+        try:
+            dc.DrawText(textLine, x, y)
+        except:
+            raise RuntimeError('Could not draw text %s' % repr(textLine))
         textHeight = dc.GetTextExtent(textLine)[1]
         return y + textHeight + 1
     
     def _drawIconSeparator(self, dc, x, top, bottom):
         ''' Draw a vertical line between the icon and the text. '''
         dc.DrawLine(x, top, x, bottom)
-

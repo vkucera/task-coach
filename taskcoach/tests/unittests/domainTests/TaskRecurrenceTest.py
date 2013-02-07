@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,10 +25,10 @@ class RecurringTaskTestCase(test.TestCase):
     def setUp(self):
         self.settings = task.Task.settings = config.Settings(load=False)
         self.now = date.Now()
-        self.yesterday = self.now - date.oneDay
-        self.tomorrow = self.now + date.oneDay
+        self.yesterday = self.now - date.ONE_DAY
+        self.tomorrow = self.now + date.ONE_DAY
         kwargs_list = self.taskCreationKeywordArguments()
-        self.tasks = [task.Task(**kwargs) for kwargs in kwargs_list] # pylint: disable-msg=W0142
+        self.tasks = [task.Task(**kwargs) for kwargs in kwargs_list] # pylint: disable=W0142
         self.task = self.tasks[0]
         for index, eachTask in enumerate(self.tasks):
             taskLabel = 'task%d'%(index+1)
@@ -162,7 +162,7 @@ class TaskWithDailyRecurrenceThatHasMaxRecurrenceCountFixture( \
     maxRecurrenceCount = 2
     
     def createRecurrence(self):
-        return date.Recurrence('daily', max=self.maxRecurrenceCount)
+        return date.Recurrence('daily', maximum=self.maxRecurrenceCount)
 
     def testRecurLessThanMaxRecurrenceCount(self):
         for _ in range(self.maxRecurrenceCount):
@@ -189,17 +189,20 @@ class TaskWithDailyRecurrenceBasedOnCompletionFixture(RecurringTaskTestCase,
     def testPlannedStartDateDayBeforeYesterday(self):
         self.task.setPlannedStartDateTime(self.now - date.TimeDelta(hours=48))
         self.task.setCompletionDateTime(self.now)
-        self.assertEqual(self.now + date.TimeDelta(hours=24), self.task.plannedStartDateTime())
+        self.assertEqual(self.now + date.ONE_DAY, 
+                         self.task.plannedStartDateTime())
 
     def testPlannedStartDateToday(self):
         self.task.setPlannedStartDateTime(self.now.startOfDay())
         self.task.setCompletionDateTime(self.now)
-        self.assertEqual(self.tomorrow.startOfDay(), self.task.plannedStartDateTime())
+        self.assertEqual(self.tomorrow.startOfDay(), 
+                         self.task.plannedStartDateTime())
 
     def testPlannedStartDateTomorrow(self):
         self.task.setPlannedStartDateTime(self.tomorrow.startOfDay())
         self.task.setCompletionDateTime(self.now)
-        self.assertEqual(self.tomorrow.startOfDay(), self.task.plannedStartDateTime())
+        self.assertEqual(self.tomorrow.startOfDay(), 
+                         self.task.plannedStartDateTime())
         
     def testDueDateToday(self):
         self.task.setDueDateTime(self.now.endOfDay())
@@ -239,14 +242,14 @@ class TaskWithDailyRecurrenceBasedOnCompletionFixture(RecurringTaskTestCase,
 
     def testPlannedStartAndDueInTheFuture(self):
         self.task.setPlannedStartDateTime(self.tomorrow)
-        self.task.setDueDateTime(self.tomorrow + date.TimeDelta(hours=24))
+        self.task.setDueDateTime(self.tomorrow + date.ONE_DAY)
         self.task.setCompletionDateTime(self.now)
         self.assertEqual(self.now, self.task.plannedStartDateTime())
         self.assertEqual(self.tomorrow, self.task.dueDateTime())
 
 
 class CommonRecurrenceTestsMixinWithChild(CommonRecurrenceTestsMixin):
-    # pylint: disable-msg=E1101
+    # pylint: disable=E1101
     
     def testChildPlannedStartDateRecursToo(self):    
         self.task.setCompletionDateTime()
@@ -271,12 +274,12 @@ class CommonRecurrenceTestsMixinWithChild(CommonRecurrenceTestsMixin):
         self.task.setDueDateTime(self.tomorrow)
         child.setDueDateTime(self.now)
         self.task.setCompletionDateTime()
-        self.assertEqual(self.createRecurrence()(date.Today()),
+        self.assertEqual(self.createRecurrence()(self.now),
                          self.task.children()[0].dueDateTime())
 
 
 class CommonRecurrenceTestsMixinWithRecurringChild(CommonRecurrenceTestsMixin):
-    # pylint: disable-msg=E1101
+    # pylint: disable=E1101
     
     def testChildDoesNotRecurWhenParentDoes(self):
         origPlannedStartDateTime = self.task.children()[0].plannedStartDateTime()

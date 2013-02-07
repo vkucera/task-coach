@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib import patterns
 from taskcoachlib.domain import base
 from taskcoachlib.thirdparty.pubsub import pub
 import task
@@ -39,15 +38,13 @@ class Sorter(base.TreeSorter):
                           task.Task.completionDateTimeChangedEventType()):
             pub.subscribe(self.onAttributeChanged, eventType)
     
-    @patterns.eventSource       
-    def setTreeMode(self, treeMode=True, event=None):
+    def setTreeMode(self, treeMode=True):
         self.__treeMode = treeMode
         try:
             self.observable().setTreeMode(treeMode)
         except AttributeError:
             pass
-        self.reset(event=event)
-        event.addSource(self, type=self.sortEventType())  # Force notification 
+        self.reset(forceEvent=True)
 
     def treeMode(self):
         return self.__treeMode

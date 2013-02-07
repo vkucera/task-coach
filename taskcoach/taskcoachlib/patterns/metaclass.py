@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import weakref
 
+
 class NumberedInstances(type):
     ''' A metaclass that numbers class instances. Use by defining the metaclass 
         of a class NumberedInstances, e.g.: 
@@ -30,17 +31,17 @@ class NumberedInstances(type):
         
     count = dict()
         
-    def __call__(class_, *args, **kwargs):
-        if class_ not in NumberedInstances.count:
-            NumberedInstances.count[class_] = weakref.WeakKeyDictionary()
-        instanceNumber = NumberedInstances.lowestUnusedNumber(class_)
+    def __call__(cls, *args, **kwargs):
+        if cls not in NumberedInstances.count:
+            NumberedInstances.count[cls] = weakref.WeakKeyDictionary()
+        instanceNumber = NumberedInstances.lowestUnusedNumber(cls)
         kwargs['instanceNumber'] = instanceNumber
-        instance = super(NumberedInstances, class_).__call__(*args, **kwargs)
-        NumberedInstances.count[class_][instance] = instanceNumber
+        instance = super(NumberedInstances, cls).__call__(*args, **kwargs)
+        NumberedInstances.count[cls][instance] = instanceNumber
         return instance
         
-    def lowestUnusedNumber(class_):
-        usedNumbers = sorted(NumberedInstances.count[class_].values())
+    def lowestUnusedNumber(cls):
+        usedNumbers = sorted(NumberedInstances.count[cls].values())
         for index, usedNumber in enumerate(usedNumbers):
             if usedNumber != index:
                 return index

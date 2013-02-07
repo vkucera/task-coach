@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,21 +25,21 @@ class DummyFile(object):
     encoding = 'utf-8'
     name = 'whatever.tsk'
     
-    def close(self, *args, **kwargs): # pylint: disable-msg=W0613
+    def close(self, *args, **kwargs): # pylint: disable=W0613
         pass
 
-    def write(self, *args, **kwargs): # pylint: disable-msg=W0613
+    def write(self, *args, **kwargs): # pylint: disable=W0613
         pass
     
     
 class DummyTaskFile(persistence.TaskFile):
-    def _openForRead(self, *args, **kwargs): # pylint: disable-msg=W0613
+    def _openForRead(self, *args, **kwargs): # pylint: disable=W0613
         return DummyFile()
         
-    def _openForWrite(self, *args, **kwargs): # pylint: disable-msg=W0613
+    def _openForWrite(self, *args, **kwargs): # pylint: disable=W0613
         return None, DummyFile()
     
-    def _read(self, *args, **kwargs): # pylint: disable-msg=W0613
+    def _read(self, *args, **kwargs): # pylint: disable=W0613
         return [task.Task()], [], [], None, dict(), None
     
     def exists(self):
@@ -50,7 +50,7 @@ class DummyTaskFile(persistence.TaskFile):
 
 
 class AutoBackupTest(test.TestCase):
-    # pylint: disable-msg=E1101,E1002,W0232
+    # pylint: disable=E1101,E1002,W0232
     def setUp(self):
         super(AutoBackupTest, self).setUp()
         task.Task.settings = self.settings = config.Settings(load=False)
@@ -63,7 +63,7 @@ class AutoBackupTest(test.TestCase):
         self.taskFile.close()
         self.taskFile.stop()
 
-    def onCopyFile(self, *args): # pylint: disable-msg=W0613
+    def onCopyFile(self, *args): # pylint: disable=W0613
         self.copyCalled = True
 
     def oneBackupFile(self):
@@ -86,7 +86,7 @@ class AutoBackupTest(test.TestCase):
         files.sort()
         return files
 
-    def globMany(self, pattern): # pylint: disable-msg=W0613
+    def globMany(self, pattern): # pylint: disable=W0613
         return self.manyBackupFiles()
     
     def manyBackupFiles(self):
@@ -116,20 +116,20 @@ class AutoBackupTest(test.TestCase):
         self.assertEqual(86, len(removedFiles))
                 
     def testRemoveExtraneousBackFiles_OSError(self):
-        def remove(filename): # pylint: disable-msg=W0613
+        def remove(filename): # pylint: disable=W0613
             raise OSError
         self.backup.removeExtraneousBackupFiles(self.taskFile, remove=remove, glob=self.globMany)
 
     def testBackupFilename(self):
         now = date.DateTime(2004,1,1)
         self.assertEqual('whatever.20040101-000000.tsk.bak', 
-            self.backup.backupFilename(self.taskFile, lambda: now)) # pylint: disable-msg=W0212
+            self.backup.backupFilename(self.taskFile, lambda: now)) # pylint: disable=W0212
         
     def testBackupFilenameOfBackupFilename(self):
         self.taskFile.setFilename('whatever.20040101-000000.tsk.bak')
         now = date.DateTime(2004,1,2)
         self.assertEqual('whatever.20040101-000000.20040102-000000.tsk.bak', 
-            self.backup.backupFilename(self.taskFile, lambda: now)) # pylint: disable-msg=W0212
+            self.backup.backupFilename(self.taskFile, lambda: now)) # pylint: disable=W0212
 
     def testCreateBackupOnSave(self):
         self.settings.set('file', 'backup', 'True')

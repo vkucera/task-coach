@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -105,9 +105,14 @@ class TaskFile(patterns.Observer):
         for eventType in effort.Effort.modificationEventTypes():
             self.registerObserver(self.onEffortChanged, eventType)
         for eventType in note.Note.modificationEventTypes():
-            self.registerObserver(self.onNoteChanged, eventType)
+            if not eventType.startswith('pubsub'):
+                self.registerObserver(self.onNoteChanged_Deprecated, eventType)
+        pub.subscribe(self.onNoteChanged, 'pubsub.note')
         for eventType in category.Category.modificationEventTypes():
-            self.registerObserver(self.onCategoryChanged, eventType)
+            if not eventType.startswith('pubsub'):
+                self.registerObserver(self.onCategoryChanged_Deprecated, 
+                                      eventType)
+        pub.subscribe(self.onCategoryChanged, 'pubsub.category')
         for eventType in attachment.FileAttachment.modificationEventTypes() + \
                          attachment.URIAttachment.modificationEventTypes() + \
                          attachment.MailAttachment.modificationEventTypes():
@@ -153,7 +158,7 @@ class TaskFile(patterns.Observer):
     def isEmpty(self):
         return 0 == len(self.categories()) == len(self.tasks()) == len(self.notes())
             
-    def onDomainObjectAddedOrRemoved(self, event):  # pylint: disable-msg=W0613
+    def onDomainObjectAddedOrRemoved(self, event):  # pylint: disable=W0613
         if self.__loading or self.__saving:
             return
         self.markDirty()
@@ -183,8 +188,8 @@ class TaskFile(patterns.Observer):
             self.markDirty()
             for changedEffort in changedEfforts:
                 changedEffort.markDirty()
-            
-    def onCategoryChanged(self, event):
+                
+    def onCategoryChanged_Deprecated(self, event):
         if self.__loading or self.__saving:
             return
         changedCategories = [changedCategory for changedCategory in event.sources() if \
@@ -201,14 +206,39 @@ class TaskFile(patterns.Observer):
                 for categorizable in changedCategory.categorizables():
                     categorizable.markDirty()
             
-    def onNoteChanged(self, event):
+    def onCategoryChanged(self, newValue, sender):
         if self.__loading or self.__saving:
+            return
+        changedCategories = [changedCategory for changedCategory in [sender] if \
+                             changedCategory in self.categories()]
+        if changedCategories:
+            self.markDirty()
+            # Mark all categorizables belonging to the changed category dirty; 
+            # this is needed because in SyncML/vcard world, categories are not 
+            # first-class objects. Instead, each task/contact/etc has a 
+            # categories property which is a comma-separated list of category
+            # names. So, when a category name changes, every associated
+            # categorizable changes.
+            for changedCategory in changedCategories:
+                for categorizable in changedCategory.categorizables():
+                    categorizable.markDirty()
+            
+    def onNoteChanged_Deprecated(self, event):
+        if self.__loading:
             return
         # A note may be in self.notes() or it may be a note of another 
         # domain object.
         self.markDirty()
         for changedNote in event.sources():
             changedNote.markDirty()
+            
+    def onNoteChanged(self, newValue, sender):
+        if self.__loading:
+            return
+        # A note may be in self.notes() or it may be a note of another 
+        # domain object.
+        self.markDirty()
+        sender.markDirty()
             
     def onAttachmentChanged(self, newValue, sender):
         if self.__loading or self.__saving:
@@ -253,16 +283,20 @@ class TaskFile(patterns.Observer):
         if not self.__saving:
             import wx # Not really clean but we're in another thread...
             self.__changedOnDisk = True
-            wx.CallAfter(pub.sendMessage, 'taskfile.changed', self)
+            wx.CallAfter(pub.sendMessage, 'taskfile.changed', taskFile=self)
 
     @patterns.eventSource
     def clear(self, regenerate=True, event=None):
-        self.tasks().clear(event=event)
-        self.categories().clear(event=event)
-        self.notes().clear(event=event)
-        if regenerate:
-            self.__guid = generate()
-            self.__syncMLConfig = createDefaultSyncConfig(self.__guid)
+        pub.sendMessage('taskfile.aboutToClear', taskFile=self)
+        try:
+            self.tasks().clear(event=event)
+            self.categories().clear(event=event)
+            self.notes().clear(event=event)
+            if regenerate:
+                self.__guid = generate()
+                self.__syncMLConfig = createDefaultSyncConfig(self.__guid)
+        finally:
+            pub.sendMessage('taskfile.justCleared', taskFile=self)
 
     def close(self):
         if os.path.exists(self.filename()):
@@ -294,6 +328,7 @@ class TaskFile(patterns.Observer):
         return name, file(name, 'w')
     
     def load(self, filename=None):
+        pub.sendMessage('taskfile.aboutToRead', taskFile=self)
         self.__loading = True
         if filename:
             self.setFilename(filename)
@@ -516,7 +551,7 @@ class LockedTaskFile(TaskFile):
         finally:
             self.release_lock()
 
-    def load(self, filename=None, lock=True, breakLock=False): # pylint: disable-msg=W0221
+    def load(self, filename=None, lock=True, breakLock=False): # pylint: disable=W0221
         ''' Lock the file before we load, if not already locked. '''
         filename = filename or self.filename()
         try:

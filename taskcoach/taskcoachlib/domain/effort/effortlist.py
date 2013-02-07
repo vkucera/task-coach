@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -53,6 +53,9 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
         effortsToAdd = []
         for task in tasks:
             effortsToAdd.extend(task.efforts())
+        for effort in effortsToAdd:
+            if effort.getStop() is None:
+                pub.sendMessage(effort.trackingChangedEventType(), newValue=True, sender=effort)
         super(EffortList, self).extendSelf(effortsToAdd, event)
         
     def removeItemsFromSelf(self, tasks, event=None):
@@ -65,15 +68,24 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
         effortsToRemove = []
         for task in tasks:
             effortsToRemove.extend(task.efforts())
+        for effort in effortsToRemove:
+            if effort.getStop() is None:
+                pub.sendMessage(effort.trackingChangedEventType(), newValue=False, sender=effort)
         super(EffortList, self).removeItemsFromSelf(effortsToRemove, event)
 
-    def onAddEffortToOrRemoveEffortFromTask(self, newValue, oldValue, sender):
+    def onAddEffortToOrRemoveEffortFromTask(self, newValue, sender):
         if sender not in self.observable():
             return
+        newValue, oldValue = newValue
         effortsToAdd = [effort for effort in newValue if not effort in oldValue]
         effortsToRemove = [effort for effort in oldValue if not effort in newValue]
         super(EffortList, self).extendSelf(effortsToAdd)
         super(EffortList, self).removeItemsFromSelf(effortsToRemove)
+        for effort in effortsToAdd + effortsToRemove:
+            if effort.getStop() is None:
+                pub.sendMessage(effort.trackingChangedEventType(),
+                                newValue=effort in effortsToAdd,
+                                sender=effort)
 
     def originalLength(self):
         ''' Do not delegate originalLength to the underlying TaskList because
@@ -81,7 +93,7 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
             records.'''
         return len(self)
         
-    def removeItems(self, efforts):  # pylint: disable-msg=W0221
+    def removeItems(self, efforts):  # pylint: disable=W0221
         ''' We override ObservableListObserver.removeItems because the default
             implementation is to remove the arguments from the original list,
             which in this case would mean removing efforts from a task list.
@@ -90,7 +102,7 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
         for effort in efforts:
             effort.task().removeEffort(effort)
 
-    def extend(self, efforts):  # pylint: disable-msg=W0221
+    def extend(self, efforts):  # pylint: disable=W0221
         ''' We override ObservableListObserver.extend because the default
             implementation is to add the arguments to the original list,
             which in this case would mean adding efforts to a task list.

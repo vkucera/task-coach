@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ class CtrlWithColumnsTestCase(test.wxTestCase):
 
 
 class CtrlWithHideableColumnsUnderTest( \
-          widgets.itemctrl._CtrlWithHideableColumnsMixin, # pylint: disable-msg=W0212 
+          widgets.itemctrl._CtrlWithHideableColumnsMixin, # pylint: disable=W0212 
           wx.ListCtrl): 
     pass
 
@@ -60,14 +60,14 @@ class CtrlWithHideableColumnsTest(CtrlWithColumnsTestCase,
                 
         
 class CtrlWithSortableColumnsUnderTest( \
-        widgets.itemctrl._CtrlWithSortableColumnsMixin, # pylint: disable-msg=W0212 
+        widgets.itemctrl._CtrlWithSortableColumnsMixin, # pylint: disable=W0212 
         wx.ListCtrl):
     pass
 
 
 class CtrlWithSortableColumnsTestsMixin(object):
     def assertCurrentSortColumn(self, expectedSortColumn):
-        currentSortColumn = self.control._currentSortColumn() # pylint: disable-msg=W0212
+        currentSortColumn = self.control._currentSortColumn() # pylint: disable=W0212
         self.assertEqual(expectedSortColumn, currentSortColumn)
         
     def testDefaultSortColumn(self):
@@ -102,7 +102,7 @@ class DummyEvent(object):
     def __init__(self, eventObject):
         self.eventObject = eventObject
         
-    def Skip(self):
+    def Skip(self, *args):
         pass
     
     def GetColumn(self):

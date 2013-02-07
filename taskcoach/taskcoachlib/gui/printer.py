@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -17,9 +17,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
-from taskcoachlib import persistence, patterns
+from taskcoachlib import persistence, patterns, operating_system
 from taskcoachlib.i18n import _
+import wx
+
+
+# Prepare for printing. On Jolicloud, printing crashes unless we do this:
+if operating_system.isGTK():
+    try:
+        import gtk  # pylint: disable=F0401
+        gtk.remove_log_handlers()
+    except ImportError:
+        pass
 
 
 class PrinterSettings(object):
@@ -31,14 +40,14 @@ class PrinterSettings(object):
         self.settings = settings
         self.printData = wx.PrintData()
         self.pageSetupData = wx.PageSetupDialogData(self.printData)
-        self._initializeFromSettings()
+        self.__initialize_from_settings()
 
     def updatePageSetupData(self, data):
         self.pageSetupData = wx.PageSetupDialogData(data)
-        self._updatePrintData(data.GetPrintData())
-        self._saveToSettings()
+        self.__update_print_data(data.GetPrintData())
+        self.__save_to_settings()
 
-    def _updatePrintData(self, printData):
+    def __update_print_data(self, printData):
         self.printData = wx.PrintData(printData)
         self.pageSetupData.SetPrintData(self.printData)
  
@@ -48,44 +57,44 @@ class PrinterSettings(object):
         except AttributeError:
             return getattr(self.printData, attr)
 
-    def _initializeFromSettings(self):
+    def __initialize_from_settings(self):
         ''' Load the printer settings from the user settings. '''
         margin = dict()
         for edge in self.edges:
-            margin[edge] = self._getSetting('margin_'+edge)
-        topLeft = wx.Point(margin['left'], margin['top'])
-        bottomRight = wx.Point(margin['right'], margin['bottom'])
-        self.SetMarginTopLeft(topLeft)
-        self.SetMarginBottomRight(bottomRight)
-        self.SetPaperId(self._getSetting('paper_id'))
-        self.SetOrientation(self._getSetting('orientation'))
+            margin[edge] = self.__get_setting('margin_' + edge)
+        top_left = wx.Point(margin['left'], margin['top'])
+        bottom_right = wx.Point(margin['right'], margin['bottom'])
+        self.SetMarginTopLeft(top_left)
+        self.SetMarginBottomRight(bottom_right)
+        self.SetPaperId(self.__get_setting('paper_id'))
+        self.SetOrientation(self.__get_setting('orientation'))
 
-    def _saveToSettings(self):
+    def __save_to_settings(self):
         ''' Save the printer settings to the user settings. '''
         margin = dict()
         margin['left'], margin['top'] = self.GetMarginTopLeft()  
         margin['right'], margin['bottom'] = self.GetMarginBottomRight()  
         for edge in self.edges:
-            self._setSetting('margin_'+edge, margin[edge])
-        self._setSetting('paper_id', self.GetPaperId())
-        self._setSetting('orientation', self.GetOrientation())
+            self.__set_setting('margin_'+edge, margin[edge])
+        self.__set_setting('paper_id', self.GetPaperId())
+        self.__set_setting('orientation', self.GetOrientation())
 
-    def _getSetting(self, option):
+    def __get_setting(self, option):
         return self.settings.getint('printer', option)
 
-    def _setSetting(self, option, value):
+    def __set_setting(self, option, value):
         self.settings.set('printer', option, str(value))
 
 
 class HTMLPrintout(wx.html.HtmlPrintout):
-    def __init__(self, htmlText, settings):
+    def __init__(self, html_text, settings):
         super(HTMLPrintout, self).__init__()
-        self.SetHtmlText(htmlText)
+        self.SetHtmlText(html_text)
         self.SetFooter(_('Page') + ' @PAGENUM@/@PAGESCNT@', wx.html.PAGE_ALL)
         self.SetFonts('Arial', 'Courier')
-        printerSettings = PrinterSettings(settings)
-        left, top = printerSettings.pageSetupData.GetMarginTopLeft()
-        right, bottom = printerSettings.pageSetupData.GetMarginBottomRight()
+        printer_settings = PrinterSettings(settings)
+        left, top = printer_settings.pageSetupData.GetMarginTopLeft()
+        right, bottom = printer_settings.pageSetupData.GetMarginBottomRight()
         self.SetMargins(top, bottom, left, right)
 
                 
@@ -94,10 +103,10 @@ class DCPrintout(wx.Printout):
         self.widget = widget
         super(DCPrintout, self).__init__()
         
-    def OnPrintPage(self, page): # pylint: disable-msg=W0613
+    def OnPrintPage(self, page):  # pylint: disable=W0613
         self.widget.Draw(self.GetDC())
         
-    def GetPageInfo(self): # pylint: disable-msg=W0221
+    def GetPageInfo(self):  # pylint: disable=W0221
         return (1, 1, 1, 1)
 
         
@@ -110,10 +119,10 @@ def Printout(viewer, settings, printSelectionOnly=False,
         def _printout():
             return DCPrintout(widget)
     else:
-        htmlText = persistence.viewer2html(viewer, settings, 
+        html_text = persistence.viewer2html(viewer, settings, 
                                            selectionOnly=printSelectionOnly)[0]
         def _printout():
-            return HTMLPrintout(htmlText, settings)
+            return HTMLPrintout(html_text, settings)
     result = _printout()
     if twoPrintouts:
         result = (result, _printout())

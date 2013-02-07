@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ class AttachmentEditorTest(test.wxTestCase):
             page._subjectEntry.SetFocus()
         
     def testCreate(self):
-        # pylint: disable-msg=W0212
+        # pylint: disable=W0212
         self.assertEqual('Attachment', self.editor._interior[0]._subjectEntry.GetValue())
 
     def testEditSubject(self):
@@ -75,4 +75,4 @@ class AttachmentEditorTest(test.wxTestCase):
     def testAddNote(self):
         viewer = self.editor._interior[1].viewer
         viewer.newItemCommand(viewer.presentation()).do()
-        self.assertEqual(1, len(self.attachment.notes())) # pylint: disable-msg=E1101
+        self.assertEqual(1, len(self.attachment.notes())) # pylint: disable=E1101

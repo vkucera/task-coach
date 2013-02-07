@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,16 +20,13 @@ import sys, os
 import test
 from taskcoachlib import meta
 sys.path.append(os.path.join(test.projectRoot, 'changes.in'))
-import changes # pylint: disable-msg=F0401
+import changes # pylint: disable=F0401
 
 
 class ChangeHistoryTestCase(test.TestCase):
     def setUp(self):
         self.latestRelease = changes.releases[0]
         
-    def testRevisionIsRelease(self):
-        self.assertEqual(meta.data.revision, 'release')
-
     def testLatestReleaseNumberEqualsMetaDataReleaseNumber(self):
         self.assertEqual(self.latestRelease.number, meta.data.version)
 

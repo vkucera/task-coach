@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ class FileAttachmentTest(test.TestCase):
         self.attachment = attachment.FileAttachment('filename')
         self.events = []
         
-    def onEvent(self, newValue, sender):  # pylint: disable-msg=W0221
+    def onEvent(self, newValue, sender):  # pylint: disable=W0221
         self.events.append((newValue, sender))
         
     def openAttachment(self, filename):
@@ -80,7 +80,7 @@ class FileAttachmentTest(test.TestCase):
 
     def testModificationEventTypes(self):
         Attachment = attachment.Attachment
-        # pylint: disable-msg=E1101
+        # pylint: disable=E1101
         self.assertEqual([Attachment.notesChangedEventType(),
                           Attachment.subjectChangedEventType(),
                           Attachment.descriptionChangedEventType(),

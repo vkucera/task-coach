@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ class VirtualListCtrlTestCase(test.wxTestCase):
         self.frame.getItemText = lambda item, column: ''
         self.frame.getItemTooltipData = lambda item: []
         self.frame.getItemImages = lambda item, column: {wx.TreeItemIcon_Normal: -1}
-        return widgets.ListCtrl(self.frame, self.columns, self.onSelect, 
+        return widgets.VirtualListCtrl(self.frame, self.columns, self.onSelect, 
             dummy.DummyUICommand())
 
     def createColumns(self, nrColumns):
@@ -70,7 +70,7 @@ class VirtualListCtrlTestCase(test.wxTestCase):
         self.listctrl.showColumn(self.columns[2], False)
         self.listctrl.showColumn(self.columns[1], True)
         self.listctrl.showColumn(self.columns[2], True)
-        # pylint: disable-msg=W0212
+        # pylint: disable=W0212
         self.assertEqual(self.columns[1].header(), 
                          self.listctrl._getColumnHeader(1))
         self.assertEqual(self.columns[2].header(), 

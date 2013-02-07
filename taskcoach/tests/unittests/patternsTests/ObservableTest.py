@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -140,7 +140,7 @@ class EventTest(test.TestCase):
     def testSubEventForTwoTypesWhenEventHasTwoTypes(self):
         self.event.addSource('source', type='another eventtype')
         args = [('eventtype', self), ('another eventtype', 'source')]
-        self.assertEqual(self.event, self.event.subEvent(*args)) # pylint: disable-msg=W0142
+        self.assertEqual(self.event, self.event.subEvent(*args)) # pylint: disable=W0142
 
     def testSubEventForTypeThatIsNotPresent(self):
         self.assertEqual(patterns.Event(), 

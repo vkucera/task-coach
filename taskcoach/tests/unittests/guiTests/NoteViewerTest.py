@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -64,13 +64,12 @@ class NoteViewerTest(test.wxTestCase):
         self.note.addCategory(newCategory)
         newCategory.addCategorizable(self.note)
         self.viewer.showColumnByName('categories')
-        self.assertEqual('Category', self.firstItemText(column=1))
+        self.assertEqual('Category', self.firstItemText(column=3))
         
     def testShowAttachmentColumn(self):
-        self.viewer.showColumnByName('attachments')
         self.note.addAttachments(attachment.FileAttachment('whatever'))
         self.assertEqual(self.viewer.imageIndex['paperclip_icon'], 
-                         self.firstItemIcon(column=1))
+                         self.firstItemIcon(column=2))
 
     def testFilterOnAllCategories(self):
         cat1 = category.Category('category 1')

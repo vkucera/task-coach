@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ if sys.platform == 'linux2':
     # The user should install the binary packages
     pass
 elif sys.platform == 'darwin':
-    sys.path.insert(0, os.path.join(_BINBASE, 'macos'))
+    sys.path.insert(0, os.path.join(_BINBASE, 'macos', arch))
 else:
     sys.path.insert(0, os.path.join(_BINBASE, 'windows', 'py%s' % ''.join(map(str, sys.version_info[:2]))))
 

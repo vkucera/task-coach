@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
@@ -20,11 +20,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
 from taskcoachlib import command
 from taskcoachlib.domain import base, task, category, attachment
-from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand
+from taskcoachlib.i18n import _
+from taskcoachlib.thirdparty.pubsub import pub
+import wx
 
 
 class SearchableViewerMixin(object):
@@ -38,23 +39,27 @@ class SearchableViewerMixin(object):
         return base.SearchFilter(presentation, **self.searchOptions())
 
     def searchOptions(self):
-        searchString, matchCase, includeSubItems, searchDescription = self.getSearchFilter()
+        searchString, matchCase, includeSubItems, searchDescription, regularExpression = self.getSearchFilter()
         return dict(searchString=searchString, 
                     matchCase=matchCase, 
                     includeSubItems=includeSubItems, 
                     searchDescription=searchDescription,
+                    regularExpression=regularExpression,
                     treeMode=self.isTreeViewer())
     
     def setSearchFilter(self, searchString, matchCase=False, 
-                        includeSubItems=False, searchDescription=False):
+                        includeSubItems=False, searchDescription=False,
+                        regularExpression=False):
         section = self.settingsSection()
         self.settings.set(section, 'searchfilterstring', searchString)
         self.settings.set(section, 'searchfiltermatchcase', str(matchCase))
         self.settings.set(section, 'searchfilterincludesubitems', str(includeSubItems))
         self.settings.set(section, 'searchdescription', str(searchDescription))
+        self.settings.set(section, 'regularexpression', str(regularExpression))
         self.presentation().setSearchFilter(searchString, matchCase=matchCase, 
                                             includeSubItems=includeSubItems,
-                                            searchDescription=searchDescription)
+                                            searchDescription=searchDescription,
+                                            regularExpression=regularExpression)
         
     def getSearchFilter(self):
         section = self.settingsSection()
@@ -62,13 +67,14 @@ class SearchableViewerMixin(object):
         matchCase = self.settings.getboolean(section, 'searchfiltermatchcase')
         includeSubItems = self.settings.getboolean(section, 'searchfilterincludesubitems')
         searchDescription = self.settings.getboolean(section, 'searchdescription')
-        return searchString, matchCase, includeSubItems, searchDescription
+        regularExpression = self.settings.getboolean(section, 'regularexpression')
+        return searchString, matchCase, includeSubItems, searchDescription, regularExpression
     
     def createToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
         searchUICommand = uicommand.Search(viewer=self, settings=self.settings)
         return super(SearchableViewerMixin, self).createToolBarUICommands() + \
-            (None, searchUICommand)
+            (1, searchUICommand)
             
 
 class FilterableViewerMixin(object):
@@ -89,10 +95,20 @@ class FilterableViewerMixin(object):
         return self.__filterUICommands[:2] + self.createCategoryFilterCommands() + self.__filterUICommands[2:]
 
     def createFilterUICommands(self):
-        return [uicommand.ResetFilter(viewer=self), None]
+        return [uicommand.ResetFilter(viewer=self), 
+                uicommand.CategoryViewerFilterChoice(settings=self.settings),
+                None]
+
+    def createToolBarUICommands(self):
+        clearUICommand = uicommand.ResetFilter(viewer=self)
+        return super(FilterableViewerMixin, self).createToolBarUICommands() + \
+            (clearUICommand,)
 
     def resetFilter(self):
         self.taskFile.categories().resetAllFilteredCategories()
+
+    def hasFilter(self):
+        return bool(self.taskFile.categories().filteredCategories())
 
     def createCategoryFilterCommands(self):
         categories = self.taskFile.categories()
@@ -138,11 +154,15 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
                     statusesToHide=self.hiddenTaskStatuses())
    
     def hideTaskStatus(self, status, hide=True):
-        self.__setBooleanSetting('hide%stasks'%status, hide)
+        self.__setBooleanSetting('hide%stasks' % status, hide)
         self.presentation().hideTaskStatus(status, hide)
 
+    def showOnlyTaskStatus(self, status):
+        for taskStatus in task.Task.possibleStatuses():
+            self.hideTaskStatus(taskStatus, hide=status != taskStatus)
+
     def isHidingTaskStatus(self, status):
-        return self.__getBooleanSetting('hide%stasks'%status)
+        return self.__getBooleanSetting('hide%stasks' % status)
     
     def hiddenTaskStatuses(self):
         return [status for status in task.Task.possibleStatuses() if self.isHidingTaskStatus(status)]
@@ -158,12 +178,19 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
         super(FilterableViewerForTasksMixin, self).resetFilter()
         for status in task.Task.possibleStatuses():
             self.hideTaskStatus(status, False)
-        self.hideCompositeTasks(False)
+        if not self.isTreeViewer():
+            # Only reset this filter when in list mode, since it only applies
+            # to list mode
+            self.hideCompositeTasks(False)
+
+    def hasFilter(self):
+        return super(FilterableViewerForTasksMixin, self).hasFilter() or \
+            self.presentation().hasFilter()
 
     def createFilterUICommands(self):
         return super(FilterableViewerForTasksMixin, 
                      self).createFilterUICommands() + \
-            [uicommand.ViewerHideTasks(taskStatus, viewer=self) for taskStatus in task.Task.possibleStatuses()] + \
+            [uicommand.ViewerHideTasks(taskStatus, viewer=self, settings=self.settings) for taskStatus in task.Task.possibleStatuses()] + \
             [uicommand.ViewerHideCompositeTasks(viewer=self)]
             
     def __getBooleanSetting(self, setting):
@@ -185,10 +212,20 @@ class SortableViewerMixin(object):
 
     def registerPresentationObservers(self):
         super(SortableViewerMixin, self).registerPresentationObservers()
-        self.registerObserver(self.onPresentationChanged, 
-            eventType=self.presentation().sortEventType(),
-            eventSource=self.presentation())
-
+        pub.subscribe(self.onSortOrderChanged,
+                      self.presentation().sortEventType())
+        
+    def detach(self):
+        super(SortableViewerMixin, self).detach()
+        pub.unsubscribe(self.onSortOrderChanged,
+                        self.presentation().sortEventType())
+        
+    def onSortOrderChanged(self, sender):
+        if sender == self.presentation():
+            self.refresh()
+            self.updateSelection(sendViewerStatusEvent=False)
+            self.sendViewerStatusEvent()
+        
     def createSorter(self, presentation):
         return self.SorterClass(presentation, **self.sorterOptions())
     
@@ -240,7 +277,7 @@ class SortableViewerMixin(object):
         self._sortUICommands = self.createSortOrderUICommands()
         sortByCommands = self.createSortByUICommands()
         if sortByCommands:
-            self._sortUICommands.append(None) # Separator
+            self._sortUICommands.append(None)  # Separator
             self._sortUICommands.extend(sortByCommands)
         
     def createSortOrderUICommands(self):
@@ -257,7 +294,14 @@ class SortableViewerMixin(object):
                     helpText=self.sortBySubjectHelpText),
                 uicommand.ViewerSortByCommand(viewer=self, value='description',
                     menuText=_('&Description'),
-                    helpText=self.sortByDescriptionHelpText)]
+                    helpText=self.sortByDescriptionHelpText),
+                uicommand.ViewerSortByCommand(viewer=self, 
+                    value='creationDateTime', menuText=_('&Creation date'),
+                    helpText=self.sortByCreationDateTimeHelpText),
+                uicommand.ViewerSortByCommand(viewer=self,
+                    value='modificationDateTime', 
+                    menuText=_('&Modification date'),
+                    helpText=self.sortByModificationDateTimeHelpText)]
 
 
 class SortableViewerForEffortMixin(SortableViewerMixin):
@@ -279,6 +323,8 @@ class SortableViewerForEffortMixin(SortableViewerMixin):
 class SortableViewerForCategoriesMixin(SortableViewerMixin):
     sortBySubjectHelpText = _('Sort categories by subject')
     sortByDescriptionHelpText = _('Sort categories by description')
+    sortByCreationDateTimeHelpText = _('Sort categories by creation date')
+    sortByModificationDateTimeHelpText = _('Sort categories by last modification date')
 
 
 class SortableViewerForCategorizablesMixin(SortableViewerMixin):
@@ -296,12 +342,16 @@ class SortableViewerForAttachmentsMixin(SortableViewerForCategorizablesMixin):
     sortBySubjectHelpText = _('Sort attachments by subject')
     sortByDescriptionHelpText = _('Sort attachments by description')
     sortByCategoryHelpText = _('Sort attachments by category')
-    
+    sortByCreationDateTimeHelpText = _('Sort attachments by creation date')
+    sortByModificationDateTimeHelpText = _('Sort attachments by last modification date')
+
 
 class SortableViewerForNotesMixin(SortableViewerForCategorizablesMixin):
     sortBySubjectHelpText = _('Sort notes by subject')
     sortByDescriptionHelpText = _('Sort notes by description')
     sortByCategoryHelpText = _('Sort notes by category')
+    sortByCreationDateTimeHelpText = _('Sort notes by creation date')
+    sortByModificationDateTimeHelpText = _('Sort notes by last modification date')
 
 
 class SortableViewerForTasksMixin(SortableViewerForCategorizablesMixin):
@@ -309,7 +359,9 @@ class SortableViewerForTasksMixin(SortableViewerForCategorizablesMixin):
     sortBySubjectHelpText = _('Sort tasks by subject')
     sortByDescriptionHelpText = _('Sort tasks by description')
     sortByCategoryHelpText = _('Sort tasks by category')
-    
+    sortByCreationDateTimeHelpText = _('Sort tasks by creation date')
+    sortByModificationDateTimeHelpText = _('Sort tasks by last modification date')
+
     def __init__(self, *args, **kwargs):
         self.__sortKeyUnchangedCount = 0
         super(SortableViewerForTasksMixin, self).__init__(*args, **kwargs)
@@ -356,7 +408,7 @@ class SortableViewerForTasksMixin(SortableViewerForCategorizablesMixin):
             (_('&Due date'), _('Sort tasks by due date'), 'dueDateTime'),
             (_('&Completion date'), _('Sort tasks by completion date'), 'completionDateTime'),
             (_('&Prerequisites'), _('Sort tasks by prerequisite tasks'), 'prerequisites'),
-            (_('&Dependencies'), _('Sort tasks by dependent tasks'), 'dependencies'),
+            (_('&Dependents'), _('Sort tasks by dependent tasks'), 'dependencies'),
             (_('&Time left'), _('Sort tasks by time left'), 'timeLeft'),
             (_('&Percentage complete'), _('Sort tasks by percentage complete'), 'percentageComplete'),
             (_('&Recurrence'), _('Sort tasks by recurrence'), 'recurrence'),
@@ -420,7 +472,8 @@ class AttachmentDropTargetMixin(object):
             on an item. '''
         att = attachment.MailAttachment(mail)
         subject, content = att.read()
-        self._addAttachments([att], item, subject=subject, description=content, **kwargs)
+        self._addAttachments([att], item, subject=subject, description=content, 
+                             **kwargs)
 
 
 class NoteColumnMixin(object):
@@ -430,7 +483,6 @@ class NoteColumnMixin(object):
     
 
 class AttachmentColumnMixin(object):    
-    def attachmentImageIndices(self, item): # pylint: disable-msg=W0613
+    def attachmentImageIndices(self, item):  # pylint: disable=W0613
         index = self.imageIndex['paperclip_icon'] if item.attachments() else -1
         return {wx.TreeItemIcon_Normal: index}
-

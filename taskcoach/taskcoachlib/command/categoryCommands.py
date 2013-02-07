@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -48,6 +48,7 @@ class NewSubCategoryCommand(base.NewSubItemCommand):
         super(NewSubCategoryCommand, self).__init__(*args, **kwargs)
         self.items = self.createNewCategories(subject=subject,
             description=description, attachments=attachments)
+        self.save_modification_datetimes()
 
     def createNewCategories(self, **kwargs):
         return [parent.newChild(**kwargs) for parent in self.items]
@@ -64,11 +65,13 @@ class EditExclusiveSubcategoriesCommand(base.BaseCommand):
         
     @patterns.eventSource
     def do_command(self, event=None):
+        super(EditExclusiveSubcategoriesCommand, self).do_command()
         for item in self.items:
             item.makeSubcategoriesExclusive(self.__newExclusivity, event=event)
 
     @patterns.eventSource
     def undo_command(self, event=None):
+        super(EditExclusiveSubcategoriesCommand, self).undo_command()
         for item, oldExclusivity in zip(self.items, self.__oldExclusivities):
             item.makeSubcategoriesExclusive(oldExclusivity, event=event)
 

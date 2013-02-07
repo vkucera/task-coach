@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -47,9 +47,14 @@ class TestWithTaskFile(base.Win32TestCase):
         mainwindow = self.findWindow(r'^Task Coach', tries=20)
         w = mainwindow.findChildren('wxWindowClassNR', 'HyperTreeList')
         
+        mainwindow.waitFocus()
+        w[1].clickAt(5, 30)
+        time.sleep(1)
+
         # Double-click the first task to open the task edit dialog:
         for _ in range(2):
             w[1].clickAt(5, 30)
+            time.sleep(0.1)
 
         editor = self.findWindow(r'\(task\)$')
         self.failIf(editor is None, 'Task editor not found')
@@ -60,10 +65,8 @@ class TestWithTaskFile(base.Win32TestCase):
         # Close the task edit dialog:
         editor.close()
 
-        mainwindow.waitFocus()
-        mainwindow.clickAt(58, 15) # Save button
-
-        time.sleep(2)
+        # Give some time to write the file...
+        time.sleep(15)
 
         if os.path.exists(self.logfilename):
             self.fail('Exception occurred while saving:\n' + \

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,8 +27,9 @@ class AttributeSync(object):
         attribute of the domain object is changed (e.g. in another dialog) the 
         value of the control is updated. '''
         
-    def __init__(self, attributeGetterName, entry, currentValue, items, commandClass, 
-                 editedEventType, changedEventType, **kwargs):
+    def __init__(self, attributeGetterName, entry, currentValue, items, 
+                 commandClass, editedEventType, changedEventType, callback=None, 
+                 **kwargs):
         self._getter = attributeGetterName
         self._entry = entry
         self._currentValue = currentValue
@@ -36,26 +37,31 @@ class AttributeSync(object):
         self._commandClass = commandClass
         self.__commandKwArgs = kwargs
         self.__changedEventType = changedEventType
+        self.__callback = callback
         entry.Bind(editedEventType, self.onAttributeEdited)
         if len(items) == 1:
-            self.startObservingAttribute(changedEventType, items[0])
+            self.__start_observing_attribute(changedEventType, items[0])
         
     def onAttributeEdited(self, event):
         event.Skip()
-        newValue = self.getValue()
-        if newValue != self._currentValue:
-            self._currentValue = newValue
-            commandKwArgs = self.commandKwArgs(newValue)
-            self._commandClass(None, self._items, **commandKwArgs).do()  # pylint: disable-msg=W0142
+        new_value = self.getValue()
+        if new_value != self._currentValue:
+            self._currentValue = new_value
+            if self.__callback is not None:
+                self.__callback(new_value)
+            commandKwArgs = self.commandKwArgs(new_value)
+            self._commandClass(None, self._items, **commandKwArgs).do()  # pylint: disable=W0142
             
-    def onAttributeChanged_Deprecated(self, event):  # pylint: disable-msg=W0613
+    def onAttributeChanged_Deprecated(self, event):  # pylint: disable=W0613
         if self._entry: 
-            newValue = getattr(self._items[0], self._getter)()
-            if newValue != self._currentValue:
-                self._currentValue = newValue
-                self.setValue(newValue)
+            new_value = getattr(self._items[0], self._getter)()
+            if new_value != self._currentValue:
+                self._currentValue = new_value
+                self.setValue(new_value)
+                if self.__callback is not None:
+                    self.__callback(new_value)
         else:
-            self.stopObservingAttribute()
+            self.__stop_observing_attribute()
             
     def onAttributeChanged(self, newValue, sender):
         if sender in self._items:
@@ -63,20 +69,22 @@ class AttributeSync(object):
                 if newValue != self._currentValue:
                     self._currentValue = newValue
                     self.setValue(newValue)
+                    if self.__callback is not None:
+                        self.__callback(newValue)
             else:
-                self.stopObservingAttribute()
+                self.__stop_observing_attribute()
             
-    def commandKwArgs(self, newValue):
-        self.__commandKwArgs['newValue'] = newValue
+    def commandKwArgs(self, new_value):
+        self.__commandKwArgs['newValue'] = new_value
         return self.__commandKwArgs
     
-    def setValue(self, newValue):
-        self._entry.SetValue(newValue)
+    def setValue(self, new_value):
+        self._entry.SetValue(new_value)
             
     def getValue(self):
         return self._entry.GetValue()
     
-    def startObservingAttribute(self, eventType, eventSource):
+    def __start_observing_attribute(self, eventType, eventSource):
         if eventType.startswith('pubsub'):
             pub.subscribe(self.onAttributeChanged, eventType)
         else:
@@ -84,7 +92,7 @@ class AttributeSync(object):
                                                   eventType=eventType,
                                                   eventSource=eventSource)
     
-    def stopObservingAttribute(self):
+    def __stop_observing_attribute(self):
         try:
             pub.unsubscribe(self.onAttributeChanged, self.__changedEventType)
         except pub.UndefinedTopic:

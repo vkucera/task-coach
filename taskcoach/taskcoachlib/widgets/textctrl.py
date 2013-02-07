@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,9 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, webbrowser
-from taskcoachlib import i18n
-import draganddrop
+from taskcoachlib import i18n, operating_system
+import wx
+import webbrowser
 
 
 UNICODE_CONTROL_CHARACTERS_TO_WEED = {}
@@ -31,17 +31,81 @@ class BaseTextCtrl(wx.TextCtrl):
     def __init__(self, parent, *args, **kwargs):
         super(BaseTextCtrl, self).__init__(parent, -1, *args, **kwargs)
         self.__data = None
+        if operating_system.isGTK():
+            self.Bind(wx.EVT_KEY_DOWN, self.__on_key_down)
+            self.Bind(wx.EVT_KILL_FOCUS, self.__on_kill_focus)
+            self.__initial_value = self.GetValue()
+            self.__undone_value = None
 
     def GetValue(self, *args, **kwargs):
         value = super(BaseTextCtrl, self).GetValue(*args, **kwargs)
         # Don't allow unicode control characters:
         return value.translate(UNICODE_CONTROL_CHARACTERS_TO_WEED)
 
+    def SetValue(self, *args, **kwargs):
+        super(BaseTextCtrl, self).SetValue(*args, **kwargs)
+        if operating_system.isGTK():
+            self.__initial_value = self.GetValue()
+
+    def AppendText(self, *args, **kwargs):
+        super(BaseTextCtrl, self).AppendText(*args, **kwargs)
+        if operating_system.isGTK():
+            self.__initial_value = self.GetValue()
+
     def SetData(self, data):
         self.__data = data
 
     def GetData(self):
         return self.__data
+
+    def __on_key_down(self, event):
+        ''' Check whether the user pressed Ctrl-Z (or Ctrl-Y) and if so, 
+            undo (or redo) the editing. '''
+        if self.__ctrl_z_pressed(event) and self.__can_undo():
+            self.__undo()
+        elif self.__ctrl_y_pressed(event) and self.__can_redo():
+            self.__redo()
+        else:
+            event.Skip()
+
+    @staticmethod
+    def __ctrl_z_pressed(event):
+        ''' Did the user press Ctrl-Z (for undo)? '''
+        return event.GetKeyCode() == ord('Z') and event.ControlDown()
+
+    def __can_undo(self):
+        ''' Is there a change to be undone? '''
+        return self.GetValue() != self.__initial_value
+
+    def __undo(self):
+        ''' Undo the last change. '''
+        insertion_point = self.GetInsertionPoint()
+        self.__undone_value = self.GetValue()
+        super(BaseTextCtrl, self).SetValue(self.__initial_value)
+        insertion_point = min(insertion_point, self.GetLastPosition())
+        self.SetInsertionPoint(insertion_point)
+
+    @staticmethod
+    def __ctrl_y_pressed(event):
+        ''' Did the user press Ctrl-Y (for redo)? '''
+        return event.GetKeyCode() == ord('Y') and event.ControlDown()
+
+    def __can_redo(self):
+        ''' Is there an undone change to be redone? '''
+        return self.__undone_value not in (self.GetValue(), None)
+
+    def __redo(self):
+        ''' Redo the last undone change. '''
+        insertion_point = self.GetInsertionPoint()
+        super(BaseTextCtrl, self).SetValue(self.__undone_value)
+        self.__undone_value = None
+        insertion_point = min(insertion_point, self.GetLastPosition())
+        self.SetInsertionPoint(insertion_point)
+
+    def __on_kill_focus(self, event):
+        ''' Reset the edit history. '''
+        self.__initial_value = self.GetValue()
+        self.__undone_value = None
 
 
 class SingleLineTextCtrl(BaseTextCtrl):
@@ -57,7 +121,7 @@ class MultiLineTextCtrl(BaseTextCtrl):
             # Using wx.TE_RICH will remove the RTL specific menu items
             # from the right-click menu in the TextCtrl, so we don't use 
             # wx.TE_RICH if the language is RTL.
-            kwargs['style'] |= wx.TE_RICH|wx.TE_AUTO_URL
+            kwargs['style'] |= wx.TE_RICH | wx.TE_AUTO_URL
         super(MultiLineTextCtrl, self).__init__(parent, *args, **kwargs)
         self.__initializeText(text)
         self.Bind(wx.EVT_TEXT_URL, self.onURLClicked)

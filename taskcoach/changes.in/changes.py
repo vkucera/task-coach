@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,8 +21,338 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
+
+Release('1.3.23', 'February 7, 2013',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bugv2('''Some navigation shortcuts in the date/time picker
+would not work on Windows or Linux.''', '1340'),
+        Bugv2('''Typing would not do anything on Windows in the
+date/time picker if the calendar is shown.''', '1340'),
+        Bugv2('''The calendar popup from the date/time picker
+would not show all days.''', '1340'),
+        Bugv2('''Task Coach would fail to start when the user had selected an 
+empty bitmap for one of the task statuses.'''),
+        Bugv2('''Non-ASCII characters would display wrong in the calendar popup
+on OS X.'''),
+        Bugv2('''Start/end of day choice in preferences now follow the user's
+format preferences.''', '1331'),
+        Bugv2('''Resizing the toolbar would truncate it.''', '1341'),
+        Bugv2('''Try to fetch Mail.app message subject.''', '1342', '1003'),
+        Bugv2('''Don't let the user pick columns that cannot be exported'''),
+        Bugv2('''When cancelling application shutdown, the window would
+close nonetheless.''', '1346'),
+        Bugv2('''The calendar popup in the date picker would not use the
+first week day setting.''', '1348'),
+        Bugv2('''Disable hide all filters when in tree mode and the only
+filter is "hide composite tasks".''', '1351'),
+        Bugv2('''The task editor would not open on Windows if the user's short
+date format used abbreviated or full month name.''', '1338'),
+        Bugv2('''Increase timer value for the date picker.''', '1354'),
+        Bugv2('''Backspace/delete removes the last digit in the date
+picker.''', '1354'),
+        Bugv2('''Fix Shift-S and Shift-E shortcuts in date picker on
+Linux.''', '1358'),
+        Bugv2('''Fix overlay in toolbar icons.''', '1356'),
+        Bugv2('''Use system default GUI font in date picker.''', '1361'),
+        Bugv2('''Add shortcuts for AM/PM in date picker.''', '1362'),
+        Bugv2('''Escape now dismisses calendar popup in date picker.''', '1362'),
+        Bugv2('''Fix crash when a task status icon has been set to
+"No icon".''', '1364'),
+        Bugv2('''Fix refreshing of spent time in effort viewer''', '1363'),
+        ],
+    featuresAdded=[
+        Feature('''Add a modification date attribute to tasks, notes, 
+attachments, and categories.''', 'http://uservoice.com/a/-2HX-'),
+        Feature('''Hitting Ctrl+V (or Cmd+V on OS X) while the date or time
+picker has focus will try to interpret the clipboard's content. Ctrl+C
+stores the current value in the clipboard.''', '1352'),
+        ],
+    dependenciesChanged=[
+        Dependency('''Task Coach now needs Python 2.7.''')],
+    ),  
             
-Release('1.3.15', 'May 21, 2012',
+Release('1.3.22', 'January 2, 2013',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bugv2('''The task editor would not open after some time on Windows and
+OS X.''', '1338'),
+        ],
+    ),
+ 
+Release('1.3.21', 'January 1, 2013',
+    summary='''This is a mixed feature and bugfix release.''',
+    bugsFixed=[
+        Bugv2('''Changing the percentage complete would not cause the
+calendar viewer to refresh.'''),
+        Bugv2('''On Mac OS X, clicking the period column in effort viewers to 
+change the sort order didn't work.'''),
+        Bugv2('''Adapt font size to available space in calendar view.''', '1309'),
+        Bugv2('''Using Shift+Enter key on the number keypad would not work on 
+Mac OS X nor Linux.''', '1285'),
+        Bugv2('''Search defaults to simple substring matching.''', '1286'),
+        Bugv2('''Growl notifications didn't work with Growl 2.0.''', '1324'),
+        Bugv2('''Fix another encoding problem on some locales (Windows).''', '1310',
+              '1321'),
+        Bugv2('''Performance improvement in the edit dialogs.''', '991'),
+        Bugv2('''Fix icon size in Unity.''', '1329'),
+        Bugv2('''Fix docking of floating viewers on Windows.'''),
+        Bugv2('''When toggling the category of multiple items, not all of which 
+are in the selected category, don't remove the items from the category that 
+already belonged to that category.''', '1271'),
+        Bugv2('''Toolbar icons to show/hide tasks according to status now respect
+appearance settings, and are overlayed with a red cross.''', '1104', '1323'),
+        Bugv2('''New date/time picker should fix most existing problems with the
+old one.''', '702', '1089', '1212', '1266', '1233'),
+        Bugv2('''Fix wording for task statuses.''', '1333'),
+        ],
+    featuresAdded=[
+        Feature('''New, hopefully more intuitive date/time control.'''),
+        Feature('''Display dates in human-readable form in viewers (today,
+yesterday, tomorrow).'''),
+        Feature('''Startup and shutdown performance improvements.'''),
+        Feature('''Autosave is now on by default.'''),
+        Feature('''Support for Growl on Windows.'''),
+        Feature('''Toolbars are now customizable.'''),
+        Feature('''Add a creation date attribute to tasks, notes, attachments,
+and categories.''', 'http://uservoice.com/a/-2HX-'),
+        Feature('''Shift+Click on a filter button in the toolbar shows only the
+corresponding task status'''),
+        ],
+    ),
+
+Release('1.3.20', 'October 21, 2012',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bugv2('''Fix an encoding problem on Windows non-European locales''',
+              '1306'),
+        Bugv2('''On Linux, Ctrl-Z in a text control would always remove the
+whole contents of the text control instead of undoing the recent 
+changes.''', '1267'),
+        Bugv2('''When adding a new item, always start the edit dialog with the 
+description tab raised and focus on the item subject.''', '1263'),
+        Bugv2('''Editing templates would not work.'''),
+        Bugv2('''The effort dialog wouldn't function properly when the time
+format contained dots, like in Italian.''', '1307'),
+        Bugv2('''Moving efforts between tasks would sometimes trigger an 
+exception, resulting in lost efforts.''', '1203'),
+        Bugv2('''When there are multiple reminders and speech is on, don't
+say all the reminders simultaneously, but one at a time.''', '1313'),
+        ],
+    ),
+
+Release('1.3.19', 'October 7, 2012',
+    summary='''This is a mixed feature and bugfix release.''',
+    bugsFixed=[
+        Bug('''Format times in the calendar view according to the user's
+preferences.''', '3563441'),
+        Bug('''Do not automatically give focus to the subject field
+in the task editor on Linux (it overwrites the X clipboard).''', '3539452'),
+        Bug('''After loading a task file, tasks would not become due soon
+on time.''', '3562925'),
+        Bug('''On OS X, the first entry in an editor page would not be
+automatically selected.''', '3562922'),
+        Bug('''On Linux, drag and drop of email messages from Evolution didn't
+work.''', '3562808'),
+        Bug('''With autosaving on, Task Coach would actually save too often.''', 
+            '3562836'),
+        Bug('''On Ubuntu, a file was missing causing Task Coach not to
+start.''', '3562695'),
+        Bug('''On Ubuntu, the native text control doesn't support undo and 
+redo, added a home grown version.''', '3563376'),
+        Bug('''Don't silently adjust dates of parent and child tasks. See 
+also the changed feature below.''', '3561465', '3564794'),
+        Bug('''Remember whether the "make this snooze time the default snooze
+time for future reminders" check box was checked in the reminder dialog.''',
+'3567139'),
+        Bug('''The task viewer would not refresh at midnight.'''),
+        Bugv2('''On Windows with some locale settings, Task Coach would crash
+trying to render dates.''', '1306'),
+        ],
+    featuresAdded=[
+        Feature('''In addition to specifying a maximum number of recurrences,
+it is now also possible to specify an end date for recurrence. If both an end
+date and a maximum number of recurrences are specified, recurrence stops when
+the first of both conditions is met.'''),
+        Feature('''Put a link to our IndieGoGo campaign on the toolbar of the
+main window. The link will disappear when the campaign is over.'''),
+        ],
+    featuresChanged=[
+        Feature('''Task Coach no longer enforces that the dates of child tasks
+lie between the dates of its parent task. Previously, if the start date of a 
+child task would be made earlier than the start date of its parent task, 
+Task Coach would silently make the start of the parent task equal to the 
+start date of the child task. The same for the due date: setting the due
+date of the parent task earlier than the due date of a child task would 
+silently change the due date of the child tasks if their due date would 
+otherwise become later than the due date of the parent task.
+
+When viewing tasks in the task tree viewer, collapsing a task with child tasks 
+will show recursive dates when relevant. This means that the planned start 
+date column will show the earliest start date of the task itself and all of
+its child tasks. If the earliest start date is the start date of one of the 
+child tasks, the date will be shown between brackets. Likewise, the actual 
+start date column will show the earliest actual start date of the task and all 
+of its child tasks. The due date column and the completion date column will 
+show the latest date of the parent and child tasks combined. 
+
+When sorting on a date column, the recursive value is used for sorting. So when
+sorting ascending by due date a parent task without due date but with a child
+task due today will sort before a task that is due tomorrow.
+
+This change makes the date behavior consistent with priorities and other 
+attributes.'''),
+        Feature('''New viewers will open floating so that is easier to put them
+in the position you want. Hopefully this will also make it more obvious for 
+new users that viewers can be reordered any way they like since moving a 
+floating viewer will show the docking guides.'''),
+        Feature('''Clicking outside an inplace editor now accepts the changes
+instead of discarding them.'''),
+        Feature('''On Windows, both left clicking and left double clicking the 
+Task Coach icon in the notification area (often called the system tray) will 
+raise or minimize the main window (in accordance with 
+http://msdn.microsoft.com/en-us/library/windows/desktop/aa511448.aspx#interaction).''',
+        'http://uservoice.com/a/m3P6j'),
+        ],
+    ),
+
+Release('1.3.18', 'August 28, 2012',
+    summary='''This is a mixed feature and bugfix release.''',
+    teamChanges=[
+        Team('''We're happy to announce that Aaron Wolf joined the Task Coach
+team. Aaron is already doing a great job scrutinizing the large number of 
+feature requests we have open on http://taskcoach.uservoice.com. In addition,
+he is helping us testing Task Coach and ironing out as many bugs as we can, see
+the first results below. Furthermore, he is planning to develop an in-app 
+tutorial for Task Coach so we're glad to have him on board. Welcome, Aaron!'''),
+    ],
+    bugsFixed=[
+        Bug('''Get rid of the infamous "AttributeError: __onDead" error''',
+            '3546400'),
+        Bug('''Do not automatically give focus to the subject field
+in the task editor on Linux (it overwrites the X clipboard).''', '3539452'),
+        Bug('''On Mac OS X, the window would shrink at each launch.
+Tested on 10.5, 10.7 and 10.8DP4.'''),
+        Bug('''Do not singularize user-set icons.''', '3539824'),
+        Bug('''Disable spell checking on Mountain Lion because
+it makes Task Coach crash.''', '3554534'),
+        Bug('''Fix opening URLs from the Help menu on KDE4.''', '3542487'),
+        Bug('''Fix the About dialog on Kubuntu.''', '3542487'),
+        Bug('''Reminders sometimes wouldn't fire.''', '3554603'),
+        Bug('''On Mac OS X, idle time notifications would not work.''', 
+            '3554603'),
+        Bug('''On Mac OS X Snow Leopard (10.6) and earlier, the system would
+ask the user to allow Task coach use a port (firewall) or the keychain
+on every launch.''', '3556753'),
+        Bug('''On Mac OS X, the search options menu wouldn't work.''', 
+            '3558511'),
+        Bug('''When the language is set to English/US, use 12 hour clock in 
+task and effort dialogs instead of 24 hour clock.'''),
+        Bug('''Don't reset the edit dialog layout for editing single items
+after editing multiple items at the same time.''', '3559292'),
+        Bug('''When changing the "Mark task completed when all children are 
+completed?"-setting in the "Progress" tab of the task edit dialog, Task Coach
+would set the percentage complete slider in the "Progress" tab to the 
+recursive percentage complete while the slider is meant to only display and
+change the percentage complete of the task itself.''', '3559740'),
+        Bug('''When a task with subtasks does not override the global setting
+for marking a task completed when all of its subtasks are completed, actually
+use that setting when displaying the percentage complete of the parent task
+in the task viewer.''', '3559740'),
+        Bug('''The settings for the viewers in the edit dialogs (such as the
+visible columns in the effort tab and the notes tab) wouldn't be consistently 
+applied to each edit dialog.''', '3559057'),
+        Bug('''On Mac OS X, the button in the effort edit dialog for dropping
+down the tree of tasks didn't work.''', '3560296'),
+        Bug('''Make recurrence label in the task edit dialog clearer.''', 
+            '3560420'),
+        Bug('''Make the description of the "idle time notice" setting in the 
+preferences clearer.''', '3555498'),
+        Bug('''Make the description of the "minutes between suggested
+times" setting in the preferences clearer.''', '3556765'),
+        Bug('''The combobox for selecting the snooze time in the reminder
+dialog was not read only. This suggested that one could type in custom snooze 
+times while that is not supported (yet).''', '3560416'),
+        Bug('''The "Filter on all checked categories/Filter on any checked
+category" option was only available via the toolbar of the category viewer. 
+Due to the width of the option, it could be difficult to access. The option
+is now also available as menu item in the View->Filter menu.''', '3554627'),
+        Bug('''When the budget left is negative, the budget left field in the
+task edit dialog would not show a minus sign.''', '3554616'),
+        Bug('''On Mac OS X, the tip of the day window would block the dialog 
+for unlocking a locked task file.''', '3561499'),
+        Bug('''When saving selected tasks, not only include the categories
+the selected tasks belong to, but also the parent categories of the used
+categories, even though they may not have been used themselves.''', '3561159'),
+        Bug('''When creating a new item, set focus to the subject field so 
+that the description tab is raised if needed.''', '3561515'),
+        Bug('''On Mac OS X, dropping of URLs without a protocol specification
+('http:', 'https:', 'ftp:', etc.) would result in attachments that couldn't be
+opened.''', '3561889'),
+        Bug('''On Linux, dropping of URLs didn't work.''', '3561889'),
+        Bug('''The order of tabs in edit dialogs wouldn't be restored 
+correctly after it had been changed by the user.''', '3562239'),
+        Bug('''Save size, position and maximization state of dialogs separately
+for single-item and multi-item dialogs.''', '3562239'),
+#        Bug('''Fix slowness when viewing aggregated efforts.''',
+#            '3538310', '3537702'),
+        ],
+    featuresAdded=[
+        Feature('''Increase font size in the calendar view's header.''',
+                '3558650'),
+        Feature('''In the calendar view, unplanned dates are now cropped
+to the current day.'''), # Close bug report 3539404 when 1.3.18 is released.
+        Feature('''Add support for Thunderbird IMAP accounts that use
+NTLM authentication (typically Exchange accounts).'''),
+        Feature('''When starting up, Task Coach checks for messages from the 
+Task Coach developers. This allows us to reach all users for e.g. notifications 
+on critical bugs or requests for support. Each message is displayed only once
+and the display of messages can be turned off completely. This feature will be
+used sparingly, of course.'''),
+        Feature('''Added almost complete Belarusian translation thanks to 
+Korney San.'''),
+        Feature('''Allow for changing the font used in the description field
+of edit dialogs. The font can be changed in the editor tab of the preferences 
+dialog. Patch supplied by Nicola Chiapolini.'''),
+        ],
+    featuresChanged=[
+        Feature('''When a task has no due date, instead of displaying 
+"Infinite" for the time left in the task viewer, Task Coach now displays blank 
+space.'''),
+        ],
+    ),
+
+Release('1.3.17', 'July 2, 2012',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Use the user-specified time format on Windows.''',
+            '3530080'),
+        Bug('''In the effort viewer, when calculating total effort for tasks in 
+a certain period, one effort would be skipped.''', '3537707'),
+        Bug('''When tracking effort for one task, don't show "Stop tracking
+multiple tasks" as the menu label for the "Stop tracking" menu item in the 
+action menu.''', '3536577'),
+        Bug('''On Windows, use a more recent Python27.dll to satisfy Secunia 
+PSI.''', '3539139'),
+        Bug('''Loading a big task file is now much faster.'''),
+        Bug('''The calendar view would not react to changes to tasks.''', 
+            '3539402'),
+        ],
+    ),
+
+Release('1.3.16', 'June 16, 2012',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Fix a crash during iPhone synchronization if a category 
+associated with a modified task has been deleted on the desktop.'''),
+        Bug('''The stop/resume effort tracking button on the toolbar wasn't
+working correctly.''', '3529025'),
+        Bug('''When tracking effort, the time spent in the effort viewer was
+not always updated.'''),
+        ],
+    ),
+            
+Release('1.3.15', 'May 24, 2012',
     summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
         Bug('''On Windows 7, when the language is English (US), render times
@@ -270,8 +600,8 @@ would contain a "recurrence edited" action even though the recurrence was
 not changed.''', '3453625'),
         Bug('''On Ubuntu, the date controls in the effort edit dialog would
 be invisible.''', '3452446'),
-        Bug('''On Windows, when the user tries to save the task file in a 
-folder where she doesn't have permission, Task Coach would not give a proper
+        Bug('''On Windows, when users try to save the task file in a 
+folder where they don't have permission, Task Coach would not give a proper
 warning.'''),
         Bug('''When editing multiple items at once, show all descriptions in the
 description field for easier editing and/or copying.''', '3446417'),
@@ -300,8 +630,8 @@ display its start instead of its end.''', '3433481'),
 Release('1.3.1', 'November 27, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug('''Don't turn off the start date on new tasks when the user
-has indicated in the preferences that she wants a default start date.''', 
+        Bug('''Don't turn off the start date on new tasks when users
+have indicated in the preferences that they want a default start date.''', 
             '3440634'),
         Bug('''The "Start tracking from last effort" button in the effort
 dialog didn't work.''', '3440794'),
@@ -1402,8 +1732,8 @@ note and category viewers.'''),
 the appearance tab of edit dialogs.''', '2992006', '3021759'),
         Bug('''Don't display long descriptions in an inline text control,
 it's too buggy.''', '2992853', '2992850', '2992848'),
-        Bug('''On Mac OS X, don't cut text in text controls when the user
-types <cmd><shift>X, only when she types <cmd>X.''', '2942288'),
+        Bug('''On Mac OS X, don't cut text in text controls when users
+type <cmd><shift>X, only when they type <cmd>X.''', '2942288'),
         Bug('''Properly save the task file when the font name contains
 non-ascii characters.''', '3014110'),
         Bug('''Correctly export tasks and effort to vCalendar (.ics) when they
@@ -2448,9 +2778,9 @@ that Task Coach is started automatically when the user logs on
         Feature('''Made (right-click) context menu's more consistent.''')],
     featuresRemoved=[
         Feature('''Don't supply the dummy recipient 'Please enter recipient' to 
-the email program when mailing a task. This only forces the user to perform 
+the email program when mailing a task. This only forces users to perform 
 an extra action to remove that dummy text, while most if not all email 
-programs will warn the user when she forgets to enter a recipient. ''', 
+programs will warn users when they forget to enter a recipient. ''', 
 '2026833')]),
 
 Release('0.70.1', 'June 28, 2008',

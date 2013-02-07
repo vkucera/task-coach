@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,9 +29,13 @@ class DummyMainWindow(widgets.AuiManagedFrameWithDynamicCenterPane):
     def __init__(self):
         super(DummyMainWindow, self).__init__(None)
 
-    def addPane(self, pane, title):
+    def addPane(self, window, caption, floating=False):
         self.count += 1
-        super(DummyMainWindow, self).addPane(pane, title, str('name%d'%self.count))
+        super(DummyMainWindow, self).addPane(window, caption, 
+                                             str('name%d'%self.count))
+
+    def AddBalloonTip(self, *args, **kwargs):
+        pass
 
 
 class DummyPane(object):

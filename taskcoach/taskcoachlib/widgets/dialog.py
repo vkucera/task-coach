@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,19 +16,22 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, wx.html, os
 from taskcoachlib import operating_system
 from taskcoachlib.i18n import _
-from taskcoachlib.thirdparty import aui, sized_controls
+from taskcoachlib.thirdparty import aui
 import notebook
+import wx
+import wx.html
+from wx.lib import sized_controls
+import os
 
 
 class Dialog(sized_controls.SizedDialog):
     def __init__(self, parent, title, bitmap='edit', 
                  direction=None, *args, **kwargs):
-        self._buttonTypes = kwargs.get('buttonTypes', wx.OK|wx.CANCEL)
+        self._buttonTypes = kwargs.get('buttonTypes', wx.OK | wx.CANCEL)
         super(Dialog, self).__init__(parent, -1, title,
-            style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER|wx.MAXIMIZE_BOX|wx.MINIMIZE_BOX)
+            style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER | wx.MAXIMIZE_BOX | wx.MINIMIZE_BOX)
         self.SetIcon(wx.ArtProvider_GetIcon(bitmap, wx.ART_FRAME_ICON,
             (16, 16)))
         self._panel = self.GetContentsPane()
@@ -45,7 +48,13 @@ class Dialog(sized_controls.SizedDialog):
         if not operating_system.isGTK():
             wx.CallAfter(self.Raise)
         wx.CallAfter(self._panel.SetFocus)
-        
+
+    def SetExtraStyle(self, exstyle):
+        # SizedDialog's constructor calls this to set WS_EX_VALIDATE_RECURSIVELY. We don't need
+        # it, it makes the dialog appear in about 7 seconds, and it makes switching focus
+        # between two controls take up to 5 seconds.
+        pass
+
     def createInterior(self):
         raise NotImplementedError
 
@@ -53,7 +62,8 @@ class Dialog(sized_controls.SizedDialog):
         pass
     
     def createButtons(self):
-        buttonSizer = self.CreateStdDialogButtonSizer(wx.OK if self._buttonTypes == wx.ID_CLOSE else self._buttonTypes)
+        buttonTypes = wx.OK if self._buttonTypes == wx.ID_CLOSE else self._buttonTypes
+        buttonSizer = self.CreateStdDialogButtonSizer(buttonTypes)
         if self._buttonTypes & wx.OK or self._buttonTypes & wx.ID_CLOSE:
             buttonSizer.GetAffirmativeButton().Bind(wx.EVT_BUTTON, self.ok)
         if self._buttonTypes & wx.CANCEL:
@@ -94,13 +104,6 @@ class NotebookDialog(Dialog):
     def __getitem__(self, index):
         return self._interior[index]
     
-    def cancelPages(self, pagesToCancel):
-        ''' Close the pages and remove them from our interior book widget. '''
-        for pageIndex, page in enumerate(self):
-            if page in pagesToCancel:
-                self._interior.GetPage(pageIndex).Close()
-                self._interior.RemovePage(pageIndex)
-       
     def ok(self, *args, **kwargs):
         self.okPages()
         super(NotebookDialog, self).ok(*args, **kwargs)
@@ -114,10 +117,10 @@ class NotebookDialog(Dialog):
 
         
 class HtmlWindowThatUsesWebBrowserForExternalLinks(wx.html.HtmlWindow):
-    def OnLinkClicked(self, linkInfo): # pylint: disable-msg=W0221
+    def OnLinkClicked(self, linkInfo):  # pylint: disable=W0221
         openedLinkInExternalBrowser = False
         if linkInfo.GetTarget() == '_blank':
-            import webbrowser # pylint: disable-msg=W0404
+            import webbrowser  # pylint: disable=W0404
             try:
                 webbrowser.open(linkInfo.GetHref())
                 openedLinkInExternalBrowser = True
@@ -136,7 +139,7 @@ class HTMLDialog(Dialog):
         
     def createInterior(self):
         interior = HtmlWindowThatUsesWebBrowserForExternalLinks(self._panel, 
-            -1, size=(550,400))
+            -1, size=(550, 400))
         if self._direction:
             interior.SetLayoutDirection(self._direction)
         return interior
@@ -150,8 +153,8 @@ class HTMLDialog(Dialog):
         
 def AttachmentSelector(**callerKeywordArguments):
     kwargs = {'message': _('Add attachment'),
-              'default_path' : os.getcwd(), 
-              'wildcard' : _('All files (*.*)|*'), 
+              'default_path': os.getcwd(), 
+              'wildcard': _('All files (*.*)|*'), 
               'flags': wx.OPEN}
     kwargs.update(callerKeywordArguments)
-    return wx.FileSelector(**kwargs) # pylint: disable-msg=W0142
+    return wx.FileSelector(**kwargs)  # pylint: disable=W0142

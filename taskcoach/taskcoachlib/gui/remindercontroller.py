@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -34,7 +34,6 @@ class ReminderController(object):
         patterns.Publisher().registerObserver(self.onRemoveTask,
             eventType=taskList.removeItemEventType(),
             eventSource=taskList)
-        pub.subscribe(self.onReminder, 'powermgt.on')
         self.__tasksWithReminders = {}  # {task: reminderDateTime}
         self.__mainWindow = mainWindow
         self.__mainWindowWasHidden = False
@@ -49,7 +48,7 @@ class ReminderController(object):
     def onRemoveTask(self, event):
         self.__removeRemindersForTasks(event.values())
                 
-    def onSetReminder(self, newValue, sender):  # pylint: disable-msg=W0613
+    def onSetReminder(self, newValue, sender):  # pylint: disable=W0613
         self.__removeRemindersForTasks([sender])
         self.__registerRemindersForTasks([sender])
         

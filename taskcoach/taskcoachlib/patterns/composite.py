@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,22 +17,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import observer
+import weakref
 
 
 class Composite(object):
     def __init__(self, children=None, parent=None):
         super(Composite, self).__init__()
-        self.__parent = parent
+        self.__parent = parent if parent is None else weakref.ref(parent)
         self.__children = children or []
         for child in self.__children:
             child.setParent(self)
         
     def __getstate__(self):
         return dict(children=self.__children[:], 
-                    parent=self.__parent)
+                    parent=self.parent())
     
     def __setstate__(self, state):
-        self.__parent = state['parent']
+        self.__parent = None if state['parent'] is None else weakref.ref(state['parent'])
         self.__children = state['children']
 
     def __getcopystate__(self):
@@ -42,11 +43,11 @@ class Composite(object):
         except AttributeError:
             state = dict()
         state.update(dict(children=[child.copy() for child in self.__children], 
-                          parent=self.__parent))
+                          parent=self.parent()))
         return state
     
     def parent(self):
-        return self.__parent
+        return None if self.__parent is None else self.__parent()
     
     def ancestors(self):
         ''' Return the parent, and its parent, etc., as a list. '''
@@ -59,8 +60,8 @@ class Composite(object):
         return self.ancestors() + [self] + self.children(recursive=True)
     
     def setParent(self, parent):
-        self.__parent = parent
-    
+        self.__parent = None if parent is None else weakref.ref(parent)
+
     def children(self, recursive=False):
         # Warning: this must satisfy the same condition as
         # allItemsSorted() below.
@@ -105,12 +106,12 @@ class Composite(object):
 
 class ObservableComposite(Composite):
     @observer.eventSource
-    def __setstate__(self, state, event=None): # pylint: disable-msg=W0221
+    def __setstate__(self, state, event=None): # pylint: disable=W0221
         oldChildren = set(self.children())
         super(ObservableComposite, self).__setstate__(state)
         newChildren = set(self.children())
         childrenRemoved = oldChildren - newChildren
-        # pylint: disable-msg=W0142
+        # pylint: disable=W0142
         if childrenRemoved:
             self.removeChildEvent(event, *childrenRemoved)
         childrenAdded = newChildren - oldChildren
@@ -118,7 +119,7 @@ class ObservableComposite(Composite):
             self.addChildEvent(event, *childrenAdded)
 
     @observer.eventSource
-    def addChild(self, child, event=None): # pylint: disable-msg=W0221
+    def addChild(self, child, event=None): # pylint: disable=W0221
         super(ObservableComposite, self).addChild(child)
         self.addChildEvent(event, child)
 
@@ -130,7 +131,7 @@ class ObservableComposite(Composite):
         return 'composite(%s).child.add'%class_
 
     @observer.eventSource
-    def removeChild(self, child, event=None): # pylint: disable-msg=W0221
+    def removeChild(self, child, event=None): # pylint: disable=W0221
         super(ObservableComposite, self).removeChild(child)
         self.removeChildEvent(event, child)
 

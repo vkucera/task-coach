@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,10 +22,15 @@ from taskcoachlib.domain import task, date
 from taskcoachlib.thirdparty import hypertreelist
 
 
-class Window(widgets.AuiManagedFrameWithDynamicCenterPane):
-    def addPane(self, viewer, title, name='name'):
-        super(Window, self).addPane(viewer, title, name)
-        
+class AuiManagedFrameWithDynamicCenterPane(widgets.AuiManagedFrameWithDynamicCenterPane):
+    def AddBalloonTip(self, *args, **kwargs):
+        pass
+
+
+class Window(AuiManagedFrameWithDynamicCenterPane):
+    def addPane(self, viewer, title, name='name', floating=False):
+        super(Window, self).addPane(viewer, title, name, floating)
+
 
 class ViewerTest(test.wxTestCase):
     def setUp(self):
@@ -50,24 +55,24 @@ class ViewerTest(test.wxTestCase):
             self.settings)
 
     def testSelectAllViaWidget(self):
-        self.viewer.widget.selectall()
+        self.viewer.widget.select_all()
         self.viewer.updateSelection()
         self.assertEqual([self.task], self.viewer.curselection())
         
     def testSelectAllViaWidgetWithMultipleItems(self):
         self.taskFile.tasks().append(task.Task('second'))
-        self.viewer.widget.selectall()
+        self.viewer.widget.select_all()
         self.viewer.updateSelection()
         self.assertEqual(2, len(self.viewer.curselection()))
         
     def testSelectAll(self):
-        self.viewer.selectall()
+        self.viewer.select_all()
         self.viewer.endOfSelectAll()
         self.assertEqual([self.task], self.viewer.curselection())
         
     def testSelectAllWithMultipleItems(self):
         self.taskFile.tasks().append(task.Task('second'))
-        self.viewer.selectall()
+        self.viewer.select_all()
         self.viewer.endOfSelectAll()
         self.assertEqual(2, len(self.viewer.curselection()))
         
@@ -106,7 +111,7 @@ class ViewerTest(test.wxTestCase):
         
     def testSecondViewerInstanceHasAnotherSettingsSection(self):
         viewer2 = self.createViewer()
-        self.assertEqual(self.viewer.settingsSection()+'1', 
+        self.assertEqual(self.viewer.settingsSection() + '1', 
                          viewer2.settingsSection())
         
     def testTitle(self):
@@ -229,7 +234,7 @@ class SearchableViewerTest(test.TestCase):
         
     def createViewer(self):
         viewer = SearchableViewerUnderTest()
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         viewer.settings = self.settings
         viewer.settingsSection = lambda: 'taskviewer'
         presentation = viewer.createFilter(task.TaskList())
@@ -240,7 +245,7 @@ class SearchableViewerTest(test.TestCase):
         self.failUnless(self.viewer.isSearchable())
         
     def testDefaultSearchFilter(self):
-        self.assertEqual(('', False, False, False), self.viewer.getSearchFilter())
+        self.assertEqual(('', False, False, False, False), self.viewer.getSearchFilter())
         
     def testSetSearchFilterString(self):
         self.viewer.setSearchFilter('bla', matchCase=True)
@@ -320,7 +325,7 @@ class FilterableViewerForTasks(test.TestCase):
 
     def createViewer(self):
         viewer = FilterableViewerForTasksUnderTest()
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         viewer.taskFile = persistence.TaskFile()
         viewer.settings = self.settings
         viewer.settingsSection = lambda: 'taskviewer'
@@ -341,12 +346,12 @@ class FilterableViewerForTasks(test.TestCase):
                                                  'hideinactivetasks'))
 
     def testHideInactiveTasks_AffectsPresentation(self):
-        self.viewer.presentation().append(task.Task(plannedStartDateTime=date.Now() + date.oneDay))
+        self.viewer.presentation().append(task.Task(plannedStartDateTime=date.Tomorrow()))
         self.viewer.hideTaskStatus(task.status.inactive)
         self.failIf(self.viewer.presentation())
     
     def testUnhideInactiveTasks(self):
-        self.viewer.presentation().append(task.Task(plannedStartDateTime=date.Now() + date.oneDay))
+        self.viewer.presentation().append(task.Task(plannedStartDateTime=date.Tomorrow()))
         self.viewer.hideTaskStatus(task.status.inactive)
         self.viewer.hideTaskStatus(task.status.inactive, False)
         self.failUnless(self.viewer.presentation())
@@ -364,12 +369,12 @@ class FilterableViewerForTasks(test.TestCase):
                                                  'hidelatetasks'))
 
     def testHideLateTasks_AffectsPresentation(self):
-        self.viewer.presentation().append(task.Task(plannedStartDateTime=date.Now() - date.oneDay))
+        self.viewer.presentation().append(task.Task(plannedStartDateTime=date.Yesterday()))
         self.viewer.hideTaskStatus(task.status.late)
         self.failIf(self.viewer.presentation())
     
     def testUnhideLateTasks(self):
-        self.viewer.presentation().append(task.Task(plannedStartDateTime=date.Now() - date.oneDay))
+        self.viewer.presentation().append(task.Task(plannedStartDateTime=date.Yesterday()))
         self.viewer.hideTaskStatus(task.status.late)
         self.viewer.hideTaskStatus(task.status.late, False)
         self.failUnless(self.viewer.presentation())
@@ -387,12 +392,12 @@ class FilterableViewerForTasks(test.TestCase):
                                                  'hideduesoontasks'))
 
     def testHideDueSoonTasks_AffectsPresentation(self):
-        self.viewer.presentation().append(task.Task(dueDateTime=date.Now() + date.oneHour))
+        self.viewer.presentation().append(task.Task(dueDateTime=date.Now() + date.ONE_HOUR))
         self.viewer.hideTaskStatus(task.status.duesoon)
         self.failIf(self.viewer.presentation())
     
     def testUnhideDueSoonTasks(self):
-        self.viewer.presentation().append(task.Task(dueDateTime=date.Now() + date.oneHour))
+        self.viewer.presentation().append(task.Task(dueDateTime=date.Now() + date.ONE_HOUR))
         self.viewer.hideTaskStatus(task.status.duesoon)
         self.viewer.hideTaskStatus(task.status.duesoon, False)
         self.failUnless(self.viewer.presentation())
@@ -410,12 +415,12 @@ class FilterableViewerForTasks(test.TestCase):
                                                  'hideoverduetasks'))
 
     def testHideOverDueTasks_AffectsPresentation(self):
-        self.viewer.presentation().append(task.Task(dueDateTime=date.Now() - date.oneDay))
+        self.viewer.presentation().append(task.Task(dueDateTime=date.Yesterday()))
         self.viewer.hideTaskStatus(task.status.overdue)
         self.failIf(self.viewer.presentation())
     
     def testUnhideOverDueTasks(self):
-        self.viewer.presentation().append(task.Task(dueDateTime=date.Now() - date.oneDay))
+        self.viewer.presentation().append(task.Task(dueDateTime=date.Yesterday()))
         self.viewer.hideTaskStatus(task.status.overdue)
         self.viewer.hideTaskStatus(task.status.overdue, False)
         self.failUnless(self.viewer.presentation())
@@ -516,9 +521,10 @@ class ViewerIteratorTestCase(test.wxTestCase):
         task.Task.settings = self.settings
         self.taskFile = persistence.TaskFile()
         self.taskList = self.taskFile.tasks()
-        self.window = widgets.AuiManagedFrameWithDynamicCenterPane(self.frame)
+        self.window = AuiManagedFrameWithDynamicCenterPane(self.frame)
         self.viewer = self.createViewer()
-        self.viewer.showTree(self.treeMode == 'True')
+        self.settings.setboolean(self.viewer.settingsSection(), 'treemode',
+                                 self.treeMode == 'True')
         self.viewer.sortBy('subject')
 
     def tearDown(self):
@@ -527,7 +533,7 @@ class ViewerIteratorTestCase(test.wxTestCase):
         self.taskFile.stop()
 
     def getItemsFromIterator(self):
-        return list(self.viewer.visibleItems()) # pylint: disable-msg=E1101
+        return list(self.viewer.visibleItems()) # pylint: disable=E1101
 
 
 class ViewerIteratorTestsMixin(object):
@@ -590,6 +596,6 @@ class ViewerWithColumnsTest(test.wxTestCase):
         self.taskFile.stop()
 
     def testDefaultColumnWidth(self):
-        expectedWidth = hypertreelist._DEFAULT_COL_WIDTH # pylint: disable-msg=W0212
+        expectedWidth = hypertreelist._DEFAULT_COL_WIDTH # pylint: disable=W0212
         self.assertEqual(expectedWidth, self.viewer.getColumnWidth('subject'))
         

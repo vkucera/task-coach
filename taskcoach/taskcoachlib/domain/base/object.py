@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,10 +18,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import uuid
 from taskcoachlib import patterns
-import attribute
 from taskcoachlib.domain.attribute import icon
+from taskcoachlib.domain.date import DateTime, Now
+from taskcoachlib.thirdparty.pubsub import pub
+import attribute
+import functools
+import uuid
 
 
 class SynchronizedObject(object):
@@ -130,6 +133,9 @@ class SynchronizedObject(object):
 class Object(SynchronizedObject):
     def __init__(self, *args, **kwargs):
         Attribute = attribute.Attribute
+        self.__creationDateTime = kwargs.pop('creationDateTime', None) or Now()
+        self.__modificationDateTime = kwargs.pop('modificationDateTime', 
+                                                 DateTime.min)
         self.__subject = Attribute(kwargs.pop('subject', ''), self, 
                                    self.subjectChangedEvent)
         self.__description = Attribute(kwargs.pop('description', ''), self,
@@ -146,7 +152,7 @@ class Object(SynchronizedObject):
                                         self.appearanceChangedEvent)
         self.__id = kwargs.pop('id', None) or str(uuid.uuid1())
         super(Object, self).__init__(*args, **kwargs)
-        
+    
     def __repr__(self):
         return self.subject()
 
@@ -155,7 +161,10 @@ class Object(SynchronizedObject):
             state = super(Object, self).__getstate__()
         except AttributeError:
             state = dict()
-        state.update(dict(id=self.__id, subject=self.__subject.get(), 
+        state.update(dict(id=self.__id, 
+                          creationDateTime=self.__creationDateTime,
+                          modificationDateTime=self.__modificationDateTime,
+                          subject=self.__subject.get(), 
                           description=self.__description.get(),
                           fgColor=self.__fgColor.get(),
                           bgColor=self.__bgColor.get(),
@@ -170,7 +179,7 @@ class Object(SynchronizedObject):
             super(Object, self).__setstate__(state, event=event)
         except AttributeError:
             pass
-        self.setId(state['id'])
+        self.__id = state['id']
         self.setSubject(state['subject'], event=event)
         self.setDescription(state['description'], event=event)
         self.setForegroundColor(state['fgColor'], event=event)
@@ -178,6 +187,10 @@ class Object(SynchronizedObject):
         self.setFont(state['font'], event=event)
         self.setIcon(state['icon'], event=event)
         self.setSelectedIcon(state['selectedIcon'], event=event)
+        self.__creationDateTime = state['creationDateTime']
+        # Set modification date/time last to overwrite changes made by the 
+        # setters above
+        self.__modificationDateTime = state['modificationDateTime']
 
     def __getcopystate__(self):
         ''' Return a dictionary that can be passed to __init__ when creating
@@ -188,8 +201,8 @@ class Object(SynchronizedObject):
             state = super(Object, self).__getcopystate__()
         except AttributeError:
             state = dict()
-        # Note: we don't put the id in the state dict, because a copy should
-        # get a new id:
+        # Note that we don't put the id and the creation date/time in the state 
+        # dict, because a copy should get a new id and a new creation date/time
         state.update(dict(\
             subject=self.__subject.get(), description=self.__description.get(),
             fgColor=self.__fgColor.get(), bgColor=self.__bgColor.get(),
@@ -208,9 +221,17 @@ class Object(SynchronizedObject):
        
     def id(self):
         return self.__id
+            
+    # Editing date/time:
     
-    def setId(self, id_):
-        self.__id = id_
+    def creationDateTime(self):
+        return self.__creationDateTime
+    
+    def modificationDateTime(self):
+        return self.__modificationDateTime
+    
+    def setModificationDateTime(self, dateTime):
+        self.__modificationDateTime = dateTime
         
     # Subject:
     
@@ -274,7 +295,7 @@ class Object(SynchronizedObject):
     def setForegroundColor(self, color, event=None):
         self.__fgColor.set(color, event=event)
     
-    def foregroundColor(self, recursive=False): # pylint: disable-msg=W0613
+    def foregroundColor(self, recursive=False): # pylint: disable=W0613
         # The 'recursive' argument isn't actually used here, but some
         # code assumes composite objects where there aren't. This is
         # the simplest workaround.
@@ -283,7 +304,7 @@ class Object(SynchronizedObject):
     def setBackgroundColor(self, color, event=None):
         self.__bgColor.set(color, event=event)
         
-    def backgroundColor(self, recursive=False): # pylint: disable-msg=W0613
+    def backgroundColor(self, recursive=False): # pylint: disable=W0613
         # The 'recursive' argument isn't actually used here, but some
         # code assumes composite objects where there aren't. This is
         # the simplest workaround.
@@ -291,7 +312,7 @@ class Object(SynchronizedObject):
     
     # Font:
     
-    def font(self, recursive=False): # pylint: disable-msg=W0613
+    def font(self, recursive=False): # pylint: disable=W0613
         # The 'recursive' argument isn't actually used here, but some
         # code assumes composite objects where there aren't. This is
         # the simplest workaround.
@@ -350,7 +371,7 @@ class CompositeObject(Object, patterns.ObservableComposite):
 
     # Subject:
 
-    def subject(self, recursive=False): # pylint: disable-msg=W0221
+    def subject(self, recursive=False): # pylint: disable=W0221
         subject = super(CompositeObject, self).subject()
         if recursive and self.parent():
             subject = u'%s -> %s'%(self.parent().subject(recursive=True), subject)
@@ -372,7 +393,7 @@ class CompositeObject(Object, patterns.ObservableComposite):
         
     # Description:
         
-    def description(self, recursive=False): # pylint: disable-msg=W0221,W0613
+    def description(self, recursive=False): # pylint: disable=W0221,W0613
         # Allow for the recursive flag, but ignore it
         return super(CompositeObject, self).description()
         
@@ -393,8 +414,7 @@ class CompositeObject(Object, patterns.ObservableComposite):
             expanded. ''' 
         return list(self.__expandedContexts)
     
-    @patterns.eventSource
-    def expand(self, expand=True, context='None', event=None):
+    def expand(self, expand=True, context='None', notify=True):
         ''' Expands (or collapses) the composite object in the specified 
             context. ''' 
         if expand == self.isExpanded(context):
@@ -403,11 +423,15 @@ class CompositeObject(Object, patterns.ObservableComposite):
             self.__expandedContexts.add(context)
         else:
             self.__expandedContexts.discard(context)
-        self.expansionChangedEvent(event)
+        if notify:
+            pub.sendMessage(self.expansionChangedEventType(), newValue=expand,
+                            sender=self)
 
     @classmethod
-    def expansionChangedEventType(class_):
-        return '%s.expanded'%class_
+    def expansionChangedEventType(cls):
+        ''' The event type used for notifying changes in the expansion state
+            of a composite object. '''
+        return 'pubsub.%s.expandedContexts' % cls.__name__.lower()
 
     def expansionChangedEvent(self, event):
         event.addSource(self, type=self.expansionChangedEventType())
@@ -452,7 +476,7 @@ class CompositeObject(Object, patterns.ObservableComposite):
             return myIcon
         if not myIcon and self.parent():
             myIcon = self.parent().icon(recursive=True)
-        return self.pluralOrSingularIcon(myIcon)
+        return self.pluralOrSingularIcon(myIcon, native=super(CompositeObject, self).icon() == '')
 
     def selectedIcon(self, recursive=False):
         myIcon = super(CompositeObject, self).selectedIcon()
@@ -460,12 +484,16 @@ class CompositeObject(Object, patterns.ObservableComposite):
             return myIcon
         if not myIcon and self.parent():
             myIcon = self.parent().selectedIcon(recursive=True)
-        return self.pluralOrSingularIcon(myIcon)
+        return self.pluralOrSingularIcon(myIcon, native=super(CompositeObject, self).selectedIcon() == '')
 
-    def pluralOrSingularIcon(self, myIcon):
+    def pluralOrSingularIcon(self, myIcon, native=True):
         hasChildren = any(child for child in self.children() if not child.isDeleted())
         mapping = icon.itemImagePlural if hasChildren else icon.itemImageSingular
-        return mapping.get(myIcon, myIcon)
+        # If the icon comes from the user settings, only pluralize it; this is probably
+        # the Way of the Least Astonishment
+        if native or hasChildren:
+            return mapping.get(myIcon, myIcon)
+        return myIcon
     
     # Event types:
 

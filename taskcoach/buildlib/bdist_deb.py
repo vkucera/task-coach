@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -63,6 +63,7 @@ class bdist_deb(Command, object):
         ('license-summary=', None, 'summary of the license of the application'),
         ('license-path=', None, 'path of the license on Debian systems'),
         ('wxpythonversion=', None, 'minimal wxPython version needed'),
+        ('pythonversion=', None, 'minimal Python version needed'),
         ('sdist-exclude=', None, 
          'dirs and files in the source distribution to exclude from the deb package'),
         ('url=', None, 'url of the application homepage'),
@@ -82,7 +83,7 @@ class bdist_deb(Command, object):
             self.author_email = self.copyright = self.license = \
             self.license_abbrev = self.license_summary = self.license_path = \
             self.url = self.version = self.package_version = \
-            self.distribution = self.wxpythonversion = \
+            self.distribution = self.wxpythonversion = self.pythonversion = \
             self.sdist_exclude = None
                     
     def finalize_options(self):
@@ -116,6 +117,8 @@ class bdist_deb(Command, object):
             self.distribution = 'UNRELEASED'
         if not self.wxpythonversion:
             self.wxpythonversion = '2.8'
+        if not self.pythonversion:
+            self.pythonversion = '2.7'
         self.sdist_exclude = self.sdist_exclude.split(',') \
             if self.sdist_exclude else []
         self.subsection_lower = self.subsection.lower()
@@ -251,7 +254,7 @@ Homepage: %(url)s
 
 Package: %(package)s
 Architecture: %(architecture)s
-Depends: python, python-wxgtk2.8 (>= %(wxpythonversion)s), python-wxversion, libxss1
+Depends: python (>= %(pythonversion)s), python-wxgtk2.8 (>= %(wxpythonversion)s), python-wxversion, libxss1, ttf-dejavu
 Recommends: python-notify, libgnome2-0
 Description: %(description)s.
 %(long_description)s

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -47,10 +47,10 @@ class CategoryEditorTest(test.wxTestCase):
         self.taskFile.close()
         self.taskFile.stop()
 
-    # pylint: disable-msg=E1101,E1103,W0212
+    # pylint: disable=E1101,E1103,W0212
     
     def createCategories(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.category = category.Category('Category to edit')
         self.attachment = attachment.FileAttachment('some attachment')
         self.category.addAttachments(self.attachment)

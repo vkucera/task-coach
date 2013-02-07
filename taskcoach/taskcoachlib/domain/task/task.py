@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2010 Svetoslav Trochev <sal_electronics@hotmail.com>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -20,10 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import patterns
-from taskcoachlib.domain import date, categorizable, note, attachment
-from taskcoachlib.domain.attribute import color
+from taskcoachlib.domain import date, categorizable, note, attachment, base
 from taskcoachlib.thirdparty.pubsub import pub
 import status
+import weakref
 import wx
 
 
@@ -35,7 +35,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def __init__(self, subject='', description='', 
                  dueDateTime=None, plannedStartDateTime=None, 
                  actualStartDateTime=None, completionDateTime=None,
-                 budget=None, priority=0, id=None, hourlyFee=0,  # pylint: disable-msg=W0622
+                 budget=None, priority=0, id=None, hourlyFee=0,  # pylint: disable=W0622
                  fixedFee=0, reminder=None, reminderBeforeSnooze=None, categories=None,
                  efforts=None, shouldMarkCompletedWhenAllChildrenCompleted=None, 
                  recurrence=None, percentageComplete=0, prerequisites=None,
@@ -46,7 +46,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         kwargs['categories'] = categories
         super(Task, self).__init__(*args, **kwargs)
         self.__status = None  # status cache
-        self.__dueSoonHours = self.settings.getint('behavior', 'duesoonhours')  # pylint: disable-msg=E1101
+        self.__dueSoonHours = self.settings.getint('behavior', 'duesoonhours')  # pylint: disable=E1101
         maxDateTime = self.maxDateTime    
         self.__dueDateTime = dueDateTime or maxDateTime
         self.__plannedStartDateTime = plannedStartDateTime or maxDateTime
@@ -64,8 +64,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__reminder = reminder or maxDateTime
         self.__reminderBeforeSnooze = reminderBeforeSnooze or self.__reminder
         self.__recurrence = date.Recurrence() if recurrence is None else recurrence
-        self.__prerequisites = set(prerequisites or [])
-        self.__dependencies = set(dependencies or [])
+        self.__prerequisites = weakref.WeakSet(prerequisites or [])
+        self.__dependencies = weakref.WeakSet(dependencies or [])
         self.__shouldMarkCompletedWhenAllChildrenCompleted = \
             shouldMarkCompletedWhenAllChildrenCompleted
         for effort in self._efforts:
@@ -75,13 +75,19 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         pub.subscribe(self.__computeRecursiveIcon, 'settings.icon')
         pub.subscribe(self.__computeRecursiveSelectedIcon, 'settings.icon')
         pub.subscribe(self.onDueSoonHoursChanged, 'settings.behavior.duesoonhours')
+        pub.subscribe(self.onMarkParentCompletedWhenAllChildrenCompletedChanged,
+                      'settings.behavior.markparentcompletedwhenallchildrencompleted')
 
         now = date.Now()
         if now < self.__dueDateTime < maxDateTime:
-            date.Scheduler().schedule(self.onOverDue, self.__dueDateTime + date.oneSecond)
+            date.Scheduler().schedule(self.onOverDue, self.__dueDateTime + date.ONE_SECOND)
+            if self.__dueSoonHours:
+                dueSoonDateTime = self.__dueDateTime + date.ONE_SECOND - date.TimeDelta(hours=self.__dueSoonHours)
+                if dueSoonDateTime > date.Now():
+                    date.Scheduler().schedule(self.onDueSoon, dueSoonDateTime)
         if now < self.__plannedStartDateTime < maxDateTime:
-            date.Scheduler().schedule(self.onTimeToStart, self.__plannedStartDateTime + date.oneSecond)
-
+            date.Scheduler().schedule(self.onTimeToStart, self.__plannedStartDateTime + date.ONE_SECOND)
+            
     @patterns.eventSource
     def __setstate__(self, state, event=None):
         super(Task, self).__setstate__(state, event=event)
@@ -115,8 +121,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             hourlyFee=self.__hourlyFee, fixedFee=self.__fixedFee, 
             recurrence=self.__recurrence.copy(),
             reminder=self.__reminder,
-            prerequisites=self.__prerequisites.copy(),
-            dependencies=self.__dependencies.copy(),
+            prerequisites=set(self.__prerequisites),
+            dependencies=set(self.__dependencies),
             shouldMarkCompletedWhenAllChildrenCompleted=self.__shouldMarkCompletedWhenAllChildrenCompleted))
         return state
 
@@ -175,12 +181,6 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             self.setCompletionDateTime(child.completionDateTime())
         elif self.completed() and not child.completed():
             self.setCompletionDateTime(self.maxDateTime)
-        if self.maxDateTime > child.dueDateTime() > self.dueDateTime():
-            self.setDueDateTime(child.dueDateTime())           
-        if child.plannedStartDateTime() < self.plannedStartDateTime():
-            self.setPlannedStartDateTime(child.plannedStartDateTime())
-        if child.actualStartDateTime() < self.actualStartDateTime():
-            self.setActualStartDateTime(child.actualStartDateTime())
         self.recomputeAppearance(recursive=False, event=event)
         child.recomputeAppearance(recursive=True, event=event)
 
@@ -250,24 +250,21 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__dueDateTime = dueDateTime
         date.Scheduler().unschedule(self.onOverDue)
         date.Scheduler().unschedule(self.onDueSoon)
-        if dueDateTime != self.maxDateTime:
-            for child in self.children():
-                if child.dueDateTime() > dueDateTime:
-                    child.setDueDateTime(dueDateTime)
-            if self.parent():
-                parent = self.parent()
-                if dueDateTime > parent.dueDateTime():
-                    parent.setDueDateTime(dueDateTime)
         if date.Now() <= dueDateTime < self.maxDateTime:
-            date.Scheduler().schedule(self.onOverDue, dueDateTime + date.oneSecond)
+            date.Scheduler().schedule(self.onOverDue, 
+                                      dueDateTime + date.ONE_SECOND)
             if self.__dueSoonHours > 0:
-                dueSoonDateTime = dueDateTime + date.oneSecond - date.TimeDelta(hours=self.__dueSoonHours)
+                dueSoonDateTime = dueDateTime + date.ONE_SECOND - \
+                    date.TimeDelta(hours=self.__dueSoonHours)
                 if dueSoonDateTime > date.Now():
                     date.Scheduler().schedule(self.onDueSoon, dueSoonDateTime)
         self.markDirty()
         self.recomputeAppearance()
         pub.sendMessage(self.dueDateTimeChangedEventType(), 
                         newValue=dueDateTime, sender=self)
+        for ancestor in self.ancestors():
+            pub.sendMessage(ancestor.dueDateTimeChangedEventType(),
+                            newValue=dueDateTime, sender=ancestor)
 
     @classmethod
     def dueDateTimeChangedEventType(class_):
@@ -304,21 +301,16 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             return
         self.__plannedStartDateTime = plannedStartDateTime
         date.Scheduler().unschedule(self.onTimeToStart)
-        if plannedStartDateTime != self.maxDateTime:
-            if not self.recurrence(recursive=True, upwards=True):
-                for child in self.children():
-                    if plannedStartDateTime > child.plannedStartDateTime():
-                        child.setPlannedStartDateTime(plannedStartDateTime)
-            parent = self.parent()
-            if parent and plannedStartDateTime < parent.plannedStartDateTime():
-                parent.setPlannedStartDateTime(plannedStartDateTime)
         self.markDirty()
         self.recomputeAppearance()
         if plannedStartDateTime < self.maxDateTime:
             date.Scheduler().schedule(self.onTimeToStart, 
-                                      plannedStartDateTime + date.oneSecond)
+                                      plannedStartDateTime + date.ONE_SECOND)
         pub.sendMessage(self.plannedStartDateTimeChangedEventType(), 
                         newValue=plannedStartDateTime, sender=self)
+        for ancestor in self.ancestors():
+            pub.sendMessage(ancestor.plannedStartDateTimeChangedEventType(),
+                            newValue=plannedStartDateTime, sender=ancestor)
 
     @classmethod
     def plannedStartDateTimeChangedEventType(class_):
@@ -368,13 +360,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if recursive:
             for child in self.children(recursive=True):
                 child.setActualStartDateTime(actualStartDateTime)
-        parent = self.parent()
-        if parent and actualStartDateTime < parent.actualStartDateTime():
-            parent.setActualStartDateTime(actualStartDateTime)
         self.markDirty()
         self.recomputeAppearance()
         pub.sendMessage(self.actualStartDateTimeChangedEventType(), 
                         newValue=actualStartDateTime, sender=self)
+        for ancestor in self.ancestors():
+            pub.sendMessage(ancestor.actualStartDateTimeChangedEventType(),
+                            newValue=actualStartDateTime, sender=ancestor)
 
     @classmethod
     def actualStartDateTimeChangedEventType(class_):
@@ -438,6 +430,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 dependency.recomputeAppearance(recursive=True)
             pub.sendMessage(self.completionDateTimeChangedEventType(), 
                         newValue=completionDateTime, sender=self)
+            for ancestor in self.ancestors():
+                pub.sendMessage(ancestor.completionDateTimeChangedEventType(),
+                                newValue=completionDateTime, sender=ancestor)
             
     @classmethod
     def completionDateTimeChangedEventType(class_):
@@ -449,7 +444,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             are completed, 3) its setting says it should be completed when
             all of its children are completed. '''
         shouldMarkCompletedAccordingToSetting = \
-            self.settings.getboolean('behavior',  # pylint: disable-msg=E1101
+            self.settings.getboolean('behavior',  # pylint: disable=E1101
                 'markparentcompletedwhenallchildrencompleted')
         shouldMarkCompletedAccordingToTask = \
             self.shouldMarkCompletedWhenAllChildrenCompleted()
@@ -467,6 +462,14 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def completionDateTimeSortEventTypes(class_):
         ''' The event types that influence the completion date time sort order. '''
         return (class_.completionDateTimeChangedEventType(),)
+    
+    def onMarkParentCompletedWhenAllChildrenCompletedChanged(self, value):
+        ''' When the global setting changes, send a percentage completed 
+            changed if necessary. '''
+        if self.shouldMarkCompletedWhenAllChildrenCompleted() is None and \
+            any([child.percentageComplete(True) for child in self.children()]):
+            pub.sendMessage(self.percentageCompleteChangedEventType(),
+                            newValue=self.percentageComplete(), sender=self)
 
     # Task state
     
@@ -524,9 +527,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 self.__status = status.active
             # Don't call prerequisite.completed() because it will lead to infinite
             # recursion in the case of circular dependencies:
-            elif any([prerequisite.completionDateTime() == self.maxDateTime for prerequisite in self.prerequisites()]):
-                self.__status = status.inactive
-            elif self.parent() and self.parent().inactive():
+            elif any([prerequisite.completionDateTime() == self.maxDateTime \
+                      for prerequisite in self.prerequisites(recursive=True, 
+                                                             upwards=True)]):
                 self.__status = status.inactive
             elif self.plannedStartDateTime() < now:
                 self.__status = status.late
@@ -539,7 +542,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__dueSoonHours = value
         dueDateTime = self.dueDateTime()
         if dueDateTime < self.maxDateTime:
-            newDueSoonDateTime = dueDateTime + date.oneSecond - date.TimeDelta(hours=self.__dueSoonHours)
+            newDueSoonDateTime = dueDateTime + date.ONE_SECOND - date.TimeDelta(hours=self.__dueSoonHours)
             date.Scheduler().schedule(self.onDueSoon, newDueSoonDateTime)
         self.recomputeAppearance()
             
@@ -567,8 +570,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self._efforts.append(effort)
         if effort.getStart() < self.actualStartDateTime():
             self.setActualStartDateTime(effort.getStart())
-        pub.sendMessage(self.effortsChangedEventType(), newValue=self._efforts,
-                        oldValue=oldValue, sender=self)
+        pub.sendMessage(self.effortsChangedEventType(), newValue=(self._efforts,
+                        oldValue), sender=self)
         if effort.isBeingTracked() and not wasTracking:
             self.sendTrackingChangedMessage(tracking=True)
         self.sendTimeSpentChangedMessage()
@@ -582,16 +585,16 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         pub.sendMessage(self.trackingChangedEventType(), newValue=tracking,
                         sender=self)  
         for ancestor in self.ancestors():
-            pub.sendMessage(ancestor.trackingChangedEventType(), newValue=tracking,
-                            sender=ancestor)
+            pub.sendMessage(ancestor.trackingChangedEventType(), 
+                            newValue=tracking, sender=ancestor)
 
     def removeEffort(self, effort):
         if effort not in self._efforts:
             return
         oldValue = self._efforts[:]
         self._efforts.remove(effort)
-        pub.sendMessage(self.effortsChangedEventType(), newValue=self._efforts,
-                        oldValue=oldValue, sender=self)
+        pub.sendMessage(self.effortsChangedEventType(), newValue=(self._efforts,
+                        oldValue), sender=self)
         if effort.isBeingTracked() and not self.isBeingTracked():
             self.sendTrackingChangedMessage(tracking=False)
         self.sendTimeSpentChangedMessage()
@@ -605,8 +608,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             return
         oldValue = self._efforts[:]
         self._efforts = efforts
-        pub.sendMessage(self.effortsChangedEventType(), newValue=self._efforts,
-                        oldValue=oldValue, sender=self)
+        pub.sendMessage(self.effortsChangedEventType(), newValue=(self._efforts,
+                        oldValue), sender=self)
         self.sendTimeSpentChangedMessage()
         
     @classmethod
@@ -624,7 +627,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                         newValue=self.timeSpent(), sender=self)
         for ancestor in self.ancestors():
             pub.sendMessage(ancestor.timeSpentChangedEventType(), 
-                            newValue=ancestor.timeSpent(recursive=True),
+                            newValue=ancestor.timeSpent(),
                             sender=ancestor)
         if self.budget(recursive=True):
             self.sendBudgetLeftChangedMessage()
@@ -653,7 +656,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             for task in self.children():
                 result += task.budget(recursive)
         return result
-        
+    
     def setBudget(self, budget):
         if budget == self.__budget:
             return
@@ -725,16 +728,17 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         except AttributeError:
             return self.__computeRecursiveForegroundColor()
         
-    def __computeRecursiveForegroundColor(self, value=None):  # pylint: disable-msg=W0613
-        fgColor = super(Task, self).foregroundColor(recursive=True)
-        statusColor = self.statusFgColor()
-        if statusColor == wx.BLACK:
-            recursiveColor = fgColor
-        elif fgColor == None:
-            recursiveColor = statusColor
+    def __computeRecursiveForegroundColor(self, value=None):  # pylint: disable=W0613
+        ownColor = super(Task, self).foregroundColor(False)
+        if ownColor:
+            recursiveColor = ownColor
         else:
-            recursiveColor = color.ColorMixer.mix((fgColor, statusColor))
-        self.__recursiveForegroundColor = recursiveColor  # pylint: disable-msg=W0201
+            categoryColor = self._categoryForegroundColor()
+            if categoryColor:
+                recursiveColor = categoryColor
+            else:
+                recursiveColor = self.statusFgColor()
+        self.__recursiveForegroundColor = recursiveColor  # pylint: disable=W0201
         return recursiveColor
     
     def statusFgColor(self):
@@ -744,7 +748,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     
     @classmethod
     def fgColorForStatus(class_, taskStatus):
-        return wx.Colour(*eval(class_.settings.get('fgcolor', '%stasks' % taskStatus)))  # pylint: disable-msg=E1101
+        return wx.Colour(*eval(class_.settings.get('fgcolor', '%stasks' % taskStatus)))  # pylint: disable=E1101
 
     def appearanceChangedEvent(self, event):
         self.__computeRecursiveForegroundColor()
@@ -769,38 +773,47 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         except AttributeError:
             return self.__computeRecursiveBackgroundColor()
         
-    def __computeRecursiveBackgroundColor(self, *args, **kwargs):  # pylint: disable-msg=W0613
-        bgColor = super(Task, self).backgroundColor(recursive=True)
-        statusColor = self.statusBgColor()
-        if statusColor == wx.WHITE:
-            recursiveColor = bgColor
-        elif bgColor == None:
-            recursiveColor = statusColor
+    def __computeRecursiveBackgroundColor(self, *args, **kwargs):  # pylint: disable=W0613
+        ownColor = super(Task, self).backgroundColor(recursive=False)
+        if ownColor:
+            recursiveColor = ownColor
         else:
-            recursiveColor = color.ColorMixer.mix((bgColor, statusColor))
-        self.__recursiveBackgroundColor = recursiveColor  # pylint: disable-msg=W0201
+            categoryColor = self._categoryBackgroundColor()
+            if categoryColor:
+                recursiveColor = categoryColor
+            else:
+                statusColor = self.statusBgColor()
+                if statusColor:
+                    recursiveColor = statusColor
+                elif self.parent():
+                    recursiveColor = self.parent().backgroundColor(recursive=True)
+                else:
+                    recursiveColor = None
+        self.__recursiveBackgroundColor = recursiveColor  # pylint: disable=W0201
         return recursiveColor
     
     def statusBgColor(self):
         ''' Return the current color of task, based on its status (completed,
             overdue, duesoon, inactive, or active). '''            
-        return self.bgColorForStatus(self.status())
+        color = self.bgColorForStatus(self.status())
+        return None if color == wx.WHITE else color
     
     @classmethod
     def bgColorForStatus(class_, taskStatus):
-        return wx.Colour(*eval(class_.settings.get('bgcolor', '%stasks' % taskStatus)))  # pylint: disable-msg=E1101
+        return wx.Colour(*eval(class_.settings.get('bgcolor', '%stasks' % taskStatus)))  # pylint: disable=E1101
     
     # Font
 
     def font(self, recursive=False):
-        myFont = super(Task, self).font()
-        if myFont or not recursive:
-            return myFont
-        recursiveFont = super(Task, self).font(recursive=True)
-        if recursiveFont:
-            return recursiveFont
+        ownFont = super(Task, self).font(recursive=False)
+        if ownFont or not recursive:
+            return ownFont
         else:
-            return self.statusFont()
+            categoryFont = self._categoryFont()
+            if categoryFont:
+                return categoryFont
+            else:
+                return self.statusFont()
 
     def statusFont(self):
         ''' Return the current font of task, based on its status (completed,
@@ -809,7 +822,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     @classmethod
     def fontForStatus(class_, taskStatus):
-        nativeInfoString = class_.settings.get('font', '%stasks' % taskStatus)  # pylint: disable-msg=E1101
+        nativeInfoString = class_.settings.get('font', '%stasks' % taskStatus)  # pylint: disable=E1101
         return wx.FontFromNativeInfoString(nativeInfoString) if nativeInfoString else None
                 
     # Icon
@@ -823,10 +836,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 myIcon = self.__recursiveIcon
             except AttributeError:
                 myIcon = self.__computeRecursiveIcon()
-        return self.pluralOrSingularIcon(myIcon)
+        return self.pluralOrSingularIcon(myIcon, native=super(Task, self).icon() == '')
     
-    def __computeRecursiveIcon(self, *args, **kwargs):  # pylint: disable-msg=W0613
-        # pylint: disable-msg=W0201
+    def __computeRecursiveIcon(self, *args, **kwargs):  # pylint: disable=W0613
+        # pylint: disable=W0201
         self.__recursiveIcon = self.categoryIcon() or self.statusIcon()
         return self.__recursiveIcon
 
@@ -838,11 +851,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             try:
                 myIcon = self.__recursiveSelectedIcon
             except AttributeError:
-                myIcon = self.__computeRecursiveSelectedIcon() 
-        return self.pluralOrSingularIcon(myIcon)
+                myIcon = self.__computeRecursiveSelectedIcon()
+        return self.pluralOrSingularIcon(myIcon, native=super(Task, self).selectedIcon == '')
         
-    def __computeRecursiveSelectedIcon(self, *args, **kwargs):  # pylint: disable-msg=W0613
-        # pylint: disable-msg=W0201
+    def __computeRecursiveSelectedIcon(self, *args, **kwargs):  # pylint: disable=W0613
+        # pylint: disable=W0201
         self.__recursiveSelectedIcon = self.categorySelectedIcon() or self.statusIcon(selected=True)
         return self.__recursiveSelectedIcon
 
@@ -851,7 +864,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return self.iconForStatus(self.status(), selected)            
 
     def iconForStatus(self, taskStatus, selected=False):
-        iconName = self.settings.get('icon', '%stasks' % taskStatus)  # pylint: disable-msg=E1101
+        iconName = self.settings.get('icon', '%stasks' % taskStatus)  # pylint: disable=E1101
         iconName = self.pluralOrSingularIcon(iconName)
         if selected and iconName.startswith('folder'):
             iconName = iconName[:-len('_icon')] + '_open_icon' 
@@ -889,16 +902,20 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     
     def percentageComplete(self, recursive=False):
         if recursive:
-            # We ignore our own percentageComplete when we are marked complete
-            # when all children are completed *and* our percentageComplete is 0
+            if self.shouldMarkCompletedWhenAllChildrenCompleted() is None:
+                # pylint: disable=E1101    
+                ignore_me = self.settings.getboolean('behavior', 
+                                'markparentcompletedwhenallchildrencompleted')
+            else:
+                ignore_me = self.shouldMarkCompletedWhenAllChildrenCompleted()
             percentages = []
-            if self.__percentageComplete > 0 or not self.shouldMarkCompletedWhenAllChildrenCompleted():
+            if self.__percentageComplete > 0 or not ignore_me:
                 percentages.append(self.__percentageComplete)
             percentages.extend([child.percentageComplete(recursive) for child in self.children()])
             return sum(percentages) / len(percentages) if percentages else 0
         else:
             return self.__percentageComplete
-        
+    
     def setPercentageComplete(self, percentage):
         if percentage == self.__percentageComplete:
             return
@@ -972,7 +989,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     
     # Hourly fee
     
-    def hourlyFee(self, recursive=False):  # pylint: disable-msg=W0613
+    def hourlyFee(self, recursive=False):  # pylint: disable=W0613
         return self.__hourlyFee
     
     def setHourlyFee(self, hourlyFee):
@@ -990,7 +1007,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def hourlyFeeChangedEventType(class_):
         return 'pubsub.task.hourlyFee'
     
-    @staticmethod  # pylint: disable-msg=W0613
+    @staticmethod  # pylint: disable=W0613
     def hourlyFeeSortFunction(**kwargs): 
         return lambda task: task.hourlyFee()
 
@@ -1064,7 +1081,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     
     # reminder
     
-    def reminder(self, recursive=False, includeSnooze=True):  # pylint: disable-msg=W0613
+    def reminder(self, recursive=False, includeSnooze=True):  # pylint: disable=W0613
         if recursive:
             reminders = [child.reminder(recursive=True) for child in \
                          self.children()] + [self.__reminder]
@@ -1082,6 +1099,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__reminderBeforeSnooze = reminderDateTime
         pub.sendMessage(self.reminderChangedEventType(), 
                         newValue=reminderDateTime, sender=self)
+        for ancestor in self.ancestors():
+            pub.sendMessage(ancestor.reminderChangedEventType(),
+                            newValue=reminderDateTime, sender=ancestor)
         
     def snoozeReminder(self, timeDelta, now=date.Now):
         if timeDelta:
@@ -1189,7 +1209,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     # Prerequisites
     
     def prerequisites(self, recursive=False, upwards=False):
-        prerequisites = self.__prerequisites.copy()
+        prerequisites = set(self.__prerequisites)
         if recursive and upwards and self.parent() is not None:
             prerequisites |= self.parent().prerequisites(recursive=True, upwards=True)
         elif recursive and not upwards:
@@ -1199,32 +1219,32 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     
     def setPrerequisites(self, prerequisites):
         prerequisites = set(prerequisites)
-        if prerequisites == self.__prerequisites:
+        if prerequisites == self.prerequisites():
             return
-        self.__prerequisites = prerequisites
+        self.__prerequisites = weakref.WeakSet(prerequisites)
         self.setActualStartDateTime(self.maxDateTime, recursive=True)
         self.recomputeAppearance(recursive=True)
         pub.sendMessage(self.prerequisitesChangedEventType(), 
-                        newValue=self.__prerequisites, sender=self)
-        
+                        newValue=self.prerequisites(), sender=self)
+  
     def addPrerequisites(self, prerequisites):
         prerequisites = set(prerequisites)
-        if prerequisites <= self.__prerequisites:
+        if prerequisites <= self.prerequisites():
             return
-        self.__prerequisites |= prerequisites
+        self.__prerequisites = weakref.WeakSet(prerequisites | self.prerequisites())
         self.setActualStartDateTime(self.maxDateTime, recursive=True)
         self.recomputeAppearance(recursive=True)
         pub.sendMessage(self.prerequisitesChangedEventType(), 
-                        newValue=self.__prerequisites, sender=self)
+                        newValue=self.prerequisites(), sender=self)
         
     def removePrerequisites(self, prerequisites):
         prerequisites = set(prerequisites)
-        if self.__prerequisites.isdisjoint(prerequisites):
+        if self.prerequisites().isdisjoint(prerequisites):
             return
-        self.__prerequisites -= prerequisites
+        self.__prerequisites = weakref.WeakSet(self.prerequisites() - prerequisites)
         self.recomputeAppearance(recursive=True)
         pub.sendMessage(self.prerequisitesChangedEventType(), 
-                        newValue=self.__prerequisites, sender=self)
+                        newValue=self.prerequisites(), sender=self)
         
     def addTaskAsDependencyOf(self, prerequisites):
         for prerequisite in prerequisites:
@@ -1266,7 +1286,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     # Dependencies
     
     def dependencies(self, recursive=False, upwards=False):
-        dependencies = self.__dependencies.copy()
+        dependencies = set(self.__dependencies)
         if recursive and upwards and self.parent() is not None:
             dependencies |= self.parent().dependencies(recursive=True, upwards=True)
         elif recursive and not upwards:
@@ -1276,27 +1296,27 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     def setDependencies(self, dependencies):
         dependencies = set(dependencies)
-        if dependencies == self.__dependencies:
+        if dependencies == self.dependencies():
             return
-        self.__dependencies = dependencies
+        self.__dependencies = weakref.WeakSet(dependencies)
         pub.sendMessage(self.dependenciesChangedEventType(),
-                        newValue=self.__dependencies, sender=self)
+                        newValue=self.dependencies(), sender=self)
     
     def addDependencies(self, dependencies):
         dependencies = set(dependencies)
-        if dependencies <= self.__dependencies:
+        if dependencies <= self.dependencies():
             return
-        self.__dependencies |= dependencies
+        self.__dependencies = weakref.WeakSet(self.dependencies() | dependencies)
         pub.sendMessage(self.dependenciesChangedEventType(),
-                        newValue=self.__dependencies, sender=self)
-        
+                        newValue=self.dependencies(), sender=self)
+
     def removeDependencies(self, dependencies):
         dependencies = set(dependencies)
-        if self.__dependencies.isdisjoint(dependencies):
+        if self.dependencies().isdisjoint(dependencies):
             return
-        self.__dependencies -= dependencies
+        self.__dependencies = weakref.WeakSet(self.dependencies() - dependencies)
         pub.sendMessage(self.dependenciesChangedEventType(),
-                        newValue=self.__dependencies, sender=self)
+                        newValue=self.dependencies(), sender=self)
         
     def addTaskAsPrerequisiteOf(self, dependencies):
         for dependency in dependencies:
@@ -1344,8 +1364,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         pub.sendMessage(self.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType(),
                         newValue=newValue, sender=self)
         pub.sendMessage(self.percentageCompleteChangedEventType(), 
-                        newValue=self.percentageComplete(recursive=True), 
-                        sender=self)
+                        newValue=self.percentageComplete(), sender=self)
     
     @classmethod
     def shouldMarkCompletedWhenAllChildrenCompletedChangedEventType(class_):
@@ -1376,20 +1395,20 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     
     @classmethod    
     def suggestedDateTime(cls, defaultDateTimeSetting, now=date.Now):
-        # pylint: disable-msg=E1101,W0142
+        # pylint: disable=E1101,W0142
         defaultDateTime = cls.settings.get('view', defaultDateTimeSetting)
         dummy_prefix, defaultDate, defaultTime = defaultDateTime.split('_')
         dateTime = now()
         currentTime = dict(hour=dateTime.hour, minute=dateTime.minute,
                            second=dateTime.second, microsecond=dateTime.microsecond)
         if defaultDate == 'tomorrow':
-            dateTime += date.oneDay
+            dateTime += date.ONE_DAY
         elif defaultDate == 'dayaftertomorrow':
-            dateTime += (date.oneDay + date.oneDay)
+            dateTime += (date.ONE_DAY + date.ONE_DAY)
         elif defaultDate == 'nextfriday':
-            dateTime = (dateTime + date.oneDay).endOfWorkWeek().replace(**currentTime)
+            dateTime = (dateTime + date.ONE_DAY).endOfWorkWeek().replace(**currentTime)
         elif defaultDate == 'nextmonday':
-            dateTime = (dateTime + date.oneWeek).startOfWorkWeek().replace(**currentTime)
+            dateTime = (dateTime + date.ONE_WEEK).startOfWorkWeek().replace(**currentTime)
             
         if defaultTime == 'startofday':
             return dateTime.startOfDay()

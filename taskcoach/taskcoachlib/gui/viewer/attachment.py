@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
@@ -28,7 +28,7 @@ from taskcoachlib.gui import uicommand, menu, dialog
 import base, mixin
 
 
-class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
+class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable=W0223
                        base.SortableViewerWithColumns,
                        mixin.SortableViewerForAttachmentsMixin, 
                        mixin.SearchableViewerMixin, mixin.NoteColumnMixin,
@@ -57,7 +57,7 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0
         columnPopupMenu = menu.ColumnPopupMenu(self)
         self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
         self._columns = self._createColumns()
-        widget = widgets.ListCtrl(self, self.columns(), self.onSelect,
+        widget = widgets.VirtualListCtrl(self, self.columns(), self.onSelect,
             uicommand.Edit(viewer=self),
             itemPopupMenu, columnPopupMenu,
             resizeableColumn=1, **self.widgetCreationKeywordArguments())
@@ -93,15 +93,32 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0
                                renderCallback=lambda item: item.description(),
                                resizeCallback=self.onResizeColumn),
                 widgets.Column('notes', '', 
-                               attachment.FileAttachment.notesChangedEventType(), # pylint: disable-msg=E1101
-                               attachment.URIAttachment.notesChangedEventType(), # pylint: disable-msg=E1101
-                               attachment.MailAttachment.notesChangedEventType(), # pylint: disable-msg=E1101
+                               attachment.FileAttachment.notesChangedEventType(), # pylint: disable=E1101
+                               attachment.URIAttachment.notesChangedEventType(), # pylint: disable=E1101
+                               attachment.MailAttachment.notesChangedEventType(), # pylint: disable=E1101
                                width=self.getColumnWidth('notes'),
                                alignment=wx.LIST_FORMAT_LEFT,
-                               imageIndicesCallback=self.noteImageIndices, # pylint: disable-msg=E1101
+                               imageIndicesCallback=self.noteImageIndices, # pylint: disable=E1101
                                headerImageIndex=self.imageIndex['note_icon'],
                                renderCallback=lambda item: '',
                                resizeCallback=self.onResizeColumn),
+                widgets.Column('creationDateTime', _('Creation date'),
+                               width=self.getColumnWidth('creationDateTime'),
+                               renderCallback=self.renderCreationDateTime,
+                               sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                                                                          value='creationDateTime',
+                                                                          menuText=_('&Creation date'),
+                                                                          helpText=_('Sort by creation date')),
+                               resizeCallback=self.onResizeColumn),
+                widgets.Column('modificationDateTime', _('Modification date'),
+                               width=self.getColumnWidth('modificationDateTime'),
+                               renderCallback=self.renderModificationDateTime,
+                               sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                                                                          value='modificationDateTime',
+                                                                          menuText=_('&Modification date'),
+                                                                          helpText=_('Sort by last modification date')),
+                               resizeCallback=self.onResizeColumn,
+                               *attachment.Attachment.modificationEventTypes())
                 ]
 
     def createColumnUICommands(self):
@@ -114,7 +131,13 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0
                 setting='description', viewer=self),
             uicommand.ViewColumn(menuText=_('&Notes'),
                 helpText=_('Show/hide notes column'),
-                setting='notes', viewer=self)]
+                setting='notes', viewer=self),
+            uicommand.ViewColumn(menuText=_('&Creation date'),
+                helpText=_('Show/hide creation date column'),
+                setting='creationDateTime', viewer=self),
+            uicommand.ViewColumn(menuText=_('&Modification date'),
+                helpText=_('Show/hide last modification date column'),
+                setting='modificationDateTime', viewer=self)]
     
     def createCreationToolBarUICommands(self):
         return (uicommand.AttachmentNew(attachments=self.presentation(),
@@ -127,7 +150,7 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0
                                          viewer=self, settings=self.settings),) + \
            super(AttachmentViewer, self).createActionToolBarUICommands()
     
-    def typeImageIndices(self, anAttachment, exists=os.path.exists): # pylint: disable-msg=W0613
+    def typeImageIndices(self, anAttachment, exists=os.path.exists): # pylint: disable=W0613
         if anAttachment.type_ == 'file':
             attachmentBase = self.settings.get('file', 'attachmentbase')
             if exists(anAttachment.normalizedLocation(attachmentBase)):
@@ -146,10 +169,10 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0
         return dialog.editor.AttachmentEditor
 
     def newItemCommandClass(self):
-        return command.NewAttachmentCommand
-    
+        raise NotImplementedError  # pragma: no cover
+     
     def newSubItemCommandClass(self):
         return None
 
     def deleteItemCommandClass(self):
-        return command.DeleteAttachmentCommand
+        raise NotImplementedError  # pragma: no cover

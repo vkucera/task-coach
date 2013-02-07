@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
@@ -20,15 +20,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
-from taskcoachlib import patterns, command, widgets, domain
+from taskcoachlib import command, widgets, domain
 from taskcoachlib.domain import note
-from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, dialog
-import base, mixin, inplace_editor
+from taskcoachlib.i18n import _
+import base
+import mixin
+import inplace_editor
+import wx
 
 
-class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
+class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                      mixin.SearchableViewerMixin, 
                      mixin.SortableViewerForNotesMixin,
                      mixin.AttachmentColumnMixin, 
@@ -53,7 +55,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W022
         return class_ == note.Note
 
     def createWidget(self):
-        imageList = self.createImageList() # Has side-effects
+        imageList = self.createImageList()  # Has side-effects
         self._columns = self._createColumns()
         itemPopupMenu = menu.NotePopupMenu(self.parent, self.settings,
             self.taskFile.categories(), self)
@@ -64,7 +66,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W022
             uicommand.NoteDragAndDrop(viewer=self, notes=self.presentation()),
             itemPopupMenu, columnPopupMenu,
             **self.widgetCreationKeywordArguments())
-        widget.AssignImageList(imageList) # pylint: disable-msg=E1101
+        widget.AssignImageList(imageList)  # pylint: disable=E1101
         return widget
     
     def createFilter(self, notes):
@@ -90,7 +92,13 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W022
                 setting='attachments', viewer=self),
             uicommand.ViewColumn(menuText=_('&Categories'),
                 helpText=_('Show/hide categories column'),
-                setting='categories', viewer=self)]
+                setting='categories', viewer=self),
+            uicommand.ViewColumn(menuText=_('&Creation date'),
+                helpText=_('Show/hide creation date column'),
+                setting='creationDateTime', viewer=self),
+            uicommand.ViewColumn(menuText=_('&Modification date'),
+                helpText=_('Show/hide last modification date column'),
+                setting='modificationDateTime', viewer=self)]
 
     def _createColumns(self):
         subjectColumn = widgets.Column('subject', _('Subject'), 
@@ -114,10 +122,10 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W022
             editCallback=self.onEditDescription,
             editControl=inplace_editor.DescriptionCtrl)
         attachmentsColumn = widgets.Column('attachments', '', 
-            note.Note.attachmentsChangedEventType(), # pylint: disable-msg=E1101
+            note.Note.attachmentsChangedEventType(),  # pylint: disable=E1101
             width=self.getColumnWidth('attachments'),
             alignment=wx.LIST_FORMAT_LEFT,
-            imageIndicesCallback=self.attachmentImageIndices, # pylint: disable-msg=E1101
+            imageIndicesCallback=self.attachmentImageIndices,  # pylint: disable=E1101
             headerImageIndex=self.imageIndex['paperclip_icon'],
             renderCallback=lambda note: '')
         categoriesColumn = widgets.Column('categories', _('Categories'),
@@ -131,7 +139,25 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W022
             sortCallback=uicommand.ViewerSortByCommand(viewer=self, 
                 value='categories', menuText=_('&Categories'), 
                 helpText=_('Sort notes by categories')))
-        return [subjectColumn, descriptionColumn, attachmentsColumn, categoriesColumn]
+        creationDateTimeColumn = widgets.Column('creationDateTime', 
+            _('Creation date'), width=self.getColumnWidth('creationDateTime'),
+            resizeCallback=self.onResizeColumn,
+            renderCallback=self.renderCreationDateTime,
+            sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                value='creationDateTime', menuText=_('&Creation date'),
+                helpText=_('Sort notes by creation date')))
+        modificationDateTimeColumn = widgets.Column('modificationDateTime', 
+            _('Modification date'), 
+            width=self.getColumnWidth('modificationDateTime'),
+            resizeCallback=self.onResizeColumn,
+            renderCallback=self.renderModificationDateTime,
+            sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                value='modificationDateTime', menuText=_('&Modification date'),
+                helpText=_('Sort notes by last modification date')),
+            *note.Note.modificationEventTypes())
+        return [subjectColumn, descriptionColumn, attachmentsColumn, 
+                categoriesColumn, creationDateTimeColumn, 
+                modificationDateTimeColumn]
 
     def getItemTooltipData(self, item, column=0):
         if self.settings.getboolean('view', 'descriptionpopups'):
@@ -146,7 +172,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W022
         return True
 
     def statusMessages(self):
-        status1 = _('Notes: %d selected, %d total')%\
+        status1 = _('Notes: %d selected, %d total') % \
             (len(self.curselection()), len(self.presentation()))
         status2 = _('Status: n/a')
         return status1, status2
@@ -156,8 +182,9 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W022
         return super(BaseNoteViewer, self).newItemDialog(*args, **kwargs)
     
     def deleteItemCommand(self):
-        return command.DeleteNoteCommand(self.presentation(), self.curselection(),
-                  shadow=self.settings.getboolean('feature', 'syncml'))
+        return command.DeleteNoteCommand(self.presentation(), 
+            self.curselection(), 
+            shadow=self.settings.getboolean('feature', 'syncml'))
         
     def itemEditorClass(self):
         return dialog.editor.NoteEditor
@@ -169,5 +196,5 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W022
         return command.NewSubNoteCommand
 
 
-class NoteViewer(mixin.FilterableViewerForCategorizablesMixin, BaseNoteViewer): # pylint: disable-msg=W0223
+class NoteViewer(mixin.FilterableViewerForCategorizablesMixin, BaseNoteViewer):  # pylint: disable=W0223
     pass

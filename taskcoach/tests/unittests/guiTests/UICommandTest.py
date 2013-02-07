@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -109,7 +109,7 @@ class NewTaskWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
 
 
 class DummyTask(object):
-    def subject(self, *args, **kwargs): # pylint: disable-msg=W0613
+    def subject(self, *args, **kwargs): # pylint: disable=W0613
         return 'subject'
     
     def description(self):
@@ -141,11 +141,11 @@ class DummyViewer(object):
 
 class MailTaskTest(test.TestCase):
     def testException(self):
-        def mail(*args): # pylint: disable-msg=W0613
+        def mail(*args): # pylint: disable=W0613
             raise RuntimeError, 'message'
         
-        def showerror(*args, **kwargs): # pylint: disable-msg=W0613
-            self.showerror = args # pylint: disable-msg=W0201
+        def showerror(*args, **kwargs): # pylint: disable=W0613
+            self.showerror = args # pylint: disable=W0201
             
         mailTask = gui.uicommand.Mail(viewer=DummyViewer([DummyTask()]))
         mailTask.doCommand(None, mail=mail, showerror=showerror)
@@ -247,6 +247,7 @@ class TaskNewTest(wxTestCaseWithFrameAsTopLevelWindow):
         self.failUnless(firstChild.IsChecked())
         
     def testNewTaskWithPresetPlannedStartDateTime(self):
+        self.settings.set('view', 'defaultplannedstartdatetime', 'preset_tomorrow_endofworkingday')
         taskNew = gui.uicommand.TaskNew(taskList=self.taskFile.tasks(),
                                         settings=self.settings)
         taskNew.doCommand(None, show=False)
@@ -321,9 +322,9 @@ class EditPreferencesTest(test.TestCase):
         
 class EffortViewerAggregationChoiceTest(test.TestCase):
     def setUp(self):
-        self.selectedAggregation = 'details'
-        self.showAggregationCalled = False
-        self.choice = gui.uicommand.EffortViewerAggregationChoice(viewer=self)
+        self.settings = config.Settings(load=False)
+        self.choice = gui.uicommand.EffortViewerAggregationChoice(viewer=self,
+            settings=self.settings)
         self.choice.currentChoice = 0
         class DummyEvent(object):
             def __init__(self, selection):
@@ -332,31 +333,23 @@ class EffortViewerAggregationChoiceTest(test.TestCase):
                 return self.selection
         self.DummyEvent = DummyEvent
         
-    def showEffortAggregation(self, aggregation):
-        self.selectedAggregation = aggregation
-        self.showAggregationCalled = True
-    
-    def testUserPicksCurrentChoice(self):
-        self.choice.onChoice(self.DummyEvent(0))
-        self.failIf(self.showAggregationCalled)
-
-    def testUserPicksSameChoiceTwice(self):
-        self.choice.onChoice(self.DummyEvent(1))
-        self.showAggregationCalled = False
-        self.choice.onChoice(self.DummyEvent(1))
-        self.failIf(self.showAggregationCalled)
+    def settingsSection(self):
+        return 'effortviewer'
     
     def testUserPicksEffortPerDay(self):
         self.choice.onChoice(self.DummyEvent(1))
-        self.assertEqual('day', self.selectedAggregation)
+        self.assertEqual('day', self.settings.gettext(self.settingsSection(),
+                                                      'aggregation'))
 
     def testUserPicksEffortPerWeek(self):
         self.choice.onChoice(self.DummyEvent(2))
-        self.assertEqual('week', self.selectedAggregation)
+        self.assertEqual('week', self.settings.gettext(self.settingsSection(),
+                                                       'aggregation'))
 
     def testUserPicksEffortPerMonth(self):
         self.choice.onChoice(self.DummyEvent(3))
-        self.assertEqual('month', self.selectedAggregation)
+        self.assertEqual('month', self.settings.gettext(self.settingsSection(),
+                                                        'aggregation'))
 
     def testSetChoice(self):
         class DummyToolBar(wx.Frame):
@@ -399,7 +392,7 @@ class OpenAllAttachmentsTest(test.TestCase):
         class DummyAttachment(object):
             def __init__(self):
                 self.openCalled = False
-            def open(self, attachmentBase): # pylint: disable-msg=W0613
+            def open(self, attachmentBase): # pylint: disable=W0613
                 self.openCalled = True
             def isDeleted(self):
                 return False
@@ -427,6 +420,28 @@ class ToggleCategoryTest(test.TestCase):
         uiCommand = gui.uicommand.ToggleCategory(viewer=viewer,
                                                  category=self.category)
         self.failIf(uiCommand.enabled(None))
+        
+    def testDisableWhenSelectionIsEmpty(self):
+        viewer = DummyViewer(selection=[])
+        uiCommand = gui.uicommand.ToggleCategory(viewer=viewer,
+                                                 category=self.category)
+        self.failIf(uiCommand.enabled(None))
+        
+    def testDisableWhenCategoryHasMutualExclusiveAncestorThatIsNotChecked(self):
+        parent_category = category.Category('Parent of mutual exclusive categories', 
+                                            exclusiveSubcategories=True)
+        child_category = category.Category('Mutual exclusive category')
+        parent_category.addChild(child_category)
+        child_category.setParent(parent_category)
+        child_category.addChild(self.category)
+        self.category.setParent(child_category)
+        task_with_category = task.Task('Task')
+        task_with_category.addCategory(self.category)
+        self.category.addCategorizable(task_with_category)
+        viewer = DummyViewer(selection=[task_with_category])
+        uiCommand = gui.uicommand.ToggleCategory(viewer=viewer,
+                                                 category=self.category)
+        self.failIf(uiCommand.enabled(None))
 
 
 class EffortStopTest(test.TestCase):
@@ -439,7 +454,8 @@ class EffortStopTest(test.TestCase):
         self.effort1 = effort.Effort(self.task)
         self.effort2 = effort.Effort(self.task)
         self.taskList.append(self.task)
-        self.effortStop = gui.uicommand.EffortStop(effortList=effort.EffortList(self.taskList),
+        self.effortList = effort.EffortList(self.taskList)
+        self.effortStop = gui.uicommand.EffortStop(effortList=self.effortList, 
                                                    taskList=self.taskList)
     
     # Tests of EffortStop.enabled()
@@ -514,6 +530,11 @@ class EffortStopTest(test.TestCase):
         self.taskList.append(self.task2)
         self.effort1.setTask(self.task2)
         self.failUnless(self.effortStop.enabled())
+        
+    def testIgnoreCompositeEfforts(self):
+        effort.reducer.EffortAggregator(self.taskList, aggregation='day')
+        self.task.addEffort(self.effort1)
+        self.failIf('multiple tasks' in self.effortStop.getMenuText())
         
     # Tests of EffortStop.doCommand()
 

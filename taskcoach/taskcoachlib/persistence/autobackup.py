@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ class AutoBackup(object):
         self.__copyfile(taskFile.filename(), self.backupFilename(taskFile))
     
     def removeExtraneousBackupFiles(self, taskFile, remove=os.remove, 
-                                    glob=glob.glob): # pylint: disable-msg=W0621
+                                    glob=glob.glob): # pylint: disable=W0621
         backupFiles = self.backupFiles(taskFile, glob)
         for _ in range(min(self.maxNrOfBackupFilesToRemoveAtOnce,
                            self.numberOfExtraneousBackupFiles(backupFiles))):
@@ -86,8 +86,8 @@ class AutoBackup(object):
         return deltas[0][1]
 
     @staticmethod
-    def backupFiles(taskFile, glob=glob.glob):  # pylint: disable-msg=W0621
-        root, ext = os.path.splitext(taskFile.filename()) # pylint: disable-msg=W0612
+    def backupFiles(taskFile, glob=glob.glob):  # pylint: disable=W0621
+        root, ext = os.path.splitext(taskFile.filename()) # pylint: disable=W0612
         datePattern = '[0-9]'*8
         timePattern = '[0-9]'*6
         files = glob('%s.%s-%s.tsk.bak'%(root, datePattern, timePattern))
@@ -111,4 +111,4 @@ class AutoBackup(object):
         dt = backupFilename.split('.')[-3] # dt == date and time
         parts = (int(part) for part in (dt[0:4], dt[4:6], dt[6:8], 
                                         dt[9:11], dt[11:13], dt[13:14]))
-        return date.DateTime(*parts) # pylint: disable-msg=W0142
+        return date.DateTime(*parts) # pylint: disable=W0142

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,6 +28,6 @@ class OwnerUnderTest(object):
 class DomainObjectOwnerMetaclassTest(test.TestCase):
     def testModificationEventTypes(self):
         owner = OwnerUnderTest()
-        # pylint: disable-msg=E1101
+        # pylint: disable=E1101
         self.failUnless(owner.foosChangedEventType() in \
                         owner.modificationEventTypes())    

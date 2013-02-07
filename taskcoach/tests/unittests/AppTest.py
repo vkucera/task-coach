@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -57,7 +57,7 @@ class AppTests(test.TestCase):
         if locale:
             args.append(locale)
         self.assertEqual(expectedLanguage, 
-                         application.Application.determineLanguage(*args))  # pylint: disable-msg=W0142
+                         application.Application.determine_language(*args))  # pylint: disable=W0142
         
     def testLanguageViaCommandLineOption(self):
         self.options.language = 'fi_FI'

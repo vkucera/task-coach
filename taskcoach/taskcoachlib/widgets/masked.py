@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,14 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import locale
-from wx.lib import masked
 from taskcoachlib import operating_system
+from wx.lib import masked
+import locale
 
 
 class FixOverwriteSelectionMixin(object):
     def _SetSelection(self, start, end):
-        if operating_system.isGTK(): # pragma: no cover
+        if operating_system.isGTK():  # pragma: no cover
             # By exchanging the start and end parameters we make sure that the 
             # cursor is at the start of the field so that typing overwrites the 
             # current field instead of moving to the next field:
@@ -50,18 +50,42 @@ class AmountCtrl(FixOverwriteSelectionMixin, masked.NumCtrl):
         # Prevent decimalChar and groupChar from being the same:
         if groupChar == decimalChar:
             groupChar = '.' if decimalChar == ',' else ','
-        super(AmountCtrl, self).__init__(parent, value=value, allowNegative=False,
-                                         fractionWidth=2, selectOnEntry=True,
-                                         decimalChar=decimalChar, groupChar=groupChar,
-                                         groupDigits=groupDigits)
+        super(AmountCtrl, self).__init__(parent, value=value, 
+            allowNegative=False, fractionWidth=2, selectOnEntry=True, 
+            decimalChar=decimalChar, groupChar=groupChar, 
+            groupDigits=groupDigits)
         
 
 class TimeDeltaCtrl(TextCtrl):
-    def __init__(self, parent, hours, minutes, seconds, *args, **kwargs):
-        mask = kwargs.pop('mask', '#{8}:##:##')
-        super(TimeDeltaCtrl, self).__init__(parent, mask=mask,
-            formatcodes='FS',
-            fields=[masked.Field(formatcodes='r', defaultValue='%8d'%hours),
-                    masked.Field(defaultValue='%02d'%minutes),
-                    masked.Field(defaultValue='%02d'%seconds)], *args, **kwargs)
+    ''' Masked edit control for entering or displaying time deltas of the
+        form <hour>:<minute>:<second>. Entering negative time deltas is not
+        allowed, displaying negative time deltas is allowed if the control
+        is read only. '''
+    def __init__(self, parent, hours, minutes, seconds, readonly=False, 
+                 negative_value=False, *args, **kwargs):
+        # If the control is read only (meaning it could potentially have to 
+        # show negative values) or if the value is actually negative, allow
+        # the minus sign in the mask. Otherwise only allow for numbers.
+        mask = 'X{9}:##:##' if negative_value or readonly else '#{9}:##:##'
+        hours = self.__hour_string(hours, negative_value) 
+        super(TimeDeltaCtrl, self).__init__(parent, mask=mask, formatcodes='FS',
+            fields=[masked.Field(formatcodes='Rr', defaultValue=hours),
+                    masked.Field(defaultValue='%02d' % minutes),
+                    masked.Field(defaultValue='%02d' % seconds)], 
+            *args, **kwargs)
+               
+    def set_value(self, hours, minutes, seconds, negative_value=False):
+        hours = self.__hour_string(hours, negative_value)
+        self.SetCtrlParameters(formatcodes='FS',
+            fields=[masked.Field(formatcodes='Rr', defaultValue=hours),
+                    masked.Field(defaultValue='%02d' % minutes),
+                    masked.Field(defaultValue='%02d' % seconds)])
+        self.Refresh()
         
+    @staticmethod
+    def __hour_string(hours, negative_value):
+        ''' If the value is negative (e.g. over budget), place a minus sign 
+            before the hours number and make sure the field has the appropriate
+            width. '''
+        return '%9s' % ('-' + '%d' % hours) if negative_value else \
+               '%9d' % hours

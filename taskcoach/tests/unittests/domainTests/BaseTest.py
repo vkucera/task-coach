@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,8 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 import test
+import weakref
 from taskcoachlib import patterns
-from taskcoachlib.domain import base
+from taskcoachlib.domain import base, date
 
 
 class SynchronizedObjectTest(test.TestCase):
@@ -32,7 +33,7 @@ class SynchronizedObjectTest(test.TestCase):
     def onEvent(self, event):
         self.events.append(event)
         
-    def registerObserver(self, eventType):  # pylint: disable-msg=W0221
+    def registerObserver(self, eventType):  # pylint: disable=W0221
         patterns.Publisher().registerObserver(self.onEvent, eventType)
         
     def assertObjectStatus(self, expectedStatus):
@@ -106,6 +107,14 @@ class ObjectTest(test.TestCase):
     def onEvent(self, event):
         self.eventsReceived.append(event)
 
+    # Basic tests:
+
+    def testCyclicReference(self):
+        domainObject = base.Object()
+        weak = weakref.ref(domainObject)
+        del domainObject # Assuming CPython
+        self.failUnless(weak() is None)
+
     # Id tests:
         
     def testSetIdOnCreation(self):
@@ -122,7 +131,31 @@ class ObjectTest(test.TestCase):
         objectId = self.object.id()  # Force generation of id
         copy = self.object.copy()
         self.assertNotEqual(copy.id(), objectId)
-                
+    
+    # Creation date/time tests:
+    
+    def testSetCreationDateTimeOnCreation(self):
+        creation_datetime = date.DateTime(2012, 12, 12, 10, 0, 0)
+        domain_object = base.Object(creationDateTime=creation_datetime)
+        self.assertEqual(creation_datetime, domain_object.creationDateTime())
+        
+    def testCreationDateTimeIsSetWhenNotPassed(self):
+        now = date.Now()
+        creation_datetime = self.object.creationDateTime()
+        minute = date.TimeDelta(seconds=60)
+        self.failUnless(now - minute < creation_datetime < now + minute)
+        
+    # Modification date/time tests:
+    
+    def testSetModificationDateTimeOnCreation(self):
+        modification_datetime = date.DateTime(2012, 12, 12, 10, 0, 0)
+        domain_object = base.Object(modificationDateTime=modification_datetime)
+        self.assertEqual(modification_datetime, 
+                         domain_object.modificationDateTime())
+        
+    def testModificationDateTimeIsNotSetWhenNotPassed(self):
+        self.assertEqual(date.DateTime.min, self.object.modificationDateTime())
+        
     # Subject tests:
         
     def testSubjectIsEmptyByDefault(self):
@@ -149,7 +182,7 @@ class ObjectTest(test.TestCase):
     def testSubjectChangedNotificationIsDifferentForSubclass(self):
         self.subclassObject.setSubject('New')
         self.failIf(self.eventsReceived)
-    
+        
     # Description tests:
     
     def testDescriptionIsEmptyByDefault(self):
@@ -183,15 +216,18 @@ class ObjectTest(test.TestCase):
     def testGetState(self):
         self.assertEqual(dict(subject='', description='', id=self.object.id(),
                               status=self.object.getStatus(), fgColor=None,
-                              bgColor=None, font=None, icon='', 
-                              selectedIcon=''),
+                              bgColor=None, font=None, icon='', selectedIcon='', 
+                              creationDateTime=self.object.creationDateTime(),
+                              modificationDateTime=self.object.modificationDateTime()),
                          self.object.__getstate__())
 
     def testSetState(self):
         newState = dict(subject='New', description='New', id=None,
                         status=self.object.STATUS_DELETED, 
                         fgColor=wx.GREEN, bgColor=wx.RED, font=wx.SWISS_FONT,
-                        icon='icon', selectedIcon='selectedIcon')
+                        icon='icon', selectedIcon='selectedIcon',
+                        creationDateTime=date.DateTime(2012, 12, 12, 12, 0, 0),
+                        modificationDateTime=date.DateTime(2012, 12, 12, 12, 1, 0))
         self.object.__setstate__(newState)
         self.assertEqual(newState, self.object.__getstate__())
         
@@ -199,11 +235,27 @@ class ObjectTest(test.TestCase):
         newState = dict(subject='New', description='New', id=None,
                         status=self.object.STATUS_DELETED, 
                         fgColor=wx.GREEN, bgColor=wx.RED, font=wx.SWISS_FONT,
-                        icon='icon', selectedIcon='selectedIcon')
+                        icon='icon', selectedIcon='selectedIcon',
+                        creationDateTime=date.DateTime(2013, 1, 1, 0, 0, 0),
+                        modificationDateTime=date.DateTime(2013, 1, 1, 1, 0, 0))
         self.object.__setstate__(newState)
         self.assertEqual(1, len(self.eventsReceived))
         
     # Copy tests:
+    
+    def testCopy_IdIsNotCopied(self):
+        copy = self.object.copy()
+        self.assertNotEqual(copy.id(), self.object.id())
+    
+    def testCopy_CreationDateTimeIsNotCopied(self):
+        copy = self.object.copy()
+        # Use >= to prevent failures on fast computers with low time granularity
+        self.failUnless(copy.creationDateTime() >= self.object.creationDateTime())
+        
+    def testCopy_ModificationDateTimeIsNotCopied(self):
+        self.object.setModificationDateTime(date.DateTime(2013, 1, 1, 1, 0, 0))
+        copy = self.object.copy()
+        self.assertEqual(date.DateTime.min, copy.modificationDateTime())
         
     def testCopy_SubjectIsCopied(self):
         self.object.setSubject('New subject')
@@ -277,7 +329,7 @@ class ObjectTest(test.TestCase):
     
     def testBackgroundColorChangedNotification(self):
         self.object.setBackgroundColor(wx.BLACK)
-        self.assertEqual(1, len(self.eventsReceived))
+        self.assertEqual(1, len(self.eventsReceived))      
         
     # Font tests:
     
@@ -357,7 +409,7 @@ class CompositeObjectTest(test.TestCase):
         
     def removeChild(self):
         self.compositeObject.removeChild(self.child)
-        
+
     def testIsExpanded(self):
         self.failIf(self.compositeObject.isExpanded())
         
@@ -518,15 +570,15 @@ class CompositeObjectTest(test.TestCase):
         self.assertEqual('books_icon', self.compositeObject.selectedIcon(recursive=True))
         self.assertEqual('book_icon', self.compositeObject.selectedIcon(recursive=False)) 
 
-    def testCompositeWithoutChildrenUsesSingularIconIfAvailable(self):
+    def testCompositeWithoutChildrenDoesNotUseSingularIconIfAvailable(self):
         self.compositeObject.setIcon('books_icon')
         self.assertEqual('books_icon', self.compositeObject.icon(recursive=False))
-        self.assertEqual('book_icon', self.compositeObject.icon(recursive=True))
+        self.assertEqual('books_icon', self.compositeObject.icon(recursive=True))
 
-    def testCompositeWithoutChildrenUsesSingularSelectedIconIfAvailable(self):
+    def testCompositeWithoutChildrenDoesNotUseSingularSelectedIconIfAvailable(self):
         self.compositeObject.setSelectedIcon('books_icon')
         self.assertEqual('books_icon', self.compositeObject.selectedIcon(recursive=False))
-        self.assertEqual('book_icon', self.compositeObject.selectedIcon(recursive=True))
+        self.assertEqual('books_icon', self.compositeObject.selectedIcon(recursive=True))
 
     def testChildOfCompositeUsesSingularIconIfAvailable(self):
         self.compositeObject.setIcon('books_icon')
@@ -555,7 +607,7 @@ class CompositeObjectTest(test.TestCase):
     def testCopy(self):
         self.compositeObject.expand(context='some_viewer')
         copy = self.compositeObject.copy()
-        # pylint: disable-msg=E1101
+        # pylint: disable=E1101
         self.assertEqual(copy.expandedContexts(),
                          self.compositeObject.expandedContexts())
         self.compositeObject.expand(context='another_viewer')

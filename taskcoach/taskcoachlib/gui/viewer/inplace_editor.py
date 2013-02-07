@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 '''
 In place editors for viewers.
-''' # pylint: disable-msg=W0105
+''' # pylint: disable=W0105
 
 import wx
 from taskcoachlib.thirdparty import hypertreelist
@@ -26,12 +26,39 @@ from taskcoachlib import widgets
 from taskcoachlib.domain import date
 
 
-class SubjectCtrl(hypertreelist.EditTextCtrl):
+class KillFocusAcceptsEditsMixin(object):
+    ''' Mixin class to let in place editors accept changes whenever the user
+        clicks outside the edit control instead of cancelling the changes. '''
+    def StopEditing(self):
+        try:
+            if self.__has_focus():
+                # User hit Escape
+                super(KillFocusAcceptsEditsMixin, self).StopEditing()
+            else:
+                # User clicked outside edit window
+                self.AcceptChanges()
+                self.Finish()
+        except wx.PyDeadObjectError:
+            pass
+
+    def __has_focus(self):
+        ''' Return whether this control has the focus. '''
+
+        def window_and_all_children(window):
+            window_and_children = [window]
+            for child in window.GetChildren():
+                window_and_children.extend(window_and_all_children(child))
+            return window_and_children
+
+        return wx.Window.FindFocus() in window_and_all_children(self)
+
+
+class SubjectCtrl(KillFocusAcceptsEditsMixin, hypertreelist.EditTextCtrl):
     ''' Single line inline control for editing item subjects. '''
     pass
 
 
-class DescriptionCtrl(hypertreelist.EditTextCtrl):
+class DescriptionCtrl(KillFocusAcceptsEditsMixin, hypertreelist.EditTextCtrl):
     ''' Multiline inline text control for editing item descriptions. '''
     def __init__(self, *args, **kwargs):
         kwargs['style'] = kwargs.get('style', 0) | wx.TE_MULTILINE
@@ -55,10 +82,13 @@ class EscapeKeyMixin(object):
             event.Skip()
       
 
-class _SpinCtrl(EscapeKeyMixin, hypertreelist.EditCtrl, widgets.SpinCtrl):
+class _SpinCtrl(EscapeKeyMixin, KillFocusAcceptsEditsMixin, 
+                hypertreelist.EditCtrl, widgets.SpinCtrl):
     ''' Base spin control class. '''
-    def __init__(self, parent, wxId, item, column, owner, value, *args, **kwargs):
-        super(_SpinCtrl, self).__init__(parent, wxId, item, column, owner, str(value), *args, **kwargs)
+    def __init__(self, parent, wxId, item, column, owner, value, 
+                 *args, **kwargs):
+        super(_SpinCtrl, self).__init__(parent, wxId, item, column, owner, 
+                                        str(value), *args, **kwargs)
         self._textCtrl.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
 
         
@@ -76,7 +106,7 @@ class PercentageCtrl(_SpinCtrl):
 
 class Panel(wx.Panel):
     ''' Panel class for inline controls that need to be put into a panel. '''
-    def __init__(self, parent, wxId, value, *args, **kwargs): # pylint: disable-msg=W0613
+    def __init__(self, parent, wxId, value, *args, **kwargs): # pylint: disable=W0613
         # Don't pass the value argument to the wx.Panel since it doesn't take 
         # a value argument
         super(Panel, self).__init__(parent, wxId, *args, **kwargs)      
@@ -87,7 +117,8 @@ class Panel(wx.Panel):
         self.SetSizerAndFit(sizer)
 
 
-class BudgetCtrl(hypertreelist.EditCtrl, Panel):
+class BudgetCtrl(EscapeKeyMixin, KillFocusAcceptsEditsMixin, 
+                 hypertreelist.EditCtrl, Panel):
     ''' Masked inline text control for editing budgets: 
         <hours>:<minutes>:<seconds>. '''
     def __init__(self, parent, wxId, item, column, owner, value):
@@ -95,14 +126,17 @@ class BudgetCtrl(hypertreelist.EditCtrl, Panel):
         hours, minutes, seconds = value.hoursMinutesSeconds()
         # Can't inherit from TimeDeltaCtrl because we need to override GetValue,
         # so we use composition instead
-        self.__timeDeltaCtrl = widgets.masked.TimeDeltaCtrl(self, hours, minutes, seconds)
+        self.__timeDeltaCtrl = widgets.masked.TimeDeltaCtrl(self, hours, 
+                                                            minutes, seconds)
+        self.__timeDeltaCtrl.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
         self.makeSizer(self.__timeDeltaCtrl)
         
     def GetValue(self):
         return date.parseTimeDelta(self.__timeDeltaCtrl.GetValue())
 
 
-class AmountCtrl(EscapeKeyMixin, hypertreelist.EditCtrl, Panel):
+class AmountCtrl(EscapeKeyMixin, KillFocusAcceptsEditsMixin, 
+                 hypertreelist.EditCtrl, Panel):
     ''' Masked inline text control for editing amounts (floats >= 0). '''
     def __init__(self, parent, wxId, item, column, owner, value):
         super(AmountCtrl, self).__init__(parent, wxId, item, column, owner)
@@ -114,19 +148,24 @@ class AmountCtrl(EscapeKeyMixin, hypertreelist.EditCtrl, Panel):
         return self.__floatCtrl.GetValue()
  
     
-class DateTimeCtrl(hypertreelist.EditCtrl, Panel):
+class DateTimeCtrl(KillFocusAcceptsEditsMixin, hypertreelist.EditCtrl, Panel):
     ''' Inline date and time picker control. '''
     def __init__(self, parent, wxId, item, column, owner, value, **kwargs):
+        relative = kwargs.pop('relative', False)
+        if relative:
+            start = kwargs.pop('startDateTime', date.Now())
         super(DateTimeCtrl, self).__init__(parent, wxId, item, column, owner)
         settings = kwargs['settings']
         starthour = settings.getint('view', 'efforthourstart')
         endhour = settings.getint('view', 'efforthourend')
         interval = settings.getint('view', 'effortminuteinterval')
-        self.__dateTimeCtrl = widgets.DateTimeCtrl(self, starthour=starthour,
+        self._dateTimeCtrl = widgets.DateTimeCtrl(self, starthour=starthour,
                                                    endhour=endhour, 
-                                                   interval=interval)
-        self.__dateTimeCtrl.SetValue(value)
-        self.makeSizer(self.__dateTimeCtrl)
+                                                   interval=interval, showRelative=relative)
+        self._dateTimeCtrl.SetValue(value)
+        if relative:
+            self._dateTimeCtrl.SetRelativeChoicesStart(start=None if start == date.DateTime() else start)
+        self.makeSizer(self._dateTimeCtrl)
                 
     def GetValue(self):
-        return self.__dateTimeCtrl.GetValue()
+        return self._dateTimeCtrl.GetValue()

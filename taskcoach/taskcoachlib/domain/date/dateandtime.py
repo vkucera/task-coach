@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,7 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import datetime, timedelta, re
+import datetime, timedelta, re, time
+from taskcoachlib import operating_system
+
 
 class DateTime(datetime.datetime):
     
@@ -28,11 +30,20 @@ class DateTime(datetime.datetime):
 
     def __new__(class_, *args, **kwargs):
         if not args and not kwargs:
-            max = datetime.datetime.max # pylint: disable-msg=W0622
+            max = datetime.datetime.max # pylint: disable=W0622
             args = (max.year, max.month, max.day, 
                     max.hour, max.minute, max.second, max.microsecond)
         return datetime.datetime.__new__(class_, *args, **kwargs)
-    
+
+    @staticmethod
+    def fromDateTime(dateTime):
+        return DateTime(year=dateTime.year, month=dateTime.month, day=dateTime.day,
+                        hour=dateTime.hour, minute=dateTime.minute, second=dateTime.second,
+                        microsecond=dateTime.microsecond)
+
+    def strftime(self, *args):
+        return operating_system.decodeSystemString(super(DateTime, self).strftime(*args))
+
     def weeknumber(self):
         return self.isocalendar()[1]
 
@@ -53,12 +64,6 @@ class DateTime(datetime.datetime):
         
     def endOfDay(self):
         return self.replace(hour=23, minute=59, second=59, microsecond=999999)
-    
-    def endOfTomorrow(self):
-        return self.endOfDay() + timedelta.TimeDelta(days=1)
-
-    def endOfYesterday(self):
-        return self.endOfDay() - timedelta.TimeDelta(days=1)
 
     def startOfWeek(self):
         days = self.weekday()
@@ -101,7 +106,7 @@ class DateTime(datetime.datetime):
     def __sub__(self, other):
         ''' Make sure substraction returns instances of the right classes. '''
         if self == DateTime() and isinstance(other, datetime.datetime):
-            max = timedelta.TimeDelta.max # pylint: disable-msg=W0622
+            max = timedelta.TimeDelta.max # pylint: disable=W0622
             return timedelta.TimeDelta(max.days, max.seconds, max.microseconds)
         result = super(DateTime, self).__sub__(other)
         if isinstance(result, datetime.timedelta):
@@ -130,8 +135,27 @@ def parseDateTime(string, *timeDefaults):
         args = [int(arg) for arg in re.split('[-:. ]', string)]
         if len(args) == 3:  # We parsed a date, no time
             args.extend(timeDefaults)
-        return DateTime(*args)  # pylint: disable-msg=W0142
+        return DateTime(*args)  # pylint: disable=W0142
         
 
 def Now():
     return DateTime.now()
+
+def Today():
+    # For backwards compatibility: "Today()" may be used in templates
+    return Now().replace(hour=0, minute=0, second=0, microsecond=0)
+
+def Tomorrow():
+    return Now() + timedelta.ONE_DAY
+
+def Yesterday():
+    return Now() - timedelta.ONE_DAY
+
+def LastDayOfCurrentMonth(localtime=time.localtime):
+    now = localtime()
+    year, nextMonth = now[0], now[1]+1
+    if nextMonth > 12:
+        nextMonth = 1
+        year += 1
+    return DateTime(year, nextMonth, 1) - timedelta.ONE_DAY 
+

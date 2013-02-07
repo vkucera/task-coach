@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -87,6 +87,7 @@ class ChangeToHTMLConverter(ChangeConverter):
 
     LinkToSourceForge = '<a href="https://sourceforge.net/tracker/index.php?func=detail&aid=%%(id)s&group_id=130831&atid=%(atid)s">%%(id)s</a>'
     LinkToSourceForgeBugReport = LinkToSourceForge%{'atid': '719134'}
+    LinkToSourceForgeBugReportv2 = '<a href="https://sourceforge.net/p/taskcoach/bugs/%(id)s/">%(id)s</a>'
     LinkToSourceForgeFeatureRequest = LinkToSourceForge%{'atid': '719137'}
     NoConversion = '%(id)s'
 
@@ -108,7 +109,9 @@ class ChangeToHTMLConverter(ChangeConverter):
     def convertChangeId(self, change, changeId):
         template = self.NoConversion # URL's will be converted in postProcess()
         if not changeId.startswith('http'):
-            if isinstance(change, changetypes.Bug):
+            if isinstance(change, changetypes.Bugv2):
+                template = self.LinkToSourceForgeBugReportv2
+            elif isinstance(change, changetypes.Bug):
                 template = self.LinkToSourceForgeBugReport    
             elif isinstance(change, changetypes.Feature):
                 template = self.LinkToSourceForgeFeatureRequest
@@ -133,7 +136,8 @@ class ReleaseConverter(object):
         result = [self.summary(release, greeting)]
         if not greeting:
             result.insert(0, self.header(release))
-        for section, list in [('Bug%(s)s fixed', release.bugsFixed),
+        for section, list in [('Team change%(s)s', release.teamChanges),
+                ('Bug%(s)s fixed', release.bugsFixed),
                 ('Feature%(s)s added', release.featuresAdded),
                 ('Feature%(s)s changed', release.featuresChanged),
                 ('Feature%(s)s removed', release.featuresRemoved),

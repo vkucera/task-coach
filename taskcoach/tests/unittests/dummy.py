@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,13 +30,16 @@ class DummyWidget(wx.Frame):
         super(DummyWidget, self).__init__(viewer)
         self.viewer = viewer
 
+    def RefreshItems(self, *items):
+        pass
+
     def curselection(self):
         return []
     
     def select(self, *args):
         pass
     
-    def clearselection(self):
+    def clear_selection(self):
         pass
 
     def GetItemCount(self):
@@ -55,16 +58,16 @@ class DummyWidget(wx.Frame):
         pass
         
 
-class DummyUICommand(gui.uicommand.UICommand): # pylint: disable-msg=W0223
+class DummyUICommand(gui.uicommand.UICommand): # pylint: disable=W0223
     bitmap = 'undo'
     section = 'view'
     setting = 'setting'
 
     def onCommandActivate(self, event):
-        self.activated = True # pylint: disable-msg=W0201
+        self.activated = True # pylint: disable=W0201
 
 
-class ViewerWithDummyWidget(gui.viewer.base.Viewer): # pylint: disable-msg=W0223
+class ViewerWithDummyWidget(gui.viewer.base.Viewer): # pylint: disable=W0223
     defaultTitle = 'ViewerWithDummyWidget'
     defaultBitmap = ''
     
@@ -72,7 +75,7 @@ class ViewerWithDummyWidget(gui.viewer.base.Viewer): # pylint: disable-msg=W0223
         return self.taskFile.tasks()
     
     def createWidget(self):
-        self._columns = self._createColumns() # pylint: disable-msg=W0201
+        self._columns = self._createColumns() # pylint: disable=W0201
         return DummyWidget(self)
 
     def _createColumns(self):
@@ -82,12 +85,12 @@ class ViewerWithDummyWidget(gui.viewer.base.Viewer): # pylint: disable-msg=W0223
 class TaskFile(persistence.TaskFile):
     raiseError = None
     
-    def load(self, *args, **kwargs): # pylint: disable-msg=W0613
+    def load(self, *args, **kwargs): # pylint: disable=W0613
         if self.raiseError:
-            raise self.raiseError # pylint: disable-msg=E0702
+            raise self.raiseError # pylint: disable=E0702
         
     merge = save = saveas = load
     
 
-class MainWindow: # pylint: disable-msg=W0232
+class MainWindow: # pylint: disable=W0232
     showFindDialog = None

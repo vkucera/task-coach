@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ if projectRoot not in sys.path:
     sys.path.insert(0, projectRoot)
 
 
-def ignore(*args, **kwargs):  # pylint: disable-msg=W0613
+def ignore(*args, **kwargs):  # pylint: disable=W0613
     pass
 
 
@@ -51,8 +51,8 @@ class TestCase(unittest.TestCase, object):
             
     def registerObserver(self, eventType, eventSource=None):
         if not hasattr(self, 'events'):
-            self.events = []  # pylint: disable-msg=W0201
-        from taskcoachlib import patterns  # pylint: disable-msg=W0404
+            self.events = []  # pylint: disable=W0201
+        from taskcoachlib import patterns  # pylint: disable=W0404
         patterns.Publisher().registerObserver(self.onEvent, eventType=eventType,
                                               eventSource=eventSource)
         
@@ -60,7 +60,7 @@ class TestCase(unittest.TestCase, object):
         self.events.append(event)
 
     def tearDown(self):
-        # pylint: disable-msg=W0404
+        # pylint: disable=W0404
         # Prevent processing of pending events after the test has finished:
         wx.GetApp().Disconnect(wx.ID_ANY) 
         from taskcoachlib import patterns
@@ -75,12 +75,24 @@ class TestCase(unittest.TestCase, object):
         from taskcoachlib.thirdparty.pubsub import pub
         pub.unsubAll()
         super(TestCase, self).tearDown()
-        
+
+
+class TestCaseFrame(wx.Frame):
+    def __init__(self):
+        super(TestCaseFrame, self).__init__(None, wx.ID_ANY, 'Frame')
+        self.toolbarPerspective = ''
+
+    def getToolBarPerspective(self):
+        return self.toolbarPerspective
+
+    def AddBalloonTip(self, *args, **kwargs):
+        pass
+
 
 class wxTestCase(TestCase):
-    # pylint: disable-msg=W0404
+    # pylint: disable=W0404
     app = wx.App(0)
-    frame = wx.Frame(None, -1, 'Frame')
+    frame = TestCaseFrame()
     from taskcoachlib import i18n
     i18n.Translator('en_US')
     from taskcoachlib import gui
@@ -94,7 +106,7 @@ class wxTestCase(TestCase):
         self.frame.DestroyChildren() # Clean up GDI objects on Windows
 
 
-class TestResultWithTimings(unittest._TextTestResult): # pylint: disable-msg=W0212
+class TestResultWithTimings(unittest._TextTestResult): # pylint: disable=W0212
     def __init__(self, *args, **kwargs):
         super(TestResultWithTimings, self).__init__(*args, **kwargs)
         self._timings = {}
@@ -118,10 +130,10 @@ class TextTestRunnerWithTimings(unittest.TextTestRunner):
         return TestResultWithTimings(self.stream, self.descriptions, 
             self.verbosity)
 
-    def run(self, *args, **kwargs): # pylint: disable-msg=W0221
+    def run(self, *args, **kwargs): # pylint: disable=W0221
         result = super(TextTestRunnerWithTimings, self).run(*args, **kwargs)
         if self._timeTests:
-            sortableTimings = [(timing, test) for test, timing in result._timings.items()] # pylint: disable-msg=W0212
+            sortableTimings = [(timing, test) for test, timing in result._timings.items()] # pylint: disable=W0212
             sortableTimings.sort(reverse=True)
             print '\n%d slowest tests:'%self._nrTestsToReport
             for timing, test in sortableTimings[:self._nrTestsToReport]:
@@ -169,7 +181,7 @@ class AllTests(unittest.TestSuite):
             # modules.
             __import__(moduleName)
             suite = testloader.loadTestsFromName(moduleName)
-            self.addTests(suite._tests) # pylint: disable-msg=W0212
+            self.addTests(suite._tests) # pylint: disable=W0212
    
     def runTests(self):       
         testrunner = TextTestRunnerWithTimings(
@@ -189,7 +201,7 @@ class AllTests(unittest.TestSuite):
     @staticmethod
     def getFilesFromDir(directory, extension):
         result = []
-        for root, dirs, filenames in os.walk(directory): # pylint: disable-msg=W0612
+        for root, dirs, filenames in os.walk(directory): # pylint: disable=W0612
             result.extend([os.path.join(root, filename) for filename in filenames \
                            if filename.endswith(extension)])
         return result
@@ -260,7 +272,7 @@ class TestOptionParser(config.OptionParser):
 
         return testselection
 
-    def parse_args(self): # pylint: disable-msg=W0221
+    def parse_args(self): # pylint: disable=W0221
         options, args = super(TestOptionParser, self).parse_args()
         if options.profile_report_only:
             options.profile = True
@@ -285,7 +297,7 @@ class TestProfiler:
         self._options = options
 
     def reportLastRun(self):
-        import pstats # pylint: disable-msg=W0404
+        import pstats # pylint: disable=W0404
         stats = pstats.Stats(self._logfile)
         stats.strip_dirs()
         for sortKey in self._options.profile_sort:
@@ -301,8 +313,8 @@ class TestProfiler:
         if self._options.profile_report_only or self.profile(tests, command):
             self.reportLastRun()
 
-    def profile(self, tests, command): # pylint: disable-msg=W0613
-        import cProfile # pylint: disable-msg=W0404
+    def profile(self, tests, command): # pylint: disable=W0613
+        import cProfile # pylint: disable=W0404
         _locals = dict(locals())
         cProfile.runctx('result = tests.%s()'%command, globals(), _locals,
             filename=self._logfile)

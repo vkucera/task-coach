@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -133,7 +133,7 @@ To be done.
 ''' % meta.metaDict + doubleline
 
 
-def writeFile(filename, text, directory='.'):  # pylint: disable-msg=W0621
+def writeFile(filename, text, directory='.'):  # pylint: disable=W0621
     if not os.path.exists(directory):
         os.mkdir(directory)
     with file(os.path.join(directory, filename), 'w') as textFile:
@@ -158,7 +158,7 @@ def createDebianChangelog():
 
 if sys.argv[1] == 'py2exe':
     from distutils.core import setup
-    import py2exe  # pylint: disable-msg=F0401
+    import py2exe  # pylint: disable=F0401
     py2exeDistdir = '%s-%s-win32exe' % (meta.filename, meta.version)
     # Get .mo files for wxWidgets:
     locale_dir = os.path.join(os.path.dirname(wx.__file__), 'locale')
@@ -196,7 +196,7 @@ if sys.argv[1] == 'py2exe':
     os.environ['PATH'] = 'dist.in;' + os.environ['PATH']
  
 elif sys.argv[1] == 'py2app':
-    from setuptools import setup  # pylint: disable-msg=W0404
+    from setuptools import setup  # pylint: disable=W0404
     setupOptions.update(dict(app=['taskcoach.py'], 
         setup_requires=['py2app'],
         options=dict(py2app=dict(argv_emulation=True, compressed=True,
@@ -253,7 +253,8 @@ elif sys.argv[1] in ['bdist_deb', 'bdist_ubuntu']:
         wxpythonversion=meta.data.wxpythonversionnumber,
         subsection='Office', url=meta.data.url,
         command='/usr/bin/taskcoach.py',
-        changelog_content=file('changelog_content', 'rb').read().rstrip())
+        changelog_content=file('changelog_content', 'rb').read().rstrip(),
+        sdist_exclude='buildlib')
 
     if sys.argv[1] == 'bdist_ubuntu':
         bdist_deb['distribution'] = sys.argv[2]
@@ -293,6 +294,6 @@ if __name__ == '__main__':
         if not os.path.exists(directory):
             os.mkdir(directory)
     createDocumentation()
-    setup(**setupOptions)  # pylint: disable-msg=W0142
+    setup(**setupOptions)  # pylint: disable=W0142
     if sys.argv[1] == 'py2exe':
         createInnoSetupScript()

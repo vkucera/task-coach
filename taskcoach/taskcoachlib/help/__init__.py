@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -57,7 +57,7 @@ def p(*text):
     return '<p>%s</p>' % '\n'.join(text)
 
 
-def ul(*li):  # pylint: disable-msg=W0621
+def ul(*li):  # pylint: disable=W0621
     return '<ul>%s</ul>' % '\n'.join(li)
 
 
@@ -65,7 +65,7 @@ def li(*text):
     return '<li>%s</li>' % '\n'.join(text)
 
 
-def table(*tr):  # pylint: disable-msg=W0621
+def table(*tr):  # pylint: disable=W0621
     return '<table border=1>%s</table>' % '\n'.join(tr)
 
 
@@ -192,7 +192,7 @@ regardless of the time spent.''')))),
         _('The following properties are calculated from the properties above:'),
         ul(
             li(_('Days left: the number of days left until the due date.')),
-            li(_('''Dependencies: other tasks that can be started when the 
+            li(_('''Dependents: other tasks that can be started when the 
 prerequisite task has been completed.''')),
             li(_('Time spent: effort spent on the task.')),
             li(_('Budget left: task budget minus time spent on the task.')),

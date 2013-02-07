@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 João Alexandre de Toledo <jtoledo@griffo.com.br>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -57,14 +57,21 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
         # we would use the wrong status count.
         self.registerObserver(self.onChangeDueDateTime_Deprecated,
             eventType=task.Task.appearanceChangedEventType()) 
-        event = wx.EVT_TASKBAR_LEFT_DOWN if operating_system.isGTK() else wx.EVT_TASKBAR_LEFT_DCLICK    
-        self.Bind(event, self.onTaskbarClick)
+        if operating_system.isGTK():
+            events = [wx.EVT_TASKBAR_LEFT_DOWN]
+        elif operating_system.isWindows():
+            # See http://msdn.microsoft.com/en-us/library/windows/desktop/aa511448.aspx#interaction
+            events = [wx.EVT_TASKBAR_LEFT_DOWN, wx.EVT_TASKBAR_LEFT_DCLICK]
+        else:
+            events = [wx.EVT_TASKBAR_LEFT_DCLICK]
+        for event in events:
+            self.Bind(event, self.onTaskbarClick)
         self.__setTooltipText()
         self.__setIcon()
 
     # Event handlers:
 
-    def onTaskListChanged(self, event):  # pylint: disable-msg=W0613
+    def onTaskListChanged(self, event):  # pylint: disable=W0613
         self.__setTooltipText()
         self.__startOrStopTicking()
         
@@ -82,11 +89,11 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
         else:
             self.__stopTicking()
 
-    def onChangeSubject(self, event):  # pylint: disable-msg=W0613
+    def onChangeSubject(self, event):  # pylint: disable=W0613
         self.__setTooltipText()
         self.__setIcon()
 
-    def onChangeDueDateTime(self, newValue, sender):  # pylint: disable-msg=W0613
+    def onChangeDueDateTime(self, newValue, sender):  # pylint: disable=W0613
         self.__setTooltipText()
         self.__setIcon()
         
@@ -110,9 +117,9 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
 
     def setPopupMenu(self, menu):
         self.Bind(wx.EVT_TASKBAR_RIGHT_UP, self.popupTaskBarMenu)
-        self.popupmenu = menu  # pylint: disable-msg=W0201
+        self.popupmenu = menu  # pylint: disable=W0201
 
-    def popupTaskBarMenu(self, event):  # pylint: disable-msg=W0613
+    def popupTaskBarMenu(self, event):  # pylint: disable=W0613
         self.PopupMenu(self.popupmenu)
 
     # Getters:

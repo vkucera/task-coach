@@ -1,6 +1,6 @@
 =====================================================================
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2009 George Weeks <gcw52@telus.net>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@ developing Task Coach.
 
 --- Prerequisites ---------------------------------------------------
 
-You need Python version 2.6 or higher and wxPython version 
+You need Python version 2.7 or higher and wxPython version 
 2.8.9.2-unicode or higher. See http://www.taskcoach.org/devinfo.html 
 for more details and platform specific notes. 
     
@@ -36,6 +36,9 @@ script, unless directed otherwise. Makefile in turn uses "make.py"
 to build distributions. So, if you don't have make installed you can
 still build the distributions by running the commands from the 
 Makefile by hand.
+
+Since 2012/10/14 you will also need tar, gzip and patch to unpack the
+third party modules. Those are part of Cygwin.
 
 --- Preparation -----------------------------------------------------
 

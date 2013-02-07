@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from data import *
+from debug import log_call, time_call, profile_call
+from developermessagechecker import DeveloperMessageChecker
 from gpl import licenseText, licenseHTML
 from versionchecker import VersionChecker
-from debug import log_call, time_call, profile_call

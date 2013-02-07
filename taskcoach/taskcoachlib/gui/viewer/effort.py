@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import command, widgets, domain, render
 from taskcoachlib.domain import effort, date
-from taskcoachlib.domain.base import filter  # pylint: disable-msg=W0622
+from taskcoachlib.domain.base import filter  # pylint: disable=W0622
 from taskcoachlib.gui import uicommand, menu, dialog
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty.pubsub import pub
@@ -48,7 +48,6 @@ class EffortViewer(base.ListViewer,
         self.__hiddenTotalColumns = []
         self.__columnUICommands = None
         self.__domainObjectsToView = None
-        self.__observersToDetach = []
         super(EffortViewer, self).__init__(parent, taskFile, settings, *args, **kwargs)
         self.secondRefresher = refresher.SecondRefresher(self,
             effort.Effort.trackingChangedEventType())
@@ -60,11 +59,24 @@ class EffortViewer(base.ListViewer,
                       'settings.%s.round' % self.settingsSection())
         pub.subscribe(self.onRoundingChanged, 
                       'settings.%s.alwaysroundup' % self.settingsSection())
-        
-    def onRoundingChanged(self, value):  # pylint: disable-msg=W0613
+        pub.subscribe(self.on_aggregation_changed, 
+                      'settings.%s.aggregation' % self.settingsSection())
+
+    def selectableColumns(self):
+        columns = list()
+        for column in self.columns():
+            if column.name().startswith('total') and self.aggregation == 'details':
+                continue
+            if column.name() in ['monday', 'tuesday', 'wednesday', 
+                 'thursday', 'friday', 'saturday', 'sunday'] and self.aggregation != 'week':
+                continue
+            columns.append(column)
+        return columns
+
+    def onRoundingChanged(self, value):  # pylint: disable=W0613
         self.__initRoundingToolBarUICommands()
         self.refresh()
-        
+
     def __initModeToolBarUICommands(self):
         self.aggregationUICommand.setChoice(self.aggregation)
         self.__initRoundingToolBarUICommands()
@@ -82,9 +94,8 @@ class EffortViewer(base.ListViewer,
             if self.__displayingNewTasks():
                 tasks = self.__tasksToShowEffortFor
             else:
-                tasks = selectedItemsFilter = domain.base.SelectedItemsFilter(self.taskFile.tasks(), 
-                                                                              selectedItems=self.__tasksToShowEffortFor)
-                self.__observersToDetach.append(selectedItemsFilter)
+                tasks = domain.base.SelectedItemsFilter(self.taskFile.tasks(), 
+                                                        selectedItems=self.__tasksToShowEffortFor)
             self.__domainObjectsToView = tasks
         return self.__domainObjectsToView
     
@@ -94,8 +105,6 @@ class EffortViewer(base.ListViewer,
     def detach(self):
         super(EffortViewer, self).detach()
         self.secondRefresher.removeInstance()
-        for observer in self.__observersToDetach:
-            observer.removeInstance()    
             
     def isShowingEffort(self):
         return True
@@ -103,12 +112,14 @@ class EffortViewer(base.ListViewer,
     def curselectionIsInstanceOf(self, class_):
         return class_ == effort.Effort
     
-    def showEffortAggregation(self, aggregation):
+    def on_aggregation_changed(self, value):
+        self.__show_effort_aggregation(value)
+    
+    def __show_effort_aggregation(self, aggregation):
         ''' Change the aggregation mode. Can be one of 'details', 'day', 'week'
             and 'month'. '''
         assert aggregation in ('details', 'day', 'week', 'month')
         self.aggregation = aggregation
-        self.settings.set(self.settingsSection(), 'aggregation', aggregation)
         self.setPresentation(self.createSorter(self.createFilter(\
                              self.domainObjectsToView())))
         self.secondRefresher.updatePresentation()
@@ -116,7 +127,7 @@ class EffortViewer(base.ListViewer,
         # Invalidate the UICommands used for the column popup menu:
         self.__columnUICommands = None
         # Clear the selection to remove the cached selection
-        self.clearselection()
+        self.clear_selection()
         # If the widget is auto-resizing columns, turn it off temporarily to 
         # make removing/adding columns faster
         autoResizing = self.widget.IsAutoResizing()
@@ -146,8 +157,6 @@ class EffortViewer(base.ListViewer,
         categoryFilter = super(EffortViewer, self).createFilter(deletedFilter)
         searchFilter = filter.SearchFilter(self.createAggregator(categoryFilter,
                                                                  aggregation))
-        self.__observersToDetach.extend([deletedFilter, categoryFilter, 
-                                         searchFilter])
         return searchFilter
     
     def createAggregator(self, taskList, aggregation):
@@ -161,25 +170,24 @@ class EffortViewer(base.ListViewer,
             aggregator = effort.EffortList(taskList)
         else:
             aggregator = effort.EffortAggregator(taskList, aggregation=aggregation)
-        self.__observersToDetach.append(aggregator)
         return aggregator
             
     def createWidget(self):
         imageList = self.createImageList()  # Has side-effects
-        self._columns = self._createColumns()  # pylint: disable-msg=W0201
+        self._columns = self._createColumns()  # pylint: disable=W0201
         itemPopupMenu = menu.EffortPopupMenu(self.parent, self.taskFile.tasks(),
             self.taskFile.efforts(), self.settings, self)
         columnPopupMenu = menu.EffortViewerColumnPopupMenu(self)
         self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
-        widget = widgets.ListCtrl(self, self.columns(), self.onSelect,
+        widget = widgets.VirtualListCtrl(self, self.columns(), self.onSelect,
             uicommand.Edit(viewer=self),
             itemPopupMenu, columnPopupMenu,
             resizeableColumn=1, **self.widgetCreationKeywordArguments())
-        widget.AssignImageList(imageList, wx.IMAGE_LIST_SMALL)  # pylint: disable-msg=E1101
+        widget.AssignImageList(imageList, wx.IMAGE_LIST_SMALL)  # pylint: disable=E1101
         return widget
     
     def _createColumns(self):
-        # pylint: disable-msg=W0142
+        # pylint: disable=W0142
         kwargs = dict(renderDescriptionCallback=lambda effort: effort.description(),
                       resizeCallback=self.onResizeColumn)
         return [widgets.Column(name, columnHeader, eventType, 
@@ -190,8 +198,11 @@ class EffortViewer(base.ListViewer,
             ('period', _('Period'), effort.Effort.durationChangedEventType(), 
              self.__renderPeriod, 
              uicommand.ViewerSortByCommand(viewer=self, value='period')),
-            ('task', _('Task'), effort.Effort.taskChangedEventType(), lambda effort: effort.task().subject(recursive=True), None),
-            ('description', _('Description'), effort.Effort.descriptionChangedEventType(), lambda effort: effort.description(), None)] + \
+            ('task', _('Task'), effort.Effort.taskChangedEventType(), 
+             lambda effort: effort.task().subject(recursive=True), None),
+            ('description', _('Description'), 
+             effort.Effort.descriptionChangedEventType(), 
+             lambda effort: effort.description(), None)] + \
             [widgets.Column('categories', _('Categories'),
              width=self.getColumnWidth('categories'),
              renderCallback=self.renderCategories, **kwargs)] + \
@@ -308,11 +319,12 @@ class EffortViewer(base.ListViewer,
                                      taskList=tasks))
                 
     def createModeToolBarUICommands(self):
-        # This is an instance variable so that the choice can be changed 
+        # These are instance variables so that the choice can be changed 
         # programmatically
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.aggregationUICommand = \
-            uicommand.EffortViewerAggregationChoice(viewer=self)
+            uicommand.EffortViewerAggregationChoice(viewer=self, 
+                                                    settings=self.settings)
         self.roundingUICommand = uicommand.RoundingPrecision(viewer=self, 
                                                              settings=self.settings)
         self.alwaysRoundUpUICommand = uicommand.AlwaysRoundUp(viewer=self, 
@@ -330,8 +342,20 @@ class EffortViewer(base.ListViewer,
                                   settings=self.settings) \
                 for (menuText, value) in zip(uicommand.RoundingPrecision.choiceLabels, 
                                              uicommand.RoundingPrecision.choiceData)]
+               
+    def hasModes(self):
+        return True
+    
+    def getModeUICommands(self):
+        return [_('Effort aggregation'), None] + \
+            [uicommand.EffortViewerAggregationOption(menuText=menuText, 
+                                                     value=value,
+                                                     viewer=self,
+                                                     settings=self.settings)
+             for (menuText, value) in zip(uicommand.EffortViewerAggregationChoice.choiceLabels,
+                                          uicommand.EffortViewerAggregationChoice.choiceData)]
 
-    def getItemImages(self, index, column=0):  # pylint: disable-msg=W0613
+    def getItemImages(self, index, column=0):  # pylint: disable=W0613
         return {wx.TreeItemIcon_Normal: -1}
     
     def curselection(self):
@@ -341,14 +365,6 @@ class EffortViewer(base.ListViewer,
                                   for anEffort in compositeEffort]
         return selection
     
-    def getIndexOfItem(self, item):
-        if self.aggregation == 'details':
-            return super(EffortViewer, self).getIndexOfItem(item)
-        for index, compositeEffort in enumerate(self.presentation()):
-            if item == compositeEffort or item in compositeEffort:
-                return index
-        return -1
-
     def isselected(self, item):
         ''' When this viewer is in aggregation mode, L{curselection}
             returns the actual underlying L{Effort} objects instead of
@@ -393,18 +409,19 @@ class EffortViewer(base.ListViewer,
     # Rendering
     
     periodRenderers = dict( \
-        details=lambda anEffort: render.dateTimePeriod(anEffort.getStart(), 
-                                                       anEffort.getStop()),
-        day=lambda anEffort: render.date(anEffort.getStart().date()),
-        week=lambda anEffort: render.weekNumber(anEffort.getStart()),
-        month=lambda anEffort: render.month(anEffort.getStart()))
+        details=lambda anEffort, humanReadable=True: render.dateTimePeriod(anEffort.getStart(), 
+                                                       anEffort.getStop(), humanReadable=humanReadable),
+        day=lambda anEffort, humanReadable=True: render.date(anEffort.getStart(),
+                                                             humanReadable=humanReadable),
+        week=lambda anEffort, humanReadable=True: render.weekNumber(anEffort.getStart()),
+        month=lambda anEffort, humanReadable=True: render.month(anEffort.getStart()))
 
-    def __renderPeriod(self, anEffort):
+    def __renderPeriod(self, anEffort, humanReadable=True):
         ''' Return the period the effort belongs to. This depends on the
             current aggregation. If this period is the same as the previous
             period, an empty string is returned. '''
         return '' if self.__hasRepeatedPeriod(anEffort) else \
-            self.periodRenderers[self.aggregation](anEffort)
+            self.periodRenderers[self.aggregation](anEffort, humanReadable=humanReadable)
                     
     def __hasRepeatedPeriod(self, anEffort):
         ''' Return whether the effort has the same period as the previous 

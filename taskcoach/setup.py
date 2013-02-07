@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,6 +26,9 @@ import sys
 
 
 def findPackages(base):
+    if not os.path.exists(base):
+        return list()
+
     result = [base.replace('/', '.')]
 
     for name in os.listdir(base):
@@ -62,7 +65,6 @@ setupOptions = {
         'License :: OSI Approved :: GNU General Public License (GPL)',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Topic :: Office/Business']}
 
@@ -91,10 +93,10 @@ elif system == 'Darwin':
     wordSize = '32' if struct.calcsize('L') == 4 else '64'
     sys.path.insert(0, os.path.join('taskcoachlib', 'bin.in', 'macos', 'IA%s' % wordSize))
     sys.path.insert(0, os.path.join('extension', 'macos', 'bin-ia32'))
-    # pylint: disable-msg=F0401,W0611
-    import _growl, _growlImage, _powermgt
+    # pylint: disable=F0401,W0611
+    import _powermgt
     import _idle
 
 
 if __name__ == '__main__':
-    setup(**setupOptions)  # pylint: disable-msg=W0142
+    setup(**setupOptions)  # pylint: disable=W0142

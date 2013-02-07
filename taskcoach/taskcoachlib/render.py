@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,15 +19,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 ''' render.py - functions to render various objects, like date, time, 
-etc. '''  # pylint: disable-msg=W0105
+etc. '''  # pylint: disable=W0105
 
 from taskcoachlib.domain import date as datemodule
 from taskcoachlib.i18n import _
+from taskcoachlib import operating_system
+import datetime
 import codecs
 import locale
 import re
 
-# pylint: disable-msg=W0621
+# pylint: disable=W0621
 
 
 def priority(priority):
@@ -37,12 +39,10 @@ def priority(priority):
  
 def timeLeft(time_left, completed_task):
     ''' Render time left as a text string. Returns an empty string for 
-        completed tasks and "Infinite" for tasks without planned due date. 
-        Otherwise it returns the number of days, hours, and minutes left. '''
-    if completed_task:
+        completed tasks and for tasks without planned due date. Otherwise it 
+        returns the number of days, hours, and minutes left. '''
+    if completed_task or time_left == datemodule.TimeDelta.max:
         return ''
-    if time_left == datemodule.TimeDelta.max:
-        return _('Infinite')
     sign = '-' if time_left.days < 0 else ''
     time_left = abs(time_left)
     if time_left.days > 0:
@@ -93,60 +93,105 @@ def budget(aBudget):
     return timeSpent(aBudget)
 
 
-try:
-    dateFormat = '%x'  # Apparently, this may produce invalid utf-8 so test
-    codecs.utf_8_decode(datemodule.Now().strftime(dateFormat))
-except UnicodeDecodeError:
-    dateFormat = '%Y-%m-%d'
-
-language_and_country = locale.getlocale()[0]
-if language_and_country and ('_US' in language_and_country or 
-                             '_United States' in language_and_country):
-    timeFormat = '%I:%M %p'
-else: 
-    timeFormat = '%H:%M'  # Alas, %X includes seconds (see http://stackoverflow.com/questions/2507726)
-
-dateTimeFormat = ' '.join([dateFormat, timeFormat])
+dateFormat = '%x'
+def dateFunc(dt=None, humanReadable=False):
+    if humanReadable:
+        theDate = dt.date()
+        if theDate == datemodule.Now().date():
+            return _('Today')
+        elif theDate == datemodule.Yesterday().date():
+            return _('Yesterday')
+        elif theDate == datemodule.Tomorrow().date():
+            return _('Tomorrow')
+    return operating_system.decodeSystemString(datetime.datetime.strftime(dt, dateFormat))
 
 
-def date(aDate): 
-    ''' Render a date (of type date.Date) '''
-    if str(aDate) == '':
-        return ''
-    year = aDate.year
-    if year >= 1900:
-        return aDate.strftime(dateFormat)
+if operating_system.isWindows():
+    import pywintypes, win32api
+    def rawTimeFunc(dt, minutes=True, seconds=False):
+        if seconds:
+            # You can't include seconds without minutes
+            flags = 0x0
+        else:
+            if minutes:
+                flags = 0x2
+            else:
+                flags = 0x1
+        return win32api.GetTimeFormat(0x400, flags, None if dt is None else pywintypes.Time(dt), None)
+else:
+    language_and_country = locale.getlocale()[0]
+    if language_and_country and ('_US' in language_and_country or 
+                                 '_United States' in language_and_country):
+        timeFormat = '%I %p'
+        timeWithMinutesFormat = '%I:%M %p'
+        timeWithSecondsFormat = '%I:%M:%S %p'
     else:
-        result = date(datemodule.Date(year + 1900, aDate.month, aDate.day))
+        timeFormat = '%H'
+        timeWithMinutesFormat = '%H:%M'  # %X includes seconds (see http://stackoverflow.com/questions/2507726)
+        timeWithSecondsFormat = '%X'
+    def rawTimeFunc(dt, minutes=True, seconds=False):
+        if seconds:
+            fmt = timeWithSecondsFormat
+        else:
+            if minutes:
+                fmt = timeWithMinutesFormat
+            else:
+                fmt = timeFormat
+        return datemodule.DateTime.strftime(dt, fmt)
+
+timeFunc = lambda dt, minutes=True, seconds=False: operating_system.decodeSystemString(rawTimeFunc(dt, minutes=minutes, seconds=seconds))
+
+dateTimeFunc = lambda dt=None, humanReadable=False: u'%s %s' % (dateFunc(dt, humanReadable=humanReadable), timeFunc(dt))
+
+
+def date(aDateTime, humanReadable=False):
+    ''' Render a date/time as date. '''
+    if str(aDateTime) == '':
+        return ''
+    year = aDateTime.year
+    if year >= 1900:
+        return dateFunc(aDateTime, humanReadable=humanReadable)
+    else:
+        result = date(datemodule.DateTime(year + 1900, aDateTime.month, 
+                                          aDateTime.day), 
+                      humanReadable=humanReadable)
         return re.sub(str(year + 1900), str(year), result)
 
 
-def dateTime(aDateTime):
-    if not aDateTime or aDateTime == datemodule.DateTime():
+def dateTime(aDateTime, humanReadable=False):
+    if not aDateTime or aDateTime == datemodule.DateTime() or aDateTime == datemodule.DateTime.min:
         return ''
     timeIsMidnight = (aDateTime.hour, aDateTime.minute) in ((0, 0), (23, 59))
     year = aDateTime.year
     if year >= 1900:
-        return aDateTime.strftime(dateFormat if timeIsMidnight else dateTimeFormat)
+        return dateFunc(aDateTime, humanReadable=humanReadable) if timeIsMidnight else \
+            dateTimeFunc(aDateTime, humanReadable=humanReadable)
     else:
-        result = dateTime(aDateTime.replace(year=year + 1900))
+        result = dateTime(aDateTime.replace(year=year + 1900), humanReadable=humanReadable)
         return re.sub(str(year + 1900), str(year), result)
 
    
-def dateTimePeriod(start, stop):
+def dateTimePeriod(start, stop, humanReadable=False):
     if stop is None:
-        return '%s - %s' % (dateTime(start), _('now'))
+        return '%s - %s' % (dateTime(start, humanReadable=humanReadable), _('now'))
     elif start.date() == stop.date():
-        return '%s %s - %s' % (date(start.date()), time(start), time(stop))
+        return '%s %s - %s' % (date(start, humanReadable=humanReadable), 
+                               time(start), time(stop))
     else:
-        return '%s - %s' % (dateTime(start), dateTime(stop))
+        return '%s - %s' % (dateTime(start, humanReadable=humanReadable), dateTime(stop, humanReadable=humanReadable))
     
     
-def time(dateTime):
-    dateTime = dateTime.replace(year=2000)  # strftime doesn't handle years before 1900
-    return dateTime.strftime(timeFormat)
+def time(dateTime, seconds=False, minutes=True):
+    try:
+        # strftime doesn't handle years before 1900, be prepared:
+        dateTime = dateTime.replace(year=2000)  
+    except TypeError:  # We got a time instead of a dateTime
+        dateTime = datemodule.Now().replace(hour=dateTime.hour, 
+                                            minute=dateTime.minute,
+                                            second=dateTime.second) 
+    return timeFunc(dateTime, minutes=minutes, seconds=seconds)
 
-    
+
 def month(dateTime):
     return dateTime.strftime('%Y %B')
 

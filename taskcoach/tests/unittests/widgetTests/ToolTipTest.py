@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ import test, wx
 from taskcoachlib.widgets import tooltip
 
 
-class ToolTipUnderTest(tooltip.ToolTipMixin, wx.Frame): # pylint: disable-msg=W0223
+class ToolTipUnderTest(tooltip.ToolTipMixin, wx.Frame): # pylint: disable=W0223
     def GetMainWindow(self):
         return self
 

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,11 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from date import Date, Today, Tomorrow, Yesterday, NextSunday, \
-    NextFriday, LastDayOfCurrentMonth, LastDayOfCurrentYear, parseDate, minimumDate
-from dateandtime import DateTime, Now, parseDateTime
-from timedelta import TimeDelta, oneSecond, zeroHour, oneHour, twoHours, \
-    threeHours, oneDay, oneWeek, oneYear, parseTimeDelta
+from date import Date, parseDate
+from dateandtime import DateTime, Now, Today, Yesterday, Tomorrow, \
+    LastDayOfCurrentMonth, parseDateTime
+from timedelta import TimeDelta, ONE_SECOND, ONE_MINUTE, ONE_HOUR, TWO_HOURS, \
+    ONE_DAY, ONE_WEEK, ONE_YEAR, parseTimeDelta
 from timeclass import Time
 from scheduler import Scheduler
 from recurrence import Recurrence

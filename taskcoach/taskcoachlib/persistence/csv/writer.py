@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ class CSVWriter(object):
         self.__fd = fd
 
     def write(self, viewer, settings, selectionOnly=False, 
-              separateDateAndTimeColumns=False, columns=None): # pylint: disable-msg=W0613
+              separateDateAndTimeColumns=False, columns=None): # pylint: disable=W0613
         csvRows = generator.viewer2csv(viewer, selectionOnly, 
                                        separateDateAndTimeColumns, columns)
         UnicodeCSVWriter(self.__fd).writerows(csvRows)

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ class TaskListTest(test.TestCase):
 
     def testNrDueSoon(self):
         self.assertEqual(0, self.nrStatus(task.status.duesoon))
-        self.taskList.append(task.Task(dueDateTime=date.Now() + date.oneHour))
+        self.taskList.append(task.Task(dueDateTime=date.Now() + date.ONE_HOUR))
         self.assertEqual(1, self.nrStatus(task.status.duesoon))
         
     def testNrBeingTracked(self):

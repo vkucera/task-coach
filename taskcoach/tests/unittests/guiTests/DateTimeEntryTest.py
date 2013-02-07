@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ class DateTimeEntryTest(test.wxTestCase):
 
 class DateEntryConstructorTest(test.wxTestCase):
     def testCreateWithDate(self):
-        tomorrow = date.Now() + date.oneDay
+        tomorrow = date.Tomorrow()
         dateTimeEntry = entry.DateTimeEntry(self.frame, 
                                             config.Settings(load=False), 
                                             tomorrow)
@@ -67,15 +67,18 @@ class TimeDeltaEntryTest(test.wxTestCase):
         self.assertEqual(date.TimeDelta(), self.timeDeltaEntry.GetValue())
         
     def testDefaultDisplayedValue(self):    
-        self.assertEqual('       0:00:00', self.timeDeltaEntry._entry.GetValue())
+        self.assertEqual('        0:00:00', 
+                         self.timeDeltaEntry._entry.GetValue())
         
     def testSetValue(self):
         self.timeDeltaEntry.SetValue(date.TimeDelta(hours=10, seconds=5))
-        self.assertEqual('      10:00:05', self.timeDeltaEntry._entry.GetValue())
+        self.assertEqual('       10:00:05', 
+                         self.timeDeltaEntry._entry.GetValue())
     
     def testOverflow(self):
-        self.timeDeltaEntry.SetValue(date.TimeDelta(hours=1000000000))
-        self.assertEqual('       0:00:00', self.timeDeltaEntry._entry.GetValue())
+        self.timeDeltaEntry.SetValue(date.TimeDelta(hours=12345678912))
+        self.assertEqual('123456789:00:00', 
+                         self.timeDeltaEntry._entry.GetValue())
     
     
 class ReadOnlyTimeDeltaEntryTest(test.wxTestCase):
@@ -85,4 +88,10 @@ class ReadOnlyTimeDeltaEntryTest(test.wxTestCase):
 
     def testSetNegativeValue(self):
         self.timeDeltaEntry.SetValue(date.TimeDelta(hours=-10, minutes=-20))
-        self.assertEqual('     -10:20:00', self.timeDeltaEntry._entry.GetValue())
+        self.assertEqual('      -10:20:00', 
+                         self.timeDeltaEntry._entry.GetValue())
+
+    def testSetSmallNegativeValue(self):
+        self.timeDeltaEntry.SetValue(date.TimeDelta(seconds=-4))
+        self.assertEqual('       -0:00:04', 
+                         self.timeDeltaEntry._entry.GetValue())

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -42,6 +42,7 @@ class FontPickerCtrl(wx.Button):
         self.__updateButton()
 
     def onClick(self, event):
+        event.Skip(False)
         dialog = wx.FontDialog(self, self.__newFontData())
         if wx.ID_OK == dialog.ShowModal():
             self.__readFontData(dialog.GetFontData())
@@ -66,4 +67,3 @@ class FontPickerCtrl(wx.Button):
     def __sendPickerEvent(self):
         event = wx.FontPickerEvent(self, self.GetId(), self.__font)
         self.GetEventHandler().ProcessEvent(event)
-

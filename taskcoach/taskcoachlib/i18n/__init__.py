@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -60,7 +60,7 @@ class Translator:
 
     def _installModule(self, module):
         ''' Make the module's translation dictionary and encoding available. '''
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         if module:
             self.__language = module.dict
             self.__encoding = module.encoding
@@ -73,7 +73,7 @@ class Translator:
         for localeString in self._localeStrings(language):
             languageInfo = wx.Locale.FindLanguageInfo(localeString)
             if languageInfo:
-                self.__locale = wx.Locale(languageInfo.Language) # pylint: disable-msg=W0201
+                self.__locale = wx.Locale(languageInfo.Language) # pylint: disable=W0201
                 # Add the wxWidgets message catalog. This is really only for 
                 # py2exe'ified versions, but it doesn't seem to hurt on other
                 # platforms...
@@ -137,3 +137,6 @@ def translate(string):
 
 _ = translate # This prevents a warning from pygettext.py
 
+# Inject into builtins for 3rdparty packages
+import __builtin__
+__builtin__.__dict__['_'] = _

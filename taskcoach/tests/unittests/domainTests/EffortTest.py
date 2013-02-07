@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -197,7 +197,8 @@ class EffortTest(test.TestCase, asserts.Mixin):
      
     def testState(self):
         state = self.effort.__getstate__()
-        newEffort = effort.Effort(task.Task())
+        theTask = task.Task()
+        newEffort = effort.Effort(theTask)
         newEffort.__setstate__(state)
         self.assertEqualEfforts(newEffort, self.effort)
         
@@ -226,7 +227,8 @@ class EffortTest(test.TestCase, asserts.Mixin):
         
     def testSetStop_None(self):
         self.effort.setStop()
-        self.assertEqual(date.Today(), self.effort.getStop().date())
+        now = date.Now()
+        self.failUnless(now - date.ONE_SECOND < self.effort.getStop() < now + date.ONE_SECOND)
         
     def testSetStop_Infinite(self):
         self.effort.setStop(date.DateTime.max)
@@ -298,7 +300,7 @@ class EffortTest(test.TestCase, asserts.Mixin):
         self.task.addCategory(category.Category('C'))
         self.assertEqual(self.task.categories(), self.effort.categories())
 
-    def testModificationEventTypes(self):  # pylint: disable-msg=E1003
+    def testModificationEventTypes(self):  # pylint: disable=E1003
         self.assertEqual(super(effort.Effort, self.effort).modificationEventTypes() + \
                          [self.effort.taskChangedEventType(), 
                           self.effort.startChangedEventType(), 

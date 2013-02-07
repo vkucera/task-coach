@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ from notebook import Notebook, BookPage
 from frame import AuiManagedFrameWithDynamicCenterPane
 from dialog import Dialog, NotebookDialog, HTMLDialog, AttachmentSelector
 from itemctrl import Column
-from listctrl import ListCtrl
+from listctrl import VirtualListCtrl
 from checklistbox import CheckListBox
 from treectrl import CheckTreeCtrl, TreeListCtrl
 from squaremap import SquareMap
@@ -38,10 +38,4 @@ from calendarwidget import Calendar
 from calendarconfig import CalendarConfigDialog
 from password import GetPassword
 import masked
-try:
-    from wx.lib import sized_controls
-except ImportError:
-    try:
-        from wxaddons import sized_controls # pylint: disable-msg=F0401
-    except ImportError:
-        from taskcoachlib.thirdparty import sized_controls # pylint: disable-msg=W0404
+from wx.lib import sized_controls

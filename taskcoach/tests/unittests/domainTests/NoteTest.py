@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test, wx
 from taskcoachlib import patterns
-from taskcoachlib.domain import note
+from taskcoachlib.domain import note, date, base
 
 
 class NoteTest(test.TestCase):
@@ -92,65 +92,81 @@ class NoteTest(test.TestCase):
         
     def testNewChild(self):
         child = self.note.newChild(subject='child')
-        self.assertEqual('child', child.subject())  # pylint: disable-msg=E1101
+        self.assertEqual('child', child.subject())  # pylint: disable=E1101
         
     def testGetState(self):
-        self.assertEqual(dict(id=self.note.id(), subject='', description='', parent=None,
-            categories=set(), attachments=[], children=self.note.children(),
-            status=self.note.getStatus(), fgColor=None, bgColor=None, font=None,
-            icon='', selectedIcon=''),
+        self.assertEqual(dict(id=self.note.id(), subject='', description='', 
+            parent=None, categories=set(), attachments=[], 
+            children=self.note.children(), status=self.note.getStatus(), 
+            fgColor=None, bgColor=None, font=None, icon='', selectedIcon='', 
+            creationDateTime=self.note.creationDateTime(),
+            modificationDateTime=self.note.modificationDateTime()),
             self.note.__getstate__())
         
     def testSetState(self):
         self.note.__setstate__(dict(id='id', subject='new', description='new', 
             parent=None, children=[], status=42, attachments=[], categories=[],
             fgColor=(1, 1, 1, 1), bgColor=(0, 0, 0, 255), font=wx.SWISS_FONT,
-            icon='icon', selectedIcon='selected'))
+            icon='icon', selectedIcon='selected', creationDateTime=date.Now(),
+            modificationDateTime=date.Now()))
         self.assertEqual('new', self.note.description())
-        
+
+
+class NoteOwnerUnderTest(note.NoteOwner, base.Object):
+    pass
+
         
 class NoteOwnerTest(test.TestCase):
     def setUp(self):
         self.note = note.Note(subject='Note')
-        self.noteOwner = note.NoteOwner()
+        self.noteOwner = NoteOwnerUnderTest()
         self.events = []
         
     def onEvent(self, event):
         self.events.append(event)
     
-    # pylint: disable-msg=E1101
+    # pylint: disable=E1101
         
-    def registerObserver(self):  # pylint: disable-msg=W0221
+    def registerObserver(self):  # pylint: disable=W0221
         patterns.Publisher().registerObserver(self.onEvent,
-            note.NoteOwner.notesChangedEventType())
+            NoteOwnerUnderTest.notesChangedEventType())
         
     def testAddNote(self):
         self.noteOwner.addNote(self.note)
+        self.assertEqual([self.note], self.noteOwner.notes())
+        
+    def testAddNotes(self):
+        self.noteOwner.addNotes(self.note)
         self.assertEqual([self.note], self.noteOwner.notes())
 
     def testAddNoteNotification(self):
         self.registerObserver()
         self.noteOwner.addNote(self.note)
         self.assertEqual(patterns.Event( \
-            note.NoteOwner.notesChangedEventType(), self.noteOwner, self.note), 
+            NoteOwnerUnderTest.notesChangedEventType(), self.noteOwner, self.note), 
             self.events[0])
-        
+
     def testRemoveNote(self):
         self.noteOwner.addNote(self.note)
         self.noteOwner.removeNote(self.note)
         self.failIf(self.noteOwner.notes())
-
+        
+    def testRemoveNotes(self):
+        self.noteOwner.addNote(self.note)
+        self.noteOwner.removeNotes(self.note)
+        self.failIf(self.noteOwner.notes())
+        
     def testRemoveNoteNotification(self):
         self.noteOwner.addNote(self.note)
         self.registerObserver()
         self.noteOwner.removeNote(self.note)
         self.assertEqual([patterns.Event( \
-            note.NoteOwner.notesChangedEventType(), self.noteOwner, self.note)], 
+            NoteOwnerUnderTest.notesChangedEventType(), self.noteOwner, self.note)], 
             self.events)
-            
+        
     def testGetState(self):
         self.noteOwner.addNote(self.note)
-        self.assertEqual(dict(notes=[self.note]), self.noteOwner.__getstate__())
+        self.assertEqual([self.note], self.noteOwner.__getstate__()['notes'])
 
     def testSetState(self):
         self.noteOwner.addNote(self.note)
@@ -166,16 +182,16 @@ class NoteOwnerTest(test.TestCase):
         self.registerObserver()
         self.noteOwner.__setstate__(state)
         self.assertEqual(patterns.Event( \
-            note.NoteOwner.notesChangedEventType(), self.noteOwner, self.note), 
+            NoteOwnerUnderTest.notesChangedEventType(), self.noteOwner, self.note), 
             self.events[0])
             
     def testInitializeNotesViaConstructor(self):
-        noteOwner = note.NoteOwner(notes=[self.note])
+        noteOwner = NoteOwnerUnderTest(notes=[self.note])
         self.assertEqual([self.note], noteOwner.notes())
 
     def testCopy(self):
         self.noteOwner.addNote(self.note)
-        copy = note.NoteOwner(**self.noteOwner.__getcopystate__())
+        copy = NoteOwnerUnderTest(**self.noteOwner.__getcopystate__())
         self.assertNotEqual(copy.notes()[0].id(), self.note.id())
         self.assertEqual(copy.notes()[0].subject(), self.note.subject())
 
@@ -183,7 +199,7 @@ class NoteOwnerTest(test.TestCase):
         child = note.Note(subject='child')
         self.note.addChild(child)
         self.noteOwner.addNote(self.note)
-        copy = note.NoteOwner(**self.noteOwner.__getcopystate__())
+        copy = NoteOwnerUnderTest(**self.noteOwner.__getcopystate__())
         childCopy = copy.notes()[0].children()[0]
         self.assertNotEqual(childCopy.id(), child.id())
         self.assertEqual(childCopy.subject(), child.subject())

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 This module defines classes and functions to handle the VCalendar
 format.
-''' # pylint: disable-msg=W0105
+''' # pylint: disable=W0105
 
 from taskcoachlib.domain.base import Object
 from taskcoachlib.domain import date
@@ -87,7 +87,7 @@ class VCalendarParser(object):
         domain object creation for the current (parsed) object.
     @ivar tasks: A list of dictionaries suitable to use as
         keyword arguments for task creation, representing all
-        VTODO object in the parsed file. ''' # pylint: disable-msg=W0511
+        VTODO object in the parsed file. ''' # pylint: disable=W0511
 
     def __init__(self, *args, **kwargs):
         super(VCalendarParser, self).__init__(*args, **kwargs)
@@ -100,7 +100,7 @@ class VCalendarParser(object):
 
     def init(self):
         ''' Called after a state change. '''
-        self.kwargs = {} # pylint: disable-msg=W0201
+        self.kwargs = {} # pylint: disable=W0201
 
     def setState(self, state):
         ''' Sets the state (class) of the parser object. '''
@@ -185,11 +185,20 @@ class VCalendarParser(object):
         ''' Called on each new 'item', i.e. key/value pair. Default
         behaviour is to store the pair in the 'kwargs' instance
         variable (which is emptied in L{init}). '''
-        self.kwargs[name.lower()] = value
+        if name in ('CREATED', 'DCREATED'):
+            self.kwargs['creationDateTime'] = parseDateTime(value)
+        elif name == 'LAST-MODIFIED':
+            self.kwargs['modificationDateTime'] = parseDateTime(value)
+        elif name == 'SUMMARY':
+            self.kwargs['subject'] = value
+        elif name == 'CATEGORIES':
+            self.kwargs['categories'] = value.split(',')
+        else:
+            self.kwargs[name.lower()] = value
 
 
 class VTodoParser(VCalendarParser):
-    ''' This is the state responsible for parsing VTODO objects. ''' # pylint: disable-msg=W0511
+    ''' This is the state responsible for parsing VTODO objects. ''' # pylint: disable=W0511
 
     def onFinish(self):
         if not self.kwargs.has_key('plannedStartDateTime'):
@@ -225,10 +234,6 @@ class VTodoParser(VCalendarParser):
             # 3, but what it means depends on the other client...
 
             self.kwargs['priority'] = int(value) - 1
-        elif name == 'SUMMARY':
-            self.kwargs['subject'] = value
-        elif name == 'CATEGORIES':
-            self.kwargs['categories'] = value.split(',')
         elif name == 'STATUS':
             self.kwargs['vcardStatus'] = value
         else:
@@ -241,20 +246,19 @@ class VNoteParser(VCalendarParser):
     def onFinish(self):
         # Summary is not mandatory.
         if not self.kwargs.has_key('subject'):
-            self.kwargs['subject'] = self.kwargs['description'].split('\n')[0]
+            if 'description' in self.kwargs:
+                self.kwargs['subject'] = self.kwargs['description'].split('\n')[0]
+            else:
+                self.kwargs['subject'] = ''
         self.kwargs['status'] = Object.STATUS_NONE
         self.notes.append(self.kwargs)
 
     def acceptItem(self, name, value):
         if name == 'X-IRMC-LUID':
             self.kwargs['id'] = value.decode('UTF-8')
-        elif name == 'SUMMARY':
-            self.kwargs['subject'] = value
         elif name == 'BODY':
             self.kwargs['description'] = value
-        elif name == 'CATEGORIES':
-            self.kwargs['categories'] = value.split(',')
-        elif name in ['DCREATED', 'LAST-MODIFIED', 'CLASS']:
+        elif name == 'CLASS':
             pass
         else:
             super(VNoteParser, self).acceptItem(name, value)
@@ -272,21 +276,27 @@ def VCalFromTask(task, encoding=True, doFold=True):
     quote = quoteString if encoding else lambda s: s
 
     components = []
-    components.append('BEGIN:VTODO') # pylint: disable-msg=W0511
+    components.append('BEGIN:VTODO') # pylint: disable=W0511
     components.append('UID:%s' % task.id().encode('UTF-8'))
+    
+    if task.creationDateTime() > date.DateTime.min:
+        components.append('CREATED:%s' % fmtDateTime(task.creationDateTime()))
+        
+    if task.modificationDateTime() > date.DateTime.min:
+        components.append('LAST-MODIFIED:%s' % fmtDateTime(task.modificationDateTime()))
 
     if task.plannedStartDateTime() != date.DateTime():
-        components.append('DTSTART:%s'%fmtDateTime(task.plannedStartDateTime()))
+        components.append('DTSTART:%s' % fmtDateTime(task.plannedStartDateTime()))
 
     if task.dueDateTime() != date.DateTime():
-        components.append('DUE:%s'%fmtDateTime(task.dueDateTime()))
+        components.append('DUE:%s' % fmtDateTime(task.dueDateTime()))
 
     if task.completionDateTime() != date.DateTime():
-        components.append('COMPLETED:%s'%fmtDateTime(task.completionDateTime()))
+        components.append('COMPLETED:%s' % fmtDateTime(task.completionDateTime()))
 
     if task.categories(recursive=True, upwards=True):
         categories = ','.join([quote(unicode(c)) for c in task.categories(recursive=True, upwards=True)])
-        components.append('CATEGORIES%s:%s'%(encoding, categories))
+        components.append('CATEGORIES%s:%s' % (encoding, categories))
 
     if task.completed():
         components.append('STATUS:COMPLETED')
@@ -295,11 +305,11 @@ def VCalFromTask(task, encoding=True, doFold=True):
     else:
         components.append('STATUS:CANCELLED') # Hum...
 
-    components.append('DESCRIPTION%s:%s'%(encoding, quote(task.description())))
-    components.append('PRIORITY:%d'%min(3, task.priority() + 1))
-    components.append('PERCENT-COMPLETE:%d'%task.percentageComplete())
-    components.append('SUMMARY%s:%s'%(encoding, quote(task.subject())))
-    components.append('END:VTODO') # pylint: disable-msg=W0511
+    components.append('DESCRIPTION%s:%s' % (encoding, quote(task.description())))
+    components.append('PRIORITY:%d' % min(3, task.priority() + 1))
+    components.append('PERCENT-COMPLETE:%d' % task.percentageComplete())
+    components.append('SUMMARY%s:%s' % (encoding, quote(task.subject())))
+    components.append('END:VTODO')  # pylint: disable=W0511
     if doFold:
         return fold(components)
     return '\r\n'.join(components) + '\r\n'

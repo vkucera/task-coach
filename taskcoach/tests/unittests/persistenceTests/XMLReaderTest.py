@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,8 +30,8 @@ from taskcoachlib.domain import date, task
 
 
 class XMLTemplateReaderTestCase(test.TestCase):
-    def convert(self, oldFormat, now=date.Now):
-        return persistence.TemplateXMLReader.convertOldFormat(oldFormat, now)
+    def convert(self, old_format, now=date.Now):
+        return persistence.TemplateXMLReader.convert_old_format(old_format, now)
     
     def testConvertNow(self):
         self.assertEqual('now', self.convert('Now()'))
@@ -46,7 +46,8 @@ class XMLTemplateReaderTestCase(test.TestCase):
         self.assertEqual('11:59 PM today', self.convert('Now().endOfDay()'))
 
     def testConvertTomorrow2(self):
-        self.assertEqual('11:59 PM tomorrow', self.convert('Now().endOfDay() + oneDay'))
+        self.assertEqual('11:59 PM tomorrow', 
+                         self.convert('Now().endOfDay() + oneDay'))
 
     def testConvertNowAndPositiveTimeDelta(self):
         self.assertEqual('%d minutes from now' % date.TimeDelta(2, 1861, 0).minutes(),
@@ -58,8 +59,9 @@ class XMLTemplateReaderTestCase(test.TestCase):
 
     def testConvertTodayAndPositiveTimeDelta(self):
         now = date.Now()
-        expectedDate = date.Today() + date.TimeDelta(17)
-        expectedDateTime = date.DateTime(expectedDate.year, expectedDate.month, expectedDate.day)
+        expectedDate = date.Now() + date.TimeDelta(17)
+        expectedDateTime = date.DateTime(expectedDate.year, expectedDate.month, 
+                                         expectedDate.day)
         expectedMinutes = (expectedDateTime - now).minutes() 
         actualMinutes = int(self.convert('Today() + TimeDelta(17)').split(' ')[0])
         self.failUnless(abs(actualMinutes - expectedMinutes) <= 1)
@@ -78,41 +80,42 @@ class XMLReaderTestCase(test.TestCase):
         super(XMLReaderTestCase, self).setUp()
         task.Task.settings = config.Settings(load=False)
             
-    def writeAndRead(self, xmlContents):
-        # pylint: disable-msg=W0201
+    def writeAndRead(self, xml_contents):
+        # pylint: disable=W0201
         self.fd = StringIO.StringIO()
         self.fd.name = 'testfile.tsk'
         self.reader = persistence.XMLReader(self.fd)
-        allXML = '<?taskcoach release="whatever" tskversion="%d"?>\n' % self.tskversion + xmlContents
-        self.fd.write(allXML)
+        all_xml = '<?taskcoach release="whatever" ' \
+                  'tskversion="%d"?>\n' % self.tskversion + xml_contents
+        self.fd.write(all_xml)
         self.fd.seek(0)
         return self.reader.read()
 
-    def writeAndReadTasks(self, xmlContents):
-        return self.writeAndRead(xmlContents)[0]
+    def writeAndReadTasks(self, xml_contents):
+        return self.writeAndRead(xml_contents)[0]
 
-    def writeAndReadCategories(self, xmlContents):
-        return self.writeAndRead(xmlContents)[1]
+    def writeAndReadCategories(self, xml_contents):
+        return self.writeAndRead(xml_contents)[1]
 
-    def writeAndReadNotes(self, xmlContents):
-        return self.writeAndRead(xmlContents)[2]
+    def writeAndReadNotes(self, xml_contents):
+        return self.writeAndRead(xml_contents)[2]
 
-    def writeAndReadSyncMLConfig(self, xmlContents):
-        return self.writeAndRead(xmlContents)[3]
+    def writeAndReadSyncMLConfig(self, xml_contents):
+        return self.writeAndRead(xml_contents)[3]
 
-    def writeAndReadGUID(self, xmlContents):
-        return self.writeAndRead(xmlContents)[5]
+    def writeAndReadGUID(self, xml_contents):
+        return self.writeAndRead(xml_contents)[5]
 
-    def writeAndReadTasksAndCategories(self, xmlContents):
-        tasks, categories, _, _, _, _ = self.writeAndRead(xmlContents)
+    def writeAndReadTasksAndCategories(self, xml_contents):
+        tasks, categories, _, _, _, _ = self.writeAndRead(xml_contents)
         return tasks, categories
 
-    def writeAndReadTasksAndCategoriesAndNotes(self, xmlContents):
-        tasks, categories, notes, _, _, _ = self.writeAndRead(xmlContents)
+    def writeAndReadTasksAndCategoriesAndNotes(self, xml_contents):
+        tasks, categories, notes, _, _, _ = self.writeAndRead(xml_contents)
         return tasks, categories, notes
 
-    def writeAndReadCategoriesAndNotes(self, xmlContents):
-        _, categories, notes, _, _, _ = self.writeAndRead(xmlContents)
+    def writeAndReadCategoriesAndNotes(self, xml_contents):
+        _, categories, notes, _, _, _ = self.writeAndRead(xml_contents)
         return categories, notes
     
 
@@ -124,7 +127,7 @@ class TempFileLockTest(XMLReaderTestCase):
         
         def newMkstemp(*args, **kwargs):  # pragma: no cover
             handle, name = self.oldMkstemp(*args, **kwargs)
-            self.__filename = name  # pylint: disable-msg=W0201
+            self.__filename = name  # pylint: disable=W0201
             return handle, name
         
         tempfile.mkstemp = newMkstemp
@@ -145,7 +148,7 @@ class TempFileLockTest(XMLReaderTestCase):
                 os.remove(self.__filename)
                 os.remove(self.__filename + '.delta')
             except:
-                pass  # pylint: disable-msg=W0702
+                pass  # pylint: disable=W0702
 
             self.assert_(os.path.exists(self.__filename))
 
@@ -287,8 +290,10 @@ class XMLReaderVersion16Text(XMLReaderTestCase):
                 <attachment>whatever.tsk</attachment>
             </task>
         </tasks>''')
-        self.assertEqual(['whatever.tsk'], [att.location() for att in tasks[0].attachments()])
-        self.assertEqual(['whatever.tsk'], [att.subject() for att in tasks[0].attachments()])
+        self.assertEqual(['whatever.tsk'], 
+                         [att.location() for att in tasks[0].attachments()])
+        self.assertEqual(['whatever.tsk'], 
+                         [att.subject() for att in tasks[0].attachments()])
         
     def testTwoAttachmentsCompat(self):
         tasks = self.writeAndReadTasks('''
@@ -310,8 +315,10 @@ class XMLReaderVersion16Text(XMLReaderTestCase):
                 <attachment>FILE:whatever.tsk</attachment>
             </task>
         </tasks>''')
-        self.assertEqual(['whatever.tsk'], [att.location() for att in tasks[0].attachments()])
-        self.assertEqual(['whatever.tsk'], [att.subject() for att in tasks[0].attachments()])
+        self.assertEqual(['whatever.tsk'], 
+                         [att.location() for att in tasks[0].attachments()])
+        self.assertEqual(['whatever.tsk'], 
+                         [att.subject() for att in tasks[0].attachments()])
         
     def testTwoAttachments(self):
         tasks = self.writeAndReadTasks('''
@@ -440,7 +447,8 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
         <tasks>
             <task budget="4:10:10"/>
         </tasks>\n''')
-        self.assertEqual(date.TimeDelta(hours=4, minutes=10, seconds=10), tasks[0].budget())
+        self.assertEqual(date.TimeDelta(hours=4, minutes=10, seconds=10), 
+                         tasks[0].budget())
 
     def testBudget_NoBudget(self):
         tasks = self.writeAndReadTasks('<tasks><task/></tasks>\n')
@@ -621,7 +629,10 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
         tasks = self.writeAndReadTasks('''
         <tasks>
             <task>
-                <attachment type="file"><description>whatever.tsk</description><data>whateverdata.tsk</data></attachment>
+                <attachment type="file">
+                    <description>whatever.tsk</description>
+                    <data>whateverdata.tsk</data>
+                </attachment>
             </task>
         </tasks>''')
         self.assertEqual([os.path.join(os.getcwd(),
@@ -634,7 +645,10 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
         notes = self.writeAndReadNotes('''
         <tasks>
             <note>
-                <attachment type="file"><description>whatever.tsk</description><data>whateverdata.tsk</data></attachment>
+                <attachment type="file">
+                    <description>whatever.tsk</description>
+                    <data>whateverdata.tsk</data>
+                </attachment>
             </note>
         </tasks>''')
         self.assertEqual([os.path.join(os.getcwd(),
@@ -647,21 +661,31 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
         categories = self.writeAndReadCategories('''
         <tasks>
             <category>
-                <attachment type="file"><description>whatever.tsk</description><data>whateverdata.tsk</data></attachment>
+                <attachment type="file">
+                    <description>whatever.tsk</description>
+                    <data>whateverdata.tsk</data>
+                </attachment>
             </category>
         </tasks>''')
         self.assertEqual([os.path.join(os.getcwd(),
                                        'testfile_attachments',
                                        'whateverdata.tsk')],
                          [att.location() for att in categories[0].attachments()])
-        self.assertEqual(['whatever.tsk'], [att.subject() for att in categories[0].attachments()])
+        self.assertEqual(['whatever.tsk'], 
+                         [att.subject() for att in categories[0].attachments()])
         
     def testTaskWithTwoAttachments(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
             <task>
-                <attachment type="file"><description>whatever.tsk</description><data>whateverdata.tsk</data></attachment>
-                <attachment type="file"><description>another.txt</description><data>anotherdata.txt</data></attachment>
+                <attachment type="file">
+                   <description>whatever.tsk</description>
+                   <data>whateverdata.tsk</data>
+                </attachment>
+                <attachment type="file">
+                    <description>another.txt</description>
+                    <data>anotherdata.txt</data>
+                </attachment>
             </task>
         </tasks>''')
         self.assertEqual([os.path.join(os.getcwd(),
@@ -747,7 +771,8 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
         </tasks>''')
 
         self.assertEqual(tasks[0], list(categories[0].categorizables())[0])
-        self.assertEqual(tasks[1], list(categories[0].children()[0].categorizables())[0])
+        self.assertEqual(tasks[1], 
+                         list(categories[0].children()[0].categorizables())[0])
         
     def testSubtaskCategory(self):
         tasks, categories = self.writeAndReadTasksAndCategories('''
@@ -757,7 +782,8 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
                 <task subject="task2" id="1.1"/>
             </task>
         </tasks>''')
-        self.assertEqual(tasks[0].children()[0], list(categories[0].categorizables())[0])
+        self.assertEqual(tasks[0].children()[0], 
+                         list(categories[0].categorizables())[0])
         
     def testFilteredCategory(self):
         categories = self.writeAndReadCategories('''
@@ -768,7 +794,8 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
     
     def testCategoryWithDeletedTasks(self):
         ''' There's a bug in release 0.61.5 that causes the task file to contain
-            references to deleted tasks. Ignore these when loading the task file.'''
+            references to deleted tasks. Ignore these when loading the task 
+            file.'''
         categories = self.writeAndReadCategories('''
         <tasks>
             <category subject="cat" tasks="some_task_id"/>
@@ -812,7 +839,10 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
         <tasks>
             <note>
                 <note>
-                    <attachment type="file"><description>whatever.tsk</description><data>whateverdata.tsk</data></attachment>
+                    <attachment type="file">
+                       <description>whatever.tsk</description>
+                       <data>whateverdata.tsk</data>
+                    </attachment>
                 </note>
             </note>
         </tasks>''')
@@ -820,7 +850,8 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
                                        'testfile_attachments',
                                        'whateverdata.tsk')],
                          [att.location() for att in notes[0].children()[0].attachments()])
-        self.assertEqual(['whatever.tsk'], [att.subject() for att in notes[0].children()[0].attachments()])
+        self.assertEqual(['whatever.tsk'], 
+                         [att.subject() for att in notes[0].children()[0].attachments()])
         
     def testNoteCategory(self):
         categories, notes = self.writeAndReadCategoriesAndNotes('''
@@ -1005,7 +1036,9 @@ class XMLReaderVersion21Test(XMLReaderTestCase):
         categories = self.writeAndReadCategories('''
         <tasks>
             <category>
-                <attachment type="file" location="location"><description>description</description></attachment>
+                <attachment type="file" location="location">
+                   <description>description</description>
+                </attachment>
             </category>
         </tasks>''')
         self.assertEqual(['location'], [os.path.split(att.location())[-1] for att in categories[0].attachments()])
@@ -1400,7 +1433,8 @@ class XMLReaderVersion31Test(XMLReaderTestCase):
     tskversion = 31  # New in release 1.2.0.
     
     def writeAndReadTasks(self, *args, **kwargs):
-        tasks = super(XMLReaderVersion31Test, self).writeAndReadTasks(*args, **kwargs)
+        tasks = super(XMLReaderVersion31Test, self).writeAndReadTasks(*args, 
+                                                                      **kwargs)
         tasksById = dict()
         
         def collectIds(tasks):
@@ -1606,3 +1640,56 @@ class XMLReaderVersion34Test(XMLReaderTestCase):
         </tasks>\n''')
         self.assertEqual(list(tasks[0].notes())[0], 
                          list(categories[0].categorizables())[0])
+
+
+class XMLReaderVersion35Test(XMLReaderTestCase):
+    tskversion = 35  # New in release 1.3.19.
+
+    def testRecurrenceStopDateTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task>
+                <recurrence stop_datetime="2000-01-10 13:13:13"/>
+            </task>
+        </tasks>''')
+        self.assertEqual(date.DateTime(2000, 1, 10, 13, 13, 13), 
+                         tasks[0].recurrence().stop_datetime)
+        
+    def testCreationDateTimeIsSetToMinDateTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task/>
+        </tasks>''')
+        self.assertEqual(date.DateTime.min, tasks[0].creationDateTime())
+
+
+class XMLReaderVersion36Test(XMLReaderTestCase):
+    tskversion = 36  # New in release 1.3.21
+    
+    def testCreationDateTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task creationDateTime="2012-12-12 12:00:00.12345"/>
+        </tasks>''')
+        self.assertEqual(date.DateTime(2012, 12, 12, 12, 0, 0, 12345),
+                         tasks[0].creationDateTime())
+        
+        
+class XMLReaderVersion37Test(XMLReaderTestCase):
+    tskversion = 37  # New in release 1.3.23
+    
+    def testModificationDateTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task modificationDateTime="2012-12-12 12:00:00.12345"/>
+        </tasks>''')
+        self.assertEqual(date.DateTime(2012, 12, 12, 12, 0, 0, 12345),
+                         tasks[0].modificationDateTime())
+        
+    def testModificationDateTimeWithOtherAttributes(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task modificationDateTime="2012-12-12 12:00:00.12345"/>
+        </tasks>''')
+        self.assertEqual(date.DateTime(2012, 12, 12, 12, 0, 0, 12345),
+                         tasks[0].modificationDateTime())

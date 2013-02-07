@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ fileOpen = _('Open a %s file')%meta.name
 fileSave = _('Save the current file')
 fileMergeDiskChanges = _('Load what has changed on disk')
 fileSaveAs = _('Save the current file under a new name')
-help = _('Help about the program') # pylint: disable-msg=W0622
+help = _('Help about the program') # pylint: disable=W0622
 mailItem = _('Mail the selected item(s), using your default mailer')
 noteNew = _('Insert a new note')
 openAllAttachments = _('Open all attachments of the selected item(s)')

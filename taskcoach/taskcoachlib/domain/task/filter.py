@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -46,16 +46,20 @@ class ViewFilter(tasklist.TaskListQueryMixin, base.Filter):
                 registerObserver(self.onTaskStatusChange_Deprecated, 
                                  eventType=eventType)
         date.Scheduler().schedule_interval(self.atMidnight, days=1)
-        
+
+    def detach(self):
+        super(ViewFilter, self).detach()
+        patterns.Publisher().removeObserver(self.onTaskStatusChange_Deprecated)
+
     def atMidnight(self):
         ''' Whether tasks are included in the filter or not may change at
             midnight. '''
         self.reset()
 
-    def onTaskStatusChange(self, newValue, sender):  # pylint: disable-msg=W0613
+    def onTaskStatusChange(self, newValue, sender):  # pylint: disable=W0613
         self.reset()
         
-    def onTaskStatusChange_Deprecated(self, event=None):  # pylint: disable-msg=W0613
+    def onTaskStatusChange_Deprecated(self, event=None):  # pylint: disable=W0613
         self.reset()
         
     def hideTaskStatus(self, status, hide=True):
@@ -70,12 +74,15 @@ class ViewFilter(tasklist.TaskListQueryMixin, base.Filter):
         self.reset()
         
     def filterItems(self, tasks):
-        return [task for task in tasks if self.filterTask(task)]  # pylint: disable-msg=W0621
+        return [task for task in tasks if self.filterTask(task)]  # pylint: disable=W0621
     
-    def filterTask(self, task):  # pylint: disable-msg=W0621
+    def filterTask(self, task):  # pylint: disable=W0621
         result = True
         if task.status() in self.__statusesToHide:
             result = False
         elif self.__hideCompositeTasks and not self.treeMode() and task.children():
             result = False  # Hide composite task
         return result
+
+    def hasFilter(self):
+        return len(self.__statusesToHide) != 0 or (self.__hideCompositeTasks and not self.treeMode())

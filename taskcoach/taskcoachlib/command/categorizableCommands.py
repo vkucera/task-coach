@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,11 +31,22 @@ class ToggleCategoryCommand(base.BaseCommand):
         # Keep track of previous category per categorizable in case of mutual 
         # exclusive categories:
         self.__previous_categories = dict()
+        # When some items are in the category and some are not, only toggle
+        # the items that are not in the category.
+        items_not_in_category = [item for item in self.items \
+                                 if self.category not in item.categories()]
+        if 0 < len(items_not_in_category) < len(self.items):
+            self.items = items_not_in_category
         
     def do_command(self):
+        super(ToggleCategoryCommand, self).do_command()
         self.toggle_category()
         
-    undo_command = redo_command = do_command
+    def undo_command(self):
+        super(ToggleCategoryCommand, self).undo_command()
+        self.toggle_category()
+        
+    redo_command = do_command
     
     @patterns.eventSource    
     def toggle_category(self, event=None):

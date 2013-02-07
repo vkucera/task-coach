@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,12 +20,12 @@ import test
 from taskcoachlib import config
 from taskcoachlib.domain import task, category
 
-# pylint: disable-msg=W0201,E1101
+# pylint: disable=W0201,E1101
 
 ''' The tests below test the category filter. Different fixtures are defined
     for different combinations of tasks and categories. Each fixture is than
     subclassed by a <Fixture>InListMode and a <Fixture>InTreeMode class since 
-    we want to run the tests in both list and tree mode. ''' # pylint: disable-msg=W0105
+    we want to run the tests in both list and tree mode. ''' # pylint: disable=W0105
     
 
 class CategoryFilterHelpersMixin(object):
@@ -35,7 +35,7 @@ class CategoryFilterHelpersMixin(object):
     def setFilterOnAllCategories(self):
         self.settings.setboolean('view', 'categoryfiltermatchall', True)
 
-    def link(self, category, categorizable): # pylint: disable-msg=W0621
+    def link(self, category, categorizable): # pylint: disable=W0621
         category.addCategorizable(categorizable)
         categorizable.addCategory(category)
 

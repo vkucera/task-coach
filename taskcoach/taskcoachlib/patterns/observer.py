@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,11 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import singleton
 import functools
+from taskcoachlib.thirdparty.pubsub import pub
 
 # Ignore these pylint messages:
 # - W0142: * or ** magic
 # - W0622: Redefining builtin types
-# pylint: disable-msg=W0142,W0622
+# pylint: disable=W0142,W0622
 
 class List(list):
     def __eq__(self, other):
@@ -147,7 +148,7 @@ class Event(object):
                 sourcesToAdd &= set([source])
             kwargs = dict(type=type) # Python doesn't allow type=type after *values 
             for eachSource in sourcesToAdd:
-                subEvent.addSource(eachSource, *self.values(eachSource, type), **kwargs) # pylint: disable-msg=W0142
+                subEvent.addSource(eachSource, *self.values(eachSource, type), **kwargs) # pylint: disable=W0142
         return subEvent
     
     def send(self):
@@ -247,7 +248,7 @@ class Publisher(object):
     def clear(self):
         ''' Clear the registry of observers. Mainly for testing purposes. '''
         # observers = {(eventType, eventSource): set(callbacks)}
-        self.__observers = {} # pylint: disable-msg=W0201
+        self.__observers = {} # pylint: disable=W0201
     
     @wrapObserver
     def registerObserver(self, observer, eventType, eventSource=None):
@@ -271,7 +272,7 @@ class Publisher(object):
             specified, the observer is removed for the combination of that
             specific event type and event source only. '''
         
-        # pylint: disable-msg=W0613
+        # pylint: disable=W0613
             
         # First, create a match function that will select the combination of
         # event source and event type we're looking for:
@@ -291,6 +292,8 @@ class Publisher(object):
         matchingKeys = [key for key in self.__observers if match(*key)]
         for key in matchingKeys:
             self.__observers[key].discard(observer)
+            if not self.__observers[key]:
+                del self.__observers[key]
                         
     def notifyObservers(self, event):
         ''' Notify observers of the event. The event type and sources are 
@@ -340,6 +343,8 @@ class Observer(object):
     def removeInstance(self):
         for observer in self.__observers.copy():
             self.removeObserver(observer)
+        pub.unsubAll(listenerFilter=lambda listener: hasattr(listener.getCallable(), 'im_self') and \
+                     listener.getCallable().im_self is self)
 
 
 class Decorator(Observer):
@@ -363,6 +368,9 @@ class ObservableCollection(object):
     def __hash__(self):
         ''' Make ObservableCollections suitable as keys in dictionaries. '''
         return hash(id(self))
+
+    def detach(self):
+        ''' Break cycles '''
 
     @classmethod
     def addItemEventType(class_):
@@ -449,7 +457,7 @@ class ObservableList(ObservableCollection, List):
         event.addSource(self, item, type=self.removeItemEventType())
 
     @eventSource    
-    def removeItems(self, items, event=None): # pylint: disable-msg=W0221
+    def removeItems(self, items, event=None): # pylint: disable=W0221
         if not items:
             return
         super(ObservableList, self).removeItems(items)
@@ -482,6 +490,12 @@ class CollectionDecorator(Decorator, ObservableCollection):
 
     def __repr__(self): # pragma: no cover
         return '%s(%s)'%(self.__class__, super(CollectionDecorator, self).__repr__())
+
+    def detach(self):
+        self.removeObserver(self.onAddItem)
+        self.removeObserver(self.onRemoveItem)
+        self.observable().detach()
+        super(CollectionDecorator, self).detach()
 
     def onAddItem(self, event):
         ''' The default behaviour is to simply add the items that are

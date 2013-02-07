@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -41,18 +41,22 @@ class MockWxApp(object):
     
     
 class App(application.Application):
-    def __init__(self, args=None): # pylint: disable-msg=W0231
+    def __init__(self, args=None): # pylint: disable=W0231
         self._options = None
         self._args = args or []
-        self.wxApp = MockWxApp()
+        self._Application__wx_app = MockWxApp()
         self.init()
         self.sessionMonitor = None
 
-    def init(self): # pylint: disable-msg=W0221
+    def init(self): # pylint: disable=W0221
         super(App, self).init(loadSettings=False, loadTaskFile=False)
 
+    def addTask(self):
+        self.task = task.Task('Task')
+        self.taskFile.tasks().extend([self.task])
+
     def addTasks(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.parent = task.Task('Parent')
         self.child = task.Task('Child')
         self.parent.addChild(self.child)

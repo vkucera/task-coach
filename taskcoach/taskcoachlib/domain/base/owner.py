@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -92,7 +92,7 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
             return
         setattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower()), 
                                         newObjects)
-        changedEvent(instance, event, *newObjects) # pylint: disable-msg=W0142
+        changedEvent(instance, event, *newObjects) # pylint: disable=W0142
 
     setattr(klass, 'set%ss' % klass.__ownedType__, setObjects)
 

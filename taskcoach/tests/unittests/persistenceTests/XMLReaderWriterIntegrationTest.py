@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -54,7 +54,8 @@ class IntegrationTestCase(test.TestCase):
 
     def readAndWrite(self):
         self.fd.seek(0)
-        self.writer.write(self.taskList, self.categories, self.notes, self.syncMLConfig, self.guid)
+        self.writer.write(self.taskList, self.categories, self.notes, 
+                          self.syncMLConfig, self.guid)
         self.fd.seek(0)
         return self.reader.read()
 
@@ -69,32 +70,30 @@ class IntegrationTest_EmptyList(IntegrationTestCase):
         
 class IntegrationTest(IntegrationTestCase):
     def fillContainers(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.description = 'Description\nLine 2'
         self.task = task.Task(subject='Subject', description=self.description, 
-            plannedStartDateTime=date.Now() - date.TimeDelta(days=1), 
-            dueDateTime=date.Now() + date.TimeDelta(days=1), 
+            plannedStartDateTime=date.Yesterday(), dueDateTime=date.Tomorrow(), 
             actualStartDateTime=date.Now() - date.TimeDelta(hours=4),
-            completionDateTime=date.Now() - date.TimeDelta(days=1), 
-            budget=date.TimeDelta(hours=1), 
+            completionDateTime=date.Yesterday(), budget=date.ONE_HOUR, 
             priority=4, hourlyFee=100.5, fixedFee=1000, 
-            recurrence=date.Recurrence('weekly', max=10, count=5, amount=2),
-            reminder=date.DateTime(2004,1,1), fgColor=wx.BLUE, bgColor=wx.RED,
+            recurrence=date.Recurrence('weekly', maximum=10, count=5, amount=2,
+                                       stop_datetime=date.Now()),
+            reminder=date.DateTime(2004, 1, 1), fgColor=wx.BLUE, bgColor=wx.RED,
             font=wx.NORMAL_FONT, expandedContexts=['viewer1'], icon='icon',
-            selectedIcon='selectedIcon',
-            shouldMarkCompletedWhenAllChildrenCompleted=True,
-            percentageComplete=67)
+            selectedIcon='selectedIcon', percentageComplete=67,
+            shouldMarkCompletedWhenAllChildrenCompleted=True)
         self.child = task.Task()
         self.task.addChild(self.child)
         self.grandChild = task.Task()
         self.child.addChild(self.grandChild)
-        self.task.addEffort(effort.Effort(self.task, start=date.DateTime(2004,1,1), 
-            stop=date.DateTime(2004,1,2), description=self.description))
+        self.task.addEffort(effort.Effort(self.task, start=date.DateTime(2004, 1, 1), 
+            stop=date.DateTime(2004, 1, 2), description=self.description))
         self.category = category.Category('test', [self.task], filtered=True,
                                           description='Description', 
                                           exclusiveSubcategories=True)
         self.categories.append(self.category)
-        # pylint: disable-msg=E1101
+        # pylint: disable=E1101
         self.task.addAttachments(attachment.FileAttachment('/home/frank/whatever.txt'))
         self.task.addNote(note.Note(subject='Task note'))
         self.task2 = task.Task('Task 2', priority=-1954)
@@ -103,9 +102,10 @@ class IntegrationTest(IntegrationTestCase):
                               children=[note.Note(subject='Child')])
         self.notes.append(self.note)
         self.category.addCategorizable(self.note)
+        self.task.setModificationDateTime(date.DateTime(2012, 1, 1, 10, 9, 8))
 
     def getTaskWrittenAndRead(self, targetId):
-        # pylint: disable-msg=W0621
+        # pylint: disable=W0621
         return [task for task in self.tasksWrittenAndRead if task.id() == targetId][0]
 
     def assertAttributeWrittenAndRead(self, aTask, attribute):
@@ -117,6 +117,12 @@ class IntegrationTest(IntegrationTestCase):
         taskWrittenAndRead = self.getTaskWrittenAndRead(aTask.id())
         self.assertEqual([obj.id() for obj in getattr(aTask, attribute)()], 
                          [obj.id() for obj in getattr(taskWrittenAndRead, attribute)()])
+        
+    def testCreationDateTime(self):
+        self.assertAttributeWrittenAndRead(self.task, 'creationDateTime')
+        
+    def testModificationDateTime(self):
+        self.assertAttributeWrittenAndRead(self.task, 'modificationDateTime')
                
     def testSubject(self):
         self.assertAttributeWrittenAndRead(self.task, 'subject')

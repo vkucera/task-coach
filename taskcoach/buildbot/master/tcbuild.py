@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-# pylint: disable-msg=F0401,E1101
+# pylint: disable=F0401,E1101
 from buildbot.steps.shell import Compile, ShellCommand, WithProperties
 from buildbot.steps.master import MasterShellCommand
 from buildbot.steps.transfer import FileUpload, DirectoryUpload
@@ -41,14 +41,18 @@ class TaskCoachEmailLookup(object):
             return None
 
 
+class Revert(Compile):
+    name = 'Revert'
+    description = ['Reverting', 'locally', 'modified', 'files']
+    descriptionDone = ['Local', 'changes', 'reverted']
+    command = ['svn', 'revert', '-R', '.']
+
+
 class Cleanup(Compile):
     name = 'Cleanup'
     description = ['Deleting', 'unversioned', 'files']
     descriptionDone = ['Unversioned', 'files', 'deleted']
-
-    def __init__(self, **kwargs):
-        kwargs['command'] = ['make', 'nuke']
-        Compile.__init__(self, **kwargs)
+    command = ['make', 'nuke']
 
     def start(self):
         try:
@@ -63,11 +67,7 @@ class Revision(Compile):
     name = 'Revision'
     description = ['Generating', 'revision', 'file']
     descriptionDone = ['Revision', 'file', 'generated']
-
-    def __init__(self, **kwargs):
-        kwargs['command'] = ['make', 'revision', WithProperties('TCREV=%s',
-                                                                'got_revision')]
-        Compile.__init__(self, **kwargs)
+    command = ['make', 'revision', WithProperties('TCREV=%s', 'got_revision')]
 
 
 #==============================================================================
@@ -77,23 +77,15 @@ class UnitTests(Compile):
     name = 'unit tests'
     description = ['Running', 'unit', 'tests']
     descriptionDone = ['Unit', 'tests']
-
-    def __init__(self, **kwargs):
-        kwargs['command'] = ['make', 'unittests']
-        # On several distros, some tests fail randomly. Just make sure
-        # we still build the package and so on.
-        kwargs['haltOnFailure'] = False
-        Compile.__init__(self, **kwargs)
+    haltOnFailure = False
+    command = ['make', 'unittests']
 
 
 class IntegrationTests(Compile):
     name = 'integration tests'
     description = ['Running', 'integration', 'tests']
     descriptionDone = ['Integration', 'tests']
-
-    def __init__(self, **kwargs):
-        kwargs['command'] = ['make', 'integrationtests']
-        Compile.__init__(self, **kwargs)
+    command = ['make', 'integrationtests']
 
 
 class LanguageTests(Compile):
@@ -101,20 +93,23 @@ class LanguageTests(Compile):
     description = ['Running', 'language', 'tests']
     descriptionDone = ['Language', 'tests']
     haltOnFailure = False
+    command = ['make', 'languagetests']
 
-    def __init__(self, **kwargs):
-        kwargs['command'] = ['make', 'languagetests']
-        Compile.__init__(self, **kwargs)
+
+class ReleaseTests(Compile):
+    name = 'release tests'
+    description = ['Running', 'release', 'tests']
+    descriptionDone = ['Release', 'tests']
+    haltOnFailure = False
+    command = ['make', 'releasetests']
 
 
 class DistributionTests(Compile):
     name = 'distribution tests'
     description = ['Running', 'distribution', 'tests']
     descriptionDone = ['Distribution', 'tests']
-
-    def __init__(self, **kwargs):
-        kwargs['command'] = ['make', 'disttests']
-        Compile.__init__(self, **kwargs)
+    haltOnFailure = False
+    command = ['make', 'disttests']
 
 
 class KillEXE(ShellCommand):
@@ -133,12 +128,8 @@ class Coverage(Compile):
     name = 'coverage'
     description = ['Running', 'coverage']
     descriptionDone = ['Coverage']
-
-    def __init__(self, **kwargs):
-        kwargs['command'] = ['make', 'coverage']
-        # Same remark as for UnitTests
-        kwargs['haltOnFailure'] = False
-        Compile.__init__(self, **kwargs)
+    haltOnFailure = False
+    command = ['make', 'coverage']
 
     def createSummary(self, log):
         Compile.createSummary(self, log)
@@ -150,10 +141,7 @@ class Coverage(Compile):
 class UploadCoverage(DirectoryUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = 'tests/coverage.out'
-        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-coverage/%s',
-                                              'buildername')
-        kwargs['mode'] = 0755
-        kwargs['compress'] = None
+        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-coverage/%s', 'buildername')
         DirectoryUpload.__init__(self, **kwargs)
 
 
@@ -162,19 +150,13 @@ class Epydoc(Compile):
     description = ['Generating', 'documentation']
     descriptionDone = ['Documentation']
     warningPattern = '.*Warning:.*'
-
-    def __init__(self, **kwargs):
-        kwargs['command'] = ['make', 'epydoc']
-        Compile.__init__(self, **kwargs)
+    command = ['make', 'epydoc']
 
 
 class UploadDoc(DirectoryUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = 'epydoc.out'
-        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-doc/%s',
-                                              'buildername')
-        kwargs['mode'] = 0755
-        kwargs['compress'] = None
+        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-doc/%s', 'buildername')
         DirectoryUpload.__init__(self, **kwargs)
 
     def start(self):
@@ -199,8 +181,7 @@ class DistCompile(Compile):
         if self.getProperty('release'):
             self.command = ['make', self.target or self.name]
         else:
-            self.command = ['make', self.target or self.name,
-                            WithProperties('TCREV=%s', 'got_revision')]
+            self.command = ['make', self.target or self.name, 'TCREV=%s' % self.getProperty('got_revision')]
 
         Compile.start(self)
 
@@ -229,8 +210,7 @@ class DistCompile(Compile):
 class UploadBase(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = WithProperties('%s', 'filename')
-        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-packages/%s/%s',
-                                              'branch', 'basefilename')
+        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-packages/%s/%s', 'branch', 'basefilename')
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
 
@@ -250,11 +230,9 @@ class UploadBase(FileUpload):
 class UploadChangelog(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = 'changelog_content'
-        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-packages/%s/changelog_content',
-                                              'branch')
+        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-packages/%s/changelog_content', 'branch')
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
-
 
 
 # Mac OS X
@@ -262,7 +240,7 @@ class UploadChangelog(FileUpload):
 class BuildDMG(DistCompile):
     filename_rx = re.compile(r'^created: (.*)')
 
-    name = 'dmg'
+    name = 'dmg-signed'
     description = ['Generating', 'MacOS', 'binary']
     descriptionDone = ['MacOS', 'binary']
 
@@ -315,8 +293,7 @@ class UploadPortableApps(UploadBase):
 # Source
 
 class BuildSourceTar(DistCompile):
-    filename_rx = re.compile(r'tar -cf (.*\.tar)')
-    filesuffix = '.gz'
+    filename_rx = re.compile('^Created (.*)$')
 
     name = 'sdist_linux'
     description = ['Generating', 'source', 'distribution']
@@ -333,11 +310,24 @@ class BuildSourceZip(DistCompile):
     descriptionDone = ['Source', 'distribution']
 
 
+class BuildSourceRaw(DistCompile):
+    filename_rx = re.compile(r'tar czf (TaskCoach-.*-raw.tgz)')
+    fileprefix = 'dist/'
+
+    name = 'sdist_raw'
+    description = ['Generating', 'raw', 'source', 'distribution']
+    descriptionDone = ['Raw', 'source', 'distribution']
+
+
 class UploadSourceTar(UploadBase):
     pass
 
 
 class UploadSourceZip(UploadBase):
+    pass
+
+
+class UploadSourceRaw(UploadBase):
     pass
 
 # Debian
@@ -367,8 +357,10 @@ class PPA(Compile):
     description_done = ['PPA', 'uploaded']
 
     def __init__(self, **kwargs):
-        kwargs['command'] = ['make', 'ppa-' + kwargs.pop('name')]
+        name = kwargs.pop('name')
+        kwargs['command'] = ['make', 'ppa-' + name]
         Compile.__init__(self, **kwargs)
+        self.addFactoryArguments(name=name)
 
 
 # Generic RPM
@@ -412,6 +404,21 @@ class BuildFedora14(DistCompile):
 class UploadFedora14(UploadBase):
     pass
 
+# OpenSuse
+
+class BuildOpenSuse(DistCompile):
+    filename_rx = re.compile(r'([^/]*).noarch.rpm -> dist')
+    fileprefix = 'dist/'
+    filesuffix = '.opensuse.i386.rpm'
+
+    name = 'opensuse'
+    description = ['Generating', 'OpenSuse', 'package']
+    descriptionDone = ['OpenSuse', 'package']
+
+
+class UploadOpenSuse(UploadBase):
+    pass
+
 # Release
 
 class CleanupReleaseStep(MasterShellCommand):
@@ -419,7 +426,7 @@ class CleanupReleaseStep(MasterShellCommand):
     description = ['Cleanup']
 
     def __init__(self, **kwargs):
-        kwargs['command'] = 'rm -f /var/www/TaskCoach-packages/release/*'
+        kwargs['command'] = 'rm -rf /var/www/TaskCoach-packages/release/*'
         MasterShellCommand.__init__(self, **kwargs)
 
 
@@ -428,10 +435,30 @@ class ZipReleaseStep(MasterShellCommand):
     description = ['Zip']
 
     def __init__(self, **kwargs):
-        kwargs['command'] = '''cd /var/www/TaskCoach-packages/release
-zip release.zip *'''
+        kwargs['command'] = 'cd /var/www/TaskCoach-packages/release\nzip release.zip *'
         MasterShellCommand.__init__(self, **kwargs)
 
     def start(self):
         MasterShellCommand.start(self)
         self.addURL('Download release', 'http://www.fraca7.net/TaskCoach-packages/release/release.zip')
+
+# Pylint
+
+class PylintStep(Compile):
+    name = 'pylint'
+    description = ['Running', 'pylint']
+    descriptionDone = ['pylint']
+    command = ['make', 'pylint']
+
+
+class PylintUploadStep(FileUpload):
+    def __init__(self, **kwargs):
+        kwargs['slavesrc'] = 'pylint.html'
+        kwargs['masterdest'] = WithProperties('/var/www/pylint-%s.html', 'buildername')
+        kwargs['mode'] = 0644
+        FileUpload.__init__(self, **kwargs)
+
+    def start(self):
+        FileUpload.start(self)
+
+        self.addURL('See', 'http://www.fraca7.net/pylint-%s.html' % self.getProperty('buildername'))

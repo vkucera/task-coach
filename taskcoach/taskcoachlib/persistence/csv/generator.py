@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -35,7 +35,9 @@ class RowBuilder(object):
                                     plannedStartDateTime=[_('Planned start date'), _('Planned start time')],
                                     dueDateTime=[_('Due date'), _('Due time')],
                                     completionDateTime=[_('Completion date'), _('Completion time')],
-                                    reminder=[_('Reminder date'), _('Reminder time')])
+                                    reminder=[_('Reminder date'), _('Reminder time')],
+                                    creationDateTime=[_('Creation date'), _('Creation time')],
+                                    period=[_('Period')])
     
     def __init__(self, columns, isTree, separateDateAndTimeColumns):
         self.__columns = columns
@@ -60,7 +62,7 @@ class RowBuilder(object):
             if self.shouldSplitDateAndTime(column):
                 row.extend(self.splitDateAndTime(column, item))
             else:
-                row.append(column.render(item))
+                row.append(column.render(item, humanReadable=False))
         row[0] = self.indent(item) + row[0]
         return row
 

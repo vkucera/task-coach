@@ -16,42 +16,48 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, wx
 from xml.etree import ElementTree as ET
-from taskcoachlib.i18n import _
-
-
-def _anonymize(filename):
-    tree = ET.parse(file(filename, 'rb'))
-    root = tree.getroot()
-
-    def handle(node):
-        for child in node:
-            handle(child)
-
-        if 'subject' in node.attrib:
-            node.attrib['subject'] = u'X' * len(node.attrib['subject'])
-
-        if node.tag in ['description', 'data'] and node.text:
-            node.text = '\n'.join([u'X' * len(line) for line in node.text.split('\n')])
-            if node.tag == 'data':
-                node.attrib['extension'] = 'X' * len(node.attrib['extension'])
-
-        if node.tag == 'property' and node.attrib.has_key('name') and node.attrib['name'] == 'username':
-            node.text = 'XXX' # pylint: disable-msg=W0511
-
-        if node.tag == 'attachment':
-            if node.attrib.has_key('location'):
-                node.attrib['location'] = 'X' * len(node.attrib['location'])
-
-    handle(root)
-
-    name, ext = os.path.splitext(filename)
-    tree.write(name + '.anonymized' + ext)
-    return name + '.anonymized' + ext
+import os
 
 
 def anonymize(filename):
-    name = _anonymize(filename)
-    wx.MessageBox(_('Your task file has been anonymized and saved to:') + '\n' + name,
-                  _('Finished'), wx.OK)
+    ''' Anonymize the file specified by the filename by reading its contents,
+        replacing the contents with X's and saving the anonymized contents to 
+        a copy of the file. '''
+    
+    def anonymize_string(string):
+        ''' Return an anonymized version of the string. '''
+        return u'X' * len(string)
+    
+    def anonymize_text(text):
+        ''' Return an anonymized version of the text, keeping the line 
+            breaks. '''
+        return '\n'.join([anonymize_string(line) for line in text.split('\n')])
+
+    def anonymize_node(node):
+        ''' Recursively anonymize the node and all of its child nodes. '''
+        for child in node:
+            anonymize_node(child)
+
+        if 'subject' in node.attrib:
+            node.attrib['subject'] = anonymize_string(node.attrib['subject'])
+
+        if node.tag in ('description', 'data') and node.text:
+            node.text = anonymize_text(node.text)
+            if node.tag == 'data':
+                node.attrib['extension'] = \
+                    anonymize_string(node.attrib['extension'])
+
+        if node.tag == 'property' and 'name' in node.attrib and \
+           node.attrib['name'] == 'username':
+            node.text = 'XXX'  # pylint: disable=W0511
+
+        if node.tag == 'attachment' and 'location' in node.attrib:
+            node.attrib['location'] = anonymize_string(node.attrib['location'])
+            
+    tree = ET.parse(file(filename, 'rb'))
+    anonymize_node(tree.getroot())
+    name, ext = os.path.splitext(filename)
+    anonymized_filename = name + '.anonymized' + ext
+    tree.write(anonymized_filename)
+    return anonymized_filename

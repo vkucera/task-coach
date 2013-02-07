@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,47 +18,52 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
-from taskcoachlib import application, meta, patterns, widgets, operating_system # pylint: disable-msg=W0622
-from taskcoachlib.i18n import _
-from taskcoachlib.gui.threads import DeferredCallMixin, synchronized
+from taskcoachlib import application, meta, widgets, \
+    operating_system # pylint: disable=W0622
+from taskcoachlib.gui import viewer, toolbar, uicommand, remindercontroller, \
+    artprovider, windowdimensionstracker, idlecontroller
 from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog
 from taskcoachlib.gui.dialog.xfce4warning import XFCE4WarningDialog
 from taskcoachlib.gui.iphone import IPhoneSyncFrame
+from taskcoachlib.gui.threads import DeferredCallMixin, synchronized
+from taskcoachlib.i18n import _
 from taskcoachlib.powermgt import PowerStateMixin
-import taskcoachlib.thirdparty.aui as aui
+from taskcoachlib.help.balloontips import BalloonTipManager
 from taskcoachlib.thirdparty.pubsub import pub
-import viewer, toolbar, uicommand, remindercontroller, artprovider, windowdimensionstracker, idlecontroller
+import taskcoachlib.thirdparty.aui as aui
+import wx
 
 
-def turnOnDoubleBufferingOnWindows(window):
-    import win32gui, win32con # pylint: disable-msg=F0401
+def turn_on_double_buffering_on_windows(window):
+    import win32gui, win32con  # pylint: disable=F0401
     exstyle = win32gui.GetWindowLong(window.GetHandle(), win32con.GWL_EXSTYLE)
     exstyle |= win32con.WS_EX_COMPOSITED
     win32gui.SetWindowLong(window.GetHandle(), win32con.GWL_EXSTYLE, exstyle)
 
 
-class MainWindow(DeferredCallMixin, PowerStateMixin, 
+class MainWindow(DeferredCallMixin, PowerStateMixin, BalloonTipManager,
                  widgets.AuiManagedFrameWithDynamicCenterPane):
     def __init__(self, iocontroller, taskFile, settings, *args, **kwargs):
+        self.__splash = kwargs.pop('splash', None)
         super(MainWindow, self).__init__(None, -1, '', *args, **kwargs)
         # This prevents the viewers from flickering on Windows 7 when refreshed:
         if operating_system.isWindows7_OrNewer():
-            turnOnDoubleBufferingOnWindows(self)
-        self.dimensionsTracker = windowdimensionstracker.WindowDimensionsTracker(self, settings)
+            turn_on_double_buffering_on_windows(self)
+        self.__dimensions_tracker = windowdimensionstracker.WindowDimensionsTracker(self, settings)
         self.iocontroller = iocontroller
         self.taskFile = taskFile
         self.settings = settings
         self.Bind(wx.EVT_CLOSE, self.onClose)
         self.Bind(wx.EVT_ICONIZE, self.onIconify)
-        self.createWindowComponents()
-        self.initWindowComponents()
-        self.initWindow()
-        self.registerForWindowComponentChanges()
+        self.Bind(wx.EVT_SIZE, self.onResize)
+        self._create_window_components()  # Not private for test purposes
+        self.__init_window_components()
+        self.__init_window()
+        self.__register_for_window_component_changes()
         
         if settings.getboolean('feature', 'syncml'):
             try:
-                import taskcoachlib.syncml.core # pylint: disable-msg=W0612,W0404
+                import taskcoachlib.syncml.core  # pylint: disable=W0612,W0404
             except ImportError:
                 if settings.getboolean('syncml', 'showwarning'):
                     dlg = widgets.SyncMLWarningDialog(self)
@@ -71,7 +76,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         self.bonjourRegister = None
 
         if settings.getboolean('feature', 'iphone'):
-            # pylint: disable-msg=W0612,W0404,W0702
+            # pylint: disable=W0612,W0404,W0702
             try:
                 from taskcoachlib.thirdparty import pybonjour 
                 from taskcoachlib.iphone import IPhoneAcceptor, BonjourServiceRegister
@@ -103,60 +108,77 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
                 dlg = XFCE4WarningDialog(self, self.settings)
                 dlg.Show()
 
-    def createWindowComponents(self):
-        self.createViewerContainer()
+    def _create_window_components(self):  # Not private for test purposes
+        self._create_viewer_container()
         viewer.addViewers(self.viewer, self.taskFile, self.settings)
-        self.createStatusBar()
-        self.createMenuBar()
-        self.createReminderController()
+        self._create_status_bar()
+        self.__create_menu_bar()
+        self.__create_reminder_controller()
         
-    def createViewerContainer(self):
-        # pylint: disable-msg=W0201
+    def _create_viewer_container(self):  # Not private for test purposes
+        # pylint: disable=W0201
         self.viewer = viewer.ViewerContainer(self, self.settings) 
         
-    def createStatusBar(self):
-        import status # pylint: disable-msg=W0404
+    def _create_status_bar(self):
+        from taskcoachlib.gui import status  # pylint: disable=W0404
         self.SetStatusBar(status.StatusBar(self, self.viewer))
         
-    def createMenuBar(self):
-        import menu # pylint: disable-msg=W0404
+    def __create_menu_bar(self):
+        from taskcoachlib.gui import menu  # pylint: disable=W0404
         self.SetMenuBar(menu.MainMenu(self, self.settings, self.iocontroller, 
                                       self.viewer, self.taskFile))
     
-    def createReminderController(self):
-        # pylint: disable-msg=W0201
+    def __create_reminder_controller(self):
+        # pylint: disable=W0201
         self.reminderController = \
             remindercontroller.ReminderController(self, self.taskFile.tasks(),
                 self.taskFile.efforts(), self.settings)
         
-    def addPane(self, page, caption): # pylint: disable-msg=W0221
+    def addPane(self, page, caption, floating=False):  # pylint: disable=W0221
         name = page.settingsSection()
-        super(MainWindow, self).addPane(page, caption, name)
+        super(MainWindow, self).addPane(page, caption, name, floating=floating)
         
-    def initWindow(self):
+    def __init_window(self):
         self.setTitle(self.taskFile.filename())
         self.SetIcons(artprovider.iconBundle('taskcoach'))
-        self.displayMessage(_('Welcome to %(name)s version %(version)s')% \
+        self.displayMessage(_('Welcome to %(name)s version %(version)s') % \
             {'name': meta.name, 'version': meta.version}, pane=1)
 
-    def initWindowComponents(self):
+    def __init_window_components(self):
         self.showToolBar(self.settings.getvalue('view', 'toolbar'))
         # We use CallAfter because otherwise the statusbar will appear at the 
         # top of the window when it is initially hidden and later shown.
-        wx.CallAfter(self.showStatusBar, self.settings.getboolean('view', 'statusbar'))
-        self.restorePerspective()
+        wx.CallAfter(self.showStatusBar, 
+                     self.settings.getboolean('view', 'statusbar'))
+        self.__restore_perspective()
             
-    def restorePerspective(self):
+    def __restore_perspective(self):
         perspective = self.settings.get('view', 'perspective')
-        viewerTypes = viewer.viewerTypes()
-        for viewerType in viewerTypes:
-            if self.perspectiveAndSettingsHaveDifferentViewerCount(viewerType):
+        for viewer_type in viewer.viewerTypes():
+            if self.__perspective_and_settings_viewer_count_differ(viewer_type):
                 # Different viewer counts may happen when the name of a viewer 
                 # is changed between versions
                 perspective = ''
                 break
 
-        self.manager.LoadPerspective(perspective)
+        try:
+            self.manager.LoadPerspective(perspective)
+        except ValueError, reason:
+            # This has been reported to happen. Don't know why. Keep going
+            # if it does.
+            if self.__splash:
+                self.__splash.Destroy()
+            wx.MessageBox(_('''Couldn't restore the pane layout from TaskCoach.ini:
+%s
+
+The default pane layout will be used.
+
+If this happens again, please make a copy of your TaskCoach.ini file '''
+'''before closing the program, open a bug report, and attach the '''
+'''copied TaskCoach.ini file to the bug report.''') % reason,
+            _('%s settings error') % meta.name, style=wx.OK | wx.ICON_ERROR)
+            self.manager.LoadPerspective('')
+        
         for pane in self.manager.GetAllPanes():
             # Prevent zombie panes by making sure all panes are visible
             if not pane.IsShown():
@@ -167,13 +189,14 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
                 pane.Caption(pane.window.title())
         self.manager.Update()
         
-    def perspectiveAndSettingsHaveDifferentViewerCount(self, viewerType):
+    def __perspective_and_settings_viewer_count_differ(self, viewer_type):
         perspective = self.settings.get('view', 'perspective')
-        perspectiveViewerCount = perspective.count('name=%s'%viewerType)
-        settingsViewerCount = self.settings.getint('view', '%scount'%viewerType)
-        return perspectiveViewerCount != settingsViewerCount
+        perspective_viewer_count = perspective.count('name=%s' % viewer_type)
+        settings_viewer_count = self.settings.getint('view', 
+                                                     '%scount' % viewer_type)
+        return perspective_viewer_count != settings_viewer_count
     
-    def registerForWindowComponentChanges(self):
+    def __register_for_window_component_changes(self):
         pub.subscribe(self.setTitle, 'taskfile.filenameChanged')
         pub.subscribe(self.showStatusBar, 'settings.view.statusbar')
         pub.subscribe(self.showToolBar, 'settings.view.toolbar')
@@ -182,29 +205,29 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
     def setTitle(self, filename):
         title = meta.name
         if filename:
-            title += ' - %s'%filename
+            title += ' - %s' % filename
         self.SetTitle(title)
         
     def displayMessage(self, message, pane=0):
         self.GetStatusBar().SetStatusText(message, pane)
         
-    def saveSettings(self):
-        self.saveViewerCounts()
-        self.savePerspective()
-        self.savePosition()
+    def save_settings(self):
+        self.__save_viewer_counts()
+        self.__save_perspective()
+        self.__save_position()
 
-    def saveViewerCounts(self):
+    def __save_viewer_counts(self):
         ''' Save the number of viewers for each viewer type. '''
-        for viewerType in viewer.viewerTypes():
-            count = len([v for v in self.viewer if v.__class__.__name__.lower() == viewerType])
-            self.settings.set('view', viewerType + 'count', str(count))
+        for viewer_type in viewer.viewerTypes():
+            count = len([v for v in self.viewer if v.__class__.__name__.lower() == viewer_type])
+            self.settings.set('view', viewer_type + 'count', str(count))
             
-    def savePerspective(self):
+    def __save_perspective(self):
         perspective = self.manager.SavePerspective()
         self.settings.set('view', 'perspective', perspective)
         
-    def savePosition(self):
-        self.dimensionsTracker.savePosition()
+    def __save_position(self):
+        self.__dimensions_tracker.save_position()
         
     def onClose(self, event):
         if event.CanVeto() and self.settings.getboolean('window', 
@@ -212,11 +235,12 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
             event.Veto()
             self.Iconize()
         else:
-            self._idleController.stop()
-            self.taskFile.stop()
-            application.Application().quitApplication()
+            if application.Application().quitApplication():
+                event.Skip()
+                self.taskFile.stop()
+                self._idleController.stop()
 
-    def restore(self, event):  # pylint: disable-msg=W0613
+    def restore(self, event):  # pylint: disable=W0613
         if self.settings.getboolean('window', 'maximized'):
             self.Maximize()
         self.Iconize(False)
@@ -230,7 +254,14 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
             self.Hide()
         else:
             event.Skip()
-            
+
+    def onResize(self, event):
+        currentToolbar = self.manager.GetPane('toolbar')
+        if currentToolbar.IsOk():
+            currentToolbar.window.SetSize((event.GetSize().GetWidth(), -1))
+            currentToolbar.window.SetMinSize((event.GetSize().GetWidth(), 42))
+        event.Skip()
+
     def showStatusBar(self, value=True):
         # FIXME: First hiding the statusbar, then hiding the toolbar, then
         # showing the statusbar puts it in the wrong place (only on Linux?)
@@ -254,32 +285,26 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
                 uicommand.EffortStop(effortList=self.taskFile.efforts(),
                                      taskList=self.taskFile.tasks())])
         return uiCommands
-        
+
+    def getToolBarPerspective(self):
+        return self.settings.get('view', 'toolbarperspective')
+
+    def saveToolBarPerspective(self, perspective):
+        self.settings.set('view', 'toolbarperspective', perspective)
+
     def showToolBar(self, value):
-        # Current version of wxPython (2.7.8.1) has a bug 
-        # (https://sourceforge.net/tracker/?func=detail&atid=109863&aid=1742682&group_id=9863)
-        # that makes adding controls to a toolbar not working. Also, when the 
-        # toolbar is visible it's nearly impossible to enter text into text
-        # controls. Immediately after you click on a text control the focus
-        # is removed. We work around it by not having AUI manage the toolbar
-        # on Mac OS X:
-        if operating_system.isMac():
-            if self.GetToolBar():
-                self.GetToolBar().Destroy()
-            if value is not None:
-                self.SetToolBar(toolbar.ToolBar(self, size=value))
-            self.SendSizeEvent()
-        else:
-            currentToolbar = self.manager.GetPane('toolbar')
-            if currentToolbar.IsOk():
-                self.manager.DetachPane(currentToolbar.window)
-                currentToolbar.window.Destroy()
-            if value:
-                bar = toolbar.ToolBar(self, size=value)
-                self.manager.AddPane(bar, aui.AuiPaneInfo().Name('toolbar').
-                                     Caption('Toolbar').ToolbarPane().Top().DestroyOnClose().
-                                     LeftDockable(False).RightDockable(False))
-            self.manager.Update()
+        currentToolbar = self.manager.GetPane('toolbar')
+        if currentToolbar.IsOk():
+            self.manager.DetachPane(currentToolbar.window)
+            currentToolbar.window.Destroy()
+        if value:
+            bar = toolbar.MainToolBar(self, self.settings, size=value)
+            self.manager.AddPane(bar, aui.AuiPaneInfo().Name('toolbar').
+                                 Caption('Toolbar').ToolbarPane().Top().DestroyOnClose().
+                                 LeftDockable(False).RightDockable(False))
+            # Using .Gripper(False) does not work here
+            wx.CallAfter(bar.SetGripperVisible, False)
+        self.manager.Update()
 
     def onCloseToolBar(self, event):
         if event.GetPane().IsToolbar():
@@ -304,13 +329,14 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
     @synchronized
     def createIPhoneProgressFrame(self):
         return IPhoneSyncFrame(self.settings, _('iPhone/iPod'),
-                               icon=wx.ArtProvider.GetBitmap('taskcoach', wx.ART_FRAME_ICON, (16, 16)),
-                               parent=self)
+            icon=wx.ArtProvider.GetBitmap('taskcoach', wx.ART_FRAME_ICON, 
+                                          (16, 16)),
+            parent=self)
 
     @synchronized
     def getIPhoneSyncType(self, guid):
         if guid == self.taskFile.guid():
-            return 0 # two-ways
+            return 0  # two-way
 
         dlg = IPhoneSyncTypeDialog(self, wx.ID_ANY, _('Synchronization type'))
         try:
@@ -387,7 +413,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         task.setRecurrence(recurrence)
         task.setPriority(priority)
 
-        if categories is not None: # Protocol v2
+        if categories is not None:  # Protocol v2
             for toRemove in task.categories() - categories:
                 task.removeCategory(toRemove)
                 toRemove.removeCategorizable(task)

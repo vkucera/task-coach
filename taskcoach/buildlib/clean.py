@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ class clean(BaseCleanCommand, object):
 
     def initialize_options(self):
         super(clean, self).initialize_options()
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self.really_clean = False
         self.cleaning_patterns = ['*.pyc']
         self.really_clean_patterns = ['*.bak']

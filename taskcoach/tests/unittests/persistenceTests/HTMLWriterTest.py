@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, StringIO, os
 import test
-from taskcoachlib import persistence, gui, config
+from taskcoachlib import persistence, gui, config, render
 from taskcoachlib.domain import task, category, effort, date
     
     
@@ -118,7 +118,7 @@ class TaskTestsMixin(CommonTestsMixin):
         self.expectInHTML('      .completed {color: #FF0000}\n')
         
     def testOverdueTask(self):
-        self.task.setDueDateTime(date.Now() - date.oneDay)
+        self.task.setDueDateTime(date.Yesterday())
         fragment = '<tr class="overdue">' if self.filename else '<font color="#FF0000">Task subject</font>'
         self.expectInHTML(fragment)
 
@@ -130,17 +130,17 @@ class TaskTestsMixin(CommonTestsMixin):
             self.expectInHTML('<font color="#00FF00">Task subject</font>')
 
     def testTaskDueSoon(self):
-        self.task.setDueDateTime(date.Now() + date.oneHour)
+        self.task.setDueDateTime(date.Now() + date.ONE_HOUR)
         fragment = '<tr class="duesoon">' if self.filename else '<font color="#FF8000">Task subject</font>' 
         self.expectInHTML(fragment)
         
     def testInactiveTask(self):
-        self.task.setPlannedStartDateTime(date.Now() + date.oneDay)
+        self.task.setPlannedStartDateTime(date.Tomorrow())
         fragment = '<tr class="inactive">' if self.filename else '<font color="#C0C0C0">Task subject</font>'
         self.expectInHTML(fragment)
         
     def testLateTask(self):
-        self.task.setPlannedStartDateTime(date.Now() - date.oneDay)
+        self.task.setPlannedStartDateTime(date.Yesterday())
         fragment = '<tr class="late">' if self.filename else '<font color="#A020F0">Task subject</font>'
         self.expectInHTML(fragment)
 
@@ -173,9 +173,9 @@ class TaskTestsMixin(CommonTestsMixin):
             self.expectNotInHTML('stylesheet')
             
     def testOSErrorWhileWritingCSS(self):
-        def open(*args): # pylint: disable-msg=W0613,W0622
+        def open(*args): # pylint: disable=W0613,W0622
             raise IOError
-        self.writer._writeCSS(open=open) # pylint: disable-msg=W0212
+        self.writer._writeCSS(open=open) # pylint: disable=W0212
         
 
 class TaskListTestsMixin(object):
@@ -189,6 +189,29 @@ class TaskListTestsMixin(object):
         self.viewer.showColumnByName('description')
         self.expectInHTML('>Line1<br>Line2<')
         
+    def testCreationDateTime(self):
+        self.viewer.showColumnByName('creationDateTime')
+        self.expectInHTML(render.dateTime(self.task.creationDateTime(), 
+                                          humanReadable=False))
+        
+    def testMissingCreationDateTime(self):
+        self.viewer.showColumnByName('creationDateTime')
+        self.taskFile.tasks().append(task.Task(creationDateTime=date.DateTime.min))
+        self.taskFile.tasks().remove(self.task)
+        self.expectNotInHTML('1/1/1')
+        
+    def testModificationDateTime(self):
+        self.task.setModificationDateTime(date.DateTime(2012, 1, 1, 10, 0, 0))
+        self.viewer.showColumnByName('modificationDateTime')
+        self.expectInHTML(render.dateTime(self.task.modificationDateTime(),
+                                          humanReadable=False))
+        
+    def testMissingModificationDateTime(self):
+        self.viewer.showColumnByName('modificationDateTime')
+        self.expectInHTML(render.dateTime(self.task.modificationDateTime(),
+                                          humanReadable=False))
+        self.expectNotInHTML('1/1/1')
+
         
 class TaskListExportTest(TaskTestsMixin, TaskListTestsMixin, TaskWriterTestCase):
     treeMode = 'False'
@@ -217,7 +240,7 @@ class EffortWriterTestCase(CommonTestsMixin, HTMLWriterTestCase):
         super(EffortWriterTestCase, self).setUp()
         now = date.DateTime.now()
         self.task.addEffort(effort.Effort(self.task, start=now,
-                                          stop=now + date.TimeDelta(seconds=1)))
+                                          stop=now + date.ONE_SECOND))
 
     def createViewer(self):
         return gui.viewer.EffortViewer(self.frame, self.taskFile, self.settings)

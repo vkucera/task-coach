@@ -105,12 +105,13 @@ elif operating_system.isMac():
 class IdleNotifier(IdleQuery):
     STATE_NONE            = 0
     STATE_IDLE            = 1
+    STATE_OFF             = 0x80 # Used as bitmask
 
     def __init__(self):
         super(IdleNotifier, self).__init__()
 
         self.state = self.STATE_NONE
-        self.last = 0.0
+        self.lastActivity = time.time()
         self.evtStop = threading.Event()
 
         self.thr = threading.Thread(target=self._run)
@@ -120,6 +121,27 @@ class IdleNotifier(IdleQuery):
     def stop(self):
         self.evtStop.set()
         self.thr.join()
+
+    def poweroff(self):
+        """
+        Call this when the computer goes to sleep.
+        """
+        self.state |= self.STATE_OFF
+
+    def poweron(self):
+        """
+        Call this when the computer resumes from sleep.
+        """
+        if self.state & self.STATE_OFF:
+            self.state &= ~self.STATE_OFF
+            if self.getMinIdleTime() != 0 and time.time() - self.lastActivity >= self.getMinIdleTime():
+                if self.state == self.STATE_NONE:
+                    self.sleep()
+                self.wake()
+
+            self.lastDelta = 0
+            self.lastActivity = time.time()
+            self.state = self.STATE_NONE
 
     def getMinIdleTime(self):
         """
@@ -132,28 +154,28 @@ class IdleNotifier(IdleQuery):
         Called when the min idle time has elapsed without any user
         input.
         """
-        raise NotImplementedError
 
     def wake(self):
         """
         Called when the computer is not idle any more.
         """
-        raise NotImplementedError
 
     def _run(self):
         while not self.evtStop.isSet():
-            if self.getMinIdleTime() != 0:
-                if self.state == self.STATE_NONE:
-                    self.last = self.getIdleSeconds()
-                    if self.last >= self.getMinIdleTime():
-                        self.sleep()
-                        self.state = self.STATE_IDLE
-                elif self.state == self.STATE_IDLE:
-                    idleTime = self.getIdleSeconds()
-                    if idleTime < self.last:
-                        self.wake()
-                        self.state = self.STATE_NONE
-                    self.last = idleTime
+            if self.state == self.STATE_NONE:
+                delta = self.getIdleSeconds()
+                self.lastActivity = time.time() - delta
+                self.lastDelta = delta
+                if self.getMinIdleTime() != 0 and delta >= self.getMinIdleTime():
+                    self.state = self.STATE_IDLE
+                    self.sleep()
+            elif self.state == self.STATE_IDLE:
+                delta = self.getIdleSeconds()
+                if delta < self.lastDelta:
+                    self.state = self.STATE_NONE
+                    self.wake()
+                    self.lastActivity = time.time() - delta
+                    self.lastDelta = delta
 
             # Ideally this would be self.evtStop.wait(1) but on some
             # platforms it's a busy wait.

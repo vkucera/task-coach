@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -96,6 +96,15 @@ class CommonTestsMixin(object):
         self.task1.addEffort(self.effort1period1b)
         self.taskList.append(self.task1)
         self.assertEqual(2, len(self.effortAggregator))
+        
+    def testAddTaskWithTwoEffortsOnSameDayAndCheckTotalEffort(self):
+        self.task1.addEffort(self.effort1period1a)
+        self.task1.addEffort(self.effort1period1b)
+        self.taskList.append(self.task1)
+        expectedDuration = self.effort1period1a.duration() + \
+                           self.effort1period1b.duration()
+        self.assertEqual(expectedDuration, 
+                         list(self.effortAggregator)[0].duration())
         
     def testAddTwoEffortsInDifferentPeriods(self):
         self.taskList.append(self.task1)
@@ -223,7 +232,7 @@ class CommonTestsMixin(object):
         self.taskList.append(self.task1)
         self.task1.addEffort(self.effort1period1a)
         self.effort1period1a.setStart(self.effort1period1a.getStart() + \
-            date.TimeDelta(seconds=1))
+            date.ONE_SECOND)
         self.assertEqual(2, len(self.effortAggregator))
 
     def testChangeStopDoesNotAffectPeriod(self):

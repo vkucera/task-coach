@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ class iCalendarWriter(object):
     def __init__(self, fd, filename=None):
         self.__fd = fd
 
-    def write(self, viewer, settings, selectionOnly=False): # pylint: disable-msg=W0613
+    def write(self, viewer, settings, selectionOnly=False): # pylint: disable=W0613
         items = viewer.visibleItems()
         if selectionOnly:
             selection = viewer.curselection()

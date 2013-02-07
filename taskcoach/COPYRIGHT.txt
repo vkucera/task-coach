@@ -1,18 +1,20 @@
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach developers are:
+Copyright (C) 2012 Aaron Wolf <wolftune@gmail.com>
+Copyright (C) 2005-2011 JÃ©rÃ´me Laheurte <fraca7@free.fr>
 Copyright (C) 2004-2011 Frank Niessink <frank@niessink.com>
-Copyright (C) 2005-2011 Jérôme Laheurte <fraca7@free.fr>
 
 Portions were contributed by:
+Copyright (C) 2012 Nicola Chiapolini <nicola.chiapolini@physik.uzh.ch>
 Copyright (C) 2011 David Harks <dave@dwink.net>
 Copyright (C) 2010 Svetoslav Trochev <sal_electronics@hotmail.com>
 Copyright (C) 2009 George Weeks <gcw52@telus.net>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Carl Zmola <zmola@acm.org>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
-Copyright (C) 2008 João Alexandre de Toledo <jtoledo@griffo.com.br>
+Copyright (C) 2008 JoÄƒo Alexandre de Toledo <jtoledo@griffo.com.br>
 Copyright (C) 2008 Marcin Zajaczkowski <mszpak@wp.pl>
 Copyright (C) 2011 Tobias Gradl <https://sourceforge.net/users/greentomato>
 
@@ -24,7 +26,7 @@ license.
 The following files do not include any copyright information except
 for the original author's name:
 
- - taskcoachlib/notify/snarl.py: that's how we found it on the Interwebs.
+ - taskcoachlib/thirdparty/snarl.py: that's how we found it on the Interwebs.
  - taskcoachlib/i18n/po2dict.py: same.
  - taskcoachlib/persistence/xml/templates.py: because it's a generated
     file.

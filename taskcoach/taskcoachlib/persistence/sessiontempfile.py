@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ class TempFiles(object):
                     os.chmod(name, stat.S_IREAD|stat.S_IWRITE)
                 os.remove(name)
             except:
-                pass # pylint: disable-msg=W0702
+                pass # pylint: disable=W0702
 
 
 def get_temp_file(**kwargs):

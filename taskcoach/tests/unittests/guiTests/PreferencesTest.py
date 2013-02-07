@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ class PreferencesTest(test.wxTestCase):
         self.originalColor = self.settings.get('fgcolor', 'activetasks')
         self.newColor = (1, 2, 29)
         
-    # pylint: disable-msg=W0212
+    # pylint: disable=W0212
     
     def testCancel(self):
         self.preferences[5]._colorSettings[4][2].SetColour(self.newColor)

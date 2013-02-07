@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,9 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, os
 from taskcoachlib import persistence, config
 from taskcoachlib.domain import task
+import test
+import os
+from unittests import dummy
 
 
 class AutoExporterTestCase(test.TestCase):
@@ -44,6 +46,7 @@ class AutoExporterTestCase(test.TestCase):
         self.settings.set('file', 'autosave', 'True')
         autosaver = persistence.AutoSaver(self.settings)
         self.taskFile.tasks().append(task.Task(subject='Some task'))
+        autosaver.on_idle(dummy.Event())
         self.assertEqual('Some task\n', file(self.txtFilename, 'r').read())
         
     def testAddOneTaskAndSaveManually(self):
@@ -67,6 +70,7 @@ class AutoExporterTestCase(test.TestCase):
         with file(self.txtFilename, 'w') as todoTxtFile:
             todoTxtFile.write('Imported task\n')
         self.taskFile.tasks().append(task.Task(subject='Some task'))
+        autosaver.on_idle(dummy.Event())
         self.assertEqual(2, len(self.taskFile.tasks()))
 
     def testImportAfterReadingTaskFile(self):
@@ -82,4 +86,3 @@ class AutoExporterTestCase(test.TestCase):
         self.settings.set('file', 'autoimport', '["Todo.txt"]')
         self.taskFile.tasks().append(task.Task(subject='Whatever'))
         self.taskFile.save()
-     

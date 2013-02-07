@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,14 +16,55 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, icons
 from taskcoachlib import patterns, operating_system
 from taskcoachlib.i18n import _
+import wx
+import icons
 
 
 class ArtProvider(wx.ArtProvider):
     def CreateBitmap(self, artId, artClient, size):
-        catalogKey = '%s%dx%d'%(artId, size[0], size[1])
+        if '+' in artId:
+            w, h = size
+            main, overlay = artId.split('+')
+
+            overlayImage = self._CreateBitmap(overlay, artClient, size).ConvertToImage()
+            overlayImage.Rescale(int(w / 2), int(h / 2), wx.IMAGE_QUALITY_HIGH)
+            overlayAlpha = overlayImage.GetAlphaData()
+            overlayBitmap = overlayImage.ConvertToBitmap()
+
+            mainImage = self._CreateBitmap(main, artClient, size).ConvertToImage()
+            mainAlpha = mainImage.GetAlphaData()
+            mainImage.SetAlphaData(chr(255) * len(mainAlpha))
+            mainBitmap = mainImage.ConvertToBitmap()
+
+            dstDC = wx.MemoryDC()
+            dstDC.SelectObject(mainBitmap)
+            try:
+                dstDC.DrawBitmap(overlayBitmap, w - int(w / 2), h - int(h / 2), True)
+            finally:
+                dstDC.SelectObject(wx.NullBitmap)
+            mainImage = mainBitmap.ConvertToImage()
+
+            # Just drawing works fine on OS X but clips to the destination bitmap on
+            # other platforms. There doesn't seem to be anything better than this.
+            resultAlpha = list()
+            for y in xrange(h):
+                for x in xrange(w):
+                    alpha = mainAlpha[y * w + x]
+                    if x >= w / 2 and y >= h / 2:
+                        alpha = max(alpha, overlayAlpha[(y - h / 2) * w / 2 + x - w / 2])
+                    resultAlpha.append(alpha)
+            mainImage.SetAlphaData(''.join(resultAlpha))
+
+            return mainImage.ConvertToBitmap()
+        else:
+            return self._CreateBitmap(artId, artClient, size)
+
+    def _CreateBitmap(self, artId, artClient, size):
+        if not artId:
+            return wx.EmptyBitmap(*size)
+        catalogKey = '%s%dx%d' % (artId, size[0], size[1])
         if catalogKey in icons.catalog.keys():
             bitmap = icons.catalog[catalogKey].getBitmap()
             if artClient == wx.ART_FRAME_ICON:
@@ -83,9 +124,9 @@ def getIcon(iconTitle):
 
 def init():
     if operating_system.isWindows() and wx.DisplayDepth() >= 32:
-        wx.SystemOptions_SetOption("msw.remap", "0") # pragma: no cover
+        wx.SystemOptions_SetOption("msw.remap", "0")  # pragma: no cover
     try:
-        wx.ArtProvider_PushProvider(ArtProvider()) # pylint: disable-msg=E1101
+        wx.ArtProvider_PushProvider(ArtProvider())  # pylint: disable=E1101
     except AttributeError:
         wx.ArtProvider.Push(ArtProvider())
 
@@ -185,4 +226,3 @@ itemImages = chooseableItemImages.keys() + ['folder_blue_open_icon',
     'folder_blue_light_open_icon']
 
 chooseableItemImages[''] = _('No icon')
-

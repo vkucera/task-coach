@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,13 +25,13 @@ from unittests import dummy
 
 class EditorUnderTest(gui.dialog.editor.NoteEditor):        
     def __init__(self, *args, **kwargs):
-        kwargs['callAfter'] = lambda f, *args, **kwargs: f(*args, **kwargs)
+        kwargs['call_after'] = lambda f, *args, **kwargs: f(*args, **kwargs)
         super(EditorUnderTest, self).__init__(*args, **kwargs)
         self.editorClosed = False
                 
-    def onClose(self, event):
+    def on_close_editor(self, event):
         self.editorClosed = True
-        super(EditorUnderTest, self).onClose(event)
+        super(EditorUnderTest, self).on_close_editor(event)
 
 
 class EditorTestCase(test.wxTestCase):
@@ -60,9 +60,10 @@ class EditorTestCase(test.wxTestCase):
         self.failIf(self.editor.editorClosed)
         
     def testVeryLongSubject(self):
-        longSubject = 'Subject'*1000
+        longSubject = 'Subject' * 1000
         self.item.setSubject(longSubject)
-        self.assertEqual(longSubject, self.editor._interior[0]._subjectEntry.GetValue())
+        self.assertEqual(longSubject, 
+                         self.editor._interior[0]._subjectEntry.GetValue())
 
     def testThatPickingAForegroundColorChangesTheItemForegroundColor(self):
         self.appearance._foregroundColorEntry.SetValue(wx.RED)
@@ -71,7 +72,8 @@ class EditorTestCase(test.wxTestCase):
         
     def testThatChangingTheItemForegroundColorAffectsTheForegroundColorButton(self):
         self.item.setForegroundColor(wx.RED)
-        self.assertEqual(wx.RED, self.appearance._foregroundColorEntry.GetValue())
+        self.assertEqual(wx.RED, 
+                         self.appearance._foregroundColorEntry.GetValue())
         
     def testThatPickingABackgroundColorChangesTheItemBackgroundColor(self):
         self.appearance._backgroundColorEntry.SetValue(wx.RED)
@@ -80,7 +82,8 @@ class EditorTestCase(test.wxTestCase):
 
     def testThatChangingTheItemBackgroundColorAffectsTheBackgroundColorButton(self):
         self.item.setBackgroundColor(wx.RED)
-        self.assertEqual(wx.RED, self.appearance._backgroundColorEntry.GetValue())
+        self.assertEqual(wx.RED, 
+                         self.appearance._backgroundColorEntry.GetValue())
         
     def testThatPickingAFontChangesTheItemFont(self):
         font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
@@ -107,7 +110,8 @@ class EditorTestCase(test.wxTestCase):
     def testThatPickingAColoredFontChangesTheColorButton(self):
         self.appearance._fontEntry.SetColor(wx.RED)
         self.appearance._fontColorSync.onAttributeEdited(dummy.Event())
-        self.assertEqual(wx.RED, self.appearance._foregroundColorEntry.GetValue())
+        self.assertEqual(wx.RED, 
+                         self.appearance._foregroundColorEntry.GetValue())
         
     def testThatPickingAColorChangesTheFontButtonColor(self):
         self.appearance._foregroundColorEntry.SetValue(wx.RED)
@@ -123,3 +127,17 @@ class EditorTestCase(test.wxTestCase):
         imageNames = sorted(gui.artprovider.chooseableItemImages.keys())
         self.item.setIcon(imageNames[10])
         self.assertEqual(10, self.appearance._iconEntry.GetSelection())
+
+    def testDefaultDescriptionFont(self):
+        default_font = wx.TextCtrl(self.frame).GetFont()
+        self.assertEqual(default_font,
+                         self.editor._interior[0]._descriptionEntry.GetFont())
+
+    def testSetDescriptionFont(self):
+        font = wx.TextCtrl(self.frame).GetFont()
+        font.SetPointSize(font.GetPointSize() + 1)
+        self.settings.settext('editor', 'descriptionfont', 
+                              font.GetNativeFontInfoDesc())
+        editor = EditorUnderTest(self.frame, [self.item], self.settings, 
+                                 self.items, self.taskFile)
+        self.assertEqual(font, editor._interior[0]._descriptionEntry.GetFont())

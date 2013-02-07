@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,9 +18,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import string, re # pylint: disable-msg=W0402
-import test
 from taskcoachlib import meta
+import string  # pylint: disable=W0402
+import re  
+import test
 
 
 class TranslationIntegrityTestsMixin(object):
@@ -30,9 +31,9 @@ class TranslationIntegrityTestsMixin(object):
     conversionSpecificationRE = re.compile('%\(\w+\)[sd]')
     
     @staticmethod
-    def countMatches(regex, searchString):
+    def countMatches(regex, search_string):
         matches = dict()
-        for match in re.findall(regex, searchString):
+        for match in re.findall(regex, search_string):
             matches[match] = matches.get(match, 0) + 1
         return matches
             
@@ -40,13 +41,13 @@ class TranslationIntegrityTestsMixin(object):
         regex = self.conversionSpecificationRE
         matches_english = self.countMatches(regex, self.englishString)
         matches_translation = self.countMatches(regex, self.translatedString)
-        self.assertEqual(matches_english, matches_translation)
+        self.assertEqual(matches_english, matches_translation, self.englishString)
             
     def testMatchingNonLiterals(self):
         for symbol in '\t', '|', '%s', '%d', '%.2f':
             self.assertEqual(self.englishString.count(symbol), 
                 self.translatedString.count(symbol),
-                "Symbol ('%s') doesn't match for '%s' and '%s'"%(symbol,
+                "Symbol ('%s') doesn't match for '%s' and '%s'" % (symbol,
                     self.englishString, self.translatedString))
             
     def testMatchingAmpersands(self):
@@ -61,11 +62,11 @@ class TranslationIntegrityTestsMixin(object):
         nrEnglishAmpersand = self.englishString.count('&')
         nrTranslatedAmpersand = translatedString.count('&')
         if nrEnglishAmpersand <= 1 and not '\n' in self.englishString:
-            self.failUnless(nrTranslatedAmpersand in [0,1], 
-                "'%s' has more than one '&'"%self.translatedString)
+            self.failUnless(nrTranslatedAmpersand in [0, 1], 
+                "'%s' has more than one '&'" % self.translatedString)
         else:
             self.assertEqual(nrEnglishAmpersand, nrTranslatedAmpersand,
-                "'%s' has more or less '&'s than '%s'"%(self.translatedString,
+                "'%s' has more or less '&'s than '%s'" % (self.translatedString,
                 self.englishString))
 
     usedShortcuts = dict()
@@ -78,19 +79,26 @@ class TranslationIntegrityTestsMixin(object):
             shortcutKey = shortcut, self.language
             timesUsed = self.usedShortcuts.get(shortcutKey, 0)
             timesAllowed = self.maxShortcuts.get(shortcut, 1)
-            self.failIf(timesUsed > timesAllowed, 
-                "Shortcut ('%s') used more than once in language %s."%shortcutKey)
+            self.failIf(timesUsed > timesAllowed, "Shortcut ('%s') used more "
+                        "than once in language %s." % shortcutKey)
             self.usedShortcuts[shortcutKey] = timesUsed + 1
             
     def testMatchingShortCut(self):
         for shortcutPrefix in ('Ctrl+', 'Ctrl-', 'Shift+', 'Shift-', 
                                'Alt+', 'Alt-', 'Shift+Ctrl+', 'Shift-Ctrl-',
                                'Shift+Alt+', 'Shift-Alt-'):
-            self.assertEqual(self.englishString.count('\t'+shortcutPrefix),
-                             self.translatedString.count('\t'+shortcutPrefix),
-                             "Shortcut prefix ('%s') doesn't match for '%s' and '%s'"%(shortcutPrefix,
-                                 self.englishString, self.translatedString))
-    
+            self.assertEqual(self.englishString.count('\t' + shortcutPrefix),
+                             self.translatedString.count('\t' + shortcutPrefix),
+                             "Shortcut prefix ('%s') doesn't match for '%s' "
+                             "and '%s'" % (shortcutPrefix, self.englishString, 
+                                           self.translatedString))
+            
+    def testShortCutIsAscii(self):
+        ''' Test that the translated short cut key is using ASCII only. '''
+        if '\t' in self.translatedString:
+            shortcut = set(self.translatedString.split('\t')[1])
+            self.failUnless(shortcut & set(string.ascii_letters + string.digits))
+            
     @staticmethod
     def ellipsisCount(text):
         return text.count('...') + text.count('…')
@@ -98,9 +106,11 @@ class TranslationIntegrityTestsMixin(object):
     def testMatchingEllipses(self):
         self.assertEqual(self.ellipsisCount(self.englishString),
                          self.ellipsisCount(self.translatedString),
-                         "Ellipses ('...') don't match for '%s' and '%s'"%(self.englishString, self.translatedString))
+                         "Ellipses ('...') don't match for '%s' and '%s'" % \
+                         (self.englishString, self.translatedString))
 
     umlautRE = re.compile(r'&[A-Za-z]uml;')
+    
     @classmethod
     def removeUmlauts(cls, text):
         return re.sub(cls.umlautRE, '', text)      
@@ -110,15 +120,19 @@ def installAllTestCaseClasses():
     for language in getLanguages():
         installTestCaseClasses(language)
 
+
 def getLanguages():
     return [language for language in meta.data.languages.values() \
             if language is not None]
 
+
 def installTestCaseClasses(language):
-    translation = __import__('taskcoachlib.i18n.%s'%language, fromlist=['dict'])
+    translation = __import__('taskcoachlib.i18n.%s' % language, 
+                             fromlist=['dict'])
     for englishString, translatedString in translation.dict.iteritems():        
         installTranslationTestCaseClass(language, englishString, 
                                               translatedString)
+
 
 def installTranslationTestCaseClass(language, englishString, 
                                           translatedString):
@@ -126,6 +140,7 @@ def installTranslationTestCaseClass(language, englishString,
     testCaseClass = translationTestCaseClass(testCaseClassName, 
         language, englishString, translatedString)
     globals()[testCaseClassName] = testCaseClass
+
 
 def translationTestCaseClassName(language, englishString, 
                                  prefix='TranslationIntegrityTest'):
@@ -136,15 +151,17 @@ def translationTestCaseClassName(language, englishString,
     allowableCharacters = string.ascii_letters + string.digits + '_'
     englishString = ''.join([char for char in englishString \
                              if char in allowableCharacters])
-    className = '%s_%s_%s'%(prefix, language, englishString)
+    className = '%s_%s_%s' % (prefix, language, englishString)
     count = 0
-    while className in globals(): # Make sure className is unique
+    while className in globals():  # Make sure className is unique
         count += 1
-        className = '%s_%s_%s_%d'%(prefix, language, englishString, count)
+        className = '%s_%s_%s_%d' % (prefix, language, englishString, count)
     return className
 
+
 def translationTestCaseClass(className, language, englishString, translatedString):
-    class_ = type(className, (TranslationIntegrityTestsMixin, test.TestCase), {})
+    class_ = type(className, (TranslationIntegrityTestsMixin, test.TestCase), 
+                  {})
     class_.language = language
     class_.englishString = englishString
     class_.translatedString = translatedString

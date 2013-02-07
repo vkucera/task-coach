@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import test, weakref
 from taskcoachlib import patterns, config
 from taskcoachlib.domain import task, base
 
@@ -62,7 +62,7 @@ class DummyFilter(base.Filter):
         return items
     
     def test(self):
-        self.testcalled = 1  # pylint: disable-msg=W0201
+        self.testcalled = 1  # pylint: disable=W0201
 
 
 class DummyItem(str):
@@ -88,22 +88,30 @@ class StackedFilterTest(test.TestCase):
     def testSetTreeMode_False(self):
         self.filter2.setTreeMode(False)
         self.failIf(self.filter1.treeMode())
-        
+
+    def testFiltersAreCollected(self):
+        filterRef = weakref.ref(self.filter1)
+        self.filter2.detach()
+        del self.filter1
+        del self.filter2
+        self.failUnless(filterRef() is None)
+
 
 class SearchFilterTest(test.TestCase):
     def setUp(self):
         task.Task.settings = config.Settings(load=False)
-        self.parent = task.Task(subject='*ABC', description='Parent description')
+        self.parent = task.Task(subject='*ABC$D', description='Parent description')
         self.child = task.Task(subject='DEF', description='Child description')
         self.parent.addChild(self.child)
         self.list = task.TaskList([self.parent, self.child])
         self.filter = base.SearchFilter(self.list)
 
     def setSearchString(self, searchString, matchCase=False,
-                        includeSubItems=False, searchDescription=False):
+                        includeSubItems=False, searchDescription=False, regularExpression=True):
         self.filter.setSearchFilter(searchString, matchCase=matchCase, 
                                     includeSubItems=includeSubItems,
-                                    searchDescription=searchDescription)
+                                    searchDescription=searchDescription,
+                                    regularExpression=regularExpression)
         
     def testNoMatch(self):
         self.setSearchString('XYZ')
@@ -123,6 +131,10 @@ class SearchFilterTest(test.TestCase):
 
     def testMatchWithRE(self):
         self.setSearchString('a.c')
+        self.assertEqual(1, len(self.filter))
+
+    def testMatchWithoutRE(self):
+        self.setSearchString('$D', regularExpression=False)
         self.assertEqual(1, len(self.filter))
 
     def testMatchWithEmptyString(self):

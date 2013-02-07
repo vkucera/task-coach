@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,14 +31,18 @@ class Sorter(patterns.ListDecorator):
         self._registerObserverForAttribute(self._sortKey)
         self.reset()
 
+    def detach(self):
+        super(Sorter, self).detach()
+        self._removeObserverForAttribute(self._sortKey)
+
     @classmethod        
-    def sortEventType(class_):
-        return '%s.sorted' % class_
+    def sortEventType(cls):
+        return 'pubsub.%s.sorted' % cls.__name__
     
     @patterns.eventSource
     def extendSelf(self, items, event=None):
         super(Sorter, self).extendSelf(items, event)
-        self.reset(event=event)
+        self.reset()
 
     # We don't implement removeItemsFromSelf() because there is no need 
     # to resort when items are removed since after removing items the 
@@ -60,15 +64,14 @@ class Sorter(patterns.ListDecorator):
         self._sortCaseSensitive = sortCaseSensitive
         self.reset()
     
-    @patterns.eventSource
-    def reset(self, event=None):
+    def reset(self, forceEvent=False):
         ''' reset does the actual sorting. If the order of the list changes, 
             observers are notified by means of the list-sorted event. '''
         oldSelf = self[:]
         self.sort(key=self.createSortKeyFunction(), 
                   reverse=not self._sortAscending)
-        if self != oldSelf:
-            event.addSource(self, type=self.sortEventType())
+        if forceEvent or self != oldSelf:
+            pub.sendMessage(self.sortEventType(), sender=self)
 
     def createSortKeyFunction(self):
         ''' createSortKeyFunction returns a function that is passed to the 
@@ -102,10 +105,10 @@ class Sorter(patterns.ListDecorator):
                 patterns.Publisher().removeObserver(self.onAttributeChanged_Deprecated, 
                                                     eventType=eventType)
      
-    def onAttributeChanged(self, newValue, sender):  # pylint: disable-msg=W0613
+    def onAttributeChanged(self, newValue, sender):  # pylint: disable=W0613
         self.reset()
            
-    def onAttributeChanged_Deprecated(self, event):  # pylint: disable-msg=W0613
+    def onAttributeChanged_Deprecated(self, event):  # pylint: disable=W0613
         self.reset()
 
     def _getSortEventTypes(self, attribute):
@@ -132,8 +135,7 @@ class TreeSorter(Sorter):
         return self._getSortKeyFunction()(sortCaseSensitive=self._sortCaseSensitive, 
                                           treeMode=self.treeMode())
 
-    @patterns.eventSource
-    def reset(self, *args, **kwargs):  # pylint: disable-msg=W0221
+    def reset(self, *args, **kwargs):  # pylint: disable=W0221
         self.__invalidateRootItemCache()
         return super(TreeSorter, self).reset(*args, **kwargs)
 

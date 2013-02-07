@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -60,7 +60,7 @@ class HTMLWriter(object):
             self._writeCSS()
         return count
     
-    def _writeCSS(self, open=open): # pylint: disable-msg=W0622
+    def _writeCSS(self, open=open): # pylint: disable=W0622
         if not self.__cssFilename or os.path.exists(self.__cssFilename):
             return
         try:

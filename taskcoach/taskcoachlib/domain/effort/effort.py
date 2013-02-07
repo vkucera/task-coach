@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -21,6 +21,7 @@ from taskcoachlib import patterns
 from taskcoachlib.domain import date, base, task
 from taskcoachlib.thirdparty.pubsub import pub
 import base as baseeffort
+import weakref
 
 
 class Effort(baseeffort.BaseEffort, base.Object):
@@ -35,15 +36,15 @@ class Effort(baseeffort.BaseEffort, base.Object):
             # task, without notifying observers. Also, don't call addEffort()
             # on the new task, because we assume setTask was invoked by the
             # new task itself.
-            self._task = task
+            self._task = None if task is None else weakref.ref(task)
             return
-        if task in (self._task, None): 
+        if task in (self.task(), None): 
             # command.PasteCommand may try to set the parent to None
             return
         event = patterns.Event()  # Change monitor needs one event to detect task change
-        self._task.removeEffort(self)
-        self._task = task
-        self._task.addEffort(self)
+        self._task().removeEffort(self)
+        self._task = weakref.ref(task)
+        self._task().addEffort(self)
         event.send()
         pub.sendMessage(self.taskChangedEventType(), newValue=task, sender=self)
         
@@ -54,20 +55,20 @@ class Effort(baseeffort.BaseEffort, base.Object):
         return base.Object.monitoredAttributes() + ['start', 'stop']
 
     def task(self):
-        return self._task
+        return None if self._task is None else self._task()
 
     @classmethod
     def taskChangedEventType(class_):
         return 'pubsub.effort.task'
     
     def __str__(self):
-        return 'Effort(%s, %s, %s)' % (self._task, self._start, self._stop)
+        return 'Effort(%s, %s, %s)' % (self.task(), self._start, self._stop)
     
     __repr__ = __str__
         
     def __getstate__(self):
         state = super(Effort, self).__getstate__()
-        state.update(dict(task=self._task, start=self._start, stop=self._stop))
+        state.update(dict(task=self.task(), start=self._start, stop=self._stop))
         return state
 
     @patterns.eventSource
@@ -79,7 +80,7 @@ class Effort(baseeffort.BaseEffort, base.Object):
 
     def __getcopystate__(self):
         state = super(Effort, self).__getcopystate__()
-        state.update(dict(task=self._task, start=self._start, stop=self._stop))
+        state.update(dict(task=self.task(), start=self._start, stop=self._stop))
         return state
    
     def duration(self, now=date.DateTime.now):
@@ -133,7 +134,7 @@ class Effort(baseeffort.BaseEffort, base.Object):
     def __updateDurationCache(self):
         self.__cachedDuration = self._stop - self._start if self._stop else None
         
-    def isBeingTracked(self, recursive=False):  # pylint: disable-msg=W0613
+    def isBeingTracked(self, recursive=False):  # pylint: disable=W0613
         return self._stop is None
 
     def revenue(self):

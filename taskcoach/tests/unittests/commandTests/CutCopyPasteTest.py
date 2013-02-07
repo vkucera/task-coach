@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -126,7 +126,7 @@ class PasteCommandWithTasksTest(TaskCommandTestCase):
     def testClipboardIsNotEmptyAfterPaste(self):
         self.cut([self.task1])
         self.paste()
-        # pylint: disable-msg=W0212
+        # pylint: disable=W0212
         self.assertDoUndoRedo(
             lambda: self.assertEqual(1, len(command.Clipboard()._contents)))
 
@@ -157,7 +157,7 @@ class PasteCommandWithEffortTest(CommandWithEffortTestCase):
     def testClipboardIsNotEmptyAfterPaste(self):
         self.cut([self.effort1])
         self.paste()
-        # pylint: disable-msg=W0212
+        # pylint: disable=W0212
         self.assertDoUndoRedo(
             lambda: self.assertEqual([self.effort1], command.Clipboard()._contents))
         
@@ -204,6 +204,9 @@ class PasteIntoTaskCommandTest(CommandWithChildrenTestCase):
                                           self.grandchild])))
 
     def testPasteChild_MarksNewParentAsNotCompleted(self):
+        self.settings.setboolean('behavior', 
+                                 'markparentcompletedwhenallchildrencompleted', 
+                                 True)
         self.markCompleted([self.parent])
         self.cut([self.task1])
         self.paste([self.parent])
@@ -327,7 +330,7 @@ class CopyCommandWithEffortTest(CommandWithEffortTestCase):
      
         
 class DragAndDropWithTasksTest(CommandWithChildrenTestCase):
-    def dragAndDrop(self, draggedItems, dropItem): # pylint: disable-msg=W0222
+    def dragAndDrop(self, draggedItems, dropItem): # pylint: disable=W0222
         command.DragAndDropTaskCommand(self.taskList, draggedItems, drop=[dropItem]).do()
         
     def testDragAndDropRootTask(self):

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ from taskcoachlib.domain import base
 from taskcoachlib import patterns
 
 
-class OwnerUnderTest(object):
+class OwnerUnderTest(base.Object):
     __metaclass__ = base.DomainObjectOwnerMetaclass
     __ownedType__ = 'Foo'
     
@@ -39,7 +39,7 @@ class OwnerTest(test.TestCase):
     def onEvent(self, event):
         self.events.append(event) 
     
-    # pylint: disable-msg=E1101
+    # pylint: disable=E1101
     
     def testSetObjects_NoNotificationWhenUnchanged(self):
         patterns.Publisher().registerObserver(self.onEvent, 

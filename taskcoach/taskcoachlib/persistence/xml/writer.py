@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,12 +18,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, sys
-from xml.etree import ElementTree as ET
-
 from xml.etree import ElementTree as ET
 from taskcoachlib import meta
 from taskcoachlib.domain import date, task, note, category
+from xml.etree import ElementTree as ET
+import os
+import sys
 
 
 def flatten(elem):
@@ -43,11 +43,11 @@ class PIElementTree(ET.ElementTree):
 
     def _write(self, file, node, encoding, namespaces):
         if node == self._root:
-            # WTF ? ElementTree does not write the encoding if it's ASCII or UTF-8...
+            # WTF? ElementTree does not write the encoding if it's ASCII or UTF-8...
             if encoding in ['us-ascii', 'utf-8']:
                 file.write('<?xml version="1.0" encoding="%s"?>\n' % encoding)
             file.write(self.__pi.encode(encoding) + '\n')
-        ET.ElementTree._write(self, file, node, encoding, namespaces) # pylint: disable-msg=E1101
+        ET.ElementTree._write(self, file, node, encoding, namespaces)  # pylint: disable=E1101
 
     def write(self, file, encoding, *args, **kwargs):
         if encoding is None:
@@ -103,7 +103,7 @@ class XMLWriter(object):
                 notes.extend(noteOwner.notes(recursive=True))
         return notes
     
-    def taskNode(self, parentNode, task): # pylint: disable-msg=W0621
+    def taskNode(self, parentNode, task):  # pylint: disable=W0621
         maxDateTime = self.maxDateTime
         node = self.baseCompositeNode(parentNode, task, 'task', self.taskNode)
         node.attrib['status'] = str(task.getStatus())
@@ -156,6 +156,8 @@ class XMLWriter(object):
             attrs['count'] = str(recurrence.count)
         if recurrence.max > 0:
             attrs['max'] = str(recurrence.max)
+        if recurrence.stop_datetime != self.maxDateTime:
+            attrs['stop_datetime'] = str(recurrence.stop_datetime)
         if recurrence.sameWeekday:
             attrs['sameWeekday'] = 'True'
         if recurrence.recurBasedOnCompletion:
@@ -170,14 +172,14 @@ class XMLWriter(object):
             formattedStop = self.formatDateTime(stop)
             if formattedStop == formattedStart:
                 # Make sure the effort duration is at least one second
-                formattedStop = self.formatDateTime(stop + date.TimeDelta(seconds=1))
+                formattedStop = self.formatDateTime(stop + date.ONE_SECOND)
             attrs['stop'] = formattedStop
         node = ET.SubElement(parentNode, 'effort', attrs)
         if effort.description():
             ET.SubElement(node, 'description').text = effort.description()
         return node
     
-    def categoryNode(self, parentNode, category, *categorizableContainers): # pylint: disable-msg=W0621
+    def categoryNode(self, parentNode, category, *categorizableContainers):  # pylint: disable=W0621
         def inCategorizableContainer(categorizable):
             for container in categorizableContainers:
                 if categorizable in container:
@@ -201,7 +203,7 @@ class XMLWriter(object):
             node.attrib['categorizables'] = categorizableIds
         return node
     
-    def noteNode(self, parentNode, note): # pylint: disable-msg=W0621
+    def noteNode(self, parentNode, note):  # pylint: disable=W0621
         node = self.baseCompositeNode(parentNode, note, 'note', self.noteNode)
         for attachment in sortedById(note.attachments()):
             self.attachmentNode(node, attachment)
@@ -210,6 +212,10 @@ class XMLWriter(object):
     def __baseNode(self, parentNode, item, nodeName):
         node = ET.SubElement(parentNode, nodeName,
                              dict(id=item.id(), status=str(item.getStatus())))
+        if item.creationDateTime() > date.DateTime.min:
+            node.attrib['creationDateTime'] = str(item.creationDateTime())
+        if item.modificationDateTime() > date.DateTime.min:
+            node.attrib['modificationDateTime'] = str(item.modificationDateTime())
         if item.subject():
             node.attrib['subject'] = item.subject()
         if item.description():
@@ -250,7 +256,7 @@ class XMLWriter(object):
             node.attrib['expandedContexts'] = \
                      str(tuple(sorted(item.expandedContexts())))
         for child in sortedById(item.children()):
-            childNodeFactory(node, child, *childNodeFactoryArgs) # pylint: disable-msg=W0142
+            childNodeFactory(node, child, *childNodeFactoryArgs)  # pylint: disable=W0142
         return node
 
     def attachmentNode(self, parentNode, attachment):
@@ -280,7 +286,7 @@ class XMLWriter(object):
             self.__syncMLNode(childCfg, child)
 
     def budgetAsAttribute(self, budget):
-        return '%d:%02d:%02d'%budget.hoursMinutesSeconds()
+        return '%d:%02d:%02d' % budget.hoursMinutesSeconds()
 
     def formatDateTime(self, dateTime):
         return dateTime.strftime('%Y-%m-%d %H:%M:%S')
@@ -307,13 +313,13 @@ class ChangesXMLWriter(object):
 
 
 class TemplateXMLWriter(XMLWriter):
-    def write(self, tsk): # pylint: disable-msg=W0221
+    def write(self, tsk):  # pylint: disable=W0221
         super(TemplateXMLWriter, self).write(task.TaskList([tsk]),
                    category.CategoryList(),
                    note.NoteContainer(),
                    None, None)
 
-    def taskNode(self, parentNode, task): # pylint: disable-msg=W0621
+    def taskNode(self, parentNode, task):  # pylint: disable=W0621
         node = super(TemplateXMLWriter, self).taskNode(parentNode, task)
 
         for name, getter in [('plannedstartdate', 'plannedStartDateTime'),

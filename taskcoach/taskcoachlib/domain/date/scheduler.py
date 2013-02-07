@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,6 +22,26 @@ import dateandtime
 import logging
 import timedelta
 import wx
+import weakref
+
+
+class ScheduledMethod(object):
+    def __init__(self, method):
+        self.__func = method.im_func
+        self.__self = weakref.ref(method.im_self)
+
+    def __eq__(self, other):
+        return self.__func is other.__func and self.__self() is other.__self()
+
+    def __hash__(self):
+        return hash(self.__dict__['_ScheduledMethod__func'])
+
+    def __call__(self, *args, **kwargs):
+        obj = self.__self()
+        if obj is None:
+            Scheduler().unschedule(self)
+        else:
+            self.__func(obj, *args, **kwargs)
 
 
 class Scheduler(apscheduler.scheduler.Scheduler):
@@ -55,31 +75,38 @@ class Scheduler(apscheduler.scheduler.Scheduler):
         self.removeLogHandler()
 
     def schedule(self, function, dateTime):
+        proxy = ScheduledMethod(function)
         def callback():
-            if function in self.__jobs:
-                del self.__jobs[function]
-            wx.CallAfter(function)
+            if proxy in self.__jobs:
+                del self.__jobs[proxy]
+            wx.CallAfter(proxy)
 
         if dateTime <= dateandtime.Now() + timedelta.TimeDelta(milliseconds=500):
             callback()
         else:
-            self.__jobs[function] = job = self.add_date_job(callback, dateTime)
+            self.__jobs[proxy] = job = self.add_date_job(callback, dateTime, misfire_grace_time=0)
             return job
-        
+
     def schedule_interval(self, function, days=0, minutes=0, seconds=0):
+        proxy = ScheduledMethod(function)
         def callback():
-            wx.CallAfter(function)
+            wx.CallAfter(proxy)
             
-        if function not in self.__jobs:
+        if proxy not in self.__jobs:
             start_date = dateandtime.Now().endOfDay() if days > 0 else None
-            self.__jobs[function] = job = self.add_interval_job(callback, days=days, 
-                minutes=minutes, seconds=seconds, start_date=start_date)
+            self.__jobs[proxy] = job = self.add_interval_job(callback, days=days, 
+                minutes=minutes, seconds=seconds, start_date=start_date, misfire_grace_time=0,
+                coalesce=True)
             return job
 
     def unschedule(self, function):
-        if function in self.__jobs:
-            self.unschedule_job(self.__jobs[function])
-            del self.__jobs[function]
+        proxy = function if isinstance(function, ScheduledMethod) else ScheduledMethod(function)
+        if proxy in self.__jobs:
+            try:
+                self.unschedule_job(self.__jobs[proxy])
+            except KeyError:
+                pass
+            del self.__jobs[proxy]
 
     def is_scheduled(self, function):
-        return function in self.__jobs
+        return ScheduledMethod(function) in self.__jobs

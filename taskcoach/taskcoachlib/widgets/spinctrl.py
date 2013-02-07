@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Carl Zmola <zmola@acm.org>
 
@@ -29,7 +29,7 @@ class SpinCtrl(wx.Panel):
     maxRange = 2147483647 # 2^31
     
     def __init__(self, parent, wxId=wx.ID_ANY, value=0, pos=wx.DefaultPosition, size=wx.DefaultSize, 
-                 style=0, name='wx.SpinCtrl', **kwargs): # pylint: disable-msg=W0613
+                 style=0, name='wx.SpinCtrl', **kwargs): # pylint: disable=W0613
         super(SpinCtrl, self).__init__(parent, wxId, pos=pos, size=size, name=name)
         minValue = kwargs['min'] if 'min' in kwargs else -self.maxRange
         maxValue = kwargs['max'] if 'max' in kwargs else self.maxRange
@@ -74,7 +74,7 @@ class SpinCtrl(wx.Panel):
         self._textCtrl.SelectAll()
         event.Skip()
             
-    def onSpin(self, event): # pylint: disable-msg=W0613
+    def onSpin(self, event): # pylint: disable=W0613
         self._textCtrl.SetValue(str(self._spinButton.GetValue()))
         self.__postEvent()
 

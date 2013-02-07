@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -137,29 +137,33 @@ class SettingsIOTest(SettingsTestCase):
         self.failUnless(self.settings.has_section('testing'))
         
     def testIOErrorWhileSaving(self):
-        def file(*args): # pylint: disable-msg=W0613,W0622
+        def file_that_raises_ioerror(*args):  # pylint: disable=W0613,W0622
             raise IOError
-        def showerror(*args, **kwargs): # pylint: disable-msg=W0613
-            self.showerror_args = args # pylint: disable-msg=W0201
+        
+        def showerror(*args, **kwargs):  # pylint: disable=W0613
+            self.showerror_args = args  # pylint: disable=W0201
+            
         settings = config.Settings()
-        settings.save(showerror=showerror, file=file)
+        settings.save(showerror=showerror, file=file_that_raises_ioerror)
         self.failUnless(self.showerror_args)
 
     def testIOErrorWhileReading(self):
         class SettingsThatThrowsParsingError(config.Settings):
-            def read(self, *args, **kwargs): # pylint: disable-msg=W0613
+            def read(self, *args, **kwargs):  # pylint: disable=W0613
                 self.remove_section('file')
                 raise ConfigParser.ParsingError, 'Testing'
+            
         self.failIf(SettingsThatThrowsParsingError().getboolean('file', 'inifileloaded'))
         
     def testFixOldColumnValues(self):
         section = 'prerequisiteviewerintaskeditor1'
-        self.fakeFile.write("[%s]\ncolumns = ['dueDate']\ncolumnwidths = {'dueDate': 40}\n"%section)
+        self.fakeFile.write("[%s]\ncolumns = ['dueDate']\ncolumnwidths = {'dueDate': 40}\n" % section)
         self.fakeFile.seek(0)
         self.settings.readfp(self.fakeFile)
         self.failUnless(['dueDateTime'], 
                         self.settings.getlist(section, 'columns'))
-        self.assertEqual(dict(dueDateTime=40), self.settings.getdict(section, 'columnwidths'))
+        self.assertEqual(dict(dueDateTime=40), 
+                         self.settings.getdict(section, 'columnwidths'))
 
 
 class SettingsObservableTest(SettingsTestCase):
@@ -257,7 +261,7 @@ class SettingsFileLocationTest(SettingsTestCase):
     def testSettingSaveIniFileInProgramDirToFalseRemovesIniFile(self):
         class SettingsUnderTest(config.Settings):
             def onSettingsFileLocationChanged(self, value):
-                self.onSettingsFileLocationChangedCalled = value # pylint: disable-msg=W0201
+                self.onSettingsFileLocationChangedCalled = value # pylint: disable=W0201
         settings = SettingsUnderTest(load=False)
         settings.setboolean('file', 'saveinifileinprogramdir', True)
         settings.setboolean('file', 'saveinifileinprogramdir', False)

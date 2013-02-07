@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,17 +26,17 @@ class Fake(object):
 
 
 class TemplateReaderThatThrowsTooNewException(Fake):    
-    def read(self, *args, **kwargs): # pylint: disable-msg=W0613
+    def read(self, *args, **kwargs): # pylint: disable=W0613
         raise persistence.xml.reader.XMLReaderTooNewException
 
 
 class TemplateReaderThatThrowsIOError(Fake):    
-    def read(self, *args, **kwargs): # pylint: disable-msg=W0613
+    def read(self, *args, **kwargs): # pylint: disable=W0613
         raise IOError
     
     
 class TemplateReaderThatThrowsParseError(Fake):
-    def read(self, *args, **kwargs): # pylint: disable-msg=W0613
+    def read(self, *args, **kwargs): # pylint: disable=W0613
         raise xml.etree.ElementTree.ParseError
 
 
@@ -46,7 +46,7 @@ class FakeFileClass(Fake):
     
 
 class FileClassThatRaisesIOError(object):
-    def __init__(self, *args, **kwargs): # pylint: disable-msg=W0613
+    def __init__(self, *args, **kwargs): # pylint: disable=W0613
         raise IOError
     
 

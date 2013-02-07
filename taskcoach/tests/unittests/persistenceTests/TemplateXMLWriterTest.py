@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -41,7 +41,9 @@ class TemplateXMLWriterTestCase(test.TestCase):
     # tests
     
     def testDefaultTask(self):
-        self.expectInXML('<tasks>\n<task id="%s" status="1" />\n</tasks>'%self.task.id())
+        self.expectInXML('<tasks>\n<task creationDateTime="%s" id="%s" '
+                         'status="1" />\n</tasks>' % (self.task.creationDateTime(),
+                                                      self.task.id()))
         
     def testTaskWithPlannedStartDateTime(self):
         self.task.setPlannedStartDateTime(date.Now() + date.TimeDelta(minutes=31))

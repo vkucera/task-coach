@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ class CategoryList(base.Collection):
         super(CategoryList, self).extend(categories, event=event)
         for category in self._compositesAndAllChildren(categories):
             for categorizable in category.categorizables():
-                categorizable.addCategory(category, event=event)
+                categorizable.addCategory(category, event=event, modify=False)
 
     @patterns.eventSource                
     def removeItems(self, categories, event=None):

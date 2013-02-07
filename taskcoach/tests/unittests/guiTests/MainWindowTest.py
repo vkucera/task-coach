@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,15 +32,15 @@ class MockViewer(wx.Frame):
 
 
 class MainWindowUnderTest(gui.MainWindow):
-    def createWindowComponents(self):
+    def _create_window_components(self):
         # Create only the window components we really need for the tests
-        self.createViewerContainer()
+        self._create_viewer_container()
         self.viewer.addViewer(MockViewer(None))
-        self.createStatusBar()
+        self._create_status_bar()
     
 
 class DummyIOController(object):
-    def needSave(self, *args, **kwargs): # pylint: disable-msg=W0613
+    def needSave(self, *args, **kwargs): # pylint: disable=W0613
         return False # pragma: no cover
 
     def changedOnDisk(self):
@@ -138,7 +138,7 @@ class MainWindowIconizedTest(MainWindowTestCase):
     def expectedHeight(self):
         height = 500
         if operating_system.isMac():
-            height -= 40 # pragma: no cover
+            height += 18 # pragma: no cover
         return height
     
     @test.skipOnPlatform('__WXGTK__') # Test fails on Fedora, don't know why nor how to fix it    

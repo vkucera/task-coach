@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,8 +21,9 @@ from taskcoachlib import operating_system
 
 if operating_system.isWindows():
     from notifier_windows import *
+    from notifier_growl import *
 elif operating_system.isMac():
-    from notifier_macos import *
+    from notifier_growl import *
 else:
     from notifier_libnotify import *
 

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,10 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 ''' Base classes for controls with items, such as ListCtrl, TreeCtrl, 
-    and TreeListCtrl. ''' # pylint: disable-msg=W0105
+    and TreeListCtrl. ''' # pylint: disable=W0105
 
 
-import wx, draganddrop, autowidth, tooltip
+import wx, draganddrop, autowidth, tooltip, inspect
 from taskcoachlib.thirdparty import hypertreelist
 
 
@@ -122,7 +122,7 @@ class _CtrlWithColumnPopupMenuMixin(_CtrlWithPopupMenuMixin):
             window = event.GetEventObject()
         window.SetFocus()
         self.PopupMenuXY(self.__popupMenu, *event.GetPosition())
-        event.Skip()
+        event.Skip(False)
         
 
 class _CtrlWithDropTargetMixin(_CtrlWithItemsMixin):
@@ -195,7 +195,7 @@ class Column(object):
     def __init__(self, name, columnHeader, *eventTypes, **kwargs):
         self.__name = name
         self.__columnHeader = columnHeader
-        self.width = kwargs.pop('width', hypertreelist._DEFAULT_COL_WIDTH) # pylint: disable-msg=W0212
+        self.width = kwargs.pop('width', hypertreelist._DEFAULT_COL_WIDTH) # pylint: disable=W0212
         # The event types to use for registering an observer that is
         # interested in changes that affect this column:
         self.__eventTypes = eventTypes
@@ -237,23 +237,28 @@ class Column(object):
     def sort(self, *args, **kwargs):
         if self.__sortCallback:
             self.__sortCallback(*args, **kwargs)
-        
+
+    def __filterArgs(self, func, kwargs):
+        actualKwargs = dict()
+        argNames = inspect.getargspec(func).args
+        return dict([(name, value) for name, value in kwargs.items() if name in argNames])
+
     def render(self, *args, **kwargs):
-        return self.__renderCallback(*args, **kwargs)
+        return self.__renderCallback(*args, **self.__filterArgs(self.__renderCallback, kwargs))
 
     def renderDescription(self, *args, **kwargs):
-        return self.__renderDescriptionCallback(*args, **kwargs)
+        return self.__renderDescriptionCallback(*args, **self.__filterArgs(self.__renderDescriptionCallback, kwargs))
 
-    def defaultRenderer(self, *args, **kwargs): # pylint: disable-msg=W0613
+    def defaultRenderer(self, *args, **kwargs): # pylint: disable=W0613
         return unicode(args[0])
 
-    def defaultDescriptionRenderer(self, *args, **kwargs): # pylint: disable-msg=W0613
+    def defaultDescriptionRenderer(self, *args, **kwargs): # pylint: disable=W0613
         return None
 
     def alignment(self):
         return self.__alignment
     
-    def defaultImageIndices(self, *args, **kwargs): # pylint: disable-msg=W0613
+    def defaultImageIndices(self, *args, **kwargs): # pylint: disable=W0613
         return {wx.TreeItemIcon_Normal: -1}
         
     def imageIndices(self, *args, **kwargs):
@@ -263,7 +268,7 @@ class Column(object):
         return self.__hasImages
     
     def isEditable(self):
-        return self.__editCallback != None
+        return self.__editControlClass != None and self.__editCallback != None
     
     def onEndEdit(self, item, newValue):
         self.__editCallback(item, newValue)
@@ -271,7 +276,7 @@ class Column(object):
     def editControl(self, parent, item, columnIndex, domainObject):
         value = self.value(domainObject)
         kwargs = dict(settings=self.__settings) if self.__settings else dict()
-        # pylint: disable-msg=W0142
+        # pylint: disable=W0142
         return self.__editControlClass(parent, wx.ID_ANY, item, columnIndex,
                                        parent, value, **kwargs)
     
@@ -394,7 +399,7 @@ class _CtrlWithSortableColumnsMixin(_BaseCtrlWithColumnsMixin):
         self.__currentSortImageIndex = -1
                 
     def onColumnClick(self, event):
-        event.Skip()
+        event.Skip(False)
         # Make sure the window this control is in has focus:
         try:
             window = event.GetEventObject().GetMainWindow()

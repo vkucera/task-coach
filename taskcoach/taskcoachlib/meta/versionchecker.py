@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,8 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import threading, urllib2, sys, traceback
 import data
+import threading
+import urllib2
+import sys
+import traceback
  
 
 class VersionChecker(threading.Thread):
@@ -27,7 +30,7 @@ class VersionChecker(threading.Thread):
         super(VersionChecker, self).__init__()
         
     def _set_daemon(self):
-        return True # Don't block application exit
+        return True  # Don't block application exit
         
     def run(self):
         from taskcoachlib.gui.dialog import version

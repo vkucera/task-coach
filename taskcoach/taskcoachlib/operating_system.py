@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -41,22 +41,44 @@ def isPlatform(threeLetterPlatformAbbreviation, wxPlatform=wx.Platform):
 
 def isWindows7_OrNewer(): # pragma: no cover
     if isWindows(): 
-        major, minor = sys.getwindowsversion()[:2] # pylint: disable-msg=E1101
+        major, minor = sys.getwindowsversion()[:2] # pylint: disable=E1101
         return (major, minor) >= (6, 1)
     else:
         return False
-    
+
+
+def _platformVersion():
+    return tuple(map(int, platform.release().split('.')))
 
 def isMacOsXLion_OrNewer(): # pragma: no cover
     if isMac():
-        return platform.release() >= '11.1.0'
+        return _platformVersion() >= (11, 1)
     else:
         return False
-
 
 def isMacOsXTiger_OrOlder(): # pragma no cover
     if isMac():
-        return platform.release() <= '8.11.1' # Darwin release number for Tiger
+        return _platformVersion() <= (8, 11, 1) # Darwin release number for Tiger
     else:
         return False
 
+def isMacOsXMountainLion_OrNewer(): # pragma no cover
+    if isMac():
+        return _platformVersion() >= (12,)
+    else:
+        return False
+
+
+def defaultEncodingName():
+    return wx.Locale.GetSystemEncodingName() or 'utf-8'
+
+def decodeSystemString(s):
+    if isinstance(s, unicode):
+        return s
+    encoding = defaultEncodingName()
+    # Python does not define the windows_XXX aliases for every code page...
+    if encoding.startswith('windows-'):
+        encoding = 'cp' + encoding[8:]
+    if not encoding:
+        encoding = 'utf-8'
+    return s.decode(encoding, 'ignore')

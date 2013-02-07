@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ class TreeCtrlTestCase(test.wxTestCase):
     onSelect = None
     
     def getFirstTreeItem(self):
-        # pylint: disable-msg=E1101
+        # pylint: disable=E1101
         return self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())[0]
                 
     def setUp(self):
@@ -53,7 +53,7 @@ class DummyDomainObject(object):
     def subject(self):
         return self.__subject
     
-    # pylint: disable-msg=W0613
+    # pylint: disable=W0613
     
     def foregroundColor(self, recursive=False):
         return None
@@ -272,7 +272,7 @@ class TreeListCtrlTest(TreeCtrlTestCase, CommonTestsMixin):
         for bitmapName in ['led_blue_icon', 'folder_blue_icon']:
             imageList.Add(wx.ArtProvider_GetBitmap(bitmapName, wx.ART_MENU, 
                           (16,16)))
-        self.treeCtrl.AssignImageList(imageList) # pylint: disable-msg=E1101
+        self.treeCtrl.AssignImageList(imageList) # pylint: disable=E1101
     
 
 class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTestsMixin):
@@ -293,7 +293,7 @@ class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTestsMixin):
         self.children[None] = [self.item0]
         self.children[self.item0] = [self.item0_0]
         self.treeCtrl.RefreshAllItems(2)
-        self.treeCtrl.ExpandAll() # pylint: disable-msg=E1101
+        self.treeCtrl.ExpandAll() # pylint: disable=E1101
         parent = self.getFirstTreeItem()
         self.treeCtrl.CheckItem(parent)
         child = self.treeCtrl.GetItemChildren(parent)[0]
@@ -303,7 +303,7 @@ class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTestsMixin):
         self.children[None] = [self.item0]
         self.children[self.item0] = [self.mutual1, self.mutual2]
         self.treeCtrl.RefreshAllItems(3)
-        self.treeCtrl.ExpandAll() # pylint: disable-msg=E1101
+        self.treeCtrl.ExpandAll() # pylint: disable=E1101
         parent = self.getFirstTreeItem()
         children = self.treeCtrl.GetItemChildren(parent)
         self.treeCtrl.CheckItem(children[0])
@@ -316,7 +316,7 @@ class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTestsMixin):
         self.children[self.item0] = [self.mutual1, self.mutual2]
         self.children[self.mutual1] = [self.item1_0]
         self.treeCtrl.RefreshAllItems(4)
-        self.treeCtrl.ExpandAll() # pylint: disable-msg=E1101
+        self.treeCtrl.ExpandAll() # pylint: disable=E1101
         parent = self.getFirstTreeItem()
         children = self.treeCtrl.GetItemChildren(parent, recursively=True)
         grandchild = children[1]
@@ -328,9 +328,9 @@ class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTestsMixin):
         self.children[None] = [self.item0]
         self.children[self.item0] = [self.mutual1, self.mutual2]
         self.treeCtrl.RefreshAllItems(3)
-        self.treeCtrl.ExpandAll() # pylint: disable-msg=E1101
+        self.treeCtrl.ExpandAll() # pylint: disable=E1101
         parent = self.getFirstTreeItem()
         children = self.treeCtrl.GetItemChildren(parent)
         self.treeCtrl.CheckItem(parent)
         self.treeCtrl.CheckItem(children[0])
-        self.failIf(self.treeCtrl.IsItemChecked(parent))  # pylint: disable-msg=E1101
+        self.failIf(self.treeCtrl.IsItemChecked(parent))  # pylint: disable=E1101

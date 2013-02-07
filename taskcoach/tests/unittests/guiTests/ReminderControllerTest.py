@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ class ReminderControllerUnderTest(gui.ReminderController):
         self.userAttentionRequested = False
         super(ReminderControllerUnderTest, self).__init__(*args, **kwargs)
         
-    def showReminderMessage(self, message): # pylint: disable-msg=W0221
+    def showReminderMessage(self, message): # pylint: disable=W0221
         class DummyDialog(object):
             def __init__(self, *args, **kwargs):
                 pass
@@ -57,7 +57,7 @@ class ReminderControllerTestCase(test.TestCase):
         self.reminderController = ReminderControllerUnderTest(self.dummyWindow, 
             self.taskList, self.effortList, settings)
         self.nowDateTime = date.DateTime.now()
-        self.reminderDateTime = self.nowDateTime + date.TimeDelta(hours=1)
+        self.reminderDateTime = self.nowDateTime + date.ONE_HOUR
         
     def tearDown(self):
         super(ReminderControllerTestCase, self).tearDown()
@@ -78,7 +78,7 @@ class ReminderControllerTest(ReminderControllerTestCase):
     def testAfterReminderJobIsRemovedFromScheduler(self):
         self.task.setReminder(self.reminderDateTime)
         self.failUnless(date.Scheduler().get_jobs())
-        date.Scheduler()._process_jobs(self.reminderDateTime) # pylint: disable-msg=W0212
+        date.Scheduler()._process_jobs(self.reminderDateTime) # pylint: disable=W0212
         self.failIf(date.Scheduler().get_jobs())
         
     def testAddTaskWithReminderSchedulesJob(self):
@@ -96,7 +96,7 @@ class ReminderControllerTest(ReminderControllerTestCase):
     def testChangeReminderRemovesOldReminder(self):
         self.task.setReminder(self.reminderDateTime)
         job = date.Scheduler().get_jobs()[0]
-        self.task.setReminder(self.reminderDateTime + date.TimeDelta(hours=1))
+        self.task.setReminder(self.reminderDateTime + date.ONE_HOUR)
         self.failIf(job in date.Scheduler().get_jobs())
         
     def testMarkTaskCompletedRemovesReminder(self):
@@ -108,7 +108,7 @@ class ReminderControllerTest(ReminderControllerTestCase):
     def dummyCloseEvent(self, snoozeTimeDelta=None, openAfterClose=False):
         class DummySnoozeOptions(object):
             Selection = 0
-            def GetClientData(self, *args): # pylint: disable-msg=W0613
+            def GetClientData(self, *args): # pylint: disable=W0613
                 return snoozeTimeDelta
         class DummyDialog(object):
             task = self.task
@@ -131,10 +131,9 @@ class ReminderControllerTest(ReminderControllerTestCase):
 
     def testOnCloseReminderSetsReminder(self):
         self.task.setReminder(self.reminderDateTime)
-        oneHour = date.TimeDelta(hours=1)
         self.reminderController.onCloseReminderDialog(\
-            self.dummyCloseEvent(oneHour), show=False)
-        self.failUnless(abs(self.nowDateTime + oneHour - self.task.reminder()) \
+            self.dummyCloseEvent(date.ONE_HOUR), show=False)
+        self.failUnless(abs(self.nowDateTime + date.ONE_HOUR - self.task.reminder()) \
                         < date.TimeDelta(seconds=5))
 
     def testOnCloseMayOpenTask(self):

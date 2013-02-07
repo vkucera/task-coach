@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Carl Zmola <zmola@acm.org>
 
@@ -18,30 +18,34 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, wx.combo
-from wx.lib import newevent
 from taskcoachlib import widgets, operating_system
-from taskcoachlib.gui import artprovider
 from taskcoachlib.domain import date
-from taskcoachlib.thirdparty import combotreebox
+from taskcoachlib.gui import artprovider
 from taskcoachlib.i18n import _
+from taskcoachlib.thirdparty import combotreebox
+import datetime
+from wx.lib import newevent
+import wx
+import wx.combo
 
  
 DateTimeEntryEvent, EVT_DATETIMEENTRY = newevent.NewEvent()
+
 
 class DateTimeEntry(widgets.DateTimeCtrl):
     defaultDateTime = date.DateTime()
 
     def __init__(self, parent, settings, initialDateTime=defaultDateTime, 
                  readonly=False, noneAllowed=True, showSeconds=False, 
-                 suggestedDateTime=None, *args, **kwargs):
+                 suggestedDateTime=None, showRelative=False, units=None, *args, **kwargs):
         starthour = settings.getint('view', 'efforthourstart')
         endhour = settings.getint('view', 'efforthourend')
         interval = settings.getint('view', 'effortminuteinterval')
         super(DateTimeEntry, self).__init__(parent, noneAllowed=noneAllowed, 
-                                            starthour=starthour, endhour=endhour, 
-                                            interval=interval, 
-                                            showSeconds=showSeconds)
+                                            starthour=starthour, 
+                                            endhour=endhour, interval=interval, 
+                                            showSeconds=showSeconds,
+                                            showRelative=showRelative, units=units)
         if readonly:
             self.Disable()
         # First set the initial value and then set the callback so that the
@@ -59,7 +63,7 @@ class DateTimeEntry(widgets.DateTimeCtrl):
         super(DateTimeEntry, self).SetValue(suggestedDateTime)
         super(DateTimeEntry, self).SetNone()
         
-    def onDateTimeCtrlEdited(self, *args, **kwargs): # pylint: disable-msg=W0613
+    def onDateTimeCtrlEdited(self, *args, **kwargs):  # pylint: disable=W0613
         wx.PostEvent(self, DateTimeEntryEvent())            
         
 
@@ -73,13 +77,12 @@ class TimeDeltaEntry(widgets.PanelWithBoxSizer):
                  *args, **kwargs):
         super(TimeDeltaEntry, self).__init__(parent, *args, **kwargs)
         hours, minutes, seconds = timeDelta.hoursMinutesSeconds()
-        if timeDelta < self.defaultTimeDelta:
-            hours = -hours
-        mask = 'X{8}:XX:XX' if readonly else '#{8}:##:##' # X is needed to allow for negative values 
-        self._entry = widgets.masked.TimeDeltaCtrl(self, hours, minutes, seconds, mask=mask)
+        self._entry = widgets.masked.TimeDeltaCtrl(self, hours, minutes, 
+                                                   seconds, readonly,
+                                                   timeDelta < self.defaultTimeDelta)
         if readonly:
             self._entry.Disable()
-        self.add(self._entry, flag=wx.EXPAND|wx.ALL, proportion=1)
+        self.add(self._entry, flag=wx.EXPAND | wx.ALL, proportion=1)
         self.fit()
 
     def GetValue(self):
@@ -87,14 +90,10 @@ class TimeDeltaEntry(widgets.PanelWithBoxSizer):
     
     def SetValue(self, newTimeDelta):
         hours, minutes, seconds = newTimeDelta.hoursMinutesSeconds()
-        if newTimeDelta < self.defaultTimeDelta:
-            hours = -hours
-        try:
-            self._entry.SetValue('%8d:%02d:%02d'%(hours, minutes, seconds))
-        except ValueError:            
-            self._entry.SetValue('%8d:%02d:%02d'%(0, 0, 0))
+        negative = newTimeDelta < self.defaultTimeDelta
+        self._entry.set_value(hours, minutes, seconds, negative)
             
-    def Bind(self, *args, **kwargs): # pylint: disable-msg=W0221
+    def Bind(self, *args, **kwargs):  # pylint: disable=W0221
         self._entry.Bind(*args, **kwargs)
 
 
@@ -116,11 +115,12 @@ class AmountEntry(widgets.PanelWithBoxSizer):
     def SetValue(self, value):
         self._entry.SetValue(value)
 
-    def Bind(self, *args, **kwargs): # pylint: disable-msg=W0221
+    def Bind(self, *args, **kwargs):  # pylint: disable=W0221
         self._entry.Bind(*args, **kwargs)
 
 
 PercentageEntryEvent, EVT_PERCENTAGEENTRY = newevent.NewEvent()
+        
         
 class PercentageEntry(widgets.PanelWithBoxSizer):
     def __init__(self, parent, percentage=0, *args, **kwargs):
@@ -135,7 +135,7 @@ class PercentageEntry(widgets.PanelWithBoxSizer):
         
     def _createSlider(self, percentage):
         slider = wx.Slider(self, value=percentage, style=wx.SL_AUTOTICKS,
-                          minValue=0, maxValue=100, size=(150,-1))
+                          minValue=0, maxValue=100, size=(150, -1))
         slider.SetTickFreq(25)
         slider.Bind(wx.EVT_SCROLL, self.onSliderScroll)
         return slider
@@ -154,10 +154,10 @@ class PercentageEntry(widgets.PanelWithBoxSizer):
         self._entry.SetValue(value)
         self._slider.SetValue(value)
         
-    def onSliderScroll(self, event): # pylint: disable-msg=W0613
+    def onSliderScroll(self, event):  # pylint: disable=W0613
         self.syncControl(self._entry, self._slider)
             
-    def onSpin(self, event): # pylint: disable-msg=W0613
+    def onSpin(self, event):  # pylint: disable=W0613
         self.syncControl(self._slider, self._entry)
             
     def syncControl(self, controlToWrite, controlToRead):
@@ -171,14 +171,17 @@ class PercentageEntry(widgets.PanelWithBoxSizer):
 
 FontEntryEvent, EVT_FONTENTRY = newevent.NewEvent()
         
+        
 class FontEntry(widgets.PanelWithBoxSizer):
     def __init__(self, parent, currentFont, currentColor, *args, **kwargs):
         kwargs['orientation'] = wx.HORIZONTAL
         super(FontEntry, self).__init__(parent, *args, **kwargs)
         self._fontCheckBox = self._createCheckBox(currentFont)
         self._fontPicker = self._createFontPicker(currentFont, currentColor)
-        self.add(self._fontCheckBox, flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL, proportion=0)
-        self.add(self._fontPicker, flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL, proportion=1)
+        self.add(self._fontCheckBox, flag=wx.ALL | wx.ALIGN_CENTER_VERTICAL, 
+                 proportion=0)
+        self.add(self._fontPicker, flag=wx.ALL | wx.ALIGN_CENTER_VERTICAL, 
+                 proportion=1)
         self.fit()
         
     def _createCheckBox(self, currentFont):
@@ -204,8 +207,8 @@ class FontEntry(widgets.PanelWithBoxSizer):
         wx.PostEvent(self, FontEntryEvent())
     
     def GetValue(self):
-        return self._fontPicker.GetSelectedFont() if self._fontCheckBox.IsChecked() \
-            else None
+        return self._fontPicker.GetSelectedFont() if \
+            self._fontCheckBox.IsChecked() else None
             
     def SetValue(self, newFont):
         checked = newFont is not None
@@ -222,14 +225,17 @@ class FontEntry(widgets.PanelWithBoxSizer):
 
 ColorEntryEvent, EVT_COLORENTRY = newevent.NewEvent()
 
+
 class ColorEntry(widgets.PanelWithBoxSizer):
     def __init__(self, parent, currentColor, defaultColor, *args, **kwargs):
         kwargs['orientation'] = wx.HORIZONTAL
         super(ColorEntry, self).__init__(parent, *args, **kwargs)
         self._colorCheckBox = self._createCheckBox(currentColor)
         self._colorPicker = self._createColorPicker(currentColor, defaultColor)
-        self.add(self._colorCheckBox, flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL, proportion=0)
-        self.add(self._colorPicker, flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL, proportion=1)
+        self.add(self._colorCheckBox, flag=wx.ALL | wx.ALIGN_CENTER_VERTICAL, 
+                 proportion=0)
+        self.add(self._colorPicker, flag=wx.ALL | wx.ALIGN_CENTER_VERTICAL, 
+                 proportion=1)
         self.fit()
 
     def _createCheckBox(self, currentColor):
@@ -241,7 +247,7 @@ class ColorEntry(widgets.PanelWithBoxSizer):
     def _createColorPicker(self, currentColor, defaultColor):
         # wx.ColourPickerCtrl on Mac OS X expects a wx.Color and fails on tuples
         # so convert the tuples to a wx.Color:
-        currentColor = wx.Color(*currentColor) if currentColor else defaultColor # pylint: disable-msg=W0142
+        currentColor = wx.Color(*currentColor) if currentColor else defaultColor  # pylint: disable=W0142
         picker = wx.ColourPickerCtrl(self, col=currentColor)
         picker.Bind(wx.EVT_COLOURPICKER_CHANGED, self.onColorPicked)
         return picker
@@ -267,6 +273,7 @@ class ColorEntry(widgets.PanelWithBoxSizer):
 
 
 IconEntryEvent, EVT_ICONENTRY = newevent.NewEvent()
+
 
 class IconEntry(wx.combo.BitmapComboBox):
     def __init__(self, parent, currentIcon, *args, **kwargs):
@@ -298,13 +305,14 @@ class IconEntry(wx.combo.BitmapComboBox):
 
 ChoiceEntryEvent, EVT_CHOICEENTRY = newevent.NewEvent()
 
+
 class ChoiceEntry(wx.Choice):
     def __init__(self, parent, choices, currentChoiceValue, *args, **kwargs):
         super(ChoiceEntry, self).__init__(parent, *args, **kwargs)
         for choiceValue, choiceText in choices:
             self.Append(choiceText, choiceValue)
             if choiceValue == currentChoiceValue:
-                self.SetSelection(self.GetCount()-1)
+                self.SetSelection(self.GetCount() - 1)
         if self.GetSelection() == wx.NOT_FOUND:
             # Force a selection if necessary:
             self.SetSelection(0)
@@ -325,6 +333,7 @@ class ChoiceEntry(wx.Choice):
 
 
 TaskEntryEvent, EVT_TASKENTRY = newevent.NewEvent()
+
 
 class TaskEntry(wx.Panel):
     ''' A ComboTreeBox with tasks. This class does not inherit from the
@@ -347,9 +356,9 @@ class TaskEntry(wx.Panel):
 
     def _createInterior(self):
         ''' Create the ComboTreebox widget. '''
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         self._comboTreeBox = combotreebox.ComboTreeBox(self,
-            style=wx.CB_READONLY|wx.CB_SORT|wx.TAB_TRAVERSAL)
+            style=wx.CB_READONLY | wx.CB_SORT | wx.TAB_TRAVERSAL)
         self._comboTreeBox.Bind(wx.EVT_COMBOBOX, self.onTaskSelected)
         boxSizer = wx.BoxSizer()
         boxSizer.Add(self._comboTreeBox, flag=wx.EXPAND, proportion=1)
@@ -369,7 +378,7 @@ class TaskEntry(wx.Panel):
             self._comboTreeBox.SetClientData(item, task)
             self._addTasksRecursively(task.children(), item)
 
-    def onTaskSelected(self, event):
+    def onTaskSelected(self, event):  # pylint: disable=W0613
         wx.PostEvent(self, TaskEntryEvent())
         
     def SetValue(self, task):
@@ -384,37 +393,44 @@ class TaskEntry(wx.Panel):
 
 RecurrenceEntryEvent, EVT_RECURRENCEENTRY = newevent.NewEvent()
 
+
 class RecurrenceEntry(wx.Panel):
     horizontalSpace = (3, -1)
     verticalSpace = (-1, 3)
 
-    def __init__(self, parent, recurrence, *args, **kwargs):
+    def __init__(self, parent, recurrence, settings, *args, **kwargs):
         super(RecurrenceEntry, self).__init__(parent, *args, **kwargs)
         recurrenceFrequencyPanel = wx.Panel(self)
         self._recurrencePeriodEntry = wx.Choice(recurrenceFrequencyPanel, 
-            choices=[_('None'), _('Daily'), _('Weekly'), _('Monthly'), _('Yearly')])        
+            choices=[_('None'), _('Daily'), _('Weekly'), _('Monthly'), 
+                     _('Yearly')])        
         self._recurrencePeriodEntry.Bind(wx.EVT_CHOICE, self.onRecurrencePeriodEdited)
         self._recurrenceFrequencyEntry = widgets.SpinCtrl(recurrenceFrequencyPanel, 
-                                                          size=(50,-1), 
+                                                          size=(50, -1), 
                                                           value=1, min=1)
         self._recurrenceFrequencyEntry.Bind(wx.EVT_SPINCTRL, self.onRecurrenceEdited)
         self._recurrenceStaticText = wx.StaticText(recurrenceFrequencyPanel, 
                                                    label='reserve some space')
         self._recurrenceSameWeekdayCheckBox = wx.CheckBox(recurrenceFrequencyPanel, 
             label=_('keeping dates on the same weekday'))
-        self._recurrenceSameWeekdayCheckBox.Bind(wx.EVT_CHECKBOX, self.onRecurrenceEdited)
+        self._recurrenceSameWeekdayCheckBox.Bind(wx.EVT_CHECKBOX, 
+                                                 self.onRecurrenceEdited)
         panelSizer = wx.BoxSizer(wx.HORIZONTAL)
-        panelSizer.Add(self._recurrencePeriodEntry, flag=wx.ALIGN_CENTER_VERTICAL)
-        panelSizer.Add(self.horizontalSpace)
-        panelSizer.Add(wx.StaticText(recurrenceFrequencyPanel, label=_(', every')), 
+        panelSizer.Add(self._recurrencePeriodEntry, 
                        flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add(self.horizontalSpace)
-        panelSizer.Add(self._recurrenceFrequencyEntry, flag=wx.ALIGN_CENTER_VERTICAL)
+        panelSizer.Add(wx.StaticText(recurrenceFrequencyPanel, 
+                                     label=_(', every')), 
+                       flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add(self.horizontalSpace)
-        panelSizer.Add(self._recurrenceStaticText, flag=wx.ALIGN_CENTER_VERTICAL)
+        panelSizer.Add(self._recurrenceFrequencyEntry, 
+                       flag=wx.ALIGN_CENTER_VERTICAL)
+        panelSizer.Add(self.horizontalSpace)
+        panelSizer.Add(self._recurrenceStaticText, 
+                       flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add(self.horizontalSpace)
         panelSizer.Add(self._recurrenceSameWeekdayCheckBox, proportion=1, 
-                       flag=wx.ALIGN_CENTER_VERTICAL|wx.EXPAND)
+                       flag=wx.ALIGN_CENTER_VERTICAL | wx.EXPAND)
         recurrenceFrequencyPanel.SetSizerAndFit(panelSizer)
         self._recurrenceSizer = panelSizer
 
@@ -422,11 +438,15 @@ class RecurrenceEntry(wx.Panel):
         panelSizer = wx.BoxSizer(wx.HORIZONTAL)
         
         self._maxRecurrenceCheckBox = wx.CheckBox(maxPanel)
-        self._maxRecurrenceCheckBox.Bind(wx.EVT_CHECKBOX, self.onMaxRecurrenceChecked)
-        self._maxRecurrenceCountEntry = widgets.SpinCtrl(maxPanel, size=(50,-1), 
+        self._maxRecurrenceCheckBox.Bind(wx.EVT_CHECKBOX, 
+                                         self.onMaxRecurrenceChecked)
+        self._maxRecurrenceCountEntry = widgets.SpinCtrl(maxPanel, 
+                                                         size=(50, -1), 
                                                          value=1, min=1)
-        self._maxRecurrenceCountEntry.Bind(wx.EVT_SPINCTRL, self.onRecurrenceEdited)
-        panelSizer.Add(self._maxRecurrenceCheckBox, flag=wx.ALIGN_CENTER_VERTICAL)
+        self._maxRecurrenceCountEntry.Bind(wx.EVT_SPINCTRL, 
+                                           self.onRecurrenceEdited)
+        panelSizer.Add(self._maxRecurrenceCheckBox, 
+                       flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add(self.horizontalSpace)
         panelSizer.Add(wx.StaticText(maxPanel, label=_('Stop after')),
                        flag=wx.ALIGN_CENTER_VERTICAL)
@@ -440,19 +460,45 @@ class RecurrenceEntry(wx.Panel):
         
         schedulePanel = wx.Panel(self)
         panelSizer = wx.BoxSizer(wx.HORIZONTAL)
-        label = wx.StaticText(schedulePanel, label=_('Schedule each next recurrence based on'))
+        label = wx.StaticText(schedulePanel, 
+                              label=_('Schedule each next recurrence based on'))
         panelSizer.Add(label, flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add((3, -1))
         self._scheduleChoice = wx.Choice(schedulePanel,
-            choices=[_('previous start and/or due date and time'),
+            choices=[_('previous planned start and/or due date and time'),
                      _('last completion date and time')])
         self._scheduleChoice.Bind(wx.EVT_CHOICE, self.onRecurrenceEdited)
         if operating_system.isMac():
-            # On Mac OS X, the wx.Choice gets too little vertical space by default
+            # On Mac OS X, the wx.Choice gets too little vertical space by 
+            # default
             size = self._scheduleChoice.GetSizeTuple()
-            self._scheduleChoice.SetMinSize((size[0], size[1]+1))
+            self._scheduleChoice.SetMinSize((size[0], size[1] + 1))
         panelSizer.Add(self._scheduleChoice, flag=wx.ALIGN_CENTER_VERTICAL)
         schedulePanel.SetSizerAndFit(panelSizer)
+
+        stopPanel = wx.Panel(self)
+        panelSizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        self._stopDateTimeCheckBox = wx.CheckBox(stopPanel)
+        self._stopDateTimeCheckBox.Bind(wx.EVT_CHECKBOX, 
+                                        self.onRecurrenceStopDateTimeChecked)
+        # Since None is not allowed, we need an initial value...
+        self._recurrenceStopDateTimeEntry = DateTimeEntry(stopPanel, settings,
+                                                          noneAllowed=False,
+            initialDateTime=datetime.datetime.combine(date.LastDayOfCurrentMonth(),
+                                                      datetime.time(0, 0, 0)))
+        self._recurrenceStopDateTimeEntry.Bind(EVT_DATETIMEENTRY,
+                                               self.onRecurrenceEdited)
+        panelSizer.Add(self._stopDateTimeCheckBox, 
+                       flag=wx.ALIGN_CENTER_VERTICAL)
+        panelSizer.Add(self.horizontalSpace)
+        panelSizer.Add(wx.StaticText(stopPanel, label=_('Stop after')),
+                       flag=wx.ALIGN_CENTER_VERTICAL)
+        panelSizer.Add(self.horizontalSpace)
+        panelSizer.Add(self._recurrenceStopDateTimeEntry,
+                       flag=wx.ALIGN_CENTER_VERTICAL)
+        panelSizer.Add(self.horizontalSpace)
+        stopPanel.SetSizerAndFit(panelSizer)
         
         panelSizer = wx.BoxSizer(wx.VERTICAL)
         panelSizer.Add(recurrenceFrequencyPanel)
@@ -460,6 +506,7 @@ class RecurrenceEntry(wx.Panel):
         panelSizer.Add(schedulePanel)
         panelSizer.Add(self.verticalSpace)
         panelSizer.Add(maxPanel)
+        panelSizer.Add(stopPanel)
         self.SetSizerAndFit(panelSizer)
         self.SetValue(recurrence)
 
@@ -468,16 +515,19 @@ class RecurrenceEntry(wx.Panel):
                           3: _('month(s),'), 4: _('year(s),')}
         recurrenceLabel = recurrenceDict[self._recurrencePeriodEntry.Selection]
         self._recurrenceStaticText.SetLabel(recurrenceLabel)
-        self._recurrenceSameWeekdayCheckBox.Enable(self._recurrencePeriodEntry.Selection in (3,4))
+        self._recurrenceSameWeekdayCheckBox.Enable(self._recurrencePeriodEntry.Selection in (3, 4))
         self._recurrenceSizer.Layout()
 
     def onRecurrencePeriodEdited(self, event):
         recurrenceOn = event.String != _('None')
         self._maxRecurrenceCheckBox.Enable(recurrenceOn)
+        self._stopDateTimeCheckBox.Enable(recurrenceOn)
         self._recurrenceFrequencyEntry.Enable(recurrenceOn)
         self._scheduleChoice.Enable(recurrenceOn)
         self._maxRecurrenceCountEntry.Enable(recurrenceOn and \
             self._maxRecurrenceCheckBox.IsChecked())
+        self._recurrenceStopDateTimeEntry.Enable(recurrenceOn and \
+            self._stopDateTimeCheckBox.IsChecked())
         self.updateRecurrenceLabel()
         self.onRecurrenceEdited()
 
@@ -486,11 +536,17 @@ class RecurrenceEntry(wx.Panel):
         self._maxRecurrenceCountEntry.Enable(maxRecurrenceOn)
         self.onRecurrenceEdited()
 
-    def onRecurrenceEdited(self, event=None): # pylint: disable-msg=W0613
+    def onRecurrenceStopDateTimeChecked(self, event):
+        stopRecurrenceOn = event.IsChecked()
+        self._recurrenceStopDateTimeEntry.Enable(stopRecurrenceOn)
+        self.onRecurrenceEdited()
+
+    def onRecurrenceEdited(self, event=None):  # pylint: disable=W0613
         wx.PostEvent(self, RecurrenceEntryEvent())
         
     def SetValue(self, recurrence):
-        index = {'': 0, 'daily': 1, 'weekly': 2, 'monthly': 3, 'yearly': 4}[recurrence.unit]
+        index = {'': 0, 'daily': 1, 'weekly': 2, 'monthly': 3, 
+                 'yearly': 4}[recurrence.unit]
         self._recurrencePeriodEntry.Selection = index
         self._maxRecurrenceCheckBox.Enable(bool(recurrence))
         self._maxRecurrenceCheckBox.SetValue(recurrence.max > 0)
@@ -503,14 +559,24 @@ class RecurrenceEntry(wx.Panel):
             if recurrence.unit in ('monthly', 'yearly') else False
         self._scheduleChoice.Selection = 1 if recurrence.recurBasedOnCompletion else 0
         self._scheduleChoice.Enable(bool(recurrence))
+        self._stopDateTimeCheckBox.Enable(bool(recurrence))
+        has_stop_datetime = recurrence.stop_datetime != date.DateTime()
+        self._stopDateTimeCheckBox.SetValue(has_stop_datetime)
+        self._recurrenceStopDateTimeEntry.Enable(has_stop_datetime)
+        if has_stop_datetime:
+            self._recurrenceStopDateTimeEntry.SetValue(recurrence.stop_datetime)
         self.updateRecurrenceLabel()
 
     def GetValue(self):
-        recurrenceDict = {0: '', 1: 'daily', 2: 'weekly', 3: 'monthly', 4: 'yearly'}
+        recurrenceDict = {0: '', 1: 'daily', 2: 'weekly', 3: 'monthly', 
+                          4: 'yearly'}
         kwargs = dict(unit=recurrenceDict[self._recurrencePeriodEntry.Selection])
         if self._maxRecurrenceCheckBox.IsChecked():
-            kwargs['max'] = self._maxRecurrenceCountEntry.Value
+            kwargs['maximum'] = self._maxRecurrenceCountEntry.Value
         kwargs['amount'] = self._recurrenceFrequencyEntry.Value
         kwargs['sameWeekday'] = self._recurrenceSameWeekdayCheckBox.IsChecked()
         kwargs['recurBasedOnCompletion'] = bool(self._scheduleChoice.Selection)
-        return date.Recurrence(**kwargs) # pylint: disable-msg=W0142
+        if self._stopDateTimeCheckBox.IsChecked():
+            kwargs['stop_datetime'] = self._recurrenceStopDateTimeEntry.GetValue()
+        return date.Recurrence(**kwargs)  # pylint: disable=W0142
+

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -177,10 +177,10 @@ class CompositeEffortTest(test.TestCase):
 
     def testChangeStartTimeOfEffort_KeepWithinPeriod(self):
         self.task.addEffort(self.effort1)
-        self.effort1.setStart(self.effort1.getStart() + date.TimeDelta(hours=1))
+        self.effort1.setStart(self.effort1.getStart() + date.ONE_HOUR)
         self.assertEqual(self.effort1.duration(), self.composite.duration())
 
-    def testChangeStartTimeOfEffort_KeepWithinPeriod_Notification(self):
+    def testChangeStartTimeOfEffort_KeepWithinPeriod_NoNotification(self):
         self.task.addEffort(self.effort1)
         events = []
         
@@ -188,8 +188,8 @@ class CompositeEffortTest(test.TestCase):
             events.append((newValue, sender))
             
         pub.subscribe(onEvent, effort.Effort.durationChangedEventType())
-        self.effort1.setStart(self.effort1.getStart() + date.TimeDelta(hours=1))
-        self.failUnless((self.composite.duration(), self.composite) in events)
+        self.effort1.setStart(self.effort1.getStart() + date.ONE_HOUR)
+        self.failIf((self.composite.duration(), self.composite) in events)
 
     def testChangeStartTimeOfEffort_MoveOutsidePeriode(self):
         self.task.addEffort(self.effort1)
@@ -198,7 +198,7 @@ class CompositeEffortTest(test.TestCase):
 
     def testChangeStopTimeOfEffort_KeepWithinPeriod(self):
         self.task.addEffort(self.effort1)
-        self.effort1.setStop(self.effort1.getStop() + date.TimeDelta(hours=1))
+        self.effort1.setStop(self.effort1.getStop() + date.ONE_HOUR)
         self.assertEqual(self.effort1.duration(), self.composite.duration())
 
     def testChangeStopTimeOfEffort_MoveOutsidePeriod(self):
@@ -206,7 +206,7 @@ class CompositeEffortTest(test.TestCase):
         self.effort1.setStop(self.effort1.getStop() + date.TimeDelta(days=2))
         self.assertEqual(self.effort1.duration(), self.composite.duration())
 
-    def testChangeStartTimeOfEffort_Notification(self):
+    def testChangeStopTimeOfEffort_MoveOutsidePeriod_Notification(self):
         self.task.addEffort(self.effort1)
         events = []
         
@@ -214,8 +214,19 @@ class CompositeEffortTest(test.TestCase):
             events.append((newValue, sender))
             
         pub.subscribe(onEvent, effort.Effort.durationChangedEventType())
-        self.effort1.setStop(self.effort1.getStop() + date.TimeDelta(hours=1))
-        self.failUnless((self.composite.duration(), self.composite) in events)
+        self.effort1.setStop(self.effort1.getStop() + date.TimeDelta(days=2))
+        self.failIf((self.composite.duration(), self.composite) in events)
+        
+    def testChangeStopTimeOfEffort_NoNotification(self):
+        self.task.addEffort(self.effort1)
+        events = []
+        
+        def onEvent(newValue, sender):
+            events.append((newValue, sender))
+            
+        pub.subscribe(onEvent, effort.Effort.durationChangedEventType())
+        self.effort1.setStop(self.effort1.getStop() + date.ONE_HOUR)
+        self.failIf((self.composite.duration(), self.composite) in events)
 
     def testChangeStartTimeOfEffort_MoveInsidePeriod(self):
         self.task.addEffort(self.effort3)
@@ -247,9 +258,7 @@ class CompositeEffortTest(test.TestCase):
         pub.subscribe(onEvent, effort.CompositeEffort.compositeEmptyEventType())
         self.task.addEffort(self.effort1)
         self.effort1.setTask(task.Task())
-        # We get the event twice: once because of setTask, second from the 
-        # changed duration 
-        self.assertEqual([self.composite, self.composite], events)
+        self.assertEqual([self.composite], events)
 
     def testGetDescription_ZeroEfforts(self):
         self.assertEqual('', self.composite.description())
@@ -323,9 +332,7 @@ class CompositeEffortWithSubTasksTest(test.TestCase):
             
         pub.subscribe(onEvent, effort.CompositeEffort.compositeEmptyEventType())
         self.child.removeEffort(self.childEffort)
-        # We get the event twice: once because of setTask, second from the 
-        # changed duration 
-        self.assertEqual([self.composite, self.composite], events)
+        self.assertEqual([self.composite], events)
 
     def testDuration(self):
         self.child.addEffort(self.childEffort)
@@ -360,7 +367,7 @@ class CompositeEffortWithSubTasksTest(test.TestCase):
         grandChild = task.Task(subject='grandchild')
         self.child2.addChild(grandChild)
         grandChildEffort = effort.Effort(grandChild, self.composite.getStart(), 
-            self.composite.getStart() + date.TimeDelta(hours=1))
+            self.composite.getStart() + date.ONE_HOUR)
         grandChild.addEffort(grandChildEffort)
         self.assertEqual(grandChildEffort.duration(),
             self.composite.duration(recursive=True))
@@ -369,7 +376,7 @@ class CompositeEffortWithSubTasksTest(test.TestCase):
         self.task.addChild(self.child2)
         grandChild = task.Task(subject='grandchild')
         grandChildEffort = effort.Effort(grandChild, self.composite.getStart(),
-            self.composite.getStart() + date.TimeDelta(hours=1))
+            self.composite.getStart() + date.ONE_HOUR)
         grandChild.addEffort(grandChildEffort)
         self.child2.addChild(grandChild)
         self.assertEqual(grandChildEffort.duration(),

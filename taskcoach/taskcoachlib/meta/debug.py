@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -76,7 +76,7 @@ def signature(func, args, kwargs, result):
     try:
         return '%s(%s, %s) -> %s'%(func, unicode(args), unicode(kwargs), result)
     except:
-        return '%s(...) -> %s'%(func, result) # pylint: disable-msg=W0702
+        return '%s(...) -> %s'%(func, result) # pylint: disable=W0702
                                
                                
 def format_traceback(frame):

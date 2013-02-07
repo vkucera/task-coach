@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -45,6 +45,34 @@ class ToggleCategory(ToggleCategoryCommandTestCase):
         self.assertDoUndoRedo(\
             lambda: self.assertEqual(set([self.categorizable]), self.category.categorizables()),
             lambda: self.assertEqual(set(), self.category.categorizables()))
+        
+    def testToggleCategory_AffectsCategorizableThatIsInCategory(self):
+        self.categorizable.addCategory(self.category)
+        self.category.addCategorizable(self.categorizable)
+        self.toggleItem([self.categorizable])
+        self.assertDoUndoRedo(\
+            lambda: self.assertEqual(set(), self.categorizable.categories()),
+            lambda: self.assertEqual(set([self.category]), self.categorizable.categories()))
+        
+    def testToggleCategory_AffectsCategoryThatAlreadyContainsCategorizable(self):
+        self.categorizable.addCategory(self.category)
+        self.category.addCategorizable(self.categorizable)
+        self.toggleItem([self.categorizable])
+        self.assertDoUndoRedo(\
+            lambda: self.assertEqual(set(), self.category.categorizables()),
+            lambda: self.assertEqual(set([self.categorizable]), self.category.categorizables()))
+        
+    def testToggleCategory_WhenSomeCategorizablesAreInCategory(self):
+        ''' If some of the selected categorizables are in the category and some
+            are not, toggle category puts all categorizables in the category, 
+            rather than toggling all categorizables. '''
+        categorizable2 = categorizable.CategorizableCompositeObject(subject='Categorizable2')
+        categorizable2.addCategory(self.category)
+        self.category.addCategorizable(categorizable2)
+        self.toggleItem([self.categorizable, categorizable2])
+        self.assertDoUndoRedo(\
+            lambda: self.assertEqual(set([self.categorizable, categorizable2]), self.category.categorizables()), 
+            lambda: self.assertEqual(set([categorizable2]), self.category.categorizables()))
 
 
 class ToggleMutualExclusiveCategories(ToggleCategoryCommandTestCase):

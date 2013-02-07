@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ class APSchedulerTest(test.TestCase):
         self.jobCalled += 1
         
     def testScheduleJob(self):
-        self.scheduler.add_date_job(self.job, date.Now() + date.TimeDelta(microseconds=650))
+        self.scheduler.add_date_job(self.job, date.Now() + date.TimeDelta(microseconds=650), misfire_grace_time=0)
         while self.jobCalled == 0:
             pass
         self.assertEqual(1, self.jobCalled)

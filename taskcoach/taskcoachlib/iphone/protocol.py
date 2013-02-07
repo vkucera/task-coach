@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-# pylint: disable-msg=W0201,E1101
+# pylint: disable=W0201,E1101
  
 from taskcoachlib.patterns.network import Acceptor
 from taskcoachlib.domain.date import Date, parseDate, DateTime, parseDateTime, Recurrence
@@ -266,7 +266,7 @@ class CompositeItem(BaseItem):
                             for idx, v in enumerate(values)])
 
     def __str__(self):
-        return 'CompositeItem([%s])' % ', '.join(map(str, self._items)) # pylint: disable-msg=W0141
+        return 'CompositeItem([%s])' % ', '.join(map(str, self._items)) # pylint: disable=W0141
 
 
 class ListItem(BaseItem):
@@ -357,7 +357,7 @@ class ItemParser(object):
 
         klass.formatMap[character] = itemClass
 
-    def parse(self, format): # pylint: disable-msg=W0622
+    def parse(self, format): # pylint: disable=W0622
         if format.startswith('['):
             return ListItem(self.parse(format[1:-1]))
 
@@ -398,7 +398,7 @@ class State(object):
 
         self.__disp = disp
 
-    def init(self, format, count): # pylint: disable-msg=W0622
+    def init(self, format, count): # pylint: disable=W0622
         self.__format = format
         self.__count = count
 
@@ -449,7 +449,7 @@ class State(object):
             else:
                 self.__disp.set_terminator(length)
 
-    def pack(self, format, *values):  # pylint: disable-msg=W0622
+    def pack(self, format, *values):  # pylint: disable=W0622
         """Send a value."""
 
         self.__disp.push(ItemParser().parse(format).pack(*values))
@@ -520,7 +520,7 @@ class IPhoneHandler(asynchat.async_chat):
 
     def handle_error(self):
         if self.state.ui is not None:
-            import traceback, StringIO # pylint: disable-msg=W0404
+            import traceback, StringIO # pylint: disable=W0404
             bf = StringIO.StringIO()
             traceback.print_exc(file=bf)
 
@@ -531,7 +531,7 @@ class IPhoneHandler(asynchat.async_chat):
         self.state.handleClose()
 
 
-class BaseState(State): # pylint: disable-msg=W0223
+class BaseState(State): # pylint: disable=W0223
     def __init__(self, disp, *args, **kwargs):
         self.oldTasks = disp.window.taskFile.tasks().copy()
         self.oldCategories = disp.window.taskFile.categories().copy()
@@ -618,7 +618,7 @@ class PasswordState(BaseState):
         self.hashData = ''.join([struct.pack('B', random.randint(0, 255)) for dummy in xrange(512)])
         self.pack('20b', self.hashData)
 
-    def handleNewObject(self, hash): # pylint: disable-msg=W0622
+    def handleNewObject(self, hash): # pylint: disable=W0622
         local = hashlib.sha1()
         local.update(self.hashData + self.disp().settings.get('iphone', 'password').encode('UTF-8'))
 
@@ -687,7 +687,7 @@ class TaskFileNameState(BaseState):
         self.disp().log(_('Sending file name: %s'), filename)
         self.pack('z', filename)
 
-    def handleNewObject(self, response): # pylint: disable-msg=W0613
+    def handleNewObject(self, response): # pylint: disable=W0613
         self.setState(TwoWayState if self.version < 5 else DayHoursState)
         
     def finished(self):
@@ -702,7 +702,7 @@ class DayHoursState(BaseState):
                   self.disp().settings.getint('view', 'efforthourstart'),
                   self.disp().settings.getint('view', 'efforthourend'))
 
-    def handleNewObject(self, response): # pylint: disable-msg=W0613
+    def handleNewObject(self, response): # pylint: disable=W0613
         self.setState(TwoWayState)
 
     def finished(self):
@@ -725,7 +725,7 @@ class FullFromDesktopState(BaseState):
                 self.efforts = list([effort for effort in allEfforts \
                                   if effort.task() is None or not (effort.task().isDeleted() or effort.task().completed())])
         else:
-            self.tasks = filter(self.isTaskEligible, self.disp().window.taskFile.tasks()) # pylint: disable-msg=W0141
+            self.tasks = filter(self.isTaskEligible, self.disp().window.taskFile.tasks()) # pylint: disable=W0141
         self.categories = list([cat for cat in self.disp().window.taskFile.categories().allItemsSorted() if not cat.isDeleted()])
 
         if self.version >= 4:
@@ -858,7 +858,7 @@ class FullFromDesktopEffortState(BaseState):
                       effort.getStart(),
                       effort.getStop())
 
-    def handleNewObject(self, code): # pylint: disable-msg=W0613
+    def handleNewObject(self, code): # pylint: disable=W0613
         self.count += 1
         self.ui.SetProgress(self.count, self.total)
         self.sendObject()
@@ -1205,7 +1205,7 @@ class TwoWayModifiedTasks(BaseState):
         else:
             (subject, taskId, description, plannedStartDate, dueDate, completionDate, reminderDateTime,
              priority, hasRecurrence, recPeriod, recRepeat, recSameWeekday, categories) = args
-            categories = set([self.categoryMap[catId] for catId in categories])
+            categories = set([self.categoryMap[catId] for catId in categories if catId in self.categoryMap])
 
             if hasRecurrence:
                 recurrence = Recurrence(unit={0: 'daily', 1: 'weekly', 2: 'monthly', 3: 'yearly'}[recPeriod],

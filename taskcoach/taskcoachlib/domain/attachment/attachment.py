@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2012 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -60,7 +60,7 @@ def getRelativePath(path, basePath=os.getcwd()):
         path1.insert(0, '..')
         path2.pop(0)
 
-    return os.path.join(*path1)  # pylint: disable-msg=W0142
+    return os.path.join(*path1)  # pylint: disable=W0142
 
 
 class Attachment(base.Object, NoteOwner):
@@ -140,7 +140,7 @@ class Attachment(base.Object, NoteOwner):
 class FileAttachment(Attachment):
     type_ = 'file'
 
-    def open(self, workingDir=None, openAttachment=desktop.open):  # pylint: disable-msg=W0221
+    def open(self, workingDir=None, openAttachment=desktop.open):  # pylint: disable=W0221
         return openAttachment(self.normalizedLocation(workingDir))
 
     def normalizedLocation(self, workingDir=None):
@@ -159,7 +159,7 @@ class URIAttachment(Attachment):
     type_ = 'uri'
 
     def __init__(self, location, *args, **kwargs):
-        if location.startswith('message:'):
+        if location.startswith('message:') and 'subject' not in kwargs:
             subject = mailer.getSubjectOfMail(location[8:])
             if subject:
                 kwargs['subject'] = subject
