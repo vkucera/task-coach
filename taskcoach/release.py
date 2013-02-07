@@ -298,7 +298,7 @@ def marking_default_downloads(settings, options):
             # httplib does not seem to handle PUT very well
             # See http://stackoverflow.com/questions/111945/is-there-any-way-to-do-http-put-in-python
             opener = urllib2.build_opener(urllib2.HTTPSHandler)
-            url = 'https://sourceforge.net/projects/taskcoach/files/taskcoach/Release-%s/%s' % (meta.version, name)
+            url = 'https://sourceforge.net/projects/taskcoach/files/taskcoach/Release-%s/%s' % (taskcoachlib.meta.version, name)
             req = urllib2.Request(url,
                                   data=urllib.urlencode(dict(default=platform, api_key=settings.get('sourceforge', 'api_key'))))
             req.add_header('Content-Type', 'application/x-www-form-urlencoded')
