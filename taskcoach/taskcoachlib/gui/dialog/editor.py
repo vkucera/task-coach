@@ -69,8 +69,8 @@ class Page(patterns.Observer, widgets.BookPage):
                     # This ensures that if the TextCtrl value is more than can 
                     # be displayed, it will display the start instead of the 
                     # end:
-                    from taskcoachlib.thirdparty import SendKeys  # pylint: disable=W0404
-                    SendKeys.SendKeys('{END}+{HOME}')
+                    """from taskcoachlib.thirdparty import SendKeys  # pylint: disable=W0404
+                    SendKeys.SendKeys('{END}+{HOME}')"""
                 else:
                     the_entry.SetSelection(-1, -1)  # Select all text
             except (AttributeError, TypeError):
