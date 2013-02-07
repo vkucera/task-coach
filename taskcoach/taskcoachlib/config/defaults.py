@@ -509,7 +509,6 @@ defaults = {
 'feature': {
     'notes': 'True',
     'effort': 'True',
-    'iphone': 'False',
     'notifier': 'Task Coach',
     'minidletime': '0',
     'usesm2': 'False',
@@ -517,12 +516,6 @@ defaults = {
     'sayreminder': 'False',
     'sdtcspans': '60,120,1440,2880',
     'sdtcspans_effort': '60,120,180,240'
-    },
-'iphone': {
-    'password': '',
-    'service': '',
-    'synccompleted': 'True',
-    'showlog': 'False' 
     },
 'printer': {
     'margin_left': '0',

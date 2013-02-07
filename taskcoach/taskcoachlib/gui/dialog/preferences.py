@@ -535,8 +535,6 @@ class FeaturesPage(SettingsPage):
         self.addBooleanSetting('feature', 'effort', 
             _('Allow for tracking effort'))
         self.addBooleanSetting('feature', 'notes', _('Allow for taking notes'))
-        self.addBooleanSetting('feature', 'iphone', 
-                               _('Enable iPhone synchronization'))
         if operating_system.isGTK():
             self.addBooleanSetting('feature', 'usesm2', 
                                    _('Use X11 session management'))
@@ -668,25 +666,6 @@ class TaskReminderPage(SettingsPage):
             flags=(wx.ALIGN_TOP | wx.ALL, None))  # Don't offer "Don't snooze" as a choice
         self.fit()
 
-
-class IPhonePage(SettingsPage):
-    pageName = 'iphone'
-    pageTitle = _('iPhone')
-    pageIcon = 'computer_handheld_icon'
-    
-    def __init__(self, *args, **kwargs):
-        super(IPhonePage, self).__init__(columns=3, *args, **kwargs)
-        self.addTextSetting('iphone', 'password',
-            _('Password for synchronization with iPhone'),
-            helpText=_('When synchronizing, enter this password on the iPhone to authorize it'))
-        self.addTextSetting('iphone', 'service',
-            _('Bonjour service name'), helpText='restart')
-        self.addBooleanSetting('iphone', 'synccompleted',
-            _('Upload completed tasks to device'))
-        self.addBooleanSetting('iphone', 'showlog',
-            _('Show the synchronization log'))
-        self.fit()
-
         
 class EditorPage(SettingsPage):
     pageName = 'editor'
@@ -711,11 +690,11 @@ class EditorPage(SettingsPage):
 
 class Preferences(widgets.NotebookDialog):
     allPageNames = ['window', 'save', 'language', 'task', 'reminder', 
-                    'appearance', 'features', 'iphone', 'editor']
+                    'appearance', 'features', 'editor']
     pages = dict(window=WindowBehaviorPage, task=TaskDatesPage, 
                  reminder=TaskReminderPage, save=SavePage, 
                  language=LanguagePage, appearance=TaskAppearancePage, 
-                 features=FeaturesPage, iphone=IPhonePage, editor=EditorPage)
+                 features=FeaturesPage, editor=EditorPage)
     
     def __init__(self, settings=None, *args, **kwargs):
         self.settings = settings
@@ -731,10 +710,7 @@ class Preferences(widgets.NotebookDialog):
                 self._interior.AddPage(page, page.pageTitle, page.pageIcon)
 
     def __should_create_page(self, page_name):
-        if page_name == 'iphone':
-            return self.settings.getboolean('feature', 'iphone')
-        else:
-            return True
+        return True
 
     def createPage(self, pageName):
         return self.pages[pageName](parent=self._interior, 

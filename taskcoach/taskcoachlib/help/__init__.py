@@ -119,12 +119,6 @@ _TOC = sequence(
                 li(a_href(_('Attaching an e-mail to a task'), 'emailattach')),
                 li(a_href(_('Creating a task from an e-mail'), 'emailcreate')))),
         li(
-            a_href(_('iPhone and iPod Touch'), 'iphone'),
-            ul(
-                li(a_href(_('%(name)s on the iPhone') % meta.metaDict, 'taskcoachiphone')),
-                li(a_href(_('Configuration'), 'iphoneconf')),
-                li(a_href(_('Troubleshooting'), 'iphonetrouble')))),
-        li(
             a_href(_('Android'), 'android'),
             ul(
                 li(a_href(_('%(name)s on Android?') % meta.metaDict, 'taskcoachandroid')),
@@ -440,101 +434,6 @@ description is its content. Additionally, the mail is automatically
 attached to the newly created task.''')))
 
 
-_iPhoneSection = sequence(
-    h3(
-        a_name(_('iPhone, iPod Touch and iPad'), 'iphone')),
-    h4(
-        a_name(_('%(name)s on the iPhone/iPod Touch/iPad')%meta.metaDict, 'taskcoachiphone')),
-    p(
-        _('''There is an iPhone/iPod Touch/iPad companion app for %(name)s, 
-available on <a 
-href="http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=311403563&mt=8"
-target="_blank">Apple's AppStore</a>. (If you don't have iTunes installed on 
-your computer, you'll be presented a page where you can download iTunes). 
-It supports the following features:''')%meta.metaDict,
-        ul(
-            li(_('''Basic task attributes: subject, description, dates (with 
-recurrence)...''')),
-            li(_('Hierarchical tasks and categories')),
-            li(_('Time tracking')),
-            li(_('Multiple task files')),
-            li(_('Two-way synchronization with %(name)s on the desktop')%meta.metaDict)),
-    p(
-        _('''The application is universal and has a custom iPad UI.''')),
-    h4(
-        a_name(_('Configuration'), 'iphoneconf')),
-    h5(
-        _('Configuration on the iPhone/iPod Touch/iPad')),
-    p(
-        _('''There are some settings for the iPhone/iPod Touch/iPad app in the 
-Settings application:'''),
-        ul(
-            li(_('Show completed: whether to show completed tasks.')),
-            li(_('''Show inactive: whether to show inactive tasks (planned start date 
-in the future).''')),
-            li(_('''Icon position: the LED icon may show up either on the 
-left side or the right side of the screen.''')),
-            li(_('''Compact mode: if this is enabled, the task list has smaller 
-LEDs and doesn't show categories or dates.''')),
-            li(_('''Confirm complete: if enabled, a message box will pop up for 
-confirmation when you mark a task complete by tapping its LED.''')),
-            li(_('''# days due soon: How many days in the future is 
-considered "soon".''')))),
-    h5(
-        _('Configuration on the desktop, all platforms')),
-    p(
-        _('''Before synchronizing, you must also configure %(name)s on the 
-desktop; in the preferences, in the "Features" tab, check "Enable iPhone
-synchronization". Restart %(name)s. Now, in the preferences, choose the 
-"iPhone" tab and fill in at least the password.''')%meta.metaDict),
-    p(
-        _('''When you tap the "Sync" button in the category view, %(name)s
-will automatically detect running instances of %(name)s on your
-desktop and ask you to select one (you may have several instances
-running on different computers on your network, or several instances
-on the same computer). The name displayed is, by default, some string
-identifying the computer it's running on. To customize this, you may
-change the "Bonjour service name" in the configuration.''')%meta.metaDict),
-    p(
-        _('''%(name)s will remember the chosen instance and try it next time
-you synchronize; if it's not running, it will prompt you again.''')%meta.metaDict),
-    p(
-        _('''Note that this synchronization happens through the network; there 
-is no need for the device to be connected through USB nor for iTunes to
-be running.''')),
-    h5(
-        _('Configuration on Windows')),
-    p(
-        _('''On Windows, you must install <a
-href="http://support.apple.com/kb/dl999">Bonjour for Windows</a> and
-unblock it when asked by the firewall.''')),
-    h5(
-        _('Configuration on Linux')),
-    p(
-        _('''On Linux, you must have the <a href="http://avahi.org/">Avahi</a> 
-daemon installed and running. Most modern distributions already have it. You 
-must also install the dnscompat package; its name depends on your distribution 
-(libavahi-compat-libdnssd1 on Ubuntu for instance).''')),
-    h4(
-        a_name(_('Troubleshooting'), 'iphonetrouble')),
-    h5(
-        _('''I can't seem to find the iPhone/iPod Touch app on Apple's 
-website''')),
-    p(
-        _('''You need to have iTunes installed on your computer to browse 
-Apple's App Store. <a href="http://www.apple.com/itunes/" target="_blank">Get 
-iTunes</a>.''')),
-    h5(
-        _('''My computer doesn't appear in the list when trying to sync''')),
-    p(
-        _('''Check that your iPhone/iPod Touch is connected to the same network 
-your computer is through WiFi.''')),
-    h5(
-        _("The iPhone can't connect to my computer")),
-    p(
-        _('If you have a firewall, check that ports 4096-4100 are open.'))))
-
-
 _androidSection = sequence(
     h3(
         a_name(_('Android'), 'android')),
@@ -731,7 +630,7 @@ shortcuts are not configurable at the moment.''')%meta.metaDict),
 
 helpHTML = _TOC + _taskSection + _effortSection + _categorySection + \
     _noteSection + _printingAndExportingSection + _multiuserSection + _emailSection + \
-    _iPhoneSection + _androidSection + _templatesSection + \
+    _androidSection + _templatesSection + \
     _guiSection + _shortcutSection
 
 

@@ -22,9 +22,7 @@ from taskcoachlib import application, meta, widgets, \
     operating_system # pylint: disable=W0622
 from taskcoachlib.gui import viewer, toolbar, uicommand, remindercontroller, \
     artprovider, windowdimensionstracker, idlecontroller
-from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog
 from taskcoachlib.gui.dialog.xfce4warning import XFCE4WarningDialog
-from taskcoachlib.gui.iphone import IPhoneSyncFrame
 from taskcoachlib.gui.threads import DeferredCallMixin, synchronized
 from taskcoachlib.i18n import _
 from taskcoachlib.powermgt import PowerStateMixin
@@ -62,23 +60,6 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, BalloonTipManager,
         self.__register_for_window_component_changes()
 
         self.bonjourRegister = None
-
-        if settings.getboolean('feature', 'iphone'):
-            # pylint: disable=W0612,W0404,W0702
-            try:
-                from taskcoachlib.thirdparty import pybonjour 
-                from taskcoachlib.iphone import IPhoneAcceptor, BonjourServiceRegister
-
-                acceptor = IPhoneAcceptor(self, settings, iocontroller)
-                self.bonjourRegister = BonjourServiceRegister(settings, acceptor.port)
-            except:
-                from taskcoachlib.gui.dialog.iphone import IPhoneBonjourDialog
-
-                dlg = IPhoneBonjourDialog(self, wx.ID_ANY, _('Warning'))
-                try:
-                    dlg.ShowModal()
-                finally:
-                    dlg.Destroy()
 
         self._idleController = idlecontroller.IdleController(self,
                                                              self.settings,
@@ -311,101 +292,3 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
 
     def OnPowerState(self, state):
         pub.sendMessage('powermgt.%s' % {self.POWERON: 'on', self.POWEROFF: 'off'}[state])
-
-    # iPhone-related methods. These are called from the asyncore thread so they're deferred.
-
-    @synchronized
-    def createIPhoneProgressFrame(self):
-        return IPhoneSyncFrame(self.settings, _('iPhone/iPod'),
-            icon=wx.ArtProvider.GetBitmap('taskcoach', wx.ART_FRAME_ICON, 
-                                          (16, 16)),
-            parent=self)
-
-    @synchronized
-    def getIPhoneSyncType(self, guid):
-        if guid == self.taskFile.guid():
-            return 0  # two-way
-
-        dlg = IPhoneSyncTypeDialog(self, wx.ID_ANY, _('Synchronization type'))
-        try:
-            dlg.ShowModal()
-            return dlg.value
-        finally:
-            dlg.Destroy()
-
-    @synchronized
-    def notifyIPhoneProtocolFailed(self):
-        # This should actually never happen.
-        wx.MessageBox(_('''An iPhone or iPod Touch device tried to synchronize with this\n'''
-                      '''task file, but the protocol negotiation failed. Please file a\n'''
-                      '''bug report.'''),
-                      _('Error'), wx.OK)
-
-    # The notification system is not thread-save; adding or modifying tasks
-    # or categories from the asyncore thread crashes the app.
-
-    @synchronized
-    def clearTasks(self):
-        self.taskFile.clear(False)
-
-    @synchronized
-    def restoreTasks(self, categories, tasks):
-        self.taskFile.clear(False)
-        self.taskFile.categories().extend(categories)
-        self.taskFile.tasks().extend(tasks)
-
-    @synchronized
-    def addIPhoneCategory(self, category):
-        self.taskFile.categories().append(category)
-
-    @synchronized
-    def removeIPhoneCategory(self, category):
-        self.taskFile.categories().remove(category)
-
-    @synchronized
-    def modifyIPhoneCategory(self, category, name):
-        category.setSubject(name)
-
-    @synchronized
-    def addIPhoneTask(self, task, categories):
-        self.taskFile.tasks().append(task)
-        for category in categories:
-            task.addCategory(category)
-            category.addCategorizable(task)
-
-    @synchronized
-    def removeIPhoneTask(self, task):
-        self.taskFile.tasks().remove(task)
-
-    @synchronized
-    def addIPhoneEffort(self, task, effort):
-        if task is not None:
-            task.addEffort(effort)
-
-    @synchronized
-    def modifyIPhoneEffort(self, effort, subject, started, ended):
-        effort.setSubject(subject)
-        effort.setStart(started)
-        effort.setStop(ended)
-
-    @synchronized
-    def modifyIPhoneTask(self, task, subject, description, plannedStartDateTime, 
-                         dueDateTime, completionDateTime, reminderDateTime,
-                         recurrence, priority, categories):
-        task.setSubject(subject)
-        task.setDescription(description)
-        task.setPlannedStartDateTime(plannedStartDateTime)
-        task.setDueDateTime(dueDateTime)
-        task.setCompletionDateTime(completionDateTime)
-        task.setReminder(reminderDateTime)
-        task.setRecurrence(recurrence)
-        task.setPriority(priority)
-
-        if categories is not None:  # Protocol v2
-            for toRemove in task.categories() - categories:
-                task.removeCategory(toRemove)
-                toRemove.removeCategorizable(task)
-
-            for toAdd in categories - task.categories():
-                task.addCategory(toAdd)
-                toAdd.addCategorizable(task)
