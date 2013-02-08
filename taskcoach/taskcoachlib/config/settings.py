@@ -300,7 +300,7 @@ class Settings(object, CachingConfigParser):
     def pathToTemplatesDir(self):
         if operating_system.isGTK():
             from taskcoachlib.thirdparty.xdg import BaseDirectory
-            path = BaseDirectory.save_data_path(meta.name)
+            path = os.path.join(BaseDirectory.save_data_path(meta.name), 'templates')
         else:
             path = self.pathToTemplatesDir_deprecated()
         return path
