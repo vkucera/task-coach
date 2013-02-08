@@ -27,6 +27,8 @@ Release('1.3.24', 'February 28, 2013',
     bugsFixed=[
         Bugv2('''Clicking in the hour choice popup in the date/time
 picker would select the wrong value.'''),
+        Bugv2('''Task Coach now follows the XDG specification for
+configuration and data (template) files on Linux.''', '367'),
         ],
     ),
 
