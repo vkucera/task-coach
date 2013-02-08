@@ -1958,7 +1958,8 @@ class SmartDateTimeCtrl(wx.Panel):
         EVT_TIME_PREV_DAY(self, self.OnPrevDay)
 
     def __OnFirstFocus(self, event):
-        self.__dateCtrl.SetFocus()
+        if self.__checkbox.GetValue():
+            self.__dateCtrl.SetFocus()
         self.__checkbox.Unbind(wx.EVT_SET_FOCUS)
 
     def __OnPopupRelativeChoices(self, event):
@@ -2042,7 +2043,8 @@ class SmartDateTimeCtrl(wx.Panel):
         self.ProcessEvent(evt)
         self.Enable(event.IsChecked())
         self.Refresh()
-        self.__dateCtrl.SetFocus()
+        if event.IsChecked():
+            self.__dateCtrl.SetFocus()
 
     def OnDateChange(self, event):
         newValue = datetime.datetime.combine(event.GetValue(), self.__timeCtrl.GetTime())
