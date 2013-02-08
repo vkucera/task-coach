@@ -53,10 +53,10 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
         effortsToAdd = []
         for task in tasks:
             effortsToAdd.extend(task.efforts())
+        super(EffortList, self).extendSelf(effortsToAdd, event)
         for effort in effortsToAdd:
             if effort.getStop() is None:
                 pub.sendMessage(effort.trackingChangedEventType(), newValue=True, sender=effort)
-        super(EffortList, self).extendSelf(effortsToAdd, event)
         
     def removeItemsFromSelf(self, tasks, event=None):
         ''' This method is called when a task is removed from the observed 

@@ -29,6 +29,8 @@ Release('1.3.24', 'February 28, 2013',
 picker would select the wrong value.'''),
         Bugv2('''Task Coach now follows the XDG specification for
 configuration and data (template) files on Linux.''', '367'),
+        Bugv2('''Fix menu "Stop tracking multiple tasks" menu''',
+              '1366'),
         ],
     ),
 
