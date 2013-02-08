@@ -66,11 +66,13 @@ class Page(patterns.Observer, widgets.BookPage):
             try:
                 if operating_system.isWindows() and \
                     isinstance(the_entry, wx.TextCtrl):
+                    # XXXFIXME: See SR #325. Disable this for now.
+
                     # This ensures that if the TextCtrl value is more than can 
                     # be displayed, it will display the start instead of the 
                     # end:
-                    from taskcoachlib.thirdparty import SendKeys  # pylint: disable=W0404
-                    SendKeys.SendKeys('{END}+{HOME}')
+                    """from taskcoachlib.thirdparty import SendKeys  # pylint: disable=W0404
+                    SendKeys.SendKeys('{END}+{HOME}')"""
                 else:
                     the_entry.SetSelection(-1, -1)  # Select all text
             except (AttributeError, TypeError):
