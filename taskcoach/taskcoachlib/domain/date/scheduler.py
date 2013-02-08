@@ -39,7 +39,10 @@ class ScheduledMethod(object):
     def __call__(self, *args, **kwargs):
         obj = self.__self()
         if obj is None:
-            Scheduler().unschedule(self)
+            try:
+                Scheduler().unschedule(self)
+            except KeyError:
+                pass
         else:
             self.__func(obj, *args, **kwargs)
 
