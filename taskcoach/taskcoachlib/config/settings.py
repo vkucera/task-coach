@@ -303,6 +303,9 @@ class Settings(object, CachingConfigParser):
             path = os.path.join(BaseDirectory.save_data_path(meta.name), 'templates')
         else:
             path = self.pathToTemplatesDir_deprecated()
+
+        if not os.path.exists(path):
+            os.makedirs(path)
         return path
 
     def pathToConfigDir_deprecated(self, environ):
