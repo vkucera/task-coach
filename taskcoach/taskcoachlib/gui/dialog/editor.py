@@ -66,6 +66,8 @@ class Page(patterns.Observer, widgets.BookPage):
             try:
                 if operating_system.isWindows() and \
                     isinstance(the_entry, wx.TextCtrl):
+                    # XXXFIXME: See SR #325. Disable this for now.
+
                     # This ensures that if the TextCtrl value is more than can 
                     # be displayed, it will display the start instead of the 
                     # end:
