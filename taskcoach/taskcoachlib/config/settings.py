@@ -356,7 +356,7 @@ class Settings(object, CachingConfigParser):
                 # path not expanded: apparently, there is no home dir
                 path = os.getcwd()
             path = os.path.join(path, '.%s' % meta.filename)
-        return path
+        return operating_system.decodeSystemString(path)
 
     def pathToTemplatesDir_deprecated(self):
         path = os.path.join(self.path(), 'taskcoach-templates')
@@ -376,7 +376,7 @@ class Settings(object, CachingConfigParser):
             os.makedirs(path)
         except OSError:
             pass
-        return path
+        return operating_system.decodeSystemString(path)
 
     def pathToIniFileSpecifiedOnCommandLine(self):
         return os.path.dirname(self.__iniFileSpecifiedOnCommandLine) or '.'
