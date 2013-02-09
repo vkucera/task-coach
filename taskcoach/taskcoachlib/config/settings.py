@@ -24,6 +24,7 @@ import ConfigParser
 import os
 import sys
 import wx
+import shutil
 import defaults
 
 
@@ -63,10 +64,11 @@ class Settings(object, CachingConfigParser):
     def __init__(self, load=True, iniFile=None, *args, **kwargs):
         # Sigh, ConfigParser.SafeConfigParser is an old-style class, so we 
         # have to call the superclass __init__ explicitly:
-        CachingConfigParser.__init__(self, *args, **kwargs) 
+        CachingConfigParser.__init__(self, *args, **kwargs)
         self.initializeWithDefaults()
         self.__loadAndSave = load
         self.__iniFileSpecifiedOnCommandLine = iniFile
+        self.migrateConfigurationFiles()
         if load:
             # First, try to load the settings file from the program directory,
             # if that fails, load the settings file from the settings directory
@@ -286,8 +288,27 @@ class Settings(object, CachingConfigParser):
         if not os.path.isdir(path):
             path = os.path.dirname(path)
         return path
-    
+
     def pathToConfigDir(self, environ):
+        if operating_system.isGTK():
+            from taskcoachlib.thirdparty.xdg import BaseDirectory
+            path = BaseDirectory.save_config_path(meta.name)
+        else:
+            path = self.pathToConfigDir_deprecated(environ=environ)
+        return path
+
+    def pathToTemplatesDir(self):
+        if operating_system.isGTK():
+            from taskcoachlib.thirdparty.xdg import BaseDirectory
+            path = os.path.join(BaseDirectory.save_data_path(meta.name), 'templates')
+        else:
+            path = self.pathToTemplatesDir_deprecated()
+
+        if not os.path.exists(path):
+            os.makedirs(path)
+        return path
+
+    def pathToConfigDir_deprecated(self, environ):
         try:
             path = os.path.join(environ['APPDATA'], meta.filename)
         except Exception:
@@ -298,7 +319,7 @@ class Settings(object, CachingConfigParser):
             path = os.path.join(path, '.%s' % meta.filename)
         return path
 
-    def pathToTemplatesDir(self):
+    def pathToTemplatesDir_deprecated(self):
         path = os.path.join(self.path(), 'taskcoach-templates')
 
         if operating_system.isWindows():
@@ -323,3 +344,23 @@ class Settings(object, CachingConfigParser):
     
     def generatedIniFilename(self, forceProgramDir):
         return os.path.join(self.path(forceProgramDir), '%s.ini' % meta.filename)
+
+    def migrateConfigurationFiles(self):
+        # Templates. Extra care for Windows shortcut.
+        oldPath = os.path.join(self.pathToConfigDir_deprecated(environ=os.environ), 'taskcoach-templates')
+        newPath = self.pathToTemplatesDir()
+        if oldPath != newPath:
+            if operating_system.isWindows() and os.path.exists(oldPath + '.lnk'):
+                shutil.move(oldPath + '.lnk', newPath + '.lnk')
+            elif os.path.exists(oldPath):
+                shutil.move(oldPath, newPath)
+        # Ini file
+        oldPath = os.path.join(self.pathToConfigDir_deprecated(environ=os.environ), '%s.ini' % meta.filename)
+        newPath = os.path.join(self.pathToConfigDir(environ=os.environ), '%s.ini' % meta.filename)
+        if newPath != oldPath and os.path.exists(oldPath):
+            shutil.move(oldPath, newPath)
+        # Cleanup
+        try:
+            os.rmdir(self.pathToConfigDir_deprecated(environ=os.environ))
+        except:
+            pass

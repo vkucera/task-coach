@@ -22,6 +22,19 @@ from changetypes import *
 
 releases = [
 
+Release('1.3.24', 'February 28, 2013',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bugv2('''Clicking in the hour choice popup in the date/time
+picker would select the wrong value.'''),
+        Bugv2('''Task Coach now follows the XDG specification for
+configuration and data (template) files on Linux.''', '367'),
+        Bugv2('''Fix menu "Stop tracking multiple tasks" menu''',
+              '1366'),
+        Bugv2('''Fix focus issue in date picker.''', '1368'),
+        ],
+    ),
+
 Release('1.3.23', 'February 7, 2013',
     summary='''This is a bugfix release.''',
     bugsFixed=[
