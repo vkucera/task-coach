@@ -297,16 +297,31 @@ class Settings(object, CachingConfigParser):
             path = self.pathToConfigDir_deprecated(environ=environ)
         return path
 
-    def pathToTemplatesDir(self):
+    def pathToDataDir(self, *args):
         if operating_system.isGTK():
             from taskcoachlib.thirdparty.xdg import BaseDirectory
-            path = os.path.join(BaseDirectory.save_data_path(meta.name), 'templates')
+            path = BaseDirectory.save_data_path(meta.name)
         else:
-            path = self.pathToTemplatesDir_deprecated()
+            path = self.path()
+
+        if operating_system.isWindows():
+            # Follow shortcuts.
+            from win32com.client import Dispatch
+            shell = Dispatch('WScript.Shell')
+            for component in args:
+                path = os.path.join(path, component)
+                if os.path.exists(path + '.lnk'):
+                    shortcut = shell.CreateShortcut(path + '.lnk')
+                    path = shortcut.TargetPath
+        else:
+            path = os.path.join(path, *args)
 
         if not os.path.exists(path):
             os.makedirs(path)
         return path
+
+    def pathToTemplatesDir(self):
+        return self.pathToDataDir('templates')
 
     def pathToConfigDir_deprecated(self, environ):
         try:
