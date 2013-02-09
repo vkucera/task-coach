@@ -295,24 +295,10 @@ class Settings(object, CachingConfigParser):
                 from taskcoachlib.thirdparty.xdg import BaseDirectory
                 path = BaseDirectory.save_config_path(meta.name)
             elif operating_system.isMac():
-                if operating_system.isMacOsXMountainLion_OrNewer():
-                    import Cocoa
-                    mgr = Cocoa.NSFileManager.alloc().init()
-                    try:
-                        path = mgr.URLForDirectory_inDomain_appropriateForURL_create_error_(5, # NSLibraryDirectory
-                                                                                            1,  # NSUserDomainMask
-                                                                                            None,
-                                                                                            True,
-                                                                                            None)
-                        # No constant for Preferences directory ?
-                        path = os.path.join(path, 'Preferences')
-                    finally:
-                        mgr.release()
-                else:
-                    import Carbon.Folder, Carbon.Folders, Carbon.File
-                    pathRef = Carbon.Folder.FSFindFolder(Carbon.Folders.kUserDomain, Carbon.Folders.kPreferencesFolderType, True)
-                    path = Carbon.File.pathname(pathRef)
-                    # XXXFIXME: should we release pathRef ? Doesn't seem so since I get a SIGSEGV if I try.
+                import Carbon.Folder, Carbon.Folders, Carbon.File
+                pathRef = Carbon.Folder.FSFindFolder(Carbon.Folders.kUserDomain, Carbon.Folders.kPreferencesFolderType, True)
+                path = Carbon.File.pathname(pathRef)
+                # XXXFIXME: should we release pathRef ? Doesn't seem so since I get a SIGSEGV if I try.
             elif operating_system.isWindows():
                 from win32com.shell import shell, shellcon
                 path = os.path.join(shell.SHGetSpecialFolderPath(None, shellcon.CSIDL_APPDATA, True), meta.name)
@@ -327,22 +313,10 @@ class Settings(object, CachingConfigParser):
             from taskcoachlib.thirdparty.xdg import BaseDirectory
             path = BaseDirectory.save_data_path(meta.name)
         elif operating_system.isMac():
-            if operating_system.isMacOsXMountainLion_OrNewer():
-                import Cocoa
-                mgr = Cocoa.NSFileManager.alloc().init()
-                try:
-                    path = mgr.URLForDirectory_inDomain_appropriateForURL_create_error_(14, # NSApplicationSupportDirectory
-                                                                                        1,  # NSUserDomainMask
-                                                                                        None,
-                                                                                        True,
-                                                                                        None)
-                finally:
-                    mgr.release()
-            else:
-                import Carbon.Folder, Carbon.Folders, Carbon.File
-                pathRef = Carbon.Folder.FSFindFolder(Carbon.Folders.kUserDomain, Carbon.Folders.kApplicationSupportFolderType, True)
-                path = Carbon.File.pathname(pathRef)
-                # XXXFIXME: should we release pathRef ? Doesn't seem so since I get a SIGSEGV if I try.
+            import Carbon.Folder, Carbon.Folders, Carbon.File
+            pathRef = Carbon.Folder.FSFindFolder(Carbon.Folders.kUserDomain, Carbon.Folders.kApplicationSupportFolderType, True)
+            path = Carbon.File.pathname(pathRef)
+            # XXXFIXME: should we release pathRef ? Doesn't seem so since I get a SIGSEGV if I try.
             path = os.path.join(path, meta.name)
         elif operating_system.isWindows():
             from win32com.shell import shell, shellcon
