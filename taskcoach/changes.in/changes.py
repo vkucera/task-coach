@@ -32,6 +32,7 @@ configuration and data (template) files on Linux.''', '367'),
         Bugv2('''Fix menu "Stop tracking multiple tasks" menu''',
               '1366'),
         Bugv2('''Fix focus issue in date picker.''', '1368'),
+        Bugv2('''Fix discrepancy in due date time precision''', '1253'),
         ],
     ),
 
