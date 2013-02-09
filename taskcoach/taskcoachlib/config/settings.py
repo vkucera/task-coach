@@ -313,6 +313,9 @@ class Settings(object, CachingConfigParser):
                     pathRef = Carbon.Folder.FSFindFolder(Carbon.Folders.kUserDomain, Carbon.Folders.kPreferencesFolderType, True)
                     path = Carbon.File.pathname(pathRef)
                     # XXXFIXME: should we release pathRef ? Doesn't seem so since I get a SIGSEGV if I try.
+            elif operating_system.isWindows():
+                from win32com.shell import shell, shellcon
+                path = os.path.join(shell.SHGetSpecialFolderPath(None, shellcon.CSIDL_APPDATA, True), meta.name)
             else:
                 path = self.pathToConfigDir_deprecated(environ=environ)
         except: # Fallback to old dir
@@ -341,7 +344,10 @@ class Settings(object, CachingConfigParser):
                 path = Carbon.File.pathname(pathRef)
                 # XXXFIXME: should we release pathRef ? Doesn't seem so since I get a SIGSEGV if I try.
             path = os.path.join(path, meta.name)
-        else:
+        elif operating_system.isWindows():
+            from win32com.shell import shell, shellcon
+            path = os.path.join(shell.SHGetSpecialFolderPath(None, shellcon.CSIDL_APPDATA, True), meta.name)
+        else: # Errr...
             path = self.path()
 
         if operating_system.isWindows():
@@ -362,8 +368,7 @@ class Settings(object, CachingConfigParser):
 
     def pathToTemplatesDir(self):
         try:
-            if operating_system.isGTK() or operating_system.isMac():
-                return self.pathToDataDir('templates')
+            return self.pathToDataDir('templates')
         except:
             pass # Fallback on old path
         return self.pathToTemplatesDir_deprecated()
