@@ -321,7 +321,9 @@ class Settings(object, CachingConfigParser):
         return path
 
     def pathToTemplatesDir(self):
-        return self.pathToDataDir('templates')
+        if operating_system.isGTK():
+            return self.pathToDataDir('templates')
+        return self.pathToTemplatesDir_deprecated()
 
     def pathToConfigDir_deprecated(self, environ):
         try:
