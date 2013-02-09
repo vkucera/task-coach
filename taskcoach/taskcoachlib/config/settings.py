@@ -290,10 +290,32 @@ class Settings(object, CachingConfigParser):
         return path
 
     def pathToConfigDir(self, environ):
-        if operating_system.isGTK():
-            from taskcoachlib.thirdparty.xdg import BaseDirectory
-            path = BaseDirectory.save_config_path(meta.name)
-        else:
+        try:
+            if operating_system.isGTK():
+                from taskcoachlib.thirdparty.xdg import BaseDirectory
+                path = BaseDirectory.save_config_path(meta.name)
+            elif operating_system.isMac():
+                if operating_system.isMacOsXMountainLion_OrNewer():
+                    import Cocoa
+                    mgr = Cocoa.NSFileManager.alloc().init()
+                    try:
+                        path = mgr.URLForDirectory_inDomain_appropriateForURL_create_error_(5, # NSLibraryDirectory
+                                                                                            1,  # NSUserDomainMask
+                                                                                            None,
+                                                                                            True,
+                                                                                            None)
+                        # No constant for Preferences directory ?
+                        path = os.path.join(path, 'Preferences')
+                    finally:
+                        mgr.release()
+                else:
+                    import Carbon.Folder, Carbon.Folders, Carbon.File
+                    pathRef = Carbon.Folder.FSFindFolder(Carbon.Folders.kUserDomain, Carbon.Folders.kPreferencesFolderType, True)
+                    path = Carbon.File.pathname(pathRef)
+                    # XXXFIXME: should we release pathRef ? Doesn't seem so since I get a SIGSEGV if I try.
+            else:
+                path = self.pathToConfigDir_deprecated(environ=environ)
+        except: # Fallback to old dir
             path = self.pathToConfigDir_deprecated(environ=environ)
         return path
 
@@ -301,6 +323,24 @@ class Settings(object, CachingConfigParser):
         if operating_system.isGTK():
             from taskcoachlib.thirdparty.xdg import BaseDirectory
             path = BaseDirectory.save_data_path(meta.name)
+        elif operating_system.isMac():
+            if operating_system.isMacOsXMountainLion_OrNewer():
+                import Cocoa
+                mgr = Cocoa.NSFileManager.alloc().init()
+                try:
+                    path = mgr.URLForDirectory_inDomain_appropriateForURL_create_error_(14, # NSApplicationSupportDirectory
+                                                                                        1,  # NSUserDomainMask
+                                                                                        None,
+                                                                                        True,
+                                                                                        None)
+                finally:
+                    mgr.release()
+            else:
+                import Carbon.Folder, Carbon.Folders, Carbon.File
+                pathRef = Carbon.Folder.FSFindFolder(Carbon.Folders.kUserDomain, Carbon.Folders.kApplicationSupportFolderType, True)
+                path = Carbon.File.pathname(pathRef)
+                # XXXFIXME: should we release pathRef ? Doesn't seem so since I get a SIGSEGV if I try.
+            path = os.path.join(path, meta.name)
         else:
             path = self.path()
 
@@ -321,8 +361,11 @@ class Settings(object, CachingConfigParser):
         return path
 
     def pathToTemplatesDir(self):
-        if operating_system.isGTK():
-            return self.pathToDataDir('templates')
+        try:
+            if operating_system.isGTK() or operating_system.isMac():
+                return self.pathToDataDir('templates')
+        except:
+            pass # Fallback on old path
         return self.pathToTemplatesDir_deprecated()
 
     def pathToConfigDir_deprecated(self, environ):
@@ -370,6 +413,11 @@ class Settings(object, CachingConfigParser):
             if operating_system.isWindows() and os.path.exists(oldPath + '.lnk'):
                 shutil.move(oldPath + '.lnk', newPath + '.lnk')
             elif os.path.exists(oldPath):
+                # pathToTemplatesDir() has created the directory
+                try:
+                    os.rmdir(newPath)
+                except:
+                    pass
                 shutil.move(oldPath, newPath)
         # Ini file
         oldPath = os.path.join(self.pathToConfigDir_deprecated(environ=os.environ), '%s.ini' % meta.filename)
