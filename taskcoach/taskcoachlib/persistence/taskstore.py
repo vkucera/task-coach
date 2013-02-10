@@ -125,7 +125,7 @@ class TaskStore(patterns.Observer):
                 return backend.exists()
         return False
 
-    def load(self, filename=None):
+    def load(self, filename=None, breakLock=False):
         if filename is None:
             filename = self.filename()
         pub.sendMessage('taskstore.aboutToRead', taskStore=self)

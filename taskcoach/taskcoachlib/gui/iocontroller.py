@@ -100,8 +100,7 @@ class IOController(object):
             self.__addRecentFile(filename)
             try:
                 try:
-                    self.__taskStore.load(filename, lock=lock, 
-                                         breakLock=breakLock)
+                    self.__taskStore.load(filename, breakLock=breakLock)
                 except:
                     # Need to destroy splash screen first because it may 
                     # interfere with dialogs we show later on Mac OS X
