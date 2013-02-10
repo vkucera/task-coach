@@ -397,7 +397,8 @@ class DatesPage(Page):
         suggestedDateTime = getattr(self.items[0], suggestedDateTimeMethodName)()
         dateTimeEntry = entry.DateTimeEntry(self, self.__settings, dateTime,
                                             suggestedDateTime=suggestedDateTime,
-                                            showRelative=taskMethodName == 'dueDateTime')
+                                            showRelative=taskMethodName == 'dueDateTime',
+                                            adjustEndOfDay=taskMethodName == 'dueDateTime')
         setattr(self, '_%sEntry' % taskMethodName, dateTimeEntry)
         commandClass = getattr(command, 'Edit%sCommand' % TaskMethodName)
         eventType = getattr(self.items[0], 

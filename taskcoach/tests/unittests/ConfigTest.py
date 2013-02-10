@@ -41,17 +41,6 @@ class SettingsTest(SettingsTestCase):
         self.settings.setvalue('view', 'toolbar', (16, 16))
         self.assertEqual((16, 16), self.settings.gettuple('view', 'toolbar'))
 
-    @test.onlyOnPlatform('__WXMSW__')
-    def testPathWithAppData(self):
-        environ = {'APPDATA' : 'test' }
-        expected = os.path.join(environ['APPDATA'], meta.filename)
-        self.assertEqual(expected, self.settings.path(environ=environ))
-
-    @test.onlyOnPlatform('__WXMSW__')
-    def testPathWithoutAppData(self):
-        expected = os.path.join(os.path.expanduser("~"), '.%s'%meta.filename)
-        self.assertEqual(expected, self.settings.path(environ={}))
-
     def testGetList_EmptyByDefault(self):
         self.assertEqual([], self.settings.getlist('file', 'recentfiles'))
 
