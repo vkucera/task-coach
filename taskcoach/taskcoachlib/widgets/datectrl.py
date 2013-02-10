@@ -52,9 +52,10 @@ class _SmartDateTimeCtrl(sdtc.SmartDateTimeCtrl):
 class DateTimeCtrl(wx.Panel):
     def __init__(self, parent, callback=None, noneAllowed=True,
                  starthour=8, endhour=18, interval=15, showSeconds=False,
-                 showRelative=False, units=None, **kwargs):
+                 showRelative=False, adjustEndOfDay=False, units=None, **kwargs):
         super(DateTimeCtrl, self).__init__(parent, **kwargs)
 
+        self.__adjust = adjustEndOfDay
         self.__callback = callback
         self.__ctrl = _SmartDateTimeCtrl(self, enableNone=noneAllowed,
                                          dateFormat=render.date,
@@ -92,6 +93,8 @@ class DateTimeCtrl(wx.Panel):
         self.__ctrl.LoadChoices(choices)
 
     def GetValue(self):
+        if self.__value is not None and self.__value.time() == date.Time(23, 59, 0, 0) and self.__adjust:
+            return date.DateTime.fromDateTime(date.DateTime.combine(self.__value.date(), date.Time(23, 59, 59, 999999)))
         return date.DateTime() if self.__value is None else date.DateTime.fromDateTime(self.__value)
 
     def SetValue(self, dateTime):

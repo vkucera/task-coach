@@ -71,10 +71,20 @@ class CommonTestsMixin(object):
 
         
 class DateTimeCtrlTestCase(test.wxTestCase):
+    adjustEndOfDay = False
+    showSeconds = False
+
     def setUp(self):
         super(DateTimeCtrlTestCase, self).setUp()
         self.dateTimeCtrl = widgets.datectrl.DateTimeCtrl(self.frame, 
-                                                          showSeconds=self.showSeconds)
+                                                          showSeconds=self.showSeconds,
+                                                          adjustEndOfDay=self.adjustEndOfDay)
+
+    def test_adjust(self):
+        self.dateTimeCtrl.SetValue(date.DateTime(2012, 12, 12, 23, 59, 0, 0))
+        self.assertEqual(self.dateTimeCtrl.GetValue(),
+                         date.DateTime(2012, 12, 12, 23, 59, 59, 999999) if self.adjustEndOfDay \
+                             else date.DateTime(2012, 12, 12, 23, 59, 0, 0))
 
 
 class DateTimeCtrlTest_Seconds_Base(CommonTestsMixin):
@@ -108,5 +118,15 @@ class DateTimeCtrlTest_NoSeconds(DateTimeCtrlTest_NoSeconds_Base, DateTimeCtrlTe
     ampm = False
 
 
+class DateTimeCtrlTest_NoSeconds_Adjust(DateTimeCtrlTest_NoSeconds_Base, DateTimeCtrlTestCase):
+    ampm = False
+    adjustEndOfDay = True
+
+
 class DateTimeCtrlTest_NoSeconds_AMPM(DateTimeCtrlTest_NoSeconds_Base, DateTimeCtrlTestCase):
     ampm = True
+
+
+class DateTimeCtrlTest_NoSeconds_AMPM_Adjust(DateTimeCtrlTest_NoSeconds_Base, DateTimeCtrlTestCase):
+    ampm = True
+    adjustEndOfDay = True

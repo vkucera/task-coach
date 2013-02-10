@@ -1693,3 +1693,35 @@ class XMLReaderVersion37Test(XMLReaderTestCase):
         </tasks>''')
         self.assertEqual(date.DateTime(2012, 12, 12, 12, 0, 0, 12345),
                          tasks[0].modificationDateTime())
+
+    def testAdjustDueDateTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+          <task duedate="2012-12-12 23:59:00:000000" />
+        </tasks>''')
+        self.assertEqual(date.DateTime(2012, 12, 12, 23, 59, 59, 999999),
+                         tasks[0].dueDateTime())
+
+    def test_dontAdjustPlannedStartDateTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+          <task plannedstartdate="2012-12-12 23:59:00:000000" />
+        </tasks>''')
+        self.assertEqual(date.DateTime(2012, 12, 12, 23, 59, 0, 0),
+                         tasks[0].plannedStartDateTime())
+
+    def test_dontAdjustActualStartDateTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+          <task actualstartdate="2012-12-12 23:59:00:000000" />
+        </tasks>''')
+        self.assertEqual(date.DateTime(2012, 12, 12, 23, 59, 0, 0),
+                         tasks[0].actualStartDateTime())
+
+    def test_dontAdjustCompletionDateTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+          <task completiondate="2012-12-12 23:59:00:000000" />
+        </tasks>''')
+        self.assertEqual(date.DateTime(2012, 12, 12, 23, 59, 0, 0),
+                         tasks[0].completionDateTime())

@@ -34,6 +34,17 @@ import wx
 import xml.etree.ElementTree as ET
 
 
+def parseAndAdjustDateTime(string, *timeDefaults):
+    dateTime = date.parseDateTime(string, *timeDefaults)
+    if dateTime != date.DateTime() and dateTime is not None and \
+        dateTime.time() == date.Time(23, 59, 0, 0):
+        dateTime = date.DateTime(year=dateTime.year,
+                                 month=dateTime.month,
+                                 day=dateTime.day,
+                                 hour=23, minute=59, second=59, microsecond=999999)
+    return dateTime
+
+
 class PIParser(ET.XMLTreeBuilder):
     """See http://effbot.org/zone/element-pi.htm"""
     def __init__(self):
@@ -249,7 +260,7 @@ class XMLReader(object):
         kwargs.update(dict(
             plannedStartDateTime=date.parseDateTime(task_node.attrib.get(planned_start_datetime_attribute_name, ''), 
                                                     *self.defaultStartTime),
-            dueDateTime=date.parseDateTime(task_node.attrib.get('duedate', ''), 
+            dueDateTime=parseAndAdjustDateTime(task_node.attrib.get('duedate', ''), 
                                            *self.defaultEndTime),
             actualStartDateTime=date.parseDateTime(task_node.attrib.get('actualstartdate', ''),
                                                    *self.defaultStartTime),

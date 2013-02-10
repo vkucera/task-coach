@@ -290,23 +290,62 @@ class Settings(object, CachingConfigParser):
         return path
 
     def pathToConfigDir(self, environ):
-        if operating_system.isGTK():
-            from taskcoachlib.thirdparty.xdg import BaseDirectory
-            path = BaseDirectory.save_config_path(meta.name)
-        else:
+        try:
+            if operating_system.isGTK():
+                from taskcoachlib.thirdparty.xdg import BaseDirectory
+                path = BaseDirectory.save_config_path(meta.name)
+            elif operating_system.isMac():
+                import Carbon.Folder, Carbon.Folders, Carbon.File
+                pathRef = Carbon.Folder.FSFindFolder(Carbon.Folders.kUserDomain, Carbon.Folders.kPreferencesFolderType, True)
+                path = Carbon.File.pathname(pathRef)
+                # XXXFIXME: should we release pathRef ? Doesn't seem so since I get a SIGSEGV if I try.
+            elif operating_system.isWindows():
+                from win32com.shell import shell, shellcon
+                path = os.path.join(shell.SHGetSpecialFolderPath(None, shellcon.CSIDL_APPDATA, True), meta.name)
+            else:
+                path = self.pathToConfigDir_deprecated(environ=environ)
+        except: # Fallback to old dir
             path = self.pathToConfigDir_deprecated(environ=environ)
         return path
 
-    def pathToTemplatesDir(self):
+    def pathToDataDir(self, *args):
         if operating_system.isGTK():
             from taskcoachlib.thirdparty.xdg import BaseDirectory
-            path = os.path.join(BaseDirectory.save_data_path(meta.name), 'templates')
+            path = BaseDirectory.save_data_path(meta.name)
+        elif operating_system.isMac():
+            import Carbon.Folder, Carbon.Folders, Carbon.File
+            pathRef = Carbon.Folder.FSFindFolder(Carbon.Folders.kUserDomain, Carbon.Folders.kApplicationSupportFolderType, True)
+            path = Carbon.File.pathname(pathRef)
+            # XXXFIXME: should we release pathRef ? Doesn't seem so since I get a SIGSEGV if I try.
+            path = os.path.join(path, meta.name)
+        elif operating_system.isWindows():
+            from win32com.shell import shell, shellcon
+            path = os.path.join(shell.SHGetSpecialFolderPath(None, shellcon.CSIDL_APPDATA, True), meta.name)
+        else: # Errr...
+            path = self.path()
+
+        if operating_system.isWindows():
+            # Follow shortcuts.
+            from win32com.client import Dispatch
+            shell = Dispatch('WScript.Shell')
+            for component in args:
+                path = os.path.join(path, component)
+                if os.path.exists(path + '.lnk'):
+                    shortcut = shell.CreateShortcut(path + '.lnk')
+                    path = shortcut.TargetPath
         else:
-            path = self.pathToTemplatesDir_deprecated()
+            path = os.path.join(path, *args)
 
         if not os.path.exists(path):
             os.makedirs(path)
         return path
+
+    def pathToTemplatesDir(self):
+        try:
+            return self.pathToDataDir('templates')
+        except:
+            pass # Fallback on old path
+        return self.pathToTemplatesDir_deprecated()
 
     def pathToConfigDir_deprecated(self, environ):
         try:
@@ -317,7 +356,7 @@ class Settings(object, CachingConfigParser):
                 # path not expanded: apparently, there is no home dir
                 path = os.getcwd()
             path = os.path.join(path, '.%s' % meta.filename)
-        return path
+        return operating_system.decodeSystemString(path)
 
     def pathToTemplatesDir_deprecated(self):
         path = os.path.join(self.path(), 'taskcoach-templates')
@@ -337,7 +376,7 @@ class Settings(object, CachingConfigParser):
             os.makedirs(path)
         except OSError:
             pass
-        return path
+        return operating_system.decodeSystemString(path)
 
     def pathToIniFileSpecifiedOnCommandLine(self):
         return os.path.dirname(self.__iniFileSpecifiedOnCommandLine) or '.'
@@ -353,6 +392,11 @@ class Settings(object, CachingConfigParser):
             if operating_system.isWindows() and os.path.exists(oldPath + '.lnk'):
                 shutil.move(oldPath + '.lnk', newPath + '.lnk')
             elif os.path.exists(oldPath):
+                # pathToTemplatesDir() has created the directory
+                try:
+                    os.rmdir(newPath)
+                except:
+                    pass
                 shutil.move(oldPath, newPath)
         # Ini file
         oldPath = os.path.join(self.pathToConfigDir_deprecated(environ=os.environ), '%s.ini' % meta.filename)
