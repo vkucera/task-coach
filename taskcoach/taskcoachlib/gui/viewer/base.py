@@ -38,10 +38,10 @@ class Viewer(patterns.Observer, wx.Panel):
     defaultBitmap = 'Subclass responsibility'
     viewerImages = artprovider.itemImages
     
-    def __init__(self, parent, taskFile, settings, *args, **kwargs):
+    def __init__(self, parent, taskStore, settings, *args, **kwargs):
         super(Viewer, self).__init__(parent, -1)
         self.parent = parent
-        self.taskFile = taskFile
+        self.taskStore = taskStore
         self.settings = settings
         self.__settingsSection = kwargs.pop('settingsSection')
         self.__freezeCount = 0
@@ -66,10 +66,10 @@ class Viewer(patterns.Observer, wx.Panel):
         self.registerPresentationObservers()
         self.refresh()
 
-        pub.subscribe(self.onBeginIO, 'taskfile.aboutToRead')
-        pub.subscribe(self.onBeginIO, 'taskfile.aboutToClear')
-        pub.subscribe(self.onEndIO, 'taskfile.justRead')
-        pub.subscribe(self.onEndIO, 'taskfile.justCleared')
+        pub.subscribe(self.onBeginIO, 'taskstore.aboutToRead')
+        pub.subscribe(self.onBeginIO, 'taskstore.aboutToClear')
+        pub.subscribe(self.onEndIO, 'taskstore.justRead')
+        pub.subscribe(self.onEndIO, 'taskstore.justCleared')
 
         wx.CallAfter(self.__DisplayBalloon)
 
@@ -81,10 +81,10 @@ class Viewer(patterns.Observer, wx.Panel):
                 getRect=lambda: self.toolbar.GetToolRect(self.toolbar.getToolIdByCommand('EditToolBarPerspective')),
                 message=_('''Click on the gear icon on the right to add buttons and rearrange them.'''))
 
-    def onBeginIO(self, taskFile):
+    def onBeginIO(self, taskStore):
         self.__freezeCount += 1
 
-    def onEndIO(self, taskFile):
+    def onEndIO(self, taskStore):
         self.__freezeCount -= 1
         if self.__freezeCount == 0:
             self.refresh()
@@ -92,7 +92,7 @@ class Viewer(patterns.Observer, wx.Panel):
     def domainObjectsToView(self):
         ''' Return the domain objects that this viewer should display. For
             global viewers this will be part of the task file, 
-            e.g. self.taskFile.tasks(), for local viewers this will be a list
+            e.g. self.taskStore.tasks(), for local viewers this will be a list
             of objects passed to the viewer constructor. '''
         raise NotImplementedError
     
@@ -130,10 +130,10 @@ class Viewer(patterns.Observer, wx.Panel):
             except wx.PyDeadObjectError:
                 pass
 
-        pub.unsubscribe(self.onBeginIO, 'taskfile.aboutToRead')
-        pub.unsubscribe(self.onBeginIO, 'taskfile.aboutToClear')
-        pub.unsubscribe(self.onEndIO, 'taskfile.justRead')
-        pub.unsubscribe(self.onEndIO, 'taskfile.justCleared')
+        pub.unsubscribe(self.onBeginIO, 'taskstore.aboutToRead')
+        pub.unsubscribe(self.onBeginIO, 'taskstore.aboutToClear')
+        pub.unsubscribe(self.onEndIO, 'taskstore.justRead')
+        pub.unsubscribe(self.onEndIO, 'taskstore.justCleared')
 
         self.presentation().detach()
         self.toolbar.detach()
@@ -486,7 +486,7 @@ class Viewer(patterns.Observer, wx.Panel):
     def editItemDialog(self, items, bitmap, columnName='', items_are_new=False):
         Editor = self.itemEditorClass()
         return Editor(wx.GetTopLevelParent(self), items, 
-                      self.settings, self.presentation(), self.taskFile, 
+                      self.settings, self.presentation(), self.taskStore, 
                       bitmap=bitmap, columnName=columnName, 
                       items_are_new=items_are_new)
         

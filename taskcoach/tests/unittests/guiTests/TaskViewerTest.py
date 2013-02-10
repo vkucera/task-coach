@@ -51,10 +51,10 @@ class TaskViewerTestCase(test.wxTestCase):
         self.task = task.Task(subject='task', plannedStartDateTime=date.Now())
         self.child = task.Task(subject='child', plannedStartDateTime=date.Now())
         self.child.setParent(self.task)
-        self.taskFile = persistence.TaskFile()
-        self.taskList = self.taskFile.tasks()
+        self.taskStore = persistence.TaskStore()
+        self.taskList = self.taskStore.tasks()
         self.parentFrame = wx.Frame(self.frame, wx.ID_ANY, '')
-        self.viewer = TaskViewerUnderTest(self.parentFrame, self.taskFile, 
+        self.viewer = TaskViewerUnderTest(self.parentFrame, self.taskStore, 
                                           self.settings)
         self.viewer.sortBy('subject')
         self.viewer.setSortOrderAscending()
@@ -73,8 +73,8 @@ class TaskViewerTestCase(test.wxTestCase):
         if not operating_system.isGTK():
             locale.setlocale(locale.LC_ALL, self.originalLocale)
         attachment.Attachment.attdir = None
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
 
         for name in os.listdir('.'):
             if os.path.isdir(name) and name.endswith('_attachments'):
@@ -291,7 +291,7 @@ class CommonTestsMixin(object):
         cat2 = category.Category('category 2')
         self.task.addCategory(cat1)
         cat1.addCategorizable(self.task)
-        self.taskFile.categories().extend([cat1, cat2])
+        self.taskStore.categories().extend([cat1, cat2])
         cat1.setFiltered(True)
         cat2.setFiltered(True)
         self.assertEqual(1, self.viewer.size())
@@ -305,7 +305,7 @@ class CommonTestsMixin(object):
         cat2 = category.Category('category 2')
         self.task.addCategory(cat1)
         cat1.addCategorizable(self.task)
-        self.taskFile.categories().extend([cat1, cat2])
+        self.taskStore.categories().extend([cat1, cat2])
         cat1.setFiltered(True)
         cat2.setFiltered(True)
         self.assertEqual(0, self.viewer.size())
@@ -622,7 +622,7 @@ class CommonTestsMixin(object):
         self.assertBackgroundColor()
         
     def testNewItem(self):
-        self.taskFile.categories().append(category.Category('cat', filtered=True))
+        self.taskStore.categories().append(category.Category('cat', filtered=True))
         dialog = self.viewer.newItemDialog(bitmap='new')
         tree = dialog._interior[4].viewer.widget  # pylint: disable=W0212
         firstChild = tree.GetFirstChild(tree.GetRootItem())[0]
@@ -1084,9 +1084,9 @@ class TaskCalendarViewerTest(test.wxTestCase):
     def setUp(self):
         super(TaskCalendarViewerTest, self).setUp()
         task.Task.settings = self.settings = config.Settings(load=False)
-        self.taskFile = persistence.TaskFile()
-        self.frame.taskFile = self.taskFile
-        self.viewer = gui.viewer.task.CalendarViewer(self.frame, self.taskFile, 
+        self.taskStore = persistence.TaskStore()
+        self.frame.taskStore = self.taskStore
+        self.viewer = gui.viewer.task.CalendarViewer(self.frame, self.taskStore, 
                                                      self.settings)
         self.originalTopWindow = wx.GetApp().TopWindow
         wx.GetApp().TopWindow = self.frame  # uiCommands use TopWindow to get the main window
@@ -1094,13 +1094,13 @@ class TaskCalendarViewerTest(test.wxTestCase):
     def tearDown(self):
         super(TaskCalendarViewerTest, self).tearDown()
         wx.GetApp().TopWindow = self.originalTopWindow
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
         
     def openDialogAndAssertDateTimes(self, dateTime, expectedPlannedStartDateTime, 
                                      expectedDueDateTime):
         self.viewer.onCreate(dateTime, show=False)
-        newTask = list(self.taskFile.tasks())[0]
+        newTask = list(self.taskStore.tasks())[0]
         self.assertEqual(expectedPlannedStartDateTime, newTask.plannedStartDateTime())
         self.assertEqual(expectedDueDateTime, newTask.dueDateTime())
         
@@ -1116,35 +1116,35 @@ class TaskCalendarViewerTest(test.wxTestCase):
 class TaskSquareMapViewerTest(test.wxTestCase):
     def testCreate(self):
         task.Task.settings = settings = config.Settings(load=False)
-        self.taskFile = persistence.TaskFile()
-        gui.viewer.task.SquareTaskViewer(self.frame, self.taskFile, settings)
+        self.taskStore = persistence.TaskStore()
+        gui.viewer.task.SquareTaskViewer(self.frame, self.taskStore, settings)
 
     def tearDown(self):
         super(TaskSquareMapViewerTest, self).tearDown()
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
 
 
 class TaskTimelineViewerTest(test.wxTestCase):
     def testCreate(self):
         # pylint: disable-msg=W0201
         task.Task.settings = settings = config.Settings(load=False)
-        self.taskFile = persistence.TaskFile()
-        gui.viewer.task.TimelineViewer(self.frame, self.taskFile, settings)
+        self.taskStore = persistence.TaskStore()
+        gui.viewer.task.TimelineViewer(self.frame, self.taskStore, settings)
 
     def tearDown(self):
         super(TaskTimelineViewerTest, self).tearDown()
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
 
 
 class TaskStatisticsViewerTest(test.wxTestCase):
     def testCreate(self):
         task.Task.settings = settings = config.Settings(load=False)
-        self.taskFile = persistence.TaskFile()
-        gui.viewer.task.TaskStatsViewer(self.frame, self.taskFile, settings)
+        self.taskStore = persistence.TaskStore()
+        gui.viewer.task.TaskStatsViewer(self.frame, self.taskStore, settings)
 
     def tearDown(self):
         super(TaskStatisticsViewerTest, self).tearDown()
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()

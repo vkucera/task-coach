@@ -36,9 +36,9 @@ class IOController(object):
     saving, and exporting files. It also presents the necessary dialogs
     to let the user specify what file to load/save/etc. '''
 
-    def __init__(self, taskFile, messageCallback, settings, splash=None): 
+    def __init__(self, taskStore, messageCallback, settings, splash=None): 
         super(IOController, self).__init__()
-        self.__taskFile = taskFile
+        self.__taskStore = taskStore
         self.__messageCallback = messageCallback
         self.__settings = settings
         self.__splash = splash
@@ -67,10 +67,10 @@ class IOController(object):
                                           meta.name, style=wx.ICON_ERROR)
 
     def needSave(self):
-        return self.__taskFile.needSave()
+        return self.__taskStore.needSave()
 
     def changedOnDisk(self):
-        return self.__taskFile.changedOnDisk()
+        return self.__taskStore.changedOnDisk()
 
     def openAfterStart(self, commandLineArgs):
         ''' Open either the file specified on the command line, or the file
@@ -86,7 +86,7 @@ class IOController(object):
             
     def open(self, filename=None, showerror=wx.MessageBox, 
              fileExists=os.path.exists, breakLock=False, lock=True):
-        if self.__taskFile.needSave():
+        if self.__taskStore.needSave():
             if not self.__saveUnsavedChanges():
                 return
         if not filename:
@@ -100,7 +100,7 @@ class IOController(object):
             self.__addRecentFile(filename)
             try:
                 try:
-                    self.__taskFile.load(filename, lock=lock, 
+                    self.__taskStore.load(filename, lock=lock, 
                                          breakLock=breakLock)
                 except:
                     # Need to destroy splash screen first because it may 
@@ -128,8 +128,8 @@ class IOController(object):
                 self.__showGenericErrorMessage(filename, showerror)
                 return
             self.__messageCallback(_('Loaded %(nrtasks)d tasks from '
-                 '%(filename)s') % dict(nrtasks=len(self.__taskFile.tasks()), 
-                                        filename=self.__taskFile.filename()))
+                 '%(filename)s') % dict(nrtasks=len(self.__taskStore.tasks()), 
+                                        filename=self.__taskStore.filename()))
         else:
             errorMessage = _("Cannot open %s because it doesn't exist") % filename
             # Use CallAfter on Mac OS X because otherwise the app will hang:
@@ -145,7 +145,7 @@ class IOController(object):
                                              self.__tskFileOpenDialogOpts)
         if filename:
             try:
-                self.__taskFile.merge(filename)
+                self.__taskStore.merge(filename)
             except lockfile.LockTimeout:
                 showerror(_('Cannot open %(filename)s\nbecause it is locked.') % \
                           dict(filename=filename),
@@ -162,18 +162,18 @@ class IOController(object):
             self.__addRecentFile(filename)
 
     def save(self, showerror=wx.MessageBox):
-        if self.__taskFile.filename():
-            if self._saveSave(self.__taskFile, showerror):
+        if self.__taskStore.filename():
+            if self._saveSave(self.__taskStore, showerror):
                 return True
             else:
                 return self.saveas(showerror=showerror)
-        elif not self.__taskFile.isEmpty():
+        elif not self.__taskStore.isEmpty():
             return self.saveas(showerror=showerror)  # Ask for filename
         else:
             return False
 
     def mergeDiskChanges(self):
-        self.__taskFile.mergeDiskChanges()
+        self.__taskStore.mergeDiskChanges()
 
     def saveas(self, filename=None, showerror=wx.MessageBox, 
                fileExists=os.path.exists):
@@ -183,13 +183,13 @@ class IOController(object):
                 flag=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT, fileExists=fileExists)
             if not filename:
                 return False  # User didn't enter a filename, cancel save
-        if self._saveSave(self.__taskFile, showerror, filename):
+        if self._saveSave(self.__taskStore, showerror, filename):
             return True
         else:
             return self.saveas(showerror=showerror)  # Try again
 
     def saveselection(self, tasks, filename=None, showerror=wx.MessageBox,
-                      TaskFileClass=persistence.TaskFile, 
+                      TaskStoreClass=persistence.TaskStore, 
                       fileExists=os.path.exists):
         if not filename:
             filename = self.__askUserForFile(_('Save selection'),
@@ -197,15 +197,15 @@ class IOController(object):
                 flag=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT, fileExists=fileExists)
             if not filename:
                 return False  # User didn't enter a filename, cancel save
-        selectionFile = self._createSelectionFile(tasks, TaskFileClass)
+        selectionFile = self._createSelectionFile(tasks, TaskStoreClass)
         if self._saveSave(selectionFile, showerror, filename):
             return True
         else:
             return self.saveselection(tasks, showerror=showerror, 
-                                      TaskFileClass=TaskFileClass)  # Try again
+                                      TaskStoreClass=TaskStoreClass)  # Try again
             
-    def _createSelectionFile(self, tasks, TaskFileClass):
-        selectionFile = TaskFileClass()
+    def _createSelectionFile(self, tasks, TaskStoreClass):
+        selectionFile = TaskStoreClass()
         # Add the selected tasks:
         selectionFile.tasks().extend(tasks)
         # Include categories used by the selected tasks:
@@ -218,15 +218,15 @@ class IOController(object):
         selectionFile.categories().extend(allCategories)
         return selectionFile
     
-    def _saveSave(self, taskFile, showerror, filename=None):
+    def _saveSave(self, taskStore, showerror, filename=None):
         ''' Save the file and show an error message if saving fails. '''
         try:
             if filename:
-                taskFile.saveas(filename)
+                taskStore.saveas(filename)
             else:
-                filename = taskFile.filename()
-                taskFile.save()
-            self.__showSaveMessage(taskFile)
+                filename = taskStore.filename()
+                taskStore.save()
+            self.__showSaveMessage(taskStore)
             self.__addRecentFile(filename)
             return True
         except lockfile.LockTimeout:
@@ -260,11 +260,11 @@ class IOController(object):
                 showerror(errorMessage, **self.__errorMessageOptions)
             
     def close(self, force=False):
-        if self.__taskFile.needSave():
+        if self.__taskStore.needSave():
             if force:
                 # No user interaction, since we're forced to close right now.
-                if self.__taskFile.filename():
-                    self._saveSave(self.__taskFile, 
+                if self.__taskStore.filename():
+                    self._saveSave(self.__taskStore, 
                                    lambda *args, **kwargs: None)
                 else:
                     pass  # No filename, we cannot ask, give up...
@@ -322,15 +322,15 @@ class IOController(object):
             selectionOnly, fileExists=fileExists)
 
     def importCSV(self, **kwargs):
-        persistence.CSVReader(self.__taskFile.tasks(),
-                              self.__taskFile.categories()).read(**kwargs)
+        persistence.CSVReader(self.__taskStore.tasks(),
+                              self.__taskStore.categories()).read(**kwargs)
                               
     def importTodoTxt(self, filename):
-        persistence.TodoTxtReader(self.__taskFile.tasks(),
-                                  self.__taskFile.categories()).read(filename)
+        persistence.TodoTxtReader(self.__taskStore.tasks(),
+                                  self.__taskStore.categories()).read(filename)
 
     def filename(self):
-        return self.__taskFile.filename()
+        return self.__taskStore.filename()
 
     def __openFileForWriting(self, filename, openfile, showerror, mode='w', 
                              encoding='utf-8'):
@@ -421,8 +421,8 @@ Break the lock?''') % filename,
         return result == wx.YES
     
     def __closeUnconditionally(self):
-        self.__messageCallback(_('Closed %s') % self.__taskFile.filename())
-        self.__taskFile.close()
+        self.__messageCallback(_('Closed %s') % self.__taskStore.filename())
+        self.__taskStore.close()
         patterns.CommandHistory().clear()
         gc.collect()
 

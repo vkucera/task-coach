@@ -24,16 +24,16 @@ from taskcoachlib.domain import attachment
 class AttachmentViewerTest(test.wxTestCase):
     def setUp(self):
         settings = config.Settings(load=False)
-        self.taskFile = persistence.TaskFile()
+        self.taskStore = persistence.TaskStore()
         attachments = attachment.AttachmentList()
-        self.viewer = gui.viewer.AttachmentViewer(self.frame, self.taskFile, 
+        self.viewer = gui.viewer.AttachmentViewer(self.frame, self.taskStore, 
             settings, attachmentsToShow=attachments, 
             settingsSection='attachmentviewer')
 
     def tearDown(self):
         super(AttachmentViewerTest, self).tearDown()
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
 
     def assertIcon(self, expectedIcon, anAttachment, **kwargs):
         self.assertEqual(self.viewer.imageIndex[expectedIcon], 

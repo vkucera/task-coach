@@ -25,17 +25,17 @@ class NoteViewerTest(test.wxTestCase):
     def setUp(self):
         super(NoteViewerTest, self).setUp()
         self.settings = config.Settings(load=False)
-        self.taskFile = persistence.TaskFile()
+        self.taskStore = persistence.TaskStore()
         self.note = note.Note()
-        self.taskFile.notes().append(self.note)
-        self.viewer = gui.viewer.NoteViewer(self.frame, self.taskFile, 
+        self.taskStore.notes().append(self.note)
+        self.viewer = gui.viewer.NoteViewer(self.frame, self.taskStore, 
                                             self.settings, 
-                                            notesToShow=self.taskFile.notes())
+                                            notesToShow=self.taskStore.notes())
 
     def tearDown(self):
         super(NoteViewerTest, self).tearDown()
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
 
     def firstItem(self):
         widget = self.viewer.widget
@@ -48,7 +48,7 @@ class NoteViewerTest(test.wxTestCase):
         return self.viewer.widget.GetItemImage(self.firstItem(), column=column)
 
     def testLocalNoteViewerForItemWithoutNotes(self):
-        localViewer = gui.viewer.NoteViewer(self.frame, self.taskFile, 
+        localViewer = gui.viewer.NoteViewer(self.frame, self.taskStore, 
                                             self.settings, 
                                             notesToShow=note.NoteContainer())
         self.failIf(localViewer.presentation())
@@ -60,7 +60,7 @@ class NoteViewerTest(test.wxTestCase):
 
     def testShowCategoriesColumn(self):
         newCategory = category.Category('Category')
-        self.taskFile.categories().append(newCategory)
+        self.taskStore.categories().append(newCategory)
         self.note.addCategory(newCategory)
         newCategory.addCategorizable(self.note)
         self.viewer.showColumnByName('categories')
@@ -76,7 +76,7 @@ class NoteViewerTest(test.wxTestCase):
         cat2 = category.Category('category 2')
         self.note.addCategory(cat1)
         cat1.addCategorizable(self.note)
-        self.taskFile.categories().extend([cat1, cat2])
+        self.taskStore.categories().extend([cat1, cat2])
         cat1.setFiltered(True)
         cat2.setFiltered(True)
         self.assertEqual(1, self.viewer.size())
@@ -88,7 +88,7 @@ class NoteViewerTest(test.wxTestCase):
         cat2 = category.Category('category 2')
         self.note.addCategory(cat1)
         cat1.addCategorizable(self.note)
-        self.taskFile.categories().extend([cat1, cat2])
+        self.taskStore.categories().extend([cat1, cat2])
         cat1.setFiltered(True)
         cat2.setFiltered(True)
         self.assertEqual(1, self.viewer.size())

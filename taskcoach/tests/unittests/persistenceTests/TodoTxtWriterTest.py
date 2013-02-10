@@ -29,64 +29,64 @@ class TodoTxtWriterTestCase(test.wxTestCase):
         self.file = StringIO.StringIO()
         self.writer = persistence.TodoTxtWriter(self.file, 'whatever.tsk')
         self.settings.set('taskviewer', 'treemode', 'False')
-        self.taskFile = persistence.TaskFile()
-        self.viewer = gui.viewer.TaskViewer(self.frame, self.taskFile, self.settings)
+        self.taskStore = persistence.TaskStore()
+        self.viewer = gui.viewer.TaskViewer(self.frame, self.taskStore, self.settings)
 
     def testNoTasksAndCategories(self):
         self.writer.write(self.viewer, self.settings, False)
         self.assertEqual('', self.file.getvalue())
         
     def testOneTask(self):
-        self.taskFile.tasks().append(task.Task(subject='Get cheese'))
+        self.taskStore.tasks().append(task.Task(subject='Get cheese'))
         self.writer.write(self.viewer, self.settings, False)
         self.assertEqual('Get cheese\n', self.file.getvalue())
         
     def testTwoTasks(self):
-        self.taskFile.tasks().append(task.Task(subject='Get cheese'))
-        self.taskFile.tasks().append(task.Task(subject='Paint house'))
+        self.taskStore.tasks().append(task.Task(subject='Get cheese'))
+        self.taskStore.tasks().append(task.Task(subject='Paint house'))
         self.writer.write(self.viewer, self.settings, False)
         self.assertEqual('Get cheese\nPaint house\n', self.file.getvalue())
         
     def testNonAsciiSubject(self):
-        self.taskFile.tasks().append(task.Task(subject='Call Jérôme'))
+        self.taskStore.tasks().append(task.Task(subject='Call Jérôme'))
         self.writer.write(self.viewer, self.settings, False)
         self.assertEqual('Call Jérôme\n', self.file.getvalue())
 
     def testSorting(self):
-        self.taskFile.tasks().append(task.Task(subject='Get cheese'))
-        self.taskFile.tasks().append(task.Task(subject='Paint house'))
+        self.taskStore.tasks().append(task.Task(subject='Get cheese'))
+        self.taskStore.tasks().append(task.Task(subject='Paint house'))
         self.viewer.sortBy('subject')
         self.viewer.setSortOrderAscending(False)
         self.writer.write(self.viewer, self.settings, False)
         self.assertEqual('Paint house\nGet cheese\n', self.file.getvalue())
         
     def testTaskPriorityIsWrittenAsLetter(self):
-        self.taskFile.tasks().append(task.Task(subject='Get cheese', priority=1))
+        self.taskStore.tasks().append(task.Task(subject='Get cheese', priority=1))
         self.writer.write(self.viewer, self.settings, False)
         self.assertEqual('(A) Get cheese\n', self.file.getvalue())
         
     def testTaskPriorityHigherThanZIsIgnored(self):
-        self.taskFile.tasks().append(task.Task(subject='Get cheese', priority=27))
+        self.taskStore.tasks().append(task.Task(subject='Get cheese', priority=27))
         self.writer.write(self.viewer, self.settings, False)
         self.assertEqual('Get cheese\n', self.file.getvalue())
         
     def testStartDate(self):
-        self.taskFile.tasks().append(task.Task(subject='Get cheese', 
+        self.taskStore.tasks().append(task.Task(subject='Get cheese', 
                                                plannedStartDateTime=date.DateTime(2027,1,23,15,34,12)))
         self.writer.write(self.viewer, self.settings, False)
         self.assertEqual('2027-01-23 Get cheese\n', self.file.getvalue())
         
     def testCompletionDate(self):
-        self.taskFile.tasks().append(task.Task(subject='Get cheese', 
+        self.taskStore.tasks().append(task.Task(subject='Get cheese', 
                                                completionDateTime=date.DateTime(2027,1,23,15,34,12)))
         self.writer.write(self.viewer, self.settings, False)
         self.assertEqual('X 2027-01-23 Get cheese\n', self.file.getvalue())
         
     def testContext(self):
         phone = category.Category(subject='@phone')
-        self.taskFile.categories().append(phone)
+        self.taskStore.categories().append(phone)
         pizza = task.Task(subject='Order pizza')
-        self.taskFile.tasks().append(pizza)
+        self.taskStore.tasks().append(pizza)
         phone.addCategorizable(pizza)
         pizza.addCategory(phone)
         self.writer.write(self.viewer, self.settings, False)
@@ -94,9 +94,9 @@ class TodoTxtWriterTestCase(test.wxTestCase):
         
     def testContextWithSpaces(self):
         at_home = category.Category(subject='@at home')
-        self.taskFile.categories().append(at_home)
+        self.taskStore.categories().append(at_home)
         dishes = task.Task(subject='Do dishes')
-        self.taskFile.tasks().append(dishes)
+        self.taskStore.tasks().append(dishes)
         at_home.addCategorizable(dishes)
         dishes.addCategory(at_home)
         self.writer.write(self.viewer, self.settings, False)
@@ -106,9 +106,9 @@ class TodoTxtWriterTestCase(test.wxTestCase):
         work = category.Category(subject='@Work')
         staff_meeting = category.Category(subject='Staff meeting')
         work.addChild(staff_meeting)
-        self.taskFile.categories().append(work)
+        self.taskStore.categories().append(work)
         discuss_proposal = task.Task(subject='Discuss the proposal')
-        self.taskFile.tasks().append(discuss_proposal)
+        self.taskStore.tasks().append(discuss_proposal)
         discuss_proposal.addCategory(staff_meeting)
         staff_meeting.addCategorizable(discuss_proposal)
         self.writer.write(self.viewer, self.settings, False)
@@ -118,9 +118,9 @@ class TodoTxtWriterTestCase(test.wxTestCase):
     def testMultipleContexts(self):
         phone = category.Category(subject='@phone')
         food = category.Category(subject='@food')
-        self.taskFile.categories().extend([phone, food])
+        self.taskStore.categories().extend([phone, food])
         pizza = task.Task(subject='Order pizza')
-        self.taskFile.tasks().append(pizza)
+        self.taskStore.tasks().append(pizza)
         phone.addCategorizable(pizza)
         pizza.addCategory(phone)
         food.addCategorizable(pizza)
@@ -130,9 +130,9 @@ class TodoTxtWriterTestCase(test.wxTestCase):
         
     def testProject(self):
         alive = category.Category(subject='+Stay alive')
-        self.taskFile.categories().append(alive)
+        self.taskStore.categories().append(alive)
         pizza = task.Task(subject='Order pizza')
-        self.taskFile.tasks().append(pizza)
+        self.taskStore.tasks().append(pizza)
         alive.addCategorizable(pizza)
         pizza.addCategory(alive)
         self.writer.write(self.viewer, self.settings, False)
@@ -140,9 +140,9 @@ class TodoTxtWriterTestCase(test.wxTestCase):
         
     def testIgnoreCategoriesThatAreNotAContextNorAProject(self):
         phone = category.Category(subject='phone')
-        self.taskFile.categories().append(phone)
+        self.taskStore.categories().append(phone)
         pizza = task.Task(subject='Order pizza')
-        self.taskFile.tasks().append(pizza)
+        self.taskStore.tasks().append(pizza)
         phone.addCategorizable(pizza)
         pizza.addCategory(phone)
         self.writer.write(self.viewer, self.settings, False)
@@ -154,20 +154,20 @@ class TodoTxtWriterTestCase(test.wxTestCase):
         project = task.Task(subject='Project')
         activity = task.Task(subject='Some activity')
         project.addChild(activity)
-        self.taskFile.tasks().append(project)
+        self.taskStore.tasks().append(project)
         self.writer.write(self.viewer, self.settings, False)
         self.assertEqual('Project\nProject -> Some activity\n', self.file.getvalue())
         
     def testTaskWithDueDate(self):
-        self.taskFile.tasks().append(task.Task(subject='Export due date',
+        self.taskStore.tasks().append(task.Task(subject='Export due date',
                                                dueDateTime=date.DateTime(2011,1,1,16,50,10)))
         self.writer.write(self.viewer, self.settings, False)
         self.assertEqual('Export due date due:2011-01-01\n', self.file.getvalue())
         
     def testExportSelectionOnly(self):
         cheese = task.Task(subject='Get cheese')
-        self.taskFile.tasks().append(cheese)
-        self.taskFile.tasks().append(task.Task(subject='Paint house'))
+        self.taskStore.tasks().append(cheese)
+        self.taskStore.tasks().append(task.Task(subject='Paint house'))
         self.viewer.select([cheese])
         self.writer.write(self.viewer, self.settings, True)
         self.assertEqual('Get cheese\n', self.file.getvalue())

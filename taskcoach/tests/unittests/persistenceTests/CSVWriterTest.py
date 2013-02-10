@@ -30,20 +30,20 @@ class CSVWriterTestCase(test.wxTestCase):
         task.Task.settings = self.settings = config.Settings(load=False)
         self.fd = StringIO.StringIO()
         self.writer = persistence.CSVWriter(self.fd)
-        self.taskFile = persistence.TaskFile()
+        self.taskStore = persistence.TaskStore()
         self.task = task.Task('Task subject')
-        self.taskFile.tasks().append(self.task)
+        self.taskStore.tasks().append(self.task)
         self.createViewer()
 
     def tearDown(self):
         super(CSVWriterTestCase, self).tearDown()
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
 
     def createViewer(self):
         self.settings.set('taskviewer', 'treemode', self.treeMode)
         # pylint: disable=W0201
-        self.viewer = gui.viewer.TaskViewer(self.frame, self.taskFile,
+        self.viewer = gui.viewer.TaskViewer(self.frame, self.taskStore,
             self.settings)
 
     def __writeAndRead(self, selectionOnly, separateDateAndTimeColumns, columns):
@@ -76,14 +76,14 @@ class TaskTestsMixin(object):
         
     def testWriteSelectionOnly_SelectedChild(self):
         child = task.Task('Child', parent=self.task)
-        self.taskFile.tasks().append(child)
+        self.taskStore.tasks().append(child)
         self.viewer.expandAll()
         self.selectItem([child])
         self.expectInCSV('Child,', selectionOnly=True)
 
     def testWriteSelectionOnly_SelectedParent(self):
         child = task.Task('Child', parent=self.task)
-        self.taskFile.tasks().append(child)
+        self.taskStore.tasks().append(child)
         self.selectItem([self.task])
         self.expectNotInCSV('Child', selectionOnly=True)
         
@@ -270,8 +270,8 @@ class TaskTestsMixin(object):
         
     def testMissingCreationDateTime(self):
         self.viewer.showColumnByName('creationDateTime')
-        self.taskFile.tasks().append(task.Task(creationDateTime=date.DateTime.min))
-        self.taskFile.tasks().remove(self.task)
+        self.taskStore.tasks().append(task.Task(creationDateTime=date.DateTime.min))
+        self.taskStore.tasks().remove(self.task)
         self.expectInCSV(',,,')  # No 1/1/1 for the missing creation date
 
     def testModificationDateTime(self):
@@ -313,7 +313,7 @@ class EffortWriterTest(CSVWriterTestCase):
 
     def createViewer(self):
         # pylint: disable=W0201
-        self.viewer = gui.viewer.EffortViewer(self.frame, self.taskFile,
+        self.viewer = gui.viewer.EffortViewer(self.frame, self.taskStore,
             self.settings)
 
     def testTaskSubject(self):
@@ -343,7 +343,7 @@ class EffortWriterTest(CSVWriterTestCase):
 class EffortWriterRenderTest(CSVWriterTestCase):
     def createViewer(self):
         # pylint: disable=W0201
-        self.viewer = gui.viewer.EffortViewer(self.frame, self.taskFile,
+        self.viewer = gui.viewer.EffortViewer(self.frame, self.taskStore,
             self.settings)
 
     def testToday(self):

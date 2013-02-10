@@ -33,24 +33,24 @@ class AutoBackup(object):
         super(AutoBackup, self).__init__()
         self.__settings = settings
         self.__copyfile = copyfile
-        pub.subscribe(self.onTaskFileAboutToSave, 'taskfile.aboutToSave')
+        pub.subscribe(self.onTaskStoreAboutToSave, 'taskstore.aboutToSave')
             
-    def onTaskFileAboutToSave(self, taskFile):
+    def onTaskStoreAboutToSave(self, taskStore):
         ''' Just before a task file is about to be saved, and backups are on,
             create a backup and remove extraneous backup files. '''
-        if self.needBackup(taskFile):
-            self.createBackup(taskFile)
-        self.removeExtraneousBackupFiles(taskFile)
+        if self.needBackup(taskStore):
+            self.createBackup(taskStore)
+        self.removeExtraneousBackupFiles(taskStore)
 
-    def needBackup(self, taskFile):
-        return self.__settings.getboolean('file', 'backup') and taskFile.exists()
+    def needBackup(self, taskStore):
+        return self.__settings.getboolean('file', 'backup') and taskStore.exists()
 
-    def createBackup(self, taskFile):
-        self.__copyfile(taskFile.filename(), self.backupFilename(taskFile))
+    def createBackup(self, taskStore):
+        self.__copyfile(taskStore.filename(), self.backupFilename(taskStore))
     
-    def removeExtraneousBackupFiles(self, taskFile, remove=os.remove, 
+    def removeExtraneousBackupFiles(self, taskStore, remove=os.remove, 
                                     glob=glob.glob): # pylint: disable=W0621
-        backupFiles = self.backupFiles(taskFile, glob)
+        backupFiles = self.backupFiles(taskStore, glob)
         for _ in range(min(self.maxNrOfBackupFilesToRemoveAtOnce,
                            self.numberOfExtraneousBackupFiles(backupFiles))):
             try:
@@ -86,8 +86,8 @@ class AutoBackup(object):
         return deltas[0][1]
 
     @staticmethod
-    def backupFiles(taskFile, glob=glob.glob):  # pylint: disable=W0621
-        root, ext = os.path.splitext(taskFile.filename()) # pylint: disable=W0612
+    def backupFiles(taskStore, glob=glob.glob):  # pylint: disable=W0621
+        root, ext = os.path.splitext(taskStore.filename()) # pylint: disable=W0612
         datePattern = '[0-9]'*8
         timePattern = '[0-9]'*6
         files = glob('%s.%s-%s.tsk.bak'%(root, datePattern, timePattern))
@@ -95,11 +95,11 @@ class AutoBackup(object):
         return files
 
     @staticmethod
-    def backupFilename(taskFile, now=date.DateTime.now):
+    def backupFilename(taskStore, now=date.DateTime.now):
         ''' Generate a backup filename by adding '.bak' to the end and by 
             inserting a date-time string in the filename. '''
         now = now().strftime('%Y%m%d-%H%M%S')
-        root, ext = os.path.splitext(taskFile.filename())
+        root, ext = os.path.splitext(taskStore.filename())
         if ext == '.bak':
             root, ext = os.path.splitext(root)
         return root + '.' + now + ext + '.bak'

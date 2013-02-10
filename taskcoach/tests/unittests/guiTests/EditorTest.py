@@ -38,18 +38,18 @@ class EditorTestCase(test.wxTestCase):
     def setUp(self):
         super(EditorTestCase, self).setUp()
         self.settings = config.Settings(load=False)
-        self.taskFile = persistence.TaskFile()
-        self.items = base.filter.SearchFilter(self.taskFile.notes())
+        self.taskStore = persistence.TaskStore()
+        self.items = base.filter.SearchFilter(self.taskStore.notes())
         self.item = note.Note(subject='item')
         self.items.append(self.item)
         self.editor = EditorUnderTest(self.frame, [self.item], self.settings, 
-                                      self.items, self.taskFile)
+                                      self.items, self.taskStore)
         self.appearance = self.editor._interior[-1]
 
     def tearDown(self):
         super(EditorTestCase, self).tearDown()
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
 
     def testCloseEditorWhenItemIsDeleted(self):
         self.items.remove(self.item)
@@ -139,5 +139,5 @@ class EditorTestCase(test.wxTestCase):
         self.settings.settext('editor', 'descriptionfont', 
                               font.GetNativeFontInfoDesc())
         editor = EditorUnderTest(self.frame, [self.item], self.settings, 
-                                 self.items, self.taskFile)
+                                 self.items, self.taskStore)
         self.assertEqual(font, editor._interior[0]._descriptionEntry.GetFont())

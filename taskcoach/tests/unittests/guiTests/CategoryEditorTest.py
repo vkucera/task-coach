@@ -31,12 +31,12 @@ class CategoryEditorTest(test.wxTestCase):
     def setUp(self):
         super(CategoryEditorTest, self).setUp()
         self.settings = config.Settings(load=False)
-        self.taskFile = persistence.TaskFile()
-        self.categories = self.taskFile.categories()
+        self.taskStore = persistence.TaskStore()
+        self.categories = self.taskStore.categories()
         self.categories.extend(self.createCategories())
         self.editor = gui.dialog.editor.CategoryEditor(self.frame, 
             list(self.categories), self.settings, self.categories, 
-            self.taskFile)
+            self.taskStore)
 
     def tearDown(self):
         # CategoryEditor uses CallAfter for setting the focus, make sure those 
@@ -44,8 +44,8 @@ class CategoryEditorTest(test.wxTestCase):
         if operating_system.isGTK():
             wx.Yield() # pragma: no cover 
         super(CategoryEditorTest, self).tearDown()
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
 
     # pylint: disable=E1101,E1103,W0212
     

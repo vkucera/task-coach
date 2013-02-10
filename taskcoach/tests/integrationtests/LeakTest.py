@@ -35,5 +35,5 @@ class LeakTest(test.TestCase):
     def testClear(self):
         """taskRef = weakref.ref(self.mockApp.task)
         del self.mockApp.task
-        self.mockApp.taskFile.clear()
+        self.mockApp.taskStore.clear()
         self.failUnless(taskRef() is None)"""

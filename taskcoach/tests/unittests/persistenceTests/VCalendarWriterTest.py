@@ -39,12 +39,12 @@ class VCalTestCase(test.wxTestCase):
         task.Task.settings = self.settings = config.Settings(load=False)
         self.fd = UTF8StringIO()
         self.writer = persistence.iCalendarWriter(self.fd)
-        self.taskFile = persistence.TaskFile()
+        self.taskStore = persistence.TaskStore()
 
     def tearDown(self):
         super(VCalTestCase, self).tearDown()
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
 
     def writeAndRead(self):
         self.writer.write(self.viewer, self.settings, self.selectionOnly)
@@ -86,8 +86,8 @@ class VCalEffortWriterTestCase(VCalTestCase):
         self.effort2 = effort.Effort(self.task1)
         self.task1.addEffort(self.effort1)
         self.task1.addEffort(self.effort2)
-        self.taskFile.tasks().extend([self.task1])
-        self.viewer = gui.viewer.EffortViewer(self.frame, self.taskFile,
+        self.taskStore.tasks().extend([self.task1])
+        self.viewer = gui.viewer.EffortViewer(self.frame, self.taskStore,
                                               self.settings)
         self.viewer.widget.select([self.effort1])
         self.viewer.updateSelection()
@@ -147,9 +147,9 @@ class VCalTaskWriterTestCase(VCalTestCase):
         self.task2 = task.Task(u'Task subject 2黑', 
                                description=u'Task description 2\nwith newline\n微软雅黑',
                                modificationDateTime=date.DateTime(2012, 1, 1))
-        self.taskFile.tasks().extend([self.task1, self.task2])
+        self.taskStore.tasks().extend([self.task1, self.task2])
         self.settings.set('taskviewer', 'treemode', self.treeMode)
-        self.viewer = gui.viewer.TaskViewer(self.frame, self.taskFile,
+        self.viewer = gui.viewer.TaskViewer(self.frame, self.taskStore,
             self.settings)
         self.selectItems([self.task2])
         self.vcalFile = self.writeAndRead()

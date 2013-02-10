@@ -71,25 +71,25 @@ class wxTestCaseWithFrameAsTopLevelWindow(test.wxTestCase):
     def setUp(self):
         task.Task.settings = self.settings = config.Settings(load=False)
         wx.GetApp().SetTopWindow(self.frame)
-        self.taskFile = self.frame.taskFile = persistence.TaskFile()
+        self.taskStore = self.frame.taskStore = persistence.TaskStore()
 
     def tearDown(self):
         super(wxTestCaseWithFrameAsTopLevelWindow, self).tearDown()
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
 
 
 class NewTaskWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
     def setUp(self):
         super(NewTaskWithSelectedCategoryTest, self).setUp()
-        self.categories = self.taskFile.categories()
+        self.categories = self.taskStore.categories()
         self.categories.append(category.Category('cat'))
-        self.viewer = gui.viewer.CategoryViewer(self.frame, self.taskFile, 
+        self.viewer = gui.viewer.CategoryViewer(self.frame, self.taskStore, 
                                                 self.settings)
        
     def createNewTask(self):
         taskNew = gui.uicommand.NewTaskWithSelectedCategories( \
-            taskList=self.taskFile.tasks(), viewer=self.viewer, 
+            taskList=self.taskStore.tasks(), viewer=self.viewer, 
             categories=self.categories, settings=self.settings)
         dialog = taskNew.doCommand(None, show=False)
         tree = dialog._interior[4].viewer.widget
@@ -238,8 +238,8 @@ class MarkCompletedTest(test.TestCase):
 class TaskNewTest(wxTestCaseWithFrameAsTopLevelWindow):
     def testNewTaskWithCategories(self):
         cat = category.Category('cat', filtered=True)
-        self.taskFile.categories().append(cat)
-        taskNew = gui.uicommand.TaskNew(taskList=self.taskFile.tasks(), 
+        self.taskStore.categories().append(cat)
+        taskNew = gui.uicommand.TaskNew(taskList=self.taskStore.tasks(), 
                                         settings=self.settings)
         dialog = taskNew.doCommand(None, show=False)
         tree = dialog._interior[4].viewer.widget
@@ -248,45 +248,45 @@ class TaskNewTest(wxTestCaseWithFrameAsTopLevelWindow):
         
     def testNewTaskWithPresetPlannedStartDateTime(self):
         self.settings.set('view', 'defaultplannedstartdatetime', 'preset_tomorrow_endofworkingday')
-        taskNew = gui.uicommand.TaskNew(taskList=self.taskFile.tasks(),
+        taskNew = gui.uicommand.TaskNew(taskList=self.taskStore.tasks(),
                                         settings=self.settings)
         taskNew.doCommand(None, show=False)
-        self.failIf(date.DateTime() == list(self.taskFile.tasks())[0].plannedStartDateTime())
+        self.failIf(date.DateTime() == list(self.taskStore.tasks())[0].plannedStartDateTime())
 
     def testNewTaskWithProposedPlannedStartDateTime(self):
         self.settings.set('view', 'defaultplannedstartdatetime', 'propose_tomorrow_endofworkingday')
-        taskNew = gui.uicommand.TaskNew(taskList=self.taskFile.tasks(),
+        taskNew = gui.uicommand.TaskNew(taskList=self.taskStore.tasks(),
                                         settings=self.settings)
         taskNew.doCommand(None, show=False)
-        self.assertEqual(date.DateTime(), list(self.taskFile.tasks())[0].plannedStartDateTime())
+        self.assertEqual(date.DateTime(), list(self.taskStore.tasks())[0].plannedStartDateTime())
         
     def testNewTaskWithPresetDueDateTime(self):
         self.settings.set('view', 'defaultduedatetime', 'preset_tomorrow_endofworkingday')
-        taskNew = gui.uicommand.TaskNew(taskList=self.taskFile.tasks(),
+        taskNew = gui.uicommand.TaskNew(taskList=self.taskStore.tasks(),
                                         settings=self.settings)
         taskNew.doCommand(None, show=False)
-        self.failIf(date.DateTime() == list(self.taskFile.tasks())[0].dueDateTime())
+        self.failIf(date.DateTime() == list(self.taskStore.tasks())[0].dueDateTime())
 
     def testNewTaskWithPresetCompletionDateTime(self):
         self.settings.set('view', 'defaultcompletiondatetime', 'preset_tomorrow_endofworkingday')
-        taskNew = gui.uicommand.TaskNew(taskList=self.taskFile.tasks(),
+        taskNew = gui.uicommand.TaskNew(taskList=self.taskStore.tasks(),
                                         settings=self.settings)
         taskNew.doCommand(None, show=False)
-        self.failIf(date.DateTime() == list(self.taskFile.tasks())[0].completionDateTime())
+        self.failIf(date.DateTime() == list(self.taskStore.tasks())[0].completionDateTime())
 
     def testNewTaskWithPresetReminderDateTime(self):
         self.settings.set('view', 'defaultreminderdatetime', 'preset_tomorrow_endofworkingday')
-        taskNew = gui.uicommand.TaskNew(taskList=self.taskFile.tasks(),
+        taskNew = gui.uicommand.TaskNew(taskList=self.taskStore.tasks(),
                                         settings=self.settings)
         taskNew.doCommand(None, show=False)
-        self.failIf(date.DateTime() == list(self.taskFile.tasks())[0].reminder())
+        self.failIf(date.DateTime() == list(self.taskStore.tasks())[0].reminder())
 
 
 class NoteNewTest(wxTestCaseWithFrameAsTopLevelWindow):
     def testNewNoteWithCategories(self):        
         cat = category.Category('cat', filtered=True)
-        self.taskFile.categories().append(cat)
-        noteNew = gui.uicommand.NoteNew(notes=self.taskFile.notes(), 
+        self.taskStore.categories().append(cat)
+        noteNew = gui.uicommand.NoteNew(notes=self.taskStore.notes(), 
                                         settings=self.settings)
         dialog = noteNew.doCommand(None, show=False)
         tree = dialog._interior[1].viewer.widget
@@ -300,11 +300,11 @@ class EffortNewTest(wxTestCaseWithFrameAsTopLevelWindow):
         task2 = task.Task('task 2')
         effort_task2 = effort.Effort(task2)
         task2.addEffort(effort_task2)
-        self.taskFile.tasks().extend([task1, task2])
+        self.taskStore.tasks().extend([task1, task2])
         viewer = DummyViewer(task2.efforts(), showingEffort=True, 
-                             domainObjectsToView=self.taskFile.tasks())
-        effortNew = gui.uicommand.EffortNew(effortList=self.taskFile.efforts(),
-                                            taskList=self.taskFile.tasks(),
+                             domainObjectsToView=self.taskStore.tasks())
+        effortNew = gui.uicommand.EffortNew(effortList=self.taskStore.efforts(),
+                                            taskList=self.taskStore.tasks(),
                                             viewer=viewer, 
                                             settings=self.settings)
         dialog = effortNew.doCommand(None, show=False)

@@ -45,6 +45,6 @@ class PerformanceTest(test.TestCase):
         start = time.time()
         mockApp.iocontroller.open(self.taskfilename)
         end = time.time()
-        self.assertEqual(self.nrTasks, len(mockApp.taskFile.tasks()))
+        self.assertEqual(self.nrTasks, len(mockApp.taskStore.tasks()))
         self.failUnless(end-start < self.nrTasks/10)
         mockApp.quitApplication()

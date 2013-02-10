@@ -110,11 +110,11 @@ class TaskEditorTestCase(test.wxTestCase):
         self.tomorrow = self.today + date.ONE_DAY
         self.yesterday = self.today - date.ONE_DAY
         self.twodaysago = self.yesterday - date.ONE_DAY
-        self.taskFile = persistence.TaskFile()
-        self.taskList = self.taskFile.tasks()
+        self.taskStore = persistence.TaskStore()
+        self.taskList = self.taskStore.tasks()
         self.taskList.extend(self.createTasks())
         self.editor = self.editorClass(self.frame, self.getItems(),
-            self.settings, self.taskList, self.taskFile)
+            self.settings, self.taskList, self.taskStore)
 
     def tearDown(self):
         # TaskEditor uses CallAfter for setting the focus, make sure those 
@@ -122,8 +122,8 @@ class TaskEditorTestCase(test.wxTestCase):
         if operating_system.isGTK():
             wx.Yield()  # pragma: no cover 
         super(TaskEditorTestCase, self).tearDown()
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
         
     def createTasks(self):
         raise NotImplementedError  # pragma: no cover

@@ -83,7 +83,7 @@ class ViewerContainerTest(test.wxTestCase):
         self.events = 0
         task.Task.settings = self.settings = config.Settings(load=False)
         self.settings.set('view', 'viewerwithdummywidgetcount', '2', new=True)
-        self.taskFile = persistence.TaskFile()
+        self.taskStore = persistence.TaskStore()
         self.mainWindow = DummyMainWindow()
         self.container = gui.viewer.ViewerContainer(self.mainWindow,
                                                     self.settings)
@@ -94,7 +94,7 @@ class ViewerContainerTest(test.wxTestCase):
 
     def createViewer(self, settingsSection):
         self.settings.add_section(settingsSection)
-        return dummy.ViewerWithDummyWidget(self.mainWindow, self.taskFile, 
+        return dummy.ViewerWithDummyWidget(self.mainWindow, self.taskStore, 
             self.settings, settingsSection=settingsSection)
             
     def onEvent(self):
@@ -104,7 +104,7 @@ class ViewerContainerTest(test.wxTestCase):
         self.assertEqual(0, self.container.size())
 
     def testAddTask(self):
-        self.taskFile.tasks().append(task.Task())
+        self.taskStore.tasks().append(task.Task())
         self.assertEqual(1, self.container.size())
 
     def testDefaultActiveViewer(self):

@@ -31,15 +31,15 @@ class HTMLWriterTestCase(test.wxTestCase):
         task.Task.settings = self.settings = config.Settings(load=False)
         self.fd = StringIO.StringIO()
         self.writer = persistence.HTMLWriter(self.fd, self.filename)
-        self.taskFile = persistence.TaskFile()
+        self.taskStore = persistence.TaskStore()
         self.task = task.Task('Task subject')
-        self.taskFile.tasks().append(self.task)
+        self.taskStore.tasks().append(self.task)
         self.viewer = self.createViewer()
         
     def tearDown(self):
         super(HTMLWriterTestCase, self).tearDown()
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
         cssFilename = self.filename + '.css'
         if os.path.exists(cssFilename):
             os.remove(cssFilename)
@@ -85,7 +85,7 @@ class CommonTestsMixin(object):
 class TaskWriterTestCase(HTMLWriterTestCase):
     def createViewer(self):
         self.settings.set('taskviewer', 'treemode', self.treeMode)
-        return gui.viewer.TaskViewer(self.frame, self.taskFile, self.settings)
+        return gui.viewer.TaskViewer(self.frame, self.taskStore, self.settings)
 
 
 class TaskTestsMixin(CommonTestsMixin):
@@ -98,7 +98,7 @@ class TaskTestsMixin(CommonTestsMixin):
     def testWriteSelectionOnly_SelectedChild(self):
         child = task.Task('Child')
         self.task.addChild(child)
-        self.taskFile.tasks().append(child)
+        self.taskStore.tasks().append(child)
         self.selectItem([child])
         self.expectInHTML('>Task subject<')
 
@@ -196,8 +196,8 @@ class TaskListTestsMixin(object):
         
     def testMissingCreationDateTime(self):
         self.viewer.showColumnByName('creationDateTime')
-        self.taskFile.tasks().append(task.Task(creationDateTime=date.DateTime.min))
-        self.taskFile.tasks().remove(self.task)
+        self.taskStore.tasks().append(task.Task(creationDateTime=date.DateTime.min))
+        self.taskStore.tasks().remove(self.task)
         self.expectNotInHTML('1/1/1')
         
     def testModificationDateTime(self):
@@ -243,7 +243,7 @@ class EffortWriterTestCase(CommonTestsMixin, HTMLWriterTestCase):
                                           stop=now + date.ONE_SECOND))
 
     def createViewer(self):
-        return gui.viewer.EffortViewer(self.frame, self.taskFile, self.settings)
+        return gui.viewer.EffortViewer(self.frame, self.taskStore, self.settings)
 
     def testTaskSubject(self):
         self.expectInHTML('>Task subject<')
@@ -271,10 +271,10 @@ class CategoryWriterTestCase(HTMLWriterTestCase):
     def setUp(self):
         super(CategoryWriterTestCase, self).setUp()
         self.category = category.Category('Category')
-        self.taskFile.categories().append(self.category)
+        self.taskStore.categories().append(self.category)
 
     def createViewer(self):
-        return gui.viewer.CategoryViewer(self.frame, self.taskFile, 
+        return gui.viewer.CategoryViewer(self.frame, self.taskStore, 
                                          self.settings)
 
         

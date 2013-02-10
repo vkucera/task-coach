@@ -28,22 +28,22 @@ class AutoSaver(object):
         super(AutoSaver, self).__init__(*args, **kwargs)
         self.__settings = settings
         self.__task_files = set()
-        pub.subscribe(self.onTaskFileDirty, 'taskfile.dirty')
+        pub.subscribe(self.onTaskStoreDirty, 'taskstore.dirty')
         wx.GetApp().Bind(wx.EVT_IDLE, self.on_idle)
             
-    def onTaskFileDirty(self, taskFile):
+    def onTaskStoreDirty(self, taskStore):
         ''' When a task file gets dirty and auto save is on, note it so 
             it can be saved during idle time. '''
-        if self._needSave(taskFile):
-            self.__task_files.add(taskFile)
+        if self._needSave(taskStore):
+            self.__task_files.add(taskStore)
 
     def _needSave(self, task_file):
         ''' Return whether the task file needs to be saved. '''
         return task_file.filename() and task_file.needSave() and \
             self.__settings.getboolean('file', 'autosave')
 
-    def _needLoad(self, taskFile):
-        return taskFile.changedOnDisk() and \
+    def _needLoad(self, taskStore):
+        return taskStore.changedOnDisk() and \
             self.__settings.getboolean('file', 'autoload')
 
     def on_idle(self, event):

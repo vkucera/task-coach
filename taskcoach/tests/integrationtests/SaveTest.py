@@ -37,7 +37,7 @@ class SaveTest(test.TestCase):
         super(SaveTest, self).tearDown()
         
     def assertTasksLoaded(self, nrTasks):
-        self.assertEqual(nrTasks, len(self.mockApp.taskFile.tasks()))
+        self.assertEqual(nrTasks, len(self.mockApp.taskStore.tasks()))
         
     def testSave(self):
         self.mockApp.iocontroller.saveas(self.filename)

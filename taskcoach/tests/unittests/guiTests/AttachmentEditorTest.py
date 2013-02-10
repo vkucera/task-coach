@@ -30,17 +30,17 @@ class AttachmentEditorTest(test.wxTestCase):
     def setUp(self):
         super(AttachmentEditorTest, self).setUp()
         self.settings = config.Settings(load=False)
-        self.taskFile = persistence.TaskFile()
+        self.taskStore = persistence.TaskStore()
         self.attachment = attachment.FileAttachment('Attachment')
         self.attachments = attachment.AttachmentList()
         self.attachments.append(self.attachment)
         self.editor = gui.dialog.editor.AttachmentEditor(self.frame, 
-            self.attachments, self.settings, self.attachments, self.taskFile)
+            self.attachments, self.settings, self.attachments, self.taskStore)
 
     def tearDown(self):
         super(AttachmentEditorTest, self).tearDown()
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
 
     def setSubject(self, newSubject):
         page = self.editor._interior[0]

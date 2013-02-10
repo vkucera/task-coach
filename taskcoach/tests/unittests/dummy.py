@@ -72,7 +72,7 @@ class ViewerWithDummyWidget(gui.viewer.base.Viewer): # pylint: disable=W0223
     defaultBitmap = ''
     
     def domainObjectsToView(self):
-        return self.taskFile.tasks()
+        return self.taskStore.tasks()
     
     def createWidget(self):
         self._columns = self._createColumns() # pylint: disable=W0201
@@ -82,7 +82,7 @@ class ViewerWithDummyWidget(gui.viewer.base.Viewer): # pylint: disable=W0223
         return []
     
     
-class TaskFile(persistence.TaskFile):
+class TaskStore(persistence.TaskStore):
     raiseError = None
     
     def load(self, *args, **kwargs): # pylint: disable=W0613

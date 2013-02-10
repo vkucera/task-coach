@@ -160,12 +160,12 @@ class Application(object):
         show_splash_screen = self.settings.getboolean('window', 'splash')
         splash = gui.SplashScreen() if show_splash_screen else None
         # pylint: disable=W0201
-        self.taskFile = persistence.LockedTaskFile(poll=not self.settings.getboolean('file', 'nopoll'))
+        self.taskStore = persistence.TaskStore()
         self.__auto_saver = persistence.AutoSaver(self.settings)
         self.__auto_backup = persistence.AutoBackup(self.settings)
-        self.iocontroller = gui.IOController(self.taskFile, self.displayMessage, 
+        self.iocontroller = gui.IOController(self.taskStore, self.displayMessage, 
                                              self.settings, splash)
-        self.mainwindow = gui.MainWindow(self.iocontroller, self.taskFile, 
+        self.mainwindow = gui.MainWindow(self.iocontroller, self.taskStore, 
                                          self.settings, splash=splash)
         self.__wx_app.SetTopWindow(self.mainwindow)
         self.__init_spell_checking()
@@ -259,9 +259,9 @@ class Application(object):
         if self.__can_create_task_bar_icon():
             from taskcoachlib.gui import taskbaricon, menu
             self.taskBarIcon = taskbaricon.TaskBarIcon(self.mainwindow,  # pylint: disable=W0201
-                self.taskFile.tasks(), self.settings)
+                self.taskStore.tasks(), self.settings)
             self.taskBarIcon.setPopupMenu(menu.TaskBarMenu(self.taskBarIcon, 
-                self.settings, self.taskFile))
+                self.settings, self.taskStore))
 
     def __can_create_task_bar_icon(self):
         try:
@@ -298,7 +298,7 @@ class Application(object):
         if not self.iocontroller.close(force=force):
             return False
         # Remember what the user was working on: 
-        self.settings.set('file', 'lastfile', self.taskFile.lastFilename())
+        self.settings.set('file', 'lastfile', self.taskStore.lastFilename())
         self.mainwindow.save_settings()
         self.settings.save()
         if hasattr(self, 'taskBarIcon'):

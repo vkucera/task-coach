@@ -169,8 +169,8 @@ class FileSaveSelection(mixin_uicommand.NeedsSelectedTasksMixin, IOCommand,
                         ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(FileSaveSelection, self).__init__( \
-            menuText=_('Sa&ve selected tasks to new taskfile...'),
-            helpText=_('Save the selected tasks to a separate taskfile'), 
+            menuText=_('Sa&ve selected tasks to new file...'),
+            helpText=_('Save the selected tasks to a separate file'), 
             bitmap='saveselection', *args, **kwargs)
     
     def doCommand(self, event):
@@ -569,7 +569,7 @@ class EditCopy(mixin_uicommand.NeedsSelectionMixin, ViewerCommand):
 
 class EditPaste(base_uicommand.UICommand):
     ''' Action for pasting the item(s) in the clipboard into the current 
-        taskfile. '''
+        taskstore. '''
     
     def __init__(self, *args, **kwargs):
         super(EditPaste, self).__init__(menuText=_('&Paste\tCtrl+V'), 
@@ -595,7 +595,7 @@ class EditPaste(base_uicommand.UICommand):
 class EditPasteAsSubItem(mixin_uicommand.NeedsSelectedCompositeMixin, 
                          ViewerCommand):
     ''' Action for pasting the item(s) in the clipboard into the current 
-        taskfile, as a subitem of the currently selected item. '''
+        taskstore, as a subitem of the currently selected item. '''
     
     def __init__(self, *args, **kwargs):
         super(EditPasteAsSubItem, self).__init__(
@@ -756,14 +756,14 @@ class ViewViewer(settings_uicommand.SettingsCommand, ViewerCommand):
     ''' Action for opening a new viewer of a specific class. '''
     
     def __init__(self, *args, **kwargs):
-        self.taskFile = kwargs.pop('taskFile')
+        self.taskStore = kwargs.pop('taskStore')
         self.viewerClass = kwargs.pop('viewerClass')
         kwargs.setdefault('bitmap', self.viewerClass.defaultBitmap) 
         super(ViewViewer, self).__init__(*args, **kwargs)
         
     def doCommand(self, event):
         from taskcoachlib.gui import viewer
-        viewer.addOneViewer(self.viewer, self.taskFile, self.settings, 
+        viewer.addOneViewer(self.viewer, self.taskStore, self.settings, 
                             self.viewerClass)
         self.increaseViewerCount()
         
@@ -781,13 +781,13 @@ class ViewEffortViewerForSelectedTask(mixin_uicommand.NeedsOneSelectedTaskMixin,
     def __init__(self, *args, **kwargs):
         from taskcoachlib.gui import viewer
         self.viewerClass = viewer.EffortViewer
-        self.taskFile = kwargs.pop('taskFile')
+        self.taskStore = kwargs.pop('taskStore')
         kwargs['bitmap'] = viewer.EffortViewer.defaultBitmap
         super(ViewEffortViewerForSelectedTask, self).__init__(*args, **kwargs)
         
     def doCommand(self, event):
         from taskcoachlib.gui import viewer
-        viewer.addOneViewer(self.viewer, self.taskFile, self.settings, 
+        viewer.addOneViewer(self.viewer, self.taskStore, self.settings, 
             self.viewerClass, 
             tasksToShowEffortFor=task.TaskList(self.viewer.curselection()))
         
@@ -1038,7 +1038,7 @@ class EditTrackedTasks(TaskListCommand, settings_uicommand.SettingsCommand):
     def doCommand(self, event, show=True):
         editTaskDialog = dialog.editor.TaskEditor(self.mainWindow(), 
             self.taskList.tasksBeingTracked(), self.settings, self.taskList, 
-            self.mainWindow().taskFile, bitmap=self.bitmap)
+            self.mainWindow().taskStore, bitmap=self.bitmap)
         editTaskDialog.Show(show)
         return editTaskDialog  # for testing purposes
         
@@ -1107,12 +1107,12 @@ class TaskNew(TaskListCommand, settings_uicommand.SettingsCommand):
         newTaskCommand.do() 
         newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(),
             newTaskCommand.items, self.settings, self.taskList, 
-            self.mainWindow().taskFile, bitmap=self.bitmap, items_are_new=True)
+            self.mainWindow().taskStore, bitmap=self.bitmap, items_are_new=True)
         newTaskDialog.Show(show)
         return newTaskDialog  # for testing purposes
 
     def categoriesForTheNewTask(self):
-        return self.mainWindow().taskFile.categories().filteredCategories()
+        return self.mainWindow().taskStore.categories().filteredCategories()
 
     def prerequisitesForTheNewTask(self):
         return []
@@ -1164,7 +1164,7 @@ class TaskNewFromTemplate(TaskNew):
         # pylint: disable=W0142
         newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(), 
             newTaskCommand.items, self.settings, self.taskList, 
-            self.mainWindow().taskFile, bitmap=self.bitmap, items_are_new=True)
+            self.mainWindow().taskStore, bitmap=self.bitmap, items_are_new=True)
         newTaskDialog.Show(show)
         return newTaskDialog  # for testing purposes
    
@@ -1494,7 +1494,7 @@ class AddNote(mixin_uicommand.NeedsSelectedNoteOwnersMixin, ViewerCommand,
         addNoteCommand.do()
         editDialog = dialog.editor.NoteEditor(self.mainWindow(), 
             addNoteCommand.items, self.settings, self.viewer.presentation(),  
-            self.mainWindow().taskFile, bitmap=self.bitmap)
+            self.mainWindow().taskStore, bitmap=self.bitmap)
         editDialog.Show(show)
         return editDialog  # for testing purposes
     
@@ -1510,7 +1510,7 @@ class OpenAllNotes(mixin_uicommand.NeedsSelectedNoteOwnersMixinWithNotes,
             for note in item.notes():
                 editDialog = dialog.editor.NoteEditor(self.mainWindow(),
                     [note], self.settings, self.viewer.presentation(), 
-                    self.mainWindow().taskFile, bitmap=self.bitmap)
+                    self.mainWindow().taskStore, bitmap=self.bitmap)
                 editDialog.Show()
 
 
@@ -1539,7 +1539,7 @@ class EffortNew(mixin_uicommand.NeedsAtLeastOneTaskMixin, ViewerCommand,
         newEffortCommand.do()
         newEffortDialog = dialog.editor.EffortEditor(self.mainWindow(), 
             newEffortCommand.items, self.settings, self.effortList, 
-            self.mainWindow().taskFile, bitmap=self.bitmap)
+            self.mainWindow().taskStore, bitmap=self.bitmap)
         if show:
             newEffortDialog.Show()
         return newEffortDialog
@@ -1787,10 +1787,10 @@ class CategoryNew(CategoriesCommand, settings_uicommand.SettingsCommand):
     def doCommand(self, event, show=True):  # pylint: disable=W0221
         newCategoryCommand = command.NewCategoryCommand(self.categories)
         newCategoryCommand.do()
-        taskFile = self.mainWindow().taskFile
+        taskStore = self.mainWindow().taskStore
         newCategoryDialog = dialog.editor.CategoryEditor(self.mainWindow(), 
-            newCategoryCommand.items, self.settings, taskFile.categories(), 
-            taskFile, bitmap=self.bitmap)
+            newCategoryCommand.items, self.settings, taskStore.categories(), 
+            taskStore, bitmap=self.bitmap)
         newCategoryDialog.Show(show)
 
 
@@ -1817,12 +1817,12 @@ class NoteNew(NotesCommand, settings_uicommand.SettingsCommand, ViewerCommand):
             newNoteCommand.do()
             noteDialog = dialog.editor.NoteEditor(self.mainWindow(),
                 newNoteCommand.items, self.settings, self.notes, 
-                self.mainWindow().taskFile, bitmap=self.bitmap)
+                self.mainWindow().taskStore, bitmap=self.bitmap)
         noteDialog.Show(show)
         return noteDialog  # for testing purposes
 
     def categoriesForTheNewNote(self):
-        return self.mainWindow().taskFile.categories().filteredCategories()
+        return self.mainWindow().taskStore.categories().filteredCategories()
     
 
 class NewNoteWithSelectedCategories(NoteNew, ViewerCommand):

@@ -49,7 +49,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                                   eventType)
 
     def domainObjectsToView(self):
-        return self.taskFile.notes() if self.notesToShow is None else self.notesToShow
+        return self.taskStore.notes() if self.notesToShow is None else self.notesToShow
 
     def curselectionIsInstanceOf(self, class_):
         return class_ == note.Note
@@ -58,7 +58,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
         imageList = self.createImageList()  # Has side-effects
         self._columns = self._createColumns()
         itemPopupMenu = menu.NotePopupMenu(self.parent, self.settings,
-            self.taskFile.categories(), self)
+            self.taskStore.categories(), self)
         columnPopupMenu = menu.ColumnPopupMenu(self)
         self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
         widget = widgets.TreeListCtrl(self, self.columns(), self.onSelect,
@@ -174,7 +174,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
         return status1, status2
 
     def newItemDialog(self, *args, **kwargs):
-        kwargs['categories'] = self.taskFile.categories().filteredCategories()
+        kwargs['categories'] = self.taskStore.categories().filteredCategories()
         return super(BaseNoteViewer, self).newItemDialog(*args, **kwargs)
     
     def deleteItemCommand(self):

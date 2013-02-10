@@ -124,40 +124,57 @@ class ChangeMonitor(Observer):
         if self.__frozen:
             return
 
+        changed = False
         for name in sender.monitoredAttributes():
             if name in topic.getNameTuple():
                 if sender.id() in self._changes and self._changes[sender.id()] is not None:
+                    changed = True
                     self._changes[sender.id()].add(name)
+        if changed:
+            pub.sendMessage('monitor.dirty', monitor=self)
 
     def onAttributeChanged_Deprecated(self, event):
         if self.__frozen:
             return
 
+        changed = False
         for type_, valBySource in event.sourcesAndValuesByType().items():
             for obj in valBySource.keys():
                 for name in obj.monitoredAttributes():
                     if type_ == getattr(obj, '%sChangedEventType' % name)():
                         if obj.id() in self._changes and self._changes[obj.id()] is not None:
+                            changed = True
                             self._changes[obj.id()].add(name)
+        if changed:
+            pub.sendMessage('monitor.dirty', monitor=self)
                                 
     def _objectAdded(self, obj):
+        changed = False
         if obj.id() in self._changes:
             if self._changes[obj.id()] is not None and \
                    '__del__' in self._changes[obj.id()]:
+                changed = True
                 self._changes[obj.id()].remove('__del__')
         else:
+            changed = True
             self._changes[obj.id()] = None
+        if changed:
+            pub.sendMessage('monitor.dirty', monitor=self)
 
     def _objectsAdded(self, event):
         for obj in event.values():
             self._objectAdded(obj)
 
     def _objectRemoved(self, obj):
+        changed = False
         if obj.id() in self._changes:
+            changed = True
             if self._changes[obj.id()] is None:
                 del self._changes[obj.id()]
             else:
                 self._changes[obj.id()].add('__del__')
+        if changed:
+            pub.sendMessage('monitor.dirty', monitor=self)
 
     def _objectsRemoved(self, event):
         for obj in event.values():
@@ -168,18 +185,26 @@ class ChangeMonitor(Observer):
             return
 
         self._objectsAdded(event)
+        changed = False
         for obj in event.values():
             if self._changes[obj.id()] is not None:
+                changed = True
                 self._changes[obj.id()].add('__parent__')
+        if changed:
+            pub.sendMessage('monitor.dirty', monitor=self)
 
     def onChildRemoved(self, event):
         if self.__frozen:
             return
 
         self._objectsRemoved(event)
+        changed = False
         for obj in event.values():
             if obj in self._changes and self._changes[obj.id()] is not None:
+                changed = True
                 self._changes[obj.id()].add('__parent__')
+        if changed:
+            pub.sendMessage('monitor.dirty', monitor=self)
 
     def onObjectAdded(self, event):
         if self.__frozen:
@@ -218,32 +243,41 @@ class ChangeMonitor(Observer):
         changes = self._changes.get(sender.id(), None)
         if changes is not None:
             changes.add('__task__')
+            pub.sendMessage('monitor.dirty', monitor=self)
 
     def onCategoryAdded(self, event):
         if self.__frozen:
             return
 
+        changed = False
         for obj in event.sources():
             if obj.id() in self._changes and self._changes[obj.id()] is not None:
                 for theCategory in event.values(source=obj):
                     name = '_category:%s' % theCategory.id()
+                    changed = True
                     if '__del' + name in self._changes[obj.id()]:
                         self._changes[obj.id()].remove('__del' + name)
                     else:
                         self._changes[obj.id()].add('__add' + name)
+        if changed:
+            pub.sendMessage('monitor.dirty', monitor=self)
 
     def onCategoryRemoved(self, event):
         if self.__frozen:
             return
 
+        changed = False
         for obj in event.sources():
             if obj.id() in self._changes and self._changes[obj.id()] is not None:
                 for theCategory in event.values(source=obj):
                     name = '_category:%s' % theCategory.id()
+                    changed = True
                     if '__add' + name in self._changes[obj.id()]:
                         self._changes[obj.id()].remove('__add' + name)
                     else:
                         self._changes[obj.id()].add('__del' + name)
+        if changed:
+            pub.sendMessage('monitor.dirty', monitor=self)
 
     def onPrerequisitesChanged(self, newValue, sender):  # pylint: disable-msg=W0613
         # Need to check whether the sender is actually in one of the collections we monitor
@@ -255,6 +289,7 @@ class ChangeMonitor(Observer):
             return
         if sender.id() in self._changes and self._changes[sender.id()] is not None:
             self._changes[sender.id()].add('__prerequisites__')
+            pub.sendMessage('monitor.dirty', monitor=self)
 
     def allChanges(self):
         return self._changes

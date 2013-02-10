@@ -41,6 +41,13 @@ class TaskStore(patterns.Observer):
         self.__efforts = effort.EffortList(self.tasks())
 
         self.__lastFilename = ''
+        pub.subscribe(self.onMonitorDirty, 'monitor.dirty')
+
+    def onMonitorDirty(self, monitor):
+        for backend in self.__backends:
+            if backend.monitor() == monitor:
+                pub.sendMessage('taskstore.dirty', taskStore=self)
+                break
 
     def addBackend(self, backend):
         self.__backends.append(backend)
@@ -104,6 +111,7 @@ class TaskStore(patterns.Observer):
             self.__backends.append(backend)
         backend.setFilename(filename)
         self.__lastFilename = filename
+        pub.sendMessage('taskstore.filenameChanged', filename=filename)
 
     def lastFilename(self):
         return self.__lastFilename

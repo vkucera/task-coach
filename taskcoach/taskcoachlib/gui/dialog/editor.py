@@ -638,20 +638,20 @@ class BudgetPage(Page):
 class PageWithViewer(Page):
     columns = 1
     
-    def __init__(self, items, parent, taskFile, settings, settingsSection, 
+    def __init__(self, items, parent, taskStore, settings, settingsSection, 
                  *args, **kwargs):
-        self.__taskFile = taskFile
+        self.__taskStore = taskStore
         self.__settings = settings
         self.__settingsSection = settingsSection
         super(PageWithViewer, self).__init__(items, parent, *args, **kwargs)
         
     def addEntries(self):
         # pylint: disable=W0201
-        self.viewer = self.createViewer(self.__taskFile, self.__settings,
+        self.viewer = self.createViewer(self.__taskStore, self.__settings,
                                         self.__settingsSection) 
         self.addEntry(self.viewer, growable=True)
         
-    def createViewer(self, taskFile, settings, settingsSection):
+    def createViewer(self, taskStore, settings, settingsSection):
         raise NotImplementedError
         
     def close(self):
@@ -671,8 +671,8 @@ class EffortPage(PageWithViewer):
     pageTitle = _('Effort')
     pageIcon = 'clock_icon'
             
-    def createViewer(self, taskFile, settings, settingsSection):
-        return viewer.EffortViewer(self, taskFile, settings,
+    def createViewer(self, taskStore, settings, settingsSection):
+        return viewer.EffortViewer(self, taskStore, settings,
             settingsSection=settingsSection,
             use_separate_settings_section=False,
             tasksToShowEffortFor=task.TaskList(self.items))
@@ -711,14 +711,14 @@ class CategoriesPage(PageWithViewer):
     pageTitle = _('Categories')
     pageIcon = 'folder_blue_arrow_icon'
     
-    def createViewer(self, taskFile, settings, settingsSection):
+    def createViewer(self, taskStore, settings, settingsSection):
         assert len(self.items) == 1
         item = self.items[0]
         for eventType in (item.categoryAddedEventType(), 
                          item.categoryRemovedEventType()):
             self.registerObserver(self.onCategoryChanged, eventType=eventType,
                                   eventSource=item)
-        return LocalCategoryViewer(self.items, self, taskFile, settings,
+        return LocalCategoryViewer(self.items, self, taskStore, settings,
                                    settingsSection=settingsSection,
                                    use_separate_settings_section=False)
         
@@ -749,13 +749,13 @@ class AttachmentsPage(PageWithViewer):
     pageTitle = _('Attachments')
     pageIcon = 'paperclip_icon'
     
-    def createViewer(self, taskFile, settings, settingsSection):
+    def createViewer(self, taskStore, settings, settingsSection):
         assert len(self.items) == 1
         item = self.items[0]
         self.registerObserver(self.onAttachmentsChanged, 
             eventType=item.attachmentsChangedEventType(), 
             eventSource=item)    
-        return LocalAttachmentViewer(self, taskFile, settings,
+        return LocalAttachmentViewer(self, taskStore, settings,
             settingsSection=settingsSection, 
             use_separate_settings_section=False, owner=item)
 
@@ -791,13 +791,13 @@ class NotesPage(PageWithViewer):
     pageTitle = _('Notes')
     pageIcon = 'note_icon'
     
-    def createViewer(self, taskFile, settings, settingsSection):
+    def createViewer(self, taskStore, settings, settingsSection):
         assert len(self.items) == 1
         item = self.items[0]
         self.registerObserver(self.onNotesChanged,
                               eventType=item.notesChangedEventType(),
                               eventSource=item)
-        return LocalNoteViewer(self, taskFile, settings, 
+        return LocalNoteViewer(self, taskStore, settings, 
                                settingsSection=settingsSection, 
                                use_separate_settings_section=False, owner=item)
 
@@ -835,11 +835,11 @@ class PrerequisitesPage(PageWithViewer):
     pageTitle = _('Prerequisites')
     pageIcon = 'trafficlight_icon'
     
-    def createViewer(self, taskFile, settings, settingsSection):
+    def createViewer(self, taskStore, settings, settingsSection):
         assert len(self.items) == 1
         pub.subscribe(self.onPrerequisitesChanged, 
                       self.items[0].prerequisitesChangedEventType())
-        return LocalPrerequisiteViewer(self.items, self, taskFile, settings,
+        return LocalPrerequisiteViewer(self.items, self, taskStore, settings,
                                        settingsSection=settingsSection,
                                        use_separate_settings_section=False)
         
@@ -856,11 +856,11 @@ class EditBook(widgets.Notebook):
     allPageNames = ['subclass responsibility']
     domainObject = 'subclass responsibility'
     
-    def __init__(self, parent, items, taskFile, settings, items_are_new):
+    def __init__(self, parent, items, taskStore, settings, items_are_new):
         self.items = items
         self.settings = settings
         super(EditBook, self).__init__(parent)
-        self.addPages(taskFile, items_are_new)
+        self.addPages(taskStore, items_are_new)
         self.__load_perspective(items_are_new)
         
     def addPages(self, task_file, items_are_new):
@@ -1066,14 +1066,14 @@ class EffortEditBook(Page):
     domainObject = 'effort'
     columns = 3
     
-    def __init__(self, parent, efforts, taskFile, settings, items_are_new, 
+    def __init__(self, parent, efforts, taskStore, settings, items_are_new, 
                  *args, **kwargs):  # pylint: disable=W0613
-        self._effortList = taskFile.efforts()
-        task_list = taskFile.tasks()
+        self._effortList = taskStore.efforts()
+        task_list = taskStore.tasks()
         self._taskList = task.TaskList(task_list)
         self._taskList.extend([effort.task() for effort in efforts if effort.task() not in task_list])
         self._settings = settings
-        self._taskFile = taskFile
+        self._taskStore = taskStore
         super(EffortEditBook, self).__init__(efforts, parent, *args, **kwargs)
         pub.subscribe(self.__onChoicesConfigChanged, 'settings.feature.sdtcspans_effort')
 
@@ -1224,8 +1224,8 @@ class EffortEditBook(Page):
 
     def onEditTask(self, event):  # pylint: disable=W0613
         task_to_edit = self._taskEntry.GetValue()
-        TaskEditor(None, [task_to_edit], self._settings, self._taskFile.tasks(), 
-            self._taskFile).Show()
+        TaskEditor(None, [task_to_edit], self._settings, self._taskStore.tasks(), 
+            self._taskStore).Show()
 
     def addDescriptionEntry(self):
         # pylint: disable=W0201
@@ -1275,7 +1275,7 @@ class Editor(BalloonTipManager, widgets.Dialog):
                  *args, **kwargs):
         self._items = items
         self._settings = settings
-        self._taskFile = task_file
+        self._taskStore = task_file
         self.__items_are_new = kwargs.pop('items_are_new', False)
         column_name = kwargs.pop('columnName', '') 
         self.__call_after = kwargs.get('call_after', wx.CallAfter)
@@ -1328,14 +1328,14 @@ class Editor(BalloonTipManager, widgets.Dialog):
         effort_page = self._interior.getPage('effort') 
         effort_viewer = effort_page.viewer if effort_page else None 
         self.__new_effort_command = uicommand.EffortNew(viewer=effort_viewer,
-            taskList=self._taskFile.tasks(), 
-            effortList=self._taskFile.efforts(), settings=self._settings)
+            taskList=self._taskStore.tasks(), 
+            effortList=self._taskStore.efforts(), settings=self._settings)
         self.__undo_command.bind(self._interior, wx.ID_UNDO)
         self.__redo_command.bind(self._interior, wx.ID_REDO)
         self.__new_effort_command.bind(self._interior, new_effort_id)
 
     def createInterior(self):
-        return self.EditBookClass(self._panel, self._items, self._taskFile, 
+        return self.EditBookClass(self._panel, self._items, self._taskStore, 
                                   self._settings, self.__items_are_new)
 
     def on_close_editor(self, event):
@@ -1359,7 +1359,7 @@ class Editor(BalloonTipManager, widgets.Dialog):
     def __close_if_item_is_deleted(self, items):
         for item in items:
             if self._interior.isDisplayingItemOrChildOfItem(item) and \
-               not item in self._taskFile:
+               not item in self._taskStore:
                 self.Close()
                 break            
 

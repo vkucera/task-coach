@@ -51,7 +51,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
                 eventType)
 
     def domainObjectsToView(self):
-        return self.taskFile.categories()
+        return self.taskStore.categories()
     
     def curselectionIsInstanceOf(self, class_):
         return class_ == category.Category
@@ -72,7 +72,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
         return widget
 
     def createCategoryPopupMenu(self, localOnly=False):
-        return menu.CategoryPopupMenu(self.parent, self.settings, self.taskFile,
+        return menu.CategoryPopupMenu(self.parent, self.settings, self.taskStore,
                                       self, localOnly)
 
     def _createColumns(self):

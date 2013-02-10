@@ -45,7 +45,7 @@ class ReminderControllerUnderTest(gui.ReminderController):
 class DummyWindow(wx.Frame):
     def __init__(self):
         super(DummyWindow, self).__init__(None)
-        self.taskFile = persistence.TaskFile()
+        self.taskStore = persistence.TaskStore()
     
 
 class ReminderControllerTestCase(test.TestCase):
@@ -61,8 +61,8 @@ class ReminderControllerTestCase(test.TestCase):
         
     def tearDown(self):
         super(ReminderControllerTestCase, self).tearDown()
-        self.dummyWindow.taskFile.close()
-        self.dummyWindow.taskFile.stop()
+        self.dummyWindow.taskStore.close()
+        self.dummyWindow.taskStore.stop()
         
 
 class ReminderControllerTest(ReminderControllerTestCase):

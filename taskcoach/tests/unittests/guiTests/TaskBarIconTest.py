@@ -21,13 +21,13 @@ from taskcoachlib.domain import task, effort, date
 import test
 
 
-class TaskFileMock(object):
+class TaskStoreMock(object):
     def filename(self):
         return 'filename'
 
 
 class MainWindowMock(object):
-    taskFile = TaskFileMock()
+    taskStore = TaskStoreMock()
     
     def restore(self):
         pass  # pragma: no cover
@@ -69,7 +69,7 @@ class TaskBarIconTest(TaskBarIconTestCase):
         
 class TaskBarIconTooltipTestCase(TaskBarIconTestCase):
     def assertTooltip(self, text):
-        expectedTooltip = '%s - %s' % (meta.name, TaskFileMock().filename()) 
+        expectedTooltip = '%s - %s' % (meta.name, TaskStoreMock().filename()) 
         if text:
             expectedTooltip += '\n%s' % text
         self.assertEqual(expectedTooltip, self.icon.tooltip())

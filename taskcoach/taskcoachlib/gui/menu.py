@@ -200,7 +200,7 @@ class DynamicMenuThatGetsUICommandsFromViewer(DynamicMenu):
 
 class MainMenu(wx.MenuBar):
     def __init__(self, mainwindow, settings, iocontroller, viewerContainer,
-                 taskFile):
+                 taskStore):
         super(MainMenu, self).__init__()
         accels = list()
         for menu, text in [
@@ -209,10 +209,10 @@ class MainMenu(wx.MenuBar):
                 (EditMenu(mainwindow, settings, iocontroller,
                           viewerContainer), _('&Edit')),
                 (ViewMenu(mainwindow, settings, viewerContainer,
-                          taskFile), _('&View')),
-                (NewMenu(mainwindow, settings, taskFile,
+                          taskStore), _('&View')),
+                (NewMenu(mainwindow, settings, taskStore,
                          viewerContainer), _('&New')),
-                (ActionMenu(mainwindow, settings, taskFile,
+                (ActionMenu(mainwindow, settings, taskStore,
                             viewerContainer), _('&Actions')),
                 (HelpMenu(mainwindow, settings, iocontroller), _('&Help'))
                 ]:
@@ -373,10 +373,10 @@ activatePreviousViewerId = wx.NewId()
 
 
 class ViewMenu(Menu):
-    def __init__(self, mainwindow, settings, viewerContainer, taskFile):
+    def __init__(self, mainwindow, settings, viewerContainer, taskStore):
         super(ViewMenu, self).__init__(mainwindow)
         self.appendMenu(_('&New viewer'), 
-            ViewViewerMenu(mainwindow, settings, viewerContainer, taskFile),
+            ViewViewerMenu(mainwindow, settings, viewerContainer, taskStore),
                 'viewnewviewer')
         activateNextViewer = uicommand.ActivateViewer(viewer=viewerContainer,
             menuText=_('&Activate next viewer\tCtrl+PgDn'),
@@ -414,10 +414,10 @@ class ViewMenu(Menu):
 
 
 class ViewViewerMenu(Menu):
-    def __init__(self, mainwindow, settings, viewerContainer, taskFile):
+    def __init__(self, mainwindow, settings, viewerContainer, taskStore):
         super(ViewViewerMenu, self).__init__(mainwindow)
         ViewViewer = uicommand.ViewViewer
-        kwargs = dict(viewer=viewerContainer, taskFile=taskFile, settings=settings)
+        kwargs = dict(viewer=viewerContainer, taskStore=taskStore, settings=settings)
         # pylint: disable=W0142
         viewViewerCommands = [\
             ViewViewer(menuText=_('&Task'),
@@ -522,9 +522,9 @@ class ToolBarMenu(Menu):
 
 
 class NewMenu(Menu):
-    def __init__(self, mainwindow, settings, taskFile, viewerContainer):
+    def __init__(self, mainwindow, settings, taskStore, viewerContainer):
         super(NewMenu, self).__init__(mainwindow)
-        tasks = taskFile.tasks()
+        tasks = taskStore.tasks()
         self.appendUICommands(
             uicommand.TaskNew(taskList=tasks, settings=settings),
             uicommand.NewTaskWithSelectedTasksAsPrerequisites(taskList=tasks, 
@@ -538,25 +538,25 @@ class NewMenu(Menu):
         if settings.getboolean('feature', 'effort'):
             self.appendUICommands(
                 uicommand.EffortNew(viewer=viewerContainer, 
-                                    effortList=taskFile.efforts(), 
+                                    effortList=taskStore.efforts(), 
                                     taskList=tasks, settings=settings))
         self.appendUICommands(
-            uicommand.CategoryNew(categories=taskFile.categories(), 
+            uicommand.CategoryNew(categories=taskStore.categories(), 
                                   settings=settings))
         if settings.getboolean('feature', 'notes'):
             self.appendUICommands(
-                uicommand.NoteNew(notes=taskFile.notes(), settings=settings))
+                uicommand.NoteNew(notes=taskStore.notes(), settings=settings))
         self.appendUICommands(
             None,
             uicommand.NewSubItem(viewer=viewerContainer))
 
 
 class ActionMenu(Menu):
-    def __init__(self, mainwindow, settings, taskFile, viewerContainer):
+    def __init__(self, mainwindow, settings, taskStore, viewerContainer):
         super(ActionMenu, self).__init__(mainwindow)
-        tasks = taskFile.tasks()
-        efforts = taskFile.efforts()
-        categories = taskFile.categories()
+        tasks = taskStore.tasks()
+        efforts = taskStore.efforts()
+        categories = taskStore.categories()
         # Generic actions, applicable to all/most domain objects:
         self.appendUICommands(
             uicommand.AddAttachment(viewer=viewerContainer, settings=settings),
@@ -628,10 +628,10 @@ class HelpMenu(Menu):
 
 
 class TaskBarMenu(Menu):
-    def __init__(self, taskBarIcon, settings, taskFile):
+    def __init__(self, taskBarIcon, settings, taskStore):
         super(TaskBarMenu, self).__init__(taskBarIcon)
-        tasks = taskFile.tasks()
-        efforts = taskFile.efforts()
+        tasks = taskStore.tasks()
+        efforts = taskStore.efforts()
         self.appendUICommands(
             uicommand.TaskNew(taskList=tasks, settings=settings))
         self.appendMenu(_('New task from &template'),
@@ -643,11 +643,11 @@ class TaskBarMenu(Menu):
                 uicommand.EffortNew(effortList=efforts, taskList=tasks, 
                                     settings=settings))
         self.appendUICommands(
-            uicommand.CategoryNew(categories=taskFile.categories(), 
+            uicommand.CategoryNew(categories=taskStore.categories(), 
                                   settings=settings))
         if settings.getboolean('feature', 'notes'):
             self.appendUICommands(
-                uicommand.NoteNew(notes=taskFile.notes(), settings=settings))
+                uicommand.NoteNew(notes=taskStore.notes(), settings=settings))
         if settings.getboolean('feature', 'effort'):
             self.appendUICommands(None)  # Separator
             label = _('&Start tracking effort')
@@ -826,12 +826,12 @@ class EffortPopupMenu(Menu):
 
 
 class CategoryPopupMenu(Menu):
-    def __init__(self, mainwindow, settings, taskFile, categoryViewer, 
+    def __init__(self, mainwindow, settings, taskStore, categoryViewer, 
                  localOnly=False):
         super(CategoryPopupMenu, self).__init__(mainwindow)
         categories = categoryViewer.presentation()
-        tasks = taskFile.tasks()
-        notes = taskFile.notes()
+        tasks = taskStore.tasks()
+        notes = taskStore.notes()
         self.appendUICommands(
             uicommand.EditCut(viewer=categoryViewer),
             uicommand.EditCopy(viewer=categoryViewer),

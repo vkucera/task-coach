@@ -52,9 +52,9 @@ class MainWindowTestCase(test.wxTestCase):
         super(MainWindowTestCase, self).setUp()
         self.settings = config.Settings(load=False)
         self.setSettings()
-        self.taskFile = persistence.TaskFile()
+        self.taskStore = persistence.TaskStore()
         self.mainwindow = MainWindowUnderTest(DummyIOController(),
-            self.taskFile, self.settings)
+            self.taskStore, self.settings)
             
     def setSettings(self):
         pass
@@ -66,8 +66,8 @@ class MainWindowTestCase(test.wxTestCase):
         self.mainwindow._idleController.stop()
         del self.mainwindow
         super(MainWindowTestCase, self).tearDown()
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
         
         
 class MainWindowTest(MainWindowTestCase):
@@ -83,8 +83,8 @@ class MainWindowTest(MainWindowTestCase):
         self.assertEqual(meta.name, self.mainwindow.GetTitle())
         
     def testTitle_AfterFilenameChange(self):
-        self.taskFile.setFilename('New filename')
-        self.assertEqual('%s - %s'%(meta.name, self.taskFile.filename()), 
+        self.taskStore.setFilename('New filename')
+        self.assertEqual('%s - %s'%(meta.name, self.taskStore.filename()), 
             self.mainwindow.GetTitle())
         
 

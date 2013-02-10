@@ -29,15 +29,15 @@ import test
 class IOControllerTest(test.TestCase):
     def setUp(self):
         task.Task.settings = self.settings = config.Settings(load=False)
-        self.taskFile = dummy.TaskFile()
-        self.iocontroller = gui.IOController(self.taskFile, 
+        self.taskStore = dummy.TaskStore()
+        self.iocontroller = gui.IOController(self.taskStore, 
             lambda *args: None, self.settings)
         self.filename1 = 'whatever.tsk'
         self.filename2 = 'another.tsk' 
 
     def tearDown(self):
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
         for filename in self.filename1, self.filename2:
             if os.path.exists(filename):
                 os.remove(filename)
@@ -101,8 +101,8 @@ class IOControllerTest(test.TestCase):
         self.doIOAndCheckRecentFiles(filenames, 
                                      expectedFilenames=filenames[1:])
         
-    def testSaveTaskFileWithoutTasksButWithNotes(self):
-        self.taskFile.notes().append(note.Note(subject='Note'))
+    def testSaveTaskStoreWithoutTasksButWithNotes(self):
+        self.taskStore.notes().append(note.Note(subject='Note'))
         
         def saveasReplacement(*args, **kwargs):  # pylint: disable=W0613
             self.saveAsCalled = True  # pylint: disable=W0201
@@ -114,14 +114,14 @@ class IOControllerTest(test.TestCase):
         self.iocontroller.__class__.saveas = originalSaveAs
     
     def testIOErrorOnSave(self):
-        self.taskFile.setFilename(self.filename1)
+        self.taskStore.setFilename(self.filename1)
         
         def saveasReplacement(*args, **kwargs):  # pylint: disable=W0613
             self.saveAsCalled = True
             
         originalSaveAs = self.iocontroller.__class__.saveas
         self.iocontroller.__class__.saveas = saveasReplacement
-        self.taskFile.raiseError = IOError
+        self.taskStore.raiseError = IOError
         
         def showerror(*args, **kwargs):  # pylint: disable=W0613
             self.showerrorCalled = True  # pylint: disable=W0201
@@ -131,7 +131,7 @@ class IOControllerTest(test.TestCase):
         self.iocontroller.__class__.saveas = originalSaveAs
 
     def testIOErrorOnSaveAs(self):
-        self.taskFile.raiseError = IOError
+        self.taskStore.raiseError = IOError
         
         def saveasReplacement(*args, **kwargs):  # pylint: disable=W0613
             self.saveAsCalled = True
@@ -150,53 +150,53 @@ class IOControllerTest(test.TestCase):
     def testSaveSelectionAddsCategories(self):
         task1 = task.Task()
         task2 = task.Task()
-        self.taskFile.tasks().extend([task1, task2])
+        self.taskStore.tasks().extend([task1, task2])
         aCategory = category.Category('A Category')
-        self.taskFile.categories().append(aCategory)
-        for eachTask in self.taskFile.tasks():
+        self.taskStore.categories().append(aCategory)
+        for eachTask in self.taskStore.tasks():
             eachTask.addCategory(aCategory)
             aCategory.addCategorizable(eachTask)
-        self.iocontroller.saveselection(tasks=self.taskFile.tasks(), 
+        self.iocontroller.saveselection(tasks=self.taskStore.tasks(), 
                                         filename=self.filename1)
-        taskFile = persistence.TaskFile()
-        taskFile.setFilename(self.filename1)
-        taskFile.load()
+        taskStore = persistence.TaskStore()
+        taskStore.setFilename(self.filename1)
+        taskStore.load()
         try:
-            self.assertEqual(1, len(taskFile.categories()))
+            self.assertEqual(1, len(taskStore.categories()))
         finally:
-            taskFile.close()
-            taskFile.stop()
+            taskStore.close()
+            taskStore.stop()
      
     def testSaveSelectionAddsParentCategoriesWhenSubcategoriesAreUsed(self):
         task1 = task.Task()
-        self.taskFile.tasks().extend([task1])
+        self.taskStore.tasks().extend([task1])
         aCategory = category.Category('A category')
         aSubCategory = category.Category('A subcategory')
         aCategory.addChild(aSubCategory)
-        self.taskFile.categories().append(aCategory)
+        self.taskStore.categories().append(aCategory)
         task1.addCategory(aSubCategory)
         aSubCategory.addCategorizable(task1)
-        self.iocontroller.saveselection(tasks=self.taskFile.tasks(), 
+        self.iocontroller.saveselection(tasks=self.taskStore.tasks(), 
                                         filename=self.filename1)
-        taskFile = persistence.TaskFile()
-        taskFile.setFilename(self.filename1)
-        taskFile.load()
-        self.assertEqual(2, len(taskFile.categories()))
+        taskStore = persistence.TaskStore()
+        taskStore.setFilename(self.filename1)
+        taskStore.load()
+        self.assertEqual(2, len(taskStore.categories()))
         
     def testIOErrorOnSaveSave(self):
-        self.taskFile.raiseError = IOError
-        self.taskFile.setFilename(self.filename1)
+        self.taskStore.raiseError = IOError
+        self.taskStore.setFilename(self.filename1)
         
         def showerror(*args, **kwargs):  # pylint: disable=W0613
             self.showerrorCalled = True
             
-        self.taskFile.tasks().append(task.Task())
-        self.iocontroller._saveSave(self.taskFile, showerror)  # pylint: disable=W0212
+        self.taskStore.tasks().append(task.Task())
+        self.iocontroller._saveSave(self.taskStore, showerror)  # pylint: disable=W0212
         self.failUnless(self.showerrorCalled)
 
     def testIOErrorOnExport(self):
-        self.taskFile.setFilename(self.filename1)
-        self.taskFile.tasks().append(task.Task())
+        self.taskStore.setFilename(self.filename1)
+        self.taskStore.tasks().append(task.Task())
         
         def showerror(*args, **kwargs):  # pylint: disable=W0613
             self.showerrorCalled = True
@@ -209,12 +209,12 @@ class IOControllerTest(test.TestCase):
         self.failUnless(self.showerrorCalled)
 
     def testMerge(self):
-        mergeFile = persistence.TaskFile()
+        mergeFile = persistence.TaskStore()
         mergeFile.setFilename(self.filename2)
         mergeFile.tasks().append(task.Task(subject='Task to merge'))
         mergeFile.save()
         mergeFile.close()
-        targetFile = persistence.TaskFile()
+        targetFile = persistence.TaskStore()
         iocontroller = gui.IOController(targetFile, lambda *args: None, 
                                         self.settings)
         iocontroller.merge(self.filename2)
@@ -227,7 +227,7 @@ class IOControllerTest(test.TestCase):
             targetFile.stop()
         
     def testOpenWhenLockFailed(self):
-        self.taskFile.raiseError = lockfile.LockFailed
+        self.taskStore.raiseError = lockfile.LockFailed
         
         def askOpenUnlocked(*args, **kwargs):  # pylint: disable=W0613
             self.askOpenUnlockedCalled = True 
@@ -237,7 +237,7 @@ class IOControllerTest(test.TestCase):
         self.failUnless(self.askOpenUnlockedCalled)
 
     def testOpenWhenAlreadyLocked(self):
-        self.taskFile.raiseError = lockfile.LockTimeout
+        self.taskStore.raiseError = lockfile.LockTimeout
         
         def askBreakLock(*args, **kwargs):  # pylint: disable=W0613
             self.askBreakLockCalled = True
@@ -260,13 +260,13 @@ class IOControllerOverwriteExistingFileTest(test.TestCase):
         
         wx.MessageBox = messageBox
         task.Task.settings = self.settings = config.Settings(load=False)
-        self.taskFile = dummy.TaskFile()
-        self.iocontroller = gui.IOController(self.taskFile, 
+        self.taskStore = dummy.TaskStore()
+        self.iocontroller = gui.IOController(self.taskStore, 
             lambda *args: None, self.settings)
 
     def tearDown(self):
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
         wx.FileSelector = self.originalFileSelector
         wx.MessageBox = self.originalMessageBox
         super(IOControllerOverwriteExistingFileTest, self).tearDown()

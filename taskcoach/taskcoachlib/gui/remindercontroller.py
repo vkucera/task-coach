@@ -108,7 +108,7 @@ class ReminderController(object):
             # reminder back to its original date-time, which is now in the past.
         if dialog.openTaskAfterClose:
             editTask = editor.TaskEditor(self.__mainWindow, [taskWithReminder], 
-                self.settings, self.taskList, self.__mainWindow.taskFile, 
+                self.settings, self.taskList, self.__mainWindow.taskStore, 
                 bitmap='edit')
             editTask.Show(show)
         else:

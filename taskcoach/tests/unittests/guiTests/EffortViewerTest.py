@@ -36,30 +36,30 @@ class EffortViewerForSpecificTasksTest(test.wxTestCase):
         super(EffortViewerForSpecificTasksTest, self).setUp()
         self.settings = config.Settings(load=False)
         task.Task.settings = self.settings
-        self.taskFile = persistence.TaskFile()
+        self.taskStore = persistence.TaskStore()
         self.task1 = task.Task('Task 1')
         self.task2 = task.Task('Task 2')
-        self.taskFile.tasks().extend([self.task1, self.task2])
+        self.taskStore.tasks().extend([self.task1, self.task2])
         self.effort1 = effort.Effort(self.task1, date.DateTime(2006, 1, 1),
             date.DateTime(2006, 1, 2))
         self.task1.addEffort(self.effort1)
         self.effort2 = effort.Effort(self.task2, date.DateTime(2006, 1, 2),
             date.DateTime(2006, 1, 3))
         self.task2.addEffort(self.effort2)
-        self.viewer = EffortViewerUnderTest(self.frame, self.taskFile,  
+        self.viewer = EffortViewerUnderTest(self.frame, self.taskStore,  
             self.settings, tasksToShowEffortFor=task.TaskList([self.task1]))
 
     def tearDown(self):
         super(EffortViewerForSpecificTasksTest, self).tearDown()
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
 
     def testViewerShowsOnlyEffortForSpecifiedTask(self):
         self.assertEqual([self.effort1], self.viewer.presentation())
         
     def testEffortEditorDoesUseAllTasks(self):
         dialog = self.viewer.newItemDialog()
-        self.assertEqual(2, len(dialog._taskFile.tasks()))  # pylint: disable=W0212
+        self.assertEqual(2, len(dialog._taskStore.tasks()))  # pylint: disable=W0212
         
     def testViewerKeepsShowingOnlyEffortForSpecifiedTasksWhenSwitchingAggregation(self):
         self.settings.settext(self.viewer.settingsSection(), 'aggregation', 
@@ -71,26 +71,26 @@ class EffortViewerStatusMessageTest(test.wxTestCase):
     def setUp(self):
         super(EffortViewerStatusMessageTest, self).setUp()
         self.settings = config.Settings(load=False)
-        self.taskFile = persistence.TaskFile()
+        self.taskStore = persistence.TaskStore()
         self.task = task.Task()
-        self.taskFile.tasks().append(self.task)
+        self.taskStore.tasks().append(self.task)
         self.effort1 = effort.Effort(self.task, date.DateTime(2006, 1, 1),
             date.DateTime(2006, 1, 2))
         self.effort2 = effort.Effort(self.task, date.DateTime(2006, 1, 2),
             date.DateTime(2006, 1, 3))
-        self.viewer = EffortViewerUnderTest(self.frame, self.taskFile,  
+        self.viewer = EffortViewerUnderTest(self.frame, self.taskStore,  
             self.settings)
 
     def tearDown(self):
         super(EffortViewerStatusMessageTest, self).tearDown()
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
 
     def assertStatusMessages(self, message1, message2):
         self.assertEqual((message1, message2), self.viewer.statusMessages())
         
     def testStatusMessage_EmptyTaskList(self):
-        self.taskFile.tasks().clear()
+        self.taskStore.tasks().clear()
         self.assertStatusMessages('Effort: 0 selected, 0 visible, 0 total', 
             'Status: 0 tracking')
             
@@ -140,20 +140,20 @@ class EffortViewerTest(test.wxTestCase):
     def setUp(self):
         super(EffortViewerTest, self).setUp()
         self.settings = config.Settings(load=False)
-        self.taskFile = persistence.TaskFile()
+        self.taskStore = persistence.TaskStore()
         self.task = task.Task('task')
-        self.taskFile.tasks().append(self.task)
+        self.taskStore.tasks().append(self.task)
         self.effort1 = effort.Effort(self.task, date.DateTime(2006, 1, 1),
             date.DateTime(2006, 1, 2))
         self.effort2 = effort.Effort(self.task, date.DateTime(2006, 1, 2),
             date.DateTime(2006, 1, 3))
-        self.viewer = gui.viewer.EffortViewer(self.frame, self.taskFile, 
+        self.viewer = gui.viewer.EffortViewer(self.frame, self.taskStore, 
                                               self.settings)
 
     def tearDown(self):
         super(EffortViewerTest, self).tearDown()
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
 
     @test.skipOnPlatform('__WXMSW__')  # GetItemBackgroundColour doesn't work on Windows
     def testEffortBackgroundColor(self):  # pragma: no cover
@@ -179,7 +179,7 @@ class EffortViewerTest(test.wxTestCase):
         child = task.Task('child')
         self.task.addChild(child)
         child.setParent(self.task)
-        self.taskFile.tasks().append(child)
+        self.taskStore.tasks().append(child)
         child.addEffort(effort.Effort(child))
         self.assertEqual(2, len(self.viewer.presentation()))
         self.viewer.presentation().setSearchFilter(self.task.subject())
@@ -205,18 +205,18 @@ class EffortViewerAggregationTestCase(test.wxTestCase):
     aggregation = 'Subclass responsibility'
     
     def createViewer(self):
-        return gui.viewer.EffortViewer(self.frame, self.taskFile, self.settings)
+        return gui.viewer.EffortViewer(self.frame, self.taskStore, self.settings)
 
     def setUp(self):
         super(EffortViewerAggregationTestCase, self).setUp()
         task.Task.settings = self.settings = config.Settings(load=False)
         self.settings.set('effortviewer', 'aggregation', self.aggregation)
 
-        self.taskFile = persistence.TaskFile()
+        self.taskStore = persistence.TaskStore()
         self.viewer = self.createViewer()
         self.task = task.Task('Task')
         self.task2 = task.Task('Task2')
-        self.taskFile.tasks().extend([self.task, self.task2])
+        self.taskStore.tasks().extend([self.task, self.task2])
         self.task.addEffort(effort.Effort(self.task, 
             date.DateTime(2008, 7, 16, 10, 0, 0), 
             date.DateTime(2008, 7, 16, 11, 0, 0)))
@@ -235,8 +235,8 @@ class EffortViewerAggregationTestCase(test.wxTestCase):
 
     def tearDown(self):
         super(EffortViewerAggregationTestCase, self).tearDown()
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
 
     def switchAggregation(self):
         aggregations = ['details', 'day', 'week', 'month']
@@ -294,7 +294,7 @@ class CommonTestsMixin(object):
         self.assertEqual(expectedNumberOfItems, self.viewer.size())
     
     def testDeleteTask(self):
-        self.taskFile.tasks().remove(self.task2)
+        self.taskStore.tasks().remove(self.task2)
         expectedNumberOfItems = self.expectedNumberOfItems - 1
         self.assertEqual(expectedNumberOfItems, self.viewer.size())
         
@@ -371,8 +371,8 @@ class CommonTestsMixin(object):
         
     def testStopEffortTracking(self):
         self.task.addEffort(effort.Effort(self.task))
-        stopUICommand = gui.uicommand.EffortStop(effortList=self.taskFile.efforts(),
-                                                 taskList=self.taskFile.tasks())
+        stopUICommand = gui.uicommand.EffortStop(effortList=self.taskStore.efforts(),
+                                                 taskList=self.taskStore.tasks())
         stopUICommand.doCommand()
         self.failIf(self.task.isBeingTracked())
     
@@ -410,16 +410,16 @@ class EffortViewerRenderTestMixin(object):
     aggregation = 'Subclass responsibility'
 
     def createViewer(self):
-        return gui.viewer.EffortViewer(self.frame, self.taskFile, self.settings)
+        return gui.viewer.EffortViewer(self.frame, self.taskStore, self.settings)
 
     def setUp(self):
         super(EffortViewerRenderTestMixin, self).setUp()
         task.Task.settings = self.settings = config.Settings(load=False)
         self.settings.set('effortviewer', 'aggregation', self.aggregation)
 
-        self.taskFile = persistence.TaskFile()
+        self.taskStore = persistence.TaskStore()
         self.task = task.Task('task')
-        self.taskFile.tasks().append(self.task)
+        self.taskStore.tasks().append(self.task)
         self.midnight = date.Now().startOfDay()
         self.viewer = self.createViewer()
 

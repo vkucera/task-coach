@@ -106,7 +106,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,  # pylint: disable=W0223
         self.toolbar.loadPerspective(self.toolbar.perspective(), cache=False)
 
     def domainObjectsToView(self):
-        return self.taskFile.tasks()
+        return self.taskStore.tasks()
 
     def isShowingTasks(self): 
         return True
@@ -141,7 +141,7 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable=W0223
             del self.minuteRefresher
         
     def newItemDialog(self, *args, **kwargs):
-        kwargs['categories'] = self.taskFile.categories().filteredCategories()
+        kwargs['categories'] = self.taskStore.categories().filteredCategories()
         return super(BaseTaskTreeViewer, self).newItemDialog(*args, **kwargs)
     
     def editItemDialog(self, items, bitmap, columnName='', 
@@ -151,7 +151,7 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable=W0223
                 columnName=columnName, items_are_new=items_are_new)
         else:
             return dialog.editor.EffortEditor(wx.GetTopLevelParent(self),
-                items, self.settings, self.taskFile.efforts(), self.taskFile,  
+                items, self.settings, self.taskStore.efforts(), self.taskStore,  
                 bitmap=bitmap, items_are_new=items_are_new)
             
     def itemEditorClass(self):
@@ -199,8 +199,8 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable=W0223
 
     def createTaskPopupMenu(self):
         return menu.TaskPopupMenu(self.parent, self.settings,
-                                  self.presentation(), self.taskFile.efforts(),
-                                  self.taskFile.categories(), self)
+                                  self.presentation(), self.taskStore.efforts(),
+                                  self.taskStore.categories(), self)
 
     def createCreationToolBarUICommands(self):
         return (uicommand.TaskNew(taskList=self.presentation(),
@@ -223,9 +223,9 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable=W0223
                 # presentation.
                 None,
                 uicommand.EffortStart(viewer=self, 
-                                      taskList=self.taskFile.tasks()),
-                uicommand.EffortStop(effortList=self.taskFile.efforts(),
-                                     taskList=self.taskFile.tasks()))
+                                      taskList=self.taskStore.tasks()),
+                uicommand.EffortStop(effortList=self.taskStore.efforts(),
+                                     taskList=self.taskStore.tasks()))
         return uiCommands + super(BaseTaskTreeViewer, self).createActionToolBarUICommands()
     
     def createModeToolBarUICommands(self):

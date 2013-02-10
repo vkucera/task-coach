@@ -25,22 +25,22 @@ class TreeViewerTest(test.wxTestCase):
     def setUp(self):
         super(TreeViewerTest, self).setUp()
         task.Task.settings = self.settings = config.Settings(load=False)
-        self.taskFile = persistence.TaskFile()
-        self.viewer = gui.viewer.TaskViewer(self.frame, self.taskFile,
+        self.taskStore = persistence.TaskStore()
+        self.viewer = gui.viewer.TaskViewer(self.frame, self.taskStore,
             self.settings)
         self.expansionContext = self.viewer.settingsSection()
         self.parent = task.Task('parent')
         self.child = task.Task('child')
         self.parent.addChild(self.child)
         self.child.setParent(self.parent)
-        self.taskFile.tasks().extend([self.parent, self.child])
+        self.taskStore.tasks().extend([self.parent, self.child])
         self.viewer.refresh()
         self.widget = self.viewer.widget
 
     def tearDown(self):
         super(TreeViewerTest, self).tearDown()
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
 
     def firstItem(self):
         root = self.widget.GetRootItem()

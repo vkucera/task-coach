@@ -184,7 +184,7 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
                     textParts.append(plural % count)
         
         textPart = ', '.join(textParts)
-        filename = os.path.basename(self.__window.taskFile.filename())        
+        filename = os.path.basename(self.__window.taskStore.filename())        
         namePart = u'%s - %s' % (meta.name, filename) if filename else meta.name
         text = u'%s\n%s' % (namePart, textPart) if textPart else namePart
         

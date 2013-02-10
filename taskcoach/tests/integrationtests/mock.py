@@ -53,13 +53,13 @@ class App(application.Application):
 
     def addTask(self):
         self.task = task.Task('Task')
-        self.taskFile.tasks().extend([self.task])
+        self.taskStore.tasks().extend([self.task])
 
     def addTasks(self):
         # pylint: disable=W0201
         self.parent = task.Task('Parent')
         self.child = task.Task('Child')
         self.parent.addChild(self.child)
-        self.taskFile.tasks().extend([self.parent])
+        self.taskStore.tasks().extend([self.parent])
 
 

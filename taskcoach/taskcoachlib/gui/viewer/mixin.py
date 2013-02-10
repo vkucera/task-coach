@@ -105,13 +105,13 @@ class FilterableViewerMixin(object):
             (clearUICommand,)
 
     def resetFilter(self):
-        self.taskFile.categories().resetAllFilteredCategories()
+        self.taskStore.categories().resetAllFilteredCategories()
 
     def hasFilter(self):
-        return bool(self.taskFile.categories().filteredCategories())
+        return bool(self.taskStore.categories().filteredCategories())
 
     def createCategoryFilterCommands(self):
-        categories = self.taskFile.categories()
+        categories = self.taskStore.categories()
         commands = [_('&Categories'), 
                 uicommand.ResetCategoryFilter(categories=categories)]
         if categories:
@@ -139,7 +139,7 @@ class FilterableViewerForCategorizablesMixin(FilterableViewerMixin):
         filterOnlyWhenAllCategoriesMatch = self.settings.getboolean('view', 
             'categoryfiltermatchall')
         return category.filter.CategoryFilter(items, 
-            categories=self.taskFile.categories(), treeMode=self.isTreeViewer(), 
+            categories=self.taskStore.categories(), treeMode=self.isTreeViewer(), 
             filterOnlyWhenAllCategoriesMatch=filterOnlyWhenAllCategoriesMatch)
 
 

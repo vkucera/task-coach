@@ -40,8 +40,8 @@ class UpdatePerSecondViewerTestsMixin(object):
         super(UpdatePerSecondViewerTestsMixin, self).setUp()
         task.Task.settings = self.settings = config.Settings(load=False)
         self.settings.set('taskviewer', 'columns', "['timeSpent']")
-        self.taskFile = persistence.TaskFile()
-        self.taskList = task.sorter.Sorter(self.taskFile.tasks(), sortBy='dueDateTime')
+        self.taskStore = persistence.TaskStore()
+        self.taskList = task.sorter.Sorter(self.taskStore.tasks(), sortBy='dueDateTime')
         self.updateViewer = self.createUpdateViewer()
         self.trackedTask = task.Task(subject='tracked')
         self.trackedEffort = effort.Effort(self.trackedTask)
@@ -50,11 +50,11 @@ class UpdatePerSecondViewerTestsMixin(object):
 
     def tearDown(self):
         super(UpdatePerSecondViewerTestsMixin, self).tearDown()
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
 
     def createUpdateViewer(self):
-        return self.ListViewerClass(self.frame, self.taskFile, self.settings)
+        return self.ListViewerClass(self.frame, self.taskStore, self.settings)
         
     def testViewerHasRegisteredWithClock(self):
         self.failUnless(date.Scheduler().get_jobs())

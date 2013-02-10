@@ -36,27 +36,27 @@ class EffortEditorTest(test.wxTestCase):
     def setUp(self):
         super(EffortEditorTest, self).setUp()
         task.Task.settings = self.settings = config.Settings(load=False)
-        self.taskFile = persistence.TaskFile()
-        self.taskList = self.taskFile.tasks()
-        self.effortList = self.taskFile.efforts()
+        self.taskStore = persistence.TaskStore()
+        self.taskList = self.taskStore.tasks()
+        self.effortList = self.taskStore.efforts()
         self.task = task.Task('task')
         self.effort = effort.Effort(self.task)
         self.task.addEffort(self.effort)
         self.task2 = task.Task('task2')
-        self.taskFile.tasks().extend([self.task, self.task2])
+        self.taskStore.tasks().extend([self.task, self.task2])
         self.editor = EditorUnderTest(self.frame, 
-            list(self.effortList), self.settings, self.taskFile.efforts(), 
-            self.taskFile, raiseDialog=False)
+            list(self.effortList), self.settings, self.taskStore.efforts(), 
+            self.taskStore, raiseDialog=False)
 
     def tearDown(self):
         super(EffortEditorTest, self).tearDown()
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
 
     def createEditor(self):
         return EditorUnderTest(self.frame,
-            list(self.taskFile.efforts()), self.settings, 
-            self.taskFile.efforts(), self.taskFile)        
+            list(self.taskStore.efforts()), self.settings, 
+            self.taskStore.efforts(), self.taskStore)        
 
     # pylint: disable=W0201,W0212
         

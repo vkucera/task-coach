@@ -41,7 +41,7 @@ def turn_on_double_buffering_on_windows(window):
 
 class MainWindow(DeferredCallMixin, PowerStateMixin, BalloonTipManager,
                  widgets.AuiManagedFrameWithDynamicCenterPane):
-    def __init__(self, iocontroller, taskFile, settings, *args, **kwargs):
+    def __init__(self, iocontroller, taskStore, settings, *args, **kwargs):
         self.__splash = kwargs.pop('splash', None)
         super(MainWindow, self).__init__(None, -1, '', *args, **kwargs)
         # This prevents the viewers from flickering on Windows 7 when refreshed:
@@ -49,7 +49,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, BalloonTipManager,
             turn_on_double_buffering_on_windows(self)
         self.__dimensions_tracker = windowdimensionstracker.WindowDimensionsTracker(self, settings)
         self.iocontroller = iocontroller
-        self.taskFile = taskFile
+        self.taskStore = taskStore
         self.settings = settings
         self.Bind(wx.EVT_CLOSE, self.onClose)
         self.Bind(wx.EVT_ICONIZE, self.onIconify)
@@ -63,7 +63,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, BalloonTipManager,
 
         self._idleController = idlecontroller.IdleController(self,
                                                              self.settings,
-                                                             self.taskFile.efforts())
+                                                             self.taskStore.efforts())
 
         wx.CallAfter(self.checkXFCE4)
 
@@ -79,7 +79,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, BalloonTipManager,
 
     def _create_window_components(self):  # Not private for test purposes
         self._create_viewer_container()
-        viewer.addViewers(self.viewer, self.taskFile, self.settings)
+        viewer.addViewers(self.viewer, self.taskStore, self.settings)
         self._create_status_bar()
         self.__create_menu_bar()
         self.__create_reminder_controller()
@@ -95,20 +95,20 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, BalloonTipManager,
     def __create_menu_bar(self):
         from taskcoachlib.gui import menu  # pylint: disable=W0404
         self.SetMenuBar(menu.MainMenu(self, self.settings, self.iocontroller, 
-                                      self.viewer, self.taskFile))
+                                      self.viewer, self.taskStore))
     
     def __create_reminder_controller(self):
         # pylint: disable=W0201
         self.reminderController = \
-            remindercontroller.ReminderController(self, self.taskFile.tasks(),
-                self.taskFile.efforts(), self.settings)
+            remindercontroller.ReminderController(self, self.taskStore.tasks(),
+                self.taskStore.efforts(), self.settings)
         
     def addPane(self, page, caption, floating=False):  # pylint: disable=W0221
         name = page.settingsSection()
         super(MainWindow, self).addPane(page, caption, name, floating=floating)
         
     def __init_window(self):
-        self.setTitle(self.taskFile.filename())
+        self.setTitle(self.taskStore.filename())
         self.SetIcons(artprovider.iconBundle('taskcoach'))
         self.displayMessage(_('Welcome to %(name)s version %(version)s') % \
             {'name': meta.name, 'version': meta.version}, pane=1)
@@ -166,7 +166,7 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
         return perspective_viewer_count != settings_viewer_count
     
     def __register_for_window_component_changes(self):
-        pub.subscribe(self.setTitle, 'taskfile.filenameChanged')
+        pub.subscribe(self.setTitle, 'taskstore.filenameChanged')
         pub.subscribe(self.showStatusBar, 'settings.view.statusbar')
         pub.subscribe(self.showToolBar, 'settings.view.toolbar')
         self.Bind(aui.EVT_AUI_PANE_CLOSE, self.onCloseToolBar)
@@ -206,7 +206,7 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
         else:
             if application.Application().quitApplication():
                 event.Skip()
-                self.taskFile.stop()
+                self.taskStore.stop()
                 self._idleController.stop()
 
     def restore(self, event):  # pylint: disable=W0613
@@ -250,9 +250,9 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
         if self.settings.getboolean('feature', 'effort'):
             uiCommands.extend([ 
                 None, 
-                uicommand.EffortStartButton(taskList=self.taskFile.tasks()), 
-                uicommand.EffortStop(effortList=self.taskFile.efforts(),
-                                     taskList=self.taskFile.tasks())])
+                uicommand.EffortStartButton(taskList=self.taskStore.tasks()), 
+                uicommand.EffortStop(effortList=self.taskStore.efforts(),
+                                     taskList=self.taskStore.tasks())])
         return uiCommands
 
     def getToolBarPerspective(self):

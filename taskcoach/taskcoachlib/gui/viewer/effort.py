@@ -40,7 +40,7 @@ class EffortViewer(base.ListViewer,
     defaultBitmap = 'clock_icon'
     SorterClass = effort.EffortSorter
     
-    def __init__(self, parent, taskFile, settings, *args, **kwargs):        
+    def __init__(self, parent, taskStore, settings, *args, **kwargs):        
         kwargs.setdefault('settingsSection', 'effortviewer')
         self.__tasksToShowEffortFor = kwargs.pop('tasksToShowEffortFor', [])
         self.aggregation = 'details'  # Temporary value, will be properly set below
@@ -48,7 +48,7 @@ class EffortViewer(base.ListViewer,
         self.__hiddenTotalColumns = []
         self.__columnUICommands = None
         self.__domainObjectsToView = None
-        super(EffortViewer, self).__init__(parent, taskFile, settings, *args, **kwargs)
+        super(EffortViewer, self).__init__(parent, taskStore, settings, *args, **kwargs)
         self.secondRefresher = refresher.SecondRefresher(self,
             effort.Effort.trackingChangedEventType())
         self.aggregation = settings.get(self.settingsSection(), 'aggregation')
@@ -94,13 +94,13 @@ class EffortViewer(base.ListViewer,
             if self.__displayingNewTasks():
                 tasks = self.__tasksToShowEffortFor
             else:
-                tasks = domain.base.SelectedItemsFilter(self.taskFile.tasks(), 
+                tasks = domain.base.SelectedItemsFilter(self.taskStore.tasks(), 
                                                         selectedItems=self.__tasksToShowEffortFor)
             self.__domainObjectsToView = tasks
         return self.__domainObjectsToView
     
     def __displayingNewTasks(self):
-        return any([task not in self.taskFile.tasks() for task in self.__tasksToShowEffortFor])
+        return any([task not in self.taskStore.tasks() for task in self.__tasksToShowEffortFor])
     
     def detach(self):
         super(EffortViewer, self).detach()
@@ -174,8 +174,8 @@ class EffortViewer(base.ListViewer,
     def createWidget(self):
         imageList = self.createImageList()  # Has side-effects
         self._columns = self._createColumns()  # pylint: disable=W0201
-        itemPopupMenu = menu.EffortPopupMenu(self.parent, self.taskFile.tasks(),
-            self.taskFile.efforts(), self.settings, self)
+        itemPopupMenu = menu.EffortPopupMenu(self.parent, self.taskStore.tasks(),
+            self.taskStore.efforts(), self.settings, self)
         columnPopupMenu = menu.EffortViewerColumnPopupMenu(self)
         self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
         widget = widgets.VirtualListCtrl(self, self.columns(), self.onSelect,
@@ -308,13 +308,13 @@ class EffortViewer(base.ListViewer,
     
     def createCreationToolBarUICommands(self):
         return (uicommand.EffortNew(viewer=self, effortList=self.presentation(),
-                                    taskList=self.taskFile.tasks(), 
+                                    taskList=self.taskStore.tasks(), 
                                     settings=self.settings),)
         
     def createActionToolBarUICommands(self):
-        tasks = self.taskFile.tasks()
+        tasks = self.taskStore.tasks()
         return (uicommand.EffortStartForEffort(viewer=self, taskList=tasks),
-                uicommand.EffortStop(effortList=self.taskFile.efforts(), 
+                uicommand.EffortStop(effortList=self.taskStore.efforts(), 
                                      taskList=tasks))
                 
     def createModeToolBarUICommands(self):
@@ -377,7 +377,7 @@ class EffortViewer(base.ListViewer,
     def statusMessages(self):
         status1 = _('Effort: %d selected, %d visible, %d total') % \
             (len(self.curselection()), len(self.presentation()), 
-             len(self.taskFile.efforts()))         
+             len(self.taskStore.efforts()))         
         status2 = _('Status: %d tracking') % \
             self.presentation().nrBeingTracked()
         return status1, status2

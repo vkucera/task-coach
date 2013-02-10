@@ -36,9 +36,9 @@ class ViewerTest(test.wxTestCase):
     def setUp(self):
         super(ViewerTest, self).setUp()
         self.settings = config.Settings(load=False)
-        self.taskFile = persistence.TaskFile()
+        self.taskStore = persistence.TaskStore()
         self.task = task.Task('task')
-        self.taskFile.tasks().append(self.task)
+        self.taskStore.tasks().append(self.task)
         self.window = Window(self.frame)
         self.viewerContainer = gui.viewer.ViewerContainer(self.window, 
             self.settings)
@@ -47,11 +47,11 @@ class ViewerTest(test.wxTestCase):
 
     def tearDown(self):
         super(ViewerTest, self).tearDown()
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
 
     def createViewer(self):
-        return gui.viewer.TaskViewer(self.window, self.taskFile,
+        return gui.viewer.TaskViewer(self.window, self.taskStore,
             self.settings)
 
     def testSelectAllViaWidget(self):
@@ -60,7 +60,7 @@ class ViewerTest(test.wxTestCase):
         self.assertEqual([self.task], self.viewer.curselection())
         
     def testSelectAllViaWidgetWithMultipleItems(self):
-        self.taskFile.tasks().append(task.Task('second'))
+        self.taskStore.tasks().append(task.Task('second'))
         self.viewer.widget.select_all()
         self.viewer.updateSelection()
         self.assertEqual(2, len(self.viewer.curselection()))
@@ -71,38 +71,38 @@ class ViewerTest(test.wxTestCase):
         self.assertEqual([self.task], self.viewer.curselection())
         
     def testSelectAllWithMultipleItems(self):
-        self.taskFile.tasks().append(task.Task('second'))
+        self.taskStore.tasks().append(task.Task('second'))
         self.viewer.select_all()
         self.viewer.endOfSelectAll()
         self.assertEqual(2, len(self.viewer.curselection()))
         
     def testSelectNextItemAfterDeletingSelection(self):
         secondTask = task.Task('second')
-        self.taskFile.tasks().append(secondTask)
+        self.taskStore.tasks().append(secondTask)
         self.viewer.select([self.task])
-        self.taskFile.tasks().remove(self.task)
+        self.taskStore.tasks().remove(self.task)
         self.assertEqual([secondTask], self.viewer.curselection())
 
     def testSelectParentAfterDeletingSelectedChild(self):
         secondTask = task.Task('second')
-        self.taskFile.tasks().append(secondTask)
+        self.taskStore.tasks().append(secondTask)
         child = task.Task('child')
         self.task.addChild(child)
         child.setParent(self.task)
-        self.taskFile.tasks().append(child)
+        self.taskStore.tasks().append(child)
         self.viewer.select([child])
-        self.taskFile.tasks().remove(child)
+        self.taskStore.tasks().remove(child)
         self.assertEqual([self.task], self.viewer.curselection())
         
     def testDontChangeSelectionAfterDeletingAnItemThatIsNotSelected(self):
         secondTask = task.Task('second')
-        self.taskFile.tasks().append(secondTask)
+        self.taskStore.tasks().append(secondTask)
         child = task.Task('child')
         self.task.addChild(child)
         child.setParent(self.task)
-        self.taskFile.tasks().append(child)
+        self.taskStore.tasks().append(child)
         self.viewer.select([secondTask])
-        self.taskFile.tasks().remove(child)
+        self.taskStore.tasks().remove(child)
         self.assertEqual([secondTask], self.viewer.curselection())
           
     def testFirstViewerInstanceSettingsSection(self):
@@ -320,16 +320,16 @@ class FilterableViewerForTasks(test.TestCase):
 
     def tearDown(self):
         super(FilterableViewerForTasks, self).tearDown()
-        self.viewer.taskFile.close()
-        self.viewer.taskFile.stop()
+        self.viewer.taskStore.close()
+        self.viewer.taskStore.stop()
 
     def createViewer(self):
         viewer = FilterableViewerForTasksUnderTest()
         # pylint: disable=W0201
-        viewer.taskFile = persistence.TaskFile()
+        viewer.taskStore = persistence.TaskStore()
         viewer.settings = self.settings
         viewer.settingsSection = lambda: 'taskviewer'
-        presentation = viewer.createFilter(viewer.taskFile.tasks())
+        presentation = viewer.createFilter(viewer.taskStore.tasks())
         viewer.presentation = lambda: presentation
         return viewer
 
@@ -495,32 +495,32 @@ class FilterableViewerForTasks(test.TestCase):
 
 class ViewerBaseClassTest(test.wxTestCase):
     def testNotImplementedError(self):
-        taskFile = persistence.TaskFile()
+        taskStore = persistence.TaskStore()
         try:
             try:
-                gui.viewer.base.Viewer(self.frame, taskFile,
+                gui.viewer.base.Viewer(self.frame, taskStore,
                                        None, settingsSection='bla')
                 self.fail('Expected NotImplementedError') # pragma: no cover
             except NotImplementedError:
                 pass
         finally:
-            taskFile.close()
-            taskFile.stop()
+            taskStore.close()
+            taskStore.stop()
 
 
 class ViewerIteratorTestCase(test.wxTestCase):
     treeMode = 'Subclass responsibility'
     
     def createViewer(self):
-        return gui.viewer.TaskViewer(self.window, self.taskFile,
+        return gui.viewer.TaskViewer(self.window, self.taskStore,
             self.settings)
 
     def setUp(self):
         super(ViewerIteratorTestCase, self).setUp()
         self.settings = config.Settings(load=False)
         task.Task.settings = self.settings
-        self.taskFile = persistence.TaskFile()
-        self.taskList = self.taskFile.tasks()
+        self.taskStore = persistence.TaskStore()
+        self.taskList = self.taskStore.tasks()
         self.window = AuiManagedFrameWithDynamicCenterPane(self.frame)
         self.viewer = self.createViewer()
         self.settings.setboolean(self.viewer.settingsSection(), 'treemode',
@@ -529,8 +529,8 @@ class ViewerIteratorTestCase(test.wxTestCase):
 
     def tearDown(self):
         super(ViewerIteratorTestCase, self).tearDown()
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
 
     def getItemsFromIterator(self):
         return list(self.viewer.visibleItems()) # pylint: disable=E1101
@@ -587,13 +587,13 @@ class ListViewerIteratorTest(ViewerIteratorTestCase, ViewerIteratorTestsMixin):
 class ViewerWithColumnsTest(test.wxTestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
-        self.taskFile = persistence.TaskFile()
-        self.viewer = gui.viewer.TaskViewer(self.frame, self.taskFile, self.settings)
+        self.taskStore = persistence.TaskStore()
+        self.viewer = gui.viewer.TaskViewer(self.frame, self.taskStore, self.settings)
 
     def tearDown(self):
         super(ViewerWithColumnsTest, self).tearDown()
-        self.taskFile.close()
-        self.taskFile.stop()
+        self.taskStore.close()
+        self.taskStore.stop()
 
     def testDefaultColumnWidth(self):
         expectedWidth = hypertreelist._DEFAULT_COL_WIDTH # pylint: disable=W0212
