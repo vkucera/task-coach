@@ -66,6 +66,11 @@ class ChangeSynchronizer(object):
         self._allChanges[self._monitor.guid()] = self._monitor
 
         for memList, diskList in lists:
+            # Map id to object
+            self.addIds(memList, self.memMap, self.memOwnerMap)
+            self.addIds(diskList, self.diskMap, self.diskOwnerMap)
+
+        for memList, diskList in lists:
             self.mergeObjects(memList, diskList)
 
         # Cleanup monitor
@@ -79,28 +84,25 @@ class ChangeSynchronizer(object):
             if devGUID != self._monitor.guid():
                 changes.merge(self.conflictChanges)
 
+    def addIds(self, objects, idMap, ownerMap, owner=None):
+        for obj in objects:
+            idMap[obj.id()] = obj
+            if owner is not None:
+                ownerMap[obj.id()] = owner
+            if isinstance(obj, CompositeObject):
+                self.addIds(obj.children(), idMap, ownerMap)
+            if isinstance(obj, NoteOwner):
+                self.addIds(obj.notes(), idMap, ownerMap, obj)
+            if isinstance(obj, AttachmentOwner):
+                self.addIds(obj.attachments(), idMap, ownerMap, obj)
+            if isinstance(obj, Task):
+                self.addIds(obj.efforts(), idMap, ownerMap)
+
     def notify(self, message):
         self.notifier.notify(_('Task Coach'), message,
                              wx.ArtProvider.GetBitmap('taskcoach', size=wx.Size(32, 32)))
 
     def mergeObjects(self, memList, diskList):
-        # Map id to object
-        def addIds(objects, idMap, ownerMap, owner=None):
-            for obj in objects:
-                idMap[obj.id()] = obj
-                if owner is not None:
-                    ownerMap[obj.id()] = owner
-                if isinstance(obj, CompositeObject):
-                    addIds(obj.children(), idMap, ownerMap)
-                if isinstance(obj, NoteOwner):
-                    addIds(obj.notes(), idMap, ownerMap, obj)
-                if isinstance(obj, AttachmentOwner):
-                    addIds(obj.attachments(), idMap, ownerMap, obj)
-                if isinstance(obj, Task):
-                    addIds(obj.efforts(), idMap, ownerMap)
-        addIds(memList, self.memMap, self.memOwnerMap)
-        addIds(diskList, self.diskMap, self.diskOwnerMap)
-
         self.mergeCompositeObjects(memList, diskList)
         self.mergeOwnedObjectsFromDisk(diskList)
         self.reparentObjects(memList, diskList)
@@ -143,7 +145,7 @@ class ChangeSynchronizer(object):
                         self.notify(_('"%s" became top-level because its parent was locally deleted.') %
                                     diskObject.subject())
                 memList.append(diskObject)
-                self.memMap[diskObject.id()] = diskObject
+                self.addIds([diskObject], self.memMap, self.memOwnerMap)
 
     def mergeOwnedObjectsFromDisk(self, diskList):
         # Second pass: 'owned' objects (notes and attachments

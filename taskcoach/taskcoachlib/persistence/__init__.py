@@ -31,7 +31,9 @@ from todotxt import TodoTxtReader, TodoTxtWriter
 from icalendar.writer import iCalendarWriter
 from icalendar.ical import VCalendarParser
 from taskfile import TaskFile, LockedTaskFile
+from taskstore import TaskStore
 from autosaver import AutoSaver
 from autobackup import AutoBackup
 from sessiontempfile import get_temp_file
 from templatelist import TemplateList
+from backends import Backend, FileBackend

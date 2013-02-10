@@ -50,6 +50,9 @@ class ChangeMonitor(Observer):
         return self.__guid
 
     def reset(self):
+        # _changes maps object Ids to:
+        #   * None if the object is new
+        #   * A set of attribute names (or special names like __del__)
         self._changes = dict()
         self._classes = set()
 

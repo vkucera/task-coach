@@ -36,7 +36,7 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
 
     @classmethod
     def monitoredAttributes(class_):
-        return base.CompositeObject.monitoredAttributes() + ['exclusiveSubcategories']
+        return base.CompositeObject.monitoredAttributes() + ['exclusiveSubcategories', 'filter']
 
     @classmethod
     def filterChangedEventType(class_):
