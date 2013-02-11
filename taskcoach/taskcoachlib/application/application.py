@@ -317,7 +317,8 @@ class Application(object):
         if operating_system.isGTK() and self.sessionMonitor is not None:
             self.sessionMonitor.stop()
 
-        if operating_system.isMac() and hasattr(sys, 'frozen'):
+        if (operating_system.isMac() and hasattr(sys, 'frozen')) or \
+            (operating_system.isGTK() and not sys.stdout.isatty()):
             sys.stdout.summary()
 
         return True
