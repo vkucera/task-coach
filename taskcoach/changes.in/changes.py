@@ -36,7 +36,8 @@ configuration and data (template) files on Linux.''', '367'),
         Bugv2('''Fix multiple effort notices when idle.''', '1365'),
         Bugv2('''Fix font issue with calendar viewer.''', '1370'),
         Bugv2('''Fix "NoneType object is not callable" problem.''', '1371'),
-        Bugv2('''Prevent reminder dialogs to steal focus.''', '956'),
+        Bugv2('''Prevent reminder dialogs and editors from stealing
+focus.''', '956'),
         Bugv2('''Add a visual hint that the checkbox has focus in the
 date picker.''', '1372'),
         ],
