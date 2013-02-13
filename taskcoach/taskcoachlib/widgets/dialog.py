@@ -36,6 +36,9 @@ class Dialog(sized_controls.SizedDialog):
             (16, 16)))
 
         if operating_system.isWindows7_OrNewer():
+            # Without this the window has no taskbar icon on Windows, and the focus comes back to the main
+            # window instead of this one when returning to Task Coach through Alt+Tab. Which is probably not
+            # what we want.
             import win32gui, win32con
             exStyle = win32gui.GetWindowLong(self.GetHandle(), win32con.GWL_EXSTYLE)
             win32gui.SetWindowLong(self.GetHandle(), win32con.GWL_EXSTYLE, exStyle|win32con.WS_EX_APPWINDOW)

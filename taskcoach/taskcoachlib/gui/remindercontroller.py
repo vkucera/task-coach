@@ -80,6 +80,9 @@ class ReminderController(object):
         return notifier == 'Task Coach' or notify.AbstractNotifier.get(notifier) is None
         
     def __showReminderDialog(self, taskWithReminder, ReminderDialog):
+        # If the dialog has self.__mainWindow as parent, it steals the focus when
+        # returning to Task Coach through Alt+Tab; we don't want that for
+        # reminders.
         reminderDialog = ReminderDialog(taskWithReminder, self.taskList, 
                                         self.effortList, self.settings, None)
         reminderDialog.Bind(wx.EVT_CLOSE, self.onCloseReminderDialog)
