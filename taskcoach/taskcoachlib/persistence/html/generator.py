@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, cgi
+import wx, cgi, StringIO
 from taskcoachlib.domain import task
 
 # pylint: disable=W0142
@@ -282,12 +282,30 @@ class Viewer2HTMLConverter(object):
             return wxColor.GetAsString(wx.C2S_HTML_SYNTAX)
         except AttributeError: # color is a tuple
             return class_.cssColorSyntax(wx.Color(*wxColor))
-        
+
     @staticmethod
     def render(item, column, indent=False):
         ''' Render the item based on the column, escape HTML and indent
             the item with non-breaking spaces, if indent == True. '''
-        # Escape the rendered item and then replace newlines with <br>. 
+        # Escape the rendered item and then replace newlines with <br>.
+        if column.name() == 'notes':
+            def renderNotes(notes):
+                bf = StringIO.StringIO()
+                for note in notes:
+                    bf.write('<p>\n')
+                    bf.write(cgi.escape(note.subject()))
+                    bf.write(u'<br />\n')
+                    bf.write(cgi.escape(note.description()))
+                    bf.write('</p>\n')
+                    if note.children():
+                        bf.write(u'<div style="padding-left: 20px;">\n')
+                        bf.write(renderNotes(note.children()))
+                        bf.write(u'</div>\n')
+                return bf.getvalue()
+            return renderNotes(item.notes())
+        elif column.name() == 'attachments':
+            return u'<br />'.join(map(cgi.escape, [attachment.subject() for attachment in item.attachments()]))
+            
         renderedItem = cgi.escape(column.render(item, 
                                   humanReadable=False)).replace('\n', '<br>')
         if indent:

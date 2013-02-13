@@ -319,7 +319,7 @@ class _BaseCtrlWithColumnsMixin(object):
         newMap.append((columnIndex, column))
         self.__indexMap = newMap
 
-        self.InsertColumn(columnIndex, column.header(), 
+        self.InsertColumn(columnIndex, column.header() if column.headerImageIndex() == -1 else u'', 
             format=column.alignment(), width=column.width)
 
         columnInfo = self.GetColumn(columnIndex)

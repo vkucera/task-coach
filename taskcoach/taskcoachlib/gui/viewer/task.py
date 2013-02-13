@@ -858,7 +858,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                 width=self.getColumnWidth('description'),  
                 editCallback=self.onEditDescription, 
                 editControl=inplace_editor.DescriptionCtrl, **kwargs)] + \
-            [widgets.Column('attachments', '', 
+            [widgets.Column('attachments', _('Attachments'), 
                 task.Task.attachmentsChangedEventType(), 
                 width=self.getColumnWidth('attachments'),
                 alignment=wx.LIST_FORMAT_LEFT,
@@ -866,7 +866,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                 headerImageIndex=self.imageIndex['paperclip_icon'],
                 renderCallback=lambda task: '', **kwargs)]
         if self.settings.getboolean('feature', 'notes'):
-            columns.append(widgets.Column('notes', '', 
+            columns.append(widgets.Column('notes', _('Notes'), 
                 task.Task.notesChangedEventType(),
                 width=self.getColumnWidth('notes'),
                 alignment=wx.LIST_FORMAT_LEFT,

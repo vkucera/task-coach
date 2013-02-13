@@ -23,7 +23,7 @@ from changetypes import *
 releases = [
 
 Release('1.3.24', 'February 28, 2013',
-    summary='''This is a bugfix release.''',
+    summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bugv2('''Clicking in the hour choice popup in the date/time
 picker would select the wrong value.'''),
@@ -40,6 +40,10 @@ configuration and data (template) files on Linux.''', '367'),
 focus.''', '956'),
         Bugv2('''Add a visual hint that the checkbox has focus in the
 date picker.''', '1372'),
+        ],
+    featuresAdded=[
+        Feature('''The "notes" and "attachments" columns can now be
+exported to HTML and CSV.'''),
         ],
     ),
 
