@@ -26,7 +26,7 @@ Release('1.3.24', 'February 28, 2013',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bugv2('''Clicking in the hour choice popup in the date/time
-picker would select the wrong value.'''),
+picker would select the wrong value.''', '1377'),
         Bugv2('''Task Coach now follows the XDG specification for
 configuration and data (template) files on Linux.''', '367'),
         Bugv2('''Fix menu "Stop tracking multiple tasks" menu''',
