@@ -41,6 +41,7 @@ focus.''', '956'),
         Bugv2('''Add a visual hint that the checkbox has focus in the
 date picker.''', '1372'),
         Bugv2('''Fix opening of editor dialog on some locales''', '1360'),
+        Bugv2('''Fix idle notifications.''', '1365'),
         ],
     featuresAdded=[
         Feature('''The "notes" and "attachments" columns can now be

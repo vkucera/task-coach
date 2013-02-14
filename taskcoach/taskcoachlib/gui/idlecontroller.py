@@ -110,10 +110,11 @@ class IdleController(Observer, IdleNotifier):
         
     def onTrackingChanged(self, newValue, sender):
         if newValue:
-            self.__trackedEfforts.extend(self.__filterTrackedEfforts([sender]))
+            if sender not in self.__trackedEfforts:
+                self.__trackedEfforts.extend(self.__filterTrackedEfforts([sender]))
         else:
             if sender in self.__trackedEfforts:
-                self.__trackedEfforts.remove(sender) 
+                self.__trackedEfforts.remove(sender)
 
     def getMinIdleTime(self):
         return self._settings.getint('feature', 'minidletime') * 60
