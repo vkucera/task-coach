@@ -736,7 +736,7 @@ class TimeEntry(Entry):
     Entry.addFormat(SecondFormatCharacter)
 
     def __init__(self, *args, **kwargs):
-        fmt = kwargs.pop('format', lambda x: x.strftime('%H:%M:%S'))
+        fmt = kwargs.pop('format', lambda x: decodeSystemString(x.strftime('%H:%M:%S')))
         self.__formatter = fmt
         pattern = decodeSystemString(fmt(datetime.time(hour=11, minute=33, second=44)))
         pattern = re.sub('3+', 'M', pattern)
@@ -1048,7 +1048,7 @@ class MonthField(NumericField):
 
 class AbbreviatedMonthField(EnumerationField):
     def __init__(self, **kwargs):
-        kwargs['choices'] = list(reversed([(datetime.date(year=2012, month=month, day=1).strftime('%b'), month) for month in xrange(1, 13)]))
+        kwargs['choices'] = list(reversed([(decodeSystemString(datetime.date(year=2012, month=month, day=1).strftime('%b')), month) for month in xrange(1, 13)]))
         kwargs['enablePopup'] = False
         kwargs['width'] = 2
         super(AbbreviatedMonthField, self).__init__(**kwargs)
@@ -1056,7 +1056,7 @@ class AbbreviatedMonthField(EnumerationField):
 
 class FullMonthField(EnumerationField):
     def __init__(self, **kwargs):
-        kwargs['choices'] = list(reversed([(datetime.date(year=2012, month=month, day=1).strftime('%B'), month) for month in xrange(1, 13)]))
+        kwargs['choices'] = list(reversed([(decodeSystemString(datetime.date(year=2012, month=month, day=1).strftime('%B')), month) for month in xrange(1, 13)]))
         kwargs['enablePopup'] = False
         kwargs['width'] = 2
         super(AbbreviatedMonthField, self).__init__(**kwargs)
@@ -1112,12 +1112,12 @@ class DateEntry(Entry):
     Entry.addFormat(DayFormatCharacter)
 
     def __init__(self, *args, **kwargs):
-        fmt = kwargs.pop('format', lambda x: x.strftime('%x'))
+        fmt = kwargs.pop('format', lambda x: decodeSystemString(x.strftime('%x')))
         self.__formatter = fmt
         fmt = decodeSystemString(fmt(datetime.date(year=3333, day=22, month=11)))
 
         for fmtChar in ['B', 'b']:
-            substring = datetime.date(year=3333, day=22, month=11).strftime('%%%s' % fmtChar)
+            substring = decodeSystemString(datetime.date(year=3333, day=22, month=11).strftime('%%%s' % fmtChar))
             if fmt.find(substring) != -1:
                 fmt = fmt.replace(substring, fmtChar)
                 break
@@ -1909,8 +1909,8 @@ class SmartDateTimeCtrl(wx.Panel):
         value = kwargs.pop('value', None)
         label = kwargs.pop('label', u'')
         self.__enableNone = kwargs.pop('enableNone', False)
-        dateFormat = kwargs.pop('dateFormat', lambda x: x.strftime('%x'))
-        timeFormat = kwargs.pop('timeFormat', lambda x: x.strftime('%H:%M:%S'))
+        dateFormat = kwargs.pop('dateFormat', lambda x: decodeSystemString(x.strftime('%x')))
+        timeFormat = kwargs.pop('timeFormat', lambda x: decodeSystemString(x.strftime('%H:%M:%S')))
         startHour = kwargs.pop('startHour', 0)
         endHour = kwargs.pop('endHour', 24)
         minuteDelta = kwargs.pop('minuteDelta', 10)
@@ -2169,11 +2169,11 @@ if __name__ == '__main__':
             super(Dialog, self).__init__(None, wx.ID_ANY, 'Test', style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER)
             sz = wx.BoxSizer(wx.VERTICAL)
 
-            pnl1 = SmartDateTimeCtrl(self, label='Start', enableNone=True, timeFormat=lambda x: x.strftime('%I:%M %p'), dateFormat=lambda x: x.strftime('%Y %b %d'), startHour=8, endHour=18)
+            pnl1 = SmartDateTimeCtrl(self, label='Start', enableNone=True, timeFormat=lambda x: decodeSystemString(x.strftime('%I:%M %p')), dateFormat=lambda x: decodeSystemString(x.strftime('%Y %b %d')), startHour=8, endHour=18)
             pnl1.EnableChoices()
             sz.Add(pnl1, 0, wx.ALL|wx.ALIGN_LEFT, 3)
 
-            pnl2 = SmartDateTimeCtrl(self, label='End', enableNone=True, timeFormat=lambda x: x.strftime('%H:%M:%S'), showRelative=True)
+            pnl2 = SmartDateTimeCtrl(self, label='End', enableNone=True, timeFormat=lambda x: decodeSystemString(x.strftime('%H:%M:%S')), showRelative=True)
             pnl2.EnableChoices()
             sz.Add(pnl2, 0, wx.ALL|wx.ALIGN_LEFT, 3)
 
