@@ -751,8 +751,11 @@ class TimeEntry(Entry):
                 pattern += ' '
             pattern += 'p'
         else:
-            ampm = pattern.lower().find('am') != -1
-            pattern = re.sub('(?i)am', 'p', pattern)
+            amLit = decodeSystemString(datetime.time(hour=1).strftime('%p'))
+            idx = pattern.lower().find(amLit.lower())
+            ampm = idx != -1
+            if ampm:
+                pattern = pattern[:idx] + u'p' + pattern[idx + len(amLit):]
 
         self.__value = datetime.time(hour=kwargs.get('hour', 0), minute=kwargs.get('minute', 0), second=kwargs.get('second', 0))
         self.__minuteDelta = kwargs.pop('minuteDelta', 10)
