@@ -1681,42 +1681,11 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
         super(EffortStop, self).__init__(bitmap='clock_resume_icon', 
             bitmap2='clock_stop_icon', menuText=self.defaultMenuText,
             helpText=self.defaultHelpText, kind=wx.ITEM_CHECK, *args, **kwargs)
-        # __trackedEfforts is a list and not a set because when an effort is
-        # moved from one task to another task we might get the event that the
-        # effort is (re)added to the effortList before the event that the effort
-        # was removed from the effortList. If we would use a set, the effort
-        # would be missing from the set after the removal event.    
-        self.__trackedEfforts = self.__filterTrackedEfforts(self.effortList)
+        self.__tracker = effort.EffortListTracker(self.effortList)
         self.__currentBitmap = None  # Don't know yet what our bitmap is
-        self.registerObserver(self.onEffortAdded, 
-                              eventType=self.effortList.addItemEventType(),
-                              eventSource=self.effortList)
-        self.registerObserver(self.onEffortRemoved, 
-                              eventType=self.effortList.removeItemEventType(),
-                              eventSource=self.effortList)
-        pub.subscribe(self.onTrackingChanged, 
-                      effort.Effort.trackingChangedEventType())
-                
-    def onEffortAdded(self, event):
-        self.__trackedEfforts.extend(self.__filterTrackedEfforts(event.values()))
-
-    def onEffortRemoved(self, event):
-        for effort in event.values():
-            if effort in self.__trackedEfforts:
-                self.__trackedEfforts.remove(effort)
-        
-    def onTrackingChanged(self, newValue, sender):
-        if sender.parent() is None:
-            return  # Ignore composite efforts
-        if newValue:
-            if sender not in self.__trackedEfforts:
-                self.__trackedEfforts.extend([sender])
-        else:
-            if sender in self.__trackedEfforts:
-                self.__trackedEfforts.remove(sender) 
                         
     def doCommand(self, event=None):
-        if self.__trackedEfforts:
+        if self.__tracker.trackedEfforts():
             # Stop the tracked effort(s)
             effortCommand = command.StopEffortCommand(self.effortList)
         else:
@@ -1730,10 +1699,6 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
         # untracked efforts this command will resume them. Otherwise this 
         # command is disabled.
         return self.anyTrackedEfforts() or self.anyStoppedEfforts()
-    
-    @staticmethod
-    def __filterTrackedEfforts(efforts):
-        return [effort for effort in efforts if effort.isBeingTracked()]
 
     def onUpdateUI(self, event):
         super(EffortStop, self).onUpdateUI(event)
@@ -1782,8 +1747,9 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
         
     def getMenuText(self, paused=None):  # pylint: disable=W0221
         if self.anyTrackedEfforts():
-            subject = _('multiple tasks') if len(self.__trackedEfforts) > 1 \
-                      else self.__trackedEfforts[0].task().subject()
+            trackedEfforts = self.__tracker.trackedEfforts()
+            subject = _('multiple tasks') if len(trackedEfforts) > 1 \
+                      else trackedEfforts[0].task().subject()
             return self.stopMenuText % self.trimmedSubject(subject)
         if paused is None:
             paused = self.anyStoppedEfforts()
@@ -1804,7 +1770,7 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
         return bool(self.effortList.maxDateTime())
     
     def anyTrackedEfforts(self):
-        return bool(self.__trackedEfforts)
+        return bool(self.__tracker.trackedEfforts())
 
     def mostRecentTrackedTask(self):
         stopTimes = [(effort.getStop(), effort) for effort in self.effortList if effort.getStop() is not None]

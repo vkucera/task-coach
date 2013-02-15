@@ -83,38 +83,10 @@ class IdleController(Observer, IdleNotifier):
 
         super(IdleController, self).__init__()
 
-        self.__trackedEfforts = self.__filterTrackedEfforts(self._effortList)
+        self.__tracker = effort.EffortListTracker(self._effortList)
 
-        self.registerObserver(self.onEffortAdded, 
-                              eventType=self._effortList.addItemEventType(),
-                              eventSource=self._effortList)
-        self.registerObserver(self.onEffortRemoved, 
-                              eventType=self._effortList.removeItemEventType(),
-                              eventSource=self._effortList)
-        pub.subscribe(self.onTrackingChanged, effort.Effort.trackingChangedEventType())
         pub.subscribe(self.poweroff, 'powermgt.off')
         pub.subscribe(self.poweron, 'powermgt.on')
-
-    @staticmethod
-    def __filterTrackedEfforts(efforts):
-        return [anEffort for anEffort in efforts if anEffort.isBeingTracked() \
-                and not isinstance(anEffort, effort.BaseCompositeEffort)]
-
-    def onEffortAdded(self, event):
-        self.__trackedEfforts.extend(self.__filterTrackedEfforts(event.values()))
-
-    def onEffortRemoved(self, event):
-        for effort in event.values():
-            if effort in self.__trackedEfforts:
-                self.__trackedEfforts.remove(effort)
-        
-    def onTrackingChanged(self, newValue, sender):
-        if newValue:
-            if sender not in self.__trackedEfforts:
-                self.__trackedEfforts.extend(self.__filterTrackedEfforts([sender]))
-        else:
-            if sender in self.__trackedEfforts:
-                self.__trackedEfforts.remove(sender)
 
     def getMinIdleTime(self):
         return self._settings.getint('feature', 'minidletime') * 60
@@ -124,7 +96,7 @@ class IdleController(Observer, IdleNotifier):
         wx.CallAfter(self.OnWake)
 
     def OnWake(self):
-        for effort in self.__trackedEfforts:
+        for effort in self.__tracker.trackedEfforts():
             if effort not in self._displayed:
                 self._displayed.add(effort)
                 frm = WakeFromIdleFrame(date.DateTime.fromtimestamp(self._lastActivity), effort, self._displayed, _('Notification'),
