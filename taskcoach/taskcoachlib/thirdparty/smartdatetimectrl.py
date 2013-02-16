@@ -743,13 +743,15 @@ class TimeEntry(Entry):
         pattern = re.sub('1+', 'H', pattern)
         pattern = re.sub('4+', 'S', pattern)
 
-        # Work around a bug in wx...
-        if time.strftime('%p') == '' and fmt(datetime.time(hour=1, minute=0)) == fmt(datetime.time(hour=13, minute=0)):
-            ampm = True
-            # We can't actually guess where it should be so put it at the end.
-            if not pattern.endswith(' '):
-                pattern += ' '
-            pattern += 'p'
+        ampm = False
+        # wx initializes the locale itself (at least under GTK) so %p may end up swallowed.
+        if time.strftime('%p') == '':
+            if fmt(datetime.time(hour=1, minute=0)) == fmt(datetime.time(hour=13, minute=0)):
+                ampm = True
+                # We can't actually guess where it should be so put it at the end.
+                if not pattern.endswith(' '):
+                    pattern += ' '
+                pattern += 'p'
         else:
             amLit = decodeSystemString(datetime.time(hour=1).strftime('%p'))
             idx = pattern.lower().find(amLit.lower())
