@@ -702,7 +702,7 @@ class ToggleCategoryMenu(DynamicMenu):
     def addMenuItemsForCategories(self, categories, menu):
         # pylint: disable=W0621
         categories = categories[:]
-        categories.sort(key=lambda category: category.subject())
+        categories.sort(key=lambda category: category.subject().lower())
         for category in categories:
             uiCommand = uicommand.ToggleCategory(category=category, 
                                                  viewer=self.viewer)
