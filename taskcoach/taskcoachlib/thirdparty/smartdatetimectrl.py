@@ -1983,7 +1983,7 @@ class SmartDateTimeCtrl(wx.Panel):
                 return True
             elif event.GetKeyCode() in [ord('n'), ord('N')]:
                 # Now
-                self.SetDateTime(datetime.datetime.now())
+                self.SetDateTime(datetime.datetime.now(), notify=True)
                 return True
         return False
 

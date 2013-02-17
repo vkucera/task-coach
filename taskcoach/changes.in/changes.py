@@ -43,6 +43,7 @@ date picker.''', '1372'),
         Bugv2('''Fix opening of editor dialog on some locales''', '1360', '1375'),
         Bugv2('''Fix idle notifications.''', '1365'),
         Bugv2('''Sort case insensitive in the toggle category menu.''', '1369'),
+        Bugv2('''Fix the N shortcut in datetime picker.''', '1378'),
         ],
     featuresAdded=[
         Feature('''The "notes" and "attachments" columns can now be
