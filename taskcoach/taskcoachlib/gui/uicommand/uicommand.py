@@ -1283,9 +1283,9 @@ class NewSubItem(mixin_uicommand.NeedsOneSelectedCompositeItemMixin,
         return self.defaultMenuText
 
 
-class TaskMarkActive(mixin_uicommand.NeedsSelectedTasksMixin, ViewerCommand):    
+class TaskMarkActive(mixin_uicommand.NeedsSelectedTasksMixin, settings_uicommand.SettingsCommand, ViewerCommand):    
     def __init__(self, *args, **kwargs):
-        super(TaskMarkActive, self).__init__(bitmap='led_blue_icon',
+        super(TaskMarkActive, self).__init__(bitmap=task.active.getBitmap(kwargs['settings']),
             menuText=_('Mark task &active\tAlt+RETURN'),
             helpText=_('Mark the selected task(s) active'),
             *args, **kwargs)
@@ -1302,9 +1302,9 @@ class TaskMarkActive(mixin_uicommand.NeedsSelectedTasksMixin, ViewerCommand):
             any([canBeMarkedActive(task) for task in self.viewer.curselection()])         
  
 
-class TaskMarkInactive(mixin_uicommand.NeedsSelectedTasksMixin, ViewerCommand):    
+class TaskMarkInactive(mixin_uicommand.NeedsSelectedTasksMixin, settings_uicommand.SettingsCommand, ViewerCommand):    
     def __init__(self, *args, **kwargs):
-        super(TaskMarkInactive, self).__init__(bitmap='led_grey_icon',
+        super(TaskMarkInactive, self).__init__(bitmap=task.inactive.getBitmap(kwargs['settings']),
             menuText=_('Mark task &inactive\tCtrl+Alt+RETURN'),
             helpText=_('Mark the selected task(s) inactive'),
             *args, **kwargs)
@@ -1321,9 +1321,9 @@ class TaskMarkInactive(mixin_uicommand.NeedsSelectedTasksMixin, ViewerCommand):
             any([canBeMarkedInactive(task) for task in self.viewer.curselection()])         
     
 
-class TaskMarkCompleted(mixin_uicommand.NeedsSelectedTasksMixin, ViewerCommand):    
+class TaskMarkCompleted(mixin_uicommand.NeedsSelectedTasksMixin, settings_uicommand.SettingsCommand, ViewerCommand):    
     def __init__(self, *args, **kwargs):
-        super(TaskMarkCompleted, self).__init__(bitmap='led_green_icon',
+        super(TaskMarkCompleted, self).__init__(bitmap=task.completed.getBitmap(kwargs['settings']),
             menuText=_('Mark task &completed\tCtrl+RETURN'),
             helpText=_('Mark the selected task(s) completed'),
             *args, **kwargs)

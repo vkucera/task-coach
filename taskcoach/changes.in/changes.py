@@ -49,6 +49,8 @@ date picker.''', '1372'),
         Feature('''The "notes" and "attachments" columns can now be
 exported to HTML and CSV.'''),
         Feature('''Store the IMAP passwords in the user's keychain.'''),
+        Feature('''The default icon for completed tasks is now the green
+checkmark.'''),
         ],
     ),
 

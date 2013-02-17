@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 from taskcoachlib.domain import date, categorizable, note, attachment, base
+from taskcoachlib.domain.attribute.icon import getImageOpen
 from taskcoachlib.thirdparty.pubsub import pub
 import status
 import weakref
@@ -859,7 +860,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         iconName = self.settings.get('icon', '%stasks' % taskStatus)  # pylint: disable=E1101
         iconName = self.pluralOrSingularIcon(iconName)
         if selected and iconName.startswith('folder'):
-            iconName = iconName[:-len('_icon')] + '_open_icon' 
+            iconName = getImageOpen(iconName)
         return iconName
 
     @patterns.eventSource

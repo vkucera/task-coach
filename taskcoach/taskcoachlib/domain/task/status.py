@@ -29,9 +29,15 @@ class TaskStatus(object):
         self.hideMenuText = hideMenuText
         self.hideHelpText = hideHelpText
 
+    # This is only used by uicommands so use default if the user configured 'no bitmap', because we
+    # need one for the toolbar...
+
+    def getBitmap(self, settings):
+        if settings.get('icon', '%stasks' % self.statusString):
+            return settings.get('icon', '%stasks' % self.statusString)
+        return defaults.defaults['icon']['%stasks' % self.statusString]
+
     def getHideBitmap(self, settings):
-        # This is only used by uicommands so use default if the user configured 'no bitmap', because we
-        # need one for the toolbar...
         if settings.get('icon', '%stasks' % self.statusString):
             return '%s+cross_red_icon' % settings.get('icon', '%stasks' % self.statusString)
         return '%s+cross_red_icon' % defaults.defaults['icon']['%stasks' % self.statusString]

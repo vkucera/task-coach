@@ -155,7 +155,7 @@ class MailTaskTest(test.TestCase):
 class MarkActiveTest(test.TestCase):
     def assertMarkActiveIsEnabled(self, selection, shouldBeEnabled=True):
         viewer = DummyViewer(selection)
-        markActive = gui.uicommand.TaskMarkActive(viewer=viewer)
+        markActive = gui.uicommand.TaskMarkActive(viewer=viewer, settings=config.Settings(load=False))
         isEnabled = markActive.enabled(None)
         if shouldBeEnabled:
             self.failUnless(isEnabled)
@@ -181,7 +181,7 @@ class MarkActiveTest(test.TestCase):
 class MarkInactiveTest(test.TestCase):
     def assertMarkInactiveIsEnabled(self, selection, shouldBeEnabled=True):
         viewer = DummyViewer(selection)
-        markInactive = gui.uicommand.TaskMarkInactive(viewer=viewer)
+        markInactive = gui.uicommand.TaskMarkInactive(viewer=viewer, settings=config.Settings(load=False))
         isEnabled = markInactive.enabled(None)
         if shouldBeEnabled:
             self.failUnless(isEnabled)
@@ -207,7 +207,7 @@ class MarkInactiveTest(test.TestCase):
 class MarkCompletedTest(test.TestCase):
     def assertMarkCompletedIsEnabled(self, selection, shouldBeEnabled=True):
         viewer = DummyViewer(selection)
-        markCompleted = gui.uicommand.TaskMarkCompleted(viewer=viewer)
+        markCompleted = gui.uicommand.TaskMarkCompleted(viewer=viewer, settings=config.Settings(load=False))
         isEnabled = markCompleted.enabled(None)
         if shouldBeEnabled:
             self.failUnless(isEnabled)
