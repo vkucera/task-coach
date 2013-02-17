@@ -77,13 +77,17 @@ class KeychainPasswordWidget(wx.Dialog):
 
 def GetPassword(domain, username, reset=False):
     try:
-        from taskcoachlib.thirdparty.keyring import set_password
+        from taskcoachlib.thirdparty.keyring import set_password, get_password
     except:
         # Keychain unavailable.
         return wx.GetPasswordFromUser(_('Please enter your password.'), domain) or None
 
     if reset:
         set_password(domain, username, '')
+    else:
+        pwd = get_password(domain, username)
+        if pwd:
+            return pwd
 
     dlg = KeychainPasswordWidget(domain, username, None, wx.ID_ANY, _('Please enter your password'))
     try:
