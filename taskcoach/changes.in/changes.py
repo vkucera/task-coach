@@ -48,6 +48,7 @@ date picker.''', '1372'),
     featuresAdded=[
         Feature('''The "notes" and "attachments" columns can now be
 exported to HTML and CSV.'''),
+        Feature('''Store the IMAP passwords in the user's keychain.'''),
         ],
     ),
 

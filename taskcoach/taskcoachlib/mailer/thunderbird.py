@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import persistence, operating_system
 from taskcoachlib.thirdparty.ntlm import IMAPNtlmAuthHandler
+from taskcoachlib.widgets.password import GetPassword
 from taskcoachlib.i18n import _
 import os
 import stat
@@ -239,8 +240,6 @@ class ThunderbirdMailboxReader(object):
 
 
 class ThunderbirdImapReader(object):
-    _PASSWORDS = {}
-
     def __init__(self, url):
         mt = _RX_IMAP.search(url)
         if mt is None:
@@ -311,17 +310,10 @@ class ThunderbirdImapReader(object):
                                    reason=reason)
             raise ThunderbirdError(error_message)
 
-        password_key = (self.server, self.user, self.port)
-        if password_key in self._PASSWORDS:
-            pwd = self._PASSWORDS[password_key]
-        else:
-            pwd = wx.GetPasswordFromUser( \
-                _('Please enter password for user %(user)s on ' \
-                  '%(server)s:%(port)d') % dict(user=self.user, 
-                                                server=self.server, 
-                                                port=self.port))
-            if pwd == '':
-                raise ThunderbirdCancelled('User canceled')
+        password_domain = '%s:%d' % (self.server, self.port)
+        pwd = GetPassword(password_domain, self.user)
+        if pwd is None:
+            raise ThunderbirdCancelled('User canceled')
 
         while True:
             try:
@@ -345,12 +337,9 @@ class ThunderbirdImapReader(object):
             if response == 'OK':
                 break
 
-            pwd = wx.GetPasswordFromUser( \
-                _('Login failed (%s). Please try again.') % error_message)
-            if pwd == '':
+            pwd = GetPassword(password_domain, self.user, reset=True)
+            if pwd is None:
                 raise ThunderbirdCancelled('User canceled')
-
-        self._PASSWORDS[password_key] = pwd
 
         # Two possibilities for separator...
 
