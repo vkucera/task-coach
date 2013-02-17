@@ -597,9 +597,9 @@ class ActionMenu(Menu):
         # Start of task specific actions:
         self.appendUICommands(
             None,
-            uicommand.TaskMarkInactive(viewer=viewerContainer),
-            uicommand.TaskMarkActive(viewer=viewerContainer),
-            uicommand.TaskMarkCompleted(viewer=viewerContainer),
+            uicommand.TaskMarkInactive(settings=settings, viewer=viewerContainer),
+            uicommand.TaskMarkActive(settings=settings, viewer=viewerContainer),
+            uicommand.TaskMarkCompleted(settings=settings, viewer=viewerContainer),
             None)
         self.appendMenu(_('Change task &priority'), 
                         TaskPriorityMenu(mainwindow, tasks, viewerContainer),
@@ -703,7 +703,7 @@ class ToggleCategoryMenu(DynamicMenu):
     def addMenuItemsForCategories(self, categories, menu):
         # pylint: disable=W0621
         categories = categories[:]
-        categories.sort(key=lambda category: category.subject())
+        categories.sort(key=lambda category: category.subject().lower())
         for category in categories:
             uiCommand = uicommand.ToggleCategory(category=category, 
                                                  viewer=self.viewer)
@@ -807,9 +807,9 @@ class TaskPopupMenu(Menu):
                         'folder_blue_arrow_icon')
         self.appendUICommands(
             None,
-            uicommand.TaskMarkInactive(viewer=taskViewer),
-            uicommand.TaskMarkActive(viewer=taskViewer),    
-            uicommand.TaskMarkCompleted(viewer=taskViewer),
+            uicommand.TaskMarkInactive(settings=settings, viewer=taskViewer),
+            uicommand.TaskMarkActive(settings=settings, viewer=taskViewer),    
+            uicommand.TaskMarkCompleted(settings=settings, viewer=taskViewer),
             None)
         self.appendMenu(_('&Priority'), 
                         TaskPriorityMenu(mainwindow, tasks, taskViewer),

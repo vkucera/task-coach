@@ -21,6 +21,7 @@ from taskcoachlib.i18n import _
 from taskcoachlib import help
 from taskcoachlib.thirdparty.pubsub import pub
 from taskcoachlib.domain import task
+from . import effort
 
 
 class MaxDateTimeMixin(object):
@@ -114,3 +115,60 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
     @classmethod        
     def sortEventType(class_):
         return 'this event type is not used'
+
+
+class EffortListTracker(patterns.Observer):
+    ''' EffortListTracker observes an EffortList and keeps track of
+    currently tracked efforts. '''
+
+    def __init__(self, effortList, includeComposites=False):
+        '''@param effortList: The effort list to observe.
+        @param includeComposites: if False, composite efforts will be
+            ignored.'''
+        super(EffortListTracker, self).__init__()
+
+        self.__effortList = effortList
+        self.__includeComposites = includeComposites
+
+        # __trackedEfforts is a list and not a set because when an effort is
+        # moved from one task to another task we might get the event that the
+        # effort is (re)added to the effortList before the event that the effort
+        # was removed from the effortList. If we would use a set, the effort
+        # would be missing from the set after the removal event.    
+        self.__trackedEfforts = self.__filterTrackedEfforts(self.__effortList)
+
+        self.registerObserver(self.onEffortAdded, 
+                              eventType=self.__effortList.addItemEventType(),
+                              eventSource=self.__effortList)
+        self.registerObserver(self.onEffortRemoved, 
+                              eventType=self.__effortList.removeItemEventType(),
+                              eventSource=self.__effortList)
+        pub.subscribe(self.onTrackingChanged, 
+                      effort.Effort.trackingChangedEventType())
+
+    def trackedEfforts(self):
+        return self.__trackedEfforts
+
+    def onEffortAdded(self, event):
+        self.__trackedEfforts.extend(self.__filterTrackedEfforts(event.values()))
+
+    def onEffortRemoved(self, event):
+        for effort in event.values():
+            if effort in self.__trackedEfforts:
+                self.__trackedEfforts.remove(effort)
+        
+    def onTrackingChanged(self, newValue, sender):
+        if sender.parent() is None and not self.__includeComposites:
+            return
+        if sender not in self.__effortList:
+            return
+        if newValue:
+            if sender not in self.__trackedEfforts:
+                self.__trackedEfforts.extend([sender])
+        else:
+            if sender in self.__trackedEfforts:
+                self.__trackedEfforts.remove(sender) 
+
+    @staticmethod
+    def __filterTrackedEfforts(efforts):
+        return [effort for effort in efforts if effort.isBeingTracked()]

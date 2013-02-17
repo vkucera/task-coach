@@ -22,11 +22,11 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.24', 'February 28, 2013',
-    summary='''This is a bugfix release.''',
+Release('1.3.24', 'February 17, 2013',
+    summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bugv2('''Clicking in the hour choice popup in the date/time
-picker would select the wrong value.'''),
+picker would select the wrong value.''', '1377'),
         Bugv2('''Task Coach now follows the XDG specification for
 configuration and data (template) files on Linux.''', '367'),
         Bugv2('''Fix menu "Stop tracking multiple tasks" menu''',
@@ -34,6 +34,23 @@ configuration and data (template) files on Linux.''', '367'),
         Bugv2('''Fix focus issue in date picker.''', '1368'),
         Bugv2('''Fix discrepancy in due date time precision''', '1253'),
         Bugv2('''Fix multiple effort notices when idle.''', '1365'),
+        Bugv2('''Fix font issue with calendar viewer.''', '1370'),
+        Bugv2('''Fix "NoneType object is not callable" problem.''', '1371'),
+        Bugv2('''Prevent reminder dialogs and editors from stealing
+focus.''', '956'),
+        Bugv2('''Add a visual hint that the checkbox has focus in the
+date picker.''', '1372'),
+        Bugv2('''Fix opening of editor dialog on some locales''', '1360', '1375'),
+        Bugv2('''Fix idle notifications.''', '1365'),
+        Bugv2('''Sort case insensitive in the toggle category menu.''', '1369'),
+        Bugv2('''Fix the N shortcut in datetime picker.''', '1378'),
+        ],
+    featuresAdded=[
+        Feature('''The "notes" and "attachments" columns can now be
+exported to HTML and CSV.'''),
+        Feature('''Store the IMAP passwords in the user's keychain.'''),
+        Feature('''The default icon for completed tasks is now the green
+checkmark.'''),
         ],
     ),
 

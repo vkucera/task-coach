@@ -485,7 +485,7 @@ defaults = {
 'icon': { 
     'activetasks': 'led_blue_icon',
     'latetasks': 'led_purple_icon',
-    'completedtasks': 'led_green_icon',
+    'completedtasks': 'checkmark_green_icon',
     'overduetasks': 'led_red_icon',
     'inactivetasks': 'led_grey_icon',
     'duesoontasks': 'led_orange_icon' 

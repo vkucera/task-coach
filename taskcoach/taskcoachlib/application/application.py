@@ -30,6 +30,30 @@ import wx
 import calendar
 
 
+class RedirectedOutput(object):
+    def __init__(self):
+        self.__handle = None
+
+    def write(self, bf):
+        if self.__handle is None:
+            self.__handle = file(os.path.expanduser('~/taskcoachlog.txt'), 'a+')
+            self.__handle.write('============= %s\n' % time.ctime())
+        self.__handle.write(bf)
+
+    def flush(self):
+        pass
+
+    def close(self):
+        if self.__handle is not None:
+            self.__handle.close()
+            self.__handle = None
+
+    def summary(self):
+        if self.__handle is not None:
+            self.close()
+            wx.MessageBox(_('Errors have occured. Please see "%s"') % os.path.expanduser('~/taskcoachlog.txt'), _('Error'), wx.OK)
+
+
 # pylint: disable=W0404
 
         
@@ -44,29 +68,6 @@ class wxApp(wx.App):
 
         if (operating_system.isMac() and hasattr(sys, 'frozen')) or \
             (operating_system.isGTK() and not sys.stdout.isatty()):
-            class RedirectedOutput(object):
-                def __init__(self):
-                    self.__handle = None
-
-                def write(self, bf):
-                    if self.__handle is None:
-                        self.__handle = file(os.path.expanduser('~/taskcoachlog.txt'), 'a+')
-                        self.__handle.write('============= %s\n' % time.ctime())
-                    self.__handle.write(bf)
-
-                def flush(self):
-                    pass
-
-                def close(self):
-                    if self.__handle is not None:
-                        self.__handle.close()
-                        self.__handle = None
-
-                def summary(self):
-                    if self.__handle is not None:
-                        self.close()
-                        wx.MessageBox(_('Errors have occured. Please see "%s"') % os.path.expanduser('~/taskcoachlog.txt'), _('Error'), wx.OK)
-
             sys.stdout = sys.stderr = RedirectedOutput()
 
         return True
@@ -317,7 +318,7 @@ class Application(object):
         if operating_system.isGTK() and self.sessionMonitor is not None:
             self.sessionMonitor.stop()
 
-        if operating_system.isMac() and hasattr(sys, 'frozen'):
+        if isinstance(sys.stdout, RedirectedOutput):
             sys.stdout.summary()
 
         return True
