@@ -22,6 +22,13 @@ from changetypes import *
 
 releases = [
 
+Release('1.3.25', 'February 28, 2013',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bugv2('''Fix fonts in calendar viewer.''', '1370'),
+        ],
+    ),
+
 Release('1.3.24', 'February 17, 2013',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
