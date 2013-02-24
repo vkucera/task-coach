@@ -40,7 +40,11 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable=W0223
         self.attachments = kwargs.pop('attachmentsToShow')
         kwargs.setdefault('settingssection', 'attachmentviewer')
         super(AttachmentViewer, self).__init__(*args, **kwargs)
-        
+
+    def _addAttachments(self, attachments, item, **itemDialogKwargs):
+        # Don't try to add attachments to attachments.
+        super(AttachmentViewer, self)._addAttachments(attachments, None, **itemDialogKwargs)
+
     def domainObjectsToView(self):
         return self.attachments
 
