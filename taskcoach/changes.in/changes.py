@@ -27,6 +27,7 @@ Release('1.3.25', 'February 28, 2013',
     bugsFixed=[
         Bugv2('''Fix fonts in calendar viewer.''', '1370'),
         Bugv2('''Fix cutting attachments.'''),
+        Bugv2('''Fix focus on category viewer in task editor.''', '1382'),
         ],
     ),
 
