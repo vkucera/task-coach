@@ -30,6 +30,7 @@ Release('1.3.25', 'February 28, 2013',
         Bugv2('''Fix focus on category viewer in task editor.''', '1382'),
         Bugv2('''Fix keyboard navigation in the editor's tabs.''', '1216'),
         Bugv2('''Make the effort stop menu a bit more contextual.''', '1381'),
+        Bugv2('''Fix effort stop button interaction with undo.''', '1381'),
         ],
     ),
 

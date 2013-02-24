@@ -1210,9 +1210,7 @@ class EffortEditBook(Page):
         self.onDateTimeChanged(event)
         
     def onStopNow(self, event):
-        self._stopDateTimeEntry.SetValue(date.Now())
-        self._stopDateTimeSync.onAttributeEdited(event)
-        self.onDateTimeChanged(event)
+        command.StopEffortCommand(self._effortList, self.items).do()
         
     def onStopDateTimeChanged(self, *args, **kwargs):
         self.onDateTimeChanged(*args, **kwargs)
