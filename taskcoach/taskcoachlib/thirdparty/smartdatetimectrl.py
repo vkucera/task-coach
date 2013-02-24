@@ -418,6 +418,9 @@ class Entry(wx.Panel):
 
     def OnChar(self, event):
         if event.GetKeyCode() == wx.WXK_TAB:
+            if event.GetModifiers():
+                event.Skip()
+                return
             self.DismissPopup()
             self.Navigate(not event.ShiftDown())
             return
