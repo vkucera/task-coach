@@ -450,7 +450,9 @@ class EffortStopTest(test.TestCase):
         self.effort2 = effort.Effort(self.task)
         self.taskList.append(self.task)
         self.effortList = effort.EffortList(self.taskList)
-        self.effortStop = gui.uicommand.EffortStop(effortList=self.effortList, 
+        self.viewer = DummyViewer()
+        self.effortStop = gui.uicommand.EffortStop(viewer=self.viewer,
+                                                   effortList=self.effortList, 
                                                    taskList=self.taskList)
     
     # Tests of EffortStop.enabled()

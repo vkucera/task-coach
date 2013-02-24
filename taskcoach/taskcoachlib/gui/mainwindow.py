@@ -280,7 +280,8 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
             uiCommands.extend([ 
                 None, 
                 uicommand.EffortStartButton(taskList=self.taskFile.tasks()), 
-                uicommand.EffortStop(effortList=self.taskFile.efforts(),
+                uicommand.EffortStop(viewer=self.viewer,
+                                     effortList=self.taskFile.efforts(),
                                      taskList=self.taskFile.tasks())])
         return uiCommands
 

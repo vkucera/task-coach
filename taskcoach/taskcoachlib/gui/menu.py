@@ -607,7 +607,7 @@ class ActionMenu(Menu):
             self.appendUICommands(
                 None,
                 uicommand.EffortStart(viewer=viewerContainer, taskList=tasks),
-                uicommand.EffortStop(effortList=efforts, taskList=tasks),
+                uicommand.EffortStop(viewer=viewerContainer, effortList=efforts, taskList=tasks),
                 uicommand.EditTrackedTasks(taskList=tasks, settings=settings))
 
 
@@ -645,7 +645,7 @@ class HelpMenu(Menu):
 
 
 class TaskBarMenu(Menu):
-    def __init__(self, taskBarIcon, settings, taskFile):
+    def __init__(self, taskBarIcon, settings, taskFile, viewer):
         super(TaskBarMenu, self).__init__(taskBarIcon)
         tasks = taskFile.tasks()
         efforts = taskFile.efforts()
@@ -672,7 +672,8 @@ class TaskBarMenu(Menu):
                 StartEffortForTaskMenu(taskBarIcon, 
                                        base.filter.DeletedFilter(tasks), 
                                        self, label), 'clock_icon')
-            self.appendUICommands(uicommand.EffortStop(effortList=efforts,
+            self.appendUICommands(uicommand.EffortStop(viewer=viewer,
+                                                       effortList=efforts,
                                                        taskList=tasks))
         self.appendUICommands(
             None,
@@ -819,7 +820,7 @@ class TaskPopupMenu(Menu):
                 uicommand.EffortNew(viewer=taskViewer, effortList=efforts,
                                     taskList=tasks, settings=settings),
                 uicommand.EffortStart(viewer=taskViewer, taskList=tasks),
-                uicommand.EffortStop(effortList=efforts, taskList=tasks))
+                uicommand.EffortStop(viewer=taskViewer, effortList=efforts, taskList=tasks))
         self.appendUICommands(
             None,
             uicommand.NewSubItem(viewer=taskViewer))
@@ -839,7 +840,7 @@ class EffortPopupMenu(Menu):
             uicommand.EffortNew(viewer=effortViewer, effortList=efforts,
                                 taskList=tasks, settings=settings),
             uicommand.EffortStartForEffort(viewer=effortViewer, taskList=tasks),
-            uicommand.EffortStop(effortList=efforts, taskList=tasks))
+            uicommand.EffortStop(viewer=effortViewer, effortList=efforts, taskList=tasks))
 
 
 class CategoryPopupMenu(Menu):

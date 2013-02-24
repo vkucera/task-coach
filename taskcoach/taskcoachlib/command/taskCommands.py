@@ -346,7 +346,7 @@ class StopEffortCommand(EffortCommand):
     
     def tasksToStopTracking(self):
         stoppable = lambda effort: effort.isBeingTracked() and not effort.isTotal()
-        return set([effort.task() for effort in self.list if stoppable(effort)])  # pylint: disable=W0621 
+        return set([effort.task() for effort in (self.items if self.items else self.list) if stoppable(effort)])  # pylint: disable=W0621 
 
 
 class ExtremePriorityCommand(base.BaseCommand):  # pylint: disable=W0223

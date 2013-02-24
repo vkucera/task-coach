@@ -315,7 +315,8 @@ class EffortViewer(base.ListViewer,
     def createActionToolBarUICommands(self):
         tasks = self.taskFile.tasks()
         return (uicommand.EffortStartForEffort(viewer=self, taskList=tasks),
-                uicommand.EffortStop(effortList=self.taskFile.efforts(), 
+                uicommand.EffortStop(viewer=self,
+                                     effortList=self.taskFile.efforts(), 
                                      taskList=tasks))
                 
     def createModeToolBarUICommands(self):

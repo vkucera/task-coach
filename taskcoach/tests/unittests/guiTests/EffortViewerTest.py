@@ -351,7 +351,8 @@ class CommonTestsMixin(object):
         
     def testStopEffortTracking(self):
         self.task.addEffort(effort.Effort(self.task))
-        stopUICommand = gui.uicommand.EffortStop(effortList=self.taskFile.efforts(),
+        stopUICommand = gui.uicommand.EffortStop(viewer=self.viewer,
+                                                 effortList=self.taskFile.efforts(),
                                                  taskList=self.taskFile.tasks())
         stopUICommand.doCommand()
         self.failIf(self.task.isBeingTracked())
