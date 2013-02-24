@@ -1668,7 +1668,7 @@ class EffortStartButton(mixin_uicommand.PopupButtonMixin, TaskListCommand):
         return any(not task.completed() for task in self.taskList)
     
 
-class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
+class EffortStop(EffortListCommand, TaskListCommand):
     defaultMenuText = _('Stop tracking or resume tracking effort\tShift+Ctrl+T')
     defaultHelpText = help.effortStopOrResume
     stopMenuText = _('St&op tracking %s\tShift+Ctrl+T')
