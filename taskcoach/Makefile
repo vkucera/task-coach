@@ -209,6 +209,7 @@ thirdpartymodules:
 	cd taskcoachlib/thirdparty/pubsub; patch -p1 < ../../../thirdparty/patches/pubsub.diff
 	cd taskcoachlib/thirdparty/squaremap; patch -p1 < ../../../thirdparty/patches/squaremap.diff
 	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/customtreectrl.diff
+	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/hypertreelist-headers.diff
 	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/hypertreelist.diff
 	$(PYTHON) fixinit.py
 
