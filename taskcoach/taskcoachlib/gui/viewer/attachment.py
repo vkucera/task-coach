@@ -176,3 +176,6 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable=W0223
 
     def deleteItemCommandClass(self):
         raise NotImplementedError  # pragma: no cover
+
+    def cutItemCommandClass(self):
+        raise NotImplementedError  # pragma: no cover

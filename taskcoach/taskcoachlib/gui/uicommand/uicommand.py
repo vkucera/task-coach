@@ -551,8 +551,7 @@ class EditCut(mixin_uicommand.NeedsSelectionMixin, ViewerCommand):
         if isinstance(windowWithFocus, wx.TextCtrl):
             windowWithFocus.Cut()
         else:
-            cutCommand = command.CutCommand(self.viewer.presentation(),
-                                            self.viewer.curselection())
+            cutCommand = self.viewer.cutItemCommand()
             cutCommand.do()
 
     def enabled(self, event):

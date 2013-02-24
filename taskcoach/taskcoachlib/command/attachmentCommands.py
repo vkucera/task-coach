@@ -95,20 +95,20 @@ class RemoveAttachmentCommand(base.BaseCommand):
     singular_name = _('Remove attachment to "%s"')
     
     def __init__(self, *args, **kwargs):
-        self.__attachments = kwargs.pop('attachments')
+        self._attachments = kwargs.pop('attachments')
         super(RemoveAttachmentCommand, self).__init__(*args, **kwargs)
 
     @patterns.eventSource
     def addAttachments(self, event=None):
         kwargs = dict(event=event)
         for item in self.items:
-            item.addAttachments(*self.__attachments, **kwargs) # pylint: disable=W0142
+            item.addAttachments(*self._attachments, **kwargs) # pylint: disable=W0142
         
     @patterns.eventSource
     def removeAttachments(self, event=None):
         kwargs = dict(event=event)
         for item in self.items:
-            item.removeAttachments(*self.__attachments, **kwargs) # pylint: disable=W0142
+            item.removeAttachments(*self._attachments, **kwargs) # pylint: disable=W0142
                 
     def do_command(self):
         super(RemoveAttachmentCommand, self).do_command()
@@ -121,3 +121,20 @@ class RemoveAttachmentCommand(base.BaseCommand):
     def redo_command(self):
         super(RemoveAttachmentCommand, self).redo_command()
         self.removeAttachments()
+
+
+class CutAttachmentCommand(base.CutCommandMixin, RemoveAttachmentCommand):
+    def itemsToCut(self):
+        return self._attachments
+
+    def sourceOfItemsToCut(self):
+        class Wrapper(object):
+            def __init__(self, items):
+                self.__items = items
+            def extend(self, attachments):
+                for item in self.__items:
+                    item.addAttachments(*attachments)
+            def removeItems(self, attachments):
+                for item in self.__items:
+                    item.removeAttachments(*attachments)
+        return Wrapper(self.items)

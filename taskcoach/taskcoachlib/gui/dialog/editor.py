@@ -743,6 +743,10 @@ class LocalAttachmentViewer(viewer.AttachmentViewer):  # pylint: disable=W0223
         return command.RemoveAttachmentCommand(None, [self.attachmentOwner], 
                                                attachments=self.curselection())
 
+    def cutItemCommand(self):
+        return command.CutAttachmentCommand(None, [self.attachmentOwner],
+                                            attachments=self.curselection())
+
 
 class AttachmentsPage(PageWithViewer):
     pageName = 'attachments'

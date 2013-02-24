@@ -511,7 +511,13 @@ class Viewer(patterns.Observer, wx.Panel):
 
     def deleteItemCommandClass(self):
         return command.DeleteCommand
-    
+
+    def cutItemCommand(self):
+        return self.cutItemCommandClass()(self.presentation(), self.curselection())
+
+    def cutItemCommandClass(self):
+        return command.CutCommand
+
     def onEditSubject(self, item, newValue):
         command.EditSubjectCommand(items=[item], newValue=newValue).do()
         
