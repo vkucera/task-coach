@@ -85,6 +85,10 @@ class TimeDeltaEntry(widgets.PanelWithBoxSizer):
         self.add(self._entry, flag=wx.EXPAND | wx.ALL, proportion=1)
         self.fit()
 
+    def NavigateBook(self, event):
+        self.GetParent().NavigateBook(not event.ShiftDown())
+        return True
+
     def GetValue(self):
         return date.parseTimeDelta(self._entry.GetValue())
     
@@ -108,7 +112,11 @@ class AmountEntry(widgets.PanelWithBoxSizer):
 
     def createEntry(self, amount):
         return widgets.masked.AmountCtrl(self, amount)
-  
+
+    def NavigateBook(self, event):
+        self.GetParent().NavigateBook(not event.ShiftDown())
+        return True
+
     def GetValue(self):
         return self._entry.GetValue()
 

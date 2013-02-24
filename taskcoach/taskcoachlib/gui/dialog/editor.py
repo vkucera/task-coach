@@ -502,7 +502,10 @@ class BudgetPage(Page):
     pageName = 'budget'
     pageTitle = _('Budget')
     pageIcon = 'calculator_icon'
-    
+
+    def NavigateBook(self, forward):
+        self.GetParent().NavigateBook(forward)
+
     def addEntries(self):
         self.addBudgetEntries()
         self.addLine()
@@ -866,7 +869,13 @@ class EditBook(widgets.Notebook):
         super(EditBook, self).__init__(parent)
         self.addPages(taskFile, items_are_new)
         self.__load_perspective(items_are_new)
-        
+
+    def NavigateBook(self, forward):
+        curSel = self.GetSelection()
+        curSel = curSel + 1 if forward else curSel - 1
+        if curSel >= 0 and curSel < self.GetPageCount():
+            self.SetSelection(curSel)
+
     def addPages(self, task_file, items_are_new):
         page_names = self.settings.getlist(self.settings_section(), 'pages') 
         for page_name in page_names:  
