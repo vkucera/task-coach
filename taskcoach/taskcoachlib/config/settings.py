@@ -308,7 +308,7 @@ class Settings(object, CachingConfigParser):
             path = self.pathToConfigDir_deprecated(environ=environ)
         return path
 
-    def pathToDataDir(self, *args):
+    def _pathToDataDir(self, *args):
         if operating_system.isGTK():
             from taskcoachlib.thirdparty.xdg import BaseDirectory
             path = BaseDirectory.save_data_path(meta.name)
@@ -341,12 +341,18 @@ class Settings(object, CachingConfigParser):
             os.makedirs(path)
         return path, exists
 
-    def pathToTemplatesDir(self):
+    def pathToDataDir(self, *args):
+        return self._pathToDataDir(*args)[0]
+
+    def _pathToTemplatesDir(self):
         try:
-            return self.pathToDataDir('templates')
+            return self._pathToDataDir('templates')
         except:
             pass # Fallback on old path
         return self.pathToTemplatesDir_deprecated(), True
+
+    def pathToTemplatesDir(self):
+        return self._pathToTemplatesDir()[0]
 
     def pathToConfigDir_deprecated(self, environ):
         try:
@@ -388,7 +394,7 @@ class Settings(object, CachingConfigParser):
     def migrateConfigurationFiles(self):
         # Templates. Extra care for Windows shortcut.
         oldPath = os.path.join(self.pathToConfigDir_deprecated(environ=os.environ), 'taskcoach-templates')
-        newPath, exists = self.pathToTemplatesDir()
+        newPath, exists = self._pathToTemplatesDir()
         if exists:
             return
         if oldPath != newPath:
