@@ -32,6 +32,8 @@ Release('1.3.25', 'February 28, 2013',
         Bugv2('''Make the effort stop menu a bit more contextual.''', '1381'),
         Bugv2('''Fix effort stop button interaction with undo.''', '1381'),
         Bugv2('''Fix flickering on Windows 7 when Aero is enabled.''', '1384'),
+        Bugv2('''Fix opening of the task editor and preferences on
+some locales.''', '1360'),
         Bugv2('''Sorting by modification or creation date/time didn't
 work.''', '1380'),
         ],

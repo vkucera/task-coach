@@ -756,8 +756,11 @@ class TimeEntry(Entry):
                     pattern += ' '
                 pattern += 'p'
         else:
-            amLit = decodeSystemString(datetime.time(hour=1).strftime('%p'))
-            idx = pattern.lower().find(amLit.lower())
+            amLitLocal = decodeSystemString(datetime.time(hour=1).strftime('%p'))
+            for amLit in [amLitLocal, 'am', 'a.m.']:
+                idx = pattern.lower().find(amLit.lower())
+                if idx != -1:
+                    break
             ampm = idx != -1
             if ampm:
                 pattern = pattern[:idx] + u'p' + pattern[idx + len(amLit):]
