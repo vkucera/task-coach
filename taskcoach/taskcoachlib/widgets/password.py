@@ -75,12 +75,29 @@ class KeychainPasswordWidget(wx.Dialog):
         self.EndModal(wx.ID_CANCEL)
 
 
+_PASSWORDCACHE = None
+
 def GetPassword(domain, username, reset=False):
+    global _PASSWORDCACHE
+
     try:
         from taskcoachlib.thirdparty.keyring import set_password, get_password
     except:
         # Keychain unavailable.
-        return wx.GetPasswordFromUser(_('Please enter your password.'), domain) or None
+        if _PASSWORDCACHE is None:
+            import StringIO, traceback
+            bf = StringIO.StringIO()
+            traceback.print_exc(file=bf)
+            wx.MessageBox(_('There was a problem trying to find out your system\'s keychain.\nPlease file a bug report (see the Help menu) and attach a screenshot of this message.\nError was:\n\n%s') % bf.getvalue(), _('Error'), wx.OK)
+            _PASSWORDCACHE = dict()
+        if (domain, username) in _PASSWORDCACHE and reset:
+            del _PASSWORDCACHE[(domain, username)]
+        if (domain, username) not in _PASSWORDCACHE:
+            pwd = wx.GetPasswordFromUser(_('Please enter your password.'), domain)
+            if not pwd:
+                return None
+            _PASSWORDCACHE[(domain, username)] = pwd
+        return _PASSWORDCACHE[(domain, username)]
 
     if reset:
         set_password(domain.encode('UTF-8'), username.encode('UTF-8'), '')
