@@ -229,7 +229,8 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable=W0223
                 None,
                 uicommand.EffortStart(viewer=self, 
                                       taskList=self.taskFile.tasks()),
-                uicommand.EffortStop(effortList=self.taskFile.efforts(),
+                uicommand.EffortStop(viewer=self,
+                                     effortList=self.taskFile.efforts(),
                                      taskList=self.taskFile.tasks()))
         return uiCommands + super(BaseTaskTreeViewer, self).createActionToolBarUICommands()
     

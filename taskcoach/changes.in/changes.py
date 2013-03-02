@@ -22,6 +22,24 @@ from changetypes import *
 
 releases = [
 
+Release('1.3.25', 'February 28, 2013',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bugv2('''Fix fonts in calendar viewer.''', '1370'),
+        Bugv2('''Fix cutting attachments.'''),
+        Bugv2('''Fix focus on category viewer in task editor.''', '1382'),
+        Bugv2('''Fix keyboard navigation in the editor's tabs.''', '1216'),
+        Bugv2('''Make the effort stop menu a bit more contextual.''', '1381'),
+        Bugv2('''Fix effort stop button interaction with undo.''', '1381'),
+        Bugv2('''Fix flickering on Windows 7 when Aero is enabled.''', '1384'),
+        Bugv2('''Fix opening of the task editor and preferences on
+some locales.''', '1360'),
+        Bugv2('''Sorting by modification or creation date/time didn't
+work.''', '1380'),
+        Bugv2('''Fix checkbox focus hint on Windows (in the date picker).''', '1372'),
+        ],
+    ),
+
 Release('1.3.24', 'February 17, 2013',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[

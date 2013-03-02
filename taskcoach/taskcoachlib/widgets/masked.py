@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import operating_system
 from wx.lib import masked
+import wx
 import locale
 
 
@@ -29,6 +30,14 @@ class FixOverwriteSelectionMixin(object):
             # current field instead of moving to the next field:
             start, end = end, start
         super(FixOverwriteSelectionMixin, self)._SetSelection(start, end)
+
+    def _OnKeyDown(self, event):
+        # Allow keyboard navigation in notebook. Just skipping the event does not work;
+        # propagate it all the way up...
+        if event.GetKeyCode() == wx.WXK_TAB and event.GetModifiers() and hasattr(self.GetParent(), 'NavigateBook'):
+            if self.GetParent().NavigateBook(event):
+                return
+        super(FixOverwriteSelectionMixin, self)._OnChar(event)
 
 
 class TextCtrl(FixOverwriteSelectionMixin, masked.TextCtrl):
@@ -67,7 +76,7 @@ class TimeDeltaCtrl(TextCtrl):
         # show negative values) or if the value is actually negative, allow
         # the minus sign in the mask. Otherwise only allow for numbers.
         mask = 'X{9}:##:##' if negative_value or readonly else '#{9}:##:##'
-        hours = self.__hour_string(hours, negative_value) 
+        hours = self.__hour_string(hours, negative_value)
         super(TimeDeltaCtrl, self).__init__(parent, mask=mask, formatcodes='FS',
             fields=[masked.Field(formatcodes='Rr', defaultValue=hours),
                     masked.Field(defaultValue='%02d' % minutes),

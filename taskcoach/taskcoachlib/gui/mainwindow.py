@@ -31,10 +31,16 @@ from taskcoachlib.powermgt import PowerStateMixin
 from taskcoachlib.help.balloontips import BalloonTipManager
 from taskcoachlib.thirdparty.pubsub import pub
 import taskcoachlib.thirdparty.aui as aui
-import wx
+import wx, ctypes
 
 
 def turn_on_double_buffering_on_windows(window):
+    # This has actually an adverse effect when Aero is enabled...
+    from ctypes import wintypes
+    dll = ctypes.WinDLL('dwmapi.dll')
+    ret = wintypes.BOOL()
+    if dll.DwmIsCompositionEnabled(ctypes.pointer(ret)) == 0 and ret.value:
+        return
     import win32gui, win32con  # pylint: disable=F0401
     exstyle = win32gui.GetWindowLong(window.GetHandle(), win32con.GWL_EXSTYLE)
     exstyle |= win32con.WS_EX_COMPOSITED
@@ -282,7 +288,8 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
             uiCommands.extend([ 
                 None, 
                 uicommand.EffortStartButton(taskList=self.taskFile.tasks()), 
-                uicommand.EffortStop(effortList=self.taskFile.efforts(),
+                uicommand.EffortStop(viewer=self.viewer,
+                                     effortList=self.taskFile.efforts(),
                                      taskList=self.taskFile.tasks())])
         return uiCommands
 

@@ -263,7 +263,7 @@ class Application(object):
             self.taskBarIcon = taskbaricon.TaskBarIcon(self.mainwindow,  # pylint: disable=W0201
                 self.taskFile.tasks(), self.settings)
             self.taskBarIcon.setPopupMenu(menu.TaskBarMenu(self.taskBarIcon, 
-                self.settings, self.taskFile))
+                self.settings, self.taskFile, self.mainwindow.viewer))
 
     def __can_create_task_bar_icon(self):
         try:

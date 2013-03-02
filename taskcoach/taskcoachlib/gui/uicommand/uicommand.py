@@ -564,8 +564,7 @@ class EditCut(mixin_uicommand.NeedsSelectionMixin, ViewerCommand):
         if isinstance(windowWithFocus, wx.TextCtrl):
             windowWithFocus.Cut()
         else:
-            cutCommand = command.CutCommand(self.viewer.presentation(),
-                                            self.viewer.curselection())
+            cutCommand = self.viewer.cutItemCommand()
             cutCommand.do()
 
     def enabled(self, event):
@@ -1682,7 +1681,7 @@ class EffortStartButton(mixin_uicommand.PopupButtonMixin, TaskListCommand):
         return any(not task.completed() for task in self.taskList)
     
 
-class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
+class EffortStop(EffortListCommand, TaskListCommand, ViewerCommand):
     defaultMenuText = _('Stop tracking or resume tracking effort\tShift+Ctrl+T')
     defaultHelpText = help.effortStopOrResume
     stopMenuText = _('St&op tracking %s\tShift+Ctrl+T')
@@ -1696,11 +1695,22 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
             helpText=self.defaultHelpText, kind=wx.ITEM_CHECK, *args, **kwargs)
         self.__tracker = effort.EffortListTracker(self.effortList)
         self.__currentBitmap = None  # Don't know yet what our bitmap is
-                        
+
+    def efforts(self):
+        selectedEfforts = set()
+        for item in self.viewer.curselection():
+            if isinstance(item, task.Task):
+                selectedEfforts |= set(item.efforts())
+            elif isinstance(item, effort.Effort):
+                selectedEfforts.add(item)
+        selectedEfforts &= set(self.__tracker.trackedEfforts())
+        return selectedEfforts if selectedEfforts else self.__tracker.trackedEfforts()
+
     def doCommand(self, event=None):
-        if self.__tracker.trackedEfforts():
+        efforts = self.efforts()
+        if efforts:
             # Stop the tracked effort(s)
-            effortCommand = command.StopEffortCommand(self.effortList)
+            effortCommand = command.StopEffortCommand(self.effortList, efforts)
         else:
             # Resume tracking the last task
             effortCommand = command.StartEffortCommand(self.taskList, 
@@ -1760,7 +1770,7 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
         
     def getMenuText(self, paused=None):  # pylint: disable=W0221
         if self.anyTrackedEfforts():
-            trackedEfforts = self.__tracker.trackedEfforts()
+            trackedEfforts = list(self.efforts())
             subject = _('multiple tasks') if len(trackedEfforts) > 1 \
                       else trackedEfforts[0].task().subject()
             return self.stopMenuText % self.trimmedSubject(subject)
@@ -1783,7 +1793,7 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
         return bool(self.effortList.maxDateTime())
     
     def anyTrackedEfforts(self):
-        return bool(self.__tracker.trackedEfforts())
+        return bool(self.efforts())
 
     def mostRecentTrackedTask(self):
         stopTimes = [(effort.getStop(), effort) for effort in self.effortList if effort.getStop() is not None]

@@ -455,7 +455,9 @@ class EffortStopTest(test.TestCase):
         self.effort2 = effort.Effort(self.task)
         self.taskList.append(self.task)
         self.effortList = effort.EffortList(self.taskList)
-        self.effortStop = gui.uicommand.EffortStop(effortList=self.effortList, 
+        self.viewer = DummyViewer()
+        self.effortStop = gui.uicommand.EffortStop(viewer=self.viewer,
+                                                   effortList=self.effortList, 
                                                    taskList=self.taskList)
     
     # Tests of EffortStop.enabled()
@@ -548,3 +550,40 @@ class EffortStopTest(test.TestCase):
         self.task.addEffort(self.effort2)
         self.effortStop.doCommand()
         self.failIf(self.task.isBeingTracked())
+
+
+class AttachmentTest(test.wxTestCase):
+    def setUp(self):
+        super(AttachmentTest, self).setUp()
+
+        task.Task.settings = config.Settings(load=False)
+        taskFile = persistence.TaskFile()
+        self.task = task.Task()
+        taskFile.tasks().extend([self.task])
+        self.attachment = attachment.FileAttachment('Test')
+        self.task.addAttachment(self.attachment)
+        self.viewer = gui.dialog.editor.LocalAttachmentViewer(self.frame, taskFile,
+                                                              task.Task.settings, owner=self.task,
+                                                              settingsSection='attachmentviewer')
+
+    def select(self):
+        self.viewer.widget.select_all()
+        self.viewer.updateSelection()
+
+    def test_delete(self):
+        self.select()
+        cmd = gui.uicommand.Delete(viewer=self.viewer)
+        cmd.doCommand(None)
+        self.assertEqual(self.task.attachments(), [])
+
+    def test_cut(self):
+        self.select()
+        cmd = gui.uicommand.EditCut(viewer=self.viewer)
+        cmd.doCommand(None)
+        self.assertEqual(self.task.attachments(), [])
+
+    def test_cutpaste(self):
+        self.test_cut()
+        cmd = gui.uicommand.EditPaste(viewer=self.viewer)
+        cmd.doCommand(None)
+        self.assertEqual(self.task.attachments(), [self.attachment])
