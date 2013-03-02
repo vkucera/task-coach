@@ -226,14 +226,14 @@ class DeleteCommand(BaseCommand, SaveStateMixin):
         self.list.removeItems(self.items)
 
 
-class CutCommand(DeleteCommand):
+class CutCommandMixin(object):
     plural_name = _('Cut')
     singular_name = _('Cut "%s"')
 
     def __putItemsOnClipboard(self):
         cb = Clipboard()
         self.__previousClipboardContents = cb.get() # pylint: disable=W0201
-        cb.put(self.items, self.list)
+        cb.put(self.itemsToCut(), self.sourceOfItemsToCut())
 
     def __removeItemsFromClipboard(self):
         cb = Clipboard()
@@ -241,15 +241,23 @@ class CutCommand(DeleteCommand):
 
     def do_command(self):
         self.__putItemsOnClipboard()
-        super(CutCommand, self).do_command()
+        super(CutCommandMixin, self).do_command()
 
     def undo_command(self):
         self.__removeItemsFromClipboard()
-        super(CutCommand, self).undo_command()
+        super(CutCommandMixin, self).undo_command()
 
     def redo_command(self):
         self.__putItemsOnClipboard()
-        super(CutCommand, self).redo_command()
+        super(CutCommandMixin, self).redo_command()
+
+
+class CutCommand(CutCommandMixin, DeleteCommand):
+    def itemsToCut(self):
+        return self.items
+
+    def sourceOfItemsToCut(self):
+        return self.list
 
         
 class PasteCommand(BaseCommand, SaveStateMixin):

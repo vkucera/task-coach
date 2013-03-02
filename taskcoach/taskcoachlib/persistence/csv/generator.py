@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib.i18n import _
 from taskcoachlib import render
 from taskcoachlib.domain import date
+import StringIO
 
 
 def extendedWithAncestors(selection):
@@ -61,6 +62,17 @@ class RowBuilder(object):
         for column in self.__columns:
             if self.shouldSplitDateAndTime(column):
                 row.extend(self.splitDateAndTime(column, item))
+            elif column.name() == 'notes':
+                def renderNotes(notes, indent=0):
+                    bf = StringIO.StringIO()
+                    spaces = '  ' * indent
+                    for note in notes:
+                        bf.write('%s%s\n%s%s\n' % (spaces, note.subject(), spaces, note.description()))
+                        bf.write(renderNotes(note.children(), indent + 1))
+                    return bf.getvalue()
+                row.append(renderNotes(item.notes()))
+            elif column.name() == 'attachments':
+                row.append(u'\n'.join([attachment.subject() for attachment in item.attachments()]))
             else:
                 row.append(column.render(item, humanReadable=False))
         row[0] = self.indent(item) + row[0]

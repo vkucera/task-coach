@@ -18,5 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from task import Task
 from tasklist import TaskList
+from status import *
 import filter  # pylint: disable=W0622
 import sorter

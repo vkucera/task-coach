@@ -530,8 +530,7 @@ class EditCut(mixin_uicommand.NeedsSelectionMixin, ViewerCommand):
         if isinstance(windowWithFocus, wx.TextCtrl):
             windowWithFocus.Cut()
         else:
-            cutCommand = command.CutCommand(self.viewer.presentation(),
-                                            self.viewer.curselection())
+            cutCommand = self.viewer.cutItemCommand()
             cutCommand.do()
 
     def enabled(self, event):
@@ -1246,9 +1245,9 @@ class NewSubItem(mixin_uicommand.NeedsOneSelectedCompositeItemMixin,
         return self.defaultMenuText
 
 
-class TaskMarkActive(mixin_uicommand.NeedsSelectedTasksMixin, ViewerCommand):    
+class TaskMarkActive(mixin_uicommand.NeedsSelectedTasksMixin, settings_uicommand.SettingsCommand, ViewerCommand):    
     def __init__(self, *args, **kwargs):
-        super(TaskMarkActive, self).__init__(bitmap='led_blue_icon',
+        super(TaskMarkActive, self).__init__(bitmap=task.active.getBitmap(kwargs['settings']),
             menuText=_('Mark task &active\tAlt+RETURN'),
             helpText=_('Mark the selected task(s) active'),
             *args, **kwargs)
@@ -1265,9 +1264,9 @@ class TaskMarkActive(mixin_uicommand.NeedsSelectedTasksMixin, ViewerCommand):
             any([canBeMarkedActive(task) for task in self.viewer.curselection()])         
  
 
-class TaskMarkInactive(mixin_uicommand.NeedsSelectedTasksMixin, ViewerCommand):    
+class TaskMarkInactive(mixin_uicommand.NeedsSelectedTasksMixin, settings_uicommand.SettingsCommand, ViewerCommand):    
     def __init__(self, *args, **kwargs):
-        super(TaskMarkInactive, self).__init__(bitmap='led_grey_icon',
+        super(TaskMarkInactive, self).__init__(bitmap=task.inactive.getBitmap(kwargs['settings']),
             menuText=_('Mark task &inactive\tCtrl+Alt+RETURN'),
             helpText=_('Mark the selected task(s) inactive'),
             *args, **kwargs)
@@ -1284,9 +1283,9 @@ class TaskMarkInactive(mixin_uicommand.NeedsSelectedTasksMixin, ViewerCommand):
             any([canBeMarkedInactive(task) for task in self.viewer.curselection()])         
     
 
-class TaskMarkCompleted(mixin_uicommand.NeedsSelectedTasksMixin, ViewerCommand):    
+class TaskMarkCompleted(mixin_uicommand.NeedsSelectedTasksMixin, settings_uicommand.SettingsCommand, ViewerCommand):    
     def __init__(self, *args, **kwargs):
-        super(TaskMarkCompleted, self).__init__(bitmap='led_green_icon',
+        super(TaskMarkCompleted, self).__init__(bitmap=task.completed.getBitmap(kwargs['settings']),
             menuText=_('Mark task &completed\tCtrl+RETURN'),
             helpText=_('Mark the selected task(s) completed'),
             *args, **kwargs)
@@ -1631,7 +1630,7 @@ class EffortStartButton(mixin_uicommand.PopupButtonMixin, TaskListCommand):
         return any(not task.completed() for task in self.taskList)
     
 
-class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
+class EffortStop(EffortListCommand, TaskListCommand, ViewerCommand):
     defaultMenuText = _('Stop tracking or resume tracking effort\tShift+Ctrl+T')
     defaultHelpText = help.effortStopOrResume
     stopMenuText = _('St&op tracking %s\tShift+Ctrl+T')
@@ -1643,44 +1642,24 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
         super(EffortStop, self).__init__(bitmap='clock_resume_icon', 
             bitmap2='clock_stop_icon', menuText=self.defaultMenuText,
             helpText=self.defaultHelpText, kind=wx.ITEM_CHECK, *args, **kwargs)
-        # __trackedEfforts is a list and not a set because when an effort is
-        # moved from one task to another task we might get the event that the
-        # effort is (re)added to the effortList before the event that the effort
-        # was removed from the effortList. If we would use a set, the effort
-        # would be missing from the set after the removal event.    
-        self.__trackedEfforts = self.__filterTrackedEfforts(self.effortList)
+        self.__tracker = effort.EffortListTracker(self.effortList)
         self.__currentBitmap = None  # Don't know yet what our bitmap is
-        self.registerObserver(self.onEffortAdded, 
-                              eventType=self.effortList.addItemEventType(),
-                              eventSource=self.effortList)
-        self.registerObserver(self.onEffortRemoved, 
-                              eventType=self.effortList.removeItemEventType(),
-                              eventSource=self.effortList)
-        pub.subscribe(self.onTrackingChanged, 
-                      effort.Effort.trackingChangedEventType())
-                
-    def onEffortAdded(self, event):
-        self.__trackedEfforts.extend(self.__filterTrackedEfforts(event.values()))
 
-    def onEffortRemoved(self, event):
-        for effort in event.values():
-            if effort in self.__trackedEfforts:
-                self.__trackedEfforts.remove(effort)
-        
-    def onTrackingChanged(self, newValue, sender):
-        if sender.parent() is None:
-            return  # Ignore composite efforts
-        if newValue:
-            if sender not in self.__trackedEfforts:
-                self.__trackedEfforts.extend([sender])
-        else:
-            if sender in self.__trackedEfforts:
-                self.__trackedEfforts.remove(sender) 
-                        
+    def efforts(self):
+        selectedEfforts = set()
+        for item in self.viewer.curselection():
+            if isinstance(item, task.Task):
+                selectedEfforts |= set(item.efforts())
+            elif isinstance(item, effort.Effort):
+                selectedEfforts.add(item)
+        selectedEfforts &= set(self.__tracker.trackedEfforts())
+        return selectedEfforts if selectedEfforts else self.__tracker.trackedEfforts()
+
     def doCommand(self, event=None):
-        if self.__trackedEfforts:
+        efforts = self.efforts()
+        if efforts:
             # Stop the tracked effort(s)
-            effortCommand = command.StopEffortCommand(self.effortList)
+            effortCommand = command.StopEffortCommand(self.effortList, efforts)
         else:
             # Resume tracking the last task
             effortCommand = command.StartEffortCommand(self.taskList, 
@@ -1692,10 +1671,6 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
         # untracked efforts this command will resume them. Otherwise this 
         # command is disabled.
         return self.anyTrackedEfforts() or self.anyStoppedEfforts()
-    
-    @staticmethod
-    def __filterTrackedEfforts(efforts):
-        return [effort for effort in efforts if effort.isBeingTracked()]
 
     def onUpdateUI(self, event):
         super(EffortStop, self).onUpdateUI(event)
@@ -1744,8 +1719,9 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
         
     def getMenuText(self, paused=None):  # pylint: disable=W0221
         if self.anyTrackedEfforts():
-            subject = _('multiple tasks') if len(self.__trackedEfforts) > 1 \
-                      else self.__trackedEfforts[0].task().subject()
+            trackedEfforts = list(self.efforts())
+            subject = _('multiple tasks') if len(trackedEfforts) > 1 \
+                      else trackedEfforts[0].task().subject()
             return self.stopMenuText % self.trimmedSubject(subject)
         if paused is None:
             paused = self.anyStoppedEfforts()
@@ -1766,7 +1742,7 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
         return bool(self.effortList.maxDateTime())
     
     def anyTrackedEfforts(self):
-        return bool(self.__trackedEfforts)
+        return bool(self.efforts())
 
     def mostRecentTrackedTask(self):
         stopTimes = [(effort.getStop(), effort) for effort in self.effortList if effort.getStop() is not None]

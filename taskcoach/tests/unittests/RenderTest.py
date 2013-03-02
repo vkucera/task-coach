@@ -79,7 +79,10 @@ class RenderDateTime(test.TestCase):
         self.assertRenderedDateTime(expectedDateTime, 2010, 4, 5, 23, 0, 0)
         
     def testDateBefore1900(self):
-        self.failUnless('1800' in render.dateTime(date.DateTime(1800, 4, 5, 23, 0, 0)))
+        # Don't check for '1801' since the year may be formatted on only 2
+        # digits.
+        result = render.dateTime(date.DateTime(1801, 4, 5, 23, 0, 0))
+        self.failUnless('01' in result, result)
                          
                          
 class RenderDate(test.TestCase):

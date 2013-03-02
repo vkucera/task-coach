@@ -29,9 +29,22 @@ itemImagePlural = dict(book_icon='books_icon',
                        led_purple_icon='folder_purple_icon',
                        led_red_icon='folder_red_icon',
                        led_yellow_icon='folder_yellow_icon',
+                       checkmark_green_icon='checkmark_green_icon_multiple',
                        person_icon='persons_icon')
+
+
+itemImageOpen = dict()
+for _color in ['blue', 'grey', 'green', 'orange', 'purple', 'red', 'yellow']:
+    itemImageOpen['folder_%s_icon' % _color] = 'folder_%s_open_icon' % _color
+
+def getImageOpen(name):
+    return itemImageOpen.get(name, name)
 
 
 itemImageSingular = dict()
 for key, value in itemImagePlural.iteritems():
     itemImageSingular[value] = key
+
+
+def getImagePlural(name):
+    return itemImagePlural.get(name, name)

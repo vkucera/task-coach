@@ -15,7 +15,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with smartdatetimectrl.  If not, see <http://www.gnu.org/licenses/>.
 
-import wx, math, time, re, datetime, calendar, StringIO
+import wx, math, time, re, datetime, calendar, StringIO, platform
 import wx.lib.platebtn as pbtn
 
 
@@ -40,6 +40,112 @@ def decodeSystemString(s):
     if not encoding:
         encoding = 'utf-8'
     return s.decode(encoding, 'ignore')
+
+
+def drawFocusRect(dc, x, y, w, h):
+    color = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
+    if platform.system() == 'Windows' and platform.win32_ver()[0] == 'XP':
+        # Default is too ugly.
+        r, g, b = color.Red(), color.Green(), color.Blue()
+        color = wx.Colour((r + 255) // 2, (g + 255) // 2, (b + 255) // 2)
+    dc.SetPen(wx.Pen(color))
+    dc.SetBrush(wx.Brush(color))
+    dc.DrawRoundedRectangle(x, y, w, h, 3)
+
+
+class _CheckBox(wx.Panel):
+    """
+    Checkbox that can get keyboard focus on OS X and draws a
+    better hint when it has, on all platforms.
+    """
+    def __init__(self, parent, label=None):
+        super(_CheckBox, self).__init__(parent)
+        self.__value = False
+        self.__label = label
+
+        self.Bind(wx.EVT_PAINT, self.OnPaint)
+        self.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
+        self.Bind(wx.EVT_SET_FOCUS, self.OnFocusChange)
+        self.Bind(wx.EVT_KILL_FOCUS, self.OnFocusChange)
+        self.Bind(wx.EVT_CHAR, self.OnChar)
+
+        w, h = 18, 16
+        if self.__label:
+            dc = wx.WindowDC(self)
+            dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
+            tw, th = dc.GetTextExtent(self.__label)
+            w = w + tw + 4
+            h = max(h, th)
+        self.SetClientSize((w + 4, h + 4))
+
+    def GetValue(self):
+        return self.__value
+
+    def SetValue(self, value):
+        self.__value = value
+        self.Refresh()
+
+    def OnLeftUp(self, event):
+        self.__value = not self.__value
+        self.Refresh()
+        event = wx.PyCommandEvent(wx.wxEVT_COMMAND_CHECKBOX_CLICKED)
+        event.SetEventObject(self)
+        event.SetInt(self.__value)
+        self.ProcessEvent(event)
+
+    def OnChar(self, event):
+        if event.GetKeyCode() == wx.WXK_SPACE:
+            self.__value = not self.__value
+            self.Refresh()
+            event = wx.PyCommandEvent(wx.wxEVT_COMMAND_CHECKBOX_CLICKED)
+            event.SetEventObject(self)
+            event.SetInt(self.__value)
+            self.ProcessEvent(event)
+        else:
+            event.Skip()
+
+    def OnFocusChange(self, event):
+        self.Refresh()
+        event.Skip()
+
+    def OnPaint(self, event):
+        w, h = self.GetClientSize()
+        if platform.system() == 'Windows' and platform.win32_ver()[0] == 'XP':
+            cbw, cbh = 16, 16
+        else:
+            cbw, cbh = 16, 16
+        dc = wx.PaintDC(self)
+        dc.SetTextForeground(wx.BLACK)
+        if self.FindFocus() == self:
+            # wxPen.SetDashes does not work; draw a solid rectangle instead
+            drawFocusRect(dc, 0, 0, w, h)
+            dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT))
+        x = (20 - cbw) // 2
+        y = (h - cbh) // 2
+        wx.RendererNative.Get().DrawCheckBox(self, dc, (x, y, cbw, cbh), wx.CONTROL_CHECKED if self.__value else 0)
+        if platform.system() == 'Windows' and platform.win32_ver()[0] == 'XP':
+            # Draw the 3D box ourselves...
+            cbw, cbh = 15, 15
+            dc.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW)))
+            dc.DrawLine(x, y, x + cbw, y)
+            dc.DrawLine(x, y, x, y + cbh)
+            dc.SetPen(wx.BLACK_PEN)
+            dc.DrawLine(x + 1, y + 1, x + cbw - 1, y + 1)
+            dc.DrawLine(x + 1, y + 1, x + 1, y + cbh - 1)
+            dc.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNFACE)))
+            dc.DrawLine(x + cbw - 1, y + 1, x + cbw - 1, y + cbh - 1)
+            dc.DrawLine(x + cbw - 1, y + cbh - 1, x + 1, y + cbh - 1)
+            dc.SetPen(wx.WHITE_PEN)
+            dc.DrawLine(x + cbw, y, x + cbw, y + cbh + 1)
+            dc.DrawLine(x, y + cbh, x + cbw, y + cbh)
+            if not self.__value:
+                # Geeez
+                dc.SetBrush(wx.WHITE_BRUSH)
+                dc.DrawRectangle(x + 2, y + 2, cbw - 3, cbh - 3)
+        if self.__label:
+            dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
+            tw, th = dc.GetTextExtent(self.__label)
+            dc.DrawText(self.__label, 22, (h - th) // 2)
 
 
 class NullField(object):
@@ -398,10 +504,7 @@ class Entry(wx.Panel):
                     dc.DrawText(widget, x, y)
                 else:
                     if widget == self.__focus and (self.FindFocus() == self or self.__forceFocus):
-                        color = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
-                        dc.SetPen(wx.Pen(color))
-                        dc.SetBrush(wx.Brush(color))
-                        dc.DrawRoundedRectangle(x, y, w, h, 3)
+                        drawFocusRect(dc, x, y, w, h)
                         dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT))
                     else:
                         dc.SetTextForeground(wx.BLACK)
@@ -418,6 +521,9 @@ class Entry(wx.Panel):
 
     def OnChar(self, event):
         if event.GetKeyCode() == wx.WXK_TAB:
+            if event.GetModifiers() & ~wx.MOD_SHIFT:
+                event.Skip()
+                return
             self.DismissPopup()
             self.Navigate(not event.ShiftDown())
             return
@@ -736,23 +842,31 @@ class TimeEntry(Entry):
     Entry.addFormat(SecondFormatCharacter)
 
     def __init__(self, *args, **kwargs):
-        fmt = kwargs.pop('format', lambda x: x.strftime('%H:%M:%S'))
+        fmt = kwargs.pop('format', lambda x: decodeSystemString(x.strftime('%H:%M:%S')))
         self.__formatter = fmt
         pattern = decodeSystemString(fmt(datetime.time(hour=11, minute=33, second=44)))
         pattern = re.sub('3+', 'M', pattern)
         pattern = re.sub('1+', 'H', pattern)
         pattern = re.sub('4+', 'S', pattern)
 
-        # Work around a bug in wx...
-        if time.strftime('%p') == '' and fmt(datetime.time(hour=1, minute=0)) == fmt(datetime.time(hour=13, minute=0)):
-            ampm = True
-            # We can't actually guess where it should be so put it at the end.
-            if not pattern.endswith(' '):
-                pattern += ' '
-            pattern += 'p'
+        ampm = False
+        # wx initializes the locale itself (at least under GTK) so %p may end up swallowed.
+        if time.strftime('%p') == '':
+            if fmt(datetime.time(hour=1, minute=0)) == fmt(datetime.time(hour=13, minute=0)):
+                ampm = True
+                # We can't actually guess where it should be so put it at the end.
+                if not pattern.endswith(' '):
+                    pattern += ' '
+                pattern += 'p'
         else:
-            ampm = pattern.lower().find('am') != -1
-            pattern = re.sub('(?i)am', 'p', pattern)
+            amLitLocal = decodeSystemString(datetime.time(hour=1).strftime('%p'))
+            for amLit in [amLitLocal, 'am', 'a.m.']:
+                idx = pattern.lower().find(amLit.lower())
+                if idx != -1:
+                    break
+            ampm = idx != -1
+            if ampm:
+                pattern = pattern[:idx] + u'p' + pattern[idx + len(amLit):]
 
         self.__value = datetime.time(hour=kwargs.get('hour', 0), minute=kwargs.get('minute', 0), second=kwargs.get('second', 0))
         self.__minuteDelta = kwargs.pop('minuteDelta', 10)
@@ -1045,7 +1159,7 @@ class MonthField(NumericField):
 
 class AbbreviatedMonthField(EnumerationField):
     def __init__(self, **kwargs):
-        kwargs['choices'] = list(reversed([(datetime.date(year=2012, month=month, day=1).strftime('%b'), month) for month in xrange(1, 13)]))
+        kwargs['choices'] = list(reversed([(decodeSystemString(datetime.date(year=2012, month=month, day=1).strftime('%b')), month) for month in xrange(1, 13)]))
         kwargs['enablePopup'] = False
         kwargs['width'] = 2
         super(AbbreviatedMonthField, self).__init__(**kwargs)
@@ -1053,7 +1167,7 @@ class AbbreviatedMonthField(EnumerationField):
 
 class FullMonthField(EnumerationField):
     def __init__(self, **kwargs):
-        kwargs['choices'] = list(reversed([(datetime.date(year=2012, month=month, day=1).strftime('%B'), month) for month in xrange(1, 13)]))
+        kwargs['choices'] = list(reversed([(decodeSystemString(datetime.date(year=2012, month=month, day=1).strftime('%B')), month) for month in xrange(1, 13)]))
         kwargs['enablePopup'] = False
         kwargs['width'] = 2
         super(AbbreviatedMonthField, self).__init__(**kwargs)
@@ -1109,12 +1223,12 @@ class DateEntry(Entry):
     Entry.addFormat(DayFormatCharacter)
 
     def __init__(self, *args, **kwargs):
-        fmt = kwargs.pop('format', lambda x: x.strftime('%x'))
+        fmt = kwargs.pop('format', lambda x: decodeSystemString(x.strftime('%x')))
         self.__formatter = fmt
         fmt = decodeSystemString(fmt(datetime.date(year=3333, day=22, month=11)))
 
         for fmtChar in ['B', 'b']:
-            substring = datetime.date(year=3333, day=22, month=11).strftime('%%%s' % fmtChar)
+            substring = decodeSystemString(datetime.date(year=3333, day=22, month=11).strftime('%%%s' % fmtChar))
             if fmt.find(substring) != -1:
                 fmt = fmt.replace(substring, fmtChar)
                 break
@@ -1744,10 +1858,7 @@ class _CalendarPopup(_PopupWindow):
                     dc.SetTextForeground(wx.RED if (dayIndex + calendar.firstweekday()) % 7 in [5, 6] else wx.BLACK)
 
                     if dt == self.__selection:
-                        color = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
-                        dc.SetPen(wx.Pen(color))
-                        dc.SetBrush(wx.Brush(color))
-                        dc.DrawRectangle(x, y, self.__maxDim, self.__maxDim)
+                        drawFocusRect(dc, x, y, self.__maxDim, self.__maxDim)
                         dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT))
 
                     if not active:
@@ -1843,10 +1954,7 @@ class _MultipleChoicesPopup(_PopupWindow):
         for label, value in self.__choices:
             tw, th = dc.GetTextExtent(label)
             if value == self.__value:
-                color = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
-                dc.SetPen(wx.Pen(color))
-                dc.SetBrush(wx.Brush(color))
-                dc.DrawRoundedRectangle(1, y, w - 2, th, 3)
+                drawFocusRect(dc, 1, y, w - 2, th)
                 dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT))
             else:
                 dc.SetTextForeground(wx.BLACK)
@@ -1906,8 +2014,8 @@ class SmartDateTimeCtrl(wx.Panel):
         value = kwargs.pop('value', None)
         label = kwargs.pop('label', u'')
         self.__enableNone = kwargs.pop('enableNone', False)
-        dateFormat = kwargs.pop('dateFormat', lambda x: x.strftime('%x'))
-        timeFormat = kwargs.pop('timeFormat', lambda x: x.strftime('%H:%M:%S'))
+        dateFormat = kwargs.pop('dateFormat', lambda x: decodeSystemString(x.strftime('%x')))
+        timeFormat = kwargs.pop('timeFormat', lambda x: decodeSystemString(x.strftime('%H:%M:%S')))
         startHour = kwargs.pop('startHour', 0)
         endHour = kwargs.pop('endHour', 24)
         minuteDelta = kwargs.pop('minuteDelta', 10)
@@ -1920,9 +2028,8 @@ class SmartDateTimeCtrl(wx.Panel):
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.__label = None
         if self.__enableNone:
-            self.__checkbox = wx.CheckBox(self, wx.ID_ANY, label)
+            self.__checkbox = _CheckBox(self, label)
             wx.EVT_CHECKBOX(self.__checkbox, wx.ID_ANY, self.OnToggleNone)
-            wx.EVT_SET_FOCUS(self.__checkbox, self.__OnFirstFocus)
             sizer.Add(self.__checkbox, 0, wx.ALL|wx.ALIGN_CENTRE, 3)
             self.__label = self.__checkbox
         elif label:
@@ -1957,11 +2064,6 @@ class SmartDateTimeCtrl(wx.Panel):
         EVT_TIME_NEXT_DAY(self, self.OnNextDay)
         EVT_TIME_PREV_DAY(self, self.OnPrevDay)
 
-    def __OnFirstFocus(self, event):
-        if self.__checkbox.GetValue():
-            self.__dateCtrl.SetFocus()
-        self.__checkbox.Unbind(wx.EVT_SET_FOCUS)
-
     def __OnPopupRelativeChoices(self, event):
         self.__timeCtrl.PopupRelativeChoices()
 
@@ -1978,7 +2080,7 @@ class SmartDateTimeCtrl(wx.Panel):
                 return True
             elif event.GetKeyCode() in [ord('n'), ord('N')]:
                 # Now
-                self.SetDateTime(datetime.datetime.now())
+                self.SetDateTime(datetime.datetime.now(), notify=True)
                 return True
         return False
 
@@ -2166,11 +2268,11 @@ if __name__ == '__main__':
             super(Dialog, self).__init__(None, wx.ID_ANY, 'Test', style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER)
             sz = wx.BoxSizer(wx.VERTICAL)
 
-            pnl1 = SmartDateTimeCtrl(self, label='Start', enableNone=True, timeFormat=lambda x: x.strftime('%I:%M %p'), dateFormat=lambda x: x.strftime('%Y %b %d'), startHour=8, endHour=18)
+            pnl1 = SmartDateTimeCtrl(self, label='Start', enableNone=True, timeFormat=lambda x: decodeSystemString(x.strftime('%I:%M %p')), dateFormat=lambda x: decodeSystemString(x.strftime('%Y %b %d')), startHour=8, endHour=18)
             pnl1.EnableChoices()
             sz.Add(pnl1, 0, wx.ALL|wx.ALIGN_LEFT, 3)
 
-            pnl2 = SmartDateTimeCtrl(self, label='End', enableNone=True, timeFormat=lambda x: x.strftime('%H:%M:%S'), showRelative=True)
+            pnl2 = SmartDateTimeCtrl(self, label='End', enableNone=True, timeFormat=lambda x: decodeSystemString(x.strftime('%H:%M:%S')), showRelative=True)
             pnl2.EnableChoices()
             sz.Add(pnl2, 0, wx.ALL|wx.ALIGN_LEFT, 3)
 

@@ -635,24 +635,24 @@ class CommonTestsMixin(object):
     def testIconUpdatesWhenPlannedStartDateTimeChanges(self):
         self.taskList.append(self.task)
         self.task.setPlannedStartDateTime(date.Now() + date.ONE_DAY)
-        self.assertIcon('led_grey_icon')
+        self.assertIcon(task.inactive.getBitmap(self.settings))
 
     def testIconUpdatesWhenDueDateTimeChanges(self):
         self.taskList.append(self.task)
         self.task.setDueDateTime(date.Now() + date.ONE_HOUR)
-        self.assertIcon('led_orange_icon')
+        self.assertIcon(task.duesoon.getBitmap(self.settings))
 
     def testIconUpdatesWhenCompletionDateTimeChanges(self):
         self.taskList.append(self.task)
         self.task.setCompletionDateTime(date.Now())
-        self.assertIcon('led_green_icon')
+        self.assertIcon(task.completed.getBitmap(self.settings))
 
     def testIconUpdatesWhenPrerequisiteIsAdded(self):
         prerequisite = task.Task('zzz')
         self.taskList.extend([prerequisite, self.task])
         self.task.addPrerequisites([prerequisite])
         prerequisite.addDependencies([self.task])
-        self.assertIcon('led_grey_icon')
+        self.assertIcon(task.inactive.getBitmap(self.settings))
 
     def testIconUpdatesWhenPrerequisiteIsCompleted(self):
         prerequisite = task.Task(subject='zzz')
@@ -660,7 +660,7 @@ class CommonTestsMixin(object):
         self.task.addPrerequisites([prerequisite])
         prerequisite.addDependencies([self.task]) 
         prerequisite.setCompletionDateTime(date.Now())
-        self.assertIcon('led_purple_icon')
+        self.assertIcon(task.late.getBitmap(self.settings))
         
     def testIconUpdatesWhenEffortTrackingStarts(self):
         self.taskList.append(self.task)
@@ -671,19 +671,19 @@ class CommonTestsMixin(object):
         self.taskList.append(self.task)
         self.task.addEffort(effort.Effort(self.task))
         self.task.stopTracking()
-        self.assertIcon('led_blue_icon')
+        self.assertIcon(task.active.getBitmap(self.settings))
         
     def testIconUpdatesWhenTaskBecomesOverdue(self):
         dueDateTime = date.Now() + date.TimeDelta(seconds=10)
         dueDateTime = dueDateTime.replace(microsecond=0)
         self.task.setDueDateTime(dueDateTime)
         self.taskList.append(self.task)
-        self.assertIcon('led_orange_icon')
+        self.assertIcon(task.duesoon.getBitmap(self.settings))
         now = dueDateTime + date.ONE_SECOND
         oldNow = date.Now
         date.Now = lambda: now
         self.task.onOverDue()        
-        self.assertIcon('led_red_icon')
+        self.assertIcon(task.overdue.getBitmap(self.settings))
         date.Now = oldNow
         
     def testModeIsSavedInSettings(self):

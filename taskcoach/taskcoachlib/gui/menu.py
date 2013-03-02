@@ -579,9 +579,9 @@ class ActionMenu(Menu):
         # Start of task specific actions:
         self.appendUICommands(
             None,
-            uicommand.TaskMarkInactive(viewer=viewerContainer),
-            uicommand.TaskMarkActive(viewer=viewerContainer),
-            uicommand.TaskMarkCompleted(viewer=viewerContainer),
+            uicommand.TaskMarkInactive(settings=settings, viewer=viewerContainer),
+            uicommand.TaskMarkActive(settings=settings, viewer=viewerContainer),
+            uicommand.TaskMarkCompleted(settings=settings, viewer=viewerContainer),
             None)
         self.appendMenu(_('Change task &priority'), 
                         TaskPriorityMenu(mainwindow, tasks, viewerContainer),
@@ -590,7 +590,7 @@ class ActionMenu(Menu):
             self.appendUICommands(
                 None,
                 uicommand.EffortStart(viewer=viewerContainer, taskList=tasks),
-                uicommand.EffortStop(effortList=efforts, taskList=tasks),
+                uicommand.EffortStop(viewer=viewerContainer, effortList=efforts, taskList=tasks),
                 uicommand.EditTrackedTasks(taskList=tasks, settings=settings))
 
 
@@ -628,7 +628,7 @@ class HelpMenu(Menu):
 
 
 class TaskBarMenu(Menu):
-    def __init__(self, taskBarIcon, settings, taskStore):
+    def __init__(self, taskBarIcon, settings, taskStore, viewer):
         super(TaskBarMenu, self).__init__(taskBarIcon)
         tasks = taskStore.tasks()
         efforts = taskStore.efforts()
@@ -655,7 +655,8 @@ class TaskBarMenu(Menu):
                 StartEffortForTaskMenu(taskBarIcon, 
                                        tasks, 
                                        self, label), 'clock_icon')
-            self.appendUICommands(uicommand.EffortStop(effortList=efforts,
+            self.appendUICommands(uicommand.EffortStop(viewer=viewer,
+                                                       effortList=efforts,
                                                        taskList=tasks))
         self.appendUICommands(
             None,
@@ -685,7 +686,7 @@ class ToggleCategoryMenu(DynamicMenu):
     def addMenuItemsForCategories(self, categories, menu):
         # pylint: disable=W0621
         categories = categories[:]
-        categories.sort(key=lambda category: category.subject())
+        categories.sort(key=lambda category: category.subject().lower())
         for category in categories:
             uiCommand = uicommand.ToggleCategory(category=category, 
                                                  viewer=self.viewer)
@@ -789,9 +790,9 @@ class TaskPopupMenu(Menu):
                         'folder_blue_arrow_icon')
         self.appendUICommands(
             None,
-            uicommand.TaskMarkInactive(viewer=taskViewer),
-            uicommand.TaskMarkActive(viewer=taskViewer),    
-            uicommand.TaskMarkCompleted(viewer=taskViewer),
+            uicommand.TaskMarkInactive(settings=settings, viewer=taskViewer),
+            uicommand.TaskMarkActive(settings=settings, viewer=taskViewer),    
+            uicommand.TaskMarkCompleted(settings=settings, viewer=taskViewer),
             None)
         self.appendMenu(_('&Priority'), 
                         TaskPriorityMenu(mainwindow, tasks, taskViewer),
@@ -802,7 +803,7 @@ class TaskPopupMenu(Menu):
                 uicommand.EffortNew(viewer=taskViewer, effortList=efforts,
                                     taskList=tasks, settings=settings),
                 uicommand.EffortStart(viewer=taskViewer, taskList=tasks),
-                uicommand.EffortStop(effortList=efforts, taskList=tasks))
+                uicommand.EffortStop(viewer=taskViewer, effortList=efforts, taskList=tasks))
         self.appendUICommands(
             None,
             uicommand.NewSubItem(viewer=taskViewer))
@@ -822,7 +823,7 @@ class EffortPopupMenu(Menu):
             uicommand.EffortNew(viewer=effortViewer, effortList=efforts,
                                 taskList=tasks, settings=settings),
             uicommand.EffortStartForEffort(viewer=effortViewer, taskList=tasks),
-            uicommand.EffortStop(effortList=efforts, taskList=tasks))
+            uicommand.EffortStop(viewer=effortViewer, effortList=efforts, taskList=tasks))
 
 
 class CategoryPopupMenu(Menu):

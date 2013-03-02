@@ -151,6 +151,7 @@ chooseableItemImages = dict( \
     charts_icon=_('Charts'),
     chat_icon=_('Chatting'),
     checkmark_green_icon=_('Check mark'),
+    checkmark_green_icon_multiple=_('Check marks'),
     clock_icon=_('Clock'),
     clock_alarm_icon=_('Alarm clock'),
     clock_stopwatch_icon=_('Stopwatch'),

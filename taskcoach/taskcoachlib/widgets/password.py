@@ -24,15 +24,15 @@ class KeychainPasswordWidget(wx.Dialog):
     def __init__(self, domain, username, *args, **kwargs):
         super(KeychainPasswordWidget, self).__init__(*args, **kwargs)
 
-        self.domain = domain
-        self.username = username
+        self.domain = domain.encode('UTF-8')
+        self.username = username.encode('UTF-8')
 
         pnl = wx.Panel(self, wx.ID_ANY)
         hsz = wx.BoxSizer(wx.HORIZONTAL)
         hsz.Add(wx.StaticText(pnl, wx.ID_ANY, _('Password:')), 0, wx.ALL, 3)
 
         from taskcoachlib.thirdparty.keyring import get_password
-        password = get_password(domain, username)
+        password = get_password(self.domain, self.username)
         self.password = (password or '').decode('UTF-8')
         self.passwordField = wx.TextCtrl(pnl, wx.ID_ANY, self.password, style=wx.TE_PASSWORD)
         hsz.Add(self.passwordField, 1, wx.ALL, 3)
@@ -75,15 +75,36 @@ class KeychainPasswordWidget(wx.Dialog):
         self.EndModal(wx.ID_CANCEL)
 
 
+_PASSWORDCACHE = None
+
 def GetPassword(domain, username, reset=False):
+    global _PASSWORDCACHE
+
     try:
-        from taskcoachlib.thirdparty.keyring import set_password
+        from taskcoachlib.thirdparty.keyring import set_password, get_password
     except:
         # Keychain unavailable.
-        return wx.GetPasswordFromUser(_('Please enter your password.'), domain) or None
+        if _PASSWORDCACHE is None:
+            import StringIO, traceback
+            bf = StringIO.StringIO()
+            traceback.print_exc(file=bf)
+            wx.MessageBox(_('There was a problem trying to find out your system\'s keychain.\nPlease file a bug report (see the Help menu) and attach a screenshot of this message.\nError was:\n\n%s') % bf.getvalue(), _('Error'), wx.OK)
+            _PASSWORDCACHE = dict()
+        if (domain, username) in _PASSWORDCACHE and reset:
+            del _PASSWORDCACHE[(domain, username)]
+        if (domain, username) not in _PASSWORDCACHE:
+            pwd = wx.GetPasswordFromUser(_('Please enter your password.'), domain)
+            if not pwd:
+                return None
+            _PASSWORDCACHE[(domain, username)] = pwd
+        return _PASSWORDCACHE[(domain, username)]
 
     if reset:
-        set_password(domain, username, '')
+        set_password(domain.encode('UTF-8'), username.encode('UTF-8'), '')
+    else:
+        pwd = get_password(domain.encode('UTF-8'), username.encode('UTF-8'))
+        if pwd:
+            return pwd.decode('UTF-8')
 
     dlg = KeychainPasswordWidget(domain, username, None, wx.ID_ANY, _('Please enter your password'))
     try:

@@ -129,7 +129,15 @@ class Object(object):
     
     def setModificationDateTime(self, dateTime):
         self.__modificationDateTime = dateTime
-        
+
+    @staticmethod
+    def modificationDateTimeSortFunction(**kwargs):
+        return lambda item: item.modificationDateTime()
+
+    @staticmethod
+    def creationDateTimeSortFunction(**kwargs):
+        return lambda item: item.creationDateTime()
+
     # Subject:
     
     def subject(self):

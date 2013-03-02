@@ -165,11 +165,13 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         self.Bind(wx.EVT_TREE_BEGIN_LABEL_EDIT, self.onBeginEdit)
         self.Bind(wx.EVT_TREE_END_LABEL_EDIT, self.onEndEdit)
         self.Bind(wx.EVT_TREE_ITEM_EXPANDING, self.onItemExpanding)
-        wx.GetTopLevelParent(self).Bind(wx.EVT_CLOSE, self.onParentClose)
-
-    def onParentClose(self, event):
-        self.selectCommand = self.editCommand = self.dragAndDropCommand = None
-        event.Skip()
+        self.Bind(wx.EVT_SET_FOCUS, self.onSetFocus)
+        
+    def onSetFocus(self, event):  # pylint: disable=W0613
+        # Send a child focus event to let the AuiManager know we received focus
+        # so it will activate our pane
+        wx.PostEvent(self._main_win, wx.ChildFocusEvent(self._main_win))
+        self.SetFocus()
 
     def getItemTooltipData(self, item, column):
         return self.__adapter.getItemTooltipData(item, column)

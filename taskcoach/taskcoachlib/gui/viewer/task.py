@@ -212,9 +212,9 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable=W0223
             super(BaseTaskTreeViewer, self).createCreationToolBarUICommands()
     
     def createActionToolBarUICommands(self):
-        uiCommands = (uicommand.TaskMarkInactive(viewer=self),
-                      uicommand.TaskMarkActive(viewer=self),
-                      uicommand.TaskMarkCompleted(viewer=self))
+        uiCommands = (uicommand.TaskMarkInactive(settings=self.settings, viewer=self),
+                      uicommand.TaskMarkActive(settings=self.settings, viewer=self),
+                      uicommand.TaskMarkCompleted(settings=self.settings, viewer=self))
         if self.settings.getboolean('feature', 'effort'):
             uiCommands += (
                 # EffortStart needs a reference to the original (task) list to
@@ -224,7 +224,8 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable=W0223
                 None,
                 uicommand.EffortStart(viewer=self, 
                                       taskList=self.taskStore.tasks()),
-                uicommand.EffortStop(effortList=self.taskStore.efforts(),
+                uicommand.EffortStop(viewer=self,
+                                     effortList=self.taskStore.efforts(),
                                      taskList=self.taskStore.tasks()))
         return uiCommands + super(BaseTaskTreeViewer, self).createActionToolBarUICommands()
     
@@ -853,7 +854,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                 width=self.getColumnWidth('description'),  
                 editCallback=self.onEditDescription, 
                 editControl=inplace_editor.DescriptionCtrl, **kwargs)] + \
-            [widgets.Column('attachments', '', 
+            [widgets.Column('attachments', _('Attachments'), 
                 task.Task.attachmentsChangedEventType(), 
                 width=self.getColumnWidth('attachments'),
                 alignment=wx.LIST_FORMAT_LEFT,
@@ -861,7 +862,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                 headerImageIndex=self.imageIndex['paperclip_icon'],
                 renderCallback=lambda task: '', **kwargs)]
         if self.settings.getboolean('feature', 'notes'):
-            columns.append(widgets.Column('notes', '', 
+            columns.append(widgets.Column('notes', _('Notes'), 
                 task.Task.notesChangedEventType(),
                 width=self.getColumnWidth('notes'),
                 alignment=wx.LIST_FORMAT_LEFT,
