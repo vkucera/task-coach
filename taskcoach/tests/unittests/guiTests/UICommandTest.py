@@ -557,7 +557,7 @@ class AttachmentTest(test.wxTestCase):
         super(AttachmentTest, self).setUp()
 
         task.Task.settings = config.Settings(load=False)
-        taskFile = persistence.TaskFile()
+        taskFile = persistence.TaskStore()
         self.task = task.Task()
         taskFile.tasks().extend([self.task])
         self.attachment = attachment.FileAttachment('Test')
