@@ -30,6 +30,9 @@ class MockViewer(wx.Frame):
     def viewerStatusEventType(self):
         return 'mockviewer.status'
 
+    def curselection(self):
+        return []
+
 
 class MainWindowUnderTest(gui.MainWindow):
     def _create_window_components(self):
