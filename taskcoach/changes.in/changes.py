@@ -36,6 +36,7 @@ Release('1.3.25', 'February 28, 2013',
 some locales.''', '1360'),
         Bugv2('''Sorting by modification or creation date/time didn't
 work.''', '1380'),
+        Bugv2('''Fix checkbox focus hint on Windows (in the date picker).''', '1372'),
         ],
     ),
 
