@@ -38,7 +38,7 @@ class TestWithTaskFile(base.Win32TestCase):
         self.failIf(window is None,
                     'Cannot find main window')
         self.failUnless(window.title.endswith('testfile.tsk'),
-                        'Wrong window title')
+                        'Wrong window title', window.title)
         
     def test_save(self):
         filename = self.args[0][1:-1] # Remove "'s
