@@ -121,7 +121,8 @@ class Settings(ConfigParser.SafeConfigParser, object):
                         twitter=['consumer_key', 'consumer_secret',
                                  'oauth_token', 'oauth_token_secret'],
                         identica=['username', 'password'],
-                        freecode=['auth_code'])
+                        freecode=['auth_code'],
+			buildbot=['username', 'password'])
         for section in defaults:
             self.add_section(section)
             for option in defaults[section]:
@@ -243,12 +244,16 @@ def building_packages(settings, options):
         if status['state'] != 'idle':
             raise RuntimeError('Builder Release is not idle.')
 
+	credentials = ':'.join(settings.get('buildbot', credential) \
+			       for credential in ('username', 'password'))
+	basic_auth = base64.encodestring(credentials)[:-1]
         if not httpPostRequest('www.fraca7.net', '/builders/Release/force',
                                urllib.urlencode([('forcescheduler', 'Force'),
                                                  ('branch', branch),
                                                  ('username', 'release'),
                                                  ('reason', 'release')]),
-                               'application/x-www-form-urlencoded; charset=utf-8', port=8010, ok=302):
+                               'application/x-www-form-urlencoded; charset=utf-8', port=8010, ok=302,
+			       Authorization='Basic %s' % basic_auth):
             raise RuntimeError('Force request failed')
 
         if options.verbose:
@@ -488,6 +493,7 @@ def postRequest(connection, api_call, body, contentType, ok=200, **headers):
     if response.status != ok:
         print 'Request failed: %d %s' % (response.status, response.reason)
         return False
+    print 'XXX', response.read() # XXXTMP
     return True
 
 
