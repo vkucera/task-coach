@@ -1186,7 +1186,7 @@ class FullMonthField(EnumerationField):
         kwargs['choices'] = list(reversed([(decodeSystemString(datetime.date(year=2012, month=month, day=1).strftime('%B')), month) for month in xrange(1, 13)]))
         kwargs['enablePopup'] = False
         kwargs['width'] = 2
-        super(AbbreviatedMonthField, self).__init__(**kwargs)
+        super(FullMonthField, self).__init__(**kwargs)
 
 
 class DayField(NumericField):
