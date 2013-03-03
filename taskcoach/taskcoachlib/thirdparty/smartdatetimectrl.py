@@ -851,22 +851,28 @@ class TimeEntry(Entry):
 
         ampm = False
         # wx initializes the locale itself (at least under GTK) so %p may end up swallowed.
-        if time.strftime('%p') == '':
-            if fmt(datetime.time(hour=1, minute=0)) == fmt(datetime.time(hour=13, minute=0)):
-                ampm = True
-                # We can't actually guess where it should be so put it at the end.
-                if not pattern.endswith(' '):
-                    pattern += ' '
-                pattern += 'p'
-        else:
-            amLitLocal = decodeSystemString(datetime.time(hour=1).strftime('%p'))
-            for amLit in [amLitLocal, 'am', 'a.m.']:
-                idx = pattern.lower().find(amLit.lower())
-                if idx != -1:
-                    break
-            ampm = idx != -1
-            if ampm:
-                pattern = pattern[:idx] + u'p' + pattern[idx + len(amLit):]
+        amStrings = ['am', 'a.m.']
+        amLitLocal = decodeSystemString(datetime.time(hour=1).strftime('%p'))
+        if amLitLocal:
+            amStrings.append(amLitLocal)
+        if platform.system() == 'Darwin':
+            try:
+                import Cocoa
+            except ImportError:
+                pass
+            else:
+                osxFormatter = Cocoa.NSDateFormatter.alloc().init()
+                osxFormatter.setDateFormat_('a')
+                amStrings.append(osxFormatter.stringFromDate_(Cocoa.NSDate.dateWithTimeIntervalSinceNow_((datetime.datetime(year=2013,
+                                        month=3, day=3, hour=11, minute=33, second=0) - datetime.datetime.now()).total_seconds())))
+
+        for amLit in amStrings:
+            idx = pattern.lower().find(amLit.lower())
+            if idx != -1:
+                break
+        ampm = idx != -1
+        if ampm:
+            pattern = pattern[:idx] + u'p' + pattern[idx + len(amLit):]
 
         self.__value = datetime.time(hour=kwargs.get('hour', 0), minute=kwargs.get('minute', 0), second=kwargs.get('second', 0))
         self.__minuteDelta = kwargs.pop('minuteDelta', 10)

@@ -118,6 +118,51 @@ if operating_system.isWindows():
             else:
                 flags = 0x1
         return win32api.GetTimeFormat(0x400, flags, None if dt is None else pywintypes.Time(dt), None)
+elif operating_system.isMac():
+    import Cocoa, calendar
+    # We don't actually respect the 'seconds' parameter; this assumes that the short time format does
+    # not include them, but the medium format does.
+    _shortFormatter = Cocoa.NSDateFormatter.alloc().init()
+    _shortFormatter.setTimeStyle_(Cocoa.NSDateFormatterShortStyle)
+    _mediumFormatter = Cocoa.NSDateFormatter.alloc().init()
+    _mediumFormatter.setTimeStyle_(Cocoa.NSDateFormatterMediumStyle)
+    # Special case for hour without minutes or seconds. I don't know if it is possible to get the AM/PM
+    # setting alone, so parse the format string instead.
+    # See http://www.unicode.org/reports/tr35/tr35-25.html#Date_Format_Patterns
+    _state = 0
+    _hourFormat = u''
+    _ampmFormat = u''
+    for c in _mediumFormatter.dateFormat():
+        if _state == 0:
+            if c == u"'":
+                _state = 1 # After single quote
+            elif c in [u'h', u'H', u'k', u'K', u'j']:
+                _hourFormat += c
+            elif c == 'a':
+                _ampmFormat = c
+        elif _state == 1:
+            if c == u"'":
+                _state = 0
+            else:
+                _state = 2 # Escaped string
+        elif _state == 2:
+            if c == u"'":
+                _state = 0
+    _hourFormatter = Cocoa.NSDateFormatter.alloc().init()
+    _hourFormatter.setDateFormat_(_hourFormat + (' %s' % _ampmFormat if _ampmFormat else ''))
+
+    def _applyFormatter(dt, fmt):
+        # We don't use time zones internally so the datetime object 'thinks' it's UTC. But
+        # NSDate.dateWithTimeIntervalSince1970 expects local time... So use a difference...
+        dt_native = Cocoa.NSDate.dateWithTimeIntervalSinceNow_((dt - datetime.datetime.now()).total_seconds())
+        return fmt.stringFromDate_(dt_native)
+
+    def rawTimeFunc(dt, minutes=True, seconds=False):
+        if minutes:
+            if seconds:
+                return _applyFormatter(dt, _mediumFormatter)
+            return _applyFormatter(dt, _shortFormatter)
+        return _applyFormatter(dt, _hourFormatter)
 else:
     language_and_country = locale.getlocale()[0]
     if language_and_country and ('_US' in language_and_country or 
