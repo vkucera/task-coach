@@ -38,6 +38,8 @@ some locales.''', '1360'),
 work.''', '1380'),
         Bugv2('''Fix checkbox focus hint on Windows (in the date picker).''', '1372'),
         Bugv2('''Use system settings for date and time formatting on OSX.'''),
+        Bugv2('''Use system settings for date and time formatting on
+KDE4.''', '1386'),
         ],
     ),
 

@@ -865,6 +865,16 @@ class TimeEntry(Entry):
                 osxFormatter.setDateFormat_('a')
                 amStrings.append(osxFormatter.stringFromDate_(Cocoa.NSDate.dateWithTimeIntervalSinceNow_((datetime.datetime(year=2013,
                                         month=3, day=3, hour=11, minute=33, second=0) - datetime.datetime.now()).total_seconds())))
+        elif platform.system() == 'Linux':
+            try:
+                from PyKDE4.kdecore import KLocale, KGlobal
+                from PyQt4.QtCore import QTime
+            except ImportError:
+                pass
+            else:
+                localeCopy = KLocale(KGlobal.locale())
+                localeCopy.setTimeFormat('%p')
+                amStrings.append(unicode(localeCopy.formatTime(QTime(11, 0, 0))))
 
         for amLit in amStrings:
             idx = pattern.lower().find(amLit.lower())

@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 etc. '''  # pylint: disable=W0105
 
 from taskcoachlib.domain import date as datemodule
+from taskcoachlib.thirdparty import desktop
 from taskcoachlib.i18n import _
 from taskcoachlib import operating_system
 import datetime
@@ -106,6 +107,29 @@ def dateFunc(dt=None, humanReadable=False):
     return operating_system.decodeSystemString(datetime.datetime.strftime(dt, dateFormat))
 
 
+# Default time formatting
+language_and_country = locale.getlocale()[0]
+if language_and_country and ('_US' in language_and_country or 
+                             '_United States' in language_and_country):
+    timeFormat = '%I %p'
+    timeWithMinutesFormat = '%I:%M %p'
+    timeWithSecondsFormat = '%I:%M:%S %p'
+else:
+    timeFormat = '%H'
+    timeWithMinutesFormat = '%H:%M'  # %X includes seconds (see http://stackoverflow.com/questions/2507726)
+    timeWithSecondsFormat = '%X'
+def rawTimeFunc(dt, minutes=True, seconds=False):
+    if seconds:
+        fmt = timeWithSecondsFormat
+    else:
+        if minutes:
+            fmt = timeWithMinutesFormat
+        else:
+            fmt = timeFormat
+    return datemodule.DateTime.strftime(dt, fmt)
+
+
+# OS-specific time formatting
 if operating_system.isWindows():
     import pywintypes, win32api
     def rawTimeFunc(dt, minutes=True, seconds=False):
@@ -163,26 +187,24 @@ elif operating_system.isMac():
                 return _applyFormatter(dt, _mediumFormatter)
             return _applyFormatter(dt, _shortFormatter)
         return _applyFormatter(dt, _hourFormatter)
-else:
-    language_and_country = locale.getlocale()[0]
-    if language_and_country and ('_US' in language_and_country or 
-                                 '_United States' in language_and_country):
-        timeFormat = '%I %p'
-        timeWithMinutesFormat = '%I:%M %p'
-        timeWithSecondsFormat = '%I:%M:%S %p'
+elif desktop.get_desktop() == 'KDE4':
+    try:
+        from PyKDE4.kdecore import KGlobal, KLocale
+        from PyQt4.QtCore import QTime
+    except ImportError:
+        pass
     else:
-        timeFormat = '%H'
-        timeWithMinutesFormat = '%H:%M'  # %X includes seconds (see http://stackoverflow.com/questions/2507726)
-        timeWithSecondsFormat = '%X'
-    def rawTimeFunc(dt, minutes=True, seconds=False):
-        if seconds:
-            fmt = timeWithSecondsFormat
+        _localeCopy = KLocale(KGlobal.locale())
+        if '%p' in KGlobal.locale().timeFormat():
+            _localeCopy.setTimeFormat('%I %p')
         else:
+            _localeCopy.setTimeFormat('%H')
+        def rawTimeFunc(dt, minutes=True, seconds=False):
+            qtdt = QTime(dt.hour, dt.minute, dt.second)
             if minutes:
-                fmt = timeWithMinutesFormat
-            else:
-                fmt = timeFormat
-        return datemodule.DateTime.strftime(dt, fmt)
+                return unicode(KGlobal.locale().formatTime(qtdt, seconds))
+            return unicode(_localeCopy.formatTime(qtdt))
+
 
 timeFunc = lambda dt, minutes=True, seconds=False: operating_system.decodeSystemString(rawTimeFunc(dt, minutes=minutes, seconds=seconds))
 
