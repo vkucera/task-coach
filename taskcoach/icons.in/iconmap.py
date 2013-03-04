@@ -140,6 +140,7 @@ iconlist = [
 ('led_red_icon', 'actions', 'ledred', [16]),
 ('led_yellow_icon', 'actions', 'ledyellow', [16]),
 ('life_ring_icon', 'apps', 'khelpcenter', [16]),
+('linux', 'apps', 'linux', [16]),
 ('lock_locked_icon', 'actions', 'encrypted', [16]),
 ('lock_unlocked_icon', 'actions', 'decrypted', [16]),
 ('mac', 'apps', 'mac', [16]),
