@@ -27,6 +27,7 @@ defaults = {
     'customizabletoolbars': 'True',
     'customizabletoolbars_dnd': 'True',
     'filtershiftclick': 'True',
+    'autosavehint': 'True',
     },
 'view': {
     'statusbar': 'True',
