@@ -710,13 +710,28 @@ class EditorPage(SettingsPage):
             self.settings.getboolean('editor', 'maccheckspelling')
 
 
+class OSXPage(SettingsPage):
+    pageName = 'os_darwin'
+    pageTitle = _('OS X')
+    pageIcon = 'mac'
+
+    def __init__(self, *args, **kwargs):
+        super(OSXPage, self).__init__(columns=3, *args, **kwargs)
+
+        self.addBooleanSetting('os_darwin', 'getmailsubject',
+            _('Get e-mail subject from Mail.app'),
+            helpText=_('When dropping an e-mail from Mail.app, try to get its subject.\nThis takes up to 20 seconds.'))
+        self.fit()
+
+
 class Preferences(widgets.NotebookDialog):
     allPageNames = ['window', 'save', 'language', 'task', 'reminder', 
-                    'appearance', 'features', 'iphone', 'editor']
+                    'appearance', 'features', 'iphone', 'editor', 'os_darwin']
     pages = dict(window=WindowBehaviorPage, task=TaskDatesPage, 
                  reminder=TaskReminderPage, save=SavePage, 
                  language=LanguagePage, appearance=TaskAppearancePage, 
-                 features=FeaturesPage, iphone=IPhonePage, editor=EditorPage)
+                 features=FeaturesPage, iphone=IPhonePage, editor=EditorPage,
+                 os_darwin=OSXPage)
     
     def __init__(self, settings=None, *args, **kwargs):
         self.settings = settings
@@ -734,6 +749,8 @@ class Preferences(widgets.NotebookDialog):
     def __should_create_page(self, page_name):
         if page_name == 'iphone':
             return self.settings.getboolean('feature', 'iphone')
+        elif page_name == 'os_darwin':
+            return operating_system.isMac()
         else:
             return True
 

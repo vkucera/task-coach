@@ -492,6 +492,9 @@ defaults = {
     'descriptionfont': '',  # Font to use in the desciption field of editors
     'maccheckspelling': 'True' 
     },
+'os_darwin': {
+    'getmailsubject': 'False'
+    },
 'version': {
     'python': '',  # Filled in by the Settings class when saving the settings
     'wxpython': '',  # Idem

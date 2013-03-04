@@ -156,9 +156,12 @@ class URIAttachment(Attachment):
 
     def __init__(self, location, *args, **kwargs):
         if location.startswith('message:') and 'subject' not in kwargs:
-            subject = mailer.getSubjectOfMail(location[8:])
-            if subject:
-                kwargs['subject'] = subject
+            if self.settings.getboolean('os_darwin', 'getmailsubject'):
+                subject = mailer.getSubjectOfMail(location[8:])
+                if subject:
+                    kwargs['subject'] = subject
+            else:
+                kwargs['subject'] = _('Mail.app message')
         super(URIAttachment, self).__init__(location, *args, **kwargs)
 
     def open(self, workingDir=None):

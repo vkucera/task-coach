@@ -142,6 +142,7 @@ iconlist = [
 ('life_ring_icon', 'apps', 'khelpcenter', [16]),
 ('lock_locked_icon', 'actions', 'encrypted', [16]),
 ('lock_unlocked_icon', 'actions', 'decrypted', [16]),
+('mac', 'apps', 'mac', [16]),
 ('magnifier_glass_dropdown_icon', 'actions', 'searchmenu', [16]),
 ('magnifier_glass_icon', 'actions', 'viewmag', [16]),
 ('music_piano_icon', 'actions', 'piano', [16]),

@@ -217,9 +217,10 @@ class Application(object):
     
     def __init_domain_objects(self):
         ''' Provide relevant domain objects with access to the settings. '''
-        from taskcoachlib.domain import task
+        from taskcoachlib.domain import task, attachment
         task.Task.settings = self.settings
-        
+        attachment.Attachment.settings = self.settings
+
     def __init_application(self):
         from taskcoachlib import meta
         self.__wx_app.SetAppName(meta.name)
