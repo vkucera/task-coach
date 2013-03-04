@@ -189,6 +189,8 @@ elif operating_system.isMac():
         return _applyFormatter(dt, _hourFormatter)
 elif desktop.get_desktop() == 'KDE4':
     try:
+        # Import gtk first because when it's imported indirectly it generates a RuntimeWarning.
+        import gtk
         from PyKDE4.kdecore import KGlobal, KLocale
         from PyQt4.QtCore import QTime
     except ImportError:
