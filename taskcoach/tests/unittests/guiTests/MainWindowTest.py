@@ -144,7 +144,7 @@ class MainWindowIconizedTest(MainWindowTestCase):
         self.failUnless(self.mainwindow.IsIconized()) # pragma: no cover
                         
     def testWindowSize(self):
-        self.assertEqual((700, self.expectedHeight()), 
+        self.assertEqual((900, self.expectedHeight()), 
                          eval(self.settings.get('window', 'size')))
         
     def testWindowSizeShouldnotChangeWhenReceivingChangeSizeEvent(self):
@@ -154,6 +154,6 @@ class MainWindowIconizedTest(MainWindowTestCase):
             process(event) # pragma: no cover
         else:
             wx.CallAfter(process, event) # pragma: no cover
-        self.assertEqual((700, self.expectedHeight()),
+        self.assertEqual((900, self.expectedHeight()),
                          eval(self.settings.get('window', 'size')))
 
