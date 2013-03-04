@@ -319,8 +319,12 @@ class Settings(object, CachingConfigParser):
             # XXXFIXME: should we release pathRef ? Doesn't seem so since I get a SIGSEGV if I try.
             path = os.path.join(path, meta.name)
         elif operating_system.isWindows():
-            from win32com.shell import shell, shellcon
-            path = os.path.join(shell.SHGetSpecialFolderPath(None, shellcon.CSIDL_APPDATA, True), meta.name)
+            if self.getboolean('file', 'saveinifileinprogramdir'):
+                path = self.pathToIniFileSpecifiedOnCommandLine()
+            else:
+                from win32com.shell import shell, shellcon
+                path = os.path.join(shell.SHGetSpecialFolderPath(None, shellcon.CSIDL_APPDATA, True), meta.name)
+
         else: # Errr...
             path = self.path()
 

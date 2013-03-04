@@ -40,6 +40,7 @@ work.''', '1380'),
         Bugv2('''Use system settings for date and time formatting on OSX.'''),
         Bugv2('''Use system settings for date and time formatting on
 KDE4.''', '1386'),
+        Bugv2('''Save templates to program directory for Task Coach Portable.'''),
         ],
     ),
 
