@@ -106,7 +106,7 @@ class SubjectPage(Page):
             super(SubjectPage, self).SetFocus()
 
     def focusTextControl(self):
-        return self.settings.getboolean('os_linux', 'focustextentry')
+        return self._settings.getboolean('os_linux', 'focustextentry')
 
     def addEntries(self):
         self.addSubjectEntry()
