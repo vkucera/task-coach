@@ -564,6 +564,8 @@ class AttachmentTest(test.wxTestCase):
     def select(self):
         self.viewer.widget.select_all()
         self.viewer.updateSelection()
+        # Without this tests fail on Fedora 14
+        self.viewer.SetFocus()
 
     def test_delete(self):
         self.select()
