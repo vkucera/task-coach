@@ -496,6 +496,9 @@ defaults = {
 'os_darwin': {
     'getmailsubject': 'False'
     },
+'os_linux': {
+    'focustextentry': 'True'
+    },
 'version': {
     'python': '',  # Filled in by the Settings class when saving the settings
     'wxpython': '',  # Idem

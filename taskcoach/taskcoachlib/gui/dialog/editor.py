@@ -61,7 +61,7 @@ class Page(patterns.Observer, widgets.BookPage):
         ''' If the entry has selectable text, select the text so that the user
             can start typing over it immediately, except on Linux because it
             overwrites the X clipboard. '''
-        if not operating_system.isGTK():
+        if self.focusTextControl():
             the_entry.SetFocus()
             try:
                 if operating_system.isWindows() and \
@@ -77,7 +77,10 @@ class Page(patterns.Observer, widgets.BookPage):
                     the_entry.SetSelection(-1, -1)  # Select all text
             except (AttributeError, TypeError):
                 pass  # Not a TextCtrl
-        
+
+    def focusTextControl(self):
+        return True
+
     def close(self):
         self.removeInstance()
         for entry in self.entries().values():
@@ -99,8 +102,11 @@ class SubjectPage(Page):
         # overrides the X selection. Simply commenting out the SetFocus() in 
         # __load_perspective is not enough because the aui notebook calls this 
         # when the user selects a tab.
-        if not operating_system.isGTK():
+        if self.focusTextControl():
             super(SubjectPage, self).SetFocus()
+
+    def focusTextControl(self):
+        return self.settings.getboolean('os_linux', 'focustextentry')
 
     def addEntries(self):
         self.addSubjectEntry()

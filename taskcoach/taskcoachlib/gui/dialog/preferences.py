@@ -724,14 +724,29 @@ class OSXPage(SettingsPage):
         self.fit()
 
 
+class LinuxPage(SettingsPage):
+    pageName = 'os_linux'
+    pageTitle = _('Linux')
+    pageIcon = 'linux'
+
+    def __init__(self, *args, **kwargs):
+        super(LinuxPage, self).__init__(columns=3, *args, **kwargs)
+
+        self.addBooleanSetting('os_linux', 'focustextentry',
+            _('Focus task subject in task editor'),
+            helpText=_('When opening the task editor, select the task subject and focus it.\nThis overwrites the X selection.'))
+        self.fit()
+
+
 class Preferences(widgets.NotebookDialog):
     allPageNames = ['window', 'save', 'language', 'task', 'reminder', 
-                    'appearance', 'features', 'iphone', 'editor', 'os_darwin']
+                    'appearance', 'features', 'iphone', 'editor', 'os_darwin',
+                    'os_linux']
     pages = dict(window=WindowBehaviorPage, task=TaskDatesPage, 
                  reminder=TaskReminderPage, save=SavePage, 
                  language=LanguagePage, appearance=TaskAppearancePage, 
                  features=FeaturesPage, iphone=IPhonePage, editor=EditorPage,
-                 os_darwin=OSXPage)
+                 os_darwin=OSXPage, os_linux=LinuxPage)
     
     def __init__(self, settings=None, *args, **kwargs):
         self.settings = settings
@@ -751,6 +766,8 @@ class Preferences(widgets.NotebookDialog):
             return self.settings.getboolean('feature', 'iphone')
         elif page_name == 'os_darwin':
             return operating_system.isMac()
+        elif page_name == 'os_linux':
+            return operating_system.isGTK()
         else:
             return True
 

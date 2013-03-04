@@ -45,6 +45,8 @@ KDE4.''', '1386'),
     featuresAdded=[
         Feature('''Getting the subject from Mail.app on drag and drop is now
 optional (takes too long).'''),
+        Feature('''Focus subject field when opening the task editor on Linux.
+This is configurable.''', '1263'),
         ],
     ),
 
