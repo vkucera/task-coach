@@ -420,7 +420,7 @@ defaults = {
     'columnautoresizing': 'True' 
     },
 'window': {
-    'size': '(700, 500)',  # Default size of the main window
+    'size': '(900, 500)',  # Default size of the main window
     'position': '(-1, -1)',  # Position of the main window, undefined by default
     'iconized': 'False',  # Don't start up iconized by default
     'maximized': 'False',  # Don't start up maximized by default
