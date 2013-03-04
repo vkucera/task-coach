@@ -397,7 +397,7 @@ class Settings(object, CachingConfigParser):
 
     def migrateConfigurationFiles(self):
         # Templates. Extra care for Windows shortcut.
-        oldPath = os.path.join(self.pathToConfigDir_deprecated(environ=os.environ), 'taskcoach-templates')
+        oldPath = self.pathToTemplatesDir_deprecated()
         newPath, exists = self._pathToTemplatesDir()
         if exists:
             return
