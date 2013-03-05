@@ -167,8 +167,6 @@ class TaskStore(patterns.Observer):
         self.save()
         self.__lastFilename = filename
 
-    # XXXTODO: merge file
-
     def needSave(self):
         hasFile = False
         for backend in self.__backends:
