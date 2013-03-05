@@ -376,28 +376,40 @@ class FocusTest(TaskEditorTestCase):
         return [self.task]
 
     def testFocus(self):
-        if operating_system.isGTK():
-            wx.Yield()  # pragma: no cover
-            # pylint: disable=W0212
-            self.assertNotEqual(self.editor._interior[0]._subjectEntry, 
-                                wx.Window_FindFocus())
-        else:
-            # pylint: disable=W0212
-            self.assertEqual(self.editor._interior[0]._subjectEntry, 
-                             wx.Window_FindFocus())
+        # pylint: disable=W0212
+        self.assertEqual(self.editor._interior[0]._subjectEntry, 
+                         wx.Window_FindFocus())
 
     def testSelection(self):
-        if operating_system.isGTK():
-            wx.Yield()  # pragma: no cover
-            # pylint: disable=W0212
-            self.assertEqual(self.editor._interior[0]._subjectEntry.GetStringSelection(), u'')
-        else:
-            # pylint: disable=W0212
-            self.assertEqual(self.editor._interior[0]._subjectEntry.GetStringSelection(),
-                             self.editor._interior[0]._subjectEntry.GetValue())
+        # pylint: disable=W0212
+        self.assertEqual(self.editor._interior[0]._subjectEntry.GetStringSelection(),
+                         self.editor._interior[0]._subjectEntry.GetValue())
+
+
+class FocusTestWithGTKSetting(TaskEditorTestCase):
+    extraSettings = [('os_linux', 'focustextentry', 'False')]
+    def createTasks(self):
+        self.task = task.Task('Task to edit')
+        return [self.task]
+    
+    def getItems(self):
+        return [self.task]
+
+    def testFocus(self):
+        # pylint: disable=W0212
+        self.assertNotEqual(self.editor._interior[0]._subjectEntry, 
+                            wx.Window_FindFocus())
+
+    def testSelection(self):
+        # pylint: disable=W0212
+        self.assertEqual(self.editor._interior[0]._subjectEntry.GetStringSelection(), u'')
 
 
 class FocusTestWithPerspective(FocusTest):
+    editorClass = TaskEditorWithPerspective
+
+
+class FocusTestWithPerspectiveAndGTKSetting(FocusTestWithGTKSetting):
     editorClass = TaskEditorWithPerspective
 
 

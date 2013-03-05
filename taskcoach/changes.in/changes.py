@@ -22,8 +22,14 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.25', 'February 28, 2013',
+Release('1.3.26', 'March ??, 2013',
     summary='''This is a bugfix release.''',
+    bugsFixed=[
+        ],
+    ),
+
+Release('1.3.25', 'March 5, 2013',
+    summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bugv2('''Fix fonts in calendar viewer.''', '1370'),
         Bugv2('''Fix cutting attachments.'''),
@@ -37,6 +43,16 @@ some locales.''', '1360'),
         Bugv2('''Sorting by modification or creation date/time didn't
 work.''', '1380'),
         Bugv2('''Fix checkbox focus hint on Windows (in the date picker).''', '1372'),
+        Bugv2('''Use system settings for date and time formatting on OSX.'''),
+        Bugv2('''Use system settings for date and time formatting on
+KDE4.''', '1386'),
+        Bugv2('''Save templates to program directory for Task Coach Portable.'''),
+        ],
+    featuresAdded=[
+        Feature('''Getting the subject from Mail.app on drag and drop is now
+optional (takes too long).'''),
+        Feature('''Focus subject field when opening the task editor on Linux.
+This is configurable.''', '1263'),
         ],
     ),
 

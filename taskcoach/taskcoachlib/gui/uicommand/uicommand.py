@@ -2261,7 +2261,7 @@ class EffortViewerAggregationOption(settings_uicommand.UIRadioCommand,
 class TaskViewerTreeOrListChoice(ToolbarChoiceCommandMixin, 
                                  settings_uicommand.UICheckCommand,
                                  ViewerCommand):
-    choiceLabels = [_('Tree of tasks'), _('List of tasks')]
+    choiceLabels = [_('Tree'), _('List')]
     choiceData = [True, False]
 
     def __init__(self, *args, **kwargs):

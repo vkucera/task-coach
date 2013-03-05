@@ -65,6 +65,7 @@ import smtplib
 import httplib
 import urllib
 import urllib2
+import cookielib
 import os
 import glob
 import sys
@@ -121,7 +122,8 @@ class Settings(ConfigParser.SafeConfigParser, object):
                         twitter=['consumer_key', 'consumer_secret',
                                  'oauth_token', 'oauth_token_secret'],
                         identica=['username', 'password'],
-                        freecode=['auth_code'])
+                        freecode=['auth_code'],
+                        buildbot=['username', 'password'])
         for section in defaults:
             self.add_section(section)
             for option in defaults[section]:
@@ -243,13 +245,25 @@ def building_packages(settings, options):
         if status['state'] != 'idle':
             raise RuntimeError('Builder Release is not idle.')
 
-        if not httpPostRequest('www.fraca7.net', '/builders/Release/force',
-                               urllib.urlencode([('forcescheduler', 'Force'),
-                                                 ('branch', branch),
-                                                 ('username', 'release'),
-                                                 ('reason', 'release')]),
-                               'application/x-www-form-urlencoded; charset=utf-8', port=8010, ok=302):
-            raise RuntimeError('Force request failed')
+        cj = cookielib.CookieJar()
+        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+        for i in xrange(3): # Retry in case of 500
+            try:
+                opener.open('http://www.fraca7.net:8010/login',
+                            urllib.urlencode([('username', settings.get('buildbot', 'username')),
+                                              ('passwd', settings.get('buildbot', 'password'))]))
+                opener.open('http://www.fraca7.net:8010/builders/Release/force',
+                            urllib.urlencode([('forcescheduler', 'Force'),
+                                              ('branch', branch),
+                                              ('username', 'release'),
+                                              ('reason', 'release')]))
+            except urllib2.HTTPError as e:
+                print 'Failed to force (%s), retrying' % e
+                time.sleep(5)
+            else:
+                break
+        else:
+            raise RuntimeError('Could not force build')
 
         if options.verbose:
             print 'Build forced.'
@@ -488,6 +502,7 @@ def postRequest(connection, api_call, body, contentType, ok=200, **headers):
     if response.status != ok:
         print 'Request failed: %d %s' % (response.status, response.reason)
         return False
+    print 'XXX', response.read() # XXXTMP
     return True
 
 
