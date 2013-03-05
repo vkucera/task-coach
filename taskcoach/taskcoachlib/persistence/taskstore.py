@@ -134,6 +134,7 @@ class TaskStore(patterns.Observer):
             backend = FileBackend(self)
             self.__backends.append(backend)
             backend.setFilename(filename)
+            pub.sendMessage('taskstore.filenameChanged', filename=filename)
             if self.exists():
                 backend.monitor().reset()
                 backend.sync(self)
@@ -161,6 +162,7 @@ class TaskStore(patterns.Observer):
             backend.clear(self)
         backend = FileBackend(self)
         backend.setFilename(filename)
+        pub.sendMessage('taskstore.filenameChanged', filename=filename)
         self.__backends = [backend]
         self.save()
         self.__lastFilename = filename
