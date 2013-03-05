@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-03-05 00:38+CET\n"
+"POT-Creation-Date: 2013-03-05 12:26+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -106,7 +106,7 @@ msgstr ""
 msgid "Paste as subitem of \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/base.py:326 taskcoachlib/gui/dialog/toolbar.py:130
+#: taskcoachlib/command/base.py:326 taskcoachlib/gui/dialog/toolbar.py:134
 msgid "Drag and drop"
 msgstr ""
 
@@ -2157,26 +2157,42 @@ msgid "Preview"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/toolbar.py:67
-msgid "Commands"
+msgid "Available tools"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/toolbar.py:90
-msgid "Visible commands"
+#: taskcoachlib/gui/dialog/toolbar.py:83
+msgid "Make this tool visible in the toolbar"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/toolbar.py:130
+#: taskcoachlib/gui/dialog/toolbar.py:87
+msgid "Hide this tool from the toolbar"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/toolbar.py:92
+msgid "Tools"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/toolbar.py:106
+msgid "Move the tool up (to the left of the toolbar)"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/toolbar.py:110
+msgid "Move the tool down (to the right of the toolbar)"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/toolbar.py:134
 msgid "Reorder toolbar buttons by drag and dropping them in this list."
 msgstr ""
 
-#: taskcoachlib/gui/dialog/toolbar.py:163
-#: taskcoachlib/gui/dialog/toolbar.py:221
-#: taskcoachlib/gui/dialog/toolbar.py:250
+#: taskcoachlib/gui/dialog/toolbar.py:167
+#: taskcoachlib/gui/dialog/toolbar.py:225
+#: taskcoachlib/gui/dialog/toolbar.py:254
 msgid "Separator"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/toolbar.py:165
-#: taskcoachlib/gui/dialog/toolbar.py:224
-#: taskcoachlib/gui/dialog/toolbar.py:252
+#: taskcoachlib/gui/dialog/toolbar.py:169
+#: taskcoachlib/gui/dialog/toolbar.py:228
+#: taskcoachlib/gui/dialog/toolbar.py:256
 msgid "Spacer"
 msgstr ""
 
@@ -3422,11 +3438,11 @@ msgid "Aggregation mode"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2251
-msgid "List of tasks"
+msgid "List"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2251
-msgid "Tree of tasks"
+msgid "Tree"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2257
