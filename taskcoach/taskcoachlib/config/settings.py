@@ -308,7 +308,8 @@ class Settings(object, CachingConfigParser):
             path = self.pathToConfigDir_deprecated(environ=environ)
         return path
 
-    def _pathToDataDir(self, *args):
+    def _pathToDataDir(self, *args, **kwargs):
+        forceGlobal = kwargs.pop('forceGlobal', False)
         if operating_system.isGTK():
             from taskcoachlib.thirdparty.xdg import BaseDirectory
             path = BaseDirectory.save_data_path(meta.name)
@@ -319,8 +320,12 @@ class Settings(object, CachingConfigParser):
             # XXXFIXME: should we release pathRef ? Doesn't seem so since I get a SIGSEGV if I try.
             path = os.path.join(path, meta.name)
         elif operating_system.isWindows():
-            from win32com.shell import shell, shellcon
-            path = os.path.join(shell.SHGetSpecialFolderPath(None, shellcon.CSIDL_APPDATA, True), meta.name)
+            if self.__iniFileSpecifiedOnCommandLine and not forceGlobal:
+                path = self.pathToIniFileSpecifiedOnCommandLine()
+            else:
+                from win32com.shell import shell, shellcon
+                path = os.path.join(shell.SHGetSpecialFolderPath(None, shellcon.CSIDL_APPDATA, True), meta.name)
+
         else: # Errr...
             path = self.path()
 
@@ -341,8 +346,8 @@ class Settings(object, CachingConfigParser):
             os.makedirs(path)
         return path, exists
 
-    def pathToDataDir(self, *args):
-        return self._pathToDataDir(*args)[0]
+    def pathToDataDir(self, *args, **kwargs):
+        return self._pathToDataDir(*args, **kwargs)[0]
 
     def _pathToTemplatesDir(self):
         try:
@@ -365,7 +370,7 @@ class Settings(object, CachingConfigParser):
             path = os.path.join(path, '.%s' % meta.filename)
         return operating_system.decodeSystemString(path)
 
-    def pathToTemplatesDir_deprecated(self):
+    def pathToTemplatesDir_deprecated(self, doCreate=True):
         path = os.path.join(self.path(), 'taskcoach-templates')
 
         if operating_system.isWindows():
@@ -379,10 +384,11 @@ class Settings(object, CachingConfigParser):
                 shortcut = shell.CreateShortcut(path + '.lnk')
                 return shortcut.TargetPath
 
-        try:
-            os.makedirs(path)
-        except OSError:
-            pass
+        if doCreate:
+            try:
+                os.makedirs(path)
+            except OSError:
+                pass
         return operating_system.decodeSystemString(path)
 
     def pathToIniFileSpecifiedOnCommandLine(self):
@@ -393,8 +399,17 @@ class Settings(object, CachingConfigParser):
 
     def migrateConfigurationFiles(self):
         # Templates. Extra care for Windows shortcut.
-        oldPath = os.path.join(self.pathToConfigDir_deprecated(environ=os.environ), 'taskcoach-templates')
+        oldPath = self.pathToTemplatesDir_deprecated(doCreate=False)
         newPath, exists = self._pathToTemplatesDir()
+        if self.__iniFileSpecifiedOnCommandLine:
+            globalPath = os.path.join(self.pathToDataDir(forceGlobal=True), 'templates')
+            if os.path.exists(globalPath) and not os.path.exists(oldPath):
+                # Upgrade from fresh installation of 1.3.24 Portable
+                oldPath = globalPath
+                if exists and not os.path.exists(newPath + '-old'):
+                    # WTF?
+                    os.rename(newPath, newPath + '-old')
+                exists = False
         if exists:
             return
         if oldPath != newPath:

@@ -64,7 +64,7 @@ class _ToolBarEditorInterior(wx.Panel):
                 self.__imgListIndex[uiCommand.bitmap] = self.__imgList.Add(wx.ArtProvider.GetBitmap(uiCommand.bitmap, wx.ART_MENU, (16, 16)))
 
         # Remaining commands list
-        sb = wx.StaticBox(self, wx.ID_ANY, _('Commands'))
+        sb = wx.StaticBox(self, wx.ID_ANY, _('Available tools'))
         self.__remainingCommands = _AutoWidthTree(self,
                     agwStyle=htl.TR_NO_BUTTONS|htl.TR_SINGLE|htl.TR_NO_LINES|htl.TR_HIDE_ROOT|htl.TR_NO_HEADER|htl.TR_FULL_ROW_HIGHLIGHT)
         self.__remainingCommands.AddColumn('Command')
@@ -80,14 +80,16 @@ class _ToolBarEditorInterior(wx.Panel):
         btnSizer = wx.BoxSizer(wx.VERTICAL)
         self.__showButton = wx.BitmapButton(self, wx.ID_ANY, wx.ArtProvider.GetBitmap('next', wx.ART_BUTTON, (16, 16)))
         self.__showButton.Enable(False)
+        self.__showButton.SetToolTip(wx.ToolTip(_('Make this tool visible in the toolbar')))
         btnSizer.Add(self.__showButton, wx.ALL, 3)
         self.__hideButton = wx.BitmapButton(self, wx.ID_ANY, wx.ArtProvider.GetBitmap('prev', wx.ART_BUTTON, (16, 16)))
         self.__hideButton.Enable(False)
+        self.__hideButton.SetToolTip(wx.ToolTip(_('Hide this tool from the toolbar')))
         btnSizer.Add(self.__hideButton, wx.ALL, 3)
         hsizer.Add(btnSizer, 0, wx.ALIGN_CENTRE)
 
         # Visible commands list
-        sb = wx.StaticBox(self, wx.ID_ANY, _('Visible commands'))
+        sb = wx.StaticBox(self, wx.ID_ANY, _('Tools'))
         self.__visibleCommands = _AutoWidthTree(self,
                     agwStyle=htl.TR_NO_BUTTONS|htl.TR_SINGLE|htl.TR_NO_LINES|htl.TR_HIDE_ROOT|htl.TR_NO_HEADER|htl.TR_FULL_ROW_HIGHLIGHT)
         self.__visibleCommands.AddColumn('Command')
@@ -101,9 +103,11 @@ class _ToolBarEditorInterior(wx.Panel):
         btnSizer = wx.BoxSizer(wx.VERTICAL)
         self.__moveUpButton = wx.BitmapButton(self, wx.ID_ANY, wx.ArtProvider.GetBitmap('up', wx.ART_BUTTON, (16, 16)))
         self.__moveUpButton.Enable(False)
+        self.__moveUpButton.SetToolTip(wx.ToolTip(_('Move the tool up (to the left of the toolbar)')))
         btnSizer.Add(self.__moveUpButton, wx.ALL, 3)
         self.__moveDownButton = wx.BitmapButton(self, wx.ID_ANY, wx.ArtProvider.GetBitmap('down', wx.ART_BUTTON, (16, 16)))
         self.__moveDownButton.Enable(False)
+        self.__moveDownButton.SetToolTip(wx.ToolTip(_('Move the tool down (to the right of the toolbar)')))
         btnSizer.Add(self.__moveDownButton, wx.ALL, 3)
         hsizer.Add(btnSizer, 0, wx.ALIGN_CENTRE)
 
@@ -292,6 +296,8 @@ class ToolBarEditor(BalloonTipManager, widgets.Dialog):
         self.__toolbar = toolbar
         self.__settings = settings
         super(ToolBarEditor, self).__init__(*args, **kwargs)
+        self.SetClientSize(wx.Size(900, 700))
+        self.CentreOnParent()
 
     def createInterior(self):
         return _ToolBarEditorInterior(self.__toolbar, self.__settings, self._panel)
