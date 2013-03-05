@@ -64,7 +64,7 @@ class _ToolBarEditorInterior(wx.Panel):
                 self.__imgListIndex[uiCommand.bitmap] = self.__imgList.Add(wx.ArtProvider.GetBitmap(uiCommand.bitmap, wx.ART_MENU, (16, 16)))
 
         # Remaining commands list
-        sb = wx.StaticBox(self, wx.ID_ANY, _('Commands'))
+        sb = wx.StaticBox(self, wx.ID_ANY, _('Available tools'))
         self.__remainingCommands = _AutoWidthTree(self,
                     agwStyle=htl.TR_NO_BUTTONS|htl.TR_SINGLE|htl.TR_NO_LINES|htl.TR_HIDE_ROOT|htl.TR_NO_HEADER|htl.TR_FULL_ROW_HIGHLIGHT)
         self.__remainingCommands.AddColumn('Command')
@@ -87,7 +87,7 @@ class _ToolBarEditorInterior(wx.Panel):
         hsizer.Add(btnSizer, 0, wx.ALIGN_CENTRE)
 
         # Visible commands list
-        sb = wx.StaticBox(self, wx.ID_ANY, _('Visible commands'))
+        sb = wx.StaticBox(self, wx.ID_ANY, _('Tools'))
         self.__visibleCommands = _AutoWidthTree(self,
                     agwStyle=htl.TR_NO_BUTTONS|htl.TR_SINGLE|htl.TR_NO_LINES|htl.TR_HIDE_ROOT|htl.TR_NO_HEADER|htl.TR_FULL_ROW_HIGHLIGHT)
         self.__visibleCommands.AddColumn('Command')
