@@ -292,6 +292,8 @@ class ToolBarEditor(BalloonTipManager, widgets.Dialog):
         self.__toolbar = toolbar
         self.__settings = settings
         super(ToolBarEditor, self).__init__(*args, **kwargs)
+        self.SetClientSize(wx.Size(900, 700))
+        self.CentreOnParent()
 
     def createInterior(self):
         return _ToolBarEditorInterior(self.__toolbar, self.__settings, self._panel)
