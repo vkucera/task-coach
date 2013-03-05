@@ -25,6 +25,8 @@ releases = [
 Release('1.3.26', 'March ??, 2013',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bugv2('''Exporting efforts in CSV with the 'Period' column and date/time
+splitting would not work.''', '1387'),
         ],
     ),
 

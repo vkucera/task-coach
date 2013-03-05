@@ -303,8 +303,9 @@ class EffortWriterTest(CSVWriterTestCase):
     def setUp(self):
         super(EffortWriterTest, self).setUp()
         now = date.DateTime.now()
-        self.task.addEffort(effort.Effort(self.task, start=now,
-                                          stop=now + date.ONE_SECOND))
+        self.effort = effort.Effort(self.task, start=now,
+                                    stop=now + date.ONE_SECOND)
+        self.task.addEffort(self.effort)
 
     def createViewer(self):
         # pylint: disable=W0201
@@ -333,6 +334,15 @@ class EffortWriterTest(CSVWriterTestCase):
         self.viewer.widget.select_all()
         self.viewer.updateSelection()
         self.expectInCSV('Total', selectionOnly=True)
+
+    def testExportAllColumns_NoSplit(self):
+        self.expectInCSV(render.dateTimePeriod(self.effort.getStart(), self.effort.getStop()),
+                         columns=self.viewer.selectableColumns())
+
+    def testExportAllColumns_Split(self):
+        self.expectInCSV(render.dateTimePeriod(self.effort.getStart(), self.effort.getStop()),
+                         separateDateAndTimeColumns=True,
+                         columns=self.viewer.selectableColumns())
 
 
 class EffortWriterRenderTest(CSVWriterTestCase):
