@@ -39,6 +39,7 @@ class TaskStore(patterns.Observer):
         self.__categories = category.CategoryList()
         self.__notes = note.NoteContainer()
         self.__efforts = effort.EffortList(self.tasks())
+        self.__locked = list()
 
         self.__lastFilename = ''
         pub.subscribe(self.onMonitorDirty, 'monitor.dirty')
@@ -67,6 +68,29 @@ class TaskStore(patterns.Observer):
     def dirty(self):
         return any([backend.dirty() for backend in self.__backends])
 
+    def lockAll(self):
+        self.__locked = list()
+        try:
+            for backend in self.__backends:
+                backend.lock()
+                self.__locked.append(backend)
+        except:
+            for backend in self.__locked:
+                try:
+                    backend.unlock()
+                except:
+                    pass # XXXTODO: log
+            self.__locked = list()
+            raise
+
+    def unlockAll(self):
+        for backend in self.__locked:
+            try:
+                backend.unlock()
+            except:
+                pass # XXXTODO: idem
+        self.__locked = list()
+
     def clear(self):
         pub.sendMessage('taskstore.aboutToClear', taskStore=self)
         try:
@@ -74,10 +98,14 @@ class TaskStore(patterns.Observer):
             for collection in [self.tasks(), self.notes(), self.categories()]:
                 collection.clear(event=event)
             event.send()
-            for backend in self.__backends:
-                backend.stop(self)
-                backend.clear(self)
-            self.__backends = list()
+            self.lockAll()
+            try:
+                for backend in self.__backends:
+                    backend.stop(self)
+                    backend.clear(self)
+                self.__backends = list()
+            finally:
+                self.unlockAll()
         finally:
             pub.sendMessage('taskstore.justCleared', taskStore=self)
 
@@ -126,6 +154,7 @@ class TaskStore(patterns.Observer):
         return False
 
     def load(self, filename=None, breakLock=False):
+        # XXXTODO: breakLock...
         if filename is None:
             filename = self.filename()
         pub.sendMessage('taskstore.aboutToRead', taskStore=self)
@@ -137,7 +166,11 @@ class TaskStore(patterns.Observer):
             pub.sendMessage('taskstore.filenameChanged', filename=filename)
             if self.exists():
                 backend.monitor().reset()
-                backend.sync(self)
+                backend.lock()
+                try:
+                    backend.sync(self)
+                finally:
+                    backend.unlock()
                 backend.monitor().resetAllChanges()
             self.__lastFilename = filename
         finally:
@@ -146,9 +179,19 @@ class TaskStore(patterns.Observer):
     def save(self):
         pub.sendMessage('taskstore.aboutToSave', taskStore=self)
         try:
-            for backend in self.__backends:
-                if isinstance(backend, FileBackend):
-                    backend.sync(self)
+            self.lockAll()
+            try:
+                allData = list()
+                for backend in self.__backends:
+                    if isinstance(backend, FileBackend):
+                        allData.append(backend.get(self))
+                    else:
+                        allData.append(None)
+                for backend, data in zip(self.__backends, allData):
+                    if isinstance(backend, FileBackend):
+                        backend.put(self, data)
+            finally:
+                self.unlockAll()
         finally:
             pub.sendMessage('taskstore.justSaved')
 
@@ -157,9 +200,13 @@ class TaskStore(patterns.Observer):
             os.remove(filename)
         if os.path.exists(filename + '.delta'):
             os.remove(filename + '.delta')
-        for backend in self.__backends:
-            backend.stop(self)
-            backend.clear(self)
+        self.lockAll()
+        try:
+            for backend in self.__backends:
+                backend.stop(self)
+                backend.clear(self)
+        finally:
+            self.unlockAll()
         backend = FileBackend(self)
         backend.setFilename(filename)
         pub.sendMessage('taskstore.filenameChanged', filename=filename)

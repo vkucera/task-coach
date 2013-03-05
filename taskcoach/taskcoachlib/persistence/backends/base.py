@@ -42,9 +42,6 @@ class Backend(object):
     def guid(self):
         return self.__monitor.guid()
 
-    def clear(self, store):
-        pass
-
     def stop(self, store):
         for collection in [store.tasks(), store.categories(), store.notes()]:
             self.__monitor.unmonitorCollection(collection)
@@ -64,3 +61,18 @@ class Backend(object):
 
     def unlock(self):
         pass
+
+    # clear, get and put may assume the lock is acquired.
+
+    def clear(self, store):
+        pass
+
+    def get(self, store):
+        """Get changes from the "remote" store. The return value will be passed to put."""
+        raise NotImplementedError
+
+    def put(self, store, data=None):
+        raise NotImplementedError
+
+    def sync(self, store):
+        self.put(store, self.get(store))
