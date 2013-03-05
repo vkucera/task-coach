@@ -80,9 +80,11 @@ class _ToolBarEditorInterior(wx.Panel):
         btnSizer = wx.BoxSizer(wx.VERTICAL)
         self.__showButton = wx.BitmapButton(self, wx.ID_ANY, wx.ArtProvider.GetBitmap('next', wx.ART_BUTTON, (16, 16)))
         self.__showButton.Enable(False)
+        self.__showButton.SetToolTip(wx.ToolTip(_('Make this tool visible in the toolbar')))
         btnSizer.Add(self.__showButton, wx.ALL, 3)
         self.__hideButton = wx.BitmapButton(self, wx.ID_ANY, wx.ArtProvider.GetBitmap('prev', wx.ART_BUTTON, (16, 16)))
         self.__hideButton.Enable(False)
+        self.__hideButton.SetToolTip(wx.ToolTip(_('Hide this tool from the toolbar')))
         btnSizer.Add(self.__hideButton, wx.ALL, 3)
         hsizer.Add(btnSizer, 0, wx.ALIGN_CENTRE)
 
@@ -101,9 +103,11 @@ class _ToolBarEditorInterior(wx.Panel):
         btnSizer = wx.BoxSizer(wx.VERTICAL)
         self.__moveUpButton = wx.BitmapButton(self, wx.ID_ANY, wx.ArtProvider.GetBitmap('up', wx.ART_BUTTON, (16, 16)))
         self.__moveUpButton.Enable(False)
+        self.__moveUpButton.SetToolTip(wx.ToolTip(_('Move the tool up (to the left of the toolbar)')))
         btnSizer.Add(self.__moveUpButton, wx.ALL, 3)
         self.__moveDownButton = wx.BitmapButton(self, wx.ID_ANY, wx.ArtProvider.GetBitmap('down', wx.ART_BUTTON, (16, 16)))
         self.__moveDownButton.Enable(False)
+        self.__moveDownButton.SetToolTip(wx.ToolTip(_('Move the tool down (to the right of the toolbar)')))
         btnSizer.Add(self.__moveDownButton, wx.ALL, 3)
         hsizer.Add(btnSizer, 0, wx.ALIGN_CENTRE)
 
