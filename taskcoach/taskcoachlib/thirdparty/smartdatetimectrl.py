@@ -862,6 +862,7 @@ class TimeEntry(Entry):
                 pass
             else:
                 osxFormatter = Cocoa.NSDateFormatter.alloc().init()
+                osxFormatter.setFormatterBehavior_(Cocoa.NSDateFormatterBehavior10_4)
                 osxFormatter.setDateFormat_('a')
                 amStrings.append(osxFormatter.stringFromDate_(Cocoa.NSDate.dateWithTimeIntervalSinceNow_((datetime.datetime(year=2013,
                                         month=3, day=3, hour=11, minute=33, second=0) - datetime.datetime.now()).total_seconds())))
@@ -899,7 +900,10 @@ class TimeEntry(Entry):
             kwargs['hour'], kwargs['ampm'] = Convert24To12(kwargs['hour'])
 
         kwargs['format'] = pattern
-        super(TimeEntry, self).__init__(*args, **kwargs)
+        try:
+            super(TimeEntry, self).__init__(*args, **kwargs)
+        except KeyError as e:
+            raise ValueError('Invalid format "%s" (original exception: "%s")' % (pattern, e))
 
         EVT_ENTRY_CHOICE_SELECTED(self, self.__OnHourSelected)
 
@@ -1259,9 +1263,11 @@ class DateEntry(Entry):
         fmt = re.sub('3+', 'y', fmt)
         kwargs['format'] = fmt
 
-        self.__value = datetime.date(year=kwargs['year'], month=kwargs['month'], day=kwargs['day'])
-
-        super(DateEntry, self).__init__(*args, **kwargs)
+        try:
+            self.__value = datetime.date(year=kwargs['year'], month=kwargs['month'], day=kwargs['day'])
+            super(DateEntry, self).__init__(*args, **kwargs)
+        except KeyError as e:
+            raise ValueError('Invalid format "%s" (original exception: "%s")' % (fmt, e))
 
         self.__calendar = None
 
