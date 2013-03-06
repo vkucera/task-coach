@@ -154,9 +154,11 @@ elif operating_system.isMac():
     # We don't actually respect the 'seconds' parameter; this assumes that the short time format does
     # not include them, but the medium format does.
     _shortFormatter = Cocoa.NSDateFormatter.alloc().init()
+    _shortFormatter.setFormatterBehavior_(Cocoa.NSDateFormatterBehavior10_4)
     _shortFormatter.setTimeStyle_(Cocoa.NSDateFormatterShortStyle)
     _shortFormatter.setDateStyle_(Cocoa.NSDateFormatterNoStyle)
     _mediumFormatter = Cocoa.NSDateFormatter.alloc().init()
+    _mediumFormatter.setFormatterBehavior_(Cocoa.NSDateFormatterBehavior10_4)
     _mediumFormatter.setTimeStyle_(Cocoa.NSDateFormatterMediumStyle)
     _mediumFormatter.setDateStyle_(Cocoa.NSDateFormatterNoStyle)
     # Special case for hour without minutes or seconds. I don't know if it is possible to get the AM/PM
@@ -182,8 +184,10 @@ elif operating_system.isMac():
             if c == u"'":
                 _state = 0
     _hourFormatter = Cocoa.NSDateFormatter.alloc().init()
+    _hourFormatter.setFormatterBehavior_(Cocoa.NSDateFormatterBehavior10_4)
     _hourFormatter.setDateFormat_(_hourFormat + (' %s' % _ampmFormat if _ampmFormat else ''))
     _dateFormatter = Cocoa.NSDateFormatter.alloc().init()
+    _dateFormatter.setFormatterBehavior_(Cocoa.NSDateFormatterBehavior10_4)
     _dateFormatter.setDateStyle_(Cocoa.NSDateFormatterShortStyle)
     _dateFormatter.setTimeStyle_(Cocoa.NSDateFormatterNoStyle)
 
@@ -197,7 +201,6 @@ elif operating_system.isMac():
         if minutes:
             if seconds:
                 return _applyFormatter(dt, _mediumFormatter)
-            r = _applyFormatter(dt, _shortFormatter)
             return _applyFormatter(dt, _shortFormatter)
         return _applyFormatter(dt, _hourFormatter)
 
