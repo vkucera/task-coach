@@ -94,19 +94,6 @@ def budget(aBudget):
     return timeSpent(aBudget)
 
 
-dateFormat = '%x'
-def dateFunc(dt=None, humanReadable=False):
-    if humanReadable:
-        theDate = dt.date()
-        if theDate == datemodule.Now().date():
-            return _('Today')
-        elif theDate == datemodule.Yesterday().date():
-            return _('Yesterday')
-        elif theDate == datemodule.Tomorrow().date():
-            return _('Tomorrow')
-    return operating_system.decodeSystemString(datetime.datetime.strftime(dt, dateFormat))
-
-
 # Default time formatting
 language_and_country = locale.getlocale()[0]
 if language_and_country and ('_US' in language_and_country or 
@@ -127,6 +114,23 @@ def rawTimeFunc(dt, minutes=True, seconds=False):
         else:
             fmt = timeFormat
     return datemodule.DateTime.strftime(dt, fmt)
+
+
+dateFormat = '%x'
+def rawDateFunc(dt=None):
+    return operating_system.decodeSystemString(datetime.datetime.strftime(dt, dateFormat))
+
+
+def dateFunc(dt=None, humanReadable=False):
+    if humanReadable:
+        theDate = dt.date()
+        if theDate == datemodule.Now().date():
+            return _('Today')
+        elif theDate == datemodule.Yesterday().date():
+            return _('Yesterday')
+        elif theDate == datemodule.Tomorrow().date():
+            return _('Tomorrow')
+    return rawDateFunc(dt)
 
 
 # OS-specific time formatting
@@ -174,6 +178,8 @@ elif operating_system.isMac():
                 _state = 0
     _hourFormatter = Cocoa.NSDateFormatter.alloc().init()
     _hourFormatter.setDateFormat_(_hourFormat + (' %s' % _ampmFormat if _ampmFormat else ''))
+    _dateFormatter = Cocoa.NSDateFormatter.alloc().init()
+    _dateFormatter.setDateStyle_(Cocoa.NSDateFormatterShortStyle)
 
     def _applyFormatter(dt, fmt):
         # We don't use time zones internally so the datetime object 'thinks' it's UTC. But
@@ -187,6 +193,9 @@ elif operating_system.isMac():
                 return _applyFormatter(dt, _mediumFormatter)
             return _applyFormatter(dt, _shortFormatter)
         return _applyFormatter(dt, _hourFormatter)
+
+    def rawDateFunc(dt):
+        return _applyFormatter(dt, _dateFormatter)
 elif desktop.get_desktop() == 'KDE4':
     try:
         # Import gtk first because when it's imported indirectly it generates a RuntimeWarning.

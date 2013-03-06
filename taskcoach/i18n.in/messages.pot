@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-03-05 13:12+CET\n"
+"POT-Creation-Date: 2013-03-06 13:01+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1895,11 +1895,11 @@ msgstr ""
 msgid "Propose"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:602 taskcoachlib/render.py:102
+#: taskcoachlib/gui/dialog/preferences.py:602 taskcoachlib/render.py:128
 msgid "Today"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:603 taskcoachlib/render.py:106
+#: taskcoachlib/gui/dialog/preferences.py:603 taskcoachlib/render.py:132
 msgid "Tomorrow"
 msgstr ""
 
@@ -3642,7 +3642,6 @@ msgid "Status: %d filtered"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/effort.py:198
-#: taskcoachlib/persistence/csv/generator.py:41
 msgid "Period"
 msgstr ""
 
@@ -6022,11 +6021,11 @@ msgstr ""
 msgid "Every other year"
 msgstr ""
 
-#: taskcoachlib/render.py:104
+#: taskcoachlib/render.py:130
 msgid "Yesterday"
 msgstr ""
 
-#: taskcoachlib/render.py:245
+#: taskcoachlib/render.py:249
 msgid "now"
 msgstr ""
 
