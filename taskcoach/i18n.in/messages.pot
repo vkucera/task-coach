@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-03-05 15:24+CET\n"
+"POT-Creation-Date: 2013-03-06 14:51+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,7 +20,7 @@ msgid "Errors have occured. Please see \"%s\""
 msgstr ""
 
 #: taskcoachlib/application/application.py:54
-#: taskcoachlib/gui/mainwindow.py:373 taskcoachlib/iphone/protocol.py:482
+#: taskcoachlib/gui/mainwindow.py:361 taskcoachlib/iphone/protocol.py:482
 #: taskcoachlib/widgets/draganddrop.py:121
 #: taskcoachlib/widgets/draganddrop.py:163 taskcoachlib/widgets/password.py:91
 msgid "Error"
@@ -1932,11 +1932,11 @@ msgstr ""
 msgid "Propose"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:607 taskcoachlib/render.py:102
+#: taskcoachlib/gui/dialog/preferences.py:607 taskcoachlib/render.py:128
 msgid "Today"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:608 taskcoachlib/render.py:106
+#: taskcoachlib/gui/dialog/preferences.py:608 taskcoachlib/render.py:132
 msgid "Tomorrow"
 msgstr ""
 
@@ -2507,19 +2507,15 @@ msgstr ""
 msgid "%s settings error"
 msgstr ""
 
-#: taskcoachlib/gui/mainwindow.py:326
-msgid "Task Coach is configured to automatically save every change you make. The save button will therefore stay disabled."
-msgstr ""
-
-#: taskcoachlib/gui/mainwindow.py:350
+#: taskcoachlib/gui/mainwindow.py:338
 msgid "iPhone/iPod"
 msgstr ""
 
-#: taskcoachlib/gui/mainwindow.py:360
+#: taskcoachlib/gui/mainwindow.py:348
 msgid "Synchronization type"
 msgstr ""
 
-#: taskcoachlib/gui/mainwindow.py:370
+#: taskcoachlib/gui/mainwindow.py:358
 msgid ""
 "An iPhone or iPod Touch device tried to synchronize with this\n"
 "task file, but the protocol negotiation failed. Please file a\n"
@@ -3683,7 +3679,6 @@ msgid "Status: %d filtered"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/effort.py:198
-#: taskcoachlib/persistence/csv/generator.py:41
 msgid "Period"
 msgstr ""
 
@@ -6146,11 +6141,11 @@ msgstr ""
 msgid "Every other year"
 msgstr ""
 
-#: taskcoachlib/render.py:104
+#: taskcoachlib/render.py:130
 msgid "Yesterday"
 msgstr ""
 
-#: taskcoachlib/render.py:245
+#: taskcoachlib/render.py:262
 msgid "now"
 msgstr ""
 

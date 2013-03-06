@@ -94,19 +94,6 @@ def budget(aBudget):
     return timeSpent(aBudget)
 
 
-dateFormat = '%x'
-def dateFunc(dt=None, humanReadable=False):
-    if humanReadable:
-        theDate = dt.date()
-        if theDate == datemodule.Now().date():
-            return _('Today')
-        elif theDate == datemodule.Yesterday().date():
-            return _('Yesterday')
-        elif theDate == datemodule.Tomorrow().date():
-            return _('Tomorrow')
-    return operating_system.decodeSystemString(datetime.datetime.strftime(dt, dateFormat))
-
-
 # Default time formatting
 language_and_country = locale.getlocale()[0]
 if language_and_country and ('_US' in language_and_country or 
@@ -129,6 +116,23 @@ def rawTimeFunc(dt, minutes=True, seconds=False):
     return datemodule.DateTime.strftime(dt, fmt)
 
 
+dateFormat = '%x'
+def rawDateFunc(dt=None):
+    return operating_system.decodeSystemString(datetime.datetime.strftime(dt, dateFormat))
+
+
+def dateFunc(dt=None, humanReadable=False):
+    if humanReadable:
+        theDate = dt.date()
+        if theDate == datemodule.Now().date():
+            return _('Today')
+        elif theDate == datemodule.Yesterday().date():
+            return _('Yesterday')
+        elif theDate == datemodule.Tomorrow().date():
+            return _('Tomorrow')
+    return rawDateFunc(dt)
+
+
 # OS-specific time formatting
 if operating_system.isWindows():
     import pywintypes, win32api
@@ -141,7 +145,10 @@ if operating_system.isWindows():
                 flags = 0x2
             else:
                 flags = 0x1
-        return win32api.GetTimeFormat(0x400, flags, None if dt is None else pywintypes.Time(dt), None)
+        return operating_system.decodeSystemString(win32api.GetTimeFormat(0x400, flags, None if dt is None else pywintypes.Time(dt), None))
+
+    def rawDateFunc(dt):
+        return operating_system.decodeSystemString(win32api.GetDateFormat(0x400, 0, None if dt is None else pywintypes.Time(dt), None))
 elif operating_system.isMac():
     import Cocoa, calendar
     # We don't actually respect the 'seconds' parameter; this assumes that the short time format does
@@ -174,6 +181,8 @@ elif operating_system.isMac():
                 _state = 0
     _hourFormatter = Cocoa.NSDateFormatter.alloc().init()
     _hourFormatter.setDateFormat_(_hourFormat + (' %s' % _ampmFormat if _ampmFormat else ''))
+    _dateFormatter = Cocoa.NSDateFormatter.alloc().init()
+    _dateFormatter.setDateStyle_(Cocoa.NSDateFormatterShortStyle)
 
     def _applyFormatter(dt, fmt):
         # We don't use time zones internally so the datetime object 'thinks' it's UTC. But
@@ -185,14 +194,18 @@ elif operating_system.isMac():
         if minutes:
             if seconds:
                 return _applyFormatter(dt, _mediumFormatter)
+            r = _applyFormatter(dt, _shortFormatter)
             return _applyFormatter(dt, _shortFormatter)
         return _applyFormatter(dt, _hourFormatter)
+
+    def rawDateFunc(dt):
+        return _applyFormatter(datetime.datetime.combine(dt, datetime.time(0, 0, 0, 0)), _dateFormatter)
 elif desktop.get_desktop() == 'KDE4':
     try:
         # Import gtk first because when it's imported indirectly it generates a RuntimeWarning.
         import gtk
-        from PyKDE4.kdecore import KGlobal, KLocale
-        from PyQt4.QtCore import QTime
+        from PyKDE4.kdecore import KGlobal, KLocale, ShortDate
+        from PyQt4.QtCore import QTime, QDate
     except ImportError:
         pass
     else:
@@ -206,6 +219,10 @@ elif desktop.get_desktop() == 'KDE4':
             if minutes:
                 return unicode(KGlobal.locale().formatTime(qtdt, seconds))
             return unicode(_localeCopy.formatTime(qtdt))
+
+        def rawDateFunc(dt):
+            qtdt = QDate(dt.year, dt.month, dt.day)
+            return unicode(KGlobal.locale().formatDate(qtdt, ShortDate))
 
 
 timeFunc = lambda dt, minutes=True, seconds=False: operating_system.decodeSystemString(rawTimeFunc(dt, minutes=minutes, seconds=seconds))
