@@ -32,7 +32,7 @@ defaults = {
 'view': {
     'statusbar': 'True',
     'toolbar': '(22, 22)',
-    'toolbarperspective': 'FileOpen,FileSave,Print,Separator,EditUndo,EditRedo,Separator,EffortStartButton,EffortStop',
+    'toolbarperspective': 'FileOpen,Print,Separator,EditUndo,EditRedo,Separator,EffortStartButton,EffortStop',
     # Index of the active effort viewer in task editor:
     'effortviewerintaskeditor': '0',  
     'taskviewercount': '1',  # Number of task viewers in main window
