@@ -155,8 +155,10 @@ elif operating_system.isMac():
     # not include them, but the medium format does.
     _shortFormatter = Cocoa.NSDateFormatter.alloc().init()
     _shortFormatter.setTimeStyle_(Cocoa.NSDateFormatterShortStyle)
+    _shortFormatter.setDateStyle_(Cocoa.NSDateFormatterNoStyle)
     _mediumFormatter = Cocoa.NSDateFormatter.alloc().init()
     _mediumFormatter.setTimeStyle_(Cocoa.NSDateFormatterMediumStyle)
+    _mediumFormatter.setDateStyle_(Cocoa.NSDateFormatterNoStyle)
     # Special case for hour without minutes or seconds. I don't know if it is possible to get the AM/PM
     # setting alone, so parse the format string instead.
     # See http://www.unicode.org/reports/tr35/tr35-25.html#Date_Format_Patterns
@@ -183,6 +185,7 @@ elif operating_system.isMac():
     _hourFormatter.setDateFormat_(_hourFormat + (' %s' % _ampmFormat if _ampmFormat else ''))
     _dateFormatter = Cocoa.NSDateFormatter.alloc().init()
     _dateFormatter.setDateStyle_(Cocoa.NSDateFormatterShortStyle)
+    _dateFormatter.setTimeStyle_(Cocoa.NSDateFormatterNoStyle)
 
     def _applyFormatter(dt, fmt):
         # We don't use time zones internally so the datetime object 'thinks' it's UTC. But
