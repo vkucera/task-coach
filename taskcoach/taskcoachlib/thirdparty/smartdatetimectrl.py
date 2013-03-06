@@ -862,7 +862,7 @@ class TimeEntry(Entry):
                 pass
             else:
                 osxFormatter = Cocoa.NSDateFormatter.alloc().init()
-                osxFormatter.setFormatterBehavior(Cocoa.NSDateFormatterBehavior10_4)
+                osxFormatter.setFormatterBehavior_(Cocoa.NSDateFormatterBehavior10_4)
                 osxFormatter.setDateFormat_('a')
                 amStrings.append(osxFormatter.stringFromDate_(Cocoa.NSDate.dateWithTimeIntervalSinceNow_((datetime.datetime(year=2013,
                                         month=3, day=3, hour=11, minute=33, second=0) - datetime.datetime.now()).total_seconds())))
