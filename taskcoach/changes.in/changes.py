@@ -27,6 +27,7 @@ Release('1.3.27', 'March ??, 2013',
     bugsFixed=[
         Bugv2('''Follow system preferences to format dates (instead of
 just times).''', '1386'),
+        Bugv2('''Fix date rendering on some versions of OSX.''', '1391'),
         ],
     ),
 
