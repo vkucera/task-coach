@@ -281,18 +281,6 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
             # Using .Gripper(False) does not work here
             wx.CallAfter(bar.SetGripperVisible, False)
         self.manager.Update()
-        wx.CallAfter(self.__DisplayBalloon)
-
-    def __DisplayBalloon(self):
-        toolbarPane = self.manager.GetPane('toolbar')
-        if toolbarPane.IsOk():
-            toolbar = toolbarPane.window
-            if toolbar.IsShownOnScreen() and \
-                toolbar.getToolIdByCommand('FileSave') != wx.ID_ANY and \
-                self.settings.getboolean('file', 'autosave'):
-                self.AddBalloonTip(self.settings, 'autosavehint', toolbar,
-                            getRect=lambda: toolbar.GetToolRect(toolbar.getToolIdByCommand('FileSave')),
-                            message=_('''Task Coach is configured to automatically save every change you make. The save button will therefore stay disabled.'''))
 
     def onCloseToolBar(self, event):
         if event.GetPane().IsToolbar():

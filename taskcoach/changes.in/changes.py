@@ -22,9 +22,20 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.26', 'March ??, 2013',
+Release('1.3.27', 'March ??, 2013',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bugv2('''Follow system preferences to format dates (instead of
+just times).''', '1386'),
+        ],
+    ),
+
+Release('1.3.26', 'March 6, 2013',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bugv2('''Exporting efforts in CSV with the 'Period' column and date/time
+splitting would not work.''', '1387'),
+        Bugv2('''Task Coach would not launch on OS X 10.6 and later.''', '1388', '1390'),
         ],
     ),
 

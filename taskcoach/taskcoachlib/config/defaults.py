@@ -32,7 +32,7 @@ defaults = {
 'view': {
     'statusbar': 'True',
     'toolbar': '(22, 22)',
-    'toolbarperspective': 'FileOpen,FileSave,Print,Separator,EditUndo,EditRedo,Separator,EffortStartButton,EffortStop',
+    'toolbarperspective': 'FileOpen,Print,Separator,EditUndo,EditRedo,Separator,EffortStartButton,EffortStop',
     # Index of the active effort viewer in task editor:
     'effortviewerintaskeditor': '0',  
     'taskviewercount': '1',  # Number of task viewers in main window
@@ -74,7 +74,7 @@ defaults = {
     },
 'taskviewer': {
     'title': '',  # User supplied viewer title
-    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,TaskViewerTreeOrListChoice,Spacer,ViewerHideTasks_completed,ViewerHideTasks_inactive,ResetFilter,Search',
+    'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,Spacer,ViewerHideTasks_completed,ViewerHideTasks_inactive,ResetFilter,TaskViewerTreeOrListChoice,Search',
     'treemode': 'True',  # True = tree mode, False = list mode
     'sortby': 'dueDateTime',
     'sortascending': 'True',

@@ -37,8 +37,7 @@ class RowBuilder(object):
                                     dueDateTime=[_('Due date'), _('Due time')],
                                     completionDateTime=[_('Completion date'), _('Completion time')],
                                     reminder=[_('Reminder date'), _('Reminder time')],
-                                    creationDateTime=[_('Creation date'), _('Creation time')],
-                                    period=[_('Period')])
+                                    creationDateTime=[_('Creation date'), _('Creation time')])
     
     def __init__(self, columns, isTree, separateDateAndTimeColumns):
         self.__columns = columns

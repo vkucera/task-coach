@@ -1243,10 +1243,15 @@ class DateEntry(Entry):
         self.__formatter = fmt
         fmt = decodeSystemString(fmt(datetime.date(year=3333, day=22, month=11)))
 
+        months = list()
         for fmtChar in ['B', 'b']:
             substring = decodeSystemString(datetime.date(year=3333, day=22, month=11).strftime('%%%s' % fmtChar))
-            if fmt.find(substring) != -1:
-                fmt = fmt.replace(substring, fmtChar)
+            months.append((fmtChar, substring + '.'))
+            months.append((fmtChar, substring))
+        for fmtChar, substring in months:
+            idx = fmt.lower().find(substring.lower())
+            if idx != -1:
+                fmt = fmt[:idx] + fmtChar + fmt[idx + len(substring):]
                 break
 
         fmt = re.sub('1+', 'm', fmt)
