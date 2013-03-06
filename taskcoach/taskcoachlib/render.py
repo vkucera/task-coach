@@ -145,10 +145,10 @@ if operating_system.isWindows():
                 flags = 0x2
             else:
                 flags = 0x1
-        return win32api.GetTimeFormat(0x400, flags, None if dt is None else pywintypes.Time(dt), None)
+        return operating_system.decodeSystemString(win32api.GetTimeFormat(0x400, flags, None if dt is None else pywintypes.Time(dt), None))
 
     def rawDateFunc(dt):
-        return win32api.GetDateFormat(0x400, 0, None if dt is None else pywintypes.Time(dt), None)
+        return operating_system.decodeSystemString(win32api.GetDateFormat(0x400, 0, None if dt is None else pywintypes.Time(dt), None))
 elif operating_system.isMac():
     import Cocoa, calendar
     # We don't actually respect the 'seconds' parameter; this assumes that the short time format does
