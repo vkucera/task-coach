@@ -194,11 +194,12 @@ elif operating_system.isMac():
         if minutes:
             if seconds:
                 return _applyFormatter(dt, _mediumFormatter)
+            r = _applyFormatter(dt, _shortFormatter)
             return _applyFormatter(dt, _shortFormatter)
         return _applyFormatter(dt, _hourFormatter)
 
     def rawDateFunc(dt):
-        return _applyFormatter(dt, _dateFormatter)
+        return _applyFormatter(datetime.datetime.combine(dt, datetime.time(0, 0, 0, 0)), _dateFormatter)
 elif desktop.get_desktop() == 'KDE4':
     try:
         # Import gtk first because when it's imported indirectly it generates a RuntimeWarning.
