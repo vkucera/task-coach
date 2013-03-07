@@ -210,7 +210,7 @@ elif desktop.get_desktop() == 'KDE4':
     try:
         # Import gtk first because when it's imported indirectly it generates a RuntimeWarning.
         import gtk
-        from PyKDE4.kdecore import KGlobal, KLocale, ShortDate
+        from PyKDE4.kdecore import KGlobal, KLocale
         from PyQt4.QtCore import QTime, QDate
     except ImportError:
         pass
@@ -228,7 +228,7 @@ elif desktop.get_desktop() == 'KDE4':
 
         def rawDateFunc(dt):
             qtdt = QDate(dt.year, dt.month, dt.day)
-            return unicode(KGlobal.locale().formatDate(qtdt, ShortDate))
+            return unicode(KGlobal.locale().formatDate(qtdt, 0))
 
 
 timeFunc = lambda dt, minutes=True, seconds=False: operating_system.decodeSystemString(rawTimeFunc(dt, minutes=minutes, seconds=seconds))
