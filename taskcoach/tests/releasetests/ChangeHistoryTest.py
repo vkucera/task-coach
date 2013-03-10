@@ -25,6 +25,7 @@ import changes # pylint: disable=F0401
 
 class ChangeHistoryTestCase(test.TestCase):
     def setUp(self):
+        super(ChangeHistoryTestCase, self).setUp()
         self.latestRelease = changes.releases[0]
         
     def testLatestReleaseNumberEqualsMetaDataReleaseNumber(self):
