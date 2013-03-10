@@ -20,14 +20,13 @@ from __future__ import absolute_import # Or we can't import ElementTree :(
 
 import os
 from taskcoachlib import patterns, render
-from taskcoachlib.domain import base, task, category, note, effort, attachment
+from taskcoachlib.domain import base, task, category, note, effort, attachment, date
 from taskcoachlib.thirdparty.guid import generate
 from taskcoachlib.thirdparty.pubsub import pub
 from taskcoachlib.persistence.backends import FileBackend
 from taskcoachlib.persistence.xml import reader, writer
 from taskcoachlib.i18n import _
 from xml.etree import ElementTree as ET
-import datetime
 
 
 class TaskStore(patterns.Observer):
@@ -46,7 +45,7 @@ class TaskStore(patterns.Observer):
         self.__efforts = effort.EffortList(self.tasks())
         self.__locked = list()
         self.__guid = generate()
-        self.__name = _('Session created on %s') % render.dateTime(datetime.datetime.now())
+        self.__name = _('Session created on %s') % render.dateTime(date.Now())
         self.__master = FileBackend(self)
         self.__dirty = False
         self.__lastFilename = ''
@@ -121,7 +120,7 @@ class TaskStore(patterns.Observer):
                     self.categories().extend(categories)
                     self.notes().extend(notes)
             else:
-                self.__name = _('Session created on %s') % render.dateTime(datetime.datetime.now())
+                self.__name = _('Session created on %s') % render.dateTime(date.Now())
 
             self.__master.monitor().resetAllChanges()
             self.__dirty = False
@@ -266,7 +265,7 @@ class TaskStore(patterns.Observer):
         if filename:
             self.setName(os.path.split(filename)[-1])
         else:
-            self.setName(_('Session created on %s') % render.dateTime(datetime.datetime.now()))
+            self.setName(_('Session created on %s') % render.dateTime(date.Now()))
         if doSave:
             backend.lock()
             try:
