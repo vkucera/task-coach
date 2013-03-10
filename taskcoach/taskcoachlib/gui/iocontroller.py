@@ -69,9 +69,6 @@ class IOController(object):
     def needSave(self):
         return self.__taskStore.needSave()
 
-    def changedOnDisk(self):
-        return self.__taskStore.changedOnDisk()
-
     def openAfterStart(self, commandLineArgs):
         ''' Open either the file specified on the command line, or the file
             the user was working on previously, or none at all. '''
@@ -170,9 +167,6 @@ class IOController(object):
             return self.saveas(showerror=showerror)  # Ask for filename
         else:
             return False
-
-    def mergeDiskChanges(self):
-        self.__taskStore.mergeDiskChanges()
 
     def saveas(self, filename=None, showerror=wx.MessageBox, 
                fileExists=os.path.exists):

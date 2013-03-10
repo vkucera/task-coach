@@ -42,10 +42,6 @@ class AutoSaver(object):
         return task_file.filename() and task_file.needSave() and \
             self.__settings.getboolean('file', 'autosave')
 
-    def _needLoad(self, taskStore):
-        return taskStore.changedOnDisk() and \
-            self.__settings.getboolean('file', 'autoload')
-
     def on_idle(self, event):
         ''' Actually save the dirty files during idle time. '''
         event.Skip()
