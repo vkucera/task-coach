@@ -22,6 +22,7 @@ import test, mock, os
 
 class LeakTest(test.TestCase):
     def setUp(self):
+        super(LeakTest, self).setUp()
         self.mockApp = mock.App()
         self.mockApp.addTask()
 

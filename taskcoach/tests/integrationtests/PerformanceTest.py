@@ -24,7 +24,6 @@ from taskcoachlib.domain import task, category, note
 
 class PerformanceTest(test.TestCase):
     def createTestFile(self):
-        task.Task.settings = config.Settings(load=False)
         taskList = task.TaskList([task.Task('test') for _ in range(self.nrTasks)])
         taskfile = file(self.taskfilename, 'w')
         taskWriter = persistence.XMLWriter(taskfile)
@@ -32,6 +31,7 @@ class PerformanceTest(test.TestCase):
         taskfile.close()
 
     def setUp(self):
+        super(PerformanceTest, self).setUp()
         self.nrTasks = 100
         self.taskfilename = 'performanceTest.tsk'
         self.createTestFile()

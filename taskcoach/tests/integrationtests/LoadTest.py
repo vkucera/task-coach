@@ -22,6 +22,7 @@ import test, mock
 
 class LoadTest(test.TestCase):
     def setUp(self):
+        super(LoadTest, self).setUp()
         self.filename = 'LoadTest.tsk'
         taskfile = file(self.filename, 'w')
         taskfile.writelines(['Line 1\n', 'Line 2\n'])

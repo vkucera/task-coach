@@ -22,6 +22,7 @@ import test, mock
 
 class SaveTest(test.TestCase):
     def setUp(self):
+        super(SaveTest, self).setUp()
         self.filename = 'SaveTest.tsk'
         self.filename2 = 'SaveTest2.tsk'
         self.mockApp = mock.App()
