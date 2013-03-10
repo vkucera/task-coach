@@ -29,7 +29,7 @@ class TodoTxtWriterTestCase(test.wxTestCase):
         self.file = StringIO.StringIO()
         self.writer = persistence.TodoTxtWriter(self.file, 'whatever.tsk')
         self.settings.set('taskviewer', 'treemode', 'False')
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(self.settings)
         self.viewer = gui.viewer.TaskViewer(self.frame, self.taskStore, self.settings)
 
     def testNoTasksAndCategories(self):

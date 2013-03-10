@@ -34,7 +34,7 @@ class EffortViewerUnderTest(gui.viewer.EffortViewer):  # pylint: disable=W0223
 class EffortViewerForSpecificTasksTest(test.wxTestCase):
     def setUp(self):
         super(EffortViewerForSpecificTasksTest, self).setUp()
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(self.settings)
         self.task1 = task.Task('Task 1')
         self.task2 = task.Task('Task 2')
         self.taskStore.tasks().extend([self.task1, self.task2])
@@ -68,7 +68,7 @@ class EffortViewerForSpecificTasksTest(test.wxTestCase):
 class EffortViewerStatusMessageTest(test.wxTestCase):
     def setUp(self):
         super(EffortViewerStatusMessageTest, self).setUp()
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(self.settings)
         self.task = task.Task()
         self.taskStore.tasks().append(self.task)
         self.effort1 = effort.Effort(self.task, date.DateTime(2006, 1, 1),
@@ -136,7 +136,7 @@ class EffortViewerStatusMessageTest(test.wxTestCase):
 class EffortViewerTest(test.wxTestCase):
     def setUp(self):
         super(EffortViewerTest, self).setUp()
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(self.settings)
         self.task = task.Task('task')
         self.taskStore.tasks().append(self.task)
         self.effort1 = effort.Effort(self.task, date.DateTime(2006, 1, 1),
@@ -207,7 +207,7 @@ class EffortViewerAggregationTestCase(test.wxTestCase):
         super(EffortViewerAggregationTestCase, self).setUp()
         self.settings.set('effortviewer', 'aggregation', self.aggregation)
 
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(self.settings)
         self.viewer = self.createViewer()
         self.task = task.Task('Task')
         self.task2 = task.Task('Task2')
@@ -412,7 +412,7 @@ class EffortViewerRenderTestMixin(object):
         super(EffortViewerRenderTestMixin, self).setUp()
         self.settings.set('effortviewer', 'aggregation', self.aggregation)
 
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(self.settings)
         self.task = task.Task('task')
         self.taskStore.tasks().append(self.task)
         self.midnight = date.Now().startOfDay()

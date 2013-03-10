@@ -29,7 +29,7 @@ class DummyEvent(object):
 class AttachmentEditorTest(test.wxTestCase):
     def setUp(self):
         super(AttachmentEditorTest, self).setUp()
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(self.settings)
         self.attachment = attachment.FileAttachment('Attachment')
         self.attachments = attachment.AttachmentList()
         self.attachments.append(self.attachment)

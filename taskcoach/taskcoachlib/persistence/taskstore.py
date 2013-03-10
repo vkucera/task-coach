@@ -16,14 +16,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+from __future__ import absolute_import # Or we can't import ElementTree :(
 
 import os
-from taskcoachlib import patterns
+from taskcoachlib import patterns, render
 from taskcoachlib.domain import base, task, category, note, effort, attachment
 from taskcoachlib.thirdparty.guid import generate
 from taskcoachlib.thirdparty.pubsub import pub
 from taskcoachlib.persistence.backends import FileBackend
-from taskcoachlib.persistence.xml import reader
+from taskcoachlib.persistence.xml import reader, writer
+from taskcoachlib.i18n import _
+from xml.etree import ElementTree as ET
+import datetime
 
 
 class TaskStore(patterns.Observer):
@@ -31,27 +35,109 @@ class TaskStore(patterns.Observer):
     This class is a container for domain objects in memory.
     """
 
-    def __init__(self):
+    def __init__(self, settings):
         super(TaskStore, self).__init__()
 
+        self.__settings = settings
         self.__backends = list()
         self.__tasks = task.TaskList()
         self.__categories = category.CategoryList()
         self.__notes = note.NoteContainer()
         self.__efforts = effort.EffortList(self.tasks())
         self.__locked = list()
-
+        self.__guid = generate()
+        self.__name = _('Session created on %s') % render.dateTime(datetime.datetime.now())
+        self.__master = FileBackend(self)
+        self.__dirty = False
         self.__lastFilename = ''
+
         pub.subscribe(self.onMonitorDirty, 'monitor.dirty')
 
+    def needSave(self): # For autosave
+        return self.__master.dirty() or self.__dirty
+
+    def exists(self, fileExists=os.path.exists):
+        return fileExists(os.path.join(self.__settings.pathToDataDir(), self.__guid + '.store'))
+
+    def guid(self):
+        return self.__guid
+
+    def name(self):
+        return self.__name
+
+    def setName(self, name):
+        self.__name = name
+        self__dirty = True
+        pub.sendMessage('taskstore.filenameChanged', filename=self.name())
+        pub.sendMessage('taskstore.dirty', taskStore=self)
+
+    def backends(self):
+        return self.__backends[:]
+
+    def saveSession(self):
+        pub.sendMessage('taskstore.aboutToSave', taskStore=self)
+        try:
+            root = ET.Element('store')
+            ET.SubElement(root, 'name').text = self.__name
+            for backend in self.__backends:
+                node = ET.SubElement(root, 'backend')
+                if isinstance(backend, FileBackend):
+                    node.attrib['type'] = u'file'
+                else:
+                    raise RuntimeError('Unknown backend: %s' % backend)
+                backend.toElement(node)
+            with file(os.path.join(self.__settings.pathToDataDir(), self.__guid + '.store'), 'wb') as fd:
+                ET.ElementTree(root).write(fd, encoding='UTF-8')
+
+            with file(os.path.join(self.__settings.pathToDataDir(), self.__guid + '.storedata'), 'wb') as fd:
+                writer.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes(), self.__guid)
+
+            self.__master.monitor().resetAllChanges()
+            self.__dirty = False
+            pub.sendMessage('taskstore.dirty', taskStore=self)
+        finally:
+            pub.sendMessage('taskstore.justSaved', taskStore=self)
+
+    def loadSession(self, guid):
+        pub.sendMessage('taskstore.aboutToRead', taskStore=self)
+        try:
+            self.clear()
+            self.__guid = guid
+            if os.path.exists(os.path.join(self.__settings.pathToDataDir(), guid + '.store')):
+                with file(os.path.join(self.__settings.pathToDataDir(), guid + '.store'), 'rb') as fd:
+                    root = ET.parse(fd)
+                    self.__name = root.find('name').text
+                    for node in root.findall('backend'):
+                        if node.attrib['type'] == u'file':
+                            backend = FileBackend(self)
+                        else:
+                            raise RuntimeError('Unknown backend type: "%s"' % node.attrib['type'])
+                        backend.fromElement(node)
+                with file(os.path.join(self.__settings.pathToDataDir(), guid + '.storedata'), 'rU') as fd:
+                    tasks, categories, notes, allChanges, guid = reader.XMLReader(fd).read()
+                    self.tasks().extend(tasks)
+                    self.categories().extend(categories)
+                    self.notes().extend(notes)
+            else:
+                self.__name = _('Session created on %s') % render.dateTime(datetime.datetime.now())
+
+            self.__master.monitor().resetAllChanges()
+            self.__dirty = False
+            pub.sendMessage('taskstore.filenameChanged', filename=self.name())
+        finally:
+            pub.sendMessage('taskstore.justRead', taskStore=self)
+
+    def isEmpty(self):
+        return 0 == len(self.tasks()) == len(self.notes()) == len(self.categories())
+
     def onMonitorDirty(self, monitor):
-        for backend in self.__backends:
-            if backend.monitor() == monitor:
-                pub.sendMessage('taskstore.dirty', taskStore=self)
-                break
+        if monitor == self.__master.monitor():
+            pub.sendMessage('taskstore.dirty', taskStore=self)
 
     def addBackend(self, backend):
         self.__backends.append(backend)
+        self.__dirty = True
+        pub.sendMessage('taskstore.dirty', taskStore=self)
 
     def tasks(self):
         return self.__tasks
@@ -66,7 +152,7 @@ class TaskStore(patterns.Observer):
         return self.__efforts
 
     def dirty(self):
-        return any([backend.dirty() for backend in self.__backends])
+        return self.__master.dirty() or self.__dirty
 
     def lockAll(self):
         self.__locked = list()
@@ -94,6 +180,7 @@ class TaskStore(patterns.Observer):
     def clear(self):
         pub.sendMessage('taskstore.aboutToClear', taskStore=self)
         try:
+            self.__master.stop(self)
             event = patterns.Event()
             for collection in [self.tasks(), self.notes(), self.categories()]:
                 collection.clear(event=event)
@@ -106,128 +193,15 @@ class TaskStore(patterns.Observer):
                 self.__backends = list()
             finally:
                 self.unlockAll()
+            self.__guid = generate()
+            self.__master = FileBackend(self)
+            self.__dirty = False
         finally:
             pub.sendMessage('taskstore.justCleared', taskStore=self)
 
     def stop(self):
         for backend in self.__backends:
             backend.stop(self)
-
-    def isEmpty(self):
-        return 0 == len(self.tasks()) == len(self.notes()) == len(self.categories())
-
-    def fileBackend(self):
-        for backend in self.__backends:
-            if isinstance(backend, FileBackend):
-                return backend
-        return None
-
-    # Methods making this almost compatible with the old TaskFile interface
-
-    def filename(self):
-        for backend in self.__backends:
-            if isinstance(backend, FileBackend):
-                return backend.filename()
-        return ''
-
-    def setFilename(self, filename):
-        for backend in self.__backends:
-            if isinstance(backend, FileBackend):
-                break
-        else:
-            backend = FileBackend(self)
-            self.__backends.append(backend)
-        backend.setFilename(filename)
-        self.__lastFilename = filename
-        pub.sendMessage('taskstore.filenameChanged', filename=filename)
-
-    def lastFilename(self):
-        return self.__lastFilename
-
-    def close(self):
-        self.clear()
-
-    def exists(self):
-        for backend in self.__backends:
-            if isinstance(backend, FileBackend):
-                return backend.exists()
-        return False
-
-    def load(self, filename=None, breakLock=False):
-        # XXXTODO: breakLock...
-        if filename is None:
-            filename = self.filename()
-        pub.sendMessage('taskstore.aboutToRead', taskStore=self)
-        try:
-            self.clear()
-            backend = FileBackend(self)
-            self.__backends.append(backend)
-            backend.setFilename(filename)
-            pub.sendMessage('taskstore.filenameChanged', filename=filename)
-            if self.exists():
-                backend.monitor().reset()
-                backend.lock()
-                try:
-                    backend.sync(self)
-                finally:
-                    backend.unlock()
-                backend.monitor().resetAllChanges()
-            self.__lastFilename = filename
-        finally:
-            pub.sendMessage('taskstore.justRead', taskStore=self)
-
-    def save(self):
-        pub.sendMessage('taskstore.aboutToSave', taskStore=self)
-        try:
-            self.lockAll()
-            try:
-                allData = list()
-                for backend in self.__backends:
-                    if isinstance(backend, FileBackend):
-                        allData.append(backend.get(self))
-                    else:
-                        allData.append(None)
-                for backend, data in zip(self.__backends, allData):
-                    if isinstance(backend, FileBackend):
-                        backend.put(self, data)
-            finally:
-                self.unlockAll()
-        finally:
-            pub.sendMessage('taskstore.justSaved')
-
-    def saveas(self, filename):
-        if os.path.exists(filename):
-            os.remove(filename)
-        if os.path.exists(filename + '.delta'):
-            os.remove(filename + '.delta')
-        self.lockAll()
-        try:
-            for backend in self.__backends:
-                backend.stop(self)
-                backend.clear(self)
-        finally:
-            self.unlockAll()
-        backend = FileBackend(self)
-        backend.setFilename(filename)
-        pub.sendMessage('taskstore.filenameChanged', filename=filename)
-        self.__backends = [backend]
-        self.save()
-        self.__lastFilename = filename
-
-    def needSave(self):
-        hasFile = False
-        for backend in self.__backends:
-            if isinstance(backend, FileBackend):
-                hasFile = True
-                if backend.dirty():
-                    return True
-        if hasFile:
-            return False
-        return not self.isEmpty()
-
-    def is_locked(self):
-        # XXXTODO
-        return False
 
     def __contains__(self, item):
         return item in self.tasks() or item in self.notes() or \
@@ -276,3 +250,79 @@ class TaskStore(patterns.Observer):
             for categorizable in categorizables:
                 categorizable.addCategory(categoryToLink)
                 categoryToLink.addCategorizable(categorizable)
+
+    # Convenience methods
+
+    def __createNewSessionWithFile(self, filename, doSave=True):
+        if filename:
+            self.__lastFilename = filename
+        for backend in self.__backends:
+            backend.stop(self)
+        backend = FileBackend(self)
+        backend.setFilename(filename)
+        self.__backends = [backend]
+        if filename:
+            self.setName(os.path.split(filename)[-1])
+        else:
+            self.setName(_('Session created on %s') % render.dateTime(datetime.datetime.now()))
+        if doSave:
+            backend.lock()
+            try:
+                backend.put(self, backend.get(self))
+            finally:
+                backend.unlock()
+        self.__master.monitor().resetAllChanges()
+        self.saveSession()
+        self.__dirty = False
+
+    def save(self):
+        self.lockAll()
+        try:
+            data = list()
+            for backend in self.__backends:
+                if backend.isAutomatic():
+                    data.append(backend.get(self))
+            for backend in self.__backends:
+                if backend.isAutomatic():
+                    backend.put(self, data.pop(0))
+        finally:
+            self.unlockAll()
+        self.saveSession()
+
+    def saveas(self, filename):
+        if os.path.exists(filename):
+            os.remove(filename)
+        self.__createNewSessionWithFile(filename)
+
+    def load(self, filename=None):
+        if filename is None:
+            for backend in self.__backends:
+                if isinstance(backend, FileBackend):
+                    filename = backend.filename()
+                    break
+        self.clear()
+        self.__createNewSessionWithFile(filename, doSave=filename and os.path.exists(filename))
+
+    def close(self):
+        self.saveSession()
+        self.clear()
+
+    def filename(self):
+        for backend in self.__backends:
+            if isinstance(backend, FileBackend):
+                return backend.filename()
+        return ''
+
+    def setFilename(self, filename):
+        self.__lastFilename = filename or ''
+        if filename:
+            for backend in self.__backends:
+                if isinstance(backend, FileBackend):
+                    backend.setFilename(filename)
+                    return
+            self.__createNewSessionWithFile(filename, doSave=False)
+        else:
+            self.clear()
+
+    def lastFilename(self):
+        return self.__lastFilename

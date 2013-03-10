@@ -24,7 +24,7 @@ from taskcoachlib.domain import category
 class CategoryViewerTest(test.wxTestCase):
     def setUp(self):
         super(CategoryViewerTest, self).setUp()
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(self.settings)
         self.categories = self.taskStore.categories()
         self.viewer = gui.viewer.CategoryViewer(self.frame, self.taskStore, 
                                                 self.settings)

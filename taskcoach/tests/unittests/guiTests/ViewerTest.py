@@ -35,7 +35,7 @@ class Window(AuiManagedFrameWithDynamicCenterPane):
 class ViewerTest(test.wxTestCase):
     def setUp(self):
         super(ViewerTest, self).setUp()
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(self.settings)
         self.task = task.Task('task')
         self.taskStore.tasks().append(self.task)
         self.window = Window(self.frame)
@@ -326,7 +326,7 @@ class FilterableViewerForTasks(test.TestCase):
     def createViewer(self):
         viewer = FilterableViewerForTasksUnderTest()
         # pylint: disable=W0201
-        viewer.taskStore = persistence.TaskStore()
+        viewer.taskStore = persistence.TaskStore(self.settings)
         viewer.settings = self.settings
         viewer.settingsSection = lambda: 'taskviewer'
         presentation = viewer.createFilter(viewer.taskStore.tasks())
@@ -495,7 +495,7 @@ class FilterableViewerForTasks(test.TestCase):
 
 class ViewerBaseClassTest(test.wxTestCase):
     def testNotImplementedError(self):
-        taskStore = persistence.TaskStore()
+        taskStore = persistence.TaskStore(self.settings)
         try:
             try:
                 gui.viewer.base.Viewer(self.frame, taskStore,
@@ -518,7 +518,7 @@ class ViewerIteratorTestCase(test.wxTestCase):
     def setUp(self):
         super(ViewerIteratorTestCase, self).setUp()
         task.Task.settings = self.settings
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(self.settings)
         self.taskList = self.taskStore.tasks()
         self.window = AuiManagedFrameWithDynamicCenterPane(self.frame)
         self.viewer = self.createViewer()
@@ -586,7 +586,7 @@ class ListViewerIteratorTest(ViewerIteratorTestCase, ViewerIteratorTestsMixin):
 class ViewerWithColumnsTest(test.wxTestCase):
     def setUp(self):
         super(ViewerWithColumnsTest, self).setUp()
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(self.settings)
         self.viewer = gui.viewer.TaskViewer(self.frame, self.taskStore, self.settings)
 
     def tearDown(self):

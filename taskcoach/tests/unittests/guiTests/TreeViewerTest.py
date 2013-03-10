@@ -24,7 +24,7 @@ from taskcoachlib.domain import task
 class TreeViewerTest(test.wxTestCase):
     def setUp(self):
         super(TreeViewerTest, self).setUp()
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(self.settings)
         self.viewer = gui.viewer.TaskViewer(self.frame, self.taskStore,
             self.settings)
         self.expansionContext = self.viewer.settingsSection()

@@ -16,15 +16,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-
 from taskcoachlib.changes import ChangeMonitor
 from taskcoachlib.domain import task, category, note, effort, attachment
 
 
 class Backend(object):
-    def __init__(self, store):
+    def __init__(self, store, automatic=False):
         super(Backend, self).__init__()
 
+        self.__automatic = automatic
         self.__monitor = ChangeMonitor()
         for collection in [store.tasks(), store.categories(), store.notes()]:
             self.__monitor.monitorCollection(collection)
@@ -33,8 +33,18 @@ class Backend(object):
                             attachment.MailAttachment]:
             self.__monitor.monitorClass(domainClass)
 
-    def __repr__(self):
-        return 'FileBackend(%s)' % self.__monitor.guid()
+    def toElement(self, node):
+        if self.isAutomatic():
+            node.attrib['automatic'] = u'1'
+
+    def fromElement(self, node):
+        self.setAutomatic(int(node.attrib.get('automatic', '0')))
+
+    def isAutomatic(self):
+        return self.__automatic
+
+    def setAutomatic(self, automatic):
+        self.__automatic = automatic
 
     def monitor(self):
         return self.__monitor

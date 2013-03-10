@@ -109,7 +109,7 @@ class TaskEditorTestCase(test.wxTestCase):
         self.tomorrow = self.today + date.ONE_DAY
         self.yesterday = self.today - date.ONE_DAY
         self.twodaysago = self.yesterday - date.ONE_DAY
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(self.settings)
         self.taskList = self.taskStore.tasks()
         self.taskList.extend(self.createTasks())
         self.editor = self.editorClass(self.frame, self.getItems(),

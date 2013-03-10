@@ -29,7 +29,7 @@ class CSVWriterTestCase(test.wxTestCase):
         super(CSVWriterTestCase, self).setUp()
         self.fd = StringIO.StringIO()
         self.writer = persistence.CSVWriter(self.fd)
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(self.settings)
         self.task = task.Task('Task subject')
         self.taskStore.tasks().append(self.task)
         self.createViewer()

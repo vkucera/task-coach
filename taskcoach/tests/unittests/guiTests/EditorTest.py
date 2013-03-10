@@ -37,7 +37,7 @@ class EditorUnderTest(gui.dialog.editor.NoteEditor):
 class EditorTestCase(test.wxTestCase):
     def setUp(self):
         super(EditorTestCase, self).setUp()
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(self.settings)
         self.items = base.filter.SearchFilter(self.taskStore.notes())
         self.item = note.Note(subject='item')
         self.items.append(self.item)

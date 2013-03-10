@@ -16,6 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+from __future__ import absolute_import # Or we can't import xml
+
 import os
 from .base import Backend
 from taskcoachlib.persistence.xml import reader, writer
@@ -23,12 +25,13 @@ from taskcoachlib.changes import sync
 from taskcoachlib.domain import task, note, category
 from taskcoachlib.thirdparty.guid import generate
 from taskcoachlib.thirdparty import lockfile
+from xml.etree import ElementTree as ET
 
 
 
 class FileBackend(Backend):
-    def __init__(self, store):
-        super(FileBackend, self).__init__(store)
+    def __init__(self, store, automatic=True):
+        super(FileBackend, self).__init__(store, automatic=automatic)
         self.__filename = ''
         self.__guid = generate()
         self.__lock = None
@@ -41,6 +44,14 @@ class FileBackend(Backend):
 
     def exists(self, suffix=''):
         return self.__filename and os.path.exists(self.__filename + suffix)
+
+    def toElement(self, node):
+        super(FileBackend, self).toElement(node)
+        ET.SubElement(node, 'filename').text = self.filename()
+ 
+    def fromElement(self, node):
+        super(FileBackend, self).fromElement(node)
+        self.setFilename(node.find('filename').text)
 
     def clear(self, store):
         if self.__filename:

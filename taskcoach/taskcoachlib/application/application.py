@@ -161,7 +161,7 @@ class Application(object):
         show_splash_screen = self.settings.getboolean('window', 'splash')
         splash = gui.SplashScreen() if show_splash_screen else None
         # pylint: disable=W0201
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(self.settings)
         self.__auto_saver = persistence.AutoSaver(self.settings)
         self.__auto_backup = persistence.AutoBackup(self.settings)
         self.iocontroller = gui.IOController(self.taskStore, self.displayMessage, 

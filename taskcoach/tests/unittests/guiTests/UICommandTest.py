@@ -71,7 +71,7 @@ class wxTestCaseWithFrameAsTopLevelWindow(test.wxTestCase):
     def setUp(self):
         super(wxTestCaseWithFrameAsTopLevelWindow, self).setUp()
         wx.GetApp().SetTopWindow(self.frame)
-        self.taskStore = self.frame.taskStore = persistence.TaskStore()
+        self.taskStore = self.frame.taskStore = persistence.TaskStore(self.settings)
 
     def tearDown(self):
         self.taskStore.close()
@@ -554,7 +554,7 @@ class EffortStopTest(test.TestCase):
 class AttachmentTest(test.wxTestCase):
     def setUp(self):
         super(AttachmentTest, self).setUp()
-        taskFile = persistence.TaskStore()
+        taskFile = persistence.TaskStore(self.settings)
         self.task = task.Task()
         taskFile.tasks().extend([self.task])
         self.attachment = attachment.FileAttachment('Test')

@@ -50,7 +50,7 @@ class TaskViewerTestCase(test.wxTestCase):
         self.task = task.Task(subject='task', plannedStartDateTime=date.Now())
         self.child = task.Task(subject='child', plannedStartDateTime=date.Now())
         self.child.setParent(self.task)
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(self.settings)
         self.taskList = self.taskStore.tasks()
         self.parentFrame = wx.Frame(self.frame, wx.ID_ANY, '')
         self.viewer = TaskViewerUnderTest(self.parentFrame, self.taskStore, 
@@ -1082,7 +1082,7 @@ class TaskViewerInListModeTest(CommonTestsMixin, TaskViewerTestCase):
 class TaskCalendarViewerTest(test.wxTestCase):
     def setUp(self):
         super(TaskCalendarViewerTest, self).setUp()
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(self.settings)
         self.frame.taskStore = self.taskStore
         self.viewer = gui.viewer.task.CalendarViewer(self.frame, self.taskStore, 
                                                      self.settings)
@@ -1113,7 +1113,7 @@ class TaskCalendarViewerTest(test.wxTestCase):
         
 class TaskSquareMapViewerTest(test.wxTestCase):
     def testCreate(self):
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(self.settings)
         gui.viewer.task.SquareTaskViewer(self.frame, self.taskStore, self.settings)
 
     def tearDown(self):
@@ -1124,7 +1124,7 @@ class TaskSquareMapViewerTest(test.wxTestCase):
 
 class TaskTimelineViewerTest(test.wxTestCase):
     def testCreate(self):
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(self.settings)
         gui.viewer.task.TimelineViewer(self.frame, self.taskStore, self.settings)
 
     def tearDown(self):
@@ -1135,7 +1135,7 @@ class TaskTimelineViewerTest(test.wxTestCase):
 
 class TaskStatisticsViewerTest(test.wxTestCase):
     def testCreate(self):
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(self.settings)
         gui.viewer.task.TaskStatsViewer(self.frame, self.taskStore, self.settings)
 
     def tearDown(self):

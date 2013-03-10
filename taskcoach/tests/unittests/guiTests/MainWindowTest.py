@@ -51,7 +51,7 @@ class MainWindowTestCase(test.wxTestCase):
     def setUp(self):
         super(MainWindowTestCase, self).setUp()
         self.setSettings()
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(self.settings)
         self.mainwindow = MainWindowUnderTest(DummyIOController(),
             self.taskStore, self.settings)
             

@@ -21,42 +21,32 @@ from taskcoachlib.domain import task, category
 from unittests import dummy
 import test, os
 from taskcoachlib.changes import ChangeMonitor
-
-
-class DummyFile(object):
-    name = 'testfile.tsk'
-    encoding = 'utf-8'
-
-    def close(self, *args, **kwargs):
-        pass
-
-    def write(self, *args, **kwargs):
-        pass
     
     
 class DummyTaskStore(persistence.TaskStore):
     def __init__(self, *args, **kwargs):
         self.saveCalled = 0
+        self.throw = False
         super(DummyTaskStore, self).__init__(*args, **kwargs)
 
     def exists(self, *args, **kwargs):  # pylint: disable=W0613
         return True
 
-    def save(self, *args, **kwargs):
+    def saveSession(self, *args, **kwargs):
         if kwargs.get('doNotify', True):
             self.saveCalled += 1
-        super(DummyTaskStore, self).save(*args, **kwargs)
+        super(DummyTaskStore, self).saveSession(*args, **kwargs)
 
-    def load(self, filename=None, throw=False, *args, **kwargs):  # pylint: disable=W0221
-        if throw:
+    def loadSession(self, guid):
+        if self.throw:
             raise IOError('error')
-        return super(DummyTaskStore, self).load(filename, *args, **kwargs)
+        return super(DummyTaskStore, self).loadSession(guid)
 
 
 class AutoSaverTestCase(test.TestCase):
     def setUp(self):
         super(AutoSaverTestCase, self).setUp()
-        self.taskStore = DummyTaskStore()
+        self.taskStore = DummyTaskStore(self.settings)
         self.autoSaver = persistence.AutoSaver(self.settings)
 
         file('filetomerge.tsk', 'wb').write('<?xml version="1.0" encoding="UTF-8" ?><tasks><task subject="foo" /></tasks>')
@@ -67,70 +57,61 @@ class AutoSaverTestCase(test.TestCase):
         self.taskStore.stop()
         del self.autoSaver # Make sure AutoSaver is not observing task files
         os.remove('filetomerge.tsk')
+        if os.path.exists('newfilename.tsk'):
+            os.remove('newfilename.tsk')
+            os.remove('newfilename.tsk.delta')
         
     def testCreate(self):
         self.failIf(self.taskStore.saveCalled)
         
-    def testFileChanged_ButNoFilenameAndAutoSaveOff(self):
-        self.taskStore.tasks().append(task.Task())
-        self.autoSaver.on_idle(dummy.Event())
-        self.failIf(self.taskStore.saveCalled)
-        
     def testFileChanged_ButAutoSaveOff(self):
         self.settings.set('file', 'autosave', 'False')
-        self.taskStore.setFilename('whatever.tsk')
+        self.taskStore.loadSession('whatever')
         self.taskStore.tasks().append(task.Task())
         self.autoSaver.on_idle(dummy.Event())
         self.failIf(self.taskStore.saveCalled)
-                
-    def testFileChanged_ButNoFilename(self):
-        self.settings.set('file', 'autosave', 'True')
-        self.taskStore.tasks().append(task.Task())
-        self.autoSaver.on_idle(dummy.Event())
-        self.failIf(self.taskStore.saveCalled)
-        
+     
     def testFileChanged(self):
         self.settings.set('file', 'autosave', 'True')
-        self.taskStore.setFilename('whatever.tsk')
+        self.taskStore.loadSession('whatever')
         self.taskStore.tasks().append(task.Task())
         self.autoSaver.on_idle(dummy.Event())
         self.assertEqual(1, self.taskStore.saveCalled)
-        
+
     def testSaveAsDoesNotTriggerAutoSave(self):
         self.settings.set('file', 'autosave', 'True')
-        self.taskStore.setFilename('whatever.tsk')
+        self.taskStore.loadSession('whatever')
         self.taskStore.saveas('newfilename.tsk')
         self.autoSaver.on_idle(dummy.Event())
         self.assertEqual(1, self.taskStore.saveCalled)
-              
+           
     def testCloseDoesNotTriggerAutoSave(self):
         self.settings.set('file', 'autosave', 'True')
-        self.taskStore.setFilename('whatever.tsk')
+        self.taskStore.loadSession('whatever')
         self.taskStore.tasks().append(task.Task())
         self.autoSaver.on_idle(dummy.Event())
-        self.taskStore.close()
+        self.taskStore.clear()
         self.assertEqual(1, self.taskStore.saveCalled)
-        
+     
     def testLoadDoesNotTriggerAutoSave(self):
         self.settings.set('file', 'autosave', 'True')
-        self.taskStore.setFilename('whatever.tsk')
-        self.taskStore.load()
+        self.taskStore.loadSession('whatever')
         self.autoSaver.on_idle(dummy.Event())
         self.failIf(self.taskStore.saveCalled)
 
     def testLoadWithExceptionDoesNotTriggerAutoSave(self):
         self.settings.set('file', 'autosave', 'True')
-        self.taskStore.setFilename('whatever.tsk')
+        self.taskStore.throw = True
         try:
-            self.taskStore.load(throw=True)
+            self.taskStore.loadSession('whatever')
         except IOError:
             pass
         self.autoSaver.on_idle(dummy.Event())
         self.failIf(self.taskStore.saveCalled)
-        
+     
     def testMergeDoesTriggerAutoSave(self):
         self.settings.set('file', 'autosave', 'True')
-        self.taskStore.setFilename('whatever.tsk')
+        self.taskStore.loadSession('whatever')
         self.taskStore.merge('filetomerge.tsk')
         self.autoSaver.on_idle(dummy.Event())
         self.assertEqual(1, self.taskStore.saveCalled)

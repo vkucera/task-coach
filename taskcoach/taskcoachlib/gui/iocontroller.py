@@ -198,7 +198,7 @@ class IOController(object):
                                       TaskStoreClass=TaskStoreClass)  # Try again
             
     def _createSelectionFile(self, tasks, TaskStoreClass):
-        selectionFile = TaskStoreClass()
+        selectionFile = TaskStoreClass(self.__settings)
         # Add the selected tasks:
         selectionFile.tasks().extend(tasks)
         # Include categories used by the selected tasks:

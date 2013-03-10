@@ -24,7 +24,7 @@ from taskcoachlib.domain import attachment
 class AttachmentViewerTest(test.wxTestCase):
     def setUp(self):
         super(AttachmentViewerTest, self).setUp()
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(self.settings)
         attachments = attachment.AttachmentList()
         self.viewer = gui.viewer.AttachmentViewer(self.frame, self.taskStore, 
             self.settings, attachmentsToShow=attachments, 

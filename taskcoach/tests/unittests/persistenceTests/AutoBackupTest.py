@@ -16,51 +16,28 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import test, shutil, os
 from taskcoachlib import persistence, config
 from taskcoachlib.domain import date, task
 
-
-class DummyFile(object):
-    encoding = 'utf-8'
-    name = 'whatever.tsk'
-    
-    def close(self, *args, **kwargs): # pylint: disable=W0613
-        pass
-
-    def write(self, *args, **kwargs): # pylint: disable=W0613
-        pass
-    
     
 class DummyTaskStore(persistence.TaskStore):
-    def _openForRead(self, *args, **kwargs): # pylint: disable=W0613
-        return DummyFile()
-        
-    def _openForWrite(self, *args, **kwargs): # pylint: disable=W0613
-        return None, DummyFile()
-    
-    def _read(self, *args, **kwargs): # pylint: disable=W0613
-        return [task.Task()], [], [], dict(), None
-    
     def exists(self):
         return True
-    
-    def filename(self):
-        return super(DummyTaskStore, self).filename() or 'whatever.tsk'
 
 
 class AutoBackupTest(test.TestCase):
     # pylint: disable=E1101,E1002,W0232
     def setUp(self):
         super(AutoBackupTest, self).setUp()
-        self.taskStore = DummyTaskStore()
+        self.taskStore = DummyTaskStore(self.settings)
         self.backup = persistence.AutoBackup(self.settings, copyfile=self.onCopyFile)
         self.copyCalled = False
 
     def tearDown(self):
-        super(AutoBackupTest, self).tearDown()
         self.taskStore.close()
         self.taskStore.stop()
+        super(AutoBackupTest, self).tearDown()
 
     def onCopyFile(self, *args): # pylint: disable=W0613
         self.copyCalled = True
@@ -112,7 +89,7 @@ class AutoBackupTest(test.TestCase):
         def remove(filename):
             removedFiles.append(filename)
         self.backup.removeExtraneousBackupFiles(self.taskStore, remove=remove, glob=self.globMany)
-        self.assertEqual(86, len(removedFiles))
+        self.assertEqual(86 * 2, len(removedFiles)) # Data files as well
                 
     def testRemoveExtraneousBackFiles_OSError(self):
         def remove(filename): # pylint: disable=W0613
@@ -121,35 +98,29 @@ class AutoBackupTest(test.TestCase):
 
     def testBackupFilename(self):
         now = date.DateTime(2004,1,1)
-        self.assertEqual('whatever.20040101-000000.tsk.bak', 
-            self.backup.backupFilename(self.taskStore, lambda: now)) # pylint: disable=W0212
-        
-    def testBackupFilenameOfBackupFilename(self):
-        self.taskStore.setFilename('whatever.20040101-000000.tsk.bak')
-        now = date.DateTime(2004,1,2)
-        self.assertEqual('whatever.20040101-000000.20040102-000000.tsk.bak', 
+        self.assertEqual(os.path.join(self.settings.pathToDataDir(), '%s.20040101-000000.store.bak' % self.taskStore.guid()), 
             self.backup.backupFilename(self.taskStore, lambda: now)) # pylint: disable=W0212
 
     def testCreateBackupOnSave(self):
         self.settings.set('file', 'backup', 'True')
         self.taskStore.tasks().append(task.Task())
-        self.taskStore.save()
+        self.taskStore.saveSession()
         self.failUnless(self.copyCalled)
 
     def testCreateBackupOnSave_ButBackupOff(self):
         self.settings.set('file', 'backup', 'False')
         self.taskStore.tasks().append(task.Task())
-        self.taskStore.save()
+        self.taskStore.saveSession()
         self.failIf(self.copyCalled)
 
     def testDontCreateBackupOnOpen(self):
         self.settings.set('file', 'backup', 'True')
-        self.taskStore.load()
+        self.taskStore.loadSession('fakeguid')
         self.failIf(self.copyCalled)
         
     def testDontCreateBackupWhenSettingFilename(self):
         self.settings.set('file', 'backup', 'True')
-        self.taskStore.setFilename('newname.tsk')
+        self.taskStore.loadSession('otherfakeguid')
         self.failIf(self.copyCalled)
                         
     def testLeastUniqueBackupFile_FourBackupFiles(self):  

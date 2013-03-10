@@ -38,7 +38,7 @@ class VCalTestCase(test.wxTestCase):
         super(VCalTestCase, self).setUp()
         self.fd = UTF8StringIO()
         self.writer = persistence.iCalendarWriter(self.fd)
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(self.settings)
 
     def tearDown(self):
         super(VCalTestCase, self).tearDown()

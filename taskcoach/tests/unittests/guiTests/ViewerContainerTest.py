@@ -82,7 +82,7 @@ class ViewerContainerTest(test.wxTestCase):
         super(ViewerContainerTest, self).setUp()
         self.events = 0
         self.settings.set('view', 'viewerwithdummywidgetcount', '2', new=True)
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(self.settings)
         self.mainWindow = DummyMainWindow()
         self.container = gui.viewer.ViewerContainer(self.mainWindow,
                                                     self.settings)

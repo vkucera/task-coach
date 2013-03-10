@@ -29,7 +29,7 @@ import test
 class IOControllerTest(test.TestCase):
     def setUp(self):
         super(IOControllerTest, self).setUp()
-        self.taskStore = dummy.TaskStore()
+        self.taskStore = dummy.TaskStore(self.settings)
         self.iocontroller = gui.IOController(self.taskStore, 
             lambda *args: None, self.settings)
         self.filename1 = 'whatever.tsk'
@@ -158,7 +158,7 @@ class IOControllerTest(test.TestCase):
             aCategory.addCategorizable(eachTask)
         self.iocontroller.saveselection(tasks=self.taskStore.tasks(), 
                                         filename=self.filename1)
-        taskStore = persistence.TaskStore()
+        taskStore = persistence.TaskStore(self.settings)
         taskStore.setFilename(self.filename1)
         taskStore.load()
         try:
@@ -178,7 +178,7 @@ class IOControllerTest(test.TestCase):
         aSubCategory.addCategorizable(task1)
         self.iocontroller.saveselection(tasks=self.taskStore.tasks(), 
                                         filename=self.filename1)
-        taskStore = persistence.TaskStore()
+        taskStore = persistence.TaskStore(self.settings)
         taskStore.setFilename(self.filename1)
         taskStore.load()
         self.assertEqual(2, len(taskStore.categories()))
@@ -209,12 +209,12 @@ class IOControllerTest(test.TestCase):
         self.failUnless(self.showerrorCalled)
 
     def testMerge(self):
-        mergeFile = persistence.TaskStore()
+        mergeFile = persistence.TaskStore(self.settings)
         mergeFile.setFilename(self.filename2)
         mergeFile.tasks().append(task.Task(subject='Task to merge'))
         mergeFile.save()
         mergeFile.close()
-        targetFile = persistence.TaskStore()
+        targetFile = persistence.TaskStore(self.settings)
         iocontroller = gui.IOController(targetFile, lambda *args: None, 
                                         self.settings)
         iocontroller.merge(self.filename2)
@@ -259,7 +259,7 @@ class IOControllerOverwriteExistingFileTest(test.TestCase):
             return wx.CANCEL
         
         wx.MessageBox = messageBox
-        self.taskStore = dummy.TaskStore()
+        self.taskStore = dummy.TaskStore(self.settings)
         self.iocontroller = gui.IOController(self.taskStore, 
             lambda *args: None, self.settings)
 

@@ -43,9 +43,9 @@ class ReminderControllerUnderTest(gui.ReminderController):
 
         
 class DummyWindow(wx.Frame):
-    def __init__(self):
+    def __init__(self, settings):
         super(DummyWindow, self).__init__(None)
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(settings)
     
 
 class ReminderControllerTestCase(test.TestCase):
@@ -53,7 +53,7 @@ class ReminderControllerTestCase(test.TestCase):
         super(ReminderControllerTestCase, self).setUp()
         self.taskList = task.TaskList()
         self.effortList = effort.EffortList(self.taskList)
-        self.dummyWindow = DummyWindow()
+        self.dummyWindow = DummyWindow(self.settings)
         self.reminderController = ReminderControllerUnderTest(self.dummyWindow, 
             self.taskList, self.effortList, self.settings)
         self.nowDateTime = date.DateTime.now()

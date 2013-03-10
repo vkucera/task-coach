@@ -42,7 +42,7 @@ class UpdatePerSecondViewerTestsMixin(object):
     def setUp(self):
         super(UpdatePerSecondViewerTestsMixin, self).setUp()
         self.settings.set('taskviewer', 'columns', "['timeSpent']")
-        self.taskStore = persistence.TaskStore()
+        self.taskStore = persistence.TaskStore(self.settings)
         self.taskList = task.sorter.Sorter(self.taskStore.tasks(), sortBy='dueDateTime')
         self.updateViewer = self.createUpdateViewer()
         self.trackedTask = task.Task(subject='tracked')

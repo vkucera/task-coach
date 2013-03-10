@@ -68,6 +68,7 @@ class Settings(object, CachingConfigParser):
         self.initializeWithDefaults()
         self.__loadAndSave = load
         self.__iniFileSpecifiedOnCommandLine = iniFile
+        self.__dataDir = None # Unit tests
         self.migrateConfigurationFiles()
         if load:
             # First, try to load the settings file from the program directory,
@@ -87,7 +88,10 @@ class Settings(object, CachingConfigParser):
             self.__beQuiet()
         pub.subscribe(self.onSettingsFileLocationChanged, 
                       'settings.file.saveinifileinprogramdir')
-        
+
+    def setDataDir(self, path):
+        self.__dataDir = path
+
     def onSettingsFileLocationChanged(self, value):
         saveIniFileInProgramDir = value
         if not saveIniFileInProgramDir:
@@ -309,6 +313,8 @@ class Settings(object, CachingConfigParser):
         return path
 
     def _pathToDataDir(self, *args, **kwargs):
+        if self.__dataDir is not None:
+            return self.__dataDir, True
         forceGlobal = kwargs.pop('forceGlobal', False)
         if operating_system.isGTK():
             from taskcoachlib.thirdparty.xdg import BaseDirectory

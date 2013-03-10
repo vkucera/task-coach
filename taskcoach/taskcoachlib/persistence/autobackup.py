@@ -46,7 +46,10 @@ class AutoBackup(object):
         return self.__settings.getboolean('file', 'backup') and taskStore.exists()
 
     def createBackup(self, taskStore):
-        self.__copyfile(taskStore.filename(), self.backupFilename(taskStore))
+        name = os.path.join(self.__settings.pathToDataDir(), taskStore.guid()) + '.store'
+        backupName = self.backupFilename(taskStore)
+        self.__copyfile(name, backupName)
+        self.__copyfile(name.replace('.store', '.storedata'), backupName.replace('.store.bak', '.storedata.bak'))
     
     def removeExtraneousBackupFiles(self, taskStore, remove=os.remove, 
                                     glob=glob.glob): # pylint: disable=W0621
@@ -54,7 +57,9 @@ class AutoBackup(object):
         for _ in range(min(self.maxNrOfBackupFilesToRemoveAtOnce,
                            self.numberOfExtraneousBackupFiles(backupFiles))):
             try:
-                remove(self.leastUniqueBackupFile(backupFiles))
+                name = self.leastUniqueBackupFile(backupFiles)
+                remove(name)
+                remove(name.replace('.store.bak', '.storedata.bak'))
             except OSError:
                 pass # Ignore errors
                 
@@ -85,23 +90,19 @@ class AutoBackup(object):
         deltas.sort()
         return deltas[0][1]
 
-    @staticmethod
-    def backupFiles(taskStore, glob=glob.glob):  # pylint: disable=W0621
-        root, ext = os.path.splitext(taskStore.filename()) # pylint: disable=W0612
+    def backupFiles(self, taskStore, glob=glob.glob):  # pylint: disable=W0621
+        root = os.path.join(self.__settings.pathToDataDir(), taskStore.guid())
         datePattern = '[0-9]'*8
         timePattern = '[0-9]'*6
-        files = glob('%s.%s-%s.tsk.bak'%(root, datePattern, timePattern))
+        files = glob('%s.%s-%s.store.bak'%(root, datePattern, timePattern))
         files.sort()
         return files
 
-    @staticmethod
-    def backupFilename(taskStore, now=date.DateTime.now):
+    def backupFilename(self, taskStore, now=date.DateTime.now):
         ''' Generate a backup filename by adding '.bak' to the end and by 
             inserting a date-time string in the filename. '''
         now = now().strftime('%Y%m%d-%H%M%S')
-        root, ext = os.path.splitext(taskStore.filename())
-        if ext == '.bak':
-            root, ext = os.path.splitext(root)
+        root, ext = os.path.join(self.__settings.pathToDataDir(), taskStore.guid()), '.store'
         return root + '.' + now + ext + '.bak'
                 
     @staticmethod
