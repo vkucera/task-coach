@@ -298,7 +298,8 @@ class TaskStore(patterns.Observer):
             os.remove(filename)
         self.__createNewSessionWithFile(filename)
 
-    def load(self, filename=None):
+    def load(self, filename=None, breakLock=False):
+        # XXXTODO: break lock ?
         if filename is None:
             for backend in self.__backends:
                 if isinstance(backend, FileBackend):
