@@ -22,7 +22,13 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.27', 'March ??, 2013',
+Release('1.3.28', 'March ??, 2013',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        ],
+    ),
+
+Release('1.3.27', 'March 10, 2013',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bugv2('''Follow system preferences to format dates (instead of
