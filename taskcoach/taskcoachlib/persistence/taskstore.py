@@ -117,6 +117,7 @@ class TaskStore(patterns.Observer):
                         else:
                             raise RuntimeError('Unknown backend type: "%s"' % node.attrib['type'])
                         backend.fromElement(node)
+                        self.__backends.append(backend)
                 with file(os.path.join(self.__settings.pathToDataDir(), guid + '.storedata'), 'rU') as fd:
                     tasks, categories, notes, allChanges, guid = reader.XMLReader(fd).read()
                     self.tasks().extend(tasks)
