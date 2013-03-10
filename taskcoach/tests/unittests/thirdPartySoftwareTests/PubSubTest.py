@@ -22,6 +22,7 @@ import test
 
 class PubSubTest(test.TestCase):
     def setUp(self):
+        super(PubSubTest, self).setUp()
         self.calledTestTopic = False
         
     def onTestTopic(self):

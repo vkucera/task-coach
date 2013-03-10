@@ -35,7 +35,6 @@ class EditorUnderTest(gui.dialog.editor.EffortEditor):
 class EffortEditorTest(test.wxTestCase):      
     def setUp(self):
         super(EffortEditorTest, self).setUp()
-        task.Task.settings = self.settings = config.Settings(load=False)
         self.taskStore = persistence.TaskStore()
         self.taskList = self.taskStore.tasks()
         self.effortList = self.taskStore.efforts()
@@ -49,9 +48,9 @@ class EffortEditorTest(test.wxTestCase):
             self.taskStore, raiseDialog=False)
 
     def tearDown(self):
-        super(EffortEditorTest, self).tearDown()
         self.taskStore.close()
         self.taskStore.stop()
+        super(EffortEditorTest, self).tearDown()
 
     def createEditor(self):
         return EditorUnderTest(self.frame,

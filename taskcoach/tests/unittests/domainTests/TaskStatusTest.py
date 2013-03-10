@@ -23,7 +23,7 @@ from taskcoachlib import config
 
 class TaskStatusTest(test.TestCase):    
     def setUp(self):
-        self.settings = task.Task.settings = config.Settings(load=False)
+        super(TaskStatusTest, self).setUp()
         self.now = date.Now()
         self.yesterday = self.now - date.ONE_DAY
         self.nearFuture = self.now + date.ONE_DAY - date.ONE_HOUR

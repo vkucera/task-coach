@@ -27,7 +27,7 @@ from taskcoachlib.domain import task, category, effort, date, note, attachment
 
 class IntegrationTestCase(test.TestCase):
     def setUp(self):
-        task.Task.settings = config.Settings(load=False)
+        super(IntegrationTestCase, self).setUp()
         self.fd = StringIO.StringIO()
         self.fd.name = 'testfile.tsk'
         self.fd.encoding = 'utf-8'

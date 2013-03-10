@@ -32,6 +32,7 @@ class DummyTaskList(task.TaskList):
 
 class TaskSorterTest(test.TestCase):
     def setUp(self):
+        super(TaskSorterTest, self).setUp()
         a = self.a = task.Task('a')
         b = self.b = task.Task('b')
         c = self.c = task.Task('c')
@@ -70,6 +71,7 @@ class TaskSorterTest(test.TestCase):
 
 class TaskSorterSettingsTest(test.TestCase):        
     def setUp(self):
+        super(TaskSorterSettingsTest, self).setUp()
         self.taskList = task.TaskList()
         self.sorter = task.sorter.Sorter(self.taskList)    
         self.task1 = task.Task(subject='A')
@@ -324,7 +326,7 @@ class TaskSorterSettingsTest(test.TestCase):
 
 class TaskSorterTreeModeTest(test.TestCase):
     def setUp(self):
-        task.Task.settings = config.Settings(load=False)
+        super(TaskSorterTreeModeTest, self).setUp()
         self.taskList = DummyTaskList()
         self.sorter = task.sorter.Sorter(self.taskList, treeMode=True)        
         self.parent1 = task.Task(subject='parent 1')
@@ -392,7 +394,7 @@ class TaskSorterTreeModeTest(test.TestCase):
             
 class EffortSorterTest(test.TestCase):
     def setUp(self):
-        task.Task.settings = config.Settings(load=False)
+        super(EffortSorterTest, self).setUp()
         self.taskList = task.TaskList()
         self.effortList = effort.EffortList(self.taskList)
         self.sorter = effort.EffortSorter(self.effortList)

@@ -28,6 +28,7 @@ class NoteOwnerUnderTest(note.NoteOwner, base.Object):
 
 class NoteCommandTestCase(CommandTestCase, asserts.CommandAssertsMixin):
     def setUp(self):
+        super(NoteCommandTestCase, self).setUp()
         self.notes = note.NoteContainer()
         self.taskList = task.TaskList()
 

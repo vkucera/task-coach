@@ -23,7 +23,7 @@ from taskcoachlib.domain import category, task
 
 class CategoryContainerTest(test.TestCase):
     def setUp(self):
-        task.Task.settings = config.Settings(load=False)
+        super(CategoryContainerTest, self).setUp()
         self.categories = category.CategoryList()
         self.category = category.Category('Unfiltered category')
         self.filteredCategory = category.Category('Filtered category', filtered=True)

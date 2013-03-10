@@ -39,6 +39,7 @@ class GetRelativePathTest(test.TestCase):
         
 class FileAttachmentTest(test.TestCase):
     def setUp(self):
+        super(FileAttachmentTest, self).setUp()
         self.filename = ''
         self.attachment = attachment.FileAttachment('filename')
         self.events = []

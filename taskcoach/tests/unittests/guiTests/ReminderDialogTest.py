@@ -29,7 +29,7 @@ class DummyEvent(object):
 
 class ReminderDialogTest(test.TestCase):
     def setUp(self):
-        self.settings = config.Settings(load=False)
+        super(ReminderDialogTest, self).setUp()
         task.Task.settings = self.settings
         self.aTask = task.Task('subject')
         self.taskList = task.TaskList([self.aTask])

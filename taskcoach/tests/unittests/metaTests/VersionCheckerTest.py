@@ -47,9 +47,6 @@ class VersionCheckerUnderTest(meta.VersionChecker):
     
 
 class VersionCheckerTest(test.TestCase):
-    def setUp(self):
-        self.settings = config.Settings(load=False)
-        
     def checkVersion(self, version, retrievalException=None, 
                      parseException=None):
         checker = VersionCheckerUnderTest(self.settings, version=version, 

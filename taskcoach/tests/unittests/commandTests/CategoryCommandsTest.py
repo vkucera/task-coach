@@ -24,7 +24,7 @@ from taskcoachlib.domain import category, task
 
 class CategoryCommandTestCase(CommandTestCase, asserts.CommandAssertsMixin):
     def setUp(self):
-        task.Task.settings = config.Settings(load=False)
+        super(CategoryCommandTestCase, self).setUp()
         self.categories = category.CategoryList()
         
 

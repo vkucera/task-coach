@@ -24,7 +24,7 @@ from taskcoachlib.domain import task, effort, date
 
 class EffortCommandTestCase(CommandTestCase, asserts.CommandAssertsMixin):
     def setUp(self):
-        task.Task.settings = config.Settings(load=False)
+        super(EffortCommandTestCase, self).setUp()
         self.taskList = task.TaskList()
         self.effortList = effort.EffortList(self.taskList)
         self.originalTask = task.Task()

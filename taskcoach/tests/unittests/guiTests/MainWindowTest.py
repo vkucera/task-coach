@@ -53,7 +53,6 @@ class DummyIOController(object):
 class MainWindowTestCase(test.wxTestCase):
     def setUp(self):
         super(MainWindowTestCase, self).setUp()
-        self.settings = config.Settings(load=False)
         self.setSettings()
         self.taskStore = persistence.TaskStore()
         self.mainwindow = MainWindowUnderTest(DummyIOController(),

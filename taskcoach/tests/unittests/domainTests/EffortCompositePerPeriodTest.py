@@ -25,7 +25,7 @@ import test
 
 class CompositeEffortPerPeriodTest(test.TestCase):
     def setUp(self):
-        task.Task.settings = config.Settings(load=False)
+        super(CompositeEffortPerPeriodTest, self).setUp()
         self.taskList = task.TaskList()
         self.effortList = effort.EffortList(self.taskList)
         self.task = task.Task(subject='task')

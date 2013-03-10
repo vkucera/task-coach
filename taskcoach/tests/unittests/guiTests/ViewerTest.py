@@ -35,7 +35,6 @@ class Window(AuiManagedFrameWithDynamicCenterPane):
 class ViewerTest(test.wxTestCase):
     def setUp(self):
         super(ViewerTest, self).setUp()
-        self.settings = config.Settings(load=False)
         self.taskStore = persistence.TaskStore()
         self.task = task.Task('task')
         self.taskStore.tasks().append(self.task)
@@ -46,9 +45,9 @@ class ViewerTest(test.wxTestCase):
         self.viewerContainer.addViewer(self.viewer)
 
     def tearDown(self):
-        super(ViewerTest, self).tearDown()
         self.taskStore.close()
         self.taskStore.stop()
+        super(ViewerTest, self).tearDown()
 
     def createViewer(self):
         return gui.viewer.TaskViewer(self.window, self.taskStore,
@@ -141,7 +140,7 @@ class ViewerTest(test.wxTestCase):
 
 class SortableViewerTest(test.TestCase):
     def setUp(self):
-        self.settings = config.Settings(load=False)
+        super(SortableViewerTest, self).setUp()
         self.viewer = self.createViewer()
         
     def createViewer(self):
@@ -199,7 +198,7 @@ class SortableViewerTest(test.TestCase):
 
 class SortableViewerForTasksTest(test.TestCase):
     def setUp(self):
-        self.settings = config.Settings(load=False)
+        super(SortableViewerForTasksTest, self).setUp()
         self.viewer = gui.viewer.mixin.SortableViewerForTasksMixin()
         self.viewer.settings = self.settings
         self.viewer.settingsSection = lambda: 'taskviewer'
@@ -229,7 +228,7 @@ class SearchableViewerUnderTest(gui.viewer.mixin.SearchableViewerMixin,
     
 class SearchableViewerTest(test.TestCase):
     def setUp(self):
-        self.settings = config.Settings(load=False)
+        super(SearchableViewerTest, self).setUp()
         self.viewer = self.createViewer()
         
     def createViewer(self):
@@ -301,6 +300,7 @@ class SearchableViewerTest(test.TestCase):
 
 class FilterableViewerTest(test.TestCase):
     def setUp(self):
+        super(FilterableViewerTest, self).setUp()
         self.viewer = gui.viewer.mixin.FilterableViewerMixin()
         
     def testIsFilterable(self):
@@ -314,14 +314,14 @@ class FilterableViewerForTasksUnderTest(gui.viewer.mixin.FilterableViewerForTask
         
 class FilterableViewerForTasks(test.TestCase):
     def setUp(self):
-        self.settings = config.Settings(load=False)
+        super(FilterableViewerForTasks, self).setUp()
         task.Task.settings = self.settings
         self.viewer = self.createViewer()
 
     def tearDown(self):
-        super(FilterableViewerForTasks, self).tearDown()
         self.viewer.taskStore.close()
         self.viewer.taskStore.stop()
+        super(FilterableViewerForTasks, self).tearDown()
 
     def createViewer(self):
         viewer = FilterableViewerForTasksUnderTest()
@@ -517,7 +517,6 @@ class ViewerIteratorTestCase(test.wxTestCase):
 
     def setUp(self):
         super(ViewerIteratorTestCase, self).setUp()
-        self.settings = config.Settings(load=False)
         task.Task.settings = self.settings
         self.taskStore = persistence.TaskStore()
         self.taskList = self.taskStore.tasks()
@@ -528,9 +527,9 @@ class ViewerIteratorTestCase(test.wxTestCase):
         self.viewer.sortBy('subject')
 
     def tearDown(self):
-        super(ViewerIteratorTestCase, self).tearDown()
         self.taskStore.close()
         self.taskStore.stop()
+        super(ViewerIteratorTestCase, self).tearDown()
 
     def getItemsFromIterator(self):
         return list(self.viewer.visibleItems()) # pylint: disable=E1101
@@ -586,14 +585,14 @@ class ListViewerIteratorTest(ViewerIteratorTestCase, ViewerIteratorTestsMixin):
 
 class ViewerWithColumnsTest(test.wxTestCase):
     def setUp(self):
-        self.settings = config.Settings(load=False)
+        super(ViewerWithColumnsTest, self).setUp()
         self.taskStore = persistence.TaskStore()
         self.viewer = gui.viewer.TaskViewer(self.frame, self.taskStore, self.settings)
 
     def tearDown(self):
-        super(ViewerWithColumnsTest, self).tearDown()
         self.taskStore.close()
         self.taskStore.stop()
+        super(ViewerWithColumnsTest, self).tearDown()
 
     def testDefaultColumnWidth(self):
         expectedWidth = hypertreelist._DEFAULT_COL_WIDTH # pylint: disable=W0212

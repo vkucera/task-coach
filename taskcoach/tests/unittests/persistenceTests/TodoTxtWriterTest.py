@@ -25,7 +25,7 @@ from taskcoachlib.domain import task, category, date
 
 class TodoTxtWriterTestCase(test.wxTestCase):
     def setUp(self):
-        self.settings = task.Task.settings = config.Settings(load=False)
+        super(TodoTxtWriterTestCase, self).setUp()
         self.file = StringIO.StringIO()
         self.writer = persistence.TodoTxtWriter(self.file, 'whatever.tsk')
         self.settings.set('taskviewer', 'treemode', 'False')

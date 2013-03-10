@@ -23,7 +23,7 @@ import test
 
 class DeveloperMessageDialogTest(test.TestCase):
     def setUp(self):
-        self.settings = config.Settings(load=False)
+        super(DeveloperMessageDialogTest, self).setUp()
         self.dialog = developer_message.MessageDialog(None, message='Message',
                                                       url='http://a.b',
                                                       settings=self.settings)

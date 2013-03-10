@@ -22,6 +22,7 @@ from taskcoachlib.domain import note, category
 
 class NoteContainerTest(test.TestCase):
     def setUp(self):
+        super(NoteContainerTest, self).setUp()
         self.container = note.NoteContainer()
         self.note = note.Note()
         

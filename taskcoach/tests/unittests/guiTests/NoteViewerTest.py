@@ -24,7 +24,6 @@ from taskcoachlib.domain import note, attachment, category
 class NoteViewerTest(test.wxTestCase):
     def setUp(self):
         super(NoteViewerTest, self).setUp()
-        self.settings = config.Settings(load=False)
         self.taskStore = persistence.TaskStore()
         self.note = note.Note()
         self.taskStore.notes().append(self.note)
@@ -33,9 +32,9 @@ class NoteViewerTest(test.wxTestCase):
                                             notesToShow=self.taskStore.notes())
 
     def tearDown(self):
-        super(NoteViewerTest, self).tearDown()
         self.taskStore.close()
         self.taskStore.stop()
+        super(NoteViewerTest, self).tearDown()
 
     def firstItem(self):
         widget = self.viewer.widget

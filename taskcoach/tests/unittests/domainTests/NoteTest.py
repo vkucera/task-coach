@@ -23,6 +23,7 @@ from taskcoachlib.domain import note, date, base
 
 class NoteTest(test.TestCase):
     def setUp(self):
+        super(NoteTest, self).setUp()
         self.note = note.Note()
         self.child = note.Note()
         self.events = []
@@ -118,6 +119,7 @@ class NoteOwnerUnderTest(note.NoteOwner, base.Object):
         
 class NoteOwnerTest(test.TestCase):
     def setUp(self):
+        super(NoteOwnerTest, self).setUp()
         self.note = note.Note(subject='Note')
         self.noteOwner = NoteOwnerUnderTest()
         self.events = []

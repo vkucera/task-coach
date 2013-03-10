@@ -26,7 +26,7 @@ import wx
 
 class EffortTest(test.TestCase, asserts.Mixin):
     def setUp(self):
-        task.Task.settings = config.Settings(load=False)
+        super(EffortTest, self).setUp()
         self.task = task.Task()
         self.effort = effort.Effort(self.task, start=date.DateTime(2004, 1, 1),
             stop=date.DateTime(2004, 1, 2))
@@ -302,6 +302,7 @@ class EffortTest(test.TestCase, asserts.Mixin):
 
 class EffortWithoutTaskTest(test.TestCase):   
     def setUp(self):
+        super(EffortWithoutTaskTest, self).setUp()
         self.effort = effort.Effort(None, start=date.DateTime(2005, 1, 1))
         self.task = task.Task()
         self.events = []

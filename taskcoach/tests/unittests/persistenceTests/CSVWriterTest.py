@@ -27,7 +27,6 @@ class CSVWriterTestCase(test.wxTestCase):
     
     def setUp(self):
         super(CSVWriterTestCase, self).setUp()
-        task.Task.settings = self.settings = config.Settings(load=False)
         self.fd = StringIO.StringIO()
         self.writer = persistence.CSVWriter(self.fd)
         self.taskStore = persistence.TaskStore()

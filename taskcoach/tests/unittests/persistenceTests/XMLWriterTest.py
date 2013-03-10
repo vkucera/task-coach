@@ -26,7 +26,7 @@ from taskcoachlib.domain import base, task, effort, date, category, note, attach
 
 class XMLWriterTest(test.TestCase):
     def setUp(self):
-        task.Task.settings = config.Settings(load=False)
+        super(XMLWriterTest, self).setUp()
         self.fd = StringIO.StringIO()
         self.fd.name = 'testfile.tsk'
         self.fd.encoding = 'utf-8'

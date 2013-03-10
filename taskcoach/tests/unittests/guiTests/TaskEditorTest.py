@@ -103,7 +103,6 @@ class TaskEditorTestCase(test.wxTestCase):
 
     def setUp(self):
         super(TaskEditorTestCase, self).setUp()
-        task.Task.settings = self.settings = config.Settings(load=False)
         for section, name, value in self.extraSettings:
             self.settings.set(section, name, value)
         self.today = date.Now()
@@ -121,9 +120,9 @@ class TaskEditorTestCase(test.wxTestCase):
         # calls are dealt with, otherwise they'll turn up in other tests
         if operating_system.isGTK():
             wx.Yield()  # pragma: no cover 
-        super(TaskEditorTestCase, self).tearDown()
         self.taskStore.close()
         self.taskStore.stop()
+        super(TaskEditorTestCase, self).tearDown()
         
     def createTasks(self):
         raise NotImplementedError  # pragma: no cover

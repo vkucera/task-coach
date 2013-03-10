@@ -25,7 +25,6 @@ from taskcoachlib.domain import task, effort, date, category, attachment
 class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
     def setUp(self):
         super(TaskCommandTestCase, self).setUp()
-        self.settings = task.Task.settings = config.Settings(load=False)
         self.list = self.taskList = task.TaskList()
         self.categories = category.CategoryList()
         self.category = category.Category('cat')

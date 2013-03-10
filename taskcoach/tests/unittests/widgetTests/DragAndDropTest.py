@@ -39,6 +39,7 @@ class TreeCtrlDragAndDropMixinTest(test.wxTestCase):
     # pylint: disable=E1101
     
     def setUp(self):
+        super(TreeCtrlDragAndDropMixinTest, self).setUp()
         self.treeCtrl = treectrl.HyperTreeList(self.frame)
         self.treeCtrl.AddColumn('First')
         

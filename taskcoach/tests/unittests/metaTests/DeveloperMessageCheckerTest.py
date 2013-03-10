@@ -40,7 +40,7 @@ class DeveloperMessageCheckerUnderTest(meta.DeveloperMessageChecker):
 
 class DeveloperMessageCheckerTest(test.TestCase):
     def setUp(self):
-        self.settings = config.Settings(load=False)
+        super(DeveloperMessageCheckerTest, self).setUp()
         self.checker = DeveloperMessageCheckerUnderTest(self.settings)
         
     def testDialogContainsMessage(self):

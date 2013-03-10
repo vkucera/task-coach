@@ -39,6 +39,7 @@ class DummyToolTipWindow(object):
 
 class ToolTipMixinTestCase(test.TestCase):
     def setUp(self):
+        super(ToolTipMixinTestCase, self).setUp()
         self.tooltipMixin = ToolTipUnderTest(None)
  
     def testShowTip(self):
@@ -67,6 +68,7 @@ class SimpleToolTipUnderTest(tooltip.SimpleToolTip):
 
 class SimpleToolTipTestCase(test.wxTestCase):
     def setUp(self):
+        super(SimpleToolTipTestCase, self).setUp()
         self.tip = SimpleToolTipUnderTest(self.frame)
         
     def testOneShortLine(self):

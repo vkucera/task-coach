@@ -28,7 +28,6 @@ class HTMLWriterTestCase(test.wxTestCase):
     
     def setUp(self):
         super(HTMLWriterTestCase, self).setUp()
-        task.Task.settings = self.settings = config.Settings(load=False)
         self.fd = StringIO.StringIO()
         self.writer = persistence.HTMLWriter(self.fd, self.filename)
         self.taskStore = persistence.TaskStore()

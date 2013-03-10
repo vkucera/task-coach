@@ -34,8 +34,6 @@ class EffortViewerUnderTest(gui.viewer.EffortViewer):  # pylint: disable=W0223
 class EffortViewerForSpecificTasksTest(test.wxTestCase):
     def setUp(self):
         super(EffortViewerForSpecificTasksTest, self).setUp()
-        self.settings = config.Settings(load=False)
-        task.Task.settings = self.settings
         self.taskStore = persistence.TaskStore()
         self.task1 = task.Task('Task 1')
         self.task2 = task.Task('Task 2')
@@ -50,9 +48,9 @@ class EffortViewerForSpecificTasksTest(test.wxTestCase):
             self.settings, tasksToShowEffortFor=task.TaskList([self.task1]))
 
     def tearDown(self):
-        super(EffortViewerForSpecificTasksTest, self).tearDown()
         self.taskStore.close()
         self.taskStore.stop()
+        super(EffortViewerForSpecificTasksTest, self).tearDown()
 
     def testViewerShowsOnlyEffortForSpecifiedTask(self):
         self.assertEqual([self.effort1], self.viewer.presentation())
@@ -70,7 +68,6 @@ class EffortViewerForSpecificTasksTest(test.wxTestCase):
 class EffortViewerStatusMessageTest(test.wxTestCase):
     def setUp(self):
         super(EffortViewerStatusMessageTest, self).setUp()
-        self.settings = config.Settings(load=False)
         self.taskStore = persistence.TaskStore()
         self.task = task.Task()
         self.taskStore.tasks().append(self.task)
@@ -82,9 +79,9 @@ class EffortViewerStatusMessageTest(test.wxTestCase):
             self.settings)
 
     def tearDown(self):
-        super(EffortViewerStatusMessageTest, self).tearDown()
         self.taskStore.close()
         self.taskStore.stop()
+        super(EffortViewerStatusMessageTest, self).tearDown()
 
     def assertStatusMessages(self, message1, message2):
         self.assertEqual((message1, message2), self.viewer.statusMessages())
@@ -139,7 +136,6 @@ class EffortViewerStatusMessageTest(test.wxTestCase):
 class EffortViewerTest(test.wxTestCase):
     def setUp(self):
         super(EffortViewerTest, self).setUp()
-        self.settings = config.Settings(load=False)
         self.taskStore = persistence.TaskStore()
         self.task = task.Task('task')
         self.taskStore.tasks().append(self.task)
@@ -151,9 +147,9 @@ class EffortViewerTest(test.wxTestCase):
                                               self.settings)
 
     def tearDown(self):
-        super(EffortViewerTest, self).tearDown()
         self.taskStore.close()
         self.taskStore.stop()
+        super(EffortViewerTest, self).tearDown()
 
     @test.skipOnPlatform('__WXMSW__')  # GetItemBackgroundColour doesn't work on Windows
     def testEffortBackgroundColor(self):  # pragma: no cover
@@ -209,7 +205,6 @@ class EffortViewerAggregationTestCase(test.wxTestCase):
 
     def setUp(self):
         super(EffortViewerAggregationTestCase, self).setUp()
-        task.Task.settings = self.settings = config.Settings(load=False)
         self.settings.set('effortviewer', 'aggregation', self.aggregation)
 
         self.taskStore = persistence.TaskStore()
@@ -415,7 +410,6 @@ class EffortViewerRenderTestMixin(object):
 
     def setUp(self):
         super(EffortViewerRenderTestMixin, self).setUp()
-        task.Task.settings = self.settings = config.Settings(load=False)
         self.settings.set('effortviewer', 'aggregation', self.aggregation)
 
         self.taskStore = persistence.TaskStore()

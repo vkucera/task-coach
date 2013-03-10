@@ -22,6 +22,7 @@ from taskcoachlib import patterns
 
 class EventTest(test.TestCase):
     def setUp(self):
+        super(EventTest, self).setUp()
         self.event = patterns.Event('eventtype', self, 'some value')
 
     def testEqualWhenAllValuesAreEqual(self):
@@ -168,6 +169,7 @@ class EventTest(test.TestCase):
 
 class ObservableCollectionFixture(test.TestCase):
     def setUp(self):
+        super(ObservableCollectionFixture, self).setUp()
         self.collection = self.createObservableCollection()
         patterns.Publisher().registerObserver(self.onAdd, 
             eventType=self.collection.addItemEventType(),
@@ -310,6 +312,7 @@ class SetDecoratorTest_Constructor(test.TestCase):
 
 class ListDecoratorTest_AddItems(test.TestCase):
     def setUp(self):
+        super(ListDecoratorTest_AddItems, self).setUp()
         self.observable = patterns.ObservableList()
         self.observer = patterns.ListDecorator(self.observable)
 
@@ -332,6 +335,7 @@ class ListDecoratorTest_AddItems(test.TestCase):
 
 class SetDecoratorTest_AddItems(test.TestCase):
     def setUp(self):
+        super(SetDecoratorTest_AddItems, self).setUp()
         self.observable = patterns.ObservableList()
         self.observer = patterns.SetDecorator(self.observable)
 
@@ -354,6 +358,7 @@ class SetDecoratorTest_AddItems(test.TestCase):
 
 class ListDecoratorTest_RemoveItems(test.TestCase):
     def setUp(self):
+        super(ListDecoratorTest_RemoveItems, self).setUp()
         self.observable = patterns.ObservableList()
         self.observer = patterns.ListDecorator(self.observable)
         self.observable.extend([1, 2, 3])
@@ -377,6 +382,7 @@ class ListDecoratorTest_RemoveItems(test.TestCase):
 
 class SetDecoratorTest_RemoveItems(test.TestCase):
     def setUp(self):
+        super(SetDecoratorTest_RemoveItems, self).setUp()
         self.observable = patterns.ObservableList()
         self.observer = patterns.SetDecorator(self.observable)
         self.observable.extend([1, 2, 3])
@@ -400,6 +406,7 @@ class SetDecoratorTest_RemoveItems(test.TestCase):
 
 class ListDecoratorTest_ObserveTheObserver(test.TestCase):
     def setUp(self):
+        super(ListDecoratorTest_ObserveTheObserver, self).setUp()
         self.list = patterns.ObservableList()
         self.observer = patterns.ListDecorator(self.list)
         patterns.Publisher().registerObserver(self.onAdd, 
@@ -433,6 +440,7 @@ class ListDecoratorTest_ObserveTheObserver(test.TestCase):
 
 class PublisherTest(test.TestCase):
     def setUp(self):
+        super(PublisherTest, self).setUp()
         self.publisher = patterns.Publisher()
         self.events = []
         self.events2 = []

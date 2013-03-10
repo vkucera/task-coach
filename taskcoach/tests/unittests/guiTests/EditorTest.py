@@ -37,7 +37,6 @@ class EditorUnderTest(gui.dialog.editor.NoteEditor):
 class EditorTestCase(test.wxTestCase):
     def setUp(self):
         super(EditorTestCase, self).setUp()
-        self.settings = config.Settings(load=False)
         self.taskStore = persistence.TaskStore()
         self.items = base.filter.SearchFilter(self.taskStore.notes())
         self.item = note.Note(subject='item')
@@ -47,9 +46,9 @@ class EditorTestCase(test.wxTestCase):
         self.appearance = self.editor._interior[-1]
 
     def tearDown(self):
-        super(EditorTestCase, self).tearDown()
         self.taskStore.close()
         self.taskStore.stop()
+        super(EditorTestCase, self).tearDown()
 
     def testCloseEditorWhenItemIsDeleted(self):
         self.items.remove(self.item)

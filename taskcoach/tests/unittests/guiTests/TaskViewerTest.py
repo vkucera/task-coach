@@ -47,7 +47,6 @@ class TaskViewerTestCase(test.wxTestCase):
     
     def setUp(self):
         super(TaskViewerTestCase, self).setUp()
-        task.Task.settings = self.settings = config.Settings(load=False)
         self.task = task.Task(subject='task', plannedStartDateTime=date.Now())
         self.child = task.Task(subject='child', plannedStartDateTime=date.Now())
         self.child.setParent(self.task)
@@ -69,12 +68,12 @@ class TaskViewerTestCase(test.wxTestCase):
             locale.setlocale(locale.LC_ALL, tmpLocale)
 
     def tearDown(self):
-        super(TaskViewerTestCase, self).tearDown()
         if not operating_system.isGTK():
             locale.setlocale(locale.LC_ALL, self.originalLocale)
         attachment.Attachment.attdir = None
         self.taskStore.close()
         self.taskStore.stop()
+        super(TaskViewerTestCase, self).tearDown()
 
         for name in os.listdir('.'):
             if os.path.isdir(name) and name.endswith('_attachments'):
@@ -1083,7 +1082,6 @@ class TaskViewerInListModeTest(CommonTestsMixin, TaskViewerTestCase):
 class TaskCalendarViewerTest(test.wxTestCase):
     def setUp(self):
         super(TaskCalendarViewerTest, self).setUp()
-        task.Task.settings = self.settings = config.Settings(load=False)
         self.taskStore = persistence.TaskStore()
         self.frame.taskStore = self.taskStore
         self.viewer = gui.viewer.task.CalendarViewer(self.frame, self.taskStore, 
@@ -1092,10 +1090,10 @@ class TaskCalendarViewerTest(test.wxTestCase):
         wx.GetApp().TopWindow = self.frame  # uiCommands use TopWindow to get the main window
         
     def tearDown(self):
-        super(TaskCalendarViewerTest, self).tearDown()
         wx.GetApp().TopWindow = self.originalTopWindow
         self.taskStore.close()
         self.taskStore.stop()
+        super(TaskCalendarViewerTest, self).tearDown()
         
     def openDialogAndAssertDateTimes(self, dateTime, expectedPlannedStartDateTime, 
                                      expectedDueDateTime):
@@ -1115,36 +1113,32 @@ class TaskCalendarViewerTest(test.wxTestCase):
         
 class TaskSquareMapViewerTest(test.wxTestCase):
     def testCreate(self):
-        task.Task.settings = settings = config.Settings(load=False)
         self.taskStore = persistence.TaskStore()
-        gui.viewer.task.SquareTaskViewer(self.frame, self.taskStore, settings)
+        gui.viewer.task.SquareTaskViewer(self.frame, self.taskStore, self.settings)
 
     def tearDown(self):
-        super(TaskSquareMapViewerTest, self).tearDown()
         self.taskStore.close()
         self.taskStore.stop()
+        super(TaskSquareMapViewerTest, self).tearDown()
 
 
 class TaskTimelineViewerTest(test.wxTestCase):
     def testCreate(self):
-        # pylint: disable-msg=W0201
-        task.Task.settings = settings = config.Settings(load=False)
         self.taskStore = persistence.TaskStore()
-        gui.viewer.task.TimelineViewer(self.frame, self.taskStore, settings)
+        gui.viewer.task.TimelineViewer(self.frame, self.taskStore, self.settings)
 
     def tearDown(self):
-        super(TaskTimelineViewerTest, self).tearDown()
         self.taskStore.close()
         self.taskStore.stop()
+        super(TaskTimelineViewerTest, self).tearDown()
 
 
 class TaskStatisticsViewerTest(test.wxTestCase):
     def testCreate(self):
-        task.Task.settings = settings = config.Settings(load=False)
         self.taskStore = persistence.TaskStore()
-        gui.viewer.task.TaskStatsViewer(self.frame, self.taskStore, settings)
+        gui.viewer.task.TaskStatsViewer(self.frame, self.taskStore, self.settings)
 
     def tearDown(self):
-        super(TaskStatisticsViewerTest, self).tearDown()
         self.taskStore.close()
         self.taskStore.stop()
+        super(TaskStatisticsViewerTest, self).tearDown()

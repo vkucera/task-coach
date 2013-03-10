@@ -24,7 +24,6 @@ from taskcoachlib.domain import task
 class TreeViewerTest(test.wxTestCase):
     def setUp(self):
         super(TreeViewerTest, self).setUp()
-        task.Task.settings = self.settings = config.Settings(load=False)
         self.taskStore = persistence.TaskStore()
         self.viewer = gui.viewer.TaskViewer(self.frame, self.taskStore,
             self.settings)
@@ -38,9 +37,9 @@ class TreeViewerTest(test.wxTestCase):
         self.widget = self.viewer.widget
 
     def tearDown(self):
-        super(TreeViewerTest, self).tearDown()
         self.taskStore.close()
         self.taskStore.stop()
+        super(TreeViewerTest, self).tearDown()
 
     def firstItem(self):
         root = self.widget.GetRootItem()

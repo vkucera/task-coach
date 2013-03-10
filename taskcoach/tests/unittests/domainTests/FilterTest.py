@@ -28,6 +28,7 @@ class TestFilter(base.Filter):
 
 class FilterTestsMixin(object):
     def setUp(self):
+        super(FilterTestsMixin, self).setUp()
         self.observable = self.collectionClass(['a', 'b', 'c', 'd'])
         self.filter = TestFilter(self.observable)
 
@@ -72,6 +73,7 @@ class DummyItem(str):
 
 class StackedFilterTest(test.TestCase):
     def setUp(self):
+        super(StackedFilterTest, self).setUp()
         self.list = patterns.ObservableList([DummyItem('a'), DummyItem('b'), 
                                              DummyItem('c'), DummyItem('d')])
         self.filter1 = DummyFilter(self.list)
@@ -99,7 +101,7 @@ class StackedFilterTest(test.TestCase):
 
 class SearchFilterTest(test.TestCase):
     def setUp(self):
-        task.Task.settings = config.Settings(load=False)
+        super(SearchFilterTest, self).setUp()
         self.parent = task.Task(subject='*ABC$D', description='Parent description')
         self.child = task.Task(subject='DEF', description='Child description')
         self.parent.addChild(self.child)
@@ -204,7 +206,7 @@ class SearchFilterTest(test.TestCase):
 
 class SelectedItemsFilterTest(test.TestCase):
     def setUp(self):
-        task.Task.settings = config.Settings(load=False)
+        super(SelectedItemsFilterTest, self).setUp()
         self.task = task.Task()
         self.child = task.Task(parent=self.task)
         self.list = task.TaskList([self.task])

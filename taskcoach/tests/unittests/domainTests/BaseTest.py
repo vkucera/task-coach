@@ -31,6 +31,7 @@ class ObjectSubclass(base.Object):
 
 class ObjectTest(test.TestCase):
     def setUp(self):
+        super(ObjectTest, self).setUp()
         self.object = base.Object()
         self.subclassObject = ObjectSubclass()
         self.eventsReceived = []
@@ -328,6 +329,7 @@ class ObjectTest(test.TestCase):
 
 class CompositeObjectTest(test.TestCase):
     def setUp(self):
+        super(CompositeObjectTest, self).setUp()
         self.compositeObject = base.CompositeObject()
         self.child = None
         self.eventsReceived = []
@@ -558,6 +560,7 @@ class CompositeObjectTest(test.TestCase):
 
 class BaseCollectionTest(test.TestCase):
     def setUp(self):
+        super(BaseCollectionTest, self).setUp()
         self.collection = base.Collection()
         
     def testLookupByIdWhenCollectionIsEmptyRaisesIndexError(self):

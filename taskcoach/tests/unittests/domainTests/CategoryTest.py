@@ -23,6 +23,7 @@ from taskcoachlib.domain import category, categorizable, note, date
 
 class CategoryTest(test.TestCase):
     def setUp(self):
+        super(CategoryTest, self).setUp()
         self.category = category.Category(subject='category')
         self.subCategory = category.Category(subject='subcategory')
         self.categorizable = categorizable.CategorizableCompositeObject(subject='parent')

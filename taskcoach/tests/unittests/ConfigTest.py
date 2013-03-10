@@ -23,16 +23,7 @@ from taskcoachlib import config, meta
 from taskcoachlib.thirdparty.pubsub import pub
 
 
-class SettingsTestCase(test.TestCase):
-    def setUp(self):
-        self.settings = config.Settings(load=False)
-
-    def tearDown(self):
-        super(SettingsTestCase, self).tearDown()
-        del self.settings
-
-
-class SettingsTest(SettingsTestCase):
+class SettingsTest(test.TestCase):
     def testDefaults(self):
         self.failUnless(self.settings.has_section('view'))
         self.assertEqual(True, self.settings.getboolean('view', 'statusbar'))
@@ -110,7 +101,7 @@ class SettingsTest(SettingsTestCase):
         self.assertEqual('Task Coach', self.settings.getRawValue('feature', 'notifier'))
         
 
-class SettingsIOTest(SettingsTestCase):
+class SettingsIOTest(test.TestCase):
     def setUp(self):
         super(SettingsIOTest, self).setUp()
         self.fakeFile = StringIO.StringIO()
@@ -157,7 +148,7 @@ class SettingsIOTest(SettingsTestCase):
                          self.settings.getdict(section, 'columnwidths'))
 
 
-class SettingsObservableTest(SettingsTestCase):
+class SettingsObservableTest(test.TestCase):
     def setUp(self):
         super(SettingsObservableTest, self).setUp()
         self.events = []
@@ -184,6 +175,7 @@ class UnicodeAwareConfigParserTest(test.TestCase):
         for UnicodeAwareConfigParser. '''
         
     def setUp(self):
+        super(UnicodeAwareConfigParserTest, self).setUp()
         self.parser = config.settings.UnicodeAwareConfigParser()
         self.parser.add_section('section')
         self.iniFile = StringIO.StringIO()
@@ -221,7 +213,7 @@ class UnicodeAwareConfigParserTest(test.TestCase):
                          self.parser.get('section', 'setting'))
         
 
-class SpecificSettingsTest(SettingsTestCase):
+class SpecificSettingsTest(test.TestCase):
     def testDefaultWindowPosition(self):
         self.assertEqual('(-1, -1)', self.settings.get('window', 'position'))
         
@@ -231,7 +223,7 @@ class SpecificSettingsTest(SettingsTestCase):
         self.assertEqual(meta.data.version, self.settings.get('version', 'current'))
             
 
-class SettingsFileLocationTest(SettingsTestCase):
+class SettingsFileLocationTest(test.TestCase):
     def testDefaultSetting(self):
         self.assertEqual(False, self.settings.getboolean('file', 
                          'saveinifileinprogramdir'))
@@ -259,7 +251,7 @@ class SettingsFileLocationTest(SettingsTestCase):
         self.failIf(settings.onSettingsFileLocationChangedCalled)
 
 
-class MinimumSettingsTest(SettingsTestCase):
+class MinimumSettingsTest(test.TestCase):
     def testAtLeastOneTaskTreeListViewer(self):
         self.assertEqual(1, self.settings.getint('view', 'taskviewercount'))
 

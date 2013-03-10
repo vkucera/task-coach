@@ -69,14 +69,14 @@ class UICommandTest(test.wxTestCase):
 
 class wxTestCaseWithFrameAsTopLevelWindow(test.wxTestCase):
     def setUp(self):
-        task.Task.settings = self.settings = config.Settings(load=False)
+        super(wxTestCaseWithFrameAsTopLevelWindow, self).setUp()
         wx.GetApp().SetTopWindow(self.frame)
         self.taskStore = self.frame.taskStore = persistence.TaskStore()
 
     def tearDown(self):
-        super(wxTestCaseWithFrameAsTopLevelWindow, self).tearDown()
         self.taskStore.close()
         self.taskStore.stop()
+        super(wxTestCaseWithFrameAsTopLevelWindow, self).tearDown()
 
 
 class NewTaskWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
@@ -160,7 +160,7 @@ class MailTaskTest(test.TestCase):
 class MarkActiveTest(test.TestCase):
     def assertMarkActiveIsEnabled(self, selection, shouldBeEnabled=True):
         viewer = DummyViewer(selection)
-        markActive = gui.uicommand.TaskMarkActive(viewer=viewer, settings=config.Settings(load=False))
+        markActive = gui.uicommand.TaskMarkActive(viewer=viewer, settings=self.settings)
         isEnabled = markActive.enabled(None)
         if shouldBeEnabled:
             self.failUnless(isEnabled)
@@ -186,7 +186,7 @@ class MarkActiveTest(test.TestCase):
 class MarkInactiveTest(test.TestCase):
     def assertMarkInactiveIsEnabled(self, selection, shouldBeEnabled=True):
         viewer = DummyViewer(selection)
-        markInactive = gui.uicommand.TaskMarkInactive(viewer=viewer, settings=config.Settings(load=False))
+        markInactive = gui.uicommand.TaskMarkInactive(viewer=viewer, settings=self.settings)
         isEnabled = markInactive.enabled(None)
         if shouldBeEnabled:
             self.failUnless(isEnabled)
@@ -212,7 +212,7 @@ class MarkInactiveTest(test.TestCase):
 class MarkCompletedTest(test.TestCase):
     def assertMarkCompletedIsEnabled(self, selection, shouldBeEnabled=True):
         viewer = DummyViewer(selection)
-        markCompleted = gui.uicommand.TaskMarkCompleted(viewer=viewer, settings=config.Settings(load=False))
+        markCompleted = gui.uicommand.TaskMarkCompleted(viewer=viewer, settings=self.settings)
         isEnabled = markCompleted.enabled(None)
         if shouldBeEnabled:
             self.failUnless(isEnabled)
@@ -314,15 +314,14 @@ class EffortNewTest(wxTestCaseWithFrameAsTopLevelWindow):
 
 class EditPreferencesTest(test.TestCase):
     def testEditPreferences(self):
-        settings = config.Settings(load=False)
-        editPreferences = gui.uicommand.EditPreferences(settings=settings)
+        editPreferences = gui.uicommand.EditPreferences(settings=self.settings)
         editPreferences.doCommand(None, show=False)
         # No assert, just checking whether it works without exceptions
         
         
 class EffortViewerAggregationChoiceTest(test.TestCase):
     def setUp(self):
-        self.settings = config.Settings(load=False)
+        super(EffortViewerAggregationChoiceTest, self).setUp()
         self.choice = gui.uicommand.EffortViewerAggregationChoice(viewer=self,
             settings=self.settings)
         self.choice.currentChoice = 0
@@ -364,9 +363,9 @@ class EffortViewerAggregationChoiceTest(test.TestCase):
 
 class OpenAllAttachmentsTest(test.TestCase):
     def setUp(self):
-        settings = config.Settings(load=False)
+        super(OpenAllAttachmentsTest, self).setUp()
         self.viewer = DummyViewer([task.Task('Task')])
-        self.openAll = gui.uicommand.OpenAllAttachments(settings=settings, 
+        self.openAll = gui.uicommand.OpenAllAttachments(settings=self.settings, 
                                                         viewer=self.viewer)
         self.errorArgs = self.errorKwargs = None
 
@@ -407,6 +406,7 @@ class OpenAllAttachmentsTest(test.TestCase):
 
 class ToggleCategoryTest(test.TestCase):
     def setUp(self):
+        super(ToggleCategoryTest, self).setUp()
         self.category = category.Category('Category')
         
     def testEnableWhenViewerIsShowingCategorizables(self):
@@ -447,7 +447,6 @@ class ToggleCategoryTest(test.TestCase):
 class EffortStopTest(test.TestCase):
     def setUp(self):
         super(EffortStopTest, self).setUp()
-        task.Task.settings = config.Settings(load=False)
         self.taskList = task.TaskList()
         self.task = task.Task('Task')
         self.task2 = task.Task('Task 2')
@@ -555,8 +554,6 @@ class EffortStopTest(test.TestCase):
 class AttachmentTest(test.wxTestCase):
     def setUp(self):
         super(AttachmentTest, self).setUp()
-
-        task.Task.settings = config.Settings(load=False)
         taskFile = persistence.TaskStore()
         self.task = task.Task()
         taskFile.tasks().extend([self.task])

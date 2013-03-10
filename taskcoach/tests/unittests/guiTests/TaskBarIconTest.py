@@ -35,8 +35,8 @@ class MainWindowMock(object):
 
 class TaskBarIconTestCase(test.TestCase):
     def setUp(self):
+        super(TaskBarIconTestCase, self).setUp()
         self.taskList = task.TaskList()
-        self.settings = task.Task.settings = config.Settings(load=False)
         self.icon = gui.TaskBarIcon(MainWindowMock(), self.taskList,
             self.settings)
 

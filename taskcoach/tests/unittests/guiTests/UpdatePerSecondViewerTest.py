@@ -27,6 +27,9 @@ class MockWidget(object):
         
     def RefreshItems(self, *items):
         self.refreshedItems.update(set(items))
+
+    def RefreshAllItems(self, nr):
+        pass
         
     def ToggleAutoResizing(self, *args, **kwargs):
         pass
@@ -38,7 +41,6 @@ class MockWidget(object):
 class UpdatePerSecondViewerTestsMixin(object):
     def setUp(self):
         super(UpdatePerSecondViewerTestsMixin, self).setUp()
-        task.Task.settings = self.settings = config.Settings(load=False)
         self.settings.set('taskviewer', 'columns', "['timeSpent']")
         self.taskStore = persistence.TaskStore()
         self.taskList = task.sorter.Sorter(self.taskStore.tasks(), sortBy='dueDateTime')
@@ -49,9 +51,9 @@ class UpdatePerSecondViewerTestsMixin(object):
         self.taskList.append(self.trackedTask)
 
     def tearDown(self):
-        super(UpdatePerSecondViewerTestsMixin, self).tearDown()
         self.taskStore.close()
         self.taskStore.stop()
+        super(UpdatePerSecondViewerTestsMixin, self).tearDown()
 
     def createUpdateViewer(self):
         return self.ListViewerClass(self.frame, self.taskStore, self.settings)

@@ -37,7 +37,6 @@ class DummyLocale(object):
 class AppTests(test.TestCase):
     def setUp(self):
         super(AppTests, self).setUp()
-        self.settings = config.Settings(load=False)
         self.options = DummyOptions()
 
     def testAppProperties(self):

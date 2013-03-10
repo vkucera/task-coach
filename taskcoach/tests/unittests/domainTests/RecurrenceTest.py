@@ -120,6 +120,7 @@ class YearlyRecurrenceCompareTestsMixin(object):
 
 class NoRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin):
     def setUp(self):
+        super(NoRecurrenceTest, self).setUp()
         self.recur = date.Recurrence()
         
     def testNextDate(self):
@@ -136,6 +137,7 @@ class NoRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin):
 class DailyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
                           DailyRecurrenceCompareTestsMixin):
     def setUp(self):
+        super(DailyRecurrenceTest, self).setUp()
         self.recur = date.Recurrence('daily')
         self.now = date.Now()
                 
@@ -157,6 +159,7 @@ class DailyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
 class BiDailyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
                             DailyRecurrenceCompareTestsMixin):
     def setUp(self):
+        super(BiDailyRecurrenceTest, self).setUp()
         self.recur = date.Recurrence('daily', amount=2)
         self.now = date.Now()
         
@@ -168,6 +171,7 @@ class BiDailyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
 class TriDailyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
                              DailyRecurrenceCompareTestsMixin):
     def setUp(self):
+        super(TriDailyRecurrenceTest, self).setUp()
         self.recur = date.Recurrence('daily', amount=3)
         
     def testEveryThirdDay(self):
@@ -178,6 +182,7 @@ class TriDailyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
 class WeeklyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
                            WeeklyRecurrenceCompareTestsMixin):
     def setUp(self):
+        super(WeeklyRecurrenceTest, self).setUp()
         self.January1 = date.DateTime(2000, 1, 1)
         self.January8 = date.DateTime(2000, 1, 8)
         self.January15 = date.DateTime(2000, 1, 15)
@@ -197,6 +202,7 @@ class WeeklyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
 class BiWeeklyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
                              WeeklyRecurrenceCompareTestsMixin):
     def setUp(self):
+        super(BiWeeklyRecurrenceTest, self).setUp()
         self.recur = date.Recurrence('weekly', amount=2)
                 
     def testEveryOtherWeek(self):
@@ -207,6 +213,7 @@ class BiWeeklyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
 class MonthlyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
                             MonthlyRecurrenceCompareTestsMixin):
     def setUp(self):
+        super(MonthlyRecurrenceTest, self).setUp()
         self.recur = date.Recurrence('monthly')
         
     def testFirstDayOf31DayMonth(self):
@@ -233,6 +240,7 @@ class MonthlyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
 class BiMontlyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
                              MonthlyRecurrenceCompareTestsMixin):
     def setUp(self):
+        super(BiMontlyRecurrenceTest, self).setUp()
         self.recur = date.Recurrence('monthly', amount=2)
         
     def testEveryOtherMonth(self):
@@ -243,6 +251,7 @@ class BiMontlyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
 class MonthlySameWeekDayRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
                                        MonthlyRecurrenceCompareTestsMixin):
     def setUp(self):
+        super(MonthlySameWeekDayRecurrenceTest, self).setUp()
         self.recur = date.Recurrence('monthly', sameWeekday=True)
         
     def testFirstSaturdayOfTheMonth(self):
@@ -269,6 +278,7 @@ class MonthlySameWeekDayRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin
 class BiMonthlySameWeekDayRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
                                          MonthlyRecurrenceCompareTestsMixin):
     def setUp(self):
+        super(BiMonthlySameWeekDayRecurrenceTest, self).setUp()
         self.recur = date.Recurrence('monthly', amount=2, sameWeekday=True)
         
     def testFourthSaturdayOfTheMonth(self):
@@ -279,6 +289,7 @@ class BiMonthlySameWeekDayRecurrenceTest(test.TestCase, CommonRecurrenceTestsMix
 class YearlyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
                            YearlyRecurrenceCompareTestsMixin):
     def setUp(self):
+        super(YearlyRecurrenceTest, self).setUp()
         self.recur = date.Recurrence('yearly')
         
     def testJanuary1(self):
@@ -321,6 +332,7 @@ class YearlyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
 class BiYearlyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
                              YearlyRecurrenceCompareTestsMixin):
     def setUp(self):
+        super(BiYearlyRecurrenceTest, self).setUp()
         self.recur = date.Recurrence('yearly', amount=2)
         
     def testEveryOtherYear(self):
@@ -331,6 +343,7 @@ class BiYearlyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
 class YearlySameWeekDayRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
                                       YearlyRecurrenceCompareTestsMixin):
     def setUp(self):
+        super(YearlySameWeekDayRecurrenceTest, self).setUp()
         self.recur = date.Recurrence('yearly', sameWeekday=True)
         
     def testFirstTuesdayOfTheYear(self):
@@ -380,6 +393,7 @@ class YearlySameWeekDayRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
         
 class MaxRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin):
     def setUp(self):
+        super(MaxRecurrenceTest, self).setUp()
         self.recur = date.Recurrence('daily', maximum=4)
         
     def testFirst(self):

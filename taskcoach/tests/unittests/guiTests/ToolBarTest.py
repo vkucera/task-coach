@@ -30,8 +30,7 @@ class ToolBar(gui.toolbar.ToolBar):
 class ToolBarTest(test.wxTestCase):
     def testAppendUICommand(self):
         gui.init()
-        settings = config.Settings(load=False)
-        toolbar = ToolBar(self.frame, settings)
+        toolbar = ToolBar(self.frame, self.settings)
         uiCommand = dummy.DummyUICommand(menuText='undo', bitmap='undo')
         toolId = toolbar.appendUICommand(uiCommand)
         self.assertNotEqual(wx.NOT_FOUND, toolbar.GetToolPos(toolId))
@@ -51,8 +50,7 @@ class ToolBarSizeTest(test.wxTestCase):
         self.createToolBarAndTestSize((32, 32))
 
     def createToolBarAndTestSize(self, size, expectedSize=None):
-        settings = config.Settings(load=False)
-        toolbarArgs = [self.frame, settings]
+        toolbarArgs = [self.frame, self.settings]
         if size:
             toolbarArgs.append(size)
         toolbar = ToolBar(*toolbarArgs)
@@ -63,6 +61,8 @@ class ToolBarSizeTest(test.wxTestCase):
 
 class ToolBarPerspectiveTest(test.wxTestCase):
     def setUp(self):
+        super(ToolBarPerspectiveTest, self).setUp()
+
         class NoBitmapUICommand(dummy.DummyUICommand):
             def appendToToolBar(self, toolbar):
                 pass
@@ -74,7 +74,6 @@ class ToolBarPerspectiveTest(test.wxTestCase):
                     pass
                 return [Test1(), None, Test2(), 1]
         self.tbFrame = TestFrame()
-        self.settings = config.Settings(load=False)
 
     def tearDown(self):
         self.tbFrame.Close()

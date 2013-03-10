@@ -23,7 +23,7 @@ from taskcoachlib.domain import task, date
 
 class TemplateXMLWriterTestCase(test.TestCase):
     def setUp(self):
-        task.Task.settings = config.Settings(load=False)
+        super(TemplateXMLWriterTestCase, self).setUp()
         self.fd = StringIO.StringIO()
         self.fd.name = 'testfile.tsk'
         self.fd.encoding = 'utf-8'

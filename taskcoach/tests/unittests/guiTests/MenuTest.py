@@ -96,7 +96,6 @@ class MenuTest(MenuTestCase):
 class MenuWithBooleanMenuItemsTestCase(MenuTestCase):
     def setUp(self):
         super(MenuWithBooleanMenuItemsTestCase, self).setUp()
-        self.settings = config.Settings(load=False)
         self.commands = self.createCommands()
 
     def createCommands(self):
@@ -156,7 +155,6 @@ class RecentFilesMenuTest(test.wxTestCase):
     def setUp(self):
         super(RecentFilesMenuTest, self).setUp()
         self.ioController = MockIOController()
-        self.settings = config.Settings(load=False)
         self.initialFileMenuLength = len(self.createFileMenu())
         self.filename1 = 'c:/Program Files/TaskCoach/test.tsk'
         self.filename2 = 'c:/two.tsk'
@@ -228,7 +226,6 @@ class RecentFilesMenuTest(test.wxTestCase):
 class ViewMenuTestCase(test.wxTestCase):
     def setUp(self):
         super(ViewMenuTestCase, self).setUp()
-        self.settings = config.Settings(load=False)
         self.viewerContainer = MockViewerContainer()
         self.menuBar = wx.MenuBar()
         self.parentMenu = wx.Menu()
@@ -272,7 +269,7 @@ class ViewMenuTestCase(test.wxTestCase):
 
 class StartEffortForTaskMenuTest(test.wxTestCase):
     def setUp(self):
-        task.Task.settings = config.Settings(load=False)
+        super(StartEffortForTaskMenuTest, self).setUp()
         self.tasks = task.TaskList()
         self.menu = gui.menu.StartEffortForTaskMenu(self.frame, self.tasks)
         
@@ -317,6 +314,7 @@ class StartEffortForTaskMenuTest(test.wxTestCase):
 
 class ToggleCategoryMenuTest(test.wxTestCase):
     def setUp(self):
+        super(ToggleCategoryMenuTest, self).setUp()
         self.categories = category.CategoryList()
         self.category1 = category.Category('Category 1')
         self.category2 = category.Category('Category 2')
@@ -392,9 +390,8 @@ class TaskTemplateMenuTest(test.wxTestCase):
             def getUICommands(self):
                 return uicommands
             
-        settings = config.Settings(load=False)
         taskList = task.TaskList()
-        menu = TaskTemplateMenu(self.frame, taskList, settings)
+        menu = TaskTemplateMenu(self.frame, taskList, self.settings)
         self.assertEqual(1, len(menu))
         uicommands.append(None)  # Add another separator
         pub.sendMessage('templates.saved')

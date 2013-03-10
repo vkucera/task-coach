@@ -25,7 +25,7 @@ class EffortAggregatorTestCase(test.TestCase):
     aggregation = 'One of: day, week, or month (override in subclass)'
     
     def setUp(self):
-        task.Task.settings = config.Settings(load=False)
+        super(EffortAggregatorTestCase, self).setUp()
         self.taskList = task.TaskList()
         self.effortAggregator = effort.EffortAggregator(self.taskList, 
             aggregation=self.aggregation)
@@ -347,6 +347,7 @@ class EffortPerMonthTest(EffortAggregatorTestCase, CommonTestsMixin):
         
 class MultipleAggregatorsTest(test.TestCase):
     def setUp(self):
+        super(MultipleAggregatorsTest, self).setUp()
         self.taskList = task.TaskList()
         self.effortPerDay = effort.EffortSorter(effort.EffortAggregator(self.taskList, aggregation='day'))
         self.effortPerWeek = effort.EffortSorter(effort.EffortAggregator(self.taskList, aggregation='week'))

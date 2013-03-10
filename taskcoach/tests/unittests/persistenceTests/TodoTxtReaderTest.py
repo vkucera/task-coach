@@ -23,7 +23,7 @@ from taskcoachlib.domain import task, category, date
 
 class TodoTxtReaderTestCase(test.TestCase):
     def setUp(self):
-        task.Task.settings = config.Settings(load=False)
+        super(TodoTxtReaderTestCase, self).setUp()
         self.tasks = task.TaskList()
         self.categories = category.CategoryList() 
         self.reader = persistence.TodoTxtReader(self.tasks, self.categories)

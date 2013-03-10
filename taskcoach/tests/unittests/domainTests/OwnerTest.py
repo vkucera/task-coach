@@ -33,6 +33,7 @@ class Foo(object):
     
 class OwnerTest(test.TestCase):
     def setUp(self):
+        super(OwnerTest, self).setUp()
         self.owner = OwnerUnderTest()
         self.events = []
         

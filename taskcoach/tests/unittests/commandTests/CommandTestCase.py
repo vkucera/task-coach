@@ -25,10 +25,6 @@ from taskcoachlib.domain import task
 class CommandTestCase(test.wxTestCase, asserts.CommandAssertsMixin):
     list = []
     
-    def setUp(self):
-        super(CommandTestCase, self).setUp()
-        task.Task.settings = config.Settings(load=False)
-    
     def tearDown(self):
         super(CommandTestCase, self).tearDown()
         patterns.CommandHistory().clear()

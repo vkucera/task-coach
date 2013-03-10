@@ -24,16 +24,15 @@ from taskcoachlib.domain import category
 class CategoryViewerTest(test.wxTestCase):
     def setUp(self):
         super(CategoryViewerTest, self).setUp()
-        self.settings = config.Settings(load=False)
         self.taskStore = persistence.TaskStore()
         self.categories = self.taskStore.categories()
         self.viewer = gui.viewer.CategoryViewer(self.frame, self.taskStore, 
                                                 self.settings)
 
     def tearDown(self):
-        super(CategoryViewerTest, self).tearDown()
         self.taskStore.close()
         self.taskStore.stop()
+        super(CategoryViewerTest, self).tearDown()
 
     def addTwoCategories(self):
         cat1 = category.Category('1')

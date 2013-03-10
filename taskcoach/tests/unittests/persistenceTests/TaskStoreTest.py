@@ -42,8 +42,11 @@ class FakeAttachment(base.Object):
 
 class TaskStoreTestCase(test.TestCase):
     def setUp(self):
-        self.settings = task.Task.settings = config.Settings(load=False)
+        super(TaskStoreTestCase, self).setUp()
         self.createTaskStores()
+        self.init()
+
+    def init(self):
         self.task = task.Task(subject='task')
         self.taskStore.tasks().append(self.task)
         self.category = category.Category('category')
@@ -63,6 +66,9 @@ class TaskStoreTestCase(test.TestCase):
 
     def tearDown(self):
         super(TaskStoreTestCase, self).tearDown()
+        self.clear()
+
+    def clear(self):
         self.taskStore.close()
         self.taskStore.stop()
         self.emptyTaskStore.close()
@@ -920,10 +926,8 @@ class LockedTaskStoreLockTest(TaskStoreTestCase):
 
 
 class TaskStoreMultiUserTestBase(object):
-    def setUp(self):
-        task.Task.settings = config.Settings(load=False)
-        self.createTaskStores()
 
+    def init(self):
         self.task = task.Task(subject='Task')
         self.taskStore1.tasks().append(self.task)
 
@@ -958,7 +962,7 @@ class TaskStoreMultiUserTestBase(object):
         self.taskStore1 = persistence.TaskStore()
         self.taskStore2 = persistence.TaskStore()
 
-    def tearDown(self):
+    def clear(self):
         self.taskStore1.close()
         self.taskStore1.stop()
         self.taskStore2.close()

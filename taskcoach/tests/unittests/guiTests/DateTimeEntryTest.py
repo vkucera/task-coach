@@ -25,8 +25,7 @@ from taskcoachlib import config
 class DateTimeEntryTest(test.wxTestCase):
     def setUp(self):
         super(DateTimeEntryTest, self).setUp()
-        self.dateTimeEntry = entry.DateTimeEntry(self.frame, 
-                                                 config.Settings(load=False))
+        self.dateTimeEntry = entry.DateTimeEntry(self.frame, self.settings)
         self.dateTime = date.DateTime(2004, 1, 1)
 
     def testCreate(self):
@@ -50,9 +49,7 @@ class DateTimeEntryTest(test.wxTestCase):
 class DateEntryConstructorTest(test.wxTestCase):
     def testCreateWithDate(self):
         tomorrow = date.Tomorrow()
-        dateTimeEntry = entry.DateTimeEntry(self.frame, 
-                                            config.Settings(load=False), 
-                                            tomorrow)
+        dateTimeEntry = entry.DateTimeEntry(self.frame, self.settings, tomorrow)
         self.assertAlmostEqual(tomorrow.toordinal(), 
                                dateTimeEntry.GetValue().toordinal(),
                                places=2)

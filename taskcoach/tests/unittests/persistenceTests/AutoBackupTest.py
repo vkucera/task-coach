@@ -53,7 +53,6 @@ class AutoBackupTest(test.TestCase):
     # pylint: disable=E1101,E1002,W0232
     def setUp(self):
         super(AutoBackupTest, self).setUp()
-        task.Task.settings = self.settings = config.Settings(load=False)
         self.taskStore = DummyTaskStore()
         self.backup = persistence.AutoBackup(self.settings, copyfile=self.onCopyFile)
         self.copyCalled = False

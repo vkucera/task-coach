@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import sys, unittest, os, time, wx, logging
+import sys, unittest, os, time, wx, logging, shutil
 projectRoot = os.path.abspath('..')
 if projectRoot not in sys.path:
     sys.path.insert(0, projectRoot)
@@ -44,6 +44,12 @@ def skipOnPlatform(*platforms):
     
 
 class TestCase(unittest.TestCase, object):
+    def setUp(self):
+        super(TestCase, self).setUp()
+        from taskcoachlib.domain import task, attachment
+        from taskcoachlib.config import Settings
+        self.settings = task.Task.settings = attachment.Attachment.settings = Settings(load=False)
+
     def assertEqualLists(self, expectedList, actualList):
         self.assertEqual(len(expectedList), len(actualList))
         for item in expectedList:
@@ -60,6 +66,7 @@ class TestCase(unittest.TestCase, object):
         self.events.append(event)
 
     def tearDown(self):
+        shutil.rmtree(self.settings.pathToDataDir())
         # pylint: disable=W0404
         # Prevent processing of pending events after the test has finished:
         wx.GetApp().Disconnect(wx.ID_ANY) 
@@ -97,9 +104,6 @@ class wxTestCase(TestCase):
     i18n.Translator('en_US')
     from taskcoachlib import gui
     gui.init()
-    
-    def setUp(self):
-        pass
 
     def tearDown(self):
         super(wxTestCase, self).tearDown()

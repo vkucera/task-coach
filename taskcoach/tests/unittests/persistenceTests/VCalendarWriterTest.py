@@ -36,7 +36,6 @@ class VCalTestCase(test.wxTestCase):
     
     def setUp(self):
         super(VCalTestCase, self).setUp()
-        task.Task.settings = self.settings = config.Settings(load=False)
         self.fd = UTF8StringIO()
         self.writer = persistence.iCalendarWriter(self.fd)
         self.taskStore = persistence.TaskStore()

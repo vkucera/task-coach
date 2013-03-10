@@ -23,11 +23,11 @@ from taskcoachlib.domain import attachment
 
 class AttachmentViewerTest(test.wxTestCase):
     def setUp(self):
-        settings = config.Settings(load=False)
+        super(AttachmentViewerTest, self).setUp()
         self.taskStore = persistence.TaskStore()
         attachments = attachment.AttachmentList()
         self.viewer = gui.viewer.AttachmentViewer(self.frame, self.taskStore, 
-            settings, attachmentsToShow=attachments, 
+            self.settings, attachmentsToShow=attachments, 
             settingsSection='attachmentviewer')
 
     def tearDown(self):

@@ -50,12 +50,12 @@ class DummyWindow(wx.Frame):
 
 class ReminderControllerTestCase(test.TestCase):
     def setUp(self):
-        task.Task.settings = settings = config.Settings(load=False)
+        super(ReminderControllerTestCase, self).setUp()
         self.taskList = task.TaskList()
         self.effortList = effort.EffortList(self.taskList)
         self.dummyWindow = DummyWindow()
         self.reminderController = ReminderControllerUnderTest(self.dummyWindow, 
-            self.taskList, self.effortList, settings)
+            self.taskList, self.effortList, self.settings)
         self.nowDateTime = date.DateTime.now()
         self.reminderDateTime = self.nowDateTime + date.ONE_HOUR
         

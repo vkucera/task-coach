@@ -28,7 +28,7 @@ import test
 
 class IOControllerTest(test.TestCase):
     def setUp(self):
-        task.Task.settings = self.settings = config.Settings(load=False)
+        super(IOControllerTest, self).setUp()
         self.taskStore = dummy.TaskStore()
         self.iocontroller = gui.IOController(self.taskStore, 
             lambda *args: None, self.settings)
@@ -259,7 +259,6 @@ class IOControllerOverwriteExistingFileTest(test.TestCase):
             return wx.CANCEL
         
         wx.MessageBox = messageBox
-        task.Task.settings = self.settings = config.Settings(load=False)
         self.taskStore = dummy.TaskStore()
         self.iocontroller = gui.IOController(self.taskStore, 
             lambda *args: None, self.settings)

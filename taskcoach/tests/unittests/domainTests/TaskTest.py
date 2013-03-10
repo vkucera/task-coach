@@ -45,7 +45,7 @@ class TaskTestCase(test.TestCase):
             setattr(self, effortLabel, eachEffort)
             
     def setUp(self, settings=None):
-        self.settings = task.Task.settings = config.Settings(load=False)
+        super(TaskTestCase, self).setUp()
         if settings is not None:
             for section, name, value in settings:
                 # XXXTODO: other types ? Not needed right now
@@ -2893,7 +2893,6 @@ class TaskWithCategoryTestCase(TaskTestCase):
 class TaskColorTest(test.TestCase):
     def setUp(self):
         super(TaskColorTest, self).setUp()
-        self.settings = task.Task.settings = config.Settings(load=False)
         self.yesterday = date.Yesterday()
         self.tomorrow = date.Tomorrow()
         
@@ -3037,8 +3036,8 @@ class TaskWithDependency(TaskTestCase):
 
 class TaskSuggestedDateTimeBaseSetupAndTests(object):
     def setUp(self):
+        super(TaskSuggestedDateTimeBaseSetupAndTests, self).setUp()
         # pylint: disable=W0142
-        self.settings = task.Task.settings = config.Settings(load=False)
         self.changeSettings()
         self.now = now = date.Now()
         tomorrow = now + date.ONE_DAY

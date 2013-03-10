@@ -23,6 +23,7 @@ from taskcoachlib.thirdparty import lockfile
 
 class LockFileTest(test.TestCase):
     def setUp(self):
+        super(LockFileTest, self).setUp()
         self.tmpfile = tempfile.NamedTemporaryFile()
         self.lock = lockfile.FileLock(self.tmpfile.name)
         

@@ -68,8 +68,7 @@ class DummyViewerContainer(object):
 class ExportDialogTest(test.wxTestCase):
     def testCreate(self):
         self.frame.viewer = DummyViewerContainer()
-        settings = config.Settings(load=False)
-        dialog.export.ExportAsHTMLDialog(self.frame, settings=settings)
+        dialog.export.ExportAsHTMLDialog(self.frame, settings=self.settings)
         
         
 class ColumnPickerTest(test.wxTestCase):

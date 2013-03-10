@@ -54,7 +54,7 @@ class Fixture(CategoryFilterHelpersMixin):
     treeMode = False
     
     def setUp(self):
-        self.settings = task.Task.settings = config.Settings(load=False)
+        super(Fixture, self).setUp()
         self.categories = category.CategoryList(self.createCategories())
         self.tasks = task.TaskList(self.createTasks())
         self.categorize()
@@ -690,7 +690,7 @@ class ParentAndChildCategoryAndTaskInTreeModeTest(ParentAndChildCategoryAndOneTa
                        
 class CategoryFilterAndViewFilterFixtureAndCommonTestsMixin(CategoryFilterHelpersMixin):
     def setUp(self):
-        task.Task.settings = config.Settings(load=False)
+        super(CategoryFilterAndViewFilterFixtureAndCommonTestsMixin, self).setUp()
         self.parent = task.Task('parent task')
         self.parent.setShouldMarkCompletedWhenAllChildrenCompleted(False)
         self.child = task.Task('child task')

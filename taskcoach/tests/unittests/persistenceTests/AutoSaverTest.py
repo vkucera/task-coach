@@ -55,7 +55,7 @@ class DummyTaskStore(persistence.TaskStore):
 
 class AutoSaverTestCase(test.TestCase):
     def setUp(self):
-        task.Task.settings = self.settings = config.Settings(load=False)
+        super(AutoSaverTestCase, self).setUp()
         self.taskStore = DummyTaskStore()
         self.autoSaver = persistence.AutoSaver(self.settings)
 

@@ -75,10 +75,6 @@ class XMLTemplateReaderTestCase(test.TestCase):
 
 class XMLReaderTestCase(test.TestCase):
     tskversion = 'Subclass responsibility'
-
-    def setUp(self):
-        super(XMLReaderTestCase, self).setUp()
-        task.Task.settings = config.Settings(load=False)
             
     def writeAndRead(self, xml_contents):
         # pylint: disable=W0201

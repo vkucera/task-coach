@@ -23,7 +23,7 @@ import test
  
 class CommonTaskRelationshipManagerTestsMixin(object):
     def setUp(self):
-        task.Task.settings = settings = config.Settings(load=False)
+        super(CommonTaskRelationshipManagerTestsMixin, self).setUp()
         now = self.now = date.Now()
         self.yesterday = now - date.ONE_DAY
         self.tomorrow = now + date.ONE_DAY
@@ -33,7 +33,7 @@ class CommonTaskRelationshipManagerTestsMixin(object):
         self.child.setParent(self.parent)
         self.child2 = task.Task('child2', plannedStartDateTime=now)
         self.grandchild = task.Task('grandchild', plannedStartDateTime=now)
-        settings.set('behavior', 'markparentcompletedwhenallchildrencompleted', 
+        self.settings.set('behavior', 'markparentcompletedwhenallchildrencompleted', 
             str(self.markParentCompletedWhenAllChildrenCompleted))
         self.taskList = task.TaskList([self.parent, self.child2, 
                                        self.grandchild])

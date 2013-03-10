@@ -25,6 +25,7 @@ class VCalendarParserTest(test.TestCase):
     # pylint: disable=W0511
 
     def setUp(self):
+        super(VCalendarParserTest, self).setUp()
         self.parser = persistence.icalendar.ical.VCalendarParser()
         
     def testEmptyVCalender(self):
@@ -71,6 +72,7 @@ class VCalendarParserTest(test.TestCase):
 
 class VNoteParserTest(test.TestCase):
     def setUp(self):
+        super(VNoteParserTest, self).setUp()
         self.parser = persistence.icalendar.ical.VNoteParser()
         
     def testEmptyVCalendar(self):
