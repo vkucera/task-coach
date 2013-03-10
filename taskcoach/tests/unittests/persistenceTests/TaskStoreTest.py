@@ -206,6 +206,15 @@ class TaskStoreTest(TaskStoreTestCase):
     def testTaskStoreDoesNotContainEffort(self):
         self.failIf(effort.Effort(self.task) in self.taskStore)
 
+    def testCloseSavesSession(self):
+        self.emptyTaskStore.tasks().extend([task.Task('Test task')])
+        guid = self.emptyTaskStore.guid()
+        self.emptyTaskStore.close()
+
+        taskStore = persistence.TaskStore(self.settings)
+        taskStore.loadSession(guid)
+        self.assertEqual(len(taskStore.tasks()), 1)
+
 
 class DirtyTaskStoreTest(TaskStoreTestCase):
     def setUp(self):
