@@ -80,15 +80,18 @@ class TaskStore(patterns.Observer):
         try:
             root = ET.Element('store')
             ET.SubElement(root, 'name').text = self.__name
+            fileMap = self.__loadFileMap()
             for backend in self.__backends:
                 node = ET.SubElement(root, 'backend')
                 if isinstance(backend, FileBackend):
                     node.attrib['type'] = u'file'
+                    fileMap[os.path.normpath(os.path.abspath(backend.filename()))] = self.__guid
                 else:
                     raise RuntimeError('Unknown backend: %s' % backend)
                 backend.toElement(node)
             with file(os.path.join(self.__settings.pathToDataDir(), self.__guid + '.store'), 'wb') as fd:
                 ET.ElementTree(root).write(fd, encoding='UTF-8')
+            self.__saveFileMap(fileMap)
 
             with file(os.path.join(self.__settings.pathToDataDir(), self.__guid + '.storedata'), 'wb') as fd:
                 writer.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes(), self.__guid)
@@ -301,6 +304,12 @@ class TaskStore(patterns.Observer):
                 if isinstance(backend, FileBackend):
                     filename = backend.filename()
                     break
+        elif filename:
+            absfilename = os.path.normpath(os.path.abspath(filename))
+            fileMap = self.__loadFileMap()
+            if fileMap.has_key(absfilename):
+                self.loadSession(fileMap[absfilename])
+                return
         self.clear()
         self.__createNewSessionWithFile(filename, doSave=filename and os.path.exists(filename))
 
@@ -327,3 +336,22 @@ class TaskStore(patterns.Observer):
 
     def lastFilename(self):
         return self.__lastFilename
+
+    def __saveFileMap(self, fileMap):
+        root = ET.Element('filemap')
+        for filename, guid in fileMap.items():
+            node = ET.SubElement(root, 'map')
+            node.text = filename
+            node.attrib['guid'] = guid
+        with file(os.path.join(self.__settings.pathToDataDir(), 'filemap.xml'), 'wb') as fd:
+            ET.ElementTree(root).write(fd, encoding='UTF-8')
+
+    def __loadFileMap(self):
+        fileMap = dict()
+        filename = os.path.join(self.__settings.pathToDataDir(), 'filemap.xml')
+        if os.path.exists(filename):
+            with file(filename, 'rU') as fd:
+                root = ET.parse(fd).getroot()
+            for node in root.findall('map'):
+                fileMap[node.text] = node.attrib['guid']
+        return fileMap

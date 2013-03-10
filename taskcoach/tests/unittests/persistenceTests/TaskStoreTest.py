@@ -221,6 +221,13 @@ class TaskStoreTest(TaskStoreTestCase):
         taskStore.close()
         self.failIf(os.path.exists(os.path.join(self.settings.pathToDataDir(), guid + '.store')))
 
+    def testLoadFileLoadsSession(self):
+        self.taskStore.setFilename(self.filename)
+        self.taskStore.save()
+        taskStore = persistence.TaskStore(self.settings)
+        taskStore.load(self.filename)
+        self.assertEqual(self.taskStore.guid(), taskStore.guid())
+
 
 class DirtyTaskStoreTest(TaskStoreTestCase):
     def setUp(self):
