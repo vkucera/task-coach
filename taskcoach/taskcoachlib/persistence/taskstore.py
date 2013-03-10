@@ -75,6 +75,8 @@ class TaskStore(patterns.Observer):
         return self.__backends[:]
 
     def saveSession(self):
+        if self.isEmpty() and not self.exists():
+            return
         pub.sendMessage('taskstore.aboutToSave', taskStore=self)
         try:
             root = ET.Element('store')

@@ -215,6 +215,12 @@ class TaskStoreTest(TaskStoreTestCase):
         taskStore.loadSession(guid)
         self.assertEqual(len(taskStore.tasks()), 1)
 
+    def testCloseDoesNotSaveEmptySession(self):
+        taskStore = persistence.TaskStore(self.settings)
+        guid = taskStore.guid()
+        taskStore.close()
+        self.failIf(os.path.exists(os.path.join(self.settings.pathToDataDir(), guid + '.store')))
+
 
 class DirtyTaskStoreTest(TaskStoreTestCase):
     def setUp(self):
