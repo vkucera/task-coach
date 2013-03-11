@@ -49,6 +49,10 @@ class TestCase(unittest.TestCase, object):
         from taskcoachlib.domain import task, attachment
         from taskcoachlib.config import Settings
         self.settings = task.Task.settings = attachment.Attachment.settings = Settings(load=False)
+        if os.path.exists('tempdata'):
+            shutil.rmtree('tempdata')
+        os.mkdir('tempdata')
+        self.settings.setDataDir(os.path.normpath(os.path.abspath('tempdata')))
 
     def assertEqualLists(self, expectedList, actualList):
         self.assertEqual(len(expectedList), len(actualList))

@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import application
 from taskcoachlib.domain import task
+import os
 
 
 class MockWxApp(object):
@@ -50,6 +51,7 @@ class App(application.Application):
 
     def init(self): # pylint: disable=W0221
         super(App, self).init(loadSettings=False, loadTaskFile=False)
+        self.settings.setDataDir(os.path.normpath(os.path.abspath('tempdata')))
 
     def addTask(self):
         self.task = task.Task('Task')
