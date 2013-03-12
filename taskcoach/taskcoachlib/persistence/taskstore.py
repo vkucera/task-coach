@@ -182,14 +182,13 @@ class TaskStore(patterns.Observer):
                 pass # XXXTODO: idem
         self.__locked = list()
 
-    def clear(self):
+    @patterns.eventSource
+    def clear(self, event=None):
         pub.sendMessage('taskstore.aboutToClear', taskStore=self)
         try:
             self.__master.stop(self)
-            event = patterns.Event()
             for collection in [self.tasks(), self.notes(), self.categories()]:
                 collection.clear(event=event)
-            event.send()
             self.lockAll()
             try:
                 for backend in self.__backends:

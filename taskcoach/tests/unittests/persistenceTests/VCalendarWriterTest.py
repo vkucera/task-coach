@@ -41,9 +41,9 @@ class VCalTestCase(test.wxTestCase):
         self.taskStore = persistence.TaskStore(self.settings)
 
     def tearDown(self):
-        super(VCalTestCase, self).tearDown()
         self.taskStore.close()
         self.taskStore.stop()
+        super(VCalTestCase, self).tearDown()
 
     def writeAndRead(self):
         self.writer.write(self.viewer, self.settings, self.selectionOnly)

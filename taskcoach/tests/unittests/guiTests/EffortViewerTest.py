@@ -229,9 +229,9 @@ class EffortViewerAggregationTestCase(test.wxTestCase):
         
 
     def tearDown(self):
-        super(EffortViewerAggregationTestCase, self).tearDown()
         self.taskStore.close()
         self.taskStore.stop()
+        super(EffortViewerAggregationTestCase, self).tearDown()
 
     def switchAggregation(self):
         aggregations = ['details', 'day', 'week', 'month']

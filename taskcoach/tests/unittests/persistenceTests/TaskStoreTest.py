@@ -65,8 +65,8 @@ class TaskStoreTestCase(test.TestCase):
         self.emptyTaskStore = persistence.TaskStore(self.settings)
 
     def tearDown(self):
-        super(TaskStoreTestCase, self).tearDown()
         self.clear()
+        super(TaskStoreTestCase, self).tearDown()
 
     def clear(self):
         self.taskStore.close()

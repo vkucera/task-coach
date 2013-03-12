@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-03-10 20:26+CET\n"
+"POT-Creation-Date: 2013-03-12 21:57+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -5376,7 +5376,7 @@ msgstr ""
 
 #: taskcoachlib/persistence/taskstore.py:48
 #: taskcoachlib/persistence/taskstore.py:127
-#: taskcoachlib/persistence/taskstore.py:272
+#: taskcoachlib/persistence/taskstore.py:271
 msgid "Session created on %s"
 msgstr ""
 

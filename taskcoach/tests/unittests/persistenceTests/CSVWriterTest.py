@@ -35,9 +35,9 @@ class CSVWriterTestCase(test.wxTestCase):
         self.createViewer()
 
     def tearDown(self):
-        super(CSVWriterTestCase, self).tearDown()
         self.taskStore.close()
         self.taskStore.stop()
+        super(CSVWriterTestCase, self).tearDown()
 
     def createViewer(self):
         self.settings.set('taskviewer', 'treemode', self.treeMode)

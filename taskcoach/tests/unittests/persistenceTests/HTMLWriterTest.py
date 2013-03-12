@@ -36,9 +36,9 @@ class HTMLWriterTestCase(test.wxTestCase):
         self.viewer = self.createViewer()
         
     def tearDown(self):
-        super(HTMLWriterTestCase, self).tearDown()
         self.taskStore.close()
         self.taskStore.stop()
+        super(HTMLWriterTestCase, self).tearDown()
         cssFilename = self.filename + '.css'
         if os.path.exists(cssFilename):
             os.remove(cssFilename)

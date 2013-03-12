@@ -52,9 +52,9 @@ class AutoSaverTestCase(test.TestCase):
         file('filetomerge.tsk', 'wb').write('<?xml version="1.0" encoding="UTF-8" ?><tasks><task subject="foo" /></tasks>')
 
     def tearDown(self):
-        super(AutoSaverTestCase, self).tearDown()
         self.taskStore.close()
         self.taskStore.stop()
+        super(AutoSaverTestCase, self).tearDown()
         del self.autoSaver # Make sure AutoSaver is not observing task files
         os.remove('filetomerge.tsk')
         if os.path.exists('newfilename.tsk'):
