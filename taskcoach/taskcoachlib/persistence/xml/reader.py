@@ -394,7 +394,7 @@ class XMLReader(object):
         ''' Parse an effort record from the node. '''
         kwargs = {}
         if self.__tskversion >= 22:
-            kwargs['status'] = int(node.attrib['status'])
+            kwargs['status'] = int(node.attrib.get('status', '1'))
         if self.__tskversion >= 29:
             kwargs['id'] = node.attrib['id']
         start = node.attrib.get('start', '')
