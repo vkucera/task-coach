@@ -25,6 +25,8 @@ releases = [
 Release('1.3.28', 'March ??, 2013',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bugv2('''On OS X, Task Coach would use an unreasonable amount of CPU
+load when doing nothing.''', '1396'),
         ],
     ),
 
