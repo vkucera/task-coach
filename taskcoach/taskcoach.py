@@ -24,6 +24,14 @@ import sys
 # Workaround for a bug in Ubuntu 10.10
 os.environ['XLIB_SKIP_ARGB_VISUALS'] = '1'
 
+# This prevents a message printed to the console when wx.lib.masked
+# is imported from taskcoachlib.widgets on Ubuntu 12.04 64 bits...
+try:
+    from mx import DateTime
+except ImportError:
+    pass
+
+
 if not hasattr(sys, "frozen"):
     # These checks are only necessary in a non-frozen environment, i.e. we
     # skip these checks when run from a py2exe-fied application

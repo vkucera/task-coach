@@ -27,6 +27,7 @@ Release('1.3.28', 'March ??, 2013',
     bugsFixed=[
         Bugv2('''On OS X, Task Coach would use an unreasonable amount of CPU
 load when doing nothing.''', '1396'),
+        Bugv2('''Fix a console warning on Ubuntu 64 bits.''', '1393'),
         ],
     ),
 
