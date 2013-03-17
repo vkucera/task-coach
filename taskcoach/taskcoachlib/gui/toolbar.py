@@ -18,7 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import operating_system
 from taskcoachlib.thirdparty import aui
-from taskcoachlib.powermgt import IdleNotifier
 import wx
 import uicommand
 
@@ -26,29 +25,6 @@ import uicommand
 class _Toolbar(aui.AuiToolBar):
     def __init__(self, parent, style):
         super(_Toolbar, self).__init__(parent, agwStyle=aui.AUI_TB_NO_AUTORESIZE)
-
-        if operating_system.isMac():
-            # Don't believe the documentation. On OS X, the idle event is just fired
-            # at regular intervals instead of only once when all events have been
-            # processed. In the case of AuiToolBar this is expensive (taking up to 20%
-            # CPU load on my iMac when Task Coach shouldn't be doing anything).
-            # See https://sourceforge.net/p/taskcoach/bugs/1396/
-            class ToolBarIdleNotifier(IdleNotifier):
-                def __init__(self, toolbar):
-                    self.__toolbar = toolbar
-                    super(ToolBarIdleNotifier, self).__init__()
-                def getMinIdleTime(self):
-                    return 1.0
-                def sleep(self):
-                    self.__toolbar.DoIdleUpdate()
-
-            self.Unbind(wx.EVT_IDLE)
-            wx.GetTopLevelParent(self).Bind(wx.EVT_CLOSE, self.__onCloseParent)
-            self.__idle = ToolBarIdleNotifier(self)
-
-    def __onCloseParent(self, event):
-        self.__idle.stop()
-        event.Skip()
 
     def AddLabelTool(self, id, label, bitmap1, bitmap2, kind, **kwargs):
         long_help_string = kwargs.pop('longHelp', '')
