@@ -29,6 +29,8 @@ Release('1.3.28', 'March ??, 2013',
         Bugv2('''Fix task selection through keyboard in effort
 editor (MS Windows and GTK).''', '1400'),
         Bugv2('''Fix editing of effort start in the effort dialog.''', '1399'),
+        Bugv2('''Fix timezone-related display bug that would prevent
+the task editor from opening on OS X.''', '1395'),
         ],
     ),
 
