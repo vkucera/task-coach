@@ -184,7 +184,10 @@ class SourceforgeAPI(object):
             for name, value in ticketData.get('custom_fields', dict()).items():
                 if name == '_priority':
                     value = '1'
-                data.append(('ticket_form.custom_fields.%s' % name, value))
+		if name == '_milestone': # WTF?
+		    data.append(('ticket_form._milestone', value))
+		else:
+		    data.append(('ticket_form.custom_fields.%s' % name, value))
             self.__apply('bugs/%s/save' % id_, data=data)
 
             # Canned response
