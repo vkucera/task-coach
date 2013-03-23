@@ -180,9 +180,12 @@ class SourceforgeAPI(object):
         else:
             ticketData = self.__apply('bugs/%s' % id_)['ticket']
             # Status: fixed; priority: 1
-            self.__apply('bugs/%s/save' % id_,
-                         data=[('ticket_form.status', 'fixed'),
-                         ('ticket_form.custom_fields._priority', '1')])
+            data = [('ticket_form.status', 'fixed')]
+            for name, value in ticketData.get('custom_fields', dict()).items():
+                if name == '_priority':
+                    value = '1'
+                data.append(('ticket_form.custom_fields.%s' % name, value))
+            self.__apply('bugs/%s/save' % id_, data=data)
 
             # Canned response
             self.__apply('bugs/_discuss/thread/%s/new' % ticketData['discussion_thread']['_id'],
