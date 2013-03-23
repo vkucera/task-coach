@@ -28,6 +28,7 @@ Release('1.3.28', 'March ??, 2013',
         Bugv2('''Fix a console warning on Ubuntu 64 bits.''', '1393'),
         Bugv2('''Fix task selection through keyboard in effort
 editor (MS Windows).''', '1400'),
+        Bugv2('''Fix editing of effort start in the effort dialog.''', '1399'),
         ],
     ),
 

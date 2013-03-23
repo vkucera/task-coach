@@ -47,10 +47,10 @@ class AttributeSync(object):
         new_value = self.getValue()
         if new_value != self._currentValue:
             self._currentValue = new_value
-            if self.__callback is not None:
-                self.__callback(new_value)
             commandKwArgs = self.commandKwArgs(new_value)
             self._commandClass(None, self._items, **commandKwArgs).do()  # pylint: disable=W0142
+            if self.__callback is not None:
+                self.__callback(new_value)
             
     def onAttributeChanged_Deprecated(self, event):  # pylint: disable=W0613
         if self._entry: 
