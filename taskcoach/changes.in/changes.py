@@ -32,6 +32,8 @@ editor (MS Windows and GTK).''', '1400'),
         Bugv2('''Fix timezone-related display bug that would prevent
 the task editor from opening on OS X.''', '1395'),
         Bugv2('''Use presets for tasks created through mail DnD.''', '1403'),
+        Bugv2('''Fix loading of categories for notes belonging to
+a subtask, and other such imbrications.''', '1404'),
         ],
     ),
 
