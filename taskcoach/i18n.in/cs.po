@@ -7,22 +7,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-05 05:51+0000\n"
-"PO-Revision-Date: 2013-03-04 20:07+0000\n"
-"Last-Translator: Zbyněk Schwarz <Unknown>\n"
+"POT-Creation-Date: 2013-03-16 18:16+0000\n"
+"PO-Revision-Date: 2013-03-06 03:27+0000\n"
+"Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-05 12:08+0000\n"
-"X-Generator: Launchpad (build 16514)\n"
+"X-Launchpad-Export-Date: 2013-03-24 16:12+0000\n"
+"X-Generator: Launchpad (build 16540)\n"
 
 #: taskcoachlib/application/application.py:54
 msgid "Errors have occured. Please see \"%s\""
 msgstr "Vyskytly se chyby. Prosím prohlédněte si \"%s\""
 
 #: taskcoachlib/application/application.py:54
-#: taskcoachlib/gui/mainwindow.py:371 taskcoachlib/iphone/protocol.py:482
+#: taskcoachlib/gui/mainwindow.py:359 taskcoachlib/iphone/protocol.py:482
 #: taskcoachlib/widgets/draganddrop.py:121
 #: taskcoachlib/widgets/draganddrop.py:163 taskcoachlib/widgets/password.py:91
 msgid "Error"
@@ -110,7 +110,7 @@ msgstr "Vložit jako podpoložku"
 msgid "Paste as subitem of \"%s\""
 msgstr "Vložit jako podpoložku \"%s\""
 
-#: taskcoachlib/command/base.py:326 taskcoachlib/gui/dialog/toolbar.py:130
+#: taskcoachlib/command/base.py:326 taskcoachlib/gui/dialog/toolbar.py:134
 msgid "Drag and drop"
 msgstr "Táhnout a pustit"
 
@@ -603,7 +603,7 @@ msgid "45 minutes"
 msgstr "45 minut"
 
 #: taskcoachlib/domain/date/snooze.py:25
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1688
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1699
 msgid "1 hour"
 msgstr "1 hodina"
 
@@ -652,7 +652,7 @@ msgid "2 weeks"
 msgstr "2 týdny"
 
 #: taskcoachlib/domain/date/snooze.py:30
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1676
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1687
 msgid "1 week"
 msgstr "1 týden"
 
@@ -1391,24 +1391,24 @@ msgid "Start"
 msgstr "Start"
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1578
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1589
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Week(s)"
 msgstr "Týdnů"
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1579
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1590
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Day(s)"
 msgstr "Dnů"
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1580
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1591
 msgid "Hour(s)"
 msgstr "Hodin(a)"
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1581
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1592
 msgid "Minute(s)"
 msgstr "Minut(a)"
 
@@ -1967,11 +1967,11 @@ msgstr "Předvolit"
 msgid "Propose"
 msgstr "Navrhnout"
 
-#: taskcoachlib/gui/dialog/preferences.py:602 taskcoachlib/render.py:102
+#: taskcoachlib/gui/dialog/preferences.py:602 taskcoachlib/render.py:128
 msgid "Today"
 msgstr "Dnes"
 
-#: taskcoachlib/gui/dialog/preferences.py:603 taskcoachlib/render.py:106
+#: taskcoachlib/gui/dialog/preferences.py:603 taskcoachlib/render.py:132
 msgid "Tomorrow"
 msgstr "Zítra"
 
@@ -2126,17 +2126,19 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:729
 msgid "Linux"
-msgstr ""
+msgstr "Linux"
 
 #: taskcoachlib/gui/dialog/preferences.py:736
 msgid "Focus task subject in task editor"
-msgstr ""
+msgstr "Zaměřit předmět úkolu v editoru"
 
 #: taskcoachlib/gui/dialog/preferences.py:737
 msgid ""
 "When opening the task editor, select the task subject and focus it.\n"
 "This overwrites the X selection."
 msgstr ""
+"Při otevírání editoru úkolu, vyberte předmět úkolu a zaměřte ho.\n"
+"Toto přepíše výběr X."
 
 #: taskcoachlib/gui/dialog/reminder.py:31
 msgid "%(name)s reminder - %(task)s"
@@ -2243,26 +2245,42 @@ msgid "Preview"
 msgstr "Náhled"
 
 #: taskcoachlib/gui/dialog/toolbar.py:67
-msgid "Commands"
-msgstr "Příkazy"
+msgid "Available tools"
+msgstr "Dostupné nástroje"
 
-#: taskcoachlib/gui/dialog/toolbar.py:90
-msgid "Visible commands"
-msgstr "Zobrazené příkazy"
+#: taskcoachlib/gui/dialog/toolbar.py:83
+msgid "Make this tool visible in the toolbar"
+msgstr "Zobrazit tento nástroj v liště"
 
-#: taskcoachlib/gui/dialog/toolbar.py:130
+#: taskcoachlib/gui/dialog/toolbar.py:87
+msgid "Hide this tool from the toolbar"
+msgstr "Skrýt tento nástroj z lišty"
+
+#: taskcoachlib/gui/dialog/toolbar.py:92
+msgid "Tools"
+msgstr "Nástroje"
+
+#: taskcoachlib/gui/dialog/toolbar.py:106
+msgid "Move the tool up (to the left of the toolbar)"
+msgstr "Přesunout nástroj nahoru (doleva na liště)"
+
+#: taskcoachlib/gui/dialog/toolbar.py:110
+msgid "Move the tool down (to the right of the toolbar)"
+msgstr "Přesunout nástroj dolů (doprava na liště)"
+
+#: taskcoachlib/gui/dialog/toolbar.py:134
 msgid "Reorder toolbar buttons by drag and dropping them in this list."
 msgstr "Změňte pořadí tlačítek v liště jejich přetažením v seznamu."
 
-#: taskcoachlib/gui/dialog/toolbar.py:163
-#: taskcoachlib/gui/dialog/toolbar.py:221
-#: taskcoachlib/gui/dialog/toolbar.py:250
+#: taskcoachlib/gui/dialog/toolbar.py:167
+#: taskcoachlib/gui/dialog/toolbar.py:225
+#: taskcoachlib/gui/dialog/toolbar.py:254
 msgid "Separator"
 msgstr "Oddělovač"
 
-#: taskcoachlib/gui/dialog/toolbar.py:165
-#: taskcoachlib/gui/dialog/toolbar.py:224
-#: taskcoachlib/gui/dialog/toolbar.py:252
+#: taskcoachlib/gui/dialog/toolbar.py:169
+#: taskcoachlib/gui/dialog/toolbar.py:228
+#: taskcoachlib/gui/dialog/toolbar.py:256
 msgid "Spacer"
 msgstr "Mezera"
 
@@ -2585,21 +2603,15 @@ msgstr ""
 msgid "%s settings error"
 msgstr "chyba nastavení %s"
 
-#: taskcoachlib/gui/mainwindow.py:324
-msgid ""
-"Task Coach is configured to automatically save every change you make. The "
-"save button will therefore stay disabled."
-msgstr ""
-
-#: taskcoachlib/gui/mainwindow.py:348
+#: taskcoachlib/gui/mainwindow.py:336
 msgid "iPhone/iPod"
 msgstr "iPhone/iPod"
 
-#: taskcoachlib/gui/mainwindow.py:358
+#: taskcoachlib/gui/mainwindow.py:346
 msgid "Synchronization type"
 msgstr "Typ synchronizace"
 
-#: taskcoachlib/gui/mainwindow.py:368
+#: taskcoachlib/gui/mainwindow.py:356
 msgid ""
 "An iPhone or iPod Touch device tried to synchronize with this\n"
 "task file, but the protocol negotiation failed. Please file a\n"
@@ -3582,12 +3594,12 @@ msgid "Aggregation mode"
 msgstr "Režim seskupení"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2251
-msgid "List of tasks"
-msgstr "Seznam úkolů"
+msgid "List"
+msgstr "Seznam"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2251
-msgid "Tree of tasks"
-msgstr "Strom úkolů"
+msgid "Tree"
+msgstr "Strom"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2257
 msgid "When checked, show tasks as tree, otherwise show tasks as list"
@@ -3665,12 +3677,12 @@ msgid "No rounding"
 msgstr "Bez zaokrouhlování"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2465
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1693
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1704
 msgid "1 minute"
 msgstr "1 minuta"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2466
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1695
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1706
 msgid "%d minutes"
 msgstr "%d minut"
 
@@ -3795,7 +3807,6 @@ msgid "Status: %d filtered"
 msgstr "Stav: %d filtrováno"
 
 #: taskcoachlib/gui/viewer/effort.py:198
-#: taskcoachlib/persistence/csv/generator.py:41
 msgid "Period"
 msgstr "Období"
 
@@ -6636,11 +6647,11 @@ msgstr "Dnes má termín nový úkol"
 msgid "New task due tomorrow"
 msgstr "Zítra má termín nový úkol"
 
-#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1683
+#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1694
 msgid "%d days"
 msgstr "%d dnů"
 
-#: taskcoachlib/render.py:51 taskcoachlib/thirdparty/smartdatetimectrl.py:1681
+#: taskcoachlib/render.py:51 taskcoachlib/thirdparty/smartdatetimectrl.py:1692
 msgid "1 day"
 msgstr "1 den"
 
@@ -6676,11 +6687,11 @@ msgstr "Každý druhý měsíc"
 msgid "Every other year"
 msgstr "Každý druhý rok"
 
-#: taskcoachlib/render.py:104
+#: taskcoachlib/render.py:130
 msgid "Yesterday"
 msgstr "Včera"
 
-#: taskcoachlib/render.py:245
+#: taskcoachlib/render.py:268
 msgid "now"
 msgstr "teď"
 
@@ -6795,20 +6806,20 @@ msgstr "&Předchozí"
 msgid "&Window"
 msgstr "&Okno"
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1627
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1734
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1638
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1745
 msgid "Edit"
 msgstr "Upravit"
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1678
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1689
 msgid "%d weeks"
 msgstr "%d týdnů"
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1690
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1701
 msgid "%d hours"
 msgstr "%d hodin"
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1734
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1745
 msgid "Done"
 msgstr "Hotovo"
 
@@ -7074,6 +7085,12 @@ msgstr "Chyba při otevírání URL"
 #~ msgstr ""
 #~ "Zobrazí/skryje aktivní úkoly (ty, které začaly v minulosti a nejsou "
 #~ "dokončené)"
+
+#~ msgid "List of tasks"
+#~ msgstr "Seznam úkolů"
+
+#~ msgid "Tree of tasks"
+#~ msgstr "Strom úkolů"
 
 #~ msgid "New task with selected tasks as &dependencies..."
 #~ msgstr "Nový úkol s vybraným úkolem jako &závislostí..."

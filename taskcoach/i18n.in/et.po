@@ -7,22 +7,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-05 05:51+0000\n"
+"POT-Creation-Date: 2013-03-16 18:16+0000\n"
 "PO-Revision-Date: 2011-02-13 11:40+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-05 12:08+0000\n"
-"X-Generator: Launchpad (build 16514)\n"
+"X-Launchpad-Export-Date: 2013-03-24 16:13+0000\n"
+"X-Generator: Launchpad (build 16540)\n"
 
 #: taskcoachlib/application/application.py:54
 msgid "Errors have occured. Please see \"%s\""
 msgstr ""
 
 #: taskcoachlib/application/application.py:54
-#: taskcoachlib/gui/mainwindow.py:371 taskcoachlib/iphone/protocol.py:482
+#: taskcoachlib/gui/mainwindow.py:359 taskcoachlib/iphone/protocol.py:482
 #: taskcoachlib/widgets/draganddrop.py:121
 #: taskcoachlib/widgets/draganddrop.py:163 taskcoachlib/widgets/password.py:91
 msgid "Error"
@@ -108,7 +108,7 @@ msgstr ""
 msgid "Paste as subitem of \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/base.py:326 taskcoachlib/gui/dialog/toolbar.py:130
+#: taskcoachlib/command/base.py:326 taskcoachlib/gui/dialog/toolbar.py:134
 msgid "Drag and drop"
 msgstr ""
 
@@ -600,7 +600,7 @@ msgid "45 minutes"
 msgstr ""
 
 #: taskcoachlib/domain/date/snooze.py:25
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1688
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1699
 msgid "1 hour"
 msgstr ""
 
@@ -649,7 +649,7 @@ msgid "2 weeks"
 msgstr ""
 
 #: taskcoachlib/domain/date/snooze.py:30
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1676
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1687
 msgid "1 week"
 msgstr ""
 
@@ -1382,24 +1382,24 @@ msgid "Start"
 msgstr "Alusta"
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1578
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1589
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Week(s)"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1579
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1590
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Day(s)"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1580
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1591
 msgid "Hour(s)"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1581
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1592
 msgid "Minute(s)"
 msgstr ""
 
@@ -1914,11 +1914,11 @@ msgstr ""
 msgid "Propose"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:602 taskcoachlib/render.py:102
+#: taskcoachlib/gui/dialog/preferences.py:602 taskcoachlib/render.py:128
 msgid "Today"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:603 taskcoachlib/render.py:106
+#: taskcoachlib/gui/dialog/preferences.py:603 taskcoachlib/render.py:132
 msgid "Tomorrow"
 msgstr ""
 
@@ -2179,26 +2179,42 @@ msgid "Preview"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/toolbar.py:67
-msgid "Commands"
+msgid "Available tools"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/toolbar.py:90
-msgid "Visible commands"
+#: taskcoachlib/gui/dialog/toolbar.py:83
+msgid "Make this tool visible in the toolbar"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/toolbar.py:130
+#: taskcoachlib/gui/dialog/toolbar.py:87
+msgid "Hide this tool from the toolbar"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/toolbar.py:92
+msgid "Tools"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/toolbar.py:106
+msgid "Move the tool up (to the left of the toolbar)"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/toolbar.py:110
+msgid "Move the tool down (to the right of the toolbar)"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/toolbar.py:134
 msgid "Reorder toolbar buttons by drag and dropping them in this list."
 msgstr ""
 
-#: taskcoachlib/gui/dialog/toolbar.py:163
-#: taskcoachlib/gui/dialog/toolbar.py:221
-#: taskcoachlib/gui/dialog/toolbar.py:250
+#: taskcoachlib/gui/dialog/toolbar.py:167
+#: taskcoachlib/gui/dialog/toolbar.py:225
+#: taskcoachlib/gui/dialog/toolbar.py:254
 msgid "Separator"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/toolbar.py:165
-#: taskcoachlib/gui/dialog/toolbar.py:224
-#: taskcoachlib/gui/dialog/toolbar.py:252
+#: taskcoachlib/gui/dialog/toolbar.py:169
+#: taskcoachlib/gui/dialog/toolbar.py:228
+#: taskcoachlib/gui/dialog/toolbar.py:256
 msgid "Spacer"
 msgstr ""
 
@@ -2478,21 +2494,15 @@ msgstr ""
 msgid "%s settings error"
 msgstr ""
 
-#: taskcoachlib/gui/mainwindow.py:324
-msgid ""
-"Task Coach is configured to automatically save every change you make. The "
-"save button will therefore stay disabled."
-msgstr ""
-
-#: taskcoachlib/gui/mainwindow.py:348
+#: taskcoachlib/gui/mainwindow.py:336
 msgid "iPhone/iPod"
 msgstr ""
 
-#: taskcoachlib/gui/mainwindow.py:358
+#: taskcoachlib/gui/mainwindow.py:346
 msgid "Synchronization type"
 msgstr ""
 
-#: taskcoachlib/gui/mainwindow.py:368
+#: taskcoachlib/gui/mainwindow.py:356
 msgid ""
 "An iPhone or iPod Touch device tried to synchronize with this\n"
 "task file, but the protocol negotiation failed. Please file a\n"
@@ -3453,11 +3463,11 @@ msgid "Aggregation mode"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2251
-msgid "List of tasks"
+msgid "List"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2251
-msgid "Tree of tasks"
+msgid "Tree"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2257
@@ -3531,12 +3541,12 @@ msgid "No rounding"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2465
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1693
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1704
 msgid "1 minute"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2466
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1695
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1706
 msgid "%d minutes"
 msgstr ""
 
@@ -3660,7 +3670,6 @@ msgid "Status: %d filtered"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/effort.py:198
-#: taskcoachlib/persistence/csv/generator.py:41
 msgid "Period"
 msgstr ""
 
@@ -6104,11 +6113,11 @@ msgstr ""
 msgid "New task due tomorrow"
 msgstr ""
 
-#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1683
+#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1694
 msgid "%d days"
 msgstr ""
 
-#: taskcoachlib/render.py:51 taskcoachlib/thirdparty/smartdatetimectrl.py:1681
+#: taskcoachlib/render.py:51 taskcoachlib/thirdparty/smartdatetimectrl.py:1692
 msgid "1 day"
 msgstr ""
 
@@ -6144,11 +6153,11 @@ msgstr ""
 msgid "Every other year"
 msgstr ""
 
-#: taskcoachlib/render.py:104
+#: taskcoachlib/render.py:130
 msgid "Yesterday"
 msgstr ""
 
-#: taskcoachlib/render.py:245
+#: taskcoachlib/render.py:268
 msgid "now"
 msgstr "praegu"
 
@@ -6253,20 +6262,20 @@ msgstr ""
 msgid "&Window"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1627
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1734
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1638
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1745
 msgid "Edit"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1678
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1689
 msgid "%d weeks"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1690
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1701
 msgid "%d hours"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1734
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1745
 msgid "Done"
 msgstr ""
 
