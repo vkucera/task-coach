@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from .. import sessiontempfile  # pylint: disable=F0401
 from taskcoachlib import meta
 from taskcoachlib.changes import ChangeMonitor
-from taskcoachlib.domain import date, effort, task, category, note, attachment
+from taskcoachlib.domain import base, date, effort, task, category, categorizable, note, attachment
 from taskcoachlib.i18n import translate
 from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
 from taskcoachlib.thirdparty.deltaTime import nlTimeExpression
@@ -72,6 +72,7 @@ class XMLReader(object):
         self.__default_font_size = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT).GetPointSize()
         self.__modification_datetimes = {}
         self.__prerequisites = {}
+        self.__categorizables = {}
 
     def tskversion(self):
         ''' Return the version of the current task file. Note that this is not
@@ -93,22 +94,12 @@ class XMLReader(object):
             raise XMLReaderTooNewException
         tasks = self.__parse_task_nodes(root)
         self.__resolve_prerequisites_and_dependencies(tasks)
-        categorizables = tasks[:]
-        for each_task in tasks:
-            categorizables.extend(each_task.children(recursive=True))
-        for each_task in tasks:
-            categorizables.extend(each_task.notes(recursive=True))
         notes = self.__parse_note_nodes(root)
-        categorizables.extend(notes)
-        for each_note in notes:
-            categorizables.extend(each_note.children(recursive=True))
-        categorizables_by_id = dict([(categorizable.id(), categorizable) for \
-                                   categorizable in categorizables])
         if self.__tskversion <= 13:
-            categories = self.__parse_category_nodes_from_task_nodes(root, 
-                                                        categorizables_by_id)
+            categories = self.__parse_category_nodes_from_task_nodes(root)
         else:
-            categories = self.__parse_category_nodes(root, categorizables_by_id)
+            categories = self.__parse_category_nodes(root)
+        self.__resolve_categories(categories, tasks, notes)
 
         guid = self.__parse_guid_node(root.find('guid'))
         syncml_config = self.__parse_syncml_node(root, guid)
@@ -186,19 +177,52 @@ class XMLReader(object):
                 
         collect_ids(tasks)
         resolve_ids(tasks)
-                
-    def __parse_category_nodes(self, node, categorizables_by_id):
-        return [self.__parse_category_node(child, categorizables_by_id) \
+
+    def __resolve_categories(self, categories, tasks, notes):
+        def mapCategorizables(obj, resultMap, categoryMap):
+            if isinstance(obj, categorizable.CategorizableCompositeObject):
+                resultMap[obj.id()] = obj
+            if isinstance(obj, category.Category):
+                categoryMap[obj.id()] = obj
+            if isinstance(obj, base.CompositeObject):
+                for child in obj.children():
+                    mapCategorizables(child, resultMap, categoryMap)
+            if isinstance(obj, note.NoteOwner):
+                for theNote in obj.notes():
+                    mapCategorizables(theNote, resultMap, categoryMap)
+            if isinstance(obj, attachment.AttachmentOwner):
+                for theAttachment in obj.attachments():
+                    mapCategorizables(theAttachment, resultMap, categoryMap)
+
+        categorizableMap = dict()
+        categoryMap = dict()
+        for theCategory in categories:
+            mapCategorizables(theCategory, categorizableMap, categoryMap)
+        for theTask in tasks:
+            mapCategorizables(theTask, categorizableMap, categoryMap)
+        for theNote in notes:
+            mapCategorizables(theNote, categorizableMap, categoryMap)
+
+        for categoryId, categorizableIds in self.__categorizables.items():
+            theCategory = categoryMap[categoryId]
+            for categorizableId in categorizableIds:
+                if categorizableMap.has_key(categorizableId):
+                    theCategorizable = categorizableMap[categorizableId]
+                    theCategory.addCategorizable(theCategorizable)
+                    theCategorizable.addCategory(theCategory)
+
+    def __parse_category_nodes(self, node):
+        return [self.__parse_category_node(child) \
                 for child in node.findall('category')]
         
     def __parse_note_nodes(self, node):
         return [self.__parse_note_node(child) for child in node.findall('note')]
 
-    def __parse_category_node(self, category_node, categorizables_by_id):
+    def __parse_category_node(self, category_node):
         ''' Recursively parse the categories from the node and return a 
             category instance. '''
         kwargs = self.__parse_base_composite_attributes(category_node, 
-            self.__parse_category_nodes, categorizables_by_id)
+            self.__parse_category_nodes)
         notes = self.__parse_note_nodes(category_node)
         filtered = self.__parse_boolean(category_node.attrib.get('filtered', 
                                                                  'False'))
@@ -210,21 +234,13 @@ class XMLReader(object):
             categorizable_ids = category_node.attrib.get('tasks', '')
         else:
             categorizable_ids = category_node.attrib.get('categorizables', '')
-        if categorizable_ids:
-            # The category tasks attribute might contain id's that refer to 
-            # tasks that have been deleted (a bug in release 0.61.5), 
-            # be prepared:
-            categorizables = [categorizables_by_id[categorizable_id] for \
-                              categorizable_id in categorizable_ids.split(' ') \
-                              if categorizable_id in categorizables_by_id]
-        else:
-            categorizables = []
-        kwargs['categorizables'] = categorizables
         if self.__tskversion > 20:
             kwargs['attachments'] = self.__parse_attachments(category_node)
-        return self.__save_modification_datetime(category.Category(**kwargs))  # pylint: disable=W0142
+        theCategory = category.Category(**kwargs) # pylint: disable=W0142
+        self.__categorizables.setdefault(theCategory.id(), list()).extend(categorizable_ids.split(' '))
+        return self.__save_modification_datetime(theCategory)
                       
-    def __parse_category_nodes_from_task_nodes(self, root, tasks):
+    def __parse_category_nodes_from_task_nodes(self, root):
         ''' In tskversion <=13 category nodes were subnodes of task nodes. '''
         task_nodes = root.findall('.//task')
         category_mapping = \
@@ -237,9 +253,7 @@ class XMLReader(object):
                 else:
                     cat = category.Category(subject)
                     subject_category_mapping[subject] = cat
-                task_instance = tasks[task_id]
-                cat.addCategorizable(task_instance)
-                task_instance.addCategory(cat)
+                self.__categorizables.setdefault(cat.id(), list()).append(task_id)
         return subject_category_mapping.values()
     
     def __parse_category_nodes_within_task_nodes(self, task_nodes):
@@ -402,7 +416,7 @@ class XMLReader(object):
         ''' Parse an effort record from the node. '''
         kwargs = {}
         if self.__tskversion >= 22:
-            kwargs['status'] = int(node.attrib['status'])
+            kwargs['status'] = int(node.attrib.get('status', '1'))
         if self.__tskversion >= 29:
             kwargs['id'] = node.attrib['id']
         start = node.attrib.get('start', '')

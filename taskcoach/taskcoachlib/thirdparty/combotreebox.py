@@ -371,6 +371,9 @@ class BaseComboTreeBoxMixin(object):
             nextItem = self._tree.GetFirstItem()
         if nextItem:
             self.SetSelection(nextItem)
+            event = wx.PyCommandEvent(wx.wxEVT_COMMAND_COMBOBOX_SELECTED)
+            event.SetEventObject(self)
+            self.ProcessEvent(event)
 
     def OnText(self, event):
         event.Skip()

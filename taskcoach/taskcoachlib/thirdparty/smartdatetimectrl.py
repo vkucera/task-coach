@@ -845,6 +845,7 @@ class TimeEntry(Entry):
         fmt = kwargs.pop('format', lambda x: decodeSystemString(x.strftime('%H:%M:%S')))
         self.__formatter = fmt
         pattern = decodeSystemString(fmt(datetime.time(hour=11, minute=33, second=44)))
+        debugInfo = dict(original=pattern)
         pattern = re.sub('3+', 'M', pattern)
         pattern = re.sub('1+', 'H', pattern)
         pattern = re.sub('4+', 'S', pattern)
@@ -877,6 +878,7 @@ class TimeEntry(Entry):
                 localeCopy.setTimeFormat('%p')
                 amStrings.append(unicode(localeCopy.formatTime(QTime(11, 0, 0))))
 
+        debugInfo['amlit'] = amStrings
         for amLit in amStrings:
             idx = pattern.lower().find(amLit.lower())
             if idx != -1:
@@ -900,10 +902,11 @@ class TimeEntry(Entry):
             kwargs['hour'], kwargs['ampm'] = Convert24To12(kwargs['hour'])
 
         kwargs['format'] = pattern
+        debugInfo['format'] = pattern
         try:
             super(TimeEntry, self).__init__(*args, **kwargs)
         except KeyError as e:
-            raise ValueError('Invalid format "%s" (original exception: "%s")' % (pattern, e))
+            raise ValueError('Invalid format "%s" (original exception: "%s")' % (debugInfo, e))
 
         EVT_ENTRY_CHOICE_SELECTED(self, self.__OnHourSelected)
 
@@ -1246,10 +1249,12 @@ class DateEntry(Entry):
         fmt = kwargs.pop('format', lambda x: decodeSystemString(x.strftime('%x')))
         self.__formatter = fmt
         fmt = decodeSystemString(fmt(datetime.date(year=3333, day=22, month=11)))
+        debugInfo = dict(original=fmt)
 
         months = list()
         for fmtChar in ['B', 'b']:
             substring = decodeSystemString(datetime.date(year=3333, day=22, month=11).strftime('%%%s' % fmtChar))
+            debugInfo['month%s' % fmtChar] = substring
             months.append((fmtChar, substring + '.'))
             months.append((fmtChar, substring))
         for fmtChar, substring in months:
@@ -1262,12 +1267,13 @@ class DateEntry(Entry):
         fmt = re.sub('2+', 'd', fmt)
         fmt = re.sub('3+', 'y', fmt)
         kwargs['format'] = fmt
+        debugInfo['numeric'] = fmt
 
         try:
             self.__value = datetime.date(year=kwargs['year'], month=kwargs['month'], day=kwargs['day'])
             super(DateEntry, self).__init__(*args, **kwargs)
         except KeyError as e:
-            raise ValueError('Invalid format "%s" (original exception: "%s")' % (fmt, e))
+            raise ValueError('Invalid format "%s" (original exception: "%s")' % (debugInfo, e))
 
         self.__calendar = None
 

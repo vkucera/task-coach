@@ -1176,7 +1176,7 @@ class EffortEditBook(Page):
         self._stopDateTimeSync = attributesync.AttributeSync('getStop',
             self._stopDateTimeEntry, current_stop_date_time, self.items,
             command.EditEffortStopDateTimeCommand, entry.EVT_DATETIMEENTRY,
-            self.items[0].stopChangedEventType())
+            self.items[0].stopChangedEventType(), callback=self.__onStopDateTimeChanged)
         self._stopDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, 
                                      self.onStopDateTimeChanged)
         stop_now_button = self.__create_stop_now_button()
@@ -1220,6 +1220,12 @@ class EffortEditBook(Page):
         
     def onStopDateTimeChanged(self, *args, **kwargs):
         self.onDateTimeChanged(*args, **kwargs)
+
+    def __onStopDateTimeChanged(self, new_value):
+        # The actual start date/time was not changed (the command class checks that) if
+        # if was greater than the stop date/time then, so make sure it is if everything is
+        # OK now.
+        command.EditEffortStartDateTimeCommand(None, self.items, newValue=self._startDateTimeEntry.GetValue()).do()
 
     def onDateTimeChanged(self, event):
         event.Skip()

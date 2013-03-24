@@ -22,9 +22,26 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.28', 'March ??, 2013',
+Release('1.3.29', 'April ??, 2013',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        ],
+    ),
+
+Release('1.3.28', 'March 24, 2013',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bugv2('''Fix a console warning on Ubuntu 64 bits.''', '1393'),
+        Bugv2('''Fix task selection through keyboard in effort
+editor (MS Windows and GTK).''', '1400'),
+        Bugv2('''Fix editing of effort start in the effort dialog.''', '1399'),
+        Bugv2('''Fix timezone-related display bug that would prevent
+the task editor from opening on OS X.''', '1395'),
+        Bugv2('''Use presets for tasks created through mail DnD.''', '1403'),
+        Bugv2('''Fix loading of categories for notes belonging to
+a subtask, and other such imbrications.''', '1404'),
+        Bugv2('''Fix preferences opening when end of work day is set to 24.''',
+              '1394'),
         ],
     ),
 

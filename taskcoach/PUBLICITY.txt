@@ -33,3 +33,5 @@ CNET Upload.com        http://www.upload.com
 Ohloh                  http://www.ohloh.net/p/taskcoach
 Apple                  http://www.apple.com/downloads/macosx/unix_open_source/taskcoach.html
 CIA                    http://cia.vc/stats/project/taskcoach
+FSF                    http://directory.fsf.org/wiki/Task_coach
+MacUpdate        https://www.macupdate.com/app/mac/26043/task-coach

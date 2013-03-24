@@ -24,7 +24,6 @@ from taskcoachlib import meta, widgets, notify, operating_system, render
 from taskcoachlib.domain import date, task
 from taskcoachlib.gui import artprovider
 from taskcoachlib.i18n import _
-from taskcoachlib.thirdparty import smartdatetimectrl as sdtc
 import wx, calendar
 
 
@@ -126,11 +125,10 @@ class SettingsPageBase(widgets.BookPage):
         self.addEntry(text, spin, helpText=helpText, flags=flags)
         self._integerSettings.append((section, setting, spin))
 
-    def addTimeSetting(self, section, setting, text, helpText=''):
+    def addTimeSetting(self, section, setting, text, helpText='', disabledMessage=None, disabledValue=None, defaultValue=0):
         hourValue = self.getint(section, setting)
-        timeCtrl = sdtc.TimeEntry(self, format=lambda x: render.time(x, minutes=False), hour=hourValue,
-                                  minute=0, second=0)
-        timeCtrl.EnableChoices()
+        timeCtrl = widgets.TimeEntry(self, hourValue, defaultValue=defaultValue, disabledValue=disabledValue,
+                                     disabledMessage=disabledMessage)
         self.addEntry(text, timeCtrl, helpText=helpText, flags=(wx.ALL|wx.ALIGN_CENTER_VERTICAL,
                                                                 wx.ALL|wx.ALIGN_CENTER_VERTICAL,
                                                                 wx.ALL|wx.ALIGN_CENTER_VERTICAL))
@@ -232,7 +230,7 @@ class SettingsPageBase(widgets.BookPage):
         for section, setting, spin in self._integerSettings:
             self.setint(section, setting, spin.GetValue())
         for section, setting, timeCtrl in self._timeSettings:
-            self.setint(section, setting, timeCtrl.GetTime().hour)
+            self.setint(section, setting, timeCtrl.GetValue())
         for section, setting, colorButton in self._colorSettings:
             self.setvalue(section, setting, colorButton.GetColour())
         for section, setting, fontButton in self._fontSettings:
@@ -552,7 +550,8 @@ class FeaturesPage(SettingsPage):
         self.addTimeSetting('view', 'efforthourstart',
             _('Hour of start of work day'), helpText=' ')
         self.addTimeSetting('view', 'efforthourend',
-            _('Hour of end of work day'), helpText=' ')
+            _('Hour of end of work day'), helpText=' ', disabledMessage=_('End of day'),
+            disabledValue=24, defaultValue=23)
         self.addBooleanSetting('calendarviewer', 'gradient',
             _('Use gradients in calendar views.\n'
               'This may slow down Task Coach.'))
