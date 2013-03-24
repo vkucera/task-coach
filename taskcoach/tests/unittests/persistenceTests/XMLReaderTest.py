@@ -32,7 +32,7 @@ from taskcoachlib.domain import date, task
 class XMLTemplateReaderTestCase(test.TestCase):
     def convert(self, old_format, now=date.Now):
         return persistence.TemplateXMLReader.convert_old_format(old_format, now)
-    
+ 
     def testConvertNow(self):
         self.assertEqual('now', self.convert('Now()'))
 
@@ -117,12 +117,12 @@ class TempFileLockTest(XMLReaderTestCase):
 
     def setUp(self):
         self.oldMkstemp = tempfile.mkstemp
-        
+     
         def newMkstemp(*args, **kwargs):  # pragma: no cover
             handle, name = self.oldMkstemp(*args, **kwargs)
             self.__filename = name  # pylint: disable=W0201
             return handle, name
-        
+     
         tempfile.mkstemp = newMkstemp
         super(TempFileLockTest, self).setUp()
 
@@ -166,7 +166,7 @@ class XMLReaderVersion6Test(XMLReaderTestCase):
             </task>
         </tasks>''')
         self.assertEqual('Yo', tasks[0].efforts()[0].description())
-        
+     
 
 class XMLReaderVersion8Test(XMLReaderTestCase):   
     tskversion = 8
@@ -174,19 +174,19 @@ class XMLReaderVersion8Test(XMLReaderTestCase):
     def testReadTaskWithoutPriority(self):
         tasks = self.writeAndReadTasks('<tasks><task id="foo"/></tasks>')
         self.assertEqual(0, tasks[0].priority())
-        
-        
+     
+     
 class XMLReaderVersion9Test(XMLReaderTestCase):
     tskversion = 9
-    
+ 
     def testReadTaskWithoutId(self):
         tasks = self.writeAndReadTasks('<tasks><task id="foo"/></tasks>')
         self.failUnless(tasks[0].id())
-        
+     
 
 class XMLReaderVersion10Test(XMLReaderTestCase):
     tskversion = 10
-    
+ 
     def testReadTaskWithoutFee(self):
         tasks = self.writeAndReadTasks('<tasks><task id="foo"/></tasks>')
         self.assertEqual(0, tasks[0].hourlyFee())
@@ -195,20 +195,20 @@ class XMLReaderVersion10Test(XMLReaderTestCase):
 
 class XMLReaderVersion11Test(XMLReaderTestCase):
     tskversion = 11
-    
+ 
     def testReadTaskWithoutReminder(self):
         tasks = self.writeAndReadTasks('<tasks><task id="foo"/></tasks>')
         self.assertEqual(date.DateTime(), tasks[0].reminder())
-        
-        
+     
+     
 class XMLReaderVersion12Test(XMLReaderTestCase):
     tskversion = 12
-    
+ 
     def testReadTaskWithoutMarkCompletedWhenAllChildrenCompletedSetting(self):
         tasks = self.writeAndReadTasks('<tasks><task id="foo"/></tasks>')
         self.assertEqual(None, 
                          tasks[0].shouldMarkCompletedWhenAllChildrenCompleted())
-        
+     
 
 class XMLReaderVersion13Test(XMLReaderTestCase):
     tskversion = 13
@@ -238,7 +238,7 @@ class XMLReaderVersion13Test(XMLReaderTestCase):
         for category in categories:
             self.assertEqual(set([tasks[0]]), category.categorizables())
             self.failUnless(category in tasks[0].categories())
-            
+         
     def testSubTaskWithCategories(self):
         tasks, categories = self.writeAndReadTasksAndCategories('''
         <tasks>
@@ -255,11 +255,11 @@ class XMLReaderVersion13Test(XMLReaderTestCase):
         self.assertEqual("1.1", list(anotherCategory.categorizables())[0].id())         
         self.assertEqual(set([testCategory]), tasks[0].categories())
         self.assertEqual(set([anotherCategory]), tasks[0].children()[0].categories())
-        
-        
+     
+     
 class XMLReaderVersion14Test(XMLReaderTestCase):
     tskversion = 14
-    
+ 
     def testEffortWithMilliseconds(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -287,7 +287,7 @@ class XMLReaderVersion16Text(XMLReaderTestCase):
                          [att.location() for att in tasks[0].attachments()])
         self.assertEqual(['whatever.tsk'], 
                          [att.subject() for att in tasks[0].attachments()])
-        
+     
     def testTwoAttachmentsCompat(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -300,7 +300,7 @@ class XMLReaderVersion16Text(XMLReaderTestCase):
                          [att.location() for att in tasks[0].attachments()])
         self.assertEqual(['whatever.tsk', 'another.txt'], 
                          [att.subject() for att in tasks[0].attachments()])
-        
+     
     def testOneAttachment(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -312,7 +312,7 @@ class XMLReaderVersion16Text(XMLReaderTestCase):
                          [att.location() for att in tasks[0].attachments()])
         self.assertEqual(['whatever.tsk'], 
                          [att.subject() for att in tasks[0].attachments()])
-        
+     
     def testTwoAttachments(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -366,14 +366,14 @@ class XMLReaderVersion19Test(XMLReaderTestCase):
             <task recurrence="monthly"/>
         </tasks>''')
         self.assertEqual('monthly', tasks[0].recurrence().unit)
-                
+             
     def testRecurrenceCount(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
             <task recurrenceCount="10"/>
         </tasks>''')
         self.assertEqual(10, tasks[0].recurrence().count)
-        
+     
     def testMaxRecurrenceCount(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -391,7 +391,7 @@ class XMLReaderVersion19Test(XMLReaderTestCase):
 
 class XMLReaderVersion20Test(XMLReaderTestCase):
     tskversion = 20  # New in release 0.71.0
-           
+        
     def testReadEmptyStream(self):
         reader = persistence.XMLReader(StringIO.StringIO())
         try:
@@ -401,11 +401,11 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
             pass  # pragma: no cover
         except xml.etree.ElementTree.ParseError:
             pass  # pragma: no cover
-        
+     
     def testNoTasksAndNoCategories(self):
         tasks, categories, notes = self.writeAndReadTasksAndCategoriesAndNotes('<tasks/>\n')
         self.assertEqual(([], [], []), (tasks, categories, notes))
-        
+     
     def testOneTask(self):
         tasks = self.writeAndReadTasks('<tasks><task/></tasks>\n')
         self.assertEqual(1, len(tasks))
@@ -420,21 +420,21 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
         self.assertEqual(2, len(tasks))
         self.assertEqual('1', tasks[0].subject())
         self.assertEqual('2', tasks[1].subject())
-        
+     
     def testOneTask_Subject(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
             <task subject="Yo"/>
         </tasks>\n''')
         self.assertEqual('Yo', tasks[0].subject())
-        
+     
     def testOneTask_UnicodeSubject(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
             <task subject="???"/>
         </tasks>\n''')
         self.assertEqual('???', tasks[0].subject())        
-        
+     
     def testBudget(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -446,7 +446,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
     def testBudget_NoBudget(self):
         tasks = self.writeAndReadTasks('<tasks><task/></tasks>\n')
         self.assertEqual(date.TimeDelta(), tasks[0].budget())
-        
+     
     def testDescription(self):
         description = u'Description\nline 2'
         tasks = self.writeAndReadTasks('''
@@ -456,11 +456,11 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
             </task>
         </tasks>\n''' % description)
         self.assertEqual(description, tasks[0].description())
-    
+ 
     def testNoChildren(self):
         tasks = self.writeAndReadTasks('<tasks><task/></tasks>\n')
         self.failIf((tasks[0].children()))
-        
+     
     def testChild(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -470,7 +470,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
         </tasks>\n''')
         self.assertEqual(1, len(tasks[0].children()))
         self.assertEqual(1, len(tasks))
-        
+     
     def testChildren(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -481,7 +481,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
         </tasks>\n''')
         self.assertEqual(2, len(tasks[0].children()))
         self.assertEqual(1, len(tasks))
-        
+     
     def testGrandchild(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -495,7 +495,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
         parent = tasks[0]
         self.assertEqual(1, len(parent.children()))
         self.assertEqual(1, len(parent.children()[0].children()))
-        
+     
     def testEffort(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -507,7 +507,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
         self.assertEqual(1, len(tasks[0].efforts()))
         self.assertEqual(date.TimeDelta(minutes=30), tasks[0].timeSpent())
         self.assertEqual(tasks[0], tasks[0].efforts()[0].task())
-    
+ 
     def testChildEffort(self):    
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -534,7 +534,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
             </task>
         </tasks>''' % description)
         self.assertEqual(description, tasks[0].efforts()[0].description())
-        
+     
     def testActiveEffort(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -544,11 +544,11 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
         </tasks>''')
         self.assertEqual(1, len(tasks[0].efforts()))
         self.failUnless(tasks[0].isBeingTracked())
-                
+             
     def testPriority(self):
         tasks = self.writeAndReadTasks('<tasks><task priority="5"/></tasks>')        
         self.assertEqual(5, tasks[0].priority())
-        
+     
     def testTaskId(self):
         tasks = self.writeAndReadTasks('<tasks><task id="xyz"/></tasks>')
         self.assertEqual('xyz', tasks[0].id())
@@ -559,7 +559,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
             <task color="(255, 0, 0, 255)"/>
         </tasks>''')
         self.assertEqual(wx.RED, tasks[0].backgroundColor())
-                
+             
     def testHourlyFee(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -568,7 +568,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
         </tasks>''')
         self.assertEqual(100, tasks[0].hourlyFee())
         self.assertEqual(5.5, tasks[1].hourlyFee())
-        
+     
     def testFixedFee(self):
         tasks = self.writeAndReadTasks('<tasks><task fixedFee="240.50"/></tasks>')
         self.assertEqual(240.5, tasks[0].fixedFee())
@@ -576,7 +576,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
     def testNoReminder(self):
         tasks = self.writeAndReadTasks('<tasks><task reminder="None"/></tasks>')
         self.assertEqual(date.DateTime(), tasks[0].reminder())
-        
+     
     def testReminder(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -584,7 +584,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
         </tasks>''')
         self.assertEqual(date.DateTime(2004, 1, 1, 10, 0, 0, 0),
                          tasks[0].reminder())
-        
+     
     def testMarkCompletedWhenAllChildrenCompletedSetting_True(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -600,7 +600,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
         </tasks>''')
         self.assertEqual(False,
                          tasks[0].shouldMarkCompletedWhenAllChildrenCompleted())
- 
+
     def testMarkCompletedWhenAllChildrenCompletedSetting_None(self):
         tasks = self.writeAndReadTasks('<tasks><task/></tasks>')
         self.assertEqual(None,
@@ -617,7 +617,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
     def testCategoryWithoutAttachments(self):
         categories = self.writeAndReadCategories('<tasks><category/></tasks>')
         self.assertEqual([], categories[0].attachments())
-        
+     
     def testTaskWithOneAttachment(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -666,7 +666,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
                          [att.location() for att in categories[0].attachments()])
         self.assertEqual(['whatever.tsk'], 
                          [att.subject() for att in categories[0].attachments()])
-        
+     
     def testTaskWithTwoAttachments(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -690,7 +690,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
                          [att.location() for att in tasks[0].attachments()])
         self.assertEqual(['whatever.tsk', 'another.txt'], 
                          [att.subject() for att in tasks[0].attachments()])
-        
+     
     def testOneCategory(self):
         categories = self.writeAndReadCategories('<tasks><category subject="cat"/></tasks>')
         self.assertEqual('cat', categories[0].subject())
@@ -710,7 +710,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
             <category id="catId"/>
         </tasks>''')
         self.assertEqual('catId', categories[0].id())
-            
+         
     def testCategoryWithDescription(self):
         categories = self.writeAndReadCategories('''
         <tasks>
@@ -719,14 +719,14 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
             </category>
         </tasks>''')
         self.assertEqual('Description', categories[0].description())
-    
+ 
     def testCategoryColor(self):
         categories = self.writeAndReadCategories('''
         <tasks>
             <category subject="cat" color="(255, 0, 0, 255)"/>
         </tasks>''')
         self.assertEqual(wx.RED, categories[0].backgroundColor())
-        
+     
     def testOneTaskWithCategory(self):
         tasks, categories = self.writeAndReadTasksAndCategories('''
         <tasks>
@@ -734,7 +734,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
             <task id="1"/>
         </tasks>''')
         self.assertEqual(set(tasks), categories[0].categorizables())
-        
+     
     def testTwoRecursiveCategories(self):
         categories = self.writeAndReadCategories('''
         <tasks>
@@ -743,7 +743,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
             </category>
         </tasks>''')
         self.assertEqual('cat1.1', categories[0].children()[0].subject())
-        
+     
     def testRecursiveCategoriesNotInResultList(self):
         categories = self.writeAndReadCategories('''
         <tasks>
@@ -766,7 +766,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
         self.assertEqual(tasks[0], list(categories[0].categorizables())[0])
         self.assertEqual(tasks[1], 
                          list(categories[0].children()[0].categorizables())[0])
-        
+     
     def testSubtaskCategory(self):
         tasks, categories = self.writeAndReadTasksAndCategories('''
         <tasks>
@@ -777,14 +777,14 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
         </tasks>''')
         self.assertEqual(tasks[0].children()[0], 
                          list(categories[0].categorizables())[0])
-        
+     
     def testFilteredCategory(self):
         categories = self.writeAndReadCategories('''
         <tasks>
             <category filtered="True" subject="category"/>
         </tasks>''')
         self.failUnless(categories[0].isFiltered())
-    
+ 
     def testCategoryWithDeletedTasks(self):
         ''' There's a bug in release 0.61.5 that causes the task file to contain
             references to deleted tasks. Ignore these when loading the task 
@@ -794,7 +794,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
             <category subject="cat" tasks="some_task_id"/>
         </tasks>''')
         self.failIf(categories[0].categorizables())
-        
+     
     def testNote(self):
         notes = self.writeAndReadNotes('''
         <tasks>
@@ -845,7 +845,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
                          [att.location() for att in notes[0].children()[0].attachments()])
         self.assertEqual(['whatever.tsk'], 
                          [att.subject() for att in notes[0].children()[0].attachments()])
-        
+     
     def testNoteCategory(self):
         categories, notes = self.writeAndReadCategoriesAndNotes('''
         <tasks>
@@ -853,21 +853,21 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
             <category categorizables="noteId" subject="Category"/>
         </tasks>''')
         self.assertEqual(notes[0], list(categories[0].categorizables())[0])
-        
+     
     def testNoteId(self):
         notes = self.writeAndReadNotes('''
         <tasks>
             <note id="noteId"/>
         </tasks>''')
         self.assertEqual('noteId', notes[0].id())
-        
+     
     def testNoteColor(self):        
         notes = self.writeAndReadNotes('''
         <tasks>
             <note color="(255, 0, 0, 255)"/>
         </tasks>''')
         self.assertEqual(wx.RED, notes[0].backgroundColor())
-        
+     
     def testNoRecurrence(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -916,7 +916,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
             <task><recurrence unit="daily" sameWeekday="True"/></task>
         </tasks>''')
         self.failUnless(tasks[0].recurrence().sameWeekday)
-        
+     
     def testTaskWithNote(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -925,7 +925,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
             </task> 
         </tasks>''')
         self.assertEqual(1, len(tasks[0].notes()))
-        
+     
     def testTaskWithNotes(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -934,7 +934,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
             </task> 
         </tasks>''')
         self.assertEqual(2, len(tasks[0].notes()))
-        
+     
     def testTaskWithNestedNotes(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -945,7 +945,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
             </task> 
         </tasks>''')
         self.assertEqual(1, len(tasks[0].notes()[0].children()))
-        
+     
     def testTaskNotesDontGetAddedToOverallNotesList(self):
         notes = self.writeAndReadNotes('''
         <tasks>
@@ -954,7 +954,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
             </task> 
         </tasks>''')
         self.failIf(notes)
-        
+     
     def testCategoryWithNote(self):
         categories = self.writeAndReadCategories('''
         <tasks>
@@ -1054,12 +1054,12 @@ class XMLReaderVersion23Test(XMLReaderTestCase):
             '<data extension="eml">%s</data>\n'
             '</attachment>\n</task>\n</tasks>\n' % base64.encodestring('Data'))
         self.assertEqual('Data', tasks[0].attachments()[0].data())
-    
+ 
     def testGUID(self):
         guid = self.writeAndReadGUID('<tasks><guid>GUID</guid></tasks>')
         self.assertEqual('GUID', guid)
-        
-        
+     
+     
 class XMLReaderVersion24Test(XMLReaderTestCase):
     tskversion = 24  # New in release 0.72.9
 
@@ -1073,7 +1073,7 @@ class XMLReaderVersion24Test(XMLReaderTestCase):
             '<description>\nDescription\n</description>\n'
             '</task>\n</tasks>\n')
         self.assertEqual('Description', tasks[0].description())
-        
+     
     def testAttachmentData(self):
         tasks = self.writeAndReadTasks(\
             '<tasks>\n<task>\n'
@@ -1085,13 +1085,13 @@ class XMLReaderVersion24Test(XMLReaderTestCase):
     def testGUID(self):
         guid = self.writeAndReadGUID('<tasks>\n<guid>\nGUID\n</guid>\n</tasks>')
         self.assertEqual('GUID', guid)
-        
+
 
 class XMLReaderVersion26Test(XMLReaderTestCase):
     tskversion = 26  # New in release 0.75.0
 
     # Release 0.75.0 introduces percentage complete for tasks
-    
+ 
     def testPercentageComplete(self):   
         tasks = self.writeAndReadTasks(\
             '<tasks>\n<task subject="Task" percentageComplete="50"/>\n'
@@ -1101,27 +1101,27 @@ class XMLReaderVersion26Test(XMLReaderTestCase):
 
 class XMLReaderVersion27Test(XMLReaderTestCase):
     tskversion = 27  # New in release 0.76.0
-    
+ 
     # Release 0.76.0 introduces exclusive subcategories
-    
+ 
     def testExclusiveSubcategories(self):
         categories = self.writeAndReadCategories(\
             '<categories>\n'
             '<category subject="Category" exclusiveSubcategories="True" />\n'
             '</categories>\n')
         self.failUnless(categories[0].hasExclusiveSubcategories())
-        
+     
     def testNoExclusiveSubcategoriesByDefault(self):
         categories = self.writeAndReadCategories(\
             '<categories>\n'
             '<category subject="Category" />\n'
             '</categories>\n')
         self.failIf(categories[0].hasExclusiveSubcategories())
-        
+     
 
 class XMLReaderVersion28Test(XMLReaderTestCase):
     tskversion = 28  # New in release 0.78.0
-    
+ 
     # Release 0.78.0 introduces foreground colors and fonts that can be set per object.
 
     def testTaskForegroundColor(self):
@@ -1129,7 +1129,7 @@ class XMLReaderVersion28Test(XMLReaderTestCase):
             '<tasks>\n<task subject="Task" fgColor="(255,0,0)"/>\n'
             '</tasks>\n')
         self.assertEqual(wx.RED, tasks[0].foregroundColor())
-    
+ 
     def testTaskBackgroundColor(self):
         tasks = self.writeAndReadTasks(\
             '<tasks>\n<task subject="Task" bgColor="(255,0,0)"/>\n'
@@ -1141,31 +1141,31 @@ class XMLReaderVersion28Test(XMLReaderTestCase):
             '<categories>\n<category subject="Category" fgColor="(255,0,0)"/>\n'
             '</categories>\n')
         self.assertEqual(wx.RED, categories[0].foregroundColor())
-        
+     
     def testCategoryBackgroundColor(self):
         categories = self.writeAndReadCategories(\
             '<categories>\n<category subject="Category" bgColor="(255,0,0)"/>\n'
             '</categories>\n')
         self.assertEqual(wx.RED, categories[0].backgroundColor())
-        
+     
     def testNoteForegroundColor(self):
         notes = self.writeAndReadNotes(\
             '<notes>\n<note subject="Note" fgColor="(255,0,0)"/>\n'
             '</notes>\n')
         self.assertEqual(wx.RED, notes[0].foregroundColor())
-        
+     
     def testNoteBackgroundColor(self):
         notes = self.writeAndReadNotes(\
             '<notes>\n<note subject="Note" bgColor="(255,0,0)"/>\n'
             '</notes>\n')
         self.assertEqual(wx.RED, notes[0].backgroundColor())
-        
+     
     def testTaskFont(self):
         tasks = self.writeAndReadTasks(\
             '<tasks>\n<task subject="Task" font="%s"/>\n'
             '</tasks>\n' % wx.NORMAL_FONT.GetNativeFontInfoDesc())
         self.assertEqual(wx.NORMAL_FONT, tasks[0].font())
-        
+     
     def testNoTaskFont(self):
         tasks = self.writeAndReadTasks(\
             '<tasks>\n<task subject="Task"/>\n</tasks>\n')
@@ -1246,7 +1246,7 @@ class XMLReaderVersion29Test(XMLReaderTestCase):
 
 class XMLReaderVersion30Test(XMLReaderTestCase):
     tskversion = 30  # New in release 1.1.0.
-    
+ 
     def testStartDateTime(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -1277,7 +1277,7 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
         </tasks>\n''')
         self.assertEqual(date.DateTime(2005, 1, 1, 22, 1, 30, 456),
                          tasks[0].plannedStartDateTime())
-        
+     
     def testDueDateTime(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -1316,7 +1316,7 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
         </tasks>\n''')
         self.assertEqual(date.DateTime(2005, 1, 1, 22, 1, 30, 456000),
                          tasks[0].dueDateTime())
-        
+     
     def testCompletionDateTime(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -1357,7 +1357,7 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
             <task font=""/>
         </tasks>\n''')
         self.assertEqual(None, tasks[0].font())
-        
+     
     def testHelveticaMacFont(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -1368,7 +1368,7 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
             self.assertEqual(11, size)
         else:  # pragma: no cover
             self.failUnless(size > 0)
-        
+     
     def testSans9LinuxFont(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -1383,24 +1383,24 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
 
 class XMLReaderVersion31Test(XMLReaderTestCase):
     tskversion = 31  # New in release 1.2.0.
-    
+ 
     def writeAndReadTasks(self, *args, **kwargs):
         tasks = super(XMLReaderVersion31Test, self).writeAndReadTasks(*args, 
                                                                       **kwargs)
         tasksById = dict()
-        
+     
         def collectIds(tasks):
             for eachTask in tasks:
                 tasksById[eachTask.id()] = eachTask
                 collectIds(eachTask.children())
-                
+             
         collectIds(tasks)
         return tasksById
-    
+ 
     def assertDepends(self, prerequisite, dependency):
         self.failUnless(prerequisite in dependency.prerequisites())
         self.failUnless(dependency in prerequisite.dependencies())
-        
+     
     def testOnePrerequisite(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -1408,7 +1408,7 @@ class XMLReaderVersion31Test(XMLReaderTestCase):
             <task id="2" prerequisites="1"/>
         </tasks>\n''')
         self.assertDepends(tasks['1'], tasks['2'])
-        
+     
     def testTwoPrerequisites(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -1418,7 +1418,7 @@ class XMLReaderVersion31Test(XMLReaderTestCase):
         </tasks>\n''')
         self.assertDepends(tasks['1'], tasks['2'])
         self.assertDepends(tasks['3'], tasks['2'])
-        
+     
     def testChainOfPrerequisites(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -1438,7 +1438,7 @@ class XMLReaderVersion31Test(XMLReaderTestCase):
             <task id="2" prerequisites="1.1"/>
         </tasks>\n''')
         self.assertDepends(tasks['1.1'], tasks['2'])
-        
+     
     def testInterSubTaskPrerequisite(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -1467,7 +1467,7 @@ class XMLReaderVersion31Test(XMLReaderTestCase):
         </tasks>\n''')
         self.assertDepends(tasks['1'], tasks['1.1'])
         self.assertDepends(tasks['1.1'], tasks['1'])
-                
+             
     def testSelfPrerequisite(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -1478,7 +1478,7 @@ class XMLReaderVersion31Test(XMLReaderTestCase):
 
 class XMLReaderVersion33Test(XMLReaderTestCase):
     tskversion = 33  # New in release 1.2.24.
-    
+ 
     def testReminderBeforeSnooze(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -1519,7 +1519,7 @@ class XMLReaderVersion33Test(XMLReaderTestCase):
 
 class XMLReaderVersion34Test(XMLReaderTestCase):
     tskversion = 34  # New in release 1.3.5.
-    
+ 
     def testPlannedStartDateTime(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -1581,7 +1581,7 @@ class XMLReaderVersion34Test(XMLReaderTestCase):
         </tasks>\n''')
         self.assertEqual(date.DateTime(2005, 1, 1, 22, 1, 30, 456),
                          tasks[0].actualStartDateTime())
-        
+     
     def testTaskWithNoteWithCategory(self):
         tasks, categories = self.writeAndReadTasksAndCategories('''
         <tasks>
@@ -1606,7 +1606,7 @@ class XMLReaderVersion35Test(XMLReaderTestCase):
         </tasks>''')
         self.assertEqual(date.DateTime(2000, 1, 10, 13, 13, 13), 
                          tasks[0].recurrence().stop_datetime)
-        
+     
     def testCreationDateTimeIsSetToMinDateTime(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -1617,7 +1617,7 @@ class XMLReaderVersion35Test(XMLReaderTestCase):
 
 class XMLReaderVersion36Test(XMLReaderTestCase):
     tskversion = 36  # New in release 1.3.21
-    
+ 
     def testCreationDateTime(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -1637,7 +1637,7 @@ class XMLReaderVersion37Test(XMLReaderTestCase):
         </tasks>''')
         self.assertEqual(date.DateTime(2012, 12, 12, 12, 0, 0, 12345),
                          tasks[0].modificationDateTime())
-        
+     
     def testModificationDateTimeWithOtherAttributes(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -1677,3 +1677,72 @@ class XMLReaderVersion37Test(XMLReaderTestCase):
         </tasks>''')
         self.assertEqual(date.DateTime(2012, 12, 12, 23, 59, 0, 0),
                          tasks[0].completionDateTime())
+
+    def testTaskNoteCategory(self):
+        categories = self.writeAndReadCategories('''
+        <tasks>
+          <task>
+            <note id="noteid" />
+          </task>
+          <category categorizables="noteid" />
+        </tasks>''')
+        self.assert_('noteid' in [obj.id() for obj in categories[0].categorizables()])
+
+    def testSubtaskNoteCategory(self):
+        categories = self.writeAndReadCategories('''
+        <tasks>
+          <task>
+            <task>
+              <note id="noteid" />
+            </task>
+          </task>
+          <category categorizables="noteid" />
+        </tasks>''')
+        self.assert_('noteid' in [obj.id() for obj in categories[0].categorizables()])
+
+    def testCategoryNoteCategory(self):
+        categories = self.writeAndReadCategories('''
+        <tasks>
+          <category categorizables="noteid">
+            <note id="noteid" />
+          </category>
+        </tasks>''')
+        self.assert_('noteid' in [obj.id() for obj in categories[0].categorizables()])
+
+    def testSubcategoryNoteCategory(self):
+        categories = self.writeAndReadCategories('''
+        <tasks>
+          <category categorizables="noteid">
+            <category>
+              <note id="noteid" />
+            </category>
+
+          </category>
+        </tasks>''')
+        self.assert_('noteid' in [obj.id() for obj in categories[0].categorizables()])
+
+    def testTaskAttachmentNoteCategory(self):
+        categories = self.writeAndReadCategories('''
+        <tasks>
+          <task>
+            <attachment location="test" type="file">
+              <note id="noteid" />
+            </attachment>
+          </task>
+          <category categorizables="noteid" />
+        </tasks>''')
+        self.assert_('noteid' in [obj.id() for obj in categories[0].categorizables()])
+
+    def testSubtaskAttachmentNoteCategory(self):
+        categories = self.writeAndReadCategories('''
+        <tasks>
+          <task subject="Task">
+            <task subject="Subtask">
+              <attachment location="test" type="file" subject="Attachment">
+                <note id="noteid" subject="Note" />
+              </attachment>
+            </task>
+          </task>
+          <category categorizables="noteid" subject="Category" />
+        </tasks>''')
+        self.assert_('noteid' in [obj.id() for obj in categories[0].categorizables()])

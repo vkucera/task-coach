@@ -443,6 +443,16 @@ class AttachmentDropTargetMixin(object):
             to that new object. '''
         if item is None:
             itemDialogKwargs['subject'] = attachments[0].subject()
+            if self.settings.get('view', 'defaultplannedstartdatetime').startswith('preset'):
+                itemDialogKwargs['plannedStartDateTime'] = task.Task.suggestedPlannedStartDateTime()
+            if self.settings.get('view', 'defaultduedatetime').startswith('preset'):
+                itemDialogKwargs['dueDateTime'] = task.Task.suggestedDueDateTime()
+            if self.settings.get('view', 'defaultactualstartdatetime').startswith('preset'):
+                itemDialogKwargs['actualStartDateTime'] = task.Task.suggestedActualStartDateTime()
+            if self.settings.get('view', 'defaultcompletiondatetime').startswith('preset'):
+                itemDialogKwargs['completionDateTime'] = task.Task.suggestedCompletionDateTime()
+            if self.settings.get('view', 'defaultreminderdatetime').startswith('preset'):
+                itemDialogKwargs['reminder'] = task.Task.suggestedReminderDateTime()
             newItemDialog = self.newItemDialog(bitmap='new',
                 attachments=attachments, **itemDialogKwargs)
             newItemDialog.Show()

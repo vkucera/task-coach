@@ -112,3 +112,37 @@ class DateTimeCtrl(wx.Panel):
 
     def Cleanup(self):
         self.__ctrl.Cleanup()
+
+
+class TimeEntry(wx.Panel):
+    def __init__(self, parent, value, defaultValue=0, disabledValue=None, disabledMessage=None):
+        super(TimeEntry, self).__init__(parent)
+
+        self.__disabledValue = disabledValue
+
+        sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.__entry = sdtc.TimeEntry(self, format=lambda x: render.time(x, minutes=False),
+                                      hour=defaultValue, minute=0, second=0)
+        self.__entry.EnableChoices()
+        sizer.Add(self.__entry, 0, wx.ALL, 3)
+
+        if disabledMessage is not None:
+            self.__checkbox = wx.CheckBox(self, wx.ID_ANY, disabledMessage)
+            self.Bind(wx.EVT_CHECKBOX, self.OnCheck)
+            if value == disabledValue:
+                self.__checkbox.SetValue(True)
+                self.__entry.Enable(False)
+            else:
+                self.__entry.SetTime(date.Time(hour=value, minute=0, second=0))
+            sizer.Add(self.__checkbox, 1, wx.ALL, 3)
+        else:
+            self.__checkbox = None
+        self.SetSizer(sizer)
+
+    def OnCheck(self, event):
+        self.__entry.Enable(not event.IsChecked())
+
+    def GetValue(self):
+        if self.__checkbox is not None and self.__checkbox.GetValue():
+            return self.__disabledValue
+        return self.__entry.GetTime().hour

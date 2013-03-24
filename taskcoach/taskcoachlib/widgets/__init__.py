@@ -25,7 +25,7 @@ from checklistbox import CheckListBox
 from treectrl import CheckTreeCtrl, TreeListCtrl
 from squaremap import SquareMap
 from timeline import Timeline
-from datectrl import DateTimeCtrl
+from datectrl import DateTimeCtrl, TimeEntry
 from textctrl import SingleLineTextCtrl, MultiLineTextCtrl, StaticTextWithToolTip
 from panel import PanelWithBoxSizer, BoxWithFlexGridSizer, BoxWithBoxSizer
 from searchctrl import SearchCtrl

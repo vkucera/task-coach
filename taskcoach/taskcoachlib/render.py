@@ -157,10 +157,12 @@ elif operating_system.isMac():
     _shortFormatter.setFormatterBehavior_(Cocoa.NSDateFormatterBehavior10_4)
     _shortFormatter.setTimeStyle_(Cocoa.NSDateFormatterShortStyle)
     _shortFormatter.setDateStyle_(Cocoa.NSDateFormatterNoStyle)
+    _shortFormatter.setTimeZone_(Cocoa.NSTimeZone.timeZoneForSecondsFromGMT_(0))
     _mediumFormatter = Cocoa.NSDateFormatter.alloc().init()
     _mediumFormatter.setFormatterBehavior_(Cocoa.NSDateFormatterBehavior10_4)
     _mediumFormatter.setTimeStyle_(Cocoa.NSDateFormatterMediumStyle)
     _mediumFormatter.setDateStyle_(Cocoa.NSDateFormatterNoStyle)
+    _mediumFormatter.setTimeZone_(Cocoa.NSTimeZone.timeZoneForSecondsFromGMT_(0))
     # Special case for hour without minutes or seconds. I don't know if it is possible to get the AM/PM
     # setting alone, so parse the format string instead.
     # See http://www.unicode.org/reports/tr35/tr35-25.html#Date_Format_Patterns
@@ -186,15 +188,15 @@ elif operating_system.isMac():
     _hourFormatter = Cocoa.NSDateFormatter.alloc().init()
     _hourFormatter.setFormatterBehavior_(Cocoa.NSDateFormatterBehavior10_4)
     _hourFormatter.setDateFormat_(_hourFormat + (' %s' % _ampmFormat if _ampmFormat else ''))
+    _hourFormatter.setTimeZone_(Cocoa.NSTimeZone.timeZoneForSecondsFromGMT_(0))
     _dateFormatter = Cocoa.NSDateFormatter.alloc().init()
     _dateFormatter.setFormatterBehavior_(Cocoa.NSDateFormatterBehavior10_4)
     _dateFormatter.setDateStyle_(Cocoa.NSDateFormatterShortStyle)
     _dateFormatter.setTimeStyle_(Cocoa.NSDateFormatterNoStyle)
+    _dateFormatter.setTimeZone_(Cocoa.NSTimeZone.timeZoneForSecondsFromGMT_(0))
 
     def _applyFormatter(dt, fmt):
-        # We don't use time zones internally so the datetime object 'thinks' it's UTC. But
-        # NSDate.dateWithTimeIntervalSince1970 expects local time... So use a difference...
-        dt_native = Cocoa.NSDate.dateWithTimeIntervalSinceNow_((dt - datetime.datetime.now()).total_seconds())
+        dt_native = Cocoa.NSDate.dateWithTimeIntervalSince1970_((dt - datetime.datetime(1970, 1, 1, 0, 0, 0, 0)).total_seconds())
         return fmt.stringFromDate_(dt_native)
 
     def rawTimeFunc(dt, minutes=True, seconds=False):
