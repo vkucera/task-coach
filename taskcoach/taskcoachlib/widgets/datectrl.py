@@ -133,7 +133,8 @@ class TimeEntry(wx.Panel):
                 self.__checkbox.SetValue(True)
                 self.__entry.Enable(False)
             else:
-                self.__entry.SetValue((value,))
+                print 'XXX'
+                self.__entry.SetTime(date.Time(hour=value, minute=0, second=0))
             sizer.Add(self.__checkbox, 1, wx.ALL, 3)
         else:
             self.__checkbox = None
