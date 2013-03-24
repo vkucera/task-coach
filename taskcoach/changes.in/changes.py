@@ -34,6 +34,8 @@ the task editor from opening on OS X.''', '1395'),
         Bugv2('''Use presets for tasks created through mail DnD.''', '1403'),
         Bugv2('''Fix loading of categories for notes belonging to
 a subtask, and other such imbrications.''', '1404'),
+        Bugv2('''Fix preferences opening when end of work day is set to 24.''',
+              '1394'),
         ],
     ),
 
