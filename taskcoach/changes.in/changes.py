@@ -23,8 +23,12 @@ from changetypes import *
 releases = [
 
 Release('1.3.29', 'April ??, 2013',
-    summary='''This is a bugfix release.''',
+    summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
+        ],
+    featuresAdded=[
+        Feature('''Display a few days of previous and next month in
+the calendar popup.'''),
         ],
     ),
 
