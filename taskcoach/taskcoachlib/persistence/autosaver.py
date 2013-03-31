@@ -48,4 +48,4 @@ class AutoSaver(object):
         while self.__task_stores:
             task_store = self.__task_stores.pop()
             if self._needSave(task_store):
-                task_store.saveSession()
+                task_store.save()
