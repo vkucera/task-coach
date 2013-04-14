@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-16 18:16+0000\n"
+"POT-Creation-Date: 2013-03-24 21:51+0000\n"
 "PO-Revision-Date: 2013-03-06 03:27+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-24 16:12+0000\n"
-"X-Generator: Launchpad (build 16540)\n"
+"X-Launchpad-Export-Date: 2013-04-14 16:21+0000\n"
+"X-Generator: Launchpad (build 16564)\n"
 
 #: taskcoachlib/application/application.py:54
 msgid "Errors have occured. Please see \"%s\""
@@ -603,7 +603,7 @@ msgid "45 minutes"
 msgstr "45 minut"
 
 #: taskcoachlib/domain/date/snooze.py:25
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1699
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1705
 msgid "1 hour"
 msgstr "1 hodina"
 
@@ -652,7 +652,7 @@ msgid "2 weeks"
 msgstr "2 týdny"
 
 #: taskcoachlib/domain/date/snooze.py:30
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1687
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1693
 msgid "1 week"
 msgstr "1 týden"
 
@@ -1142,7 +1142,7 @@ msgid "See:"
 msgstr "Viz:"
 
 #: taskcoachlib/gui/dialog/editor.py:93 taskcoachlib/gui/dialog/editor.py:147
-#: taskcoachlib/gui/dialog/editor.py:1264
+#: taskcoachlib/gui/dialog/editor.py:1270
 #: taskcoachlib/gui/viewer/attachment.py:89
 #: taskcoachlib/gui/viewer/category.py:90
 #: taskcoachlib/gui/viewer/effort.py:203 taskcoachlib/gui/viewer/note.py:114
@@ -1167,7 +1167,7 @@ msgid "Subject"
 msgstr "Předmět"
 
 #: taskcoachlib/gui/dialog/editor.py:131
-#: taskcoachlib/gui/dialog/editor.py:1250
+#: taskcoachlib/gui/dialog/editor.py:1256
 msgid "Edit to change all descriptions"
 msgstr "Změnit všechny popisy"
 
@@ -1219,22 +1219,22 @@ msgid "Appearance"
 msgstr "Vzhled"
 
 #: taskcoachlib/gui/dialog/editor.py:316
-#: taskcoachlib/gui/dialog/preferences.py:155
+#: taskcoachlib/gui/dialog/preferences.py:153
 msgid "Foreground color"
 msgstr "Barva popředí"
 
 #: taskcoachlib/gui/dialog/editor.py:317
-#: taskcoachlib/gui/dialog/preferences.py:155
+#: taskcoachlib/gui/dialog/preferences.py:153
 msgid "Background color"
 msgstr "Barva pozadí"
 
 #: taskcoachlib/gui/dialog/editor.py:343
-#: taskcoachlib/gui/dialog/preferences.py:156
+#: taskcoachlib/gui/dialog/preferences.py:154
 msgid "Font"
 msgstr "Písmo"
 
 #: taskcoachlib/gui/dialog/editor.py:352
-#: taskcoachlib/gui/dialog/preferences.py:156
+#: taskcoachlib/gui/dialog/preferences.py:154
 msgid "Icon"
 msgstr "Ikona"
 
@@ -1391,24 +1391,24 @@ msgid "Start"
 msgstr "Start"
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1589
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1595
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Week(s)"
 msgstr "Týdnů"
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1590
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1596
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Day(s)"
 msgstr "Dnů"
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1591
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1597
 msgid "Hour(s)"
 msgstr "Hodin(a)"
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1592
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1598
 msgid "Minute(s)"
 msgstr "Minut(a)"
 
@@ -1424,47 +1424,47 @@ msgstr "Začít měřit od posledního přerušení"
 msgid "Stop tracking now"
 msgstr "Zastavit sledování nyní"
 
-#: taskcoachlib/gui/dialog/editor.py:1230
+#: taskcoachlib/gui/dialog/editor.py:1236
 msgid "Warning: start must be earlier than stop"
 msgstr "Varování: začátek musí být dřív než konec"
 
-#: taskcoachlib/gui/dialog/editor.py:1392
+#: taskcoachlib/gui/dialog/editor.py:1398
 msgid "Multiple tasks"
 msgstr "Mnoho úkolů"
 
-#: taskcoachlib/gui/dialog/editor.py:1393
+#: taskcoachlib/gui/dialog/editor.py:1399
 msgid "%s (task)"
 msgstr "%s (úkol)"
 
-#: taskcoachlib/gui/dialog/editor.py:1398
+#: taskcoachlib/gui/dialog/editor.py:1404
 msgid "Multiple categories"
 msgstr "Mnoho kategorií"
 
-#: taskcoachlib/gui/dialog/editor.py:1399
+#: taskcoachlib/gui/dialog/editor.py:1405
 msgid "%s (category)"
 msgstr "%s (kategorie)"
 
-#: taskcoachlib/gui/dialog/editor.py:1404
+#: taskcoachlib/gui/dialog/editor.py:1410
 msgid "Multiple notes"
 msgstr "Mnoho poznámek"
 
-#: taskcoachlib/gui/dialog/editor.py:1405
+#: taskcoachlib/gui/dialog/editor.py:1411
 msgid "%s (note)"
 msgstr "%s (poznámka)"
 
-#: taskcoachlib/gui/dialog/editor.py:1410
+#: taskcoachlib/gui/dialog/editor.py:1416
 msgid "Multiple attachments"
 msgstr "Mnoho příloh"
 
-#: taskcoachlib/gui/dialog/editor.py:1411
+#: taskcoachlib/gui/dialog/editor.py:1417
 msgid "%s (attachment)"
 msgstr "%s (příloha)"
 
-#: taskcoachlib/gui/dialog/editor.py:1416
+#: taskcoachlib/gui/dialog/editor.py:1422
 msgid "Multiple efforts"
 msgstr "Mnoho úsilí"
 
-#: taskcoachlib/gui/dialog/editor.py:1417
+#: taskcoachlib/gui/dialog/editor.py:1423
 msgid "%s (effort)"
 msgstr "%s (úsilí)"
 
@@ -1666,11 +1666,11 @@ msgstr "Pokud máte firewall, také ověřte, že máte otevřeny porty 4096-410
 msgid "OK"
 msgstr "OK"
 
-#: taskcoachlib/gui/dialog/preferences.py:296
+#: taskcoachlib/gui/dialog/preferences.py:294
 msgid "This setting will take effect after you restart %s"
 msgstr "Toto nastavení se projeví až po restartu %s"
 
-#: taskcoachlib/gui/dialog/preferences.py:298
+#: taskcoachlib/gui/dialog/preferences.py:296
 msgid ""
 "This setting can be overridden for individual tasks\n"
 "in the task edit dialog."
@@ -1678,15 +1678,15 @@ msgstr ""
 "Toto nastavení lze potlačit v jednotlivých úkolech\n"
 "pomocí dialogového okna úpravy úkolu."
 
-#: taskcoachlib/gui/dialog/preferences.py:345
+#: taskcoachlib/gui/dialog/preferences.py:343
 msgid "Files"
 msgstr "Soubory"
 
-#: taskcoachlib/gui/dialog/preferences.py:351
+#: taskcoachlib/gui/dialog/preferences.py:349
 msgid "Auto save after every change"
 msgstr "Automaticky uložit po každé změně"
 
-#: taskcoachlib/gui/dialog/preferences.py:353
+#: taskcoachlib/gui/dialog/preferences.py:351
 msgid ""
 "Create a backup copy before\n"
 "overwriting a %s file"
@@ -1694,7 +1694,7 @@ msgstr ""
 "Vytvořit záložní kopii před\n"
 "přepsáním souboru %s"
 
-#: taskcoachlib/gui/dialog/preferences.py:355
+#: taskcoachlib/gui/dialog/preferences.py:353
 msgid ""
 "Save settings (%s.ini) in the same\n"
 "directory as the program"
@@ -1702,15 +1702,15 @@ msgstr ""
 "Uložit nastavení (%s.ini)\n"
 "do adresáře programu"
 
-#: taskcoachlib/gui/dialog/preferences.py:357
+#: taskcoachlib/gui/dialog/preferences.py:355
 msgid "For running %s from a removable medium"
 msgstr "Pro používání %s z přenosného média"
 
-#: taskcoachlib/gui/dialog/preferences.py:359
+#: taskcoachlib/gui/dialog/preferences.py:357
 msgid "Attachment base directory"
 msgstr "Adresář pro přílohy"
 
-#: taskcoachlib/gui/dialog/preferences.py:360
+#: taskcoachlib/gui/dialog/preferences.py:358
 msgid ""
 "When adding an attachment, try to make\n"
 "its path relative to this one."
@@ -1718,16 +1718,16 @@ msgstr ""
 "Při přidání přílohy, vyzkoušet\n"
 "možnost relativní cesty."
 
-#: taskcoachlib/gui/dialog/preferences.py:363
+#: taskcoachlib/gui/dialog/preferences.py:361
 msgid "Before saving, automatically import from"
 msgstr "Před uložením automaticky importovat z"
 
-#: taskcoachlib/gui/dialog/preferences.py:364
-#: taskcoachlib/gui/dialog/preferences.py:370
+#: taskcoachlib/gui/dialog/preferences.py:362
+#: taskcoachlib/gui/dialog/preferences.py:368
 msgid "Todo.txt format"
 msgstr "Formát Todo.txt"
 
-#: taskcoachlib/gui/dialog/preferences.py:365
+#: taskcoachlib/gui/dialog/preferences.py:363
 msgid ""
 "Before saving, %s automatically imports tasks\n"
 "from a Todo.txt file with the same name as the task file,\n"
@@ -1737,11 +1737,11 @@ msgstr ""
 "ze souboru Todo.txt se stejným názvem, jako\n"
 "soubor úkolů, ale s příponou .txt"
 
-#: taskcoachlib/gui/dialog/preferences.py:369
+#: taskcoachlib/gui/dialog/preferences.py:367
 msgid "When saving, automatically export to"
 msgstr "Při uložení automaticky exportuj do"
 
-#: taskcoachlib/gui/dialog/preferences.py:371
+#: taskcoachlib/gui/dialog/preferences.py:369
 msgid ""
 "When saving, %s automatically exports tasks\n"
 "to a Todo.txt file with the same name as the task file,\n"
@@ -1751,55 +1751,55 @@ msgstr ""
 "do souboru Todo.txt se stejným názvem, jako\n"
 "soubor úkolů, ale s příponou .txt"
 
-#: taskcoachlib/gui/dialog/preferences.py:379
+#: taskcoachlib/gui/dialog/preferences.py:377
 msgid "Window behavior"
 msgstr "Chování okna"
 
-#: taskcoachlib/gui/dialog/preferences.py:386
+#: taskcoachlib/gui/dialog/preferences.py:384
 msgid "Show splash screen on startup"
 msgstr "Zobrazit úvodní obrazovku při startu"
 
-#: taskcoachlib/gui/dialog/preferences.py:388
+#: taskcoachlib/gui/dialog/preferences.py:386
 msgid "Show tips window on startup"
 msgstr "Zobraz tipy při startu"
 
-#: taskcoachlib/gui/dialog/preferences.py:390
+#: taskcoachlib/gui/dialog/preferences.py:388
 msgid "Start with the main window iconized"
 msgstr "Spustit minimalizované v systémové liště"
 
-#: taskcoachlib/gui/dialog/preferences.py:391
+#: taskcoachlib/gui/dialog/preferences.py:389
 msgid "Always"
 msgstr "Vždy"
 
-#: taskcoachlib/gui/dialog/preferences.py:391
+#: taskcoachlib/gui/dialog/preferences.py:389
 msgid "Never"
 msgstr "Nikdy"
 
-#: taskcoachlib/gui/dialog/preferences.py:393
+#: taskcoachlib/gui/dialog/preferences.py:391
 msgid "If it was iconized last session"
 msgstr "Pokud bylo ikonizováno minule"
 
-#: taskcoachlib/gui/dialog/preferences.py:394
+#: taskcoachlib/gui/dialog/preferences.py:392
 msgid "Check for new version of %(name)s on startup"
 msgstr "Kontrolovat nové verze %(name)s při startu"
 
-#: taskcoachlib/gui/dialog/preferences.py:396
+#: taskcoachlib/gui/dialog/preferences.py:394
 msgid "Check for messages from the %(name)s developers on startup"
 msgstr "Při spuštění zkontrolovat zprávy od vývojářů %(name)s"
 
-#: taskcoachlib/gui/dialog/preferences.py:400
+#: taskcoachlib/gui/dialog/preferences.py:398
 msgid "Hide main window when iconized"
 msgstr "Schovat hlavní okno aplikace při minimalizaci"
 
-#: taskcoachlib/gui/dialog/preferences.py:402
+#: taskcoachlib/gui/dialog/preferences.py:400
 msgid "Minimize main window when closed"
 msgstr "Minimalizovat hlavní okno aplikace při zavření"
 
-#: taskcoachlib/gui/dialog/preferences.py:404
+#: taskcoachlib/gui/dialog/preferences.py:402
 msgid "Make clock in the task bar tick when tracking effort"
 msgstr "Tikání hodin při plnění pracovního plánu"
 
-#: taskcoachlib/gui/dialog/preferences.py:406
+#: taskcoachlib/gui/dialog/preferences.py:404
 msgid ""
 "Show a popup with the description of an item\n"
 "when hovering over it"
@@ -1807,16 +1807,16 @@ msgstr ""
 "Ukaž bublinu s popisem předmětu\\n\n"
 "při najetí myši"
 
-#: taskcoachlib/gui/dialog/preferences.py:413
-#: taskcoachlib/gui/dialog/preferences.py:476
+#: taskcoachlib/gui/dialog/preferences.py:411
+#: taskcoachlib/gui/dialog/preferences.py:474
 msgid "Language"
 msgstr "Jazyk"
 
-#: taskcoachlib/gui/dialog/preferences.py:419
+#: taskcoachlib/gui/dialog/preferences.py:417
 msgid "Let the system determine the language"
 msgstr "Vybrat jazyk podle systému"
 
-#: taskcoachlib/gui/dialog/preferences.py:484
+#: taskcoachlib/gui/dialog/preferences.py:482
 msgid ""
 "If your language is not available, or the translation needs improving, "
 "please consider helping. See:"
@@ -1824,15 +1824,15 @@ msgstr ""
 "Pokud váš jazyk není dostupný, nebo je třeba překlad změnit, můžete nám "
 "pomoci. Viz:"
 
-#: taskcoachlib/gui/dialog/preferences.py:492
+#: taskcoachlib/gui/dialog/preferences.py:490
 msgid "Language not found?"
 msgstr "Jazyk nenalezen?"
 
-#: taskcoachlib/gui/dialog/preferences.py:502
+#: taskcoachlib/gui/dialog/preferences.py:500
 msgid "Task appearance"
 msgstr "Vzhled úkolu"
 
-#: taskcoachlib/gui/dialog/preferences.py:515
+#: taskcoachlib/gui/dialog/preferences.py:513
 msgid ""
 "These appearance settings can be overridden for individual tasks in the task "
 "edit dialog."
@@ -1840,57 +1840,62 @@ msgstr ""
 "Tyto nastavení vzhledu lze potlačit v jednotlivých úkolech pomocí "
 "dialogového okna úpravy úkolu."
 
-#: taskcoachlib/gui/dialog/preferences.py:522
+#: taskcoachlib/gui/dialog/preferences.py:520
 msgid "Features"
 msgstr "Vlastnosti"
 
-#: taskcoachlib/gui/dialog/preferences.py:528
+#: taskcoachlib/gui/dialog/preferences.py:526
 msgid "All settings on this tab require a restart of %s to take effect"
 msgstr "Všechna nastavení v této kartě vyžadují restart %s aby nabyly účinku"
 
-#: taskcoachlib/gui/dialog/preferences.py:531
+#: taskcoachlib/gui/dialog/preferences.py:529
 msgid "Allow for tracking effort"
 msgstr "Povolit sledování práce"
 
-#: taskcoachlib/gui/dialog/preferences.py:532
+#: taskcoachlib/gui/dialog/preferences.py:530
 msgid "Allow for taking notes"
 msgstr "Povolit poznámky"
 
-#: taskcoachlib/gui/dialog/preferences.py:538
+#: taskcoachlib/gui/dialog/preferences.py:536
 msgid "Enable SyncML"
 msgstr "Povolit SyncML"
 
-#: taskcoachlib/gui/dialog/preferences.py:540
+#: taskcoachlib/gui/dialog/preferences.py:538
 msgid "Enable iPhone synchronization"
 msgstr "Povolit synchronizaci iPhonu"
 
-#: taskcoachlib/gui/dialog/preferences.py:543
+#: taskcoachlib/gui/dialog/preferences.py:541
 msgid "Use X11 session management"
 msgstr "Použít správu sezení X11"
 
-#: taskcoachlib/gui/dialog/preferences.py:544
+#: taskcoachlib/gui/dialog/preferences.py:542
 msgid "Start of work week"
 msgstr "Začátek pracovního týdne"
 
-#: taskcoachlib/gui/dialog/preferences.py:545
+#: taskcoachlib/gui/dialog/preferences.py:543
 #: taskcoachlib/gui/viewer/effort.py:227
 msgid "Monday"
 msgstr "Pondělí"
 
-#: taskcoachlib/gui/dialog/preferences.py:546
+#: taskcoachlib/gui/dialog/preferences.py:544
 #: taskcoachlib/gui/viewer/effort.py:245
 msgid "Sunday"
 msgstr "Neděle"
 
-#: taskcoachlib/gui/dialog/preferences.py:548
+#: taskcoachlib/gui/dialog/preferences.py:546
 msgid "Hour of start of work day"
 msgstr "Hodina začátku pracovního dne"
 
-#: taskcoachlib/gui/dialog/preferences.py:550
+#: taskcoachlib/gui/dialog/preferences.py:548
 msgid "Hour of end of work day"
 msgstr "Hodina konce pracovního dne"
 
-#: taskcoachlib/gui/dialog/preferences.py:552
+#: taskcoachlib/gui/dialog/preferences.py:548
+#: taskcoachlib/gui/dialog/preferences.py:610
+msgid "End of day"
+msgstr "Konec dne"
+
+#: taskcoachlib/gui/dialog/preferences.py:551
 msgid ""
 "Use gradients in calendar views.\n"
 "This may slow down Task Coach."
@@ -1898,11 +1903,11 @@ msgstr ""
 "Použít gradienty v zobrazení kalendáře.\n"
 "Může to zpomalit Task Coach."
 
-#: taskcoachlib/gui/dialog/preferences.py:555
+#: taskcoachlib/gui/dialog/preferences.py:554
 msgid "Minutes between suggested times"
 msgstr "Minuty mezi navrhovanými časy"
 
-#: taskcoachlib/gui/dialog/preferences.py:556
+#: taskcoachlib/gui/dialog/preferences.py:555
 msgid ""
 "In popup-menus for time selection (e.g. for setting the start \n"
 "time of an effort) %(name)s will suggest times using this \n"
@@ -1916,11 +1921,11 @@ msgstr ""
 "bude navrhnuto. Samozřejmě můžete také zadat jakoukoli \n"
 "dobu, kterou chcete."
 
-#: taskcoachlib/gui/dialog/preferences.py:565
+#: taskcoachlib/gui/dialog/preferences.py:564
 msgid "Idle time notice"
 msgstr "Doba upozornění při nečinnosti"
 
-#: taskcoachlib/gui/dialog/preferences.py:566
+#: taskcoachlib/gui/dialog/preferences.py:565
 msgid ""
 "If there is no user input for this amount of time\n"
 "(in minutes), %(name)s will ask what to do about current efforts."
@@ -1928,106 +1933,102 @@ msgstr ""
 "Pokud po tuto dobu nedojde ke vstupu od uživatele\n"
 "(v minutách), %(name)s se zeptá, co dále provést."
 
-#: taskcoachlib/gui/dialog/preferences.py:578
+#: taskcoachlib/gui/dialog/preferences.py:577
 msgid "Task dates"
 msgstr "Data úkolu"
 
-#: taskcoachlib/gui/dialog/preferences.py:586
+#: taskcoachlib/gui/dialog/preferences.py:585
 msgid "Mark parent task completed when all children are completed"
 msgstr ""
 "Označit nadřazený úkol za hotový, pokud jsou dokončeny všechny vnořené úkoly"
 
-#: taskcoachlib/gui/dialog/preferences.py:589
+#: taskcoachlib/gui/dialog/preferences.py:588
 msgid "Number of hours that tasks are considered to be 'due soon'"
 msgstr "Počet hodin, kdy se termín úkolu považuje za brzký"
 
-#: taskcoachlib/gui/dialog/preferences.py:591
+#: taskcoachlib/gui/dialog/preferences.py:590
 msgid "Nothing"
 msgstr "Nic"
 
-#: taskcoachlib/gui/dialog/preferences.py:593
+#: taskcoachlib/gui/dialog/preferences.py:592
 msgid "Changing the planned start date changes the due date"
 msgstr "Změna plánovaného začátku změní datum termínu"
 
-#: taskcoachlib/gui/dialog/preferences.py:595
+#: taskcoachlib/gui/dialog/preferences.py:594
 msgid "Changing the due date changes the planned start date"
 msgstr "Změna data termínu změní plánované datum zahájení"
 
-#: taskcoachlib/gui/dialog/preferences.py:597
+#: taskcoachlib/gui/dialog/preferences.py:596
 msgid ""
 "What to do with planned start and due date if the other one is changed"
 msgstr ""
 "Co provést s plánovaným datem zahájení a termínem, pokud je druhý změněn"
 
-#: taskcoachlib/gui/dialog/preferences.py:600
+#: taskcoachlib/gui/dialog/preferences.py:599
 msgid "Preset"
 msgstr "Předvolit"
 
-#: taskcoachlib/gui/dialog/preferences.py:601
+#: taskcoachlib/gui/dialog/preferences.py:600
 msgid "Propose"
 msgstr "Navrhnout"
 
-#: taskcoachlib/gui/dialog/preferences.py:602 taskcoachlib/render.py:128
+#: taskcoachlib/gui/dialog/preferences.py:601 taskcoachlib/render.py:128
 msgid "Today"
 msgstr "Dnes"
 
-#: taskcoachlib/gui/dialog/preferences.py:603 taskcoachlib/render.py:132
+#: taskcoachlib/gui/dialog/preferences.py:602 taskcoachlib/render.py:132
 msgid "Tomorrow"
 msgstr "Zítra"
 
-#: taskcoachlib/gui/dialog/preferences.py:604
+#: taskcoachlib/gui/dialog/preferences.py:603
 msgid "Day after tomorrow"
 msgstr "Pozítří"
 
-#: taskcoachlib/gui/dialog/preferences.py:605
+#: taskcoachlib/gui/dialog/preferences.py:604
 msgid "Next Friday"
 msgstr "Příští pátek"
 
-#: taskcoachlib/gui/dialog/preferences.py:606
+#: taskcoachlib/gui/dialog/preferences.py:605
 msgid "Next Monday"
 msgstr "Příští pondělí"
 
-#: taskcoachlib/gui/dialog/preferences.py:607
+#: taskcoachlib/gui/dialog/preferences.py:606
 msgid "Start of day"
 msgstr "Začátek dne"
 
-#: taskcoachlib/gui/dialog/preferences.py:608
+#: taskcoachlib/gui/dialog/preferences.py:607
 msgid "Start of working day"
 msgstr "Začátek pracovního dne"
 
-#: taskcoachlib/gui/dialog/preferences.py:609
+#: taskcoachlib/gui/dialog/preferences.py:608
 msgid "Current time"
 msgstr "Aktuální čas"
 
-#: taskcoachlib/gui/dialog/preferences.py:610
+#: taskcoachlib/gui/dialog/preferences.py:609
 msgid "End of working day"
 msgstr "Konec pracovního dne"
 
-#: taskcoachlib/gui/dialog/preferences.py:611
-msgid "End of day"
-msgstr "Konec dne"
-
-#: taskcoachlib/gui/dialog/preferences.py:613
+#: taskcoachlib/gui/dialog/preferences.py:612
 msgid "Default planned start date and time"
 msgstr "Výchozí datum a čas plánovaného zahájení"
 
-#: taskcoachlib/gui/dialog/preferences.py:616
+#: taskcoachlib/gui/dialog/preferences.py:615
 msgid "Default due date and time"
 msgstr "Implicitní datum a čas termínu"
 
-#: taskcoachlib/gui/dialog/preferences.py:619
+#: taskcoachlib/gui/dialog/preferences.py:618
 msgid "Default actual start date and time"
 msgstr "Výchozí datum a čas skutečného zahájení"
 
-#: taskcoachlib/gui/dialog/preferences.py:622
+#: taskcoachlib/gui/dialog/preferences.py:621
 msgid "Default completion date and time"
 msgstr "Implicitní datum a čas dokončení"
 
-#: taskcoachlib/gui/dialog/preferences.py:625
+#: taskcoachlib/gui/dialog/preferences.py:624
 msgid "Default reminder date and time"
 msgstr "Implicitní datum a čas připomínky"
 
-#: taskcoachlib/gui/dialog/preferences.py:632
+#: taskcoachlib/gui/dialog/preferences.py:631
 msgid ""
 "New tasks start with \"Preset\" dates and times filled in and checked. "
 "\"Proposed\" dates and times are filled in, but not checked.\n"
@@ -2048,75 +2049,75 @@ msgstr ""
 "\"Začátek\" a \"Konec pracovního dne\" používají pracovní dny zadané v kartě "
 "Funkce tohoto dialogového okna nastavení."
 
-#: taskcoachlib/gui/dialog/preferences.py:643
+#: taskcoachlib/gui/dialog/preferences.py:642
 msgid "Task reminders"
 msgstr "Připomínky úkolu"
 
-#: taskcoachlib/gui/dialog/preferences.py:653
+#: taskcoachlib/gui/dialog/preferences.py:652
 msgid "Notification system to use for reminders"
 msgstr "Systém připomínek"
 
-#: taskcoachlib/gui/dialog/preferences.py:657
+#: taskcoachlib/gui/dialog/preferences.py:656
 msgid "Let the computer say the reminder"
 msgstr "Ať počítač sdělí připomínku"
 
-#: taskcoachlib/gui/dialog/preferences.py:658
+#: taskcoachlib/gui/dialog/preferences.py:657
 msgid "(Needs espeak)"
 msgstr "(Vyžaduje espeak)"
 
-#: taskcoachlib/gui/dialog/preferences.py:663
+#: taskcoachlib/gui/dialog/preferences.py:662
 msgid "Default snooze time to use after reminder"
 msgstr "Výchozí čas odložení při připomenutí"
 
-#: taskcoachlib/gui/dialog/preferences.py:667
+#: taskcoachlib/gui/dialog/preferences.py:666
 msgid "Snooze times to offer in task reminder dialog"
 msgstr "Časy odložení, které budou nabídnuty na dialogu připomenutí"
 
-#: taskcoachlib/gui/dialog/preferences.py:675
+#: taskcoachlib/gui/dialog/preferences.py:674
 msgid "iPhone"
 msgstr "iPhone"
 
-#: taskcoachlib/gui/dialog/preferences.py:681
+#: taskcoachlib/gui/dialog/preferences.py:680
 msgid "Password for synchronization with iPhone"
 msgstr "Helso pro synchronizaci s iPhone"
 
-#: taskcoachlib/gui/dialog/preferences.py:682
+#: taskcoachlib/gui/dialog/preferences.py:681
 msgid "When synchronizing, enter this password on the iPhone to authorize it"
 msgstr "Při synchronizaci zadejte toto heslo v iPhone pro jeho ověření"
 
-#: taskcoachlib/gui/dialog/preferences.py:684
+#: taskcoachlib/gui/dialog/preferences.py:683
 msgid "Bonjour service name"
 msgstr "Jméno Bonjour služby"
 
-#: taskcoachlib/gui/dialog/preferences.py:686
+#: taskcoachlib/gui/dialog/preferences.py:685
 msgid "Upload completed tasks to device"
 msgstr "Nahrát do zařízení dokončené úkoly"
 
-#: taskcoachlib/gui/dialog/preferences.py:688
+#: taskcoachlib/gui/dialog/preferences.py:687
 msgid "Show the synchronization log"
 msgstr "Zobrazit záznam synchronizace"
 
-#: taskcoachlib/gui/dialog/preferences.py:694
+#: taskcoachlib/gui/dialog/preferences.py:693
 msgid "Editor"
 msgstr "Editor"
 
-#: taskcoachlib/gui/dialog/preferences.py:702
+#: taskcoachlib/gui/dialog/preferences.py:701
 msgid "Check spelling in editors"
 msgstr "Kontrolovat pravopis v editoru"
 
-#: taskcoachlib/gui/dialog/preferences.py:704
+#: taskcoachlib/gui/dialog/preferences.py:703
 msgid "Font to use in the description field of edit dialogs"
 msgstr "Písmo, které použít v poli popisu v dialogových oknech úprav"
 
-#: taskcoachlib/gui/dialog/preferences.py:715
+#: taskcoachlib/gui/dialog/preferences.py:714
 msgid "OS X"
 msgstr "OS X"
 
-#: taskcoachlib/gui/dialog/preferences.py:722
+#: taskcoachlib/gui/dialog/preferences.py:721
 msgid "Get e-mail subject from Mail.app"
 msgstr "Získat předměty e-mailu z Mail.app"
 
-#: taskcoachlib/gui/dialog/preferences.py:723
+#: taskcoachlib/gui/dialog/preferences.py:722
 msgid ""
 "When dropping an e-mail from Mail.app, try to get its subject.\n"
 "This takes up to 20 seconds."
@@ -2124,15 +2125,15 @@ msgstr ""
 "Při tažení e-mailu z Mail.app se pokusit získat jeho předmět.\n"
 "To může trvat až 20 vteřin."
 
-#: taskcoachlib/gui/dialog/preferences.py:729
+#: taskcoachlib/gui/dialog/preferences.py:728
 msgid "Linux"
 msgstr "Linux"
 
-#: taskcoachlib/gui/dialog/preferences.py:736
+#: taskcoachlib/gui/dialog/preferences.py:735
 msgid "Focus task subject in task editor"
 msgstr "Zaměřit předmět úkolu v editoru"
 
-#: taskcoachlib/gui/dialog/preferences.py:737
+#: taskcoachlib/gui/dialog/preferences.py:736
 msgid ""
 "When opening the task editor, select the task subject and focus it.\n"
 "This overwrites the X selection."
@@ -3677,12 +3678,12 @@ msgid "No rounding"
 msgstr "Bez zaokrouhlování"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2465
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1704
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1710
 msgid "1 minute"
 msgstr "1 minuta"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2466
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1706
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1712
 msgid "%d minutes"
 msgstr "%d minut"
 
@@ -6647,11 +6648,11 @@ msgstr "Dnes má termín nový úkol"
 msgid "New task due tomorrow"
 msgstr "Zítra má termín nový úkol"
 
-#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1694
+#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1700
 msgid "%d days"
 msgstr "%d dnů"
 
-#: taskcoachlib/render.py:51 taskcoachlib/thirdparty/smartdatetimectrl.py:1692
+#: taskcoachlib/render.py:51 taskcoachlib/thirdparty/smartdatetimectrl.py:1698
 msgid "1 day"
 msgstr "1 den"
 
@@ -6691,7 +6692,7 @@ msgstr "Každý druhý rok"
 msgid "Yesterday"
 msgstr "Včera"
 
-#: taskcoachlib/render.py:268
+#: taskcoachlib/render.py:270
 msgid "now"
 msgstr "teď"
 
@@ -6806,20 +6807,20 @@ msgstr "&Předchozí"
 msgid "&Window"
 msgstr "&Okno"
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1638
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1745
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1644
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1751
 msgid "Edit"
 msgstr "Upravit"
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1689
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1695
 msgid "%d weeks"
 msgstr "%d týdnů"
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1701
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1707
 msgid "%d hours"
 msgstr "%d hodin"
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1745
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1751
 msgid "Done"
 msgstr "Hotovo"
 
