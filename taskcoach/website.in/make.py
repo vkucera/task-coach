@@ -440,6 +440,16 @@ debian = download_table(image='debian',
               instructions</a>''',
                         installation='Double click the package to start the installer')
 
+
+ubuntu_ppa = download_table(image='ubuntu',
+                            download_urls=dict(Launchpad='https://launchpad.net/~taskcoach-developers/+archive/ppa'),
+                            package_type='PPA',
+                            platform='Ubuntu', platform_lower='ubuntu',
+                            platform_versions_supported='Ubuntu 10.04 LTS ("Lucid Lynx") and newer',
+                            prerequisites=prerequisites27,
+                            installation='''Add ppa:taskcoach-developers/ppa to your Software Sources.''')
+
+
 ubuntu = download_table(image='ubuntu',
                         download_urls=dict(Sourceforge='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1.deb'),
                         package_type='Debian package (deb)',
@@ -504,7 +514,7 @@ linux = download_table(image='linux',
 
 pages['download_for_linux'] = sep.join([download_header(platform='Linux',
                                                         release='%(version)s'), 
-                                        ubuntu, debian, fedora14, gentoo, 
+                                        ubuntu_ppa, ubuntu, debian, fedora14, gentoo, 
                                         opensuse, redhat_el4and5, archlinux,
                                         linux, download_footer()])
 
