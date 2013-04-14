@@ -419,7 +419,7 @@ macDMG = download_table(image='mac',
                         download_urls=dict(Sourceforge='%(dist_download_prefix)s/%(filename)s-%(version)s.dmg'),
                         package_type='Disk image (dmg)',
                         platform_lower='macosx',
-                        platform_versions_supported='Mac OS X Tiger/10.4 (Universal) and newer',
+                        platform_versions_supported='Mac OS X Leopard/10.5 (Universal) and newer',
                         installation='Double click the package and drop the %(name)s application in your Applications folder')
 
 pages['download_for_mac'] = sep.join([download_header(platform='Mac OS X',
