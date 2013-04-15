@@ -183,6 +183,7 @@ if sys.argv[1] == 'py2exe':
             # We need to explicitly include these packages because they 
             # are imported implicitly:
             'packages': ['taskcoachlib.i18n',
+                          'taskcoachlib.thirdparty.keyring',
                           'taskcoachlib.thirdparty.pubsub',
                           'taskcoachlib.thirdparty.pubsub.core',
                           'taskcoachlib.thirdparty.pubsub.core.kwargs',

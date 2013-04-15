@@ -118,6 +118,8 @@ class DynamicMenu(Menu):
         # handlers get a chance too:
         if event and hasattr(event, 'Skip'):
             event.Skip()
+            if event.GetMenu() != self._parentMenu:
+                return
         try:  # Prepare for menu or window to be destroyed
             self.updateMenu()
         except wx.PyDeadObjectError:
