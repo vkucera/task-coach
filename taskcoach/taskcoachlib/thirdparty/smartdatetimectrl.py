@@ -42,6 +42,26 @@ def decodeSystemString(s):
     return s.decode(encoding, 'ignore')
 
 
+def monthcalendarex(year, month, weeks=0):
+    weekDay, monthLength = calendar.monthrange(year, month)
+    startDate = datetime.date(year, month, 1)
+    endDate = datetime.date(year, month, monthLength)
+    # To start of week
+    startDate -= datetime.timedelta(days=(startDate.weekday() - calendar.firstweekday()) % 7)
+    endDate += datetime.timedelta(days=(7 + calendar.firstweekday() - endDate.weekday()) % 7)
+    startDate -= datetime.timedelta(weeks=weeks)
+    endDate += datetime.timedelta(weeks=weeks)
+    monthCal = list()
+    while startDate < endDate:
+        week = list()
+        for dayNumber in xrange(7):
+            theDate = startDate + datetime.timedelta(days=dayNumber)
+            week.append((theDate.year, theDate.month, theDate.day))
+        monthCal.append(week)
+        startDate += datetime.timedelta(weeks=1)
+    return monthCal
+
+
 def drawFocusRect(dc, x, y, w, h):
     color = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
     if platform.system() == 'Windows' and platform.win32_ver()[0] == 'XP':
@@ -1786,10 +1806,10 @@ class _CalendarPopup(_PopupWindow):
             H = max(H, th)
         header = decodeSystemString(datetime.date(year=self.__year, month=self.__month, day=1).strftime('%B %Y'))
 
-        lines = calendar.monthcalendar(self.__year, self.__month)
+        lines = monthcalendarex(self.__year, self.__month, weeks=1)
         self.__maxDim = 0
         for line in lines:
-            for day in line:
+            for year, month, day in line:
                 tw, th = dc.GetTextExtent('%d' % day)
                 self.__maxDim = max(self.__maxDim, tw, th)
 
@@ -1880,37 +1900,43 @@ class _CalendarPopup(_PopupWindow):
         # Days
 
         self.__days = list()
-        for line in calendar.monthcalendar(self.__year, self.__month):
+        for line in monthcalendarex(self.__year, self.__month, weeks=1):
             x = 0
-            for dayIndex, day in enumerate(line):
-                if day != 0:
-                    dt = datetime.date(year=self.__year, month=self.__month, day=day)
-                    active = (self.__minDate is None or dt >= self.__minDate) and (self.__maxDate is None or dt <= self.__maxDate)
+            for dayIndex, (year, month, day) in enumerate(line):
+                dt = datetime.date(year=year, month=month, day=day)
+                active = (self.__minDate is None or dt >= self.__minDate) and (self.__maxDate is None or dt <= self.__maxDate)
+                thisMonth = year == self.__year and month == self.__month
 
-                    dc.SetPen(wx.BLACK_PEN)
-                    dc.SetTextForeground(wx.RED if (dayIndex + calendar.firstweekday()) % 7 in [5, 6] else wx.BLACK)
+                dc.SetPen(wx.BLACK_PEN)
+                dc.SetTextForeground(wx.RED if (dayIndex + calendar.firstweekday()) % 7 in [5, 6] else wx.BLACK)
 
-                    if dt == self.__selection:
-                        drawFocusRect(dc, x, y, self.__maxDim, self.__maxDim)
-                        dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT))
+                if dt == self.__selection:
+                    drawFocusRect(dc, x, y, self.__maxDim, self.__maxDim)
+                    dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT))
 
-                    if not active:
-                        dc.SetPen(wx.LIGHT_GREY_PEN)
-                        dc.SetBrush(wx.LIGHT_GREY_BRUSH)
-                        dc.DrawRectangle(x, y, self.__maxDim, self.__maxDim)
+                if not active:
+                    dc.SetPen(wx.LIGHT_GREY_PEN)
+                    dc.SetBrush(wx.LIGHT_GREY_BRUSH)
+                    dc.DrawRectangle(x, y, self.__maxDim, self.__maxDim)
+                elif not thisMonth:
+                    # Very light grey...
+                    color = wx.Colour(230, 230, 230)
+                    dc.SetPen(wx.Pen(color))
+                    dc.SetBrush(wx.Brush(color))
+                    dc.DrawRectangle(x, y, self.__maxDim, self.__maxDim)
 
-                    now = datetime.datetime.now()
-                    if (dt.year, dt.month, dt.day) == (now.year, now.month, now.day):
-                        dc.SetPen(wx.RED_PEN)
-                        dc.SetBrush(wx.TRANSPARENT_BRUSH)
-                        dc.DrawRectangle(x, y, self.__maxDim, self.__maxDim)
+                now = datetime.datetime.now()
+                if (dt.year, dt.month, dt.day) == (now.year, now.month, now.day):
+                    dc.SetPen(wx.RED_PEN)
+                    dc.SetBrush(wx.TRANSPARENT_BRUSH)
+                    dc.DrawRectangle(x, y, self.__maxDim, self.__maxDim)
 
-                    label = '%d' % day
-                    tw, th = dc.GetTextExtent(label)
-                    dc.DrawText(label, x + (self.__maxDim - tw) / 2, y + (self.__maxDim - th) / 2)
+                label = '%d' % day
+                tw, th = dc.GetTextExtent(label)
+                dc.DrawText(label, x + (self.__maxDim - tw) / 2, y + (self.__maxDim - th) / 2)
 
-                    if active:
-                        self.__days.append((x, y, day))
+                if active:
+                    self.__days.append((x, y, (year, month, day)))
                 x += self.__maxDim
             y += self.__maxDim
 
@@ -1939,10 +1965,10 @@ class _CalendarPopup(_PopupWindow):
             self.Refresh()
             return
 
-        for x, y, day in self.__days:
+        for x, y, (year, month, day) in self.__days:
             if event.GetX() >= x and event.GetX() < x + self.__maxDim and \
                 event.GetY() >= y and event.GetY() < y + self.__maxDim:
-                self.GetParent().SetDate(datetime.date(year=self.__year, month=self.__month, day=day), notify=True)
+                self.GetParent().SetDate(datetime.date(year=year, month=month, day=day), notify=True)
                 self.Dismiss()
                 break
 
