@@ -26,6 +26,8 @@ Release('1.3.30', 'April ??, 2013',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         ],
+    dependenciesChanged=[
+        Dependency('''The minimal version of Python is back to 2.6.''')],
     ),
 
 Release('1.3.29', 'April 14, 2013',
