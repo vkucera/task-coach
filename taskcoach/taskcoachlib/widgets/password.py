@@ -61,6 +61,7 @@ class KeychainPasswordWidget(wx.Dialog):
         wx.EVT_BUTTON(btnCancel, wx.ID_ANY, self.OnCancel)
 
         self.SetDefaultItem(btnOK)
+        wx.CallAfter(self.RequestUserAttention)
 
     def OnOK(self, event):
         self.password = self.passwordField.GetValue()
@@ -106,7 +107,7 @@ def GetPassword(domain, username, reset=False):
         if pwd:
             return pwd.decode('UTF-8')
 
-    dlg = KeychainPasswordWidget(domain, username, None, wx.ID_ANY, _('Please enter your password'))
+    dlg = KeychainPasswordWidget(domain, username, None, wx.ID_ANY, _('Please enter your password'), style=wx.DEFAULT_DIALOG_STYLE|wx.STAY_ON_TOP)
     try:
         dlg.CentreOnScreen()
         if dlg.ShowModal() == wx.ID_OK:
