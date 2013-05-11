@@ -25,6 +25,8 @@ releases = [
 Release('1.3.30', 'April ??, 2013',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bugv2('''Working day start hour would be reset to 0 every time
+preferences are opened.''', '1418'),
         ],
     dependenciesChanged=[
         Dependency('''The minimal version of Python is back to 2.6.''')],
