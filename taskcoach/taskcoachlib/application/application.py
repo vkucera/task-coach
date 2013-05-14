@@ -311,7 +311,6 @@ class Application(object):
         from taskcoachlib.domain import date 
         date.Scheduler().shutdown()
         self.__wx_app.ProcessIdle()
-        self.__wx_app.ExitMainLoop()
 
         # For PowerStateMixin
         self.mainwindow.OnQuit()
@@ -322,4 +321,5 @@ class Application(object):
         if isinstance(sys.stdout, RedirectedOutput):
             sys.stdout.summary()
 
+        self.__wx_app.ExitMainLoop()
         return True
