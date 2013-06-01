@@ -376,10 +376,24 @@ class EffortViewer(base.ListViewer,
 
         return item in super(EffortViewer, self).curselection()
 
+    def __sumTimeSpent(self, efforts):
+        td = date.TimeDelta()
+        for effort in efforts:
+            td = td + effort.duration()
+
+        sumTimeSpent = render.timeSpent(td, showSeconds=self.__show_seconds())
+        if sumTimeSpent == '':
+            if self.__show_seconds():
+                sumTimeSpent = '0:00:00'
+            else:
+                sumTimeSpent = '0:00'
+        return sumTimeSpent
+
     def statusMessages(self):
-        status1 = _('Effort: %d selected, %d visible, %d total') % \
+        status1 = _('Effort: %d selected, %d visible, %d total. Time spent: %s selected, %s visible, %s total') % \
             (len(self.curselection()), len(self.presentation()), 
-             len(self.taskFile.efforts()))         
+             len(self.taskFile.efforts()), self.__sumTimeSpent(self.curselection()),
+             self.__sumTimeSpent(self.presentation()),  self.__sumTimeSpent(self.taskFile.efforts()))
         status2 = _('Status: %d tracking') % \
             self.presentation().nrBeingTracked()
         return status1, status2

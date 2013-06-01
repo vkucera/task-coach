@@ -23,13 +23,17 @@ from changetypes import *
 releases = [
 
 Release('1.3.30', 'April ??, 2013',
-    summary='''This is a bugfix release.''',
+    summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bugv2('''Working day start hour would be reset to 0 every time
 preferences are opened.''', '1418'),
         ],
     dependenciesChanged=[
         Dependency('''The minimal version of Python is back to 2.6.''')],
+    featuresAdded=[
+        Feature('''Display effort statistics in the status bar (patch
+from Ivan Romanov).''', 'https://taskcoach.uservoice.com/admin/forums/26465-desktop-version-windows-linux-mac-of-task-coach/suggestions/606269-section-in-status-bar-for-calculated-information-a'), # Where the hell do they hide short URLs ?
+-        ],
     ),
 
 Release('1.3.29', 'April 14, 2013',

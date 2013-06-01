@@ -81,40 +81,40 @@ class EffortViewerStatusMessageTest(test.wxTestCase):
         
     def testStatusMessage_EmptyTaskList(self):
         self.taskFile.tasks().clear()
-        self.assertStatusMessages('Effort: 0 selected, 0 visible, 0 total', 
+        self.assertStatusMessages('Effort: 0 selected, 0 visible, 0 total. Time spent: 0:00:00 selected, 0:00:00 visible, 0:00:00 total',
             'Status: 0 tracking')
             
     def testStatusMessage_OneTaskNoEffort(self):
-        self.assertStatusMessages('Effort: 0 selected, 0 visible, 0 total', 
+        self.assertStatusMessages('Effort: 0 selected, 0 visible, 0 total. Time spent: 0:00:00 selected, 0:00:00 visible, 0:00:00 total',
             'Status: 0 tracking')
         
     def testStatusMessage_OneTaskOneEffort(self):
         self.task.addEffort(self.effort1)
-        self.assertStatusMessages('Effort: 0 selected, 1 visible, 1 total', 
+        self.assertStatusMessages('Effort: 0 selected, 1 visible, 1 total. Time spent: 0:00:00 selected, 24:00:00 visible, 24:00:00 total',
             'Status: 0 tracking')
             
     def testStatusMessage_OneTaskTwoEfforts(self):
         self.task.addEffort(self.effort1)
         self.task.addEffort(self.effort2)
-        self.assertStatusMessages('Effort: 0 selected, 2 visible, 2 total', 
+        self.assertStatusMessages('Effort: 0 selected, 2 visible, 2 total. Time spent: 0:00:00 selected, 48:00:00 visible, 48:00:00 total',
             'Status: 0 tracking')
             
     def testStatusMessage_OneTaskOneActiveEffort(self):
         self.task.addEffort(effort.Effort(self.task))
-        self.assertStatusMessages('Effort: 0 selected, 1 visible, 1 total',
+        self.assertStatusMessages('Effort: 0 selected, 1 visible, 1 total. Time spent: 0:00:00 selected, 0:00:00 visible, 0:00:00 total',
             'Status: 1 tracking')
         
     def testStatusMessageInAggregatedMode_OneTaskNoEffort(self):
         self.settings.settext(self.viewer.settingsSection(), 'aggregation', 
                               'day')
-        self.assertStatusMessages('Effort: 0 selected, 0 visible, 0 total', 
+        self.assertStatusMessages('Effort: 0 selected, 0 visible, 0 total. Time spent: 0:00:00 selected, 0:00:00 visible, 0:00:00 total',
             'Status: 0 tracking')
 
     def testStatusMessageInAggregateMode_OneTaskOneEffort(self):
         self.settings.settext(self.viewer.settingsSection(), 'aggregation', 
                               'day')
         self.task.addEffort(self.effort1)
-        self.assertStatusMessages('Effort: 0 selected, 2 visible, 1 total', 
+        self.assertStatusMessages('Effort: 0 selected, 2 visible, 1 total. Time spent: 0:00:00 selected, 48:00:00 visible, 24:00:00 total',
             'Status: 0 tracking')
 
     def testStatusMessageInAggregateMode_OneTaskTwoEfforts(self):
@@ -122,7 +122,7 @@ class EffortViewerStatusMessageTest(test.wxTestCase):
                               'day')
         self.task.addEffort(self.effort1)
         self.task.addEffort(self.effort2)
-        self.assertStatusMessages('Effort: 0 selected, 4 visible, 2 total', 
+        self.assertStatusMessages('Effort: 0 selected, 4 visible, 2 total. Time spent: 0:00:00 selected, 96:00:00 visible, 48:00:00 total',
             'Status: 0 tracking')
 
 
