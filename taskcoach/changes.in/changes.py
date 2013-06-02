@@ -33,7 +33,7 @@ preferences are opened.''', '1418'),
     featuresAdded=[
         Feature('''Display effort statistics in the status bar (patch
 from Ivan Romanov).''', 'https://taskcoach.uservoice.com/admin/forums/26465-desktop-version-windows-linux-mac-of-task-coach/suggestions/606269-section-in-status-bar-for-calculated-information-a'), # Where the hell do they hide short URLs ?
--        ],
+        ],
     ),
 
 Release('1.3.29', 'April 14, 2013',
