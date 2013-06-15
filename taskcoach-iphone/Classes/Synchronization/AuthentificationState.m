@@ -13,7 +13,6 @@
 #import "GUIDState.h"
 #import "Network.h"
 #import "SyncViewController.h"
-#import "AlertPrompt.h"
 #import "LogUtils.h"
 #import "String+Utils.h"
 #import "i18n.h"
@@ -24,11 +23,12 @@
 {
 	JLDEBUG("Asking for password.");
 
-	AlertPrompt *prompt = [[AlertPrompt alloc] initWithTitle:_("Please type your password.")
-													 message:@"\n"
-													delegate:self
-										   cancelButtonTitle:_("Cancel")
-											   okButtonTitle:_("OK")];
+    UIAlertView *prompt =[[UIAlertView alloc] initWithTitle:_("Please type your password.")
+                                                    message:@"\n"
+                                                   delegate:self
+                                          cancelButtonTitle:_("Cancel")
+                                          otherButtonTitles:_("OK"), nil];
+    prompt.alertViewStyle = UIAlertViewStyleSecureTextInput;
 	[prompt show];
 	[prompt release];
 }
@@ -167,8 +167,6 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-	AlertPrompt *pwd = (AlertPrompt *)alertView;
-	
 	switch (buttonIndex)
 	{
 		case 0:
@@ -176,7 +174,7 @@
 			break;
 		case 1:
 		{
-			[currentPasswords setObject:pwd.enteredText forKey:myController.name];
+			[currentPasswords setObject:[[alertView textFieldAtIndex:0] text] forKey:myController.name];
 			
 			if (state == 1)
 			{
@@ -206,8 +204,6 @@
 			}
 		}
 	}
-	
-	[pwd.textField resignFirstResponder];
 }
 
 @end
