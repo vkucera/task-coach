@@ -187,7 +187,6 @@
 		A6DDF8540F1F988600F35108 /* TaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDF8530F1F988600F35108 /* TaskViewController.m */; };
 		A6DFB4E711C64BF8007FB4F0 /* TaskCoach-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = A6DFB4E611C64BF8007FB4F0 /* TaskCoach-iPad.png */; };
 		A6E46386113028A500976293 /* SyncView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6E46385113028A500976293 /* SyncView.xib */; };
-		A6E7C0801114418D00B230E2 /* AlertPrompt.m in Sources */ = {isa = PBXBuildFile; fileRef = A6E7C07F1114418D00B230E2 /* AlertPrompt.m */; };
 		A6E83C5A10E4C9AF00FF3E45 /* FileChooser.m in Sources */ = {isa = PBXBuildFile; fileRef = A6E83C5810E4C9AF00FF3E45 /* FileChooser.m */; };
 		A6E83C5B10E4C9AF00FF3E45 /* FileChooser.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6E83C5910E4C9AF00FF3E45 /* FileChooser.xib */; };
 		A6E83D0F10E4E34800FF3E45 /* TaskFileNameState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6E83D0E10E4E34800FF3E45 /* TaskFileNameState.m */; };
@@ -570,8 +569,6 @@
 		A6DDF8530F1F988600F35108 /* TaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskViewController.m; sourceTree = "<group>"; };
 		A6DFB4E611C64BF8007FB4F0 /* TaskCoach-iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TaskCoach-iPad.png"; path = "Resources-iPad/TaskCoach-iPad.png"; sourceTree = "<group>"; };
 		A6E46385113028A500976293 /* SyncView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SyncView.xib; sourceTree = "<group>"; };
-		A6E7C07E1114418D00B230E2 /* AlertPrompt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlertPrompt.h; path = Thirdparty/AlertPrompt.h; sourceTree = "<group>"; };
-		A6E7C07F1114418D00B230E2 /* AlertPrompt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlertPrompt.m; path = Thirdparty/AlertPrompt.m; sourceTree = "<group>"; };
 		A6E83C5710E4C9AF00FF3E45 /* FileChooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileChooser.h; sourceTree = "<group>"; };
 		A6E83C5810E4C9AF00FF3E45 /* FileChooser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileChooser.m; sourceTree = "<group>"; };
 		A6E83C5910E4C9AF00FF3E45 /* FileChooser.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FileChooser.xib; sourceTree = "<group>"; };
@@ -755,8 +752,6 @@
 		A61F544A108CB56200BDFD6D /* Thirdparty */ = {
 			isa = PBXGroup;
 			children = (
-				A6E7C07E1114418D00B230E2 /* AlertPrompt.h */,
-				A6E7C07F1114418D00B230E2 /* AlertPrompt.m */,
 				A61F544B108CB57A00BDFD6D /* BadgeItem.h */,
 				A61F544C108CB57A00BDFD6D /* BadgeItem.m */,
 				A61F544D108CB57A00BDFD6D /* BadgeView.h */,
@@ -1333,7 +1328,6 @@
 				A6C3CEF810E76C8C00483057 /* ButtonCell.m in Sources */,
 				A6CFB50A1109BBC5004DB892 /* TwoWayNewEffortsState.m in Sources */,
 				A6CFB5B21109C691004DB892 /* TwoWayModifiedEffortsState.m in Sources */,
-				A6E7C0801114418D00B230E2 /* AlertPrompt.m in Sources */,
 				A69F6C2F115E2196003F68F5 /* SearchCell.m in Sources */,
 				A66EE70C1196AEAF006758BB /* NSDate+Utils.m in Sources */,
 				A61A55F2119FB7840036FC56 /* DayHourState.m in Sources */,

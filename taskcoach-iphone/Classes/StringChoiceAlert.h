@@ -8,9 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "AlertPrompt.h"
-
-@interface StringChoiceAlert : AlertPrompt
+@interface StringChoiceAlert : UIAlertView
 {
 	id target;
 	SEL action;

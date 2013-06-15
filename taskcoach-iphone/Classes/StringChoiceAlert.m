@@ -13,11 +13,11 @@
 
 - initWithPlaceholder:(NSString *)thePlaceholder text:(NSString *)theText target:(id)theTarget action:(SEL)theAction
 {
-	if ((self = [super initWithTitle:@"" message:@"\n\n" delegate:self cancelButtonTitle:_("Cancel") okButtonTitle:_("OK")]))
+	if ((self = [super initWithTitle:@"" message:@"" delegate:self cancelButtonTitle:_("Cancel") otherButtonTitles:_("OK"), nil]))
 	{
-		textField.placeholder = thePlaceholder;
-		textField.text = theText;
-		textField.secureTextEntry = NO;
+        self.alertViewStyle = UIAlertViewStylePlainTextInput;
+        [self textFieldAtIndex:0].text = theText;
+        [self textFieldAtIndex:0].placeholder = thePlaceholder;
 
 		target = theTarget;
 		action = theAction;
@@ -36,7 +36,7 @@
 			[target performSelector:action withObject:nil];
 			break;
 		case 1:
-			[target performSelector:action withObject:textField.text];
+			[target performSelector:action withObject:[[self textFieldAtIndex:0] text]];
 			break;
 	}
 }

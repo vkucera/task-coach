@@ -230,7 +230,7 @@
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
 	{
 		StringChoiceAlert *alert = [[StringChoiceAlert alloc] initWithPlaceholder:_("Enter category name") text:nil target:self action:@selector(onCategoryAdded:)];
-		alert.textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
+        [alert textFieldAtIndex:0].autocapitalizationType = UITextAutocapitalizationTypeSentences;
 		[alert show];
 		[alert release];
 	}
@@ -419,7 +419,7 @@
 		currentCategory = indexPath.row / 2;
 
 		StringChoiceAlert *alert = [[StringChoiceAlert alloc] initWithPlaceholder:_("Enter category name") text:nil target:self action:@selector(onCategoryAdded:)];
-		alert.textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
+		[alert textFieldAtIndex:0].autocapitalizationType = UITextAutocapitalizationTypeSentences;
 		[alert show];
 		[alert release];
 	}
@@ -455,7 +455,7 @@
 			if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
 			{
 				StringChoiceAlert *alert = [[StringChoiceAlert alloc] initWithPlaceholder:_("Enter category name") text:nil target:self action:@selector(onCategoryAdded:)];
-				alert.textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
+                [alert textFieldAtIndex:0].autocapitalizationType = UITextAutocapitalizationTypeSentences;
 				[alert show];
 				[alert release];
 			}
@@ -476,7 +476,7 @@
 			if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
 			{
 				StringChoiceAlert *alert = [[StringChoiceAlert alloc] initWithPlaceholder:_("Enter category name") text:[(CDCategory *)[categories objectAtIndex:currentCategory] name] target:self action:@selector(onCategoryChanged:)];
-				alert.textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
+                [alert textFieldAtIndex:0].autocapitalizationType = UITextAutocapitalizationTypeSentences;
 				[alert show];
 				[alert release];
 			}
