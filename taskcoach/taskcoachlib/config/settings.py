@@ -287,7 +287,7 @@ class Settings(object, CachingConfigParser):
     def pathToDocumentsDir():
         if operating_system.isWindows():
             from win32com.shell import shell, shellcon
-            return shell.SHGetSpecialFolderPath(None, shellcon.CSIDL_MYDOCUMENTS)
+            return shell.SHGetSpecialFolderPath(None, shellcon.CSIDL_PERSONAL)
         elif operating_system.isMac():
             import Carbon.Folder, Carbon.Folders, Carbon.File
             pathRef = Carbon.Folder.FSFindFolder(Carbon.Folders.kUserDomain, Carbon.Folders.kDocumentsFolderType, True)

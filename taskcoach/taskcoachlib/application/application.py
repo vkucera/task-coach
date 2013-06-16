@@ -68,7 +68,7 @@ class wxApp(wx.App):
         if operating_system.isWindows():
             self.Bind(wx.EVT_QUERY_END_SESSION, self.onQueryEndSession)
 
-        if not sys.stdout.isatty():
+        if (operating_system.isWindows() and hasattr(sys, 'frozen')) or not sys.stdout.isatty():
             sys.stdout = sys.stderr = RedirectedOutput()
 
         return True
