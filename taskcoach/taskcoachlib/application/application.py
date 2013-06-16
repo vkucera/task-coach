@@ -53,7 +53,10 @@ class RedirectedOutput(object):
     def summary(self):
         if self.__handle is not None:
             self.close()
-            wx.MessageBox(_('Errors have occured. Please see "%s"') % self.__path, _('Error'), wx.OK)
+            if operating_system.isWindows():
+                wx.MessageBox(_('Errors have occured. Please see "taskcoachlog.txt" in your "My Documents" folder.'), _('Error'), wx.OK)
+            else:
+                wx.MessageBox(_('Errors have occured. Please see "%s"') % self.__path, _('Error'), wx.OK)
 
 
 # pylint: disable=W0404
