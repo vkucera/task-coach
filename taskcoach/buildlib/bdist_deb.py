@@ -254,7 +254,7 @@ Homepage: %(url)s
 
 Package: %(package)s
 Architecture: %(architecture)s
-Depends: python (>= %(pythonversion)s), python-wxgtk2.8 (>= %(wxpythonversion)s), python-wxversion, libxss1, ttf-dejavu, libavahi-compat-libdnssd1
+Depends: python (>= %(pythonversion)s), python-wxgtk2.8 (>= %(wxpythonversion)s), python-wxversion, libxss1, ttf-dejavu, libavahi-compat-libdnssd1, python-kde4
 Recommends: python-notify, libgnome2-0
 Description: %(description)s.
 %(long_description)s
