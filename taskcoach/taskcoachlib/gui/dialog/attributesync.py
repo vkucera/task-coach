@@ -18,6 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 from taskcoachlib.thirdparty.pubsub import pub
+from taskcoachlib.i18n import _
+import wx
 
 
 class AttributeSync(object):
@@ -49,17 +51,15 @@ class AttributeSync(object):
             self._currentValue = new_value
             commandKwArgs = self.commandKwArgs(new_value)
             self._commandClass(None, self._items, **commandKwArgs).do()  # pylint: disable=W0142
-            if self.__callback is not None:
-                self.__callback(new_value)
-            
+            self.__invokeCallback(new_value)
+
     def onAttributeChanged_Deprecated(self, event):  # pylint: disable=W0613
         if self._entry: 
             new_value = getattr(self._items[0], self._getter)()
             if new_value != self._currentValue:
                 self._currentValue = new_value
                 self.setValue(new_value)
-                if self.__callback is not None:
-                    self.__callback(new_value)
+                self.__invokeCallback(new_value)
         else:
             self.__stop_observing_attribute()
             
@@ -69,8 +69,7 @@ class AttributeSync(object):
                 if newValue != self._currentValue:
                     self._currentValue = newValue
                     self.setValue(newValue)
-                    if self.__callback is not None:
-                        self.__callback(newValue)
+                    self.__invokeCallback(newValue)
             else:
                 self.__stop_observing_attribute()
             
@@ -83,7 +82,14 @@ class AttributeSync(object):
             
     def getValue(self):
         return self._entry.GetValue()
-    
+
+    def __invokeCallback(self, value):
+        if self.__callback is not None:
+            try:
+                self.__callback(value)
+            except Exception, e:
+                wx.MessageBox(unicode(e), _('Error'), wx.OK)
+
     def __start_observing_attribute(self, eventType, eventSource):
         if eventType.startswith('pubsub'):
             pub.subscribe(self.onAttributeChanged, eventType)
