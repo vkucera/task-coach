@@ -457,7 +457,11 @@ class EffortViewer(base.ListViewer,
     
     def __renderTimeSpent(self, anEffort):
         ''' Return a rendered version of the effort duration. '''
-        duration = anEffort.duration()
+        kwargs = dict()
+        if isinstance(anEffort, effort.BaseCompositeEffort):
+            kwargs['rounding'] = self.__round_precision()
+            kwargs['roundUp'] = self.__always_round_up()
+        duration = anEffort.duration(**kwargs)
         # Check for aggregation because we never round in details mode
         if self.isShowingAggregatedEffort():
             duration = self.__round_duration(duration)
@@ -471,14 +475,19 @@ class EffortViewer(base.ListViewer,
             composite efforts). '''
         # No need to check for aggregation because this method is only used
         # in aggregated mode
-        total_duration = anEffort.duration(recursive=True)
-        return render.timeSpent(self.__round_duration(total_duration), 
+        total_duration = anEffort.duration(recursive=True,
+               rounding=self.__round_precision(), roundUp=self.__always_round_up())
+        return render.timeSpent(total_duration, 
                                 showSeconds=self.__show_seconds())
     
     def __renderTimeSpentOnDay(self, anEffort, dayOffset):
         ''' Return a rendered version of the duration of the effort on a
             specific day. '''
-        duration = anEffort.durationDay(dayOffset) \
+        kwargs = dict()
+        if isinstance(anEffort, effort.BaseCompositeEffort):
+            kwargs['rounding'] = self.__round_precision()
+            kwargs['roundUp'] = self.__always_round_up()
+        duration = anEffort.durationDay(dayOffset, **kwargs) \
             if self.aggregation == 'week' else date.TimeDelta()
         return render.timeSpent(self.__round_duration(duration), 
                                 showSeconds=self.__show_seconds())

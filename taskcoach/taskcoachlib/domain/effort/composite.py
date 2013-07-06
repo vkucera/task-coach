@@ -52,18 +52,23 @@ class BaseCompositeEffort(base.BaseEffort):  # pylint: disable=W0223
     def markDirty(self):
         pass  # CompositeEfforts cannot be dirty
     
-    def duration(self, recursive=False):
-        return sum((effort.duration() for effort in \
+    def __doRound(self, duration, rounding, roundUp):
+        if rounding:
+            return duration.round(seconds=rounding, alwaysUp=roundUp)
+        return duration
+
+    def duration(self, recursive=False, rounding=0, roundUp=False):
+        return sum((self.__doRound(effort.duration(), rounding, roundUp) for effort in \
                     self._getEfforts(recursive)), date.TimeDelta())
 
     def isBeingTracked(self, recursive=False):  # pylint: disable=W0613
         return any(effort.isBeingTracked() for effort in self._getEfforts())
 
-    def durationDay(self, dayOffset):
+    def durationDay(self, dayOffset, rounding=0, roundUp=False):
         ''' Return the duration of this composite effort on a specific day. '''
         startOfDay = self.getStart() + date.TimeDelta(days=dayOffset)
         endOfDay = self.getStart() + date.TimeDelta(days=dayOffset + 1)
-        return sum((effort.duration() for effort in \
+        return sum((self.__doRound(effort.duration(), rounding, roundUp) for effort in \
                     self._getEfforts(recursive=False) \
                     if startOfDay <= effort.getStart() <= endOfDay), 
                    date.TimeDelta())

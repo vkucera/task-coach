@@ -29,6 +29,8 @@ Release('1.3.30', 'April ??, 2013',
 preferences are opened.''', '1418'),
         Bugv2('''Fix the ICC warning with recent versions of libpng.''', '1422'),
         Bugv2('''Fix path to log file.''', '1350'),
+        Bugv2('''Total duration of efforts is the sum of rounded durations,
+not the rounded sum of durations.''', '1426'),
         ],
     dependenciesChanged=[
         Dependency('''The minimal version of Python is back to 2.6.'''),
