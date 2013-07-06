@@ -31,7 +31,9 @@ preferences are opened.''', '1418'),
         Bugv2('''Fix path to log file.''', '1350'),
         ],
     dependenciesChanged=[
-        Dependency('''The minimal version of Python is back to 2.6.''')],
+        Dependency('''The minimal version of Python is back to 2.6.'''),
+        Dependency('''On Linux, Task Coach does not depend on KDE any more,
+but it is recommended.''')],
     featuresAdded=[
         Feature('''Display effort statistics in the status bar (patch
 from Ivan Romanov).''', 'https://taskcoach.uservoice.com/admin/forums/26465-desktop-version-windows-linux-mac-of-task-coach/suggestions/606269-section-in-status-bar-for-calculated-information-a'), # Where the hell do they hide short URLs ?
