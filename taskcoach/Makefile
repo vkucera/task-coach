@@ -26,9 +26,9 @@ DOT="dot"       # dot should be on the path
 # make it the default does not seem to work on Lion).
 
 ifeq "$(shell uname -sm)" "Darwin x86_64"
-    PYTHON="python-32"
+    PYTHON?="python-32"
 else
-    PYTHON="python"
+    PYTHON?="python"
 endif
 
 ifeq (CYGWIN_NT,$(findstring CYGWIN_NT,$(shell uname)))
