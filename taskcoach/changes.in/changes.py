@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.30', 'April ??, 2013',
+Release('1.3.30', 'July 7, 2013',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bugv2('''Working day start hour would be reset to 0 every time
