@@ -159,6 +159,8 @@ def createDebianChangelog():
 if sys.argv[1] == 'py2exe':
     from distutils.core import setup
     import py2exe  # pylint: disable=F0401
+    import shutil
+    shutil.copyfile('taskcoach.pyw', 'taskcoach_console.py')
     py2exeDistdir = '%s-%s-win32exe' % (meta.filename, meta.version)
     # Get .mo files for wxWidgets:
     locale_dir = os.path.join(os.path.dirname(wx.__file__), 'locale')
@@ -177,6 +179,8 @@ if sys.argv[1] == 'py2exe':
         'windows': [{'script': 'taskcoach.pyw', 
             'other_resources': [(24, 1, manifest)],
             'icon_resources': [(1, 'icons.in/taskcoach.ico')]}],
+        'console': [{'script': 'taskcoach_console.py',
+            'other_resources': [(24, 1, manifest)]}],
         'options': {'py2exe': {
             'compressed': 1, 
             'optimize': 2, 
@@ -190,7 +194,8 @@ if sys.argv[1] == 'py2exe':
                           'taskcoachlib.thirdparty.apscheduler',
                           'taskcoachlib.thirdparty.apscheduler.jobstores',
                           'taskcoachlib.thirdparty.apscheduler.triggers',
-                          'taskcoachlib.thirdparty.apscheduler.triggers.cron'], 
+                          'taskcoachlib.thirdparty.apscheduler.triggers.cron',
+                          'taskcoachlib.thirdparty._weakrefset'], 
             'dist_dir': os.path.join(builddir, py2exeDistdir),
             'dll_excludes': ['MSVCR80.dll', 'UxTheme.dll']}},
         'data_files': dll_files + mo_files})

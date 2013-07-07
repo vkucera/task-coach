@@ -24,8 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 version = '1.4.0'  # Current version number of the application
 tskversion = 37  # Current version number of the task file format, changed to 37 for release 1.3.23.
-release_day = '14'  # Day number of the release, 1-31, as string
-release_month = 'April'  # Month of the release in plain English
+release_day = '7'  # Day number of the release, 1-31, as string
+release_month = 'July'  # Month of the release in plain English
 release_year = '2013'  # Year of the release as string
 release_status = 'stable'  # One of 'alpha', 'beta', 'stable'
 
@@ -129,7 +129,7 @@ license_notice_html = '<p>%s</p>'%license_notice.replace('\n\n', '</p><p>')
 license_notice_html = re.sub(r'<http([^>]*)>', r'<a href="http\1" target="_blank">http\1</a>', license_notice_html)
 
 platform = 'Any'
-pythonversion = '2.7'
+pythonversion = '2.6'
 wxpythonversionnumber = '2.8.9.2'
 wxpythonversion = '%s-unicode' % wxpythonversionnumber
 

@@ -91,40 +91,40 @@ class EffortViewerStatusMessageTest(test.wxTestCase):
         
     def testStatusMessage_EmptyTaskList(self):
         self.taskFile.tasks().clear()
-        self.assertStatusMessages('Effort: 0 selected, 0 visible, 0 total', 
+        self.assertStatusMessages('Effort: 0 selected, 0 visible, 0 total. Time spent: 0:00:00 selected, 0:00:00 visible, 0:00:00 total',
             'Status: 0 tracking')
             
     def testStatusMessage_OneTaskNoEffort(self):
-        self.assertStatusMessages('Effort: 0 selected, 0 visible, 0 total', 
+        self.assertStatusMessages('Effort: 0 selected, 0 visible, 0 total. Time spent: 0:00:00 selected, 0:00:00 visible, 0:00:00 total',
             'Status: 0 tracking')
         
     def testStatusMessage_OneTaskOneEffort(self):
         self.task.addEffort(self.effort1)
-        self.assertStatusMessages('Effort: 0 selected, 1 visible, 1 total', 
+        self.assertStatusMessages('Effort: 0 selected, 1 visible, 1 total. Time spent: 0:00:00 selected, 24:00:00 visible, 24:00:00 total',
             'Status: 0 tracking')
             
     def testStatusMessage_OneTaskTwoEfforts(self):
         self.task.addEffort(self.effort1)
         self.task.addEffort(self.effort2)
-        self.assertStatusMessages('Effort: 0 selected, 2 visible, 2 total', 
+        self.assertStatusMessages('Effort: 0 selected, 2 visible, 2 total. Time spent: 0:00:00 selected, 48:00:00 visible, 48:00:00 total',
             'Status: 0 tracking')
             
     def testStatusMessage_OneTaskOneActiveEffort(self):
         self.task.addEffort(effort.Effort(self.task))
-        self.assertStatusMessages('Effort: 0 selected, 1 visible, 1 total',
+        self.assertStatusMessages('Effort: 0 selected, 1 visible, 1 total. Time spent: 0:00:00 selected, 0:00:00 visible, 0:00:00 total',
             'Status: 1 tracking')
         
     def testStatusMessageInAggregatedMode_OneTaskNoEffort(self):
         self.settings.settext(self.viewer.settingsSection(), 'aggregation', 
                               'day')
-        self.assertStatusMessages('Effort: 0 selected, 0 visible, 0 total', 
+        self.assertStatusMessages('Effort: 0 selected, 0 visible, 0 total. Time spent: 0:00:00 selected, 0:00:00 visible, 0:00:00 total',
             'Status: 0 tracking')
 
     def testStatusMessageInAggregateMode_OneTaskOneEffort(self):
         self.settings.settext(self.viewer.settingsSection(), 'aggregation', 
                               'day')
         self.task.addEffort(self.effort1)
-        self.assertStatusMessages('Effort: 0 selected, 2 visible, 1 total', 
+        self.assertStatusMessages('Effort: 0 selected, 2 visible, 1 total. Time spent: 0:00:00 selected, 48:00:00 visible, 24:00:00 total',
             'Status: 0 tracking')
 
     def testStatusMessageInAggregateMode_OneTaskTwoEfforts(self):
@@ -132,7 +132,7 @@ class EffortViewerStatusMessageTest(test.wxTestCase):
                               'day')
         self.task.addEffort(self.effort1)
         self.task.addEffort(self.effort2)
-        self.assertStatusMessages('Effort: 0 selected, 4 visible, 2 total', 
+        self.assertStatusMessages('Effort: 0 selected, 4 visible, 2 total. Time spent: 0:00:00 selected, 96:00:00 visible, 48:00:00 total',
             'Status: 0 tracking')
 
 
@@ -243,7 +243,101 @@ class EffortViewerAggregationTestCase(test.wxTestCase):
         aggregations.remove(self.aggregation)
         self.settings.settext(self.viewer.settingsSection(), 'aggregation', 
                               aggregations[0])
-    
+
+
+class EffortViewerAggregationRoundingTestCase(test.wxTestCase):
+    aggregation = 'Subclass responsibility'
+    roundingValue = None
+    alwaysRoundUp = None
+
+    def createViewer(self):
+        return gui.viewer.EffortViewer(self.frame, self.taskFile, self.settings)
+
+    def setUp(self):
+        super(EffortViewerAggregationRoundingTestCase, self).setUp()
+        task.Task.settings = self.settings = config.Settings(load=False)
+        self.settings.set('effortviewer', 'aggregation', self.aggregation)
+        self.settings.setint('effortviewer', 'round', self.roundingValue)
+        self.settings.setboolean('effortviewer', 'alwaysroundup', self.alwaysRoundUp)
+
+        self.taskFile = persistence.TaskFile()
+        self.viewer = self.createViewer()
+        self.task = task.Task('Task')
+        self.taskFile.tasks().extend([self.task])
+        self.task.addEffort(effort.Effort(self.task,
+                                          date.DateTime(2013, 7, 6, 1, 0, 0),
+                                          date.DateTime(2013, 7, 6, 1, 0, 45)))
+        self.task.addEffort(effort.Effort(self.task,
+                                          date.DateTime(2013, 7, 6, 2, 0, 0),
+                                          date.DateTime(2013, 7, 6, 2, 0, 45)))
+        self.task.addEffort(effort.Effort(self.task,
+                                          date.DateTime(2013, 7, 6, 3, 0, 0),
+                                          date.DateTime(2013, 7, 6, 3, 0, 45)))
+        self.task.addEffort(effort.Effort(self.task,
+                                          date.DateTime(2013, 7, 6, 4, 0, 0),
+                                          date.DateTime(2013, 7, 6, 4, 0, 10)))
+
+
+class RoundingTestsMixin(object):
+    def testRenderDuration(self):
+        self.assertEqual(self.expectedPeriodRendering, self.viewer.widget.getItemText(self.viewer.widget.getItemWithIndex(0), 3))
+
+
+class EffortViewerAggregationRoundingDayTest(EffortViewerAggregationRoundingTestCase, RoundingTestsMixin):
+    aggregation = 'day'
+    roundingValue = 60
+    alwaysRoundUp = False
+    expectedPeriodRendering = '0:03'
+
+
+class EffortViewerAggregationRoundingDayUpTest(EffortViewerAggregationRoundingTestCase, RoundingTestsMixin):
+    aggregation = 'day'
+    roundingValue = 60
+    alwaysRoundUp = True
+    expectedPeriodRendering = '0:04'
+
+
+class EffortViewerAggregationRoundingWeekTest(EffortViewerAggregationRoundingTestCase, RoundingTestsMixin):
+    aggregation = 'week'
+    roundingValue = 60
+    alwaysRoundUp = False
+    expectedPeriodRendering = '0:03'
+
+
+class EffortViewerAggregationRoundingWeekUpTest(EffortViewerAggregationRoundingTestCase, RoundingTestsMixin):
+    aggregation = 'week'
+    roundingValue = 60
+    alwaysRoundUp = True
+    expectedPeriodRendering = '0:04'
+
+
+class EffortViewerAggregationRoundingMonthTest(EffortViewerAggregationRoundingTestCase, RoundingTestsMixin):
+    aggregation = 'month'
+    roundingValue = 60
+    alwaysRoundUp = False
+    expectedPeriodRendering = '0:03'
+
+
+class EffortViewerAggregationRoundingMonthUpTest(EffortViewerAggregationRoundingTestCase, RoundingTestsMixin):
+    aggregation = 'month'
+    roundingValue = 60
+    alwaysRoundUp = True
+    expectedPeriodRendering = '0:04'
+
+
+class EffortViewerAggregationNoRoundingTest(EffortViewerAggregationRoundingTestCase, RoundingTestsMixin):
+    aggregation = 'details'
+    roundingValue = 60
+    alwaysRoundUp = False
+    expectedPeriodRendering = '0:00:10'
+
+
+class EffortViewerAggregationNoRoundingUpTest(EffortViewerAggregationRoundingTestCase, RoundingTestsMixin):
+    aggregation = 'details'
+    roundingValue = 60
+    alwaysRoundUp = True
+    expectedPeriodRendering = '0:00:10'
+
 
 class CommonTestsMixin(object):
     def testNumberOfItems(self):

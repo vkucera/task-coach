@@ -22,9 +22,29 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.30', 'April ??, 2013',
+Release('1.3.31', 'July ??, 2013',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        ],
+    ),
+
+Release('1.3.30', 'July 7, 2013',
+    summary='''This is a mixed bugfix and feature release.''',
+    bugsFixed=[
+        Bugv2('''Working day start hour would be reset to 0 every time
+preferences are opened.''', '1418'),
+        Bugv2('''Fix the ICC warning with recent versions of libpng.''', '1422'),
+        Bugv2('''Fix path to log file.''', '1350'),
+        Bugv2('''Total duration of efforts is the sum of rounded durations,
+not the rounded sum of durations.''', '1426'),
+        ],
+    dependenciesChanged=[
+        Dependency('''The minimal version of Python is back to 2.6.'''),
+        Dependency('''On Linux, Task Coach does not depend on KDE any more,
+but it is recommended.''')],
+    featuresAdded=[
+        Feature('''Display effort statistics in the status bar (patch
+from Ivan Romanov).''', 'https://taskcoach.uservoice.com/admin/forums/26465-desktop-version-windows-linux-mac-of-task-coach/suggestions/606269-section-in-status-bar-for-calculated-information-a'), # Where the hell do they hide short URLs ?
         ],
     ),
 

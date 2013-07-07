@@ -283,6 +283,25 @@ class Settings(object, CachingConfigParser):
         else:
             return self.pathToConfigDir(environ)
 
+    @staticmethod
+    def pathToDocumentsDir():
+        if operating_system.isWindows():
+            from win32com.shell import shell, shellcon
+            return shell.SHGetSpecialFolderPath(None, shellcon.CSIDL_PERSONAL)
+        elif operating_system.isMac():
+            import Carbon.Folder, Carbon.Folders, Carbon.File
+            pathRef = Carbon.Folder.FSFindFolder(Carbon.Folders.kUserDomain, Carbon.Folders.kDocumentsFolderType, True)
+            return Carbon.File.pathname(pathRef)
+        elif operating_system.isGTK():
+            try:
+                from PyKDE4.kdeui import KGlobalSettings
+            except ImportError:
+                pass
+            else:
+                return unicode(KGlobalSettings.documentPath())
+        # Assuming Unix-like
+        return os.path.expanduser('~')
+
     def pathToProgramDir(self):
         path = sys.argv[0]
         if not os.path.isdir(path):

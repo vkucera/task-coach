@@ -23,6 +23,7 @@ from taskcoachlib import patterns
 from taskcoachlib.domain import date, categorizable, note, attachment, base
 from taskcoachlib.domain.attribute.icon import getImageOpen
 from taskcoachlib.thirdparty.pubsub import pub
+from taskcoachlib.thirdparty._weakrefset import WeakSet
 import status
 import weakref
 import wx
@@ -65,8 +66,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__reminder = reminder or maxDateTime
         self.__reminderBeforeSnooze = reminderBeforeSnooze or self.__reminder
         self.__recurrence = date.Recurrence() if recurrence is None else recurrence
-        self.__prerequisites = weakref.WeakSet(prerequisites or [])
-        self.__dependencies = weakref.WeakSet(dependencies or [])
+        self.__prerequisites = WeakSet(prerequisites or [])
+        self.__dependencies = WeakSet(dependencies or [])
         self.__shouldMarkCompletedWhenAllChildrenCompleted = \
             shouldMarkCompletedWhenAllChildrenCompleted
         for effort in self._efforts:
@@ -1222,7 +1223,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         prerequisites = set(prerequisites)
         if prerequisites == self.prerequisites():
             return
-        self.__prerequisites = weakref.WeakSet(prerequisites)
+        self.__prerequisites = WeakSet(prerequisites)
         self.setActualStartDateTime(self.maxDateTime, recursive=True)
         self.recomputeAppearance(recursive=True)
         pub.sendMessage(self.prerequisitesChangedEventType(), 
@@ -1232,7 +1233,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         prerequisites = set(prerequisites)
         if prerequisites <= self.prerequisites():
             return
-        self.__prerequisites = weakref.WeakSet(prerequisites | self.prerequisites())
+        self.__prerequisites = WeakSet(prerequisites | self.prerequisites())
         self.setActualStartDateTime(self.maxDateTime, recursive=True)
         self.recomputeAppearance(recursive=True)
         pub.sendMessage(self.prerequisitesChangedEventType(), 
@@ -1242,7 +1243,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         prerequisites = set(prerequisites)
         if self.prerequisites().isdisjoint(prerequisites):
             return
-        self.__prerequisites = weakref.WeakSet(self.prerequisites() - prerequisites)
+        self.__prerequisites = WeakSet(self.prerequisites() - prerequisites)
         self.recomputeAppearance(recursive=True)
         pub.sendMessage(self.prerequisitesChangedEventType(), 
                         newValue=self.prerequisites(), sender=self)
@@ -1299,7 +1300,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         dependencies = set(dependencies)
         if dependencies == self.dependencies():
             return
-        self.__dependencies = weakref.WeakSet(dependencies)
+        self.__dependencies = WeakSet(dependencies)
         pub.sendMessage(self.dependenciesChangedEventType(),
                         newValue=self.dependencies(), sender=self)
     
@@ -1307,7 +1308,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         dependencies = set(dependencies)
         if dependencies <= self.dependencies():
             return
-        self.__dependencies = weakref.WeakSet(self.dependencies() | dependencies)
+        self.__dependencies = WeakSet(self.dependencies() | dependencies)
         pub.sendMessage(self.dependenciesChangedEventType(),
                         newValue=self.dependencies(), sender=self)
 
@@ -1315,7 +1316,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         dependencies = set(dependencies)
         if self.dependencies().isdisjoint(dependencies):
             return
-        self.__dependencies = weakref.WeakSet(self.dependencies() - dependencies)
+        self.__dependencies = WeakSet(self.dependencies() - dependencies)
         pub.sendMessage(self.dependenciesChangedEventType(),
                         newValue=self.dependencies(), sender=self)
         
