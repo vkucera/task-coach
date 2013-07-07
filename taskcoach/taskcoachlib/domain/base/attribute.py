@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 import weakref
+from taskcoachlib.thirdparty._weakrefset import WeakSet
 
 
 class Attribute(object):
@@ -48,7 +49,7 @@ class SetAttribute(object):
                  '__changeEvent', '__setClass')
     
     def __init__(self, values, owner, addEvent=None, removeEvent=None, changeEvent=None, weak=False):
-        self.__setClass = weakref.WeakSet if weak else set
+        self.__setClass = WeakSet if weak else set
         self.__set = self.__setClass(values) if values else self.__setClass()
         self.__owner = weakref.ref(owner)
         self.__addEvent = (addEvent or self.__nullEvent).im_func

@@ -894,9 +894,10 @@ class TimeEntry(Entry):
             except ImportError:
                 pass
             else:
-                localeCopy = KLocale(KGlobal.locale())
-                localeCopy.setTimeFormat('%p')
-                amStrings.append(unicode(localeCopy.formatTime(QTime(11, 0, 0))))
+                if KGlobal.locale() is not None:
+                    localeCopy = KLocale(KGlobal.locale())
+                    localeCopy.setTimeFormat('%p')
+                    amStrings.append(unicode(localeCopy.formatTime(QTime(11, 0, 0))))
 
         debugInfo['amlit'] = amStrings
         for amLit in amStrings:

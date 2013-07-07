@@ -22,6 +22,7 @@ from taskcoachlib import workarounds  # pylint: disable=W0611
 from taskcoachlib import patterns, operating_system
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty.pubsub import pub
+from taskcoachlib.config import Settings
 import locale
 import os
 import sys
@@ -33,10 +34,11 @@ import calendar
 class RedirectedOutput(object):
     def __init__(self):
         self.__handle = None
+        self.__path = os.path.join(Settings.pathToDocumentsDir(), 'taskcoachlog.txt')
 
     def write(self, bf):
         if self.__handle is None:
-            self.__handle = file(os.path.expanduser('~/taskcoachlog.txt'), 'a+')
+            self.__handle = file(self.__path, 'a+')
             self.__handle.write('============= %s\n' % time.ctime())
         self.__handle.write(bf)
 
@@ -51,7 +53,10 @@ class RedirectedOutput(object):
     def summary(self):
         if self.__handle is not None:
             self.close()
-            wx.MessageBox(_('Errors have occured. Please see "%s"') % os.path.expanduser('~/taskcoachlog.txt'), _('Error'), wx.OK)
+            if operating_system.isWindows():
+                wx.MessageBox(_('Errors have occured. Please see "taskcoachlog.txt" in your "My Documents" folder.'), _('Error'), wx.OK)
+            else:
+                wx.MessageBox(_('Errors have occured. Please see "%s"') % self.__path, _('Error'), wx.OK)
 
 
 # pylint: disable=W0404
@@ -66,8 +71,12 @@ class wxApp(wx.App):
         if operating_system.isWindows():
             self.Bind(wx.EVT_QUERY_END_SESSION, self.onQueryEndSession)
 
-        if (operating_system.isMac() and hasattr(sys, 'frozen')) or \
-            (operating_system.isGTK() and not sys.stdout.isatty()):
+        try:
+            isatty = sys.stdout.isatty()
+        except AttributeError:
+            isatty = False
+
+        if (operating_system.isWindows() and hasattr(sys, 'frozen') and not isatty) or not isatty:
             sys.stdout = sys.stderr = RedirectedOutput()
 
         return True
@@ -310,7 +319,6 @@ class Application(object):
         from taskcoachlib.domain import date 
         date.Scheduler().shutdown()
         self.__wx_app.ProcessIdle()
-        self.__wx_app.ExitMainLoop()
 
         # For PowerStateMixin
         self.mainwindow.OnQuit()
@@ -321,4 +329,5 @@ class Application(object):
         if isinstance(sys.stdout, RedirectedOutput):
             sys.stdout.summary()
 
+        self.__wx_app.ExitMainLoop()
         return True

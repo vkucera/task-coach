@@ -38,8 +38,40 @@ class FakeEffortAggregator(object):
             
     def onRevenueChanged(self, newValue, sender):
         self.composite.onRevenueChanged(newValue, sender)
-    
-    
+
+
+class CompositeEffortWithRoundingTest(test.TestCase):
+    def setUp(self):
+        super(CompositeEffortWithRoundingTest, self).setUp()
+        task.Task.settings = config.Settings(load=False)
+        self.task = task.Task(subject='task')
+        self.effort1 = effort.Effort(self.task, 
+            date.DateTime(2004, 1, 1, 11, 0, 0), 
+            date.DateTime(2004, 1, 1, 11, 0, 45))
+        self.effort2 = effort.Effort(self.task, 
+            date.DateTime(2004, 1, 1, 12, 0, 0), 
+            date.DateTime(2004, 1, 1, 12, 0, 45))
+        self.effort3 = effort.Effort(self.task, 
+            date.DateTime(2004, 1, 1, 13, 0, 0), 
+            date.DateTime(2004, 1, 1, 13, 0, 45))
+        self.effort4 = effort.Effort(self.task, 
+            date.DateTime(2004, 1, 1, 13, 0, 0), 
+            date.DateTime(2004, 1, 1, 13, 0, 10))
+        self.composite = effort.CompositeEffort(self.task,
+            date.DateTime(2004, 1, 1, 0, 0, 0),
+            date.DateTime(2004, 1, 1, 23, 59, 59))
+        self.task.addEffort(self.effort1)
+        self.task.addEffort(self.effort2)
+        self.task.addEffort(self.effort3)
+        self.task.addEffort(self.effort4)
+
+    def test_round_total(self):
+        self.assertEqual(self.composite.duration(recursive=True, rounding=60), date.TimeDelta(seconds=3*60))
+
+    def test_round_total_up(self):
+        self.assertEqual(self.composite.duration(recursive=True, rounding=60, roundUp=True), date.TimeDelta(seconds=4*60))
+
+
 class CompositeEffortTest(test.TestCase):
     def setUp(self):
         super(CompositeEffortTest, self).setUp()

@@ -375,10 +375,24 @@ class EffortViewer(base.ListViewer,
 
         return item in super(EffortViewer, self).curselection()
 
+    def __sumTimeSpent(self, efforts):
+        td = date.TimeDelta()
+        for effort in efforts:
+            td = td + effort.duration()
+
+        sumTimeSpent = render.timeSpent(td, showSeconds=self.__show_seconds())
+        if sumTimeSpent == '':
+            if self.__show_seconds():
+                sumTimeSpent = '0:00:00'
+            else:
+                sumTimeSpent = '0:00'
+        return sumTimeSpent
+
     def statusMessages(self):
-        status1 = _('Effort: %d selected, %d visible, %d total') % \
+        status1 = _('Effort: %d selected, %d visible, %d total. Time spent: %s selected, %s visible, %s total') % \
             (len(self.curselection()), len(self.presentation()), 
-             len(self.taskStore.efforts()))         
+             len(self.taskStore.efforts()), self.__sumTimeSpent(self.curselection()),
+             self.__sumTimeSpent(self.presentation()),  self.__sumTimeSpent(self.taskStore.efforts()))
         status2 = _('Status: %d tracking') % \
             self.presentation().nrBeingTracked()
         return status1, status2
@@ -442,7 +456,11 @@ class EffortViewer(base.ListViewer,
     
     def __renderTimeSpent(self, anEffort):
         ''' Return a rendered version of the effort duration. '''
-        duration = anEffort.duration()
+        kwargs = dict()
+        if isinstance(anEffort, effort.BaseCompositeEffort):
+            kwargs['rounding'] = self.__round_precision()
+            kwargs['roundUp'] = self.__always_round_up()
+        duration = anEffort.duration(**kwargs)
         # Check for aggregation because we never round in details mode
         if self.isShowingAggregatedEffort():
             duration = self.__round_duration(duration)
@@ -456,14 +474,19 @@ class EffortViewer(base.ListViewer,
             composite efforts). '''
         # No need to check for aggregation because this method is only used
         # in aggregated mode
-        total_duration = anEffort.duration(recursive=True)
-        return render.timeSpent(self.__round_duration(total_duration), 
+        total_duration = anEffort.duration(recursive=True,
+               rounding=self.__round_precision(), roundUp=self.__always_round_up())
+        return render.timeSpent(total_duration, 
                                 showSeconds=self.__show_seconds())
     
     def __renderTimeSpentOnDay(self, anEffort, dayOffset):
         ''' Return a rendered version of the duration of the effort on a
             specific day. '''
-        duration = anEffort.durationDay(dayOffset) \
+        kwargs = dict()
+        if isinstance(anEffort, effort.BaseCompositeEffort):
+            kwargs['rounding'] = self.__round_precision()
+            kwargs['roundUp'] = self.__always_round_up()
+        duration = anEffort.durationDay(dayOffset, **kwargs) \
             if self.aggregation == 'week' else date.TimeDelta()
         return render.timeSpent(self.__round_duration(duration), 
                                 showSeconds=self.__show_seconds())

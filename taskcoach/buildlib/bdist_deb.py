@@ -118,7 +118,7 @@ class bdist_deb(Command, object):
         if not self.wxpythonversion:
             self.wxpythonversion = '2.8'
         if not self.pythonversion:
-            self.pythonversion = '2.7'
+            self.pythonversion = '2.6'
         self.sdist_exclude = self.sdist_exclude.split(',') \
             if self.sdist_exclude else []
         self.subsection_lower = self.subsection.lower()
@@ -254,8 +254,8 @@ Homepage: %(url)s
 
 Package: %(package)s
 Architecture: %(architecture)s
-Depends: python (>= %(pythonversion)s), python-wxgtk2.8 (>= %(wxpythonversion)s), python-wxversion, libxss1, ttf-dejavu, libavahi-compat-libdnssd1
-Recommends: python-notify, libgnome2-0
+Depends: python (>= %(pythonversion)s), python-wxgtk2.8 (>= %(wxpythonversion)s), python-wxversion, libxss1, ttf-dejavu
+Recommends: python-notify, libgnome2-0, python-kde4, libavahi-compat-libdnssd1
 Description: %(description)s.
 %(long_description)s
 '''

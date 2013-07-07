@@ -300,6 +300,9 @@ prerequisites = '''
               <a href="http://www.wxpython.org/download.php">wxPython</a>
               <strong>%(wxpythonversion)s</strong> (or newer)'''
 
+prerequisites26 = prerequisites%dict(pythonversion='2.6', 
+                                     wxpythonversion='%(wxpythonversion)s')
+
 prerequisites27 = prerequisites%dict(pythonversion='2.7', 
                                      wxpythonversion='%(wxpythonversion)s')
 
@@ -433,7 +436,7 @@ debian = download_table(image='debian',
                         package_type='Debian package (deb)',
                         platform='Debian', platform_lower='debian',
                         platform_versions_supported='Debian GNU/Linux 6.0 ("squeeze") and newer',
-                        prerequisites=prerequisites27 + '''. If your Debian 
+                        prerequisites=prerequisites26 + '''. If your Debian 
               installation does not have the minimally required wxPython version 
               you will need to install it yourself following 
               <a href="http://wiki.wxpython.org/InstallingOnUbuntuOrDebian">these 
@@ -455,7 +458,7 @@ ubuntu = download_table(image='ubuntu',
                         package_type='Debian package (deb)',
                         platform='Ubuntu', platform_lower='ubuntu',
                         platform_versions_supported='Ubuntu 10.04 LTS ("Lucid Lynx") and newer',
-                        prerequisites=prerequisites27,
+                        prerequisites=prerequisites26,
                         installation='''Double click the package to start the 
 installer. You can also use the PPA (<a href="https://answers.launchpad.net/taskcoach/+faq/1615">see the FAQ</a>)''')
 
@@ -488,7 +491,7 @@ archlinux = download_table(image='archlinux', action='Install',
                            package_type='Source tar archive',
                            platform='Arch', platform_lower='arch',
                            platform_versions_supported='Not applicable (Arch uses a rolling release)',
-                           prerequisites=prerequisites27,
+                           prerequisites=prerequisites26,
                            installation='''%(name)s is included in the Arch 
 User Repository. See the 
 <a href="https://wiki.archlinux.org/index.php/AUR_User_Guidelines">AUR user 
