@@ -7,24 +7,24 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-24 21:51+0000\n"
-"PO-Revision-Date: 2013-02-06 20:34+0000\n"
-"Last-Translator: Jérôme Laheurte <fraca7@free.fr>\n"
+"POT-Creation-Date: 2013-06-01 16:31+0000\n"
+"PO-Revision-Date: 2013-06-02 13:32+0000\n"
+"Last-Translator: zed yz chen <zedcyz@gmail.com>\n"
 "Language-Team: Traditional Chinese <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-14 16:21+0000\n"
-"X-Generator: Launchpad (build 16564)\n"
+"X-Launchpad-Export-Date: 2013-07-06 19:05+0000\n"
+"X-Generator: Launchpad (build 16696)\n"
 
 #: taskcoachlib/application/application.py:54
 msgid "Errors have occured. Please see \"%s\""
-msgstr ""
+msgstr "有錯誤發生. 請參見 \"%s\""
 
 #: taskcoachlib/application/application.py:54
 #: taskcoachlib/gui/mainwindow.py:359 taskcoachlib/iphone/protocol.py:482
 #: taskcoachlib/widgets/draganddrop.py:121
-#: taskcoachlib/widgets/draganddrop.py:163 taskcoachlib/widgets/password.py:91
+#: taskcoachlib/widgets/draganddrop.py:163 taskcoachlib/widgets/password.py:92
 msgid "Error"
 msgstr "錯誤"
 
@@ -191,11 +191,11 @@ msgstr "新增子類別"
 
 #: taskcoachlib/command/categoryCommands.py:58
 msgid "Edit exclusive subcategories"
-msgstr ""
+msgstr "編輯專用子分類"
 
 #: taskcoachlib/command/categoryCommands.py:59
 msgid "Edit exclusive subcategories of \"%s\""
-msgstr ""
+msgstr "編輯 \"%s\" 的專用子分類"
 
 #: taskcoachlib/command/categoryCommands.py:83
 msgid "Delete categories"
@@ -549,7 +549,7 @@ msgstr "儲存時發生錯誤"
 #: taskcoachlib/domain/attachment/attachment.py:164
 #: taskcoachlib/mailer/macmail.py:50 taskcoachlib/mailer/macmail.py:69
 msgid "Mail.app message"
-msgstr ""
+msgstr "Mail.app 訊息"
 
 #: taskcoachlib/domain/attachment/attachmentlist.py:24
 msgid "New attachment..."
@@ -600,7 +600,7 @@ msgid "45 minutes"
 msgstr "45 分鐘"
 
 #: taskcoachlib/domain/date/snooze.py:25
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1705
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1726
 msgid "1 hour"
 msgstr "1 小時"
 
@@ -649,7 +649,7 @@ msgid "2 weeks"
 msgstr "2 週"
 
 #: taskcoachlib/domain/date/snooze.py:30
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1693
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1714
 msgid "1 week"
 msgstr "1 週"
 
@@ -667,19 +667,19 @@ msgstr "新建工作(&N)...\tCtrl+E"
 
 #: taskcoachlib/domain/task/status.py:61
 msgid "Inactive tasks"
-msgstr ""
+msgstr "靜止任務"
 
 #: taskcoachlib/domain/task/status.py:62
 msgid "Hide &inactive tasks"
-msgstr ""
+msgstr "隱藏靜止任務(&i)"
 
 #: taskcoachlib/domain/task/status.py:62
 msgid "Inactive tasks: %d (%d%%)"
-msgstr ""
+msgstr "靜止任務: %d (%d%%)"
 
 #: taskcoachlib/domain/task/status.py:63
 msgid "Show/hide inactive tasks (incomplete tasks without actual start date)"
-msgstr ""
+msgstr "顯示/隱藏靜止任務 (無實際開始日期的未完成任務)"
 
 #: taskcoachlib/domain/task/status.py:65
 msgid "Late tasks"
@@ -687,69 +687,69 @@ msgstr "最後任務"
 
 #: taskcoachlib/domain/task/status.py:66
 msgid "Hide &late tasks"
-msgstr ""
+msgstr "隱藏遲延任務(&l)"
 
 #: taskcoachlib/domain/task/status.py:66
 msgid "Late tasks: %d (%d%%)"
-msgstr ""
+msgstr "遲延任務: %d (%d%%)"
 
 #: taskcoachlib/domain/task/status.py:67
 msgid ""
 "Show/hide late tasks (inactive tasks with a planned start in the past)"
-msgstr ""
+msgstr "顯示/隱藏 遲延任務 (靜止任務有過去的計劃開始日)"
 
 #: taskcoachlib/domain/task/status.py:69
 msgid "Active tasks"
-msgstr ""
+msgstr "活動中任務"
 
 #: taskcoachlib/domain/task/status.py:70
 msgid "Active tasks: %d (%d%%)"
-msgstr ""
+msgstr "活動中任務: %d (%d%%)"
 
 #: taskcoachlib/domain/task/status.py:70
 msgid "Hide &active tasks"
-msgstr ""
+msgstr "隱藏活動中任務(&a)"
 
 #: taskcoachlib/domain/task/status.py:71
 msgid ""
 "Show/hide active tasks (incomplete tasks with an actual start date in the "
 "past)"
-msgstr ""
+msgstr "顯示/隱藏活動中任務 (未完成任務且有過去的實際開始日)"
 
 #: taskcoachlib/domain/task/status.py:73
 msgid "Due soon tasks"
-msgstr ""
+msgstr "即將到期任務"
 
 #: taskcoachlib/domain/task/status.py:74
 msgid "Due soon tasks: %d (%d%%)"
-msgstr ""
+msgstr "即將到期任務: %d (%d%%)"
 
 #: taskcoachlib/domain/task/status.py:74
 msgid "Hide &due soon tasks"
-msgstr ""
+msgstr "隱藏即將到期任務(&d)"
 
 #: taskcoachlib/domain/task/status.py:75
 msgid ""
 "Show/hide due soon tasks (incomplete tasks with a due date in the near "
 "future)"
-msgstr ""
+msgstr "顯示/隱藏即將到期任務 (未完成任務且不久即將到期)"
 
 #: taskcoachlib/domain/task/status.py:77
 msgid "Overdue tasks"
-msgstr "過期的任務"
+msgstr "過期任務"
 
 #: taskcoachlib/domain/task/status.py:78
 msgid "Hide &over due tasks"
-msgstr ""
+msgstr "隱藏過期任務(&o)"
 
 #: taskcoachlib/domain/task/status.py:78
 msgid "Overdue tasks: %d (%d%%)"
-msgstr ""
+msgstr "過期任務: %d (%d%%)"
 
 #: taskcoachlib/domain/task/status.py:79
 msgid ""
 "Show/hide over due tasks (incomplete tasks with a due date in the past)"
-msgstr ""
+msgstr "顯示/隱藏過期任務 (到期日已過的未完成任務)"
 
 #: taskcoachlib/domain/task/status.py:81
 msgid "Completed tasks"
@@ -757,11 +757,11 @@ msgstr "完成的任務"
 
 #: taskcoachlib/domain/task/status.py:82
 msgid "Completed tasks: %d (%d%%)"
-msgstr ""
+msgstr "已完成任務: %d (%d%%)"
 
 #: taskcoachlib/domain/task/status.py:82
 msgid "Hide &completed tasks"
-msgstr ""
+msgstr "隱藏已完成任務(&c)"
 
 #: taskcoachlib/domain/task/status.py:83
 msgid "Show/hide completed tasks"
@@ -1126,11 +1126,11 @@ msgstr "沒有圖示"
 
 #: taskcoachlib/gui/dialog/developer_message.py:32
 msgid "Message from the %s developers"
-msgstr ""
+msgstr "來自 %s 開發者的訊息"
 
 #: taskcoachlib/gui/dialog/developer_message.py:52
 msgid "See:"
-msgstr ""
+msgstr "參見:"
 
 #: taskcoachlib/gui/dialog/editor.py:93 taskcoachlib/gui/dialog/editor.py:147
 #: taskcoachlib/gui/dialog/editor.py:1270
@@ -1168,14 +1168,14 @@ msgstr "編輯所有修改的描述"
 #: taskcoachlib/gui/viewer/task.py:978
 #: taskcoachlib/persistence/csv/generator.py:40
 msgid "Creation date"
-msgstr ""
+msgstr "建立日期"
 
 #: taskcoachlib/gui/dialog/editor.py:163
 #: taskcoachlib/gui/viewer/attachment.py:117
 #: taskcoachlib/gui/viewer/category.py:119 taskcoachlib/gui/viewer/note.py:150
 #: taskcoachlib/gui/viewer/task.py:985
 msgid "Modification date"
-msgstr ""
+msgstr "修改日期"
 
 #: taskcoachlib/gui/dialog/editor.py:225
 #: taskcoachlib/gui/uicommand/uicommand.py:2321
@@ -1365,7 +1365,7 @@ msgstr "註記"
 
 #: taskcoachlib/gui/dialog/editor.py:848 taskcoachlib/gui/viewer/task.py:887
 msgid "Prerequisites"
-msgstr ""
+msgstr "前提"
 
 #: taskcoachlib/gui/dialog/editor.py:1133
 msgid "Edit task"
@@ -1382,26 +1382,26 @@ msgid "Start"
 msgstr "開始"
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1595
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1616
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Week(s)"
 msgstr "週"
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1596
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1617
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Day(s)"
 msgstr "天"
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1597
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1618
 msgid "Hour(s)"
-msgstr ""
+msgstr "小時"
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1598
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1619
 msgid "Minute(s)"
-msgstr ""
+msgstr "分鐘"
 
 #: taskcoachlib/gui/dialog/editor.py:1184
 msgid "Stop"
@@ -1417,47 +1417,47 @@ msgstr "立刻停止追蹤"
 
 #: taskcoachlib/gui/dialog/editor.py:1236
 msgid "Warning: start must be earlier than stop"
-msgstr ""
+msgstr "警告: 開始必須早於停止"
 
 #: taskcoachlib/gui/dialog/editor.py:1398
 msgid "Multiple tasks"
-msgstr ""
+msgstr "多任務"
 
 #: taskcoachlib/gui/dialog/editor.py:1399
 msgid "%s (task)"
-msgstr ""
+msgstr "%s (任務)"
 
 #: taskcoachlib/gui/dialog/editor.py:1404
 msgid "Multiple categories"
-msgstr ""
+msgstr "多類別"
 
 #: taskcoachlib/gui/dialog/editor.py:1405
 msgid "%s (category)"
-msgstr ""
+msgstr "%s (類別)"
 
 #: taskcoachlib/gui/dialog/editor.py:1410
 msgid "Multiple notes"
-msgstr ""
+msgstr "多註解"
 
 #: taskcoachlib/gui/dialog/editor.py:1411
 msgid "%s (note)"
-msgstr ""
+msgstr "%s (註解)"
 
 #: taskcoachlib/gui/dialog/editor.py:1416
 msgid "Multiple attachments"
-msgstr ""
+msgstr "多附件"
 
 #: taskcoachlib/gui/dialog/editor.py:1417
 msgid "%s (attachment)"
-msgstr ""
+msgstr "%s (附件)"
 
 #: taskcoachlib/gui/dialog/editor.py:1422
 msgid "Multiple efforts"
-msgstr ""
+msgstr "多工作量"
 
 #: taskcoachlib/gui/dialog/editor.py:1423
 msgid "%s (effort)"
-msgstr ""
+msgstr "%s (工作量)"
 
 #: taskcoachlib/gui/dialog/entry.py:196
 msgid "Use font:"
@@ -1500,7 +1500,7 @@ msgstr ", 每一"
 
 #: taskcoachlib/gui/dialog/entry.py:459 taskcoachlib/gui/dialog/entry.py:503
 msgid "Stop after"
-msgstr ""
+msgstr "之後停止"
 
 #: taskcoachlib/gui/dialog/entry.py:465
 msgid "recurrences"
@@ -1512,11 +1512,11 @@ msgstr "安排每下一個循環是依據"
 
 #: taskcoachlib/gui/dialog/entry.py:476
 msgid "previous planned start and/or due date and time"
-msgstr ""
+msgstr "計劃開始/到期日和時間"
 
 #: taskcoachlib/gui/dialog/entry.py:477
 msgid "last completion date and time"
-msgstr ""
+msgstr "最後完成日期和時間"
 
 #: taskcoachlib/gui/dialog/entry.py:522
 msgid "day(s),"
@@ -1524,7 +1524,7 @@ msgstr "天，"
 
 #: taskcoachlib/gui/dialog/entry.py:522
 msgid "period,"
-msgstr ""
+msgstr "期間,"
 
 #: taskcoachlib/gui/dialog/entry.py:522
 msgid "week(s),"
@@ -1552,7 +1552,7 @@ msgstr "要匯出的欄位："
 
 #: taskcoachlib/gui/dialog/export.py:184
 msgid "Put task dates and times in separate columns"
-msgstr ""
+msgstr "將任務的日期和時間放在不同的資料列"
 
 #: taskcoachlib/gui/dialog/export.py:216
 msgid "Write style information to a separate CSS file"
@@ -1563,7 +1563,7 @@ msgid ""
 "If a CSS file exists for the exported file, %(name)s will not overwrite it. "
 "This allows you to change the style information without losing your changes "
 "on the next export."
-msgstr ""
+msgstr "如果匯出檔有可用的 CSS 檔案, %(name)s 將不會覆蓋它. 這樣可以允許你變更樣式資訊且不會在下次匯出失去已做過的修改."
 
 #: taskcoachlib/gui/dialog/export.py:238 taskcoachlib/gui/iocontroller.py:321
 msgid "Export as CSV"
@@ -1588,14 +1588,17 @@ msgid ""
 "the first time. What kind of synchronization\n"
 "would you like to use?"
 msgstr ""
+"有一個 iPhone 或 iPod Touch 裝置\n"
+"正在嘗試第一次同步這個任務檔案.\n"
+"你想要使用哪一種同步方式?"
 
 #: taskcoachlib/gui/dialog/iphone.py:38
 msgid "Refresh from desktop"
-msgstr ""
+msgstr "從桌上型電腦更新"
 
 #: taskcoachlib/gui/dialog/iphone.py:41
 msgid "Refresh from device"
-msgstr ""
+msgstr "從裝置更新"
 
 #: taskcoachlib/gui/dialog/iphone.py:44 taskcoachlib/widgets/password.py:49
 msgid "Cancel"
@@ -1607,24 +1610,26 @@ msgid ""
 "needs Bonjour. Bonjour does not seem to be installed on\n"
 "your system."
 msgstr ""
+"你已經啟用 iPhone 同步功能, 並需要 Bonjour. \n"
+"Bonjour 看起來並未被安裝在你的系統上."
 
 #: taskcoachlib/gui/dialog/iphone.py:79
 msgid "Please download and install Bonjour for Windows from\n"
-msgstr ""
+msgstr "請從這裡下載並安裝 Bonjour for Windows\n"
 
 #: taskcoachlib/gui/dialog/iphone.py:81
 msgid "Apple's web site"
-msgstr ""
+msgstr "Apple 的網站"
 
 #: taskcoachlib/gui/dialog/iphone.py:86
 msgid ""
 "Bonjour support for Linux is generally provided by\n"
 "Avahi."
-msgstr ""
+msgstr "Bonjour 對 Linux 的支援通常可由 Avahi 提供."
 
 #: taskcoachlib/gui/dialog/iphone.py:89
 msgid "You may find details for your distribution here"
-msgstr ""
+msgstr "你可以在這裡取得你的發行版本的詳細資訊"
 
 #: taskcoachlib/gui/dialog/iphone.py:92
 msgid ""
@@ -1632,6 +1637,8 @@ msgid ""
 "install the avahi-compat-libdns_sd package as well as Avahi in order\n"
 "for this to work."
 msgstr ""
+"請注意在某些系統(Fedora), 你必須安裝 \n"
+"avahi-compat-libdns_sd 套件才可以使用."
 
 #: taskcoachlib/gui/dialog/iphone.py:96
 msgid ""
@@ -1646,13 +1653,13 @@ msgstr "確認"
 
 #: taskcoachlib/gui/dialog/preferences.py:294
 msgid "This setting will take effect after you restart %s"
-msgstr ""
+msgstr "設定將會在你重新啓動 %s 後生效"
 
 #: taskcoachlib/gui/dialog/preferences.py:296
 msgid ""
 "This setting can be overridden for individual tasks\n"
 "in the task edit dialog."
-msgstr ""
+msgstr "該設定可在個別任務的編輯視窗中被覆蓋."
 
 #: taskcoachlib/gui/dialog/preferences.py:343
 msgid "Files"
@@ -1674,11 +1681,11 @@ msgstr ""
 msgid ""
 "Save settings (%s.ini) in the same\n"
 "directory as the program"
-msgstr ""
+msgstr "儲存設定 (%s.ini) 與應用程式同一目錄"
 
 #: taskcoachlib/gui/dialog/preferences.py:355
 msgid "For running %s from a removable medium"
-msgstr ""
+msgstr "由從可移除儲存媒體執行 %s"
 
 #: taskcoachlib/gui/dialog/preferences.py:357
 msgid "Attachment base directory"
@@ -1688,16 +1695,16 @@ msgstr "附件所在的目錄"
 msgid ""
 "When adding an attachment, try to make\n"
 "its path relative to this one."
-msgstr ""
+msgstr "當加入附件時, 會試著以此為相對路徑."
 
 #: taskcoachlib/gui/dialog/preferences.py:361
 msgid "Before saving, automatically import from"
-msgstr ""
+msgstr "儲存前, 自動匯入來自"
 
 #: taskcoachlib/gui/dialog/preferences.py:362
 #: taskcoachlib/gui/dialog/preferences.py:368
 msgid "Todo.txt format"
-msgstr ""
+msgstr "Todo.txt 格式"
 
 #: taskcoachlib/gui/dialog/preferences.py:363
 msgid ""
@@ -1705,10 +1712,12 @@ msgid ""
 "from a Todo.txt file with the same name as the task file,\n"
 "but with extension .txt"
 msgstr ""
+"儲存前, %s 自動匯入與任務檔案同名的 Todo.txt 檔案, \n"
+"而其延伸檔名為 .txt"
 
 #: taskcoachlib/gui/dialog/preferences.py:367
 msgid "When saving, automatically export to"
-msgstr ""
+msgstr "儲存時, 自動匯出到"
 
 #: taskcoachlib/gui/dialog/preferences.py:369
 msgid ""
@@ -1716,6 +1725,8 @@ msgid ""
 "to a Todo.txt file with the same name as the task file,\n"
 "but with extension .txt"
 msgstr ""
+"儲存前, %s 自動匯出與任務檔案同名的 Todo.txt 檔案, \n"
+"而其延伸檔名為 .txt"
 
 #: taskcoachlib/gui/dialog/preferences.py:377
 msgid "Window behavior"
@@ -1743,7 +1754,7 @@ msgstr "從不"
 
 #: taskcoachlib/gui/dialog/preferences.py:391
 msgid "If it was iconized last session"
-msgstr ""
+msgstr "如果上次執行為最小化"
 
 #: taskcoachlib/gui/dialog/preferences.py:392
 msgid "Check for new version of %(name)s on startup"
@@ -1751,7 +1762,7 @@ msgstr "啟動時檢查 %(name)s 的新版本"
 
 #: taskcoachlib/gui/dialog/preferences.py:394
 msgid "Check for messages from the %(name)s developers on startup"
-msgstr ""
+msgstr "啓動時檢查來自 %(name)s 開發者的訊息"
 
 #: taskcoachlib/gui/dialog/preferences.py:398
 msgid "Hide main window when iconized"
@@ -1784,7 +1795,7 @@ msgstr "讓系統決定所用的語言"
 msgid ""
 "If your language is not available, or the translation needs improving, "
 "please consider helping. See:"
-msgstr ""
+msgstr "如果沒有你可用的語言, 或翻譯需要改善, 敬請提供協助. 參見:"
 
 #: taskcoachlib/gui/dialog/preferences.py:490
 msgid "Language not found?"
@@ -1826,11 +1837,11 @@ msgstr "啟用 iPhone 同步化"
 
 #: taskcoachlib/gui/dialog/preferences.py:541
 msgid "Use X11 session management"
-msgstr ""
+msgstr "Use X11 session management"
 
 #: taskcoachlib/gui/dialog/preferences.py:542
 msgid "Start of work week"
-msgstr ""
+msgstr "工作周的起始日"
 
 #: taskcoachlib/gui/dialog/preferences.py:543
 #: taskcoachlib/gui/viewer/effort.py:227
@@ -1860,10 +1871,12 @@ msgid ""
 "Use gradients in calendar views.\n"
 "This may slow down Task Coach."
 msgstr ""
+"日曆檢視器在使用漸層.\n"
+"這可能會讓 Task Coach 變慢."
 
 #: taskcoachlib/gui/dialog/preferences.py:554
 msgid "Minutes between suggested times"
-msgstr ""
+msgstr "提示時段的間隔分鐘數"
 
 #: taskcoachlib/gui/dialog/preferences.py:555
 msgid ""
@@ -1873,10 +1886,13 @@ msgid ""
 "are suggested. Of course, you can also enter any time you \n"
 "want beside the suggested times."
 msgstr ""
+"在彈出選單的時間選取 (例如 工作量的開始時間) %(name)s \n"
+"會以這個設定提示時段. 分鐘數越小會分出越多時段.\n"
+"當然除了提示時段你也可以自行輸入任何想要的時段."
 
 #: taskcoachlib/gui/dialog/preferences.py:564
 msgid "Idle time notice"
-msgstr ""
+msgstr "閑置時間提醒"
 
 #: taskcoachlib/gui/dialog/preferences.py:565
 msgid ""
@@ -1902,11 +1918,11 @@ msgstr "無"
 
 #: taskcoachlib/gui/dialog/preferences.py:592
 msgid "Changing the planned start date changes the due date"
-msgstr ""
+msgstr "更改計劃開始日會改動到期日"
 
 #: taskcoachlib/gui/dialog/preferences.py:594
 msgid "Changing the due date changes the planned start date"
-msgstr ""
+msgstr "更改到期日會改動計劃開始日"
 
 #: taskcoachlib/gui/dialog/preferences.py:596
 msgid ""
@@ -1991,27 +2007,27 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:642
 msgid "Task reminders"
-msgstr ""
+msgstr "任務提醒"
 
 #: taskcoachlib/gui/dialog/preferences.py:652
 msgid "Notification system to use for reminders"
-msgstr ""
+msgstr "任務提醒使用的通知系統"
 
 #: taskcoachlib/gui/dialog/preferences.py:656
 msgid "Let the computer say the reminder"
-msgstr ""
+msgstr "讓電腦發送提醒"
 
 #: taskcoachlib/gui/dialog/preferences.py:657
 msgid "(Needs espeak)"
-msgstr ""
+msgstr "(需要 espeak)"
 
 #: taskcoachlib/gui/dialog/preferences.py:662
 msgid "Default snooze time to use after reminder"
-msgstr ""
+msgstr "預設提醒後的貪睡時間"
 
 #: taskcoachlib/gui/dialog/preferences.py:666
 msgid "Snooze times to offer in task reminder dialog"
-msgstr ""
+msgstr "任務提醒視窗設定的貪睡時間"
 
 #: taskcoachlib/gui/dialog/preferences.py:674
 msgid "iPhone"
@@ -2019,15 +2035,15 @@ msgstr "iPhone"
 
 #: taskcoachlib/gui/dialog/preferences.py:680
 msgid "Password for synchronization with iPhone"
-msgstr ""
+msgstr "用於與 iPhone 同步的密碼"
 
 #: taskcoachlib/gui/dialog/preferences.py:681
 msgid "When synchronizing, enter this password on the iPhone to authorize it"
-msgstr ""
+msgstr "當同步時, 在 iPhone 輸入該密碼以通過認證"
 
 #: taskcoachlib/gui/dialog/preferences.py:683
 msgid "Bonjour service name"
-msgstr ""
+msgstr "Bonjour 服務名稱"
 
 #: taskcoachlib/gui/dialog/preferences.py:685
 msgid "Upload completed tasks to device"
@@ -2047,29 +2063,31 @@ msgstr "在編輯器中檢查拼字"
 
 #: taskcoachlib/gui/dialog/preferences.py:703
 msgid "Font to use in the description field of edit dialogs"
-msgstr ""
+msgstr "用於編輯視窗說明欄的字型"
 
 #: taskcoachlib/gui/dialog/preferences.py:714
 msgid "OS X"
-msgstr ""
+msgstr "OS X"
 
 #: taskcoachlib/gui/dialog/preferences.py:721
 msgid "Get e-mail subject from Mail.app"
-msgstr ""
+msgstr "從 Mail.app 取得 e-mail 主旨"
 
 #: taskcoachlib/gui/dialog/preferences.py:722
 msgid ""
 "When dropping an e-mail from Mail.app, try to get its subject.\n"
 "This takes up to 20 seconds."
 msgstr ""
+"當透過 Mail.app 發送 e-mail 並取得主旨.\n"
+"需費時 20 秒."
 
 #: taskcoachlib/gui/dialog/preferences.py:728
 msgid "Linux"
-msgstr ""
+msgstr "Linux"
 
 #: taskcoachlib/gui/dialog/preferences.py:735
 msgid "Focus task subject in task editor"
-msgstr ""
+msgstr "聚焦任務主題在任務編輯器中"
 
 #: taskcoachlib/gui/dialog/preferences.py:736
 msgid ""
@@ -2079,7 +2097,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/reminder.py:31
 msgid "%(name)s reminder - %(task)s"
-msgstr ""
+msgstr "%(name)s 提醒 - %(task)s"
 
 #: taskcoachlib/gui/dialog/reminder.py:65
 msgid "Reminder date/time"
@@ -2091,7 +2109,7 @@ msgstr "延後通知"
 
 #: taskcoachlib/gui/dialog/reminder.py:88
 msgid "Also make this the default snooze time for future reminders"
-msgstr ""
+msgstr "附帶設定成為未來提醒的預設貪睡時間"
 
 #: taskcoachlib/gui/dialog/reminder.py:94
 msgid "Mark task completed"
@@ -2143,7 +2161,7 @@ msgstr "慢"
 #: taskcoachlib/gui/dialog/syncpreferences.py:96
 #: taskcoachlib/gui/dialog/syncpreferences.py:109
 msgid "One way from client"
-msgstr ""
+msgstr "客戶端單向同步"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:97
 #: taskcoachlib/gui/dialog/syncpreferences.py:110
@@ -2153,7 +2171,7 @@ msgstr "從客戶刷新"
 #: taskcoachlib/gui/dialog/syncpreferences.py:98
 #: taskcoachlib/gui/dialog/syncpreferences.py:111
 msgid "One way from server"
-msgstr ""
+msgstr "伺服端單向同步"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:99
 #: taskcoachlib/gui/dialog/syncpreferences.py:112
@@ -2183,43 +2201,43 @@ msgstr "預覽"
 
 #: taskcoachlib/gui/dialog/toolbar.py:67
 msgid "Available tools"
-msgstr ""
+msgstr "可用的工具"
 
 #: taskcoachlib/gui/dialog/toolbar.py:83
 msgid "Make this tool visible in the toolbar"
-msgstr ""
+msgstr "使這個工具在工具列上顯示"
 
 #: taskcoachlib/gui/dialog/toolbar.py:87
 msgid "Hide this tool from the toolbar"
-msgstr ""
+msgstr "使這個工具從工具列上隱藏"
 
 #: taskcoachlib/gui/dialog/toolbar.py:92
 msgid "Tools"
-msgstr ""
+msgstr "工具"
 
 #: taskcoachlib/gui/dialog/toolbar.py:106
 msgid "Move the tool up (to the left of the toolbar)"
-msgstr ""
+msgstr "將工具上移 (向工具列的左邊)"
 
 #: taskcoachlib/gui/dialog/toolbar.py:110
 msgid "Move the tool down (to the right of the toolbar)"
-msgstr ""
+msgstr "將工具下移 (向工具列的右邊)"
 
 #: taskcoachlib/gui/dialog/toolbar.py:134
 msgid "Reorder toolbar buttons by drag and dropping them in this list."
-msgstr ""
+msgstr "在清單拖放重新安排工具列按鈕."
 
 #: taskcoachlib/gui/dialog/toolbar.py:167
 #: taskcoachlib/gui/dialog/toolbar.py:225
 #: taskcoachlib/gui/dialog/toolbar.py:254
 msgid "Separator"
-msgstr ""
+msgstr "分隔"
 
 #: taskcoachlib/gui/dialog/toolbar.py:169
 #: taskcoachlib/gui/dialog/toolbar.py:228
 #: taskcoachlib/gui/dialog/toolbar.py:256
 msgid "Spacer"
-msgstr ""
+msgstr "空格"
 
 #: taskcoachlib/gui/dialog/version.py:41
 msgid "Notify me of new versions."
@@ -2231,7 +2249,7 @@ msgstr "%(name)s 已有新版本"
 
 #: taskcoachlib/gui/dialog/version.py:66
 msgid "You are using %(name)s version %(currentVersion)s."
-msgstr ""
+msgstr "你使用的是 %(name)s 版本 %(currentVersion)s."
 
 #: taskcoachlib/gui/dialog/version.py:71
 msgid "Version %(version)s of %(name)s is available from"
@@ -2243,7 +2261,7 @@ msgstr "%(name)s是最新的"
 
 #: taskcoachlib/gui/dialog/version.py:81
 msgid "%(name)s is up to date at version %(version)s."
-msgstr ""
+msgstr "%(name)s 是最新版本 %(version)s."
 
 #: taskcoachlib/gui/dialog/version.py:86
 msgid "Couldn't find out latest version"
@@ -2273,23 +2291,28 @@ msgstr "警告"
 
 #: taskcoachlib/gui/dialog/xfce4warning.py:35
 msgid "Task Coach has known issues with XFCE4 session management.\n"
-msgstr ""
+msgstr "Task Coach 包含已知關於 XFCE4 session management 的問題 .\n"
 
 #: taskcoachlib/gui/dialog/xfce4warning.py:36
 msgid ""
 "If you experience random freeze at startup, please uncheck\n"
 "the \"Use X11 session management\" in the Features tab of the preferences.\n"
 msgstr ""
+"如果你在啟動時遇到隨機停滯的問題, 請取消選取\n"
+"偏好設定的功能頁籤中的 \"Use X11 session management\".\n"
+"\n"
+"If you experience random freeze at startup, please uncheck\n"
+"the \"Use X11 session management\" in the Features tab of the preferences.\n"
 
 #: taskcoachlib/gui/dialog/xfce4warning.py:37
 msgid "Do not show this dialog at startup"
-msgstr ""
+msgstr "啓動時不顯示這個視窗"
 
 #: taskcoachlib/gui/idlecontroller.py:41
 msgid ""
 "No user input since %s. The following task was\n"
 "being tracked:"
-msgstr ""
+msgstr "從 %s 使用者沒有輸入動作. 追蹤到以下任務:"
 
 #: taskcoachlib/gui/idlecontroller.py:46
 msgid "Do nothing"
@@ -2297,11 +2320,11 @@ msgstr "什麼都不做"
 
 #: taskcoachlib/gui/idlecontroller.py:47
 msgid "Stop it at %s"
-msgstr ""
+msgstr "停止於 %s"
 
 #: taskcoachlib/gui/idlecontroller.py:48
 msgid "Stop it at %s and resume now"
-msgstr ""
+msgstr "停止於 %s 且立刻恢復"
 
 #: taskcoachlib/gui/idlecontroller.py:102
 msgid "Notification"
@@ -2373,6 +2396,8 @@ msgid ""
 "Cannot save %s\n"
 "It is locked by another instance of %s.\n"
 msgstr ""
+"不能儲存 %s\n"
+"已被另一個 %s 實體鎖定.\n"
 
 #: taskcoachlib/gui/iocontroller.py:252
 msgid ""
@@ -2510,7 +2535,7 @@ msgstr ""
 
 #: taskcoachlib/gui/mainwindow.py:336
 msgid "iPhone/iPod"
-msgstr ""
+msgstr "iPhone/iPod"
 
 #: taskcoachlib/gui/mainwindow.py:346
 msgid "Synchronization type"
@@ -2523,224 +2548,224 @@ msgid ""
 "bug report."
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:208
+#: taskcoachlib/gui/menu.py:210
 msgid "&File"
 msgstr "檔案(&F)"
 
-#: taskcoachlib/gui/menu.py:210
+#: taskcoachlib/gui/menu.py:212
 msgid "&Edit"
 msgstr "編輯(&E)"
 
-#: taskcoachlib/gui/menu.py:212
+#: taskcoachlib/gui/menu.py:214
 msgid "&View"
 msgstr "檢視(&V)"
 
-#: taskcoachlib/gui/menu.py:214
+#: taskcoachlib/gui/menu.py:216
 msgid "&New"
 msgstr "新增(&N)"
 
-#: taskcoachlib/gui/menu.py:216
+#: taskcoachlib/gui/menu.py:218
 msgid "&Actions"
 msgstr "動作(&A)"
 
-#: taskcoachlib/gui/menu.py:217
+#: taskcoachlib/gui/menu.py:219
 msgid "&Help"
 msgstr "求助(&H)"
 
-#: taskcoachlib/gui/menu.py:253
+#: taskcoachlib/gui/menu.py:255
 msgid "&Import"
 msgstr "匯入(&I)"
 
-#: taskcoachlib/gui/menu.py:255
+#: taskcoachlib/gui/menu.py:257
 msgid "&Export"
 msgstr "匯出(&E)"
 
-#: taskcoachlib/gui/menu.py:366
+#: taskcoachlib/gui/menu.py:368
 msgid "&Select"
 msgstr "選擇(&S)"
 
-#: taskcoachlib/gui/menu.py:395
+#: taskcoachlib/gui/menu.py:397
 msgid "&New viewer"
 msgstr "新檢視器(&N)"
 
-#: taskcoachlib/gui/menu.py:399
+#: taskcoachlib/gui/menu.py:401
 msgid "&Activate next viewer\tCtrl+PgDn"
 msgstr "啟用下一個觀看畫面 (&A)\tCtrl+PgDn"
 
-#: taskcoachlib/gui/menu.py:403
+#: taskcoachlib/gui/menu.py:405
 msgid "Activate &previous viewer\tCtrl+PgUp"
 msgstr "啟用上一個觀看畫面 (&P)\tCtrl+PgUp"
 
-#: taskcoachlib/gui/menu.py:411 taskcoachlib/gui/menu.py:412
+#: taskcoachlib/gui/menu.py:413 taskcoachlib/gui/menu.py:414
 msgid "&Mode"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:413 taskcoachlib/gui/menu.py:414
+#: taskcoachlib/gui/menu.py:415 taskcoachlib/gui/menu.py:416
 msgid "&Filter"
 msgstr "過濾器(&F)"
 
-#: taskcoachlib/gui/menu.py:415 taskcoachlib/gui/menu.py:416
+#: taskcoachlib/gui/menu.py:417 taskcoachlib/gui/menu.py:418
 msgid "&Sort"
 msgstr "排序(&S)"
 
-#: taskcoachlib/gui/menu.py:417 taskcoachlib/gui/menu.py:418
+#: taskcoachlib/gui/menu.py:419 taskcoachlib/gui/menu.py:420
 msgid "&Columns"
 msgstr "欄(&C)"
 
-#: taskcoachlib/gui/menu.py:420 taskcoachlib/gui/menu.py:421
+#: taskcoachlib/gui/menu.py:422 taskcoachlib/gui/menu.py:423
 msgid "&Rounding"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:423
+#: taskcoachlib/gui/menu.py:425
 msgid "&Tree options"
 msgstr "樹狀目錄選項(&T)"
 
-#: taskcoachlib/gui/menu.py:427
+#: taskcoachlib/gui/menu.py:429
 msgid "T&oolbar"
 msgstr "工具列(&O)"
 
-#: taskcoachlib/gui/menu.py:429
+#: taskcoachlib/gui/menu.py:431
 msgid "Show/hide status bar"
 msgstr "顯示/隱藏狀態列"
 
-#: taskcoachlib/gui/menu.py:429
+#: taskcoachlib/gui/menu.py:431
 msgid "Status&bar"
 msgstr "狀態列(&B)"
 
-#: taskcoachlib/gui/menu.py:440
+#: taskcoachlib/gui/menu.py:442
 msgid "&Task"
 msgstr "工作(&T)"
 
-#: taskcoachlib/gui/menu.py:441
+#: taskcoachlib/gui/menu.py:443
 msgid "Open a new tab with a viewer that displays tasks"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:443
+#: taskcoachlib/gui/menu.py:445
 msgid "Task &statistics"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:444
+#: taskcoachlib/gui/menu.py:446
 msgid "Open a new tab with a viewer that displays task statistics"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:446
+#: taskcoachlib/gui/menu.py:448
 msgid "Task &square map"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:447
+#: taskcoachlib/gui/menu.py:449
 msgid "Open a new tab with a viewer that displays tasks in a square map"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:449
+#: taskcoachlib/gui/menu.py:451
 msgid "T&imeline"
 msgstr "T&imeline"
 
-#: taskcoachlib/gui/menu.py:450
+#: taskcoachlib/gui/menu.py:452
 msgid ""
 "Open a new tab with a viewer that displays a timeline of tasks and effort"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:452
+#: taskcoachlib/gui/menu.py:454
 msgid "&Calendar"
 msgstr "行事曆(&C)"
 
-#: taskcoachlib/gui/menu.py:453
+#: taskcoachlib/gui/menu.py:455
 msgid "Open a new tab with a viewer that displays tasks in a calendar"
 msgstr "開啟新頁籤以顯示行事曆上的任務"
 
-#: taskcoachlib/gui/menu.py:455 taskcoachlib/gui/viewer/mixin.py:336
+#: taskcoachlib/gui/menu.py:457 taskcoachlib/gui/viewer/mixin.py:336
 msgid "&Category"
 msgstr "類別(&C)"
 
-#: taskcoachlib/gui/menu.py:456
+#: taskcoachlib/gui/menu.py:458
 msgid "Open a new tab with a viewer that displays categories"
 msgstr "開啟新頁籤以顯示類別"
 
-#: taskcoachlib/gui/menu.py:460
+#: taskcoachlib/gui/menu.py:462
 msgid "&Effort"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:461
+#: taskcoachlib/gui/menu.py:463
 msgid "Open a new tab with a viewer that displays efforts"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:464
+#: taskcoachlib/gui/menu.py:466
 msgid "Effort for &one task"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:465
+#: taskcoachlib/gui/menu.py:467
 msgid ""
 "Open a new tab with a viewer that displays efforts for the selected task"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:469
+#: taskcoachlib/gui/menu.py:471
 msgid "&Note"
 msgstr "註記(&N)"
 
-#: taskcoachlib/gui/menu.py:470
+#: taskcoachlib/gui/menu.py:472
 msgid "Open a new tab with a viewer that displays notes"
 msgstr "開啟新頁籤以顯示註記"
 
-#: taskcoachlib/gui/menu.py:530
+#: taskcoachlib/gui/menu.py:532
 msgid "&Hide"
 msgstr "隱藏(&H)"
 
-#: taskcoachlib/gui/menu.py:530
+#: taskcoachlib/gui/menu.py:532
 msgid "Hide the toolbar"
 msgstr "隱藏工具列"
 
-#: taskcoachlib/gui/menu.py:531
+#: taskcoachlib/gui/menu.py:533
 msgid "&Small images"
 msgstr "小圖示(&S)"
 
-#: taskcoachlib/gui/menu.py:531
+#: taskcoachlib/gui/menu.py:533
 msgid "Small images (16x16) on the toolbar"
 msgstr "工具列使用小圖示(16x16)"
 
-#: taskcoachlib/gui/menu.py:532
+#: taskcoachlib/gui/menu.py:534
 msgid "&Medium-sized images"
 msgstr "中圖示(&M)"
 
-#: taskcoachlib/gui/menu.py:532
+#: taskcoachlib/gui/menu.py:534
 msgid "Medium-sized images (22x22) on the toolbar"
 msgstr "工具列使用中圖示(22x22)"
 
-#: taskcoachlib/gui/menu.py:533
+#: taskcoachlib/gui/menu.py:535
 msgid "&Large images"
 msgstr "大圖示(&L)"
 
-#: taskcoachlib/gui/menu.py:533
+#: taskcoachlib/gui/menu.py:535
 msgid "Large images (32x32) on the toolbar"
 msgstr "工具列使用大圖示(32x32)"
 
-#: taskcoachlib/gui/menu.py:551 taskcoachlib/gui/menu.py:654
+#: taskcoachlib/gui/menu.py:553 taskcoachlib/gui/menu.py:656
 #: taskcoachlib/gui/uicommand/uicommand.py:1217
 msgid "New task from &template"
 msgstr "從樣版新增任務(&t)"
 
-#: taskcoachlib/gui/menu.py:592 taskcoachlib/gui/menu.py:804
-#: taskcoachlib/gui/menu.py:908
+#: taskcoachlib/gui/menu.py:594 taskcoachlib/gui/menu.py:806
+#: taskcoachlib/gui/menu.py:910
 msgid "&Toggle category"
 msgstr "切換類別(&T)"
 
-#: taskcoachlib/gui/menu.py:603
+#: taskcoachlib/gui/menu.py:605
 msgid "Change task &priority"
 msgstr "更改任務優先權(&p)"
 
-#: taskcoachlib/gui/menu.py:670 taskcoachlib/gui/uicommand/uicommand.py:1617
+#: taskcoachlib/gui/menu.py:672 taskcoachlib/gui/uicommand/uicommand.py:1617
 #: taskcoachlib/gui/uicommand/uicommand.py:1659
 msgid "&Start tracking effort"
 msgstr "開始追蹤工作量(&S)"
 
-#: taskcoachlib/gui/menu.py:721 taskcoachlib/gui/viewer/mixin.py:130
+#: taskcoachlib/gui/menu.py:723 taskcoachlib/gui/viewer/mixin.py:130
 msgid "%s (subcategories)"
 msgstr "%s (子類別)"
 
-#: taskcoachlib/gui/menu.py:769
+#: taskcoachlib/gui/menu.py:771
 msgid "%s (subtasks)"
 msgstr "%s (子工作)"
 
-#: taskcoachlib/gui/menu.py:814 taskcoachlib/gui/viewer/mixin.py:418
+#: taskcoachlib/gui/menu.py:816 taskcoachlib/gui/viewer/mixin.py:418
 #: taskcoachlib/gui/viewer/task.py:1082
 msgid "&Priority"
 msgstr "優先權(&P)"
@@ -2751,7 +2776,7 @@ msgstr "頁面"
 
 #: taskcoachlib/gui/remindercontroller.py:93
 msgid "%s Reminder"
-msgstr ""
+msgstr "%s 提醒"
 
 #: taskcoachlib/gui/taskbaricon.py:161
 msgid "%d tasks overdue"
@@ -3555,12 +3580,12 @@ msgid "No rounding"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2465
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1710
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1731
 msgid "1 minute"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2466
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1712
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1733
 msgid "%d minutes"
 msgstr ""
 
@@ -3772,11 +3797,13 @@ msgstr ""
 msgid "Effort aggregation"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/effort.py:380
-msgid "Effort: %d selected, %d visible, %d total"
-msgstr "工作量：%d 筆已選擇，%d 筆可見，共 %d 筆"
+#: taskcoachlib/gui/viewer/effort.py:393
+msgid ""
+"Effort: %d selected, %d visible, %d total. Time spent: %s selected, %s "
+"visible, %s total"
+msgstr ""
 
-#: taskcoachlib/gui/viewer/effort.py:383
+#: taskcoachlib/gui/viewer/effort.py:397
 msgid "Status: %d tracking"
 msgstr "狀態：%d 筆追蹤中"
 
@@ -4246,7 +4273,7 @@ msgstr ""
 #: taskcoachlib/persistence/csv/generator.py:39
 #: taskcoachlib/persistence/csv/reader.py:102
 msgid "Reminder date"
-msgstr ""
+msgstr "提醒日期"
 
 #: taskcoachlib/gui/wizard/csvimport.py:241
 #: taskcoachlib/persistence/csv/reader.py:128
@@ -4295,7 +4322,7 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:87 taskcoachlib/help/__init__.py:233
 msgid "Reminders"
-msgstr ""
+msgstr "提醒"
 
 #: taskcoachlib/help/__init__.py:91 taskcoachlib/help/__init__.py:247
 msgid "About effort"
@@ -4928,7 +4955,7 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:455
 msgid "Recurrence and reminders are not supported yet."
-msgstr ""
+msgstr "循環和提醒還未被支援."
 
 #: taskcoachlib/help/__init__.py:456
 msgid "Note categories are lost to the server."
@@ -6119,7 +6146,7 @@ msgstr ""
 
 #: taskcoachlib/persistence/csv/generator.py:39
 msgid "Reminder time"
-msgstr ""
+msgstr "提醒時間"
 
 #: taskcoachlib/persistence/csv/generator.py:40
 msgid "Creation time"
@@ -6137,11 +6164,11 @@ msgstr ""
 msgid "New task due tomorrow"
 msgstr ""
 
-#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1700
+#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1721
 msgid "%d days"
 msgstr ""
 
-#: taskcoachlib/render.py:51 taskcoachlib/thirdparty/smartdatetimectrl.py:1698
+#: taskcoachlib/render.py:51 taskcoachlib/thirdparty/smartdatetimectrl.py:1719
 msgid "1 day"
 msgstr ""
 
@@ -6283,20 +6310,20 @@ msgstr "前一個(&P)"
 msgid "&Window"
 msgstr "視窗(&W)"
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1644
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1751
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1665
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1772
 msgid "Edit"
 msgstr "編輯"
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1695
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1716
 msgid "%d weeks"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1707
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1728
 msgid "%d hours"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1751
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1772
 msgid "Done"
 msgstr "完成"
 
@@ -6368,7 +6395,7 @@ msgstr "密碼:"
 msgid "Store in keychain"
 msgstr ""
 
-#: taskcoachlib/widgets/password.py:91
+#: taskcoachlib/widgets/password.py:92
 msgid ""
 "There was a problem trying to find out your system's keychain.\n"
 "Please file a bug report (see the Help menu) and attach a screenshot of this "
@@ -6378,11 +6405,11 @@ msgid ""
 "%s"
 msgstr ""
 
-#: taskcoachlib/widgets/password.py:96
+#: taskcoachlib/widgets/password.py:97
 msgid "Please enter your password."
 msgstr "請輸入您的密碼。"
 
-#: taskcoachlib/widgets/password.py:109
+#: taskcoachlib/widgets/password.py:110
 msgid "Please enter your password"
 msgstr "請輸入您的密碼"
 
@@ -6488,6 +6515,9 @@ msgstr "開啟網址時發生錯誤"
 
 #~ msgid "Mark the selected task(s) uncompleted"
 #~ msgstr "標示已選工作未完城"
+
+#~ msgid "Effort: %d selected, %d visible, %d total"
+#~ msgstr "工作量：%d 筆已選擇，%d 筆可見，共 %d 筆"
 
 #~ msgid "Sort tasks by start date"
 #~ msgstr "以開始日期排序工作"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-24 21:51+0000\n"
-"PO-Revision-Date: 2012-08-24 11:21+0000\n"
-"Last-Translator: linuxlalala <Unknown>\n"
+"POT-Creation-Date: 2013-06-01 16:31+0000\n"
+"PO-Revision-Date: 2013-04-28 13:40+0000\n"
+"Last-Translator: HereTo HelpTranslate <necroaalalealex@yahoo.gr>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-14 16:21+0000\n"
-"X-Generator: Launchpad (build 16564)\n"
+"X-Launchpad-Export-Date: 2013-07-06 19:06+0000\n"
+"X-Generator: Launchpad (build 16696)\n"
 
 #: taskcoachlib/application/application.py:54
 msgid "Errors have occured. Please see \"%s\""
@@ -24,7 +24,7 @@ msgstr "Προέκυψε ένα σφάλμα. Παρακαλώ δείτε το \
 #: taskcoachlib/application/application.py:54
 #: taskcoachlib/gui/mainwindow.py:359 taskcoachlib/iphone/protocol.py:482
 #: taskcoachlib/widgets/draganddrop.py:121
-#: taskcoachlib/widgets/draganddrop.py:163 taskcoachlib/widgets/password.py:91
+#: taskcoachlib/widgets/draganddrop.py:163 taskcoachlib/widgets/password.py:92
 msgid "Error"
 msgstr "Σφάλμα"
 
@@ -33,7 +33,7 @@ msgid ""
 "Couldn't load settings from TaskCoach.ini:\n"
 "%s"
 msgstr ""
-"Δεν είναι δυνατή η φόρτωση των ρυθμίσεων από το TaskCoach.ini:\n"
+"Δεν ήταν δυνατή η φόρτωση των ρυθμίσεων από το TaskCoach.ini:\n"
 "%s"
 
 #: taskcoachlib/application/application.py:291
@@ -108,15 +108,15 @@ msgstr "Επικόλληση ως δευτερεύον αντικείμενο"
 
 #: taskcoachlib/command/base.py:314
 msgid "Paste as subitem of \"%s\""
-msgstr ""
+msgstr "Επικόλληση ως δευτερεύον αντικείμενο του \"%s\""
 
 #: taskcoachlib/command/base.py:326 taskcoachlib/gui/dialog/toolbar.py:134
 msgid "Drag and drop"
-msgstr "Μεταφορά και απόθεση"
+msgstr "Μετάφερε με το ποντίκι"
 
 #: taskcoachlib/command/base.py:327
 msgid "Drag and drop \"%s\""
-msgstr "Μεταφορά και απόθεση του \"%s\""
+msgstr "Μεταφορά με το ποντίκι του \"%s\""
 
 #: taskcoachlib/command/base.py:370
 msgid "Edit subjects"
@@ -152,11 +152,11 @@ msgstr "Αλλαγή γραμματοσειράς του \"%s\""
 
 #: taskcoachlib/command/base.py:505
 msgid "Change foreground colors"
-msgstr "Αλλαγή χρωμάτων προσκηνίου"
+msgstr ""
 
 #: taskcoachlib/command/base.py:506
 msgid "Change foreground color \"%s\""
-msgstr "Αλλαγή χρώματος προσκηνίου \"%s\""
+msgstr ""
 
 #: taskcoachlib/command/base.py:518
 msgid "Change background colors"
@@ -181,7 +181,7 @@ msgstr "Νέα κατηγορία"
 
 #: taskcoachlib/command/categoryCommands.py:41
 msgid "New subcategories"
-msgstr "Νέα υποκατηγορία"
+msgstr "Νέες υποκατηγορίες"
 
 #: taskcoachlib/command/categoryCommands.py:42
 msgid "New subcategory of \"%s\""
@@ -193,11 +193,11 @@ msgstr "Νέα υποκατηγορία"
 
 #: taskcoachlib/command/categoryCommands.py:58
 msgid "Edit exclusive subcategories"
-msgstr "Αλλαγή αποκλειστικών υποκατηγοριών"
+msgstr "Επεξεργασία αποκλειστικών υποκατηγοριών"
 
 #: taskcoachlib/command/categoryCommands.py:59
 msgid "Edit exclusive subcategories of \"%s\""
-msgstr "Αλλαγή αποκλειστικών υποκατηγοριών του \"%s\""
+msgstr "Επεξεργασία αποκλειστικών υποκατηγοριών του \"%s\""
 
 #: taskcoachlib/command/categoryCommands.py:83
 msgid "Delete categories"
@@ -209,47 +209,47 @@ msgstr "Διαγραφή κατηγορίας \"%s\""
 
 #: taskcoachlib/command/categoryCommands.py:88
 msgid "Drag and drop categories"
-msgstr "Σύρσιμο και απόθεση κατηγοριών"
+msgstr "Μετάφερε με το ποντίκι κατηγορίες"
 
 #: taskcoachlib/command/effortCommands.py:25
 msgid "New efforts"
-msgstr ""
+msgstr "Καινούργιες προσπάθειες"
 
 #: taskcoachlib/command/effortCommands.py:26
 msgid "New effort of \"%s\""
-msgstr ""
+msgstr "Καινούργια προσπάθεια του \"%s\""
 
 #: taskcoachlib/command/effortCommands.py:64
 msgid "Delete efforts"
-msgstr ""
+msgstr "Διαγραφή προσπαθειών"
 
 #: taskcoachlib/command/effortCommands.py:65
 msgid "Delete effort \"%s\""
-msgstr ""
+msgstr "Διαγραφή προσπάθειας \"%s\""
 
 #: taskcoachlib/command/effortCommands.py:72
 msgid "Change task of effort"
-msgstr ""
+msgstr "Αλλαγή εργασίας της προσπάθειας"
 
 #: taskcoachlib/command/effortCommands.py:73
 msgid "Change task of \"%s\" effort"
-msgstr ""
+msgstr "Αλλαγή εργασίας της \"%s\" προσπάθειας"
 
 #: taskcoachlib/command/effortCommands.py:100
 msgid "Change effort start date and time"
-msgstr ""
+msgstr "Αλλαγή ημερομηνίας και ώρας εκκίνησης προσπάθειας"
 
 #: taskcoachlib/command/effortCommands.py:101
 msgid "Change effort start date and time of \"%s\""
-msgstr ""
+msgstr "Αλλαγή ημερομηνίας και ώρας εκκίνησης προσπάθειας του \"%s\""
 
 #: taskcoachlib/command/effortCommands.py:135
 msgid "Change effort stop date and time"
-msgstr ""
+msgstr "Αλλαγή προθεσμίας προσπάθειας"
 
 #: taskcoachlib/command/effortCommands.py:136
 msgid "Change effort stop date and time of \"%s\""
-msgstr ""
+msgstr "Αλλαγή προθεσμίας της \"%s\" προσπάθειας"
 
 #: taskcoachlib/command/noteCommands.py:26
 #: taskcoachlib/command/noteCommands.py:29
@@ -280,11 +280,11 @@ msgstr "Διαγραφή σημείωσης \"%s\""
 
 #: taskcoachlib/command/noteCommands.py:61
 msgid "Drag and drop notes"
-msgstr "Σύρσιμο και απόθεση σημειώσεων"
+msgstr "Μεταφορά σημειώσεων με το ποντίκι"
 
 #: taskcoachlib/command/noteCommands.py:62
 msgid "Drag and drop note \"%s\""
-msgstr "Σύρσιμο και απόθεση της σημείωσης \"%s\""
+msgstr "Μεταφορά σημείωσης \"%s\" με το ποντίκι"
 
 #: taskcoachlib/command/noteCommands.py:66
 msgid "Add note"
@@ -333,7 +333,7 @@ msgstr "Νέες υπoεργασίες"
 
 #: taskcoachlib/command/taskCommands.py:197
 msgid "New subtask of \"%s\""
-msgstr "Νέα υπoεργασία του \"%s\""
+msgstr "Νέα υποεργασία του \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:201
 msgid "New subtask"
@@ -341,11 +341,11 @@ msgstr "Νέα υποεργασία"
 
 #: taskcoachlib/command/taskCommands.py:229
 msgid "Mark tasks completed"
-msgstr "Οι μαρκαρισμένες εργασίες ολοκληρώθηκαν"
+msgstr "Σημείωσε τις εργασίες ως ολοκληρωμένες"
 
 #: taskcoachlib/command/taskCommands.py:230
 msgid "Mark \"%s\" completed"
-msgstr ""
+msgstr "Σημείωσε το \"%s\" ως ολοκληρωμένο"
 
 #: taskcoachlib/command/taskCommands.py:256
 msgid "Mark task active"
@@ -433,19 +433,19 @@ msgstr "Αλλαγή σχεδιασμένης ημερομηνίας έναρξ�
 
 #: taskcoachlib/command/taskCommands.py:564
 msgid "Change due date"
-msgstr ""
+msgstr "Αλλαγή προθεσμίας λήξης"
 
 #: taskcoachlib/command/taskCommands.py:565
 msgid "Change due date of \"%s\""
-msgstr ""
+msgstr "Αλλαγή προθεσμίας λήξης του \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:585
 msgid "Change actual start date"
-msgstr ""
+msgstr "Αλλαγή πραγματικής ημερομηνίας εκκίνησης"
 
 #: taskcoachlib/command/taskCommands.py:586
 msgid "Change actual start date of \"%s\""
-msgstr ""
+msgstr "Αλλαγή πραγματικής ημερομηνίας εκκίνησης του \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:606
 msgid "Change completion date"
@@ -457,11 +457,11 @@ msgstr "Αλλαγή ημερομηνίας ολοκλήρωσης του \"%s\"
 
 #: taskcoachlib/command/taskCommands.py:630
 msgid "Change reminder dates/times"
-msgstr ""
+msgstr "Αλλαγή ημερομηνίας/ώρας υπενθύμισης"
 
 #: taskcoachlib/command/taskCommands.py:631
 msgid "Change reminder date/time of \"%s\""
-msgstr ""
+msgstr "Αλλαγή ημερομηνίας/ώρας υπενθύμισης του \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:643
 msgid "Change recurrences"
@@ -602,7 +602,7 @@ msgid "45 minutes"
 msgstr ""
 
 #: taskcoachlib/domain/date/snooze.py:25
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1705
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1726
 msgid "1 hour"
 msgstr ""
 
@@ -651,7 +651,7 @@ msgid "2 weeks"
 msgstr ""
 
 #: taskcoachlib/domain/date/snooze.py:30
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1693
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1714
 msgid "1 week"
 msgstr ""
 
@@ -1384,24 +1384,24 @@ msgid "Start"
 msgstr "Έναρξη"
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1595
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1616
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Week(s)"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1596
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1617
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Day(s)"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1597
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1618
 msgid "Hour(s)"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1598
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1619
 msgid "Minute(s)"
 msgstr ""
 
@@ -2517,224 +2517,224 @@ msgid ""
 "bug report."
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:208
+#: taskcoachlib/gui/menu.py:210
 msgid "&File"
 msgstr "&Αρχείο"
 
-#: taskcoachlib/gui/menu.py:210
+#: taskcoachlib/gui/menu.py:212
 msgid "&Edit"
 msgstr "&Επεξεργασία"
 
-#: taskcoachlib/gui/menu.py:212
+#: taskcoachlib/gui/menu.py:214
 msgid "&View"
 msgstr "&Προβολή"
 
-#: taskcoachlib/gui/menu.py:214
+#: taskcoachlib/gui/menu.py:216
 msgid "&New"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:216
+#: taskcoachlib/gui/menu.py:218
 msgid "&Actions"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:217
+#: taskcoachlib/gui/menu.py:219
 msgid "&Help"
 msgstr "&Βοήθεια"
 
-#: taskcoachlib/gui/menu.py:253
+#: taskcoachlib/gui/menu.py:255
 msgid "&Import"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:255
+#: taskcoachlib/gui/menu.py:257
 msgid "&Export"
 msgstr "&Εξαγωγή"
 
-#: taskcoachlib/gui/menu.py:366
+#: taskcoachlib/gui/menu.py:368
 msgid "&Select"
 msgstr "&Επιλογή"
 
-#: taskcoachlib/gui/menu.py:395
+#: taskcoachlib/gui/menu.py:397
 msgid "&New viewer"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:399
+#: taskcoachlib/gui/menu.py:401
 msgid "&Activate next viewer\tCtrl+PgDn"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:403
+#: taskcoachlib/gui/menu.py:405
 msgid "Activate &previous viewer\tCtrl+PgUp"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:411 taskcoachlib/gui/menu.py:412
+#: taskcoachlib/gui/menu.py:413 taskcoachlib/gui/menu.py:414
 msgid "&Mode"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:413 taskcoachlib/gui/menu.py:414
+#: taskcoachlib/gui/menu.py:415 taskcoachlib/gui/menu.py:416
 msgid "&Filter"
 msgstr "&Φίλτρο"
 
-#: taskcoachlib/gui/menu.py:415 taskcoachlib/gui/menu.py:416
+#: taskcoachlib/gui/menu.py:417 taskcoachlib/gui/menu.py:418
 msgid "&Sort"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:417 taskcoachlib/gui/menu.py:418
+#: taskcoachlib/gui/menu.py:419 taskcoachlib/gui/menu.py:420
 msgid "&Columns"
 msgstr "&Στήλες"
 
-#: taskcoachlib/gui/menu.py:420 taskcoachlib/gui/menu.py:421
+#: taskcoachlib/gui/menu.py:422 taskcoachlib/gui/menu.py:423
 msgid "&Rounding"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:423
+#: taskcoachlib/gui/menu.py:425
 msgid "&Tree options"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:427
+#: taskcoachlib/gui/menu.py:429
 msgid "T&oolbar"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:429
+#: taskcoachlib/gui/menu.py:431
 msgid "Show/hide status bar"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:429
+#: taskcoachlib/gui/menu.py:431
 msgid "Status&bar"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:440
+#: taskcoachlib/gui/menu.py:442
 msgid "&Task"
 msgstr "&Εργασία"
 
-#: taskcoachlib/gui/menu.py:441
+#: taskcoachlib/gui/menu.py:443
 msgid "Open a new tab with a viewer that displays tasks"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:443
+#: taskcoachlib/gui/menu.py:445
 msgid "Task &statistics"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:444
+#: taskcoachlib/gui/menu.py:446
 msgid "Open a new tab with a viewer that displays task statistics"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:446
+#: taskcoachlib/gui/menu.py:448
 msgid "Task &square map"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:447
+#: taskcoachlib/gui/menu.py:449
 msgid "Open a new tab with a viewer that displays tasks in a square map"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:449
+#: taskcoachlib/gui/menu.py:451
 msgid "T&imeline"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:450
+#: taskcoachlib/gui/menu.py:452
 msgid ""
 "Open a new tab with a viewer that displays a timeline of tasks and effort"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:452
+#: taskcoachlib/gui/menu.py:454
 msgid "&Calendar"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:453
+#: taskcoachlib/gui/menu.py:455
 msgid "Open a new tab with a viewer that displays tasks in a calendar"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:455 taskcoachlib/gui/viewer/mixin.py:336
+#: taskcoachlib/gui/menu.py:457 taskcoachlib/gui/viewer/mixin.py:336
 msgid "&Category"
 msgstr "&Κατηγορία"
 
-#: taskcoachlib/gui/menu.py:456
+#: taskcoachlib/gui/menu.py:458
 msgid "Open a new tab with a viewer that displays categories"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:460
+#: taskcoachlib/gui/menu.py:462
 msgid "&Effort"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:461
+#: taskcoachlib/gui/menu.py:463
 msgid "Open a new tab with a viewer that displays efforts"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:464
+#: taskcoachlib/gui/menu.py:466
 msgid "Effort for &one task"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:465
+#: taskcoachlib/gui/menu.py:467
 msgid ""
 "Open a new tab with a viewer that displays efforts for the selected task"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:469
+#: taskcoachlib/gui/menu.py:471
 msgid "&Note"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:470
+#: taskcoachlib/gui/menu.py:472
 msgid "Open a new tab with a viewer that displays notes"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:530
+#: taskcoachlib/gui/menu.py:532
 msgid "&Hide"
 msgstr "&Απόκρυψη"
 
-#: taskcoachlib/gui/menu.py:530
+#: taskcoachlib/gui/menu.py:532
 msgid "Hide the toolbar"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:531
+#: taskcoachlib/gui/menu.py:533
 msgid "&Small images"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:531
+#: taskcoachlib/gui/menu.py:533
 msgid "Small images (16x16) on the toolbar"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:532
+#: taskcoachlib/gui/menu.py:534
 msgid "&Medium-sized images"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:532
+#: taskcoachlib/gui/menu.py:534
 msgid "Medium-sized images (22x22) on the toolbar"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:533
+#: taskcoachlib/gui/menu.py:535
 msgid "&Large images"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:533
+#: taskcoachlib/gui/menu.py:535
 msgid "Large images (32x32) on the toolbar"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:551 taskcoachlib/gui/menu.py:654
+#: taskcoachlib/gui/menu.py:553 taskcoachlib/gui/menu.py:656
 #: taskcoachlib/gui/uicommand/uicommand.py:1217
 msgid "New task from &template"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:592 taskcoachlib/gui/menu.py:804
-#: taskcoachlib/gui/menu.py:908
+#: taskcoachlib/gui/menu.py:594 taskcoachlib/gui/menu.py:806
+#: taskcoachlib/gui/menu.py:910
 msgid "&Toggle category"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:603
+#: taskcoachlib/gui/menu.py:605
 msgid "Change task &priority"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:670 taskcoachlib/gui/uicommand/uicommand.py:1617
+#: taskcoachlib/gui/menu.py:672 taskcoachlib/gui/uicommand/uicommand.py:1617
 #: taskcoachlib/gui/uicommand/uicommand.py:1659
 msgid "&Start tracking effort"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:721 taskcoachlib/gui/viewer/mixin.py:130
+#: taskcoachlib/gui/menu.py:723 taskcoachlib/gui/viewer/mixin.py:130
 msgid "%s (subcategories)"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:769
+#: taskcoachlib/gui/menu.py:771
 msgid "%s (subtasks)"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:814 taskcoachlib/gui/viewer/mixin.py:418
+#: taskcoachlib/gui/menu.py:816 taskcoachlib/gui/viewer/mixin.py:418
 #: taskcoachlib/gui/viewer/task.py:1082
 msgid "&Priority"
 msgstr "&Προτεραιότητα"
@@ -3549,12 +3549,12 @@ msgid "No rounding"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2465
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1710
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1731
 msgid "1 minute"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2466
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1712
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1733
 msgid "%d minutes"
 msgstr ""
 
@@ -3766,11 +3766,13 @@ msgstr ""
 msgid "Effort aggregation"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/effort.py:380
-msgid "Effort: %d selected, %d visible, %d total"
+#: taskcoachlib/gui/viewer/effort.py:393
+msgid ""
+"Effort: %d selected, %d visible, %d total. Time spent: %s selected, %s "
+"visible, %s total"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/effort.py:383
+#: taskcoachlib/gui/viewer/effort.py:397
 msgid "Status: %d tracking"
 msgstr ""
 
@@ -6121,11 +6123,11 @@ msgstr ""
 msgid "New task due tomorrow"
 msgstr ""
 
-#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1700
+#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1721
 msgid "%d days"
 msgstr ""
 
-#: taskcoachlib/render.py:51 taskcoachlib/thirdparty/smartdatetimectrl.py:1698
+#: taskcoachlib/render.py:51 taskcoachlib/thirdparty/smartdatetimectrl.py:1719
 msgid "1 day"
 msgstr ""
 
@@ -6267,20 +6269,20 @@ msgstr ""
 msgid "&Window"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1644
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1751
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1665
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1772
 msgid "Edit"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1695
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1716
 msgid "%d weeks"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1707
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1728
 msgid "%d hours"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1751
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1772
 msgid "Done"
 msgstr ""
 
@@ -6352,7 +6354,7 @@ msgstr ""
 msgid "Store in keychain"
 msgstr ""
 
-#: taskcoachlib/widgets/password.py:91
+#: taskcoachlib/widgets/password.py:92
 msgid ""
 "There was a problem trying to find out your system's keychain.\n"
 "Please file a bug report (see the Help menu) and attach a screenshot of this "
@@ -6362,11 +6364,11 @@ msgid ""
 "%s"
 msgstr ""
 
-#: taskcoachlib/widgets/password.py:96
+#: taskcoachlib/widgets/password.py:97
 msgid "Please enter your password."
 msgstr ""
 
-#: taskcoachlib/widgets/password.py:109
+#: taskcoachlib/widgets/password.py:110
 msgid "Please enter your password"
 msgstr ""
 

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-06-01 17:00+CEST\n"
+"POT-Creation-Date: 2013-07-06 21:23+CEST\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,24 +15,30 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: taskcoachlib/application/application.py:54
-msgid "Errors have occured. Please see \"%s\""
+#: taskcoachlib/application/application.py:57
+msgid "Errors have occured. Please see \"taskcoachlog.txt\" in your \"My Documents\" folder."
 msgstr ""
 
-#: taskcoachlib/application/application.py:54
+#: taskcoachlib/application/application.py:57
+#: taskcoachlib/application/application.py:59
+#: taskcoachlib/gui/dialog/attributesync.py:91
 #: taskcoachlib/gui/mainwindow.py:359 taskcoachlib/iphone/protocol.py:482
 #: taskcoachlib/widgets/draganddrop.py:121
 #: taskcoachlib/widgets/draganddrop.py:163 taskcoachlib/widgets/password.py:92
 msgid "Error"
 msgstr ""
 
-#: taskcoachlib/application/application.py:290
+#: taskcoachlib/application/application.py:59
+msgid "Errors have occured. Please see \"%s\""
+msgstr ""
+
+#: taskcoachlib/application/application.py:299
 msgid ""
 "Couldn't load settings from TaskCoach.ini:\n"
 "%s"
 msgstr ""
 
-#: taskcoachlib/application/application.py:291
+#: taskcoachlib/application/application.py:300
 #: taskcoachlib/gui/iocontroller.py:72
 msgid "%s file error"
 msgstr ""
@@ -648,11 +654,11 @@ msgstr ""
 msgid "1 week"
 msgstr ""
 
-#: taskcoachlib/domain/effort/composite.py:184
+#: taskcoachlib/domain/effort/composite.py:189
 msgid "Total"
 msgstr ""
 
-#: taskcoachlib/domain/effort/composite.py:219
+#: taskcoachlib/domain/effort/composite.py:224
 msgid "Total for %s"
 msgstr ""
 

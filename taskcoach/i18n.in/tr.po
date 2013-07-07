@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-24 21:51+0000\n"
-"PO-Revision-Date: 2013-03-06 03:21+0000\n"
-"Last-Translator: Frank Niessink <frank@niessink.com>\n"
+"POT-Creation-Date: 2013-06-01 16:31+0000\n"
+"PO-Revision-Date: 2013-06-09 06:56+0000\n"
+"Last-Translator: Kaya Zeren <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-14 16:21+0000\n"
-"X-Generator: Launchpad (build 16564)\n"
+"X-Launchpad-Export-Date: 2013-07-06 19:05+0000\n"
+"X-Generator: Launchpad (build 16696)\n"
 
 #: taskcoachlib/application/application.py:54
 msgid "Errors have occured. Please see \"%s\""
@@ -24,7 +24,7 @@ msgstr "Hatalar oluştu. Lütden \"%s\" bölümüne bakın."
 #: taskcoachlib/application/application.py:54
 #: taskcoachlib/gui/mainwindow.py:359 taskcoachlib/iphone/protocol.py:482
 #: taskcoachlib/widgets/draganddrop.py:121
-#: taskcoachlib/widgets/draganddrop.py:163 taskcoachlib/widgets/password.py:91
+#: taskcoachlib/widgets/draganddrop.py:163 taskcoachlib/widgets/password.py:92
 msgid "Error"
 msgstr "Hata"
 
@@ -602,7 +602,7 @@ msgid "45 minutes"
 msgstr "45 dakika"
 
 #: taskcoachlib/domain/date/snooze.py:25
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1705
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1726
 msgid "1 hour"
 msgstr "1 saat"
 
@@ -651,7 +651,7 @@ msgid "2 weeks"
 msgstr "2 hafta"
 
 #: taskcoachlib/domain/date/snooze.py:30
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1693
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1714
 msgid "1 week"
 msgstr "1 hafta"
 
@@ -861,7 +861,7 @@ msgstr "Onay işareti"
 
 #: taskcoachlib/gui/artprovider.py:154
 msgid "Check marks"
-msgstr ""
+msgstr "Seçim işaretleri"
 
 #: taskcoachlib/gui/artprovider.py:155
 msgid "Clock"
@@ -1394,24 +1394,24 @@ msgid "Start"
 msgstr "Başlat"
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1595
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1616
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Week(s)"
 msgstr "Hafta"
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1596
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1617
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Day(s)"
 msgstr "Gün"
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1597
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1618
 msgid "Hour(s)"
 msgstr "Saat"
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1598
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1619
 msgid "Minute(s)"
 msgstr "Dakika"
 
@@ -2121,31 +2121,35 @@ msgstr "Açıklama alanı ve düzenleme pencerelerinde kullanılacak yazı tipi"
 
 #: taskcoachlib/gui/dialog/preferences.py:714
 msgid "OS X"
-msgstr ""
+msgstr "OS X"
 
 #: taskcoachlib/gui/dialog/preferences.py:721
 msgid "Get e-mail subject from Mail.app"
-msgstr ""
+msgstr "Mail.app üzerinden e-posta konusu alınsın"
 
 #: taskcoachlib/gui/dialog/preferences.py:722
 msgid ""
 "When dropping an e-mail from Mail.app, try to get its subject.\n"
 "This takes up to 20 seconds."
 msgstr ""
+"Mail.app üzerinden bir e-posta gönderilirken konusunu alınmaya çalışılır.\n"
+"Bu işlem 20 saniye kadar sürebilir."
 
 #: taskcoachlib/gui/dialog/preferences.py:728
 msgid "Linux"
-msgstr ""
+msgstr "Linux"
 
 #: taskcoachlib/gui/dialog/preferences.py:735
 msgid "Focus task subject in task editor"
-msgstr ""
+msgstr "İş düzenleyicide iş konusuna odaklanılsın"
 
 #: taskcoachlib/gui/dialog/preferences.py:736
 msgid ""
 "When opening the task editor, select the task subject and focus it.\n"
 "This overwrites the X selection."
 msgstr ""
+"İş düzenleyici açılırken, iş konusu seçilir ve odaklanılır.\n"
+"Bu ayar X seçiminin önüne geçer."
 
 #: taskcoachlib/gui/dialog/reminder.py:31
 msgid "%(name)s reminder - %(task)s"
@@ -2255,27 +2259,27 @@ msgstr "Önizleme"
 
 #: taskcoachlib/gui/dialog/toolbar.py:67
 msgid "Available tools"
-msgstr ""
+msgstr "Kullanılabilecek araçlar"
 
 #: taskcoachlib/gui/dialog/toolbar.py:83
 msgid "Make this tool visible in the toolbar"
-msgstr ""
+msgstr "Bu araç, araç çubuğunda görüntülensin"
 
 #: taskcoachlib/gui/dialog/toolbar.py:87
 msgid "Hide this tool from the toolbar"
-msgstr ""
+msgstr "Bu araç, araç çubuğundan kaldırılsın"
 
 #: taskcoachlib/gui/dialog/toolbar.py:92
 msgid "Tools"
-msgstr ""
+msgstr "Araçlar"
 
 #: taskcoachlib/gui/dialog/toolbar.py:106
 msgid "Move the tool up (to the left of the toolbar)"
-msgstr ""
+msgstr "Aracı yukarı taşıyın (araç çubuğunun soluna)"
 
 #: taskcoachlib/gui/dialog/toolbar.py:110
 msgid "Move the tool down (to the right of the toolbar)"
-msgstr ""
+msgstr "Aracı aşağı taşıyın (araç çubuğunun sağına)"
 
 #: taskcoachlib/gui/dialog/toolbar.py:134
 msgid "Reorder toolbar buttons by drag and dropping them in this list."
@@ -2634,225 +2638,225 @@ msgstr ""
 "eşleşmeye çalışıyor ancak iletişim bağlantısı kurulamadı.\n"
 "Lütfen bir hata raporunu inceleyin ve iletin."
 
-#: taskcoachlib/gui/menu.py:208
+#: taskcoachlib/gui/menu.py:210
 msgid "&File"
 msgstr "&Dosya"
 
-#: taskcoachlib/gui/menu.py:210
+#: taskcoachlib/gui/menu.py:212
 msgid "&Edit"
 msgstr "Düz&enle"
 
-#: taskcoachlib/gui/menu.py:212
+#: taskcoachlib/gui/menu.py:214
 msgid "&View"
 msgstr "&Görünüm"
 
-#: taskcoachlib/gui/menu.py:214
+#: taskcoachlib/gui/menu.py:216
 msgid "&New"
 msgstr "Ye&ni"
 
-#: taskcoachlib/gui/menu.py:216
+#: taskcoachlib/gui/menu.py:218
 msgid "&Actions"
 msgstr "Ça&lışmalar"
 
-#: taskcoachlib/gui/menu.py:217
+#: taskcoachlib/gui/menu.py:219
 msgid "&Help"
 msgstr "&Yardım"
 
-#: taskcoachlib/gui/menu.py:253
+#: taskcoachlib/gui/menu.py:255
 msgid "&Import"
 msgstr "&Al"
 
-#: taskcoachlib/gui/menu.py:255
+#: taskcoachlib/gui/menu.py:257
 msgid "&Export"
 msgstr "&Ver"
 
-#: taskcoachlib/gui/menu.py:366
+#: taskcoachlib/gui/menu.py:368
 msgid "&Select"
 msgstr "&Seç"
 
-#: taskcoachlib/gui/menu.py:395
+#: taskcoachlib/gui/menu.py:397
 msgid "&New viewer"
 msgstr "&Yeni pencere"
 
-#: taskcoachlib/gui/menu.py:399
+#: taskcoachlib/gui/menu.py:401
 msgid "&Activate next viewer\tCtrl+PgDn"
 msgstr "S&onraki pencereyi etkinleştir\tCtrl+PgDn"
 
-#: taskcoachlib/gui/menu.py:403
+#: taskcoachlib/gui/menu.py:405
 msgid "Activate &previous viewer\tCtrl+PgUp"
 msgstr "Ö&nceki pencereyi etkinleştir\tCtrl+PgUp"
 
-#: taskcoachlib/gui/menu.py:411 taskcoachlib/gui/menu.py:412
+#: taskcoachlib/gui/menu.py:413 taskcoachlib/gui/menu.py:414
 msgid "&Mode"
 msgstr "&Kip"
 
-#: taskcoachlib/gui/menu.py:413 taskcoachlib/gui/menu.py:414
+#: taskcoachlib/gui/menu.py:415 taskcoachlib/gui/menu.py:416
 msgid "&Filter"
 msgstr "&Süzgeç"
 
-#: taskcoachlib/gui/menu.py:415 taskcoachlib/gui/menu.py:416
+#: taskcoachlib/gui/menu.py:417 taskcoachlib/gui/menu.py:418
 msgid "&Sort"
 msgstr "Sı&ralama"
 
-#: taskcoachlib/gui/menu.py:417 taskcoachlib/gui/menu.py:418
+#: taskcoachlib/gui/menu.py:419 taskcoachlib/gui/menu.py:420
 msgid "&Columns"
 msgstr "Süt&unlar"
 
-#: taskcoachlib/gui/menu.py:420 taskcoachlib/gui/menu.py:421
+#: taskcoachlib/gui/menu.py:422 taskcoachlib/gui/menu.py:423
 msgid "&Rounding"
 msgstr "Yuva&rlama"
 
-#: taskcoachlib/gui/menu.py:423
+#: taskcoachlib/gui/menu.py:425
 msgid "&Tree options"
 msgstr "&Ağaç seçenekleri"
 
-#: taskcoachlib/gui/menu.py:427
+#: taskcoachlib/gui/menu.py:429
 msgid "T&oolbar"
 msgstr "A&raç çubuğu"
 
-#: taskcoachlib/gui/menu.py:429
+#: taskcoachlib/gui/menu.py:431
 msgid "Show/hide status bar"
 msgstr "Durum çubuğunu gösterir ya da gizler"
 
-#: taskcoachlib/gui/menu.py:429
+#: taskcoachlib/gui/menu.py:431
 msgid "Status&bar"
 msgstr "Durum çu&buğu"
 
-#: taskcoachlib/gui/menu.py:440
+#: taskcoachlib/gui/menu.py:442
 msgid "&Task"
 msgstr "İ&şler"
 
-#: taskcoachlib/gui/menu.py:441
+#: taskcoachlib/gui/menu.py:443
 msgid "Open a new tab with a viewer that displays tasks"
 msgstr "İşleri gösteren yeni bir pencere sekmesi açar"
 
-#: taskcoachlib/gui/menu.py:443
+#: taskcoachlib/gui/menu.py:445
 msgid "Task &statistics"
 msgstr "İş i&statistikleri"
 
-#: taskcoachlib/gui/menu.py:444
+#: taskcoachlib/gui/menu.py:446
 msgid "Open a new tab with a viewer that displays task statistics"
 msgstr "İş istatistiklerini gösteren yeni bir sekme görünümü açar"
 
-#: taskcoachlib/gui/menu.py:446
+#: taskcoachlib/gui/menu.py:448
 msgid "Task &square map"
 msgstr "İş &alanı haritası"
 
-#: taskcoachlib/gui/menu.py:447
+#: taskcoachlib/gui/menu.py:449
 msgid "Open a new tab with a viewer that displays tasks in a square map"
 msgstr "İşleri alan haritasında gösteren yeni bir pencere sekmesi açar"
 
-#: taskcoachlib/gui/menu.py:449
+#: taskcoachlib/gui/menu.py:451
 msgid "T&imeline"
 msgstr "&Zaman akışı"
 
-#: taskcoachlib/gui/menu.py:450
+#: taskcoachlib/gui/menu.py:452
 msgid ""
 "Open a new tab with a viewer that displays a timeline of tasks and effort"
 msgstr ""
 "İş ve çalışmaların zaman akışını gösteren yeni bir pencere sekmesi  açar"
 
-#: taskcoachlib/gui/menu.py:452
+#: taskcoachlib/gui/menu.py:454
 msgid "&Calendar"
 msgstr "&Takvim"
 
-#: taskcoachlib/gui/menu.py:453
+#: taskcoachlib/gui/menu.py:455
 msgid "Open a new tab with a viewer that displays tasks in a calendar"
 msgstr "İşleri takvimde gösteren yeni bir pencere sekmesi açar"
 
-#: taskcoachlib/gui/menu.py:455 taskcoachlib/gui/viewer/mixin.py:336
+#: taskcoachlib/gui/menu.py:457 taskcoachlib/gui/viewer/mixin.py:336
 msgid "&Category"
 msgstr "G&ruplar"
 
-#: taskcoachlib/gui/menu.py:456
+#: taskcoachlib/gui/menu.py:458
 msgid "Open a new tab with a viewer that displays categories"
 msgstr "Grupları gösteren yeni bir pencere sekmesi açar"
 
-#: taskcoachlib/gui/menu.py:460
+#: taskcoachlib/gui/menu.py:462
 msgid "&Effort"
 msgstr "Ç&alışma"
 
-#: taskcoachlib/gui/menu.py:461
+#: taskcoachlib/gui/menu.py:463
 msgid "Open a new tab with a viewer that displays efforts"
 msgstr "Çalışmaları gösteren yeni bir pencere sekmesi açar"
 
-#: taskcoachlib/gui/menu.py:464
+#: taskcoachlib/gui/menu.py:466
 msgid "Effort for &one task"
 msgstr "&Bu işin çalışmaları"
 
-#: taskcoachlib/gui/menu.py:465
+#: taskcoachlib/gui/menu.py:467
 msgid ""
 "Open a new tab with a viewer that displays efforts for the selected task"
 msgstr "Seçili işin çalışmalarını gösteren yeni bir pencere sekmesi açar"
 
-#: taskcoachlib/gui/menu.py:469
+#: taskcoachlib/gui/menu.py:471
 msgid "&Note"
 msgstr "&Notlar"
 
-#: taskcoachlib/gui/menu.py:470
+#: taskcoachlib/gui/menu.py:472
 msgid "Open a new tab with a viewer that displays notes"
 msgstr "Notları gösteren yeni bir pencere sekmesi açar"
 
-#: taskcoachlib/gui/menu.py:530
+#: taskcoachlib/gui/menu.py:532
 msgid "&Hide"
 msgstr "&Gizle"
 
-#: taskcoachlib/gui/menu.py:530
+#: taskcoachlib/gui/menu.py:532
 msgid "Hide the toolbar"
 msgstr "Araç çubuğunu gizler"
 
-#: taskcoachlib/gui/menu.py:531
+#: taskcoachlib/gui/menu.py:533
 msgid "&Small images"
 msgstr "Küçük &simgeler"
 
-#: taskcoachlib/gui/menu.py:531
+#: taskcoachlib/gui/menu.py:533
 msgid "Small images (16x16) on the toolbar"
 msgstr "Araç çubuğunda küçük (16x16) simgeleri gösterir"
 
-#: taskcoachlib/gui/menu.py:532
+#: taskcoachlib/gui/menu.py:534
 msgid "&Medium-sized images"
 msgstr "&Orta boy simgeler"
 
-#: taskcoachlib/gui/menu.py:532
+#: taskcoachlib/gui/menu.py:534
 msgid "Medium-sized images (22x22) on the toolbar"
 msgstr "Araç çubuğunda (22x22) orta-boy simgeleri gösterir"
 
-#: taskcoachlib/gui/menu.py:533
+#: taskcoachlib/gui/menu.py:535
 msgid "&Large images"
 msgstr "&Büyük simgeler"
 
-#: taskcoachlib/gui/menu.py:533
+#: taskcoachlib/gui/menu.py:535
 msgid "Large images (32x32) on the toolbar"
 msgstr "Araç çubuğunda (32x32) büyük boy simgeleri gösterir"
 
-#: taskcoachlib/gui/menu.py:551 taskcoachlib/gui/menu.py:654
+#: taskcoachlib/gui/menu.py:553 taskcoachlib/gui/menu.py:656
 #: taskcoachlib/gui/uicommand/uicommand.py:1217
 msgid "New task from &template"
 msgstr "Kalıp&tan yeni iş"
 
-#: taskcoachlib/gui/menu.py:592 taskcoachlib/gui/menu.py:804
-#: taskcoachlib/gui/menu.py:908
+#: taskcoachlib/gui/menu.py:594 taskcoachlib/gui/menu.py:806
+#: taskcoachlib/gui/menu.py:910
 msgid "&Toggle category"
 msgstr "Grubu değiş&tir"
 
-#: taskcoachlib/gui/menu.py:603
+#: taskcoachlib/gui/menu.py:605
 msgid "Change task &priority"
 msgstr "İş ön&celiğini değiştir"
 
-#: taskcoachlib/gui/menu.py:670 taskcoachlib/gui/uicommand/uicommand.py:1617
+#: taskcoachlib/gui/menu.py:672 taskcoachlib/gui/uicommand/uicommand.py:1617
 #: taskcoachlib/gui/uicommand/uicommand.py:1659
 msgid "&Start tracking effort"
 msgstr "Çalışmaya &başla"
 
-#: taskcoachlib/gui/menu.py:721 taskcoachlib/gui/viewer/mixin.py:130
+#: taskcoachlib/gui/menu.py:723 taskcoachlib/gui/viewer/mixin.py:130
 msgid "%s (subcategories)"
 msgstr "%s (altgrup)"
 
-#: taskcoachlib/gui/menu.py:769
+#: taskcoachlib/gui/menu.py:771
 msgid "%s (subtasks)"
 msgstr "%s (altişler)"
 
-#: taskcoachlib/gui/menu.py:814 taskcoachlib/gui/viewer/mixin.py:418
+#: taskcoachlib/gui/menu.py:816 taskcoachlib/gui/viewer/mixin.py:418
 #: taskcoachlib/gui/viewer/task.py:1082
 msgid "&Priority"
 msgstr "Ö&ncelik"
@@ -3608,11 +3612,11 @@ msgstr "Kümeleme kipi"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2251
 msgid "List"
-msgstr ""
+msgstr "Liste"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2251
 msgid "Tree"
-msgstr ""
+msgstr "Ağaç"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2257
 msgid "When checked, show tasks as tree, otherwise show tasks as list"
@@ -3691,12 +3695,12 @@ msgid "No rounding"
 msgstr "Yuvarlanmasın"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2465
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1710
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1731
 msgid "1 minute"
 msgstr "1 dakika"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2466
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1712
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1733
 msgid "%d minutes"
 msgstr "%d dakika"
 
@@ -3825,7 +3829,7 @@ msgstr "Dönem"
 
 #: taskcoachlib/gui/viewer/effort.py:216
 msgid "Total time spent"
-msgstr "Toplam harcanan zaman"
+msgstr "Harcanan toplam zaman"
 
 #: taskcoachlib/gui/viewer/effort.py:221
 msgid "Total revenue"
@@ -3908,11 +3912,15 @@ msgstr "Hafta içi günlerindeki çalışmalar sütununu gösterir ya da gizler"
 msgid "Effort aggregation"
 msgstr "Çalışma kümelemesi"
 
-#: taskcoachlib/gui/viewer/effort.py:380
-msgid "Effort: %d selected, %d visible, %d total"
-msgstr "Çalışma: %d seçili, %d görünen, %d toplam"
+#: taskcoachlib/gui/viewer/effort.py:393
+msgid ""
+"Effort: %d selected, %d visible, %d total. Time spent: %s selected, %s "
+"visible, %s total"
+msgstr ""
+"Çalışma: %d seçilmiş, %d görünür, %d toplam. Harcanan zaman: %s seçilmiş, %s "
+"görünür, %s toplam"
 
-#: taskcoachlib/gui/viewer/effort.py:383
+#: taskcoachlib/gui/viewer/effort.py:397
 msgid "Status: %d tracking"
 msgstr "Durum: %d üzerinde çalışılıyor"
 
@@ -6712,11 +6720,11 @@ msgstr "Bugün bitecek yeni iş"
 msgid "New task due tomorrow"
 msgstr "Yarın bitecek yeni iş"
 
-#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1700
+#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1721
 msgid "%d days"
 msgstr "%d gün"
 
-#: taskcoachlib/render.py:51 taskcoachlib/thirdparty/smartdatetimectrl.py:1698
+#: taskcoachlib/render.py:51 taskcoachlib/thirdparty/smartdatetimectrl.py:1719
 msgid "1 day"
 msgstr "1 gün"
 
@@ -6872,20 +6880,20 @@ msgstr "Ön&ceki"
 msgid "&Window"
 msgstr "&Pencere"
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1644
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1751
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1665
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1772
 msgid "Edit"
 msgstr "Düzenle"
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1695
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1716
 msgid "%d weeks"
 msgstr "%d hafta"
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1707
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1728
 msgid "%d hours"
 msgstr "%d saat"
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1751
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1772
 msgid "Done"
 msgstr "Bitti"
 
@@ -6923,7 +6931,7 @@ msgstr "Planlanmış başlangıç tarihi olan işler"
 
 #: taskcoachlib/widgets/calendarconfig.py:88
 msgid "Tasks with a due date"
-msgstr "Bitiş tarih olan işler"
+msgstr "Bitiş tarihi olan işler"
 
 #: taskcoachlib/widgets/calendarconfig.py:89
 msgid "All tasks"
@@ -6957,7 +6965,7 @@ msgstr "Parola:"
 msgid "Store in keychain"
 msgstr "Anahtarlıkta sakla"
 
-#: taskcoachlib/widgets/password.py:91
+#: taskcoachlib/widgets/password.py:92
 msgid ""
 "There was a problem trying to find out your system's keychain.\n"
 "Please file a bug report (see the Help menu) and attach a screenshot of this "
@@ -6966,12 +6974,18 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Sisteminizdeki anahtar zinciri aranırken bir hata oluştu.\n"
+"Lütfen bu iletinin ekran görüntüsünü ekleyerek bir hata raporu gönderin "
+"(Yardım menüsüne bakın)\n"
+"Hata:\n"
+"\n"
+"%s"
 
-#: taskcoachlib/widgets/password.py:96
+#: taskcoachlib/widgets/password.py:97
 msgid "Please enter your password."
 msgstr "Lütfen parolanızı yazın."
 
-#: taskcoachlib/widgets/password.py:109
+#: taskcoachlib/widgets/password.py:110
 msgid "Please enter your password"
 msgstr "Lütfen parolanızı yazın"
 
@@ -7123,6 +7137,9 @@ msgstr "İnternet adresi açılırken hata"
 
 #~ msgid "Tree of tasks"
 #~ msgstr "İş ağacı"
+
+#~ msgid "Effort: %d selected, %d visible, %d total"
+#~ msgstr "Çalışma: %d seçili, %d görünen, %d toplam"
 
 #~ msgid "Sort tasks by start date"
 #~ msgstr "İşleri başlama tarihine göre sıralar"
