@@ -287,7 +287,12 @@ class Settings(object, CachingConfigParser):
     def pathToDocumentsDir():
         if operating_system.isWindows():
             from win32com.shell import shell, shellcon
-            return shell.SHGetSpecialFolderPath(None, shellcon.CSIDL_PERSONAL)
+            try:
+                return shell.SHGetSpecialFolderPath(None, shellcon.CSIDL_PERSONAL)
+            except:
+                # Yes, one of the documented ways to get this sometimes fail with "Unspecified error". Not sure
+                # this will work either.
+                return shell.SHGetFolderPath(None, shellcon.CSIDL_PERSONAL, None, 0) # SHGFP_TYPE_CURRENT not in shellcon
         elif operating_system.isMac():
             import Carbon.Folder, Carbon.Folders, Carbon.File
             pathRef = Carbon.Folder.FSFindFolder(Carbon.Folders.kUserDomain, Carbon.Folders.kDocumentsFolderType, True)
