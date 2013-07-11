@@ -17,3 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 # taskcoachlib contains all taskcoach packages
+
+# When thirdparty packages are imported, they may import submodules
+# from the system-wide installation (apscheduler does this). Doing
+# this in workaround/__init__.py is too late.
+import os, sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'thirdparty')))
