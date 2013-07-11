@@ -27,6 +27,8 @@ Release('1.3.31', 'July ??, 2013',
     bugsFixed=[
         Bugv2('''Fix crash at startup on Ubuntu 13 if python-apscheduler
 is installed.''', '1428'),
+        Bugv2('''Use the "Suggests" mechanism instead of "Recommends" for
+the Debian package (python-kde4).''', '1430'),
         ],
     ),
 
