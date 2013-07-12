@@ -29,6 +29,7 @@ Release('1.3.31', 'July ??, 2013',
 is installed.''', '1428'),
         Bugv2('''Use the "Suggests" mechanism instead of "Recommends" for
 the Debian package (python-kde4).''', '1430'),
+        Bugv2('''Handle short date formats with weekday'''),
         ],
     ),
 
