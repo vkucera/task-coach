@@ -1144,6 +1144,8 @@ class TimeEntry(Entry):
         self.__ValidateIncrementDecrement(-datetime.timedelta(seconds=1), TimePrevDayEvent)
 
     def ValidateAMPMChange(self, value):
+        if value not in [0, 1]:
+            return None
         evt = TimeChangeEvent(self, self.__NewValue(ampm=value))
         self.ProcessEvent(evt)
         if evt.IsVetoed():

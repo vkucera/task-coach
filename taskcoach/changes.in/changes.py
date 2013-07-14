@@ -32,6 +32,8 @@ the Debian package (python-kde4).''', '1430'),
         Bugv2('''Handle short date formats with weekday'''),
         Bugv2('''When adding a viewer, the main toolbar would shrink.''',
               '1431'),
+        Bugv2('''Fix an error when the user types a numeric value in
+the AM/PM field of the date/time picker.''', '1425'),
         ],
     ),
 
