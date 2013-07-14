@@ -30,6 +30,8 @@ is installed.''', '1428'),
         Bugv2('''Use the "Suggests" mechanism instead of "Recommends" for
 the Debian package (python-kde4).''', '1430'),
         Bugv2('''Handle short date formats with weekday'''),
+        Bugv2('''When adding a viewer, the main toolbar would shrink.''',
+              '1431'),
         ],
     ),
 

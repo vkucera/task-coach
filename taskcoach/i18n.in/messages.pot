@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-07-06 21:23+CEST\n"
+"POT-Creation-Date: 2013-07-14 12:00+CEST\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -601,7 +601,7 @@ msgid "45 minutes"
 msgstr ""
 
 #: taskcoachlib/domain/date/snooze.py:25
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1726
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1731
 msgid "1 hour"
 msgstr ""
 
@@ -650,7 +650,7 @@ msgid "2 weeks"
 msgstr ""
 
 #: taskcoachlib/domain/date/snooze.py:30
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1714
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1719
 msgid "1 week"
 msgstr ""
 
@@ -1377,24 +1377,24 @@ msgid "Start"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1616
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1621
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Week(s)"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1617
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1622
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Day(s)"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1618
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1623
 msgid "Hour(s)"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1619
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1624
 msgid "Minute(s)"
 msgstr ""
 
@@ -3517,12 +3517,12 @@ msgid "No rounding"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2465
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1731
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1736
 msgid "1 minute"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2466
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1733
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1738
 msgid "%d minutes"
 msgstr ""
 
@@ -5984,11 +5984,11 @@ msgstr ""
 msgid "New task due tomorrow"
 msgstr ""
 
-#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1721
+#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1726
 msgid "%d days"
 msgstr ""
 
-#: taskcoachlib/render.py:51 taskcoachlib/thirdparty/smartdatetimectrl.py:1719
+#: taskcoachlib/render.py:51 taskcoachlib/thirdparty/smartdatetimectrl.py:1724
 msgid "1 day"
 msgstr ""
 
@@ -6130,20 +6130,20 @@ msgstr ""
 msgid "&Window"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1665
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1772
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1670
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1777
 msgid "Edit"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1716
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1721
 msgid "%d weeks"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1728
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1733
 msgid "%d hours"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1772
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1777
 msgid "Done"
 msgstr ""
 
