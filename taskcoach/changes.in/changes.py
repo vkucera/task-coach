@@ -35,7 +35,7 @@ the Debian package (python-kde4).''', '1430'),
         Bugv2('''Fix an error when the user types a numeric value in
 the AM/PM field of the date/time picker.''', '1425'),
         Bugv2('''Don't open floating viewers on the top-left corner of
-the screen''', '1432'),
+the screen''', '1432', '1349'),
         ],
     ),
 
