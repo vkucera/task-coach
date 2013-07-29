@@ -386,25 +386,25 @@ def download_table(**kwargs):
 windowsOptions = dict(platform_lower='windows',
     platform_versions_supported='Windows 2000, XP, Vista, Windows 7, Windows 8')
 
-bestsoft_url = 'http://www.downloadbestsoft.com/Task-Coach.html'
+bestsoft_url = 'http://www.fosshub.com/Task-Coach.html'
 
 windowsInstaller = download_table(image='windows',
     download_urls=dict(Sourceforge='%(dist_download_prefix)s/%(filename)s-%(version)s-win32.exe',
-                       DownloadBestSoft=bestsoft_url),
+                       FossHub=bestsoft_url),
     package_type='%(name)s Installer',
     installation='Run the installer; it will guide you through the installation process',
     **windowsOptions)
  
 windowsPortableApp = download_table(image='portableApps',
     download_urls=dict(Sourceforge='%(dist_download_prefix)s/%(filename)sPortable_%(version)s.paf.exe',
-                       DownloadBestSoft=bestsoft_url),
+                       FossHub=bestsoft_url),
     package_type='%(name)s in PortableApps Format',
     installation='Run the installer; it will guide you through the installation process',
     **windowsOptions)
 
 windowsPenPack = download_table(image='winPenPack',
     download_urls=dict(Sourceforge='%(dist_download_prefix)s/X-%(filename)s_%(version)s_rev1.zip',
-                       DownloadBestSoft=bestsoft_url),
+                       FossHub=bestsoft_url),
     package_type='%(name)s in winPenPack Format',
     installation='Unzip the archive contents in the location where you want %(name)s to be installed',
     **windowsOptions) 
