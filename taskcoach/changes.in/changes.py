@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.31', 'July ??, 2013',
+Release('1.3.31', 'July 29, 2013',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bugv2('''Fix crash at startup on Ubuntu 13 if python-apscheduler
