@@ -59,6 +59,8 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, BalloonTipManager,
         self.iocontroller = iocontroller
         self.taskFile = taskFile
         self.settings = settings
+        self.__filename = None
+        self.__dirty = False
         self.Bind(wx.EVT_CLOSE, self.onClose)
         self.Bind(wx.EVT_ICONIZE, self.onIconify)
         self.Bind(wx.EVT_SIZE, self.onResize)
@@ -145,7 +147,8 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, BalloonTipManager,
         super(MainWindow, self).addPane(page, caption, name, floating=floating)
         
     def __init_window(self):
-        self.setTitle(self.taskFile.filename())
+        self.__filename = self.taskFile.filename()
+        self.__setTitle()
         self.SetIcons(artprovider.iconBundle('taskcoach'))
         self.displayMessage(_('Welcome to %(name)s version %(version)s') % \
             {'name': meta.name, 'version': meta.version}, pane=1)
@@ -203,15 +206,27 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
         return perspective_viewer_count != settings_viewer_count
     
     def __register_for_window_component_changes(self):
-        pub.subscribe(self.setTitle, 'taskfile.filenameChanged')
+        pub.subscribe(self.__onFilenameChanged, 'taskfile.filenameChanged')
+        pub.subscribe(self.__onDirtyChanged, 'taskfile.dirty')
+        pub.subscribe(self.__onDirtyChanged, 'taskfile.clean')
         pub.subscribe(self.showStatusBar, 'settings.view.statusbar')
         pub.subscribe(self.showToolBar, 'settings.view.toolbar')
         self.Bind(aui.EVT_AUI_PANE_CLOSE, self.onCloseToolBar)
 
-    def setTitle(self, filename):
+    def __onFilenameChanged(self, filename):
+        self.__filename = filename
+        self.__setTitle()
+
+    def __onDirtyChanged(self, taskFile):
+        self.__dirty = taskFile.isDirty()
+        self.__setTitle()
+
+    def __setTitle(self):
         title = meta.name
-        if filename:
-            title += ' - %s' % filename
+        if self.__filename:
+            title += ' - %s' % self.__filename
+        if self.__dirty:
+            title += ' *'
         self.SetTitle(title)
         
     def displayMessage(self, message, pane=0):

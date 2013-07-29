@@ -225,7 +225,10 @@ class TaskFile(patterns.Observer):
         
     def lastFilename(self):
         return self.__lastFilename
-    
+
+    def isDirty(self):
+        return self.__needSave
+
     def markDirty(self, force=False):
         if force or not self.__needSave:
             self.__needSave = True
@@ -234,7 +237,8 @@ class TaskFile(patterns.Observer):
     def markClean(self):
         if self.__needSave:
             self.__needSave = False
-            
+            pub.sendMessage('taskfile.clean', taskFile=self)
+
     @patterns.eventSource
     def clear(self, regenerate=True, event=None):
         pub.sendMessage('taskfile.aboutToClear', taskFile=self)
@@ -252,7 +256,7 @@ class TaskFile(patterns.Observer):
         self.setFilename('')
         self.__guid = generate()
         self.clear()
-        self.__needSave = False
+        self.markClean()
 
     def _read(self, fd):
         return xml.XMLReader(fd).read()
@@ -296,7 +300,7 @@ class TaskFile(patterns.Observer):
             raise
         finally:
             self.__loading = False
-            self.__needSave = False
+            self.markClean()
         pub.sendMessage('taskfile.justRead', taskFile=self)
         
     def save(self):
@@ -313,7 +317,7 @@ class TaskFile(patterns.Observer):
             os.remove(self.__filename)
         if name is not None:  # Unit tests (AutoSaver)
             os.rename(name, self.__filename)
-        self.__needSave = False
+        self.markClean()
 
     def saveas(self, filename):
         self.setFilename(filename)
@@ -371,7 +375,7 @@ class TaskFile(patterns.Observer):
 
     def endSync(self):
         self.__loading = False
-        self.__needSave = True
+        self.markDirty()
 
 
 class LockedTaskFile(TaskFile):

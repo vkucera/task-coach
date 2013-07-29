@@ -36,6 +36,8 @@ the Debian package (python-kde4).''', '1430'),
 the AM/PM field of the date/time picker.''', '1425'),
         Bugv2('''Don't open floating viewers on the top-left corner of
 the screen''', '1432', '1349'),
+        Bugv2('''Add a hint that the task file needs to be saved in the
+main window title.''', '1434'),
         ],
     ),
 
