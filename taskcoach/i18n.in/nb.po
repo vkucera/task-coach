@@ -9,30 +9,38 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nb\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-01 16:31+0000\n"
+"POT-Creation-Date: 2013-07-14 11:01+0000\n"
 "PO-Revision-Date: 2011-02-13 11:40+0000\n"
 "Last-Translator: Smart Viking <smart_viking@live.com>\n"
 "Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-06 19:06+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-07-29 18:21+0000\n"
+"X-Generator: Launchpad (build 16700)\n"
 "X-Poedit-Country: NORWAY\n"
 "X-Poedit-Language: Norwegian Bokmal\n"
 
-#: taskcoachlib/application/application.py:54
-msgid "Errors have occured. Please see \"%s\""
+#: taskcoachlib/application/application.py:57
+msgid ""
+"Errors have occured. Please see \"taskcoachlog.txt\" in your \"My "
+"Documents\" folder."
 msgstr ""
 
-#: taskcoachlib/application/application.py:54
+#: taskcoachlib/application/application.py:57
+#: taskcoachlib/application/application.py:59
+#: taskcoachlib/gui/dialog/attributesync.py:91
 #: taskcoachlib/gui/mainwindow.py:359 taskcoachlib/iphone/protocol.py:482
 #: taskcoachlib/widgets/draganddrop.py:121
 #: taskcoachlib/widgets/draganddrop.py:163 taskcoachlib/widgets/password.py:92
 msgid "Error"
 msgstr "Feil"
 
-#: taskcoachlib/application/application.py:290
+#: taskcoachlib/application/application.py:59
+msgid "Errors have occured. Please see \"%s\""
+msgstr ""
+
+#: taskcoachlib/application/application.py:299
 msgid ""
 "Couldn't load settings from TaskCoach.ini:\n"
 "%s"
@@ -40,7 +48,7 @@ msgstr ""
 "Feil ved henting av oppsett fra TaskCoach.ini\n"
 "%s"
 
-#: taskcoachlib/application/application.py:291
+#: taskcoachlib/application/application.py:300
 #: taskcoachlib/gui/iocontroller.py:72
 msgid "%s file error"
 msgstr "Filfeil: %s"
@@ -606,7 +614,7 @@ msgid "45 minutes"
 msgstr ""
 
 #: taskcoachlib/domain/date/snooze.py:25
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1726
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1731
 msgid "1 hour"
 msgstr ""
 
@@ -655,15 +663,15 @@ msgid "2 weeks"
 msgstr ""
 
 #: taskcoachlib/domain/date/snooze.py:30
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1714
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1719
 msgid "1 week"
 msgstr ""
 
-#: taskcoachlib/domain/effort/composite.py:184
+#: taskcoachlib/domain/effort/composite.py:189
 msgid "Total"
 msgstr "Sum"
 
-#: taskcoachlib/domain/effort/composite.py:219
+#: taskcoachlib/domain/effort/composite.py:224
 msgid "Total for %s"
 msgstr "Sum av %s"
 
@@ -1388,24 +1396,24 @@ msgid "Start"
 msgstr "Start"
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1616
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1621
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Week(s)"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1617
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1622
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Day(s)"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1618
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1623
 msgid "Hour(s)"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1619
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1624
 msgid "Minute(s)"
 msgstr ""
 
@@ -3588,12 +3596,12 @@ msgid "No rounding"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2465
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1731
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1736
 msgid "1 minute"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2466
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1733
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1738
 msgid "%d minutes"
 msgstr ""
 
@@ -6197,11 +6205,11 @@ msgstr "Oppgave som forfaller i dag"
 msgid "New task due tomorrow"
 msgstr "Oppgave som forfaller i morgen"
 
-#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1721
+#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1726
 msgid "%d days"
 msgstr ""
 
-#: taskcoachlib/render.py:51 taskcoachlib/thirdparty/smartdatetimectrl.py:1719
+#: taskcoachlib/render.py:51 taskcoachlib/thirdparty/smartdatetimectrl.py:1724
 msgid "1 day"
 msgstr ""
 
@@ -6355,20 +6363,20 @@ msgstr ""
 msgid "&Window"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1665
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1772
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1670
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1777
 msgid "Edit"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1716
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1721
 msgid "%d weeks"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1728
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1733
 msgid "%d hours"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1772
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1777
 msgid "Done"
 msgstr ""
 
