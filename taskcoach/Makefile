@@ -69,9 +69,6 @@ sdist_linux: prepare changes templates dist/TaskCoach-$(TCVERSION).tar.gz
 sdist_ubuntu: sdist_linux
 	# Launchpad does not support one size fits all packages...
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu10~lucid.tar.gz
-	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu10~maverick.tar.gz
-	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu11~natty.tar.gz
-	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu11~oneiric.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu12~precise.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu12~quantal.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu13~raring.tar.gz
@@ -111,12 +108,6 @@ deb: sdist_linux
 ubuntu: sdist_ubuntu
 	LC_ALL=C $(PYTHON) make.py bdist_ubuntu lucid 10 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu10~lucid.tar.gz
 	mv build build-lucid
-	LC_ALL=C $(PYTHON) make.py bdist_ubuntu maverick 10 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu10~maverick.tar.gz
-	mv build build-maverick
-	LC_ALL=C $(PYTHON) make.py bdist_ubuntu natty 11 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu11~natty.tar.gz
-	mv build build-natty
-	LC_ALL=C $(PYTHON) make.py bdist_ubuntu oneiric 11 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu11~oneiric.tar.gz
-	mv build build-oneiric
 	LC_ALL=C $(PYTHON) make.py bdist_ubuntu precise 12 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu12~precise.tar.gz
 	mv build build-precise
 	LC_ALL=C $(PYTHON) make.py bdist_ubuntu quantal 12 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu12~quantal.tar.gz
@@ -126,36 +117,24 @@ ubuntu: sdist_ubuntu
 
 ppa-sign: ubuntu
 	cd build-lucid; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
-	cd build-maverick; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu10~maverick-1_source.changes
-	cd build-natty; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu11~natty-1_source.changes
-	cd build-oneiric; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu11~oneiric-1_source.changes
 	cd build-precise; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
 	cd build-quantal; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes
 	cd build-raring; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu13~raring-1_source.changes
 
 ppa-rel: ppa-sign
 	cd build-lucid; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
-	cd build-maverick; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu10~maverick-1_source.changes
-	cd build-natty; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu11~natty-1_source.changes
-	cd build-oneiric; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu11~oneiric-1_source.changes
 	cd build-precise; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
 	cd build-quantal; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes
 	cd build-raring; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu13~raring-1_source.changes
 
 ppa-relnext: ppa-sign
 	cd build-lucid; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
-	cd build-maverick; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu10~maverick-1_source.changes
-	cd build-natty; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu11~natty-1_source.changes
-	cd build-oneiric; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu11~oneiric-1_source.changes
 	cd build-precise; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
 	cd build-quantal; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes
 	cd build-raring; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu13~raring-1_source.changes
 
 ppa-release: ppa-sign
 	cd build-lucid; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
-	cd build-maverick; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu10~maverick-1_source.changes
-	cd build-natty; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu11~natty-1_source.changes
-	cd build-oneiric; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu11~oneiric-1_source.changes
 	cd build-precise; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
 	cd build-quantal; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes
 	cd build-raring; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu13~raring-1_source.changes

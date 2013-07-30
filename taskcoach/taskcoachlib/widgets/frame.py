@@ -53,10 +53,13 @@ class AuiManagedFrameWithDynamicCenterPane(wx.Frame):
                 dockedPanes[0].Center()
                 
     def addPane(self, window, caption, name, floating=False):
+        x, y = window.GetPositionTuple()
+        x, y = window.ClientToScreenXY(x, y)
         paneInfo = aui.AuiPaneInfo()
         paneInfo = paneInfo.CloseButton(True).Floatable(True).\
             Name(name).Caption(caption).Right().\
             FloatingSize((300, 200)).BestSize((200, 200)).\
+            FloatingPosition((x + 30, y + 30)).\
             CaptionVisible().MaximizeButton().DestroyOnClose()
         if floating:
             paneInfo.Float()

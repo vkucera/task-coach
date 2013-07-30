@@ -77,6 +77,7 @@ class ViewerContainer(object):
         if len(self.viewers) == 1:
             self.activateViewer(viewer)
         pub.subscribe(self.onStatusChanged, viewer.viewerStatusEventType())
+        self.containerWidget.SendSizeEvent() # So that the main toolbar doesn't shrink
         
     def closeViewer(self, viewer):
         ''' Close the specified viewer. ''' 

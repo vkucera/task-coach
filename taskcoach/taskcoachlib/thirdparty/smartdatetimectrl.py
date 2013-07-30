@@ -1144,6 +1144,8 @@ class TimeEntry(Entry):
         self.__ValidateIncrementDecrement(-datetime.timedelta(seconds=1), TimePrevDayEvent)
 
     def ValidateAMPMChange(self, value):
+        if value not in [0, 1]:
+            return None
         evt = TimeChangeEvent(self, self.__NewValue(ampm=value))
         self.ProcessEvent(evt)
         if evt.IsVetoed():
@@ -1283,6 +1285,11 @@ class DateEntry(Entry):
             if idx != -1:
                 fmt = fmt[:idx] + fmtChar + fmt[idx + len(substring):]
                 break
+
+        # Some people have the week day in their "short" date format.
+        for weekChar in ['A', 'a']:
+            weekday = decodeSystemString(datetime.date(year=3333, day=22, month=11).strftime('%%%s' % weekChar))
+            fmt = re.sub(ur'%s\s*' % weekday, '', fmt)
 
         fmt = re.sub('1+', 'm', fmt)
         fmt = re.sub('2+', 'd', fmt)
@@ -2328,7 +2335,7 @@ if __name__ == '__main__':
             super(Dialog, self).__init__(None, wx.ID_ANY, 'Test', style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER)
             sz = wx.BoxSizer(wx.VERTICAL)
 
-            pnl1 = SmartDateTimeCtrl(self, label='Start', enableNone=True, timeFormat=lambda x: decodeSystemString(x.strftime('%I:%M %p')), dateFormat=lambda x: decodeSystemString(x.strftime('%Y %b %d')), startHour=8, endHour=18)
+            pnl1 = SmartDateTimeCtrl(self, label='Start', enableNone=True, timeFormat=lambda x: decodeSystemString(x.strftime('%I:%M %p')), dateFormat=lambda x: decodeSystemString(x.strftime('%a %Y %b %d')), startHour=8, endHour=18)
             pnl1.EnableChoices()
             sz.Add(pnl1, 0, wx.ALL|wx.ALIGN_LEFT, 3)
 

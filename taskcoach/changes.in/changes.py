@@ -22,9 +22,28 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.31', 'July ??, 2013',
+Release('1.3.32', 'July ??, 2013',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        ],
+    ),
+
+Release('1.3.31', 'July 29, 2013',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bugv2('''Fix crash at startup on Ubuntu 13 if python-apscheduler
+is installed.''', '1428'),
+        Bugv2('''Use the "Suggests" mechanism instead of "Recommends" for
+the Debian package (python-kde4).''', '1430'),
+        Bugv2('''Handle short date formats with weekday'''),
+        Bugv2('''When adding a viewer, the main toolbar would shrink.''',
+              '1431'),
+        Bugv2('''Fix an error when the user types a numeric value in
+the AM/PM field of the date/time picker.''', '1425'),
+        Bugv2('''Don't open floating viewers on the top-left corner of
+the screen''', '1432', '1349'),
+        Bugv2('''Add a hint that the task file needs to be saved in the
+main window title.''', '1434'),
         ],
     ),
 
