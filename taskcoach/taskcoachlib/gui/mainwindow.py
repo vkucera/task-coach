@@ -61,6 +61,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, BalloonTipManager,
         self.settings = settings
         self.__filename = None
         self.__dirty = False
+        self.__shutdown = False
         self.Bind(wx.EVT_CLOSE, self.onClose)
         self.Bind(wx.EVT_ICONIZE, self.onIconify)
         self.Bind(wx.EVT_SIZE, self.onResize)
@@ -115,6 +116,9 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, BalloonTipManager,
                     mon.vendor == 'xfce4-session':
                 dlg = XFCE4WarningDialog(self, self.settings)
                 dlg.Show()
+
+    def setShutdownInProgress(self):
+        self.__shutdown = True
 
     def _create_window_components(self):  # Not private for test purposes
         self._create_viewer_container()
@@ -251,6 +255,9 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
         self.__dimensions_tracker.save_position()
         
     def onClose(self, event):
+        if self.__shutdown:
+            event.Skip()
+            return
         if event.CanVeto() and self.settings.getboolean('window', 
                                                         'hidewhenclosed'):
             event.Veto()

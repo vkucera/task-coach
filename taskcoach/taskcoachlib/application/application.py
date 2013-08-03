@@ -115,7 +115,7 @@ class Application(object):
                     def saveYourself(self, saveType, shutdown, interactStyle, 
                                      fast):  # pylint: disable=W0613
                         if shutdown:
-                            self._callback()
+                            wx.CallAfter(self._callback)
                         self.saveYourselfDone(True)
                         
                     def die(self):
@@ -304,7 +304,8 @@ class Application(object):
         self.mainwindow.displayMessage(message)
 
     def on_end_session(self):
-        wx.CallAfter(self.quitApplication, force=True)
+        self.mainwindow.setShutdownInProgress()
+        self.quitApplication(force=True)
 
     def quitApplication(self, force=False):
         if not self.iocontroller.close(force=force):
