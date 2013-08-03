@@ -27,6 +27,8 @@ Release('1.3.32', 'July ??, 2013',
     bugsFixed=[
         Bugv2('''Don't prevent shutdown on Windows if the minimize on
 close option is set.'''),
+        Bugv2('''Prevent a PyGTK warning on recent Linux distributions.''',
+              '1435'),
         ],
     ),
 
