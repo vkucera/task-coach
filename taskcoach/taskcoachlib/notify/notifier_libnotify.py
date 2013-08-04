@@ -27,14 +27,6 @@ class LibnotifyNotifier(AbstractNotifier):
         super(LibnotifyNotifier, self).__init__()
 
         try:
-            # On recent distros, importing pynotify triggers a warning
-            # that this import prevents. On other distros, this module
-            # does not exist. All of this only happens if stdout is
-            # not a TTY...
-            try:
-                import _pynotify
-            except ImportError:
-                pass
             import pynotify
         except ImportError:
             self.__notify = None

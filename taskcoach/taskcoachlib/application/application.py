@@ -29,14 +29,23 @@ import sys
 import time
 import wx
 import calendar
+import re
 
 
 class RedirectedOutput(object):
+    _rx_ignore = [
+        re.compile('RuntimeWarning: PyOS_InputHook'),
+        ]
+
     def __init__(self):
         self.__handle = None
         self.__path = os.path.join(Settings.pathToDocumentsDir(), 'taskcoachlog.txt')
 
     def write(self, bf):
+        for rx in self._rx_ignore:
+            if rx.search(bf):
+                return
+
         if self.__handle is None:
             self.__handle = file(self.__path, 'a+')
             self.__handle.write('============= %s\n' % time.ctime())
