@@ -178,7 +178,8 @@ class MainToolBar(ToolBar):
 
     def _OnSize(self, event):
         event.Skip()
-        wx.CallAfter(self.GetParent().SendSizeEvent)
+        if event.GetSize()[0] != self.GetParent().GetClientSize()[0]:
+            wx.CallAfter(self.GetParent().SendSizeEvent)
 
     def Realize(self):
         self._agwStyle &= ~aui.AUI_TB_NO_AUTORESIZE
