@@ -125,6 +125,7 @@ class FileClose(IOCommand):
             *args, **kwargs)
 
     def doCommand(self, event):
+        self.mainWindow().closeEditors()
         self.iocontroller.close()
 
 

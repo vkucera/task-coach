@@ -35,6 +35,8 @@ close option is set.'''),
         Bugv2('''Prevent TypeError in date selection widget.''', '1445'),
         Bugv2('''Fix initial tab when creating new items'''),
         Bugv2('''Fix undo/redo in text controls on OS X.''', '1436'),
+        Bugv2('''Fix loss of description edits when closing/quitting while
+editors are still open.''', '1437'),
         ],
     ),
 

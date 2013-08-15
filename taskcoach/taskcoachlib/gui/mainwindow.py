@@ -24,6 +24,7 @@ from taskcoachlib.gui import viewer, toolbar, uicommand, remindercontroller, \
     artprovider, windowdimensionstracker, idlecontroller
 from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog
 from taskcoachlib.gui.dialog.xfce4warning import XFCE4WarningDialog
+from taskcoachlib.gui.dialog.editor import Editor
 from taskcoachlib.gui.iphone import IPhoneSyncFrame
 from taskcoachlib.gui.threads import DeferredCallMixin, synchronized
 from taskcoachlib.i18n import _
@@ -253,8 +254,16 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
         
     def __save_position(self):
         self.__dimensions_tracker.save_position()
-        
+
+    def closeEditors(self):
+        for child in self.GetChildren():
+            if isinstance(child, Editor):
+                child.Close()
+                child.Destroy()
+
     def onClose(self, event):
+        self.closeEditors()
+
         if self.__shutdown:
             event.Skip()
             return
