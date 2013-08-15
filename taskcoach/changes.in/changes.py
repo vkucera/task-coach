@@ -31,6 +31,7 @@ close option is set.'''),
               '1435'),
         Bugv2('''Fix main toolbar shrinking when resizing a viewer.''',
               '1431'),
+        Bugv2('''Improve performance when tracking effort.''', '1442'),
         ],
     ),
 

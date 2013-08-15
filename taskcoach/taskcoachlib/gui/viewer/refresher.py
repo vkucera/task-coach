@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import patterns
 from taskcoachlib.domain import date
 from taskcoachlib.thirdparty.pubsub import pub
+import wx
 
 
 class MinuteRefresher(object):
@@ -48,15 +49,20 @@ class MinuteRefresher(object):
             self.stopClock()
 
 
-class SecondRefresher(patterns.Observer):
+class SecondRefresher(patterns.Observer, wx.EvtHandler):
     ''' This class can be used by viewers to refresh themselves every second
         whenever items (tasks, efforts) are being tracked. '''
-        
+
+    # APScheduler seems to take a lot of resources in this setup, so we use a wx.Timer
+
     def __init__(self, viewer, trackingChangedEventType):
         super(SecondRefresher, self).__init__()
         self.__viewer = viewer
         self.__presentation = viewer.presentation()
         self.__trackedItems = set()
+        id_ = wx.NewId()
+        self.__timer = wx.Timer(self, id_)
+        wx.EVT_TIMER(self, id_, self.onEverySecond)
         pub.subscribe(self.onTrackingChanged, trackingChangedEventType)
         self.registerObserver(self.onItemAdded, 
                               eventType=self.__presentation.addItemEventType(),
@@ -82,7 +88,7 @@ class SecondRefresher(patterns.Observer):
             self.removeTrackedItems([sender])
         self.refreshItems([sender])
 
-    def onEverySecond(self):
+    def onEverySecond(self, event):
         self.refreshItems(self.__trackedItems)
         
     def refreshItems(self, items):
@@ -116,11 +122,11 @@ class SecondRefresher(patterns.Observer):
             self.stopClock()
             
     def startClock(self):
-        date.Scheduler().schedule_interval(self.onEverySecond, seconds=1)
-            
+        self.__timer.Start(1000, False)
+
     def stopClock(self):
-        date.Scheduler().unschedule(self.onEverySecond)
-    
+        self.__timer.Stop()
+
     def currentlyTrackedItems(self):
         return list(self.__trackedItems)
 
