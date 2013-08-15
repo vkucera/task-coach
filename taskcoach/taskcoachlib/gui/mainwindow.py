@@ -259,7 +259,6 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
         for child in self.GetChildren():
             if isinstance(child, Editor):
                 child.Close()
-                child.Destroy()
 
     def onClose(self, event):
         self.closeEditors()

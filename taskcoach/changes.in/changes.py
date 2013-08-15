@@ -37,6 +37,8 @@ close option is set.'''),
         Bugv2('''Fix undo/redo in text controls on OS X.''', '1436'),
         Bugv2('''Fix loss of description edits when closing/quitting while
 editors are still open.''', '1437'),
+        Bugv2('''Fix strange Escape behavior on multiple open editors
+on OS X.''', '1438'),
         ],
     ),
 
