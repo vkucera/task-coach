@@ -172,6 +172,14 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
 
 
 class MainToolBar(ToolBar):
+    def __init__(self, *args, **kwargs):
+        super(MainToolBar, self).__init__(*args, **kwargs)
+        self.Bind(wx.EVT_SIZE, self._OnSize)
+
+    def _OnSize(self, event):
+        event.Skip()
+        wx.CallAfter(self.GetParent().SendSizeEvent)
+
     def Realize(self):
         self._agwStyle &= ~aui.AUI_TB_NO_AUTORESIZE
         super(MainToolBar, self).Realize()

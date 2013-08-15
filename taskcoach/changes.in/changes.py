@@ -29,6 +29,8 @@ Release('1.3.32', 'July ??, 2013',
 close option is set.'''),
         Bugv2('''Prevent a PyGTK warning on recent Linux distributions.''',
               '1435'),
+        Bugv2('''Fix main toolbar shrinking when resizing a viewer.''',
+              '1431'),
         ],
     ),
 
