@@ -891,11 +891,17 @@ class EditBook(widgets.Notebook):
         self.SetMinSize((width, self.GetHeightForPageHeight(height)))
 
     def getPage(self, page_name):
-        for index in range(self.GetPageCount()):
-            if page_name == self[index].pageName:
-                return self[index]
+        index = self.getPageIndex(page_name)
+        if index is not None:
+            return self[index]
         return None
-    
+
+    def getPageIndex(self, page_name):
+        for index in xrange(self.GetPageCount()):
+            if page_name == self[index].pageName:
+                return index
+        return None
+
     def __get_minimum_page_size(self):
         min_widths, min_heights = [], []
         for page in self:
@@ -990,7 +996,7 @@ class EditBook(widgets.Notebook):
             except:  # pylint: disable=W0702
                 pass
         if items_are_new:
-            current_page = 0  # For new items, start at the subject page.
+            current_page = self.getPageIndex('subject') or 0  # For new items, start at the subject page.
         else:
             # Although the active/current page is written in the perspective 
             # string (a + before the number of the active page), the current 

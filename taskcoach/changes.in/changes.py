@@ -33,6 +33,7 @@ close option is set.'''),
               '1431'),
         Bugv2('''Improve performance when tracking effort.''', '1442'),
         Bugv2('''Prevent TypeError in date selection widget.''', '1445'),
+        Bugv2('''Fix initial tab when creating new items'''),
         ],
     ),
 
