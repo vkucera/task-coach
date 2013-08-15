@@ -88,7 +88,7 @@ class SecondRefresher(patterns.Observer, wx.EvtHandler):
             self.removeTrackedItems([sender])
         self.refreshItems([sender])
 
-    def onEverySecond(self, event):
+    def onEverySecond(self, event=None):
         self.refreshItems(self.__trackedItems)
         
     def refreshItems(self, items):
@@ -126,6 +126,9 @@ class SecondRefresher(patterns.Observer, wx.EvtHandler):
 
     def stopClock(self):
         self.__timer.Stop()
+
+    def isClockStarted(self): # Unit tests
+        return self.__timer.IsRunning()
 
     def currentlyTrackedItems(self):
         return list(self.__trackedItems)
