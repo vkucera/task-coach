@@ -178,7 +178,9 @@ class MainToolBar(ToolBar):
 
     def _OnSize(self, event):
         event.Skip()
-        if event.GetSize()[0] != self.GetParent().GetClientSize()[0]:
+        # On Windows XP, the sizes are off by 1 pixel. I fear that this value depends
+        # on the user's config so let's take some margin.
+        if abs(event.GetSize()[0] - self.GetParent().GetClientSize()[0]) >= 10:
             wx.CallAfter(self.GetParent().SendSizeEvent)
 
     def Realize(self):
