@@ -625,12 +625,13 @@ class Entry(wx.Panel):
             EVT_ENTRY_CHOICE_SELECTED(self.__popup[0], self.__OnChoiceSelected)
 
     def __OnChoiceSelected(self, event):
-        popup, field = self.__popup
-        evt = EntryChoiceSelectedEvent(self, event.GetValue(), field=field)
-        self.ProcessEvent(evt)
-        if not evt.IsVetoed():
-            field.SetValue(evt.GetValue(), notify=True)
-        popup.Dismiss()
+        if self.__popup is not None: # How can this happen ? It does.
+            popup, field = self.__popup
+            evt = EntryChoiceSelectedEvent(self, event.GetValue(), field=field)
+            self.ProcessEvent(evt)
+            if not evt.IsVetoed():
+                field.SetValue(evt.GetValue(), notify=True)
+            popup.Dismiss()
 
 
 class NumericField(Field):
