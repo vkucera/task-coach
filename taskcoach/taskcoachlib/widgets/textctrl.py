@@ -31,8 +31,9 @@ class BaseTextCtrl(wx.TextCtrl):
     def __init__(self, parent, *args, **kwargs):
         super(BaseTextCtrl, self).__init__(parent, -1, *args, **kwargs)
         self.__data = None
-        if operating_system.isGTK():
-            self.Bind(wx.EVT_KEY_DOWN, self.__on_key_down)
+        if operating_system.isGTK() or operating_system.isMac():
+            if operating_system.isGTK():
+                self.Bind(wx.EVT_KEY_DOWN, self.__on_key_down)
             self.Bind(wx.EVT_KILL_FOCUS, self.__on_kill_focus)
             self.__initial_value = self.GetValue()
             self.__undone_value = None
@@ -44,12 +45,12 @@ class BaseTextCtrl(wx.TextCtrl):
 
     def SetValue(self, *args, **kwargs):
         super(BaseTextCtrl, self).SetValue(*args, **kwargs)
-        if operating_system.isGTK():
+        if operating_system.isGTK() or operating_system.isMac():
             self.__initial_value = self.GetValue()
 
     def AppendText(self, *args, **kwargs):
         super(BaseTextCtrl, self).AppendText(*args, **kwargs)
-        if operating_system.isGTK():
+        if operating_system.isGTK() or operating_system.isMac():
             self.__initial_value = self.GetValue()
 
     def SetData(self, data):
@@ -57,6 +58,28 @@ class BaseTextCtrl(wx.TextCtrl):
 
     def GetData(self):
         return self.__data
+
+    def CanUndo(self):
+        if operating_system.isMac():
+            return self.__can_undo()
+        return super(BaseTextCtrl, self).CanUndo()
+
+    def Undo(self):
+        if operating_system.isMac():
+            self.__undo()
+        else:
+            super(BaseTextCtrl, self).Undo()
+
+    def CanRedo(self):
+        if operating_system.isMac():
+            return self.__can_redo()
+        return super(BaseTextCtrl, self).CanRedo()
+
+    def Redo(self):
+        if operating_system.isMac():
+            self.__redo()
+        else:
+            super(BaseTextCtrl, self).Redo()
 
     def __on_key_down(self, event):
         ''' Check whether the user pressed Ctrl-Z (or Ctrl-Y) and if so, 
