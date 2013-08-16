@@ -40,6 +40,8 @@ editors are still open.''', '1437'),
         Bugv2('''Fix strange Escape behavior on multiple open editors
 on OS X.''', '1438'),
         Bugv2('''Fix German translation.''', '1448'),
+        Bugv2('''"New note with selected categories" would create a new
+category.''', '1447'),
         ],
     ),
 

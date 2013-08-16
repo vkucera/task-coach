@@ -1824,15 +1824,12 @@ class NoteNew(NotesCommand, settings_uicommand.SettingsCommand, ViewerCommand):
             helpText=self.helpText, bitmap='new', *args, **kwargs)
 
     def doCommand(self, event, show=True):  # pylint: disable=W0221
-        if self.viewer:
-            noteDialog = self.viewer.newItemDialog(bitmap=self.bitmap)
-        else: 
-            newNoteCommand = command.NewNoteCommand(self.notes,
-                categories=self.categoriesForTheNewNote())
-            newNoteCommand.do()
-            noteDialog = dialog.editor.NoteEditor(self.mainWindow(),
-                newNoteCommand.items, self.settings, self.notes, 
-                self.mainWindow().taskFile, bitmap=self.bitmap)
+        newNoteCommand = command.NewNoteCommand(self.notes,
+            categories=self.categoriesForTheNewNote())
+        newNoteCommand.do()
+        noteDialog = dialog.editor.NoteEditor(self.mainWindow(),
+            newNoteCommand.items, self.settings, self.notes, 
+            self.mainWindow().taskFile, bitmap=self.bitmap)
         noteDialog.Show(show)
         return noteDialog  # for testing purposes
 
