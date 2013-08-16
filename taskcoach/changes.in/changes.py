@@ -39,6 +39,7 @@ close option is set.'''),
 editors are still open.''', '1437'),
         Bugv2('''Fix strange Escape behavior on multiple open editors
 on OS X.''', '1438'),
+        Bugv2('''Fix German translation.''', '1448'),
         ],
     ),
 
