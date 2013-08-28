@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.32', 'July ??, 2013',
+Release('1.3.32', 'August 28, 2013',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bugv2('''Don't prevent shutdown on Windows if the minimize on
