@@ -44,6 +44,8 @@ on OS X.''', '1438'),
 category.''', '1447'),
         Bugv2('''Fix search issue when editing the toolbar.''', '1449'),
         Bugv2('''Fix note creation in editor windows.''', '1451'),
+        Bugv2('''Fix opening preferences dialog when the end of work day
+is set to 24.'''),
         ],
     ),
 

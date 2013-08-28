@@ -126,15 +126,18 @@ class TimeEntry(wx.Panel):
         self.__entry.EnableChoices()
         sizer.Add(self.__entry, 0, wx.ALL, 3)
 
-        self.__entry.SetTime(date.Time(hour=value, minute=0, second=0))
         if disabledMessage is not None:
             self.__checkbox = wx.CheckBox(self, wx.ID_ANY, disabledMessage)
             self.Bind(wx.EVT_CHECKBOX, self.OnCheck)
             if value == disabledValue:
+                self.__entry.SetTime(date.Time(hour=defaultValue, minute=0, second=0))
                 self.__checkbox.SetValue(True)
                 self.__entry.Enable(False)
+            else:
+                self.__entry.SetTime(date.Time(hour=value, minute=0, second=0))
             sizer.Add(self.__checkbox, 1, wx.ALL, 3)
         else:
+            self.__entry.SetTime(date.Time(hour=value, minute=0, second=0))
             self.__checkbox = None
         self.SetSizer(sizer)
 
