@@ -7,26 +7,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-07-14 11:01+0000\n"
-"PO-Revision-Date: 2013-03-06 03:16+0000\n"
-"Last-Translator: Frank Niessink <frank@niessink.com>\n"
+"POT-Creation-Date: 2013-07-30 00:31+0000\n"
+"PO-Revision-Date: 2013-08-07 02:24+0000\n"
+"Last-Translator: Ken Sharp <Unknown>\n"
 "Language-Team: English (Canada) <en_CA@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-29 18:21+0000\n"
-"X-Generator: Launchpad (build 16700)\n"
+"X-Launchpad-Export-Date: 2013-08-28 17:37+0000\n"
+"X-Generator: Launchpad (build 16738)\n"
 
 #: taskcoachlib/application/application.py:57
 msgid ""
 "Errors have occured. Please see \"taskcoachlog.txt\" in your \"My "
 "Documents\" folder."
 msgstr ""
+"Errors have occurred. Please see \"taskcoachlog.txt\" in your \"My "
+"Documents\" folder."
 
 #: taskcoachlib/application/application.py:57
 #: taskcoachlib/application/application.py:59
 #: taskcoachlib/gui/dialog/attributesync.py:91
-#: taskcoachlib/gui/mainwindow.py:359 taskcoachlib/iphone/protocol.py:482
+#: taskcoachlib/gui/mainwindow.py:374 taskcoachlib/iphone/protocol.py:482
 #: taskcoachlib/widgets/draganddrop.py:121
 #: taskcoachlib/widgets/draganddrop.py:163 taskcoachlib/widgets/password.py:92
 msgid "Error"
@@ -389,19 +391,19 @@ msgstr "Stop tracking \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:386
 msgid "Maximize priority"
-msgstr "Maximize priority"
+msgstr "Maximise priority"
 
 #: taskcoachlib/command/taskCommands.py:387
 msgid "Maximize priority of \"%s\""
-msgstr "Maximize priority of \"%s\""
+msgstr "Maximise priority of \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:396
 msgid "Minimize priority"
-msgstr "Minimize priority"
+msgstr "Minimise priority"
 
 #: taskcoachlib/command/taskCommands.py:397
 msgid "Minimize priority of \"%s\""
-msgstr "Minimize priority of \"%s\""
+msgstr "Minimise priority of \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:426
 msgid "Increase priority"
@@ -611,7 +613,7 @@ msgid "45 minutes"
 msgstr "45 minutes"
 
 #: taskcoachlib/domain/date/snooze.py:25
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1731
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1733
 msgid "1 hour"
 msgstr "1 hour"
 
@@ -660,7 +662,7 @@ msgid "2 weeks"
 msgstr "2 weeks"
 
 #: taskcoachlib/domain/date/snooze.py:30
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1719
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1721
 msgid "1 week"
 msgstr "1 week"
 
@@ -867,7 +869,7 @@ msgstr "Check mark"
 
 #: taskcoachlib/gui/artprovider.py:154
 msgid "Check marks"
-msgstr ""
+msgstr "Check marks"
 
 #: taskcoachlib/gui/artprovider.py:155
 msgid "Clock"
@@ -1230,12 +1232,12 @@ msgstr "Appearance"
 #: taskcoachlib/gui/dialog/editor.py:316
 #: taskcoachlib/gui/dialog/preferences.py:153
 msgid "Foreground color"
-msgstr "Foreground color"
+msgstr "Foreground colour"
 
 #: taskcoachlib/gui/dialog/editor.py:317
 #: taskcoachlib/gui/dialog/preferences.py:153
 msgid "Background color"
-msgstr "Background color"
+msgstr "Background colour"
 
 #: taskcoachlib/gui/dialog/editor.py:343
 #: taskcoachlib/gui/dialog/preferences.py:154
@@ -1400,24 +1402,24 @@ msgid "Start"
 msgstr "Start"
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1621
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1623
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Week(s)"
 msgstr "Week(s)"
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1622
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1624
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Day(s)"
 msgstr "Day(s)"
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1623
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1625
 msgid "Hour(s)"
 msgstr "Hour(s)"
 
 #: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1624
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1626
 msgid "Minute(s)"
 msgstr "Minute(s)"
 
@@ -1483,7 +1485,7 @@ msgstr "Use font:"
 
 #: taskcoachlib/gui/dialog/entry.py:250
 msgid "Use color:"
-msgstr "Use color:"
+msgstr "Use colour:"
 
 #: taskcoachlib/gui/dialog/entry.py:413 taskcoachlib/gui/dialog/entry.py:530
 #: taskcoachlib/gui/uicommand/base_uicommand.py:42
@@ -1805,7 +1807,7 @@ msgstr "Hide main window when iconized"
 
 #: taskcoachlib/gui/dialog/preferences.py:400
 msgid "Minimize main window when closed"
-msgstr "Minimize main window when closed"
+msgstr "Minimise main window when closed"
 
 #: taskcoachlib/gui/dialog/preferences.py:402
 msgid "Make clock in the task bar tick when tracking effort"
@@ -2081,7 +2083,7 @@ msgstr "Default snooze time to use after reminder"
 
 #: taskcoachlib/gui/dialog/preferences.py:666
 msgid "Snooze times to offer in task reminder dialog"
-msgstr "Snooze times to offer in task reminder dialogue"
+msgstr "Snooze times to offer in task reminder dialog"
 
 #: taskcoachlib/gui/dialog/preferences.py:674
 msgid "iPhone"
@@ -2094,7 +2096,7 @@ msgstr "Password for synchronization with iPhone"
 #: taskcoachlib/gui/dialog/preferences.py:681
 msgid "When synchronizing, enter this password on the iPhone to authorize it"
 msgstr ""
-"When synchronizing, enter this password on the iPhone to authorize it"
+"When synchronising, enter this password on the iPhone to authorise it"
 
 #: taskcoachlib/gui/dialog/preferences.py:683
 msgid "Bonjour service name"
@@ -2122,31 +2124,35 @@ msgstr "Font to use in the description field of edit dialogs"
 
 #: taskcoachlib/gui/dialog/preferences.py:714
 msgid "OS X"
-msgstr ""
+msgstr "OS X"
 
 #: taskcoachlib/gui/dialog/preferences.py:721
 msgid "Get e-mail subject from Mail.app"
-msgstr ""
+msgstr "Get e-mail subject from Mail.app"
 
 #: taskcoachlib/gui/dialog/preferences.py:722
 msgid ""
 "When dropping an e-mail from Mail.app, try to get its subject.\n"
 "This takes up to 20 seconds."
 msgstr ""
+"When dropping an e-mail from Mail.app, try to get its subject.\n"
+"This takes up to 20 seconds."
 
 #: taskcoachlib/gui/dialog/preferences.py:728
 msgid "Linux"
-msgstr ""
+msgstr "Linux"
 
 #: taskcoachlib/gui/dialog/preferences.py:735
 msgid "Focus task subject in task editor"
-msgstr ""
+msgstr "Focus task subject in task editor"
 
 #: taskcoachlib/gui/dialog/preferences.py:736
 msgid ""
 "When opening the task editor, select the task subject and focus it.\n"
 "This overwrites the X selection."
 msgstr ""
+"When opening the task editor, select the task subject and focus it.\n"
+"This overwrites the X selection."
 
 #: taskcoachlib/gui/dialog/reminder.py:31
 msgid "%(name)s reminder - %(task)s"
@@ -2254,27 +2260,27 @@ msgstr "Preview"
 
 #: taskcoachlib/gui/dialog/toolbar.py:67
 msgid "Available tools"
-msgstr ""
+msgstr "Available tools"
 
 #: taskcoachlib/gui/dialog/toolbar.py:83
 msgid "Make this tool visible in the toolbar"
-msgstr ""
+msgstr "Make this tool visible in the toolbar"
 
 #: taskcoachlib/gui/dialog/toolbar.py:87
 msgid "Hide this tool from the toolbar"
-msgstr ""
+msgstr "Hide this tool from the toolbar"
 
 #: taskcoachlib/gui/dialog/toolbar.py:92
 msgid "Tools"
-msgstr ""
+msgstr "Tools"
 
 #: taskcoachlib/gui/dialog/toolbar.py:106
 msgid "Move the tool up (to the left of the toolbar)"
-msgstr ""
+msgstr "Move the tool up (to the left of the toolbar)"
 
 #: taskcoachlib/gui/dialog/toolbar.py:110
 msgid "Move the tool down (to the right of the toolbar)"
-msgstr ""
+msgstr "Move the tool down (to the right of the toolbar)"
 
 #: taskcoachlib/gui/dialog/toolbar.py:134
 msgid "Reorder toolbar buttons by drag and dropping them in this list."
@@ -2337,7 +2343,7 @@ msgid "The latest released version of %(name)s is %(version)s."
 msgstr "The latest released version of %(name)s is %(version)s."
 
 #: taskcoachlib/gui/dialog/xfce4warning.py:27
-#: taskcoachlib/gui/mainwindow.py:95
+#: taskcoachlib/gui/mainwindow.py:97
 #: taskcoachlib/gui/uicommand/uicommand.py:219
 msgid "Warning"
 msgstr "Warning"
@@ -2580,11 +2586,11 @@ msgstr "Synchronizing..."
 msgid "Synchronizing with %s..."
 msgstr "Synchronizing with %s..."
 
-#: taskcoachlib/gui/mainwindow.py:150
+#: taskcoachlib/gui/mainwindow.py:153
 msgid "Welcome to %(name)s version %(version)s"
 msgstr "Welcome to %(name)s version %(version)s"
 
-#: taskcoachlib/gui/mainwindow.py:177
+#: taskcoachlib/gui/mainwindow.py:180
 msgid ""
 "Couldn't restore the pane layout from TaskCoach.ini:\n"
 "%s\n"
@@ -2604,19 +2610,19 @@ msgstr ""
 "closing the program, open a bug report, and attach the copied TaskCoach.ini "
 "file to the bug report."
 
-#: taskcoachlib/gui/mainwindow.py:185
+#: taskcoachlib/gui/mainwindow.py:188
 msgid "%s settings error"
 msgstr "%s settings error"
 
-#: taskcoachlib/gui/mainwindow.py:336
+#: taskcoachlib/gui/mainwindow.py:351
 msgid "iPhone/iPod"
 msgstr "iPhone/iPod"
 
-#: taskcoachlib/gui/mainwindow.py:346
+#: taskcoachlib/gui/mainwindow.py:361
 msgid "Synchronization type"
 msgstr "Synchronization type"
 
-#: taskcoachlib/gui/mainwindow.py:356
+#: taskcoachlib/gui/mainwindow.py:371
 msgid ""
 "An iPhone or iPod Touch device tried to synchronize with this\n"
 "task file, but the protocol negotiation failed. Please file a\n"
@@ -3312,11 +3318,11 @@ msgstr "Mark the selected task(s) completed"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1347
 msgid "&Maximize priority\tShift+Ctrl+I"
-msgstr "&Maximize priority\tShift+Ctrl+I"
+msgstr "&Maximise priority\tShift+Ctrl+I"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1361
 msgid "&Minimize priority\tShift+Ctrl+D"
-msgstr "&Minimize priority\tShift+Ctrl+D"
+msgstr "&Minimise priority\tShift+Ctrl+D"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1375
 msgid "&Increase priority\tCtrl+I"
@@ -3597,11 +3603,11 @@ msgstr "Aggregation mode"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2251
 msgid "List"
-msgstr ""
+msgstr "List"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2251
 msgid "Tree"
-msgstr ""
+msgstr "Tree"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2257
 msgid "When checked, show tasks as tree, otherwise show tasks as list"
@@ -3676,12 +3682,12 @@ msgid "No rounding"
 msgstr "No rounding"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2465
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1736
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1738
 msgid "1 minute"
 msgstr "1 minute"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2466
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1738
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1740
 msgid "%d minutes"
 msgstr "%d minutes"
 
@@ -3899,6 +3905,8 @@ msgid ""
 "Effort: %d selected, %d visible, %d total. Time spent: %s selected, %s "
 "visible, %s total"
 msgstr ""
+"Effort: %d selected, %d visible, %d total. Time spent: %s selected, %s "
+"visible, %s total"
 
 #: taskcoachlib/gui/viewer/effort.py:397
 msgid "Status: %d tracking"
@@ -4748,7 +4756,7 @@ msgstr "No budget: the task has no budget."
 
 #: taskcoachlib/help/__init__.py:218
 msgid "The text of tasks is colored according to the following rules:"
-msgstr "The text of tasks is colored according to the following rules:"
+msgstr "The text of tasks is coloured according to the following rules:"
 
 #: taskcoachlib/help/__init__.py:220
 msgid "Overdue tasks are red;"
@@ -4779,7 +4787,7 @@ msgid ""
 "This all assumes you have not changed the text colors through the \n"
 "preferences dialog, of course."
 msgstr ""
-"This all assumes you have not changed the text colors through the \n"
+"This all assumes you have not changed the text colours through the \n"
 "preferences dialog, of course."
 
 #: taskcoachlib/help/__init__.py:229
@@ -4788,7 +4796,7 @@ msgid ""
 "task belongs to. See the section about \n"
 "<a href=\"#categoryproperties\">category properties</a> below."
 msgstr ""
-"The background color of tasks is determined by the categories the \n"
+"The background colour of tasks is determined by the categories the \n"
 "task belongs to. See the section about \n"
 "<a href=\"#categoryproperties\">category properties</a> below."
 
@@ -4934,16 +4942,16 @@ msgid ""
 "associated with it, a mixture of those colors will be used to render that \n"
 "item."
 msgstr ""
-"Appearance properties such as icon, font and colors: \n"
+"Appearance properties such as icon, font and colours: \n"
 "the appearance properties are used to render the category, but also the "
 "items\n"
-"that belong to that category. If a category has no color, font or icon of "
+"that belong to that category. If a category has no colour, font or icon of "
 "its \n"
 "own, but it has a parent category with such a property, the parent's "
 "property \n"
 "will be used. If an item belongs to multiple categories that each have a "
-"color \n"
-"associated with it, a mixture of those colors will be used to render that \n"
+"colour \n"
+"associated with it, a mixture of those colours will be used to render that \n"
 "item."
 
 #: taskcoachlib/help/__init__.py:310
@@ -4976,7 +4984,7 @@ msgstr "Description: a multi-line description of the note."
 
 #: taskcoachlib/help/__init__.py:322
 msgid "Appearance properties such as icon, font and colors."
-msgstr "Appearance properties such as icon, font and colors."
+msgstr "Appearance properties such as icon, font and colours."
 
 #: taskcoachlib/help/__init__.py:331
 msgid ""
@@ -6225,7 +6233,7 @@ msgid ""
 "interface, resulting in a 'smaller' user interface."
 msgstr ""
 "You can turn off some features, such as notes and effort tracking, in the "
-"Preferences dialogue. Features turned off are not accessible via the user "
+"Preferences dialog. Features turned off are not accessible via the user "
 "interface, resulting in a 'smaller' user interface."
 
 #: taskcoachlib/help/tips.py:37
@@ -6664,11 +6672,11 @@ msgstr "New task due today"
 msgid "New task due tomorrow"
 msgstr "New task due tomorrow"
 
-#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1726
+#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1728
 msgid "%d days"
 msgstr "%d days"
 
-#: taskcoachlib/render.py:51 taskcoachlib/thirdparty/smartdatetimectrl.py:1724
+#: taskcoachlib/render.py:51 taskcoachlib/thirdparty/smartdatetimectrl.py:1726
 msgid "1 day"
 msgstr "1 day"
 
@@ -6823,20 +6831,20 @@ msgstr "&Previous"
 msgid "&Window"
 msgstr "&Window"
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1670
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1777
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1672
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1779
 msgid "Edit"
 msgstr "Edit"
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1721
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1723
 msgid "%d weeks"
 msgstr "%d weeks"
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1733
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1735
 msgid "%d hours"
 msgstr "%d hours"
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1777
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1779
 msgid "Done"
 msgstr "Done"
 
@@ -6890,7 +6898,7 @@ msgstr "Draw a line showing the current time"
 
 #: taskcoachlib/widgets/calendarconfig.py:108
 msgid "Color used to highlight the current day"
-msgstr "Color used to highlight the current day"
+msgstr "Colour used to highlight the current day"
 
 #: taskcoachlib/widgets/dialog.py:81
 msgid "Close"
@@ -6917,6 +6925,12 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"There was a problem trying to find out your system's keychain.\n"
+"Please file a bug report (see the Help menu) and attach a screenshot of this "
+"message.\n"
+"Error was:\n"
+"\n"
+"%s"
 
 #: taskcoachlib/widgets/password.py:97
 msgid "Please enter your password."
