@@ -625,12 +625,13 @@ class Entry(wx.Panel):
             EVT_ENTRY_CHOICE_SELECTED(self.__popup[0], self.__OnChoiceSelected)
 
     def __OnChoiceSelected(self, event):
-        popup, field = self.__popup
-        evt = EntryChoiceSelectedEvent(self, event.GetValue(), field=field)
-        self.ProcessEvent(evt)
-        if not evt.IsVetoed():
-            field.SetValue(evt.GetValue(), notify=True)
-        popup.Dismiss()
+        if self.__popup is not None: # How can this happen ? It does.
+            popup, field = self.__popup
+            evt = EntryChoiceSelectedEvent(self, event.GetValue(), field=field)
+            self.ProcessEvent(evt)
+            if not evt.IsVetoed():
+                field.SetValue(evt.GetValue(), notify=True)
+            popup.Dismiss()
 
 
 class NumericField(Field):
@@ -889,6 +890,8 @@ class TimeEntry(Entry):
                                         month=3, day=3, hour=11, minute=33, second=0) - datetime.datetime.now()).total_seconds())))
         elif platform.system() == 'Linux':
             try:
+                # Without this gtk import there's a warning if you try to import wx.lib.masked
+                import gtk
                 from PyKDE4.kdecore import KLocale, KGlobal
                 from PyQt4.QtCore import QTime
             except ImportError:

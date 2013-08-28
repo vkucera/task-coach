@@ -71,13 +71,10 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
     def Clear(self):
         """The regular Clear method does not remove controls."""
 
-        for uiCommand in self.__visibleUICommands:
-            if uiCommand is not None and not isinstance(uiCommand, int):
-                ## item = self.FindTool(uiCommand.id)
-                uiCommand.unbind(self, uiCommand.id)
-                ## if item.GetKind() == aui.ITEM_CONTROL:
-                ##     self.DeleteTool(item.GetId())
-                ##     item.window.Destroy()
+        if self.__visibleUICommands: # May be None
+            for uiCommand in self.__visibleUICommands:
+                if uiCommand is not None and not isinstance(uiCommand, int):
+                    uiCommand.unbind(self, uiCommand.id)
 
         idx = 0
         while idx < self.GetToolCount():
@@ -172,6 +169,17 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
 
 
 class MainToolBar(ToolBar):
+    def __init__(self, *args, **kwargs):
+        super(MainToolBar, self).__init__(*args, **kwargs)
+        self.Bind(wx.EVT_SIZE, self._OnSize)
+
+    def _OnSize(self, event):
+        event.Skip()
+        # On Windows XP, the sizes are off by 1 pixel. I fear that this value depends
+        # on the user's config so let's take some margin.
+        if abs(event.GetSize()[0] - self.GetParent().GetClientSize()[0]) >= 10:
+            wx.CallAfter(self.GetParent().SendSizeEvent)
+
     def Realize(self):
         self._agwStyle &= ~aui.AUI_TB_NO_AUTORESIZE
         super(MainToolBar, self).Realize()

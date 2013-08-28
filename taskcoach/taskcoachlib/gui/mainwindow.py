@@ -24,6 +24,7 @@ from taskcoachlib.gui import viewer, toolbar, uicommand, remindercontroller, \
     artprovider, windowdimensionstracker, idlecontroller
 from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog
 from taskcoachlib.gui.dialog.xfce4warning import XFCE4WarningDialog
+from taskcoachlib.gui.dialog.editor import Editor
 from taskcoachlib.gui.iphone import IPhoneSyncFrame
 from taskcoachlib.gui.threads import DeferredCallMixin, synchronized
 from taskcoachlib.i18n import _
@@ -61,6 +62,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, BalloonTipManager,
         self.settings = settings
         self.__filename = None
         self.__dirty = False
+        self.__shutdown = False
         self.Bind(wx.EVT_CLOSE, self.onClose)
         self.Bind(wx.EVT_ICONIZE, self.onIconify)
         self.Bind(wx.EVT_SIZE, self.onResize)
@@ -115,6 +117,9 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, BalloonTipManager,
                     mon.vendor == 'xfce4-session':
                 dlg = XFCE4WarningDialog(self, self.settings)
                 dlg.Show()
+
+    def setShutdownInProgress(self):
+        self.__shutdown = True
 
     def _create_window_components(self):  # Not private for test purposes
         self._create_viewer_container()
@@ -249,8 +254,18 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
         
     def __save_position(self):
         self.__dimensions_tracker.save_position()
-        
+
+    def closeEditors(self):
+        for child in self.GetChildren():
+            if isinstance(child, Editor):
+                child.Close()
+
     def onClose(self, event):
+        self.closeEditors()
+
+        if self.__shutdown:
+            event.Skip()
+            return
         if event.CanVeto() and self.settings.getboolean('window', 
                                                         'hidewhenclosed'):
             event.Veto()

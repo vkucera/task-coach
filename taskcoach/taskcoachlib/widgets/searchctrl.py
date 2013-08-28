@@ -39,7 +39,6 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
         self.__tooltip = tooltip.SimpleToolTip(self)
         self.createMenu()
         self.bindEventHandlers()
-        self.onFind(None)
         
     def GetMainWindow(self):
         return self

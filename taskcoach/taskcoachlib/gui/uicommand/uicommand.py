@@ -125,6 +125,7 @@ class FileClose(IOCommand):
             *args, **kwargs)
 
     def doCommand(self, event):
+        self.mainWindow().closeEditors()
         self.iocontroller.close()
 
 
@@ -1836,7 +1837,7 @@ class NoteNew(NotesCommand, settings_uicommand.SettingsCommand, ViewerCommand):
             helpText=self.helpText, bitmap='new', *args, **kwargs)
 
     def doCommand(self, event, show=True):  # pylint: disable=W0221
-        if self.viewer:
+        if self.viewer and self.viewer.isShowingNotes():
             noteDialog = self.viewer.newItemDialog(bitmap=self.bitmap)
         else: 
             newNoteCommand = command.NewNoteCommand(self.notes,

@@ -55,9 +55,6 @@ class UpdatePerSecondViewerTestsMixin(object):
 
     def createUpdateViewer(self):
         return self.ListViewerClass(self.frame, self.taskFile, self.settings)
-        
-    def testViewerHasRegisteredWithClock(self):
-        self.failUnless(date.Scheduler().get_jobs())
 
     def testClockNotificationResultsInRefreshedItem(self):
         self.updateViewer.widget = MockWidget()
@@ -90,7 +87,7 @@ class UpdatePerSecondViewerTestsMixin(object):
         
     def testCreateViewerWithTrackedItemsStartsTheClock(self):
         self.createUpdateViewer()
-        self.failUnless(date.Scheduler().get_jobs())
+        self.failUnless(self.updateViewer.secondRefresher.isClockStarted())
         
     def testViewerDoesNotReactToAddEventsFromOtherContainers(self):
         categories = base.filter.SearchFilter(category.CategoryList())

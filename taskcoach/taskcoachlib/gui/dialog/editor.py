@@ -891,11 +891,17 @@ class EditBook(widgets.Notebook):
         self.SetMinSize((width, self.GetHeightForPageHeight(height)))
 
     def getPage(self, page_name):
-        for index in range(self.GetPageCount()):
-            if page_name == self[index].pageName:
-                return self[index]
+        index = self.getPageIndex(page_name)
+        if index is not None:
+            return self[index]
         return None
-    
+
+    def getPageIndex(self, page_name):
+        for index in xrange(self.GetPageCount()):
+            if page_name == self[index].pageName:
+                return index
+        return None
+
     def __get_minimum_page_size(self):
         min_widths, min_heights = [], []
         for page in self:
@@ -990,7 +996,7 @@ class EditBook(widgets.Notebook):
             except:  # pylint: disable=W0702
                 pass
         if items_are_new:
-            current_page = 0  # For new items, start at the subject page.
+            current_page = self.getPageIndex('subject') or 0  # For new items, start at the subject page.
         else:
             # Although the active/current page is written in the perspective 
             # string (a + before the number of the active page), the current 
@@ -1320,6 +1326,16 @@ class Editor(BalloonTipManager, widgets.Dialog):
                 eventSource=self._items[0])
         self.Bind(wx.EVT_CLOSE, self.on_close_editor)
 
+        if operating_system.isMac():
+            # Sigh. On OS X, if you open an editor, switch back to the main window, open
+            # another editor, then hit Escape twice, the second editor disappears without any
+            # notification (EVT_CLOSE, EVT_ACTIVATE), so poll for this, because there might
+            # be pending changes...
+            id_ = wx.NewId()
+            self.__timer = wx.Timer(self, id_)
+            wx.EVT_TIMER(self, id_, self.__on_timer)
+            self.__timer.Start(1000, False)
+
         # On Mac OS X, the frame opens by default in the top-left
         # corner of the first display. This gets annoying on a
         # 2560x1440 27" + 1920x1200 24" dual screen...
@@ -1334,7 +1350,11 @@ class Editor(BalloonTipManager, widgets.Dialog):
         self.__create_ui_commands()
         self.__dimensions_tracker = windowdimensionstracker.WindowSizeAndPositionTracker(
             self, settings, self._interior.settings_section())
-        
+
+    def __on_timer(self, event):
+        if not self.IsShown():
+            self.Close()
+
     def __create_ui_commands(self):
         # FIXME: keyboard shortcuts are hardcoded here, but they can be 
         # changed in the translations
@@ -1370,7 +1390,12 @@ class Editor(BalloonTipManager, widgets.Dialog):
         # destroyed...
         if operating_system.isMac():
             self._interior.SetFocusIgnoringChildren()
-            
+        self.Destroy()
+
+    def on_activate(self, event):
+        print 'XXX'
+        event.Skip()
+
     def on_item_removed(self, event):
         ''' The item we're editing or one of its ancestors has been removed or 
             is hidden by a filter. If the item is really removed, close the tab 

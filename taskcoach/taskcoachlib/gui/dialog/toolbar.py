@@ -288,7 +288,7 @@ class _ToolBarEditorInterior(wx.Panel):
         return ','.join(names)
 
     def createToolBarUICommands(self):
-        return self.__toolbar.uiCommands()
+        return self.__toolbar.uiCommands(cache=False)
 
 
 class ToolBarEditor(BalloonTipManager, widgets.Dialog):

@@ -325,6 +325,16 @@ class EditTaskTestMixin(object):
         # Only the parent note should be added to the notes list:
         self.assertEqual(1, len(self.task.notes())) 
 
+    def testNewNote(self):
+        viewer = self.editor._interior[7].viewer
+        wx.GetApp().TopWindow.taskFile = self.taskFile
+        command = gui.uicommand.NoteNew(notes=viewer.presentation(),
+                                        settings=self.settings,
+                                        viewer=viewer)
+        dialog = command.doCommand(None, show=False)
+        dialog.ok()
+        self.assertEqual(1, len(self.task.notes()))
+
 
 class EditTaskTestBySettingFocus(TaskEditorBySettingFocusMixin, 
                                  EditTaskTestMixin, TaskEditorTestCase):

@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, test
 from taskcoachlib import gui, config, persistence, meta, operating_system
+from taskcoachlib.domain import task
 
 
 class MockViewer(wx.Frame):
@@ -55,6 +56,7 @@ class MainWindowTestCase(test.wxTestCase):
         super(MainWindowTestCase, self).setUp()
         self.settings = config.Settings(load=False)
         self.setSettings()
+        task.Task.settings = self.settings
         self.taskFile = persistence.TaskFile()
         self.mainwindow = MainWindowUnderTest(DummyIOController(),
             self.taskFile, self.settings)
@@ -89,7 +91,20 @@ class MainWindowTest(MainWindowTestCase):
         self.taskFile.setFilename('New filename')
         self.assertEqual('%s - %s'%(meta.name, self.taskFile.filename()), 
             self.mainwindow.GetTitle())
-        
+
+    def testTitle_AfterChange(self):
+        self.taskFile.setFilename('New filename')
+        self.taskFile.tasks().extend([task.Task()])
+        self.assertEqual('%s - %s *' % (meta.name, self.taskFile.filename()),
+                         self.mainwindow.GetTitle())
+
+    def testTitle_AfterSave(self):
+        self.taskFile.setFilename('New filename')
+        self.taskFile.tasks().extend([task.Task()])
+        self.taskFile.save()
+        self.assertEqual('%s - %s' % (meta.name, self.taskFile.filename()),
+                         self.mainwindow.GetTitle())
+
 
 class MainWindowMaximizeTestCase(MainWindowTestCase):
     maximized = 'Subclass responsibility'

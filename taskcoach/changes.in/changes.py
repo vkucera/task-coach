@@ -22,9 +22,36 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.32', 'July ??, 2013',
+Release('1.3.33', 'Semptember ??, 2013',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        ],
+    ),
+
+Release('1.3.32', 'August 28, 2013',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bugv2('''Don't prevent shutdown on Windows if the minimize on
+close option is set.'''),
+        Bugv2('''Prevent a PyGTK warning on recent Linux distributions.''',
+              '1435'),
+        Bugv2('''Fix main toolbar shrinking when resizing a viewer.''',
+              '1431'),
+        Bugv2('''Improve performance when tracking effort.''', '1442'),
+        Bugv2('''Prevent TypeError in date selection widget.''', '1445'),
+        Bugv2('''Fix initial tab when creating new items'''),
+        Bugv2('''Fix undo/redo in text controls on OS X.''', '1436'),
+        Bugv2('''Fix loss of description edits when closing/quitting while
+editors are still open.''', '1437'),
+        Bugv2('''Fix strange Escape behavior on multiple open editors
+on OS X.''', '1438'),
+        Bugv2('''Fix German translation.''', '1448'),
+        Bugv2('''"New note with selected categories" would create a new
+category.''', '1447'),
+        Bugv2('''Fix search issue when editing the toolbar.''', '1449'),
+        Bugv2('''Fix note creation in editor windows.''', '1451'),
+        Bugv2('''Fix opening preferences dialog when the end of work day
+is set to 24.'''),
         ],
     ),
 
