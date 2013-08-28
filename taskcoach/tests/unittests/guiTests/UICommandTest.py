@@ -22,6 +22,7 @@ from unittests import dummy
 from taskcoachlib import gui, config, persistence
 from taskcoachlib.domain import task, category, date, attachment, effort
 from taskcoachlib.thirdparty import desktop
+from taskcoachlib.gui.dialog.editor import NoteEditor, TaskEditor
 
 
 if desktop.get_desktop() in ('KDE', 'GNOME'): # pragma: no cover
@@ -87,6 +88,7 @@ class NewTaskWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
             taskList=self.taskFile.tasks(), viewer=self.viewer, 
             categories=self.categories, settings=self.settings)
         dialog = taskNew.doCommand(None, show=False)
+        self.failUnless(isinstance(dialog, TaskEditor), dialog)
         tree = dialog._interior[4].viewer.widget
         return tree.GetFirstChild(tree.GetRootItem())[0]
 
@@ -101,6 +103,36 @@ class NewTaskWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
     def testNewTaskWithoutSelectedCategory(self):
         firstCategoryInTaskDialog = self.createNewTask()
         self.failIf(firstCategoryInTaskDialog.IsChecked())
+
+
+class NewNoteWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
+    def setUp(self):
+        super(NewNoteWithSelectedCategoryTest, self).setUp()
+        self.categories = self.taskFile.categories()
+        self.categories.append(category.Category('cat'))
+        self.viewer = gui.viewer.CategoryViewer(self.frame, self.taskFile, 
+                                                self.settings)
+       
+    def createNewNote(self):
+        noteNew = gui.uicommand.NewNoteWithSelectedCategories( \
+            notes=self.taskFile.notes(), viewer=self.viewer, 
+            categories=self.categories, settings=self.settings)
+        dialog = noteNew.doCommand(None, show=False)
+        self.failUnless(isinstance(dialog, NoteEditor), dialog)
+        tree = dialog._interior[1].viewer.widget
+        return tree.GetFirstChild(tree.GetRootItem())[0]
+
+    def selectFirstCategory(self):
+        self.viewer.select([list(self.categories)[0]])
+
+    def testNewNoteWithSelectedCategory(self):
+        self.selectFirstCategory()
+        firstCategoryInNoteDialog = self.createNewNote()
+        self.failUnless(firstCategoryInNoteDialog.IsChecked())
+        
+    def testNewNoteWithoutSelectedCategory(self):
+        firstCategoryInNoteDialog = self.createNewNote()
+        self.failIf(firstCategoryInNoteDialog.IsChecked())
 
 
 class DummyTask(object):

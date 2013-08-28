@@ -43,6 +43,7 @@ on OS X.''', '1438'),
         Bugv2('''"New note with selected categories" would create a new
 category.''', '1447'),
         Bugv2('''Fix search issue when editing the toolbar.''', '1449'),
+        Bugv2('''Fix note creation in editor windows.''', '1451'),
         ],
     ),
 
