@@ -577,7 +577,7 @@ def announcing_via_OAuth_Api(settings, options, section, host):
         print 'Skipping announcing "%s" on %s.' % (status, host)
     else: 
         response, dummy_content = client.request( \
-            'http://api.%s/1/statuses/update.json' % host, method='POST', 
+            'http://api.%s/1.1/statuses/update.json' % host, method='POST', 
             body='status=%s' % status, headers=None)
         if response.status != 200:
             print 'Request failed: %d %s' % (response.status, response.reason)
