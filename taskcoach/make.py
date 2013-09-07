@@ -241,7 +241,7 @@ elif sys.argv[1] == 'bdist_rpm_opensuse':
     spec_file = spec_file.split('\n')
     setupOptions.update(dict(options=dict(bdist_rpm_opensuse=dict(\
         spec_file=spec_file, icon='icons.in/taskcoach.png', 
-        desktop_file='build.in/linnux_common/taskcoach.desktop'))))
+        desktop_file='build.in/linux_common/taskcoach.desktop'))))
 
 elif sys.argv[1] in ['bdist_deb', 'bdist_ubuntu']:
     from distutils.core import setup
