@@ -6,5 +6,5 @@ Exec=taskcoach.py %f
 Icon=taskcoach
 Terminal=false
 Type=Application
-Categories=Office;Application;
-
+Categories=Office;Calendar;
+Keywords=task;todo;reminder
