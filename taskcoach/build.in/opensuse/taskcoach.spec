@@ -27,7 +27,7 @@ Group: 		Applications/Productivity
 URL: 		%(url)s
 Source:		%(dist_download_prefix)s/TaskCoach-%%{version}.tar.gz
 Source1:	taskcoach.png
-Source2:	build.in/opensuse/taskcoach.desktop
+Source2:	build.in/linux_common/taskcoach.desktop
 BuildRoot: 	%%{_tmppath}/%%{name}-%%{version}-%%{release}-root-%%(%%{__id_u} -n)
 BuildArch:	noarch
 Requires: 	python >= %(pythonversion)s
