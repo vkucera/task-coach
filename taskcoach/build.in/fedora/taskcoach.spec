@@ -34,7 +34,7 @@ BuildArch:	noarch
 Requires: 	python >= %(pythonversion)s
 Requires:	wxPython >= %(wxpythonversionnumber)s
 # Depend on libXScrnSaver for libXss
-Requires:   libXScrnSaver >= 1.2.1
+Requires:   libXScrnSaver >= 1.2.0
 
 # Must have setuptools to build the package
 BuildRequires: python-setuptools-devel
