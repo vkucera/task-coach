@@ -68,6 +68,11 @@ NSManagedObjectContext *getManagedObjectContext(void)
 #endif
 
 	JLINFO("Started.");
+    
+    CGRect frame = [[UIScreen mainScreen] applicationFrame];
+    frame.size.height += frame.origin.y;
+    frame.origin.y = 0;
+    [window setFrame:frame];
 
     NSString *strVersion = [UIDevice currentDevice].systemVersion;
     NSRange rg = [strVersion rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"."]];

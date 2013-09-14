@@ -24,6 +24,9 @@
 		1E0D1EB217E4A6B10089ED25 /* TaskCoach-50h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E0D1EB017E4A6B10089ED25 /* TaskCoach-50h@2x.png */; };
 		1E0D1EB517E4A7260089ED25 /* TaskCoach-40h.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E0D1EB317E4A7260089ED25 /* TaskCoach-40h.png */; };
 		1E0D1EB617E4A7260089ED25 /* TaskCoach-40h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E0D1EB417E4A7260089ED25 /* TaskCoach-40h@2x.png */; };
+		1EF07F9F17E4A906001DB4B0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EF07F9D17E4A906001DB4B0 /* Default.png */; };
+		1EF07FA017E4A906001DB4B0 /* Default~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EF07F9E17E4A906001DB4B0 /* Default~iphone.png */; };
+		1EF07FA217E4AA70001DB4B0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EF07FA117E4AA70001DB4B0 /* Default-568h@2x.png */; };
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
 		A600012A11DF7425003DD3D5 /* paper.png in Resources */ = {isa = PBXBuildFile; fileRef = A600012911DF7425003DD3D5 /* paper.png */; };
 		A600012C11DF74A9003DD3D5 /* TaskCelliPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A600012B11DF74A9003DD3D5 /* TaskCelliPad.xib */; };
@@ -58,7 +61,6 @@
 		A62DFB2C11BB763300F594AB /* FullFromDesktopEffortState.m in Sources */ = {isa = PBXBuildFile; fileRef = A62DFB2B11BB763300F594AB /* FullFromDesktopEffortState.m */; };
 		A639811311C3DEE100B43940 /* addtask.png in Resources */ = {isa = PBXBuildFile; fileRef = A63980FC11C3DEE100B43940 /* addtask.png */; };
 		A639811411C3DEE100B43940 /* blueButton.png in Resources */ = {isa = PBXBuildFile; fileRef = A63980FD11C3DEE100B43940 /* blueButton.png */; };
-		A639811511C3DEE100B43940 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = A63980FE11C3DEE100B43940 /* Default.png */; };
 		A639811611C3DEE100B43940 /* disclosure.png in Resources */ = {isa = PBXBuildFile; fileRef = A63980FF11C3DEE100B43940 /* disclosure.png */; };
 		A639811711C3DEE100B43940 /* ledblue.png in Resources */ = {isa = PBXBuildFile; fileRef = A639810011C3DEE100B43940 /* ledblue.png */; };
 		A639811811C3DEE100B43940 /* ledbluebig.png in Resources */ = {isa = PBXBuildFile; fileRef = A639810111C3DEE100B43940 /* ledbluebig.png */; };
@@ -231,6 +233,9 @@
 		1E0D1EB317E4A7260089ED25 /* TaskCoach-40h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TaskCoach-40h.png"; path = "Resources-iPad/TaskCoach-40h.png"; sourceTree = "<group>"; };
 		1E0D1EB417E4A7260089ED25 /* TaskCoach-40h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TaskCoach-40h@2x.png"; path = "Resources-iPad/TaskCoach-40h@2x.png"; sourceTree = "<group>"; };
 		1ED4D2EB14DD30EE004950E2 /* TaskCoachCD 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TaskCoachCD 3.xcdatamodel"; sourceTree = "<group>"; };
+		1EF07F9D17E4A906001DB4B0 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = "Resources-iPhone/Default.png"; sourceTree = "<group>"; };
+		1EF07F9E17E4A906001DB4B0 /* Default~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default~iphone.png"; path = "Resources-iPhone/Default~iphone.png"; sourceTree = "<group>"; };
+		1EF07FA117E4AA70001DB4B0 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "Resources-iPhone/Default-568h@2x.png"; sourceTree = "<group>"; };
 		288765FC0DF74451002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* TaskCoach_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskCoach_Prefix.pch; sourceTree = "<group>"; };
@@ -292,7 +297,6 @@
 		A62DFB2B11BB763300F594AB /* FullFromDesktopEffortState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FullFromDesktopEffortState.m; path = Synchronization/FullFromDesktopEffortState.m; sourceTree = "<group>"; };
 		A63980FC11C3DEE100B43940 /* addtask.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = addtask.png; path = "Resources-iPhone/addtask.png"; sourceTree = "<group>"; };
 		A63980FD11C3DEE100B43940 /* blueButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blueButton.png; path = "Resources-iPhone/blueButton.png"; sourceTree = "<group>"; };
-		A63980FE11C3DEE100B43940 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = "Resources-iPhone/Default.png"; sourceTree = "<group>"; };
 		A63980FF11C3DEE100B43940 /* disclosure.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = disclosure.png; path = "Resources-iPhone/disclosure.png"; sourceTree = "<group>"; };
 		A639810011C3DEE100B43940 /* ledblue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ledblue.png; path = "Resources-iPhone/ledblue.png"; sourceTree = "<group>"; };
 		A639810111C3DEE100B43940 /* ledbluebig.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ledbluebig.png; path = "Resources-iPhone/ledbluebig.png"; sourceTree = "<group>"; };
@@ -828,6 +832,9 @@
 		A639813611C3DF5E00B43940 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				1EF07FA117E4AA70001DB4B0 /* Default-568h@2x.png */,
+				1EF07F9D17E4A906001DB4B0 /* Default.png */,
+				1EF07F9E17E4A906001DB4B0 /* Default~iphone.png */,
 				1E0D1EAB17E4A6170089ED25 /* TaskCoach-29h.png */,
 				1E0D1EAC17E4A6170089ED25 /* TaskCoach-29h@2x.png */,
 				1E0D1E9D17E4A34D0089ED25 /* TaskCoach-57h.png */,
@@ -846,7 +853,6 @@
 				A646183B1228EFFB005D9651 /* switchcal.png */,
 				A63980FC11C3DEE100B43940 /* addtask.png */,
 				A63980FD11C3DEE100B43940 /* blueButton.png */,
-				A63980FE11C3DEE100B43940 /* Default.png */,
 				A63980FF11C3DEE100B43940 /* disclosure.png */,
 				A639810011C3DEE100B43940 /* ledblue.png */,
 				A639810111C3DEE100B43940 /* ledbluebig.png */,
@@ -1224,6 +1230,7 @@
 				A6A9753A0F26572200622396 /* TaskCellRight.xib in Resources */,
 				A6DA5C780F3D87F300372358 /* DescriptionCell.xib in Resources */,
 				A680C0C60F47366900A8D18B /* Localizable.strings in Resources */,
+				1EF07F9F17E4A906001DB4B0 /* Default.png in Resources */,
 				A680C0DD0F47368E00A8D18B /* DatePickerView.strings in Resources */,
 				A680C0DE0F47368E00A8D18B /* MainWindow.strings in Resources */,
 				A63CC07C0F517055003669FD /* TaskCellLeftBig.xib in Resources */,
@@ -1237,9 +1244,11 @@
 				A6832038102EB499002A7083 /* TaskView.strings in Resources */,
 				A61F5458108CB67800BDFD6D /* BadgedCell.xib in Resources */,
 				A6E83C5B10E4C9AF00FF3E45 /* FileChooser.xib in Resources */,
+				1EF07FA217E4AA70001DB4B0 /* Default-568h@2x.png in Resources */,
 				A6C3CEFA10E76CB600483057 /* ButtonCell.xib in Resources */,
 				A6E46386113028A500976293 /* SyncView.xib in Resources */,
 				A69F6C31115E21A5003F68F5 /* SearchCell.xib in Resources */,
+				1EF07FA017E4A906001DB4B0 /* Default~iphone.png in Resources */,
 				A65D1B1E119D379300F0F5C3 /* BUILD.txt in Resources */,
 				A600A3BC119FDD710018F309 /* TaskDetailsGeneral.xib in Resources */,
 				A600A48F119FEA790018F309 /* TaskDetailsDates.xib in Resources */,
@@ -1249,7 +1258,6 @@
 				A639811311C3DEE100B43940 /* addtask.png in Resources */,
 				1E0D1EB117E4A6B10089ED25 /* TaskCoach-50h.png in Resources */,
 				A639811411C3DEE100B43940 /* blueButton.png in Resources */,
-				A639811511C3DEE100B43940 /* Default.png in Resources */,
 				A639811611C3DEE100B43940 /* disclosure.png in Resources */,
 				A639811711C3DEE100B43940 /* ledblue.png in Resources */,
 				A639811811C3DEE100B43940 /* ledbluebig.png in Resources */,
