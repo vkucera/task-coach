@@ -259,7 +259,7 @@
 			else if (task.startDate)
 				[datePicker setDate:task.startDate target:self action:@selector(onPickReminder:)];
 			else
-				[datePicker setDate:[[NSDate date] addTimeInterval:60*60] target:self action:@selector(onPickReminder:)];
+                [datePicker setDate:[[NSDate date] dateByAddingTimeInterval:60*60] target:self action:@selector(onPickReminder:)];
 
 			[self presentDatePicker];
 		}
