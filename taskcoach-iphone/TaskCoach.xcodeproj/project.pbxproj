@@ -11,6 +11,19 @@
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
+		1E0D1E9F17E4A34D0089ED25 /* TaskCoach-57h.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E0D1E9D17E4A34D0089ED25 /* TaskCoach-57h.png */; };
+		1E0D1EA017E4A34D0089ED25 /* TaskCoach-57h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E0D1E9E17E4A34D0089ED25 /* TaskCoach-57h@2x.png */; };
+		1E0D1EA317E4A40D0089ED25 /* TaskCoach-72h.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E0D1EA117E4A40D0089ED25 /* TaskCoach-72h.png */; };
+		1E0D1EA417E4A40D0089ED25 /* TaskCoach-72h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E0D1EA217E4A40D0089ED25 /* TaskCoach-72h@2x.png */; };
+		1E0D1EA617E4A47E0089ED25 /* TaskCoach-120h.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E0D1EA517E4A47E0089ED25 /* TaskCoach-120h.png */; };
+		1E0D1EA917E4A5060089ED25 /* TaskCoach-76h.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E0D1EA717E4A5060089ED25 /* TaskCoach-76h.png */; };
+		1E0D1EAA17E4A5060089ED25 /* TaskCoach-76h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E0D1EA817E4A5060089ED25 /* TaskCoach-76h@2x.png */; };
+		1E0D1EAD17E4A6170089ED25 /* TaskCoach-29h.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E0D1EAB17E4A6170089ED25 /* TaskCoach-29h.png */; };
+		1E0D1EAE17E4A6170089ED25 /* TaskCoach-29h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E0D1EAC17E4A6170089ED25 /* TaskCoach-29h@2x.png */; };
+		1E0D1EB117E4A6B10089ED25 /* TaskCoach-50h.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E0D1EAF17E4A6B10089ED25 /* TaskCoach-50h.png */; };
+		1E0D1EB217E4A6B10089ED25 /* TaskCoach-50h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E0D1EB017E4A6B10089ED25 /* TaskCoach-50h@2x.png */; };
+		1E0D1EB517E4A7260089ED25 /* TaskCoach-40h.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E0D1EB317E4A7260089ED25 /* TaskCoach-40h.png */; };
+		1E0D1EB617E4A7260089ED25 /* TaskCoach-40h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E0D1EB417E4A7260089ED25 /* TaskCoach-40h@2x.png */; };
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
 		A600012A11DF7425003DD3D5 /* paper.png in Resources */ = {isa = PBXBuildFile; fileRef = A600012911DF7425003DD3D5 /* paper.png */; };
 		A600012C11DF74A9003DD3D5 /* TaskCelliPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A600012B11DF74A9003DD3D5 /* TaskCelliPad.xib */; };
@@ -61,7 +74,6 @@
 		A639812211C3DEE100B43940 /* ledredbig.png in Resources */ = {isa = PBXBuildFile; fileRef = A639810B11C3DEE100B43940 /* ledredbig.png */; };
 		A639812311C3DEE100B43940 /* redButton.png in Resources */ = {isa = PBXBuildFile; fileRef = A639810C11C3DEE100B43940 /* redButton.png */; };
 		A639812611C3DEE100B43940 /* taskcoach_small.png in Resources */ = {isa = PBXBuildFile; fileRef = A639810F11C3DEE100B43940 /* taskcoach_small.png */; };
-		A639812711C3DEE100B43940 /* TaskCoach.png in Resources */ = {isa = PBXBuildFile; fileRef = A639811011C3DEE100B43940 /* TaskCoach.png */; };
 		A639812811C3DEE100B43940 /* time.png in Resources */ = {isa = PBXBuildFile; fileRef = A639811111C3DEE100B43940 /* time.png */; };
 		A639812911C3DEE100B43940 /* whiteButton.png in Resources */ = {isa = PBXBuildFile; fileRef = A639811211C3DEE100B43940 /* whiteButton.png */; };
 		A63C2FA911B280D3000DE779 /* CategoryTaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A63C2FA811B280D3000DE779 /* CategoryTaskViewController.m */; };
@@ -185,7 +197,6 @@
 		A6DDECFC0F46C5040047AEF5 /* KeychainWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDECFB0F46C5040047AEF5 /* KeychainWrapper.m */; };
 		A6DDED1B0F46C5D30047AEF5 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6DDED1A0F46C5D30047AEF5 /* Security.framework */; };
 		A6DDF8540F1F988600F35108 /* TaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDF8530F1F988600F35108 /* TaskViewController.m */; };
-		A6DFB4E711C64BF8007FB4F0 /* TaskCoach-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = A6DFB4E611C64BF8007FB4F0 /* TaskCoach-iPad.png */; };
 		A6E46386113028A500976293 /* SyncView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6E46385113028A500976293 /* SyncView.xib */; };
 		A6E83C5A10E4C9AF00FF3E45 /* FileChooser.m in Sources */ = {isa = PBXBuildFile; fileRef = A6E83C5810E4C9AF00FF3E45 /* FileChooser.m */; };
 		A6E83C5B10E4C9AF00FF3E45 /* FileChooser.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6E83C5910E4C9AF00FF3E45 /* FileChooser.xib */; };
@@ -206,6 +217,19 @@
 		1D3623250D0F684500981E51 /* TaskCoachAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskCoachAppDelegate.m; sourceTree = "<group>"; };
 		1D6058910D05DD3D006BFB54 /* TaskCoach.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TaskCoach.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		1E0D1E9D17E4A34D0089ED25 /* TaskCoach-57h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TaskCoach-57h.png"; path = "Resources-iPhone/TaskCoach-57h.png"; sourceTree = "<group>"; };
+		1E0D1E9E17E4A34D0089ED25 /* TaskCoach-57h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TaskCoach-57h@2x.png"; path = "Resources-iPhone/TaskCoach-57h@2x.png"; sourceTree = "<group>"; };
+		1E0D1EA117E4A40D0089ED25 /* TaskCoach-72h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TaskCoach-72h.png"; path = "Resources-iPad/TaskCoach-72h.png"; sourceTree = "<group>"; };
+		1E0D1EA217E4A40D0089ED25 /* TaskCoach-72h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TaskCoach-72h@2x.png"; path = "Resources-iPad/TaskCoach-72h@2x.png"; sourceTree = "<group>"; };
+		1E0D1EA517E4A47E0089ED25 /* TaskCoach-120h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TaskCoach-120h.png"; path = "Resources-iPhone/TaskCoach-120h.png"; sourceTree = "<group>"; };
+		1E0D1EA717E4A5060089ED25 /* TaskCoach-76h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TaskCoach-76h.png"; path = "Resources-iPad/TaskCoach-76h.png"; sourceTree = "<group>"; };
+		1E0D1EA817E4A5060089ED25 /* TaskCoach-76h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TaskCoach-76h@2x.png"; path = "Resources-iPad/TaskCoach-76h@2x.png"; sourceTree = "<group>"; };
+		1E0D1EAB17E4A6170089ED25 /* TaskCoach-29h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TaskCoach-29h.png"; path = "Resources-iPhone/TaskCoach-29h.png"; sourceTree = "<group>"; };
+		1E0D1EAC17E4A6170089ED25 /* TaskCoach-29h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TaskCoach-29h@2x.png"; path = "Resources-iPhone/TaskCoach-29h@2x.png"; sourceTree = "<group>"; };
+		1E0D1EAF17E4A6B10089ED25 /* TaskCoach-50h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TaskCoach-50h.png"; path = "Resources-iPad/TaskCoach-50h.png"; sourceTree = "<group>"; };
+		1E0D1EB017E4A6B10089ED25 /* TaskCoach-50h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TaskCoach-50h@2x.png"; path = "Resources-iPad/TaskCoach-50h@2x.png"; sourceTree = "<group>"; };
+		1E0D1EB317E4A7260089ED25 /* TaskCoach-40h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TaskCoach-40h.png"; path = "Resources-iPad/TaskCoach-40h.png"; sourceTree = "<group>"; };
+		1E0D1EB417E4A7260089ED25 /* TaskCoach-40h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TaskCoach-40h@2x.png"; path = "Resources-iPad/TaskCoach-40h@2x.png"; sourceTree = "<group>"; };
 		1ED4D2EB14DD30EE004950E2 /* TaskCoachCD 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TaskCoachCD 3.xcdatamodel"; sourceTree = "<group>"; };
 		288765FC0DF74451002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -284,7 +308,6 @@
 		A639810B11C3DEE100B43940 /* ledredbig.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ledredbig.png; path = "Resources-iPhone/ledredbig.png"; sourceTree = "<group>"; };
 		A639810C11C3DEE100B43940 /* redButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = redButton.png; path = "Resources-iPhone/redButton.png"; sourceTree = "<group>"; };
 		A639810F11C3DEE100B43940 /* taskcoach_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = taskcoach_small.png; path = "Resources-iPhone/taskcoach_small.png"; sourceTree = "<group>"; };
-		A639811011C3DEE100B43940 /* TaskCoach.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TaskCoach.png; path = "Resources-iPhone/TaskCoach.png"; sourceTree = "<group>"; };
 		A639811111C3DEE100B43940 /* time.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = time.png; path = "Resources-iPhone/time.png"; sourceTree = "<group>"; };
 		A639811211C3DEE100B43940 /* whiteButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = whiteButton.png; path = "Resources-iPhone/whiteButton.png"; sourceTree = "<group>"; };
 		A63C2FA711B280D3000DE779 /* CategoryTaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CategoryTaskViewController.h; sourceTree = "<group>"; };
@@ -567,7 +590,6 @@
 		A6DDED1A0F46C5D30047AEF5 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		A6DDF8520F1F988600F35108 /* TaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskViewController.h; sourceTree = "<group>"; };
 		A6DDF8530F1F988600F35108 /* TaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskViewController.m; sourceTree = "<group>"; };
-		A6DFB4E611C64BF8007FB4F0 /* TaskCoach-iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TaskCoach-iPad.png"; path = "Resources-iPad/TaskCoach-iPad.png"; sourceTree = "<group>"; };
 		A6E46385113028A500976293 /* SyncView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SyncView.xib; sourceTree = "<group>"; };
 		A6E83C5710E4C9AF00FF3E45 /* FileChooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileChooser.h; sourceTree = "<group>"; };
 		A6E83C5810E4C9AF00FF3E45 /* FileChooser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileChooser.m; sourceTree = "<group>"; };
@@ -806,6 +828,11 @@
 		A639813611C3DF5E00B43940 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				1E0D1EAB17E4A6170089ED25 /* TaskCoach-29h.png */,
+				1E0D1EAC17E4A6170089ED25 /* TaskCoach-29h@2x.png */,
+				1E0D1E9D17E4A34D0089ED25 /* TaskCoach-57h.png */,
+				1E0D1E9E17E4A34D0089ED25 /* TaskCoach-57h@2x.png */,
+				1E0D1EA517E4A47E0089ED25 /* TaskCoach-120h.png */,
 				A64C0E25128FED8C00E8A126 /* folderblue.png */,
 				A64C0E26128FED8C00E8A126 /* folderbluebig.png */,
 				A64C0E27128FED8C00E8A126 /* foldergreen.png */,
@@ -835,7 +862,6 @@
 				A639810B11C3DEE100B43940 /* ledredbig.png */,
 				A639810C11C3DEE100B43940 /* redButton.png */,
 				A639810F11C3DEE100B43940 /* taskcoach_small.png */,
-				A639811011C3DEE100B43940 /* TaskCoach.png */,
 				A639811111C3DEE100B43940 /* time.png */,
 				A639811211C3DEE100B43940 /* whiteButton.png */,
 			);
@@ -904,6 +930,14 @@
 		A68B5E0E11C4B796009AE2F1 /* Resources-iPad */ = {
 			isa = PBXGroup;
 			children = (
+				1E0D1EB317E4A7260089ED25 /* TaskCoach-40h.png */,
+				1E0D1EB417E4A7260089ED25 /* TaskCoach-40h@2x.png */,
+				1E0D1EAF17E4A6B10089ED25 /* TaskCoach-50h.png */,
+				1E0D1EB017E4A6B10089ED25 /* TaskCoach-50h@2x.png */,
+				1E0D1EA717E4A5060089ED25 /* TaskCoach-76h.png */,
+				1E0D1EA817E4A5060089ED25 /* TaskCoach-76h@2x.png */,
+				1E0D1EA117E4A40D0089ED25 /* TaskCoach-72h.png */,
+				1E0D1EA217E4A40D0089ED25 /* TaskCoach-72h@2x.png */,
 				A6AA589A11E0AFC600F5689E /* paper_big.png */,
 				A6A4F31C11E0983B00FDDDD5 /* check.png */,
 				A645E84711E0828100E1DD82 /* leather.png */,
@@ -913,7 +947,6 @@
 				A600012911DF7425003DD3D5 /* paper.png */,
 				A696428711CE21550002F90E /* Default-Landscape.png */,
 				A696428811CE21550002F90E /* Default-Portrait.png */,
-				A6DFB4E611C64BF8007FB4F0 /* TaskCoach-iPad.png */,
 			);
 			name = "Resources-iPad";
 			sourceTree = "<group>";
@@ -1186,6 +1219,7 @@
 				A6D384780F24830F0097F0F6 /* TextFieldCell.xib in Resources */,
 				A6D385630F24A2330097F0F6 /* SwitchCell.xib in Resources */,
 				A6D3868A0F24B4450097F0F6 /* DatePickerView.xib in Resources */,
+				1E0D1EAD17E4A6170089ED25 /* TaskCoach-29h.png in Resources */,
 				A6A975390F26572200622396 /* TaskCellLeft.xib in Resources */,
 				A6A9753A0F26572200622396 /* TaskCellRight.xib in Resources */,
 				A6DA5C780F3D87F300372358 /* DescriptionCell.xib in Resources */,
@@ -1199,6 +1233,7 @@
 				A60B6EE510258EB200F9983C /* TaskCategoryPicker.xib in Resources */,
 				A60B70EB1025AF0B00F9983C /* CHANGELOG in Resources */,
 				A6831FFE102EB057002A7083 /* TaskView.xib in Resources */,
+				1E0D1EA317E4A40D0089ED25 /* TaskCoach-72h.png in Resources */,
 				A6832038102EB499002A7083 /* TaskView.strings in Resources */,
 				A61F5458108CB67800BDFD6D /* BadgedCell.xib in Resources */,
 				A6E83C5B10E4C9AF00FF3E45 /* FileChooser.xib in Resources */,
@@ -1212,37 +1247,43 @@
 				A66C188A11C386B90081C175 /* TaskDetailsRecurrencePeriodPicker.xib in Resources */,
 				A668B4E311C3B0820048BB89 /* TaskDetailsRecurrencePeriodPicker.strings in Resources */,
 				A639811311C3DEE100B43940 /* addtask.png in Resources */,
+				1E0D1EB117E4A6B10089ED25 /* TaskCoach-50h.png in Resources */,
 				A639811411C3DEE100B43940 /* blueButton.png in Resources */,
 				A639811511C3DEE100B43940 /* Default.png in Resources */,
 				A639811611C3DEE100B43940 /* disclosure.png in Resources */,
 				A639811711C3DEE100B43940 /* ledblue.png in Resources */,
 				A639811811C3DEE100B43940 /* ledbluebig.png in Resources */,
 				A639811911C3DEE100B43940 /* ledclock.png in Resources */,
+				1E0D1EB617E4A7260089ED25 /* TaskCoach-40h@2x.png in Resources */,
 				A639811A11C3DEE100B43940 /* ledclockbig.png in Resources */,
 				A639811B11C3DEE100B43940 /* ledgreen.png in Resources */,
 				A639811C11C3DEE100B43940 /* ledgreenbig.png in Resources */,
 				A639811D11C3DEE100B43940 /* ledgrey.png in Resources */,
 				A639811E11C3DEE100B43940 /* ledgreybig.png in Resources */,
 				A639811F11C3DEE100B43940 /* ledorange.png in Resources */,
+				1E0D1EA617E4A47E0089ED25 /* TaskCoach-120h.png in Resources */,
 				A639812011C3DEE100B43940 /* ledorangebig.png in Resources */,
 				A639812111C3DEE100B43940 /* ledred.png in Resources */,
 				A639812211C3DEE100B43940 /* ledredbig.png in Resources */,
 				A639812311C3DEE100B43940 /* redButton.png in Resources */,
 				A639812611C3DEE100B43940 /* taskcoach_small.png in Resources */,
-				A639812711C3DEE100B43940 /* TaskCoach.png in Resources */,
+				1E0D1E9F17E4A34D0089ED25 /* TaskCoach-57h.png in Resources */,
+				1E0D1EA917E4A5060089ED25 /* TaskCoach-76h.png in Resources */,
 				A639812811C3DEE100B43940 /* time.png in Resources */,
 				A639812911C3DEE100B43940 /* whiteButton.png in Resources */,
 				A68B5E1711C4B799009AE2F1 /* MainWindow-iPad.xib in Resources */,
 				A6D5FFBD11C4C43D0030502F /* MainWindow-iPad.strings in Resources */,
-				A6DFB4E711C64BF8007FB4F0 /* TaskCoach-iPad.png in Resources */,
 				A672213511C74B210046C6CF /* SimpleDatePicker.xib in Resources */,
 				A6782E7C11CCBD35005ADB23 /* TaskDetailsEffortsBase.xib in Resources */,
 				A6EDD13E11CCDB570092BC79 /* TaskDetailsRecurrenceControlleriPad.xib in Resources */,
 				A6E8F66311CD02670087DDF3 /* TaskDetailsControlleriPad.xib in Resources */,
+				1E0D1EA017E4A34D0089ED25 /* TaskCoach-57h@2x.png in Resources */,
 				A6E8F66611CD02800087DDF3 /* TaskDetailsControlleriPad.strings in Resources */,
 				A6C00BD511CDEF0D0028385F /* NewCategoryiPad.xib in Resources */,
 				A696428911CE21550002F90E /* Default-Landscape.png in Resources */,
 				A696428A11CE21550002F90E /* Default-Portrait.png in Resources */,
+				1E0D1EB217E4A6B10089ED25 /* TaskCoach-50h@2x.png in Resources */,
+				1E0D1EAA17E4A5060089ED25 /* TaskCoach-76h@2x.png in Resources */,
 				A600012A11DF7425003DD3D5 /* paper.png in Resources */,
 				A600012C11DF74A9003DD3D5 /* TaskCelliPad.xib in Resources */,
 				A69E217A11DF90D5003CC658 /* PaperHeaderView.xib in Resources */,
@@ -1252,10 +1293,13 @@
 				A645E84811E0828100E1DD82 /* leather.png in Resources */,
 				A6A4F31D11E0983B00FDDDD5 /* check.png in Resources */,
 				A6AA589B11E0AFC600F5689E /* paper_big.png in Resources */,
+				1E0D1EB517E4A7260089ED25 /* TaskCoach-40h.png in Resources */,
+				1E0D1EA417E4A40D0089ED25 /* TaskCoach-72h@2x.png in Resources */,
 				A646183C1228EFFB005D9651 /* switchcal.png in Resources */,
 				A6BF52FF1272DEFD00CC5D3C /* ConfigurationView.xib in Resources */,
 				A6BF530B1272E1E800CC5D3C /* configure.png in Resources */,
 				A6C1F899128E9CE000718C86 /* ChoiceViewController.xib in Resources */,
+				1E0D1EAE17E4A6170089ED25 /* TaskCoach-29h@2x.png in Resources */,
 				A6C1F8A3128E9FB000718C86 /* RegularCell.xib in Resources */,
 				A64C0E2F128FED8C00E8A126 /* folderblue.png in Resources */,
 				A64C0E30128FED8C00E8A126 /* folderbluebig.png in Resources */,
@@ -1604,7 +1648,7 @@
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = TaskCoach;
 				SDKROOT = iphoneos;
@@ -1625,7 +1669,7 @@
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = TaskCoach;
 				SDKROOT = iphoneos;
@@ -1656,7 +1700,7 @@
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "";
 				RUN_CLANG_STATIC_ANALYZER = NO;
@@ -1679,7 +1723,7 @@
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = TaskCoach;
 				SDKROOT = iphoneos;
@@ -1708,7 +1752,7 @@
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "";
 				SDKROOT = iphoneos;
@@ -1728,7 +1772,7 @@
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = TaskCoach;
 				SDKROOT = iphoneos;
@@ -1757,7 +1801,7 @@
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "";
 				SDKROOT = iphoneos;
@@ -1778,7 +1822,7 @@
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = TaskCoach;
 				SDKROOT = iphoneos;
@@ -1807,7 +1851,7 @@
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "";
 				SDKROOT = iphoneos;
@@ -1827,7 +1871,7 @@
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = TaskCoach;
 				SDKROOT = iphoneos;
@@ -1857,7 +1901,7 @@
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "";
 				SDKROOT = iphoneos;
@@ -1877,7 +1921,7 @@
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = TaskCoach;
 				SDKROOT = iphoneos;
@@ -1908,7 +1952,7 @@
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
@@ -1936,7 +1980,7 @@
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "";
 				SDKROOT = iphoneos;

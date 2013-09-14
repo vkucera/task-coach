@@ -12,6 +12,21 @@
 	<string>TaskCoach.png</string>
 	<key>CFBundleIconFiles</key>
 	<array>
+		<string>TaskCoach-40h</string>
+		<string>TaskCoach-29h</string>
+		<string>TaskCoach-120h</string>
+		<string>TaskCoach-57h</string>
+		<string>TaskCoach-iPad.png</string>
+		<string>TaskCoach.png</string>
+	</array>
+	<key>CFBundleIconFiles~ipad</key>
+	<array>
+		<string>TaskCoach-40h</string>
+		<string>TaskCoach-50h</string>
+		<string>TaskCoach-29h</string>
+		<string>TaskCoach-76h</string>
+		<string>TaskCoach-72h</string>
+		<string>TaskCoach-57h</string>
 		<string>TaskCoach-iPad.png</string>
 		<string>TaskCoach.png</string>
 	</array>
