@@ -155,6 +155,9 @@ static void deleteTask(CDTask *task)
 		searchCell = [[CellFactory cellFactory] createSearchCell];
 		searchCell.searchBar.placeholder = _("Search tasks...");
 		searchCell.searchBar.delegate = self;
+
+        if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
+            self.edgesForExtendedLayout = UIRectEdgeNone;
 	}
 
 	return self;
