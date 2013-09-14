@@ -50,6 +50,9 @@
 
 		self.delegate = self;
 		self.navigationItem.title = task.name;
+
+        if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
+            self.edgesForExtendedLayout = UIRectEdgeNone;
 	}
 
 	return self;
