@@ -38,6 +38,9 @@
 	{
 		task = [theTask retain];
 		parentCtrl = parent;
+
+        if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
+            self.edgesForExtendedLayout = UIRectEdgeNone;
 	}
 
 	return self;
