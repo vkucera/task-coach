@@ -37,7 +37,10 @@ class FixOverwriteSelectionMixin(object):
         if event.GetKeyCode() == wx.WXK_TAB and event.GetModifiers() and hasattr(self.GetParent(), 'NavigateBook'):
             if self.GetParent().NavigateBook(event):
                 return
-        super(FixOverwriteSelectionMixin, self)._OnChar(event)
+        if operating_system.isGTK():
+            super(FixOverwriteSelectionMixin, self)._OnKeyDown(event)
+        else:
+            super(FixOverwriteSelectionMixin, self)._OnChar(event)
 
 
 class TextCtrl(FixOverwriteSelectionMixin, masked.TextCtrl):
