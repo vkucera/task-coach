@@ -25,6 +25,7 @@ releases = [
 Release('1.3.33', 'Semptember ??, 2013',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bugv2('''Fix budget entry.''', '1458'),
         ],
     ),
 
