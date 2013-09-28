@@ -24,6 +24,14 @@
 		1E0D1EB217E4A6B10089ED25 /* TaskCoach-50h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E0D1EB017E4A6B10089ED25 /* TaskCoach-50h@2x.png */; };
 		1E0D1EB517E4A7260089ED25 /* TaskCoach-40h.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E0D1EB317E4A7260089ED25 /* TaskCoach-40h.png */; };
 		1E0D1EB617E4A7260089ED25 /* TaskCoach-40h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E0D1EB417E4A7260089ED25 /* TaskCoach-40h@2x.png */; };
+		1EBBD28B17F6F83B00C69EE2 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EBBD28917F6F83B00C69EE2 /* Default.png */; };
+		1EBBD28C17F6F83B00C69EE2 /* Default~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EBBD28A17F6F83B00C69EE2 /* Default~ipad.png */; };
+		1EBBD28F17F6F92700C69EE2 /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EBBD28D17F6F92700C69EE2 /* Default-Landscape~ipad.png */; };
+		1EBBD29017F6F92700C69EE2 /* Default-Landscape@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EBBD28E17F6F92700C69EE2 /* Default-Landscape@2x~ipad.png */; };
+		1EBBD29317F6F9B400C69EE2 /* Default-1024h.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EBBD29117F6F9B400C69EE2 /* Default-1024h.png */; };
+		1EBBD29617F6FA1E00C69EE2 /* Default-1024h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EBBD29517F6FA1E00C69EE2 /* Default-1024h@2x.png */; };
+		1EBBD29917F6FA8600C69EE2 /* Default-768h.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EBBD29717F6FA8600C69EE2 /* Default-768h.png */; };
+		1EBBD29A17F6FA8600C69EE2 /* Default-768h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EBBD29817F6FA8600C69EE2 /* Default-768h@2x.png */; };
 		1EF07F9F17E4A906001DB4B0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EF07F9D17E4A906001DB4B0 /* Default.png */; };
 		1EF07FA017E4A906001DB4B0 /* Default~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EF07F9E17E4A906001DB4B0 /* Default~iphone.png */; };
 		1EF07FA217E4AA70001DB4B0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EF07FA117E4AA70001DB4B0 /* Default-568h@2x.png */; };
@@ -232,6 +240,14 @@
 		1E0D1EB017E4A6B10089ED25 /* TaskCoach-50h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TaskCoach-50h@2x.png"; path = "Resources-iPad/TaskCoach-50h@2x.png"; sourceTree = "<group>"; };
 		1E0D1EB317E4A7260089ED25 /* TaskCoach-40h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TaskCoach-40h.png"; path = "Resources-iPad/TaskCoach-40h.png"; sourceTree = "<group>"; };
 		1E0D1EB417E4A7260089ED25 /* TaskCoach-40h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TaskCoach-40h@2x.png"; path = "Resources-iPad/TaskCoach-40h@2x.png"; sourceTree = "<group>"; };
+		1EBBD28917F6F83B00C69EE2 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = "Resources-iPad/Default.png"; sourceTree = "<group>"; };
+		1EBBD28A17F6F83B00C69EE2 /* Default~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default~ipad.png"; path = "Resources-iPad/Default~ipad.png"; sourceTree = "<group>"; };
+		1EBBD28D17F6F92700C69EE2 /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Landscape~ipad.png"; path = "Resources-iPad/Default-Landscape~ipad.png"; sourceTree = "<group>"; };
+		1EBBD28E17F6F92700C69EE2 /* Default-Landscape@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Landscape@2x~ipad.png"; path = "Resources-iPad/Default-Landscape@2x~ipad.png"; sourceTree = "<group>"; };
+		1EBBD29117F6F9B400C69EE2 /* Default-1024h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-1024h.png"; path = "Resources-iPad/Default-1024h.png"; sourceTree = "<group>"; };
+		1EBBD29517F6FA1E00C69EE2 /* Default-1024h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-1024h@2x.png"; path = "Resources-iPad/Default-1024h@2x.png"; sourceTree = "<group>"; };
+		1EBBD29717F6FA8600C69EE2 /* Default-768h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-768h.png"; path = "Resources-iPad/Default-768h.png"; sourceTree = "<group>"; };
+		1EBBD29817F6FA8600C69EE2 /* Default-768h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-768h@2x.png"; path = "Resources-iPad/Default-768h@2x.png"; sourceTree = "<group>"; };
 		1ED4D2EB14DD30EE004950E2 /* TaskCoachCD 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TaskCoachCD 3.xcdatamodel"; sourceTree = "<group>"; };
 		1EF07F9D17E4A906001DB4B0 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = "Resources-iPhone/Default.png"; sourceTree = "<group>"; };
 		1EF07F9E17E4A906001DB4B0 /* Default~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default~iphone.png"; path = "Resources-iPhone/Default~iphone.png"; sourceTree = "<group>"; };
@@ -936,6 +952,14 @@
 		A68B5E0E11C4B796009AE2F1 /* Resources-iPad */ = {
 			isa = PBXGroup;
 			children = (
+				1EBBD29717F6FA8600C69EE2 /* Default-768h.png */,
+				1EBBD29817F6FA8600C69EE2 /* Default-768h@2x.png */,
+				1EBBD29517F6FA1E00C69EE2 /* Default-1024h@2x.png */,
+				1EBBD29117F6F9B400C69EE2 /* Default-1024h.png */,
+				1EBBD28D17F6F92700C69EE2 /* Default-Landscape~ipad.png */,
+				1EBBD28E17F6F92700C69EE2 /* Default-Landscape@2x~ipad.png */,
+				1EBBD28917F6F83B00C69EE2 /* Default.png */,
+				1EBBD28A17F6F83B00C69EE2 /* Default~ipad.png */,
 				1E0D1EB317E4A7260089ED25 /* TaskCoach-40h.png */,
 				1E0D1EB417E4A7260089ED25 /* TaskCoach-40h@2x.png */,
 				1E0D1EAF17E4A6B10089ED25 /* TaskCoach-50h.png */,
@@ -1240,13 +1264,17 @@
 				A60B6EE510258EB200F9983C /* TaskCategoryPicker.xib in Resources */,
 				A60B70EB1025AF0B00F9983C /* CHANGELOG in Resources */,
 				A6831FFE102EB057002A7083 /* TaskView.xib in Resources */,
+				1EBBD29617F6FA1E00C69EE2 /* Default-1024h@2x.png in Resources */,
+				1EBBD29A17F6FA8600C69EE2 /* Default-768h@2x.png in Resources */,
 				1E0D1EA317E4A40D0089ED25 /* TaskCoach-72h.png in Resources */,
+				1EBBD28C17F6F83B00C69EE2 /* Default~ipad.png in Resources */,
 				A6832038102EB499002A7083 /* TaskView.strings in Resources */,
 				A61F5458108CB67800BDFD6D /* BadgedCell.xib in Resources */,
 				A6E83C5B10E4C9AF00FF3E45 /* FileChooser.xib in Resources */,
 				1EF07FA217E4AA70001DB4B0 /* Default-568h@2x.png in Resources */,
 				A6C3CEFA10E76CB600483057 /* ButtonCell.xib in Resources */,
 				A6E46386113028A500976293 /* SyncView.xib in Resources */,
+				1EBBD28B17F6F83B00C69EE2 /* Default.png in Resources */,
 				A69F6C31115E21A5003F68F5 /* SearchCell.xib in Resources */,
 				1EF07FA017E4A906001DB4B0 /* Default~iphone.png in Resources */,
 				A65D1B1E119D379300F0F5C3 /* BUILD.txt in Resources */,
@@ -1279,8 +1307,11 @@
 				1E0D1EA917E4A5060089ED25 /* TaskCoach-76h.png in Resources */,
 				A639812811C3DEE100B43940 /* time.png in Resources */,
 				A639812911C3DEE100B43940 /* whiteButton.png in Resources */,
+				1EBBD29917F6FA8600C69EE2 /* Default-768h.png in Resources */,
+				1EBBD29317F6F9B400C69EE2 /* Default-1024h.png in Resources */,
 				A68B5E1711C4B799009AE2F1 /* MainWindow-iPad.xib in Resources */,
 				A6D5FFBD11C4C43D0030502F /* MainWindow-iPad.strings in Resources */,
+				1EBBD29017F6F92700C69EE2 /* Default-Landscape@2x~ipad.png in Resources */,
 				A672213511C74B210046C6CF /* SimpleDatePicker.xib in Resources */,
 				A6782E7C11CCBD35005ADB23 /* TaskDetailsEffortsBase.xib in Resources */,
 				A6EDD13E11CCDB570092BC79 /* TaskDetailsRecurrenceControlleriPad.xib in Resources */,
@@ -1312,6 +1343,7 @@
 				A64C0E2F128FED8C00E8A126 /* folderblue.png in Resources */,
 				A64C0E30128FED8C00E8A126 /* folderbluebig.png in Resources */,
 				A64C0E31128FED8C00E8A126 /* foldergreen.png in Resources */,
+				1EBBD28F17F6F92700C69EE2 /* Default-Landscape~ipad.png in Resources */,
 				A64C0E32128FED8C00E8A126 /* foldergreenbig.png in Resources */,
 				A64C0E33128FED8C00E8A126 /* foldergrey.png in Resources */,
 				A64C0E34128FED8C00E8A126 /* foldergreybig.png in Resources */,
