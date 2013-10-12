@@ -30,6 +30,8 @@ Release('1.3.33', 'Semptember ??, 2013',
 search string on launch, but the view would be filtered anyway.'''),
         Bugv2('''Fix date picker on locales that have non-ASCII
 month/day abbreviations.''', '1463'),
+        Bugv2('''Fix position of text in subject entry on Windows.''',
+              '1464'),
         ],
     ),
 
