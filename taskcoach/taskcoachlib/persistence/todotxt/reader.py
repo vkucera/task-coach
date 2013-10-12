@@ -80,7 +80,7 @@ class TodoTxtReader(object):
         subjects, priority, plannedStartDateTime, completionDateTime, dueDateTime, categories = \
           self.__processLine(line, todoTxtRE, keyValueRE, now, event)
 
-        if metaLines.get('->'.join(subjects), None) == line:
+        if metaLines and metaLines.get('->'.join(subjects), None) == line:
             # Not modified. Don't read it or we'll overwrite local changes
             # in case we're importing just before saving...
             return

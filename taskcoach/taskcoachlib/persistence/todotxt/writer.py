@@ -45,7 +45,8 @@ class TodoTxtWriter(object):
         metaName = self.__filename + '-meta'
         if os.path.exists(metaName):
             os.remove(metaName)
-        shutil.copyfile(self.__filename, metaName)
+        if os.path.exists(self.__filename): # Unit tests
+            shutil.copyfile(self.__filename, metaName)
         return count
                 
     @staticmethod
