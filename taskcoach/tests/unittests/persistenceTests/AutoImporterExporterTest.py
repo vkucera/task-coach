@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import persistence, config
-from taskcoachlib.domain import task
+from taskcoachlib.domain import task, date
 import test
 import os
 from unittests import dummy
@@ -35,7 +35,7 @@ class AutoExporterTestCase(test.TestCase):
     def tearDown(self):
         super(AutoExporterTestCase, self).tearDown()
         del self.exporter
-        for filename in self.tskFilename, self.txtFilename:
+        for filename in self.tskFilename, self.txtFilename, self.txtFilename + '-meta':
             try:
                 os.remove(filename)
             except OSError:
@@ -86,3 +86,24 @@ class AutoExporterTestCase(test.TestCase):
         self.settings.set('file', 'autoimport', '["Todo.txt"]')
         self.taskFile.tasks().append(task.Task(subject='Whatever'))
         self.taskFile.save()
+
+    def testBothDeletedTask(self):
+        self.settings.set('file', 'autoimport', '["Todo.txt"]')
+        self.settings.set('file', 'autoexport', '["Todo.txt"]')
+        aTask = task.Task(subject='Whatever')
+        self.taskFile.tasks().append(aTask)
+        self.taskFile.save()
+        self.taskFile.tasks().remove(aTask)
+        self.taskFile.save()
+        self.assertEqual(self.taskFile.tasks(), [])
+
+    def testBothMarkCompleted(self):
+        self.settings.set('file', 'autoimport', '["Todo.txt"]')
+        self.settings.set('file', 'autoexport', '["Todo.txt"]')
+        aTask = task.Task(subject='Whatever')
+        self.taskFile.tasks().append(aTask)
+        self.taskFile.save()
+        now = date.Now()
+        aTask.setCompletionDateTime(now)
+        self.taskFile.save()
+        self.assertEqual(aTask.completionDateTime(), now)

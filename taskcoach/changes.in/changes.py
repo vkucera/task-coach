@@ -32,6 +32,9 @@ search string on launch, but the view would be filtered anyway.'''),
 month/day abbreviations.''', '1463'),
         Bugv2('''Fix position of text in subject entry on Windows.''',
               '1464'),
+        Bugv2('''When automatic import and export to ToDo.txt is
+enabled, one could not delete tasks or change some task dates''',
+              '1446'),
         ],
     ),
 
