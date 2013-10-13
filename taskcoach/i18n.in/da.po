@@ -9,36 +9,36 @@ msgid ""
 msgstr ""
 "Project-Id-Version: da\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-07-30 00:31+0000\n"
+"POT-Creation-Date: 2013-08-28 19:21+0000\n"
 "PO-Revision-Date: 2013-02-15 01:58+0000\n"
 "Last-Translator: Frands Hundebøl <frandsoh@gmail.com>\n"
 "Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-08-28 17:36+0000\n"
-"X-Generator: Launchpad (build 16738)\n"
+"X-Launchpad-Export-Date: 2013-10-13 11:52+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
 
-#: taskcoachlib/application/application.py:57
+#: taskcoachlib/application/application.py:66
 msgid ""
 "Errors have occured. Please see \"taskcoachlog.txt\" in your \"My "
 "Documents\" folder."
 msgstr ""
 
-#: taskcoachlib/application/application.py:57
-#: taskcoachlib/application/application.py:59
+#: taskcoachlib/application/application.py:66
+#: taskcoachlib/application/application.py:68
 #: taskcoachlib/gui/dialog/attributesync.py:91
-#: taskcoachlib/gui/mainwindow.py:374 taskcoachlib/iphone/protocol.py:482
+#: taskcoachlib/gui/mainwindow.py:389 taskcoachlib/iphone/protocol.py:482
 #: taskcoachlib/widgets/draganddrop.py:121
 #: taskcoachlib/widgets/draganddrop.py:163 taskcoachlib/widgets/password.py:92
 msgid "Error"
 msgstr "Fejl"
 
-#: taskcoachlib/application/application.py:59
+#: taskcoachlib/application/application.py:68
 msgid "Errors have occured. Please see \"%s\""
 msgstr "Der er sket en fejl. Se \"%s\""
 
-#: taskcoachlib/application/application.py:299
+#: taskcoachlib/application/application.py:308
 msgid ""
 "Couldn't load settings from TaskCoach.ini:\n"
 "%s"
@@ -46,7 +46,7 @@ msgstr ""
 "Kunne ikke indlæse indstillinger fra TaskCoach.ini:\n"
 "%s"
 
-#: taskcoachlib/application/application.py:300
+#: taskcoachlib/application/application.py:309
 #: taskcoachlib/gui/iocontroller.py:72
 msgid "%s file error"
 msgstr "%s fil fejl"
@@ -615,7 +615,7 @@ msgid "45 minutes"
 msgstr "45 minutter"
 
 #: taskcoachlib/domain/date/snooze.py:25
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1733
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1736
 msgid "1 hour"
 msgstr "1 time"
 
@@ -664,7 +664,7 @@ msgid "2 weeks"
 msgstr "2 uger"
 
 #: taskcoachlib/domain/date/snooze.py:30
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1721
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1724
 msgid "1 week"
 msgstr "1 uge"
 
@@ -1150,7 +1150,7 @@ msgid "See:"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:93 taskcoachlib/gui/dialog/editor.py:147
-#: taskcoachlib/gui/dialog/editor.py:1270
+#: taskcoachlib/gui/dialog/editor.py:1276
 #: taskcoachlib/gui/viewer/attachment.py:89
 #: taskcoachlib/gui/viewer/category.py:90
 #: taskcoachlib/gui/viewer/effort.py:203 taskcoachlib/gui/viewer/note.py:114
@@ -1175,7 +1175,7 @@ msgid "Subject"
 msgstr "Emne"
 
 #: taskcoachlib/gui/dialog/editor.py:131
-#: taskcoachlib/gui/dialog/editor.py:1256
+#: taskcoachlib/gui/dialog/editor.py:1262
 msgid "Edit to change all descriptions"
 msgstr "Rediger for at ændre alle beskrivelser"
 
@@ -1195,7 +1195,7 @@ msgid "Modification date"
 msgstr "Ændret den"
 
 #: taskcoachlib/gui/dialog/editor.py:225
-#: taskcoachlib/gui/uicommand/uicommand.py:2321
+#: taskcoachlib/gui/uicommand/uicommand.py:2322
 #: taskcoachlib/gui/viewer/task.py:946
 #: taskcoachlib/gui/wizard/csvimport.py:232
 #: taskcoachlib/persistence/csv/reader.py:89
@@ -1320,7 +1320,7 @@ msgid "Mark task completed when all children are completed?"
 msgstr "Marker opgave som fuldført når alle underopgaver er fuldførte?"
 
 #: taskcoachlib/gui/dialog/editor.py:509 taskcoachlib/gui/dialog/editor.py:535
-#: taskcoachlib/gui/uicommand/uicommand.py:2320
+#: taskcoachlib/gui/uicommand/uicommand.py:2321
 #: taskcoachlib/gui/viewer/task.py:937
 #: taskcoachlib/gui/wizard/csvimport.py:238
 #: taskcoachlib/persistence/csv/reader.py:104
@@ -1328,7 +1328,7 @@ msgid "Budget"
 msgstr "Budget"
 
 #: taskcoachlib/gui/dialog/editor.py:543
-#: taskcoachlib/gui/uicommand/uicommand.py:2320
+#: taskcoachlib/gui/uicommand/uicommand.py:2321
 #: taskcoachlib/gui/viewer/effort.py:214 taskcoachlib/gui/viewer/task.py:940
 msgid "Time spent"
 msgstr "Forbrugt tid"
@@ -1344,7 +1344,7 @@ msgid "Hourly fee"
 msgstr "Timetakst"
 
 #: taskcoachlib/gui/dialog/editor.py:595
-#: taskcoachlib/gui/uicommand/uicommand.py:2320
+#: taskcoachlib/gui/uicommand/uicommand.py:2321
 #: taskcoachlib/gui/viewer/task.py:951
 #: taskcoachlib/gui/wizard/csvimport.py:239
 #: taskcoachlib/persistence/csv/reader.py:118
@@ -1352,7 +1352,7 @@ msgid "Fixed fee"
 msgstr "Fast takst"
 
 #: taskcoachlib/gui/dialog/editor.py:601
-#: taskcoachlib/gui/uicommand/uicommand.py:2320
+#: taskcoachlib/gui/uicommand/uicommand.py:2321
 #: taskcoachlib/gui/viewer/effort.py:219 taskcoachlib/gui/viewer/task.py:954
 msgid "Revenue"
 msgstr "Indkomst"
@@ -1384,95 +1384,95 @@ msgstr "Noter"
 msgid "Prerequisites"
 msgstr "Forudsætninger"
 
-#: taskcoachlib/gui/dialog/editor.py:1133
+#: taskcoachlib/gui/dialog/editor.py:1139
 msgid "Edit task"
 msgstr "Redigér opgave"
 
-#: taskcoachlib/gui/dialog/editor.py:1142
+#: taskcoachlib/gui/dialog/editor.py:1148
 #: taskcoachlib/gui/dialog/reminder.py:50
 #: taskcoachlib/gui/viewer/effort.py:201
 msgid "Task"
 msgstr "Opgave"
 
-#: taskcoachlib/gui/dialog/editor.py:1168
+#: taskcoachlib/gui/dialog/editor.py:1174
 msgid "Start"
 msgstr "Start"
 
-#: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1623
+#: taskcoachlib/gui/dialog/editor.py:1180
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1626
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Week(s)"
 msgstr "Uge(r)"
 
-#: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1624
+#: taskcoachlib/gui/dialog/editor.py:1180
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1627
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Day(s)"
 msgstr "Dag(e)"
 
-#: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1625
+#: taskcoachlib/gui/dialog/editor.py:1180
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1628
 msgid "Hour(s)"
 msgstr "Time(r)"
 
-#: taskcoachlib/gui/dialog/editor.py:1174
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1626
+#: taskcoachlib/gui/dialog/editor.py:1180
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1629
 msgid "Minute(s)"
 msgstr "Minut(er)"
 
-#: taskcoachlib/gui/dialog/editor.py:1184
+#: taskcoachlib/gui/dialog/editor.py:1190
 msgid "Stop"
 msgstr "Stop"
 
-#: taskcoachlib/gui/dialog/editor.py:1193
+#: taskcoachlib/gui/dialog/editor.py:1199
 msgid "Start tracking from last stop time"
 msgstr "Start registrering fra sidste stoptid"
 
-#: taskcoachlib/gui/dialog/editor.py:1200
+#: taskcoachlib/gui/dialog/editor.py:1206
 msgid "Stop tracking now"
 msgstr "Stop registrering nu"
 
-#: taskcoachlib/gui/dialog/editor.py:1236
+#: taskcoachlib/gui/dialog/editor.py:1242
 msgid "Warning: start must be earlier than stop"
 msgstr "Advarsel: start skal ligge før stop"
 
-#: taskcoachlib/gui/dialog/editor.py:1398
+#: taskcoachlib/gui/dialog/editor.py:1423
 msgid "Multiple tasks"
 msgstr "Flere opgaver"
 
-#: taskcoachlib/gui/dialog/editor.py:1399
+#: taskcoachlib/gui/dialog/editor.py:1424
 msgid "%s (task)"
 msgstr "%s (opgave)"
 
-#: taskcoachlib/gui/dialog/editor.py:1404
+#: taskcoachlib/gui/dialog/editor.py:1429
 msgid "Multiple categories"
 msgstr "Flere kategorier"
 
-#: taskcoachlib/gui/dialog/editor.py:1405
+#: taskcoachlib/gui/dialog/editor.py:1430
 msgid "%s (category)"
 msgstr "%s (kategori)"
 
-#: taskcoachlib/gui/dialog/editor.py:1410
+#: taskcoachlib/gui/dialog/editor.py:1435
 msgid "Multiple notes"
 msgstr "Flere noter"
 
-#: taskcoachlib/gui/dialog/editor.py:1411
+#: taskcoachlib/gui/dialog/editor.py:1436
 msgid "%s (note)"
 msgstr "%s (note)"
 
-#: taskcoachlib/gui/dialog/editor.py:1416
+#: taskcoachlib/gui/dialog/editor.py:1441
 msgid "Multiple attachments"
 msgstr "Flere bilag"
 
-#: taskcoachlib/gui/dialog/editor.py:1417
+#: taskcoachlib/gui/dialog/editor.py:1442
 msgid "%s (attachment)"
 msgstr "%s (bilag)"
 
-#: taskcoachlib/gui/dialog/editor.py:1422
+#: taskcoachlib/gui/dialog/editor.py:1447
 msgid "Multiple efforts"
 msgstr "Flere indsatser"
 
-#: taskcoachlib/gui/dialog/editor.py:1423
+#: taskcoachlib/gui/dialog/editor.py:1448
 msgid "%s (effort)"
 msgstr "%s (indsats)"
 
@@ -2313,8 +2313,8 @@ msgid "The latest released version of %(name)s is %(version)s."
 msgstr "Den senest udgivede version af %(name)s er %(version)s."
 
 #: taskcoachlib/gui/dialog/xfce4warning.py:27
-#: taskcoachlib/gui/mainwindow.py:97
-#: taskcoachlib/gui/uicommand/uicommand.py:219
+#: taskcoachlib/gui/mainwindow.py:99
+#: taskcoachlib/gui/uicommand/uicommand.py:220
 msgid "Warning"
 msgstr "Advarsel"
 
@@ -2554,11 +2554,11 @@ msgstr "Synkroniserer..."
 msgid "Synchronizing with %s..."
 msgstr "Synkroniserer med %s..."
 
-#: taskcoachlib/gui/mainwindow.py:153
+#: taskcoachlib/gui/mainwindow.py:158
 msgid "Welcome to %(name)s version %(version)s"
 msgstr "Velkommen til %(name)s version %(version)s"
 
-#: taskcoachlib/gui/mainwindow.py:180
+#: taskcoachlib/gui/mainwindow.py:185
 msgid ""
 "Couldn't restore the pane layout from TaskCoach.ini:\n"
 "%s\n"
@@ -2570,19 +2570,19 @@ msgid ""
 "file to the bug report."
 msgstr ""
 
-#: taskcoachlib/gui/mainwindow.py:188
+#: taskcoachlib/gui/mainwindow.py:193
 msgid "%s settings error"
 msgstr ""
 
-#: taskcoachlib/gui/mainwindow.py:351
+#: taskcoachlib/gui/mainwindow.py:366
 msgid "iPhone/iPod"
 msgstr "iPhone/iPod"
 
-#: taskcoachlib/gui/mainwindow.py:361
+#: taskcoachlib/gui/mainwindow.py:376
 msgid "Synchronization type"
 msgstr "Synkroniseringstype"
 
-#: taskcoachlib/gui/mainwindow.py:371
+#: taskcoachlib/gui/mainwindow.py:386
 msgid ""
 "An iPhone or iPod Touch device tried to synchronize with this\n"
 "task file, but the protocol negotiation failed. Please file a\n"
@@ -2787,7 +2787,7 @@ msgid "Large images (32x32) on the toolbar"
 msgstr "Store billeder (32x32) på værtøjslinjen."
 
 #: taskcoachlib/gui/menu.py:553 taskcoachlib/gui/menu.py:656
-#: taskcoachlib/gui/uicommand/uicommand.py:1217
+#: taskcoachlib/gui/uicommand/uicommand.py:1218
 msgid "New task from &template"
 msgstr "Ny opgave fra ska&belon"
 
@@ -2800,8 +2800,8 @@ msgstr "Skif&t kategori"
 msgid "Change task &priority"
 msgstr "Skift opgave &prioritet"
 
-#: taskcoachlib/gui/menu.py:672 taskcoachlib/gui/uicommand/uicommand.py:1617
-#: taskcoachlib/gui/uicommand/uicommand.py:1659
+#: taskcoachlib/gui/menu.py:672 taskcoachlib/gui/uicommand/uicommand.py:1618
+#: taskcoachlib/gui/uicommand/uicommand.py:1660
 msgid "&Start tracking effort"
 msgstr "Start registrering af arbejdsindsats"
 
@@ -2870,60 +2870,60 @@ msgstr "Sammenflet opgaver fra en anden fil med den nuværende fil"
 msgid "&Close\tCtrl+W"
 msgstr "Lu&k \tCtrl+W"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:133
+#: taskcoachlib/gui/uicommand/uicommand.py:134
 msgid "&Save\tCtrl+S"
 msgstr "&Gem\tCtrl+S"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:147
+#: taskcoachlib/gui/uicommand/uicommand.py:148
 msgid "S&ave as...\tShift+Ctrl+S"
 msgstr "Gem &som...\tShift+Ctrl+S"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:159
+#: taskcoachlib/gui/uicommand/uicommand.py:160
 msgid "Sa&ve selected tasks to new taskfile..."
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:160
+#: taskcoachlib/gui/uicommand/uicommand.py:161
 msgid "Save the selected tasks to a separate taskfile"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:171
+#: taskcoachlib/gui/uicommand/uicommand.py:172
 msgid "Save selected task as &template"
 msgstr "Gem valg&te opgave som skabelon"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:172
+#: taskcoachlib/gui/uicommand/uicommand.py:173
 msgid "Save the selected task as a task template"
 msgstr "Gem den valgte opgave som opgaveskabelon"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:182
+#: taskcoachlib/gui/uicommand/uicommand.py:183
 msgid "&Import template..."
 msgstr "&Importer skabelon..."
 
-#: taskcoachlib/gui/uicommand/uicommand.py:183
+#: taskcoachlib/gui/uicommand/uicommand.py:184
 msgid "Import a new template from a template file"
 msgstr "Importer en ny skabelon fra en skabelonfil"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:194
+#: taskcoachlib/gui/uicommand/uicommand.py:195
 msgid "Edit templates..."
 msgstr "Rediger skabeloner..."
 
-#: taskcoachlib/gui/uicommand/uicommand.py:195
+#: taskcoachlib/gui/uicommand/uicommand.py:196
 msgid "Edit existing templates"
 msgstr "Rediger eksisterende skabeloner"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:199
+#: taskcoachlib/gui/uicommand/uicommand.py:200
 msgid "Edit templates"
 msgstr "Rediger skabeloner"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:206
+#: taskcoachlib/gui/uicommand/uicommand.py:207
 msgid "&Purge deleted items"
 msgstr "&Ryd slettede elementer op"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:207
+#: taskcoachlib/gui/uicommand/uicommand.py:208
 msgid ""
 "Actually delete deleted tasks and notes (see the SyncML chapter in Help)"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:212
+#: taskcoachlib/gui/uicommand/uicommand.py:213
 msgid ""
 "Purging deleted items is undoable.\n"
 "If you're planning on enabling\n"
@@ -2941,224 +2941,224 @@ msgstr ""
 "\n"
 "Vil du stadigvæk gerne rydde op?"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:230
+#: taskcoachlib/gui/uicommand/uicommand.py:231
 msgid "&Page setup...\tShift+Ctrl+P"
 msgstr "&Sideopsætning...\tShift+Ctrl+P"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:250
+#: taskcoachlib/gui/uicommand/uicommand.py:251
 msgid "&Print preview..."
 msgstr "&Vis udskrift..."
 
-#: taskcoachlib/gui/uicommand/uicommand.py:251
+#: taskcoachlib/gui/uicommand/uicommand.py:252
 msgid "Show a preview of what the print will look like"
 msgstr "Vis hvordan udskriften vil se ud"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:261
+#: taskcoachlib/gui/uicommand/uicommand.py:262
 msgid "Print preview"
 msgstr "Vis udskrift"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:270
+#: taskcoachlib/gui/uicommand/uicommand.py:271
 msgid "&Print...\tCtrl+P"
 msgstr "&Udskriv...\tCtrl+P"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:321
+#: taskcoachlib/gui/uicommand/uicommand.py:322
 msgid "Export as &HTML..."
 msgstr "Eksport som &HTML..."
 
-#: taskcoachlib/gui/uicommand/uicommand.py:322
+#: taskcoachlib/gui/uicommand/uicommand.py:323
 msgid "Export items from a viewer in HTML format"
 msgstr "Eksporter elementer fra en oversigt til HTML format"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:337
+#: taskcoachlib/gui/uicommand/uicommand.py:338
 msgid "Export as &CSV..."
 msgstr "Eksport som &CSV..."
 
-#: taskcoachlib/gui/uicommand/uicommand.py:338
+#: taskcoachlib/gui/uicommand/uicommand.py:339
 msgid "Export items from a viewer in Comma Separated Values (CSV) format"
 msgstr ""
 "Eksporter elementer fra en oversigt til Komma Sepererede Værdier (CSV) "
 "formatet"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:355
+#: taskcoachlib/gui/uicommand/uicommand.py:356
 msgid "Export as &iCalendar..."
 msgstr "Eksporter som &iCalendar..."
 
-#: taskcoachlib/gui/uicommand/uicommand.py:356
+#: taskcoachlib/gui/uicommand/uicommand.py:357
 msgid "Export items from a viewer in iCalendar format"
 msgstr "Eksporter elementer fra en oversigt til iCalendarn formatet"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:382
+#: taskcoachlib/gui/uicommand/uicommand.py:383
 msgid "Export as &Todo.txt..."
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:383
+#: taskcoachlib/gui/uicommand/uicommand.py:384
 msgid "Export items from a viewer in Todo.txt format (see todotxt.com)"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:409
+#: taskcoachlib/gui/uicommand/uicommand.py:410
 msgid "&Import CSV..."
 msgstr "&Importer CSV..."
 
-#: taskcoachlib/gui/uicommand/uicommand.py:410
+#: taskcoachlib/gui/uicommand/uicommand.py:411
 msgid "Import tasks from a Comma Separated Values (CSV) file"
 msgstr "Importer opgaver fra en Komma Sepereret Værdi (CSV) fil"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:415
-#: taskcoachlib/gui/uicommand/uicommand.py:420
-#: taskcoachlib/gui/uicommand/uicommand.py:423
+#: taskcoachlib/gui/uicommand/uicommand.py:416
+#: taskcoachlib/gui/uicommand/uicommand.py:421
+#: taskcoachlib/gui/uicommand/uicommand.py:424
 msgid "Import CSV"
 msgstr "Importer CSV"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:418
+#: taskcoachlib/gui/uicommand/uicommand.py:419
 msgid "The selected file is empty. Please select a different file."
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:437
+#: taskcoachlib/gui/uicommand/uicommand.py:438
 msgid "&Import Todo.txt..."
 msgstr "&Importer Todo.txt..."
 
-#: taskcoachlib/gui/uicommand/uicommand.py:438
+#: taskcoachlib/gui/uicommand/uicommand.py:439
 msgid "Import tasks from a Todo.txt (see todotxt.com) file"
 msgstr "Importer opgaver fra en Todo.txt-fil (se todotxt.com)"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:442
+#: taskcoachlib/gui/uicommand/uicommand.py:443
 msgid "Import Todo.txt"
 msgstr "Importer Todo.txt"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:453
+#: taskcoachlib/gui/uicommand/uicommand.py:454
 msgid "S&yncML synchronization..."
 msgstr "S&yncML synkronisering..."
 
-#: taskcoachlib/gui/uicommand/uicommand.py:454
+#: taskcoachlib/gui/uicommand/uicommand.py:455
 msgid "Synchronize with a SyncML server"
 msgstr "Synkroniser med SyncML server"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:465
+#: taskcoachlib/gui/uicommand/uicommand.py:466
 msgid "&Quit\tCtrl+Q"
 msgstr "Luk\tCtrl+Q"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:485
+#: taskcoachlib/gui/uicommand/uicommand.py:486
 msgid "&Undo"
 msgstr "&Fortryd"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:519
+#: taskcoachlib/gui/uicommand/uicommand.py:520
 msgid "&Redo"
 msgstr "Ann&ullér fortryd"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:546
+#: taskcoachlib/gui/uicommand/uicommand.py:547
 msgid "Cu&t\tCtrl+X"
 msgstr "&Klip\tCtrl+X"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:570
+#: taskcoachlib/gui/uicommand/uicommand.py:571
 msgid "&Copy\tCtrl+C"
 msgstr "&Kopier\tCtrl+C"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:595
+#: taskcoachlib/gui/uicommand/uicommand.py:596
 msgid "&Paste\tCtrl+V"
 msgstr "&Indsæt\tCtrl+V"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:622
+#: taskcoachlib/gui/uicommand/uicommand.py:623
 msgid "P&aste as subitem\tShift+Ctrl+V"
 msgstr "&Indsæt som underelement\tShift+Ctrl+V"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:662
+#: taskcoachlib/gui/uicommand/uicommand.py:663
 msgid "&Preferences...\tAlt+P"
 msgstr "&Indstillinger...\tAlt+P"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:668
+#: taskcoachlib/gui/uicommand/uicommand.py:669
 msgid "Preferences"
 msgstr "Indstillinger"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:677
+#: taskcoachlib/gui/uicommand/uicommand.py:678
 msgid "&SyncML preferences..."
 msgstr "&SyncML indstillinger..."
 
-#: taskcoachlib/gui/uicommand/uicommand.py:678
+#: taskcoachlib/gui/uicommand/uicommand.py:679
 msgid "Edit SyncML preferences"
 msgstr "Rediger SyncML indstillinger"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:684
+#: taskcoachlib/gui/uicommand/uicommand.py:685
 msgid "SyncML preferences"
 msgstr "SyncML indstillinger"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:695
-#: taskcoachlib/gui/uicommand/uicommand.py:700
+#: taskcoachlib/gui/uicommand/uicommand.py:696
+#: taskcoachlib/gui/uicommand/uicommand.py:701
 msgid "Customize toolbar"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:696
+#: taskcoachlib/gui/uicommand/uicommand.py:697
 msgid "Customize"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:707
+#: taskcoachlib/gui/uicommand/uicommand.py:708
 msgid "&All\tCtrl+A"
 msgstr "&Alle\tCtrl+A"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:729
+#: taskcoachlib/gui/uicommand/uicommand.py:730
 msgid "&Clear selection"
 msgstr "&Ryd markering"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:730
+#: taskcoachlib/gui/uicommand/uicommand.py:731
 msgid "Unselect all items"
 msgstr "Rydder markeringen"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:742
+#: taskcoachlib/gui/uicommand/uicommand.py:743
 msgid "&Clear all filters\tShift-Ctrl-R"
 msgstr "&Ryd alle filtre\tShift-Ctrl-R"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:759
+#: taskcoachlib/gui/uicommand/uicommand.py:760
 msgid "&Reset all categories\tCtrl-R"
 msgstr "&Nulstil alle kategorier\tCtrl-R"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:784
+#: taskcoachlib/gui/uicommand/uicommand.py:785
 msgid "Show/hide items belonging to %s"
 msgstr "Vis/skjul elementer der hører til %s"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:833
+#: taskcoachlib/gui/uicommand/uicommand.py:834
 msgid "&Rename viewer..."
 msgstr "&Omdøb visning..."
 
-#: taskcoachlib/gui/uicommand/uicommand.py:834
+#: taskcoachlib/gui/uicommand/uicommand.py:835
 msgid "Rename the selected viewer"
 msgstr "Omdøb den valgte visning"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:839
+#: taskcoachlib/gui/uicommand/uicommand.py:840
 msgid "New title for the viewer:"
 msgstr "Ny title for visningen"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:839
+#: taskcoachlib/gui/uicommand/uicommand.py:840
 msgid "Rename viewer"
 msgstr "Omdøb visningen"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:863
+#: taskcoachlib/gui/uicommand/uicommand.py:864
 msgid "&Hide this column"
 msgstr "&Skjul denne kolonne"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:864
+#: taskcoachlib/gui/uicommand/uicommand.py:865
 msgid "Hide the selected column"
 msgstr "Skjul den valgte kolonne"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:910
+#: taskcoachlib/gui/uicommand/uicommand.py:911
 msgid "&Expand all items\tShift+Ctrl+E"
 msgstr "&Udvid alle\tShift+Ctrl+E"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:924
+#: taskcoachlib/gui/uicommand/uicommand.py:925
 msgid "&Collapse all items\tShift+Ctrl+C"
 msgstr "&Sammenfold alle\tShift+Ctrl+C"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:945
+#: taskcoachlib/gui/uicommand/uicommand.py:946
 msgid "&Ascending"
 msgstr "Stigende"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:946
+#: taskcoachlib/gui/uicommand/uicommand.py:947
 msgid "Sort ascending (checked) or descending (unchecked)"
 msgstr "Sotere stigende (afkrydset) eller faldende (uafkrydset)"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:959
+#: taskcoachlib/gui/uicommand/uicommand.py:960
 msgid "Sort &case sensitive"
 msgstr "Sorter &forskel på små/store bogstaver"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:960
+#: taskcoachlib/gui/uicommand/uicommand.py:961
 msgid ""
 "When comparing text, sorting is case sensitive (checked) or insensitive "
 "(unchecked)"
@@ -3166,156 +3166,156 @@ msgstr ""
 "Ved sammenligning af text, er der sorteret med forskel på små/store "
 "bogstaver (markeret) eller uden forskel på små/store bogstaver (umarkeret)"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:975
+#: taskcoachlib/gui/uicommand/uicommand.py:976
 msgid "Sort by status &first"
 msgstr "Sorter efter status &først"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:976
+#: taskcoachlib/gui/uicommand/uicommand.py:977
 msgid "Sort tasks by status (active/inactive/completed) first"
 msgstr "Sorter efter status (aktiv/inaktiv/fuldført) først"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1013
+#: taskcoachlib/gui/uicommand/uicommand.py:1014
 msgid "Hide c&omposite tasks"
 msgstr "Skjul &sammensatte opgaver"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1014
+#: taskcoachlib/gui/uicommand/uicommand.py:1015
 msgid "Show/hide tasks with subtasks in list mode"
 msgstr "Vis/skjul opgaver med underopgaver i listetilstand"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1029
+#: taskcoachlib/gui/uicommand/uicommand.py:1030
 msgid "&Edit...\tRETURN"
 msgstr "&Rediger...\tENTER"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1030
+#: taskcoachlib/gui/uicommand/uicommand.py:1031
 msgid "Edit the selected item(s)"
 msgstr "Rediger de valgte element(er)"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1070
+#: taskcoachlib/gui/uicommand/uicommand.py:1071
 msgid "Edit &tracked task...\tShift-Alt-T"
 msgstr "Rediger igangværende opgave...\tShift-Alt-T"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1071
+#: taskcoachlib/gui/uicommand/uicommand.py:1072
 msgid "Edit the currently tracked task(s)"
 msgstr "Rediger de(n) igangværende opgave(r)"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1087
+#: taskcoachlib/gui/uicommand/uicommand.py:1088
 msgid "&Delete\tDEL"
 msgstr "&Slet\tDELETE"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1088
+#: taskcoachlib/gui/uicommand/uicommand.py:1089
 #: taskcoachlib/help/__init__.py:771
 msgid "Delete the selected item(s)"
 msgstr "Slet de valgte element(er)"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1220
+#: taskcoachlib/gui/uicommand/uicommand.py:1221
 msgid "Create a new task from a template"
 msgstr "Opret en ny opgave fra skabelon"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1226
+#: taskcoachlib/gui/uicommand/uicommand.py:1227
 msgid "New task with selected &categories..."
 msgstr "Ny opgave med valgte &kategorier..."
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1227
+#: taskcoachlib/gui/uicommand/uicommand.py:1228
 msgid "Insert a new task with the selected categories checked"
 msgstr "Indsæt en ny opgave med de valgte kategorier afkrydset"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1238
+#: taskcoachlib/gui/uicommand/uicommand.py:1239
 msgid "New task with selected tasks as &prerequisites..."
 msgstr "Ny opgave med valgte opgaver som &forudsætninger..."
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1239
+#: taskcoachlib/gui/uicommand/uicommand.py:1240
 msgid "Insert a new task with the selected tasks as prerequisite tasks"
 msgstr "Indsæt en ny opgave med de valgte opgaver som forudsatte opgaver"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1250
+#: taskcoachlib/gui/uicommand/uicommand.py:1251
 msgid "New task with selected tasks as &dependents..."
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1251
+#: taskcoachlib/gui/uicommand/uicommand.py:1252
 msgid "Insert a new task with the selected tasks as dependent tasks"
 msgstr "Indsæt en ny opgave med de valgte opgaver som afhængige opgaver"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1261
+#: taskcoachlib/gui/uicommand/uicommand.py:1262
 msgid "New &subitem..."
 msgstr "Nyt &underelement..."
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1262
+#: taskcoachlib/gui/uicommand/uicommand.py:1263
 msgid "New &subtask..."
 msgstr "Ny &underopgave..."
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1263
+#: taskcoachlib/gui/uicommand/uicommand.py:1264
 msgid "New &subnote..."
 msgstr "Ny &undernote..."
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1264
+#: taskcoachlib/gui/uicommand/uicommand.py:1265
 msgid "New &subcategory..."
 msgstr "Ny &kategori..."
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1268
+#: taskcoachlib/gui/uicommand/uicommand.py:1269
 msgid "Insert a new subitem of the selected item"
 msgstr "Indsæt et nyt underelement til det valgte element"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1288
+#: taskcoachlib/gui/uicommand/uicommand.py:1289
 msgid "Mark task &active\tAlt+RETURN"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1289
+#: taskcoachlib/gui/uicommand/uicommand.py:1290
 msgid "Mark the selected task(s) active"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1307
+#: taskcoachlib/gui/uicommand/uicommand.py:1308
 msgid "Mark task &inactive\tCtrl+Alt+RETURN"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1308
+#: taskcoachlib/gui/uicommand/uicommand.py:1309
 msgid "Mark the selected task(s) inactive"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1326
+#: taskcoachlib/gui/uicommand/uicommand.py:1327
 msgid "Mark task &completed\tCtrl+RETURN"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1327
+#: taskcoachlib/gui/uicommand/uicommand.py:1328
 msgid "Mark the selected task(s) completed"
 msgstr "Marker valgte opgave(r) som fuldførte"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1347
+#: taskcoachlib/gui/uicommand/uicommand.py:1348
 msgid "&Maximize priority\tShift+Ctrl+I"
 msgstr "&Maksimer prioritet\tShift+Ctrl+I"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1361
+#: taskcoachlib/gui/uicommand/uicommand.py:1362
 msgid "&Minimize priority\tShift+Ctrl+D"
 msgstr "&Minimer prioritet\tShift+Ctrl+D"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1375
+#: taskcoachlib/gui/uicommand/uicommand.py:1376
 msgid "&Increase priority\tCtrl+I"
 msgstr "&Forøg prioritet\tCtrl+I"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1389
+#: taskcoachlib/gui/uicommand/uicommand.py:1390
 msgid "&Decrease priority\tCtrl+D"
 msgstr "&Formindsk prioritet\tCtrl+D"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1436
+#: taskcoachlib/gui/uicommand/uicommand.py:1437
 msgid "Toggle %s"
 msgstr "Slå %s til/fra"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1470
+#: taskcoachlib/gui/uicommand/uicommand.py:1471
 msgid "&Mail...\tCtrl-M"
 msgstr "&Mail...\tCtrl-M"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1470
+#: taskcoachlib/gui/uicommand/uicommand.py:1471
 msgid "&Mail...\tShift-Ctrl-M"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1483
+#: taskcoachlib/gui/uicommand/uicommand.py:1484
 msgid "Several things"
 msgstr "Flere ting"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1486
+#: taskcoachlib/gui/uicommand/uicommand.py:1487
 msgid "and"
 msgstr "og"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1516
+#: taskcoachlib/gui/uicommand/uicommand.py:1517
 msgid ""
 "Cannot send email:\n"
 "%s"
@@ -3323,348 +3323,348 @@ msgstr ""
 "Kan ikke sende email:\n"
 "%s"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1517
+#: taskcoachlib/gui/uicommand/uicommand.py:1518
 msgid "%s mail error"
 msgstr "%s mail fejl"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1524
+#: taskcoachlib/gui/uicommand/uicommand.py:1525
 msgid "Add &note...\tCtrl+B"
 msgstr "Tilføj &note...\tCtrl+B"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1541
+#: taskcoachlib/gui/uicommand/uicommand.py:1542
 msgid "Open all notes...\tShift+Ctrl+B"
 msgstr "Åben alle noter...\tShift+Ctrl+B"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1597
+#: taskcoachlib/gui/uicommand/uicommand.py:1598
 msgid "&Start tracking effort\tCtrl-T"
 msgstr "&Start registrering af arbejdsindsats\tCtrl-T"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1618
+#: taskcoachlib/gui/uicommand/uicommand.py:1619
 msgid "Start tracking effort for the task(s) of the selected effort(s)"
 msgstr ""
 "Start registrering af arbejdsindsats  for opgaven(erne) fra de valgte "
 "arbejdsindsatser(er)"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1641
+#: taskcoachlib/gui/uicommand/uicommand.py:1642
 msgid "(No subject)"
 msgstr "(Intet emne)"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1644
+#: taskcoachlib/gui/uicommand/uicommand.py:1645
 msgid "Start tracking effort for %s"
 msgstr "Start registrering af arbejdsindsats for %s"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1660
+#: taskcoachlib/gui/uicommand/uicommand.py:1661
 msgid "Select a task via the menu and start tracking effort for it"
 msgstr ""
 "Vælg en opgave via menuen og start registrering af arbejdsindsats for den"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1672
+#: taskcoachlib/gui/uicommand/uicommand.py:1673
 msgid "Stop tracking or resume tracking effort\tShift+Ctrl+T"
 msgstr ""
 "Stop registrering eller fortsæt registrering af indsats\tShift+Ctrl+T"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1674
+#: taskcoachlib/gui/uicommand/uicommand.py:1675
 msgid "St&op tracking %s\tShift+Ctrl+T"
 msgstr "Af&slut registrering %s\tShift+Ctrl+T"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1675
+#: taskcoachlib/gui/uicommand/uicommand.py:1676
 msgid "Stop tracking effort for the active task(s)"
 msgstr "Ophør med at registrere arbejdsindsats for den aktive opgave"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1676
+#: taskcoachlib/gui/uicommand/uicommand.py:1677
 msgid "&Resume tracking %s\tShift+Ctrl+T"
 msgstr "&Fortsæt registrering %s\tShift+Ctrl+T"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1677
+#: taskcoachlib/gui/uicommand/uicommand.py:1678
 msgid "Resume tracking effort for the last tracked task"
 msgstr "Fortsæt registrering af indsats for den opgave der sidst var i gang"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1761
+#: taskcoachlib/gui/uicommand/uicommand.py:1762
 msgid "multiple tasks"
 msgstr "flere opgaver"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1798
+#: taskcoachlib/gui/uicommand/uicommand.py:1799
 msgid "New category...\tCtrl-G"
 msgstr "Ny kategori...\tCtrl-G"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1818
+#: taskcoachlib/gui/uicommand/uicommand.py:1819
 msgid "New note...\tCtrl-J"
 msgstr "Ny note...\tCtrl-J"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1843
+#: taskcoachlib/gui/uicommand/uicommand.py:1844
 msgid "New &note with selected categories..."
 msgstr "Ny &note med valgte kategorier..."
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1844
+#: taskcoachlib/gui/uicommand/uicommand.py:1845
 msgid "Insert a new note with the selected categories checked"
 msgstr "Indsæt en ny note med de valgte kategorier markeret"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1875
+#: taskcoachlib/gui/uicommand/uicommand.py:1876
 msgid "&Add attachment...\tShift-Ctrl-A"
 msgstr "&Tilføj bilag...\tShift-Ctrl-A"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1899
+#: taskcoachlib/gui/uicommand/uicommand.py:1900
 msgid "Error opening attachment"
 msgstr "Fejl ved åbning af det vedhæftede"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1920
+#: taskcoachlib/gui/uicommand/uicommand.py:1921
 msgid "&Open all attachments...\tShift+Ctrl+O"
 msgstr "&Åben alle bilag...\tShift+Ctrl+O"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1962
+#: taskcoachlib/gui/uicommand/uicommand.py:1963
 msgid "&Help contents\tCtrl+?"
 msgstr "&Hjælp indhold\tCtrl+?"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1965
+#: taskcoachlib/gui/uicommand/uicommand.py:1966
 msgid "&Help contents\tCtrl+H"
 msgstr "&Hjælp indhold\tCtrl+H"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1967
+#: taskcoachlib/gui/uicommand/uicommand.py:1968
 msgid "Help"
 msgstr "Hjælp"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1973
+#: taskcoachlib/gui/uicommand/uicommand.py:1974
 msgid "&Tips"
 msgstr "&Tips"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1974
+#: taskcoachlib/gui/uicommand/uicommand.py:1975
 msgid "Tips about the program"
 msgstr "Tips om programmet"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1983
+#: taskcoachlib/gui/uicommand/uicommand.py:1984
 msgid "Anonymize"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1984
+#: taskcoachlib/gui/uicommand/uicommand.py:1985
 msgid "Anonymize a task file to attach it to a bug report"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1989
+#: taskcoachlib/gui/uicommand/uicommand.py:1990
 msgid "Your task file has been anonymized and saved to:"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1990
+#: taskcoachlib/gui/uicommand/uicommand.py:1991
 msgid "Finished"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1998
+#: taskcoachlib/gui/uicommand/uicommand.py:1999
 msgid "&About %s"
 msgstr "&Om %s"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:1999
+#: taskcoachlib/gui/uicommand/uicommand.py:2000
 msgid "Version and contact information about %s"
 msgstr "Version og kontakt information for %s"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2000
+#: taskcoachlib/gui/uicommand/uicommand.py:2001
 msgid "About %s"
 msgstr "Om %s"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2007
+#: taskcoachlib/gui/uicommand/uicommand.py:2008
 msgid "&License"
 msgstr "&Licens"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2008
 #: taskcoachlib/gui/uicommand/uicommand.py:2009
+#: taskcoachlib/gui/uicommand/uicommand.py:2010
 msgid "%s license"
 msgstr "%s licens"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2016
+#: taskcoachlib/gui/uicommand/uicommand.py:2017
 msgid "Check for update"
 msgstr "Søg efter opdatering"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2017
+#: taskcoachlib/gui/uicommand/uicommand.py:2018
 msgid "Check for the availability of a new version of %s"
 msgstr "Søg efter om der er en ny version tilgængelig af %s"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2033
+#: taskcoachlib/gui/uicommand/uicommand.py:2034
 msgid ""
 "Cannot open URL:\n"
 "%s"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2034
+#: taskcoachlib/gui/uicommand/uicommand.py:2035
 msgid "%s URL error"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2040
+#: taskcoachlib/gui/uicommand/uicommand.py:2041
 msgid "&Frequently asked questions"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2041
+#: taskcoachlib/gui/uicommand/uicommand.py:2042
 msgid "Browse the frequently asked questions and answers"
 msgstr "Gennemse de ofte stillede spørgsmål og svar"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2048
+#: taskcoachlib/gui/uicommand/uicommand.py:2049
 msgid "Report a &bug..."
 msgstr "Rapportér en &fejl..."
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2049
+#: taskcoachlib/gui/uicommand/uicommand.py:2050
 msgid "Report a bug or browse known bugs"
 msgstr "Rapportér en fejl eller gennemse kendte fejl"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2056
+#: taskcoachlib/gui/uicommand/uicommand.py:2057
 msgid "Request a &feature..."
 msgstr "Anmod om en &funktion..."
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2057
+#: taskcoachlib/gui/uicommand/uicommand.py:2058
 msgid "Request a new feature or vote for existing requests"
 msgstr "Anmod om en ny funktion eller stem på eksisterende anmodninger"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2064
+#: taskcoachlib/gui/uicommand/uicommand.py:2065
 msgid "Request &support..."
 msgstr "Anmod om &hjælp..."
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2065
+#: taskcoachlib/gui/uicommand/uicommand.py:2066
 msgid "Request user support from the developers"
 msgstr "Anmod om brugerhjælp fra udviklerne"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2073
+#: taskcoachlib/gui/uicommand/uicommand.py:2074
 msgid "Help improve &translations..."
 msgstr "Hjælp med at forbedre &oversættelserne..."
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2074
+#: taskcoachlib/gui/uicommand/uicommand.py:2075
 msgid "Help improve the translations of %s"
 msgstr "Hjælp med at forbedre oversættelserne af %s"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2081
+#: taskcoachlib/gui/uicommand/uicommand.py:2082
 msgid "&Donate..."
 msgstr "&Donér..."
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2082
+#: taskcoachlib/gui/uicommand/uicommand.py:2083
 msgid "Donate to support the development of %s"
 msgstr "Donér for at støtte udviklingen af %s"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2088
+#: taskcoachlib/gui/uicommand/uicommand.py:2089
 msgid "&Restore"
 msgstr "Gendan"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2089
+#: taskcoachlib/gui/uicommand/uicommand.py:2090
 msgid "Restore the window to its previous state"
 msgstr "Gendan vinduet til tidligere stand"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2100
+#: taskcoachlib/gui/uicommand/uicommand.py:2101
 msgid "Search"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2213
+#: taskcoachlib/gui/uicommand/uicommand.py:2214
 msgid "Effort details"
 msgstr "Indsats"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2213
+#: taskcoachlib/gui/uicommand/uicommand.py:2214
 msgid "Effort per day"
 msgstr "Indsats pr. dag"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2214
+#: taskcoachlib/gui/uicommand/uicommand.py:2215
 msgid "Effort per month"
 msgstr "Indsatser pr. måned"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2214
+#: taskcoachlib/gui/uicommand/uicommand.py:2215
 msgid "Effort per week"
 msgstr "Indsatser pr. uge"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2218
+#: taskcoachlib/gui/uicommand/uicommand.py:2219
 msgid "Aggregation mode"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2251
+#: taskcoachlib/gui/uicommand/uicommand.py:2252
 msgid "List"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2251
+#: taskcoachlib/gui/uicommand/uicommand.py:2252
 msgid "Tree"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2257
+#: taskcoachlib/gui/uicommand/uicommand.py:2258
 msgid "When checked, show tasks as tree, otherwise show tasks as list"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2288
+#: taskcoachlib/gui/uicommand/uicommand.py:2289
 msgid "Filter on all checked categories"
 msgstr "Filtrer på alle markerede kategorier"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2289
+#: taskcoachlib/gui/uicommand/uicommand.py:2290
 msgid "Filter on any checked category"
 msgstr "Filtrer på hvilken som helst af de markerede kategorier"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2295
+#: taskcoachlib/gui/uicommand/uicommand.py:2296
 msgid ""
 "When checked, filter on all checked categories, otherwise on any checked "
 "category"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2325
+#: taskcoachlib/gui/uicommand/uicommand.py:2326
 msgid "Order choice"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2352
+#: taskcoachlib/gui/uicommand/uicommand.py:2353
 msgid "&Configure"
 msgstr "&Konfigurer"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2353
+#: taskcoachlib/gui/uicommand/uicommand.py:2354
 msgid "Configure the calendar viewer"
 msgstr "Konfigurer kalender fremviseren"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2380
+#: taskcoachlib/gui/uicommand/uicommand.py:2381
 msgid "&Next period"
 msgstr "&Næste periode"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2381
+#: taskcoachlib/gui/uicommand/uicommand.py:2382
 msgid "Show next period"
 msgstr "Vis næste periode"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2387
+#: taskcoachlib/gui/uicommand/uicommand.py:2388
 msgid "&Previous period"
 msgstr "&Forige periode"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2388
+#: taskcoachlib/gui/uicommand/uicommand.py:2389
 msgid "Show previous period"
 msgstr "Vis forige periode"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2394
+#: taskcoachlib/gui/uicommand/uicommand.py:2395
 msgid "&Today"
 msgstr "&I dag"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2395
+#: taskcoachlib/gui/uicommand/uicommand.py:2396
 msgid "Show today"
 msgstr "Vis i dag"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2404
+#: taskcoachlib/gui/uicommand/uicommand.py:2405
 msgid "&Automatic column resizing"
 msgstr "&Automatisk tilpasning af kolonner"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2405
+#: taskcoachlib/gui/uicommand/uicommand.py:2406
 msgid "When checked, automatically resize columns to fill available space"
 msgstr ""
 "Hvis markeret, tilpas automatisk kolonnebredden til at fylde alt tilgængelig "
 "plads"
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2427
+#: taskcoachlib/gui/uicommand/uicommand.py:2428
 msgid "Set pie chart angle"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2465
+#: taskcoachlib/gui/uicommand/uicommand.py:2466
 msgid "No rounding"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2465
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1738
+#: taskcoachlib/gui/uicommand/uicommand.py:2466
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1741
 msgid "1 minute"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2466
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1740
+#: taskcoachlib/gui/uicommand/uicommand.py:2467
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1743
 msgid "%d minutes"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2469
+#: taskcoachlib/gui/uicommand/uicommand.py:2470
 msgid "Rounding precision"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2488
+#: taskcoachlib/gui/uicommand/uicommand.py:2489
 msgid "&Always round up"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand/uicommand.py:2489
+#: taskcoachlib/gui/uicommand/uicommand.py:2490
 msgid "Always round up to the next rounding increment"
 msgstr ""
 
@@ -6433,11 +6433,11 @@ msgstr "Ny opgave forfalder i dag"
 msgid "New task due tomorrow"
 msgstr "Ny opgave forfalder i morgen"
 
-#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1728
+#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1731
 msgid "%d days"
 msgstr "%d dage"
 
-#: taskcoachlib/render.py:51 taskcoachlib/thirdparty/smartdatetimectrl.py:1726
+#: taskcoachlib/render.py:51 taskcoachlib/thirdparty/smartdatetimectrl.py:1729
 msgid "1 day"
 msgstr "1 dag"
 
@@ -6585,20 +6585,20 @@ msgstr "&Forrige"
 msgid "&Window"
 msgstr "&Vindue"
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1672
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1779
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1675
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1782
 msgid "Edit"
 msgstr "Rediger"
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1723
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1726
 msgid "%d weeks"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1735
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1738
 msgid "%d hours"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1779
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1782
 msgid "Done"
 msgstr ""
 
@@ -6688,51 +6688,51 @@ msgstr ""
 msgid "Please enter your password"
 msgstr ""
 
-#: taskcoachlib/widgets/searchctrl.py:59
+#: taskcoachlib/widgets/searchctrl.py:58
 msgid "&Match case"
 msgstr "Forskel på &store og små bogstaver"
 
-#: taskcoachlib/widgets/searchctrl.py:59
+#: taskcoachlib/widgets/searchctrl.py:58
 msgid "Match case when filtering"
 msgstr "Sammenlign store og små bogstaver ved filtrering"
 
-#: taskcoachlib/widgets/searchctrl.py:62
+#: taskcoachlib/widgets/searchctrl.py:61
 msgid "&Include sub items"
 msgstr "&Inkludér underelementer"
 
-#: taskcoachlib/widgets/searchctrl.py:63
+#: taskcoachlib/widgets/searchctrl.py:62
 msgid "Include sub items of matching items in the search results"
 msgstr "Inkluder underpunkter som matcher søge resultaterne"
 
-#: taskcoachlib/widgets/searchctrl.py:66
+#: taskcoachlib/widgets/searchctrl.py:65
 msgid "&Search description too"
 msgstr "&Søg også i beskrivelse"
 
-#: taskcoachlib/widgets/searchctrl.py:67
+#: taskcoachlib/widgets/searchctrl.py:66
 msgid "Search both subject and description"
 msgstr ""
 
-#: taskcoachlib/widgets/searchctrl.py:70
+#: taskcoachlib/widgets/searchctrl.py:69
 msgid "&Regular Expression"
 msgstr ""
 
-#: taskcoachlib/widgets/searchctrl.py:71
+#: taskcoachlib/widgets/searchctrl.py:70
 msgid "Consider search text as a regular expression"
 msgstr ""
 
-#: taskcoachlib/widgets/searchctrl.py:140
+#: taskcoachlib/widgets/searchctrl.py:139
 msgid "This is an invalid regular expression."
 msgstr ""
 
-#: taskcoachlib/widgets/searchctrl.py:141
+#: taskcoachlib/widgets/searchctrl.py:140
 msgid "Defaulting to substring search."
 msgstr ""
 
-#: taskcoachlib/widgets/searchctrl.py:206
+#: taskcoachlib/widgets/searchctrl.py:205
 msgid "Recent searches"
 msgstr "Sidste søgninger"
 
-#: taskcoachlib/widgets/searchctrl.py:214
+#: taskcoachlib/widgets/searchctrl.py:213
 msgid "Viewer not searchable"
 msgstr "Visning ikke søgbar"
 
@@ -6753,7 +6753,7 @@ msgstr ""
 msgid "Never show this dialog again"
 msgstr "Vis aldrig denne besked igen"
 
-#: taskcoachlib/widgets/textctrl.py:141
+#: taskcoachlib/widgets/textctrl.py:164
 msgid "Error opening URL"
 msgstr "Fejl under åbning af URL"
 
