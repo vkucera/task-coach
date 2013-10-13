@@ -1824,7 +1824,7 @@ class _CalendarPopup(_PopupWindow):
                 tw, th = dc.GetTextExtent('%d' % day)
                 self.__maxDim = max(self.__maxDim, tw, th)
 
-        for header in calendar.weekheader(2).split():
+        for header in decodeSystemString(calendar.weekheader(2)).split():
             tw, th = dc.GetTextExtent(header)
             self.__maxDim = max(self.__maxDim, tw, th)
 
@@ -1902,7 +1902,7 @@ class _CalendarPopup(_PopupWindow):
         dc.SetBrush(wx.LIGHT_GREY_BRUSH)
         dc.DrawRectangle(0, y, self.__maxDim * 7, self.__maxDim)
         dc.SetTextForeground(wx.BLUE)
-        for idx, header in enumerate(calendar.weekheader(2).split()):
+        for idx, header in enumerate(decodeSystemString(calendar.weekheader(2)).split()):
             tw, th = dc.GetTextExtent(header)
             dc.DrawText(header, self.__maxDim * idx + int((self.__maxDim - tw) / 2), y + int((self.__maxDim - th) / 2))
 

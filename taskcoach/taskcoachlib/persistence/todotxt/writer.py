@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import re
+import re, shutil, os
 from taskcoachlib.domain import date
 
 
@@ -42,6 +42,11 @@ class TodoTxtWriter(object):
                             task.subject(recursive=True) + \
                             self.contextsAndProjects(task) + \
                             self.dueDate(task.dueDateTime()) + '\n')
+        metaName = self.__filename + '-meta'
+        if os.path.exists(metaName):
+            os.remove(metaName)
+        if os.path.exists(self.__filename): # Unit tests
+            shutil.copyfile(self.__filename, metaName)
         return count
                 
     @staticmethod

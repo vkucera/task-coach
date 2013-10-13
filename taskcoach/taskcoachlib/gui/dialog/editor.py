@@ -73,8 +73,10 @@ class Page(patterns.Observer, widgets.BookPage):
                     # end:
                     """from taskcoachlib.thirdparty import SendKeys  # pylint: disable=W0404
                     SendKeys.SendKeys('{END}+{HOME}')"""
-                else:
-                    the_entry.SetSelection(-1, -1)  # Select all text
+
+                    # Scrol to left...
+                    the_entry.SetInsertionPoint(0)
+                the_entry.SetSelection(-1, -1)  # Select all text
             except (AttributeError, TypeError):
                 pass  # Not a TextCtrl
 

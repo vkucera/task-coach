@@ -230,7 +230,7 @@ elif sys.argv[1] == 'bdist_rpm_fedora':
     spec_file = spec_file.split('\n')
     setupOptions.update(dict(options=dict(bdist_rpm_fedora=dict(\
         spec_file=spec_file, icon='icons.in/taskcoach.png', 
-        desktop_file='build.in/fedora/taskcoach.desktop'))))
+        desktop_file='build.in/linux_common/taskcoach.desktop'))))
     # On Fedora, to keep the rpm build process going when it finds 
     # unpackaged files you need to create a ~/.rpmmacros file 
     # containing the line '%_unpackaged_files_terminate_build 0'.
@@ -241,7 +241,7 @@ elif sys.argv[1] == 'bdist_rpm_opensuse':
     spec_file = spec_file.split('\n')
     setupOptions.update(dict(options=dict(bdist_rpm_opensuse=dict(\
         spec_file=spec_file, icon='icons.in/taskcoach.png', 
-        desktop_file='build.in/opensuse/taskcoach.desktop'))))
+        desktop_file='build.in/linux_common/taskcoach.desktop'))))
 
 elif sys.argv[1] in ['bdist_deb', 'bdist_ubuntu']:
     from distutils.core import setup

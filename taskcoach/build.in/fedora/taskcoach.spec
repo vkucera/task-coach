@@ -28,13 +28,13 @@ Group: 		Applications/Productivity
 URL: 		%(url)s
 Source:		%(dist_download_prefix)s/TaskCoach-%%{version}.tar.gz
 Source1:	taskcoach.png
-Source2:	build.in/fedora/taskcoach.desktop
+Source2:	build.in/linux_common/taskcoach.desktop
 BuildRoot: 	%%{_tmppath}/%%{name}-%%{version}-%%{release}-root-%%(%%{__id_u} -n)
 BuildArch:	noarch
 Requires: 	python >= %(pythonversion)s
 Requires:	wxPython >= %(wxpythonversionnumber)s
 # Depend on libXScrnSaver for libXss
-Requires:   libXScrnSaver >= 1.2.1
+Requires:   libXScrnSaver >= 1.2.0
 
 # Must have setuptools to build the package
 BuildRequires: python-setuptools-devel

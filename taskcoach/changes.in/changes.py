@@ -22,9 +22,25 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.33', 'Semptember ??, 2013',
+Release('1.3.34', 'October 13, 2013',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        ],
+    ),
+
+Release('1.3.33', 'October 13, 2013',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bugv2('''Fix budget entry.''', '1458'),
+        Bugv2('''The search controls would not remember the previous
+search string on launch, but the view would be filtered anyway.'''),
+        Bugv2('''Fix date picker on locales that have non-ASCII
+month/day abbreviations.''', '1463'),
+        Bugv2('''Fix position of text in subject entry on Windows.''',
+              '1464'),
+        Bugv2('''When automatic import and export to ToDo.txt is
+enabled, one could not delete tasks or change some task dates''',
+              '1446'),
         ],
     ),
 

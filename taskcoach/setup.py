@@ -79,7 +79,7 @@ if system == 'Linux':
     # Add data files for Debian-based systems:
     current_dist = [dist.lower() for dist in platform.dist()]
     if 'debian' in current_dist or 'ubuntu' in current_dist:
-        setupOptions['data_files'] = [('share/applications', ['build.in/fedora/taskcoach.desktop']), 
+        setupOptions['data_files'] = [('share/applications', ['build.in/linux_common/taskcoach.desktop']), 
                                       ('share/pixmaps', ['icons.in/taskcoach.png'])]
 elif system == 'Windows':
     setupOptions['scripts'].append('taskcoach.pyw')

@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import re, codecs
+import re, os, codecs
 from taskcoachlib.domain import task, category, date
 from taskcoachlib import patterns
 
@@ -29,19 +29,30 @@ class TodoTxtReader(object):
         self.__categoriesBySubject = self.__createSubjectCache(categoryList)
 
     def read(self, filename):
+        metaName = filename + '-meta'
+        metaLines = dict()
+        if os.path.exists(metaName):
+            todoTxtRE = self.compileTodoTxtRE()
+            keyValueRE = self.compileKeyValueRE()
+            with codecs.open(metaName, 'r', 'utf-8') as fp:
+                for line in fp:
+                    line = line.strip()
+                    subjects, priority, plannedStartDateTime, completionDateTime, dueDateTime, categories = \
+                      self.__processLine(line, todoTxtRE, keyValueRE, date.Now, None)
+                    metaLines['->'.join(subjects)] = line
         with codecs.open(filename, 'r', 'utf-8') as fp:
-            self.readFile(fp)
+            self.readFile(fp, metaLines=metaLines)
     
     @patterns.eventSource    
-    def readFile(self, fp, now=date.Now, event=None):
+    def readFile(self, fp, now=date.Now, event=None, metaLines=None):
         todoTxtRE = self.compileTodoTxtRE()
         keyValueRE = self.compileKeyValueRE()
         for line in fp:
             line = line.strip()
             if line:
-                self.processLine(line, todoTxtRE, keyValueRE, now, event)
-            
-    def processLine(self, line, todoTxtRE, keyValueRE, now, event):
+                self.processLine(line, todoTxtRE, keyValueRE, now, event, metaLines)
+
+    def __processLine(self, line, todoTxtRE, keyValueRE, now, event):
         # First, process all key:value pairs. These are additional metadata not
         # defined by the todo.txt format  at
         # https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format
@@ -54,13 +65,26 @@ class TodoTxtReader(object):
         # Now, process the "official" todo.txt format using a RE that should 
         # match the line completely.
         match = todoTxtRE.match(line)
+
         priority = self.priority(match)    
         completionDateTime = self.completionDateTime(match, now)
         plannedStartDateTime = self.plannedStartDateTime(match)
         categories = self.categories(match, event)
        
         recursiveSubject = match.group('subject')
+
         subjects = recursiveSubject.split('->')
+        return subjects, priority, plannedStartDateTime, completionDateTime, dueDateTime, categories
+
+    def processLine(self, line, todoTxtRE, keyValueRE, now, event, metaLines):
+        subjects, priority, plannedStartDateTime, completionDateTime, dueDateTime, categories = \
+          self.__processLine(line, todoTxtRE, keyValueRE, now, event)
+
+        if metaLines and metaLines.get('->'.join(subjects), None) == line:
+            # Not modified. Don't read it or we'll overwrite local changes
+            # in case we're importing just before saving...
+            return
+
         newTask = None
         for subject in subjects:
             newTask = self.findOrCreateTask(subject.strip(), newTask, event)
