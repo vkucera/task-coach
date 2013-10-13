@@ -508,7 +508,6 @@ def postRequest(connection, api_call, body, contentType, ok=200, **headers):
     if response.status != ok:
         print 'Request failed: %d %s' % (response.status, response.reason)
         return False
-    print 'XXX', response.read() # XXXTMP
     return True
 
 
@@ -597,7 +596,7 @@ def announcing_on_Identica(settings, options):
 def uploading_website(settings, options, *args):
     ''' Upload the website contents to the website(s). If args is present
         only the files specified in args are uploaded. '''
-    uploading_website_to_Dreamhost(settings, options, *args)
+    #uploading_website_to_Dreamhost(settings, options, *args)
     uploading_website_to_Hostland(settings, options, *args)
     
 
