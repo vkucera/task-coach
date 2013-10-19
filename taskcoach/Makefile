@@ -196,6 +196,7 @@ thirdpartymodules:
 	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/customtreectrl.diff
 	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/hypertreelist-headers.diff
 	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/hypertreelist.diff
+	cd taskcoachlib/thirdparty; patch -p2 < ../../thirdparty/patches/pypubsub.diff
 	$(PYTHON) fixinit.py
 
 taskcoachlib/gui/icons.py: icons.in/iconmap.py icons.in/nuvola.zip icons.in/splash.png
