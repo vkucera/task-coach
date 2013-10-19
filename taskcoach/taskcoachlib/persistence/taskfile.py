@@ -26,19 +26,50 @@ from taskcoachlib.thirdparty import lockfile
 from taskcoachlib.thirdparty.pubsub import pub
 
 
-def getTemporaryFileName(path):
-    """All functions/classes in the standard library that can generate
-    a temporary file, visible on the file system, without deleting it
-    when closed are deprecated (there is tempfile.NamedTemporaryFile
-    but its 'delete' argument is new in Python 2.6). This is not
-    secure, not thread-safe, but it works."""
+class SafeWriteFile(object):
+    def __init__(self, filename):
+        self.__filename = filename
+        if self._isDropbox():
+            # Ideally we should create a temporary file on the same filesystem (so that
+            # os.rename works) but outside the Dropbox folder...
+            self.__fd = file(self.__filename, 'w')
+        else:
+            self.__tempFilename = self._getTemporaryFileName(os.path.dirname(filename))
+            self.__fd = file(self.__tempFilename, 'w')
 
-    idx = 0
-    while True:
-        name = os.path.join(path, 'tmp-%d' % idx)
-        if not os.path.exists(name):
-            return name
-        idx += 1
+    def write(self, bf):
+        self.__fd.write(bf)
+
+    def close(self):
+        self.__fd.close()
+        if not self._isDropbox():
+            if os.path.exists(self.__filename):
+                os.remove(self.__filename)
+            if self.__filename is not None:
+                os.rename(self.__tempFilename, self.__filename)
+
+    def _getTemporaryFileName(self, path):
+        """All functions/classes in the standard library that can generate
+        a temporary file, visible on the file system, without deleting it
+        when closed are deprecated (there is tempfile.NamedTemporaryFile
+        but its 'delete' argument is new in Python 2.6). This is not
+        secure, not thread-safe, but it works."""
+
+        idx = 0
+        while True:
+            name = os.path.join(path, 'tmp-%d' % idx)
+            if not os.path.exists(name):
+                return name
+            idx += 1
+
+    def _isDropbox(self):
+        path = os.path.abspath(os.path.dirname(self.__filename))
+        while True:
+            if os.path.exists(os.path.join(path, '.dropbox.cache')):
+                return True
+            path, name = os.path.split(path)
+            if name == '':
+                return False
 
 
 class TaskFile(patterns.Observer):
@@ -268,8 +299,7 @@ class TaskFile(patterns.Observer):
         return file(self.__filename, 'rU')
 
     def _openForWrite(self):
-        name = getTemporaryFileName(os.path.split(self.__filename)[0])
-        return name, file(name, 'w')
+        return SafeWriteFile(self.__filename)
     
     def load(self, filename=None):
         pub.sendMessage('taskfile.aboutToRead', taskFile=self)
@@ -309,14 +339,12 @@ class TaskFile(patterns.Observer):
         # computer on fire), if we were writing directly to the file,
         # it's lost. So write to a temporary file and rename it if
         # everything went OK.
-        name, fd = self._openForWrite()
-        xml.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes(),
-                                self.syncMLConfig(), self.guid())
-        fd.close()
-        if os.path.exists(self.__filename):  # Not using self.exists() because DummyFile.exists returns True
-            os.remove(self.__filename)
-        if name is not None:  # Unit tests (AutoSaver)
-            os.rename(name, self.__filename)
+        fd = self._openForWrite()
+        try:
+            xml.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes(),
+                                    self.syncMLConfig(), self.guid())
+        finally:
+            fd.close()
         self.markClean()
 
     def saveas(self, filename):

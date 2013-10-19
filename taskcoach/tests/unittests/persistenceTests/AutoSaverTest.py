@@ -51,7 +51,7 @@ class DummyTaskFile(persistence.TaskFile):
         return DummyFile()
         
     def _openForWrite(self, *args, **kwargs):  # pylint: disable=W0613
-        return None, DummyFile()
+        return DummyFile()
     
     def save(self, *args, **kwargs):
         self.saveCalled += 1
