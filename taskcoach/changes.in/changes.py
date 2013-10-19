@@ -29,6 +29,7 @@ Release('1.3.34', 'October 13, 2013',
               '1456'),
         Bugv2('''Fix some problems when saving the task file to
 a Dropbox folder.'''),
+        Bugv2('''Performance improvement when reading the task file.'''),
         ],
     ),
 

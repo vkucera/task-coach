@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from .. import sessiontempfile  # pylint: disable=F0401
-from taskcoachlib import meta
+from taskcoachlib import meta, patterns
 from taskcoachlib.domain import base, date, effort, task, category, categorizable, note, attachment
 from taskcoachlib.i18n import translate
 from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
@@ -195,13 +195,15 @@ class XMLReader(object):
         for theNote in notes:
             mapCategorizables(theNote, categorizableMap, categoryMap)
 
+        event = patterns.Event()
         for categoryId, categorizableIds in self.__categorizables.items():
             theCategory = categoryMap[categoryId]
             for categorizableId in categorizableIds:
                 if categorizableMap.has_key(categorizableId):
                     theCategorizable = categorizableMap[categorizableId]
                     theCategory.addCategorizable(theCategorizable)
-                    theCategorizable.addCategory(theCategory)
+                    theCategorizable.addCategory(theCategory, event=event)
+        event.send()
 
     def __parse_category_nodes(self, node):
         return [self.__parse_category_node(child) \
