@@ -25,6 +25,8 @@ releases = [
 Release('1.3.34', 'October 13, 2013',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bugv2('''Silence the AttributeError problem in PyPubSub.''',
+              '1456'),
         Bugv2('''Fix some problems when saving the task file to
 a Dropbox folder.'''),
         ],
