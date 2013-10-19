@@ -66,6 +66,8 @@ class MainWindowTestCase(test.wxTestCase):
             self.mainwindow.OnQuit() # Stop power monitoring thread
         # Also stop idle time thread
         self.mainwindow._idleController.stop()
+        self.mainwindow.Destroy()
+        wx.Yield()
         del self.mainwindow
         super(MainWindowTestCase, self).tearDown()
         
