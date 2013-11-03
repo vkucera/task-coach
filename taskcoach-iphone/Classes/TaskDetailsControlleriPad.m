@@ -81,6 +81,9 @@
 	[taskEffortCtrl updateButton:effortButton];
 
 	self.prioritySlider.value = (float)[task.priority intValue];
+    
+    if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
+        self.edgesForExtendedLayout = UIRectEdgeNone;
 }
 
 - (void)viewDidUnload
