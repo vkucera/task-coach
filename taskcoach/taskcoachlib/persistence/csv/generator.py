@@ -37,7 +37,8 @@ class RowBuilder(object):
                                     dueDateTime=[_('Due date'), _('Due time')],
                                     completionDateTime=[_('Completion date'), _('Completion time')],
                                     reminder=[_('Reminder date'), _('Reminder time')],
-                                    creationDateTime=[_('Creation date'), _('Creation time')])
+                                    creationDateTime=[_('Creation date'), _('Creation time')],
+                                    period=[_('Period start date'), _('Period start time'), _('Period end date'), _('Period end time')])
     
     def __init__(self, columns, isTree, separateDateAndTimeColumns):
         self.__columns = columns
@@ -81,12 +82,15 @@ class RowBuilder(object):
         return self.__separateDateAndTimeColumns and column.name() in self.dateAndTimeColumnHeaders
     
     def splitDateAndTime(self, column, item):
-        dateTime = getattr(item, column.name())()
+        if column.name() == 'period':
+            return self.__splitDateAndTime(item.getStart()) + self.__splitDateAndTime(item.getStop())
+        return self.__splitDateAndTime(getattr(item, column.name())())
+
+    def __splitDateAndTime(self, dateTime):
         if dateTime == date.DateTime():
             return '', ''
-        else:
-            return render.date(dateTime), render.time(dateTime)
-        
+        return render.date(dateTime), render.time(dateTime)
+
     def itemRows(self, items):
         return [self.itemRow(item) for item in items]
     

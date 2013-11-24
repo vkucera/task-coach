@@ -30,6 +30,8 @@ Release('1.3.34', 'October 13, 2013',
         Bugv2('''Fix some problems when saving the task file to
 a Dropbox folder.'''),
         Bugv2('''Performance improvement when reading the task file.'''),
+        Bugv2('''Split date and time when exporting efforts to
+CSV.''', '1472'),
         ],
     ),
 

@@ -340,7 +340,10 @@ class EffortWriterTest(CSVWriterTestCase):
                          columns=self.viewer.selectableColumns())
 
     def testExportAllColumns_Split(self):
-        self.expectInCSV(render.dateTimePeriod(self.effort.getStart(), self.effort.getStop()),
+        self.expectInCSV('%s,%s,%s,%s' % (render.date(self.effort.getStart().date()),
+                                          render.time(self.effort.getStart().time()),
+                                          render.date(self.effort.getStop().date()),
+                                          render.time(self.effort.getStop().time())),
                          separateDateAndTimeColumns=True,
                          columns=self.viewer.selectableColumns())
 
