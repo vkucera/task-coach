@@ -123,7 +123,7 @@ class Settings(ConfigParser.SafeConfigParser, object):
                                  'oauth_token', 'oauth_token_secret'],
                         identica=['username', 'password'],
                         freecode=['auth_code'],
-                        buildbot=['username', 'password'])
+                        buildbot=['username', 'password', 'host'])
         for section in defaults:
             self.add_section(section)
             for option in defaults[section]:
@@ -242,12 +242,13 @@ def rsync(settings, options, rsync_command):
 
 @progress
 def building_packages(settings, options):
+    host = settings.get('buildbot', 'host')
     metadata = taskcoachlib.meta.data.metaDict
     branch = 'branches/Release%s_Branch' % '_'.join(metadata['version'].split('.')[:2])
     if options.dry_run:
         print 'Skipping force build on branch "%s"' % branch
     else:
-        status = json.load(urllib.urlopen('http://www.fraca7.net:8010/json/builders/Release'))
+        status = json.load(urllib.urlopen('http://%s:8010/json/builders/Release' % host))
         if status['state'] != 'idle':
             raise RuntimeError('Builder Release is not idle.')
 
@@ -255,10 +256,10 @@ def building_packages(settings, options):
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
         for i in xrange(3): # Retry in case of 500
             try:
-                opener.open('http://www.fraca7.net:8010/login',
+                opener.open('http://%s:8010/login' % host,
                             urllib.urlencode([('username', settings.get('buildbot', 'username')),
                                               ('passwd', settings.get('buildbot', 'password'))]))
-                opener.open('http://www.fraca7.net:8010/builders/Release/force',
+                opener.open('http://%s:8010/builders/Release/force' % host,
                             urllib.urlencode([('forcescheduler', 'Force'),
                                               ('branch', branch),
                                               ('username', 'release'),
@@ -279,7 +280,7 @@ def building_packages(settings, options):
 
     while True:
         time.sleep(60)
-        status = json.load(urllib.urlopen('http://www.fraca7.net:8010/json/builders/Release'))
+        status = json.load(urllib.urlopen('http://%s:8010/json/builders/Release' % host))
         if status['state'] == 'idle':
             break
 
@@ -288,7 +289,7 @@ def building_packages(settings, options):
         print 'Downloading release.zip'
 
     buildno = status['cachedBuilds'][-1]
-    status = json.load(urllib.urlopen('http://www.fraca7.net:8010/json/builders/Release/builds/%d' % buildno))
+    status = json.load(urllib.urlopen('http://%s:8010/json/builders/Release/builds/%d' % (host, buildno)))
     try:
         zipurl = status['steps'][-1]['urls']['Download release']
     except:
