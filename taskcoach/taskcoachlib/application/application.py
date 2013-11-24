@@ -30,6 +30,7 @@ import time
 import wx
 import calendar
 import re
+import threading
 
 
 class RedirectedOutput(object):
@@ -256,7 +257,18 @@ class Application(object):
                                           value)
         
     def __register_signal_handlers(self):
-        quit_adapter = lambda *args: self.quitApplication()
+        def quit_adapter(*args):
+            # The handler is called from something that is not the main thread, so we can't do
+            # much wx-related
+            event = threading.Event()
+            def quit():
+                try:
+                    self.quitApplication()
+                finally:
+                    event.set()
+            wx.CallAfter(quit)
+            event.wait()
+            return True
         if operating_system.isWindows():
             import win32api  # pylint: disable=F0401
             win32api.SetConsoleCtrlHandler(quit_adapter, True)
