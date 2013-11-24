@@ -475,13 +475,13 @@ class TaskFile(patterns.Observer):
                 self.__changes = {self.__monitor.guid(): self.__monitor}
 
             self.__monitor.resetAllChanges()
-            name, fd = self._openForWrite()
-            xml.ChangesXMLWriter(fd).write(self.changes())
-            fd.close()
+            fd = self._openForWrite()
+            try:
+                xml.ChangesXMLWriter(fd).write(self.changes())
+            finally:
+                fd.close()
             if os.path.exists(self.__filename + '.delta'):
                 os.remove(self.__filename + '.delta')
-            if name is not None: # Unit tests (AutoSaver)
-                os.rename(name, self.__filename + '.delta')
 
             self.__changedOnDisk = False
         finally:
