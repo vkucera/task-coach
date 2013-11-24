@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TaskCoach\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-28 19:21+0000\n"
-"PO-Revision-Date: 2013-08-28 17:33+0000\n"
-"Last-Translator: Jérôme Laheurte <fraca7@free.fr>\n"
+"POT-Creation-Date: 2013-10-19 12:12+0000\n"
+"PO-Revision-Date: 2013-11-23 22:17+0000\n"
+"Last-Translator: Emmanuel Simond <emanwebdev@gmail.com>\n"
 "Language-Team: Français <fraca7@free.fr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-13 11:52+0000\n"
-"X-Generator: Launchpad (build 16799)\n"
+"X-Launchpad-Export-Date: 2013-11-24 12:28+0000\n"
+"X-Generator: Launchpad (build 16831)\n"
 "X-Poedit-Country: France\n"
 "X-Poedit-Language: fr_FR\n"
 "Generated-By: pygettext.py 1.5\n"
@@ -80,7 +80,7 @@ msgstr "Supprimer la pièce jointe"
 
 #: taskcoachlib/command/attachmentCommands.py:95
 msgid "Remove attachment to \"%s\""
-msgstr "Supprimer la pièce jointe \"%s\""
+msgstr "Supprimer la pièce jointe à \"%s\""
 
 #: taskcoachlib/command/base.py:192
 msgid "Copy"
@@ -275,7 +275,7 @@ msgstr "Nouvelles sous-notes"
 
 #: taskcoachlib/command/noteCommands.py:41
 msgid "New subnote of \"%s\""
-msgstr "Nouvelle sous-node de \"%s\""
+msgstr "Nouvelle sous-note de \"%s\""
 
 #: taskcoachlib/command/noteCommands.py:44
 #: taskcoachlib/command/noteCommands.py:118
@@ -304,7 +304,7 @@ msgstr "Ajouter une note"
 
 #: taskcoachlib/command/noteCommands.py:67
 msgid "Add note to \"%s\""
-msgstr "Ajouter un commentaire à \"%s\""
+msgstr "Ajouter une note à \"%s\""
 
 #: taskcoachlib/command/noteCommands.py:110
 msgid "Add subnote"
@@ -353,7 +353,7 @@ msgstr "Nouvelle sous-tâche"
 
 #: taskcoachlib/command/taskCommands.py:229
 msgid "Mark tasks completed"
-msgstr "Marquer la tâche comme faite"
+msgstr "Marquer la tâche comme terminée"
 
 #: taskcoachlib/command/taskCommands.py:230
 msgid "Mark \"%s\" completed"
@@ -385,7 +385,7 @@ msgstr "Démarrer le suivi de \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:341
 msgid "Stop tracking"
-msgstr "Arrêter le suivi"
+msgstr "Stopper le suivi"
 
 #: taskcoachlib/command/taskCommands.py:342
 msgid "Stop tracking \"%s\""
@@ -437,11 +437,11 @@ msgstr "Ajouter la note aux tâches"
 
 #: taskcoachlib/command/taskCommands.py:543
 msgid "Change planned start date"
-msgstr "Modifier la date de début prévu"
+msgstr "Modifier la date de début prévue"
 
 #: taskcoachlib/command/taskCommands.py:544
 msgid "Change planned start date of \"%s\""
-msgstr "Modifier la date de début prévu de \"%s\""
+msgstr "Modifier la date de début prévue de \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:564
 msgid "Change due date"
@@ -465,7 +465,7 @@ msgstr "Modifier la date de fin"
 
 #: taskcoachlib/command/taskCommands.py:607
 msgid "Change completion date of \"%s\""
-msgstr "Modifier la date d'achèvement de \"%s\""
+msgstr "Modifier la date de complétion de \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:630
 msgid "Change reminder dates/times"
@@ -1157,8 +1157,8 @@ msgstr "Message de la part des développeurs de %s"
 msgid "See:"
 msgstr "Voir:"
 
-#: taskcoachlib/gui/dialog/editor.py:93 taskcoachlib/gui/dialog/editor.py:147
-#: taskcoachlib/gui/dialog/editor.py:1276
+#: taskcoachlib/gui/dialog/editor.py:95 taskcoachlib/gui/dialog/editor.py:149
+#: taskcoachlib/gui/dialog/editor.py:1278
 #: taskcoachlib/gui/viewer/attachment.py:89
 #: taskcoachlib/gui/viewer/category.py:90
 #: taskcoachlib/gui/viewer/effort.py:203 taskcoachlib/gui/viewer/note.py:114
@@ -1168,11 +1168,11 @@ msgstr "Voir:"
 msgid "Description"
 msgstr "Description"
 
-#: taskcoachlib/gui/dialog/editor.py:120
+#: taskcoachlib/gui/dialog/editor.py:122
 msgid "Edit to change all subjects"
 msgstr "Editer pour modifier tous les sujets"
 
-#: taskcoachlib/gui/dialog/editor.py:126
+#: taskcoachlib/gui/dialog/editor.py:128
 #: taskcoachlib/gui/dialog/templates.py:109
 #: taskcoachlib/gui/viewer/attachment.py:79
 #: taskcoachlib/gui/viewer/base.py:336 taskcoachlib/gui/viewer/category.py:82
@@ -1182,12 +1182,12 @@ msgstr "Editer pour modifier tous les sujets"
 msgid "Subject"
 msgstr "Sujet"
 
-#: taskcoachlib/gui/dialog/editor.py:131
-#: taskcoachlib/gui/dialog/editor.py:1262
+#: taskcoachlib/gui/dialog/editor.py:133
+#: taskcoachlib/gui/dialog/editor.py:1264
 msgid "Edit to change all descriptions"
 msgstr "Editer pour changer toutes les descriptions"
 
-#: taskcoachlib/gui/dialog/editor.py:158
+#: taskcoachlib/gui/dialog/editor.py:160
 #: taskcoachlib/gui/viewer/attachment.py:109
 #: taskcoachlib/gui/viewer/category.py:113 taskcoachlib/gui/viewer/note.py:143
 #: taskcoachlib/gui/viewer/task.py:978
@@ -1195,14 +1195,14 @@ msgstr "Editer pour changer toutes les descriptions"
 msgid "Creation date"
 msgstr "Date de création"
 
-#: taskcoachlib/gui/dialog/editor.py:163
+#: taskcoachlib/gui/dialog/editor.py:165
 #: taskcoachlib/gui/viewer/attachment.py:117
 #: taskcoachlib/gui/viewer/category.py:119 taskcoachlib/gui/viewer/note.py:150
 #: taskcoachlib/gui/viewer/task.py:985
 msgid "Modification date"
 msgstr "Date de modification"
 
-#: taskcoachlib/gui/dialog/editor.py:225
+#: taskcoachlib/gui/dialog/editor.py:227
 #: taskcoachlib/gui/uicommand/uicommand.py:2322
 #: taskcoachlib/gui/viewer/task.py:946
 #: taskcoachlib/gui/wizard/csvimport.py:232
@@ -1210,64 +1210,64 @@ msgstr "Date de modification"
 msgid "Priority"
 msgstr "Priorité"
 
-#: taskcoachlib/gui/dialog/editor.py:247
+#: taskcoachlib/gui/dialog/editor.py:249
 msgid "Mutually exclusive"
 msgstr "Mutuellement exclusives"
 
-#: taskcoachlib/gui/dialog/editor.py:254
+#: taskcoachlib/gui/dialog/editor.py:256
 msgid "Subcategories"
 msgstr "Sous-catégories"
 
-#: taskcoachlib/gui/dialog/editor.py:272
+#: taskcoachlib/gui/dialog/editor.py:274
 msgid "Edit to change location of all attachments"
 msgstr "Editer pour modifier l'emplacement de toutes les pièces jointes"
 
-#: taskcoachlib/gui/dialog/editor.py:280
+#: taskcoachlib/gui/dialog/editor.py:282
 msgid "Browse"
 msgstr "Parcourir"
 
-#: taskcoachlib/gui/dialog/editor.py:284
+#: taskcoachlib/gui/dialog/editor.py:286
 msgid "Location"
 msgstr "Emplacement"
 
-#: taskcoachlib/gui/dialog/editor.py:306
+#: taskcoachlib/gui/dialog/editor.py:308
 msgid "Appearance"
 msgstr "Apparence"
 
-#: taskcoachlib/gui/dialog/editor.py:316
+#: taskcoachlib/gui/dialog/editor.py:318
 #: taskcoachlib/gui/dialog/preferences.py:153
 msgid "Foreground color"
 msgstr "Couleur d'avant plan"
 
-#: taskcoachlib/gui/dialog/editor.py:317
+#: taskcoachlib/gui/dialog/editor.py:319
 #: taskcoachlib/gui/dialog/preferences.py:153
 msgid "Background color"
 msgstr "Couleur d'arrière plan"
 
-#: taskcoachlib/gui/dialog/editor.py:343
+#: taskcoachlib/gui/dialog/editor.py:345
 #: taskcoachlib/gui/dialog/preferences.py:154
 msgid "Font"
 msgstr "Police de caractères"
 
-#: taskcoachlib/gui/dialog/editor.py:352
+#: taskcoachlib/gui/dialog/editor.py:354
 #: taskcoachlib/gui/dialog/preferences.py:154
 msgid "Icon"
 msgstr "Icône"
 
-#: taskcoachlib/gui/dialog/editor.py:360
+#: taskcoachlib/gui/dialog/editor.py:362
 msgid "Dates"
 msgstr "Dates"
 
-#: taskcoachlib/gui/dialog/editor.py:387
+#: taskcoachlib/gui/dialog/editor.py:389
 #: taskcoachlib/gui/dialog/templates.py:112
 #: taskcoachlib/gui/viewer/task.py:903
 #: taskcoachlib/gui/wizard/csvimport.py:233
 #: taskcoachlib/persistence/csv/generator.py:36
 #: taskcoachlib/persistence/csv/reader.py:96
 msgid "Planned start date"
-msgstr "Date de début prévu"
+msgstr "Date de début prévue"
 
-#: taskcoachlib/gui/dialog/editor.py:388
+#: taskcoachlib/gui/dialog/editor.py:390
 #: taskcoachlib/gui/dialog/templates.py:115
 #: taskcoachlib/gui/viewer/task.py:905
 #: taskcoachlib/gui/wizard/csvimport.py:234
@@ -1276,14 +1276,14 @@ msgstr "Date de début prévu"
 msgid "Due date"
 msgstr "Date d'échéance"
 
-#: taskcoachlib/gui/dialog/editor.py:390 taskcoachlib/gui/viewer/task.py:907
+#: taskcoachlib/gui/dialog/editor.py:392 taskcoachlib/gui/viewer/task.py:907
 #: taskcoachlib/gui/wizard/csvimport.py:235
 #: taskcoachlib/persistence/csv/generator.py:35
 #: taskcoachlib/persistence/csv/reader.py:94
 msgid "Actual start date"
 msgstr "Date de début effective"
 
-#: taskcoachlib/gui/dialog/editor.py:391
+#: taskcoachlib/gui/dialog/editor.py:393
 #: taskcoachlib/gui/dialog/templates.py:118
 #: taskcoachlib/gui/viewer/task.py:910
 #: taskcoachlib/gui/wizard/csvimport.py:236
@@ -1292,42 +1292,42 @@ msgstr "Date de début effective"
 msgid "Completion date"
 msgstr "Date d'achèvement"
 
-#: taskcoachlib/gui/dialog/editor.py:435
+#: taskcoachlib/gui/dialog/editor.py:437
 #: taskcoachlib/gui/dialog/reminder.py:105
 #: taskcoachlib/gui/dialog/templates.py:121
 #: taskcoachlib/gui/viewer/task.py:968
 msgid "Reminder"
 msgstr "Rappel"
 
-#: taskcoachlib/gui/dialog/editor.py:446 taskcoachlib/gui/viewer/task.py:934
+#: taskcoachlib/gui/dialog/editor.py:448 taskcoachlib/gui/viewer/task.py:934
 msgid "Recurrence"
 msgstr "Récurrence"
 
-#: taskcoachlib/gui/dialog/editor.py:462
+#: taskcoachlib/gui/dialog/editor.py:464
 msgid "Progress"
 msgstr "Etat d'avancement"
 
-#: taskcoachlib/gui/dialog/editor.py:479
+#: taskcoachlib/gui/dialog/editor.py:481
 msgid "Percentage complete"
 msgstr "Pourcentage terminé"
 
-#: taskcoachlib/gui/dialog/editor.py:488
+#: taskcoachlib/gui/dialog/editor.py:490
 msgid "Use application-wide setting"
 msgstr "Utiliser la configuration globale de l'application"
 
-#: taskcoachlib/gui/dialog/editor.py:489
+#: taskcoachlib/gui/dialog/editor.py:491
 msgid "No"
 msgstr "Non"
 
-#: taskcoachlib/gui/dialog/editor.py:489
+#: taskcoachlib/gui/dialog/editor.py:491
 msgid "Yes"
 msgstr "Oui"
 
-#: taskcoachlib/gui/dialog/editor.py:499
+#: taskcoachlib/gui/dialog/editor.py:501
 msgid "Mark task completed when all children are completed?"
 msgstr "Marquer la tâche terminée lorsque toutes les filles sont terminées?"
 
-#: taskcoachlib/gui/dialog/editor.py:509 taskcoachlib/gui/dialog/editor.py:535
+#: taskcoachlib/gui/dialog/editor.py:511 taskcoachlib/gui/dialog/editor.py:537
 #: taskcoachlib/gui/uicommand/uicommand.py:2321
 #: taskcoachlib/gui/viewer/task.py:937
 #: taskcoachlib/gui/wizard/csvimport.py:238
@@ -1335,23 +1335,23 @@ msgstr "Marquer la tâche terminée lorsque toutes les filles sont terminées?"
 msgid "Budget"
 msgstr "Budget"
 
-#: taskcoachlib/gui/dialog/editor.py:543
+#: taskcoachlib/gui/dialog/editor.py:545
 #: taskcoachlib/gui/uicommand/uicommand.py:2321
 #: taskcoachlib/gui/viewer/effort.py:214 taskcoachlib/gui/viewer/task.py:940
 msgid "Time spent"
 msgstr "Temps écoulé"
 
-#: taskcoachlib/gui/dialog/editor.py:560 taskcoachlib/gui/viewer/task.py:943
+#: taskcoachlib/gui/dialog/editor.py:562 taskcoachlib/gui/viewer/task.py:943
 msgid "Budget left"
 msgstr "Budget restant"
 
-#: taskcoachlib/gui/dialog/editor.py:585 taskcoachlib/gui/viewer/task.py:949
+#: taskcoachlib/gui/dialog/editor.py:587 taskcoachlib/gui/viewer/task.py:949
 #: taskcoachlib/gui/wizard/csvimport.py:240
 #: taskcoachlib/persistence/csv/reader.py:123
 msgid "Hourly fee"
 msgstr "Montant horaire"
 
-#: taskcoachlib/gui/dialog/editor.py:595
+#: taskcoachlib/gui/dialog/editor.py:597
 #: taskcoachlib/gui/uicommand/uicommand.py:2321
 #: taskcoachlib/gui/viewer/task.py:951
 #: taskcoachlib/gui/wizard/csvimport.py:239
@@ -1359,18 +1359,18 @@ msgstr "Montant horaire"
 msgid "Fixed fee"
 msgstr "Montant fixe"
 
-#: taskcoachlib/gui/dialog/editor.py:601
+#: taskcoachlib/gui/dialog/editor.py:603
 #: taskcoachlib/gui/uicommand/uicommand.py:2321
 #: taskcoachlib/gui/viewer/effort.py:219 taskcoachlib/gui/viewer/task.py:954
 msgid "Revenue"
 msgstr "Revenu"
 
-#: taskcoachlib/gui/dialog/editor.py:680 taskcoachlib/gui/viewer/effort.py:39
+#: taskcoachlib/gui/dialog/editor.py:682 taskcoachlib/gui/viewer/effort.py:39
 #: taskcoachlib/help/__init__.py:89 taskcoachlib/help/__init__.py:245
 msgid "Effort"
 msgstr "Effort"
 
-#: taskcoachlib/gui/dialog/editor.py:720
+#: taskcoachlib/gui/dialog/editor.py:722
 #: taskcoachlib/gui/viewer/category.py:40
 #: taskcoachlib/gui/viewer/effort.py:206 taskcoachlib/gui/viewer/note.py:131
 #: taskcoachlib/gui/viewer/task.py:878 taskcoachlib/help/__init__.py:94
@@ -1378,109 +1378,109 @@ msgstr "Effort"
 msgid "Categories"
 msgstr "Catégories"
 
-#: taskcoachlib/gui/dialog/editor.py:762 taskcoachlib/gui/viewer/task.py:862
+#: taskcoachlib/gui/dialog/editor.py:764 taskcoachlib/gui/viewer/task.py:862
 msgid "Attachments"
 msgstr "Pièces jointes"
 
-#: taskcoachlib/gui/dialog/editor.py:804 taskcoachlib/gui/viewer/note.py:39
+#: taskcoachlib/gui/dialog/editor.py:806 taskcoachlib/gui/viewer/note.py:39
 #: taskcoachlib/gui/viewer/task.py:870 taskcoachlib/help/__init__.py:99
 #: taskcoachlib/help/__init__.py:306
 msgid "Notes"
 msgstr "Notes"
 
-#: taskcoachlib/gui/dialog/editor.py:848 taskcoachlib/gui/viewer/task.py:887
+#: taskcoachlib/gui/dialog/editor.py:850 taskcoachlib/gui/viewer/task.py:887
 msgid "Prerequisites"
 msgstr "Prérequis"
 
-#: taskcoachlib/gui/dialog/editor.py:1139
+#: taskcoachlib/gui/dialog/editor.py:1141
 msgid "Edit task"
 msgstr "Editer la tâche"
 
-#: taskcoachlib/gui/dialog/editor.py:1148
+#: taskcoachlib/gui/dialog/editor.py:1150
 #: taskcoachlib/gui/dialog/reminder.py:50
 #: taskcoachlib/gui/viewer/effort.py:201
 msgid "Task"
 msgstr "Tâche"
 
-#: taskcoachlib/gui/dialog/editor.py:1174
+#: taskcoachlib/gui/dialog/editor.py:1176
 msgid "Start"
 msgstr "Démarrer"
 
-#: taskcoachlib/gui/dialog/editor.py:1180
+#: taskcoachlib/gui/dialog/editor.py:1182
 #: taskcoachlib/thirdparty/smartdatetimectrl.py:1626
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Week(s)"
 msgstr "Semaine(s)"
 
-#: taskcoachlib/gui/dialog/editor.py:1180
+#: taskcoachlib/gui/dialog/editor.py:1182
 #: taskcoachlib/thirdparty/smartdatetimectrl.py:1627
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Day(s)"
 msgstr "Jour(s)"
 
-#: taskcoachlib/gui/dialog/editor.py:1180
+#: taskcoachlib/gui/dialog/editor.py:1182
 #: taskcoachlib/thirdparty/smartdatetimectrl.py:1628
 msgid "Hour(s)"
 msgstr "Heure(s)"
 
-#: taskcoachlib/gui/dialog/editor.py:1180
+#: taskcoachlib/gui/dialog/editor.py:1182
 #: taskcoachlib/thirdparty/smartdatetimectrl.py:1629
 msgid "Minute(s)"
 msgstr "Minute(s)"
 
-#: taskcoachlib/gui/dialog/editor.py:1190
+#: taskcoachlib/gui/dialog/editor.py:1192
 msgid "Stop"
 msgstr "Arrêter"
 
-#: taskcoachlib/gui/dialog/editor.py:1199
+#: taskcoachlib/gui/dialog/editor.py:1201
 msgid "Start tracking from last stop time"
 msgstr "Démarrer le suivi depuis la dernière date d'arrêt"
 
-#: taskcoachlib/gui/dialog/editor.py:1206
+#: taskcoachlib/gui/dialog/editor.py:1208
 msgid "Stop tracking now"
 msgstr "Stopper le suivi maintenant"
 
-#: taskcoachlib/gui/dialog/editor.py:1242
+#: taskcoachlib/gui/dialog/editor.py:1244
 msgid "Warning: start must be earlier than stop"
 msgstr "Attention : Le départ doit être plus tôt que l'arrêt"
 
-#: taskcoachlib/gui/dialog/editor.py:1423
+#: taskcoachlib/gui/dialog/editor.py:1425
 msgid "Multiple tasks"
 msgstr "Tâches multiples"
 
-#: taskcoachlib/gui/dialog/editor.py:1424
+#: taskcoachlib/gui/dialog/editor.py:1426
 msgid "%s (task)"
 msgstr "%s (tâche)"
 
-#: taskcoachlib/gui/dialog/editor.py:1429
+#: taskcoachlib/gui/dialog/editor.py:1431
 msgid "Multiple categories"
 msgstr "Catégories multiples"
 
-#: taskcoachlib/gui/dialog/editor.py:1430
+#: taskcoachlib/gui/dialog/editor.py:1432
 msgid "%s (category)"
 msgstr "%s (catégorie)"
 
-#: taskcoachlib/gui/dialog/editor.py:1435
+#: taskcoachlib/gui/dialog/editor.py:1437
 msgid "Multiple notes"
 msgstr "Notes multiples"
 
-#: taskcoachlib/gui/dialog/editor.py:1436
+#: taskcoachlib/gui/dialog/editor.py:1438
 msgid "%s (note)"
 msgstr "%s (note)"
 
-#: taskcoachlib/gui/dialog/editor.py:1441
+#: taskcoachlib/gui/dialog/editor.py:1443
 msgid "Multiple attachments"
 msgstr "Pièces jointes multiples"
 
-#: taskcoachlib/gui/dialog/editor.py:1442
+#: taskcoachlib/gui/dialog/editor.py:1444
 msgid "%s (attachment)"
 msgstr "%s (pièce jointe)"
 
-#: taskcoachlib/gui/dialog/editor.py:1447
+#: taskcoachlib/gui/dialog/editor.py:1449
 msgid "Multiple efforts"
 msgstr "Efforts multiples"
 
-#: taskcoachlib/gui/dialog/editor.py:1448
+#: taskcoachlib/gui/dialog/editor.py:1450
 msgid "%s (effort)"
 msgstr "%s (effort)"
 
@@ -1595,15 +1595,15 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/export.py:238 taskcoachlib/gui/iocontroller.py:321
 msgid "Export as CSV"
-msgstr "Exporter vers CSV"
+msgstr "Exporter en CSV"
 
 #: taskcoachlib/gui/dialog/export.py:259 taskcoachlib/gui/iocontroller.py:328
 msgid "Export as iCalendar"
-msgstr "Exporter vers iCalendar"
+msgstr "Exporter au format iCalendar"
 
 #: taskcoachlib/gui/dialog/export.py:275 taskcoachlib/gui/iocontroller.py:314
 msgid "Export as HTML"
-msgstr "Exporter vers HTML"
+msgstr "Exporter en HTML"
 
 #: taskcoachlib/gui/dialog/export.py:291 taskcoachlib/gui/iocontroller.py:334
 msgid "Export as Todo.txt"
@@ -1851,7 +1851,7 @@ msgstr "Langue non trouvée?"
 
 #: taskcoachlib/gui/dialog/preferences.py:500
 msgid "Task appearance"
-msgstr "Apparance de la tâche"
+msgstr "Apparence de la tâche"
 
 #: taskcoachlib/gui/dialog/preferences.py:513
 msgid ""
@@ -1939,7 +1939,7 @@ msgstr ""
 "Dans les menus contextuels pour la sélection du temps (par exemple\n"
 "pour régler le début d'un effort) %(name)s suggèrera des temps en\n"
 "utilisant ce réglage. Plus celui-ci est petit, plus il y aura de "
-"siggestions.\n"
+"suggestions.\n"
 "Bien entendu, vous pouvez aussi entrer un temps arbitraire."
 
 #: taskcoachlib/gui/dialog/preferences.py:564
@@ -1974,11 +1974,11 @@ msgstr "Rien"
 
 #: taskcoachlib/gui/dialog/preferences.py:592
 msgid "Changing the planned start date changes the due date"
-msgstr "Modifier la date de début prévu modifiera la date d'échéance"
+msgstr "Modifier la date de début prévue modifiera la date d'échéance"
 
 #: taskcoachlib/gui/dialog/preferences.py:594
 msgid "Changing the due date changes the planned start date"
-msgstr "Modifier la date dûe modifiera la date de début prévu"
+msgstr "Modifier la date d'échéance modifiera la date de début prévue"
 
 #: taskcoachlib/gui/dialog/preferences.py:596
 msgid ""
@@ -2031,7 +2031,7 @@ msgstr "Fin du jour de travail"
 
 #: taskcoachlib/gui/dialog/preferences.py:612
 msgid "Default planned start date and time"
-msgstr "Date et heure de début prévu par défaut"
+msgstr "Date et heure de début prévues par défaut"
 
 #: taskcoachlib/gui/dialog/preferences.py:615
 msgid "Default due date and time"
@@ -2139,14 +2139,14 @@ msgstr "OS X"
 
 #: taskcoachlib/gui/dialog/preferences.py:721
 msgid "Get e-mail subject from Mail.app"
-msgstr "Récupérer le sujet du courriel auprès de Mail.app"
+msgstr "Récupérer le sujet des Emails depuis Mail.app"
 
 #: taskcoachlib/gui/dialog/preferences.py:722
 msgid ""
 "When dropping an e-mail from Mail.app, try to get its subject.\n"
 "This takes up to 20 seconds."
 msgstr ""
-"Lorsqu'un courriel est déposé depuis Mail.app, essayer de récupérer\n"
+"Lorsqu'un Email est déposé depuis Mail.app, essayer de récupérer\n"
 "son sujet. Ceci peut prendre jusqu'à 20 secondes."
 
 #: taskcoachlib/gui/dialog/preferences.py:728
@@ -2334,7 +2334,7 @@ msgstr "%(name)s est à jour"
 
 #: taskcoachlib/gui/dialog/version.py:81
 msgid "%(name)s is up to date at version %(version)s."
-msgstr "%(name)s est à jour en version %(version)s"
+msgstr "%(name)s est à jour avec cette version %(version)s"
 
 #: taskcoachlib/gui/dialog/version.py:86
 msgid "Couldn't find out latest version"
@@ -2489,18 +2489,18 @@ msgstr ""
 
 #: taskcoachlib/gui/iocontroller.py:263
 msgid "Import template"
-msgstr "Importer un patron"
+msgstr "Importer un modèle"
 
 #: taskcoachlib/gui/iocontroller.py:265
 msgid "%s template files (*.tsktmpl)|*.tsktmpl"
-msgstr "Fichier de patron %s (*.tsktmpl)|*.tsktmpl"
+msgstr "Fichier de modèle %s (*.tsktmpl)|*.tsktmpl"
 
 #: taskcoachlib/gui/iocontroller.py:272
 msgid ""
 "Cannot import template %s\n"
 "%s"
 msgstr ""
-"Impossible d'importer le patron %s\n"
+"Impossible d'importer le modèle %s\n"
 "%s"
 
 #: taskcoachlib/gui/iocontroller.py:303
@@ -2850,7 +2850,7 @@ msgstr "Afficher de grandes images (32x32) dans la barre d'outils"
 #: taskcoachlib/gui/menu.py:553 taskcoachlib/gui/menu.py:656
 #: taskcoachlib/gui/uicommand/uicommand.py:1218
 msgid "New task from &template"
-msgstr "Nouvelle tâche depuis un &patron"
+msgstr "Nouvelle tâche depuis un &modèle"
 
 #: taskcoachlib/gui/menu.py:594 taskcoachlib/gui/menu.py:806
 #: taskcoachlib/gui/menu.py:910
@@ -2950,19 +2950,19 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:172
 msgid "Save selected task as &template"
-msgstr "Sauvegarder la tâche sélectionnée en tant que &patron"
+msgstr "Sauvegarder la tâche sélectionnée en tant que &modèle"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:173
 msgid "Save the selected task as a task template"
-msgstr "Sauvegarde la tâche sélectionnée comme patron de tâche"
+msgstr "Sauvegarder la tâche sélectionnée comme modèle de tâche"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:183
 msgid "&Import template..."
-msgstr "&Importer un patron..."
+msgstr "&Importer un modèle..."
 
 #: taskcoachlib/gui/uicommand/uicommand.py:184
 msgid "Import a new template from a template file"
-msgstr "Importer un nouveau patron depuis un fichier"
+msgstr "Importer un nouveau modèle depuis un fichier"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:195
 msgid "Edit templates..."
@@ -3273,7 +3273,7 @@ msgstr "Supprimer les objets sélectionnés"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1221
 msgid "Create a new task from a template"
-msgstr "Créer une nouvelle tâche à partir d'un patron"
+msgstr "Créer une nouvelle tâche à partir d'un modèle"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1227
 msgid "New task with selected &categories..."
@@ -3367,7 +3367,7 @@ msgstr "Permuter %s"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1471
 msgid "&Mail...\tCtrl-M"
-msgstr "&Courriel...\tCtrl-M"
+msgstr "&Email...\tCtrl-M"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1471
 msgid "&Mail...\tShift-Ctrl-M"
@@ -3386,12 +3386,12 @@ msgid ""
 "Cannot send email:\n"
 "%s"
 msgstr ""
-"Impossible d'envoyer le courriel:\n"
+"Impossible d'envoyer l'Email:\n"
 "%s"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1518
 msgid "%s mail error"
-msgstr "Erreur de courriel %s"
+msgstr "Erreur avec l'Email %s"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1525
 msgid "Add &note...\tCtrl+B"
@@ -3502,7 +3502,7 @@ msgstr "Anonymiser"
 #: taskcoachlib/gui/uicommand/uicommand.py:1985
 msgid "Anonymize a task file to attach it to a bug report"
 msgstr ""
-"Anonymiser un fichier de tâches pour l'attacher à un rapport de bogue"
+"Rendre anonyme un fichier de tâches pour le joindre à un rapport de plantage"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1990
 msgid "Your task file has been anonymized and saved to:"
@@ -3827,7 +3827,7 @@ msgstr "Les barres d'outils sont personnalisables"
 msgid ""
 "Click on the gear icon on the right to add buttons and rearrange them."
 msgstr ""
-"Cliquez sur l'icône d'engrenage à droite pour ajouter des boutons et les "
+"Cliquez sur l'icône Engrenage à droite pour ajouter des boutons et les "
 "réordonner."
 
 #: taskcoachlib/gui/viewer/category.py:140 taskcoachlib/gui/viewer/note.py:90
@@ -4026,11 +4026,11 @@ msgstr "Trier les tâches par date de dernière modification"
 
 #: taskcoachlib/gui/viewer/mixin.py:407
 msgid "Sort tasks by planned start date"
-msgstr "Trier les tâches par date de début prévu"
+msgstr "Trier les tâches par date de début prévue"
 
 #: taskcoachlib/gui/viewer/mixin.py:407 taskcoachlib/gui/viewer/task.py:1006
 msgid "&Planned start date"
-msgstr "Date de début &prévu"
+msgstr "Date de début &prévue"
 
 #: taskcoachlib/gui/viewer/mixin.py:408
 msgid "Sort tasks by due date"
@@ -4082,7 +4082,7 @@ msgstr "&Pourcentage effectué"
 
 #: taskcoachlib/gui/viewer/mixin.py:414
 msgid "Sort tasks by recurrence"
-msgstr "Trier les taches par récurrence"
+msgstr "Trier les tâches par récurrence"
 
 #: taskcoachlib/gui/viewer/mixin.py:414 taskcoachlib/gui/viewer/task.py:1021
 msgid "&Recurrence"
@@ -4225,7 +4225,7 @@ msgstr "Montrer/cacher les colonnes dates"
 
 #: taskcoachlib/gui/viewer/task.py:1007
 msgid "Show/hide planned start date column"
-msgstr "Montrer/cacher la colonne date de début prévu"
+msgstr "Montrer/cacher la colonne date de début prévue"
 
 #: taskcoachlib/gui/viewer/task.py:1010
 msgid "Show/hide due date column"
@@ -4249,7 +4249,7 @@ msgstr "Afficher/cacher la colonne du temps restant"
 
 #: taskcoachlib/gui/viewer/task.py:1022
 msgid "Show/hide recurrence column"
-msgstr "Montrer/cacher la colonne Récurrence"
+msgstr "Montrer/cacher la colonne récurrence"
 
 #: taskcoachlib/gui/viewer/task.py:1027
 msgid "&All budget columns"
@@ -4373,7 +4373,7 @@ msgstr "L'échapper avec"
 
 #: taskcoachlib/gui/wizard/csvimport.py:79
 msgid "Import only the selected rows"
-msgstr "N'importer que les colonnes sélectionnées"
+msgstr "Importer que les colonnes sélectionnées"
 
 #: taskcoachlib/gui/wizard/csvimport.py:82
 msgid "First line describes fields"
@@ -4498,7 +4498,7 @@ msgstr "Impression et Export"
 
 #: taskcoachlib/help/__init__.py:106 taskcoachlib/help/__init__.py:329
 msgid "About printing and exporting"
-msgstr "au sujet de l'impression et de l'export"
+msgstr "A propos de l'impression et de l'export"
 
 #: taskcoachlib/help/__init__.py:108 taskcoachlib/help/__init__.py:339
 msgid "Printing"
@@ -4510,19 +4510,19 @@ msgstr "Export"
 
 #: taskcoachlib/help/__init__.py:111 taskcoachlib/help/__init__.py:366
 msgid "E-mail integration"
-msgstr "Intégration d'Email"
+msgstr "Intégration avec les Emails"
 
 #: taskcoachlib/help/__init__.py:113 taskcoachlib/help/__init__.py:368
 msgid "About e-mail integration"
-msgstr "A propos de l'intégration messagerie"
+msgstr "A propos de l'intégration avec les Emails"
 
 #: taskcoachlib/help/__init__.py:114 taskcoachlib/help/__init__.py:388
 msgid "Attaching an e-mail to a task"
-msgstr "Joindre un message à une tâche"
+msgstr "Joindre un Email à une tâche"
 
 #: taskcoachlib/help/__init__.py:115 taskcoachlib/help/__init__.py:395
 msgid "Creating a task from an e-mail"
-msgstr "Créer une tâche à partir d'un message"
+msgstr "Créer une tâche à partir d'un Email"
 
 #: taskcoachlib/help/__init__.py:117 taskcoachlib/help/__init__.py:405
 msgid "SyncML support"
@@ -4575,23 +4575,23 @@ msgstr "Todo.txt et Todo.txt Touch"
 
 #: taskcoachlib/help/__init__.py:135 taskcoachlib/help/__init__.py:614
 msgid "Importing todo.txt"
-msgstr "Import Todo.txt en cours"
+msgstr "Importation de Todo.txt en cours"
 
 #: taskcoachlib/help/__init__.py:136 taskcoachlib/help/__init__.py:627
 msgid "Exporting todo.txt"
-msgstr "Export Todo.txt en cours"
+msgstr "Exportation de Todo.txt en cours"
 
 #: taskcoachlib/help/__init__.py:138 taskcoachlib/help/__init__.py:654
 msgid "Task templates"
-msgstr "Patrons de tâche"
+msgstr "Modèles de tâche"
 
 #: taskcoachlib/help/__init__.py:140 taskcoachlib/help/__init__.py:656
 msgid "About templates"
-msgstr "A propos des patrons"
+msgstr "A propos des modèles"
 
 #: taskcoachlib/help/__init__.py:141 taskcoachlib/help/__init__.py:663
 msgid "Using templates"
-msgstr "Utilisation des patrons"
+msgstr "Utilisation des modèles"
 
 #: taskcoachlib/help/__init__.py:143 taskcoachlib/help/__init__.py:698
 msgid "Graphical user interface"
@@ -4633,9 +4633,9 @@ msgid ""
 "convenient \n"
 "for e.g. registering sick leave."
 msgstr ""
-"Date de début prévu: la date à partir de laquelle la tâche peut démarrer.\n"
-"La valeur par défaut de la date de début prévu est la date de création. Elle "
-"peut aussi\n"
+"Date de début prévue: la date à partir de laquelle la tâche peut démarrer.\n"
+"La valeur par défaut de la date de début prévue est sa date de création. "
+"Elle peut aussi\n"
 "être 'None', ce qui indique que vous ne voulez pas démarrer cette tâche. "
 "Cela peut\n"
 "être utile par exemple pour les arrêts maladie."
@@ -4657,10 +4657,10 @@ msgid ""
 "task\n"
 "to a value between 0% and 100%."
 msgstr ""
-"date effective de début : la date à laquelle la tâche a réellement débuté.\n"
+"Date effective de début: la date à laquelle la tâche a réellement débuté.\n"
 "La date effective de début peut être éditée manuellement. Elle est aussi "
-"automatiquement enregistrée quand vous activez le suivi d'effort ou quand "
-"vous précisez le degré d'avancement d'une tâche."
+"automatiquement fixée quand vous activez le suivi d'effort ou quand vous "
+"précisez le degré d'avancement d'une tâche."
 
 #: taskcoachlib/help/__init__.py:174
 msgid ""
@@ -4669,11 +4669,10 @@ msgid ""
 "\n"
 "completed. The completion date can also be entered manually."
 msgstr ""
-"Date de fin: Cette date est à 'Aucune' tant que la tâche n'a pas été "
+"Date de fin: cette date est à 'Aucune' tant que la tâche n'est pas "
 "terminée.\n"
-"Elle est mise à la date courante lorsque vous marquez la tâche terminée. "
-"Elle\n"
-"peut aussi être entrée manuellement."
+"Elle est mise à la date courante lorsque vous marquez la tâche terminée. \n"
+"La date de fin peut évidemment aussi être spécifiée manuellement."
 
 #: taskcoachlib/help/__init__.py:177
 msgid ""
@@ -4685,11 +4684,11 @@ msgid ""
 "date has to be in the past <em>and</em> all prerequisite tasks need to be\n"
 "completed before the task becomes late."
 msgstr ""
-"Prérequis : Autres tâches qui doivent être accomplies avant qu'une tâche "
-"puisse être démarrée. La tâche demeure inactive tant que la dernière tâche "
-"annexe n'est pas terminée.\n"
-"NB : si une tâche possède une date de début planifié spécifique, cette date "
-"doit être antérieure.  <em>Par ailleurs</em> toutes les tâches annexes "
+"Prérequises: ce sont les autres tâches qui doivent être accomplies avant \n"
+"qu'une tâche puisse être démarrée. La tâche demeure inactive jusqu'à ce \n"
+"que la dernière de ces tâches prérequises soit terminée.\n"
+"NB : si une tâche possède une date de début planifiée spécifique, cette date "
+"doit être antérieure.  <em>Par ailleurs</em> toutes les tâches prérequises "
 "doivent être réalisées avant que la tâche devienne en retard."
 
 #: taskcoachlib/help/__init__.py:182
@@ -5100,19 +5099,19 @@ msgid ""
 "e-mail attachments on a system which is different from the one you\n"
 "created it first."
 msgstr ""
-"%(name)s s'intègre avec plusieurs logiciels de courriel, par "
+"%(name)s s'intègre avec plusieurs logiciels de messagerie, par "
 "glisser/déposer.\n"
-"Cela a certaines limitations; les courriels sont copiés dans un répertoire "
+"Cela a certaines limitations; les Emails sont copiés dans un répertoire "
 "voisin\n"
-"du fichier %(name)s en tant que fichiers .eml et sont ensuite ouvertes avec\n"
-"le programme associé à cette extension. Cependant, cela vous permet "
+"du fichier %(name)s en tant que fichiers .eml et sont ensuite ouverts avec\n"
+"le programme associé à cette extension. D'un autre côté, cela vous permet "
 "d'ouvrir\n"
 "ces pièces jointes sur un autre système que celui sous lequel vous les avez "
-"créées."
+"créés."
 
 #: taskcoachlib/help/__init__.py:378
 msgid "Mail user agents supported include:"
-msgstr "Les logiciels de courriel supportés sont:"
+msgstr "Les logiciels de messagerie supportés sont:"
 
 #: taskcoachlib/help/__init__.py:380
 msgid "Mozilla Thunderbird"
@@ -5135,12 +5134,12 @@ msgid ""
 "Due to a Thunderbird limitation, you can't drag and drop several\n"
 "e-mails from Thunderbird. This does not apply to Outlook."
 msgstr ""
-"A cause d'une limitation de Thunderbird, vous ne pouvez glisser-déposer\n"
-"qu'un seul message depuis ce client. Ceci ne s'applique pas à Outlook."
+"A cause d'une limitation de Thunderbird, vous ne pouvez pas glisser-déposer\n"
+"plusieurs Email à la fois depuis ce client. Ceci ne s'applique pas à Outlook."
 
 #: taskcoachlib/help/__init__.py:390
 msgid "There are two ways to attach an e-mail to a task; you can:"
-msgstr "Il y a deux moyens de joindre un message à une tâche; vous pouvez:"
+msgstr "Il y a deux moyens de joindre un Email à une tâche; vous pouvez:"
 
 #: taskcoachlib/help/__init__.py:392
 msgid "Drop it on a task either in the task tree or the task list."
@@ -5158,10 +5157,12 @@ msgid ""
 "description is its content. Additionally, the mail is automatically\n"
 "attached to the newly created task."
 msgstr ""
-"Déposer un message sur une partie vide de la vue des tâches crée une\n"
-"nouvelle tâche. Son sujet est celui du message et sa description est son "
-"contenu.\n"
-"De plus, le message est automatiquement ajouté en pièce jointe."
+"Déposer un Email sur une partie vide de la vue des tâches ou de la liste des "
+"tâches\n"
+"crée une nouvelle tâche. \n"
+"Son sujet est celui de l'Email et sa description est le contenu de l'Email.\n"
+"De plus, l'Email est automatiquement ajouté en pièce jointe à la nouvelle "
+"tâche créée."
 
 #: taskcoachlib/help/__init__.py:409
 msgid ""
@@ -5448,7 +5449,7 @@ msgid ""
 "in the future)."
 msgstr ""
 "Montrer les inactives: montrer ou pas les tâches inactives (date de début\n"
-"prévu dans l'avenir)."
+"prévue dans l'avenir)."
 
 #: taskcoachlib/help/__init__.py:524
 msgid ""
@@ -5675,7 +5676,7 @@ msgid ""
 "parent tasks because Todo.txt allows tasks to belong to multiple projects, \n"
 "while %(name)s only allows one parent task per task."
 msgstr ""
-"%(name)s importe les sujets, dates de début prévu, dates d'échéance, dates "
+"%(name)s importe les sujets, dates de début prévues, dates d'échéance, dates "
 "de fin,\n"
 "priorités, contextes et projets. Les contextes et projets sont transformés "
 "en\n"
@@ -5706,7 +5707,8 @@ msgid ""
 "not\n"
 "exported."
 msgstr ""
-"%(name)s exporte les sujets, dates de début prévu, dates d'échéance, dates\n"
+"%(name)s exporte les sujets, dates de début prévues, dates d'échéance, "
+"dates\n"
 "de fin, priorités et catégories dans le format Todo.txt. Les autres "
 "attributs ne\n"
 "sont pas exportés."
@@ -5778,10 +5780,11 @@ msgid ""
 "\n"
 "current date."
 msgstr ""
-"Les patrons sont des \"plans\" pour de nouvelles tâches. Actuellement, les\n"
+"Les modèles sont des \"chablons\" pour les nouvelles tâches. Actuellement, "
+"les\n"
 "seules propriétés qui peuvent être \"paramétrées\" sont les dates. Lorsque "
 "vous\n"
-"instanciez un patron, les dates de la nouvelle tâche sont remplacées par "
+"instanciez un modèle, les dates de la nouvelle tâche sont remplacées par "
 "des\n"
 "dates relatives à la date actuelle."
 
@@ -5792,10 +5795,11 @@ msgid ""
 "and \n"
 "attachments are part of the template. Only categories are not saved."
 msgstr ""
-"Un patron peut être créé en sélectionnant une tâche (une seule) et en\n"
-"sélectionnant \"Sauver en tant que patron\" dans le menu Fichier. Toutes "
+"Un modèle peut être créé en sélectionnant une tâche (une seule) et en\n"
+"sélectionnant \"Sauver en tant que modèle\" dans le menu Fichier. Toutes "
 "les\n"
-"sous-tâches, notes et pièces jointes font partie du patron. Seules les\n"
+"sous-tâches, notes et pièces jointes sont inclues dans le modèle. Seules "
+"les\n"
 "catégories ne sont pas sauvegardées."
 
 #: taskcoachlib/help/__init__.py:669
@@ -5807,10 +5811,10 @@ msgid ""
 "TaskCoach.ini \n"
 "is."
 msgstr ""
-"Vous pouvez aussi créer un nouveau patron à partir d'un fichier de patron\n"
-"existant (.tsktmpl); sélectionnez \"Importer un patron\" dans le menu "
+"Vous pouvez aussi créer un nouveau modèle à partir d'un fichier de modèle \n"
+"existant (.tsktmpl); sélectionnez \"Importer un modèle\" dans le menu "
 "Fichier\n"
-"et sélectionnez le fichier. Les fichiers de patron sont stockés dans un\n"
+"et sélectionnez le fichier. Les fichiers de modèle sont stockés dans un\n"
 "sous-répertoire du répertoire dans lequel le fichier TaskCoach.ini est sauvé."
 
 #: taskcoachlib/help/__init__.py:674
@@ -5827,17 +5831,17 @@ msgid ""
 "and the \n"
 "due date by the current date plus one day."
 msgstr ""
-"Pour instancier un patron de tâche, utilisez le menu \"Nouvelle tâche depuis "
-"un patron\"\n"
+"Pour instancier un modèle de tâche, utilisez le menu \"Nouvelle tâche depuis "
+"un modèle\"\n"
 "du menu Tâche, ou le bouton de la barre d'outils. Lorsque la tâche est "
 "créée, les dates\n"
-"de début, d'échéance et de fin, si possible, sont recalculées en fonction de "
-"la date courante.\n"
-"Donc si vous créez un patron à partir d'une tâche démarrant aujourd'hui et "
+"de début, d'échéance et de fin, s'il y a lieu, sont recalculées en fonction "
+"de la date courante.\n"
+"Donc si vous créez un modèle à partir d'une tâche démarrant aujourd'hui et "
 "arrivant à\n"
-"échéance demain, à chaque fois qu'il sera instancié, la date de début prévu "
-"sera remplacé par\n"
-"la date courante et le date d'échéance par la date courante plus un jour."
+"échéance demain, à chaque fois que le modèle est utilisé, la date de début "
+"prévue sera remplacée par la date courante et la date d'échéance par la date "
+"courante plus un jour."
 
 #: taskcoachlib/help/__init__.py:682
 msgid ""
@@ -5847,8 +5851,8 @@ msgid ""
 "will become red if %(name)s cannot figure out what it means. Example\n"
 "dates:"
 msgstr ""
-"Vous pouvez aussi ajouter des patrons depuis l'éditeur de patrons\n"
-"(Fichier/Editer les patrons), ainsi qu'éditer les propriétés de base (dates\n"
+"Vous pouvez aussi ajouter des modèles depuis l'éditeur de modèles \n"
+"(Fichier/Editer les modèles), ainsi qu'éditer les propriétés de base (dates\n"
 "et sujet). Les dates sont spécifiées sous forme intuitive; l'éditeur de\n"
 "date devient rouge si %(name)s n'arrive pas à déterminer ce qu'une date\n"
 "signifie. Exemples de dates:"
@@ -6186,10 +6190,10 @@ msgid ""
 "prevent them, bugs do happen. So, backing up your work on a regular basis is "
 "strongly advised."
 msgstr ""
-"%(name)s est en cours de développement. Bien que les développeurs de "
-"%(name)s se donnent du mal pour les éviter, des bogues peuvent apparaître. "
-"Il est donc fortement conseillé de faire une copie de sauvegarde de votre "
-"travail régulièrement."
+"%(name)s est constamment en cours de développement. Bien que les "
+"développeurs de %(name)s se donnent du mal pour les éviter, des bogues "
+"peuvent apparaître. Il est donc fortement conseillé de faire régulièrement "
+"une copie de sauvegarde de votre travail."
 
 #: taskcoachlib/help/tips.py:27
 msgid ""
@@ -6197,11 +6201,10 @@ msgid ""
 "fellow users, discuss and request features and complain about bugs. Go to "
 "%(url)s and join today!"
 msgstr ""
-"%(name)s dispose d'une liste de courriels sur laquelle vous pouvez discuter "
-"de l'utilisation de %(name)s avec\r\n"
-"d'autres utilisateurs, discuter et demander des fonctionnalités et vous "
-"plaindre des bogues. Allez sur %(url)s et\r\n"
-"rejoignez-nous aujourd'hui !"
+"%(name)s dispose d'une liste de diffusion sur laquelle vous pouvez dialoguer "
+"au sujet de l'utilisation de %(name)s avec d'autres utilisateurs, parler et "
+"demander des nouvelles fonctionnalités ou encore vous plaindre des bogues. "
+"Allez sur %(url)s et rejoignez-nous aujourd'hui!"
 
 #: taskcoachlib/help/tips.py:28
 msgid ""
@@ -6224,11 +6227,11 @@ msgid ""
 "helping with the translation of %(name)s. Visit %(url)s for more information "
 "about how you can help."
 msgstr ""
-"%(name)s est disponible dans plusieurs langages différents. Sélectionnez "
-"'Editer' -> 'Préférences' pour voir si votre langage est inclus. S'il n'est "
-"pas disponible ou que la traduction mérite des améliorations, veuillez "
+"%(name)s est disponible dans plusieurs langues différentes. Sélectionnez "
+"'Editer' -> 'Préférences' pour voir si votre langue est disponible. Si tel "
+"n'est pas le cas ou si la traduction mérite des améliorations, veuillez "
 "considérer la possibilité d'aider à traduire %(name)s. Visitez %(url)s pour "
-"plus d'informations sur la manière dont vous pouvez aider."
+"plus d'informations sur la manière dont vous pouvez contribuer et aider."
 
 #: taskcoachlib/help/tips.py:30
 msgid ""
@@ -6238,8 +6241,7 @@ msgid ""
 msgstr ""
 "Lorsque vous entrez une URL (par exemple %(url)s) dans la description d'une "
 "tâche ou d'un effort, le lien vers cette adresse devient cliquable. Cliquer "
-"sur une telle URL charge la page Web référencée avec le navigateur Internet "
-"par défaut."
+"sur un tel lien ouvre la page Web avec votre navigateur par défaut."
 
 #: taskcoachlib/help/tips.py:31
 msgid ""
@@ -6260,8 +6262,8 @@ msgstr ""
 "Vous pouvez glisser des fichiers depuis un navigateur de fichiers sur une "
 "tâche pour créer des pièces jointes. Glisser les fichiers au-dessus d'un "
 "onglet ouvre la page appropriée; glisser des fichiers dans la vue "
-"arborescente au-dessus d'une tâche fermée  ouvre la tâche afin d'afficher "
-"ses sous-tâches."
+"arborescente au-dessus d'une tâche fermée ouvre la tâche afin d'afficher ses "
+"sous-tâches."
 
 #: taskcoachlib/help/tips.py:33
 msgid ""
@@ -6269,8 +6271,8 @@ msgid ""
 "The layout is saved and reused in the next session."
 msgstr ""
 "Vous pouvez créer n'importe quelle mise en page en glissant/déplaçant les "
-"onglets. La mise en page est sauvegardée et restaurée lors de la session "
-"suivante."
+"onglets. La mise en page est sauvegardée et restaurée d'une session à "
+"l'autre."
 
 #: taskcoachlib/help/tips.py:34
 msgid ""
@@ -6282,7 +6284,7 @@ msgstr ""
 "Ce qui est réellement imprimé lorsque vous sélectionnez 'Fichier' -> "
 "'Imprimer' dépend de la vue courante. Si la vue courante est la liste de "
 "tâches, toutes les tâches seront imprimées; si c'est la liste des efforts "
-"groupés par mois, c'est cette liste qui sera imprimé. Il en va de même pour "
+"groupés par mois, c'est cette liste qui sera imprimée. Il en va de même pour "
 "les colonnes visibles, l'ordre de tri, les tâches filtrées, etc."
 
 #: taskcoachlib/help/tips.py:35
@@ -6304,13 +6306,22 @@ msgid ""
 "Preferences dialog. Features turned off are not accessible via the user "
 "interface, resulting in a 'smaller' user interface."
 msgstr ""
-"Vous pouvez désactiver certaines fonctionnalités, comme les notes ou le"
+"Vous pouvez désactiver certaines fonctionnalités, comme les notes ou le "
+"suivi des efforts,\r\n"
+"dans les Préférences. Les fonctionnalités désactivées ne sont alors plus "
+"accessibles \r\n"
+"via l'interface utilisateur, la rendant ainsi plus \"compacte\". \r\n"
+"Ceci vous permet de simplifier l'interface utilisateur, en la rendant ainsi "
+"plus \"compacte\" \r\n"
+"en affichant uniquement les fonctionnalités dont vous avez besoin."
 
 #: taskcoachlib/help/tips.py:37
 msgid ""
 "You can create a template from a task in order to reduce typing when "
 "repetitive patterns emerge."
-msgstr "Vous pouvez créer un patron à partir d'une tâche pour minimiser"
+msgstr ""
+"Vous pouvez créer un modèle à partir d'une tâche afin de simplifier la "
+"saisie des informations répétitives."
 
 #: taskcoachlib/help/tips.py:38
 msgid "Ctrl-Tab switches between tabs in edit dialogs."
@@ -6414,7 +6425,7 @@ msgstr "Aide sur le programme"
 
 #: taskcoachlib/help/uicommand.py:46
 msgid "Mail the selected item(s), using your default mailer"
-msgstr "Envoyer les objets sélectionnés par courriel"
+msgstr "Envoyer les éléments sélectionnés par Email"
 
 #: taskcoachlib/help/uicommand.py:47
 msgid "Insert a new note"
@@ -6642,11 +6653,11 @@ msgstr "Envoi du GUID: %s"
 
 #: taskcoachlib/mailer/macmail.py:26
 msgid "Reading mail info..."
-msgstr "Lecture des informations du courriel..."
+msgstr "Lecture des informations de l'Email..."
 
 #: taskcoachlib/mailer/macmail.py:27
 msgid "Reading mail information. Please wait."
-msgstr "Lecture des informations du courriel. Veuillez patienter."
+msgstr "Lecture des informations de l'Email. Veuillez patienter."
 
 #: taskcoachlib/mailer/thunderbird.py:96
 msgid "Could not find Thunderbird data dir"
@@ -6690,7 +6701,7 @@ msgid ""
 msgstr ""
 "Impossible d'ouvrir une connexion IMAP vers\n"
 "%(server)s:%(port)s\n"
-"afin de récupérer le message Thunderbird:\n"
+"afin de récupérer l'Email depuis Thunderbird:\n"
 "%(reason)s"
 
 #: taskcoachlib/mailer/thunderbird.py:325
@@ -6948,11 +6959,11 @@ msgstr "Les tâches à afficher"
 
 #: taskcoachlib/widgets/calendarconfig.py:86
 msgid "Tasks with a planned start date and a due date"
-msgstr "Tâches ayant une date de début prévu et une date d'échéance"
+msgstr "Tâches ayant une date de début prévue et une date d'échéance"
 
 #: taskcoachlib/widgets/calendarconfig.py:87
 msgid "Tasks with a planned start date"
-msgstr "Tâches ayant une date de début prévu"
+msgstr "Tâches ayant une date de début prévue"
 
 #: taskcoachlib/widgets/calendarconfig.py:88
 msgid "Tasks with a due date"
@@ -7014,53 +7025,53 @@ msgstr "Veuillez saisir votre mot de passe."
 msgid "Please enter your password"
 msgstr "Veuillez saisir votre mot de passe"
 
-#: taskcoachlib/widgets/searchctrl.py:58
+#: taskcoachlib/widgets/searchctrl.py:60
 msgid "&Match case"
 msgstr "&Sensible à la casse"
 
-#: taskcoachlib/widgets/searchctrl.py:58
+#: taskcoachlib/widgets/searchctrl.py:60
 msgid "Match case when filtering"
 msgstr "Tenir compte de la casse en filtrant"
 
-#: taskcoachlib/widgets/searchctrl.py:61
+#: taskcoachlib/widgets/searchctrl.py:63
 msgid "&Include sub items"
 msgstr "&Inclure les objets fils"
 
-#: taskcoachlib/widgets/searchctrl.py:62
+#: taskcoachlib/widgets/searchctrl.py:64
 msgid "Include sub items of matching items in the search results"
 msgstr ""
 "Inclus les sous-objets des objets correspondant dans les résultats de la "
 "recherche"
 
-#: taskcoachlib/widgets/searchctrl.py:65
+#: taskcoachlib/widgets/searchctrl.py:67
 msgid "&Search description too"
 msgstr "&Rechercher dans la description aussi"
 
-#: taskcoachlib/widgets/searchctrl.py:66
+#: taskcoachlib/widgets/searchctrl.py:68
 msgid "Search both subject and description"
 msgstr "Rechercher dans les sujets et les descriptions"
 
-#: taskcoachlib/widgets/searchctrl.py:69
+#: taskcoachlib/widgets/searchctrl.py:71
 msgid "&Regular Expression"
 msgstr "Expression &régulière"
 
-#: taskcoachlib/widgets/searchctrl.py:70
+#: taskcoachlib/widgets/searchctrl.py:72
 msgid "Consider search text as a regular expression"
-msgstr "Considérer le critère comme une expression régulière"
+msgstr "Considérer cette recherche comme une expression régulière"
 
-#: taskcoachlib/widgets/searchctrl.py:139
+#: taskcoachlib/widgets/searchctrl.py:141
 msgid "This is an invalid regular expression."
-msgstr "Ceci n'est pas un expression regulière valide."
+msgstr "Ceci n'est pas un expression régulière valide."
 
-#: taskcoachlib/widgets/searchctrl.py:140
+#: taskcoachlib/widgets/searchctrl.py:142
 msgid "Defaulting to substring search."
 msgstr "Recherche des sous-chaînes par défaut"
 
-#: taskcoachlib/widgets/searchctrl.py:205
+#: taskcoachlib/widgets/searchctrl.py:207
 msgid "Recent searches"
 msgstr "Recherches récentes"
 
-#: taskcoachlib/widgets/searchctrl.py:213
+#: taskcoachlib/widgets/searchctrl.py:215
 msgid "Viewer not searchable"
 msgstr "Recherche impossible dans cette vue"
 
