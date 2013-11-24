@@ -37,8 +37,11 @@ class TodoTxtReader(object):
             with codecs.open(metaName, 'r', 'utf-8') as fp:
                 for line in fp:
                     line = line.strip()
-                    subjects, priority, plannedStartDateTime, completionDateTime, dueDateTime, categories = \
-                      self.__processLine(line, todoTxtRE, keyValueRE, date.Now, None)
+                    try:
+                        subjects, priority, plannedStartDateTime, completionDateTime, dueDateTime, categories = \
+                          self.__processLine(line, todoTxtRE, keyValueRE, date.Now, None)
+                    except:
+                        pass # Err
                     metaLines['->'.join(subjects)] = line
         with codecs.open(filename, 'r', 'utf-8') as fp:
             self.readFile(fp, metaLines=metaLines)

@@ -37,7 +37,7 @@ class DummyTaskFile(persistence.TaskFile):
         return DummyFile()
         
     def _openForWrite(self, *args, **kwargs): # pylint: disable=W0613
-        return None, DummyFile()
+        return DummyFile()
     
     def _read(self, *args, **kwargs): # pylint: disable=W0613
         return [task.Task()], [], [], None, dict(), None

@@ -247,12 +247,16 @@ class ExportAsCSVDialog(ExportDialog):
         self.separateDateAndTimeColumnsCheckBox = \
             SeparateDateAndTimeColumnsCheckBox(pane, self.settings, self.section,
                                                'csv_separatedateandtimecolumns')
+        self.__check(viewerPicker.selectedViewer())
         return viewerPicker, self.columnPicker, selectionOnlyCheckBox, self.separateDateAndTimeColumnsCheckBox
     
     def onViewerChanged(self, event):
         event.Skip()
         self.columnPicker.populateColumnPicker(event.viewer)
-        self.separateDateAndTimeColumnsCheckBox.Enable(event.viewer.isShowingTasks())
+        self.__check(event.viewer)
+
+    def __check(self, viewer):
+        self.separateDateAndTimeColumnsCheckBox.Enable(viewer.isShowingTasks() or viewer.isShowingEffort())
 
           
 class ExportAsICalendarDialog(ExportDialog):

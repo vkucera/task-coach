@@ -22,9 +22,22 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.34', 'October 13, 2013',
+Release('1.3.35', 'December ??, 2013',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        ],
+    ),
+
+Release('1.3.34', 'November 24, 2013',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bugv2('''Silence the AttributeError problem in PyPubSub.''',
+              '1456'),
+        Bugv2('''Fix some problems when saving the task file to
+a Dropbox folder.'''),
+        Bugv2('''Performance improvement when reading the task file.'''),
+        Bugv2('''Split date and time when exporting efforts to
+CSV.''', '1472'),
         ],
     ),
 
