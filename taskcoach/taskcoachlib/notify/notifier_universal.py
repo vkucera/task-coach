@@ -41,6 +41,7 @@ class AnimatedShow(wx.Timer):
             self.SetOwner(self, id_)
             wx.EVT_TIMER(self, id_, self.__OnTick)
             self.Start(100)
+            wx.EVT_CLOSE(frame, self.__OnClose)
 
             frame.SetTransparent(0)
 
@@ -65,6 +66,10 @@ class AnimatedShow(wx.Timer):
             if not self.__show:
                 self.__frame.Close()
 
+    def __OnClose(self, event):
+        self.Stop()
+        event.Skip()
+
 
 class AnimatedMove(wx.Timer):
     """
@@ -83,6 +88,7 @@ class AnimatedMove(wx.Timer):
         self.SetOwner(self, id_)
         wx.EVT_TIMER(self, id_, self.__OnTick)
         self.Start(100)
+        wx.EVT_CLOSE(frame, self.__OnClose)
 
     def __OnTick(self, event): # pylint: disable=W0613
         x0, y0 = self.__origin
@@ -96,6 +102,10 @@ class AnimatedMove(wx.Timer):
 
         if self.__step == 10:
             self.Stop()
+
+    def __OnClose(self, event):
+        self.Stop()
+        event.Skip()
 
 
 #==============================================================================
