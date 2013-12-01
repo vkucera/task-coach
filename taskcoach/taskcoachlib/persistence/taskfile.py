@@ -357,9 +357,6 @@ class TaskFile(patterns.Observer):
         
     def _openForRead(self):
         return file(self.__filename, 'rU')
-
-    def _openForWrite(self):
-        return SafeWriteFile(self.__filename)
     
     def load(self, filename=None):
         pub.sendMessage('taskfile.aboutToRead', taskFile=self)
@@ -429,7 +426,7 @@ class TaskFile(patterns.Observer):
             self.mergeDiskChanges()
 
             if self.__needSave or not os.path.exists(self.__filename):
-                fd = self._openForWrite()
+                fd = SafeWriteFile(self.__filename)
                 try:
                     xml.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes(),
                                             self.syncMLConfig(), self.guid())
@@ -475,13 +472,11 @@ class TaskFile(patterns.Observer):
                 self.__changes = {self.__monitor.guid(): self.__monitor}
 
             self.__monitor.resetAllChanges()
-            fd = self._openForWrite()
+            fd = SafeWriteFile(self.__filename + '.delta')
             try:
                 xml.ChangesXMLWriter(fd).write(self.changes())
             finally:
                 fd.close()
-            if os.path.exists(self.__filename + '.delta'):
-                os.remove(self.__filename + '.delta')
 
             self.__changedOnDisk = False
         finally:
