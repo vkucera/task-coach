@@ -193,7 +193,7 @@ class SubjectPage(Page):
         for eventType in self.items[0].modificationEventTypes():
             try:
                 pub.unsubscribe(self.onAttributeChanged, eventType)
-            except pub.UndefinedTopic:
+            except pub.TopicNameError:
                 pass
         patterns.Publisher().removeObserver(self.onAttributeChanged_Deprecated)
                  

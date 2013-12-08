@@ -101,7 +101,7 @@ class AttributeSync(object):
     def __stop_observing_attribute(self):
         try:
             pub.unsubscribe(self.onAttributeChanged, self.__changedEventType)
-        except pub.UndefinedTopic:
+        except pub.TopicNameError:
             pass
         patterns.Publisher().removeObserver(self.onAttributeChanged_Deprecated)
 

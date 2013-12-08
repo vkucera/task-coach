@@ -1,20 +1,18 @@
-Only in PyPubSub-r303-patched/: .DS_Store
-Only in PyPubSub-r303-patched/src: .DS_Store
-Only in PyPubSub-r303-patched/src/pubsub: .DS_Store
-diff -U 4 -r PyPubSub-r303/src/pubsub/core/listenerbase.py PyPubSub-r303-patched/src/pubsub/core/listenerbase.py
---- PyPubSub-r303/src/pubsub/core/listenerbase.py	2013-08-12 20:34:05.000000000 +0200
-+++ PyPubSub-r303-patched/src/pubsub/core/listenerbase.py	2013-10-19 13:58:21.000000000 +0200
-@@ -120,9 +120,12 @@
+diff -U 4 -r PyPubSub-r343/src/pubsub/core/listenerbase.py PyPubSub-r343-patched/src/pubsub/core/listenerbase.py
+--- PyPubSub-r343/src/pubsub/core/listenerbase.py	2013-12-08 13:14:41.000000000 +0100
++++ PyPubSub-r343-patched/src/pubsub/core/listenerbase.py	2013-12-08 13:17:48.000000000 +0100
+@@ -92,10 +92,13 @@
  
      def __notifyOnDead(self, ref):
-         '''This gets called when listener weak ref has died. Propagate 
-         info to Topic).'''
+         """This gets called when listener weak ref has died. Propagate
+         info to Topic)."""
 -        notifyDeath = self.__onDead
+         self._unlinkFromTopic_()
 +        try:
 +            notifyDeath = self.__onDead
 +        except AttributeError:
-+            return
-         self._unlinkFromTopic_()
++            pass
          if notifyDeath is not None:
              notifyDeath(self)
  
+     def __eq__(self, rhs):
