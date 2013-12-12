@@ -25,6 +25,8 @@ releases = [
 Release('1.3.35', 'December ??, 2013',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bugv2('''The task editor would not open if the user's date
+format didn't include the year.'''),
         ],
     ),
 

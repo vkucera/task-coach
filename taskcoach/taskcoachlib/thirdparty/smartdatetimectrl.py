@@ -358,9 +358,6 @@ class Entry(wx.Panel):
             kwargs['style'] = wx.WANTS_CHARS
         super(Entry, self).__init__(*args, **kwargs)
 
-        dc = wx.ClientDC(self)
-        dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
-
         self.__focus = None
         self.__forceFocus = False
         self.__fields = list()
@@ -369,32 +366,15 @@ class Entry(wx.Panel):
         self.__popup = None
         self.__focusStamp = time.time()
 
-        minW = 0
-        minH = 0
-        curX = self.MARGIN
+        self.__minW = 0
+        self.__minH = 0
+        self.__curX = self.MARGIN
 
         for state, keywords in format:
             field = state.createField(observer=self, **keywords)
-            if state.valueName is not None:
-                self.__namedFields[state.valueName] = field
-
-            if isinstance(field, (str, unicode)):
-                tw, th = dc.GetTextExtent(field)
-                self.__widgets.append((field, curX, self.MARGIN, tw, th))
-                minW += tw
-                minH = max(minH, th)
-                curX += tw + self.MARGIN
-            else:
-                self.__fields.append(field)
-                w, h = field.GetExtent(dc)
-                self.__widgets.append((field, curX, self.MARGIN, w, h))
-                minW += w
-                minH = max(minH, h)
-                curX += w + self.MARGIN
+            self.AddField(state.valueName, field)
 
         self.__SetFocus(self.__widgets[0][0])
-
-        self.SetMinSize(wx.Size(minW + (len(self.__widgets) + 1) * self.MARGIN, minH + 2 * self.MARGIN))
 
         timerId = wx.NewId()
         self.__timer = wx.Timer(self, timerId)
@@ -405,6 +385,29 @@ class Entry(wx.Panel):
         wx.EVT_LEFT_UP(self, self.OnLeftUp)
         wx.EVT_KILL_FOCUS(self, self.OnKillFocus)
         wx.EVT_SET_FOCUS(self, self.OnSetFocus)
+
+    def AddField(self, name, field):
+        dc = wx.ClientDC(self)
+        dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
+
+        if name is not None:
+            self.__namedFields[name] = field
+        self.__fields.append(field)
+
+        if isinstance(field, (str, unicode)):
+            tw, th = dc.GetTextExtent(field)
+            self.__widgets.append((field, self.__curX, self.MARGIN, tw, th))
+            self.__minW += tw
+            self.__minH = max(self.__minH, th)
+            self.__curX += tw + self.MARGIN
+        else:
+            w, h = field.GetExtent(dc)
+            self.__widgets.append((field, self.__curX, self.MARGIN, w, h))
+            self.__minW += w
+            self.__minH = max(self.__minH, h)
+            self.__curX += w + self.MARGIN
+
+        self.SetMinSize(wx.Size(self.__minW + (len(self.__widgets) + 1) * self.MARGIN, self.__minH + 2 * self.MARGIN))
 
     def Cleanup(self):
         # It's complicated.
@@ -467,7 +470,7 @@ class Entry(wx.Panel):
         klass.formats.insert(0, format)
 
     def Fields(self):
-        return self.__fields[:]
+        return [field for field in self.__fields if isinstance(field, Field)]
 
     def Field(self, name):
         return self.__namedFields.get(name, NullField)
@@ -485,13 +488,13 @@ class Entry(wx.Panel):
 
     def GetValue(self):
         value = list()
-        for field in self.__fields:
+        for field in self.Fields():
             value.append(field.GetValue())
         return tuple(value)
 
     def SetValue(self, value):
         value = list(value)
-        for index, field in enumerate(self.__fields):
+        for index, field in enumerate(self.Fields()):
             field.SetValue(value[index])
 
     def ValidateChange(self, field, value):
@@ -537,7 +540,7 @@ class Entry(wx.Panel):
 
     def FocusNext(self):
         if self.__focus is not None:
-            self.__SetFocus(self.__fields[(self.__fields.index(self.__focus) + 1) % len(self.__fields)])
+            self.__SetFocus(self.Fields()[(self.Fields().index(self.__focus) + 1) % len(self.Fields())])
 
     def OnChar(self, event):
         if event.GetKeyCode() == wx.WXK_TAB:
@@ -560,7 +563,7 @@ class Entry(wx.Panel):
                     wx.TheClipboard.GetData(data)
                     values = list()
                     for idx, mt in enumerate(self._rx_paste.finditer(data.GetText())):
-                        values.append((mt.group(0), self.__fields[idx] if idx < len(self.__fields) else NullField))
+                        values.append((mt.group(0), self.Fields()[idx] if idx < len(self.Fields()) else NullField))
                     self.OnPaste(values)
                 finally:
                     wx.TheClipboard.Close()
@@ -580,7 +583,7 @@ class Entry(wx.Panel):
             self.FocusNext()
         elif event.GetKeyCode() == wx.WXK_LEFT:
             if self.__focus is not None:
-                self.__SetFocus(self.__fields[(self.__fields.index(self.__focus) + len(self.__fields) - 1) % len(self.__fields)])
+                self.__SetFocus(self.Fields()[(self.Fields().index(self.__focus) + len(self.Fields()) - 1) % len(self.Fields())])
         elif event.GetKeyCode() == wx.WXK_ESCAPE and self.__popup is not None:
             self.__popup[0].Dismiss()
         elif event.GetKeyCode() == wx.WXK_RETURN and self.__popup is None and \
@@ -1311,6 +1314,16 @@ class DateEntry(Entry):
         wx.EVT_LEFT_UP(self, self.__OnLeftUp)
         if '__WXMAC__' in wx.PlatformInfo:
             wx.EVT_KILL_FOCUS(self, self.__OnKillFocus)
+
+        if self.Field('day') is NullField:
+            self.AddField(None, ' ')
+            self.AddField('day', DayField(value=self.__value.day, observer=self, width=2))
+        if self.Field('month') is NullField:
+            self.AddField(None, ' ')
+            self.AddField('month', AbbreviatedMonthField(value=self.__value.month, observer=self))
+        if self.Field('year') is NullField:
+            self.AddField(None, ' ')
+            self.AddField('year', YearField(value=self.__value.year, observer=self, width=4))
 
     def Format(self):
         return self.__formatter(self.GetDate())
