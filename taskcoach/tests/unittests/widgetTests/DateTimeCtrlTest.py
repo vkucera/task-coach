@@ -41,7 +41,7 @@ class CommonTestsMixin(object):
             else:
                 break
         else:
-            self.fail('No supported locale found. Try "locale -a" and add a supported locale.')
+            self.skipTest('No supported locale found. Try "locale -a" and add a supported locale.')
         reload(render) # To execute module-level code every time
 
     def tearDown(self):
