@@ -107,6 +107,8 @@ class DropTarget(wx.DropTarget):
                     filename = urllib.unquote(url[len('file://'):])
                     self.__onDropMailCallback(x, y, filename)
                 elif self.__onDropURLCallback:
+                    if url.startswith('file://'):
+                        url = urllib.url2pathname(url[7:])
                     self.__onDropURLCallback(x, y, url)
         elif formatId == 'Object Descriptor':
             self.onOutlookDrop(x, y)

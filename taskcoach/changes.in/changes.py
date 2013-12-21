@@ -29,6 +29,8 @@ Release('1.3.35', 'December ??, 2013',
 format didn't include the year.'''),
         Bugv2('''Unsetting an exclusive category or its parent would
 not work.''', '1475'),
+        Bugv2('''Remove file:// URL scheme from filenames dropped
+from Nautilus.'''),
         ],
     ),
 
