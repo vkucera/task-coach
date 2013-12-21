@@ -513,7 +513,7 @@ class CheckTreeCtrl(TreeListCtrl):
         if self.__checking: 
             # Ignore checked events while we're making the tree consistent,
             # only invoke the callback:
-            self.checkCommand(event)
+            self.checkCommand(event, final=False)
             return
         self.__checking = True
         item = event.GetItem()
@@ -537,7 +537,7 @@ class CheckTreeCtrl(TreeListCtrl):
             if self.GetItemType(parent) != 2:
                 self.CheckItem(parent, False)
         self.__checking = False
-        self.checkCommand(event)
+        self.checkCommand(event, final=True)
         
     def onItemActivated(self, event):
         if self.__is_double_clicked(event):

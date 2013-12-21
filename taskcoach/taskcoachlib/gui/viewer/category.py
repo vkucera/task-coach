@@ -167,7 +167,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
         else:
             super(BaseCategoryViewer, self).onAttributeChanged_Deprecated(event)
         
-    def onCheck(self, event):
+    def onCheck(self, event, final):
         categoryToFilter = self.widget.GetItemPyData(event.GetItem())
         categoryToFilter.setFiltered(event.GetItem().IsChecked())
         self.sendViewerStatusEvent()  # Notify status observers like the status bar

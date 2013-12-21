@@ -286,7 +286,7 @@ class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTestsMixin):
         self.mutual1 = DummyDomainObject('mutual 1')
         self.mutual2 = DummyDomainObject('mutual 2')
 
-    def onCheck(self, event):
+    def onCheck(self, event, final):
         pass
 
     def testCheckParentDoesNotCheckChild(self):

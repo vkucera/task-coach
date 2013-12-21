@@ -1280,7 +1280,7 @@ class CheckableTaskViewer(TaskViewer):  # pylint: disable=W0223
         widget.AssignImageList(imageList)  # pylint: disable=E1101
         return widget    
     
-    def onCheck(self, event):
+    def onCheck(self, event, final):
         pass
     
     def getIsItemChecked(self, task):  # pylint: disable=W0613,W0621
