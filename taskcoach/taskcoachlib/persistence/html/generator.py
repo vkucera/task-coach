@@ -291,7 +291,7 @@ class Viewer2HTMLConverter(object):
         if column.name() == 'notes':
             def renderNotes(notes):
                 bf = StringIO.StringIO()
-                for note in notes:
+                for note in sorted(notes, key=lambda note: note.subject()):
                     bf.write('<p>\n')
                     bf.write(cgi.escape(note.subject()))
                     bf.write(u'<br />\n')
@@ -304,7 +304,7 @@ class Viewer2HTMLConverter(object):
                 return bf.getvalue()
             return renderNotes(item.notes())
         elif column.name() == 'attachments':
-            return u'<br />'.join(map(cgi.escape, [attachment.subject() for attachment in item.attachments()]))
+            return u'<br />'.join(map(cgi.escape, sorted([attachment.subject() for attachment in item.attachments()])))
             
         renderedItem = cgi.escape(column.render(item, 
                                   humanReadable=False)).replace('\n', '<br>')

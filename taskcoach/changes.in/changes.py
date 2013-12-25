@@ -31,6 +31,8 @@ format didn't include the year.'''),
 not work.''', '1475'),
         Bugv2('''Remove file:// URL scheme from filenames dropped
 from Nautilus.'''),
+        Bugv2('''When exporting tasks to HTML or CSV, sort notes
+alphabetically.''', '1477'),
         ],
     ),
 
