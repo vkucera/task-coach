@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2014 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
@@ -1280,7 +1280,7 @@ class CheckableTaskViewer(TaskViewer):  # pylint: disable=W0223
         widget.AssignImageList(imageList)  # pylint: disable=E1101
         return widget    
     
-    def onCheck(self, event):
+    def onCheck(self, event, final):
         pass
     
     def getIsItemChecked(self, task):  # pylint: disable=W0613,W0621

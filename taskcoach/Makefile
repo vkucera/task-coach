@@ -1,5 +1,5 @@
 # Task Coach - Your friendly task manager
-# Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
+# Copyright (C) 2004-2014 Task Coach developers <developers@taskcoach.org>
 # 
 # Task Coach is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -175,9 +175,9 @@ thirdpartymodules:
 	cd thirdparty; tar xzf chardet-2.1.1.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty chardet-2.1.1/chardet
 	cd thirdparty; tar xzf python-dateutil-1.5.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty python-dateutil-1.5/dateutil
 	cd thirdparty; tar xzf desktop-0.4.1.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty desktop-0.4.1/desktop
-	cd thirdparty; tar xzf keyring-0.9.2.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty keyring-0.9.2/keyring
+	cd thirdparty; tar xzf keyring-3.3.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty keyring-3.3/keyring
 	cd thirdparty; tar xzf lockfile-0.8.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty lockfile-0.8/lockfile.py
-	cd thirdparty; tar xzf PyPubSub-r303.tar.gz --strip-components=2 -C ../taskcoachlib/thirdparty PyPubSub-r303/src/pubsub
+	cd thirdparty; tar xzf PyPubSub-r343.tar.gz --strip-components=2 -C ../taskcoachlib/thirdparty PyPubSub-r343/src/pubsub
 	cd thirdparty; tar xzf SquareMap-1.0.1b3.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty SquareMap-1.0.1b3/squaremap
 	cd thirdparty; tar xzf python-ntlm-40080cff37ab32570f9bb50bad0a46b957409c18.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty python-ntlm/ntlm
 	cd thirdparty; tar xzf wxScheduler-r150.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty wxScheduler/wxScheduler

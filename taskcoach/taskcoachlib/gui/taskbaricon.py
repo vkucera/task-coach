@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2014 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 João Alexandre de Toledo <jtoledo@griffo.com.br>
 
 Task Coach is free software: you can redistribute it and/or modify

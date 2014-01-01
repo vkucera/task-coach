@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2014 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ class CommonTestsMixin(object):
             else:
                 break
         else:
-            self.fail('No supported locale found. Try "locale -a" and add a supported locale.')
+            self.skipTest('No supported locale found. Try "locale -a" and add a supported locale.')
         reload(render) # To execute module-level code every time
 
     def tearDown(self):

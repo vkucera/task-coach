@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2014 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,6 +25,14 @@ releases = [
 Release('1.3.35', 'December ??, 2013',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bugv2('''The task editor would not open if the user's date
+format didn't include the year.'''),
+        Bugv2('''Unsetting an exclusive category or its parent would
+not work.''', '1475'),
+        Bugv2('''Remove file:// URL scheme from filenames dropped
+from Nautilus.'''),
+        Bugv2('''When exporting tasks to HTML or CSV, sort notes
+alphabetically.''', '1477'),
         ],
     ),
 

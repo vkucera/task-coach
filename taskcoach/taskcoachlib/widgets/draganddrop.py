@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2014 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2011 Tobias Gradl <https://sourceforge.net/users/greentomato>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -107,6 +107,8 @@ class DropTarget(wx.DropTarget):
                     filename = urllib.unquote(url[len('file://'):])
                     self.__onDropMailCallback(x, y, filename)
                 elif self.__onDropURLCallback:
+                    if url.startswith('file://'):
+                        url = urllib.url2pathname(url[7:])
                     self.__onDropURLCallback(x, y, url)
         elif formatId == 'Object Descriptor':
             self.onOutlookDrop(x, y)

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2014 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -286,7 +286,7 @@ class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTestsMixin):
         self.mutual1 = DummyDomainObject('mutual 1')
         self.mutual2 = DummyDomainObject('mutual 2')
 
-    def onCheck(self, event):
+    def onCheck(self, event, final):
         pass
 
     def testCheckParentDoesNotCheckChild(self):

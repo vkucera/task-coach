@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2014 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
@@ -167,7 +167,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
         else:
             super(BaseCategoryViewer, self).onAttributeChanged_Deprecated(event)
         
-    def onCheck(self, event):
+    def onCheck(self, event, final):
         categoryToFilter = self.widget.GetItemPyData(event.GetItem())
         categoryToFilter.setFiltered(event.GetItem().IsChecked())
         self.sendViewerStatusEvent()  # Notify status observers like the status bar

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2014 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -66,13 +66,13 @@ class RowBuilder(object):
                 def renderNotes(notes, indent=0):
                     bf = StringIO.StringIO()
                     spaces = '  ' * indent
-                    for note in notes:
+                    for note in sorted(notes, key=lambda note: note.subject()):
                         bf.write('%s%s\n%s%s\n' % (spaces, note.subject(), spaces, note.description()))
                         bf.write(renderNotes(note.children(), indent + 1))
                     return bf.getvalue()
                 row.append(renderNotes(item.notes()))
             elif column.name() == 'attachments':
-                row.append(u'\n'.join([attachment.subject() for attachment in item.attachments()]))
+                row.append(u'\n'.join(sorted([attachment.subject() for attachment in item.attachments()])))
             else:
                 row.append(column.render(item, humanReadable=False))
         row[0] = self.indent(item) + row[0]

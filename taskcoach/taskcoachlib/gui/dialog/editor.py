@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2013 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2014 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2012 Nicola Chiapolini <nicola.chiapolini@physik.uzh.ch>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Carl Zmola <zmola@acm.org>
@@ -193,7 +193,7 @@ class SubjectPage(Page):
         for eventType in self.items[0].modificationEventTypes():
             try:
                 pub.unsubscribe(self.onAttributeChanged, eventType)
-            except pub.UndefinedTopic:
+            except pub.TopicNameError:
                 pass
         patterns.Publisher().removeObserver(self.onAttributeChanged_Deprecated)
                  
@@ -706,12 +706,13 @@ class LocalCategoryViewer(viewer.BaseCategoryViewer):  # pylint: disable=W0223
                 return True
         return False
 
-    def onCheck(self, event):
+    def onCheck(self, event, final):
         ''' Here we keep track of the items checked by the user so that these 
             items remain checked when refreshing the viewer. ''' 
-        category = self.widget.GetItemPyData(event.GetItem())
-        command.ToggleCategoryCommand(None, self.__items, 
-                                      category=category).do()
+        if final:
+            category = self.widget.GetItemPyData(event.GetItem())
+            command.ToggleCategoryCommand(None, self.__items, 
+                                          category=category).do()
 
     def createCategoryPopupMenu(self):  # pylint: disable=W0221
         return super(LocalCategoryViewer, self).createCategoryPopupMenu(True)            
