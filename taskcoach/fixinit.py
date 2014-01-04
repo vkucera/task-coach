@@ -26,10 +26,10 @@ def visitDir(arg, dirname, names):
         pass
 
     for name in names:
-        if name == '__init__.py':
+        if name in ['__init__.py', 'itopicdefnprovider.py']:
             fname = os.path.join(dirname, name)
             if os.stat(fname).st_size == 0:
-                file(fname, 'wb').write('# Make this a package\n')
+                file(fname, 'wb').write('# Not empty\n')
 
 
 if __name__ == '__main__':
