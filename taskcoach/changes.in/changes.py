@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.35', 'December ??, 2013',
+Release('1.3.35', 'January 4, 2014',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bugv2('''The task editor would not open if the user's date
