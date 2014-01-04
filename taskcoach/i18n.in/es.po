@@ -2,15 +2,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Task Coach 0.45\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-19 12:12+0000\n"
-"PO-Revision-Date: 2013-11-23 13:16+0000\n"
-"Last-Translator: Adolfo Jayme Barrientos <fitoschido@gmail.com>\n"
+"POT-Creation-Date: 2013-11-24 17:21+0000\n"
+"PO-Revision-Date: 2013-11-27 11:02+0000\n"
+"Last-Translator: Rafa Soler <Unknown>\n"
 "Language-Team: jjramos <jjramos@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-24 12:28+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-01-04 15:53+0000\n"
+"X-Generator: Launchpad (build 16877)\n"
 "X-Poedit-Country: SPAIN\n"
 "X-Poedit-Language: Spanish\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -30,7 +30,7 @@ msgstr ""
 "Ver/Ocultar tareas atrasadas (Tareas inactivas con inicio previsto en fechas "
 "anteriores)"
 
-#: taskcoachlib/application/application.py:66
+#: taskcoachlib/application/application.py:67
 msgid ""
 "Errors have occured. Please see \"taskcoachlog.txt\" in your \"My "
 "Documents\" folder."
@@ -38,8 +38,8 @@ msgstr ""
 "Ha ocurrido un error. Por favor vea \"taskcoachlog.txt\" en su folder \"My "
 "Documents\""
 
-#: taskcoachlib/application/application.py:66
-#: taskcoachlib/application/application.py:68
+#: taskcoachlib/application/application.py:67
+#: taskcoachlib/application/application.py:69
 #: taskcoachlib/gui/dialog/attributesync.py:91
 #: taskcoachlib/gui/mainwindow.py:389 taskcoachlib/iphone/protocol.py:482
 #: taskcoachlib/widgets/draganddrop.py:121
@@ -47,11 +47,11 @@ msgstr ""
 msgid "Error"
 msgstr "Error"
 
-#: taskcoachlib/application/application.py:68
+#: taskcoachlib/application/application.py:69
 msgid "Errors have occured. Please see \"%s\""
 msgstr "Han ocurrido errores. Por favor ver «%s»"
 
-#: taskcoachlib/application/application.py:308
+#: taskcoachlib/application/application.py:322
 msgid ""
 "Couldn't load settings from TaskCoach.ini:\n"
 "%s"
@@ -59,7 +59,7 @@ msgstr ""
 "No se pudo cargar la configuración de TaskCoach.ini:\n"
 "%s"
 
-#: taskcoachlib/application/application.py:309
+#: taskcoachlib/application/application.py:323
 #: taskcoachlib/gui/iocontroller.py:72
 msgid "%s file error"
 msgstr "%s error de archivo"
@@ -749,6 +749,8 @@ msgid ""
 "Show/hide due soon tasks (incomplete tasks with a due date in the near "
 "future)"
 msgstr ""
+"Mostrar/ocultar tareas de próximo vencimiento (tareas incompletas que tienen "
+"fecha de vencimiento en un futuro cercano)"
 
 #: taskcoachlib/domain/task/status.py:77
 msgid "Overdue tasks"
@@ -766,6 +768,8 @@ msgstr "Las tareas vencidas: %d (%d%%)"
 msgid ""
 "Show/hide over due tasks (incomplete tasks with a due date in the past)"
 msgstr ""
+"Mostrar/ocultar tareas vencidas (tareas incompletas que tienen fecha de "
+"vencimiento pasada)"
 
 #: taskcoachlib/domain/task/status.py:81
 msgid "Completed tasks"
@@ -1588,15 +1592,15 @@ msgstr ""
 msgid "Export as CSV"
 msgstr "Exportar como CSV"
 
-#: taskcoachlib/gui/dialog/export.py:259 taskcoachlib/gui/iocontroller.py:328
+#: taskcoachlib/gui/dialog/export.py:263 taskcoachlib/gui/iocontroller.py:328
 msgid "Export as iCalendar"
 msgstr "Exportar como iCalendar"
 
-#: taskcoachlib/gui/dialog/export.py:275 taskcoachlib/gui/iocontroller.py:314
+#: taskcoachlib/gui/dialog/export.py:279 taskcoachlib/gui/iocontroller.py:314
 msgid "Export as HTML"
 msgstr "Exporar como HTML"
 
-#: taskcoachlib/gui/dialog/export.py:291 taskcoachlib/gui/iocontroller.py:334
+#: taskcoachlib/gui/dialog/export.py:295 taskcoachlib/gui/iocontroller.py:334
 msgid "Export as Todo.txt"
 msgstr "Exportar como Todo.txt"
 
@@ -1860,6 +1864,8 @@ msgstr "Características"
 #: taskcoachlib/gui/dialog/preferences.py:526
 msgid "All settings on this tab require a restart of %s to take effect"
 msgstr ""
+"Todas la configuraciones de esta pestaña requieren el reinicio de %s para "
+"tener efecto"
 
 #: taskcoachlib/gui/dialog/preferences.py:529
 msgid "Allow for tracking effort"
@@ -2097,6 +2103,7 @@ msgstr "Contraseña para sincronizar con el iPhone"
 #: taskcoachlib/gui/dialog/preferences.py:681
 msgid "When synchronizing, enter this password on the iPhone to authorize it"
 msgstr ""
+"Cuando sincronice, introduzca esta contraseña en el iPhone para autorizarla"
 
 #: taskcoachlib/gui/dialog/preferences.py:683
 msgid "Bonjour service name"
@@ -2252,7 +2259,7 @@ msgstr "Nueva plantilla de tareas"
 
 #: taskcoachlib/gui/dialog/toolbar.py:47
 msgid "Preview"
-msgstr ""
+msgstr "Vista Previa"
 
 #: taskcoachlib/gui/dialog/toolbar.py:67
 msgid "Available tools"
@@ -2260,11 +2267,11 @@ msgstr "Herramientas disponibles"
 
 #: taskcoachlib/gui/dialog/toolbar.py:83
 msgid "Make this tool visible in the toolbar"
-msgstr ""
+msgstr "Hacer esta herramienta visible en la barra de herramientas"
 
 #: taskcoachlib/gui/dialog/toolbar.py:87
 msgid "Hide this tool from the toolbar"
-msgstr ""
+msgstr "Ocultar esta herramienta de la barra de herramientas"
 
 #: taskcoachlib/gui/dialog/toolbar.py:92
 msgid "Tools"
@@ -2272,27 +2279,29 @@ msgstr "Herramientas"
 
 #: taskcoachlib/gui/dialog/toolbar.py:106
 msgid "Move the tool up (to the left of the toolbar)"
-msgstr ""
+msgstr "Subir la herramienta (a la izquierda de la barra de herramientas)"
 
 #: taskcoachlib/gui/dialog/toolbar.py:110
 msgid "Move the tool down (to the right of the toolbar)"
-msgstr ""
+msgstr "Bajar la herramienta (a la derecha de la barra de herramientas)"
 
 #: taskcoachlib/gui/dialog/toolbar.py:134
 msgid "Reorder toolbar buttons by drag and dropping them in this list."
 msgstr ""
+"Reorganizar los botones de la barra de herramientas arrastrando y soltando "
+"elementos en esta lista."
 
 #: taskcoachlib/gui/dialog/toolbar.py:167
 #: taskcoachlib/gui/dialog/toolbar.py:225
 #: taskcoachlib/gui/dialog/toolbar.py:254
 msgid "Separator"
-msgstr ""
+msgstr "Separador"
 
 #: taskcoachlib/gui/dialog/toolbar.py:169
 #: taskcoachlib/gui/dialog/toolbar.py:228
 #: taskcoachlib/gui/dialog/toolbar.py:256
 msgid "Spacer"
-msgstr ""
+msgstr "Espaciador"
 
 #: taskcoachlib/gui/dialog/version.py:41
 msgid "Notify me of new versions."
@@ -2672,7 +2681,7 @@ msgstr "Activar el visor &anterior\tCtrl+PgUp"
 
 #: taskcoachlib/gui/menu.py:413 taskcoachlib/gui/menu.py:414
 msgid "&Mode"
-msgstr ""
+msgstr "&Modo"
 
 #: taskcoachlib/gui/menu.py:415 taskcoachlib/gui/menu.py:416
 msgid "&Filter"
@@ -3122,11 +3131,11 @@ msgstr "Preferencias de SyncML"
 #: taskcoachlib/gui/uicommand/uicommand.py:696
 #: taskcoachlib/gui/uicommand/uicommand.py:701
 msgid "Customize toolbar"
-msgstr ""
+msgstr "Personalizar barra de tareas"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:697
 msgid "Customize"
-msgstr ""
+msgstr "Personalizar"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:708
 msgid "&All\tCtrl+A"
@@ -3269,7 +3278,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1251
 msgid "New task with selected tasks as &dependents..."
-msgstr ""
+msgstr "Nueva tarea con las tareas seleccionadas como dependientes..."
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1252
 msgid "Insert a new task with the selected tasks as dependent tasks"
@@ -3591,7 +3600,7 @@ msgstr "Restaurar la ventana a su estado anterior"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2101
 msgid "Search"
-msgstr ""
+msgstr "Búsqueda"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2214
 msgid "Effort details"
@@ -3615,15 +3624,17 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2252
 msgid "List"
-msgstr ""
+msgstr "Lista"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2252
 msgid "Tree"
-msgstr ""
+msgstr "Árbol"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2258
 msgid "When checked, show tasks as tree, otherwise show tasks as list"
 msgstr ""
+"Cuando marcada, mostrar tareas como árbol, en caso contrario hacerlo como "
+"lista"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2289
 msgid "Filter on all checked categories"
@@ -3753,7 +3764,7 @@ msgstr ""
 
 #: taskcoachlib/gui/viewer/attachment.py:115
 msgid "Sort by creation date"
-msgstr ""
+msgstr "Ordenar por fecha de creación"
 
 #: taskcoachlib/gui/viewer/attachment.py:122
 #: taskcoachlib/gui/viewer/attachment.py:142
@@ -3765,7 +3776,7 @@ msgstr ""
 
 #: taskcoachlib/gui/viewer/attachment.py:123
 msgid "Sort by last modification date"
-msgstr ""
+msgstr "Ordenar por la útima fecha de modificación"
 
 #: taskcoachlib/gui/viewer/attachment.py:134
 #: taskcoachlib/gui/viewer/category.py:138
@@ -3790,22 +3801,24 @@ msgstr "Mostrar/ocultar columna de notas"
 #: taskcoachlib/gui/viewer/category.py:148 taskcoachlib/gui/viewer/note.py:97
 #: taskcoachlib/gui/viewer/task.py:1089
 msgid "Show/hide creation date column"
-msgstr ""
+msgstr "Mostrar/ocultar la columna de fecha de creación"
 
 #: taskcoachlib/gui/viewer/attachment.py:143
 #: taskcoachlib/gui/viewer/category.py:151 taskcoachlib/gui/viewer/note.py:100
 #: taskcoachlib/gui/viewer/task.py:1092
 msgid "Show/hide last modification date column"
-msgstr ""
+msgstr "Mostrar/ocultar la columna de última modificación"
 
 #: taskcoachlib/gui/viewer/base.py:80
 msgid "Toolbars are customizable"
-msgstr ""
+msgstr "Las barras de herramientas son personalizables"
 
 #: taskcoachlib/gui/viewer/base.py:82
 msgid ""
 "Click on the gear icon on the right to add buttons and rearrange them."
 msgstr ""
+"Pinche en el icono del engranaje de la derecha para añadir botones o "
+"reorganizarlos"
 
 #: taskcoachlib/gui/viewer/category.py:140 taskcoachlib/gui/viewer/note.py:90
 #: taskcoachlib/gui/viewer/task.py:1070
@@ -6591,6 +6604,22 @@ msgstr "recordatorio de tiempo"
 
 #: taskcoachlib/persistence/csv/generator.py:40
 msgid "Creation time"
+msgstr ""
+
+#: taskcoachlib/persistence/csv/generator.py:41
+msgid "Period end date"
+msgstr ""
+
+#: taskcoachlib/persistence/csv/generator.py:41
+msgid "Period end time"
+msgstr ""
+
+#: taskcoachlib/persistence/csv/generator.py:41
+msgid "Period start date"
+msgstr ""
+
+#: taskcoachlib/persistence/csv/generator.py:41
+msgid "Period start time"
 msgstr ""
 
 #: taskcoachlib/persistence/csv/reader.py:58

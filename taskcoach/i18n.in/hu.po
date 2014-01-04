@@ -6,26 +6,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Task Coach\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-19 12:12+0000\n"
+"POT-Creation-Date: 2013-11-24 17:21+0000\n"
 "PO-Revision-Date: 2013-04-15 13:39+0000\n"
 "Last-Translator: Attila Herczeg <hnczy.public@gmail.com>\n"
 "Language-Team: Majsa Norbert <nmajsa@szintezis.hu>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-24 12:28+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-01-04 15:52+0000\n"
+"X-Generator: Launchpad (build 16877)\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "Generated-By: pygettext.py 1.5\n"
 
-#: taskcoachlib/application/application.py:66
+#: taskcoachlib/application/application.py:67
 msgid ""
 "Errors have occured. Please see \"taskcoachlog.txt\" in your \"My "
 "Documents\" folder."
 msgstr ""
 
-#: taskcoachlib/application/application.py:66
-#: taskcoachlib/application/application.py:68
+#: taskcoachlib/application/application.py:67
+#: taskcoachlib/application/application.py:69
 #: taskcoachlib/gui/dialog/attributesync.py:91
 #: taskcoachlib/gui/mainwindow.py:389 taskcoachlib/iphone/protocol.py:482
 #: taskcoachlib/widgets/draganddrop.py:121
@@ -33,11 +33,11 @@ msgstr ""
 msgid "Error"
 msgstr "Hiba"
 
-#: taskcoachlib/application/application.py:68
+#: taskcoachlib/application/application.py:69
 msgid "Errors have occured. Please see \"%s\""
 msgstr "Hiba lépett fel. Lásd \"%s\""
 
-#: taskcoachlib/application/application.py:308
+#: taskcoachlib/application/application.py:322
 msgid ""
 "Couldn't load settings from TaskCoach.ini:\n"
 "%s"
@@ -45,7 +45,7 @@ msgstr ""
 "Nem sikerült betölteni a beállításokat: TaskCoach.ini:\n"
 "%s"
 
-#: taskcoachlib/application/application.py:309
+#: taskcoachlib/application/application.py:323
 #: taskcoachlib/gui/iocontroller.py:72
 msgid "%s file error"
 msgstr "%s fájl hiba"
@@ -1584,15 +1584,15 @@ msgstr ""
 msgid "Export as CSV"
 msgstr "Exportálás CSV-be"
 
-#: taskcoachlib/gui/dialog/export.py:259 taskcoachlib/gui/iocontroller.py:328
+#: taskcoachlib/gui/dialog/export.py:263 taskcoachlib/gui/iocontroller.py:328
 msgid "Export as iCalendar"
 msgstr "Exportálás iCalendar formátumba"
 
-#: taskcoachlib/gui/dialog/export.py:275 taskcoachlib/gui/iocontroller.py:314
+#: taskcoachlib/gui/dialog/export.py:279 taskcoachlib/gui/iocontroller.py:314
 msgid "Export as HTML"
 msgstr "Exportálás HTML-be"
 
-#: taskcoachlib/gui/dialog/export.py:291 taskcoachlib/gui/iocontroller.py:334
+#: taskcoachlib/gui/dialog/export.py:295 taskcoachlib/gui/iocontroller.py:334
 msgid "Export as Todo.txt"
 msgstr ""
 
@@ -6207,6 +6207,22 @@ msgstr ""
 
 #: taskcoachlib/persistence/csv/generator.py:40
 msgid "Creation time"
+msgstr ""
+
+#: taskcoachlib/persistence/csv/generator.py:41
+msgid "Period end date"
+msgstr ""
+
+#: taskcoachlib/persistence/csv/generator.py:41
+msgid "Period end time"
+msgstr ""
+
+#: taskcoachlib/persistence/csv/generator.py:41
+msgid "Period start date"
+msgstr ""
+
+#: taskcoachlib/persistence/csv/generator.py:41
+msgid "Period start time"
 msgstr ""
 
 #: taskcoachlib/persistence/csv/reader.py:58
