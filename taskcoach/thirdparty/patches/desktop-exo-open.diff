@@ -1,0 +1,19 @@
+diff -r -U 4 desktop-0.4.1/desktop/__init__.py desktop-0.4.1-patched/desktop/__init__.py
+--- desktop-0.4.1/desktop/__init__.py	2012-09-06 00:28:18.000000000 +0200
++++ desktop-0.4.1-patched/desktop/__init__.py	2014-01-04 13:20:09.000000000 +0100
+@@ -277,9 +277,14 @@
+     elif desktop_in_use == "GNOME":
+         cmd = ["gnome-open", url]
+ 
+     elif desktop_in_use == "XFCE":
+-        cmd = ["exo-open", url]
++        # exo-open 0.10 cannot parse the mailto: URL scheme if there is no
++        # recipient
++        if url.lower().startswith('mailto:'):
++            cmd = ["exo-open", "--launch", "MailReader", url]
++        else:
++            cmd = ["exo-open", url]
+ 
+     elif desktop_in_use == "Mac OS X":
+         cmd = ["open", url]
+ 
