@@ -35,6 +35,7 @@ from Nautilus.'''),
 alphabetically.''', '1477'),
         Bugv2('''Sending a task by e-mail would not work on
 XFCE 4.10.'''),
+        Bugv2('''Fix AttributeError problem''', '1479'),
         ],
     ),
 
