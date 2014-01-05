@@ -22,7 +22,14 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.35', 'December ??, 2013',
+Release('1.3.36', 'January ??, 2014',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bugv2('''Prerequisites modification would not work.''', '1480'),
+        ],
+    ),
+
+Release('1.3.35', 'January 4, 2014',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bugv2('''The task editor would not open if the user's date
@@ -33,6 +40,9 @@ not work.''', '1475'),
 from Nautilus.'''),
         Bugv2('''When exporting tasks to HTML or CSV, sort notes
 alphabetically.''', '1477'),
+        Bugv2('''Sending a task by e-mail would not work on
+XFCE 4.10.'''),
+        Bugv2('''Fix AttributeError problem''', '1479'),
         ],
     ),
 

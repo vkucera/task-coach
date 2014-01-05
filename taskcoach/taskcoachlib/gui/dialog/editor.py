@@ -666,10 +666,12 @@ class PageWithViewer(Page):
         raise NotImplementedError
         
     def close(self):
-        self.viewer.detach()
-        # Don't notify the viewer about any changes anymore, it's about
-        # to be deleted, but don't delete it too soon.
-        wx.CallAfter(self.deleteViewer)
+        # I guess this happens because of CallAfter in context of #1437...
+        if hasattr(self, 'viewer'):
+            self.viewer.detach()
+            # Don't notify the viewer about any changes anymore, it's about
+            # to be deleted, but don't delete it too soon.
+            wx.CallAfter(self.deleteViewer)
         super(PageWithViewer, self).close()
         
     def deleteViewer(self):
@@ -836,7 +838,7 @@ class LocalPrerequisiteViewer(viewer.CheckableTaskViewer):  # pylint: disable=W0
     def getIsItemCheckable(self, item):
         return item not in self.__items
     
-    def onCheck(self, event):
+    def onCheck(self, event, final):
         item = self.widget.GetItemPyData(event.GetItem())
         is_checked = event.GetItem().IsChecked()
         if is_checked != self.getIsItemChecked(item):
