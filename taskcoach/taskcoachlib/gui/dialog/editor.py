@@ -838,7 +838,7 @@ class LocalPrerequisiteViewer(viewer.CheckableTaskViewer):  # pylint: disable=W0
     def getIsItemCheckable(self, item):
         return item not in self.__items
     
-    def onCheck(self, event):
+    def onCheck(self, event, final):
         item = self.widget.GetItemPyData(event.GetItem())
         is_checked = event.GetItem().IsChecked()
         if is_checked != self.getIsItemChecked(item):
