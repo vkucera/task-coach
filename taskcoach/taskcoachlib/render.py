@@ -95,7 +95,7 @@ def budget(aBudget):
 
 
 # Default time formatting
-language_and_country = locale.getlocale()[0]
+language_and_country = locale.getlocale(locale.LC_TIME)[0]
 if language_and_country and ('_US' in language_and_country or 
                              '_United States' in language_and_country):
     timeFormat = '%I %p'
