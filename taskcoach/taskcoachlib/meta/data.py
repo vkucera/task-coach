@@ -28,6 +28,8 @@ release_day = '4'  # Day number of the release, 1-31, as string
 release_month = 'January'  # Month of the release in plain English
 release_year = '2014'  # Year of the release as string
 release_status = 'stable'  # One of 'alpha', 'beta', 'stable'
+# Enabled languages (more than 90% translated)
+enabled_languages = ['be', 'cs', 'de', 'es', 'fi', 'fr', 'it', 'nl', 'pl', 'pt', 'pt_BR', 'ru', 'sk', 'sv', 'tr']
 
 # No editing needed below this line for doing a release.
 

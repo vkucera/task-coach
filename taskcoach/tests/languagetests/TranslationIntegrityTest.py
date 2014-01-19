@@ -22,6 +22,7 @@ from taskcoachlib import meta
 import string  # pylint: disable=W0402
 import re  
 import test
+import shutil, os
 
 
 class TranslationIntegrityTestsMixin(object):
@@ -114,11 +115,27 @@ class TranslationIntegrityTestsMixin(object):
     @classmethod
     def removeUmlauts(cls, text):
         return re.sub(cls.umlautRE, '', text)      
-    
+
+
+class TranslationCoverageTestsMixin(object):
+    def testNotComplete(self):
+        if self.language in meta.enabled_languages:
+            percentDone = 100.0 * len(self.translation) / len(self.strings)
+            self.assertGreaterEqual(percentDone, 90.0, 'Translation for %s is only %.2f%% complete' % (self.language, percentDone))
+
+    def testComplete(self):
+        if self.language not in meta.enabled_languages:
+            percentDone = 100.0 * len(self.translation) / len(self.strings)
+            self.assertLess(percentDone, 90.0, 'Translation for %s is %.2f%% complete but disabled' % (self.language, percentDone))
+
 
 def installAllTestCaseClasses():
+    shutil.copyfile(os.path.join(os.path.dirname(__file__), '../../i18n.in/messages.pot'), 'messages.po')
+    from taskcoachlib.i18n import po2dict
+    po2dict.make('messages')
+    allStrings = set(po2dict.STRINGS)
     for language in getLanguages():
-        installTestCaseClasses(language)
+        installTestCaseClasses(language, allStrings)
 
 
 def getLanguages():
@@ -126,12 +143,13 @@ def getLanguages():
             if language is not None]
 
 
-def installTestCaseClasses(language):
+def installTestCaseClasses(language, allStrings):
     translation = __import__('taskcoachlib.i18n.%s' % language, 
                              fromlist=['dict'])
-    for englishString, translatedString in translation.dict.iteritems():        
-        installTranslationTestCaseClass(language, englishString, 
-                                              translatedString)
+    ## for englishString, translatedString in translation.dict.iteritems():        
+    ##     installTranslationTestCaseClass(language, englishString, 
+    ##                                           translatedString)
+    installLanguageTestCaseClass(language, translation, allStrings)
 
 
 def installTranslationTestCaseClass(language, englishString, 
@@ -141,6 +159,10 @@ def installTranslationTestCaseClass(language, englishString,
         language, englishString, translatedString)
     globals()[testCaseClassName] = testCaseClass
 
+def installLanguageTestCaseClass(language, translation, allStrings):
+    testCaseClassName = languageTestCaseClassName(language)
+    testCaseClass = languageTestCaseClass(testCaseClassName, language, translation, allStrings)
+    globals()[testCaseClassName] = testCaseClass
 
 def translationTestCaseClassName(language, englishString, 
                                  prefix='TranslationIntegrityTest'):
@@ -158,6 +180,13 @@ def translationTestCaseClassName(language, englishString,
         className = '%s_%s_%s_%d' % (prefix, language, englishString, count)
     return className
 
+def languageTestCaseClassName(language, prefix='TranslationCoverageTests'):
+    className = '%s_%s' % (prefix, language)
+    count = 0
+    while className in globals():
+        count += 1
+        className = '%s_%s_%s' % (prefix, language, count)
+    return className
 
 def translationTestCaseClass(className, language, englishString, translatedString):
     class_ = type(className, (TranslationIntegrityTestsMixin, test.TestCase), 
@@ -165,6 +194,13 @@ def translationTestCaseClass(className, language, englishString, translatedStrin
     class_.language = language
     class_.englishString = englishString
     class_.translatedString = translatedString
+    return class_
+
+def languageTestCaseClass(className, language, translation, allStrings):
+    class_ = type(className, (TranslationCoverageTestsMixin, test.TestCase), dict())
+    class_.translation = translation.dict
+    class_.strings = allStrings
+    class_.language = language
     return class_
 
 
