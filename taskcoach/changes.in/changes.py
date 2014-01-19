@@ -28,6 +28,7 @@ Release('1.3.36', 'January ??, 2014',
         Bugv2('''Prerequisites modification would not work.''', '1480', '1486'),
         Bugv2('''LC_TIME would not be honored if set independently''',
               '1483'),
+        Bugv2('''Disable translations that are not at least 90% complete.'''),
         ],
     ),
 
