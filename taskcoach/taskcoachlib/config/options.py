@@ -65,7 +65,7 @@ class ApplicationOptionParser(OptionParser):
         
     def languageOption(self):
         return optparse.Option('-l', '--language', dest='language', 
-            type='choice', choices=sorted([lang for lang in \
+            type='choice', choices=sorted([lang for (lang, enabled) in \
                 meta.data.languages.values() if lang is not None] + ['en']),
             help='use the specified LANGUAGE for the GUI (e.g. "nl" or "fr"')
 

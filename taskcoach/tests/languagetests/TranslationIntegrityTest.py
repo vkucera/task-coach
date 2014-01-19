@@ -119,12 +119,12 @@ class TranslationIntegrityTestsMixin(object):
 
 class TranslationCoverageTestsMixin(object):
     def testNotComplete(self):
-        if self.language in meta.enabled_languages:
+        if self.enabled:
             percentDone = 100.0 * len(self.translation) / len(self.strings)
             self.assertGreaterEqual(percentDone, 90.0, 'Translation for %s is only %.2f%% complete' % (self.language, percentDone))
 
     def testComplete(self):
-        if self.language not in meta.enabled_languages:
+        if not self.enabled:
             percentDone = 100.0 * len(self.translation) / len(self.strings)
             self.assertLess(percentDone, 90.0, 'Translation for %s is %.2f%% complete but disabled' % (self.language, percentDone))
 
@@ -134,22 +134,22 @@ def installAllTestCaseClasses():
     from taskcoachlib.i18n import po2dict
     po2dict.make('messages')
     allStrings = set(po2dict.STRINGS)
-    for language in getLanguages():
-        installTestCaseClasses(language, allStrings)
+    for language, enabled in getLanguages():
+        installTestCaseClasses(language, enabled, allStrings)
 
 
 def getLanguages():
-    return [language for language in meta.data.languages.values() \
+    return [(language, enabled) for language, enabled in meta.data.languages.values() \
             if language is not None]
 
 
-def installTestCaseClasses(language, allStrings):
+def installTestCaseClasses(language, enabled, allStrings):
     translation = __import__('taskcoachlib.i18n.%s' % language, 
                              fromlist=['dict'])
     for englishString, translatedString in translation.dict.iteritems():        
         installTranslationTestCaseClass(language, englishString, 
                                               translatedString)
-    installLanguageTestCaseClass(language, translation, allStrings)
+    installLanguageTestCaseClass(language, enabled, translation, allStrings)
 
 
 def installTranslationTestCaseClass(language, englishString, 
@@ -159,9 +159,9 @@ def installTranslationTestCaseClass(language, englishString,
         language, englishString, translatedString)
     globals()[testCaseClassName] = testCaseClass
 
-def installLanguageTestCaseClass(language, translation, allStrings):
+def installLanguageTestCaseClass(language, enabled, translation, allStrings):
     testCaseClassName = languageTestCaseClassName(language)
-    testCaseClass = languageTestCaseClass(testCaseClassName, language, translation, allStrings)
+    testCaseClass = languageTestCaseClass(testCaseClassName, language, enabled, translation, allStrings)
     globals()[testCaseClassName] = testCaseClass
 
 def translationTestCaseClassName(language, englishString, 
@@ -196,9 +196,10 @@ def translationTestCaseClass(className, language, englishString, translatedStrin
     class_.translatedString = translatedString
     return class_
 
-def languageTestCaseClass(className, language, translation, allStrings):
+def languageTestCaseClass(className, language, enabled, translation, allStrings):
     class_ = type(className, (TranslationCoverageTestsMixin, test.TestCase), dict())
     class_.translation = translation.dict
+    class_.enabled = enabled
     class_.strings = allStrings
     class_.language = language
     return class_

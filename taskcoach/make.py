@@ -157,15 +157,6 @@ def createDebianChangelog():
               os.path.join(builddir, 'debian'))
 
 
-def deleteDisabledTranslations():
-    for filename in glob.glob('taskcoachlib/i18n/*.py'):
-        name = os.path.split(filename)[-1][:-3]
-        if name not in meta.enabled_languages and name not in ['__init__', 'po2dict']:
-            os.remove(filename)
-
-
-deleteDisabledTranslations()
-
 if sys.argv[1] == 'py2exe':
     from distutils.core import setup
     import py2exe  # pylint: disable=F0401
