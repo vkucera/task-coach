@@ -159,7 +159,7 @@ def createDebianChangelog():
 
 def deleteDisabledTranslations():
     for name in glob.glob('taskcoachlib/i18n/*.py'):
-        if name[:-3] not in meta.enabled_languages:
+        if name[:-3] not in meta.enabled_languages and name not in ['__init__.py', 'po2dict.py']:
             os.remove(name)
 
 
