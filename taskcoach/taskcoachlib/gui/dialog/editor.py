@@ -1264,8 +1264,12 @@ class EffortEditBook(Page):
     def addDescriptionEntry(self):
         # pylint: disable=W0201
         def combined_description(items):
-            return u'[%s]\n\n' % _('Edit to change all descriptions') + \
-                '\n\n'.join(item.description() for item in items)
+            distinctDescriptions = set(item.description() for item in items)
+            if len(distinctDescriptions) == 1 and distinctDescriptions.pop():
+                return items[0].description()
+            lines = [u'[%s]' % _('Edit to change all descriptions')]
+            lines.extend(item.description() for item in items if item.description())
+            return u'\n\n'.join(lines)
                 
         current_description = self.items[0].description() if len(self.items) == 1 else combined_description(self.items)
         self._descriptionEntry = widgets.MultiLineTextCtrl(self, current_description)
