@@ -26,6 +26,13 @@ except NameError:
     _ = lambda x: x
 
 
+# On Windows, using wx.NewId() in __Populate leads to errors after some time
+# (only 2^16 possible values). Keep a cache of them and reuse them. No clash
+# because they're used in a popup, so there should only be one instance of it
+# at a time.
+_POPUPIDCACHE = list()
+
+
 def defaultEncodingName():
     return wx.Locale.GetSystemEncodingName() or 'utf-8'
 
@@ -1711,12 +1718,14 @@ class _RelativeChoicePopup(_PopupWindow):
 
         self.__lines = list()
         for line, delta in enumerate(self.__choices):
-            idSpan = wx.NewId()
+            if line >= len(_POPUPIDCACHE):
+                _POPUPIDCACHE.append((wx.NewId(), wx.NewId()))
+            idSpan, idDel = _POPUPIDCACHE[line]
+
             btn = pbtn.PlateButton(self.__interior, idSpan, self.DeltaRepr(delta), style=pbtn.PB_STYLE_SQUARE)
             self.__sizer.Add(btn, 0, wx.EXPAND)
             wx.EVT_BUTTON(btn, idSpan, self.OnChoose)
 
-            idDel = wx.NewId()
             btn = wx.BitmapButton(self.__interior, idDel, wx.ArtProvider.GetBitmap(wx.ART_DEL_BOOKMARK, wx.ART_BUTTON, (16, 16)))
             self.__sizer.Add(btn, 0, wx.ALL|wx.ALIGN_CENTRE, 3)
             btn.Show(False)

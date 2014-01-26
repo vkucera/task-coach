@@ -31,6 +31,7 @@ Release('1.3.36', 'January ??, 2014',
         Bugv2('''Disable translations that are not at least 90% complete.'''),
         Bugv2('''Do something a little more intuitive when editing efforts
 in aggregated mode.''', '1485'),
+        Bugv2('''Fix a resource leak on Windows.''', '1488'),
         ],
     ),
 
