@@ -32,6 +32,8 @@ Release('1.3.36', 'January ??, 2014',
         Bugv2('''Do something a little more intuitive when editing efforts
 in aggregated mode.''', '1485'),
         Bugv2('''Fix a resource leak on Windows.''', '1488'),
+        Bugv2('''Fix a crash on Mint when synchronizing with an iPhone
+if the password is not set.''', '1487'),
         ],
     ),
 

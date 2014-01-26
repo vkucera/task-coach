@@ -476,10 +476,10 @@ class IPhoneAcceptor(Acceptor):
             if password:
                 return IPhoneHandler(window, settings, iocontroller, fp)
 
-            wx.MessageBox(_('''An iPhone or iPod Touch tried to connect to Task Coach,\n'''
-                            '''but no password is set. Please set a password in the\n'''
-                            '''iPhone section of the configuration and try again.'''),
-                          _('Error'), wx.OK)
+            wx.CallAfter(wx.MessageBox, _('''An iPhone or iPod Touch tried to connect to Task Coach,\n'''
+                                          '''but no password is set. Please set a password in the\n'''
+                                          '''iPhone section of the configuration and try again.'''),
+                         _('Error'), wx.OK)
 
         Acceptor.__init__(self, factory, '', None)
 
