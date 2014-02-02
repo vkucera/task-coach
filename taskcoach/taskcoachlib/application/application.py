@@ -75,7 +75,24 @@ class RedirectedOutput(object):
 class wxApp(wx.App):
     def __init__(self, callback, *args, **kwargs):
         self.sessionCallback = callback
+        self.keepGoing = True
         super(wxApp, self).__init__(*args, **kwargs)
+
+    def MainLoop(self):
+        # The default main loop fires idle events every second on OSX...
+        evtLoop = wx.EventLoop()
+        oldLoop = wx.EventLoop.GetActive()
+        wx.EventLoop.SetActive(evtLoop)
+        while self.keepGoing:
+            if evtLoop.Pending():
+                while evtLoop.Pending():
+                    evtLoop.Dispatch()
+                self.ProcessIdle()
+        wx.EventLoop.SetActive(oldLoop)
+
+    def ExitMainLoop(self):
+        self.keepGoing = False
+        super(wxApp, self).ExitMainLoop()
 
     def OnInit(self):
         if operating_system.isWindows():
