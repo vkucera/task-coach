@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, wx
+import test, wx, time
 from taskcoachlib.domain import date
 
 
@@ -24,30 +24,45 @@ class SchedulerTest(test.TestCase):
     def setUp(self):
         super(SchedulerTest, self).setUp()
         self.scheduler = date.Scheduler()
+        self.callCount = 0
 
     def callback(self):
-        pass
+        self.callCount += 1
         
     def testScheduleAtDateTime(self):
-        futureDate = date.Tomorrow()
+        futureDate = date.Now() + date.TimeDelta(seconds=1)
         self.scheduler.schedule(self.callback, futureDate)
         self.failUnless(self.scheduler.is_scheduled(self.callback))
-        self.scheduler._process_jobs(futureDate)
-        wx.Yield()
+        t0 = time.time()
+        while time.time() - t0 < 2.1:
+            wx.Yield()
         self.failIf(self.scheduler.is_scheduled(self.callback))
+        self.assertEqual(self.callCount, 1)
 
     def testUnschedule(self):
-        futureDate = date.Tomorrow()
+        futureDate = date.Now() + date.TimeDelta(seconds=1)
         self.scheduler.schedule(self.callback, futureDate)
         self.scheduler.unschedule(self.callback)
         self.failIf(self.scheduler.is_scheduled(self.callback))
-        self.scheduler._process_jobs(futureDate)
-        wx.Yield()
+        t0 = time.time()
+        while time.time() - t0 < 1.2:
+            wx.Yield()
+        self.assertEqual(self.callCount, 0)
 
     def testScheduleAtPastDateTime(self):
-        pastDate = date.Yesterday()
+        pastDate = date.Now() - date.TimeDelta(seconds=1)
         self.scheduler.schedule(self.callback, pastDate)
         self.failIf(self.scheduler.is_scheduled(self.callback))
-        self.scheduler._process_jobs(pastDate)
         wx.Yield()
         self.failIf(self.scheduler.is_scheduled(self.callback))
+        self.assertEqual(self.callCount, 1)
+
+    def testScheduleInterval(self):
+        self.scheduler.schedule_interval(self.callback, seconds=1)
+        try:
+            t0 = time.time()
+            while time.time() - t0 < 2.1:
+                wx.Yield()
+            self.assertEqual(self.callCount, 2)
+        finally:
+            self.scheduler.unschedule(self.callback)

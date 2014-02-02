@@ -172,6 +172,8 @@ class CompositeEffort(BaseCompositeEffort):
             super(CompositeEffort, self).mayContain(effort)
             
     def description(self):
+        if len(set(effort.description() for effort in self._getEfforts(False))) == 1:
+            return self._getEfforts(False)[0].description()
         effortDescriptions = [effort.description() for effort in \
                               sorted(self._getEfforts(False), 
                                      key=lambda effort: effort.getStart()) if effort.description()]
@@ -261,4 +263,3 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
             effort_in_period = [effort for effort in task.efforts() if \
                                 self._inPeriod(effort)]
             self.__effort_cache.extend(effort_in_period)
-           

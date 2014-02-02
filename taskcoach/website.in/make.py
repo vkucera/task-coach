@@ -515,11 +515,19 @@ linux = download_table(image='linux',
                        prerequisites=prerequisites,
                        installation='Use your package manager to install the package')
 
+syncml = download_table(image='linux',
+                        download_urls={'taskcoach.org': 'downloads/python2.7-syncml_0.3-1_amd64.deb'},
+                        package_type='SyncML module',
+                        platform='Debian', platform_lower='debian',
+                        platform_versions_supported='64 bits Debian-based distribution',
+                        prerequisites='',
+                        installation='Use your package manager to install the package')
+
 pages['download_for_linux'] = sep.join([download_header(platform='Linux',
                                                         release='%(version)s'), 
                                         ubuntu_ppa, ubuntu, debian, fedora14, gentoo, 
                                         opensuse, redhat_el4and5, archlinux,
-                                        linux, download_footer()])
+                                        linux, syncml, download_footer()])
 
 
 freeBSD = download_table(image='freebsd', action='Install', 
@@ -1100,7 +1108,7 @@ createHTMLPages(websiteFolder, pages)
 createPAD(websiteFolder)
 createVersionFile(websiteFolder)
 copyFiles(websiteFolder, 'messages.txt', 'robots.txt', '*.ico')
-for subFolder in 'images', 'js', 'css':
+for subFolder in 'images', 'js', 'css', 'downloads':
     copyDir(websiteFolder, subFolder)
 for subFolder in os.listdir('screenshots'):
     if not subFolder.startswith('.'):

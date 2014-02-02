@@ -13,6 +13,7 @@ Based on msgfmt.py by Martin v. Löwis <loewis@informatik.hu-berlin.de>
 import sys, re, os
 
 MESSAGES = {}
+STRINGS = set()
 
 # pylint: disable=W0602,W0603
 
@@ -21,6 +22,7 @@ def add(id_, string, fuzzy):
     global MESSAGES
     if not fuzzy and string:
         MESSAGES[id_] = string
+    STRINGS.add(id_)
 
 
 def generateDict():

@@ -70,7 +70,7 @@ setupOptions = {
         'Topic :: Office/Business']}
 
 # Add available translations:
-languages = sorted(meta.data.languages.keys())
+languages = sorted([name for name, (code, enabled) in meta.data.languages.items() if enabled])
 for language in languages:
     setupOptions['classifiers'].append('Natural Language :: %s' % language)
 

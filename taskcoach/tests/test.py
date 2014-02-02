@@ -68,7 +68,7 @@ class TestCase(unittest.TestCase, object):
         patterns.CommandHistory().clear()
         patterns.NumberedInstances.count = dict()
         from taskcoachlib.domain import date
-        date.Scheduler().shutdown(False, False)
+        date.Scheduler().shutdown()
         date.Scheduler.deleteInstance()
         if hasattr(self, 'events'):
             del self.events

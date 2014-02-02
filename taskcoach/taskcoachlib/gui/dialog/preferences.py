@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import meta, widgets, notify, operating_system, render
 from taskcoachlib.domain import date, task
 from taskcoachlib.gui import artprovider
+from taskcoachlib.meta import data
 from taskcoachlib.i18n import _
 import wx, calendar
 
@@ -418,9 +419,8 @@ class LanguagePage(SettingsPage):
     
     def __init__(self, *args, **kwargs):
         super(LanguagePage, self).__init__(columns=3, *args, **kwargs) 
-        choices = \
-            [('', _('Let the system determine the language')),
-             ('ar', u'الْعَرَبيّة (Arabic)'),
+        languages = \
+            [('ar', u'الْعَرَبيّة (Arabic)'),
              ('eu_ES', 'Euskal Herria (Basque)'),
              ('be_BY', u'беларуская мова (Belarusian)'),
              ('bs_BA', u'босански (Bosnian)'),
@@ -474,6 +474,20 @@ class LanguagePage(SettingsPage):
              ('tr_TR', u'Türkçe (Turkish)'),
              ('uk_UA', u'украї́нська мо́ва (Ukranian)'),
              ('vi_VI', u'tiếng Việt (Vietnamese)')]
+        choices = [('', _('Let the system determine the language'))]
+        allLanguages = dict(data.languages.values())
+        for code, label in languages:
+            if code == 'en_US':
+                label = 'English (US)'
+                enabled = True
+            elif code in allLanguages:
+                enabled = allLanguages[code]
+            elif '_' in code:
+                enabled = allLanguages.get(code.split('_')[0], False)
+            else:
+                enabled = False
+            if enabled:
+                choices.append((code, label))
         # Don't use '_' as separator since we don't have different choice 
         # controls for language and country (but maybe we should?)
         self.addChoiceSetting('view', 'language_set_by_user', _('Language'), 

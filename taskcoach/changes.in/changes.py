@@ -25,7 +25,15 @@ releases = [
 Release('1.3.36', 'January ??, 2014',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bugv2('''Prerequisites modification would not work.''', '1480'),
+        Bugv2('''Prerequisites modification would not work.''', '1480', '1486'),
+        Bugv2('''LC_TIME would not be honored if set independently''',
+              '1483'),
+        Bugv2('''Disable translations that are not at least 90% complete.'''),
+        Bugv2('''Do something a little more intuitive when editing efforts
+in aggregated mode.''', '1485'),
+        Bugv2('''Fix a resource leak on Windows.''', '1488'),
+        Bugv2('''Fix a crash on Mint when synchronizing with an iPhone
+if the password is not set.''', '1487'),
         ],
     ),
 

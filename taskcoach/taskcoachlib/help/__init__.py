@@ -470,8 +470,9 @@ your %(name)s file, as well as %(name)s tasks and notes in Outlook. Or
 your Pocket PC.''')%meta.metaDict),
     p(
         _('''On Linux, you must install the SyncML client binding for
-Python yourself. Debian packages for 32 and 64 bits, Python 2.5 and 2.6
-are available on the <a target="_blank" href="https://pysyncml.forge.funambol.org/">pysyncml home page</a>.''')),
+Python yourself. A 64 bits Debian package for Python 2.7 is available on
+<a target="_blank" href="http://www.taskcoach.org/">taskcoach.org</a>,
+at the end of the Linux downloads section.''')),
     h4(
         a_name(_('Setup'), 'syncmlsetup')),
     p(
