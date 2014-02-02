@@ -72,6 +72,7 @@ sdist_ubuntu: sdist_linux
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu12~precise.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu12~quantal.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu13~raring.tar.gz
+	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu13~saucy.tar.gz
 
 sdist_raw:
 	mkdir -p dist
@@ -114,30 +115,36 @@ ubuntu: sdist_ubuntu
 	mv build build-quantal
 	LC_ALL=C $(PYTHON) make.py bdist_ubuntu raring 13 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu13~raring.tar.gz
 	mv build build-raring
+	LC_ALL=C $(PYTHON) make.py bdist_ubuntu saucy 13 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu13~saucy.tar.gz
+	mv build build-saucy
 
 ppa-sign: ubuntu
 	cd build-lucid; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
 	cd build-precise; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
 	cd build-quantal; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes
 	cd build-raring; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu13~raring-1_source.changes
+	cd build-saucy; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu13~saucy-1_source.changes
 
 ppa-rel: ppa-sign
 	cd build-lucid; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
 	cd build-precise; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
 	cd build-quantal; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes
 	cd build-raring; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu13~raring-1_source.changes
+	cd build-saucy; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu13~saucy-1_source.changes
 
 ppa-relnext: ppa-sign
 	cd build-lucid; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
 	cd build-precise; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
 	cd build-quantal; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes
 	cd build-raring; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu13~raring-1_source.changes
+	cd build-saucy; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu13~saucy-1_source.changes
 
 ppa-release: ppa-sign
 	cd build-lucid; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
 	cd build-precise; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
 	cd build-quantal; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes
 	cd build-raring; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu13~raring-1_source.changes
+	cd build-saucy; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu13~saucy-1_source.changes
 
 app: prepare
 	$(PYTHON) make.py py2app
