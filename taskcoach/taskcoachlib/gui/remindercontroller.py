@@ -151,8 +151,6 @@ class ReminderController(object):
                                                                                 reminderDateTime)
             
     def __removeReminder(self, taskWithReminder):
-        scheduler = date.Scheduler()
         job = self.__tasksWithReminders[taskWithReminder]
-        if job in scheduler.get_jobs():
-            scheduler.unschedule_job(job)
+        date.Scheduler().unschedule(job)
         del self.__tasksWithReminders[taskWithReminder]

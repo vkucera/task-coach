@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, wx
+import test, wx, time
 from taskcoachlib import gui, config, persistence
 from taskcoachlib.domain import task, date, effort
 
@@ -70,9 +70,11 @@ class ReminderControllerTest(ReminderControllerTestCase):
         self.failUnless(date.Scheduler().get_jobs())
         
     def testAfterReminderJobIsRemovedFromScheduler(self):
-        self.task.setReminder(self.reminderDateTime)
+        self.task.setReminder(date.Now() + date.TimeDelta(seconds=1))
         self.failUnless(date.Scheduler().get_jobs())
-        date.Scheduler()._process_jobs(self.reminderDateTime) # pylint: disable=W0212
+        t0 = time.time()
+        while time.time() - t0 < 1.1:
+            wx.Yield()
         self.failIf(date.Scheduler().get_jobs())
         
     def testAddTaskWithReminderSchedulesJob(self):
@@ -91,7 +93,9 @@ class ReminderControllerTest(ReminderControllerTestCase):
         self.task.setReminder(self.reminderDateTime)
         job = date.Scheduler().get_jobs()[0]
         self.task.setReminder(self.reminderDateTime + date.ONE_HOUR)
-        self.failIf(job in date.Scheduler().get_jobs())
+        jobs = date.Scheduler().get_jobs()
+        self.assertEqual(len(jobs), 1)
+        self.failIf(job is jobs[0])
         
     def testMarkTaskCompletedRemovesReminder(self):
         self.task.setReminder(self.reminderDateTime)

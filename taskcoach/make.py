@@ -192,10 +192,6 @@ if sys.argv[1] == 'py2exe':
                           'taskcoachlib.thirdparty.pubsub',
                           'taskcoachlib.thirdparty.pubsub.core',
                           'taskcoachlib.thirdparty.pubsub.core.kwargs',
-                          'taskcoachlib.thirdparty.apscheduler',
-                          'taskcoachlib.thirdparty.apscheduler.jobstores',
-                          'taskcoachlib.thirdparty.apscheduler.triggers',
-                          'taskcoachlib.thirdparty.apscheduler.triggers.cron',
                           'taskcoachlib.thirdparty._weakrefset'], 
             'dist_dir': os.path.join(builddir, py2exeDistdir),
             'dll_excludes': ['MSVCR80.dll', 'UxTheme.dll']}},
@@ -214,11 +210,7 @@ elif sys.argv[1] == 'py2app':
                       in glob.glob('taskcoachlib/i18n/*.py') + \
                       glob.glob('taskcoachlib/thirdparty/pubsub/*.py') + \
                       glob.glob('taskcoachlib/thirdparty/pubsub/core/*.py') + \
-                      glob.glob('taskcoachlib/thirdparty/pubsub/core/kwargs/*.py') + \
-                      glob.glob('taskcoachlib/thirdparty/apscheduler/*.py') + \
-                      glob.glob('taskcoachlib/thirdparty/apscheduler/jobstores/*.py') + \
-                      glob.glob('taskcoachlib/thirdparty/apscheduler/triggers/*.py') + \
-                      glob.glob('taskcoachlib/thirdparty/apscheduler/triggers/cron/*.py')],
+                      glob.glob('taskcoachlib/thirdparty/pubsub/core/kwargs/*.py')],
             plist=dict(CFBundleIconFile='taskcoach.icns',
                        CFBundleDocumentTypes=[dict(CFBundleTypeExtensions=['tsk'],
                                                    CFBundleTypeIconFile='taskcoach.icns',

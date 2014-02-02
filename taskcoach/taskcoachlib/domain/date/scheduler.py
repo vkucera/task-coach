@@ -17,12 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import patterns
-from taskcoachlib.thirdparty import apscheduler
-import dateandtime
+import dateandtime, timedelta
 import logging
 import timedelta
 import wx
 import weakref
+import bisect
 
 
 class ScheduledMethod(object):
@@ -39,77 +39,113 @@ class ScheduledMethod(object):
     def __call__(self, *args, **kwargs):
         obj = self.__self()
         if obj is None:
-            try:
-                Scheduler().unschedule(self)
-            except KeyError:
-                pass
+            Scheduler().unschedule(self)
         else:
             self.__func(obj, *args, **kwargs)
 
 
-class Scheduler(apscheduler.scheduler.Scheduler):
+class wxScheduler(wx.EvtHandler):
+    """
+    A class to schedule jobs at specified date/time. Unlike apscheduler, this
+    uses wx.Timers instead of threading, in order to avoid busy waits.
+    """
+    def __init__(self):
+        super(wxScheduler, self).__init__()
+        self.__jobs = []
+        self.__timerId = wx.NewId()
+        self.__timer = None
+        wx.EVT_TIMER(self, self.__timerId, self.__onTimer)
+
+    def __schedule(self, job, dateTime, interval):
+        if self.__timer is not None:
+            self.__timer.Stop()
+            self.__timer = None
+        bisect.insort_right(self.__jobs, (dateTime, job, interval))
+        self.__fire()
+
+    def scheduleDate(self, job, dateTime):
+        """
+        Schedules 'job' to be called at 'dateTime'. This assumes the caller is the
+        wx main loop thread.
+        """
+        self.__schedule(job, dateTime, None)
+
+    def scheduleInterval(self, job, interval, startDateTime=None):
+        self.__schedule(job, startDateTime or dateandtime.Now() + interval, interval)
+
+    def unschedule(self, theJob):
+        for idx, (ts, job, interval) in enumerate(self.__jobs):
+            if job == theJob:
+                del self.__jobs[idx]
+                break
+
+    def isScheduled(self, theJob):
+        for ts, job, interval in self.__jobs:
+            if job == theJob:
+                return True
+        return False
+
+    def shutdown(self):
+        if self.__timer is not None:
+            self.__timer.Stop()
+            self.__timer = None
+        self.__jobs = []
+
+    def jobs(self):
+        return [job for ts, job, interval in self.__jobs]
+
+    def __fire(self):
+        while self.__jobs and self.__jobs[0][0] <= dateandtime.Now():
+            ts, job, interval = self.__jobs.pop(0)
+            try:
+                job()
+            except:
+                # Hum.
+                import traceback
+                traceback.print_exc()
+            if interval is not None:
+                self.__schedule(job, ts + interval, interval)
+
+        if self.__jobs and self.__timer is None:
+            nextDuration = int((self.__jobs[0][0] - dateandtime.Now()).total_seconds() * 1000)
+            nextDuration = max(nextDuration, 1)
+            nextDuration = min(nextDuration, 2**31-1)
+            self.__timer = wx.Timer(self, self.__timerId)
+            self.__timer.Start(nextDuration, True)
+
+    def __onTimer(self, event):
+        self.__timer = None
+        self.__fire()
+
+
+class Scheduler(object):
     __metaclass__ = patterns.Singleton
-    
+
     def __init__(self, *args, **kwargs):
-        self.__handler = self.createLogHandler()
         super(Scheduler, self).__init__(*args, **kwargs)
-        self.__jobs = {}
-        self.start()
-        
-    def createLogHandler(self):
-        # apscheduler logs, but doesn't provide a default handler itself, make it happy:
-        schedulerLogger = logging.getLogger('taskcoachlib.thirdparty.apscheduler.scheduler')
-        try:
-            handler = logging.NullHandler()
-        except AttributeError:
-            # NullHandler is new in Python 2.7, log to stderr if not available
-            handler = logging.StreamHandler()
-        schedulerLogger.addHandler(handler)
-        return handler
+        self.__scheduler = wxScheduler()
 
-    def removeLogHandler(self):
-        # accumulation of handlers in the unit/language/etc tests makes them *slow*
-        schedulerLogger = logging.getLogger('taskcoachlib.thirdparty.apscheduler.scheduler')
-        schedulerLogger.removeHandler(self.__handler)
-
-    def shutdown(self, wait=True, shutdown_threadpool=True):
-        super(Scheduler, self).shutdown(wait=wait, 
-                                        shutdown_threadpool=shutdown_threadpool)
-        self.removeLogHandler()
+    def shutdown(self):
+        self.__scheduler.shutdown()
 
     def schedule(self, function, dateTime):
-        proxy = ScheduledMethod(function)
-        def callback():
-            if proxy in self.__jobs:
-                del self.__jobs[proxy]
-            wx.CallAfter(proxy)
-
-        if dateTime <= dateandtime.Now() + timedelta.TimeDelta(milliseconds=500):
-            callback()
-        else:
-            self.__jobs[proxy] = job = self.add_date_job(callback, dateTime, misfire_grace_time=0)
-            return job
+        job = ScheduledMethod(function)
+        self.__scheduler.scheduleDate(job, dateTime)
+        return job
 
     def schedule_interval(self, function, days=0, minutes=0, seconds=0):
-        proxy = ScheduledMethod(function)
-        def callback():
-            wx.CallAfter(proxy)
-            
-        if proxy not in self.__jobs:
-            start_date = dateandtime.Now().endOfDay() if days > 0 else None
-            self.__jobs[proxy] = job = self.add_interval_job(callback, days=days, 
-                minutes=minutes, seconds=seconds, start_date=start_date, misfire_grace_time=0,
-                coalesce=True)
+        job = ScheduledMethod(function)
+        if not self.__scheduler.isScheduled(job):
+            startDate = dateandtime.Now().endOfDay() if days > 0 else None
+            self.__scheduler.scheduleInterval(job, timedelta.TimeDelta(days=days, minutes=minutes, seconds=seconds), startDateTime=startDate)
             return job
 
     def unschedule(self, function):
-        proxy = function if isinstance(function, ScheduledMethod) else ScheduledMethod(function)
-        if proxy in self.__jobs:
-            try:
-                self.unschedule_job(self.__jobs[proxy])
-            except KeyError:
-                pass
-            del self.__jobs[proxy]
+        job = function if isinstance(function, ScheduledMethod) else ScheduledMethod(function)
+        self.__scheduler.unschedule(job)
 
     def is_scheduled(self, function):
-        return ScheduledMethod(function) in self.__jobs
+        return self.__scheduler.isScheduled(ScheduledMethod(function))
+
+    def get_jobs(self):
+        return self.__scheduler.jobs()

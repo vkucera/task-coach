@@ -1296,7 +1296,7 @@ class TaskWithPlannedStartDateInTheFutureTest(TaskTestCase, CommonTaskTestsMixin
         now = self.task.plannedStartDateTime() + date.ONE_SECOND
         oldNow = date.Now
         date.Now = lambda: now
-        date.Scheduler()._process_jobs(now)  # pylint: disable=W0212
+        wx.Yield()
         self.assertEqual(task.late.getBitmap(self.settings), self.task.icon(recursive=True))
         date.Now = oldNow
         
