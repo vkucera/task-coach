@@ -48,6 +48,8 @@ class TemplateList(object):
             fd.close()
 
     def _templateFilenames(self):
+        if not os.path.exists(self._path):
+            return []
         filenames = [name for name in os.listdir(self._path) if \
                     name.endswith('.tsktmpl') and os.path.exists(os.path.join(self._path, name))]
         listName = os.path.join(self._path, 'list.pickle')

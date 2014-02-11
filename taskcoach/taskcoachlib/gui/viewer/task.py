@@ -511,7 +511,7 @@ class SquareTaskViewer(BaseTaskTreeViewer):
         if oldEventType.startswith('pubsub'):
             try:
                 pub.unsubscribe(self.onAttributeChanged, oldEventType)
-            except pub.UndefinedSubtopic:
+            except pub.TopicNameError:
                 pass  # Can happen on first call to orderBy
         else:
             self.removeObserver(self.onAttributeChanged_Deprecated, oldEventType)
