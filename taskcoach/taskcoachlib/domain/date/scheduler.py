@@ -54,6 +54,7 @@ class wxScheduler(wx.EvtHandler):
         self.__jobs = []
         self.__timerId = wx.NewId()
         self.__timer = None
+        self.__firing = False
         wx.EVT_TIMER(self, self.__timerId, self.__onTimer)
 
     def __schedule(self, job, dateTime, interval):
@@ -61,7 +62,8 @@ class wxScheduler(wx.EvtHandler):
             self.__timer.Stop()
             self.__timer = None
         bisect.insort_right(self.__jobs, (dateTime, job, interval))
-        self.__fire()
+        if not self.__firing:
+            self.__fire()
 
     def scheduleDate(self, job, dateTime):
         """
@@ -95,16 +97,20 @@ class wxScheduler(wx.EvtHandler):
         return [job for ts, job, interval in self.__jobs]
 
     def __fire(self):
-        while self.__jobs and self.__jobs[0][0] <= dateandtime.Now():
-            ts, job, interval = self.__jobs.pop(0)
-            try:
-                job()
-            except:
-                # Hum.
-                import traceback
-                traceback.print_exc()
-            if interval is not None:
-                self.__schedule(job, ts + interval, interval)
+        self.__firing = True
+        try:
+            while self.__jobs and self.__jobs[0][0] <= dateandtime.Now():
+                ts, job, interval = self.__jobs.pop(0)
+                try:
+                    job()
+                except:
+                    # Hum.
+                    import traceback
+                    traceback.print_exc()
+                if interval is not None:
+                    self.__schedule(job, ts + interval, interval)
+        finally:
+            self.__firing = False
 
         if self.__jobs and self.__timer is None:
             nextDuration = int((self.__jobs[0][0] - dateandtime.Now()).total_seconds() * 1000)
