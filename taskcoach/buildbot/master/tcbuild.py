@@ -358,7 +358,7 @@ class PPA(Compile):
 
     def __init__(self, **kwargs):
         name = kwargs.pop('name')
-        kwargs['command'] = ['./uploadppa.sh', 'ppa_' + name]
+        kwargs['command'] = ['./uploadppa.sh', name]
         Compile.__init__(self, **kwargs)
         self.addFactoryArguments(name=name)
 
