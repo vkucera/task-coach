@@ -34,6 +34,9 @@ in aggregated mode.''', '1485'),
         Bugv2('''Fix a resource leak on Windows.''', '1488'),
         Bugv2('''Fix a crash on Mint when synchronizing with an iPhone
 if the password is not set.''', '1487'),
+        Bugv2('''Show and bring minimized window to front on simple click in
+the dock (OS X)''', '1490'),
+        Bugv2('''Disable dock icon ticking on Mavericks.''', '1489'),
         ],
     ),
 

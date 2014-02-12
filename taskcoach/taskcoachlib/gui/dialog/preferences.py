@@ -404,8 +404,9 @@ class WindowBehaviorPage(SettingsPage):
             _('Hide main window when iconized'))
         self.addBooleanSetting('window', 'hidewhenclosed', 
             _('Minimize main window when closed'))
-        self.addBooleanSetting('window', 'blinktaskbariconwhentrackingeffort',
-            _('Make clock in the task bar tick when tracking effort'))
+        if not operating_system.isMacOsXMavericks_OrNewer():
+            self.addBooleanSetting('window', 'blinktaskbariconwhentrackingeffort',
+                _('Make clock in the task bar tick when tracking effort'))
         self.addBooleanSetting('view', 'descriptionpopups',
             _('Show a popup with the description of an item\n'
               'when hovering over it'))

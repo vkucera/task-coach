@@ -68,6 +68,12 @@ def isMacOsXMountainLion_OrNewer(): # pragma no cover
     else:
         return False
 
+def isMacOsXMavericks_OrNewer(): # pragma no cover
+    if isMac():
+        return _platformVersion() >= (13,)
+    else:
+        return False
+
 
 def defaultEncodingName():
     return wx.Locale.GetSystemEncodingName() or 'utf-8'
