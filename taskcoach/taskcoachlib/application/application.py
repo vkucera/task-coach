@@ -73,9 +73,13 @@ class RedirectedOutput(object):
 
         
 class wxApp(wx.App):
-    def __init__(self, callback, *args, **kwargs):
-        self.sessionCallback = callback
+    def __init__(self, sessionCallback, reopenCallback, *args, **kwargs):
+        self.sessionCallback = sessionCallback
+        self.reopenCallback = reopenCallback
         super(wxApp, self).__init__(*args, **kwargs)
+
+    def MacReopenApp(self):
+        self.reopenCallback()
 
     def OnInit(self):
         if operating_system.isWindows():
@@ -104,7 +108,7 @@ class Application(object):
     def __init__(self, options=None, args=None, **kwargs):
         self._options = options
         self._args = args
-        self.__wx_app = wxApp(self.on_end_session, redirect=False)
+        self.__wx_app = wxApp(self.on_end_session, self.on_reopen_app, redirect=False)
         self.init(**kwargs)
 
         if operating_system.isGTK():
@@ -329,6 +333,9 @@ class Application(object):
     def on_end_session(self):
         self.mainwindow.setShutdownInProgress()
         self.quitApplication(force=True)
+
+    def on_reopen_app(self):
+        self.taskBarIcon.onTaskbarClick(None)
 
     def quitApplication(self, force=False):
         if not self.iocontroller.close(force=force):
