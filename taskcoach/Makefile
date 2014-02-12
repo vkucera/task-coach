@@ -125,7 +125,7 @@ ppa_sign: ubuntu
 		cd ../build-quantal; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes && \
 		cd ../build-raring; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu13~raring-1_source.changes && \
 		cd ../build-saucy; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu13~saucy-1_source.changes && \
-		touch .ubuntu-signed
+		touch .ubuntu-signed; \
 	fi
 
 # Split PPA by version because the upload has a tendency to fail so the buildbot must retry
