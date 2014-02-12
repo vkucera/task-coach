@@ -118,32 +118,61 @@ ubuntu: sdist_ubuntu
 	LC_ALL=C $(PYTHON) make.py bdist_ubuntu saucy 13 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu13~saucy.tar.gz
 	mv build build-saucy
 
-ppa-sign: ubuntu
-	cd build-lucid; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
-	cd build-precise; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
-	cd build-quantal; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes
-	cd build-raring; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu13~raring-1_source.changes
-	cd build-saucy; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu13~saucy-1_source.changes
+ppa_sign: ubuntu
+	if [ ! -e .ubuntu-signed ]; then \
+		cd build-lucid; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes && \
+		cd ../build-precise; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes && \
+		cd ../build-quantal; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes && \
+		cd ../build-raring; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu13~raring-1_source.changes && \
+		cd ../build-saucy; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu13~saucy-1_source.changes && \
+		touch .ubuntu-signed
+	fi
 
-ppa-rel: ppa-sign
+# Split PPA by version because the upload has a tendency to fail so the buildbot must retry
+
+ppa_rel_lucid: ppa_sign
 	cd build-lucid; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
+
+ppa_rel_precise: ppa_sign
 	cd build-precise; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
+
+ppa_rel_quantal: ppa_sign
 	cd build-quantal; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes
+
+ppa_rel_raring: ppa_sign
 	cd build-raring; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu13~raring-1_source.changes
+
+ppa_rel_saucy: ppa_sign
 	cd build-saucy; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu13~saucy-1_source.changes
 
-ppa-relnext: ppa-sign
+ppa_relnext_lucid: ppa_sign
 	cd build-lucid; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
+
+ppa_relnext_precise: ppa_sign
 	cd build-precise; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
+
+ppa_relnext_quantal: ppa_sign
 	cd build-quantal; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes
+
+ppa_relnext_raring: ppa_sign
 	cd build-raring; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu13~raring-1_source.changes
+
+ppa_relnext_saucy: ppa_sign
 	cd build-saucy; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu13~saucy-1_source.changes
 
-ppa-release: ppa-sign
+ppa_release_lucid: ppa_sign
 	cd build-lucid; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
+
+ppa_release_precise: ppa_sign
 	cd build-precise; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
+
+ppa_release_quantal: ppa_sign
 	cd build-quantal; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes
+
+ppa_release_raring: ppa_sign
 	cd build-raring; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu13~raring-1_source.changes
+
+ppa_release_saucy: ppa_sign
 	cd build-saucy; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu13~saucy-1_source.changes
 
 app: prepare
