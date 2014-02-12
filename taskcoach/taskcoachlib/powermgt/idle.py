@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import sys, threading, time
+import sys, time, wx
 from taskcoachlib import operating_system
 from ctypes import *
 
@@ -102,46 +102,64 @@ elif operating_system.isMac():
 #==============================================================================
 #
 
-class IdleNotifier(IdleQuery):
-    STATE_NONE            = 0
-    STATE_IDLE            = 1
-    STATE_OFF             = 0x80 # Used as bitmask
+class IdleNotifier(wx.EvtHandler, IdleQuery):
+    STATE_SLEEPING         = 0
+    STATE_AWAKE            = 1
 
     def __init__(self):
-        super(IdleNotifier, self).__init__()
+        wx.EvtHandler.__init__(self)
+        IdleQuery.__init__(self)
 
-        self.state = self.STATE_NONE
+        self.state = self.STATE_AWAKE
         self.lastActivity = time.time()
-        self.evtStop = threading.Event()
 
-        self.thr = threading.Thread(target=self._run)
-        self.thr.setDaemon(True)
-        self.thr.start()
+        self._bound = True
+        wx.GetApp().Bind(wx.EVT_IDLE, self._OnIdle)
 
     def stop(self):
-        self.evtStop.set()
-        self.thr.join()
+        self.pause()
+
+    def pause(self):
+        if self._bound:
+            wx.GetApp().Unbind(wx.EVT_IDLE, handler=self._OnIdle)
+            self._bound = False
+
+    def resume(self):
+        if not self._bound:
+            wx.GetApp().Bind(wx.EVT_IDLE, self._OnIdle)
+
+    def _check(self):
+        if self.state == self.STATE_AWAKE and time.time() - self.lastActivity >= self.getMinIdleTime():
+            self.state = self.STATE_SLEEPING
+            self.sleep()
+        elif self.state == self.STATE_SLEEPING and time.time() - self.lastActivity < self.getMinIdleTime():
+            self.state = self.STATE_AWAKE
+            self.wake()
+
+    def _OnIdle(self, event):
+        self._check()
+        self.lastActivity = time.time() - self.getIdleSeconds()
+        self._check()
+        event.Skip()
 
     def poweroff(self):
         """
         Call this when the computer goes to sleep.
         """
-        self.state |= self.STATE_OFF
+        if self._bound:
+            wx.GetApp().Unbind(wx.EVT_IDLE, handler=self._OnIdle)
+            self._bound = False
 
     def poweron(self):
         """
         Call this when the computer resumes from sleep.
         """
-        if self.state & self.STATE_OFF:
-            self.state &= ~self.STATE_OFF
-            if self.getMinIdleTime() != 0 and time.time() - self.lastActivity >= self.getMinIdleTime():
-                if self.state == self.STATE_NONE:
-                    self.sleep()
-                self.wake()
-
-            self.lastDelta = 0
-            self.lastActivity = time.time()
-            self.state = self.STATE_NONE
+        if not self._bound:
+            wx.GetApp().Bind(wx.EVT_IDLE, self._OnIdle)
+            self._bound = True
+        self._check()
+        self.lastActivity = time.time() - self.getIdleSeconds()
+        self._check()
 
     def getMinIdleTime(self):
         """
@@ -159,41 +177,3 @@ class IdleNotifier(IdleQuery):
         """
         Called when the computer is not idle any more.
         """
-
-    def _run(self):
-        while not self.evtStop.isSet():
-            if self.state == self.STATE_NONE:
-                delta = self.getIdleSeconds()
-                self.lastActivity = time.time() - delta
-                self.lastDelta = delta
-                if self.getMinIdleTime() != 0 and delta >= self.getMinIdleTime():
-                    self.state = self.STATE_IDLE
-                    self.sleep()
-            elif self.state == self.STATE_IDLE:
-                delta = self.getIdleSeconds()
-                if delta < self.lastDelta:
-                    self.state = self.STATE_NONE
-                    self.wake()
-                    self.lastActivity = time.time() - delta
-                    self.lastDelta = delta
-
-            # Ideally this would be self.evtStop.wait(1) but on some
-            # platforms it's a busy wait.
-            time.sleep(1)
-
-
-if __name__ == '__main__':
-    class Test(IdleNotifier):
-        def getMinIdleTime(self):
-            return 10
-
-        def sleep(self):
-            print 'Going idle'
-
-        def wake(self):
-            print 'Waking'
-
-    test = Test()
-    raw_input('...')
-
-    test.stop()

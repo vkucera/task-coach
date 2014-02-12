@@ -84,16 +84,23 @@ class IdleController(Observer, IdleNotifier):
         super(IdleController, self).__init__()
 
         self.__tracker = effort.EffortListTracker(self._effortList)
+        self.__tracker.subscribe(self.__onTrackedChanged, 'effortlisttracker')
 
         pub.subscribe(self.poweroff, 'powermgt.off')
         pub.subscribe(self.poweron, 'powermgt.on')
+
+    def __onTrackedChanged(self, efforts):
+        if len(efforts):
+            self.resume()
+        else:
+            self.pause()
 
     def getMinIdleTime(self):
         return self._settings.getint('feature', 'minidletime') * 60
 
     def wake(self):
         self._lastActivity = self.lastActivity # Because it is reset before OnWake is actually called
-        wx.CallAfter(self.OnWake)
+        self.OnWake()
 
     def OnWake(self):
         for effort in self.__tracker.trackedEfforts():

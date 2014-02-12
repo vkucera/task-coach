@@ -20,6 +20,7 @@ from taskcoachlib import patterns
 from taskcoachlib.i18n import _                   
 from taskcoachlib import help
 from taskcoachlib.thirdparty.pubsub import pub
+from taskcoachlib.thirdparty.pubsub.core import Publisher
 from taskcoachlib.domain import task
 from . import effort
 
@@ -117,7 +118,7 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
         return 'this event type is not used'
 
 
-class EffortListTracker(patterns.Observer):
+class EffortListTracker(patterns.Observer, Publisher):
     ''' EffortListTracker observes an EffortList and keeps track of
     currently tracked efforts. '''
 
@@ -126,6 +127,7 @@ class EffortListTracker(patterns.Observer):
         @param includeComposites: if False, composite efforts will be
             ignored.'''
         super(EffortListTracker, self).__init__()
+        Publisher.__init__(self)
 
         self.__effortList = effortList
         self.__includeComposites = includeComposites
@@ -151,11 +153,13 @@ class EffortListTracker(patterns.Observer):
 
     def onEffortAdded(self, event):
         self.__trackedEfforts.extend(self.__filterTrackedEfforts(event.values()))
+        self.sendMessage('effortlisttracker.changed.added', efforts=self.__trackedEfforts)
 
     def onEffortRemoved(self, event):
         for effort in event.values():
             if effort in self.__trackedEfforts:
                 self.__trackedEfforts.remove(effort)
+        self.sendMessage('effortlisttracker.changed.removed', efforts=self.__trackedEfforts)
         
     def onTrackingChanged(self, newValue, sender):
         if sender.parent() is None and not self.__includeComposites:
@@ -168,6 +172,7 @@ class EffortListTracker(patterns.Observer):
         else:
             if sender in self.__trackedEfforts:
                 self.__trackedEfforts.remove(sender) 
+        self.sendMessage('effortlisttracker.changed', efforts=self.__trackedEfforts)
 
     @staticmethod
     def __filterTrackedEfforts(efforts):
