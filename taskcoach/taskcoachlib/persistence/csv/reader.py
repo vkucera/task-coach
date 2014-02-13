@@ -41,7 +41,7 @@ class CSVReader(object):
         
     def read(self, **kwargs):
         fp = tempfile.TemporaryFile()
-        fp.write(file(kwargs['filename'], 'rb').read().decode(kwargs['encoding']).encode('UTF-8'))
+        fp.write(file(kwargs['filename'], 'rU').read().decode(kwargs['encoding']).encode('UTF-8'))
         fp.seek(0)
         
         rx1 = re.compile(r'^(\d+):(\d+)$')

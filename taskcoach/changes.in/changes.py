@@ -37,6 +37,8 @@ if the password is not set.''', '1487'),
         Bugv2('''Show and bring minimized window to front on simple click in
 the dock (OS X)''', '1490'),
         Bugv2('''Disable dock icon ticking on Mavericks.''', '1489'),
+        Bugv2('''Fix line ending problem when importing from CSV on
+Mac/Linux''', '1493'),
         ],
     ),
 
