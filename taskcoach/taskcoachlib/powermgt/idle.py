@@ -125,6 +125,8 @@ class IdleNotifier(wx.EvtHandler, IdleQuery):
             self._bound = False
 
     def resume(self):
+        self.state = self.STATE_AWAKE
+        self.lastActivity = time.time()
         if not self._bound:
             wx.GetApp().Bind(wx.EVT_IDLE, self._OnIdle)
 
