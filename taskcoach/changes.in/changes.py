@@ -40,6 +40,8 @@ the dock (OS X)''', '1490'),
         Bugv2('''Disable dock icon ticking on Mavericks.''', '1489'),
         Bugv2('''Fix line ending problem when importing from CSV on
 Mac/Linux''', '1493'),
+        Bugv2('''Delete .txt files as well when overwriting a task
+file.''', '1274'),
         ],
     ),
 
