@@ -157,7 +157,7 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
 
             fp = tempfile.TemporaryFile()
             try:
-                fp.write(file(self.filename, 'rb').read().decode(self.encoding).encode('UTF-8'))
+                fp.write(file(self.filename, 'rU').read().decode(self.encoding).encode('UTF-8'))
                 fp.seek(0)
 
                 reader = csv.reader(fp, dialect=self.dialect)

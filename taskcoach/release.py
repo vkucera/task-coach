@@ -488,9 +488,13 @@ def registering_with_PyPI(settings, options):
     languages_pypi_does_not_know = ['Basque', 'Belarusian', 'Breton', 
         'Estonian', 'Galician', 'Lithuanian', 'Norwegian (Bokmal)', 
         'Norwegian (Nynorsk)', 'Occitan', 'Papiamento', 'Slovene', 
-        'German (Low)', 'Mongolian']
+        'German (Low)', 'Mongolian', 'English (AU)', 'English (CA)',
+        'English (GB)', 'English (US)']
     for language in languages_pypi_does_not_know:
-        setupOptions['classifiers'].remove('Natural Language :: %s' % language)
+        try:
+            setupOptions['classifiers'].remove('Natural Language :: %s' % language)
+        except ValueError:
+            pass
     from distutils.core import setup
     del sys.argv[1:]
     os.environ['HOME'] = '.'

@@ -22,13 +22,20 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.36', 'January ??, 2014',
+Release('1.3.37', 'February ??, 2014',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bugv2('''Prerequisites modification would not work.''', '1480', '1486'),
+        ],
+    ),
+
+Release('1.3.36', 'February 16, 2014',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bugv2('''Prerequisites modification would not work.''', '1480', '1486',
+              '1495'),
         Bugv2('''LC_TIME would not be honored if set independently''',
               '1483'),
-        Bugv2('''Disable translations that are not at least 90% complete.'''),
+        Bugv2('''Disable translations that are not at least 90%% complete.'''),
         Bugv2('''Do something a little more intuitive when editing efforts
 in aggregated mode.''', '1485'),
         Bugv2('''Fix a resource leak on Windows.''', '1488'),
@@ -37,6 +44,10 @@ if the password is not set.''', '1487'),
         Bugv2('''Show and bring minimized window to front on simple click in
 the dock (OS X)''', '1490'),
         Bugv2('''Disable dock icon ticking on Mavericks.''', '1489'),
+        Bugv2('''Fix line ending problem when importing from CSV on
+Mac/Linux''', '1493'),
+        Bugv2('''Delete .txt files as well when overwriting a task
+file.''', '1274'),
         ],
     ),
 

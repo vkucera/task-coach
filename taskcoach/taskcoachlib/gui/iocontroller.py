@@ -423,6 +423,13 @@ class IOController(object):
             title, 
             style=wx.YES_NO | wx.CANCEL | wx.ICON_QUESTION | wx.NO_DEFAULT)
         if result == wx.YES:
+            extensions = { 'Todo.txt': '.txt' }
+            for auto in set(self.__settings.getlist('file', 'autoimport') + self.__settings.getlist('file', 'autoexport')):
+                autoName = os.path.splitext(filename)[0] + extensions[auto]
+                if os.path.exists(autoName):
+                    os.remove(autoName)
+                if os.path.exists(autoName + '-meta'):
+                    os.remove(autoName + '-meta')
             return filename
         elif result == wx.NO:
             return self.__askUserForFile(title, fileDialogOpts, 
