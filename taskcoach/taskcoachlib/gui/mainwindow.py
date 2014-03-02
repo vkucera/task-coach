@@ -95,7 +95,6 @@ class MainWindow(PowerStateMixin, BalloonTipManager,
 
     def _registerBonjour(self, value=True):
         if self.bonjourRegister is not None:
-            print '== Closing.'
             self.bonjourRegister.stop()
             self.bonjourAcceptor.close()
             self.bonjourRegister = self.bonjourAcceptor = None
