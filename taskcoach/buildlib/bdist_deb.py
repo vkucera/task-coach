@@ -64,6 +64,7 @@ class bdist_deb(Command, object):
         ('license-path=', None, 'path of the license on Debian systems'),
         ('wxpythonversion=', None, 'minimal wxPython version needed'),
         ('pythonversion=', None, 'minimal Python version needed'),
+        ('twistedversion=', None, 'minimal Twisted version needed'),
         ('sdist-exclude=', None, 
          'dirs and files in the source distribution to exclude from the deb package'),
         ('url=', None, 'url of the application homepage'),
@@ -84,7 +85,7 @@ class bdist_deb(Command, object):
             self.license_abbrev = self.license_summary = self.license_path = \
             self.url = self.version = self.package_version = \
             self.distribution = self.wxpythonversion = self.pythonversion = \
-            self.sdist_exclude = None
+            self.twistedversion = self.sdist_exclude = None
                     
     def finalize_options(self):
         mandatoryOptions = [\
@@ -117,6 +118,8 @@ class bdist_deb(Command, object):
             self.distribution = 'UNRELEASED'
         if not self.wxpythonversion:
             self.wxpythonversion = '2.8'
+        if not self.twistedversion:
+            self.twistedversion = '10.1.0'
         if not self.pythonversion:
             self.pythonversion = '2.6'
         self.sdist_exclude = self.sdist_exclude.split(',') \
@@ -254,7 +257,7 @@ Homepage: %(url)s
 
 Package: %(package)s
 Architecture: %(architecture)s
-Depends: python (>= %(pythonversion)s), python-wxgtk2.8 (>= %(wxpythonversion)s), python-wxversion, python-twisted (>= %(twistedversionnumber)s), libxss1, ttf-dejavu
+Depends: python (>= %(pythonversion)s), python-wxgtk2.8 (>= %(wxpythonversion)s), python-wxversion, python-twisted (>= %(twistedversion)s), libxss1, ttf-dejavu
 Recommends: python-notify, libgnome2-0, libavahi-compat-libdnssd1
 Suggests: python-kde4
 Description: %(description)s.

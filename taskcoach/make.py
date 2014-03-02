@@ -251,7 +251,7 @@ elif sys.argv[1] in ['bdist_deb', 'bdist_ubuntu']:
         license_path='/usr/share/common-licenses/GPL-3',
         license_summary=meta.data.license_notice, 
         wxpythonversion=meta.data.wxpythonversionnumber,
-        twistedversionnumber=meta.data.twistedversionnumber,
+        twistedversion=meta.data.twistedversionnumber,
         subsection='Office', url=meta.data.url,
         command='/usr/bin/taskcoach.py',
         changelog_content=file('changelog_content', 'rb').read().rstrip(),
