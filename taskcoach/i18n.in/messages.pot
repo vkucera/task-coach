@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-02-15 14:30+CET\n"
+"POT-Creation-Date: 2014-03-02 12:45+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,8 +22,8 @@ msgstr ""
 #: taskcoachlib/application/application.py:67
 #: taskcoachlib/application/application.py:69
 #: taskcoachlib/gui/dialog/attributesync.py:91
-#: taskcoachlib/gui/mainwindow.py:389 taskcoachlib/iphone/protocol.py:482
-#: taskcoachlib/widgets/draganddrop.py:123
+#: taskcoachlib/gui/mainwindow.py:116 taskcoachlib/gui/mainwindow.py:407
+#: taskcoachlib/iphone/protocol.py:503 taskcoachlib/widgets/draganddrop.py:123
 #: taskcoachlib/widgets/draganddrop.py:165 taskcoachlib/widgets/password.py:92
 msgid "Error"
 msgstr ""
@@ -32,13 +32,13 @@ msgstr ""
 msgid "Errors have occured. Please see \"%s\""
 msgstr ""
 
-#: taskcoachlib/application/application.py:326
+#: taskcoachlib/application/application.py:329
 msgid ""
 "Couldn't load settings from TaskCoach.ini:\n"
 "%s"
 msgstr ""
 
-#: taskcoachlib/application/application.py:327
+#: taskcoachlib/application/application.py:330
 #: taskcoachlib/gui/iocontroller.py:72
 msgid "%s file error"
 msgstr ""
@@ -2248,7 +2248,7 @@ msgid "The latest released version of %(name)s is %(version)s."
 msgstr ""
 
 #: taskcoachlib/gui/dialog/xfce4warning.py:27
-#: taskcoachlib/gui/mainwindow.py:99
+#: taskcoachlib/gui/mainwindow.py:123
 #: taskcoachlib/gui/uicommand/uicommand.py:220
 msgid "Warning"
 msgstr ""
@@ -2459,11 +2459,11 @@ msgstr ""
 msgid "Synchronizing with %s..."
 msgstr ""
 
-#: taskcoachlib/gui/mainwindow.py:158
+#: taskcoachlib/gui/mainwindow.py:176
 msgid "Welcome to %(name)s version %(version)s"
 msgstr ""
 
-#: taskcoachlib/gui/mainwindow.py:185
+#: taskcoachlib/gui/mainwindow.py:203
 msgid ""
 "Couldn't restore the pane layout from TaskCoach.ini:\n"
 "%s\n"
@@ -2473,19 +2473,19 @@ msgid ""
 "If this happens again, please make a copy of your TaskCoach.ini file before closing the program, open a bug report, and attach the copied TaskCoach.ini file to the bug report."
 msgstr ""
 
-#: taskcoachlib/gui/mainwindow.py:193
+#: taskcoachlib/gui/mainwindow.py:211
 msgid "%s settings error"
 msgstr ""
 
-#: taskcoachlib/gui/mainwindow.py:366
+#: taskcoachlib/gui/mainwindow.py:384
 msgid "iPhone/iPod"
 msgstr ""
 
-#: taskcoachlib/gui/mainwindow.py:376
+#: taskcoachlib/gui/mainwindow.py:394
 msgid "Synchronization type"
 msgstr ""
 
-#: taskcoachlib/gui/mainwindow.py:386
+#: taskcoachlib/gui/mainwindow.py:404
 msgid ""
 "An iPhone or iPod Touch device tried to synchronize with this\n"
 "task file, but the protocol negotiation failed. Please file a\n"
@@ -2720,27 +2720,27 @@ msgstr ""
 msgid "%s Reminder"
 msgstr ""
 
-#: taskcoachlib/gui/taskbaricon.py:162
+#: taskcoachlib/gui/taskbaricon.py:165
 msgid "%d tasks overdue"
 msgstr ""
 
-#: taskcoachlib/gui/taskbaricon.py:162
+#: taskcoachlib/gui/taskbaricon.py:165
 msgid "one task overdue"
 msgstr ""
 
-#: taskcoachlib/gui/taskbaricon.py:163
+#: taskcoachlib/gui/taskbaricon.py:166
 msgid "%d tasks due soon"
 msgstr ""
 
-#: taskcoachlib/gui/taskbaricon.py:163
+#: taskcoachlib/gui/taskbaricon.py:166
 msgid "one task due soon"
 msgstr ""
 
-#: taskcoachlib/gui/taskbaricon.py:174
+#: taskcoachlib/gui/taskbaricon.py:177
 msgid "tracking \"%s\""
 msgstr ""
 
-#: taskcoachlib/gui/taskbaricon.py:176
+#: taskcoachlib/gui/taskbaricon.py:179
 msgid "tracking effort for %d tasks"
 msgstr ""
 
@@ -5738,155 +5738,155 @@ msgstr ""
 msgid "Activate the previous open viewer"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:479
+#: taskcoachlib/iphone/protocol.py:500
 msgid ""
 "An iPhone or iPod Touch tried to connect to Task Coach,\n"
 "but no password is set. Please set a password in the\n"
 "iPhone section of the configuration and try again."
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:599
+#: taskcoachlib/iphone/protocol.py:619
 msgid "Protocol version: %d"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:607
+#: taskcoachlib/iphone/protocol.py:627
 msgid "Rejected protocol version %d"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:626
+#: taskcoachlib/iphone/protocol.py:646
 msgid "Hash OK."
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:630
+#: taskcoachlib/iphone/protocol.py:650
 msgid "Hash KO."
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:643
+#: taskcoachlib/iphone/protocol.py:663
 msgid "Device name: %s"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:658
+#: taskcoachlib/iphone/protocol.py:678
 msgid "GUID: %s"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:687
+#: taskcoachlib/iphone/protocol.py:707
 msgid "Sending file name: %s"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:714
+#: taskcoachlib/iphone/protocol.py:734
 msgid "Full from desktop."
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:747
+#: taskcoachlib/iphone/protocol.py:767
 msgid "%d categories"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:755
+#: taskcoachlib/iphone/protocol.py:775
 msgid "Send category %s"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:760 taskcoachlib/iphone/protocol.py:829
+#: taskcoachlib/iphone/protocol.py:780 taskcoachlib/iphone/protocol.py:849
 msgid "Response: %d"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:773
+#: taskcoachlib/iphone/protocol.py:793
 msgid "%d tasks"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:781
+#: taskcoachlib/iphone/protocol.py:801
 msgid "Send task %s"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:845
+#: taskcoachlib/iphone/protocol.py:865
 msgid "%d efforts"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:853
+#: taskcoachlib/iphone/protocol.py:873
 msgid "Send effort %s"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:870 taskcoachlib/iphone/protocol.py:1307
+#: taskcoachlib/iphone/protocol.py:890 taskcoachlib/iphone/protocol.py:1327
 msgid "Finished."
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:986
+#: taskcoachlib/iphone/protocol.py:1006
 msgid "%d new categories"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:987
+#: taskcoachlib/iphone/protocol.py:1007
 msgid "%d new tasks"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:988
+#: taskcoachlib/iphone/protocol.py:1008
 msgid "%d new efforts"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:989
+#: taskcoachlib/iphone/protocol.py:1009
 msgid "%d modified categories"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:990
+#: taskcoachlib/iphone/protocol.py:1010
 msgid "%d modified tasks"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:991
+#: taskcoachlib/iphone/protocol.py:1011
 msgid "%d modified efforts"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:992
+#: taskcoachlib/iphone/protocol.py:1012
 msgid "%d deleted categories"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:993
+#: taskcoachlib/iphone/protocol.py:1013
 msgid "%d deleted tasks"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:994
+#: taskcoachlib/iphone/protocol.py:1014
 msgid "%d deleted efforts"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:1009
+#: taskcoachlib/iphone/protocol.py:1029
 msgid "New category (parent: %s)"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:1040
+#: taskcoachlib/iphone/protocol.py:1060
 msgid "Delete category %s"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:1060
+#: taskcoachlib/iphone/protocol.py:1080
 msgid "Modify category %s"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:1087 taskcoachlib/iphone/protocol.py:1120
-#: taskcoachlib/iphone/protocol.py:1156
+#: taskcoachlib/iphone/protocol.py:1107 taskcoachlib/iphone/protocol.py:1140
+#: taskcoachlib/iphone/protocol.py:1176
 msgid "New task %s"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:1176
+#: taskcoachlib/iphone/protocol.py:1196
 msgid "Delete task %s"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:1232
+#: taskcoachlib/iphone/protocol.py:1252
 msgid "Modify task %s"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:1241
+#: taskcoachlib/iphone/protocol.py:1261
 msgid "End of task synchronization."
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:1258
+#: taskcoachlib/iphone/protocol.py:1278
 msgid "Could not find task %s for effort."
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:1261
+#: taskcoachlib/iphone/protocol.py:1281
 msgid "New effort %s"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:1286
+#: taskcoachlib/iphone/protocol.py:1306
 msgid "Modify effort %s"
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:1300
+#: taskcoachlib/iphone/protocol.py:1320
 msgid "Sending GUID: %s"
 msgstr ""
 

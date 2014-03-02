@@ -18,7 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # pylint: disable=W0201,E1101
  
-from taskcoachlib.patterns.network import Acceptor
 from taskcoachlib.domain.date import Date, parseDate, DateTime, parseDateTime, Recurrence
 
 from taskcoachlib.domain.category import Category
@@ -27,7 +26,10 @@ from taskcoachlib.domain.effort import Effort
 
 from taskcoachlib.i18n import _
 
-import wx, asynchat, threading, asyncore, struct, \
+from twisted.internet.protocol import Protocol, ServerFactory
+from twisted.internet.error import CannotListenError
+
+import wx, struct, \
     random, time, hashlib, cStringIO, socket, os
 
 # Default port is 8001.
@@ -468,67 +470,92 @@ class State(object):
 
 _PROTOVERSION = 5
 
-class IPhoneAcceptor(Acceptor):
-    def __init__(self, window, settings, iocontroller):
-        def factory(fp, addr):
-            password = settings.get('iphone', 'password')
 
-            if password:
-                return IPhoneHandler(window, settings, iocontroller, fp)
-
-            wx.CallAfter(wx.MessageBox, _('''An iPhone or iPod Touch tried to connect to Task Coach,\n'''
-                                          '''but no password is set. Please set a password in the\n'''
-                                          '''iPhone section of the configuration and try again.'''),
-                         _('Error'), wx.OK)
-
-        Acceptor.__init__(self, factory, '', None)
-
-        thread = threading.Thread(target=asyncore.loop, args=(2,))
-        thread.setDaemon(True)
-        thread.start()
-
-
-class IPhoneHandler(asynchat.async_chat):
-    def __init__(self, window, settings, iocontroller, fp):
-        asynchat.async_chat.__init__(self, fp)
-
-        self.setsockopt(socket.SOL_TCP, socket.TCP_NODELAY, 1)
-
-        self.window = window
-        self.settings = settings
-        self.iocontroller = iocontroller
-
-        self.state = BaseState(self)
-
-        self.state.setState(InitialState, _PROTOVERSION)
-
+class IPhoneHandler(Protocol):
+    def __init__(self):
+        self.state = None
+        self.__buffer = ''
+        self.__expecting = None
         random.seed(time.time())
+
+    def connectionMade(self):
+        self.transport.socket.setsockopt(socket.SOL_TCP, socket.TCP_NODELAY, 1)
+        self.state = BaseState(self)
+        self.state.setState(InitialState, _PROTOVERSION)
 
     def log(self, msg, *args):
         if self.state.ui is not None:
             self.state.ui.AddLogLine(msg % args)
 
-    def collect_incoming_data(self, data):
-        self.state.collect_incoming_data(data)
+    def _flush(self):
+        while self.__expecting is not None and len(self.__buffer) >= self.__expecting:
+            data = self.__buffer[:self.__expecting]
+            self.__buffer = self.__buffer[self.__expecting:]
+            self.state.collect_incoming_data(data)
+            self.state.found_terminator()
 
-    def found_terminator(self):
-        self.state.found_terminator()
+    def set_terminator(self, terminator):
+        self.__expecting = terminator
+        self._flush()
 
-    def handle_close(self):
+    def close_when_done(self):
+        # XXX: without this delay, the other side sometimes doesn't "notice" the socket has been
+        # closed... I should take a look with Wireshark...
+        from twisted.internet import reactor
+        reactor.callLater(0.5, self.transport.loseConnection)
+
+    def dataReceived(self, data):
+        self.__buffer += data
+        self._flush()
+
+    def connectionLost(self, reason):
         self.state.handleClose()
-        self.close()
 
-    def handle_error(self):
-        if self.state.ui is not None:
-            import traceback, StringIO # pylint: disable=W0404
-            bf = StringIO.StringIO()
-            traceback.print_exc(file=bf)
+    def push(self, data):
+        self.transport.write(data)
 
-            self.state.ui.AddLogLine(bf.getvalue())
 
-        asynchat.async_chat.handle_error(self)
-        self.close()
-        self.state.handleClose()
+class IPhoneAcceptor(ServerFactory):
+    protocol = IPhoneHandler
+
+    def __init__(self, window, settings, iocontroller):
+        from twisted.internet import reactor
+
+        self.window = window
+        self.settings = settings
+        self.iocontroller = iocontroller
+
+        for port in xrange(4096, 8192):
+            try:
+                self.__listening = reactor.listenTCP(port, self, backlog=5)
+            except CannotListenError:
+                pass
+            else:
+                break
+        else:
+            raise RuntimeError('Could not find a port to bind to.')
+
+        self.port = port
+
+    def buildProtocol(self, addr):
+        password = self.settings.get('iphone', 'password')
+        if password:
+            protocol = ServerFactory.buildProtocol(self, addr)
+            protocol.window = self.window
+            protocol.settings = self.settings
+            protocol.iocontroller = self.iocontroller
+            return protocol
+
+        wx.MessageBox(_('''An iPhone or iPod Touch tried to connect to Task Coach,\n'''
+                        '''but no password is set. Please set a password in the\n'''
+                        '''iPhone section of the configuration and try again.'''),
+                        _('Error'), wx.OK)
+
+        return None
+
+    def close(self):
+        self.__listening.stopListening()
+        self.__listening = None
 
 
 class BaseState(State): # pylint: disable=W0223

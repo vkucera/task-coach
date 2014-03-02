@@ -109,6 +109,8 @@ class Application(object):
         self._options = options
         self._args = args
         self.__wx_app = wxApp(self.on_end_session, self.on_reopen_app, redirect=False)
+        from twisted.internet import reactor
+        reactor.registerWxApp(self.__wx_app)
         self.init(**kwargs)
 
         if operating_system.isGTK():
@@ -159,7 +161,8 @@ class Application(object):
             self.__message_checker.start()
         self.__copy_default_templates()
         self.mainwindow.Show()
-        self.__wx_app.MainLoop()
+        from twisted.internet import reactor
+        reactor.run()
         
     def __copy_default_templates(self):
         ''' Copy default templates that don't exist yet in the user's
@@ -361,5 +364,6 @@ class Application(object):
         if isinstance(sys.stdout, RedirectedOutput):
             sys.stdout.summary()
 
-        self.__wx_app.ExitMainLoop()
+        from twisted.internet import reactor
+        reactor.stop()
         return True
