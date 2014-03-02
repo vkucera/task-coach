@@ -108,9 +108,9 @@ class Application(object):
     def __init__(self, options=None, args=None, **kwargs):
         self._options = options
         self._args = args
+        self.initTwisted()
         self.__wx_app = wxApp(self.on_end_session, self.on_reopen_app, redirect=False)
-        from twisted.internet import reactor
-        reactor.registerWxApp(self.__wx_app)
+        self.registerApp()
         self.init(**kwargs)
 
         if operating_system.isGTK():
@@ -148,6 +148,18 @@ class Application(object):
                 self.sessionMonitor = None
 
         calendar.setfirstweekday(dict(monday=0, sunday=6)[self.settings.get('view', 'weekstart')])
+
+    def initTwisted(self):
+        from twisted.internet import wxreactor
+        wxreactor.install()
+
+    def stopTwisted(self):
+        from twisted.internet import reactor
+        reactor.stop()
+
+    def registerApp(self):
+        from twisted.internet import reactor
+        reactor.registerWxApp(self.__wx_app)
 
     def start(self):
         ''' Call this to start the Application. '''
@@ -364,6 +376,5 @@ class Application(object):
         if isinstance(sys.stdout, RedirectedOutput):
             sys.stdout.summary()
 
-        from twisted.internet import reactor
-        reactor.stop()
+        self.stopTwisted()
         return True
