@@ -115,8 +115,6 @@ class MainWindow(PowerStateMixin, BalloonTipManager,
                     wx.MessageBox(reason.getErrorMessage(), _('Error'), wx.OK)
                 BonjourServiceRegister(self.settings, acceptor.port).addCallbacks(success, error)
             except:
-                import traceback
-                traceback.print_exc()
                 from taskcoachlib.gui.dialog.iphone import IPhoneBonjourDialog
 
                 dlg = IPhoneBonjourDialog(self, wx.ID_ANY, _('Warning'))
