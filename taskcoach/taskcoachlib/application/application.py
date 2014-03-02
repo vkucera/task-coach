@@ -154,8 +154,12 @@ class Application(object):
         wxreactor.install()
 
     def stopTwisted(self):
-        from twisted.internet import reactor
-        reactor.stop()
+        from twisted.internet import reactor, error
+        try:
+            reactor.stop()
+        except error.ReactorNotRunning:
+            # Happens on Fedora 14 when running unit tests. Old Twisted ?
+            pass
 
     def registerApp(self):
         from twisted.internet import reactor
