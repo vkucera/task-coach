@@ -16,13 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib.gui.threads import DeferredCallMixin, synchronized, synchronizednb
 from taskcoachlib.notify import NotificationFrameBase, NotificationCenter
 from taskcoachlib.i18n import _
 import wx
 
 
-class IPhoneSyncFrame(DeferredCallMixin, NotificationFrameBase):
+class IPhoneSyncFrame(NotificationFrameBase):
     def __init__(self, settings, *args, **kwargs):
         self.settings = settings
 
@@ -49,24 +48,19 @@ class IPhoneSyncFrame(DeferredCallMixin, NotificationFrameBase):
     def CloseButton(self, panel):
         return None
 
-    @synchronized
     def SetDeviceName(self, name):
         self.text.SetLabel(_('Synchronizing with %s...') % name)
 
-    @synchronized
     def SetProgress(self, value, total):
         self.gauge.SetValue(int(100 * value / total))
 
-    @synchronized
     def AddLogLine(self, line):
         if self.settings.getboolean('iphone', 'showlog'):
             self.log.AppendText(line + u'\n')
 
-    @synchronizednb
     def Started(self):
         NotificationCenter().NotifyFrame(self)
 
-    @synchronized
     def Finished(self):
         if self.settings.getboolean('iphone', 'showlog'):
             self.btn.Enable(True)

@@ -37,4 +37,4 @@ class Singleton(type):
 
     def hasInstance(class_):
         ''' Has the (only) instance been created already? '''
-        return hasattr(class_, 'instance')
+        return 'instance' in class_.__dict__

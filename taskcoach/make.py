@@ -81,8 +81,9 @@ installText = header + '''
 
 --- Prerequisites ----------------------------------------------
 
-You need Python version %(pythonversion)s or higher and wxPython 
-version %(wxpythonversion)s or higher.
+You need Python version %(pythonversion)s or higher, wxPython 
+version %(wxpythonversion)s or higher, and Twisted version
+%(twistedversionnumber)s or higher.
 
 
 --- Testing ----------------------------------------------------
@@ -250,6 +251,7 @@ elif sys.argv[1] in ['bdist_deb', 'bdist_ubuntu']:
         license_path='/usr/share/common-licenses/GPL-3',
         license_summary=meta.data.license_notice, 
         wxpythonversion=meta.data.wxpythonversionnumber,
+        twistedversion=meta.data.twistedversionnumber,
         subsection='Office', url=meta.data.url,
         command='/usr/bin/taskcoach.py',
         changelog_content=file('changelog_content', 'rb').read().rstrip(),

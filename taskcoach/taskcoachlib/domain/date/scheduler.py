@@ -113,7 +113,8 @@ class wxScheduler(wx.EvtHandler):
             self.__firing = False
 
         if self.__jobs and self.__timer is None:
-            nextDuration = int((self.__jobs[0][0] - dateandtime.Now()).total_seconds() * 1000)
+            dt = self.__jobs[0][0] - dateandtime.Now()
+            nextDuration = int((dt.microseconds + (dt.seconds + dt.days * 24 * 3600) * 10**6) / 10**3)
             nextDuration = max(nextDuration, 1)
             nextDuration = min(nextDuration, 2**31-1)
             self.__timer = wx.Timer(self, self.__timerId)

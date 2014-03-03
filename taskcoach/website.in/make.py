@@ -932,7 +932,7 @@ pages['devinfo'] = '''
                     <h2>Dependencies</h2>
                     <p>%(name)s is developed in <a href="http://www.python.org">Python</a>,
                     using <a href="http://www.wxpython.org">wxPython</A> for the
-                    graphical user interface. On Windows, 
+                    graphical user interface and <a href="https://twistedmatrix.com/">Twisted</a>. On Windows, 
                     <a href="http://sourceforge.net/projects/pywin32/">Pywin32</a> 
                     is used as well. For generating the API documentation you need to have
                     <a href="http://epydoc.sourceforge.net/">Epydoc</a> installed. For

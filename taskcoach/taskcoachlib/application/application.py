@@ -108,7 +108,9 @@ class Application(object):
     def __init__(self, options=None, args=None, **kwargs):
         self._options = options
         self._args = args
+        self.initTwisted()
         self.__wx_app = wxApp(self.on_end_session, self.on_reopen_app, redirect=False)
+        self.registerApp()
         self.init(**kwargs)
 
         if operating_system.isGTK():
@@ -147,6 +149,22 @@ class Application(object):
 
         calendar.setfirstweekday(dict(monday=0, sunday=6)[self.settings.get('view', 'weekstart')])
 
+    def initTwisted(self):
+        from twisted.internet import wxreactor
+        wxreactor.install()
+
+    def stopTwisted(self):
+        from twisted.internet import reactor, error
+        try:
+            reactor.stop()
+        except error.ReactorNotRunning:
+            # Happens on Fedora 14 when running unit tests. Old Twisted ?
+            pass
+
+    def registerApp(self):
+        from twisted.internet import reactor
+        reactor.registerWxApp(self.__wx_app)
+
     def start(self):
         ''' Call this to start the Application. '''
         # pylint: disable=W0201
@@ -159,7 +177,8 @@ class Application(object):
             self.__message_checker.start()
         self.__copy_default_templates()
         self.mainwindow.Show()
-        self.__wx_app.MainLoop()
+        from twisted.internet import reactor
+        reactor.run()
         
     def __copy_default_templates(self):
         ''' Copy default templates that don't exist yet in the user's
@@ -361,5 +380,5 @@ class Application(object):
         if isinstance(sys.stdout, RedirectedOutput):
             sys.stdout.summary()
 
-        self.__wx_app.ExitMainLoop()
+        self.stopTwisted()
         return True

@@ -112,7 +112,10 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
         if self.__window.IsIconized() or not self.__window.IsShown():
             self.__window.restore(event)
         else:
-            self.__window.Iconize()
+            if operating_system.isMac():
+                self.__window.Raise()
+            else:
+                self.__window.Iconize()
 
     # Menu:
 

@@ -17,41 +17,59 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib.thirdparty import pybonjour
-import select, threading
+from twisted.internet.interfaces import IReadDescriptor
+from twisted.internet.defer import Deferred
+from twisted.python.failure import Failure
+from zope import interface
 
-class BonjourServiceRegister(object):
-    def __init__(self, settings, port):
-        super(BonjourServiceRegister, self).__init__()
 
-        self.name = settings.get('iphone', 'service')
-        self.__stopped = False
+class BonjourServiceDescriptor(object):
+    interface.implements(IReadDescriptor)
 
-        # This ID is registered, see http://www.dns-sd.org/ServiceTypes.html
+    def __init__(self):
+        self.__fd = None
 
-        sdRef = pybonjour.DNSServiceRegister(name=self.name or None,
-                                             regtype='_taskcoachsync._tcp',
-                                             port=port,
-                                             callBack=self.__registerCallback)
-
-        self.__thread = threading.Thread(target=self.__run, args=(sdRef,))
-        self.__thread.start()
-
-    def __registerCallback(self, sdRef, flags, errorCode, name, regtype, domain):
-        if errorCode == pybonjour.kDNSServiceErr_NoError:
-            self.name = name
-        else:
-            # Should do something...
-            pass
-
-    def __run(self, sdRef):
-        try:
-            while not self.__stopped:
-                ready = select.select([sdRef], [], [], 1.0)
-                if sdRef in ready[0]:
-                    pybonjour.DNSServiceProcessResult(sdRef)
-        except Exception, e:
-            pass # XXXTODO
+    def start(self, fd):
+        from twisted.internet import reactor
+        self.__fd = fd
+        reactor.addReader(self)
 
     def stop(self):
-        self.__stopped = True
-        self.__thread.join()
+        from twisted.internet import reactor
+        reactor.removeReader(self)
+        self.__fd.close()
+        self.__fd = None
+
+    def doRead(self):
+        pybonjour.DNSServiceProcessResult(self.__fd)
+
+    def fileno(self):
+        return None if self.__fd is None else self.__fd.fileno()
+
+    def logPrefix(self):
+        return 'bonjour'
+
+    def connectionLost(self, reason):
+        self.__fd.close()
+
+
+def BonjourServiceRegister(settings, port):
+    from twisted.internet import reactor
+
+    d = Deferred()
+    reader = BonjourServiceDescriptor()
+
+    def registerCallback(sdRef, flags, errorCode, name, regtype, domain):
+        if errorCode == pybonjour.kDNSServiceErr_NoError:
+            d.callback(reader)
+        else:
+            reader.stop()
+            d.errback(Failure(RuntimeError('Could not register with Bonjour: %d' % errorCode)))
+
+    # This ID is registered, see http://www.dns-sd.org/ServiceTypes.html
+    sdRef = pybonjour.DNSServiceRegister(name=settings.get('iphone', 'service') or None,
+                                         regtype='_taskcoachsync._tcp',
+                                         port=port,
+                                         callBack=registerCallback)
+    reader.start(sdRef)
+    return d

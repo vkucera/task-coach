@@ -25,6 +25,9 @@ releases = [
 Release('1.3.37', 'February ??, 2014',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bugv2('''Fix a crash at startup on Lucid.''', '1496'),
+        Bugv2('''Behave like regular OS X apps with regards to
+minimization and foreground behavior.''', '1500'),
         ],
     ),
 

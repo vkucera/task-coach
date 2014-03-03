@@ -32,6 +32,7 @@ BuildRoot: 	%%{_tmppath}/%%{name}-%%{version}-%%{release}-root-%%(%%{__id_u} -n)
 BuildArch:	noarch
 Requires: 	python >= %(pythonversion)s
 Requires:	python-wxGTK >= %(wxpythonversionnumber)s
+Requires:	python-twisted >= %(twistedversionnumber)s
 
 # Must have setuptools to build the package
 BuildRequires: python-setuptools

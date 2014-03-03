@@ -56,6 +56,7 @@ for more information and possible resolutions.
 
 def start():
     ''' Process command line options and start the application. '''
+
     # pylint: disable=W0404
     from taskcoachlib import config, application 
     options, args = config.ApplicationOptionParser().parse_args()

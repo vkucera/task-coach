@@ -47,6 +47,16 @@ class App(application.Application):
         self._Application__wx_app = MockWxApp()
         self.init()
         self.sessionMonitor = None
+        application.Application.instance = self
+
+    def initTwisted(self):
+        pass
+
+    def stopTwisted(self):
+        pass
+
+    def registerApp(self):
+        pass
 
     def init(self): # pylint: disable=W0221
         super(App, self).init(loadSettings=False, loadTaskFile=False)
