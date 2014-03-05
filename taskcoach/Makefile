@@ -194,7 +194,7 @@ thirdpartymodules:
 	cd thirdparty; tar xzf chardet-2.1.1.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty chardet-2.1.1/chardet
 	cd thirdparty; tar xzf python-dateutil-1.5.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty python-dateutil-1.5/dateutil
 	cd thirdparty; tar xzf desktop-0.4.2.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty desktop-0.4.2/desktop
-	cd thirdparty; tar xzf keyring-3.3.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty keyring-3.3/keyring
+	cd thirdparty; tar xzf keyring-3.6.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty keyring-3.6/keyring
 	cd thirdparty; tar xzf lockfile-0.8.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty lockfile-0.8/lockfile.py
 	cd thirdparty; tar xzf PyPubSub-3.3.0.tar.gz --strip-components=2 -C ../taskcoachlib/thirdparty PyPubSub-3.3.0/src/pubsub
 	cd thirdparty; tar xzf SquareMap-1.0.3.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty SquareMap-1.0.3/squaremap
