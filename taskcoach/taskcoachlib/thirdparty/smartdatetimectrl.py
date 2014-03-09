@@ -2122,11 +2122,11 @@ class SmartDateTimeCtrl(wx.Panel):
         if self.__enableNone:
             self.__checkbox = _CheckBox(self, label)
             wx.EVT_CHECKBOX(self.__checkbox, wx.ID_ANY, self.OnToggleNone)
-            sizer.Add(self.__checkbox, 0, wx.ALL|wx.ALIGN_CENTRE, 3)
+            sizer.Add(self.__checkbox, 0, wx.ALL|wx.EXPAND|wx.ALIGN_CENTRE, 3)
             self.__label = self.__checkbox
         elif label:
             self.__label = wx.StaticText(self, wx.ID_ANY, label)
-            sizer.Add(self.__label, 0, wx.ALL|wx.ALIGN_CENTRE, 3)
+            sizer.Add(self.__label, 0, wx.ALL|wx.EXPAND|wx.ALIGN_CENTRE, 3)
 
         dateTime = value or datetime.datetime.now()
 
