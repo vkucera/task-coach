@@ -253,9 +253,9 @@ class ColorEntry(widgets.PanelWithBoxSizer):
         return checkBox
     
     def _createColorPicker(self, currentColor, defaultColor):
-        # wx.ColourPickerCtrl on Mac OS X expects a wx.Color and fails on tuples
-        # so convert the tuples to a wx.Color:
-        currentColor = wx.Color(*currentColor) if currentColor else defaultColor  # pylint: disable=W0142
+        # wx.ColourPickerCtrl on Mac OS X expects a wx.Colour and fails on tuples
+        # so convert the tuples to a wx.Colour:
+        currentColor = wx.Colour(*currentColor) if currentColor else defaultColor  # pylint: disable=W0142
         picker = wx.ColourPickerCtrl(self, col=currentColor)
         picker.Bind(wx.EVT_COLOURPICKER_CHANGED, self.onColorPicked)
         return picker

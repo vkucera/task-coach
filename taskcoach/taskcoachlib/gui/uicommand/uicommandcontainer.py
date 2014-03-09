@@ -32,8 +32,10 @@ class UICommandContainerMixin(object):
                 self.AppendStretchSpacer(uiCommand)
             elif isinstance(uiCommand, (str, unicode)):
                 label = wx.MenuItem(self, wx.NewId(), uiCommand)
-                label.Enable(False)
+                #must append item before disable to insure
+                #that internal object exists
                 self.AppendItem(label)
+                label.Enable(False)
             elif type(uiCommand) == type(()):  # This only works for menu's
                 menuTitle, menuUICommands = uiCommand[0], uiCommand[1:]
                 self.appendSubMenuWithUICommands(menuTitle, menuUICommands)

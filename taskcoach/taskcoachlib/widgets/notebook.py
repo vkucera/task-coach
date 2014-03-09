@@ -56,9 +56,9 @@ class BookPage(wx.Panel):
         self._columns = columns
         self._position = GridCursor(columns)
         if growableColumn is None:
-            growableColumn = columns - 1
-        if growableColumn > -1:
-            self._sizer.AddGrowableCol(growableColumn)
+            self._growableColumn = columns - 1
+        else:
+            self._growableColumn = growableColumn
         self._borderWidth = 5
 
     def fit(self):
@@ -109,6 +109,14 @@ class BookPage(wx.Panel):
                 control.MoveAfterInTabOrder(controls[columnIndex - 1])
         if kwargs.get('growable', False):
             self._sizer.AddGrowableRow(self._position.maxRow())
+        # Move growable column definition here
+        # There are asserts to fail if the column is already
+        # marked growable or if there is no column yet created
+        if self._growableColumn > -1 and \
+               self._growableColumn >= lastColumnIndex:
+            self._sizer.AddGrowableCol(self._growableColumn)
+            self._growableColumn = -1
+
             
     def addLine(self):
         line = wx.StaticLine(self)

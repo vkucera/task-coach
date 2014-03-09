@@ -136,11 +136,11 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable=W0223
         
     def detach(self):
         super(BaseTaskTreeViewer, self).detach()
-        if self.secondRefresher:
+        if hasattr(self, "secondRefresher") and self.secondRefresher:
             self.secondRefresher.stopClock()
             self.secondRefresher.removeInstance()
             del self.secondRefresher
-        if self.minuteRefresher:
+        if hasattr(self, "minuteRefresher") and self.minuteRefresher:
             self.minuteRefresher.stopClock()
             del self.minuteRefresher
         
@@ -575,7 +575,7 @@ class SquareTaskViewer(BaseTaskTreeViewer):
     def background_color(self, task, depth):  # pylint: disable=W0613
         red = blue = 255 - (depth * 3) % 100
         green = 255 - (depth * 2) % 100
-        color = wx.Color(red, green, blue)
+        color = wx.Colour(red, green, blue)
         return task.backgroundColor(recursive=True) or color
     
     def font(self, task, depth):  # pylint: disable=W0613
