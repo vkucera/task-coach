@@ -103,6 +103,7 @@ class _CheckBox(wx.Panel):
             tw, th = dc.GetTextExtent(self.__label)
             w = w + tw + 4
             h = max(h, th)
+        self.SetMinSize((w + 4, h + 4))
         self.SetClientSize((w + 4, h + 4))
 
     def GetValue(self):
