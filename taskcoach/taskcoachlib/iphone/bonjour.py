@@ -35,13 +35,15 @@ class BonjourServiceDescriptor(object):
         reactor.addReader(self)
 
     def stop(self):
-        from twisted.internet import reactor
-        reactor.removeReader(self)
-        self.__fd.close()
-        self.__fd = None
+        if self.__fd is not None:
+            from twisted.internet import reactor
+            reactor.removeReader(self)
+            self.__fd.close()
+            self.__fd = None
 
     def doRead(self):
-        pybonjour.DNSServiceProcessResult(self.__fd)
+        if self.__fd is not None:
+            pybonjour.DNSServiceProcessResult(self.__fd)
 
     def fileno(self):
         return None if self.__fd is None else self.__fd.fileno()
@@ -50,7 +52,8 @@ class BonjourServiceDescriptor(object):
         return 'bonjour'
 
     def connectionLost(self, reason):
-        self.__fd.close()
+        if self.__fd is not None:
+            self.__fd.close()
 
 
 def BonjourServiceRegister(settings, port):
