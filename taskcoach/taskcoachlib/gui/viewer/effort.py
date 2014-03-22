@@ -61,6 +61,8 @@ class EffortViewer(base.ListViewer,
                       'settings.%s.alwaysroundup' % self.settingsSection())
         pub.subscribe(self.on_aggregation_changed, 
                       'settings.%s.aggregation' % self.settingsSection())
+        pub.subscribe(self.onHourDisplayChanged,
+                      'settings.feature.decimaltime')
 
     def selectableColumns(self):
         columns = list()
@@ -75,6 +77,9 @@ class EffortViewer(base.ListViewer,
 
     def onRoundingChanged(self, value):  # pylint: disable=W0613
         self.__initRoundingToolBarUICommands()
+        self.refresh()
+        
+    def onHourDisplayChanged(self, value):
         self.refresh()
 
     def __initModeToolBarUICommands(self):
@@ -381,9 +386,12 @@ class EffortViewer(base.ListViewer,
         for effort in efforts:
             td = td + effort.duration()
 
-        sumTimeSpent = render.timeSpent(td, showSeconds=self.__show_seconds())
+        sumTimeSpent = render.timeSpent(td, showSeconds=self.__show_seconds(), decimal=self.settings.getboolean('feature', 'decimaltime'))
+
         if sumTimeSpent == '':
-            if self.__show_seconds():
+            if self.settings.getboolean('feature', 'decimaltime'):
+                sumTimeSpent = '0.0'
+            elif self.__show_seconds():
                 sumTimeSpent = '0:00:00'
             else:
                 sumTimeSpent = '0:00'
@@ -468,7 +476,8 @@ class EffortViewer(base.ListViewer,
             showSeconds = self.__show_seconds()
         else:
             showSeconds = True
-        return render.timeSpent(duration, showSeconds=showSeconds)
+
+        return render.timeSpent(duration, showSeconds=showSeconds, decimal=self.settings.getboolean('feature', 'decimaltime'))
 
     def __renderTotalTimeSpent(self, anEffort):
         ''' Return a rendered version of the effort total duration (of 
@@ -478,7 +487,8 @@ class EffortViewer(base.ListViewer,
         total_duration = anEffort.duration(recursive=True,
                rounding=self.__round_precision(), roundUp=self.__always_round_up())
         return render.timeSpent(total_duration, 
-                                showSeconds=self.__show_seconds())
+                            showSeconds=self.__show_seconds(),
+                            decimal=self.settings.getboolean('feature', 'decimaltime'))
     
     def __renderTimeSpentOnDay(self, anEffort, dayOffset):
         ''' Return a rendered version of the duration of the effort on a
@@ -490,7 +500,8 @@ class EffortViewer(base.ListViewer,
         duration = anEffort.durationDay(dayOffset, **kwargs) \
             if self.aggregation == 'week' else date.TimeDelta()
         return render.timeSpent(self.__round_duration(duration), 
-                                showSeconds=self.__show_seconds())
+                                showSeconds=self.__show_seconds(),
+                                decimal=self.settings.getboolean('feature', 'decimaltime'))
     
     @staticmethod
     def __renderRevenue(anEffort):

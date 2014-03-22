@@ -23,7 +23,7 @@ from changetypes import *
 releases = [
 
 Release('1.3.37', 'February ??, 2014',
-    summary='''This is a bugfix release.''',
+    summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bugv2('''Fix a crash at startup on Lucid.''', '1496'),
         Bugv2('''Behave like regular OS X apps with regards to
@@ -51,6 +51,10 @@ the dock (OS X)''', '1490'),
 Mac/Linux''', '1493'),
         Bugv2('''Delete .txt files as well when overwriting a task
 file.''', '1274'),
+        ],
+    featuresAdded=[
+        Feature('''Add an option to render efforts in decimal (patch
+from Tom Monaco).''', 'https://taskcoach.uservoice.com/admin/forums/26465-desktop-version-windows-linux-mac-of-task-coach/suggestions/739042-allow-display-of-effort-in-decimal-dd-dd-as-wel'),
         ],
     ),
 
