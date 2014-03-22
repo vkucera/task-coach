@@ -197,7 +197,8 @@ class TodoTxtReader(object):
         
     @staticmethod
     def compileKeyValueRE():
-        return re.compile(' (?P<key>\S+):(?P<value>\S+)')
+        # The key is non-greedy because IDs may contain ':'
+        return re.compile(' (?P<key>\S+?):(?P<value>\S+)')
     
     @staticmethod
     def __createSubjectCache(itemContainer):
