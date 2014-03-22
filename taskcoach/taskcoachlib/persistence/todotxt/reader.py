@@ -100,6 +100,9 @@ class TodoTxtReader(object):
             # in case we're importing just before saving...
             return
 
+        if taskId is not None and taskId not in self.__tasksById:
+            return # Deleted on desktop, changed on device. Keep deleted.
+
         if self.__version == 0:
             newTask = None
             for subject in subjects:
