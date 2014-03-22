@@ -108,6 +108,10 @@ _TOC = sequence(
                 li(a_href(_('Printing'), 'printing')),
                 li(a_href(_('Exporting'), 'exporting')))),
         li(
+            a_href(_('E-mailing tasks'), 'emailtasks'),
+            ul(
+                li(a_href(_('Custom attributes for e-mailing'), 'emailcustom')))),
+        li(
             a_href(_('E-mail integration'), 'email'),
             ul(
                 li(a_href(_('About e-mail integration'), 'aboutemail')),
@@ -360,6 +364,18 @@ to export to include CSV (comma separated format), HTML and iCalendar. When
 you export to HTML, a CSS file is created that you can edit to change
 the appearance of the HTML.''')))
 
+_emailTasksSection = sequence(
+    h3(
+        a_name(_('E-mailing tasks'), 'emailtasks')),
+    h4(
+        a_name(_('Custom attributes for e-mailing tasks'), 'emailcustom')),
+    p(
+        _('''You can alter the behaviour of the e-mail command using custom attributes
+in a task description. Those attributes must be on a line by themselves. Supported
+attributes are 'cc' and 'to'. Examples:''') % meta.metaDict),
+    p(_('[email:to=foo@spam.com]')),
+    p(_('[email:cc=bar@spam.com]')),
+    )
 
 _emailSection = sequence(
     h3(
@@ -782,7 +798,7 @@ shortcuts are not configurable at the moment.''')%meta.metaDict),
 
 
 helpHTML = _TOC + _taskSection + _effortSection + _categorySection + \
-    _noteSection + _printingAndExportingSection + _emailSection + \
+    _noteSection + _printingAndExportingSection + _emailTasksSection + _emailSection + \
     _syncmlSection + _iPhoneSection + _androidSection + _templatesSection + \
     _guiSection + _shortcutSection
 

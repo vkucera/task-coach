@@ -25,6 +25,7 @@ from taskcoachlib.thirdparty.pubsub import pub
 import attribute
 import functools
 import uuid
+import re
 
 
 class SynchronizedObject(object):
@@ -131,6 +132,8 @@ class SynchronizedObject(object):
 
         
 class Object(SynchronizedObject):
+    rx_attributes = re.compile(r'\[(\w+):(.+)\]')
+
     def __init__(self, *args, **kwargs):
         Attribute = attribute.Attribute
         self.__creationDateTime = kwargs.pop('creationDateTime', None) or Now()
@@ -217,7 +220,16 @@ class Object(SynchronizedObject):
        
     def id(self):
         return self.__id
-            
+
+    # Custom attributes
+    def customAttributes(self, sectionName):
+        attributes = set()
+        for line in self.description().split('\n'):
+            match = self.rx_attributes.match(line.strip())
+            if match and match.group(1) == sectionName:
+                attributes.add(match.group(2))
+        return attributes
+
     # Editing date/time:
     
     def creationDateTime(self):
