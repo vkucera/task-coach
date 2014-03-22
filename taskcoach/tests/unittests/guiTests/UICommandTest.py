@@ -138,7 +138,10 @@ class NewNoteWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
 class DummyTask(object):
     def subject(self, *args, **kwargs): # pylint: disable=W0613
         return 'subject'
-    
+
+    def customAttributes(self, sectionName):
+        return set()
+
     def description(self):
         return 'description'
 
