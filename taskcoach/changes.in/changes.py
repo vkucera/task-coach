@@ -32,6 +32,7 @@ minimization and foreground behavior.''', '1500'),
     featuresAdded=[
         Feature('''Add an option to render efforts in decimal (patch
 from Tom Monaco).''', 'https://taskcoach.uservoice.com/admin/forums/26465-desktop-version-windows-linux-mac-of-task-coach/suggestions/739042-allow-display-of-effort-in-decimal-dd-dd-as-wel'),
+        Feature('''Improved import/export of Todo.txt'''),
         ],
     ),
 

@@ -45,15 +45,17 @@ class AutoExporterTestCase(test.TestCase):
         self.settings.set('file', 'autoexport', '["Todo.txt"]')
         self.settings.set('file', 'autosave', 'True')
         autosaver = persistence.AutoSaver(self.settings)
-        self.taskFile.tasks().append(task.Task(subject='Some task'))
+        theTask = task.Task(subject='Some task')
+        self.taskFile.tasks().append(theTask)
         autosaver.on_idle(dummy.Event())
-        self.assertEqual('Some task\n', file(self.txtFilename, 'r').read())
+        self.assertEqual('Some task tcid:%s\n' % theTask.id(), file(self.txtFilename, 'r').read())
         
     def testAddOneTaskAndSaveManually(self):
         self.settings.set('file', 'autoexport', '["Todo.txt"]')
-        self.taskFile.tasks().append(task.Task(subject='Whatever'))
+        theTask = task.Task(subject='Whatever')
+        self.taskFile.tasks().append(theTask)
         self.taskFile.save()
-        self.assertEqual('Whatever\n', file(self.txtFilename, 'r').read())
+        self.assertEqual('Whatever tcid:%s\n' % theTask.id(), file(self.txtFilename, 'r').read())
         
     def testImportOneTaskWhenSavingManually(self):
         self.settings.set('file', 'autoimport', '["Todo.txt"]')
