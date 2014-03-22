@@ -610,7 +610,10 @@ file.''')%meta.metaDict),
         _('''Tip: if you save your task file in the todo folder that Todo.txt
 Touch creates in your Dropbox folder, and you turn on automatic importing and 
 exporting of Todo.txt, %(name)s will keep the task file and the 
-todo.txt file in sync.''')%meta.metaDict),
+todo.txt file in sync. Please note that another file, named after the .txt file
+with '-meta' appended, is also generated. This is used internally by %(name)s
+in order to keep track of what has been modified in the .txt file; don't modify
+or delete it.''')%meta.metaDict),
     h4(
         a_name(_('Importing todo.txt'), 'todotxtimporting')),
     p(
