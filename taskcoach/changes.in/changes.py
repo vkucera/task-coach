@@ -28,6 +28,7 @@ Release('1.3.37', 'February ??, 2014',
         Bugv2('''Fix a crash at startup on Lucid.''', '1496'),
         Bugv2('''Behave like regular OS X apps with regards to
 minimization and foreground behavior.''', '1500'),
+        Bugv2('''Fix idle time notification.''', '1503'),
         ],
     featuresAdded=[
         Feature('''Add an option to render efforts in decimal (patch

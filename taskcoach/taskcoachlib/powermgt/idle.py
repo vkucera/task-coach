@@ -112,6 +112,7 @@ class IdleNotifier(wx.EvtHandler, IdleQuery):
 
         self.state = self.STATE_AWAKE
         self.lastActivity = time.time()
+        self.goneToSleep = None
 
         self._bound = True
         wx.GetApp().Bind(wx.EVT_IDLE, self._OnIdle)
@@ -132,11 +133,12 @@ class IdleNotifier(wx.EvtHandler, IdleQuery):
 
     def _check(self):
         if self.state == self.STATE_AWAKE and time.time() - self.lastActivity >= self.getMinIdleTime():
+            self.goneToSleep = self.lastActivity
             self.state = self.STATE_SLEEPING
             self.sleep()
         elif self.state == self.STATE_SLEEPING and time.time() - self.lastActivity < self.getMinIdleTime():
             self.state = self.STATE_AWAKE
-            self.wake()
+            self.wake(self.goneToSleep)
 
     def _OnIdle(self, event):
         self._check()
@@ -175,7 +177,7 @@ class IdleNotifier(wx.EvtHandler, IdleQuery):
         input.
         """
 
-    def wake(self):
+    def wake(self, timestamp):
         """
         Called when the computer is not idle any more.
         """
