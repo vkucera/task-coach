@@ -37,6 +37,9 @@ from Tom Monaco).''', 'https://taskcoach.uservoice.com/admin/forums/26465-deskto
         Feature('''Custom attributes for mailing tasks/categories/etc''',
                 'https://taskcoach.uservoice.com/admin/forums/26465-desktop-version-windows-linux-mac-of-task-coach/suggestions/5342642-embeded-command-capability'),
         ],
+    dependenciesChanged=[
+        Dependency('''Task Coach now depends on Twisted.''')
+        ],
     ),
 
 Release('1.3.36', 'February 16, 2014',
