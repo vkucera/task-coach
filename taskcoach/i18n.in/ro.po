@@ -38,15 +38,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TaskCoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-02-11 20:00+0000\n"
-"PO-Revision-Date: 2014-02-13 17:01+0000\n"
+"POT-Creation-Date: 2014-03-10 00:00+0000\n"
+"PO-Revision-Date: 2014-03-29 10:16+0000\n"
 "Last-Translator: Jérôme Laheurte <fraca7@free.fr>\n"
 "Language-Team: Romanian <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-15 13:16+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-03-29 10:20+0000\n"
+"X-Generator: Launchpad (build 16967)\n"
 "X-Poedit-Country: ROMANIA\n"
 "X-Poedit-Language: Romanian\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -62,8 +62,8 @@ msgstr ""
 #: taskcoachlib/application/application.py:67
 #: taskcoachlib/application/application.py:69
 #: taskcoachlib/gui/dialog/attributesync.py:91
-#: taskcoachlib/gui/mainwindow.py:389 taskcoachlib/iphone/protocol.py:482
-#: taskcoachlib/widgets/draganddrop.py:123
+#: taskcoachlib/gui/mainwindow.py:114 taskcoachlib/gui/mainwindow.py:400
+#: taskcoachlib/iphone/protocol.py:552 taskcoachlib/widgets/draganddrop.py:123
 #: taskcoachlib/widgets/draganddrop.py:165 taskcoachlib/widgets/password.py:92
 msgid "Error"
 msgstr "Eroare"
@@ -72,7 +72,7 @@ msgstr "Eroare"
 msgid "Errors have occured. Please see \"%s\""
 msgstr "S-a produs o eroare. Verificaţi \"%s\"."
 
-#: taskcoachlib/application/application.py:322
+#: taskcoachlib/application/application.py:345
 msgid ""
 "Couldn't load settings from TaskCoach.ini:\n"
 "%s"
@@ -80,7 +80,7 @@ msgstr ""
 "Nu s-au putut încărca configurările din TaskCoach.ini:\n"
 "%s"
 
-#: taskcoachlib/application/application.py:323
+#: taskcoachlib/application/application.py:346
 #: taskcoachlib/gui/iocontroller.py:72
 msgid "%s file error"
 msgstr "%s eroare  de fișier"
@@ -648,7 +648,7 @@ msgid "45 minutes"
 msgstr "45 de minute"
 
 #: taskcoachlib/domain/date/snooze.py:25
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1758
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1759
 msgid "1 hour"
 msgstr "1 oră"
 
@@ -697,7 +697,7 @@ msgid "2 weeks"
 msgstr "2 săptămîni"
 
 #: taskcoachlib/domain/date/snooze.py:30
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1746
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1747
 msgid "1 week"
 msgstr "1 săptămînă"
 
@@ -709,7 +709,7 @@ msgstr "Total"
 msgid "Total for %s"
 msgstr "Total pentru %s"
 
-#: taskcoachlib/domain/effort/effortlist.py:34
+#: taskcoachlib/domain/effort/effortlist.py:35
 msgid "&New effort...\tCtrl+E"
 msgstr "Efort &nou...\tCtrl+E"
 
@@ -794,7 +794,7 @@ msgstr "Activitati cu termen de finalizare depasit"
 
 #: taskcoachlib/domain/task/status.py:78
 msgid "Hide &over due tasks"
-msgstr ""
+msgstr "Ascundeţi sarcinile care au &depăşit termenul"
 
 #: taskcoachlib/domain/task/status.py:78
 msgid "Overdue tasks: %d (%d%%)"
@@ -905,7 +905,7 @@ msgstr "Bifare"
 
 #: taskcoachlib/gui/artprovider.py:154
 msgid "Check marks"
-msgstr ""
+msgstr "Bife"
 
 #: taskcoachlib/gui/artprovider.py:155
 msgid "Clock"
@@ -1439,24 +1439,24 @@ msgid "Start"
 msgstr "Pornește"
 
 #: taskcoachlib/gui/dialog/editor.py:1185
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1646
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1647
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Week(s)"
 msgstr "Săptămîni"
 
 #: taskcoachlib/gui/dialog/editor.py:1185
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1647
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1648
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Day(s)"
 msgstr "Zile"
 
 #: taskcoachlib/gui/dialog/editor.py:1185
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1648
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1649
 msgid "Hour(s)"
 msgstr "Ora (ore)"
 
 #: taskcoachlib/gui/dialog/editor.py:1185
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1649
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1650
 msgid "Minute(s)"
 msgstr "Minut(e)"
 
@@ -1712,7 +1712,7 @@ msgstr ""
 "În plus, dacă aveți un parafoc, verificați că porturile 4096-4100 sînt "
 "deschise."
 
-#: taskcoachlib/gui/dialog/iphone.py:98 taskcoachlib/gui/iphone.py:44
+#: taskcoachlib/gui/dialog/iphone.py:98 taskcoachlib/gui/iphone.py:43
 #: taskcoachlib/widgets/password.py:47
 #: taskcoachlib/widgets/syncmlwarning.py:36
 msgid "OK"
@@ -1848,11 +1848,11 @@ msgstr "Ascunde fereastra principală la iconizare"
 msgid "Minimize main window when closed"
 msgstr "Minimizează fereastra principală la închidere"
 
-#: taskcoachlib/gui/dialog/preferences.py:403
+#: taskcoachlib/gui/dialog/preferences.py:404
 msgid "Make clock in the task bar tick when tracking effort"
 msgstr "Fă să ticăie ceasul din bara de sarcini cînd se urmărește efortul"
 
-#: taskcoachlib/gui/dialog/preferences.py:405
+#: taskcoachlib/gui/dialog/preferences.py:406
 msgid ""
 "Show a popup with the description of an item\n"
 "when hovering over it"
@@ -1860,16 +1860,16 @@ msgstr ""
 "Afișează o fereastră cu descrierea unui element\n"
 "cînd este planat"
 
-#: taskcoachlib/gui/dialog/preferences.py:412
-#: taskcoachlib/gui/dialog/preferences.py:488
+#: taskcoachlib/gui/dialog/preferences.py:413
+#: taskcoachlib/gui/dialog/preferences.py:489
 msgid "Language"
 msgstr "Limbă"
 
-#: taskcoachlib/gui/dialog/preferences.py:472
+#: taskcoachlib/gui/dialog/preferences.py:473
 msgid "Let the system determine the language"
 msgstr "Lăsați sistemul să determine limba"
 
-#: taskcoachlib/gui/dialog/preferences.py:496
+#: taskcoachlib/gui/dialog/preferences.py:497
 msgid ""
 "If your language is not available, or the translation needs improving, "
 "please consider helping. See:"
@@ -1877,15 +1877,15 @@ msgstr ""
 "Dacă traducerea în limba dvs. nu este disponibilă sau necesită îmbunătăţiri, "
 "vă rugăm sa ne ajutaţi.  Vedeţi:"
 
-#: taskcoachlib/gui/dialog/preferences.py:504
+#: taskcoachlib/gui/dialog/preferences.py:505
 msgid "Language not found?"
 msgstr "Limbă negăsită?"
 
-#: taskcoachlib/gui/dialog/preferences.py:514
+#: taskcoachlib/gui/dialog/preferences.py:515
 msgid "Task appearance"
 msgstr "Aspect activitate"
 
-#: taskcoachlib/gui/dialog/preferences.py:527
+#: taskcoachlib/gui/dialog/preferences.py:528
 msgid ""
 "These appearance settings can be overridden for individual tasks in the task "
 "edit dialog."
@@ -1893,62 +1893,64 @@ msgstr ""
 "Aceste configurări ale aspectului pot fi suprascrise, pentru fiecare sarcină "
 "în parte, în dialogul de modificare al sarcinilor."
 
-#: taskcoachlib/gui/dialog/preferences.py:534
+#: taskcoachlib/gui/dialog/preferences.py:535
 msgid "Features"
 msgstr "Funcționalități"
 
-#: taskcoachlib/gui/dialog/preferences.py:540
+#: taskcoachlib/gui/dialog/preferences.py:541
 msgid "All settings on this tab require a restart of %s to take effect"
 msgstr ""
+"Toate schimbările de pe aceasta filă necesită repornirea %s pentru a fi "
+"efectuate."
 
-#: taskcoachlib/gui/dialog/preferences.py:543
+#: taskcoachlib/gui/dialog/preferences.py:544
 msgid "Allow for tracking effort"
 msgstr "Permite urmărirea efortului"
 
-#: taskcoachlib/gui/dialog/preferences.py:544
+#: taskcoachlib/gui/dialog/preferences.py:545
 msgid "Allow for taking notes"
 msgstr "Permite luarea de notițe"
 
-#: taskcoachlib/gui/dialog/preferences.py:550
+#: taskcoachlib/gui/dialog/preferences.py:551
 msgid "Enable SyncML"
 msgstr "Activează SyncML"
 
-#: taskcoachlib/gui/dialog/preferences.py:552
+#: taskcoachlib/gui/dialog/preferences.py:553
 msgid "Enable iPhone synchronization"
 msgstr "Activează sincronizarea iPhone"
 
-#: taskcoachlib/gui/dialog/preferences.py:555
+#: taskcoachlib/gui/dialog/preferences.py:556
 msgid "Use X11 session management"
 msgstr "Utilizati controlul sesiunii sub X11"
 
-#: taskcoachlib/gui/dialog/preferences.py:556
+#: taskcoachlib/gui/dialog/preferences.py:557
 msgid "Start of work week"
 msgstr "Începutul săptămânii de lucru"
 
-#: taskcoachlib/gui/dialog/preferences.py:557
+#: taskcoachlib/gui/dialog/preferences.py:558
 #: taskcoachlib/gui/viewer/effort.py:227
 msgid "Monday"
 msgstr "Luni"
 
-#: taskcoachlib/gui/dialog/preferences.py:558
+#: taskcoachlib/gui/dialog/preferences.py:559
 #: taskcoachlib/gui/viewer/effort.py:245
 msgid "Sunday"
 msgstr "Duminică"
 
-#: taskcoachlib/gui/dialog/preferences.py:560
+#: taskcoachlib/gui/dialog/preferences.py:561
 msgid "Hour of start of work day"
 msgstr "Ora de început a zilei de lucru"
 
-#: taskcoachlib/gui/dialog/preferences.py:562
+#: taskcoachlib/gui/dialog/preferences.py:563
 msgid "Hour of end of work day"
 msgstr "Ora de sfîrșit a zilei de lucru"
 
-#: taskcoachlib/gui/dialog/preferences.py:562
-#: taskcoachlib/gui/dialog/preferences.py:624
+#: taskcoachlib/gui/dialog/preferences.py:563
+#: taskcoachlib/gui/dialog/preferences.py:625
 msgid "End of day"
 msgstr "Sfârșitul zilei"
 
-#: taskcoachlib/gui/dialog/preferences.py:565
+#: taskcoachlib/gui/dialog/preferences.py:566
 msgid ""
 "Use gradients in calendar views.\n"
 "This may slow down Task Coach."
@@ -1956,11 +1958,11 @@ msgstr ""
 "Utilizează gradienți în vederile de calendar.\n"
 "Aceasta poate încetini Task Coach."
 
-#: taskcoachlib/gui/dialog/preferences.py:568
+#: taskcoachlib/gui/dialog/preferences.py:569
 msgid "Minutes between suggested times"
 msgstr "Minute între orele propuse"
 
-#: taskcoachlib/gui/dialog/preferences.py:569
+#: taskcoachlib/gui/dialog/preferences.py:570
 msgid ""
 "In popup-menus for time selection (e.g. for setting the start \n"
 "time of an effort) %(name)s will suggest times using this \n"
@@ -1968,12 +1970,18 @@ msgid ""
 "are suggested. Of course, you can also enter any time you \n"
 "want beside the suggested times."
 msgstr ""
+"În meniurile de selecţie a timpuui (de ex. pentru definirea momentului de "
+"început \n"
+"al unui efort) %(name)s va sugera orele utilizând această configurare. \n"
+"Cut cât numărul de minute este mai mic, cu atât mai multe intervale \n"
+"vor fi sugerate. Puteti, desigur, introduce orice ora doriti, pe lingă cele "
+"sugerate."
 
-#: taskcoachlib/gui/dialog/preferences.py:578
+#: taskcoachlib/gui/dialog/preferences.py:579
 msgid "Idle time notice"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:579
+#: taskcoachlib/gui/dialog/preferences.py:580
 msgid ""
 "If there is no user input for this amount of time\n"
 "(in minutes), %(name)s will ask what to do about current efforts."
@@ -1981,105 +1989,105 @@ msgstr ""
 "Dacă utilizatorul nu introduce o durată\n"
 "(în minute), %(name)s va întreba ce este de făcut cu eforturile în cauză."
 
-#: taskcoachlib/gui/dialog/preferences.py:591
+#: taskcoachlib/gui/dialog/preferences.py:592
 msgid "Task dates"
 msgstr "Data operațiilor"
 
-#: taskcoachlib/gui/dialog/preferences.py:599
+#: taskcoachlib/gui/dialog/preferences.py:600
 msgid "Mark parent task completed when all children are completed"
 msgstr ""
 "Marchează terminată sarcina părinte cînd toate sarcinile copil sînt terminate"
 
-#: taskcoachlib/gui/dialog/preferences.py:602
+#: taskcoachlib/gui/dialog/preferences.py:603
 msgid "Number of hours that tasks are considered to be 'due soon'"
 msgstr "Numărul de ore în care sarcinile sînt considerate „scadente curînd”"
 
-#: taskcoachlib/gui/dialog/preferences.py:604
+#: taskcoachlib/gui/dialog/preferences.py:605
 msgid "Nothing"
 msgstr "Nimic"
 
-#: taskcoachlib/gui/dialog/preferences.py:606
+#: taskcoachlib/gui/dialog/preferences.py:607
 msgid "Changing the planned start date changes the due date"
 msgstr ""
 "Dacă schimbaţi data de început planificată, se schimbă şi data de încheiere"
 
-#: taskcoachlib/gui/dialog/preferences.py:608
+#: taskcoachlib/gui/dialog/preferences.py:609
 msgid "Changing the due date changes the planned start date"
 msgstr ""
 "Dacă schimbaţi data de încheiere, se schimbă şi data de început planificată"
 
-#: taskcoachlib/gui/dialog/preferences.py:610
+#: taskcoachlib/gui/dialog/preferences.py:611
 msgid ""
 "What to do with planned start and due date if the other one is changed"
 msgstr ""
 "Ce facem cu data de început planificată şi cea de încheiere dacă una dintre "
 "ele este schimbată"
 
-#: taskcoachlib/gui/dialog/preferences.py:613
+#: taskcoachlib/gui/dialog/preferences.py:614
 msgid "Preset"
 msgstr "Prestabilit"
 
-#: taskcoachlib/gui/dialog/preferences.py:614
+#: taskcoachlib/gui/dialog/preferences.py:615
 msgid "Propose"
 msgstr "Scop"
 
-#: taskcoachlib/gui/dialog/preferences.py:615 taskcoachlib/render.py:128
+#: taskcoachlib/gui/dialog/preferences.py:616 taskcoachlib/render.py:128
 msgid "Today"
 msgstr "Astăzi"
 
-#: taskcoachlib/gui/dialog/preferences.py:616 taskcoachlib/render.py:132
+#: taskcoachlib/gui/dialog/preferences.py:617 taskcoachlib/render.py:132
 msgid "Tomorrow"
 msgstr "Mâine"
 
-#: taskcoachlib/gui/dialog/preferences.py:617
+#: taskcoachlib/gui/dialog/preferences.py:618
 msgid "Day after tomorrow"
 msgstr "Poimâine"
 
-#: taskcoachlib/gui/dialog/preferences.py:618
+#: taskcoachlib/gui/dialog/preferences.py:619
 msgid "Next Friday"
 msgstr "Vinerea viitoare"
 
-#: taskcoachlib/gui/dialog/preferences.py:619
+#: taskcoachlib/gui/dialog/preferences.py:620
 msgid "Next Monday"
 msgstr "Lunea viitoare"
 
-#: taskcoachlib/gui/dialog/preferences.py:620
+#: taskcoachlib/gui/dialog/preferences.py:621
 msgid "Start of day"
 msgstr "Începutul zilei"
 
-#: taskcoachlib/gui/dialog/preferences.py:621
+#: taskcoachlib/gui/dialog/preferences.py:622
 msgid "Start of working day"
 msgstr "Începutul zilei de lucru"
 
-#: taskcoachlib/gui/dialog/preferences.py:622
+#: taskcoachlib/gui/dialog/preferences.py:623
 msgid "Current time"
 msgstr "Ora curentă"
 
-#: taskcoachlib/gui/dialog/preferences.py:623
+#: taskcoachlib/gui/dialog/preferences.py:624
 msgid "End of working day"
 msgstr "sfârșitul zilei de lucru"
 
-#: taskcoachlib/gui/dialog/preferences.py:626
+#: taskcoachlib/gui/dialog/preferences.py:627
 msgid "Default planned start date and time"
 msgstr "Valori implicite pentru data si ora de început planificate"
 
-#: taskcoachlib/gui/dialog/preferences.py:629
+#: taskcoachlib/gui/dialog/preferences.py:630
 msgid "Default due date and time"
 msgstr "Data și ora scadente implicite"
 
-#: taskcoachlib/gui/dialog/preferences.py:632
+#: taskcoachlib/gui/dialog/preferences.py:633
 msgid "Default actual start date and time"
 msgstr "Valori implicite pentru data si ora de început efective"
 
-#: taskcoachlib/gui/dialog/preferences.py:635
+#: taskcoachlib/gui/dialog/preferences.py:636
 msgid "Default completion date and time"
 msgstr "Dat și ora finalizării implicite"
 
-#: taskcoachlib/gui/dialog/preferences.py:638
+#: taskcoachlib/gui/dialog/preferences.py:639
 msgid "Default reminder date and time"
 msgstr "Data și ora implicite pentru memento"
 
-#: taskcoachlib/gui/dialog/preferences.py:645
+#: taskcoachlib/gui/dialog/preferences.py:646
 msgid ""
 "New tasks start with \"Preset\" dates and times filled in and checked. "
 "\"Proposed\" dates and times are filled in, but not checked.\n"
@@ -2090,94 +2098,108 @@ msgid ""
 "\"Start of working day\" and \"End of working day\" use the working day as "
 "set in the Features tab of this preferences dialog."
 msgstr ""
+"Sarcinile noi sunt create cu valorile \"predefinite\" pentru date şi ore "
+"completate si activate. Valorile \"propuse\" pentru date şi ore sunt "
+"completate, dar nu sunt activate.\n"
+"\n"
+"\"Începutul zilei\" este la miezul nopţii şi \"Sfârşitul zilei\" este chiar "
+"inainte de miezul nopţii.  Când aceste valori sunt utilizate, ferestrele de "
+"vizualizare a sarcinilor ascund orele si afişează numai data.\n"
+"\n"
+"\"Începutul zilei de lucru\" şi \"Sfârşitul zilei de lucru\" utilizează ziua "
+"de lucru definită in fila de \"Functionalităţi\" a acestei ferestre de "
+"dialog (\"Preferinţe\")."
 
-#: taskcoachlib/gui/dialog/preferences.py:656
+#: taskcoachlib/gui/dialog/preferences.py:657
 msgid "Task reminders"
 msgstr "Memento-uri pentru operații"
 
-#: taskcoachlib/gui/dialog/preferences.py:666
+#: taskcoachlib/gui/dialog/preferences.py:667
 msgid "Notification system to use for reminders"
 msgstr "sistemul de notificare utilizat pentru memento-uri"
 
-#: taskcoachlib/gui/dialog/preferences.py:670
-msgid "Let the computer say the reminder"
-msgstr ""
-
 #: taskcoachlib/gui/dialog/preferences.py:671
+msgid "Let the computer say the reminder"
+msgstr "Lăsaţi calculatorul sa facă anunţul"
+
+#: taskcoachlib/gui/dialog/preferences.py:672
 msgid "(Needs espeak)"
 msgstr "(Necesită espeak)"
 
-#: taskcoachlib/gui/dialog/preferences.py:676
+#: taskcoachlib/gui/dialog/preferences.py:677
 msgid "Default snooze time to use after reminder"
 msgstr "Durata implicită de timp după care o atenţionare este repetată"
 
-#: taskcoachlib/gui/dialog/preferences.py:680
+#: taskcoachlib/gui/dialog/preferences.py:681
 msgid "Snooze times to offer in task reminder dialog"
 msgstr "Duratele de repetiție propuse în dialogul de rapel"
 
-#: taskcoachlib/gui/dialog/preferences.py:688
+#: taskcoachlib/gui/dialog/preferences.py:689
 msgid "iPhone"
 msgstr "iPhone"
 
-#: taskcoachlib/gui/dialog/preferences.py:694
+#: taskcoachlib/gui/dialog/preferences.py:695
 msgid "Password for synchronization with iPhone"
 msgstr "Parola pentru sincronizarea cu iPhone"
 
-#: taskcoachlib/gui/dialog/preferences.py:695
+#: taskcoachlib/gui/dialog/preferences.py:696
 msgid "When synchronizing, enter this password on the iPhone to authorize it"
 msgstr ""
 "Când sincronizaţi, intrduceţi această parolă pe iPhone pentru a autoriza "
 "procesul."
 
-#: taskcoachlib/gui/dialog/preferences.py:697
+#: taskcoachlib/gui/dialog/preferences.py:698
 msgid "Bonjour service name"
 msgstr "Serviciul de nume Bonjour"
 
-#: taskcoachlib/gui/dialog/preferences.py:699
+#: taskcoachlib/gui/dialog/preferences.py:700
 msgid "Upload completed tasks to device"
 msgstr "Încarcă pe dispozitiv sarcinile complete"
 
-#: taskcoachlib/gui/dialog/preferences.py:701
+#: taskcoachlib/gui/dialog/preferences.py:702
 msgid "Show the synchronization log"
 msgstr "Afișează jurnalul de sincronizare"
 
-#: taskcoachlib/gui/dialog/preferences.py:707
+#: taskcoachlib/gui/dialog/preferences.py:708
 msgid "Editor"
 msgstr "Editor"
 
-#: taskcoachlib/gui/dialog/preferences.py:715
+#: taskcoachlib/gui/dialog/preferences.py:716
 msgid "Check spelling in editors"
 msgstr "Verificare ortografică în editoare"
 
-#: taskcoachlib/gui/dialog/preferences.py:717
+#: taskcoachlib/gui/dialog/preferences.py:718
 msgid "Font to use in the description field of edit dialogs"
 msgstr ""
 "Corpul de literă utilizat în câmpul de descriere al dialogurilor de "
 "editare/modficare"
 
-#: taskcoachlib/gui/dialog/preferences.py:728
+#: taskcoachlib/gui/dialog/preferences.py:729
 msgid "OS X"
 msgstr "OS X"
 
-#: taskcoachlib/gui/dialog/preferences.py:735
+#: taskcoachlib/gui/dialog/preferences.py:736
 msgid "Get e-mail subject from Mail.app"
 msgstr "Luaţi subiectul e-mail-ului din Mail.app"
 
-#: taskcoachlib/gui/dialog/preferences.py:736
+#: taskcoachlib/gui/dialog/preferences.py:737
 msgid ""
 "When dropping an e-mail from Mail.app, try to get its subject.\n"
 "This takes up to 20 seconds."
 msgstr ""
+"Când transferaţi un e-mail din Mail.app, încercaţi să luaţi şi subiectul "
+"său.\n"
+"Durează maxim 20 de secunde."
 
-#: taskcoachlib/gui/dialog/preferences.py:742
+#: taskcoachlib/gui/dialog/preferences.py:743
 msgid "Linux"
 msgstr "Linux"
 
-#: taskcoachlib/gui/dialog/preferences.py:749
+#: taskcoachlib/gui/dialog/preferences.py:750
 msgid "Focus task subject in task editor"
 msgstr "Selectaţi subiectul sarcinii în editorul de sarcini"
 
-#: taskcoachlib/gui/dialog/preferences.py:750
+#: taskcoachlib/gui/dialog/preferences.py:751
 msgid ""
 "When opening the task editor, select the task subject and focus it.\n"
 "This overwrites the X selection."
@@ -2199,7 +2221,7 @@ msgstr "Ațipește"
 
 #: taskcoachlib/gui/dialog/reminder.py:88
 msgid "Also make this the default snooze time for future reminders"
-msgstr ""
+msgstr "Folosiţi-o de aici inainte ca valoare implictă"
 
 #: taskcoachlib/gui/dialog/reminder.py:94
 msgid "Mark task completed"
@@ -2374,7 +2396,7 @@ msgid "The latest released version of %(name)s is %(version)s."
 msgstr "Ultima veriune lansată a %(name)s este %(version)s."
 
 #: taskcoachlib/gui/dialog/xfce4warning.py:27
-#: taskcoachlib/gui/mainwindow.py:99
+#: taskcoachlib/gui/mainwindow.py:119
 #: taskcoachlib/gui/uicommand/uicommand.py:220
 msgid "Warning"
 msgstr "Avertisment"
@@ -2415,7 +2437,7 @@ msgstr "Opriți la %s"
 msgid "Stop it at %s and resume now"
 msgstr "Opriți la %s și reluați acum"
 
-#: taskcoachlib/gui/idlecontroller.py:102
+#: taskcoachlib/gui/idlecontroller.py:109
 msgid "Notification"
 msgstr "Notificare"
 
@@ -2543,7 +2565,7 @@ msgstr ""
 "Un fișier numit %s există deja.\n"
 "Doriți să-l înlocuiți?"
 
-#: taskcoachlib/gui/iocontroller.py:429
+#: taskcoachlib/gui/iocontroller.py:436
 msgid ""
 "You have unsaved changes.\n"
 "Save before closing?"
@@ -2551,11 +2573,11 @@ msgstr ""
 "Aveți modificări nesalvate.\n"
 "Salvați înainte de închidere?"
 
-#: taskcoachlib/gui/iocontroller.py:430
+#: taskcoachlib/gui/iocontroller.py:437
 msgid "%s: save changes?"
 msgstr "%s: salvați modificările?"
 
-#: taskcoachlib/gui/iocontroller.py:440
+#: taskcoachlib/gui/iocontroller.py:447
 msgid ""
 "Cannot open %s because it is locked.\n"
 "\n"
@@ -2575,11 +2597,11 @@ msgstr ""
 "\n"
 "Deblocați fișierul?"
 
-#: taskcoachlib/gui/iocontroller.py:448 taskcoachlib/gui/iocontroller.py:456
+#: taskcoachlib/gui/iocontroller.py:455 taskcoachlib/gui/iocontroller.py:463
 msgid "%s: file locked"
 msgstr "%s: fișier blocat"
 
-#: taskcoachlib/gui/iocontroller.py:453
+#: taskcoachlib/gui/iocontroller.py:460
 msgid ""
 "Cannot acquire a lock because locking is not supported\n"
 "on the location of %s.\n"
@@ -2589,15 +2611,15 @@ msgstr ""
 "suportată pe locația lui %s.\n"
 "Deschideți %s neblocat?"
 
-#: taskcoachlib/gui/iocontroller.py:461
+#: taskcoachlib/gui/iocontroller.py:468
 msgid "Closed %s"
 msgstr "Închise %s"
 
-#: taskcoachlib/gui/iocontroller.py:467
+#: taskcoachlib/gui/iocontroller.py:474
 msgid "Saved %(nrtasks)d tasks to %(filename)s"
 msgstr "%(nrtasks)d sarcini salvate în %(filename)s"
 
-#: taskcoachlib/gui/iocontroller.py:472
+#: taskcoachlib/gui/iocontroller.py:479
 msgid ""
 "Cannot open %(filename)s\n"
 "because it was created by a newer version of %(name)s.\n"
@@ -2607,23 +2629,23 @@ msgstr ""
 "deoarece a fost creat de o versiune mai nouă de %(name)s.\n"
 "Actualizați %(name)s."
 
-#: taskcoachlib/gui/iocontroller.py:482
+#: taskcoachlib/gui/iocontroller.py:489
 msgid "Error while reading %s:\n"
 msgstr "Eroare la citirea %s:\n"
 
-#: taskcoachlib/gui/iphone.py:32
+#: taskcoachlib/gui/iphone.py:31
 msgid "Synchronizing..."
 msgstr "Sincronizare..."
 
-#: taskcoachlib/gui/iphone.py:54
+#: taskcoachlib/gui/iphone.py:52
 msgid "Synchronizing with %s..."
 msgstr "Sincronizare cu %s..."
 
-#: taskcoachlib/gui/mainwindow.py:158
+#: taskcoachlib/gui/mainwindow.py:172
 msgid "Welcome to %(name)s version %(version)s"
 msgstr "Bun venit în %(name)s versiunea %(version)s"
 
-#: taskcoachlib/gui/mainwindow.py:185
+#: taskcoachlib/gui/mainwindow.py:199
 msgid ""
 "Couldn't restore the pane layout from TaskCoach.ini:\n"
 "%s\n"
@@ -2635,19 +2657,19 @@ msgid ""
 "file to the bug report."
 msgstr ""
 
-#: taskcoachlib/gui/mainwindow.py:193
+#: taskcoachlib/gui/mainwindow.py:207
 msgid "%s settings error"
 msgstr ""
 
-#: taskcoachlib/gui/mainwindow.py:366
+#: taskcoachlib/gui/mainwindow.py:379
 msgid "iPhone/iPod"
 msgstr "iPhone/iPod"
 
-#: taskcoachlib/gui/mainwindow.py:376
+#: taskcoachlib/gui/mainwindow.py:388
 msgid "Synchronization type"
 msgstr "Tip de sincronizare"
 
-#: taskcoachlib/gui/mainwindow.py:386
+#: taskcoachlib/gui/mainwindow.py:397
 msgid ""
 "An iPhone or iPod Touch device tried to synchronize with this\n"
 "task file, but the protocol negotiation failed. Please file a\n"
@@ -2892,27 +2914,27 @@ msgstr "Pagină"
 msgid "%s Reminder"
 msgstr "%s Rapel"
 
-#: taskcoachlib/gui/taskbaricon.py:161
+#: taskcoachlib/gui/taskbaricon.py:165
 msgid "%d tasks overdue"
 msgstr "%d sarcini depășite"
 
-#: taskcoachlib/gui/taskbaricon.py:161
+#: taskcoachlib/gui/taskbaricon.py:165
 msgid "one task overdue"
 msgstr "o sarcină despășită"
 
-#: taskcoachlib/gui/taskbaricon.py:162
+#: taskcoachlib/gui/taskbaricon.py:166
 msgid "%d tasks due soon"
 msgstr "%d sarcini scadente curînd"
 
-#: taskcoachlib/gui/taskbaricon.py:162
+#: taskcoachlib/gui/taskbaricon.py:166
 msgid "one task due soon"
 msgstr "o sarcină scadentă curînd"
 
-#: taskcoachlib/gui/taskbaricon.py:173
+#: taskcoachlib/gui/taskbaricon.py:177
 msgid "tracking \"%s\""
 msgstr "urmărire „%s”"
 
-#: taskcoachlib/gui/taskbaricon.py:175
+#: taskcoachlib/gui/taskbaricon.py:179
 msgid "tracking effort for %d tasks"
 msgstr "urmărire efort pentru %d sarcini"
 
@@ -3717,12 +3739,12 @@ msgid "No rounding"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2466
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1763
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1764
 msgid "1 minute"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2467
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1765
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1766
 msgid "%d minutes"
 msgstr ""
 
@@ -6408,7 +6430,7 @@ msgstr "Activează următoarea vedere deschisă"
 msgid "Activate the previous open viewer"
 msgstr "Activează precedenta vedere deschisă"
 
-#: taskcoachlib/iphone/protocol.py:479
+#: taskcoachlib/iphone/protocol.py:549
 msgid ""
 "An iPhone or iPod Touch tried to connect to Task Coach,\n"
 "but no password is set. Please set a password in the\n"
@@ -6418,148 +6440,148 @@ msgstr ""
 "dar nu este configurată nici o parolă. Configurați o parolă în secțiunea\n"
 "iPhone a configurării și încercați din nou."
 
-#: taskcoachlib/iphone/protocol.py:599
+#: taskcoachlib/iphone/protocol.py:626
 msgid "Protocol version: %d"
 msgstr "Versiune protocol: %d"
 
-#: taskcoachlib/iphone/protocol.py:607
+#: taskcoachlib/iphone/protocol.py:634
 msgid "Rejected protocol version %d"
 msgstr "Versiunea protocolului respins %d"
 
-#: taskcoachlib/iphone/protocol.py:626
+#: taskcoachlib/iphone/protocol.py:653
 msgid "Hash OK."
 msgstr "Hash OK."
 
-#: taskcoachlib/iphone/protocol.py:630
+#: taskcoachlib/iphone/protocol.py:657
 msgid "Hash KO."
 msgstr "Hash KO."
 
-#: taskcoachlib/iphone/protocol.py:643
+#: taskcoachlib/iphone/protocol.py:670
 msgid "Device name: %s"
 msgstr "Nume dispozitiv: %s"
 
-#: taskcoachlib/iphone/protocol.py:658
+#: taskcoachlib/iphone/protocol.py:685
 msgid "GUID: %s"
 msgstr "GUID: %s"
 
-#: taskcoachlib/iphone/protocol.py:687
+#: taskcoachlib/iphone/protocol.py:714
 msgid "Sending file name: %s"
 msgstr "Trimitere fișier: %s"
 
-#: taskcoachlib/iphone/protocol.py:714
+#: taskcoachlib/iphone/protocol.py:741
 msgid "Full from desktop."
 msgstr "Complet de pe birou."
 
-#: taskcoachlib/iphone/protocol.py:747
+#: taskcoachlib/iphone/protocol.py:774
 msgid "%d categories"
 msgstr "%d categorii"
 
-#: taskcoachlib/iphone/protocol.py:755
+#: taskcoachlib/iphone/protocol.py:782
 msgid "Send category %s"
 msgstr "Trimite categoria %s"
 
-#: taskcoachlib/iphone/protocol.py:760 taskcoachlib/iphone/protocol.py:829
+#: taskcoachlib/iphone/protocol.py:787 taskcoachlib/iphone/protocol.py:856
 msgid "Response: %d"
 msgstr "Răspuns: %d"
 
-#: taskcoachlib/iphone/protocol.py:773
+#: taskcoachlib/iphone/protocol.py:800
 msgid "%d tasks"
 msgstr "%d sarcini"
 
-#: taskcoachlib/iphone/protocol.py:781
+#: taskcoachlib/iphone/protocol.py:808
 msgid "Send task %s"
 msgstr "Trimite sarcina %s"
 
-#: taskcoachlib/iphone/protocol.py:845
+#: taskcoachlib/iphone/protocol.py:872
 msgid "%d efforts"
 msgstr "%d eforturi"
 
-#: taskcoachlib/iphone/protocol.py:853
+#: taskcoachlib/iphone/protocol.py:880
 msgid "Send effort %s"
 msgstr "Trimite efortul %s"
 
-#: taskcoachlib/iphone/protocol.py:870 taskcoachlib/iphone/protocol.py:1307
+#: taskcoachlib/iphone/protocol.py:897 taskcoachlib/iphone/protocol.py:1334
 msgid "Finished."
 msgstr "Încheiat."
 
-#: taskcoachlib/iphone/protocol.py:986
+#: taskcoachlib/iphone/protocol.py:1013
 msgid "%d new categories"
 msgstr "%d categorii noi"
 
-#: taskcoachlib/iphone/protocol.py:987
+#: taskcoachlib/iphone/protocol.py:1014
 msgid "%d new tasks"
 msgstr "%d sarcini noi"
 
-#: taskcoachlib/iphone/protocol.py:988
+#: taskcoachlib/iphone/protocol.py:1015
 msgid "%d new efforts"
 msgstr "%d eforturi noi"
 
-#: taskcoachlib/iphone/protocol.py:989
+#: taskcoachlib/iphone/protocol.py:1016
 msgid "%d modified categories"
 msgstr "%d categorii modificate"
 
-#: taskcoachlib/iphone/protocol.py:990
+#: taskcoachlib/iphone/protocol.py:1017
 msgid "%d modified tasks"
 msgstr "%d sarcini modificate"
 
-#: taskcoachlib/iphone/protocol.py:991
+#: taskcoachlib/iphone/protocol.py:1018
 msgid "%d modified efforts"
 msgstr "%d eforturi modificate"
 
-#: taskcoachlib/iphone/protocol.py:992
+#: taskcoachlib/iphone/protocol.py:1019
 msgid "%d deleted categories"
 msgstr "%d categorii șterse"
 
-#: taskcoachlib/iphone/protocol.py:993
+#: taskcoachlib/iphone/protocol.py:1020
 msgid "%d deleted tasks"
 msgstr "%d sarcini șterse"
 
-#: taskcoachlib/iphone/protocol.py:994
+#: taskcoachlib/iphone/protocol.py:1021
 msgid "%d deleted efforts"
 msgstr "%d eforturi șterse"
 
-#: taskcoachlib/iphone/protocol.py:1009
+#: taskcoachlib/iphone/protocol.py:1036
 msgid "New category (parent: %s)"
 msgstr "Cetegorie nouă (părinte: %s)"
 
-#: taskcoachlib/iphone/protocol.py:1040
+#: taskcoachlib/iphone/protocol.py:1067
 msgid "Delete category %s"
 msgstr "Șterge categoria %s"
 
-#: taskcoachlib/iphone/protocol.py:1060
+#: taskcoachlib/iphone/protocol.py:1087
 msgid "Modify category %s"
 msgstr "Modifică categoria %s"
 
-#: taskcoachlib/iphone/protocol.py:1087 taskcoachlib/iphone/protocol.py:1120
-#: taskcoachlib/iphone/protocol.py:1156
+#: taskcoachlib/iphone/protocol.py:1114 taskcoachlib/iphone/protocol.py:1147
+#: taskcoachlib/iphone/protocol.py:1183
 msgid "New task %s"
 msgstr "Sarcina nouă %s"
 
-#: taskcoachlib/iphone/protocol.py:1176
+#: taskcoachlib/iphone/protocol.py:1203
 msgid "Delete task %s"
 msgstr "Șterge sarcina %s"
 
-#: taskcoachlib/iphone/protocol.py:1232
+#: taskcoachlib/iphone/protocol.py:1259
 msgid "Modify task %s"
 msgstr "Modifică sarcina %s"
 
-#: taskcoachlib/iphone/protocol.py:1241
+#: taskcoachlib/iphone/protocol.py:1268
 msgid "End of task synchronization."
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:1258
+#: taskcoachlib/iphone/protocol.py:1285
 msgid "Could not find task %s for effort."
 msgstr ""
 
-#: taskcoachlib/iphone/protocol.py:1261
+#: taskcoachlib/iphone/protocol.py:1288
 msgid "New effort %s"
 msgstr "Efortul nou %s"
 
-#: taskcoachlib/iphone/protocol.py:1286
+#: taskcoachlib/iphone/protocol.py:1313
 msgid "Modify effort %s"
 msgstr "Modifică efortul %s"
 
-#: taskcoachlib/iphone/protocol.py:1300
+#: taskcoachlib/iphone/protocol.py:1327
 msgid "Sending GUID: %s"
 msgstr "Trimitere GUID: %s"
 
@@ -6679,11 +6701,11 @@ msgstr "Sarcină nouă scadentă astăzi"
 msgid "New task due tomorrow"
 msgstr "Sarcină nouă scadentă mîine"
 
-#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1753
+#: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1754
 msgid "%d days"
 msgstr "%d zile"
 
-#: taskcoachlib/render.py:51 taskcoachlib/thirdparty/smartdatetimectrl.py:1751
+#: taskcoachlib/render.py:51 taskcoachlib/thirdparty/smartdatetimectrl.py:1752
 msgid "1 day"
 msgstr "1 zi"
 
@@ -6839,20 +6861,20 @@ msgstr "Îna&poi"
 msgid "&Window"
 msgstr "&Fereastră"
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1695
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1804
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1696
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1805
 msgid "Edit"
 msgstr "Editează"
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1748
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1749
 msgid "%d weeks"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1760
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1761
 msgid "%d hours"
 msgstr ""
 
-#: taskcoachlib/thirdparty/smartdatetimectrl.py:1804
+#: taskcoachlib/thirdparty/smartdatetimectrl.py:1805
 msgid "Done"
 msgstr ""
 
