@@ -364,10 +364,10 @@ class TaskSchedule(wxSchedule):
                 else:
                     r, g, b, a = color
                 if r + g + b < 128 * 3:
-                    self.foreground = wx.Color(255 - r, 255 - g, 255 - b)
+                    self.foreground = wx.Colour(255 - r, 255 - g, 255 - b)
             else:
-                self.color = wx.Color(*(self.task.backgroundColor(True) or (255, 255, 255)))
-                self.foreground = wx.Color(*(self.task.foregroundColor(True) or (0, 0, 0)))
+                self.color = wx.Colour(*(self.task.backgroundColor(True) or (255, 255, 255)))
+                self.foreground = wx.Colour(*(self.task.foregroundColor(True) or (0, 0, 0)))
         finally:
             self.Thaw()
 
@@ -418,8 +418,8 @@ class TaskSchedule(wxSchedule):
             if self.task.completed():
                 self.done = True
 
-            self.color = wx.Color(*(self.task.backgroundColor(True) or (255, 255, 255)))
-            self.foreground = wx.Color(*(self.task.foregroundColor(True) or (0, 0, 0)))
+            self.color = wx.Colour(*(self.task.backgroundColor(True) or (255, 255, 255)))
+            self.foreground = wx.Colour(*(self.task.foregroundColor(True) or (0, 0, 0)))
             self.font = self.task.font(True)
 
             self.icons = [self.iconProvider(self.task, False)]

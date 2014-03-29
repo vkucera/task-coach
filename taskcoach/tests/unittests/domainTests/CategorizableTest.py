@@ -535,7 +535,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
         self.categorizable.addCategory(anotherCategory)
         self.category.setForegroundColor(wx.RED)
         anotherCategory.setForegroundColor(wx.BLUE)
-        expectedColor = wx.Color(127, 0, 127, 255)
+        expectedColor = wx.Colour(127, 0, 127, 255)
         self.assertEqual(expectedColor, 
                          self.categorizable.foregroundColor(recursive=True))
                 
@@ -545,7 +545,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
         self.categorizable.addCategory(anotherCategory)
         self.category.setBackgroundColor(wx.RED)
         anotherCategory.setBackgroundColor(wx.BLUE)
-        expectedColor = wx.Color(127, 0, 127, 255)
+        expectedColor = wx.Colour(127, 0, 127, 255)
         self.assertEqual(expectedColor, 
                          self.categorizable.backgroundColor(recursive=True))
 

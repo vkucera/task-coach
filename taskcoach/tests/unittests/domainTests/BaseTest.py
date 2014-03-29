@@ -115,6 +115,12 @@ class ObjectTest(test.TestCase):
         del domainObject # Assuming CPython
         self.failUnless(weak() is None)
 
+    # Custom attributes tests:
+
+    def testCustomAttributes(self):
+        self.object.setDescription('\n[mailto:cc=foo@bar.com]\n[mailto:cc=baz@spam.com]\n')
+        self.assertEqual(self.object.customAttributes('mailto'), set(['cc=foo@bar.com', 'cc=baz@spam.com']))
+
     # Id tests:
         
     def testSetIdOnCreation(self):

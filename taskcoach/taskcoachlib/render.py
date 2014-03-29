@@ -56,9 +56,12 @@ def timeLeft(time_left, completed_task):
     return sign + days + hours_and_minutes
 
 
-def timeSpent(timeSpent, showSeconds=True):
+def timeSpent(timeSpent, showSeconds=True, decimal=False):
     ''' Render time spent (of type date.TimeDelta) as
         "<hours>:<minutes>:<seconds>" or "<hours>:<minutes>" '''
+    if decimal:
+        return timeSpentDecimal(timeSpent)
+
     zero = datemodule.TimeDelta()
     if timeSpent == zero:
         return ''
@@ -68,6 +71,17 @@ def timeSpent(timeSpent, showSeconds=True):
         return sign + '%d:%02d' % (hours, minutes) + \
                (':%02d' % seconds if showSeconds else '')
 
+def timeSpentDecimal(timeSpent):
+    ''' Render time spent (of type date.TimeDelta) as
+        "<hours>.<fractional hours> '''
+    zero = datemodule.TimeDelta()
+    if timeSpent == zero:
+        return ''
+    else:
+        sign = '-' if timeSpent < zero else ''
+        hours, minutes, seconds = timeSpent.hoursMinutesSeconds()
+        decimalHours = hours + minutes/60.0 + seconds/3600.0
+        return sign + '%.2f' % (decimalHours)
 
 def recurrence(recurrence):
     ''' Render the recurrence as a short string describing the frequency of

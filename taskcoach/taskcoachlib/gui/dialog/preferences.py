@@ -585,6 +585,10 @@ class FeaturesPage(SettingsPage):
             helpText=_('If there is no user input for this amount of time\n'
                        '(in minutes), %(name)s will ask what to do about current '
                        'efforts.') % meta.data.metaDict)
+        self.addBooleanSetting('feature', 'decimaltime',
+            _('Use decimal times for effort entries.'),
+            _('Display one hour, fifteen minutes as 1.25 instead of 1:15\n'
+                'This is useful when creating invoices.'))
         self.fit()
 
     def ok(self):

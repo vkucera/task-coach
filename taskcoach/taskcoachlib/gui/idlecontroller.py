@@ -98,8 +98,8 @@ class IdleController(Observer, IdleNotifier):
     def getMinIdleTime(self):
         return self._settings.getint('feature', 'minidletime') * 60
 
-    def wake(self):
-        self._lastActivity = self.lastActivity # Because it is reset before OnWake is actually called
+    def wake(self, timestamp):
+        self._lastActivity = timestamp
         self.OnWake()
 
     def OnWake(self):

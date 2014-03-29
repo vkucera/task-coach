@@ -36,7 +36,7 @@ if not hasattr(sys, "frozen"):
     # These checks are only necessary in a non-frozen environment, i.e. we
     # skip these checks when run from a py2exe-fied application
     import wxversion
-    wxversion.ensureMinimal("2.8-unicode", optionsRequired=True)
+    wxversion.select(["2.8-unicode", "3.0"], optionsRequired=True)
     try:
         import taskcoachlib  # pylint: disable=W0611
     except ImportError:

@@ -40,7 +40,7 @@ def randomSubject():
     return randomtext.title()
 
 def randomColor():
-    return randomThing(lambda: wx.Color(random.randint(0,255), random.randint(0,255), 
+    return randomThing(lambda: wx.Colour(random.randint(0,255), random.randint(0,255), 
                                         random.randint(0,255)))
         
 def randomFont():

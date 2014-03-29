@@ -276,12 +276,12 @@ class Viewer2HTMLConverter(object):
     
     @classmethod
     def cssColorSyntax(class_, wxColor):
-        ''' Translate the wx-color, either a wx.Color instance or a tuple, 
+        ''' Translate the wx-color, either a wx.Colour instance or a tuple, 
             into CSS syntax. ''' 
         try:
             return wxColor.GetAsString(wx.C2S_HTML_SYNTAX)
         except AttributeError: # color is a tuple
-            return class_.cssColorSyntax(wx.Color(*wxColor))
+            return class_.cssColorSyntax(wx.Colour(*wxColor))
 
     @staticmethod
     def render(item, column, indent=False):

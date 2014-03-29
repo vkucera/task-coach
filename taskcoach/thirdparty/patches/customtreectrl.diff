@@ -1,6 +1,8 @@
---- a/customtreectrl.py	2012-11-18 15:11:07.000000000 +0100
-+++ b/customtreectrl.py	2012-11-18 15:08:42.000000000 +0100
-@@ -1601,6 +1601,7 @@
+diff -r -U 4 agw/customtreectrl.py agw-patched/customtreectrl.py
+--- agw/customtreectrl.py	2012-10-14 17:50:36.000000000 +0200
++++ agw-patched/customtreectrl.py	2014-03-09 14:32:25.000000000 +0100
+@@ -1600,8 +1600,9 @@
+         self._height = 0        # height of this item
  
          self._isCollapsed = True
          self._hasHilight = False    # same as focused
@@ -8,7 +10,9 @@
          self._hasPlus = False       # used for item which doesn't have
                                      # children but has a [+] button
          self._isBold = False        # render the label in bold font
-@@ -2098,9 +2099,20 @@
+         self._isItalic = False      # render the label in italic font
+@@ -2097,11 +2098,22 @@
+ 
          :param bool `set`: ``True`` to set the focus to the item, ``False`` otherwise.    
          """
  
@@ -30,7 +34,9 @@
      def HasChildren(self):
          """
          Returns whether the item has children or not.
-@@ -2120,6 +2132,12 @@
+ 
+@@ -2119,8 +2131,14 @@
+         """
  
          return self._hasHilight != 0 
  
@@ -43,7 +49,21 @@
  
      def IsExpanded(self):
          """
-@@ -7125,7 +7143,7 @@
+         Returns whether the item is expanded or not.
+@@ -4584,8 +4602,11 @@
+ 
+         :param `item`: an instance of L{GenericTreeItem}.
+         """
+ 
++        if item is None:
++            return
++
+         i = item
+ 
+         # First see if there are any children.
+         children = i.GetChildren()
+@@ -7124,9 +7145,9 @@
+             if not self.IsItemEnabled(self._current):
                  event.Skip()
                  return
              
@@ -52,3 +72,4 @@
                  event = TreeEvent(wxEVT_TREE_ITEM_ACTIVATED, self.GetId())
                  event._item = self._current
                  event.SetEventObject(self)
+                 self.GetEventHandler().ProcessEvent(event)

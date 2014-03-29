@@ -102,13 +102,17 @@ def openMail(filename):
 
     desktop.open(filename)
 
-def sendMail(to, subject, body, openURL=desktop.open):
+def sendMail(to, subject, body, cc=None, openURL=desktop.open):
     def unicode_quote(s):
         # This is like urllib.quote but leaves out Unicode characters,
         # which urllib.quote does not support.
         chars = [c if ord(c) >= 128 else urllib.quote(c) for c in s]
         return ''.join(chars)
-    
+
+    cc = cc or []
+    if isinstance(to, (str, unicode)):
+        to = [to]
+
     # FIXME: Very  strange things happen on  MacOS X. If  there is one
     # non-ASCII character in the body, it works. If there is more than
     # one, it fails.  Maybe we should use Mail.app  directly ? What if
@@ -116,5 +120,11 @@ def sendMail(to, subject, body, openURL=desktop.open):
 
     if not operating_system.isMac():
         body = unicode_quote(body) # Otherwise newlines disappear
+        cc = map(unicode_quote, cc)
+        to = map(unicode_quote, to)
 
-    openURL(u'mailto:%s?subject=%s&body=%s' % (to, subject, body))
+    components = ['subject=%s' % subject, 'body=%s' % body]
+    if cc:
+        components.append('cc=%s' % ','.join(cc))
+
+    openURL(u'mailto:%s?%s' % (','.join(to), '&'.join(components)))

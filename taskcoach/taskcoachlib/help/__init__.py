@@ -113,6 +113,10 @@ _TOC = sequence(
                 li(a_href(_('About multi-user'), 'aboutmultiuser')),
                 li(a_href(_('Storage options'), 'storage')))),
         li(
+            a_href(_('E-mailing tasks'), 'emailtasks'),
+            ul(
+                li(a_href(_('Custom attributes for e-mailing'), 'emailcustom')))),
+        li(
             a_href(_('E-mail integration'), 'email'),
             ul(
                 li(a_href(_('About e-mail integration'), 'aboutemail')),
@@ -365,6 +369,18 @@ to export to include CSV (comma separated format), HTML and iCalendar. When
 you export to HTML, a CSS file is created that you can edit to change
 the appearance of the HTML.''')))
 
+_emailTasksSection = sequence(
+    h3(
+        a_name(_('E-mailing tasks'), 'emailtasks')),
+    h4(
+        a_name(_('Custom attributes for e-mailing tasks'), 'emailcustom')),
+    p(
+        _('''You can alter the behaviour of the e-mail command using custom attributes
+in a task description. Those attributes must be on a line by themselves. Supported
+attributes are 'cc' and 'to'. Examples:''') % meta.metaDict),
+    p(_('[email:to=foo@spam.com]')),
+    p(_('[email:cc=bar@spam.com]')),
+    )
 
 _multiuserSection = sequence(
     h3(
@@ -658,7 +674,10 @@ file.''')%meta.metaDict),
         _('''Tip: if you save your task file in the todo folder that Todo.txt
 Touch creates in your Dropbox folder, and you turn on automatic importing and 
 exporting of Todo.txt, %(name)s will keep the task file and the 
-todo.txt file in sync.''')%meta.metaDict),
+todo.txt file in sync. Please note that another file, named after the .txt file
+with '-meta' appended, is also generated. This is used internally by %(name)s
+in order to keep track of what has been modified in the .txt file; don't modify
+or delete it.''')%meta.metaDict),
     h4(
         a_name(_('Importing todo.txt'), 'todotxtimporting')),
     p(
@@ -828,7 +847,7 @@ shortcuts are not configurable at the moment.''')%meta.metaDict),
 
 
 helpHTML = _TOC + _taskSection + _effortSection + _categorySection + \
-    _noteSection + _printingAndExportingSection + _multiuserSection + _emailSection + \
+    _noteSection + _printingAndExportingSection + _multiuserSection + _emailTasksSection + _emailSection + \
     _syncmlSection + _iPhoneSection + _androidSection + _templatesSection + \
     _guiSection + _shortcutSection
 

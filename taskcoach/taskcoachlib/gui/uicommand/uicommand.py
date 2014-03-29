@@ -33,7 +33,7 @@ from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_NEXT, \
     wxSCHEDULER_PREV, wxSCHEDULER_TODAY
 from taskcoachlib.tools import anonymize
 from taskcoachlib.workarounds import ExceptionAsUnicode
-import wx
+import wx, re, operator
 import base_uicommand
 import mixin_uicommand
 import settings_uicommand
@@ -1480,6 +1480,8 @@ class ToggleCategory(mixin_uicommand.NeedsSelectedCategorizableMixin,
     
 
 class Mail(mixin_uicommand.NeedsSelectionMixin, ViewerCommand):
+    rx_attr = re.compile(r'(cc|to)=(.*)')
+
     def __init__(self, *args, **kwargs):
         menuText = _('&Mail...\tShift-Ctrl-M') if operating_system.isMac() else _('&Mail...\tCtrl-M')
         super(Mail, self).__init__(menuText=menuText,
@@ -1489,7 +1491,9 @@ class Mail(mixin_uicommand.NeedsSelectionMixin, ViewerCommand):
         items = self.viewer.curselection()
         subject = self.subject(items)
         body = self.body(items)
-        self.mail(subject, body, mail, showerror)
+        to = self.to(items)
+        cc = self.cc(items)
+        self.mail(to, cc, subject, body, mail, showerror)
 
     def subject(self, items):
         assert items
@@ -1509,7 +1513,19 @@ class Mail(mixin_uicommand.NeedsSelectionMixin, ViewerCommand):
         else:
             bodyLines = items[0].description().splitlines()
         return '\r\n'.join(bodyLines)
-    
+
+    def to(self, items):
+        return self._mailAttr('to', items)
+
+    def cc(self, items):
+        return self._mailAttr('cc', items)
+
+    def _mailAttr(self, name, items):
+        sets = []
+        for item in items:
+            sets.append(set([value[len(name)+1:] for value in item.customAttributes('mailto') if value.startswith('%s=' % name)]))
+        return reduce(operator.or_, sets)
+
     def itemToLines(self, item):
         lines = []
         subject = item.subject(recursive=True)
@@ -1519,9 +1535,9 @@ class Mail(mixin_uicommand.NeedsSelectionMixin, ViewerCommand):
             lines.extend('\r\n')
         return lines
     
-    def mail(self, subject, body, mail, showerror):
+    def mail(self, to, cc, subject, body, mail, showerror):
         try:
-            mail('', subject, body)
+            mail(to, subject, body, cc=cc)
         except:
             # Try again with a dummy recipient:
             try:

@@ -524,7 +524,8 @@ defaults = {
     'showsmwarning': 'True',
     'sayreminder': 'False',
     'sdtcspans': '60,120,1440,2880',
-    'sdtcspans_effort': '60,120,180,240'
+    'sdtcspans_effort': '60,120,180,240',
+    'decimaltime' : 'False'
     },
 'syncml': { 
     'url': '',

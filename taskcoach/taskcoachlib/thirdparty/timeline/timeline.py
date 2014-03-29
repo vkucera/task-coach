@@ -264,7 +264,7 @@ class TimeLine(wx.Panel):
         
     def DrawNow(self, dc):
         alpha_dc = wx.GCDC(dc)
-        alpha_dc.SetPen(wx.Pen(wx.Color(128, 200, 128, 128), width=3))
+        alpha_dc.SetPen(wx.Pen(wx.Colour(128, 200, 128, 128), width=3))
         now = self.scaleX(self.adapter.now())
         alpha_dc.DrawLine(now, 0, now, self.height)
         label = self.adapter.nowlabel()
@@ -305,12 +305,12 @@ class TimeLine(wx.Panel):
             color = self.adapter.background_color(node)
             if color:
                 # The adapter returns a 3-tuple
-                color = wx.Color(*color)
+                color = wx.Colour(*color)
             else:
                 red = (depth * 10)%255
                 green = 255-((depth * 10)%255)
                 blue = 200
-                color = wx.Color(red, green, blue)
+                color = wx.Colour(red, green, blue)
         if isSequentialNode:
             color.Set(color.Red(), color.Green(), color.Blue(), 128)
         return wx.Brush(color)

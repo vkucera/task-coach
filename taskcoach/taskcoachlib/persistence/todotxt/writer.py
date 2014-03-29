@@ -21,6 +21,8 @@ from taskcoachlib.domain import date
 
 
 class TodoTxtWriter(object):
+    VERSION = 1
+
     def __init__(self, fd, filename):
         self.__fd = fd
         self.__filename = filename
@@ -41,12 +43,16 @@ class TodoTxtWriter(object):
                             self.startDate(task.plannedStartDateTime()) + \
                             task.subject(recursive=True) + \
                             self.contextsAndProjects(task) + \
-                            self.dueDate(task.dueDateTime()) + '\n')
+                            self.dueDate(task.dueDateTime()) + \
+                            self.id(task.id()) + '\n')
         metaName = self.__filename + '-meta'
         if os.path.exists(metaName):
             os.remove(metaName)
         if os.path.exists(self.__filename): # Unit tests
-            shutil.copyfile(self.__filename, metaName)
+            with file(metaName, 'wb') as dst:
+                dst.write('VERSION: %d\n' % self.VERSION)
+                with file(self.__filename, 'rb') as src:
+                    shutil.copyfileobj(src, dst)
         return count
                 
     @staticmethod
@@ -60,7 +66,11 @@ class TodoTxtWriter(object):
     @classmethod
     def dueDate(cls, dueDateTime):
         return ' due:%s'%cls.dateTime(dueDateTime) if cls.isActualDateTime(dueDateTime) else ''
-        
+
+    @classmethod
+    def id(cls, id_):
+        return ' tcid:%s' % id_
+
     @classmethod
     def completionDate(cls, completionDateTime):
         return 'X ' + '%s '%cls.dateTime(completionDateTime) if cls.isActualDateTime(completionDateTime) else ''

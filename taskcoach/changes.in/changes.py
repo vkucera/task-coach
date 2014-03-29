@@ -22,12 +22,29 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.37', 'February ??, 2014',
+Release('1.3.38', 'April ??, 2014',
     summary='''This is a bugfix release.''',
+    bugsFixed=[
+        ],
+    ),
+
+Release('1.3.37', 'March 29, 2014',
+    summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bugv2('''Fix a crash at startup on Lucid.''', '1496'),
         Bugv2('''Behave like regular OS X apps with regards to
 minimization and foreground behavior.''', '1500'),
+        Bugv2('''Fix idle time notification.''', '1503'),
+        ],
+    featuresAdded=[
+        Feature('''Add an option to render efforts in decimal (patch
+from Tom Monaco).''', 'https://taskcoach.uservoice.com/admin/forums/26465-desktop-version-windows-linux-mac-of-task-coach/suggestions/739042-allow-display-of-effort-in-decimal-dd-dd-as-wel'),
+        Feature('''Improved import/export of Todo.txt'''),
+        Feature('''Custom attributes for mailing tasks/categories/etc''',
+                'https://taskcoach.uservoice.com/admin/forums/26465-desktop-version-windows-linux-mac-of-task-coach/suggestions/5342642-embeded-command-capability'),
+        ],
+    dependenciesChanged=[
+        Dependency('''Task Coach now depends on Twisted.''')
         ],
     ),
 

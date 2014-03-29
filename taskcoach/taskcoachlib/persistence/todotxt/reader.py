@@ -25,8 +25,10 @@ class TodoTxtReader(object):
     def __init__(self, taskList, categoryList):
         self.__taskList = taskList
         self.__tasksBySubject = self.__createSubjectCache(taskList)
+        self.__tasksById = self.__createIdCache(taskList)
         self.__categoryList = categoryList
         self.__categoriesBySubject = self.__createSubjectCache(categoryList)
+        self.__version = 0
 
     def read(self, filename):
         metaName = filename + '-meta'
@@ -35,14 +37,20 @@ class TodoTxtReader(object):
             todoTxtRE = self.compileTodoTxtRE()
             keyValueRE = self.compileKeyValueRE()
             with codecs.open(metaName, 'r', 'utf-8') as fp:
+                match = re.match(r'VERSION: (\d+)', fp.readline().strip())
+                if match:
+                    self.__version = int(match.group(1))
+                else:
+                    fp.seek(0)
+
                 for line in fp:
                     line = line.strip()
                     try:
-                        subjects, priority, plannedStartDateTime, completionDateTime, dueDateTime, categories = \
+                        taskId, subjects, priority, plannedStartDateTime, completionDateTime, dueDateTime, categories = \
                           self.__processLine(line, todoTxtRE, keyValueRE, date.Now, None)
                     except:
                         pass # Err
-                    metaLines['->'.join(subjects)] = line
+                    metaLines['->'.join(subjects) if self.__version == 0 else taskId] = line
         with codecs.open(filename, 'r', 'utf-8') as fp:
             self.readFile(fp, metaLines=metaLines)
     
@@ -60,9 +68,12 @@ class TodoTxtReader(object):
         # defined by the todo.txt format  at
         # https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format
         dueDateTime = date.DateTime()
+        taskId = None
         for key, value in re.findall(keyValueRE, line):
             if key == 'due':
                 dueDateTime = self.dateTime(value)
+            elif key == 'tcid':
+                taskId = value
         line = re.sub(keyValueRE, '', line) # Remove all key:value pairs
         
         # Now, process the "official" todo.txt format using a RE that should 
@@ -77,21 +88,33 @@ class TodoTxtReader(object):
         recursiveSubject = match.group('subject')
 
         subjects = recursiveSubject.split('->')
-        return subjects, priority, plannedStartDateTime, completionDateTime, dueDateTime, categories
+        return taskId, subjects, priority, plannedStartDateTime, completionDateTime, dueDateTime, categories
 
     def processLine(self, line, todoTxtRE, keyValueRE, now, event, metaLines):
-        subjects, priority, plannedStartDateTime, completionDateTime, dueDateTime, categories = \
+        taskId, subjects, priority, plannedStartDateTime, completionDateTime, dueDateTime, categories = \
           self.__processLine(line, todoTxtRE, keyValueRE, now, event)
 
-        if metaLines and metaLines.get('->'.join(subjects), None) == line:
+        if (self.__version == 0 and metaLines and metaLines.get('->'.join(subjects), None) == line) or \
+          (self.__version == 1 and metaLines and taskId and metaLines.get(taskId, None) == line):
             # Not modified. Don't read it or we'll overwrite local changes
             # in case we're importing just before saving...
             return
 
-        newTask = None
-        for subject in subjects:
-            newTask = self.findOrCreateTask(subject.strip(), newTask, event)
-        
+        if taskId is not None and taskId not in self.__tasksById:
+            return # Deleted on desktop, changed on device. Keep deleted.
+
+        if self.__version == 0:
+            newTask = None
+            for subject in subjects:
+                newTask = self.findOrCreateTask(subject.strip(), newTask, event)
+        else:
+            newTask = None if taskId is None else self.__tasksById.get(taskId, None)
+            if newTask is None:
+                newTask = task.Task(subject=subjects[-1])
+                self.__taskList.append(newTask)
+            else:
+                newTask.setSubject(subjects[-1])
+
         newTask.setPriority(priority)
         newTask.setPlannedStartDateTime(plannedStartDateTime)
         newTask.setCompletionDateTime(completionDateTime)
@@ -177,7 +200,8 @@ class TodoTxtReader(object):
         
     @staticmethod
     def compileKeyValueRE():
-        return re.compile(' (?P<key>\S+):(?P<value>\S+)')
+        # The key is non-greedy because IDs may contain ':'
+        return re.compile(' (?P<key>\S+?):(?P<value>\S+)')
     
     @staticmethod
     def __createSubjectCache(itemContainer):
@@ -186,4 +210,9 @@ class TodoTxtReader(object):
             cache[(item.subject(), item.parent())] = item
         return cache
 
-        
+    @staticmethod
+    def __createIdCache(itemContainer):
+        cache = dict()
+        for item in itemContainer:
+            cache[item.id()] = item
+        return cache
