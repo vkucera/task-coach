@@ -72,7 +72,7 @@ setupOptions = {
 # Add available translations:
 languages = sorted([name for name, (code, enabled) in meta.data.languages.items() if enabled])
 for language in languages:
-    setupOptions['classifiers'].append('Natural Language :: %s' % 'English' if languages == 'English (US)' else language)
+    setupOptions['classifiers'].append('Natural Language :: %s' % 'English' if languages == 'English (US)' else 'Natural Language :: %s' % language)
 
 system = platform.system()
 if system == 'Linux':
