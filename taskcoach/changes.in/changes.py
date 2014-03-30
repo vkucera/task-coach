@@ -28,6 +28,9 @@ Release('1.3.38', 'April ??, 2014',
         Bugv2('''Code signature would become invalid on OSX after the
 first run.''', '1506'),
         ],
+    dependenciesChanged=[
+        Dependency('''Minimal Twisted version is now 10.0.''')
+        ],
     ),
 
 Release('1.3.37', 'March 29, 2014',
