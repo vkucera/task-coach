@@ -25,6 +25,8 @@ releases = [
 Release('1.3.38', 'April ??, 2014',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bugv2('''Code signature would become invalid on OSX after the
+first run.''', '1506'),
         ],
     ),
 
