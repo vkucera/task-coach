@@ -35,26 +35,35 @@ class TodoTxtWriter(object):
         return self.writeTasks(tasks)
     
     def writeTasks(self, tasks):
-        count = 0
-        for task in tasks:
-            count += 1
-            self.__fd.write(self.priority(task.priority()) + \
-                            self.completionDate(task.completionDateTime()) + \
-                            self.startDate(task.plannedStartDateTime()) + \
-                            task.subject(recursive=True) + \
-                            self.contextsAndProjects(task) + \
-                            self.dueDate(task.dueDateTime()) + \
-                            self.id(task.id()) + '\n')
-        metaName = self.__filename + '-meta'
-        if os.path.exists(metaName):
-            os.remove(metaName)
-        if os.path.exists(self.__filename): # Unit tests
-            with file(metaName, 'wb') as dst:
-                dst.write('VERSION: %d\n' % self.VERSION)
-                with file(self.__filename, 'rb') as src:
-                    shutil.copyfileobj(src, dst)
-        return count
-                
+        try:
+            print '== Writing tasks'
+            count = 0
+            for task in tasks:
+                count += 1
+                self.__fd.write(self.priority(task.priority()) + \
+                                self.completionDate(task.completionDateTime()) + \
+                                self.startDate(task.plannedStartDateTime()) + \
+                                task.subject(recursive=True) + \
+                                self.contextsAndProjects(task) + \
+                                self.dueDate(task.dueDateTime()) + \
+                                self.id(task.id()) + '\n')
+            self.__fd.close()
+            metaName = self.__filename + '-meta'
+            if os.path.exists(metaName):
+                print '== Removing old meta'
+                os.remove(metaName)
+            if os.path.exists(self.__filename): # Unit tests
+                print '== Copying meta'
+                with file(metaName, 'wb') as dst:
+                    dst.write('VERSION: %d\n' % self.VERSION)
+                    with file(self.__filename, 'rb') as src:
+                        shutil.copyfileobj(src, dst)
+            return count
+        except:
+            import traceback
+            traceback.print_exc()
+            raise
+
     @staticmethod
     def priority(priorityNumber):
         return '(%s) '%chr(ord('A') + priorityNumber - 1) if 1 <= priorityNumber <= 26 else ''
