@@ -29,6 +29,7 @@ Release('1.3.38', 'April ??, 2014',
 first run.''', '1506'),
         Bugv2('''Task Coach wouldn't actually stop with older versions
 of Twisted (<11).''', '1505'),
+        Bugv2('''Fix Todo.txt export''', '1274'),
         ],
     dependenciesChanged=[
         Dependency('''Minimal Twisted version is now 10.0.''')
