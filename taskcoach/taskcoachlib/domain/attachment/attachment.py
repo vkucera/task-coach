@@ -45,9 +45,9 @@ def getRelativePath(path, basePath=os.getcwd()):
             return ''
 
         if path2 == os.path.sep:
-            return path1[1:]
+            return path1[1:].replace('\\', '/')
 
-        return path1[len(path2) + 1:]
+        return path1[len(path2) + 1:].replace('\\', '/')
 
     path1 = path1.split(os.path.sep)
     path2 = path2.split(os.path.sep)
@@ -60,7 +60,7 @@ def getRelativePath(path, basePath=os.getcwd()):
         path1.insert(0, '..')
         path2.pop(0)
 
-    return os.path.join(*path1)  # pylint: disable=W0142
+    return os.path.join(*path1).replace('\\', '/')  # pylint: disable=W0142
 
 
 class Attachment(base.Object, NoteOwner):
