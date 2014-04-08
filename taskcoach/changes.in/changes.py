@@ -30,6 +30,7 @@ first run.''', '1506'),
         Bugv2('''Task Coach wouldn't actually stop with older versions
 of Twisted (<11).''', '1505'),
         Bugv2('''Fix Todo.txt export''', '1274'),
+        Bugv2('''Performance improvements.'''),
         ],
     featuresAdded=[
         Feature('''Always use "/" as path separator in relative attachment
