@@ -29,7 +29,7 @@ from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty.pubsub import pub
 from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_TODAY, wxFancyDrawer
 from taskcoachlib.thirdparty import smartdatetimectrl as sdtc
-from taskcoachlib.widgets import CalendarConfigDialog
+from taskcoachlib.widgets import CalendarConfigDialog, HierarchicalCalendarConfigDialog
 import base
 import inplace_editor
 import mixin
@@ -596,6 +596,115 @@ class SquareTaskViewer(BaseTaskTreeViewer):
         return self.renderer[self.__orderBy](value)
 
 
+class HierarchicalCalendarViewer(mixin.AttachmentDropTargetMixin,
+                                 mixin.SortableViewerForTasksMixin,
+                                 BaseTaskTreeViewer):
+    defaultTitle = _('Hierarchical calendar')
+    defaultBitmap = 'calendar_icon'
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('settingsSection', 'hierarchicalcalendarviewer')
+        super(HierarchicalCalendarViewer, self).__init__(*args, **kwargs)
+
+        # pylint: disable=E1101
+        for eventType in (task.Task.subjectChangedEventType(), 
+                          task.Task.attachmentsChangedEventType(),
+                          task.Task.notesChangedEventType(),
+                          task.Task.trackingChangedEventType(),
+                          task.Task.percentageCompleteChangedEventType()):
+            if eventType.startswith('pubsub'):
+                pub.subscribe(self.onAttributeChanged, eventType)
+            else:
+                self.registerObserver(self.onAttributeChanged_Deprecated, 
+                                      eventType)
+
+        # Dates are treated separately because the layout may change (_Invalidate)
+        # pylint: disable=E1101
+        for eventType in (task.Task.plannedStartDateTimeChangedEventType(),
+                          task.Task.dueDateTimeChangedEventType(), 
+                          task.Task.completionDateTimeChangedEventType()):
+            if eventType.startswith('pubsub'):
+                pub.subscribe(self.onLayoutAttributeChanged, eventType)
+            else:
+                self.registerObserver(self.onLayoutAttributeChanged_Deprecated, 
+                                      eventType)
+
+        self.reconfig()
+
+        date.Scheduler().schedule_interval(self.atMidnight, days=1)
+
+    def reconfig(self):
+        self.widget.SetCalendarFormat(self.settings.getint(self.settingsSection(), 'calendarformat'))
+        self.widget.SetHeaderFormat(self.settings.getint(self.settingsSection(), 'headerformat'))
+        self.widget.SetDrawNow(self.settings.getboolean(self.settingsSection(), 'drawnow'))
+        self.widget.SetTodayColor(map(int, self.settings.get(self.settingsSection(), 'todaycolor').split(',')))
+
+    def configure(self):
+        dialog = HierarchicalCalendarConfigDialog(self.settings, self.settingsSection(), 
+                                                  self, 
+                                                  title=_('Hierarchical calendar viewer configuration'))
+        dialog.CentreOnParent()
+        if dialog.ShowModal() == wx.ID_OK:
+            self.reconfig()
+
+    def createModeToolBarUICommands(self):
+        return super(HierarchicalCalendarViewer, self).createModeToolBarUICommands() + \
+            (None, uicommand.HierarchicalCalendarViewerConfigure(viewer=self),
+             uicommand.HierarchicalCalendarViewerPreviousPeriod(viewer=self),
+             uicommand.HierarchicalCalendarViewerToday(viewer=self),
+             uicommand.HierarchicalCalendarViewerNextPeriod(viewer=self))
+
+    def detach(self):
+        super(HierarchicalCalendarViewer, self).detach()
+        date.Scheduler().unschedule(self.atMidnight)
+
+    def atMidnight(self):
+        self.widget.SetCalendarFormat(self.widget.CalendarFormat())
+
+    def onLayoutAttributeChanged(self, newValue, sender):
+        self.refresh()
+
+    def onLayoutAttributeChanged_Deprecated(self, event):
+        self.refresh()
+
+    def isTreeViewer(self):
+        return True
+
+    def onEverySecond(self, event):  # pylint: disable=W0221,W0613
+        pass
+
+    def createWidget(self):
+        itemPopupMenu = self.createTaskPopupMenu()
+        self._popupMenus.append(itemPopupMenu)
+        widget = widgets.HierarchicalCalendar(self, self.presentation(),
+                                  self.onSelect, self.onEdit, self.onCreate, 
+                                  itemPopupMenu,
+                                  **self.widgetCreationKeywordArguments())
+        return widget
+
+    def onEdit(self, item):
+        edit = uicommand.Edit(viewer=self)
+        edit(item)
+
+    def onCreate(self, dateTime, show=True):
+        plannedStartDateTime = dateTime
+        dueDateTime = dateTime.endOfDay() if dateTime == dateTime.startOfDay() else dateTime
+        create = uicommand.TaskNew(taskList=self.presentation(), 
+                                   settings=self.settings,
+                                   taskKeywords=dict(plannedStartDateTime=plannedStartDateTime, 
+                                                     dueDateTime=dueDateTime))
+        return create(event=None, show=show)
+
+    def isAnyItemExpandable(self):
+        return False
+
+    def isAnyItemCollapsable(self):
+        return False
+
+    def GetPrintout(self, settings):
+        return self.widget.GetPrintout(settings)
+
+
 class CalendarViewer(mixin.AttachmentDropTargetMixin,
                      mixin.SortableViewerForTasksMixin,
                      BaseTaskTreeViewer):
@@ -752,8 +861,8 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         if dialog.ShowModal() == wx.ID_OK:
             self.reconfig()
 
-    def GetPrintout(self):
-        return self.widget.GetPrintout()
+    def GetPrintout(self, settings):
+        return self.widget.GetPrintout(settings)
 
 
 class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223

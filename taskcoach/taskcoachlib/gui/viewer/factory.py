@@ -27,7 +27,7 @@ def viewerTypes():
         settings. '''
     return ('timelineviewer', 'squaretaskviewer', 'taskviewer', 
         'taskstatsviewer', 'noteviewer', 'categoryviewer', 'effortviewer', 
-        'calendarviewer')
+        'calendarviewer', 'hierarchicalcalendarviewer')
 
 
 class addViewers(object):  # pylint: disable=C0103, R0903
@@ -51,6 +51,7 @@ class addViewers(object):  # pylint: disable=C0103, R0903
         self.__add_viewers(task.SquareTaskViewer)
         self.__add_viewers(task.TimelineViewer)
         self.__add_viewers(task.CalendarViewer)
+        self.__add_viewers(task.HierarchicalCalendarViewer)
         if self.__settings.getboolean('feature', 'effort'):
             self.__add_viewers(effort.EffortViewer)
         self.__add_viewers(category.CategoryViewer)

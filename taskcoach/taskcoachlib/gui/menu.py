@@ -454,6 +454,9 @@ class ViewViewerMenu(Menu):
             ViewViewer(menuText=_('&Calendar'),
                        helpText=_('Open a new tab with a viewer that displays tasks in a calendar'),
                        viewerClass=viewer.CalendarViewer, **kwargs),
+            ViewViewer(menuText=_('&Hierarchical calendar'),
+                       helpText=_('Open a new tab with a viewer that displays task hierarchy in a calendar'),
+                       viewerClass=viewer.HierarchicalCalendarViewer, **kwargs),
             ViewViewer(menuText=_('&Category'),
                        helpText=_('Open a new tab with a viewer that displays categories'),
                        viewerClass=viewer.CategoryViewer, **kwargs)]

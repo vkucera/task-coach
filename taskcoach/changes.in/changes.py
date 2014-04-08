@@ -34,6 +34,7 @@ of Twisted (<11).''', '1505'),
     featuresAdded=[
         Feature('''Always use "/" as path separator in relative attachment
 file names.''', 'https://taskcoach.uservoice.com/admin/forums/26465-desktop-version-windows-linux-mac-of-task-coach/suggestions/5721924-use-slash-instead-backslash-on-attachment-file-pat'),
+        Feature('''New hierarchical calendar viewer.'''),
         ],
     dependenciesChanged=[
         Dependency('''Minimal Twisted version is now 10.0.''')

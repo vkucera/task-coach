@@ -116,14 +116,14 @@ def Printout(viewer, settings, printSelectionOnly=False,
     if hasattr(widget, 'GetPrintout'):
         _printout = widget.GetPrintout
     elif hasattr(widget, 'Draw'):
-        def _printout():
+        def _printout(settings):
             return DCPrintout(widget)
     else:
         html_text = persistence.viewer2html(viewer, settings, 
                                            selectionOnly=printSelectionOnly)[0]
-        def _printout():
+        def _printout(settings):
             return HTMLPrintout(html_text, settings)
-    result = _printout()
+    result = _printout(PrinterSettings(settings))
     if twoPrintouts:
-        result = (result, _printout())
+        result = (result, _printout(PrinterSettings(settings)))
     return result

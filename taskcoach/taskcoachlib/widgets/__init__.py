@@ -37,5 +37,7 @@ from syncmlwarning import SyncMLWarningDialog
 from calendarwidget import Calendar
 from calendarconfig import CalendarConfigDialog
 from password import GetPassword
+from hcalendar import HierarchicalCalendar
+from hcalendarconfig import HierarchicalCalendarConfigDialog
 import masked
 from wx.lib import sized_controls
