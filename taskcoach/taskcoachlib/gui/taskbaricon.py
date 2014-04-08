@@ -78,7 +78,8 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
             self.__currentText = self.__tooltipText
             self.__currentBitmap = self.__bitmap
             self.__setIcon()
-        event.Skip()
+        if event is not None: # Unit tests
+            event.Skip()
 
     def onTaskListChanged(self, event):  # pylint: disable=W0613
         self.__setTooltipText()

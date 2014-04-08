@@ -28,16 +28,27 @@ class TaskFileMock(object):
 
 class MainWindowMock(object):
     taskFile = TaskFileMock()
+
+    def __init__(self):
+        self.__cb = None
     
     def restore(self):
         pass  # pragma: no cover
-    
+
+    def Bind(self, evt, cb):
+        self.__cb = cb
+
+    def ProcessIdle(self):
+        if self.__cb is not None:
+            self.__cb(None)
+
 
 class TaskBarIconTestCase(test.TestCase):
     def setUp(self):
         self.taskList = task.TaskList()
         self.settings = task.Task.settings = config.Settings(load=False)
-        self.icon = gui.TaskBarIcon(MainWindowMock(), self.taskList,
+        self.window = MainWindowMock()
+        self.icon = gui.TaskBarIcon(self.window, self.taskList,
             self.settings)
 
     def tearDown(self):  # pragma: no cover
@@ -50,6 +61,7 @@ class TaskBarIconTestCase(test.TestCase):
 
 class TaskBarIconTest(TaskBarIconTestCase):
     def testIcon_NoTasks(self):
+        self.window.ProcessIdle()
         self.failUnless(self.icon.IsIconInstalled())
         
     def testStartTracking(self):
