@@ -92,7 +92,7 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
                     cb(None, droppedObject, plannedStartDateTime=datetime, 
                        dueDateTime=datetime.endOfDay())
 
-    def GetPrintout(self):
+    def GetPrintout(self, settings):
         return wxReportScheduler(self.GetViewType(),
                                  self.GetStyle(),
                                  self.GetDrawer(),

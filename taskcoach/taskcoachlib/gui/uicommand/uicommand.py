@@ -2392,6 +2392,10 @@ class CalendarViewerConfigure(ViewerCommand):
         self.viewer.configure()
 
 
+class HierarchicalCalendarViewerConfigure(CalendarViewerConfigure):
+    helpText = _('Configure the hierarchical calendar viewer')
+
+
 class CalendarViewerNavigationCommand(ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(CalendarViewerNavigationCommand, self).__init__( \
@@ -2411,20 +2415,62 @@ class CalendarViewerNextPeriod(CalendarViewerNavigationCommand):
     helpText = _('Show next period')
     bitmap = 'next'
     calendarViewType = wxSCHEDULER_NEXT
-    
+
+
+class HierarchicalCalendarViewerNextPeriod(ViewerCommand):
+    menuText = _('&Next period')
+    helpText = _('Show next period')
+    bitmap = 'next'
+
+    def __init__(self, *args, **kwargs):
+        super(HierarchicalCalendarViewerNextPeriod, self).__init__( \
+            menuText=self.menuText, helpText=self.helpText, bitmap=self.bitmap, 
+            *args, **kwargs)
+
+    def doCommand(self, event):
+        self.viewer.widget.Next()
+
 
 class CalendarViewerPreviousPeriod(CalendarViewerNavigationCommand):
     menuText = _('&Previous period')
     helpText = _('Show previous period')
     bitmap = 'prev'
     calendarViewType = wxSCHEDULER_PREV
-    
+
+
+class HierarchicalCalendarViewerPreviousPeriod(ViewerCommand):
+    menuText = _('&Previous period')
+    helpText = _('Show previous period')
+    bitmap = 'prev'
+
+    def __init__(self, *args, **kwargs):
+        super(HierarchicalCalendarViewerPreviousPeriod, self).__init__( \
+            menuText=self.menuText, helpText=self.helpText, bitmap=self.bitmap, 
+            *args, **kwargs)
+
+    def doCommand(self, event):
+        self.viewer.widget.Prev()
+
 
 class CalendarViewerToday(CalendarViewerNavigationCommand):
     menuText = _('&Today')
     helpText = _('Show today')
     bitmap = 'calendar_icon'
     calendarViewType = wxSCHEDULER_TODAY
+
+
+class HierarchicalCalendarViewerToday(ViewerCommand):
+    menuText = _('&Today')
+    helpText = _('Show today')
+    bitmap = 'calendar_icon'
+
+    def __init__(self, *args, **kwargs):
+        super(HierarchicalCalendarViewerToday, self).__init__( \
+            menuText=self.menuText, helpText=self.helpText, bitmap=self.bitmap, 
+            *args, **kwargs)
+
+    def doCommand(self, event):
+        self.viewer.widget.Today()
 
 
 class ToggleAutoColumnResizing(settings_uicommand.UICheckCommand, 

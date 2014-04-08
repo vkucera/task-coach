@@ -26,6 +26,7 @@ class TodoTxtReader(object):
         self.__taskList = taskList
         self.__tasksBySubject = self.__createSubjectCache(taskList)
         self.__tasksById = self.__createIdCache(taskList)
+        self.__deletedTasks = set()
         self.__categoryList = categoryList
         self.__categoriesBySubject = self.__createSubjectCache(categoryList)
         self.__version = 0
@@ -48,12 +49,13 @@ class TodoTxtReader(object):
                     try:
                         taskId, subjects, priority, plannedStartDateTime, completionDateTime, dueDateTime, categories = \
                           self.__processLine(line, todoTxtRE, keyValueRE, date.Now, None)
+                        self.__deletedTasks.add(taskId)
                     except:
                         pass # Err
                     metaLines['->'.join(subjects) if self.__version == 0 else taskId] = line
         with codecs.open(filename, 'r', 'utf-8') as fp:
             self.readFile(fp, metaLines=metaLines)
-    
+
     @patterns.eventSource    
     def readFile(self, fp, now=date.Now, event=None, metaLines=None):
         todoTxtRE = self.compileTodoTxtRE()
@@ -62,6 +64,9 @@ class TodoTxtReader(object):
             line = line.strip()
             if line:
                 self.processLine(line, todoTxtRE, keyValueRE, now, event, metaLines)
+        if self.__version >= 1:
+            for deletedTaskId in self.__deletedTasks:
+                self.__taskList.remove(self.__tasksById[deletedTaskId])
 
     def __processLine(self, line, todoTxtRE, keyValueRE, now, event):
         # First, process all key:value pairs. These are additional metadata not
@@ -93,6 +98,9 @@ class TodoTxtReader(object):
     def processLine(self, line, todoTxtRE, keyValueRE, now, event, metaLines):
         taskId, subjects, priority, plannedStartDateTime, completionDateTime, dueDateTime, categories = \
           self.__processLine(line, todoTxtRE, keyValueRE, now, event)
+
+        if taskId is not None and taskId in self.__deletedTasks:
+            self.__deletedTasks.remove(taskId)
 
         if (self.__version == 0 and metaLines and metaLines.get('->'.join(subjects), None) == line) or \
           (self.__version == 1 and metaLines and taskId and metaLines.get(taskId, None) == line):

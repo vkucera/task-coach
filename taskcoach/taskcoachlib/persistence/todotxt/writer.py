@@ -49,12 +49,13 @@ class TodoTxtWriter(object):
         if os.path.exists(metaName):
             os.remove(metaName)
         if os.path.exists(self.__filename): # Unit tests
+            self.__fd.close()
             with file(metaName, 'wb') as dst:
                 dst.write('VERSION: %d\n' % self.VERSION)
                 with file(self.__filename, 'rb') as src:
                     shutil.copyfileobj(src, dst)
         return count
-                
+
     @staticmethod
     def priority(priorityNumber):
         return '(%s) '%chr(ord('A') + priorityNumber - 1) if 1 <= priorityNumber <= 26 else ''

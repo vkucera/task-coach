@@ -23,8 +23,22 @@ from changetypes import *
 releases = [
 
 Release('1.3.38', 'April ??, 2014',
-    summary='''This is a bugfix release.''',
+    summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
+        Bugv2('''Code signature would become invalid on OSX after the
+first run.''', '1506'),
+        Bugv2('''Task Coach wouldn't actually stop with older versions
+of Twisted (<11).''', '1505'),
+        Bugv2('''Fix Todo.txt export''', '1274'),
+        Bugv2('''Performance improvements.'''),
+        ],
+    featuresAdded=[
+        Feature('''Always use "/" as path separator in relative attachment
+file names.''', 'https://taskcoach.uservoice.com/admin/forums/26465-desktop-version-windows-linux-mac-of-task-coach/suggestions/5721924-use-slash-instead-backslash-on-attachment-file-pat'),
+        Feature('''New hierarchical calendar viewer.'''),
+        ],
+    dependenciesChanged=[
+        Dependency('''Minimal Twisted version is now 10.0.''')
         ],
     ),
 

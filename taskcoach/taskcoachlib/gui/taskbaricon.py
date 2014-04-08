@@ -27,9 +27,9 @@ from taskcoachlib.domain import date, task
 from taskcoachlib.thirdparty.pubsub import pub
 import artprovider
 
-        
+
 class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
-    def __init__(self, mainwindow, taskList, settings, 
+    def __init__(self, mainwindow, taskList, settings,
             defaultBitmap='taskcoach', tickBitmap='clock_icon',
             tackBitmap='clock_stopwatch_icon', *args, **kwargs):
         super(TaskBarIcon, self).__init__(*args, **kwargs)
@@ -37,16 +37,18 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
         self.__taskList = taskList
         self.__settings = settings
         self.__bitmap = self.__defaultBitmap = defaultBitmap
+        self.__currentBitmap = self.__bitmap
         self.__tooltipText = ''
+        self.__currentText = self.__tooltipText
         self.__tickBitmap = tickBitmap
         self.__tackBitmap = tackBitmap
         self.registerObserver(self.onTaskListChanged,
             eventType=taskList.addItemEventType(), eventSource=taskList)
-        self.registerObserver(self.onTaskListChanged, 
+        self.registerObserver(self.onTaskListChanged,
             eventType=taskList.removeItemEventType(), eventSource=taskList)
-        pub.subscribe(self.onTrackingChanged, 
+        pub.subscribe(self.onTrackingChanged,
                       task.Task.trackingChangedEventType())
-        pub.subscribe(self.onChangeDueDateTime, 
+        pub.subscribe(self.onChangeDueDateTime,
                       task.Task.dueDateTimeChangedEventType())
         # When the user chances the due soon hours preferences it may cause
         # a task to change appearance. That also means the number of due soon
@@ -56,7 +58,7 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
         # do. When that happens the tasks haven't changed their status yet and
         # we would use the wrong status count.
         self.registerObserver(self.onChangeDueDateTime_Deprecated,
-            eventType=task.Task.appearanceChangedEventType()) 
+            eventType=task.Task.appearanceChangedEventType())
         if operating_system.isGTK():
             events = [wx.EVT_TASKBAR_LEFT_DOWN]
         elif operating_system.isWindows():
@@ -67,18 +69,26 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
         for event in events:
             self.Bind(event, self.onTaskbarClick)
         self.__setTooltipText()
-        self.__setIcon()
+        mainwindow.Bind(wx.EVT_IDLE, self.onIdle)
 
     # Event handlers:
+
+    def onIdle(self, event):
+        if self.__currentText != self.__tooltipText or self.__currentBitmap != self.__bitmap:
+            self.__currentText = self.__tooltipText
+            self.__currentBitmap = self.__bitmap
+            self.__setIcon()
+        if event is not None: # Unit tests
+            event.Skip()
 
     def onTaskListChanged(self, event):  # pylint: disable=W0613
         self.__setTooltipText()
         self.__startOrStopTicking()
-        
+
     def onTrackingChanged(self, newValue, sender):
         if newValue:
             self.registerObserver(self.onChangeSubject,
-                                  eventType=sender.subjectChangedEventType(), 
+                                  eventType=sender.subjectChangedEventType(),
                                   eventSource=sender)
         else:
             self.removeObserver(self.onChangeSubject,
@@ -91,18 +101,15 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
 
     def onChangeSubject(self, event):  # pylint: disable=W0613
         self.__setTooltipText()
-        self.__setIcon()
 
     def onChangeDueDateTime(self, newValue, sender):  # pylint: disable=W0613
         self.__setTooltipText()
-        self.__setIcon()
-        
+
     def onChangeDueDateTime_Deprecated(self, event):
         self.__setTooltipText()
-        self.__setIcon()
-        
+
     def onEverySecond(self):
-        if self.__settings.getboolean('window', 
+        if self.__settings.getboolean('window',
             'blinktaskbariconwhentrackingeffort') and \
             not operating_system.isMacOsXMavericks_OrNewer():
             self.__toggleTrackingBitmap()
@@ -130,25 +137,25 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
 
     def tooltip(self):
         return self.__tooltipText
-        
+
     def bitmap(self):
         return self.__bitmap
 
     def defaultBitmap(self):
         return self.__defaultBitmap
-            
+
     # Private methods:
-    
+
     def __startOrStopTicking(self):
         self.__startTicking()
         self.__stopTicking()
-            
+
     def __startTicking(self):
         if self.__taskList.nrBeingTracked() > 0:
             self.startClock()
             self.__toggleTrackingBitmap()
             self.__setIcon()
-            
+
     def startClock(self):
         date.Scheduler().schedule_interval(self.onEverySecond, seconds=1)
 
@@ -157,19 +164,19 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
             self.stopClock()
             self.__setDefaultBitmap()
             self.__setIcon()
-            
+
     def stopClock(self):
         date.Scheduler().unschedule(self.onEverySecond)
 
     toolTipMessages = \
         [(task.status.overdue, _('one task overdue'), _('%d tasks overdue')),
          (task.status.duesoon, _('one task due soon'), _('%d tasks due soon'))]
-    
+
     def __setTooltipText(self):
         ''' Note that Windows XP and Vista limit the text shown in the
             tool tip to 64 characters, so we cannot show everything we would
             like to and have to make choices. '''
-        textParts = []              
+        textParts = []
         trackedTasks = self.__taskList.tasksBeingTracked()
         if trackedTasks:
             count = len(trackedTasks)
@@ -186,16 +193,15 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
                     textParts.append(singular)
                 elif count > 1:
                     textParts.append(plural % count)
-        
+
         textPart = ', '.join(textParts)
-        filename = os.path.basename(self.__window.taskFile.filename())        
+        filename = os.path.basename(self.__window.taskFile.filename())
         namePart = u'%s - %s' % (meta.name, filename) if filename else meta.name
         text = u'%s\n%s' % (namePart, textPart) if textPart else namePart
-        
+
         if text != self.__tooltipText:
             self.__tooltipText = text
-            self.__setIcon()  # Update tooltip
-            
+
     def __setDefaultBitmap(self):
         self.__bitmap = self.__defaultBitmap
 
