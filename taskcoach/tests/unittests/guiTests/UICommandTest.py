@@ -89,6 +89,7 @@ class NewTaskWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
             categories=self.categories, settings=self.settings)
         dialog = taskNew.doCommand(None, show=False)
         self.failUnless(isinstance(dialog, TaskEditor), dialog)
+        dialog._interior[4].selected()
         tree = dialog._interior[4].viewer.widget
         return tree.GetFirstChild(tree.GetRootItem())[0]
 
@@ -119,6 +120,7 @@ class NewNoteWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
             categories=self.categories, settings=self.settings)
         dialog = noteNew.doCommand(None, show=False)
         self.failUnless(isinstance(dialog, NoteEditor), dialog)
+        dialog._interior[1].selected()
         tree = dialog._interior[1].viewer.widget
         return tree.GetFirstChild(tree.GetRootItem())[0]
 
@@ -272,6 +274,7 @@ class TaskNewTest(wxTestCaseWithFrameAsTopLevelWindow):
         taskNew = gui.uicommand.TaskNew(taskList=self.taskFile.tasks(), 
                                         settings=self.settings)
         dialog = taskNew.doCommand(None, show=False)
+        dialog._interior[4].selected()
         tree = dialog._interior[4].viewer.widget
         firstChild = tree.GetFirstChild(tree.GetRootItem())[0]
         self.failUnless(firstChild.IsChecked())
@@ -319,6 +322,7 @@ class NoteNewTest(wxTestCaseWithFrameAsTopLevelWindow):
         noteNew = gui.uicommand.NoteNew(notes=self.taskFile.notes(), 
                                         settings=self.settings)
         dialog = noteNew.doCommand(None, show=False)
+        dialog._interior[1].selected()
         tree = dialog._interior[1].viewer.widget
         firstChild = tree.GetFirstChild(tree.GetRootItem())[0]
         self.failUnless(firstChild.IsChecked())
