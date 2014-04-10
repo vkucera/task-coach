@@ -43,6 +43,9 @@ class Page(patterns.Observer, widgets.BookPage):
         self.addEntries()
         self.fit()
 
+    def selected(self):
+        pass
+
     def addEntries(self):
         raise NotImplementedError
         
@@ -724,7 +727,20 @@ class CategoriesPage(PageWithViewer):
     pageName = 'categories'
     pageTitle = _('Categories')
     pageIcon = 'folder_blue_arrow_icon'
-    
+
+    def __init__(self, *args, **kwargs):
+        self.__realized = False
+        super(CategoriesPage, self).__init__(*args, **kwargs)
+
+    def addEntries(self):
+        pass
+
+    def selected(self):
+        if not self.__realized:
+            self.__realized = True
+            super(CategoriesPage, self).addEntries()
+            self.fit()
+
     def createViewer(self, taskFile, settings, settingsSection):
         assert len(self.items) == 1
         item = self.items[0]
@@ -740,7 +756,9 @@ class CategoriesPage(PageWithViewer):
         self.viewer.refreshItems(*event.values())
         
     def entries(self):
-        return dict(firstEntry=self.viewer, categories=self.viewer) 
+        if self.__realized:
+            return dict(firstEntry=self.viewer, categories=self.viewer) 
+        return dict()
 
 
 class LocalAttachmentViewer(viewer.AttachmentViewer):  # pylint: disable=W0223
@@ -852,7 +870,20 @@ class PrerequisitesPage(PageWithViewer):
     pageName = 'prerequisites'
     pageTitle = _('Prerequisites')
     pageIcon = 'trafficlight_icon'
-    
+
+    def __init__(self, *args, **kwargs):
+        self.__realized = False
+        super(PrerequisitesPage, self).__init__(*args, **kwargs)
+
+    def addEntries(self):
+        pass
+
+    def selected(self):
+        if not self.__realized:
+            self.__realized = True
+            super(PrerequisitesPage, self).addEntries()
+            self.fit()
+
     def createViewer(self, taskFile, settings, settingsSection):
         assert len(self.items) == 1
         pub.subscribe(self.onPrerequisitesChanged, 
@@ -866,8 +897,10 @@ class PrerequisitesPage(PageWithViewer):
             self.viewer.refreshItems(*newValue)
     
     def entries(self):
-        return dict(firstEntry=self.viewer, prerequisites=self.viewer,
-                    dependencies=self.viewer)
+        if self.__realized:
+            return dict(firstEntry=self.viewer, prerequisites=self.viewer,
+                        dependencies=self.viewer)
+        return dict()
 
 
 class EditBook(widgets.Notebook):
@@ -894,6 +927,13 @@ class EditBook(widgets.Notebook):
             self.AddPage(page, page.pageTitle, page.pageIcon)
         width, height = self.__get_minimum_page_size()
         self.SetMinSize((width, self.GetHeightForPageHeight(height)))
+
+    def onPageChanged(self, event):
+        self.GetPage(event.Selection).selected()
+        event.Skip()
+        if operating_system.isMac():
+            # The dialog loses focus sometimes...
+            wx.GetTopLevelParent(self).Raise()
 
     def getPage(self, page_name):
         index = self.getPageIndex(page_name)

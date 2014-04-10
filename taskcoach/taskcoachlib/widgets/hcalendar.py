@@ -120,6 +120,13 @@ class HierarchicalCalendar(tooltip.ToolTipMixin, CalendarCanvas):
     def select(self, items):
         self.Select(items)
 
+    def select_all(self):
+        items = list()
+        for task in self.__taskList:
+            items.append(task)
+            items.extend(task.children(recursive=True))
+        self.select(items)
+
     # Configuration
 
     def SetCalendarFormat(self, fmt):

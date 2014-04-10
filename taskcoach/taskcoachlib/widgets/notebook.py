@@ -167,7 +167,7 @@ class BookMixin(object):
             
 
 class Notebook(BookMixin, aui.AuiNotebook):
-    pageChangedEvent = wx.EVT_NOTEBOOK_PAGE_CHANGED
+    pageChangedEvent = aui.EVT_AUINOTEBOOK_PAGE_CHANGED
     
     def __init__(self, *args, **kwargs):
         defaultStyle = kwargs.get('agwStyle', aui.AUI_NB_DEFAULT_STYLE)
