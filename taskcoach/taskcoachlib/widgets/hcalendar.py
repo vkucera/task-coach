@@ -239,10 +239,12 @@ class HierarchicalCalendar(tooltip.ToolTipMixin, CalendarCanvas):
         return self.__adapter.getItemText(task)
 
     def GetBackgroundColor(self, task):
-        return task.backgroundColor(True) or wx.WHITE
+        color = task.backgroundColor(True)
+        return wx.Colour(*color) if color else wx.WHITE
 
     def GetForegroundColor(self, task):
-        return task.foregroundColor(True) or wx.BLACK
+        color = task.foregroundColor(True)
+        return wx.Colour(*color) if color else wx.BLACK
 
     def GetProgress(self, task):
         p = task.percentageComplete(recursive=True)
