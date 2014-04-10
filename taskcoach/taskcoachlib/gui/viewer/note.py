@@ -161,13 +161,10 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                 modificationDateTimeColumn]
 
     def getItemTooltipData(self, item):
-        if self.settings.getboolean('view', 'descriptionpopups'):
-            lines = [line.rstrip('\r') for line in item.description().split('\n')] 
-            result = [(None, lines)] if lines and lines != [''] else [] 
-            result.append(('paperclip_icon', sorted([unicode(attachment) for attachment in item.attachments()])))
-            return result + super(BaseNoteViewer, self).getItemTooltipData(item)
-        else:
-            return []
+        lines = [line.rstrip('\r') for line in item.description().split('\n')] 
+        result = [(None, lines)] if lines and lines != [''] else [] 
+        result.append(('paperclip_icon', sorted([unicode(attachment) for attachment in item.attachments()])))
+        return result + super(BaseNoteViewer, self).getItemTooltipData(item)
                     
     def isShowingNotes(self):
         return True

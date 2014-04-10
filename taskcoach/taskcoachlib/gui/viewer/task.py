@@ -247,8 +247,6 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable=W0223
         return item.selectedIcon(recursive=True) if isSelected else item.icon(recursive=True)
 
     def getItemTooltipData(self, task):  # pylint: disable=W0621
-        if not self.settings.getboolean('view', 'descriptionpopups'):
-            return []
         result = [(self.iconName(task, task in self.curselection()), 
                    [self.getItemText(task)])]
         if task.description():
@@ -436,9 +434,7 @@ class TimelineViewer(BaseTaskTreeViewer):
         return _('Now')
 
     def getItemTooltipData(self, item):
-        if not self.settings.getboolean('view', 'descriptionpopups'):
-            result = []
-        elif isinstance(item, task.Task):
+        if isinstance(item, task.Task):
             result = super(TimelineViewer, self).getItemTooltipData(item)
         else:
             result = [(None, [render.dateTimePeriod(item.getStart(), item.getStop(), humanReadable=True)])]
