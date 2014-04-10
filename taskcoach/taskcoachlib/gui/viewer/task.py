@@ -70,6 +70,7 @@ class TaskViewerStatusMessages(object):
 
 class BaseTaskViewer(mixin.SearchableViewerMixin,  # pylint: disable=W0223
                      mixin.FilterableViewerForTasksMixin,
+                     base.CategorizableViewerMixin,
                      base.TreeViewer):        
     def __init__(self, *args, **kwargs):
         super(BaseTaskViewer, self).__init__(*args, **kwargs)
@@ -246,8 +247,6 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable=W0223
         return item.selectedIcon(recursive=True) if isSelected else item.icon(recursive=True)
 
     def getItemTooltipData(self, task):  # pylint: disable=W0621
-        if not self.settings.getboolean('view', 'descriptionpopups'):
-            return []
         result = [(self.iconName(task, task in self.curselection()), 
                    [self.getItemText(task)])]
         if task.description():
@@ -257,7 +256,7 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable=W0223
         if task.attachments():
             result.append(('paperclip_icon',
                 sorted([unicode(attachment) for attachment in task.attachments()])))
-        return result
+        return result + super(BaseTaskTreeViewer, self).getItemTooltipData(task)
 
     def label(self, task):  # pylint: disable=W0621
         return self.getItemText(task)
@@ -435,9 +434,7 @@ class TimelineViewer(BaseTaskTreeViewer):
         return _('Now')
 
     def getItemTooltipData(self, item):
-        if not self.settings.getboolean('view', 'descriptionpopups'):
-            result = []
-        elif isinstance(item, task.Task):
+        if isinstance(item, task.Task):
             result = super(TimelineViewer, self).getItemTooltipData(item)
         else:
             result = [(None, [render.dateTimePeriod(item.getStart(), item.getStop(), humanReadable=True)])]
@@ -942,8 +939,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                                     editedTask.subject(recursive=True))
     
     def _createColumns(self):
-        kwargs = dict(renderDescriptionCallback=lambda task: task.description(),
-                      resizeCallback=self.onResizeColumn)
+        kwargs = dict(resizeCallback=self.onResizeColumn)
         # pylint: disable=E1101,W0142
         columns = [widgets.Column('subject', _('Subject'), 
                 task.Task.subjectChangedEventType(),

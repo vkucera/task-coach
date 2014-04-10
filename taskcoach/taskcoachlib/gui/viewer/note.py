@@ -34,6 +34,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                      mixin.SearchableViewerMixin, 
                      mixin.SortableViewerForNotesMixin,
                      mixin.AttachmentColumnMixin, 
+                     base.CategorizableViewerMixin,
                      base.SortableViewerWithColumns, base.TreeViewer):
     SorterClass = note.NoteSorter
     defaultTitle = _('Notes')
@@ -159,14 +160,11 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                 categoriesColumn, creationDateTimeColumn, 
                 modificationDateTimeColumn]
 
-    def getItemTooltipData(self, item, column=0):
-        if self.settings.getboolean('view', 'descriptionpopups'):
-            lines = [line.rstrip('\r') for line in item.description().split('\n')] 
-            result = [(None, lines)] if lines and lines != [''] else [] 
-            result.append(('paperclip_icon', sorted([unicode(attachment) for attachment in item.attachments()])))
-            return result
-        else:
-            return []
+    def getItemTooltipData(self, item):
+        lines = [line.rstrip('\r') for line in item.description().split('\n')] 
+        result = [(None, lines)] if lines and lines != [''] else [] 
+        result.append(('paperclip_icon', sorted([unicode(attachment) for attachment in item.attachments()])))
+        return result + super(BaseNoteViewer, self).getItemTooltipData(item)
                     
     def isShowingNotes(self):
         return True

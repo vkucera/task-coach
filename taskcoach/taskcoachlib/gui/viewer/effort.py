@@ -193,8 +193,7 @@ class EffortViewer(base.ListViewer,
     
     def _createColumns(self):
         # pylint: disable=W0142
-        kwargs = dict(renderDescriptionCallback=lambda effort: effort.description(),
-                      resizeCallback=self.onResizeColumn)
+        kwargs = dict(resizeCallback=self.onResizeColumn)
         return [widgets.Column(name, columnHeader, eventType, 
                 renderCallback=renderCallback,
                 sortCallback=sortCallback,

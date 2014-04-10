@@ -57,8 +57,8 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
     def getItemText(self, domainObject, columnIndex):
         return self.__parent.getItemText(domainObject, columnIndex)
     
-    def getItemTooltipData(self, domainObject, columnIndex):
-        return self.__parent.getItemTooltipData(domainObject, columnIndex)
+    def getItemTooltipData(self, domainObject):
+        return self.__parent.getItemTooltipData(domainObject)
     
     def getItemImage(self, domainObject, columnIndex=0):
         return self.__parent.getItemImages(domainObject, 
@@ -70,7 +70,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
 
     def OnGetItemTooltipData(self, rowIndex, columnIndex):
         item = self.getItemWithIndex(rowIndex)
-        return self.getItemTooltipData(item, columnIndex)
+        return self.getItemTooltipData(item)
 
     def OnGetItemImage(self, rowIndex):
         item = self.getItemWithIndex(rowIndex)

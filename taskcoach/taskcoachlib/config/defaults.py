@@ -49,7 +49,6 @@ defaults = {
     # Language and locale as set by user via preferences, overrides language:
     'language_set_by_user': '',  
     'categoryfiltermatchall': 'False',
-    'descriptionpopups': 'True',
     'weekstart': 'monday',  # Start of work week, 'monday' or 'sunday'
     # The next three options are used in the effort dialog to populate the
     # drop down menu with start and stop times.
