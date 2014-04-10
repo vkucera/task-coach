@@ -328,13 +328,12 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
                 None, 
                 uicommand.EditUndo(), 
                 uicommand.EditRedo()]
-        if self.settings.getboolean('feature', 'effort'):
-            uiCommands.extend([ 
-                None, 
-                uicommand.EffortStartButton(taskList=self.taskFile.tasks()), 
-                uicommand.EffortStop(viewer=self.viewer,
-                                     effortList=self.taskFile.efforts(),
-                                     taskList=self.taskFile.tasks())])
+        uiCommands.extend([ 
+            None, 
+            uicommand.EffortStartButton(taskList=self.taskFile.tasks()), 
+            uicommand.EffortStop(viewer=self.viewer,
+                                 effortList=self.taskFile.efforts(),
+                                 taskList=self.taskFile.tasks())])
         return uiCommands
 
     def getToolBarPerspective(self):

@@ -46,6 +46,7 @@ class HierarchicalCalendar(tooltip.ToolTipMixin, CalendarCanvas):
         self.__calFormat = self.CAL_WEEKLY
         self.__hdrFormat = self.HDR_DATE
         self.__drawNow = True
+        self.__adapter = parent
         self.getItemTooltipData = parent.getItemTooltipData
         super(HierarchicalCalendar, self).__init__(parent, **kwargs)
         self.SetCalendarFormat(self.__calFormat) # This calls _Invalidate() so no need to call SetHeaderFormat
@@ -220,14 +221,11 @@ class HierarchicalCalendar(tooltip.ToolTipMixin, CalendarCanvas):
         if self.__drawNow:
             super(HierarchicalCalendar, self)._DrawNow(gc, h)
 
-    def _PutCompositesFirst(self, objects):
-        return [obj for obj in objects if obj.children()] + [obj for obj in objects if not obj.children()]
-
     def GetRootEvents(self):
-        return self._PutCompositesFirst(self.__taskList.rootItems())
+        return self.__adapter.getRootItems()
 
     def GetChildren(self, task):
-        return self._PutCompositesFirst(task.children())
+        return self.__adapter.children(task)
 
     def GetStart(self, task):
         dt = task.plannedStartDateTime()
@@ -238,7 +236,7 @@ class HierarchicalCalendar(tooltip.ToolTipMixin, CalendarCanvas):
         return None if dt == date.DateTime() else dt
 
     def GetText(self, task):
-        return task.subject()
+        return self.__adapter.getItemText(task)
 
     def GetBackgroundColor(self, task):
         return task.backgroundColor(True) or wx.WHITE

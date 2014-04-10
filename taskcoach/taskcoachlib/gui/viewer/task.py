@@ -220,18 +220,17 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable=W0223
         uiCommands = (uicommand.TaskMarkInactive(settings=self.settings, viewer=self),
                       uicommand.TaskMarkActive(settings=self.settings, viewer=self),
                       uicommand.TaskMarkCompleted(settings=self.settings, viewer=self))
-        if self.settings.getboolean('feature', 'effort'):
-            uiCommands += (
-                # EffortStart needs a reference to the original (task) list to
-                # be able to stop tracking effort for tasks that are already 
-                # being tracked, but that might be filtered in the viewer's 
-                # presentation.
-                None,
-                uicommand.EffortStart(viewer=self, 
-                                      taskList=self.taskFile.tasks()),
-                uicommand.EffortStop(viewer=self,
-                                     effortList=self.taskFile.efforts(),
-                                     taskList=self.taskFile.tasks()))
+        uiCommands += (
+            # EffortStart needs a reference to the original (task) list to
+            # be able to stop tracking effort for tasks that are already 
+            # being tracked, but that might be filtered in the viewer's 
+            # presentation.
+            None,
+            uicommand.EffortStart(viewer=self, 
+                                  taskList=self.taskFile.tasks()),
+            uicommand.EffortStop(viewer=self,
+                                 effortList=self.taskFile.efforts(),
+                                 taskList=self.taskFile.tasks()))
         return uiCommands + super(BaseTaskTreeViewer, self).createActionToolBarUICommands()
     
     def createModeToolBarUICommands(self):
@@ -975,14 +974,13 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                 imageIndicesCallback=self.attachmentImageIndices,
                 headerImageIndex=self.imageIndex['paperclip_icon'],
                 renderCallback=lambda task: '', **kwargs)]
-        if self.settings.getboolean('feature', 'notes'):
-            columns.append(widgets.Column('notes', _('Notes'), 
-                task.Task.notesChangedEventType(),
-                width=self.getColumnWidth('notes'),
-                alignment=wx.LIST_FORMAT_LEFT,
-                imageIndicesCallback=self.noteImageIndices,
-                headerImageIndex=self.imageIndex['note_icon'],
-                renderCallback=lambda task: '', **kwargs))
+        columns.append(widgets.Column('notes', _('Notes'), 
+            task.Task.notesChangedEventType(),
+            width=self.getColumnWidth('notes'),
+            alignment=wx.LIST_FORMAT_LEFT,
+            imageIndicesCallback=self.noteImageIndices,
+            headerImageIndex=self.imageIndex['note_icon'],
+            renderCallback=lambda task: '', **kwargs))
         columns.extend(
             [widgets.Column('categories', _('Categories'), 
                 task.Task.categoryAddedEventType(), 
@@ -1029,7 +1027,6 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                 editCallback=editCallback, settings=self.settings, *eventTypes, 
                 **kwargs))
 
-        effortOn = self.settings.getboolean('feature', 'effort')
         dependsOnEffortFeature = ['budget', 'timeSpent', 'budgetLeft',
                                   'hourlyFee', 'fixedFee', 'revenue']
             
@@ -1063,7 +1060,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
             ('revenue', _('Revenue'), None, None, 
              [task.Task.expansionChangedEventType(), 
               task.Task.revenueChangedEventType()])]:
-            if (name in dependsOnEffortFeature and effortOn) or name not in dependsOnEffortFeature:
+            if (name in dependsOnEffortFeature) or name not in dependsOnEffortFeature:
                 renderCallback = getattr(self, 'render%s' % \
                                          (name[0].capitalize() + name[1:]))
                 columns.append(widgets.Column(name, columnHeader,  
@@ -1130,39 +1127,38 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
              uicommand.ViewColumn(menuText=_('&Recurrence'),
                  helpText=_('Show/hide recurrence column'),
                  setting='recurrence', viewer=self))]
-        if self.settings.getboolean('feature', 'effort'):
-            commands.extend([
-                (_('&Budget'),
-                 uicommand.ViewColumns(menuText=_('&All budget columns'),
-                     helpText=_('Show/hide all budget-related columns'),
-                     setting=['budget', 'timeSpent', 'budgetLeft'],
-                     viewer=self),
-                 None,
-                 uicommand.ViewColumn(menuText=_('&Budget'),
-                     helpText=_('Show/hide budget column'),
-                     setting='budget', viewer=self),
-                 uicommand.ViewColumn(menuText=_('&Time spent'),
-                     helpText=_('Show/hide time spent column'),
-                     setting='timeSpent', viewer=self),
-                 uicommand.ViewColumn(menuText=_('&Budget left'),
-                     helpText=_('Show/hide budget left column'),
-                     setting='budgetLeft', viewer=self),
-                ),
-                (_('&Financial'),
-                 uicommand.ViewColumns(menuText=_('&All financial columns'),
-                     helpText=_('Show/hide all finance-related columns'),
-                     setting=['hourlyFee', 'fixedFee', 'revenue'],
-                     viewer=self),
-                 None,
-                 uicommand.ViewColumn(menuText=_('&Hourly fee'),
-                     helpText=_('Show/hide hourly fee column'),
-                     setting='hourlyFee', viewer=self),
-                 uicommand.ViewColumn(menuText=_('&Fixed fee'),
-                     helpText=_('Show/hide fixed fee column'),
-                     setting='fixedFee', viewer=self),
-                 uicommand.ViewColumn(menuText=_('&Revenue'),
-                     helpText=_('Show/hide revenue column'),
-                     setting='revenue', viewer=self))])
+        commands.extend([
+            (_('&Budget'),
+             uicommand.ViewColumns(menuText=_('&All budget columns'),
+                 helpText=_('Show/hide all budget-related columns'),
+                 setting=['budget', 'timeSpent', 'budgetLeft'],
+                 viewer=self),
+             None,
+             uicommand.ViewColumn(menuText=_('&Budget'),
+                 helpText=_('Show/hide budget column'),
+                 setting='budget', viewer=self),
+             uicommand.ViewColumn(menuText=_('&Time spent'),
+                 helpText=_('Show/hide time spent column'),
+                 setting='timeSpent', viewer=self),
+             uicommand.ViewColumn(menuText=_('&Budget left'),
+                 helpText=_('Show/hide budget left column'),
+                 setting='budgetLeft', viewer=self),
+            ),
+            (_('&Financial'),
+             uicommand.ViewColumns(menuText=_('&All financial columns'),
+                 helpText=_('Show/hide all finance-related columns'),
+                 setting=['hourlyFee', 'fixedFee', 'revenue'],
+                 viewer=self),
+             None,
+             uicommand.ViewColumn(menuText=_('&Hourly fee'),
+                 helpText=_('Show/hide hourly fee column'),
+                 setting='hourlyFee', viewer=self),
+             uicommand.ViewColumn(menuText=_('&Fixed fee'),
+                 helpText=_('Show/hide fixed fee column'),
+                 setting='fixedFee', viewer=self),
+             uicommand.ViewColumn(menuText=_('&Revenue'),
+                 helpText=_('Show/hide revenue column'),
+                 setting='revenue', viewer=self))])
         commands.extend([
             uicommand.ViewColumn(menuText=_('&Description'),
                 helpText=_('Show/hide description column'),
@@ -1179,11 +1175,10 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
             uicommand.ViewColumn(menuText=_('&Attachments'),
                 helpText=_('Show/hide attachment column'),
                 setting='attachments', viewer=self)])
-        if self.settings.getboolean('feature', 'notes'):
-            commands.append(
-                uicommand.ViewColumn(menuText=_('&Notes'),
-                    helpText=_('Show/hide notes column'),
-                    setting='notes', viewer=self))
+        commands.append(
+            uicommand.ViewColumn(menuText=_('&Notes'),
+                helpText=_('Show/hide notes column'),
+                setting='notes', viewer=self))
         commands.extend([
             uicommand.ViewColumn(menuText=_('&Categories'),
                 helpText=_('Show/hide categories column'),

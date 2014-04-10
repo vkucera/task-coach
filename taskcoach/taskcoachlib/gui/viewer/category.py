@@ -102,8 +102,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
                        imageIndicesCallback=self.attachmentImageIndices,
                        headerImageIndex=self.imageIndex['paperclip_icon'],
                        renderCallback=lambda category: '', **kwargs)]
-        if self.settings.getboolean('feature', 'notes'):
-            columns.append(widgets.Column('notes', '', 
+        columns.append(widgets.Column('notes', '', 
                        category.Category.notesChangedEventType(),  # pylint: disable=E1101
                        width=self.getColumnWidth('notes'),
                        alignment=wx.LIST_FORMAT_LEFT,
@@ -140,10 +139,9 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
             uicommand.ViewColumn(menuText=_('&Attachments'),
                 helpText=_('Show/hide attachments column'),
                 setting='attachments', viewer=self)]
-        if self.settings.getboolean('feature', 'notes'):
-            commands.append(uicommand.ViewColumn(menuText=_('&Notes'),
-                helpText=_('Show/hide notes column'),
-                setting='notes', viewer=self))
+        commands.append(uicommand.ViewColumn(menuText=_('&Notes'),
+            helpText=_('Show/hide notes column'),
+            setting='notes', viewer=self))
         commands.append(uicommand.ViewColumn(menuText=_('&Creation date'),
             helpText=_('Show/hide creation date column'), 
             setting='creationDateTime', viewer=self))

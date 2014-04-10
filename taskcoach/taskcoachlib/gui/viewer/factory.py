@@ -52,11 +52,9 @@ class addViewers(object):  # pylint: disable=C0103, R0903
         self.__add_viewers(task.TimelineViewer)
         self.__add_viewers(task.CalendarViewer)
         self.__add_viewers(task.HierarchicalCalendarViewer)
-        if self.__settings.getboolean('feature', 'effort'):
-            self.__add_viewers(effort.EffortViewer)
+        self.__add_viewers(effort.EffortViewer)
         self.__add_viewers(category.CategoryViewer)
-        if self.__settings.getboolean('feature', 'notes'):
-            self.__add_viewers(note.NoteViewer)
+        self.__add_viewers(note.NoteViewer)
 
     def __add_viewers(self, viewer_class):
         ''' Open viewers of the specified viewer class as saved previously in
