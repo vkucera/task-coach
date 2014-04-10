@@ -481,6 +481,7 @@ class CollectionDecorator(Decorator, ObservableCollection):
 
     def __init__(self, observedCollection, *args, **kwargs):
         super(CollectionDecorator, self).__init__(observedCollection, *args, **kwargs)
+        self.__freezeCount = 0
         observable = self.observable()
         self.registerObserver(self.onAddItem, 
             eventType=observable.addItemEventType(), eventSource=observable)
@@ -490,6 +491,19 @@ class CollectionDecorator(Decorator, ObservableCollection):
 
     def __repr__(self): # pragma: no cover
         return '%s(%s)'%(self.__class__, super(CollectionDecorator, self).__repr__())
+
+    def freeze(self):
+        if isinstance(self.observable(), CollectionDecorator):
+            self.observable().freeze()
+        self.__freezeCount += 1
+
+    def thaw(self):
+        self.__freezeCount -= 1
+        if isinstance(self.observable(), CollectionDecorator):
+            self.observable().thaw()
+
+    def isFrozen(self):
+        return self.__freezeCount != 0
 
     def detach(self):
         self.removeObserver(self.onAddItem)

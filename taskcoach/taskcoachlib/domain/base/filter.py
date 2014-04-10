@@ -28,6 +28,11 @@ class Filter(patterns.SetDecorator):
         super(Filter, self).__init__(*args, **kwargs)
         self.reset()
 
+    def thaw(self):
+        super(Filter, self).thaw()
+        if not self.isFrozen():
+            self.reset()
+
     def setTreeMode(self, treeMode):
         self.__treeMode = treeMode
         try:
@@ -38,9 +43,12 @@ class Filter(patterns.SetDecorator):
         
     def treeMode(self):
         return self.__treeMode
-   
+
     @patterns.eventSource    
     def reset(self, event=None):
+        if self.isFrozen():
+            return
+
         filteredItems = set(self.filterItems(self.observable()))
         if self.treeMode():
             for item in filteredItems.copy():

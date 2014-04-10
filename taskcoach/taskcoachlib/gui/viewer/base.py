@@ -68,8 +68,10 @@ class Viewer(patterns.Observer, wx.Panel):
 
         pub.subscribe(self.onBeginIO, 'taskfile.aboutToRead')
         pub.subscribe(self.onBeginIO, 'taskfile.aboutToClear')
+        pub.subscribe(self.onBeginIO, 'taskfile.aboutToSave')
         pub.subscribe(self.onEndIO, 'taskfile.justRead')
         pub.subscribe(self.onEndIO, 'taskfile.justCleared')
+        pub.subscribe(self.onEndIO, 'taskfile.justSaved')
 
         wx.CallAfter(self.__DisplayBalloon)
 
@@ -83,12 +85,14 @@ class Viewer(patterns.Observer, wx.Panel):
 
     def onBeginIO(self, taskFile):
         self.__freezeCount += 1
+        self.__presentation.freeze()
 
     def onEndIO(self, taskFile):
         self.__freezeCount -= 1
+        self.__presentation.thaw()
         if self.__freezeCount == 0:
             self.refresh()
-        
+
     def domainObjectsToView(self):
         ''' Return the domain objects that this viewer should display. For
             global viewers this will be part of the task file, 
@@ -132,8 +136,10 @@ class Viewer(patterns.Observer, wx.Panel):
 
         pub.unsubscribe(self.onBeginIO, 'taskfile.aboutToRead')
         pub.unsubscribe(self.onBeginIO, 'taskfile.aboutToClear')
+        pub.unsubscribe(self.onBeginIO, 'taskfile.aboutToSave')
         pub.unsubscribe(self.onEndIO, 'taskfile.justRead')
         pub.unsubscribe(self.onEndIO, 'taskfile.justCleared')
+        pub.unsubscribe(self.onEndIO, 'taskfile.justSaved')
 
         self.presentation().detach()
         self.toolbar.detach()

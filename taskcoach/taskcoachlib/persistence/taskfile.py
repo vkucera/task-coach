@@ -351,7 +351,7 @@ class TaskFile(patterns.Observer):
 
     def _read(self, fd):
         return xml.XMLReader(fd).read()
-        
+
     def exists(self):
         return os.path.isfile(self.__filename)
 
@@ -440,6 +440,7 @@ class TaskFile(patterns.Observer):
         finally:
             self.__saving = False
             self.__notifier.saved()
+            pub.sendMessage('taskfile.justSaved', taskFile=self)
 
     def mergeDiskChanges(self):
         self.__loading = True

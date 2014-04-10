@@ -31,6 +31,11 @@ class Sorter(patterns.ListDecorator):
         self._registerObserverForAttribute(self._sortKey)
         self.reset()
 
+    def thaw(self):
+        super(Sorter, self).thaw()
+        if not self.isFrozen():
+            self.reset()
+
     def detach(self):
         super(Sorter, self).detach()
         self._removeObserverForAttribute(self._sortKey)
@@ -67,6 +72,9 @@ class Sorter(patterns.ListDecorator):
     def reset(self, forceEvent=False):
         ''' reset does the actual sorting. If the order of the list changes, 
             observers are notified by means of the list-sorted event. '''
+        if self.isFrozen():
+            return
+
         oldSelf = self[:]
         self.sort(key=self.createSortKeyFunction(), 
                   reverse=not self._sortAscending)
