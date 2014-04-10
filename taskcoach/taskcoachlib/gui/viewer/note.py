@@ -159,7 +159,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                 categoriesColumn, creationDateTimeColumn, 
                 modificationDateTimeColumn]
 
-    def getItemTooltipData(self, item, column=0):
+    def getItemTooltipData(self, item):
         if self.settings.getboolean('view', 'descriptionpopups'):
             lines = [line.rstrip('\r') for line in item.description().split('\n')] 
             result = [(None, lines)] if lines and lines != [''] else [] 

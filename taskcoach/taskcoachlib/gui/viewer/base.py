@@ -523,7 +523,10 @@ class Viewer(patterns.Observer, wx.Panel):
         
     def onEditDescription(self, item, newValue):
         command.EditDescriptionCommand(items=[item], newValue=newValue).do()
-    
+
+    def getItemTooltipData(self, item):
+        return []
+
 
 class ListViewer(Viewer):  # pylint: disable=W0223
     def isTreeViewer(self):
@@ -771,25 +774,6 @@ class ViewerWithColumns(Viewer):  # pylint: disable=W0223
     def getItemText(self, item, column=0):
         column = self.visibleColumns()[column]
         return column.render(item)
-
-    def getItemTooltipData(self, item, column=0):
-        result = []
-        if not self.settings.getboolean('view', 'descriptionpopups'):
-            return result        
-        column = self.visibleColumns()[column]
-        description = column.renderDescription(item)
-        if description:
-            lines = description.split('\n')
-            result.append((None, [line.rstrip('\n') for line in lines]))                            
-        try:
-            result.append(('note_icon', sorted([note.subject() for note in item.notes()])))
-        except AttributeError:
-            pass
-        try:
-            result.append(('paperclip_icon', sorted([unicode(attachment) for attachment in item.attachments()])))
-        except AttributeError:
-            pass
-        return result
     
     def getItemImages(self, item, column=0):
         column = self.visibleColumns()[column]

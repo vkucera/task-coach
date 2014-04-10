@@ -179,7 +179,7 @@ class CtrlWithToolTipMixin(_CtrlWithItemsMixin, tooltip.ToolTipMixin):
         item, _, column = self.HitTest(wx.Point(x, y))
         domainObject = self._objectBelongingTo(item)
         if domainObject:
-            tooltipData = self.getItemTooltipData(domainObject, column)
+            tooltipData = self.getItemTooltipData(domainObject)
             doShow = any([data[1] for data in tooltipData])
             if doShow:
                 self.__tip.SetData(tooltipData)
@@ -202,8 +202,6 @@ class Column(object):
         self.__sortCallback = kwargs.pop('sortCallback', None)
         self.__renderCallback = kwargs.pop('renderCallback',
             self.defaultRenderer)
-        self.__renderDescriptionCallback = kwargs.pop('renderDescriptionCallback',
-            self.defaultDescriptionRenderer)
         self.__resizeCallback = kwargs.pop('resizeCallback', None)
         self.__alignment = kwargs.pop('alignment', wx.LIST_FORMAT_LEFT)
         self.__hasImages = 'imageIndicesCallback' in kwargs
@@ -246,14 +244,8 @@ class Column(object):
     def render(self, *args, **kwargs):
         return self.__renderCallback(*args, **self.__filterArgs(self.__renderCallback, kwargs))
 
-    def renderDescription(self, *args, **kwargs):
-        return self.__renderDescriptionCallback(*args, **self.__filterArgs(self.__renderDescriptionCallback, kwargs))
-
     def defaultRenderer(self, *args, **kwargs): # pylint: disable=W0613
         return unicode(args[0])
-
-    def defaultDescriptionRenderer(self, *args, **kwargs): # pylint: disable=W0613
-        return None
 
     def alignment(self):
         return self.__alignment

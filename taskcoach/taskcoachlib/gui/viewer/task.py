@@ -942,8 +942,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                                     editedTask.subject(recursive=True))
     
     def _createColumns(self):
-        kwargs = dict(renderDescriptionCallback=lambda task: task.description(),
-                      resizeCallback=self.onResizeColumn)
+        kwargs = dict(resizeCallback=self.onResizeColumn)
         # pylint: disable=E1101,W0142
         columns = [widgets.Column('subject', _('Subject'), 
                 task.Task.subjectChangedEventType(), 

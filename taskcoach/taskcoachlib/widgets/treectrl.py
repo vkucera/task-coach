@@ -173,8 +173,8 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         wx.PostEvent(self._main_win, wx.ChildFocusEvent(self._main_win))
         self.SetFocus()
 
-    def getItemTooltipData(self, item, column):
-        return self.__adapter.getItemTooltipData(item, column)
+    def getItemTooltipData(self, item):
+        return self.__adapter.getItemTooltipData(item)
     
     def getItemCTType(self, item): # pylint: disable=W0613
         return self.ct_type
