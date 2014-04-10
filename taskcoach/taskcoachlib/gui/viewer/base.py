@@ -528,6 +528,13 @@ class Viewer(patterns.Observer, wx.Panel):
         return []
 
 
+class CategorizableViewerMixin(object):
+    def getItemTooltipData(self, item):
+        if not self.settings.getboolean('view', 'descriptionpopups'):
+            return []
+        return [('folder_blue_arrow_icon', [u', '.join(sorted([cat.subject() for cat in item.categories()]))] if item.categories() else [])]
+
+
 class ListViewer(Viewer):  # pylint: disable=W0223
     def isTreeViewer(self):
         return False

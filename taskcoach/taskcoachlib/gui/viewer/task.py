@@ -70,6 +70,7 @@ class TaskViewerStatusMessages(object):
 
 class BaseTaskViewer(mixin.SearchableViewerMixin,  # pylint: disable=W0223
                      mixin.FilterableViewerForTasksMixin,
+                     base.CategorizableViewerMixin,
                      base.TreeViewer):        
     def __init__(self, *args, **kwargs):
         super(BaseTaskViewer, self).__init__(*args, **kwargs)
@@ -257,7 +258,7 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable=W0223
         if task.attachments():
             result.append(('paperclip_icon',
                 sorted([unicode(attachment) for attachment in task.attachments()])))
-        return result
+        return result + super(BaseTaskTreeViewer, self).getItemTooltipData(task)
 
     def label(self, task):  # pylint: disable=W0621
         return self.getItemText(task)
