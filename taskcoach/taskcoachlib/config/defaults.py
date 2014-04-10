@@ -537,8 +537,6 @@ defaults = {
     'duesoonhours': '24'  # When a task is considered to be "due soon"
     }, 
 'feature': {
-    'notes': 'True',
-    'effort': 'True',
     'syncml': 'False',
     'iphone': 'False',
     'notifier': 'Task Coach',

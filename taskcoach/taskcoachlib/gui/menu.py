@@ -418,9 +418,8 @@ class ViewMenu(Menu):
                         SortMenu(mainwindow, self, _('&Sort')))
         self.appendMenu(_('&Columns'), 
                         ColumnMenu(mainwindow, self, _('&Columns')))
-        if settings.getboolean('feature', 'effort'):
-            self.appendMenu(_('&Rounding'),
-                            RoundingMenu(mainwindow, self, _('&Rounding')))
+        self.appendMenu(_('&Rounding'),
+                        RoundingMenu(mainwindow, self, _('&Rounding')))
         self.appendUICommands(None)
         self.appendMenu(_('&Tree options'), 
                         ViewTreeOptionsMenu(mainwindow, viewerContainer),
@@ -459,21 +458,16 @@ class ViewViewerMenu(Menu):
                        viewerClass=viewer.HierarchicalCalendarViewer, **kwargs),
             ViewViewer(menuText=_('&Category'),
                        helpText=_('Open a new tab with a viewer that displays categories'),
-                       viewerClass=viewer.CategoryViewer, **kwargs)]
-        if settings.getboolean('feature', 'effort'):
-            viewViewerCommands.append(
-                ViewViewer(menuText=_('&Effort'),
-                       helpText=_('Open a new tab with a viewer that displays efforts'),
-                       viewerClass=viewer.EffortViewer, **kwargs))
-            viewViewerCommands.append(
-                uicommand.ViewEffortViewerForSelectedTask(menuText=_('Effort for &one task'),
-                        helpText=_('Open a new tab with a viewer that displays efforts for the selected task'),
-                        viewerClass=viewer.EffortViewer, **kwargs))
-        if settings.getboolean('feature', 'notes'):
-            viewViewerCommands.append(
-                ViewViewer(menuText=_('&Note'),
-                       helpText=_('Open a new tab with a viewer that displays notes'),
-                       viewerClass=viewer.NoteViewer, **kwargs))
+                       viewerClass=viewer.CategoryViewer, **kwargs),
+            ViewViewer(menuText=_('&Effort'),
+                   helpText=_('Open a new tab with a viewer that displays efforts'),
+                   viewerClass=viewer.EffortViewer, **kwargs),
+            uicommand.ViewEffortViewerForSelectedTask(menuText=_('Effort for &one task'),
+                    helpText=_('Open a new tab with a viewer that displays efforts for the selected task'),
+                    viewerClass=viewer.EffortViewer, **kwargs),
+            ViewViewer(menuText=_('&Note'),
+                   helpText=_('Open a new tab with a viewer that displays notes'),
+                   viewerClass=viewer.NoteViewer, **kwargs)]
         self.appendUICommands(*viewViewerCommands)
        
                                       
@@ -556,19 +550,14 @@ class NewMenu(Menu):
         self.appendMenu(_('New task from &template'),
             TaskTemplateMenu(mainwindow, taskList=tasks, settings=settings),
             'newtmpl')
-        self.appendUICommands(None)
-        if settings.getboolean('feature', 'effort'):
-            self.appendUICommands(
-                uicommand.EffortNew(viewer=viewerContainer, 
-                                    effortList=taskFile.efforts(), 
-                                    taskList=tasks, settings=settings))
         self.appendUICommands(
+            None,
+            uicommand.EffortNew(viewer=viewerContainer, 
+                                effortList=taskFile.efforts(), 
+                                taskList=tasks, settings=settings),
             uicommand.CategoryNew(categories=taskFile.categories(), 
-                                  settings=settings))
-        if settings.getboolean('feature', 'notes'):
-            self.appendUICommands(
-                uicommand.NoteNew(notes=taskFile.notes(), settings=settings))
-        self.appendUICommands(
+                                  settings=settings),
+            uicommand.NoteNew(notes=taskFile.notes(), settings=settings),
             None,
             uicommand.NewSubItem(viewer=viewerContainer))
 
@@ -584,14 +573,11 @@ class ActionMenu(Menu):
             uicommand.AddAttachment(viewer=viewerContainer, settings=settings),
             uicommand.OpenAllAttachments(viewer=viewerContainer,
                                          settings=settings),
-            None)
-        if settings.getboolean('feature', 'notes'):
-            self.appendUICommands(
-                uicommand.AddNote(viewer=viewerContainer, settings=settings),
-                uicommand.OpenAllNotes(viewer=viewerContainer, 
-                                       settings=settings),
-                None)
-        self.appendUICommands(
+            None,
+            uicommand.AddNote(viewer=viewerContainer, settings=settings),
+            uicommand.OpenAllNotes(viewer=viewerContainer, 
+                                   settings=settings),
+            None,
             uicommand.Mail(viewer=viewerContainer),
             None)
         self.appendMenu(_('&Toggle category'),
@@ -608,12 +594,11 @@ class ActionMenu(Menu):
         self.appendMenu(_('Change task &priority'), 
                         TaskPriorityMenu(mainwindow, tasks, viewerContainer),
                         'incpriority')
-        if settings.getboolean('feature', 'effort'):
-            self.appendUICommands(
-                None,
-                uicommand.EffortStart(viewer=viewerContainer, taskList=tasks),
-                uicommand.EffortStop(viewer=viewerContainer, effortList=efforts, taskList=tasks),
-                uicommand.EditTrackedTasks(taskList=tasks, settings=settings))
+        self.appendUICommands(
+            None,
+            uicommand.EffortStart(viewer=viewerContainer, taskList=tasks),
+            uicommand.EffortStop(viewer=viewerContainer, effortList=efforts, taskList=tasks),
+            uicommand.EditTrackedTasks(taskList=tasks, settings=settings))
 
 
 class TaskPriorityMenu(Menu):
@@ -660,26 +645,21 @@ class TaskBarMenu(Menu):
             TaskTemplateMenu(taskBarIcon, taskList=tasks, settings=settings),
             'newtmpl')
         self.appendUICommands(None)  # Separator
-        if settings.getboolean('feature', 'effort'):
-            self.appendUICommands(
-                uicommand.EffortNew(effortList=efforts, taskList=tasks, 
-                                    settings=settings))
         self.appendUICommands(
+            uicommand.EffortNew(effortList=efforts, taskList=tasks, 
+                                settings=settings),
             uicommand.CategoryNew(categories=taskFile.categories(), 
-                                  settings=settings))
-        if settings.getboolean('feature', 'notes'):
-            self.appendUICommands(
-                uicommand.NoteNew(notes=taskFile.notes(), settings=settings))
-        if settings.getboolean('feature', 'effort'):
-            self.appendUICommands(None)  # Separator
-            label = _('&Start tracking effort')
-            self.appendMenu(label,
-                StartEffortForTaskMenu(taskBarIcon, 
-                                       base.filter.DeletedFilter(tasks), 
-                                       self, label), 'clock_icon')
-            self.appendUICommands(uicommand.EffortStop(viewer=viewer,
-                                                       effortList=efforts,
-                                                       taskList=tasks))
+                                  settings=settings),
+            uicommand.NoteNew(notes=taskFile.notes(), settings=settings))
+        self.appendUICommands(None)  # Separator
+        label = _('&Start tracking effort')
+        self.appendMenu(label,
+            StartEffortForTaskMenu(taskBarIcon, 
+                                   base.filter.DeletedFilter(tasks), 
+                                   self, label), 'clock_icon')
+        self.appendUICommands(uicommand.EffortStop(viewer=viewer,
+                                                   effortList=efforts,
+                                                   taskList=tasks))
         self.appendUICommands(
             None,
             uicommand.MainWindowRestore(),
@@ -796,13 +776,10 @@ class TaskPopupMenu(Menu):
             uicommand.AddAttachment(viewer=taskViewer, settings=settings),
             uicommand.OpenAllAttachments(viewer=taskViewer,
                                          settings=settings),
-            None)
-        if settings.getboolean('feature', 'notes'):
-            self.appendUICommands(
-                uicommand.AddNote(viewer=taskViewer,
-                                      settings=settings),
-                uicommand.OpenAllNotes(viewer=taskViewer, settings=settings))
-        self.appendUICommands(
+            None,
+            uicommand.AddNote(viewer=taskViewer,
+                                  settings=settings),
+            uicommand.OpenAllNotes(viewer=taskViewer, settings=settings),
             None,
             uicommand.Mail(viewer=taskViewer),
             None)
@@ -819,14 +796,12 @@ class TaskPopupMenu(Menu):
         self.appendMenu(_('&Priority'), 
                         TaskPriorityMenu(mainwindow, tasks, taskViewer),
                         'incpriority')
-        if settings.getboolean('feature', 'effort'):
-            self.appendUICommands(
-                None,
-                uicommand.EffortNew(viewer=taskViewer, effortList=efforts,
-                                    taskList=tasks, settings=settings),
-                uicommand.EffortStart(viewer=taskViewer, taskList=tasks),
-                uicommand.EffortStop(viewer=taskViewer, effortList=efforts, taskList=tasks))
         self.appendUICommands(
+            None,
+            uicommand.EffortNew(viewer=taskViewer, effortList=efforts,
+                                taskList=tasks, settings=settings),
+            uicommand.EffortStart(viewer=taskViewer, taskList=tasks),
+            uicommand.EffortStop(viewer=taskViewer, effortList=efforts, taskList=tasks),
             None,
             uicommand.NewSubItem(viewer=taskViewer))
 
@@ -866,13 +841,10 @@ class CategoryPopupMenu(Menu):
             None,
             uicommand.AddAttachment(viewer=categoryViewer, settings=settings),
             uicommand.OpenAllAttachments(viewer=categoryViewer,
-                                         settings=settings))
-        if settings.getboolean('feature', 'notes'):
-            self.appendUICommands(
-                None,
-                uicommand.AddNote(viewer=categoryViewer, settings=settings),
-                uicommand.OpenAllNotes(viewer=categoryViewer, settings=settings))
-        self.appendUICommands(
+                                         settings=settings),
+            None,
+            uicommand.AddNote(viewer=categoryViewer, settings=settings),
+            uicommand.OpenAllNotes(viewer=categoryViewer, settings=settings),
             None, 
             uicommand.Mail(viewer=categoryViewer))
         if not localOnly:
@@ -881,12 +853,10 @@ class CategoryPopupMenu(Menu):
                 uicommand.NewTaskWithSelectedCategories(taskList=tasks,
                                                         settings=settings,
                                                         categories=categories,
-                                                        viewer=categoryViewer))
-            if settings.getboolean('feature', 'notes'):
-                self.appendUICommands(
-                    uicommand.NewNoteWithSelectedCategories(notes=notes,
-                        settings=settings, categories=categories,
-                        viewer=categoryViewer))
+                                                        viewer=categoryViewer),
+                uicommand.NewNoteWithSelectedCategories(notes=notes,
+                    settings=settings, categories=categories,
+                    viewer=categoryViewer))
         self.appendUICommands(
             None,
             uicommand.NewSubItem(viewer=categoryViewer))
@@ -975,14 +945,11 @@ class AttachmentPopupMenu(Menu):
             uicommand.EditPaste(),
             None,
             uicommand.Edit(viewer=attachmentViewer),
-            uicommand.Delete(viewer=attachmentViewer))
-        if settings.getboolean('feature', 'notes'):
-            self.appendUICommands(
-                None,
-                uicommand.AddNote(viewer=attachmentViewer, settings=settings),
-                uicommand.OpenAllNotes(viewer=attachmentViewer, 
-                                       settings=settings))
-        self.appendUICommands(
+            uicommand.Delete(viewer=attachmentViewer),
+            None,
+            uicommand.AddNote(viewer=attachmentViewer, settings=settings),
+            uicommand.OpenAllNotes(viewer=attachmentViewer, 
+                                   settings=settings),
             None,
             uicommand.AttachmentOpen(viewer=attachmentViewer, 
                                      attachments=attachments, 

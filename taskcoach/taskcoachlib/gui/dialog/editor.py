@@ -960,18 +960,7 @@ class EditBook(widgets.Notebook):
                 if self.__should_create_page(page_name)]
         
     def __should_create_page(self, page_name):
-        if self.__page_feature_is_disabled(page_name):
-            return False
         return self.__page_supports_mass_editing(page_name) if len(self.items) > 1 else True
-
-    def __page_feature_is_disabled(self, page_name):
-        ''' Return whether the feature that the page is displaying has been 
-            disabled by the user. '''
-        if page_name in ('budget', 'effort', 'notes'):
-            feature = 'effort' if page_name == 'budget' else page_name
-            return not self.settings.getboolean('feature', feature)
-        else:
-            return False
         
     @staticmethod
     def __page_supports_mass_editing(page_name):

@@ -54,12 +54,11 @@ class ReminderDialog(patterns.Observer, sized_controls.SizedDialog):
                                   label=self.task.subject(recursive=True))
         self.openTask.Bind(wx.EVT_BUTTON, self.onOpenTask)
         sizer.Add(self.openTask, flag=wx.ALIGN_CENTER_VERTICAL)
-        if self.settings.getboolean('feature', 'effort'):
-            self.startTracking = wx.BitmapButton(panel)
-            self.setTrackingIcon()
-            self.startTracking.Bind(wx.EVT_BUTTON, self.onStartOrStopTracking)
-            sizer.Add((3, -1), flag=wx.ALIGN_CENTER_VERTICAL)
-            sizer.Add(self.startTracking, flag=wx.ALIGN_CENTER_VERTICAL)
+        self.startTracking = wx.BitmapButton(panel)
+        self.setTrackingIcon()
+        self.startTracking.Bind(wx.EVT_BUTTON, self.onStartOrStopTracking)
+        sizer.Add((3, -1), flag=wx.ALIGN_CENTER_VERTICAL)
+        sizer.Add(self.startTracking, flag=wx.ALIGN_CENTER_VERTICAL)
         panel.SetSizerAndFit(sizer)
         
         for label in _('Reminder date/time') + ':', \

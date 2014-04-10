@@ -540,9 +540,6 @@ class FeaturesPage(SettingsPage):
                                            *args, **kwargs)
         self.addEntry(_('All settings on this tab require a restart of %s ' \
                         'to take effect') % meta.name)
-        self.addBooleanSetting('feature', 'effort', 
-            _('Allow for tracking effort'))
-        self.addBooleanSetting('feature', 'notes', _('Allow for taking notes'))
         try:
             import taskcoachlib.syncml.core  # pylint: disable=W0404,W0612
         except ImportError:

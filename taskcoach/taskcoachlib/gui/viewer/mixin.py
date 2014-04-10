@@ -400,7 +400,6 @@ class SortableViewerForTasksMixin(SortableViewerForCategorizablesMixin):
     
     def createSortByUICommands(self):
         commands = super(SortableViewerForTasksMixin, self).createSortByUICommands()
-        effortOn = self.settings.getboolean('feature', 'effort')
         dependsOnEffortFeature = ['budget', 'timeSpent', 'budgetLeft',  
                                   'hourlyFee', 'fixedFee', 'revenue']
         for menuText, helpText, value in [\
@@ -420,7 +419,7 @@ class SortableViewerForTasksMixin(SortableViewerForCategorizablesMixin):
             (_('&Fixed fee'), _('Sort tasks by fixed fee'), 'fixedFee'),
             (_('&Revenue'), _('Sort tasks by revenue'), 'revenue'),
             (_('&Reminder'), _('Sort tasks by reminder date and time'), 'reminder')]:
-            if value not in dependsOnEffortFeature or (value in dependsOnEffortFeature and effortOn):
+            if value not in dependsOnEffortFeature or (value in dependsOnEffortFeature):
                 commands.append(uicommand.ViewerSortByCommand(\
                     viewer=self, value=value, menuText=menuText, helpText=helpText))
         return commands
