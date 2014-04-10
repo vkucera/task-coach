@@ -221,14 +221,11 @@ class HierarchicalCalendar(tooltip.ToolTipMixin, CalendarCanvas):
         if self.__drawNow:
             super(HierarchicalCalendar, self)._DrawNow(gc, h)
 
-    def _PutCompositesFirst(self, objects):
-        return [obj for obj in objects if obj.children()] + [obj for obj in objects if not obj.children()]
-
     def GetRootEvents(self):
-        return self._PutCompositesFirst(self.__adapter.getRootItems())
+        return self.__adapter.getRootItems()
 
     def GetChildren(self, task):
-        return self._PutCompositesFirst(self.__adapter.children(task))
+        return self.__adapter.children(task)
 
     def GetStart(self, task):
         dt = task.plannedStartDateTime()
