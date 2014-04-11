@@ -1398,24 +1398,34 @@ class TaskDecPriority(mixin_uicommand.NeedsSelectedTasksMixin, TaskListCommand,
 
 
 class DragAndDropCommand(ViewerCommand):
-    def onCommandActivate(self, dropItem, dragItems, part):  # pylint: disable=W0221
+    def onCommandActivate(self, dropItem, dragItems, part, column):  # pylint: disable=W0221
         ''' Override onCommandActivate to be able to accept two items instead
             of one event. '''
-        self.doCommand(dropItem, dragItems, part)
+        self.doCommand(dropItem, dragItems, part, None if column == -1 else self.viewer.visibleColumns()[column])
 
-    def doCommand(self, dropItem, dragItems, part):  # pylint: disable=W0221
-        dragAndDropCommand = self.createCommand(dropItem=dropItem, dragItems=dragItems, part=part)
+    def doCommand(self, dropItem, dragItems, part, column):  # pylint: disable=W0221
+        dragAndDropCommand = self.createCommand(dropItem=dropItem, dragItems=dragItems, part=part, column=column)
         if dragAndDropCommand.canDo():
             dragAndDropCommand.do()
-            
+            return dragAndDropCommand
+
     def createCommand(self, dropItem, dragItems, part):
         raise NotImplementedError  # pragma: no cover
-    
 
-class TaskDragAndDrop(DragAndDropCommand, TaskListCommand):
-    def createCommand(self, dropItem, dragItems, part):
+
+class OrderingDragAndDropCommand(DragAndDropCommand):
+    def doCommand(self, dropItem, dragItems, part, column):
+        command = super(OrderingDragAndDropCommand, self).doCommand(dropItem, dragItems, part, column)
+        if command is not None and command.isOrdering():
+            sortCommand = ViewerSortByCommand(viewer=self.viewer, value='ordering')
+            sortCommand.doCommand(None)
+
+
+class TaskDragAndDrop(OrderingDragAndDropCommand, TaskListCommand):
+    def createCommand(self, dropItem, dragItems, part, column):
         return command.DragAndDropTaskCommand(self.taskList, dragItems, 
-                                              drop=[dropItem], part=part)
+                                              drop=[dropItem], part=part,
+            column=column)
         
 
 class ToggleCategory(mixin_uicommand.NeedsSelectedCategorizableMixin, 
@@ -1825,10 +1835,11 @@ class CategoryNew(CategoriesCommand, settings_uicommand.SettingsCommand):
         newCategoryDialog.Show(show)
 
 
-class CategoryDragAndDrop(DragAndDropCommand, CategoriesCommand):
-    def createCommand(self, dropItem, dragItems, part):
+class CategoryDragAndDrop(OrderingDragAndDropCommand, CategoriesCommand):
+    def createCommand(self, dropItem, dragItems, part, column):
         return command.DragAndDropCategoryCommand(self.categories, dragItems, 
-                                                  drop=[dropItem], part=part)
+                                                  drop=[dropItem], part=part,
+            column=column)
 
 
 class NoteNew(NotesCommand, settings_uicommand.SettingsCommand, ViewerCommand):
@@ -1864,10 +1875,11 @@ class NewNoteWithSelectedCategories(NoteNew, ViewerCommand):
         return self.viewer.curselection()
 
 
-class NoteDragAndDrop(DragAndDropCommand, NotesCommand):
-    def createCommand(self, dropItem, dragItems, part):
+class NoteDragAndDrop(OrderingDragAndDropCommand, NotesCommand):
+    def createCommand(self, dropItem, dragItems, part, column):
         return command.DragAndDropNoteCommand(self.notes, dragItems, 
-                                              drop=[dropItem], part=part)
+                                              drop=[dropItem], part=part,
+            column=column)
  
                                                         
 class AttachmentNew(AttachmentsCommand, ViewerCommand, 

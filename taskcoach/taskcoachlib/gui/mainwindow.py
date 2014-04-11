@@ -141,7 +141,8 @@ class MainWindow(PowerStateMixin, BalloonTipManager,
         self._create_status_bar()
         self.__create_menu_bar()
         self.__create_reminder_controller()
-        
+        wx.CallAfter(self.viewer.componentsCreated)
+
     def _create_viewer_container(self):  # Not private for test purposes
         # pylint: disable=W0201
         self.viewer = viewer.ViewerContainer(self, self.settings) 

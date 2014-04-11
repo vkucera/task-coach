@@ -39,6 +39,7 @@ file names.''', 'https://taskcoach.uservoice.com/admin/forums/26465-desktop-vers
         Feature('''Efforts and notes are always enabled.'''),
         Feature('''Display categories in tooltip.''', 'https://taskcoach.uservoice.com/admin/forums/26465-desktop-version-windows-linux-mac-of-task-coach/suggestions/5727692-tooltips-for-grid-cells-with-too-long-contents-to'),
         Feature('''The tooltip is now always enabled.'''),
+        Feature('''Manual reordering of tasks, categories and notes.''', 'http://taskcoach.uservoice.com/forums/26465-desktop-version-windows-linux-mac-of-task-coach/suggestions/289031-better-control-over-task-order'),
         ],
     dependenciesChanged=[
         Dependency('''Minimal Twisted version is now 10.0.''')

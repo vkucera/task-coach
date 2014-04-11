@@ -88,7 +88,10 @@ class Viewer(patterns.Observer, wx.Panel):
         self.__freezeCount -= 1
         if self.__freezeCount == 0:
             self.refresh()
-        
+
+    def activate(self):
+        pass
+
     def domainObjectsToView(self):
         ''' Return the domain objects that this viewer should display. For
             global viewers this will be part of the task file, 
@@ -682,7 +685,13 @@ class ViewerWithColumns(Viewer):  # pylint: disable=W0223
         
     def hasHideableColumns(self):
         return True
-    
+
+    def hasOrderingColumn(self):
+        for column in self._columns:
+            if column.name() == 'ordering':
+                return True
+        return False
+
     def getColumnUICommands(self):
         if not self.__columnUICommands:
             self.__columnUICommands = self.createColumnUICommands()
@@ -776,7 +785,9 @@ class ViewerWithColumns(Viewer):  # pylint: disable=W0223
         columnWidths[column.name()] = width
         self.settings.setdict(self.settingsSection(), 'columnwidths', columnWidths)
                             
-    def getItemText(self, item, column=0):
+    def getItemText(self, item, column=None):
+        if column is None:
+            column = 1 if self.hasOrderingColumn() else 0
         column = self.visibleColumns()[column]
         return column.render(item)
     

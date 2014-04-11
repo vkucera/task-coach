@@ -195,7 +195,9 @@ class SortableViewerTest(test.TestCase):
 class SortableViewerForTasksTest(test.TestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
-        self.viewer = gui.viewer.mixin.SortableViewerForTasksMixin()
+        class ViewerUnderTest(gui.viewer.mixin.SortableViewerForTasksMixin):
+            viewerImages = []
+        self.viewer = ViewerUnderTest()
         self.viewer.settings = self.settings
         self.viewer.settingsSection = lambda: 'taskviewer'
         self.viewer.presentation = lambda: task.sorter.Sorter(task.TaskList())

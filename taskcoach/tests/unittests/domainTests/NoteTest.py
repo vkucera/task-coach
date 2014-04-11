@@ -100,7 +100,8 @@ class NoteTest(test.TestCase):
             children=self.note.children(), status=self.note.getStatus(), 
             fgColor=None, bgColor=None, font=None, icon='', selectedIcon='', 
             creationDateTime=self.note.creationDateTime(),
-            modificationDateTime=self.note.modificationDateTime()),
+            modificationDateTime=self.note.modificationDateTime(),
+            ordering=self.note.ordering()),
             self.note.__getstate__())
         
     def testSetState(self):
@@ -108,7 +109,7 @@ class NoteTest(test.TestCase):
             parent=None, children=[], status=42, attachments=[], categories=[],
             fgColor=(1, 1, 1, 1), bgColor=(0, 0, 0, 255), font=wx.SWISS_FONT,
             icon='icon', selectedIcon='selected', creationDateTime=date.Now(),
-            modificationDateTime=date.Now()))
+            modificationDateTime=date.Now(), ordering=42L))
         self.assertEqual('new', self.note.description())
 
 

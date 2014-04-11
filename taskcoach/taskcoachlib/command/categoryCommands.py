@@ -84,5 +84,5 @@ class DeleteCategoryCommand(base.DeleteCommand):
     singular_name = _('Delete category "%s"')
     
     
-class DragAndDropCategoryCommand(base.DragAndDropCommand):
+class DragAndDropCategoryCommand(base.OrderingDragAndDropCommand):
     plural_name = _('Drag and drop categories')

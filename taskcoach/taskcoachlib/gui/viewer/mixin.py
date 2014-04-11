@@ -236,10 +236,12 @@ class SortableViewerMixin(object):
         
     def sortBy(self, sortKey):
         if self.isSortedBy(sortKey):
-            self.setSortOrderAscending(not self.isSortOrderAscending())
+            self.setSortOrderAscending(sortKey == 'ordering' or not self.isSortOrderAscending())
         else:
             self.settings.set(self.settingsSection(), 'sortby', sortKey)
             self.presentation().sortBy(sortKey)
+            if sortKey == 'ordering':
+                self.setSortOrderAscending(True)
         
     def isSortedBy(self, sortKey):
         return sortKey == self.sortKey()
@@ -318,13 +320,31 @@ class SortableViewerForEffortMixin(SortableViewerMixin):
     def sortKey(self):
         ''' Efforts are always sorted by period at the moment. '''
         return 'period'
-        
 
-class SortableViewerForCategoriesMixin(SortableViewerMixin):
+
+class ManualOrderingMixin(object):
+    def __init__(self, *args, **kwargs):
+        if 'sort' not in self.viewerImages:
+            self.viewerImages = self.viewerImages + ['sort']
+        super(ManualOrderingMixin, self).__init__(*args, **kwargs)
+
+    def createSortByUICommands(self):
+        return [uicommand.ViewerSortByCommand(viewer=self, value='ordering',
+                        menuText=_('&Manual ordering'),
+                        helpText=self.sortByOrderingHelpText)] + super(ManualOrderingMixin, self).createSortByUICommands()
+
+    def orderingImageIndices(self, item):
+        index = self.imageIndex['sort']
+        return {wx.TreeItemIcon_Normal: index,
+                wx.TreeItemIcon_Expanded: index} 
+
+
+class SortableViewerForCategoriesMixin(ManualOrderingMixin, SortableViewerMixin):
     sortBySubjectHelpText = _('Sort categories by subject')
     sortByDescriptionHelpText = _('Sort categories by description')
     sortByCreationDateTimeHelpText = _('Sort categories by creation date')
     sortByModificationDateTimeHelpText = _('Sort categories by last modification date')
+    sortByOrderingHelpText = _('Sort categories manually')
 
 
 class SortableViewerForCategorizablesMixin(SortableViewerMixin):
@@ -346,21 +366,23 @@ class SortableViewerForAttachmentsMixin(SortableViewerForCategorizablesMixin):
     sortByModificationDateTimeHelpText = _('Sort attachments by last modification date')
 
 
-class SortableViewerForNotesMixin(SortableViewerForCategorizablesMixin):
+class SortableViewerForNotesMixin(ManualOrderingMixin, SortableViewerForCategorizablesMixin):
     sortBySubjectHelpText = _('Sort notes by subject')
     sortByDescriptionHelpText = _('Sort notes by description')
     sortByCategoryHelpText = _('Sort notes by category')
     sortByCreationDateTimeHelpText = _('Sort notes by creation date')
     sortByModificationDateTimeHelpText = _('Sort notes by last modification date')
+    sortByOrderingHelpText = _('Sort notes manually')
 
 
-class SortableViewerForTasksMixin(SortableViewerForCategorizablesMixin):
+class SortableViewerForTasksMixin(ManualOrderingMixin, SortableViewerForCategorizablesMixin):
     SorterClass = task.sorter.Sorter
     sortBySubjectHelpText = _('Sort tasks by subject')
     sortByDescriptionHelpText = _('Sort tasks by description')
     sortByCategoryHelpText = _('Sort tasks by category')
     sortByCreationDateTimeHelpText = _('Sort tasks by creation date')
     sortByModificationDateTimeHelpText = _('Sort tasks by last modification date')
+    sortByOrderingHelpText = _('Sort tasks manually')
 
     def __init__(self, *args, **kwargs):
         self.__sortKeyUnchangedCount = 0

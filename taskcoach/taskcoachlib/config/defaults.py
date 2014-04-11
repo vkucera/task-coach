@@ -28,6 +28,7 @@ defaults = {
     'customizabletoolbars_dnd': 'True',
     'filtershiftclick': 'True',
     'autosavehint': 'True',
+    'manualordering': 'True',
     },
 'view': {
     'statusbar': 'True',
@@ -86,8 +87,8 @@ defaults = {
     'searchdescription': 'False',
     'regularexpression': 'False',
     'columns': "['plannedStartDateTime', 'dueDateTime']",
-    'columnsalwaysvisible': "['subject']",
-    'columnwidths': "{'attachments': 28, 'notes': 28}",
+    'columnsalwaysvisible': "['ordering', 'subject']",
+    'columnwidths': "{'attachments': 28, 'notes': 28, 'ordering': 28}",
     'columnautoresizing': 'True',
     'hideinactivetasks': 'False',
     'hidelatetasks': 'False',
@@ -240,8 +241,8 @@ defaults = {
     'searchdescription': 'False',
     'regularexpression': 'False',
     'columns': "[]",
-    'columnsalwaysvisible': "['subject']",
-    'columnwidths': "{'attachments': 28, 'notes': 28}",
+    'columnsalwaysvisible': "['ordering', 'subject']",
+    'columnwidths': "{'attachments': 28, 'notes': 28, 'ordering': 28}",
     'columnautoresizing': 'True'
     },
 'categoryviewerintaskeditor': {
@@ -256,8 +257,8 @@ defaults = {
     'searchdescription': 'False',
     'regularexpression': 'False',
     'columns': "[]",
-    'columnsalwaysvisible': "['subject']",
-    'columnwidths': "{'attachments': 28, 'notes': 28}",
+    'columnsalwaysvisible': "['ordering', 'subject']",
+    'columnwidths': "{'attachments': 28, 'notes': 28, 'ordering': 28}",
     'columnautoresizing': 'True'
     },
 'categoryviewerinnoteeditor': {
@@ -272,8 +273,8 @@ defaults = {
     'searchdescription': 'False',
     'regularexpression': 'False',
     'columns': "[]",
-    'columnsalwaysvisible': "['subject']",
-    'columnwidths': "{'attachments': 28, 'notes': 28}",
+    'columnsalwaysvisible': "['ordering', 'subject']",
+    'columnwidths': "{'attachments': 28, 'notes': 28, 'ordering': 28}",
     'columnautoresizing': 'True'
     },
 'noteviewer': {
@@ -289,8 +290,8 @@ defaults = {
     'regularexpression': 'False',
     'columns': "['attachments', 'description', 'creationDateTime', \
                  'modificationDateTime']",
-    'columnsalwaysvisible': "['subject']",
-    'columnwidths': "{'attachments': 28, 'description': 200}",
+    'columnsalwaysvisible': "['ordering', 'subject']",
+    'columnwidths': "{'attachments': 28, 'description': 200, 'ordering': 28}",
     'columnautoresizing': 'True'
     },
 'noteviewerintaskeditor': {
@@ -300,8 +301,8 @@ defaults = {
     'sortcasesensitive': 'False',
     'columns': "['attachments', 'description', 'creationDateTime', \
                  'modificationDateTime']",
-    'columnsalwaysvisible': "['subject']",
-    'columnwidths': "{'attachments': 28, 'description': 200}",
+    'columnsalwaysvisible': "['ordering', 'subject']",
+    'columnwidths': "{'attachments': 28, 'description': 200, 'ordering': 28}",
     'columnautoresizing': 'True',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
@@ -315,8 +316,8 @@ defaults = {
     'sortascending': 'True',
     'sortcasesensitive': 'False',
     'columns': "['subject']",
-    'columnsalwaysvisible': "['subject']",
-    'columnwidths': "{}",
+    'columnsalwaysvisible': "['ordering', 'subject']",
+    'columnwidths': "{'ordering': 28}",
     'columnautoresizing': 'True',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
@@ -330,8 +331,8 @@ defaults = {
     'sortascending': 'True',
     'sortcasesensitive': 'False',
     'columns': "['subject']",
-    'columnsalwaysvisible': "['subject']",
-    'columnwidths': "{}",
+    'columnsalwaysvisible': "['ordering', 'subject']",
+    'columnwidths': "{'ordering': 28}",
     'columnautoresizing': 'True',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',

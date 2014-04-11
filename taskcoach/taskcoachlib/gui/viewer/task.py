@@ -874,6 +874,13 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
         pub.subscribe(self.onTreeListModeChanged, 
                       'settings.%s.treemode' % self.settingsSection())
 
+    def activate(self):
+        if hasattr(wx.GetTopLevelParent(self), 'AddBalloonTip'):
+            wx.GetTopLevelParent(self).AddBalloonTip(self.settings, 'manualordering', self.widget,
+                title=_('Manual ordering'),
+                getRect=lambda: wx.Rect(0, 0, 28, 16),
+                message=_('''Drag and drop items from this column to sort them arbitrarily.'''))
+
     def isTreeViewer(self):
         # We first ask our presentation what the mode is because 
         # ConfigParser.getboolean is a relatively expensive method. However,
@@ -906,7 +913,10 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
             uicommand.TaskDragAndDrop(taskList=self.presentation(), 
                                       viewer=self),
             itemPopupMenu, columnPopupMenu,
+            resizeableColumn=1 if self.hasOrderingColumn() else 0,
             **self.widgetCreationKeywordArguments())
+        if self.hasOrderingColumn():
+            widget.SetMainColumn(1)
         widget.AssignImageList(imageList)  # pylint: disable=E1101
         widget.Bind(wx.EVT_TREE_BEGIN_LABEL_EDIT, self.onBeginEdit)
         widget.Bind(wx.EVT_TREE_END_LABEL_EDIT, self.onEndEdit)
@@ -941,7 +951,15 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
     def _createColumns(self):
         kwargs = dict(resizeCallback=self.onResizeColumn)
         # pylint: disable=E1101,W0142
-        columns = [widgets.Column('subject', _('Subject'), 
+        columns = [
+            widgets.Column('ordering', u'',
+                task.Task.orderingChangedEventType(),
+                sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                    value='ordering'),
+                renderCallback=lambda task: '',
+                imageIndicesCallback=self.orderingImageIndices,
+                width=self.getColumnWidth('ordering')),
+            widgets.Column('subject', _('Subject'), 
                 task.Task.subjectChangedEventType(), 
                 task.Task.completionDateTimeChangedEventType(),
                 task.Task.dueDateTimeChangedEventType(),
