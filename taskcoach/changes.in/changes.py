@@ -31,6 +31,7 @@ first run.''', '1506'),
 of Twisted (<11).''', '1505'),
         Bugv2('''Fix Todo.txt export''', '1274'),
         Bugv2('''Performance improvements.'''),
+        Bugv2('''In some circumstances, balloon tips would not close.'''),
         ],
     featuresAdded=[
         Feature('''Always use "/" as path separator in relative attachment
