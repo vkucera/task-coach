@@ -57,7 +57,7 @@ class DeleteNoteCommand(base.DeleteCommand):
     singular_name = _('Delete note "%s"')
     
     
-class DragAndDropNoteCommand(base.DragAndDropCommand):
+class DragAndDropNoteCommand(base.OrderingDragAndDropCommand):
     plural_name = _('Drag and drop notes')
     singular_name = _('Drag and drop note "%s"')
 

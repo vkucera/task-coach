@@ -229,9 +229,11 @@ class TreeCtrlDragAndDropMixin(TreeHelperMixin):
                           wx.TR_HIDE_ROOT
         super(TreeCtrlDragAndDropMixin, self).__init__(*args, **kwargs)
         self.Bind(wx.EVT_TREE_BEGIN_DRAG, self.OnBeginDrag)
+        self._dragStartPos = None
+        self.GetMainWindow().Bind(wx.EVT_LEFT_DOWN, self._OnLeftDown)
         self._dragItems = []
 
-    def OnDrop(self, dropItem, dragItems, part):
+    def OnDrop(self, dropItem, dragItems, part, column):
         ''' This function must be overloaded in the derived class. dragItems 
         are the items being dragged by the user. dropItem is the item the 
         dragItems are dropped on. If the user doesn't drop the dragItems
@@ -245,13 +247,33 @@ class TreeCtrlDragAndDropMixin(TreeHelperMixin):
         ''' This method is called when the drag starts. It either allows the
         drag and starts it or it vetoes the drag when the the root item is one
         of the dragged items. '''
+        column = self._ColumnHitTest(self._dragStartPos)
         selections = self.GetSelections()
         self._dragItems = selections[:] if selections else [event.GetItem()] if event.GetItem() else []
+        self._dragColumn = column
         if self._dragItems and (self.GetRootItem() not in self._dragItems): 
             self.StartDragging()
             event.Allow()
         else:
             event.Veto()
+
+    def _OnLeftDown(self, event):
+        # event.GetPoint() in OnBeginDrag is totally off.
+        self._dragStartPos = wx.Point(event.GetX(), event.GetY())
+        event.Skip()
+
+    def _ColumnHitTest(self, point):
+        # Aaaand HitTest() returns -1 too often...
+        hwin = self.GetHeaderWindow()
+        x = 0
+        for j in xrange(self.GetColumnCount()):
+            if not hwin.IsColumnShown(j):
+                continue
+            w = hwin.GetColumnWidth(j)
+            if point.x >= x and point.x < x+w:
+                return j
+            x += w
+        return -1
 
     def OnEndDrag(self, event):
         self.StopDragging()
@@ -268,7 +290,7 @@ class TreeCtrlDragAndDropMixin(TreeHelperMixin):
                 part = -1
             elif flags & wx.TREE_HITTEST_ONITEMLOWERPART:
                 part = 1
-            self.OnDrop(dropTarget, self._dragItems, part)
+            self.OnDrop(dropTarget, self._dragItems, part, self._dragColumn)
         else:
             # Work around an issue with HyperTreeList. HyperTreeList will
             # restore the selection to the last item highlighted by the drag,

@@ -67,7 +67,10 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
             uicommand.Edit(viewer=self),
             uicommand.CategoryDragAndDrop(viewer=self, categories=self.presentation()),
             itemPopupMenu, columnPopupMenu,
+            resizeableColumn=1 if self.hasOrderingColumn() else 0,
             **self.widgetCreationKeywordArguments())
+        if self.hasOrderingColumn():
+            widget.SetMainColumn(1)
         widget.AssignImageList(imageList)  # pylint: disable=E1101
         return widget
 
@@ -78,7 +81,14 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
     def _createColumns(self):
         # pylint: disable=W0142,E1101
         kwargs = dict(resizeCallback=self.onResizeColumn)
-        columns = [widgets.Column('subject', _('Subject'), 
+        columns = [widgets.Column('ordering', u'',
+                       category.Category.orderingChangedEventType(),
+                       sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                           value='ordering'),
+                       imageIndicesCallback=self.orderingImageIndices,
+                       renderCallback=lambda category: '',
+                       width=self.getColumnWidth('ordering')),
+                   widgets.Column('subject', _('Subject'), 
                        category.Category.subjectChangedEventType(),  
                        sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                            value='subject'),

@@ -236,6 +236,8 @@ class XMLWriter(object):
             node.attrib['icon'] = str(item.icon())
         if item.selectedIcon():
             node.attrib['selectedIcon'] = str(item.selectedIcon())
+        if item.ordering():
+            node.attrib['ordering'] = str(item.ordering())
         return node
 
     def baseCompositeNode(self, parentNode, item, nodeName, childNodeFactory, childNodeFactoryArgs=()):
@@ -252,6 +254,8 @@ class XMLWriter(object):
             node.attrib['icon'] = str(item.icon())
         if item.selectedIcon():
             node.attrib['selectedIcon'] = str(item.selectedIcon())
+        if item.ordering():
+            node.attrib['ordering'] = str(item.ordering())
         if item.expandedContexts():
             node.attrib['expandedContexts'] = \
                      str(tuple(sorted(item.expandedContexts())))

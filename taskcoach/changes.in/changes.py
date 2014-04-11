@@ -31,6 +31,7 @@ first run.''', '1506'),
 of Twisted (<11).''', '1505'),
         Bugv2('''Fix Todo.txt export''', '1274'),
         Bugv2('''Performance improvements.'''),
+        Bugv2('''In some circumstances, balloon tips would not close.'''),
         ],
     featuresAdded=[
         Feature('''Always use "/" as path separator in relative attachment
@@ -39,6 +40,7 @@ file names.''', 'https://taskcoach.uservoice.com/admin/forums/26465-desktop-vers
         Feature('''Efforts and notes are always enabled.'''),
         Feature('''Display categories in tooltip.''', 'https://taskcoach.uservoice.com/admin/forums/26465-desktop-version-windows-linux-mac-of-task-coach/suggestions/5727692-tooltips-for-grid-cells-with-too-long-contents-to'),
         Feature('''The tooltip is now always enabled.'''),
+        Feature('''Manual reordering of tasks, categories and notes.''', 'http://taskcoach.uservoice.com/forums/26465-desktop-version-windows-linux-mac-of-task-coach/suggestions/289031-better-control-over-task-order'),
         ],
     dependenciesChanged=[
         Dependency('''Minimal Twisted version is now 10.0.''')

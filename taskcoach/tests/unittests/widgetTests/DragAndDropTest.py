@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import test, wx
 from taskcoachlib.widgets import treectrl
 
 
@@ -55,16 +55,19 @@ class TreeCtrlDragAndDropMixinTest(test.wxTestCase):
         
     def testEventIsVetoedWhenDragBeginsWithoutItem(self): 
         event = DummyEvent()
+        self.treeCtrl._dragStartPos = wx.Point(0, 0)
         self.treeCtrl.OnBeginDrag(event)
         self.assertEventIsVetoed(event)
         
     def testEventIsAllowedWhenDragBeginsWithItem(self):
         event = DummyEvent(self.item)
+        self.treeCtrl._dragStartPos = wx.Point(0, 0)
         self.treeCtrl.OnBeginDrag(event)
         self.assertEventIsAllowed(event)
         
     def testEventIsAllowedWhenDragBeginWithSelectedItem(self):
         self.treeCtrl.SelectItem(self.item)
         event = DummyEvent(self.item)
+        self.treeCtrl._dragStartPos = wx.Point(0, 0)
         self.treeCtrl.OnBeginDrag(event)
         self.assertEventIsAllowed(event)

@@ -60,7 +60,8 @@ class CategoryTest(test.TestCase):
                         attachments=[], filtered=True, exclusiveSubcategories=True,
                         icon='icon', selectedIcon='selected',
                         creationDateTime=date.Now(), 
-                        modificationDateTime=date.Now())
+                        modificationDateTime=date.Now(),
+                        ordering=42L)
         for eventType in self.category.modificationEventTypes():
             self.registerObserver(eventType)
         self.category.__setstate__(newState)

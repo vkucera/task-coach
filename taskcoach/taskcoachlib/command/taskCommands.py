@@ -57,31 +57,20 @@ class EffortCommand(base.BaseCommand):  # pylint: disable=W0223
         self.stopTracking()
 
 
-class DragAndDropTaskCommand(base.DragAndDropCommand):
+class DragAndDropTaskCommand(base.OrderingDragAndDropCommand):
     plural_name = _('Drag and drop tasks')
-
-    def __init__(self, *args, **kwargs):
-        self.__part = kwargs.pop('part', 0)
-        super(DragAndDropTaskCommand, self).__init__(*args, **kwargs)
 
     def getItemsToSave(self):
         toSave = super(DragAndDropTaskCommand, self).getItemsToSave()
-        if self.__part != 0:
+        if self.part != 0:
             toSave.extend(self.getSiblings())
-        return toSave        
-
-    def getSiblings(self):
-        siblings = []
-        for item in self.list:
-            if item.parent() == self._itemToDropOn.parent() and item not in self.items:
-                siblings.append(item)
-        return siblings
+        return list(set(toSave)) # Because parent may have added siblings as well
 
     def do_command(self):
-        if self.__part == 0:
+        if self.part == 0 or self.isOrdering():
             super(DragAndDropTaskCommand, self).do_command()
         else:
-            if self.__part == -1:
+            if self.part == -1:
                 # Up part. Add dropped items as prerequisites of dropped on item.
                 self._itemToDropOn.addPrerequisites(self.items)
                 self._itemToDropOn.addTaskAsDependencyOf(self.items)
@@ -92,9 +81,9 @@ class DragAndDropTaskCommand(base.DragAndDropCommand):
                     item.addTaskAsDependencyOf([self._itemToDropOn])
 
     def undo_command(self):
-        if self.__part == 0:
+        if self.part == 0 or self.isOrdering():
             super(DragAndDropTaskCommand, self).undo_command()
-        elif self.__part == -1:
+        elif self.part == -1:
             self._itemToDropOn.removePrerequisites(self.items)
             self._itemToDropOn.removeTaskAsDependencyOf(self.items)
         else:
@@ -103,9 +92,9 @@ class DragAndDropTaskCommand(base.DragAndDropCommand):
                 item.removeTaskAsDependencyOf([self._itemToDropOn])
 
     def redo_command(self):
-        if self.__part == 0:
+        if self.part == 0 or self.isOrdering():
             super(DragAndDropTaskCommand, self).redo_command()
-        elif self.__part == -1:
+        elif self.part == -1:
             self._itemToDropOn.addPrerequisites(self.items)
             self._itemToDropOn.addTaskAsDependencyOf(self.items)
         else:

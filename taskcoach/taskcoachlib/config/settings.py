@@ -163,6 +163,10 @@ class Settings(object, CachingConfigParser):
         # Starting with release 1.1.0, the date properties of tasks (startDate,
         # dueDate and completionDate) are datetimes: 
         taskDateColumns = ('startDate', 'dueDate', 'completionDate')
+        orderingViewers = ['taskviewer', 'categoryviewer', 'noteviewer',
+                           'noteviewerintaskeditor', 'noteviewerincategoryeditor',
+                           'noteviewerinattachmenteditor', 'categoryviewerintaskeditor',
+                           'categoryviewerinnoteeditor']
         if option == 'sortby' and result in taskDateColumns:
             result += 'Time'
         elif option == 'columns':
@@ -178,11 +182,22 @@ class Settings(object, CachingConfigParser):
                 if column in taskDateColumns:
                     column += 'Time'
                 widths[column] = width
+            if section in orderingViewers and 'ordering' not in widths:
+                widths['ordering'] = 38
             result = str(widths)
         elif section == 'feature' and option == 'notifier' and result == 'Native':
             result = 'Task Coach'
         elif section == 'editor' and option == 'preferencespages':
             result = result.replace('colors', 'appearance')
+        elif section in orderingViewers and option == 'columnsalwaysvisible':
+            try:
+                columns = eval(result)
+            except SyntaxError:
+                columns = ['ordering', 'subject']
+            else:
+                if 'ordering' not in columns:
+                    columns.insert(0, 'ordering')
+            result = str(columns)
         if result != original:
             super(Settings, self).set(section, option, result)
         return result

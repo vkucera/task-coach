@@ -362,7 +362,8 @@ class XMLReader(object):
                                      None),
             font=self.__parse_font_description(node.attrib.get('font', '')),
             icon=self.__parse_icon(node.attrib.get('icon', '')),
-            selectedIcon=self.__parse_icon(node.attrib.get('selectedIcon', '')))
+            selectedIcon=self.__parse_icon(node.attrib.get('selectedIcon', '')),
+            ordering=long(node.attrib.get('ordering', '0L')))
 
         if self.__tskversion <= 20:
             attributes['attachments'] = \

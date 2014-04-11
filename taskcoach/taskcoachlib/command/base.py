@@ -366,6 +366,71 @@ class DragAndDropCommand(BaseCommand, SaveStateMixin, CompositeMixin):
         self.list.extend(self.items)
 
 
+class OrderingDragAndDropCommand(DragAndDropCommand):
+    def __init__(self, *args, **kwargs):
+        self.column = kwargs.pop('column', None)
+        self.part = kwargs.pop('part', 0)
+        super(OrderingDragAndDropCommand, self).__init__(*args, **kwargs)
+
+    def isOrdering(self):
+        return self.column is not None and self.column.name() == 'ordering'
+
+    def getSiblings(self):
+        siblings = []
+        for item in self.list:
+            if item.parent() == self._itemToDropOn.parent() and item not in self.items:
+                siblings.append(item)
+        return siblings
+
+    def getItemsToSave(self):
+        items = super(OrderingDragAndDropCommand, self).getItemsToSave()
+        if self.isOrdering():
+            items.extend(self.getSiblings())
+        return items
+
+    def do_command(self):
+        if self.isOrdering():
+            siblings = self.getSiblings()
+            self.list.removeItems(self.items)
+            for item in self.items:
+                item.setParent(self._itemToDropOn.parent())
+
+            orderings = [item.ordering() for item in self.items]
+            minOrdering = min(orderings)
+            maxOrdering = max(orderings)
+
+            insertIndex = siblings.index(self._itemToDropOn) + (self.part + 1) // 2
+
+            # Simple special cases
+            if insertIndex == 0:
+                minOrderingOfSiblings = min([item.ordering() for item in siblings])
+                for item in self.items:
+                    item.setOrdering(item.ordering() - maxOrdering + minOrderingOfSiblings - 1)
+            elif insertIndex == len(siblings):
+                maxOrderingOfSiblings = max([item.ordering() for item in siblings])
+                for item in self.items:
+                    item.setOrdering(item.ordering() - minOrdering + maxOrderingOfSiblings + 1)
+            else:
+                maxOrderingOfPreviousSiblings = max([item.ordering() for idx, item in enumerate(siblings) if idx < insertIndex])
+                minOrderingOfPreviousSiblings = min([item.ordering() for idx, item in enumerate(siblings) if idx < insertIndex])
+                maxOrderingOfNextSiblings = max([item.ordering() for idx, item in enumerate(siblings) if idx >= insertIndex])
+                minOrderingOfNextSiblings = min([item.ordering() for idx, item in enumerate(siblings) if idx >= insertIndex])
+                if insertIndex < len(siblings) // 2:
+                    for item in self.items:
+                        item.setOrdering(item.ordering() - maxOrdering - 1 + minOrderingOfNextSiblings)
+                    for item in siblings[:insertIndex]:
+                        item.setOrdering(item.ordering() - maxOrderingOfPreviousSiblings - 1 + minOrdering - maxOrdering - 1 + minOrderingOfNextSiblings)
+                else:
+                    for item in self.items:
+                        item.setOrdering(item.ordering() - minOrdering + 1 + maxOrderingOfPreviousSiblings)
+                    for item in siblings[insertIndex:]:
+                        item.setOrdering(item.ordering() - minOrderingOfNextSiblings + 1 + maxOrdering - minOrdering + 1 + maxOrderingOfPreviousSiblings)
+
+            self.list.extend(self.items)
+        else:
+            super(OrderingDragAndDropCommand, self).do_command()
+
+
 class EditSubjectCommand(BaseCommand):
     plural_name = _('Edit subjects')
     singular_name = _('Edit subject "%s"')

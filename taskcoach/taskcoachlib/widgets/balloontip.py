@@ -170,6 +170,9 @@ class BalloonTipManager(object):
 
     def AddBalloonTip(self, target, message=None, title=None, bitmap=None, getRect=None, **kwargs):
         """Schedules a tip. Extra keyword arguments will be passed to L{OnBalloonTipShow} and L{OnBalloonTipClosed}."""
+        for eTarget, eMessage, eTitle, eBitmap, eGetRect, eArgs in self.__tips:
+            if (eTitle, eMessage) == (title, message):
+                return
         self.__tips.append((target, message, title, bitmap, getRect, kwargs))
         self.__Try()
 

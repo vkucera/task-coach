@@ -66,7 +66,10 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
             uicommand.Edit(viewer=self),
             uicommand.NoteDragAndDrop(viewer=self, notes=self.presentation()),
             itemPopupMenu, columnPopupMenu,
+            resizeableColumn=1 if self.hasOrderingColumn() else 0,
             **self.widgetCreationKeywordArguments())
+        if self.hasOrderingColumn():
+            widget.SetMainColumn(1)
         widget.AssignImageList(imageList)  # pylint: disable=E1101
         return widget
     
@@ -102,6 +105,15 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                 setting='modificationDateTime', viewer=self)]
 
     def _createColumns(self):
+        orderingColumn = widgets.Column('ordering', u'',
+            width=self.getColumnWidth('ordering'),
+            resizeCallback=self.onResizeColumn,
+            renderCallback=lambda note: '',
+            imageIndicesCallback=self.orderingImageIndices,
+            sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                value='ordering', menuText=_('&Manual ordering'),
+                helpText=_('Sort notes manually')))
+        # XXXCHECK editCallback & co
         subjectColumn = widgets.Column('subject', _('Subject'), 
             width=self.getColumnWidth('subject'), 
             resizeCallback=self.onResizeColumn,
@@ -156,7 +168,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                 value='modificationDateTime', menuText=_('&Modification date'),
                 helpText=_('Sort notes by last modification date')),
             *note.Note.modificationEventTypes())
-        return [subjectColumn, descriptionColumn, attachmentsColumn, 
+        return [orderingColumn, subjectColumn, descriptionColumn, attachmentsColumn, 
                 categoriesColumn, creationDateTimeColumn, 
                 modificationDateTimeColumn]
 

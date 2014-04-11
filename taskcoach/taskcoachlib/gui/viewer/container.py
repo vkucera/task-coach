@@ -34,11 +34,15 @@ class ViewerContainer(object):
         
     def __init__(self, containerWidget, settings, *args, **kwargs):
         self.containerWidget = containerWidget
+        self._notifyActiveViewer = False
         self.__bind_event_handlers()
         self._settings = settings
         self.viewers = []
         super(ViewerContainer, self).__init__(*args, **kwargs)
-        
+
+    def componentsCreated(self):
+        self._notifyActiveViewer = True
+
     def advanceSelection(self, forward):
         ''' Activate the next viewer if forward is true else the previous 
             viewer. '''
@@ -122,6 +126,8 @@ class ViewerContainer(object):
     def onPageChanged(self, event):
         self.__ensure_active_viewer_has_focus()
         self.sendViewerStatusEvent()
+        if self._notifyActiveViewer and self.activeViewer() is not None:
+            self.activeViewer().activate()
         event.Skip()
     
     def sendViewerStatusEvent(self):
