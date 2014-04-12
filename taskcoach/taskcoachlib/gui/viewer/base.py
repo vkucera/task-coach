@@ -812,6 +812,10 @@ class ViewerWithColumns(Viewer):  # pylint: disable=W0223
 
         # If they are, only allow drag at the same level
         if dragItems[0].parent() != (None if dropItem is None else dropItem.parent()):
+            wx.GetTopLevelParent(self).AddBalloonTip(self.settings, 'treechildrenmanualordering', self,
+                title=_('Reordering in tree mode'),
+                getRect=lambda: wx.Rect(0, 0, 28, 16),
+                message=_('''When in tree mode, you can only put objects at the same level (parent).'''))
             return False
 
         return True

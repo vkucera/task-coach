@@ -30,6 +30,7 @@ defaults = {
     'autosavehint': 'True',
     'manualordering': 'True',
     'treemanualordering': 'True',
+    'treechildrenmanualordering': 'True',
     },
 'view': {
     'statusbar': 'True',
