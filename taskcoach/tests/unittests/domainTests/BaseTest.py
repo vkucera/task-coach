@@ -225,7 +225,7 @@ class ObjectTest(test.TestCase):
                               bgColor=None, font=None, icon='', selectedIcon='', 
                               creationDateTime=self.object.creationDateTime(),
                               modificationDateTime=self.object.modificationDateTime(),
-                              ordering=0L),
+                              ordering=self.object.ordering()),
                          self.object.__getstate__())
 
     def testSetState(self):
@@ -235,7 +235,7 @@ class ObjectTest(test.TestCase):
                         icon='icon', selectedIcon='selectedIcon',
                         creationDateTime=date.DateTime(2012, 12, 12, 12, 0, 0),
                         modificationDateTime=date.DateTime(2012, 12, 12, 12, 1, 0),
-                        ordering=42)
+                        ordering=42L)
         self.object.__setstate__(newState)
         self.assertEqual(newState, self.object.__getstate__())
         
@@ -246,7 +246,7 @@ class ObjectTest(test.TestCase):
                         icon='icon', selectedIcon='selectedIcon',
                         creationDateTime=date.DateTime(2013, 1, 1, 0, 0, 0),
                         modificationDateTime=date.DateTime(2013, 1, 1, 1, 0, 0),
-                        ordering=42)
+                        ordering=42L)
         self.object.__setstate__(newState)
         self.assertEqual(1, len(self.eventsReceived))
         

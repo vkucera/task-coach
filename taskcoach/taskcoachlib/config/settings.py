@@ -183,20 +183,23 @@ class Settings(object, CachingConfigParser):
                     column += 'Time'
                 widths[column] = width
             if section in orderingViewers and 'ordering' not in widths:
-                widths['ordering'] = 38
+                widths['ordering'] = 28
             result = str(widths)
         elif section == 'feature' and option == 'notifier' and result == 'Native':
             result = 'Task Coach'
         elif section == 'editor' and option == 'preferencespages':
             result = result.replace('colors', 'appearance')
         elif section in orderingViewers and option == 'columnsalwaysvisible':
+            # XXX: remove 'ordering' from always visible columns. This wasn't in any official release
+            # but I need it so that people can test without resetting their .ini file...
+            # Remove this after the 1.3.38 release.
             try:
                 columns = eval(result)
             except SyntaxError:
-                columns = ['ordering', 'subject']
+                columns = ['ordering']
             else:
-                if 'ordering' not in columns:
-                    columns.insert(0, 'ordering')
+                if 'ordering' in columns:
+                    columns.remove('ordering')
             result = str(columns)
         if result != original:
             super(Settings, self).set(section, option, result)

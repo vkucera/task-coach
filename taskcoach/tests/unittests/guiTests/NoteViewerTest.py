@@ -51,7 +51,7 @@ class NoteViewerTest(test.wxTestCase):
     def testShowDescriptionColumn(self):
         self.note.setDescription('Description')
         self.viewer.showColumnByName('description')
-        self.assertEqual('Description', self.firstItemText(column=2))
+        self.assertEqual('Description', self.firstItemText(column=1))
 
     def testShowCategoriesColumn(self):
         newCategory = category.Category('Category')
@@ -59,12 +59,12 @@ class NoteViewerTest(test.wxTestCase):
         self.note.addCategory(newCategory)
         newCategory.addCategorizable(self.note)
         self.viewer.showColumnByName('categories')
-        self.assertEqual('Category', self.firstItemText(column=4))
+        self.assertEqual('Category', self.firstItemText(column=3))
         
     def testShowAttachmentColumn(self):
         self.note.addAttachments(attachment.FileAttachment('whatever'))
         self.assertEqual(self.viewer.imageIndex['paperclip_icon'], 
-                         self.firstItemIcon(column=3))
+                         self.firstItemIcon(column=2))
 
     def testFilterOnAllCategories(self):
         cat1 = category.Category('category 1')

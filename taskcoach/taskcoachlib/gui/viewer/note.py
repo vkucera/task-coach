@@ -72,6 +72,12 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
             widget.SetMainColumn(1)
         widget.AssignImageList(imageList)  # pylint: disable=E1101
         return widget
+
+    def showColumn(self, column, show=True, *args, **kwargs):
+        if column.name() == 'ordering':
+            self.widget.SetResizeColumn(1 if show else 0)
+            self.widget.SetMainColumn(1 if show else 0)
+        super(BaseNoteViewer, self).showColumn(column, show, *args, **kwargs)
     
     def createFilter(self, notes):
         notes = super(BaseNoteViewer, self).createFilter(notes)
@@ -88,6 +94,9 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
             uicommand.ToggleAutoColumnResizing(viewer=self,
                                                settings=self.settings),
             None,
+            uicommand.ViewColumn(menuText=_('&Manual ordering'),
+                helpText=_('Show/hide the manual ordering column'),
+                setting='ordering', viewer=self),
             uicommand.ViewColumn(menuText=_('&Description'),
                 helpText=_('Show/hide description column'),
                 setting='description', viewer=self),

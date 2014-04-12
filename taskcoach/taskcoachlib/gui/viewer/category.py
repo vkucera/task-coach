@@ -74,6 +74,12 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
         widget.AssignImageList(imageList)  # pylint: disable=E1101
         return widget
 
+    def showColumn(self, column, show=True, *args, **kwargs):
+        if column.name() == 'ordering':
+            self.widget.SetResizeColumn(1 if show else 0)
+            self.widget.SetMainColumn(1 if show else 0)
+        super(BaseCategoryViewer, self).showColumn(column, show, *args, **kwargs)
+
     def createCategoryPopupMenu(self, localOnly=False):
         return menu.CategoryPopupMenu(self.parent, self.settings, self.taskFile,
                                       self, localOnly)
@@ -142,6 +148,9 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
             uicommand.ToggleAutoColumnResizing(viewer=self,
                                                settings=self.settings),
             None,
+            uicommand.ViewColumn(menuText=_('&Manual ordering'),
+                helpText=_('Show/hide the manual ordering column'),
+                setting='ordering', viewer=self),
             uicommand.ViewColumn(menuText=_('&Description'),
                 helpText=_('Show/hide description column'),
                 setting='description', viewer=self),

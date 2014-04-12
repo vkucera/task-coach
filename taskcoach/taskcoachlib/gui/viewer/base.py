@@ -687,7 +687,7 @@ class ViewerWithColumns(Viewer):  # pylint: disable=W0223
         return True
 
     def hasOrderingColumn(self):
-        for column in self._columns:
+        for column in self.__visibleColumns:
             if column.name() == 'ordering':
                 return True
         return False

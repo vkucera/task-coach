@@ -879,7 +879,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
             wx.GetTopLevelParent(self).AddBalloonTip(self.settings, 'manualordering', self.widget,
                 title=_('Manual ordering'),
                 getRect=lambda: wx.Rect(0, 0, 28, 16),
-                message=_('''Drag and drop items from this column to sort them arbitrarily.'''))
+                message=_('''Show the "Manual ordering" column, then drag and drop items from this column to sort them arbitrarily.'''))
 
     def isTreeViewer(self):
         # We first ask our presentation what the mode is because 
@@ -892,13 +892,16 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
             return self.settings.getboolean(self.settingsSection(), 'treemode')
 
     def showColumn(self, column, show=True, *args, **kwargs):
-        super(TaskViewer, self).showColumn(column, show, *args, **kwargs)
         if column.name() == 'timeLeft':
             if show:
                 self.minuteRefresher.startClock()
             else:
                 self.minuteRefresher.stopClock()
-                            
+        elif column.name() == 'ordering':
+            self.widget.SetResizeColumn(1 if show else 0)
+            self.widget.SetMainColumn(1 if show else 0)
+        super(TaskViewer, self).showColumn(column, show, *args, **kwargs)
+
     def curselectionIsInstanceOf(self, class_):
         return class_ == task.Task
     
@@ -1174,6 +1177,9 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                  helpText=_('Show/hide revenue column'),
                  setting='revenue', viewer=self))])
         commands.extend([
+            uicommand.ViewColumn(menuText=_('&Manual ordering'),
+                helpText=_('Show/hide the manual ordering column'),
+                setting='ordering', viewer=self),
             uicommand.ViewColumn(menuText=_('&Description'),
                 helpText=_('Show/hide description column'),
                 setting='description', viewer=self),
