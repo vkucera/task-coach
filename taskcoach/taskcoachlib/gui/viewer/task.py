@@ -897,9 +897,6 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                 self.minuteRefresher.startClock()
             else:
                 self.minuteRefresher.stopClock()
-        elif column.name() == 'ordering':
-            self.widget.SetResizeColumn(1 if show else 0)
-            self.widget.SetMainColumn(1 if show else 0)
         super(TaskViewer, self).showColumn(column, show, *args, **kwargs)
 
     def curselectionIsInstanceOf(self, class_):
@@ -917,6 +914,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                                       viewer=self),
             itemPopupMenu, columnPopupMenu,
             resizeableColumn=1 if self.hasOrderingColumn() else 0,
+            validateDrag=self.validateDrag,
             **self.widgetCreationKeywordArguments())
         if self.hasOrderingColumn():
             widget.SetMainColumn(1)
@@ -924,7 +922,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
         widget.Bind(wx.EVT_TREE_BEGIN_LABEL_EDIT, self.onBeginEdit)
         widget.Bind(wx.EVT_TREE_END_LABEL_EDIT, self.onEndEdit)
         return widget
-    
+
     def onBeginEdit(self, event):
         ''' Make sure only the non-recursive part of the subject can be
             edited inline. '''

@@ -29,6 +29,7 @@ defaults = {
     'filtershiftclick': 'True',
     'autosavehint': 'True',
     'manualordering': 'True',
+    'treemanualordering': 'True',
     },
 'view': {
     'statusbar': 'True',

@@ -398,7 +398,8 @@ class ObjectTest(test.TestCase):
     def testModificationEventTypes(self):
         self.assertEqual([self.object.subjectChangedEventType(),
                           self.object.descriptionChangedEventType(),
-                          self.object.appearanceChangedEventType()],
+                          self.object.appearanceChangedEventType(),
+                          self.object.orderingChangedEventType()],
                          self.object.modificationEventTypes())
 
 
@@ -671,6 +672,7 @@ class CompositeObjectTest(test.TestCase):
                           self.compositeObject.subjectChangedEventType(),
                           self.compositeObject.descriptionChangedEventType(),
                           self.compositeObject.appearanceChangedEventType(),
+                          self.compositeObject.orderingChangedEventType(),
                           self.compositeObject.expansionChangedEventType()], 
                          self.compositeObject.modificationEventTypes())
 

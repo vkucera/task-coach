@@ -68,17 +68,12 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
             uicommand.CategoryDragAndDrop(viewer=self, categories=self.presentation()),
             itemPopupMenu, columnPopupMenu,
             resizeableColumn=1 if self.hasOrderingColumn() else 0,
+            validateDrag=self.validateDrag,
             **self.widgetCreationKeywordArguments())
         if self.hasOrderingColumn():
             widget.SetMainColumn(1)
         widget.AssignImageList(imageList)  # pylint: disable=E1101
         return widget
-
-    def showColumn(self, column, show=True, *args, **kwargs):
-        if column.name() == 'ordering':
-            self.widget.SetResizeColumn(1 if show else 0)
-            self.widget.SetMainColumn(1 if show else 0)
-        super(BaseCategoryViewer, self).showColumn(column, show, *args, **kwargs)
 
     def createCategoryPopupMenu(self, localOnly=False):
         return menu.CategoryPopupMenu(self.parent, self.settings, self.taskFile,

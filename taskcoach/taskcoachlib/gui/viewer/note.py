@@ -67,17 +67,12 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
             uicommand.NoteDragAndDrop(viewer=self, notes=self.presentation()),
             itemPopupMenu, columnPopupMenu,
             resizeableColumn=1 if self.hasOrderingColumn() else 0,
+            validateDrag=self.validateDrag,
             **self.widgetCreationKeywordArguments())
         if self.hasOrderingColumn():
             widget.SetMainColumn(1)
         widget.AssignImageList(imageList)  # pylint: disable=E1101
         return widget
-
-    def showColumn(self, column, show=True, *args, **kwargs):
-        if column.name() == 'ordering':
-            self.widget.SetResizeColumn(1 if show else 0)
-            self.widget.SetMainColumn(1 if show else 0)
-        super(BaseNoteViewer, self).showColumn(column, show, *args, **kwargs)
     
     def createFilter(self, notes):
         notes = super(BaseNoteViewer, self).createFilter(notes)

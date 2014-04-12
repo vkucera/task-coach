@@ -729,6 +729,10 @@ class ViewerWithColumns(Viewer):  # pylint: disable=W0223
                 break
 
     def showColumn(self, column, show=True, refresh=True):
+        if column.name() == 'ordering':
+            self.widget.SetResizeColumn(1 if show else 0)
+            self.widget.SetMainColumn(1 if show else 0)
+
         if show:
             self.__visibleColumns.append(column)
             # Make sure we keep the columns in the right order:
@@ -777,14 +781,38 @@ class ViewerWithColumns(Viewer):  # pylint: disable=W0223
     def getColumnWidth(self, columnName):
         columnWidths = self.settings.getdict(self.settingsSection(),
                                              'columnwidths')
-        defaultWidth = hypertreelist._DEFAULT_COL_WIDTH  # pylint: disable=W0212
+        defaultWidth = 28 if columnName == 'ordering' else hypertreelist._DEFAULT_COL_WIDTH  # pylint: disable=W0212
         return columnWidths.get(columnName, defaultWidth)
 
     def onResizeColumn(self, column, width):
         columnWidths = self.settings.getdict(self.settingsSection(), 'columnwidths')
         columnWidths[column.name()] = width
         self.settings.setdict(self.settingsSection(), 'columnwidths', columnWidths)
-                            
+
+    def validateDrag(self, dropItem, dragItems, columnIndex):
+        if columnIndex == -1 or self.visibleColumns()[columnIndex].name() != 'ordering':
+            print '== NORM'
+            return None # Normal behavior
+
+        # Ordering
+
+        if not self.isTreeViewer():
+            return True
+
+        # Tree mode. Only allow drag if all selected items are siblings.
+        if len(set([item.parent() for item in dragItems])) >= 2:
+            wx.GetTopLevelParent(self).AddBalloonTip(self.settings, 'treemanualordering', self,
+                title=_('Reordering in tree mode'),
+                getRect=lambda: wx.Rect(0, 0, 28, 16),
+                message=_('''When in tree mode, manual ordering is only possible when all selected items are siblings.'''))
+            return False
+
+        # If they are, only allow drag at the same level
+        if dragItems[0].parent() != (None if dropItem is None else dropItem.parent()):
+            return False
+
+        return True
+
     def getItemText(self, item, column=None):
         if column is None:
             column = 1 if self.hasOrderingColumn() else 0

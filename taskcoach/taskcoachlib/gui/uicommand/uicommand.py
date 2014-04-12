@@ -1404,12 +1404,12 @@ class DragAndDropCommand(ViewerCommand):
         self.doCommand(dropItem, dragItems, part, None if column == -1 else self.viewer.visibleColumns()[column])
 
     def doCommand(self, dropItem, dragItems, part, column):  # pylint: disable=W0221
-        dragAndDropCommand = self.createCommand(dropItem=dropItem, dragItems=dragItems, part=part, column=column)
+        dragAndDropCommand = self.createCommand(dropItem=dropItem, dragItems=dragItems, part=part, column=column, isTree=self.viewer.isTreeViewer())
         if dragAndDropCommand.canDo():
             dragAndDropCommand.do()
             return dragAndDropCommand
 
-    def createCommand(self, dropItem, dragItems, part):
+    def createCommand(self, dropItem, dragItems, part, isTree):
         raise NotImplementedError  # pragma: no cover
 
 
@@ -1422,10 +1422,10 @@ class OrderingDragAndDropCommand(DragAndDropCommand):
 
 
 class TaskDragAndDrop(OrderingDragAndDropCommand, TaskListCommand):
-    def createCommand(self, dropItem, dragItems, part, column):
+    def createCommand(self, dropItem, dragItems, part, column, isTree):
         return command.DragAndDropTaskCommand(self.taskList, dragItems, 
                                               drop=[dropItem], part=part,
-            column=column)
+            column=column, isTree=isTree)
         
 
 class ToggleCategory(mixin_uicommand.NeedsSelectedCategorizableMixin, 
@@ -1836,10 +1836,10 @@ class CategoryNew(CategoriesCommand, settings_uicommand.SettingsCommand):
 
 
 class CategoryDragAndDrop(OrderingDragAndDropCommand, CategoriesCommand):
-    def createCommand(self, dropItem, dragItems, part, column):
+    def createCommand(self, dropItem, dragItems, part, column, isTree):
         return command.DragAndDropCategoryCommand(self.categories, dragItems, 
                                                   drop=[dropItem], part=part,
-            column=column)
+            column=column, isTree=isTree)
 
 
 class NoteNew(NotesCommand, settings_uicommand.SettingsCommand, ViewerCommand):
@@ -1876,10 +1876,10 @@ class NewNoteWithSelectedCategories(NoteNew, ViewerCommand):
 
 
 class NoteDragAndDrop(OrderingDragAndDropCommand, NotesCommand):
-    def createCommand(self, dropItem, dragItems, part, column):
+    def createCommand(self, dropItem, dragItems, part, column, isTree):
         return command.DragAndDropNoteCommand(self.notes, dragItems, 
                                               drop=[dropItem], part=part,
-            column=column)
+            column=column, isTree=isTree)
  
                                                         
 class AttachmentNew(AttachmentsCommand, ViewerCommand, 

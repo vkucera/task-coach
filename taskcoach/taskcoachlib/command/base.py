@@ -369,6 +369,7 @@ class DragAndDropCommand(BaseCommand, SaveStateMixin, CompositeMixin):
 class OrderingDragAndDropCommand(DragAndDropCommand):
     def __init__(self, *args, **kwargs):
         self.column = kwargs.pop('column', None)
+        self.isTreeMode = kwargs.pop('isTree', True)
         self.part = kwargs.pop('part', 0)
         super(OrderingDragAndDropCommand, self).__init__(*args, **kwargs)
 
@@ -382,18 +383,26 @@ class OrderingDragAndDropCommand(DragAndDropCommand):
                 siblings.append(item)
         return siblings
 
+    def getOrderingSiblings(self):
+        if self.isTreeMode:
+            return self.getSiblings()
+        # Everything, almost
+        return [item for item in self.list if item not in self.items]
+
     def getItemsToSave(self):
         items = super(OrderingDragAndDropCommand, self).getItemsToSave()
         if self.isOrdering():
-            items.extend(self.getSiblings())
+            items.extend(self.getOrderingSiblings())
         return items
+
+    def canDo(self):
+        if self.isOrdering():
+            return True # Already checked when drag and droppin
+        return super(OrderingDragAndDropCommand, self).canDo()
 
     def do_command(self):
         if self.isOrdering():
-            siblings = self.getSiblings()
-            self.list.removeItems(self.items)
-            for item in self.items:
-                item.setParent(self._itemToDropOn.parent())
+            siblings = self.getOrderingSiblings()
 
             orderings = [item.ordering() for item in self.items]
             minOrdering = min(orderings)
@@ -425,8 +434,6 @@ class OrderingDragAndDropCommand(DragAndDropCommand):
                         item.setOrdering(item.ordering() - minOrdering + 1 + maxOrderingOfPreviousSiblings)
                     for item in siblings[insertIndex:]:
                         item.setOrdering(item.ordering() - minOrderingOfNextSiblings + 1 + maxOrdering - minOrdering + 1 + maxOrderingOfPreviousSiblings)
-
-            self.list.extend(self.items)
         else:
             super(OrderingDragAndDropCommand, self).do_command()
 

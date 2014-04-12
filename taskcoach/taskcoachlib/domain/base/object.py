@@ -395,7 +395,8 @@ class Object(SynchronizedObject):
             eventTypes = []
         return eventTypes + [class_.subjectChangedEventType(),
                              class_.descriptionChangedEventType(),
-                             class_.appearanceChangedEventType()]
+                             class_.appearanceChangedEventType(),
+                             class_.orderingChangedEventType()]
 
 
 class CompositeObject(Object, patterns.ObservableComposite):
