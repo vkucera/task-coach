@@ -183,7 +183,7 @@ languages = {
     'Slovak': ('sk', True),
     'Slovene': ('sl', False),
     'Spanish': ('es', True),
-    'Swedish': ('sv', True),
+    'Swedish': ('sv', False),
     'Telugu': ('te', False),
     'Thai': ('th', False),
     'Turkish': ('tr', True),
