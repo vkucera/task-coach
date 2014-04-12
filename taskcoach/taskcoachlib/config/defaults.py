@@ -29,6 +29,8 @@ defaults = {
     'filtershiftclick': 'True',
     'autosavehint': 'True',
     'manualordering': 'True',
+    'treemanualordering': 'True',
+    'treechildrenmanualordering': 'True',
     },
 'view': {
     'statusbar': 'True',
@@ -87,7 +89,7 @@ defaults = {
     'searchdescription': 'False',
     'regularexpression': 'False',
     'columns': "['plannedStartDateTime', 'dueDateTime']",
-    'columnsalwaysvisible': "['ordering', 'subject']",
+    'columnsalwaysvisible': "['subject']",
     'columnwidths': "{'attachments': 28, 'notes': 28, 'ordering': 28}",
     'columnautoresizing': 'True',
     'hideinactivetasks': 'False',
@@ -241,7 +243,7 @@ defaults = {
     'searchdescription': 'False',
     'regularexpression': 'False',
     'columns': "[]",
-    'columnsalwaysvisible': "['ordering', 'subject']",
+    'columnsalwaysvisible': "['subject']",
     'columnwidths': "{'attachments': 28, 'notes': 28, 'ordering': 28}",
     'columnautoresizing': 'True'
     },
@@ -257,7 +259,7 @@ defaults = {
     'searchdescription': 'False',
     'regularexpression': 'False',
     'columns': "[]",
-    'columnsalwaysvisible': "['ordering', 'subject']",
+    'columnsalwaysvisible': "['subject']",
     'columnwidths': "{'attachments': 28, 'notes': 28, 'ordering': 28}",
     'columnautoresizing': 'True'
     },
@@ -273,7 +275,7 @@ defaults = {
     'searchdescription': 'False',
     'regularexpression': 'False',
     'columns': "[]",
-    'columnsalwaysvisible': "['ordering', 'subject']",
+    'columnsalwaysvisible': "['subject']",
     'columnwidths': "{'attachments': 28, 'notes': 28, 'ordering': 28}",
     'columnautoresizing': 'True'
     },
@@ -290,7 +292,7 @@ defaults = {
     'regularexpression': 'False',
     'columns': "['attachments', 'description', 'creationDateTime', \
                  'modificationDateTime']",
-    'columnsalwaysvisible': "['ordering', 'subject']",
+    'columnsalwaysvisible': "['subject']",
     'columnwidths': "{'attachments': 28, 'description': 200, 'ordering': 28}",
     'columnautoresizing': 'True'
     },
@@ -301,7 +303,7 @@ defaults = {
     'sortcasesensitive': 'False',
     'columns': "['attachments', 'description', 'creationDateTime', \
                  'modificationDateTime']",
-    'columnsalwaysvisible': "['ordering', 'subject']",
+    'columnsalwaysvisible': "['subject']",
     'columnwidths': "{'attachments': 28, 'description': 200, 'ordering': 28}",
     'columnautoresizing': 'True',
     'searchfilterstring': '',
@@ -316,7 +318,7 @@ defaults = {
     'sortascending': 'True',
     'sortcasesensitive': 'False',
     'columns': "['subject']",
-    'columnsalwaysvisible': "['ordering', 'subject']",
+    'columnsalwaysvisible': "['subject']",
     'columnwidths': "{'ordering': 28}",
     'columnautoresizing': 'True',
     'searchfilterstring': '',
@@ -331,7 +333,7 @@ defaults = {
     'sortascending': 'True',
     'sortcasesensitive': 'False',
     'columns': "['subject']",
-    'columnsalwaysvisible': "['ordering', 'subject']",
+    'columnsalwaysvisible': "['subject']",
     'columnwidths': "{'ordering': 28}",
     'columnautoresizing': 'True',
     'searchfilterstring': '',

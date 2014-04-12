@@ -227,6 +227,7 @@ class TreeCtrlDragAndDropMixin(TreeHelperMixin):
     def __init__(self, *args, **kwargs):
         kwargs['style'] = kwargs.get('style', wx.TR_DEFAULT_STYLE) | \
                           wx.TR_HIDE_ROOT
+        self._validateDragCallback = kwargs.pop('validateDrag', None)
         super(TreeCtrlDragAndDropMixin, self).__init__(*args, **kwargs)
         self.Bind(wx.EVT_TREE_BEGIN_DRAG, self.OnBeginDrag)
         self._dragStartPos = None
@@ -344,6 +345,12 @@ class TreeCtrlDragAndDropMixin(TreeHelperMixin):
         self.GetMainWindow().SetCursor(wx.NullCursor)
 
     def IsValidDropTarget(self, dropTarget):
+        if self._validateDragCallback is not None:
+            isValid = self._validateDragCallback(self.GetItemPyData(dropTarget),
+                                                 [self.GetItemPyData(item) for item in self._dragItems], self._dragColumn)
+            if isValid is not None:
+                return isValid
+
         if dropTarget:
             invalidDropTargets = set(self._dragItems) 
             invalidDropTargets |= set(self.GetItemParent(item) for item in self._dragItems)

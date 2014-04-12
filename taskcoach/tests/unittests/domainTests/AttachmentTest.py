@@ -85,5 +85,6 @@ class FileAttachmentTest(test.TestCase):
                           Attachment.subjectChangedEventType(),
                           Attachment.descriptionChangedEventType(),
                           Attachment.appearanceChangedEventType(),
-                          Attachment.locationChangedEventType()], 
+                          Attachment.orderingChangedEventType(),
+                          Attachment.locationChangedEventType()],
                          Attachment.modificationEventTypes())

@@ -68,6 +68,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
             uicommand.CategoryDragAndDrop(viewer=self, categories=self.presentation()),
             itemPopupMenu, columnPopupMenu,
             resizeableColumn=1 if self.hasOrderingColumn() else 0,
+            validateDrag=self.validateDrag,
             **self.widgetCreationKeywordArguments())
         if self.hasOrderingColumn():
             widget.SetMainColumn(1)
@@ -142,6 +143,9 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
             uicommand.ToggleAutoColumnResizing(viewer=self,
                                                settings=self.settings),
             None,
+            uicommand.ViewColumn(menuText=_('&Manual ordering'),
+                helpText=_('Show/hide the manual ordering column'),
+                setting='ordering', viewer=self),
             uicommand.ViewColumn(menuText=_('&Description'),
                 helpText=_('Show/hide description column'),
                 setting='description', viewer=self),

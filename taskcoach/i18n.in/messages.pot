@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-04-11 17:46+CEST\n"
+"POT-Creation-Date: 2014-04-12 17:22+CEST\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -142,51 +142,51 @@ msgstr ""
 msgid "Drag and drop \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/base.py:435
+#: taskcoachlib/command/base.py:442
 msgid "Edit subjects"
 msgstr ""
 
-#: taskcoachlib/command/base.py:436
+#: taskcoachlib/command/base.py:443
 msgid "Edit subject \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/base.py:460
+#: taskcoachlib/command/base.py:467
 msgid "Edit descriptions"
 msgstr ""
 
-#: taskcoachlib/command/base.py:461
+#: taskcoachlib/command/base.py:468
 msgid "Edit description \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/base.py:485
+#: taskcoachlib/command/base.py:492
 msgid "Change icons"
 msgstr ""
 
-#: taskcoachlib/command/base.py:486
+#: taskcoachlib/command/base.py:493
 msgid "Change icon \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/base.py:515
+#: taskcoachlib/command/base.py:522
 msgid "Change fonts"
 msgstr ""
 
-#: taskcoachlib/command/base.py:516
+#: taskcoachlib/command/base.py:523
 msgid "Change font \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/base.py:570
+#: taskcoachlib/command/base.py:577
 msgid "Change foreground colors"
 msgstr ""
 
-#: taskcoachlib/command/base.py:571
+#: taskcoachlib/command/base.py:578
 msgid "Change foreground color \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/base.py:583
+#: taskcoachlib/command/base.py:590
 msgid "Change background colors"
 msgstr ""
 
-#: taskcoachlib/command/base.py:584
+#: taskcoachlib/command/base.py:591
 msgid "Change background color \"%s\""
 msgstr ""
 
@@ -539,33 +539,33 @@ msgstr ""
 msgid "Toggle prerequisite of \"%s\""
 msgstr ""
 
-#: taskcoachlib/config/settings.py:255
+#: taskcoachlib/config/settings.py:258
 msgid "Error while reading the %s-%s setting from %s.ini."
 msgstr ""
 
-#: taskcoachlib/config/settings.py:256
+#: taskcoachlib/config/settings.py:259
 msgid "The value is: %s"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:257
+#: taskcoachlib/config/settings.py:260
 msgid "The error is: %s"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:258
+#: taskcoachlib/config/settings.py:261
 msgid "%s will use the default value for the setting and should proceed normally."
 msgstr ""
 
-#: taskcoachlib/config/settings.py:259
+#: taskcoachlib/config/settings.py:262
 msgid "Settings error"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:282
+#: taskcoachlib/config/settings.py:285
 msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:283
+#: taskcoachlib/config/settings.py:286
 msgid "Save error"
 msgstr ""
 
@@ -1152,9 +1152,9 @@ msgstr ""
 #: taskcoachlib/gui/dialog/editor.py:98 taskcoachlib/gui/dialog/editor.py:152
 #: taskcoachlib/gui/dialog/editor.py:1314
 #: taskcoachlib/gui/viewer/attachment.py:89
-#: taskcoachlib/gui/viewer/category.py:99
-#: taskcoachlib/gui/viewer/effort.py:207 taskcoachlib/gui/viewer/note.py:127
-#: taskcoachlib/gui/viewer/task.py:976
+#: taskcoachlib/gui/viewer/category.py:100
+#: taskcoachlib/gui/viewer/effort.py:207 taskcoachlib/gui/viewer/note.py:131
+#: taskcoachlib/gui/viewer/task.py:977
 #: taskcoachlib/gui/wizard/csvimport.py:230
 #: taskcoachlib/persistence/csv/reader.py:78
 msgid "Description"
@@ -1167,8 +1167,8 @@ msgstr ""
 #: taskcoachlib/gui/dialog/editor.py:131
 #: taskcoachlib/gui/dialog/templates.py:109
 #: taskcoachlib/gui/viewer/attachment.py:79
-#: taskcoachlib/gui/viewer/base.py:345 taskcoachlib/gui/viewer/category.py:91
-#: taskcoachlib/gui/viewer/note.py:117 taskcoachlib/gui/viewer/task.py:962
+#: taskcoachlib/gui/viewer/base.py:345 taskcoachlib/gui/viewer/category.py:92
+#: taskcoachlib/gui/viewer/note.py:121 taskcoachlib/gui/viewer/task.py:963
 #: taskcoachlib/gui/wizard/csvimport.py:229
 #: taskcoachlib/persistence/csv/reader.py:76
 msgid "Subject"
@@ -1181,22 +1181,22 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:163
 #: taskcoachlib/gui/viewer/attachment.py:109
-#: taskcoachlib/gui/viewer/category.py:121 taskcoachlib/gui/viewer/note.py:156
-#: taskcoachlib/gui/viewer/task.py:1098
+#: taskcoachlib/gui/viewer/category.py:122 taskcoachlib/gui/viewer/note.py:160
+#: taskcoachlib/gui/viewer/task.py:1099
 #: taskcoachlib/persistence/csv/generator.py:40
 msgid "Creation date"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:168
 #: taskcoachlib/gui/viewer/attachment.py:117
-#: taskcoachlib/gui/viewer/category.py:127 taskcoachlib/gui/viewer/note.py:163
-#: taskcoachlib/gui/viewer/task.py:1105
+#: taskcoachlib/gui/viewer/category.py:128 taskcoachlib/gui/viewer/note.py:167
+#: taskcoachlib/gui/viewer/task.py:1106
 msgid "Modification date"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:230
 #: taskcoachlib/gui/uicommand/uicommand.py:2363
-#: taskcoachlib/gui/viewer/task.py:1066
+#: taskcoachlib/gui/viewer/task.py:1067
 #: taskcoachlib/gui/wizard/csvimport.py:232
 #: taskcoachlib/persistence/csv/reader.py:89
 msgid "Priority"
@@ -1252,7 +1252,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:392
 #: taskcoachlib/gui/dialog/templates.py:112
-#: taskcoachlib/gui/viewer/task.py:1024
+#: taskcoachlib/gui/viewer/task.py:1025
 #: taskcoachlib/gui/wizard/csvimport.py:233
 #: taskcoachlib/persistence/csv/generator.py:36
 #: taskcoachlib/persistence/csv/reader.py:96
@@ -1261,14 +1261,14 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:393
 #: taskcoachlib/gui/dialog/templates.py:115
-#: taskcoachlib/gui/viewer/task.py:1026
+#: taskcoachlib/gui/viewer/task.py:1027
 #: taskcoachlib/gui/wizard/csvimport.py:234
 #: taskcoachlib/persistence/csv/generator.py:37
 #: taskcoachlib/persistence/csv/reader.py:98
 msgid "Due date"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:395 taskcoachlib/gui/viewer/task.py:1028
+#: taskcoachlib/gui/dialog/editor.py:395 taskcoachlib/gui/viewer/task.py:1029
 #: taskcoachlib/gui/wizard/csvimport.py:235
 #: taskcoachlib/persistence/csv/generator.py:35
 #: taskcoachlib/persistence/csv/reader.py:94
@@ -1277,7 +1277,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:396
 #: taskcoachlib/gui/dialog/templates.py:118
-#: taskcoachlib/gui/viewer/task.py:1031
+#: taskcoachlib/gui/viewer/task.py:1032
 #: taskcoachlib/gui/wizard/csvimport.py:236
 #: taskcoachlib/persistence/csv/generator.py:38
 #: taskcoachlib/persistence/csv/reader.py:100
@@ -1287,11 +1287,11 @@ msgstr ""
 #: taskcoachlib/gui/dialog/editor.py:440
 #: taskcoachlib/gui/dialog/reminder.py:104
 #: taskcoachlib/gui/dialog/templates.py:121
-#: taskcoachlib/gui/viewer/task.py:1088
+#: taskcoachlib/gui/viewer/task.py:1089
 msgid "Reminder"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:451 taskcoachlib/gui/viewer/task.py:1054
+#: taskcoachlib/gui/dialog/editor.py:451 taskcoachlib/gui/viewer/task.py:1055
 msgid "Recurrence"
 msgstr ""
 
@@ -1321,7 +1321,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:514 taskcoachlib/gui/dialog/editor.py:540
 #: taskcoachlib/gui/uicommand/uicommand.py:2362
-#: taskcoachlib/gui/viewer/task.py:1057
+#: taskcoachlib/gui/viewer/task.py:1058
 #: taskcoachlib/gui/wizard/csvimport.py:238
 #: taskcoachlib/persistence/csv/reader.py:104
 msgid "Budget"
@@ -1329,15 +1329,15 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:548
 #: taskcoachlib/gui/uicommand/uicommand.py:2362
-#: taskcoachlib/gui/viewer/effort.py:218 taskcoachlib/gui/viewer/task.py:1060
+#: taskcoachlib/gui/viewer/effort.py:218 taskcoachlib/gui/viewer/task.py:1061
 msgid "Time spent"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:565 taskcoachlib/gui/viewer/task.py:1063
+#: taskcoachlib/gui/dialog/editor.py:565 taskcoachlib/gui/viewer/task.py:1064
 msgid "Budget left"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:590 taskcoachlib/gui/viewer/task.py:1069
+#: taskcoachlib/gui/dialog/editor.py:590 taskcoachlib/gui/viewer/task.py:1070
 #: taskcoachlib/gui/wizard/csvimport.py:240
 #: taskcoachlib/persistence/csv/reader.py:123
 msgid "Hourly fee"
@@ -1345,7 +1345,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:600
 #: taskcoachlib/gui/uicommand/uicommand.py:2362
-#: taskcoachlib/gui/viewer/task.py:1071
+#: taskcoachlib/gui/viewer/task.py:1072
 #: taskcoachlib/gui/wizard/csvimport.py:239
 #: taskcoachlib/persistence/csv/reader.py:118
 msgid "Fixed fee"
@@ -1353,7 +1353,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:606
 #: taskcoachlib/gui/uicommand/uicommand.py:2362
-#: taskcoachlib/gui/viewer/effort.py:223 taskcoachlib/gui/viewer/task.py:1074
+#: taskcoachlib/gui/viewer/effort.py:223 taskcoachlib/gui/viewer/task.py:1075
 msgid "Revenue"
 msgstr ""
 
@@ -1364,23 +1364,23 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:728
 #: taskcoachlib/gui/viewer/category.py:40
-#: taskcoachlib/gui/viewer/effort.py:210 taskcoachlib/gui/viewer/note.py:144
-#: taskcoachlib/gui/viewer/task.py:999 taskcoachlib/help/__init__.py:94
+#: taskcoachlib/gui/viewer/effort.py:210 taskcoachlib/gui/viewer/note.py:148
+#: taskcoachlib/gui/viewer/task.py:1000 taskcoachlib/help/__init__.py:94
 #: taskcoachlib/help/__init__.py:280
 msgid "Categories"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:785 taskcoachlib/gui/viewer/task.py:984
+#: taskcoachlib/gui/dialog/editor.py:785 taskcoachlib/gui/viewer/task.py:985
 msgid "Attachments"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:827 taskcoachlib/gui/viewer/note.py:40
-#: taskcoachlib/gui/viewer/task.py:991 taskcoachlib/help/__init__.py:99
+#: taskcoachlib/gui/viewer/task.py:992 taskcoachlib/help/__init__.py:99
 #: taskcoachlib/help/__init__.py:315
 msgid "Notes"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:871 taskcoachlib/gui/viewer/task.py:1008
+#: taskcoachlib/gui/dialog/editor.py:871 taskcoachlib/gui/viewer/task.py:1009
 msgid "Prerequisites"
 msgstr ""
 
@@ -2749,7 +2749,7 @@ msgid "%s (subtasks)"
 msgstr ""
 
 #: taskcoachlib/gui/menu.py:797 taskcoachlib/gui/viewer/mixin.py:439
-#: taskcoachlib/gui/viewer/task.py:1200
+#: taskcoachlib/gui/viewer/task.py:1204
 msgid "&Priority"
 msgstr ""
 
@@ -3612,18 +3612,18 @@ msgstr ""
 
 #: taskcoachlib/gui/viewer/attachment.py:95
 #: taskcoachlib/gui/viewer/attachment.py:133
-#: taskcoachlib/gui/viewer/category.py:145
+#: taskcoachlib/gui/viewer/category.py:149
 #: taskcoachlib/gui/viewer/effort.py:284 taskcoachlib/gui/viewer/mixin.py:298
-#: taskcoachlib/gui/viewer/note.py:91 taskcoachlib/gui/viewer/note.py:133
-#: taskcoachlib/gui/viewer/task.py:1177
+#: taskcoachlib/gui/viewer/note.py:95 taskcoachlib/gui/viewer/note.py:137
+#: taskcoachlib/gui/viewer/task.py:1181
 msgid "&Description"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/attachment.py:114
 #: taskcoachlib/gui/viewer/attachment.py:139
-#: taskcoachlib/gui/viewer/category.py:154
-#: taskcoachlib/gui/viewer/mixin.py:301 taskcoachlib/gui/viewer/note.py:100
-#: taskcoachlib/gui/viewer/note.py:160 taskcoachlib/gui/viewer/task.py:1206
+#: taskcoachlib/gui/viewer/category.py:158
+#: taskcoachlib/gui/viewer/mixin.py:301 taskcoachlib/gui/viewer/note.py:104
+#: taskcoachlib/gui/viewer/note.py:164 taskcoachlib/gui/viewer/task.py:1210
 msgid "&Creation date"
 msgstr ""
 
@@ -3633,9 +3633,9 @@ msgstr ""
 
 #: taskcoachlib/gui/viewer/attachment.py:122
 #: taskcoachlib/gui/viewer/attachment.py:142
-#: taskcoachlib/gui/viewer/category.py:157
-#: taskcoachlib/gui/viewer/mixin.py:305 taskcoachlib/gui/viewer/note.py:103
-#: taskcoachlib/gui/viewer/note.py:168 taskcoachlib/gui/viewer/task.py:1209
+#: taskcoachlib/gui/viewer/category.py:161
+#: taskcoachlib/gui/viewer/mixin.py:305 taskcoachlib/gui/viewer/note.py:107
+#: taskcoachlib/gui/viewer/note.py:172 taskcoachlib/gui/viewer/task.py:1213
 msgid "&Modification date"
 msgstr ""
 
@@ -3644,33 +3644,33 @@ msgid "Sort by last modification date"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/attachment.py:134
-#: taskcoachlib/gui/viewer/category.py:146
-#: taskcoachlib/gui/viewer/effort.py:285 taskcoachlib/gui/viewer/note.py:92
-#: taskcoachlib/gui/viewer/task.py:1178
+#: taskcoachlib/gui/viewer/category.py:150
+#: taskcoachlib/gui/viewer/effort.py:285 taskcoachlib/gui/viewer/note.py:96
+#: taskcoachlib/gui/viewer/task.py:1182
 msgid "Show/hide description column"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/attachment.py:136
-#: taskcoachlib/gui/viewer/category.py:151
-#: taskcoachlib/gui/viewer/task.py:1193
+#: taskcoachlib/gui/viewer/category.py:155
+#: taskcoachlib/gui/viewer/task.py:1197
 msgid "&Notes"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/attachment.py:137
-#: taskcoachlib/gui/viewer/category.py:152
-#: taskcoachlib/gui/viewer/task.py:1194
+#: taskcoachlib/gui/viewer/category.py:156
+#: taskcoachlib/gui/viewer/task.py:1198
 msgid "Show/hide notes column"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/attachment.py:140
-#: taskcoachlib/gui/viewer/category.py:155 taskcoachlib/gui/viewer/note.py:101
-#: taskcoachlib/gui/viewer/task.py:1207
+#: taskcoachlib/gui/viewer/category.py:159 taskcoachlib/gui/viewer/note.py:105
+#: taskcoachlib/gui/viewer/task.py:1211
 msgid "Show/hide creation date column"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/attachment.py:143
-#: taskcoachlib/gui/viewer/category.py:158 taskcoachlib/gui/viewer/note.py:104
-#: taskcoachlib/gui/viewer/task.py:1210
+#: taskcoachlib/gui/viewer/category.py:162 taskcoachlib/gui/viewer/note.py:108
+#: taskcoachlib/gui/viewer/task.py:1214
 msgid "Show/hide last modification date column"
 msgstr ""
 
@@ -3682,20 +3682,43 @@ msgstr ""
 msgid "Click on the gear icon on the right to add buttons and rearrange them."
 msgstr ""
 
-#: taskcoachlib/gui/viewer/category.py:148 taskcoachlib/gui/viewer/note.py:94
-#: taskcoachlib/gui/viewer/task.py:1189
+#: taskcoachlib/gui/viewer/base.py:814 taskcoachlib/gui/viewer/base.py:822
+msgid "Reordering in tree mode"
+msgstr ""
+
+#: taskcoachlib/gui/viewer/base.py:816
+msgid "When in tree mode, manual ordering is only possible when all selected items are siblings."
+msgstr ""
+
+#: taskcoachlib/gui/viewer/base.py:824
+msgid "When in tree mode, you can only put objects at the same level (parent)."
+msgstr ""
+
+#: taskcoachlib/gui/viewer/category.py:146
+#: taskcoachlib/gui/viewer/mixin.py:333 taskcoachlib/gui/viewer/note.py:92
+#: taskcoachlib/gui/viewer/note.py:118 taskcoachlib/gui/viewer/task.py:1178
+msgid "&Manual ordering"
+msgstr ""
+
+#: taskcoachlib/gui/viewer/category.py:147 taskcoachlib/gui/viewer/note.py:93
+#: taskcoachlib/gui/viewer/task.py:1179
+msgid "Show/hide the manual ordering column"
+msgstr ""
+
+#: taskcoachlib/gui/viewer/category.py:152 taskcoachlib/gui/viewer/note.py:98
+#: taskcoachlib/gui/viewer/task.py:1193
 msgid "&Attachments"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/category.py:149 taskcoachlib/gui/viewer/note.py:95
+#: taskcoachlib/gui/viewer/category.py:153 taskcoachlib/gui/viewer/note.py:99
 msgid "Show/hide attachments column"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/category.py:195
+#: taskcoachlib/gui/viewer/category.py:199
 msgid "Categories: %d selected, %d total"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/category.py:198
+#: taskcoachlib/gui/viewer/category.py:202
 msgid "Status: %d filtered"
 msgstr ""
 
@@ -3732,31 +3755,31 @@ msgid "Saturday"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/effort.py:287 taskcoachlib/gui/viewer/mixin.py:115
-#: taskcoachlib/gui/viewer/note.py:97 taskcoachlib/gui/viewer/note.py:153
-#: taskcoachlib/gui/viewer/task.py:1197
+#: taskcoachlib/gui/viewer/note.py:101 taskcoachlib/gui/viewer/note.py:157
+#: taskcoachlib/gui/viewer/task.py:1201
 msgid "&Categories"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/effort.py:288 taskcoachlib/gui/viewer/note.py:98
-#: taskcoachlib/gui/viewer/task.py:1198
+#: taskcoachlib/gui/viewer/effort.py:288 taskcoachlib/gui/viewer/note.py:102
+#: taskcoachlib/gui/viewer/task.py:1202
 msgid "Show/hide categories column"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/effort.py:290 taskcoachlib/gui/viewer/mixin.py:437
-#: taskcoachlib/gui/viewer/task.py:1154
+#: taskcoachlib/gui/viewer/task.py:1155
 msgid "&Time spent"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/effort.py:291 taskcoachlib/gui/viewer/task.py:1155
+#: taskcoachlib/gui/viewer/effort.py:291 taskcoachlib/gui/viewer/task.py:1156
 msgid "Show/hide time spent column"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/effort.py:293 taskcoachlib/gui/viewer/mixin.py:442
-#: taskcoachlib/gui/viewer/task.py:1173
+#: taskcoachlib/gui/viewer/task.py:1174
 msgid "&Revenue"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/effort.py:294 taskcoachlib/gui/viewer/task.py:1174
+#: taskcoachlib/gui/viewer/effort.py:294 taskcoachlib/gui/viewer/task.py:1175
 msgid "Show/hide revenue column"
 msgstr ""
 
@@ -3794,10 +3817,6 @@ msgstr ""
 
 #: taskcoachlib/gui/viewer/effort.py:404
 msgid "Status: %d tracking"
-msgstr ""
-
-#: taskcoachlib/gui/viewer/mixin.py:333 taskcoachlib/gui/viewer/note.py:114
-msgid "&Manual ordering"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/mixin.py:343
@@ -3840,11 +3859,11 @@ msgstr ""
 msgid "Sort attachments by last modification date"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:370 taskcoachlib/gui/viewer/note.py:123
+#: taskcoachlib/gui/viewer/mixin.py:370 taskcoachlib/gui/viewer/note.py:127
 msgid "Sort notes by subject"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:371 taskcoachlib/gui/viewer/note.py:134
+#: taskcoachlib/gui/viewer/mixin.py:371 taskcoachlib/gui/viewer/note.py:138
 msgid "Sort notes by description"
 msgstr ""
 
@@ -3852,15 +3871,15 @@ msgstr ""
 msgid "Sort notes by category"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:373 taskcoachlib/gui/viewer/note.py:161
+#: taskcoachlib/gui/viewer/mixin.py:373 taskcoachlib/gui/viewer/note.py:165
 msgid "Sort notes by creation date"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:374 taskcoachlib/gui/viewer/note.py:169
+#: taskcoachlib/gui/viewer/mixin.py:374 taskcoachlib/gui/viewer/note.py:173
 msgid "Sort notes by last modification date"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:375 taskcoachlib/gui/viewer/note.py:115
+#: taskcoachlib/gui/viewer/mixin.py:375 taskcoachlib/gui/viewer/note.py:119
 msgid "Sort notes manually"
 msgstr ""
 
@@ -3892,7 +3911,7 @@ msgstr ""
 msgid "Sort tasks by planned start date"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:428 taskcoachlib/gui/viewer/task.py:1126
+#: taskcoachlib/gui/viewer/mixin.py:428 taskcoachlib/gui/viewer/task.py:1127
 msgid "&Planned start date"
 msgstr ""
 
@@ -3900,7 +3919,7 @@ msgstr ""
 msgid "Sort tasks by due date"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:429 taskcoachlib/gui/viewer/task.py:1129
+#: taskcoachlib/gui/viewer/mixin.py:429 taskcoachlib/gui/viewer/task.py:1130
 msgid "&Due date"
 msgstr ""
 
@@ -3908,7 +3927,7 @@ msgstr ""
 msgid "Sort tasks by completion date"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:430 taskcoachlib/gui/viewer/task.py:1135
+#: taskcoachlib/gui/viewer/mixin.py:430 taskcoachlib/gui/viewer/task.py:1136
 msgid "&Completion date"
 msgstr ""
 
@@ -3916,7 +3935,7 @@ msgstr ""
 msgid "Sort tasks by prerequisite tasks"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:431 taskcoachlib/gui/viewer/task.py:1180
+#: taskcoachlib/gui/viewer/mixin.py:431 taskcoachlib/gui/viewer/task.py:1184
 msgid "&Prerequisites"
 msgstr ""
 
@@ -3924,7 +3943,7 @@ msgstr ""
 msgid "Sort tasks by dependent tasks"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:432 taskcoachlib/gui/viewer/task.py:1183
+#: taskcoachlib/gui/viewer/mixin.py:432 taskcoachlib/gui/viewer/task.py:1187
 msgid "&Dependents"
 msgstr ""
 
@@ -3932,7 +3951,7 @@ msgstr ""
 msgid "Sort tasks by time left"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:433 taskcoachlib/gui/viewer/task.py:1138
+#: taskcoachlib/gui/viewer/mixin.py:433 taskcoachlib/gui/viewer/task.py:1139
 msgid "&Time left"
 msgstr ""
 
@@ -3940,7 +3959,7 @@ msgstr ""
 msgid "Sort tasks by percentage complete"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:434 taskcoachlib/gui/viewer/task.py:1186
+#: taskcoachlib/gui/viewer/mixin.py:434 taskcoachlib/gui/viewer/task.py:1190
 msgid "&Percentage complete"
 msgstr ""
 
@@ -3948,7 +3967,7 @@ msgstr ""
 msgid "Sort tasks by recurrence"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:435 taskcoachlib/gui/viewer/task.py:1141
+#: taskcoachlib/gui/viewer/mixin.py:435 taskcoachlib/gui/viewer/task.py:1142
 msgid "&Recurrence"
 msgstr ""
 
@@ -3956,8 +3975,8 @@ msgstr ""
 msgid "Sort tasks by budget"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:436 taskcoachlib/gui/viewer/task.py:1145
-#: taskcoachlib/gui/viewer/task.py:1151
+#: taskcoachlib/gui/viewer/mixin.py:436 taskcoachlib/gui/viewer/task.py:1146
+#: taskcoachlib/gui/viewer/task.py:1152
 msgid "&Budget"
 msgstr ""
 
@@ -3981,7 +4000,7 @@ msgstr ""
 msgid "Sort tasks by hourly fee"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:440 taskcoachlib/gui/viewer/task.py:1167
+#: taskcoachlib/gui/viewer/mixin.py:440 taskcoachlib/gui/viewer/task.py:1168
 msgid "&Hourly fee"
 msgstr ""
 
@@ -3989,7 +4008,7 @@ msgstr ""
 msgid "Sort tasks by fixed fee"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:441 taskcoachlib/gui/viewer/task.py:1170
+#: taskcoachlib/gui/viewer/mixin.py:441 taskcoachlib/gui/viewer/task.py:1171
 msgid "&Fixed fee"
 msgstr ""
 
@@ -4001,23 +4020,23 @@ msgstr ""
 msgid "Sort tasks by reminder date and time"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/mixin.py:443 taskcoachlib/gui/viewer/task.py:1203
+#: taskcoachlib/gui/viewer/mixin.py:443 taskcoachlib/gui/viewer/task.py:1207
 msgid "&Reminder"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/note.py:122
+#: taskcoachlib/gui/viewer/note.py:126
 msgid "&Subject"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/note.py:154
+#: taskcoachlib/gui/viewer/note.py:158
 msgid "Sort notes by categories"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/note.py:185
+#: taskcoachlib/gui/viewer/note.py:189
 msgid "Notes: %d selected, %d total"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/note.py:187
+#: taskcoachlib/gui/viewer/note.py:191
 msgid "Status: n/a"
 msgstr ""
 
@@ -4071,130 +4090,130 @@ msgid "Manual ordering"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/task.py:882
-msgid "Drag and drop items from this column to sort them arbitrarily."
+msgid "Show the \"Manual ordering\" column, then drag and drop items from this column to sort them arbitrarily."
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1015
+#: taskcoachlib/gui/viewer/task.py:1016
 msgid "Dependents"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1048
+#: taskcoachlib/gui/viewer/task.py:1049
 msgid "% complete"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1052
+#: taskcoachlib/gui/viewer/task.py:1053
 msgid "Time left"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1118
+#: taskcoachlib/gui/viewer/task.py:1119
 msgid "&Dates"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1119
+#: taskcoachlib/gui/viewer/task.py:1120
 msgid "&All date columns"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1120
+#: taskcoachlib/gui/viewer/task.py:1121
 msgid "Show/hide all date-related columns"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1127
+#: taskcoachlib/gui/viewer/task.py:1128
 msgid "Show/hide planned start date column"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1130
+#: taskcoachlib/gui/viewer/task.py:1131
 msgid "Show/hide due date column"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1132
+#: taskcoachlib/gui/viewer/task.py:1133
 msgid "&Actual start date"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1133
+#: taskcoachlib/gui/viewer/task.py:1134
 msgid "Show/hide actual start date column"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1136
+#: taskcoachlib/gui/viewer/task.py:1137
 msgid "Show/hide completion date column"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1139
+#: taskcoachlib/gui/viewer/task.py:1140
 msgid "Show/hide time left column"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1142
+#: taskcoachlib/gui/viewer/task.py:1143
 msgid "Show/hide recurrence column"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1146
+#: taskcoachlib/gui/viewer/task.py:1147
 msgid "&All budget columns"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1147
+#: taskcoachlib/gui/viewer/task.py:1148
 msgid "Show/hide all budget-related columns"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1152
+#: taskcoachlib/gui/viewer/task.py:1153
 msgid "Show/hide budget column"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1157
+#: taskcoachlib/gui/viewer/task.py:1158
 msgid "&Budget left"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1158
+#: taskcoachlib/gui/viewer/task.py:1159
 msgid "Show/hide budget left column"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1161
+#: taskcoachlib/gui/viewer/task.py:1162
 msgid "&Financial"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1162
+#: taskcoachlib/gui/viewer/task.py:1163
 msgid "&All financial columns"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1163
+#: taskcoachlib/gui/viewer/task.py:1164
 msgid "Show/hide all finance-related columns"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1168
+#: taskcoachlib/gui/viewer/task.py:1169
 msgid "Show/hide hourly fee column"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1171
+#: taskcoachlib/gui/viewer/task.py:1172
 msgid "Show/hide fixed fee column"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1181
+#: taskcoachlib/gui/viewer/task.py:1185
 msgid "Show/hide prerequisites column"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1184
+#: taskcoachlib/gui/viewer/task.py:1188
 msgid "Show/hide dependents column"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1187
+#: taskcoachlib/gui/viewer/task.py:1191
 msgid "Show/hide percentage complete column"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1190
+#: taskcoachlib/gui/viewer/task.py:1194
 msgid "Show/hide attachment column"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1201
+#: taskcoachlib/gui/viewer/task.py:1205
 msgid "Show/hide priority column"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1204
+#: taskcoachlib/gui/viewer/task.py:1208
 msgid "Show/hide reminder column"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1224
+#: taskcoachlib/gui/viewer/task.py:1228
 msgid "Show tasks as"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/task.py:1412
+#: taskcoachlib/gui/viewer/task.py:1416
 msgid "Task statistics"
 msgstr ""
 
