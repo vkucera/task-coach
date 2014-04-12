@@ -707,6 +707,9 @@ class ViewerWithColumns(Viewer):  # pylint: disable=W0223
     def initColumns(self):
         for column in self.columns():
             self.initColumn(column)
+        if self.hasOrderingColumn():
+            self.widget.SetResizeColumn(1)
+            self.widget.SetMainColumn(1)
 
     def initColumn(self, column):
         if column.name() in self.settings.getlist(self.settingsSection(), 
