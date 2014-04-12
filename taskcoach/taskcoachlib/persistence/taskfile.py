@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import xml
-from taskcoachlib import patterns
+from taskcoachlib import patterns, operating_system
 from taskcoachlib.domain import base, task, category, note, effort, attachment
 from taskcoachlib.syncml.config import createDefaultSyncConfig
 from taskcoachlib.thirdparty.guid import generate
@@ -412,7 +412,21 @@ class LockedTaskFile(TaskFile):
     def __init__(self, *args, **kwargs):
         super(LockedTaskFile, self).__init__(*args, **kwargs)
         self.__lock = None
-        
+
+    def __isFuse(self, path):
+        if operating_system.isGTK() and os.path.exists('/proc/mounts'):
+            for line in file('/proc/mounts', 'rb'):
+                try:
+                    location, mountPoint, fsType, options, a, b = line.strip().split()
+                except:
+                    pass
+                if os.path.abspath(path).startswith(mountPoint) and fsType.startswith('fuse.'):
+                    return True
+        return False
+
+    def __createLockFile(self, filename):
+        return (lockfile.MkdirFileLock if self.__isFuse(filename) else lockfile.FileLock)(filename)
+
     def is_locked(self):
         return self.__lock and self.__lock.is_locked()
 
@@ -425,11 +439,11 @@ class LockedTaskFile(TaskFile):
             
     def acquire_lock(self, filename):
         if not self.is_locked_by_me():
-            self.__lock = lockfile.FileLock(filename)
+            self.__lock = self.__createLockFile(filename)
             self.__lock.acquire(-1) # Fail immediately if we can't get a lock
             
     def break_lock(self, filename):
-        self.__lock = lockfile.FileLock(filename)
+        self.__lock = self.__createLockFile(filename)
         self.__lock.break_lock()
             
     def load(self, filename=None, lock=True, breakLock=False): # pylint: disable=W0221
