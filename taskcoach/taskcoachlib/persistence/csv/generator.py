@@ -87,7 +87,7 @@ class RowBuilder(object):
         return self.__splitDateAndTime(getattr(item, column.name())())
 
     def __splitDateAndTime(self, dateTime):
-        if dateTime == date.DateTime():
+        if dateTime == date.DateTime() or dateTime is None:
             return '', ''
         return render.date(dateTime), render.time(dateTime)
 

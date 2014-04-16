@@ -33,6 +33,7 @@ of Twisted (<11).''', '1505'),
         Bugv2('''Performance improvements.'''),
         Bugv2('''In some circumstances, balloon tips would not close.'''),
         Bugv2('''Locking would fail on SSHFS''', '1509'),
+        Bugv2('''Fix CSV export for some setups.''', '1510'),
         ],
     featuresAdded=[
         Feature('''Always use "/" as path separator in relative attachment
