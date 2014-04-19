@@ -72,6 +72,7 @@ sdist_ubuntu: sdist_linux
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu12~precise.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu12~quantal.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu13~saucy.tar.gz
+	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu14~trusty.tar.gz
 
 sdist_raw:
 	mkdir -p dist
@@ -114,12 +115,15 @@ ubuntu: sdist_ubuntu
 	mv build build-quantal
 	LC_ALL=C $(PYTHON) make.py bdist_ubuntu saucy 13 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu13~saucy.tar.gz
 	mv build build-saucy
+	LC_ALL=C $(PYTHON) make.py bdist_ubuntu trusty 14 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu14~trusty.tar.gz
+	mv build build-trusty
 
 ppa_sign: ubuntu
 	cd build-lucid; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
 	cd build-precise; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
 	cd build-quantal; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes
 	cd build-saucy; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu13~saucy-1_source.changes
+	cd build-trusty; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
 
 # Split PPA by version because the upload has a tendency to fail so the buildbot must retry
 
@@ -135,6 +139,9 @@ ppa_rel_quantal:
 ppa_rel_saucy:
 	cd build-saucy; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu13~saucy-1_source.changes
 
+ppa_rel_trusty:
+	cd build-trusty; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
+
 ppa_relnext_lucid:
 	cd build-lucid; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
 
@@ -147,6 +154,9 @@ ppa_relnext_quantal:
 ppa_relnext_saucy:
 	cd build-saucy; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu13~saucy-1_source.changes
 
+ppa_relnext_trusty:
+	cd build-trusty; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
+
 ppa_release_lucid:
 	cd build-lucid; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
 
@@ -158,6 +168,9 @@ ppa_release_quantal:
 
 ppa_release_saucy:
 	cd build-saucy; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu13~saucy-1_source.changes
+
+ppa_release_trusty:
+	cd build-trusty; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
 
 app: prepare
 	$(PYTHON) make.py py2app
