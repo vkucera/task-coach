@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.38', 'April ??, 2014',
+Release('1.3.38', 'April 21, 2014',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bugv2('''Code signature would become invalid on OSX after the
