@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-04-12 15:14+CEST\n"
+"POT-Creation-Date: 2014-04-20 17:17+CEST\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -120,51 +120,51 @@ msgstr ""
 msgid "Drag and drop \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/base.py:435
+#: taskcoachlib/command/base.py:442
 msgid "Edit subjects"
 msgstr ""
 
-#: taskcoachlib/command/base.py:436
+#: taskcoachlib/command/base.py:443
 msgid "Edit subject \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/base.py:460
+#: taskcoachlib/command/base.py:467
 msgid "Edit descriptions"
 msgstr ""
 
-#: taskcoachlib/command/base.py:461
+#: taskcoachlib/command/base.py:468
 msgid "Edit description \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/base.py:485
+#: taskcoachlib/command/base.py:492
 msgid "Change icons"
 msgstr ""
 
-#: taskcoachlib/command/base.py:486
+#: taskcoachlib/command/base.py:493
 msgid "Change icon \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/base.py:515
+#: taskcoachlib/command/base.py:522
 msgid "Change fonts"
 msgstr ""
 
-#: taskcoachlib/command/base.py:516
+#: taskcoachlib/command/base.py:523
 msgid "Change font \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/base.py:570
+#: taskcoachlib/command/base.py:577
 msgid "Change foreground colors"
 msgstr ""
 
-#: taskcoachlib/command/base.py:571
+#: taskcoachlib/command/base.py:578
 msgid "Change foreground color \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/base.py:583
+#: taskcoachlib/command/base.py:590
 msgid "Change background colors"
 msgstr ""
 
-#: taskcoachlib/command/base.py:584
+#: taskcoachlib/command/base.py:591
 msgid "Change background color \"%s\""
 msgstr ""
 
@@ -3641,12 +3641,16 @@ msgstr ""
 msgid "Click on the gear icon on the right to add buttons and rearrange them."
 msgstr ""
 
-#: taskcoachlib/gui/viewer/base.py:802
+#: taskcoachlib/gui/viewer/base.py:808 taskcoachlib/gui/viewer/base.py:816
 msgid "Reordering in tree mode"
 msgstr ""
 
-#: taskcoachlib/gui/viewer/base.py:804
+#: taskcoachlib/gui/viewer/base.py:810
 msgid "When in tree mode, manual ordering is only possible when all selected items are siblings."
+msgstr ""
+
+#: taskcoachlib/gui/viewer/base.py:818
+msgid "When in tree mode, you can only put objects at the same level (parent)."
 msgstr ""
 
 #: taskcoachlib/gui/viewer/category.py:146
