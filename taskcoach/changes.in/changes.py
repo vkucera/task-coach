@@ -22,7 +22,13 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.38', 'April ??, 2014',
+Release('1.3.39', 'May .., 2014',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        ],
+    ),
+
+Release('1.3.38', 'April 21, 2014',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bugv2('''Code signature would become invalid on OSX after the
@@ -33,6 +39,7 @@ of Twisted (<11).''', '1505'),
         Bugv2('''Performance improvements.'''),
         Bugv2('''In some circumstances, balloon tips would not close.'''),
         Bugv2('''Locking would fail on SSHFS''', '1509'),
+        Bugv2('''Fix CSV export for some setups.''', '1510'),
         ],
     featuresAdded=[
         Feature('''Always use "/" as path separator in relative attachment
