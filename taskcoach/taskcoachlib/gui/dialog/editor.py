@@ -1042,7 +1042,12 @@ class EditBook(widgets.Notebook):
                 current_page = 0
         self.SetSelection(current_page)
         self.GetPage(current_page).SetFocus()
-        
+
+        for idx in xrange(self.GetPageCount()):
+            page = self.GetPage(idx)
+            if page.IsShown():
+                page.selected()
+
     def __save_perspective(self):
         ''' Save the current perspective of the editor in the settings. 
             Multiple perspectives are supported, for each set of visible pages.

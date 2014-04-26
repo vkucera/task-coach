@@ -25,6 +25,8 @@ releases = [
 Release('1.3.39', 'May .., 2014',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bugv2('''Some tabs would come up blank when the editor was in
+multi-notebook mode.'''),
         ],
     ),
 
