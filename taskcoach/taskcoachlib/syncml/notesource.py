@@ -26,30 +26,39 @@ from taskcoachlib.i18n import _
 import wx, inspect
 
 class NoteSource(BaseSource):
-    def __init__(self, callback, noteList, categoryList, *args, **kwargs):
+    def __init__(self, callback, noteList, categoryList, dataType, *args, **kwargs):
         super(NoteSource, self).__init__(callback, noteList, *args, **kwargs)
 
         self.categoryList = categoryList
+        self._dataType = dataType
 
     def updateItemProperties(self, item, note):
-        item.dataType = 'text/x-vnote:1.1'
-        item.data = ical.VNoteFromNote(note, doFold=False).encode('UTF-8')
+        item.dataType = self._dataType
+        if self._dataType == 'text/x-vnote':
+            item.data = ical.VNoteFromNote(note, doFold=False).encode('UTF-8')
+        else:
+            item.data = (u'%s\n%s' % (note.subject(), note.description())).encode('UTF-8')
 
     def _parseObject(self, item):
-        parser = ical.VCalendarParser()
-        parser.parse(map(lambda x: x.rstrip('\r'), item.data.strip().split('\n')))
-        categories = parser.notes[0].pop('categories', [])
+        # Horde doesn't seem to give a fuck about the supported types we send it.
+        if item.dataType == 'text/plain':
+            lines = map(lambda x: x.rstrip('\r', item.data.split('\n')))
+            kwargs = dict(subject=lines[0], description='\n'.join(lines[1:])) if lines else dict()
+            categories = list()
+        else:
+            parser = ical.VCalendarParser()
+            parser.parse(map(lambda x: x.rstrip('\r'), item.data.strip().split('\n')))
+            categories = parser.notes[0].pop('categories', [])
 
-        kwargs = dict([(k, v) for k, v in parser.notes[0].items() if k in ['subject', 'description', 'id']])
+            kwargs = dict([(k, v) for k, v in parser.notes[0].items() if k in ['subject', 'description', 'id']])
+
         note = Note(**kwargs)
-
         for category in categories:
             categoryObject = self.categoryList.findCategoryByName(category)
             if categoryObject is None:
                 categoryObject = Category(category)
                 self.categoryList.extend([categoryObject])
             note.addCategory(categoryObject)
-
         return note
 
     def doUpdateItem(self, note, local):

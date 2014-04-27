@@ -157,7 +157,7 @@ class Synchronizer(wx.ProgressDialog):
 
             cfg.URI = self.taskdbname
             cfg.syncModes = 'two-way'
-            cfg.supportedTypes = 'text/vcalendar:1.0'
+            cfg.supportedTypes = 'text/calendar'
             cfg.version = '1.0'
 
             self.dmt.setSyncSourceConfig(cfg)
@@ -185,6 +185,8 @@ class Synchronizer(wx.ProgressDialog):
             src = NoteSource(self,
                              self.taskFile.notes(),
                              self.taskFile.categories(),
+                             # This is ugly and doesn't work for every configuration but well...
+                             'text/plain' if self.url.endswith('rpc.php') else 'text/x-vnote',
                              '%s.Notes' % self.clientName, cfg)
             src.preferredSyncMode = globals()[self.notemode]
             self.sources.append(src)

@@ -32,7 +32,7 @@ class TaskSource(basesource.BaseSource):
         item.data = 'BEGIN:VCALENDAR\r\nVERSION: 1.0\r\n' + \
                     ical.VCalFromTask(task, doFold=False).encode('UTF-8') + \
                     'END:VCALENDAR'
-        item.dataType = 'text/x-vcalendar:1.0'
+        item.dataType = 'text/calendar'
 
     def _parseObject(self, item):
         parser = ical.VCalendarParser()
