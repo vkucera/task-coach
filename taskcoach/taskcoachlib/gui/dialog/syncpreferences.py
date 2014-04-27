@@ -139,6 +139,7 @@ class SyncMLPreferences(widgets.NotebookDialog):
         self.iocontroller = iocontroller
         super(SyncMLPreferences, self).__init__(bitmap='wrench_icon', *args,
                                                 **kwargs)
+        self.SetSize((700, -1))
         if operating_system.isMac():
             self.CentreOnParent()
 
