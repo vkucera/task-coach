@@ -80,8 +80,8 @@ class SyncMLAccessPage(SyncMLBasePage):
 
         choice = self.addChoiceSetting(None, 'preset', _('SyncML server'), '',
                                        [('0', _('Custom')),
-                                        #('1', _('myFunambol (http://my.funambol.com/)')),
-                                        ('1', _('MemoToo (http://www.memotoo.com/)'))])[0]
+                                        ('1', _('MemoToo (http://www.memotoo.com/)')),
+                                        ('2', _('Horde-based'))])[0]
         wx.EVT_CHOICE(choice, wx.ID_ANY, self.OnPresetChanged)
 
         self.addTextSetting('access', 'syncUrl', _('SyncML server URL'))
@@ -120,6 +120,10 @@ class SyncMLAccessPage(SyncMLBasePage):
             self.setTextSetting('access', 'syncUrl', 'http://sync.memotoo.com/syncml')
             self.setTextSetting('task', 'uri', 'task')
             self.setTextSetting('note', 'uri', 'note')
+        elif event.GetInt() == 2:
+            self.setTextSetting('access', 'syncUrl', 'http://<hostname_and_path>/rpc.php')
+            self.setTextSetting('task', 'uri', 'tasks')
+            self.setTextSetting('note', 'uri', 'notes')
 
     def OnSyncTaskChanged(self, event):
         self.enableTextSetting('task', 'uri', event.IsChecked())
@@ -135,6 +139,7 @@ class SyncMLPreferences(widgets.NotebookDialog):
         self.iocontroller = iocontroller
         super(SyncMLPreferences, self).__init__(bitmap='wrench_icon', *args,
                                                 **kwargs)
+        self.SetSize((700, -1))
         if operating_system.isMac():
             self.CentreOnParent()
 

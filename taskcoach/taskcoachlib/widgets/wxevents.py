@@ -236,7 +236,7 @@ class CalendarCanvas(wx.Panel):
         return self._selection
 
     def Select(self, events):
-        self._selection = set(events)
+        self._selection = set(events) & set(self._coords.keys())
         e = wx.PyCommandEvent(wxEVT_EVENT_SELECTION_CHANGED)
         e.selection = set(self._selection)
         e.SetEventObject(self)
@@ -489,7 +489,7 @@ class CalendarCanvas(wx.Panel):
                     self._Flatten(result.event, events)
                 else:
                     events = [result.event]
-                events = set(events)
+                events = set(events) & set(self._coords.keys())
 
                 if event.CmdDown():
                     for e in events:

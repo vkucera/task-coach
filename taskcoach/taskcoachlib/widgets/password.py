@@ -78,34 +78,41 @@ class KeychainPasswordWidget(wx.Dialog):
 
 _PASSWORDCACHE = None
 
-def GetPassword(domain, username, reset=False):
+def _GetCachedPassword(domain, username, reset):
     global _PASSWORDCACHE
 
+    if _PASSWORDCACHE is None:
+        import StringIO, traceback
+        bf = StringIO.StringIO()
+        traceback.print_exc(file=bf)
+        wx.MessageBox(_('There was a problem trying to find out your system\'s keychain.\nPlease file a bug report (see the Help menu) and attach a screenshot of this message.\nError was:\n\n%s') % bf.getvalue(), _('Error'), wx.OK)
+        _PASSWORDCACHE = dict()
+    if (domain, username) in _PASSWORDCACHE and reset:
+        del _PASSWORDCACHE[(domain, username)]
+    if (domain, username) not in _PASSWORDCACHE:
+        pwd = wx.GetPasswordFromUser(_('Please enter your password.'), domain)
+        if not pwd:
+            return None
+        _PASSWORDCACHE[(domain, username)] = pwd
+    return _PASSWORDCACHE[(domain, username)]
+
+def GetPassword(domain, username, reset=False):
     try:
         from taskcoachlib.thirdparty.keyring import set_password, get_password
     except:
         # Keychain unavailable.
-        if _PASSWORDCACHE is None:
-            import StringIO, traceback
-            bf = StringIO.StringIO()
-            traceback.print_exc(file=bf)
-            wx.MessageBox(_('There was a problem trying to find out your system\'s keychain.\nPlease file a bug report (see the Help menu) and attach a screenshot of this message.\nError was:\n\n%s') % bf.getvalue(), _('Error'), wx.OK)
-            _PASSWORDCACHE = dict()
-        if (domain, username) in _PASSWORDCACHE and reset:
-            del _PASSWORDCACHE[(domain, username)]
-        if (domain, username) not in _PASSWORDCACHE:
-            pwd = wx.GetPasswordFromUser(_('Please enter your password.'), domain)
-            if not pwd:
-                return None
-            _PASSWORDCACHE[(domain, username)] = pwd
-        return _PASSWORDCACHE[(domain, username)]
+        return _GetCachedPassword(domain, username, reset)
 
-    if reset:
-        set_password(domain.encode('UTF-8'), username.encode('UTF-8'), '')
-    else:
-        pwd = get_password(domain.encode('UTF-8'), username.encode('UTF-8'))
-        if pwd:
-            return pwd.decode('UTF-8')
+    try:
+        if reset:
+            set_password(domain.encode('UTF-8'), username.encode('UTF-8'), '')
+        else:
+            pwd = get_password(domain.encode('UTF-8'), username.encode('UTF-8'))
+            if pwd:
+                return pwd.decode('UTF-8')
+    except ImportError:
+        # Bug seen on Ubuntu 13.10: secretstorage cannot import ._gi
+        return _GetCachedPassword(domain, username, reset)
 
     dlg = KeychainPasswordWidget(domain, username, None, wx.ID_ANY, _('Please enter your password'), style=wx.DEFAULT_DIALOG_STYLE|wx.STAY_ON_TOP)
     try:
