@@ -176,13 +176,13 @@ class EffortViewerTest(test.wxTestCase):
     def testAscendingSortOrder(self):
         self.task.addEffort(self.effort1)
         self.task.addEffort(self.effort2)
-        self.viewer.presentation().sortAscending(True)
+        self.viewer.setSortOrderAscending(True)
         self.assertEqual([self.effort1, self.effort2], list(self.viewer.presentation()))
 
     def testDescendingSortOrder(self):
         self.task.addEffort(self.effort1)
         self.task.addEffort(self.effort2)
-        self.viewer.presentation().sortAscending(False)
+        self.viewer.setSortOrderAscending(False)
         self.assertEqual([self.effort2, self.effort1], list(self.viewer.presentation()))
         
         

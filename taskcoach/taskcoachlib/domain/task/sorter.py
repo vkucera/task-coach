@@ -55,14 +55,14 @@ class Sorter(base.TreeSorter):
         # changed, the sort order also changes which in turn will cause 
         # self.reset() to be called.
                                 
-    def createSortKeyFunction(self):
+    def createSortKeyFunction(self, sortKey):
         statusSortKey = self.__createStatusSortKey()
-        regularSortKey = super(Sorter, self).createSortKeyFunction()
+        regularSortKey = super(Sorter, self).createSortKeyFunction(sortKey)
         return lambda task: statusSortKey(task) + [regularSortKey(task)]
 
     def __createStatusSortKey(self):
         if self.__sortByTaskStatusFirst:
-            if self._sortAscending:
+            if self.isAscending():
                 return lambda task: [task.completed(), task.inactive()]
             else:
                 return lambda task: [not task.completed(), not task.inactive()]

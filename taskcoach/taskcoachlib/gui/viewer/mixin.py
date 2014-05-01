@@ -228,36 +228,30 @@ class SortableViewerMixin(object):
         
     def createSorter(self, presentation):
         return self.SorterClass(presentation, **self.sorterOptions())
-    
+
     def sorterOptions(self):
         return dict(sortBy=self.sortKey(),
-                    sortAscending=self.isSortOrderAscending(),
                     sortCaseSensitive=self.isSortCaseSensitive())
         
     def sortBy(self, sortKey):
-        if self.isSortedBy(sortKey):
-            self.setSortOrderAscending(sortKey == 'ordering' or not self.isSortOrderAscending())
-        else:
-            self.settings.set(self.settingsSection(), 'sortby', sortKey)
-            self.presentation().sortBy(sortKey)
-            if sortKey == 'ordering':
-                self.setSortOrderAscending(True)
+        self.presentation().sortBy(sortKey)
+        self.settings.set(self.settingsSection(), 'sortby', str(self.presentation().sortKeys()))
         
     def isSortedBy(self, sortKey):
-        return sortKey == self.sortKey()
+        sortKeys = self.presentation().sortKeys()
+        return sortKeys and (sortKeys[0] == sortKey or sortKeys[0] == '-' + sortKey)
 
     def sortKey(self):
-        return self.settings.get(self.settingsSection(), 'sortby')
-    
+        return eval(self.settings.get(self.settingsSection(), 'sortby'))
+
     def isSortOrderAscending(self):
-        return self.settings.getboolean(self.settingsSection(), 
-            'sortascending')
-    
+        sortKeys = self.presentation().sortKeys()
+        return sortKeys and not sortKeys[0].startswith('-')
+
     def setSortOrderAscending(self, ascending=True):
-        self.settings.set(self.settingsSection(), 'sortascending', 
-            str(ascending))
         self.presentation().sortAscending(ascending)
-        
+        self.settings.set(self.settingsSection(), 'sortby', str(self.presentation().sortKeys()))
+
     def isSortCaseSensitive(self):
         return self.settings.getboolean(self.settingsSection(), 
             'sortcasesensitive')
@@ -319,7 +313,7 @@ class SortableViewerForEffortMixin(SortableViewerMixin):
 
     def sortKey(self):
         ''' Efforts are always sorted by period at the moment. '''
-        return 'period'
+        return ['-period']
 
 
 class ManualOrderingMixin(object):
