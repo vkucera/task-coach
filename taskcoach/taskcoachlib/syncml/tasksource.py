@@ -74,4 +74,6 @@ class TaskSource(basesource.BaseSource):
         for category in local.categories():
             category.addCategorizable(local)
 
+        super(TaskSource, self).doUpdateItem(task, local)
+
         return 200 # FIXME

@@ -78,7 +78,7 @@ class KeychainPasswordWidget(wx.Dialog):
 
 _PASSWORDCACHE = None
 
-def _GetCachedPassword(domain, username):
+def _GetCachedPassword(domain, username, reset):
     global _PASSWORDCACHE
 
     if _PASSWORDCACHE is None:
@@ -101,7 +101,7 @@ def GetPassword(domain, username, reset=False):
         from taskcoachlib.thirdparty.keyring import set_password, get_password
     except:
         # Keychain unavailable.
-        return _GetCachedPassword(domain, username)
+        return _GetCachedPassword(domain, username, reset)
 
     try:
         if reset:
@@ -112,7 +112,7 @@ def GetPassword(domain, username, reset=False):
                 return pwd.decode('UTF-8')
     except ImportError:
         # Bug seen on Ubuntu 13.10: secretstorage cannot import ._gi
-        return _GetCachedPassword(domain, username)
+        return _GetCachedPassword(domain, username, reset)
 
     dlg = KeychainPasswordWidget(domain, username, None, wx.ID_ANY, _('Please enter your password'), style=wx.DEFAULT_DIALOG_STYLE|wx.STAY_ON_TOP)
     try:

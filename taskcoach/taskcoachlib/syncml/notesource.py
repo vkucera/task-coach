@@ -42,7 +42,7 @@ class NoteSource(BaseSource):
     def _parseObject(self, item):
         # Horde doesn't seem to give a fuck about the supported types we send it.
         if item.dataType == 'text/plain':
-            lines = map(lambda x: x.rstrip('\r', item.data.split('\n')))
+            lines = map(lambda x: x.rstrip('\r'), item.data.split('\n'))
             kwargs = dict(subject=lines[0], description='\n'.join(lines[1:])) if lines else dict()
             categories = list()
         else:
@@ -72,5 +72,7 @@ class NoteSource(BaseSource):
 
         for category in local.categories():
             category.addCategorizable(local)
+
+        super(NoteSource, self).doUpdateItem(note, local)
 
         return 200

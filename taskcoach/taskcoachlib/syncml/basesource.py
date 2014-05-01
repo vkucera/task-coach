@@ -158,6 +158,7 @@ class BaseSource(SyncSource):
         self.callback.onAddItem()
 
         obj = self._parseObject(item)
+        obj.cleanDirty()
         self.objectList.append(obj)
         item.key = obj.id().encode('UTF-8')
 
@@ -184,8 +185,7 @@ class BaseSource(SyncSource):
     def doUpdateItem(self, obj, local):
         """Must update the 'local' domain object according to 'obj'
         (which is a 'temporary' domain object)"""
-
-        raise NotImplementedError
+        local.cleanDirty()
 
     def deleteItem(self, item):
         self.callback.onDeleteItem()

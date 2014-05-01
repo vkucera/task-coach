@@ -47,16 +47,12 @@ def parseDateTime(fulldate):
 
     return date.DateTime(year, month, day, hour, minute, second)
 
-def fmtDate(dt):
-    ''' Formats a L{taskcoachlib.domain.date.Date} object to a string
-    suitable for inclusion in an iCcalendar file. '''
-    return '%04d%02d%02dT000000' % (dt.year, dt.month, dt.day)
-
 def fmtDateTime(dt):
     ''' Formats a L{taskcoachlib.domain.date.DateTime} object to a string
     suitable for inclusion in an iCalendar file. '''
-    return '%04d%02d%02dT%02d%02d%02d' % (dt.year, dt.month, dt.day,
-                                          dt.hour, dt.minute, dt.second)
+    dt = dt.utcfromtimestamp(time.mktime(dt.timetuple()))
+    return '%04d%02d%02dT%02d%02d%02dZ' % (dt.year, dt.month, dt.day,
+                                           dt.hour, dt.minute, dt.second)
 
 def quoteString(s):
     ''' The 'quoted-printable' codec doesn't encode \n, but tries to
@@ -158,7 +154,8 @@ class VCalendarParser(object):
             else:
                 # Some  servers only  specify CHARSET  when  there are
                 # non-ASCII characters :)
-                value = value.decode('ascii')
+                # More, Horde encodes in UTF-8 without specifying the charset.
+                value = value.decode('UTF-8')
 
             # If  an item  name ends  with  'TMPL', it's  part of  the
             # template system and has to be eval()ed.
@@ -192,7 +189,12 @@ class VCalendarParser(object):
         elif name == 'SUMMARY':
             self.kwargs['subject'] = value
         elif name == 'CATEGORIES':
-            self.kwargs['categories'] = value.split(',')
+            # Horde escapes the comma, even though it's an actual separator.
+            # I didn't found any way to include an actual comma in a Horde
+            # "tag".
+            self.kwargs['categories'] = map(lambda x: x.rstrip('\\').lstrip(), value.split(','))
+        elif name == 'DESCRIPTION':
+            self.kwargs['description'] = value.replace('\\n', '\n')
         else:
             self.kwargs[name.lower()] = value
 
@@ -257,7 +259,7 @@ class VNoteParser(VCalendarParser):
         if name == 'X-IRMC-LUID':
             self.kwargs['id'] = value.decode('UTF-8')
         elif name == 'BODY':
-            self.kwargs['description'] = value
+            self.kwargs['description'] = value.replace('\\n', '\n')
         elif name == 'CLASS':
             pass
         else:
