@@ -453,7 +453,9 @@ class SquareTaskViewer(BaseTaskTreeViewer):
         self.__transformTaskAttribute = lambda x: x
         self.__zero = 0
         super(SquareTaskViewer, self).__init__(*args, **kwargs)
-        self.orderBy(self.settings.get(self.settingsSection(), 'sortby'))
+        sortKeys = eval(self.settings.get(self.settingsSection(), 'sortby'))
+        orderBy = sortKeys[0] if sortKeys else 'budget'
+        self.orderBy(sortKeys[0] if sortKeys else 'budget')
         pub.subscribe(self.on_order_by_changed, 
                       'settings.%s.sortby' % self.settingsSection())
         self.orderUICommand.setChoice(self.__orderBy)

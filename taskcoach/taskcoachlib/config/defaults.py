@@ -79,8 +79,7 @@ defaults = {
     'title': '',  # User supplied viewer title
     'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,Spacer,ViewerHideTasks_completed,ViewerHideTasks_inactive,ResetFilter,TaskViewerTreeOrListChoice,Search',
     'treemode': 'True',  # True = tree mode, False = list mode
-    'sortby': 'dueDateTime',
-    'sortascending': 'True',
+    'sortby': '["dueDateTime"]',
     'sortbystatusfirst': 'True',
     'sortcasesensitive': 'False',
     'searchfilterstring': '',
@@ -121,8 +120,7 @@ defaults = {
     'title': '',  # User supplied viewer title
     'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Spacer,ViewerHideTasks_completed,ViewerHideTasks_inactive,ResetFilter,Search',
     'treemode': 'True',  # True = tree mode, False = list mode
-    'sortby': 'subject',
-    'sortascending': 'True',
+    'sortby': '["subject"]',
     'sortbystatusfirst': 'True',
     'sortcasesensitive': 'False',
     'searchfilterstring': '',
@@ -146,7 +144,7 @@ defaults = {
 'squaretaskviewer': {
     'title': '',
     'toolbarperspective': 'TaskNew,NewSubItem,TaskNewFromTemplateButton,Separator,Edit,Delete,Separator,TaskMarkInactive,TaskMarkActive,TaskMarkCompleted,Separator,EffortStart,EffortStop,Separator,SquareTaskViewerOrderChoice,Spacer,ViewerHideTasks_completed,ViewerHideTasks_inactive,ResetFilter,Search',
-    'sortby': 'budget',
+    'sortby': '["budget"]',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
@@ -195,8 +193,7 @@ defaults = {
     'hideoverduetasks': 'False',
     'hidecompletedtasks': 'False',
     'hidecompositetasks': 'False',
-    'sortby': 'subject',
-    'sortascending': 'True',
+    'sortby': '["subject"]',
     'sortcasesensitive': 'False',
     'sortbystatusfirst': 'True',
     },
@@ -224,8 +221,7 @@ defaults = {
     'hideoverduetasks': 'False',
     'hidecompletedtasks': 'False',
     'hidecompositetasks': 'False',
-    'sortby': 'subject',
-    'sortascending': 'True',
+    'sortby': '["subject"]',
     'sortcasesensitive': 'False',
     'sortbystatusfirst': 'True',
     'highlightcolor': '',
@@ -234,8 +230,7 @@ defaults = {
 'categoryviewer': {
     'title': '',
     'toolbarperspective': 'CategoryNew,NewSubItem,Separator,Edit,Delete,Spacer,ResetFilter,Search',
-    'sortby': 'subject',
-    'sortascending': 'True',
+    'sortby': '["subject"]',
     'sortcasesensitive': 'False',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
@@ -250,8 +245,7 @@ defaults = {
 'categoryviewerintaskeditor': {
     'title': '',
     'toolbarperspective': 'CategoryNew,NewSubItem,Separator,Edit,Delete,Spacer,ResetFilter,Search',
-    'sortby': 'subject',
-    'sortascending': 'True',
+    'sortby': '["subject"]',
     'sortcasesensitive': 'False',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
@@ -266,8 +260,7 @@ defaults = {
 'categoryviewerinnoteeditor': {
     'title': '',
     'toolbarperspective': 'CategoryNew,NewSubItem,Separator,Edit,Delete,Spacer,ResetFilter,Search',
-    'sortby': 'subject',
-    'sortascending': 'True',
+    'sortby': '["subject"]',
     'sortcasesensitive': 'False',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
@@ -282,8 +275,7 @@ defaults = {
 'noteviewer': {
     'title': '',
     'toolbarperspective': 'NoteNew,NewSubItem,Separator,Edit,Delete,Spacer,ResetFilter,Search',
-    'sortby': 'subject',
-    'sortascending': 'True',
+    'sortby': '["subject"]',
     'sortcasesensitive': 'False',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
@@ -298,8 +290,7 @@ defaults = {
     },
 'noteviewerintaskeditor': {
     'toolbarperspective': 'NoteNew,NewSubItem,Separator,Edit,Delete,Spacer,ResetFilter,Search',
-    'sortby': 'subject',
-    'sortascending': 'True',
+    'sortby': '["subject"]',
     'sortcasesensitive': 'False',
     'columns': "['attachments', 'description', 'creationDateTime', \
                  'modificationDateTime']",
@@ -314,8 +305,7 @@ defaults = {
     },
 'noteviewerincategoryeditor': {
     'toolbarperspective': 'NoteNew,NewSubItem,Separator,Edit,Delete,Spacer,ResetFilter,Search',
-    'sortby': 'subject',
-    'sortascending': 'True',
+    'sortby': '["subject"]',
     'sortcasesensitive': 'False',
     'columns': "['subject']",
     'columnsalwaysvisible': "['subject']",
@@ -329,8 +319,7 @@ defaults = {
     },
 'noteviewerinattachmenteditor': {
     'toolbarperspective': 'NoteNew,NewSubItem,Separator,Edit,Delete,Spacer,ResetFilter,Search',
-    'sortby': 'subject',
-    'sortascending': 'True',
+    'sortby': '["subject"]',
     'sortcasesensitive': 'False',
     'columns': "['subject']",
     'columnsalwaysvisible': "['subject']",
@@ -346,8 +335,7 @@ defaults = {
     'title': '',
     'toolbarperspective': 'EffortNew,Separator,Edit,Delete,Separator,EffortStartForEffort,EffortStop,Separator,EffortViewerAggregationChoice,Spacer,ResetFilter,Search',
     'aggregation': 'details',  # 'details' (default), 'day', 'week', or 'month'
-    'sortby': 'period',
-    'sortascending': 'False',
+    'sortby': '["-period"]',
     'sortcasesensitive': 'False',
     'columns': "['description', 'timeSpent']",
     'columnsalwaysvisible': "['period', 'task']",
@@ -366,8 +354,7 @@ defaults = {
 'effortviewerintaskeditor': {
     'toolbarperspective': 'EffortNew,Separator,Edit,Delete,Separator,EffortStartForEffort,EffortStop,Separator,EffortViewerAggregationChoice,Spacer,ResetFilter,Search',
     'aggregation': 'details',  # 'details' (default), 'day', 'week', or 'month'
-    'sortby': 'period',
-    'sortascending': 'False',
+    'sortby': '["-period"]',
     'sortcasesensitive': 'False',
     'columns': "['description', 'timeSpent']",
     'columnsalwaysvisible': "['period', 'task']",
@@ -386,8 +373,7 @@ defaults = {
 'attachmentviewer': {
     'title': '',
     'toolbarperspective': 'AttachmentNew,Separator,Edit,Delete,Separator,AttachmentOpen,Spacer,Search',
-    'sortby': 'subject',
-    'sortascending': 'True',
+    'sortby': '["subject"]',
     'sortcasesensitive': 'False',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
@@ -402,8 +388,7 @@ defaults = {
 'attachmentviewerintaskeditor': {
     'title': '',
     'toolbarperspective': 'AttachmentNew,Separator,Edit,Delete,Separator,AttachmentOpen,Spacer,Search',
-    'sortby': 'subject',
-    'sortascending': 'True',
+    'sortby': '["subject"]',
     'sortcasesensitive': 'False',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
@@ -418,8 +403,7 @@ defaults = {
 'attachmentviewerinnoteeditor': {
     'title': '',
     'toolbarperspective': 'AttachmentNew,Separator,Edit,Delete,Separator,AttachmentOpen,Spacer,Search',
-    'sortby': 'subject',
-    'sortascending': 'True',
+    'sortby': '["subject"]',
     'sortcasesensitive': 'False',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
@@ -434,8 +418,7 @@ defaults = {
 'attachmentviewerincategoryeditor': {
     'title': '',
     'toolbarperspective': 'AttachmentNew,Separator,Edit,Delete,Separator,AttachmentOpen,Spacer,Search',
-    'sortby': 'subject',
-    'sortascending': 'True',
+    'sortby': '["subject"]',
     'sortcasesensitive': 'False',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',

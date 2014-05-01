@@ -167,8 +167,18 @@ class Settings(object, CachingConfigParser):
                            'noteviewerintaskeditor', 'noteviewerincategoryeditor',
                            'noteviewerinattachmenteditor', 'categoryviewerintaskeditor',
                            'categoryviewerinnoteeditor']
-        if option == 'sortby' and result in taskDateColumns:
-            result += 'Time'
+        if option == 'sortby':
+            if result in taskDateColumns:
+                result += 'Time'
+            try:
+                eval(result)
+            except:
+                sortKeys = [result]
+                try:
+                    ascending = self.getboolean(section, 'sortascending')
+                except:
+                    ascending = True
+                result = '["%s%s"]' % (('' if ascending else '-'), result)
         elif option == 'columns':
             columns = [(col + 'Time' if col in taskDateColumns else col) for col in eval(result)]
             result = str(columns)

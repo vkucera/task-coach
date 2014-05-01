@@ -158,8 +158,8 @@ class SortableViewerTest(test.TestCase):
 
     def testSortBy(self):
         self.viewer.sortBy('subject')
-        self.assertEqual('subject', 
-            self.settings.get(self.viewer.settingsSection(), 'sortby'))
+        self.assertEqual('subject',
+            eval(self.settings.get(self.viewer.settingsSection(), 'sortby'))[0])
 
     def testSortByTwiceFlipsSortOrder(self):
         self.viewer.sortBy('subject')
@@ -188,8 +188,7 @@ class SortableViewerTest(test.TestCase):
         self.failIf(self.viewer.isSortCaseSensitive())
         
     def testApplySettingsWhenCreatingViewer(self):
-        self.settings.set(self.viewer.settingsSection(), 'sortby', 'description')
-        self.settings.set(self.viewer.settingsSection(), 'sortascending', 'True')
+        self.settings.set(self.viewer.settingsSection(), 'sortby', '["description"]')
         anotherViewer = self.createViewer()
         anotherViewer.presentation().extend([task.Task(description='B'), 
                                              task.Task(description='A')])

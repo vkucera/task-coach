@@ -24,11 +24,11 @@ class Sorter(patterns.ListDecorator):
     ''' This class decorates a list and sorts its contents. '''
     
     def __init__(self, *args, **kwargs):
-        self._sortKey = kwargs.pop('sortBy', 'subject')
-        self._sortAscending = kwargs.pop('sortAscending', True)
+        self._sortKeys = kwargs.pop('sortBy', ['subject'])
         self._sortCaseSensitive = kwargs.pop('sortCaseSensitive', True)
         super(Sorter, self).__init__(*args, **kwargs)
-        self._registerObserverForAttribute(self._sortKey)
+        for sortKey in self._sortKeys:
+            self._registerObserverForAttribute(sortKey.lstrip('-'))
         self.reset()
 
     def thaw(self):
@@ -38,7 +38,8 @@ class Sorter(patterns.ListDecorator):
 
     def detach(self):
         super(Sorter, self).detach()
-        self._removeObserverForAttribute(self._sortKey)
+        for sortKey in self._sortKeys:
+            self._removeObserverForAttribute(sortKey.lstrip('-'))
 
     @classmethod        
     def sortEventType(cls):
@@ -49,26 +50,47 @@ class Sorter(patterns.ListDecorator):
         super(Sorter, self).extendSelf(items, event)
         self.reset()
 
+    def isAscending(self):
+        if self._sortKeys:
+            return not self._sortKeys[0].startswith('-')
+        return True
+
+    def sortKeys(self):
+        return self._sortKeys
+
     # We don't implement removeItemsFromSelf() because there is no need 
     # to resort when items are removed since after removing items the 
     # remaining items are still in the right order.
 
     def sortBy(self, sortKey):
-        if sortKey == self._sortKey:
-            return  # No need to sort
-        self._removeObserverForAttribute(self._sortKey)
-        self._registerObserverForAttribute(sortKey)
-        self._sortKey = sortKey
-        self.reset()
+        if self._sortKeys and self._sortKeys[0] == sortKey:
+            if sortKey == 'ordering':
+                return
+            self._sortKeys[0] = '-' + sortKey
+        elif self._sortKeys and self._sortKeys[0] == '-' + sortKey:
+            self._sortKeys[0] = sortKey
+        elif self._sortKeys and sortKey in self._sortKeys:
+            self._sortKeys.remove(sortKey)
+            self._sortKeys.insert(0, sortKey)
+        elif self._sortKeys and ('-' + sortKey) in self._sortKeys:
+            self._sortKeys.remove('-' + sortKey)
+            self._sortKeys.insert(0, sortKey)
+        else:
+            self._sortKeys.insert(0, sortKey)
+            self._registerObserverForAttribute(sortKey)
 
-    def sortAscending(self, ascending):
-        self._sortAscending = ascending
         self.reset()
         
     def sortCaseSensitive(self, sortCaseSensitive):
         self._sortCaseSensitive = sortCaseSensitive
         self.reset()
-    
+
+    def sortAscending(self, ascending=True):
+        if self._sortKeys:
+            if (ascending and self._sortKeys[0].startswith('-')) or \
+              (not ascending and not self._sortKeys[0].startswith('-')):
+              self.sortBy(self._sortKeys[0].lstrip('-'))
+
     def reset(self, forceEvent=False):
         ''' reset does the actual sorting. If the order of the list changes, 
             observers are notified by means of the list-sorted event. '''
@@ -76,26 +98,27 @@ class Sorter(patterns.ListDecorator):
             return
 
         oldSelf = self[:]
-        self.sort(key=self.createSortKeyFunction(), 
-                  reverse=not self._sortAscending)
+        # XXXTODO: create only one function with all keys ? Reversing may
+        # be problematic.
+        for sortKey in reversed(self._sortKeys):
+            self.sort(key=self.createSortKeyFunction(sortKey.lstrip('-')), reverse=sortKey.startswith('-'))
         if forceEvent or self != oldSelf:
             pub.sendMessage(self.sortEventType(), sender=self)
 
-    def createSortKeyFunction(self):
+    def createSortKeyFunction(self, sortKey):
         ''' createSortKeyFunction returns a function that is passed to the 
             builtin list.sort method to extract the sort key from each element
             in the list. We expect the domain object class to provide a
             <sortKey>SortFunction(sortCaseSensitive) method that returns the
             sortKeyFunction for the sortKey. '''
-        return self._getSortKeyFunction()(sortCaseSensitive=self._sortCaseSensitive)
+        return self._getSortKeyFunction(sortKey)(sortCaseSensitive=self._sortCaseSensitive)
             
-    def _getSortKeyFunction(self):
+    def _getSortKeyFunction(self, sortKey):
         try:
             return getattr(self.DomainObjectClass, 
-                           '%sSortFunction' % self._sortKey)
+                           '%sSortFunction' % sortKey)
         except AttributeError:
-            self._sortKey = 'subject'
-            return self._getSortKeyFunction()
+            return self._getSortKeyFunction('subject')
 
     def _registerObserverForAttribute(self, attribute):
         for eventType in self._getSortEventTypes(attribute):
@@ -134,14 +157,14 @@ class TreeSorter(Sorter):
     def treeMode(self):
         return True
 
-    def createSortKeyFunction(self):
+    def createSortKeyFunction(self, key):
         ''' createSortKeyFunction returns a function that is passed to the 
             builtin list.sort method to extract the sort key from each element
             in the list. We expect the domain object class to provide a
             <sortKey>SortFunction(sortCaseSensitive, treeMode) method that 
             returns the sortKeyFunction for the sortKey. '''            
-        return self._getSortKeyFunction()(sortCaseSensitive=self._sortCaseSensitive, 
-                                          treeMode=self.treeMode())
+        return self._getSortKeyFunction(key)(sortCaseSensitive=self._sortCaseSensitive, 
+                                             treeMode=self.treeMode())
 
     def reset(self, *args, **kwargs):  # pylint: disable=W0221
         self.__invalidateRootItemCache()

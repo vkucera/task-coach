@@ -33,6 +33,8 @@ Shift-clicking a parent task, only select visible tasks.'''),
         ],
     featuresAdded=[
         Feature('''SyncML: add support for Horde-based servers.'''),
+        Feature('''All sort criterion are now persisted between
+sessions.''', 'http://taskcoach.uservoice.com/forums/26465-desktop-version-windows-linux-mac-of-task-coach/suggestions/289031-better-control-over-task-order'),
         ],
     ),
 
