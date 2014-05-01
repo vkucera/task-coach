@@ -27,6 +27,8 @@ Release('1.3.39', 'May .., 2014',
     bugsFixed=[
         Bugv2('''Some tabs would come up blank when the editor was in
 multi-notebook mode.'''),
+        Bugv2('''In hierarchical calendar, when hitting Ctrl-A or
+Shift-clicking a parent task, only select visible tasks.'''),
         ],
     ),
 
