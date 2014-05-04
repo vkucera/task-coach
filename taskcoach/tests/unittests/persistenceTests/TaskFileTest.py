@@ -55,6 +55,7 @@ class TaskFileTestCase(test.TestCase):
         self.task.addEffort(self.effort)
         self.filename = 'test.tsk'
         self.filename2 = 'test2.tsk'
+        super(TaskFileTestCase, self).setUp()
         
     def createTaskFiles(self):
         # pylint: disable=W0201

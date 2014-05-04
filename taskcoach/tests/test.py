@@ -23,6 +23,8 @@ projectRoot = os.path.abspath('..')
 if projectRoot not in sys.path:
     sys.path.insert(0, projectRoot)
 
+from taskcoachlib.notify import AbstractNotifier
+
 
 def ignore(*args, **kwargs):  # pylint: disable=W0613
     pass
@@ -58,6 +60,9 @@ class TestCase(unittest.TestCase, object):
         
     def onEvent(self, event):
         self.events.append(event)
+
+    def setUp(self):
+        AbstractNotifier.disableNotifications()
 
     def tearDown(self):
         # pylint: disable=W0404
@@ -97,9 +102,6 @@ class wxTestCase(TestCase):
     i18n.Translator('en_US')
     from taskcoachlib import gui
     gui.init()
-    
-    def setUp(self):
-        pass
 
     def tearDown(self):
         super(wxTestCase, self).tearDown()

@@ -26,6 +26,7 @@ class AbstractNotifier(object):
     """
 
     notifiers = {}
+    _enabled = True
 
     def getName(self):
         raise NotImplementedError
@@ -53,12 +54,26 @@ class AbstractNotifier(object):
         availability.
         """
 
-        if operating_system.isMac():
-            return klass.get('Growl') or klass.get('Task Coach')
-        elif operating_system.isWindows():
-            return klass.get('Snarl') or klass.get('Task Coach')
+        if klass._enabled:
+            if operating_system.isMac():
+                return klass.get('Growl') or klass.get('Task Coach')
+            elif operating_system.isWindows():
+                return klass.get('Snarl') or klass.get('Task Coach')
+            else:
+                return klass.get('libnotify') or klass.get('Task Coach')
         else:
-            return klass.get('libnotify') or klass.get('Task Coach')
+            class DummyNotifier(AbstractNotifier):
+                def getName(self):
+                    return u'Dummy'
+                def isAvailable(self):
+                    return True
+                def notify(self, title, summary, bitmap, **kwargs):
+                    pass
+            return DummyNotifier()
+
+    @classmethod
+    def disableNotifications(klass):
+        klass._enabled = False
 
     @classmethod
     def names(klass):
