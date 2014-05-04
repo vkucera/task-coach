@@ -765,6 +765,15 @@ class TaskFileSaveAndLoadTest(TaskFileTestCase):
         self.taskFile.close()
         self.remove('new.tsk', 'new.tsk.delta')
 
+    def testSaveAsOverwrites(self):
+        self.taskFile.saveas('new.tsk')
+        self.taskFile.close()
+        self.taskFile.tasks().extend([task.Task(subject=u'foo')])
+        self.taskFile.saveas('new.tsk')
+        self.assertEqual(1, len(self.taskFile.tasks()))
+        self.taskFile.close()
+        self.remove('new.tsk', 'new.tsk.delta')
+
 
 class TaskFileMergeTest(TaskFileTestCase):
     def setUp(self):

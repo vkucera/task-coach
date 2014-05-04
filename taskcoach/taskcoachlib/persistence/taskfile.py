@@ -487,6 +487,10 @@ class TaskFile(patterns.Observer):
             self.__loading = False
 
     def saveas(self, filename):
+        if os.path.exists(filename):
+            os.remove(filename)
+        if os.path.exists(filename + '.delta'):
+            os.remove(filename + '.delta')
         self.setFilename(filename)
         self.save()
 
