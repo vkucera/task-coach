@@ -30,6 +30,8 @@ multi-notebook mode.''', '1512'),
         Bugv2('''In hierarchical calendar, when hitting Ctrl-A or
 Shift-clicking a parent task, only select visible tasks.'''),
         Bugv2('''Fix a number of SyncML-related bugs.'''),
+        Bugv2('''Fix the "cannot create a file that exists" problem when
+saving.''', '1517'),
         ],
     featuresAdded=[
         Feature('''SyncML: add support for Horde-based servers.'''),
