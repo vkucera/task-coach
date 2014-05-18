@@ -32,6 +32,7 @@ Shift-clicking a parent task, only select visible tasks.'''),
         Bugv2('''Fix a number of SyncML-related bugs.'''),
         Bugv2('''Fix the "cannot create a file that exists" problem when
 saving.''', '1517'),
+        Bugv2('''Fix an error introduced in 1.3.38 related to tips.''', '1518'),
         ],
     featuresAdded=[
         Feature('''SyncML: add support for Horde-based servers.'''),
