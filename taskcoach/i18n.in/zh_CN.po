@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: zh_CN\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-10 00:00+0000\n"
-"PO-Revision-Date: 2013-01-02 01:36+0000\n"
-"Last-Translator: Frank Niessink <frank@niessink.com>\n"
+"PO-Revision-Date: 2014-05-18 09:33+0000\n"
+"Last-Translator: Jérôme Laheurte <fraca7@free.fr>\n"
 "Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-20 15:21+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-05-18 09:36+0000\n"
+"X-Generator: Launchpad (build 17007)\n"
 "X-Poedit-Country: CHINA\n"
 "X-Poedit-Language: Chinese\n"
 "Generated-By: pygettext.py 1.5\n"
@@ -23,7 +23,7 @@ msgstr ""
 msgid ""
 "Errors have occured. Please see \"taskcoachlog.txt\" in your \"My "
 "Documents\" folder."
-msgstr ""
+msgstr "程序出错，请参见“我的文档”中taskcoachlog.txt文件。"
 
 #: taskcoachlib/application/application.py:67
 #: taskcoachlib/application/application.py:69
@@ -32,7 +32,7 @@ msgstr ""
 #: taskcoachlib/iphone/protocol.py:552 taskcoachlib/widgets/draganddrop.py:123
 #: taskcoachlib/widgets/draganddrop.py:165 taskcoachlib/widgets/password.py:92
 msgid "Error"
-msgstr "错误"
+msgstr "出错"
 
 #: taskcoachlib/application/application.py:69
 msgid "Errors have occured. Please see \"%s\""
@@ -122,7 +122,7 @@ msgstr "粘帖为\"%s\"的子项目"
 
 #: taskcoachlib/command/base.py:326 taskcoachlib/gui/dialog/toolbar.py:134
 msgid "Drag and drop"
-msgstr "拖拽"
+msgstr "拖放"
 
 #: taskcoachlib/command/base.py:327
 msgid "Drag and drop \"%s\""
@@ -1180,14 +1180,14 @@ msgstr "编辑改变所有描述"
 #: taskcoachlib/gui/viewer/task.py:978
 #: taskcoachlib/persistence/csv/generator.py:40
 msgid "Creation date"
-msgstr ""
+msgstr "创建日期"
 
 #: taskcoachlib/gui/dialog/editor.py:165
 #: taskcoachlib/gui/viewer/attachment.py:117
 #: taskcoachlib/gui/viewer/category.py:119 taskcoachlib/gui/viewer/note.py:150
 #: taskcoachlib/gui/viewer/task.py:985
 msgid "Modification date"
-msgstr ""
+msgstr "修改日期"
 
 #: taskcoachlib/gui/dialog/editor.py:227
 #: taskcoachlib/gui/uicommand/uicommand.py:2322
@@ -1403,17 +1403,17 @@ msgstr ""
 #: taskcoachlib/thirdparty/smartdatetimectrl.py:1648
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Day(s)"
-msgstr ""
+msgstr "天"
 
 #: taskcoachlib/gui/dialog/editor.py:1185
 #: taskcoachlib/thirdparty/smartdatetimectrl.py:1649
 msgid "Hour(s)"
-msgstr ""
+msgstr "小时"
 
 #: taskcoachlib/gui/dialog/editor.py:1185
 #: taskcoachlib/thirdparty/smartdatetimectrl.py:1650
 msgid "Minute(s)"
-msgstr ""
+msgstr "分钟"
 
 #: taskcoachlib/gui/dialog/editor.py:1195
 msgid "Stop"
@@ -1665,7 +1665,7 @@ msgstr "确定"
 
 #: taskcoachlib/gui/dialog/preferences.py:295
 msgid "This setting will take effect after you restart %s"
-msgstr ""
+msgstr "此设置在 %s 重启后才能起效"
 
 #: taskcoachlib/gui/dialog/preferences.py:297
 msgid ""
@@ -1900,6 +1900,10 @@ msgid ""
 "are suggested. Of course, you can also enter any time you \n"
 "want beside the suggested times."
 msgstr ""
+"在时间选择弹出菜单中（如设置一项实施的起始时间） \n"
+"%(name)s 将使用这些设置建议时间选择。分钟数字越小，越多\n"
+"建议使用。当然，你也可以输入建议时间间隔内任意你想使用\n"
+"的时间。"
 
 #: taskcoachlib/gui/dialog/preferences.py:579
 msgid "Idle time notice"
@@ -2078,7 +2082,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:729
 msgid "OS X"
-msgstr ""
+msgstr "OS X"
 
 #: taskcoachlib/gui/dialog/preferences.py:736
 msgid "Get e-mail subject from Mail.app"
@@ -2092,7 +2096,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:743
 msgid "Linux"
-msgstr ""
+msgstr "Linux"
 
 #: taskcoachlib/gui/dialog/preferences.py:750
 msgid "Focus task subject in task editor"
@@ -2206,7 +2210,7 @@ msgstr "新任务模板"
 
 #: taskcoachlib/gui/dialog/toolbar.py:47
 msgid "Preview"
-msgstr ""
+msgstr "预览"
 
 #: taskcoachlib/gui/dialog/toolbar.py:67
 msgid "Available tools"
@@ -2240,7 +2244,7 @@ msgstr ""
 #: taskcoachlib/gui/dialog/toolbar.py:225
 #: taskcoachlib/gui/dialog/toolbar.py:254
 msgid "Separator"
-msgstr ""
+msgstr "分隔符"
 
 #: taskcoachlib/gui/dialog/toolbar.py:169
 #: taskcoachlib/gui/dialog/toolbar.py:228

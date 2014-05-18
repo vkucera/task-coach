@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-03-10 00:00+0000\n"
-"PO-Revision-Date: 2013-04-28 13:40+0000\n"
-"Last-Translator: HereTo HelpTranslate <necroaalalealex@yahoo.gr>\n"
+"PO-Revision-Date: 2014-05-04 06:27+0000\n"
+"Last-Translator: Barbara Georgiadou <barbgeorgiadou@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-20 15:21+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-05-18 09:37+0000\n"
+"X-Generator: Launchpad (build 17007)\n"
+"Language: el\n"
 
 #: taskcoachlib/application/application.py:67
 msgid ""
@@ -579,7 +580,7 @@ msgstr "Άνοιγμα επιλεγμένων συνημμένων"
 
 #: taskcoachlib/domain/date/snooze.py:22
 msgid "5 minutes"
-msgstr ""
+msgstr "5 λεπτά"
 
 #: taskcoachlib/domain/date/snooze.py:22
 msgid "Don't snooze"
@@ -587,81 +588,81 @@ msgstr ""
 
 #: taskcoachlib/domain/date/snooze.py:23
 msgid "10 minutes"
-msgstr ""
+msgstr "10 λεπτά"
 
 #: taskcoachlib/domain/date/snooze.py:23
 msgid "15 minutes"
-msgstr ""
+msgstr "15 λεπτά"
 
 #: taskcoachlib/domain/date/snooze.py:24
 msgid "20 minutes"
-msgstr ""
+msgstr "20 λεπτά"
 
 #: taskcoachlib/domain/date/snooze.py:24
 msgid "30 minutes"
-msgstr ""
+msgstr "30 λεπτά"
 
 #: taskcoachlib/domain/date/snooze.py:25
 msgid "1.5 hour"
-msgstr ""
+msgstr "1,5 ώρα"
 
 #: taskcoachlib/domain/date/snooze.py:25
 msgid "45 minutes"
-msgstr ""
+msgstr "45 λεπτά"
 
 #: taskcoachlib/domain/date/snooze.py:25
 #: taskcoachlib/thirdparty/smartdatetimectrl.py:1759
 msgid "1 hour"
-msgstr ""
+msgstr "1 ώρα"
 
 #: taskcoachlib/domain/date/snooze.py:26
 msgid "2 hours"
-msgstr ""
+msgstr "2 ώρες"
 
 #: taskcoachlib/domain/date/snooze.py:26
 msgid "3 hours"
-msgstr ""
+msgstr "3 ώρες"
 
 #: taskcoachlib/domain/date/snooze.py:26
 msgid "4 hours"
-msgstr ""
+msgstr "4 ώρες"
 
 #: taskcoachlib/domain/date/snooze.py:27
 msgid "12 hours"
-msgstr ""
+msgstr "12 ώρες"
 
 #: taskcoachlib/domain/date/snooze.py:27
 msgid "6 hours"
-msgstr ""
+msgstr "6 ώρες"
 
 #: taskcoachlib/domain/date/snooze.py:27
 msgid "8 hours"
-msgstr ""
+msgstr "8 ώρες"
 
 #: taskcoachlib/domain/date/snooze.py:28
 msgid "18 hours"
-msgstr ""
+msgstr "18 ώρες"
 
 #: taskcoachlib/domain/date/snooze.py:28
 msgid "24 hours"
-msgstr ""
+msgstr "24 ώρες"
 
 #: taskcoachlib/domain/date/snooze.py:29
 msgid "48 hours"
-msgstr ""
+msgstr "48 ώρες"
 
 #: taskcoachlib/domain/date/snooze.py:29
 msgid "72 hours"
-msgstr ""
+msgstr "72 ώρες"
 
 #: taskcoachlib/domain/date/snooze.py:30
 msgid "2 weeks"
-msgstr ""
+msgstr "2 εβδομάδες"
 
 #: taskcoachlib/domain/date/snooze.py:30
 #: taskcoachlib/thirdparty/smartdatetimectrl.py:1747
 msgid "1 week"
-msgstr ""
+msgstr "1 εβδομάδα"
 
 #: taskcoachlib/domain/effort/composite.py:191
 msgid "Total"
@@ -807,39 +808,39 @@ msgstr ""
 
 #: taskcoachlib/gui/artprovider.py:141
 msgid "Bomb"
-msgstr ""
+msgstr "Βόμβα"
 
 #: taskcoachlib/gui/artprovider.py:142
 msgid "Book"
-msgstr ""
+msgstr "Βιβλίο"
 
 #: taskcoachlib/gui/artprovider.py:143
 msgid "Books"
-msgstr ""
+msgstr "Βιβλία"
 
 #: taskcoachlib/gui/artprovider.py:144
 msgid "Box"
-msgstr ""
+msgstr "Κουτί"
 
 #: taskcoachlib/gui/artprovider.py:145
 msgid "Ladybug"
-msgstr ""
+msgstr "Πασχαλίτσα"
 
 #: taskcoachlib/gui/artprovider.py:146
 msgid "Cake"
-msgstr ""
+msgstr "Κέικ"
 
 #: taskcoachlib/gui/artprovider.py:147
 msgid "Calculator"
-msgstr ""
+msgstr "Αριθμομηχανή"
 
 #: taskcoachlib/gui/artprovider.py:148 taskcoachlib/gui/viewer/task.py:602
 msgid "Calendar"
-msgstr ""
+msgstr "Ημερολόγιο"
 
 #: taskcoachlib/gui/artprovider.py:149
 msgid "Cat"
-msgstr ""
+msgstr "Γάτα"
 
 #: taskcoachlib/gui/artprovider.py:150
 msgid "Compact disc (CD)"
@@ -867,11 +868,11 @@ msgstr ""
 
 #: taskcoachlib/gui/artprovider.py:156
 msgid "Alarm clock"
-msgstr ""
+msgstr "Ξυπνητήρι"
 
 #: taskcoachlib/gui/artprovider.py:157
 msgid "Stopwatch"
-msgstr ""
+msgstr "Χρονόμετρο"
 
 #: taskcoachlib/gui/artprovider.py:158
 msgid "Cogwheel"
@@ -895,19 +896,19 @@ msgstr ""
 
 #: taskcoachlib/gui/artprovider.py:163
 msgid "Red cross"
-msgstr ""
+msgstr "Κόκκινος σταυρός"
 
 #: taskcoachlib/gui/artprovider.py:164
 msgid "Die"
-msgstr ""
+msgstr "Ζάρι"
 
 #: taskcoachlib/gui/artprovider.py:165
 msgid "Document"
-msgstr ""
+msgstr "Έγγραφο"
 
 #: taskcoachlib/gui/artprovider.py:166
 msgid "Blue earth"
-msgstr ""
+msgstr "Μπλε γη"
 
 #: taskcoachlib/gui/artprovider.py:167
 msgid "Green earth"
@@ -923,11 +924,11 @@ msgstr ""
 
 #: taskcoachlib/gui/artprovider.py:170
 msgid "Blue folder"
-msgstr ""
+msgstr "Μπλε φάκελος"
 
 #: taskcoachlib/gui/artprovider.py:171
 msgid "Light blue folder"
-msgstr ""
+msgstr "Γαλάζιος φάκελος"
 
 #: taskcoachlib/gui/artprovider.py:172
 msgid "Green folder"
@@ -935,35 +936,35 @@ msgstr ""
 
 #: taskcoachlib/gui/artprovider.py:173
 msgid "Grey folder"
-msgstr ""
+msgstr "Γκρι φάκελος"
 
 #: taskcoachlib/gui/artprovider.py:174
 msgid "Orange folder"
-msgstr ""
+msgstr "Πορτοκαλί φάκελος"
 
 #: taskcoachlib/gui/artprovider.py:175
 msgid "Purple folder"
-msgstr ""
+msgstr "Μωβ φάκελος"
 
 #: taskcoachlib/gui/artprovider.py:176
 msgid "Red folder"
-msgstr ""
+msgstr "Κόκκινος φάκελος"
 
 #: taskcoachlib/gui/artprovider.py:177
 msgid "Yellow folder"
-msgstr ""
+msgstr "Κίτρινος φάκελος"
 
 #: taskcoachlib/gui/artprovider.py:178
 msgid "Blue folder with arrow"
-msgstr ""
+msgstr "Μπλε φάκελος με βέλος"
 
 #: taskcoachlib/gui/artprovider.py:179
 msgid "Heart"
-msgstr ""
+msgstr "Καρδιά"
 
 #: taskcoachlib/gui/artprovider.py:180
 msgid "Hearts"
-msgstr ""
+msgstr "Καρδιές"
 
 #: taskcoachlib/gui/artprovider.py:181
 msgid "Green house"
@@ -971,15 +972,15 @@ msgstr ""
 
 #: taskcoachlib/gui/artprovider.py:182
 msgid "Red house"
-msgstr ""
+msgstr "Κόκκινο σπίτι"
 
 #: taskcoachlib/gui/artprovider.py:183
 msgid "Key"
-msgstr ""
+msgstr "Κλειδί"
 
 #: taskcoachlib/gui/artprovider.py:184
 msgid "Keys"
-msgstr ""
+msgstr "Κλειδιά"
 
 #: taskcoachlib/gui/artprovider.py:185
 msgid "Lamp"
@@ -987,12 +988,12 @@ msgstr ""
 
 #: taskcoachlib/gui/artprovider.py:186
 msgid "Question mark"
-msgstr ""
+msgstr "Ερωτηματικό"
 
 #: taskcoachlib/gui/artprovider.py:187
 #: taskcoachlib/gui/wizard/csvimport.py:341
 msgid "Information"
-msgstr ""
+msgstr "Πληροφορία"
 
 #: taskcoachlib/gui/artprovider.py:188
 msgid "Blue led"
@@ -1060,11 +1061,11 @@ msgstr ""
 
 #: taskcoachlib/gui/artprovider.py:204
 msgid "Palette"
-msgstr ""
+msgstr "Παλέττα"
 
 #: taskcoachlib/gui/artprovider.py:205
 msgid "Paperclip"
-msgstr ""
+msgstr "Συνδετήρας"
 
 #: taskcoachlib/gui/artprovider.py:206
 msgid "Pencil"
@@ -1072,11 +1073,11 @@ msgstr ""
 
 #: taskcoachlib/gui/artprovider.py:207
 msgid "Person"
-msgstr ""
+msgstr "Άτομο"
 
 #: taskcoachlib/gui/artprovider.py:208
 msgid "People"
-msgstr ""
+msgstr "Άνθρωποι"
 
 #: taskcoachlib/gui/artprovider.py:209
 msgid "Identification"
@@ -1088,23 +1089,23 @@ msgstr ""
 
 #: taskcoachlib/gui/artprovider.py:211
 msgid "Warning sign"
-msgstr ""
+msgstr "Προειδοποιητικό σήμα"
 
 #: taskcoachlib/gui/artprovider.py:212
 msgid "Minus"
-msgstr ""
+msgstr "Μείον"
 
 #: taskcoachlib/gui/artprovider.py:213
 msgid "Plus"
-msgstr ""
+msgstr "Συν"
 
 #: taskcoachlib/gui/artprovider.py:214
 msgid "Red star"
-msgstr ""
+msgstr "Κόκκινο αστέρι"
 
 #: taskcoachlib/gui/artprovider.py:215
 msgid "Yellow star"
-msgstr ""
+msgstr "Κίτρινο αστέρι"
 
 #: taskcoachlib/gui/artprovider.py:216
 msgid "Traffic light"
@@ -1116,11 +1117,11 @@ msgstr ""
 
 #: taskcoachlib/gui/artprovider.py:218
 msgid "Lightning"
-msgstr ""
+msgstr "Κεραυνός"
 
 #: taskcoachlib/gui/artprovider.py:219
 msgid "Umbrella"
-msgstr ""
+msgstr "Ομπρέλα"
 
 #: taskcoachlib/gui/artprovider.py:220
 msgid "Partly sunny"
@@ -1178,14 +1179,14 @@ msgstr ""
 #: taskcoachlib/gui/viewer/task.py:978
 #: taskcoachlib/persistence/csv/generator.py:40
 msgid "Creation date"
-msgstr ""
+msgstr "Ημερομηνία δημιουργίας"
 
 #: taskcoachlib/gui/dialog/editor.py:165
 #: taskcoachlib/gui/viewer/attachment.py:117
 #: taskcoachlib/gui/viewer/category.py:119 taskcoachlib/gui/viewer/note.py:150
 #: taskcoachlib/gui/viewer/task.py:985
 msgid "Modification date"
-msgstr ""
+msgstr "Ημερομηνία τροποποίησης"
 
 #: taskcoachlib/gui/dialog/editor.py:227
 #: taskcoachlib/gui/uicommand/uicommand.py:2322
@@ -1197,11 +1198,11 @@ msgstr "Προτεραιότητα"
 
 #: taskcoachlib/gui/dialog/editor.py:249
 msgid "Mutually exclusive"
-msgstr ""
+msgstr "Αλληλοαποκλειόμενα"
 
 #: taskcoachlib/gui/dialog/editor.py:256
 msgid "Subcategories"
-msgstr ""
+msgstr "Υποκατηγορίες"
 
 #: taskcoachlib/gui/dialog/editor.py:274
 msgid "Edit to change location of all attachments"
@@ -1217,7 +1218,7 @@ msgstr "Τοποθεσία"
 
 #: taskcoachlib/gui/dialog/editor.py:308
 msgid "Appearance"
-msgstr ""
+msgstr "Εμφάνιση"
 
 #: taskcoachlib/gui/dialog/editor.py:318
 #: taskcoachlib/gui/dialog/preferences.py:154
@@ -1232,12 +1233,12 @@ msgstr ""
 #: taskcoachlib/gui/dialog/editor.py:345
 #: taskcoachlib/gui/dialog/preferences.py:155
 msgid "Font"
-msgstr ""
+msgstr "Γραμματοσειρά"
 
 #: taskcoachlib/gui/dialog/editor.py:354
 #: taskcoachlib/gui/dialog/preferences.py:155
 msgid "Icon"
-msgstr ""
+msgstr "Εικονίδιο"
 
 #: taskcoachlib/gui/dialog/editor.py:362
 msgid "Dates"
@@ -1290,7 +1291,7 @@ msgstr "Επανάληψη"
 
 #: taskcoachlib/gui/dialog/editor.py:464
 msgid "Progress"
-msgstr ""
+msgstr "Πρόοδος"
 
 #: taskcoachlib/gui/dialog/editor.py:481
 msgid "Percentage complete"
@@ -1375,7 +1376,7 @@ msgstr "Σημειώσεις"
 
 #: taskcoachlib/gui/dialog/editor.py:853 taskcoachlib/gui/viewer/task.py:887
 msgid "Prerequisites"
-msgstr ""
+msgstr "Προαπαιτούμενα"
 
 #: taskcoachlib/gui/dialog/editor.py:1144
 msgid "Edit task"
@@ -1395,23 +1396,23 @@ msgstr "Έναρξη"
 #: taskcoachlib/thirdparty/smartdatetimectrl.py:1647
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Week(s)"
-msgstr ""
+msgstr "Εβδομάδα(-ες)"
 
 #: taskcoachlib/gui/dialog/editor.py:1185
 #: taskcoachlib/thirdparty/smartdatetimectrl.py:1648
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Day(s)"
-msgstr ""
+msgstr "Ημέρα(-ες)"
 
 #: taskcoachlib/gui/dialog/editor.py:1185
 #: taskcoachlib/thirdparty/smartdatetimectrl.py:1649
 msgid "Hour(s)"
-msgstr ""
+msgstr "Ώρα(-ες)"
 
 #: taskcoachlib/gui/dialog/editor.py:1185
 #: taskcoachlib/thirdparty/smartdatetimectrl.py:1650
 msgid "Minute(s)"
-msgstr ""
+msgstr "Λεπτό(-α)"
 
 #: taskcoachlib/gui/dialog/editor.py:1195
 msgid "Stop"
@@ -1494,7 +1495,7 @@ msgstr "Μηνιαίως"
 
 #: taskcoachlib/gui/dialog/entry.py:413 taskcoachlib/render.py:86
 msgid "Weekly"
-msgstr "Εβδομαδιαία"
+msgstr "Εβδομαδιαίως"
 
 #: taskcoachlib/gui/dialog/entry.py:414 taskcoachlib/render.py:86
 msgid "Yearly"
@@ -1534,19 +1535,19 @@ msgstr "μkhgkjfjhtfjyufjhgfkj"
 
 #: taskcoachlib/gui/dialog/entry.py:522
 msgid "period,"
-msgstr ""
+msgstr "περίοδος,"
 
 #: taskcoachlib/gui/dialog/entry.py:522
 msgid "week(s),"
-msgstr ""
+msgstr "εβδομάδα(-ες),"
 
 #: taskcoachlib/gui/dialog/entry.py:523
 msgid "month(s),"
-msgstr ""
+msgstr "μήνας(-ες),"
 
 #: taskcoachlib/gui/dialog/entry.py:523
 msgid "year(s),"
-msgstr ""
+msgstr "έτος(-η),"
 
 #: taskcoachlib/gui/dialog/export.py:82
 msgid "Export items from:"
@@ -1624,7 +1625,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/iphone.py:81
 msgid "Apple's web site"
-msgstr ""
+msgstr "Ιστοσελίδα της Apple"
 
 #: taskcoachlib/gui/dialog/iphone.py:86
 msgid ""
@@ -1931,23 +1932,23 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:616 taskcoachlib/render.py:128
 msgid "Today"
-msgstr ""
+msgstr "Σήμερα"
 
 #: taskcoachlib/gui/dialog/preferences.py:617 taskcoachlib/render.py:132
 msgid "Tomorrow"
-msgstr ""
+msgstr "Αύριο"
 
 #: taskcoachlib/gui/dialog/preferences.py:618
 msgid "Day after tomorrow"
-msgstr ""
+msgstr "Μεθαύριο"
 
 #: taskcoachlib/gui/dialog/preferences.py:619
 msgid "Next Friday"
-msgstr ""
+msgstr "Επόμενη Παρασκευή"
 
 #: taskcoachlib/gui/dialog/preferences.py:620
 msgid "Next Monday"
-msgstr ""
+msgstr "Επόμενη Δευτέρα"
 
 #: taskcoachlib/gui/dialog/preferences.py:621
 msgid "Start of day"
@@ -2023,7 +2024,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:689
 msgid "iPhone"
-msgstr ""
+msgstr "iPhone"
 
 #: taskcoachlib/gui/dialog/preferences.py:695
 msgid "Password for synchronization with iPhone"
@@ -2059,7 +2060,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:729
 msgid "OS X"
-msgstr ""
+msgstr "OS X"
 
 #: taskcoachlib/gui/dialog/preferences.py:736
 msgid "Get e-mail subject from Mail.app"
@@ -2073,7 +2074,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:743
 msgid "Linux"
-msgstr ""
+msgstr "Linux"
 
 #: taskcoachlib/gui/dialog/preferences.py:750
 msgid "Focus task subject in task editor"
@@ -2095,7 +2096,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/reminder.py:66
 msgid "Snooze"
-msgstr ""
+msgstr "Αναβολή"
 
 #: taskcoachlib/gui/dialog/reminder.py:88
 msgid "Also make this the default snooze time for future reminders"
@@ -2191,7 +2192,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/toolbar.py:67
 msgid "Available tools"
-msgstr ""
+msgstr "Διαθέσιμα εργαλεία"
 
 #: taskcoachlib/gui/dialog/toolbar.py:83
 msgid "Make this tool visible in the toolbar"
@@ -2203,7 +2204,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/toolbar.py:92
 msgid "Tools"
-msgstr ""
+msgstr "Εργαλεία"
 
 #: taskcoachlib/gui/dialog/toolbar.py:106
 msgid "Move the tool up (to the left of the toolbar)"
@@ -2277,7 +2278,7 @@ msgstr ""
 #: taskcoachlib/gui/mainwindow.py:119
 #: taskcoachlib/gui/uicommand/uicommand.py:220
 msgid "Warning"
-msgstr ""
+msgstr "Προειδοποίηση"
 
 #: taskcoachlib/gui/dialog/xfce4warning.py:35
 msgid "Task Coach has known issues with XFCE4 session management.\n"
@@ -2372,11 +2373,11 @@ msgstr "Συγχωνευμένο %(filename)s"
 
 #: taskcoachlib/gui/iocontroller.py:195
 msgid "Save as"
-msgstr ""
+msgstr "Αποθήκευση ως"
 
 #: taskcoachlib/gui/iocontroller.py:209
 msgid "Save selection"
-msgstr ""
+msgstr "Αποθήκευση επιλογής"
 
 #: taskcoachlib/gui/iocontroller.py:247
 msgid ""
@@ -2484,11 +2485,11 @@ msgstr "Σφάλμα κατά την ανάγνωση %s:\n"
 
 #: taskcoachlib/gui/iphone.py:31
 msgid "Synchronizing..."
-msgstr ""
+msgstr "Συγχρονισμός..."
 
 #: taskcoachlib/gui/iphone.py:52
 msgid "Synchronizing with %s..."
-msgstr ""
+msgstr "Συγχρονισμός με %s..."
 
 #: taskcoachlib/gui/mainwindow.py:172
 msgid "Welcome to %(name)s version %(version)s"
@@ -2512,11 +2513,11 @@ msgstr ""
 
 #: taskcoachlib/gui/mainwindow.py:379
 msgid "iPhone/iPod"
-msgstr ""
+msgstr "iPhone/iPod"
 
 #: taskcoachlib/gui/mainwindow.py:388
 msgid "Synchronization type"
-msgstr ""
+msgstr "Τύπος συγχρονισμού"
 
 #: taskcoachlib/gui/mainwindow.py:397
 msgid ""
@@ -2603,7 +2604,7 @@ msgstr ""
 
 #: taskcoachlib/gui/menu.py:431
 msgid "Show/hide status bar"
-msgstr ""
+msgstr "Εμφάνιση/απόκρυψη γραμμής κατάστασης"
 
 #: taskcoachlib/gui/menu.py:431
 msgid "Status&bar"
@@ -2689,7 +2690,7 @@ msgstr "&Απόκρυψη"
 
 #: taskcoachlib/gui/menu.py:532
 msgid "Hide the toolbar"
-msgstr ""
+msgstr "Απόκρυψη γραμμής εργαλειών"
 
 #: taskcoachlib/gui/menu.py:533
 msgid "&Small images"
@@ -3231,7 +3232,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1487
 msgid "and"
-msgstr ""
+msgstr "και"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1517
 msgid ""
@@ -3261,7 +3262,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1642
 msgid "(No subject)"
-msgstr ""
+msgstr "(Χωρίς θέμα)"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1645
 msgid "Start tracking effort for %s"
@@ -3369,7 +3370,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2001
 msgid "About %s"
-msgstr ""
+msgstr "Σχετικά %s"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2008
 msgid "&License"
@@ -3378,7 +3379,7 @@ msgstr ""
 #: taskcoachlib/gui/uicommand/uicommand.py:2009
 #: taskcoachlib/gui/uicommand/uicommand.py:2010
 msgid "%s license"
-msgstr ""
+msgstr "%s άδεια"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2017
 msgid "Check for update"
@@ -3456,7 +3457,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2101
 msgid "Search"
-msgstr ""
+msgstr "Αναζήτηση"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2214
 msgid "Effort details"
@@ -3468,11 +3469,11 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2215
 msgid "Effort per month"
-msgstr ""
+msgstr "Προσπάθεια ανά μήνα"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2215
 msgid "Effort per week"
-msgstr ""
+msgstr "Προσπάθεια ανά εβδομάδα"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2219
 msgid "Aggregation mode"
@@ -3480,11 +3481,11 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2252
 msgid "List"
-msgstr ""
+msgstr "Λίστα"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2252
 msgid "Tree"
-msgstr ""
+msgstr "Δέντρο"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2258
 msgid "When checked, show tasks as tree, otherwise show tasks as list"
@@ -3559,12 +3560,12 @@ msgstr ""
 #: taskcoachlib/gui/uicommand/uicommand.py:2466
 #: taskcoachlib/thirdparty/smartdatetimectrl.py:1764
 msgid "1 minute"
-msgstr ""
+msgstr "1 λεπτό"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2467
 #: taskcoachlib/thirdparty/smartdatetimectrl.py:1766
 msgid "%d minutes"
-msgstr ""
+msgstr "%d λεπτά"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2470
 msgid "Rounding precision"
@@ -4018,7 +4019,7 @@ msgstr ""
 
 #: taskcoachlib/gui/viewer/task.py:436
 msgid "Now"
-msgstr ""
+msgstr "Τώρα"
 
 #: taskcoachlib/gui/viewer/task.py:451
 msgid "Task square map"
@@ -4034,7 +4035,7 @@ msgstr ""
 
 #: taskcoachlib/gui/viewer/task.py:894
 msgid "Dependents"
-msgstr ""
+msgstr "Εξαρτάται"
 
 #: taskcoachlib/gui/viewer/task.py:928
 msgid "% complete"
@@ -4042,7 +4043,7 @@ msgstr ""
 
 #: taskcoachlib/gui/viewer/task.py:932
 msgid "Time left"
-msgstr ""
+msgstr "Υπολειπόμενος χρόνος"
 
 #: taskcoachlib/gui/viewer/task.py:998
 msgid "&Dates"
@@ -4158,7 +4159,7 @@ msgstr ""
 
 #: taskcoachlib/gui/wizard/csvimport.py:47
 msgid "Comma"
-msgstr ""
+msgstr "Κόμμα"
 
 #: taskcoachlib/gui/wizard/csvimport.py:48 taskcoachlib/help/__init__.py:768
 msgid "Tab"
@@ -4166,7 +4167,7 @@ msgstr ""
 
 #: taskcoachlib/gui/wizard/csvimport.py:49
 msgid "Space"
-msgstr ""
+msgstr "Κενό"
 
 #: taskcoachlib/gui/wizard/csvimport.py:50
 msgid "Colon"
@@ -4244,7 +4245,7 @@ msgstr ""
 #: taskcoachlib/gui/wizard/csvimport.py:231
 #: taskcoachlib/persistence/csv/reader.py:81
 msgid "Category"
-msgstr ""
+msgstr "Κατηγορία"
 
 #: taskcoachlib/gui/wizard/csvimport.py:237
 #: taskcoachlib/persistence/csv/generator.py:39
@@ -4299,7 +4300,7 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:87 taskcoachlib/help/__init__.py:233
 msgid "Reminders"
-msgstr ""
+msgstr "Υπενθυμίσεις"
 
 #: taskcoachlib/help/__init__.py:91 taskcoachlib/help/__init__.py:247
 msgid "About effort"
@@ -4396,7 +4397,7 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:131 taskcoachlib/help/__init__.py:590
 msgid "Android"
-msgstr ""
+msgstr "Android"
 
 #: taskcoachlib/help/__init__.py:133 taskcoachlib/help/__init__.py:592
 msgid "%(name)s on Android?"
@@ -4432,7 +4433,7 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:145 taskcoachlib/help/__init__.py:721
 msgid "Keyboard shortcuts"
-msgstr ""
+msgstr "Συντομεύσεις πληκτρολογίου"
 
 #: taskcoachlib/help/__init__.py:154
 msgid ""
@@ -4820,11 +4821,11 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:380
 msgid "Mozilla Thunderbird"
-msgstr ""
+msgstr "Mozilla Thunderbird"
 
 #: taskcoachlib/help/__init__.py:381
 msgid "Microsoft Outlook"
-msgstr ""
+msgstr "Microsoft Outlook"
 
 #: taskcoachlib/help/__init__.py:382
 msgid "Claws Mail"
@@ -5536,11 +5537,11 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:765
 msgid "Enter"
-msgstr ""
+msgstr "Enter"
 
 #: taskcoachlib/help/__init__.py:766
 msgid "Ctrl-Enter"
-msgstr ""
+msgstr "Ctrl-Enter"
 
 #: taskcoachlib/help/__init__.py:766
 msgid "Mark the selected task(s) (un)completed"
@@ -5565,11 +5566,11 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:769
 msgid "Shift-Tab"
-msgstr ""
+msgstr "Shift-Tab"
 
 #: taskcoachlib/help/__init__.py:770
 msgid "Ctrl-Tab"
-msgstr ""
+msgstr "Ctrl-Tab"
 
 #: taskcoachlib/help/__init__.py:770
 msgid "Move keyboard focus to the next tab in a notebook control"
@@ -5581,7 +5582,7 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:771
 msgid "Shift-Ctrl-Tab"
-msgstr ""
+msgstr "Shift-Ctrl-Tab"
 
 #: taskcoachlib/help/__init__.py:772
 msgid "DELETE"
@@ -5597,15 +5598,15 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:775
 msgid "Ctrl-PgDn"
-msgstr ""
+msgstr "Ctrl-PgDn"
 
 #: taskcoachlib/help/__init__.py:776
 msgid "Ctrl-PgUp"
-msgstr ""
+msgstr "Ctrl-PgUp"
 
 #: taskcoachlib/help/__init__.py:777
 msgid "Alt-Down"
-msgstr ""
+msgstr "Alt-Down"
 
 #: taskcoachlib/help/__init__.py:777
 msgid "Pop up menu or drop down box"
@@ -5617,7 +5618,7 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:778
 msgid "F2"
-msgstr ""
+msgstr "F2"
 
 #: taskcoachlib/help/__init__.py:787
 msgid ""
@@ -6348,7 +6349,7 @@ msgstr ""
 
 #: taskcoachlib/widgets/calendarconfig.py:89
 msgid "All tasks"
-msgstr ""
+msgstr "Όλες οι εργασίες"
 
 #: taskcoachlib/widgets/calendarconfig.py:89
 msgid "All tasks, except unplanned tasks"
@@ -6364,7 +6365,7 @@ msgstr ""
 
 #: taskcoachlib/widgets/dialog.py:81
 msgid "Close"
-msgstr ""
+msgstr "Κλείσιμο"
 
 #: taskcoachlib/widgets/dialog.py:166
 msgid "All files (*.*)|*"

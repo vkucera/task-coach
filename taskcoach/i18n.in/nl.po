@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: Task Coach\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-10 00:00+0000\n"
-"PO-Revision-Date: 2013-09-02 22:06+0000\n"
-"Last-Translator: Ben Ooms <benoomsdh@gmail.com>\n"
+"PO-Revision-Date: 2014-05-06 12:32+0000\n"
+"Last-Translator: D.Feenstra <netelvrees@hotmail.com>\n"
 "Language-Team: Dutch <frank@niessink.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-20 15:21+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-05-18 09:37+0000\n"
+"X-Generator: Launchpad (build 17007)\n"
 "X-Poedit-Country: NETHERLANDS\n"
 "X-Poedit-Language: dutch\n"
 "Generated-By: pygettext.py 1.5\n"
@@ -874,7 +874,7 @@ msgstr "Vinkje"
 
 #: taskcoachlib/gui/artprovider.py:154
 msgid "Check marks"
-msgstr ""
+msgstr "Vinkjes"
 
 #: taskcoachlib/gui/artprovider.py:155
 msgid "Clock"
@@ -2137,17 +2137,20 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:729
 msgid "OS X"
-msgstr ""
+msgstr "OS X"
 
 #: taskcoachlib/gui/dialog/preferences.py:736
 msgid "Get e-mail subject from Mail.app"
-msgstr ""
+msgstr "Gebruik het e-mailonderwerp van Mail.app"
 
 #: taskcoachlib/gui/dialog/preferences.py:737
 msgid ""
 "When dropping an e-mail from Mail.app, try to get its subject.\n"
 "This takes up to 20 seconds."
 msgstr ""
+"Probeer bij het gebruiken van een e-mail uit Mail.app het onderwerp ervan te "
+"gebruiken.\n"
+"Dit kan tot 20 seconden duren"
 
 #: taskcoachlib/gui/dialog/preferences.py:743
 msgid "Linux"
@@ -2162,6 +2165,8 @@ msgid ""
 "When opening the task editor, select the task subject and focus it.\n"
 "This overwrites the X selection."
 msgstr ""
+"Bij het openen van de taakeditor het onderwerp selecteren en activeren.\n"
+"Deze instelling overschrijft de huidige instelling."
 
 #: taskcoachlib/gui/dialog/reminder.py:31
 msgid "%(name)s reminder - %(task)s"
@@ -2285,11 +2290,11 @@ msgstr "Tools"
 
 #: taskcoachlib/gui/dialog/toolbar.py:106
 msgid "Move the tool up (to the left of the toolbar)"
-msgstr ""
+msgstr "Verplaats het gereedschap omhoog. (Naar links op de werkbalk)"
 
 #: taskcoachlib/gui/dialog/toolbar.py:110
 msgid "Move the tool down (to the right of the toolbar)"
-msgstr ""
+msgstr "Verplaats het gereedschap omlaag (Naar rechts op de werkbalk)"
 
 #: taskcoachlib/gui/dialog/toolbar.py:134
 msgid "Reorder toolbar buttons by drag and dropping them in this list."
@@ -3627,7 +3632,7 @@ msgstr "Lijst"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2252
 msgid "Tree"
-msgstr ""
+msgstr "Boomstructuur"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2258
 msgid "When checked, show tasks as tree, otherwise show tasks as list"
@@ -3927,6 +3932,8 @@ msgid ""
 "Effort: %d selected, %d visible, %d total. Time spent: %s selected, %s "
 "visible, %s total"
 msgstr ""
+"Taken: %d geselecteerd, %d zichtbaar, %d totaal. Tijdsbesteding: %s "
+"geselecteerd, %s zichtbaar, %s totaal"
 
 #: taskcoachlib/gui/viewer/effort.py:397
 msgid "Status: %d tracking"
@@ -5203,6 +5210,10 @@ msgid ""
 "<a target=\"_blank\" href=\"http://www.taskcoach.org/\">taskcoach.org</a>,\n"
 "at the end of the Linux downloads section."
 msgstr ""
+"OP Linux moet je de SyncML client installeren voor\n"
+" Python. A 64 bits Debian pakket for Python 2.7 is beschikbaar op\n"
+" <a target=\"_blank\" href=\"http://www.taskcoach.org/\">taskcoach.org</a>,\n"
+" op het einde van de downloadsectie."
 
 #: taskcoachlib/help/__init__.py:431
 msgid ""
@@ -6733,19 +6744,19 @@ msgstr "Aanmaaktijd"
 
 #: taskcoachlib/persistence/csv/generator.py:41
 msgid "Period end date"
-msgstr ""
+msgstr "Eindtijd periode"
 
 #: taskcoachlib/persistence/csv/generator.py:41
 msgid "Period end time"
-msgstr ""
+msgstr "Eindtijd periode"
 
 #: taskcoachlib/persistence/csv/generator.py:41
 msgid "Period start date"
-msgstr ""
+msgstr "Start tijd periode"
 
 #: taskcoachlib/persistence/csv/generator.py:41
 msgid "Period start time"
-msgstr ""
+msgstr "Starttijd periode"
 
 #: taskcoachlib/persistence/csv/reader.py:58
 msgid "No subject"
@@ -7011,6 +7022,12 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Er was een probleem met het vinden van het wachtwoord.\n"
+"Stuur ons alstublieft het rapport op (zie het Help menu) en voeg een "
+"screenshot van deze melding toe.\n"
+"Het probleem is:\n"
+"\n"
+" %s"
 
 #: taskcoachlib/widgets/password.py:97
 msgid "Please enter your password."
