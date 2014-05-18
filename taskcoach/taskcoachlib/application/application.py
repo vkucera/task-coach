@@ -76,6 +76,7 @@ class wxApp(wx.App):
     def __init__(self, sessionCallback, reopenCallback, *args, **kwargs):
         self.sessionCallback = sessionCallback
         self.reopenCallback = reopenCallback
+        self.__shutdownInProgress = False
         super(wxApp, self).__init__(*args, **kwargs)
 
     def MacReopenApp(self):
@@ -96,7 +97,9 @@ class wxApp(wx.App):
         return True
 
     def onQueryEndSession(self, event=None):
-        self.sessionCallback()
+        if not self.__shutdownInProgress:
+            self.__shutdownInProgress = True
+            self.sessionCallback()
 
         if event is not None:
             event.Skip()

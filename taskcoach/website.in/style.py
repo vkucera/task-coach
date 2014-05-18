@@ -98,6 +98,7 @@ pageTracker._trackPageview();
                             <li><a href="download_for_linux.html" title="Download %(name)s for Linux">Linux</a></li>
                             <li><a href="download_for_bsd.html" title="Download %(name)s for BSD">BSD</a></li>
                             <li><a href="download_for_iphone.html" title="Download %(name)s for iPhone and iPod Touch">iPhone and iPod Touch</a></li>
+                            <li><a href="download_for_android.html" title="Download %(name)s for Android">Android</a></li>
                             <li class="divider"></li>
                             <li><a href="download_sources.html" title="Download %(name)s sources">Sources</a></li>
                             <li><a href="download_daily_build.html" title="Download %(name)s daily builds">Daily builds</a></li>

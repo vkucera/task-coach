@@ -22,14 +22,24 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.39', 'May .., 2014',
+Release('1.3.40', 'May ??, 2014',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        ],
+    ),
+
+Release('1.3.39', 'May 18, 2014',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bugv2('''Some tabs would come up blank when the editor was in
-multi-notebook mode.'''),
+multi-notebook mode.''', '1512'),
         Bugv2('''In hierarchical calendar, when hitting Ctrl-A or
 Shift-clicking a parent task, only select visible tasks.'''),
         Bugv2('''Fix a number of SyncML-related bugs.'''),
+        Bugv2('''Fix the "cannot create a file that exists" problem when
+saving.''', '1517'),
+        Bugv2('''Fix an error introduced in 1.3.38 related to tips.''', '1518'),
+        Bugv2('''Hopefully fix a session-related bug on Windows''', '1516'),
         ],
     featuresAdded=[
         Feature('''SyncML: add support for Horde-based servers.'''),

@@ -66,7 +66,20 @@ class SafeWriteFile(object):
             if os.path.exists(self.__filename):
                 os.remove(self.__filename)
             if self.__filename is not None:
+                if os.path.exists(self.__filename):
+                    # WTF ?
+                    self.__moveFileOutOfTheWay(self.__filename)
                 os.rename(self.__tempFilename, self.__filename)
+
+    def __moveFileOutOfTheWay(self, filename):
+        index = 1
+        while True:
+            name, ext = os.path.splitext(filename)
+            newName = '%s (%d)%s' % (name, index, ext)
+            if not os.path.exists(newName):
+                os.rename(filename, newName)
+                break
+            index += 1
 
     def _getTemporaryFileName(self, path):
         """All functions/classes in the standard library that can generate

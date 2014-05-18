@@ -43,7 +43,7 @@ class TipProvider(object):
         self.__tip_index = tip_index
         
     def GetTip(self):
-        tip = tips[self.__tip_index]
+        tip = tips[self.__tip_index % len(tips)]
         self.__tip_index += 1 
         if self.__tip_index >= len(tips):
             self.__tip_index = 0
