@@ -84,7 +84,7 @@ pages['index'] = u'''
                             <a href="download_for_windows.html">Windows</a>,
                             <a href="download_for_mac.html">Mac OS X</a>, <a href="download_for_linux.html">Linux</a>, 
                             <a href="download_for_bsd.html">BSD</a>, <a href="download_for_iphone.html">iPhone, 
-                            iPad, and iPod Touch</a>.</p>
+                            iPad, and iPod Touch</a>, and <a href="download_for_android.html">Android</a>.</p>
                             <h3>What does it cost?</h3>
                             The desktop versions of %(name)s are completely free. The iOS versions
                             of %(name)s come with a small price tag because it costs us money to make them 
@@ -260,7 +260,7 @@ pages['givesupport'] = '''
                     <p>Help us spread the word. Talk about %(name)s with your
                     family, friends and colleagues. Tweet about %(name)s, +1 us,
                     you know the drill.</p>
-                    <p><a href="http://twitter.com/share" class="twitter-share-button" data-url="http://taskcoach.org" data-text="Check out Task Coach: a free and open source todo app for Windows, Mac, Linux and iPhone." data-count="horizontal" data-via="taskcoach">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script></p>
+                    <p><a href="http://twitter.com/share" class="twitter-share-button" data-url="http://taskcoach.org" data-text="Check out Task Coach: a free and open source todo app for Windows, Mac, Linux, iPhone and Android." data-count="horizontal" data-via="taskcoach">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script></p>
                     <p><iframe src="http://www.facebook.com/plugins/like.php?href=http%%3A%%2F%%2Ftaskcoach.org&amp;layout=button_count&amp;show_faces=true&amp;width=190&amp;action=like&amp;colorscheme=light&amp;height=21" 
                             scrolling="no" frameborder="0" 
                             style="border:none; overflow:hidden; width:190px; height:21px;" 
@@ -555,6 +555,16 @@ pages['download_for_iphone'] = sep.join([download_header(platform='iPhone and iP
                                          iphone,
                                          download_footer(one_ad)])
 
+android = download_table(image='logoandroid', action='Install',
+                         download_urls={"Ajiget's site": 'https://sites.google.com/site/ajiget/programs/android-programs/taskcoach-for-android'},
+                         package_type='Android app',
+                         platform='Android', platform_lower='android',
+                         platform_versions_supported='Android 2.2 or newer',
+                         installation='Follow the link to Google Play from the site.')
+
+pages['download_for_android'] = sep.join([download_header(platform='Android', release='0.25'),
+                                          android,
+                                          download_footer(one_ad)])
 
 sourceOptions = dict(image='source', prerequisites=prerequisites,
                      installation='''Decompress the archive and run <code>python 
@@ -677,6 +687,10 @@ pages['download'] = '''
                                     <a href="download_for_iphone.html"><img alt"iOS" src="images/appstore.png"></a>
                                 </td>
                                 <td>
+                                    <h3>Android</h3>
+                                    <a href="download_for_android.html"><img alt"Android" src="images/logoandroid.png"></a>
+                                </td>
+                                <td>
                                     <h3>Sources</h3>
                                     <a href="download_sources.html"><img alt"iOS" src="images/sources.png"></a>
                                 </td>
@@ -753,6 +767,9 @@ pages['features'] = '''
                         <li>Tap on the task's led icon to mark it complete.</li>
                         <li>Available in English and French.</li>
                     </ul>
+                    <h2>%(name)s for Android</h2>
+                    <p>The Android version is separately developed. See the developer's site for
+                    details.</p>
                 </div>
                 <div class="span2">''' + ads + '''
                 </div>
