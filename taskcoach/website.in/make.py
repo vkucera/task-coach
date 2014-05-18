@@ -476,7 +476,7 @@ opensuse = download_table(image='opensuse',
                           platform='OpenSuse', platform_lower='opensuse',
                           platform_versions_supported='OpenSuse 11.4 and newer',
                           prerequisites=prerequisites,
-                          installation='Double click the package to start the installer')
+                          installation='Double click the package to start the installer. Alternatively, you can find RPMs for various Suse versions on <a href="http://software.opensuse.org/package/TaskCoach">software.opensuse.org</a>.')
 
 fedora14 = download_table(image='fedora',
                           download_urls=dict(Sourceforge='%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.fc14.noarch.rpm'),
