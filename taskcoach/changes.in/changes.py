@@ -25,6 +25,7 @@ releases = [
 Release('1.3.40', 'May ??, 2014',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bugv2('''Remove a debug trace in DnD code.'''),
         ],
     ),
 
