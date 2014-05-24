@@ -812,22 +812,20 @@ class ViewViewer(settings_uicommand.SettingsCommand, ViewerCommand):
         self.settings.set('view', setting, str(viewerCount + 1))
         
         
-class ViewEffortViewerForSelectedTask(mixin_uicommand.NeedsOneSelectedTaskMixin, 
-                                      settings_uicommand.SettingsCommand, 
+class ViewEffortViewerForSelectedTask(settings_uicommand.SettingsCommand, 
                                       ViewerCommand):
     def __init__(self, *args, **kwargs):
         from taskcoachlib.gui import viewer
-        self.viewerClass = viewer.EffortViewer
+        self.viewerClass = viewer.EffortViewerForSelectedTasks
         self.taskFile = kwargs.pop('taskFile')
         kwargs['bitmap'] = viewer.EffortViewer.defaultBitmap
         super(ViewEffortViewerForSelectedTask, self).__init__(*args, **kwargs)
-        
+
     def doCommand(self, event):
         from taskcoachlib.gui import viewer
         viewer.addOneViewer(self.viewer, self.taskFile, self.settings, 
-            self.viewerClass, 
-            tasksToShowEffortFor=task.TaskList(self.viewer.curselection()))
-        
+            self.viewerClass)
+
 
 class RenameViewer(ViewerCommand):
     def __init__(self, *args, **kwargs):

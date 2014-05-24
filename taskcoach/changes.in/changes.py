@@ -28,6 +28,8 @@ Release('1.3.40', 'May ??, 2014',
         Bugv2('''Remove a debug trace in DnD code.'''),
         Bugv2('''Add an "add note to selected task" button in
 the task toolbar; patch from Manab Chetia'''),
+        Bugv2('''"Effort for one task" becomes "Effort for
+selected task(s)"''', '1474'),
         ],
     ),
 

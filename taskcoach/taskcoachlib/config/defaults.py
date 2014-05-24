@@ -42,6 +42,7 @@ defaults = {
     'categoryviewercount': '1',  # Number of category viewers in main window
     'noteviewercount': '0',  # Number of note viewers in main window
     'effortviewercount': '0',  # Number of effort viewers in main window
+    'effortviewerforselectedtaskscount': '0',
     'squaretaskviewercount': '0',
     'timelineviewercount': '0',
     'calendarviewercount': '0',
@@ -332,6 +333,26 @@ defaults = {
     'regularexpression': 'False',
     },
 'effortviewer': {
+    'title': '',
+    'toolbarperspective': 'EffortNew,Separator,Edit,Delete,Separator,EffortStartForEffort,EffortStop,Separator,EffortViewerAggregationChoice,Spacer,ResetFilter,Search',
+    'aggregation': 'details',  # 'details' (default), 'day', 'week', or 'month'
+    'sortby': '["-period"]',
+    'sortcasesensitive': 'False',
+    'columns': "['description', 'timeSpent']",
+    'columnsalwaysvisible': "['period', 'task']",
+    'columnwidths': "{'period': 160, 'monday': 70, 'tuesday': 70, "
+                     "'wednesday': 70, 'thursday': 70, 'friday': 70, "
+                     "'saturday': 70, 'sunday': 70, 'description': 200}",
+    'columnautoresizing': 'True',
+    'searchfilterstring': '',
+    'searchfiltermatchcase': 'False',
+    'searchfilterincludesubitems': 'False',
+    'searchdescription': 'False',
+    'regularexpression': 'False',
+    'round': '0',  # round effort to this number of seconds, 0 = no rounding
+    'alwaysroundup': 'False',
+    },
+'effortviewerforselectedtasks': {
     'title': '',
     'toolbarperspective': 'EffortNew,Separator,Edit,Delete,Separator,EffortStartForEffort,EffortStop,Separator,EffortViewerAggregationChoice,Spacer,ResetFilter,Search',
     'aggregation': 'details',  # 'details' (default), 'day', 'week', or 'month'

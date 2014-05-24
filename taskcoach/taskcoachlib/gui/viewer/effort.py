@@ -75,6 +75,9 @@ class EffortViewer(base.ListViewer,
             columns.append(column)
         return columns
 
+    def tasksToShowEffortFor(self):
+        return self.__tasksToShowEffortFor
+
     def onRoundingChanged(self, value):  # pylint: disable=W0613
         self.__initRoundingToolBarUICommands()
         self.refresh()
@@ -97,15 +100,15 @@ class EffortViewer(base.ListViewer,
     def domainObjectsToView(self):
         if self.__domainObjectsToView is None:
             if self.__displayingNewTasks():
-                tasks = self.__tasksToShowEffortFor
+                tasks = self.tasksToShowEffortFor()
             else:
                 tasks = domain.base.SelectedItemsFilter(self.taskFile.tasks(), 
-                                                        selectedItems=self.__tasksToShowEffortFor)
+                                                        selectedItems=self.tasksToShowEffortFor())
             self.__domainObjectsToView = tasks
         return self.__domainObjectsToView
     
     def __displayingNewTasks(self):
-        return any([task not in self.taskFile.tasks() for task in self.__tasksToShowEffortFor])
+        return any([task not in self.taskFile.tasks() for task in self.tasksToShowEffortFor()])
     
     def detach(self):
         super(EffortViewer, self).detach()
@@ -125,6 +128,11 @@ class EffortViewer(base.ListViewer,
             and 'month'. '''
         assert aggregation in ('details', 'day', 'week', 'month')
         self.aggregation = aggregation
+        self._refresh()
+
+    def _refresh(self, clear=False):
+        if clear:
+            self.__domainObjectsToView = None
         self.setPresentation(self.createSorter(self.createFilter(\
                              self.domainObjectsToView())))
         self.secondRefresher.updatePresentation()
@@ -142,8 +150,8 @@ class EffortViewer(base.ListViewer,
         # efforts than there really are when switching from aggregate mode to
         # detail mode.
         self.refresh()
-        self._showWeekdayColumns(show=aggregation == 'week')
-        self._showTotalColumns(show=aggregation != 'details')
+        self._showWeekdayColumns(show=self.aggregation == 'week')
+        self._showTotalColumns(show=self.aggregation != 'details')
         if autoResizing:
             self.widget.ToggleAutoResizing(True)
         self.__initRoundingToolBarUICommands()
@@ -410,7 +418,7 @@ class EffortViewer(base.ListViewer,
         bitmap = kwargs.get('bitmap', 'new')
         if not selectedTasks:
             subjectDecoratedTaskList = [(task.subject(recursive=True), task) \
-                                        for task in self.__tasksToShowEffortFor]
+                                        for task in self.tasksToShowEffortFor()]
             subjectDecoratedTaskList.sort() # Sort by subject
             selectedTasks = [subjectDecoratedTaskList[0][1]]
         return super(EffortViewer, self).newItemDialog(selectedTasks, 
@@ -530,3 +538,24 @@ class EffortViewer(base.ListViewer,
     def __always_round_up(self):
         ''' Return whether durations are always rounded up or not. '''
         return self.settings.getboolean(self.settingsSection(), 'alwaysroundup')
+
+
+class EffortViewerForSelectedTasks(EffortViewer):
+    defaultTitle = _('Effort for selected task(s)')
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('settingsSection', 'effortviewerforselectedtasks')
+        self.__viewerContainer = kwargs.pop('viewerContainer')
+        self.__currentTaskViewer = self.__viewerContainer.activeViewer() if self.__viewerContainer.activeViewer().isShowingTasks() else None
+        pub.subscribe(self.onTaskSelectionChanged, 'all.viewer.status')
+        super(EffortViewerForSelectedTasks, self).__init__(*args, **kwargs)
+
+    def tasksToShowEffortFor(self):
+        if self.__currentTaskViewer is not None:
+            return domain.task.TaskList(self.__currentTaskViewer.curselection())
+        return []
+
+    def onTaskSelectionChanged(self, viewer):
+        if viewer.isShowingTasks():
+            self.__currentTaskViewer = viewer
+            self._refresh(clear=True)
