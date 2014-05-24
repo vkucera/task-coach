@@ -1549,7 +1549,7 @@ class AddNote(mixin_uicommand.NeedsSelectedNoteOwnersMixin, ViewerCommand,
               settings_uicommand.SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(AddNote, self).__init__(menuText=_('Add &note...\tCtrl+B'),
-            helpText=help.addNote, bitmap='new', *args, **kwargs)
+            helpText=help.addNote, bitmap='note_icon', *args, **kwargs)
             
     def doCommand(self, event, show=True):  # pylint: disable=W0221
         addNoteCommand = command.AddNoteCommand(self.viewer.presentation(), 
