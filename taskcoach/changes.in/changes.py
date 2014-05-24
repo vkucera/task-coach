@@ -30,6 +30,8 @@ Release('1.3.40', 'May ??, 2014',
 the task toolbar; patch from Manab Chetia'''),
         Bugv2('''"Effort for one task" becomes "Effort for
 selected task(s)"''', '1474'),
+        Bugv2('''Fix an occasional "AlreadyCalledError" when iPhone
+sync is enabled.'''),
         ],
     ),
 
