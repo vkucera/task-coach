@@ -825,22 +825,20 @@ class ViewViewer(settings_uicommand.SettingsCommand, ViewerCommand):
         self.settings.set('view', setting, str(viewerCount + 1))
         
         
-class ViewEffortViewerForSelectedTask(mixin_uicommand.NeedsOneSelectedTaskMixin, 
-                                      settings_uicommand.SettingsCommand, 
+class ViewEffortViewerForSelectedTask(settings_uicommand.SettingsCommand, 
                                       ViewerCommand):
     def __init__(self, *args, **kwargs):
         from taskcoachlib.gui import viewer
-        self.viewerClass = viewer.EffortViewer
+        self.viewerClass = viewer.EffortViewerForSelectedTasks
         self.taskFile = kwargs.pop('taskFile')
         kwargs['bitmap'] = viewer.EffortViewer.defaultBitmap
         super(ViewEffortViewerForSelectedTask, self).__init__(*args, **kwargs)
-        
+
     def doCommand(self, event):
         from taskcoachlib.gui import viewer
         viewer.addOneViewer(self.viewer, self.taskFile, self.settings, 
-            self.viewerClass, 
-            tasksToShowEffortFor=task.TaskList(self.viewer.curselection()))
-        
+            self.viewerClass)
+
 
 class RenameViewer(ViewerCommand):
     def __init__(self, *args, **kwargs):
@@ -1562,7 +1560,7 @@ class AddNote(mixin_uicommand.NeedsSelectedNoteOwnersMixin, ViewerCommand,
               settings_uicommand.SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(AddNote, self).__init__(menuText=_('Add &note...\tCtrl+B'),
-            helpText=help.addNote, bitmap='new', *args, **kwargs)
+            helpText=help.addNote, bitmap='note_icon', *args, **kwargs)
             
     def doCommand(self, event, show=True):  # pylint: disable=W0221
         addNoteCommand = command.AddNoteCommand(self.viewer.presentation(), 

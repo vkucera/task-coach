@@ -800,7 +800,6 @@ class ViewerWithColumns(Viewer):  # pylint: disable=W0223
 
     def validateDrag(self, dropItem, dragItems, columnIndex):
         if columnIndex == -1 or self.visibleColumns()[columnIndex].name() != 'ordering':
-            print '== NORM'
             return None # Normal behavior
 
         # Ordering

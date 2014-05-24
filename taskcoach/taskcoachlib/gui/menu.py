@@ -463,7 +463,7 @@ class ViewViewerMenu(Menu):
             ViewViewer(menuText=_('&Effort'),
                    helpText=_('Open a new tab with a viewer that displays efforts'),
                    viewerClass=viewer.EffortViewer, **kwargs),
-            uicommand.ViewEffortViewerForSelectedTask(menuText=_('Effort for &one task'),
+            uicommand.ViewEffortViewerForSelectedTask(menuText=_('Eff&ort for selected task(s)'),
                     helpText=_('Open a new tab with a viewer that displays efforts for the selected task'),
                     viewerClass=viewer.EffortViewer, **kwargs),
             ViewViewer(menuText=_('&Note'),

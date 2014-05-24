@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib.thirdparty import pybonjour
 from twisted.internet.interfaces import IReadDescriptor
-from twisted.internet.defer import Deferred
+from twisted.internet.defer import Deferred, AlreadyCalledError
 from twisted.python.failure import Failure
 from zope import interface
 
@@ -63,11 +63,14 @@ def BonjourServiceRegister(settings, port):
     reader = BonjourServiceDescriptor()
 
     def registerCallback(sdRef, flags, errorCode, name, regtype, domain):
-        if errorCode == pybonjour.kDNSServiceErr_NoError:
-            d.callback(reader)
-        else:
-            reader.stop()
-            d.errback(Failure(RuntimeError('Could not register with Bonjour: %d' % errorCode)))
+        try:
+            if errorCode == pybonjour.kDNSServiceErr_NoError:
+                d.callback(reader)
+            else:
+                reader.stop()
+                d.errback(Failure(RuntimeError('Could not register with Bonjour: %d' % errorCode)))
+        except AlreadyCalledError:
+            pass
 
     # This ID is registered, see http://www.dns-sd.org/ServiceTypes.html
     sdRef = pybonjour.DNSServiceRegister(name=settings.get('iphone', 'service') or None,

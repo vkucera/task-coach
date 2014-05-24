@@ -122,6 +122,7 @@ class ViewerContainer(object):
     def onStatusChanged(self, viewer):
         if self.activeViewer() == viewer:
             self.sendViewerStatusEvent()
+        pub.sendMessage('all.viewer.status', viewer=viewer)
 
     def onPageChanged(self, event):
         self.__ensure_active_viewer_has_focus()
@@ -132,7 +133,7 @@ class ViewerContainer(object):
     
     def sendViewerStatusEvent(self):
         pub.sendMessage('viewer.status')
-        
+
     def __ensure_active_viewer_has_focus(self):
         if not self.activeViewer():
             return

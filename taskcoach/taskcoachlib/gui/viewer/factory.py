@@ -27,7 +27,7 @@ def viewerTypes():
         settings. '''
     return ('timelineviewer', 'squaretaskviewer', 'taskviewer', 
         'taskstatsviewer', 'noteviewer', 'categoryviewer', 'effortviewer', 
-        'calendarviewer', 'hierarchicalcalendarviewer')
+        'calendarviewer', 'hierarchicalcalendarviewer', 'effortviewerforselectedtasks')
 
 
 class addViewers(object):  # pylint: disable=C0103, R0903
@@ -53,6 +53,7 @@ class addViewers(object):  # pylint: disable=C0103, R0903
         self.__add_viewers(task.CalendarViewer)
         self.__add_viewers(task.HierarchicalCalendarViewer)
         self.__add_viewers(effort.EffortViewer)
+        self.__add_viewers(effort.EffortViewerForSelectedTasks)
         self.__add_viewers(category.CategoryViewer)
         self.__add_viewers(note.NoteViewer)
 
@@ -62,7 +63,7 @@ class addViewers(object):  # pylint: disable=C0103, R0903
         number_of_viewers_to_add = self._number_of_viewers_to_add(viewer_class)
         for _ in range(number_of_viewers_to_add):
             viewer_instance = viewer_class(*self.__viewer_init_args, 
-                                           **self._viewer_kwargs())
+                                           **self._viewer_kwargs(viewer_class))
             self.__viewer_container.addViewer(viewer_instance, 
                                               floating=self.floating)
     
@@ -72,11 +73,11 @@ class addViewers(object):  # pylint: disable=C0103, R0903
         return self.__settings.getint('view', 
                                       viewer_class.__name__.lower() + 'count')
 
-    def _viewer_kwargs(self):  # pylint: disable=R0201
+    def _viewer_kwargs(self, viewer_class):  # pylint: disable=R0201
         ''' Return the keyword arguments to be passed to the viewer 
             initializer. '''
-        return dict()
-    
+        return dict(viewerContainer=self.__viewer_container) if issubclass(viewer_class, effort.EffortViewerForSelectedTasks) else dict()
+
 
 class addOneViewer(addViewers):  # pylint: disable=C0103, R0903
     ''' addOneViewer is a class masquerading as a method to add one viewer
@@ -94,5 +95,7 @@ class addOneViewer(addViewers):  # pylint: disable=C0103, R0903
     def _number_of_viewers_to_add(self, viewer_class):
         return 1 if viewer_class == self.__viewer_class else 0
         
-    def _viewer_kwargs(self):
-        return self.__kwargs
+    def _viewer_kwargs(self, viewer_class):
+        kwargs = super(addOneViewer, self)._viewer_kwargs(viewer_class)
+        kwargs.update(self.__kwargs)
+        return kwargs

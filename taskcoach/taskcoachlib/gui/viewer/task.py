@@ -218,7 +218,8 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable=W0223
             super(BaseTaskTreeViewer, self).createCreationToolBarUICommands()
     
     def createActionToolBarUICommands(self):
-        uiCommands = (uicommand.TaskMarkInactive(settings=self.settings, viewer=self),
+        uiCommands = (uicommand.AddNote(settings=self.settings, viewer=self),
+                      uicommand.TaskMarkInactive(settings=self.settings, viewer=self),
                       uicommand.TaskMarkActive(settings=self.settings, viewer=self),
                       uicommand.TaskMarkCompleted(settings=self.settings, viewer=self))
         uiCommands += (
