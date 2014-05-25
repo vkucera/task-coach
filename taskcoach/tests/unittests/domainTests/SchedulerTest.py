@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, wx, time
+import test, time
 from taskcoachlib.domain import date
 
 
@@ -34,8 +34,9 @@ class SchedulerTest(test.TestCase):
         self.scheduler.schedule(self.callback, futureDate)
         self.failUnless(self.scheduler.is_scheduled(self.callback))
         t0 = time.time()
+        from twisted.internet import reactor
         while time.time() - t0 < 2.1:
-            wx.Yield()
+            reactor.iterate()
         self.failIf(self.scheduler.is_scheduled(self.callback))
         self.assertEqual(self.callCount, 1)
 
@@ -45,15 +46,17 @@ class SchedulerTest(test.TestCase):
         self.scheduler.unschedule(self.callback)
         self.failIf(self.scheduler.is_scheduled(self.callback))
         t0 = time.time()
+        from twisted.internet import reactor
         while time.time() - t0 < 1.2:
-            wx.Yield()
+            reactor.iterate()
         self.assertEqual(self.callCount, 0)
 
     def testScheduleAtPastDateTime(self):
         pastDate = date.Now() - date.TimeDelta(seconds=1)
         self.scheduler.schedule(self.callback, pastDate)
         self.failIf(self.scheduler.is_scheduled(self.callback))
-        wx.Yield()
+        from twisted.internet import reactor
+        reactor.iterate()
         self.failIf(self.scheduler.is_scheduled(self.callback))
         self.assertEqual(self.callCount, 1)
 
@@ -61,8 +64,9 @@ class SchedulerTest(test.TestCase):
         self.scheduler.schedule_interval(self.callback, seconds=1)
         try:
             t0 = time.time()
+            from twisted.internet import reactor
             while time.time() - t0 < 2.1:
-                wx.Yield()
+                reactor.iterate()
             self.assertEqual(self.callCount, 2)
         finally:
             self.scheduler.unschedule(self.callback)
