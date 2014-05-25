@@ -39,11 +39,12 @@ def skipOnTwistedVersions(*versions):
         versions of Twisted. Versions are strings. The test is
         skipped if the current Twisted version string is prefixed by any
         of the specified ones. '''
-        def wrapper(func):
-            if any([twisted.version.short().startswith(version) for version in versions]):
-                return lambda self, *args, **kwargs: self.skipTest('Twisted version is %s' % twisted.version.short())
-            return func
-        return wrapper
+    def wrapper(func):
+        import twisted
+        if any([twisted.version.short().startswith(version) for version in versions]):
+            return lambda self, *args, **kwargs: self.skipTest('Twisted version is %s' % twisted.version.short())
+        return func
+    return wrapper
 
 
 class TestCase(unittest.TestCase, object):
