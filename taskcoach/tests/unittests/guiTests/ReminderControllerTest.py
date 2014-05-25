@@ -69,7 +69,7 @@ class ReminderControllerTest(ReminderControllerTestCase):
         self.task.setReminder(self.reminderDateTime)
         self.failUnless(date.Scheduler().get_jobs())
         
-    @test.skipOnTwistedVersions('11.')
+    @test.skipOnTwistedVersions('12.')
     def testAfterReminderJobIsRemovedFromScheduler(self):
         self.task.setReminder(date.Now() + date.TimeDelta(seconds=1))
         self.failUnless(date.Scheduler().get_jobs())

@@ -29,7 +29,7 @@ class SchedulerTest(test.TestCase):
     def callback(self):
         self.callCount += 1
 
-    @test.skipOnTwistedVersions('11.')
+    @test.skipOnTwistedVersions('12.')
     def testScheduleAtDateTime(self):
         futureDate = date.Now() + date.TimeDelta(seconds=1)
         self.scheduler.schedule(self.callback, futureDate)
@@ -41,7 +41,7 @@ class SchedulerTest(test.TestCase):
         self.failIf(self.scheduler.is_scheduled(self.callback))
         self.assertEqual(self.callCount, 1)
 
-    @test.skipOnTwistedVersions('11.')
+    @test.skipOnTwistedVersions('12.')
     def testUnschedule(self):
         futureDate = date.Now() + date.TimeDelta(seconds=1)
         self.scheduler.schedule(self.callback, futureDate)
@@ -53,7 +53,7 @@ class SchedulerTest(test.TestCase):
             reactor.iterate()
         self.assertEqual(self.callCount, 0)
 
-    @test.skipOnTwistedVersions('11.')
+    @test.skipOnTwistedVersions('12.')
     def testScheduleAtPastDateTime(self):
         pastDate = date.Now() - date.TimeDelta(seconds=1)
         self.scheduler.schedule(self.callback, pastDate)
@@ -63,7 +63,7 @@ class SchedulerTest(test.TestCase):
         self.failIf(self.scheduler.is_scheduled(self.callback))
         self.assertEqual(self.callCount, 1)
 
-    @test.skipOnTwistedVersions('11.')
+    @test.skipOnTwistedVersions('12.')
     def testScheduleInterval(self):
         self.scheduler.schedule_interval(self.callback, seconds=1)
         try:
