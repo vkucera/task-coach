@@ -70,13 +70,17 @@ class ReminderControllerTest(ReminderControllerTestCase):
         self.failUnless(date.Scheduler().get_jobs())
         
     def testAfterReminderJobIsRemovedFromScheduler(self):
-        self.task.setReminder(date.Now() + date.TimeDelta(seconds=1))
-        self.failUnless(date.Scheduler().get_jobs())
-        t0 = time.time()
-        from twisted.internet import reactor
-        while time.time() - t0 < 1.1:
-            reactor.iterate()
-        self.failIf(date.Scheduler().get_jobs())
+        import twisted
+        if twisted.version.major == 12:
+            self.skipTest('Avoid wxreactor-related problem with Twisted 12')
+        else:
+            self.task.setReminder(date.Now() + date.TimeDelta(seconds=1))
+            self.failUnless(date.Scheduler().get_jobs())
+            t0 = time.time()
+            from twisted.internet import reactor
+            while time.time() - t0 < 1.1:
+                reactor.iterate()
+            self.failIf(date.Scheduler().get_jobs())
         
     def testAddTaskWithReminderSchedulesJob(self):
         taskWithReminder = task.Task('Task with reminder', 
