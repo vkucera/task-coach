@@ -20,7 +20,6 @@ from taskcoachlib import patterns
 import dateandtime, timedelta
 import logging
 import timedelta
-import wx
 import weakref
 import bisect
 
@@ -44,23 +43,21 @@ class ScheduledMethod(object):
             self.__func(obj, *args, **kwargs)
 
 
-class wxScheduler(wx.EvtHandler):
+class TwistedScheduler(object):
     """
     A class to schedule jobs at specified date/time. Unlike apscheduler, this
-    uses wx.Timers instead of threading, in order to avoid busy waits.
+    uses Twisted instead of threading, in order to avoid busy waits.
     """
     def __init__(self):
-        super(wxScheduler, self).__init__()
+        super(TwistedScheduler, self).__init__()
         self.__jobs = []
-        self.__timerId = wx.NewId()
-        self.__timer = None
+        self.__nextCall = None
         self.__firing = False
-        wx.EVT_TIMER(self, self.__timerId, self.__onTimer)
 
     def __schedule(self, job, dateTime, interval):
-        if self.__timer is not None:
-            self.__timer.Stop()
-            self.__timer = None
+        if self.__nextCall is not None:
+            self.__nextCall.cancel()
+            self.__nextCall = None
         bisect.insort_right(self.__jobs, (dateTime, job, interval))
         if not self.__firing:
             self.__fire()
@@ -68,7 +65,7 @@ class wxScheduler(wx.EvtHandler):
     def scheduleDate(self, job, dateTime):
         """
         Schedules 'job' to be called at 'dateTime'. This assumes the caller is the
-        wx main loop thread.
+        main loop thread.
         """
         self.__schedule(job, dateTime, None)
 
@@ -88,9 +85,9 @@ class wxScheduler(wx.EvtHandler):
         return False
 
     def shutdown(self):
-        if self.__timer is not None:
-            self.__timer.Stop()
-            self.__timer = None
+        if self.__nextCall is not None:
+            self.__nextCall.cancel()
+            self.__nextCall = None
         self.__jobs = []
 
     def jobs(self):
@@ -112,16 +109,16 @@ class wxScheduler(wx.EvtHandler):
         finally:
             self.__firing = False
 
-        if self.__jobs and self.__timer is None:
+        if self.__jobs and self.__nextCall is None:
             dt = self.__jobs[0][0] - dateandtime.Now()
             nextDuration = int((dt.microseconds + (dt.seconds + dt.days * 24 * 3600) * 10**6) / 10**3)
             nextDuration = max(nextDuration, 1)
             nextDuration = min(nextDuration, 2**31-1)
-            self.__timer = wx.Timer(self, self.__timerId)
-            self.__timer.Start(nextDuration, True)
+            from twisted.internet import reactor
+            self.__nextCall = reactor.callLater(1.0 * nextDuration / 1000, self.__callback)
 
-    def __onTimer(self, event):
-        self.__timer = None
+    def __callback(self):
+        self.__nextCall = None
         self.__fire()
 
 
@@ -130,7 +127,7 @@ class Scheduler(object):
 
     def __init__(self, *args, **kwargs):
         super(Scheduler, self).__init__(*args, **kwargs)
-        self.__scheduler = wxScheduler()
+        self.__scheduler = TwistedScheduler()
 
     def shutdown(self):
         self.__scheduler.shutdown()

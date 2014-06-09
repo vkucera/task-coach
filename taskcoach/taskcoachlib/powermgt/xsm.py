@@ -327,10 +327,12 @@ class SessionMonitor(ICELoop):
         """
         Call this after a save yourself.
         """
-        SmcSaveYourselfDone(self.conn, int(status))
+        if self.isValid():
+            SmcSaveYourselfDone(self.conn, int(status))
 
     def _saveYourself(self, conn, client_data, save_type, shutdown, interact_style, fast):
-        self.saveYourself(save_type, shutdown, interact_style, fast)
+        if self.isValid():
+            self.saveYourself(save_type, shutdown, interact_style, fast)
 
     def saveYourself(self, save_type, shutdown, interact_style, fast):
         """
@@ -376,19 +378,19 @@ class SessionMonitor(ICELoop):
 
     @property
     def version(self):
-        return SmcProtocolVersion(self.conn)
+        return SmcProtocolVersion(self.conn) if self.isValid() else None
 
     @property
     def revision(self):
-        return SmcProtocolRevision(self.conn)
+        return SmcProtocolRevision(self.conn) if self.isValid() else None
 
     @property
     def vendor(self):
-        return SmcVendor(self.conn) # Leak
+        return SmcVendor(self.conn) if self.isValid() else None # Leak
 
     @property
     def release(self):
-        return SmcRelease(self.conn) # Leak
+        return SmcRelease(self.conn) if self.isValid() else None # Leak
 
 #==============================================================================
 # Testing

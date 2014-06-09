@@ -26,24 +26,28 @@ if projectRoot not in sys.path:
 from taskcoachlib.notify import AbstractNotifier
 
 
-def ignore(*args, **kwargs):  # pylint: disable=W0613
-    pass
-
-
-def runTest(func):
-    return func
-
-
-def onlyOnPlatform(*platforms):
-    ''' Decorator for unit tests that only run on specific platforms. '''
-    return runTest if wx.Platform in platforms else ignore
-
-    
 def skipOnPlatform(*platforms):
     ''' Decorator for unit tests that are to be skipped on specific 
         platforms. '''
-    return ignore if wx.Platform in platforms else runTest
-    
+    def wrapper(func):
+        if wx.Platform in platforms:
+            return lambda self, *args, **kwargs: self.skipTest('platform is %s' % wx.Platform)
+        return func
+    return wrapper
+
+
+def skipOnTwistedVersions(*versions):
+    ''' Decorator for unit tests that are to be skipped on specific
+        versions of Twisted. Versions are strings. The test is
+        skipped if the current Twisted version string is prefixed by any
+        of the specified ones. '''
+    def wrapper(func):
+        import twisted
+        if any([twisted.version.short().startswith(version) for version in versions]):
+            return lambda self, *args, **kwargs: self.skipTest('Twisted version is %s' % twisted.version.short())
+        return func
+    return wrapper
+
 
 class TestCase(unittest.TestCase, object):
     def assertEqualLists(self, expectedList, actualList):
