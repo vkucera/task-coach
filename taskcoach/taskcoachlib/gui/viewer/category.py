@@ -34,6 +34,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
                          mixin.FilterableViewerMixin,
                          mixin.SortableViewerForCategoriesMixin, 
                          mixin.SearchableViewerMixin, 
+                         base.WithAttachmentsViewerMixin,
                          mixin.NoteColumnMixin, mixin.AttachmentColumnMixin,
                          base.SortableViewerWithColumns, base.TreeViewer):
     SorterClass = category.CategorySorter

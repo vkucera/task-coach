@@ -71,6 +71,7 @@ class TaskViewerStatusMessages(object):
 class BaseTaskViewer(mixin.SearchableViewerMixin,  # pylint: disable=W0223
                      mixin.FilterableViewerForTasksMixin,
                      base.CategorizableViewerMixin,
+                     base.WithAttachmentsViewerMixin,
                      base.TreeViewer):        
     def __init__(self, *args, **kwargs):
         super(BaseTaskViewer, self).__init__(*args, **kwargs)

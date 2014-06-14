@@ -26,6 +26,7 @@ from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, toolbar, artprovider
 from taskcoachlib.thirdparty import hypertreelist
 from taskcoachlib.thirdparty.pubsub import pub
+from taskcoachlib.widgets import ToolTipMixin
 import mixin
 
 
@@ -73,6 +74,10 @@ class Viewer(patterns.Observer, wx.Panel):
         pub.subscribe(self.onEndIO, 'taskfile.justCleared')
         pub.subscribe(self.onEndIO, 'taskfile.justSaved')
 
+        if isinstance(self.widget, ToolTipMixin):
+            pub.subscribe(self.onShowTooltipsChanged, 'settings.view.descriptionpopups')
+            self.widget.SetToolTipsEnabled(settings.getboolean('view', 'descriptionpopups'))
+
         wx.CallAfter(self.__DisplayBalloon)
 
     def __DisplayBalloon(self):
@@ -82,6 +87,9 @@ class Viewer(patterns.Observer, wx.Panel):
                 title=_('Toolbars are customizable'),
                 getRect=lambda: self.toolbar.GetToolRect(self.toolbar.getToolIdByCommand('EditToolBarPerspective')),
                 message=_('''Click on the gear icon on the right to add buttons and rearrange them.'''))
+
+    def onShowTooltipsChanged(self, value):
+        self.widget.SetToolTipsEnabled(value)
 
     def onBeginIO(self, taskFile):
         self.__freezeCount += 1
@@ -534,12 +542,19 @@ class Viewer(patterns.Observer, wx.Panel):
         command.EditDescriptionCommand(items=[item], newValue=newValue).do()
 
     def getItemTooltipData(self, item):
-        return []
+        lines = [line.rstrip('\r') for line in item.description().split('\n')] 
+        return [(None, lines)] if lines and lines != [''] else [] 
 
 
 class CategorizableViewerMixin(object):
     def getItemTooltipData(self, item):
         return [('folder_blue_arrow_icon', [u', '.join(sorted([cat.subject() for cat in item.categories()]))] if item.categories() else [])]
+
+
+class WithAttachmentsViewerMixin(object):
+    def getItemTooltipData(self, item):
+        return [('paperclip_icon', sorted([unicode(attachment) for attachment in item.attachments()]))] + \
+          super(WithAttachmentsViewerMixin, self).getItemTooltipData()
 
 
 class ListViewer(Viewer):  # pylint: disable=W0223

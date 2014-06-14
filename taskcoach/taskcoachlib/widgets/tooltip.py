@@ -26,6 +26,7 @@ class ToolTipMixin(object):
     dynamic tooltip over a control."""
 
     def __init__(self, *args, **kwargs):
+        self.__enabled = kwargs.pop('tooltipsEnabled', True)
         super(ToolTipMixin, self).__init__(*args, **kwargs)
 
         self.__timer = wx.Timer(self, wx.NewId())
@@ -33,16 +34,19 @@ class ToolTipMixin(object):
         self.__tip = None
         self.__position = (0, 0)
         self.__text = None
-        self.__enabled = True
+        self.__frozen = True
 
         self.GetMainWindow().Bind(wx.EVT_MOTION, self.__OnMotion)
         self.GetMainWindow().Bind(wx.EVT_LEAVE_WINDOW, self.__OnLeave)
         self.Bind(wx.EVT_TIMER, self.__OnTimer, id=self.__timer.GetId())        
 
+    def SetToolTipsEnabled(self, enabled):
+        self.__enabled = enabled
+
     def PopupMenu(self, menu):
-        self.__enabled = False
+        self.__frozen = False
         super(ToolTipMixin, self).PopupMenu(menu)
-        self.__enabled = True
+        self.__frozen = True
 
     def ShowTip(self, x, y):
         # Ensure we're not too big (in the Y direction anyway) for the
@@ -50,7 +54,7 @@ class ToolTipMixin(object):
         # ClientDisplayRect() returns the whole display size, not
         # taking the taskbar into account...
 
-        if self.__enabled:
+        if self.__frozen:
             theDisplay = wx.Display(wx.Display.GetFromPoint(wx.Point(x, y)))
             displayX, displayY, displayWidth, displayHeight = theDisplay.GetClientArea()
             tipWidth, tipHeight = self.__tip.GetSizeTuple()
@@ -92,12 +96,13 @@ class ToolTipMixin(object):
             self.HideTip()
             self.__tip = None
 
-        newTip = self.OnBeforeShowToolTip(x, y)
-        if newTip is not None:
-            self.__tip = newTip
-            self.__tip.Bind(wx.EVT_MOTION, self.__OnTipMotion)
-            self.__position = (x + 20, y + 10)
-            self.__timer.Start(200, True)
+        if self.__enabled:
+            newTip = self.OnBeforeShowToolTip(x, y)
+            if newTip is not None:
+                self.__tip = newTip
+                self.__tip.Bind(wx.EVT_MOTION, self.__OnTipMotion)
+                self.__position = (x + 20, y + 10)
+                self.__timer.Start(200, True)
 
         event.Skip()
 

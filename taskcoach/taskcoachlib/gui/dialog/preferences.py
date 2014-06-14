@@ -583,6 +583,9 @@ class FeaturesPage(SettingsPage):
             _('Use decimal times for effort entries.'),
             _('Display one hour, fifteen minutes as 1.25 instead of 1:15\n'
                 'This is useful when creating invoices.'))
+        self.addBooleanSetting('view', 'descriptionpopups',
+            _('Show a popup with the description of an item\n'
+              'when hovering over it'))
         self.fit()
 
     def ok(self):
