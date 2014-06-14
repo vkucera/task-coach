@@ -29,6 +29,8 @@ Release('1.3.41', 'June ??, 2014',
 window managers that don't set the SESSION_MANAGER environment
 variable.'''),
         Bugv2('''Bring back effort tooltips.'''),
+        Bugv2('''Fix positionning of balool tips when moving the
+window from one display to another.''', '1522'),
         ],
     featuresAdded=[
         Feature('''Bring back the option to disable tooltips.'''),
