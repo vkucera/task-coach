@@ -75,6 +75,7 @@ defaults = {
     # Show messages from the developers downloaded from the website:
     'developermessages': 'True',
     'lastdevelopermessage': '',
+    'descriptionpopups': 'True',
     },
 'taskviewer': {
     'title': '',  # User supplied viewer title

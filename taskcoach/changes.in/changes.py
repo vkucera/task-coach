@@ -23,12 +23,15 @@ from changetypes import *
 releases = [
 
 Release('1.3.41', 'June ??, 2014',
-    summary='''This is a bugfix release.''',
+    summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bugv2('''Fix a crash at startup on Linux when using some
 window managers that don't set the SESSION_MANAGER environment
 variable.'''),
         Bugv2('''Bring back effort tooltips.'''),
+        ],
+    featuresAdded=[
+        Feature('''Bring back the option to disable tooltips.'''),
         ],
     ),
 

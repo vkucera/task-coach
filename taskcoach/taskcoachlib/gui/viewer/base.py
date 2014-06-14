@@ -26,6 +26,7 @@ from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, toolbar, artprovider
 from taskcoachlib.thirdparty import hypertreelist
 from taskcoachlib.thirdparty.pubsub import pub
+from taskcoachlib.widgets import ToolTipMixin
 import mixin
 
 
@@ -71,6 +72,10 @@ class Viewer(patterns.Observer, wx.Panel):
         pub.subscribe(self.onEndIO, 'taskfile.justRead')
         pub.subscribe(self.onEndIO, 'taskfile.justCleared')
 
+        if isinstance(self.widget, ToolTipMixin):
+            pub.subscribe(self.onShowTooltipsChanged, 'settings.view.descriptionpopups')
+            self.widget.SetToolTipsEnabled(settings.getboolean('view', 'descriptionpopups'))
+
         wx.CallAfter(self.__DisplayBalloon)
 
     def __DisplayBalloon(self):
@@ -80,6 +85,9 @@ class Viewer(patterns.Observer, wx.Panel):
                 title=_('Toolbars are customizable'),
                 getRect=lambda: self.toolbar.GetToolRect(self.toolbar.getToolIdByCommand('EditToolBarPerspective')),
                 message=_('''Click on the gear icon on the right to add buttons and rearrange them.'''))
+
+    def onShowTooltipsChanged(self, value):
+        self.widget.SetToolTipsEnabled(value)
 
     def onBeginIO(self, taskFile):
         self.__freezeCount += 1
