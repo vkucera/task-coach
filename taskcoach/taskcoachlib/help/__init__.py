@@ -622,6 +622,12 @@ Android platform. Todo.txt Touch uses a todo.txt file that lives in your
 Dropbox folder. %(name)s can import from and export to that todo.txt 
 file.''')%meta.metaDict),
     p(
+        _('''When exporting to Todo.txt, %(name)s creates another file alongside
+the target one, suffixed with "-meta". Don't delete this file; %(name)s uses it
+to keep track of external changed to the tasks. When a conflict arises (a task
+is modified both by Task Coach and by an external application when importing),
+the Todo.txt file wins the conflict.''') % meta.metaDict),
+    p(
         _('''Tip: if you save your task file in the todo folder that Todo.txt
 Touch creates in your Dropbox folder, and you turn on automatic importing and 
 exporting of Todo.txt, %(name)s will keep the task file and the 
