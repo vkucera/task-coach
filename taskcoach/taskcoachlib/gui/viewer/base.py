@@ -528,12 +528,19 @@ class Viewer(patterns.Observer, wx.Panel):
         command.EditDescriptionCommand(items=[item], newValue=newValue).do()
 
     def getItemTooltipData(self, item):
-        return []
+        lines = [line.rstrip('\r') for line in item.description().split('\n')] 
+        return [(None, lines)] if lines and lines != [''] else [] 
 
 
 class CategorizableViewerMixin(object):
     def getItemTooltipData(self, item):
         return [('folder_blue_arrow_icon', [u', '.join(sorted([cat.subject() for cat in item.categories()]))] if item.categories() else [])]
+
+
+class WithAttachmentsViewerMixin(object):
+    def getItemTooltipData(self, item):
+        return [('paperclip_icon', sorted([unicode(attachment) for attachment in item.attachments()]))] + \
+          super(WithAttachmentsViewerMixin, self).getItemTooltipData()
 
 
 class ListViewer(Viewer):  # pylint: disable=W0223

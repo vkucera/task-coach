@@ -509,7 +509,16 @@ class EffortViewer(base.ListViewer,
         return render.timeSpent(self.__round_duration(duration), 
                                 showSeconds=self.__show_seconds(),
                                 decimal=self.settings.getboolean('feature', 'decimaltime'))
-    
+
+    def getItemTooltipData(self, item):
+        result = super(EffortViewer, self).getItemTooltipData(item)
+        if isinstance(item, effort.CompositeEffort) and len(item):
+            details = [_('Details:')]
+            for theEffort in item:
+                details.append(u'%s (%s)' % (render.dateTimePeriod(theEffort.getStart(), theEffort.getStop(), humanReadable=True), self.__renderTimeSpent(theEffort)))
+            result.append((None, details))
+        return result
+
     @staticmethod
     def __renderRevenue(anEffort):
         ''' Return the revenue of the effort as a monetary value. '''
