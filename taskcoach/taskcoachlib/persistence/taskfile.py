@@ -381,9 +381,8 @@ class TaskFile(patterns.Observer):
             self.setFilename(filename)
         try:
             if self.exists():
-                fd = self._openForRead()
-                tasks, categories, notes, syncMLConfig, changes, guid = self._read(fd)
-                fd.close()
+                with self._openForRead() as fd:
+                    tasks, categories, notes, syncMLConfig, changes, guid = self._read(fd)
             else:
                 tasks = []
                 categories = []
@@ -429,7 +428,7 @@ class TaskFile(patterns.Observer):
             self.__loading = False
             self.markClean()
             self.__changedOnDisk = False
-        pub.sendMessage('taskfile.justRead', taskFile=self)
+            pub.sendMessage('taskfile.justRead', taskFile=self)
         
     def save(self):
         pub.sendMessage('taskfile.aboutToSave', taskFile=self)

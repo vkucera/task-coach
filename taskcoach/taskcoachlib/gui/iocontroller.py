@@ -23,6 +23,7 @@ from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty import lockfile
 from taskcoachlib.widgets import GetPassword
 from taskcoachlib.workarounds import ExceptionAsUnicode
+from taskcoachlib.gui.dialog import BackupManagerDialog
 import wx
 import os
 import gc
@@ -145,7 +146,7 @@ class IOController(object):
                 self.__showTooNewErrorMessage(filename, showerror)
                 return
             except Exception:
-                self.__showGenericErrorMessage(filename, showerror)
+                self.__showGenericErrorMessage(filename, showerror, showBackups=True)
                 return
             self.__messageCallback(_('Loaded %(nrtasks)d tasks from '
                  '%(filename)s') % dict(nrtasks=len(self.__taskFile.tasks()), 
@@ -176,7 +177,7 @@ class IOController(object):
                 return
             except Exception:
                 self.__showGenericErrorMessage(filename, showerror)
-                return                
+                return
             self.__messageCallback(_('Merged %(filename)s') % \
                                    dict(filename=filename))
             self.__addRecentFile(filename)
@@ -488,12 +489,24 @@ Break the lock?''') % filename,
             dict(filename=filename, name=meta.name),
             **self.__errorMessageOptions)
         
-    def __showGenericErrorMessage(self, filename, showerror):
+    def __showGenericErrorMessage(self, filename, showerror, showBackups=False):
         sys.stderr.write(''.join(traceback.format_exception(*sys.exc_info())))
         limitedException = ''.join(traceback.format_exception(*sys.exc_info(), 
                                                               limit=10))
-        showerror(_('Error while reading %s:\n') % filename + \
-                    limitedException, **self.__errorMessageOptions)
+        message = _('Error while reading %s:\n') % filename + \
+                    limitedException
+        man = persistence.BackupManifest(self.__settings)
+        if showBackups and man.hasBackups(filename):
+            message += u'\n' + _('The backup manager will now open to allow you to restore\nan older version of this file.')
+        showerror(message, **self.__errorMessageOptions)
+
+        if showBackups and man.hasBackups(filename):
+            dlg = BackupManagerDialog(None, self.__settings, filename)
+            try:
+                if dlg.ShowModal() == wx.ID_OK:
+                    wx.CallAfter(self.open, dlg.restoredFilename())
+            finally:
+                dlg.Destroy()
 
     def __updateDefaultPath(self, filename):
         for options in [self.__tskFileOpenDialogOpts, 

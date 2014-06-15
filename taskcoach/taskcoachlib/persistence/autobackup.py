@@ -67,6 +67,9 @@ class BackupManifest(object):
             backups.append(date.DateTime(*tuple(comp)))
         return list(reversed(sorted(backups)))
 
+    def hasBackups(self, filename):
+        return len(self.listBackups(filename)) != 0
+
     def backupPath(self, filename):
         path = os.path.join(self.__settings.pathToBackupsDir(), hashlib.sha1(filename).hexdigest())
         if not os.path.exists(path):
@@ -116,6 +119,9 @@ class AutoBackup(object):
 
         backups.xml maps the SHA to actual file names, for enumeration in the
         GUI. '''
+
+        if not taskFile.filename():
+            return
 
         # First add the file to the XML manifest.
         man = BackupManifest(self.__settings)
