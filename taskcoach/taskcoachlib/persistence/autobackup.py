@@ -33,6 +33,46 @@ def compressFile(srcName, dstName):
             shutil.copyfileobj(src, dst)
 
 
+class BackupManifest(object):
+    def __init__(self, settings):
+        self.__settings = settings
+
+        xmlName = os.path.join(settings.pathToBackupsDir(), 'backups.xml')
+        if os.path.exists(xmlName):
+            with file(xmlName, 'rb') as fp:
+                root = ET.parse(fp).getroot()
+                self.__files = dict([(node.attrib['sha'], node.text) for node in root.findall('file')])
+        else:
+            self.__files = dict()
+
+    def save(self):
+        root = ET.Element('backupfiles')
+        for sha, filename in self.__files.items():
+            node = ET.SubElement(root, 'file')
+            node.attrib['sha'] = sha
+            node.text = filename
+        with file(os.path.join(self.__settings.pathToBackupsDir(), 'backups.xml'), 'wb') as fp:
+            ET.ElementTree(root).write(fp)
+
+    def listFiles(self):
+        return sorted(self.__files.values())
+
+    def backupPath(self, filename):
+        path = os.path.join(self.__settings.pathToBackupsDir(), hashlib.sha1(filename).hexdigest())
+        if not os.path.exists(path):
+            os.makedirs(path)
+        return path
+
+    def addFile(self, filename):
+        sha = hashlib.sha1(filename).hexdigest()
+        self.__files[sha] = filename
+
+    def removeFile(self, filename):
+        sha = hashlib.sha1(filename).hexdigest()
+        if sha in self.__files:
+            del self.__files[sha]
+
+
 class AutoBackup(object):
     ''' AutoBackup creates a backup copy of the task
         file before it is overwritten. To prevent the number of backups growing
@@ -60,36 +100,17 @@ class AutoBackup(object):
         GUI. '''
 
         # First add the file to the XML manifest.
-        sha = hashlib.sha1(taskFile.filename()).hexdigest()
-        xmlName = os.path.join(self.__settings.pathToBackupsDir(), 'backups.xml')
-        if os.path.exists(xmlName):
-            with file(xmlName, 'rb') as fp:
-                root = ET.parse(fp).getroot()
-        else:
-            root = ET.Element('backupfiles')
-
-        for node in root.findall('file'):
-            if node.attrib['sha'] == sha:
-                break
-        else:
-            node = ET.SubElement(root, 'file')
-            node.attrib['sha'] = sha
-            node.text = taskFile.filename()
-
-            with file(xmlName, 'wb') as fp:
-                ET.ElementTree(root).write(fp)
+        man = BackupManifest(self.__settings)
+        man.addFile(taskFile.filename())
+        man.save()
 
         # Then copy existing backups
-        backupDir = os.path.join(self.__settings.pathToBackupsDir(), sha)
-        if not os.path.exists(backupDir):
-            os.makedirs(backupDir)
-
         rx = re.compile(r'\.(\d{8})-(\d{6})\.tsk\.bak$')
         for name in os.listdir(os.path.split(taskFile.filename())[0] or '.'):
             srcName = os.path.join(os.path.split(taskFile.filename())[0], name)
             mt = rx.search(name)
             if mt:
-                dstName = os.path.join(backupDir, '%s%s.bak' % (mt.group(1), mt.group(2)))
+                dstName = os.path.join(man.backupPath(taskFile.filename()), '%s%s.bak' % (mt.group(1), mt.group(2)))
                 if os.path.exists(dstName):
                     os.remove(dstName)
                 with file(srcName, 'rb') as src:
