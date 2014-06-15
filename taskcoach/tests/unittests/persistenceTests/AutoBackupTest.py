@@ -158,6 +158,8 @@ class AutoBackupTest(test.TestCase):
             self.backup.backupFilename(self.taskFile, lambda: now)) # pylint: disable=W0212
 
     def testCreateBackupOnSave(self):
+        self.taskFile.save()
+        self.copyCalled = False
         self.taskFile.tasks().append(task.Task())
         self.taskFile.save()
         self.failUnless(self.copyCalled)

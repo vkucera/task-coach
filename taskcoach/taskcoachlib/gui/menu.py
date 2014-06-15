@@ -258,6 +258,10 @@ class FileMenu(Menu):
         self.appendMenu(_('&Export'),
                         ExportMenu(mainwindow, iocontroller, settings),
                         'export')
+        self.appendUICommands(
+            None,
+            uicommand.FileManageBackups(iocontroller=iocontroller, settings=settings)
+            )
         if settings.getboolean('feature', 'syncml'):
             try:
                 import taskcoachlib.syncml.core  # pylint: disable=W0612,W0404

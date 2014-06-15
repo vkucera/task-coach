@@ -57,6 +57,16 @@ class BackupManifest(object):
     def listFiles(self):
         return sorted(self.__files.values())
 
+    def listBackups(self, filename):
+        backups = list()
+        for name in os.listdir(self.backupPath(filename)):
+            try:
+                comp = map(int, [name[0:4], name[4:6], name[6:8], name[8:10], name[10:12], name[12:14]])
+            except:
+                continue
+            backups.append(date.DateTime(*tuple(comp)))
+        return list(reversed(sorted(backups)))
+
     def backupPath(self, filename):
         path = os.path.join(self.__settings.pathToBackupsDir(), hashlib.sha1(filename).hexdigest())
         if not os.path.exists(path):
@@ -71,6 +81,14 @@ class BackupManifest(object):
         sha = hashlib.sha1(filename).hexdigest()
         if sha in self.__files:
             del self.__files[sha]
+
+    def restoreFile(self, filename, dateTime, dstName):
+        if os.path.exists(dstName):
+            os.remove(dstName)
+        sha = hashlib.sha1(filename).hexdigest()
+        with bz2.BZ2File(os.path.join(self.__settings.pathToBackupsDir(), sha, dateTime.strftime('%Y%m%d%H%M%S.bak')), 'r') as src:
+            with file(dstName, 'wb') as dst:
+                shutil.copyfileobj(src, dst)
 
 
 class AutoBackup(object):
@@ -121,11 +139,16 @@ class AutoBackup(object):
     def onTaskFileAboutToSave(self, taskFile):
         ''' Just before a task file is about to be saved, and backups are on,
             create a backup and remove extraneous backup files. '''
-        self.createBackup(taskFile)
-        self.removeExtraneousBackupFiles(taskFile)
+        if taskFile.exists():
+            self.createBackup(taskFile)
+            self.removeExtraneousBackupFiles(taskFile)
 
     def createBackup(self, taskFile):
-        self.__copyfile(taskFile.filename(), self.backupFilename(taskFile))
+        filename = self.backupFilename(taskFile)
+        path = os.path.dirname(filename)
+        if not os.path.exists(path):
+            os.makedirs(path)
+        self.__copyfile(taskFile.filename(), filename)
 
     def removeExtraneousBackupFiles(self, taskFile, remove=os.remove,
                                     glob=glob.glob): # pylint: disable=W0621

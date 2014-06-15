@@ -23,3 +23,4 @@ import export
 import preferences
 import syncpreferences
 import templates
+from backupmanager import BackupManagerDialog

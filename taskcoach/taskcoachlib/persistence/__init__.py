@@ -33,6 +33,6 @@ from icalendar.ical import VCalendarParser
 from taskfile import TaskFile, LockedTaskFile
 from autosaver import AutoSaver
 from autoimporterexporter import AutoImporterExporter
-from autobackup import AutoBackup
+from autobackup import AutoBackup, BackupManifest
 from sessiontempfile import get_temp_file
 from templatelist import TemplateList

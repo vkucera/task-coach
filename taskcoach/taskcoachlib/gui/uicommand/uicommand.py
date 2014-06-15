@@ -325,7 +325,23 @@ class FileExportCommand(IOCommand, settings_uicommand.SettingsCommand):
             take the selected viewer as the first parameter and possibly a
             number of keyword arguments for export options. '''
         raise NotImplementedError  # pragma: no cover
- 
+
+
+class FileManageBackups(IOCommand, settings_uicommand.SettingsCommand):
+    def __init__(self, *args, **kwargs):
+        super(FileManageBackups, self).__init__(\
+            menuText=_('Manage backups...'),
+            helpText=_('Manage all task file backups'), *args, **kwargs)
+
+    def doCommand(self, event):
+        dlg = dialog.BackupManagerDialog(self.mainWindow(), self.settings, self.iocontroller.filename())
+        try:
+            if dlg.ShowModal() == wx.ID_OK:
+                self.iocontroller.open(dlg.restoredFilename())
+        finally:
+            dlg.Destroy()
+
+
 
 class FileExportAsHTML(FileExportCommand):
     ''' Action for exporting the contents of a viewer to HTML. '''

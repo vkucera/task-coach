@@ -22,6 +22,16 @@ from changetypes import *
 
 releases = [
 
+Release('1.4.0', 'June ??, 2014',
+    summary='''This is a major feature release.''',
+    featuresAdded=[
+        Feature('''A task file can now be open by several instances
+of Task Coach, allowing several users to work on the same file.''',
+                'http://taskcoach.uservoice.com/forums/26465-desktop-version-windows-linux-mac-of-task-coach/suggestions/288999-enable-multi-user-task-management'),
+        Feature('''Backups are now always enabled.'''),
+        ],
+    ),
+
 Release('1.3.41', 'June ??, 2014',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
