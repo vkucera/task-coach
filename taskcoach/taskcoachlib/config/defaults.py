@@ -484,7 +484,6 @@ defaults = {
     # time:
     'autoexport': '[]',  
     'nopoll': 'False',
-    'backup': 'False',
     'saveinifileinprogramdir': 'False',
     'attachmentbase': '',
     'lastattachmentpath': '',

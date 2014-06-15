@@ -16,39 +16,97 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, shutil, glob, math
+from __future__ import absolute_import # For xml...
+
+import os, shutil, glob, math, re
 from taskcoachlib.domain import date
 from taskcoachlib.thirdparty.pubsub import pub
+import bz2, hashlib
+
+# Hack: indirect 
+from xml.etree import ElementTree as ET
+
+
+def compressFile(srcName, dstName):
+    with file(srcName, 'rb') as src:
+        with bz2.BZ2File(dstName, 'w') as dst:
+            shutil.copyfileobj(src, dst)
 
 
 class AutoBackup(object):
-    ''' If backups are on, AutoBackup creates a backup copy of the task 
+    ''' AutoBackup creates a backup copy of the task
         file before it is overwritten. To prevent the number of backups growing
         indefinitely, AutoBackup removes older backups. '''
-        
+
     minNrOfBackupFiles = 3 # Keep at least three backup files.
     maxNrOfBackupFilesToRemoveAtOnce = 3 # Slowly reduce the number of backups
-    
-    def __init__(self, settings, copyfile=shutil.copyfile):
+
+    def __init__(self, settings, copyfile=compressFile):
         super(AutoBackup, self).__init__()
         self.__settings = settings
         self.__copyfile = copyfile
         pub.subscribe(self.onTaskFileAboutToSave, 'taskfile.aboutToSave')
-            
+        pub.subscribe(self.onTaskFileRead, 'taskfile.justRead')
+
+    def onTaskFileRead(self, taskFile):
+        ''' Copies old-style backups (in the same dictory as the task file) to the
+        user-specific backup directory. The backup directory layout is as follows:
+
+          <backupdir>/backups.xml          List of backups
+          <backupdir>/<sha>/<datetime>.bak Backup for <datetime>. <sha> is the SHA-1
+                                           hash of the task file name.
+
+        backups.xml maps the SHA to actual file names, for enumeration in the
+        GUI. '''
+
+        # First add the file to the XML manifest.
+        sha = hashlib.sha1(taskFile.filename()).hexdigest()
+        xmlName = os.path.join(self.__settings.pathToBackupsDir(), 'backups.xml')
+        if os.path.exists(xmlName):
+            with file(xmlName, 'rb') as fp:
+                root = ET.parse(fp).getroot()
+        else:
+            root = ET.Element('backupfiles')
+
+        for node in root.findall('file'):
+            if node.attrib['sha'] == sha:
+                break
+        else:
+            node = ET.SubElement(root, 'file')
+            node.attrib['sha'] = sha
+            node.text = taskFile.filename()
+
+            with file(xmlName, 'wb') as fp:
+                ET.ElementTree(root).write(fp)
+
+        # Then copy existing backups
+        backupDir = os.path.join(self.__settings.pathToBackupsDir(), sha)
+        if not os.path.exists(backupDir):
+            os.makedirs(backupDir)
+
+        rx = re.compile(r'\.(\d{8})-(\d{6})\.tsk\.bak$')
+        for name in os.listdir(os.path.split(taskFile.filename())[0] or '.'):
+            srcName = os.path.join(os.path.split(taskFile.filename())[0], name)
+            mt = rx.search(name)
+            if mt:
+                dstName = os.path.join(backupDir, '%s%s.bak' % (mt.group(1), mt.group(2)))
+                if os.path.exists(dstName):
+                    os.remove(dstName)
+                with file(srcName, 'rb') as src:
+                    with bz2.BZ2File(dstName, 'w') as dst:
+                        shutil.copyfileobj(src, dst)
+                os.remove(srcName)
+
     def onTaskFileAboutToSave(self, taskFile):
         ''' Just before a task file is about to be saved, and backups are on,
             create a backup and remove extraneous backup files. '''
-        if self.needBackup(taskFile):
-            self.createBackup(taskFile)
+        self.createBackup(taskFile)
         self.removeExtraneousBackupFiles(taskFile)
-
-    def needBackup(self, taskFile):
-        return self.__settings.getboolean('file', 'backup') and taskFile.exists()
 
     def createBackup(self, taskFile):
         self.__copyfile(taskFile.filename(), self.backupFilename(taskFile))
-    
-    def removeExtraneousBackupFiles(self, taskFile, remove=os.remove, 
+
+    def removeExtraneousBackupFiles(self, taskFile, remove=os.remove,
                                     glob=glob.glob): # pylint: disable=W0621
         backupFiles = self.backupFiles(taskFile, glob)
         for _ in range(min(self.maxNrOfBackupFilesToRemoveAtOnce,
@@ -57,7 +115,7 @@ class AutoBackup(object):
                 remove(self.leastUniqueBackupFile(backupFiles))
             except OSError:
                 pass # Ignore errors
-                
+
     def numberOfExtraneousBackupFiles(self, backupFiles):
         return max(0, len(backupFiles) - self.maxNrOfBackupFiles(backupFiles))
 
@@ -69,12 +127,12 @@ class AutoBackup(object):
             return 0
         age = date.DateTime.now() - self.backupDateTime(backupFiles[0])
         ageInMinutes = age.hours() * 60
-        # We keep log(ageInMinutes) backups, but at least minNrOfBackupFiles: 
+        # We keep log(ageInMinutes) backups, but at least minNrOfBackupFiles:
         return max(self.minNrOfBackupFiles, int(math.log(max(1, ageInMinutes))))
-    
+
     def leastUniqueBackupFile(self, backupFiles):
         ''' Find the backupFile that is closest (in time) to its neighbors,
-            i.e. that is the least unique. Ignore the oldest and newest 
+            i.e. that is the least unique. Ignore the oldest and newest
             backups. '''
         assert len(backupFiles) > self.minNrOfBackupFiles
         deltas = []
@@ -85,30 +143,21 @@ class AutoBackup(object):
         deltas.sort()
         return deltas[0][1]
 
-    @staticmethod
-    def backupFiles(taskFile, glob=glob.glob):  # pylint: disable=W0621
-        root, ext = os.path.splitext(taskFile.filename()) # pylint: disable=W0612
-        datePattern = '[0-9]'*8
-        timePattern = '[0-9]'*6
-        files = glob('%s.%s-%s.tsk.bak'%(root, datePattern, timePattern))
-        files.sort()
-        return files
+    def backupFiles(self, taskFile, glob=glob.glob):  # pylint: disable=W0621
+        sha = hashlib.sha1(taskFile.filename()).hexdigest()
+        root = os.path.join(self.__settings.pathToBackupsDir(), sha)
+        return sorted(glob('%s.bak' % os.path.join(root, '[0-9]' * 14)))
+
+    def backupFilename(self, taskFile, now=date.DateTime.now):
+        ''' Generate a backup filename for the specified date/time. '''
+        sha = hashlib.sha1(taskFile.filename()).hexdigest()
+        return os.path.join(self.__settings.pathToBackupsDir(), sha, now().strftime('%Y%m%d%H%M%S.bak'))
 
     @staticmethod
-    def backupFilename(taskFile, now=date.DateTime.now):
-        ''' Generate a backup filename by adding '.bak' to the end and by 
-            inserting a date-time string in the filename. '''
-        now = now().strftime('%Y%m%d-%H%M%S')
-        root, ext = os.path.splitext(taskFile.filename())
-        if ext == '.bak':
-            root, ext = os.path.splitext(root)
-        return root + '.' + now + ext + '.bak'
-                
-    @staticmethod
     def backupDateTime(backupFilename):
-        ''' Parse the date and time from the filename and return a DateTime 
+        ''' Parse the date and time from the filename and return a DateTime
             instance. '''
-        dt = backupFilename.split('.')[-3] # dt == date and time
-        parts = (int(part) for part in (dt[0:4], dt[4:6], dt[6:8], 
-                                        dt[9:11], dt[11:13], dt[13:14]))
+        dt = os.path.split(backupFilename)[-1][:-4]
+        parts = (int(part) for part in (dt[0:4], dt[4:6], dt[6:8],
+                                        dt[8:10], dt[10:12], dt[12:14]))
         return date.DateTime(*parts) # pylint: disable=W0142

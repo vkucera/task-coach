@@ -353,8 +353,6 @@ class SavePage(SettingsPage):
         self.addBooleanSetting('file', 'nopoll',
              _('Smart filesystem monitoring'),
              _('Try to detect changes to the task file in real time.\nDo not check this if your task file is on a network share.\nYou must restart %s after changing this.') % meta.name)
-        self.addBooleanSetting('file', 'backup', 
-            _('Create a backup copy before\noverwriting a %s file') % meta.name)
         self.addBooleanSetting('file', 'saveinifileinprogramdir',
             _('Save settings (%s.ini) in the same\n'
               'directory as the program') % meta.filename, 

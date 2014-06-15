@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import test, os, shutil, bz2
 from taskcoachlib import persistence, config
 from taskcoachlib.domain import date, task
 
@@ -49,11 +49,23 @@ class DummyTaskFile(persistence.TaskFile):
         return super(DummyTaskFile, self).filename() or 'whatever.tsk'
 
 
+class LocalSettings(config.Settings):
+    def __init__(self, *args, **kwargs):
+        self.__path = os.path.join(os.getcwd(), 'testdata')
+        if os.path.exists(self.__path):
+            shutil.rmtree(self.__path)
+        os.mkdir(self.__path)
+        super(LocalSettings, self).__init__(*args, **kwargs)
+
+    def _pathToDataDir(self, *args, **kwargs):
+        return self.__path, False
+
+
 class AutoBackupTest(test.TestCase):
     # pylint: disable=E1101,E1002,W0232
     def setUp(self):
         super(AutoBackupTest, self).setUp()
-        task.Task.settings = self.settings = config.Settings(load=False)
+        task.Task.settings = self.settings = LocalSettings(load=False)
         self.taskFile = DummyTaskFile()
         self.backup = persistence.AutoBackup(self.settings, copyfile=self.onCopyFile)
         self.copyCalled = False
@@ -62,6 +74,8 @@ class AutoBackupTest(test.TestCase):
         super(AutoBackupTest, self).tearDown()
         self.taskFile.close()
         self.taskFile.stop()
+        if os.path.exists('test.tsk'):
+            os.remove('test.tsk')
 
     def onCopyFile(self, *args): # pylint: disable=W0613
         self.copyCalled = True
@@ -94,7 +108,25 @@ class AutoBackupTest(test.TestCase):
             [self.backup.backupFilename(self.taskFile, now=lambda: date.DateTime(2000,1,1,1,1,1))]
         files.sort()
         return files
-        
+
+    def testBackupMigrationManifest(self):
+        self.taskFile.setFilename('test.tsk')
+        self.backup.onTaskFileRead(self.taskFile)
+        with file(os.path.join(self.settings.pathToBackupsDir(), 'backups.xml'), 'rb') as fp:
+            content = fp.read()
+        self.assertEqual(content, '<backupfiles><file sha="13cf6835565aaf4ab1f78e922b9917f9a4c7a856">test.tsk</file></backupfiles>')
+
+    def testBackupMigration(self):
+        self.taskFile.setFilename('test.tsk')
+        with file('test.20140715-010203.tsk.bak', 'wb') as fp:
+            fp.write('Hello, world')
+        self.backup.onTaskFileRead(self.taskFile)
+        self.failIf(os.path.exists('test.20140715-010203.tsk.bak'))
+
+        backupName = os.path.join(self.settings.pathToBackupsDir(), '13cf6835565aaf4ab1f78e922b9917f9a4c7a856', '20140715010203.bak')
+        self.failUnless(os.path.exists(backupName))
+        self.assertEqual(bz2.BZ2File(backupName).read(), 'Hello, world')
+
     def testNoBackupFiles(self):
         self.assertEqual([], self.backup.backupFiles(self.taskFile, glob=lambda pattern: []))
 
@@ -122,34 +154,19 @@ class AutoBackupTest(test.TestCase):
 
     def testBackupFilename(self):
         now = date.DateTime(2004,1,1)
-        self.assertEqual('whatever.20040101-000000.tsk.bak', 
-            self.backup.backupFilename(self.taskFile, lambda: now)) # pylint: disable=W0212
-        
-    def testBackupFilenameOfBackupFilename(self):
-        self.taskFile.setFilename('whatever.20040101-000000.tsk.bak')
-        now = date.DateTime(2004,1,2)
-        self.assertEqual('whatever.20040101-000000.20040102-000000.tsk.bak', 
+        self.assertEqual(os.path.join(self.settings.pathToBackupsDir(), 'c81e25c3e04922232ab8eb87be8337c806a44209', '20040101000000.bak'),
             self.backup.backupFilename(self.taskFile, lambda: now)) # pylint: disable=W0212
 
     def testCreateBackupOnSave(self):
-        self.settings.set('file', 'backup', 'True')
         self.taskFile.tasks().append(task.Task())
         self.taskFile.save()
         self.failUnless(self.copyCalled)
 
-    def testCreateBackupOnSave_ButBackupOff(self):
-        self.settings.set('file', 'backup', 'False')
-        self.taskFile.tasks().append(task.Task())
-        self.taskFile.save()
-        self.failIf(self.copyCalled)
-
     def testDontCreateBackupOnOpen(self):
-        self.settings.set('file', 'backup', 'True')
         self.taskFile.load()
         self.failIf(self.copyCalled)
         
     def testDontCreateBackupWhenSettingFilename(self):
-        self.settings.set('file', 'backup', 'True')
         self.taskFile.setFilename('newname.tsk')
         self.failIf(self.copyCalled)
                         

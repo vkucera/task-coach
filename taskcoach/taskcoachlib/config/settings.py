@@ -411,6 +411,9 @@ class Settings(object, CachingConfigParser):
     def pathToTemplatesDir(self):
         return self._pathToTemplatesDir()[0]
 
+    def pathToBackupsDir(self):
+        return self._pathToDataDir('backups')[0]
+
     def pathToConfigDir_deprecated(self, environ):
         try:
             path = os.path.join(environ['APPDATA'], meta.filename)
