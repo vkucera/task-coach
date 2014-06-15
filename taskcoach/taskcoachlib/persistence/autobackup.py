@@ -29,7 +29,7 @@ from xml.etree import ElementTree as ET
 
 def compressFile(srcName, dstName):
     with file(srcName, 'rb') as src:
-        dst = bz1.BZ2File(dstName, 'w')
+        dst = bz2.BZ2File(dstName, 'w')
         try:
             shutil.copyfileobj(src, dst)
         finally:
