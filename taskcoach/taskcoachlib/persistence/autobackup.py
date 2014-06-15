@@ -29,8 +29,11 @@ from xml.etree import ElementTree as ET
 
 def compressFile(srcName, dstName):
     with file(srcName, 'rb') as src:
-        with bz2.BZ2File(dstName, 'w') as dst:
+        dst = bz1.BZ2File(dstName, 'w')
+        try:
             shutil.copyfileobj(src, dst)
+        finally:
+            dst.close()
 
 
 class BackupManifest(object):
@@ -89,9 +92,12 @@ class BackupManifest(object):
         if os.path.exists(dstName):
             os.remove(dstName)
         sha = hashlib.sha1(filename).hexdigest()
-        with bz2.BZ2File(os.path.join(self.__settings.pathToBackupsDir(), sha, dateTime.strftime('%Y%m%d%H%M%S.bak')), 'r') as src:
+        src = bz2.BZ2File(os.path.join(self.__settings.pathToBackupsDir(), sha, dateTime.strftime('%Y%m%d%H%M%S.bak')), 'r')
+        try:
             with file(dstName, 'wb') as dst:
                 shutil.copyfileobj(src, dst)
+        finally:
+            src.close()
 
 
 class AutoBackup(object):
@@ -138,8 +144,11 @@ class AutoBackup(object):
                 if os.path.exists(dstName):
                     os.remove(dstName)
                 with file(srcName, 'rb') as src:
-                    with bz2.BZ2File(dstName, 'w') as dst:
+                    dst = bz2.BZ2File(dstName, 'w')
+                    try:
                         shutil.copyfileobj(src, dst)
+                    finally:
+                        dst.close()
                 os.remove(srcName)
 
     def onTaskFileAboutToSave(self, taskFile):

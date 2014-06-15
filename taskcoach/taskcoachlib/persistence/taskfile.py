@@ -381,8 +381,11 @@ class TaskFile(patterns.Observer):
             self.setFilename(filename)
         try:
             if self.exists():
-                with self._openForRead() as fd:
+                fd = self._openForRead()
+                try:
                     tasks, categories, notes, syncMLConfig, changes, guid = self._read(fd)
+                finally:
+                    fd.close()
             else:
                 tasks = []
                 categories = []
