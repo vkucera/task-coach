@@ -2,7 +2,7 @@
 
 make ppa_sign || exit 1
 
-for versionName in lucid precise quantal saucy trusty; do
+for versionName in lucid precise saucy trusty; do
     for retryCount in 1 2 3 4 5 6 7 8 9 10; do
 	make ppa_${1}_$versionName && break
 	sleep 20

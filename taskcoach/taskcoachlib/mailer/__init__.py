@@ -37,7 +37,15 @@ def getSubject(message):
     try:
         return u' '.join((part[0].decode(part[1]) if part[1] else part[0]) for part in email.header.decode_header(subject))
     except UnicodeDecodeError:
-        return subject
+        encoding = message.get_content_charset()
+        if encoding is None:
+            encoding = message.get('Content-Transfer-Encoding')
+        if encoding is None:
+            encoding = 'utf-8'
+        try:
+            return subject.decode(encoding)
+        except:
+            return repr(subject)
 
 def getContent(message):
     if message.is_multipart():

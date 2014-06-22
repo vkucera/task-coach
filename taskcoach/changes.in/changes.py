@@ -32,15 +32,17 @@ of Task Coach, allowing several users to work on the same file.''',
         ],
     ),
 
-Release('1.3.41', 'June ??, 2014',
+Release('1.3.41', 'June 22, 2014',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bugv2('''Fix a crash at startup on Linux when using some
 window managers that don't set the SESSION_MANAGER environment
 variable.'''),
         Bugv2('''Bring back effort tooltips.'''),
-        Bugv2('''Fix positionning of balool tips when moving the
+        Bugv2('''Fix positionning of baloon tips when moving the
 window from one display to another.''', '1522'),
+        Bugv2('''Fix for non-ASCII e-mail subjects without encoding
+specification''', '1523'),
         ],
     featuresAdded=[
         Feature('''Bring back the option to disable tooltips.'''),

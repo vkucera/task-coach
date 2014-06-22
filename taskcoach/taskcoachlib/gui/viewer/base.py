@@ -554,7 +554,7 @@ class CategorizableViewerMixin(object):
 class WithAttachmentsViewerMixin(object):
     def getItemTooltipData(self, item):
         return [('paperclip_icon', sorted([unicode(attachment) for attachment in item.attachments()]))] + \
-          super(WithAttachmentsViewerMixin, self).getItemTooltipData()
+          super(WithAttachmentsViewerMixin, self).getItemTooltipData(item)
 
 
 class ListViewer(Viewer):  # pylint: disable=W0223
