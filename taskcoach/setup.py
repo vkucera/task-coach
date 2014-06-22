@@ -81,6 +81,8 @@ if system == 'Linux':
     if 'debian' in current_dist or 'ubuntu' in current_dist:
         setupOptions['data_files'] = [('share/applications', ['build.in/linux_common/taskcoach.desktop']), 
                                       ('share/pixmaps', ['icons.in/taskcoach.png'])]
+        if 'ubuntu' in current_dist:
+            setupOptions['data_files'].append(('share/appdata', ['build.in/debian/taskcoach.appdata.xml']))
 elif system == 'Windows':
     setupOptions['scripts'].append('taskcoach.pyw')
     major, minor = majorAndMinorPythonVersion()
