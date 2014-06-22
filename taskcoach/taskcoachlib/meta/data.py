@@ -178,7 +178,7 @@ languages = {
     'Polish': ('pl', True),
     'Portuguese': ('pt', True),
     'Portuguese (Brazilian)': ('pt_BR', True),
-    'Romanian': ('ro', False),
+    'Romanian': ('ro', True),
     'Russian': ('ru', True),
     'Slovak': ('sk', True),
     'Slovene': ('sl', False),
