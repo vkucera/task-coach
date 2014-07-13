@@ -82,7 +82,11 @@ class Translator:
                 self.__locale.AddCatalog('wxstd')
                 break
         if operating_system.isGTK():
-            locale.setlocale(locale.LC_ALL, '')
+            try:
+                locale.setlocale(locale.LC_ALL, '')
+            except locale.Error:
+                # Mmmh. wx will display a message box later, so don't do anything.
+                pass
         self._fixBrokenLocales()
             
     def _fixBrokenLocales(self):
