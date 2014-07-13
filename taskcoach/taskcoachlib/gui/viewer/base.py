@@ -934,6 +934,7 @@ class SortableViewerWithColumns(mixin.SortableViewerMixin, ViewerWithColumns):  
     def sortBy(self, *args, **kwargs):  # pylint: disable=W0221
         super(SortableViewerWithColumns, self).sortBy(*args, **kwargs)
         self.showSortColumn()
+        self.showSortOrder()
 
     def showSortColumn(self):
         for column in self.columns():
