@@ -548,7 +548,8 @@ class Viewer(patterns.Observer, wx.Panel):
 
 class CategorizableViewerMixin(object):
     def getItemTooltipData(self, item):
-        return [('folder_blue_arrow_icon', [u', '.join(sorted([cat.subject() for cat in item.categories()]))] if item.categories() else [])]
+        return [('folder_blue_arrow_icon', [u', '.join(sorted([cat.subject() for cat in item.categories()]))] if item.categories() else [])] + \
+            super(CategorizableViewerMixin, self).getItemTooltipData(item)
 
 
 class WithAttachmentsViewerMixin(object):

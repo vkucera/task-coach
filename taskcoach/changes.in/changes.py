@@ -30,6 +30,9 @@ of Task Coach, allowing several users to work on the same file.''',
                 'http://taskcoach.uservoice.com/forums/26465-desktop-version-windows-linux-mac-of-task-coach/suggestions/288999-enable-multi-user-task-management'),
         Feature('''Backups are now always enabled.'''),
         ],
+    bugsFixed=[
+        Bugv2('''Fix tooltips on notes.''', '1525'),
+        ],
     ),
 
 Release('1.3.41', 'June 22, 2014',
