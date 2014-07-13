@@ -33,6 +33,7 @@ of Task Coach, allowing several users to work on the same file.''',
     bugsFixed=[
         Bugv2('''Fix tooltips on notes.''', '1525'),
         Bugv2('''Fix sort order indication in viewer columns.''', '1527'),
+        Bugv2('''Don't crash at startup if the locale is not supported.''', '1528'),
         ],
     ),
 
