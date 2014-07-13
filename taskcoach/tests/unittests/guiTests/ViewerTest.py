@@ -135,7 +135,7 @@ class ViewerTest(test.wxTestCase):
 
     def testGetItemTooltipData(self):
         self.task.setDescription('Description')
-        expectedData = [('led_grey_icon', ['task']), (None, ['Description']), ('folder_blue_arrow_icon', [])]
+        expectedData = [('led_grey_icon', ['task']), ('folder_blue_arrow_icon', []), ('paperclip_icon', []), (None, ['Description'])]
         self.assertEqual(expectedData, self.viewer.getItemTooltipData(self.task))
 
 

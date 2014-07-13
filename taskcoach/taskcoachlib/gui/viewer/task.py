@@ -251,8 +251,6 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable=W0223
     def getItemTooltipData(self, task):  # pylint: disable=W0621
         result = [(self.iconName(task, task in self.curselection()), 
                    [self.getItemText(task)])]
-        if task.description():
-            result.append((None, [line.rstrip('\n') for line in task.description().split('\n')]))
         if task.notes():
             result.append(('note_icon', sorted([note.subject() for note in task.notes()])))
         if task.attachments():
