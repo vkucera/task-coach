@@ -473,8 +473,8 @@ class RecurrenceEntry(wx.Panel):
         panelSizer.Add(label, flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add((3, -1))
         self._scheduleChoice = wx.Choice(schedulePanel,
-            choices=[_('previous planned start and/or due date and time'),
-                     _('last completion date and time')])
+            choices=[_('previous planned start and/or due date'),
+                     _('last completion date')])
         self._scheduleChoice.Bind(wx.EVT_CHOICE, self.onRecurrenceEdited)
         if operating_system.isMac():
             # On Mac OS X, the wx.Choice gets too little vertical space by 

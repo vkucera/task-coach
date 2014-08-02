@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-07-13 08:59+PDT\n"
+"POT-Creation-Date: 2014-08-02 16:18+CEST\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1554,11 +1554,11 @@ msgid "Schedule each next recurrence based on"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/entry.py:476
-msgid "previous planned start and/or due date and time"
+msgid "previous planned start and/or due date"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/entry.py:477
-msgid "last completion date and time"
+msgid "last completion date"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/entry.py:522
@@ -6270,11 +6270,11 @@ msgid "No subject"
 msgstr ""
 
 #: taskcoachlib/persistence/xml/templates.py:8
-msgid "New task due tomorrow"
+msgid "New task due today"
 msgstr ""
 
 #: taskcoachlib/persistence/xml/templates.py:10
-msgid "New task due today"
+msgid "New task due tomorrow"
 msgstr ""
 
 #: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1754
