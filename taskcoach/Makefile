@@ -70,7 +70,6 @@ sdist_ubuntu: sdist_linux
 	# Launchpad does not support one size fits all packages...
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu10~lucid.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu12~precise.tar.gz
-	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu13~saucy.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu14~trusty.tar.gz
 
 sdist_raw:
@@ -110,15 +109,12 @@ ubuntu: sdist_ubuntu
 	mv build build-lucid
 	LC_ALL=C $(PYTHON) make.py bdist_ubuntu precise 12 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu12~precise.tar.gz
 	mv build build-precise
-	LC_ALL=C $(PYTHON) make.py bdist_ubuntu saucy 13 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu13~saucy.tar.gz
-	mv build build-saucy
 	LC_ALL=C $(PYTHON) make.py bdist_ubuntu trusty 14 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu14~trusty.tar.gz
 	mv build build-trusty
 
 ppa_sign: ubuntu
 	cd build-lucid; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
 	cd build-precise; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
-	cd build-saucy; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu13~saucy-1_source.changes
 	cd build-trusty; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
 
 # Split PPA by version because the upload has a tendency to fail so the buildbot must retry
@@ -129,9 +125,6 @@ ppa_rel_lucid:
 ppa_rel_precise:
 	cd build-precise; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
 
-ppa_rel_saucy:
-	cd build-saucy; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu13~saucy-1_source.changes
-
 ppa_rel_trusty:
 	cd build-trusty; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
 
@@ -141,9 +134,6 @@ ppa_relnext_lucid:
 ppa_relnext_precise:
 	cd build-precise; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
 
-ppa_relnext_saucy:
-	cd build-saucy; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu13~saucy-1_source.changes
-
 ppa_relnext_trusty:
 	cd build-trusty; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
 
@@ -152,9 +142,6 @@ ppa_release_lucid:
 
 ppa_release_precise:
 	cd build-precise; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
-
-ppa_release_saucy:
-	cd build-saucy; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu13~saucy-1_source.changes
 
 ppa_release_trusty:
 	cd build-trusty; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
