@@ -11,6 +11,7 @@ msgstr ""
 "PO-Revision-Date: 2011-04-15 08:36+0000\n"
 "Last-Translator: Fedik <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,8 +20,8 @@ msgstr ""
 
 #: taskcoachlib/application/application.py:67
 msgid ""
-"Errors have occured. Please see \"taskcoachlog.txt\" in your \"My "
-"Documents\" folder."
+"Errors have occured. Please see \"taskcoachlog.txt\" in your \"My Documents"
+"\" folder."
 msgstr ""
 
 #: taskcoachlib/application/application.py:67
@@ -726,8 +727,7 @@ msgid "Late tasks: %d (%d%%)"
 msgstr ""
 
 #: taskcoachlib/domain/task/status.py:67
-msgid ""
-"Show/hide late tasks (inactive tasks with a planned start in the past)"
+msgid "Show/hide late tasks (inactive tasks with a planned start in the past)"
 msgstr ""
 
 #: taskcoachlib/domain/task/status.py:69
@@ -779,8 +779,7 @@ msgid "Overdue tasks: %d (%d%%)"
 msgstr ""
 
 #: taskcoachlib/domain/task/status.py:79
-msgid ""
-"Show/hide over due tasks (incomplete tasks with a due date in the past)"
+msgid "Show/hide over due tasks (incomplete tasks with a due date in the past)"
 msgstr ""
 
 #: taskcoachlib/domain/task/status.py:81
@@ -1973,8 +1972,7 @@ msgid "Changing the due date changes the planned start date"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:614
-msgid ""
-"What to do with planned start and due date if the other one is changed"
+msgid "What to do with planned start and due date if the other one is changed"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:617
@@ -2392,8 +2390,7 @@ msgstr "Файли HTML (*.html)|*.html|Всі файли (*.*)|*"
 
 #: taskcoachlib/gui/iocontroller.py:67
 msgid "CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt|All files (*.*)|*"
-msgstr ""
-"Файли CSV (*.csv)|*.csv|Текстові файли (*.txt)|*.txt|Всі файли (*.*)|*"
+msgstr "Файли CSV (*.csv)|*.csv|Текстові файли (*.txt)|*.txt|Всі файли (*.*)|*"
 
 #: taskcoachlib/gui/iocontroller.py:71
 msgid "Todo.txt files (*.txt)|*.txt|All files (*.*)|*"
@@ -2735,8 +2732,7 @@ msgid "&Hierarchical calendar"
 msgstr ""
 
 #: taskcoachlib/gui/menu.py:458
-msgid ""
-"Open a new tab with a viewer that displays task hierarchy in a calendar"
+msgid "Open a new tab with a viewer that displays task hierarchy in a calendar"
 msgstr ""
 
 #: taskcoachlib/gui/menu.py:460 taskcoachlib/gui/viewer/mixin.py:356
@@ -3192,8 +3188,7 @@ msgstr "Сортувати в першу чергу за &статусом"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:990
 msgid "Sort tasks by status (active/inactive/completed) first"
-msgstr ""
-"Сортувати завдання за статусом в порядку(Активні/Неактивні/Завершені)"
+msgstr "Сортувати завдання за статусом в порядку(Активні/Неактивні/Завершені)"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1027
 msgid "Hide c&omposite tasks"
@@ -3783,8 +3778,7 @@ msgid "Toolbars are customizable"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/base.py:84
-msgid ""
-"Click on the gear icon on the right to add buttons and rearrange them."
+msgid "Click on the gear icon on the right to add buttons and rearrange them."
 msgstr ""
 
 #: taskcoachlib/gui/viewer/base.py:814 taskcoachlib/gui/viewer/base.py:822
@@ -3798,8 +3792,7 @@ msgid ""
 msgstr ""
 
 #: taskcoachlib/gui/viewer/base.py:824
-msgid ""
-"When in tree mode, you can only put objects at the same level (parent)."
+msgid "When in tree mode, you can only put objects at the same level (parent)."
 msgstr ""
 
 #: taskcoachlib/gui/viewer/category.py:146
@@ -4683,8 +4676,8 @@ msgstr ""
 #: taskcoachlib/help/__init__.py:183
 msgid ""
 "Completion date: this date is 'None' as long as the task has \n"
-"not been completed. It is set to the current date when you mark the task as "
-"\n"
+"not been completed. It is set to the current date when you mark the task "
+"as \n"
 "completed. The completion date can also be entered manually."
 msgstr ""
 "Дата завершення: Це поле матиме значення 'Відсутня', до тих пір, доки "
@@ -4728,8 +4721,7 @@ msgstr "Наступні властивості розраховуються в�
 
 #: taskcoachlib/help/__init__.py:198
 msgid "Days left: the number of days left until the due date."
-msgstr ""
-"Днів залишилось, кількість днів, що залишилось до закінчення терміну."
+msgstr "Днів залишилось, кількість днів, що залишилось до закінчення терміну."
 
 #: taskcoachlib/help/__init__.py:199
 msgid ""
@@ -4916,8 +4908,8 @@ msgid ""
 "or more categories by checking a category in the category viewer. For "
 "example, \n"
 "if you have a category 'phone calls' and you check that category, the task \n"
-"viewers will only show tasks belonging to that category; in other words the "
-"\n"
+"viewers will only show tasks belonging to that category; in other words "
+"the \n"
 "phone calls you need to make."
 msgstr ""
 
@@ -5252,8 +5244,8 @@ msgstr ""
 msgid ""
 "The conflict detection/resolution system is a workaround \n"
 "for a Funambol limitation. It should work in most cases, but if many \n"
-"applications synchronize with the same server at the same time, problems may "
-"\n"
+"applications synchronize with the same server at the same time, problems "
+"may \n"
 "arise."
 msgstr ""
 
@@ -5323,8 +5315,8 @@ msgstr ""
 msgid ""
 "There is an iPhone/iPod Touch/iPad companion app for %(name)s, \n"
 "available on <a \n"
-"href=\"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=3114"
-"03563&mt=8\"\n"
+"href=\"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?"
+"id=311403563&mt=8\"\n"
 "target=\"_blank\">Apple's AppStore</a>. (If you don't have iTunes installed "
 "on \n"
 "your computer, you'll be presented a page where you can download iTunes). \n"
@@ -5455,8 +5447,8 @@ msgstr "Налаштування на Linux"
 #: taskcoachlib/help/__init__.py:628
 msgid ""
 "On Linux, you must have the <a href=\"http://avahi.org/\">Avahi</a> \n"
-"daemon installed and running. Most modern distributions already have it. You "
-"\n"
+"daemon installed and running. Most modern distributions already have it. "
+"You \n"
 "must also install the dnscompat package; its name depends on your "
 "distribution \n"
 "(libavahi-compat-libdnssd1 on Ubuntu for instance)."
@@ -5471,8 +5463,8 @@ msgstr ""
 #: taskcoachlib/help/__init__.py:638
 msgid ""
 "You need to have iTunes installed on your computer to browse \n"
-"Apple's App Store. <a href=\"http://www.apple.com/itunes/\" "
-"target=\"_blank\">Get \n"
+"Apple's App Store. <a href=\"http://www.apple.com/itunes/\" target=\"_blank"
+"\">Get \n"
 "iTunes</a>."
 msgstr ""
 
@@ -5499,8 +5491,8 @@ msgid ""
 "No, %(name)s is not available for the Android platform. But,\n"
 "<a target=\"_blank\" href=\"http://todotxt.com\">Todo.txt Touch</a> is. \n"
 "You can export your tasks from %(name)s to the <a target=\"_blank\" \n"
-"href=\"https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-"
-"Format\">Todo.txt \n"
+"href=\"https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format"
+"\">Todo.txt \n"
 "format</a> and then edit your tasks on your Android device."
 msgstr ""
 
@@ -5510,8 +5502,8 @@ msgid ""
 "Trapani, that works with plain text files. Todo.txt has a command-line \n"
 "interface. However, since the file format is plain text, you can also edit "
 "your \n"
-"tasks with any text editor. Todo.txt Touch is a version of Todo.txt for the "
-"\n"
+"tasks with any text editor. Todo.txt Touch is a version of Todo.txt for "
+"the \n"
 "Android platform. Todo.txt Touch uses a todo.txt file that lives in your\n"
 "Dropbox folder. %(name)s can import from and export to that todo.txt \n"
 "file."
@@ -5525,8 +5517,8 @@ msgid ""
 "exporting of Todo.txt, %(name)s will keep the task file and the \n"
 "todo.txt file in sync. Please note that another file, named after the .txt "
 "file\n"
-"with '-meta' appended, is also generated. This is used internally by "
-"%(name)s\n"
+"with '-meta' appended, is also generated. This is used internally by %(name)"
+"s\n"
 "in order to keep track of what has been modified in the .txt file; don't "
 "modify\n"
 "or delete it."
@@ -5536,8 +5528,8 @@ msgstr ""
 msgid ""
 "%(name)s imports task subjects, planned start date, due date, completion \n"
 "date, priority, contexts and projects. Contexts and projects are both \n"
-"transformed into categories in %(name)s. Projects cannot be transformed into "
-"\n"
+"transformed into categories in %(name)s. Projects cannot be transformed "
+"into \n"
 "parent tasks because Todo.txt allows tasks to belong to multiple projects, \n"
 "while %(name)s only allows one parent task per task."
 msgstr ""
@@ -5598,10 +5590,10 @@ msgstr ""
 #: taskcoachlib/help/__init__.py:726
 msgid ""
 "Templates are blueprints for new tasks. Right now, the only task \n"
-"properties that can be \"parameterized\" are the dates. When instantiating a "
-"\n"
-"template, the created task has its dates replaced with dates relative to the "
-"\n"
+"properties that can be \"parameterized\" are the dates. When instantiating "
+"a \n"
+"template, the created task has its dates replaced with dates relative to "
+"the \n"
 "current date."
 msgstr ""
 
@@ -5618,19 +5610,19 @@ msgid ""
 "You can also create a new template from a pre-made template file \n"
 "(.tsktmpl); just select \"Import template\" in the File menu and select the "
 "file. \n"
-"Template files are stored in a subdirectory of the directory where "
-"TaskCoach.ini \n"
+"Template files are stored in a subdirectory of the directory where TaskCoach."
+"ini \n"
 "is."
 msgstr ""
 
 #: taskcoachlib/help/__init__.py:742
 msgid ""
 "In order to instantiate a task template, use the \"New task from \n"
-"template\" menu in the Task menu, or the equivalent toolbar button. When the "
-"\n"
+"template\" menu in the Task menu, or the equivalent toolbar button. When "
+"the \n"
 "task is created, the due, start and completion dates, if applicable, are \n"
-"reevaluated relatively to the current date. That means that if you create a "
-"\n"
+"reevaluated relatively to the current date. That means that if you create "
+"a \n"
 "template from a task starting today and due tomorrow, every time the "
 "template \n"
 "is instantiated, the planned start date will be replaced by the current date "
@@ -5975,8 +5967,8 @@ msgid ""
 msgstr ""
 "%(name)s має необмежену історію відміни. Будь-яку зміну, яку ви зробили чи "
 "то редагуючи опис завдання чи видаливши запис зусилля, можна повернути. "
-"Виберіть \"Редагування\" -> \"Відмінити\" або \"Редагування\" -> "
-"\"Повернути\" щоб рухтися вперед та назад по історії дій."
+"Виберіть \"Редагування\" -> \"Відмінити\" або \"Редагування\" -> \"Повернути"
+"\" щоб рухтися вперед та назад по історії дій."
 
 #: taskcoachlib/help/tips.py:29
 msgid ""
@@ -6801,8 +6793,7 @@ msgstr "&Включаючи підпункти"
 
 #: taskcoachlib/widgets/searchctrl.py:64
 msgid "Include sub items of matching items in the search results"
-msgstr ""
-"Включати у відображенн підпункти тіх пунктів, які підходять по пошуку"
+msgstr "Включати у відображенн підпункти тіх пунктів, які підходять по пошуку"
 
 #: taskcoachlib/widgets/searchctrl.py:67
 msgid "&Search description too"
@@ -6852,8 +6843,8 @@ msgstr ""
 "Це могло статися із-за того, що Ваша платформа\n"
 "не підтримується, або під Windows в разі відсутності\n"
 "необхідних DLL. Будь ласка, зверніться до розділу SyncML\n"
-"онлайн довідки для отримання детальної інформації (\"Усунення "
-"несправностей\")."
+"онлайн довідки для отримання детальної інформації (\"Усунення несправностей"
+"\")."
 
 #: taskcoachlib/widgets/syncmlwarning.py:34
 msgid "Never show this dialog again"

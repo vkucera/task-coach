@@ -10,6 +10,7 @@ msgstr ""
 "PO-Revision-Date: 2011-05-02 19:14+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Dutch <frank@niessink.com>\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -38,8 +39,7 @@ msgstr "&Tijdsbesteding"
 #: taskcoachlib/gui/menu.py:467
 msgid ""
 "Open a new tab with a viewer that displays efforts for the selected task"
-msgstr ""
-"Open een nieuwe tab met de tijdsbestedingen voor de geselecteerde taak"
+msgstr "Open een nieuwe tab met de tijdsbestedingen voor de geselecteerde taak"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:335
 msgid "Export as &HTML..."
@@ -47,8 +47,7 @@ msgstr "Als &HTML exporteren..."
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1885
 msgid "Insert a new note with the selected categories checked"
-msgstr ""
-"Een nieuwe notitie invoegen met de geselecteerde categoriën aangevinkt"
+msgstr "Een nieuwe notitie invoegen met de geselecteerde categoriën aangevinkt"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2330
 msgid "Filter on all checked categories"
@@ -114,8 +113,8 @@ msgstr "De gelecteerde items naar het klembord kopiëren"
 
 #: taskcoachlib/application/application.py:67
 msgid ""
-"Errors have occured. Please see \"taskcoachlog.txt\" in your \"My "
-"Documents\" folder."
+"Errors have occured. Please see \"taskcoachlog.txt\" in your \"My Documents"
+"\" folder."
 msgstr ""
 
 #: taskcoachlib/application/application.py:67
@@ -821,8 +820,7 @@ msgid "Late tasks: %d (%d%%)"
 msgstr ""
 
 #: taskcoachlib/domain/task/status.py:67
-msgid ""
-"Show/hide late tasks (inactive tasks with a planned start in the past)"
+msgid "Show/hide late tasks (inactive tasks with a planned start in the past)"
 msgstr ""
 
 #: taskcoachlib/domain/task/status.py:69
@@ -874,8 +872,7 @@ msgid "Overdue tasks: %d (%d%%)"
 msgstr ""
 
 #: taskcoachlib/domain/task/status.py:79
-msgid ""
-"Show/hide over due tasks (incomplete tasks with a due date in the past)"
+msgid "Show/hide over due tasks (incomplete tasks with a due date in the past)"
 msgstr ""
 
 #: taskcoachlib/domain/task/status.py:81
@@ -1927,8 +1924,7 @@ msgstr "Het window minimaliseren bij sluiten"
 
 #: taskcoachlib/gui/dialog/preferences.py:409
 msgid "Make clock in the task bar tick when tracking effort"
-msgstr ""
-"Animeer de klok in de werkbalk bij het registreren van tijdsbesteding"
+msgstr "Animeer de klok in de werkbalk bij het registreren van tijdsbesteding"
 
 #: taskcoachlib/gui/dialog/preferences.py:415
 #: taskcoachlib/gui/dialog/preferences.py:491
@@ -2072,8 +2068,7 @@ msgid "Changing the due date changes the planned start date"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:614
-msgid ""
-"What to do with planned start and due date if the other one is changed"
+msgid "What to do with planned start and due date if the other one is changed"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:617
@@ -2490,8 +2485,8 @@ msgstr "HTML bestanden (*.html)|*.html|Alle bestanden (*.*)|*"
 #: taskcoachlib/gui/iocontroller.py:67
 msgid "CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt|All files (*.*)|*"
 msgstr ""
-"CSV bestanden (*.csv)|*.csv|Tekstbestanden (*.txt)|*.txt|Alle bestanden "
-"(*.*)|*"
+"CSV bestanden (*.csv)|*.csv|Tekstbestanden (*.txt)|*.txt|Alle bestanden (*."
+"*)|*"
 
 #: taskcoachlib/gui/iocontroller.py:71
 msgid "Todo.txt files (*.txt)|*.txt|All files (*.*)|*"
@@ -2831,8 +2826,7 @@ msgid "&Hierarchical calendar"
 msgstr ""
 
 #: taskcoachlib/gui/menu.py:458
-msgid ""
-"Open a new tab with a viewer that displays task hierarchy in a calendar"
+msgid "Open a new tab with a viewer that displays task hierarchy in a calendar"
 msgstr ""
 
 #: taskcoachlib/gui/menu.py:460 taskcoachlib/gui/viewer/mixin.py:356
@@ -3075,8 +3069,7 @@ msgstr "Exporteren als &CSV..."
 
 #: taskcoachlib/gui/uicommand/uicommand.py:352
 msgid "Export items from a viewer in Comma Separated Values (CSV) format"
-msgstr ""
-"Items uit een tab in komma-gescheiden-waarden (CSV) formaat exporteren"
+msgstr "Items uit een tab in komma-gescheiden-waarden (CSV) formaat exporteren"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:369
 msgid "Export as &iCalendar..."
@@ -3443,8 +3436,8 @@ msgstr "&Tijdsbesteding starten\tCtrl-T"
 #: taskcoachlib/gui/uicommand/uicommand.py:1658
 msgid "Start tracking effort for the task(s) of the selected effort(s)"
 msgstr ""
-"Start tijdsbesteding aan de taak/taken van de geselecteerde "
-"tijdsbesteding(en)"
+"Start tijdsbesteding aan de taak/taken van de geselecteerde tijdsbesteding"
+"(en)"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1681
 msgid "(No subject)"
@@ -3476,8 +3469,7 @@ msgstr "Tijdsbesteding %s &herstarten\tShift+Ctrl+T"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1717
 msgid "Resume tracking effort for the last tracked task"
-msgstr ""
-"Tijdsbesteding herstarten voor de taak waar het laatst aan gewerkt is"
+msgstr "Tijdsbesteding herstarten voor de taak waar het laatst aan gewerkt is"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1801
 msgid "multiple tasks"
@@ -3852,8 +3844,7 @@ msgid "Toolbars are customizable"
 msgstr ""
 
 #: taskcoachlib/gui/viewer/base.py:84
-msgid ""
-"Click on the gear icon on the right to add buttons and rearrange them."
+msgid "Click on the gear icon on the right to add buttons and rearrange them."
 msgstr ""
 
 #: taskcoachlib/gui/viewer/base.py:814 taskcoachlib/gui/viewer/base.py:822
@@ -3867,8 +3858,7 @@ msgid ""
 msgstr ""
 
 #: taskcoachlib/gui/viewer/base.py:824
-msgid ""
-"When in tree mode, you can only put objects at the same level (parent)."
+msgid "When in tree mode, you can only put objects at the same level (parent)."
 msgstr ""
 
 #: taskcoachlib/gui/viewer/category.py:146
@@ -4738,8 +4728,8 @@ msgstr ""
 #: taskcoachlib/help/__init__.py:183
 msgid ""
 "Completion date: this date is 'None' as long as the task has \n"
-"not been completed. It is set to the current date when you mark the task as "
-"\n"
+"not been completed. It is set to the current date when you mark the task "
+"as \n"
 "completed. The completion date can also be entered manually."
 msgstr ""
 "Werkelijke einddatum: deze datum ontbreekt zolang de taak nog niet is\n"
@@ -4805,8 +4795,7 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:207
 msgid "Tasks always have exactly one of the following states:"
-msgstr ""
-"Taken bevinden zich altijd in precies één van de volgende toestanden:"
+msgstr "Taken bevinden zich altijd in precies één van de volgende toestanden:"
 
 #: taskcoachlib/help/__init__.py:209
 msgid "Active: the actual start date is in the past;"
@@ -4924,16 +4913,15 @@ msgid ""
 "the Effort menu or context menu or via the 'Start tracking effort' toolbar \n"
 "button."
 msgstr ""
-"Als u tijd besteed aan taken, kunt u de hoeveelheid bestede tijd bijhouden. "
-"\n"
+"Als u tijd besteed aan taken, kunt u de hoeveelheid bestede tijd "
+"bijhouden. \n"
 "Selecteer een taak en kies 'Tijdsbesteding starten' in het tijdsbestedingen "
 "menu\n"
 "of contextmenu of via de 'Tijdsbesteding starten' knop op de toolbar."
 
 #: taskcoachlib/help/__init__.py:265
 msgid "Effort records have the following properties you can change:"
-msgstr ""
-"Tijdsbestedingen hebben de volgende eigenschappen die u kunt wijzigen:"
+msgstr "Tijdsbestedingen hebben de volgende eigenschappen die u kunt wijzigen:"
 
 #: taskcoachlib/help/__init__.py:267
 msgid "Task: the task the effort belongs to."
@@ -4958,8 +4946,7 @@ msgstr "Omschrijving: een meerregelige omschrijving van de tijdsbesteding."
 
 #: taskcoachlib/help/__init__.py:275
 msgid "Time spent: how much time you have spent working on the task."
-msgstr ""
-"Bestede tijd: hoeveel tijd u heeft besteed aan het werken aan de taak."
+msgstr "Bestede tijd: hoeveel tijd u heeft besteed aan het werken aan de taak."
 
 #: taskcoachlib/help/__init__.py:276
 msgid "Revenue: money earned with the time spent."
@@ -4987,8 +4974,8 @@ msgid ""
 "or more categories by checking a category in the category viewer. For "
 "example, \n"
 "if you have a category 'phone calls' and you check that category, the task \n"
-"viewers will only show tasks belonging to that category; in other words the "
-"\n"
+"viewers will only show tasks belonging to that category; in other words "
+"the \n"
 "phone calls you need to make."
 msgstr ""
 "U kunt de items die in de taak- en notitieschermen worden getoond\n"
@@ -5406,8 +5393,7 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:519
 msgid "Task and category hierarchy are lost to the server."
-msgstr ""
-"Taak- en categoriehiërarchieën worden niet doorgegeven aan de server."
+msgstr "Taak- en categoriehiërarchieën worden niet doorgegeven aan de server."
 
 #: taskcoachlib/help/__init__.py:520
 msgid "Recurrence and reminders are not supported yet."
@@ -5421,8 +5407,8 @@ msgstr "Notitiecategorieën worden niet doorgegeven aan de server"
 msgid ""
 "The conflict detection/resolution system is a workaround \n"
 "for a Funambol limitation. It should work in most cases, but if many \n"
-"applications synchronize with the same server at the same time, problems may "
-"\n"
+"applications synchronize with the same server at the same time, problems "
+"may \n"
 "arise."
 msgstr ""
 
@@ -5519,8 +5505,8 @@ msgstr "%(name)s op de iPhone/iPod Touch/iPad"
 msgid ""
 "There is an iPhone/iPod Touch/iPad companion app for %(name)s, \n"
 "available on <a \n"
-"href=\"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=3114"
-"03563&mt=8\"\n"
+"href=\"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?"
+"id=311403563&mt=8\"\n"
 "target=\"_blank\">Apple's AppStore</a>. (If you don't have iTunes installed "
 "on \n"
 "your computer, you'll be presented a page where you can download iTunes). \n"
@@ -5528,8 +5514,8 @@ msgid ""
 msgstr ""
 "Er is een vergezellende iPhone/iPod Touch/iPad app voor %(name)s,\n"
 "beschikbaar in <a \n"
-"href=\"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=3114"
-"03563&mt=8\"\n"
+"href=\"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?"
+"id=311403563&mt=8\"\n"
 "target=\"_blank\">Apple's AppStore</a>. (Als u geen iTunes heeft "
 "geïnstalleerd op uw computer\n"
 "krijgt u een pagina te zien waar u iTunes kunt downloaden).\n"
@@ -5700,8 +5686,8 @@ msgstr "Configuratie op Linux"
 #: taskcoachlib/help/__init__.py:628
 msgid ""
 "On Linux, you must have the <a href=\"http://avahi.org/\">Avahi</a> \n"
-"daemon installed and running. Most modern distributions already have it. You "
-"\n"
+"daemon installed and running. Most modern distributions already have it. "
+"You \n"
 "must also install the dnscompat package; its name depends on your "
 "distribution \n"
 "(libavahi-compat-libdnssd1 on Ubuntu for instance)."
@@ -5717,19 +5703,18 @@ msgstr ""
 msgid ""
 "I can't seem to find the iPhone/iPod Touch app on Apple's \n"
 "website"
-msgstr ""
-"Ik kan de iPhone/iPod Touch applicatie niet vinden op Apple's website"
+msgstr "Ik kan de iPhone/iPod Touch applicatie niet vinden op Apple's website"
 
 #: taskcoachlib/help/__init__.py:638
 msgid ""
 "You need to have iTunes installed on your computer to browse \n"
-"Apple's App Store. <a href=\"http://www.apple.com/itunes/\" "
-"target=\"_blank\">Get \n"
+"Apple's App Store. <a href=\"http://www.apple.com/itunes/\" target=\"_blank"
+"\">Get \n"
 "iTunes</a>."
 msgstr ""
 "U moet iTunes op uw computer hebben geïnstalleerd om Apple's App Store te\n"
-"kunnen bekijken. <a href=\"http://www.apple.com/itunes/\" "
-"target=\"_blank\">iTunes verkrijgen</a>."
+"kunnen bekijken. <a href=\"http://www.apple.com/itunes/\" target=\"_blank"
+"\">iTunes verkrijgen</a>."
 
 #: taskcoachlib/help/__init__.py:642
 msgid "My computer doesn't appear in the list when trying to sync"
@@ -5751,16 +5736,15 @@ msgstr "De iPhone kan niet verbinden met mijn computer"
 
 #: taskcoachlib/help/__init__.py:649
 msgid "If you have a firewall, check that ports 4096-4100 are open."
-msgstr ""
-"Als u een firewall heeft, controleer dat poorten 4096-4100 open staan."
+msgstr "Als u een firewall heeft, controleer dat poorten 4096-4100 open staan."
 
 #: taskcoachlib/help/__init__.py:658
 msgid ""
 "No, %(name)s is not available for the Android platform. But,\n"
 "<a target=\"_blank\" href=\"http://todotxt.com\">Todo.txt Touch</a> is. \n"
 "You can export your tasks from %(name)s to the <a target=\"_blank\" \n"
-"href=\"https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-"
-"Format\">Todo.txt \n"
+"href=\"https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format"
+"\">Todo.txt \n"
 "format</a> and then edit your tasks on your Android device."
 msgstr ""
 
@@ -5770,8 +5754,8 @@ msgid ""
 "Trapani, that works with plain text files. Todo.txt has a command-line \n"
 "interface. However, since the file format is plain text, you can also edit "
 "your \n"
-"tasks with any text editor. Todo.txt Touch is a version of Todo.txt for the "
-"\n"
+"tasks with any text editor. Todo.txt Touch is a version of Todo.txt for "
+"the \n"
 "Android platform. Todo.txt Touch uses a todo.txt file that lives in your\n"
 "Dropbox folder. %(name)s can import from and export to that todo.txt \n"
 "file."
@@ -5785,8 +5769,8 @@ msgid ""
 "exporting of Todo.txt, %(name)s will keep the task file and the \n"
 "todo.txt file in sync. Please note that another file, named after the .txt "
 "file\n"
-"with '-meta' appended, is also generated. This is used internally by "
-"%(name)s\n"
+"with '-meta' appended, is also generated. This is used internally by %(name)"
+"s\n"
 "in order to keep track of what has been modified in the .txt file; don't "
 "modify\n"
 "or delete it."
@@ -5796,8 +5780,8 @@ msgstr ""
 msgid ""
 "%(name)s imports task subjects, planned start date, due date, completion \n"
 "date, priority, contexts and projects. Contexts and projects are both \n"
-"transformed into categories in %(name)s. Projects cannot be transformed into "
-"\n"
+"transformed into categories in %(name)s. Projects cannot be transformed "
+"into \n"
 "parent tasks because Todo.txt allows tasks to belong to multiple projects, \n"
 "while %(name)s only allows one parent task per task."
 msgstr ""
@@ -5858,10 +5842,10 @@ msgstr ""
 #: taskcoachlib/help/__init__.py:726
 msgid ""
 "Templates are blueprints for new tasks. Right now, the only task \n"
-"properties that can be \"parameterized\" are the dates. When instantiating a "
-"\n"
-"template, the created task has its dates replaced with dates relative to the "
-"\n"
+"properties that can be \"parameterized\" are the dates. When instantiating "
+"a \n"
+"template, the created task has its dates replaced with dates relative to "
+"the \n"
 "current date."
 msgstr ""
 "Templates zijn blauwdrukken voor nieuwe taken. Op dit moment zijn de enige\n"
@@ -5890,19 +5874,19 @@ msgid ""
 "You can also create a new template from a pre-made template file \n"
 "(.tsktmpl); just select \"Import template\" in the File menu and select the "
 "file. \n"
-"Template files are stored in a subdirectory of the directory where "
-"TaskCoach.ini \n"
+"Template files are stored in a subdirectory of the directory where TaskCoach."
+"ini \n"
 "is."
 msgstr ""
 
 #: taskcoachlib/help/__init__.py:742
 msgid ""
 "In order to instantiate a task template, use the \"New task from \n"
-"template\" menu in the Task menu, or the equivalent toolbar button. When the "
-"\n"
+"template\" menu in the Task menu, or the equivalent toolbar button. When "
+"the \n"
 "task is created, the due, start and completion dates, if applicable, are \n"
-"reevaluated relatively to the current date. That means that if you create a "
-"\n"
+"reevaluated relatively to the current date. That means that if you create "
+"a \n"
 "template from a task starting today and due tomorrow, every time the "
 "template \n"
 "is instantiated, the planned start date will be replaced by the current date "
@@ -6350,8 +6334,7 @@ msgstr "Item(s) van het klembord plakken"
 
 #: taskcoachlib/help/uicommand.py:32
 msgid "Paste item(s) from the clipboard as subitem of the selected item"
-msgstr ""
-"Plak item(s) van het klembord als subitem van het geselecteerde item."
+msgstr "Plak item(s) van het klembord als subitem van het geselecteerde item."
 
 #: taskcoachlib/help/uicommand.py:33
 msgid "Edit preferences"
