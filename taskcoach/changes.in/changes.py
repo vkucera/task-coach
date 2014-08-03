@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.4.0', 'June ??, 2014',
+Release('1.4.0', 'July 3, 2014',
     summary='''This is a major feature release.''',
     featuresAdded=[
         Feature('''A task file can now be open by several instances
