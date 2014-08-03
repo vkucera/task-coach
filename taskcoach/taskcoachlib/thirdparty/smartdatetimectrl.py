@@ -1,4 +1,4 @@
-#!/usr/bin/python-32
+#!/usr/bin/env python
 
 # This file is part of smartdatetimectrl.
 
