@@ -1814,7 +1814,7 @@ msgstr "Utoljára ikon állapotban maradt"
 
 #: taskcoachlib/gui/dialog/preferences.py:398
 msgid "Check for new version of %(name)s on startup"
-msgstr "Induláskor keresse a %(name) új verzióját"
+msgstr "Induláskor keresse a %(name)s új verzióját"
 
 #: taskcoachlib/gui/dialog/preferences.py:400
 msgid "Check for messages from the %(name)s developers on startup"
@@ -2970,7 +2970,7 @@ msgstr "&Oldal beállítása...\tShift+Ctrl+P"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:264
 msgid "&Print preview..."
-msgstr "&Nyomtatási kép"
+msgstr "&Nyomtatási kép..."
 
 #: taskcoachlib/gui/uicommand/uicommand.py:265
 msgid "Show a preview of what the print will look like"
@@ -6462,19 +6462,19 @@ msgstr "1 nap"
 
 #: taskcoachlib/render.py:92
 msgid "Every %(frequency)d days"
-msgstr "Minden %(frequency)-dik napon"
+msgstr "Minden %(frequency)d-dik napon"
 
 #: taskcoachlib/render.py:93
 msgid "Every %(frequency)d weeks"
-msgstr "Minden %(frequency)-dik héten"
+msgstr "Minden %(frequency)d-dik héten"
 
 #: taskcoachlib/render.py:94
 msgid "Every %(frequency)d months"
-msgstr "Minden %(frequency)-dik hónapban"
+msgstr "Minden %(frequency)d-dik hónapban"
 
 #: taskcoachlib/render.py:95
 msgid "Every %(frequency)d years"
-msgstr "Minden %(frequency)-dik évben"
+msgstr "Minden %(frequency)d-dik évben"
 
 #: taskcoachlib/render.py:97
 msgid "Every other day"

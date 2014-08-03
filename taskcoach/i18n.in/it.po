@@ -3238,7 +3238,7 @@ msgstr "Crea una nuova attività da un modello"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1240
 msgid "New task with selected &categories..."
-msgstr "Nuova attività con le &categorie selezionate"
+msgstr "Nuova attività con le &categorie selezionate..."
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1241
 msgid "Insert a new task with the selected categories checked"
@@ -6454,19 +6454,19 @@ msgstr "1 giorno"
 
 #: taskcoachlib/render.py:92
 msgid "Every %(frequency)d days"
-msgstr "Ogni % giorni"
+msgstr "Ogni %(frequency)d giorni"
 
 #: taskcoachlib/render.py:93
 msgid "Every %(frequency)d weeks"
-msgstr "Ogni % settimane"
+msgstr "Ogni %(frequency)d settimane"
 
 #: taskcoachlib/render.py:94
 msgid "Every %(frequency)d months"
-msgstr "Ogni % mesi"
+msgstr "Ogni %(frequency)d mesi"
 
 #: taskcoachlib/render.py:95
 msgid "Every %(frequency)d years"
-msgstr "Ogni % anni"
+msgstr "Ogni %(frequency)d anni"
 
 #: taskcoachlib/render.py:97
 msgid "Every other day"

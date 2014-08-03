@@ -3149,7 +3149,7 @@ msgstr "&Sauvegarder\tCtrl+S"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:147
 msgid "Merge &disk changes\tShift-Ctrl-M"
-msgstr "Fusionner les mo&difications sur le disque"
+msgstr "Fusionner les mo&difications sur le disque\tShift-Ctrl-M"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:161
 msgid "S&ave as...\tShift+Ctrl+S"

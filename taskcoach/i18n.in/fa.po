@@ -41,7 +41,8 @@ msgstr ""
 msgid ""
 "Couldn't load settings from TaskCoach.ini:\n"
 "%s"
-msgstr "ناتواني در بارگذاري تنظيمات از فايل TaskCoach.ini"
+msgstr "ناتواني در بارگذاري تنظيمات از فايل TaskCoach.ini:\n"
+"%s"
 
 #: taskcoachlib/application/application.py:356
 #: taskcoachlib/gui/iocontroller.py:72

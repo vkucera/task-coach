@@ -698,7 +698,7 @@ msgstr ""
 
 #: taskcoachlib/domain/effort/effortlist.py:35
 msgid "&New effort...\tCtrl+E"
-msgstr "&Ny insats...\t Ctrl+E"
+msgstr "&Ny insats...\tCtrl+E"
 
 #: taskcoachlib/domain/task/status.py:61
 msgid "Inactive tasks"
@@ -2547,7 +2547,7 @@ msgstr "Synkroniserar med %s..."
 
 #: taskcoachlib/gui/mainwindow.py:173
 msgid "Welcome to %(name)s version %(version)s"
-msgstr "Välkommen till %(name)s version %(version)"
+msgstr "Välkommen till %(name)s version %(version)s"
 
 #: taskcoachlib/gui/mainwindow.py:200
 msgid ""
@@ -6261,7 +6261,7 @@ msgstr "Ny aktivitet %s"
 
 #: taskcoachlib/iphone/protocol.py:1203
 msgid "Delete task %s"
-msgstr "Ta bort aktivitet %"
+msgstr "Ta bort aktivitet %s"
 
 #: taskcoachlib/iphone/protocol.py:1259
 msgid "Modify task %s"

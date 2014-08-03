@@ -2204,7 +2204,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/reminder.py:31
 msgid "%(name)s reminder - %(task)s"
-msgstr "Lembrete %(name)s - %(tarefa)s"
+msgstr "Lembrete %(name)s - %(task)s"
 
 #: taskcoachlib/gui/dialog/reminder.py:64
 msgid "Reminder date/time"

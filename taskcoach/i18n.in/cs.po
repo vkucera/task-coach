@@ -3309,7 +3309,7 @@ msgstr "Vložit nový úkol, který bude mít nastaveny vybrané kategorie"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1252
 msgid "New task with selected tasks as &prerequisites..."
-msgstr "Nový úkol s vybranými úkoly jako &podmínkami"
+msgstr "Nový úkol s vybranými úkoly jako &podmínkami..."
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1253
 msgid "Insert a new task with the selected tasks as prerequisite tasks"
@@ -3325,7 +3325,7 @@ msgstr "Vloží nový úkol s vybranými úkoly jako závisejícími úkoly"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1275
 msgid "New &subitem..."
-msgstr "Nová &podpoložka"
+msgstr "Nová &podpoložka..."
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1276
 msgid "New &subtask..."
@@ -3333,7 +3333,7 @@ msgstr "Nový &podřazený úkol..."
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1277
 msgid "New &subnote..."
-msgstr "Nová &podpoznámka"
+msgstr "Nová &podpoznámka..."
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1278
 msgid "New &subcategory..."
@@ -5702,7 +5702,7 @@ msgid ""
 "identifying the computer it's running on. To customize this, you may\n"
 "change the \"Bonjour service name\" in the configuration."
 msgstr ""
-"Když klepnete na tlačítko \"Sync\" v zobrazení kategorií, %(name(s\n"
+"Když klepnete na tlačítko \"Sync\" v zobrazení kategorií, %(name)s\n"
 "automaticky zjistí spuštěné instance %(name)s na Vašem\n"
 "počítači a zeptá se Vás, kterou chcete (můžete mít několik instancí\n"
 "spuštěných na různých počítačích ve Vaší síti, nebo na stejném\n"
@@ -6931,19 +6931,19 @@ msgstr "1 den"
 
 #: taskcoachlib/render.py:92
 msgid "Every %(frequency)d days"
-msgstr "Každých %(frequency) dnů"
+msgstr "Každých %(frequency)d dnů"
 
 #: taskcoachlib/render.py:93
 msgid "Every %(frequency)d weeks"
-msgstr "Každý %(frequency) týden"
+msgstr "Každý %(frequency)d týden"
 
 #: taskcoachlib/render.py:94
 msgid "Every %(frequency)d months"
-msgstr "Každý %(frequency) měsíc"
+msgstr "Každý %(frequency)d měsíc"
 
 #: taskcoachlib/render.py:95
 msgid "Every %(frequency)d years"
-msgstr "Každých %(frequency) let"
+msgstr "Každých %(frequency)d let"
 
 #: taskcoachlib/render.py:97
 msgid "Every other day"

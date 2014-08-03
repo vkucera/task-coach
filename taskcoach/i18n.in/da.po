@@ -2937,7 +2937,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:208
 msgid "Edit templates..."
-msgstr "Rediger skabeloner.."
+msgstr "Rediger skabeloner..."
 
 #: taskcoachlib/gui/uicommand/uicommand.py:209
 msgid "Edit existing templates"
@@ -3012,7 +3012,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:369
 msgid "Export as &iCalendar..."
-msgstr "Eksporter som &iCalendar"
+msgstr "Eksporter som &iCalendar..."
 
 #: taskcoachlib/gui/uicommand/uicommand.py:370
 msgid "Export items from a viewer in iCalendar format"

@@ -2945,7 +2945,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:208
 msgid "Edit templates..."
-msgstr "Editar modelos"
+msgstr "Editar modelos..."
 
 #: taskcoachlib/gui/uicommand/uicommand.py:209
 msgid "Edit existing templates"

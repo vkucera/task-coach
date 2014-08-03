@@ -3212,7 +3212,7 @@ msgstr "Показать/спрятать задачи с подзадачами
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1043
 msgid "&Edit...\tRETURN"
-msgstr "&Редактировать...\tВВОД"
+msgstr "&Редактировать...\tRETURN"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1044
 msgid "Edit the selected item(s)"
@@ -3625,7 +3625,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2394
 msgid "&Configure"
-msgstr "На&строить..."
+msgstr "На&строить"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2395
 msgid "Configure the calendar viewer"

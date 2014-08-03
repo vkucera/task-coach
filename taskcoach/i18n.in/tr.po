@@ -2469,7 +2469,8 @@ msgstr "%s kalıp dosyası (*.tsktmpl)|*.tsktmpl"
 msgid ""
 "Cannot import template %s\n"
 "%s"
-msgstr "%s kalıbı alınamadı"
+msgstr "%s kalıbı alınamadı\n"
+"%s"
 
 #: taskcoachlib/gui/iocontroller.py:309
 msgid "Exported %(count)d items to %(filename)s"
@@ -3410,7 +3411,7 @@ msgstr "birden çok iş"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1838
 msgid "New category...\tCtrl-G"
-msgstr "Yeni grup...\tCtrl+G"
+msgstr "Yeni grup...\tCtrl-G"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1859
 msgid "New note...\tCtrl-J"
@@ -4589,7 +4590,7 @@ msgstr "iPhone ve iPod Touch"
 
 #: taskcoachlib/help/__init__.py:136
 msgid "%(name)s on the iPhone"
-msgstr "iPhone için %(name)"
+msgstr "iPhone için %(name)s"
 
 #: taskcoachlib/help/__init__.py:137 taskcoachlib/help/__init__.py:579
 msgid "Configuration"

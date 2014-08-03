@@ -3427,7 +3427,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1637
 msgid "&Start tracking effort\tCtrl-T"
-msgstr "Iniciar el &seguimiento de esfuerzo\t Ctrl-T"
+msgstr "Iniciar el &seguimiento de esfuerzo\tCtrl-T"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1658
 msgid "Start tracking effort for the task(s) of the selected effort(s)"
@@ -3445,11 +3445,11 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1714
 msgid "St&op tracking %s\tShift+Ctrl+T"
-msgstr "Detener el seguimient&o %s\t Shift+Ctrl+T"
+msgstr "Detener el seguimient&o %s\tShift+Ctrl+T"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1716
 msgid "&Resume tracking %s\tShift+Ctrl+T"
-msgstr "Continua&r el seghimiento %s\t Shift+Ctrl+T"
+msgstr "Continua&r el seghimiento %s\tShift+Ctrl+T"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1717
 msgid "Resume tracking effort for the last tracked task"

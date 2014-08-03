@@ -296,7 +296,7 @@ msgstr "Nowe podnotatki"
 
 #: taskcoachlib/command/noteCommands.py:41
 msgid "New subnote of \"%s\""
-msgstr "Nowa podnotatka dla \"%\""
+msgstr "Nowa podnotatka dla \"%s\""
 
 #: taskcoachlib/command/noteCommands.py:44
 #: taskcoachlib/command/noteCommands.py:118
@@ -366,7 +366,7 @@ msgstr "Nowe podzadania"
 
 #: taskcoachlib/command/taskCommands.py:186
 msgid "New subtask of \"%s\""
-msgstr "Nowe podzadanie dla \"%\""
+msgstr "Nowe podzadanie dla \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:190
 msgid "New subtask"
@@ -378,7 +378,7 @@ msgstr "Oznacz zadania jako wykonane"
 
 #: taskcoachlib/command/taskCommands.py:219
 msgid "Mark \"%s\" completed"
-msgstr "Oznacz \"%\" jako wykonane"
+msgstr "Oznacz \"%s\" jako wykonane"
 
 #: taskcoachlib/command/taskCommands.py:245
 msgid "Mark task active"
@@ -434,7 +434,7 @@ msgstr "Zwiększ priorytet"
 
 #: taskcoachlib/command/taskCommands.py:416
 msgid "Increase priority of \"%s\""
-msgstr "Zwiększ priorytet dla \"%\""
+msgstr "Zwiększ priorytet dla \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:421
 msgid "Decrease priority"
@@ -450,7 +450,7 @@ msgstr "Zmień priorytet"
 
 #: taskcoachlib/command/taskCommands.py:428
 msgid "Change priority of \"%s\""
-msgstr "Zmień priorytet dla \"%\""
+msgstr "Zmień priorytet dla \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:450
 msgid "Add note to tasks"
@@ -1476,7 +1476,7 @@ msgstr "Wiele notatek"
 
 #: taskcoachlib/gui/dialog/editor.py:1474
 msgid "%s (note)"
-msgstr "% s (uwaga)"
+msgstr "%s (uwaga)"
 
 #: taskcoachlib/gui/dialog/editor.py:1479
 msgid "Multiple attachments"
@@ -2298,7 +2298,7 @@ msgstr "Nowa wersja %(name)s jest dostępna"
 
 #: taskcoachlib/gui/dialog/version.py:66
 msgid "You are using %(name)s version %(currentVersion)s."
-msgstr "Aktualnie używasz %(name) w wersji %(currentVersion)"
+msgstr "Aktualnie używasz %(name)s w wersji %(currentVersion)s"
 
 #: taskcoachlib/gui/dialog/version.py:71
 msgid "Version %(version)s of %(name)s is available from"
@@ -2306,7 +2306,7 @@ msgstr "Wersja %(version)s %(name)s jest dostępna z"
 
 #: taskcoachlib/gui/dialog/version.py:77
 msgid "%(name)s is up to date"
-msgstr "%(name) jest aktualny."
+msgstr "%(name)s jest aktualny."
 
 #: taskcoachlib/gui/dialog/version.py:81
 msgid "%(name)s is up to date at version %(version)s."
@@ -2318,7 +2318,7 @@ msgstr "Nie mogę znaleźć najnowszej wersji."
 
 #: taskcoachlib/gui/dialog/version.py:89
 msgid "Couldn't find out what the latest version of %(name)s is."
-msgstr "Nie mogę znaleźć najnowszej wersji %(name)."
+msgstr "Nie mogę znaleźć najnowszej wersji %(name)s."
 
 #: taskcoachlib/gui/dialog/version.py:95
 msgid "Prerelease version"
@@ -2956,7 +2956,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:244
 msgid "&Page setup...\tShift+Ctrl+P"
-msgstr "Ustawienia strony... \t Shift+Ctrl+P"
+msgstr "Ustawienia strony... \tShift+Ctrl+P"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:264
 msgid "&Print preview..."
@@ -2992,7 +2992,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:369
 msgid "Export as &iCalendar..."
-msgstr "Eksportuj jako &iCalendar"
+msgstr "Eksportuj jako &iCalendar..."
 
 #: taskcoachlib/gui/uicommand/uicommand.py:370
 msgid "Export items from a viewer in iCalendar format"
@@ -3224,7 +3224,7 @@ msgstr "Utwórz nowe zadanie z szablonu"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1240
 msgid "New task with selected &categories..."
-msgstr "Nowe zadanie w wybranej &kategorii"
+msgstr "Nowe zadanie w wybranej &kategorii..."
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1241
 msgid "Insert a new task with the selected categories checked"
@@ -3232,7 +3232,7 @@ msgstr "Wstaw nowe zadanie i zaznacz wybrane kategorie"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1252
 msgid "New task with selected tasks as &prerequisites..."
-msgstr "Nowe zadanie z wybranymi zadaniami wymaganymi"
+msgstr "Nowe zadanie z wybranymi zadaniami wymaganymi..."
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1253
 msgid "Insert a new task with the selected tasks as prerequisite tasks"
@@ -3248,7 +3248,7 @@ msgstr "Wprowadź nowe zadanie z wybranymi zależnymi zadaniami"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1275
 msgid "New &subitem..."
-msgstr "Nowy pode&lement"
+msgstr "Nowy pode&lement..."
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1276
 msgid "New &subtask..."
@@ -3260,7 +3260,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1278
 msgid "New &subcategory..."
-msgstr "N&owa podkategorai"
+msgstr "N&owa podkategorai..."
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1282
 msgid "Insert a new subitem of the selected item"

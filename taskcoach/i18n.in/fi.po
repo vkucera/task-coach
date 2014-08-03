@@ -4185,7 +4185,7 @@ msgstr "Tehtävät: %d valittu, %d näkyvissä, %d yhteensä"
 
 #: taskcoachlib/gui/viewer/task.py:53
 msgid "Status: %d overdue, %d late, %d inactive, %d completed"
-msgstr "Tila: %d yliajalla, %s myöhässä, %d ei-aktiivisena, %d valmiina"
+msgstr "Tila: %d yliajalla, %d myöhässä, %d ei-aktiivisena, %d valmiina"
 
 #: taskcoachlib/gui/viewer/task.py:86
 msgid ""

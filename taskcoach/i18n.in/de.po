@@ -2484,7 +2484,8 @@ msgstr "Synchronisationsstatus"
 msgid ""
 "Cannot open %s\n"
 "%s"
-msgstr "Kann \"%s\" nicht öffnen"
+msgstr "Kann \"%s\" nicht öffnen\n"
+"%s"
 
 #: taskcoachlib/gui/iocontroller.py:421
 msgid ""
@@ -3370,7 +3371,7 @@ msgstr "Alle Textnotizen öffnen...\tShift+Ctrl+B"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1637
 msgid "&Start tracking effort\tCtrl-T"
-msgstr "&Aufwands-Erfassung für ausgewählte Aufgabe(n) starten"
+msgstr "&Aufwands-Erfassung für ausgewählte Aufgabe(n) starten\tCtrl-T"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1658
 msgid "Start tracking effort for the task(s) of the selected effort(s)"
@@ -3394,7 +3395,7 @@ msgstr "Aufwandserfassung anhalten oder wieder aufnehmen\tShift+Ctrl+T"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1714
 msgid "St&op tracking %s\tShift+Ctrl+T"
-msgstr "&Aufwands-Erfassung für ausgewählte Aufgabe(n) anhalten"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1715
 msgid "Stop tracking effort for the active task(s)"

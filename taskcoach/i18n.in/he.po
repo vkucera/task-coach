@@ -137,7 +137,7 @@ msgstr "הדבק \"%s\""
 
 #: taskcoachlib/command/base.py:313
 msgid "Paste as subitem"
-msgstr "הדבק כפריט משנה \"%s\""
+msgstr "הדבק כפריט משנה"
 
 #: taskcoachlib/command/base.py:314
 msgid "Paste as subitem of \"%s\""
@@ -258,11 +258,11 @@ msgstr "מחק משימות מאמץ"
 
 #: taskcoachlib/command/effortCommands.py:65
 msgid "Delete effort \"%s\""
-msgstr "מחק מאמץ"
+msgstr "מחק מאמץ \"%s\""
 
 #: taskcoachlib/command/effortCommands.py:72
 msgid "Change task of effort"
-msgstr "שנה משימת מאמץ \"%s\""
+msgstr "שנה משימת מאמץ"
 
 #: taskcoachlib/command/effortCommands.py:73
 msgid "Change task of \"%s\" effort"
@@ -325,7 +325,7 @@ msgstr "הוספת הערה"
 
 #: taskcoachlib/command/noteCommands.py:67
 msgid "Add note to \"%s\""
-msgstr "הוסף הערה ל-\"s%\""
+msgstr "הוסף הערה ל-\"%s\""
 
 #: taskcoachlib/command/noteCommands.py:110
 msgid "Add subnote"
@@ -522,7 +522,7 @@ msgstr "שנה תקציבים"
 
 #: taskcoachlib/command/taskCommands.py:706
 msgid "Change budget of \"%s\""
-msgstr "שנה תקציב של %"
+msgstr "שנה תקציב של \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:728
 msgid "Change hourly fees"
@@ -530,7 +530,7 @@ msgstr "שנה תשלומים שעתיים"
 
 #: taskcoachlib/command/taskCommands.py:729
 msgid "Change hourly fee of \"%s\""
-msgstr "שנה תשלום שעתי של \"s%\""
+msgstr "שנה תשלום שעתי של \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:751
 msgid "Change fixed fees"
@@ -538,7 +538,7 @@ msgstr "שנה תשלומים קבועים"
 
 #: taskcoachlib/command/taskCommands.py:752
 msgid "Change fixed fee of \"%s\""
-msgstr "שנה תשלום קבוע של \"s%\""
+msgstr "שנה תשלום קבוע של \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:774
 msgid "Toggle prerequisite"
