@@ -109,7 +109,7 @@ class BalloonTip(wx.Frame):
         else:
             tx, ty, tw, th = self._getRect()
         tx, ty = self._target.ClientToScreen(wx.Point(tx, ty))
-        dpyIndex = wx.Display.GetFromPoint(wx.Point(tx, ty)) or 0
+        dpyIndex = max(0, wx.Display.GetFromPoint(wx.Point(tx, ty)) or 0)
         rect = wx.Display(dpyIndex).GetClientArea()
 
         x = max(rect.GetLeft(), min(rect.GetRight() - w, int(tx + tw / 2 - w / 2)))
