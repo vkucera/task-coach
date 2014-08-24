@@ -27,6 +27,8 @@ Release('1.4.1', 'August ??, 2014',
     bugsFixed=[
         Bugv2('''Increase taskbar icon size on Linux to avoid dead places.''',
               '1536'),
+        Bugv2('''Display time spent in decimal format in task viewer if the
+option is set.''', '1534'),
         ],
     ),
 
