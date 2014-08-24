@@ -17,11 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import datetime, timedelta, re, time
-from taskcoachlib import operating_system
+from .date import Date
+from .fix import StrftimeFix
 
 
-class DateTime(datetime.datetime):
-    
+class DateTime(StrftimeFix, datetime.datetime):
     secondsPerMinute = 60
     minutesPerHour = 60
     hoursPerDay = 24
@@ -41,8 +41,8 @@ class DateTime(datetime.datetime):
                         hour=dateTime.hour, minute=dateTime.minute, second=dateTime.second,
                         microsecond=dateTime.microsecond)
 
-    def strftime(self, *args):
-        return operating_system.decodeSystemString(super(DateTime, self).strftime(*args))
+    def date(self):
+        return Date(self.year, self.month, self.day)
 
     def weeknumber(self):
         return self.isocalendar()[1]
