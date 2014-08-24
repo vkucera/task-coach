@@ -94,8 +94,11 @@ class DateTest(test.TestCase):
 
     def testSubstractTwoDates_BothInfinite(self):
         self.assertEqual(date.TimeDelta(), date.Date() - date.Date())
-        
-        
+
+    def testFormat1900(self):
+        self.assertEqual(date.DateTime(2, 5, 19, 0, 0, 0).strftime('%Y%m%d'), '20519')
+
+
 class FactoriesTest(test.TestCase):
     def testParseDate(self):
         parsed = date.parseDate("2004-1-1")

@@ -80,3 +80,6 @@ class DateTimeTest(test.TestCase):
         expected = date.DateTime(2003, 12, 31)
         actual = date.LastDayOfCurrentMonth(localtime=lambda: (2003, 12, 1))
         self.assertEqual(expected, actual)
+
+    def testFormat1900(self):
+        self.assertEqual(date.DateTime(2, 5, 19, 0, 0, 0).strftime('%Y%m%d'), '20519')
