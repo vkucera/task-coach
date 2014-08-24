@@ -85,7 +85,12 @@ class IconProvider(object):
 
     def __init__(self):
         self.__iconCache = dict()
-        self.__iconSizeOnCurrentPlatform = 128 if operating_system.isMac() else 16
+        if operating_system.isMac():
+            self.__iconSizeOnCurrentPlatform = 128
+        elif operating_system.isGTK():
+            self.__iconSizeOnCurrentPlatform = 48
+        else:
+            self.__iconSizeOnCurrentPlatform = 16
         
     def getIcon(self, iconTitle): 
         ''' Return the icon. Use a cache to prevent leakage of GDI object 
@@ -106,6 +111,11 @@ class IconProvider(object):
     
     def getIconFromArtProvider(self, iconTitle, iconSize=None):
         size = iconSize or self.__iconSizeOnCurrentPlatform
+        # I just spent two hours trying to get rid of garbage in the icon
+        # background on KDE. I give up.
+        if operating_system.isGTK():
+            return wx.ArtProvider_GetIcon(iconTitle, wx.ART_FRAME_ICON, (size, size))
+
         # wx.ArtProvider_GetIcon doesn't convert alpha to mask, so we do it
         # ourselves:
         bitmap = wx.ArtProvider_GetBitmap(iconTitle, wx.ART_FRAME_ICON, 
