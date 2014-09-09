@@ -30,6 +30,7 @@ Release('1.4.1', 'August ??, 2014',
         Bugv2('''Display time spent in decimal format in task viewer if the
 option is set.''', '1534'),
         Bugv2('''Fix todo.txt export when dates have a year < 1900''', '1541'),
+        Bugv2('''Avoid locking in Dropbox folder on Windows.''', '1540'),
         ],
     ),
 

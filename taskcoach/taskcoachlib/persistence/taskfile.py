@@ -28,6 +28,16 @@ from taskcoachlib.filesystem import FilesystemNotifier, FilesystemPollerNotifier
 from taskcoachlib.thirdparty.pubsub import pub
 
 
+def _isDropbox(path):
+    path = os.path.abspath(path)
+    while True:
+        if os.path.exists(os.path.join(path, '.dropbox.cache')):
+            return True
+        path, name = os.path.split(path)
+        if name == '':
+            return False
+
+
 class TaskCoachFilesystemNotifier(FilesystemNotifier):
     def __init__(self, taskFile):
         self.__taskFile = taskFile
@@ -96,13 +106,7 @@ class SafeWriteFile(object):
             idx += 1
 
     def _isDropbox(self):
-        path = os.path.abspath(os.path.dirname(self.__filename))
-        while True:
-            if os.path.exists(os.path.join(path, '.dropbox.cache')):
-                return True
-            path, name = os.path.split(path)
-            if name == '':
-                return False
+        return _isDropbox(os.path.dirname(self.__filename))
 
 
 class TaskFile(patterns.Observer):
@@ -567,6 +571,23 @@ class TaskFile(patterns.Observer):
         self.markDirty()
 
 
+class DummyLockFile(object):
+    def acquire(self, timeout=None):
+        pass
+
+    def release(self):
+        pass
+
+    def is_locked(self):
+        return True
+
+    def i_am_locking(self):
+        return True
+
+    def break_lock(self):
+        pass
+
+
 class LockedTaskFile(TaskFile):
     ''' LockedTaskFile adds cooperative locking to the TaskFile. '''
     
@@ -585,8 +606,15 @@ class LockedTaskFile(TaskFile):
                     return True
         return False
 
+    def __isDropbox(self, filename):
+        return _isDropbox(os.path.dirname(filename))
+
     def __createLockFile(self, filename):
-        return (lockfile.MkdirFileLock if self.__isFuse(filename) else lockfile.FileLock)(filename)
+        if operating_system.isWindows() and self.__isDropbox(filename):
+            return DummyLockFile()
+        if self.__isFuse(filename):
+            return lockfile.MkdirFileLock(filename)
+        return lockfile.FileLock(filename)
 
     def is_locked(self):
         return self.__lock and self.__lock.is_locked()
