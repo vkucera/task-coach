@@ -33,6 +33,7 @@ option is set.''', '1534'),
         Bugv2('''Avoid locking in Dropbox folder on Windows.''', '1540'),
         Bugv2('''Backup and save would fail if the path to the user's home contained
 a non-ASCII character'''),
+        Bugv2('''Fix stop effort tooltip.''', '1537'),
         ],
     ),
 

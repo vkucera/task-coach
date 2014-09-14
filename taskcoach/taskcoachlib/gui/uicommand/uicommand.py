@@ -1735,7 +1735,12 @@ class EffortStop(EffortListCommand, TaskListCommand, ViewerCommand):
             bitmap2='clock_stop_icon', menuText=self.defaultMenuText,
             helpText=self.defaultHelpText, kind=wx.ITEM_CHECK, *args, **kwargs)
         self.__tracker = effort.EffortListTracker(self.effortList)
+        for subtype in ['', '.added', '.removed']:
+            self.__tracker.subscribe(self.__onEffortsChanged, 'effortlisttracker%s' % subtype)
         self.__currentBitmap = None  # Don't know yet what our bitmap is
+
+    def __onEffortsChanged(self, efforts):
+        self.updateUI()
 
     def efforts(self):
         selectedEfforts = set()
