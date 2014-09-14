@@ -28,9 +28,18 @@ Release('1.5.0', 'August ??, 2014',
         ],
     ),
 
-Release('1.4.1', 'August ??, 2014',
+Release('1.4.1', 'September 14, 2014',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bugv2('''Increase taskbar icon size on Linux to avoid dead places.''',
+              '1536'),
+        Bugv2('''Display time spent in decimal format in task viewer if the
+option is set.''', '1534'),
+        Bugv2('''Fix todo.txt export when dates have a year < 1900''', '1541'),
+        Bugv2('''Avoid locking in Dropbox folder on Windows.''', '1540'),
+        Bugv2('''Backup and save would fail if the path to the user's home contained
+a non-ASCII character''', '1547', '1546'),
+        Bugv2('''Fix stop effort tooltip.''', '1537'),
         ],
     ),
 

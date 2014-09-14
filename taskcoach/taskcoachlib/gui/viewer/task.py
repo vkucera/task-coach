@@ -101,6 +101,11 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,  # pylint: disable=W0223
         super(BaseTaskViewer, self).detach()
         self.statusMessages = None # Break cycle
 
+    def _renderTimeSpent(self, *args, **kwargs):
+        if self.settings.getboolean('feature', 'decimaltime'):
+            return render.timeSpentDecimal(*args, **kwargs)
+        return render.timeSpent(*args, **kwargs)
+
     def onAppearanceSettingChange(self, value):  # pylint: disable=W0613
         if self:
             wx.CallAfter(self.refresh)  # Let domain objects update appearance first
@@ -452,6 +457,10 @@ class SquareTaskViewer(BaseTaskTreeViewer):
         self.__orderBy = 'revenue'
         self.__transformTaskAttribute = lambda x: x
         self.__zero = 0
+        self.renderer = dict(budget=render.budget, timeSpent=self._renderTimeSpent, 
+                        fixedFee=render.monetaryAmount, 
+                        revenue=render.monetaryAmount,
+                        priority=render.priority)
         super(SquareTaskViewer, self).__init__(*args, **kwargs)
         sortKeys = eval(self.settings.get(self.settingsSection(), 'sortby'))
         orderBy = sortKeys[0] if sortKeys else 'budget'
@@ -584,11 +593,6 @@ class SquareTaskViewer(BaseTaskTreeViewer):
         return wx.ArtProvider_GetIcon(bitmap, wx.ART_MENU, (16, 16))
 
     # Helper methods
-    
-    renderer = dict(budget=render.budget, timeSpent=render.timeSpent, 
-                    fixedFee=render.monetaryAmount, 
-                    revenue=render.monetaryAmount,
-                    priority=render.priority)
     
     def render(self, value):
         return self.renderer[self.__orderBy](value)
@@ -1289,7 +1293,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                                   task.completed())
         
     def renderTimeSpent(self, task):
-        return self.renderedValue(task, task.timeSpent, render.timeSpent)
+        return self.renderedValue(task, task.timeSpent, self._renderTimeSpent)
 
     def renderBudget(self, task):
         return self.renderedValue(task, task.budget, render.budget)

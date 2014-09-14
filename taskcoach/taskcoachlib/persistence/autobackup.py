@@ -27,6 +27,10 @@ import bz2, hashlib
 from xml.etree import ElementTree as ET
 
 
+def SHA(filename):
+    return hashlib.sha1(filename.encode('UTF-8')).hexdigest()
+
+
 def compressFile(srcName, dstName):
     with file(srcName, 'rb') as src:
         dst = bz2.BZ2File(dstName, 'w')
@@ -74,24 +78,23 @@ class BackupManifest(object):
         return len(self.listBackups(filename)) != 0
 
     def backupPath(self, filename):
-        path = os.path.join(self.__settings.pathToBackupsDir(), hashlib.sha1(filename).hexdigest())
+        path = os.path.join(self.__settings.pathToBackupsDir(), SHA(filename))
         if not os.path.exists(path):
             os.makedirs(path)
         return path
 
     def addFile(self, filename):
-        sha = hashlib.sha1(filename).hexdigest()
-        self.__files[sha] = filename
+        self.__files[SHA(filename)] = filename
 
     def removeFile(self, filename):
-        sha = hashlib.sha1(filename).hexdigest()
+        sha = SHA(filename)
         if sha in self.__files:
             del self.__files[sha]
 
     def restoreFile(self, filename, dateTime, dstName):
         if os.path.exists(dstName):
             os.remove(dstName)
-        sha = hashlib.sha1(filename).hexdigest()
+        sha = SHA(filename)
         src = bz2.BZ2File(os.path.join(self.__settings.pathToBackupsDir(), sha, dateTime.strftime('%Y%m%d%H%M%S.bak')), 'r')
         try:
             with file(dstName, 'wb') as dst:
@@ -203,13 +206,13 @@ class AutoBackup(object):
         return deltas[0][1]
 
     def backupFiles(self, taskFile, glob=glob.glob):  # pylint: disable=W0621
-        sha = hashlib.sha1(taskFile.filename()).hexdigest()
+        sha = SHA(taskFile.filename())
         root = os.path.join(self.__settings.pathToBackupsDir(), sha)
         return sorted(glob('%s.bak' % os.path.join(root, '[0-9]' * 14)))
 
     def backupFilename(self, taskFile, now=date.DateTime.now):
         ''' Generate a backup filename for the specified date/time. '''
-        sha = hashlib.sha1(taskFile.filename()).hexdigest()
+        sha = SHA(taskFile.filename())
         return os.path.join(self.__settings.pathToBackupsDir(), sha, now().strftime('%Y%m%d%H%M%S.bak'))
 
     @staticmethod

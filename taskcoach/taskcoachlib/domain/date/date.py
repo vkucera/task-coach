@@ -16,14 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import time, string, datetime, timedelta # pylint: disable=W0402
+import time, string, datetime, re, timedelta # pylint: disable=W0402
 from taskcoachlib import patterns
+from .fix import StrftimeFix
 
 
 infinite = datetime.date.max
-    
-class RealDate(datetime.date):
 
+class RealDate(StrftimeFix, datetime.date):
     def __add__(self, delta):
         newdate = super(RealDate, self).__add__(delta)
         return RealDate(newdate.year, newdate.month, newdate.day)
