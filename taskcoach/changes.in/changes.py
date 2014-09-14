@@ -31,6 +31,8 @@ Release('1.4.1', 'August ??, 2014',
 option is set.''', '1534'),
         Bugv2('''Fix todo.txt export when dates have a year < 1900''', '1541'),
         Bugv2('''Avoid locking in Dropbox folder on Windows.''', '1540'),
+        Bugv2('''Backup and save would fail if the path to the user's home contained
+a non-ASCII character'''),
         ],
     ),
 
