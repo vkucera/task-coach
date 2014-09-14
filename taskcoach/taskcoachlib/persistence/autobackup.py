@@ -206,13 +206,13 @@ class AutoBackup(object):
         return deltas[0][1]
 
     def backupFiles(self, taskFile, glob=glob.glob):  # pylint: disable=W0621
-        sha = SHA(filename)
+        sha = SHA(taskFile.filename())
         root = os.path.join(self.__settings.pathToBackupsDir(), sha)
         return sorted(glob('%s.bak' % os.path.join(root, '[0-9]' * 14)))
 
     def backupFilename(self, taskFile, now=date.DateTime.now):
         ''' Generate a backup filename for the specified date/time. '''
-        sha = SHA(filename)
+        sha = SHA(taskFile.filename())
         return os.path.join(self.__settings.pathToBackupsDir(), sha, now().strftime('%Y%m%d%H%M%S.bak'))
 
     @staticmethod
