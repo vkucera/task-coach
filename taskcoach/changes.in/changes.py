@@ -32,7 +32,7 @@ option is set.''', '1534'),
         Bugv2('''Fix todo.txt export when dates have a year < 1900''', '1541'),
         Bugv2('''Avoid locking in Dropbox folder on Windows.''', '1540'),
         Bugv2('''Backup and save would fail if the path to the user's home contained
-a non-ASCII character''', '1547'),
+a non-ASCII character''', '1547', '1546'),
         Bugv2('''Fix stop effort tooltip.''', '1537'),
         ],
     ),
