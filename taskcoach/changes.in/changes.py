@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.4.1', 'August ??, 2014',
+Release('1.4.1', 'September 14, 2014',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bugv2('''Increase taskbar icon size on Linux to avoid dead places.''',
