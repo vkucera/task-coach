@@ -28,11 +28,12 @@ from taskcoachlib.filesystem import FilesystemNotifier, FilesystemPollerNotifier
 from taskcoachlib.thirdparty.pubsub import pub
 
 
-def _isDropbox(path):
+def _isCloud(path):
     path = os.path.abspath(path)
     while True:
-        if os.path.exists(os.path.join(path, '.dropbox.cache')):
-            return True
+        for name in ['.dropbox.cache', '.csync_journal.db']:
+            if os.path.exists(os.path.join(path, name):
+                return True
         path, name = os.path.split(path)
         if name == '':
             return False
@@ -59,7 +60,7 @@ class TaskCoachFilesystemPollerNotifier(FilesystemPollerNotifier):
 class SafeWriteFile(object):
     def __init__(self, filename):
         self.__filename = filename
-        if self._isDropbox():
+        if self._isCloud():
             # Ideally we should create a temporary file on the same filesystem (so that
             # os.rename works) but outside the Dropbox folder...
             self.__fd = file(self.__filename, 'w')
@@ -72,7 +73,7 @@ class SafeWriteFile(object):
 
     def close(self):
         self.__fd.close()
-        if not self._isDropbox():
+        if not self._isCloud():
             if os.path.exists(self.__filename):
                 os.remove(self.__filename)
             if self.__filename is not None:
@@ -105,8 +106,8 @@ class SafeWriteFile(object):
                 return name
             idx += 1
 
-    def _isDropbox(self):
-        return _isDropbox(os.path.dirname(self.__filename))
+    def _isCloud(self):
+        return _isCloud(os.path.dirname(self.__filename))
 
 
 class TaskFile(patterns.Observer):
@@ -606,11 +607,11 @@ class LockedTaskFile(TaskFile):
                     return True
         return False
 
-    def __isDropbox(self, filename):
-        return _isDropbox(os.path.dirname(filename))
+    def __isCloud(self, filename):
+        return _isCloud(os.path.dirname(filename))
 
     def __createLockFile(self, filename):
-        if operating_system.isWindows() and self.__isDropbox(filename):
+        if operating_system.isWindows() and self.__isCloud(filename):
             return DummyLockFile()
         if self.__isFuse(filename):
             return lockfile.MkdirFileLock(filename)

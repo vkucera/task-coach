@@ -25,6 +25,7 @@ releases = [
 Release('1.4.2', 'September ??, 2014',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bugv2('''Also avoid locking in an ownCloud folder.'''),
         ],
     ),
 
