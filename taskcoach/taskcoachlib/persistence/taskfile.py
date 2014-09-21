@@ -32,7 +32,7 @@ def _isCloud(path):
     path = os.path.abspath(path)
     while True:
         for name in ['.dropbox.cache', '.csync_journal.db']:
-            if os.path.exists(os.path.join(path, name):
+            if os.path.exists(os.path.join(path, name)):
                 return True
         path, name = os.path.split(path)
         if name == '':
