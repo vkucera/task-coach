@@ -140,7 +140,12 @@ class AutoBackup(object):
         # Then copy existing backups
         rx = re.compile(r'\.(\d{8})-(\d{6})\.tsk\.bak$')
         for name in os.listdir(os.path.split(taskFile.filename())[0] or '.'):
-            srcName = os.path.join(os.path.split(taskFile.filename())[0], name)
+            try:
+                srcName = os.path.join(os.path.split(taskFile.filename())[0], name)
+            except UnicodeDecodeError:
+                # See https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=764763
+                continue
+
             mt = rx.search(name)
             if mt:
                 dstName = os.path.join(man.backupPath(taskFile.filename()), '%s%s.bak' % (mt.group(1), mt.group(2)))
