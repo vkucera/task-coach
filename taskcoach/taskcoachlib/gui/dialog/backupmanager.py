@@ -111,7 +111,7 @@ class BackupManagerDialog(wx.Dialog):
         dlg = wx.FileDialog(self, _('Choose the restoration destination'),
                             defaultDir=os.path.dirname(filename),
                             defaultFile=os.path.split(filename)[-1],
-                            wildcard='*.tsk', style=wx.FD_SAVE|wx.OVERWRITE_PROMPT)
+                            wildcard='*.tsk', style=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT)
         try:
             if dlg.ShowModal() == wx.ID_OK:
                 self.__filename = dlg.GetPath()

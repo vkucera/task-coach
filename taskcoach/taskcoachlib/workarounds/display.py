@@ -43,7 +43,7 @@ if operating_system.isWindows():
 
         @staticmethod
         def GetFromWindow(window):
-            if window.GetWindowStyle() & wx.THICK_FRAME:
+            if window.GetWindowStyle() & wx.RESIZE_BORDER:
                 margin = wx.SystemSettings.GetMetric(wx.SYS_FRAMESIZE_X)
             else:
                 margin = 0

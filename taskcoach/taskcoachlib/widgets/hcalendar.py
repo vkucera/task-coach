@@ -163,7 +163,7 @@ class HierarchicalCalendar(tooltip.ToolTipMixin, CalendarCanvas):
         return self.__drawNow
 
     def SetTodayColor(self, (r, g, b)):
-        super(HierarchicalCalendar, self).SetTodayColor(wx.Color(r, g, b))
+        super(HierarchicalCalendar, self).SetTodayColor(wx.Colour(r, g, b))
 
     def TodayColor(self):
         color = super(HierarchicalCalendar, self).TodayColor()
