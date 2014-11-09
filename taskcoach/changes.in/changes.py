@@ -28,6 +28,15 @@ Release('1.5.0', 'August ??, 2014',
         ],
     ),
 
+Release('1.4.2', 'September ??, 2014',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bugv2('''Also avoid locking in an ownCloud folder.'''),
+        Bugv2('''Avoid a crash when files with badly encoded names are
+in the same directory as the task file.'''),
+        ],
+    ),
+
 Release('1.4.1', 'September 14, 2014',
     summary='''This is a bugfix release.''',
     bugsFixed=[

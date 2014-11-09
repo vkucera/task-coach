@@ -164,6 +164,6 @@ def AttachmentSelector(**callerKeywordArguments):
     kwargs = {'message': _('Add attachment'),
               'default_path': os.getcwd(), 
               'wildcard': _('All files (*.*)|*'), 
-              'flags': wx.OPEN}
+              'flags': wx.FD_OPEN}
     kwargs.update(callerKeywordArguments)
     return wx.FileSelector(**kwargs)  # pylint: disable=W0142
