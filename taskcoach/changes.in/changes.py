@@ -28,6 +28,7 @@ Release('1.4.2', 'September ??, 2014',
         Bugv2('''Also avoid locking in an ownCloud folder.'''),
         Bugv2('''Avoid a crash when files with badly encoded names are
 in the same directory as the task file.'''),
+        Bugv2('''Avoid data loss in some rare situations'''),
         ],
     ),
 
