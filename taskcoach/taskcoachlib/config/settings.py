@@ -320,7 +320,11 @@ class Settings(object, CachingConfigParser):
             except:
                 # Yes, one of the documented ways to get this sometimes fail with "Unspecified error". Not sure
                 # this will work either.
-                return shell.SHGetFolderPath(None, shellcon.CSIDL_PERSONAL, None, 0) # SHGFP_TYPE_CURRENT not in shellcon
+                # Update: There are cases when it doesn't work either; see support request #410...
+                try:
+                    return shell.SHGetFolderPath(None, shellcon.CSIDL_PERSONAL, None, 0) # SHGFP_TYPE_CURRENT not in shellcon
+                except:
+                    return os.getcwd() # Fuck this
         elif operating_system.isMac():
             import Carbon.Folder, Carbon.Folders, Carbon.File
             pathRef = Carbon.Folder.FSFindFolder(Carbon.Folders.kUserDomain, Carbon.Folders.kDocumentsFolderType, True)
