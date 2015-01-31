@@ -205,8 +205,6 @@ class ChangeSynchronizer(object):
                             # Owner deleted. Just forget it.
                             self.conflictChanges.addChange(diskObject, '__del__')
                             addObject = False
-                            self.notify(_('"%s" was not kept because its owner ("%s") was locally deleted.') %
-                                        (diskObject.subject(), diskOwner.subject()))
                 else:
                     diskOwner = self.diskOwnerMap[diskObject.id()]
                     if diskOwner.id() in self.memMap:
@@ -217,8 +215,6 @@ class ChangeSynchronizer(object):
                         # Forget it again...
                         self.conflictChanges.addChange(diskObject, '__del__')
                         addObject = False
-                        self.notify(_('"%s" was not kept because its owner ("%s") was locally deleted.') %
-                                    (diskObject.subject(), diskOwner.subject()))
 
                 if addObject:
                     self.memMap[diskObject.id()] = diskObject
@@ -244,8 +240,6 @@ class ChangeSynchronizer(object):
                 else:
                     # Task deleted; forget it.
                     self.conflictChanges.addChange(diskEffort, '__del__')
-                    self.notify(_('Effort discarded because its owner ("%s") was locally deleted.') %
-                                diskTask.subject())
 
     def reparentObjects(self, memList, diskList):
         # Third pass: objects reparented on disk.
