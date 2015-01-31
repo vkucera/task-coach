@@ -84,7 +84,7 @@ pages['index'] = u'''
                             <a href="download_for_windows.html">Windows</a>,
                             <a href="download_for_mac.html">Mac OS X</a>, <a href="download_for_linux.html">Linux</a>, 
                             <a href="download_for_bsd.html">BSD</a>, <a href="download_for_iphone.html">iPhone, 
-                            iPad, and iPod Touch</a>, and <a href="download_for_android.html">Android</a>.</p>
+                            iPad, and iPod Touch</a>.</p>
                             <h3>What does it cost?</h3>
                             The desktop versions of %(name)s are completely free. The iOS versions
                             of %(name)s come with a small price tag because it costs us money to make them 
@@ -260,7 +260,7 @@ pages['givesupport'] = '''
                     <p>Help us spread the word. Talk about %(name)s with your
                     family, friends and colleagues. Tweet about %(name)s, +1 us,
                     you know the drill.</p>
-                    <p><a href="http://twitter.com/share" class="twitter-share-button" data-url="http://taskcoach.org" data-text="Check out Task Coach: a free and open source todo app for Windows, Mac, Linux, iPhone and Android." data-count="horizontal" data-via="taskcoach">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script></p>
+                    <p><a href="http://twitter.com/share" class="twitter-share-button" data-url="http://taskcoach.org" data-text="Check out Task Coach: a free and open source todo app for Windows, Mac, Linux and iPhone." data-count="horizontal" data-via="taskcoach">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script></p>
                     <p><iframe src="http://www.facebook.com/plugins/like.php?href=http%%3A%%2F%%2Ftaskcoach.org&amp;layout=button_count&amp;show_faces=true&amp;width=190&amp;action=like&amp;colorscheme=light&amp;height=21" 
                             scrolling="no" frameborder="0" 
                             style="border:none; overflow:hidden; width:190px; height:21px;" 
@@ -768,7 +768,7 @@ pages['features'] = '''
                         <li>Available in English and French.</li>
                     </ul>
                     <h2>%(name)s for Android</h2>
-                    <p>The Android version is separately developed. See the developer's site for
+                    <p>The Android version is separately developed; we don't support it ourselves. See the developer's site for
                     details.</p>
                 </div>
                 <div class="span2">''' + ads + '''
