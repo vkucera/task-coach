@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2014 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2015 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,12 +28,13 @@ Release('1.5.0', 'August ??, 2014',
         ],
     ),
 
-Release('1.4.2', 'September ??, 2014',
+Release('1.4.2', 'January 31, 2015',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bugv2('''Also avoid locking in an ownCloud folder.'''),
         Bugv2('''Avoid a crash when files with badly encoded names are
 in the same directory as the task file.'''),
+        Bugv2('''Avoid data loss in some rare situations'''),
         ],
     ),
 

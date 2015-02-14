@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2014 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2015 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -439,7 +439,10 @@ class TaskFile(patterns.Observer):
             pub.sendMessage('taskfile.justRead', taskFile=self)
         
     def save(self):
-        pub.sendMessage('taskfile.aboutToSave', taskFile=self)
+        try:
+            pub.sendMessage('taskfile.aboutToSave', taskFile=self)
+        except:
+            pass
         # When encountering a problem while saving (disk full,
         # computer on fire), if we were writing directly to the file,
         # it's lost. So write to a temporary file and rename it if
@@ -460,7 +463,10 @@ class TaskFile(patterns.Observer):
         finally:
             self.__saving = False
             self.__notifier.saved()
-            pub.sendMessage('taskfile.justSaved', taskFile=self)
+            try:
+                pub.sendMessage('taskfile.justSaved', taskFile=self)
+            except:
+                pass
 
     def mergeDiskChanges(self):
         self.__loading = True

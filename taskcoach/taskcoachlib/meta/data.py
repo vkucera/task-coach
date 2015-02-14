@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2014 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2015 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,9 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 version = '1.5.0'  # Current version number of the application
 tskversion = 37  # Current version number of the task file format, changed to 37 for release 1.3.23.
-release_day = '14'  # Day number of the release, 1-31, as string
-release_month = 'September'  # Month of the release in plain English
-release_year = '2014'  # Year of the release as string
+release_day = '31'  # Day number of the release, 1-31, as string
+release_month = 'January'  # Month of the release in plain English
+release_year = '2015'  # Year of the release as string
 release_status = 'stable'  # One of 'alpha', 'beta', 'stable'
 
 # No editing needed below this line for doing a release.
@@ -150,20 +150,20 @@ languages = {
     'Chinese (Traditional)': ('zh_TW', False),
     'Czech': ('cs', True),
     'Danish': ('da', False),
-    'Dutch': ('nl', False),
+    'Dutch': ('nl', True),
     'Esperanto': ('eo', False),
     'Estonian': ('et', False),
     'Finnish': ('fi', False),
     'French': ('fr', True), 
     'Galician': ('gl', False),
-    'German': ('de', False),
+    'German': ('de', True),
     'German (Low)': ('nds', False),
     'Greek': ('el', False),
     'Hebrew': ('he', False),
     'Hindi': ('hi', False),
     'Hungarian': ('hu', False),
     'Indonesian': ('id', False),
-    'Italian': ('it', False),
+    'Italian': ('it', True),
     'Japanese': ('ja', False),
     'Korean': ('ko', False),
     'Latvian': ('lv', False),
@@ -175,18 +175,18 @@ languages = {
     'Occitan': ('oc', False),
     'Papiamento': ('pap', False),
     'Persian': ('fa', False),
-    'Polish': ('pl', False),
-    'Portuguese': ('pt', False),
-    'Portuguese (Brazilian)': ('pt_BR', False),
-    'Romanian': ('ro', False),
-    'Russian': ('ru', False),
-    'Slovak': ('sk', False),
+    'Polish': ('pl', True),
+    'Portuguese': ('pt', True),
+    'Portuguese (Brazilian)': ('pt_BR', True),
+    'Romanian': ('ro', True),
+    'Russian': ('ru', True),
+    'Slovak': ('sk', True),
     'Slovene': ('sl', False),
-    'Spanish': ('es', False),
+    'Spanish': ('es', True),
     'Swedish': ('sv', False),
     'Telugu': ('te', False),
     'Thai': ('th', False),
-    'Turkish': ('tr', False),
+    'Turkish': ('tr', True),
     'Ukranian': ('uk', False),
     'Vietnamese': ('vi', False)}
 languages_list = ','.join(languages.keys())
