@@ -25,8 +25,13 @@ DOT="dot"       # dot should be on the path
 # (wx only works in 32 bits mode and the environment/default write trick to
 # make it the default does not seem to work on Lion).
 
-ifeq "$(shell uname -sm)" "Darwin x86_64"
+ifeq "$(shell uname -s)" "Darwin"
+BITS=$(shell python -c "import struct; print len(struct.pack('L', 0))")
+ifeq "$BITS" "8"
     PYTHON?="python-32"
+else
+    PYTHON?="python"
+endif
 else
     PYTHON?="python"
 endif
