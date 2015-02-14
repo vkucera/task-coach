@@ -27,7 +27,7 @@ DOT="dot"       # dot should be on the path
 
 ifeq "$(shell uname -s)" "Darwin"
 BITS=$(shell python -c "import struct; print len(struct.pack('L', 0))")
-ifeq "$BITS" "8"
+ifeq "$(BITS)" "8"
     PYTHON?="python-32"
 else
     PYTHON?="python"
