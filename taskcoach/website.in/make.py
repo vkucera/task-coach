@@ -70,7 +70,7 @@ pages['index'] = u'''
                 <div class="span10">
                     <p><img src="images/banner.png" alt="Banner image"></p>
                     <div class="row">
-                        <p align=center><a class="btn btn-primary btn-large" href="download.html">Download Task Coach, it's free!</a></p>
+                        <p align=center><a class="btn btn-primary btn-large" href="download.html">Download Task Coach, it's open source!</a></p>
                     </div>
                     <div class="row">
                         <div class="span5">
@@ -160,7 +160,7 @@ pages['getsupport'] = '''
                     the manual is far from being completed. However, since this is a 
                     community effort, you can help too.</p>
                     <p><a class="btn" 
-                          href="http://taskcoach.wikispaces.com">Browse manual</a></p>
+                          href="https://snowdrift.coop/p/taskcoach/w/en/main">Browse manual</a></p>
                 </div>
             </div>
             <hr>
@@ -213,7 +213,7 @@ pages['givesupport'] = '''
                     the manual is far from being completed. However, since this is a 
                     community effort, you can help too.</p>
                     <p><a class="btn" 
-                          href="http://taskcoach.wikispaces.com">Browse manual</a></p>
+                          href="https://snowdrift.coop/p/taskcoach/w/en/main">Browse manual</a></p>
                 </div>
                 <div class="span4">
                     <h2>Help develop</h2>
