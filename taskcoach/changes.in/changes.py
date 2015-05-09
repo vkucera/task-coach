@@ -25,6 +25,8 @@ releases = [
 Release('1.4.3', 'February ??, 2015',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bugv2('''Fix excessive CPU usage on Linux when smart filesystem monitoring is
+enabled.'''),
     ],
     ),
 

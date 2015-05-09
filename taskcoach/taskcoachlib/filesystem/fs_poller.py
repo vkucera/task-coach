@@ -59,5 +59,9 @@ class FilesystemPollerNotifier(base.NotifierBase, threading.Thread):
         self.evt.set()
         self.join()
 
+    def saved(self):
+        with self.lock:
+            super(FilesystemPollerNotifier, self).saved()
+
     def onFileChanged(self):
         raise NotImplementedError

@@ -53,11 +53,7 @@ class NotifierBase(object):
             self._path, self._name = None, None
 
     def saved(self):
-        self.lock.acquire()
-        try:
-            if self._filename and os.path.exists(self._filename):
-                self.stamp = os.stat(self._filename).st_mtime
-            else:
-                self.stamp = None
-        finally:
-            self.lock.release()
+        if self._filename and os.path.exists(self._filename):
+            self.stamp = os.stat(self._filename).st_mtime
+        else:
+            self.stamp = None

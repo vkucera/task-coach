@@ -119,7 +119,7 @@ class bdist_deb(Command, object):
         if not self.wxpythonversion:
             self.wxpythonversion = '2.8'
         if not self.twistedversion:
-            self.twistedversion = '10.0'
+            self.twistedversion = '12.1'
         if not self.pythonversion:
             self.pythonversion = '2.6'
         self.sdist_exclude = self.sdist_exclude.split(',') \

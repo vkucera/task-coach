@@ -104,6 +104,10 @@ class FilesystemNotifier(base.NotifierBase):
         finally:
             self.lock.release()
 
+    def saved(self):
+        with self.lock:
+            super(FilesystemNotifier, self).saved()
+
     def onFileChanged(self):
         raise NotImplementedError
 
