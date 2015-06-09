@@ -153,7 +153,7 @@ languages = {
     'Dutch': ('nl', True),
     'Esperanto': ('eo', False),
     'Estonian': ('et', False),
-    'Finnish': ('fi', False),
+    'Finnish': ('fi', True),
     'French': ('fr', True), 
     'Galician': ('gl', False),
     'German': ('de', True),
