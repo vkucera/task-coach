@@ -3335,8 +3335,8 @@ msgid "Edit the currently tracked task(s)"
 msgstr "Muuta tällä hetkellä seurattavia tehtäviä"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1115
-msgid "&Delete\tDEL"
-msgstr "Poista\tDEL"
+msgid "&Delete\tCtrl+DEL"
+msgstr "Poista\tCtrl+DEL"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1116
 #: taskcoachlib/help/__init__.py:845

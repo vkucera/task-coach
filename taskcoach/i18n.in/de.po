@@ -3339,8 +3339,8 @@ msgid "Edit the currently tracked task(s)"
 msgstr "Aufgabe(n), deren Aufwand gerade aufgezeichnet wird, bearbeiten"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1115
-msgid "&Delete\tDEL"
-msgstr "&Löschen\tDEL"
+msgid "&Delete\tCtrl+DEL"
+msgstr "&Löschen\tCtrl+DEL"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1116
 #: taskcoachlib/help/__init__.py:845

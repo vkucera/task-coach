@@ -3246,8 +3246,8 @@ msgid "Edit the currently tracked task(s)"
 msgstr "現在トラッキング中のタスクを編集します"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1115
-msgid "&Delete\tDEL"
-msgstr "削除(&D)\tDEL"
+msgid "&Delete\tCtrl+DEL"
+msgstr "削除(&D)\tCtrl+DEL"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1116
 #: taskcoachlib/help/__init__.py:845
