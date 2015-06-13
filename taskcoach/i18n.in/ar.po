@@ -2589,7 +2589,7 @@ msgid "Edit the selected item(s)"
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:1313
-msgid "&Delete\tDEL"
+msgid "&Delete\tCtrl+DEL"
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:1314 taskcoachlib\help\__init__.py:634

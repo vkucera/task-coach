@@ -21,6 +21,7 @@ Copyright (C) 2013 Ivan Romanov <https://sourceforge.net/u/ivanromanov/>
 Copyright (C) 2014 Joseph Wang <https://sourceforge.net/u/drjoe/profile/)>
 Copyright (C) 2014 Tom Monaco <http://www.thomasmonaco.com/>
 Copyright (C) 2014 Manab Chetia <manab.chetia@outlook.com>
+Copyright (C) 2015 Nicola (https://sourceforge.net/u/swisscarbon/profile/)
 
 Files under taskcoachlib/thirdparty are, well, third party. They come
 with their own license. They may include modifications from the

@@ -1112,7 +1112,7 @@ class EditTrackedTasks(TaskListCommand, settings_uicommand.SettingsCommand):
 
 class Delete(mixin_uicommand.NeedsSelectionMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(Delete, self).__init__(menuText=_('&Delete\tDEL'),
+        super(Delete, self).__init__(menuText=_('&Delete\tCtrl+DEL'),
             helpText=_('Delete the selected item(s)'), bitmap='delete', 
             *args, **kwargs)
         

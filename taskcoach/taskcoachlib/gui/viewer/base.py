@@ -424,7 +424,7 @@ class Viewer(patterns.Observer, wx.Panel):
                                      (wx.ACCEL_CMD, ord('C'), wx.ID_COPY),
                                      (wx.ACCEL_CMD, ord('V'), wx.ID_PASTE),
                                      (wx.ACCEL_NORMAL, wx.WXK_RETURN, wx.ID_EDIT),
-                                     (wx.ACCEL_NORMAL, wx.WXK_DELETE, wx.ID_DELETE)])
+                                     (wx.ACCEL_CTRL, wx.WXK_DELETE, wx.ID_DELETE)])
         self.SetAcceleratorTable(table)
         
         clipboardToolBarUICommands = self.createClipboardToolBarUICommands()

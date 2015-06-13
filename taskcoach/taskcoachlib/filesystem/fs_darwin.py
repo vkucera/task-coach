@@ -217,6 +217,10 @@ class FilesystemNotifier(base.NotifierBase):
             self.stamp = os.stat(filename).st_mtime
             self.onFileChanged()
 
+    def saved(self):
+        with self.lock:
+            super(FilesystemNotifier, self).saved()
+
     def onFileChanged(self):
         raise NotImplementedError
 

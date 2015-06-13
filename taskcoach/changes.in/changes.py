@@ -28,6 +28,19 @@ Release('1.5.0', 'August ??, 2014',
         ],
     ),
 
+Release('1.4.3', 'February ??, 2015',
+    summary='''This is a mixed feature and bugfix release.''',
+    featuresAdded=[
+        Feature('''Finnish translation fixed and enabled.'''),
+        Feature('''The shortcut to delete tasks is now Ctrl+DEL instead
+of just DEL.'''),
+        ],
+    bugsFixed=[
+        Bugv2('''Fix excessive CPU usage on Linux when smart filesystem monitoring is
+enabled.'''),
+    ],
+    ),
+
 Release('1.4.2', 'January 31, 2015',
     summary='''This is a bugfix release.''',
     bugsFixed=[

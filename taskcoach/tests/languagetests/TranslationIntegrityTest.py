@@ -32,18 +32,18 @@ class TranslationIntegrityTestsMixin(object):
     conversionSpecificationRE = re.compile('%\(\w+\)[sd]')
     
     @staticmethod
-    def countMatches(regex, search_string):
-        matches = dict()
+    def findMatches(regex, search_string):
+        matches = set()
         for match in re.findall(regex, search_string):
-            matches[match] = matches.get(match, 0) + 1
+            matches.add(match)
         return matches
             
     def testMatchingConversionSpecifications(self):
         regex = self.conversionSpecificationRE
-        matches_english = self.countMatches(regex, self.englishString)
-        matches_translation = self.countMatches(regex, self.translatedString)
+        matches_english = self.findMatches(regex, self.englishString)
+        matches_translation = self.findMatches(regex, self.translatedString)
         self.assertEqual(matches_english, matches_translation, self.englishString)
-            
+
     def testMatchingNonLiterals(self):
         for symbol in '\t', '|', '%s', '%d', '%.2f':
             self.assertEqual(self.englishString.count(symbol), 
