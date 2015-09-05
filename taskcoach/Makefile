@@ -73,10 +73,8 @@ sdist_linux: prepare changes templates dist/TaskCoach-$(TCVERSION).tar.gz
 
 sdist_ubuntu: sdist_linux
 	# Launchpad does not support one size fits all packages...
-	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu10~lucid.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu12~precise.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu14~trusty.tar.gz
-	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu14~utopic.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu15~vivid.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu15~wily.tar.gz
 
@@ -113,31 +111,22 @@ deb: sdist_linux
 	mv dist/taskcoach_$(TCVERSION)-1_all.deb dist/taskcoach_$(TCVERSION)-1.deb
 
 ubuntu: sdist_ubuntu
-	LC_ALL=C $(PYTHON) make.py bdist_ubuntu lucid 10 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu10~lucid.tar.gz
-	mv build build-lucid
 	LC_ALL=C $(PYTHON) make.py bdist_ubuntu precise 12 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu12~precise.tar.gz
 	mv build build-precise
 	LC_ALL=C $(PYTHON) make.py bdist_ubuntu trusty 14 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu14~trusty.tar.gz
 	mv build build-trusty
-	LC_ALL=C $(PYTHON) make.py bdist_ubuntu utopic 14 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu14~utopic.tar.gz
-	mv build build-utopic
 	LC_ALL=C $(PYTHON) make.py bdist_ubuntu vivid 15 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu15~vivid.tar.gz
 	mv build build-vivid
 	LC_ALL=C $(PYTHON) make.py bdist_ubuntu wily 15 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu15~wily.tar.gz
 	mv build build-wily
 
 ppa_sign: ubuntu
-	cd build-lucid; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
 	cd build-precise; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
 	cd build-trusty; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
-	cd build-utopic; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu14~utopic-1_source.changes
 	cd build-vivid; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu15~vivid-1_source.changes
 	cd build-wily; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu15~wily-1_source.changes
 
 # Split PPA by version because the upload has a tendency to fail so the buildbot must retry
-
-ppa_rel_lucid:
-	cd build-lucid; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
 
 ppa_rel_precise:
 	cd build-precise; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
@@ -145,17 +134,11 @@ ppa_rel_precise:
 ppa_rel_trusty:
 	cd build-trusty; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
 
-ppa_rel_utopic:
-	cd build-utopic; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu14~utopic-1_source.changes
-
 ppa_rel_vivid:
 	cd build-vivid; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu15~vivid-1_source.changes
 
 ppa_rel_wily:
 	cd build-wily; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu15~wily-1_source.changes
-
-ppa_relnext_lucid:
-	cd build-lucid; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
 
 ppa_relnext_precise:
 	cd build-precise; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
@@ -163,26 +146,17 @@ ppa_relnext_precise:
 ppa_relnext_trusty:
 	cd build-trusty; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
 
-ppa_relnext_utopic:
-	cd build-utopic; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu14~utopic-1_source.changes
-
 ppa_relnext_vivid:
 	cd build-vivid; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu15~vivid-1_source.changes
 
 ppa_relnext_wily:
 	cd build-wily; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu15~wily-1_source.changes
 
-ppa_release_lucid:
-	cd build-lucid; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
-
 ppa_release_precise:
 	cd build-precise; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
 
 ppa_release_trusty:
 	cd build-trusty; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
-
-ppa_release_utopic:
-	cd build-utopic; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu14~utopic-1_source.changes
 
 ppa_release_vivid:
 	cd build-vivid; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu15~vivid-1_source.changes
