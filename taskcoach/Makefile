@@ -77,6 +77,8 @@ sdist_ubuntu: sdist_linux
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu12~precise.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu14~trusty.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu14~utopic.tar.gz
+	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu15~vivid.tar.gz
+	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu15~wily.tar.gz
 
 sdist_raw:
 	mkdir -p dist
@@ -119,12 +121,18 @@ ubuntu: sdist_ubuntu
 	mv build build-trusty
 	LC_ALL=C $(PYTHON) make.py bdist_ubuntu utopic 14 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu14~utopic.tar.gz
 	mv build build-utopic
+	LC_ALL=C $(PYTHON) make.py bdist_ubuntu vivid 15 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu15~vivid.tar.gz
+	mv build build-vivid
+	LC_ALL=C $(PYTHON) make.py bdist_ubuntu wily 15 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu15~wily.tar.gz
+	mv build build-wily
 
 ppa_sign: ubuntu
 	cd build-lucid; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
 	cd build-precise; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
 	cd build-trusty; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
 	cd build-utopic; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu14~utopic-1_source.changes
+	cd build-vivid; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu15~vivid-1_source.changes
+	cd build-wily; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu15~wily-1_source.changes
 
 # Split PPA by version because the upload has a tendency to fail so the buildbot must retry
 
@@ -140,6 +148,12 @@ ppa_rel_trusty:
 ppa_rel_utopic:
 	cd build-utopic; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu14~utopic-1_source.changes
 
+ppa_rel_vivid:
+	cd build-vivid; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu15~vivid-1_source.changes
+
+ppa_rel_wily:
+	cd build-wily; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu15~wily-1_source.changes
+
 ppa_relnext_lucid:
 	cd build-lucid; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
 
@@ -152,6 +166,12 @@ ppa_relnext_trusty:
 ppa_relnext_utopic:
 	cd build-utopic; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu14~utopic-1_source.changes
 
+ppa_relnext_vivid:
+	cd build-vivid; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu15~vivid-1_source.changes
+
+ppa_relnext_wily:
+	cd build-wily; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu15~wily-1_source.changes
+
 ppa_release_lucid:
 	cd build-lucid; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
 
@@ -163,6 +183,12 @@ ppa_release_trusty:
 
 ppa_release_utopic:
 	cd build-utopic; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu14~utopic-1_source.changes
+
+ppa_release_vivid:
+	cd build-vivid; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu15~vivid-1_source.changes
+
+ppa_release_wily:
+	cd build-wily; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu15~wily-1_source.changes
 
 app: prepare
 	$(PYTHON) make.py py2app
