@@ -48,7 +48,7 @@ BuildRequires: python-setuptools-devel
 %%setup -q -n %%{originalName}-%%{version}
 
 %%build
-CFLAGS="%%{optflags}" %%{__python} make.py build
+CFLAGS="%%{optflags}" %%{__python} pymake.py build
 
 %%install
 %%{__rm} -rf %%{buildroot}

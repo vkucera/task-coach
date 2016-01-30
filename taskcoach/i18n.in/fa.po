@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-06-09 22:21+0000\n"
-"PO-Revision-Date: 2015-01-30 23:40+0000\n"
-"Last-Translator: AliReza Vahabzadeh <alirezavahabzadeh@gmail.com>\n"
+"POT-Creation-Date: 2015-06-13 22:42+0000\n"
+"PO-Revision-Date: 2015-10-29 07:18+0000\n"
+"Last-Translator: Marhoomagha <h_elahi1373@yahoo.com>\n"
 "Language-Team: Persian <fa@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-06-13 17:12+0000\n"
-"X-Generator: Launchpad (build 17557)\n"
+"X-Launchpad-Export-Date: 2016-01-30 14:28+0000\n"
+"X-Generator: Launchpad (build 17908)\n"
 "Language: fa\n"
 
 #: taskcoachlib/application/application.py:67
@@ -33,7 +33,7 @@ msgstr ""
 #: taskcoachlib/iphone/protocol.py:552 taskcoachlib/widgets/draganddrop.py:123
 #: taskcoachlib/widgets/draganddrop.py:165 taskcoachlib/widgets/password.py:88
 msgid "Error"
-msgstr ""
+msgstr "خطا"
 
 #: taskcoachlib/application/application.py:69
 msgid "Errors have occured. Please see \"%s\""
@@ -54,11 +54,11 @@ msgstr "\"%s\" خطای فایل"
 
 #: taskcoachlib/changes/sync.py:83
 msgid "Task Coach"
-msgstr ""
+msgstr "مدیریت فعالیت ها"
 
 #: taskcoachlib/changes/sync.py:143 taskcoachlib/changes/sync.py:196
 msgid "\"%s\" became top-level because its parent was locally deleted."
-msgstr ""
+msgstr "\"%s\" به بالاترین رتبه تبدیل شد زیرا موقعیت منبع آن پاک گردیده است."
 
 #: taskcoachlib/changes/sync.py:467
 msgid ""
@@ -1163,7 +1163,7 @@ msgstr "بدون آیکون"
 
 #: taskcoachlib/gui/dialog/backupmanager.py:31
 msgid "File"
-msgstr ""
+msgstr "فایل"
 
 #: taskcoachlib/gui/dialog/backupmanager.py:32
 msgid "Full path"
@@ -1172,11 +1172,11 @@ msgstr ""
 #: taskcoachlib/gui/dialog/backupmanager.py:34
 #: taskcoachlib/widgets/hcalendarconfig.py:56
 msgid "Date"
-msgstr ""
+msgstr "تاریخ"
 
 #: taskcoachlib/gui/dialog/backupmanager.py:36
 msgid "Restore"
-msgstr ""
+msgstr "بازیابی"
 
 #: taskcoachlib/gui/dialog/backupmanager.py:52
 #: taskcoachlib/widgets/dialog.py:81
@@ -1185,7 +1185,7 @@ msgstr "بستن"
 
 #: taskcoachlib/gui/dialog/backupmanager.py:111
 msgid "Choose the restoration destination"
-msgstr ""
+msgstr "مسیر بازیابی را انتخاب کن"
 
 #: taskcoachlib/gui/dialog/developer_message.py:32
 msgid "Message from the %s developers"
@@ -1572,7 +1572,7 @@ msgstr "بازگشت"
 
 #: taskcoachlib/gui/dialog/entry.py:472
 msgid "Schedule each next recurrence based on"
-msgstr ""
+msgstr "برنامه ریزی هر رویداد مجدد بر اساس"
 
 #: taskcoachlib/gui/dialog/entry.py:476
 msgid "previous planned start and/or due date"
@@ -1580,7 +1580,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/entry.py:477
 msgid "last completion date"
-msgstr ""
+msgstr "آخرین تاریخ تکمیل"
 
 #: taskcoachlib/gui/dialog/entry.py:522
 msgid "day(s),"
@@ -6840,3 +6840,6 @@ msgstr "این پنجره را دیگر نشان نده"
 #: taskcoachlib/widgets/textctrl.py:164
 msgid "Error opening URL"
 msgstr "خطا در باز کردن آدرس"
+
+#~ msgid "&Delete\tDEL"
+#~ msgstr "&حذف\tDEL"

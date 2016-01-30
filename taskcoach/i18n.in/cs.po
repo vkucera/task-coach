@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-06-09 22:21+0000\n"
-"PO-Revision-Date: 2015-05-15 12:58+0000\n"
+"POT-Creation-Date: 2015-06-13 22:42+0000\n"
+"PO-Revision-Date: 2015-11-09 14:37+0000\n"
 "Last-Translator: Pavel Borecki <Unknown>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-06-13 17:12+0000\n"
-"X-Generator: Launchpad (build 17557)\n"
+"X-Launchpad-Export-Date: 2016-01-30 14:28+0000\n"
+"X-Generator: Launchpad (build 17908)\n"
 "Language: cs\n"
 
 #: taskcoachlib/application/application.py:67
@@ -364,7 +364,7 @@ msgstr "Nový podúkol %s"
 
 #: taskcoachlib/command/taskCommands.py:190
 msgid "New subtask"
-msgstr "Nový vnořený úkol"
+msgstr "Nový podúkol"
 
 #: taskcoachlib/command/taskCommands.py:218
 msgid "Mark tasks completed"
@@ -516,7 +516,7 @@ msgstr "Změnit rozpočet"
 
 #: taskcoachlib/command/taskCommands.py:706
 msgid "Change budget of \"%s\""
-msgstr "Změnit rozpočet \"%s\""
+msgstr "Změnit rozpočet %s"
 
 #: taskcoachlib/command/taskCommands.py:728
 msgid "Change hourly fees"
@@ -1388,7 +1388,7 @@ msgstr "Z rozpočtu zbývá"
 #: taskcoachlib/gui/wizard/csvimport.py:240
 #: taskcoachlib/persistence/csv/reader.py:123
 msgid "Hourly fee"
-msgstr "Hodinová mzda"
+msgstr "Hodinová sazba"
 
 #: taskcoachlib/gui/dialog/editor.py:600
 #: taskcoachlib/gui/uicommand/uicommand.py:2381
@@ -1669,7 +1669,7 @@ msgstr "Obnovit ze zařízení"
 
 #: taskcoachlib/gui/dialog/iphone.py:44 taskcoachlib/widgets/password.py:49
 msgid "Cancel"
-msgstr "Zrušit"
+msgstr "Storno"
 
 #: taskcoachlib/gui/dialog/iphone.py:74
 msgid ""
@@ -1740,7 +1740,7 @@ msgstr "Soubory"
 
 #: taskcoachlib/gui/dialog/preferences.py:350
 msgid "Auto save after every change"
-msgstr "Automaticky uložit při každé změně"
+msgstr "Automaticky uložit po každé změně"
 
 #: taskcoachlib/gui/dialog/preferences.py:352
 msgid "Auto load when the file changes on disk"
@@ -2286,7 +2286,7 @@ msgstr "Pomalu"
 #: taskcoachlib/gui/dialog/syncpreferences.py:96
 #: taskcoachlib/gui/dialog/syncpreferences.py:109
 msgid "One way from client"
-msgstr "Jednocestně z klienta"
+msgstr "Jednosměrně z klienta"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:97
 #: taskcoachlib/gui/dialog/syncpreferences.py:110
@@ -3290,7 +3290,7 @@ msgstr "&Vzestupně"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:974
 msgid "Sort ascending (checked) or descending (unchecked)"
-msgstr "Uspořádej vzejstupně (zaškrtnuto) nebo sestupně (nezaškrtnuto)"
+msgstr "Uspořádat vzestupně (zaškrtnuto) nebo sestupně (nezaškrtnuto)"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:987
 msgid "Sort &case sensitive"
@@ -7391,3 +7391,6 @@ msgstr "Příště toto okno nezobrazovat"
 #: taskcoachlib/widgets/textctrl.py:164
 msgid "Error opening URL"
 msgstr "Chyba při otevírání URL"
+
+#~ msgid "&Delete\tDEL"
+#~ msgstr "&Smazat\tDEL"

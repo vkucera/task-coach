@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-06-09 22:21+0000\n"
-"PO-Revision-Date: 2014-08-11 08:13+0000\n"
-"Last-Translator: Frank Niessink <frank@niessink.com>\n"
+"POT-Creation-Date: 2015-06-13 22:42+0000\n"
+"PO-Revision-Date: 2016-01-30 14:27+0000\n"
+"Last-Translator: Jérôme Laheurte <fraca7@free.fr>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-06-13 17:13+0000\n"
-"X-Generator: Launchpad (build 17557)\n"
+"X-Launchpad-Export-Date: 2016-01-30 14:28+0000\n"
+"X-Generator: Launchpad (build 17908)\n"
 "Language: vi\n"
 
 #: taskcoachlib/application/application.py:67
@@ -23,6 +23,8 @@ msgid ""
 "Errors have occured. Please see \"taskcoachlog.txt\" in your \"My "
 "Documents\" folder."
 msgstr ""
+"Có lỗi. Xem thông tin tập tin \"taskcoachlog.txt\" trong thư mục \"My "
+"Documnets\"."
 
 #: taskcoachlib/application/application.py:67
 #: taskcoachlib/application/application.py:69
@@ -31,57 +33,57 @@ msgstr ""
 #: taskcoachlib/iphone/protocol.py:552 taskcoachlib/widgets/draganddrop.py:123
 #: taskcoachlib/widgets/draganddrop.py:165 taskcoachlib/widgets/password.py:88
 msgid "Error"
-msgstr ""
+msgstr "Có lỗi"
 
 #: taskcoachlib/application/application.py:69
 msgid "Errors have occured. Please see \"%s\""
-msgstr ""
+msgstr "Có lỗi. Vui lòng xem \"%s\""
 
 #: taskcoachlib/application/application.py:358
 msgid ""
 "Couldn't load settings from TaskCoach.ini:\n"
 "%s"
-msgstr ""
+msgstr "Không lấy được thông tin cài đặt từ tập tin TaskCoach.ini: %s"
 
 #: taskcoachlib/application/application.py:359
 #: taskcoachlib/gui/iocontroller.py:73
 msgid "%s file error"
-msgstr ""
+msgstr "Lỗi tập tin %s"
 
 #: taskcoachlib/changes/sync.py:83
 msgid "Task Coach"
-msgstr ""
+msgstr "Task Coach"
 
 #: taskcoachlib/changes/sync.py:143 taskcoachlib/changes/sync.py:196
 msgid "\"%s\" became top-level because its parent was locally deleted."
-msgstr ""
+msgstr "\"%s\" ở lên hết vì các thư mục \"cha mẹ\" đã bị xóa."
 
 #: taskcoachlib/changes/sync.py:467
 msgid ""
 "Conflicts detected for \"%s\".\n"
 "The local version was used."
-msgstr ""
+msgstr "Có xung đột \"%s\"."
 
 #: taskcoachlib/command/attachmentCommands.py:28
 msgid "Edit location of attachments"
-msgstr ""
+msgstr "Chỉnh sửa vị trí các tập tin đính kèm"
 
 #: taskcoachlib/command/attachmentCommands.py:29
 msgid "Edit attachment \"%s\" location"
-msgstr ""
+msgstr "Chỉnh sửa vị trí các tập tin đính kèm \"%s\""
 
 #: taskcoachlib/command/attachmentCommands.py:53
 #: taskcoachlib/widgets/dialog.py:164
 msgid "Add attachment"
-msgstr "Đính kèm file"
+msgstr "Thêm đính kèm"
 
 #: taskcoachlib/command/attachmentCommands.py:54
 msgid "Add attachment to \"%s\""
-msgstr ""
+msgstr "Thêm đính kèm vào \"%s\""
 
 #: taskcoachlib/command/attachmentCommands.py:59
 msgid "New attachment"
-msgstr ""
+msgstr "Đính kèm tập tin mới"
 
 #: taskcoachlib/command/attachmentCommands.py:94
 msgid "Remove attachment"
@@ -89,7 +91,7 @@ msgstr "Loại bỏ đính kèm"
 
 #: taskcoachlib/command/attachmentCommands.py:95
 msgid "Remove attachment to \"%s\""
-msgstr ""
+msgstr "Loại bỏ đính kèm với \"%s\""
 
 #: taskcoachlib/command/base.py:192
 msgid "Copy"
@@ -97,7 +99,7 @@ msgstr "Sao chép"
 
 #: taskcoachlib/command/base.py:193
 msgid "Copy \"%s\""
-msgstr ""
+msgstr "Sao chép \"%s\""
 
 #: taskcoachlib/command/base.py:207
 msgid "Delete"
@@ -105,7 +107,7 @@ msgstr "Xóa"
 
 #: taskcoachlib/command/base.py:208
 msgid "Delete \"%s\""
-msgstr ""
+msgstr "Xóa \"%s\""
 
 #: taskcoachlib/command/base.py:243
 msgid "Cut"
@@ -113,7 +115,7 @@ msgstr "Cắt"
 
 #: taskcoachlib/command/base.py:244
 msgid "Cut \"%s\""
-msgstr ""
+msgstr "Cắt \"%s\""
 
 #: taskcoachlib/command/base.py:277
 msgid "Paste"
@@ -121,15 +123,15 @@ msgstr "Dán"
 
 #: taskcoachlib/command/base.py:278
 msgid "Paste \"%s\""
-msgstr ""
+msgstr "Dán \"%s\""
 
 #: taskcoachlib/command/base.py:313
 msgid "Paste as subitem"
-msgstr ""
+msgstr "Dán như thành phần con"
 
 #: taskcoachlib/command/base.py:314
 msgid "Paste as subitem of \"%s\""
-msgstr ""
+msgstr "Dán như thành phần con của \"%s\""
 
 #: taskcoachlib/command/base.py:326 taskcoachlib/gui/dialog/toolbar.py:134
 msgid "Drag and drop"
@@ -137,76 +139,76 @@ msgstr "Kéo và thả"
 
 #: taskcoachlib/command/base.py:327
 msgid "Drag and drop \"%s\""
-msgstr ""
+msgstr "Kéo và thả \"%s\""
 
 #: taskcoachlib/command/base.py:442
 msgid "Edit subjects"
-msgstr ""
+msgstr "Chỉnh sửa chủ đề"
 
 #: taskcoachlib/command/base.py:443
 msgid "Edit subject \"%s\""
-msgstr ""
+msgstr "Chỉnh sửa chủ đề \"%s\""
 
 #: taskcoachlib/command/base.py:467
 msgid "Edit descriptions"
-msgstr ""
+msgstr "Chỉnh sửa mô tả"
 
 #: taskcoachlib/command/base.py:468
 msgid "Edit description \"%s\""
-msgstr ""
+msgstr "Chỉnh sửa mô tả \"%s\""
 
 #: taskcoachlib/command/base.py:492
 msgid "Change icons"
-msgstr ""
+msgstr "Đổi biểu tượng"
 
 #: taskcoachlib/command/base.py:493
 msgid "Change icon \"%s\""
-msgstr ""
+msgstr "Đổi biểu tượng \"%s\""
 
 #: taskcoachlib/command/base.py:522
 msgid "Change fonts"
-msgstr ""
+msgstr "Thay đổi font chữ"
 
 #: taskcoachlib/command/base.py:523
 msgid "Change font \"%s\""
-msgstr ""
+msgstr "Thay đổi font chữ \"%s\""
 
 #: taskcoachlib/command/base.py:577
 msgid "Change foreground colors"
-msgstr ""
+msgstr "Thay đổi màu hiển thị"
 
 #: taskcoachlib/command/base.py:578
 msgid "Change foreground color \"%s\""
-msgstr ""
+msgstr "Thay đổi màu hiển thị \"%s\""
 
 #: taskcoachlib/command/base.py:590
 msgid "Change background colors"
-msgstr ""
+msgstr "Thay đổi màu nền"
 
 #: taskcoachlib/command/base.py:591
 msgid "Change background color \"%s\""
-msgstr ""
+msgstr "Thay đổi màu nền \"%s\""
 
 #: taskcoachlib/command/categorizableCommands.py:25
 msgid "Toggle category"
-msgstr ""
+msgstr "Gán vào loại"
 
 #: taskcoachlib/command/categorizableCommands.py:26
 msgid "Toggle category of \"%s\""
-msgstr ""
+msgstr "Gán vào loại của \"%s\""
 
 #: taskcoachlib/command/categoryCommands.py:26
 #: taskcoachlib/command/categoryCommands.py:29
 msgid "New category"
-msgstr "Tạo phân mục mới"
+msgstr "Tạo loại mới"
 
 #: taskcoachlib/command/categoryCommands.py:41
 msgid "New subcategories"
-msgstr ""
+msgstr "Tạo phân loại"
 
 #: taskcoachlib/command/categoryCommands.py:42
 msgid "New subcategory of \"%s\""
-msgstr ""
+msgstr "Tạo phân loại của \"%s\""
 
 #: taskcoachlib/command/categoryCommands.py:45
 msgid "New subcategory"
@@ -214,63 +216,63 @@ msgstr "Tạo phân mục con mới"
 
 #: taskcoachlib/command/categoryCommands.py:58
 msgid "Edit exclusive subcategories"
-msgstr ""
+msgstr "Chỉnh sửa phân loại riêng"
 
 #: taskcoachlib/command/categoryCommands.py:59
 msgid "Edit exclusive subcategories of \"%s\""
-msgstr ""
+msgstr "Chỉnh sửa phân loại riêng của \"%s\""
 
 #: taskcoachlib/command/categoryCommands.py:83
 msgid "Delete categories"
-msgstr ""
+msgstr "Xóa loại"
 
 #: taskcoachlib/command/categoryCommands.py:84
 msgid "Delete category \"%s\""
-msgstr ""
+msgstr "Xóa loại của \"%s\""
 
 #: taskcoachlib/command/categoryCommands.py:88
 msgid "Drag and drop categories"
-msgstr ""
+msgstr "Kéo và thả loại"
 
 #: taskcoachlib/command/effortCommands.py:25
 msgid "New efforts"
-msgstr ""
+msgstr "Sự nổ lực mới"
 
 #: taskcoachlib/command/effortCommands.py:26
 msgid "New effort of \"%s\""
-msgstr ""
+msgstr "Sự nổ lực mới của \"%s\""
 
 #: taskcoachlib/command/effortCommands.py:64
 msgid "Delete efforts"
-msgstr ""
+msgstr "Xóa sự nổ lực"
 
 #: taskcoachlib/command/effortCommands.py:65
 msgid "Delete effort \"%s\""
-msgstr ""
+msgstr "Xóa sự nổ lực của \"%s\""
 
 #: taskcoachlib/command/effortCommands.py:72
 msgid "Change task of effort"
-msgstr ""
+msgstr "Thay đổi công việc của sự nổ lực"
 
 #: taskcoachlib/command/effortCommands.py:73
 msgid "Change task of \"%s\" effort"
-msgstr ""
+msgstr "Thay đổi công việc của \"%s\" sự nổ lực"
 
 #: taskcoachlib/command/effortCommands.py:100
 msgid "Change effort start date and time"
-msgstr ""
+msgstr "Thay đổi ngày, giờ bắt đầu của sự nổ lực"
 
 #: taskcoachlib/command/effortCommands.py:101
 msgid "Change effort start date and time of \"%s\""
-msgstr ""
+msgstr "Thay đổi ngày, giờ bắt đầu của sự nổ lực \"%s\""
 
 #: taskcoachlib/command/effortCommands.py:135
 msgid "Change effort stop date and time"
-msgstr ""
+msgstr "Thay đổi ngày, giờ kết thúc của sự nổ lực"
 
 #: taskcoachlib/command/effortCommands.py:136
 msgid "Change effort stop date and time of \"%s\""
-msgstr ""
+msgstr "Thay đổi ngày, giờ kết thúc của sự nổ lực \"%s\""
 
 #: taskcoachlib/command/noteCommands.py:26
 #: taskcoachlib/command/noteCommands.py:29
@@ -280,11 +282,11 @@ msgstr "Ghi chú mới"
 
 #: taskcoachlib/command/noteCommands.py:40
 msgid "New subnotes"
-msgstr ""
+msgstr "Nhánh ghi chú mới"
 
 #: taskcoachlib/command/noteCommands.py:41
 msgid "New subnote of \"%s\""
-msgstr ""
+msgstr "Nhánh ghi chú mới của (%s\""
 
 #: taskcoachlib/command/noteCommands.py:44
 #: taskcoachlib/command/noteCommands.py:118
@@ -293,55 +295,55 @@ msgstr "Ghi chú con mới"
 
 #: taskcoachlib/command/noteCommands.py:56
 msgid "Delete notes"
-msgstr ""
+msgstr "Xóa ghi chú"
 
 #: taskcoachlib/command/noteCommands.py:57
 msgid "Delete note \"%s\""
-msgstr ""
+msgstr "Xóa ghi chú \"%s\""
 
 #: taskcoachlib/command/noteCommands.py:61
 msgid "Drag and drop notes"
-msgstr ""
+msgstr "Kéo và thả ghi chú"
 
 #: taskcoachlib/command/noteCommands.py:62
 msgid "Drag and drop note \"%s\""
-msgstr ""
+msgstr "Kéo và thả ghi chú \"%s\""
 
 #: taskcoachlib/command/noteCommands.py:66
 msgid "Add note"
-msgstr ""
+msgstr "Thêm ghi chú"
 
 #: taskcoachlib/command/noteCommands.py:67
 msgid "Add note to \"%s\""
-msgstr ""
+msgstr "Thêm ghi chú \"%s\""
 
 #: taskcoachlib/command/noteCommands.py:110
 msgid "Add subnote"
-msgstr ""
+msgstr "Thêm nhánh ghi chú"
 
 #: taskcoachlib/command/noteCommands.py:111
 msgid "Add subnote to \"%s\""
-msgstr ""
+msgstr "Thêm nhánh ghi chú \"%s\""
 
 #: taskcoachlib/command/noteCommands.py:153
 msgid "Remove note"
-msgstr ""
+msgstr "Bỏ ghi chú"
 
 #: taskcoachlib/command/noteCommands.py:154
 msgid "Remove note from \"%s\""
-msgstr ""
+msgstr "Bỏ ghi chú \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:61
 msgid "Drag and drop tasks"
-msgstr ""
+msgstr "Kéo và thả công việc"
 
 #: taskcoachlib/command/taskCommands.py:107
 msgid "Delete tasks"
-msgstr ""
+msgstr "Xóa công việc"
 
 #: taskcoachlib/command/taskCommands.py:108
 msgid "Delete task \"%s\""
-msgstr ""
+msgstr "Xóa công việc \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:147
 #: taskcoachlib/command/taskCommands.py:150
@@ -350,11 +352,11 @@ msgstr "Tác vụ mới"
 
 #: taskcoachlib/command/taskCommands.py:185
 msgid "New subtasks"
-msgstr ""
+msgstr "Tạo mới công việc con"
 
 #: taskcoachlib/command/taskCommands.py:186
 msgid "New subtask of \"%s\""
-msgstr ""
+msgstr "Tạo mới công việc con \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:190
 msgid "New subtask"
@@ -362,43 +364,43 @@ msgstr "Tác vụ con mới"
 
 #: taskcoachlib/command/taskCommands.py:218
 msgid "Mark tasks completed"
-msgstr ""
+msgstr "Đánh dấu công việc hoàn thành"
 
 #: taskcoachlib/command/taskCommands.py:219
 msgid "Mark \"%s\" completed"
-msgstr ""
+msgstr "Đánh dấu \"%s\" hoàn thành"
 
 #: taskcoachlib/command/taskCommands.py:245
 msgid "Mark task active"
-msgstr ""
+msgstr "Đánh dấu công việc đang thực hiện"
 
 #: taskcoachlib/command/taskCommands.py:246
 msgid "Mark \"%s\" active"
-msgstr ""
+msgstr "Đánh dấu \"%s\" đang thực hiện"
 
 #: taskcoachlib/command/taskCommands.py:270
 msgid "Mark task inactive"
-msgstr ""
+msgstr "Đánh dấu công việc không thực hiện"
 
 #: taskcoachlib/command/taskCommands.py:271
 msgid "Mark \"%s\" inactive"
-msgstr ""
+msgstr "Đánh dấu \"%s\" không thực hiện"
 
 #: taskcoachlib/command/taskCommands.py:295
 msgid "Start tracking"
-msgstr ""
+msgstr "Bắt đầu theo dõi"
 
 #: taskcoachlib/command/taskCommands.py:296
 msgid "Start tracking \"%s\""
-msgstr ""
+msgstr "Bắt đầu theo dõi \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:330
 msgid "Stop tracking"
-msgstr ""
+msgstr "Dừng theo dõi"
 
 #: taskcoachlib/command/taskCommands.py:331
 msgid "Stop tracking \"%s\""
-msgstr ""
+msgstr "Dừng theo dõi \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:375
 msgid "Maximize priority"
@@ -406,7 +408,7 @@ msgstr "Ưu tiên tối đa"
 
 #: taskcoachlib/command/taskCommands.py:376
 msgid "Maximize priority of \"%s\""
-msgstr ""
+msgstr "Thứ tự ưu tiên cao nhất \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:385
 msgid "Minimize priority"
@@ -414,7 +416,7 @@ msgstr "Ưu tiên tối thiểu"
 
 #: taskcoachlib/command/taskCommands.py:386
 msgid "Minimize priority of \"%s\""
-msgstr ""
+msgstr "Thứ tự ưu tiên thấp nhất \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:415
 msgid "Increase priority"
@@ -422,7 +424,7 @@ msgstr "Tăng độ ưu tiên"
 
 #: taskcoachlib/command/taskCommands.py:416
 msgid "Increase priority of \"%s\""
-msgstr ""
+msgstr "Tăng thứ tự ưu tiên \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:421
 msgid "Decrease priority"
@@ -430,132 +432,133 @@ msgstr "Giảm độ ưu tiên"
 
 #: taskcoachlib/command/taskCommands.py:422
 msgid "Decrease priority of \"%s\""
-msgstr ""
+msgstr "Giảm thứ tự ưu tiên \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:427
 msgid "Change priority"
-msgstr ""
+msgstr "Thay đổi thứ tự ưu tiên"
 
 #: taskcoachlib/command/taskCommands.py:428
 msgid "Change priority of \"%s\""
-msgstr ""
+msgstr "Thay đổi thứ tự ưu tiên \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:450
 msgid "Add note to tasks"
-msgstr ""
+msgstr "Thêm ghi chú vào công việc"
 
 #: taskcoachlib/command/taskCommands.py:532
 msgid "Change planned start date"
-msgstr ""
+msgstr "Thay đổi ngày vạch kế hoạch"
 
 #: taskcoachlib/command/taskCommands.py:533
 msgid "Change planned start date of \"%s\""
-msgstr ""
+msgstr "Thay đổi ngày vạch kế hoạch \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:553
 msgid "Change due date"
-msgstr ""
+msgstr "Thay đổi ngày hết hạn"
 
 #: taskcoachlib/command/taskCommands.py:554
 msgid "Change due date of \"%s\""
-msgstr ""
+msgstr "Thay đổi ngày hết hạn \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:574
 msgid "Change actual start date"
-msgstr ""
+msgstr "Thay đổi ngày thực tế bắt đầu"
 
 #: taskcoachlib/command/taskCommands.py:575
 msgid "Change actual start date of \"%s\""
-msgstr ""
+msgstr "Thay đổi ngày thực tế bắt đầu \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:595
 msgid "Change completion date"
-msgstr ""
+msgstr "Thay đổi ngày hoàn thành"
 
 #: taskcoachlib/command/taskCommands.py:596
 msgid "Change completion date of \"%s\""
-msgstr ""
+msgstr "Thay đổi ngày hoàn thành \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:619
 msgid "Change reminder dates/times"
-msgstr ""
+msgstr "Thay đổi thời gian nhắc nhở"
 
 #: taskcoachlib/command/taskCommands.py:620
 msgid "Change reminder date/time of \"%s\""
-msgstr ""
+msgstr "Thay đổi thời gian nhắc nhở \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:632
 msgid "Change recurrences"
-msgstr ""
+msgstr "Thay đổi việc lặp lại"
 
 #: taskcoachlib/command/taskCommands.py:633
 msgid "Change recurrence of \"%s\""
-msgstr ""
+msgstr "Thay đổi việc lặp lại \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:656
 msgid "Change percentage complete of \"%s\""
-msgstr ""
+msgstr "Thay đổi tỉ lệ hoàn thành \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:682
 msgid "Change when tasks are marked completed"
-msgstr ""
+msgstr "Thay đổi khi công việc được đánh dấu hoàn thành"
 
 #: taskcoachlib/command/taskCommands.py:683
 msgid "Change when \"%s\" is marked completed"
-msgstr ""
+msgstr "Thay đổi khi \"%s\" được đánh dấu hoàn thành"
 
 #: taskcoachlib/command/taskCommands.py:705
 msgid "Change budgets"
-msgstr ""
+msgstr "Thay đổi kinh phí"
 
 #: taskcoachlib/command/taskCommands.py:706
 msgid "Change budget of \"%s\""
-msgstr ""
+msgstr "Thay đổi kinh phí \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:728
 msgid "Change hourly fees"
-msgstr ""
+msgstr "Thay đổi chi phí theo giờ"
 
 #: taskcoachlib/command/taskCommands.py:729
 msgid "Change hourly fee of \"%s\""
-msgstr ""
+msgstr "Thay đổi chi phí theo giờ \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:751
 msgid "Change fixed fees"
-msgstr ""
+msgstr "Thay đổi chi phí cố định"
 
 #: taskcoachlib/command/taskCommands.py:752
 msgid "Change fixed fee of \"%s\""
-msgstr ""
+msgstr "Thay đổi chi phí cố định \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:774
 msgid "Toggle prerequisite"
-msgstr ""
+msgstr "Gán điều kiện cần thiết"
 
 #: taskcoachlib/command/taskCommands.py:775
 msgid "Toggle prerequisite of \"%s\""
-msgstr ""
+msgstr "Gán điều kiện cần thiết \"%s\""
 
 #: taskcoachlib/config/settings.py:268
 msgid "Error while reading the %s-%s setting from %s.ini."
-msgstr ""
+msgstr "Có lỗi trong khi đọc thông tin cài đặt  %s-%s từ %s.ini"
 
 #: taskcoachlib/config/settings.py:269
 msgid "The value is: %s"
-msgstr ""
+msgstr "Giá trị là: %s"
 
 #: taskcoachlib/config/settings.py:270
 msgid "The error is: %s"
-msgstr ""
+msgstr "Lỗi là: %s"
 
 #: taskcoachlib/config/settings.py:271
 msgid ""
 "%s will use the default value for the setting and should proceed normally."
 msgstr ""
+"%s sẽ sử dụng giá trị mặc định để cài đặt và thực thi theo thông thường."
 
 #: taskcoachlib/config/settings.py:272
 msgid "Settings error"
-msgstr ""
+msgstr "Lỗi cài đặt"
 
 #: taskcoachlib/config/settings.py:295
 msgid ""
@@ -572,15 +575,15 @@ msgstr "Lưu lỗi"
 #: taskcoachlib/domain/attachment/attachment.py:168
 #: taskcoachlib/mailer/macmail.py:50 taskcoachlib/mailer/macmail.py:69
 msgid "Mail.app message"
-msgstr ""
+msgstr "Mail.app thông điệp"
 
 #: taskcoachlib/domain/attachment/attachmentlist.py:24
 msgid "New attachment..."
-msgstr ""
+msgstr "Đính kèm mới..."
 
 #: taskcoachlib/domain/attachment/attachmentlist.py:25
 msgid "Insert a new attachment"
-msgstr ""
+msgstr "Chèn vào đính kèm mới"
 
 #: taskcoachlib/domain/attachment/attachmentlist.py:26
 msgid "Open attachment"
@@ -588,424 +591,432 @@ msgstr "Mở file đính kèm"
 
 #: taskcoachlib/domain/attachment/attachmentlist.py:27
 msgid "Open the selected attachments"
-msgstr ""
+msgstr "Mở đính kèm được chọn"
 
 #: taskcoachlib/domain/date/snooze.py:22
 msgid "5 minutes"
-msgstr ""
+msgstr "5 phút"
 
 #: taskcoachlib/domain/date/snooze.py:22
 msgid "Don't snooze"
-msgstr ""
+msgstr "Không tạm ngưng"
 
 #: taskcoachlib/domain/date/snooze.py:23
 msgid "10 minutes"
-msgstr ""
+msgstr "10 phút"
 
 #: taskcoachlib/domain/date/snooze.py:23
 msgid "15 minutes"
-msgstr ""
+msgstr "15 phút"
 
 #: taskcoachlib/domain/date/snooze.py:24
 msgid "20 minutes"
-msgstr ""
+msgstr "20 phút"
 
 #: taskcoachlib/domain/date/snooze.py:24
 msgid "30 minutes"
-msgstr ""
+msgstr "30 phút"
 
 #: taskcoachlib/domain/date/snooze.py:25
 msgid "1.5 hour"
-msgstr ""
+msgstr "1 giờ 30 phút"
 
 #: taskcoachlib/domain/date/snooze.py:25
 msgid "45 minutes"
-msgstr ""
+msgstr "45 phút"
 
 #: taskcoachlib/domain/date/snooze.py:25
 #: taskcoachlib/thirdparty/smartdatetimectrl.py:1759
 msgid "1 hour"
-msgstr ""
+msgstr "1 giờ"
 
 #: taskcoachlib/domain/date/snooze.py:26
 msgid "2 hours"
-msgstr ""
+msgstr "2 giờ"
 
 #: taskcoachlib/domain/date/snooze.py:26
 msgid "3 hours"
-msgstr ""
+msgstr "3 giờ"
 
 #: taskcoachlib/domain/date/snooze.py:26
 msgid "4 hours"
-msgstr ""
+msgstr "4 giờ"
 
 #: taskcoachlib/domain/date/snooze.py:27
 msgid "12 hours"
-msgstr ""
+msgstr "12 giờ"
 
 #: taskcoachlib/domain/date/snooze.py:27
 msgid "6 hours"
-msgstr ""
+msgstr "6 giờ"
 
 #: taskcoachlib/domain/date/snooze.py:27
 msgid "8 hours"
-msgstr ""
+msgstr "8 giờ"
 
 #: taskcoachlib/domain/date/snooze.py:28
 msgid "18 hours"
-msgstr ""
+msgstr "18 giờ"
 
 #: taskcoachlib/domain/date/snooze.py:28
 msgid "24 hours"
-msgstr ""
+msgstr "24 giờ"
 
 #: taskcoachlib/domain/date/snooze.py:29
 msgid "48 hours"
-msgstr ""
+msgstr "48 giờ"
 
 #: taskcoachlib/domain/date/snooze.py:29
 msgid "72 hours"
-msgstr ""
+msgstr "72 giờ"
 
 #: taskcoachlib/domain/date/snooze.py:30
 msgid "2 weeks"
-msgstr ""
+msgstr "2 tuần"
 
 #: taskcoachlib/domain/date/snooze.py:30
 #: taskcoachlib/thirdparty/smartdatetimectrl.py:1747
 msgid "1 week"
-msgstr ""
+msgstr "1 tuần"
 
 #: taskcoachlib/domain/effort/composite.py:191
 msgid "Total"
-msgstr ""
+msgstr "Tổng cộng"
 
 #: taskcoachlib/domain/effort/composite.py:226
 msgid "Total for %s"
-msgstr ""
+msgstr "Tổng cộng %s"
 
 #: taskcoachlib/domain/effort/effortlist.py:35
 msgid "&New effort...\tCtrl+E"
-msgstr ""
+msgstr "&New effort...\tCtrl+E"
 
 #: taskcoachlib/domain/task/status.py:61
 msgid "Inactive tasks"
-msgstr ""
+msgstr "Công việc không thực hiện"
 
 #: taskcoachlib/domain/task/status.py:62
 msgid "Hide &inactive tasks"
-msgstr ""
+msgstr "Ẩn &inactive tasks"
 
 #: taskcoachlib/domain/task/status.py:62
 msgid "Inactive tasks: %d (%d%%)"
-msgstr ""
+msgstr "Công việc không thực hiện: %d (%d%%)"
 
 #: taskcoachlib/domain/task/status.py:63
 msgid "Show/hide inactive tasks (incomplete tasks without actual start date)"
 msgstr ""
+"Hiện/Ẩn công việc không thực hiện (công việc không hoàn thành không có ngày "
+"bắt đầu thực tế)"
 
 #: taskcoachlib/domain/task/status.py:65
 msgid "Late tasks"
-msgstr ""
+msgstr "Công việc hoàn thành trễ"
 
 #: taskcoachlib/domain/task/status.py:66
 msgid "Hide &late tasks"
-msgstr ""
+msgstr "Ẩn &late tasks"
 
 #: taskcoachlib/domain/task/status.py:66
 msgid "Late tasks: %d (%d%%)"
-msgstr ""
+msgstr "Công việc hoàn thành trễ: %d (%d%%)"
 
 #: taskcoachlib/domain/task/status.py:67
 msgid ""
 "Show/hide late tasks (inactive tasks with a planned start in the past)"
 msgstr ""
+"Hiện/Ẩn công việc hoàn thành trễ (Công việc không thực hiện với ngày bắt đầu "
+"trong quá khứ)"
 
 #: taskcoachlib/domain/task/status.py:69
 msgid "Active tasks"
-msgstr ""
+msgstr "Công việc đang thực hiện"
 
 #: taskcoachlib/domain/task/status.py:70
 msgid "Active tasks: %d (%d%%)"
-msgstr ""
+msgstr "Công việc đang thực hiện: %d (%d%%)"
 
 #: taskcoachlib/domain/task/status.py:70
 msgid "Hide &active tasks"
-msgstr ""
+msgstr "Ẩn &active tasks"
 
 #: taskcoachlib/domain/task/status.py:71
 msgid ""
 "Show/hide active tasks (incomplete tasks with an actual start date in the "
 "past)"
 msgstr ""
+"Hiện/Ẩn công việc đang thực hiện (Công việc không hoàn thành với ngày ngày "
+"bắt đầu thực tế trong quá khứ)"
 
 #: taskcoachlib/domain/task/status.py:73
 msgid "Due soon tasks"
-msgstr ""
+msgstr "Công việc sắp tới hạn"
 
 #: taskcoachlib/domain/task/status.py:74
 msgid "Due soon tasks: %d (%d%%)"
-msgstr ""
+msgstr "Công việc sắp tới hạn: %d (%d%%)"
 
 #: taskcoachlib/domain/task/status.py:74
 msgid "Hide &due soon tasks"
-msgstr ""
+msgstr "Ẩn  &due soon tasks"
 
 #: taskcoachlib/domain/task/status.py:75
 msgid ""
 "Show/hide due soon tasks (incomplete tasks with a due date in the near "
 "future)"
 msgstr ""
+"Hiện/Ẩn công việc sắp tới hạn (Công việc không hoàn thành với ngày tới hạn "
+"gần kề)"
 
 #: taskcoachlib/domain/task/status.py:77
 msgid "Overdue tasks"
-msgstr ""
+msgstr "Công việc quá hạn chưa hoàn thành"
 
 #: taskcoachlib/domain/task/status.py:78
 msgid "Hide &over due tasks"
-msgstr ""
+msgstr "Ẩn &over due tasks"
 
 #: taskcoachlib/domain/task/status.py:78
 msgid "Overdue tasks: %d (%d%%)"
-msgstr ""
+msgstr "Công việc quá hạn: %d (%d%%)"
 
 #: taskcoachlib/domain/task/status.py:79
 msgid ""
 "Show/hide over due tasks (incomplete tasks with a due date in the past)"
-msgstr ""
+msgstr "Hiện/Ẩn công việc quá hạn (chưa hoàn thành với hạn chót đã qua)"
 
 #: taskcoachlib/domain/task/status.py:81
 msgid "Completed tasks"
-msgstr ""
+msgstr "Công việc đã hoàn thành"
 
 #: taskcoachlib/domain/task/status.py:82
 msgid "Completed tasks: %d (%d%%)"
-msgstr ""
+msgstr "Công việc đã hoàn thành: %d (%d%%)"
 
 #: taskcoachlib/domain/task/status.py:82
 msgid "Hide &completed tasks"
-msgstr ""
+msgstr "Ẩn  &completed tasks"
 
 #: taskcoachlib/domain/task/status.py:83
 msgid "Show/hide completed tasks"
-msgstr ""
+msgstr "Hiện/Ẩn công việc đã hoàn thành"
 
 #: taskcoachlib/domain/task/tasklist.py:40
 msgid "&New task..."
-msgstr ""
+msgstr "&New task..."
 
 #: taskcoachlib/gui/artprovider.py:145
 msgid "Arrow down"
-msgstr ""
+msgstr "Arrow down"
 
 #: taskcoachlib/gui/artprovider.py:146
 msgid "Arrow down with status"
-msgstr ""
+msgstr "Arrow down with status"
 
 #: taskcoachlib/gui/artprovider.py:147
 msgid "Blue arrows looped"
-msgstr ""
+msgstr "Blue arrows looped"
 
 #: taskcoachlib/gui/artprovider.py:148
 msgid "Green arrows looped"
-msgstr ""
+msgstr "Green arrows looped"
 
 #: taskcoachlib/gui/artprovider.py:149
 msgid "Arrow up"
-msgstr ""
+msgstr "Arrow up"
 
 #: taskcoachlib/gui/artprovider.py:150
 msgid "Arrow up with status"
-msgstr ""
+msgstr "Arrow up with status"
 
 #: taskcoachlib/gui/artprovider.py:151
 msgid "Bomb"
-msgstr ""
+msgstr "Bomb"
 
 #: taskcoachlib/gui/artprovider.py:152
 msgid "Book"
-msgstr ""
+msgstr "Book"
 
 #: taskcoachlib/gui/artprovider.py:153
 msgid "Books"
-msgstr ""
+msgstr "Books"
 
 #: taskcoachlib/gui/artprovider.py:154
 msgid "Box"
-msgstr ""
+msgstr "Box"
 
 #: taskcoachlib/gui/artprovider.py:155
 msgid "Ladybug"
-msgstr ""
+msgstr "Ladybug"
 
 #: taskcoachlib/gui/artprovider.py:156
 msgid "Cake"
-msgstr ""
+msgstr "Cake"
 
 #: taskcoachlib/gui/artprovider.py:157
 msgid "Calculator"
-msgstr ""
+msgstr "Calculator"
 
 #: taskcoachlib/gui/artprovider.py:158 taskcoachlib/gui/viewer/task.py:713
 msgid "Calendar"
-msgstr ""
+msgstr "Lịch"
 
 #: taskcoachlib/gui/artprovider.py:159
 msgid "Cat"
-msgstr ""
+msgstr "Loại"
 
 #: taskcoachlib/gui/artprovider.py:160
 msgid "Compact disc (CD)"
-msgstr ""
+msgstr "Compact disc (CD)"
 
 #: taskcoachlib/gui/artprovider.py:161
 msgid "Charts"
-msgstr ""
+msgstr "Charts"
 
 #: taskcoachlib/gui/artprovider.py:162
 msgid "Chatting"
-msgstr ""
+msgstr "Chatting"
 
 #: taskcoachlib/gui/artprovider.py:163
 msgid "Check mark"
-msgstr ""
+msgstr "Check mark"
 
 #: taskcoachlib/gui/artprovider.py:164
 msgid "Check marks"
-msgstr ""
+msgstr "Check marks"
 
 #: taskcoachlib/gui/artprovider.py:165
 msgid "Clock"
-msgstr ""
+msgstr "Đồng hồ"
 
 #: taskcoachlib/gui/artprovider.py:166
 msgid "Alarm clock"
-msgstr ""
+msgstr "Đồng hồ báo động"
 
 #: taskcoachlib/gui/artprovider.py:167
 msgid "Stopwatch"
-msgstr ""
+msgstr "Đồ hồ bấm giờ"
 
 #: taskcoachlib/gui/artprovider.py:168
 msgid "Cogwheel"
-msgstr ""
+msgstr "Cogwheel"
 
 #: taskcoachlib/gui/artprovider.py:169
 msgid "Cogwheels"
-msgstr ""
+msgstr "Cogwheels"
 
 #: taskcoachlib/gui/artprovider.py:170
 msgid "Desktop computer"
-msgstr ""
+msgstr "Máy tính để bàn"
 
 #: taskcoachlib/gui/artprovider.py:171
 msgid "Laptop computer"
-msgstr ""
+msgstr "Máy tính xách tay"
 
 #: taskcoachlib/gui/artprovider.py:172
 msgid "Handheld computer"
-msgstr ""
+msgstr "Handheld computer"
 
 #: taskcoachlib/gui/artprovider.py:173
 msgid "Red cross"
-msgstr ""
+msgstr "Dấu thập đỏ"
 
 #: taskcoachlib/gui/artprovider.py:174
 msgid "Die"
-msgstr ""
+msgstr "Die"
 
 #: taskcoachlib/gui/artprovider.py:175
 msgid "Document"
-msgstr ""
+msgstr "Document"
 
 #: taskcoachlib/gui/artprovider.py:176
 msgid "Blue earth"
-msgstr ""
+msgstr "Blue earth"
 
 #: taskcoachlib/gui/artprovider.py:177
 msgid "Green earth"
-msgstr ""
+msgstr "Green earth"
 
 #: taskcoachlib/gui/artprovider.py:178
 msgid "Envelope"
-msgstr ""
+msgstr "Envelope"
 
 #: taskcoachlib/gui/artprovider.py:179
 msgid "Envelopes"
-msgstr ""
+msgstr "Envelopes"
 
 #: taskcoachlib/gui/artprovider.py:180
 msgid "Blue folder"
-msgstr ""
+msgstr "Blue folder"
 
 #: taskcoachlib/gui/artprovider.py:181
 msgid "Light blue folder"
-msgstr ""
+msgstr "Light blue folder"
 
 #: taskcoachlib/gui/artprovider.py:182
 msgid "Green folder"
-msgstr ""
+msgstr "Green folder"
 
 #: taskcoachlib/gui/artprovider.py:183
 msgid "Grey folder"
-msgstr ""
+msgstr "Grey folder"
 
 #: taskcoachlib/gui/artprovider.py:184
 msgid "Orange folder"
-msgstr ""
+msgstr "Orange folder"
 
 #: taskcoachlib/gui/artprovider.py:185
 msgid "Purple folder"
-msgstr ""
+msgstr "Purple folder"
 
 #: taskcoachlib/gui/artprovider.py:186
 msgid "Red folder"
-msgstr ""
+msgstr "Red folder"
 
 #: taskcoachlib/gui/artprovider.py:187
 msgid "Yellow folder"
-msgstr ""
+msgstr "Yellow folder"
 
 #: taskcoachlib/gui/artprovider.py:188
 msgid "Blue folder with arrow"
-msgstr ""
+msgstr "Blue folder with arrow"
 
 #: taskcoachlib/gui/artprovider.py:189
 msgid "Heart"
-msgstr ""
+msgstr "Heart"
 
 #: taskcoachlib/gui/artprovider.py:190
 msgid "Hearts"
-msgstr ""
+msgstr "Hearts"
 
 #: taskcoachlib/gui/artprovider.py:191
 msgid "Green house"
-msgstr ""
+msgstr "Green house"
 
 #: taskcoachlib/gui/artprovider.py:192
 msgid "Red house"
-msgstr ""
+msgstr "Red house"
 
 #: taskcoachlib/gui/artprovider.py:193
 msgid "Key"
-msgstr ""
+msgstr "Key"
 
 #: taskcoachlib/gui/artprovider.py:194
 msgid "Keys"
-msgstr ""
+msgstr "Keys"
 
 #: taskcoachlib/gui/artprovider.py:195
 msgid "Lamp"
-msgstr ""
+msgstr "Lamp"
 
 #: taskcoachlib/gui/artprovider.py:196
 msgid "Question mark"
-msgstr ""
+msgstr "Question mark"
 
 #: taskcoachlib/gui/artprovider.py:197
 #: taskcoachlib/gui/wizard/csvimport.py:341
 msgid "Information"
-msgstr ""
+msgstr "Thông tin"
 
 #: taskcoachlib/gui/artprovider.py:198
 msgid "Blue led"
@@ -1045,7 +1056,7 @@ msgstr ""
 
 #: taskcoachlib/gui/artprovider.py:207
 msgid "Life ring"
-msgstr ""
+msgstr "Vòng đời"
 
 #: taskcoachlib/gui/artprovider.py:208
 msgid "Locked lock"
@@ -1101,15 +1112,15 @@ msgstr ""
 
 #: taskcoachlib/gui/artprovider.py:221
 msgid "Warning sign"
-msgstr ""
+msgstr "Dấu hiệu cảnh báo"
 
 #: taskcoachlib/gui/artprovider.py:222
 msgid "Minus"
-msgstr ""
+msgstr "Trừ"
 
 #: taskcoachlib/gui/artprovider.py:223
 msgid "Plus"
-msgstr ""
+msgstr "Cộng"
 
 #: taskcoachlib/gui/artprovider.py:224
 msgid "Red star"
@@ -1171,15 +1182,15 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/backupmanager.py:111
 msgid "Choose the restoration destination"
-msgstr ""
+msgstr "Chọn nơi phục hồi"
 
 #: taskcoachlib/gui/dialog/developer_message.py:32
 msgid "Message from the %s developers"
-msgstr ""
+msgstr "Thông điệp từ %s người phát triển"
 
 #: taskcoachlib/gui/dialog/developer_message.py:52
 msgid "See:"
-msgstr ""
+msgstr "Xem:"
 
 #: taskcoachlib/gui/dialog/editor.py:98 taskcoachlib/gui/dialog/editor.py:152
 #: taskcoachlib/gui/dialog/editor.py:1319
@@ -1194,7 +1205,7 @@ msgstr "Mô tả"
 
 #: taskcoachlib/gui/dialog/editor.py:125
 msgid "Edit to change all subjects"
-msgstr ""
+msgstr "Chỉnh sửa thay đổi tất cả đề mục"
 
 #: taskcoachlib/gui/dialog/editor.py:131
 #: taskcoachlib/gui/dialog/templates.py:109
@@ -1209,7 +1220,7 @@ msgstr "Tựa đề"
 #: taskcoachlib/gui/dialog/editor.py:136
 #: taskcoachlib/gui/dialog/editor.py:1304
 msgid "Edit to change all descriptions"
-msgstr ""
+msgstr "Chỉnh sửa thay đổi tất cả mô tả"
 
 #: taskcoachlib/gui/dialog/editor.py:163
 #: taskcoachlib/gui/viewer/attachment.py:109
@@ -1217,14 +1228,14 @@ msgstr ""
 #: taskcoachlib/gui/viewer/task.py:1105
 #: taskcoachlib/persistence/csv/generator.py:40
 msgid "Creation date"
-msgstr ""
+msgstr "Ngày tạo"
 
 #: taskcoachlib/gui/dialog/editor.py:168
 #: taskcoachlib/gui/viewer/attachment.py:117
 #: taskcoachlib/gui/viewer/category.py:129 taskcoachlib/gui/viewer/note.py:168
 #: taskcoachlib/gui/viewer/task.py:1112
 msgid "Modification date"
-msgstr ""
+msgstr "Ngày chỉnh sửa"
 
 #: taskcoachlib/gui/dialog/editor.py:230
 #: taskcoachlib/gui/uicommand/uicommand.py:2382
@@ -1236,47 +1247,47 @@ msgstr "Độ ưu tiên"
 
 #: taskcoachlib/gui/dialog/editor.py:252
 msgid "Mutually exclusive"
-msgstr ""
+msgstr "Loại trừ qua lại"
 
 #: taskcoachlib/gui/dialog/editor.py:259
 msgid "Subcategories"
-msgstr ""
+msgstr "Phân loại"
 
 #: taskcoachlib/gui/dialog/editor.py:277
 msgid "Edit to change location of all attachments"
-msgstr ""
+msgstr "Chỉnh sửa để thay đổi vị trí của tất cả đính kèm"
 
 #: taskcoachlib/gui/dialog/editor.py:285
 msgid "Browse"
-msgstr ""
+msgstr "Xem lướt"
 
 #: taskcoachlib/gui/dialog/editor.py:289
 msgid "Location"
-msgstr ""
+msgstr "Vị trí"
 
 #: taskcoachlib/gui/dialog/editor.py:311
 msgid "Appearance"
-msgstr ""
+msgstr "Giao diện"
 
 #: taskcoachlib/gui/dialog/editor.py:321
 #: taskcoachlib/gui/dialog/preferences.py:154
 msgid "Foreground color"
-msgstr ""
+msgstr "Màu cận cảnh"
 
 #: taskcoachlib/gui/dialog/editor.py:322
 #: taskcoachlib/gui/dialog/preferences.py:154
 msgid "Background color"
-msgstr ""
+msgstr "Màu nền"
 
 #: taskcoachlib/gui/dialog/editor.py:348
 #: taskcoachlib/gui/dialog/preferences.py:155
 msgid "Font"
-msgstr ""
+msgstr "Kiểu chữ"
 
 #: taskcoachlib/gui/dialog/editor.py:357
 #: taskcoachlib/gui/dialog/preferences.py:155
 msgid "Icon"
-msgstr ""
+msgstr "Biểu tượng"
 
 #: taskcoachlib/gui/dialog/editor.py:365
 msgid "Dates"
@@ -1289,7 +1300,7 @@ msgstr "Ngày"
 #: taskcoachlib/persistence/csv/generator.py:36
 #: taskcoachlib/persistence/csv/reader.py:96
 msgid "Planned start date"
-msgstr ""
+msgstr "Ngày vạch kế hoạch bắt đầu"
 
 #: taskcoachlib/gui/dialog/editor.py:393
 #: taskcoachlib/gui/dialog/templates.py:115
@@ -1305,7 +1316,7 @@ msgstr "Ngày đến hạn"
 #: taskcoachlib/persistence/csv/generator.py:35
 #: taskcoachlib/persistence/csv/reader.py:94
 msgid "Actual start date"
-msgstr ""
+msgstr "Ngày thực tế bắt đầu"
 
 #: taskcoachlib/gui/dialog/editor.py:396
 #: taskcoachlib/gui/dialog/templates.py:118
@@ -1329,15 +1340,15 @@ msgstr "Lặp lại"
 
 #: taskcoachlib/gui/dialog/editor.py:467
 msgid "Progress"
-msgstr ""
+msgstr "Tiến độ"
 
 #: taskcoachlib/gui/dialog/editor.py:484
 msgid "Percentage complete"
-msgstr ""
+msgstr "Tỉ lệ (%) hoàn thành"
 
 #: taskcoachlib/gui/dialog/editor.py:493
 msgid "Use application-wide setting"
-msgstr ""
+msgstr "Sử dụng cài đặt ứng dụng theo chiều rộng"
 
 #: taskcoachlib/gui/dialog/editor.py:494
 msgid "No"
@@ -1349,7 +1360,7 @@ msgstr "Có"
 
 #: taskcoachlib/gui/dialog/editor.py:504
 msgid "Mark task completed when all children are completed?"
-msgstr ""
+msgstr "Đánh dấu công việc đã hoàn thành khi các công việc con đã hoàn thành"
 
 #: taskcoachlib/gui/dialog/editor.py:514 taskcoachlib/gui/dialog/editor.py:540
 #: taskcoachlib/gui/uicommand/uicommand.py:2381
@@ -1357,23 +1368,23 @@ msgstr ""
 #: taskcoachlib/gui/wizard/csvimport.py:238
 #: taskcoachlib/persistence/csv/reader.py:104
 msgid "Budget"
-msgstr ""
+msgstr "Kinh phí"
 
 #: taskcoachlib/gui/dialog/editor.py:548
 #: taskcoachlib/gui/uicommand/uicommand.py:2381
 #: taskcoachlib/gui/viewer/effort.py:226 taskcoachlib/gui/viewer/task.py:1067
 msgid "Time spent"
-msgstr ""
+msgstr "Thời gian đã trãi qua"
 
 #: taskcoachlib/gui/dialog/editor.py:565 taskcoachlib/gui/viewer/task.py:1070
 msgid "Budget left"
-msgstr ""
+msgstr "Kinh phí còn lại"
 
 #: taskcoachlib/gui/dialog/editor.py:590 taskcoachlib/gui/viewer/task.py:1076
 #: taskcoachlib/gui/wizard/csvimport.py:240
 #: taskcoachlib/persistence/csv/reader.py:123
 msgid "Hourly fee"
-msgstr ""
+msgstr "Chi phí hàng giờ"
 
 #: taskcoachlib/gui/dialog/editor.py:600
 #: taskcoachlib/gui/uicommand/uicommand.py:2381
@@ -1381,18 +1392,18 @@ msgstr ""
 #: taskcoachlib/gui/wizard/csvimport.py:239
 #: taskcoachlib/persistence/csv/reader.py:118
 msgid "Fixed fee"
-msgstr ""
+msgstr "Chi phí cố định"
 
 #: taskcoachlib/gui/dialog/editor.py:606
 #: taskcoachlib/gui/uicommand/uicommand.py:2381
 #: taskcoachlib/gui/viewer/effort.py:231 taskcoachlib/gui/viewer/task.py:1081
 msgid "Revenue"
-msgstr ""
+msgstr "Lợi nhuận"
 
 #: taskcoachlib/gui/dialog/editor.py:687 taskcoachlib/gui/viewer/effort.py:39
 #: taskcoachlib/help/__init__.py:89 taskcoachlib/help/__init__.py:254
 msgid "Effort"
-msgstr ""
+msgstr "Nổ lực"
 
 #: taskcoachlib/gui/dialog/editor.py:728
 #: taskcoachlib/gui/viewer/category.py:41
@@ -1410,11 +1421,11 @@ msgstr "File đính kèm"
 #: taskcoachlib/gui/viewer/task.py:998 taskcoachlib/help/__init__.py:99
 #: taskcoachlib/help/__init__.py:315
 msgid "Notes"
-msgstr ""
+msgstr "Ghi chú"
 
 #: taskcoachlib/gui/dialog/editor.py:871 taskcoachlib/gui/viewer/task.py:1015
 msgid "Prerequisites"
-msgstr ""
+msgstr "Điều kiện cần thiết"
 
 #: taskcoachlib/gui/dialog/editor.py:1178
 msgid "Edit task"
@@ -1424,97 +1435,97 @@ msgstr "Sửa tác vụ"
 #: taskcoachlib/gui/dialog/reminder.py:50
 #: taskcoachlib/gui/viewer/effort.py:213
 msgid "Task"
-msgstr ""
+msgstr "Công việc"
 
 #: taskcoachlib/gui/dialog/editor.py:1213
 msgid "Start"
-msgstr ""
+msgstr "Bắt đầu"
 
 #: taskcoachlib/gui/dialog/editor.py:1219
 #: taskcoachlib/thirdparty/smartdatetimectrl.py:1647
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Week(s)"
-msgstr ""
+msgstr "Tuần"
 
 #: taskcoachlib/gui/dialog/editor.py:1219
 #: taskcoachlib/thirdparty/smartdatetimectrl.py:1648
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Day(s)"
-msgstr ""
+msgstr "Ngày"
 
 #: taskcoachlib/gui/dialog/editor.py:1219
 #: taskcoachlib/thirdparty/smartdatetimectrl.py:1649
 msgid "Hour(s)"
-msgstr ""
+msgstr "Giờ"
 
 #: taskcoachlib/gui/dialog/editor.py:1219
 #: taskcoachlib/thirdparty/smartdatetimectrl.py:1650
 msgid "Minute(s)"
-msgstr ""
+msgstr "Phút"
 
 #: taskcoachlib/gui/dialog/editor.py:1229
 msgid "Stop"
-msgstr ""
+msgstr "Dừng"
 
 #: taskcoachlib/gui/dialog/editor.py:1238
 msgid "Start tracking from last stop time"
-msgstr ""
+msgstr "Bắt đầu theo xoi từ lần dững cuối"
 
 #: taskcoachlib/gui/dialog/editor.py:1245
 msgid "Stop tracking now"
-msgstr ""
+msgstr "Dùng theo dõi ngay"
 
 #: taskcoachlib/gui/dialog/editor.py:1281
 msgid "Warning: start must be earlier than stop"
-msgstr ""
+msgstr "Cảnh báo: thời gian bắt đầu phải trước thời gian kết thúc"
 
 #: taskcoachlib/gui/dialog/editor.py:1466
 msgid "Multiple tasks"
-msgstr ""
+msgstr "Nhiều công việc"
 
 #: taskcoachlib/gui/dialog/editor.py:1467
 msgid "%s (task)"
-msgstr ""
+msgstr "%s (task)"
 
 #: taskcoachlib/gui/dialog/editor.py:1472
 msgid "Multiple categories"
-msgstr ""
+msgstr "Đa loại"
 
 #: taskcoachlib/gui/dialog/editor.py:1473
 msgid "%s (category)"
-msgstr ""
+msgstr "%s (category)"
 
 #: taskcoachlib/gui/dialog/editor.py:1478
 msgid "Multiple notes"
-msgstr ""
+msgstr "Nhiều ghi chú"
 
 #: taskcoachlib/gui/dialog/editor.py:1479
 msgid "%s (note)"
-msgstr ""
+msgstr "%s (note)"
 
 #: taskcoachlib/gui/dialog/editor.py:1484
 msgid "Multiple attachments"
-msgstr ""
+msgstr "Nhiều phần đính kèm"
 
 #: taskcoachlib/gui/dialog/editor.py:1485
 msgid "%s (attachment)"
-msgstr ""
+msgstr "%s (attachment)"
 
 #: taskcoachlib/gui/dialog/editor.py:1490
 msgid "Multiple efforts"
-msgstr ""
+msgstr "Nhiều sự nổ lực"
 
 #: taskcoachlib/gui/dialog/editor.py:1491
 msgid "%s (effort)"
-msgstr ""
+msgstr "%s (effort)"
 
 #: taskcoachlib/gui/dialog/entry.py:196
 msgid "Use font:"
-msgstr ""
+msgstr "Sử dung phông chữ"
 
 #: taskcoachlib/gui/dialog/entry.py:250
 msgid "Use color:"
-msgstr ""
+msgstr "Sử dụng màu"
 
 #: taskcoachlib/gui/dialog/entry.py:413 taskcoachlib/gui/dialog/entry.py:530
 #: taskcoachlib/gui/uicommand/base_uicommand.py:42
@@ -1537,75 +1548,75 @@ msgstr "Hằng tuần"
 
 #: taskcoachlib/gui/dialog/entry.py:414 taskcoachlib/render.py:100
 msgid "Yearly"
-msgstr ""
+msgstr "Hàng năm"
 
 #: taskcoachlib/gui/dialog/entry.py:423
 msgid "keeping dates on the same weekday"
-msgstr ""
+msgstr "Giữ ngày như ngày trong tuần"
 
 #: taskcoachlib/gui/dialog/entry.py:431
 msgid ", every"
-msgstr ""
+msgstr ", every"
 
 #: taskcoachlib/gui/dialog/entry.py:459 taskcoachlib/gui/dialog/entry.py:503
 msgid "Stop after"
-msgstr ""
+msgstr "Dừng lại sau"
 
 #: taskcoachlib/gui/dialog/entry.py:465
 msgid "recurrences"
-msgstr ""
+msgstr "Duy trì tái lập"
 
 #: taskcoachlib/gui/dialog/entry.py:472
 msgid "Schedule each next recurrence based on"
-msgstr ""
+msgstr "Lập lịch cho lần tái lập kế tiếp trên cơ sở"
 
 #: taskcoachlib/gui/dialog/entry.py:476
 msgid "previous planned start and/or due date"
-msgstr ""
+msgstr "kế hoạch vạch trước ngày bắt đầu và/hoặc ngày hạn chót"
 
 #: taskcoachlib/gui/dialog/entry.py:477
 msgid "last completion date"
-msgstr ""
+msgstr "ngày hoàn thành cuối"
 
 #: taskcoachlib/gui/dialog/entry.py:522
 msgid "day(s),"
-msgstr ""
+msgstr "ngày,"
 
 #: taskcoachlib/gui/dialog/entry.py:522
 msgid "period,"
-msgstr ""
+msgstr "khoảng thời gian,"
 
 #: taskcoachlib/gui/dialog/entry.py:522
 msgid "week(s),"
-msgstr ""
+msgstr "tuần,"
 
 #: taskcoachlib/gui/dialog/entry.py:523
 msgid "month(s),"
-msgstr ""
+msgstr "tháng,"
 
 #: taskcoachlib/gui/dialog/entry.py:523
 msgid "year(s),"
-msgstr ""
+msgstr "năm,"
 
 #: taskcoachlib/gui/dialog/export.py:82
 msgid "Export items from:"
-msgstr ""
+msgstr "Xuất thành phần từ:"
 
 #: taskcoachlib/gui/dialog/export.py:119
 msgid "Export only the selected items"
-msgstr ""
+msgstr "Chỉ xuất thành phần được chọn"
 
 #: taskcoachlib/gui/dialog/export.py:149
 msgid "Columns to export:"
-msgstr ""
+msgstr "Cột để xuất"
 
 #: taskcoachlib/gui/dialog/export.py:184
 msgid "Put task dates and times in separate columns"
-msgstr ""
+msgstr "Đặt ngày và giờ công việc ở cột riêng biệt"
 
 #: taskcoachlib/gui/dialog/export.py:216
 msgid "Write style information to a separate CSS file"
-msgstr ""
+msgstr "Viết kiểu thông tin ở tập tien CSS riêng"
 
 #: taskcoachlib/gui/dialog/export.py:223
 msgid ""
@@ -1613,22 +1624,25 @@ msgid ""
 "This allows you to change the style information without losing your changes "
 "on the next export."
 msgstr ""
+"Nếu tập tin CSS tồn tại trong file đã xuất,  %(name)s sẽ không ghi đè lên "
+"nó. Điều này cho phép bạn thay đổi kiểu thông tin không mất đi sự thay đổi "
+"trong lần xuất tới"
 
 #: taskcoachlib/gui/dialog/export.py:238 taskcoachlib/gui/iocontroller.py:328
 msgid "Export as CSV"
-msgstr ""
+msgstr "Xuất thành CSV"
 
 #: taskcoachlib/gui/dialog/export.py:263 taskcoachlib/gui/iocontroller.py:335
 msgid "Export as iCalendar"
-msgstr ""
+msgstr "Xuất dạng iCalendar"
 
 #: taskcoachlib/gui/dialog/export.py:279 taskcoachlib/gui/iocontroller.py:321
 msgid "Export as HTML"
-msgstr ""
+msgstr "Xuất dạng HTML"
 
 #: taskcoachlib/gui/dialog/export.py:295 taskcoachlib/gui/iocontroller.py:341
 msgid "Export as Todo.txt"
-msgstr ""
+msgstr "Xuất dạng Todo.txt"
 
 #: taskcoachlib/gui/dialog/iphone.py:32
 msgid ""
@@ -1637,18 +1651,22 @@ msgid ""
 "the first time. What kind of synchronization\n"
 "would you like to use?"
 msgstr ""
+"iPhone hoặc iPod Touch đang\n"
+"đồng bộ với tập tin công việc\n"
+"cho lần đầu tiên. Loại đồng bộ nào\n"
+"bạn muốn dùng?"
 
 #: taskcoachlib/gui/dialog/iphone.py:38
 msgid "Refresh from desktop"
-msgstr ""
+msgstr "Làm tươi màn hình"
 
 #: taskcoachlib/gui/dialog/iphone.py:41
 msgid "Refresh from device"
-msgstr ""
+msgstr "Làm tươi từ thiết bị"
 
 #: taskcoachlib/gui/dialog/iphone.py:44 taskcoachlib/widgets/password.py:49
 msgid "Cancel"
-msgstr ""
+msgstr "Hủy"
 
 #: taskcoachlib/gui/dialog/iphone.py:74
 msgid ""
@@ -1656,24 +1674,29 @@ msgid ""
 "needs Bonjour. Bonjour does not seem to be installed on\n"
 "your system."
 msgstr ""
+"Bạn đang bật tính năng đồng bộ IPhone, điều đó\n"
+"cần Bonjour. Bonjour dường như không được cài đặt\n"
+"trên hệ thống của bạn."
 
 #: taskcoachlib/gui/dialog/iphone.py:79
 msgid "Please download and install Bonjour for Windows from\n"
-msgstr ""
+msgstr "Hãy tải về và cài đặt Bonjour cho Windows từ\n"
 
 #: taskcoachlib/gui/dialog/iphone.py:81
 msgid "Apple's web site"
-msgstr ""
+msgstr "Trang chủ Apple's"
 
 #: taskcoachlib/gui/dialog/iphone.py:86
 msgid ""
 "Bonjour support for Linux is generally provided by\n"
 "Avahi."
 msgstr ""
+"Bonjour hỗ trợ Linux được cung cấp bởi\n"
+"Avahi"
 
 #: taskcoachlib/gui/dialog/iphone.py:89
 msgid "You may find details for your distribution here"
-msgstr ""
+msgstr "Bạn có thể tìm thấy thông tin chi tiết cho phần đóng góp ở đây"
 
 #: taskcoachlib/gui/dialog/iphone.py:92
 msgid ""
@@ -1681,21 +1704,25 @@ msgid ""
 "install the avahi-compat-libdns_sd package as well as Avahi in order\n"
 "for this to work."
 msgstr ""
+"Chú ý một số hệ thống (Fedora), bạn cần cài đặt\n"
+"gói avahi-compat-libdns_sf cũng như Avahi để\n"
+"có thể thực hiện."
 
 #: taskcoachlib/gui/dialog/iphone.py:96
 msgid ""
 "In addition, if you have a firewall, check that ports 4096-4100 are open."
 msgstr ""
+"Thêm vào đó, nếu bạn có tường lửa, kiểm tra cổng từ 4096-4100 được mở."
 
 #: taskcoachlib/gui/dialog/iphone.py:98 taskcoachlib/gui/iphone.py:43
 #: taskcoachlib/widgets/password.py:47
 #: taskcoachlib/widgets/syncmlwarning.py:36
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: taskcoachlib/gui/dialog/preferences.py:295
 msgid "This setting will take effect after you restart %s"
-msgstr ""
+msgstr "Cài đặt này sẽ có hiệu quả sau khi khởi động %s"
 
 #: taskcoachlib/gui/dialog/preferences.py:297
 msgid ""
@@ -6757,8 +6784,8 @@ msgstr ""
 
 #: taskcoachlib/widgets/syncmlwarning.py:34
 msgid "Never show this dialog again"
-msgstr ""
+msgstr "Không hiển thị hộp thoại này lần nữa"
 
 #: taskcoachlib/widgets/textctrl.py:164
 msgid "Error opening URL"
-msgstr ""
+msgstr "Lỗi mở liên kết"

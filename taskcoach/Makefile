@@ -62,12 +62,12 @@ windist: py2exe
 	$(INNOSETUP) build/taskcoach.iss
 
 py2exe: prepare
-	$(PYTHON) make.py py2exe
+	$(PYTHON) pymake.py py2exe
 
 sdist_windows: prepare changes templates dist/TaskCoach-$(TCVERSION).zip
 
 dist/TaskCoach-$(TCVERSION).zip:
-	$(PYTHON) make.py sdist --formats=zip --no-prune --template=build.in/windows/MANIFEST.in
+	$(PYTHON) pymake.py sdist --formats=zip --no-prune --template=build.in/windows/MANIFEST.in
 
 sdist_linux: prepare changes templates dist/TaskCoach-$(TCVERSION).tar.gz
 
@@ -86,38 +86,38 @@ sdist_raw:
 	cd dist; tar czf TaskCoach-$(TCVERSION)-raw.tgz TaskCoach-$(TCVERSION); rm -rf TaskCoach-$(TCVERSION)
 
 dist/TaskCoach-$(TCVERSION).tar.gz:
-	$(PYTHON) make.py sdist --formats=gztar --no-prune --template=build.in/debian/MANIFEST.in
+	$(PYTHON) pymake.py sdist --formats=gztar --no-prune --template=build.in/debian/MANIFEST.in
 	echo Created dist/TaskCoach-$(TCVERSION).tar.gz
 
 rpm: prepare changes templates
 	cp build.in/debian/MANIFEST.in .
-	$(PYTHON) make.py bdist_rpm --requires "python2.5,python-wxgtk2.8" --group "Applications/Productivity"
+	$(PYTHON) pymake.py bdist_rpm --requires "python2.5,python-wxgtk2.8" --group "Applications/Productivity"
 	rm MANIFEST.in
 
 fedora: prepare changes templates
 	cp build.in/debian/MANIFEST.in .
-	$(PYTHON) make.py bdist_rpm_fedora
+	$(PYTHON) pymake.py bdist_rpm_fedora
 	rm MANIFEST.in
 
 opensuse: sdist_linux
 	cp build.in/debian/MANIFEST.in .
-	$(PYTHON) make.py bdist_rpm_opensuse 
+	$(PYTHON) pymake.py bdist_rpm_opensuse 
 	mv dist/taskcoach-$(TCVERSION)-1.noarch.rpm dist/taskcoach-$(TCVERSION)-1.opensuse.i386.rpm
 	mv dist/taskcoach-$(TCVERSION)-1.src.rpm dist/taskcoach-$(TCVERSION)-1.opensuse.src.rpm
 
 deb: sdist_linux
 	mv dist/TaskCoach-$(TCVERSION).tar.gz dist/TaskCoach_$(TCVERSION).tar.gz
-	LC_ALL=C $(PYTHON) make.py bdist_deb --sdist=dist/TaskCoach_$(TCVERSION).tar.gz
+	LC_ALL=C $(PYTHON) pymake.py bdist_deb --sdist=dist/TaskCoach_$(TCVERSION).tar.gz
 	mv dist/taskcoach_$(TCVERSION)-1_all.deb dist/taskcoach_$(TCVERSION)-1.deb
 
 ubuntu: sdist_ubuntu
-	LC_ALL=C $(PYTHON) make.py bdist_ubuntu precise 12 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu12~precise.tar.gz
+	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu precise 12 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu12~precise.tar.gz
 	mv build build-precise
-	LC_ALL=C $(PYTHON) make.py bdist_ubuntu trusty 14 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu14~trusty.tar.gz
+	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu trusty 14 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu14~trusty.tar.gz
 	mv build build-trusty
-	LC_ALL=C $(PYTHON) make.py bdist_ubuntu vivid 15 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu15~vivid.tar.gz
+	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu vivid 15 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu15~vivid.tar.gz
 	mv build build-vivid
-	LC_ALL=C $(PYTHON) make.py bdist_ubuntu wily 15 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu15~wily.tar.gz
+	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu wily 15 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu15~wily.tar.gz
 	mv build build-wily
 
 ppa_sign: ubuntu
@@ -165,7 +165,7 @@ ppa_release_wily:
 	cd build-wily; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu15~wily-1_source.changes
 
 app: prepare
-	$(PYTHON) make.py py2app
+	$(PYTHON) pymake.py py2app
 	chmod 644 "build/Task Coach/TaskCoach.app/Contents/Resources/taskcoach.py"
 
 dmg-goodies: app
@@ -184,10 +184,10 @@ dmg-signed: dmg-goodies
 	make dmgbase
 
 winpenpack: py2exe 
-	$(PYTHON) make.py bdist_winpenpack
+	$(PYTHON) pymake.py bdist_winpenpack
 
 portableapps: py2exe
-	$(PYTHON) make.py bdist_portableapps
+	$(PYTHON) pymake.py bdist_portableapps
 	$(PORTABLEAPPSINSTALLER) $(TCPORTABLE)
 	mv build/TaskCoachPortable_$(TCVERSION).paf.exe dist
 
@@ -287,11 +287,11 @@ REALLYCLEANFILES=dist taskcoachlib/gui/icons.py taskcoachlib/persistence/xml/tem
 	taskcoachlib/i18n/??.py taskcoachlib/i18n/???.py taskcoachlib/i18n/??_??.py .\#* */.\#* */*/.\#*
 
 clean:
-	$(PYTHON) make.py clean
+	$(PYTHON) pymake.py clean
 	rm -rf $(CLEANFILES)
 
 reallyclean:
-	$(PYTHON) make.py clean --really-clean
+	$(PYTHON) pymake.py clean --really-clean
 	rm -rf $(CLEANFILES) $(REALLYCLEANFILES)
 
 nuke:

@@ -32,7 +32,7 @@ For building distributions and running tests, GNU make is used. Make
 is installed on most systems by default. On Windows you can install 
 Cygwin (http://www.cygwin.com) to get make and a lot of other nice 
 utilities. Make will automatically use the file Makefile as its 
-script, unless directed otherwise. Makefile in turn uses "make.py" 
+script, unless directed otherwise. Makefile in turn uses "pymake.py" 
 to build distributions. So, if you don't have make installed you can
 still build the distributions by running the commands from the 
 Makefile by hand.
@@ -97,7 +97,7 @@ Use the Makefile to create distributions (they are placed in dist/):
 Check out the Makefile for more details. E.g. to create the Task
 Coach app on Mac OS X you can also run:
 
-  python make.py py2app
+  python pymake.py py2app
 
 The TaskCoach.app ends up in build/
 
