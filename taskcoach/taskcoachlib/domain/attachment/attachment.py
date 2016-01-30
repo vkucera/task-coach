@@ -20,7 +20,7 @@ import os
 import urlparse
 from taskcoachlib import patterns, mailer
 from taskcoachlib.domain import base
-from taskcoachlib.thirdparty import desktop
+from taskcoachlib.tools import openfile
 from taskcoachlib.thirdparty.pubsub import pub
 from taskcoachlib.domain.note.noteowner import NoteOwner
 
@@ -140,7 +140,7 @@ class Attachment(base.Object, NoteOwner):
 class FileAttachment(Attachment):
     type_ = 'file'
 
-    def open(self, workingDir=None, openAttachment=desktop.open):  # pylint: disable=W0221
+    def open(self, workingDir=None, openAttachment=openfile.openFile):  # pylint: disable=W0221
         return openAttachment(self.normalizedLocation(workingDir))
 
     def normalizedLocation(self, workingDir=None):
@@ -169,7 +169,7 @@ class URIAttachment(Attachment):
         super(URIAttachment, self).__init__(location, *args, **kwargs)
 
     def open(self, workingDir=None):
-        return desktop.open(self.location())
+        return openfile.openFile(self.location())
 
 
 class MailAttachment(Attachment):

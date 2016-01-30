@@ -27,11 +27,11 @@ from taskcoachlib.gui import dialog, printer
 from taskcoachlib.gui.wizard import CSVImportWizard
 from taskcoachlib.i18n import _
 from taskcoachlib.mailer import sendMail
-from taskcoachlib.thirdparty import desktop, hypertreelist
+from taskcoachlib.thirdparty import hypertreelist
 from taskcoachlib.thirdparty.pubsub import pub
 from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_NEXT, \
     wxSCHEDULER_PREV, wxSCHEDULER_TODAY
-from taskcoachlib.tools import anonymize
+from taskcoachlib.tools import anonymize, openfile
 from taskcoachlib.workarounds import ExceptionAsUnicode
 import wx, re, operator
 import base_uicommand
@@ -2089,7 +2089,7 @@ class URLCommand(base_uicommand.UICommand):
          
     def doCommand(self, event):
         try:
-            desktop.open(self.url)
+            openfile.openFile(self.url)
         except Exception, reason:
             wx.MessageBox(_('Cannot open URL:\n%s') % ExceptionAsUnicode(reason), 
                       caption=_('%s URL error') % meta.name, 
