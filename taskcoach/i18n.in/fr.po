@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TaskCoach\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-09 22:21+0000\n"
-"PO-Revision-Date: 2015-02-01 08:56+0000\n"
-"Last-Translator: Roberto <megamitzu@yahoo.com>\n"
+"POT-Creation-Date: 2015-06-13 22:42+0000\n"
+"PO-Revision-Date: 2015-10-24 17:31+0000\n"
+"Last-Translator: Jean-Marc <Unknown>\n"
 "Language-Team: Français <fraca7@free.fr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-06-13 17:12+0000\n"
-"X-Generator: Launchpad (build 17557)\n"
+"X-Launchpad-Export-Date: 2016-01-30 14:28+0000\n"
+"X-Generator: Launchpad (build 17908)\n"
 "X-Poedit-Country: France\n"
 "Language: \n"
 "X-Poedit-Language: fr_FR\n"
@@ -712,8 +712,8 @@ msgstr "Tâches inactives: %d (%d%%)"
 #: taskcoachlib/domain/task/status.py:63
 msgid "Show/hide inactive tasks (incomplete tasks without actual start date)"
 msgstr ""
-"Montrer/cacher les tâches inactives (tâches non terminées sans date de début "
-"effective)"
+"Afficher/masquer les tâches inactives (tâches non terminées sans date de "
+"début effective)"
 
 #: taskcoachlib/domain/task/status.py:65
 msgid "Late tasks"
@@ -731,8 +731,8 @@ msgstr "Tâches en retard : %d (%d%%)"
 msgid ""
 "Show/hide late tasks (inactive tasks with a planned start in the past)"
 msgstr ""
-"Montrer/cacher les tâches en retard (tâches inactives avec un date prévue de "
-"démarrage dans le passé)"
+"Afficher/masquer les tâches en retard (tâches inactives avec un date prévue "
+"de démarrage dans le passé)"
 
 #: taskcoachlib/domain/task/status.py:69
 msgid "Active tasks"
@@ -751,7 +751,7 @@ msgid ""
 "Show/hide active tasks (incomplete tasks with an actual start date in the "
 "past)"
 msgstr ""
-"Montrer/cacher les tâches actives (tâches non terminées avec une date de "
+"Afficher/masquer les tâches actives (tâches non terminées avec une date de "
 "début effective dans le passé)"
 
 #: taskcoachlib/domain/task/status.py:73
@@ -771,7 +771,7 @@ msgid ""
 "Show/hide due soon tasks (incomplete tasks with a due date in the near "
 "future)"
 msgstr ""
-"Montrer/cacher les tâches dûes bientôt (tâches non terminées avec une date "
+"Afficher/masquer les tâches dues bientôt (tâches non terminées avec une date "
 "d'échéance dans l'avenir proche)"
 
 #: taskcoachlib/domain/task/status.py:77
@@ -790,8 +790,8 @@ msgstr "Tâches en dépassement: %d (%d%%)"
 msgid ""
 "Show/hide over due tasks (incomplete tasks with a due date in the past)"
 msgstr ""
-"Montrer/cacher les tâches en dépassement (tâches non terminées avec une date "
-"d'échéance dans le passé)"
+"Afficher/masquer les tâches en dépassement (tâches non terminées avec une "
+"date d'échéance dans le passé)"
 
 #: taskcoachlib/domain/task/status.py:81
 msgid "Completed tasks"
@@ -807,7 +807,7 @@ msgstr "Cacher les tâches &terminées"
 
 #: taskcoachlib/domain/task/status.py:83
 msgid "Show/hide completed tasks"
-msgstr "Montrer/cacher les tâches terminées"
+msgstr "Afficher/masquer les tâches terminées"
 
 #: taskcoachlib/domain/task/tasklist.py:40
 msgid "&New task..."
@@ -2178,11 +2178,11 @@ msgstr "Tâche d'envoi terminée sur le périphérique"
 
 #: taskcoachlib/gui/dialog/preferences.py:706
 msgid "Show the synchronization log"
-msgstr "Montrer le journal de synchronisation"
+msgstr "Afficher le journal de synchronisation"
 
 #: taskcoachlib/gui/dialog/preferences.py:712
 msgid "Editor"
-msgstr "Editeur"
+msgstr "Éditeur"
 
 #: taskcoachlib/gui/dialog/preferences.py:720
 msgid "Check spelling in editors"
@@ -2805,7 +2805,7 @@ msgstr "Barre d'&outils"
 
 #: taskcoachlib/gui/menu.py:435
 msgid "Show/hide status bar"
-msgstr "Montrer/cacher la barre d'état"
+msgstr "Afficher/masquer la barre d'état"
 
 #: taskcoachlib/gui/menu.py:435
 msgid "Status&bar"
@@ -3103,7 +3103,7 @@ msgstr "A&perçu d'impression..."
 
 #: taskcoachlib/gui/uicommand/uicommand.py:265
 msgid "Show a preview of what the print will look like"
-msgstr "Montrer un aperçu de ce à quoi l'impression ressemblera"
+msgstr "Afficher un aperçu de ce à quoi l'impression ressemblera"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:275
 msgid "Print preview"
@@ -3272,7 +3272,7 @@ msgstr "&Réinitialiser toutes les catégories\tCtrl-R"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:814
 msgid "Show/hide items belonging to %s"
-msgstr "Montrer/cacher les objets appartenant à %s"
+msgstr "Afficher/masquer les objets appartenant à %s"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:861
 msgid "&Rename viewer..."
@@ -3340,7 +3340,7 @@ msgstr "Cacher les tâches c&omposites"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1042
 msgid "Show/hide tasks with subtasks in list mode"
-msgstr "Montrer/cacher les tâches ayant des sous-tâches en liste"
+msgstr "Afficher/masquer les tâches ayant des sous-tâches en liste"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1057
 msgid "&Edit...\tRETURN"
@@ -3740,7 +3740,7 @@ msgstr "Arborescence"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2318
 msgid "When checked, show tasks as tree, otherwise show tasks as list"
-msgstr "Si coché, montre les tâches en arbre, sinon en liste."
+msgstr "Si coché, affiche les tâches en arbre, sinon en liste."
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2349
 msgid "Filter on all checked categories"
@@ -3782,7 +3782,7 @@ msgstr "Période &suivante"
 #: taskcoachlib/gui/uicommand/uicommand.py:2446
 #: taskcoachlib/gui/uicommand/uicommand.py:2453
 msgid "Show next period"
-msgstr "Montre la période suivante"
+msgstr "Afficher la période suivante"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2466
 #: taskcoachlib/gui/uicommand/uicommand.py:2473
@@ -3792,7 +3792,7 @@ msgstr "Période &précédente"
 #: taskcoachlib/gui/uicommand/uicommand.py:2467
 #: taskcoachlib/gui/uicommand/uicommand.py:2474
 msgid "Show previous period"
-msgstr "Montre la période précédente"
+msgstr "Afficher la période précédente"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2487
 #: taskcoachlib/gui/uicommand/uicommand.py:2494
@@ -3899,7 +3899,7 @@ msgstr "Trier par date de dernière modification"
 #: taskcoachlib/gui/viewer/effort.py:293 taskcoachlib/gui/viewer/note.py:97
 #: taskcoachlib/gui/viewer/task.py:1188
 msgid "Show/hide description column"
-msgstr "Montrer/cacher la colonne description"
+msgstr "Afficher/masquer la colonne description"
 
 #: taskcoachlib/gui/viewer/attachment.py:136
 #: taskcoachlib/gui/viewer/category.py:156
@@ -3911,19 +3911,19 @@ msgstr "&Notes"
 #: taskcoachlib/gui/viewer/category.py:157
 #: taskcoachlib/gui/viewer/task.py:1204
 msgid "Show/hide notes column"
-msgstr "Montrer/cacher la colonne des notes"
+msgstr "Afficher/masquer la colonne des notes"
 
 #: taskcoachlib/gui/viewer/attachment.py:140
 #: taskcoachlib/gui/viewer/category.py:160 taskcoachlib/gui/viewer/note.py:106
 #: taskcoachlib/gui/viewer/task.py:1217
 msgid "Show/hide creation date column"
-msgstr "Montrer/cacher la colonne de date de création"
+msgstr "Afficher/masquer la colonne de date de création"
 
 #: taskcoachlib/gui/viewer/attachment.py:143
 #: taskcoachlib/gui/viewer/category.py:163 taskcoachlib/gui/viewer/note.py:109
 #: taskcoachlib/gui/viewer/task.py:1220
 msgid "Show/hide last modification date column"
-msgstr "Montrer/cacher la colonne de date de dernière modification"
+msgstr "Afficher/masquer la colonne de date de dernière modification"
 
 #: taskcoachlib/gui/viewer/base.py:87
 msgid "Toolbars are customizable"
@@ -3963,7 +3963,7 @@ msgstr "Ordonnancement &manuel"
 #: taskcoachlib/gui/viewer/category.py:148 taskcoachlib/gui/viewer/note.py:94
 #: taskcoachlib/gui/viewer/task.py:1185
 msgid "Show/hide the manual ordering column"
-msgstr "Montrer/cacher la colonne d'ordonnancement manuel"
+msgstr "Afficher/masquer la colonne d'ordonnancement manuel"
 
 #: taskcoachlib/gui/viewer/category.py:153 taskcoachlib/gui/viewer/note.py:99
 #: taskcoachlib/gui/viewer/task.py:1199
@@ -3972,7 +3972,7 @@ msgstr "&Pièces jointes"
 
 #: taskcoachlib/gui/viewer/category.py:154 taskcoachlib/gui/viewer/note.py:100
 msgid "Show/hide attachments column"
-msgstr "Montrer/cacher la colonne des pièces jointes"
+msgstr "Afficher/masquer la colonne des pièces jointes"
 
 #: taskcoachlib/gui/viewer/category.py:200
 msgid "Categories: %d selected, %d total"
@@ -4023,7 +4023,7 @@ msgstr "&Catégories"
 #: taskcoachlib/gui/viewer/effort.py:296 taskcoachlib/gui/viewer/note.py:103
 #: taskcoachlib/gui/viewer/task.py:1208
 msgid "Show/hide categories column"
-msgstr "Montrer/cacher la colonne des catégories"
+msgstr "Afficher/masquer la colonne des catégories"
 
 #: taskcoachlib/gui/viewer/effort.py:298 taskcoachlib/gui/viewer/mixin.py:431
 #: taskcoachlib/gui/viewer/task.py:1161
@@ -4032,7 +4032,7 @@ msgstr "&Temps passé"
 
 #: taskcoachlib/gui/viewer/effort.py:299 taskcoachlib/gui/viewer/task.py:1162
 msgid "Show/hide time spent column"
-msgstr "Montrer/cacher la colonne temps passé"
+msgstr "Afficher/masquer la colonne temps passé"
 
 #: taskcoachlib/gui/viewer/effort.py:301 taskcoachlib/gui/viewer/mixin.py:436
 #: taskcoachlib/gui/viewer/task.py:1180
@@ -4041,7 +4041,7 @@ msgstr "&Revenu"
 
 #: taskcoachlib/gui/viewer/effort.py:302 taskcoachlib/gui/viewer/task.py:1181
 msgid "Show/hide revenue column"
-msgstr "Montrer/cacher la colonne revenu"
+msgstr "Afficher/masquer la colonne revenu"
 
 #: taskcoachlib/gui/viewer/effort.py:306
 msgid "&Total time spent"
@@ -4049,7 +4049,7 @@ msgstr "&Temps total passé"
 
 #: taskcoachlib/gui/viewer/effort.py:307
 msgid "Show/hide total time spent column"
-msgstr "Montrer/cacher la colonne temps passé total"
+msgstr "Afficher/masquer la colonne temps passé total"
 
 #: taskcoachlib/gui/viewer/effort.py:310
 msgid "&Total revenue"
@@ -4057,7 +4057,7 @@ msgstr "Revenu &total"
 
 #: taskcoachlib/gui/viewer/effort.py:311
 msgid "Show/hide total revenue column"
-msgstr "Montrer/cacher la colonne revenu total"
+msgstr "Afficher/masquer la colonne revenu total"
 
 #: taskcoachlib/gui/viewer/effort.py:315
 msgid "Effort per weekday"
@@ -4065,7 +4065,7 @@ msgstr "Effort par jour de la semaine"
 
 #: taskcoachlib/gui/viewer/effort.py:316
 msgid "Show/hide time spent per weekday columns"
-msgstr "Montrer/cacher la colonne du temps passé par jour de la semaine"
+msgstr "Afficher/masquer la colonne du temps passé par jour de la semaine"
 
 #: taskcoachlib/gui/viewer/effort.py:363
 msgid "Effort aggregation"
@@ -4371,7 +4371,7 @@ msgid ""
 "Show the \"Manual ordering\" column, then drag and drop items from this "
 "column to sort them arbitrarily."
 msgstr ""
-"Montrer la colonne \"ordonnancement manuel\", puis glisser-déposer les "
+"Afficher la colonne \"ordonnancement manuel\", puis glisser-déposer les "
 "objets depuis cette colonne pour\r\n"
 "les réordonner de manière arbitraire."
 
@@ -4397,15 +4397,15 @@ msgstr "Colonne avec toutes les &dates"
 
 #: taskcoachlib/gui/viewer/task.py:1127
 msgid "Show/hide all date-related columns"
-msgstr "Montrer/cacher les colonnes dates"
+msgstr "Afficher/masquer les colonnes dates"
 
 #: taskcoachlib/gui/viewer/task.py:1134
 msgid "Show/hide planned start date column"
-msgstr "Montrer/cacher la colonne date de début prévue"
+msgstr "Afficher/masquer la colonne date de début prévue"
 
 #: taskcoachlib/gui/viewer/task.py:1137
 msgid "Show/hide due date column"
-msgstr "Montrer/cacher la colonne date d'échéance"
+msgstr "Afficher/masquer la colonne date d'échéance"
 
 #: taskcoachlib/gui/viewer/task.py:1139
 msgid "&Actual start date"
@@ -4413,19 +4413,19 @@ msgstr "Date de début &effectif"
 
 #: taskcoachlib/gui/viewer/task.py:1140
 msgid "Show/hide actual start date column"
-msgstr "Montrer/cacher la colonne date de début effectif"
+msgstr "Afficher/masquer la colonne date de début effectif"
 
 #: taskcoachlib/gui/viewer/task.py:1143
 msgid "Show/hide completion date column"
-msgstr "Montrer/cacher la colonne date de fin"
+msgstr "Afficher/masquer la colonne date de fin"
 
 #: taskcoachlib/gui/viewer/task.py:1146
 msgid "Show/hide time left column"
-msgstr "Afficher/cacher la colonne du temps restant"
+msgstr "Afficher/masquer la colonne du temps restant"
 
 #: taskcoachlib/gui/viewer/task.py:1149
 msgid "Show/hide recurrence column"
-msgstr "Montrer/cacher la colonne récurrence"
+msgstr "Afficher/masquer la colonne récurrence"
 
 #: taskcoachlib/gui/viewer/task.py:1153
 msgid "&All budget columns"
@@ -4433,11 +4433,11 @@ msgstr "Colonne avec tous les &budgets"
 
 #: taskcoachlib/gui/viewer/task.py:1154
 msgid "Show/hide all budget-related columns"
-msgstr "Montrer/cacher les colonnes budget"
+msgstr "Afficher/masquer les colonnes budget"
 
 #: taskcoachlib/gui/viewer/task.py:1159
 msgid "Show/hide budget column"
-msgstr "Montrer/cacher la colonne budget"
+msgstr "Afficher/masquer la colonne budget"
 
 #: taskcoachlib/gui/viewer/task.py:1164
 msgid "&Budget left"
@@ -4445,7 +4445,7 @@ msgstr "&Budget restant"
 
 #: taskcoachlib/gui/viewer/task.py:1165
 msgid "Show/hide budget left column"
-msgstr "Montrer/cacher la colonne budget restant"
+msgstr "Afficher/masquer la colonne budget restant"
 
 #: taskcoachlib/gui/viewer/task.py:1168
 msgid "&Financial"
@@ -4457,43 +4457,43 @@ msgstr "&Toutes les colonnes financières"
 
 #: taskcoachlib/gui/viewer/task.py:1170
 msgid "Show/hide all finance-related columns"
-msgstr "Montrer/cacher les colonnes financières"
+msgstr "Afficher/masquer les colonnes finances"
 
 #: taskcoachlib/gui/viewer/task.py:1175
 msgid "Show/hide hourly fee column"
-msgstr "Montrer/cacher la colonne montant horaire"
+msgstr "Afficher/masquer la colonne montant horaire"
 
 #: taskcoachlib/gui/viewer/task.py:1178
 msgid "Show/hide fixed fee column"
-msgstr "Montrer/cacher la colonne montant fixe"
+msgstr "Afficher/masquer la colonne montant fixe"
 
 #: taskcoachlib/gui/viewer/task.py:1191
 msgid "Show/hide prerequisites column"
-msgstr "Montrer/cacher la colonne des pré-requis"
+msgstr "Afficher/masquer la colonne des pré-requis"
 
 #: taskcoachlib/gui/viewer/task.py:1194
 msgid "Show/hide dependents column"
-msgstr "Montrer/cacher la colonne des dépendances"
+msgstr "Afficher/masquer la colonne des dépendances"
 
 #: taskcoachlib/gui/viewer/task.py:1197
 msgid "Show/hide percentage complete column"
-msgstr "Montrer/Cacher la colonne Pourcentage terminé"
+msgstr "Afficher/masquer la colonne Pourcentage terminé"
 
 #: taskcoachlib/gui/viewer/task.py:1200
 msgid "Show/hide attachment column"
-msgstr "Montrer/cacher la colonne des pièces jointes"
+msgstr "Afficher/masquer la colonne des pièces jointes"
 
 #: taskcoachlib/gui/viewer/task.py:1211
 msgid "Show/hide priority column"
-msgstr "Montrer/cacher la colonne priorité"
+msgstr "Afficher/masquer la colonne priorité"
 
 #: taskcoachlib/gui/viewer/task.py:1214
 msgid "Show/hide reminder column"
-msgstr "Cacher/montrer la colonne rappel"
+msgstr "Afficher/masquer la colonne rappel"
 
 #: taskcoachlib/gui/viewer/task.py:1234
 msgid "Show tasks as"
-msgstr "Montrer les tâches comme"
+msgstr "Afficher les tâches comme"
 
 #: taskcoachlib/gui/viewer/task.py:1422
 msgid "Task statistics"
@@ -5767,14 +5767,14 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:585
 msgid "Show completed: whether to show completed tasks."
-msgstr "Montrer terminée: montrer ou non les tâches terminées."
+msgstr "Afficher terminée : montrer ou non les tâches terminées."
 
 #: taskcoachlib/help/__init__.py:586
 msgid ""
 "Show inactive: whether to show inactive tasks (planned start date \n"
 "in the future)."
 msgstr ""
-"Montrer les inactives: montrer ou pas les tâches inactives (date de début\n"
+"Afficher les inactives : montrer ou pas les tâches inactives (date de début\n"
 "prévue dans l'avenir)."
 
 #: taskcoachlib/help/__init__.py:588
@@ -6760,7 +6760,7 @@ msgstr "Ouvrir un fichier %s"
 
 #: taskcoachlib/help/uicommand.py:43
 msgid "Save the current file"
-msgstr "Sauvegarder le fichier courant"
+msgstr "Enregistrer le fichier actuel"
 
 #: taskcoachlib/help/uicommand.py:44
 msgid "Load what has changed on disk"
@@ -6800,11 +6800,11 @@ msgstr "Configurer la page d'impression"
 
 #: taskcoachlib/help/uicommand.py:53
 msgid "Show all items (reset all filters)"
-msgstr "Montre tous les objets (réinitialise tous les filtres)"
+msgstr "Afficher tous les objets (réinitialise tous les filtres)"
 
 #: taskcoachlib/help/uicommand.py:54
 msgid "Show all items regardless of category"
-msgstr "Montrer tous les objets quelles que soient leurs catégories"
+msgstr "Afficher tous les objets quelles que soient leurs catégories"
 
 #: taskcoachlib/help/uicommand.py:55
 msgid "Move keyboard focus from viewer to search control"
@@ -7348,7 +7348,7 @@ msgstr "Toutes les tâches, à l'exception des tâches non datées"
 #: taskcoachlib/widgets/calendarconfig.py:99
 #: taskcoachlib/widgets/hcalendarconfig.py:73
 msgid "Draw a line showing the current time"
-msgstr "Dessiner une ligne montrant l'instant présent"
+msgstr "Dessiner une ligne affichant l'instant présent"
 
 #: taskcoachlib/widgets/calendarconfig.py:108
 #: taskcoachlib/widgets/hcalendarconfig.py:81
@@ -7482,8 +7482,11 @@ msgstr ""
 
 #: taskcoachlib/widgets/syncmlwarning.py:34
 msgid "Never show this dialog again"
-msgstr "Ne plus montrer ce dialogue"
+msgstr "Ne plus jamais afficher ce dialogue"
 
 #: taskcoachlib/widgets/textctrl.py:164
 msgid "Error opening URL"
 msgstr "Erreur lors de l'ouverture de l'URL"
+
+#~ msgid "&Delete\tDEL"
+#~ msgstr "&Supprimer\tDEL"

@@ -2,15 +2,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Task Coach 0.45\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-09 22:21+0000\n"
-"PO-Revision-Date: 2015-03-13 20:48+0000\n"
-"Last-Translator: Julio González <jgonzalez@rembox.cl>\n"
+"POT-Creation-Date: 2015-06-13 22:42+0000\n"
+"PO-Revision-Date: 2015-09-01 05:16+0000\n"
+"Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: jjramos <jjramos@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-06-13 17:12+0000\n"
-"X-Generator: Launchpad (build 17557)\n"
+"X-Launchpad-Export-Date: 2016-01-30 14:28+0000\n"
+"X-Generator: Launchpad (build 17908)\n"
 "X-Poedit-Country: SPAIN\n"
 "Language: \n"
 "X-Poedit-Language: Spanish\n"
@@ -924,7 +924,7 @@ msgstr "Cruz roja"
 
 #: taskcoachlib/gui/artprovider.py:174
 msgid "Die"
-msgstr "Muere"
+msgstr "Dado"
 
 #: taskcoachlib/gui/artprovider.py:175
 msgid "Document"
@@ -1969,9 +1969,9 @@ msgid ""
 "are suggested. Of course, you can also enter any time you \n"
 "want beside the suggested times."
 msgstr ""
-"En los menus emergentes para la asignación de tiempo\n"
-"(para el tiempo de trabajo) %(name)s le sugerimos estos\n"
-"ajustes. Es prferible usar periodos cortos de tiempo.\n"
+"En los menús emergentes para la asignación de tiempo\n"
+"(para el tiempo de trabajo) %(name)s le sugiere estos\n"
+"ajustes. Es preferible usar periodos cortos de tiempo.\n"
 "Por supuesto que usted puede asignar el tiempo\n"
 "que usted considere adecuado."
 
@@ -2132,7 +2132,7 @@ msgstr "Sistema de notificación usado para los recordatorios"
 
 #: taskcoachlib/gui/dialog/preferences.py:675
 msgid "Let the computer say the reminder"
-msgstr "Permita los recordatorios de la compuetadora."
+msgstr "Permitir que la computadora diga los recordatorios"
 
 #: taskcoachlib/gui/dialog/preferences.py:676
 msgid "(Needs espeak)"
@@ -3953,7 +3953,7 @@ msgstr "Orden &Manual"
 #: taskcoachlib/gui/viewer/category.py:148 taskcoachlib/gui/viewer/note.py:94
 #: taskcoachlib/gui/viewer/task.py:1185
 msgid "Show/hide the manual ordering column"
-msgstr ""
+msgstr "Mostrar/esconder la columna de ordenación manual"
 
 #: taskcoachlib/gui/viewer/category.py:153 taskcoachlib/gui/viewer/note.py:99
 #: taskcoachlib/gui/viewer/task.py:1199
@@ -4059,13 +4059,15 @@ msgstr "Mostrar/ocultar columnas de tiempo empleado por día de la semana"
 
 #: taskcoachlib/gui/viewer/effort.py:363
 msgid "Effort aggregation"
-msgstr ""
+msgstr "Agregación de esfuerzo"
 
 #: taskcoachlib/gui/viewer/effort.py:408
 msgid ""
 "Effort: %d selected, %d visible, %d total. Time spent: %s selected, %s "
 "visible, %s total"
 msgstr ""
+"Esfuerzo: %d seleccionados, %d visibles, %d en total. Tiempo usado: %s "
+"seleccionado, %s visible, %s en total"
 
 #: taskcoachlib/gui/viewer/effort.py:412
 msgid "Status: %d tracking"
@@ -4077,7 +4079,7 @@ msgstr "Detalles:"
 
 #: taskcoachlib/gui/viewer/effort.py:553
 msgid "Effort for selected task(s)"
-msgstr ""
+msgstr "Esfuerzo de la(s) tarea(s) seleccionada(s)"
 
 #: taskcoachlib/gui/viewer/mixin.py:337
 msgid "Sort categories by subject"
@@ -4313,6 +4315,8 @@ msgid ""
 "Shift-click on a filter tool to see only tasks belonging to the "
 "corresponding status"
 msgstr ""
+"Shift+clic en una herramienta de filtro para ver únicamente las tareas con "
+"el estado correspondiente."
 
 #: taskcoachlib/gui/viewer/task.py:132 taskcoachlib/help/__init__.py:81
 #: taskcoachlib/help/__init__.py:159 taskcoachlib/widgets/hcalendar.py:286
@@ -4337,7 +4341,7 @@ msgstr ""
 
 #: taskcoachlib/gui/viewer/task.py:604
 msgid "Hierarchical calendar"
-msgstr ""
+msgstr "Calendario jerárquico"
 
 #: taskcoachlib/gui/viewer/task.py:647
 msgid "Hierarchical calendar viewer configuration"
@@ -4349,7 +4353,7 @@ msgstr "Configuración del visor de calendario"
 
 #: taskcoachlib/gui/viewer/task.py:886
 msgid "Manual ordering"
-msgstr ""
+msgstr "Ordenación manial"
 
 #: taskcoachlib/gui/viewer/task.py:888
 msgid ""
@@ -5136,6 +5140,10 @@ msgid ""
 "only\n"
 "filter by one of the subcategories at a time."
 msgstr ""
+"Categorías mutuamente excluyentes: marque para indicar\n"
+"si las subcategorías de una categoría son mutuamente excluyentes.\n"
+"Si lo son, sus objetos sólo pueden pertenecer a una de sus subcategorías.\n"
+"Cuando se filtra, sólo puedes hacerlo por una subcategoría a la vez."
 
 #: taskcoachlib/help/__init__.py:305
 msgid ""
@@ -5266,7 +5274,7 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:376
 msgid "Custom attributes for e-mailing tasks"
-msgstr ""
+msgstr "Atributos personalizados para tareas de correo"
 
 #: taskcoachlib/help/__init__.py:378
 msgid ""
@@ -5300,10 +5308,12 @@ msgid ""
 "A single user, opening the task file on several computers (work,\n"
 "home, laptop)."
 msgstr ""
+"Un sólo usuario, abriendo el archivo de tareas en varias computadoras\n"
+"(trabajo, casa, laptop)"
 
 #: taskcoachlib/help/__init__.py:399
 msgid "Several users working on the same task file."
-msgstr ""
+msgstr "Varios usuarios trabajando en el mismo archivo de tareas"
 
 #: taskcoachlib/help/__init__.py:401
 msgid ""
@@ -7300,3 +7310,6 @@ msgstr "Nunca más mostrar este cuadro de diálogo"
 #: taskcoachlib/widgets/textctrl.py:164
 msgid "Error opening URL"
 msgstr "Error al abrir la URL"
+
+#~ msgid "&Delete\tDEL"
+#~ msgstr "&Borrar\tDEL"

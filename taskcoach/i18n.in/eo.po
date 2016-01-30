@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-06-09 22:21+0000\n"
-"PO-Revision-Date: 2014-08-11 07:52+0000\n"
-"Last-Translator: Viliam Búr <viliam@bur.sk>\n"
+"POT-Creation-Date: 2015-06-13 22:42+0000\n"
+"PO-Revision-Date: 2016-01-30 14:26+0000\n"
+"Last-Translator: Jérôme Laheurte <fraca7@free.fr>\n"
 "Language-Team: Esperanto <eo@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-06-13 17:12+0000\n"
-"X-Generator: Launchpad (build 17557)\n"
+"X-Launchpad-Export-Date: 2016-01-30 14:28+0000\n"
+"X-Generator: Launchpad (build 17908)\n"
 "Language: eo\n"
 
 #: taskcoachlib/application/application.py:67
@@ -23,6 +23,8 @@ msgid ""
 "Errors have occured. Please see \"taskcoachlog.txt\" in your \"My "
 "Documents\" folder."
 msgstr ""
+"Okazis eraroj. Bonvolu legi \"taskcoaching.txt\" en via  dosierujo \"Miaj "
+"Dosieroj\"."
 
 #: taskcoachlib/application/application.py:67
 #: taskcoachlib/application/application.py:69
@@ -31,44 +33,46 @@ msgstr ""
 #: taskcoachlib/iphone/protocol.py:552 taskcoachlib/widgets/draganddrop.py:123
 #: taskcoachlib/widgets/draganddrop.py:165 taskcoachlib/widgets/password.py:88
 msgid "Error"
-msgstr ""
+msgstr "Eraro"
 
 #: taskcoachlib/application/application.py:69
 msgid "Errors have occured. Please see \"%s\""
-msgstr ""
+msgstr "Eraroj okazis. Bonvolu vidi \"%s\""
 
 #: taskcoachlib/application/application.py:358
 msgid ""
 "Couldn't load settings from TaskCoach.ini:\n"
 "%s"
 msgstr ""
+"Ne eblas ŝarĝi agordoj de TaskCoach.ini:\n"
+"%s"
 
 #: taskcoachlib/application/application.py:359
 #: taskcoachlib/gui/iocontroller.py:73
 msgid "%s file error"
-msgstr ""
+msgstr "Eraro de dosiero %s"
 
 #: taskcoachlib/changes/sync.py:83
 msgid "Task Coach"
-msgstr ""
+msgstr "Task-Trejnisto"
 
 #: taskcoachlib/changes/sync.py:143 taskcoachlib/changes/sync.py:196
 msgid "\"%s\" became top-level because its parent was locally deleted."
-msgstr ""
+msgstr "\"%s\" moviĝas altnivelen ĉar ĝia patro estis forviŝita."
 
 #: taskcoachlib/changes/sync.py:467
 msgid ""
 "Conflicts detected for \"%s\".\n"
 "The local version was used."
-msgstr ""
+msgstr "Konflikto malkovrita por \"%s\"."
 
 #: taskcoachlib/command/attachmentCommands.py:28
 msgid "Edit location of attachments"
-msgstr ""
+msgstr "Redakti lokon de kunsendaĵoj"
 
 #: taskcoachlib/command/attachmentCommands.py:29
 msgid "Edit attachment \"%s\" location"
-msgstr ""
+msgstr "Redakti lokon de kunsendaĵo \"%s\""
 
 #: taskcoachlib/command/attachmentCommands.py:53
 #: taskcoachlib/widgets/dialog.py:164
@@ -77,23 +81,23 @@ msgstr "Aldonu kunsendaĵon"
 
 #: taskcoachlib/command/attachmentCommands.py:54
 msgid "Add attachment to \"%s\""
-msgstr ""
+msgstr "Aldoni kunsendaĵon al \"%s\""
 
 #: taskcoachlib/command/attachmentCommands.py:59
 msgid "New attachment"
-msgstr ""
+msgstr "Nova kunsendaĵo"
 
 #: taskcoachlib/command/attachmentCommands.py:94
 msgid "Remove attachment"
-msgstr ""
+msgstr "Forĵeti kunsendaĵon"
 
 #: taskcoachlib/command/attachmentCommands.py:95
 msgid "Remove attachment to \"%s\""
-msgstr ""
+msgstr "Movi kunsendaĵon al  \"%s\""
 
 #: taskcoachlib/command/base.py:192
 msgid "Copy"
-msgstr "Kopiu"
+msgstr "Kopii"
 
 #: taskcoachlib/command/base.py:193
 msgid "Copy \"%s\""
@@ -101,7 +105,7 @@ msgstr "Kopii \"%s\""
 
 #: taskcoachlib/command/base.py:207
 msgid "Delete"
-msgstr "Forigu"
+msgstr "Forĵeti"
 
 #: taskcoachlib/command/base.py:208
 msgid "Delete \"%s\""
@@ -109,7 +113,7 @@ msgstr "Forigi \"%s\""
 
 #: taskcoachlib/command/base.py:243
 msgid "Cut"
-msgstr "Eltondu"
+msgstr "Tranĉi"
 
 #: taskcoachlib/command/base.py:244
 msgid "Cut \"%s\""
@@ -117,19 +121,19 @@ msgstr ""
 
 #: taskcoachlib/command/base.py:277
 msgid "Paste"
-msgstr "Algluu"
+msgstr "Alglui"
 
 #: taskcoachlib/command/base.py:278
 msgid "Paste \"%s\""
-msgstr ""
+msgstr "Alglui  \"%s\""
 
 #: taskcoachlib/command/base.py:313
 msgid "Paste as subitem"
-msgstr ""
+msgstr "Alglui kiel subero"
 
 #: taskcoachlib/command/base.py:314
 msgid "Paste as subitem of \"%s\""
-msgstr ""
+msgstr "Alglui kiel subero de \"%s\""
 
 #: taskcoachlib/command/base.py:326 taskcoachlib/gui/dialog/toolbar.py:134
 msgid "Drag and drop"
@@ -141,59 +145,59 @@ msgstr "Ŝovi kaj demeti \"%s\""
 
 #: taskcoachlib/command/base.py:442
 msgid "Edit subjects"
-msgstr ""
+msgstr "Redakti temojn"
 
 #: taskcoachlib/command/base.py:443
 msgid "Edit subject \"%s\""
-msgstr ""
+msgstr "Redakti la temon \"%s\""
 
 #: taskcoachlib/command/base.py:467
 msgid "Edit descriptions"
-msgstr ""
+msgstr "Redakti priskribojn"
 
 #: taskcoachlib/command/base.py:468
 msgid "Edit description \"%s\""
-msgstr ""
+msgstr "Redakti la priskribon de \"%s\""
 
 #: taskcoachlib/command/base.py:492
 msgid "Change icons"
-msgstr ""
+msgstr "Ŝanĝi bildsimbolojn"
 
 #: taskcoachlib/command/base.py:493
 msgid "Change icon \"%s\""
-msgstr ""
+msgstr "Ŝanĝi bildsimbolon \"%s\""
 
 #: taskcoachlib/command/base.py:522
 msgid "Change fonts"
-msgstr ""
+msgstr "Ŝanĝi tiparojn"
 
 #: taskcoachlib/command/base.py:523
 msgid "Change font \"%s\""
-msgstr ""
+msgstr "Ŝanĝi la tiparon \"%s\""
 
 #: taskcoachlib/command/base.py:577
 msgid "Change foreground colors"
-msgstr ""
+msgstr "Ŝanĝi malfonajn kolorojn"
 
 #: taskcoachlib/command/base.py:578
 msgid "Change foreground color \"%s\""
-msgstr ""
+msgstr "Ŝanĝi la malfonan koloron \"%s\""
 
 #: taskcoachlib/command/base.py:590
 msgid "Change background colors"
-msgstr ""
+msgstr "Ŝanĝi fonajn kolorojn"
 
 #: taskcoachlib/command/base.py:591
 msgid "Change background color \"%s\""
-msgstr ""
+msgstr "Ŝanĝi la fonan koloron \"%s\""
 
 #: taskcoachlib/command/categorizableCommands.py:25
 msgid "Toggle category"
-msgstr ""
+msgstr "Ŝanĝi katogorion"
 
 #: taskcoachlib/command/categorizableCommands.py:26
 msgid "Toggle category of \"%s\""
-msgstr ""
+msgstr "Ŝanĝi la katogorion de \"%s\""
 
 #: taskcoachlib/command/categoryCommands.py:26
 #: taskcoachlib/command/categoryCommands.py:29
@@ -202,11 +206,11 @@ msgstr "Nova kategorio"
 
 #: taskcoachlib/command/categoryCommands.py:41
 msgid "New subcategories"
-msgstr ""
+msgstr "Novaj subkatogorioj"
 
 #: taskcoachlib/command/categoryCommands.py:42
 msgid "New subcategory of \"%s\""
-msgstr ""
+msgstr "Nova subkatogorio de \"%s\""
 
 #: taskcoachlib/command/categoryCommands.py:45
 msgid "New subcategory"
@@ -214,63 +218,63 @@ msgstr "Nova subkategorio"
 
 #: taskcoachlib/command/categoryCommands.py:58
 msgid "Edit exclusive subcategories"
-msgstr ""
+msgstr "Redakti ekklusivajn subkatogoriojn"
 
 #: taskcoachlib/command/categoryCommands.py:59
 msgid "Edit exclusive subcategories of \"%s\""
-msgstr ""
+msgstr "Redakti ekklusivajn subkatogoriojn de \"%s\""
 
 #: taskcoachlib/command/categoryCommands.py:83
 msgid "Delete categories"
-msgstr ""
+msgstr "Forviŝi kategoriojn"
 
 #: taskcoachlib/command/categoryCommands.py:84
 msgid "Delete category \"%s\""
-msgstr ""
+msgstr "Forviŝi kategorion de \"%s\""
 
 #: taskcoachlib/command/categoryCommands.py:88
 msgid "Drag and drop categories"
-msgstr ""
+msgstr "Ŝovi kaj demeti kategoriojn"
 
 #: taskcoachlib/command/effortCommands.py:25
 msgid "New efforts"
-msgstr ""
+msgstr "Novaj fortostreĉoj"
 
 #: taskcoachlib/command/effortCommands.py:26
 msgid "New effort of \"%s\""
-msgstr ""
+msgstr "Novaj fortostreĉoj de \"%s\""
 
 #: taskcoachlib/command/effortCommands.py:64
 msgid "Delete efforts"
-msgstr ""
+msgstr "Forĵeti fortostreĉojn"
 
 #: taskcoachlib/command/effortCommands.py:65
 msgid "Delete effort \"%s\""
-msgstr ""
+msgstr "Forĵeti fortostreĉon \"%s\""
 
 #: taskcoachlib/command/effortCommands.py:72
 msgid "Change task of effort"
-msgstr ""
+msgstr "Ŝanĝi la taskon de fortostreĉo"
 
 #: taskcoachlib/command/effortCommands.py:73
 msgid "Change task of \"%s\" effort"
-msgstr ""
+msgstr "Ŝanĝi la taskon de fortostreĉo \"%s\""
 
 #: taskcoachlib/command/effortCommands.py:100
 msgid "Change effort start date and time"
-msgstr ""
+msgstr "Ŝanĝi la komencan daton kaj la horon de la tasko"
 
 #: taskcoachlib/command/effortCommands.py:101
 msgid "Change effort start date and time of \"%s\""
-msgstr ""
+msgstr "Ŝanĝi la komencan daton kaj la horon de la tasko \"%s\""
 
 #: taskcoachlib/command/effortCommands.py:135
 msgid "Change effort stop date and time"
-msgstr ""
+msgstr "Ŝanĝi la finan daton kaj la horon de la tasko"
 
 #: taskcoachlib/command/effortCommands.py:136
 msgid "Change effort stop date and time of \"%s\""
-msgstr ""
+msgstr "Ŝanĝi la finan daton kaj la horon de la tasko \"%s\""
 
 #: taskcoachlib/command/noteCommands.py:26
 #: taskcoachlib/command/noteCommands.py:29
@@ -280,7 +284,7 @@ msgstr "Nova noto"
 
 #: taskcoachlib/command/noteCommands.py:40
 msgid "New subnotes"
-msgstr ""
+msgstr "Novaj sunotoj"
 
 #: taskcoachlib/command/noteCommands.py:41
 msgid "New subnote of \"%s\""
@@ -293,55 +297,55 @@ msgstr "Nova subnoto"
 
 #: taskcoachlib/command/noteCommands.py:56
 msgid "Delete notes"
-msgstr ""
+msgstr "Forvŝi notojn"
 
 #: taskcoachlib/command/noteCommands.py:57
 msgid "Delete note \"%s\""
-msgstr ""
+msgstr "Forvŝi noton \"%s\""
 
 #: taskcoachlib/command/noteCommands.py:61
 msgid "Drag and drop notes"
-msgstr ""
+msgstr "Ŝovi kaj demeti notojn"
 
 #: taskcoachlib/command/noteCommands.py:62
 msgid "Drag and drop note \"%s\""
-msgstr ""
+msgstr "Ŝovi kaj demeti notojn \"%s\""
 
 #: taskcoachlib/command/noteCommands.py:66
 msgid "Add note"
-msgstr ""
+msgstr "Aldoni notojn"
 
 #: taskcoachlib/command/noteCommands.py:67
 msgid "Add note to \"%s\""
-msgstr ""
+msgstr "Aldoni noton al \"%s\""
 
 #: taskcoachlib/command/noteCommands.py:110
 msgid "Add subnote"
-msgstr ""
+msgstr "Aldoni subnoton"
 
 #: taskcoachlib/command/noteCommands.py:111
 msgid "Add subnote to \"%s\""
-msgstr ""
+msgstr "Aldoni subnoton \"%s\""
 
 #: taskcoachlib/command/noteCommands.py:153
 msgid "Remove note"
-msgstr ""
+msgstr "Forviŝi noton"
 
 #: taskcoachlib/command/noteCommands.py:154
 msgid "Remove note from \"%s\""
-msgstr ""
+msgstr "Forviŝi noton de \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:61
 msgid "Drag and drop tasks"
-msgstr ""
+msgstr "Ŝovi kaj demeti taskojn"
 
 #: taskcoachlib/command/taskCommands.py:107
 msgid "Delete tasks"
-msgstr ""
+msgstr "Forviŝi taskojn"
 
 #: taskcoachlib/command/taskCommands.py:108
 msgid "Delete task \"%s\""
-msgstr ""
+msgstr "Forviŝi taskon \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:147
 #: taskcoachlib/command/taskCommands.py:150
@@ -350,11 +354,11 @@ msgstr "Nova tasko"
 
 #: taskcoachlib/command/taskCommands.py:185
 msgid "New subtasks"
-msgstr ""
+msgstr "Novaj subtaskoj"
 
 #: taskcoachlib/command/taskCommands.py:186
 msgid "New subtask of \"%s\""
-msgstr ""
+msgstr "Novaj subtaskoj de \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:190
 msgid "New subtask"
@@ -366,39 +370,39 @@ msgstr ""
 
 #: taskcoachlib/command/taskCommands.py:219
 msgid "Mark \"%s\" completed"
-msgstr ""
+msgstr "Marki \"%s\" kiel kompletigita"
 
 #: taskcoachlib/command/taskCommands.py:245
 msgid "Mark task active"
-msgstr ""
+msgstr "Marki taskon kiel activa"
 
 #: taskcoachlib/command/taskCommands.py:246
 msgid "Mark \"%s\" active"
-msgstr ""
+msgstr "Marki \"%s\" kiel activa"
 
 #: taskcoachlib/command/taskCommands.py:270
 msgid "Mark task inactive"
-msgstr ""
+msgstr "Marki taskon kiel ne activa"
 
 #: taskcoachlib/command/taskCommands.py:271
 msgid "Mark \"%s\" inactive"
-msgstr ""
+msgstr "Marki  \"%s\" kiel ne activa"
 
 #: taskcoachlib/command/taskCommands.py:295
 msgid "Start tracking"
-msgstr ""
+msgstr "Eki la sekvadon"
 
 #: taskcoachlib/command/taskCommands.py:296
 msgid "Start tracking \"%s\""
-msgstr ""
+msgstr "Eki la sekvadon de \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:330
 msgid "Stop tracking"
-msgstr ""
+msgstr "Ĉesi la sekvadon"
 
 #: taskcoachlib/command/taskCommands.py:331
 msgid "Stop tracking \"%s\""
-msgstr ""
+msgstr "Ĉesi la sekvadon de \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:375
 msgid "Maximize priority"
@@ -406,7 +410,7 @@ msgstr "Plejgrandigu prioritaton"
 
 #: taskcoachlib/command/taskCommands.py:376
 msgid "Maximize priority of \"%s\""
-msgstr ""
+msgstr "Maksimumigi prioriteton de \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:385
 msgid "Minimize priority"
@@ -414,7 +418,7 @@ msgstr "Malplejgrandigu prioritaton"
 
 #: taskcoachlib/command/taskCommands.py:386
 msgid "Minimize priority of \"%s\""
-msgstr ""
+msgstr "Minimumigi prioriteton de \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:415
 msgid "Increase priority"
@@ -422,7 +426,7 @@ msgstr "Pligrandigu prioritaton"
 
 #: taskcoachlib/command/taskCommands.py:416
 msgid "Increase priority of \"%s\""
-msgstr ""
+msgstr "Kreski prioriteton de \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:421
 msgid "Decrease priority"
@@ -430,83 +434,83 @@ msgstr "Malpligrandigu prioritaton"
 
 #: taskcoachlib/command/taskCommands.py:422
 msgid "Decrease priority of \"%s\""
-msgstr ""
+msgstr "Malkreski prioriteton de \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:427
 msgid "Change priority"
-msgstr ""
+msgstr "Ŝanĝi prioriteton"
 
 #: taskcoachlib/command/taskCommands.py:428
 msgid "Change priority of \"%s\""
-msgstr ""
+msgstr "Ŝanĝi prioriteton de \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:450
 msgid "Add note to tasks"
-msgstr ""
+msgstr "Aldoni noton al tasko"
 
 #: taskcoachlib/command/taskCommands.py:532
 msgid "Change planned start date"
-msgstr ""
+msgstr "Ŝanĝi la planitan ekdaton"
 
 #: taskcoachlib/command/taskCommands.py:533
 msgid "Change planned start date of \"%s\""
-msgstr ""
+msgstr "Ŝanĝi la planitan ekdaton de \"%s"
 
 #: taskcoachlib/command/taskCommands.py:553
 msgid "Change due date"
-msgstr ""
+msgstr "Ŝanĝi la limdaton"
 
 #: taskcoachlib/command/taskCommands.py:554
 msgid "Change due date of \"%s\""
-msgstr ""
+msgstr "Ŝanĝi la limdaton de \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:574
 msgid "Change actual start date"
-msgstr ""
+msgstr "Ŝanĝi la limdaton"
 
 #: taskcoachlib/command/taskCommands.py:575
 msgid "Change actual start date of \"%s\""
-msgstr ""
+msgstr "Ŝanĝi la aktualan ekdaton de \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:595
 msgid "Change completion date"
-msgstr ""
+msgstr "Ŝanĝi la plenumdaton"
 
 #: taskcoachlib/command/taskCommands.py:596
 msgid "Change completion date of \"%s\""
-msgstr ""
+msgstr "Ŝanĝi la plenumdaton de \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:619
 msgid "Change reminder dates/times"
-msgstr ""
+msgstr "Ŝanĝi la memorigajn datojn/tempojn"
 
 #: taskcoachlib/command/taskCommands.py:620
 msgid "Change reminder date/time of \"%s\""
-msgstr ""
+msgstr "Ŝanĝi la memorigan daton/tempon de \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:632
 msgid "Change recurrences"
-msgstr ""
+msgstr "Ŝanĝi rekurojn"
 
 #: taskcoachlib/command/taskCommands.py:633
 msgid "Change recurrence of \"%s\""
-msgstr ""
+msgstr "Ŝanĝi rekuron de \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:656
 msgid "Change percentage complete of \"%s\""
-msgstr ""
+msgstr "Ŝanĝi elcentan kompletigadon de \"%s\""
 
 #: taskcoachlib/command/taskCommands.py:682
 msgid "Change when tasks are marked completed"
-msgstr ""
+msgstr "Ŝanĝi kiam taskoj estas markitaj kiel kompletigitaj"
 
 #: taskcoachlib/command/taskCommands.py:683
 msgid "Change when \"%s\" is marked completed"
-msgstr ""
+msgstr "Ŝanĝi kiam \"%s\" estas markitaj kiel kompletigitaj"
 
 #: taskcoachlib/command/taskCommands.py:705
 msgid "Change budgets"
-msgstr ""
+msgstr "Ŝanĝi budĝetojn"
 
 #: taskcoachlib/command/taskCommands.py:706
 msgid "Change budget of \"%s\""

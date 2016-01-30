@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-06-09 22:21+0000\n"
-"PO-Revision-Date: 2015-02-13 12:31+0000\n"
-"Last-Translator: Cihan <cihanbegburs@hotmail.com>\n"
+"POT-Creation-Date: 2015-06-13 22:42+0000\n"
+"PO-Revision-Date: 2016-01-23 02:09+0000\n"
+"Last-Translator: Kaya Zeren <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-06-13 17:13+0000\n"
-"X-Generator: Launchpad (build 17557)\n"
+"X-Launchpad-Export-Date: 2016-01-30 14:28+0000\n"
+"X-Generator: Launchpad (build 17908)\n"
 "Language: tr\n"
 
 #: taskcoachlib/application/application.py:67
@@ -64,7 +64,9 @@ msgstr "Üst ögesi yerel olarak silindiğinden \"%s\" en üst düzey olacak."
 msgid ""
 "Conflicts detected for \"%s\".\n"
 "The local version was used."
-msgstr "\"%s\" için çakışmalar algılandı"
+msgstr ""
+"\"%s\" için çakışmalar algılandı.\n"
+"Yerel sürüm kullanıldı."
 
 #: taskcoachlib/command/attachmentCommands.py:28
 msgid "Edit location of attachments"
@@ -81,7 +83,7 @@ msgstr "Eklenti ekle"
 
 #: taskcoachlib/command/attachmentCommands.py:54
 msgid "Add attachment to \"%s\""
-msgstr "Eki \"%s\" içine yükler"
+msgstr "Eki \"%s\" içine yükle"
 
 #: taskcoachlib/command/attachmentCommands.py:59
 msgid "New attachment"
@@ -93,7 +95,7 @@ msgstr "Eki kaldır"
 
 #: taskcoachlib/command/attachmentCommands.py:95
 msgid "Remove attachment to \"%s\""
-msgstr "Eki \"%s\" içinden siler"
+msgstr "Eki \"%s\" içinden sil"
 
 #: taskcoachlib/command/base.py:192
 msgid "Copy"
@@ -109,7 +111,7 @@ msgstr "Sil"
 
 #: taskcoachlib/command/base.py:208
 msgid "Delete \"%s\""
-msgstr "\"%s\" siler"
+msgstr "\"%s\" ögesini sil"
 
 #: taskcoachlib/command/base.py:243
 msgid "Cut"
@@ -370,7 +372,7 @@ msgstr "İşleri tamamlandı olarak işaretle"
 
 #: taskcoachlib/command/taskCommands.py:219
 msgid "Mark \"%s\" completed"
-msgstr "\"%s\" tamamlandı olarak işaretler"
+msgstr "\"%s\" ögesini tamamlandı olarak işaretle"
 
 #: taskcoachlib/command/taskCommands.py:245
 msgid "Mark task active"
@@ -802,7 +804,7 @@ msgstr "&Tamamlanmış işleri gizle"
 
 #: taskcoachlib/domain/task/status.py:83
 msgid "Show/hide completed tasks"
-msgstr "Tamamlanmış işleri gösterir/gizler"
+msgstr "Tamamlanmış işleri göster ya da gizle"
 
 #: taskcoachlib/domain/task/tasklist.py:40
 msgid "&New task..."
@@ -1432,7 +1434,7 @@ msgstr "Ön koşullar"
 
 #: taskcoachlib/gui/dialog/editor.py:1178
 msgid "Edit task"
-msgstr "Görevi düzenle"
+msgstr "İşi düzenle"
 
 #: taskcoachlib/gui/dialog/editor.py:1187
 #: taskcoachlib/gui/dialog/reminder.py:50
@@ -1861,7 +1863,7 @@ msgstr "Sistem tepsisi simgesi olarak küçült"
 
 #: taskcoachlib/gui/dialog/preferences.py:404
 msgid "Minimize main window when closed"
-msgstr "Ana pencere kapatıldığında görev çubuğuna küçült"
+msgstr "Kapatıldığında ana pencereyi küçült"
 
 #: taskcoachlib/gui/dialog/preferences.py:407
 msgid "Make clock in the task bar tick when tracking effort"
@@ -2222,7 +2224,7 @@ msgstr "%(name)s anımsatıcı - %(task)s"
 
 #: taskcoachlib/gui/dialog/reminder.py:64
 msgid "Reminder date/time"
-msgstr "Anımsatıcı tarih/zamanı"
+msgstr "Anımsatıcı tarih ve saati"
 
 #: taskcoachlib/gui/dialog/reminder.py:65
 msgid "Snooze"
@@ -2773,7 +2775,7 @@ msgstr "&Süzgeç"
 
 #: taskcoachlib/gui/menu.py:422 taskcoachlib/gui/menu.py:423
 msgid "&Sort"
-msgstr "Sı&rala"
+msgstr "Sı&ralama"
 
 #: taskcoachlib/gui/menu.py:424 taskcoachlib/gui/menu.py:425
 msgid "&Columns"
@@ -2793,7 +2795,7 @@ msgstr "A&raç çubuğu"
 
 #: taskcoachlib/gui/menu.py:435
 msgid "Show/hide status bar"
-msgstr "Durum çubuğunu gösterir/gizler"
+msgstr "Durum çubuğunu göster ya da gizle"
 
 #: taskcoachlib/gui/menu.py:435
 msgid "Status&bar"
@@ -3022,7 +3024,7 @@ msgstr "Seçilmiş işleri ayrı bir iş dosyayı olarak kaydeder"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:185
 msgid "Save selected task as &template"
-msgstr "Seçilen görevi &şablon olarak kaydet"
+msgstr "Seçilen işi &kalıp olarak kaydet"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:186
 msgid "Save the selected task as a task template"
@@ -3255,7 +3257,7 @@ msgstr "Tüm g&rupları sıfırla\tCtrl-R"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:814
 msgid "Show/hide items belonging to %s"
-msgstr "%s ögesine ait tüm ögeleri göster/gizle"
+msgstr "%s ögesine ait tüm ögeleri göster ya da gizle"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:861
 msgid "&Rename viewer..."
@@ -3323,7 +3325,7 @@ msgstr "Bi&rleşik işleri gizle"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1042
 msgid "Show/hide tasks with subtasks in list mode"
-msgstr "İşlerle altişleri liste kipinde gösterir/gizler"
+msgstr "Liste kipinde, işleri altişleriyle birlikte göster ya da gizle"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1057
 msgid "&Edit...\tRETURN"
@@ -3500,7 +3502,7 @@ msgstr "Menüden bir iş seçin ve üzerinde çalışmaya başlayın"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1726
 msgid "Stop tracking or resume tracking effort\tShift+Ctrl+T"
-msgstr "İş izlemeyi durdur ya da sürdür\tShift+Ctrl+T"
+msgstr "Çalışmayı durdur ya da sürdür\tShift+Ctrl+T"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:1728
 msgid "St&op tracking %s\tShift+Ctrl+T"
@@ -3663,7 +3665,7 @@ msgstr "Geliştiricilerden yazılım desteği alın"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2134
 msgid "Help improve &translations..."
-msgstr "Çevirileri güncellemeye yardım et..."
+msgstr "Çevi&riye yardım edin..."
 
 #: taskcoachlib/gui/uicommand/uicommand.py:2135
 msgid "Help improve the translations of %s"
@@ -3880,7 +3882,7 @@ msgstr "Son değişiklik tarihine göre sırala"
 #: taskcoachlib/gui/viewer/effort.py:293 taskcoachlib/gui/viewer/note.py:97
 #: taskcoachlib/gui/viewer/task.py:1188
 msgid "Show/hide description column"
-msgstr "Açıklama sütununu gösterir/gizler"
+msgstr "Açıklama sütununu göster ya da gizle"
 
 #: taskcoachlib/gui/viewer/attachment.py:136
 #: taskcoachlib/gui/viewer/category.py:156
@@ -3892,7 +3894,7 @@ msgstr "&Notlar"
 #: taskcoachlib/gui/viewer/category.py:157
 #: taskcoachlib/gui/viewer/task.py:1204
 msgid "Show/hide notes column"
-msgstr "Notlar sütununu gösterir/gizler"
+msgstr "Notlar sütununu göster ya da gizle"
 
 #: taskcoachlib/gui/viewer/attachment.py:140
 #: taskcoachlib/gui/viewer/category.py:160 taskcoachlib/gui/viewer/note.py:106
@@ -3950,7 +3952,7 @@ msgstr "&Ekler"
 
 #: taskcoachlib/gui/viewer/category.py:154 taskcoachlib/gui/viewer/note.py:100
 msgid "Show/hide attachments column"
-msgstr "Ekler sütununu gösterir/gizler"
+msgstr "Ekler sütununu göster ya da gizle"
 
 #: taskcoachlib/gui/viewer/category.py:200
 msgid "Categories: %d selected, %d total"
@@ -3966,7 +3968,7 @@ msgstr "Dönem"
 
 #: taskcoachlib/gui/viewer/effort.py:228
 msgid "Total time spent"
-msgstr "Toplam harcanan zaman"
+msgstr "Harcanan toplam zaman"
 
 #: taskcoachlib/gui/viewer/effort.py:233
 msgid "Total revenue"
@@ -4001,7 +4003,7 @@ msgstr "&Gruplar"
 #: taskcoachlib/gui/viewer/effort.py:296 taskcoachlib/gui/viewer/note.py:103
 #: taskcoachlib/gui/viewer/task.py:1208
 msgid "Show/hide categories column"
-msgstr "Grup sütununu gösterir/gizler"
+msgstr "Grup sütununu göster ya da gizle"
 
 #: taskcoachlib/gui/viewer/effort.py:298 taskcoachlib/gui/viewer/mixin.py:431
 #: taskcoachlib/gui/viewer/task.py:1161
@@ -4010,7 +4012,7 @@ msgstr "&Harcanan zaman"
 
 #: taskcoachlib/gui/viewer/effort.py:299 taskcoachlib/gui/viewer/task.py:1162
 msgid "Show/hide time spent column"
-msgstr "Harcanan zaman sütununu gösterir/gizler"
+msgstr "Harcanan zaman sütununu göster ya da gizle"
 
 #: taskcoachlib/gui/viewer/effort.py:301 taskcoachlib/gui/viewer/mixin.py:436
 #: taskcoachlib/gui/viewer/task.py:1180
@@ -4019,7 +4021,7 @@ msgstr "Geli&r"
 
 #: taskcoachlib/gui/viewer/effort.py:302 taskcoachlib/gui/viewer/task.py:1181
 msgid "Show/hide revenue column"
-msgstr "Gelir sütununu gösterir/gizler"
+msgstr "Gelir sütununu göster ya da gizle"
 
 #: taskcoachlib/gui/viewer/effort.py:306
 msgid "&Total time spent"
@@ -4027,7 +4029,7 @@ msgstr "Harcanan &toplam zaman"
 
 #: taskcoachlib/gui/viewer/effort.py:307
 msgid "Show/hide total time spent column"
-msgstr "Harcanan toplam zaman sütununu göster/gizle"
+msgstr "Harcanan toplam zaman sütununu göster ya da gizle"
 
 #: taskcoachlib/gui/viewer/effort.py:310
 msgid "&Total revenue"
@@ -4035,7 +4037,7 @@ msgstr "&Toplam kazanç"
 
 #: taskcoachlib/gui/viewer/effort.py:311
 msgid "Show/hide total revenue column"
-msgstr "Toplam kazanç sütununu göster/gizle"
+msgstr "Toplam kazanç sütununu göster ya da gizle"
 
 #: taskcoachlib/gui/viewer/effort.py:315
 msgid "Effort per weekday"
@@ -4043,7 +4045,7 @@ msgstr "Hafta içi günlerindeki çalışma"
 
 #: taskcoachlib/gui/viewer/effort.py:316
 msgid "Show/hide time spent per weekday columns"
-msgstr "Hafta içi günlerindeki çalışmalar sütununu gösterir/gizler"
+msgstr "Hafta içi günlerindeki çalışmalar sütununu göster ya da gizle"
 
 #: taskcoachlib/gui/viewer/effort.py:363
 msgid "Effort aggregation"
@@ -4374,7 +4376,7 @@ msgstr "%Tüm tarih sütunları"
 
 #: taskcoachlib/gui/viewer/task.py:1127
 msgid "Show/hide all date-related columns"
-msgstr "Tarihle ilgili tüm sütunları gösterir/gizler"
+msgstr "Tarihle ilgili tüm sütunları göster ya da gizle"
 
 #: taskcoachlib/gui/viewer/task.py:1134
 msgid "Show/hide planned start date column"
@@ -4382,7 +4384,7 @@ msgstr "Planlanan başlangıç tarihi sütununu gösterir ya da gizler"
 
 #: taskcoachlib/gui/viewer/task.py:1137
 msgid "Show/hide due date column"
-msgstr "Bitiş tarihi sütununu gösterir/gizler"
+msgstr "Bitiş tarihi sütununu göster  ya da gizle"
 
 #: taskcoachlib/gui/viewer/task.py:1139
 msgid "&Actual start date"
@@ -4394,15 +4396,15 @@ msgstr "Geçerli başlangıç tarihi sütununu gösterir ya da gizler"
 
 #: taskcoachlib/gui/viewer/task.py:1143
 msgid "Show/hide completion date column"
-msgstr "Tamamlanma tarihi sütununu gösterir/gizler"
+msgstr "Tamamlanma tarihi sütununu göster ya da gizle"
 
 #: taskcoachlib/gui/viewer/task.py:1146
 msgid "Show/hide time left column"
-msgstr "Kalan zaman sütununu gösterir/gizler"
+msgstr "Kalan zaman sütununu göster ya da gizle"
 
 #: taskcoachlib/gui/viewer/task.py:1149
 msgid "Show/hide recurrence column"
-msgstr "Yineleme sütununu gösterir/gizler"
+msgstr "Yineleme sütununu göster ya da gizle"
 
 #: taskcoachlib/gui/viewer/task.py:1153
 msgid "&All budget columns"
@@ -4410,11 +4412,11 @@ msgstr "Tüm &bütçe sütunları"
 
 #: taskcoachlib/gui/viewer/task.py:1154
 msgid "Show/hide all budget-related columns"
-msgstr "Bütçe ile ilgili tüm sütunları gösterir/gizler"
+msgstr "Bütçe ile ilgili tüm sütunları göster ya da gizle"
 
 #: taskcoachlib/gui/viewer/task.py:1159
 msgid "Show/hide budget column"
-msgstr "Bütçe sütununu gösterir/gizler"
+msgstr "Bütçe sütununu göster ya da gizle"
 
 #: taskcoachlib/gui/viewer/task.py:1164
 msgid "&Budget left"
@@ -4422,7 +4424,7 @@ msgstr "Kalan &bütçe"
 
 #: taskcoachlib/gui/viewer/task.py:1165
 msgid "Show/hide budget left column"
-msgstr "Kalan bütçe sütununu gösterir/gizler"
+msgstr "Kalan bütçe sütununu göster ya da gizle"
 
 #: taskcoachlib/gui/viewer/task.py:1168
 msgid "&Financial"
@@ -4434,19 +4436,19 @@ msgstr "Tüm &finansal sütunlar"
 
 #: taskcoachlib/gui/viewer/task.py:1170
 msgid "Show/hide all finance-related columns"
-msgstr "Finansla ilgili tüm sütunları gösterir/gizler"
+msgstr "Finansla ilgili tüm sütunları göster ya da gizle"
 
 #: taskcoachlib/gui/viewer/task.py:1175
 msgid "Show/hide hourly fee column"
-msgstr "Saat ücreti sütununu gösterir/gizler"
+msgstr "Saat ücreti sütununu göster ya da gizle"
 
 #: taskcoachlib/gui/viewer/task.py:1178
 msgid "Show/hide fixed fee column"
-msgstr "Sabit ücret sütununu gösterir/gizler"
+msgstr "Sabit ücret sütununu göster ya da gizle"
 
 #: taskcoachlib/gui/viewer/task.py:1191
 msgid "Show/hide prerequisites column"
-msgstr "Önkoşullar sütununu gösterir/gizler"
+msgstr "Ön koşullar sütununu göster ya da gizle"
 
 #: taskcoachlib/gui/viewer/task.py:1194
 msgid "Show/hide dependents column"
@@ -4454,19 +4456,19 @@ msgstr "Bağlılıklar sütununu gösterir ya da gizler"
 
 #: taskcoachlib/gui/viewer/task.py:1197
 msgid "Show/hide percentage complete column"
-msgstr "Tamamlanma yüzdesi sütununu gösterir/gizler"
+msgstr "Tamamlanma yüzdesi sütununu göster ya da gizle"
 
 #: taskcoachlib/gui/viewer/task.py:1200
 msgid "Show/hide attachment column"
-msgstr "Ek sütununu gösterir/gizler"
+msgstr "Ek sütununu göster ya da gizle"
 
 #: taskcoachlib/gui/viewer/task.py:1211
 msgid "Show/hide priority column"
-msgstr "Öncelik sütununu gösterir/gizler"
+msgstr "Öncelik sütununu göster ya da gizle"
 
 #: taskcoachlib/gui/viewer/task.py:1214
 msgid "Show/hide reminder column"
-msgstr "Anımsatıcı sütununu gösterir/gizler"
+msgstr "Anımsatıcı sütununu göster ya da gizle"
 
 #: taskcoachlib/gui/viewer/task.py:1234
 msgid "Show tasks as"
@@ -5063,14 +5065,14 @@ msgstr "İş: Üzerinde çalışılan iş."
 
 #: taskcoachlib/help/__init__.py:268
 msgid "Start date/time: start date and time of the effort."
-msgstr "Başlangıç tarihi/zamanı: Çalışmanın başlangıç tarihi ve zamanı."
+msgstr "Başlangıç tarihi ve saati: Çalışmanın başlangıç tarihi ve saati."
 
 #: taskcoachlib/help/__init__.py:269
 msgid ""
 "Stop date/time: stop date and time of the effort. This can be \n"
 "'None' as long as you are still working on the task."
 msgstr ""
-"Bitiş tarihi/zamanı: Çalışmanın bitiş tarihi ve zamanı. İş üzerinde\n"
+"Bitiş tarihi ve saati: Çalışmanın bitiş tarihi ve saati. İş üzerinde\n"
 "çalışmaktayken 'Yok' olarak görünebilir."
 
 #: taskcoachlib/help/__init__.py:271
@@ -6131,7 +6133,7 @@ msgid ""
 msgstr ""
 "Bir kalıp oluşturmak için yalnızca bir işi seçip Dosya menüsünden \n"
 "\"Seçili işi kalıp olarak kaydet\" komutunu vermek yeterlidir. Tüm alt "
-"görevler, \n"
+"işler, \n"
 "notlar ve ekler kalıbın bir parçasıdır. Yalnızca gruplar kaydedilmez."
 
 #: taskcoachlib/help/__init__.py:742
@@ -6520,9 +6522,9 @@ msgid ""
 "prevent them, bugs do happen. So, backing up your work on a regular basis is "
 "strongly advised."
 msgstr ""
-"%(name)s sürekli gekiştirilmektedir. %(name)s geliştiricileri hataları "
-"ayıklamak için çok çalışsa da gözden kaçanlar olabilmektedir. Bu nedenle "
-"çalışmalarınızı düzenli olarak yedeklemeniz önerilir."
+"%(name)s sürekli geliştirilen bir yazılımdır. %(name)s geliştiricileri "
+"hataları ayıklamak için çok çalışsa da gözden kaçan hatalar olabiliyor. Bu "
+"nedenle çalışmalarınızı düzenli olarak yedeklemenizi öneriyoruz."
 
 #: taskcoachlib/help/tips.py:27
 msgid ""
@@ -7441,3 +7443,6 @@ msgstr "Bu iletiyi bir daha gösterme"
 #: taskcoachlib/widgets/textctrl.py:164
 msgid "Error opening URL"
 msgstr "İnternet adresi açılırken hata"
+
+#~ msgid "&Delete\tDEL"
+#~ msgstr "&Sil\tDEL"
