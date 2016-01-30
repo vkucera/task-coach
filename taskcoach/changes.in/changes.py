@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2015 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2016 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -38,6 +38,7 @@ of just DEL.'''),
     bugsFixed=[
         Bugv2('''Fix excessive CPU usage on Linux when smart filesystem monitoring is
 enabled.'''),
+        Bugv2('''Fix attachment opening on some Linux distros.''', '1613'),
     ],
     ),
 

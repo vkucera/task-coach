@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2016 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2016 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,5 +16,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-# iCalendar/vCalendar format (2.0) persistence. 
-# See http://www.ietf.org/rfc/rfc2445.txt.
+from taskcoachlib.thirdparty import desktop
+import platform
+
+def openFile(filename):
+    try:
+        desktop.open(filename)
+    except OSError:
+        if platform.system() == 'Linux':
+            if os.system('xdg-open "%s"' % filename):
+                raise OSError('Unable to open "%s"')
+        else:
+            raise

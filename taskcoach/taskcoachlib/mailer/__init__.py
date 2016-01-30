@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2015 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2016 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,7 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, os, re, tempfile, urllib, email, email.header
-from taskcoachlib.thirdparty import desktop, chardet
+from taskcoachlib.thirdparty import chardet
+from taskcoachlib.tools import openfile
 from taskcoachlib.mailer.macmail import getSubjectOfMail
 from taskcoachlib.i18n import _
 from taskcoachlib import operating_system
@@ -108,9 +109,9 @@ def openMail(filename):
         finally:
             _winreg.CloseKey(key)
 
-    desktop.open(filename)
+    openfile.openFile(filename)
 
-def sendMail(to, subject, body, cc=None, openURL=desktop.open):
+def sendMail(to, subject, body, cc=None, openURL=openfile.openFile):
     def unicode_quote(s):
         # This is like urllib.quote but leaves out Unicode characters,
         # which urllib.quote does not support.

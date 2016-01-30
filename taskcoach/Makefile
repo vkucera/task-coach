@@ -1,5 +1,5 @@
 # Task Coach - Your friendly task manager
-# Copyright (C) 2004-2015 Task Coach developers <developers@taskcoach.org>
+# Copyright (C) 2004-2016 Task Coach developers <developers@taskcoach.org>
 # 
 # Task Coach is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -73,10 +73,10 @@ sdist_linux: prepare changes templates dist/TaskCoach-$(TCVERSION).tar.gz
 
 sdist_ubuntu: sdist_linux
 	# Launchpad does not support one size fits all packages...
-	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu10~lucid.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu12~precise.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu14~trusty.tar.gz
-	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu14~utopic.tar.gz
+	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu15~vivid.tar.gz
+	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu15~wily.tar.gz
 
 sdist_raw:
 	mkdir -p dist
@@ -111,25 +111,22 @@ deb: sdist_linux
 	mv dist/taskcoach_$(TCVERSION)-1_all.deb dist/taskcoach_$(TCVERSION)-1.deb
 
 ubuntu: sdist_ubuntu
-	LC_ALL=C $(PYTHON) make.py bdist_ubuntu lucid 10 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu10~lucid.tar.gz
-	mv build build-lucid
 	LC_ALL=C $(PYTHON) make.py bdist_ubuntu precise 12 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu12~precise.tar.gz
 	mv build build-precise
 	LC_ALL=C $(PYTHON) make.py bdist_ubuntu trusty 14 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu14~trusty.tar.gz
 	mv build build-trusty
-	LC_ALL=C $(PYTHON) make.py bdist_ubuntu utopic 14 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu14~utopic.tar.gz
-	mv build build-utopic
+	LC_ALL=C $(PYTHON) make.py bdist_ubuntu vivid 15 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu15~vivid.tar.gz
+	mv build build-vivid
+	LC_ALL=C $(PYTHON) make.py bdist_ubuntu wily 15 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu15~wily.tar.gz
+	mv build build-wily
 
 ppa_sign: ubuntu
-	cd build-lucid; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
 	cd build-precise; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
 	cd build-trusty; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
-	cd build-utopic; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu14~utopic-1_source.changes
+	cd build-vivid; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu15~vivid-1_source.changes
+	cd build-wily; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu15~wily-1_source.changes
 
 # Split PPA by version because the upload has a tendency to fail so the buildbot must retry
-
-ppa_rel_lucid:
-	cd build-lucid; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
 
 ppa_rel_precise:
 	cd build-precise; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
@@ -137,11 +134,11 @@ ppa_rel_precise:
 ppa_rel_trusty:
 	cd build-trusty; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
 
-ppa_rel_utopic:
-	cd build-utopic; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu14~utopic-1_source.changes
+ppa_rel_vivid:
+	cd build-vivid; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu15~vivid-1_source.changes
 
-ppa_relnext_lucid:
-	cd build-lucid; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
+ppa_rel_wily:
+	cd build-wily; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu15~wily-1_source.changes
 
 ppa_relnext_precise:
 	cd build-precise; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
@@ -149,11 +146,11 @@ ppa_relnext_precise:
 ppa_relnext_trusty:
 	cd build-trusty; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
 
-ppa_relnext_utopic:
-	cd build-utopic; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu14~utopic-1_source.changes
+ppa_relnext_vivid:
+	cd build-vivid; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu15~vivid-1_source.changes
 
-ppa_release_lucid:
-	cd build-lucid; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
+ppa_relnext_wily:
+	cd build-wily; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu15~wily-1_source.changes
 
 ppa_release_precise:
 	cd build-precise; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
@@ -161,8 +158,11 @@ ppa_release_precise:
 ppa_release_trusty:
 	cd build-trusty; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
 
-ppa_release_utopic:
-	cd build-utopic; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu14~utopic-1_source.changes
+ppa_release_vivid:
+	cd build-vivid; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu15~vivid-1_source.changes
+
+ppa_release_wily:
+	cd build-wily; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu15~wily-1_source.changes
 
 app: prepare
 	$(PYTHON) make.py py2app
@@ -200,7 +200,7 @@ thirdpartymodules:
 	cd thirdparty; tar xzf python-dateutil-1.5.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty python-dateutil-1.5/dateutil
 	cd thirdparty; tar xzf desktop-0.4.2.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty desktop-0.4.2/desktop
 	cd thirdparty; tar xzf keyring-3.7.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty keyring-3.7/keyring
-	cd thirdparty; tar xzf lockfile-0.8.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty lockfile-0.8/lockfile.py
+	cd thirdparty; tar xzf lockfile-0.12.2.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty lockfile-0.12.2/lockfile
 	cd thirdparty; tar xzf PyPubSub-3.3.0.tar.gz --strip-components=2 -C ../taskcoachlib/thirdparty PyPubSub-3.3.0/src/pubsub
 	cd thirdparty; tar xzf SquareMap-1.0.3.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty SquareMap-1.0.3/squaremap
 	cd thirdparty; tar xzf python-ntlm-40080cff37ab32570f9bb50bad0a46b957409c18.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty python-ntlm/ntlm
@@ -214,7 +214,6 @@ thirdpartymodules:
 	cd thirdparty; tar xzf agw-r70819.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty agw/hypertreelist.py
 	cd thirdparty; tar xzf gntp-d639fa2e981fe41196a5115ad64320b5061f004b.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty gntp/gntp
 	cd thirdparty; tar xzf pyxdg-0.25.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty pyxdg-0.25/xdg
-	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/lockfile.diff
 	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/customtreectrl.diff
 	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/hypertreelist-headers.diff
 	cd taskcoachlib/thirdparty; patch -p1 < ../../thirdparty/patches/hypertreelist.diff

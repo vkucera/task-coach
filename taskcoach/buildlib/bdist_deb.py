@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2015 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2016 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -257,7 +257,7 @@ Homepage: %(url)s
 
 Package: %(package)s
 Architecture: %(architecture)s
-Depends: python (>= %(pythonversion)s), python-wxgtk2.8 (>= %(wxpythonversion)s), python-wxversion, python-twisted (>= %(twistedversion)s), libxss1, ttf-dejavu
+Depends: python (>= %(pythonversion)s), python-wxgtk2.8 (>= %(wxpythonversion)s), python-wxversion, python-twisted (>= %(twistedversion)s), libxss1, ttf-dejavu, xdg-utils
 Recommends: python-notify, libgnome2-0, libavahi-compat-libdnssd1, x11-utils
 Suggests: python-kde4
 Description: %(description)s.
