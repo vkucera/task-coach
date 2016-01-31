@@ -16,15 +16,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, urllib, re
+import test, urllib2, re
 from taskcoachlib import help # pylint: disable=W0622
 
 
 class MSDownloadTest(test.TestCase):
     def testExeInPage(self):
-        url = help._MSURL # pylint: disable=W0212
+        req = urllib2.Request(help._MSURL)
+        req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36')
         try:
-            content = urllib.urlopen(url).read() 
+            content = urllib2.build_opener().open(req).read()
         except Exception, message: # pylint: disable=W0703
             self.fail('Could not download page: %s' % str(message))
 
