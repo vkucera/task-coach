@@ -274,10 +274,10 @@ alltests: prepare sdist_linux
 coverage: coverage_run coverage_report
 
 coverage_run:
-	cd tests; coverage run --source=../taskcoachlib,unittests test.py
+	cd tests; $(PYTHON) -m coverage run --source=../taskcoachlib,unittests test.py
 
 coverage_report:
-	cd tests; coverage html -d coverage.out --omit=../taskcoachlib/i18n/po2dict.py,../taskcoachlib/i18n/??.py,../taskcoachlib/i18n/???.py,../taskcoachlib/i18n/??_??.py,../taskcoachlib/thirdparty/*.py,../taskcoachlib/meta/debug.py,test.py
+	cd tests; $(PYTHON) -m coverage html -d coverage.out --omit=../taskcoachlib/i18n/po2dict.py,../taskcoachlib/i18n/??.py,../taskcoachlib/i18n/???.py,../taskcoachlib/i18n/??_??.py,../taskcoachlib/thirdparty/*.py,../taskcoachlib/meta/debug.py,test.py
 
 pylint:
 	-pylint --rcfile=.pylintrc -f html taskcoachlib > pylint.html

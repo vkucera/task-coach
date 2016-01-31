@@ -28,7 +28,7 @@ Release('1.5.0', 'August ??, 2014',
         ],
     ),
 
-Release('1.4.3', 'February ??, 2015',
+Release('1.4.3', 'January 31, 2016',
     summary='''This is a mixed feature and bugfix release.''',
     featuresAdded=[
         Feature('''Finnish translation fixed and enabled.'''),
