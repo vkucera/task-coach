@@ -80,9 +80,9 @@ sdist_ubuntu: sdist_linux
 
 sdist_raw:
 	mkdir -p dist
-	cp -a . ../tmp-sdist
-	cd ../tmp-sdist; make nuke; find . -name ".hg" | xargs -d '\n' rm -rf
-	mv ../tmp-sdist dist/TaskCoach-$(TCVERSION)
+	cp -a . ../../tmp-sdist
+	cd ../../tmp-sdist; make nuke; find . -name ".hg" | xargs -d '\n' rm -rf
+	mv ../../tmp-sdist dist/TaskCoach-$(TCVERSION)
 	cd dist; tar czf TaskCoach-$(TCVERSION)-raw.tgz TaskCoach-$(TCVERSION); rm -rf TaskCoach-$(TCVERSION)
 
 dist/TaskCoach-$(TCVERSION).tar.gz:
