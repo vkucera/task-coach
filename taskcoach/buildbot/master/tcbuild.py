@@ -67,7 +67,7 @@ class Revision(Compile):
     name = 'Revision'
     description = ['Generating', 'revision', 'file']
     descriptionDone = ['Revision', 'file', 'generated']
-    command = ['make', 'revision', WithProperties('TCREV=%s', 'got_revision')]
+    command = ['make', 'revision', WithProperties('TCREV=%s', 'got_revision_number')]
 
 
 #==============================================================================
@@ -181,7 +181,7 @@ class DistCompile(Compile):
         if self.getProperty('release'):
             self.command = ['make', self.target or self.name]
         else:
-            self.command = ['make', self.target or self.name, 'TCREV=%s' % self.getProperty('got_revision')]
+            self.command = ['make', self.target or self.name, 'TCREV=%s' % self.getProperty('got_revision_number')]
 
         Compile.start(self)
 
