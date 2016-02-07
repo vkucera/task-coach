@@ -28,6 +28,10 @@ Release('1.4.4', 'January ??, 2016',
         Bugv2('''TaskCoach would not start on Fedora 23 using LXDE. This probably
 concerns other distributions as well.'''),
     ],
+    dependenciesChanged=[
+        Dependency('''Task Coach now uses Marcurial for version control. This
+only affects you if you want to develop or use Task Coach source code.'''),
+    ],
     ),
 
 Release('1.4.3', 'January 31, 2016',
