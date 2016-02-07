@@ -26,7 +26,7 @@ class bdist_portable_base(Command, object):
     ''' Base class for bdist commands that create portable distributions. '''
     
     def copy_files(self, src_dir, dest_dir, copy_recursively=False):
-        if src_dir.endswith('.svn'):
+        if src_dir.endswith('.hg'):
             return
         if not os.path.exists(dest_dir):
             os.mkdir(dest_dir)

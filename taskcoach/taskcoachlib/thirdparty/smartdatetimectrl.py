@@ -901,8 +901,6 @@ class TimeEntry(Entry):
                                         month=3, day=3, hour=11, minute=33, second=0) - datetime.datetime.now()).total_seconds())))
         elif platform.system() == 'Linux':
             try:
-                # Without this gtk import there's a warning if you try to import wx.lib.masked
-                import gtk
                 from PyKDE4.kdecore import KLocale, KGlobal
                 from PyQt4.QtCore import QTime
             except ImportError:

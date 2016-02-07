@@ -24,8 +24,18 @@ releases = [
 
 Release('1.5.0', 'August ??, 2014',
     summary='''This is a major release.''',
+    ),
+
+Release('1.4.4', 'January ??, 2016',
+    summary='''This is a bugfix release.''',
     bugsFixed=[
-        ],
+        Bugv2('''TaskCoach would not start on Fedora 23 using LXDE. This probably
+concerns other distributions as well.'''),
+    ],
+    dependenciesChanged=[
+        Dependency('''Task Coach now uses Marcurial for version control. This
+only affects you if you want to develop or use Task Coach source code.'''),
+    ],
     ),
 
 Release('1.4.3', 'January 31, 2016',
