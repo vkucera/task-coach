@@ -21,7 +21,7 @@ import os
 
 def visitDir(arg, dirname, names):
     try:
-        names.remove('.svn')
+        names.remove('.hg')
     except:
         pass
 

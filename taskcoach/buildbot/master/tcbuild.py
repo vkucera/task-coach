@@ -45,7 +45,7 @@ class Revert(Compile):
     name = 'Revert'
     description = ['Reverting', 'locally', 'modified', 'files']
     descriptionDone = ['Local', 'changes', 'reverted']
-    command = ['svn', 'revert', '-R', '.']
+    command = ['hg', 'revert', '.']
 
 
 class Cleanup(Compile):

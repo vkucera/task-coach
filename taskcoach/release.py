@@ -43,7 +43,7 @@ Release steps:
     * Wait for the confirmation email from Launchpad and copy the URL
     * Run 'cd i18n.in && python make.py <url>' to update the translations
     * Run 'make languagetests' to test the translations
-    * When all tests pass, run 'svn commit -m "Updated translations"' 
+    * When all tests pass, run 'hg commit -m "Updated translations"' 
   - Run 'make reallyclean' to remove old packages.
   - Run 'make alltests'.
   - Run 'python release.py release' to build the distributions, upload and download them
@@ -52,7 +52,7 @@ Release steps:
     Twitter, Identi.ca, Freecode and PyPI (Python Package Index), mark the bug reports
     on SourceForge fixed-and-released, send the 
     announcement email, mark .dmg and .exe files as default downloads for their
-    platforms, and to tag the release in Subversion.
+    platforms, and to tag the release in Mercurial.
   - Create branch if feature release.
   - Merge recent changes to the trunk.
   - Add release to Sourceforge bug tracker and support request groups.
@@ -645,7 +645,7 @@ def releasing(settings, options):
     uploading_website(settings, options)
     announcing(settings, options)
     updating_Sourceforge_trackers(settings, options)
-    tagging_release_in_subversion(settings, options)
+    tagging_release_in_mercurial(settings, options)
     marking_default_downloads(settings, options)
 
 
@@ -735,30 +735,17 @@ Server said: %s
 
 
 @progress
-def tagging_release_in_subversion(settings, options):
+def tagging_release_in_mercurial(settings, options):
     metadata = taskcoachlib.meta.data.metaDict
     version = metadata['version']
-    username = settings.get('sourceforge', 'username') 
     release_tag = 'Release' + version.replace('.', '_')
-    output = subprocess.check_output(['svn', 'info'])
-    for line in output.split('\n'):
-        if line.startswith('URL: '):
-            source_url = line[5:].strip()
-            break
-    else:
-        raise RuntimeError('Could not find source URL')
-
-    if source_url.startswith('https://'):
-        tag_url = 'https://svn.code.sf.net/p/taskcoach/code/tags/'
-    else:
-        tag_url = 'svn+ssh://%s@svn.code.sf.net/p/taskcoach/code/tags/' % username
-    target_url = tag_url + release_tag
+    hg_tag = 'hg tag %s' % release_tag
     commit_message = 'Tag for release %s.' % version
-    svn_copy = 'svn copy -m "%s" %s %s' % (commit_message, source_url, target_url)
     if options.dry_run:
-        print 'Skipping %s.' % svn_copy
+        print 'Skipping %s.' % hg_tag
     else:
-        os.system(svn_copy)
+        os.system(hg_tag)
+        os.system('hg commit -m "%s"' % commit_message)
 
 
 COMMANDS = dict(release=releasing,
@@ -777,7 +764,7 @@ COMMANDS = dict(release=releasing,
                 mail=mailing_announcement,
                 announce=announcing,
                 update=updating_Sourceforge_trackers,
-                tag=tagging_release_in_subversion,
+                tag=tagging_release_in_mercurial,
                 markdefault=marking_default_downloads,
                 markfixed=marking_bug_fixed,
                 markreleased=marking_bug_released)

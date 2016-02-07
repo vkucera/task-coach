@@ -600,20 +600,20 @@ source_zip = download_table(download_urls=dict(Sourceforge='%(dist_download_pref
                             platform_versions_supported='All Windows platforms that support the prerequisites',
                             **sourceOptions)
 
-subversion = download_table(image='sources',
-                            download_urls=dict(Sourceforge='http://sourceforge.net/projects/taskcoach/develop'),
-                            package_type='Sources from Subversion',
-                            platform='all platforms', platform_lower='subversion',
-                            platform_versions_supported='All platforms that support the prerequisites',
-                            prerequisites=prerequisites,
-                            installation='''Run <code>make prepare</code> to generate 
+mercurial = download_table(image='sources',
+                           download_urls=dict(Sourceforge='http://sourceforge.net/projects/taskcoach/develop'),
+                           package_type='Sources from Mercurial',
+                           platform='all platforms', platform_lower='mercurial',
+                           platform_versions_supported='All platforms that support the prerequisites',
+                           prerequisites=prerequisites,
+                           installation='''Run <code>make prepare</code> to generate 
               the icons and language files and then <code>python taskcoach.py</code> 
               to start the application''')
 
 
 pages['download_sources'] = sep.join([download_header(release='%(version)s'), 
                                       source_rpm, source_zip, 
-                                      source_tgz, source_raw, subversion,
+                                      source_tgz, source_raw, mercurial,
                                       download_footer()])
 
 
@@ -972,9 +972,9 @@ pages['devinfo'] = '''
                     
                     <h2>Getting the source</h2>
                     <p>%(name)s source code is hosted in a <a
-                    href="http://sourceforge.net/svn/?group_id=130831">Subversion repository 
+                    href="http://hg.code.sf.net/p/taskcoach/repo taskcoach-repo">Mercurial repository 
                     at SourceForge</a>. You can check out the code from the repository 
-                    directly or <a href="http://taskcoach.svn.sourceforge.net/">browse the
+                    directly or <a href="https://sourceforge.net/p/taskcoach/repo/ci/default/tree/">browse the
                     repository</A>. Please read the file <tt>HACKING.txt</tt> after checking
                     out the sources. You can generate documentation with Epydoc and Graphviz
                     from the Makefile: <code>make dot epydoc</code>.</p>
@@ -1026,7 +1026,7 @@ pages['devinfo'] = '''
                     styles. But it turned out to be quite handy, since you can easily
                     see whether some method is a wxPython method or not.</p>
                     
-                    <h2>SVN usage conventions</h2>
+                    <h2>Mercurial usage conventions</h2>
                     <p>Releases are tagged ReleaseX_Y_Z and for each ReleaseX_Y_0 a 
                     branch (ReleaseX_Y_Branch) is created to facilitate bug fix releases. 
                     The release tagging and branching is part of 
