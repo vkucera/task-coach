@@ -23,12 +23,16 @@ import wx
 
 
 # Prepare for printing. On Jolicloud, printing crashes unless we do this:
-if operating_system.isGTK():
-    try:
-        import gtk  # pylint: disable=F0401
-        gtk.remove_log_handlers()
-    except ImportError:
-        pass
+
+# BUT on Fedora, if we do this, TaskCoach doesn't even start. My opinion is that
+# Fedora is more widely used than Jolicloud.
+
+## if operating_system.isGTK():
+##     try:
+##         import gtk  # pylint: disable=F0401
+##         gtk.remove_log_handlers()
+##     except ImportError:
+##         pass
 
 
 class PrinterSettings(object):

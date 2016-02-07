@@ -22,6 +22,14 @@ from changetypes import *
 
 releases = [
 
+Release('1.4.4', 'January ??, 2016',
+    sumary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bugv2('''TaskCoach would not start on Fedora 23 using LXDE. This probably
+concerns other distributions as well.'''),
+    ],
+    ),
+
 Release('1.4.3', 'January 31, 2016',
     summary='''This is a mixed feature and bugfix release.''',
     featuresAdded=[
