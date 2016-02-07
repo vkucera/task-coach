@@ -210,7 +210,7 @@ class DistCompile(Compile):
 class UploadBase(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = WithProperties('%s', 'filename')
-        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-packages/%s/%s', 'branch', 'basefilename')
+        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-packages/branches/%s/%s', 'branch', 'basefilename')
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
 
@@ -221,8 +221,8 @@ class UploadBase(FileUpload):
         FileUpload.start(self)
 
         if not self.getProperty('release'):
-            url = 'http://www.fraca7.net/TaskCoach-packages/%s/%s' % (self.getProperty('branch') or '',
-                                                                      self.getProperty('basefilename'))
+            url = 'http://www.fraca7.net/TaskCoach-packages/branches/%s/%s' % (self.getProperty('branch') or '',
+                                                                               self.getProperty('basefilename'))
 
             self.addURL('Download', url)
 
@@ -230,7 +230,7 @@ class UploadBase(FileUpload):
 class UploadChangelog(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = 'changelog_content'
-        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-packages/%s/changelog_content', 'branch')
+        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-packages/branches/%s/changelog_content', 'branch')
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
 
