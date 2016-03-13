@@ -2630,3 +2630,47 @@ class AlwaysRoundUp(settings_uicommand.UICheckCommand, ViewerCommand):
     def enable(self, enable=True):
         if self.checkboxCtrl is not None:
             self.checkboxCtrl.Enable(enable)
+
+class ConsolidateEffortsPerTask(settings_uicommand.UICheckCommand, ViewerCommand):
+	def __init__(self, *args, **kwargs):
+		self.checkboxCtrl = None
+		super(ConsolidateEffortsPerTask, self).__init__(\
+			menuText=_('&Consolidate efforts per task'),
+			helpText=_('Consolidate all efforts per task to a single effort before rounding'),
+			*args, **kwargs)
+
+	def appendToToolBar(self, toolbar):
+		''' Add a checkbox control to the toolbar. '''
+		# pylint: disable=W0201
+		self.checkboxCtrl = wx.CheckBox(toolbar, label=self.menuText)
+		self.checkboxCtrl.Bind(wx.EVT_CHECKBOX, self.onCheck)
+		toolbar.AddControl(self.checkboxCtrl)
+
+	def unbind(self, window, itemId):
+		if self.checkboxCtrl is not None:
+			self.checkboxCtrl.Unbind(wx.EVT_CHECKBOX)
+			self.checkboxCtrl = None
+		super(ConsolidateEffortsPerTask, self).unbind(window, itemId)
+
+	def isSettingChecked(self):
+		return self.settings.getboolean(self.viewer.settingsSection(),
+								        'consolidateeffortspertask')
+
+	def onCheck(self, event):
+		self.setSetting(self._isMenuItemChecked(event))
+
+	def doCommand(self, event):
+		self.setSetting(self._isMenuItemChecked(event))
+
+	def setSetting(self, consolidateEffortsPerTask):
+		self.settings.setboolean(self.viewer.settingsSection(), 'consolidateeffortspertask',
+						         consolidateEffortsPerTask)
+
+	def setValue(self, value):
+		if self.checkboxCtrl is not None:
+			self.checkboxCtrl.SetValue(value)
+
+
+	def enable(self, enable=True):
+		if self.checkboxCtrl is not None:
+			self.checkboxCtrl.Enable(enable)

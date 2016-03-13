@@ -23,11 +23,14 @@ from changetypes import *
 releases = [
 
 Release('1.4.4', 'January ??, 2016',
-    summary='''This is a bugfix release.''',
+    summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
         Bugv2('''TaskCoach would not start on Fedora 23 using LXDE. This probably
 concerns other distributions as well.'''),
     ],
+    featuresAdded=[
+        Feature('''Per-task effort total time consolidation, patch provided by rogerdc@gmail.com'''),
+        ],
     dependenciesChanged=[
         Dependency('''Task Coach now uses Marcurial for version control. This
 only affects you if you want to develop or use Task Coach source code.'''),

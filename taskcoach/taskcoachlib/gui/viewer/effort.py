@@ -59,6 +59,8 @@ class EffortViewer(base.ListViewer,
                       'settings.%s.round' % self.settingsSection())
         pub.subscribe(self.onRoundingChanged, 
                       'settings.%s.alwaysroundup' % self.settingsSection())
+        pub.subscribe(self.onRoundingChanged,
+				      'settings.%s.consolidateeffortspertask' % self.settingsSection())
         pub.subscribe(self.on_aggregation_changed, 
                       'settings.%s.aggregation' % self.settingsSection())
         pub.subscribe(self.onHourDisplayChanged,
@@ -96,7 +98,9 @@ class EffortViewer(base.ListViewer,
         self.roundingUICommand.enable(aggregated)
         self.alwaysRoundUpUICommand.setValue(self.__always_round_up())
         self.alwaysRoundUpUICommand.enable(aggregated and rounding != 0)
-        
+        self.consolidateEffortsPerTaskUICommand.setValue(self.__consolidate_efforts_per_task())
+        self.consolidateEffortsPerTaskUICommand.enable(aggregated and rounding != 0)
+    
     def domainObjectsToView(self):
         if self.__domainObjectsToView is None:
             if self.__displayingNewTasks():
@@ -342,8 +346,10 @@ class EffortViewer(base.ListViewer,
                                                              settings=self.settings)
         self.alwaysRoundUpUICommand = uicommand.AlwaysRoundUp(viewer=self, 
                                                               settings=self.settings)
+        self.consolidateEffortsPerTaskUICommand = uicommand.ConsolidateEffortsPerTask(viewer=self,
+                                                                                      settings=self.settings)
         return (self.aggregationUICommand, self.roundingUICommand, 
-                self.alwaysRoundUpUICommand)
+                self.alwaysRoundUpUICommand, self.consolidateEffortsPerTaskUICommand)
 
     def supportsRounding(self):
         return True
@@ -351,11 +357,13 @@ class EffortViewer(base.ListViewer,
     def getRoundingUICommands(self):
         return [uicommand.AlwaysRoundUp(viewer=self, settings=self.settings), 
                 None] + \
-               [uicommand.RoundBy(menuText=menuText, value=value, viewer=self, 
-                                  settings=self.settings) \
-                for (menuText, value) in zip(uicommand.RoundingPrecision.choiceLabels, 
-                                             uicommand.RoundingPrecision.choiceData)]
-               
+                [uicommand.ConsolidateEffortsPerTask(viewer=self, settings=self.settings),
+                 None] + \
+                 [uicommand.RoundBy(menuText=menuText, value=value, viewer=self, 
+                                    settings=self.settings) \
+                  for (menuText, value) in zip(uicommand.RoundingPrecision.choiceLabels, 
+                                               uicommand.RoundingPrecision.choiceData)]
+
     def hasModes(self):
         return True
     
@@ -483,7 +491,6 @@ class EffortViewer(base.ListViewer,
             showSeconds = self.__show_seconds()
         else:
             showSeconds = True
-
         return render.timeSpent(duration, showSeconds=showSeconds, decimal=self.settings.getboolean('feature', 'decimaltime'))
 
     def __renderTotalTimeSpent(self, anEffort):
@@ -492,7 +499,8 @@ class EffortViewer(base.ListViewer,
         # No need to check for aggregation because this method is only used
         # in aggregated mode
         total_duration = anEffort.duration(recursive=True,
-               rounding=self.__round_precision(), roundUp=self.__always_round_up())
+               rounding=self.__round_precision(), roundUp=self.__always_round_up(),
+			   consolidate=self.__consolidate_efforts_per_task())
         return render.timeSpent(total_duration, 
                             showSeconds=self.__show_seconds(),
                             decimal=self.settings.getboolean('feature', 'decimaltime'))
@@ -504,6 +512,7 @@ class EffortViewer(base.ListViewer,
         if isinstance(anEffort, effort.BaseCompositeEffort):
             kwargs['rounding'] = self.__round_precision()
             kwargs['roundUp'] = self.__always_round_up()
+            kwargs['consolidate'] = self.__consolidate_efforts_per_task()
         duration = anEffort.durationDay(dayOffset, **kwargs) \
             if self.aggregation == 'week' else date.TimeDelta()
         return render.timeSpent(self.__round_duration(duration), 
@@ -547,6 +556,10 @@ class EffortViewer(base.ListViewer,
     def __always_round_up(self):
         ''' Return whether durations are always rounded up or not. '''
         return self.settings.getboolean(self.settingsSection(), 'alwaysroundup')
+
+    def __consolidate_efforts_per_task(self):
+        ''' Return whether task efforts are consolidated before rounding. '''
+        return self.settings.getboolean(self.settingsSection(), 'consolidateeffortspertask')
 
 
 class EffortViewerForSelectedTasks(EffortViewer):
