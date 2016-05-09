@@ -30,6 +30,8 @@ concerns other distributions as well.'''),
     ],
     featuresAdded=[
         Feature('''Per-task effort total time consolidation, patch provided by rogerdc@gmail.com'''),
+        Feature('''Add a viewer for task dependencies based on igraph (contributed
+by Matthias Tafelmeier)'''),
         ],
     dependenciesChanged=[
         Dependency('''Task Coach now uses Marcurial for version control. This

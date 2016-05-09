@@ -30,10 +30,16 @@ from taskcoachlib.thirdparty.pubsub import pub
 from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_TODAY, wxFancyDrawer
 from taskcoachlib.thirdparty import smartdatetimectrl as sdtc
 from taskcoachlib.widgets import CalendarConfigDialog, HierarchicalCalendarConfigDialog
+from twisted.internet.threads import deferToThread
+from twisted.internet.defer import inlineCallbacks
 import base
 import inplace_editor
 import mixin
-import refresher 
+import refresher
+import wx
+import tempfile
+import igraph
+import struct
 
 
 class DueDateTimeCtrl(inplace_editor.DateTimeCtrl):
@@ -1508,3 +1514,146 @@ class TaskStatsViewer(BaseTaskViewer):  # pylint: disable=W0223
     def onPieChartAngleChanged(self, value):  # pylint: disable=W0613
         self.refresh()
 
+
+class TaskInterdepsViewer(BaseTaskViewer):
+    defaultTitle = ('Tasks Interdependencies')
+    defaultBitmap = ('graph_icon')
+
+    graphFile = tempfile.NamedTemporaryFile(suffix=".png")
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('settingsSection', 'taskinterdepsviewer')
+        self.refreshCount = 0 # refresh called from parent constructor
+        super(TaskInterdepsViewer, self).__init__(*args, **kwargs)
+
+        pub.subscribe(self.onAttributeChanged, task.Task.dependenciesChangedEventType())
+        pub.subscribe(self.onAttributeChanged, task.Task.prerequisitesChangedEventType())
+
+    def createWidget(self):
+        self.scrolled_panel = wx.lib.scrolledpanel.ScrolledPanel(self, -1)
+
+        self.vbox = wx.BoxSizer(wx.VERTICAL)
+        self.hbox = wx.BoxSizer(wx.HORIZONTAL)
+        self.vbox.Add(self.hbox, 0, wx.ALIGN_CENTRE)
+        self.scrolled_panel.SetSizer(self.vbox)
+
+        graph, visual_style = self.form_depend_graph()
+        igraph.plot(graph, self.graphFile.name, **visual_style)
+        graph_png_bm = wx.StaticBitmap(self.scrolled_panel, wx.ID_ANY,
+                                       wx.Image(self.graphFile.name, wx.BITMAP_TYPE_ANY).ConvertToBitmap())
+
+        self.hbox.Add(graph_png_bm, 1, wx.ALL, 3)
+        self.scrolled_panel.SetupScrolling()
+
+        return self.scrolled_panel 
+
+    def onAttributeChanged(self, newValue, sender):
+        self.refreshCount += 1
+        if self.refreshCount == 1:
+            self.refresh()
+
+    def createClipboardToolBarUICommands(self):
+        return ()
+
+    def createEditToolBarUICommands(self):
+        return ()
+
+    def createCreationToolBarUICommands(self):
+        return ()
+
+    def createActionToolBarUICommands(self):
+        return tuple([uicommand.ViewerHideTasks(taskStatus=status,
+                                                settings=self.settings, viewer=self) \
+                      for status in task.Task.possibleStatuses()]) 
+
+    def initLegend(self, widget):
+        legend = widget.GetLegend()
+        legend.Show()
+
+    @staticmethod
+    def determine_vertex_weight(budget, priority):
+        budg_h = budget.total_seconds()/3600
+        return  (budg_h + priority * (budg_h + 1) + 10) % 200
+
+    @staticmethod
+    def convert_rgba_to_rgb(rgba):
+        rgb = (rgba[0], rgba[1], rgba[2])
+        return "#" + struct.pack('BBB', *rgb).encode('hex')
+
+    def form_depend_graph(self):
+        tasks = self.presentation()
+        dep_to_requ_m = {}
+        edges = []
+        prerequs = []
+        vertices = [] 
+        vertices_w = []
+        vertices_col = []
+        for task in tasks:
+            new_prereq = False
+            name = task.subject()    
+            for prerequ in task.prerequisites():
+                prerequs.append((prerequ.subject(), name))
+                new_prereq = True
+            if new_prereq == True or len(task.dependencies()) > 0:
+                vertices.append(name)
+                vertices_w.append(self.determine_vertex_weight(task.budget(), task.priority()))
+                color = self.convert_rgba_to_rgb(task.foregroundColor(recursive=True))
+                vertices_col.append(color)
+
+        #build edges
+        for prerequ in prerequs:
+            src_v = vertices.index(prerequ[0])
+            dst_v = vertices.index(prerequ[1])
+            edges.append((src_v, dst_v))
+
+        graph = igraph.Graph(vertex_attrs={"label": vertices}, edges=edges, directed=True)
+        graph.topological_sorting(mode=igraph.OUT)
+        visual_style = {}
+        visual_style["vertex_color"] = vertices_col
+        e_width = 3
+        visual_style["edge_width"] = [e_width for x in graph.es]
+        visual_style["margin"] = 70
+        visual_style["edge_curved"] = True 
+        graph.vs["label_dist"] = 1 
+
+        #weighted vertex 
+        indegree = graph.degree(type="in")
+        if len(indegree) > 0:
+            max_i_degree = max(indegree)
+        visual_style["vertex_size"] = [(i_deg/max_i_degree) * 20 + vert_w 
+                for i_deg, vert_w in zip(indegree, vertices_w)]
+
+        return graph, visual_style
+    
+    def getFgColor(self, status):
+        color = wx.Colour(*eval(self.settings.get('fgcolor', 
+                                                  '%stasks' % status)))
+        if status == task.status.active and color == wx.BLACK:
+            color = wx.BLUE
+        return color
+
+    def refreshItems(self, *args, **kwargs):  # pylint: disable=W0613
+        self.onAttributeChanged(self, None, None)
+
+    def select(self, *args):
+        pass
+
+    def updateSelection(self, *args, **kwargs):
+        pass
+
+    def isTreeViewer(self):
+        return False
+
+    @inlineCallbacks
+    def refresh(self):
+        while self.refreshCount:
+            # Compute this in main thread because of concurrent access issues
+            graph, visual_style = self.form_depend_graph()
+            self.refreshCount = 0 # Any new refresh starting here should trigger a new iteration
+            yield deferToThread(igraph.plot, graph, self.graphFile.name, **visual_style)
+
+        # Only update graphics once all refreshes have been "collapsed"
+        graph_png_bm = wx.StaticBitmap(self.scrolled_panel, wx.ID_ANY,
+                                       wx.Image(self.graphFile.name, wx.BITMAP_TYPE_ANY).ConvertToBitmap())
+        self.hbox.Clear(True)
+        self.hbox.Add(graph_png_bm, 1, wx.ALL, 3)
