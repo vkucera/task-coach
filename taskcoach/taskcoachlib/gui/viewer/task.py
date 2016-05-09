@@ -1523,7 +1523,8 @@ class TaskInterdepsViewer(BaseTaskViewer):
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'taskinterdepsviewer')
-        self.refreshCount = 0 # refresh called from parent constructor
+        self._needsUpdate = False # refresh called from parent constructor
+        self._updating = False
         super(TaskInterdepsViewer, self).__init__(*args, **kwargs)
 
         pub.subscribe(self.onAttributeChanged, task.Task.dependenciesChangedEventType())
@@ -1546,11 +1547,6 @@ class TaskInterdepsViewer(BaseTaskViewer):
         self.scrolled_panel.SetupScrolling()
 
         return self.scrolled_panel 
-
-    def onAttributeChanged(self, newValue, sender):
-        self.refreshCount += 1
-        if self.refreshCount == 1:
-            self.refresh()
 
     def createClipboardToolBarUICommands(self):
         return ()
@@ -1632,9 +1628,6 @@ class TaskInterdepsViewer(BaseTaskViewer):
             color = wx.BLUE
         return color
 
-    def refreshItems(self, *args, **kwargs):  # pylint: disable=W0613
-        self.onAttributeChanged(self, None, None)
-
     def select(self, *args):
         pass
 
@@ -1644,13 +1637,26 @@ class TaskInterdepsViewer(BaseTaskViewer):
     def isTreeViewer(self):
         return False
 
-    @inlineCallbacks
+    def refreshItems(self, *items):
+        self.refresh()
+
     def refresh(self):
-        while self.refreshCount:
+        if not self._needsUpdate:
+            self._needsUpdate = True
+            if not self._updating:
+                self._refresh()
+
+    @inlineCallbacks
+    def _refresh(self):
+        while self._needsUpdate:
             # Compute this in main thread because of concurrent access issues
             graph, visual_style = self.form_depend_graph()
-            self.refreshCount = 0 # Any new refresh starting here should trigger a new iteration
-            yield deferToThread(igraph.plot, graph, self.graphFile.name, **visual_style)
+            self._needsUpdate = False # Any new refresh starting here should trigger a new iteration
+            self._updating = True
+            try:
+                yield deferToThread(igraph.plot, graph, self.graphFile.name, **visual_style)
+            finally:
+                self._updating = False
 
         # Only update graphics once all refreshes have been "collapsed"
         graph_png_bm = wx.StaticBitmap(self.scrolled_panel, wx.ID_ANY,
