@@ -170,6 +170,7 @@ iconlist = [
 ('weather_sunny_icon', 'apps', 'kweather', [16]),
 ('weather_umbrella_icon', 'apps', 'colors', [16]),
 ('wrench_icon', 'actions', 'configure', [16, 22, 32]),
+('graph_icon', 'apps', 'graph', [16, 22, 32]),
 ]
 
 icons = {}

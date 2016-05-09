@@ -45,6 +45,20 @@ hack zope.interface (a Twisted dependency) as described here:
 
 http://stackoverflow.com/questions/7816799/getting-py2exe-to-work-with-zope-interface
 
+Starting with 1.4.4 you'll also need python-igraph. Binaries are
+available for Windows, but installing this on OSX is a bit
+difficult. The best way is probably to install the C core using Brew,
+and then the Python extension using pip:
+
+brew install gcc
+brew tap homebrew/science
+brew install --use-gcc --universal igraph
+sudo pip install python-igraph
+
+Note that --universal is needed because wxWidgets 2.x is 32-bits only;
+--use-gcc is needed because of a bug in recent versions of the XCode
+command-line tools, which make the link fail.
+
 --- Preparation -----------------------------------------------------
 
 Task Coach needs a few generated files, run the following command

@@ -33,6 +33,7 @@ BuildArch:	noarch
 Requires: 	python >= %(pythonversion)s
 Requires:	python-wxGTK >= %(wxpythonversionnumber)s
 Requires:	python-twisted >= %(twistedversionnumber)s
+Requires:	python-igraph >= %(igraphversionnumber)s
 
 # Must have setuptools to build the package
 BuildRequires: python-setuptools

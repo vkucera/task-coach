@@ -133,6 +133,7 @@ pythonversion = '2.6'
 wxpythonversionnumber = '2.8.9.2'
 wxpythonversion = '%s-unicode' % wxpythonversionnumber
 twistedversionnumber = '10.0'
+igraphversionnumber = '0.7'
 
 languages = {
     'English (US)': (None, True),

@@ -34,6 +34,7 @@ BuildArch:	noarch
 Requires: 	python >= %(pythonversion)s
 Requires:	wxPython >= %(wxpythonversionnumber)s
 Requires:	python-twisted >= %(twistedversionnumber)s
+Requires:	python-igraph >= %(igraphversionnumber)s
 # Depend on libXScrnSaver for libXss
 Requires:   libXScrnSaver >= 1.2.0
 

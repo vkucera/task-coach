@@ -472,7 +472,10 @@ class ViewViewerMenu(Menu):
                     viewerClass=viewer.EffortViewer, **kwargs),
             ViewViewer(menuText=_('&Note'),
                    helpText=_('Open a new tab with a viewer that displays notes'),
-                   viewerClass=viewer.NoteViewer, **kwargs)]
+                   viewerClass=viewer.NoteViewer, **kwargs),
+            ViewViewer(menuText=_('&Dependency Graph'),
+                       helpText=_('Open a new tab with a viewer that dependencies between weighted tasks over time'),
+                       viewerClass=viewer.TaskInterdepsViewer, **kwargs)]
         self.appendUICommands(*viewViewerCommands)
        
                                       

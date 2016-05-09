@@ -27,7 +27,11 @@ Release('1.5.0', 'August ??, 2014',
     ),
 
 Release('1.4.4', 'January ??, 2016',
-    summary='''This is a bugfix release.''',
+    summary='''This is a mixed feature and bugfix release.''',
+    featuresAdded=[
+        Feature('''Add a viewer for task dependencies based on igraph (contributed
+by Matthias Tafelmeier)'''),
+        ],
     bugsFixed=[
         Bugv2('''TaskCoach would not start on Fedora 23 using LXDE. This probably
 concerns other distributions as well.'''),
