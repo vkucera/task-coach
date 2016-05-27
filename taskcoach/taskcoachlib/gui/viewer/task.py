@@ -1539,9 +1539,12 @@ class TaskInterdepsViewer(BaseTaskViewer):
         self.scrolled_panel.SetSizer(self.vbox)
 
         graph, visual_style = self.form_depend_graph()
-        igraph.plot(graph, self.graphFile.name, **visual_style)
-        graph_png_bm = wx.StaticBitmap(self.scrolled_panel, wx.ID_ANY,
-                                       wx.Image(self.graphFile.name, wx.BITMAP_TYPE_ANY).ConvertToBitmap())
+        if graph.get_edgelist():
+            igraph.plot(graph, self.graphFile.name, **visual_style)
+            bitmap = wx.Image(self.graphFile.name, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+        else:
+            bitmap = wx.NullBitmap
+        graph_png_bm = wx.StaticBitmap(self.scrolled_panel, wx.ID_ANY, bitmap)
 
         self.hbox.Add(graph_png_bm, 1, wx.ALL, 3)
         self.scrolled_panel.SetupScrolling()
@@ -1652,14 +1655,17 @@ class TaskInterdepsViewer(BaseTaskViewer):
             # Compute this in main thread because of concurrent access issues
             graph, visual_style = self.form_depend_graph()
             self._needsUpdate = False # Any new refresh starting here should trigger a new iteration
-            self._updating = True
-            try:
-                yield deferToThread(igraph.plot, graph, self.graphFile.name, **visual_style)
-            finally:
-                self._updating = False
+            if graph.get_edgelist():
+                self._updating = True
+                try:
+                    yield deferToThread(igraph.plot, graph, self.graphFile.name, **visual_style)
+                finally:
+                    self._updating = False
+                bitmap = wx.Image(self.graphFile.name, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+            else:
+                bitmap = wx.NullBitmap
 
         # Only update graphics once all refreshes have been "collapsed"
-        graph_png_bm = wx.StaticBitmap(self.scrolled_panel, wx.ID_ANY,
-                                       wx.Image(self.graphFile.name, wx.BITMAP_TYPE_ANY).ConvertToBitmap())
+        graph_png_bm = wx.StaticBitmap(self.scrolled_panel, wx.ID_ANY, bitmap)
         self.hbox.Clear(True)
         self.hbox.Add(graph_png_bm, 1, wx.ALL, 3)
