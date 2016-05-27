@@ -1580,44 +1580,40 @@ class TaskInterdepsViewer(BaseTaskViewer):
         return "#" + struct.pack('BBB', *rgb).encode('hex')
 
     def form_depend_graph(self):
-        tasks = self.presentation()
-        dep_to_requ_m = {}
-        edges = []
-        prerequs = []
-        vertices = [] 
-        vertices_w = []
-        vertices_col = []
-        for task in tasks:
-            new_prereq = False
-            name = task.subject()    
-            for prerequ in task.prerequisites():
-                prerequs.append((prerequ.subject(), name))
-                new_prereq = True
-            if new_prereq == True or len(task.dependencies()) > 0:
-                vertices.append(name)
-                vertices_w.append(self.determine_vertex_weight(task.budget(), task.priority()))
-                color = self.convert_rgba_to_rgb(task.foregroundColor(recursive=True))
-                vertices_col.append(color)
+        vertices = dict() # task => (weight, color)
+        edges = set() # of 2-tuples (task, task)
 
-        #build edges
-        for prerequ in prerequs:
-            src_v = vertices.index(prerequ[0])
-            dst_v = vertices.index(prerequ[1])
-            edges.append((src_v, dst_v))
+        def addVertex(tsk):
+            if tsk not in vertices:
+                vertices[tsk] = (self.determine_vertex_weight(tsk.budget(), tsk.priority()),
+                                 self.convert_rgba_to_rgb(task.foregroundColor(recursive=True)))
+
+        for task in self.presentation():
+            if task.prerequisites():
+                addVertex(task)
+                for prereq in task.prerequisites():
+                    addVertex(prereq)
+                    edges.add((prereq, task))
+
+        vertices = list(vertices.items())
+        vertices_w = [weight for task, (weight, color) in vertices]
+        vertices_col = [color for task, (weight, color) in vertices]
+        vertices = [task for task, (weight, color) in vertices]
+        edges = [(vertices.index(task0), vertices.index(task1)) for (task0, task1) in edges]
+        vertices = [task.subject() for task in vertices]
 
         graph = igraph.Graph(vertex_attrs={"label": vertices}, edges=edges, directed=True)
         graph.topological_sorting(mode=igraph.OUT)
         visual_style = {}
         visual_style["vertex_color"] = vertices_col
-        e_width = 3
-        visual_style["edge_width"] = [e_width for x in graph.es]
+        visual_style["edge_width"] = [3 for x in graph.es]
         visual_style["margin"] = 70
         visual_style["edge_curved"] = True 
         graph.vs["label_dist"] = 1 
 
         #weighted vertex 
         indegree = graph.degree(type="in")
-        if len(indegree) > 0:
+        if indegree:
             max_i_degree = max(indegree)
         visual_style["vertex_size"] = [(i_deg/max_i_degree) * 20 + vert_w 
                 for i_deg, vert_w in zip(indegree, vertices_w)]
