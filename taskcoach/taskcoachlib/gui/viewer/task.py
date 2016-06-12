@@ -1595,11 +1595,11 @@ class TaskInterdepsViewer(BaseTaskViewer):
                     addVertex(prereq)
                     edges.add((prereq, task))
 
-        vertices = list(vertices.items())
+        vertices = list(sorted(vertices.items()))
         vertices_w = [weight for task, (weight, color) in vertices]
         vertices_col = [color for task, (weight, color) in vertices]
         vertices = [task for task, (weight, color) in vertices]
-        edges = [(vertices.index(task0), vertices.index(task1)) for (task0, task1) in edges]
+        edges = sorted([(vertices.index(task0), vertices.index(task1)) for (task0, task1) in edges])
         vertices = [task.subject() for task in vertices]
 
         graph = igraph.Graph(vertex_attrs={"label": vertices}, edges=edges, directed=True)
