@@ -1595,11 +1595,11 @@ class TaskInterdepsViewer(BaseTaskViewer):
                     addVertex(prereq)
                     edges.add((prereq, task))
 
-        vertices = list(vertices.items())
+        vertices = list(sorted(vertices.items()))
         vertices_w = [weight for task, (weight, color) in vertices]
         vertices_col = [color for task, (weight, color) in vertices]
         vertices = [task for task, (weight, color) in vertices]
-        edges = [(vertices.index(task0), vertices.index(task1)) for (task0, task1) in edges]
+        edges = sorted([(vertices.index(task0), vertices.index(task1)) for (task0, task1) in edges])
         vertices = [task.subject() for task in vertices]
 
         graph = igraph.Graph(vertex_attrs={"label": vertices}, edges=edges, directed=True)
@@ -1665,3 +1665,4 @@ class TaskInterdepsViewer(BaseTaskViewer):
         graph_png_bm = wx.StaticBitmap(self.scrolled_panel, wx.ID_ANY, bitmap)
         self.hbox.Clear(True)
         self.hbox.Add(graph_png_bm, 1, wx.ALL, 3)
+        wx.CallAfter(self.scrolled_panel.SendSizeEvent)
