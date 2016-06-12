@@ -1665,3 +1665,4 @@ class TaskInterdepsViewer(BaseTaskViewer):
         graph_png_bm = wx.StaticBitmap(self.scrolled_panel, wx.ID_ANY, bitmap)
         self.hbox.Clear(True)
         self.hbox.Add(graph_png_bm, 1, wx.ALL, 3)
+        wx.CallAfter(self.scrolled_panel.SendSizeEvent)
