@@ -127,7 +127,7 @@ footer = '''
             <p style="text-align: center">
                 %(name)s is made possible by:
                 <br>
-                <a href="http://www.hostland.com">Hostland</a> and
+                <a href="http://www.hostland.com">Hostland Web Hosting</a> and
                 <a href="http://henry.olders.ca">Henry Olders</a> (web hosting)
                 &nbsp;
                 <a href="http://www.python.org"><img src="images/python-powered-w-70x28.png" alt="Python"
