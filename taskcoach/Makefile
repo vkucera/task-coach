@@ -120,7 +120,7 @@ ubuntu: sdist_ubuntu
 	mv build build-vivid
 	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu wily 15 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu15~wily.tar.gz
 	mv build build-wily
-	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu xenial 15 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu16~xenial.tar.gz
+	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu xenial 16 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu16~xenial.tar.gz
 	mv build build-xenial
 
 ppa_sign: ubuntu
