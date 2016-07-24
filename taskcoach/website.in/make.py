@@ -160,7 +160,7 @@ pages['getsupport'] = '''
                     the manual is far from being completed. However, since this is a 
                     community effort, you can help too.</p>
                     <p><a class="btn" 
-                          href="https://snowdrift.coop/p/taskcoach/w/en/main">Browse manual</a></p>
+                          href="https://sourceforge.net/p/taskcoach/wiki/manual/">Browse manual</a></p>
                 </div>
             </div>
             <hr>
@@ -487,8 +487,8 @@ fedora14 = download_table(image='fedora',
                           installation='<code>sudo yum install --nogpgcheck %(filename_lower)s-%(version)s-1.fc*.noarch.rpm</code>')
 
 archlinux = download_table(image='archlinux', action='Install', 
-                           download_urls={'ArchLinux.org': 'http://aur.archlinux.org/packages.php?ID=6005'},
-                           package_type='Source tar archive',
+                           download_urls={'ArchLinux.org': 'http://aur.archlinux.org/packages/taskcoach'},
+                           package_type='ArchLinux package',
                            platform='Arch', platform_lower='arch',
                            platform_versions_supported='Not applicable (Arch uses a rolling release)',
                            prerequisites=prerequisites26,
@@ -832,7 +832,7 @@ pages['license'] = '''
 def languages(nr_columns=9):
     link = '<a href="https://translations.launchpad.net/taskcoach/1.4/+pots/i18n.in/%s/+details">%s</a>'
     languages = sorted(meta.languages.keys())
-    languages = [link%(meta.languages[language][0], language) for language in languages if meta.languages[language][0] is not None]
+    languages = [link%(meta.languages[language][0], language) for language in languages if meta.languages[language][0] is not Noney]
     while len(languages)%nr_columns:
         languages.append('')
     nr_of_rows = len(languages)/nr_columns
