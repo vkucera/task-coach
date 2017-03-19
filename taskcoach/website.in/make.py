@@ -832,7 +832,7 @@ pages['license'] = '''
 def languages(nr_columns=9):
     link = '<a href="https://translations.launchpad.net/taskcoach/1.4/+pots/i18n.in/%s/+details">%s</a>'
     languages = sorted(meta.languages.keys())
-    languages = [link%(meta.languages[language][0], language) for language in languages if meta.languages[language][0] is not Noney]
+    languages = [link%(meta.languages[language][0], language) for language in languages if meta.languages[language][0] is not None]
     while len(languages)%nr_columns:
         languages.append('')
     nr_of_rows = len(languages)/nr_columns
