@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib.thirdparty import desktop
 import platform
+import os
 
 def openFile(filename):
     try:
