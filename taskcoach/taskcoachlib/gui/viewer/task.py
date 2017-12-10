@@ -1514,7 +1514,7 @@ class TaskStatsViewer(BaseTaskViewer):  # pylint: disable=W0223
     def onPieChartAngleChanged(self, value):  # pylint: disable=W0613
         self.refresh()
 
-if operating_system.isGTK();
+if operating_system.isGTK():
     import igraph
 
     class TaskInterdepsViewer(BaseTaskViewer):
