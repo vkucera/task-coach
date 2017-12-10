@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import math
 import wx.lib.agw.piectrl
+from taskcoachlib import operating_system
 from taskcoachlib import command, widgets, domain, render
 from taskcoachlib.domain import task, date
 from taskcoachlib.gui import uicommand, menu, dialog
@@ -38,7 +39,6 @@ import mixin
 import refresher
 import wx
 import tempfile
-import igraph
 import struct
 
 
@@ -1514,155 +1514,157 @@ class TaskStatsViewer(BaseTaskViewer):  # pylint: disable=W0223
     def onPieChartAngleChanged(self, value):  # pylint: disable=W0613
         self.refresh()
 
+if operating_system.isGTK();
+    import igraph
 
-class TaskInterdepsViewer(BaseTaskViewer):
-    defaultTitle = ('Tasks Interdependencies')
-    defaultBitmap = ('graph_icon')
+    class TaskInterdepsViewer(BaseTaskViewer):
+        defaultTitle = ('Tasks Interdependencies')
+        defaultBitmap = ('graph_icon')
 
-    graphFile = tempfile.NamedTemporaryFile(suffix=".png")
+        graphFile = tempfile.NamedTemporaryFile(suffix=".png")
 
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('settingsSection', 'taskinterdepsviewer')
-        self._needsUpdate = False # refresh called from parent constructor
-        self._updating = False
-        super(TaskInterdepsViewer, self).__init__(*args, **kwargs)
+        def __init__(self, *args, **kwargs):
+            kwargs.setdefault('settingsSection', 'taskinterdepsviewer')
+            self._needsUpdate = False # refresh called from parent constructor
+            self._updating = False
+            super(TaskInterdepsViewer, self).__init__(*args, **kwargs)
 
-        pub.subscribe(self.onAttributeChanged, task.Task.dependenciesChangedEventType())
-        pub.subscribe(self.onAttributeChanged, task.Task.prerequisitesChangedEventType())
+            pub.subscribe(self.onAttributeChanged, task.Task.dependenciesChangedEventType())
+            pub.subscribe(self.onAttributeChanged, task.Task.prerequisitesChangedEventType())
 
-    def createWidget(self):
-        self.scrolled_panel = wx.lib.scrolledpanel.ScrolledPanel(self, -1)
+        def createWidget(self):
+            self.scrolled_panel = wx.lib.scrolledpanel.ScrolledPanel(self, -1)
 
-        self.vbox = wx.BoxSizer(wx.VERTICAL)
-        self.hbox = wx.BoxSizer(wx.HORIZONTAL)
-        self.vbox.Add(self.hbox, 0, wx.ALIGN_CENTRE)
-        self.scrolled_panel.SetSizer(self.vbox)
+            self.vbox = wx.BoxSizer(wx.VERTICAL)
+            self.hbox = wx.BoxSizer(wx.HORIZONTAL)
+            self.vbox.Add(self.hbox, 0, wx.ALIGN_CENTRE)
+            self.scrolled_panel.SetSizer(self.vbox)
 
-        graph, visual_style = self.form_depend_graph()
-        if graph.get_edgelist():
-            igraph.plot(graph, self.graphFile.name, **visual_style)
-            bitmap = wx.Image(self.graphFile.name, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
-        else:
-            bitmap = wx.NullBitmap
-        graph_png_bm = wx.StaticBitmap(self.scrolled_panel, wx.ID_ANY, bitmap)
-
-        self.hbox.Add(graph_png_bm, 1, wx.ALL, 3)
-        self.scrolled_panel.SetupScrolling()
-
-        return self.scrolled_panel 
-
-    def createClipboardToolBarUICommands(self):
-        return ()
-
-    def createEditToolBarUICommands(self):
-        return ()
-
-    def createCreationToolBarUICommands(self):
-        return ()
-
-    def createActionToolBarUICommands(self):
-        return tuple([uicommand.ViewerHideTasks(taskStatus=status,
-                                                settings=self.settings, viewer=self) \
-                      for status in task.Task.possibleStatuses()]) 
-
-    def initLegend(self, widget):
-        legend = widget.GetLegend()
-        legend.Show()
-
-    @staticmethod
-    def determine_vertex_weight(budget, priority):
-        budg_h = budget.total_seconds()/3600
-        return  (budg_h + priority * (budg_h + 1) + 10) % 200
-
-    @staticmethod
-    def convert_rgba_to_rgb(rgba):
-        rgb = (rgba[0], rgba[1], rgba[2])
-        return "#" + struct.pack('BBB', *rgb).encode('hex')
-
-    def form_depend_graph(self):
-        vertices = dict() # task => (weight, color)
-        edges = set() # of 2-tuples (task, task)
-
-        def addVertex(tsk):
-            if tsk not in vertices:
-                vertices[tsk] = (self.determine_vertex_weight(tsk.budget(), tsk.priority()),
-                                 self.convert_rgba_to_rgb(task.foregroundColor(recursive=True)))
-
-        for task in self.presentation():
-            if task.prerequisites():
-                addVertex(task)
-                for prereq in task.prerequisites():
-                    addVertex(prereq)
-                    edges.add((prereq, task))
-
-        vertices = list(sorted(vertices.items()))
-        vertices_w = [weight for task, (weight, color) in vertices]
-        vertices_col = [color for task, (weight, color) in vertices]
-        vertices = [task for task, (weight, color) in vertices]
-        edges = sorted([(vertices.index(task0), vertices.index(task1)) for (task0, task1) in edges])
-        vertices = [task.subject() for task in vertices]
-
-        graph = igraph.Graph(vertex_attrs={"label": vertices}, edges=edges, directed=True)
-        graph.topological_sorting(mode=igraph.OUT)
-        visual_style = {}
-        visual_style["vertex_color"] = vertices_col
-        visual_style["edge_width"] = [3 for x in graph.es]
-        visual_style["margin"] = 70
-        visual_style["edge_curved"] = True 
-        graph.vs["label_dist"] = 1 
-
-        #weighted vertex 
-        indegree = graph.degree(type="in")
-        if indegree:
-            max_i_degree = max(indegree)
-        visual_style["vertex_size"] = [(i_deg/max_i_degree) * 20 + vert_w 
-                for i_deg, vert_w in zip(indegree, vertices_w)]
-
-        return graph, visual_style
-    
-    def getFgColor(self, status):
-        color = wx.Colour(*eval(self.settings.get('fgcolor', 
-                                                  '%stasks' % status)))
-        if status == task.status.active and color == wx.BLACK:
-            color = wx.BLUE
-        return color
-
-    def select(self, *args):
-        pass
-
-    def updateSelection(self, *args, **kwargs):
-        pass
-
-    def isTreeViewer(self):
-        return False
-
-    def refreshItems(self, *items):
-        self.refresh()
-
-    def refresh(self):
-        if not self._needsUpdate:
-            self._needsUpdate = True
-            if not self._updating:
-                self._refresh()
-
-    @inlineCallbacks
-    def _refresh(self):
-        while self._needsUpdate:
-            # Compute this in main thread because of concurrent access issues
             graph, visual_style = self.form_depend_graph()
-            self._needsUpdate = False # Any new refresh starting here should trigger a new iteration
             if graph.get_edgelist():
-                self._updating = True
-                try:
-                    yield deferToThread(igraph.plot, graph, self.graphFile.name, **visual_style)
-                finally:
-                    self._updating = False
+                igraph.plot(graph, self.graphFile.name, **visual_style)
                 bitmap = wx.Image(self.graphFile.name, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
             else:
                 bitmap = wx.NullBitmap
+            graph_png_bm = wx.StaticBitmap(self.scrolled_panel, wx.ID_ANY, bitmap)
 
-        # Only update graphics once all refreshes have been "collapsed"
-        graph_png_bm = wx.StaticBitmap(self.scrolled_panel, wx.ID_ANY, bitmap)
-        self.hbox.Clear(True)
-        self.hbox.Add(graph_png_bm, 1, wx.ALL, 3)
-        wx.CallAfter(self.scrolled_panel.SendSizeEvent)
+            self.hbox.Add(graph_png_bm, 1, wx.ALL, 3)
+            self.scrolled_panel.SetupScrolling()
+
+            return self.scrolled_panel 
+
+        def createClipboardToolBarUICommands(self):
+            return ()
+
+        def createEditToolBarUICommands(self):
+            return ()
+
+        def createCreationToolBarUICommands(self):
+            return ()
+
+        def createActionToolBarUICommands(self):
+            return tuple([uicommand.ViewerHideTasks(taskStatus=status,
+                                                    settings=self.settings, viewer=self) \
+                          for status in task.Task.possibleStatuses()]) 
+
+        def initLegend(self, widget):
+            legend = widget.GetLegend()
+            legend.Show()
+
+        @staticmethod
+        def determine_vertex_weight(budget, priority):
+            budg_h = budget.total_seconds()/3600
+            return  (budg_h + priority * (budg_h + 1) + 10) % 200
+
+        @staticmethod
+        def convert_rgba_to_rgb(rgba):
+            rgb = (rgba[0], rgba[1], rgba[2])
+            return "#" + struct.pack('BBB', *rgb).encode('hex')
+
+        def form_depend_graph(self):
+            vertices = dict() # task => (weight, color)
+            edges = set() # of 2-tuples (task, task)
+
+            def addVertex(tsk):
+                if tsk not in vertices:
+                    vertices[tsk] = (self.determine_vertex_weight(tsk.budget(), tsk.priority()),
+                                     self.convert_rgba_to_rgb(task.foregroundColor(recursive=True)))
+
+            for task in self.presentation():
+                if task.prerequisites():
+                    addVertex(task)
+                    for prereq in task.prerequisites():
+                        addVertex(prereq)
+                        edges.add((prereq, task))
+
+            vertices = list(sorted(vertices.items()))
+            vertices_w = [weight for task, (weight, color) in vertices]
+            vertices_col = [color for task, (weight, color) in vertices]
+            vertices = [task for task, (weight, color) in vertices]
+            edges = sorted([(vertices.index(task0), vertices.index(task1)) for (task0, task1) in edges])
+            vertices = [task.subject() for task in vertices]
+
+            graph = igraph.Graph(vertex_attrs={"label": vertices}, edges=edges, directed=True)
+            graph.topological_sorting(mode=igraph.OUT)
+            visual_style = {}
+            visual_style["vertex_color"] = vertices_col
+            visual_style["edge_width"] = [3 for x in graph.es]
+            visual_style["margin"] = 70
+            visual_style["edge_curved"] = True 
+            graph.vs["label_dist"] = 1 
+
+            #weighted vertex 
+            indegree = graph.degree(type="in")
+            if indegree:
+                max_i_degree = max(indegree)
+            visual_style["vertex_size"] = [(i_deg/max_i_degree) * 20 + vert_w 
+                    for i_deg, vert_w in zip(indegree, vertices_w)]
+
+            return graph, visual_style
+
+        def getFgColor(self, status):
+            color = wx.Colour(*eval(self.settings.get('fgcolor', 
+                                                      '%stasks' % status)))
+            if status == task.status.active and color == wx.BLACK:
+                color = wx.BLUE
+            return color
+
+        def select(self, *args):
+            pass
+
+        def updateSelection(self, *args, **kwargs):
+            pass
+
+        def isTreeViewer(self):
+            return False
+
+        def refreshItems(self, *items):
+            self.refresh()
+
+        def refresh(self):
+            if not self._needsUpdate:
+                self._needsUpdate = True
+                if not self._updating:
+                    self._refresh()
+
+        @inlineCallbacks
+        def _refresh(self):
+            while self._needsUpdate:
+                # Compute this in main thread because of concurrent access issues
+                graph, visual_style = self.form_depend_graph()
+                self._needsUpdate = False # Any new refresh starting here should trigger a new iteration
+                if graph.get_edgelist():
+                    self._updating = True
+                    try:
+                        yield deferToThread(igraph.plot, graph, self.graphFile.name, **visual_style)
+                    finally:
+                        self._updating = False
+                    bitmap = wx.Image(self.graphFile.name, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+                else:
+                    bitmap = wx.NullBitmap
+
+            # Only update graphics once all refreshes have been "collapsed"
+            graph_png_bm = wx.StaticBitmap(self.scrolled_panel, wx.ID_ANY, bitmap)
+            self.hbox.Clear(True)
+            self.hbox.Add(graph_png_bm, 1, wx.ALL, 3)
+            wx.CallAfter(self.scrolled_panel.SendSizeEvent)

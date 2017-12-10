@@ -17,11 +17,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from task import TaskViewer, TaskStatsViewer, CheckableTaskViewer, \
-    SquareTaskViewer, TimelineViewer, CalendarViewer, HierarchicalCalendarViewer, \
-    TaskInterdepsViewer
+    SquareTaskViewer, TimelineViewer, CalendarViewer, HierarchicalCalendarViewer
 from category import CategoryViewer, BaseCategoryViewer
 from effort import EffortViewer, EffortViewerForSelectedTasks
 from note import NoteViewer, BaseNoteViewer
 from attachment import AttachmentViewer
 from container import ViewerContainer
 from factory import viewerTypes, addViewers, addOneViewer
+
+from taskcoachlib import operating_system
+if operating_system.isGTK():
+    from task import TaskInterdepsViewer
