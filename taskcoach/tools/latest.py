@@ -53,9 +53,9 @@ def listPath(path):
 
     for pkgname in findLatest(path, isSource):
         if path == '.' or path == 'all':
-            print '<li><a href="http://www.fraca7.net/TaskCoach-packages/%s">%s</a></li>' % (pkgname, pkgname)
+            print '<li><a href="http://jeromelaheurte.net/TaskCoach-packages/%s">%s</a></li>' % (pkgname, pkgname)
         else:
-            print '<li><a href="http://www.fraca7.net/TaskCoach-packages/%s/%s">%s</a></li>' % (path, pkgname, pkgname)
+            print '<li><a href="http://jeromelaheurte.net/TaskCoach-packages/%s/%s">%s</a></li>' % (path, pkgname, pkgname)
 
     print '</ul>'
 
@@ -64,9 +64,9 @@ def listPath(path):
 
     for pkgname in findLatest(path, lambda x: not isSource(x)):
         if path == '.' or path == 'all':
-            print '<li><a href="http://www.fraca7.net/TaskCoach-packages/%s">%s</a></li>' % (pkgname, pkgname)
+            print '<li><a href="http://jeromelaheurte.net/TaskCoach-packages/%s">%s</a></li>' % (pkgname, pkgname)
         else:
-            print '<li><a href="http://www.fraca7.net/TaskCoach-packages/%s/%s">%s</a></li>' % (path, pkgname, pkgname)
+            print '<li><a href="http://jeromelaheurte.net/TaskCoach-packages/%s/%s">%s</a></li>' % (path, pkgname, pkgname)
 
     print '</ul>'
 
