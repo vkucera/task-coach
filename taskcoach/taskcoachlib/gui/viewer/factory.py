@@ -57,7 +57,8 @@ class addViewers(object):  # pylint: disable=C0103, R0903
         self.__add_viewers(task.TimelineViewer)
         self.__add_viewers(task.CalendarViewer)
         self.__add_viewers(task.HierarchicalCalendarViewer)
-        self.__add_viewers(task.TaskInterdepsViewer)
+        if operating_system.isGTK():
+            self.__add_viewers(task.TaskInterdepsViewer)
         self.__add_viewers(effort.EffortViewer)
         self.__add_viewers(effort.EffortViewerForSelectedTasks)
         self.__add_viewers(category.CategoryViewer)
