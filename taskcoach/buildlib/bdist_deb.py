@@ -235,7 +235,6 @@ include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/class/python-distutils.mk
 
 binary-install/taskcoach::
-\tdh_desktop
 \tdh_icons
 '''
 
