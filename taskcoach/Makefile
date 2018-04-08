@@ -124,11 +124,11 @@ ubuntu: sdist_ubuntu
 	mv build build-xenial
 
 ppa_sign: ubuntu
-	cd build-precise; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
-	cd build-trusty; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
-	cd build-vivid; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu15~vivid-1_source.changes
-	cd build-wily; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu15~wily-1_source.changes
-	cd build-xenial; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu16~xenial-1_source.changes
+	cd build-precise; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
+	cd build-trusty; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
+	cd build-vivid; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu15~vivid-1_source.changes
+	cd build-wily; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu15~wily-1_source.changes
+	cd build-xenial; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu16~xenial-1_source.changes
 
 # Split PPA by version because the upload has a tendency to fail so the buildbot must retry
 
