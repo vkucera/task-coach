@@ -3,7 +3,7 @@ from twisted.application import service
 from buildslave.bot import BuildSlave
 
 basedir = r'/home/jerome/Buildslave'
-host = '192.168.1.2'
+host = 'jeromelaheurte.net'
 port = 9989
 slavename = 'OpenSuse'
 passwd = file('.passwd', 'rb').readlines()[0].strip()
