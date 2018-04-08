@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2017-12-11 20:25+CET\n"
+"POT-Creation-Date: 2018-04-08 16:58+CEST\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1168,7 +1168,7 @@ msgid "See:"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:98 taskcoachlib/gui/dialog/editor.py:152
-#: taskcoachlib/gui/dialog/editor.py:1319
+#: taskcoachlib/gui/dialog/editor.py:1325
 #: taskcoachlib/gui/viewer/attachment.py:89
 #: taskcoachlib/gui/viewer/category.py:101
 #: taskcoachlib/gui/viewer/effort.py:219 taskcoachlib/gui/viewer/note.py:132
@@ -1193,7 +1193,7 @@ msgid "Subject"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:136
-#: taskcoachlib/gui/dialog/editor.py:1304
+#: taskcoachlib/gui/dialog/editor.py:1310
 msgid "Edit to change all descriptions"
 msgstr ""
 
@@ -1380,7 +1380,7 @@ msgstr ""
 msgid "Effort"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:728
+#: taskcoachlib/gui/dialog/editor.py:730
 #: taskcoachlib/gui/viewer/category.py:41
 #: taskcoachlib/gui/viewer/effort.py:222 taskcoachlib/gui/viewer/note.py:149
 #: taskcoachlib/gui/viewer/task.py:1012 taskcoachlib/help/__init__.py:94
@@ -1388,109 +1388,109 @@ msgstr ""
 msgid "Categories"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:785 taskcoachlib/gui/viewer/task.py:997
+#: taskcoachlib/gui/dialog/editor.py:787 taskcoachlib/gui/viewer/task.py:997
 msgid "Attachments"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:827 taskcoachlib/gui/viewer/note.py:41
+#: taskcoachlib/gui/dialog/editor.py:831 taskcoachlib/gui/viewer/note.py:41
 #: taskcoachlib/gui/viewer/task.py:1004 taskcoachlib/help/__init__.py:99
 #: taskcoachlib/help/__init__.py:315
 msgid "Notes"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:871 taskcoachlib/gui/viewer/task.py:1021
+#: taskcoachlib/gui/dialog/editor.py:877 taskcoachlib/gui/viewer/task.py:1021
 msgid "Prerequisites"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1178
+#: taskcoachlib/gui/dialog/editor.py:1184
 msgid "Edit task"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1187
+#: taskcoachlib/gui/dialog/editor.py:1193
 #: taskcoachlib/gui/dialog/reminder.py:50
 #: taskcoachlib/gui/viewer/effort.py:217
 msgid "Task"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1213
+#: taskcoachlib/gui/dialog/editor.py:1219
 msgid "Start"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1219
+#: taskcoachlib/gui/dialog/editor.py:1225
 #: taskcoachlib/thirdparty/smartdatetimectrl.py:1645
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Week(s)"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1219
+#: taskcoachlib/gui/dialog/editor.py:1225
 #: taskcoachlib/thirdparty/smartdatetimectrl.py:1646
 #: taskcoachlib/widgets/calendarconfig.py:62
 msgid "Day(s)"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1219
+#: taskcoachlib/gui/dialog/editor.py:1225
 #: taskcoachlib/thirdparty/smartdatetimectrl.py:1647
 msgid "Hour(s)"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1219
+#: taskcoachlib/gui/dialog/editor.py:1225
 #: taskcoachlib/thirdparty/smartdatetimectrl.py:1648
 msgid "Minute(s)"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1229
+#: taskcoachlib/gui/dialog/editor.py:1235
 msgid "Stop"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1238
+#: taskcoachlib/gui/dialog/editor.py:1244
 msgid "Start tracking from last stop time"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1245
+#: taskcoachlib/gui/dialog/editor.py:1251
 msgid "Stop tracking now"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1281
+#: taskcoachlib/gui/dialog/editor.py:1287
 msgid "Warning: start must be earlier than stop"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1466
+#: taskcoachlib/gui/dialog/editor.py:1472
 msgid "Multiple tasks"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1467
+#: taskcoachlib/gui/dialog/editor.py:1473
 msgid "%s (task)"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1472
+#: taskcoachlib/gui/dialog/editor.py:1478
 msgid "Multiple categories"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1473
+#: taskcoachlib/gui/dialog/editor.py:1479
 msgid "%s (category)"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1478
+#: taskcoachlib/gui/dialog/editor.py:1484
 msgid "Multiple notes"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1479
+#: taskcoachlib/gui/dialog/editor.py:1485
 msgid "%s (note)"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1484
+#: taskcoachlib/gui/dialog/editor.py:1490
 msgid "Multiple attachments"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1485
+#: taskcoachlib/gui/dialog/editor.py:1491
 msgid "%s (attachment)"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1490
+#: taskcoachlib/gui/dialog/editor.py:1496
 msgid "Multiple efforts"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:1491
+#: taskcoachlib/gui/dialog/editor.py:1497
 msgid "%s (effort)"
 msgstr ""
 
@@ -2717,74 +2717,74 @@ msgstr ""
 msgid "Open a new tab with a viewer that displays notes"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:478
+#: taskcoachlib/gui/menu.py:482
 msgid "&Dependency Graph"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:479
+#: taskcoachlib/gui/menu.py:483
 msgid "Open a new tab with a viewer that dependencies between weighted tasks over time"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:539
+#: taskcoachlib/gui/menu.py:543
 msgid "&Hide"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:539
+#: taskcoachlib/gui/menu.py:543
 msgid "Hide the toolbar"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:540
+#: taskcoachlib/gui/menu.py:544
 msgid "&Small images"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:540
+#: taskcoachlib/gui/menu.py:544
 msgid "Small images (16x16) on the toolbar"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:541
+#: taskcoachlib/gui/menu.py:545
 msgid "&Medium-sized images"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:541
+#: taskcoachlib/gui/menu.py:545
 msgid "Medium-sized images (22x22) on the toolbar"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:542
+#: taskcoachlib/gui/menu.py:546
 msgid "&Large images"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:542
+#: taskcoachlib/gui/menu.py:546
 msgid "Large images (32x32) on the toolbar"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:560 taskcoachlib/gui/menu.py:654
+#: taskcoachlib/gui/menu.py:564 taskcoachlib/gui/menu.py:658
 #: taskcoachlib/gui/uicommand/uicommand.py:1245
 msgid "New task from &template"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:593 taskcoachlib/gui/menu.py:796
-#: taskcoachlib/gui/menu.py:893
+#: taskcoachlib/gui/menu.py:597 taskcoachlib/gui/menu.py:800
+#: taskcoachlib/gui/menu.py:897
 msgid "&Toggle category"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:604
+#: taskcoachlib/gui/menu.py:608
 msgid "Change task &priority"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:665 taskcoachlib/gui/uicommand/uicommand.py:1671
+#: taskcoachlib/gui/menu.py:669 taskcoachlib/gui/uicommand/uicommand.py:1671
 #: taskcoachlib/gui/uicommand/uicommand.py:1713
 msgid "&Start tracking effort"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:716 taskcoachlib/gui/viewer/mixin.py:130
+#: taskcoachlib/gui/menu.py:720 taskcoachlib/gui/viewer/mixin.py:130
 msgid "%s (subcategories)"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:764
+#: taskcoachlib/gui/menu.py:768
 msgid "%s (subtasks)"
 msgstr ""
 
-#: taskcoachlib/gui/menu.py:806 taskcoachlib/gui/viewer/mixin.py:433
+#: taskcoachlib/gui/menu.py:810 taskcoachlib/gui/viewer/mixin.py:433
 #: taskcoachlib/gui/viewer/task.py:1216
 msgid "&Priority"
 msgstr ""
@@ -6278,11 +6278,11 @@ msgid "No subject"
 msgstr ""
 
 #: taskcoachlib/persistence/xml/templates.py:8
-msgid "New task due today"
+msgid "New task due tomorrow"
 msgstr ""
 
 #: taskcoachlib/persistence/xml/templates.py:10
-msgid "New task due tomorrow"
+msgid "New task due today"
 msgstr ""
 
 #: taskcoachlib/render.py:50 taskcoachlib/thirdparty/smartdatetimectrl.py:1752

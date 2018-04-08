@@ -27,6 +27,7 @@ Release('1.4.4', 'January ??, 2016',
     bugsFixed=[
         Bugv2('''TaskCoach would not start on Fedora 23 using LXDE. This probably
 concerns other distributions as well.'''),
+        Bugv2('''Reminders would fire randomly or not at all.'''),
     ],
     featuresAdded=[
         Feature('''Per-task effort total time consolidation, patch provided by rogerdc@gmail.com'''),
