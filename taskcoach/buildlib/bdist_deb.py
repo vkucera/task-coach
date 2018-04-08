@@ -249,7 +249,7 @@ control = '''Source: %(package)s
 Section: %(section)s
 Priority: %(priority)s
 Maintainer: %(maintainer)s <%(maintainer_email)s>
-Build-Depends: cdbs (>= 0.4.43), debhelper (>= 5), python, dpatch
+Build-Depends: cdbs (>= 0.4.43), debhelper (>= 5), python, dpatch, devscripts
 Build-Depends-Indep: python-support (>= 0.5.3)
 Standards-Version: 3.7.3
 Homepage: %(url)s
