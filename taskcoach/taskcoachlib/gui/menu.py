@@ -474,7 +474,11 @@ class ViewViewerMenu(Menu):
             ViewViewer(menuText=_('&Note'),
                    helpText=_('Open a new tab with a viewer that displays notes'),
                    viewerClass=viewer.NoteViewer, **kwargs)]
-        if operating_system.isGTK():
+        try:
+            import igraph
+        except ImportError:
+            pass
+        else:
             viewViewerCommands.append(ViewViewer(menuText=_('&Dependency Graph'),
                           helpText=_('Open a new tab with a viewer that dependencies between weighted tasks over time'),
                           viewerClass=viewer.TaskInterdepsViewer, **kwargs))

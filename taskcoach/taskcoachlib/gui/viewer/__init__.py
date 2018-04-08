@@ -26,5 +26,9 @@ from container import ViewerContainer
 from factory import viewerTypes, addViewers, addOneViewer
 
 from taskcoachlib import operating_system
-if operating_system.isGTK():
+try:
+    import igraph
+except ImportError:
+    pass
+else:
     from task import TaskInterdepsViewer

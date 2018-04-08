@@ -1514,9 +1514,11 @@ class TaskStatsViewer(BaseTaskViewer):  # pylint: disable=W0223
     def onPieChartAngleChanged(self, value):  # pylint: disable=W0613
         self.refresh()
 
-if operating_system.isGTK():
+try:
     import igraph
-
+except ImportError:
+    pass
+else:
     class TaskInterdepsViewer(BaseTaskViewer):
         defaultTitle = ('Tasks Interdependencies')
         defaultBitmap = ('graph_icon')

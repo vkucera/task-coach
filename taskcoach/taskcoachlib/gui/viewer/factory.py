@@ -30,7 +30,11 @@ def viewerTypes():
     types = ['timelineviewer', 'squaretaskviewer', 'taskviewer', 
         'taskstatsviewer', 'noteviewer', 'categoryviewer', 'effortviewer', 
         'calendarviewer', 'hierarchicalcalendarviewer', 'effortviewerforselectedtasks']
-    if operating_system.isGTK():
+    try:
+        import igraph
+    except ImportError:
+        pass
+    else:
         types.append('taskinterdepsviewer')
     return tuple(types)
 
@@ -57,7 +61,11 @@ class addViewers(object):  # pylint: disable=C0103, R0903
         self.__add_viewers(task.TimelineViewer)
         self.__add_viewers(task.CalendarViewer)
         self.__add_viewers(task.HierarchicalCalendarViewer)
-        if operating_system.isGTK():
+        try:
+            import igraph
+        except ImportError:
+            pass
+        else:
             self.__add_viewers(task.TaskInterdepsViewer)
         self.__add_viewers(effort.EffortViewer)
         self.__add_viewers(effort.EffortViewerForSelectedTasks)
