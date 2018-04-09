@@ -117,7 +117,7 @@ class bdist_deb(Command, object):
         if not self.distribution:
             self.distribution = 'UNRELEASED'
         if not self.wxpythonversion:
-            self.wxpythonversion = '2.8'
+            self.wxpythonversion = '3.0'
         if not self.twistedversion:
             self.twistedversion = '12.1'
         if not self.pythonversion:
@@ -256,7 +256,7 @@ Homepage: %(url)s
 
 Package: %(package)s
 Architecture: %(architecture)s
-Depends: python (>= %(pythonversion)s), python-wxgtk2.8 (>= %(wxpythonversion)s), python-wxversion, python-twisted (>= %(twistedversion)s), libxss1, ttf-dejavu, xdg-utils, python-igraph
+Depends: python (>= %(pythonversion)s), python-wxgtk3.0 (>= %(wxpythonversion)s), python-wxversion, python-twisted (>= %(twistedversion)s), libxss1, ttf-dejavu, xdg-utils, python-igraph
 Recommends: python-notify, libgnome2-0, libavahi-compat-libdnssd1, x11-utils
 Suggests: python-kde4
 Description: %(description)s.

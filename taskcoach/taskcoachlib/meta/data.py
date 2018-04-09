@@ -130,7 +130,7 @@ license_notice_html = re.sub(r'<http([^>]*)>', r'<a href="http\1" target="_blank
 
 platform = 'Any'
 pythonversion = '2.6'
-wxpythonversionnumber = '2.8.9.2'
+wxpythonversionnumber = '3.0.0.0'
 wxpythonversion = '%s-unicode' % wxpythonversionnumber
 twistedversionnumber = '10.0'
 igraphversionnumber = '0.7'
