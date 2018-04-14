@@ -188,7 +188,7 @@ class bdist_deb(Command, object):
 
     def write_debian_files(self):
         ''' Create the different package files in the debian folder. '''
-        debian_files = dict(rules=rules, compat='5\n', pycompat='2\n',
+        debian_files = dict(rules=rules, compat='9\n', 
             menu=menu, control=control, copyright=self.copyright_contents(),
             changelog=changelog)
         for filename, contents in debian_files.iteritems():
@@ -228,9 +228,8 @@ class bdist_deb(Command, object):
 
 rules = '''#!/usr/bin/make -f
 
-DEB_PYTHON_SYSTEM := pysupport
+DEB_PYTHON2_MODULE_PACKAGES=taskcoach
 
-include /usr/share/cdbs/1/rules/simple-patchsys.mk
 include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/class/python-distutils.mk
 
@@ -249,9 +248,8 @@ control = '''Source: %(package)s
 Section: %(section)s
 Priority: %(priority)s
 Maintainer: %(maintainer)s <%(maintainer_email)s>
-Build-Depends: cdbs (>= 0.4.43), debhelper (>= 5), python, dpatch, devscripts
-Build-Depends-Indep: python-support (>= 0.5.3)
-Standards-Version: 3.7.3
+Build-Depends: cdbs (>= 0.4.43), debhelper (>= 5), python, devscripts, dh-python
+Standards-Version: 4.1.1
 Homepage: %(url)s
 
 Package: %(package)s
