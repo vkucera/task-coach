@@ -340,6 +340,11 @@ class BuildDEB(DistCompile):
     description = ['Generating', 'Debian', 'package']
     descriptionDone = ['Debian', 'package']
 
+    def __init__(self, **kwargs):
+        # Avoid having the virtualenv bin directory in path, it messes up things
+        kwargs['env'] = {'PATH': '/bin:/usr/bin:/usr/local/bin'}
+        super(DistCompile, self).__init__(**kwargs)
+
 
 class BuildUbuntu(BuildDEB):
     filename_rx = re.compile(r'^moving build/(taskcoach_.*_all)\.deb')
