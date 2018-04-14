@@ -2,7 +2,7 @@
 from twisted.application import service
 from buildslave.bot import BuildSlave
 
-basedir = r'/home/jerome/Buildslave_Ubuntu10'
+basedir = '.'
 host = 'jeromelaheurte.net'
 port = 9989
 slavename = 'Ubuntu10'
