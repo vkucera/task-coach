@@ -50,8 +50,7 @@ class AbstractNotifier(object):
     def getSimple(klass):
         """
         Returns a notifier suitable for simple notifications. This
-        defaults to Growl/Snarl/libnotify depending on their
-        availability.
+        defaults to Growl/Snarl depending on their availability.
         """
 
         if klass._enabled:
@@ -60,7 +59,7 @@ class AbstractNotifier(object):
             elif operating_system.isWindows():
                 return klass.get('Snarl') or klass.get('Task Coach')
             else:
-                return klass.get('libnotify') or klass.get('Task Coach')
+                return klass.get('Task Coach')
         else:
             class DummyNotifier(AbstractNotifier):
                 def getName(self):
