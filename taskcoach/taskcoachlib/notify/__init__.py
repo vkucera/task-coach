@@ -24,8 +24,6 @@ if operating_system.isWindows():
     from notifier_growl import *
 elif operating_system.isMac():
     from notifier_growl import *
-else:
-    from notifier_libnotify import *
 
 from notifier_universal import *
 
