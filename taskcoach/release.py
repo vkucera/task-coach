@@ -20,16 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Sanity check
 import sys
-PYTHONEXE = 'python'
-
-if sys.platform == 'darwin':
-    import struct, os, subprocess
-    if len(struct.pack('L', 0)) == 8:
-        print 'Running 64-bits Python on Darwin; relaunching with 32-bits Python.'
-        sys.exit(os.system('python-32 %s' % ' '.join(sys.argv)))
-    output = subprocess.check_output(['getconf', 'LONG_BIT']).strip()
-    if output == '64':
-        PYTHONEXE = 'python-32'
+PYTHONEXE = sys.executable
 
 import struct
 if sys.platform == 'darwin' and len(struct.pack('L', 0)) == 8:
