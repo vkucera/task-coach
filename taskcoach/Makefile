@@ -193,7 +193,9 @@ dmgbase:
 dmg: dmg-goodies dmgbase
 
 dmg-signed: dmg-goodies
-	codesign -f -s "Developer ID Application" -r='designated => certificate leaf[field.1.2.840.113635.100.6.1.13] and identifier "org.pythonmac.unspecified.TaskCoach"' "build/Task Coach/TaskCoach.app"
+	for target in Contents/Frameworks/*.dylib Contents/Frameworks/Python.framework Contents/MacOS/python .; do \
+		codesign -f --verify --verbose --sign "Mac Developer:" --entitlements TaskCoach.entitlements "build/Task Coach/TaskCoach.app/$target"; \
+	done
 	make dmgbase
 
 winpenpack: py2exe 
