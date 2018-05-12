@@ -35,7 +35,13 @@ by Matthias Tafelmeier)'''),
     bugsFixed=[
         Bugv2('''TaskCoach would not start on Fedora 23 using LXDE. This probably
 concerns other distributions as well.'''),
+        Bugv2('''Reminders would fire randomly or not at all.'''),
     ],
+    featuresAdded=[
+        Feature('''Per-task effort total time consolidation, patch provided by rogerdc@gmail.com'''),
+        Feature('''Add a viewer for task dependencies based on igraph (contributed
+by Matthias Tafelmeier)'''),
+        ],
     dependenciesChanged=[
         Dependency('''Task Coach now uses Marcurial for version control. This
 only affects you if you want to develop or use Task Coach source code.'''),

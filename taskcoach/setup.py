@@ -117,7 +117,7 @@ elif system == 'Darwin':
     import struct
     wordSize = '32' if struct.calcsize('L') == 4 else '64'
     sys.path.insert(0, os.path.join('taskcoachlib', 'bin.in', 'macos', 'IA%s' % wordSize))
-    sys.path.insert(0, os.path.join('extension', 'macos', 'bin-ia32'))
+    sys.path.insert(0, os.path.join('extension', 'macos', 'bin-ia%s' % wordSize))
     # pylint: disable=F0401,W0611
     import _powermgt
     import _idle

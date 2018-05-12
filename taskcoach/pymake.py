@@ -193,7 +193,8 @@ if sys.argv[1] == 'py2exe':
                           'taskcoachlib.thirdparty.pubsub',
                           'taskcoachlib.thirdparty.pubsub.core',
                           'taskcoachlib.thirdparty.pubsub.core.kwargs',
-                          'taskcoachlib.thirdparty._weakrefset'], 
+                          'taskcoachlib.thirdparty._weakrefset',
+                          'igraph.vendor.texttable', 'cairo'], 
             'dist_dir': os.path.join(builddir, py2exeDistdir),
             'dll_excludes': ['MSVCR80.dll', 'UxTheme.dll']}},
         'data_files': dll_files + mo_files})

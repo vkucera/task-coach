@@ -694,9 +694,11 @@ class EffortPage(PageWithViewer):
             tasksToShowEffortFor=task.TaskList(self.items))
 
     def entries(self):
-        return dict(firstEntry=self.viewer,
-                    timeSpent=self.viewer)
-        
+        if hasattr(self, 'viewer'):
+            return dict(firstEntry=self.viewer,
+                        timeSpent=self.viewer)
+        return dict()
+
 
 class LocalCategoryViewer(viewer.BaseCategoryViewer):  # pylint: disable=W0223
     def __init__(self, items, *args, **kwargs):
@@ -756,7 +758,7 @@ class CategoriesPage(PageWithViewer):
         self.viewer.refreshItems(*event.values())
         
     def entries(self):
-        if self.__realized:
+        if self.__realized and hasattr(self, 'viewer'):
             return dict(firstEntry=self.viewer, categories=self.viewer) 
         return dict()
 
@@ -800,7 +802,9 @@ class AttachmentsPage(PageWithViewer):
         self.viewer.domainObjectsToView().extend(self.items[0].attachments())
         
     def entries(self):
-        return dict(firstEntry=self.viewer, attachments=self.viewer)
+        if hasattr(self, 'viewer'):
+            return dict(firstEntry=self.viewer, attachments=self.viewer)
+        return dict()
 
 
 class LocalNoteViewer(viewer.BaseNoteViewer):  # pylint: disable=W0223
@@ -842,8 +846,10 @@ class NotesPage(PageWithViewer):
         self.viewer.domainObjectsToView().extend(self.items[0].notes())
 
     def entries(self):
-        return dict(firstEntry=self.viewer, notes=self.viewer)
-    
+        if hasattr(self, 'viewer'):
+            return dict(firstEntry=self.viewer, notes=self.viewer)
+        return dict()
+
 
 class LocalPrerequisiteViewer(viewer.CheckableTaskViewer):  # pylint: disable=W0223
     def __init__(self, items, *args, **kwargs):
@@ -897,7 +903,7 @@ class PrerequisitesPage(PageWithViewer):
             self.viewer.refreshItems(*newValue)
     
     def entries(self):
-        if self.__realized:
+        if self.__realized and hasattr(self, 'viewer'):
             return dict(firstEntry=self.viewer, prerequisites=self.viewer,
                         dependencies=self.viewer)
         return dict()

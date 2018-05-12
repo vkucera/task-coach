@@ -369,6 +369,7 @@ defaults = {
     'regularexpression': 'False',
     'round': '0',  # round effort to this number of seconds, 0 = no rounding
     'alwaysroundup': 'False',
+    'consolidateeffortspertask': 'False',
     },
 'effortviewerforselectedtasks': {
     'title': '',
@@ -389,6 +390,7 @@ defaults = {
     'regularexpression': 'False',
     'round': '0',  # round effort to this number of seconds, 0 = no rounding
     'alwaysroundup': 'False',
+    'consolidateeffortspertask': 'False',
     },
 'effortviewerintaskeditor': {
     'toolbarperspective': 'EffortNew,Separator,Edit,Delete,Separator,EffortStartForEffort,EffortStop,Separator,EffortViewerAggregationChoice,Spacer,ResetFilter,Search',
@@ -408,6 +410,7 @@ defaults = {
     'regularexpression': 'False',
     'round': '0',  # round effort to this number of seconds, 0 = no rounding
     'alwaysroundup': 'False', 
+    'consolidateeffortspertask': 'False',
     },
 'attachmentviewer': {
     'title': '',

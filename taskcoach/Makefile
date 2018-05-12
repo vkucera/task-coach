@@ -77,6 +77,7 @@ sdist_ubuntu: sdist_linux
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu14~trusty.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu15~vivid.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu15~wily.tar.gz
+	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu16~xenial.tar.gz
 
 sdist_raw:
 	mkdir -p dist
@@ -119,12 +120,15 @@ ubuntu: sdist_ubuntu
 	mv build build-vivid
 	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu wily 15 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu15~wily.tar.gz
 	mv build build-wily
+	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu xenial 16 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu16~xenial.tar.gz
+	mv build build-xenial
 
 ppa_sign: ubuntu
-	cd build-precise; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
-	cd build-trusty; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
-	cd build-vivid; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu15~vivid-1_source.changes
-	cd build-wily; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu15~wily-1_source.changes
+	cd build-precise; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
+	cd build-trusty; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
+	cd build-vivid; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu15~vivid-1_source.changes
+	cd build-wily; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu15~wily-1_source.changes
+	cd build-xenial; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu16~xenial-1_source.changes
 
 # Split PPA by version because the upload has a tendency to fail so the buildbot must retry
 
@@ -140,6 +144,9 @@ ppa_rel_vivid:
 ppa_rel_wily:
 	cd build-wily; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu15~wily-1_source.changes
 
+ppa_rel_xenial:
+	cd build-xenial; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu16~xenial-1_source.changes
+
 ppa_relnext_precise:
 	cd build-precise; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
 
@@ -152,6 +159,9 @@ ppa_relnext_vivid:
 ppa_relnext_wily:
 	cd build-wily; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu15~wily-1_source.changes
 
+ppa_relnext_xenial:
+	cd build-xenial; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu16~xenial-1_source.changes
+
 ppa_release_precise:
 	cd build-precise; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
 
@@ -163,6 +173,9 @@ ppa_release_vivid:
 
 ppa_release_wily:
 	cd build-wily; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu15~wily-1_source.changes
+
+ppa_release_xenial:
+	cd build-xenial; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu16~xenial-1_source.changes
 
 app: prepare
 	$(PYTHON) pymake.py py2app
@@ -180,7 +193,9 @@ dmgbase:
 dmg: dmg-goodies dmgbase
 
 dmg-signed: dmg-goodies
-	codesign -f -s "Developer ID Application" -r='designated => certificate leaf[field.1.2.840.113635.100.6.1.13] and identifier "org.pythonmac.unspecified.TaskCoach"' "build/Task Coach/TaskCoach.app"
+	for target in Contents/Frameworks/*.dylib Contents/Frameworks/Python.framework Contents/MacOS/python .; do \
+		codesign -f --verify --verbose --sign "Mac Developer:" --entitlements TaskCoach.entitlements "build/Task Coach/TaskCoach.app/$target"; \
+	done
 	make dmgbase
 
 winpenpack: py2exe 

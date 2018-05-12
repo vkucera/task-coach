@@ -2,8 +2,8 @@
 from twisted.application import service
 from buildslave.bot import BuildSlave
 
-basedir = r'/home/jerome/Buildslave_Ubuntu10'
-host = '192.168.1.2'
+basedir = '.'
+host = 'jeromelaheurte.net'
 port = 9989
 slavename = 'Ubuntu10'
 passwd = file('.passwd', 'rb').readlines()[0].strip()

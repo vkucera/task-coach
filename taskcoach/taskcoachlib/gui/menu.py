@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+from taskcoachlib import operating_system
 from taskcoachlib import patterns, persistence, help # pylint: disable=W0622
 from taskcoachlib.domain import task, base, category
 from taskcoachlib.i18n import _
@@ -472,10 +473,15 @@ class ViewViewerMenu(Menu):
                     viewerClass=viewer.EffortViewer, **kwargs),
             ViewViewer(menuText=_('&Note'),
                    helpText=_('Open a new tab with a viewer that displays notes'),
-                   viewerClass=viewer.NoteViewer, **kwargs),
-            ViewViewer(menuText=_('&Dependency Graph'),
-                       helpText=_('Open a new tab with a viewer that dependencies between weighted tasks over time'),
-                       viewerClass=viewer.TaskInterdepsViewer, **kwargs)]
+                   viewerClass=viewer.NoteViewer, **kwargs)]
+        try:
+            import igraph
+        except ImportError:
+            pass
+        else:
+            viewViewerCommands.append(ViewViewer(menuText=_('&Dependency Graph'),
+                          helpText=_('Open a new tab with a viewer that dependencies between weighted tasks over time'),
+                          viewerClass=viewer.TaskInterdepsViewer, **kwargs))
         self.appendUICommands(*viewViewerCommands)
        
                                       

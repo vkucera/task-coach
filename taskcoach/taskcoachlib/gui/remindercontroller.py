@@ -25,6 +25,13 @@ import wx
 
 
 class ReminderController(object):
+    lastId = 0
+
+    @classmethod
+    def nextId(cls):
+        cls.lastId += 1
+        return cls.lastId
+
     def __init__(self, mainWindow, taskList, effortList, settings):
         super(ReminderController, self).__init__()
         pub.subscribe(self.onSetReminder, task.Task.reminderChangedEventType())
@@ -147,8 +154,9 @@ class ReminderController(object):
         now = date.DateTime.now()
         if reminderDateTime < now:
             reminderDateTime = now + date.TimeDelta(seconds=10)
-        self.__tasksWithReminders[taskWithReminder] = date.Scheduler().schedule(self.onReminder, 
-                                                                                reminderDateTime)
+        job = self.__tasksWithReminders[taskWithReminder] = date.Scheduler().schedule(self.onReminder, 
+                                                                                      reminderDateTime)
+        job.setId(self.nextId())
             
     def __removeReminder(self, taskWithReminder):
         job = self.__tasksWithReminders[taskWithReminder]

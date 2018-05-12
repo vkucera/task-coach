@@ -28,12 +28,16 @@ class ScheduledMethod(object):
     def __init__(self, method):
         self.__func = method.im_func
         self.__self = weakref.ref(method.im_self)
+        self.__id = None
+
+    def setId(self, id_):
+        self.__id = id_
 
     def __eq__(self, other):
-        return self.__func is other.__func and self.__self() is other.__self()
+        return self.__func is other.__func and self.__self() is other.__self() and self.__id == other.__id
 
     def __hash__(self):
-        return hash(self.__dict__['_ScheduledMethod__func'])
+        return hash((self.__dict__['_ScheduledMethod__func'], self.__id))
 
     def __call__(self, *args, **kwargs):
         obj = self.__self()

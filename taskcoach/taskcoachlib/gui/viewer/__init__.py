@@ -25,3 +25,11 @@ from note import NoteViewer, BaseNoteViewer
 from attachment import AttachmentViewer
 from container import ViewerContainer
 from factory import viewerTypes, addViewers, addOneViewer
+
+from taskcoachlib import operating_system
+try:
+    import igraph
+except ImportError:
+    pass
+else:
+    from task import TaskInterdepsViewer

@@ -135,7 +135,7 @@ class Coverage(Compile):
         Compile.createSummary(self, log)
 
         self.addURL('coverage',
-                    'http://www.fraca7.net/TaskCoach-coverage/%s/index.html' % (self.getProperty('buildername')))
+                    'http://jeromelaheurte.net/TaskCoach-coverage/%s/index.html' % (self.getProperty('buildername')))
 
 
 class UploadCoverage(DirectoryUpload):
@@ -163,7 +163,7 @@ class UploadDoc(DirectoryUpload):
         DirectoryUpload.start(self)
 
         self.addURL('Documentation',
-                    'http://www.fraca7.net/TaskCoach-doc/%s/index.html' % (self.getProperty('buildername')))
+                    'http://jeromelaheurte.net/TaskCoach-doc/%s/index.html' % (self.getProperty('buildername')))
 
 
 
@@ -221,7 +221,7 @@ class UploadBase(FileUpload):
         FileUpload.start(self)
 
         if not self.getProperty('release'):
-            url = 'http://www.fraca7.net/TaskCoach-packages/branches/%s/%s' % (self.getProperty('branch') or '',
+            url = 'http://jeromelaheurte.net/TaskCoach-packages/branches/%s/%s' % (self.getProperty('branch') or '',
                                                                                self.getProperty('basefilename'))
 
             self.addURL('Download', url)
@@ -340,6 +340,11 @@ class BuildDEB(DistCompile):
     description = ['Generating', 'Debian', 'package']
     descriptionDone = ['Debian', 'package']
 
+    def __init__(self, **kwargs):
+        # Avoid having the virtualenv bin directory in path, it messes up things
+        kwargs['env'] = {'PATH': '/bin:/usr/bin:/usr/local/bin'}
+        super(DistCompile, self).__init__(**kwargs)
+
 
 class BuildUbuntu(BuildDEB):
     filename_rx = re.compile(r'^moving build/(taskcoach_.*_all)\.deb')
@@ -440,7 +445,7 @@ class ZipReleaseStep(MasterShellCommand):
 
     def start(self):
         MasterShellCommand.start(self)
-        self.addURL('Download release', 'http://www.fraca7.net/TaskCoach-packages/release/release.zip')
+        self.addURL('Download release', 'http://jeromelaheurte.net/TaskCoach-packages/release/release.zip')
 
 # Pylint
 
@@ -461,4 +466,4 @@ class PylintUploadStep(FileUpload):
     def start(self):
         FileUpload.start(self)
 
-        self.addURL('See', 'http://www.fraca7.net/pylint-%s.html' % self.getProperty('buildername'))
+        self.addURL('See', 'http://jeromelaheurte.net/pylint-%s.html' % self.getProperty('buildername'))
