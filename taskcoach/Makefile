@@ -78,6 +78,7 @@ sdist_ubuntu: sdist_linux
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu15~vivid.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu15~wily.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu16~xenial.tar.gz
+	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu18~bionic.tar.gz
 
 sdist_raw:
 	mkdir -p dist
@@ -122,6 +123,8 @@ ubuntu: sdist_ubuntu
 	mv build build-wily
 	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu xenial 16 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu16~xenial.tar.gz
 	mv build build-xenial
+	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu bionic 18 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu18~bionic.tar.gz
+	mv build build-bionic
 
 ppa_sign: ubuntu
 	cd build-precise; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
@@ -129,6 +132,7 @@ ppa_sign: ubuntu
 	cd build-vivid; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu15~vivid-1_source.changes
 	cd build-wily; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu15~wily-1_source.changes
 	cd build-xenial; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu16~xenial-1_source.changes
+	cd build-bionic; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu18~bionic-1_source.changes
 
 # Split PPA by version because the upload has a tendency to fail so the buildbot must retry
 
@@ -147,6 +151,9 @@ ppa_rel_wily:
 ppa_rel_xenial:
 	cd build-xenial; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu16~xenial-1_source.changes
 
+ppa_rel_bionic:
+	cd build-bionic; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu18~bionic-1_source.changes
+
 ppa_relnext_precise:
 	cd build-precise; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
 
@@ -162,6 +169,9 @@ ppa_relnext_wily:
 ppa_relnext_xenial:
 	cd build-xenial; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu16~xenial-1_source.changes
 
+ppa_relnext_bionic:
+	cd build-bionic; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu18~bionic-1_source.changes
+
 ppa_release_precise:
 	cd build-precise; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
 
@@ -176,6 +186,9 @@ ppa_release_wily:
 
 ppa_release_xenial:
 	cd build-xenial; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu16~xenial-1_source.changes
+
+ppa_release_bionic:
+	cd build-bionic; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu18~bionic-1_source.changes
 
 app: prepare
 	$(PYTHON) pymake.py py2app
