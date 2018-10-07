@@ -207,7 +207,7 @@ dmg: dmg-goodies dmgbase
 
 dmg-signed: dmg-goodies
 	for target in Contents/Frameworks/*.dylib Contents/Frameworks/Python.framework Contents/MacOS/python .; do \
-		codesign -f --verify --verbose --sign "Mac Developer:" --entitlements TaskCoach.entitlements "build/Task Coach/TaskCoach.app/$target"; \
+		codesign -f --verify --verbose --sign "Mac Developer:" --entitlements TaskCoach.entitlements "build/Task Coach/TaskCoach.app/$$target"; \
 	done
 	make dmgbase
 
