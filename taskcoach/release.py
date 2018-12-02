@@ -235,7 +235,7 @@ def rsync(settings, options, rsync_command):
 def building_packages(settings, options):
     host = settings.get('buildbot', 'host')
     metadata = taskcoachlib.meta.data.metaDict
-    branch = 'branches/Release%s_Branch' % '_'.join(metadata['version'].split('.')[:2])
+    branch = 'Release%s_Branch' % '_'.join(metadata['version'].split('.')[:2])
     if options.dry_run:
         print 'Skipping force build on branch "%s"' % branch
     else:
