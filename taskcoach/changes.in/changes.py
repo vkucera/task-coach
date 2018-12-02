@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.4.4', 'October 7, 2018',
+Release('1.4.4', 'December 2, 2018',
     summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
         Bugv2('''TaskCoach would not start on Fedora 23 using LXDE. This probably
