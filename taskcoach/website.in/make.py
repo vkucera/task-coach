@@ -247,7 +247,7 @@ pages['givesupport'] = '''
                     us (and other people that create stuff you like for free) 
                     a small amount of money really easy.</p>
                     <p>
-                        <a class="FlattrButton" style="display:none;" href="http://taskcoach.org"></a>
+                        <a class="FlattrButton" style="display:none;" href="https://taskcoach.org"></a>
                         <noscript>
                             <a href="http://flattr.com/thing/181658/Task-Coach-Your-friendly-task-manager" target="_blank">
                                 <img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" />
@@ -260,7 +260,7 @@ pages['givesupport'] = '''
                     <p>Help us spread the word. Talk about %(name)s with your
                     family, friends and colleagues. Tweet about %(name)s, +1 us,
                     you know the drill.</p>
-                    <p><a href="http://twitter.com/share" class="twitter-share-button" data-url="http://taskcoach.org" data-text="Check out Task Coach: a free and open source todo app for Windows, Mac, Linux and iPhone." data-count="horizontal" data-via="taskcoach">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script></p>
+                    <p><a href="http://twitter.com/share" class="twitter-share-button" data-url="https://taskcoach.org" data-text="Check out Task Coach: a free and open source todo app for Windows, Mac, Linux and iPhone." data-count="horizontal" data-via="taskcoach">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script></p>
                     <p><iframe src="http://www.facebook.com/plugins/like.php?href=http%%3A%%2F%%2Ftaskcoach.org&amp;layout=button_count&amp;show_faces=true&amp;width=190&amp;action=like&amp;colorscheme=light&amp;height=21" 
                             scrolling="no" frameborder="0" 
                             style="border:none; overflow:hidden; width:190px; height:21px;" 
@@ -928,7 +928,7 @@ pages['devinfo'] = '''
                     title="%(name)s @ Sourceforge">Sourceforge</a>. Translations are hosted
                     at <a href="http://launchpad.net/taskcoach/"
                     title="%(name)s @Launchpad">Launchpad</a>. Feature requests are hosted at
-                    <a href="http://taskcoach.uservoice.com/">Uservoice</a>.
+                    <a href="https://taskcoach.uservoice.com/">Uservoice</a>.
                     </p>
             
                     <h2>Mailing list</h2>
@@ -1051,7 +1051,7 @@ pages['devinfo'] = '''
                     
                     <h2>Blog</h2>
                     <p>Frank keeps a not very frequent 
-                    <a href="http://taskcoach.blogspot.com">blog</a> about
+                    <a href="https://taskcoach.blogspot.com">blog</a> about
                     lessons learned from developing %(name)s.</p>
                 </div>
                 <div class="span2">''' + ads + '''
