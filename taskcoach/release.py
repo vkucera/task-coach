@@ -42,7 +42,7 @@ Release steps:
   - Run 'python release.py release' to build the distributions, upload and download them
     to/from Sourceforge, generate MD5 digests, generate the website, upload the 
     website to the Dreamhost and Hostland websites, announce the release on 
-    Twitter, Identi.ca, Freecode and PyPI (Python Package Index), mark the bug reports
+    Twitter, and PyPI (Python Package Index), mark the bug reports
     on SourceForge fixed-and-released, send the 
     announcement email, mark .dmg and .exe files as default downloads for their
     platforms, and to tag the release in Mercurial.
@@ -112,7 +112,6 @@ class Settings(ConfigParser.SafeConfigParser, object):
                         pypi=['username', 'password'],
                         twitter=['consumer_key', 'consumer_secret',
                                  'oauth_token', 'oauth_token_secret'],
-                        freecode=['auth_code'],
                         buildbot=['username', 'password', 'host'])
         for section in defaults:
             self.add_section(section)
@@ -484,24 +483,6 @@ def httpsPostRequest(host, api_call, body, contentType, ok=200, **headers):
     return postRequest(connection, api_call, body, contentType, ok, **headers)
 
 
-@progress
-def announcing_on_Freecode(settings, options):
-    auth_code = settings.get('freecode', 'auth_code')
-    metadata = taskcoachlib.meta.data.metaDict
-    version = '%(version)s' % metadata
-    changelog = latest_release(metadata, summary_only=True)
-    tag = 'Feature enhancements' if version.endswith('.0') else 'Bug fixes'
-    release = dict(version=version, changelog=changelog, tag_list=tag)
-    body = codecs.encode(json.dumps(dict(auth_code=auth_code, 
-                                         release=release)))
-    path = '/projects/taskcoach/releases.json'
-    host = 'freecode.com'
-    if options.dry_run:
-        print 'Skipping announcing "%s" on %s.' % (release, host)
-    else:
-        httpsPostRequest(host, path, body, 'application/json', ok=201)
-
-
 def status_message():
     ''' Return a brief status message for e.g. Twitter. '''
     metadata = taskcoachlib.meta.data.metaDict
@@ -545,7 +526,6 @@ def uploading_website(settings, options):
 def announcing(settings, options):
     registering_with_PyPI(settings, options)
     announcing_on_Twitter(settings, options)
-    announcing_on_Freecode(settings, options)
     mailing_announcement(settings, options)
 
 
@@ -692,7 +672,6 @@ COMMANDS = dict(release=releasing,
                 websitegen=generating_website,
                 website=uploading_website,
                 twitter=announcing_on_Twitter,
-                freecode=announcing_on_Freecode,
                 pypi=registering_with_PyPI, 
                 mail=mailing_announcement,
                 announce=announcing,
