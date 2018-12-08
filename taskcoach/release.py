@@ -112,7 +112,6 @@ class Settings(ConfigParser.SafeConfigParser, object):
                         pypi=['username', 'password'],
                         twitter=['consumer_key', 'consumer_secret',
                                  'oauth_token', 'oauth_token_secret'],
-                        identica=['username', 'password'],
                         freecode=['auth_code'],
                         buildbot=['username', 'password', 'host'])
         for section in defaults:
@@ -510,23 +509,6 @@ def status_message():
            "See what's new at %(url)schanges.html." % metadata
 
 
-def announcing_via_Basic_Auth_Api(settings, options, section, host, 
-                                  api_prefix=''):
-    credentials = ':'.join(settings.get(section, credential) \
-                           for credential in ('username', 'password'))
-    basic_auth = base64.encodestring(credentials)[:-1]
-    status = status_message()
-    api_call = api_prefix + '/statuses/update.json'
-    body = '='.join((urllib.quote(body_part.encode('utf-8')) \
-                     for body_part in ('status', status)))
-    if options.dry_run:
-        print 'Skipping announcing "%s" on %s.' % (status, host)
-    else:
-        httpPostRequest(host, api_call, body, 
-                        'application/x-www-form-urlencoded; charset=utf-8',
-                        Authorization='Basic %s' % basic_auth)
-
-
 def announcing_via_OAuth_Api(settings, options, section, host):
     consumer_key = settings.get(section, 'consumer_key')
     consumer_secret = settings.get(section, 'consumer_secret')
@@ -552,12 +534,6 @@ def announcing_on_Twitter(settings, options):
     announcing_via_OAuth_Api(settings, options, 'twitter', 'twitter.com')
 
 
-@progress
-def announcing_on_Identica(settings, options):
-    announcing_via_Basic_Auth_Api(settings, options, 'identica', 'identi.ca', 
-                                  '/api')
-
-
 def uploading_website(settings, options):
     ''' Upload the website contents to the website(s). '''
     host = settings.get('webhost', 'hostname')
@@ -569,7 +545,6 @@ def uploading_website(settings, options):
 def announcing(settings, options):
     registering_with_PyPI(settings, options)
     announcing_on_Twitter(settings, options)
-    announcing_on_Identica(settings, options)
     announcing_on_Freecode(settings, options)
     mailing_announcement(settings, options)
 
@@ -717,7 +692,6 @@ COMMANDS = dict(release=releasing,
                 websitegen=generating_website,
                 website=uploading_website,
                 twitter=announcing_on_Twitter,
-                identica=announcing_on_Identica,
                 freecode=announcing_on_Freecode,
                 pypi=registering_with_PyPI, 
                 mail=mailing_announcement,
