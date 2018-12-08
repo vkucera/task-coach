@@ -103,14 +103,12 @@ class Settings(ConfigParser.SafeConfigParser, object):
         self.read(self.filename)
 
     def set_defaults(self):
-        defaults = dict(sourceforge=['username', 'password', 'consumer_key',
+        defaults = dict(webhost=['hostname', 'username', 'path'],
+                        sourceforge=['username', 'password', 'consumer_key',
                                      'consumer_secret', 'oauth_token',
                                      'oauth_token_secret', 'api_key'],
                         smtp=['hostname', 'port', 'username', 'password',
                               'sender_name', 'sender_email_address'],
-                        dreamhost=['hostname', 'username', 'password', 
-                                   'folder'],
-                        hostland=['hostname', 'username', 'password', 'folder'],
                         pypi=['username', 'password'],
                         twitter=['consumer_key', 'consumer_secret',
                                  'oauth_token', 'oauth_token_secret'],
