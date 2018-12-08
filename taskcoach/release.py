@@ -23,8 +23,10 @@ import sys
 PYTHONEXE = sys.executable
 
 import struct
-if sys.platform == 'darwin' and len(struct.pack('L', 0)) == 8:
-    raise RuntimeError('Please use python-32 to run this script')
+if sys.platform == 'darwin':
+    if len(struct.pack('L', 0)) == 8:
+        raise RuntimeError('Please use python-32 to run this script')
+    PYTHONEXE = 'python-32'
 
 
 HELP_TEXT = '''
@@ -434,38 +436,6 @@ class SimpleFTP(ftplib.FTP, object):
         self.retrbinary('RETR %s' % filename, open(filename, 'wb').write)
 
 
-def uploading_website_to_website_host(settings, options, website_host, 
-                                      *filename_whitelist):
-    settings_section = website_host.lower()
-    hostname = settings.get(settings_section, 'hostname')
-    username = settings.get(settings_section, 'username')
-    password = settings.get(settings_section, 'password')
-    folder = settings.get(settings_section, 'folder')
-    
-    if hostname and username and password and folder:
-        ftp = SimpleFTP(hostname, username, password, folder)
-        os.chdir('website.out')
-        if options.dry_run:
-            print 'Skipping ftp.put(website.out).'
-        else:
-            ftp.put('.', *filename_whitelist)
-        ftp.quit()
-        os.chdir('..')
-    else:
-        print 'Warning: cannot upload website to %s; missing credentials' % \
-            website_host
-
-
-@progress
-def uploading_website_to_Dreamhost(settings, options, *args):
-    uploading_website_to_website_host(settings, options, 'Dreamhost', *args)
- 
-
-@progress
-def uploading_website_to_Hostland(settings, options, *args):
-    uploading_website_to_website_host(settings, options, 'Hostland', *args)
-
-
 @progress
 def registering_with_PyPI(settings, options):
     username = settings.get('pypi', 'username')
@@ -589,12 +559,13 @@ def announcing_on_Identica(settings, options):
                                   '/api')
 
 
-def uploading_website(settings, options, *args):
-    ''' Upload the website contents to the website(s). If args is present
-        only the files specified in args are uploaded. '''
-    #uploading_website_to_Dreamhost(settings, options, *args)
-    uploading_website_to_Hostland(settings, options, *args)
-    
+def uploading_website(settings, options):
+    ''' Upload the website contents to the website(s). '''
+    host = settings.get('webhost', 'hostname')
+    user = settings.get('webhost', 'username')
+    path = settings.get('webhost', 'path')
+    os.system('rsync website.out/ -avP %s@%s:%s' % (user, host, path))
+
 
 def announcing(settings, options):
     registering_with_PyPI(settings, options)
@@ -746,8 +717,6 @@ COMMANDS = dict(release=releasing,
                 md5=generating_MD5_digests,
                 websitegen=generating_website,
                 website=uploading_website,
-                websiteDH=uploading_website_to_Dreamhost,
-                websiteHL=uploading_website_to_Hostland,
                 twitter=announcing_on_Twitter,
                 identica=announcing_on_Identica,
                 freecode=announcing_on_Freecode,
