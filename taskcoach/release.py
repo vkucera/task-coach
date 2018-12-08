@@ -25,8 +25,8 @@ PYTHONEXE = sys.executable
 import struct
 if sys.platform == 'darwin':
     if len(struct.pack('L', 0)) == 8:
-        raise RuntimeError('Please use python-32 to run this script')
-    PYTHONEXE = 'python-32'
+        # arch -i386 <path to python> release.py ...
+        raise RuntimeError('Please use 32 bits python to run this script')
 
 
 HELP_TEXT = '''
@@ -79,7 +79,6 @@ try:
     import simplejson as json
 except ImportError:
     import json
-
 
 # pylint: disable=W0621,W0613
 
@@ -434,12 +433,20 @@ class SimpleFTP(ftplib.FTP, object):
 
 @progress
 def registering_with_PyPI(settings, options):
+    import setuptools
+    if tuple(map(int, setuptools.__version__.split('.'))) < (27, 0):
+        raise RuntimeError('Need at least setuptools 27 to upload on PyPi')
+
     username = settings.get('pypi', 'username')
     password = settings.get('pypi', 'password')
-    pypirc = file('.pypirc', 'w')
-    pypirc.write('[server-login]\nusername = %s\npassword = %s\n' % \
-                 (username, password))
-    pypirc.close()
+    with open('.pypirc', 'w') as pypirc:
+        pypirc.write('[distutils]\n')
+        pypirc.write('index-servers =\n')
+        pypirc.write('  pypi\n')
+        pypirc.write('[pypi]\n')
+        pypirc.write('repository=https://upload.pypi.org/legacy/\n')
+        pypirc.write('username=%s\n' % username)
+        pypirc.write('password=%s\n' % password)
     # pylint: disable=W0404
     from setup import setupOptions
     languages_pypi_does_not_know = ['Basque', 'Belarusian', 'Breton', 
@@ -455,7 +462,8 @@ def registering_with_PyPI(settings, options):
     from distutils.core import setup
     del sys.argv[1:]
     os.environ['HOME'] = '.'
-    sys.argv.append('register')
+    sys.argv.append('sdist')
+    sys.argv.append('upload')
     if options.dry_run:
         print 'Skipping PyPI registration.'
     else:
