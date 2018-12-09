@@ -2,6 +2,7 @@ syntax: glob
 
 .DS_Store
 *.pyc
+taskcoach/@webchecker.pickle
 taskcoach/dist
 taskcoach/CHANGES.txt
 taskcoach/changelog_content
