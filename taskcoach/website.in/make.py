@@ -42,7 +42,7 @@ google_ad_height = 240;
 //-->
 </script>
 <script type="text/javascript"
-src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+src="https://pagead2.googlesyndication.com/pagead/show_ads.js">
 </script>
                         </p>   
                     </div>'''
@@ -59,7 +59,7 @@ google_ad_height = 600;
 //-->
 </script>
 <script type="text/javascript"
-src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+src="https://pagead2.googlesyndication.com/pagead/show_ads.js">
 </script>
                         </p>   
                     </div>'''
@@ -104,8 +104,8 @@ pages['index'] = u'''
                             <h3>Who is behind this?</h3>
                             <p>%(name)s is developed by <a href="mailto:%(author_email)s">%(author_unicode)s</a>, 
                             with help of different people providing <a href="i18n.html">translations</a>. 
-                            <p><a href="http://twitter.com/taskcoach" class="twitter-follow-button">Follow Task Coach on Twitter</a>
-                            <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script></p> 
+                            <p><a href="https://twitter.com/taskcoach" class="twitter-follow-button">Follow Task Coach on Twitter</a>
+                            <script src="https://platform.twitter.com/widgets.js" type="text/javascript"></script></p> 
                             <!-- AppStoreHQ:claim_code:258f8973d401112a215d79afdb82fef934ee56c9 -->
                             <!-- AppStoreHQ:developer_claim_code:d28c5a79965194fd06870ec80ab83114356b664d -->
                         </div>
@@ -146,13 +146,13 @@ pages['getsupport'] = '''
                     <p>A Yahoo!Groups mailing list is available for discussing
                     %(name)s.</p>
                     <p>You can browse the <a
-                    href="http://groups.yahoo.com/group/taskcoach/messages">archive
+                    href="https://groups.yahoo.com/group/taskcoach/messages">archive
                     of messages</a> without subscribing to the mailing list.</p>
                     <p>The mailing list is also available as  
-                    <a href="http://dir.gmane.org/gmane.comp.sysutils.pim.taskcoach">newsgroup</a>
-                    on <a href="http://gmane.org">Gmane</a>.</p>
+                    <a href="https://dir.gmane.org/gmane.comp.sysutils.pim.taskcoach">newsgroup</a>
+                    on <a href="https://gmane.org">Gmane</a>.</p>
                     <p><a class="btn"
-                    href="http://groups.yahoo.com/group/taskcoach/join">Join mailinglist</a></p>
+                    href="https://groups.yahoo.com/group/taskcoach/join">Join mailinglist</a></p>
                 </div>
                 <div class="span4">
                     <h2>User manual</h2>
@@ -218,7 +218,7 @@ pages['givesupport'] = '''
                 <div class="span4">
                     <h2>Help develop</h2>
                     <p>If you know how to program, you can learn 
-                    <a href="http://www.python.org">Python</a>. If you know Python,
+                    <a href="https://www.python.org">Python</a>. If you know Python,
                     you can help develop! And we are looking for developers, so
                     don't hesitate to jump in.</p>  
                     <p><a class="btn" href="devinfo.html">Developer info</a></p>
@@ -242,15 +242,15 @@ pages['givesupport'] = '''
                 </div>
                 <div class="span4">
                     <h2>Flattr us</h2>
-                    <p><a href="http://flattr.com">Flattr</a> is a mechanism for
+                    <p><a href="https://flattr.com">Flattr</a> is a mechanism for
                     making social micropayments. In plain English, you can donate
                     us (and other people that create stuff you like for free) 
                     a small amount of money really easy.</p>
                     <p>
                         <a class="FlattrButton" style="display:none;" href="https://taskcoach.org"></a>
                         <noscript>
-                            <a href="http://flattr.com/thing/181658/Task-Coach-Your-friendly-task-manager" target="_blank">
-                                <img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" />
+                            <a href="https://flattr.com/thing/181658/Task-Coach-Your-friendly-task-manager" target="_blank">
+                                <img src="https://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" />
                             </a>
                         </noscript>
                     </p>
@@ -260,8 +260,8 @@ pages['givesupport'] = '''
                     <p>Help us spread the word. Talk about %(name)s with your
                     family, friends and colleagues. Tweet about %(name)s, +1 us,
                     you know the drill.</p>
-                    <p><a href="http://twitter.com/share" class="twitter-share-button" data-url="https://taskcoach.org" data-text="Check out Task Coach: a free and open source todo app for Windows, Mac, Linux and iPhone." data-count="horizontal" data-via="taskcoach">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script></p>
-                    <p><iframe src="http://www.facebook.com/plugins/like.php?href=http%%3A%%2F%%2Ftaskcoach.org&amp;layout=button_count&amp;show_faces=true&amp;width=190&amp;action=like&amp;colorscheme=light&amp;height=21" 
+                    <p><a href="https://twitter.com/share" class="twitter-share-button" data-url="https://taskcoach.org" data-text="Check out Task Coach: a free and open source todo app for Windows, Mac, Linux and iPhone." data-count="horizontal" data-via="taskcoach">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script></p>
+                    <p><iframe src="https://www.facebook.com/plugins/like.php?href=http%%3A%%2F%%2Ftaskcoach.org&amp;layout=button_count&amp;show_faces=true&amp;width=190&amp;action=like&amp;colorscheme=light&amp;height=21" 
                             scrolling="no" frameborder="0" 
                             style="border:none; overflow:hidden; width:190px; height:21px;" 
                             allowTransparency="true">
@@ -295,9 +295,9 @@ pages['all_changes'] = '''
             </div>'''
 
 prerequisites = '''
-              <a href="http://www.python.org/download/">Python</a> 
+              <a href="https://www.python.org/download/">Python</a> 
               <strong>%(pythonversion)s</strong> and 
-              <a href="http://www.wxpython.org/download.php">wxPython</a>
+              <a href="https://www.wxpython.org/download.php">wxPython</a>
               <strong>%(wxpythonversion)s</strong> (or newer)'''
 
 prerequisites26 = prerequisites%dict(pythonversion='2.6', 
@@ -386,7 +386,7 @@ def download_table(**kwargs):
 windowsOptions = dict(platform_lower='windows',
     platform_versions_supported='Windows 2000, XP, Vista, Windows 7, Windows 8')
 
-bestsoft_url = 'http://www.fosshub.com/Task-Coach.html'
+bestsoft_url = 'https://www.fosshub.com/Task-Coach.html'
 
 windowsInstaller = download_table(image='windows',
     download_urls=dict(Sourceforge='%(dist_download_prefix)s/%(filename)s-%(version)s-win32.exe',
@@ -439,7 +439,7 @@ debian = download_table(image='debian',
                         prerequisites=prerequisites26 + '''. If your Debian 
               installation does not have the minimally required wxPython version 
               you will need to install it yourself following 
-              <a href="http://wiki.wxpython.org/InstallingOnUbuntuOrDebian">these 
+              <a href="https://wiki.wxpython.org/InstallingOnUbuntuOrDebian">these 
               instructions</a>''',
                         installation='Double click the package to start the installer')
 
@@ -463,7 +463,7 @@ ubuntu = download_table(image='ubuntu',
 installer. You can also use the PPA (<a href="https://answers.launchpad.net/taskcoach/+faq/1615">see the FAQ</a>)''')
 
 gentoo = download_table(image='gentoo', action='Install',
-                        download_urls={'Gentoo.org': 'http://packages.gentoo.org/package/app-office/taskcoach'},
+                        download_urls={'Gentoo.org': 'https://packages.gentoo.org/package/app-office/taskcoach'},
                         package_type='Ebuild',
                         platform='Gentoo', platform_lower='gentoo',
                         platform_versions_supported='Gentoo 2008.0 and newer',
@@ -476,7 +476,7 @@ opensuse = download_table(image='opensuse',
                           platform='OpenSuse', platform_lower='opensuse',
                           platform_versions_supported='OpenSuse 11.4 and newer',
                           prerequisites=prerequisites,
-                          installation='Double click the package to start the installer. Alternatively, you can find RPMs for various Suse versions on <a href="http://software.opensuse.org/package/TaskCoach">software.opensuse.org</a>.')
+                          installation='Double click the package to start the installer. Alternatively, you can find RPMs for various Suse versions on <a href="https://software.opensuse.org/package/TaskCoach">software.opensuse.org</a>.')
 
 fedora14 = download_table(image='fedora',
                           download_urls=dict(Sourceforge='%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.fc14.noarch.rpm'),
@@ -487,7 +487,7 @@ fedora14 = download_table(image='fedora',
                           installation='<code>sudo yum install --nogpgcheck %(filename_lower)s-%(version)s-1.fc*.noarch.rpm</code>')
 
 archlinux = download_table(image='archlinux', action='Install', 
-                           download_urls={'ArchLinux.org': 'http://aur.archlinux.org/packages/taskcoach'},
+                           download_urls={'ArchLinux.org': 'https://aur.archlinux.org/packages/taskcoach'},
                            package_type='ArchLinux package',
                            platform='Arch', platform_lower='arch',
                            platform_versions_supported='Not applicable (Arch uses a rolling release)',
@@ -504,7 +504,7 @@ redhat_el4and5 = download_table(image='redhat',
                                 platform_versions_supported='Red Hat Enterprise Linux 4 and 5',
                                 prerequisites=prerequisites,
                                 installation='''Follow the instructions on
-<a href='http://warped.org/blog/2010/04/02/ch0wned-installing-taskcoach-and-all-its-depenencies-in-home-for-el4/'>
+<a href='https://warped.org/blog/2010/04/02/ch0wned-installing-taskcoach-and-all-its-depenencies-in-home-for-el4/'>
 Max Baker's blog</a>''')
                             
 linux = download_table(image='linux',
@@ -531,7 +531,7 @@ pages['download_for_linux'] = sep.join([download_header(platform='Linux',
 
 
 freeBSD = download_table(image='freebsd', action='Install', 
-                        download_urls={'FreeBSD.org': 'http://www.freebsd.org/cgi/cvsweb.cgi/ports/deskutils/taskcoach/'},
+                        download_urls={'FreeBSD.org': 'https://www.freebsd.org/cgi/cvsweb.cgi/ports/deskutils/taskcoach/'},
                         package_type='%(name)s Port',
                         platform='FreeBSD', platform_lower='freebsd',
                         platform_versions_supported='FreeBSD 8.2 and newer',
@@ -544,7 +544,7 @@ pages['download_for_bsd'] = sep.join([download_header(platform='FreeBSD',
 
 
 iphone = download_table(image='appstore', action='Install',
-                        download_urls=dict(iTunes='http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=311403563&mt=8'),
+                        download_urls=dict(iTunes='https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=311403563&mt=8'),
                         package_type='%(name)s App',
                         platform='iPhone and iPod Touch', platform_lower='appstore',
                         platform_versions_supported='iPhone or iPod Touch with iPhone OS 2.2.1 or newer',
@@ -601,7 +601,7 @@ source_zip = download_table(download_urls=dict(Sourceforge='%(dist_download_pref
                             **sourceOptions)
 
 mercurial = download_table(image='sources',
-                           download_urls=dict(Sourceforge='http://sourceforge.net/projects/taskcoach/develop'),
+                           download_urls=dict(Sourceforge='https://sourceforge.net/projects/taskcoach/develop'),
                            package_type='Sources from Mercurial',
                            platform='all platforms', platform_lower='mercurial',
                            platform_versions_supported='All platforms that support the prerequisites',
@@ -644,7 +644,7 @@ pages['download_daily_build'] = sep.join([download_header(warning=warning),
                                           download_footer(one_ad)])
 
 old_releases = download_table(image='archive',
-                              download_urls=dict(Sourceforge='http://sourceforge.net/projects/taskcoach/files/taskcoach/'),
+                              download_urls=dict(Sourceforge='https://sourceforge.net/projects/taskcoach/files/taskcoach/'),
                               package_type='Old releases',
                               platform='all platforms', platform_lower='old_releases',
                               platform_versions_supported='See the different download sections',
@@ -755,8 +755,8 @@ pages['features'] = '''
                         view, including any filters and sort order.</li>
                         <li>%(name)s can be run from a removable medium.</li>
                         <li>Tasks and notes can be synchronized via a 
-                        <a href="http://www.funambol.com/">Funambol</a> server such
-                        as <a href="http://my.funambol.com">My Funambol</a>.</li>
+                        <a href="https://www.funambol.com/">Funambol</a> server such
+                        as <a href="https://my.funambol.com">My Funambol</a>.</li>
                     </ul>
                     <h2>%(name)s for iOS</h2>
                     <p>There is a todo-list application for iPhone, iPad and iPod Touch that 
@@ -869,22 +869,22 @@ pages['i18n'] = '''
                     development and translation of %(name)s. You can join by 
                     sending mail to <tt><a href="mailto:taskcoach-dev-subscribe@yahoogroups.com">taskcoach-dev-subscribe@yahoogroups.com</a></tt>
                     or alternatively, if you have a Yahoo id (or don't mind creating one), 
-                    join via the <a href="http://groups.yahoo.com/group/taskcoach-dev/join">webinterface</a>.</p>
+                    join via the <a href="https://groups.yahoo.com/group/taskcoach-dev/join">webinterface</a>.</p>
 
                     <p>To create a new translation or update an existing translation, 
                     please follow these steps and guidelines:
                     <ol>
-                        <li>Register at <a href="http://launchpad.net">Launchpad</a> and
+                        <li>Register at <a href="https://launchpad.net">Launchpad</a> and
                         don't forget to set your preferred languages, i.e. the language(s)
                         you want to translate to.</li>
-                        <li>Learn more about <a href="http://translations.launchpad.net/+about">translation 
+                        <li>Learn more about <a href="https://translations.launchpad.net/+about">translation 
                         support by Launchpad</a>.</li>
                         <li>Go to <a href="https://launchpad.net/taskcoach">%(name)s at 
                         Launchpad</a> and click "Help translate".</li>
                         <li>Start contributing to an existing translation or create a new
                         one.</li>
                         <li><span class="label label-info">Note</span> Please make sure you 
-                        understand how <a href="http://docs.python.org/lib/typesseq-strings.html">Python
+                        understand how <a href="https://docs.python.org/lib/typesseq-strings.html">Python
                         string formatting</a> works since %(name)s uses both the regular
                         <code>%%s</code> type of string formatting as well as the 
                         mapping key form <code>%%(mapping_key)s</code> (note the trailing <code>s</code>; 
@@ -926,7 +926,7 @@ pages['devinfo'] = '''
                     <p>%(name)s source code, file downloads and bug/patch/support trackers are hosted at 
                     <a href="https://sourceforge.net/projects/taskcoach/" 
                     title="%(name)s @ Sourceforge">Sourceforge</a>. Translations are hosted
-                    at <a href="http://launchpad.net/taskcoach/"
+                    at <a href="https://launchpad.net/taskcoach/"
                     title="%(name)s @Launchpad">Launchpad</a>. Feature requests are hosted at
                     <a href="https://taskcoach.uservoice.com/">Uservoice</a>.
                     </p>
@@ -936,25 +936,25 @@ pages['devinfo'] = '''
                     of %(name)s. You can join by sending mail to <tt><a 
                     href="mailto:taskcoach-dev-subscribe@yahoogroups.com">taskcoach-dev-subscribe@yahoogroups.com</a></tt>
                     or alternatively, if you have a Yahoo id (or don't mind creating one), 
-                    join via the <a href="http://groups.yahoo.com/group/taskcoach-dev/join">webinterface</a>.</p>
-                    <p>You can browse the <a href="http://groups.yahoo.com/group/taskcoach-dev/messages">archive
+                    join via the <a href="https://groups.yahoo.com/group/taskcoach-dev/join">webinterface</a>.</p>
+                    <p>You can browse the <a href="https://groups.yahoo.com/group/taskcoach-dev/messages">archive
                     of messages</a> without subscribing to the mailing list.</p>
                     <p>The mailing list is also available as the newsgroup 
-                    <a href="http://dir.gmane.org/gmane.comp.sysutils.pim.taskcoach.devel">gmane.comp.sysutils.pim.taskcoach.devel</a>
-                    on <a href="http://gmane.org">Gmane</a>.</p>
+                    <a href="https://dir.gmane.org/gmane.comp.sysutils.pim.taskcoach.devel">gmane.comp.sysutils.pim.taskcoach.devel</a>
+                    on <a href="https://gmane.org">Gmane</a>.</p>
                     <p>A Sourceforge mailing list is available for receiving commit messages.
-                    If you are a %(name)s developer you can <a href="http://lists.sourceforge.net/lists/listinfo/taskcoach-commits">join 
+                    If you are a %(name)s developer you can <a href="https://lists.sourceforge.net/lists/listinfo/taskcoach-commits">join 
                     this mailing list</a>.
             
                     <h2>Dependencies</h2>
-                    <p>%(name)s is developed in <a href="http://www.python.org">Python</a>,
-                    using <a href="http://www.wxpython.org">wxPython</A> for the
+                    <p>%(name)s is developed in <a href="https://www.python.org">Python</a>,
+                    using <a href="https://www.wxpython.org">wxPython</A> for the
                     graphical user interface and <a href="https://twistedmatrix.com/">Twisted</a>. On Windows, 
-                    <a href="http://sourceforge.net/projects/pywin32/">Pywin32</a> 
+                    <a href="https://sourceforge.net/projects/pywin32/">Pywin32</a> 
                     is used as well. For generating the API documentation you need to have
-                    <a href="http://epydoc.sourceforge.net/">Epydoc</a> installed. For
+                    <a href="https://epydoc.sourceforge.net/">Epydoc</a> installed. For
                     generating inheritance diagrams you need to have <a
-                    href="http://www.graphviz.org">Graphviz</a> installed.</p>
+                    href="https://www.graphviz.org">Graphviz</a> installed.</p>
                     <p>The few other libraries (other than those
                     provided by Python, wxPython and Pywin32) that are used are put into the
                     taskcoachlib/thirdparty package and included in the source code
@@ -965,14 +965,14 @@ pages['devinfo'] = '''
                     You are free to use whatever IDE you want. To make use of the Makefile you
                     need to have <tt>make</tt> installed. It is installed on Linux and Mac OS X 
                     by default. On Windows we recommend you to install
-                    <a href="http://www.cygwin.com">Cygwin</a> 
+                    <a href="https://www.cygwin.com">Cygwin</a> 
                     which provides a shell (bash) and a whole range of useful utilities. 
                     Make sure to explicitly include <tt>make</tt> in the Cygwin setup program 
                     because the standard install doesn't contain <tt>make</tt>.</p>
                     
                     <h2>Getting the source</h2>
                     <p>%(name)s source code is hosted in a <a
-                    href="http://hg.code.sf.net/p/taskcoach/repo taskcoach-repo">Mercurial repository 
+                    href="https://hg.code.sf.net/p/taskcoach/repo taskcoach-repo">Mercurial repository 
                     at SourceForge</a>. You can check out the code from the repository 
                     directly or <a href="https://sourceforge.net/p/taskcoach/repo/ci/default/tree/">browse the
                     repository</A>. Please read the file <tt>HACKING.txt</tt> after checking
