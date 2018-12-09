@@ -205,6 +205,36 @@ Thanks, Task Coach development team''')])
                 print 'Warning: could not marking fix #%s released.' % id_
 
 
+class FOSSHubAPI:
+    def __init__(self, api_key):
+        self.api_key = api_key
+        self.baseuri = 'https://api.fosshub.com/rest/'
+        self.connection = httplib.HTTPSConnection('api.fosshub.com')
+
+    def get(self, endpoint, **headers):
+        headers['X-Auth-Key'] = self.api_key
+        self.connection.request('GET', '%s%s' % (self.baseuri, endpoint), headers=headers)
+        response = self.connection.getresponse()
+        if response.status != 200:
+            raise RuntimeError('Request failed: %d %s' % (response.status, response.reason))
+        data = json.load(response)
+        if data['error'] is not None:
+            raise RuntimeError('Request failed: %s %s' % (data['code'], data['text']))
+        return data['data']
+
+    def post(self, endpoint, data, **headers):
+        headers['X-Auth-Key'] = self.api_key
+        headers['Content-Type'] = 'application/json'
+        self.connection.request('POST', '%s%s' % (self.baseuri, endpoint), json.dumps(data), headers)
+        response = self.connection.getresponse()
+        if response.status != 200:
+            raise RuntimeError('Request failed: %d %s' % (response.status, response.reason))
+        data = json.load(response)
+        if data['error'] is not None:
+            raise RuntimeError('Request failed: %s %s' % (data['code'], data['text']))
+        return data['status']
+
+
 def sourceforge_location(settings):
     metadata = taskcoachlib.meta.data.metaDict
     project = metadata['filename_lower']
@@ -304,8 +334,54 @@ def building_packages(settings, options):
 
 
 @progress
+def uploading_distributions_to_host(settings, options):
+    host = settings.get('webhost', 'hostname')
+    user = settings.get('webhost', 'username')
+    path = settings.get('webhost', 'distpath')
+    os.system('rsync dist/ -avP %s@%s:%s' % (user, host, path))
+
+
+@progress
 def uploading_distributions_to_SourceForge(settings, options):
     rsync(settings, options, 'rsync -avP -e ssh dist/* %s')
+
+
+def uploading_distributions_to_fosshub(settings, options):
+    api = FOSSHubAPI(settings.get('fosshub', 'api_key'))
+    # Play it safe.
+    for project in api.get('projects'):
+        if project['name'] == 'Task Coach':
+            project_id = project['id']
+            break
+    else:
+        raise RuntimeError('Cannot find Task Coach project on FOSSHub')
+
+    for release in api.get('projects/%s/releases' % project_id):
+        if release['version'] == taskcoachlib.meta.data.version:
+            print 'Version %s already published' % release['version']
+            import pprint
+            pprint.pprint(release)
+            return
+
+    metadata = taskcoachlib.meta.data.metaDict
+    changelog = latest_release(metadata)
+
+    data = {'version': taskcoachlib.meta.data.version, 'changeLog': changelog, 'publish': True, 'files': []}
+    for filetmpl, type_ in [
+        ('TaskCoach-%s-win32.exe', '32-bit Windows Installer'),
+        ('TaskCoach-%s.dmg', 'OS X'),
+        ('X-TaskCoach_%s_rev1.zip', 'Portable (WinPenPack Format)'),
+        ('TaskCoachPortable_%s.paf.exe', 'Portable (PortableApps Format)'),
+        ]:
+        filedata = {'fileUrl': '%s%s' % (settings.get('webhost', 'disturl'), filetmpl % taskcoachlib.meta.data.version), 'type': type_, 'version': taskcoachlib.meta.data.version}
+        data['files'].append(filedata)
+    api.post('projects/%s/releases' % project_id, data)
+
+
+def uploading_distributions(settings, options):
+    uploading_distributions_to_host(settings, options)
+    uploading_distributions_to_SourceForge(settings, options)
+    uploading_distributions_to_fosshub(settings, options)
 
 
 @progress
@@ -469,26 +545,6 @@ def registering_with_PyPI(settings, options):
     else:
         setup(**setupOptions)  # pylint: disable=W0142
     os.remove('.pypirc')
-
-
-def postRequest(connection, api_call, body, contentType, ok=200, **headers):
-    headers['Content-Type'] = contentType
-    connection.request('POST', api_call, body, headers)
-    response = connection.getresponse()
-    if response.status != ok:
-        print 'Request failed: %d %s' % (response.status, response.reason)
-        return False
-    return True
-
-
-def httpPostRequest(host, api_call, body, contentType, ok=200, port=80, **headers):
-    connection = httplib.HTTPConnection(host, port)
-    return postRequest(connection, api_call, body, contentType, ok, **headers)
-
-
-def httpsPostRequest(host, api_call, body, contentType, ok=200, **headers):
-    connection = httplib.HTTPSConnection(host)
-    return postRequest(connection, api_call, body, contentType, ok, **headers)
 
 
 def status_message():
@@ -674,7 +730,10 @@ def tagging_release_in_mercurial(settings, options):
 
 COMMANDS = dict(release=releasing,
                 build=building_packages,
-                upload=uploading_distributions_to_SourceForge, 
+                uploaddist=uploading_distributions_to_host,
+                uploadsf=uploading_distributions_to_SourceForge,
+                uploadfoss=uploading_distributions_to_fosshub,
+                upload=uploading_distributions,
                 download=downloading_distributions_from_SourceForge, 
                 md5=generating_MD5_digests,
                 websitegen=generating_website,
