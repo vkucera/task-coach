@@ -75,11 +75,18 @@ sdist_ubuntu: sdist_linux
 	# Launchpad does not support one size fits all packages...
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu12~precise.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu12~quantal.tar.gz
+	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu13~raring.tar.gz
+	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu13~saucy.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu14~trusty.tar.gz
+	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu14~utopic.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu15~vivid.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu15~wily.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu16~xenial.tar.gz
+	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu16~yakkety.tar.gz
+	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu17~zesty.tar.gz
+	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu17~artful.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu18~bionic.tar.gz
+	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu18~cosmic.tar.gz
 
 sdist_raw:
 	mkdir -p dist
@@ -118,25 +125,46 @@ ubuntu: sdist_ubuntu
 	mv build build-precise
 	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu quantal 12 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu12~quantal.tar.gz
 	mv build build-quantal
+	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu raring 13 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu13~raring.tar.gz
+	mv build build-raring
+	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu saucy 13 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu13~saucy.tar.gz
+	mv build build-saucy
 	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu trusty 14 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu14~trusty.tar.gz
 	mv build build-trusty
+	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu utopic 14 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu14~utopic.tar.gz
+	mv build build-utopic
 	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu vivid 15 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu15~vivid.tar.gz
 	mv build build-vivid
 	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu wily 15 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu15~wily.tar.gz
 	mv build build-wily
 	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu xenial 16 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu16~xenial.tar.gz
 	mv build build-xenial
+	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu yakkety 16 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu16~yakkety.tar.gz
+	mv build build-yakkety
+	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu zesty 17 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu17~zesty.tar.gz
+	mv build build-zesty
+	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu artful 17 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu17~artful.tar.gz
+	mv build build-artful
 	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu bionic 18 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu18~bionic.tar.gz
 	mv build build-bionic
+	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu cosmic 18 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu18~cosmic.tar.gz
+	mv build build-cosmic
 
 ppa_sign: ubuntu
 	cd build-precise; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
 	cd build-quantal; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes
+	cd build-raring; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu13~raring-1_source.changes
+	cd build-saucy; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu13~saucy-1_source.changes
 	cd build-trusty; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
+	cd build-utopic; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu14~utopic-1_source.changes
 	cd build-vivid; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu15~vivid-1_source.changes
 	cd build-wily; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu15~wily-1_source.changes
 	cd build-xenial; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu16~xenial-1_source.changes
+	cd build-yakkety; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu16~yakkety-1_source.changes
+	cd build-zesty; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu17~zesty-1_source.changes
+	cd build-artful; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu17~artful-1_source.changes
 	cd build-bionic; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu18~bionic-1_source.changes
+	cd build-cosmic; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu18~cosmic-1_source.changes
 
 # Split PPA by version because the upload has a tendency to fail so the buildbot must retry
 
@@ -146,8 +174,17 @@ ppa_rel_precise:
 ppa_rel_quantal:
 	cd build-quantal; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes
 
+ppa_rel_raring:
+	cd build-raring; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu13~raring-1_source.changes
+
+ppa_rel_saucy:
+	cd build-saucy; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu13~saucy-1_source.changes
+
 ppa_rel_trusty:
 	cd build-trusty; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
+
+ppa_rel_utopic:
+	cd build-utopic; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu14~utopic-1_source.changes
 
 ppa_rel_vivid:
 	cd build-vivid; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu15~vivid-1_source.changes
@@ -158,8 +195,20 @@ ppa_rel_wily:
 ppa_rel_xenial:
 	cd build-xenial; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu16~xenial-1_source.changes
 
+ppa_rel_yakkety:
+	cd build-yakkety; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu16~yakkety-1_source.changes
+
+ppa_rel_zesty:
+	cd build-zesty; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu17~zesty-1_source.changes
+
+ppa_rel_artful:
+	cd build-artful; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu17~artful-1_source.changes
+
 ppa_rel_bionic:
 	cd build-bionic; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu18~bionic-1_source.changes
+
+ppa_rel_cosmic:
+	cd build-cosmic; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu18~cosmic-1_source.changes
 
 ppa_relnext_precise:
 	cd build-precise; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
@@ -167,8 +216,17 @@ ppa_relnext_precise:
 ppa_relnext_quantal:
 	cd build-quantal; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes
 
+ppa_relnext_raring:
+	cd build-raring; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu13~raring-1_source.changes
+
+ppa_relnext_saucy:
+	cd build-saucy; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu13~saucy-1_source.changes
+
 ppa_relnext_trusty:
 	cd build-trusty; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
+
+ppa_relnext_utopic:
+	cd build-utopic; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu14~utopic-1_source.changes
 
 ppa_relnext_vivid:
 	cd build-vivid; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu15~vivid-1_source.changes
@@ -179,8 +237,20 @@ ppa_relnext_wily:
 ppa_relnext_xenial:
 	cd build-xenial; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu16~xenial-1_source.changes
 
+ppa_relnext_yakkety:
+	cd build-yakkety; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu16~yakkety-1_source.changes
+
+ppa_relnext_zesty:
+	cd build-zesty; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu17~zesty-1_source.changes
+
+ppa_relnext_artful:
+	cd build-artful; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu17~artful-1_source.changes
+
 ppa_relnext_bionic:
 	cd build-bionic; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu18~bionic-1_source.changes
+
+ppa_relnext_cosmic:
+	cd build-cosmic; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu18~cosmic-1_source.changes
 
 ppa_release_precise:
 	cd build-precise; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
@@ -188,8 +258,17 @@ ppa_release_precise:
 ppa_release_quantal:
 	cd build-quantal; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes
 
+ppa_release_raring:
+	cd build-raring; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu13~raring-1_source.changes
+
+ppa_release_saucy:
+	cd build-saucy; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu13~saucy-1_source.changes
+
 ppa_release_trusty:
 	cd build-trusty; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
+
+ppa_release_utopic:
+	cd build-utopic; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu14~utopic-1_source.changes
 
 ppa_release_vivid:
 	cd build-vivid; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu15~vivid-1_source.changes
@@ -200,8 +279,20 @@ ppa_release_wily:
 ppa_release_xenial:
 	cd build-xenial; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu16~xenial-1_source.changes
 
+ppa_release_yakkety:
+	cd build-yakkety; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu16~yakkety-1_source.changes
+
+ppa_release_zesty:
+	cd build-zesty; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu17~zesty-1_source.changes
+
+ppa_release_artful:
+	cd build-artful; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu17~artful-1_source.changes
+
 ppa_release_bionic:
 	cd build-bionic; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu18~bionic-1_source.changes
+
+ppa_release_cosmic:
+	cd build-cosmic; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu18~cosmic-1_source.changes
 
 app: prepare
 	$(PYTHON) pymake.py py2app
