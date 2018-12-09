@@ -74,6 +74,7 @@ sdist_linux: prepare changes templates dist/TaskCoach-$(TCVERSION).tar.gz
 sdist_ubuntu: sdist_linux
 	# Launchpad does not support one size fits all packages...
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu12~precise.tar.gz
+	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu12~quantal.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu14~trusty.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu15~vivid.tar.gz
 	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu15~wily.tar.gz
@@ -115,6 +116,8 @@ deb: sdist_linux
 ubuntu: sdist_ubuntu
 	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu precise 12 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu12~precise.tar.gz
 	mv build build-precise
+	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu quantal 12 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu12~quantal.tar.gz
+	mv build build-quantal
 	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu trusty 14 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu14~trusty.tar.gz
 	mv build build-trusty
 	LC_ALL=C $(PYTHON) pymake.py bdist_ubuntu vivid 15 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu15~vivid.tar.gz
@@ -128,6 +131,7 @@ ubuntu: sdist_ubuntu
 
 ppa_sign: ubuntu
 	cd build-precise; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
+	cd build-quantal; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes
 	cd build-trusty; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
 	cd build-vivid; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu15~vivid-1_source.changes
 	cd build-wily; debsign --re-sign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu15~wily-1_source.changes
@@ -138,6 +142,9 @@ ppa_sign: ubuntu
 
 ppa_rel_precise:
 	cd build-precise; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
+
+ppa_rel_quantal:
+	cd build-quantal; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes
 
 ppa_rel_trusty:
 	cd build-trusty; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
@@ -157,6 +164,9 @@ ppa_rel_bionic:
 ppa_relnext_precise:
 	cd build-precise; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
 
+ppa_relnext_quantal:
+	cd build-quantal; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes
+
 ppa_relnext_trusty:
 	cd build-trusty; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
 
@@ -174,6 +184,9 @@ ppa_relnext_bionic:
 
 ppa_release_precise:
 	cd build-precise; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu12~precise-1_source.changes
+
+ppa_release_quantal:
+	cd build-quantal; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu12~quantal-1_source.changes
 
 ppa_release_trusty:
 	cd build-trusty; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu14~trusty-1_source.changes
