@@ -22,6 +22,13 @@ from changetypes import *
 
 releases = [
 
+Release('1.4.5', 'December ??, 2018',
+    summary='''This is a mixed feature and bugfix release.''',
+    featuresAdded=[
+        Feature('''All Ubuntu versions since precise have now a PPA'''),
+        ],
+    ),
+
 Release('1.4.4', 'December 2, 2018',
     summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
