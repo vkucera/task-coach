@@ -20,9 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wxversion, sys
 wxversion.ensureMinimal("2.8")
-sys.path.append('../tools')
 
-import os, img2py
+import os
+from wx.tools import img2py
+
 
 def extractIcon(iconZipFile, pngFilename, pngZipped):
     pngFile = file(pngFilename, 'wb')
