@@ -24,9 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 version = '1.4.5'  # Current version number of the application
 tskversion = 37  # Current version number of the task file format, changed to 37 for release 1.3.23.
-release_day = '2'  # Day number of the release, 1-31, as string
-release_month = 'December'  # Month of the release in plain English
-release_year = '2018'  # Year of the release as string
+release_day = '24'  # Day number of the release, 1-31, as string
+release_month = 'March'  # Month of the release in plain English
+release_year = '2019'  # Year of the release as string
 release_status = 'stable'  # One of 'alpha', 'beta', 'stable'
 
 # No editing needed below this line for doing a release.
