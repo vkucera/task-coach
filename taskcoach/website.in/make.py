@@ -83,12 +83,9 @@ pages['index'] = u'''
                             <p>%(name)s is available for 
                             <a href="download_for_windows.html">Windows</a>,
                             <a href="download_for_mac.html">Mac OS X</a>, <a href="download_for_linux.html">Linux</a>, 
-                            <a href="download_for_bsd.html">BSD</a>, <a href="download_for_iphone.html">iPhone, 
-                            iPad, and iPod Touch</a>.</p>
+                            <a href="download_for_bsd.html">BSD</a>.</p>
                             <h3>What does it cost?</h3>
-                            The desktop versions of %(name)s are completely free. The iOS versions
-                            of %(name)s come with a small price tag because it costs us money to make them 
-                            available.</p>
+                            %(name)s is completely free.
                             <p><a class="btn" href="license.html">Read license &raquo;</a></p>
                         </div>
                         <div class="span5">  
@@ -260,7 +257,7 @@ pages['givesupport'] = '''
                     <p>Help us spread the word. Talk about %(name)s with your
                     family, friends and colleagues. Tweet about %(name)s, +1 us,
                     you know the drill.</p>
-                    <p><a href="https://twitter.com/share" class="twitter-share-button" data-url="https://taskcoach.org" data-text="Check out Task Coach: a free and open source todo app for Windows, Mac, Linux and iPhone." data-count="horizontal" data-via="taskcoach">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script></p>
+                    <p><a href="https://twitter.com/share" class="twitter-share-button" data-url="https://taskcoach.org" data-text="Check out Task Coach: a free and open source todo app for Windows, Mac, and Linux." data-count="horizontal" data-via="taskcoach">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script></p>
                     <p><iframe src="https://www.facebook.com/plugins/like.php?href=http%%3A%%2F%%2Ftaskcoach.org&amp;layout=button_count&amp;show_faces=true&amp;width=190&amp;action=like&amp;colorscheme=light&amp;height=21" 
                             scrolling="no" frameborder="0" 
                             style="border:none; overflow:hidden; width:190px; height:21px;" 
@@ -543,18 +540,6 @@ pages['download_for_bsd'] = sep.join([download_header(platform='FreeBSD',
                                                       download_footer(one_ad)])
 
 
-iphone = download_table(image='appstore', action='Install',
-                        download_urls=dict(iTunes='https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=311403563&mt=8'),
-                        package_type='%(name)s App',
-                        platform='iPhone and iPod Touch', platform_lower='appstore',
-                        platform_versions_supported='iPhone or iPod Touch with iPhone OS 2.2.1 or newer',
-                        installation='Buy %(name)s from the AppStore via iTunes or your iPhone or iPod Touch')
-                        
-pages['download_for_iphone'] = sep.join([download_header(platform='iPhone and iPod Touch',
-                                                         release='1.1'), 
-                                         iphone,
-                                         download_footer(one_ad)])
-
 android = download_table(image='logoandroid', action='Install',
                          download_urls={"Ajiget's site": 'https://sites.google.com/site/ajiget/programs/android-programs/taskcoach-for-android'},
                          package_type='Android app',
@@ -666,41 +651,37 @@ pages['download'] = '''
                             <tr>
                                 <td style="border-top: 0px;">
                                     <h3>Windows</h3>
-                                    <a href="download_for_windows.html"><img alt"Windows" src="images/windows.png"></a>
+                                    <a href="download_for_windows.html"><img alt="Windows" src="images/windows.png"></a>
                                 </td>
                                 <td style="border-top: 0px;">
                                     <h3>Mac OS X</h3>
-                                    <a href="download_for_mac.html"><img alt"Mac OS X" src="images/mac.png"></a>
+                                    <a href="download_for_mac.html"><img alt="Mac OS X" src="images/mac.png"></a>
                                 </td>
                                 <td style="border-top: 0px;">
                                     <h3>Linux</h3>
-                                    <a href="download_for_linux.html"><img alt"Linux" src="images/linux.png"></a>
+                                    <a href="download_for_linux.html"><img alt="Linux" src="images/linux.png"></a>
                                 </td>
                                 <td style="border-top: 0px;">
                                     <h3>BSD</h3>
-                                    <a href="download_for_bsd.html"><img alt"BSD" src="images/freebsd.png"></a>
+                                    <a href="download_for_bsd.html"><img alt="BSD" src="images/freebsd.png"></a>
                                 </td>
                             </tr>
                             <tr> 
                                 <td>
-                                    <h3>iPhone, iPad,<br>iPod Touch</h3>
-                                    <a href="download_for_iphone.html"><img alt"iOS" src="images/appstore.png"></a>
-                                </td>
-                                <td>
                                     <h3>Android</h3>
-                                    <a href="download_for_android.html"><img alt"Android" src="images/logoandroid.png"></a>
+                                    <a href="download_for_android.html"><img alt="Android" src="images/logoandroid.png"></a>
                                 </td>
                                 <td>
                                     <h3>Sources</h3>
-                                    <a href="download_sources.html"><img alt"iOS" src="images/sources.png"></a>
+                                    <a href="download_sources.html"><img alt="Sources" src="images/sources.png"></a>
                                 </td>
                                 <td>
                                     <h3>Daily builds</h3>
-                                    <a href="download_daily_build.html"><img alt"iOS" src="images/latest_features.png"></a>
+                                    <a href="download_daily_build.html"><img alt="Daily build" src="images/latest_features.png"></a>
                                 </td>
                                 <td>
                                     <h3>Old releases</h3>
-                                    <a href="download_old_releases.html"><img alt"iOS" src="images/archive.png"></a>
+                                    <a href="download_old_releases.html"><img alt="Old releases" src="images/archive.png"></a>
                                 </td>
                             </tr>
                         </tbody>
@@ -757,15 +738,6 @@ pages['features'] = '''
                         <li>Tasks and notes can be synchronized via a 
                         <a href="https://www.funambol.com/">Funambol</a> server such
                         as <a href="https://my.funambol.com">My Funambol</a>.</li>
-                    </ul>
-                    <h2>%(name)s for iOS</h2>
-                    <p>There is a todo-list application for iPhone, iPad and iPod Touch that 
-                    can synchronize with %(name)s through the network. Main features are:</p>
-                    <ul>
-                        <li>Hierarchical categories.</li>
-                        <li>Editing of task subject, description, dates and completed status.</li>
-                        <li>Tap on the task's led icon to mark it complete.</li>
-                        <li>Available in English and French.</li>
                     </ul>
                     <h2>%(name)s for Android</h2>
                     <p>The Android version is separately developed; we don't support it ourselves. See the developer's site for
