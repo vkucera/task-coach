@@ -25,6 +25,7 @@ from taskcoachlib import widgets, patterns, command, operating_system, render
 from taskcoachlib.domain import task, date, note, attachment
 from taskcoachlib.gui import viewer, uicommand, windowdimensionstracker
 from taskcoachlib.gui.dialog import entry, attributesync
+from taskcoachlib.gui.newid import IdProvider
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty.pubsub import pub
 from taskcoachlib.thirdparty import smartdatetimectrl as sdtc
@@ -1380,10 +1381,12 @@ class Editor(BalloonTipManager, widgets.Dialog):
             # another editor, then hit Escape twice, the second editor disappears without any
             # notification (EVT_CLOSE, EVT_ACTIVATE), so poll for this, because there might
             # be pending changes...
-            id_ = wx.NewId()
+            id_ = IdProvider.get()
             self.__timer = wx.Timer(self, id_)
             wx.EVT_TIMER(self, id_, self.__on_timer)
             self.__timer.Start(1000, False)
+        else:
+            self.__timer = None
 
         # On Mac OS X, the frame opens by default in the top-left
         # corner of the first display. This gets annoying on a
@@ -1409,10 +1412,10 @@ class Editor(BalloonTipManager, widgets.Dialog):
         # changed in the translations
         # FIXME: there are more keyboard shortcuts that don't work in dialogs 
         # at the moment, like DELETE 
-        new_effort_id = wx.NewId()
+        self.__new_effort_id = IdProvider.get()
         table = wx.AcceleratorTable([(wx.ACCEL_CMD, ord('Z'), wx.ID_UNDO),
                                      (wx.ACCEL_CMD, ord('Y'), wx.ID_REDO),
-                                     (wx.ACCEL_CMD, ord('E'), new_effort_id)])
+                                     (wx.ACCEL_CMD, ord('E'), self.__new_effort_id)])
         self._interior.SetAcceleratorTable(table)
         # pylint: disable=W0201
         self.__undo_command = uicommand.EditUndo()
@@ -1424,7 +1427,7 @@ class Editor(BalloonTipManager, widgets.Dialog):
             effortList=self._taskFile.efforts(), settings=self._settings)
         self.__undo_command.bind(self._interior, wx.ID_UNDO)
         self.__redo_command.bind(self._interior, wx.ID_REDO)
-        self.__new_effort_command.bind(self._interior, new_effort_id)
+        self.__new_effort_command.bind(self._interior, self.__new_effort_id)
 
     def createInterior(self):
         return self.EditBookClass(self._panel, self._items, self._taskFile, 
@@ -1439,10 +1442,12 @@ class Editor(BalloonTipManager, widgets.Dialog):
         # destroyed...
         if operating_system.isMac():
             self._interior.SetFocusIgnoringChildren()
+        if self.__timer is not None:
+            IdProvider.put(self.__timer.GetId())
+        IdProvider.put(self.__new_effort_id)
         self.Destroy()
 
     def on_activate(self, event):
-        print 'XXX'
         event.Skip()
 
     def on_item_removed(self, event):

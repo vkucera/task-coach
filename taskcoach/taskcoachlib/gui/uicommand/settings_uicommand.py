@@ -51,6 +51,7 @@ class BooleanSettingsCommand(SettingsCommand):  # pylint: disable=W0223
                                                               position)
         menuItem = menu.FindItemById(menuId)
         menuItem.Check(self.isSettingChecked())
+        return menuId
         
     def isSettingChecked(self):
         raise NotImplementedError  # pragma: no cover

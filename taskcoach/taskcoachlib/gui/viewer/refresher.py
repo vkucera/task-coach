@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import patterns
 from taskcoachlib.domain import date
 from taskcoachlib.thirdparty.pubsub import pub
+from taskcoachlib.gui.newid import IdProvider
 import wx
 
 
@@ -60,7 +61,7 @@ class SecondRefresher(patterns.Observer, wx.EvtHandler):
         self.__viewer = viewer
         self.__presentation = viewer.presentation()
         self.__trackedItems = set()
-        id_ = wx.NewId()
+        id_ = IdProvider.get()
         self.__timer = wx.Timer(self, id_)
         wx.EVT_TIMER(self, id_, self.onEverySecond)
         pub.subscribe(self.onTrackingChanged, trackingChangedEventType)
@@ -71,6 +72,10 @@ class SecondRefresher(patterns.Observer, wx.EvtHandler):
                               eventType=self.__presentation.removeItemEventType(),
                               eventSource=self.__presentation)
         self.setTrackedItems(self.trackedItems(self.__presentation))
+
+    def removeInstance(self):
+        IdProvider.put(self.__timer.GetId())
+        super(SecondRefresher, self).removeInstance()
 
     def onItemAdded(self, event):
         self.addTrackedItems(self.trackedItems(event.values()))
