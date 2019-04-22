@@ -28,6 +28,5 @@ class IdProvider(set):
     def put(self, id_):
         if id_ > 0:
             self.add(id_)
-        print '!!', len(self), max(self) # XXXTMP
 
 IdProvider = IdProvider()
