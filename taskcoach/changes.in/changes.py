@@ -22,6 +22,15 @@ from changetypes import *
 
 releases = [
 
+Release('1.4.6', 'April ??, 2019',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bugv2('''Workaround for an underlying wxPython limitation we ran into.
+After some time Task Coach would exhibit various symptoms because of an
+exception in the event loop.'''),
+    ],
+    ),
+
 Release('1.4.5', 'March 24, 2019',
     summary='''This is a mixed feature and bugfix release.''',
     bugsFixed=[
