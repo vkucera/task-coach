@@ -21,6 +21,7 @@ from taskcoachlib import patterns, persistence, help # pylint: disable=W0622
 from taskcoachlib.domain import task, base, category
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty.pubsub import pub
+from taskcoachlib.gui.newid import IdProvider
 import uicommand
 import viewer
 import wx
@@ -63,7 +64,7 @@ class Menu(wx.Menu, uicommand.UICommandContainerMixin):
         return cmd
 
     def appendMenu(self, text, subMenu, bitmap=None):
-        subMenuItem = wx.MenuItem(self, id=wx.NewId(), text=text, 
+        subMenuItem = wx.MenuItem(self, id=IdProvider.get(), text=text, 
                                   subMenu=subMenu)
         if bitmap:
             subMenuItem.SetBitmap(wx.ArtProvider_GetBitmap(bitmap, 

@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 from taskcoachlib import operating_system
+from taskcoachlib.gui.newid import IdProvider
 
 
 ''' User interface commands (subclasses of UICommand) are actions that can
@@ -45,9 +46,12 @@ class UICommand(object):
         self.bitmap = bitmap
         self.bitmap2 = bitmap2
         self.kind = kind
-        self.id = id or wx.NewId()
+        self.id = IdProvider.get()
         self.toolbar = None
         self.menuItems = []  # uiCommands can be used in multiple menu's
+
+    def __del__(self):
+        IdProvider.put(self.id)
 
     def __eq__(self, other):
         return self is other

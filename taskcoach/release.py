@@ -23,8 +23,10 @@ import sys
 PYTHONEXE = sys.executable
 
 import struct
-if sys.platform == 'darwin' and len(struct.pack('L', 0)) == 8:
-    raise RuntimeError('Please use python-32 to run this script')
+if sys.platform == 'darwin':
+    if len(struct.pack('L', 0)) == 8:
+        # arch -i386 <path to python> release.py ...
+        raise RuntimeError('Please use 32 bits python to run this script')
 
 
 HELP_TEXT = '''
@@ -40,7 +42,7 @@ Release steps:
   - Run 'python release.py release' to build the distributions, upload and download them
     to/from Sourceforge, generate MD5 digests, generate the website, upload the 
     website to the Dreamhost and Hostland websites, announce the release on 
-    Twitter, Identi.ca, Freecode and PyPI (Python Package Index), mark the bug reports
+    Twitter, and PyPI (Python Package Index), mark the bug reports
     on SourceForge fixed-and-released, send the 
     announcement email, mark .dmg and .exe files as default downloads for their
     platforms, and to tag the release in Mercurial.
@@ -78,7 +80,6 @@ try:
 except ImportError:
     import json
 
-
 # pylint: disable=W0621,W0613
 
 
@@ -101,19 +102,15 @@ class Settings(ConfigParser.SafeConfigParser, object):
         self.read(self.filename)
 
     def set_defaults(self):
-        defaults = dict(sourceforge=['username', 'password', 'consumer_key',
+        defaults = dict(webhost=['hostname', 'username', 'path'],
+                        sourceforge=['username', 'password', 'consumer_key',
                                      'consumer_secret', 'oauth_token',
                                      'oauth_token_secret', 'api_key'],
                         smtp=['hostname', 'port', 'username', 'password',
                               'sender_name', 'sender_email_address'],
-                        dreamhost=['hostname', 'username', 'password', 
-                                   'folder'],
-                        hostland=['hostname', 'username', 'password', 'folder'],
                         pypi=['username', 'password'],
                         twitter=['consumer_key', 'consumer_secret',
                                  'oauth_token', 'oauth_token_secret'],
-                        identica=['username', 'password'],
-                        freecode=['auth_code'],
                         buildbot=['username', 'password', 'host'])
         for section in defaults:
             self.add_section(section)
@@ -208,6 +205,36 @@ Thanks, Task Coach development team''')])
                 print 'Warning: could not marking fix #%s released.' % id_
 
 
+class FOSSHubAPI:
+    def __init__(self, api_key):
+        self.api_key = api_key
+        self.baseuri = 'https://api.fosshub.com/rest/'
+        self.connection = httplib.HTTPSConnection('api.fosshub.com')
+
+    def get(self, endpoint, **headers):
+        headers['X-Auth-Key'] = self.api_key
+        self.connection.request('GET', '%s%s' % (self.baseuri, endpoint), headers=headers)
+        response = self.connection.getresponse()
+        if response.status != 200:
+            raise RuntimeError('Request failed: %d %s' % (response.status, response.reason))
+        data = json.load(response)
+        if data['error'] is not None:
+            raise RuntimeError('Request failed: %s %s' % (data['code'], data['text']))
+        return data['data']
+
+    def post(self, endpoint, data, **headers):
+        headers['X-Auth-Key'] = self.api_key
+        headers['Content-Type'] = 'application/json'
+        self.connection.request('POST', '%s%s' % (self.baseuri, endpoint), json.dumps(data), headers)
+        response = self.connection.getresponse()
+        if response.status != 200:
+            raise RuntimeError('Request failed: %d %s' % (response.status, response.reason))
+        data = json.load(response)
+        if data['error'] is not None:
+            raise RuntimeError('Request failed: %s %s' % (data['code'], data['text']))
+        return data['status']
+
+
 def sourceforge_location(settings):
     metadata = taskcoachlib.meta.data.metaDict
     project = metadata['filename_lower']
@@ -235,7 +262,7 @@ def rsync(settings, options, rsync_command):
 def building_packages(settings, options):
     host = settings.get('buildbot', 'host')
     metadata = taskcoachlib.meta.data.metaDict
-    branch = 'branches/Release%s_Branch' % '_'.join(metadata['version'].split('.')[:2])
+    branch = 'Release%s_Branch' % '_'.join(metadata['version'].split('.')[:2])
     if options.dry_run:
         print 'Skipping force build on branch "%s"' % branch
     else:
@@ -307,8 +334,54 @@ def building_packages(settings, options):
 
 
 @progress
+def uploading_distributions_to_host(settings, options):
+    host = settings.get('webhost', 'hostname')
+    user = settings.get('webhost', 'username')
+    path = settings.get('webhost', 'distpath')
+    os.system('rsync dist/ -avP %s@%s:%s' % (user, host, path))
+
+
+@progress
 def uploading_distributions_to_SourceForge(settings, options):
     rsync(settings, options, 'rsync -avP -e ssh dist/* %s')
+
+
+def uploading_distributions_to_fosshub(settings, options):
+    api = FOSSHubAPI(settings.get('fosshub', 'api_key'))
+    # Play it safe.
+    for project in api.get('projects'):
+        if project['name'] == 'Task Coach':
+            project_id = project['id']
+            break
+    else:
+        raise RuntimeError('Cannot find Task Coach project on FOSSHub')
+
+    for release in api.get('projects/%s/releases' % project_id):
+        if release['version'] == taskcoachlib.meta.data.version:
+            print 'Version %s already published' % release['version']
+            import pprint
+            pprint.pprint(release)
+            return
+
+    metadata = taskcoachlib.meta.data.metaDict
+    changelog = latest_release(metadata)
+
+    data = {'version': taskcoachlib.meta.data.version, 'changeLog': changelog, 'publish': True, 'files': []}
+    for filetmpl, type_ in [
+        ('TaskCoach-%s-win32.exe', '32-bit Windows Installer'),
+        ('TaskCoach-%s.dmg', 'OS X'),
+        ('X-TaskCoach_%s_rev1.zip', 'Portable (WinPenPack Format)'),
+        ('TaskCoachPortable_%s.paf.exe', 'Portable (PortableApps Format)'),
+        ]:
+        filedata = {'fileUrl': '%s%s' % (settings.get('webhost', 'disturl'), filetmpl % taskcoachlib.meta.data.version), 'type': type_, 'version': taskcoachlib.meta.data.version}
+        data['files'].append(filedata)
+    api.post('projects/%s/releases' % project_id, data)
+
+
+def uploading_distributions(settings, options):
+    uploading_distributions_to_host(settings, options)
+    uploading_distributions_to_SourceForge(settings, options)
+    uploading_distributions_to_fosshub(settings, options)
 
 
 @progress
@@ -434,46 +507,22 @@ class SimpleFTP(ftplib.FTP, object):
         self.retrbinary('RETR %s' % filename, open(filename, 'wb').write)
 
 
-def uploading_website_to_website_host(settings, options, website_host, 
-                                      *filename_whitelist):
-    settings_section = website_host.lower()
-    hostname = settings.get(settings_section, 'hostname')
-    username = settings.get(settings_section, 'username')
-    password = settings.get(settings_section, 'password')
-    folder = settings.get(settings_section, 'folder')
-    
-    if hostname and username and password and folder:
-        ftp = SimpleFTP(hostname, username, password, folder)
-        os.chdir('website.out')
-        if options.dry_run:
-            print 'Skipping ftp.put(website.out).'
-        else:
-            ftp.put('.', *filename_whitelist)
-        ftp.quit()
-        os.chdir('..')
-    else:
-        print 'Warning: cannot upload website to %s; missing credentials' % \
-            website_host
-
-
-@progress
-def uploading_website_to_Dreamhost(settings, options, *args):
-    uploading_website_to_website_host(settings, options, 'Dreamhost', *args)
- 
-
-@progress
-def uploading_website_to_Hostland(settings, options, *args):
-    uploading_website_to_website_host(settings, options, 'Hostland', *args)
-
-
 @progress
 def registering_with_PyPI(settings, options):
+    import setuptools
+    if tuple(map(int, setuptools.__version__.split('.'))) < (27, 0):
+        raise RuntimeError('Need at least setuptools 27 to upload on PyPi')
+
     username = settings.get('pypi', 'username')
     password = settings.get('pypi', 'password')
-    pypirc = file('.pypirc', 'w')
-    pypirc.write('[server-login]\nusername = %s\npassword = %s\n' % \
-                 (username, password))
-    pypirc.close()
+    with open('.pypirc', 'w') as pypirc:
+        pypirc.write('[distutils]\n')
+        pypirc.write('index-servers =\n')
+        pypirc.write('  pypi\n')
+        pypirc.write('[pypi]\n')
+        pypirc.write('repository=https://upload.pypi.org/legacy/\n')
+        pypirc.write('username=%s\n' % username)
+        pypirc.write('password=%s\n' % password)
     # pylint: disable=W0404
     from setup import setupOptions
     languages_pypi_does_not_know = ['Basque', 'Belarusian', 'Breton', 
@@ -489,7 +538,8 @@ def registering_with_PyPI(settings, options):
     from distutils.core import setup
     del sys.argv[1:]
     os.environ['HOME'] = '.'
-    sys.argv.append('register')
+    sys.argv.append('sdist')
+    sys.argv.append('upload')
     if options.dry_run:
         print 'Skipping PyPI registration.'
     else:
@@ -497,66 +547,11 @@ def registering_with_PyPI(settings, options):
     os.remove('.pypirc')
 
 
-def postRequest(connection, api_call, body, contentType, ok=200, **headers):
-    headers['Content-Type'] = contentType
-    connection.request('POST', api_call, body, headers)
-    response = connection.getresponse()
-    if response.status != ok:
-        print 'Request failed: %d %s' % (response.status, response.reason)
-        return False
-    return True
-
-
-def httpPostRequest(host, api_call, body, contentType, ok=200, port=80, **headers):
-    connection = httplib.HTTPConnection(host, port)
-    return postRequest(connection, api_call, body, contentType, ok, **headers)
-
-
-def httpsPostRequest(host, api_call, body, contentType, ok=200, **headers):
-    connection = httplib.HTTPSConnection(host)
-    return postRequest(connection, api_call, body, contentType, ok, **headers)
-
-
-@progress
-def announcing_on_Freecode(settings, options):
-    auth_code = settings.get('freecode', 'auth_code')
-    metadata = taskcoachlib.meta.data.metaDict
-    version = '%(version)s' % metadata
-    changelog = latest_release(metadata, summary_only=True)
-    tag = 'Feature enhancements' if version.endswith('.0') else 'Bug fixes'
-    release = dict(version=version, changelog=changelog, tag_list=tag)
-    body = codecs.encode(json.dumps(dict(auth_code=auth_code, 
-                                         release=release)))
-    path = '/projects/taskcoach/releases.json'
-    host = 'freecode.com'
-    if options.dry_run:
-        print 'Skipping announcing "%s" on %s.' % (release, host)
-    else:
-        httpsPostRequest(host, path, body, 'application/json', ok=201)
-
-
 def status_message():
     ''' Return a brief status message for e.g. Twitter. '''
     metadata = taskcoachlib.meta.data.metaDict
     return "Release %(version)s of %(name)s is available from %(url)s. " \
            "See what's new at %(url)schanges.html." % metadata
-
-
-def announcing_via_Basic_Auth_Api(settings, options, section, host, 
-                                  api_prefix=''):
-    credentials = ':'.join(settings.get(section, credential) \
-                           for credential in ('username', 'password'))
-    basic_auth = base64.encodestring(credentials)[:-1]
-    status = status_message()
-    api_call = api_prefix + '/statuses/update.json'
-    body = '='.join((urllib.quote(body_part.encode('utf-8')) \
-                     for body_part in ('status', status)))
-    if options.dry_run:
-        print 'Skipping announcing "%s" on %s.' % (status, host)
-    else:
-        httpPostRequest(host, api_call, body, 
-                        'application/x-www-form-urlencoded; charset=utf-8',
-                        Authorization='Basic %s' % basic_auth)
 
 
 def announcing_via_OAuth_Api(settings, options, section, host):
@@ -570,12 +565,13 @@ def announcing_via_OAuth_Api(settings, options, section, host):
     status = status_message()
     if options.dry_run:
         print 'Skipping announcing "%s" on %s.' % (status, host)
-    else: 
-        response, dummy_content = client.request( \
-            'http://api.%s/1.1/statuses/update.json' % host, method='POST', 
+    else:
+        response, content = client.request( \
+            'https://api.%s/1.1/statuses/update.json' % host, method='POST', 
             body='status=%s' % status, headers=None)
         if response.status != 200:
             print 'Request failed: %d %s' % (response.status, response.reason)
+            print content
 
 
 @progress
@@ -583,24 +579,17 @@ def announcing_on_Twitter(settings, options):
     announcing_via_OAuth_Api(settings, options, 'twitter', 'twitter.com')
 
 
-@progress
-def announcing_on_Identica(settings, options):
-    announcing_via_Basic_Auth_Api(settings, options, 'identica', 'identi.ca', 
-                                  '/api')
+def uploading_website(settings, options):
+    ''' Upload the website contents to the website(s). '''
+    host = settings.get('webhost', 'hostname')
+    user = settings.get('webhost', 'username')
+    path = settings.get('webhost', 'path')
+    os.system('rsync website.out/ -avP %s@%s:%s' % (user, host, path))
 
-
-def uploading_website(settings, options, *args):
-    ''' Upload the website contents to the website(s). If args is present
-        only the files specified in args are uploaded. '''
-    #uploading_website_to_Dreamhost(settings, options, *args)
-    uploading_website_to_Hostland(settings, options, *args)
-    
 
 def announcing(settings, options):
-    registering_with_PyPI(settings, options)
+    #registering_with_PyPI(settings, options)
     announcing_on_Twitter(settings, options)
-    announcing_on_Identica(settings, options)
-    announcing_on_Freecode(settings, options)
     mailing_announcement(settings, options)
 
 
@@ -629,7 +618,7 @@ def updating_Sourceforge_trackers(settings, options):
 
 def releasing(settings, options):
     building_packages(settings, options)
-    uploading_distributions_to_SourceForge(settings, options)
+    uploading_distributions(settings, options)
     downloading_distributions_from_SourceForge(settings, options)
     generating_MD5_digests(settings, options)
     generating_website(settings, options)
@@ -741,16 +730,15 @@ def tagging_release_in_mercurial(settings, options):
 
 COMMANDS = dict(release=releasing,
                 build=building_packages,
-                upload=uploading_distributions_to_SourceForge, 
+                uploaddist=uploading_distributions_to_host,
+                uploadsf=uploading_distributions_to_SourceForge,
+                uploadfoss=uploading_distributions_to_fosshub,
+                upload=uploading_distributions,
                 download=downloading_distributions_from_SourceForge, 
                 md5=generating_MD5_digests,
                 websitegen=generating_website,
                 website=uploading_website,
-                websiteDH=uploading_website_to_Dreamhost,
-                websiteHL=uploading_website_to_Hostland,
                 twitter=announcing_on_Twitter,
-                identica=announcing_on_Identica,
-                freecode=announcing_on_Freecode,
                 pypi=registering_with_PyPI, 
                 mail=mailing_announcement,
                 announce=announcing,

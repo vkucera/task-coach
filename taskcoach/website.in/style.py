@@ -97,7 +97,6 @@ pageTracker._trackPageview();
                             <li><a href="download_for_mac.html" title="Download %(name)s for Mac OS X">Mac OS X</a></li>
                             <li><a href="download_for_linux.html" title="Download %(name)s for Linux">Linux</a></li>
                             <li><a href="download_for_bsd.html" title="Download %(name)s for BSD">BSD</a></li>
-                            <li><a href="download_for_iphone.html" title="Download %(name)s for iPhone and iPod Touch">iPhone and iPod Touch</a></li>
                             <li><a href="download_for_android.html" title="Download %(name)s for Android">Android</a></li>
                             <li class="divider"></li>
                             <li><a href="download_sources.html" title="Download %(name)s sources">Sources</a></li>
@@ -127,24 +126,21 @@ footer = '''
             <p style="text-align: center">
                 %(name)s is made possible by:
                 <br>
-                <a href="http://www.hostland.com">Hostland Web Hosting</a> and
-                <a href="http://henry.olders.ca">Henry Olders</a> (web hosting)
-                &nbsp;
-                <a href="http://www.python.org"><img src="images/python-powered-w-70x28.png" alt="Python"
+                <a href="https://www.python.org"><img src="images/python-powered-w-70x28.png" alt="Python"
                    valign="middle" align=middle width="70" height="28" border="0"></a>
                 &nbsp;
-                <a href="http://www.wxpython.org"><img valign="middle" src="images/powered-by-wxpython-80x15.png"
+                <a href="https://www.wxpython.org"><img valign="middle" src="images/powered-by-wxpython-80x15.png"
                    alt="wxPython" width="80" height="15" border="0"></a>
                 &nbsp;
-                <a href="http://www.icon-king.com">Nuvola</a> (icons)
+                <a href="https://www.icon-king.com">Nuvola</a> (icons)
                 &nbsp;
-                <a href="http://www.jrsoftware.org">Inno Setup</a>
+                <a href="https://www.jrsoftware.org">Inno Setup</a>
                 &nbsp;
-                <a href="http://sourceforge.net/projects/taskcoach"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=130831&type=8" 
+                <a href="https://sourceforge.net/projects/taskcoach"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=130831&type=8" 
                     width="80" height="15" border="0" alt="Task Coach at SourceForge.net"/></a>
                 &nbsp;
                 <script type='text/javascript' language='JavaScript' 
-                    src='http://www.ohloh.net/projects/5109;badge_js'></script>
+                    src='https://www.ohloh.net/projects/5109;badge_js'></script>
             </p>
         </footer>
     </body>

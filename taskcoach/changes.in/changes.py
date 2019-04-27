@@ -26,7 +26,32 @@ Release('1.5.0', 'August ??, 2014',
     summary='''This is a major release.''',
     ),
 
-Release('1.4.4', 'January ??, 2016',
+Release('1.4.7', 'April ??, 2019',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+    ],
+    ),
+
+Release('1.4.6', 'April 27, 2019',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bugv2('''Workaround for an underlying wxPython limitation we ran into.
+After some time Task Coach would exhibit various symptoms because of an
+exception in the event loop.'''),
+    ],
+    ),
+
+Release('1.4.5', 'March 24, 2019',
+    summary='''This is a mixed feature and bugfix release.''',
+    bugsFixed=[
+        Bugv2('''Fix an exception that would fill up the log on Linux'''),
+    ],
+    featuresAdded=[
+        Feature('''All Ubuntu versions since precise have now a PPA'''),
+        ],
+    ),
+
+Release('1.4.4', 'December 2, 2018',
     summary='''This is a mixed feature and bugfix release.''',
     featuresAdded=[
         Feature('''Add a viewer for task dependencies based on igraph (contributed
@@ -40,10 +65,10 @@ concerns other distributions as well.'''),
     featuresAdded=[
         Feature('''Per-task effort total time consolidation, patch provided by rogerdc@gmail.com'''),
         Feature('''Add a viewer for task dependencies based on igraph (contributed
-by Matthias Tafelmeier)'''),
+by Matthias Tafelmeier). Not available on all platforms.'''),
         ],
     dependenciesChanged=[
-        Dependency('''Task Coach now uses Marcurial for version control. This
+        Dependency('''Task Coach now uses Mercurial for version control. This
 only affects you if you want to develop or use Task Coach source code.'''),
     ],
     ),
