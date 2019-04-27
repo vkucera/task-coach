@@ -588,7 +588,7 @@ def uploading_website(settings, options):
 
 
 def announcing(settings, options):
-    registering_with_PyPI(settings, options)
+    #registering_with_PyPI(settings, options)
     announcing_on_Twitter(settings, options)
     mailing_announcement(settings, options)
 
@@ -618,7 +618,7 @@ def updating_Sourceforge_trackers(settings, options):
 
 def releasing(settings, options):
     building_packages(settings, options)
-    uploading_distributions_to_SourceForge(settings, options)
+    uploading_distributions(settings, options)
     downloading_distributions_from_SourceForge(settings, options)
     generating_MD5_digests(settings, options)
     generating_website(settings, options)
