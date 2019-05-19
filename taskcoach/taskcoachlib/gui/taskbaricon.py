@@ -211,4 +211,8 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
 
     def __setIcon(self):
         icon = artprovider.getIcon(self.__bitmap)
-        self.SetIcon(icon, self.__tooltipText)
+        try:
+            self.SetIcon(icon, self.__tooltipText)
+        except:
+            # wx assert errors on macOS but the icon still gets set... Whatever
+            pass
