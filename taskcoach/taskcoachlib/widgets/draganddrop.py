@@ -119,7 +119,7 @@ class DropTarget(wx.DropTarget):
                     self.__onDropMailCallback(x, y, thunderbird.getMail(url))
                 except thunderbird.ThunderbirdCancelled:
                     pass
-                except thunderbird.ThunderbirdError, e:
+                except thunderbird.ThunderbirdError as e:
                     wx.MessageBox(unicode(e), _('Error'), wx.OK)
             elif self.__onDropURLCallback:
                 self.__onDropURLCallback(x, y, url)
@@ -161,7 +161,7 @@ class DropTarget(wx.DropTarget):
                 email = thunderbird.getMail(data)
             except thunderbird.ThunderbirdCancelled:
                 pass
-            except thunderbird.ThunderbirdError, e:
+            except thunderbird.ThunderbirdError as e:
                 wx.MessageBox(e.args[0], _('Error'), wx.OK | wx.ICON_ERROR)
             else:
                 self.__onDropMailCallback(x, y, email)

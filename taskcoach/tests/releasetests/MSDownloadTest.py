@@ -26,7 +26,7 @@ class MSDownloadTest(test.TestCase):
         req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36')
         try:
             content = urllib2.build_opener().open(req).read()
-        except Exception, message: # pylint: disable=W0703
+        except Exception as message: # pylint: disable=W0703
             self.fail('Could not download page: %s' % str(message))
 
         self.failUnless(re.search('vcredist[a-zA-Z0-9_-]*\.exe', content))

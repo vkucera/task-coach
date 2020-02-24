@@ -65,7 +65,7 @@ class BaseSource(SyncSource):
         for obj in self.allObjectsList:
             if obj.id() == key:
                 return obj
-        raise KeyError, 'No such object: %s' % key
+        raise KeyError('No such object: %s' % key)
 
     def _getItem(self, ls):
         """Returns a SyncItem instance representing the first domain

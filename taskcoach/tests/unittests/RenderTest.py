@@ -239,7 +239,7 @@ class RenderException(test.TestCase):
     def testRenderUnicodeDecodeError(self):
         try:
             'abc'.encode('utf-16').decode('utf-8')
-        except UnicodeDecodeError, instance:
+        except UnicodeDecodeError as instance:
             self.assertEqual(unicode(instance), 
                              render.exception(UnicodeDecodeError, instance))
             

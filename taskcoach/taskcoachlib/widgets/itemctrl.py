@@ -347,7 +347,7 @@ class _BaseCtrlWithColumnsMixin(object):
         try:
             return self.__allColumns.index(column) # Uses overriden __eq__
         except ValueError:
-            raise ValueError, '%s: unknown column' % column.name()
+            raise ValueError('%s: unknown column' % column.name())
 
         
 class _CtrlWithHideableColumnsMixin(_BaseCtrlWithColumnsMixin):        
