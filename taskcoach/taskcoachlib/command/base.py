@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import patterns
 from taskcoachlib.domain import date
 from taskcoachlib.i18n import _
-from clipboard import Clipboard
+from .clipboard import Clipboard
  
 
 class BaseCommand(patterns.Command):

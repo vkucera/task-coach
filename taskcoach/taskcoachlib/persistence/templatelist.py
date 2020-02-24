@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os, pickle, tempfile, shutil
 from taskcoachlib.thirdparty.pubsub import pub
-from xml import TemplateXMLWriter, TemplateXMLReader
+from .xml import TemplateXMLWriter, TemplateXMLReader
 
 
 class TemplateList(object):

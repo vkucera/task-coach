@@ -19,16 +19,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import platform
 
 
-from fs_poller import *
+from .fs_poller import *
 
 
 _system = platform.system()
 if _system == 'Linux':
-    from fs_inotify import *
+    from .fs_inotify import *
 elif _system == 'Windows':
-    from fs_win32 import *
+    from .fs_win32 import *
 elif _system == 'Darwin':
-    from fs_darwin import *
+    from .fs_darwin import *
 else:
     class FilesystemNotifier(FilesystemPollerNotifier):
         pass

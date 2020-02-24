@@ -21,7 +21,7 @@ from taskcoachlib import render
 from taskcoachlib.domain import date
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty.pubsub import pub
-import base
+from . import base
 
 
 class BaseCompositeEffort(base.BaseEffort):  # pylint: disable=W0223        

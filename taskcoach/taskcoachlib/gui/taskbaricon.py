@@ -25,7 +25,7 @@ from taskcoachlib import meta, patterns, operating_system
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import date, task
 from taskcoachlib.thirdparty.pubsub import pub
-import artprovider
+from . import artprovider
 
 
 class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):

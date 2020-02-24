@@ -22,11 +22,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import command, widgets, domain
 from taskcoachlib.domain import note
-from taskcoachlib.gui import uicommand, menu, dialog
+from taskcoachlib.gui import uicommand, dialog
+import taskcoachlib.gui.menu
 from taskcoachlib.i18n import _
-import base
-import mixin
-import inplace_editor
+from . import base
+from . import mixin
+from . import inplace_editor
 import wx
 
 
@@ -59,9 +60,9 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
     def createWidget(self):
         imageList = self.createImageList()  # Has side-effects
         self._columns = self._createColumns()
-        itemPopupMenu = menu.NotePopupMenu(self.parent, self.settings,
+        itemPopupMenu = taskcoachlib.gui.menu.NotePopupMenu(self.parent, self.settings,
             self.taskFile.categories(), self)
-        columnPopupMenu = menu.ColumnPopupMenu(self)
+        columnPopupMenu = taskcoachlib.gui.menu.ColumnPopupMenu(self)
         self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
         widget = widgets.TreeListCtrl(self, self.columns(), self.onSelect,
             uicommand.Edit(viewer=self),

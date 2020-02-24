@@ -22,7 +22,7 @@ from taskcoachlib import patterns
 from taskcoachlib.domain.attribute import icon
 from taskcoachlib.domain.date import DateTime, Now
 from taskcoachlib.thirdparty.pubsub import pub
-import attribute
+from . import attribute
 import functools
 import uuid
 import re

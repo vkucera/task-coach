@@ -16,8 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from task import Task
-from tasklist import TaskList
-from status import *
-import filter  # pylint: disable=W0622
-import sorter
+from .task import Task
+from .tasklist import TaskList
+from .status import *
+from . import filter  # pylint: disable=W0622
+from . import sorter

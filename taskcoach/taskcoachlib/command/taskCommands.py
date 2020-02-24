@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import patterns
 from taskcoachlib.domain import task, effort, date
 from taskcoachlib.i18n import _
-import base
-import noteCommands
+from . import base
+from . import noteCommands
 
 
 class SaveTaskStateMixin(base.SaveStateMixin, base.CompositeMixin):

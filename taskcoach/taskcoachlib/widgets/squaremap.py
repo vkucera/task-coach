@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, operator
 from taskcoachlib.thirdparty.squaremap import squaremap
-import tooltip
+from . import tooltip
 
 
 class SquareMap(tooltip.ToolTipMixin, squaremap.SquareMap):

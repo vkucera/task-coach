@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 from taskcoachlib import i18n
 try:
-    import icons
+    from . import icons
 except ImportError: # pragma: no cover   
     print "ERROR: couldn't import icons.py."
     print 'You need to generate the icons file.'

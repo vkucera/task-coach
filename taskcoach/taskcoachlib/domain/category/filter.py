@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import patterns
 from taskcoachlib.domain import base
 from taskcoachlib.thirdparty.pubsub import pub
-from category import Category
+from .category import Category
 
 
 class CategoryFilter(base.Filter):

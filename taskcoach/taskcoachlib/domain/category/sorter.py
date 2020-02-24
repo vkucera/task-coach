@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib.domain import base
-import category
+from . import category
 
 
 class CategorySorter(base.TreeSorter):

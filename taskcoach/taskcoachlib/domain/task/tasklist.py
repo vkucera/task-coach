@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import categorizable
 from taskcoachlib import help, operating_system  # pylint: disable=W0622
-import task
+from . import task
 
 
 class TaskListQueryMixin(object):

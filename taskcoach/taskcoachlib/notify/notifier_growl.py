@@ -24,7 +24,7 @@ import wx
 
 import taskcoachlib.thirdparty.gntp.notifier as Growl
 from taskcoachlib import meta
-from notifier import AbstractNotifier
+from .notifier import AbstractNotifier
 
 
 class GrowlNotifier(AbstractNotifier):

@@ -19,9 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import patterns
 from taskcoachlib.domain import date, task
 from taskcoachlib.thirdparty.pubsub import pub
-import composite
-import effortlist
-import effort
+from . import composite
+from . import effortlist
+from . import effort
 
 
 class EffortAggregator(patterns.SetDecorator, 

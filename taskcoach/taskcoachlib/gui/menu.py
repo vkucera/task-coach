@@ -22,8 +22,8 @@ from taskcoachlib.domain import task, base, category
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty.pubsub import pub
 from taskcoachlib.gui.newid import IdProvider
-import uicommand
-import viewer
+from . import uicommand
+import taskcoachlib.gui.viewer
 import wx
 import os
 
@@ -447,34 +447,34 @@ class ViewViewerMenu(Menu):
         viewViewerCommands = [\
             ViewViewer(menuText=_('&Task'),
                        helpText=_('Open a new tab with a viewer that displays tasks'),
-                       viewerClass=viewer.TaskViewer, **kwargs),
+                       viewerClass=taskcoachlib.gui.viewer.TaskViewer, **kwargs),
             ViewViewer(menuText=_('Task &statistics'),
                        helpText=_('Open a new tab with a viewer that displays task statistics'),
-                       viewerClass=viewer.TaskStatsViewer, **kwargs),
+                       viewerClass=taskcoachlib.gui.viewer.TaskStatsViewer, **kwargs),
             ViewViewer(menuText=_('Task &square map'),
                        helpText=_('Open a new tab with a viewer that displays tasks in a square map'),
-                       viewerClass=viewer.SquareTaskViewer, **kwargs),
+                       viewerClass=taskcoachlib.gui.viewer.SquareTaskViewer, **kwargs),
             ViewViewer(menuText=_('T&imeline'),
                        helpText=_('Open a new tab with a viewer that displays a timeline of tasks and effort'),
-                       viewerClass=viewer.TimelineViewer, **kwargs),
+                       viewerClass=taskcoachlib.gui.viewer.TimelineViewer, **kwargs),
             ViewViewer(menuText=_('&Calendar'),
                        helpText=_('Open a new tab with a viewer that displays tasks in a calendar'),
-                       viewerClass=viewer.CalendarViewer, **kwargs),
+                       viewerClass=taskcoachlib.gui.viewer.CalendarViewer, **kwargs),
             ViewViewer(menuText=_('&Hierarchical calendar'),
                        helpText=_('Open a new tab with a viewer that displays task hierarchy in a calendar'),
-                       viewerClass=viewer.HierarchicalCalendarViewer, **kwargs),
+                       viewerClass=taskcoachlib.gui.viewer.HierarchicalCalendarViewer, **kwargs),
             ViewViewer(menuText=_('&Category'),
                        helpText=_('Open a new tab with a viewer that displays categories'),
-                       viewerClass=viewer.CategoryViewer, **kwargs),
+                       viewerClass=taskcoachlib.gui.viewer.CategoryViewer, **kwargs),
             ViewViewer(menuText=_('&Effort'),
                    helpText=_('Open a new tab with a viewer that displays efforts'),
-                   viewerClass=viewer.EffortViewer, **kwargs),
+                   viewerClass=taskcoachlib.gui.viewer.EffortViewer, **kwargs),
             uicommand.ViewEffortViewerForSelectedTask(menuText=_('Eff&ort for selected task(s)'),
                     helpText=_('Open a new tab with a viewer that displays efforts for the selected task'),
-                    viewerClass=viewer.EffortViewer, **kwargs),
+                    viewerClass=taskcoachlib.gui.viewer.EffortViewer, **kwargs),
             ViewViewer(menuText=_('&Note'),
                    helpText=_('Open a new tab with a viewer that displays notes'),
-                   viewerClass=viewer.NoteViewer, **kwargs)]
+                   viewerClass=taskcoachlib.gui.viewer.NoteViewer, **kwargs)]
         try:
             import igraph
         except ImportError:
@@ -482,7 +482,7 @@ class ViewViewerMenu(Menu):
         else:
             viewViewerCommands.append(ViewViewer(menuText=_('&Dependency Graph'),
                           helpText=_('Open a new tab with a viewer that dependencies between weighted tasks over time'),
-                          viewerClass=viewer.TaskInterdepsViewer, **kwargs))
+                          viewerClass=taskcoachlib.gui.viewer.TaskInterdepsViewer, **kwargs))
         self.appendUICommands(*viewViewerCommands)
        
                                       

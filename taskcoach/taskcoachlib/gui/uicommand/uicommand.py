@@ -34,9 +34,9 @@ from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_NEXT, \
 from taskcoachlib.tools import anonymize, openfile
 from taskcoachlib.workarounds import ExceptionAsUnicode
 import wx, re, operator
-import base_uicommand
-import mixin_uicommand
-import settings_uicommand
+from . import base_uicommand
+from . import mixin_uicommand
+from . import settings_uicommand
 
 
 class IOCommand(base_uicommand.UICommand):  # pylint: disable=W0223

@@ -25,7 +25,7 @@ from taskcoachlib.thirdparty.wxScheduler.wxSchedulerConstants import wxSCHEDULER
 from taskcoachlib.domain import date
 from taskcoachlib.widgets import draganddrop
 from taskcoachlib import command, render
-import tooltip
+from . import tooltip
 
 
 class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):

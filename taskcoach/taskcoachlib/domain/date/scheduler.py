@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import patterns
-import dateandtime, timedelta
+from . import dateandtime, timedelta
 import logging
 import weakref
 import bisect

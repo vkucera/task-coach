@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import operating_system
 from taskcoachlib.thirdparty import aui
 import wx
-import uicommand
+from . import uicommand
 
 
 class _Toolbar(aui.AuiToolBar):

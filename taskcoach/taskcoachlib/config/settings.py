@@ -25,7 +25,7 @@ import os
 import sys
 import wx
 import shutil
-import defaults
+from . import defaults
 
 
 class UnicodeAwareConfigParser(ConfigParser.RawConfigParser):

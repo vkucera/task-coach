@@ -20,7 +20,7 @@ from wxevents import CalendarCanvas, CalendarPrintout, EVT_EVENT_SELECTION_CHANG
 from taskcoachlib.domain import date
 from taskcoachlib.widgets import draganddrop
 from taskcoachlib import command, render
-import tooltip
+from . import tooltip
 import wx, datetime
 
 

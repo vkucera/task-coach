@@ -23,12 +23,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import command, widgets, domain, render
 from taskcoachlib.domain import effort, date
 from taskcoachlib.domain.base import filter  # pylint: disable=W0622
-from taskcoachlib.gui import uicommand, menu, dialog
+from taskcoachlib.gui import uicommand, dialog
+import taskcoachlib.gui.menu
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty.pubsub import pub
-import base
-import mixin
-import refresher
+from . import base
+from . import mixin
+from . import refresher
 import wx
 
 
@@ -192,9 +193,9 @@ class EffortViewer(base.ListViewer,
     def createWidget(self):
         imageList = self.createImageList()  # Has side-effects
         self._columns = self._createColumns()  # pylint: disable=W0201
-        itemPopupMenu = menu.EffortPopupMenu(self.parent, self.taskFile.tasks(),
+        itemPopupMenu = taskcoachlib.gui.menu.EffortPopupMenu(self.parent, self.taskFile.tasks(),
             self.taskFile.efforts(), self.settings, self)
-        columnPopupMenu = menu.EffortViewerColumnPopupMenu(self)
+        columnPopupMenu = taskcoachlib.gui.menu.EffortViewerColumnPopupMenu(self)
         self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
         widget = widgets.VirtualListCtrl(self, self.columns(), self.onSelect,
             uicommand.Edit(viewer=self),

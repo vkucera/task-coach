@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import patterns
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import attachment
-import base, noteCommands
+from . import base, noteCommands
 
 
 class EditAttachmentLocationCommand(base.BaseCommand):
