@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import operating_system
-from taskcoachlib.gui import menu
+import taskcoachlib.gui.menu
 from taskcoachlib.thirdparty.pubsub import pub
 import taskcoachlib.thirdparty.aui as aui
 import wx
@@ -183,7 +183,7 @@ class ViewerContainer(object):
             viewer. '''
         viewer = event.GetPane().window
         table = wx.AcceleratorTable([(wx.ACCEL_CTRL, wx.WXK_PAGEDOWN, 
-                                      menu.activateNextViewerId),
+                                      taskcoachlib.gui.menu.activateNextViewerId),
                                      (wx.ACCEL_CTRL, wx.WXK_PAGEUP, 
-                                      menu.activatePreviousViewerId)])
+                                      taskcoachlib.gui.menu.activatePreviousViewerId)])
         viewer.SetAcceleratorTable(table)

@@ -20,11 +20,11 @@ from taskcoachlib import operating_system
 
 
 if operating_system.isWindows():
-    from notifier_windows import *
-    from notifier_growl import *
+    from .notifier_windows import *
+    from .notifier_growl import *
 elif operating_system.isMac():
-    from notifier_growl import *
+    from .notifier_growl import *
 
-from notifier_universal import *
+from .notifier_universal import *
 
-from notifier import *
+from .notifier import *

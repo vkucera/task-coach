@@ -255,7 +255,7 @@ class IOController(object):
                              'of %s.\n') % (filename, meta.name)
             showerror(errorMessage, **self.__errorMessageOptions)
             return False
-        except (OSError, IOError, lockfile.LockFailed), reason:
+        except (OSError, IOError, lockfile.LockFailed) as reason:
             errorMessage = _('Cannot save %s\n%s') % (filename, 
                            ExceptionAsUnicode(reason))
             showerror(errorMessage, **self.__errorMessageOptions)
@@ -275,7 +275,7 @@ class IOController(object):
             templates = persistence.TemplateList(self.__settings.pathToTemplatesDir())
             try:
                 templates.copyTemplate(filename)
-            except Exception, reason:  # pylint: disable=W0703
+            except Exception as reason:  # pylint: disable=W0703
                 errorMessage = _('Cannot import template %s\n%s') % (filename, 
                                ExceptionAsUnicode(reason))
                 showerror(errorMessage, **self.__errorMessageOptions)
@@ -380,7 +380,7 @@ class IOController(object):
                              encoding='utf-8'):
         try:
             return openfile(filename, mode, encoding)
-        except IOError, reason:
+        except IOError as reason:
             errorMessage = _('Cannot open %s\n%s') % (filename, 
                            ExceptionAsUnicode(reason))
             showerror(errorMessage, **self.__errorMessageOptions)

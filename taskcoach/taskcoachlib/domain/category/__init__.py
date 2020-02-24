@@ -16,8 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from category import Category
-from categorycontainer import CategoryList
-from sorter import CategorySorter
-import filter
+from .category import Category
+from .categorycontainer import CategoryList
+from .sorter import CategorySorter
+from . import filter
 

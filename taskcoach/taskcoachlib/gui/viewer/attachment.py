@@ -24,8 +24,9 @@ import os, wx
 from taskcoachlib import command, widgets
 from taskcoachlib.domain import attachment
 from taskcoachlib.i18n import _
-from taskcoachlib.gui import uicommand, menu, dialog 
-import base, mixin
+from taskcoachlib.gui import uicommand, dialog 
+import taskcoachlib.gui.menu
+from . import base, mixin
 
 
 class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable=W0223
@@ -56,9 +57,9 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable=W0223
 
     def createWidget(self):
         imageList = self.createImageList()
-        itemPopupMenu = menu.AttachmentPopupMenu(self.parent, self.settings,
+        itemPopupMenu = taskcoachlib.gui.menu.AttachmentPopupMenu(self.parent, self.settings,
             self.presentation(), self)
-        columnPopupMenu = menu.ColumnPopupMenu(self)
+        columnPopupMenu = taskcoachlib.gui.menu.ColumnPopupMenu(self)
         self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
         self._columns = self._createColumns()
         widget = widgets.VirtualListCtrl(self, self.columns(), self.onSelect,

@@ -25,7 +25,7 @@ from taskcoachlib import meta, patterns, operating_system
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import date, task
 from taskcoachlib.thirdparty.pubsub import pub
-import artprovider
+from . import artprovider
 
 
 class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
@@ -211,4 +211,8 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
 
     def __setIcon(self):
         icon = artprovider.getIcon(self.__bitmap)
-        self.SetIcon(icon, self.__tooltipText)
+        try:
+            self.SetIcon(icon, self.__tooltipText)
+        except:
+            # wx assert errors on macOS but the icon still gets set... Whatever
+            pass

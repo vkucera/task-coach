@@ -25,7 +25,8 @@ import wx.lib.agw.piectrl
 from taskcoachlib import operating_system
 from taskcoachlib import command, widgets, domain, render
 from taskcoachlib.domain import task, date
-from taskcoachlib.gui import uicommand, menu, dialog
+from taskcoachlib.gui import uicommand, dialog
+import taskcoachlib.gui.menu
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty.pubsub import pub
 from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_TODAY, wxFancyDrawer
@@ -33,10 +34,10 @@ from taskcoachlib.thirdparty import smartdatetimectrl as sdtc
 from taskcoachlib.widgets import CalendarConfigDialog, HierarchicalCalendarConfigDialog
 from twisted.internet.threads import deferToThread
 from twisted.internet.defer import inlineCallbacks
-import base
-import inplace_editor
-import mixin
-import refresher
+from . import base
+from . import inplace_editor
+from . import mixin
+from . import refresher
 import wx
 import tempfile
 import struct
@@ -216,7 +217,7 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable=W0223
                   shadow=self.settings.getboolean('feature', 'syncml'))    
 
     def createTaskPopupMenu(self):
-        return menu.TaskPopupMenu(self.parent, self.settings,
+        return taskcoachlib.gui.menu.TaskPopupMenu(self.parent, self.settings,
                                   self.presentation(), self.taskFile.efforts(),
                                   self.taskFile.categories(), self)
 
@@ -1244,7 +1245,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                                           uicommand.TaskViewerTreeOrListChoice.choiceData)]
 
     def createColumnPopupMenu(self):
-        return menu.ColumnPopupMenu(self)
+        return taskcoachlib.gui.menu.ColumnPopupMenu(self)
                     
     def setSortByTaskStatusFirst(self, *args, **kwargs):  # pylint: disable=W0221
         super(TaskViewer, self).setSortByTaskStatusFirst(*args, **kwargs)

@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import meta
 from taskcoachlib.i18n import _
-from tips import showTips
-from uicommand import *
+from .tips import showTips
+from .uicommand import *
 
 
 _MSURL = "https://www.microsoft.com/en-us/download/details.aspx?id=5638"

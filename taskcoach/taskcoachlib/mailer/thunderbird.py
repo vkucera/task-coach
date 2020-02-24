@@ -302,7 +302,7 @@ class ThunderbirdImapReader(object):
         imap_class = imaplib.IMAP4_SSL if self.ssl else imaplib.IMAP4
         try:
             imap = imap_class(self.server, self.port)
-        except socket.gaierror, reason:
+        except socket.gaierror as reason:
             error_message = _('Could not open an IMAP connection to '
                               '%(server)s:%(port)s\nto retrieve Thunderbird '
                               'email message:\n%(reason)s') % \
@@ -330,7 +330,7 @@ class ThunderbirdImapReader(object):
                             domain_username, str(pwd)))
                 else:
                     response, dummy_parameters = imap.login(self.user, pwd)
-            except imap.error, reason:
+            except imap.error as reason:
                 response = 'KO'
                 error_message, = reason.args
 

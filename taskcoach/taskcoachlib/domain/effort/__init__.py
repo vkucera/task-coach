@@ -16,9 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from effort import Effort
-from composite import CompositeEffort, CompositeEffortPerPeriod, BaseCompositeEffort
-from effortlist import EffortList, EffortListTracker
-from sorter import EffortSorter
-from reducer import EffortAggregator
+from .effort import Effort
+from .composite import CompositeEffort, CompositeEffortPerPeriod, BaseCompositeEffort
+from .effortlist import EffortList, EffortListTracker
+from .sorter import EffortSorter
+from .reducer import EffortAggregator
 

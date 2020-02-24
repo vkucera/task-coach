@@ -17,8 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import calendar
-import timedelta
-import dateandtime as date
+from . import timedelta
+from . import dateandtime as date
 
 
 class Recurrence(object):

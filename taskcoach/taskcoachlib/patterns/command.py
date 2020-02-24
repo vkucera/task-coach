@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import singleton as patterns
+from . import singleton as patterns
 
 
 class Command(object):

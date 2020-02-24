@@ -16,7 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import generator, csv, cStringIO
+import csv, cStringIO
+from . import generator
 
 
 class UnicodeCSVWriter:

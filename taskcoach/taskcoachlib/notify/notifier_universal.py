@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from notifier import AbstractNotifier
+from .notifier import AbstractNotifier
 from taskcoachlib import operating_system
 
 

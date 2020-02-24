@@ -50,7 +50,7 @@ def make(filename, outfile=None):
 
     try:
         lines = open(infile).readlines()
-    except IOError, msg:
+    except IOError as msg:
         print >> sys.stderr, msg
         sys.exit(1)
 
@@ -107,7 +107,7 @@ def make(filename, outfile=None):
 
     try:
         open(outfile,"wb").write(output)
-    except IOError,msg:
+    except IOError as msg:
         print >> sys.stderr, msg
 
     return outfile

@@ -25,7 +25,7 @@ import os
 import sys
 import wx
 import shutil
-import defaults
+from . import defaults
 
 
 class UnicodeAwareConfigParser(ConfigParser.RawConfigParser):
@@ -76,7 +76,7 @@ class Settings(object, CachingConfigParser):
                 if not self.read(self.filename(forceProgramDir=True)):
                     self.read(self.filename())
                 errorMessage = ''
-            except ConfigParser.ParsingError, errorMessage:
+            except ConfigParser.ParsingError as errorMessage:
                 # Ignore exceptions and simply use default values. 
                 # Also record the failure in the settings:
                 self.initializeWithDefaults()
@@ -143,11 +143,11 @@ class Settings(object, CachingConfigParser):
         try:
             defaultSection = defaults.defaults[defaultSectionKey]
         except KeyError:
-            raise ConfigParser.NoSectionError, defaultSectionKey
+            raise ConfigParser.NoSectionError(defaultSectionKey)
         try:
             return defaultSection[option]
         except KeyError:
-            raise ConfigParser.NoOptionError, (option, defaultSection)
+            raise ConfigParser.NoOptionError((option, defaultSection))
             
     def _ensureMinimum(self, section, option, result):
         # Some settings may have a minimum value, make sure we return at 
@@ -263,7 +263,7 @@ class Settings(object, CachingConfigParser):
         stringValue = self.get(section, option)
         try:
             return evaluate(stringValue)
-        except Exception, exceptionMessage:  # pylint: disable=W0703
+        except Exception as exceptionMessage:  # pylint: disable=W0703
             message = '\n'.join([ \
                 _('Error while reading the %s-%s setting from %s.ini.') % (section, option, meta.filename),
                 _('The value is: %s') % stringValue,
@@ -291,7 +291,7 @@ class Settings(object, CachingConfigParser):
             if os.path.exists(self.filename()):
                 os.remove(self.filename())
             os.rename(self.filename() + '.tmp', self.filename())
-        except Exception, message:  # pylint: disable=W0703
+        except Exception as message:  # pylint: disable=W0703
             showerror(_('Error while saving %s.ini:\n%s\n') % \
                       (meta.filename, message), caption=_('Save error'), 
                       style=wx.ICON_ERROR)

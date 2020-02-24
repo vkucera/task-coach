@@ -16,5 +16,5 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from settings import Settings
-from options import OptionParser, ApplicationOptionParser, OptionGroup
+from .settings import Settings
+from .options import OptionParser, ApplicationOptionParser, OptionGroup

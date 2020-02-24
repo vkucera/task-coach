@@ -20,5 +20,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # comma separated values (cvs) format for exporting Task Coach data to csv 
 # files.
 
-from generator import viewer2csv
-from writer import CSVWriter
+from .generator import viewer2csv
+from .writer import CSVWriter

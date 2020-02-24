@@ -179,7 +179,7 @@ class DummyViewer(object):
 class MailTaskTest(test.TestCase):
     def testException(self):
         def mail(*args): # pylint: disable=W0613
-            raise RuntimeError, 'message'
+            raise RuntimeError('message')
         
         def showerror(*args, **kwargs): # pylint: disable=W0613
             self.showerror = args # pylint: disable=W0201

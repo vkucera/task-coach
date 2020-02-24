@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib.domain import base
-import effort
+from . import effort
 
 
 class EffortSorter(base.Sorter):

@@ -87,7 +87,7 @@ class AttributeSync(object):
         if self.__callback is not None:
             try:
                 self.__callback(value)
-            except Exception, e:
+            except Exception as e:
                 wx.MessageBox(unicode(e), _('Error'), wx.OK)
 
     def __start_observing_attribute(self, eventType, eventSource):

@@ -24,10 +24,11 @@ import wx
 from taskcoachlib import command, widgets
 from taskcoachlib.domain import category 
 from taskcoachlib.i18n import _
-from taskcoachlib.gui import uicommand, menu, dialog
-import base
-import mixin
-import inplace_editor
+from taskcoachlib.gui import uicommand, dialog
+import taskcoachlib.gui.menu
+from . import base
+from . import mixin
+from . import inplace_editor
 
 
 class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
@@ -61,7 +62,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
         imageList = self.createImageList()  # Has side-effects
         self._columns = self._createColumns()
         itemPopupMenu = self.createCategoryPopupMenu()
-        columnPopupMenu = menu.ColumnPopupMenu(self)
+        columnPopupMenu = taskcoachlib.gui.menu.ColumnPopupMenu(self)
         self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
         widget = widgets.CheckTreeCtrl(self, self._columns,
             self.onSelect, self.onCheck,
@@ -77,7 +78,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
         return widget
 
     def createCategoryPopupMenu(self, localOnly=False):
-        return menu.CategoryPopupMenu(self.parent, self.settings, self.taskFile,
+        return taskcoachlib.gui.menu.CategoryPopupMenu(self.parent, self.settings, self.taskFile,
                                       self, localOnly)
 
     def _createColumns(self):

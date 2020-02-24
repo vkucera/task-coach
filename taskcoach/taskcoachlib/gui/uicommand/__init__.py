@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from base_uicommand import UICommand
-from settings_uicommand import UIRadioCommand, UICheckCommand
-from uicommand import *
-from uicommandcontainer import UICommandContainerMixin
+from .base_uicommand import UICommand
+from .settings_uicommand import UIRadioCommand, UICheckCommand
+from .uicommand import *
+from .uicommandcontainer import UICommandContainerMixin

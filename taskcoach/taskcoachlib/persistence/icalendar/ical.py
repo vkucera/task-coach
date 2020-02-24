@@ -42,7 +42,7 @@ def parseDateTime(fulldate):
             # GMT. Convert this to local time.
             localTime = time.localtime(calendar.timegm((year, month, day, hour, minute, second, 0, 0, -1)))
             year, month, day, hour, minute, second = localTime[:6]
-    except Exception, e:
+    except Exception as e:
         raise ValueError('Malformed date: %s (%s)' % (fulldate, str(e)))
 
     return date.DateTime(year, month, day, hour, minute, second)
@@ -130,7 +130,7 @@ class VCalendarParser(object):
             try:
                 self.setState(self.stateMap[line[6:]])
             except KeyError:
-                raise TypeError, 'Unrecognized vcal type: %s' % line[6:]
+                raise TypeError('Unrecognized vcal type: %s' % line[6:])
         elif line.startswith('END:'):
             if line[4:] == 'VCALENDAR':
                 return True
@@ -141,7 +141,7 @@ class VCalendarParser(object):
             try:
                 idx = line.index(':')
             except ValueError:
-                raise RuntimeError, 'Malformed vcal line: %s' % line
+                raise RuntimeError('Malformed vcal line: %s' % line)
 
             details, value = line[:idx].split(';'), line[idx + 1:]
             name, specs = details[0], details[1:]

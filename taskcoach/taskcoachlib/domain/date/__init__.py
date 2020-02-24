@@ -16,13 +16,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from date import Date, parseDate
-from dateandtime import DateTime, Now, Today, Yesterday, Tomorrow, \
+from .date import Date, parseDate
+from .dateandtime import DateTime, Now, Today, Yesterday, Tomorrow, \
     LastDayOfCurrentMonth, parseDateTime
-from timedelta import TimeDelta, ONE_SECOND, ONE_MINUTE, ONE_HOUR, TWO_HOURS, \
+from .timedelta import TimeDelta, ONE_SECOND, ONE_MINUTE, ONE_HOUR, TWO_HOURS, \
     ONE_DAY, ONE_WEEK, ONE_YEAR, parseTimeDelta
-from timeclass import Time
-from scheduler import Scheduler
-from recurrence import Recurrence
-from snooze import snoozeChoices
+from .timeclass import Time
+from .scheduler import Scheduler
+from .recurrence import Recurrence
+from .snooze import snoozeChoices
 

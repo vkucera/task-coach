@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib.domain import base
 from taskcoachlib.thirdparty.pubsub import pub
-import task
+from . import task
 
 
 class Sorter(base.TreeSorter):

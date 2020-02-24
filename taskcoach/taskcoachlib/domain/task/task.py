@@ -24,7 +24,7 @@ from taskcoachlib.domain import date, categorizable, note, attachment, base
 from taskcoachlib.domain.attribute.icon import getImageOpen
 from taskcoachlib.thirdparty.pubsub import pub
 from taskcoachlib.thirdparty._weakrefset import WeakSet
-import status
+from . import status
 import weakref
 import wx
 

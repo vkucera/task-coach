@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib.domain import effort, date
 from taskcoachlib.i18n import _
-import base
+from . import base
 
 
 class NewEffortCommand(base.BaseCommand):

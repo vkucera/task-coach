@@ -1558,7 +1558,7 @@ class TaskFileMultiUserTestBase(object):
         self.taskFile1.save()
         try:
             self.doSave(self.taskFile2)
-        except Exception, e:
+        except Exception as e:
             self.fail(str(e))
 
     def testAddEffortToTask(self):

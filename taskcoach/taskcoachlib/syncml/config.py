@@ -50,7 +50,7 @@ class SyncMLConfigNode(object):
         for child in self.__children:
             if child.name == name:
                 return child
-        raise KeyError, name
+        raise KeyError(name)
 
 
 def createDefaultSyncConfig(uid):

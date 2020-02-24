@@ -17,10 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 
-import developer_message
-import entry
-import export
-import preferences
-import syncpreferences
-import templates
-from backupmanager import BackupManagerDialog
+from . import developer_message
+from . import entry
+from . import export
+from . import preferences
+from . import syncpreferences
+from . import templates
+from .backupmanager import BackupManagerDialog

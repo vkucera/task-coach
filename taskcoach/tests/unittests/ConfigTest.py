@@ -142,7 +142,7 @@ class SettingsIOTest(SettingsTestCase):
         class SettingsThatThrowsParsingError(config.Settings):
             def read(self, *args, **kwargs):  # pylint: disable=W0613
                 self.remove_section('file')
-                raise ConfigParser.ParsingError, 'Testing'
+                raise ConfigParser.ParsingError('Testing')
             
         self.failIf(SettingsThatThrowsParsingError().getboolean('file', 'inifileloaded'))
         

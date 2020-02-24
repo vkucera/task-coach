@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, operator
 from taskcoachlib.thirdparty.timeline import timeline
-import tooltip
+from . import tooltip
 
 
 class Timeline(tooltip.ToolTipMixin, timeline.TimeLine):

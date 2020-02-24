@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from note import Note
-from noteowner import NoteOwner
-from notecontainer import NoteContainer
-from sorter import NoteSorter
+from .note import Note
+from .noteowner import NoteOwner
+from .notecontainer import NoteContainer
+from .sorter import NoteSorter

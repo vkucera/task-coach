@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from notifier import AbstractNotifier
+from .notifier import AbstractNotifier
 import tempfile, os, wx
 from taskcoachlib.thirdparty import snarl
 

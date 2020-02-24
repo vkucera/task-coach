@@ -55,7 +55,7 @@ class DirectoryWatcher(object):
         if rc == WAIT_OBJECT_0:
             try:
                 size = GetOverlappedResult(self.dirHandle, self.overlapped, True)
-            except Exception, e:
+            except Exception as e:
                 if e.args[0] == 995:
                     return None
                 raise
