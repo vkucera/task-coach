@@ -189,29 +189,30 @@ class MethodProxy(object):
         return self.method(*args, **kwargs)
         
     def __eq__(self, other):
-        return self.method.im_class is other.method.im_class and \
-               self.method.im_self is other.method.im_self and \
-               self.method.im_func is other.method.im_func
+        return self.method.__self__.__class__ is other.method.__self__.__class__ and \
+               self.method.__self__ is other.method.__self__ and \
+               self.method.__func__ is other.method.__func__
                
     def __ne__(self, other):
         return not (self == other)
     
     def __hash__(self):
-        # Can't use self.method.im_self for the hash, it might be mutable
-        return hash((self.method.im_class, id(self.method.im_self), 
-                     self.method.im_func))
+        # Can't use self.method.__self__ for the hash, it might be mutable
+        return hash((self.method.__self__.__class__, id(self.method.__self__), 
+                     self.method.__func__))
                    
     def get_im_self(self):
-        return self.method.im_self
+        return self.method.__self__
     
     im_self = property(get_im_self)
+    __self__ = im_self
 
 
 def wrapObserver(decoratedMethod):
     ''' Wrap the observer argument (assumed to be the first after self) in
         a MethodProxy class. ''' 
     def decorator(self, observer, *args, **kwargs):
-        assert hasattr(observer, 'im_self')
+        assert hasattr(observer, '__self__')
         observer = MethodProxy(observer)
         return decoratedMethod(self, observer, *args, **kwargs)
     return decorator
@@ -343,8 +344,8 @@ class Observer(object):
     def removeInstance(self):
         for observer in self.__observers.copy():
             self.removeObserver(observer)
-        pub.unsubAll(listenerFilter=lambda listener: hasattr(listener.getCallable(), 'im_self') and \
-                     listener.getCallable().im_self is self)
+        pub.unsubAll(listenerFilter=lambda listener: hasattr(listener.getCallable(), '__self__') and \
+                     listener.getCallable().__self__ is self)
 
 
 class Decorator(Observer):

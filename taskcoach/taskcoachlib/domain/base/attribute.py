@@ -28,7 +28,7 @@ class Attribute(object):
         super(Attribute, self).__init__()
         self.__value = value
         self.__owner = weakref.ref(owner)
-        self.__setEvent = setEvent.im_func
+        self.__setEvent = setEvent.__func__
         
     def get(self):
         return self.__value
@@ -52,9 +52,9 @@ class SetAttribute(object):
         self.__setClass = WeakSet if weak else set
         self.__set = self.__setClass(values) if values else self.__setClass()
         self.__owner = weakref.ref(owner)
-        self.__addEvent = (addEvent or self.__nullEvent).im_func
-        self.__removeEvent = (removeEvent or self.__nullEvent).im_func
-        self.__changeEvent = (changeEvent or self.__nullEvent).im_func
+        self.__addEvent = (addEvent or self.__nullEvent).__func__
+        self.__removeEvent = (removeEvent or self.__nullEvent).__func__
+        self.__changeEvent = (changeEvent or self.__nullEvent).__func__
         
     def get(self):
         return set(self.__set)
