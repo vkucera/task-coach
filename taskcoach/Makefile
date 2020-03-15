@@ -385,7 +385,7 @@ changes:
 	$(PYTHON) changes.in/make.py html > website.in/all_changes.html
 
 unittests: thirdpartymodules icons templates
-	cd tests; $(PYTHON) test.py --unittests
+	cd tests; $(PYTHON) test.py --unittests --verbose
 
 integrationtests: thirdpartymodules icons templates
 	cd tests; $(PYTHON) test.py --integrationtests

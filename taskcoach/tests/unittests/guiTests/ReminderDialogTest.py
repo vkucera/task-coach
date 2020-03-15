@@ -39,30 +39,35 @@ class ReminderDialogTest(test.TestCase):
         return dialog.reminder.ReminderDialog(self.aTask,
             self.taskList, self.effortList, self.settings, None)
 
+    @test.skipOnPlatform('__WXGTK__') # Causes SIGSEGV
     def testRememberZeroSnoozeTime(self):
         reminderDialog = self.createReminderDialog()
         reminderDialog.snoozeOptions.SetSelection(0)
         reminderDialog.onClose(DummyEvent())
         self.assertEqual(0, self.settings.getint('view', 'defaultsnoozetime'))
 
+    @test.skipOnPlatform('__WXGTK__') # Causes SIGSEGV
     def testRememberSnoozeTime(self):
         reminderDialog = self.createReminderDialog()
         reminderDialog.snoozeOptions.SetSelection(2)
         reminderDialog.onClose(DummyEvent())
         self.assertEqual(10, self.settings.getint('view', 'defaultsnoozetime'))
 
+    @test.skipOnPlatform('__WXGTK__') # Causes SIGSEGV
     def testUseDefaultSnoozeTime(self):
         self.settings.set('view', 'defaultsnoozetime', '15')
         reminderDialog = self.createReminderDialog()
         self.assertEqual('15 minutes',
                          reminderDialog.snoozeOptions.GetStringSelection())
 
+    @test.skipOnPlatform('__WXGTK__') # Causes SIGSEGV
     def testDontUseDefaultSnoozeTimeWhenItsNotInTheListOfOptions(self):
         self.settings.set('view', 'defaultsnoozetime', '17')
         reminderDialog = self.createReminderDialog()
         self.assertEqual('5 minutes',
                          reminderDialog.snoozeOptions.GetStringSelection())
 
+    @test.skipOnPlatform('__WXGTK__') # Causes SIGSEGV
     def testRememberReminderReplaceDefaultSnoozeTime(self):
         reminderDialog = self.createReminderDialog()
         reminderDialog.replaceDefaultSnoozeTime.SetValue(False)
@@ -70,6 +75,7 @@ class ReminderDialogTest(test.TestCase):
         self.assertEqual(False, self.settings.getboolean('view',
                                 'replacedefaultsnoozetime'))
 
+    @test.skipOnPlatform('__WXGTK__') # Causes SIGSEGV
     def testUseReminderReplaceDefaultSnoozeTime(self):
         self.settings.setboolean('view', 'replacedefaultsnoozetime', False)
         reminderDialog = self.createReminderDialog()
