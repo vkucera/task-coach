@@ -111,15 +111,15 @@ class TaskTestsMixin(CommonTestsMixin):
             self.expectInHTML('<u>')
             
     def testTaskStatusStyle(self):
-        self.expectInHTML('      .completed {color: #00FF00}\n')
+        self.expectInHTML('      .completed {color: rgb(0, 255, 0)}\n')
         
     def testTaskStatusStyleWhenForegroundColorChangedInSettings(self):
         self.settings.set('fgcolor', 'completedtasks', str(wx.RED))
-        self.expectInHTML('      .completed {color: #FF0000}\n')
+        self.expectInHTML('      .completed {color: rgb(255, 0, 0)}\n')
         
     def testOverdueTask(self):
         self.task.setDueDateTime(date.Yesterday())
-        fragment = '<tr class="overdue">' if self.filename else '<font color="#FF0000">Task subject</font>'
+        fragment = '<tr class="overdue">' if self.filename else '<font color="rgb(255, 0, 0)">Task subject</font>'
         self.expectInHTML(fragment)
 
     def testCompletedTask(self):
@@ -127,44 +127,44 @@ class TaskTestsMixin(CommonTestsMixin):
         if self.filename:
             self.expectInHTML('<tr class="completed">')
         else:
-            self.expectInHTML('<font color="#00FF00">Task subject</font>')
+            self.expectInHTML('<font color="rgb(0, 255, 0)">Task subject</font>')
 
     def testTaskDueSoon(self):
         self.task.setDueDateTime(date.Now() + date.ONE_HOUR)
-        fragment = '<tr class="duesoon">' if self.filename else '<font color="#FF8000">Task subject</font>' 
+        fragment = '<tr class="duesoon">' if self.filename else '<font color="rgb(255, 128, 0)">Task subject</font>' 
         self.expectInHTML(fragment)
         
     def testInactiveTask(self):
         self.task.setPlannedStartDateTime(date.Tomorrow())
-        fragment = '<tr class="inactive">' if self.filename else '<font color="#C0C0C0">Task subject</font>'
+        fragment = '<tr class="inactive">' if self.filename else '<font color="rgb(192, 192, 192)">Task subject</font>'
         self.expectInHTML(fragment)
         
     def testLateTask(self):
         self.task.setPlannedStartDateTime(date.Yesterday())
-        fragment = '<tr class="late">' if self.filename else '<font color="#A020F0">Task subject</font>'
+        fragment = '<tr class="late">' if self.filename else '<font color="rgb(160, 32, 240)">Task subject</font>'
         self.expectInHTML(fragment)
 
     def testTaskBackgroundColor(self):
         self.task.setActualStartDateTime(date.Now())
         self.task.setBackgroundColor(wx.RED)
-        fragment = '<tr class="active" style="background: #FF0000">' if self.filename else '<tr bgcolor="#FF0000">'
+        fragment = '<tr class="active" style="background: rgb(255, 0, 0)">' if self.filename else '<tr bgcolor="rgb(255, 0, 0)">'
         self.expectInHTML(fragment)
         
     def testTaskHasCategoryBackgroundColor(self):
         self.task.setActualStartDateTime(date.Now())
         cat = category.Category('cat', bgColor=wx.RED)
         self.task.addCategory(cat)
-        fragment = '<tr class="active" style="background: #FF0000">' if self.filename else '<tr bgcolor="#FF0000">'
+        fragment = '<tr class="active" style="background: rgb(255, 0, 0)">' if self.filename else '<tr bgcolor="rgb(255, 0, 0)">'
         self.expectInHTML(fragment)
 
     def testCategoryBackgroundColorAsTuple(self):
         self.task.setActualStartDateTime(date.Now())
-        cat = category.Category('cat', bgColor=(255, 0, 0, 0))
+        cat = category.Category('cat', bgColor=(255, 0, 0))
         self.task.addCategory(cat)
         if self.filename:
-            self.expectInHTML('<tr class="active" style="background: #FF0000">')
+            self.expectInHTML('<tr class="active" style="background: rgba(255, 0, 0, 0.000)">')
         else:
-            self.expectInHTML('<tr bgcolor="#FF0000">')
+            self.expectInHTML('<tr bgcolor="rgba(255, 0, 0, 0.000)">')
 
     def testCSSLink(self):
         if self.filename:
@@ -262,9 +262,9 @@ class CategoryWriterTestsMixin(CommonTestsMixin):
     def testCategoryBackgroundColor(self):
         self.category.setBackgroundColor(wx.RED)
         if self.filename:
-            self.expectInHTML('<tr style="background: #FF0000">')
+            self.expectInHTML('<tr style="background: rgb(255, 0, 0)">')
         else:
-            self.expectInHTML('<tr bgcolor="#FF0000">')
+            self.expectInHTML('<tr bgcolor="rgb(255, 0, 0)">')
         
 
 class CategoryWriterTestCase(HTMLWriterTestCase):

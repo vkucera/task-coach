@@ -279,7 +279,7 @@ class Viewer2HTMLConverter(object):
         ''' Translate the wx-color, either a wx.Colour instance or a tuple, 
             into CSS syntax. ''' 
         try:
-            return wxColor.GetAsString(wx.C2S_HTML_SYNTAX)
+            return wxColor.GetAsString(wx.C2S_CSS_SYNTAX)
         except AttributeError: # color is a tuple
             return class_.cssColorSyntax(wx.Colour(*wxColor))
 
