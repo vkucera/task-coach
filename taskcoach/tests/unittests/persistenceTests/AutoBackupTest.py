@@ -137,7 +137,7 @@ class AutoBackupTest(test.TestCase):
         self.assertEqual(0, self.backup.numberOfExtraneousBackupFiles(self.oneBackupFile()))
 
     def testTooManyBackupFiles_(self):    
-        self.assertEqual(86, self.backup.numberOfExtraneousBackupFiles(self.manyBackupFiles()))
+        self.assertEqual(85, self.backup.numberOfExtraneousBackupFiles(self.manyBackupFiles()))
 
     def testRemoveExtraneousBackFiles(self):
         self.backup.maxNrOfBackupFilesToRemoveAtOnce = 100
@@ -145,7 +145,7 @@ class AutoBackupTest(test.TestCase):
         def remove(filename):
             removedFiles.append(filename)
         self.backup.removeExtraneousBackupFiles(self.taskFile, remove=remove, glob=self.globMany)
-        self.assertEqual(86, len(removedFiles))
+        self.assertEqual(85, len(removedFiles))
                 
     def testRemoveExtraneousBackFiles_OSError(self):
         def remove(filename): # pylint: disable=W0613
