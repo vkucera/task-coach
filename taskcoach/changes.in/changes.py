@@ -24,11 +24,8 @@ releases = [
 
 Release('1.5.0', 'August ??, 2014',
     summary='''This is a major release.''',
-    ),
-
-Release('1.4.7', 'April ??, 2019',
-    summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bugv2('''Fix exception in HTML export.'''),
     ],
     ),
 
