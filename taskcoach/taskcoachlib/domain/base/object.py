@@ -24,6 +24,7 @@ from taskcoachlib.domain.date import DateTime, Now
 from taskcoachlib.thirdparty.pubsub import pub
 from . import attribute
 import functools
+import sys
 import uuid
 import re
 
@@ -134,6 +135,11 @@ class SynchronizedObject(object):
 class Object(SynchronizedObject):
     rx_attributes = re.compile(r'\[(\w+):(.+)\]')
 
+    if sys.version_info.major == 2:
+        _long_zero = long(0)
+    else:
+        _long_zero = 0
+
     def __init__(self, *args, **kwargs):
         Attribute = attribute.Attribute
         self.__creationDateTime = kwargs.pop('creationDateTime', None) or Now()
@@ -153,7 +159,7 @@ class Object(SynchronizedObject):
                                 self.appearanceChangedEvent)
         self.__selectedIcon = Attribute(kwargs.pop('selectedIcon', ''), self,
                                         self.appearanceChangedEvent)
-        self.__ordering = Attribute(kwargs.pop('ordering', 0L), self, self.orderingChangedEvent)
+        self.__ordering = Attribute(kwargs.pop('ordering', Object._long_zero), self, self.orderingChangedEvent)
         self.__id = kwargs.pop('id', None) or str(uuid.uuid1())
         super(Object, self).__init__(*args, **kwargs)
     
