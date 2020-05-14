@@ -73,7 +73,7 @@ Name: "{userstartup}\%(name)s"; Filename: "{app}\%(filename)s.exe"; Tasks: users
 
 [Run]
 Filename: "{app}\%(filename)s.exe"; Description: "{cm:LaunchProgram,%(name)s}"; Flags: nowait postinstall skipifsilent
-Filename: "%(url)schanges.html"; Description: "Show recent changes (opens a webbrowser)"; Flags: shellexec nowait postinstall skipifsilent
+Filename: "%(url)s/changes.html"; Description: "Show recent changes (opens a webbrowser)"; Flags: shellexec nowait postinstall skipifsilent
 
 [UninstallDelete]
 Type: files; Name: "{app}\%(filename)s.url"
