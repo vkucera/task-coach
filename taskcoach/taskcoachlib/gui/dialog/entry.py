@@ -414,7 +414,7 @@ class RecurrenceEntry(wx.Panel):
                      _('Yearly')])        
         self._recurrencePeriodEntry.Bind(wx.EVT_CHOICE, self.onRecurrencePeriodEdited)
         self._recurrenceFrequencyEntry = widgets.SpinCtrl(recurrenceFrequencyPanel, 
-                                                          size=(50, -1), 
+                                                          size=(120, -1), 
                                                           value=1, min=1)
         self._recurrenceFrequencyEntry.Bind(wx.EVT_SPINCTRL, self.onRecurrenceEdited)
         self._recurrenceStaticText = wx.StaticText(recurrenceFrequencyPanel, 
@@ -449,7 +449,7 @@ class RecurrenceEntry(wx.Panel):
         self._maxRecurrenceCheckBox.Bind(wx.EVT_CHECKBOX, 
                                          self.onMaxRecurrenceChecked)
         self._maxRecurrenceCountEntry = widgets.SpinCtrl(maxPanel, 
-                                                         size=(50, -1), 
+                                                         size=(120, -1), 
                                                          value=1, min=1)
         self._maxRecurrenceCountEntry.Bind(wx.EVT_SPINCTRL, 
                                            self.onRecurrenceEdited)
