@@ -25,6 +25,7 @@ releases = [
 Release('1.4.7', 'April ??, 2019',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+      Bugv2('''Expand recurrence frequency and max count dialog entries (contributed by Alexander Bliznyuk)'''),
     ],
     ),
 
