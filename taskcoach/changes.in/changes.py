@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.4.7', 'April ??, 2019',
+Release('1.4.7', 'September 5, 2020',
     summary='''This is a bugfix release.''',
     bugsFixed=[
       Bugv2('''Expand recurrence frequency and max count dialog entries (contributed by Alexander Bliznyuk)'''),
