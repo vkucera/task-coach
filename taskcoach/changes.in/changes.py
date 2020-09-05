@@ -27,7 +27,7 @@ Release('1.5.0', 'August ??, 2014',
     bugsFixed=[
         Bugv2('''Fix exception in HTML export.'''),
     ]
-    )
+    ),
 
 Release('1.4.7', 'September 5, 2020',
     summary='''This is a bugfix release.''',
@@ -57,16 +57,14 @@ Release('1.4.5', 'March 24, 2019',
 
 Release('1.4.4', 'December 2, 2018',
     summary='''This is a mixed feature and bugfix release.''',
-    featuresAdded=[
-        Feature('''Add a viewer for task dependencies based on igraph (contributed
-by Matthias Tafelmeier)'''),
-        ],
     bugsFixed=[
         Bugv2('''TaskCoach would not start on Fedora 23 using LXDE. This probably
 concerns other distributions as well.'''),
         Bugv2('''Reminders would fire randomly or not at all.'''),
     ],
     featuresAdded=[
+        Feature('''Add a viewer for task dependencies based on igraph (contributed
+by Matthias Tafelmeier)'''),
         Feature('''Per-task effort total time consolidation, patch provided by rogerdc@gmail.com'''),
         Feature('''Add a viewer for task dependencies based on igraph (contributed
 by Matthias Tafelmeier). Not available on all platforms.'''),
