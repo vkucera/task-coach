@@ -26,6 +26,13 @@ Release('1.5.0', 'August ??, 2014',
     summary='''This is a major release.''',
     bugsFixed=[
         Bugv2('''Fix exception in HTML export.'''),
+    ]
+    )
+
+Release('1.4.7', 'September 5, 2020',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bugv2('''Expand recurrence frequency and max count dialog entries (contributed by Alexander Bliznyuk)'''),
     ],
     ),
 
