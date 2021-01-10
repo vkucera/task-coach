@@ -378,6 +378,12 @@ taskcoachlib/i18n/nl.py: i18n.in/messages.pot $(shell find i18n.in -name '*.po')
 i18n.in/messages.pot: $(shell find taskcoachlib -name '*.py' | grep -v i18n)
 	$(PYTHON) tools/pygettext.py --output-dir i18n.in taskcoachlib
 
+AppImageBuilder.yml: AppImageBuilder.yml.in
+	sed -e "s/@VERSION@/$(TCVERSION)/g" AppImageBuilder.yml.in > AppImageBuilder.yml
+
+appimage: prepare AppImageBuilder.yml
+	appimage-builder --recipe AppImageBuilder.yml
+
 changes:
 	$(PYTHON) changes.in/make.py text > CHANGES.txt
 	$(PYTHON) changes.in/make.py debian > changelog_content

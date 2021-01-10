@@ -428,6 +428,13 @@ pages['download_for_mac'] = sep.join([download_header(platform='Mac OS X',
                                                       download_footer(one_ad)])
 
 
+appimg = download_table(image='linux',
+                        download_urls=dict(Sourceforge='%(dist_download_prefix)s/%(filename)s-%(version)s-x86_64.AppImage'),
+                        package_type='AppImage',
+                        platform='Linux', platform_lower='appimage',
+                        platform_versions_supported='All',
+                        installation='Make the file executable and launch it')
+
 debian = download_table(image='debian', 
                         download_urls=dict(Sourceforge='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1.deb'),
                         package_type='Debian package (deb)',
@@ -522,7 +529,7 @@ syncml = download_table(image='linux',
 
 pages['download_for_linux'] = sep.join([download_header(platform='Linux',
                                                         release='%(version)s'), 
-                                        ubuntu_ppa, ubuntu, debian, fedora14, gentoo, 
+                                        appimg, ubuntu_ppa, ubuntu, debian, fedora14, gentoo, 
                                         opensuse, redhat_el4and5, archlinux,
                                         linux, syncml, download_footer()])
 
