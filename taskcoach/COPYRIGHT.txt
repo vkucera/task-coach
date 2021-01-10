@@ -23,6 +23,7 @@ Copyright (C) 2014 Tom Monaco <http://www.thomasmonaco.com/>
 Copyright (C) 2014 Manab Chetia <manab.chetia@outlook.com>
 Copyright (C) 2015 Nicola (https://sourceforge.net/u/swisscarbon/profile/)
 Copyright (C) 2016 Roger (rogerdc@gmail.com)
+Copyright (C) 2020 fluks.github@gmail.com
 
 Files under taskcoachlib/thirdparty are, well, third party. They come
 with their own license. They may include modifications from the

@@ -1,0 +1,77 @@
+version: 1
+script:
+  # Remove any previous build
+  - rm -rf AppDir  | true
+  # Install from pip
+  #- virtualenv --python python2 venv
+  #- . venv/bin/activate
+  # Install taskcoach from pip
+  #- pip install --system --ignore-installed --prefix=/usr --root=AppDir taskcoach
+  # Install from source
+  - python2 setup.py install --prefix=/usr --root=AppDir
+  - mkdir -p AppDir/usr/share/icons/hicolor/48x48/apps
+  - cp icons.in/taskcoach.png AppDir/usr/share/icons/hicolor/48x48/apps/taskcoach.png
+  # Looks like AppImage does not bundle libfreetype, even if it is explicitely included
+  # because it caused trouble. Of course NOT including it also causes trouble. I
+  # tested this on Ubuntu 16, 18 and 20 and it seems to work.
+  - mkdir -p AppDir/usr/lib/x86_64-linux-gnu
+  - cp /usr/lib/x86_64-linux-gnu/libfreetype.so.6 AppDir/usr/lib/x86_64-linux-gnu/
+
+AppDir:
+  path: ./AppDir
+
+  app_info:
+    id: org.taskcoach.taskcoach
+    name: TaskCoach
+    # Use taskcoach icon?
+    icon: taskcoach
+    version: @VERSION@
+    # Set the python executable as entry point
+    exec: usr/bin/python2
+    # Set the application main script path as argument. Use '$@' to forward CLI parameters
+    exec_args: "$APPDIR/usr/bin/taskcoach.py $@"
+
+  apt:
+    arch: amd64
+    sources:
+      - sourceline: 'deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ bionic main restricted universe multiverse'
+        key_url: 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0x3b4fe6acc0b21f32'
+
+    include:
+      - python2.7
+      - python-pkg-resources
+      - x11-utils
+      - python-chardet
+      - python-dateutil
+      - python-keyring
+      - python-lockfile
+      - python-pyparsing
+      - python-squaremap
+      - python-xdg
+      - python-wxgtk3.0
+      - python-wxversion
+      - python-twisted-core
+      - libxss1
+      - fonts-dejavu
+      - xdg-utils
+      - gnome-icon-theme
+    exclude: []
+
+  after_bundle:
+    # Is there a way to create these files?
+    - cp -r /usr/share/mime AppDir/usr/share
+
+  runtime:
+    env:
+      PATH: '${APPDIR}/usr/bin:${PATH}'
+      # Set python home
+      # See https://docs.python.org/3/using/cmdline.html#envvar-PYTHONHOME
+      PYTHONHOME: '${APPDIR}/usr'
+      # Path to the site-packages dir or other modules dirs
+      # See https://docs.python.org/3/using/cmdline.html#envvar-PYTHONPATH
+      PYTHONPATH: '${APPDIR}/usr/lib/python2.7/site-packages'
+
+AppImage:
+  update-information: 'gh-releases-zsync|AppImageCrafters|python-appimage-example|latest|python-appimage-*x86_64.AppImage.zsync'
+  sign-key: None
+  arch: x86_64
