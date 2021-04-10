@@ -25,7 +25,7 @@ from taskcoachlib.thirdparty.guid import generate
 from taskcoachlib.thirdparty import lockfile
 from taskcoachlib.changes import ChangeMonitor, ChangeSynchronizer
 from taskcoachlib.filesystem import FilesystemNotifier, FilesystemPollerNotifier
-from taskcoachlib.thirdparty.pubsub import pub
+from pubsub import pub
 
 
 def _isCloud(path):

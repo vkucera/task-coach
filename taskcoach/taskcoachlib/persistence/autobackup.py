@@ -20,7 +20,7 @@ from __future__ import absolute_import # For xml...
 
 import os, shutil, glob, math, re
 from taskcoachlib.domain import date
-from taskcoachlib.thirdparty.pubsub import pub
+from pubsub import pub
 import bz2, hashlib
 
 # Hack: indirect 
