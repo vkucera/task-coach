@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2016 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2021 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,15 +22,15 @@ import weakref
 
 
 class NumberedInstances(type):
-    ''' A metaclass that numbers class instances. Use by defining the metaclass 
-        of a class NumberedInstances, e.g.: 
+    ''' A metaclass that numbers class instances. Use by defining the metaclass
+        of a class NumberedInstances, e.g.:
         class Numbered:
-            __metaclass__ = NumberedInstances 
+            __metaclass__ = NumberedInstances
         Each instance of class Numbered will have an attribute instanceNumber
         that is unique. '''
-        
+
     count = dict()
-        
+
     def __call__(cls, *args, **kwargs):
         if cls not in NumberedInstances.count:
             NumberedInstances.count[cls] = weakref.WeakKeyDictionary()
@@ -39,7 +39,7 @@ class NumberedInstances(type):
         instance = super(NumberedInstances, cls).__call__(*args, **kwargs)
         NumberedInstances.count[cls][instance] = instanceNumber
         return instance
-        
+
     def lowestUnusedNumber(cls):
         usedNumbers = sorted(NumberedInstances.count[cls].values())
         for index, usedNumber in enumerate(usedNumbers):
