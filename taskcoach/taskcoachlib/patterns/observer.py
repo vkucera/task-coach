@@ -285,8 +285,8 @@ class Observer:
     def removeInstance(self):
         for observer in self.__observers.copy():
             self.removeObserver(observer)
-        pub.unsubAll(listenerFilter=lambda listener: hasattr(listener.getCallable(), 'im_self') and \
-                     listener.getCallable().im_self is self)
+        pub.unsubAll(listenerFilter=lambda listener: hasattr(listener.getCallable(), '__self__') and \
+                     listener.getCallable().__self__ is self)
 
 
 class Decorator(Observer):

@@ -75,7 +75,7 @@ class CommandHistory(metaclass=patterns.Singleton):
 
     def _extendLabel(self, label, commandList):
         if commandList:
-            commandName = u' %s'%commandList[-1]
+            commandName = ' %s'%commandList[-1]
             label += commandName.lower()
         return label
 
