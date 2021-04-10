@@ -22,7 +22,7 @@ from taskcoachlib import patterns, mailer
 from taskcoachlib.domain import base
 from taskcoachlib.tools import openfile
 from pubsub import pub
-from taskcoachlib.domain.note.noteowner import NoteOwner
+from taskcoachlib.domain.base import NoteOwner
 
 
 def getRelativePath(path, basePath=os.getcwd()):

@@ -17,10 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import patterns
-from taskcoachlib.domain import base, note, attachment
+from taskcoachlib.domain import base
 
 
-class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject):
+class Category(base.AttachmentOwner, base.NoteOwner, base.CompositeObject):
     def __init__(self, subject, categorizables=None, children=None,
                  filtered=False, parent=None, description='',
                  exclusiveSubcategories=False, *args, **kwargs):

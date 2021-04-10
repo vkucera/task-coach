@@ -17,10 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib.domain import categorizable
-from taskcoachlib.domain import attachment
+from taskcoachlib.domain import base
 
 
-class Note(attachment.AttachmentOwner,
+class Note(base.AttachmentOwner,
            categorizable.CategorizableCompositeObject):
     ''' This class represents notes. Notes consist of a subject, description,
         and attachments. In addition, a note may be assigned to categories. '''

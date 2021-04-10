@@ -19,9 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx # For ArtProvider
 
 from taskcoachlib.changes import ChangeMonitor
-from taskcoachlib.domain.note import NoteOwner
-from taskcoachlib.domain.attachment import AttachmentOwner
-from taskcoachlib.domain.base import CompositeObject
+from taskcoachlib.domain.base import CompositeObject, NoteOwner, AttachmentOwner
 from taskcoachlib.domain.task import Task
 from taskcoachlib.domain.note import Note
 from taskcoachlib.domain.category import Category

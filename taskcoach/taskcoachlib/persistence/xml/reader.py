@@ -187,10 +187,10 @@ class XMLReader:
             if isinstance(obj, base.CompositeObject):
                 for child in obj.children():
                     mapCategorizables(child, resultMap, categoryMap)
-            if isinstance(obj, note.NoteOwner):
+            if isinstance(obj, base.NoteOwner):
                 for theNote in obj.notes():
                     mapCategorizables(theNote, resultMap, categoryMap)
-            if isinstance(obj, attachment.AttachmentOwner):
+            if isinstance(obj, base.AttachmentOwner):
                 for theAttachment in obj.attachments():
                     mapCategorizables(theAttachment, resultMap, categoryMap)
 

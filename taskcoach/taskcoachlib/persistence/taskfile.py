@@ -409,9 +409,9 @@ class TaskFile(patterns.Observer):
                 for obj in objects:
                     if isinstance(obj, base.CompositeObject):
                         registerOtherObjects(obj.children())
-                    if isinstance(obj, note.NoteOwner):
+                    if isinstance(obj, base.NoteOwner):
                         registerOtherObjects(obj.notes())
-                    if isinstance(obj, attachment.AttachmentOwner):
+                    if isinstance(obj, base.AttachmentOwner):
                         registerOtherObjects(obj.attachments())
                     if isinstance(obj, task.Task):
                         registerOtherObjects(obj.efforts())

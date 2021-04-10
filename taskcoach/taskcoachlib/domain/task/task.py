@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import patterns
-from taskcoachlib.domain import date, categorizable, note, attachment, base
+from taskcoachlib.domain import date, categorizable, base
 from taskcoachlib.domain.attribute.icon import getImageOpen
 from pubsub import pub
 from taskcoachlib.thirdparty._weakrefset import WeakSet
@@ -29,7 +29,7 @@ import weakref
 import wx
 
 
-class Task(note.NoteOwner, attachment.AttachmentOwner,
+class Task(base.NoteOwner, base.AttachmentOwner,
            categorizable.CategorizableCompositeObject):
 
     maxDateTime = date.DateTime()

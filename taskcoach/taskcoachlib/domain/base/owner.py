@@ -188,3 +188,18 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
     klass.__getcopystate__ = getcopystate
 
     return klass
+
+
+# Specific classes are defined here to avoid circular imports
+
+
+class NoteOwner(metaclass=DomainObjectOwnerMetaclass):
+    ''' Mixin class for (other) domain objects that may contain notes. '''
+
+    __ownedType__ = 'Note'
+
+
+class AttachmentOwner(metaclass=DomainObjectOwnerMetaclass):
+    """Mixin class for other domain objects that may have attachments"""
+
+    __ownedType__ = 'Attachment'

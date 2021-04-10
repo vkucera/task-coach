@@ -17,6 +17,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from .attachment import *
-from .attachmentowner import AttachmentOwner
 from .attachmentlist import AttachmentList
 from .sorter import AttachmentSorter

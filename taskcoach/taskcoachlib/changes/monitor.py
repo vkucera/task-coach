@@ -18,10 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib.patterns import Observer, ObservableComposite
 from taskcoachlib.domain.categorizable import CategorizableCompositeObject
-from taskcoachlib.domain.note import NoteOwner
+from taskcoachlib.domain.base import NoteOwner, AttachmentOwner
 from taskcoachlib.domain.task import Task
 from taskcoachlib.domain.effort import Effort
-from taskcoachlib.domain.attachment import AttachmentOwner
 from taskcoachlib.thirdparty import guid
 from pubsub import pub
 
