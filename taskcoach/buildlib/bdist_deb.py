@@ -191,7 +191,7 @@ class bdist_deb(Command, object):
         debian_files = dict(rules=rules, compat='9\n', 
             menu=menu, control=control, copyright=self.copyright_contents(),
             changelog=changelog)
-        for filename, contents in debian_files.iteritems():
+        for filename, contents in debian_files.items():
             self.write_debian_file(filename, contents % self.__dict__)
                
     def write_debian_file(self, filename, contents):

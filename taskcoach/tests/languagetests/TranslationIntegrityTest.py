@@ -146,7 +146,7 @@ def getLanguages():
 def installTestCaseClasses(language, enabled, allStrings):
     translation = __import__('taskcoachlib.i18n.%s' % language, 
                              fromlist=['dict'])
-    for englishString, translatedString in translation.dict.iteritems():        
+    for englishString, translatedString in translation.dict.items():        
         installTranslationTestCaseClass(language, englishString, 
                                               translatedString)
     installLanguageTestCaseClass(language, enabled, translation, allStrings)

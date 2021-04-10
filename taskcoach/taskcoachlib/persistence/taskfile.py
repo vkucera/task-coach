@@ -555,7 +555,7 @@ class TaskFile(patterns.Observer):
             
     def restoreCategoryLinks(self, categoryMap):
         categories = self.categories()
-        for categoryId, categorizables in categoryMap.iteritems():
+        for categoryId, categorizables in categoryMap.items():
             try:
                 categoryToLink = categories.getObjectById(categoryId)
             except IndexError:

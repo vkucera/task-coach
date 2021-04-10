@@ -27,7 +27,15 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 
 class TestCase(unittest.TestCase):
-    pass
+    def tearDown(self):
+        from taskcoachlib import patterns
+        patterns.Publisher().clear()
+        patterns.NumberedInstances.count = dict()
+        if hasattr(self, 'events'):
+            del self.events
+        from pubsub import pub
+        pub.unsubAll()
+        super().tearDown()
 
 
 def main():

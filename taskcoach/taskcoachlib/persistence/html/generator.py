@@ -256,7 +256,7 @@ class Viewer2HTMLConverter(object):
         ''' Wrap one or more lines with <tagName [optional attributes]> and 
             </tagName>. '''
         if attributes:
-            attributes = ' ' + ' '.join(sorted('%s="%s"'%(key, value) for key, value in attributes.iteritems()))
+            attributes = ' ' + ' '.join(sorted('%s="%s"'%(key, value) for key, value in attributes.items()))
         else:
             attributes = ''
         openTag = '<%s%s>'%(tagName, attributes)

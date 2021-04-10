@@ -104,7 +104,7 @@ class XMLReader(object):
         guid = self.__parse_guid_node(root.find('guid'))
         syncml_config = self.__parse_syncml_node(root, guid)
         
-        for object, modification_datetime in self.__modification_datetimes.iteritems():
+        for object, modification_datetime in self.__modification_datetimes.items():
             object.setModificationDateTime(modification_datetime)
 
         changesName = self.__fd.name + '.delta'
