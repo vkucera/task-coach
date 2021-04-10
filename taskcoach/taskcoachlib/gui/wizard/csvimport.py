@@ -17,9 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 
+import chardet
+
 from taskcoachlib import meta
 
-from taskcoachlib.thirdparty import chardet
 import wx
 import csv
 import tempfile

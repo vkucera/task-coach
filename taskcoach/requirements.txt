@@ -1,3 +1,4 @@
 PyPubSub
 desktop3
 wxPython
+chardet

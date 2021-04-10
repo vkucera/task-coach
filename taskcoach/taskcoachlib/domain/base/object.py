@@ -153,7 +153,7 @@ class Object(SynchronizedObject):
                                 self.appearanceChangedEvent)
         self.__selectedIcon = Attribute(kwargs.pop('selectedIcon', ''), self,
                                         self.appearanceChangedEvent)
-        self.__ordering = Attribute(kwargs.pop('ordering', 0L), self, self.orderingChangedEvent)
+        self.__ordering = Attribute(kwargs.pop('ordering', 0), self, self.orderingChangedEvent)
         self.__id = kwargs.pop('id', None) or str(uuid.uuid1())
         super().__init__(*args, **kwargs)
 
@@ -422,7 +422,7 @@ class CompositeObject(Object, patterns.ObservableComposite):
     def subject(self, recursive=False): # pylint: disable=W0221
         subject = super().subject()
         if recursive and self.parent():
-            subject = u'%s -> %s'%(self.parent().subject(recursive=True), subject)
+            subject = '%s -> %s'%(self.parent().subject(recursive=True), subject)
         return subject
 
     def subjectChangedEvent(self, event):

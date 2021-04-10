@@ -104,7 +104,7 @@ class SelectedItemsFilter(Filter):
 
 class SearchFilter(Filter):
     def __init__(self, *args, **kwargs):
-        searchString = kwargs.pop('searchString', u'')
+        searchString = kwargs.pop('searchString', '')
         matchCase = kwargs.pop('matchCase', False)
         includeSubItems = kwargs.pop('includeSubItems', False)
         searchDescription = kwargs.pop('searchDescription', False)

@@ -17,11 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import os
-import urlparse
+from urllib.parse import urlparse
+
+from pubsub import pub
+
 from taskcoachlib import patterns, mailer
 from taskcoachlib.domain import base
 from taskcoachlib.tools import openfile
-from pubsub import pub
 from taskcoachlib.domain.base import NoteOwner
 
 
@@ -152,7 +154,7 @@ class FileAttachment(Attachment):
         return location
 
     def isLocalFile(self):
-        return urlparse.urlparse(self.location())[0] == ''
+        return urlparse(self.location())[0] == ''
 
 
 class URIAttachment(Attachment):

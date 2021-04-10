@@ -16,8 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib import patterns
 import weakref
+
+from taskcoachlib import patterns
 from taskcoachlib.thirdparty._weakrefset import WeakSet
 
 
@@ -28,7 +29,7 @@ class Attribute:
         super().__init__()
         self.__value = value
         self.__owner = weakref.ref(owner)
-        self.__setEvent = setEvent.im_func
+        self.__setEvent = setEvent.__func__
         
     def get(self):
         return self.__value
@@ -37,11 +38,12 @@ class Attribute:
     def set(self, value, event=None):
         owner = self.__owner()
         if owner is not None:
-            if value == self.__value:
-                return False
-            self.__value = value
-            self.__setEvent(owner, event)
-            return True
+            # Predefined wx.Colour like wx.BLACK et al compare equal to None...
+            if (value is None and self.__value is not None) or (self.__value is None and value is not None) or value != self.__value:
+                self.__value = value
+                self.__setEvent(owner, event)
+                return True
+            return False
     
 
 class SetAttribute:
@@ -52,9 +54,9 @@ class SetAttribute:
         self.__setClass = WeakSet if weak else set
         self.__set = self.__setClass(values) if values else self.__setClass()
         self.__owner = weakref.ref(owner)
-        self.__addEvent = (addEvent or self.__nullEvent).im_func
-        self.__removeEvent = (removeEvent or self.__nullEvent).im_func
-        self.__changeEvent = (changeEvent or self.__nullEvent).im_func
+        self.__addEvent = (addEvent or self.__nullEvent).__func__
+        self.__removeEvent = (removeEvent or self.__nullEvent).__func__
+        self.__changeEvent = (changeEvent or self.__nullEvent).__func__
         
     def get(self):
         return set(self.__set)

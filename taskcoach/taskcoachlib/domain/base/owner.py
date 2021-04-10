@@ -44,7 +44,7 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
         # NB: we use a simple list here. Maybe we should use a container type.
         setattr(instance,'_%s__%ss' % (name, klass.__ownedType__.lower()),
                 kwargs.pop(klass.__ownedType__.lower() + 's', []))
-        super().__init__(*args, **kwargs)
+        super(klass, instance).__init__(*args, **kwargs)
 
     klass.__init__ = constructor
 
@@ -68,7 +68,7 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
 
     def modificationEventTypes(class_):
         try:
-            eventTypes = super().modificationEventTypes()
+            eventTypes = super(klass, class_).modificationEventTypes()
         except AttributeError:
             eventTypes = []
         return eventTypes + [changedEventType(class_)]
@@ -158,7 +158,7 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
 
     def getstate(instance):
         try:
-            state = super().__getstate__()
+            state = super(klass, instance).__getstate__()
         except AttributeError:
             state = dict()
         state[klass.__ownedType__.lower() + 's'] = getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower()))[:]
@@ -169,7 +169,7 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
     @patterns.eventSource
     def setstate(instance, state, event=None):
         try:
-            super().__setstate__(state, event=event)
+            super(klass, instance).__setstate__(state, event=event)
         except AttributeError:
             pass
         setObjects(instance, state[klass.__ownedType__.lower() + 's'], event=event)
@@ -178,7 +178,7 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
 
     def getcopystate(instance):
         try:
-            state = super().__getcopystate__()
+            state = super(klass, instance).__getcopystate__()
         except AttributeError:
             state = dict()
         state['%ss' % klass.__ownedType__.lower()] = \
