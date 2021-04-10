@@ -70,7 +70,7 @@ class Distribution(Change):
 
 class Website(Change):
     def __init__(self, description, url, *changeIds):
-        super(Website, self).__init__(description, *changeIds)
+        super().__init__(description, *changeIds)
         self.url = url
 
 class Team(Change):

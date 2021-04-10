@@ -26,7 +26,7 @@ import weakref
 
 class Effort(baseeffort.BaseEffort, base.Object):
     def __init__(self, task=None, start=None, stop=None, *args, **kwargs):
-        super(Effort, self).__init__(task, start or date.DateTime.now(), stop,
+        super().__init__(task, start or date.DateTime.now(), stop,
             *args, **kwargs)
         self.__updateDurationCache()
 
@@ -67,19 +67,19 @@ class Effort(baseeffort.BaseEffort, base.Object):
     __repr__ = __str__
 
     def __getstate__(self):
-        state = super(Effort, self).__getstate__()
+        state = super().__getstate__()
         state.update(dict(task=self.task(), start=self._start, stop=self._stop))
         return state
 
     @patterns.eventSource
     def __setstate__(self, state, event=None):
-        super(Effort, self).__setstate__(state, event=event)
+        super().__setstate__(state, event=event)
         self.setTask(state['task'])
         self.setStart(state['start'])
         self.setStop(state['stop'])
 
     def __getcopystate__(self):
-        state = super(Effort, self).__getcopystate__()
+        state = super().__getcopystate__()
         state.update(dict(task=self.task(), start=self._start, stop=self._stop))
         return state
 
@@ -155,7 +155,7 @@ class Effort(baseeffort.BaseEffort, base.Object):
 
     @classmethod
     def modificationEventTypes(class_):
-        eventTypes = super(Effort, class_).modificationEventTypes()
+        eventTypes = super().modificationEventTypes()
         return eventTypes + [class_.taskChangedEventType(),
                              class_.startChangedEventType(),
                              class_.stopChangedEventType()]

@@ -39,10 +39,10 @@ class CategoryFilter(base.Filter):
             patterns.Publisher().registerObserver(self.onCategoryChanged,
                                                   eventType=eventType)
         pub.subscribe(self.onFilterMatchingChanged, 'settings.view.categoryfiltermatchall')
-        super(CategoryFilter, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def detach(self):
-        super(CategoryFilter, self).detach()
+        super().detach()
         self.removeObserver(self.onCategoryChanged)
 
     def filterItems(self, categorizables):

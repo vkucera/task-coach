@@ -29,7 +29,7 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
     # pylint: disable=W0223
 
     def __init__(self, *args, **kwargs):
-        super(HyperTreeList, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if operating_system.isGTK():
             self.Bind(wx.EVT_TREE_ITEM_COLLAPSED, self.__on_item_collapsed)
 
@@ -44,7 +44,7 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
         ''' If the root item is hidden, it should never be selected.
             Unfortunately, CustomTreeCtrl and HyperTreeList allow it to be
             selected. Override GetSelections to fix that. '''
-        selections = super(HyperTreeList, self).GetSelections()
+        selections = super().GetSelections()
         if self.HasFlag(wx.TR_HIDE_ROOT):
             root_item = self.GetRootItem()
             if root_item and root_item in selections:
@@ -54,7 +54,7 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
     def GetMainWindow(self, *args, **kwargs):  # pylint: disable=C0103
         ''' Have a local GetMainWindow so we can create a MainWindow
         property. '''
-        return super(HyperTreeList, self).GetMainWindow(*args, **kwargs)
+        return super().GetMainWindow(*args, **kwargs)
 
     MainWindow = property(fget=GetMainWindow)
 
@@ -62,7 +62,7 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
         ''' Always return a three-tuple (item, flags, column). '''
         if type(point) == type(()):
             point = wx.Point(point[0], point[1])
-        hit_test_result = super(HyperTreeList, self).HitTest(point)
+        hit_test_result = super().HitTest(point)
         if len(hit_test_result) == 2:
             hit_test_result += (0,)
         if hit_test_result[0] is None:
@@ -145,7 +145,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         self.__columns_with_images = []
         self.__default_font = wx.NORMAL_FONT
         kwargs.setdefault('resizeableColumn', 0)
-        super(TreeListCtrl, self).__init__(parent, style=self.__get_style(),
+        super().__init__(parent, style=self.__get_style(),
             agwStyle=self.__get_agw_style(), columns=columns,
             itemPopupMenu=itemPopupMenu,
             columnPopupMenu=columnPopupMenu, *args, **kwargs)
@@ -377,7 +377,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
     # Override CtrlWithColumnsMixin with TreeListCtrl specific behaviour:
 
     def _setColumns(self, *args, **kwargs):
-        super(TreeListCtrl, self)._setColumns(*args, **kwargs)
+        super()._setColumns(*args, **kwargs)
         self.SetMainColumn(0)
         for column_index in range(self.GetColumnCount()):
             self.SetColumnEditable(column_index,
@@ -409,7 +409,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         if column_index == self.GetColumnCount():
             self.AddColumn(column_header, *args, **kwargs)
         else:
-            super(TreeListCtrl, self).InsertColumn(column_index, column_header,
+            super().InsertColumn(column_index, column_header,
                                                    *args, **kwargs)
         self.SetColumnAlignment(column_index, alignment)
         self.SetColumnEditable(column_index,
@@ -419,7 +419,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         ''' Stop editing before we hide or show a column to prevent problems
             redrawing the tree list control contents. '''
         self.StopEditing()
-        super(TreeListCtrl, self).showColumn(*args, **kwargs)
+        super().showColumn(*args, **kwargs)
 
 
 class CheckTreeCtrl(TreeListCtrl):
@@ -427,7 +427,7 @@ class CheckTreeCtrl(TreeListCtrl):
                  editCommand, dragAndDropCommand, itemPopupMenu=None,
                  *args, **kwargs):
         self.__checking = False
-        super(CheckTreeCtrl, self).__init__(parent, columns,
+        super().__init__(parent, columns,
             selectCommand, editCommand, dragAndDropCommand,
             itemPopupMenu, *args, **kwargs)
         self.checkCommand = checkCommand
@@ -452,7 +452,7 @@ class CheckTreeCtrl(TreeListCtrl):
             # one item selected, which we don't want to enforce
             self.UnCheckRadioParent(item, checked)
         else:
-            super(CheckTreeCtrl, self).CheckItem(item, checked)
+            super().CheckItem(item, checked)
 
     def onMouseLeftDown(self, event):
         ''' By default, the HyperTreeList widget doesn't allow for unchecking
@@ -492,11 +492,11 @@ class CheckTreeCtrl(TreeListCtrl):
         self.GetEventHandler().ProcessEvent(event)
 
     def _refreshObjectCompletely(self, item, domain_object):
-        super(CheckTreeCtrl, self)._refreshObjectCompletely(item, domain_object)
+        super()._refreshObjectCompletely(item, domain_object)
         self._refreshCheckState(item, domain_object)
 
     def _refreshObjectMinimally(self, item, domain_object):
-        super(CheckTreeCtrl, self)._refreshObjectMinimally(item, domain_object)
+        super()._refreshObjectMinimally(item, domain_object)
         self._refreshCheckState(item, domain_object)
 
     def _refreshCheckState(self, item, domain_object):
@@ -542,7 +542,7 @@ class CheckTreeCtrl(TreeListCtrl):
     def onItemActivated(self, event):
         if self.__is_double_clicked(event):
             # Invoke super.onItemActivated to edit the item
-            super(CheckTreeCtrl, self).onItemActivated(event)
+            super().onItemActivated(event)
         else:
             # Item is activated, let another event handler deal with the event
             event.Skip()

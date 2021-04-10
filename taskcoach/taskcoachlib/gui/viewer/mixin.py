@@ -35,7 +35,7 @@ class SearchableViewerMixin:
         return True
 
     def createFilter(self, presentation):
-        presentation = super(SearchableViewerMixin, self).createFilter(presentation)
+        presentation = super().createFilter(presentation)
         return base.SearchFilter(presentation, **self.searchOptions())
 
     def searchOptions(self):
@@ -73,7 +73,7 @@ class SearchableViewerMixin:
     def createToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
         searchUICommand = uicommand.Search(viewer=self, settings=self.settings)
-        return super(SearchableViewerMixin, self).createToolBarUICommands() + \
+        return super().createToolBarUICommands() + \
             (1, searchUICommand)
 
 
@@ -82,7 +82,7 @@ class FilterableViewerMixin:
 
     def __init__(self, *args, **kwargs):
         self.__filterUICommands = None
-        super(FilterableViewerMixin, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def isFilterable(self):
         return True
@@ -101,7 +101,7 @@ class FilterableViewerMixin:
 
     def createToolBarUICommands(self):
         clearUICommand = uicommand.ResetFilter(viewer=self)
-        return super(FilterableViewerMixin, self).createToolBarUICommands() + \
+        return super().createToolBarUICommands() + \
             (clearUICommand,)
 
     def resetFilter(self):
@@ -135,7 +135,7 @@ class FilterableViewerMixin:
 
 class FilterableViewerForCategorizablesMixin(FilterableViewerMixin):
     def createFilter(self, items):
-        items = super(FilterableViewerForCategorizablesMixin, self).createFilter(items)
+        items = super().createFilter(items)
         filterOnlyWhenAllCategoriesMatch = self.settings.getboolean('view',
             'categoryfiltermatchall')
         return category.filter.CategoryFilter(items,
@@ -145,7 +145,7 @@ class FilterableViewerForCategorizablesMixin(FilterableViewerMixin):
 
 class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
     def createFilter(self, taskList):
-        taskList = super(FilterableViewerForTasksMixin, self).createFilter(taskList)
+        taskList = super().createFilter(taskList)
         return task.filter.ViewFilter(taskList, treeMode=self.isTreeViewer(),
                                       **self.viewFilterOptions())
 
@@ -175,7 +175,7 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
         return self.__getBooleanSetting('hidecompositetasks')
 
     def resetFilter(self):
-        super(FilterableViewerForTasksMixin, self).resetFilter()
+        super().resetFilter()
         for status in task.Task.possibleStatuses():
             self.hideTaskStatus(status, False)
         if not self.isTreeViewer():
@@ -184,7 +184,7 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
             self.hideCompositeTasks(False)
 
     def hasFilter(self):
-        return super(FilterableViewerForTasksMixin, self).hasFilter() or \
+        return super().hasFilter() or \
             self.presentation().hasFilter()
 
     def createFilterUICommands(self):
@@ -205,18 +205,18 @@ class SortableViewerMixin:
 
     def __init__(self, *args, **kwargs):
         self._sortUICommands = []
-        super(SortableViewerMixin, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def isSortable(self):
         return True
 
     def registerPresentationObservers(self):
-        super(SortableViewerMixin, self).registerPresentationObservers()
+        super().registerPresentationObservers()
         pub.subscribe(self.onSortOrderChanged,
                       self.presentation().sortEventType())
 
     def detach(self):
-        super(SortableViewerMixin, self).detach()
+        super().detach()
         pub.unsubscribe(self.onSortOrderChanged,
                         self.presentation().sortEventType())
 
@@ -320,12 +320,12 @@ class ManualOrderingMixin:
     def __init__(self, *args, **kwargs):
         if 'sort' not in self.viewerImages:
             self.viewerImages = self.viewerImages + ['sort']
-        super(ManualOrderingMixin, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def createSortByUICommands(self):
         return [uicommand.ViewerSortByCommand(viewer=self, value='ordering',
                         menuText=_('&Manual ordering'),
-                        helpText=self.sortByOrderingHelpText)] + super(ManualOrderingMixin, self).createSortByUICommands()
+                        helpText=self.sortByOrderingHelpText)] + super().createSortByUICommands()
 
     def orderingImageIndices(self, item):
         index = self.imageIndex['sort']
@@ -345,7 +345,7 @@ class SortableViewerForCategorizablesMixin(SortableViewerMixin):
     ''' Mixin class to create uiCommands for sorting categorizables. '''
 
     def createSortByUICommands(self):
-        commands = super(SortableViewerForCategorizablesMixin, self).createSortByUICommands()
+        commands = super().createSortByUICommands()
         commands.append(uicommand.ViewerSortByCommand(viewer=self,
             value='categories', menuText=_('&Category'),
             helpText=self.sortByCategoryHelpText))
@@ -380,7 +380,7 @@ class SortableViewerForTasksMixin(ManualOrderingMixin, SortableViewerForCategori
 
     def __init__(self, *args, **kwargs):
         self.__sortKeyUnchangedCount = 0
-        super(SortableViewerForTasksMixin, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def sortBy(self, sortKey):
         # If the user clicks the same column for the third time, toggle
@@ -392,7 +392,7 @@ class SortableViewerForTasksMixin(ManualOrderingMixin, SortableViewerForCategori
         if self.__sortKeyUnchangedCount > 1:
             self.setSortByTaskStatusFirst(not self.isSortByTaskStatusFirst())
             self.__sortKeyUnchangedCount = 0
-        super(SortableViewerForTasksMixin, self).sortBy(sortKey)
+        super().sortBy(sortKey)
 
     def isSortByTaskStatusFirst(self):
         return self.settings.getboolean(self.settingsSection(),
@@ -404,18 +404,18 @@ class SortableViewerForTasksMixin(ManualOrderingMixin, SortableViewerForCategori
         self.presentation().sortByTaskStatusFirst(sortByTaskStatusFirst)
 
     def sorterOptions(self):
-        options = super(SortableViewerForTasksMixin, self).sorterOptions()
+        options = super().sorterOptions()
         options.update(treeMode=self.isTreeViewer(),
             sortByTaskStatusFirst=self.isSortByTaskStatusFirst())
         return options
 
     def createSortOrderUICommands(self):
-        commands = super(SortableViewerForTasksMixin, self).createSortOrderUICommands()
+        commands = super().createSortOrderUICommands()
         commands.append(uicommand.ViewerSortByTaskStatusFirst(viewer=self))
         return commands
 
     def createSortByUICommands(self):
-        commands = super(SortableViewerForTasksMixin, self).createSortByUICommands()
+        commands = super().createSortByUICommands()
         dependsOnEffortFeature = ['budget', 'timeSpent', 'budgetLeft',
                                   'hourlyFee', 'fixedFee', 'revenue']
         for menuText, helpText, value in [\
@@ -445,7 +445,7 @@ class AttachmentDropTargetMixin:
     ''' Mixin class for viewers that are drop targets for attachments. '''
 
     def widgetCreationKeywordArguments(self):
-        kwargs = super(AttachmentDropTargetMixin, self).widgetCreationKeywordArguments()
+        kwargs = super().widgetCreationKeywordArguments()
         kwargs['onDropURL'] = self.onDropURL
         kwargs['onDropFiles'] = self.onDropFiles
         kwargs['onDropMail'] = self.onDropMail

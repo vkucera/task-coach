@@ -86,7 +86,7 @@ class _CheckBox(wx.Panel):
     better hint when it has, on all platforms.
     """
     def __init__(self, parent, label=None):
-        super(_CheckBox, self).__init__(parent)
+        super().__init__(parent)
         self.__value = False
         self.__label = label
 
@@ -248,7 +248,7 @@ class Field:
         self.__observer = kwargs.pop('observer')
         self.__choices = kwargs.pop('choices', None) # 2-tuples [(label, value)]
 
-        super(Field, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def Observer(self):
         return self.__observer
@@ -299,7 +299,7 @@ class FieldValueChangeEvent(wx.PyCommandEvent):
     type_ = None
 
     def __init__(self, owner, newValue, *args, **kwargs):
-        super(FieldValueChangeEvent, self).__init__(self.type_)
+        super().__init__(self.type_)
         self.__newValue = newValue
         self.__vetoed = False
         self.SetEventObject(owner)
@@ -326,7 +326,7 @@ class EntryChoiceSelectedEvent(FieldValueChangeEvent):
     type_ = wxEVT_ENTRY_CHOICE_SELECTED
 
     def __init__(self, owner, value, field=None, **kwargs):
-        super(EntryChoiceSelectedEvent, self).__init__(owner, value, **kwargs)
+        super().__init__(owner, value, **kwargs)
         self.__field = field
 
     def GetField(self):
@@ -364,7 +364,7 @@ class Entry(wx.Panel):
 
         if '__WXMSW__' in wx.PlatformInfo:
             kwargs['style'] = wx.WANTS_CHARS
-        super(Entry, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.__focus = None
         self.__forceFocus = False
@@ -667,14 +667,14 @@ class NumericField(Field):
         self.__width = kwargs.pop('width', 0)
         self.__state = 0
 
-        super(NumericField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def GetExtent(self, dc):
         dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
         return dc.GetTextExtent('0' * max(self.__width, 1))
 
     def SetValue(self, value, notify=False):
-        super(NumericField, self).SetValue(int(value), notify=notify)
+        super().SetValue(int(value), notify=notify)
 
     def PaintValue(self, dc, x, y, w, h):
         dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
@@ -724,11 +724,11 @@ class NumericField(Field):
 class EnumerationField(NumericField):
     def __init__(self, *args, **kwargs):
         self.__enablePopup = kwargs.pop('enablePopup', True)
-        super(EnumerationField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def PopupChoices(self, widget):
         if self.__enablePopup:
-            super(EnumerationField, self).PopupChoices(widget)
+            super().PopupChoices(widget)
 
     def GetExtent(self, dc):
         dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
@@ -759,7 +759,7 @@ class EnumerationField(NumericField):
         if event.GetKeyCode() == wx.WXK_DOWN:
             self.SetValue(self.GetChoices()[(self.__index() + 1) % len(self.GetChoices())][1], notify=True)
             return True
-        return super(EnumerationField, self).HandleKey(event)
+        return super().HandleKey(event)
 
 
 #=======================================
@@ -806,7 +806,7 @@ class AMPMField(EnumerationField):
         elif event.GetKeyCode() in [ord('p'), ord('P')]:
             self.SetValue(1, notify=True)
             return True
-        return super(AMPMField, self).HandleKey(event)
+        return super().HandleKey(event)
 
 
 class HourField(NumericField):
@@ -937,7 +937,7 @@ class TimeEntry(Entry):
         kwargs['format'] = pattern
         debugInfo['format'] = pattern
         try:
-            super(TimeEntry, self).__init__(*args, **kwargs)
+            super().__init__(*args, **kwargs)
         except KeyError as e:
             raise ValueError('Invalid format "%s" (original exception: "%s")' % (debugInfo, e))
 
@@ -951,10 +951,10 @@ class TimeEntry(Entry):
             self.FocusNext()
             event.Skip()
         else:
-            return super(TimeEntry, self).OnChar(event)
+            return super().OnChar(event)
 
     def DismissPopup(self):
-        super(TimeEntry, self).DismissPopup()
+        super().DismissPopup()
         if self.__choicePopup is not None:
             self.__choicePopup.Dismiss()
 
@@ -1220,7 +1220,7 @@ class AbbreviatedMonthField(EnumerationField):
         kwargs['choices'] = list(reversed([(decodeSystemString(datetime.date(year=2012, month=month, day=1).strftime('%b')), month) for month in xrange(1, 13)]))
         kwargs['enablePopup'] = False
         kwargs['width'] = 2
-        super(AbbreviatedMonthField, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
 
 class FullMonthField(EnumerationField):
@@ -1228,7 +1228,7 @@ class FullMonthField(EnumerationField):
         kwargs['choices'] = list(reversed([(decodeSystemString(datetime.date(year=2012, month=month, day=1).strftime('%B')), month) for month in xrange(1, 13)]))
         kwargs['enablePopup'] = False
         kwargs['width'] = 2
-        super(FullMonthField, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
 
 class DayField(NumericField):
@@ -1311,7 +1311,7 @@ class DateEntry(Entry):
 
         try:
             self.__value = datetime.date(year=kwargs['year'], month=kwargs['month'], day=kwargs['day'])
-            super(DateEntry, self).__init__(*args, **kwargs)
+            super().__init__(*args, **kwargs)
         except KeyError as e:
             raise ValueError('Invalid format "%s" (original exception: "%s")' % (debugInfo, e))
 
@@ -1335,7 +1335,7 @@ class DateEntry(Entry):
         return self.__formatter(self.GetDate())
 
     def DismissPopup(self):
-        super(DateEntry, self).DismissPopup()
+        super().DismissPopup()
         if self.__calendar is not None:
             self.__calendar.Dismiss()
 
@@ -1350,7 +1350,7 @@ class DateEntry(Entry):
         elif event.GetKeyCode() == wx.WXK_ESCAPE and self.__calendar is not None:
             self.DismissPopup()
         else:
-            return super(DateEntry, self).OnChar(event)
+            return super().OnChar(event)
 
     def GetDate(self):
         return datetime.date(year=self.Field('year').GetValue(),
@@ -1581,7 +1581,7 @@ EVT_POPUP_DISMISS = wx.PyEventBinder(wxEVT_POPUP_DISMISS)
 
 class PopupDismissEvent(wx.PyCommandEvent):
     def __init__(self, owner):
-        super(PopupDismissEvent, self).__init__(wxEVT_POPUP_DISMISS)
+        super().__init__(wxEVT_POPUP_DISMISS)
         self.SetEventObject(owner)
 
 
@@ -1592,7 +1592,7 @@ class _PopupWindow(wx.Dialog):
         kwargs['style'] = wx.FRAME_NO_TASKBAR|wx.NO_BORDER|wx.FRAME_FLOAT_ON_PARENT
         if '__WXMSW__' in wx.PlatformInfo:
             kwargs['style'] |= wx.WANTS_CHARS
-        super(_PopupWindow, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.__interior = wx.Panel(self, style=wx.WANTS_CHARS if '__WXMSW__' in wx.PlatformInfo else 0)
 
@@ -1652,7 +1652,7 @@ class _RelativeChoicePopup(_PopupWindow):
             if units:
                 self.__units = units
         self.LoadChoices(kwargs.pop('choices', '60,120,180'))
-        super(_RelativeChoicePopup, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def Fill(self, interior):
         sizer = wx.FlexGridSizer(0, 2)
@@ -1687,7 +1687,7 @@ class _RelativeChoicePopup(_PopupWindow):
         if self.__comboState != 0 and not event.GetActive():
             event.Skip()
         else:
-            super(_RelativeChoicePopup, self).OnActivate(event)
+            super().OnActivate(event)
 
     def __Populate(self):
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -1734,7 +1734,7 @@ class _RelativeChoicePopup(_PopupWindow):
 
     def Popup(self, position):
         self.Fit()
-        super(_RelativeChoicePopup, self).Popup(position)
+        super().Popup(position)
 
     def DeltaRepr(self, delta):
         values = list()
@@ -1821,7 +1821,7 @@ class _CalendarPopup(_PopupWindow):
         self.__maxDate = kwargs.pop('maxDate', None)
         self.__maxDim = None
 
-        super(_CalendarPopup, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def Fill(self, interior):
         wx.EVT_PAINT(interior, self.OnPaint)
@@ -2013,7 +2013,7 @@ class _MultipleChoicesPopup(_PopupWindow):
     def __init__(self, choices, value, *args, **kwargs):
         self.__choices = choices
         self.__value = value
-        super(_MultipleChoicesPopup, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def Fill(self, interior):
         wx.EVT_PAINT(interior, self.OnPaint)
@@ -2114,7 +2114,7 @@ class SmartDateTimeCtrl(wx.Panel):
         showRelative = kwargs.pop('showRelative', False)
         units = kwargs.pop('units', None)
 
-        super(SmartDateTimeCtrl, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.__label = None
@@ -2294,7 +2294,7 @@ class DateTimeSpanChangeEvent(FieldValueChangeEvent):
 
 class DateTimeSpanCtrl(wx.EvtHandler):
     def __init__(self, ctrlStart, ctrlEnd, minSpan=None):
-        super(DateTimeSpanCtrl, self).__init__()
+        super().__init__()
 
         self.__ctrlStart = ctrlStart
         self.__ctrlEnd = ctrlEnd
@@ -2356,7 +2356,7 @@ class DateTimeSpanCtrl(wx.EvtHandler):
 if __name__ == '__main__':
     class Dialog(wx.Dialog):
         def __init__(self):
-            super(Dialog, self).__init__(None, wx.ID_ANY, 'Test', style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER)
+            super().__init__(None, wx.ID_ANY, 'Test', style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER)
             sz = wx.BoxSizer(wx.VERTICAL)
 
             pnl1 = SmartDateTimeCtrl(self, label='Start', enableNone=True, timeFormat=lambda x: decodeSystemString(x.strftime('%I:%M %p')), dateFormat=lambda x: decodeSystemString(x.strftime('%a %Y %b %d')), startHour=8, endHour=18)

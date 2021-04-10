@@ -30,7 +30,7 @@ class Dialog(sized_controls.SizedDialog):
     def __init__(self, parent, title, bitmap='edit',
                  direction=None, *args, **kwargs):
         self._buttonTypes = kwargs.get('buttonTypes', wx.OK | wx.CANCEL)
-        super(Dialog, self).__init__(parent, -1, title,
+        super().__init__(parent, -1, title,
             style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER | wx.MAXIMIZE_BOX | wx.MINIMIZE_BOX)
         self.SetIcon(wx.ArtProvider_GetIcon(bitmap, wx.ART_FRAME_ICON,
             (16, 16)))
@@ -115,7 +115,7 @@ class NotebookDialog(Dialog):
 
     def ok(self, *args, **kwargs):
         self.okPages()
-        super(NotebookDialog, self).ok(*args, **kwargs)
+        super().ok(*args, **kwargs)
 
     def okPages(self, *args, **kwargs):
         for page in self._interior:
@@ -143,7 +143,7 @@ class HtmlWindowThatUsesWebBrowserForExternalLinks(wx.html.HtmlWindow):
 class HTMLDialog(Dialog):
     def __init__(self, title, htmlText, *args, **kwargs):
         self._htmlText = htmlText
-        super(HTMLDialog, self).__init__(None, title, buttonTypes=wx.ID_CLOSE,
+        super().__init__(None, title, buttonTypes=wx.ID_CLOSE,
                                          *args, **kwargs)
 
     def createInterior(self):

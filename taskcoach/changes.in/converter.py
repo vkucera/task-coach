@@ -75,12 +75,12 @@ class ChangeToTextConverter(ChangeConverter):
 
 class ChangeToDebianConverter(ChangeToTextConverter):
     def __init__(self):
-        super(ChangeToDebianConverter, self).__init__()
+        super().__init__()
         self._textWrapper = textwrap.TextWrapper(initial_indent='  * ',
                 subsequent_indent='    ', width=78)
 
     def postProcess(self, convertedChange):
-        return super(ChangeToDebianConverter, self).postProcess(convertedChange) + '\n'
+        return super().postProcess(convertedChange) + '\n'
 
 
 class ChangeToHTMLConverter(ChangeConverter):
@@ -170,7 +170,7 @@ class ReleaseToTextConverter(ReleaseConverter):
     ChangeConverterClass = ChangeToTextConverter
 
     def summary(self, *args, **kwargs):
-        summary = super(ReleaseToTextConverter, self).summary(*args, **kwargs)
+        summary = super().summary(*args, **kwargs)
         wrapper = textwrap.TextWrapper(initial_indent='',
             subsequent_indent='', width=78)
         multipleSpaces = re.compile(r'(?<!^) +', re.M)
@@ -201,14 +201,14 @@ class ReleaseToHTMLConverter(ReleaseConverter):
         return '<h2>Release %s <small>%s</small></h2>'%(release.number, release.date)
 
     def sectionHeader(self, section, list):
-        return super(ReleaseToHTMLConverter, self).sectionHeader(section,
+        return super().sectionHeader(section,
             list) + '\n<ul>'
 
     def sectionFooter(self, section, list):
         return '</ul>'
 
     def summary(self, release, greeting=''):
-        summaryText = super(ReleaseToHTMLConverter, self).summary(release)
+        summaryText = super().summary(release)
         if summaryText:
             return '<p>%s</p>'%summaryText
         else:

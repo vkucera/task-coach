@@ -46,7 +46,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         kwargs['subject'] = subject
         kwargs['description'] = description
         kwargs['categories'] = categories
-        super(Task, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.__status = None  # status cache
         self.__dueSoonHours = self.settings.getint('behavior', 'duesoonhours')  # pylint: disable=E1101
         maxDateTime = self.maxDateTime
@@ -92,7 +92,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     @patterns.eventSource
     def __setstate__(self, state, event=None):
-        super(Task, self).__setstate__(state, event=event)
+        super().__setstate__(state, event=event)
         self.setPlannedStartDateTime(state['plannedStartDateTime'])
         self.setActualStartDateTime(state['actualStartDateTime'])
         self.setDueDateTime(state['dueDateTime'])
@@ -111,7 +111,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             state['shouldMarkCompletedWhenAllChildrenCompleted'])
 
     def __getstate__(self):
-        state = super(Task, self).__getstate__()
+        state = super().__getstate__()
         state.update(dict(dueDateTime=self.__dueDateTime,
             plannedStartDateTime=self.__plannedStartDateTime,
             actualStartDateTime=self.__actualStartDateTime,
@@ -129,7 +129,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return state
 
     def __getcopystate__(self):
-        state = super(Task, self).__getcopystate__()
+        state = super().__getcopystate__()
         state.update(dict(plannedStartDateTime=self.__plannedStartDateTime,
             dueDateTime=self.__dueDateTime,
             actualStartDateTime=self.__actualStartDateTime,
@@ -153,17 +153,17 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     @patterns.eventSource
     def addCategory(self, *categories, **kwargs):
-        if super(Task, self).addCategory(*categories, **kwargs):
+        if super().addCategory(*categories, **kwargs):
             self.recomputeAppearance(True, event=kwargs.pop('event'))
 
     @patterns.eventSource
     def removeCategory(self, *categories, **kwargs):
-        if super(Task, self).removeCategory(*categories, **kwargs):
+        if super().removeCategory(*categories, **kwargs):
             self.recomputeAppearance(True, event=kwargs.pop('event'))
 
     @patterns.eventSource
     def setCategories(self, *categories, **kwargs):
-        if super(Task, self).setCategories(*categories, **kwargs):
+        if super().setCategories(*categories, **kwargs):
             self.recomputeAppearance(True, event=kwargs.pop('event'))
 
     def allChildrenCompleted(self):
@@ -177,7 +177,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if child in self.children():
             return
         wasTracking = self.isBeingTracked(recursive=True)
-        super(Task, self).addChild(child, event=event)
+        super().addChild(child, event=event)
         self.childChangeEvent(child, wasTracking, event)
         if self.shouldBeMarkedCompleted():
             self.setCompletionDateTime(child.completionDateTime())
@@ -191,7 +191,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if child not in self.children():
             return
         wasTracking = self.isBeingTracked(recursive=True)
-        super(Task, self).removeChild(child, event=event)
+        super().removeChild(child, event=event)
         self.childChangeEvent(child, wasTracking, event)
         if self.shouldBeMarkedCompleted():
             # The removed child was the last uncompleted child
@@ -225,7 +225,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     @patterns.eventSource
     def setSubject(self, subject, event=None):
-        super(Task, self).setSubject(subject, event=event)
+        super().setSubject(subject, event=event)
         # The subject of a dependency of our prerequisites has changed, notify:
         for prerequisite in self.prerequisites():
             pub.sendMessage(prerequisite.dependenciesChangedEventType(),
@@ -719,19 +719,19 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     # Foreground color
 
     def setForegroundColor(self, *args, **kwargs):
-        super(Task, self).setForegroundColor(*args, **kwargs)
+        super().setForegroundColor(*args, **kwargs)
         self.__computeRecursiveForegroundColor()
 
     def foregroundColor(self, recursive=False):
         if not recursive:
-            return super(Task, self).foregroundColor(recursive)
+            return super().foregroundColor(recursive)
         try:
             return self.__recursiveForegroundColor
         except AttributeError:
             return self.__computeRecursiveForegroundColor()
 
     def __computeRecursiveForegroundColor(self, value=None):  # pylint: disable=W0613
-        ownColor = super(Task, self).foregroundColor(False)
+        ownColor = super().foregroundColor(False)
         if ownColor:
             recursiveColor = ownColor
         else:
@@ -757,26 +757,26 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__computeRecursiveBackgroundColor()
         self.__computeRecursiveIcon()
         self.__computeRecursiveSelectedIcon()
-        super(Task, self).appearanceChangedEvent(event)
+        super().appearanceChangedEvent(event)
         for eachEffort in self.efforts():
             eachEffort.appearanceChangedEvent(event)
 
     # Background color
 
     def setBackgroundColor(self, *args, **kwargs):
-        super(Task, self).setBackgroundColor(*args, **kwargs)
+        super().setBackgroundColor(*args, **kwargs)
         self.__computeRecursiveBackgroundColor()
 
     def backgroundColor(self, recursive=False):
         if not recursive:
-            return super(Task, self).backgroundColor(recursive)
+            return super().backgroundColor(recursive)
         try:
             return self.__recursiveBackgroundColor
         except AttributeError:
             return self.__computeRecursiveBackgroundColor()
 
     def __computeRecursiveBackgroundColor(self, *args, **kwargs):  # pylint: disable=W0613
-        ownColor = super(Task, self).backgroundColor(recursive=False)
+        ownColor = super().backgroundColor(recursive=False)
         if ownColor:
             recursiveColor = ownColor
         else:
@@ -807,7 +807,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     # Font
 
     def font(self, recursive=False):
-        ownFont = super(Task, self).font(recursive=False)
+        ownFont = super().font(recursive=False)
         if ownFont or not recursive:
             return ownFont
         else:
@@ -832,13 +832,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def icon(self, recursive=False):
         if recursive and self.isBeingTracked():
             return 'clock_icon'
-        myIcon = super(Task, self).icon()
+        myIcon = super().icon()
         if recursive and not myIcon:
             try:
                 myIcon = self.__recursiveIcon
             except AttributeError:
                 myIcon = self.__computeRecursiveIcon()
-        return self.pluralOrSingularIcon(myIcon, native=super(Task, self).icon() == '')
+        return self.pluralOrSingularIcon(myIcon, native=super().icon() == '')
 
     def __computeRecursiveIcon(self, *args, **kwargs):  # pylint: disable=W0613
         # pylint: disable=W0201
@@ -848,13 +848,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def selectedIcon(self, recursive=False):
         if recursive and self.isBeingTracked():
             return 'clock_icon'
-        myIcon = super(Task, self).selectedIcon()
+        myIcon = super().selectedIcon()
         if recursive and not myIcon:
             try:
                 myIcon = self.__recursiveSelectedIcon
             except AttributeError:
                 myIcon = self.__computeRecursiveSelectedIcon()
-        return self.pluralOrSingularIcon(myIcon, native=super(Task, self).selectedIcon == '')
+        return self.pluralOrSingularIcon(myIcon, native=super().selectedIcon == '')
 
     def __computeRecursiveSelectedIcon(self, *args, **kwargs):  # pylint: disable=W0613
         # pylint: disable=W0201
@@ -1433,7 +1433,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     @classmethod
     def modificationEventTypes(class_):
-        eventTypes = super(Task, class_).modificationEventTypes()
+        eventTypes = super().modificationEventTypes()
         return eventTypes + [class_.plannedStartDateTimeChangedEventType(),
                              class_.dueDateTimeChangedEventType(),
                              class_.actualStartDateTimeChangedEventType(),

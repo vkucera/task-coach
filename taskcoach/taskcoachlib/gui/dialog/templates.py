@@ -26,7 +26,7 @@ from wx.lib import sized_controls
 
 class TimeExpressionEntry(wx.TextCtrl):
     def __init__(self, *args, **kwargs):
-        super(TimeExpressionEntry, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.__defaultColor = self.GetBackgroundColour()
         self.__invalidColor = wx.Colour(255, 128, 128)
@@ -52,7 +52,7 @@ class TemplatesDialog(sized_controls.SizedDialog):
     def __init__(self, settings, *args, **kwargs):
         self.settings = settings
         self._changing = False
-        super(TemplatesDialog, self).__init__(style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER,
+        super().__init__(style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER,
                                               *args, **kwargs)
         pane = self.GetContentsPane()
         pane.SetSizerType('vertical')

@@ -77,7 +77,7 @@ class wxApp(wx.App):
         self.sessionCallback = sessionCallback
         self.reopenCallback = reopenCallback
         self.__shutdownInProgress = False
-        super(wxApp, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def MacReopenApp(self):
         self.reopenCallback()
@@ -120,7 +120,7 @@ class Application(metaclass=patterns.Singleton):
 
                 class LinuxSessionMonitor(xsm.SessionMonitor):
                     def __init__(self, callback):
-                        super(LinuxSessionMonitor, self).__init__()
+                        super().__init__()
                         self._callback = callback
                         self.setProperty(xsm.SmCloneCommand, sys.argv)
                         self.setProperty(xsm.SmRestartCommand, sys.argv)

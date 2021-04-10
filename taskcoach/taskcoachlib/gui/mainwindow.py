@@ -51,7 +51,7 @@ class MainWindow(PowerStateMixin, BalloonTipManager,
                  widgets.AuiManagedFrameWithDynamicCenterPane):
     def __init__(self, iocontroller, taskFile, settings, *args, **kwargs):
         self.__splash = kwargs.pop('splash', None)
-        super(MainWindow, self).__init__(None, -1, '', *args, **kwargs)
+        super().__init__(None, -1, '', *args, **kwargs)
         # This prevents the viewers from flickering on Windows 7 when refreshed:
         if operating_system.isWindows7_OrNewer():
             turn_on_double_buffering_on_windows(self)
@@ -164,7 +164,7 @@ class MainWindow(PowerStateMixin, BalloonTipManager,
 
     def addPane(self, page, caption, floating=False):  # pylint: disable=W0221
         name = page.settingsSection()
-        super(MainWindow, self).addPane(page, caption, name, floating=floating)
+        super().addPane(page, caption, name, floating=floating)
 
     def __init_window(self):
         self.__filename = self.taskFile.filename()

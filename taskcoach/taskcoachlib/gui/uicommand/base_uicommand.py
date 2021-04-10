@@ -39,7 +39,7 @@ class UICommand:
     def __init__(self, menuText='', helpText='', bitmap='nobitmap',
              kind=wx.ITEM_NORMAL, id=None, bitmap2=None,
              *args, **kwargs):  # pylint: disable=W0622
-        super(UICommand, self).__init__()
+        super().__init__()
         menuText = menuText or '<%s>' % _('None')
         self.menuText = menuText if '&' in menuText else '&' + menuText
         self.helpText = helpText

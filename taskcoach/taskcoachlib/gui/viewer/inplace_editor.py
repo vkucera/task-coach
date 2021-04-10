@@ -33,7 +33,7 @@ class KillFocusAcceptsEditsMixin:
         try:
             if self.__has_focus():
                 # User hit Escape
-                super(KillFocusAcceptsEditsMixin, self).StopEditing()
+                super().StopEditing()
             else:
                 # User clicked outside edit window
                 self.AcceptChanges()
@@ -62,7 +62,7 @@ class DescriptionCtrl(KillFocusAcceptsEditsMixin, hypertreelist.EditTextCtrl):
     ''' Multiline inline text control for editing item descriptions. '''
     def __init__(self, *args, **kwargs):
         kwargs['style'] = kwargs.get('style', 0) | wx.TE_MULTILINE
-        super(DescriptionCtrl, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
 
 class EscapeKeyMixin:
@@ -87,7 +87,7 @@ class _SpinCtrl(EscapeKeyMixin, KillFocusAcceptsEditsMixin,
     ''' Base spin control class. '''
     def __init__(self, parent, wxId, item, column, owner, value,
                  *args, **kwargs):
-        super(_SpinCtrl, self).__init__(parent, wxId, item, column, owner,
+        super().__init__(parent, wxId, item, column, owner,
                                         str(value), *args, **kwargs)
         self._textCtrl.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
 
@@ -101,7 +101,7 @@ class PriorityCtrl(_SpinCtrl):
 class PercentageCtrl(_SpinCtrl):
     ''' Spin control for percentages. '''
     def __init__(self, *args, **kwargs):
-        super(PercentageCtrl, self).__init__(min=0, max=100, *args, **kwargs)
+        super().__init__(min=0, max=100, *args, **kwargs)
 
 
 class Panel(wx.Panel):
@@ -109,7 +109,7 @@ class Panel(wx.Panel):
     def __init__(self, parent, wxId, value, *args, **kwargs): # pylint: disable=W0613
         # Don't pass the value argument to the wx.Panel since it doesn't take
         # a value argument
-        super(Panel, self).__init__(parent, wxId, *args, **kwargs)
+        super().__init__(parent, wxId, *args, **kwargs)
 
     def makeSizer(self, control):
         sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -122,7 +122,7 @@ class BudgetCtrl(EscapeKeyMixin, KillFocusAcceptsEditsMixin,
     ''' Masked inline text control for editing budgets:
         <hours>:<minutes>:<seconds>. '''
     def __init__(self, parent, wxId, item, column, owner, value):
-        super(BudgetCtrl, self).__init__(parent, wxId, item, column, owner)
+        super().__init__(parent, wxId, item, column, owner)
         hours, minutes, seconds = value.hoursMinutesSeconds()
         # Can't inherit from TimeDeltaCtrl because we need to override GetValue,
         # so we use composition instead
@@ -139,7 +139,7 @@ class AmountCtrl(EscapeKeyMixin, KillFocusAcceptsEditsMixin,
                  hypertreelist.EditCtrl, Panel):
     ''' Masked inline text control for editing amounts (floats >= 0). '''
     def __init__(self, parent, wxId, item, column, owner, value):
-        super(AmountCtrl, self).__init__(parent, wxId, item, column, owner)
+        super().__init__(parent, wxId, item, column, owner)
         self.__floatCtrl = widgets.masked.AmountCtrl(self, value)
         self.__floatCtrl.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
         self.makeSizer(self.__floatCtrl)
@@ -154,7 +154,7 @@ class DateTimeCtrl(KillFocusAcceptsEditsMixin, hypertreelist.EditCtrl, Panel):
         relative = kwargs.pop('relative', False)
         if relative:
             start = kwargs.pop('startDateTime', date.Now())
-        super(DateTimeCtrl, self).__init__(parent, wxId, item, column, owner)
+        super().__init__(parent, wxId, item, column, owner)
         settings = kwargs['settings']
         starthour = settings.getint('view', 'efforthourstart')
         endhour = settings.getint('view', 'efforthourend')

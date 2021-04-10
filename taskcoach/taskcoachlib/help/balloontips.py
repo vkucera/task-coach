@@ -23,7 +23,7 @@ import wx
 class BalloonTipManager(balloontip.BalloonTipManager):
     def AddBalloonTip(self, settings, name, target, message=None, title=None, getRect=None):
         if settings.getboolean('balloontips', name):
-            super(BalloonTipManager, self).AddBalloonTip(target, message=message, title=title,
+            super().AddBalloonTip(target, message=message, title=title,
                         bitmap=wx.ArtProvider.GetBitmap('lamp_icon', wx.ART_MENU, (16, 16)),
                         getRect=getRect, name=name, settings=settings)
 

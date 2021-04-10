@@ -85,7 +85,7 @@ def traceEvents(fflags):
 
 class FileMonitor:
     def __init__(self, filename, callback):
-        super(FileMonitor, self).__init__()
+        super().__init__()
 
         self.callback = callback
 
@@ -176,7 +176,7 @@ class FileMonitor:
 
 class FilesystemNotifier(base.NotifierBase):
     def __init__(self):
-        super(FilesystemNotifier, self).__init__()
+        super().__init__()
 
         self.monitor = None
         self.thread = None
@@ -191,7 +191,7 @@ class FilesystemNotifier(base.NotifierBase):
                 self.monitor.close()
                 self.monitor = None
                 self.thread = None
-            super(FilesystemNotifier, self).setFilename(filename)
+            super().setFilename(filename)
             if self._filename:
                 self.monitor = FileMonitor(self._filename, self._onFileChanged)
                 self.thread = threading.Thread(target=self._run)
@@ -219,7 +219,7 @@ class FilesystemNotifier(base.NotifierBase):
 
     def saved(self):
         with self.lock:
-            super(FilesystemNotifier, self).saved()
+            super().saved()
 
     def onFileChanged(self):
         raise NotImplementedError

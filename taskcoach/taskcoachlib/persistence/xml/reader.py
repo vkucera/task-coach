@@ -615,7 +615,7 @@ class ChangesXMLReader:
 
 class TemplateXMLReader(XMLReader):
     def read(self):
-        return super(TemplateXMLReader, self).read()[0][0]
+        return super().read()[0][0]
 
     def _parse_task_node(self, task_node):
         attrs = dict()
@@ -635,7 +635,7 @@ class TemplateXMLReader(XMLReader):
                 attrs[new_name] = None
         if 'subject' in task_node.attrib:
             task_node.attrib['subject'] = translate(task_node.attrib['subject'])
-        parsed_task = super(TemplateXMLReader, self)._parse_task_node(task_node)
+        parsed_task = super()._parse_task_node(task_node)
         for name, value in attrs.items():
             setattr(parsed_task, name + 'tmpl', value)
         return parsed_task

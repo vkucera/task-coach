@@ -50,7 +50,7 @@ class GridCursor:
 class BookPage(wx.Panel):
     ''' A page in a notebook. '''
     def __init__(self, parent, columns, growableColumn=None, *args, **kwargs):
-        super(BookPage, self).__init__(parent, style=wx.TAB_TRAVERSAL,
+        super().__init__(parent, style=wx.TAB_TRAVERSAL,
             *args, **kwargs)
         self._sizer = wx.GridBagSizer(vgap=5, hgap=5)
         self._columns = columns
@@ -141,7 +141,7 @@ class BookMixin:
     pageChangedEvent = 'Subclass responsibility'
 
     def __init__(self, parent, *args, **kwargs):
-        super(BookMixin, self).__init__(parent, -1, *args, **kwargs)
+        super().__init__(parent, -1, *args, **kwargs)
         self.Bind(self.pageChangedEvent, self.onPageChanged)
 
     def __getitem__(self, index):
@@ -159,7 +159,7 @@ class BookMixin:
     def AddPage(self, page, name, bitmap=None):
         ''' Override AddPage to allow for simply specifying the bitmap name. '''
         bitmap = wx.ArtProvider_GetBitmap(bitmap, wx.ART_MENU, self._bitmapSize)
-        super(BookMixin, self).AddPage(page, name, bitmap=bitmap)
+        super().AddPage(page, name, bitmap=bitmap)
 
     def ok(self, *args, **kwargs):
         for page in self:
@@ -173,4 +173,4 @@ class Notebook(BookMixin, aui.AuiNotebook):
         defaultStyle = kwargs.get('agwStyle', aui.AUI_NB_DEFAULT_STYLE)
         kwargs['agwStyle'] = defaultStyle & ~aui.AUI_NB_CLOSE_ON_ACTIVE_TAB & \
                              ~aui.AUI_NB_MIDDLE_CLICK_CLOSE
-        super(Notebook, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)

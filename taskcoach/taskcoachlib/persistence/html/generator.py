@@ -88,7 +88,7 @@ class Viewer2HTMLConverter:
     cssLink = '<link href="%s" rel="stylesheet" type="text/css" media="screen">'
 
     def __init__(self, viewer, settings):
-        super(Viewer2HTMLConverter, self).__init__()
+        super().__init__()
         self.viewer = viewer
         self.settings = settings
         self.count = 0

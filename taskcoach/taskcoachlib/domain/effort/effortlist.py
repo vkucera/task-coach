@@ -42,7 +42,7 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
         all tasks in the underlying TaskList. '''
 
     def  __init__(self, *args, **kwargs):
-        super(EffortList, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         pub.subscribe(self.onAddEffortToOrRemoveEffortFromTask,
                       task.Task.effortsChangedEventType())
 
@@ -55,7 +55,7 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
         effortsToAdd = []
         for task in tasks:
             effortsToAdd.extend(task.efforts())
-        super(EffortList, self).extendSelf(effortsToAdd, event)
+        super().extendSelf(effortsToAdd, event)
         for effort in effortsToAdd:
             if effort.getStop() is None:
                 pub.sendMessage(effort.trackingChangedEventType(), newValue=True, sender=effort)
@@ -73,7 +73,7 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
         for effort in effortsToRemove:
             if effort.getStop() is None:
                 pub.sendMessage(effort.trackingChangedEventType(), newValue=False, sender=effort)
-        super(EffortList, self).removeItemsFromSelf(effortsToRemove, event)
+        super().removeItemsFromSelf(effortsToRemove, event)
 
     def onAddEffortToOrRemoveEffortFromTask(self, newValue, sender):
         if sender not in self.observable():
@@ -81,8 +81,8 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
         newValue, oldValue = newValue
         effortsToAdd = [effort for effort in newValue if not effort in oldValue]
         effortsToRemove = [effort for effort in oldValue if not effort in newValue]
-        super(EffortList, self).extendSelf(effortsToAdd)
-        super(EffortList, self).removeItemsFromSelf(effortsToRemove)
+        super().extendSelf(effortsToAdd)
+        super().removeItemsFromSelf(effortsToRemove)
         for effort in effortsToAdd + effortsToRemove:
             if effort.getStop() is None:
                 pub.sendMessage(effort.trackingChangedEventType(),
@@ -126,7 +126,7 @@ class EffortListTracker(patterns.Observer, Publisher):
         '''@param effortList: The effort list to observe.
         @param includeComposites: if False, composite efforts will be
             ignored.'''
-        super(EffortListTracker, self).__init__()
+        super().__init__()
         Publisher.__init__(self)
 
         self.__effortList = effortList

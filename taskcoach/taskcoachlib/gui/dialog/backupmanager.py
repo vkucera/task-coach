@@ -24,7 +24,7 @@ from taskcoachlib import render
 
 class BackupManagerDialog(wx.Dialog):
     def __init__(self, parent, settings, selectedFile=None):
-        super(BackupManagerDialog, self).__init__(parent, wx.ID_ANY, style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER)
+        super().__init__(parent, wx.ID_ANY, style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER)
 
         container = wx.Panel(self)
         self.__files = wx.ListCtrl(container, wx.ID_ANY, style=wx.LC_REPORT|wx.LC_SINGLE_SEL)

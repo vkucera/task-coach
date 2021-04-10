@@ -30,7 +30,7 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
         self.__regularExpression = kwargs.pop('regularExpression', False)
         self.__bitmapSize = kwargs.pop('size', (16, 16))
         value = kwargs.pop('value', u'')
-        super(SearchCtrl, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.SetSearchMenuBitmap(self.getBitmap('magnifier_glass_dropdown_icon'))
         self.SetSearchBitmap(self.getBitmap('magnifier_glass_icon'))
         self.SetCancelBitmap(self.getBitmap('cross_red_icon'))
@@ -213,7 +213,7 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
         ''' When wx.SearchCtrl is disabled it doesn't grey out the buttons,
             so we remove those. '''
         self.SetValue('' if enable else _('Viewer not searchable'))
-        super(SearchCtrl, self).Enable(enable)
+        super().Enable(enable)
         self.ShowCancelButton(enable and bool(self.GetValue()))
         self.ShowSearchButton(enable)
 

@@ -318,13 +318,13 @@ class ChangesXMLWriter:
 
 class TemplateXMLWriter(XMLWriter):
     def write(self, tsk):  # pylint: disable=W0221
-        super(TemplateXMLWriter, self).write(task.TaskList([tsk]),
+        super().write(task.TaskList([tsk]),
                    category.CategoryList(),
                    note.NoteContainer(),
                    None, None)
 
     def taskNode(self, parentNode, task):  # pylint: disable=W0621
-        node = super(TemplateXMLWriter, self).taskNode(parentNode, task)
+        node = super().taskNode(parentNode, task)
 
         for name, getter in [('plannedstartdate', 'plannedStartDateTime'),
                              ('duedate', 'dueDateTime'),

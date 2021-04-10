@@ -44,7 +44,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'categoryviewer')
-        super(BaseCategoryViewer, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         for eventType in [category.Category.subjectChangedEventType(),
                           category.Category.appearanceChangedEventType(),
                           category.Category.exclusiveSubcategoriesChangedEventType(),
@@ -166,7 +166,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
         return commands
 
     def onAttributeChanged(self, newValue, sender):
-        super(BaseCategoryViewer, self).onAttributeChanged(newValue, sender)
+        super().onAttributeChanged(newValue, sender)
 
     def onAttributeChanged_Deprecated(self, event):
         if category.Category.exclusiveSubcategoriesChangedEventType() in event.types():
@@ -178,7 +178,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
                 items |= set(item.children())
             self.widget.RefreshItems(*items)  # pylint: disable=W0142
         else:
-            super(BaseCategoryViewer, self).onAttributeChanged_Deprecated(event)
+            super().onAttributeChanged_Deprecated(event)
 
     def onCheck(self, event, final):
         categoryToFilter = self.widget.GetItemPyData(event.GetItem())
@@ -219,7 +219,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
 
 class CategoryViewer(BaseCategoryViewer):  # pylint: disable=W0223
     def __init__(self, *args, **kwargs):
-        super(CategoryViewer, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.filterUICommand.setChoice(self.settings.getboolean('view',
             'categoryfiltermatchall'))
 
@@ -227,5 +227,5 @@ class CategoryViewer(BaseCategoryViewer):  # pylint: disable=W0223
         # pylint: disable=W0201
         self.filterUICommand = \
             uicommand.CategoryViewerFilterChoice(settings=self.settings)
-        return super(CategoryViewer, self).createModeToolBarUICommands() + \
+        return super().createModeToolBarUICommands() + \
             (self.filterUICommand,)

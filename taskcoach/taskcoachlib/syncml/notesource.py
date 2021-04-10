@@ -27,7 +27,7 @@ import wx, inspect
 
 class NoteSource(BaseSource):
     def __init__(self, callback, noteList, categoryList, dataType, *args, **kwargs):
-        super(NoteSource, self).__init__(callback, noteList, *args, **kwargs)
+        super().__init__(callback, noteList, *args, **kwargs)
 
         self.categoryList = categoryList
         self._dataType = dataType
@@ -73,6 +73,6 @@ class NoteSource(BaseSource):
         for category in local.categories():
             category.addCategorizable(local)
 
-        super(NoteSource, self).doUpdateItem(note, local)
+        super().doUpdateItem(note, local)
 
         return 200

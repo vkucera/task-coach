@@ -30,7 +30,7 @@ class SpinCtrl(wx.Panel):
 
     def __init__(self, parent, wxId=wx.ID_ANY, value=0, pos=wx.DefaultPosition, size=wx.DefaultSize,
                  style=0, name='wx.SpinCtrl', **kwargs): # pylint: disable=W0613
-        super(SpinCtrl, self).__init__(parent, wxId, pos=pos, size=size, name=name)
+        super().__init__(parent, wxId, pos=pos, size=size, name=name)
         minValue = kwargs['min'] if 'min' in kwargs else -self.maxRange
         maxValue = kwargs['max'] if 'max' in kwargs else self.maxRange
         value = min(maxValue, max(int(value), minValue))

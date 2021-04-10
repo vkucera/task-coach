@@ -57,7 +57,7 @@ class FontColorSyncer:
 
 class SettingsPageBase(widgets.BookPage):
     def __init__(self, *args, **kwargs):
-        super(SettingsPageBase, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self._booleanSettings = []
         self._choiceSettings = []
         self._multipleChoiceSettings = []
@@ -287,7 +287,7 @@ class SettingsPageBase(widgets.BookPage):
 class SettingsPage(SettingsPageBase):
     def __init__(self, settings=None, *args, **kwargs):
         self.settings = settings
-        super(SettingsPage, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def addEntry(self, text, *controls, **kwargs):  # pylint: disable=W0221
         helpText = kwargs.pop('helpText', '')
@@ -298,7 +298,7 @@ class SettingsPage(SettingsPageBase):
                          'in the task edit dialog.')
         if helpText:
             controls = controls + (helpText,)
-        super(SettingsPage, self).addEntry(text, *controls, **kwargs)
+        super().addEntry(text, *controls, **kwargs)
 
     def get(self, section, name):
         return self.settings.get(section, name)
@@ -345,7 +345,7 @@ class SavePage(SettingsPage):
     pageIcon = 'save'
 
     def __init__(self, *args, **kwargs):
-        super(SavePage, self).__init__(columns=3, *args, **kwargs)
+        super().__init__(columns=3, *args, **kwargs)
         self.addBooleanSetting('file', 'autosave',
             _('Auto save after every change'))
         self.addBooleanSetting('file', 'autoload',
@@ -382,7 +382,7 @@ class WindowBehaviorPage(SettingsPage):
     pageIcon = 'windows'
 
     def __init__(self, *args, **kwargs):
-        super(WindowBehaviorPage, self).__init__(columns=2, growableColumn=-1,
+        super().__init__(columns=2, growableColumn=-1,
                                                  *args, **kwargs)
         self.addBooleanSetting('window', 'splash',
             _('Show splash screen on startup'))
@@ -414,7 +414,7 @@ class LanguagePage(SettingsPage):
     pageIcon = 'person_talking_icon'
 
     def __init__(self, *args, **kwargs):
-        super(LanguagePage, self).__init__(columns=3, *args, **kwargs)
+        super().__init__(columns=3, *args, **kwargs)
         languages = \
             [('ar', u'الْعَرَبيّة (Arabic)'),
              ('eu_ES', 'Euskal Herria (Basque)'),
@@ -506,7 +506,7 @@ class LanguagePage(SettingsPage):
         self.fit()
 
     def ok(self):
-        super(LanguagePage, self).ok()
+        super().ok()
         self.set('view', 'language', self.get('view', 'language_set_by_user'))
 
 
@@ -516,7 +516,7 @@ class TaskAppearancePage(SettingsPage):
     pageIcon = 'palette_icon'
 
     def __init__(self, *args, **kwargs):
-        super(TaskAppearancePage, self).__init__(columns=9, growableColumn=-1,
+        super().__init__(columns=9, growableColumn=-1,
                                                  *args, **kwargs)
         self.addAppearanceHeader()
         for status in task.Task.possibleStatuses():
@@ -536,7 +536,7 @@ class FeaturesPage(SettingsPage):
     pageIcon = 'cogwheel_icon'
 
     def __init__(self, *args, **kwargs):
-        super(FeaturesPage, self).__init__(columns=3, growableColumn=-1,
+        super().__init__(columns=3, growableColumn=-1,
                                            *args, **kwargs)
         self.addEntry(_('All settings on this tab require a restart of %s ' \
                         'to take effect') % meta.name)
@@ -587,7 +587,7 @@ class FeaturesPage(SettingsPage):
         self.fit()
 
     def ok(self):
-        super(FeaturesPage, self).ok()
+        super().ok()
         calendar.setfirstweekday(dict(monday=0, sunday=6)[self.get('view', 'weekstart')])
 
 
@@ -597,7 +597,7 @@ class TaskDatesPage(SettingsPage):
     pageIcon = 'calendar_icon'
 
     def __init__(self, *args, **kwargs):
-        super(TaskDatesPage, self).__init__(columns=4, growableColumn=-1,
+        super().__init__(columns=4, growableColumn=-1,
                                             *args, **kwargs)
         self.addBooleanSetting('behavior',
             'markparentcompletedwhenallchildrencompleted',
@@ -662,7 +662,7 @@ class TaskReminderPage(SettingsPage):
     pageIcon = 'clock_alarm_icon'
 
     def __init__(self, *args, **kwargs):
-        super(TaskReminderPage, self).__init__(columns=3, growableColumn=-1,
+        super().__init__(columns=3, growableColumn=-1,
                                                *args, **kwargs)
         names = []  # There's at least one, the universal one
         for name in notify.AbstractNotifier.names():
@@ -694,7 +694,7 @@ class IPhonePage(SettingsPage):
     pageIcon = 'computer_handheld_icon'
 
     def __init__(self, *args, **kwargs):
-        super(IPhonePage, self).__init__(columns=3, *args, **kwargs)
+        super().__init__(columns=3, *args, **kwargs)
         self.addTextSetting('iphone', 'password',
             _('Password for synchronization with iPhone'),
             helpText=_('When synchronizing, enter this password on the iPhone to authorize it'))
@@ -713,7 +713,7 @@ class EditorPage(SettingsPage):
     pageIcon = 'edit'
 
     def __init__(self, *args, **kwargs):
-        super(EditorPage, self).__init__(columns=2, *args, **kwargs)
+        super().__init__(columns=2, *args, **kwargs)
         if operating_system.isMac() and \
                 not operating_system.isMacOsXMountainLion_OrNewer():
             self.addBooleanSetting('editor', 'maccheckspelling',
@@ -723,7 +723,7 @@ class EditorPage(SettingsPage):
         self.fit()
 
     def ok(self):
-        super(EditorPage, self).ok()
+        super().ok()
         widgets.MultiLineTextCtrl.CheckSpelling = \
             self.settings.getboolean('editor', 'maccheckspelling')
 
@@ -734,7 +734,7 @@ class OSXPage(SettingsPage):
     pageIcon = 'mac'
 
     def __init__(self, *args, **kwargs):
-        super(OSXPage, self).__init__(columns=3, *args, **kwargs)
+        super().__init__(columns=3, *args, **kwargs)
 
         self.addBooleanSetting('os_darwin', 'getmailsubject',
             _('Get e-mail subject from Mail.app'),
@@ -748,7 +748,7 @@ class LinuxPage(SettingsPage):
     pageIcon = 'linux'
 
     def __init__(self, *args, **kwargs):
-        super(LinuxPage, self).__init__(columns=3, *args, **kwargs)
+        super().__init__(columns=3, *args, **kwargs)
 
         self.addBooleanSetting('os_linux', 'focustextentry',
             _('Focus task subject in task editor'),
@@ -768,7 +768,7 @@ class Preferences(widgets.NotebookDialog):
 
     def __init__(self, settings=None, *args, **kwargs):
         self.settings = settings
-        super(Preferences, self).__init__(bitmap='wrench_icon', *args, **kwargs)
+        super().__init__(bitmap='wrench_icon', *args, **kwargs)
         if operating_system.isMac():
             self.CentreOnParent()
 

@@ -26,7 +26,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
     def __init__(self, parent, columns, selectCommand=None, editCommand=None,
                  itemPopupMenu=None, columnPopupMenu=None, resizeableColumn=0,
                  *args, **kwargs):
-        super(VirtualListCtrl, self).__init__(parent,
+        super().__init__(parent,
             style=wx.LC_REPORT | wx.LC_VIRTUAL, columns=columns,
             resizeableColumn=resizeableColumn, itemPopupMenu=itemPopupMenu,
             columnPopupMenu=columnPopupMenu, *args, **kwargs)
@@ -119,7 +119,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
             self.DeleteAllItems()
         else:
             # The VirtualListCtrl makes sure only visible items are updated
-            super(VirtualListCtrl, self).RefreshItems(0, count - 1)
+            super().RefreshItems(0, count - 1)
         self.selectCommand()
 
     def RefreshItems(self, *items):
@@ -132,7 +132,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
 
     def HitTest(self, (x, y), *args, **kwargs):
         ''' Always return a three-tuple (item, flag, column). '''
-        index, flags = super(VirtualListCtrl, self).HitTest((x, y),
+        index, flags = super().HitTest((x, y),
                                                             *args, **kwargs)
         column = 0
         if self.InReportView():

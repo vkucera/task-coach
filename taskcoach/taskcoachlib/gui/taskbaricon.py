@@ -32,7 +32,7 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
     def __init__(self, mainwindow, taskList, settings,
             defaultBitmap='taskcoach', tickBitmap='clock_icon',
             tackBitmap='clock_stopwatch_icon', *args, **kwargs):
-        super(TaskBarIcon, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.__window = mainwindow
         self.__taskList = taskList
         self.__settings = settings

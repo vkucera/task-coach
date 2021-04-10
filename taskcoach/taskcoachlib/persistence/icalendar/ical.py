@@ -86,7 +86,7 @@ class VCalendarParser:
         VTODO object in the parsed file. ''' # pylint: disable=W0511
 
     def __init__(self, *args, **kwargs):
-        super(VCalendarParser, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.stateMap = { 'VCALENDAR': VCalendarParser,
                           'VTODO':     VTodoParser,
                           'VNOTE':     VNoteParser }
@@ -239,7 +239,7 @@ class VTodoParser(VCalendarParser):
         elif name == 'STATUS':
             self.kwargs['vcardStatus'] = value
         else:
-            super(VTodoParser, self).acceptItem(name, value)
+            super().acceptItem(name, value)
 
 
 class VNoteParser(VCalendarParser):
@@ -263,7 +263,7 @@ class VNoteParser(VCalendarParser):
         elif name == 'CLASS':
             pass
         else:
-            super(VNoteParser, self).acceptItem(name, value)
+            super().acceptItem(name, value)
 
 #}
 

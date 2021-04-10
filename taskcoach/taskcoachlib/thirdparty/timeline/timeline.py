@@ -14,7 +14,7 @@ class HotMap:
         self.nodes = []
         self.rects = {}
         self.children = {}
-        super(HotMap, self).__init__()
+        super().__init__()
 
     def append(self, node, rect):
         self.nodes.append(node)
@@ -79,7 +79,7 @@ class TimeLine(wx.Panel):
         self.DEFAULT_PEN = wx.Pen(wx.BLACK, 1, wx.SOLID)
         self.SELECTED_PEN = wx.Pen(wx.WHITE, 2, wx.SOLID)
         kwargs['style'] = wx.TAB_TRAVERSAL|wx.NO_BORDER|wx.FULL_REPAINT_ON_RESIZE|wx.WANTS_CHARS
-        super(TimeLine, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnSize )
         self.Bind(wx.EVT_LEFT_UP, self.OnClickRelease)
@@ -381,7 +381,7 @@ class TestApp(wx.App):
 
     def __init__(self, size):
         self.size = size
-        super(TestApp, self).__init__(0)
+        super().__init__(0)
 
     def OnInit(self):
         ''' Initialise the application. '''

@@ -96,7 +96,7 @@ def progress(func):
 
 class Settings(ConfigParser.SafeConfigParser):
     def __init__(self):
-        super(Settings, self).__init__()
+        super().__init__()
         self.set_defaults()
         self.filename = os.path.expanduser('~/.tcreleaserc')
         self.read(self.filename)
@@ -118,7 +118,7 @@ class Settings(ConfigParser.SafeConfigParser):
                 self.set(section, option, 'ask')
 
     def get(self, section, option):  # pylint: disable=W0221
-        value = super(Settings, self).get(section, option)
+        value = super().get(section, option)
         if value == 'ask':
             get_input = getpass.getpass if option == 'password' else raw_input
             value = get_input('%s %s: ' % (section, option)).strip()
@@ -461,7 +461,7 @@ def generating_website(settings, options):
 
 class SimpleFTP(ftplib.FTP):
     def __init__(self, hostname, username, password, folder='.'):
-        super(SimpleFTP, self).__init__(hostname, username, password)
+        super().__init__(hostname, username, password)
         self.ensure_folder(folder)
         self.remote_root = folder
 

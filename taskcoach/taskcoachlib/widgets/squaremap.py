@@ -25,7 +25,7 @@ class SquareMap(tooltip.ToolTipMixin, squaremap.SquareMap):
     def __init__(self, parent, rootNode, onSelect, onEdit, popupMenu):
         self.__selection = []
         self.getItemTooltipData = parent.getItemTooltipData
-        super(SquareMap, self).__init__(parent, model=rootNode, adapter=parent,
+        super().__init__(parent, model=rootNode, adapter=parent,
                                         highlight=False)
 
         self.__tip = tooltip.SimpleToolTip(self)

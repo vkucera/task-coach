@@ -27,7 +27,7 @@ class ToolTipMixin:
 
     def __init__(self, *args, **kwargs):
         self.__enabled = kwargs.pop('tooltipsEnabled', True)
-        super(ToolTipMixin, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.__timer = wx.Timer(self, wx.NewId())
 
@@ -45,7 +45,7 @@ class ToolTipMixin:
 
     def PopupMenu(self, menu):
         self.__frozen = False
-        super(ToolTipMixin, self).PopupMenu(menu)
+        super().PopupMenu(menu)
         self.__frozen = True
 
     def ShowTip(self, x, y):
@@ -126,18 +126,18 @@ if operating_system.isWindows():
     class ToolTipBase(wx.MiniFrame):
         def __init__(self, parent):
             style = wx.FRAME_NO_TASKBAR | wx.FRAME_FLOAT_ON_PARENT | wx.NO_BORDER
-            super(ToolTipBase, self).__init__(parent, wx.ID_ANY, 'Tooltip',
+            super().__init__(parent, wx.ID_ANY, 'Tooltip',
                                               style=style)
 
         def Show(self, x, y, w, h):  # pylint: disable=W0221
             self.SetDimensions(x, y, w, h)
-            super(ToolTipBase, self).Show()
+            super().Show()
 
 elif operating_system.isMac():
     class ToolTipBase(wx.Frame):
         def __init__(self, parent):  # pylint: disable=E1003
             style = wx.FRAME_NO_TASKBAR | wx.FRAME_FLOAT_ON_PARENT | wx.NO_BORDER
-            super(ToolTipBase, self).__init__(parent, wx.ID_ANY, 'ToolTip',
+            super().__init__(parent, wx.ID_ANY, 'ToolTip',
                                               style=style)
 
             # There are some subtleties on Mac regarding multi-monitor
@@ -150,7 +150,7 @@ elif operating_system.isMac():
                 self.__maxHeight = max(self.__maxHeight, y + height)
 
             self.MoveXY(self.__maxWidth, self.__maxHeight)
-            super(ToolTipBase, self).Show()
+            super().Show()
 
         def Show(self, x, y, width, height):  # pylint: disable=W0221
             self.SetDimensions(x, y, width, height)
@@ -162,12 +162,12 @@ else:
     class ToolTipBase(wx.PopupWindow):
         def Show(self, x, y, width, height):  # pylint: disable=E1003,W0221
             self.SetDimensions(x, y, width, height)
-            super(ToolTipBase, self).Show()
+            super().Show()
 
 
 class SimpleToolTip(ToolTipBase):
     def __init__(self, parent):
-        super(SimpleToolTip, self).__init__(parent)
+        super().__init__(parent)
         self.data = []
         self.Bind(wx.EVT_PAINT, self.OnPaint)
 

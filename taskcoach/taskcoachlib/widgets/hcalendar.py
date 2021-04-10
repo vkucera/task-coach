@@ -48,7 +48,7 @@ class HierarchicalCalendar(tooltip.ToolTipMixin, CalendarCanvas):
         self.__drawNow = True
         self.__adapter = parent
         self.getItemTooltipData = parent.getItemTooltipData
-        super(HierarchicalCalendar, self).__init__(parent, **kwargs)
+        super().__init__(parent, **kwargs)
         self.SetCalendarFormat(self.__calFormat) # This calls _Invalidate() so no need to call SetHeaderFormat
 
         self.__tip = tooltip.SimpleToolTip(self)
@@ -163,10 +163,10 @@ class HierarchicalCalendar(tooltip.ToolTipMixin, CalendarCanvas):
         return self.__drawNow
 
     def SetTodayColor(self, (r, g, b)):
-        super(HierarchicalCalendar, self).SetTodayColor(wx.Colour(r, g, b))
+        super().SetTodayColor(wx.Colour(r, g, b))
 
     def TodayColor(self):
-        color = super(HierarchicalCalendar, self).TodayColor()
+        color = super().TodayColor()
         return color.Red(), color.Green(), color.Blue()
 
     # Navigation
@@ -219,7 +219,7 @@ class HierarchicalCalendar(tooltip.ToolTipMixin, CalendarCanvas):
 
     def _DrawNow(self, gc, h):
         if self.__drawNow:
-            super(HierarchicalCalendar, self)._DrawNow(gc, h)
+            super()._DrawNow(gc, h)
 
     def GetRootEvents(self):
         return self.__adapter.getRootItems()

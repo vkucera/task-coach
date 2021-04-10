@@ -27,19 +27,19 @@ class clean(BaseCleanCommand):
     boolean_options = BaseCleanCommand.boolean_options + ['really-clean']
 
     def initialize_options(self):
-        super(clean, self).initialize_options()
+        super().initialize_options()
         # pylint: disable=W0201
         self.really_clean = False
         self.cleaning_patterns = ['*.pyc']
         self.really_clean_patterns = ['*.bak']
 
     def finalize_options(self):
-        super(clean, self).finalize_options()
+        super().finalize_options()
         if self.really_clean:
             self.cleaning_patterns.extend(self.really_clean_patterns)
 
     def run(self):
-        super(clean, self).run()
+        super().run()
         if not self.verbose:
             log.info("recursively removing '" + "', '".join(self.cleaning_patterns) + "'")
         for root, _, files in os.walk('.'):

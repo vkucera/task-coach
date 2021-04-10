@@ -40,7 +40,7 @@ class Page(patterns.Observer, widgets.BookPage):
     def __init__(self, items, *args, **kwargs):
         self.items = items
         self.__observers = []
-        super(Page, self).__init__(columns=self.columns, *args, **kwargs)
+        super().__init__(columns=self.columns, *args, **kwargs)
         self.addEntries()
         self.fit()
 
@@ -101,7 +101,7 @@ class SubjectPage(Page):
 
     def __init__(self, items, parent, settings, *args, **kwargs):
         self._settings = settings
-        super(SubjectPage, self).__init__(items, parent, *args, **kwargs)
+        super().__init__(items, parent, *args, **kwargs)
 
     def SetFocus(self):
         # Skip this on GTK because it selects the control's text, which
@@ -109,7 +109,7 @@ class SubjectPage(Page):
         # __load_perspective is not enough because the aui notebook calls this
         # when the user selects a tab.
         if self.focusTextControl():
-            super(SubjectPage, self).SetFocus()
+            super().SetFocus()
 
     def focusTextControl(self):
         return self._settings.getboolean('os_linux', 'focustextentry')
@@ -193,7 +193,7 @@ class SubjectPage(Page):
         self._modificationTextEntry.SetLabel(self.__modification_text())
 
     def close(self):
-        super(SubjectPage, self).close()
+        super().close()
         for eventType in self.items[0].modificationEventTypes():
             try:
                 pub.unsubscribe(self.onAttributeChanged, eventType)
@@ -231,7 +231,7 @@ class TaskSubjectPage(SubjectPage):
         self.addEntry(_('Priority'), self._priorityEntry, flags=[None, wx.ALL])
 
     def entries(self):
-        entries = super(TaskSubjectPage, self).entries()
+        entries = super().entries()
         entries['priority'] = self._priorityEntry
         return entries
 
@@ -370,7 +370,7 @@ class DatesPage(Page):
         self.__settings = settings
         self._duration = None
         self.__items_are_new = items_are_new
-        super(DatesPage, self).__init__(theTask, parent, *args, **kwargs)
+        super().__init__(theTask, parent, *args, **kwargs)
         pub.subscribe(self.__onChoicesConfigChanged, 'settings.feature.sdtcspans')
 
     def __onChoicesConfigChanged(self, value=''):
@@ -639,7 +639,7 @@ class BudgetPage(Page):
 
     def close(self):
         date.Scheduler().unschedule(self.onEverySecond)
-        super(BudgetPage, self).close()
+        super().close()
 
     def entries(self):
         return dict(firstEntry=self._budgetEntry,
@@ -658,7 +658,7 @@ class PageWithViewer(Page):
         self.__taskFile = taskFile
         self.__settings = settings
         self.__settingsSection = settingsSection
-        super(PageWithViewer, self).__init__(items, parent, *args, **kwargs)
+        super().__init__(items, parent, *args, **kwargs)
 
     def addEntries(self):
         # pylint: disable=W0201
@@ -676,7 +676,7 @@ class PageWithViewer(Page):
             # Don't notify the viewer about any changes anymore, it's about
             # to be deleted, but don't delete it too soon.
             wx.CallAfter(self.deleteViewer)
-        super(PageWithViewer, self).close()
+        super().close()
 
     def deleteViewer(self):
         if hasattr(self, 'viewer'):
@@ -704,7 +704,7 @@ class EffortPage(PageWithViewer):
 class LocalCategoryViewer(viewer.BaseCategoryViewer):  # pylint: disable=W0223
     def __init__(self, items, *args, **kwargs):
         self.__items = items
-        super(LocalCategoryViewer, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         for item in self.domainObjectsToView():
             item.expand(context=self.settingsSection(), notify=False)
 
@@ -723,7 +723,7 @@ class LocalCategoryViewer(viewer.BaseCategoryViewer):  # pylint: disable=W0223
                                           category=category).do()
 
     def createCategoryPopupMenu(self):  # pylint: disable=W0221
-        return super(LocalCategoryViewer, self).createCategoryPopupMenu(True)
+        return super().createCategoryPopupMenu(True)
 
 
 class CategoriesPage(PageWithViewer):
@@ -733,7 +733,7 @@ class CategoriesPage(PageWithViewer):
 
     def __init__(self, *args, **kwargs):
         self.__realized = False
-        super(CategoriesPage, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def addEntries(self):
         pass
@@ -741,7 +741,7 @@ class CategoriesPage(PageWithViewer):
     def selected(self):
         if not self.__realized:
             self.__realized = True
-            super(CategoriesPage, self).addEntries()
+            super().addEntries()
             self.fit()
 
     def createViewer(self, taskFile, settings, settingsSection):
@@ -768,7 +768,7 @@ class LocalAttachmentViewer(viewer.AttachmentViewer):  # pylint: disable=W0223
     def __init__(self, *args, **kwargs):
         self.attachmentOwner = kwargs.pop('owner')
         attachments = attachment.AttachmentList(self.attachmentOwner.attachments())
-        super(LocalAttachmentViewer, self).__init__(attachmentsToShow=attachments, *args, **kwargs)
+        super().__init__(attachmentsToShow=attachments, *args, **kwargs)
 
     def newItemCommand(self, *args, **kwargs):
         return command.AddAttachmentCommand(None, [self.attachmentOwner],
@@ -812,7 +812,7 @@ class LocalNoteViewer(viewer.BaseNoteViewer):  # pylint: disable=W0223
     def __init__(self, *args, **kwargs):
         self.__note_owner = kwargs.pop('owner')
         notes = note.NoteContainer(self.__note_owner.notes())
-        super(LocalNoteViewer, self).__init__(notesToShow=notes,
+        super().__init__(notesToShow=notes,
                                               *args, **kwargs)
 
     def newItemCommand(self, *args, **kwargs):
@@ -855,7 +855,7 @@ class NotesPage(PageWithViewer):
 class LocalPrerequisiteViewer(viewer.CheckableTaskViewer):  # pylint: disable=W0223
     def __init__(self, items, *args, **kwargs):
         self.__items = items
-        super(LocalPrerequisiteViewer, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def getIsItemChecked(self, item):
         return item in self.__items[0].prerequisites()
@@ -880,7 +880,7 @@ class PrerequisitesPage(PageWithViewer):
 
     def __init__(self, *args, **kwargs):
         self.__realized = False
-        super(PrerequisitesPage, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def addEntries(self):
         pass
@@ -888,7 +888,7 @@ class PrerequisitesPage(PageWithViewer):
     def selected(self):
         if not self.__realized:
             self.__realized = True
-            super(PrerequisitesPage, self).addEntries()
+            super().addEntries()
             self.fit()
 
     def createViewer(self, taskFile, settings, settingsSection):
@@ -917,7 +917,7 @@ class EditBook(widgets.Notebook):
     def __init__(self, parent, items, taskFile, settings, items_are_new):
         self.items = items
         self.settings = settings
-        super(EditBook, self).__init__(parent)
+        super().__init__(parent)
         self.addPages(taskFile, items_are_new)
         self.__load_perspective(items_are_new)
 
@@ -1145,7 +1145,7 @@ class EffortEditBook(Page):
         self._taskList.extend([effort.task() for effort in efforts if effort.task() not in task_list])
         self._settings = settings
         self._taskFile = taskFile
-        super(EffortEditBook, self).__init__(efforts, parent, *args, **kwargs)
+        super().__init__(efforts, parent, *args, **kwargs)
         pub.subscribe(self.__onChoicesConfigChanged, 'settings.feature.sdtcspans_effort')
 
     def __onChoicesConfigChanged(self, value=''):
@@ -1358,7 +1358,7 @@ class Editor(BalloonTipManager, widgets.Dialog):
         self.__items_are_new = kwargs.pop('items_are_new', False)
         column_name = kwargs.pop('columnName', '')
         self.__call_after = kwargs.get('call_after', wx.CallAfter)
-        super(Editor, self).__init__(parent, self.__title(),
+        super().__init__(parent, self.__title(),
                                      buttonTypes=wx.ID_CLOSE, *args, **kwargs)
         if not column_name:
             if self._interior.perspective() and hasattr(self._interior, 'GetSelection'):

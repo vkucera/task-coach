@@ -33,7 +33,7 @@ class WakeFromIdleFrame(NotificationFrameBase):
         self._effort = effort
         self._displayed = displayedEfforts
         self._lastActivity = 0
-        super(WakeFromIdleFrame, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def AddInnerContent(self, sizer, panel):
         idleTimeFormatted = render.dateTime(self._idleTime)
@@ -81,7 +81,7 @@ class IdleController(Observer, IdleNotifier):
         self._effortList = effortList
         self._displayed = set()
 
-        super(IdleController, self).__init__()
+        super().__init__()
 
         self.__tracker = effort.EffortListTracker(self._effortList)
         self.__tracker.subscribe(self.__onTrackedChanged, 'effortlisttracker')

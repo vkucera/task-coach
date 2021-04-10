@@ -26,7 +26,7 @@ import wx
 
 class _AutoWidthTree(widgets.autowidth.AutoColumnWidthMixin, htl.HyperTreeList):
     def __init__(self, *args, **kwargs):
-        super(_AutoWidthTree, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.ToggleAutoResizing(True)
 
     def _get_MainWindow(self):
@@ -39,7 +39,7 @@ class _ToolBarEditorInterior(wx.Panel):
         self.__toolbar = toolbar
         self.__visible = toolbar.visibleUICommands()
 
-        super(_ToolBarEditorInterior, self).__init__(parent)
+        super().__init__(parent)
 
         vsizer = wx.BoxSizer(wx.VERTICAL)
 
@@ -295,7 +295,7 @@ class ToolBarEditor(BalloonTipManager, widgets.Dialog):
     def __init__(self, toolbar, settings, *args, **kwargs):
         self.__toolbar = toolbar
         self.__settings = settings
-        super(ToolBarEditor, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.SetClientSize(wx.Size(900, 700))
         self.CentreOnParent()
 
@@ -304,4 +304,4 @@ class ToolBarEditor(BalloonTipManager, widgets.Dialog):
 
     def ok(self, event=None):
         self.__toolbar.savePerspective(self._interior.getToolBarPerspective())
-        super(ToolBarEditor, self).ok(event=event)
+        super().ok(event=event)

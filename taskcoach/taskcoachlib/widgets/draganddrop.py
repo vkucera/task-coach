@@ -55,7 +55,7 @@ class TextDropTarget(wx.TextDropTarget):
 class DropTarget(wx.DropTarget):
     def __init__(self, onDropURLCallback, onDropFileCallback,
             onDropMailCallback, onDragOverCallback=None):
-        super(DropTarget, self).__init__()
+        super().__init__()
         self.__onDropURLCallback = onDropURLCallback
         self.__onDropFileCallback = onDropFileCallback
         self.__onDropMailCallback = onDropMailCallback
@@ -228,7 +228,7 @@ class TreeCtrlDragAndDropMixin(TreeHelperMixin):
         kwargs['style'] = kwargs.get('style', wx.TR_DEFAULT_STYLE) | \
                           wx.TR_HIDE_ROOT
         self._validateDragCallback = kwargs.pop('validateDrag', None)
-        super(TreeCtrlDragAndDropMixin, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.Bind(wx.EVT_TREE_BEGIN_DRAG, self.OnBeginDrag)
         self._dragStartPos = None
         self.GetMainWindow().Bind(wx.EVT_LEFT_DOWN, self._OnLeftDown)

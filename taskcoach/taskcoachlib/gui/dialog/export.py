@@ -32,7 +32,7 @@ class ExportDialog(sized_controls.SizedDialog):
     def __init__(self, *args, **kwargs):
         self.window = args[0]
         self.settings = kwargs.pop('settings')
-        super(ExportDialog, self).__init__(title=self.title, *args, **kwargs)
+        super().__init__(title=self.title, *args, **kwargs)
         pane = self.GetContentsPane()
         pane.SetSizerType('vertical')
         self.components = self.createInterior(pane)
@@ -72,7 +72,7 @@ class ViewerPicker(sized_controls.SizedPanel):
     ''' Control for adding a viewer chooser widget to the export dialog. '''
     
     def __init__(self, parent, viewers, activeViewer):
-        super(ViewerPicker, self).__init__(parent)
+        super().__init__(parent)
         self.SetSizerType('horizontal')
         self.createPicker()
         self.populatePicker(viewers)
@@ -115,7 +115,7 @@ class SelectionOnlyCheckBox(wx.CheckBox):
         user choose between exporting all items or just the selected items. '''
         
     def __init__(self, parent, settings, section, setting):
-        super(SelectionOnlyCheckBox, self).__init__(parent, 
+        super().__init__(parent, 
             label=_('Export only the selected items'))
         self.settings = settings
         self.section = section
@@ -139,7 +139,7 @@ class ColumnPicker(sized_controls.SizedPanel):
         exporting. '''
 
     def __init__(self, parent, viewer):
-        super(ColumnPicker, self).__init__(parent)        
+        super().__init__(parent)        
         self.SetSizerType('horizontal')
         self.SetSizerProps(expand=True, proportion=1)
         self.createColumnPicker()
@@ -180,7 +180,7 @@ class SeparateDateAndTimeColumnsCheckBox(wx.CheckBox):
         separated or kept together. '''
         
     def __init__(self, parent, settings, section, setting):
-        super(SeparateDateAndTimeColumnsCheckBox, self).__init__(parent,
+        super().__init__(parent,
             label=_('Put task dates and times in separate columns'))
         self.settings = settings
         self.section = section
@@ -204,7 +204,7 @@ class SeparateCSSCheckBox(sized_controls.SizedPanel):
         separate file instead of including it into the HTML file. '''
     
     def __init__(self, parent, settings, section, setting):
-        super(SeparateCSSCheckBox, self).__init__(parent)
+        super().__init__(parent)
         self.settings = settings
         self.section = section
         self.setting = setting
@@ -269,7 +269,7 @@ class ExportAsICalendarDialog(ExportDialog):
         return viewerPicker, selectionOnlyCheckBox
 
     def exportableViewers(self):
-        viewers = super(ExportAsICalendarDialog, self).exportableViewers()
+        viewers = super().exportableViewers()
         return [viewer for viewer in viewers if
                 viewer.isShowingTasks() or 
                 (viewer.isShowingEffort() and not viewer.isShowingAggregatedEffort())]
@@ -301,5 +301,5 @@ class ExportAsTodoTxtDialog(ExportDialog):
         return viewerPicker, selectionOnlyCheckBox
            
     def exportableViewers(self):
-        viewers = super(ExportAsTodoTxtDialog, self).exportableViewers()
+        viewers = super().exportableViewers()
         return [viewer for viewer in viewers if viewer.isShowingTasks()]

@@ -33,7 +33,7 @@ class AuthenticationFailure(Exception):
 
 class TaskCoachManagementNode(ManagementNode):
     def __init__(self, syncMLConfig, *args, **kwargs):
-        super(TaskCoachManagementNode, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.__cfg = self.__getConfig(syncMLConfig)
 
@@ -68,7 +68,7 @@ class TaskCoachManagementNode(ManagementNode):
 
 class TaskCoachDMTree(DMTree):
     def __init__(self, syncMLConfig, *args, **kwargs):
-        super(TaskCoachDMTree, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.__syncMLConfig = syncMLConfig
 
@@ -86,7 +86,7 @@ class TaskCoachDMTree(DMTree):
 
 class TaskCoachDMTClientConfig(DMTClientConfig):
     def __init__(self, syncMLConfig, *args, **kwargs):
-        super(TaskCoachDMTClientConfig, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.__syncMLConfig = syncMLConfig
 
@@ -99,7 +99,7 @@ class TaskCoachDMTClientConfig(DMTClientConfig):
 
 class Synchronizer(wx.ProgressDialog):
     def __init__(self, reportCallback, taskFile, password):
-        super(Synchronizer, self).__init__(_('Synchronization'),
+        super().__init__(_('Synchronization'),
                                            _('Synchronizing. Please wait.\n\n\n'))
 
         self.clientName = 'TaskCoach-%s' % taskFile.guid().encode('UTF-8')

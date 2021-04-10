@@ -45,7 +45,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'noteviewer')
         self.notesToShow = kwargs.get('notesToShow', None)
-        super(BaseNoteViewer, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         for eventType in (note.Note.appearanceChangedEventType(),
                           note.Note.subjectChangedEventType()):
             self.registerObserver(self.onAttributeChanged_Deprecated,
@@ -77,14 +77,14 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
         return widget
 
     def createFilter(self, notes):
-        notes = super(BaseNoteViewer, self).createFilter(notes)
+        notes = super().createFilter(notes)
         return domain.base.DeletedFilter(notes)
 
     def createCreationToolBarUICommands(self):
         return (uicommand.NoteNew(notes=self.presentation(),
                                   settings=self.settings, viewer=self),
                 uicommand.NewSubItem(viewer=self),) + \
-            super(BaseNoteViewer, self).createCreationToolBarUICommands()
+            super().createCreationToolBarUICommands()
 
     def createColumnUICommands(self):
         return [\
@@ -189,7 +189,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
 
     def newItemDialog(self, *args, **kwargs):
         kwargs['categories'] = self.taskFile.categories().filteredCategories()
-        return super(BaseNoteViewer, self).newItemDialog(*args, **kwargs)
+        return super().newItemDialog(*args, **kwargs)
 
     def deleteItemCommand(self):
         return command.DeleteNoteCommand(self.presentation(),

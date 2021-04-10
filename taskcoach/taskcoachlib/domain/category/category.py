@@ -24,7 +24,7 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
     def __init__(self, subject, categorizables=None, children=None,
                  filtered=False, parent=None, description='',
                  exclusiveSubcategories=False, *args, **kwargs):
-        super(Category, self).__init__(subject=subject, children=children or [],
+        super().__init__(subject=subject, children=children or [],
                                        parent=parent, description=description,
                                        *args, **kwargs)
         self.__categorizables = base.SetAttribute(set(categorizables or []),
@@ -64,14 +64,14 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
 
     @classmethod
     def modificationEventTypes(class_):
-        eventTypes = super(Category, class_).modificationEventTypes()
+        eventTypes = super().modificationEventTypes()
         return eventTypes + [class_.filterChangedEventType(),
                              class_.categorizableAddedEventType(),
                              class_.categorizableRemovedEventType(),
                              class_.exclusiveSubcategoriesChangedEventType()]
 
     def __getstate__(self):
-        state = super(Category, self).__getstate__()
+        state = super().__getstate__()
         state.update(dict(categorizables=self.__categorizables.get(),
                           filtered=self.__filtered),
                           exclusiveSubcategories=self.__exclusiveSubcategories)
@@ -79,19 +79,19 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
 
     @patterns.eventSource
     def __setstate__(self, state, event=None):
-        super(Category, self).__setstate__(state, event=event)
+        super().__setstate__(state, event=event)
         self.setCategorizables(state['categorizables'], event=event)
         self.setFiltered(state['filtered'], event=event)
         self.makeSubcategoriesExclusive(state['exclusiveSubcategories'], event=event)
 
     def __getcopystate__(self):
-        state = super(Category, self).__getcopystate__()
+        state = super().__getcopystate__()
         state.update(dict(categorizables=self.__categorizables.get(),
                           filtered=self.__filtered))
         return state
 
     def subjectChangedEvent(self, event):
-        super(Category, self).subjectChangedEvent(event)
+        super().subjectChangedEvent(event)
         self.categorySubjectChangedEvent(event)
 
     def categorySubjectChangedEvent(self, event):
@@ -141,7 +141,7 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
         ''' Override to include all categorizables in the event
             that belong to this category since their appearance (may)
             have changed too. '''
-        super(Category, self).appearanceChangedEvent(event)
+        super().appearanceChangedEvent(event)
         for categorizable in self.categorizables():
             categorizable.appearanceChangedEvent(event)
 

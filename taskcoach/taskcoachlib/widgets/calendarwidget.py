@@ -41,7 +41,7 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
                                                  self.OnDropFiles,
                                                  self.OnDropMail)
 
-        super(_CalendarContent, self).__init__(parent, wx.ID_ANY,
+        super().__init__(parent, wx.ID_ANY,
                                                *args, **kwargs)
 
         self.SetDropTarget(self.dropTarget)
@@ -282,7 +282,7 @@ class Calendar(wx.Panel):
                  onCreate, popupMenu, *args, **kwargs):
         self.getItemTooltipData = parent.getItemTooltipData
 
-        super(Calendar, self).__init__(parent)
+        super().__init__(parent)
 
         self._headers = wx.Panel(self)
         self._content = _CalendarContent(self, taskList, iconProvider,
@@ -342,7 +342,7 @@ class Calendar(wx.Panel):
 
 class TaskSchedule(wxSchedule):
     def __init__(self, task, iconProvider):
-        super(TaskSchedule, self).__init__()
+        super().__init__()
 
         self.__selected = False
 
