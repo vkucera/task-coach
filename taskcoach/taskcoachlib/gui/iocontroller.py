@@ -38,7 +38,7 @@ except ImportError:  # pragma: no cover
     pass
 
 
-class IOController(object):
+class IOController:
     ''' IOController is responsible for opening, closing, loading,
     saving, and exporting files. It also presents the necessary dialogs
     to let the user specify what file to load/save/etc. '''

@@ -80,7 +80,7 @@ def viewer2html(viewer, settings, cssFilename=None, selectionOnly=False, columns
     return converter(cssFilename, columns, selectionOnly)
 
 
-class Viewer2HTMLConverter(object):
+class Viewer2HTMLConverter:
     ''' Class to convert the visible contents of a viewer into HTML.'''
 
     docType = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">'

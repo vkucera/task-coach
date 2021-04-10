@@ -142,7 +142,7 @@ class NewNoteWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
         self.failIf(firstCategoryInNoteDialog.IsChecked())
 
 
-class DummyTask(object):
+class DummyTask:
     def subject(self, *args, **kwargs): # pylint: disable=W0613
         return 'subject'
 
@@ -153,7 +153,7 @@ class DummyTask(object):
         return 'description'
 
 
-class DummyViewer(object):
+class DummyViewer:
     def __init__(self, selection=None, showingEffort=False,
                  domainObjectsToView=None):
         self.selection = selection or []
@@ -365,7 +365,7 @@ class EffortViewerAggregationChoiceTest(test.TestCase):
         self.choice = gui.uicommand.EffortViewerAggregationChoice(viewer=self,
             settings=self.settings)
         self.choice.currentChoice = 0
-        class DummyEvent(object):
+        class DummyEvent:
             def __init__(self, selection):
                 self.selection = selection
             def GetInt(self):
@@ -428,7 +428,7 @@ class OpenAllAttachmentsTest(test.TestCase):
             self.assertNotEqual(0, result)
 
     def testMultipleAttachments(self):
-        class DummyAttachment(object):
+        class DummyAttachment:
             def __init__(self):
                 self.openCalled = False
             def open(self, attachmentBase): # pylint: disable=W0613

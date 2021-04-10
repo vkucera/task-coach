@@ -26,7 +26,7 @@ import test
 import wx
 
 
-class TaskEditorSetterMixin(object):
+class TaskEditorSetterMixin:
     def setSubject(self, newSubject):
         page = self.editor._interior[0]
         page._subjectEntry.SetFocus()
@@ -172,7 +172,7 @@ class EditorDisplayTest(TaskEditorTestCase):
         self.assertEqual(self.stop_datetime, stop.GetValue())
 
 
-class EditTaskTestMixin(object):
+class EditTaskTestMixin:
     def getItems(self):
         return [self.task]
 
@@ -341,7 +341,7 @@ class EditTaskTestBySettingFocus(TaskEditorBySettingFocusMixin,
     pass
 
 
-class EditTaskWithChildrenMixin(object):
+class EditTaskWithChildrenMixin:
     def getItems(self):
         return [self.parent]
 

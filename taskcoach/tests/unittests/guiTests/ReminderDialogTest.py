@@ -22,7 +22,7 @@ from taskcoachlib import config
 from taskcoachlib.domain import task, effort
 
 
-class DummyEvent(object):
+class DummyEvent:
     def Skip(self):
         pass
 

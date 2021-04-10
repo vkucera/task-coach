@@ -67,7 +67,7 @@ class EffortAggregatorTestCase(test.TestCase):
         self.events.append(event)
 
 
-class CommonTestsMixin(object):
+class CommonTestsMixin:
     def testEmptyTaskList(self):
         self.assertEqual(0, len(self.effortAggregator))
 

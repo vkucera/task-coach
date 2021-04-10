@@ -176,7 +176,7 @@ class _CheckBox(wx.Panel):
             dc.DrawText(self.__label, 22, (h - th) // 2)
 
 
-class NullField(object):
+class NullField:
     def __getattr__(self, name):
         return self
     def __call__(self, *args, **kwargs):
@@ -186,7 +186,7 @@ class NullField(object):
 NullField = NullField()
 
 
-class FormatCharacter(object):
+class FormatCharacter:
     valueName = None
 
     def __init__(self, c):
@@ -242,7 +242,7 @@ class AnyFormatCharacter(FormatCharacter):
         return self.__value
 
 
-class Field(object):
+class Field:
     def __init__(self, *args, **kwargs):
         self.__value = kwargs.pop('value')
         self.__observer = kwargs.pop('observer')

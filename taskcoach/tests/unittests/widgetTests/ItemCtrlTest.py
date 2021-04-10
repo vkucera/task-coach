@@ -38,7 +38,7 @@ class CtrlWithHideableColumnsUnderTest( \
     pass
 
 
-class CtrlWithHideableColumnsTestsMixin(object):
+class CtrlWithHideableColumnsTestsMixin:
     def testColumnIsVisibleByDefault(self):
         self.failUnless(self.control.isColumnVisible(self.column1))
 
@@ -65,7 +65,7 @@ class CtrlWithSortableColumnsUnderTest( \
     pass
 
 
-class CtrlWithSortableColumnsTestsMixin(object):
+class CtrlWithSortableColumnsTestsMixin:
     def assertCurrentSortColumn(self, expectedSortColumn):
         currentSortColumn = self.control._currentSortColumn() # pylint: disable=W0212
         self.assertEqual(expectedSortColumn, currentSortColumn)
@@ -98,7 +98,7 @@ class CtrlWithColumnsTest(CtrlWithColumnsTestCase,
             columnPopupMenu=None)
 
 
-class DummyEvent(object):
+class DummyEvent:
     def __init__(self, eventObject):
         self.eventObject = eventObject
 

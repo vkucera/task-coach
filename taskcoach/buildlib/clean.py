@@ -21,7 +21,7 @@ from distutils.command.clean import clean as BaseCleanCommand
 from distutils import log
 
 
-class clean(BaseCleanCommand, object):
+class clean(BaseCleanCommand):
     user_options = BaseCleanCommand.user_options + \
         [('really-clean', 'r', 'remove even more files')]
     boolean_options = BaseCleanCommand.boolean_options + ['really-clean']

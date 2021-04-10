@@ -29,7 +29,7 @@ from taskcoachlib.gui.newid import IdProvider
 import wx
 
 
-class MinuteRefresher(object):
+class MinuteRefresher:
     ''' This class can be used by viewers to refresh themselves every minute
         to refresh attributes like time left. The user of this class is
         responsible for calling refresher.startClock() and stopClock(). '''

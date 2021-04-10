@@ -273,7 +273,7 @@ class GTKPopupFrame(BasePopupFrame):
 # ---------------------------------------------------------------------------
 
 
-class BaseComboTreeBoxMixin(object):
+class BaseComboTreeBoxMixin:
     """ BaseComboTreeBoxMixin is the base class for platform specific
         versions of the ComboTreeBox. """
 

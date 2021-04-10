@@ -228,7 +228,7 @@ class ICELoop(threading.Thread):
             self.connection = (conn, IceConnectionNumber(conn))
 
     def run(self):
-        class DummyDescriptor(object):
+        class DummyDescriptor:
             def __init__(self, fd):
                 self.fd = fd
 

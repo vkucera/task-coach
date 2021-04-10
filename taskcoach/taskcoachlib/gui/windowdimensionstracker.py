@@ -20,7 +20,7 @@ import wx
 from taskcoachlib import operating_system
 
 
-class _Tracker(object):
+class _Tracker:
     ''' Utility methods for setting and getting values from/to the 
         settings. '''
     

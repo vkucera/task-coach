@@ -21,7 +21,7 @@ from . import timedelta
 from . import dateandtime as date
 
 
-class Recurrence(object):
+class Recurrence:
     ''' Class representing a recurring date. '''
 
     units = ('daily', 'weekly', 'monthly', 'yearly', '')

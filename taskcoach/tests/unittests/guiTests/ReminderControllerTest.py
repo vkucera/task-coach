@@ -28,7 +28,7 @@ class ReminderControllerUnderTest(gui.ReminderController):
         super(ReminderControllerUnderTest, self).__init__(*args, **kwargs)
 
     def showReminderMessage(self, message): # pylint: disable=W0221
-        class DummyDialog(object):
+        class DummyDialog:
             def __init__(self, *args, **kwargs):
                 pass
             def Bind(self, *args, **kwargs):
@@ -112,18 +112,18 @@ class ReminderControllerTest(ReminderControllerTestCase):
         self.failIf(date.Scheduler().get_jobs())
 
     def dummyCloseEvent(self, snoozeTimeDelta=None, openAfterClose=False):
-        class DummySnoozeOptions(object):
+        class DummySnoozeOptions:
             Selection = 0
             def GetClientData(self, *args): # pylint: disable=W0613
                 return snoozeTimeDelta
-        class DummyDialog(object):
+        class DummyDialog:
             task = self.task
             openTaskAfterClose = openAfterClose
             ignoreSnoozeOption = False
             snoozeOptions = DummySnoozeOptions()
             def Destroy(self):
                 pass
-        class DummyEvent(object):
+        class DummyEvent:
             EventObject = DummyDialog()
             def Skip(self):
                 pass

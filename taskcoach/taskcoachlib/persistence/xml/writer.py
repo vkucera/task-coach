@@ -65,7 +65,7 @@ def sortedById(objects):
     return [obj for dummy_id, obj in s]
 
 
-class XMLWriter(object):
+class XMLWriter:
     maxDateTime = date.DateTime()
 
     def __init__(self, fd, versionnr=meta.data.tskversion):
@@ -296,7 +296,7 @@ class XMLWriter(object):
         return dateTime.strftime('%Y-%m-%d %H:%M:%S')
 
 
-class ChangesXMLWriter(object):
+class ChangesXMLWriter:
     def __init__(self, fd):
         self.__fd = fd
 

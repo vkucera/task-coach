@@ -21,12 +21,12 @@ from taskcoachlib.domain import task, effort, date
 import test
 
 
-class TaskFileMock(object):
+class TaskFileMock:
     def filename(self):
         return 'filename'
 
 
-class MainWindowMock(object):
+class MainWindowMock:
     taskFile = TaskFileMock()
 
     def __init__(self):

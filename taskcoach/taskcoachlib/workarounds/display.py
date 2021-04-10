@@ -23,7 +23,7 @@ from taskcoachlib import operating_system
 if operating_system.isWindows():
     import win32api # pylint: disable=F0401
 
-    class Display(object):
+    class Display:
         """
         This class replaces wx.Display on MSW; the original only
         enumerates the displays at app initialization so when people

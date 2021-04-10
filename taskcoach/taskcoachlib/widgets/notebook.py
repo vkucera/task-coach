@@ -134,7 +134,7 @@ class BookPage(wx.Panel):
         return control
 
 
-class BookMixin(object):
+class BookMixin:
     ''' Mixin class for *book '''
 
     _bitmapSize = (16, 16)

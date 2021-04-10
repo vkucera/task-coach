@@ -20,7 +20,7 @@ from taskcoachlib.domain import date
 import test
 
 
-class CommonRecurrenceTestsMixin(object):
+class CommonRecurrenceTestsMixin:
     def testNextDateWithInfiniteDate(self):
         self.assertEqual(date.DateTime(), self.recur(date.DateTime()))
 
@@ -50,7 +50,7 @@ class CommonRecurrenceTestsMixin(object):
         self.assertEqual(0, self.recur.count)
 
 
-class DailyRecurrenceCompareTestsMixin(object):
+class DailyRecurrenceCompareTestsMixin:
     def testCompareWithNone(self):
         self.failUnless(self.recur < None)
 
@@ -67,7 +67,7 @@ class DailyRecurrenceCompareTestsMixin(object):
         self.failUnless(self.recur < date.Recurrence('yearly'))
 
 
-class WeeklyRecurrenceCompareTestsMixin(object):
+class WeeklyRecurrenceCompareTestsMixin:
     def testCompareWithNone(self):
         self.failUnless(self.recur < None)
 
@@ -84,7 +84,7 @@ class WeeklyRecurrenceCompareTestsMixin(object):
         self.failUnless(self.recur < date.Recurrence('yearly'))
 
 
-class MonthlyRecurrenceCompareTestsMixin(object):
+class MonthlyRecurrenceCompareTestsMixin:
     def testCompareWithNone(self):
         self.failUnless(self.recur < None)
 
@@ -101,7 +101,7 @@ class MonthlyRecurrenceCompareTestsMixin(object):
         self.failUnless(self.recur < date.Recurrence('yearly'))
 
 
-class YearlyRecurrenceCompareTestsMixin(object):
+class YearlyRecurrenceCompareTestsMixin:
     def testCompareWithNone(self):
         self.failUnless(self.recur < None)
 

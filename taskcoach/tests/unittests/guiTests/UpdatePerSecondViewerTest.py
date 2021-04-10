@@ -21,7 +21,7 @@ from taskcoachlib.domain import base, task, effort, category, date
 import test
 
 
-class MockWidget(object):
+class MockWidget:
     def __init__(self):
         self.refreshedItems = set()
         
@@ -35,7 +35,7 @@ class MockWidget(object):
         return []
     
 
-class UpdatePerSecondViewerTestsMixin(object):
+class UpdatePerSecondViewerTestsMixin:
     def setUp(self):
         super(UpdatePerSecondViewerTestsMixin, self).setUp()
         task.Task.settings = self.settings = config.Settings(load=False)

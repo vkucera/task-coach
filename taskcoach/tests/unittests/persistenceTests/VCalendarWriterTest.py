@@ -60,7 +60,7 @@ class VCalTestCase(test.wxTestCase):
         return self.viewer.size()
 
 
-class VCalendarCommonTestsMixin(object):
+class VCalendarCommonTestsMixin:
     def testStart(self):
         self.assertEqual('BEGIN:VCALENDAR', self.vcalFile.split('\r\n')[0])
 

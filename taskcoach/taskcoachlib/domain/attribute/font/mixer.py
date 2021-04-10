@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 
 
-class FontMixer(object):
+class FontMixer:
     @classmethod
     def mix(class_, *fonts):
         fonts = [font for font in fonts if font]

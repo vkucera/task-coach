@@ -29,7 +29,7 @@ from taskcoachlib.notify import AbstractNotifier
 from taskcoachlib.i18n import _
 
 
-class ChangeSynchronizer(object):
+class ChangeSynchronizer:
     def __init__(self, monitor, allChanges):
         self._monitor = monitor
         self._allChanges = allChanges

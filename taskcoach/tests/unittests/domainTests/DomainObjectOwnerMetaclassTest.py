@@ -20,7 +20,7 @@ import test
 from taskcoachlib.domain import base
 
 
-class OwnerUnderTest(object):
+class OwnerUnderTest:
     __metaclass__ = base.DomainObjectOwnerMetaclass
     __ownedType__ = 'foo'
 

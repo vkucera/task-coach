@@ -188,7 +188,7 @@ class DropTarget(wx.DropTarget):
             self.__onDropFileCallback(x, y, self.__fileDataObject.GetFilenames())
 
 
-class TreeHelperMixin(object):
+class TreeHelperMixin:
     """ This class provides methods that are not part of the API of any
     tree control, but are convenient to have available. """
 

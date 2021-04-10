@@ -6,7 +6,7 @@ TimeLineSelectionEvent, EVT_TIMELINE_SELECTED = wx.lib.newevent.NewEvent()
 TimeLineActivationEvent, EVT_TIMELINE_ACTIVATED = wx.lib.newevent.NewEvent()
 
 
-class HotMap(object):
+class HotMap:
     ''' Keep track of which node is where. '''
 
     def __init__(self, parent=None):
@@ -323,7 +323,7 @@ class TimeLine(wx.Panel):
         return pen
 
 
-class DefaultAdapter(object):
+class DefaultAdapter:
     def parallel_children(self, node, recursive=False):
         children = node.parallel_children[:]
         if recursive:
@@ -403,7 +403,7 @@ class TestApp(wx.App):
                     sequential_children)
 
 
-class Node(object):
+class Node:
     def __init__(self, path, start, stop, subnodes, events):
         self.path = path
         self.start = start

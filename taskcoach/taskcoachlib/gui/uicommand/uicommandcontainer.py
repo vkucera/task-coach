@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 
 
-class UICommandContainerMixin(object):
+class UICommandContainerMixin:
     ''' Mixin with wx.Menu or wx.ToolBar (sub)class. '''
 
     def appendUICommands(self, *uiCommands):

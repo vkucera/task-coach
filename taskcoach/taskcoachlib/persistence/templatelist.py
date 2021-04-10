@@ -21,7 +21,7 @@ from pubsub import pub
 from .xml import TemplateXMLWriter, TemplateXMLReader
 
 
-class TemplateList(object):
+class TemplateList:
     def __init__(self, path, TemplateReader=TemplateXMLReader, openFile=file):
         self._path = path
         self._templates = self._readTemplates(TemplateReader, openFile)

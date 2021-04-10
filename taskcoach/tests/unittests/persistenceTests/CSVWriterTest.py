@@ -67,7 +67,7 @@ class CSVWriterTestCase(test.wxTestCase):
         self.viewer.select(items)
 
 
-class TaskTestsMixin(object):
+class TaskTestsMixin:
     def testTaskSubject(self):
         self.expectInCSV('Task subject,')
 

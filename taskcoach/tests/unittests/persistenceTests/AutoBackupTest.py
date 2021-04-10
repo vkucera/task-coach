@@ -21,7 +21,7 @@ from taskcoachlib import persistence, config
 from taskcoachlib.domain import date, task
 
 
-class DummyFile(object):
+class DummyFile:
     encoding = 'utf-8'
     name = 'whatever.tsk'
     

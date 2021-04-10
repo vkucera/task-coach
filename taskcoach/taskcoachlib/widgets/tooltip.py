@@ -21,7 +21,7 @@ import wx
 import textwrap
 
 
-class ToolTipMixin(object):
+class ToolTipMixin:
     """Subclass this and override OnBeforeShowToolTip to provide
     dynamic tooltip over a control."""
 

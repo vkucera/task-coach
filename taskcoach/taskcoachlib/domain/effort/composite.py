@@ -196,7 +196,7 @@ class CompositeEffort(BaseCompositeEffort):
 
 
 class CompositeEffortPerPeriod(BaseCompositeEffort):
-    class Total(object):
+    class Total:
         # pylint: disable=W0613
         def subject(self, *args, **kwargs):
             return _('Total')

@@ -62,7 +62,7 @@ class XMLReaderTooNewException(Exception):
     pass
 
 
-class XMLReader(object):
+class XMLReader:
     ''' Class for reading task files in the default XML task file format. '''
     defaultStartTime = (0, 0, 0, 0)
     defaultEndTime = (23, 59, 59, 999999)
@@ -593,7 +593,7 @@ class XMLReader(object):
         return item
 
 
-class ChangesXMLReader(object):
+class ChangesXMLReader:
     def __init__(self, fd):
         self.__fd = fd
 

@@ -43,7 +43,7 @@ class SplashTest(test.wxTestCase):
         self.assertCorrectBitmap()
 
     def testMirrorBitmapBackWhenLanguageIsRTL(self):
-        class FakeModule(object):
+        class FakeModule:
             def currentLanguageIsRightToLeft(self):
                 return True
         splash.i18n = FakeModule()

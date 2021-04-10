@@ -22,7 +22,7 @@ from pubsub import pub
 import test
 
 
-class FakeEffortAggregator(object):
+class FakeEffortAggregator:
     def __init__(self, composite):
         self.composite = composite
         pub.subscribe(self.onTimeSpentChanged,

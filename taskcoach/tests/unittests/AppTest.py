@@ -21,12 +21,12 @@ import wx
 from taskcoachlib import meta, application, config
 
 
-class DummyOptions(object):
+class DummyOptions:
     pofile = None
     language = None
 
 
-class DummyLocale(object):
+class DummyLocale:
     def __init__(self, language='C'):
         self.language = language
 

@@ -55,7 +55,7 @@ class DueDateTimeCtrl(inplace_editor.DateTimeCtrl):
         self.item().GetData().settings.settext('feature', 'sdtcspans', event.GetValue())
 
 
-class TaskViewerStatusMessages(object):
+class TaskViewerStatusMessages:
     template1 = _('Tasks: %d selected, %d visible, %d total')
     template2 = _('Status: %d overdue, %d late, %d inactive, %d completed')
 
@@ -274,7 +274,7 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable=W0223
         return self.getItemText(task)
 
 
-class RootNode(object):
+class RootNode:
     def __init__(self, tasks):
         self.tasks = tasks
 

@@ -20,7 +20,7 @@ from taskcoachlib import application
 from taskcoachlib.domain import task
 
 
-class MockWxApp(object):
+class MockWxApp:
     def SetAppName(self, *args, **kwargs):
         pass
 

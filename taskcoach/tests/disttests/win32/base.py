@@ -26,7 +26,7 @@ import win32process, win32event, win32gui, win32con
 sys.path.insert(0, os.path.join(os.path.split(__file__)[0], 'sendinput'))
 import sendinput as si
 
-class Window(object):
+class Window:
     def __init__(self, hwnd):
         self.hwnd = hwnd
 

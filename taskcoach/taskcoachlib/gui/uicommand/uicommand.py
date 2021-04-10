@@ -2223,7 +2223,7 @@ class Search(ViewerCommand, settings_uicommand.SettingsCommand):
         pass  # Not used
 
 
-class ToolbarChoiceCommandMixin(object):
+class ToolbarChoiceCommandMixin:
     def __init__(self, *args, **kwargs):
         self.choiceCtrl = None
         super(ToolbarChoiceCommandMixin, self).__init__(*args, **kwargs)

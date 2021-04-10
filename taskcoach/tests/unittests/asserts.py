@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-class TaskListAssertsMixin(object):
+class TaskListAssertsMixin:
     def assertTaskList(self, expected):
         self.assertEqualLists(expected, self.taskList)
         self.assertAllChildrenInTaskList()
@@ -30,12 +30,12 @@ class TaskListAssertsMixin(object):
         self.failIf(self.taskList)
 
 
-class EffortListAssertsMixin(object):
+class EffortListAssertsMixin:
     def assertEffortList(self, expected):
         self.assertEqualLists(expected, self.effortList)
 
 
-class NoteContainerAssertsMixin(object):
+class NoteContainerAssertsMixin:
     def assertNoteContainer(self, expected):
         for note in expected:
             self.failUnless(note in self.noteContainer)
@@ -43,7 +43,7 @@ class NoteContainerAssertsMixin(object):
             self.failUnless(note in expected)
 
 
-class EffortAssertsMixin(object):
+class EffortAssertsMixin:
     def assertEqualEfforts(self, effort1, effort2):
         self.assertEqual(effort1.task(), effort2.task())
         self.assertEqual(effort1.getStart(), effort2.getStart())
@@ -51,7 +51,7 @@ class EffortAssertsMixin(object):
         self.assertEqual(effort1.description(), effort2.description())
 
 
-class TaskAssertsMixin(object):
+class TaskAssertsMixin:
     def failUnlessParentAndChild(self, parent, child):
         self.failUnless(child in parent.children())
         self.failUnless(child.parent() == parent)
@@ -91,7 +91,7 @@ class TaskAssertsMixin(object):
         self.assertEqual(orig.description(), copy.description())
 
 
-class CommandAssertsMixin(object):
+class CommandAssertsMixin:
     def assertHistoryAndFuture(self, expectedHistory, expectedFuture):
         from taskcoachlib import patterns
         commands = patterns.CommandHistory()

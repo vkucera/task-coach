@@ -28,7 +28,7 @@ from pubsub import pub
 import wx
 
 
-class SearchableViewerMixin(object):
+class SearchableViewerMixin:
     ''' A viewer that is searchable. This is a mixin class. '''
 
     def isSearchable(self):
@@ -77,7 +77,7 @@ class SearchableViewerMixin(object):
             (1, searchUICommand)
 
 
-class FilterableViewerMixin(object):
+class FilterableViewerMixin:
     ''' A viewer that is filterable. This is a mixin class. '''
 
     def __init__(self, *args, **kwargs):
@@ -200,7 +200,7 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
         self.settings.setboolean(self.settingsSection(), setting, booleanValue)
 
 
-class SortableViewerMixin(object):
+class SortableViewerMixin:
     ''' A viewer that is sortable. This is a mixin class. '''
 
     def __init__(self, *args, **kwargs):
@@ -316,7 +316,7 @@ class SortableViewerForEffortMixin(SortableViewerMixin):
         return ['-period']
 
 
-class ManualOrderingMixin(object):
+class ManualOrderingMixin:
     def __init__(self, *args, **kwargs):
         if 'sort' not in self.viewerImages:
             self.viewerImages = self.viewerImages + ['sort']
@@ -441,7 +441,7 @@ class SortableViewerForTasksMixin(ManualOrderingMixin, SortableViewerForCategori
         return commands
 
 
-class AttachmentDropTargetMixin(object):
+class AttachmentDropTargetMixin:
     ''' Mixin class for viewers that are drop targets for attachments. '''
 
     def widgetCreationKeywordArguments(self):
@@ -501,13 +501,13 @@ class AttachmentDropTargetMixin(object):
                              **kwargs)
 
 
-class NoteColumnMixin(object):
+class NoteColumnMixin:
     def noteImageIndices(self, item):
         index = self.imageIndex['note_icon'] if item.notes() else -1
         return {wx.TreeItemIcon_Normal: index}
 
 
-class AttachmentColumnMixin(object):
+class AttachmentColumnMixin:
     def attachmentImageIndices(self, item):  # pylint: disable=W0613
         index = self.imageIndex['paperclip_icon'] if item.attachments() else -1
         return {wx.TreeItemIcon_Normal: index}

@@ -33,7 +33,7 @@ if operating_system.isGTK():
                     ('idle', c_ulong),
                     ('event_mask', c_ulong)]
 
-    class LinuxIdleQuery(object):
+    class LinuxIdleQuery:
         def __init__(self):
             _x11 = CDLL('libX11.so.6')
 
@@ -63,7 +63,7 @@ elif operating_system.isWindows():
     class LASTINPUTINFO(Structure):
         _fields_ = [('cbSize', c_uint), ('dwTime', c_uint)]
 
-    class WindowsIdleQuery(object):
+    class WindowsIdleQuery:
         def __init__(self):
             self.GetTickCount = windll.kernel32.GetTickCount
             self.GetLastInputInfo = windll.user32.GetLastInputInfo

@@ -94,7 +94,7 @@ class VersionCheckerTest(test.TestCase):
         meta.data.version = currentVersion
 
     def testShowDialog(self):
-        class DummyDialog(object):
+        class DummyDialog:
             def __init__(self, *args, **kwargs):  # pylint: disable=W0613
                 self.shown = False
 

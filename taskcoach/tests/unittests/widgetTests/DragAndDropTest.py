@@ -20,7 +20,7 @@ import test, wx
 from taskcoachlib.widgets import treectrl
 
 
-class DummyEvent(object):
+class DummyEvent:
     def __init__(self, item=None):
         self.item = item
         self.vetoed = self.allowed = False

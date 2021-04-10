@@ -24,7 +24,7 @@ from pubsub import pub
 import wx
 
 
-class ReminderController(object):
+class ReminderController:
     lastId = 0
 
     @classmethod

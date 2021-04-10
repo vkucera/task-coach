@@ -21,7 +21,7 @@ from taskcoachlib.domain import attachment, task, note, category
 from CommandTestCase import CommandTestCase
 
 
-class AddAttachmentTestsMixin(object):
+class AddAttachmentTestsMixin:
     def addAttachment(self, selectedItems=None):
         self.attachment = attachment.FileAttachment('attachment') # pylint: disable=W0201
         addAttachmentCommand = command.AddAttachmentCommand(self.container,

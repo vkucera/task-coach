@@ -99,7 +99,7 @@ class BaseCommand(patterns.Command):
             item.setModificationDateTime(self.__now)
 
 
-class SaveStateMixin(object):
+class SaveStateMixin:
     ''' Mixin class for commands that need to keep the states of objects.
         Objects should provide __getstate__ and __setstate__ methods. '''
 
@@ -128,7 +128,7 @@ class SaveStateMixin(object):
             objectToBeSaved.__setstate__(state, event=event)
 
 
-class CompositeMixin(object):
+class CompositeMixin:
     ''' Mixin class for commands that deal with composites. '''
     def getAncestors(self, composites):
         ancestors = []
@@ -239,7 +239,7 @@ class DeleteCommand(BaseCommand, SaveStateMixin):
             self.list.removeItems(self.items)
 
 
-class CutCommandMixin(object):
+class CutCommandMixin:
     plural_name = _('Cut')
     singular_name = _('Cut "%s"')
 

@@ -20,7 +20,7 @@ import test
 from taskcoachlib import patterns
 
 
-class Numbered(object):
+class Numbered:
     __metaclass__ = patterns.NumberedInstances
 
     def __init__(self, instanceNumber=-1):
@@ -31,7 +31,7 @@ class SubclassOfNumbered(Numbered):
     pass
 
 
-class NumberedInstancesTestsMixin(object):
+class NumberedInstancesTestsMixin:
     ''' The tests below should work for a class with NumberedInstances as
         metaclass as well as for a subclass of a class with NumberedInstances
         as metaclass. '''

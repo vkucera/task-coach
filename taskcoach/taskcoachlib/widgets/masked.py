@@ -22,7 +22,7 @@ import wx
 import locale
 
 
-class FixOverwriteSelectionMixin(object):
+class FixOverwriteSelectionMixin:
     def _SetSelection(self, start, end):
         if operating_system.isGTK():  # pragma: no cover
             # By exchanging the start and end parameters we make sure that the

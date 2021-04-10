@@ -20,7 +20,7 @@ import test
 from taskcoachlib import patterns
 
 
-class Singleton(object):
+class Singleton:
     __metaclass__ = patterns.Singleton
 
 

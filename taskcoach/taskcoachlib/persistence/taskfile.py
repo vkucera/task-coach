@@ -57,7 +57,7 @@ class TaskCoachFilesystemPollerNotifier(FilesystemPollerNotifier):
         self.__taskFile.onFileChanged()
 
 
-class SafeWriteFile(object):
+class SafeWriteFile:
     def __init__(self, filename):
         self.__filename = filename
         if self._isCloud():
@@ -578,7 +578,7 @@ class TaskFile(patterns.Observer):
         self.markDirty()
 
 
-class DummyLockFile(object):
+class DummyLockFile:
     def acquire(self, timeout=None):
         pass
 

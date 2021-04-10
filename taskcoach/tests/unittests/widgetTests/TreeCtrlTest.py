@@ -46,7 +46,7 @@ class TreeCtrlTestCase(test.wxTestCase):
         self.item1_0 = DummyDomainObject('item 1.0')
 
 
-class DummyDomainObject(object):
+class DummyDomainObject:
     def __init__(self, subject):
         self.__subject = subject
 
@@ -65,7 +65,7 @@ class DummyDomainObject(object):
         return None
 
 
-class CommonTestsMixin(object):
+class CommonTestsMixin:
     ''' Tests for all types of trees. '''
 
     def testCreate(self):

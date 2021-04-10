@@ -20,7 +20,7 @@ import wx
 from taskcoachlib import persistence, gui
 
 
-class Event(object):
+class Event:
     def Skip(self):
         pass
 

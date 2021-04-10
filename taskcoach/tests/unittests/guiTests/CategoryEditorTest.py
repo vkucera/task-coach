@@ -22,7 +22,7 @@ from taskcoachlib import gui, config, persistence, operating_system
 from taskcoachlib.domain import category, attachment
 
 
-class DummyEvent(object):
+class DummyEvent:
     def Skip(self): # pragma: no cover
         pass
 

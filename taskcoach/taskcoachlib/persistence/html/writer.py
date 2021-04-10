@@ -46,7 +46,7 @@ You can edit this file, it will not be overwritten by %(name)s.
 */
 '''
 
-class HTMLWriter(object):
+class HTMLWriter:
     def __init__(self, fd, filename=None):
         self.__fd = fd
         self.__filename = filename

@@ -25,7 +25,7 @@ from taskcoachlib import help, operating_system  # pylint: disable=W0622
 from . import task
 
 
-class TaskListQueryMixin(object):
+class TaskListQueryMixin:
     def nrOfTasksPerStatus(self):
         statuses = [eachTask.status() for eachTask in self if not eachTask.isDeleted()]
         count = dict()

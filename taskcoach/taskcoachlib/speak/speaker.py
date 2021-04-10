@@ -23,7 +23,7 @@ import wx
 
 if operating_system.isWindows():
 
-    class Speaker(object):
+    class Speaker:
         ''' No-op class since we don't support speech on Windows yet. '''
 
         def say(self, text):

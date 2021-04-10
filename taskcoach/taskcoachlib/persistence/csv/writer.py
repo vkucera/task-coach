@@ -43,7 +43,7 @@ class UnicodeCSVWriter:
             self.writerow(row)
 
 
-class CSVWriter(object):
+class CSVWriter:
     def __init__(self, fd, filename=None):
         self.__fd = fd
 

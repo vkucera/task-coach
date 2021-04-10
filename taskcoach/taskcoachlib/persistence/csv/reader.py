@@ -28,7 +28,7 @@ import re
 import math
 
 
-class CSVReader(object):
+class CSVReader:
     def __init__(self, taskList, categoryList):
         self.taskList = taskList
         self.categoryList = categoryList

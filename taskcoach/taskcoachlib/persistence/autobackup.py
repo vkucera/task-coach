@@ -40,7 +40,7 @@ def compressFile(srcName, dstName):
             dst.close()
 
 
-class BackupManifest(object):
+class BackupManifest:
     def __init__(self, settings):
         self.__settings = settings
 
@@ -103,7 +103,7 @@ class BackupManifest(object):
             src.close()
 
 
-class AutoBackup(object):
+class AutoBackup:
     ''' AutoBackup creates a backup copy of the task
         file before it is overwritten. To prevent the number of backups growing
         indefinitely, AutoBackup removes older backups. '''

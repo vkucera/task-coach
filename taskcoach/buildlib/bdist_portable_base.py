@@ -22,7 +22,7 @@ from distutils.file_util import copy_file
 from distutils import log
 
 
-class bdist_portable_base(Command, object):
+class bdist_portable_base(Command):
     ''' Base class for bdist commands that create portable distributions. '''
     
     def copy_files(self, src_dir, dest_dir, copy_recursively=False):

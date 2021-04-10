@@ -28,7 +28,7 @@ from taskcoachlib.i18n import _
 import wx, calendar
 
 
-class FontColorSyncer(object):
+class FontColorSyncer:
     ''' The font color can be changed via the font color buttons and via the
         font button. The FontColorSyncer updates the one when the font color
         is changed via the other and vice versa. '''

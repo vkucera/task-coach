@@ -26,7 +26,7 @@ class TestFilter(base.Filter):
         return [item for item in items if item > 'b']
 
 
-class FilterTestsMixin(object):
+class FilterTestsMixin:
     def setUp(self):
         self.observable = self.collectionClass(['a', 'b', 'c', 'd'])
         self.filter = TestFilter(self.observable)

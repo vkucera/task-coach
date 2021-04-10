@@ -128,7 +128,7 @@ class CutAttachmentCommand(base.CutCommandMixin, RemoveAttachmentCommand):
         return self._attachments
 
     def sourceOfItemsToCut(self):
-        class Wrapper(object):
+        class Wrapper:
             def __init__(self, items):
                 self.__items = items
             def extend(self, attachments):

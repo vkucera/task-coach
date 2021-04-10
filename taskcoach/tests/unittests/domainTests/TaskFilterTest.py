@@ -43,7 +43,7 @@ class ViewFilterTestCase(test.TestCase):
         self.failIf(self.filter)
 
 
-class ViewFilterTestsMixin(object):
+class ViewFilterTestsMixin:
     def testCreate(self):
         self.assertFilterIsEmpty()
 
@@ -201,7 +201,7 @@ class HideCompositeTasksTestCase(ViewFilterTestCase):
         self.list.extend([self.grandChild1, self.grandChild2])
 
 
-class HideCompositeTasksTestsMixin(object):
+class HideCompositeTasksTestsMixin:
     def testTurnOn(self):
         self.filter.hideCompositeTasks()
         expectedTasks = (self.task, self.child) if self.filter.treeMode() else (self.child,)

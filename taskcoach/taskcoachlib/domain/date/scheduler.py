@@ -23,7 +23,7 @@ import weakref
 import bisect
 
 
-class ScheduledMethod(object):
+class ScheduledMethod:
     def __init__(self, method):
         self.__func = method.im_func
         self.__self = weakref.ref(method.im_self)
@@ -46,7 +46,7 @@ class ScheduledMethod(object):
             self.__func(obj, *args, **kwargs)
 
 
-class TwistedScheduler(object):
+class TwistedScheduler:
     """
     A class to schedule jobs at specified date/time. Unlike apscheduler, this
     uses Twisted instead of threading, in order to avoid busy waits.

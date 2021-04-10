@@ -282,7 +282,7 @@ class EffortViewerAggregationRoundingTestCase(test.wxTestCase):
                                           date.DateTime(2013, 7, 6, 4, 0, 10)))
 
 
-class RoundingTestsMixin(object):
+class RoundingTestsMixin:
     def testRenderDuration(self):
         self.assertEqual(self.expectedPeriodRendering, self.viewer.widget.getItemText(self.viewer.widget.getItemWithIndex(0), 3))
         if self.aggregation != 'details':
@@ -412,7 +412,7 @@ class EffortViewerAggregationRoundingMonthUpConsolidationTest(EffortViewerAggreg
     expectedTotalPeriodRendering = '0:03'
 
 
-class CommonTestsMixin(object):
+class CommonTestsMixin:
     def testNumberOfItems(self):
         self.assertEqual(self.expectedNumberOfItems, self.viewer.size())
 
@@ -574,7 +574,7 @@ class EffortViewerWithAggregationPerMonthTest(CommonTestsMixin,
     expectedPeriodRendering = render.month(date.DateTime(2008, 07, 01))
 
 
-class EffortViewerRenderTestMixin(object):
+class EffortViewerRenderTestMixin:
     aggregation = 'Subclass responsibility'
 
     def createViewer(self):

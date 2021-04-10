@@ -28,7 +28,7 @@ from taskcoachlib.domain import task, category
     we want to run the tests in both list and tree mode. ''' # pylint: disable=W0105
     
 
-class CategoryFilterHelpersMixin(object):
+class CategoryFilterHelpersMixin:
     def setFilterOnAnyCategory(self):
         self.settings.setboolean('view', 'categoryfiltermatchall', False)
         

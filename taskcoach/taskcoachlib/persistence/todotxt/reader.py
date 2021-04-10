@@ -21,7 +21,7 @@ from taskcoachlib.domain import task, category, date
 from taskcoachlib import patterns
 
 
-class TodoTxtReader(object):
+class TodoTxtReader:
     def __init__(self, taskList, categoryList):
         self.__taskList = taskList
         self.__tasksBySubject = self.__createSubjectCache(taskList)

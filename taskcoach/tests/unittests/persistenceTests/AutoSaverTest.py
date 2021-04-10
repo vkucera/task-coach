@@ -23,7 +23,7 @@ import test
 from taskcoachlib.changes import ChangeMonitor
 
 
-class DummyFile(object):
+class DummyFile:
     name = 'testfile.tsk'
     encoding = 'utf-8'
 

@@ -215,7 +215,7 @@ class SortableViewerForTasksTest(test.TestCase):
         self.failIf(self.viewer.isSortByTaskStatusFirst())
 
 
-class DummyViewer(object):
+class DummyViewer:
     def isTreeViewer(self):
         return False
 
@@ -537,7 +537,7 @@ class ViewerIteratorTestCase(test.wxTestCase):
         return list(self.viewer.visibleItems()) # pylint: disable=E1101
 
 
-class ViewerIteratorTestsMixin(object):
+class ViewerIteratorTestsMixin:
     def testEmptyPresentation(self):
         self.assertEqual([], self.getItemsFromIterator())
 

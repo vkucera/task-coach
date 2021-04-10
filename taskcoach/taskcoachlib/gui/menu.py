@@ -904,7 +904,7 @@ class NotePopupMenu(Menu):
             uicommand.NewSubItem(viewer=noteViewer))
 
 
-class ColumnPopupMenuMixin(object):
+class ColumnPopupMenuMixin:
     ''' Mixin class for column header popup menu's. These menu's get the
         column index property set by the control popping up the menu to
         indicate which column the user clicked. See

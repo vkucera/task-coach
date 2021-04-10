@@ -146,7 +146,7 @@ class TaskViewerTestCase(test.wxTestCase):
                          self.getFirstItemIcon(column))
 
 
-class CommonTestsMixin(object):
+class CommonTestsMixin:
     def testCreate(self):
         self.assertItems()
 

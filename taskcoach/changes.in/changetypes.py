@@ -38,7 +38,7 @@ class Release:
         self.teamChanges = teamChanges or []
 
 
-class Change(object):
+class Change:
     def __init__(self, description, *changeIds):
         self.description = description
         self.changeIds = changeIds

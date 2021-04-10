@@ -153,7 +153,7 @@ class BalloonTip(wx.Frame):
         self.Layout()
 
 
-class BalloonTipManager(object):
+class BalloonTipManager:
     """
     Use this as a mixin in the top-level window that hosts balloon tip targets, to
     avoid them appearing all at once.

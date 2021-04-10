@@ -71,7 +71,7 @@ def quoteString(s):
 
 #{ Parsing iCalendar files
 
-class VCalendarParser(object):
+class VCalendarParser:
     ''' Base parser class for iCalendar files. This uses the State
     pattern (in its Python incarnation, replacing the class of an
     object at runtime) in order to parse different objects in the

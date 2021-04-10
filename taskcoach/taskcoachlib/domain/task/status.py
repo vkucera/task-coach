@@ -20,7 +20,7 @@ from taskcoachlib.i18n import _
 from taskcoachlib.config import defaults
 
 
-class TaskStatus(object):
+class TaskStatus:
     def __init__(self, statusString, pluralLabel, countLabel, hideMenuText,
                  hideHelpText):
         self.statusString = statusString

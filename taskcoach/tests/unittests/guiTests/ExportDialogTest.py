@@ -22,7 +22,7 @@ from taskcoachlib import config
 from wx.lib import sized_controls
 
 
-class DummyColumn(object):
+class DummyColumn:
     def __init__(self, name):
         self.__name = name
 
@@ -33,7 +33,7 @@ class DummyColumn(object):
         return 'dummy column "%s"' % self.__name
 
 
-class DummyViewer(object):
+class DummyViewer:
     def __init__(self):
         self.col1 = DummyColumn('one')
         self.col2 = DummyColumn('two')
@@ -54,7 +54,7 @@ class DummyViewer(object):
         return [self.col2]
 
 
-class DummyViewerContainer(object):
+class DummyViewerContainer:
     def activeViewer(self):
         return 1
     

@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os, atexit
 
 
-class NotifierBase(object):
+class NotifierBase:
     def __init__(self):
         super(NotifierBase, self).__init__()
 

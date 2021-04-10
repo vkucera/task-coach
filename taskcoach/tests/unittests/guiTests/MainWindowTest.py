@@ -43,7 +43,7 @@ class MainWindowUnderTest(gui.MainWindow):
         self._create_status_bar()
 
 
-class DummyIOController(object):
+class DummyIOController:
     def needSave(self, *args, **kwargs): # pylint: disable=W0613
         return False # pragma: no cover
 

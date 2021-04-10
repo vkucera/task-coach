@@ -23,7 +23,7 @@ import taskcoachlib.thirdparty.aui as aui
 import wx
 
 
-class ViewerContainer(object):
+class ViewerContainer:
     ''' ViewerContainer is a container of viewers. It has a containerWidget
         that displays the viewers. The containerWidget is assumed to be 
         an AUI managed frame. The ViewerContainer knows which of its viewers

@@ -188,7 +188,7 @@ class ObservableCollectionFixture(test.TestCase):
         self.receivedRemoveEvents.append(event)
 
 
-class ObservableCollectionTestsMixin(object):
+class ObservableCollectionTestsMixin:
     def testCollectionEqualsItself(self):
         self.failUnless(self.collection == self.collection)
 

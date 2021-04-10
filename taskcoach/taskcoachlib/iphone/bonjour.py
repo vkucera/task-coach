@@ -23,7 +23,7 @@ from twisted.python.failure import Failure
 from zope import interface
 
 
-class BonjourServiceDescriptor(object):
+class BonjourServiceDescriptor:
     interface.implements(IReadDescriptor)
 
     def __init__(self):

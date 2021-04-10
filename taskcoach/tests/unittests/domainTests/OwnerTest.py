@@ -27,7 +27,7 @@ class OwnerUnderTest(base.Object):
     __ownedType__ = 'Foo'
 
 
-class Foo(object):
+class Foo:
     pass
 
 

@@ -395,7 +395,7 @@ class _NotificationCenter(wx.EvtHandler):
         self.CheckWaiting()
 
 
-class NotificationCenter(object):
+class NotificationCenter:
     _instance = None
 
     def __new__(self):

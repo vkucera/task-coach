@@ -649,7 +649,7 @@ class XMLWriterTest(test.TestCase):
         self.expectInXML('font="%s"'%wx.SWISS_FONT.GetNativeFontInfoDesc())
 
     def testNonAsciiFontName(self):
-        class FakeFont(object):
+        class FakeFont:
             def GetNativeFontInfoDesc(self):
                 return u'微软雅黑'
         font = FakeFont()

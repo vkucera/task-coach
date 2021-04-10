@@ -20,7 +20,7 @@ from pubsub import pub
 import wx
 
 
-class AutoSaver(object):
+class AutoSaver:
     ''' AutoSaver observes task files. If a task file is changed by the user
         (gets 'dirty') and auto save is on, AutoSaver saves the task file. '''
 

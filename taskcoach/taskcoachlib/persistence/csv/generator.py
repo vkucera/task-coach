@@ -31,7 +31,7 @@ def extendedWithAncestors(selection):
     return extendedSelection
 
 
-class RowBuilder(object):
+class RowBuilder:
     dateAndTimeColumnHeaders = dict(actualStartDateTime=[_('Actual start date'), _('Actual start time')],
                                     plannedStartDateTime=[_('Planned start date'), _('Planned start time')],
                                     dueDateTime=[_('Due date'), _('Due time')],

@@ -144,7 +144,7 @@ def getDefaultProfileDir():
     raise ThunderbirdError(_('No default section in profiles.ini'))
 
 
-class ThunderbirdMailboxReader(object):
+class ThunderbirdMailboxReader:
     """Extracts an e-mail from a Thunderbird file. Behaves like a
     stream object to read this e-mail."""
 
@@ -220,7 +220,7 @@ class ThunderbirdMailboxReader(object):
         return ''.join(lines)
 
     def __iter__(self):
-        class Iterator(object):
+        class Iterator:
             def __init__(self, fp):
                 self.fp = fp
 
@@ -239,7 +239,7 @@ class ThunderbirdMailboxReader(object):
         fp.write(self.read())
 
 
-class ThunderbirdImapReader(object):
+class ThunderbirdImapReader:
     def __init__(self, url):
         mt = _RX_IMAP.search(url)
         if mt is None:
@@ -362,7 +362,7 @@ class ThunderbirdImapReader(object):
         fp.write(self._getMail())
 
 
-class ThunderbirdLocalMailboxReader(object):
+class ThunderbirdLocalMailboxReader:
     ''' Reads email from a local Thunderbird mailbox. '''
     def __init__(self, url):
         self.url = url

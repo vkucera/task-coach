@@ -28,7 +28,7 @@ wxEVT_EVENT_DATES_CHANGED = wx.NewEventType()
 EVT_EVENT_DATES_CHANGED = wx.PyEventBinder(wxEVT_EVENT_DATES_CHANGED)
 
 
-class _HitResult(object):
+class _HitResult:
     HIT_START        = 0
     HIT_IN           = 1
     HIT_END          = 2
@@ -40,7 +40,7 @@ class _HitResult(object):
         self.position = self.HIT_IN
 
 
-class _Watermark(object):
+class _Watermark:
     def __init__(self):
         self.__values = []
 

@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 
-class PowerStateMixinBase(object):
+class PowerStateMixinBase:
     """
     This is  a mixin intended to  be used on  a wx.Frame/wx.Window. It
     calls  the OnPowerState  method  when the  computer's power  state

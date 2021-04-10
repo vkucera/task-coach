@@ -30,7 +30,7 @@ from twisted.python import log
 from zope.interface import implements
 import re, os
 
-class TaskCoachEmailLookup(object):
+class TaskCoachEmailLookup:
     implements(interfaces.IEmailLookup)
 
     def getAddress(self, name):

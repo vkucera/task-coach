@@ -26,7 +26,7 @@ from taskcoachlib import widgets
 from taskcoachlib.domain import date
 
 
-class KillFocusAcceptsEditsMixin(object):
+class KillFocusAcceptsEditsMixin:
     ''' Mixin class to let in place editors accept changes whenever the user
         clicks outside the edit control instead of cancelling the changes. '''
     def StopEditing(self):
@@ -65,7 +65,7 @@ class DescriptionCtrl(KillFocusAcceptsEditsMixin, hypertreelist.EditTextCtrl):
         super(DescriptionCtrl, self).__init__(*args, **kwargs)
 
 
-class EscapeKeyMixin(object):
+class EscapeKeyMixin:
     ''' Mixin class for text(like) controls to properly handle the Escape key.
         The inheriting class needs to bind to the event handler. For example:
         self._spinCtrl.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown) '''

@@ -38,7 +38,7 @@ _('''Ctrl-Tab switches between tabs in edit dialogs.''')
 ]
 
 
-class TipProvider(object):
+class TipProvider:
     def __init__(self, tip_index):
         self.__tip_index = tip_index
 

@@ -68,7 +68,7 @@ class HTMLWriterTestCase(test.wxTestCase):
         self.viewer.widget.select(items)
 
 
-class CommonTestsMixin(object):
+class CommonTestsMixin:
     def testHTML(self):
         self.expectInHTML('<html>\n', '</html>\n')
 
@@ -178,7 +178,7 @@ class TaskTestsMixin(CommonTestsMixin):
         self.writer._writeCSS(open=open) # pylint: disable=W0212
 
 
-class TaskListTestsMixin(object):
+class TaskListTestsMixin:
     def testTaskDescription(self):
         self.task.setDescription('Task description')
         self.viewer.showColumnByName('description')

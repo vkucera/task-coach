@@ -21,7 +21,7 @@ from pubsub import pub
 from . import todotxt
 
 
-class AutoImporterExporter(object):
+class AutoImporterExporter:
     ''' AutoImporterExporter observes task files. If a task file is saved,
         either by the user or automatically (when autosave is on) and auto
         import and/or export is on, AutoImporterExporter imports and/or exports

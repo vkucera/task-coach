@@ -33,7 +33,7 @@ import re
 import threading
 
 
-class RedirectedOutput(object):
+class RedirectedOutput:
     _rx_ignore = [
         re.compile('RuntimeWarning: PyOS_InputHook'),
         ]

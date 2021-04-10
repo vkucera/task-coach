@@ -26,7 +26,7 @@ from taskcoachlib.domain import task, category, date
 from pubsub import pub
 
 
-class MockViewerContainer(object):
+class MockViewerContainer:
     def __init__(self):
         self.__sortBy = 'subject'
         self.__ascending = True

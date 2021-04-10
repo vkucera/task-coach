@@ -21,7 +21,7 @@ import textwrap, changetypes, re
 
 # Change (bugs fixed, features added, etc.) converters:
 
-class ChangeConverter(object):
+class ChangeConverter:
     def convert(self, change):
         result = self.preProcess(change.description)
         if hasattr(change, 'url'):
@@ -123,7 +123,7 @@ class ChangeToHTMLConverter(ChangeConverter):
 
 # Release converters:
 
-class ReleaseConverter(object):
+class ReleaseConverter:
     def __init__(self):
         self._changeConverter = self.ChangeConverterClass()
 

@@ -23,7 +23,7 @@ import os, threading
 from taskcoachlib.filesystem import base
 
 
-class DirectoryWatcher(object):
+class DirectoryWatcher:
     ADDED       = 1
     REMOVED     = 2
     MODIFIED    = 3

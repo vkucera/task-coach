@@ -21,7 +21,7 @@ from taskcoachlib.domain import task, date, effort
 import test
 
 
-class CommonTaskRelationshipManagerTestsMixin(object):
+class CommonTaskRelationshipManagerTestsMixin:
     def setUp(self):
         task.Task.settings = settings = config.Settings(load=False)
         now = self.now = date.Now()
@@ -176,7 +176,7 @@ class CommonTaskRelationshipManagerTestsMixin(object):
             self.failUnless(self.grandchild.completed())
 
 
-class MarkParentTaskCompletedTestsMixin(object):
+class MarkParentTaskCompletedTestsMixin:
     ''' Tests where we expect to parent task to be marked completed, based on
         the fact that all children are completed. This happens when the global
         setting is on and task is indifferent or the task specific setting is
@@ -207,7 +207,7 @@ class MarkParentTaskCompletedTestsMixin(object):
         self.failUnless(self.parent.completed())
 
 
-class DontMarkParentTaskCompletedTestsMixin(object):
+class DontMarkParentTaskCompletedTestsMixin:
     ''' Tests where we expect the parent task not to be marked completed when
         all children are completed. This should be the case when the global
         setting is off and task is indifferent or when the task specific

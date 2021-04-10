@@ -83,7 +83,7 @@ def traceEvents(fflags):
 
 # Higher-evel API
 
-class FileMonitor(object):
+class FileMonitor:
     def __init__(self, filename, callback):
         super(FileMonitor, self).__init__()
 

@@ -25,7 +25,7 @@ class ToolTipUnderTest(tooltip.ToolTipMixin, wx.Frame): # pylint: disable=W0223
         return self
 
 
-class DummyToolTipWindow(object):
+class DummyToolTipWindow:
     def __init__(self, size=(10, 10)):
         self.size = size
         self.rect = None

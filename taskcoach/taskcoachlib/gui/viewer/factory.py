@@ -39,7 +39,7 @@ def viewerTypes():
     return tuple(types)
 
 
-class addViewers(object):  # pylint: disable=C0103, R0903
+class addViewers:  # pylint: disable=C0103, R0903
     ''' addViewers is a class masquerading as a method. It's a class because
         that makes it easier to split the work over different methods that
         use the same instance variables. '''

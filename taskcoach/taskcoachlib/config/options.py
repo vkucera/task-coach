@@ -20,7 +20,7 @@ import optparse
 from taskcoachlib import meta
 
 
-class OptionParser(optparse.OptionParser, object):
+class OptionParser(optparse.OptionParser):
     def __init__(self, *args, **kwargs):
         super(OptionParser, self).__init__(*args, **kwargs)
         self.__addOptionGroups()
@@ -41,7 +41,7 @@ class OptionParser(optparse.OptionParser, object):
                 name.endswith(suffix)]
 
 
-class OptionGroup(optparse.OptionGroup, object):
+class OptionGroup(optparse.OptionGroup):
     pass
 
 

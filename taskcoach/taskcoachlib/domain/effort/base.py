@@ -21,7 +21,7 @@ from pubsub import pub
 import weakref
 
 
-class BaseEffort(object):
+class BaseEffort:
     def __init__(self, task, start, stop, *args, **kwargs):
         self._task = None if task is None else weakref.ref(task)
         self._start = start

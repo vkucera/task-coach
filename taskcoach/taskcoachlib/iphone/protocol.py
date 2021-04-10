@@ -46,7 +46,7 @@ import wx, struct, \
 #{ Support classes: object serialisation & packing
 
 
-class BaseItem(object):
+class BaseItem:
     """This is the base class of the network packet system. Each
     subclass maps to a particular type of data.
 
@@ -326,7 +326,7 @@ class ListItem(BaseItem):
         return 'ListItem(%s)' % str(self._item)
 
 
-class ItemParser(object):
+class ItemParser:
     """Utility to avoid instantiating the Item classes by
     hand. parse('is[zi]') will hold a CompositeItem([IntegerItem(),
     StringItem(), ListItem(CompositeItem([FixedSizeStringItem(),
@@ -394,7 +394,7 @@ class ItemParser(object):
         return current
 
 
-class State(object):
+class State:
     def __init__(self, disp):
         super(State, self).__init__()
 

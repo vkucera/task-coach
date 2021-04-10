@@ -107,7 +107,7 @@ class CommonTaskTestsMixin(asserts.TaskAssertsMixin):
         self.assertEqual(copy.getStatus(), copy.STATUS_NEW)
 
 
-class NoBudgetTestsMixin(object):
+class NoBudgetTestsMixin:
     ''' These tests should succeed for all tasks without budget. '''
     def testTaskHasNoBudget(self):
         self.assertEqual(date.TimeDelta(), self.task.budget())
@@ -3040,7 +3040,7 @@ class TaskWithDependency(TaskTestCase):
         self.assertEqual([(set([self.dependency]), self.task)], events)
 
 
-class TaskSuggestedDateTimeBaseSetupAndTests(object):
+class TaskSuggestedDateTimeBaseSetupAndTests:
     def setUp(self):
         # pylint: disable=W0142
         self.settings = task.Task.settings = config.Settings(load=False)

@@ -25,7 +25,7 @@ import test
 import shutil, os
 
 
-class TranslationIntegrityTestsMixin(object):
+class TranslationIntegrityTestsMixin:
     ''' Unittests for translations. This class is subclassed below for each
         translated string in each language. '''
 
@@ -117,7 +117,7 @@ class TranslationIntegrityTestsMixin(object):
         return re.sub(cls.umlautRE, '', text)
 
 
-class TranslationCoverageTestsMixin(object):
+class TranslationCoverageTestsMixin:
     def testNotComplete(self):
         if self.enabled:
             percentDone = 100.0 * len(self.translation) / len(self.strings)

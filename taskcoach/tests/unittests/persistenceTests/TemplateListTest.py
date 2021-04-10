@@ -20,7 +20,7 @@ import test, xml
 from taskcoachlib import persistence
 
 
-class Fake(object):
+class Fake:
     def __init__(self, *args, **kwargs):
         pass
 
@@ -45,7 +45,7 @@ class FakeFileClass(Fake):
         pass
     
 
-class FileClassThatRaisesIOError(object):
+class FileClassThatRaisesIOError:
     def __init__(self, *args, **kwargs): # pylint: disable=W0613
         raise IOError
     

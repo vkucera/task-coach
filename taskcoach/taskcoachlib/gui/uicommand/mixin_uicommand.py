@@ -21,7 +21,7 @@ from taskcoachlib.domain import task, note, category, effort, attachment
 import wx
 
 
-class NeedsSelectionMixin(object):
+class NeedsSelectionMixin:
     ''' Mixin class for UI commands that need at least one selected item. '''
     def enabled(self, event):
         return super(NeedsSelectionMixin, self).enabled(event) and \
@@ -37,7 +37,7 @@ class NeedsSelectedCategorizableMixin(NeedsSelectionMixin):
              self.viewer.curselectionIsInstanceOf(note.Note))
 
 
-class NeedsOneSelectedItemMixin(object):
+class NeedsOneSelectedItemMixin:
     ''' Mixin class for UI commands that need exactly one selected item. '''
     def enabled(self, event):
         return super(NeedsOneSelectedItemMixin, self).enabled(event) and \
@@ -61,7 +61,7 @@ class NeedsOneSelectedCompositeItemMixin(NeedsOneSelectedItemMixin,
     pass
 
 
-class NeedsAttachmentViewerMixin(object):
+class NeedsAttachmentViewerMixin:
     ''' Mixin class for UI commands that need a viewer that is showing
         attachments. '''
     def enabled(self, event):
@@ -133,40 +133,40 @@ class NeedsSelectedAttachmentsMixin(NeedsAttachmentViewerMixin,
     pass
 
 
-class NeedsAtLeastOneTaskMixin(object):
+class NeedsAtLeastOneTaskMixin:
     ''' Mixin class for UI commands that need at least one task created. '''
     def enabled(self, event):  # pylint: disable=W0613
         return len(self.taskList) > 0
 
 
-class NeedsAtLeastOneCategoryMixin(object):
+class NeedsAtLeastOneCategoryMixin:
     ''' Mixin class for UI commands that need at least one category created. '''
     def enabled(self, event):  # pylint: disable=W0613
         return len(self.categories) > 0
 
 
-class NeedsItemsMixin(object):
+class NeedsItemsMixin:
     ''' Mixin class for UI commands that need at least one item in their
        viewer. '''
     def enabled(self, event):  # pylint: disable=W0613
         return self.viewer.size()
 
 
-class NeedsTreeViewerMixin(object):
+class NeedsTreeViewerMixin:
     ''' Mixin class for UI commands that need a tree viewer. '''
     def enabled(self, event):
         return super(NeedsTreeViewerMixin, self).enabled(event) and \
             self.viewer.isTreeViewer()
 
 
-class NeedsDeletedItemsMixin(object):
+class NeedsDeletedItemsMixin:
     ''' Mixin class for UI commands that need deleted items to be present. '''
     def enabled(self, event):
         return super(NeedsDeletedItemsMixin, self).enabled(event) and \
                self.iocontroller.hasDeletedItems()
 
 
-class PopupButtonMixin(object):
+class PopupButtonMixin:
     ''' Mix this with a UICommand for a toolbar pop-up menu. '''
 
     def doCommand(self, event):  # pylint: disable=W0613

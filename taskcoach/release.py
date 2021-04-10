@@ -94,7 +94,7 @@ def progress(func):
     return inner
 
 
-class Settings(ConfigParser.SafeConfigParser, object):
+class Settings(ConfigParser.SafeConfigParser):
     def __init__(self):
         super(Settings, self).__init__()
         self.set_defaults()
@@ -137,7 +137,7 @@ class SFAPIError(Exception):
     pass
 
 
-class SourceforgeAPI(object):
+class SourceforgeAPI:
     def __init__(self, settings, options):
         consumer_key = settings.get('sourceforge', 'consumer_key')
         consumer_secret = settings.get('sourceforge', 'consumer_secret')
@@ -459,7 +459,7 @@ def generating_website(settings, options):
     os.chdir('..')
 
 
-class SimpleFTP(ftplib.FTP, object):
+class SimpleFTP(ftplib.FTP):
     def __init__(self, hostname, username, password, folder='.'):
         super(SimpleFTP, self).__init__(hostname, username, password)
         self.ensure_folder(folder)

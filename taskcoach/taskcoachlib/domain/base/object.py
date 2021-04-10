@@ -28,7 +28,7 @@ import uuid
 import re
 
 
-class SynchronizedObject(object):
+class SynchronizedObject:
     STATUS_NONE    = 0
     STATUS_NEW     = 1
     STATUS_CHANGED = 2

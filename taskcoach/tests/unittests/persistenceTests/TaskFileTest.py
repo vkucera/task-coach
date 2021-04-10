@@ -560,7 +560,7 @@ class DirtyTaskFileTest(TaskFileTestCase):
         self.assertEqual(self.filename2, self.taskFile.lastFilename())
 
 
-class ChangingAttachmentsTestsMixin(object):
+class ChangingAttachmentsTestsMixin:
     def testNeedSave_AfterAttachmentAdded(self):
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()
@@ -1042,7 +1042,7 @@ class TaskFileMonitorTestBase(TaskFileTestCase):
         self.assertEqual(allChanges[self.taskFile.monitor().guid()].getChanges(item), set())
 
 
-class TaskFileMultiUserTestBase(object):
+class TaskFileMultiUserTestBase:
     def setUp(self):
         self.createTaskFiles()
 

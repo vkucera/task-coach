@@ -24,7 +24,7 @@ import wx, draganddrop, autowidth, tooltip, inspect
 from taskcoachlib.thirdparty import hypertreelist
 
 
-class _CtrlWithItemsMixin(object):
+class _CtrlWithItemsMixin:
     ''' Base class for controls with items, such as ListCtrl, TreeCtrl,
         TreeListCtrl, etc. '''
 
@@ -191,7 +191,7 @@ class CtrlWithItemsMixin(_CtrlWithItemPopupMenuMixin, _CtrlWithDropTargetMixin):
     pass
 
 
-class Column(object):
+class Column:
     def __init__(self, name, columnHeader, *eventTypes, **kwargs):
         self.__name = name
         self.__columnHeader = columnHeader
@@ -282,7 +282,7 @@ class Column(object):
         return self.name() == other.name()
 
 
-class _BaseCtrlWithColumnsMixin(object):
+class _BaseCtrlWithColumnsMixin:
     ''' A base class for all controls with columns. Note that this class and
         its subclasses do not support addition or deletion of columns after
         the initial setting of columns. '''

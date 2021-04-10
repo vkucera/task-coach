@@ -22,7 +22,7 @@ from taskcoachlib.i18n import _
 import wx
 
 
-class AttributeSync(object):
+class AttributeSync:
     ''' Class used for keeping an attribute of a domain object synchronized with
         a control in a dialog. If the user edits the value using the control, 
         the domain object is changed, using the appropriate command. If the 

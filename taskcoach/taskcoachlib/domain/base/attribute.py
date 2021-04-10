@@ -21,7 +21,7 @@ import weakref
 from taskcoachlib.thirdparty._weakrefset import WeakSet
 
 
-class Attribute(object):
+class Attribute:
     __slots__ = ('__value', '__owner', '__setEvent')
     
     def __init__(self, value, owner, setEvent):
@@ -44,7 +44,7 @@ class Attribute(object):
             return True
     
 
-class SetAttribute(object):
+class SetAttribute:
     __slots__ = ('__set', '__owner', '__addEvent', '__removeEvent', 
                  '__changeEvent', '__setClass')
     

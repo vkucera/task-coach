@@ -545,13 +545,13 @@ class Viewer(patterns.Observer, wx.Panel, metaclass=patterns.NumberedInstances):
         return [(None, lines)] if lines and lines != [''] else []
 
 
-class CategorizableViewerMixin(object):
+class CategorizableViewerMixin:
     def getItemTooltipData(self, item):
         return [('folder_blue_arrow_icon', [u', '.join(sorted([cat.subject() for cat in item.categories()]))] if item.categories() else [])] + \
             super(CategorizableViewerMixin, self).getItemTooltipData(item)
 
 
-class WithAttachmentsViewerMixin(object):
+class WithAttachmentsViewerMixin:
     def getItemTooltipData(self, item):
         return [('paperclip_icon', sorted([unicode(attachment) for attachment in item.attachments()]))] + \
           super(WithAttachmentsViewerMixin, self).getItemTooltipData(item)

@@ -21,7 +21,7 @@ from taskcoachlib.thirdparty import hypertreelist
 from taskcoachlib import operating_system
 
 
-class AutoColumnWidthMixin(object):
+class AutoColumnWidthMixin:
     """ A mix-in class that automatically resizes one column to take up
         the remaining width of a control with columns (i.e. ListCtrl,
         TreeListCtrl).

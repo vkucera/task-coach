@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import operating_system
 import re
 
-class StrftimeFix(object):
+class StrftimeFix:
     """Mixin class to fix strftime() so that it works with years < 1900"""
 
     def strftime(self, *args):

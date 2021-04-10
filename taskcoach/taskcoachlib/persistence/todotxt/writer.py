@@ -20,7 +20,7 @@ import re, shutil, os
 from taskcoachlib.domain import date
 
 
-class TodoTxtWriter(object):
+class TodoTxtWriter:
     VERSION = 1
 
     def __init__(self, fd, filename):

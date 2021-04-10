@@ -38,7 +38,7 @@ class DummyMainWindow(widgets.AuiManagedFrameWithDynamicCenterPane):
         pass
 
 
-class DummyPane(object):
+class DummyPane:
     optionActive = False
 
     def __init__(self, window):
@@ -57,7 +57,7 @@ class DummyPane(object):
         return True
 
 
-class DummyEvent(object):
+class DummyEvent:
     def __init__(self, pane):
         self._pane = pane
 

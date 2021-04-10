@@ -21,7 +21,7 @@ from taskcoachlib import gui, config
 from taskcoachlib.domain import task, date
 
 
-class DummyViewer(object):
+class DummyViewer:
     def __init__(self, presentation):
         self._presentation = presentation
         self._selection = []

@@ -21,7 +21,7 @@ from taskcoachlib import widgets, render
 from taskcoachlib.domain import date
 
 
-class CommonTestsMixin(object):
+class CommonTestsMixin:
     def setUp(self):
         super(CommonTestsMixin, self).setUp()
         # LC_ALL does not work on Slackware or Arch, but LC_TIME crashes on Fedora...

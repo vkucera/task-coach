@@ -62,7 +62,7 @@ class RecurringTaskWithRecurringChildTestCase(RecurringTaskTestCase):
         raise NotImplementedError # pragma: no cover
 
 
-class CommonRecurrenceTestsMixin(object):        
+class CommonRecurrenceTestsMixin:        
     def testSetRecurrenceViaConstructor(self):
         self.assertEqual(self.createRecurrence(), self.task.recurrence())
 

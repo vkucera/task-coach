@@ -21,12 +21,12 @@ from taskcoachlib.gui.dialog import version
 import test
 
 
-class DummyEvent(object):
+class DummyEvent:
     def Skip(self):
         pass
 
 
-class CommonTestsMixin(object):
+class CommonTestsMixin:
     def testCreateAndClose(self):
         self.dialog.onClose(DummyEvent())
         self.failUnless(self.settings.getboolean('version', 'notify'))

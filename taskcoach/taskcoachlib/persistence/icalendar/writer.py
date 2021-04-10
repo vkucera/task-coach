@@ -30,7 +30,7 @@ def extendedWithAncestors(selection):
     return extendedSelection
 
 
-class iCalendarWriter(object):
+class iCalendarWriter:
     def __init__(self, fd, filename=None):
         self.__fd = fd
 

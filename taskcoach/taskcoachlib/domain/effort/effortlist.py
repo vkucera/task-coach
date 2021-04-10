@@ -25,13 +25,13 @@ from taskcoachlib.domain import task
 from . import effort
 
 
-class MaxDateTimeMixin(object):
+class MaxDateTimeMixin:
     def maxDateTime(self):
         stopTimes = [effort.getStop() for effort in self if effort.getStop() is not None]
         return max(stopTimes) if stopTimes else None
 
 
-class EffortUICommandNamesMixin(object):
+class EffortUICommandNamesMixin:
     newItemMenuText = _('&New effort...\tCtrl+E')
     newItemHelpText = help.effortNew
 

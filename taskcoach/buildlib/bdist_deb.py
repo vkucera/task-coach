@@ -27,7 +27,7 @@ import time
 import glob
 
 
-class bdist_deb(Command, object):
+class bdist_deb(Command):
     # pylint: disable=W0201
     description = 'create a Debian (.deb) package'
 

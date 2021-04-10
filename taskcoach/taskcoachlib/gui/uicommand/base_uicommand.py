@@ -29,7 +29,7 @@ from taskcoachlib.gui.newid import IdProvider
 '''  # pylint: disable=W0105
 
 
-class UICommand(object):
+class UICommand:
     ''' Base user interface command. An UICommand is some action that can be
         associated with menu's and/or toolbars. It contains the menutext and
         helptext to be displayed, code to deal with wx.EVT_UPDATE_UI and
