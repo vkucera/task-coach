@@ -38,8 +38,7 @@ class Attribute:
     def set(self, value, event=None):
         owner = self.__owner()
         if owner is not None:
-            # Predefined wx.Colour like wx.BLACK et al compare equal to None...
-            if (value is None and self.__value is not None) or (self.__value is None and value is not None) or value != self.__value:
+            if value != self.__value:
                 self.__value = value
                 self.__setEvent(owner, event)
                 return True
