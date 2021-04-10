@@ -21,8 +21,8 @@ from . import singleton as patterns
 
 class Command(object):
     def __init__(self, *args, **kwargs):
-        super(Command, self).__init__() # object.__init__ takes no arguments
-        
+        super().__init__() # object.__init__ takes no arguments
+
     def do(self):
         CommandHistory().append(self)
 
@@ -63,16 +63,16 @@ class CommandHistory(metaclass=patterns.Singleton):
 
     def hasHistory(self):
         return self.__history
-        
+
     def getHistory(self):
         return self.__history
-        
+
     def hasFuture(self):
         return self.__future
 
     def getFuture(self):
         return self.__future
-        
+
     def _extendLabel(self, label, commandList):
         if commandList:
             commandName = u' %s'%commandList[-1]
