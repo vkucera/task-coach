@@ -21,7 +21,7 @@ import test
 from unittests import dummy
 from taskcoachlib import gui, config, persistence
 from taskcoachlib.domain import task, category, date, attachment, effort
-from taskcoachlib.thirdparty import desktop
+import desktop
 from taskcoachlib.gui.dialog.editor import NoteEditor, TaskEditor
 
 

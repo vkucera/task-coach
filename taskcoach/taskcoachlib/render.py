@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 etc. '''  # pylint: disable=W0105
 
 from taskcoachlib.domain import date as datemodule
-from taskcoachlib.thirdparty import desktop
+import desktop
 from taskcoachlib.i18n import _
 from taskcoachlib import operating_system
 import datetime

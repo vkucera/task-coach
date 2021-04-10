@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test
-from taskcoachlib.thirdparty import desktop
+import desktop
 
 
 class DesktopTest(test.TestCase):
