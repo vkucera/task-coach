@@ -107,12 +107,11 @@ class EventTest(tctest.TestCase):
 
     def testAddSourceAndValueForSpecificType(self):
         self.event.addSource('source', 'value', type='another eventtype')
-        self.assertEqual('value', self.event.value('source'))
+        self.assertEqual('value', self.event.value('source', 'another eventtype'))
 
     def testAddSourceAndValuesForSpecificType(self):
-        self.event.addSource('source', 'value1', 'value2',
-                             type='another eventtype')
-        self.assertEqual(set(['value1', 'value2']), set(self.event.values('source')))
+        self.event.addSource('source', 'value1', 'value2', type='another eventtype')
+        self.assertEqual(set(['value1', 'value2']), set(self.event.values('source', 'another eventtype')))
 
     def testAddExistingSourceToAnotherType(self):
         self.event.addSource(self, type='another eventtype')
@@ -124,10 +123,8 @@ class EventTest(tctest.TestCase):
         self.assertEqual('some value', self.event.value(self, type='eventtype'))
 
     def testAddExistingSourceWithValueToType(self):
-        self.event.addSource(self, 'value for another eventtype',
-                             type='another eventtype')
-        self.assertEqual('value for another eventtype',
-                         self.event.value(self, type='another eventtype'))
+        self.event.addSource(self, 'value for another eventtype', type='another eventtype')
+        self.assertEqual('value for another eventtype', self.event.value(self, type='another eventtype'))
 
     def testSubEventForOneTypeWhenEventHasOneType(self):
         self.assertEqual(self.event, self.event.subEvent((self.event.type(), self)))
