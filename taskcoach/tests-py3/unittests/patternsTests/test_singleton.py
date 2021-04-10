@@ -26,7 +26,7 @@ class Singleton(metaclass=patterns.Singleton):
 
 class SingletonTest(tctest.TestCase):
     def tearDown(self):
-        super(SingletonTest, self).tearDown()
+        super().tearDown()
         self.resetSingleton()
 
     def resetSingleton(self):
@@ -108,7 +108,7 @@ class SingletonSubclassTest(tctest.TestCase):
     def testSubclassesCanHaveInit(self):
         class Sub(Singleton):
             def __init__(self):
-                super(Sub, self).__init__()
+                super().__init__()
                 self.a = 1
         sub = Sub()
         self.assertEqual(1, sub.a)
@@ -116,7 +116,7 @@ class SingletonSubclassTest(tctest.TestCase):
     def testSubclassInitCanHaveArgs(self):
         class Sub(Singleton):
             def __init__(self, arg):
-                super(Sub, self).__init__()
+                super().__init__()
                 self.arg = arg
         self.assertEqual('Yo', Sub('Yo').arg)
 
@@ -124,7 +124,7 @@ class SingletonSubclassTest(tctest.TestCase):
         class Sub(Singleton):
             _count = 0
             def __init__(self):
-                super(Sub, self).__init__()
+                super().__init__()
                 Sub._count += 1
         Sub()
         Sub()

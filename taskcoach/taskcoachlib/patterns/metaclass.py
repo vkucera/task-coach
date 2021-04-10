@@ -36,7 +36,7 @@ class NumberedInstances(type):
             NumberedInstances.count[cls] = weakref.WeakKeyDictionary()
         instanceNumber = NumberedInstances.lowestUnusedNumber(cls)
         kwargs['instanceNumber'] = instanceNumber
-        instance = super(NumberedInstances, cls).__call__(*args, **kwargs)
+        instance = super().__call__(*args, **kwargs)
         NumberedInstances.count[cls][instance] = instanceNumber
         return instance
 
