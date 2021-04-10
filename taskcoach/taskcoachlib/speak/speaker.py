@@ -32,12 +32,10 @@ if operating_system.isWindows():
         
 else:
     
-    class Speaker(object):
+    # Since speech is just one output channel, make this class a singleton.
+    class Speaker(metaclass=patterns.Singleton):
         ''' Class for letting the computer speak texts. Currently 'say' is
             supported on Mac OS X and 'espeak' on Linux. '''
-        
-        # Since speech is just one output channel, make this class a singleton.
-        __metaclass__ = patterns.Singleton
         
         def __init__(self):
             if operating_system.isMac():

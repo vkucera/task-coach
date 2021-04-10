@@ -26,7 +26,7 @@ class Singleton(type):
     def __call__(class_, *args, **kwargs):
         if not class_.hasInstance():
             # pylint: disable=W0201
-            class_.instance = super(Singleton, class_).__call__(*args, **kwargs)
+            class_.instance = super().__call__(*args, **kwargs)
         return class_.instance
 
     def deleteInstance(class_):

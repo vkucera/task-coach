@@ -105,9 +105,7 @@ class wxApp(wx.App):
             event.Skip()
 
 
-class Application(object):
-    __metaclass__ = patterns.Singleton
-    
+class Application(metaclass=patterns.Singleton):
     def __init__(self, options=None, args=None, **kwargs):
         self._options = options
         self._args = args

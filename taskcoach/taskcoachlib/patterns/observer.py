@@ -225,7 +225,7 @@ def unwrapObservers(decoratedMethod):
     return decorator
 
 
-class Publisher(object):
+class Publisher(metaclass=singleton.Singleton):
     ''' Publisher is used to register for event notifications. It supports
         the publisher/subscribe pattern, also known as the observer pattern.
         Objects (Observers) interested in change notifications register a 
@@ -238,8 +238,6 @@ class Publisher(object):
         - Publisher is a Singleton class since all observables and all
         observers have to use exactly one registry to be sure that all
         observables can reach all observers. '''
-        
-    __metaclass__ = singleton.Singleton
     
     def __init__(self, *args, **kwargs):
         super(Publisher, self).__init__(*args, **kwargs)

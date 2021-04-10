@@ -125,9 +125,7 @@ class TwistedScheduler(object):
         self.__fire()
 
 
-class Scheduler(object):
-    __metaclass__ = patterns.Singleton
-
+class Scheduler(metaclass=patterns.Singleton):
     def __init__(self, *args, **kwargs):
         super(Scheduler, self).__init__(*args, **kwargs)
         self.__scheduler = TwistedScheduler()

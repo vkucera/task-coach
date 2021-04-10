@@ -36,9 +36,7 @@ class Command(object):
         return 'command'
 
 
-class CommandHistory(object):
-    __metaclass__ = patterns.Singleton
-
+class CommandHistory(metaclass=patterns.Singleton):
     def __init__(self):
         self.__history = []
         self.__future = []

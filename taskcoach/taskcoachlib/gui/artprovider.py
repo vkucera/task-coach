@@ -80,9 +80,7 @@ class ArtProvider(wx.ArtProvider):
         return wx.BitmapFromImage(image)    
 
 
-class IconProvider(object):
-    __metaclass__ = patterns.Singleton
-
+class IconProvider(metaclass=patterns.Singleton):
     def __init__(self):
         self.__iconCache = dict()
         if operating_system.isMac():

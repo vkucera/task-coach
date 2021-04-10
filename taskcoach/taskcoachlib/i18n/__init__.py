@@ -21,9 +21,7 @@ from taskcoachlib import patterns, operating_system
 import po2dict
 
 
-class Translator:
-    __metaclass__ = patterns.Singleton
-    
+class Translator(metaclass=patterns.Singleton):
     def __init__(self, language):
         load = self._loadPoFile if language.endswith('.po') else self._loadModule
         module, language = load(language) 
