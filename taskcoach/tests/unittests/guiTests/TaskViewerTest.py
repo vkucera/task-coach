@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import gui, config, persistence, command, patterns, render, \
     operating_system
 from taskcoachlib.domain import task, date, effort, category, attachment
-from taskcoachlib.i18n import _
+
 import locale
 import os
 import test

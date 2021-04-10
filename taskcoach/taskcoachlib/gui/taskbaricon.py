@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 import os
 from taskcoachlib import meta, patterns, operating_system
-from taskcoachlib.i18n import _
+
 from taskcoachlib.domain import date, task
 from pubsub import pub
 from . import artprovider

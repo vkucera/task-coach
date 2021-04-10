@@ -23,7 +23,7 @@ format.
 
 from taskcoachlib.domain.base import Object
 from taskcoachlib.domain import date
-from taskcoachlib.i18n import _
+
 
 import time, calendar, datetime
 

@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import render
 from taskcoachlib.domain import date
-from taskcoachlib.i18n import _
+
 from pubsub import pub
 from . import base
 

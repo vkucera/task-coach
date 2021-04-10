@@ -24,7 +24,7 @@ from taskcoachlib.domain.category import Category
 from taskcoachlib.domain.task import Task
 from taskcoachlib.domain.effort import Effort
 
-from taskcoachlib.i18n import _
+
 
 from twisted.internet.protocol import Protocol, ServerFactory
 from twisted.internet.error import CannotListenError

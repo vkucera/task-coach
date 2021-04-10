@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 import urllib
 from taskcoachlib.mailer import thunderbird, outlook
-from taskcoachlib.i18n import _
+
 
 
 class FileDropTarget(wx.FileDropTarget):

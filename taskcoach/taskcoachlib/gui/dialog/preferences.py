@@ -24,7 +24,7 @@ from taskcoachlib import meta, widgets, notify, operating_system, render
 from taskcoachlib.domain import date, task
 from taskcoachlib.gui import artprovider
 from taskcoachlib.meta import data
-from taskcoachlib.i18n import _
+
 import wx, calendar
 
 

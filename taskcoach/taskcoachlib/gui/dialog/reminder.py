@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import meta, patterns, command, render, operating_system, \
     speak
 from taskcoachlib.domain import date
-from taskcoachlib.i18n import _
+
 from pubsub import pub
 from wx.lib import sized_controls
 import subprocess

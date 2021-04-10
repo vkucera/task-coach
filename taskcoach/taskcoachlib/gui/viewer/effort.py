@@ -25,7 +25,7 @@ from taskcoachlib.domain import effort, date
 from taskcoachlib.domain.base import filter  # pylint: disable=W0622
 from taskcoachlib.gui import uicommand, dialog
 import taskcoachlib.gui.menu
-from taskcoachlib.i18n import _
+
 from pubsub import pub
 from . import base
 from . import mixin

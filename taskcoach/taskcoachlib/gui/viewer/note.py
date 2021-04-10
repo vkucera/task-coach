@@ -24,7 +24,7 @@ from taskcoachlib import command, widgets, domain
 from taskcoachlib.domain import note
 from taskcoachlib.gui import uicommand, dialog
 import taskcoachlib.gui.menu
-from taskcoachlib.i18n import _
+
 from . import base
 from . import mixin
 from . import inplace_editor

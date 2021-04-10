@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 from taskcoachlib.gui.dialog.preferences import SettingsPageBase
 from taskcoachlib import widgets, operating_system
-from taskcoachlib.i18n import _
+
 
 
 class SyncMLBasePage(SettingsPageBase):

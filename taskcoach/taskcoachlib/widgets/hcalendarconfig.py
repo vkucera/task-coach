@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 import wx.lib.colourselect as csel
 from wx.lib import sized_controls
-from taskcoachlib.i18n import _
+
 from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_DAILY, \
     wxSCHEDULER_WEEKLY, wxSCHEDULER_MONTHLY, wxSCHEDULER_HORIZONTAL, \
     wxSCHEDULER_VERTICAL

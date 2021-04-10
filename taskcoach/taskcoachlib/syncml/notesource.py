@@ -21,7 +21,7 @@ from taskcoachlib.domain.category import Category
 from taskcoachlib.syncml.basesource import BaseSource
 from taskcoachlib.persistence.icalendar import ical
 
-from taskcoachlib.i18n import _
+
 
 import wx, inspect
 

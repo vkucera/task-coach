@@ -20,7 +20,7 @@ import wx, os, re, tempfile, urllib, email, email.header
 from taskcoachlib.thirdparty import chardet
 from taskcoachlib.tools import openfile
 from taskcoachlib.mailer.macmail import getSubjectOfMail
-from taskcoachlib.i18n import _
+
 from taskcoachlib import operating_system
 
 

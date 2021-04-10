@@ -25,7 +25,7 @@ from taskcoachlib.domain import base, task, note, category, attachment, \
     effort, date
 from taskcoachlib.gui import dialog, printer
 from taskcoachlib.gui.wizard import CSVImportWizard
-from taskcoachlib.i18n import _
+
 from taskcoachlib.mailer import sendMail
 from taskcoachlib.thirdparty import hypertreelist
 from pubsub import pub

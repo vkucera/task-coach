@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 from taskcoachlib import command, widgets
 from taskcoachlib.domain import category
-from taskcoachlib.i18n import _
+
 from taskcoachlib.gui import uicommand, dialog
 import taskcoachlib.gui.menu
 from . import base

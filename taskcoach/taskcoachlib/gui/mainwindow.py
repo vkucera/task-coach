@@ -26,7 +26,7 @@ from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog
 from taskcoachlib.gui.dialog.xfce4warning import XFCE4WarningDialog
 from taskcoachlib.gui.dialog.editor import Editor
 from taskcoachlib.gui.iphone import IPhoneSyncFrame
-from taskcoachlib.i18n import _
+
 from taskcoachlib.powermgt import PowerStateMixin
 from taskcoachlib.help.balloontips import BalloonTipManager
 from pubsub import pub

@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib.domain.category import Category
 from taskcoachlib.domain.date import DateTime, TimeDelta
 from taskcoachlib.domain.task import Task
-from taskcoachlib.i18n import _
+
 from taskcoachlib.thirdparty.dateutil import parser as dparser
 import csv
 import tempfile

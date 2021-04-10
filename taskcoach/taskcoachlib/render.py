@@ -23,7 +23,7 @@ etc. '''  # pylint: disable=W0105
 
 from taskcoachlib.domain import date as datemodule
 import desktop
-from taskcoachlib.i18n import _
+
 from taskcoachlib import operating_system
 import datetime
 import codecs

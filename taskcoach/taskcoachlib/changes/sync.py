@@ -26,7 +26,7 @@ from taskcoachlib.domain.task import Task
 from taskcoachlib.domain.note import Note
 from taskcoachlib.domain.category import Category
 from taskcoachlib.notify import AbstractNotifier
-from taskcoachlib.i18n import _
+
 
 
 class ChangeSynchronizer:

@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import widgets, operating_system
 from taskcoachlib.domain import date
 from taskcoachlib.gui import artprovider
-from taskcoachlib.i18n import _
+
 from taskcoachlib.thirdparty import combotreebox
 import datetime
 from wx.lib import newevent

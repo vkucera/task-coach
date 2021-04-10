@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib.notify import NotificationFrameBase, NotificationCenter
-from taskcoachlib.i18n import _
+
 import wx
 
 

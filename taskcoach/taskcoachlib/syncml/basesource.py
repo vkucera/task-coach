@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 from taskcoachlib.syncml.core import *
-from taskcoachlib.i18n import _
+
 
 
 class BaseSource(SyncSource):

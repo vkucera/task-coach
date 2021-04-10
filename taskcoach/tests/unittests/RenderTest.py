@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test
 from taskcoachlib import render
-from taskcoachlib.i18n import _
+
 from taskcoachlib.domain import date
 
 

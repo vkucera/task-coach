@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, os
 from taskcoachlib.persistence import BackupManifest
-from taskcoachlib.i18n import _
+
 from taskcoachlib import render
 
 

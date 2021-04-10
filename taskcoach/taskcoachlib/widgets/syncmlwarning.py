@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 
-from taskcoachlib.i18n import _
+
 
 class SyncMLWarningDialog(wx.Dialog):
     def __init__(self, parent):

@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # monkey-patching so import it first
 from taskcoachlib import workarounds  # pylint: disable=W0611
 from taskcoachlib import patterns, operating_system
-from taskcoachlib.i18n import _
+
 from pubsub import pub
 from taskcoachlib.config import Settings
 import locale

@@ -38,7 +38,7 @@ def dumpDirectory(path):
     fd = file(os.path.join('..', 'taskcoachlib', 'persistence', 'xml',
                            'templates.py'), 'wb')
     fd.write('#-*- coding: UTF-8\n\n')
-    fd.write('from taskcoachlib.i18n import _\n\n')
+    fd.write('\n\n')
     fd.write('def getDefaultTemplates():\n')
     fd.write('    templates = []\n')
 

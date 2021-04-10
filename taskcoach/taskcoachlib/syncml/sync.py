@@ -21,7 +21,7 @@ from taskcoachlib.syncml.notesource import NoteSource
 from taskcoachlib.syncml.config import SyncMLConfigNode
 from taskcoachlib.syncml.core import *
 
-from taskcoachlib.i18n import _
+
 from taskcoachlib.meta import data
 
 import sys, wx

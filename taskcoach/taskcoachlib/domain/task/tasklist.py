@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib.i18n import _
+
 from taskcoachlib.domain import categorizable
 from taskcoachlib import help, operating_system  # pylint: disable=W0622
 from . import task
