@@ -21,6 +21,7 @@ import tctest
 from test_metaclass import *
 from test_singleton import *
 from test_observable import *
+from test_composite import *
 
 
 if __name__ == '__main__':

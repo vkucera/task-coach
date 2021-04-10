@@ -37,6 +37,21 @@ class TestCase(unittest.TestCase):
         pub.unsubAll()
         super().tearDown()
 
+    def assertEqualLists(self, expectedList, actualList):
+        self.assertEqual(len(expectedList), len(actualList))
+        for item in expectedList:
+            self.assertTrue(item in actualList)
+            
+    def registerObserver(self, eventType, eventSource=None):
+        if not hasattr(self, 'events'):
+            self.events = []  # pylint: disable=W0201
+        from taskcoachlib import patterns  # pylint: disable=W0404
+        patterns.Publisher().registerObserver(self.onEvent, eventType=eventType,
+                                              eventSource=eventSource)
+        
+    def onEvent(self, event):
+        self.events.append(event)
+
 
 def main():
     unittest.main()
