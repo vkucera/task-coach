@@ -32,7 +32,7 @@ class Clipboard(metaclass=patterns.Singleton):
         currentContents = self._contents
         currentSource = self._source
         return currentContents, currentSource
-    
+
     def peek(self):
         return self._contents
 

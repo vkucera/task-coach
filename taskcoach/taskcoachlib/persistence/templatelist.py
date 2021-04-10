@@ -34,7 +34,7 @@ class TemplateList(object):
             if template:
                 templates.append((template, filename))
         return templates
-    
+
     def _readTemplate(self, filename, TemplateReader, openFile):
         try:
             fd = openFile(os.path.join(self._path, filename), 'rU')
@@ -59,7 +59,7 @@ class TemplateList(object):
             except:
                 pass
         return filenames
-    
+
     def save(self):
         pickle.dump([name for task, name in self._templates], file(os.path.join(self._path, 'list.pickle'), 'wb'))
 
@@ -93,7 +93,7 @@ class TemplateList(object):
         shutil.copyfile(filename,
                         os.path.join(self._path, os.path.split(filename)[-1]))
         pub.sendMessage('templates.saved')
-        
+
     def swapTemplates(self, i, j):
         self._templates[i], self._templates[j] = self._templates[j], self._templates[i]
 

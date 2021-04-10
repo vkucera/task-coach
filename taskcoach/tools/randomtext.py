@@ -5,8 +5,8 @@ leadins = """On the other hand,
     Furthermore,
     It follows that
     Analogously,
-    Also, 
-    Therefore, 
+    Also,
+    Therefore,
     Clearly,
     Note that
     Of course,
@@ -14,11 +14,11 @@ leadins = """On the other hand,
     Thus
     Conversely,
     Rather,
-    However, 
+    However,
     So far,
     Nevertheless,
     For one thing,
-    Summarizing, 
+    Summarizing,
     Presumably,
     It may be, then, that
     It must be emphasized that
@@ -53,7 +53,7 @@ verbs = """can be described in such a way as to impose
     is necessary to impose an interpretation on
     appears to correlate rather closely with
     is rather different from"""
-    
+
 commands = """Schedule
     Interpret
     Plan

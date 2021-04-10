@@ -4,7 +4,7 @@
 """Generate python dictionaries catalog from textual translation description.
 
 This program converts a textual Uniforum-style message catalog (.po file) into
-a python dictionary 
+a python dictionary
 
 Based on msgfmt.py by Martin v. Löwis <loewis@informatik.hu-berlin.de>
 

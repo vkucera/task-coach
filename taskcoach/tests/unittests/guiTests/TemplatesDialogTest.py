@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import test, os, shutil
 from taskcoachlib import gui, config
 
- 
+
 class TemplatesDialogTestCase(test.wxTestCase):
     def setUp(self):
         super(TemplatesDialogTestCase, self).setUp()
@@ -32,13 +32,13 @@ class TemplatesDialogTestCase(test.wxTestCase):
 
         self.settings.pathToTemplatesDir = lambda: self.path
 
-        self.editor = gui.dialog.templates.TemplatesDialog(self.settings, 
+        self.editor = gui.dialog.templates.TemplatesDialog(self.settings,
                                                            self.frame, title='title')
-        
+
     def tearDown(self):
         super(TemplatesDialogTestCase, self).tearDown()
         self.safelyRemove(self.path)
-        
+
     def safelyRemove(self, path):
         try:
             shutil.rmtree(path)

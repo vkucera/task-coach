@@ -34,23 +34,23 @@ class PyDateTimeTest(test.TestCase):
 class DateTimeTest(test.TestCase):
     def testWeekNumber(self):
         self.assertEqual(53, date.DateTime(2005,1,1).weeknumber())
-        self.assertEqual(1, date.DateTime(2005,1,3).weeknumber())   
-        
+        self.assertEqual(1, date.DateTime(2005,1,3).weeknumber())
+
     def testStartOfDay(self):
         startOfDay = date.DateTime(2005,1,1,0,0,0,0)
         noonish = date.DateTime(2005,1,1,12,30,15,400)
         self.assertEqual(startOfDay, noonish.startOfDay())
-        
+
     def testEndOfDay(self):
         endOfDay = date.DateTime(2005,1,1,23,59,59,999999)
         noonish = date.DateTime(2005,1,1,12,30,15,400)
         self.assertEqual(endOfDay, noonish.endOfDay())
-        
+
     def testStartOfWorkWeekOnWednesday(self):
         startOfWorkWeek = date.DateTime(2011,7,25,0,0,0,0)
         wednesday = date.DateTime(2011,7,27,8,39,10)
         self.assertEqual(startOfWorkWeek, wednesday.startOfWorkWeek())
-        
+
     def testStartOfWorkWeekOnMonday(self):
         startOfWorkWeek = date.DateTime(2011,7,25,0,0,0,0)
         monday = date.DateTime(2011,7,25,8,39,10)
@@ -60,7 +60,7 @@ class DateTimeTest(test.TestCase):
         startOfWorkWeek = date.DateTime(2011,7,18,0,0,0,0)
         sunday = date.DateTime(2011,7,24,8,39,10)
         self.assertEqual(startOfWorkWeek, sunday.startOfWorkWeek())
-        
+
     def testEndOfWorkWeek(self):
         endOfWorkWeek = date.DateTime(2010,5,7,23,59,59,999999)
         midweek = date.DateTime(2010,5,5,12,30,15,200000)
@@ -70,7 +70,7 @@ class DateTimeTest(test.TestCase):
         endOfWorkWeek = date.DateTime(2010,5,7,23,59,59,999999)
         midweek = date.DateTime(2010,5,1,12,30,15,200000)
         self.assertEqual(endOfWorkWeek, midweek.endOfWorkWeek())
-        
+
     def testLastDayOfCurrentMonth_InFebruary2004(self):
         expected = date.DateTime(2004, 2, 29)
         actual = date.LastDayOfCurrentMonth(localtime=lambda: (2004, 2, 1))

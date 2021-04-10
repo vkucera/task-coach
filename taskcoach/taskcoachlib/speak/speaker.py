@@ -22,21 +22,21 @@ import wx
 
 
 if operating_system.isWindows():
-    
+
     class Speaker(object):
         ''' No-op class since we don't support speech on Windows yet. '''
-        
+
         def say(self, text):
             ''' Simply ignore the method call. '''
             pass
-        
+
 else:
-    
+
     # Since speech is just one output channel, make this class a singleton.
     class Speaker(metaclass=patterns.Singleton):
         ''' Class for letting the computer speak texts. Currently 'say' is
             supported on Mac OS X and 'espeak' on Linux. '''
-        
+
         def __init__(self):
             if operating_system.isMac():
                 self.__binary = 'say'
@@ -44,14 +44,14 @@ else:
                 self.__binary = 'espeak'
             self.__texts_to_say = []
             self.__current_speech_process = None
-                
+
         def say(self, text):
             ''' Schedule the text for speaking. '''
             self.__texts_to_say.append(text)
             self.__say_next_text()
-                    
+
         def __say_next_text(self):
-            ''' Say the next text if there is no speech process currently 
+            ''' Say the next text if there is no speech process currently
                 running. If there is, try again in one second. '''
             if self.__is_speaking():
                 wx.CallLater(1000, self.__say_next_text)
@@ -59,11 +59,11 @@ else:
             if not self.__texts_to_say:
                 return
             text = self.__texts_to_say.pop()
-            self.__current_speech_process = subprocess.Popen((self.__binary, 
+            self.__current_speech_process = subprocess.Popen((self.__binary,
                                                               text))
 
         def __is_speaking(self):
             ''' Return whether the computer is currently speaking. '''
             process = self.__current_speech_process
             return process and process.poll() is None
-            
+

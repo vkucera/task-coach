@@ -26,7 +26,7 @@ class ReminderControllerUnderTest(gui.ReminderController):
         self.messages = []
         self.userAttentionRequested = False
         super(ReminderControllerUnderTest, self).__init__(*args, **kwargs)
-        
+
     def showReminderMessage(self, message): # pylint: disable=W0221
         class DummyDialog(object):
             def __init__(self, *args, **kwargs):
@@ -37,16 +37,16 @@ class ReminderControllerUnderTest(gui.ReminderController):
                 pass
         super(ReminderControllerUnderTest, self).showReminderMessage(message, DummyDialog)
         self.messages.append(message)
-    
+
     def requestUserAttention(self):
         self.userAttentionRequested = True
 
-        
+
 class DummyWindow(wx.Frame):
     def __init__(self):
         super(DummyWindow, self).__init__(None)
         self.taskFile = persistence.TaskFile()
-    
+
 
 class ReminderControllerTestCase(test.TestCase):
     def setUp(self):
@@ -54,27 +54,27 @@ class ReminderControllerTestCase(test.TestCase):
         self.taskList = task.TaskList()
         self.effortList = effort.EffortList(self.taskList)
         self.dummyWindow = DummyWindow()
-        self.reminderController = ReminderControllerUnderTest(self.dummyWindow, 
+        self.reminderController = ReminderControllerUnderTest(self.dummyWindow,
             self.taskList, self.effortList, settings)
         self.nowDateTime = date.DateTime.now()
         self.reminderDateTime = self.nowDateTime + date.ONE_HOUR
-        
+
     def tearDown(self):
         super(ReminderControllerTestCase, self).tearDown()
         self.dummyWindow.taskFile.close()
         self.dummyWindow.taskFile.stop()
-        
+
 
 class ReminderControllerTest(ReminderControllerTestCase):
     def setUp(self):
         super(ReminderControllerTest, self).setUp()
         self.task = task.Task('Task')
         self.taskList.append(self.task)
-        
+
     def testSetTaskReminderSchedulesJob(self):
         self.task.setReminder(self.reminderDateTime)
         self.failUnless(date.Scheduler().get_jobs())
-        
+
     @test.skipOnTwistedVersions('12.')
     def testAfterReminderJobIsRemovedFromScheduler(self):
         self.task.setReminder(date.Now() + date.TimeDelta(seconds=1))
@@ -84,19 +84,19 @@ class ReminderControllerTest(ReminderControllerTestCase):
         while time.time() - t0 < 1.1:
             reactor.iterate()
         self.failIf(date.Scheduler().get_jobs())
-        
+
     def testAddTaskWithReminderSchedulesJob(self):
-        taskWithReminder = task.Task('Task with reminder', 
+        taskWithReminder = task.Task('Task with reminder',
                                      reminder=self.reminderDateTime)
         self.taskList.append(taskWithReminder)
         self.failUnless(date.Scheduler().get_jobs())
-                
+
     def testRemoveTaskWithReminderRemovesClockEventFromPublisher(self):
         self.task.setReminder(self.reminderDateTime)
         job = date.Scheduler().get_jobs()[0]
         self.taskList.remove(self.task)
         self.failIf(job in date.Scheduler().get_jobs())
-                
+
     def testChangeReminderRemovesOldReminder(self):
         self.task.setReminder(self.reminderDateTime)
         job = date.Scheduler().get_jobs()[0]
@@ -104,13 +104,13 @@ class ReminderControllerTest(ReminderControllerTestCase):
         jobs = date.Scheduler().get_jobs()
         self.assertEqual(len(jobs), 1)
         self.failIf(job is jobs[0])
-        
+
     def testMarkTaskCompletedRemovesReminder(self):
         self.task.setReminder(self.reminderDateTime)
         self.failUnless(date.Scheduler().get_jobs())
         self.task.setCompletionDateTime(date.Now())
         self.failIf(date.Scheduler().get_jobs())
-        
+
     def dummyCloseEvent(self, snoozeTimeDelta=None, openAfterClose=False):
         class DummySnoozeOptions(object):
             Selection = 0
@@ -128,10 +128,10 @@ class ReminderControllerTest(ReminderControllerTestCase):
             def Skip(self):
                 pass
         return DummyEvent()
-    
+
     def testOnCloseReminderResetsReminder(self):
         self.task.setReminder(self.reminderDateTime)
-        self.reminderController.onCloseReminderDialog(self.dummyCloseEvent(), 
+        self.reminderController.onCloseReminderDialog(self.dummyCloseEvent(),
                                                      show=False)
         self.assertEqual(None, self.task.reminder())
 
@@ -147,7 +147,7 @@ class ReminderControllerTest(ReminderControllerTestCase):
         frame = self.reminderController.onCloseReminderDialog(\
             self.dummyCloseEvent(openAfterClose=True), show=False)
         self.failUnless(frame)
-        
+
     def testOnWakeDoesNotRequestUserAttentionWhenThereAreNoReminders(self):
         self.reminderController.onReminder()
         self.failIf(self.reminderController.userAttentionRequested)

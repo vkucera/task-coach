@@ -51,28 +51,28 @@ class ReminderController(object):
 
     def onAddTask(self, event):
         self.__registerRemindersForTasks(event.values())
-                
+
     def onRemoveTask(self, event):
         self.__removeRemindersForTasks(event.values())
-                
+
     def onSetReminder(self, newValue, sender):  # pylint: disable=W0613
         self.__removeRemindersForTasks([sender])
         self.__registerRemindersForTasks([sender])
-        
+
     def onReminder(self):
         self.showReminderMessages(date.DateTime.now())
-        
+
     def showReminderMessages(self, now):
-        now += date.TimeDelta(seconds=5)  # Be sure not to miss reminders 
+        now += date.TimeDelta(seconds=5)  # Be sure not to miss reminders
         requestUserAttention = False
         for taskWithReminder in self.__tasksWithReminders.copy():
             if taskWithReminder.reminder() <= now:
                 requestUserAttention = True
                 self.showReminderMessage(taskWithReminder)
         if requestUserAttention:
-            self.requestUserAttention()        
-        
-    def showReminderMessage(self, taskWithReminder, 
+            self.requestUserAttention()
+
+    def showReminderMessage(self, taskWithReminder,
                             ReminderDialog=reminder.ReminderDialog):
         if self.__useOwnReminderDialog():
             self.__showReminderDialog(taskWithReminder, ReminderDialog)
@@ -81,16 +81,16 @@ class ReminderController(object):
             self.__showReminderViaNotifier(taskWithReminder)
             self.__removeReminder(taskWithReminder)
             self.__snooze(taskWithReminder)
-            
+
     def __useOwnReminderDialog(self):
         notifier = self.settings.get('feature', 'notifier')
         return notifier == 'Task Coach' or notify.AbstractNotifier.get(notifier) is None
-        
+
     def __showReminderDialog(self, taskWithReminder, ReminderDialog):
         # If the dialog has self.__mainWindow as parent, it steals the focus when
         # returning to Task Coach through Alt+Tab; we don't want that for
         # reminders.
-        reminderDialog = ReminderDialog(taskWithReminder, self.taskList, 
+        reminderDialog = ReminderDialog(taskWithReminder, self.taskList,
                                         self.effortList, self.settings, None)
         reminderDialog.Bind(wx.EVT_CLOSE, self.onCloseReminderDialog)
         reminderDialog.Show()
@@ -100,11 +100,11 @@ class ReminderController(object):
         notifier.notify(_('%s Reminder') % meta.name, taskWithReminder.subject(),
                         wx.ArtProvider.GetBitmap('taskcoach', size=wx.Size(32, 32)),
                         windowId=self.__mainWindow.GetHandle())
-        
+
     def __snooze(self, taskWithReminder):
         minutesToSnooze = self.settings.getint('view', 'defaultsnoozetime')
         taskWithReminder.snoozeReminder(date.TimeDelta(minutes=minutesToSnooze))
-        
+
     def onCloseReminderDialog(self, event, show=True):
         event.Skip()
         dialog = event.EventObject
@@ -113,11 +113,11 @@ class ReminderController(object):
             snoozeOptions = dialog.snoozeOptions
             snoozeTimeDelta = snoozeOptions.GetClientData(snoozeOptions.Selection)
             taskWithReminder.snoozeReminder(snoozeTimeDelta)  # Note that this is not undoable
-            # Undoing the snoozing makes little sense, because it would set the 
+            # Undoing the snoozing makes little sense, because it would set the
             # reminder back to its original date-time, which is now in the past.
         if dialog.openTaskAfterClose:
-            editTask = editor.TaskEditor(self.__mainWindow, [taskWithReminder], 
-                self.settings, self.taskList, self.__mainWindow.taskFile, 
+            editTask = editor.TaskEditor(self.__mainWindow, [taskWithReminder],
+                self.settings, self.taskList, self.__mainWindow.taskFile,
                 bitmap='edit')
             editTask.Show(show)
         else:
@@ -138,7 +138,7 @@ class ReminderController(object):
             self.__mainWindow.Show()
         if not self.__mainWindow.IsActive():
             self.__mainWindow.RequestUserAttention()
-            
+
     def __registerRemindersForTasks(self, tasks):
         for eachTask in tasks:
             if eachTask.reminder() and eachTask.reminder() < date.DateTime():
@@ -154,10 +154,10 @@ class ReminderController(object):
         now = date.DateTime.now()
         if reminderDateTime < now:
             reminderDateTime = now + date.TimeDelta(seconds=10)
-        job = self.__tasksWithReminders[taskWithReminder] = date.Scheduler().schedule(self.onReminder, 
+        job = self.__tasksWithReminders[taskWithReminder] = date.Scheduler().schedule(self.onReminder,
                                                                                       reminderDateTime)
         job.setId(self.nextId())
-            
+
     def __removeReminder(self, taskWithReminder):
         job = self.__tasksWithReminders[taskWithReminder]
         date.Scheduler().unschedule(job)

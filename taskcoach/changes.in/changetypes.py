@@ -20,7 +20,7 @@ import textwrap
 
 class Release:
     def __init__(self, number, date, bugsFixed=None, featuresAdded=None,
-            featuresRemoved=None, featuresChanged=None, 
+            featuresRemoved=None, featuresChanged=None,
             dependenciesChanged=None, implementationChanged=None,
             websiteChanges=None, distributionsChanged=None, teamChanges=None,
             summary=''):

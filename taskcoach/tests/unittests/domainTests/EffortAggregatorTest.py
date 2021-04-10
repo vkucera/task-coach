@@ -23,13 +23,13 @@ import test
 
 class EffortAggregatorTestCase(test.TestCase):
     aggregation = 'One of: day, week, or month (override in subclass)'
-    
+
     def setUp(self):
         task.Task.settings = config.Settings(load=False)
         self.taskList = task.TaskList()
-        self.effortAggregator = effort.EffortAggregator(self.taskList, 
+        self.effortAggregator = effort.EffortAggregator(self.taskList,
             aggregation=self.aggregation)
-        patterns.Publisher().registerObserver(self.onEvent, 
+        patterns.Publisher().registerObserver(self.onEvent,
             eventType=self.effortAggregator.addItemEventType(),
             eventSource=self.effortAggregator)
         patterns.Publisher().registerObserver(self.onEvent,
@@ -40,41 +40,41 @@ class EffortAggregatorTestCase(test.TestCase):
         self.task3 = task.Task(subject='child')
         self.task1.addChild(self.task3)
         self.task3.setParent(self.task1)
-        self.effort1period1a = effort.Effort(self.task1, 
-            date.DateTime(2004, 1, 1, 11, 0, 0), 
+        self.effort1period1a = effort.Effort(self.task1,
+            date.DateTime(2004, 1, 1, 11, 0, 0),
             date.DateTime(2004, 1, 1, 12, 0, 0))
-        self.effort2period1a = effort.Effort(self.task2, 
-            date.DateTime(2004, 1, 1, 11, 0, 0), 
+        self.effort2period1a = effort.Effort(self.task2,
+            date.DateTime(2004, 1, 1, 11, 0, 0),
             date.DateTime(2004, 1, 1, 12, 0, 0))
-        self.effort1period1b = effort.Effort(self.task1, 
-            date.DateTime(2004, 1, 1, 13, 0, 0), 
+        self.effort1period1b = effort.Effort(self.task1,
+            date.DateTime(2004, 1, 1, 13, 0, 0),
             date.DateTime(2004, 1, 1, 14, 0, 0))
-        self.effort2period1b = effort.Effort(self.task2, 
-            date.DateTime(2004, 1, 1, 13, 0, 0), 
+        self.effort2period1b = effort.Effort(self.task2,
+            date.DateTime(2004, 1, 1, 13, 0, 0),
             date.DateTime(2004, 1, 1, 14, 0, 0))
-        self.effort1period2 = effort.Effort(self.task1, 
-            date.DateTime(2004, 2, 2, 13, 0, 0), 
+        self.effort1period2 = effort.Effort(self.task1,
+            date.DateTime(2004, 2, 2, 13, 0, 0),
             date.DateTime(2004, 2, 2, 14, 0, 0))
         self.effort1period3 = effort.Effort(self.task1,
-            date.DateTime(2004, 1, 1, 10, 0, 0), 
+            date.DateTime(2004, 1, 1, 10, 0, 0),
             date.DateTime(2005, 1, 1, 10, 0, 0))
-        self.effort3period1a = effort.Effort(self.task3, 
-            date.DateTime(2004, 1, 1, 14, 0, 0), 
+        self.effort3period1a = effort.Effort(self.task3,
+            date.DateTime(2004, 1, 1, 14, 0, 0),
             date.DateTime(2004, 1, 1, 15, 0, 0))
         self.events = []
 
     def onEvent(self, event):
         self.events.append(event)
 
-                
+
 class CommonTestsMixin(object):
     def testEmptyTaskList(self):
         self.assertEqual(0, len(self.effortAggregator))
-        
+
     def testAddTaskWithoutEffort(self):
         self.taskList.append(self.task1)
         self.assertEqual(0, len(self.effortAggregator))
-        
+
     def testAddTaskWithEffort(self):
         self.task1.addEffort(self.effort1period1a)
         self.taskList.append(self.task1)
@@ -84,7 +84,7 @@ class CommonTestsMixin(object):
         self.taskList.append(self.task1)
         self.task1.addEffort(effort.Effort(self.task1))
         self.assertEqual(2, len(self.effortAggregator))
-        
+
     def testAddTwoEffortsOnSameDay(self):
         self.taskList.append(self.task1)
         self.task1.addEffort(self.effort1period1a)
@@ -96,16 +96,16 @@ class CommonTestsMixin(object):
         self.task1.addEffort(self.effort1period1b)
         self.taskList.append(self.task1)
         self.assertEqual(2, len(self.effortAggregator))
-        
+
     def testAddTaskWithTwoEffortsOnSameDayAndCheckTotalEffort(self):
         self.task1.addEffort(self.effort1period1a)
         self.task1.addEffort(self.effort1period1b)
         self.taskList.append(self.task1)
         expectedDuration = self.effort1period1a.duration() + \
                            self.effort1period1b.duration()
-        self.assertEqual(expectedDuration, 
+        self.assertEqual(expectedDuration,
                          list(self.effortAggregator)[0].duration())
-        
+
     def testAddTwoEffortsInDifferentPeriods(self):
         self.taskList.append(self.task1)
         self.task1.addEffort(self.effort1period1a)
@@ -208,13 +208,13 @@ class CommonTestsMixin(object):
         self.task3.addEffort(self.effort3period1a)
         self.taskList.removeItems([self.task1, self.task2, self.task3])
         self.assertEqual(0, len(self.effortAggregator))
- 
+
     def testRemoveChildTask(self):
         self.taskList.extend([self.task1])
         self.task3.addEffort(self.effort3period1a)
         self.taskList.removeItems([self.task3])
         self.assertEqual(0, len(self.effortAggregator))
- 
+
     def testChangeStart(self):
         self.taskList.append(self.task1)
         self.task1.addEffort(self.effort1period1a)
@@ -265,7 +265,7 @@ class CommonTestsMixin(object):
     def testCreateWithInitialEffort(self):
         self.taskList.append(self.task1)
         self.task1.addEffort(self.effort1period1a)
-        aggregator = effort.EffortAggregator(self.taskList, 
+        aggregator = effort.EffortAggregator(self.taskList,
             aggregation=self.aggregation)
         self.assertEqual(2, len(aggregator))
 
@@ -310,7 +310,7 @@ class CommonTestsMixin(object):
     def testMaxDateTime_OneEffort(self):
         self.taskList.append(self.task1)
         self.task1.addEffort(self.effort1period1a)
-        self.assertEqual(self.effort1period1a.getStop(), 
+        self.assertEqual(self.effort1period1a.getStop(),
             self.effortAggregator.maxDateTime())
 
     def testMaxDateTime_OneTrackingEffort(self):
@@ -322,10 +322,10 @@ class CommonTestsMixin(object):
         self.taskList.append(self.task1)
         self.task1.addEffort(self.effort1period1a)
         now = date.DateTime.now()
-        self.task1.addEffort(effort.Effort(self.task1, 
+        self.task1.addEffort(effort.Effort(self.task1,
             self.effort1period1a.getStart(), now))
         self.assertEqual(now, self.effortAggregator.maxDateTime())
-   
+
     def testNrTracking(self):
         self.assertEqual(0, self.effortAggregator.nrBeingTracked())
 
@@ -344,19 +344,19 @@ class EffortPerWeekTest(EffortAggregatorTestCase, CommonTestsMixin):
 class EffortPerMonthTest(EffortAggregatorTestCase, CommonTestsMixin):
     aggregation = 'month'
 
-        
+
 class MultipleAggregatorsTest(test.TestCase):
     def setUp(self):
         self.taskList = task.TaskList()
         self.effortPerDay = effort.EffortSorter(effort.EffortAggregator(self.taskList, aggregation='day'))
         self.effortPerWeek = effort.EffortSorter(effort.EffortAggregator(self.taskList, aggregation='week'))
-        
+
     def testDeleteEffort_StartOfBothPeriods(self):
         aTask = task.Task()
         self.taskList.append(aTask)
-        # Make sure the start of the day and week are the same, 
+        # Make sure the start of the day and week are the same,
         # in other words, use a Monday
-        anEffort = effort.Effort(aTask, date.DateTime(2006, 8, 28), 
+        anEffort = effort.Effort(aTask, date.DateTime(2006, 8, 28),
                                  date.DateTime(2006, 8, 29))
         aTask.addEffort(anEffort)
         aTask.removeEffort(anEffort)

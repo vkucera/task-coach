@@ -22,7 +22,7 @@ from taskcoachlib import patterns
 from taskcoachlib.domain import date
 from taskcoachlib.i18n import _
 from .clipboard import Clipboard
- 
+
 
 class BaseCommand(patterns.Command):
     def __init__(self, list=None, items=None, *args, **kwargs): # pylint: disable=W0622
@@ -30,9 +30,9 @@ class BaseCommand(patterns.Command):
         self.list = list
         self.items = [item for item in items] if items else []
         self.save_modification_datetimes()
-        
+
     def save_modification_datetimes(self):
-        self.__old_modification_datetimes = [(item, 
+        self.__old_modification_datetimes = [(item,
             item.modificationDateTime()) for item in self.modified_items() if item]
         self.__now = date.Now()
 
@@ -41,33 +41,33 @@ class BaseCommand(patterns.Command):
 
     singular_name = 'Do something with %s' # Override in subclass
     plural_name = 'Do something'           # Override in subclass
-    
+
     def name(self):
         return self.singular_name%self.name_subject(self.items[0]) if len(self.items) == 1 else self.plural_name
 
     def name_subject(self, item):
         subject = item.subject()
         return subject if len(subject) < 60 else subject[:57] + '...'
-    
+
     def items_are_new(self):
         return False
-    
+
     def getItems(self):
         ''' The items this command operates on. '''
         return self.items
-    
+
     def modified_items(self):
         ''' Return the items that are modified by this command. '''
         return self.items
-        
+
     def canDo(self):
         return bool(self.items)
-        
+
     def do(self):
         if self.canDo():
             super(BaseCommand, self).do()
             self.do_command()
-            
+
     def undo(self):
         super(BaseCommand, self).undo()
         self.undo_command()
@@ -82,29 +82,29 @@ class BaseCommand(patterns.Command):
         except AttributeError:
             return # no 'method' in any super class
         return method(*args, **kwargs)
-        
+
     def do_command(self):
         self.__tryInvokeMethodOnSuper('do_command')
         for item in self.modified_items():
             item.setModificationDateTime(self.__now)
-        
+
     def undo_command(self):
         self.__tryInvokeMethodOnSuper('undo_command')
         for item, old_modification_datetime in self.__old_modification_datetimes:
             item.setModificationDateTime(old_modification_datetime)
-        
+
     def redo_command(self):
         self.__tryInvokeMethodOnSuper('redo_command')
         for item in self.modified_items():
             item.setModificationDateTime(self.__now)
-        
+
 
 class SaveStateMixin(object):
-    ''' Mixin class for commands that need to keep the states of objects. 
+    ''' Mixin class for commands that need to keep the states of objects.
         Objects should provide __getstate__ and __setstate__ methods. '''
-    
+
     # pylint: disable=W0201
-    
+
     def saveStates(self, objects):
         self.objectsToBeSaved = objects
         self.oldStates = self.__getStates()
@@ -119,7 +119,7 @@ class SaveStateMixin(object):
         self.__setStates(self.newStates, event=event)
 
     def __getStates(self):
-        return [objectToBeSaved.__getstate__() for objectToBeSaved in 
+        return [objectToBeSaved.__getstate__() for objectToBeSaved in
                 self.objectsToBeSaved]
 
     @patterns.eventSource
@@ -130,12 +130,12 @@ class SaveStateMixin(object):
 
 class CompositeMixin(object):
     ''' Mixin class for commands that deal with composites. '''
-    def getAncestors(self, composites): 
+    def getAncestors(self, composites):
         ancestors = []
         for composite in composites:
             ancestors.extend(composite.ancestors())
         return ancestors
-    
+
     def getAllChildren(self, composites):
         allChildren = []
         for composite in composites:
@@ -152,10 +152,10 @@ class NewItemCommand(BaseCommand):
         # Override to always return the singular name without a subject. The
         # subject would be something like "New task", so not very interesting.
         return self.singular_name
-    
+
     def items_are_new(self):
         return True
-    
+
     def modified_items(self):
         return []
 
@@ -187,7 +187,7 @@ class NewSubItemCommand(NewItemCommand):
     def modified_items(self):
         return [item.parent() for item in self.items]
 
-    
+
 class CopyCommand(BaseCommand):
     plular_name = _('Copy')
     singular_name = _('Copy "%s"')
@@ -202,7 +202,7 @@ class CopyCommand(BaseCommand):
     def redo_command(self):
         Clipboard().put(self.__copies, self.list)
 
-        
+
 class DeleteCommand(BaseCommand, SaveStateMixin):
     plural_name = _('Delete')
     singular_name = _('Delete "%s"')
@@ -210,7 +210,7 @@ class DeleteCommand(BaseCommand, SaveStateMixin):
     def __init__(self, *args, **kwargs):
         self.__shadow = kwargs.pop('shadow', False)
         super(DeleteCommand, self).__init__(*args, **kwargs)
-        
+
     def modified_items(self):
         return [item.parent() for item in self.items if item.parent()]
 
@@ -272,7 +272,7 @@ class CutCommand(CutCommandMixin, DeleteCommand):
     def sourceOfItemsToCut(self):
         return self.list
 
-        
+
 class PasteCommand(BaseCommand, SaveStateMixin):
     plural_name = _('Paste')
     singular_name = _('Paste "%s"')
@@ -284,10 +284,10 @@ class PasteCommand(BaseCommand, SaveStateMixin):
 
     def getItemsToSave(self):
         return self.__itemsToPaste
-    
+
     def canDo(self):
         return bool(self.__itemsToPaste)
-        
+
     def do_command(self):
         self.setParentOfPastedItems()
         self.__sourceOfItemsToPaste.extend(self.__itemsToPaste)
@@ -295,15 +295,15 @@ class PasteCommand(BaseCommand, SaveStateMixin):
     def undo_command(self):
         self.__sourceOfItemsToPaste.removeItems(self.__itemsToPaste)
         self.undoStates()
-        
+
     def redo_command(self):
         self.redoStates()
         self.__sourceOfItemsToPaste.extend(self.__itemsToPaste)
 
     def setParentOfPastedItems(self, newParent=None):
         for item in self.__itemsToPaste:
-            item.setParent(newParent) 
-    
+            item.setParent(newParent)
+
     def getItemsToPaste(self):
         items, source = Clipboard().get()
         return [item.copy() for item in items], source
@@ -320,28 +320,28 @@ class PasteAsSubItemCommand(PasteCommand, CompositeMixin):
     def getItemsToSave(self):
         return self.getAncestors([self.items[0]]) + \
             super(PasteAsSubItemCommand, self).getItemsToSave()
-        
+
 
 class DragAndDropCommand(BaseCommand, SaveStateMixin, CompositeMixin):
     plural_name = _('Drag and drop')
     singular_name = _('Drag and drop "%s"')
-    
+
     def __init__(self, *args, **kwargs):
         dropTargets = kwargs.pop('drop')
         self._itemToDropOn = dropTargets[0] if dropTargets else None
         super(DragAndDropCommand, self).__init__(*args, **kwargs)
         self.saveStates(self.getItemsToSave())
-        
+
     def getItemsToSave(self):
         toSave = self.items[:]
         if self._itemToDropOn is not None:
             toSave.insert(0, self._itemToDropOn)
         return toSave
-    
+
     def modified_items(self):
         return [item.parent() for item in self.items if item.parent()] + \
                [self._itemToDropOn] if self._itemToDropOn else []
-    
+
     def canDo(self):
         return self._itemToDropOn not in (self.items + \
             self.getAllChildren(self.items) + self.getAllParents(self.items))
@@ -446,19 +446,19 @@ class EditSubjectCommand(BaseCommand):
         self.__newSubject = kwargs.pop('newValue')
         super(EditSubjectCommand, self).__init__(*args, **kwargs)
         self.__old_subjects = [(item, item.subject()) for item in self.items]
-    
+
     @patterns.eventSource
     def do_command(self, event=None):
         super(EditSubjectCommand, self).do_command()
         for item in self.items:
             item.setSubject(self.__newSubject, event=event)
-            
+
     @patterns.eventSource
     def undo_command(self, event=None):
         super(EditSubjectCommand, self).undo_command()
         for item, old_subject in self.__old_subjects:
             item.setSubject(old_subject, event=event)
-            
+
     def redo_command(self):
         self.do_command()
 
@@ -471,19 +471,19 @@ class EditDescriptionCommand(BaseCommand):
         self.__new_description = kwargs.pop('newValue')
         super(EditDescriptionCommand, self).__init__(*args, **kwargs)
         self.__old_descriptions = [item.description() for item in self.items]
-    
+
     @patterns.eventSource
     def do_command(self, event=None):
         super(EditDescriptionCommand, self).do_command()
         for item in self.items:
             item.setDescription(self.__new_description, event=event)
-    
+
     @patterns.eventSource
     def undo_command(self, event=None):
         super(EditDescriptionCommand, self).undo_command()
         for item, old_description in zip(self.items, self.__old_descriptions):
             item.setDescription(old_description, event=event)
-            
+
     def redo_command(self):
         self.do_command()
 
@@ -491,7 +491,7 @@ class EditDescriptionCommand(BaseCommand):
 class EditIconCommand(BaseCommand):
     plural_name = _('Change icons')
     singular_name = _('Change icon "%s"')
-    
+
     def __init__(self, *args, **kwargs):
         self.__newIcon = icon = kwargs.pop('newValue')
         self.__newSelectedIcon = icon[:-len('_icon')] + '_open_icon' \
@@ -499,21 +499,21 @@ class EditIconCommand(BaseCommand):
             else icon
         super(EditIconCommand, self).__init__(*args, **kwargs)
         self.__oldIcons = [(item.icon(), item.selectedIcon()) for item in self.items]
-    
+
     @patterns.eventSource
     def do_command(self, event=None):
         super(EditIconCommand, self).do_command()
         for item in self.items:
             item.setIcon(self.__newIcon, event=event)
             item.setSelectedIcon(self.__newSelectedIcon, event=event)
-    
+
     @patterns.eventSource
     def undo_command(self, event=None):
         super(EditIconCommand, self).undo_command()
         for item, (oldIcon, oldSelectedIcon) in zip(self.items, self.__oldIcons):
             item.setIcon(oldIcon, event=event)
             item.setSelectedIcon(oldSelectedIcon, event=event)
-            
+
     def redo_command(self):
         self.do_command()
 
@@ -521,24 +521,24 @@ class EditIconCommand(BaseCommand):
 class EditFontCommand(BaseCommand):
     plural_name = _('Change fonts')
     singular_name = _('Change font "%s"')
-    
+
     def __init__(self, *args, **kwargs):
         self.__newFont = kwargs.pop('newValue')
         super(EditFontCommand, self).__init__(*args, **kwargs)
         self.__oldFonts = [item.font() for item in self.items]
-    
+
     @patterns.eventSource
     def do_command(self, event=None):
         super(EditFontCommand, self).do_command()
         for item in self.items:
             item.setFont(self.__newFont, event=event)
-    
+
     @patterns.eventSource
     def undo_command(self, event=None):
         super(EditFontCommand, self).undo_command()
         for item, oldFont in zip(self.items, self.__oldFonts):
             item.setFont(oldFont, event=event)
-            
+
     def redo_command(self):
         self.do_command()
 
@@ -548,7 +548,7 @@ class EditColorCommand(BaseCommand):
         self.__newColor = kwargs.pop('newValue')
         super(EditColorCommand, self).__init__(*args, **kwargs)
         self.__oldColors = [self.getItemColor(item) for item in self.items]
-        
+
     @staticmethod
     def getItemColor(item):
         raise NotImplementedError
@@ -556,7 +556,7 @@ class EditColorCommand(BaseCommand):
     @staticmethod
     def setItemColor(item, color, event):
         raise NotImplementedError
-    
+
     @patterns.eventSource
     def do_command(self, event=None):
         super(EditColorCommand, self).do_command()
@@ -572,7 +572,7 @@ class EditColorCommand(BaseCommand):
     def redo_command(self):
         self.do_command()
 
-  
+
 class EditForegroundColorCommand(EditColorCommand):
     plural_name = _('Change foreground colors')
     singular_name = _('Change foreground color "%s"')
@@ -580,11 +580,11 @@ class EditForegroundColorCommand(EditColorCommand):
     @staticmethod
     def getItemColor(item):
         return item.foregroundColor()
-    
+
     @staticmethod
     def setItemColor(item, color, event):
         item.setForegroundColor(color, event=event)
-                  
+
 
 class EditBackgroundColorCommand(EditColorCommand):
     plural_name = _('Change background colors')
@@ -597,5 +597,5 @@ class EditBackgroundColorCommand(EditColorCommand):
     @staticmethod
     def setItemColor(item, color, event):
         item.setBackgroundColor(color, event=event)
-            
-        
+
+

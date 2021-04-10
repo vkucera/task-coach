@@ -47,4 +47,4 @@ class UICommandContainerMixin(object):
         subMenu = menu.Menu(self._window)
         self.appendMenu(menuTitle, subMenu)
         subMenu.appendUICommands(*uiCommands)  # pylint: disable=W0142
-        
+

@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import test, wx
 from taskcoachlib import gui, config, persistence
 from taskcoachlib.domain import category
- 
+
 
 class CategoryViewerTest(test.wxTestCase):
     def setUp(self):
@@ -27,7 +27,7 @@ class CategoryViewerTest(test.wxTestCase):
         self.settings = config.Settings(load=False)
         self.taskFile = persistence.TaskFile()
         self.categories = self.taskFile.categories()
-        self.viewer = gui.viewer.CategoryViewer(self.frame, self.taskFile, 
+        self.viewer = gui.viewer.CategoryViewer(self.frame, self.taskFile,
                                                 self.settings)
 
     def tearDown(self):
@@ -40,7 +40,7 @@ class CategoryViewerTest(test.wxTestCase):
         cat2 = category.Category('2')
         self.categories.extend([cat2, cat1])
         return cat1, cat2
-        
+
     def testInitialSize(self):
         self.assertEqual(0, self.viewer.size())
 
@@ -57,13 +57,13 @@ class CategoryViewerTest(test.wxTestCase):
         widget = self.viewer.widget
         for item, cat in zip(widget.GetItemChildren(), self.viewer.presentation()):
             self.assertEqual(cat.subject(), widget.GetItemText(item))
-            
+
     def testSelectAll(self):
         self.addTwoCategories()
         self.viewer.widget.select_all()
         self.viewer.updateSelection()
         self.assertEqual(2, len(self.viewer.curselection()))
-        
+
     def testFilterOnAllCheckedCategoriesSetsSetting(self):
         self.viewer.filterUICommand.doChoice(True)
         self.failUnless(self.settings.getboolean('view', 'categoryfiltermatchall'))
@@ -71,4 +71,3 @@ class CategoryViewerTest(test.wxTestCase):
     def testFilterOnAnyCheckedCategoriesSetsSetting(self):
         self.viewer.filterUICommand.doChoice(False)
         self.failIf(self.settings.getboolean('view', 'categoryfiltermatchall'))
-    

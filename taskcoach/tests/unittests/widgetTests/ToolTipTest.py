@@ -29,29 +29,29 @@ class DummyToolTipWindow(object):
     def __init__(self, size=(10, 10)):
         self.size = size
         self.rect = None
-        
+
     def Show(self, *args):
         self.rect = args
-        
+
     def GetSizeTuple(self):
         return self.size
-        
+
 
 class ToolTipMixinTestCase(test.TestCase):
     def setUp(self):
         self.tooltipMixin = ToolTipUnderTest(None)
- 
+
     def testShowTip(self):
         tipWindow = DummyToolTipWindow()
         self.tooltipMixin.DoShowTip(0, 0, tipWindow)
         self.assertEqual((0, 0, 10, 10), tipWindow.rect)
-        
+
     def testReallyBigTip(self):
         width, height = wx.ClientDisplayRect()[2:]
         tipWindow = DummyToolTipWindow((2*width, 2*height))
         self.tooltipMixin.DoShowTip(0, 0, tipWindow)
         self.assertEqual((5, 5, 2*width, height-10), tipWindow.rect)
-        
+
     def testTipThatFallsOfBottomOfScreen(self):
         _, displayY, _, height = wx.ClientDisplayRect()
         tipWindow = DummyToolTipWindow((10, 100))
@@ -68,16 +68,16 @@ class SimpleToolTipUnderTest(tooltip.SimpleToolTip):
 class SimpleToolTipTestCase(test.wxTestCase):
     def setUp(self):
         self.tip = SimpleToolTipUnderTest(self.frame)
-        
+
     def testOneShortLine(self):
         self.tip.SetData([(None, ['First line'])])
         self.assertEqual([(None, ['First line'])], self.tip.data)
-        
+
     def testOneLongLine(self):
         self.tip.SetData([(None, ['First line '*10])])
-        self.assertEqual([(None, [('First line '*7).strip(), 
+        self.assertEqual([(None, [('First line '*7).strip(),
                                   ('First line '*3).strip()])], self.tip.data)
-        
+
     def testCalculateSize(self):
         self.tip.SetData([(None, ['First line'])])
         self.assertEqual(wx.Size(16, 27), self.tip._calculateSize())

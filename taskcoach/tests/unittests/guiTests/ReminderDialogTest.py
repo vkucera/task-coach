@@ -66,13 +66,12 @@ class ReminderDialogTest(test.TestCase):
     def testRememberReminderReplaceDefaultSnoozeTime(self):
         reminderDialog = self.createReminderDialog()
         reminderDialog.replaceDefaultSnoozeTime.SetValue(False)
-        reminderDialog.onClose(DummyEvent())        
+        reminderDialog.onClose(DummyEvent())
         self.assertEqual(False, self.settings.getboolean('view', 
                                 'replacedefaultsnoozetime'))
-        
+
     def testUseReminderReplaceDefaultSnoozeTime(self):
         self.settings.setboolean('view', 'replacedefaultsnoozetime', False)
         reminderDialog = self.createReminderDialog()
         self.assertEqual(False, 
                          reminderDialog.replaceDefaultSnoozeTime.GetValue())
-        

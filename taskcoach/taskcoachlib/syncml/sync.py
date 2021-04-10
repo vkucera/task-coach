@@ -190,7 +190,7 @@ class Synchronizer(wx.ProgressDialog):
                              '%s.Notes' % self.clientName, cfg)
             src.preferredSyncMode = globals()[self.notemode]
             self.sources.append(src)
-    
+
     def onAddItem(self):
         self.added += 1
         self.pulse()

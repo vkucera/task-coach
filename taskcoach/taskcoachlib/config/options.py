@@ -28,10 +28,10 @@ class OptionParser(optparse.OptionParser, object):
 
     def __addOptionGroups(self):
         self.__getAndAddOptions('OptionGroup', self.add_option_group)
-        
+
     def __addOptions(self):
         self.__getAndAddOptions('Option', self.add_option)
-        
+
     def __getAndAddOptions(self, suffix, addOption):
         for getOption in self.__methodsEndingWith(suffix):
             addOption(getOption(self))
@@ -40,35 +40,35 @@ class OptionParser(optparse.OptionParser, object):
         return [method for name, method in vars(self.__class__).items() if
                 name.endswith(suffix)]
 
-                
+
 class OptionGroup(optparse.OptionGroup, object):
     pass
-    
-    
+
+
 class ApplicationOptionParser(OptionParser):
     def __init__(self, *args, **kwargs):
         kwargs['usage'] = 'usage: %prog [options] [.tsk file]'
         kwargs['version'] = '%s %s'%(meta.data.name, meta.data.version)
         super(ApplicationOptionParser, self).__init__(*args, **kwargs)
-        
+
     def profileOption(self):
-        return optparse.Option('--profile', default=False, 
+        return optparse.Option('--profile', default=False,
             action='store_true', help=optparse.SUPPRESS_HELP)
- 
+
     def profile_skipstartOption(self):
-        return optparse.Option('-s', '--skipstart', default=False, 
+        return optparse.Option('-s', '--skipstart', default=False,
             action='store_true', help=optparse.SUPPRESS_HELP)
 
     def iniOption(self):
         return optparse.Option('-i', '--ini', dest='inifile',
             help='use the specified INIFILE for storing settings')
-        
+
     def languageOption(self):
-        return optparse.Option('-l', '--language', dest='language', 
+        return optparse.Option('-l', '--language', dest='language',
             type='choice', choices=sorted([lang for (lang, enabled) in \
                 meta.data.languages.values() if lang is not None] + ['en']),
             help='use the specified LANGUAGE for the GUI (e.g. "nl" or "fr"')
 
     def poOption(self):
         return optparse.Option('-p', '--po', dest='pofile',
-            help='use the specified POFILE for translation of the GUI') 
+            help='use the specified POFILE for translation of the GUI')

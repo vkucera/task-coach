@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from distutils.command.bdist_rpm import bdist_rpm 
+from distutils.command.bdist_rpm import bdist_rpm
 
 
 class bdist_rpm_fedora(bdist_rpm):
@@ -33,11 +33,11 @@ class bdist_rpm_fedora(bdist_rpm):
         ''' We don't want the spec file to be generated, instead the rpm build
         process should just use the provided spec file. '''
         return self.spec_file
-        
+
     def copy_file(self, source, dest):
         ''' HACK WARNING! bdist_rpm is difficult to override because its
-        methods are much too long. We need to copy the desktop file in 
-        addition to the icon, so we override copy_file, check whether the 
+        methods are much too long. We need to copy the desktop file in
+        addition to the icon, so we override copy_file, check whether the
         icon is being copied, and if so, also copy the desktop file.'''
         bdist_rpm.copy_file(self, source, dest)
         if source == self.icon:

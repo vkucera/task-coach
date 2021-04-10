@@ -32,8 +32,8 @@ class DummyFile(object):
 
     def write(self, *args, **kwargs):
         pass
-    
-    
+
+
 class DummyTaskFile(persistence.TaskFile):
     def __init__(self, *args, **kwargs):
         self.saveCalled = 0
@@ -48,13 +48,13 @@ class DummyTaskFile(persistence.TaskFile):
 
     def exists(self, *args, **kwargs):  # pylint: disable=W0613
         return True
-        
+
     def _openForRead(self, *args, **kwargs):  # pylint: disable=W0613
         return DummyFile()
-        
+
     def _openForWrite(self, *args, **kwargs):  # pylint: disable=W0613
         return DummyFile()
-    
+
     def save(self, *args, **kwargs):
         if kwargs.get('doNotify', True):
             self.saveCalled += 1
@@ -70,48 +70,48 @@ class AutoSaverTestCase(test.TestCase):
         task.Task.settings = self.settings = config.Settings(load=False)
         self.taskFile = DummyTaskFile()
         self.autoSaver = persistence.AutoSaver(self.settings)
-        
+
     def tearDown(self):
         super(AutoSaverTestCase, self).tearDown()
         self.taskFile.close()
         self.taskFile.stop()
         del self.autoSaver # Make sure AutoSaver is not observing task files
-        
+
     def testCreate(self):
         self.failIf(self.taskFile.saveCalled)
-        
+
     def testFileChanged_ButNoFilenameAndAutoSaveOff(self):
         self.taskFile.tasks().append(task.Task())
         self.autoSaver.on_idle(dummy.Event())
         self.failIf(self.taskFile.saveCalled)
-        
+
     def testFileChanged_ButAutoSaveOff(self):
         self.settings.set('file', 'autosave', 'False')
         self.taskFile.setFilename('whatever.tsk')
         self.taskFile.tasks().append(task.Task())
         self.autoSaver.on_idle(dummy.Event())
         self.failIf(self.taskFile.saveCalled)
-                
+
     def testFileChanged_ButNoFilename(self):
         self.settings.set('file', 'autosave', 'True')
         self.taskFile.tasks().append(task.Task())
         self.autoSaver.on_idle(dummy.Event())
         self.failIf(self.taskFile.saveCalled)
-        
+
     def testFileChanged(self):
         self.settings.set('file', 'autosave', 'True')
         self.taskFile.setFilename('whatever.tsk')
         self.taskFile.tasks().append(task.Task())
         self.autoSaver.on_idle(dummy.Event())
         self.assertEqual(1, self.taskFile.saveCalled)
-        
+
     def testSaveAsDoesNotTriggerAutoSave(self):
         self.settings.set('file', 'autosave', 'True')
         self.taskFile.setFilename('whatever.tsk')
         self.taskFile.saveas('newfilename.tsk')
         self.autoSaver.on_idle(dummy.Event())
         self.assertEqual(1, self.taskFile.saveCalled)
-              
+
     def testCloseDoesNotTriggerAutoSave(self):
         self.settings.set('file', 'autosave', 'True')
         self.taskFile.setFilename('whatever.tsk')
@@ -119,7 +119,7 @@ class AutoSaverTestCase(test.TestCase):
         self.autoSaver.on_idle(dummy.Event())
         self.taskFile.close()
         self.assertEqual(1, self.taskFile.saveCalled)
-        
+
     def testLoadDoesNotTriggerAutoSave(self):
         self.settings.set('file', 'autosave', 'True')
         self.taskFile.setFilename('whatever.tsk')
@@ -136,7 +136,7 @@ class AutoSaverTestCase(test.TestCase):
             pass
         self.autoSaver.on_idle(dummy.Event())
         self.failIf(self.taskFile.saveCalled)
-        
+
     def testMergeDoesTriggerAutoSave(self):
         self.settings.set('file', 'autosave', 'True')
         self.taskFile.setFilename('whatever.tsk')

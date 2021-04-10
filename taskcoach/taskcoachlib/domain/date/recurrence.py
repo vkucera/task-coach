@@ -23,11 +23,11 @@ from . import dateandtime as date
 
 class Recurrence(object):
     ''' Class representing a recurring date. '''
-    
+
     units = ('daily', 'weekly', 'monthly', 'yearly', '')
-    
+
     def __init__(self, unit='', amount=1, sameWeekday=False, maximum=0, count=0,
-                 stop_datetime=None, recurBasedOnCompletion=False):  
+                 stop_datetime=None, recurBasedOnCompletion=False):
         assert unit in self.units
         assert amount >= 1
         self.unit = unit
@@ -35,10 +35,10 @@ class Recurrence(object):
         self.stop_datetime = stop_datetime or date.DateTime()
         self.sameWeekday = sameWeekday
         # Maximum number of recurrences we give out, 0 == infinite:
-        self.max = maximum  
+        self.max = maximum
         self.count = count  # Actual number of recurrences given out so far
         self.recurBasedOnCompletion = recurBasedOnCompletion
-                
+
     def __call__(self, *dateTimes, **kwargs):
         result = [self._nextDateTime(dateTime) for dateTime in dateTimes]
         if kwargs.get('next', True):
@@ -61,10 +61,10 @@ class Recurrence(object):
             for the reccurences has passed. '''
         return self.max != 0 and self.count >= self.max or \
             date.Now() > self.stop_datetime
-        
+
     def _nextDateTime(self, dateTime, amount=0):
         if date.DateTime() == dateTime or not self.unit:
-            return dateTime 
+            return dateTime
         amount = amount or self.amount
         if amount > 1:
             dateTime = self._nextDateTime(dateTime, amount - 1)
@@ -89,7 +89,7 @@ class Recurrence(object):
             month += 1
         if self.sameWeekday:
             weekday = dateTime.weekday()
-            weekNr = min(3, (day - 1) / 7)  # In what week of the month falls aDate, allowable range 0-3 
+            weekNr = min(3, (day - 1) / 7)  # In what week of the month falls aDate, allowable range 0-3
             day = weekNr * 7 + 1  # The earliest possible day that is on the same weekday as aDate
             result = date.DateTime(year, month, day, *details)
             while result.weekday() != weekday:
@@ -105,13 +105,13 @@ class Recurrence(object):
 
     def _addYear(self, dateTime):
         if (calendar.isleap(dateTime.year) and dateTime.month <= 2 and dateTime.day <= 28) or \
-           (calendar.isleap(dateTime.year + 1) and dateTime.month >= 3): 
+           (calendar.isleap(dateTime.year + 1) and dateTime.month >= 3):
             days = 366
         else:
             days = 365
         newDateTime = dateTime + timedelta.TimeDelta(days=days)
         if self.sameWeekday:
-            # Find the nearest date in newDate's year that is on the right 
+            # Find the nearest date in newDate's year that is on the right
             # weekday:
             weekday, year = dateTime.weekday(), newDateTime.year
             newEarlierDateTime = newLaterDateTime = newDateTime
@@ -126,10 +126,10 @@ class Recurrence(object):
         return newDateTime
 
     def copy(self):
-        return self.__class__(self.unit, self.amount, self.sameWeekday, 
+        return self.__class__(self.unit, self.amount, self.sameWeekday,
                               self.max, stop_datetime=self.stop_datetime,
                               recurBasedOnCompletion=self.recurBasedOnCompletion)
-    
+
     def __eq__(self, other):
         try:
             return self.unit == other.unit and self.amount == other.amount and \
@@ -139,7 +139,7 @@ class Recurrence(object):
                    self.recurBasedOnCompletion == other.recurBasedOnCompletion
         except AttributeError:
             return False
- 
+
     def __lt__(self, other):
         try:
             return self.units.index(self.unit) < self.units.index(other.unit) or \
@@ -147,6 +147,6 @@ class Recurrence(object):
                 self.amount < other.amount)
         except AttributeError:
             return True
- 
+
     def __nonzero__(self):
         return bool(self.unit)

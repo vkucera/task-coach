@@ -27,9 +27,9 @@ class DeveloperMessageDialogTest(test.TestCase):
         self.dialog = developer_message.MessageDialog(None, message='Message',
                                                       url='http://a.b',
                                                       settings=self.settings)
-        
+
     def testDialogContainsMessage(self):
-        self.assertEqual('Message', 
+        self.assertEqual('Message',
             self.dialog.GetChildren()[0].GetChildren()[0].GetLabel())
 
     def testDialogContainsURL(self):

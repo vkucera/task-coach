@@ -36,14 +36,14 @@ Release steps:
     * Wait for the confirmation email from Launchpad and copy the URL
     * Run 'cd i18n.in && python make.py <url>' to update the translations
     * Run 'make languagetests' to test the translations
-    * When all tests pass, run 'hg commit -m "Updated translations"' 
+    * When all tests pass, run 'hg commit -m "Updated translations"'
   - Run 'make reallyclean' to remove old packages.
   - Run 'make alltests'.
   - Run 'python release.py release' to build the distributions, upload and download them
-    to/from Sourceforge, generate MD5 digests, generate the website, upload the 
-    website to the Dreamhost and Hostland websites, announce the release on 
+    to/from Sourceforge, generate MD5 digests, generate the website, upload the
+    website to the Dreamhost and Hostland websites, announce the release on
     Twitter, and PyPI (Python Package Index), mark the bug reports
-    on SourceForge fixed-and-released, send the 
+    on SourceForge fixed-and-released, send the
     announcement email, mark .dmg and .exe files as default downloads for their
     platforms, and to tag the release in Mercurial.
   - Create branch if feature release.
@@ -242,9 +242,9 @@ def sourceforge_location(settings):
     project_first_letter = project[0]
     username = '%s,%s' % (settings.get('sourceforge', 'username'), project)
     folder = '/home/frs/project/%(p)s/%(pr)s/%(project)s/%(project)s/' \
-             'Release-%(version)s/' % dict(project=project, 
-                                           pr=project_first_two_letters, 
-                                           p=project_first_letter, 
+             'Release-%(version)s/' % dict(project=project,
+                                           pr=project_first_two_letters,
+                                           p=project_first_letter,
                                            version=metadata['version'])
     return '%s@frs.sourceforge.net:%s' % (username, folder)
 
@@ -437,7 +437,7 @@ def downloading_distributions_from_SourceForge(settings, options):
 def generating_MD5_digests(settings, options):
     contents = '''md5digests = {\n'''
     for filename in glob.glob(os.path.join('dist', '*')):
-        
+
         md5digest = hashlib.md5(file(filename, 'rb').read())  # pylint: disable=E1101
         filename = os.path.basename(filename)
         hexdigest = md5digest.hexdigest()
@@ -445,7 +445,7 @@ def generating_MD5_digests(settings, options):
         if options.verbose:
             print '%40s -> %s' % (filename, hexdigest)
     contents += '}\n'
-    
+
     md5digests_file = file(os.path.join('website.in', 'md5digests.py'), 'w')
     md5digests_file.write(contents)
     md5digests_file.close()
@@ -464,14 +464,14 @@ class SimpleFTP(ftplib.FTP, object):
         super(SimpleFTP, self).__init__(hostname, username, password)
         self.ensure_folder(folder)
         self.remote_root = folder
-            
+
     def ensure_folder(self, folder):
         try:
             self.cwd(folder)
         except ftplib.error_perm:
             self.mkd(folder)
-            self.cwd(folder)    
-            
+            self.cwd(folder)
+
     def put(self, folder, *filename_whitelist):
         for root, subfolders, filenames in os.walk(folder):
             if root != folder:
@@ -490,13 +490,13 @@ class SimpleFTP(ftplib.FTP, object):
                     continue
                 print 'Store %s' % os.path.join(root, filename)
                 try:
-                    self.storbinary('STOR %s' % filename, 
+                    self.storbinary('STOR %s' % filename,
                                     file(os.path.join(root, filename), 'rb'))
                 except ftplib.error_perm, info:
                     if str(info).endswith('Overwrite permission denied'):
                         self.delete(filename)
-                        self.storbinary('STOR %s' % filename, 
-                                        file(os.path.join(root, filename), 
+                        self.storbinary('STOR %s' % filename,
+                                        file(os.path.join(root, filename),
                                              'rb'))
                     else:
                         raise
@@ -525,9 +525,9 @@ def registering_with_PyPI(settings, options):
         pypirc.write('password=%s\n' % password)
     # pylint: disable=W0404
     from setup import setupOptions
-    languages_pypi_does_not_know = ['Basque', 'Belarusian', 'Breton', 
-        'Estonian', 'Galician', 'Lithuanian', 'Norwegian (Bokmal)', 
-        'Norwegian (Nynorsk)', 'Occitan', 'Papiamento', 'Slovene', 
+    languages_pypi_does_not_know = ['Basque', 'Belarusian', 'Breton',
+        'Estonian', 'Galician', 'Lithuanian', 'Norwegian (Bokmal)',
+        'Norwegian (Nynorsk)', 'Occitan', 'Papiamento', 'Slovene',
         'German (Low)', 'Mongolian', 'English (AU)', 'English (CA)',
         'English (GB)', 'English (US)']
     for language in languages_pypi_does_not_know:
@@ -567,7 +567,7 @@ def announcing_via_OAuth_Api(settings, options, section, host):
         print 'Skipping announcing "%s" on %s.' % (status, host)
     else:
         response, content = client.request( \
-            'https://api.%s/1.1/statuses/update.json' % host, method='POST', 
+            'https://api.%s/1.1/statuses/update.json' % host, method='POST',
             body='status=%s' % status, headers=None)
         if response.status != 200:
             print 'Request failed: %d %s' % (response.status, response.reason)
@@ -632,12 +632,12 @@ def releasing(settings, options):
 def latest_release(metadata, summary_only=False):
     sys.path.insert(0, 'changes.in')
     # pylint: disable=F0401
-    import changes 
-    import converter  
+    import changes
+    import converter
     del sys.path[0]
     greeting = 'release %(version)s of %(name)s.' % metadata
     if summary_only:
-        greeting = greeting[0].upper() + greeting[1:] 
+        greeting = greeting[0].upper() + greeting[1:]
     else:
         greeting = "We're happy to announce " + greeting
     text_converter = converter.ReleaseToTextConverter()
@@ -663,20 +663,20 @@ Hi,
 
 What is %(name)s?
 
-%(name)s is a simple task manager that allows for hierarchical tasks, 
-i.e. tasks in tasks. %(name)s is open source (%(license_abbrev)s) and is developed 
+%(name)s is a simple task manager that allows for hierarchical tasks,
+i.e. tasks in tasks. %(name)s is open source (%(license_abbrev)s) and is developed
 using Python and wxPython. You can download %(name)s from:
 
 %(url)s
 
-In addition to the source distribution, packaged distributions are available 
+In addition to the source distribution, packaged distributions are available
 for Windows, Mac OS X, Linux, and BSD.
 
 Note that although we consider %(name)s to be %(release_status)s software,
-and we do our best to prevent bugs, it is always wise to back up your task 
+and we do our best to prevent bugs, it is always wise to back up your task
 file regularly, and especially when upgrading to a new release.
 
-Regards, 
+Regards,
 
 %(author)s
 Task Coach development team
@@ -707,7 +707,7 @@ Task Coach development team
     if smtpresult:
         errstr = ""
         for recip in smtpresult.keys():
-            errstr = """Could not deliver mail to: %s 
+            errstr = """Could not deliver mail to: %s
 Server said: %s
 %s
 %s""" % (recip, smtpresult[recip][0], smtpresult[recip][1], errstr)
@@ -734,12 +734,12 @@ COMMANDS = dict(release=releasing,
                 uploadsf=uploading_distributions_to_SourceForge,
                 uploadfoss=uploading_distributions_to_fosshub,
                 upload=uploading_distributions,
-                download=downloading_distributions_from_SourceForge, 
+                download=downloading_distributions_from_SourceForge,
                 md5=generating_MD5_digests,
                 websitegen=generating_website,
                 website=uploading_website,
                 twitter=announcing_on_Twitter,
-                pypi=registering_with_PyPI, 
+                pypi=registering_with_PyPI,
                 mail=mailing_announcement,
                 announce=announcing,
                 update=updating_Sourceforge_trackers,
@@ -752,9 +752,9 @@ USAGE = 'Usage: %%prog [options] [%s]' % '|'.join(sorted(COMMANDS.keys()))
 
 SETTINGS = Settings()
 
-parser = optparse.OptionParser(usage=USAGE, epilog=HELP_TEXT, 
+parser = optparse.OptionParser(usage=USAGE, epilog=HELP_TEXT,
                                formatter=HelpFormatter())
-parser.add_option('-n', '--dry-run', action='store_true', dest='dry_run', 
+parser.add_option('-n', '--dry-run', action='store_true', dest='dry_run',
                   help="don't make permanent changes")
 parser.add_option('-v', '--verbose', action='store_true', dest='verbose',
                   help='provide more detailed progress information')

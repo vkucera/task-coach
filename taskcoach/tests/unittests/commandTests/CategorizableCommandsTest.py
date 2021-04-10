@@ -71,7 +71,7 @@ class ToggleCategory(ToggleCategoryCommandTestCase):
         self.category.addCategorizable(categorizable2)
         self.toggleItem([self.categorizable, categorizable2])
         self.assertDoUndoRedo(\
-            lambda: self.assertEqual(set([self.categorizable, categorizable2]), self.category.categorizables()), 
+            lambda: self.assertEqual(set([self.categorizable, categorizable2]), self.category.categorizables()),
             lambda: self.assertEqual(set([categorizable2]), self.category.categorizables()))
 
 

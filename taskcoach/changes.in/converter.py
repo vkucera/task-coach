@@ -30,7 +30,7 @@ class ChangeConverter(object):
             convertedIds = self.convertChangeIds(change)
             result += ' (%s)'%', '.join(convertedIds)
         return self.postProcess(result)
-    
+
     def preProcess(self, changeToBeConverted):
         return changeToBeConverted
 
@@ -45,11 +45,11 @@ class ChangeConverter(object):
 
     def convertURL(self, url):
         return url
-    
+
 
 class ChangeToTextConverter(ChangeConverter):
     def __init__(self):
-        self._textWrapper = textwrap.TextWrapper(initial_indent='- ', 
+        self._textWrapper = textwrap.TextWrapper(initial_indent='- ',
                 subsequent_indent='  ', width=78)
         # Regular expression to remove multiple spaces, except when on
         # the start of a line:
@@ -76,7 +76,7 @@ class ChangeToTextConverter(ChangeConverter):
 class ChangeToDebianConverter(ChangeToTextConverter):
     def __init__(self):
         super(ChangeToDebianConverter, self).__init__()
-        self._textWrapper = textwrap.TextWrapper(initial_indent='  * ', 
+        self._textWrapper = textwrap.TextWrapper(initial_indent='  * ',
                 subsequent_indent='    ', width=78)
 
     def postProcess(self, convertedChange):
@@ -95,7 +95,7 @@ class ChangeToHTMLConverter(ChangeConverter):
         changeToBeConverted = re.sub('<', '&lt;', changeToBeConverted)
         changeToBeConverted = re.sub('>', '&gt;', changeToBeConverted)
         return changeToBeConverted
-    
+
     def postProcess(self, convertedChange):
         listOfUrlAndTextFragments = re.split('(http://[^\s()]+[^\s().])', convertedChange)
         listOfConvertedUrlsAndTextFragments = []
@@ -112,7 +112,7 @@ class ChangeToHTMLConverter(ChangeConverter):
             if isinstance(change, changetypes.Bugv2):
                 template = self.LinkToSourceForgeBugReportv2
             elif isinstance(change, changetypes.Bug):
-                template = self.LinkToSourceForgeBugReport    
+                template = self.LinkToSourceForgeBugReport
             elif isinstance(change, changetypes.Feature):
                 template = self.LinkToSourceForgeFeatureRequest
         return template%{'id': changeId}
@@ -158,10 +158,10 @@ class ReleaseConverter(object):
 
     def summary(self, release, greeting=''):
         return ' '.join([text for text in greeting, release.summary if text])
-    
+
     def sectionHeader(self, section, list):
         return '\n%s:'%(section%self._addS(list))
-        
+
     def sectionFooter(self, section, list):
         return ''
 
@@ -171,7 +171,7 @@ class ReleaseToTextConverter(ReleaseConverter):
 
     def summary(self, *args, **kwargs):
         summary = super(ReleaseToTextConverter, self).summary(*args, **kwargs)
-        wrapper = textwrap.TextWrapper(initial_indent='', 
+        wrapper = textwrap.TextWrapper(initial_indent='',
             subsequent_indent='', width=78)
         multipleSpaces = re.compile(r'(?<!^) +', re.M)
         summary = wrapper.fill(summary)
@@ -201,7 +201,7 @@ class ReleaseToHTMLConverter(ReleaseConverter):
         return '<h2>Release %s <small>%s</small></h2>'%(release.number, release.date)
 
     def sectionHeader(self, section, list):
-        return super(ReleaseToHTMLConverter, self).sectionHeader(section, 
+        return super(ReleaseToHTMLConverter, self).sectionHeader(section,
             list) + '\n<ul>'
 
     def sectionFooter(self, section, list):

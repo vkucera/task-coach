@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 from taskcoachlib import command, widgets
-from taskcoachlib.domain import category 
+from taskcoachlib.domain import category
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, dialog
 import taskcoachlib.gui.menu
@@ -33,15 +33,15 @@ from . import inplace_editor
 
 class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                          mixin.FilterableViewerMixin,
-                         mixin.SortableViewerForCategoriesMixin, 
-                         mixin.SearchableViewerMixin, 
+                         mixin.SortableViewerForCategoriesMixin,
+                         mixin.SearchableViewerMixin,
                          base.WithAttachmentsViewerMixin,
                          mixin.NoteColumnMixin, mixin.AttachmentColumnMixin,
                          base.SortableViewerWithColumns, base.TreeViewer):
     SorterClass = category.CategorySorter
     defaultTitle = _('Categories')
     defaultBitmap = 'folder_blue_arrow_icon'
-    
+
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'categoryviewer')
         super(BaseCategoryViewer, self).__init__(*args, **kwargs)
@@ -49,15 +49,15 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
                           category.Category.appearanceChangedEventType(),
                           category.Category.exclusiveSubcategoriesChangedEventType(),
                           category.Category.filterChangedEventType()]:
-            self.registerObserver(self.onAttributeChanged_Deprecated, 
+            self.registerObserver(self.onAttributeChanged_Deprecated,
                 eventType)
 
     def domainObjectsToView(self):
         return self.taskFile.categories()
-    
+
     def curselectionIsInstanceOf(self, class_):
         return class_ == category.Category
-    
+
     def createWidget(self):
         imageList = self.createImageList()  # Has side-effects
         self._columns = self._createColumns()
@@ -91,30 +91,30 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
                        imageIndicesCallback=self.orderingImageIndices,
                        renderCallback=lambda category: '',
                        width=self.getColumnWidth('ordering')),
-                   widgets.Column('subject', _('Subject'), 
-                       category.Category.subjectChangedEventType(),  
+                   widgets.Column('subject', _('Subject'),
+                       category.Category.subjectChangedEventType(),
                        sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                            value='subject'),
                        imageIndicesCallback=self.subjectImageIndices,
                        width=self.getColumnWidth('subject'),
-                       editCallback=self.onEditSubject, 
+                       editCallback=self.onEditSubject,
                        editControl=inplace_editor.SubjectCtrl, **kwargs),
-                   widgets.Column('description', _('Description'), 
-                       category.Category.descriptionChangedEventType(), 
+                   widgets.Column('description', _('Description'),
+                       category.Category.descriptionChangedEventType(),
                        sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                            value='description'),
-                       renderCallback=lambda category: category.description(), 
-                       width=self.getColumnWidth('description'), 
+                       renderCallback=lambda category: category.description(),
+                       width=self.getColumnWidth('description'),
                        editCallback=self.onEditDescription,
                        editControl=inplace_editor.DescriptionCtrl, **kwargs),
-                   widgets.Column('attachments', '', 
+                   widgets.Column('attachments', '',
                        category.Category.attachmentsChangedEventType(),  # pylint: disable=E1101
                        width=self.getColumnWidth('attachments'),
                        alignment=wx.LIST_FORMAT_LEFT,
                        imageIndicesCallback=self.attachmentImageIndices,
                        headerImageIndex=self.imageIndex['paperclip_icon'],
                        renderCallback=lambda category: '', **kwargs)]
-        columns.append(widgets.Column('notes', '', 
+        columns.append(widgets.Column('notes', '',
                        category.Category.notesChangedEventType(),  # pylint: disable=E1101
                        width=self.getColumnWidth('notes'),
                        alignment=wx.LIST_FORMAT_LEFT,
@@ -134,7 +134,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
                                                                   value='modificationDateTime'),
                        *category.Category.modificationEventTypes(), **kwargs))
         return columns
-    
+
     def createCreationToolBarUICommands(self):
         return (uicommand.CategoryNew(categories=self.presentation(),
                                       settings=self.settings),
@@ -158,19 +158,19 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
             helpText=_('Show/hide notes column'),
             setting='notes', viewer=self))
         commands.append(uicommand.ViewColumn(menuText=_('&Creation date'),
-            helpText=_('Show/hide creation date column'), 
+            helpText=_('Show/hide creation date column'),
             setting='creationDateTime', viewer=self))
         commands.append(uicommand.ViewColumn(menuText=_('&Modification date'),
-            helpText=_('Show/hide last modification date column'), 
+            helpText=_('Show/hide last modification date column'),
             setting='modificationDateTime', viewer=self))
         return commands
 
     def onAttributeChanged(self, newValue, sender):
         super(BaseCategoryViewer, self).onAttributeChanged(newValue, sender)
-            
+
     def onAttributeChanged_Deprecated(self, event):
         if category.Category.exclusiveSubcategoriesChangedEventType() in event.types():
-            # We need to refresh the children of the changed item as well 
+            # We need to refresh the children of the changed item as well
             # because they have to use radio buttons instead of checkboxes, or
             # vice versa:
             items = event.sources()
@@ -179,12 +179,12 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
             self.widget.RefreshItems(*items)  # pylint: disable=W0142
         else:
             super(BaseCategoryViewer, self).onAttributeChanged_Deprecated(event)
-        
+
     def onCheck(self, event, final):
         categoryToFilter = self.widget.GetItemPyData(event.GetItem())
         categoryToFilter.setFiltered(event.GetItem().IsChecked())
         self.sendViewerStatusEvent()  # Notify status observers like the status bar
-        
+
     def getIsItemChecked(self, item):
         if isinstance(item, category.Category):
             return item.isFiltered()
@@ -193,7 +193,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
     def getItemParentHasExclusiveChildren(self, item):
         parent = item.parent()
         return parent and parent.hasExclusiveSubcategories()
-    
+
     def isShowingCategories(self):
         return True
 
@@ -203,21 +203,21 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
         filteredCategories = self.presentation().filteredCategories()
         status2 = _('Status: %d filtered') % len(filteredCategories)
         return status1, status2
-        
+
     def itemEditorClass(self):
         return dialog.editor.CategoryEditor
 
     def newItemCommandClass(self):
         return command.NewCategoryCommand
-    
+
     def newSubItemCommandClass(self):
         return command.NewSubCategoryCommand
 
     def deleteItemCommandClass(self):
         return command.DeleteCategoryCommand
-    
 
-class CategoryViewer(BaseCategoryViewer):  # pylint: disable=W0223 
+
+class CategoryViewer(BaseCategoryViewer):  # pylint: disable=W0223
     def __init__(self, *args, **kwargs):
         super(CategoryViewer, self).__init__(*args, **kwargs)
         self.filterUICommand.setChoice(self.settings.getboolean('view',

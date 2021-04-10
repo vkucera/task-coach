@@ -20,7 +20,7 @@ import codecs
 
 def encalias(oldname, newname):
     old = codecs.lookup(oldname)
-    new = codecs.CodecInfo(old.encode, old.decode, 
+    new = codecs.CodecInfo(old.encode, old.decode,
                            streamreader=old.streamreader,
                            streamwriter=old.streamwriter,
                            incrementalencoder=old.incrementalencoder,

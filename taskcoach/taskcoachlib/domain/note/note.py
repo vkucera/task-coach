@@ -20,8 +20,8 @@ from taskcoachlib.domain import categorizable
 from taskcoachlib.domain import attachment
 
 
-class Note(attachment.AttachmentOwner, 
+class Note(attachment.AttachmentOwner,
            categorizable.CategorizableCompositeObject):
-    ''' This class represents notes. Notes consist of a subject, description, 
+    ''' This class represents notes. Notes consist of a subject, description,
         and attachments. In addition, a note may be assigned to categories. '''
     pass

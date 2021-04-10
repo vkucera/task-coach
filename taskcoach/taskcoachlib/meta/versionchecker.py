@@ -21,17 +21,17 @@ import threading
 import urllib2
 import sys
 import traceback
- 
+
 
 class VersionChecker(threading.Thread):
     def __init__(self, settings, verbose=False):
         self.settings = settings
         self.verbose = verbose
         super(VersionChecker, self).__init__()
-        
+
     def _set_daemon(self):
         return True  # Don't block application exit
-        
+
     def run(self):
         from taskcoachlib.gui.dialog import version
         try:
@@ -41,7 +41,7 @@ class VersionChecker(threading.Thread):
             currentVersion = self.tupleVersion(data.version)
         except:
             if self.verbose:
-                self.notifyUser(version.NoVersionDialog, 
+                self.notifyUser(version.NoVersionDialog,
                                 message=''.join(traceback.format_exception_only(sys.exc_type, sys.exc_value)))
         else:
             if latestVersion < currentVersion and self.verbose:
@@ -51,7 +51,7 @@ class VersionChecker(threading.Thread):
             elif latestVersion > currentVersion and (self.verbose or latestVersion > lastVersionNotified):
                 self.setLastVersionNotified(latestVersionString)
                 self.notifyUser(version.NewVersionDialog, latestVersionString)
-            
+
     def getLatestVersion(self):
         versionText = self.parseVersionFile(self.retrieveVersionFile())
         return versionText.strip()
@@ -64,15 +64,15 @@ class VersionChecker(threading.Thread):
 
     def showDialog(self, VersionDialog, latestVersion, message=''):
         import wx
-        dialog = VersionDialog(wx.GetApp().GetTopWindow(), 
-                               version=latestVersion, message=message, 
+        dialog = VersionDialog(wx.GetApp().GetTopWindow(),
+                               version=latestVersion, message=message,
                                settings=self.settings)
         dialog.Show()
         return dialog
-    
+
     def getLastVersionNotified(self):
         return self.settings.get('version', 'notified')
-    
+
     def setLastVersionNotified(self, lastVersionNotifiedString):
         self.settings.set('version', 'notified', lastVersionNotifiedString)
 

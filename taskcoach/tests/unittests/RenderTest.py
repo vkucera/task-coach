@@ -38,7 +38,7 @@ class RenderDateTime(test.TestCase):
             self.assertEqual(expectedDate, renderedDate)
         else:
             self.assertEqual(expectedDateTime, renderedDateTime)
-            
+
     @staticmethod
     def expectedDateTime(*dateTimeArgs):
         return render.dateTimeFunc(date.DateTime(*dateTimeArgs))
@@ -46,14 +46,14 @@ class RenderDateTime(test.TestCase):
     @staticmethod
     def expectedDate(*dateTimeArgs):
         return render.dateFunc(date.DateTime(*dateTimeArgs))
-        
+
     def testSomeRandomDateTime(self):
         expectedDateTime = self.expectedDateTime(2010, 4, 5, 12, 54)
         self.assertRenderedDateTime(expectedDateTime, 2010, 4, 5, 12, 54, 42)
-        
+
     def testInfiniteDateTime(self):
         self.assertRenderedDateTime('')
-        
+
     def testStartOfDay(self):
         expectedDateTime = self.expectedDate(2010, 4, 5)
         self.assertRenderedDateTime(expectedDateTime, 2010, 4, 5)
@@ -77,19 +77,19 @@ class RenderDateTime(test.TestCase):
     def testElevenOClock(self):
         expectedDateTime = self.expectedDateTime(2010, 4, 5, 23, 0)
         self.assertRenderedDateTime(expectedDateTime, 2010, 4, 5, 23, 0, 0)
-        
+
     def testDateBefore1900(self):
         # Don't check for '1801' since the year may be formatted on only 2
         # digits.
         result = render.dateTime(date.DateTime(1801, 4, 5, 23, 0, 0))
         self.failUnless('01' in result, result)
-                         
-                         
+
+
 class RenderDate(test.TestCase):
     def testRenderDateWithDateTime(self):
-        self.assertEqual(render.date(date.DateTime(2000, 1, 1)), 
+        self.assertEqual(render.date(date.DateTime(2000, 1, 1)),
                          render.date(date.DateTime(2000, 1, 1, 10, 11, 12)))
-        
+
 
 class RenderTimeLeftTest(test.TestCase):
     def testNoTimeLeftWhenActive(self):
@@ -141,20 +141,20 @@ class RenderTimeLeftTest(test.TestCase):
 class RenderTimeSpentTest(test.TestCase):
     def testZeroTime(self):
         self.assertEqual('', render.timeSpent(date.TimeDelta()))
-        
+
     def testOneSecond(self):
         self.assertEqual('0:00:01', render.timeSpent(date.ONE_SECOND))
-            
+
     def testTenHours(self):
-        self.assertEqual('10:00:00', 
+        self.assertEqual('10:00:00',
             render.timeSpent(date.TimeDelta(hours=10)))
-            
+
     def testNegativeHours(self):
-        self.assertEqual('-1:00:00', 
+        self.assertEqual('-1:00:00',
                          render.timeSpent(date.TimeDelta(hours=-1)))
-        
+
     def testNegativeSeconds(self):
-        self.assertEqual('-0:00:01', 
+        self.assertEqual('-0:00:01',
                          render.timeSpent(date.TimeDelta(seconds=-1)))
 
     def testDecimalNegative(self):
@@ -169,80 +169,80 @@ class RenderTimeSpentTest(test.TestCase):
 
 class RenderWeekNumberTest(test.TestCase):
     def testWeek1(self):
-        self.assertEqual('2005-1', 
+        self.assertEqual('2005-1',
                          render.weekNumber(date.DateTime(2005, 1, 3)))
-        
+
     def testWeek53(self):
-        self.assertEqual('2004-53', 
+        self.assertEqual('2004-53',
                          render.weekNumber(date.DateTime(2004, 12, 31)))
-        
-        
+
+
 class RenderRecurrenceTest(test.TestCase):
     def testNoRecurrence(self):
         self.assertEqual('', render.recurrence(date.Recurrence()))
-        
+
     def testDailyRecurrence(self):
-        self.assertEqual(_('Daily'), 
+        self.assertEqual(_('Daily'),
                          render.recurrence(date.Recurrence('daily')))
-        
+
     def testWeeklyRecurrence(self):
-        self.assertEqual(_('Weekly'), 
+        self.assertEqual(_('Weekly'),
                          render.recurrence(date.Recurrence('weekly')))
-        
+
     def testMonthlyRecurrence(self):
-        self.assertEqual(_('Monthly'), 
+        self.assertEqual(_('Monthly'),
                          render.recurrence(date.Recurrence('monthly')))
 
     def testYearlyRecurrence(self):
-        self.assertEqual(_('Yearly'), 
+        self.assertEqual(_('Yearly'),
                          render.recurrence(date.Recurrence('yearly')))
 
     def testEveryOtherDay(self):
-        self.assertEqual(_('Every other day'), 
+        self.assertEqual(_('Every other day'),
                          render.recurrence(date.Recurrence('daily', amount=2)))
-        
+
     def testEveryOtherWeek(self):
-        self.assertEqual(_('Every other week'), 
+        self.assertEqual(_('Every other week'),
                          render.recurrence(date.Recurrence('weekly', amount=2)))
-        
+
     def testEveryOtherMonth(self):
-        self.assertEqual(_('Every other month'), 
+        self.assertEqual(_('Every other month'),
                          render.recurrence(date.Recurrence('monthly', amount=2)))
-        
+
     def testEveryOtherYear(self):
-        self.assertEqual(_('Every other year'), 
+        self.assertEqual(_('Every other year'),
                          render.recurrence(date.Recurrence('yearly', amount=2)))
-        
+
     def testThreeDaily(self):
-        self.assertEqual('Every 3 days', 
-                         render.recurrence(date.Recurrence('daily', amount=3))) 
-        
+        self.assertEqual('Every 3 days',
+                         render.recurrence(date.Recurrence('daily', amount=3)))
+
     def testThreeWeekly(self):
-        self.assertEqual('Every 3 weeks', 
-                         render.recurrence(date.Recurrence('weekly', amount=3))) 
-        
+        self.assertEqual('Every 3 weeks',
+                         render.recurrence(date.Recurrence('weekly', amount=3)))
+
     def testThreeMonthly(self):
-        self.assertEqual('Every 3 months', 
-                         render.recurrence(date.Recurrence('monthly', 3))) 
-        
+        self.assertEqual('Every 3 months',
+                         render.recurrence(date.Recurrence('monthly', 3)))
+
     def testThreeYearly(self):
-        self.assertEqual('Every 3 years', 
+        self.assertEqual('Every 3 years',
                          render.recurrence(date.Recurrence('yearly', 3)))
-                
-        
+
+
 class RenderException(test.TestCase):
     def testRenderException(self):
         instance = Exception()
-        self.assertEqual(unicode(instance), 
+        self.assertEqual(unicode(instance),
                          render.exception(Exception, instance))
 
     def testRenderUnicodeDecodeError(self):
         try:
             'abc'.encode('utf-16').decode('utf-8')
         except UnicodeDecodeError as instance:
-            self.assertEqual(unicode(instance), 
+            self.assertEqual(unicode(instance),
                              render.exception(UnicodeDecodeError, instance))
-            
+
     def testExceptionThatCannotBePrinted(self):
         """win32all exceptions may contain localized error
         messages. But Exception.__str__ does not handle non-ASCII
@@ -254,4 +254,4 @@ class RenderException(test.TestCase):
         try:
             render.exception(Exception, e)
         except UnicodeEncodeError:  # pragma: no cover
-            self.fail() 
+            self.fail()

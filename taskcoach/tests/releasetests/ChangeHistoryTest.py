@@ -26,26 +26,26 @@ import changes # pylint: disable=F0401
 class ChangeHistoryTestCase(test.TestCase):
     def setUp(self):
         self.latestRelease = changes.releases[0]
-        
+
     def testLatestReleaseNumberEqualsMetaDataReleaseNumber(self):
         self.assertEqual(self.latestRelease.number, meta.data.version)
 
     def testLatestReleaseDateEqualsMetaDataReleaseDate(self):
         self.assertEqual(self.latestRelease.date, meta.data.date)
-        
+
     def testLatestReleaseHasDate(self):
         self.failIf('?' in self.latestRelease.date)
-        
+
     def testLatestReleaseHasBugsFixedOrFeaturesAdded(self):
         self.failUnless(self.latestRelease.bugsFixed or \
                         self.latestRelease.featuresAdded)
-        
+
     def testLatestReleaseNumberIsHigherThanPreviousReleaseNumber(self):
         def major_minor_patch(release_number):
             return tuple([int(number) for number in release_number.split('.')])
         latestRelease = major_minor_patch(self.latestRelease.number)
         latestButOneRelease = major_minor_patch(changes.releases[1].number)
         self.failUnless(latestRelease > latestButOneRelease)
-        
+
     def testLatestReleaseSummaryLength(self):
         self.failUnless(10 <= len(self.latestRelease.summary) < 600)

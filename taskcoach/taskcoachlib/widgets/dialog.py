@@ -27,7 +27,7 @@ import os
 
 
 class Dialog(sized_controls.SizedDialog):
-    def __init__(self, parent, title, bitmap='edit', 
+    def __init__(self, parent, title, bitmap='edit',
                  direction=None, *args, **kwargs):
         self._buttonTypes = kwargs.get('buttonTypes', wx.OK | wx.CANCEL)
         super(Dialog, self).__init__(parent, -1, title,
@@ -69,7 +69,7 @@ class Dialog(sized_controls.SizedDialog):
 
     def fillInterior(self):
         pass
-    
+
     def createButtons(self):
         buttonTypes = wx.OK if self._buttonTypes == wx.ID_CLOSE else self._buttonTypes
         buttonSizer = self.CreateStdDialogButtonSizer(buttonTypes)
@@ -81,50 +81,50 @@ class Dialog(sized_controls.SizedDialog):
             buttonSizer.GetAffirmativeButton().SetLabel(_('Close'))
         self.SetButtonSizer(buttonSizer)
         return buttonSizer
-    
+
     def ok(self, event=None):
         if event:
             event.Skip()
         self.Close(True)
         self.Destroy()
-        
+
     def cancel(self, event=None):
         if event:
             event.Skip()
         self.Close(True)
         self.Destroy()
-        
+
     def disableOK(self):
         self._buttons.GetAffirmativeButton().Disable()
-        
+
     def enableOK(self):
         self._buttons.GetAffirmativeButton().Enable()
 
 
-class NotebookDialog(Dialog):    
+class NotebookDialog(Dialog):
     def createInterior(self):
-        return notebook.Notebook(self._panel, 
+        return notebook.Notebook(self._panel,
             agwStyle=aui.AUI_NB_DEFAULT_STYLE & ~aui.AUI_NB_TAB_SPLIT & \
                      ~aui.AUI_NB_TAB_MOVE & ~aui.AUI_NB_DRAW_DND_TAB)
 
     def fillInterior(self):
         self.addPages()
-            
+
     def __getitem__(self, index):
         return self._interior[index]
-    
+
     def ok(self, *args, **kwargs):
         self.okPages()
         super(NotebookDialog, self).ok(*args, **kwargs)
-        
+
     def okPages(self, *args, **kwargs):
         for page in self._interior:
             page.ok(*args, **kwargs)
 
     def addPages(self):
-        raise NotImplementedError 
+        raise NotImplementedError
 
-        
+
 class HtmlWindowThatUsesWebBrowserForExternalLinks(wx.html.HtmlWindow):
     def OnLinkClicked(self, linkInfo):  # pylint: disable=W0221
         openedLinkInExternalBrowser = False
@@ -136,34 +136,34 @@ class HtmlWindowThatUsesWebBrowserForExternalLinks(wx.html.HtmlWindow):
             except webbrowser.Error:
                 pass
         if not openedLinkInExternalBrowser:
-            super(HtmlWindowThatUsesWebBrowserForExternalLinks, 
+            super(HtmlWindowThatUsesWebBrowserForExternalLinks,
                   self).OnLinkClicked(linkInfo)
 
 
 class HTMLDialog(Dialog):
     def __init__(self, title, htmlText, *args, **kwargs):
         self._htmlText = htmlText
-        super(HTMLDialog, self).__init__(None, title, buttonTypes=wx.ID_CLOSE, 
+        super(HTMLDialog, self).__init__(None, title, buttonTypes=wx.ID_CLOSE,
                                          *args, **kwargs)
-        
+
     def createInterior(self):
-        interior = HtmlWindowThatUsesWebBrowserForExternalLinks(self._panel, 
+        interior = HtmlWindowThatUsesWebBrowserForExternalLinks(self._panel,
             -1, size=(550, 400))
         if self._direction:
             interior.SetLayoutDirection(self._direction)
         return interior
-        
+
     def fillInterior(self):
         self._interior.AppendToPage(self._htmlText)
 
     def OnLinkClicked(self, linkInfo):
         pass
-        
-        
+
+
 def AttachmentSelector(**callerKeywordArguments):
     kwargs = {'message': _('Add attachment'),
-              'default_path': os.getcwd(), 
-              'wildcard': _('All files (*.*)|*'), 
+              'default_path': os.getcwd(),
+              'wildcard': _('All files (*.*)|*'),
               'flags': wx.FD_OPEN}
     kwargs.update(callerKeywordArguments)
     return wx.FileSelector(**kwargs)  # pylint: disable=W0142

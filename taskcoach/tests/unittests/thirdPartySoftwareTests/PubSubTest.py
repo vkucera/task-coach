@@ -23,13 +23,12 @@ import test
 class PubSubTest(test.TestCase):
     def setUp(self):
         self.calledTestTopic = False
-        
+
     def onTestTopic(self):
         self.calledTestTopic = True
-        
+
     def testSubscribe(self):
         pub.subscribe(self.onTestTopic, 'TestTopic')
         pub.sendMessage('TestTopic')
         self.failUnless(self.calledTestTopic)
-        
- 
+

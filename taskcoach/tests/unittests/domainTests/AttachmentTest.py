@@ -25,48 +25,48 @@ from pubsub import pub
 class GetRelativePathTest(test.TestCase):
     def testBaseAndPathEqual(self):
         self.assertEqual('', attachment.getRelativePath('/test', '/test'))
-        
+
     def testPathIsSubDirOfBase(self):
         self.assertEqual('subdir', attachment.getRelativePath('/test/subdir', '/test'))
 
     def testBaseIsSubDirOfPath(self):
         self.assertEqual('..', attachment.getRelativePath('/test', '/test/subdir'))
-        
+
     def testBaseAndPathAreDifferent(self):
         self.assertEqual(os.path.join('..', 'bar'),
                          attachment.getRelativePath('/bar', '/foo'))
-        
-        
+
+
 class FileAttachmentTest(test.TestCase):
     def setUp(self):
         self.filename = ''
         self.attachment = attachment.FileAttachment('filename')
         self.events = []
-        
+
     def onEvent(self, newValue, sender):  # pylint: disable=W0221
         self.events.append((newValue, sender))
-        
+
     def openAttachment(self, filename):
         self.filename = filename
-        
+
     def testCreateFileAttachment(self):
         self.assertEqual('filename', self.attachment.location())
-        
+
     def testOpenFileAttachmentWithRelativeFilename(self):
         self.attachment.open(openAttachment=self.openAttachment)
         self.assertEqual('filename', self.filename)
-        
+
     def testOpenFileAttachmentWithRelativeFilenameAndWorkingDir(self):
         self.attachment.open('/home', openAttachment=self.openAttachment)
-        self.assertEqual(os.path.normpath(os.path.join('/home', 'filename')), 
+        self.assertEqual(os.path.normpath(os.path.join('/home', 'filename')),
                          self.filename)
-        
+
     def testOpenFileAttachmentWithAbsoluteFilenameAndWorkingDir(self):
         att = attachment.FileAttachment('/home/frank/attachment.txt')
         att.open('/home/jerome', openAttachment=self.openAttachment)
-        self.assertEqual(os.path.normpath(os.path.join('/home/frank/attachment.txt')), 
+        self.assertEqual(os.path.normpath(os.path.join('/home/frank/attachment.txt')),
                          self.filename)
-                                
+
     def testCopy(self):
         copy = self.attachment.copy()
         self.assertEqual(copy.location(), self.attachment.location())

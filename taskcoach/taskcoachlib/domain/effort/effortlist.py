@@ -16,8 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib import patterns 
-from taskcoachlib.i18n import _                   
+from taskcoachlib import patterns
+from taskcoachlib.i18n import _
 from taskcoachlib import help
 from pubsub import pub
 from taskcoachlib.thirdparty.pubsub.core import Publisher
@@ -34,23 +34,23 @@ class MaxDateTimeMixin(object):
 class EffortUICommandNamesMixin(object):
     newItemMenuText = _('&New effort...\tCtrl+E')
     newItemHelpText = help.effortNew
-    
-                        
-class EffortList(patterns.SetDecorator, MaxDateTimeMixin, 
+
+
+class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
                  EffortUICommandNamesMixin):
     ''' EffortList observes a TaskList and contains all effort records of
         all tasks in the underlying TaskList. '''
 
     def  __init__(self, *args, **kwargs):
         super(EffortList, self).__init__(*args, **kwargs)
-        pub.subscribe(self.onAddEffortToOrRemoveEffortFromTask, 
+        pub.subscribe(self.onAddEffortToOrRemoveEffortFromTask,
                       task.Task.effortsChangedEventType())
-        
+
     def extendSelf(self, tasks, event=None):
         ''' This method is called when a task is added to the observed list.
-            It overrides ObservableListObserver.extendSelf whose default 
-            behaviour is to add the item that is added to the observed 
-            list to the observing list (this list) unchanged. But we want to 
+            It overrides ObservableListObserver.extendSelf whose default
+            behaviour is to add the item that is added to the observed
+            list to the observing list (this list) unchanged. But we want to
             add the efforts of the tasks, rather than the tasks themselves. '''
         effortsToAdd = []
         for task in tasks:
@@ -59,13 +59,13 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
         for effort in effortsToAdd:
             if effort.getStop() is None:
                 pub.sendMessage(effort.trackingChangedEventType(), newValue=True, sender=effort)
-        
+
     def removeItemsFromSelf(self, tasks, event=None):
-        ''' This method is called when a task is removed from the observed 
-            list. It overrides ObservableListObserver.removeItemsFromSelf 
+        ''' This method is called when a task is removed from the observed
+            list. It overrides ObservableListObserver.removeItemsFromSelf
             whose default behaviour is to remove the item that was removed
-            from the observed list from the observing list (this list) 
-            unchanged. But we want to remove the efforts of the tasks, rather 
+            from the observed list from the observing list (this list)
+            unchanged. But we want to remove the efforts of the tasks, rather
             than the tasks themselves. '''
         effortsToRemove = []
         for task in tasks:
@@ -91,10 +91,10 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
 
     def originalLength(self):
         ''' Do not delegate originalLength to the underlying TaskList because
-            that would return a number of tasks, and not the number of effort 
+            that would return a number of tasks, and not the number of effort
             records.'''
         return len(self)
-        
+
     def removeItems(self, efforts):  # pylint: disable=W0221
         ''' We override ObservableListObserver.removeItems because the default
             implementation is to remove the arguments from the original list,
@@ -112,8 +112,8 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
             hand. '''
         for effort in efforts:
             effort.task().addEffort(effort)
-    
-    @classmethod        
+
+    @classmethod
     def sortEventType(class_):
         return 'this event type is not used'
 
@@ -136,16 +136,16 @@ class EffortListTracker(patterns.Observer, Publisher):
         # moved from one task to another task we might get the event that the
         # effort is (re)added to the effortList before the event that the effort
         # was removed from the effortList. If we would use a set, the effort
-        # would be missing from the set after the removal event.    
+        # would be missing from the set after the removal event.
         self.__trackedEfforts = self.__filterTrackedEfforts(self.__effortList)
 
-        self.registerObserver(self.onEffortAdded, 
+        self.registerObserver(self.onEffortAdded,
                               eventType=self.__effortList.addItemEventType(),
                               eventSource=self.__effortList)
-        self.registerObserver(self.onEffortRemoved, 
+        self.registerObserver(self.onEffortRemoved,
                               eventType=self.__effortList.removeItemEventType(),
                               eventSource=self.__effortList)
-        pub.subscribe(self.onTrackingChanged, 
+        pub.subscribe(self.onTrackingChanged,
                       effort.Effort.trackingChangedEventType())
 
     def trackedEfforts(self):
@@ -160,7 +160,7 @@ class EffortListTracker(patterns.Observer, Publisher):
             if effort in self.__trackedEfforts:
                 self.__trackedEfforts.remove(effort)
         self.sendMessage('effortlisttracker.changed.removed', efforts=self.__trackedEfforts)
-        
+
     def onTrackingChanged(self, newValue, sender):
         if sender.parent() is None and not self.__includeComposites:
             return
@@ -171,7 +171,7 @@ class EffortListTracker(patterns.Observer, Publisher):
                 self.__trackedEfforts.extend([sender])
         else:
             if sender in self.__trackedEfforts:
-                self.__trackedEfforts.remove(sender) 
+                self.__trackedEfforts.remove(sender)
         self.sendMessage('effortlisttracker.changed', efforts=self.__trackedEfforts)
 
     @staticmethod

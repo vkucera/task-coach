@@ -36,8 +36,8 @@ class TaskListAssertsMixin:
 class EffortListAssertsMixin:
     def assertEffortList(self, expected):
         self.assertEqualLists(expected, self.effortList)
-        
-        
+
+
 class NoteContainerAssertsMixin:
     def assertNoteContainer(self, expected):
         for note in expected:
@@ -45,15 +45,15 @@ class NoteContainerAssertsMixin:
         for note in self.noteContainer:
             self.assertTrue(note in expected)
 
-                
+
 class EffortAssertsMixin:
     def assertEqualEfforts(self, effort1, effort2):
         self.assertEqual(effort1.task(), effort2.task())
         self.assertEqual(effort1.getStart(), effort2.getStart())
         self.assertEqual(effort1.getStop(), effort2.getStop())
         self.assertEqual(effort1.description(), effort2.description())
-        
-                
+
+
 class TaskAssertsMixin:
     def assertTrueParentAndChild(self, parent, child):
         self.assertTrue(child in parent.children())
@@ -70,7 +70,7 @@ class TaskAssertsMixin:
         self.assertEqual(orig.recurrence(), copy.recurrence())
         self.assertEqual(orig.budget(), copy.budget())
         if orig.parent():
-            self.assertFalse(copy in orig.parent().children()) 
+            self.assertFalse(copy in orig.parent().children())
         self.assertFalse(orig.id() == copy.id())
         self.assertEqual(orig.categories(), copy.categories())
         self.assertEqual(orig.priority(), copy.priority())
@@ -109,7 +109,7 @@ class CommandAssertsMixin:
         self.redo()
         assertDone()
 
-class Mixin(CommandAssertsMixin, TaskAssertsMixin, EffortAssertsMixin, 
-            TaskListAssertsMixin, EffortListAssertsMixin, 
+class Mixin(CommandAssertsMixin, TaskAssertsMixin, EffortAssertsMixin,
+            TaskListAssertsMixin, EffortListAssertsMixin,
             NoteContainerAssertsMixin):
     pass

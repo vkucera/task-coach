@@ -23,7 +23,7 @@ if not hasattr(sys, 'frozen'):
     import struct, os
 
     _subdir = 'ia64' if struct.calcsize('L') == 8 else 'ia32'
-    
+
     sys.path.insert(0, os.path.join(os.path.split(__file__)[0],
                                     '..', '..', 'extension', 'macos', 'bin-%s' % _subdir))
 

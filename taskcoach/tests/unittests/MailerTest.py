@@ -26,4 +26,3 @@ class TestMailer(test.TestCase):
             self.mailtoString = mailtoString # pylint: disable=W0201
         taskcoachlib.mailer.sendMail('to', 'subject', 'body', openURL=openURL)
         self.failUnless(self.mailtoString.startswith('mailto:'))
-        

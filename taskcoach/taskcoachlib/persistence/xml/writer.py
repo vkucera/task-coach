@@ -67,7 +67,7 @@ def sortedById(objects):
 
 class XMLWriter(object):
     maxDateTime = date.DateTime()
-    
+
     def __init__(self, fd, versionnr=meta.data.tskversion):
         self.__fd = fd
         self.__versionnr = versionnr
@@ -78,14 +78,14 @@ class XMLWriter(object):
 
         for rootTask in sortedById(taskList.rootItems()):
             self.taskNode(root, rootTask)
-        
+
         ownedNotes = self.notesOwnedByNoteOwners(taskList, categoryContainer)
         for rootCategory in sortedById(categoryContainer.rootItems()):
             self.categoryNode(root, rootCategory, taskList, noteContainer, ownedNotes)
 
         for rootNote in sortedById(noteContainer.rootItems()):
             self.noteNode(root, rootNote)
-        
+
         if syncMLConfig:
             self.syncMLNode(root, syncMLConfig)
         if guid:
@@ -95,14 +95,14 @@ class XMLWriter(object):
         PIElementTree('<?taskcoach release="%s" tskversion="%d"?>\n' % (meta.data.version,
                                                                          self.__versionnr),
                                                 root).write(self.__fd, 'utf-8')
-    
+
     def notesOwnedByNoteOwners(self, *collectionOfNoteOwners):
         notes = []
         for noteOwners in collectionOfNoteOwners:
             for noteOwner in noteOwners:
                 notes.extend(noteOwner.notes(recursive=True))
         return notes
-    
+
     def taskNode(self, parentNode, task):  # pylint: disable=W0621
         maxDateTime = self.maxDateTime
         node = self.baseCompositeNode(parentNode, task, 'task', self.taskNode)
@@ -127,7 +127,7 @@ class XMLWriter(object):
             node.attrib['hourlyFee'] = str(task.hourlyFee())
         if task.fixedFee():
             node.attrib['fixedFee'] = str(task.fixedFee())
-        reminder = task.reminder() 
+        reminder = task.reminder()
         if reminder != maxDateTime and reminder != None:
             node.attrib['reminder'] = str(reminder)
             reminderBeforeSnooze = task.reminder(includeSnooze=False)
@@ -135,7 +135,7 @@ class XMLWriter(object):
                 node.attrib['reminderBeforeSnooze'] = str(reminderBeforeSnooze)
         prerequisiteIds = ' '.join([prerequisite.id() for prerequisite in \
             sortedById(task.prerequisites())])
-        if prerequisiteIds:            
+        if prerequisiteIds:
             node.attrib['prerequisites'] = prerequisiteIds
         if task.shouldMarkCompletedWhenAllChildrenCompleted() != None:
             node.attrib['shouldMarkCompletedWhenAllChildrenCompleted'] = \
@@ -178,14 +178,14 @@ class XMLWriter(object):
         if effort.description():
             ET.SubElement(node, 'description').text = effort.description()
         return node
-    
+
     def categoryNode(self, parentNode, category, *categorizableContainers):  # pylint: disable=W0621
         def inCategorizableContainer(categorizable):
             for container in categorizableContainers:
                 if categorizable in container:
                     return True
             return False
-        node = self.baseCompositeNode(parentNode, category, 'category', self.categoryNode, 
+        node = self.baseCompositeNode(parentNode, category, 'category', self.categoryNode,
                                       categorizableContainers)
         if category.isFiltered():
             node.attrib['filtered'] = str(category.isFiltered())
@@ -195,14 +195,14 @@ class XMLWriter(object):
             self.noteNode(node, eachNote)
         for attachment in sortedById(category.attachments()):
             self.attachmentNode(node, attachment)
-        # Make sure the categorizables referenced are actually in the 
+        # Make sure the categorizables referenced are actually in the
         # categorizableContainer, i.e. they are not deleted
         categorizableIds = ' '.join([categorizable.id() for categorizable in \
             sortedById(category.categorizables()) if inCategorizableContainer(categorizable)])
-        if categorizableIds:            
+        if categorizableIds:
             node.attrib['categorizables'] = categorizableIds
         return node
-    
+
     def noteNode(self, parentNode, note):  # pylint: disable=W0621
         node = self.baseCompositeNode(parentNode, note, 'note', self.noteNode)
         for attachment in sortedById(note.attachments()):

@@ -20,8 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class Singleton(type):
     ''' Singleton metaclass. Use by defining the metaclass of a class Singleton,
         e.g.: class ThereCanBeOnlyOne:
-                  __metaclass__ = Singleton 
-    '''              
+                  __metaclass__ = Singleton
+    '''
 
     def __call__(class_, *args, **kwargs):
         if not class_.hasInstance():

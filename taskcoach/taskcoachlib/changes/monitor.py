@@ -56,7 +56,7 @@ class ChangeMonitor(Observer):
     def monitorClass(self, klass):
         if klass not in self._classes:
             for name in klass.monitoredAttributes():
-                eventType = getattr(klass, '%sChangedEventType' % name)()    
+                eventType = getattr(klass, '%sChangedEventType' % name)()
                 if eventType.startswith('pubsub'):
                     pub.subscribe(self.onAttributeChanged, eventType)
                 else:
@@ -83,7 +83,7 @@ class ChangeMonitor(Observer):
     def unmonitorClass(self, klass):
         if klass in self._classes:
             for name in klass.monitoredAttributes():
-                eventType = getattr(klass, '%sChangedEventType' % name)()    
+                eventType = getattr(klass, '%sChangedEventType' % name)()
                 if eventType.startswith('pubsub'):
                     pub.unsubscribe(self.onAttributeChanged, eventType)
                 else:
@@ -136,7 +136,7 @@ class ChangeMonitor(Observer):
                     if type_ == getattr(obj, '%sChangedEventType' % name)():
                         if obj.id() in self._changes and self._changes[obj.id()] is not None:
                             self._changes[obj.id()].add(name)
-                                
+
     def _objectAdded(self, obj):
         if obj.id() in self._changes:
             if self._changes[obj.id()] is not None and \
@@ -210,7 +210,7 @@ class ChangeMonitor(Observer):
             self._objectAdded(effort)
         for effort in effortsToRemove:
             self._objectRemoved(effort)
-            
+
     def onEffortTaskChanged(self, newValue, sender):
         changes = self._changes.get(sender.id(), None)
         if changes is not None:

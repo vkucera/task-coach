@@ -33,13 +33,13 @@ class Timeline(tooltip.ToolTipMixin, timeline.TimeLine):
         self.Bind(timeline.EVT_TIMELINE_ACTIVATED, self.onEdit)
         self.popupMenu = popupMenu
         self.Bind(wx.EVT_RIGHT_DOWN, self.onPopup)
-        
+
     def RefreshAllItems(self, count):
         self.Refresh()
-        
+
     def RefreshItems(self, *args):
         self.Refresh()
-        
+
     def onSelect(self, event):
         if event.node == self.model:
             self.__selection = []
@@ -47,14 +47,14 @@ class Timeline(tooltip.ToolTipMixin, timeline.TimeLine):
             self.__selection = [event.node]
         wx.CallAfter(self.selectCommand)
         event.Skip()
-        
+
     def select(self, items):
         pass
-    
+
     def onEdit(self, event):
         self.editCommand(event.node)
         event.Skip()
-        
+
     def OnBeforeShowToolTip(self, x, y):
         item = self.hot_map.findNodeAtPosition((x,y))
         if item is None or item == self.model:
@@ -68,12 +68,12 @@ class Timeline(tooltip.ToolTipMixin, timeline.TimeLine):
             return self.__tip
         else:
             return None
-        
+
     def onPopup(self, event):
         self.OnClickRelease(event) # Make sure the node is selected
         self.SetFocus()
         wx.CallAfter(self.PopupMenu, self.popupMenu) # Make sure the select event has been processed
-    
+
     def curselection(self):
         return self.__selection
 
@@ -87,5 +87,5 @@ class Timeline(tooltip.ToolTipMixin, timeline.TimeLine):
 
     def GetMainWindow(self):
         return self
-    
+
     MainWindow = property(GetMainWindow)

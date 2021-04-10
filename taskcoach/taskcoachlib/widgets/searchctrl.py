@@ -41,10 +41,10 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
         self.createMenu()
         self.bindEventHandlers()
         self.SetValue(value)
-        
+
     def GetMainWindow(self):
         return self
-    
+
     def getTextCtrl(self):
         textCtrl = [child for child in self.GetChildren() if isinstance(child, wx.TextCtrl)]
         return textCtrl[0] if textCtrl else self
@@ -56,11 +56,11 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
     def createMenu(self):
         # pylint: disable=W0201
         menu = wx.Menu()
-        self.__matchCaseMenuItem = menu.AppendCheckItem(wx.ID_ANY, 
+        self.__matchCaseMenuItem = menu.AppendCheckItem(wx.ID_ANY,
             _('&Match case'), _('Match case when filtering'))
         self.__matchCaseMenuItem.Check(self.__matchCase)
-        self.__includeSubItemsMenuItem = menu.AppendCheckItem(wx.ID_ANY, 
-            _('&Include sub items'), 
+        self.__includeSubItemsMenuItem = menu.AppendCheckItem(wx.ID_ANY,
+            _('&Include sub items'),
             _('Include sub items of matching items in the search results'))
         self.__includeSubItemsMenuItem.Check(self.__includeSubItems)
         self.__searchDescriptionMenuItem = menu.AppendCheckItem(wx.ID_ANY,
@@ -72,40 +72,40 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
             _('Consider search text as a regular expression'))
         self.__regularExpressionMenuItem.Check(self.__regularExpression)
         self.SetMenu(menu)
-        
+
     def PopupMenu(self): # pylint: disable=W0221
         rect = self.GetClientRect()
         x, y = rect[0], rect[1] + rect[3] + 3
         self.PopupMenuXY(self.GetMenu(), x, y)
-        
+
     def bindEventHandlers(self):
         # pylint: disable=W0142,W0612,W0201
         for args in [(wx.EVT_TIMER, self.onFind, self.__timer),
                      (wx.EVT_TEXT_ENTER, self.onFind),
                      (wx.EVT_TEXT, self.onFindLater),
                      (wx.EVT_SEARCHCTRL_CANCEL_BTN, self.onCancel),
-                     (wx.EVT_MENU, self.onMatchCaseMenuItem, 
+                     (wx.EVT_MENU, self.onMatchCaseMenuItem,
                          self.__matchCaseMenuItem),
-                     (wx.EVT_MENU, self.onIncludeSubItemsMenuItem, 
+                     (wx.EVT_MENU, self.onIncludeSubItemsMenuItem,
                          self.__includeSubItemsMenuItem),
                      (wx.EVT_MENU, self.onSearchDescriptionMenuItem,
                          self.__searchDescriptionMenuItem),
                      (wx.EVT_MENU, self.onRegularExpressionMenuItem,
                          self.__regularExpressionMenuItem)]:
-            self.Bind(*args) 
+            self.Bind(*args)
         # Precreate menu item ids for the recent searches and bind the event
         # handler for those menu item ids. It's no problem that the actual menu
-        # items don't exist yet. 
+        # items don't exist yet.
         self.__recentSearchMenuItemIds = \
             [wx.NewId() for dummy in range(self.__maxRecentSearches)]
-        self.Bind(wx.EVT_MENU_RANGE, self.onRecentSearchMenuItem, 
-            id=self.__recentSearchMenuItemIds[0], 
+        self.Bind(wx.EVT_MENU_RANGE, self.onRecentSearchMenuItem,
+            id=self.__recentSearchMenuItemIds[0],
             id2=self.__recentSearchMenuItemIds[-1])
 
     def setMatchCase(self, matchCase):
         self.__matchCase = matchCase
         self.__matchCaseMenuItem.Check(matchCase)
-        
+
     def setIncludeSubItems(self, includeSubItems):
         self.__includeSubItems = includeSubItems
         self.__includeSubItemsMenuItem.Check(includeSubItems)
@@ -137,8 +137,8 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
         if not self.IsEnabled():
             return
         if not self.isValid():
-            self.__tooltip.SetData([(None, 
-                [_('This is an invalid regular expression.'), 
+            self.__tooltip.SetData([(None,
+                [_('This is an invalid regular expression.'),
                  _('Defaulting to substring search.')])])
             x, y = self.GetParent().ClientToScreenXY(*self.GetPosition())
             height = self.GetClientSizeTuple()[1]
@@ -156,7 +156,7 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
         self.SetValue('')
         self.onFind(event)
         event.Skip()
-    
+
     def onMatchCaseMenuItem(self, event):
         self.__matchCase = self._isMenuItemChecked(event)
         self.onFind(event)
@@ -168,7 +168,7 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
     def onIncludeSubItemsMenuItem(self, event):
         self.__includeSubItems = self._isMenuItemChecked(event)
         self.onFind(event)
-        
+
     def onSearchDescriptionMenuItem(self, event):
         self.__searchDescription = self._isMenuItemChecked(event)
         self.onFind(event)
@@ -181,9 +181,9 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
         self.SetValue(self.__recentSearches[event.GetId()-self.__recentSearchMenuItemIds[0]])
         self.onFind(event)
         # Don't call event.Skip(). It will result in this event handler being
-        # called again with the next menu item since wxPython thinks the 
+        # called again with the next menu item since wxPython thinks the
         # event has not been dealt with (on Mac OS X at least).
-        
+
     def rememberSearchString(self, searchString):
         if searchString in self.__recentSearches:
             self.__recentSearches.remove(searchString)
@@ -191,12 +191,12 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
         if len(self.__recentSearches) > self.__maxRecentSearches:
             self.__recentSearches.pop()
         self.updateRecentSearches()
-                   
+
     def updateRecentSearches(self):
         menu = self.GetMenu()
         self.removeRecentSearches(menu)
         self.addRecentSearches(menu)
-        
+
     def removeRecentSearches(self, menu):
         while menu.GetMenuItemCount() > 4:
             item = menu.FindItemByPosition(4)
@@ -208,7 +208,7 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
         item.Enable(False)
         for index, searchString in enumerate(self.__recentSearches):
             menu.Append(self.__recentSearchMenuItemIds[index], searchString)
-            
+
     def Enable(self, enable=True): # pylint: disable=W0221
         ''' When wx.SearchCtrl is disabled it doesn't grey out the buttons,
             so we remove those. '''
@@ -216,9 +216,9 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
         super(SearchCtrl, self).Enable(enable)
         self.ShowCancelButton(enable and bool(self.GetValue()))
         self.ShowSearchButton(enable)
-        
+
     def _isMenuItemChecked(self, event):
-        # There's a bug in wxPython 2.8.3 on Windows XP that causes 
+        # There's a bug in wxPython 2.8.3 on Windows XP that causes
         # event.IsChecked() to return the wrong value in the context menu.
         # The menu on the main window works fine. So we first try to access the
         # context menu to get the checked state from the menu item itself.
@@ -228,6 +228,6 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
             return event.GetEventObject().FindItemById(event.GetId()).IsChecked()
         except AttributeError:
             return event.IsChecked()
-        
+
     def OnBeforeShowToolTip(self, x, y):
         return None

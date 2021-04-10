@@ -56,7 +56,7 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
         self.date.Append(_('DD/MM (day first)'))
         self.date.Append(_('MM/DD (month first)'))
         self.date.SetSelection(0)
-        
+
         self.quoteChar = wx.Choice(self, wx.ID_ANY)
         self.quoteChar.Append(_('Simple quote'))
         self.quoteChar.Append(_('Double quote'))
@@ -75,7 +75,7 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
         hsizer.Add(self.escapeQuote, 1, wx.ALL, 3)
         hsizer.Add(self.escapeChar, 1, wx.ALL, 3)
         self.quotePanel.SetSizer(hsizer)
-        
+
         self.importSelectedRowsOnly = wx.CheckBox(self, wx.ID_ANY, _('Import only the selected rows'))
         self.importSelectedRowsOnly.SetValue(False)
 
@@ -92,19 +92,19 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
         vsizer = wx.BoxSizer(wx.VERTICAL)
         gridSizer = wx.FlexGridSizer(0, 2)
 
-        gridSizer.Add(wx.StaticText(self, wx.ID_ANY, _('Delimiter')), 0, 
+        gridSizer.Add(wx.StaticText(self, wx.ID_ANY, _('Delimiter')), 0,
                       wx.ALIGN_CENTRE_VERTICAL | wx.ALL, 3)
         gridSizer.Add(self.delimiter, 0, wx.ALL, 3)
-        
-        gridSizer.Add(wx.StaticText(self, wx.ID_ANY, _('Date format')), 0, 
+
+        gridSizer.Add(wx.StaticText(self, wx.ID_ANY, _('Date format')), 0,
                       wx.ALIGN_CENTER_VERTICAL | wx.ALL, 3)
         gridSizer.Add(self.date, 0, wx.ALL, 3)
-        
-        gridSizer.Add(wx.StaticText(self, wx.ID_ANY, _('Quote character')), 0, 
+
+        gridSizer.Add(wx.StaticText(self, wx.ID_ANY, _('Quote character')), 0,
                       wx.ALIGN_CENTRE_VERTICAL | wx.ALL, 3)
         gridSizer.Add(self.quoteChar, 0, wx.ALL, 3)
 
-        gridSizer.Add(wx.StaticText(self, wx.ID_ANY, _('Escape quote')), 0, 
+        gridSizer.Add(wx.StaticText(self, wx.ID_ANY, _('Escape quote')), 0,
                       wx.ALIGN_CENTRE_VERTICAL | wx.ALL, 3)
         gridSizer.Add(self.quotePanel, 0, wx.ALL, 3)
 
@@ -201,7 +201,7 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
                     filename=self.filename,
                     encoding=self.encoding,
                     fields=self.headers)
-        
+
     def GetSelectedRows(self):
         startRows = [row for row, dummy_column in self.grid.GetSelectionBlockTopLeft()]
         stopRows = [row for row, dummy_column in self.grid.GetSelectionBlockBottomRight()]
@@ -260,7 +260,7 @@ class CSVImportMappingPage(wiz.WizardPageSimple):
         self.choices = []
 
         gsz = wx.FlexGridSizer(0, 2, 4, 2)
-        
+
         gsz.Add(wx.StaticText(self.interior, wx.ID_ANY, _('Column header in CSV file')))
         gsz.Add(wx.StaticText(self.interior, wx.ID_ANY, _('%s attribute') % meta.name))
         gsz.AddSpacer((3, 3))
@@ -268,7 +268,7 @@ class CSVImportMappingPage(wiz.WizardPageSimple):
         tcFieldNames = [field[0] for field in self.fields]
         for fieldName in options['fields']:
             gsz.Add(wx.StaticText(self.interior, wx.ID_ANY, fieldName), flag=wx.ALIGN_CENTER_VERTICAL)
-            
+
             choice = wx.Choice(self.interior, wx.ID_ANY)
             for tcFieldName in tcFieldNames:
                 choice.Append(tcFieldName)
@@ -280,14 +280,14 @@ class CSVImportMappingPage(wiz.WizardPageSimple):
         gsz.AddGrowableCol(1)
         self.interior.SetSizer(gsz)
         gsz.Layout()
-        
+
     def findFieldName(self, fieldName, fieldNames):
         def fieldNameIndex(fieldName, fieldNames):
             return fieldNames.index(fieldName) if fieldName in fieldNames else 0
-        
+
         index = fieldNameIndex(fieldName, fieldNames)
         return index if index else fieldNameIndex(fieldName[:6], [fieldName[:6] for fieldName in fieldNames])
-        
+
     def CanGoNext(self):
         wrongFields = []
         countNotNone = 0

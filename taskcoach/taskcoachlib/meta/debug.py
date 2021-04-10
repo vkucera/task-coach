@@ -21,16 +21,16 @@ import sys
 def log_call(traceback_depth):
     ''' Decorator for function calls that prints the function name,
         arguments and result to stdout. Usage:
-        
+
         @log_call(traceback_depth)
         def function(arg):
             ...
     '''
-    # Import here instead of at the module level to prevent unnecessary 
+    # Import here instead of at the module level to prevent unnecessary
     # inclusion of the inspect module when packaging the application:
-    import inspect 
-    
-    def outer(func):        
+    import inspect
+
+    def outer(func):
         def inner(*args, **kwargs):
             result = func(*args, **kwargs)
             write = sys.stdout.write
@@ -40,16 +40,16 @@ def log_call(traceback_depth):
             write('===\n')
             return result
         return inner
-    return outer    
-        
-    
+    return outer
+
+
 def time_call(func):
     ''' Decorator for function calls that times the call. '''
-    
+
     import time
-    
+
     def inner(*args, **kwargs):
-        start = time.time() 
+        start = time.time()
         result = func(*args, **kwargs)
         stop = time.time()
         sys.stdout.write('%s took %f seconds\n'%\
@@ -63,7 +63,7 @@ def profile_call(func):
         happens if you decorate a recursive function... '''
 
     import hotshot
-    
+
     def inner(*args, **kwargs):
         profiler = hotshot.Profile('.profile')
         return profiler.runcall(func, *args, **kwargs)
@@ -77,13 +77,13 @@ def signature(func, args, kwargs, result):
         return '%s(%s, %s) -> %s'%(func, unicode(args), unicode(kwargs), result)
     except:
         return '%s(...) -> %s'%(func, result) # pylint: disable=W0702
-                               
-                               
+
+
 def format_traceback(frame):
     result = []
     filename, lineno, caller, context = frame[1:5]
     result.append('  File "%s", line %s, in %s'%(filename, lineno, caller))
     for line in context:
         result.append(line[:-1])
-    return '\n'.join(result) + '\n'   
-    
+    return '\n'.join(result) + '\n'
+

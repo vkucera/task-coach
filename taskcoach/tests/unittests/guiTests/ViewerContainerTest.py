@@ -25,13 +25,13 @@ from pubsub import pub
 
 class DummyMainWindow(widgets.AuiManagedFrameWithDynamicCenterPane):
     count = 0
-    
+
     def __init__(self):
         super(DummyMainWindow, self).__init__(None)
 
     def addPane(self, window, caption, floating=False):
         self.count += 1
-        super(DummyMainWindow, self).addPane(window, caption, 
+        super(DummyMainWindow, self).addPane(window, caption,
                                              str('name%d'%self.count))
 
     def AddBalloonTip(self, *args, **kwargs):
@@ -43,24 +43,24 @@ class DummyPane(object):
 
     def __init__(self, window):
         self.window = window
-        
+
     def IsToolbar(self):
         return False
-    
+
     def IsNotebookPage(self):
         return True
-    
+
     def IsNotebookControl(self):
         return False
-    
+
     def HasFlag(self, flag):
         return True
-    
+
 
 class DummyEvent(object):
     def __init__(self, pane):
         self._pane = pane
-    
+
     def Skip(self):
         pass
 
@@ -70,13 +70,13 @@ class DummyEvent(object):
 
 class DummyChangeEvent(DummyEvent):
     pass
-        
+
 
 class DummyCloseEvent(DummyEvent):
     def __init__(self, window):
         super(DummyCloseEvent, self).__init__(DummyPane(window))
 
-    
+
 class ViewerContainerTest(test.wxTestCase):
     def setUp(self):
         super(ViewerContainerTest, self).setUp()
@@ -94,12 +94,12 @@ class ViewerContainerTest(test.wxTestCase):
 
     def createViewer(self, settingsSection):
         self.settings.add_section(settingsSection)
-        return dummy.ViewerWithDummyWidget(self.mainWindow, self.taskFile, 
+        return dummy.ViewerWithDummyWidget(self.mainWindow, self.taskFile,
             self.settings, settingsSection=settingsSection)
-            
+
     def onEvent(self):
         self.events += 1
-    
+
     def testCreate(self):
         self.assertEqual(0, self.container.size())
 
@@ -109,7 +109,7 @@ class ViewerContainerTest(test.wxTestCase):
 
     def testDefaultActiveViewer(self):
         self.assertEqual(self.viewer1, self.container.activeViewer())
-        
+
     def testChangePage_ChangesActiveViewer(self):
         self.container.activateViewer(self.viewer2)
         self.assertEqual(self.viewer2, self.container.activeViewer())
@@ -118,16 +118,16 @@ class ViewerContainerTest(test.wxTestCase):
         pub.subscribe(self.onEvent, 'viewer.status')
         self.container.onPageChanged(DummyChangeEvent(self.viewer2))
         self.failUnless(self.events > 0)
-        
+
     def testCloseViewer_RemovesViewerFromContainer(self):
         self.container.onPageClosed(DummyCloseEvent(self.viewer1))
         self.assertEqual([self.viewer2], self.container.viewers)
-        
+
     def testCloseViewer_ChangesActiveViewer(self):
         self.container.onPageChanged(DummyChangeEvent(self.viewer2))
         self.container.onPageClosed(DummyCloseEvent(self.viewer2))
         self.assertEqual(self.viewer1, self.container.activeViewer())
-        
+
     def testCloseViewer_NotifiesObserversAboutNewActiveViewer(self):
         self.container.activateViewer(self.viewer2)
         pub.subscribe(self.onEvent, 'viewer.status')

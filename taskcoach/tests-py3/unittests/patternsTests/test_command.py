@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import tctest
-from unittests import asserts 
+from unittests import asserts
 from taskcoachlib import patterns
 
 

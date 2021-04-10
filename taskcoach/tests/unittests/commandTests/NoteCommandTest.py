@@ -34,18 +34,18 @@ class NoteCommandTestCase(CommandTestCase, asserts.CommandAssertsMixin):
 
 class NewNoteCommandTest(NoteCommandTestCase):
     def new(self, categories=None):
-        newNoteCommand = command.NewNoteCommand(self.notes, 
+        newNoteCommand = command.NewNoteCommand(self.notes,
                                                 categories=categories or [])
         newNote = newNoteCommand.items[0]
         newNoteCommand.do()
         return newNote
-        
+
     def testNewNote(self):
         newNote = self.new()
         self.assertDoUndoRedo(
             lambda: self.assertEqual([newNote], self.notes),
             lambda: self.assertEqual([], self.notes))
-        
+
     def testNewNoteWithCategory(self):
         cat = category.Category('cat')
         newNote = self.new(categories=[cat])
@@ -59,27 +59,27 @@ class AddNoteCommandTest(NoteCommandTestCase):
         owner = NoteOwnerUnderTest()
         command.AddNoteCommand([owner], [owner]).do()
         self.failUnless(owner.notes()[0].parent() is None) # pylint: disable=E1101
-        
+
 
 class NewSubNoteCommandTest(NoteCommandTestCase):
     def setUp(self):
         super(NewSubNoteCommandTest, self).setUp()
         self.note = note.Note(subject='Note')
         self.notes.append(self.note)
-        
+
     def newSubNote(self, notes=None):
         newSubNote = command.NewSubNoteCommand(self.notes, notes or [])
         newSubNote.do()
 
     def testNewSubNote_WithoutSelection(self):
         self.newSubNote()
-        self.assertDoUndoRedo(lambda: self.assertEqual([self.note], 
+        self.assertDoUndoRedo(lambda: self.assertEqual([self.note],
                                                        self.notes))
 
     def testNewSubNote(self):
         self.newSubNote([self.note])
         newSubNote = self.note.children()[0]
-        self.assertDoUndoRedo(lambda: self.assertEqual([newSubNote], 
+        self.assertDoUndoRedo(lambda: self.assertEqual([newSubNote],
                                                        self.note.children()),
             lambda: self.assertEqual([self.note], self.notes))
 
@@ -93,25 +93,25 @@ class DragAndDropNoteCommand(NoteCommandTestCase):
         self.parent.addChild(self.child)
         self.child.addChild(self.grandchild)
         self.notes.extend([self.parent])
-    
+
     def dragAndDrop(self, dropTarget, notes=None):
-        command.DragAndDropNoteCommand(self.notes, notes or [], 
+        command.DragAndDropNoteCommand(self.notes, notes or [],
                                        drop=dropTarget).do()
-                                       
+
     def testCannotDropOnParent(self):
         self.dragAndDrop([self.parent], [self.child])
         self.failIf(patterns.CommandHistory().hasHistory())
-        
+
     def testCannotDropOnChild(self):
         self.dragAndDrop([self.child], [self.parent])
         self.failIf(patterns.CommandHistory().hasHistory())
-        
+
     def testCannotDropOnGrandchild(self):
         self.dragAndDrop([self.grandchild], [self.parent])
         self.failIf(patterns.CommandHistory().hasHistory())
 
     def testDropAsRootTask(self):
         self.dragAndDrop([], [self.grandchild])
-        self.assertDoUndoRedo(lambda: self.assertEqual(None, 
+        self.assertDoUndoRedo(lambda: self.assertEqual(None,
             self.grandchild.parent()), lambda:
             self.assertEqual(self.child, self.grandchild.parent()))

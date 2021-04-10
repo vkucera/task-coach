@@ -20,7 +20,7 @@ import glob, shutil, sys, os, urllib, tarfile, glob
 projectRoot = os.path.abspath('..')
 if projectRoot not in sys.path:
     sys.path.insert(0, projectRoot)
-from taskcoachlib.i18n import po2dict 
+from taskcoachlib.i18n import po2dict
 
 
 def downloadTranslations(url):
@@ -35,10 +35,10 @@ def downloadTranslations(url):
     tarFile.extractall(members=po_files(tarFile))
     tarFile.close()
     os.remove(filename)
-    
+
     for poFile in glob.glob('*.po'):
         newPoFile = os.path.join(folder, 'i18n.in-%s'%poFile)
-        shutil.copy(newPoFile, poFile) 
+        shutil.copy(newPoFile, poFile)
         print 'Updating', poFile
     shutil.rmtree(folder)
 

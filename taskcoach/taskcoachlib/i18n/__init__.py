@@ -24,20 +24,20 @@ import po2dict
 class Translator(metaclass=patterns.Singleton):
     def __init__(self, language):
         load = self._loadPoFile if language.endswith('.po') else self._loadModule
-        module, language = load(language) 
+        module, language = load(language)
         self._installModule(module)
         self._setLocale(language)
 
     def _loadPoFile(self, poFilename):
-        ''' Load the translation from a .po file by creating a python 
-            module with po2dict and them importing that module. ''' 
+        ''' Load the translation from a .po file by creating a python
+            module with po2dict and them importing that module. '''
         language = self._languageFromPoFilename(poFilename)
         pyFilename = self._tmpPyFilename()
         po2dict.make(poFilename, pyFilename)
         module = imp.load_source(language, pyFilename)
         os.remove(pyFilename)
         return module, language
-    
+
     def _tmpPyFilename(self):
         ''' Return a filename of a (closed) temporary .py file. '''
         tmpFile = tempfile.NamedTemporaryFile(suffix='.py')
@@ -46,7 +46,7 @@ class Translator(metaclass=patterns.Singleton):
         return pyFilename
 
     def _loadModule(self, language):
-        ''' Load the translation from a python module that has been 
+        ''' Load the translation from a python module that has been
             created from a .po file with po2dict before. '''
         for moduleName in self._localeStrings(language):
             try:
@@ -72,7 +72,7 @@ class Translator(metaclass=patterns.Singleton):
             languageInfo = wx.Locale.FindLanguageInfo(localeString)
             if languageInfo:
                 self.__locale = wx.Locale(languageInfo.Language) # pylint: disable=W0201
-                # Add the wxWidgets message catalog. This is really only for 
+                # Add the wxWidgets message catalog. This is really only for
                 # py2exe'ified versions, but it doesn't seem to hurt on other
                 # platforms...
                 localeDir = os.path.join(wx.StandardPaths_Get().GetResourcesDir(), 'locale')
@@ -86,17 +86,17 @@ class Translator(metaclass=patterns.Singleton):
                 # Mmmh. wx will display a message box later, so don't do anything.
                 pass
         self._fixBrokenLocales()
-            
+
     def _fixBrokenLocales(self):
         current_language = locale.getlocale(locale.LC_TIME)[0]
         if current_language and '_NO' in current_language:
             # nb_BO and ny_NO cause crashes in the wx.DatePicker. Set the
             # time part of the locale to some other locale. Since we don't
             # know which ones are available we try a few. First we try the
-            # default locale of the user (''). It's probably *_NO, but it 
-            # might be some other language so we try just in case. Then we try 
-            # English (GB) so the user at least gets a European date and time 
-            # format if that works. If all else fails we use the default 
+            # default locale of the user (''). It's probably *_NO, but it
+            # might be some other language so we try just in case. Then we try
+            # English (GB) so the user at least gets a European date and time
+            # format if that works. If all else fails we use the default
             # 'C' locale.
             for lang in ['', 'en_GB.utf8', 'C']:
                 try:
@@ -106,7 +106,7 @@ class Translator(metaclass=patterns.Singleton):
                 current_language = locale.getlocale(locale.LC_TIME)[0]
                 if current_language and '_NO' in current_language:
                     continue
-                else: 
+                else:
                     break
 
     def _localeStrings(self, language):
@@ -117,10 +117,10 @@ class Translator(metaclass=patterns.Singleton):
             if '_' in language:
                 localeStrings.append(language.split('_')[0])
         return localeStrings
-    
+
     def _languageFromPoFilename(self, poFilename):
         return os.path.splitext(os.path.basename(poFilename))[0]
-        
+
     def translate(self, string):
         ''' Look up string in the current language dictionary. Return the
             passed string if no language dictionary is available or if the
@@ -130,9 +130,9 @@ class Translator(metaclass=patterns.Singleton):
         except (AttributeError, KeyError):
             return string
 
-    
+
 def currentLanguageIsRightToLeft():
-    return wx.GetApp().GetLayoutDirection() == wx.Layout_RightToLeft       
+    return wx.GetApp().GetLayoutDirection() == wx.Layout_RightToLeft
 
 def translate(string):
     return Translator().translate(string)

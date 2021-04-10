@@ -39,7 +39,7 @@ class RowBuilder(object):
                                     reminder=[_('Reminder date'), _('Reminder time')],
                                     creationDateTime=[_('Creation date'), _('Creation time')],
                                     period=[_('Period start date'), _('Period start time'), _('Period end date'), _('Period end time')])
-    
+
     def __init__(self, columns, isTree, separateDateAndTimeColumns):
         self.__columns = columns
         self.__separateDateAndTimeColumns = separateDateAndTimeColumns
@@ -47,7 +47,7 @@ class RowBuilder(object):
             self.indent = lambda item: ' ' * len(item.ancestors())
         else:
             self.indent = lambda item: ''
-        
+
     def headerRow(self):
         headers = []
         for column in self.__columns:
@@ -56,7 +56,7 @@ class RowBuilder(object):
             else:
                 headers.append(column.header())
         return headers
-    
+
     def itemRow(self, item):
         row = []
         for column in self.__columns:
@@ -80,7 +80,7 @@ class RowBuilder(object):
 
     def shouldSplitDateAndTime(self, column):
         return self.__separateDateAndTimeColumns and column.name() in self.dateAndTimeColumnHeaders
-    
+
     def splitDateAndTime(self, column, item):
         if column.name() == 'period':
             return self.__splitDateAndTime(item.getStart()) + self.__splitDateAndTime(item.getStop())
@@ -93,19 +93,19 @@ class RowBuilder(object):
 
     def itemRows(self, items):
         return [self.itemRow(item) for item in items]
-    
+
     def rows(self, items):
         return [self.headerRow()] + self.itemRows(items)
-    
+
 
 def viewer2csv(viewer, selectionOnly=False, separateDateAndTimeColumns=False,
                columns=None):
     ''' Convert the items displayed by a viewer into a list of rows, where
-        each row consists of a list of values. If the viewer is in tree mode, 
-        indent the first value (typically the subject of the item) to 
+        each row consists of a list of values. If the viewer is in tree mode,
+        indent the first value (typically the subject of the item) to
         indicate the depth of the item in the tree. '''
-    
-    isTree = viewer.isTreeViewer()    
+
+    isTree = viewer.isTreeViewer()
     columns = columns or viewer.visibleColumns()
     rowBuilder = RowBuilder(columns, isTree, separateDateAndTimeColumns)
     items = viewer.visibleItems()

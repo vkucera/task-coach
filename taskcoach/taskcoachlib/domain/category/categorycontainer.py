@@ -21,14 +21,14 @@ from taskcoachlib import patterns
 
 
 class CategoryList(base.Collection):
-    @patterns.eventSource    
+    @patterns.eventSource
     def extend(self, categories, event=None):
         super(CategoryList, self).extend(categories, event=event)
         for category in self._compositesAndAllChildren(categories):
             for categorizable in category.categorizables():
                 categorizable.addCategory(category, event=event, modify=False)
 
-    @patterns.eventSource                
+    @patterns.eventSource
     def removeItems(self, categories, event=None):
         super(CategoryList, self).removeItems(categories, event=event)
         for category in self._compositesAndAllChildren(categories):
@@ -41,10 +41,10 @@ class CategoryList(base.Collection):
             if category.subject(recursive=recursive) == name:
                 return category
         return None
-    
+
     def filteredCategories(self):
         return [category for category in self if category.isFiltered()]
-    
+
     @patterns.eventSource
     def resetAllFilteredCategories(self, event=None):
         for category in self:

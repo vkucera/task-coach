@@ -250,7 +250,7 @@ class ThunderbirdImapReader(object):
         self.url = url
 
         self.user = unquote(mt.group(1))
-        self.server = mt.group(2) 
+        self.server = mt.group(2)
         port = None
         if ':' in self.server:
             self.server, port = self.server.split(':')
@@ -264,8 +264,8 @@ class ThunderbirdImapReader(object):
         # We iterate over a maximum of 100 mailservers. You'd think that
         # mailservers would be numbered consecutively, but apparently
         # that is not always the case, so we cannot assume that because
-        # serverX does not exist, serverX+1 won't either. 
-        for serverIndex in range(100): 
+        # serverX does not exist, serverX+1 won't either.
+        for serverIndex in range(100):
             name = 'mail.server.server%d' % serverIndex
             if config.has_key(name + '.hostname') and \
                 self.__equal_servers(config[name + '.hostname'], self.server) \
@@ -285,11 +285,11 @@ class ThunderbirdImapReader(object):
         elif config.has_key(name + '.realhostname'):
             self.server = config[name + '.realhostname']
         self.port = port or {True: 993, False: 143}[self.ssl]
-        
+
     @staticmethod
     def __equal_servers(server1, server2):
         ''' Return whether the servers are the same. '''
-        gmail_servers = ('imap.gmail.com', 'imap.google.com', 
+        gmail_servers = ('imap.gmail.com', 'imap.google.com',
                          'imap.googlemail.com')
         if server1 in gmail_servers and server2 in gmail_servers:
             return True
@@ -306,7 +306,7 @@ class ThunderbirdImapReader(object):
             error_message = _('Could not open an IMAP connection to '
                               '%(server)s:%(port)s\nto retrieve Thunderbird '
                               'email message:\n%(reason)s') % \
-                              dict(server=self.server, port=self.port, 
+                              dict(server=self.server, port=self.port,
                                    reason=reason)
             raise ThunderbirdError(error_message)
 
@@ -318,14 +318,14 @@ class ThunderbirdImapReader(object):
         while True:
             try:
                 if 'AUTH=CRAM-MD5' in imap.capabilities:
-                    response, dummy = imap.login_cram_md5(str(self.user), 
+                    response, dummy = imap.login_cram_md5(str(self.user),
                                                           str(pwd))
                 elif 'AUTH=NTLM' in imap.capabilities:
                     domain = wx.GetTextFromUser( \
                         _('Please enter the domain for user %s') % self.user)
-                    domain_username = '\\'.join([domain.upper(), 
+                    domain_username = '\\'.join([domain.upper(),
                                                  str(self.user)])
-                    response, dummy_parameters = imap.authenticate('NTLM', 
+                    response, dummy_parameters = imap.authenticate('NTLM',
                         IMAPNtlmAuthHandler.IMAPNtlmAuthHandler( \
                             domain_username, str(pwd)))
                 else:
@@ -366,7 +366,7 @@ class ThunderbirdLocalMailboxReader(object):
     ''' Reads email from a local Thunderbird mailbox. '''
     def __init__(self, url):
         self.url = url
-        
+
     def _getMail(self):
         match = _RX_MAILBOX.match(self.url)
         if match is None:
@@ -381,17 +381,17 @@ class ThunderbirdLocalMailboxReader(object):
             contents = mbox.read(4 * 1024 * 1024)  # Assume message size <= 4MB
         # Then we get a filename for a temporary file...
         filename = persistence.get_temp_file()
-        # And save the remaining contents of the original mbox file: 
+        # And save the remaining contents of the original mbox file:
         with file(filename, 'wb') as tmpmbox:
             tmpmbox.write(contents)
         # Now we can open the temporary mbox file...
         mb = mailbox.mbox(filename)
         # And the message we look for should be the first one:
         return mb.get_string(0)
-        
+
     def saveToFile(self, fp):
         fp.write(self._getMail())
-    
+
 
 def getMail(id_):
     if id_.startswith('mailbox-message://'):

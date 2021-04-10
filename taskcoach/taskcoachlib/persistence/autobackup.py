@@ -23,7 +23,7 @@ from taskcoachlib.domain import date
 from pubsub import pub
 import bz2, hashlib
 
-# Hack: indirect 
+# Hack: indirect
 from xml.etree import ElementTree as ET
 
 

@@ -21,7 +21,7 @@ from . import generator
 
 
 class UnicodeCSVWriter:
-    ''' A CSV writer that writes rows to a CSV file encoded in utf-8. 
+    ''' A CSV writer that writes rows to a CSV file encoded in utf-8.
         Based on http://docs.python.org/lib/csv-examples.html.
     '''
     def __init__(self, fd, *args, **kwargs):
@@ -32,7 +32,7 @@ class UnicodeCSVWriter:
 
     def writerow(self, row):
         self.writer.writerow([cell.encode('utf-8') for cell in row])
-        # Fetch UTF-8 output from the queue 
+        # Fetch UTF-8 output from the queue
         data = self.queue.getvalue()
         data = data.decode('utf-8')
         self.fd.write(data)
@@ -47,9 +47,9 @@ class CSVWriter(object):
     def __init__(self, fd, filename=None):
         self.__fd = fd
 
-    def write(self, viewer, settings, selectionOnly=False, 
+    def write(self, viewer, settings, selectionOnly=False,
               separateDateAndTimeColumns=False, columns=None): # pylint: disable=W0613
-        csvRows = generator.viewer2csv(viewer, selectionOnly, 
+        csvRows = generator.viewer2csv(viewer, selectionOnly,
                                        separateDateAndTimeColumns, columns)
         UnicodeCSVWriter(self.__fd).writerows(csvRows)
         return len(csvRows) - 1 # Don't count header row

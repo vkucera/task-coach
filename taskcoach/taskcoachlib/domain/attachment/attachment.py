@@ -92,7 +92,7 @@ class Attachment(base.Object, NoteOwner):
             pub.sendMessage(self.locationChangedEventType(), newValue=location,
                             sender=self)
 
-    @classmethod        
+    @classmethod
     def locationChangedEventType(class_):
         return 'pubsub.attachment.location'
 
@@ -130,7 +130,7 @@ class Attachment(base.Object, NoteOwner):
 
     def __unicode__(self):
         return self.subject()
-    
+
     @classmethod
     def modificationEventTypes(class_):
         eventTypes = super(Attachment, class_).modificationEventTypes()

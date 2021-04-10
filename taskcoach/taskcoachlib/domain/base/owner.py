@@ -51,7 +51,7 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
     def changedEventType(class_):
         return '%s.%ss' % (class_, klass.__ownedType__.lower())
 
-    setattr(klass, '%ssChangedEventType' % klass.__ownedType__.lower(), 
+    setattr(klass, '%ssChangedEventType' % klass.__ownedType__.lower(),
             classmethod(changedEventType))
 
     def addedEventType(class_):
@@ -72,7 +72,7 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
         except AttributeError:
             eventTypes = []
         return eventTypes + [changedEventType(class_)]
-    
+
     klass.modificationEventTypes = classmethod(modificationEventTypes)
 
     def objects(instance, recursive=False):
@@ -90,16 +90,16 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
     def setObjects(instance, newObjects, event=None):
         if newObjects == objects(instance):
             return
-        setattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower()), 
+        setattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower()),
                                         newObjects)
         changedEvent(instance, event, *newObjects) # pylint: disable=W0142
 
     setattr(klass, 'set%ss' % klass.__ownedType__, setObjects)
 
     def changedEvent(instance, event, *objects):
-        event.addSource(instance, *objects, 
+        event.addSource(instance, *objects,
                         **dict(type=changedEventType(instance.__class__)))
-    
+
     setattr(klass, '%ssChangedEvent' % klass.__ownedType__.lower(), changedEvent)
 
     def addedEvent(instance, event, *objects):
@@ -153,7 +153,7 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
         event = kwargs.pop('event', None)
         changedEvent(instance, event, *ownedObjects)
         removedEvent(instance, event, *ownedObjects)
-        
+
     setattr(klass, 'remove%ss' % klass.__ownedType__, removeObjects)
 
     def getstate(instance):

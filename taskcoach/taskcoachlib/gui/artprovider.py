@@ -77,7 +77,7 @@ class ArtProvider(wx.ArtProvider):
     def convertAlphaToMask(bitmap):
         image = wx.ImageFromBitmap(bitmap)
         image.ConvertAlphaToMask()
-        return wx.BitmapFromImage(image)    
+        return wx.BitmapFromImage(image)
 
 
 class IconProvider(metaclass=patterns.Singleton):
@@ -89,9 +89,9 @@ class IconProvider(metaclass=patterns.Singleton):
             self.__iconSizeOnCurrentPlatform = 48
         else:
             self.__iconSizeOnCurrentPlatform = 16
-        
-    def getIcon(self, iconTitle): 
-        ''' Return the icon. Use a cache to prevent leakage of GDI object 
+
+    def getIcon(self, iconTitle):
+        ''' Return the icon. Use a cache to prevent leakage of GDI object
             count. '''
         try:
             return self.__iconCache[iconTitle]
@@ -99,14 +99,14 @@ class IconProvider(metaclass=patterns.Singleton):
             icon = self.getIconFromArtProvider(iconTitle)
             self.__iconCache[iconTitle] = icon
             return icon
-        
+
     def iconBundle(self, iconTitle):
         ''' Create an icon bundle with icons of different sizes. '''
         bundle = wx.IconBundle()
         for size in (16, 22, 32, 48, 64, 128):
             bundle.AddIcon(self.getIconFromArtProvider(iconTitle, size))
         return bundle
-    
+
     def getIconFromArtProvider(self, iconTitle, iconSize=None):
         size = iconSize or self.__iconSizeOnCurrentPlatform
         # I just spent two hours trying to get rid of garbage in the icon
@@ -116,8 +116,8 @@ class IconProvider(metaclass=patterns.Singleton):
 
         # wx.ArtProvider_GetIcon doesn't convert alpha to mask, so we do it
         # ourselves:
-        bitmap = wx.ArtProvider_GetBitmap(iconTitle, wx.ART_FRAME_ICON, 
-                                          (size, size))    
+        bitmap = wx.ArtProvider_GetBitmap(iconTitle, wx.ART_FRAME_ICON,
+                                          (size, size))
         bitmap = ArtProvider.convertAlphaToMask(bitmap)
         return wx.IconFromBitmap(bitmap)
 

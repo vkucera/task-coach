@@ -56,7 +56,7 @@ class TodoTxtReader(object):
         with codecs.open(filename, 'r', 'utf-8') as fp:
             self.readFile(fp, metaLines=metaLines)
 
-    @patterns.eventSource    
+    @patterns.eventSource
     def readFile(self, fp, now=date.Now, event=None, metaLines=None):
         todoTxtRE = self.compileTodoTxtRE()
         keyValueRE = self.compileKeyValueRE()
@@ -80,16 +80,16 @@ class TodoTxtReader(object):
             elif key == 'tcid':
                 taskId = value
         line = re.sub(keyValueRE, '', line) # Remove all key:value pairs
-        
-        # Now, process the "official" todo.txt format using a RE that should 
+
+        # Now, process the "official" todo.txt format using a RE that should
         # match the line completely.
         match = todoTxtRE.match(line)
 
-        priority = self.priority(match)    
+        priority = self.priority(match)
         completionDateTime = self.completionDateTime(match, now)
         plannedStartDateTime = self.plannedStartDateTime(match)
         categories = self.categories(match, event)
-       
+
         recursiveSubject = match.group('subject')
 
         subjects = recursiveSubject.split('->')
@@ -129,13 +129,13 @@ class TodoTxtReader(object):
         newTask.setDueDateTime(dueDateTime)
         for eachCategory in categories:
             newTask.addCategory(eachCategory, event=event)
-            eachCategory.addCategorizable(newTask, event=event)        
-                
+            eachCategory.addCategorizable(newTask, event=event)
+
     @staticmethod
     def priority(match):
         priorityText = match.group('priority')
         return ord(priorityText) + 1 - ord('A') if priorityText else 0
-    
+
     @classmethod
     def completionDateTime(cls, match, now):
         if match.group('completed'):
@@ -143,27 +143,27 @@ class TodoTxtReader(object):
             return cls.dateTime(completionDateText) if completionDateText else now()
         else:
             return date.DateTime()
-        
+
     @classmethod
     def plannedStartDateTime(cls, match):
         startDateText = match.group('startDate')
         return cls.dateTime(startDateText) if startDateText else date.DateTime()
-    
+
     @staticmethod
     def dateTime(dateText):
         year, month, day = dateText.split('-')
         return date.DateTime(int(year), int(month), int(day), 0, 0, 0)
-      
+
     def categories(self, match, event):
         ''' Transform both projects and contexts into categories. Since Todo.txt
             allows multiple projects for one task, but Task Coach does not allow
-            for tasks to have more than one parent task, we cannot transform 
+            for tasks to have more than one parent task, we cannot transform
             projects into parent tasks. '''
         categories = []
         contextsAndProjects = match.group('contexts_and_projects_pre') + \
                               match.group('contexts_and_projects_post')
         contextsAndProjects = contextsAndProjects.strip()
-        if contextsAndProjects:        
+        if contextsAndProjects:
             for contextOrProject in contextsAndProjects.split(' '):
                 recursiveSubject = contextOrProject.strip()
                 categoryForTask = None
@@ -171,46 +171,46 @@ class TodoTxtReader(object):
                     categoryForTask = self.findOrCreateCategory(subject, categoryForTask, event)
                 categories.append(categoryForTask)
         return categories
-        
+
     def findOrCreateCategory(self, subject, parent, event):
-        return self.findOrCreateCompositeItem(subject, parent, 
-            self.__categoriesBySubject, self.__categoryList, category.Category, 
+        return self.findOrCreateCompositeItem(subject, parent,
+            self.__categoriesBySubject, self.__categoryList, category.Category,
             event)
-        
+
     def findOrCreateTask(self, subject, parent, event):
-        return self.findOrCreateCompositeItem(subject, parent, 
+        return self.findOrCreateCompositeItem(subject, parent,
             self.__tasksBySubject, self.__taskList, task.Task, event)
-    
-    def findOrCreateCompositeItem(self, subject, parent, subjectCache, 
+
+    def findOrCreateCompositeItem(self, subject, parent, subjectCache,
                                   itemContainer, itemClass, event):
         if (subject, parent) in subjectCache:
-            return subjectCache[(subject, parent)]           
+            return subjectCache[(subject, parent)]
         newItem = itemClass(subject=subject)
         if parent:
             newItem.setParent(parent)
             parent.addChild(newItem, event=event)
         itemContainer.append(newItem, event=event)
         subjectCache[(subject, parent)] = newItem
-        return newItem        
-    
+        return newItem
+
     @staticmethod
     def compileTodoTxtRE():
         priorityRE = r'(?:\((?P<priority>[A-Z])\) )?'
         completedRe = r'(?P<completed>[Xx] )?'
         completionDateRE = r'(?:(?<=[xX] )(?P<completionDate>\d{4}-\d{1,2}-\d{1,2}) )?'
-        startDateRE = r'(?:(?P<startDate>\d{4}-\d{1,2}-\d{1,2}) )?' 
+        startDateRE = r'(?:(?P<startDate>\d{4}-\d{1,2}-\d{1,2}) )?'
         contextsAndProjectsPreRE = r'(?P<contexts_and_projects_pre>(?: ?[@+][^\s]+)*)'
         subjectRE = r'(?P<subject>.*?)'
         contextsAndProjectsPostRE = r'(?P<contexts_and_projects_post>(?: [@+][^\s]+)*)'
         return re.compile('^' + priorityRE + completedRe + completionDateRE + \
                           startDateRE + contextsAndProjectsPreRE + subjectRE + \
                           contextsAndProjectsPostRE + '$')
-        
+
     @staticmethod
     def compileKeyValueRE():
         # The key is non-greedy because IDs may contain ':'
         return re.compile(' (?P<key>\S+?):(?P<value>\S+)')
-    
+
     @staticmethod
     def __createSubjectCache(itemContainer):
         cache = dict()

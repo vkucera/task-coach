@@ -38,7 +38,7 @@ class ToolTipMixin(object):
 
         self.GetMainWindow().Bind(wx.EVT_MOTION, self.__OnMotion)
         self.GetMainWindow().Bind(wx.EVT_LEAVE_WINDOW, self.__OnLeave)
-        self.Bind(wx.EVT_TIMER, self.__OnTimer, id=self.__timer.GetId())        
+        self.Bind(wx.EVT_TIMER, self.__OnTimer, id=self.__timer.GetId())
 
     def SetToolTipsEnabled(self, enabled):
         self.__enabled = enabled
@@ -175,7 +175,7 @@ class SimpleToolTip(ToolTipBase):
         self.data = self._wrapLongLines(data)
         self.SetSize(self._calculateSize())
         self.Refresh()  # Needed on Mac OS X
-        
+
     def _wrapLongLines(self, data):
         wrappedData = []
         wrapper = textwrap.TextWrapper(width=78)
@@ -185,7 +185,7 @@ class SimpleToolTip(ToolTipBase):
                 wrappedLines.extend(wrapper.fill(line).split('\n'))
             wrappedData.append((icon, wrappedLines))
         return wrappedData
-        
+
     def _calculateSize(self):
         dc = wx.ClientDC(self)
         self._setFontBrushAndPen(dc)
@@ -195,7 +195,7 @@ class SimpleToolTip(ToolTipBase):
             width = max(width, sectionWidth)
             height += sectionHeight
         return wx.Size(width + 6, height + 6)
-    
+
     def _calculateSectionSize(self, dc, sectionIndex):
         icon, lines = self.data[sectionIndex]
         sectionWidth, sectionHeight = 0, 0
@@ -208,7 +208,7 @@ class SimpleToolTip(ToolTipBase):
         if icon:
             sectionWidth += 24  # Reserve width for icon(s)
         return sectionWidth, sectionHeight
-    
+
     def _calculateLineSize(self, dc, line):
         return dc.GetTextExtent(line)
 
@@ -221,7 +221,7 @@ class SimpleToolTip(ToolTipBase):
             self._drawSections(dc)
         finally:
             dc.EndDrawing()
-            
+
     def _setFontBrushAndPen(self, dc):
         font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
         textColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_INFOTEXT)
@@ -230,16 +230,16 @@ class SimpleToolTip(ToolTipBase):
         dc.SetTextForeground(textColour)
         dc.SetBrush(wx.Brush(backgroundColour))
         dc.SetPen(wx.Pen(textColour))
-        
+
     def _drawBorder(self, dc):
         width, height = self.GetClientSizeTuple()
         dc.DrawRectangle(0, 0, width, height)
-        
+
     def _drawSections(self, dc):
         y = 3
         for sectionIndex in range(len(self.data)):
             y = self._drawSection(dc, y, sectionIndex)
-                    
+
     def _drawSection(self, dc, y, sectionIndex):
         icon, lines = self.data[sectionIndex]
         if not lines:
@@ -254,23 +254,23 @@ class SimpleToolTip(ToolTipBase):
         if icon:
             self._drawIconSeparator(dc, x - 2, topOfSection, bottomOfSection)
         return bottomOfSection
-    
+
     def _drawSectionSeparator(self, dc, x, y):
         y += 1
         width = self.GetClientSizeTuple()[0]
         dc.DrawLine(x, y, width - x, y)
         return y + 2
-        
+
     def _drawIcon(self, dc, icon, x, y):
         bitmap = wx.ArtProvider.GetBitmap(icon, wx.ART_FRAME_ICON, (16, 16))
         dc.DrawBitmap(bitmap, x, y, True)
         return 23  # New x
-        
+
     def _drawTextLines(self, dc, textLines, x, y):
         for textLine in textLines:
             y = self._drawTextLine(dc, textLine, x, y)
         return y
-        
+
     def _drawTextLine(self, dc, textLine, x, y):
         try:
             dc.DrawText(textLine, x, y)
@@ -278,7 +278,7 @@ class SimpleToolTip(ToolTipBase):
             raise RuntimeError('Could not draw text %s' % repr(textLine))
         textHeight = dc.GetTextExtent(textLine)[1]
         return y + textHeight + 1
-    
+
     def _drawIconSeparator(self, dc, x, top, bottom):
         ''' Draw a vertical line between the icon and the text. '''
         dc.DrawLine(x, top, x, bottom)

@@ -30,7 +30,7 @@ from taskcoachlib.notify import AbstractNotifier
 
 
 def skipOnPlatform(*platforms):
-    ''' Decorator for unit tests that are to be skipped on specific 
+    ''' Decorator for unit tests that are to be skipped on specific
         platforms. '''
     def wrapper(func):
         if wx.Platform in platforms:
@@ -57,14 +57,14 @@ class TestCase(unittest.TestCase, object):
         self.assertEqual(len(expectedList), len(actualList))
         for item in expectedList:
             self.failUnless(item in actualList)
-            
+
     def registerObserver(self, eventType, eventSource=None):
         if not hasattr(self, 'events'):
             self.events = []  # pylint: disable=W0201
         from taskcoachlib import patterns  # pylint: disable=W0404
         patterns.Publisher().registerObserver(self.onEvent, eventType=eventType,
                                               eventSource=eventSource)
-        
+
     def onEvent(self, event):
         self.events.append(event)
 
@@ -74,7 +74,7 @@ class TestCase(unittest.TestCase, object):
     def tearDown(self):
         # pylint: disable=W0404
         # Prevent processing of pending events after the test has finished:
-        wx.GetApp().Disconnect(wx.ID_ANY) 
+        wx.GetApp().Disconnect(wx.ID_ANY)
         from taskcoachlib import patterns
         patterns.Publisher().clear()
         patterns.CommandHistory().clear()
@@ -123,7 +123,7 @@ class TestResultWithTimings(unittest._TextTestResult): # pylint: disable=W0212
     def startTest(self, test):
         super(TestResultWithTimings, self).startTest(test)
         self._timings[test] = time.time()
-        
+
     def stopTest(self, test):
         super(TestResultWithTimings, self).stopTest(test)
         self._timings[test] = time.time() - self._timings[test]
@@ -136,7 +136,7 @@ class TextTestRunnerWithTimings(unittest.TextTestRunner):
         self._nrTestsToReport = nrTestsToReport
 
     def _makeResult(self):
-        return TestResultWithTimings(self.stream, self.descriptions, 
+        return TestResultWithTimings(self.stream, self.descriptions,
             self.verbosity)
 
     def run(self, *args, **kwargs): # pylint: disable=W0221
@@ -153,7 +153,7 @@ class TextTestRunnerWithTimings(unittest.TextTestRunner):
 class AllTests(unittest.TestSuite):
     def __init__(self, options, testFiles=None):
         super(AllTests, self).__init__()
-        self._options = options 
+        self._options = options
         self.loadAllTests(testFiles or [])
 
     def filenameToModuleName(self, filename):
@@ -161,7 +161,7 @@ class AllTests(unittest.TestSuite):
             # Strip current working directory to get the relative path:
             filename = filename[len(os.getcwd() + os.sep):]
         module = filename.replace(os.sep, '.')
-        module = module.replace('/', '.')  
+        module = module.replace('/', '.')
         return module[:-3] # strip '.py'
 
     def loadAllTests(self, testFiles):
@@ -184,15 +184,15 @@ class AllTests(unittest.TestSuite):
         for filename in testFiles:
             moduleName = self.filenameToModuleName(filename)
             # Importing the module is not strictly necessary because
-            # loadTestsFromName will do that too as a side effect. But if the 
+            # loadTestsFromName will do that too as a side effect. But if the
             # test module contains errors our import will raise an exception
-            # while loadTestsFromName ignores exceptions when importing from 
+            # while loadTestsFromName ignores exceptions when importing from
             # modules.
             __import__(moduleName)
             suite = testloader.loadTestsFromName(moduleName)
             self.addTests(suite._tests) # pylint: disable=W0212
-   
-    def runTests(self):       
+
+    def runTests(self):
         testrunner = TextTestRunnerWithTimings(
             verbosity=self._options.verbosity,
             timeTests=self._options.time,
@@ -231,23 +231,23 @@ class TestOptionParser(config.OptionParser):
             dest='verbosity', help='show progress [default]')
         testoutput.add_option('-v', '--verbose', action='store_const',
             const=2, dest='verbosity', help='show all tests')
-        testoutput.add_option('-t', '--time', default=False, 
-            action='store_true', 
+        testoutput.add_option('-t', '--time', default=False,
+            action='store_true',
             help='time the tests and report the slowest tests')
         testoutput.add_option('--time-reports', default=10, type='int',
             help='the number of slow tests to report [%default]')
         return testoutput
 
     def profileOptionGroup(self):
-        profile = config.OptionGroup(self, 'Profiling', 
+        profile = config.OptionGroup(self, 'Profiling',
             'Options to profile the tests to see what test code or production '
             'code is taking the most time.')
-        profile.add_option('-p', '--profile', default=False, 
+        profile.add_option('-p', '--profile', default=False,
             action='store_true', help='profile the running of all the tests')
-        profile.add_option('-r', '--report-only', dest='profile_report_only', 
+        profile.add_option('-r', '--report-only', dest='profile_report_only',
             action='store_true', default=False,
             help="don't make a new profile, report only on the last profile")
-        profile.add_option('-s', '--sort', dest='profile_sort', 
+        profile.add_option('-s', '--sort', dest='profile_sort',
             action='append', default=[],
             help="sort key to be used for reporting the profile data. "
             "Possible sort keys are: 'calls', 'cumulative' [default], "
@@ -257,7 +257,7 @@ class TestOptionParser(config.OptionParser):
             default=False, action='store_true', help='print callers')
         profile.add_option('--callees', dest='profile_callees',
             default=False, action='store_true', help='print callees')
-        profile.add_option('-l', '--limit', dest='profile_limit', default=50, 
+        profile.add_option('-l', '--limit', dest='profile_limit', default=50,
             type="int", help="limit the number of calls to show in the "
             "profile reports [%default]")
         profile.add_option('--regex', dest='profile_regex',
@@ -268,13 +268,13 @@ class TestOptionParser(config.OptionParser):
     def testselectionOptionGroup(self):
         testselection = config.OptionGroup(self, 'Test selection',
             'Options to determine which tests to run.')
-        
+
         description = dict(dist='the platform-specific package', all='all')
 
         def helpText(selection):
             return 'run %s tests'%description.get(selection, 'the %s'%selection) + \
                    (' [default]' if selection == 'unit' else '')
-        
+
         for selection in 'unit', 'integration', 'language', 'release', 'dist', 'all':
             testselection.add_option('--%stests'%selection, default=False,
                 action='store_true', help=helpText(selection))
@@ -311,7 +311,7 @@ class TestProfiler:
         stats.strip_dirs()
         for sortKey in self._options.profile_sort:
             stats.sort_stats(sortKey)
-            stats.print_stats(self._options.profile_regex, 
+            stats.print_stats(self._options.profile_regex,
                 self._options.profile_limit)
         if self._options.profile_callers:
             stats.print_callers()
@@ -331,11 +331,11 @@ class TestProfiler:
         if not result.wasSuccessful():
             self.cleanup()
         return result.wasSuccessful()
-            
+
     def cleanup(self):
         os.remove(self._logfile)
 
-    
+
 if __name__ == '__main__':
     logging.basicConfig()
     theOptions, theTestFiles = TestOptionParser().parse_args()

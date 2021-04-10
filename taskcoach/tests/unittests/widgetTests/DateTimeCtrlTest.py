@@ -69,14 +69,14 @@ class CommonTestsMixin(object):
         self.dateTimeCtrl.SetValue(oneHour)
         self.assertEqual(oneHour, self.dateTimeCtrl.GetValue())
 
-        
+
 class DateTimeCtrlTestCase(test.wxTestCase):
     adjustEndOfDay = False
     showSeconds = False
 
     def setUp(self):
         super(DateTimeCtrlTestCase, self).setUp()
-        self.dateTimeCtrl = widgets.datectrl.DateTimeCtrl(self.frame, 
+        self.dateTimeCtrl = widgets.datectrl.DateTimeCtrl(self.frame,
                                                           showSeconds=self.showSeconds,
                                                           adjustEndOfDay=self.adjustEndOfDay)
 

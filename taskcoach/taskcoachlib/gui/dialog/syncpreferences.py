@@ -41,7 +41,7 @@ class SyncMLBasePage(SettingsPageBase):
         elif section == 'task':
             for child in self.config.children()[0]['spds']['sources'].children():
                 if child.name.endswith('Tasks'):
-                    return child.get(name)            
+                    return child.get(name)
 
         elif section == 'note':
             for child in self.config.children()[0]['spds']['sources'].children():

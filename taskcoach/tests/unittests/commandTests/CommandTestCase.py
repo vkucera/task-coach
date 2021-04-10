@@ -24,11 +24,11 @@ from taskcoachlib.domain import task
 
 class CommandTestCase(test.wxTestCase, asserts.CommandAssertsMixin):
     list = []
-    
+
     def setUp(self):
         super(CommandTestCase, self).setUp()
         task.Task.settings = config.Settings(load=False)
-    
+
     def tearDown(self):
         super(CommandTestCase, self).tearDown()
         patterns.CommandHistory().clear()
@@ -44,5 +44,5 @@ class CommandTestCase(test.wxTestCase, asserts.CommandAssertsMixin):
             items = list(self.list)
         command.CutCommand(self.list, items or []).do()
 
-    def paste(self):        
+    def paste(self):
         command.PasteCommand(self.list).do()

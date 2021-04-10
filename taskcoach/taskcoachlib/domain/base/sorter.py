@@ -22,7 +22,7 @@ from pubsub import pub
 
 class Sorter(patterns.ListDecorator):
     ''' This class decorates a list and sorts its contents. '''
-    
+
     def __init__(self, *args, **kwargs):
         self._sortKeys = kwargs.pop('sortBy', ['subject'])
         self._sortCaseSensitive = kwargs.pop('sortCaseSensitive', True)
@@ -41,10 +41,10 @@ class Sorter(patterns.ListDecorator):
         for sortKey in self._sortKeys:
             self._removeObserverForAttribute(sortKey.lstrip('-'))
 
-    @classmethod        
+    @classmethod
     def sortEventType(cls):
         return 'pubsub.%s.sorted' % cls.__name__
-    
+
     @patterns.eventSource
     def extendSelf(self, items, event=None):
         super(Sorter, self).extendSelf(items, event)
@@ -58,8 +58,8 @@ class Sorter(patterns.ListDecorator):
     def sortKeys(self):
         return self._sortKeys
 
-    # We don't implement removeItemsFromSelf() because there is no need 
-    # to resort when items are removed since after removing items the 
+    # We don't implement removeItemsFromSelf() because there is no need
+    # to resort when items are removed since after removing items the
     # remaining items are still in the right order.
 
     def sortBy(self, sortKey):
@@ -80,7 +80,7 @@ class Sorter(patterns.ListDecorator):
             self._registerObserverForAttribute(sortKey)
 
         self.reset()
-        
+
     def sortCaseSensitive(self, sortCaseSensitive):
         self._sortCaseSensitive = sortCaseSensitive
         self.reset()
@@ -92,7 +92,7 @@ class Sorter(patterns.ListDecorator):
               self.sortBy(self._sortKeys[0].lstrip('-'))
 
     def reset(self, forceEvent=False):
-        ''' reset does the actual sorting. If the order of the list changes, 
+        ''' reset does the actual sorting. If the order of the list changes,
             observers are notified by means of the list-sorted event. '''
         if self.isFrozen():
             return
@@ -106,16 +106,16 @@ class Sorter(patterns.ListDecorator):
             pub.sendMessage(self.sortEventType(), sender=self)
 
     def createSortKeyFunction(self, sortKey):
-        ''' createSortKeyFunction returns a function that is passed to the 
+        ''' createSortKeyFunction returns a function that is passed to the
             builtin list.sort method to extract the sort key from each element
             in the list. We expect the domain object class to provide a
             <sortKey>SortFunction(sortCaseSensitive) method that returns the
             sortKeyFunction for the sortKey. '''
         return self._getSortKeyFunction(sortKey)(sortCaseSensitive=self._sortCaseSensitive)
-            
+
     def _getSortKeyFunction(self, sortKey):
         try:
-            return getattr(self.DomainObjectClass, 
+            return getattr(self.DomainObjectClass,
                            '%sSortFunction' % sortKey)
         except AttributeError:
             return self._getSortKeyFunction('subject')
@@ -125,20 +125,20 @@ class Sorter(patterns.ListDecorator):
             if eventType.startswith('pubsub'):
                 pub.subscribe(self.onAttributeChanged, eventType)
             else:
-                patterns.Publisher().registerObserver(self.onAttributeChanged_Deprecated, 
+                patterns.Publisher().registerObserver(self.onAttributeChanged_Deprecated,
                                                       eventType=eventType)
-            
+
     def _removeObserverForAttribute(self, attribute):
         for eventType in self._getSortEventTypes(attribute):
             if eventType.startswith('pubsub'):
                 pub.unsubscribe(self.onAttributeChanged, eventType)
             else:
-                patterns.Publisher().removeObserver(self.onAttributeChanged_Deprecated, 
+                patterns.Publisher().removeObserver(self.onAttributeChanged_Deprecated,
                                                     eventType=eventType)
-     
+
     def onAttributeChanged(self, newValue, sender):  # pylint: disable=W0613
         self.reset()
-           
+
     def onAttributeChanged_Deprecated(self, event):  # pylint: disable=W0613
         self.reset()
 
@@ -158,12 +158,12 @@ class TreeSorter(Sorter):
         return True
 
     def createSortKeyFunction(self, key):
-        ''' createSortKeyFunction returns a function that is passed to the 
+        ''' createSortKeyFunction returns a function that is passed to the
             builtin list.sort method to extract the sort key from each element
             in the list. We expect the domain object class to provide a
-            <sortKey>SortFunction(sortCaseSensitive, treeMode) method that 
-            returns the sortKeyFunction for the sortKey. '''            
-        return self._getSortKeyFunction(key)(sortCaseSensitive=self._sortCaseSensitive, 
+            <sortKey>SortFunction(sortCaseSensitive, treeMode) method that
+            returns the sortKeyFunction for the sortKey. '''
+        return self._getSortKeyFunction(key)(sortCaseSensitive=self._sortCaseSensitive,
                                              treeMode=self.treeMode())
 
     def reset(self, *args, **kwargs):  # pylint: disable=W0221
@@ -182,12 +182,12 @@ class TreeSorter(Sorter):
         itemsToRemove = set(itemsToRemove)
         if self.treeMode():
             for item in itemsToRemove.copy():
-                itemsToRemove.update(item.children(recursive=True)) 
+                itemsToRemove.update(item.children(recursive=True))
         itemsToRemove = [item for item in itemsToRemove if item in self]
         return super(TreeSorter, self).removeItemsFromSelf(itemsToRemove, event=event)
 
     def rootItems(self):
-        ''' Return the root items, i.e. items without a parent. ''' 
+        ''' Return the root items, i.e. items without a parent. '''
         if self.__rootItems is None:
             self.__rootItems = [item for item in self if item.parent() is None]
         return self.__rootItems

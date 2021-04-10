@@ -16,5 +16,5 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-# iCalendar/vCalendar format (2.0) persistence. 
+# iCalendar/vCalendar format (2.0) persistence.
 # See http://www.ietf.org/rfc/rfc2445.txt.

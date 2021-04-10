@@ -31,8 +31,8 @@ import wx, calendar
 class FontColorSyncer(object):
     ''' The font color can be changed via the font color buttons and via the
         font button. The FontColorSyncer updates the one when the font color
-        is changed via the other and vice versa. ''' 
-    
+        is changed via the other and vice versa. '''
+
     def __init__(self, fgColorButton, bgColorButton, fontButton):
         self._fgColorButton = fgColorButton
         self._bgColorButton = bgColorButton
@@ -43,12 +43,12 @@ class FontColorSyncer(object):
 
     def onFgColorPicked(self, event):  # pylint: disable=W0613
         self._fontButton.SetSelectedColour(self._fgColorButton.GetColour())
-        
+
     def onBgColorPicked(self, event):  # pylint: disable=W0613
         self._fontButton.SetBackgroundColour(self._bgColorButton.GetColour())
 
     def onFontPicked(self, event):  # pylint: disable=W0613
-        fontColor = self._fontButton.GetSelectedColour() 
+        fontColor = self._fontButton.GetSelectedColour()
         if  fontColor != self._fgColorButton.GetColour() and fontColor != wx.BLACK:
             self._fgColorButton.SetColour(self._fontButton.GetSelectedColour())
         else:
@@ -69,7 +69,7 @@ class SettingsPageBase(widgets.BookPage):
         self._pathSettings = []
         self._textSettings = []
         self._syncers = []
-        
+
     def addBooleanSetting(self, section, setting, text, helpText='', **kwargs):
         checkBox = wx.CheckBox(self, -1)
         checkBox.SetValue(self.getboolean(section, setting))
@@ -77,12 +77,12 @@ class SettingsPageBase(widgets.BookPage):
         self._booleanSettings.append((section, setting, checkBox))
         return checkBox
 
-    def addChoiceSetting(self, section, setting, text, helpText, 
+    def addChoiceSetting(self, section, setting, text, helpText,
                          *listsOfChoices, **kwargs):
         choiceCtrls = []
         currentValue = self.gettext(section, setting)
         sep = kwargs.pop('sep', '_')
-        for choices, currentValuePart in zip(listsOfChoices, 
+        for choices, currentValuePart in zip(listsOfChoices,
                                              currentValue.split(sep)):
             choiceCtrl = wx.Choice(self)
             choiceCtrls.append(choiceCtrl)
@@ -94,8 +94,8 @@ class SettingsPageBase(widgets.BookPage):
             if choiceCtrl.GetSelection() == wx.NOT_FOUND:
                 choiceCtrl.SetSelection(0)
         # pylint: disable=W0142
-        self.addEntry(text, *choiceCtrls, helpText=helpText, 
-                      flags=kwargs.get('flags', None)) 
+        self.addEntry(text, *choiceCtrls, helpText=helpText,
+                      flags=kwargs.get('flags', None))
         self._choiceSettings.append((section, setting, choiceCtrls))
         return choiceCtrls
 
@@ -106,18 +106,18 @@ class SettingsPageBase(widgets.BookPage):
                     ctrl.Enable(enabled)
                 break
 
-    def addMultipleChoiceSettings(self, section, setting, text, choices, 
+    def addMultipleChoiceSettings(self, section, setting, text, choices,
                                   helpText='', **kwargs):
-        # choices is a list of (number, text) tuples. 
+        # choices is a list of (number, text) tuples.
         multipleChoice = wx.CheckListBox(self, choices=[choice[1] for choice in choices])
         checkedNumbers = self.getlist(section, setting)
         for index, choice in enumerate(choices):
             multipleChoice.Check(index, choice[0] in checkedNumbers)
-        self.addEntry(text, multipleChoice, helpText=helpText, growable=True, 
+        self.addEntry(text, multipleChoice, helpText=helpText, growable=True,
                       flags=kwargs.get('flags', None))
-        self._multipleChoiceSettings.append((section, setting, multipleChoice, 
+        self._multipleChoiceSettings.append((section, setting, multipleChoice,
                                              [choice[0] for choice in choices]))
-        
+
     def addIntegerSetting(self, section, setting, text, minimum=0, maximum=100,
                           helpText='', flags=None):
         intValue = self.getint(section, setting)
@@ -140,23 +140,23 @@ class SettingsPageBase(widgets.BookPage):
         native_info_string = self.gettext(section, setting)
         current_font = wx.FontFromNativeInfoString(native_info_string) \
                        if native_info_string else None
-        font_button = widgets.FontPickerCtrl(self, 
-                                             font=current_font or default_font, 
+        font_button = widgets.FontPickerCtrl(self,
+                                             font=current_font or default_font,
                                              colour=(0, 0, 0, 255))
         font_button.SetBackgroundColour((255, 255, 255, 255))
-        self.addEntry(text, font_button, 
-                      flags=(wx.ALL | wx.ALIGN_CENTER_VERTICAL, 
+        self.addEntry(text, font_button,
+                      flags=(wx.ALL | wx.ALIGN_CENTER_VERTICAL,
                              wx.ALL | wx.ALIGN_CENTER_VERTICAL  # wx.EXPAND causes the button to be top aligned on Mac OS X
                              ))
-        self._fontSettings.append((section, setting, font_button)) 
+        self._fontSettings.append((section, setting, font_button))
 
     def addAppearanceHeader(self):
         self.addEntry('', _('Foreground color'), _('Background color'),
-                      _('Font'), _('Icon'), 
+                      _('Font'), _('Icon'),
                       flags=[wx.ALL | wx.ALIGN_CENTER] * 5)
 
-    def addAppearanceSetting(self, fgColorSection, fgColorSetting, 
-                             bgColorSection, bgColorSetting, fontSection, 
+    def addAppearanceSetting(self, fgColorSection, fgColorSetting,
+                             bgColorSection, bgColorSetting, fontSection,
                              fontSetting, iconSection, iconSetting, text):
         currentFgColor = self.getvalue(fgColorSection, fgColorSetting)
         fgColorButton = wx.ColourPickerCtrl(self, col=currentFgColor)
@@ -166,7 +166,7 @@ class SettingsPageBase(widgets.BookPage):
         nativeInfoString = self.gettext(fontSection, fontSetting)
         currentFont = wx.FontFromNativeInfoString(nativeInfoString) if nativeInfoString else None
         fontButton = widgets.FontPickerCtrl(self, font=currentFont or defaultFont, colour=currentFgColor)
-        fontButton.SetBackgroundColour(currentBgColor)        
+        fontButton.SetBackgroundColour(currentBgColor)
         iconEntry = wx.combo.BitmapComboBox(self, style=wx.CB_READONLY)
         imageNames = sorted(artprovider.chooseableItemImages.keys())
         for imageName in imageNames:
@@ -178,21 +178,21 @@ class SettingsPageBase(widgets.BookPage):
         currentSelectionIndex = imageNames.index(currentIcon)
         iconEntry.SetSelection(currentSelectionIndex)  # pylint: disable=E1101
 
-        self.addEntry(text, fgColorButton, bgColorButton, fontButton, iconEntry, 
-                      flags=(wx.ALL | wx.ALIGN_CENTER_VERTICAL, 
+        self.addEntry(text, fgColorButton, bgColorButton, fontButton, iconEntry,
+                      flags=(wx.ALL | wx.ALIGN_CENTER_VERTICAL,
                              wx.ALL | wx.EXPAND | wx.ALIGN_CENTER_VERTICAL,
-                             wx.ALL | wx.EXPAND | wx.ALIGN_CENTER_VERTICAL, 
+                             wx.ALL | wx.EXPAND | wx.ALIGN_CENTER_VERTICAL,
                              wx.ALL | wx.ALIGN_CENTER_VERTICAL,  # wx.EXPAND causes the button to be top aligned on Mac OS X
                              wx.ALL | wx.EXPAND | wx.ALIGN_CENTER_VERTICAL))
-        self._colorSettings.append((fgColorSection, fgColorSetting, 
+        self._colorSettings.append((fgColorSection, fgColorSetting,
                                     fgColorButton))
-        self._colorSettings.append((bgColorSection, bgColorSetting, 
+        self._colorSettings.append((bgColorSection, bgColorSetting,
                                     bgColorButton))
-        self._iconSettings.append((iconSection, iconSetting, iconEntry))        
+        self._iconSettings.append((iconSection, iconSetting, iconEntry))
         self._fontSettings.append((fontSection, fontSetting, fontButton))
-        self._syncers.append(FontColorSyncer(fgColorButton, bgColorButton, 
+        self._syncers.append(FontColorSyncer(fgColorButton, bgColorButton,
                                              fontButton))
-        
+
     def addPathSetting(self, section, setting, text, helpText=''):
         pathChooser = widgets.DirectoryChooser(self, wx.ID_ANY)
         pathChooser.SetPath(self.gettext(section, setting))
@@ -200,7 +200,7 @@ class SettingsPageBase(widgets.BookPage):
         self._pathSettings.append((section, setting, pathChooser))
 
     def addTextSetting(self, section, setting, text, helpText=''):
-        textChooser = wx.TextCtrl(self, wx.ID_ANY, self.gettext(section, 
+        textChooser = wx.TextCtrl(self, wx.ID_ANY, self.gettext(section,
                                                                 setting))
         self.addEntry(text, textChooser, helpText=helpText)
         self._textSettings.append((section, setting, textChooser))
@@ -255,31 +255,31 @@ class SettingsPageBase(widgets.BookPage):
 
     def getint(self, section, name):
         return int(self.get(section, name))
-    
+
     def setint(self, section, name, value):
         self.set(section, name, str(value))
-        
+
     def setboolean(self, section, name, value):
         self.set(section, name, str(value))
-        
+
     def getboolean(self, section, name):
         return self.get(section, name) == 'True'
-    
+
     def settext(self, section, name, value):
         self.set(section, name, value)
-        
+
     def gettext(self, section, name):
         return self.get(section, name)
-    
+
     def getlist(self, section, name):
         return eval(self.get(section, name))
-    
+
     def setlist(self, section, name, value):
         self.set(section, name, str(value))
-        
+
     def getvalue(self, section, name):
         return eval(self.get(section, name))
-    
+
     def setvalue(self, section, name, value):
         self.set(section, name, str(value))
 
@@ -288,7 +288,7 @@ class SettingsPage(SettingsPageBase):
     def __init__(self, settings=None, *args, **kwargs):
         self.settings = settings
         super(SettingsPage, self).__init__(*args, **kwargs)
-        
+
     def addEntry(self, text, *controls, **kwargs):  # pylint: disable=W0221
         helpText = kwargs.pop('helpText', '')
         if helpText == 'restart':
@@ -312,14 +312,14 @@ class SettingsPage(SettingsPageBase):
 
     def setint(self, section, name, value):
         self.settings.setint(section, name, value)
-        
+
     def getboolean(self, section, name):
         return self.settings.getboolean(section, name)
 
     def setboolean(self, section, name, value):
         if section is not None:
             self.settings.setboolean(section, name, value)
-            
+
     def settext(self, section, name, value):
         self.settings.settext(section, name, value)
 
@@ -328,25 +328,25 @@ class SettingsPage(SettingsPageBase):
 
     def setvalue(self, section, name, value):
         self.settings.setvalue(section, name, value)
-        
+
     def getvalue(self, section, name):
         return self.settings.getvalue(section, name)
 
     def setlist(self, section, name, value):
         self.settings.setlist(section, name, value)
-        
+
     def getlist(self, section, name):
         return self.settings.getlist(section, name)
-    
-    
+
+
 class SavePage(SettingsPage):
     pageName = 'save'
     pageTitle = _('Files')
     pageIcon = 'save'
-    
+
     def __init__(self, *args, **kwargs):
         super(SavePage, self).__init__(columns=3, *args, **kwargs)
-        self.addBooleanSetting('file', 'autosave', 
+        self.addBooleanSetting('file', 'autosave',
             _('Auto save after every change'))
         self.addBooleanSetting('file', 'autoload',
             _('Auto load when the file changes on disk'))
@@ -355,52 +355,52 @@ class SavePage(SettingsPage):
              _('Try to detect changes to the task file in real time.\nDo not check this if your task file is on a network share.\nYou must restart %s after changing this.') % meta.name)
         self.addBooleanSetting('file', 'saveinifileinprogramdir',
             _('Save settings (%s.ini) in the same\n'
-              'directory as the program') % meta.filename, 
+              'directory as the program') % meta.filename,
             _('For running %s from a removable medium') % meta.name)
-        self.addPathSetting('file', 'attachmentbase', 
+        self.addPathSetting('file', 'attachmentbase',
                             _('Attachment base directory'),
                             _('When adding an attachment, try to make\n'
                               'its path relative to this one.'))
-        self.addMultipleChoiceSettings('file', 'autoimport', 
-            _('Before saving, automatically import from'), 
+        self.addMultipleChoiceSettings('file', 'autoimport',
+            _('Before saving, automatically import from'),
             [('Todo.txt', _('Todo.txt format'))],
             helpText=_('Before saving, %s automatically imports tasks\n'
                        'from a Todo.txt file with the same name as the task file,\n'
                        'but with extension .txt') % meta.name)
-        self.addMultipleChoiceSettings('file', 'autoexport', 
-            _('When saving, automatically export to'), 
+        self.addMultipleChoiceSettings('file', 'autoexport',
+            _('When saving, automatically export to'),
             [('Todo.txt', _('Todo.txt format'))],
             helpText=_('When saving, %s automatically exports tasks\n'
                        'to a Todo.txt file with the same name as the task file,\n'
                        'but with extension .txt') % meta.name)
         self.fit()
-            
-               
+
+
 class WindowBehaviorPage(SettingsPage):
     pageName = 'window'
     pageTitle = _('Window behavior')
     pageIcon = 'windows'
-    
+
     def __init__(self, *args, **kwargs):
-        super(WindowBehaviorPage, self).__init__(columns=2, growableColumn=-1, 
+        super(WindowBehaviorPage, self).__init__(columns=2, growableColumn=-1,
                                                  *args, **kwargs)
-        self.addBooleanSetting('window', 'splash', 
+        self.addBooleanSetting('window', 'splash',
             _('Show splash screen on startup'))
-        self.addBooleanSetting('window', 'tips', 
+        self.addBooleanSetting('window', 'tips',
             _('Show tips window on startup'))
         self.addChoiceSetting('window', 'starticonized',
             _('Start with the main window iconized'), '',
-            [('Never', _('Never')), ('Always', _('Always')), 
-             ('WhenClosedIconized', 
+            [('Never', _('Never')), ('Always', _('Always')),
+             ('WhenClosedIconized',
               _('If it was iconized last session'))])
         self.addBooleanSetting('version', 'notify', _('Check for new version '
                                'of %(name)s on startup') % meta.data.metaDict)
         self.addBooleanSetting('view', 'developermessages', _('Check for '
             'messages from the %(name)s developers on startup') % \
             meta.data.metaDict)
-        self.addBooleanSetting('window', 'hidewheniconized', 
+        self.addBooleanSetting('window', 'hidewheniconized',
             _('Hide main window when iconized'))
-        self.addBooleanSetting('window', 'hidewhenclosed', 
+        self.addBooleanSetting('window', 'hidewhenclosed',
             _('Minimize main window when closed'))
         if not operating_system.isMacOsXMavericks_OrNewer():
             self.addBooleanSetting('window', 'blinktaskbariconwhentrackingeffort',
@@ -412,9 +412,9 @@ class LanguagePage(SettingsPage):
     pageName = 'language'
     pageTitle = _('Language')
     pageIcon = 'person_talking_icon'
-    
+
     def __init__(self, *args, **kwargs):
-        super(LanguagePage, self).__init__(columns=3, *args, **kwargs) 
+        super(LanguagePage, self).__init__(columns=3, *args, **kwargs)
         languages = \
             [('ar', u'الْعَرَبيّة (Arabic)'),
              ('eu_ES', 'Euskal Herria (Basque)'),
@@ -430,9 +430,9 @@ class LanguagePage(SettingsPage):
              ('da_DA', 'Dansk (Danish)'),
              ('nl_NL', 'Nederlands (Dutch)'),
              ('en_AU', 'English (Australia)'),
-             ('en_CA', 'English (Canada)'), 
+             ('en_CA', 'English (Canada)'),
              ('en_GB', 'English (UK)'),
-             ('en_US', 'English (US)'), 
+             ('en_US', 'English (US)'),
              ('eo', 'Esperanto'),
              ('et_EE', 'Eesti keel (Estonian)'),
              ('fi_FI', 'Suomi (Finnish)'),
@@ -484,14 +484,14 @@ class LanguagePage(SettingsPage):
                 enabled = False
             if enabled:
                 choices.append((code, label))
-        # Don't use '_' as separator since we don't have different choice 
+        # Don't use '_' as separator since we don't have different choice
         # controls for language and country (but maybe we should?)
-        self.addChoiceSetting('view', 'language_set_by_user', _('Language'), 
-                              'restart', choices, 
+        self.addChoiceSetting('view', 'language_set_by_user', _('Language'),
+                              'restart', choices,
                               flags=(None, wx.ALL | wx.ALIGN_CENTER_VERTICAL,
-                                     wx.ALL | wx.ALIGN_CENTER_VERTICAL), 
-                              sep='-') 
-        
+                                     wx.ALL | wx.ALIGN_CENTER_VERTICAL),
+                              sep='-')
+
         panel = wx.Panel(self)
         sizer = wx.BoxSizer(wx.VERTICAL)
         text = wx.StaticText(panel, label=_('If your language is not '
@@ -508,22 +508,22 @@ class LanguagePage(SettingsPage):
     def ok(self):
         super(LanguagePage, self).ok()
         self.set('view', 'language', self.get('view', 'language_set_by_user'))
-        
+
 
 class TaskAppearancePage(SettingsPage):
     pageName = 'appearance'
     pageTitle = _('Task appearance')
     pageIcon = 'palette_icon'
-    
+
     def __init__(self, *args, **kwargs):
-        super(TaskAppearancePage, self).__init__(columns=9, growableColumn=-1, 
+        super(TaskAppearancePage, self).__init__(columns=9, growableColumn=-1,
                                                  *args, **kwargs)
         self.addAppearanceHeader()
         for status in task.Task.possibleStatuses():
             setting = '%stasks' % status
-            self.addAppearanceSetting('fgcolor', setting, 
-                                      'bgcolor', setting, 
-                                      'font', setting, 
+            self.addAppearanceSetting('fgcolor', setting,
+                                      'bgcolor', setting,
+                                      'font', setting,
                                       'icon', setting, status.pluralLabel)
         self.addText('', _('These appearance settings can be overridden '
                            'for individual tasks in the task edit dialog.'))
@@ -534,9 +534,9 @@ class FeaturesPage(SettingsPage):
     pageName = 'features'
     pageTitle = _('Features')
     pageIcon = 'cogwheel_icon'
-    
+
     def __init__(self, *args, **kwargs):
-        super(FeaturesPage, self).__init__(columns=3, growableColumn=-1, 
+        super(FeaturesPage, self).__init__(columns=3, growableColumn=-1,
                                            *args, **kwargs)
         self.addEntry(_('All settings on this tab require a restart of %s ' \
                         'to take effect') % meta.name)
@@ -546,13 +546,13 @@ class FeaturesPage(SettingsPage):
             pass
         else:
             self.addBooleanSetting('feature', 'syncml', _('Enable SyncML'))
-        self.addBooleanSetting('feature', 'iphone', 
+        self.addBooleanSetting('feature', 'iphone',
                                _('Enable iPhone synchronization'))
         if operating_system.isGTK():
-            self.addBooleanSetting('feature', 'usesm2', 
+            self.addBooleanSetting('feature', 'usesm2',
                                    _('Use X11 session management'))
         self.addChoiceSetting('view', 'weekstart', _('Start of work week'), ' ',
-                              [('monday', _('Monday')), 
+                              [('monday', _('Monday')),
                                ('sunday', _('Sunday'))])
         self.addTimeSetting('view', 'efforthourstart',
             _('Hour of start of work day'), helpText=' ')
@@ -563,13 +563,13 @@ class FeaturesPage(SettingsPage):
             _('Use gradients in calendar views.\n'
               'This may slow down Task Coach.'))
         self.addChoiceSetting('view', 'effortminuteinterval',
-            _('Minutes between suggested times'), 
+            _('Minutes between suggested times'),
             _('In popup-menus for time selection (e.g. for setting the start \n'
               'time of an effort) %(name)s will suggest times using this \n'
               'setting. The smaller the number of minutes, the more times \n'
               'are suggested. Of course, you can also enter any time you \n'
               'want beside the suggested times.') % meta.data.metaDict,
-            [(minutes, minutes) for minutes in ('5', '6', '10', '15', '20', 
+            [(minutes, minutes) for minutes in ('5', '6', '10', '15', '20',
                                                 '30')],
             flags=(None, wx.ALL | wx.ALIGN_CENTER_VERTICAL,
                    wx.ALL | wx.ALIGN_CENTER_VERTICAL))
@@ -595,24 +595,24 @@ class TaskDatesPage(SettingsPage):
     pageName = 'task'
     pageTitle = _('Task dates')
     pageIcon = 'calendar_icon'
-    
+
     def __init__(self, *args, **kwargs):
-        super(TaskDatesPage, self).__init__(columns=4, growableColumn=-1, 
+        super(TaskDatesPage, self).__init__(columns=4, growableColumn=-1,
                                             *args, **kwargs)
-        self.addBooleanSetting('behavior', 
+        self.addBooleanSetting('behavior',
             'markparentcompletedwhenallchildrencompleted',
             _('Mark parent task completed when all children are completed'),
             helpText='override')
-        self.addIntegerSetting('behavior', 'duesoonhours', 
-            _("Number of hours that tasks are considered to be 'due soon'"), 
+        self.addIntegerSetting('behavior', 'duesoonhours',
+            _("Number of hours that tasks are considered to be 'due soon'"),
             minimum=0, maximum=9999, flags=(None, wx.ALL | wx.ALIGN_LEFT))
         choices = [('', _('Nothing')),
-                   ('startdue', 
+                   ('startdue',
                     _('Changing the planned start date changes the due date')),
-                   ('duestart', 
+                   ('duestart',
                     _('Changing the due date changes the planned start date'))]
-        self.addChoiceSetting('view', 'datestied', 
-            _('What to do with planned start and due date if the other one is changed'), 
+        self.addChoiceSetting('view', 'datestied',
+            _('What to do with planned start and due date if the other one is changed'),
             '', choices, flags=(None, wx.ALL | wx.ALIGN_LEFT))
 
         check_choices = [('preset', _('Preset')),
@@ -627,20 +627,20 @@ class TaskDatesPage(SettingsPage):
                         ('currenttime', _('Current time')),
                         ('endofworkingday', _('End of working day')),
                         ('endofday', _('End of day'))]
-        self.addChoiceSetting('view', 'defaultplannedstartdatetime', 
-                              _('Default planned start date and time'), 
+        self.addChoiceSetting('view', 'defaultplannedstartdatetime',
+                              _('Default planned start date and time'),
                               '', check_choices, day_choices, time_choices)
-        self.addChoiceSetting('view', 'defaultduedatetime', 
-                              _('Default due date and time'), 
+        self.addChoiceSetting('view', 'defaultduedatetime',
+                              _('Default due date and time'),
                               '', check_choices, day_choices, time_choices)
         self.addChoiceSetting('view', 'defaultactualstartdatetime',
                               _('Default actual start date and time'),
                               '', check_choices, day_choices, time_choices)
-        self.addChoiceSetting('view', 'defaultcompletiondatetime', 
+        self.addChoiceSetting('view', 'defaultcompletiondatetime',
                               _('Default completion date and time'),
                               '', [check_choices[1]], day_choices, time_choices)
-        self.addChoiceSetting('view', 'defaultreminderdatetime', 
-                              _('Default reminder date and time'), 
+        self.addChoiceSetting('view', 'defaultreminderdatetime',
+                              _('Default reminder date and time'),
                               '', check_choices, day_choices, time_choices)
         self.__add_help_text()
         self.fit()
@@ -660,30 +660,30 @@ class TaskReminderPage(SettingsPage):
     pageName = 'reminder'
     pageTitle = _('Task reminders')
     pageIcon = 'clock_alarm_icon'
-    
+
     def __init__(self, *args, **kwargs):
-        super(TaskReminderPage, self).__init__(columns=3, growableColumn=-1, 
+        super(TaskReminderPage, self).__init__(columns=3, growableColumn=-1,
                                                *args, **kwargs)
         names = []  # There's at least one, the universal one
         for name in notify.AbstractNotifier.names():
             names.append((name, name))
-        self.addChoiceSetting('feature', 'notifier', 
-                              _('Notification system to use for reminders'), 
+        self.addChoiceSetting('feature', 'notifier',
+                              _('Notification system to use for reminders'),
                               '', names, flags=(None, wx.ALL | wx.ALIGN_LEFT))
         if operating_system.isMac() or operating_system.isGTK():
-            self.addBooleanSetting('feature', 'sayreminder', 
+            self.addBooleanSetting('feature', 'sayreminder',
                                    _('Let the computer say the reminder'),
                                    _('(Needs espeak)') if operating_system.isGTK() else '',
-                                   flags=(None, wx.ALL | wx.ALIGN_LEFT, 
+                                   flags=(None, wx.ALL | wx.ALIGN_LEFT,
                                           wx.ALL | wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL))
         snoozeChoices = [(str(choice[0]), choice[1]) for choice in date.snoozeChoices]
-        self.addChoiceSetting('view', 'defaultsnoozetime', 
-                              _('Default snooze time to use after reminder'), 
-                              '', snoozeChoices, flags=(None, 
+        self.addChoiceSetting('view', 'defaultsnoozetime',
+                              _('Default snooze time to use after reminder'),
+                              '', snoozeChoices, flags=(None,
                                                         wx.ALL | wx.ALIGN_LEFT))
-        self.addMultipleChoiceSettings('view', 'snoozetimes', 
-            _('Snooze times to offer in task reminder dialog'), 
-            date.snoozeChoices[1:], 
+        self.addMultipleChoiceSettings('view', 'snoozetimes',
+            _('Snooze times to offer in task reminder dialog'),
+            date.snoozeChoices[1:],
             flags=(wx.ALIGN_TOP | wx.ALL, None))  # Don't offer "Don't snooze" as a choice
         self.fit()
 
@@ -692,7 +692,7 @@ class IPhonePage(SettingsPage):
     pageName = 'iphone'
     pageTitle = _('iPhone')
     pageIcon = 'computer_handheld_icon'
-    
+
     def __init__(self, *args, **kwargs):
         super(IPhonePage, self).__init__(columns=3, *args, **kwargs)
         self.addTextSetting('iphone', 'password',
@@ -706,22 +706,22 @@ class IPhonePage(SettingsPage):
             _('Show the synchronization log'))
         self.fit()
 
-        
+
 class EditorPage(SettingsPage):
     pageName = 'editor'
     pageTitle = _('Editor')
     pageIcon = 'edit'
-    
+
     def __init__(self, *args, **kwargs):
         super(EditorPage, self).__init__(columns=2, *args, **kwargs)
         if operating_system.isMac() and \
                 not operating_system.isMacOsXMountainLion_OrNewer():
             self.addBooleanSetting('editor', 'maccheckspelling',
                                    _('Check spelling in editors'))
-        self.addFontSetting('editor', 'descriptionfont', 
+        self.addFontSetting('editor', 'descriptionfont',
             _('Font to use in the description field of edit dialogs'))
         self.fit()
-        
+
     def ok(self):
         super(EditorPage, self).ok()
         widgets.MultiLineTextCtrl.CheckSpelling = \
@@ -757,15 +757,15 @@ class LinuxPage(SettingsPage):
 
 
 class Preferences(widgets.NotebookDialog):
-    allPageNames = ['window', 'save', 'language', 'task', 'reminder', 
+    allPageNames = ['window', 'save', 'language', 'task', 'reminder',
                     'appearance', 'features', 'iphone', 'editor', 'os_darwin',
                     'os_linux']
-    pages = dict(window=WindowBehaviorPage, task=TaskDatesPage, 
-                 reminder=TaskReminderPage, save=SavePage, 
-                 language=LanguagePage, appearance=TaskAppearancePage, 
+    pages = dict(window=WindowBehaviorPage, task=TaskDatesPage,
+                 reminder=TaskReminderPage, save=SavePage,
+                 language=LanguagePage, appearance=TaskAppearancePage,
                  features=FeaturesPage, iphone=IPhonePage, editor=EditorPage,
                  os_darwin=OSXPage, os_linux=LinuxPage)
-    
+
     def __init__(self, settings=None, *args, **kwargs):
         self.settings = settings
         super(Preferences, self).__init__(bitmap='wrench_icon', *args, **kwargs)
@@ -790,5 +790,5 @@ class Preferences(widgets.NotebookDialog):
             return True
 
     def createPage(self, pageName):
-        return self.pages[pageName](parent=self._interior, 
+        return self.pages[pageName](parent=self._interior,
                                     settings=self.settings)

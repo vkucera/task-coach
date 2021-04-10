@@ -51,7 +51,7 @@ class StatusBar(wx.StatusBar):
         # Give viewer a chance to update first and only update when the viewer
         # hasn't changed status for 0.5 seconds.
         self.__timer.Start(500, oneShot=True)
-              
+
     def onUpdateStatus(self, event): # pylint: disable=W0613
         if self.__timer:
             self.__timer.Stop()
@@ -61,7 +61,7 @@ class StatusBar(wx.StatusBar):
         try:
             status1, status2 = self.viewer.statusMessages()
         except AttributeError:
-            return # Viewer container contains no viewers 
+            return # Viewer container contains no viewers
         super(StatusBar, self).SetStatusText(status1, 0)
         super(StatusBar, self).SetStatusText(status2, 1)
 

@@ -32,19 +32,19 @@ class EditAttachmentLocationCommand(base.BaseCommand):
         self.__newLocation = kwargs.pop('newValue')
         super(EditAttachmentLocationCommand, self).__init__(*args, **kwargs)
         self.__oldLocations = [item.location() for item in self.items]
-    
+
     @patterns.eventSource
     def do_command(self, event=None):
         super(EditAttachmentLocationCommand, self).do_command()
         for item in self.items:
             item.setLocation(self.__newLocation)
-            
+
     @patterns.eventSource
     def undo_command(self, event=None):
         super(EditAttachmentLocationCommand, self).undo_command()
         for item, oldLocation in zip(self.items, self.__oldLocations):
             item.setLocation(oldLocation)
-            
+
     def redo_command(self):
         self.do_command()
 
@@ -52,19 +52,19 @@ class EditAttachmentLocationCommand(base.BaseCommand):
 class AddAttachmentCommand(base.BaseCommand):
     plural_name = _('Add attachment')
     singular_name = _('Add attachment to "%s"')
-    
+
     def __init__(self, *args, **kwargs):
         self.owners = []
-        self.__attachments = kwargs.get('attachments', 
+        self.__attachments = kwargs.get('attachments',
             [attachment.FileAttachment('', subject=_('New attachment'))])
         super(AddAttachmentCommand, self).__init__(*args, **kwargs)
         self.owners = self.items
         self.items = self.__attachments
         self.save_modification_datetimes()
-        
+
     def modified_items(self):
         return self.owners
-        
+
     @patterns.eventSource
     def addAttachments(self, event=None):
         kwargs = dict(event=event)
@@ -76,11 +76,11 @@ class AddAttachmentCommand(base.BaseCommand):
         kwargs = dict(event=event)
         for owner in self.owners:
             owner.removeAttachments(*self.__attachments, **kwargs) # pylint: disable=W0142
-                         
+
     def do_command(self):
         super(AddAttachmentCommand, self).do_command()
         self.addAttachments()
-        
+
     def undo_command(self):
         super(AddAttachmentCommand, self).undo_command()
         self.removeAttachments()
@@ -93,7 +93,7 @@ class AddAttachmentCommand(base.BaseCommand):
 class RemoveAttachmentCommand(base.BaseCommand):
     plural_name = _('Remove attachment')
     singular_name = _('Remove attachment to "%s"')
-    
+
     def __init__(self, *args, **kwargs):
         self._attachments = kwargs.pop('attachments')
         super(RemoveAttachmentCommand, self).__init__(*args, **kwargs)
@@ -103,17 +103,17 @@ class RemoveAttachmentCommand(base.BaseCommand):
         kwargs = dict(event=event)
         for item in self.items:
             item.addAttachments(*self._attachments, **kwargs) # pylint: disable=W0142
-        
+
     @patterns.eventSource
     def removeAttachments(self, event=None):
         kwargs = dict(event=event)
         for item in self.items:
             item.removeAttachments(*self._attachments, **kwargs) # pylint: disable=W0142
-                
+
     def do_command(self):
         super(RemoveAttachmentCommand, self).do_command()
         self.removeAttachments()
-        
+
     def undo_command(self):
         super(RemoveAttachmentCommand, self).undo_command()
         self.addAttachments()

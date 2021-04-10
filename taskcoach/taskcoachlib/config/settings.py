@@ -44,7 +44,7 @@ class CachingConfigParser(UnicodeAwareConfigParser):
     def __init__(self, *args, **kwargs):
         self.__cachedValues = dict()
         UnicodeAwareConfigParser.__init__(self, *args, **kwargs)
-        
+
     def read(self, *args, **kwargs):
         self.__cachedValues = dict()
         return UnicodeAwareConfigParser.read(self, *args, **kwargs)
@@ -52,17 +52,17 @@ class CachingConfigParser(UnicodeAwareConfigParser):
     def set(self, section, setting, value):
         self.__cachedValues[(section, setting)] = value
         UnicodeAwareConfigParser.set(self, section, setting, value)
-        
+
     def get(self, section, setting):
         cache, key = self.__cachedValues, (section, setting)
         if key not in cache:
             cache[key] = UnicodeAwareConfigParser.get(self, *key)  # pylint: disable=W0142
         return cache[key]
-        
-        
+
+
 class Settings(object, CachingConfigParser):
     def __init__(self, load=True, iniFile=None, *args, **kwargs):
-        # Sigh, ConfigParser.SafeConfigParser is an old-style class, so we 
+        # Sigh, ConfigParser.SafeConfigParser is an old-style class, so we
         # have to call the superclass __init__ explicitly:
         CachingConfigParser.__init__(self, *args, **kwargs)
         self.initializeWithDefaults()
@@ -77,25 +77,25 @@ class Settings(object, CachingConfigParser):
                     self.read(self.filename())
                 errorMessage = ''
             except ConfigParser.ParsingError as errorMessage:
-                # Ignore exceptions and simply use default values. 
+                # Ignore exceptions and simply use default values.
                 # Also record the failure in the settings:
                 self.initializeWithDefaults()
             self.setLoadStatus(ExceptionAsUnicode(errorMessage))
         else:
-            # Assume that if the settings are not to be loaded, we also 
+            # Assume that if the settings are not to be loaded, we also
             # should be quiet (i.e. we are probably in test mode):
             self.__beQuiet()
-        pub.subscribe(self.onSettingsFileLocationChanged, 
+        pub.subscribe(self.onSettingsFileLocationChanged,
                       'settings.file.saveinifileinprogramdir')
-        
+
     def onSettingsFileLocationChanged(self, value):
         saveIniFileInProgramDir = value
         if not saveIniFileInProgramDir:
             try:
                 os.remove(self.generatedIniFilename(forceProgramDir=True))
-            except: 
+            except:
                 return  # pylint: disable=W0702
-            
+
     def initializeWithDefaults(self):
         for section in self.sections():
             self.remove_section(section)
@@ -104,28 +104,28 @@ class Settings(object, CachingConfigParser):
             for key, value in settings.items():
                 # Don't notify observers while we are initializing
                 super(Settings, self).set(section, key, value)
-                
+
     def setLoadStatus(self, message):
         self.set('file', 'inifileloaded', 'False' if message else 'True')
         self.set('file', 'inifileloaderror', message)
 
     def __beQuiet(self):
-        noisySettings = [('window', 'splash', 'False'), 
-                         ('window', 'tips', 'False'), 
+        noisySettings = [('window', 'splash', 'False'),
+                         ('window', 'tips', 'False'),
                          ('window', 'starticonized', 'Always')]
         for section, setting, value in noisySettings:
             self.set(section, setting, value)
-            
+
     def add_section(self, section, copyFromSection=None):  # pylint: disable=W0221
         result = super(Settings, self).add_section(section)
         if copyFromSection:
             for name, value in self.items(copyFromSection):
                 super(Settings, self).set(section, name, value)
         return result
-    
+
     def getRawValue(self, section, option):
         return super(Settings, self).get(section, option)
-    
+
     def init(self, section, option, value):
         return super(Settings, self).set(section, option, value)
 
@@ -148,20 +148,20 @@ class Settings(object, CachingConfigParser):
             return defaultSection[option]
         except KeyError:
             raise ConfigParser.NoOptionError((option, defaultSection))
-            
+
     def _ensureMinimum(self, section, option, result):
-        # Some settings may have a minimum value, make sure we return at 
+        # Some settings may have a minimum value, make sure we return at
         # least that minimum value:
         if section in defaults.minimum and option in defaults.minimum[section]:
             result = max(result, defaults.minimum[section][option])
         return result
-    
+
     def _fixValuesFromOldIniFiles(self, section, option, result):
-        ''' Try to fix settings from old TaskCoach.ini files that are no longer 
+        ''' Try to fix settings from old TaskCoach.ini files that are no longer
             valid. '''
         original = result
         # Starting with release 1.1.0, the date properties of tasks (startDate,
-        # dueDate and completionDate) are datetimes: 
+        # dueDate and completionDate) are datetimes:
         taskDateColumns = ('startDate', 'dueDate', 'completionDate')
         orderingViewers = ['taskviewer', 'categoryviewer', 'noteviewer',
                            'noteviewerintaskeditor', 'noteviewerincategoryeditor',
@@ -227,28 +227,28 @@ class Settings(object, CachingConfigParser):
             return True
         else:
             return False
-            
+
     def setboolean(self, section, option, value):
         if self.set(section, option, str(value)):
             pub.sendMessage('settings.%s.%s' % (section, option), value=value)
 
     setvalue = settuple = setlist = setdict = setint = setboolean
-            
+
     def settext(self, section, option, value):
         if self.set(section, option, value):
             pub.sendMessage('settings.%s.%s' % (section, option), value=value)
-                
+
     def getlist(self, section, option):
         return self.getEvaluatedValue(section, option, eval)
-        
+
     getvalue = gettuple = getdict = getlist
 
     def getint(self, section, option):
         return self.getEvaluatedValue(section, option, int)
-    
+
     def getboolean(self, section, option):
         return self.getEvaluatedValue(section, option, self.evalBoolean)
-    
+
     def gettext(self, section, option):
         return self.get(section, option)
 
@@ -258,7 +258,7 @@ class Settings(object, CachingConfigParser):
             return 'True' == stringValue
         else:
             raise ValueError("invalid literal for Boolean value: '%s'" % stringValue)
-         
+
     def getEvaluatedValue(self, section, option, evaluate=eval, showerror=wx.MessageBox):
         stringValue = self.get(section, option)
         try:
@@ -273,7 +273,7 @@ class Settings(object, CachingConfigParser):
             defaultValue = self.getDefault(section, option)
             self.set(section, option, defaultValue, new=True)  # Ignore current value
             return evaluate(defaultValue)
-        
+
     def save(self, showerror=wx.MessageBox, file=file):  # pylint: disable=W0622
         self.set('version', 'python', sys.version)
         self.set('version', 'wxpython', '%s-%s @ %s' % (wx.VERSION_STRING, wx.PlatformInfo[2], wx.PlatformInfo[1]))
@@ -293,19 +293,19 @@ class Settings(object, CachingConfigParser):
             os.rename(self.filename() + '.tmp', self.filename())
         except Exception as message:  # pylint: disable=W0703
             showerror(_('Error while saving %s.ini:\n%s\n') % \
-                      (meta.filename, message), caption=_('Save error'), 
+                      (meta.filename, message), caption=_('Save error'),
                       style=wx.ICON_ERROR)
 
     def filename(self, forceProgramDir=False):
         if self.__iniFileSpecifiedOnCommandLine:
             return self.__iniFileSpecifiedOnCommandLine
         else:
-            return self.generatedIniFilename(forceProgramDir) 
-    
+            return self.generatedIniFilename(forceProgramDir)
+
     def path(self, forceProgramDir=False, environ=os.environ):  # pylint: disable=W0102
         if self.__iniFileSpecifiedOnCommandLine:
             return self.pathToIniFileSpecifiedOnCommandLine()
-        elif forceProgramDir or self.getboolean('file', 
+        elif forceProgramDir or self.getboolean('file',
                                                 'saveinifileinprogramdir'):
             return self.pathToProgramDir()
         else:
@@ -452,7 +452,7 @@ class Settings(object, CachingConfigParser):
 
     def pathToIniFileSpecifiedOnCommandLine(self):
         return os.path.dirname(self.__iniFileSpecifiedOnCommandLine) or '.'
-    
+
     def generatedIniFilename(self, forceProgramDir):
         return os.path.join(self.path(forceProgramDir), '%s.ini' % meta.filename)
 

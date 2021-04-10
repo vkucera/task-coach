@@ -31,7 +31,7 @@ class AutoExporterTestCase(test.TestCase):
         self.tskFilename = 'autoexport.tsk'
         self.txtFilename = 'autoexport.txt'
         self.taskFile.setFilename(self.tskFilename)
-        
+
     def tearDown(self):
         super(AutoExporterTestCase, self).tearDown()
         del self.exporter
@@ -40,7 +40,7 @@ class AutoExporterTestCase(test.TestCase):
                 os.remove(filename)
             except OSError:
                 pass
-        
+
     def testAddOneTaskWhenAutoSaveIsOn(self):
         self.settings.set('file', 'autoexport', '["Todo.txt"]')
         self.settings.set('file', 'autosave', 'True')
@@ -49,22 +49,22 @@ class AutoExporterTestCase(test.TestCase):
         self.taskFile.tasks().append(theTask)
         autosaver.on_idle(dummy.Event())
         self.assertEqual('Some task tcid:%s\n' % theTask.id(), file(self.txtFilename, 'r').read())
-        
+
     def testAddOneTaskAndSaveManually(self):
         self.settings.set('file', 'autoexport', '["Todo.txt"]')
         theTask = task.Task(subject='Whatever')
         self.taskFile.tasks().append(theTask)
         self.taskFile.save()
         self.assertEqual('Whatever tcid:%s\n' % theTask.id(), file(self.txtFilename, 'r').read())
-        
+
     def testImportOneTaskWhenSavingManually(self):
         self.settings.set('file', 'autoimport', '["Todo.txt"]')
         with file(self.txtFilename, 'w') as todoTxtFile:
             todoTxtFile.write('Imported task\n')
         self.taskFile.save()
-        self.assertEqual('Imported task', 
+        self.assertEqual('Imported task',
                          list(self.taskFile.tasks())[0].subject())
-        
+
     def testImportOneTaskWhenAutoSaving(self):
         self.settings.set('file', 'autoimport', '["Todo.txt"]')
         self.settings.set('file', 'autosave', 'True')
@@ -81,9 +81,9 @@ class AutoExporterTestCase(test.TestCase):
         with file(self.txtFilename, 'w') as todoTxtFile:
             todoTxtFile.write('Imported task\n')
         self.taskFile.load()
-        self.assertEqual('Imported task', 
+        self.assertEqual('Imported task',
                          list(self.taskFile.tasks())[0].subject())
-        
+
     def testSaveWithAutoImportWhenFileToImportDoesNotExist(self):
         self.settings.set('file', 'autoimport', '["Todo.txt"]')
         self.taskFile.tasks().append(task.Task(subject='Whatever'))

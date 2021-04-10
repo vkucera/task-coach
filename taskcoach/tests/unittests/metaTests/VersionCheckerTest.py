@@ -27,59 +27,59 @@ class VersionCheckerUnderTest(meta.VersionChecker):
         self.parseException = kwargs.pop('parseException', None)
         self.userNotified = False
         super(VersionCheckerUnderTest, self).__init__(*args, **kwargs)
-        
+
     def retrieveVersionFile(self):  # pylint: disable=W0221
         if self.retrievalException:
             raise self.retrievalException
         else:
             import StringIO
             return StringIO.StringIO('%s\n' % self.version)
-            
+
     def parseVersionFile(self, versionFile):  # pylint: disable=W0221
         if self.parseException:
             raise self.parseException
         else:
-            return super(VersionCheckerUnderTest, 
+            return super(VersionCheckerUnderTest,
                          self).parseVersionFile(versionFile)
-            
+
     def notifyUser(self, *args, **kwargs):  # pylint: disable=W0221,W0613
         self.userNotified = True
-    
+
 
 class VersionCheckerTest(test.TestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
-        
-    def checkVersion(self, version, retrievalException=None, 
+
+    def checkVersion(self, version, retrievalException=None,
                      parseException=None):
-        checker = VersionCheckerUnderTest(self.settings, version=version, 
-                                          retrievalException=retrievalException, 
+        checker = VersionCheckerUnderTest(self.settings, version=version,
+                                          retrievalException=retrievalException,
                                           parseException=parseException)
         checker.run()
         return checker
-        
-    def assertLastVersionNotified(self, version, retrievalException=None, 
+
+    def assertLastVersionNotified(self, version, retrievalException=None,
                                   parseException=None):
         self.checkVersion(version, retrievalException, parseException)
         self.assertEqual(version, self.settings.get('version', 'notified'))
-        
+
     def testLatestVersionIsNewerThanLastVersionNotified(self):
         self.assertLastVersionNotified('99.99.99')
-        
+
     def testLatestVersionEqualsLastVersionNotified(self):
         self.assertLastVersionNotified(meta.data.version)
-        
+
     def testErrorWhileGettingPadFile(self):
         import urllib2
         retrievalException = urllib2.HTTPError(None, None, None, None, None)
         self.assertLastVersionNotified(meta.data.version, retrievalException)
-        
+
     def testExpatParsingError(self):
         import xml.parsers.expat as expat
         exception = expat.error
-        self.assertLastVersionNotified(meta.data.version, 
+        self.assertLastVersionNotified(meta.data.version,
                                        parseException=exception)
-        
+
     def testDontNotifyWhenCurrentVersionIsNewerThanLastVersionNotified(self):
         self.settings.set('version', 'notified', '0.0')
         checker = self.checkVersion(meta.data.version)
@@ -97,10 +97,10 @@ class VersionCheckerTest(test.TestCase):
         class DummyDialog(object):
             def __init__(self, *args, **kwargs):  # pylint: disable=W0613
                 self.shown = False
-                
+
             def Show(self):
                 self.shown = True
-                
+
         checker = meta.VersionChecker(self.settings)
         dialog = checker.showDialog(DummyDialog, '1.0')
         self.failUnless(dialog.shown)

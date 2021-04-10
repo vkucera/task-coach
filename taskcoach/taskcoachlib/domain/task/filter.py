@@ -29,7 +29,7 @@ class ViewFilter(tasklist.TaskListQueryMixin, base.Filter):
         self.__hideCompositeTasks = kwargs.pop('hideCompositeTasks', False)
         self.registerObservers()
         super(ViewFilter, self).__init__(*args, **kwargs)
-        
+
     def registerObservers(self):
         registerObserver = patterns.Publisher().registerObserver
         for eventType in (task.Task.plannedStartDateTimeChangedEventType(),
@@ -43,7 +43,7 @@ class ViewFilter(tasklist.TaskListQueryMixin, base.Filter):
             if eventType.startswith('pubsub'):
                 pub.subscribe(self.onTaskStatusChange, eventType)
             else:
-                registerObserver(self.onTaskStatusChange_Deprecated, 
+                registerObserver(self.onTaskStatusChange_Deprecated,
                                  eventType=eventType)
         date.Scheduler().schedule_interval(self.atMidnight, days=1)
 
@@ -58,24 +58,24 @@ class ViewFilter(tasklist.TaskListQueryMixin, base.Filter):
 
     def onTaskStatusChange(self, newValue, sender):  # pylint: disable=W0613
         self.reset()
-        
+
     def onTaskStatusChange_Deprecated(self, event=None):  # pylint: disable=W0613
         self.reset()
-        
+
     def hideTaskStatus(self, status, hide=True):
         if hide:
             self.__statusesToHide.add(status)
         else:
             self.__statusesToHide.discard(status)
         self.reset()
-                       
+
     def hideCompositeTasks(self, hide=True):
         self.__hideCompositeTasks = hide
         self.reset()
-        
+
     def filterItems(self, tasks):
         return [task for task in tasks if self.filterTask(task)]  # pylint: disable=W0621
-    
+
     def filterTask(self, task):  # pylint: disable=W0621
         result = True
         if task.status() in self.__statusesToHide:

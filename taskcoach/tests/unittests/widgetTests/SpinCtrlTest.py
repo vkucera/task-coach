@@ -24,23 +24,23 @@ class SpinCtrlTest(test.wxTestCase):
     def testPositiveValue(self):
         spinCtrl = widgets.SpinCtrl(self.frame, value=5)
         self.assertEqual(5, spinCtrl.GetValue())
-        
+
     def testNegativeValue(self):
         spinCtrl = widgets.SpinCtrl(self.frame, value=-5)
         self.assertEqual(-5, spinCtrl.GetValue())
-        
+
     def testMinRange(self):
         spinCtrl = widgets.SpinCtrl(self.frame, min=1)
         self.assertEqual(1, spinCtrl.GetMin())
-        
+
     def testDefaultValueIsAtLeastMinRange(self):
         spinCtrl = widgets.SpinCtrl(self.frame, min=1)
         self.assertEqual(1, spinCtrl.GetValue())
-        
+
     def testMaxRange(self):
         spinCtrl = widgets.SpinCtrl(self.frame, max=100)
         self.assertEqual(100, spinCtrl.GetMax())
-        
+
     def testDefaultValueIsAtMostMaxRange(self):
         spinCtrl = widgets.SpinCtrl(self.frame, max=-1)
         self.assertEqual(-1, spinCtrl.GetValue())

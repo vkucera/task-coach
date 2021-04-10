@@ -22,41 +22,41 @@ from . import todotxt
 
 
 class AutoImporterExporter(object):
-    ''' AutoImporterExporter observes task files. If a task file is saved, 
-        either by the user or automatically (when autosave is on) and auto 
-        import and/or export is on, AutoImporterExporter imports and/or exports 
+    ''' AutoImporterExporter observes task files. If a task file is saved,
+        either by the user or automatically (when autosave is on) and auto
+        import and/or export is on, AutoImporterExporter imports and/or exports
         the task file. '''
-        
+
     def __init__(self, settings):
         super(AutoImporterExporter, self).__init__()
         self.__settings = settings
         pub.subscribe(self.onTaskFileAboutToBeSaved, 'taskfile.aboutToSave')
         pub.subscribe(self.onTaskFileJustRead, 'taskfile.justRead')
-        
+
     def onTaskFileJustRead(self, taskFile):
-        ''' After a task file has been read and if auto import is on, 
+        ''' After a task file has been read and if auto import is on,
             import it. '''
         self.importFiles(taskFile)
-            
+
     def onTaskFileAboutToBeSaved(self, taskFile):
-        ''' When a task file is about to be saved and auto import and/or 
+        ''' When a task file is about to be saved and auto import and/or
             export is on, import and/or export it. '''
         self.importFiles(taskFile)
         self.exportFiles(taskFile)
-        
+
     def importFiles(self, taskFile):
         importFormats = self.__settings.getlist('file', 'autoimport')
         for importFormat in importFormats:
             if importFormat == 'Todo.txt':
                 self.importTodoTxt(taskFile)
-                
+
     def exportFiles(self, taskFile):
         exportFormats = self.__settings.getlist('file', 'autoexport')
         for exportFormat in exportFormats:
             if exportFormat == 'Todo.txt':
                 self.exportTodoTxt(taskFile)
-    
-    @classmethod            
+
+    @classmethod
     def importTodoTxt(cls, taskFile):
         filename = cls.todoTxtFilename(taskFile)
         if os.path.exists(filename):
@@ -67,7 +67,7 @@ class AutoImporterExporter(object):
         filename = cls.todoTxtFilename(taskFile)
         with codecs.open(filename, 'w', 'utf-8') as todoFile:
             todotxt.TodoTxtWriter(todoFile, filename).writeTasks(taskFile.tasks())
-    
-    @staticmethod   
+
+    @staticmethod
     def todoTxtFilename(taskFile):
         return taskFile.filename()[:-len('tsk')] + 'txt'

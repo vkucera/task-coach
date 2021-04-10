@@ -48,19 +48,19 @@ class FilterTestsMixin(object):
         self.assertEqual(3, len(self.filter))
         self.failUnless('e' in self.filter)
 
-        
+
 class FilterListTest(FilterTestsMixin, test.TestCase):
     collectionClass = patterns.ObservableList
 
 
 class FilterSetTest(FilterTestsMixin, test.TestCase):
     collectionClass = patterns.ObservableSet
-    
-    
+
+
 class DummyFilter(base.Filter):
     def filterItems(self, items):
         return items
-    
+
     def test(self):
         self.testcalled = 1  # pylint: disable=W0201
 
@@ -72,7 +72,7 @@ class DummyItem(str):
 
 class StackedFilterTest(test.TestCase):
     def setUp(self):
-        self.list = patterns.ObservableList([DummyItem('a'), DummyItem('b'), 
+        self.list = patterns.ObservableList([DummyItem('a'), DummyItem('b'),
                                              DummyItem('c'), DummyItem('d')])
         self.filter1 = DummyFilter(self.list)
         self.filter2 = TestFilter(self.filter1)
@@ -80,11 +80,11 @@ class StackedFilterTest(test.TestCase):
     def testDelegation(self):
         self.filter2.test()
         self.assertEqual(1, self.filter1.testcalled)
-        
+
     def testSetTreeMode_True(self):
         self.filter2.setTreeMode(True)
         self.failUnless(self.filter1.treeMode())
-        
+
     def testSetTreeMode_False(self):
         self.filter2.setTreeMode(False)
         self.failIf(self.filter1.treeMode())
@@ -108,11 +108,11 @@ class SearchFilterTest(test.TestCase):
 
     def setSearchString(self, searchString, matchCase=False,
                         includeSubItems=False, searchDescription=False, regularExpression=True):
-        self.filter.setSearchFilter(searchString, matchCase=matchCase, 
+        self.filter.setSearchFilter(searchString, matchCase=matchCase,
                                     includeSubItems=includeSubItems,
                                     searchDescription=searchDescription,
                                     regularExpression=regularExpression)
-        
+
     def testNoMatch(self):
         self.setSearchString('XYZ')
         self.assertEqual(0, len(self.filter))
@@ -149,10 +149,10 @@ class SearchFilterTest(test.TestCase):
         self.filter.setTreeMode(True)
         self.setSearchString('DEF')
         self.assertEqual(2, len(self.filter))
-        
+
     def testMatchChildDoesNotSelectParentWhenChildNotInList(self):
-        self.list.remove(self.child) 
-        self.parent.addChild(self.child) # simulate a child that has been filtered 
+        self.list.remove(self.child)
+        self.parent.addChild(self.child) # simulate a child that has been filtered
         self.setSearchString('DEF')
         self.assertEqual(0, len(self.filter))
 
@@ -166,7 +166,7 @@ class SearchFilterTest(test.TestCase):
         self.setSearchString('DEF')
         self.list.remove(self.child)
         self.failIf(self.filter)
-        
+
     def testIncludeSubItems(self):
         self.setSearchString('ABC', includeSubItems=True)
         self.assertEqual(2, len(self.filter))
@@ -186,7 +186,7 @@ class SearchFilterTest(test.TestCase):
     def testSearchDescription_TurnedOff(self):
         self.setSearchString('parent description')
         self.assertEqual(0, len(self.filter))
-        
+
     def testSearchDescriptionWithSubItemsIncluded(self):
         self.setSearchString('parent description', includeSubItems=True,
                              searchDescription=True)
@@ -208,21 +208,21 @@ class DeletedFilterTest(test.TestCase):
         self.list = task.TaskList()
         self.filter = base.DeletedFilter(self.list)
         self.task = task.Task()
-        
+
     def testAddItem(self):
         self.list.append(self.task)
         self.assertEqual(1, len(self.filter))
-     
+
     def testDeleteItem(self):
         self.list.append(self.task)
         self.list.remove(self.task)
         self.assertEqual(0, len(self.filter))
-        
+
     def testMarkDeleted(self):
         self.list.append(self.task)
         self.task.markDeleted()
         self.assertEqual(0, len(self.filter))
-        
+
     def testMarkNotDeleted(self):
         self.list.append(self.task)
         self.task.markDeleted()
@@ -236,26 +236,26 @@ class SelectedItemsFilterTest(test.TestCase):
         self.task = task.Task()
         self.child = task.Task(parent=self.task)
         self.list = task.TaskList([self.task])
-        self.filter = base.SelectedItemsFilter(self.list, 
+        self.filter = base.SelectedItemsFilter(self.list,
                                                selectedItems=[self.task])
-        
+
     def testInitialContent(self):
         self.assertEqual([self.task], list(self.filter))
-        
+
     def testAddChild(self):
         self.list.append(self.child)
         self.failUnless(self.child in self.filter)
-        
+
     def testAddChildWithGrandchild(self):
         grandchild = task.Task(parent=self.child)
         self.child.addChild(grandchild)
         self.list.append(self.child)
         self.failUnless(grandchild in self.filter)
-        
+
     def testRemoveSelectedItem(self):
         self.list.remove(self.task)
         self.failIf(self.filter)
-        
+
     def testSelectedItemsFilterShowsAllTasksWhenSelectedItemsRemoved(self):
         otherTask = task.Task()
         self.list.append(otherTask)

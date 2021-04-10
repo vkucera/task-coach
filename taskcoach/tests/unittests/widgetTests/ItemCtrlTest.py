@@ -33,34 +33,34 @@ class CtrlWithColumnsTestCase(test.wxTestCase):
 
 
 class CtrlWithHideableColumnsUnderTest( \
-          widgets.itemctrl._CtrlWithHideableColumnsMixin, # pylint: disable=W0212 
-          wx.ListCtrl): 
+          widgets.itemctrl._CtrlWithHideableColumnsMixin, # pylint: disable=W0212
+          wx.ListCtrl):
     pass
 
 
 class CtrlWithHideableColumnsTestsMixin(object):
     def testColumnIsVisibleByDefault(self):
         self.failUnless(self.control.isColumnVisible(self.column1))
-        
+
     def testHideColumn(self):
         self.control.showColumn(self.column1, show=False)
         self.failIf(self.control.isColumnVisible(self.column1))
-        
+
     def testShowColumn(self):
         self.control.showColumn(self.column1, show=False)
         self.control.showColumn(self.column1, show=True)
         self.failUnless(self.control.isColumnVisible(self.column1))
-        
-        
-class CtrlWithHideableColumnsTest(CtrlWithColumnsTestCase, 
+
+
+class CtrlWithHideableColumnsTest(CtrlWithColumnsTestCase,
                                   CtrlWithHideableColumnsTestsMixin):
     def createControl(self):
         return CtrlWithHideableColumnsUnderTest(self.frame, style=wx.LC_REPORT,
             columns=[self.column1, self.column2])
-                
-        
+
+
 class CtrlWithSortableColumnsUnderTest( \
-        widgets.itemctrl._CtrlWithSortableColumnsMixin, # pylint: disable=W0212 
+        widgets.itemctrl._CtrlWithSortableColumnsMixin, # pylint: disable=W0212
         wx.ListCtrl):
     pass
 
@@ -69,10 +69,10 @@ class CtrlWithSortableColumnsTestsMixin(object):
     def assertCurrentSortColumn(self, expectedSortColumn):
         currentSortColumn = self.control._currentSortColumn() # pylint: disable=W0212
         self.assertEqual(expectedSortColumn, currentSortColumn)
-        
+
     def testDefaultSortColumn(self):
         self.assertCurrentSortColumn(self.column1)
-        
+
     def testShowSortColumn(self):
         self.control.showSortColumn(self.column2)
         self.assertCurrentSortColumn(self.column2)
@@ -81,44 +81,44 @@ class CtrlWithSortableColumnsTestsMixin(object):
 class CtrlWithSortableColumnsTest(CtrlWithColumnsTestCase, CtrlWithSortableColumnsTestsMixin):
     def createControl(self):
         return CtrlWithSortableColumnsUnderTest(self.frame, style=wx.LC_REPORT,
-            columns=[self.column1, self.column2])            
-        
-        
-class CtrlWithColumnsUnderTest(widgets.itemctrl.CtrlWithColumnsMixin, 
+            columns=[self.column1, self.column2])
+
+
+class CtrlWithColumnsUnderTest(widgets.itemctrl.CtrlWithColumnsMixin,
                                wx.ListCtrl):
     pass
 
 
-class CtrlWithColumnsTest(CtrlWithColumnsTestCase, 
+class CtrlWithColumnsTest(CtrlWithColumnsTestCase,
         CtrlWithHideableColumnsTestsMixin, CtrlWithSortableColumnsTestsMixin):
     def createControl(self):
         # NOTE: the resizeableColumn is the column that is not hidden
         return CtrlWithColumnsUnderTest(self.frame, style=wx.LC_REPORT,
-            columns=[self.column1, self.column2], resizeableColumn=1, 
+            columns=[self.column1, self.column2], resizeableColumn=1,
             columnPopupMenu=None)
 
 
 class DummyEvent(object):
     def __init__(self, eventObject):
         self.eventObject = eventObject
-        
+
     def Skip(self, *args):
         pass
-    
+
     def GetColumn(self):
         return 0
-    
+
     def GetEventObject(self):
         return self.eventObject
-    
+
     def GetPosition(self):
         return 0, 0
 
 
 class ListCtrlWithColumnPopupMenuTest(CtrlWithColumnsTestCase):
     def createControl(self):
-        return CtrlWithColumnsUnderTest(self.frame, style=wx.LC_REPORT, 
-            columns=[self.column1, self.column2], resizeableColumn=1, 
+        return CtrlWithColumnsUnderTest(self.frame, style=wx.LC_REPORT,
+            columns=[self.column1, self.column2], resizeableColumn=1,
             columnPopupMenu=wx.Menu())
 
     @test.skipOnPlatform('__WXGTK__') # Popup menu hangs the test
@@ -128,7 +128,7 @@ class ListCtrlWithColumnPopupMenuTest(CtrlWithColumnsTestCase):
 
 class HyperListTreeCtrlWithColumnPopupMenuTest(CtrlWithColumnsTestCase):
     def createControl(self):
-        return widgets.TreeListCtrl(self.frame, [self.column1, self.column2], 
+        return widgets.TreeListCtrl(self.frame, [self.column1, self.column2],
             None, None, None, None, columnPopupMenu=wx.Menu())
 
     @test.skipOnPlatform('__WXGTK__') # Popup menu hangs the test

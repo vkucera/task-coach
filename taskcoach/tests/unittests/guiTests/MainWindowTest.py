@@ -24,10 +24,10 @@ from taskcoachlib.domain import task
 class MockViewer(wx.Frame):
     def title(self):
         return ''
-    
+
     def settingsSection(self):
         return 'taskviewer'
-    
+
     def viewerStatusEventType(self):
         return 'mockviewer.status'
 
@@ -41,7 +41,7 @@ class MainWindowUnderTest(gui.MainWindow):
         self._create_viewer_container()
         self.viewer.addViewer(MockViewer(None))
         self._create_status_bar()
-    
+
 
 class DummyIOController(object):
     def needSave(self, *args, **kwargs): # pylint: disable=W0613
@@ -60,7 +60,7 @@ class MainWindowTestCase(test.wxTestCase):
         self.taskFile = persistence.TaskFile()
         self.mainwindow = MainWindowUnderTest(DummyIOController(),
             self.taskFile, self.settings)
-            
+
     def setSettings(self):
         pass
 
@@ -75,8 +75,8 @@ class MainWindowTestCase(test.wxTestCase):
         super(MainWindowTestCase, self).tearDown()
         self.taskFile.close()
         self.taskFile.stop()
-        
-        
+
+
 class MainWindowTest(MainWindowTestCase):
     def testStatusBar_Show(self):
         self.settings.setboolean('view', 'statusbar', True)
@@ -88,10 +88,10 @@ class MainWindowTest(MainWindowTestCase):
 
     def testTitle_Default(self):
         self.assertEqual(meta.name, self.mainwindow.GetTitle())
-        
+
     def testTitle_AfterFilenameChange(self):
         self.taskFile.setFilename('New filename')
-        self.assertEqual('%s - %s'%(meta.name, self.taskFile.filename()), 
+        self.assertEqual('%s - %s'%(meta.name, self.taskFile.filename()),
             self.mainwindow.GetTitle())
 
     def testTitle_AfterChange(self):
@@ -110,19 +110,19 @@ class MainWindowTest(MainWindowTestCase):
 
 class MainWindowMaximizeTestCase(MainWindowTestCase):
     maximized = 'Subclass responsibility'
-    
+
     def setUp(self):
         super(MainWindowMaximizeTestCase, self).setUp()
         if not operating_system.isMac():
             self.mainwindow.Show() # Or IsMaximized() returns always False...
-        
+
     def setSettings(self):
         self.settings.setboolean('window', 'maximized', self.maximized)
 
 
 class MainWindowNotMaximizedTest(MainWindowMaximizeTestCase):
     maximized = False
-    
+
     def testCreate(self):
         self.failIf(self.mainwindow.IsMaximized())
 
@@ -148,27 +148,27 @@ class MainWindowMaximizedTest(MainWindowMaximizeTestCase):
 
 class MainWindowIconizedTest(MainWindowTestCase):
     def setUp(self):
-        super(MainWindowIconizedTest, self).setUp()        
+        super(MainWindowIconizedTest, self).setUp()
         if operating_system.isGTK():
             wx.SafeYield() # pragma: no cover
-            
+
     def setSettings(self):
         self.settings.set('window', 'starticonized', 'Always')
-        
+
     def expectedHeight(self):
         height = 500
         if operating_system.isMac():
             height += 18 # pragma: no cover
         return height
-    
-    @test.skipOnPlatform('__WXGTK__') # Test fails on Fedora, don't know why nor how to fix it    
+
+    @test.skipOnPlatform('__WXGTK__') # Test fails on Fedora, don't know why nor how to fix it
     def testIsIconized(self):
         self.failUnless(self.mainwindow.IsIconized()) # pragma: no cover
-                        
+
     def testWindowSize(self):
-        self.assertEqual((900, self.expectedHeight()), 
+        self.assertEqual((900, self.expectedHeight()),
                          eval(self.settings.get('window', 'size')))
-        
+
     def testWindowSizeShouldnotChangeWhenReceivingChangeSizeEvent(self):
         event = wx.SizeEvent((100, 20))
         process = self.mainwindow.ProcessEvent

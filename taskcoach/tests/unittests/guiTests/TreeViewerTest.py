@@ -20,7 +20,7 @@ import test
 from taskcoachlib import gui, config, persistence
 from taskcoachlib.domain import task
 
-       
+
 class TreeViewerTest(test.wxTestCase):
     def setUp(self):
         super(TreeViewerTest, self).setUp()
@@ -45,20 +45,20 @@ class TreeViewerTest(test.wxTestCase):
     def firstItem(self):
         root = self.widget.GetRootItem()
         return self.widget.GetFirstChild(root)[0]
-                
+
     def testWidgetDoesNotDisplayChildItemBeforeItsParentIsExpanded(self):
         self.assertEqual(1, self.viewer.widget.GetItemCount())
-        
+
     def testExpand(self):
         self.widget.Expand(self.firstItem())
         self.failUnless(self.parent.isExpanded(context=self.expansionContext))
-        
+
     def testCollapse(self):
         firstVisibleItem = self.firstItem()
         self.widget.Expand(firstVisibleItem)
         self.widget.Collapse(firstVisibleItem)
         self.failIf(self.parent.isExpanded(context=self.expansionContext))
-        
+
     def testExpandall(self):
         self.viewer.expandAll()
         self.failUnless(self.parent.isExpanded(context=self.expansionContext))

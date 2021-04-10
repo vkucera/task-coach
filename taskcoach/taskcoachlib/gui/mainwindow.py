@@ -69,7 +69,7 @@ class MainWindow(PowerStateMixin, BalloonTipManager,
         self.__init_window_components()
         self.__init_window()
         self.__register_for_window_component_changes()
-        
+
         if settings.getboolean('feature', 'syncml'):
             try:
                 import taskcoachlib.syncml.core  # pylint: disable=W0612,W0404
@@ -102,7 +102,7 @@ class MainWindow(PowerStateMixin, BalloonTipManager,
         if self.settings.getboolean('feature', 'iphone'):
             # pylint: disable=W0612,W0404,W0702
             try:
-                from taskcoachlib.thirdparty import pybonjour 
+                from taskcoachlib.thirdparty import pybonjour
                 from taskcoachlib.iphone import IPhoneAcceptor, BonjourServiceRegister
 
                 acceptor = IPhoneAcceptor(self, self.settings, self.iocontroller)
@@ -145,27 +145,27 @@ class MainWindow(PowerStateMixin, BalloonTipManager,
 
     def _create_viewer_container(self):  # Not private for test purposes
         # pylint: disable=W0201
-        self.viewer = viewer.ViewerContainer(self, self.settings) 
-        
+        self.viewer = viewer.ViewerContainer(self, self.settings)
+
     def _create_status_bar(self):
         from taskcoachlib.gui import status  # pylint: disable=W0404
         self.SetStatusBar(status.StatusBar(self, self.viewer))
-        
+
     def __create_menu_bar(self):
         from taskcoachlib.gui import menu  # pylint: disable=W0404
-        self.SetMenuBar(menu.MainMenu(self, self.settings, self.iocontroller, 
+        self.SetMenuBar(menu.MainMenu(self, self.settings, self.iocontroller,
                                       self.viewer, self.taskFile))
-    
+
     def __create_reminder_controller(self):
         # pylint: disable=W0201
         self.reminderController = \
             remindercontroller.ReminderController(self, self.taskFile.tasks(),
                 self.taskFile.efforts(), self.settings)
-        
+
     def addPane(self, page, caption, floating=False):  # pylint: disable=W0221
         name = page.settingsSection()
         super(MainWindow, self).addPane(page, caption, name, floating=floating)
-        
+
     def __init_window(self):
         self.__filename = self.taskFile.filename()
         self.__setTitle()
@@ -175,17 +175,17 @@ class MainWindow(PowerStateMixin, BalloonTipManager,
 
     def __init_window_components(self):
         self.showToolBar(self.settings.getvalue('view', 'toolbar'))
-        # We use CallAfter because otherwise the statusbar will appear at the 
+        # We use CallAfter because otherwise the statusbar will appear at the
         # top of the window when it is initially hidden and later shown.
-        wx.CallAfter(self.showStatusBar, 
+        wx.CallAfter(self.showStatusBar,
                      self.settings.getboolean('view', 'statusbar'))
         self.__restore_perspective()
-            
+
     def __restore_perspective(self):
         perspective = self.settings.get('view', 'perspective')
         for viewer_type in viewer.viewerTypes():
             if self.__perspective_and_settings_viewer_count_differ(viewer_type):
-                # Different viewer counts may happen when the name of a viewer 
+                # Different viewer counts may happen when the name of a viewer
                 # is changed between versions
                 perspective = ''
                 break
@@ -207,7 +207,7 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
 '''copied TaskCoach.ini file to the bug report.''') % reason,
             _('%s settings error') % meta.name, style=wx.OK | wx.ICON_ERROR)
             self.manager.LoadPerspective('')
-        
+
         for pane in self.manager.GetAllPanes():
             # Prevent zombie panes by making sure all panes are visible
             if not pane.IsShown():
@@ -217,14 +217,14 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
             if hasattr(pane.window, 'title'):
                 pane.Caption(pane.window.title())
         self.manager.Update()
-        
+
     def __perspective_and_settings_viewer_count_differ(self, viewer_type):
         perspective = self.settings.get('view', 'perspective')
         perspective_viewer_count = perspective.count('name=%s' % viewer_type)
-        settings_viewer_count = self.settings.getint('view', 
+        settings_viewer_count = self.settings.getint('view',
                                                      '%scount' % viewer_type)
         return perspective_viewer_count != settings_viewer_count
-    
+
     def __register_for_window_component_changes(self):
         pub.subscribe(self.__onFilenameChanged, 'taskfile.filenameChanged')
         pub.subscribe(self.__onDirtyChanged, 'taskfile.dirty')
@@ -248,10 +248,10 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
         if self.__dirty:
             title += ' *'
         self.SetTitle(title)
-        
+
     def displayMessage(self, message, pane=0):
         self.GetStatusBar().SetStatusText(message, pane)
-        
+
     def save_settings(self):
         self.__save_viewer_counts()
         self.__save_perspective()
@@ -262,11 +262,11 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
         for viewer_type in viewer.viewerTypes():
             count = len([v for v in self.viewer if v.__class__.__name__.lower() == viewer_type])
             self.settings.set('view', viewer_type + 'count', str(count))
-            
+
     def __save_perspective(self):
         perspective = self.manager.SavePerspective()
         self.settings.set('view', 'perspective', perspective)
-        
+
     def __save_position(self):
         self.__dimensions_tracker.save_position()
 
@@ -281,7 +281,7 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
         if self.__shutdown:
             event.Skip()
             return
-        if event.CanVeto() and self.settings.getboolean('window', 
+        if event.CanVeto() and self.settings.getboolean('window',
                                                         'hidewhenclosed'):
             event.Veto()
             self.Iconize()
@@ -300,7 +300,7 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
         self.Refresh()
 
     def onIconify(self, event):
-        if event.Iconized() and self.settings.getboolean('window', 
+        if event.Iconized() and self.settings.getboolean('window',
                                                          'hidewheniconized'):
             self.Hide()
         else:
@@ -318,20 +318,20 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
         # showing the statusbar puts it in the wrong place (only on Linux?)
         self.GetStatusBar().Show(value)
         self.SendSizeEvent()
-        
+
     def createToolBarUICommands(self):
-        ''' UI commands to put on the toolbar of this window. ''' 
+        ''' UI commands to put on the toolbar of this window. '''
         uiCommands = [
-                uicommand.FileOpen(iocontroller=self.iocontroller), 
+                uicommand.FileOpen(iocontroller=self.iocontroller),
                 uicommand.FileSave(iocontroller=self.iocontroller),
                 uicommand.FileMergeDiskChanges(iocontroller=self.iocontroller),
-                uicommand.Print(viewer=self.viewer, settings=self.settings), 
-                None, 
-                uicommand.EditUndo(), 
+                uicommand.Print(viewer=self.viewer, settings=self.settings),
+                None,
+                uicommand.EditUndo(),
                 uicommand.EditRedo()]
-        uiCommands.extend([ 
-            None, 
-            uicommand.EffortStartButton(taskList=self.taskFile.tasks()), 
+        uiCommands.extend([
+            None,
+            uicommand.EffortStartButton(taskList=self.taskFile.tasks()),
             uicommand.EffortStop(viewer=self.viewer,
                                  effortList=self.taskFile.efforts(),
                                  taskList=self.taskFile.tasks())])
@@ -361,12 +361,12 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
         if event.GetPane().IsToolbar():
             self.settings.setvalue('view', 'toolbar', None)
         event.Skip()
-        
+
     # Viewers
-    
+
     def advanceSelection(self, forward):
         self.viewer.advanceSelection(forward)
-        
+
     def viewerCount(self):
         return len(self.viewer)
 
@@ -379,7 +379,7 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
 
     def createIPhoneProgressFrame(self):
         return IPhoneSyncFrame(self.settings, _('iPhone/iPod'),
-            icon=wx.ArtProvider.GetBitmap('taskcoach', wx.ART_FRAME_ICON, 
+            icon=wx.ArtProvider.GetBitmap('taskcoach', wx.ART_FRAME_ICON,
                                           (16, 16)),
             parent=self)
 
@@ -436,7 +436,7 @@ If this happens again, please make a copy of your TaskCoach.ini file '''
         effort.setStart(started)
         effort.setStop(ended)
 
-    def modifyIPhoneTask(self, task, subject, description, plannedStartDateTime, 
+    def modifyIPhoneTask(self, task, subject, description, plannedStartDateTime,
                          dueDateTime, completionDateTime, reminderDateTime,
                          recurrence, priority, categories):
         task.setSubject(subject)

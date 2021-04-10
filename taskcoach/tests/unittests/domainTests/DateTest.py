@@ -49,7 +49,7 @@ class DateTest(test.TestCase):
 
     def testInfiniteDateIsSingleton(self):
         self.failUnless(date.Date() is date.Date())
-        
+
     def testAddTimeDeltaToInfiniteDate(self):
         self.assertEqual(date.Date(), date.Date() + date.TimeDelta(days=2))
 
@@ -77,19 +77,19 @@ class DateTest(test.TestCase):
         self.failUnless(date1 > date2)
 
     def testAddManyDays(self):
-        self.assertEqual(date.Date(2003,1,1), 
+        self.assertEqual(date.Date(2003,1,1),
             date.Date(2002,1,1) + date.ONE_YEAR)
 
     def testSubstractTwoDates_ZeroDifference(self):
-        self.assertEqual(date.TimeDelta(), 
+        self.assertEqual(date.TimeDelta(),
                          date.Date(2004, 2, 29) - date.Date(2004, 2, 29))
 
     def testSubstractTwoDates_YearDifference(self):
-        self.assertEqual(date.TimeDelta(days=365), 
+        self.assertEqual(date.TimeDelta(days=365),
             date.Date(2004, 2, 29) + date.ONE_YEAR - date.Date(2004, 2, 29))
 
     def testSubstractTwoDates_Infinite(self):
-        self.assertEqual(date.TimeDelta.max, 
+        self.assertEqual(date.TimeDelta.max,
                          date.Date() - date.Date(2004, 2, 29))
 
     def testSubstractTwoDates_BothInfinite(self):

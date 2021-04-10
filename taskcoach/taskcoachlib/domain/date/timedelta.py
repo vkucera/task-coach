@@ -22,7 +22,7 @@ class TimeDelta(datetime.timedelta):
     millisecondsPerSecond = 1000
     millisecondsPerDay = 24 * 60 * 60 * millisecondsPerSecond
     millisecondsPerMicroSecond = 1/1000.
-    
+
     def hoursMinutesSeconds(self):
         ''' Return a tuple (hours, minutes, seconds). Note that the caller
             is responsible for checking whether the TimeDelta instance is
@@ -37,32 +37,32 @@ class TimeDelta(datetime.timedelta):
         minutes, seconds = seconds/60, seconds%60
         hours += days*24
         return hours, minutes, seconds
-    
+
     def sign(self):
         return -1 if self < TimeDelta() else 1
-    
+
     def hours(self):
         ''' Timedelta expressed in number of hours. '''
         hours, minutes, seconds = self.hoursMinutesSeconds()
         return self.sign() * (hours + (minutes / 60.) + (seconds / 3600.))
-    
+
     def minutes(self):
         ''' Timedelta expressed in number of minutes. '''
         hours, minutes, seconds = self.hoursMinutesSeconds()
         return self.sign() * (hours * 60 + minutes + (seconds / 60.))
-    
+
     def totalSeconds(self):
         ''' Timedelta expressed in number of seconds. '''
         hours, minutes, seconds = self.hoursMinutesSeconds()
-        return self.sign() * (hours * 3600 + minutes * 60 + seconds)        
-        
+        return self.sign() * (hours * 3600 + minutes * 60 + seconds)
+
     def milliseconds(self):
         ''' Timedelta expressed in number of milliseconds. '''
         # No need to use self.sign() since self.days is negative for negative values
         return int(round((self.days * self.millisecondsPerDay) + \
                          (self.seconds * self.millisecondsPerSecond) + \
                          (self.microseconds * self.millisecondsPerMicroSecond)))
-        
+
     def round(self, hours=0, minutes=0, seconds=0, alwaysUp=False):
         ''' Round the timedelta to the nearest x units. '''
         assert [hours, minutes, seconds].count(0) >= 2
@@ -73,19 +73,19 @@ class TimeDelta(datetime.timedelta):
             return self.__class__(0, roundedSeconds)
         else:
             return self
-        
+
     def __add__(self, other):
-        ''' Make sure we return a TimeDelta instance and not a 
+        ''' Make sure we return a TimeDelta instance and not a
             datetime.timedelta instance '''
         timeDelta = super(TimeDelta, self).__add__(other)
-        return self.__class__(timeDelta.days, 
+        return self.__class__(timeDelta.days,
                               timeDelta.seconds,
                               timeDelta.microseconds)
-    
+
     def __sub__(self, other):
         timeDelta = super(TimeDelta, self).__sub__(other)
-        return self.__class__(timeDelta.days, 
-                              timeDelta.seconds, 
+        return self.__class__(timeDelta.days,
+                              timeDelta.seconds,
                               timeDelta.microseconds)
 
 ONE_SECOND = TimeDelta(seconds=1)
@@ -100,6 +100,6 @@ def parseTimeDelta(string):
     try:
         hours, minutes, seconds = [int(x) for x in string.split(':')]
     except ValueError:
-        hours, minutes, seconds = 0, 0, 0 
+        hours, minutes, seconds = 0, 0, 0
     return TimeDelta(hours=hours, minutes=minutes, seconds=seconds)
 

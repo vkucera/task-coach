@@ -37,7 +37,7 @@ defaults = {
     'toolbar': '(22, 22)',
     'toolbarperspective': 'FileOpen,Print,Separator,EditUndo,EditRedo,Separator,EffortStartButton,EffortStop',
     # Index of the active effort viewer in task editor:
-    'effortviewerintaskeditor': '0',  
+    'effortviewerintaskeditor': '0',
     'taskviewercount': '1',  # Number of task viewers in main window
     'categoryviewercount': '1',  # Number of category viewers in main window
     'noteviewercount': '0',  # Number of note viewers in main window
@@ -50,9 +50,9 @@ defaults = {
     'taskstatsviewercount': '0',
     'taskinterdepsviewercount': '0',  # Number of interdep viewers in main window
     # Language and locale, maybe set externally (e.g. by PortableApps):
-    'language': '',  
+    'language': '',
     # Language and locale as set by user via preferences, overrides language:
-    'language_set_by_user': '',  
+    'language_set_by_user': '',
     'categoryfiltermatchall': 'False',
     'weekstart': 'monday',  # Start of work week, 'monday' or 'sunday'
     # The next three options are used in the effort dialog to populate the
@@ -65,7 +65,7 @@ defaults = {
     'replacedefaultsnoozetime': 'True',  # Make chosen snooze time the default?
     'perspective': '',  # The layout of the viewers in the main window
     # What to do when changing the planned start date or due date:
-    'datestied': '',  
+    'datestied': '',
     # Default date and times to offer in the task dialog, see preferences for
     # possible values:
     'defaultplannedstartdatetime': 'propose_today_currenttime',
@@ -101,7 +101,7 @@ defaults = {
     'hideoverduetasks': 'False',
     'hidecompletedtasks': 'False',
     'hidecompositetasks': 'False',
-    },              
+    },
 'taskstatsviewer': {
     'title': '',
     'toolbarperspective': 'TaskNew,TaskNewFromTemplateButton,Separator,ViewerPieChartAngle,Spacer,ViewerHideTasks_completed,ViewerHideTasks_inactive,ResetFilter,Search',
@@ -244,7 +244,7 @@ defaults = {
     'sortcasesensitive': 'False',
     'sortbystatusfirst': 'True',
     'highlightcolor': '',
-    'shownow': 'True' 
+    'shownow': 'True'
     },
 'categoryviewer': {
     'title': '',
@@ -409,7 +409,7 @@ defaults = {
     'searchdescription': 'False',
     'regularexpression': 'False',
     'round': '0',  # round effort to this number of seconds, 0 = no rounding
-    'alwaysroundup': 'False', 
+    'alwaysroundup': 'False',
     'consolidateeffortspertask': 'False',
     },
 'attachmentviewer': {
@@ -470,7 +470,7 @@ defaults = {
     'columns': "[]",
     'columnsalwaysvisible': "['type', 'subject']",
     'columnwidths': "{'notes': 28, 'type': 28}",
-    'columnautoresizing': 'True' 
+    'columnautoresizing': 'True'
     },
 'window': {
     'size': '(900, 500)',  # Default size of the main window
@@ -478,7 +478,7 @@ defaults = {
     'iconized': 'False',  # Don't start up iconized by default
     'maximized': 'False',  # Don't start up maximized by default
     # Possible strticonized values: 'Never', 'Always', 'WhenClosedIconized'
-    'starticonized': 'WhenClosedIconized',  
+    'starticonized': 'WhenClosedIconized',
     'splash': 'True',  # Show a splash screen while starting up
     'hidewheniconized': 'False',  # Don't hide the window from the task bar
     'hidewhenclosed': 'False',  # Close window quits the application
@@ -497,12 +497,12 @@ defaults = {
     'lastfile': '',
     'autosave': 'True',
     'autoload': 'False',
-    # Formats to automatically import from, only "Todo.txt" supported at this 
+    # Formats to automatically import from, only "Todo.txt" supported at this
     # time:
-    'autoimport': '[]',  
-    # Formats to automatically export to, only "Todo.txt" supported at this 
+    'autoimport': '[]',
+    # Formats to automatically export to, only "Todo.txt" supported at this
     # time:
-    'autoexport': '[]',  
+    'autoexport': '[]',
     'nopoll': 'False',
     'saveinifileinprogramdir': 'False',
     'attachmentbase': '',
@@ -516,7 +516,7 @@ defaults = {
     'completedtasks': '(0, 255, 0, 255)',
     'overduetasks': '(255, 0, 0, 255)',
     'inactivetasks': '(192, 192, 192, 255)',
-    'duesoontasks': '(255, 128, 0, 255)' 
+    'duesoontasks': '(255, 128, 0, 255)'
     },
 'bgcolor': {
     'activetasks': '(255, 255, 255, 255)',
@@ -534,17 +534,17 @@ defaults = {
     'inactivetasks': '',
     'duesoontasks': ''
     },
-'icon': { 
+'icon': {
     'activetasks': 'led_blue_icon',
     'latetasks': 'led_purple_icon',
     'completedtasks': 'checkmark_green_icon',
     'overduetasks': 'led_red_icon',
     'inactivetasks': 'led_grey_icon',
-    'duesoontasks': 'led_orange_icon' 
+    'duesoontasks': 'led_orange_icon'
     },
 'editor': {
     'descriptionfont': '',  # Font to use in the desciption field of editors
-    'maccheckspelling': 'True' 
+    'maccheckspelling': 'True'
     },
 'os_darwin': {
     'getmailsubject': 'False'
@@ -558,12 +558,12 @@ defaults = {
     'pythonfrozen': '',  # Idem
     'current': meta.data.version,
     'notified': meta.data.version,
-    'notify': 'True' 
+    'notify': 'True'
     },
 'behavior': {
     'markparentcompletedwhenallchildrencompleted': 'False',
     'duesoonhours': '24'  # When a task is considered to be "due soon"
-    }, 
+    },
 'feature': {
     'syncml': 'False',
     'iphone': 'False',
@@ -576,7 +576,7 @@ defaults = {
     'sdtcspans_effort': '60,120,180,240',
     'decimaltime' : 'False'
     },
-'syncml': { 
+'syncml': {
     'url': '',
     'username': '',
     'preferredsyncmode': 'TWO_WAY',
@@ -585,13 +585,13 @@ defaults = {
     'notedbname': 'note',
     'synctasks': 'True',
     'syncnotes': 'True',
-    'showwarning': 'True' 
+    'showwarning': 'True'
     },
 'iphone': {
     'password': '',
     'service': '',
     'synccompleted': 'True',
-    'showlog': 'False' 
+    'showlog': 'False'
     },
 'printer': {
     'margin_left': '0',
@@ -599,7 +599,7 @@ defaults = {
     'margin_bottom': '0',
     'margin_right': '0',
     'paper_id': '0',
-    'orientation': str(wx.PORTRAIT) 
+    'orientation': str(wx.PORTRAIT)
     },
 'export': {
     'html_selectiononly': 'False',
@@ -607,12 +607,12 @@ defaults = {
     'csv_selectiononly': 'False',
     'csv_separatedateandtimecolumns': 'False',
     'ical_selectiononly': 'False',
-    'todotxt_selectiononly': 'False' 
+    'todotxt_selectiononly': 'False'
     }
 }
 
-minimum = { 
-'view': { 
-    'taskviewercount': '1' 
+minimum = {
+'view': {
+    'taskviewercount': '1'
     }
 }

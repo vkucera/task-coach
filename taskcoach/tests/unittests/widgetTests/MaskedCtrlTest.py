@@ -45,42 +45,42 @@ class AmountCtrlTest(test.wxTestCase):
         masked.AmountCtrl(self.frame, locale_conventions=LocalConv())
 
     def testCommaAsDecimalSepAndNoGrouping(self):
-        masked.AmountCtrl(self.frame, 
+        masked.AmountCtrl(self.frame,
                           locale_conventions=LocalConv(decimal_point=','))
 
     def testCommaAsDecimalSepAndGrouping(self):
-        masked.AmountCtrl(self.frame, 
+        masked.AmountCtrl(self.frame,
                           locale_conventions=LocalConv(decimal_point=',',
                                                        grouping=[3,3,3]))
 
     def testCommaAsBothDecimalSepAndThousandsSepButNoGrouping(self):
-        masked.AmountCtrl(self.frame, 
+        masked.AmountCtrl(self.frame,
                           locale_conventions=LocalConv(decimal_point=',',
                                                        thousands_sep=','))
 
     def testCommaAsBothDecimalSepAndThousandsSepAndGrouping(self):
-        masked.AmountCtrl(self.frame, 
+        masked.AmountCtrl(self.frame,
                           locale_conventions=LocalConv(decimal_point=',',
-                                                       thousands_sep=',', 
+                                                       thousands_sep=',',
                                                        grouping=[3,3,3]))
 
     def testSpaceIsNotAllowedAsDecimalPoint(self):
         try:
-            masked.AmountCtrl(self.frame, 
+            masked.AmountCtrl(self.frame,
                               locale_conventions=LocalConv(decimal_point=' '))
             self.fail('Expected ValueError') # pragma: no cover
         except ValueError:
             pass
 
     def testNonAsciiDecimalPoint(self):
-        masked.AmountCtrl(self.frame, 
+        masked.AmountCtrl(self.frame,
                           locale_conventions=LocalConv(decimal_point=u'�'))
-        
+
     def testNonAsciiThousandsSeparator(self):
-        masked.AmountCtrl(self.frame, 
-                          locale_conventions=LocalConv(thousands_sep=u'�', 
+        masked.AmountCtrl(self.frame,
+                          locale_conventions=LocalConv(thousands_sep=u'�',
                                                        grouping=[3,3,3]))
 
     def testMultiCharThousandsSeparator(self):
-        masked.AmountCtrl(self.frame, 
+        masked.AmountCtrl(self.frame,
                           locale_conventions=LocalConv(thousands_sep='..'))

@@ -35,9 +35,9 @@ import re, datetime
 try:
     from taskcoachlib.meta.revision import revision  # pylint: disable=F0401,W0611
 except ImportError:
-    revision = None 
+    revision = None
 
-months = ['January', 'February', 'March', 'April', 'May', 'June', 
+months = ['January', 'February', 'March', 'April', 'May', 'June',
           'July', 'August', 'September', 'October', 'November', 'December']
 
 if revision:  # Buildbot sets revision
@@ -99,7 +99,7 @@ known_bugs_url = sf_tracker_url + '?group_id=130831&atid=719134&status=1'
 support_request_url = sf_tracker_url + '?group_id=130831&atid=719135'
 feature_request_url = 'http://taskcoach.uservoice.com'
 translations_url = 'https://translations.launchpad.net/taskcoach'
-donate_url = url + 'givesupport.html' 
+donate_url = url + 'givesupport.html'
 i18n_url = url + 'i18n.html'
 
 announcement_addresses = 'taskcoach@yahoogroups.com, python-announce-list@python.org'
@@ -108,7 +108,7 @@ bcc_announcement_addresses = 'johnhaller@portableapps.com'
 copyright = 'Copyright (C) 2004-%s %s'%(release_year, author)  # pylint: disable=W0622
 license_title = 'GNU General Public License'
 license_version = '3'
-license_title_and_version = '%s version %s'%(license_title, license_version) 
+license_title_and_version = '%s version %s'%(license_title, license_version)
 license = '%s or any later version'%license_title_and_version  # pylint: disable=W0622
 license_title_and_version_abbrev = 'GPLv%s'%license_version
 license_abbrev = '%s+'%license_title_and_version_abbrev
@@ -155,7 +155,7 @@ languages = {
     'Esperanto': ('eo', False),
     'Estonian': ('et', False),
     'Finnish': ('fi', True),
-    'French': ('fr', True), 
+    'French': ('fr', True),
     'Galician': ('gl', False),
     'German': ('de', True),
     'German (Low)': ('nds', False),

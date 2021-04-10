@@ -24,47 +24,47 @@ class DummyEvent(object):
     def __init__(self, item=None):
         self.item = item
         self.vetoed = self.allowed = False
-        
+
     def GetItem(self):
         return self.item
-    
+
     def Veto(self):
         self.vetoed = True
-        
+
     def Allow(self):
         self.allowed = True
-    
-    
+
+
 class TreeCtrlDragAndDropMixinTest(test.wxTestCase):
     # pylint: disable=E1101
-    
+
     def setUp(self):
         self.treeCtrl = treectrl.HyperTreeList(self.frame)
         self.treeCtrl.AddColumn('First')
-        
+
         self.rootItem = self.treeCtrl.AddRoot('root')
         self.item = self.treeCtrl.AppendItem(self.rootItem, 'item')
-        
+
     def assertEventIsVetoed(self, event):
         self.failUnless(event.vetoed)
         self.failIf(event.allowed)
-        
+
     def assertEventIsAllowed(self, event):
         self.failUnless(event.allowed)
         self.failIf(event.vetoed)
-        
-    def testEventIsVetoedWhenDragBeginsWithoutItem(self): 
+
+    def testEventIsVetoedWhenDragBeginsWithoutItem(self):
         event = DummyEvent()
         self.treeCtrl._dragStartPos = wx.Point(0, 0)
         self.treeCtrl.OnBeginDrag(event)
         self.assertEventIsVetoed(event)
-        
+
     def testEventIsAllowedWhenDragBeginsWithItem(self):
         event = DummyEvent(self.item)
         self.treeCtrl._dragStartPos = wx.Point(0, 0)
         self.treeCtrl.OnBeginDrag(event)
         self.assertEventIsAllowed(event)
-        
+
     def testEventIsAllowedWhenDragBeginWithSelectedItem(self):
         self.treeCtrl.SelectItem(self.item)
         event = DummyEvent(self.item)

@@ -20,7 +20,7 @@ import wx
 import test
 from unittests import dummy
 from taskcoachlib import gui, config
- 
+
 
 class ToolBar(gui.toolbar.ToolBar):
     def uiCommands(self, cache=True):

@@ -40,21 +40,21 @@ def randomSubject():
     return randomtext.title()
 
 def randomColor():
-    return randomThing(lambda: wx.Colour(random.randint(0,255), random.randint(0,255), 
+    return randomThing(lambda: wx.Colour(random.randint(0,255), random.randint(0,255),
                                         random.randint(0,255)))
-        
+
 def randomFont():
-    return randomThing(lambda: wx.Font(pointSize=random.randint(6,24), 
+    return randomThing(lambda: wx.Font(pointSize=random.randint(6,24),
                                family=random.choice([wx.FONTFAMILY_DECORATIVE, wx.FONTFAMILY_MODERN,
                                                      wx.FONTFAMILY_ROMAN, wx.FONTFAMILY_SCRIPT,
                                                      wx.FONTFAMILY_SWISS, wx.FONTFAMILY_TELETYPE]),
                                style=random.choice([wx.FONTSTYLE_ITALIC, wx.FONTSTYLE_NORMAL]),
-                               weight=random.choice([wx.FONTWEIGHT_BOLD, wx.FONTWEIGHT_LIGHT, 
+                               weight=random.choice([wx.FONTWEIGHT_BOLD, wx.FONTWEIGHT_LIGHT,
                                                      wx.FONTWEIGHT_NORMAL])))
 
 def randomIcon():
     return randomThing(lambda: random.choice(artprovider.chooseableItemImages.keys()))
-    
+
 def randomDateTime(chanceNone=0.5):
     if random.random() < chanceNone:
         return None
@@ -68,7 +68,7 @@ def randomDateTime(chanceNone=0.5):
         return date.DateTime(year, month, day, hour, minute, second)
     except ValueError:
         return randomDateTime(chanceNone)
-    
+
 def generateCategory(index, children=3, chanceNextLevel=0.2):
     newCategory = category.Category(subject='Category %s: %s'%('.'.join(index), randomSubject()),
                                     exclusiveSubcategories=random.random() < 0.3,
@@ -88,10 +88,10 @@ def assignCategories(categorizable, categories):
         randomCategory = random.choice(list(categories))
         categorizable.addCategory(randomCategory)
         randomCategory.addCategorizable(categorizable)
-        
+
 def generateEffort():
     start = randomDateTime(0)
-    stop = start + date.TimeDelta(hours=random.triangular(0, 10, 1), 
+    stop = start + date.TimeDelta(hours=random.triangular(0, 10, 1),
                                   minutes=random.randint(0, 60),
                                   seconds=random.randint(0, 60))
     return effort.Effort(None, start, stop, description=randomDescription())
@@ -101,7 +101,7 @@ def generateEfforts():
     for _ in range(random.randint(0, 10)):
         efforts.append(generateEffort())
     return efforts
-    
+
 def generateTask(index, categories, children=3, chanceNextLevel=0.2):
     efforts = generateEfforts()
     newTask = task.Task(subject='Task %s: %s'%('.'.join(index), randomSubject()),
@@ -128,10 +128,10 @@ def generate(nrCategories=20, nrTasks=250):
     categories = taskFile.categories()
     for index in range(nrCategories):
         categories.append(generateCategory([str(index)]))
-    for index in range(nrTasks):        
+    for index in range(nrTasks):
         tasks.append(generateTask([str(index)], categories))
     taskFile.save()
-        
+
 
 if __name__ == '__main__':
     #app = wx.App(False)

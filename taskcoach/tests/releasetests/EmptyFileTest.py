@@ -32,7 +32,7 @@ class EmptFileTest(test.TestCase):
     def emptyPyFiles(self, *folders):
         empty = []
         for root, dirs, files in os.walk(os.path.join(test.projectRoot, *folders)):
-            pyfiles = [os.path.join(root, filename) for filename in files 
+            pyfiles = [os.path.join(root, filename) for filename in files
                        if filename.endswith('.py')]
             for filename in pyfiles:
                 if os.stat(filename).st_size == 0:
@@ -45,7 +45,7 @@ class EmptFileTest(test.TestCase):
     '''
     def testAllUnittestPyFilesAreInManifest(self):
         self.assertEqual([], self.missingPyFiles('tests', 'unittests'))
-    
+
     def testAllReleasetestPyFilesAreInManifest(self):
         self.assertEqual([], self.missingPyFiles('tests', 'releasetests'))
 

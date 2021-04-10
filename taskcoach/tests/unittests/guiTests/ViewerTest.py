@@ -40,7 +40,7 @@ class ViewerTest(test.wxTestCase):
         self.task = task.Task('task')
         self.taskFile.tasks().append(self.task)
         self.window = Window(self.frame)
-        self.viewerContainer = gui.viewer.ViewerContainer(self.window, 
+        self.viewerContainer = gui.viewer.ViewerContainer(self.window,
             self.settings)
         self.viewer = self.createViewer()
         self.viewerContainer.addViewer(self.viewer)
@@ -58,24 +58,24 @@ class ViewerTest(test.wxTestCase):
         self.viewer.widget.select_all()
         self.viewer.updateSelection()
         self.assertEqual([self.task], self.viewer.curselection())
-        
+
     def testSelectAllViaWidgetWithMultipleItems(self):
         self.taskFile.tasks().append(task.Task('second'))
         self.viewer.widget.select_all()
         self.viewer.updateSelection()
         self.assertEqual(2, len(self.viewer.curselection()))
-        
+
     def testSelectAll(self):
         self.viewer.select_all()
         self.viewer.endOfSelectAll()
         self.assertEqual([self.task], self.viewer.curselection())
-        
+
     def testSelectAllWithMultipleItems(self):
         self.taskFile.tasks().append(task.Task('second'))
         self.viewer.select_all()
         self.viewer.endOfSelectAll()
         self.assertEqual(2, len(self.viewer.curselection()))
-        
+
     def testSelectNextItemAfterDeletingSelection(self):
         secondTask = task.Task('second')
         self.taskFile.tasks().append(secondTask)
@@ -93,7 +93,7 @@ class ViewerTest(test.wxTestCase):
         self.viewer.select([child])
         self.taskFile.tasks().remove(child)
         self.assertEqual([self.task], self.viewer.curselection())
-        
+
     def testDontChangeSelectionAfterDeletingAnItemThatIsNotSelected(self):
         secondTask = task.Task('second')
         self.taskFile.tasks().append(secondTask)
@@ -104,27 +104,27 @@ class ViewerTest(test.wxTestCase):
         self.viewer.select([secondTask])
         self.taskFile.tasks().remove(child)
         self.assertEqual([secondTask], self.viewer.curselection())
-          
+
     def testFirstViewerInstanceSettingsSection(self):
-        self.assertEqual(self.viewer.__class__.__name__.lower(), 
+        self.assertEqual(self.viewer.__class__.__name__.lower(),
                          self.viewer.settingsSection())
-        
+
     def testSecondViewerInstanceHasAnotherSettingsSection(self):
         viewer2 = self.createViewer()
-        self.assertEqual(self.viewer.settingsSection() + '1', 
+        self.assertEqual(self.viewer.settingsSection() + '1',
                          viewer2.settingsSection())
-        
+
     def testTitle(self):
         self.assertEqual(self.viewer.defaultTitle, self.viewer.title())
-        
+
     def testSetTitle(self):
         self.viewer.setTitle('New title')
         self.assertEqual('New title', self.viewer.title())
-        
+
     def testSetTitleSavesTitleInSettings(self):
         self.viewer.setTitle('New title')
         self.assertEqual('New title', self.settings.get(self.viewer.settingsSection(), 'title'))
-        
+
     def testSetTitleDoesNotSaveTitleInSettingsWhenTitleIsDefaultTitle(self):
         self.viewer.setTitle(self.viewer.defaultTitle)
         self.assertEqual('', self.settings.get(self.viewer.settingsSection(), 'title'))
@@ -143,7 +143,7 @@ class SortableViewerTest(test.TestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
         self.viewer = self.createViewer()
-        
+
     def createViewer(self):
         viewer = gui.viewer.mixin.SortableViewerMixin()
         viewer.settings = self.settings
@@ -152,7 +152,7 @@ class SortableViewerTest(test.TestCase):
         presentation = viewer.createSorter(task.TaskList())
         viewer.presentation = lambda: presentation
         return viewer
-        
+
     def testIsSortable(self):
         self.failUnless(self.viewer.isSortable())
 
@@ -170,7 +170,7 @@ class SortableViewerTest(test.TestCase):
     def testIsSortedBy(self):
         self.viewer.sortBy('description')
         self.failUnless(self.viewer.isSortedBy('description'))
-        
+
     def testSortOrderAscending(self):
         self.viewer.setSortOrderAscending(True)
         self.failUnless(self.viewer.isSortOrderAscending())
@@ -178,21 +178,21 @@ class SortableViewerTest(test.TestCase):
     def testSortOrderDescending(self):
         self.viewer.setSortOrderAscending(False)
         self.failIf(self.viewer.isSortOrderAscending())
-                
+
     def testSetSortCaseSensitive(self):
         self.viewer.setSortCaseSensitive(True)
         self.failUnless(self.viewer.isSortCaseSensitive())
-        
+
     def testSetSortCaseInsensitive(self):
         self.viewer.setSortCaseSensitive(False)
         self.failIf(self.viewer.isSortCaseSensitive())
-        
+
     def testApplySettingsWhenCreatingViewer(self):
         self.settings.set(self.viewer.settingsSection(), 'sortby', '["description"]')
         anotherViewer = self.createViewer()
-        anotherViewer.presentation().extend([task.Task(description='B'), 
+        anotherViewer.presentation().extend([task.Task(description='B'),
                                              task.Task(description='A')])
-        self.assertEqual(['A', 'B'], 
+        self.assertEqual(['A', 'B'],
                          [t.description() for t in anotherViewer.presentation()])
 
 
@@ -209,30 +209,30 @@ class SortableViewerForTasksTest(test.TestCase):
     def testSetSortByTaskStatusFirst(self):
         self.viewer.setSortByTaskStatusFirst(True)
         self.failUnless(self.viewer.isSortByTaskStatusFirst())
-        
+
     def testSetNoSortByTaskStatusFirst(self):
         self.viewer.setSortByTaskStatusFirst(False)
         self.failIf(self.viewer.isSortByTaskStatusFirst())
 
-      
+
 class DummyViewer(object):
     def isTreeViewer(self):
         return False
-    
+
     def createFilter(self, presentation):
         return presentation
 
 
-class SearchableViewerUnderTest(gui.viewer.mixin.SearchableViewerMixin, 
+class SearchableViewerUnderTest(gui.viewer.mixin.SearchableViewerMixin,
                                 DummyViewer):
-    pass   
+    pass
 
-    
+
 class SearchableViewerTest(test.TestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
         self.viewer = self.createViewer()
-        
+
     def createViewer(self):
         viewer = SearchableViewerUnderTest()
         # pylint: disable=W0201
@@ -241,13 +241,13 @@ class SearchableViewerTest(test.TestCase):
         presentation = viewer.createFilter(task.TaskList())
         viewer.presentation = lambda: presentation
         return viewer
-        
+
     def testIsSearchable(self):
         self.failUnless(self.viewer.isSearchable())
-        
+
     def testDefaultSearchFilter(self):
         self.assertEqual(('', False, False, False, False), self.viewer.getSearchFilter())
-        
+
     def testSetSearchFilterString(self):
         self.viewer.setSearchFilter('bla', matchCase=True)
         self.assertEqual('bla', self.settings.get(self.viewer.settingsSection(),
@@ -257,24 +257,24 @@ class SearchableViewerTest(test.TestCase):
         self.viewer.presentation().append(task.Task())
         self.viewer.setSearchFilter('bla')
         self.failIf(self.viewer.presentation())
-        
+
     def testSearchMatchCase(self):
         self.viewer.setSearchFilter('bla', matchCase=True)
-        self.assertEqual(True, 
-            self.settings.getboolean(self.viewer.settingsSection(), 
+        self.assertEqual(True,
+            self.settings.getboolean(self.viewer.settingsSection(),
                                      'searchfiltermatchcase'))
-        
+
     def testSearchMatchCase_AffectsPresenation(self):
         self.viewer.presentation().append(task.Task('BLA'))
         self.viewer.setSearchFilter('bla', matchCase=True)
         self.failIf(self.viewer.presentation())
-        
+
     def testSearchIncludesSubItems(self):
         self.viewer.setSearchFilter('bla', includeSubItems=True)
-        self.assertEqual(True, 
-            self.settings.getboolean(self.viewer.settingsSection(), 
+        self.assertEqual(True,
+            self.settings.getboolean(self.viewer.settingsSection(),
                                      'searchfilterincludesubitems'))
-        
+
     def testSearchIncludesSubItems_AffectsPresentation(self):
         parent = task.Task('parent')
         child = task.Task('child')
@@ -282,17 +282,17 @@ class SearchableViewerTest(test.TestCase):
         self.viewer.presentation().append(parent)
         self.viewer.setSearchFilter('parent', includeSubItems=True)
         self.assertEqual(2, len(self.viewer.presentation()))
-        
+
     def testSearchDescription(self):
         self.viewer.setSearchFilter('bla', searchDescription=True)
         self.assertEqual(True, self.settings.getboolean(self.viewer.settingsSection(),
                                                         'searchdescription'))
-        
+
     def testSearchDescription_AffectsPresentation(self):
         self.viewer.presentation().append(task.Task('subject', description='description'))
         self.viewer.setSearchFilter('descr', searchDescription=True)
         self.assertEqual(1, len(self.viewer.presentation()))
-        
+
     def testApplySettingsWhenCreatingViewer(self):
         self.settings.set(self.viewer.settingsSection(), 'searchfilterstring', 'whatever')
         anotherViewer = self.createViewer()
@@ -303,16 +303,16 @@ class SearchableViewerTest(test.TestCase):
 class FilterableViewerTest(test.TestCase):
     def setUp(self):
         self.viewer = gui.viewer.mixin.FilterableViewerMixin()
-        
+
     def testIsFilterable(self):
         self.failUnless(self.viewer.isFilterable())
 
 
-class FilterableViewerForTasksUnderTest(gui.viewer.mixin.FilterableViewerForTasksMixin, 
+class FilterableViewerForTasksUnderTest(gui.viewer.mixin.FilterableViewerForTasksMixin,
                                         DummyViewer):
     pass
-        
-        
+
+
 class FilterableViewerForTasks(test.TestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
@@ -340,17 +340,17 @@ class FilterableViewerForTasks(test.TestCase):
     def testHideInactiveTasks(self):
         self.viewer.hideTaskStatus(task.status.inactive)
         self.failUnless(self.viewer.isHidingTaskStatus(task.status.inactive))
-        
+
     def testHideInactiveTasks_SetsSetting(self):
         self.viewer.hideTaskStatus(task.status.inactive)
-        self.failUnless(self.settings.getboolean(self.viewer.settingsSection(), 
+        self.failUnless(self.settings.getboolean(self.viewer.settingsSection(),
                                                  'hideinactivetasks'))
 
     def testHideInactiveTasks_AffectsPresentation(self):
         self.viewer.presentation().append(task.Task(plannedStartDateTime=date.Tomorrow()))
         self.viewer.hideTaskStatus(task.status.inactive)
         self.failIf(self.viewer.presentation())
-    
+
     def testUnhideInactiveTasks(self):
         self.viewer.presentation().append(task.Task(plannedStartDateTime=date.Tomorrow()))
         self.viewer.hideTaskStatus(task.status.inactive)
@@ -363,40 +363,40 @@ class FilterableViewerForTasks(test.TestCase):
     def testHideLateTasks(self):
         self.viewer.hideTaskStatus(task.status.late)
         self.failUnless(self.viewer.isHidingTaskStatus(task.status.late))
-        
+
     def testHideLateTasks_SetsSetting(self):
         self.viewer.hideTaskStatus(task.status.late)
-        self.failUnless(self.settings.getboolean(self.viewer.settingsSection(), 
+        self.failUnless(self.settings.getboolean(self.viewer.settingsSection(),
                                                  'hidelatetasks'))
 
     def testHideLateTasks_AffectsPresentation(self):
         self.viewer.presentation().append(task.Task(plannedStartDateTime=date.Yesterday()))
         self.viewer.hideTaskStatus(task.status.late)
         self.failIf(self.viewer.presentation())
-    
+
     def testUnhideLateTasks(self):
         self.viewer.presentation().append(task.Task(plannedStartDateTime=date.Yesterday()))
         self.viewer.hideTaskStatus(task.status.late)
         self.viewer.hideTaskStatus(task.status.late, False)
         self.failUnless(self.viewer.presentation())
- 
+
     def testIsNotHidingDueSoonTasksByDefault(self):
         self.failIf(self.viewer.isHidingTaskStatus(task.status.duesoon))
 
     def testHideDueSoonTasks(self):
         self.viewer.hideTaskStatus(task.status.duesoon)
         self.failUnless(self.viewer.isHidingTaskStatus(task.status.duesoon))
-        
+
     def testHideDueSoonTasks_SetsSetting(self):
         self.viewer.hideTaskStatus(task.status.duesoon)
-        self.failUnless(self.settings.getboolean(self.viewer.settingsSection(), 
+        self.failUnless(self.settings.getboolean(self.viewer.settingsSection(),
                                                  'hideduesoontasks'))
 
     def testHideDueSoonTasks_AffectsPresentation(self):
         self.viewer.presentation().append(task.Task(dueDateTime=date.Now() + date.ONE_HOUR))
         self.viewer.hideTaskStatus(task.status.duesoon)
         self.failIf(self.viewer.presentation())
-    
+
     def testUnhideDueSoonTasks(self):
         self.viewer.presentation().append(task.Task(dueDateTime=date.Now() + date.ONE_HOUR))
         self.viewer.hideTaskStatus(task.status.duesoon)
@@ -409,41 +409,41 @@ class FilterableViewerForTasks(test.TestCase):
     def testHideOverDueTasks(self):
         self.viewer.hideTaskStatus(task.status.overdue)
         self.failUnless(self.viewer.isHidingTaskStatus(task.status.overdue))
-        
+
     def testHideOverDueTasks_SetsSetting(self):
         self.viewer.hideTaskStatus(task.status.overdue)
-        self.failUnless(self.settings.getboolean(self.viewer.settingsSection(), 
+        self.failUnless(self.settings.getboolean(self.viewer.settingsSection(),
                                                  'hideoverduetasks'))
 
     def testHideOverDueTasks_AffectsPresentation(self):
         self.viewer.presentation().append(task.Task(dueDateTime=date.Yesterday()))
         self.viewer.hideTaskStatus(task.status.overdue)
         self.failIf(self.viewer.presentation())
-    
+
     def testUnhideOverDueTasks(self):
         self.viewer.presentation().append(task.Task(dueDateTime=date.Yesterday()))
         self.viewer.hideTaskStatus(task.status.overdue)
         self.viewer.hideTaskStatus(task.status.overdue, False)
         self.failUnless(self.viewer.presentation())
-       
+
     def testIsNotHidingCompletedTasksByDefault(self):
         self.failIf(self.viewer.isHidingTaskStatus(task.status.completed))
-        
+
     def testHideCompletedTasks(self):
         self.viewer.hideTaskStatus(task.status.completed)
         self.failUnless(self.viewer.isHidingTaskStatus(task.status.completed))
-    
+
     def testHideCompletedTasks_SetsSetting(self):
         self.viewer.hideTaskStatus(task.status.completed)
         self.failUnless(self.settings.getboolean(self.viewer.settingsSection(),
                                                  'hidecompletedtasks'))
-    
+
     def testHideCompletedTasks_AffectsPresentation(self):
         self.viewer.presentation().append(task.Task(completionDateTime=date.Now()))
         self.viewer.hideTaskStatus(task.status.completed)
         self.failIf(self.viewer.presentation())
-        
-    def testUnhideCompletedTasks(self):    
+
+    def testUnhideCompletedTasks(self):
         self.viewer.presentation().append(task.Task(completionDateTime=date.Now()))
         self.viewer.hideTaskStatus(task.status.completed)
         self.viewer.hideTaskStatus(task.status.completed, False)
@@ -451,11 +451,11 @@ class FilterableViewerForTasks(test.TestCase):
 
     def testIsNotHidingCompositeTasksByDefault(self):
         self.failIf(self.viewer.isHidingCompositeTasks())
-        
+
     def testHideCompositeTasks(self):
         self.viewer.hideCompositeTasks()
         self.failUnless(self.viewer.isHidingCompositeTasks())
-        
+
     def testHideCompositeTasks_SetsSettings(self):
         self.viewer.hideCompositeTasks()
         self.failUnless(self.settings.getboolean(self.viewer.settingsSection(),
@@ -468,7 +468,7 @@ class FilterableViewerForTasks(test.TestCase):
         parent.addChild(child)
         self.viewer.presentation().append(parent)
         self.assertEqual([child], self.viewer.presentation())
-        
+
     def testUnhideCompositeTasks(self):
         self.viewer.hideCompositeTasks()
         parent = task.Task()
@@ -477,7 +477,7 @@ class FilterableViewerForTasks(test.TestCase):
         self.viewer.presentation().append(parent)
         self.viewer.hideCompositeTasks(False)
         self.assertEqual(2, len(self.viewer.presentation()))
-        
+
     def testClearAllFilters(self):
         self.viewer.hideCompositeTasks()
         for status in task.Task.possibleStatuses():
@@ -486,12 +486,12 @@ class FilterableViewerForTasks(test.TestCase):
         self.failIf(self.viewer.isHidingCompositeTasks())
         for status in task.Task.possibleStatuses():
             self.failIf(self.viewer.isHidingTaskStatus(status))
-        
+
     def testApplySettingsWhenCreatingViewer(self):
         self.settings.set(self.viewer.settingsSection(), 'hidecompletedtasks', 'True')
         anotherViewer = self.createViewer()
         anotherViewer.presentation().append(task.Task(completionDateTime=date.Now()))
-        self.failIf(anotherViewer.presentation())   
+        self.failIf(anotherViewer.presentation())
 
 
 class ViewerBaseClassTest(test.wxTestCase):
@@ -511,7 +511,7 @@ class ViewerBaseClassTest(test.wxTestCase):
 
 class ViewerIteratorTestCase(test.wxTestCase):
     treeMode = 'Subclass responsibility'
-    
+
     def createViewer(self):
         return gui.viewer.TaskViewer(self.window, self.taskFile,
             self.settings)
@@ -540,11 +540,11 @@ class ViewerIteratorTestCase(test.wxTestCase):
 class ViewerIteratorTestsMixin(object):
     def testEmptyPresentation(self):
         self.assertEqual([], self.getItemsFromIterator())
-        
+
     def testOneItem(self):
         self.taskList.append(task.Task())
         self.assertEqual(self.taskList, self.getItemsFromIterator())
-        
+
     def testOneParentAndOneChild(self):
         parent = task.Task('Z')
         child = task.Task('A', parent=parent)
@@ -554,7 +554,7 @@ class ViewerIteratorTestsMixin(object):
             expectedParentAndChildOrder = [parent, child]
         else:
             expectedParentAndChildOrder = [child, parent]
-        self.assertEqual(expectedParentAndChildOrder, 
+        self.assertEqual(expectedParentAndChildOrder,
                          self.getItemsFromIterator())
 
     def testOneParentOneChildAndOneGrandChild(self):
@@ -564,9 +564,9 @@ class ViewerIteratorTestsMixin(object):
         parent.addChild(child)
         child.addChild(grandChild)
         self.taskList.append(parent)
-        self.assertEqual([parent, child, grandChild], 
+        self.assertEqual([parent, child, grandChild],
                          self.getItemsFromIterator())
-    
+
     def testThatTasksNotInPresentationAreExcluded(self):
         parent = task.Task('parent')
         child = task.Task('child')
@@ -574,12 +574,12 @@ class ViewerIteratorTestsMixin(object):
         self.taskList.append(parent)
         self.viewer.setSearchFilter('parent', matchCase=True)
         self.assertEqual([parent], self.getItemsFromIterator())
-        
-    
+
+
 class TreeViewerIteratorTest(ViewerIteratorTestCase, ViewerIteratorTestsMixin):
     treeMode = 'True'
-        
-        
+
+
 class ListViewerIteratorTest(ViewerIteratorTestCase, ViewerIteratorTestsMixin):
     treeMode = 'False'
 
@@ -599,4 +599,4 @@ class ViewerWithColumnsTest(test.wxTestCase):
     def testDefaultColumnWidth(self):
         expectedWidth = hypertreelist._DEFAULT_COL_WIDTH # pylint: disable=W0212
         self.assertEqual(expectedWidth, self.viewer.getColumnWidth('subject'))
-        
+

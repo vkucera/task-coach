@@ -25,9 +25,9 @@ class SquareMap(tooltip.ToolTipMixin, squaremap.SquareMap):
     def __init__(self, parent, rootNode, onSelect, onEdit, popupMenu):
         self.__selection = []
         self.getItemTooltipData = parent.getItemTooltipData
-        super(SquareMap, self).__init__(parent, model=rootNode, adapter=parent, 
+        super(SquareMap, self).__init__(parent, model=rootNode, adapter=parent,
                                         highlight=False)
-        
+
         self.__tip = tooltip.SimpleToolTip(self)
         self.selectCommand = onSelect
         self.Bind(squaremap.EVT_SQUARE_SELECTED, self.onSelect)
@@ -35,13 +35,13 @@ class SquareMap(tooltip.ToolTipMixin, squaremap.SquareMap):
         self.Bind(squaremap.EVT_SQUARE_ACTIVATED, self.onEdit)
         self.popupMenu = popupMenu
         self.Bind(wx.EVT_RIGHT_DOWN, self.onPopup)
-        
+
     def RefreshAllItems(self, count): # pylint: disable=W0613
         self.UpdateDrawing()
-        
+
     def RefreshItems(self, *args): # pylint: disable=W0613
         self.UpdateDrawing()
-        
+
     def onSelect(self, event):
         if event.node == self.model:
             self.__selection = []
@@ -49,14 +49,14 @@ class SquareMap(tooltip.ToolTipMixin, squaremap.SquareMap):
             self.__selection = [event.node]
         wx.CallAfter(self.selectCommand)
         event.Skip()
-        
+
     def select(self, items):
         pass
-    
+
     def onEdit(self, event):
         self.editCommand(event)
         event.Skip()
-        
+
     def OnBeforeShowToolTip(self, x, y):
         item = squaremap.HotMapNavigator.findNodeAtPosition(self.hot_map, (x,y))
         if item is None or item == self.model:
@@ -70,12 +70,12 @@ class SquareMap(tooltip.ToolTipMixin, squaremap.SquareMap):
             return self.__tip
         else:
             return None
-        
+
     def onPopup(self, event):
         self.OnClickRelease(event) # Make sure the node is selected
         self.SetFocus()
         self.PopupMenu(self.popupMenu)
-    
+
     def curselection(self):
         return self.__selection
 
@@ -89,5 +89,5 @@ class SquareMap(tooltip.ToolTipMixin, squaremap.SquareMap):
 
     def GetMainWindow(self):
         return self
-    
+
     MainWindow = property(GetMainWindow)

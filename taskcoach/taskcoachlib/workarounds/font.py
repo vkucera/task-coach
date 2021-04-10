@@ -21,7 +21,7 @@ import wx
 wxFontFromNativeInfoString = wx.FontFromNativeInfoString
 
 def FontFromNativeInfoString(nativeInfoString):
-    ''' wx.FontFromNativeInfoString may throw an wx.PyAssertionError when the 
+    ''' wx.FontFromNativeInfoString may throw an wx.PyAssertionError when the
         PointSize is zero. This may happen when fonts are set on one platform
         and then used on another platform. Catch the exception and return None
         instead. '''

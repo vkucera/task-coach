@@ -52,7 +52,7 @@ class TemplatesDialog(sized_controls.SizedDialog):
     def __init__(self, settings, *args, **kwargs):
         self.settings = settings
         self._changing = False
-        super(TemplatesDialog, self).__init__(style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER, 
+        super(TemplatesDialog, self).__init__(style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER,
                                               *args, **kwargs)
         pane = self.GetContentsPane()
         pane.SetSizerType('vertical')
@@ -63,11 +63,11 @@ class TemplatesDialog(sized_controls.SizedDialog):
         self.SetMinSize(self.GetSize()) # Current size is min size
         self._buttonSizer.GetAffirmativeButton().Bind(wx.EVT_BUTTON, self.ok)
         self.CentreOnParent()
-    
+
     def createInterior(self, pane):
         self.createTemplateList(pane)
         self.createTemplateEntries(pane)
-        
+
     def createTemplateList(self, pane):
         panel = sized_controls.SizedPanel(pane)
         panel.SetSizerType('horizontal')
@@ -85,16 +85,16 @@ class TemplatesDialog(sized_controls.SizedDialog):
                 self._templateList.SetItemText(item, task.subject())
         self.createTemplateListButtons(panel)
         panel.Fit()
-        
+
     def createTemplateListButtons(self, pane):
         panel = sized_controls.SizedPanel(pane)
         panel.SetSizerType('vertical')
         self._btnDelete = self.createButton(panel, 'cross_red_icon', self.OnDelete, enable=False)
-        self._btnUp = self.createButton(panel, 'arrow_up_icon', self.OnUp, enable=False) 
+        self._btnUp = self.createButton(panel, 'arrow_up_icon', self.OnUp, enable=False)
         self._btnDown = self.createButton(panel, 'arrow_down_icon', self.OnDown, enable=False)
         self._btnAdd = self.createButton(panel, 'symbol_plus_icon', self.OnAdd)
         panel.Fit()
-        
+
     def createButton(self, parent, bitmapName, handler, enable=True):
         bitmap = wx.ArtProvider_GetBitmap(bitmapName, size=(32, 32))
         button = wx.BitmapButton(parent, bitmap=bitmap)
@@ -128,11 +128,11 @@ class TemplatesDialog(sized_controls.SizedDialog):
             ctrl.Bind(wx.EVT_TEXT, self.onValueChanged)
         self.enableEditPanel(False)
         panel.Fit()
-            
+
     def enableEditPanel(self, enable=True):
         for ctrl in self._taskControls:
             ctrl.Enable(enable)
-            
+
     def appendTemplate(self, parentItem, task):
         item = self._templateList.AppendItem(parentItem, task.subject(), data=wx.TreeItemData(task))
         for child in task.children():
@@ -219,7 +219,7 @@ class TemplatesDialog(sized_controls.SizedDialog):
 
     def OnAdd(self, event): # pylint: disable=W0613
         template = Task(subject=_('New task template'))
-        for name in ('plannedstartdatetmpl', 'duedatetmpl', 'completiondatetmpl', 
+        for name in ('plannedstartdatetmpl', 'duedatetmpl', 'completiondatetmpl',
                      'remindertmpl'):
             setattr(template, name, None)
         theTask = self._templates.addTemplate(template)
@@ -228,4 +228,4 @@ class TemplatesDialog(sized_controls.SizedDialog):
     def ok(self, event):
         self._templates.save()
         event.Skip()
-            
+

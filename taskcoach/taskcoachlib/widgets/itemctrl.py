@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-''' Base classes for controls with items, such as ListCtrl, TreeCtrl, 
+''' Base classes for controls with items, such as ListCtrl, TreeCtrl,
     and TreeListCtrl. ''' # pylint: disable=W0105
 
 
@@ -33,7 +33,7 @@ class _CtrlWithItemsMixin(object):
             return item.IsOk()          # for Tree(List)Ctrl
         except AttributeError:
             return item != wx.NOT_FOUND # for ListCtrl
-        
+
     def _objectBelongingTo(self, item):
         if not self._itemIsOk(item):
             return None
@@ -57,7 +57,7 @@ class _CtrlWithItemsMixin(object):
 
 class _CtrlWithPopupMenuMixin(_CtrlWithItemsMixin):
     ''' Base class for controls with popupmenu's. '''
-    
+
     @staticmethod
     def _attachPopupMenu(eventSource, eventTypes, eventHandler):
         for eventType in eventTypes:
@@ -72,7 +72,7 @@ class _CtrlWithItemPopupMenuMixin(_CtrlWithPopupMenuMixin):
         super(_CtrlWithItemPopupMenuMixin, self).__init__(*args, **kwargs)
         if self.__popupMenu is not None:
             self._attachPopupMenu(self,
-                (wx.EVT_TREE_ITEM_RIGHT_CLICK, wx.EVT_CONTEXT_MENU), 
+                (wx.EVT_TREE_ITEM_RIGHT_CLICK, wx.EVT_CONTEXT_MENU),
                 self.onItemPopupMenu)
 
     def onItemPopupMenu(self, event):
@@ -96,20 +96,20 @@ class _CtrlWithItemPopupMenuMixin(_CtrlWithPopupMenuMixin):
 
 
 class _CtrlWithColumnPopupMenuMixin(_CtrlWithPopupMenuMixin):
-    ''' This class enables a right-click popup menu on column headers. The 
-        popup menu should expect a public property columnIndex to be set so 
+    ''' This class enables a right-click popup menu on column headers. The
+        popup menu should expect a public property columnIndex to be set so
         that the control can tell the menu which column the user clicked to
         popup the menu. '''
-    
+
     def __init__(self, *args, **kwargs):
         self.__popupMenu = kwargs.pop('columnPopupMenu')
         super(_CtrlWithColumnPopupMenuMixin, self).__init__(*args, **kwargs)
         if self.__popupMenu is not None:
             self._attachPopupMenu(self, [wx.EVT_LIST_COL_RIGHT_CLICK],
                 self.onColumnPopupMenu)
-            
+
     def onColumnPopupMenu(self, event):
-        # We store the columnIndex in the menu, because it's near to 
+        # We store the columnIndex in the menu, because it's near to
         # impossible for commands in the menu to determine on what column the
         # menu was popped up.
         columnIndex = event.GetColumn()
@@ -123,11 +123,11 @@ class _CtrlWithColumnPopupMenuMixin(_CtrlWithPopupMenuMixin):
         window.SetFocus()
         self.PopupMenuXY(self.__popupMenu, *event.GetPosition())
         event.Skip(False)
-        
+
 
 class _CtrlWithDropTargetMixin(_CtrlWithItemsMixin):
     ''' Control that accepts files, e-mails or URLs being dropped onto items. '''
-    
+
     def __init__(self, *args, **kwargs):
         self.__onDropURLCallback = kwargs.pop('onDropURL', None)
         self.__onDropFilesCallback = kwargs.pop('onDropFiles', None)
@@ -175,7 +175,7 @@ class CtrlWithToolTipMixin(_CtrlWithItemsMixin, tooltip.ToolTipMixin):
         super(CtrlWithToolTipMixin, self).__init__(*args, **kwargs)
         self.__tip = tooltip.SimpleToolTip(self)
 
-    def OnBeforeShowToolTip(self, x, y): 
+    def OnBeforeShowToolTip(self, x, y):
         item, _, column = self.HitTest(wx.Point(x, y))
         domainObject = self._objectBelongingTo(item)
         if domainObject:
@@ -214,19 +214,19 @@ class Column(object):
         self.__editControlClass = kwargs.get('editControl', None)
         self.__parse = kwargs.get('parse', lambda value: value)
         self.__settings = kwargs.get('settings', None) # FIXME: Column shouldn't need to know about settings
-        
+
     def name(self):
         return self.__name
-        
+
     def header(self):
         return self.__columnHeader
-    
+
     def headerImageIndex(self):
         return self.__headerImageIndex
 
     def eventTypes(self):
         return self.__eventTypes
-    
+
     def setWidth(self, width):
         self.width = width
         if self.__resizeCallback:
@@ -249,42 +249,42 @@ class Column(object):
 
     def alignment(self):
         return self.__alignment
-    
+
     def defaultImageIndices(self, *args, **kwargs): # pylint: disable=W0613
         return {wx.TreeItemIcon_Normal: -1}
-        
+
     def imageIndices(self, *args, **kwargs):
         return self.__imageIndicesCallback(*args, **kwargs)
-    
+
     def hasImages(self):
         return self.__hasImages
-    
+
     def isEditable(self):
         return self.__editControlClass != None and self.__editCallback != None
-    
+
     def onEndEdit(self, item, newValue):
         self.__editCallback(item, newValue)
-                
+
     def editControl(self, parent, item, columnIndex, domainObject):
         value = self.value(domainObject)
         kwargs = dict(settings=self.__settings) if self.__settings else dict()
         # pylint: disable=W0142
         return self.__editControlClass(parent, wx.ID_ANY, item, columnIndex,
                                        parent, value, **kwargs)
-    
+
     def parse(self, value):
         return self.__parse(value)
-    
+
     def value(self, domainObject):
         return getattr(domainObject, self.name())()
-    
+
     def __eq__(self, other):
         return self.name() == other.name()
-        
+
 
 class _BaseCtrlWithColumnsMixin(object):
-    ''' A base class for all controls with columns. Note that this class and 
-        its subclasses do not support addition or deletion of columns after 
+    ''' A base class for all controls with columns. Note that this class and
+        its subclasses do not support addition or deletion of columns after
         the initial setting of columns. '''
 
     def __init__(self, *args, **kwargs):
@@ -300,7 +300,7 @@ class _BaseCtrlWithColumnsMixin(object):
     def _setColumns(self):
         for columnIndex, column in enumerate(self.__allColumns):
             self._insertColumn(columnIndex, column)
-            
+
     def _insertColumn(self, columnIndex, column):
         newMap = []
         for colIndex, col in self.__indexMap:
@@ -311,7 +311,7 @@ class _BaseCtrlWithColumnsMixin(object):
         newMap.append((columnIndex, column))
         self.__indexMap = newMap
 
-        self.InsertColumn(columnIndex, column.header() if column.headerImageIndex() == -1 else u'', 
+        self.InsertColumn(columnIndex, column.header() if column.headerImageIndex() == -1 else u'',
             format=column.alignment(), width=column.width)
 
         columnInfo = self.GetColumn(columnIndex)
@@ -336,9 +336,9 @@ class _BaseCtrlWithColumnsMixin(object):
             if colIndex == columnIndex:
                 return col
         raise IndexError
-   
+
     def _getColumnHeader(self, columnIndex):
-        ''' The currently displayed column header in the column with index 
+        ''' The currently displayed column header in the column with index
             columnIndex. '''
         return self.GetColumn(columnIndex).GetText()
 
@@ -349,14 +349,14 @@ class _BaseCtrlWithColumnsMixin(object):
         except ValueError:
             raise ValueError('%s: unknown column' % column.name())
 
-        
-class _CtrlWithHideableColumnsMixin(_BaseCtrlWithColumnsMixin):        
+
+class _CtrlWithHideableColumnsMixin(_BaseCtrlWithColumnsMixin):
     ''' This class supports hiding columns. '''
-    
+
     def showColumn(self, column, show=True):
-        ''' showColumn shows or hides the column for column. 
-            The column is actually removed or inserted into the control because 
-            although TreeListCtrl supports hiding columns, ListCtrl does not. 
+        ''' showColumn shows or hides the column for column.
+            The column is actually removed or inserted into the control because
+            although TreeListCtrl supports hiding columns, ListCtrl does not.
             '''
         columnIndex = self._getColumnIndex(column)
         if show and not self.isColumnVisible(column):
@@ -368,7 +368,7 @@ class _CtrlWithHideableColumnsMixin(_BaseCtrlWithColumnsMixin):
         return column in self._visibleColumns()
 
     def _getColumnIndex(self, column):
-        ''' _getColumnIndex returns the actual columnIndex of the column if it 
+        ''' _getColumnIndex returns the actual columnIndex of the column if it
             is visible, or the position it would have if it were visible. '''
         columnIndexWhenAllColumnsVisible = super(_CtrlWithHideableColumnsMixin, self)._getColumnIndex(column)
         for columnIndex, visibleColumn in enumerate(self._visibleColumns()):
@@ -381,15 +381,15 @@ class _CtrlWithHideableColumnsMixin(_BaseCtrlWithColumnsMixin):
 
 
 class _CtrlWithSortableColumnsMixin(_BaseCtrlWithColumnsMixin):
-    ''' This class adds sort indicators and clickable column headers that 
+    ''' This class adds sort indicators and clickable column headers that
         trigger callbacks to (re)sort the contents of the control. '''
-    
+
     def __init__(self, *args, **kwargs):
         super(_CtrlWithSortableColumnsMixin, self).__init__(*args, **kwargs)
         self.Bind(wx.EVT_LIST_COL_CLICK, self.onColumnClick)
         self.__currentSortColumn = self._getColumn(0)
         self.__currentSortImageIndex = -1
-                
+
     def onColumnClick(self, event):
         event.Skip(False)
         # Make sure the window this control is in has focus:
@@ -404,7 +404,7 @@ class _CtrlWithSortableColumnsMixin(_BaseCtrlWithColumnsMixin):
             # Use CallAfter to make sure the window this control is in is
             # activated before we process the column click:
             wx.CallAfter(column.sort, event)
-        
+
     def showSortColumn(self, column):
         if column != self.__currentSortColumn:
             self._clearSortImage()
@@ -414,16 +414,16 @@ class _CtrlWithSortableColumnsMixin(_BaseCtrlWithColumnsMixin):
     def showSortOrder(self, imageIndex):
         self.__currentSortImageIndex = imageIndex
         self._showSortImage()
-                
+
     def _clearSortImage(self):
         self.__setSortColumnImage(-1)
-    
+
     def _showSortImage(self):
         self.__setSortColumnImage(self.__currentSortImageIndex)
-            
+
     def _currentSortColumn(self):
         return self.__currentSortColumn
-        
+
     def __setSortColumnImage(self, imageIndex):
         columnIndex = self._getColumnIndex(self.__currentSortColumn)
         columnInfo = self.GetColumn(columnIndex)
@@ -438,36 +438,36 @@ class _CtrlWithAutoResizedColumnsMixin(autowidth.AutoColumnWidthMixin):
     def __init__(self, *args, **kwargs):
         super(_CtrlWithAutoResizedColumnsMixin, self).__init__(*args, **kwargs)
         self.Bind(wx.EVT_LIST_COL_END_DRAG, self.onEndColumnResize)
-        
+
     def onEndColumnResize(self, event):
         ''' Save the column widths after the user did a resize. '''
         for index, column in enumerate(self._visibleColumns()):
             column.setWidth(self.GetColumnWidth(index))
         event.Skip()
-        
 
-class CtrlWithColumnsMixin(_CtrlWithAutoResizedColumnsMixin, 
+
+class CtrlWithColumnsMixin(_CtrlWithAutoResizedColumnsMixin,
                            _CtrlWithHideableColumnsMixin,
-                           _CtrlWithSortableColumnsMixin, 
+                           _CtrlWithSortableColumnsMixin,
                            _CtrlWithColumnPopupMenuMixin):
-    ''' CtrlWithColumnsMixin combines the functionality of its four parent 
-        classes: automatic resizing of columns, hideable columns, columns with 
+    ''' CtrlWithColumnsMixin combines the functionality of its four parent
+        classes: automatic resizing of columns, hideable columns, columns with
         sort indicators, and column popup menu's. '''
-        
+
     def showColumn(self, column, show=True):
         super(CtrlWithColumnsMixin, self).showColumn(column, show)
         # Show sort indicator if the column that was just made visible is being sorted on
         if show and column == self._currentSortColumn():
             self._showSortImage()
-            
+
     def _clearSortImage(self):
         # Only clear the sort image if the column in question is visible
         if self.isColumnVisible(self._currentSortColumn()):
             super(CtrlWithColumnsMixin, self)._clearSortImage()
-            
+
     def _showSortImage(self):
         # Only show the sort image if the column in question is visible
         if self.isColumnVisible(self._currentSortColumn()):
             super(CtrlWithColumnsMixin, self)._showSortImage()
-            
+
 

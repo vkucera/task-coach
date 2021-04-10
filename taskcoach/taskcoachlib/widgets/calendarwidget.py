@@ -41,7 +41,7 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
                                                  self.OnDropFiles,
                                                  self.OnDropMail)
 
-        super(_CalendarContent, self).__init__(parent, wx.ID_ANY, 
+        super(_CalendarContent, self).__init__(parent, wx.ID_ANY,
                                                *args, **kwargs)
 
         self.SetDropTarget(self.dropTarget)
@@ -75,7 +75,7 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
 
     @staticmethod
     def __formatTime(dateTime, includeMinutes=False):
-        return render.time(TaskSchedule.tcDateTime(dateTime), 
+        return render.time(TaskSchedule.tcDateTime(dateTime),
                            minutes=includeMinutes)
 
     def _handleDrop(self, x, y, droppedObject, cb):
@@ -86,10 +86,10 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
                 if isinstance(item, TaskSchedule):
                     cb(item.task, droppedObject)
                 else:
-                    datetime = date.DateTime(item.GetYear(), 
-                                             item.GetMonth() + 1, 
+                    datetime = date.DateTime(item.GetYear(),
+                                             item.GetMonth() + 1,
                                              item.GetDay())
-                    cb(None, droppedObject, plannedStartDateTime=datetime, 
+                    cb(None, droppedObject, plannedStartDateTime=datetime,
                        dueDateTime=datetime.endOfDay())
 
     def GetPrintout(self, settings):
@@ -246,13 +246,13 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
 
     def GetItemCount(self):
         return len(self.GetSchedules())
-        
+
     def OnBeforeShowToolTip(self, x, y):
         originX, originY = self.GetViewStart()
         unitX, unitY = self.GetScrollPixelsPerUnit()
 
         try:
-            _, _, schedule = self._findSchedule(wx.Point(x + originX * unitX, 
+            _, _, schedule = self._findSchedule(wx.Point(x + originX * unitX,
                                                          y + originY * unitY))
         except TypeError:
             return
@@ -270,7 +270,7 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
 
     def GetMainWindow(self):
         return self
-    
+
     MainWindow = property(GetMainWindow)
 
     def curselection(self):
@@ -285,8 +285,8 @@ class Calendar(wx.Panel):
         super(Calendar, self).__init__(parent)
 
         self._headers = wx.Panel(self)
-        self._content = _CalendarContent(self, taskList, iconProvider, 
-                                         onSelect, onEdit, onCreate, popupMenu, 
+        self._content = _CalendarContent(self, taskList, iconProvider,
+                                         onSelect, onEdit, onCreate, popupMenu,
                                          *args, **kwargs)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -308,10 +308,10 @@ class Calendar(wx.Panel):
 
     def SetShowUnplanned(self, doShow):
         self._content.SetShowUnplanned(doShow)
-        
+
     def SetWeekStartMonday(self):
         self._content.SetWeekStart(wxSCHEDULER_WEEKSTART_MONDAY)
-        
+
     def SetWeekStartSunday(self):
         self._content.SetWeekStart(wxSCHEDULER_WEEKSTART_SUNDAY)
 
@@ -376,10 +376,10 @@ class TaskSchedule(wxSchedule):
 
     def SetEnd(self, end):
         if self.task.completed():
-            command.EditCompletionDateTimeCommand(items=[self.task], 
+            command.EditCompletionDateTimeCommand(items=[self.task],
                                                   newValue=self.tcDateTime(end)).do()
         else:
-            command.EditDueDateTimeCommand(items=[self.task], 
+            command.EditDueDateTimeCommand(items=[self.task],
                                            newValue=self.tcDateTime(end)).do()
 
     def Offset(self, ts):
@@ -387,17 +387,17 @@ class TaskSchedule(wxSchedule):
         if self.task.plannedStartDateTime() != date.DateTime():
             start = self.GetStart()
             start.AddTS(ts)
-            command.EditPlannedStartDateTimeCommand(items=[self.task], 
+            command.EditPlannedStartDateTimeCommand(items=[self.task],
                                                     newValue=self.tcDateTime(start)).do()
         if self.task.completed():
             end = self.GetEnd()
             end.AddTS(ts)
-            command.EditCompletionDateTimeCommand(items=[self.task], 
+            command.EditCompletionDateTimeCommand(items=[self.task],
                                                   newValue=self.tcDateTime(end)).do()
         elif self.task.dueDateTime() != date.DateTime():
             end = self.GetEnd()
             end.AddTS(ts)
-            command.EditDueDateTimeCommand(items=[self.task], 
+            command.EditDueDateTimeCommand(items=[self.task],
                                            newValue=self.tcDateTime(end)).do()
 
     @property
@@ -414,7 +414,7 @@ class TaskSchedule(wxSchedule):
             end = self.task.completionDateTime() if self.task.completed() else self.task.dueDateTime()
             self.end = self.wxDateTime(end,
                                        self.tupleFromDateTime(date.Now().endOfDay()))
-            
+
             if self.task.completed():
                 self.done = True
 

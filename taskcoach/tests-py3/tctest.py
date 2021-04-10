@@ -46,13 +46,13 @@ class TestCase(unittest.TestCase):
         self.assertEqual(len(expectedList), len(actualList))
         for item in expectedList:
             self.assertTrue(item in actualList)
-            
+
     def registerObserver(self, eventType, eventSource=None):
         if not hasattr(self, 'events'):
             self.events = []  # pylint: disable=W0201
         patterns.Publisher().registerObserver(self.onEvent, eventType=eventType,
                                               eventSource=eventSource)
-        
+
     def onEvent(self, event):
         self.events.append(event)
 

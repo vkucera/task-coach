@@ -42,7 +42,7 @@ class iCalendarWriter(object):
                 selection = extendedWithAncestors(selection)
             items = [item for item in items if item in selection]
         return self.writeItems(items)
-    
+
     def writeItems(self, items):
         self.__fd.write('BEGIN:VCALENDAR\r\n')
         self._writeMetaData()
@@ -57,6 +57,6 @@ class iCalendarWriter(object):
     def _writeMetaData(self):
         self.__fd.write('VERSION:2.0\r\n')
         domain = meta.url[len('http://'):].strip('/')
-        self.__fd.write('PRODID:-//%s//NONSGML %s V%s//EN\r\n'%(domain, 
-                                                                meta.name, 
+        self.__fd.write('PRODID:-//%s//NONSGML %s V%s//EN\r\n'%(domain,
+                                                                meta.name,
                                                                 meta.version))

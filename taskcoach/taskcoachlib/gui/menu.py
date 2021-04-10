@@ -34,7 +34,7 @@ class Menu(wx.Menu, uicommand.UICommandContainerMixin):
         self._window = window
         self._accels = list()
         self._observers = list()
-        
+
     def __len__(self):
         return self.GetMenuItemCount()
 
@@ -64,27 +64,27 @@ class Menu(wx.Menu, uicommand.UICommandContainerMixin):
         return cmd
 
     def appendMenu(self, text, subMenu, bitmap=None):
-        subMenuItem = wx.MenuItem(self, id=IdProvider.get(), text=text, 
+        subMenuItem = wx.MenuItem(self, id=IdProvider.get(), text=text,
                                   subMenu=subMenu)
         if bitmap:
-            subMenuItem.SetBitmap(wx.ArtProvider_GetBitmap(bitmap, 
+            subMenuItem.SetBitmap(wx.ArtProvider_GetBitmap(bitmap,
                 wx.ART_MENU, (16, 16)))
         self._accels.extend(subMenu.accelerators())
         self.AppendItem(subMenuItem)
 
     def invokeMenuItem(self, menuItem):
-        ''' Programmatically invoke the menuItem. This is mainly for testing 
+        ''' Programmatically invoke the menuItem. This is mainly for testing
             purposes. '''
         self._window.ProcessEvent(wx.CommandEvent( \
             wx.wxEVT_COMMAND_MENU_SELECTED, winid=menuItem.GetId()))
-    
+
     def openMenu(self):
-        ''' Programmatically open the menu. This is mainly for testing 
+        ''' Programmatically open the menu. This is mainly for testing
             purposes. '''
         # On Mac OSX, an explicit UpdateWindowUI is needed to ensure that
         # menu items are updated before the menu is opened. This is not needed
         # on other platforms, but it doesn't hurt either.
-        self._window.UpdateWindowUI() 
+        self._window.UpdateWindowUI()
         self._window.ProcessEvent(wx.MenuEvent(wx.wxEVT_MENU_OPEN, menu=self))
 
 
@@ -99,7 +99,7 @@ class DynamicMenu(Menu):
         self._labelInParentMenu = self.__GetLabelText(labelInParentMenu)
         self.registerForMenuUpdate()
         self.updateMenu()
-         
+
     def registerForMenuUpdate(self):
         ''' Subclasses are responsible for binding an event to onUpdateMenu so
             that the menu gets a chance to update itself at the right time. '''
@@ -125,15 +125,15 @@ class DynamicMenu(Menu):
         try:  # Prepare for menu or window to be destroyed
             self.updateMenu()
         except wx.PyDeadObjectError:
-            pass 
-       
+            pass
+
     def updateMenu(self):
         ''' Updating the menu consists of two steps: updating the menu item
             of this menu in its parent menu, e.g. to enable or disable it, and
             updating the menu items of this menu. '''
         self.updateMenuItemInParentMenu()
         self.updateMenuItems()
-            
+
     def updateMenuItemInParentMenu(self):
         ''' Enable or disable the menu item in the parent menu, depending on
             what enabled() returns. '''
@@ -157,14 +157,14 @@ class DynamicMenu(Menu):
     def updateMenuItems(self):
         ''' Update the menu items of this menu. '''
         pass
-    
+
     def enabled(self):
         ''' Return a boolean indicating whether this menu should be enabled in
-            its parent menu. This method is called by 
+            its parent menu. This method is called by
             updateMenuItemInParentMenu(). It returns True by default. Override
             in a subclass as needed.'''
         return True
-    
+
     @staticmethod
     def __GetLabelText(menuText):
         ''' Remove accelerators from the menuText. This is necessary because on
@@ -172,7 +172,7 @@ class DynamicMenu(Menu):
             different even though they are really the same. '''
         return menuText.replace('&', '').replace('_', '')
 
-            
+
 class DynamicMenuThatGetsUICommandsFromViewer(DynamicMenu):
     def __init__(self, viewer, parentMenu=None, labelInParentMenu=''):  # pylint: disable=W0621
         self._uiCommands = None
@@ -180,7 +180,7 @@ class DynamicMenuThatGetsUICommandsFromViewer(DynamicMenu):
             viewer, parentMenu, labelInParentMenu)
 
     def registerForMenuUpdate(self):
-        # Refill the menu whenever the menu is opened, because the menu might 
+        # Refill the menu whenever the menu is opened, because the menu might
         # depend on the status of the viewer:
         self._window.Bind(wx.EVT_MENU_OPEN, self.onUpdateMenu_Deprecated)
 
@@ -194,10 +194,10 @@ class DynamicMenuThatGetsUICommandsFromViewer(DynamicMenu):
         self.clearMenu()
         self.fillMenu(newCommands)
         self._uiCommands = newCommands
-            
+
     def fillMenu(self, uiCommands):
         self.appendUICommands(*uiCommands)  # pylint: disable=W0142
-        
+
     def getUICommands(self):
         raise NotImplementedError
 
@@ -224,7 +224,7 @@ class MainMenu(wx.MenuBar):
             accels.extend(menu.accelerators())
         mainwindow.SetAcceleratorTable(wx.AcceleratorTable(accels))
 
-       
+
 class FileMenu(Menu):
     def __init__(self, mainwindow, settings, iocontroller, viewerContainer):
         super(FileMenu, self).__init__(mainwindow)
@@ -270,23 +270,23 @@ class FileMenu(Menu):
             except ImportError:
                 pass
             else:
-                self.appendUICommands(uicommand.FileSynchronize(iocontroller=iocontroller, 
+                self.appendUICommands(uicommand.FileSynchronize(iocontroller=iocontroller,
                                                                 settings=settings))
-        self.__recentFilesStartPosition = len(self) 
+        self.__recentFilesStartPosition = len(self)
         self.appendUICommands(None, uicommand.FileQuit())
         self._window.Bind(wx.EVT_MENU_OPEN, self.onOpenMenu)
 
     def onOpenMenu(self, event):
         if event.GetMenu() == self:
             self.__removeRecentFileMenuItems()
-            self.__insertRecentFileMenuItems()        
+            self.__insertRecentFileMenuItems()
         event.Skip()
-    
+
     def __insertRecentFileMenuItems(self):
         recentFiles = self.__settings.getlist('file', 'recentfiles')
         if not recentFiles:
             return
-        maximumNumberOfRecentFiles = self.__settings.getint('file', 
+        maximumNumberOfRecentFiles = self.__settings.getint('file',
             'maxrecentfiles')
         recentFiles = recentFiles[:maximumNumberOfRecentFiles]
         self.__separator = self.InsertSeparator(self.__recentFilesStartPosition)
@@ -295,7 +295,7 @@ class FileMenu(Menu):
             recentFileMenuPosition = self.__recentFilesStartPosition + 1 + index
             recentFileOpenUICommand = uicommand.RecentFileOpen(filename=recentFile,
                 index=recentFileNumber, iocontroller=self.__iocontroller)
-            recentFileOpenUICommand.addToMenu(self, self._window, 
+            recentFileOpenUICommand.addToMenu(self, self._window,
                 recentFileMenuPosition)
             self.__recentFileUICommands.append(recentFileOpenUICommand)
 
@@ -318,8 +318,8 @@ class ExportMenu(Menu):
             uicommand.FileExportAsCSV(**kwargs),
             uicommand.FileExportAsICalendar(**kwargs),
             uicommand.FileExportAsTodoTxt(**kwargs))
-        
-        
+
+
 class ImportMenu(Menu):
     def __init__(self, mainwindow, iocontroller):
         super(ImportMenu, self).__init__(mainwindow)
@@ -339,11 +339,11 @@ class TaskTemplateMenu(DynamicMenu):
 
     def onTemplatesSaved(self):
         self.onUpdateMenu(None, None)
-    
+
     def updateMenuItems(self):
         self.clearMenu()
         self.fillMenu(self.getUICommands())
-     
+
     def fillMenu(self, uiCommands):
         self.appendUICommands(*uiCommands)  # pylint: disable=W0142
 
@@ -370,7 +370,7 @@ class EditMenu(Menu):
             uicommand.Edit(viewer=viewerContainer, id=wx.ID_EDIT),
             uicommand.Delete(viewer=viewerContainer, id=wx.ID_DELETE),
             None)
-        # Leave sufficient room for command names in the Undo and Redo menu 
+        # Leave sufficient room for command names in the Undo and Redo menu
         # items:
         self.appendMenu(_('&Select') + ' ' * 50,
                         SelectMenu(mainwindow, viewerContainer))
@@ -401,7 +401,7 @@ activatePreviousViewerId = wx.NewId()
 class ViewMenu(Menu):
     def __init__(self, mainwindow, settings, viewerContainer, taskFile):
         super(ViewMenu, self).__init__(mainwindow)
-        self.appendMenu(_('&New viewer'), 
+        self.appendMenu(_('&New viewer'),
             ViewViewerMenu(mainwindow, settings, viewerContainer, taskFile),
                 'viewnewviewer')
         activateNextViewer = uicommand.ActivateViewer(viewer=viewerContainer,
@@ -419,16 +419,16 @@ class ViewMenu(Menu):
             None)
         self.appendMenu(_('&Mode'),
                         ModeMenu(mainwindow, self, _('&Mode')))
-        self.appendMenu(_('&Filter'), 
+        self.appendMenu(_('&Filter'),
                         FilterMenu(mainwindow, self, _('&Filter')))
         self.appendMenu(_('&Sort'),
                         SortMenu(mainwindow, self, _('&Sort')))
-        self.appendMenu(_('&Columns'), 
+        self.appendMenu(_('&Columns'),
                         ColumnMenu(mainwindow, self, _('&Columns')))
         self.appendMenu(_('&Rounding'),
                         RoundingMenu(mainwindow, self, _('&Rounding')))
         self.appendUICommands(None)
-        self.appendMenu(_('&Tree options'), 
+        self.appendMenu(_('&Tree options'),
                         ViewTreeOptionsMenu(mainwindow, viewerContainer),
                         'treeview')
         self.appendUICommands(None)
@@ -484,8 +484,8 @@ class ViewViewerMenu(Menu):
                           helpText=_('Open a new tab with a viewer that dependencies between weighted tasks over time'),
                           viewerClass=taskcoachlib.gui.viewer.TaskInterdepsViewer, **kwargs))
         self.appendUICommands(*viewViewerCommands)
-       
-                                      
+
+
 class ViewTreeOptionsMenu(Menu):
     def __init__(self, mainwindow, viewerContainer):
         super(ViewTreeOptionsMenu, self).__init__(mainwindow)
@@ -498,24 +498,24 @@ class ModeMenu(DynamicMenuThatGetsUICommandsFromViewer):
     def enabled(self):
         return self._window.viewer.hasModes() and \
             bool(self._window.viewer.getModeUICommands())
-    
+
     def getUICommands(self):
         return self._window.viewer.getModeUICommands()
-    
+
 
 class FilterMenu(DynamicMenuThatGetsUICommandsFromViewer):
     def enabled(self):
         return self._window.viewer.isFilterable() and \
             bool(self._window.viewer.getFilterUICommands())
-    
+
     def getUICommands(self):
         return self._window.viewer.getFilterUICommands()
-    
-    
+
+
 class ColumnMenu(DynamicMenuThatGetsUICommandsFromViewer):
     def enabled(self):
         return self._window.viewer.hasHideableColumns()
-    
+
     def getUICommands(self):
         return self._window.viewer.getColumnUICommands()
 
@@ -523,7 +523,7 @@ class ColumnMenu(DynamicMenuThatGetsUICommandsFromViewer):
 class SortMenu(DynamicMenuThatGetsUICommandsFromViewer):
     def enabled(self):
         return self._window.viewer.isSortable()
-    
+
     def getUICommands(self):
         return self._window.viewer.getSortUICommands()
 
@@ -531,10 +531,10 @@ class SortMenu(DynamicMenuThatGetsUICommandsFromViewer):
 class RoundingMenu(DynamicMenuThatGetsUICommandsFromViewer):
     def enabled(self):
         return self._window.viewer.supportsRounding()
-    
+
     def getUICommands(self):
         return self._window.viewer.getRoundingUICommands()
-    
+
 
 class ToolBarMenu(Menu):
     def __init__(self, mainwindow, settings):
@@ -558,19 +558,19 @@ class NewMenu(Menu):
         tasks = taskFile.tasks()
         self.appendUICommands(
             uicommand.TaskNew(taskList=tasks, settings=settings),
-            uicommand.NewTaskWithSelectedTasksAsPrerequisites(taskList=tasks, 
+            uicommand.NewTaskWithSelectedTasksAsPrerequisites(taskList=tasks,
                 viewer=viewerContainer, settings=settings),
-            uicommand.NewTaskWithSelectedTasksAsDependencies(taskList=tasks, 
+            uicommand.NewTaskWithSelectedTasksAsDependencies(taskList=tasks,
                 viewer=viewerContainer, settings=settings))
         self.appendMenu(_('New task from &template'),
             TaskTemplateMenu(mainwindow, taskList=tasks, settings=settings),
             'newtmpl')
         self.appendUICommands(
             None,
-            uicommand.EffortNew(viewer=viewerContainer, 
-                                effortList=taskFile.efforts(), 
+            uicommand.EffortNew(viewer=viewerContainer,
+                                effortList=taskFile.efforts(),
                                 taskList=tasks, settings=settings),
-            uicommand.CategoryNew(categories=taskFile.categories(), 
+            uicommand.CategoryNew(categories=taskFile.categories(),
                                   settings=settings),
             uicommand.NoteNew(notes=taskFile.notes(), settings=settings),
             None,
@@ -590,7 +590,7 @@ class ActionMenu(Menu):
                                          settings=settings),
             None,
             uicommand.AddNote(viewer=viewerContainer, settings=settings),
-            uicommand.OpenAllNotes(viewer=viewerContainer, 
+            uicommand.OpenAllNotes(viewer=viewerContainer,
                                    settings=settings),
             None,
             uicommand.Mail(viewer=viewerContainer),
@@ -598,7 +598,7 @@ class ActionMenu(Menu):
         self.appendMenu(_('&Toggle category'),
                         ToggleCategoryMenu(mainwindow, categories=categories,
                                            viewer=viewerContainer),
-                        'folder_blue_arrow_icon')        
+                        'folder_blue_arrow_icon')
         # Start of task specific actions:
         self.appendUICommands(
             None,
@@ -606,7 +606,7 @@ class ActionMenu(Menu):
             uicommand.TaskMarkActive(settings=settings, viewer=viewerContainer),
             uicommand.TaskMarkCompleted(settings=settings, viewer=viewerContainer),
             None)
-        self.appendMenu(_('Change task &priority'), 
+        self.appendMenu(_('Change task &priority'),
                         TaskPriorityMenu(mainwindow, tasks, viewerContainer),
                         'incpriority')
         self.appendUICommands(
@@ -625,9 +625,9 @@ class TaskPriorityMenu(Menu):
             uicommand.TaskIncPriority(**kwargs),
             uicommand.TaskDecPriority(**kwargs),
             uicommand.TaskMaxPriority(**kwargs),
-            uicommand.TaskMinPriority(**kwargs))            
+            uicommand.TaskMinPriority(**kwargs))
 
-        
+
 class HelpMenu(Menu):
     def __init__(self, mainwindow, settings, iocontroller):
         super(HelpMenu, self).__init__(mainwindow)
@@ -661,16 +661,16 @@ class TaskBarMenu(Menu):
             'newtmpl')
         self.appendUICommands(None)  # Separator
         self.appendUICommands(
-            uicommand.EffortNew(effortList=efforts, taskList=tasks, 
+            uicommand.EffortNew(effortList=efforts, taskList=tasks,
                                 settings=settings),
-            uicommand.CategoryNew(categories=taskFile.categories(), 
+            uicommand.CategoryNew(categories=taskFile.categories(),
                                   settings=settings),
             uicommand.NoteNew(notes=taskFile.notes(), settings=settings))
         self.appendUICommands(None)  # Separator
         label = _('&Start tracking effort')
         self.appendMenu(label,
-            StartEffortForTaskMenu(taskBarIcon, 
-                                   base.filter.DeletedFilter(tasks), 
+            StartEffortForTaskMenu(taskBarIcon,
+                                   base.filter.DeletedFilter(tasks),
                                    self, label), 'clock_icon')
         self.appendUICommands(uicommand.EffortStop(viewer=viewer,
                                                    effortList=efforts,
@@ -679,33 +679,33 @@ class TaskBarMenu(Menu):
             None,
             uicommand.MainWindowRestore(),
             uicommand.FileQuit())
-        
+
 
 class ToggleCategoryMenu(DynamicMenu):
     def __init__(self, mainwindow, categories, viewer):  # pylint: disable=W0621
         self.categories = categories
         self.viewer = viewer
         super(ToggleCategoryMenu, self).__init__(mainwindow)
-        
+
     def registerForMenuUpdate(self):
-        for eventType in (self.categories.addItemEventType(), 
+        for eventType in (self.categories.addItemEventType(),
                           self.categories.removeItemEventType()):
             patterns.Publisher().registerObserver(self.onUpdateMenu_Deprecated,
                                                   eventType=eventType,
                                                   eventSource=self.categories)
-        patterns.Publisher().registerObserver(self.onUpdateMenu_Deprecated, 
+        patterns.Publisher().registerObserver(self.onUpdateMenu_Deprecated,
             eventType=category.Category.subjectChangedEventType())
 
     def updateMenuItems(self):
         self.clearMenu()
         self.addMenuItemsForCategories(self.categories.rootItems(), self)
-            
+
     def addMenuItemsForCategories(self, categories, menu):
         # pylint: disable=W0621
         categories = categories[:]
         categories.sort(key=lambda category: category.subject().lower())
         for category in categories:
-            uiCommand = uicommand.ToggleCategory(category=category, 
+            uiCommand = uicommand.ToggleCategory(category=category,
                                                  viewer=self.viewer)
             uiCommand.addToMenu(menu, self._window)
         categoriesWithChildren = [category for category in categories if category.children()]
@@ -714,31 +714,31 @@ class ToggleCategoryMenu(DynamicMenu):
             for category in categoriesWithChildren:
                 subMenu = Menu(self._window)
                 self.addMenuItemsForCategories(category.children(), subMenu)
-                menu.AppendSubMenu(subMenu, self.subMenuLabel(category))            
-    
+                menu.AppendSubMenu(subMenu, self.subMenuLabel(category))
+
     @staticmethod
     def subMenuLabel(category):  # pylint: disable=W0621
         return _('%s (subcategories)') % category.subject()
-    
+
     def enabled(self):
         return bool(self.categories)
-    
-                   
+
+
 class StartEffortForTaskMenu(DynamicMenu):
-    def __init__(self, taskBarIcon, tasks, parentMenu=None, 
+    def __init__(self, taskBarIcon, tasks, parentMenu=None,
                  labelInParentMenu=''):
         self.tasks = tasks
-        super(StartEffortForTaskMenu, self).__init__(taskBarIcon, parentMenu, 
+        super(StartEffortForTaskMenu, self).__init__(taskBarIcon, parentMenu,
                                                      labelInParentMenu)
 
     def registerForMenuUpdate(self):
-        for eventType in (self.tasks.addItemEventType(), 
+        for eventType in (self.tasks.addItemEventType(),
                           self.tasks.removeItemEventType()):
             patterns.Publisher().registerObserver(self.onUpdateMenu_Deprecated,
                                                   eventType=eventType,
                                                   eventSource=self.tasks)
         for eventType in (task.Task.subjectChangedEventType(),
-                          task.Task.trackingChangedEventType(), 
+                          task.Task.trackingChangedEventType(),
                           task.Task.plannedStartDateTimeChangedEventType(),
                           task.Task.dueDateTimeChangedEventType(),
                           task.Task.actualStartDateTimeChangedEventType(),
@@ -746,7 +746,7 @@ class StartEffortForTaskMenu(DynamicMenu):
             if eventType.startswith('pubsub'):
                 pub.subscribe(self.onUpdateMenu, eventType)
             else:
-                patterns.Publisher().registerObserver(self.onUpdateMenu_Deprecated, 
+                patterns.Publisher().registerObserver(self.onUpdateMenu_Deprecated,
                                                       eventType)
 
     def updateMenuItems(self):
@@ -755,7 +755,7 @@ class StartEffortForTaskMenu(DynamicMenu):
         trackableRootTasks.sort(key=lambda task: task.subject())
         for trackableRootTask in trackableRootTasks:
             self.addMenuItemForTask(trackableRootTask, self)
-                
+
     def addMenuItemForTask(self, task, menu):  # pylint: disable=W0621
         uiCommand = uicommand.EffortStartForTask(task=task, taskList=self.tasks)
         uiCommand.addToMenu(menu, self._window)
@@ -767,14 +767,14 @@ class StartEffortForTaskMenu(DynamicMenu):
             for child in trackableChildren:
                 self.addMenuItemForTask(child, subMenu)
             menu.AppendSubMenu(subMenu, _('%s (subtasks)') % task.subject())
-                        
+
     def enabled(self):
         return bool(self._trackableRootTasks())
 
     def _trackableRootTasks(self):
         return [rootTask for rootTask in self.tasks.rootItems() \
                 if not rootTask.completed()]
-    
+
 
 class TaskPopupMenu(Menu):
     def __init__(self, mainwindow, settings, tasks, efforts, categories, taskViewer):
@@ -805,10 +805,10 @@ class TaskPopupMenu(Menu):
         self.appendUICommands(
             None,
             uicommand.TaskMarkInactive(settings=settings, viewer=taskViewer),
-            uicommand.TaskMarkActive(settings=settings, viewer=taskViewer),    
+            uicommand.TaskMarkActive(settings=settings, viewer=taskViewer),
             uicommand.TaskMarkCompleted(settings=settings, viewer=taskViewer),
             None)
-        self.appendMenu(_('&Priority'), 
+        self.appendMenu(_('&Priority'),
                         TaskPriorityMenu(mainwindow, tasks, taskViewer),
                         'incpriority')
         self.appendUICommands(
@@ -839,7 +839,7 @@ class EffortPopupMenu(Menu):
 
 
 class CategoryPopupMenu(Menu):
-    def __init__(self, mainwindow, settings, taskFile, categoryViewer, 
+    def __init__(self, mainwindow, settings, taskFile, categoryViewer,
                  localOnly=False):
         super(CategoryPopupMenu, self).__init__(mainwindow)
         categories = categoryViewer.presentation()
@@ -860,7 +860,7 @@ class CategoryPopupMenu(Menu):
             None,
             uicommand.AddNote(viewer=categoryViewer, settings=settings),
             uicommand.OpenAllNotes(viewer=categoryViewer, settings=settings),
-            None, 
+            None,
             uicommand.Mail(viewer=categoryViewer))
         if not localOnly:
             self.appendUICommands(
@@ -943,13 +943,13 @@ class ColumnPopupMenu(ColumnPopupMenuMixin, Menu):
 class EffortViewerColumnPopupMenu(ColumnPopupMenuMixin,
                                   DynamicMenuThatGetsUICommandsFromViewer):
     ''' Column header popup menu. '''
-    
+
     def registerForMenuUpdate(self):
         pub.subscribe(self.onChangeAggregation, 'effortviewer.aggregation')
 
     def onChangeAggregation(self):
         self.onUpdateMenu(None, None)
-        
+
 
 class AttachmentPopupMenu(Menu):
     def __init__(self, mainwindow, settings, attachments, attachmentViewer):
@@ -963,9 +963,9 @@ class AttachmentPopupMenu(Menu):
             uicommand.Delete(viewer=attachmentViewer),
             None,
             uicommand.AddNote(viewer=attachmentViewer, settings=settings),
-            uicommand.OpenAllNotes(viewer=attachmentViewer, 
+            uicommand.OpenAllNotes(viewer=attachmentViewer,
                                    settings=settings),
             None,
-            uicommand.AttachmentOpen(viewer=attachmentViewer, 
-                                     attachments=attachments, 
+            uicommand.AttachmentOpen(viewer=attachmentViewer,
+                                     attachments=attachments,
                                      settings=settings))

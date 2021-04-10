@@ -24,18 +24,18 @@ from . import base
 
 class NewCategoryCommand(base.NewItemCommand):
     singular_name = _('New category')
-    
+
     def __init__(self, *args, **kwargs):
         subject = kwargs.pop('subject', _('New category'))
         description = kwargs.pop('description', '')
         attachments = kwargs.pop('attachments', [])
         super(NewCategoryCommand, self).__init__(*args, **kwargs)
-        self.items = self.createNewCategories(subject=subject, 
+        self.items = self.createNewCategories(subject=subject,
             description=description, attachments=attachments)
 
     def createNewCategories(self, **kwargs):
         return [category.Category(**kwargs)]
-        
+
 
 class NewSubCategoryCommand(base.NewSubItemCommand):
     plural_name = _('New subcategories')
@@ -52,7 +52,7 @@ class NewSubCategoryCommand(base.NewSubItemCommand):
 
     def createNewCategories(self, **kwargs):
         return [parent.newChild(**kwargs) for parent in self.items]
-    
+
 
 class EditExclusiveSubcategoriesCommand(base.BaseCommand):
     plural_name = _('Edit exclusive subcategories')
@@ -62,7 +62,7 @@ class EditExclusiveSubcategoriesCommand(base.BaseCommand):
         self.__newExclusivity = kwargs.pop('newValue')
         super(EditExclusiveSubcategoriesCommand, self).__init__(*args, **kwargs)
         self.__oldExclusivities = [item.hasExclusiveSubcategories() for item in self.items]
-        
+
     @patterns.eventSource
     def do_command(self, event=None):
         super(EditExclusiveSubcategoriesCommand, self).do_command()
@@ -82,7 +82,7 @@ class EditExclusiveSubcategoriesCommand(base.BaseCommand):
 class DeleteCategoryCommand(base.DeleteCommand):
     plural_name = _('Delete categories')
     singular_name = _('Delete category "%s"')
-    
-    
+
+
 class DragAndDropCategoryCommand(base.OrderingDragAndDropCommand):
     plural_name = _('Drag and drop categories')

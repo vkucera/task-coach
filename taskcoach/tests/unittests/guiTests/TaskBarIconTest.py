@@ -31,7 +31,7 @@ class MainWindowMock(object):
 
     def __init__(self):
         self.__cb = None
-    
+
     def restore(self):
         pass  # pragma: no cover
 
@@ -57,13 +57,13 @@ class TaskBarIconTestCase(test.TestCase):
         else:
             self.icon.RemoveIcon()
         super(TaskBarIconTestCase, self).tearDown()
-            
+
 
 class TaskBarIconTest(TaskBarIconTestCase):
     def testIcon_NoTasks(self):
         self.window.ProcessIdle()
         self.failUnless(self.icon.IsIconInstalled())
-        
+
     def testStartTracking(self):
         activeTask = task.Task()
         self.taskList.append(activeTask)
@@ -77,11 +77,11 @@ class TaskBarIconTest(TaskBarIconTestCase):
         activeTask.addEffort(activeEffort)
         activeTask.removeEffort(activeEffort)
         self.assertEqual(self.icon.defaultBitmap(), self.icon.bitmap())
-        
-        
+
+
 class TaskBarIconTooltipTestCase(TaskBarIconTestCase):
     def assertTooltip(self, text):
-        expectedTooltip = '%s - %s' % (meta.name, TaskFileMock().filename()) 
+        expectedTooltip = '%s - %s' % (meta.name, TaskFileMock().filename())
         if text:
             expectedTooltip += '\n%s' % text
         self.assertEqual(expectedTooltip, self.icon.tooltip())
@@ -90,7 +90,7 @@ class TaskBarIconTooltipTestCase(TaskBarIconTestCase):
 class TaskBarIconTooltipTest(TaskBarIconTooltipTestCase):
     def testNoTasks(self):
         self.assertTooltip('')
-        
+
     def testOneTaskNoDueDateTime(self):
         self.taskList.append(task.Task())
         self.assertTooltip('')
@@ -98,37 +98,37 @@ class TaskBarIconTooltipTest(TaskBarIconTooltipTestCase):
     def testOneTaskDueSoon(self):
         self.taskList.append(task.Task(dueDateTime=date.Now() + date.ONE_HOUR))
         self.assertTooltip('one task due soon')
-        
+
     def testOneTaskNoLongerDueSoonAfterChangingDueSoonSetting(self):
         self.taskList.append(task.Task(dueDateTime=date.Now() + date.ONE_HOUR))
         self.settings.setint('behavior', 'duesoonhours', 0)
         self.assertTooltip('')
-        
+
     def testTwoTasksDueSoon(self):
         self.taskList.append(task.Task(dueDateTime=date.Now() + date.ONE_HOUR))
         self.taskList.append(task.Task(dueDateTime=date.Now() + date.ONE_HOUR))
         self.assertTooltip('2 tasks due soon')
-        
+
     def testOneTasksOverdue(self):
         self.taskList.append(task.Task(dueDateTime=date.Yesterday()))
         self.assertTooltip('one task overdue')
-        
+
     def testTwoTasksOverdue(self):
         self.taskList.append(task.Task(dueDateTime=date.Yesterday()))
         self.taskList.append(task.Task(dueDateTime=date.Yesterday()))
         self.assertTooltip('2 tasks overdue')
-        
+
     def testOneTaskDueSoonAndOneTaskOverdue(self):
         self.taskList.append(task.Task(dueDateTime=date.Yesterday()))
         self.taskList.append(task.Task(dueDateTime=date.Now() + date.ONE_HOUR))
         self.assertTooltip('one task overdue, one task due soon')
-        
+
     def testRemoveTask(self):
         newTask = task.Task()
         self.taskList.append(newTask)
         self.taskList.remove(newTask)
         self.assertTooltip('')
-        
+
     def testRemoveOverdueTask(self):
         overdueTask = task.Task(dueDateTime=date.Yesterday())
         self.taskList.append(overdueTask)

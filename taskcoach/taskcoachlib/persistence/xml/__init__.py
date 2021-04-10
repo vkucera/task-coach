@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-# This is the xml package. This package contains classes to read and 
+# This is the xml package. This package contains classes to read and
 # write xml (.tsk) files.
 from .reader import XMLReader, TemplateXMLReader, ChangesXMLReader
 from .writer import XMLWriter, TemplateXMLWriter, ChangesXMLWriter

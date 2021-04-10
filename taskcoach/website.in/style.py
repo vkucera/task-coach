@@ -25,7 +25,7 @@ header = '''
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD html 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />     
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
         <script type="text/javascript" src="js/bootstrap-dropdown.js"></script>
         <script type="text/javascript" src="js/jquery.lightbox-0.5.min.js"></script>
@@ -74,17 +74,17 @@ pageTracker._trackPageview();
                     <li class="dropdown" id="about_menu">
                         <a title="About %(name)s" href="#about_menu" class="dropdown-toggle" data-toggle="dropdown">About</a>
                         <ul class="dropdown-menu">
-                            <li><a href="screenshots.html" 
+                            <li><a href="screenshots.html"
                                    title="View some screenshots of %(name)s here">Screenshots</a></li>
-                            <li><a href="features.html" 
+                            <li><a href="features.html"
                                    title="List of features in the current version of %(name)s">Features</a></li>
-                            <li><a href="i18n.html" 
+                            <li><a href="i18n.html"
                                    title="Available translations">Translations</a></li>
                             <li><a href="https://sourceforge.net/projects/taskcoach/?sort=usefulness#reviews-n-ratings"
                                    title="See what others have to say about %(name)s">User reviews</a></li>
-                            <li><a href="changes.html" 
+                            <li><a href="changes.html"
                                    title="An overview of bugs fixed and features added per version of %(name)s">Change history</a></li>
-                            <li><a href="license.html" 
+                            <li><a href="license.html"
                                    title="Your rights and obligations when using %(name)s">License</a></li>
                         </ul>
                     </li>
@@ -115,10 +115,10 @@ pageTracker._trackPageview();
         </div>
     </div>
     <div class="container">
-        <div class="content">                
+        <div class="content">
 '''%meta.metaDict
 
-footer = '''        
+footer = '''
         </div><!-- end of content div -->
         <script type="text/javascript" src="http://apis.google.com/js/plusone.js"></script>
         <footer class="footer">
@@ -136,10 +136,10 @@ footer = '''
                 &nbsp;
                 <a href="https://www.jrsoftware.org">Inno Setup</a>
                 &nbsp;
-                <a href="https://sourceforge.net/projects/taskcoach"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=130831&type=8" 
+                <a href="https://sourceforge.net/projects/taskcoach"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=130831&type=8"
                     width="80" height="15" border="0" alt="Task Coach at SourceForge.net"/></a>
                 &nbsp;
-                <script type='text/javascript' language='JavaScript' 
+                <script type='text/javascript' language='JavaScript'
                     src='https://www.ohloh.net/projects/5109;badge_js'></script>
             </p>
         </footer>

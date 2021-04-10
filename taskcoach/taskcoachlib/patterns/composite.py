@@ -28,11 +28,11 @@ class Composite:
         self.__children = children or []
         for child in self.__children:
             child.setParent(self)
-        
+
     def __getstate__(self):
-        return dict(children=self.__children[:], 
+        return dict(children=self.__children[:],
                     parent=self.parent())
-    
+
     def __setstate__(self, state):
         self.__parent = None if state['parent'] is None else weakref.ref(state['parent'])
         self.__children = state['children']
@@ -43,23 +43,23 @@ class Composite:
             state = super().__getcopystate__()
         except AttributeError:
             state = dict()
-        state.update(dict(children=[child.copy() for child in self.__children], 
+        state.update(dict(children=[child.copy() for child in self.__children],
                           parent=self.parent()))
         return state
-    
+
     def parent(self):
         return None if self.__parent is None else self.__parent()
-    
+
     def ancestors(self):
         ''' Return the parent, and its parent, etc., as a list. '''
         parent = self.parent()
         return parent.ancestors() + [parent] if parent else []
-    
+
     def family(self):
-        ''' Return this object, its ancestors and all of its children 
+        ''' Return this object, its ancestors and all of its children
             (recursively). '''
         return self.ancestors() + [self] + self.children(recursive=True)
-    
+
     def setParent(self, parent):
         self.__parent = None if parent is None else weakref.ref(parent)
 
@@ -74,7 +74,7 @@ class Composite:
             return result
         else:
             return self.__children
-        
+
     def siblings(self, recursive=False):
         parent = self.parent()
         if parent:
@@ -90,20 +90,20 @@ class Composite:
         kwargs['parent'] = self.parent()
         kwargs['children'] = [child.copy() for child in self.children()]
         return self.__class__(*args, **kwargs)
-        
+
     def newChild(self, *args, **kwargs):
         kwargs['parent'] = self
         return self.__class__(*args, **kwargs)
-    
+
     def addChild(self, child):
         self.__children.append(child)
         child.setParent(self)
-        
+
     def removeChild(self, child):
         self.__children.remove(child)
         # We don't reset the parent of the child, because that makes restoring
         # the parent-child relationship easier.
-        
+
 
 class ObservableComposite(Composite):
     @observer.eventSource
@@ -136,28 +136,28 @@ class ObservableComposite(Composite):
         super().removeChild(child)
         self.removeChildEvent(event, child)
 
-    def removeChildEvent(self, event, *children):    
+    def removeChildEvent(self, event, *children):
         event.addSource(self, *children, **dict(type=self.removeChildEventType()))
 
     @classmethod
     def removeChildEventType(class_):
         return 'composite(%s).child.remove'%class_
-    
+
     @classmethod
     def modificationEventTypes(class_):
         try:
             eventTypes = super().modificationEventTypes()
         except AttributeError:
             eventTypes = []
-        return eventTypes + [class_.addChildEventType(), 
+        return eventTypes + [class_.addChildEventType(),
                              class_.removeChildEventType()]
-            
+
 
 class CompositeCollection:
     def __init__(self, initList=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.extend(initList or [])
-    
+
     def append(self, composite, event=None):
         return self.extend([composite], event=event)
 
@@ -165,13 +165,13 @@ class CompositeCollection:
     def extend(self, composites, event=None):
         if not composites:
             return
-        compositesAndAllChildren = self._compositesAndAllChildren(composites) 
-        super().extend(compositesAndAllChildren, 
+        compositesAndAllChildren = self._compositesAndAllChildren(composites)
+        super().extend(compositesAndAllChildren,
                        event=event)
         self._addCompositesToParent(composites, event)
-            
+
     def _compositesAndAllChildren(self, composites):
-        compositesAndAllChildren = set(composites) 
+        compositesAndAllChildren = set(composites)
         for composite in composites:
             compositesAndAllChildren |= set(composite.children(recursive=True))
         return list(compositesAndAllChildren)
@@ -181,7 +181,7 @@ class CompositeCollection:
             parent = composite.parent()
             if parent and parent in self and composite not in parent.children():
                 parent.addChild(composite, event=event)
-    
+
     def remove(self, composite, event=None):
         return self.removeItems([composite], event=event) if composite in self else event
 
@@ -190,7 +190,7 @@ class CompositeCollection:
         if not composites:
             return
         compositesAndAllChildren = self._compositesAndAllChildren(composites)
-        super().removeItems(compositesAndAllChildren, 
+        super().removeItems(compositesAndAllChildren,
                                                      event=event)
         self._removeCompositesFromParent(composites, event)
 
@@ -199,7 +199,7 @@ class CompositeCollection:
             parent = composite.parent()
             if parent:
                 parent.removeChild(composite, event=event)
-                            
+
     def rootItems(self):
         return [composite for composite in self if composite.parent() is None or \
                 composite.parent() not in self]
@@ -219,7 +219,7 @@ class CompositeCollection:
 class CompositeSet(CompositeCollection, observer.ObservableSet):
     pass
 
-    
+
 class CompositeList(CompositeCollection, observer.ObservableList):
     pass
 

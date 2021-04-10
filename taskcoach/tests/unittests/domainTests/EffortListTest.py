@@ -35,19 +35,19 @@ class EffortListTest(test.TestCase):
         patterns.Publisher().registerObserver(self.onEvent,
             eventType=self.effortList.removeItemEventType(),
             eventSource=self.effortList)
-        self.effort = effort.Effort(self.task, date.DateTime(2004, 1, 1), 
+        self.effort = effort.Effort(self.task, date.DateTime(2004, 1, 1),
             date.DateTime(2004, 1, 2))
-        
+
     def testCreate(self):
         self.assertEqual(0, len(self.effortList))
-    
+
     def onEvent(self, event):
         self.events.append(event)
 
     def testNotificationAfterAppend(self):
         self.task.addEffort(self.effort)
         self.assertEqual(self.effort, self.events[0].value())
-        
+
     def testAppend(self):
         self.task.addEffort(self.effort)
         self.assertEqual(1, len(self.effortList))
@@ -57,17 +57,17 @@ class EffortListTest(test.TestCase):
         self.task.addEffort(self.effort)
         self.task.removeEffort(self.effort)
         self.assertEqual(self.effort, self.events[0].value())
-        
+
     def testRemove(self):
         self.task.addEffort(self.effort)
         self.task.removeEffort(self.effort)
         self.assertEqual(0, len(self.effortList))
-    
+
     def testAppendTaskWithEffort(self):
         newTask = task.Task()
         newTask.addEffort(effort.Effort(newTask))
         self.taskList.append(newTask)
-        self.assertEqual(1, len(self.effortList))    
+        self.assertEqual(1, len(self.effortList))
 
     def testCreateWhenTaskListIsFilled(self):
         self.task.addEffort(self.effort)
@@ -82,7 +82,7 @@ class EffortListTest(test.TestCase):
 
     def testMaxDateTime(self):
         self.assertEqual(None, self.effortList.maxDateTime())
-        
+
     def testMaxDateTime_OneEffort(self):
         self.task.addEffort(self.effort)
         self.assertEqual(self.effort.getStop(), self.effortList.maxDateTime())
@@ -90,28 +90,28 @@ class EffortListTest(test.TestCase):
     def testMaxDateTime_OneTrackingEffort(self):
         self.task.addEffort(effort.Effort(self.task))
         self.assertEqual(None, self.effortList.maxDateTime())
-        
+
     def testMaxDateTime_TwoEfforts(self):
         self.task.addEffort(self.effort)
         now = date.DateTime.now()
         self.task.addEffort(effort.Effort(self.task, None, now))
         self.assertEqual(now, self.effortList.maxDateTime())
-    
+
     def testNrTracking(self):
         self.assertEqual(0, self.effortList.nrBeingTracked())
-        
+
     def testOriginalLength(self):
         self.assertEqual(0, self.effortList.originalLength())
-        
+
     def testRemoveItems(self):
         self.task.addEffort(self.effort)
         self.effortList.removeItems([self.effort])
         self.assertEqual(0, len(self.effortList))
         self.assertEqual(0, len(self.task.efforts()))
-        
+
     def testRemoveAllItems(self):
         self.task.addEffort(self.effort)
-        effort2 = effort.Effort(self.task, date.DateTime(2005, 1, 1), 
+        effort2 = effort.Effort(self.task, date.DateTime(2005, 1, 1),
                                            date.DateTime(2005, 1, 2))
         self.task.addEffort(effort2)
         self.effortList.removeItems([effort2, self.effort])
@@ -132,7 +132,7 @@ class EffortListTest(test.TestCase):
         self.assertEqual(1, len(self.effortList))
         self.taskList.remove(self.task)
         self.assertEqual(0, len(self.effortList))
-        
+
     def testRemoveTaskWithoutEffort(self):
         self.task.addEffort(self.effort)
         anotherTask = task.Task('Another task without effort')
@@ -140,7 +140,7 @@ class EffortListTest(test.TestCase):
         self.assertEqual(1, len(self.effortList))
         self.taskList.remove(anotherTask)
         self.assertEqual(1, len(self.effortList))
-        
+
     def testChangeTask(self):
         self.task.addEffort(self.effort)
         anotherTask = task.Task('Another task without effort')

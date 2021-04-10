@@ -31,26 +31,26 @@ class ReminderDialog(patterns.Observer, sized_controls.SizedDialog):
         kwargs['title'] = _('%(name)s reminder - %(task)s') % \
             dict(name=meta.name, task=task.subject(recursive=True))
         super(ReminderDialog, self).__init__(*args, **kwargs)
-        self.SetIcon(wx.ArtProvider_GetIcon('taskcoach', wx.ART_FRAME_ICON, 
+        self.SetIcon(wx.ArtProvider_GetIcon('taskcoach', wx.ART_FRAME_ICON,
                                             (16, 16)))
         self.task = task
         self.taskList = taskList
         self.effortList = effortList
         self.settings = settings
-        self.registerObserver(self.onTaskRemoved, 
+        self.registerObserver(self.onTaskRemoved,
                               eventType=self.taskList.removeItemEventType(),
                               eventSource=self.taskList)
-        pub.subscribe(self.onTaskCompletionDateChanged, 
+        pub.subscribe(self.onTaskCompletionDateChanged,
                       task.completionDateTimeChangedEventType())
         pub.subscribe(self.onTrackingChanged, task.trackingChangedEventType())
         self.openTaskAfterClose = self.ignoreSnoozeOption = False
         pane = self.GetContentsPane()
         pane.SetSizerType("form")
-        
+
         wx.StaticText(pane, label=_('Task') + ':')
         panel = wx.Panel(pane)
         sizer = wx.BoxSizer(wx.HORIZONTAL)
-        self.openTask = wx.Button(panel, 
+        self.openTask = wx.Button(panel,
                                   label=self.task.subject(recursive=True))
         self.openTask.Bind(wx.EVT_BUTTON, self.onOpenTask)
         sizer.Add(self.openTask, flag=wx.ALIGN_CENTER_VERTICAL)
@@ -60,35 +60,35 @@ class ReminderDialog(patterns.Observer, sized_controls.SizedDialog):
         sizer.Add((3, -1), flag=wx.ALIGN_CENTER_VERTICAL)
         sizer.Add(self.startTracking, flag=wx.ALIGN_CENTER_VERTICAL)
         panel.SetSizerAndFit(sizer)
-        
+
         for label in _('Reminder date/time') + ':', \
             render.dateTime(self.task.reminder()), _('Snooze') + ':':
             wx.StaticText(pane, label=label)
-            
+
         self.snoozeOptions = wx.ComboBox(pane, style=wx.CB_READONLY)
         sizer.Add(self.snoozeOptions, flag=wx.ALIGN_CENTER_VERTICAL)
-        snoozeTimesUserWantsToSee = [0] + self.settings.getlist('view', 
+        snoozeTimesUserWantsToSee = [0] + self.settings.getlist('view',
                                                                 'snoozetimes')
         defaultSnoozeTime = self.settings.getint('view', 'defaultsnoozetime')
         # Use the 1st non-zero option if we don't find the last snooze time:
-        selectionIndex = 1  
+        selectionIndex = 1
         # pylint: disable=E1101
         for minutes, label in date.snoozeChoices:
             if minutes in snoozeTimesUserWantsToSee:
-                self.snoozeOptions.Append(label, 
+                self.snoozeOptions.Append(label,
                                           date.TimeDelta(minutes=minutes))
                 if minutes == defaultSnoozeTime:
                     selectionIndex = self.snoozeOptions.Count - 1
-        self.snoozeOptions.SetSelection(min(selectionIndex, 
+        self.snoozeOptions.SetSelection(min(selectionIndex,
                                             self.snoozeOptions.Count - 1))
-        
+
         wx.StaticText(pane, label='')
-        self.replaceDefaultSnoozeTime = wx.CheckBox(pane, 
+        self.replaceDefaultSnoozeTime = wx.CheckBox(pane,
             label=_('Also make this the default snooze time for future '
                     'reminders'))
-        self.replaceDefaultSnoozeTime.SetValue(self.settings.getboolean('view', 
+        self.replaceDefaultSnoozeTime.SetValue(self.settings.getboolean('view',
                                                'replacedefaultsnoozetime'))
-        
+
         buttonSizer = self.CreateStdDialogButtonSizer(wx.OK)
         self.markCompleted = wx.Button(self, label=_('Mark task completed'))
         self.markCompleted.Bind(wx.EVT_BUTTON, self.onMarkTaskCompleted)
@@ -106,38 +106,38 @@ class ReminderDialog(patterns.Observer, sized_controls.SizedDialog):
     def onOpenTask(self, event):  # pylint: disable=W0613
         self.openTaskAfterClose = True
         self.Close()
-        
+
     def onStartOrStopTracking(self, event):  # pylint: disable=W0613
         if self.task.isBeingTracked():
             command.StopEffortCommand(self.effortList).do()
         else:
             command.StartEffortCommand(self.taskList, [self.task]).do()
         self.setTrackingIcon()
-        
+
     def onTrackingChanged(self, newValue, sender):  # pylint: disable=W0613
         self.setTrackingIcon()
-        
+
     def setTrackingIcon(self):
         icon = 'clock_stop_icon' if self.task.isBeingTracked() else 'clock_icon'
-        self.startTracking.SetBitmapLabel(wx.ArtProvider_GetBitmap(icon, 
+        self.startTracking.SetBitmapLabel(wx.ArtProvider_GetBitmap(icon,
             wx.ART_TOOLBAR, (16, 16)))
-        
+
     def onMarkTaskCompleted(self, event):  # pylint: disable=W0613
         self.ignoreSnoozeOption = True
         self.Close()
         command.MarkCompletedCommand(self.taskList, [self.task]).do()
-    
+
     def onTaskRemoved(self, event):
         if self.task in event.values():
             self.Close()
-            
+
     def onTaskCompletionDateChanged(self, newValue, sender):  # pylint: disable=W0613
         if sender == self.task:
             if self.task.completed():
                 self.Close()
             else:
                 self.markCompleted.Enable()
-    
+
     def onClose(self, event):
         event.Skip()
         replace_default_snooze_time = self.replaceDefaultSnoozeTime.GetValue()
@@ -146,10 +146,10 @@ class ReminderDialog(patterns.Observer, sized_controls.SizedDialog):
             selection = self.snoozeOptions.Selection
             minutes = self.snoozeOptions.GetClientData(selection).minutes()
             self.settings.set('view', 'defaultsnoozetime', str(int(minutes)))
-        self.settings.setboolean('view', 'replacedefaultsnoozetime', 
+        self.settings.setboolean('view', 'replacedefaultsnoozetime',
                                  replace_default_snooze_time)
         self.removeInstance()
-        
+
     def onOK(self, event):
         event.Skip()
         self.Close()

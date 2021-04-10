@@ -71,7 +71,7 @@ def getContent(message):
         return content
     else:
         return ''
-        
+
 
 def openMailWithOutlook(filename):
     id_ = None

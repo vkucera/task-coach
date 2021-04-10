@@ -28,10 +28,10 @@ class SingletonTest(test.TestCase):
     def tearDown(self):
         super(SingletonTest, self).tearDown()
         self.resetSingleton()
-        
+
     def resetSingleton(self):
         Singleton.deleteInstance() # pylint: disable=E1101
-        
+
     def testCreation(self):
         singleton = Singleton()
         self.failUnless(isinstance(singleton, Singleton))
@@ -66,25 +66,25 @@ class SingletonTest(test.TestCase):
         SingletonWithInit()
         SingletonWithInit()
         self.assertEqual(1, SingletonWithInit._count) # pylint: disable=W0212
-        
+
     def testDeleteInstance(self):
         singleton1 = Singleton()
         self.resetSingleton()
         singleton2 = Singleton()
         self.failIf(singleton1 is singleton2)
-        
+
     def testSingletonHasNoInstanceBeforeFirstCreation(self):
         self.failIf(Singleton.hasInstance()) # pylint: disable=E1101
-        
+
     def testSingletonHasInstanceAfterFirstCreation(self):
         Singleton()
         self.failUnless(Singleton.hasInstance()) # pylint: disable=E1101
-        
+
     def testSingletonHasInstanceAfterSecondCreation(self):
         Singleton()
         Singleton()
         self.failUnless(Singleton.hasInstance()) # pylint: disable=E1101
-        
+
     def testSingletonHasNoInstanceAfterDeletion(self):
         Singleton()
         self.resetSingleton()

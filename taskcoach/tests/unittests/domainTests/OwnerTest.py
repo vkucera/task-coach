@@ -25,30 +25,30 @@ from taskcoachlib import patterns
 class OwnerUnderTest(base.Object):
     __metaclass__ = base.DomainObjectOwnerMetaclass
     __ownedType__ = 'Foo'
-    
+
 
 class Foo(object):
     pass
 
-    
+
 class OwnerTest(test.TestCase):
     def setUp(self):
         self.owner = OwnerUnderTest()
         self.events = []
-        
+
     def onEvent(self, event):
-        self.events.append(event) 
-    
+        self.events.append(event)
+
     # pylint: disable=E1101
-    
+
     def testSetObjects_NoNotificationWhenUnchanged(self):
-        patterns.Publisher().registerObserver(self.onEvent, 
+        patterns.Publisher().registerObserver(self.onEvent,
             self.owner.foosChangedEventType())
         self.owner.setFoos([])
         self.failIf(self.events)
-        
+
     def testSetObjects_NotificationWhenCanged(self):
-        patterns.Publisher().registerObserver(self.onEvent, 
+        patterns.Publisher().registerObserver(self.onEvent,
             self.owner.foosChangedEventType())
         self.owner.setFoos([Foo()])
         self.assertEqual(1, len(self.events))

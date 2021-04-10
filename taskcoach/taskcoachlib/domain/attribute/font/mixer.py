@@ -33,7 +33,7 @@ class FontMixer(object):
         style = class_.mixFontStyles(*fonts)
         underlined = class_.mixFontUnderlining(*fonts)
         return wx.Font(pointSize, family, style, weight, underline=underlined)
-    
+
     @staticmethod
     def mixFontSizes(*fonts):
         size = 0
@@ -42,22 +42,22 @@ class FontMixer(object):
         return size/len(fonts)
 
     allFamilies = (wx.FONTFAMILY_SWISS, wx.FONTFAMILY_DECORATIVE,
-                   wx.FONTFAMILY_ROMAN, wx.FONTFAMILY_SCRIPT, 
+                   wx.FONTFAMILY_ROMAN, wx.FONTFAMILY_SCRIPT,
                    wx.FONTFAMILY_MODERN, wx.FONTFAMILY_TELETYPE)
-     
+
     @classmethod
     def mixFontFamilies(class_, *fonts):
         families = [font.GetFamily() for font in fonts]
         counts = dict()
         for family in class_.allFamilies:
-            counts[family] = families.count(family)    
+            counts[family] = families.count(family)
         for family in class_.allFamilies:
             countsCopy = counts.copy()
             familyCount = countsCopy.pop(family)
             if familyCount > max(countsCopy.values()):
                 return family
         return wx.FONTFAMILY_DEFAULT
-    
+
     @staticmethod
     def mixFontWeights(*fonts):
         weights = [font.GetWeight() for font in fonts]
@@ -68,17 +68,17 @@ class FontMixer(object):
         if countLight > countBold:
             return wx.FONTWEIGHT_LIGHT
         return wx.FONTWEIGHT_NORMAL
-    
+
     @staticmethod
     def mixFontStyles(*fonts):
         ''' If any of the fonts is italic, return italic else normal. We
-            ignore slant style since a font created with the 
-            wx.FONTSTYLE_SLANT style returns wx.FONTSTYLE_ITALIC as its 
+            ignore slant style since a font created with the
+            wx.FONTSTYLE_SLANT style returns wx.FONTSTYLE_ITALIC as its
             style. '''
-        anyItalic = wx.FONTSTYLE_ITALIC in [font.GetStyle() for font in fonts] 
+        anyItalic = wx.FONTSTYLE_ITALIC in [font.GetStyle() for font in fonts]
         return wx.FONTSTYLE_ITALIC if anyItalic else wx.FONTSTYLE_NORMAL
-    
+
     @staticmethod
     def mixFontUnderlining(*fonts):
         return any(font.GetUnderlined() for font in fonts)
-    
+

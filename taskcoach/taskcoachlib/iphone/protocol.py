@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 # pylint: disable=W0201,E1101
- 
+
 from taskcoachlib.domain.date import Date, parseDate, DateTime, parseDateTime, Recurrence
 
 from taskcoachlib.domain.category import Category
@@ -716,7 +716,7 @@ class TaskFileNameState(BaseState):
 
     def handleNewObject(self, response): # pylint: disable=W0613
         self.setState(TwoWayState if self.version < 5 else DayHoursState)
-        
+
     def finished(self):
         pass
 
@@ -957,9 +957,9 @@ class FullFromDeviceTaskState(BaseState):
         super(FullFromDeviceTaskState, self).init('ssddd[s]', self.taskCount)
 
     def handleNewObject(self, (subject, description, startDate, dueDate, completionDate, categories)):
-        task = Task(subject=subject, description=description, 
+        task = Task(subject=subject, description=description,
                     plannedStartDateTime=DateTime(startDate.year, startDate.month, startDate.day),
-                    dueDateTime=DateTime(dueDate.year, dueDate.month, dueDate.day), 
+                    dueDateTime=DateTime(dueDate.year, dueDate.month, dueDate.day),
                     completionDateTime=DateTime(completionDate.year, completionDate.month, completionDate.day))
 
         self.disp().window.addIPhoneTask(task, [self.categoryMap[id_] for id_ in categories])
@@ -1104,9 +1104,9 @@ class TwoWayNewTasksState(BaseState):
         super(TwoWayNewTasksState, self).init('ssddd[s]', self.newTasksCount)
 
     def handleNewObject(self, (subject, description, startDate, dueDate, completionDate, categories)):
-        task = Task(subject=subject, description=description, 
+        task = Task(subject=subject, description=description,
                     plannedStartDateTime=DateTime(startDate.year, startDate.month, startDate.day),
-                    dueDateTime=DateTime(dueDate.year, dueDate.month, dueDate.day), 
+                    dueDateTime=DateTime(dueDate.year, dueDate.month, dueDate.day),
                     completionDateTime=DateTime(completionDate.year, completionDate.month, completionDate.day))
 
         self.disp().window.addIPhoneTask(task, [self.categoryMap[catId] for catId in categories \
@@ -1136,10 +1136,10 @@ class TwoWayNewTasksState4(BaseState):
                 DateTime(year=dueDate.year, month=dueDate.month, day=dueDate.day,
                          hour=self.disp().settings.getint('view', 'efforthourend'))
 
-        task = Task(subject=subject, description=description, 
+        task = Task(subject=subject, description=description,
                     plannedStartDateTime=plannedStartDateTime,
-                    dueDateTime=dueDateTime, 
-                    completionDateTime=completionDateTime, 
+                    dueDateTime=dueDateTime,
+                    completionDateTime=completionDateTime,
                     parent=parent)
 
         self.disp().window.addIPhoneTask(task, [self.categoryMap[catId] for catId in categories \
@@ -1167,10 +1167,10 @@ class TwoWayNewTasksState5(BaseState):
             recurrence = Recurrence(unit={0: 'daily', 1: 'weekly', 2: 'monthly', 3: 'yearly'}[recPeriod],
                                     amount=recRepeat, sameWeekday=recSameWeekday)
 
-        task = Task(subject=subject, description=description, 
+        task = Task(subject=subject, description=description,
                     plannedStartDateTime=plannedStartDateTime,
-                    dueDateTime=dueDateTime, 
-                    completionDateTime=completionDateTime, 
+                    dueDateTime=dueDateTime,
+                    completionDateTime=completionDateTime,
                     parent=parent,
                     recurrence=recurrence,
                     priority=priority)
@@ -1243,7 +1243,7 @@ class TwoWayModifiedTasks(BaseState):
                 self.disp().settings.getint('view', 'efforthourstart')) if plannedStartDate != Date() else DateTime()
             dueDateTime = DateTime(dueDate.year, dueDate.month, dueDate.day,
                 self.disp().settings.getint('view', 'efforthourend')) if dueDate != Date() else DateTime()
-            completionDateTime = DateTime(completionDate.year, completionDate.month, 
+            completionDateTime = DateTime(completionDate.year, completionDate.month,
                 completionDate.day) if completionDate != Date() else DateTime()
         else:
             plannedStartDateTime = plannedStartDate
@@ -1257,8 +1257,8 @@ class TwoWayModifiedTasks(BaseState):
                 self.pack('s', '')
         else:
             self.disp().log(_('Modify task %s'), task.id())
-            self.disp().window.modifyIPhoneTask(task, subject, description, 
-                                                plannedStartDateTime, dueDateTime, 
+            self.disp().window.modifyIPhoneTask(task, subject, description,
+                                                plannedStartDateTime, dueDateTime,
                                                 completionDateTime, reminderDateTime,
                                                 recurrence, priority, categories)
             if self.version >= 5:

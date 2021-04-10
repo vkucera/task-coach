@@ -23,10 +23,10 @@ from . import task
 
 class Sorter(base.TreeSorter):
     DomainObjectClass = task.Task  # What are we sorting
-    TaskStatusAttributes = ('prerequisites', 'dueDateTime', 
-                            'plannedStartDateTime', 'actualStartDateTime', 
+    TaskStatusAttributes = ('prerequisites', 'dueDateTime',
+                            'plannedStartDateTime', 'actualStartDateTime',
                             'completionDateTime')
-    
+
     def __init__(self, *args, **kwargs):
         self.__treeMode = kwargs.pop('treeMode', False)
         self.__sortByTaskStatusFirst = kwargs.pop('sortByTaskStatusFirst', True)
@@ -37,7 +37,7 @@ class Sorter(base.TreeSorter):
                           task.Task.actualStartDateTimeChangedEventType(),
                           task.Task.completionDateTimeChangedEventType()):
             pub.subscribe(self.onAttributeChanged, eventType)
-    
+
     def setTreeMode(self, treeMode=True):
         self.__treeMode = treeMode
         try:
@@ -48,13 +48,13 @@ class Sorter(base.TreeSorter):
 
     def treeMode(self):
         return self.__treeMode
-                
+
     def sortByTaskStatusFirst(self, sortByTaskStatusFirst):
         self.__sortByTaskStatusFirst = sortByTaskStatusFirst
         # We don't need to invoke self.reset() here since when this property is
-        # changed, the sort order also changes which in turn will cause 
+        # changed, the sort order also changes which in turn will cause
         # self.reset() to be called.
-                                
+
     def createSortKeyFunction(self, sortKey):
         statusSortKey = self.__createStatusSortKey()
         regularSortKey = super(Sorter, self).createSortKeyFunction(sortKey)
@@ -70,12 +70,12 @@ class Sorter(base.TreeSorter):
             return lambda task: []
 
     def _registerObserverForAttribute(self, attribute):
-        # Sorter is always observing task dates and prerequisites because 
+        # Sorter is always observing task dates and prerequisites because
         # sorting by status depends on those attributes. Hence we don't need
         # to subscribe to these attributes when they become the sort key.
         if attribute not in self.TaskStatusAttributes:
             super(Sorter, self)._registerObserverForAttribute(attribute)
-            
+
     def _removeObserverForAttribute(self, attribute):
         # See comment at _registerObserverForAttribute.
         if attribute not in self.TaskStatusAttributes:

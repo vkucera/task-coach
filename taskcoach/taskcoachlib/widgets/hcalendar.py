@@ -73,7 +73,7 @@ class HierarchicalCalendar(tooltip.ToolTipMixin, CalendarCanvas):
         if task.plannedStartDateTime() != start:
             command.EditPlannedStartDateTimeCommand(items=[task], newValue=start).do()
         if task.dueDateTime() != end:
-            command.EditDueDateTimeCommand(items=[task], 
+            command.EditDueDateTimeCommand(items=[task],
                                            newValue=end).do()
 
     def _OnLeftDClick(self, event):

@@ -30,7 +30,7 @@ class CategoryFilter(base.Filter):
         for eventType in (self.__categories.addItemEventType(),
                           self.__categories.removeItemEventType()):
             patterns.Publisher().registerObserver(self.onCategoryChanged,
-                                                  eventType=eventType, 
+                                                  eventType=eventType,
                                                   eventSource=self.__categories)
         eventTypes = (Category.categorizableAddedEventType(),
                       Category.categorizableRemovedEventType(),
@@ -49,14 +49,14 @@ class CategoryFilter(base.Filter):
         filteredCategories = self.__categories.filteredCategories()
         if not filteredCategories:
             return categorizables
-        
+
         if self.__filterOnlyWhenAllCategoriesMatch:
             filteredCategorizables = set(categorizables)
             for category in filteredCategories:
                 filteredCategorizables &= self.__categorizablesBelongingToCategory(category)
         else:
             filteredCategorizables = set()
-            for category in filteredCategories: 
+            for category in filteredCategories:
                 filteredCategorizables |= self.__categorizablesBelongingToCategory(category)
 
         filteredCategorizables &= self.observable()
@@ -66,9 +66,9 @@ class CategoryFilter(base.Filter):
     def __categorizablesBelongingToCategory(category):
         categorizables = category.categorizables(recursive=True)
         for categorizable in categorizables.copy():
-            categorizables |= set(categorizable.children(recursive=True))           
+            categorizables |= set(categorizable.children(recursive=True))
         return categorizables
-        
+
     def onFilterMatchingChanged(self, value):
         self.__filterOnlyWhenAllCategoriesMatch = value
         self.reset()

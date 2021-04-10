@@ -26,7 +26,7 @@ import wx
 class EffortViewerUnderTest(gui.viewer.EffortViewer):  # pylint: disable=W0223
     def createWidget(self):
         return dummy.DummyWidget(self)
-    
+
     def columns(self):
         return []
 
@@ -46,7 +46,7 @@ class EffortViewerForSpecificTasksTest(test.wxTestCase):
         self.effort2 = effort.Effort(self.task2, date.DateTime(2006, 1, 2),
             date.DateTime(2006, 1, 3))
         self.task2.addEffort(self.effort2)
-        self.viewer = EffortViewerUnderTest(self.frame, self.taskFile,  
+        self.viewer = EffortViewerUnderTest(self.frame, self.taskFile,
             self.settings, tasksToShowEffortFor=task.TaskList([self.task1]))
 
     def tearDown(self):
@@ -56,17 +56,17 @@ class EffortViewerForSpecificTasksTest(test.wxTestCase):
 
     def testViewerShowsOnlyEffortForSpecifiedTask(self):
         self.assertEqual([self.effort1], self.viewer.presentation())
-        
+
     def testEffortEditorDoesUseAllTasks(self):
         dialog = self.viewer.newItemDialog()
         self.assertEqual(2, len(dialog._taskFile.tasks()))  # pylint: disable=W0212
-        
+
     def testViewerKeepsShowingOnlyEffortForSpecifiedTasksWhenSwitchingAggregation(self):
-        self.settings.settext(self.viewer.settingsSection(), 'aggregation', 
+        self.settings.settext(self.viewer.settingsSection(), 'aggregation',
                               'week')
         self.assertEqual(2, len(self.viewer.presentation()))
-        
-        
+
+
 class EffortViewerStatusMessageTest(test.wxTestCase):
     def setUp(self):
         super(EffortViewerStatusMessageTest, self).setUp()
@@ -78,7 +78,7 @@ class EffortViewerStatusMessageTest(test.wxTestCase):
             date.DateTime(2006, 1, 2))
         self.effort2 = effort.Effort(self.task, date.DateTime(2006, 1, 2),
             date.DateTime(2006, 1, 3))
-        self.viewer = EffortViewerUnderTest(self.frame, self.taskFile,  
+        self.viewer = EffortViewerUnderTest(self.frame, self.taskFile,
             self.settings)
 
     def tearDown(self):
@@ -88,47 +88,47 @@ class EffortViewerStatusMessageTest(test.wxTestCase):
 
     def assertStatusMessages(self, message1, message2):
         self.assertEqual((message1, message2), self.viewer.statusMessages())
-        
+
     def testStatusMessage_EmptyTaskList(self):
         self.taskFile.tasks().clear()
         self.assertStatusMessages('Effort: 0 selected, 0 visible, 0 total. Time spent: 0:00:00 selected, 0:00:00 visible, 0:00:00 total',
             'Status: 0 tracking')
-            
+
     def testStatusMessage_OneTaskNoEffort(self):
         self.assertStatusMessages('Effort: 0 selected, 0 visible, 0 total. Time spent: 0:00:00 selected, 0:00:00 visible, 0:00:00 total',
             'Status: 0 tracking')
-        
+
     def testStatusMessage_OneTaskOneEffort(self):
         self.task.addEffort(self.effort1)
         self.assertStatusMessages('Effort: 0 selected, 1 visible, 1 total. Time spent: 0:00:00 selected, 24:00:00 visible, 24:00:00 total',
             'Status: 0 tracking')
-            
+
     def testStatusMessage_OneTaskTwoEfforts(self):
         self.task.addEffort(self.effort1)
         self.task.addEffort(self.effort2)
         self.assertStatusMessages('Effort: 0 selected, 2 visible, 2 total. Time spent: 0:00:00 selected, 48:00:00 visible, 48:00:00 total',
             'Status: 0 tracking')
-            
+
     def testStatusMessage_OneTaskOneActiveEffort(self):
         self.task.addEffort(effort.Effort(self.task))
         self.assertStatusMessages('Effort: 0 selected, 1 visible, 1 total. Time spent: 0:00:00 selected, 0:00:00 visible, 0:00:00 total',
             'Status: 1 tracking')
-        
+
     def testStatusMessageInAggregatedMode_OneTaskNoEffort(self):
-        self.settings.settext(self.viewer.settingsSection(), 'aggregation', 
+        self.settings.settext(self.viewer.settingsSection(), 'aggregation',
                               'day')
         self.assertStatusMessages('Effort: 0 selected, 0 visible, 0 total. Time spent: 0:00:00 selected, 0:00:00 visible, 0:00:00 total',
             'Status: 0 tracking')
 
     def testStatusMessageInAggregateMode_OneTaskOneEffort(self):
-        self.settings.settext(self.viewer.settingsSection(), 'aggregation', 
+        self.settings.settext(self.viewer.settingsSection(), 'aggregation',
                               'day')
         self.task.addEffort(self.effort1)
         self.assertStatusMessages('Effort: 0 selected, 2 visible, 1 total. Time spent: 0:00:00 selected, 48:00:00 visible, 24:00:00 total',
             'Status: 0 tracking')
 
     def testStatusMessageInAggregateMode_OneTaskTwoEfforts(self):
-        self.settings.settext(self.viewer.settingsSection(), 'aggregation', 
+        self.settings.settext(self.viewer.settingsSection(), 'aggregation',
                               'day')
         self.task.addEffort(self.effort1)
         self.task.addEffort(self.effort2)
@@ -147,7 +147,7 @@ class EffortViewerTest(test.wxTestCase):
             date.DateTime(2006, 1, 2))
         self.effort2 = effort.Effort(self.task, date.DateTime(2006, 1, 2),
             date.DateTime(2006, 1, 3))
-        self.viewer = gui.viewer.EffortViewer(self.frame, self.taskFile, 
+        self.viewer = gui.viewer.EffortViewer(self.frame, self.taskFile,
                                               self.settings)
 
     def tearDown(self):
@@ -166,14 +166,14 @@ class EffortViewerTest(test.wxTestCase):
         self.task.addEffort(self.effort1)
         self.task.setBackgroundColor(wx.RED)
         self.assertEqual(wx.RED, self.viewer.widget.GetItemBackgroundColour(0))
-    
+
     def testSearch(self):
         self.task.addEffort(self.effort1)
         self.viewer.presentation().setSearchFilter('no such task')
         self.assertEqual(0, len(self.viewer.presentation()))
         self.viewer.presentation().setSearchFilter(self.task.subject())
         self.assertEqual(1, len(self.viewer.presentation()))
-        
+
     def testSearchIncludeSubitems(self):
         self.task.addEffort(self.effort1)
         child = task.Task('child')
@@ -184,10 +184,10 @@ class EffortViewerTest(test.wxTestCase):
         self.assertEqual(2, len(self.viewer.presentation()))
         self.viewer.presentation().setSearchFilter(self.task.subject())
         self.assertEqual(1, len(self.viewer.presentation()))
-        self.viewer.presentation().setSearchFilter(self.task.subject(), 
+        self.viewer.presentation().setSearchFilter(self.task.subject(),
                                                    includeSubItems=True)
         self.assertEqual(2, len(self.viewer.presentation()))
-        
+
     def testAscendingSortOrder(self):
         self.task.addEffort(self.effort1)
         self.task.addEffort(self.effort2)
@@ -199,11 +199,11 @@ class EffortViewerTest(test.wxTestCase):
         self.task.addEffort(self.effort2)
         self.viewer.setSortOrderAscending(False)
         self.assertEqual([self.effort2, self.effort1], list(self.viewer.presentation()))
-        
-        
+
+
 class EffortViewerAggregationTestCase(test.wxTestCase):
     aggregation = 'Subclass responsibility'
-    
+
     def createViewer(self):
         return gui.viewer.EffortViewer(self.frame, self.taskFile, self.settings)
 
@@ -217,21 +217,21 @@ class EffortViewerAggregationTestCase(test.wxTestCase):
         self.task = task.Task('Task')
         self.task2 = task.Task('Task2')
         self.taskFile.tasks().extend([self.task, self.task2])
-        self.task.addEffort(effort.Effort(self.task, 
-            date.DateTime(2008, 7, 16, 10, 0, 0), 
+        self.task.addEffort(effort.Effort(self.task,
+            date.DateTime(2008, 7, 16, 10, 0, 0),
             date.DateTime(2008, 7, 16, 11, 0, 0)))
-        self.task.addEffort(effort.Effort(self.task, 
-            date.DateTime(2008, 7, 16, 12, 0, 0), 
+        self.task.addEffort(effort.Effort(self.task,
+            date.DateTime(2008, 7, 16, 12, 0, 0),
             date.DateTime(2008, 7, 16, 13, 0, 0)))
         self.task.addEffort(effort.Effort(self.task,
-            date.DateTime(2008, 7, 17, 1, 0, 0), 
+            date.DateTime(2008, 7, 17, 1, 0, 0),
             date.DateTime(2008, 7, 17, 2, 0, 0)))
-        mostRecentPeriod = (date.DateTime(2008, 7, 23, 1, 0, 0), 
+        mostRecentPeriod = (date.DateTime(2008, 7, 23, 1, 0, 0),
                             date.DateTime(2008, 7, 23, 2, 0, 0))
         # pylint: disable=W0142
         self.task.addEffort(effort.Effort(self.task, *mostRecentPeriod))
         self.task2.addEffort(effort.Effort(self.task2, *mostRecentPeriod))
-        
+
 
     def tearDown(self):
         super(EffortViewerAggregationTestCase, self).tearDown()
@@ -241,7 +241,7 @@ class EffortViewerAggregationTestCase(test.wxTestCase):
     def switchAggregation(self):
         aggregations = ['details', 'day', 'week', 'month']
         aggregations.remove(self.aggregation)
-        self.settings.settext(self.viewer.settingsSection(), 'aggregation', 
+        self.settings.settext(self.viewer.settingsSection(), 'aggregation',
                               aggregations[0])
 
 
@@ -260,7 +260,7 @@ class EffortViewerAggregationRoundingTestCase(test.wxTestCase):
         self.settings.set('effortviewer', 'aggregation', self.aggregation)
         self.settings.setint('effortviewer', 'round', self.roundingValue)
         self.settings.setboolean('effortviewer', 'alwaysroundup', self.alwaysRoundUp)
-        self.settings.setboolean('effortviewer', 'consolidateeffortspertask', 
+        self.settings.setboolean('effortviewer', 'consolidateeffortspertask',
 						         self.consolidateEffortsPerTask)
 
         self.taskFile = persistence.TaskFile()
@@ -417,7 +417,7 @@ class CommonTestsMixin(object):
         self.assertEqual(self.expectedNumberOfItems, self.viewer.size())
 
     def testRenderPeriod(self):
-        self.assertEqual(self.expectedPeriodRendering, 
+        self.assertEqual(self.expectedPeriodRendering,
                          self.viewer.widget.GetItemText(0))
 
     def testRenderRepeatedPeriod(self):
@@ -425,12 +425,12 @@ class CommonTestsMixin(object):
 
     def testSwitchAggregation(self):
         self.switchAggregation()
-        self.settings.settext(self.viewer.settingsSection(), 'aggregation', 
+        self.settings.settext(self.viewer.settingsSection(), 'aggregation',
                               self.aggregation)
         self.assertEqual(self.expectedNumberOfItems, self.viewer.size())
 
     def testAggregationIsSavedInSettings(self):
-        self.assertEqual(self.aggregation, 
+        self.assertEqual(self.aggregation,
             self.settings.get(self.viewer.settingsSection(), 'aggregation'))
 
     def testToolbarChoiceCtrlShowsAggegrationMode(self):
@@ -439,11 +439,11 @@ class CommonTestsMixin(object):
         expectedLabel = aggregationUICommand.choiceLabels[index]
         actualLabel = aggregationUICommand.choiceCtrl.GetStringSelection()
         self.assertEqual(expectedLabel, actualLabel)
-        
+
     def testSearch(self):
         self.viewer.setSearchFilter('Task2')
         self.assertEqual(1, self.viewer.size())
-        
+
     def testSearchDescription(self):
         self.task.efforts()[0].setDescription('Description')
         self.viewer.setSearchFilter('Description', searchDescription=True)
@@ -452,51 +452,51 @@ class CommonTestsMixin(object):
     def testSearchWithIncludeSubitems(self):
         self.viewer.setSearchFilter('Task2', includeSubItems=True)
         self.assertEqual(1, self.viewer.size())
-        
+
     def testDelete(self):
         self.viewer.widget.Select(0)
         self.viewer.updateSelection()
         self.viewer.deleteUICommand.doCommand(None)
         expectedNumberOfItems = self.expectedNumberOfItems - (1 if self.aggregation == 'details' else 3)
         self.assertEqual(expectedNumberOfItems, self.viewer.size())
-    
+
     def testDeleteTask(self):
         self.taskFile.tasks().remove(self.task2)
         expectedNumberOfItems = self.expectedNumberOfItems - 1
         self.assertEqual(expectedNumberOfItems, self.viewer.size())
-        
+
     def testNewEffortUsesSameTaskAsSelectedEffort(self):
-        dialog = self.viewer.newItemDialog(selectedTasks=[self.task2], 
+        dialog = self.viewer.newItemDialog(selectedTasks=[self.task2],
                                            bitmap='new')
         for newEffort in dialog._items:  # pylint: disable=W0212
             self.assertEqual(self.task2, newEffort.task())
-        
+
     def testColumnUICommands(self):
         expectedLength = dict(details=6, day=8, week=9, month=8)[self.aggregation]
         self.assertEqual(expectedLength,
                          len(self.viewer.getColumnUICommands()))
-        
+
     def testTotalTimeSpentColumnNotInDetailsMode(self):
         columns = [command.setting for command in self.viewer.getColumnUICommands() if command]
-        self.assertEqual(self.aggregation != 'details', 
+        self.assertEqual(self.aggregation != 'details',
                          'totalTimeSpent' in columns)
 
     def testTotalRevenueColumnNotInDetailsMode(self):
         columns = [command.setting for command in self.viewer.getColumnUICommands() if command]
-        self.assertEqual(self.aggregation != 'details', 
+        self.assertEqual(self.aggregation != 'details',
                          'totalRevenue' in columns)
-    
+
     def testDefaultNrOfColumns(self):
         self.assertEqual(4, self.viewer.widget.GetColumnCount())
 
     def testHideTimeSpentColumn(self):
         self.viewer.showColumnByName('timeSpent', False)
         self.assertEqual(3, self.viewer.widget.GetColumnCount())
-        
+
     def testHideRevenueColumn(self):
         self.viewer.showColumnByName('revenue', False)
         self.assertEqual(4, self.viewer.widget.GetColumnCount())
-        
+
     def testShowTotalTimeSpentColumn(self):
         self.viewer.showColumnByName('totalTimeSpent', True)
         self.assertEqual(5, self.viewer.widget.GetColumnCount())
@@ -504,7 +504,7 @@ class CommonTestsMixin(object):
     def testShowTotalRevenueColumn(self):
         self.viewer.showColumnByName('totalRevenue', True)
         self.assertEqual(5, self.viewer.widget.GetColumnCount())
-        
+
     def testTotalTimeSpentColumnIsHiddenWhenSwitchingToDetails(self):
         self.viewer.showColumnByName('totalTimeSpent', True)
         self.switchAggregation()
@@ -521,21 +521,21 @@ class CommonTestsMixin(object):
         self.task2.efforts()[0].setStop(date.DateTime.max)  # Make active
         self.viewer.secondRefresher.onEverySecond()  # Simulate clock firing
         expectedNrOfTrackedItems = 1 if self.aggregation == 'details' else 2
-        self.assertEqual(expectedNrOfTrackedItems, 
+        self.assertEqual(expectedNrOfTrackedItems,
                          len(self.viewer.secondRefresher.currentlyTrackedItems()))
-        
+
     def testActiveEffortAfterSwitch(self):
         self.task2.efforts()[0].setStop(date.DateTime.max)  # Make active
-        self.switchAggregation()    
+        self.switchAggregation()
         self.viewer.secondRefresher.onEverySecond()  # Simulate clock firing
         expectedNrOfTrackedItems = 2 if self.aggregation == 'details' else 1
-        self.assertEqual(expectedNrOfTrackedItems, 
+        self.assertEqual(expectedNrOfTrackedItems,
                          len(self.viewer.secondRefresher.currentlyTrackedItems()))
-        
+
     def testIsShowingAggregatedEffort(self):
         isAggregating = self.aggregation != 'details'
         self.assertEqual(isAggregating, self.viewer.isShowingAggregatedEffort())
-        
+
     def testStopEffortTracking(self):
         self.task.addEffort(effort.Effort(self.task))
         stopUICommand = gui.uicommand.EffortStop(viewer=self.viewer,
@@ -543,31 +543,31 @@ class CommonTestsMixin(object):
                                                  taskList=self.taskFile.tasks())
         stopUICommand.doCommand()
         self.failIf(self.task.isBeingTracked())
-    
 
-class EffortViewerWithoutAggregationTest(CommonTestsMixin, 
+
+class EffortViewerWithoutAggregationTest(CommonTestsMixin,
                                          EffortViewerAggregationTestCase):
     aggregation = 'details'
     expectedNumberOfItems = 5
     expectedPeriodRendering = render.dateTimePeriod(\
         date.DateTime(2008, 7, 23, 1, 0), date.DateTime(2008, 7, 23, 2, 0))
-    
-    
-class EffortViewerWithAggregationPerDayTest(CommonTestsMixin, 
+
+
+class EffortViewerWithAggregationPerDayTest(CommonTestsMixin,
                                             EffortViewerAggregationTestCase):
     aggregation = 'day'
-    expectedNumberOfItems = 7  # 4 day/task combinations on 3 days (== 3 total rows) 
+    expectedNumberOfItems = 7  # 4 day/task combinations on 3 days (== 3 total rows)
     expectedPeriodRendering = render.date(date.DateTime(2008, 7, 23))
 
 
-class EffortViewerWithAggregationPerWeekTest(CommonTestsMixin, 
+class EffortViewerWithAggregationPerWeekTest(CommonTestsMixin,
                                              EffortViewerAggregationTestCase):
     aggregation = 'week'
     expectedNumberOfItems = 5  # 3 week/task combinations in 2 weeks (== 2 total rows)
     expectedPeriodRendering = '2008-30'
 
 
-class EffortViewerWithAggregationPerMonthTest(CommonTestsMixin, 
+class EffortViewerWithAggregationPerMonthTest(CommonTestsMixin,
                                               EffortViewerAggregationTestCase):
     aggregation = 'month'
     expectedNumberOfItems = 3  # 2 month/task combinations in 1 month (== 1 total row)

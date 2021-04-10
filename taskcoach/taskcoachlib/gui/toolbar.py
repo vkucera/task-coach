@@ -30,7 +30,7 @@ class _Toolbar(aui.AuiToolBar):
         long_help_string = kwargs.pop('longHelp', '')
         short_help_string = kwargs.pop('shortHelp', '')
         bitmap2 = self.MakeDisabledBitmap(bitmap1)
-        super(_Toolbar, self).AddTool(id, label, bitmap1, bitmap2, kind, 
+        super(_Toolbar, self).AddTool(id, label, bitmap1, bitmap2, kind,
                                       short_help_string, long_help_string, None, None)
 
     def GetToolState(self, toolid):
@@ -53,8 +53,8 @@ class _Toolbar(aui.AuiToolBar):
 
     def MakeDisabledBitmap(self, bitmap):
         return bitmap.ConvertToImage().ConvertToGreyscale().ConvertToBitmap()
-        
-    
+
+
 class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
     def __init__(self, window, settings, size=(32, 32)):
         self.__window = window
@@ -62,7 +62,7 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
         self.__visibleUICommands = list()
         self.__cache = None
         super(ToolBar, self).__init__(window, style=wx.TB_FLAT|wx.TB_NODIVIDER)
-        self.SetToolBitmapSize(size) 
+        self.SetToolBitmapSize(size)
         if operating_system.isMac():
             # Extra margin needed because the search control is too high
             self.SetMargins(0, 7)
@@ -123,7 +123,7 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
             if 1 not in commands:
                 commands.append(1)
             from taskcoachlib.gui.dialog.toolbar import ToolBarEditor
-            uiCommand = uicommand.EditToolBarPerspective(self, ToolBarEditor, 
+            uiCommand = uicommand.EditToolBarPerspective(self, ToolBarEditor,
                                                          settings=self.__settings)
             commands.append(uiCommand)
             self.__customizeId = uiCommand.id
@@ -157,7 +157,7 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
         return self.__visibleUICommands[:]
 
     def AppendSeparator(self):
-        ''' This little adapter is needed for 
+        ''' This little adapter is needed for
         uicommand.UICommandContainerMixin.appendUICommands'''
         self.AddSeparator()
 

@@ -82,7 +82,7 @@ class BaseTextCtrl(wx.TextCtrl):
             super(BaseTextCtrl, self).Redo()
 
     def __on_key_down(self, event):
-        ''' Check whether the user pressed Ctrl-Z (or Ctrl-Y) and if so, 
+        ''' Check whether the user pressed Ctrl-Z (or Ctrl-Y) and if so,
             undo (or redo) the editing. '''
         if self.__ctrl_z_pressed(event) and self.__can_undo():
             self.__undo()
@@ -137,12 +137,12 @@ class SingleLineTextCtrl(BaseTextCtrl):
 
 class MultiLineTextCtrl(BaseTextCtrl):
     CheckSpelling = True
-    
+
     def __init__(self, parent, text='', *args, **kwargs):
         kwargs['style'] = kwargs.get('style', 0) | wx.TE_MULTILINE
         if not i18n.currentLanguageIsRightToLeft():
             # Using wx.TE_RICH will remove the RTL specific menu items
-            # from the right-click menu in the TextCtrl, so we don't use 
+            # from the right-click menu in the TextCtrl, so we don't use
             # wx.TE_RICH if the language is RTL.
             kwargs['style'] |= wx.TE_RICH | wx.TE_AUTO_URL
         super(MultiLineTextCtrl, self).__init__(parent, *args, **kwargs)
@@ -153,7 +153,7 @@ class MultiLineTextCtrl(BaseTextCtrl):
         except:
             self.__webbrowser = None
         self.MacCheckSpelling(self.CheckSpelling)
-        
+
     def onURLClicked(self, event):
         mouseEvent = event.GetMouseEvent()
         if mouseEvent.ButtonDown() and self.__webbrowser:
@@ -162,7 +162,7 @@ class MultiLineTextCtrl(BaseTextCtrl):
                 self.__webbrowser.open(url)
             except Exception as message:
                 wx.MessageBox(unicode(message), i18n._('Error opening URL'))
-     
+
     def __initializeText(self, text):
         self.AppendText(text)
         self.SetInsertionPoint(0)

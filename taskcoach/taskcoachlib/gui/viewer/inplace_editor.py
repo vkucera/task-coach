@@ -66,7 +66,7 @@ class DescriptionCtrl(KillFocusAcceptsEditsMixin, hypertreelist.EditTextCtrl):
 
 
 class EscapeKeyMixin(object):
-    ''' Mixin class for text(like) controls to properly handle the Escape key. 
+    ''' Mixin class for text(like) controls to properly handle the Escape key.
         The inheriting class needs to bind to the event handler. For example:
         self._spinCtrl.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown) '''
     def OnKeyDown(self, event):
@@ -80,62 +80,62 @@ class EscapeKeyMixin(object):
             wx.CallAfter(self.Finish)
         else:
             event.Skip()
-      
 
-class _SpinCtrl(EscapeKeyMixin, KillFocusAcceptsEditsMixin, 
+
+class _SpinCtrl(EscapeKeyMixin, KillFocusAcceptsEditsMixin,
                 hypertreelist.EditCtrl, widgets.SpinCtrl):
     ''' Base spin control class. '''
-    def __init__(self, parent, wxId, item, column, owner, value, 
+    def __init__(self, parent, wxId, item, column, owner, value,
                  *args, **kwargs):
-        super(_SpinCtrl, self).__init__(parent, wxId, item, column, owner, 
+        super(_SpinCtrl, self).__init__(parent, wxId, item, column, owner,
                                         str(value), *args, **kwargs)
         self._textCtrl.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
 
-        
+
 class PriorityCtrl(_SpinCtrl):
     ''' Spin control for priority. Since priorities can be any negative or
         positive integer we don't need to set an allowed range. '''
     pass
 
-            
+
 class PercentageCtrl(_SpinCtrl):
     ''' Spin control for percentages. '''
     def __init__(self, *args, **kwargs):
         super(PercentageCtrl, self).__init__(min=0, max=100, *args, **kwargs)
-        
+
 
 class Panel(wx.Panel):
     ''' Panel class for inline controls that need to be put into a panel. '''
     def __init__(self, parent, wxId, value, *args, **kwargs): # pylint: disable=W0613
-        # Don't pass the value argument to the wx.Panel since it doesn't take 
+        # Don't pass the value argument to the wx.Panel since it doesn't take
         # a value argument
-        super(Panel, self).__init__(parent, wxId, *args, **kwargs)      
-        
-    def makeSizer(self, control):  
+        super(Panel, self).__init__(parent, wxId, *args, **kwargs)
+
+    def makeSizer(self, control):
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         sizer.Add(control, flag=wx.EXPAND)
         self.SetSizerAndFit(sizer)
 
 
-class BudgetCtrl(EscapeKeyMixin, KillFocusAcceptsEditsMixin, 
+class BudgetCtrl(EscapeKeyMixin, KillFocusAcceptsEditsMixin,
                  hypertreelist.EditCtrl, Panel):
-    ''' Masked inline text control for editing budgets: 
+    ''' Masked inline text control for editing budgets:
         <hours>:<minutes>:<seconds>. '''
     def __init__(self, parent, wxId, item, column, owner, value):
         super(BudgetCtrl, self).__init__(parent, wxId, item, column, owner)
         hours, minutes, seconds = value.hoursMinutesSeconds()
         # Can't inherit from TimeDeltaCtrl because we need to override GetValue,
         # so we use composition instead
-        self.__timeDeltaCtrl = widgets.masked.TimeDeltaCtrl(self, hours, 
+        self.__timeDeltaCtrl = widgets.masked.TimeDeltaCtrl(self, hours,
                                                             minutes, seconds)
         self.__timeDeltaCtrl.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
         self.makeSizer(self.__timeDeltaCtrl)
-        
+
     def GetValue(self):
         return date.parseTimeDelta(self.__timeDeltaCtrl.GetValue())
 
 
-class AmountCtrl(EscapeKeyMixin, KillFocusAcceptsEditsMixin, 
+class AmountCtrl(EscapeKeyMixin, KillFocusAcceptsEditsMixin,
                  hypertreelist.EditCtrl, Panel):
     ''' Masked inline text control for editing amounts (floats >= 0). '''
     def __init__(self, parent, wxId, item, column, owner, value):
@@ -143,11 +143,11 @@ class AmountCtrl(EscapeKeyMixin, KillFocusAcceptsEditsMixin,
         self.__floatCtrl = widgets.masked.AmountCtrl(self, value)
         self.__floatCtrl.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
         self.makeSizer(self.__floatCtrl)
-        
+
     def GetValue(self):
         return self.__floatCtrl.GetValue()
- 
-    
+
+
 class DateTimeCtrl(KillFocusAcceptsEditsMixin, hypertreelist.EditCtrl, Panel):
     ''' Inline date and time picker control. '''
     def __init__(self, parent, wxId, item, column, owner, value, **kwargs):
@@ -160,12 +160,12 @@ class DateTimeCtrl(KillFocusAcceptsEditsMixin, hypertreelist.EditCtrl, Panel):
         endhour = settings.getint('view', 'efforthourend')
         interval = settings.getint('view', 'effortminuteinterval')
         self._dateTimeCtrl = widgets.DateTimeCtrl(self, starthour=starthour,
-                                                   endhour=endhour, 
+                                                   endhour=endhour,
                                                    interval=interval, showRelative=relative)
         self._dateTimeCtrl.SetValue(value)
         if relative:
             self._dateTimeCtrl.SetRelativeChoicesStart(start=None if start == date.DateTime() else start)
         self.makeSizer(self._dateTimeCtrl)
-                
+
     def GetValue(self):
         return self._dateTimeCtrl.GetValue()

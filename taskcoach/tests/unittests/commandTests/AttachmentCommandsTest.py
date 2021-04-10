@@ -30,21 +30,21 @@ class AddAttachmentTestsMixin(object):
 
     def testAddOneAttachmentToOneItem(self):
         self.addAttachment([self.item1])
-        self.assertDoUndoRedo(lambda: self.assertEqual([self.attachment], 
-            self.item1.attachments()), lambda: self.assertEqual([], 
+        self.assertDoUndoRedo(lambda: self.assertEqual([self.attachment],
+            self.item1.attachments()), lambda: self.assertEqual([],
             self.item1.attachments()))
-            
+
     def testAddOneAttachmentToTwoItems(self):
         self.addAttachment([self.item1, self.item2])
         self.assertDoUndoRedo(lambda: self.failUnless([self.attachment] == \
-            self.item1.attachments() == self.item2.attachments()), 
+            self.item1.attachments() == self.item2.attachments()),
             lambda: self.failUnless([] == self.item1.attachments() == \
             self.item2.attachments()))
 
 
 class AddAttachmentTestCase(CommandTestCase):
     ItemClass = ContainerClass = lambda subject: 'Subclass responsibility'
-    
+
     def setUp(self):
         super(AddAttachmentTestCase, self).setUp()
         self.item1 = self.ItemClass(subject='item1')
@@ -65,5 +65,4 @@ class AddAttachmentCommandWithNotesTest(AddAttachmentTestCase, AddAttachmentTest
 class AddAttachmentCommandWithCategoriesTest(AddAttachmentTestCase, AddAttachmentTestsMixin):
     ItemClass = category.Category
     ContainerClass = category.CategoryList
-    
-    
+

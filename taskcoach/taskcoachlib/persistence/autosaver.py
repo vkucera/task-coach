@@ -21,9 +21,9 @@ import wx
 
 
 class AutoSaver(object):
-    ''' AutoSaver observes task files. If a task file is changed by the user 
+    ''' AutoSaver observes task files. If a task file is changed by the user
         (gets 'dirty') and auto save is on, AutoSaver saves the task file. '''
-        
+
     def __init__(self, settings, *args, **kwargs):
         super(AutoSaver, self).__init__(*args, **kwargs)
         self.__settings = settings
@@ -32,7 +32,7 @@ class AutoSaver(object):
         pub.subscribe(self.onTaskFileDirty, 'taskfile.dirty')
 
     def onTaskFileDirty(self, taskFile):
-        ''' When a task file gets dirty and auto save is on, note it so 
+        ''' When a task file gets dirty and auto save is on, note it so
             it can be saved during idle time. '''
         if self._needSave(taskFile):
             self.__task_files.add(taskFile)

@@ -24,10 +24,10 @@ from wx.lib import sized_controls
 
 
 class VersionDialog(sized_controls.SizedDialog):  # pylint: disable=R0904,R0901
-    ''' Base class for dialogs that announce a new version (and variants 
+    ''' Base class for dialogs that announce a new version (and variants
         thereof). '''
     title = ''
-    
+
     def __init__(self, *args, **kwargs):
         self.settings = kwargs.pop('settings')
         self.message = kwargs.pop('message')
@@ -45,12 +45,12 @@ class VersionDialog(sized_controls.SizedDialog):  # pylint: disable=R0904,R0901
         self.Fit()
         buttonSizer.GetAffirmativeButton().Bind(wx.EVT_BUTTON, self.onClose)
         self.Bind(wx.EVT_CLOSE, self.onClose)
-        
+
     def createInterior(self, pane):
         ''' Create the interior parts of the dialog, i.e. the message for the
             user. '''
         raise NotImplementedError
-        
+
     def onClose(self, event):
         ''' When the user closes the dialog, remember whether (s)he wants to be
             notified of new versions. '''
@@ -60,37 +60,37 @@ class VersionDialog(sized_controls.SizedDialog):  # pylint: disable=R0904,R0901
 
 class NewVersionDialog(VersionDialog):
     title = _('New version of %(name)s available') % dict(name=meta.data.name)
-            
+
     def createInterior(self, panel):
-        wx.StaticText(panel, 
+        wx.StaticText(panel,
             label=_('You are using %(name)s version %(currentVersion)s.') % \
                   self.messageInfo)
         urlPanel = sized_controls.SizedPanel(panel)
         urlPanel.SetSizerType('horizontal')
-        wx.StaticText(urlPanel, 
+        wx.StaticText(urlPanel,
             label=_('Version %(version)s of %(name)s is available from') % \
                   self.messageInfo)
         hyperlink.HyperLinkCtrl(urlPanel, label=meta.data.url)
-        
-        
+
+
 class VersionUpToDateDialog(VersionDialog):
     title = _('%(name)s is up to date') % dict(name=meta.data.name)
 
     def createInterior(self, panel):
-        wx.StaticText(panel, 
+        wx.StaticText(panel,
             label=_('%(name)s is up to date at version %(version)s.') % \
                   self.messageInfo)
-        
-        
+
+
 class NoVersionDialog(VersionDialog):
     title = _("Couldn't find out latest version")
-        
+
     def createInterior(self, panel):
         wx.StaticText(panel, label=_("Couldn't find out what the latest "
                       "version of %(name)s is.") % self.messageInfo)
         wx.StaticText(panel, label=self.message)
-        
-        
+
+
 class PrereleaseVersionDialog(VersionDialog):
     title = _("Prerelease version")
 

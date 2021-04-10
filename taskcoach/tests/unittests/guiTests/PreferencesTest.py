@@ -28,27 +28,27 @@ class PreferencesTest(test.wxTestCase):
             settings=self.settings)
         self.originalColor = self.settings.get('fgcolor', 'activetasks')
         self.newColor = (1, 2, 29)
-        
+
     # pylint: disable=W0212
-    
+
     def testCancel(self):
         self.preferences[5]._colorSettings[4][2].SetColour(self.newColor)
         self.preferences.cancel()
         self.assertEqual(self.originalColor, self.settings.get('fgcolor', 'activetasks'))
-        
+
     def testOk(self):
         self.preferences[5]._colorSettings[4][2].SetColour(self.newColor)
         self.preferences.ok()
-        self.assertEqual(self.newColor, 
+        self.assertEqual(self.newColor,
             eval(self.settings.get('fgcolor', 'activetasks'))[:3])
-        
+
 
 class SyncMLPreferencesTest(test.TestCase):
     def testCreate(self):
         taskFile = persistence.TaskFile()
         try:
             gui.dialog.syncpreferences.SyncMLPreferences(parent=None,
-                  iocontroller=gui.IOController(taskFile, None, None), 
+                  iocontroller=gui.IOController(taskFile, None, None),
                   title='Edit SyncML preferences')
         finally:
             taskFile.close()

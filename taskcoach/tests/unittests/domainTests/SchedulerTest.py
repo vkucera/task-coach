@@ -20,7 +20,7 @@ import test, time
 from taskcoachlib.domain import date
 
 
-class SchedulerTest(test.TestCase):    
+class SchedulerTest(test.TestCase):
     def setUp(self):
         super(SchedulerTest, self).setUp()
         self.scheduler = date.Scheduler()

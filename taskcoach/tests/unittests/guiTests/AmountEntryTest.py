@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test
-from taskcoachlib.gui.dialog import entry 
+from taskcoachlib.gui.dialog import entry
 
 
 class AmountEntryTest(test.wxTestCase):

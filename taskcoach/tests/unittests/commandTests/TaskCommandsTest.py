@@ -30,12 +30,12 @@ class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
         self.categories = category.CategoryList()
         self.category = category.Category('cat')
         self.categories.append(self.category)
-        self.task1 = task.Task('task1', plannedStartDateTime=date.Now(), 
+        self.task1 = task.Task('task1', plannedStartDateTime=date.Now(),
                                dueDateTime=date.Now() + date.ONE_HOUR)
         self.task2 = task.Task('task2', plannedStartDateTime=date.Now())
         self.taskList.append(self.task1)
         self.originalList = [self.task1]
-        
+
     def tearDown(self):
         super(TaskCommandTestCase, self).tearDown()
         command.Clipboard().clear()
@@ -44,7 +44,7 @@ class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
         if items == 'all':
             items = list(self.list)
         command.DeleteTaskCommand(self.list, items or [], shadow=shadow).do()
- 
+
     def paste(self, items=None):  # pylint: disable=W0221
         if items:
             command.PasteAsSubItemCommand(self.taskList, items).do()
@@ -53,17 +53,17 @@ class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
 
     def copy(self, items=None):
         command.CopyCommand(self.list, items or []).do()
-        
+
     def markCompleted(self, tasks=None):
         command.MarkCompletedCommand(self.taskList, tasks or []).do()
-        
+
     def editPercentageComplete(self, tasks=None, percentage=50):
-        command.EditPercentageCompleteCommand(self.taskList, tasks or [], 
+        command.EditPercentageCompleteCommand(self.taskList, tasks or [],
                                               newValue=percentage).do()
-                                              
+
     def markActive(self, tasks=None):
         command.MarkActiveCommand(self.taskList, tasks or []).do()
-        
+
     def markInactive(self, tasks=None):
         command.MarkInactiveCommand(self.taskList, tasks or []).do()
 
@@ -76,9 +76,9 @@ class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
         newSubTask.do()
 
     def dragAndDrop(self, dropTarget, tasks=None):
-        command.DragAndDropTaskCommand(self.taskList, tasks or [], 
+        command.DragAndDropTaskCommand(self.taskList, tasks or [],
                                        drop=dropTarget).do()
-        
+
     def editPlannedStart(self, newPlannedStartDateTime, tasks=None, keep_delta=False):
         command.EditPlannedStartDateTimeCommand(self.taskList, tasks or [],
                                                 newValue=newPlannedStartDateTime,
@@ -101,7 +101,7 @@ class CommandWithChildrenTestCase(TaskCommandTestCase):
         self.child.addChild(self.grandchild)
         self.originalList.extend([self.parent, self.child, self.child2, self.grandchild])
         self.taskList.append(self.parent)
-        
+
 
 class CommandWithEffortTestCase(TaskCommandTestCase):
     def setUp(self):
@@ -109,7 +109,7 @@ class CommandWithEffortTestCase(TaskCommandTestCase):
         self.list = self.effortList = effort.EffortList(self.taskList)
         self.effort1 = effort.Effort(self.task1)
         self.task1.addEffort(self.effort1)
-        self.effort2 = effort.Effort(self.task2, 
+        self.effort2 = effort.Effort(self.task2,
             date.DateTime(2004, 1, 1), date.DateTime(2004, 1, 2))
         self.task2.addEffort(self.effort2)
         self.taskList.append(self.task2)
@@ -120,7 +120,7 @@ class DeleteCommandWithTasksTest(TaskCommandTestCase):
     def testDeleteAllTasks(self):
         self.taskList.append(self.task2)
         self.delete('all')
-        self.assertDoUndoRedo(self.assertEmptyTaskList, 
+        self.assertDoUndoRedo(self.assertEmptyTaskList,
             lambda: self.assertTaskList([self.task1, self.task2]))
 
     def testDeleteOneTask(self):
@@ -143,14 +143,14 @@ class DeleteCommandWithTasksTest(TaskCommandTestCase):
         self.delete('all')
         self.assertDoUndoRedo(self.assertEmptyTaskList,
             lambda: self.assertTaskList(self.originalList))
-        
+
     def testDeleteTaskWithCategory(self):
         self.category.addCategorizable(self.task1)
         self.task1.addCategory(self.category)
         self.delete('all')
-        self.assertDoUndoRedo(lambda: self.failIf(self.category.categorizables()), 
+        self.assertDoUndoRedo(lambda: self.failIf(self.category.categorizables()),
             lambda: self.assertEqual(set([self.task1]), self.category.categorizables()))
-        
+
     def testDeleteTaskWithTwoCategories(self):
         cat1 = category.Category('category 1')
         cat2 = category.Category('category 2')
@@ -159,9 +159,9 @@ class DeleteCommandWithTasksTest(TaskCommandTestCase):
             cat.addCategorizable(self.task1)
             self.task1.addCategory(cat)
         self.delete('all')
-        self.assertDoUndoRedo(lambda: self.failIf(cat1.categorizables() or cat2.categorizables()), 
+        self.assertDoUndoRedo(lambda: self.failIf(cat1.categorizables() or cat2.categorizables()),
             lambda: self.failUnless(set([self.task1]) == cat1.categorizables() == cat2.categorizables()))
-        
+
     def testDeleteTaskThatIsPrerequisite(self):
         self.task2.addPrerequisites([self.task1])
         self.task1.addDependencies([self.task2])
@@ -194,15 +194,15 @@ class DeleteCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):
     def assertShadowed(self, *shadowedTasks):
         for shadowedTask in shadowedTasks:
             self.failUnless(shadowedTask.isDeleted())
-        
+
     def testDeleteParent(self):
         self.delete([self.parent])
         self.assertDeleteWorks()
-        
+
     def testDeleteParentWhileShadowing(self):
         self.delete([self.parent], shadow=True)
         self.assertShadowed(self.parent, *self.parent.children())
-        
+
     def testDeleteParentAndChild(self):
         self.delete([self.parent, self.child])
         self.assertDeleteWorks()
@@ -212,20 +212,20 @@ class DeleteCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):
         self.assertDeleteWorks()
 
     def testDeleteLastNotCompletedChildMarksParentAsCompleted(self):
-        self.settings.setboolean('behavior', 
-                                 'markparentcompletedwhenallchildrencompleted', 
+        self.settings.setboolean('behavior',
+                                 'markparentcompletedwhenallchildrencompleted',
                                  True)
         self.markCompleted([self.child2])
         self.delete([self.child])
         self.assertDoUndoRedo(
-            lambda: self.failUnless(self.parent.completed()), 
+            lambda: self.failUnless(self.parent.completed()),
             lambda: self.failIf(self.parent.completed()))
-        
+
     def testDeleteParentAndChildWhenChildBelongsToCategory(self):
         self.category.addCategorizable(self.child)
         self.child.addCategory(self.category)
         self.delete([self.parent])
-        self.assertDoUndoRedo(lambda: self.failIf(self.category.categorizables()), 
+        self.assertDoUndoRedo(lambda: self.failIf(self.category.categorizables()),
             lambda: self.assertEqual(set([self.child]), self.category.categorizables()))
 
     def testDeleteParentAndChildWhenParentAndChildBelongToDifferentCategories(self):
@@ -237,7 +237,7 @@ class DeleteCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):
         cat2.addCategorizable(self.parent)
         self.parent.addCategory(cat2)
         self.delete([self.parent])
-        self.assertDoUndoRedo(lambda: self.failIf(cat1.categorizables() or cat2.categorizables()), 
+        self.assertDoUndoRedo(lambda: self.failIf(cat1.categorizables() or cat2.categorizables()),
             lambda: self.failUnless(set([self.child]) == cat1.categorizables() and \
                                     set([self.parent]) == cat2.categorizables()))
 
@@ -247,8 +247,8 @@ class DeleteCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):
             eachTask.addCategory(self.category)
         self.delete([self.parent])
         self.assertDoUndoRedo( \
-            lambda: self.failIf(self.category.categorizables()), 
-            lambda: self.assertEqualLists([self.parent, self.child], 
+            lambda: self.failIf(self.category.categorizables()),
+            lambda: self.assertEqualLists([self.parent, self.child],
                                           self.category.categorizables()))
 
 
@@ -267,13 +267,13 @@ class NewTaskCommandTest(TaskCommandTestCase):
         newTask = newTaskCommand.items[0]
         newTaskCommand.do()
         return newTask
-    
+
     def testNewTask(self):
         newTask = self.new()
         self.assertDoUndoRedo(
             lambda: self.assertTaskList([self.task1, newTask]),
             lambda: self.assertTaskList(self.originalList))
-        
+
     def testNewTaskWithCategory(self):
         cat = category.Category('cat')
         newTask = self.new(categories=[cat])
@@ -293,7 +293,7 @@ class NewTaskCommandTest(TaskCommandTestCase):
         self.assertDoUndoRedo(
             lambda: self.assertEqual(set([self.task1]), newTask.prerequisites()),
             lambda: self.assertTaskList(self.originalList))
-        
+
     def testNewTaskWithPrerequisite_AddsDependency(self):
         newTask = self.new(prerequisites=[self.task1])
         self.assertDoUndoRedo(
@@ -311,19 +311,19 @@ class NewTaskCommandTest(TaskCommandTestCase):
         self.assertDoUndoRedo(
             lambda: self.assertEqual(set([newTask]), self.task1.prerequisites()),
             lambda: self.failIf(self.task1.prerequisites()))
-        
+
     def testNewTaskWithAttachment(self):
         att = attachment.FileAttachment('filename')
         newTask = self.new(attachments=[att])
         self.assertDoUndoRedo(
             lambda: self.assertEqual([att], newTask.attachments()),
             lambda: self.assertTaskList(self.originalList))
-        
+
     def testNewTaskWithKeywords(self):
         dateTime = date.DateTime(2042, 2, 3)
         newTask = self.new(plannedStartDateTime=dateTime)
         self.assertEqual(dateTime, newTask.plannedStartDateTime())
-        
+
     def testItemsAreNew(self):
         self.failUnless(command.NewTaskCommand(self.taskList).items_are_new())
 
@@ -357,22 +357,22 @@ class NewSubTaskCommandTest(TaskCommandTestCase):
             lambda: self.failUnless(self.task1.completed()))
 
     def testNewCompletedSubTask(self):
-        self.settings.setboolean('behavior', 
-                                 'markparentcompletedwhenallchildrencompleted', 
+        self.settings.setboolean('behavior',
+                                 'markparentcompletedwhenallchildrencompleted',
                                  True)
         self.newSubTask([self.task1], markCompleted=True)
         self.assertDoUndoRedo(lambda: self.failUnless(self.task1.completed()),
             lambda: self.failIf(self.task1.completed()))
-        
+
     def testNewSubTaskWithoutDueDateDoesntResetParentsDueDate(self):
         dueDateTime = date.Now() + date.TWO_HOURS
         self.task1.setDueDateTime(dueDateTime)
         self.newSubTask([self.task1])
-        self.assertDoUndoRedo(lambda: self.assertEqual(dueDateTime, 
+        self.assertDoUndoRedo(lambda: self.assertEqual(dueDateTime,
                                       self.task1.dueDateTime()))
 
     def testItemsAreNew(self):
-        self.failUnless(command.NewSubTaskCommand(self.taskList, 
+        self.failUnless(command.NewSubTaskCommand(self.taskList,
                                                   []).items_are_new())
 
 
@@ -402,27 +402,27 @@ class MarkCompletedCommandTest(CommandWithChildrenTestCase):
         self.assertDoUndoRedo(lambda: self.failUnless(self.child.completed()))
 
     def testMarkCompletedGrandChild(self):
-        self.settings.setboolean('behavior', 
-                                 'markparentcompletedwhenallchildrencompleted', 
+        self.settings.setboolean('behavior',
+                                 'markparentcompletedwhenallchildrencompleted',
                                  True)
         self.markCompleted([self.grandchild])
         self.assertDoUndoRedo(
-            lambda: self.failUnless(self.child.completed() and 
-                not self.parent.completed()), 
-            lambda: self.failIf(self.child.completed() or 
+            lambda: self.failUnless(self.child.completed() and
+                not self.parent.completed()),
+            lambda: self.failIf(self.child.completed() or
                 self.parent.completed()))
 
     def testMarkCompletedStopsEffortTracking(self):
         self.task1.addEffort(effort.Effort(self.task1))
         self.markCompleted([self.task1])
-        self.assertDoUndoRedo(lambda: self.failIf(self.task1.isBeingTracked()), 
+        self.assertDoUndoRedo(lambda: self.failIf(self.task1.isBeingTracked()),
             lambda: self.failUnless(self.task1.isBeingTracked()))
-            
+
     def testMarkCompletedChildDoesNotStopEffortTrackingOfParent(self):
         self.parent.addEffort(effort.Effort(self.parent))
         self.markCompleted([self.child])
         self.assertDoUndoRedo(lambda: self.failUnless(self.parent.isBeingTracked()))
-        
+
     def testMarkRecurringTaskCompleted_CompletionDateIsNotSet(self):
         self.task1.setRecurrence(date.Recurrence('weekly'))
         self.markCompleted([self.task1])
@@ -446,7 +446,7 @@ class MarkCompletedCommandTest(CommandWithChildrenTestCase):
         self.assertDoUndoRedo(
             lambda: self.assertEqual(newDueDate, self.task1.dueDateTime()),
             lambda: self.assertEqual(tomorrow, self.task1.dueDateTime()))
-        
+
     def testMarkRecurringTaskCompleted_ActualStartDateIsReset(self):
         self.task1.setRecurrence(date.Recurrence('weekly'))
         now = date.Now()
@@ -455,7 +455,7 @@ class MarkCompletedCommandTest(CommandWithChildrenTestCase):
         self.assertDoUndoRedo(
             lambda: self.assertEqual(date.DateTime(), self.task1.actualStartDateTime()),
             lambda: self.assertEqual(now, self.task1.actualStartDateTime()))
-        
+
     def testMarkParentWithRecurringChildCompleted_RemovesChildRecurrence(self):
         self.child.setRecurrence(date.Recurrence('daily'))
         self.markCompleted([self.parent])
@@ -477,7 +477,7 @@ class EditPercentageCompleteTest(TaskCommandTestCase):
         self.assertDoUndoRedo(
             lambda: self.assertEqual(50, self.task1.percentageComplete()),
             lambda: self.assertEqual(0, self.task1.percentageComplete()))
-        
+
     def testTaskIsStartedAfterEditingPercentageComplete(self):
         self.editPercentageComplete([self.task1])
         self.assertDoUndoRedo(
@@ -491,10 +491,10 @@ class MarkActiveCommandTest(TaskCommandTestCase):
         self.assertDoUndoRedo(
             lambda: self.assertNotEqual(date.DateTime(), self.task1.actualStartDateTime()),
             lambda: self.assertEqual(date.DateTime(), self.task1.actualStartDateTime()))
-    
+
     def testMarkCompletedTaskActive(self):
         now = date.Now()
-        self.task1.setCompletionDateTime(now)        
+        self.task1.setCompletionDateTime(now)
         self.markActive([self.task1])
         self.assertDoUndoRedo(
             lambda: self.assertEqual(date.DateTime(), self.task1.completionDateTime()),
@@ -506,7 +506,7 @@ class MarkActiveCommandTest(TaskCommandTestCase):
         self.markActive([self.task1])
         self.assertDoUndoRedo(
             lambda: self.assertEqual(now, self.task1.actualStartDateTime()))
-        
+
     def testTaskWithFutureActualStartDateTime(self):
         tomorrow = date.Tomorrow()
         self.task1.setActualStartDateTime(tomorrow)
@@ -524,7 +524,7 @@ class MarkInactiveCommandTest(TaskCommandTestCase):
         self.assertDoUndoRedo(
             lambda: self.assertEqual(date.DateTime(), self.task1.actualStartDateTime()),
             lambda: self.assertEqual(now, self.task1.actualStartDateTime()))
-    
+
     def testMarkCompletedTaskInactive(self):
         now = date.Now()
         self.task1.setCompletionDateTime(now)
@@ -532,12 +532,12 @@ class MarkInactiveCommandTest(TaskCommandTestCase):
         self.assertDoUndoRedo(
             lambda: self.assertEqual(date.DateTime(), self.task1.completionDateTime()),
             lambda: self.assertEqual(now, self.task1.completionDateTime()))
-        
+
     def testIgnoreTaskThatIsAlreadyInactive(self):
         self.markInactive([self.task1])
         self.assertDoUndoRedo(
             lambda: self.assertEqual(date.DateTime(), self.task1.actualStartDateTime()))
-        
+
     def testTaskWithFutureActualStartDateTime(self):
         tomorrow = date.Tomorrow()
         self.task1.setActualStartDateTime(tomorrow)
@@ -545,27 +545,27 @@ class MarkInactiveCommandTest(TaskCommandTestCase):
         self.assertDoUndoRedo(
             lambda: self.assertEqual(date.DateTime(), self.task1.actualStartDateTime()),
             lambda: self.assertEqual(tomorrow, self.task1.actualStartDateTime()))
-           
+
 
 class DragAndDropTaskCommandTest(CommandWithChildrenTestCase):
     def testCannotDropOnParent(self):
         self.dragAndDrop([self.parent], [self.child])
         self.failIf(patterns.CommandHistory().hasHistory())
-        
+
     def testCannotDropOnChild(self):
         self.dragAndDrop([self.child], [self.parent])
         self.failIf(patterns.CommandHistory().hasHistory())
-        
+
     def testCannotDropOnGrandchild(self):
         self.dragAndDrop([self.grandchild], [self.parent])
         self.failIf(patterns.CommandHistory().hasHistory())
 
     def testDropAsRootTask(self):
         self.dragAndDrop([], [self.grandchild])
-        self.assertDoUndoRedo(lambda: self.assertEqual(None, 
+        self.assertDoUndoRedo(lambda: self.assertEqual(None,
             self.grandchild.parent()), lambda:
             self.assertEqual(self.child, self.grandchild.parent()))
-        
+
 
 class PriorityCommandTestCase(TaskCommandTestCase):
     def setUp(self):
@@ -579,45 +579,45 @@ class PriorityCommandTestCase(TaskCommandTestCase):
             lambda: self.failUnless(priority1undo == self.task1.priority() and
                     priority2undo == self.task2.priority()))
 
-        
+
 class MaxPriorityCommandTest(PriorityCommandTestCase):
     def maxPriority(self, tasks=None):
-        command.MaxPriorityCommand(self.taskList, tasks or []).do()        
-        
+        command.MaxPriorityCommand(self.taskList, tasks or []).do()
+
     def testEmptySelection(self):
         self.maxPriority()
         self.assertDoUndoRedo(0, 0, 0, 0)
-        
+
     def testOneTaskWhenBothTasksHaveSamePriority(self):
         self.maxPriority([self.task1])
         self.assertDoUndoRedo(1, 0, 0, 0)
-        
+
     def testBothTasksWhenBothTasksHaveSamePriority(self):
         self.maxPriority([self.task1, self.task2])
         self.assertDoUndoRedo(1, 1, 0, 0)
-        
+
     def testMakeLowestPriorityTheMaxPriority(self):
         self.task2.setPriority(2)
         self.maxPriority([self.task1])
         self.assertDoUndoRedo(3, 2, 0, 2)
 
 
-class MinPriorityCommandTest(PriorityCommandTestCase):        
+class MinPriorityCommandTest(PriorityCommandTestCase):
     def minPriority(self, tasks=None):
-        command.MinPriorityCommand(self.taskList, tasks or []).do()        
+        command.MinPriorityCommand(self.taskList, tasks or []).do()
 
     def testEmptySelection(self):
         self.minPriority()
         self.assertDoUndoRedo(0, 0, 0, 0)
-        
+
     def testOneTaskWhenBothTasksHaveSamePriority(self):
         self.minPriority([self.task1])
         self.assertDoUndoRedo(-1, 0, 0, 0)
-        
+
     def testBothTasksWhenBothTasksHaveSamePriority(self):
         self.minPriority([self.task1, self.task2])
         self.assertDoUndoRedo(-1, -1, 0, 0)
-        
+
     def testMakeLowestPriorityTheMaxPriority(self):
         self.task2.setPriority(-2)
         self.minPriority([self.task1])
@@ -627,41 +627,41 @@ class MinPriorityCommandTest(PriorityCommandTestCase):
 class IncreasePriorityCommandTest(PriorityCommandTestCase):
     def incPriority(self, tasks=None):
         command.IncPriorityCommand(self.taskList, tasks or []).do()
-        
+
     def testEmptySelection(self):
         self.incPriority()
         self.assertDoUndoRedo(0, 0, 0, 0)
-        
+
     def testOneTaskWhenBothTasksHaveSamePriority(self):
         self.incPriority([self.task1])
         self.assertDoUndoRedo(1, 0, 0, 0)
-        
+
     def testBothTasksWhenBothTasksHaveSamePriority(self):
         self.incPriority([self.task1, self.task2])
         self.assertDoUndoRedo(1, 1, 0, 0)
-        
+
     def testIncLowestPriority(self):
         self.task2.setPriority(-2)
         self.incPriority([self.task2])
         self.assertDoUndoRedo(0, -1, 0, -2)
-    
+
 
 class DecreasePriorityCommandTest(PriorityCommandTestCase):
     def decPriority(self, tasks=None):
         command.DecPriorityCommand(self.taskList, tasks or []).do()
-        
+
     def testEmptySelection(self):
         self.decPriority()
         self.assertDoUndoRedo(0, 0, 0, 0)
-        
+
     def testOneTaskWhenBothTasksHaveSamePriority(self):
         self.decPriority([self.task1])
         self.assertDoUndoRedo(-1, 0, 0, 0)
-        
+
     def testBothTasksWhenBothTasksHaveSamePriority(self):
         self.decPriority([self.task1, self.task2])
         self.assertDoUndoRedo(-1, -1, 0, 0)
-        
+
     def testDecLowestPriority(self):
         self.task2.setPriority(-2)
         self.decPriority([self.task2])
@@ -670,36 +670,36 @@ class DecreasePriorityCommandTest(PriorityCommandTestCase):
 
 class EditReminderCommandTest(TaskCommandTestCase):
     def editReminder(self, tasks=None):
-        command.EditReminderDateTimeCommand(self.taskList, tasks or [], 
+        command.EditReminderDateTimeCommand(self.taskList, tasks or [],
                                             newValue=date.Now() + date.ONE_HOUR).do()
-        
+
     def testEditReminder(self):
         self.editReminder([self.task1])
         self.assertDoUndoRedo(lambda: self.failUnless(self.task1.reminder()),
                               lambda: self.failIf(self.task1.reminder()))
-        
+
 
 class AddNoteCommandTest(TaskCommandTestCase):
     def addNote(self, tasks=None):
         command.AddNoteCommand(self.taskList, tasks or []).do()
-    
+
     # pylint: disable=E1101
-    
+
     def testEmptySelection(self):
         self.addNote()
         self.assertDoUndoRedo(lambda: self.failIf(self.task1.notes()))
-        
+
     def testAddNote(self):
         self.addNote([self.task1])
         self.assertDoUndoRedo(lambda: self.failUnless(self.task1.notes()),
             lambda: self.failIf(self.task1.notes()))
-            
+
     def testAddNoteToMultipleTasksAtOnce(self):
         self.addNote([self.task1, self.task2])
         self.assertDoUndoRedo(\
             lambda: self.failIf(self.task1.notes()[0] == self.task2.notes()[0]),
             lambda: self.failIf(self.task1.notes() or self.task2.notes()))
-    
+
 
 class EditDuePlannedStartDateCommandTest(TaskCommandTestCase):
     def testSetPlannedStartDateToTomorrow(self):
@@ -719,7 +719,7 @@ class EditDuePlannedStartDateCommandTest(TaskCommandTestCase):
             lambda: self.assertEqual(previousDue, self.task1.dueDateTime()))
 
     def testPushingBackPlannedStartDatePushesBackDueDate(self):
-        self.task1.setDueDateTime(date.Now() + date.TWO_HOURS) 
+        self.task1.setDueDateTime(date.Now() + date.TWO_HOURS)
         previousPlannedStart = self.task1.plannedStartDateTime()
         previousDue = self.task1.dueDateTime()
         pushBack = date.ONE_HOUR
@@ -743,7 +743,7 @@ class EditDuePlannedStartDateCommandTest(TaskCommandTestCase):
             lambda: self.assertEqual(previousPlannedStart, self.task1.plannedStartDateTime()))
 
     def testPushingBackPlannedStartDateDoesNotPushBackDueDate(self):
-        self.task1.setDueDateTime(date.Now() + date.TWO_HOURS) 
+        self.task1.setDueDateTime(date.Now() + date.TWO_HOURS)
         previousPlannedStart = self.task1.plannedStartDateTime()
         previousDue = self.task1.dueDateTime()
         pushBack = date.ONE_HOUR
@@ -805,31 +805,31 @@ class EditDuePlannedStartDateCommandTest(TaskCommandTestCase):
         self.editDue(newDue, [self.task1], keep_delta=True)
         self.assertDoUndoRedo(\
             lambda: self.assertEqual(expectedStart, self.task1.plannedStartDateTime()))
-        
+
     def testSetInfinitePlannedStartDate(self):
         newPlannedStartDateTime = date.DateTime()
         originalPlannedStartDateTime = self.task1.plannedStartDateTime()
         self.editPlannedStart(newPlannedStartDateTime, [self.task1])
         self.assertDoUndoRedo(lambda: self.assertEqual(newPlannedStartDateTime, self.task1.plannedStartDateTime()),
                               lambda: self.assertEqual(originalPlannedStartDateTime, self.task1.plannedStartDateTime()))
-        
+
     def testSetInfinitePlannedStartDateDoesNotChangeDueDate(self):
         newPlannedStartDateTime = date.DateTime()
         originalDueDateTime = self.task1.dueDateTime()
         self.editPlannedStart(newPlannedStartDateTime, [self.task1], keep_delta=True)
-        self.assertDoUndoRedo(lambda: self.assertEqual(originalDueDateTime, 
+        self.assertDoUndoRedo(lambda: self.assertEqual(originalDueDateTime,
                                                        self.task1.dueDateTime()))
-        
+
     def testSetInfiniteDueDate(self):
         newDueDateTime = date.DateTime()
         originalDueDateTime = self.task1.dueDateTime()
         self.editDue(newDueDateTime, [self.task1])
         self.assertDoUndoRedo(lambda: self.assertEqual(newDueDateTime, self.task1.dueDateTime()),
                               lambda: self.assertEqual(originalDueDateTime, self.task1.dueDateTime()))
-        
+
     def testSetInfiniteDueDateDoesNotChangePlannedStartDate(self):
         newDueDateTime = date.DateTime()
         originalPlannedStartDateTime = self.task1.plannedStartDateTime()
         self.editDue(newDueDateTime, [self.task1], keep_delta=True)
-        self.assertDoUndoRedo(lambda: self.assertEqual(originalPlannedStartDateTime, 
+        self.assertDoUndoRedo(lambda: self.assertEqual(originalPlannedStartDateTime,
                                                        self.task1.plannedStartDateTime()))

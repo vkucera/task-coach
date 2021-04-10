@@ -19,6 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from .singleton import *
 from .observer import *
 from .command import *
-from .composite import (Composite, ObservableComposite, CompositeList, 
+from .composite import (Composite, ObservableComposite, CompositeList,
                        CompositeSet)
 from .metaclass import *

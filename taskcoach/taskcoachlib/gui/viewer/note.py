@@ -32,23 +32,23 @@ import wx
 
 
 class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
-                     mixin.SearchableViewerMixin, 
+                     mixin.SearchableViewerMixin,
                      mixin.SortableViewerForNotesMixin,
-                     mixin.AttachmentColumnMixin, 
+                     mixin.AttachmentColumnMixin,
                      base.CategorizableViewerMixin,
                      base.WithAttachmentsViewerMixin,
                      base.SortableViewerWithColumns, base.TreeViewer):
     SorterClass = note.NoteSorter
     defaultTitle = _('Notes')
     defaultBitmap = 'note_icon'
-    
+
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'noteviewer')
         self.notesToShow = kwargs.get('notesToShow', None)
         super(BaseNoteViewer, self).__init__(*args, **kwargs)
-        for eventType in (note.Note.appearanceChangedEventType(), 
+        for eventType in (note.Note.appearanceChangedEventType(),
                           note.Note.subjectChangedEventType()):
-            self.registerObserver(self.onAttributeChanged_Deprecated, 
+            self.registerObserver(self.onAttributeChanged_Deprecated,
                                   eventType)
 
     def domainObjectsToView(self):
@@ -75,17 +75,17 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
             widget.SetMainColumn(1)
         widget.AssignImageList(imageList)  # pylint: disable=E1101
         return widget
-    
+
     def createFilter(self, notes):
         notes = super(BaseNoteViewer, self).createFilter(notes)
         return domain.base.DeletedFilter(notes)
-    
+
     def createCreationToolBarUICommands(self):
         return (uicommand.NoteNew(notes=self.presentation(),
                                   settings=self.settings, viewer=self),
                 uicommand.NewSubItem(viewer=self),) + \
             super(BaseNoteViewer, self).createCreationToolBarUICommands()
-        
+
     def createColumnUICommands(self):
         return [\
             uicommand.ToggleAutoColumnResizing(viewer=self,
@@ -120,27 +120,27 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                 value='ordering', menuText=_('&Manual ordering'),
                 helpText=_('Sort notes manually')))
         # XXXCHECK editCallback & co
-        subjectColumn = widgets.Column('subject', _('Subject'), 
-            width=self.getColumnWidth('subject'), 
+        subjectColumn = widgets.Column('subject', _('Subject'),
+            width=self.getColumnWidth('subject'),
             resizeCallback=self.onResizeColumn,
             renderCallback=lambda note: note.subject(),
-            sortCallback=uicommand.ViewerSortByCommand(viewer=self, 
-                value='subject', menuText=_('&Subject'), 
+            sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                value='subject', menuText=_('&Subject'),
                 helpText=_('Sort notes by subject')),
             imageIndicesCallback=self.subjectImageIndices,
             editCallback=self.onEditSubject,
             editControl=inplace_editor.SubjectCtrl)
         descriptionColumn = widgets.Column('description', _('Description'),
             note.Note.descriptionChangedEventType(),
-            width=self.getColumnWidth('description'), 
+            width=self.getColumnWidth('description'),
             resizeCallback=self.onResizeColumn,
             renderCallback=lambda note: note.description(),
-            sortCallback=uicommand.ViewerSortByCommand(viewer=self, 
-                value='description', menuText=_('&Description'), 
+            sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                value='description', menuText=_('&Description'),
                 helpText=_('Sort notes by description')),
             editCallback=self.onEditDescription,
             editControl=inplace_editor.DescriptionCtrl)
-        attachmentsColumn = widgets.Column('attachments', '', 
+        attachmentsColumn = widgets.Column('attachments', '',
             note.Note.attachmentsChangedEventType(),  # pylint: disable=E1101
             width=self.getColumnWidth('attachments'),
             alignment=wx.LIST_FORMAT_LEFT,
@@ -148,25 +148,25 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
             headerImageIndex=self.imageIndex['paperclip_icon'],
             renderCallback=lambda note: '')
         categoriesColumn = widgets.Column('categories', _('Categories'),
-            note.Note.categoryAddedEventType(), 
-            note.Note.categoryRemovedEventType(), 
+            note.Note.categoryAddedEventType(),
+            note.Note.categoryRemovedEventType(),
             note.Note.categorySubjectChangedEventType(),
             note.Note.expansionChangedEventType(),
             width=self.getColumnWidth('categories'),
             resizeCallback=self.onResizeColumn,
             renderCallback=self.renderCategories,
-            sortCallback=uicommand.ViewerSortByCommand(viewer=self, 
-                value='categories', menuText=_('&Categories'), 
+            sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                value='categories', menuText=_('&Categories'),
                 helpText=_('Sort notes by categories')))
-        creationDateTimeColumn = widgets.Column('creationDateTime', 
+        creationDateTimeColumn = widgets.Column('creationDateTime',
             _('Creation date'), width=self.getColumnWidth('creationDateTime'),
             resizeCallback=self.onResizeColumn,
             renderCallback=self.renderCreationDateTime,
             sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                 value='creationDateTime', menuText=_('&Creation date'),
                 helpText=_('Sort notes by creation date')))
-        modificationDateTimeColumn = widgets.Column('modificationDateTime', 
-            _('Modification date'), 
+        modificationDateTimeColumn = widgets.Column('modificationDateTime',
+            _('Modification date'),
             width=self.getColumnWidth('modificationDateTime'),
             resizeCallback=self.onResizeColumn,
             renderCallback=self.renderModificationDateTime,
@@ -174,10 +174,10 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                 value='modificationDateTime', menuText=_('&Modification date'),
                 helpText=_('Sort notes by last modification date')),
             *note.Note.modificationEventTypes())
-        return [orderingColumn, subjectColumn, descriptionColumn, attachmentsColumn, 
-                categoriesColumn, creationDateTimeColumn, 
+        return [orderingColumn, subjectColumn, descriptionColumn, attachmentsColumn,
+                categoriesColumn, creationDateTimeColumn,
                 modificationDateTimeColumn]
-                    
+
     def isShowingNotes(self):
         return True
 
@@ -190,18 +190,18 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
     def newItemDialog(self, *args, **kwargs):
         kwargs['categories'] = self.taskFile.categories().filteredCategories()
         return super(BaseNoteViewer, self).newItemDialog(*args, **kwargs)
-    
+
     def deleteItemCommand(self):
-        return command.DeleteNoteCommand(self.presentation(), 
-            self.curselection(), 
+        return command.DeleteNoteCommand(self.presentation(),
+            self.curselection(),
             shadow=self.settings.getboolean('feature', 'syncml'))
-        
+
     def itemEditorClass(self):
         return dialog.editor.NoteEditor
 
     def newItemCommandClass(self):
         return command.NewNoteCommand
-    
+
     def newSubItemCommandClass(self):
         return command.NewSubNoteCommand
 

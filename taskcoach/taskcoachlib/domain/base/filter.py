@@ -24,7 +24,7 @@ from taskcoachlib.domain.base import object as domainobject
 
 class Filter(patterns.SetDecorator):
     def __init__(self, *args, **kwargs):
-        self.__treeMode = kwargs.pop('treeMode', False)        
+        self.__treeMode = kwargs.pop('treeMode', False)
         super(Filter, self).__init__(*args, **kwargs)
         self.reset()
 
@@ -40,11 +40,11 @@ class Filter(patterns.SetDecorator):
         except AttributeError:
             pass
         self.reset()
-        
+
     def treeMode(self):
         return self.__treeMode
 
-    @patterns.eventSource    
+    @patterns.eventSource
     def reset(self, event=None):
         if self.isFrozen():
             return
@@ -55,17 +55,17 @@ class Filter(patterns.SetDecorator):
                 filteredItems.update(set(item.ancestors()))
         self.removeItemsFromSelf([item for item in self if item not in filteredItems], event=event)
         self.extendSelf([item for item in filteredItems if item not in self], event=event)
-            
+
     def filterItems(self, items):
         ''' filter returns the items that pass the filter. '''
         raise NotImplementedError  # pragma: no cover
 
     def rootItems(self):
         return [item for item in self if item.parent() is None]
-    
+
     def onAddItem(self, event):
         self.reset()
-        
+
     def onRemoveItem(self, event):
         self.reset()
 
@@ -82,7 +82,7 @@ class SelectedItemsFilter(Filter):
         self.__selectedItems.difference_update(set(items))
         if not self.__selectedItems:
             self.extendSelf(self.observable(), event)
-               
+
     def filterItems(self, items):
         if self.__selectedItems:
             result = [item for item in items if self.itemOrAncestorInSelectedItems(item)]
@@ -92,7 +92,7 @@ class SelectedItemsFilter(Filter):
             return result
         else:
             return [item for item in items if item not in self]
-     
+
     def itemOrAncestorInSelectedItems(self, item):
         if item in self.__selectedItems:
             return True
@@ -100,7 +100,7 @@ class SelectedItemsFilter(Filter):
             return self.itemOrAncestorInSelectedItems(item.parent())
         else:
             return False
-    
+
 
 class SearchFilter(Filter):
     def __init__(self, *args, **kwargs):
@@ -110,15 +110,15 @@ class SearchFilter(Filter):
         searchDescription = kwargs.pop('searchDescription', False)
         regularExpression = kwargs.pop('regularExpression', False)
 
-        self.setSearchFilter(searchString, matchCase=matchCase, 
-                             includeSubItems=includeSubItems, 
+        self.setSearchFilter(searchString, matchCase=matchCase,
+                             includeSubItems=includeSubItems,
                              searchDescription=searchDescription,
                              regularExpression=regularExpression, doReset=False)
 
         super(SearchFilter, self).__init__(*args, **kwargs)
 
-    def setSearchFilter(self, searchString, matchCase=False, 
-                        includeSubItems=False, searchDescription=False, 
+    def setSearchFilter(self, searchString, matchCase=False,
+                        includeSubItems=False, searchDescription=False,
                         regularExpression=False, doReset=True):
         # pylint: disable=W0201
         self.__includeSubItems = includeSubItems
@@ -134,7 +134,7 @@ class SearchFilter(Filter):
             return ''
         flag = 0 if matchCase else re.IGNORECASE | re.UNICODE
         if regularExpression:
-            try:    
+            try:
                 rx = re.compile(searchString, flag)
             except sre_constants.error:
                 if matchCase:
@@ -152,7 +152,7 @@ class SearchFilter(Filter):
         return [item for item in items if \
                 self.__searchPredicate(self.__itemText(item))] \
                 if self.__searchPredicate else items
-        
+
     def __itemText(self, item):
         text = self.__itemOwnText(item)
         if self.__includeSubItems:
@@ -169,7 +169,7 @@ class SearchFilter(Filter):
         text = item.subject()
         if self.__searchDescription:
             text += item.description()
-        return text 
+        return text
 
 
 class DeletedFilter(Filter):

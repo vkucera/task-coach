@@ -52,7 +52,7 @@ class PrinterSettings(metaclass=patterns.Singleton):
     def __update_print_data(self, printData):
         self.printData = wx.PrintData(printData)
         self.pageSetupData.SetPrintData(self.printData)
- 
+
     def __getattr__(self, attr):
         try:
             return getattr(self.pageSetupData, attr)
@@ -74,8 +74,8 @@ class PrinterSettings(metaclass=patterns.Singleton):
     def __save_to_settings(self):
         ''' Save the printer settings to the user settings. '''
         margin = dict()
-        margin['left'], margin['top'] = self.GetMarginTopLeft()  
-        margin['right'], margin['bottom'] = self.GetMarginBottomRight()  
+        margin['left'], margin['top'] = self.GetMarginTopLeft()
+        margin['right'], margin['bottom'] = self.GetMarginBottomRight()
         for edge in self.edges:
             self.__set_setting('margin_'+edge, margin[edge])
         self.__set_setting('paper_id', self.GetPaperId())
@@ -99,20 +99,20 @@ class HTMLPrintout(wx.html.HtmlPrintout):
         right, bottom = printer_settings.pageSetupData.GetMarginBottomRight()
         self.SetMargins(top, bottom, left, right)
 
-                
+
 class DCPrintout(wx.Printout):
     def __init__(self, widget):
         self.widget = widget
         super(DCPrintout, self).__init__()
-        
+
     def OnPrintPage(self, page):  # pylint: disable=W0613
         self.widget.Draw(self.GetDC())
-        
+
     def GetPageInfo(self):  # pylint: disable=W0221
         return (1, 1, 1, 1)
 
-        
-def Printout(viewer, settings, printSelectionOnly=False, 
+
+def Printout(viewer, settings, printSelectionOnly=False,
              twoPrintouts=False):
     widget = viewer.getWidget()
     if hasattr(widget, 'GetPrintout'):
@@ -121,7 +121,7 @@ def Printout(viewer, settings, printSelectionOnly=False,
         def _printout(settings):
             return DCPrintout(widget)
     else:
-        html_text = persistence.viewer2html(viewer, settings, 
+        html_text = persistence.viewer2html(viewer, settings,
                                            selectionOnly=printSelectionOnly)[0]
         def _printout(settings):
             return HTMLPrintout(html_text, settings)

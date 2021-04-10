@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-''' render.py - functions to render various objects, like date, time, 
+''' render.py - functions to render various objects, like date, time,
 etc. '''  # pylint: disable=W0105
 
 from taskcoachlib.domain import date as datemodule
@@ -37,10 +37,10 @@ def priority(priority):
     ''' Render an (integer) priority '''
     return str(priority)
 
- 
+
 def timeLeft(time_left, completed_task):
-    ''' Render time left as a text string. Returns an empty string for 
-        completed tasks and for tasks without planned due date. Otherwise it 
+    ''' Render time left as a text string. Returns an empty string for
+        completed tasks and for tasks without planned due date. Otherwise it
         returns the number of days, hours, and minutes left. '''
     if completed_task or time_left == datemodule.TimeDelta.max:
         return ''
@@ -51,7 +51,7 @@ def timeLeft(time_left, completed_task):
                _('1 day')
         days += ', '
     else:
-        days = '' 
+        days = ''
     hours_and_minutes = ':'.join(str(time_left).split(':')[:-1]).split(', ')[-1]
     return sign + days + hours_and_minutes
 
@@ -89,28 +89,28 @@ def recurrence(recurrence):
     if not recurrence:
         return ''
     if recurrence.amount > 2:
-        labels = [_('Every %(frequency)d days'), 
+        labels = [_('Every %(frequency)d days'),
                   _('Every %(frequency)d weeks'),
                   _('Every %(frequency)d months'),
-                  _('Every %(frequency)d years')] 
+                  _('Every %(frequency)d years')]
     elif recurrence.amount == 2:
         labels = [_('Every other day'), _('Every other week'),
                   _('Every other month'), _('Every other year')]
     else:
-        labels = [_('Daily'), _('Weekly'), _('Monthly'), _('Yearly')] 
+        labels = [_('Daily'), _('Weekly'), _('Monthly'), _('Yearly')]
     mapping = dict(zip(['daily', 'weekly', 'monthly', 'yearly'], labels))
     return mapping.get(recurrence.unit) % dict(frequency=recurrence.amount)
 
 
 def budget(aBudget):
-    ''' Render budget (of type date.TimeDelta) as 
+    ''' Render budget (of type date.TimeDelta) as
         "<hours>:<minutes>:<seconds>". '''
     return timeSpent(aBudget)
 
 
 # Default time formatting
 language_and_country = locale.getlocale(locale.LC_TIME)[0]
-if language_and_country and ('_US' in language_and_country or 
+if language_and_country and ('_US' in language_and_country or
                              '_United States' in language_and_country):
     timeFormat = '%I %p'
     timeWithMinutesFormat = '%I:%M %p'
@@ -258,8 +258,8 @@ def date(aDateTime, humanReadable=False):
     if year >= 1900:
         return dateFunc(aDateTime, humanReadable=humanReadable)
     else:
-        result = date(datemodule.DateTime(year + 1900, aDateTime.month, 
-                                          aDateTime.day), 
+        result = date(datemodule.DateTime(year + 1900, aDateTime.month,
+                                          aDateTime.day),
                       humanReadable=humanReadable)
         return re.sub(str(year + 1900), str(year), result)
 
@@ -276,34 +276,34 @@ def dateTime(aDateTime, humanReadable=False):
         result = dateTime(aDateTime.replace(year=year + 1900), humanReadable=humanReadable)
         return re.sub(str(year + 1900), str(year), result)
 
-   
+
 def dateTimePeriod(start, stop, humanReadable=False):
     if stop is None:
         return '%s - %s' % (dateTime(start, humanReadable=humanReadable), _('now'))
     elif start.date() == stop.date():
-        return '%s %s - %s' % (date(start, humanReadable=humanReadable), 
+        return '%s %s - %s' % (date(start, humanReadable=humanReadable),
                                time(start), time(stop))
     else:
         return '%s - %s' % (dateTime(start, humanReadable=humanReadable), dateTime(stop, humanReadable=humanReadable))
-    
-    
+
+
 def time(dateTime, seconds=False, minutes=True):
     try:
         # strftime doesn't handle years before 1900, be prepared:
-        dateTime = dateTime.replace(year=2000)  
+        dateTime = dateTime.replace(year=2000)
     except TypeError:  # We got a time instead of a dateTime
-        dateTime = datemodule.Now().replace(hour=dateTime.hour, 
+        dateTime = datemodule.Now().replace(hour=dateTime.hour,
                                             minute=dateTime.minute,
-                                            second=dateTime.second) 
+                                            second=dateTime.second)
     return timeFunc(dateTime, minutes=minutes, seconds=seconds)
 
 
 def month(dateTime):
     return dateTime.strftime('%Y %B')
 
-    
+
 def weekNumber(dateTime):
-    # Would have liked to use dateTime.strftime('%Y-%U'), but the week number 
+    # Would have liked to use dateTime.strftime('%Y-%U'), but the week number
     # is one off in 2004
     return '%d-%d' % (dateTime.year, dateTime.weeknumber())
 

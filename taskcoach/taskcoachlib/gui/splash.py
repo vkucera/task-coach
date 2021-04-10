@@ -20,7 +20,7 @@ import wx
 from taskcoachlib import i18n
 try:
     from . import icons
-except ImportError: # pragma: no cover   
+except ImportError: # pragma: no cover
     print "ERROR: couldn't import icons.py."
     print 'You need to generate the icons file.'
     print 'Run "make prepare" in the Task Coach root folder.'
@@ -34,7 +34,7 @@ class SplashScreen(wx.SplashScreen):
         if i18n.currentLanguageIsRightToLeft():
             # RTL languages cause the bitmap to be mirrored too, but because
             # the splash image is not internationalized, we have to mirror it
-            # (back). Unfortunately using SetLayoutDirection() on the 
+            # (back). Unfortunately using SetLayoutDirection() on the
             # SplashWindow doesn't work.
             bitmap = wx.BitmapFromImage(splash.getImage().Mirror())
         else:

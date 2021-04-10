@@ -30,7 +30,7 @@ elif sys.argv[1] == 'debian':
     numberOfReleases = 1
 else:
     raise ValueError, 'Unknown target format (%s)'%sys.argv[1]
-    
+
 releases = changes.releases[:numberOfReleases]
 for release in releases:
     print converter.convert(release)

@@ -33,7 +33,7 @@ class UTF8StringIO(StringIO.StringIO):
 
 class VCalTestCase(test.wxTestCase):
     selectionOnly = 'Subclass responsibility'
-    
+
     def setUp(self):
         super(VCalTestCase, self).setUp()
         task.Task.settings = self.settings = config.Settings(load=False)
@@ -52,18 +52,18 @@ class VCalTestCase(test.wxTestCase):
 
     def selectItems(self, items):
         self.viewer.select(items)
-        
+
     def numberOfSelectedItems(self):
         return len(self.viewer.curselection())
-    
+
     def numberOfVisibleItems(self):
         return self.viewer.size()
-    
-    
-class VCalendarCommonTestsMixin(object):        
+
+
+class VCalendarCommonTestsMixin(object):
     def testStart(self):
         self.assertEqual('BEGIN:VCALENDAR', self.vcalFile.split('\r\n')[0])
-        
+
     def testVersion(self):
         self.assertEqual('VERSION:2.0', self.vcalFile.split('\r\n')[1])
 
@@ -78,7 +78,7 @@ class VCalendarCommonTestsMixin(object):
 
 class VCalEffortWriterTestCase(VCalTestCase):
     def setUp(self):
-        super(VCalEffortWriterTestCase, self).setUp()        
+        super(VCalEffortWriterTestCase, self).setUp()
         self.task1 = task.Task(u'Task 1')
         self.effort1 = effort.Effort(self.task1, description=u'Description',
                                      start=date.DateTime(2000,1,1,1,1,1),
@@ -96,19 +96,19 @@ class VCalEffortWriterTestCase(VCalTestCase):
 
 class VCalEffortCommonTestsMixin(VCalendarCommonTestsMixin):
     def testBeginVEvent(self):
-        self.assertEqual(self.expectedNumberOfItems(), 
+        self.assertEqual(self.expectedNumberOfItems(),
                          self.vcalFile.count('BEGIN:VEVENT'))
 
     def testEndVEvent(self):
-        self.assertEqual(self.expectedNumberOfItems(), 
+        self.assertEqual(self.expectedNumberOfItems(),
                          self.vcalFile.count('END:VEVENT'))
-        
+
     def testEffortSubject(self):
         self.failUnless(u'SUMMARY:Task 1' in self.vcalFile)
 
     def testEffortDescription(self):
         self.failUnless(u'DESCRIPTION:Description' in self.vcalFile)
-        
+
     def testEffortStart(self):
         startLocal = date.DateTime(2000, 1, 1, 1, 1, 1)
         startUTC = startLocal.utcfromtimestamp(time.mktime(startLocal.timetuple()))
@@ -128,18 +128,18 @@ class VCalEffortCommonTestsMixin(VCalendarCommonTestsMixin):
                                                               endUTC.hour,
                                                               endUTC.minute,
                                                               endUTC.second))
-        
+
     def testEffortId(self):
         self.failUnless('UID:%s'%self.effort1.id() in self.vcalFile)
 
-    
+
 class VCalEffortWriterTest(VCalEffortWriterTestCase,
                            VCalEffortCommonTestsMixin):
     selectionOnly = False
-    
+
     def expectedNumberOfItems(self):
         return self.numberOfVisibleItems()
-        
+
 
 class VCalEffortWriterSelectionOnlyTest(VCalEffortWriterTestCase,
                                         VCalEffortCommonTestsMixin):
@@ -147,18 +147,18 @@ class VCalEffortWriterSelectionOnlyTest(VCalEffortWriterTestCase,
 
     def expectedNumberOfItems(self):
         return self.numberOfSelectedItems()
-            
+
 
 class VCalTaskWriterTestCase(VCalTestCase):
     treeMode = 'Subclass responsibility'
-    
+
     def setUp(self):
-        super(VCalTaskWriterTestCase, self).setUp() 
-        self.task1 = task.Task(u'Task subject 1', 
+        super(VCalTaskWriterTestCase, self).setUp()
+        self.task1 = task.Task(u'Task subject 1',
                                description='Task description 1',
                                percentageComplete=56,
                                creationDateTime=date.DateTime.min)
-        self.task2 = task.Task(u'Task subject 2黑', 
+        self.task2 = task.Task(u'Task subject 2黑',
                                description=u'Task description 2\nwith newline\n微软雅黑',
                                modificationDateTime=date.DateTime(2012, 1, 1))
         self.taskFile.tasks().extend([self.task1, self.task2])
@@ -167,12 +167,12 @@ class VCalTaskWriterTestCase(VCalTestCase):
             self.settings)
         self.selectItems([self.task2])
         self.vcalFile = self.writeAndRead()
-        
-        
+
+
 class VCalTaskCommonTestsMixin(VCalendarCommonTestsMixin):
     def testTaskSubject(self):
         self.failUnless(u'SUMMARY:Task subject 2' in self.vcalFile)
-        
+
     def testTaskDescription(self):
         self.failUnless(u'DESCRIPTION:Task description 2\r\n with newline\r\n 微软雅黑' in self.vcalFile, self.vcalFile)
 
@@ -182,18 +182,18 @@ class VCalTaskCommonTestsMixin(VCalendarCommonTestsMixin):
 
     def testTaskId(self):
         self.failUnless('UID:%s' % self.task2.id() in self.vcalFile)
-        
+
     def testCreationDateTime(self):
         creation_datetime = persistence.icalendar.ical.fmtDateTime(self.task2.creationDateTime())
         self.failUnless('CREATED:%s' % creation_datetime in self.vcalFile)
-        
+
     def testMissingCreationDateTime(self):
         self.assertEqual(1, self.vcalFile.count('CREATED:'))
-        
+
     def testModificationDateTime(self):
         modification_datetime = persistence.icalendar.ical.fmtDateTime(date.DateTime(2012, 1, 1))
         self.failUnless('LAST-MODIFIED:%s' % modification_datetime in self.vcalFile)
-        
+
     def testMissingModificationDateTime(self):
         self.assertEqual(1, self.vcalFile.count('LAST-MODIFIED'))
 
@@ -202,7 +202,7 @@ class TestSelectionOnlyMixin(VCalTaskCommonTestsMixin):
     selectionOnly = True
 
     def expectedNumberOfItems(self):
-        return self.numberOfSelectedItems()  
+        return self.numberOfSelectedItems()
 
 
 class TestSelectionList(TestSelectionOnlyMixin, VCalTaskWriterTestCase):
@@ -227,7 +227,7 @@ class TestNotSelectionList(TestNotSelectionOnlyMixin, VCalTaskWriterTestCase):
 
 class TestNotSelectionTree(TestNotSelectionOnlyMixin, VCalTaskWriterTestCase):
     treeMode = 'True'
-    
+
 
 class FoldTest(test.TestCase):
     def setUp(self):
@@ -236,25 +236,25 @@ class FoldTest(test.TestCase):
 
     def testEmptyText(self):
         self.assertEqual('', self.fold([]))
-        
+
     def testDontFoldAShortLine(self):
         self.assertEqual('Short line\r\n', self.fold(['Short line']))
-        
+
     def testFoldALongLine(self):
-        self.assertEqual('Long \r\n line\r\n', self.fold(['Long line'], 
+        self.assertEqual('Long \r\n line\r\n', self.fold(['Long line'],
                                                          linewidth=5))
-        
+
     def testFoldAReallyLongLine(self):
-        self.assertEqual('Long\r\n  li\r\n ne\r\n', self.fold(['Long line'], 
+        self.assertEqual('Long\r\n  li\r\n ne\r\n', self.fold(['Long line'],
                                                               linewidth=4))
-        
+
     def testFoldTwoShortLines(self):
         self.assertEqual('Short line\r\n'*2, self.fold(['Short line']*2))
-        
+
     def testFoldTwoLongLines(self):
-        self.assertEqual('Long \r\n line\r\n'*2, self.fold(['Long line']*2, 
+        self.assertEqual('Long \r\n line\r\n'*2, self.fold(['Long line']*2,
                                                          linewidth=5))
 
     def testFoldALineWithNewLines(self):
         self.assertEqual('Line 1\r\n Line 2\r\n', self.fold(['Line 1\nLine 2']))
-        
+

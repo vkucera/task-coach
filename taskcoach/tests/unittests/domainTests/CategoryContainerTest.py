@@ -27,18 +27,18 @@ class CategoryContainerTest(test.TestCase):
         self.categories = category.CategoryList()
         self.category = category.Category('Unfiltered category')
         self.filteredCategory = category.Category('Filtered category', filtered=True)
-                
+
     def testAddExistingCategory_WithoutTasks(self):
         self.categories.append(self.category)
         self.categories.append(category.Category(self.category.subject()))
         self.assertEqual(2, len(self.categories))
-        
+
     def testAddCategoryWithCategorizable(self):
         aTask = task.Task()
         self.category.addCategorizable(aTask)
         self.categories.append(self.category)
         self.assertEqual(set([self.category]), aTask.categories())
-        
+
     def testRemoveCategoryWithTask(self):
         aTask = task.Task()
         self.categories.append(self.category)
@@ -46,28 +46,28 @@ class CategoryContainerTest(test.TestCase):
         aTask.addCategory(self.category)
         self.categories.removeItems([self.category])
         self.failIf(aTask.categories())
-        
+
     def testFilteredCategoriesWhenCategoriesIsEmpty(self):
         self.failIf(self.categories.filteredCategories())
 
     def testFilteredCategoriesAfterAddingOneUnfilteredCategory(self):
         self.categories.append(self.category)
         self.failIf(self.categories.filteredCategories())
-        
+
     def testFilteredCategoriesAfterAddingOneFilteredCategory(self):
         self.categories.append(self.filteredCategory)
         self.assertEqual([self.filteredCategory], self.categories.filteredCategories())
-        
+
     def testFilteredCategoriesAfterAddingOneUnfilteredCategoryAndMakingItFilter(self):
         self.categories.append(self.category)
         self.category.setFiltered(True)
         self.assertEqual([self.category], self.categories.filteredCategories())
-    
+
     def testFilteredCategoriesAfterRemovingOneUnfilteredCategory(self):
         self.categories.append(self.category)
         self.categories.remove(self.category)
         self.failIf(self.categories.filteredCategories())
-    
+
     def testFilteredCategoriesAfterRemovingOneFilteredCategory(self):
         self.categories.append(self.filteredCategory)
         self.categories.remove(self.filteredCategory)

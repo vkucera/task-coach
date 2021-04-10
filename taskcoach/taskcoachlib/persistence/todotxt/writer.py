@@ -27,13 +27,13 @@ class TodoTxtWriter(object):
         self.__fd = fd
         self.__filename = filename
         self.__maxDateTime = date.DateTime()
-        
+
     def write(self, viewer, settings, selectionOnly, **kwargs):
         tasks = viewer.visibleItems()
         if selectionOnly:
             tasks = [task for task in tasks if viewer.isselected(task)]
         return self.writeTasks(tasks)
-    
+
     def writeTasks(self, tasks):
         count = 0
         for task in tasks:
@@ -63,7 +63,7 @@ class TodoTxtWriter(object):
     @classmethod
     def startDate(cls, plannedStartDateTime):
         return '%s '%cls.dateTime(plannedStartDateTime) if cls.isActualDateTime(plannedStartDateTime) else ''
-    
+
     @classmethod
     def dueDate(cls, dueDateTime):
         return ' due:%s'%cls.dateTime(dueDateTime) if cls.isActualDateTime(dueDateTime) else ''
@@ -75,7 +75,7 @@ class TodoTxtWriter(object):
     @classmethod
     def completionDate(cls, completionDateTime):
         return 'X ' + '%s '%cls.dateTime(completionDateTime) if cls.isActualDateTime(completionDateTime) else ''
-        
+
     @staticmethod
     def dateTime(dateTime):
         ''' Todo.txt doesn't support time, just dates, so ignore the time part. '''

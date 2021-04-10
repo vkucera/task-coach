@@ -22,14 +22,14 @@ import wx
 
 
 class NeedsSelectionMixin(object):
-    ''' Mixin class for UI commands that need at least one selected item. ''' 
+    ''' Mixin class for UI commands that need at least one selected item. '''
     def enabled(self, event):
         return super(NeedsSelectionMixin, self).enabled(event) and \
             self.viewer.curselection()
 
 
 class NeedsSelectedCategorizableMixin(NeedsSelectionMixin):
-    ''' Mixin class for UI commands that need at least one selected 
+    ''' Mixin class for UI commands that need at least one selected
         categorizable. '''
     def enabled(self, event):
         return super(NeedsSelectedCategorizableMixin, self).enabled(event) and \
@@ -53,8 +53,8 @@ class NeedsSelectedCompositeMixin(NeedsSelectionMixin):
              self.viewer.curselectionIsInstanceOf(note.Note) or \
              self.viewer.curselectionIsInstanceOf(category.Category))
 
-    
-class NeedsOneSelectedCompositeItemMixin(NeedsOneSelectedItemMixin, 
+
+class NeedsOneSelectedCompositeItemMixin(NeedsOneSelectedItemMixin,
                                          NeedsSelectedCompositeMixin):
     ''' Mixin class for UI commands that need exactly one selected composite
         item. '''
@@ -77,7 +77,7 @@ class NeedsSelectedTasksMixin(NeedsSelectionMixin):
 
 
 class NeedsSelectedNoteOwnersMixin(NeedsSelectionMixin):
-    ''' Mixin class for UI commands that need at least one selected note 
+    ''' Mixin class for UI commands that need at least one selected note
         owner. '''
     def enabled(self, event):
         return super(NeedsSelectedNoteOwnersMixin, self).enabled(event) and \
@@ -87,16 +87,16 @@ class NeedsSelectedNoteOwnersMixin(NeedsSelectionMixin):
 
 
 class NeedsSelectedNoteOwnersMixinWithNotes(NeedsSelectedNoteOwnersMixin):
-    ''' Mixin class for UI commands that need at least one selected note owner 
-        with notes. ''' 
+    ''' Mixin class for UI commands that need at least one selected note owner
+        with notes. '''
     def enabled(self, event):
         # pylint: disable=E1101
         return super(NeedsSelectedNoteOwnersMixinWithNotes, self).enabled(event) and \
             any([item.notes() for item in self.viewer.curselection()])
-            
-            
+
+
 class NeedsSelectedAttachmentOwnersMixin(NeedsSelectionMixin):
-    ''' Mixin class for UI commands that need at least one selected attachment 
+    ''' Mixin class for UI commands that need at least one selected attachment
         owner. '''
     def enabled(self, event):
         return super(NeedsSelectedAttachmentOwnersMixin, self).enabled(event) and \
@@ -105,7 +105,7 @@ class NeedsSelectedAttachmentOwnersMixin(NeedsSelectionMixin):
              self.viewer.curselectionIsInstanceOf(note.Note))
 
 
-class NeedsOneSelectedTaskMixin(NeedsSelectedTasksMixin, 
+class NeedsOneSelectedTaskMixin(NeedsSelectedTasksMixin,
                                 NeedsOneSelectedItemMixin):
     ''' Mixin class for UI commands that need at least one selected tasks. '''
     pass
@@ -126,9 +126,9 @@ class NeedsSelectedEffortMixin(NeedsSelectionMixin):
             self.viewer.curselectionIsInstanceOf(effort.Effort)
 
 
-class NeedsSelectedAttachmentsMixin(NeedsAttachmentViewerMixin, 
+class NeedsSelectedAttachmentsMixin(NeedsAttachmentViewerMixin,
                                     NeedsSelectionMixin):
-    ''' Mixin class for UI commands that need at least one selected 
+    ''' Mixin class for UI commands that need at least one selected
         attachment. '''
     pass
 
@@ -143,13 +143,13 @@ class NeedsAtLeastOneCategoryMixin(object):
     ''' Mixin class for UI commands that need at least one category created. '''
     def enabled(self, event):  # pylint: disable=W0613
         return len(self.categories) > 0
-        
-        
+
+
 class NeedsItemsMixin(object):
-    ''' Mixin class for UI commands that need at least one item in their 
+    ''' Mixin class for UI commands that need at least one item in their
        viewer. '''
     def enabled(self, event):  # pylint: disable=W0613
-        return self.viewer.size() 
+        return self.viewer.size()
 
 
 class NeedsTreeViewerMixin(object):
@@ -192,7 +192,7 @@ class PopupButtonMixin(object):
         toolbarY = self.toolbar.GetScreenPosition()[1]
         toolbarHeight = self.toolbar.GetSize()[1]
         return toolbarY + toolbarHeight
-    
+
     def createPopupMenu(self):
         raise NotImplementedError  # pragma: no cover
 

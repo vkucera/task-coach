@@ -32,12 +32,12 @@ class clean(BaseCleanCommand, object):
         self.really_clean = False
         self.cleaning_patterns = ['*.pyc']
         self.really_clean_patterns = ['*.bak']
-                    
+
     def finalize_options(self):
         super(clean, self).finalize_options()
         if self.really_clean:
             self.cleaning_patterns.extend(self.really_clean_patterns)
-                    
+
     def run(self):
         super(clean, self).run()
         if not self.verbose:

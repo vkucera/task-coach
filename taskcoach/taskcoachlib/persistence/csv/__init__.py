@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 # This is the csv package. This package contains classes to generate
-# comma separated values (cvs) format for exporting Task Coach data to csv 
+# comma separated values (cvs) format for exporting Task Coach data to csv
 # files.
 
 from .generator import viewer2csv

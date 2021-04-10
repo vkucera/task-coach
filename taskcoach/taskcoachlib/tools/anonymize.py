@@ -22,15 +22,15 @@ import os
 
 def anonymize(filename):
     ''' Anonymize the file specified by the filename by reading its contents,
-        replacing the contents with X's and saving the anonymized contents to 
+        replacing the contents with X's and saving the anonymized contents to
         a copy of the file. '''
-    
+
     def anonymize_string(string):
         ''' Return an anonymized version of the string. '''
         return u'X' * len(string)
-    
+
     def anonymize_text(text):
-        ''' Return an anonymized version of the text, keeping the line 
+        ''' Return an anonymized version of the text, keeping the line
             breaks. '''
         return '\n'.join([anonymize_string(line) for line in text.split('\n')])
 
@@ -54,7 +54,7 @@ def anonymize(filename):
 
         if node.tag == 'attachment' and 'location' in node.attrib:
             node.attrib['location'] = anonymize_string(node.attrib['location'])
-            
+
     tree = ET.parse(file(filename, 'rb'))
     anonymize_node(tree.getroot())
     name, ext = os.path.splitext(filename)

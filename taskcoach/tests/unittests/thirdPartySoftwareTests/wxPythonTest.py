@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
- 
+
 ''' These are unittests of wxPython functionality. Of course, the goal is
 not to test all wxPython functions, but rather to document platform
 inconsistencies or surprising behaviour. ''' # pylint: disable=W0105
@@ -37,5 +37,5 @@ class TextCtrlTest(test.wxTestCase):
             self.failUnless(self.clearTextCausesEvent)
 
     def onTextChanged(self, event): # pylint: disable=W0613
-        self.clearTextCausesEvent = True # pragma: no cover pylint: disable=W0201 
+        self.clearTextCausesEvent = True # pragma: no cover pylint: disable=W0201
 

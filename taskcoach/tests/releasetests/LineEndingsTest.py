@@ -34,5 +34,5 @@ class LineEndingsTest(test.TestCase):
                    for script in setup.setupOptions['scripts'] \
                    if script.endswith('.py')]
         for script in scripts:
-            self.failIf('\r\n' in file(script, 'rb').read(), 
+            self.failIf('\r\n' in file(script, 'rb').read(),
                         '%s contains DOS line endings'%script)

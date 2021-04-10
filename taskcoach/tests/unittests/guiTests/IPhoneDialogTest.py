@@ -29,4 +29,3 @@ class IPhoneSyncTypeDialogTest(test.TestCase):
 class IPhoneBonjourDialogTest(test.TestCase):
     def testCreate(self):
         iphone.IPhoneBonjourDialog(None)
- 

@@ -30,7 +30,7 @@ import time, calendar, datetime
 #{ Utility functions
 
 def parseDateTime(fulldate):
-    ''' Parses a datetime as seen in iCalendar files into a 
+    ''' Parses a datetime as seen in iCalendar files into a
     L{taskcoachlib.domain.date.DateTime} object. '''
 
     try:
@@ -280,10 +280,10 @@ def VCalFromTask(task, encoding=True, doFold=True):
     components = []
     components.append('BEGIN:VTODO') # pylint: disable=W0511
     components.append('UID:%s' % task.id().encode('UTF-8'))
-    
+
     if task.creationDateTime() > date.DateTime.min:
         components.append('CREATED:%s' % fmtDateTime(task.creationDateTime()))
-        
+
     if task.modificationDateTime() > date.DateTime.min:
         components.append('LAST-MODIFIED:%s' % fmtDateTime(task.modificationDateTime()))
 
@@ -354,7 +354,7 @@ def VNoteFromNote(note, encoding=True, doFold=True):
 
 def fold(components, linewidth=75, eol='\r\n', indent=' '):
     lines = []
-    # The iCalendar standard doesn't clearly state whether the maximum line 
+    # The iCalendar standard doesn't clearly state whether the maximum line
     # width includes the indentation or not. We keep on the safe side:
     indentedlinewidth = linewidth - len(indent)
     for component in components:

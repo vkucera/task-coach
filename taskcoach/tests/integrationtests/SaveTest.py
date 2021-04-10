@@ -35,10 +35,10 @@ class SaveTest(test.TestCase):
                 os.remove(filename)
         mock.App.deleteInstance()
         super(SaveTest, self).tearDown()
-        
+
     def assertTasksLoaded(self, nrTasks):
         self.assertEqual(nrTasks, len(self.mockApp.taskFile.tasks()))
-        
+
     def testSave(self):
         self.mockApp.iocontroller.saveas(self.filename)
         self.mockApp.iocontroller.open(self.filename)
@@ -57,7 +57,7 @@ class SaveTest(test.TestCase):
         self.mockApp.iocontroller.close()
         self.mockApp.iocontroller.open(self.filename2)
         self.assertTasksLoaded(2)
-        
+
     def testSaveAndMerge(self):
         mockApp2 = mock.App()
         mockApp2.addTasks()

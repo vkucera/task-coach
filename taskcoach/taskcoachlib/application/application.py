@@ -71,7 +71,7 @@ class RedirectedOutput(object):
 
 # pylint: disable=W0404
 
-        
+
 class wxApp(wx.App):
     def __init__(self, sessionCallback, reopenCallback, *args, **kwargs):
         self.sessionCallback = sessionCallback
@@ -117,7 +117,7 @@ class Application(metaclass=patterns.Singleton):
         if operating_system.isGTK():
             if self.settings.getboolean('feature', 'usesm2'):
                 from taskcoachlib.powermgt import xsm
-                
+
                 class LinuxSessionMonitor(xsm.SessionMonitor):
                     def __init__(self, callback):
                         super(LinuxSessionMonitor, self).__init__()
@@ -126,24 +126,24 @@ class Application(metaclass=patterns.Singleton):
                         self.setProperty(xsm.SmRestartCommand, sys.argv)
                         self.setProperty(xsm.SmCurrentDirectory, os.getcwd())
                         self.setProperty(xsm.SmProgram, sys.argv[0])
-                        self.setProperty(xsm.SmRestartStyleHint, 
+                        self.setProperty(xsm.SmRestartStyleHint,
                                          xsm.SmRestartNever)
-                        
-                    def saveYourself(self, saveType, shutdown, interactStyle, 
+
+                    def saveYourself(self, saveType, shutdown, interactStyle,
                                      fast):  # pylint: disable=W0613
                         if shutdown:
                             wx.CallAfter(self._callback)
                         self.saveYourselfDone(True)
-                        
+
                     def die(self):
                         pass
-                    
+
                     def saveComplete(self):
                         pass
-                    
+
                     def shutdownCancelled(self):
                         pass
-                    
+
                 self.sessionMonitor = LinuxSessionMonitor(self.on_end_session)  # pylint: disable=W0201
             else:
                 self.sessionMonitor = None
@@ -181,7 +181,7 @@ class Application(metaclass=patterns.Singleton):
         # pylint: disable=W0201
         from taskcoachlib import meta
         if self.settings.getboolean('version', 'notify'):
-            self.__version_checker = meta.VersionChecker(self.settings)  
+            self.__version_checker = meta.VersionChecker(self.settings)
             self.__version_checker.start()
         if self.settings.getboolean('view', 'developermessages'):
             self.__message_checker = meta.DeveloperMessageChecker(self.settings)
@@ -190,7 +190,7 @@ class Application(metaclass=patterns.Singleton):
         self.mainwindow.Show()
         from twisted.internet import reactor
         reactor.run()
-        
+
     def __copy_default_templates(self):
         ''' Copy default templates that don't exist yet in the user's
             template directory. '''
@@ -201,10 +201,10 @@ class Application(metaclass=patterns.Singleton):
                 filename = os.path.join(template_dir, name + '.tsktmpl')
                 if not os.path.exists(filename):
                     file(filename, 'wb').write(template)
-        
+
     def init(self, loadSettings=True, loadTaskFile=True):
-        ''' Initialize the application. Needs to be called before 
-            Application.start(). ''' 
+        ''' Initialize the application. Needs to be called before
+            Application.start(). '''
         self.__init_config(loadSettings)
         self.__init_language()
         self.__init_domain_objects()
@@ -218,9 +218,9 @@ class Application(metaclass=patterns.Singleton):
         self.__auto_saver = persistence.AutoSaver(self.settings)
         self.__auto_exporter = persistence.AutoImporterExporter(self.settings)
         self.__auto_backup = persistence.AutoBackup(self.settings)
-        self.iocontroller = gui.IOController(self.taskFile, self.displayMessage, 
+        self.iocontroller = gui.IOController(self.taskFile, self.displayMessage,
                                              self.settings, splash)
-        self.mainwindow = gui.MainWindow(self.iocontroller, self.taskFile, 
+        self.mainwindow = gui.MainWindow(self.iocontroller, self.taskFile,
                                          self.settings, splash=splash)
         self.__wx_app.SetTopWindow(self.mainwindow)
         self.__init_spell_checking()
@@ -234,22 +234,22 @@ class Application(metaclass=patterns.Singleton):
         self.__create_task_bar_icon()
         wx.CallAfter(self.__close_splash, splash)
         wx.CallAfter(self.__show_tips)
-                
+
     def __init_config(self, load_settings):
         from taskcoachlib import config
         ini_file = self._options.inifile if self._options else None
         # pylint: disable=W0201
         self.settings = config.Settings(load_settings, ini_file)
-        
+
     def __init_language(self):
         ''' Initialize the current translation. '''
         from taskcoachlib import i18n
         i18n.Translator(self.determine_language(self._options, self.settings))
-        
+
     @staticmethod
     def determine_language(options, settings, locale=locale):  # pylint: disable=W0621
         language = None
-        if options: 
+        if options:
             # User specified language or .po file on command line
             language = options.pofile or options.language
         if not language:
@@ -267,7 +267,7 @@ class Application(metaclass=patterns.Singleton):
             # Fall back on what the majority of our users use
             language = 'en_US'
         return language
-    
+
     def __init_domain_objects(self):
         ''' Provide relevant domain objects with access to the settings. '''
         from taskcoachlib.domain import task, attachment
@@ -278,18 +278,18 @@ class Application(metaclass=patterns.Singleton):
         from taskcoachlib import meta
         self.__wx_app.SetAppName(meta.name)
         self.__wx_app.SetVendorName(meta.author)
-        
+
     def __init_spell_checking(self):
-        self.on_spell_checking(self.settings.getboolean('editor', 
+        self.on_spell_checking(self.settings.getboolean('editor',
                                                       'maccheckspelling'))
-        pub.subscribe(self.on_spell_checking, 
+        pub.subscribe(self.on_spell_checking,
                       'settings.editor.maccheckspelling')
-    
+
     def on_spell_checking(self, value):
         if operating_system.isMac() and not operating_system.isMacOsXMountainLion_OrNewer():
-            wx.SystemOptions.SetOptionInt("mac.textcontrol-use-spell-checker", 
+            wx.SystemOptions.SetOptionInt("mac.textcontrol-use-spell-checker",
                                           value)
-        
+
     def __register_signal_handlers(self):
         if operating_system.isWindows():
             import win32api  # pylint: disable=F0401
@@ -314,8 +314,8 @@ class Application(metaclass=patterns.Singleton):
             if hasattr(signal, 'SIGHUP'):
                 forced_quit = lambda *args: self.quitApplication(force=True)
                 signal.signal(signal.SIGHUP, forced_quit)  # pylint: disable=E1101
-      
-    @staticmethod  
+
+    @staticmethod
     def __create_mutex():
         ''' On Windows, create a mutex so that InnoSetup can check whether the
             application is running. '''
@@ -329,7 +329,7 @@ class Application(metaclass=patterns.Singleton):
             from taskcoachlib.gui import taskbaricon, menu
             self.taskBarIcon = taskbaricon.TaskBarIcon(self.mainwindow,  # pylint: disable=W0201
                 self.taskFile.tasks(), self.settings)
-            self.taskBarIcon.setPopupMenu(menu.TaskBarMenu(self.taskBarIcon, 
+            self.taskBarIcon.setPopupMenu(menu.TaskBarMenu(self.taskBarIcon,
                 self.settings, self.taskFile, self.mainwindow.viewer))
 
     def __can_create_task_bar_icon(self):
@@ -338,12 +338,12 @@ class Application(metaclass=patterns.Singleton):
             return True
         except:
             return False  # pylint: disable=W0702
-                    
+
     @staticmethod
     def __close_splash(splash):
         if splash:
             splash.Destroy()
-            
+
     def __show_tips(self):
         if self.settings.getboolean('window', 'tips'):
             from taskcoachlib import help  # pylint: disable=W0622
@@ -370,7 +370,7 @@ class Application(metaclass=patterns.Singleton):
     def quitApplication(self, force=False):
         if not self.iocontroller.close(force=force):
             return False
-        # Remember what the user was working on: 
+        # Remember what the user was working on:
         self.settings.set('file', 'lastfile', self.taskFile.lastFilename())
         self.mainwindow.save_settings()
         self.settings.save()
@@ -378,7 +378,7 @@ class Application(metaclass=patterns.Singleton):
             self.taskBarIcon.RemoveIcon()
         if self.mainwindow.bonjourRegister is not None:
             self.mainwindow.bonjourRegister.stop()
-        from taskcoachlib.domain import date 
+        from taskcoachlib.domain import date
         date.Scheduler().shutdown()
         self.__wx_app.ProcessIdle()
 

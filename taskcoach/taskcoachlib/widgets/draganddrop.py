@@ -28,7 +28,7 @@ class FileDropTarget(wx.FileDropTarget):
         wx.FileDropTarget.__init__(self)
         self.__onDropCallback = onDropCallback
         self.__onDragOverCallback = onDragOverCallback or self.__defaultDragOverCallback
-        
+
     def OnDropFiles(self, x, y, filenames):  # pylint: disable=W0221
         if self.__onDropCallback:
             self.__onDropCallback(x, y, filenames)
@@ -38,16 +38,16 @@ class FileDropTarget(wx.FileDropTarget):
 
     def OnDragOver(self, x, y, defaultResult):  # pylint: disable=W0221
         return self.__onDragOverCallback(x, y, defaultResult)
-    
+
     def __defaultDragOverCallback(self, x, y, defaultResult):  # pylint: disable=W0613
         return defaultResult
-    
-    
+
+
 class TextDropTarget(wx.TextDropTarget):
     def __init__(self, onDropCallback):
         wx.TextDropTarget.__init__(self)
         self.__onDropCallback = onDropCallback
-        
+
     def OnDropText(self, x, y, text):  # pylint: disable=W0613,W0221
         self.__onDropCallback(text)
 
@@ -62,7 +62,7 @@ class DropTarget(wx.DropTarget):
         self.__onDragOverCallback = onDragOverCallback
         self.reinit()
 
-    def reinit(self): 
+    def reinit(self):
         # pylint: disable=W0201
         self.__compositeDataObject = wx.DataObjectComposite()
         self.__urlDataObject = wx.TextDataObject()
@@ -72,12 +72,12 @@ class DropTarget(wx.DropTarget):
         self.__outlookDataObject = wx.CustomDataObject('Object Descriptor')
         # Starting with Snow Leopard, mail.app supports the message: protocol
         self.__macMailObject = wx.CustomDataObject('public.url')
-        for dataObject in (self.__thunderbirdMailDataObject, 
+        for dataObject in (self.__thunderbirdMailDataObject,
                            self.__urilistDataObject,
                            self.__macMailObject, self.__outlookDataObject,
-                           self.__urlDataObject, self.__fileDataObject): 
+                           self.__urlDataObject, self.__fileDataObject):
             # Note: The first data object added is the preferred data object.
-            # We add urlData after outlookData so that Outlook messages are not 
+            # We add urlData after outlookData so that Outlook messages are not
             # interpreted as text objects.
             self.__compositeDataObject.Add(dataObject)
         self.SetDataObject(self.__compositeDataObject)
@@ -90,7 +90,7 @@ class DropTarget(wx.DropTarget):
 
     def OnDrop(self, x, y):  # pylint: disable=W0613,W0221
         return True
-    
+
     def OnData(self, x, y, result):  # pylint: disable=W0613
         self.GetData()
         formatType, formatId = self.getReceivedFormatTypeAndId()
@@ -127,15 +127,15 @@ class DropTarget(wx.DropTarget):
             self.onUrlDrop(x, y)
         elif formatType == wx.DF_FILENAME:
             self.onFileDrop(x, y)
-            
+
         self.reinit()
         return wx.DragCopy
-    
+
     def getReceivedFormatTypeAndId(self):
         receivedFormat = self.__compositeDataObject.GetReceivedFormat()
         formatType = receivedFormat.GetType()
         try:
-            formatId = receivedFormat.GetId() 
+            formatId = receivedFormat.GetId()
         except:
             formatId = None  # pylint: disable=W0702
         return formatType, formatId
@@ -146,7 +146,7 @@ class DropTarget(wx.DropTarget):
         return url.startswith('file:') and \
             ('/.cache/evolution/tmp/drag-n-drop' in url or \
              '/.claws-mail/tmp/' in url)
-    
+
     def onThunderbirdDrop(self, x, y):
         if self.__onDropMailCallback:
             data = self.__thunderbirdMailDataObject.GetData()
@@ -189,7 +189,7 @@ class DropTarget(wx.DropTarget):
 
 
 class TreeHelperMixin(object):
-    """ This class provides methods that are not part of the API of any 
+    """ This class provides methods that are not part of the API of any
     tree control, but are convenient to have available. """
 
     def GetItemChildren(self, item=None, recursively=False):
@@ -210,7 +210,7 @@ class TreeHelperMixin(object):
 
 class TreeCtrlDragAndDropMixin(TreeHelperMixin):
     """ This is a mixin class that can be used to easily implement
-    dragging and dropping of tree items. It can be mixed in with 
+    dragging and dropping of tree items. It can be mixed in with
     wx.TreeCtrl, wx.gizmos.TreeListCtrl, or wx.lib.customtree.CustomTreeCtrl.
 
     To use it derive a new class from this class and one of the tree
@@ -222,8 +222,8 @@ class TreeCtrlDragAndDropMixin(TreeHelperMixin):
     dropped an item on top of another item. It's up to you to decide how
     to handle the drop. If you are using this mixin together with the
     VirtualTree mixin, it makes sense to rearrange your underlying data
-    and then call RefreshItems to let the virtual tree refresh itself. """    
- 
+    and then call RefreshItems to let the virtual tree refresh itself. """
+
     def __init__(self, *args, **kwargs):
         kwargs['style'] = kwargs.get('style', wx.TR_DEFAULT_STYLE) | \
                           wx.TR_HIDE_ROOT
@@ -235,8 +235,8 @@ class TreeCtrlDragAndDropMixin(TreeHelperMixin):
         self._dragItems = []
 
     def OnDrop(self, dropItem, dragItems, part, column):
-        ''' This function must be overloaded in the derived class. dragItems 
-        are the items being dragged by the user. dropItem is the item the 
+        ''' This function must be overloaded in the derived class. dragItems
+        are the items being dragged by the user. dropItem is the item the
         dragItems are dropped on. If the user doesn't drop the dragItems
         on another item, dropItem equals the (hidden) root item of the
         tree control. `part` is 0 if the items were dropped on the middle third
@@ -252,7 +252,7 @@ class TreeCtrlDragAndDropMixin(TreeHelperMixin):
         selections = self.GetSelections()
         self._dragItems = selections[:] if selections else [event.GetItem()] if event.GetItem() else []
         self._dragColumn = column
-        if self._dragItems and (self.GetRootItem() not in self._dragItems): 
+        if self._dragItems and (self.GetRootItem() not in self._dragItems):
             self.StartDragging()
             event.Allow()
         else:
@@ -304,7 +304,7 @@ class TreeCtrlDragAndDropMixin(TreeHelperMixin):
 
     def selectDraggedItems(self):
         self.select(reversed(self._dragItems))
-        
+
     def OnDragging(self, event):
         if not event.Dragging():
             self.StopDragging()
@@ -320,10 +320,10 @@ class TreeCtrlDragAndDropMixin(TreeHelperMixin):
             self.Expand(item)
         if self.GetSelections() != [item]:
             self.UnselectAll()
-            if item != self.GetRootItem(): 
+            if item != self.GetRootItem():
                 self.SelectItem(item)
         event.Skip()
-        
+
     def StartDragging(self):
         self.GetMainWindow().Bind(wx.EVT_MOTION, self.OnDragging)
         self.Bind(wx.EVT_TREE_END_DRAG, self.OnEndDrag)
@@ -334,13 +334,13 @@ class TreeCtrlDragAndDropMixin(TreeHelperMixin):
         self.Unbind(wx.EVT_TREE_END_DRAG)
         self.ResetCursor()
         self.selectDraggedItems()
-        
+
     def SetCursorToDragging(self):
         self.GetMainWindow().SetCursor(wx.StockCursor(wx.CURSOR_HAND))
-        
+
     def SetCursorToDroppingImpossible(self):
         self.GetMainWindow().SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
-        
+
     def ResetCursor(self):
         self.GetMainWindow().SetCursor(wx.NullCursor)
 
@@ -352,7 +352,7 @@ class TreeCtrlDragAndDropMixin(TreeHelperMixin):
                 return isValid
 
         if dropTarget:
-            invalidDropTargets = set(self._dragItems) 
+            invalidDropTargets = set(self._dragItems)
             invalidDropTargets |= set(self.GetItemParent(item) for item in self._dragItems)
             for item in self._dragItems:
                 invalidDropTargets |= set(self.GetItemChildren(item, recursively=True))

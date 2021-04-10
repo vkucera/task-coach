@@ -29,17 +29,17 @@ class MockWxApp(object):
 
     def ProcessIdle(self):
         pass
-    
+
     def ExitMainLoop(self):
         pass
-    
+
     def SetTopWindow(self, *args):
         pass
 
     def onQuit(self):
         pass
-    
-    
+
+
 class App(application.Application):
     def __init__(self, args=None): # pylint: disable=W0231
         self._options = None

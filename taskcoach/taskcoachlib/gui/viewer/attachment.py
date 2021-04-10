@@ -24,16 +24,16 @@ import os, wx
 from taskcoachlib import command, widgets
 from taskcoachlib.domain import attachment
 from taskcoachlib.i18n import _
-from taskcoachlib.gui import uicommand, dialog 
+from taskcoachlib.gui import uicommand, dialog
 import taskcoachlib.gui.menu
 from . import base, mixin
 
 
 class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable=W0223
                        base.SortableViewerWithColumns,
-                       mixin.SortableViewerForAttachmentsMixin, 
+                       mixin.SortableViewerForAttachmentsMixin,
                        mixin.SearchableViewerMixin, mixin.NoteColumnMixin,
-                       base.ListViewer): 
+                       base.ListViewer):
     SorterClass = attachment.AttachmentSorter
     viewerImages = base.ListViewer.viewerImages + ['fileopen', 'fileopen_red']
 
@@ -51,7 +51,7 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable=W0223
 
     def isShowingAttachments(self):
         return True
-    
+
     def curselectionIsInstanceOf(self, class_):
         return class_ == attachment.Attachment
 
@@ -71,20 +71,20 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable=W0223
         return widget
 
     def _createColumns(self):
-        return [widgets.Column('type', _('Type'), 
+        return [widgets.Column('type', _('Type'),
                                '',
                                width=self.getColumnWidth('type'),
                                imageIndicesCallback=self.typeImageIndices,
                                renderCallback=lambda item: '',
                                resizeCallback=self.onResizeColumn),
-                widgets.Column('subject', _('Subject'), 
+                widgets.Column('subject', _('Subject'),
                                attachment.FileAttachment.subjectChangedEventType(),
                                attachment.URIAttachment.subjectChangedEventType(),
-                               attachment.MailAttachment.subjectChangedEventType(), 
+                               attachment.MailAttachment.subjectChangedEventType(),
                                sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                                    value='subject',
                                    menuText=_('Sub&ject'), helpText=_('Sort by subject')),
-                               width=self.getColumnWidth('subject'), 
+                               width=self.getColumnWidth('subject'),
                                renderCallback=lambda item: item.subject(),
                                resizeCallback=self.onResizeColumn),
                 widgets.Column('description', _('Description'),
@@ -97,7 +97,7 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable=W0223
                                width=self.getColumnWidth('description'),
                                renderCallback=lambda item: item.description(),
                                resizeCallback=self.onResizeColumn),
-                widgets.Column('notes', '', 
+                widgets.Column('notes', '',
                                attachment.FileAttachment.notesChangedEventType(), # pylint: disable=E1101
                                attachment.URIAttachment.notesChangedEventType(), # pylint: disable=E1101
                                attachment.MailAttachment.notesChangedEventType(), # pylint: disable=E1101
@@ -143,18 +143,18 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable=W0223
             uicommand.ViewColumn(menuText=_('&Modification date'),
                 helpText=_('Show/hide last modification date column'),
                 setting='modificationDateTime', viewer=self)]
-    
+
     def createCreationToolBarUICommands(self):
         return (uicommand.AttachmentNew(attachments=self.presentation(),
                                         settings=self.settings,
                                         viewer=self),) + \
             super(AttachmentViewer, self).createCreationToolBarUICommands()
-        
+
     def createActionToolBarUICommands(self):
         return (uicommand.AttachmentOpen(attachments=attachment.AttachmentList(),
                                          viewer=self, settings=self.settings),) + \
            super(AttachmentViewer, self).createActionToolBarUICommands()
-    
+
     def typeImageIndices(self, anAttachment, exists=os.path.exists): # pylint: disable=W0613
         if anAttachment.type_ == 'file':
             attachmentBase = self.settings.get('file', 'attachmentbase')
@@ -175,7 +175,7 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable=W0223
 
     def newItemCommandClass(self):
         raise NotImplementedError  # pragma: no cover
-     
+
     def newSubItemCommandClass(self):
         return None
 
