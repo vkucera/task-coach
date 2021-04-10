@@ -16,7 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import datetime, re, time
+import datetime
+import time
+import re
+
 from . import timedelta
 from .date import Date
 from .fix import StrftimeFix

@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+from taskcoachlib import patterns
+
+
 class TaskListAssertsMixin:
     def assertTaskList(self, expected):
         self.assertEqualLists(expected, self.taskList)
@@ -93,7 +96,6 @@ class TaskAssertsMixin:
 
 class CommandAssertsMixin:
     def assertHistoryAndFuture(self, expectedHistory, expectedFuture):
-        from taskcoachlib import patterns
         commands = patterns.CommandHistory()
         self.assertEqual(expectedHistory, commands.getHistory())
         self.assertEqual(expectedFuture, commands.getFuture())

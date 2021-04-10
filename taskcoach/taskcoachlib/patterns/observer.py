@@ -16,9 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from . import singleton
 import functools
+
 from pubsub import pub
+
+from . import singleton
 
 # Ignore these pylint messages:
 # - W0142: * or ** magic

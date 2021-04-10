@@ -28,15 +28,17 @@ gettext.NullTranslations().install()
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
+from pubsub import pub
+
+from taskcoachlib import patterns
+
 
 class TestCase(unittest.TestCase):
     def tearDown(self):
-        from taskcoachlib import patterns
         patterns.Publisher().clear()
         patterns.NumberedInstances.count = dict()
         if hasattr(self, 'events'):
             del self.events
-        from pubsub import pub
         pub.unsubAll()
         super().tearDown()
 
@@ -48,7 +50,6 @@ class TestCase(unittest.TestCase):
     def registerObserver(self, eventType, eventSource=None):
         if not hasattr(self, 'events'):
             self.events = []  # pylint: disable=W0201
-        from taskcoachlib import patterns  # pylint: disable=W0404
         patterns.Publisher().registerObserver(self.onEvent, eventType=eventType,
                                               eventSource=eventSource)
         
