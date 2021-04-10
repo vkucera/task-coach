@@ -24,8 +24,8 @@ import weakref
 class NumberedInstances(type):
     ''' A metaclass that numbers class instances. Use by defining the metaclass
         of a class NumberedInstances, e.g.:
-        class Numbered:
-            __metaclass__ = NumberedInstances
+        class Numbered(metaclass=NumberedInstances):
+            # ...
         Each instance of class Numbered will have an attribute instanceNumber
         that is unique. '''
 

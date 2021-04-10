@@ -19,8 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib.domain import base
 
 
-class NoteOwner(object):
+class NoteOwner(metaclass=base.DomainObjectOwnerMetaclass):
     ''' Mixin class for (other) domain objects that may contain notes. '''
 
-    __metaclass__ = base.DomainObjectOwnerMetaclass
     __ownedType__ = 'Note'
