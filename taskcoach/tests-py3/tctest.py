@@ -22,6 +22,9 @@ import os
 import sys
 import unittest
 import logging
+import gettext
+
+gettext.NullTranslations().install()
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 

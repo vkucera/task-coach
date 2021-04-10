@@ -16,9 +16,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import time, string, datetime, re, timedelta # pylint: disable=W0402
+import time
+import datetime
+import re
+
 from taskcoachlib import patterns
 from .fix import StrftimeFix
+from . import timedelta
 
 
 infinite = datetime.date.max
@@ -73,7 +77,7 @@ class InfiniteDate(datetime.date, metaclass=patterns.Singleton):
 
 def parseDate(dateString, default=None):
     try:
-        return Date(*[string.atoi(part) for part in dateString.split('-')])
+        return Date(*[int(part) for part in dateString.split('-')])
     except ValueError:
         if default:
             return default

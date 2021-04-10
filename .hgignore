@@ -6,6 +6,7 @@ taskcoach/@webchecker.pickle
 taskcoach/dist
 taskcoach/CHANGES.txt
 taskcoach/changelog_content
+taskcoach/taskcoachlib/meta/revision.py
 taskcoach/taskcoachlib/imported.xml
 taskcoach/taskcoachlib/gui/icons.py
 taskcoach/taskcoachlib/i18n/[a-z][a-z].py

@@ -36,7 +36,7 @@ def isGTK():
 
 
 def isPlatform(threeLetterPlatformAbbreviation, wxPlatform=wx.Platform):
-    return '__WX%s__'%threeLetterPlatformAbbreviation == wxPlatform
+    return '__WX%s__' % threeLetterPlatformAbbreviation == wxPlatform
 
 
 def isWindows7_OrNewer(): # pragma: no cover
@@ -79,7 +79,7 @@ def defaultEncodingName():
     return wx.Locale.GetSystemEncodingName() or 'utf-8'
 
 def decodeSystemString(s):
-    if isinstance(s, unicode):
+    if isinstance(s, str):
         return s
     encoding = defaultEncodingName()
     # Python does not define the windows_XXX aliases for every code page...
