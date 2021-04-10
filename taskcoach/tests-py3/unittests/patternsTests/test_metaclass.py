@@ -29,7 +29,7 @@ class SubclassOfNumbered(Numbered):
     pass
 
 
-class NumberedInstancesTestsMixin(object):
+class NumberedInstancesTestsMixin:
     ''' The tests below should work for a class with NumberedInstances as
         metaclass as well as for a subclass of a class with NumberedInstances
         as metaclass. '''

@@ -188,7 +188,7 @@ class ObservableCollectionFixture(tctest.TestCase):
         self.receivedRemoveEvents.append(event)
 
 
-class ObservableCollectionTestsMixin(object):
+class ObservableCollectionTestsMixin:
     def testCollectionEqualsItself(self):
         self.assertTrue(self.collection == self.collection)
 

@@ -20,7 +20,7 @@ from . import observer
 import weakref
 
 
-class Composite(object):
+class Composite:
     def __init__(self, children=None, parent=None):
         super().__init__()
         self.__parent = parent if parent is None else weakref.ref(parent)
@@ -152,7 +152,7 @@ class ObservableComposite(Composite):
                              class_.removeChildEventType()]
             
 
-class CompositeCollection(object):
+class CompositeCollection:
     def __init__(self, initList=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.extend(initList or [])

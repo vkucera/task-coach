@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from . import singleton as patterns
 
 
-class Command(object):
+class Command:
     def __init__(self, *args, **kwargs):
         super().__init__() # object.__init__ takes no arguments
 

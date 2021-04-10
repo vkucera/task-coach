@@ -60,7 +60,7 @@ class Set(set):
             return -1
 
 
-class Event(object):
+class Event:
     """ Event represents notification events. Events can notify about a single
         event type for a single source or for multiple event types and multiple
         sources at the same time. The Event methods try to make both uses easy.
@@ -269,7 +269,7 @@ class Publisher(metaclass=singleton.Singleton):
             return result
 
 
-class Observer(object):
+class Observer:
     def __init__(self, *args, **kwargs):
         self.__observers = set()
         super().__init__(*args, **kwargs)
@@ -306,7 +306,7 @@ class Decorator(Observer):
         return getattr(self.observable(), attribute)
 
 
-class ObservableCollection(object):
+class ObservableCollection:
     def __hash__(self):
         """ Make ObservableCollections suitable as keys in dictionaries. """
         return hash(id(self))
