@@ -16,11 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import tctest
 from taskcoachlib.domain import date
 
 
-class TimeDeltaTest(test.TestCase):
+class TimeDeltaTest(tctest.TestCase):
     def testHours(self):
         timedelta = date.TimeDelta(hours=2, minutes=15)
         self.assertEqual(2.25, timedelta.hours())
