@@ -16,10 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+from pubsub import pub
+
+import tctest
 from taskcoachlib import config
 from taskcoachlib.domain import task, effort, date
-from pubsub import pub
-import test
 
 
 class FakeEffortAggregator:
@@ -40,8 +41,9 @@ class FakeEffortAggregator:
         self.composite.onRevenueChanged(newValue, sender)
 
 
-class CompositeEffortWithRoundingTest(test.TestCase):
+class CompositeEffortWithRoundingTest(tctest.TestCase):
     def setUp(self):
+        super().setUp()
         task.Task.settings = config.Settings(load=False)
         self.task = task.Task(subject='task')
         self.effort1 = effort.Effort(self.task,
@@ -71,8 +73,9 @@ class CompositeEffortWithRoundingTest(test.TestCase):
         self.assertEqual(self.composite.duration(recursive=True, rounding=60, roundUp=True), date.TimeDelta(seconds=4*60))
 
 
-class CompositeEffortTest(test.TestCase):
+class CompositeEffortTest(tctest.TestCase):
     def setUp(self):
+        super().setUp()
         task.Task.settings = config.Settings(load=False)
         self.task = task.Task(subject='task')
         self.effort1 = effort.Effort(self.task,
@@ -98,13 +101,13 @@ class CompositeEffortTest(test.TestCase):
         self.assertEqual(date.TimeDelta(), self.composite.duration())
 
     def testInitialTrackingState(self):
-        self.failIf(self.composite.isBeingTracked())
+        self.assertFalse(self.composite.isBeingTracked())
 
     def testInitialTrackingStateWhenTaskIsTracked(self):
         self.task.addEffort(self.trackedEffort)
         composite = effort.CompositeEffort(self.task,
             self.composite.getStart(), self.composite.getStop())
-        self.failUnless(composite.isBeingTracked())
+        self.assertTrue(composite.isBeingTracked())
 
     def testDurationForSingleEffort(self):
         self.task.addEffort(self.effort1)
@@ -141,7 +144,7 @@ class CompositeEffortTest(test.TestCase):
 
         pub.subscribe(onEvent, effort.CompositeEffort.compositeEmptyEventType())
         self.task.addEffort(effort.Effort(self.task, self.composite.getStart()))
-        self.failIf(events)
+        self.assertFalse(events)
 
     def testAddEffortNotification(self):
         events = []
@@ -199,12 +202,12 @@ class CompositeEffortTest(test.TestCase):
 
         pub.subscribe(onEvent, effort.Effort.revenueChangedEventType())
         self.task.setHourlyFee(100)
-        self.failUnless((100.0, self.composite) in events)
+        self.assertTrue((100.0, self.composite) in events)
 
     def testIsBeingTracked(self):
         self.task.addEffort(self.effort1)
         self.effort1.setStop(date.DateTime())
-        self.failUnless(self.composite.isBeingTracked())
+        self.assertTrue(self.composite.isBeingTracked())
 
     def testChangeStartTimeOfEffort_KeepWithinPeriod(self):
         self.task.addEffort(self.effort1)
@@ -220,7 +223,7 @@ class CompositeEffortTest(test.TestCase):
 
         pub.subscribe(onEvent, effort.Effort.durationChangedEventType())
         self.effort1.setStart(self.effort1.getStart() + date.ONE_HOUR)
-        self.failIf((self.composite.duration(), self.composite) in events)
+        self.assertFalse((self.composite.duration(), self.composite) in events)
 
     def testChangeStartTimeOfEffort_MoveOutsidePeriode(self):
         self.task.addEffort(self.effort1)
@@ -246,7 +249,7 @@ class CompositeEffortTest(test.TestCase):
 
         pub.subscribe(onEvent, effort.Effort.durationChangedEventType())
         self.effort1.setStop(self.effort1.getStop() + date.TimeDelta(days=2))
-        self.failIf((self.composite.duration(), self.composite) in events)
+        self.assertFalse((self.composite.duration(), self.composite) in events)
 
     def testChangeStopTimeOfEffort_NoNotification(self):
         self.task.addEffort(self.effort1)
@@ -257,7 +260,7 @@ class CompositeEffortTest(test.TestCase):
 
         pub.subscribe(onEvent, effort.Effort.durationChangedEventType())
         self.effort1.setStop(self.effort1.getStop() + date.ONE_HOUR)
-        self.failIf((self.composite.duration(), self.composite) in events)
+        self.assertFalse((self.composite.duration(), self.composite) in events)
 
     def testChangeStartTimeOfEffort_MoveInsidePeriod(self):
         self.task.addEffort(self.effort3)
@@ -316,8 +319,9 @@ class CompositeEffortTest(test.TestCase):
             self.assertEqual(expectedDescription, self.composite.description())
 
 
-class CompositeEffortWithSubTasksTest(test.TestCase):
+class CompositeEffortWithSubTasksTest(tctest.TestCase):
     def setUp(self):
+        super().setUp()
         task.Task.settings = config.Settings(load=False)
         self.task = task.Task(subject='task')
         self.child = task.Task(subject='child')
@@ -347,7 +351,7 @@ class CompositeEffortWithSubTasksTest(test.TestCase):
 
         pub.subscribe(onEvent, effort.Effort.durationChangedEventType())
         self.child.addEffort(self.childEffort)
-        self.failUnless((self.composite.duration(), self.composite) in events)
+        self.assertTrue((self.composite.duration(), self.composite) in events)
 
     def testRemoveEffortFromChildTask(self):
         self.child.addEffort(self.childEffort)
@@ -454,8 +458,9 @@ class CompositeEffortWithSubTasksTest(test.TestCase):
             self.composite.duration(recursive=True))
 
 
-class CompositeEffortWithSubTasksRevenueTest(test.TestCase):
+class CompositeEffortWithSubTasksRevenueTest(tctest.TestCase):
     def setUp(self):
+        super().setUp()
         task.Task.settings = config.Settings(load=False)
         self.task = task.Task(subject='task')
         self.child = task.Task(subject='child')
@@ -555,4 +560,4 @@ class CompositeEffortWithSubTasksRevenueTest(test.TestCase):
 
         pub.subscribe(onEvent, effort.Effort.revenueChangedEventType())
         self.child.setHourlyFee(100)
-        self.failUnless((0.0, self.composite) in events)
+        self.assertTrue((0.0, self.composite) in events)
