@@ -29,6 +29,7 @@ from taskcoachlib.domain import base, date
 
 class SynchronizedObjectTest(tctest.TestCase):
     def setUp(self):
+        super().setUp()
         self.object = base.SynchronizedObject()
         self.events = []
 
@@ -98,6 +99,7 @@ class ObjectSubclass(base.Object):
 
 class ObjectTest(tctest.TestCase):
     def setUp(self):
+        super().setUp()
         self.object = base.Object()
         self.subclassObject = ObjectSubclass()
         self.eventsReceived = []
@@ -407,6 +409,7 @@ class ObjectTest(tctest.TestCase):
 
 class CompositeObjectTest(tctest.TestCase):
     def setUp(self):
+        super().setUp()
         self.compositeObject = base.CompositeObject()
         self.child = None
         self.eventsReceived = []
@@ -681,6 +684,7 @@ class CompositeObjectTest(tctest.TestCase):
 
 class BaseCollectionTest(tctest.TestCase):
     def setUp(self):
+        super().setUp()
         self.collection = base.Collection()
 
     def testLookupByIdWhenCollectionIsEmptyRaisesIndexError(self):

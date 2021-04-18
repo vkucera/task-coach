@@ -22,6 +22,7 @@ from taskcoachlib import patterns
 
 class CompositeTest(tctest.TestCase):
     def setUp(self):
+        super().setUp()
         self.composite = patterns.Composite()
         self.child = patterns.Composite()
 
@@ -180,6 +181,7 @@ class CompositeTest(tctest.TestCase):
 
 class ObservableCompositeTest(tctest.TestCase):
     def setUp(self):
+        super().setUp()
         self.composite = patterns.ObservableComposite()
         self.child = patterns.ObservableComposite()
 
@@ -214,6 +216,7 @@ class ObservableCompositeTest(tctest.TestCase):
 
 class CompositeCollectionTest(tctest.TestCase):
     def setUp(self):
+        super().setUp()
         self.composite = patterns.ObservableComposite()
         self.composite2 = patterns.ObservableComposite()
         self.collection = patterns.CompositeList()

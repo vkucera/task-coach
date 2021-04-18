@@ -24,17 +24,25 @@ import unittest
 import logging
 import gettext
 
+from pubsub import pub
+import wx
+
 gettext.NullTranslations().install()
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-
-from pubsub import pub
 
 from taskcoachlib import patterns
 
 
 class TestCase(unittest.TestCase):
+    def setUp(self):
+        # Some non-UI stuff also needs the app to be constructed (like
+        # wx.BLACK et al)
+        self.app = wx.App(0)
+
     def tearDown(self):
+        self.app.Disconnect(wx.ID_ANY)
+
         patterns.Publisher().clear()
         patterns.NumberedInstances.count = dict()
         if hasattr(self, 'events'):

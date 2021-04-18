@@ -23,6 +23,7 @@ from taskcoachlib import patterns
 
 class HistoryTest(tctest.TestCase, asserts.CommandAssertsMixin):
     def setUp(self):
+        super().setUp()
         self.commands = patterns.CommandHistory()
         self.command = patterns.Command()
 
