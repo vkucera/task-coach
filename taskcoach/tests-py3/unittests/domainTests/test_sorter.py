@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import tctest
 from taskcoachlib import config
 from taskcoachlib.domain import task, effort, date, category
 
@@ -24,14 +24,16 @@ from taskcoachlib.domain import task, effort, date, category
 class DummyTaskList(task.TaskList):
     def __init__(self, *args, **kwargs):
         self.treeMode = 'not set'
-        super(DummyTaskList, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def setTreeMode(self, treeMode):
         self.treeMode = treeMode
 
 
-class TaskSorterTest(test.TestCase):
+class TaskSorterTest(tctest.TestCase):
     def setUp(self):
+        super().setUp()
+        task.Task.settings = config.Settings(load=False)
         a = self.a = task.Task('a')
         b = self.b = task.Task('b')
         c = self.c = task.Task('c')
@@ -68,8 +70,10 @@ class TaskSorterTest(test.TestCase):
         self.assertEqual([self.b, self.c, self.d, self.a], list(self.sorter))
 
 
-class TaskSorterSettingsTest(test.TestCase):
+class TaskSorterSettingsTest(tctest.TestCase):
     def setUp(self):
+        super().setUp()
+        task.Task.settings = config.Settings(load=False)
         self.taskList = task.TaskList()
         self.sorter = task.sorter.Sorter(self.taskList)
         self.task1 = task.Task(subject='A')
@@ -329,8 +333,9 @@ class TaskSorterSettingsTest(test.TestCase):
         self.assertEqual([self.task1, self.task2], list(self.sorter))
 
 
-class TaskSorterTreeModeTest(test.TestCase):
+class TaskSorterTreeModeTest(tctest.TestCase):
     def setUp(self):
+        super().setUp()
         task.Task.settings = config.Settings(load=False)
         self.taskList = DummyTaskList()
         self.sorter = task.sorter.Sorter(self.taskList, treeMode=True)
@@ -349,7 +354,7 @@ class TaskSorterTreeModeTest(test.TestCase):
     def testSortByDueDateTime(self):
         self.sorter.sortBy('dueDateTime')
         self.child2.setDueDateTime(date.Now().endOfDay())
-        self.failUnless(list(self.sorter).index(self.parent2) < \
+        self.assertTrue(list(self.sorter).index(self.parent2) < \
             list(self.sorter).index(self.parent1))
 
     def testSortByPriority(self):
@@ -357,14 +362,14 @@ class TaskSorterTreeModeTest(test.TestCase):
         self.sorter.sortAscending(False)
         self.parent1.setPriority(5)
         self.child2.setPriority(10)
-        self.failUnless(list(self.sorter).index(self.parent2) < \
+        self.assertTrue(list(self.sorter).index(self.parent2) < \
             list(self.sorter).index(self.parent1))
 
     def testSortByCategories_WhenParentsHaveNoCategories(self):
         self.child1.addCategory(category.Category('Category 2'))
         self.child2.addCategory(category.Category('Category 1'))
         self.sorter.sortBy('categories')
-        self.failUnless(list(self.sorter).index(self.parent2) < \
+        self.assertTrue(list(self.sorter).index(self.parent2) < \
             list(self.sorter).index(self.parent1))
 
     def testSortByCategories_WhenParentCategoryEqualsChildCategoryOfAnotherParent(self):
@@ -375,7 +380,7 @@ class TaskSorterTreeModeTest(test.TestCase):
         self.parent1.addCategory(category3)
         self.parent2.addCategory(category2)
         self.sorter.sortBy('categories')
-        self.failUnless(list(self.sorter).index(self.parent2) < \
+        self.assertTrue(list(self.sorter).index(self.parent2) < \
             list(self.sorter).index(self.parent1))
 
     def testSetSorterToListMode(self):
@@ -397,8 +402,9 @@ class TaskSorterTreeModeTest(test.TestCase):
                          list(self.sorter))
 
 
-class EffortSorterTest(test.TestCase):
+class EffortSorterTest(tctest.TestCase):
     def setUp(self):
+        super().setUp()
         task.Task.settings = config.Settings(load=False)
         self.taskList = task.TaskList()
         self.effortList = effort.EffortList(self.taskList)
