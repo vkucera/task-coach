@@ -61,7 +61,7 @@ class DateTime(StrftimeFix, datetime.datetime):
         seconds = self.hour * self.secondsPerHour + \
                   self.minute * self.secondsPerMinute + \
                   self.second
-        return ordinal + (seconds / float(self.secondsPerDay))
+        return ordinal + (seconds / self.secondsPerDay)
 
     def startOfDay(self):
         return self.replace(hour=0, minute=0, second=0, microsecond=0)

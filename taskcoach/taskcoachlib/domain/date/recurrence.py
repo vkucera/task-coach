@@ -89,7 +89,7 @@ class Recurrence:
             month += 1
         if self.sameWeekday:
             weekday = dateTime.weekday()
-            weekNr = min(3, (day - 1) / 7)  # In what week of the month falls aDate, allowable range 0-3
+            weekNr = min(3, (day - 1) // 7)  # In what week of the month falls aDate, allowable range 0-3
             day = weekNr * 7 + 1  # The earliest possible day that is on the same weekday as aDate
             result = date.DateTime(year, month, day, *details)
             while result.weekday() != weekday:
@@ -148,5 +148,5 @@ class Recurrence:
         except AttributeError:
             return True
 
-    def __nonzero__(self):
+    def __bool__(self):
         return bool(self.unit)
