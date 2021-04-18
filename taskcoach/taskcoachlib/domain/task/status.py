@@ -51,10 +51,14 @@ class TaskStatus:
     def __eq__(self, other):
         return self.statusString == other.statusString
 
+    def __hash__(self):
+        # Because of __eq__
+        return hash(id(self))
+
     def __neq__(self, other):
         return self.statusString != other.statusString
 
-    def __nonzero__(self):
+    def __bool__(self):
         return True
 
 

@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import tctest
 from taskcoachlib import config
 from taskcoachlib.domain import task, category
 
@@ -47,13 +47,14 @@ class CategoryFilterHelpersMixin:
         self.assertEqual(set(self.tasks), set(self.filter))
         
     def assertFilterHidesEverything(self):
-        self.failIf(self.filter)
+        self.assertFalse(self.filter)
         
 
 class Fixture(CategoryFilterHelpersMixin):
     treeMode = False
     
     def setUp(self):
+        super().setUp()
         self.settings = task.Task.settings = config.Settings(load=False)
         self.categories = category.CategoryList(self.createCategories())
         self.tasks = task.TaskList(self.createTasks())
@@ -83,13 +84,13 @@ class Fixture(CategoryFilterHelpersMixin):
         self.assertEqual(0, self.filter.originalLength())
 
     def testThatFilterLengthIsSmallerOrEqualThanOriginalLength(self):
-        self.failUnless(len(self.filter) <= self.filter.originalLength())
+        self.assertTrue(len(self.filter) <= self.filter.originalLength())
         
     def testThatFilterIsEmptyWhenFilteringOnACategoryWithoutCategorizables(self):
         emptyCategory = category.Category('empty')
         self.categories.append(emptyCategory)
         emptyCategory.setFiltered()
-        self.failIf(self.filter)
+        self.assertFalse(self.filter)
                
     def testThatFilterContainsAllItemsAfterRemovingFilteredEmptyCategory(self):
         emptyCategory = category.Category('empty')
@@ -123,7 +124,7 @@ class Fixture(CategoryFilterHelpersMixin):
         newTask = task.Task()
         newTask.addCategory(aCategory)
         self.tasks.append(newTask)
-        self.failUnless(newTask in self.filter)
+        self.assertTrue(newTask in self.filter)
         
     def testThatFilterDoesContainNewlyAddedTaskThatBelongsToTheFilteredCategoryAfterRemoval(self):
         aCategory = list(self.categories)[0]
@@ -132,7 +133,7 @@ class Fixture(CategoryFilterHelpersMixin):
         newTask.addCategory(aCategory)
         self.tasks.append(newTask)
         self.tasks.remove(newTask)
-        self.failIf(newTask in self.filter)
+        self.assertFalse(newTask in self.filter)
         
     def testThatFilterContainsNoTasksWhenFilteringAllCategoriesIncludingAnEmptyCategory(self):
         emptyCategory = category.Category('empty')
@@ -156,11 +157,11 @@ class OneCategoryFixture(Fixture):
         self.assertEqual(0, len(self.filter))
                 
 
-class OneCategoryFilterInListModeTest(OneCategoryFixture, test.TestCase):
+class OneCategoryFilterInListModeTest(OneCategoryFixture, tctest.TestCase):
     treeMode = False   
     
 
-class OneCategoryFilterInTreeModeTest(OneCategoryFixture, test.TestCase):
+class OneCategoryFilterInTreeModeTest(OneCategoryFixture, tctest.TestCase):
     treeMode = True
 
 
@@ -186,11 +187,11 @@ class OneCategoryAndOneTaskFixture(Fixture):
         self.assertFilterHidesNothing()
 
 
-class OneCategoryAndOneTaskInListModeTest(OneCategoryAndOneTaskFixture, test.TestCase):
+class OneCategoryAndOneTaskInListModeTest(OneCategoryAndOneTaskFixture, tctest.TestCase):
     treeMode = False   
     
 
-class OneCategoryAndOneTaskInTreeModeTest(OneCategoryAndOneTaskFixture, test.TestCase):
+class OneCategoryAndOneTaskInTreeModeTest(OneCategoryAndOneTaskFixture, tctest.TestCase):
     treeMode = True
 
 
@@ -223,11 +224,11 @@ class OneCategoryAndTwoTasksFixture(Fixture):
         self.assertFilterHidesNothing()
 
 
-class OneCategoryAndTwoTasksInListModeTest(OneCategoryAndTwoTasksFixture, test.TestCase):
+class OneCategoryAndTwoTasksInListModeTest(OneCategoryAndTwoTasksFixture, tctest.TestCase):
     treeMode = False   
     
 
-class OneCategoryAndTwoTasksInTreeModeTest(OneCategoryAndTwoTasksFixture, test.TestCase):
+class OneCategoryAndTwoTasksInTreeModeTest(OneCategoryAndTwoTasksFixture, tctest.TestCase):
     treeMode = True
 
 
@@ -257,11 +258,11 @@ class TwoCategoriesAndOneTaskFixture(Fixture):
         self.assertFilterHidesEverything()
 
 
-class TwoCategoriesAndOneTaskInListModeTest(TwoCategoriesAndOneTaskFixture, test.TestCase):
+class TwoCategoriesAndOneTaskInListModeTest(TwoCategoriesAndOneTaskFixture, tctest.TestCase):
     treeMode = False   
     
 
-class TwoCategoriesAndOneTaskInTreeModeTest(TwoCategoriesAndOneTaskFixture, test.TestCase):
+class TwoCategoriesAndOneTaskInTreeModeTest(TwoCategoriesAndOneTaskFixture, tctest.TestCase):
     treeMode = True
         
 
@@ -342,11 +343,11 @@ class TwoCategoriesAndTwoTasksFixture(Fixture):
         self.assertFilterHidesEverything()
 
 
-class TwoCategoriesAndTwoTasksInListModeTest(TwoCategoriesAndTwoTasksFixture, test.TestCase):
+class TwoCategoriesAndTwoTasksInListModeTest(TwoCategoriesAndTwoTasksFixture, tctest.TestCase):
     treeMode = False   
     
 
-class TwoCategoriesAndTwoTasksInTreeModeTest(TwoCategoriesAndTwoTasksFixture, test.TestCase):
+class TwoCategoriesAndTwoTasksInTreeModeTest(TwoCategoriesAndTwoTasksFixture, tctest.TestCase):
     treeMode = True
 
 
@@ -373,11 +374,11 @@ class OneCategoryAndParentAndChildTaskFixture(Fixture):
         self.assertEqual(2 if self.treeMode else 1, len(self.filter))
         
 
-class OneCategoryAndParentAndChildTaskInListModeTest(OneCategoryAndParentAndChildTaskFixture, test.TestCase):
+class OneCategoryAndParentAndChildTaskInListModeTest(OneCategoryAndParentAndChildTaskFixture, tctest.TestCase):
     treeMode = False   
     
 
-class OneCategoryAndParentAndChildTaskInTreeModeTest(OneCategoryAndParentAndChildTaskFixture, test.TestCase):
+class OneCategoryAndParentAndChildTaskInTreeModeTest(OneCategoryAndParentAndChildTaskFixture, tctest.TestCase):
     treeMode = True
 
 
@@ -411,11 +412,11 @@ class TwoCategoriesAndParentAndChildTaskFixture(Fixture):
         self.assertChildTaskIsFiltered()
         
 
-class TwoCategoriesAndParentAndChildTaskInListModeTest(TwoCategoriesAndParentAndChildTaskFixture, test.TestCase):
+class TwoCategoriesAndParentAndChildTaskInListModeTest(TwoCategoriesAndParentAndChildTaskFixture, tctest.TestCase):
     treeMode = False   
     
 
-class TwoCategoriesAndParentAndChildTaskInTreeModeTest(TwoCategoriesAndParentAndChildTaskFixture, test.TestCase):
+class TwoCategoriesAndParentAndChildTaskInTreeModeTest(TwoCategoriesAndParentAndChildTaskFixture, tctest.TestCase):
     treeMode = True
 
 
@@ -489,11 +490,11 @@ class ParentAndChildCategoryAndParentAndChildTaskFixture(Fixture):
         self.assertChildTaskIsFiltered()
         
         
-class ParentAndChildCategoryAndParentAndChildTaskInListModeTest(ParentAndChildCategoryAndParentAndChildTaskFixture, test.TestCase):
+class ParentAndChildCategoryAndParentAndChildTaskInListModeTest(ParentAndChildCategoryAndParentAndChildTaskFixture, tctest.TestCase):
     treeMode = False   
     
 
-class ParentAndChildCategoryAndParentAndChildTaskInTreeModeTest(ParentAndChildCategoryAndParentAndChildTaskFixture, test.TestCase):
+class ParentAndChildCategoryAndParentAndChildTaskInTreeModeTest(ParentAndChildCategoryAndParentAndChildTaskFixture, tctest.TestCase):
     treeMode = True
     
 
@@ -530,14 +531,14 @@ class ParentAndChildCategoryAndParentAndGrandChildTaskFixture(Fixture):
     def testThatFilterContainsGrandChildTaskWhenChildTaskIsInChildCategoryAndParentCategoryIsFiltered(self):
         self.link(self.childCategory, self.childTask)
         self.parentCategory.setFiltered()
-        self.failUnless(self.grandChildTask in self.filter)
+        self.assertTrue(self.grandChildTask in self.filter)
 
     def testThatFilterContainsGrandChildTaskWhenChildTaskIsInChildCategoryAndAllCategoriesAreFiltered(self):
         self.setFilterOnAllCategories()
         self.link(self.childCategory, self.childTask)
         self.parentCategory.setFiltered()
         self.childCategory.setFiltered()
-        self.failUnless(self.grandChildTask in self.filter)
+        self.assertTrue(self.grandChildTask in self.filter)
         
     def testThatFilterContainsGrandParentWhenGrandChildIsInChildCategoryAndParentCategoryIsFiltered(self):
         self.link(self.childCategory, self.grandChildTask)
@@ -546,11 +547,11 @@ class ParentAndChildCategoryAndParentAndGrandChildTaskFixture(Fixture):
                          set(self.filter))
         
     
-class ParentAndChildCategoryAndParentAndGrandChildTaskInListModeTest(ParentAndChildCategoryAndParentAndGrandChildTaskFixture, test.TestCase):
+class ParentAndChildCategoryAndParentAndGrandChildTaskInListModeTest(ParentAndChildCategoryAndParentAndGrandChildTaskFixture, tctest.TestCase):
     treeMode = False   
     
 
-class ParentAndChildCategoryAndParentAndGrandChildTaskInTreeModeTest(ParentAndChildCategoryAndParentAndGrandChildTaskFixture, test.TestCase):
+class ParentAndChildCategoryAndParentAndGrandChildTaskInTreeModeTest(ParentAndChildCategoryAndParentAndGrandChildTaskFixture, tctest.TestCase):
     treeMode = True
 
 
@@ -588,11 +589,11 @@ class TwoCategoriesAndParentAndGrandChildTaskFixture(Fixture):
         self.assertFilterHidesNothing()
         
 
-class TwoCategoriesAndParentAndGrandChildTaskInListModeTest(TwoCategoriesAndParentAndGrandChildTaskFixture, test.TestCase):
+class TwoCategoriesAndParentAndGrandChildTaskInListModeTest(TwoCategoriesAndParentAndGrandChildTaskFixture, tctest.TestCase):
     treeMode = False   
     
 
-class TwoCategoriesAndParentAndGrandChildTaskInTreeModeTest(TwoCategoriesAndParentAndGrandChildTaskFixture, test.TestCase):
+class TwoCategoriesAndParentAndGrandChildTaskInTreeModeTest(TwoCategoriesAndParentAndGrandChildTaskFixture, tctest.TestCase):
     treeMode = True
 
     
@@ -630,14 +631,14 @@ class TwoCategoriesAndParentWithTwoChildTasksFixture(Fixture):
 
     def testThatFilterHidesUnfilteredChild(self):
         self.category1.setFiltered()
-        self.failIf(self.child2Task in self.filter)
+        self.assertFalse(self.child2Task in self.filter)
 
         
-class TwoCategoriesAndParentWithTwoChildTasksInListModeTest(TwoCategoriesAndParentWithTwoChildTasksFixture, test.TestCase):
+class TwoCategoriesAndParentWithTwoChildTasksInListModeTest(TwoCategoriesAndParentWithTwoChildTasksFixture, tctest.TestCase):
     treeMode = False   
     
 
-class TwoCategoriesAndParentWithTwoChildTasksInTreeModeTest(TwoCategoriesAndParentWithTwoChildTasksFixture, test.TestCase):
+class TwoCategoriesAndParentWithTwoChildTasksInTreeModeTest(TwoCategoriesAndParentWithTwoChildTasksFixture, tctest.TestCase):
     treeMode = True
 
 
@@ -656,7 +657,7 @@ class ParentAndChildCategoryAndOneTaskFixture(Fixture):
     def testThatFilterDoesNotContainTaskIfTaskHasChildCategoryAndParentIsFiltered(self):
         self.link(self.parentCategory, self.task)
         self.childCategory.setFiltered()
-        self.failIf(self.filter)
+        self.assertFalse(self.filter)
 
     def testThatFilterContainsTaskIfTaskIfTaskHasParentCategoryAndChildIsFiltered(self):
         self.link(self.childCategory, self.task)
@@ -680,16 +681,17 @@ class ParentAndChildCategoryAndOneTaskFixture(Fixture):
         self.assertFilterHidesNothing()
 
 
-class ParentAndChildCategoryAndTaskInListModeTest(ParentAndChildCategoryAndOneTaskFixture, test.TestCase):
+class ParentAndChildCategoryAndTaskInListModeTest(ParentAndChildCategoryAndOneTaskFixture, tctest.TestCase):
     treeMode = False   
     
 
-class ParentAndChildCategoryAndTaskInTreeModeTest(ParentAndChildCategoryAndOneTaskFixture, test.TestCase):
+class ParentAndChildCategoryAndTaskInTreeModeTest(ParentAndChildCategoryAndOneTaskFixture, tctest.TestCase):
     treeMode = True
 
                        
 class CategoryFilterAndViewFilterFixtureAndCommonTestsMixin(CategoryFilterHelpersMixin):
     def setUp(self):
+        super().setUp()
         task.Task.settings = config.Settings(load=False)
         self.parent = task.Task('parent task')
         self.parent.setShouldMarkCompletedWhenAllChildrenCompleted(False)
@@ -732,10 +734,10 @@ class CategoryFilterAndViewFilterFixtureAndCommonTestsMixin(CategoryFilterHelper
 
 
 class CategoryFilterAndViewFilterInListModeTest(CategoryFilterAndViewFilterFixtureAndCommonTestsMixin, 
-                                                test.TestCase):
+                                                tctest.TestCase):
     treeMode = False   
 
 
 class CategoryFilterAndViewFilterInTreeModeTest(CategoryFilterAndViewFilterFixtureAndCommonTestsMixin, 
-                                                test.TestCase):
+                                                tctest.TestCase):
     treeMode = True

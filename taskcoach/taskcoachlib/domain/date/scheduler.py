@@ -61,7 +61,8 @@ class TwistedScheduler:
         if self.__nextCall is not None:
             self.__nextCall.cancel()
             self.__nextCall = None
-        bisect.insort_right(self.__jobs, (dateTime, job, interval))
+        index = bisect.bisect_right([v[0] for v in self.__jobs], dateTime)
+        self.__jobs.insert(index, (dateTime, job, interval))
         if not self.__firing:
             self.__fire()
 
