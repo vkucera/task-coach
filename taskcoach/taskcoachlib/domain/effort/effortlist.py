@@ -20,7 +20,7 @@ from taskcoachlib import patterns
 
 from taskcoachlib import help
 from pubsub import pub
-from taskcoachlib.thirdparty.pubsub.core import Publisher
+from pubsub.core import Publisher
 from taskcoachlib.domain import task
 from . import effort
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-'''
+"""
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2016 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2010 Svetoslav Trochev <sal_electronics@hotmail.com>
@@ -17,7 +17,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-'''
+"""
 
 from taskcoachlib import patterns
 from taskcoachlib.domain import date, categorizable, base
@@ -167,7 +167,7 @@ class Task(base.NoteOwner, base.AttachmentOwner,
             self.recomputeAppearance(True, event=kwargs.pop('event'))
 
     def allChildrenCompleted(self):
-        ''' Return whether all children (non-recursively) are completed. '''
+        """ Return whether all children (non-recursively) are completed. """
         children = self.children()
         return all(child.completed() for child in children) if children \
             else False
@@ -285,7 +285,7 @@ class Task(base.NoteOwner, base.AttachmentOwner,
 
     @classmethod
     def dueDateTimeSortEventTypes(class_):
-        ''' The event types that influence the due date time sort order. '''
+        """ The event types that influence the due date time sort order. """
         return (class_.dueDateTimeChangedEventType(),)
 
     # Planned start date
@@ -328,8 +328,8 @@ class Task(base.NoteOwner, base.AttachmentOwner,
 
     @classmethod
     def plannedStartDateTimeSortEventTypes(class_):
-        ''' The event types that influence the planned start date time sort
-            order. '''
+        """ The event types that influence the planned start date time sort
+            order. """
         return (class_.plannedStartDateTimeChangedEventType(),)
 
     def timeLeft(self, recursive=False):
@@ -342,7 +342,7 @@ class Task(base.NoteOwner, base.AttachmentOwner,
 
     @classmethod
     def timeLeftSortEventTypes(class_):
-        ''' The event types that influence the time left sort order. '''
+        """ The event types that influence the time left sort order. """
         return (class_.dueDateTimeChangedEventType(),)
 
     # Actual start date
@@ -381,7 +381,7 @@ class Task(base.NoteOwner, base.AttachmentOwner,
 
     @classmethod
     def actualStartDateTimeSortEventTypes(class_):
-        ''' The event types that influence the actual start date time sort order. '''
+        """ The event types that influence the actual start date time sort order. """
         return (class_.actualStartDateTimeChangedEventType(),)
 
     # Completion date
@@ -441,10 +441,10 @@ class Task(base.NoteOwner, base.AttachmentOwner,
         return 'pubsub.task.completionDateTime'
 
     def shouldBeMarkedCompleted(self):
-        ''' Return whether this task should be marked completed. It should be
+        """ Return whether this task should be marked completed. It should be
             marked completed when 1) it's not completed, 2) all of its children
             are completed, 3) its setting says it should be completed when
-            all of its children are completed. '''
+            all of its children are completed. """
         shouldMarkCompletedAccordingToSetting = \
             self.settings.getboolean('behavior',  # pylint: disable=E1101
                 'markparentcompletedwhenallchildrencompleted')
@@ -462,12 +462,12 @@ class Task(base.NoteOwner, base.AttachmentOwner,
 
     @classmethod
     def completionDateTimeSortEventTypes(class_):
-        ''' The event types that influence the completion date time sort order. '''
+        """ The event types that influence the completion date time sort order. """
         return (class_.completionDateTimeChangedEventType(),)
 
     def onMarkParentCompletedWhenAllChildrenCompletedChanged(self, value):
-        ''' When the global setting changes, send a percentage completed
-            changed if necessary. '''
+        """ When the global setting changes, send a percentage completed
+            changed if necessary. """
         if self.shouldMarkCompletedWhenAllChildrenCompleted() is None and \
             any([child.percentageComplete(True) for child in self.children()]):
             pub.sendMessage(self.percentageCompleteChangedEventType(),
@@ -476,37 +476,37 @@ class Task(base.NoteOwner, base.AttachmentOwner,
     # Task state
 
     def completed(self):
-        ''' A task is completed if it has a completion date/time. '''
+        """ A task is completed if it has a completion date/time. """
         return self.status() == status.completed
 
     def overdue(self):
-        ''' A task is over due if its due date/time is in the past and it is
+        """ A task is over due if its due date/time is in the past and it is
             not completed. Note that an over due task is also either active
-            or inactive. '''
+            or inactive. """
         return self.status() == status.overdue
 
     def inactive(self):
-        ''' A task is inactive if it is not completed and either has no planned
+        """ A task is inactive if it is not completed and either has no planned
             start date/time or a planned start date/time in the future, and/or
-            its prerequisites are not completed. '''
+            its prerequisites are not completed. """
         return self.status() == status.inactive
 
     def active(self):
-        ''' A task is active if it has a planned start date/time in the past and
+        """ A task is active if it has a planned start date/time in the past and
             it is not completed. Note that over due and due soon tasks are also
             considered to be active. So the statuses active, inactive and
             completed are disjunct, but the statuses active, due soon and over
-            due are not. '''
+            due are not. """
         return self.status() == status.active
 
     def dueSoon(self):
-        ''' A task is due soon if it is not completed and there is still time
-            left (i.e. it is not over due). '''
+        """ A task is due soon if it is not completed and there is still time
+            left (i.e. it is not over due). """
         return self.status() == status.duesoon
 
     def late(self):
-        ''' A task is late if it is not active and its planned start date time
-            is in the past. '''
+        """ A task is late if it is not active and its planned start date time
+            is in the past. """
         return self.status() == status.late
 
     @classmethod
@@ -647,7 +647,7 @@ class Task(base.NoteOwner, base.AttachmentOwner,
 
     @classmethod
     def timeSpentSortEventTypes(class_):
-        ''' The event types that influence the time spent sort order. '''
+        """ The event types that influence the time spent sort order. """
         return (class_.timeSpentChangedEventType(),)
 
     # Budget
@@ -685,7 +685,7 @@ class Task(base.NoteOwner, base.AttachmentOwner,
 
     @classmethod
     def budgetSortEventTypes(class_):
-        ''' The event types that influence the budget sort order. '''
+        """ The event types that influence the budget sort order. """
         return (class_.budgetChangedEventType(),)
 
     # Budget left
@@ -713,7 +713,7 @@ class Task(base.NoteOwner, base.AttachmentOwner,
 
     @classmethod
     def budgetLeftSortEventTypes(class_):
-        ''' The event types that influence the budget left sort order. '''
+        """ The event types that influence the budget left sort order. """
         return (class_.budgetLeftChangedEventType(),)
 
     # Foreground color
@@ -744,8 +744,8 @@ class Task(base.NoteOwner, base.AttachmentOwner,
         return recursiveColor
 
     def statusFgColor(self):
-        ''' Return the current color of task, based on its status (completed,
-            overdue, duesoon, inactive, or active). '''
+        """ Return the current color of task, based on its status (completed,
+            overdue, duesoon, inactive, or active). """
         return self.fgColorForStatus(self.status())
 
     @classmethod
@@ -795,8 +795,8 @@ class Task(base.NoteOwner, base.AttachmentOwner,
         return recursiveColor
 
     def statusBgColor(self):
-        ''' Return the current color of task, based on its status (completed,
-            overdue, duesoon, inactive, or active). '''
+        """ Return the current color of task, based on its status (completed,
+            overdue, duesoon, inactive, or active). """
         color = self.bgColorForStatus(self.status())
         return None if color == wx.WHITE else color
 
@@ -818,8 +818,8 @@ class Task(base.NoteOwner, base.AttachmentOwner,
                 return self.statusFont()
 
     def statusFont(self):
-        ''' Return the current font of task, based on its status (completed,
-            overdue, duesoon, inactive, or active). '''
+        """ Return the current font of task, based on its status (completed,
+            overdue, duesoon, inactive, or active). """
         return self.fontForStatus(self.status())
 
     @classmethod
@@ -862,7 +862,7 @@ class Task(base.NoteOwner, base.AttachmentOwner,
         return self.__recursiveSelectedIcon
 
     def statusIcon(self, selected=False):
-        ''' Return the current icon of the task, based on its status. '''
+        """ Return the current icon of the task, based on its status. """
         return self.iconForStatus(self.status(), selected)
 
     def iconForStatus(self, taskStatus, selected=False):
@@ -914,7 +914,7 @@ class Task(base.NoteOwner, base.AttachmentOwner,
             if self.__percentageComplete > 0 or not ignore_me:
                 percentages.append(self.__percentageComplete)
             percentages.extend([child.percentageComplete(recursive) for child in self.children()])
-            return sum(percentages) / len(percentages) if percentages else 0
+            return sum(percentages) // len(percentages) if percentages else 0
         else:
             return self.__percentageComplete
 
@@ -943,7 +943,7 @@ class Task(base.NoteOwner, base.AttachmentOwner,
 
     @classmethod
     def percentageCompleteSortEventTypes(class_):
-        ''' The event types that influence the percentage complete sort order. '''
+        """ The event types that influence the percentage complete sort order. """
         return (class_.percentageCompleteChangedEventType(),)
 
     @classmethod
@@ -986,7 +986,7 @@ class Task(base.NoteOwner, base.AttachmentOwner,
 
     @classmethod
     def prioritySortEventTypes(class_):
-        ''' The event types that influence the priority sort order. '''
+        """ The event types that influence the priority sort order. """
         return (class_.priorityChangedEventType(),)
 
     # Hourly fee
@@ -1015,7 +1015,7 @@ class Task(base.NoteOwner, base.AttachmentOwner,
 
     @classmethod
     def hourlyFeeSortEventTypes(class_):
-        ''' The event types that influence the hourly fee sort order. '''
+        """ The event types that influence the hourly fee sort order. """
         return (class_.hourlyFeeChangedEventType(),)
 
     # Fixed fee
@@ -1048,7 +1048,7 @@ class Task(base.NoteOwner, base.AttachmentOwner,
 
     @classmethod
     def fixedFeeSortEventTypes(class_):
-        ''' The event types that influence the fixed fee sort order. '''
+        """ The event types that influence the fixed fee sort order. """
         return (class_.fixedFeeChangedEventType(),)
 
     # Revenue
@@ -1078,7 +1078,7 @@ class Task(base.NoteOwner, base.AttachmentOwner,
 
     @classmethod
     def revenueSortEventTypes(class_):
-        ''' The event types that influence the revenue sort order. '''
+        """ The event types that influence the revenue sort order. """
         return (class_.revenueChangedEventType(),)
 
     # reminder
@@ -1130,7 +1130,7 @@ class Task(base.NoteOwner, base.AttachmentOwner,
 
     @classmethod
     def reminderSortEventTypes(class_):
-        ''' The event types that influence the reminder sort order. '''
+        """ The event types that influence the reminder sort order. """
         return (class_.reminderChangedEventType(),)
 
     # Recurrence
@@ -1205,7 +1205,7 @@ class Task(base.NoteOwner, base.AttachmentOwner,
 
     @classmethod
     def recurrenceSortEventTypes(class_):
-        ''' The event types that influence the recurrence sort order. '''
+        """ The event types that influence the recurrence sort order. """
         return (class_.recurrenceChangedEventType(),)
 
     # Prerequisites
@@ -1262,13 +1262,13 @@ class Task(base.NoteOwner, base.AttachmentOwner,
 
     @staticmethod
     def prerequisitesSortFunction(**kwargs):
-        ''' Return a sort key for sorting by prerequisites. Since a task can
+        """ Return a sort key for sorting by prerequisites. Since a task can
             have multiple prerequisites we first sort the prerequisites by their
             subjects. If the sorter is in tree mode, we also take the
             prerequisites of the children of the task into account, after the
             prerequisites of the task itself. If the sorter is in list
             mode we also take the prerequisites of the parent (recursively) into
-            account, again after the prerequisites of the categorizable itself.'''
+            account, again after the prerequisites of the categorizable itself."""
         def sortKeyFunction(task):
             def sortedSubjects(items):
                 return sorted([item.subject(recursive=True) for item in items])
@@ -1282,7 +1282,7 @@ class Task(base.NoteOwner, base.AttachmentOwner,
 
     @classmethod
     def prerequisitesSortEventTypes(class_):
-        ''' The event types that influence the prerequisites sort order. '''
+        """ The event types that influence the prerequisites sort order. """
         return (class_.prerequisitesChangedEventType(),)
 
     # Dependencies
@@ -1334,13 +1334,13 @@ class Task(base.NoteOwner, base.AttachmentOwner,
 
     @staticmethod
     def dependenciesSortFunction(**kwargs):
-        ''' Return a sort key for sorting by dependencies. Since a task can
+        """ Return a sort key for sorting by dependencies. Since a task can
             have multiple dependencies we first sort the dependencies by their
             subjects. If the sorter is in tree mode, we also take the
             dependencies of the children of the task into account, after the
             dependencies of the task itself. If the sorter is in list
             mode we also take the dependencies of the parent (recursively) into
-            account, again after the dependencies of the categorizable itself.'''
+            account, again after the dependencies of the categorizable itself."""
         def sortKeyFunction(task):
             def sortedSubjects(items):
                 return sorted([item.subject(recursive=True) for item in items])
@@ -1354,7 +1354,7 @@ class Task(base.NoteOwner, base.AttachmentOwner,
 
     @classmethod
     def dependenciesSortEventTypes(class_):
-        ''' The event types that influence the dependencies sort order. '''
+        """ The event types that influence the dependencies sort order. """
         return (class_.dependenciesChangedEventType(),)
 
     # behavior

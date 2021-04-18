@@ -105,11 +105,14 @@ class Attachment(base.Object, NoteOwner):
     def open(self, workingDir=None):
         raise NotImplementedError
 
-    def __cmp__(self, other):
+    def __eq__(self, other):
         try:
-            return cmp(self.location(), other.location())
+            return self.location() == other.location()
         except AttributeError:
-            return 1
+            return False
+
+    def __hash__(self):
+        return hash(self.__location)
 
     def __getstate__(self):
         try:
