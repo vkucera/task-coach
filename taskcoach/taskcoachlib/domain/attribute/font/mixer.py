@@ -32,7 +32,7 @@ class FontMixer:
         weight = class_.mixFontWeights(*fonts)
         style = class_.mixFontStyles(*fonts)
         underlined = class_.mixFontUnderlining(*fonts)
-        return wx.Font(pointSize, family, style, weight, underline=underlined)
+        return wx.Font(int(pointSize), family, style, weight, underline=underlined)
 
     @staticmethod
     def mixFontSizes(*fonts):

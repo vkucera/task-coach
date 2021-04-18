@@ -23,6 +23,7 @@ import sys
 import unittest
 import logging
 import gettext
+import platform
 
 from pubsub import pub
 import wx
@@ -34,11 +35,25 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 from taskcoachlib import patterns
 
 
+# TMP: compat to map wx platform strings
+_PLATFORM_MAP = {
+    '__WXGTK__': 'Linux',
+    }
+
+def skipOnPlatform(*platforms):
+    ''' Decorator for unit tests that are to be skipped on specific
+        platforms. '''
+    def wrapper(func):
+        if platform.system() in [_PLATFORM_MAP[name] for name in platforms]:
+            return lambda self, *args, **kwargs: self.skipTest('platform is %s' % wx.Platform)
+        return func
+    return wrapper
+
+
 class TestCase(unittest.TestCase):
-    def setUp(self):
-        # Some non-UI stuff also needs the app to be constructed (like
-        # wx.BLACK et al)
-        self.app = wx.App(0)
+    # Some non-UI stuff also needs the app to be constructed (like
+    # wx.BLACK et al)
+    app = wx.App(0)
 
     def tearDown(self):
         self.app.Disconnect(wx.ID_ANY)

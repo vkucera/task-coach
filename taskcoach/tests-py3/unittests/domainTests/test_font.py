@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2016 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2021 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,13 +16,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, wx
+import wx
+
+import tctest
 from taskcoachlib.domain.attribute import font
 
 
-class MixFontsTest(test.TestCase):
+class MixFontsTest(tctest.TestCase):
     def setUp(self):
-        super(MixFontsTest, self).setUp()
+        super().setUp()
         self.mixFonts = font.FontMixer.mix
         self.font = wx.Font(10, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL,
             wx.FONTWEIGHT_NORMAL)
@@ -85,13 +87,13 @@ class MixFontsTest(test.TestCase):
                          self.mixFonts(self.font, self.italicFont).GetStyle())
 
     def testFontUnderline_NormalAndUnderlined(self):
-        self.failUnless(self.mixFonts(self.font, self.underlinedFont).GetUnderlined())
+        self.assertTrue(self.mixFonts(self.font, self.underlinedFont).GetUnderlined())
 
     def testFontFamily_DefaultAndSwiss(self):
         self.assertEqual(wx.FONTFAMILY_SWISS,
                          self.mixFonts(self.font, self.swissFont).GetFamily())
 
-    @test.skipOnPlatform('__WXGTK__')
+    @tctest.skipOnPlatform('__WXGTK__')
     def testFontFamily_DefaultAndDecorative(self):
         self.assertEqual(wx.FONTFAMILY_DECORATIVE,
                          self.mixFonts(self.font,
@@ -102,13 +104,13 @@ class MixFontsTest(test.TestCase):
                          self.mixFonts(self.font, self.romanFont,
                                        self.romanFont).GetFamily())
 
-    @test.skipOnPlatform('__WXGTK__')
+    @tctest.skipOnPlatform('__WXGTK__')
     def testFontFamily_DefaultAndScript(self):
         self.assertEqual(wx.FONTFAMILY_SCRIPT,
                          self.mixFonts(self.font,
                                        self.scriptFont).GetFamily())
 
-    @test.skipOnPlatform('__WXGTK__')
+    @tctest.skipOnPlatform('__WXGTK__')
     def testFontFamily_DefaultAndModern(self):
         self.assertEqual(wx.FONTFAMILY_MODERN,
                          self.mixFonts(self.font,
