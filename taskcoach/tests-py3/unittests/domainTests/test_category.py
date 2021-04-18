@@ -16,13 +16,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, wx
+import wx
+
+import tctest
 from taskcoachlib import patterns
 from taskcoachlib.domain import category, categorizable, note, date
 
 
-class CategoryTest(test.TestCase):
+class CategoryTest(tctest.TestCase):
     def setUp(self):
+        super().setUp()
         self.category = category.Category(subject='category')
         self.subCategory = category.Category(subject='subcategory')
         self.categorizable = categorizable.CategorizableCompositeObject(subject='parent')
@@ -49,7 +52,7 @@ class CategoryTest(test.TestCase):
         state = self.category.__getstate__()
         self.category.makeSubcategoriesExclusive()
         self.category.__setstate__(state)
-        self.failIf(self.category.hasExclusiveSubcategories())
+        self.assertFalse(self.category.hasExclusiveSubcategories())
 
     def testSetState_OneNotification(self):
         newState = dict(subject='New subject', description='New description',
@@ -61,7 +64,7 @@ class CategoryTest(test.TestCase):
                         icon='icon', selectedIcon='selected',
                         creationDateTime=date.Now(),
                         modificationDateTime=date.Now(),
-                        ordering=42L)
+                        ordering=42)
         for eventType in self.category.modificationEventTypes():
             self.registerObserver(eventType)
         self.category.__setstate__(newState)
@@ -87,7 +90,7 @@ class CategoryTest(test.TestCase):
         eventType = category.Category.subjectChangedEventType()
         self.registerObserver(eventType)
         self.category.setSubject(self.category.subject())
-        self.failIf(self.events)
+        self.assertFalse(self.events)
 
     # Description:
 
@@ -118,13 +121,13 @@ class CategoryTest(test.TestCase):
     def testRemoveCategorizable(self):
         self.category.addCategorizable(self.categorizable)
         self.category.removeCategorizable(self.categorizable)
-        self.failIf(self.category.categorizables())
-        self.failIf(self.categorizable.categories())
+        self.assertFalse(self.category.categorizables())
+        self.assertFalse(self.categorizable.categories())
 
     def testRemovecategorizableThatsNotInThisCategory(self):
         self.category.removeCategorizable(self.categorizable)
-        self.failIf(self.category.categorizables())
-        self.failIf(self.categorizable.categories())
+        self.assertFalse(self.category.categorizables())
+        self.assertFalse(self.categorizable.categories())
 
     def testCreateWithCategorizable(self):
         cat = category.Category('category', [self.categorizable])
@@ -173,19 +176,19 @@ class CategoryTest(test.TestCase):
     # Filter:
 
     def testNotFilteredByDefault(self):
-        self.failIf(self.category.isFiltered())
+        self.assertFalse(self.category.isFiltered())
 
     def testSetFilteredOn(self):
         self.category.setFiltered()
-        self.failUnless(self.category.isFiltered())
+        self.assertTrue(self.category.isFiltered())
 
     def testSetFilteredOff(self):
         self.category.setFiltered(False)
-        self.failIf(self.category.isFiltered())
+        self.assertFalse(self.category.isFiltered())
 
     def testSetFilteredViaConstructor(self):
         filteredCategory = category.Category('test', filtered=True)
-        self.failUnless(filteredCategory.isFiltered())
+        self.assertTrue(filteredCategory.isFiltered())
 
     # Copy:
 
@@ -225,7 +228,7 @@ class CategoryTest(test.TestCase):
     def testCopy_CategorizablesAreCopiedIntoADifferentList(self):
         copy = self.category.copy()
         self.category.addCategorizable(self.categorizable)
-        self.failIf(self.categorizable in copy.categorizables())
+        self.assertFalse(self.categorizable in copy.categorizables())
 
     def testCopy_ChildrenAreCopied(self):
         self.category.addChild(self.subCategory)
@@ -347,20 +350,20 @@ class CategoryTest(test.TestCase):
     # Exclusive subcategories:
 
     def testSubcategoriesAreNotExclusiveByDefault(self):
-        self.failIf(self.category.hasExclusiveSubcategories())
+        self.assertFalse(self.category.hasExclusiveSubcategories())
 
     def testMakeSubcategoriesExclusive(self):
         self.category.makeSubcategoriesExclusive()
-        self.failUnless(self.category.hasExclusiveSubcategories())
+        self.assertTrue(self.category.hasExclusiveSubcategories())
 
     def testMakeSubcategoriesNotExclusive(self):
         self.category.makeSubcategoriesExclusive()
         self.category.makeSubcategoriesExclusive(False)
-        self.failIf(self.category.hasExclusiveSubcategories())
+        self.assertFalse(self.category.hasExclusiveSubcategories())
 
     def testCreateWithExclusiveSubcategories(self):
         aCategory = category.Category('subject', exclusiveSubcategories=True)
-        self.failUnless(aCategory.hasExclusiveSubcategories())
+        self.assertTrue(aCategory.hasExclusiveSubcategories())
 
     def testExclusiveSubcategoriesNotification(self):
         eventType = category.Category.exclusiveSubcategoriesChangedEventType()
@@ -373,20 +376,20 @@ class CategoryTest(test.TestCase):
         eventType = category.Category.exclusiveSubcategoriesChangedEventType()
         self.registerObserver(eventType)
         self.category.makeSubcategoriesExclusive(False)
-        self.failIf(self.events)
+        self.assertFalse(self.events)
 
     def testMakeSubcategoriesExclusiveUnchecksAllSubcategories(self):
         self.subCategory.setFiltered(True)
         self.category.addChild(self.subCategory)
         self.category.makeSubcategoriesExclusive(True)
-        self.failIf(self.subCategory.isFiltered())
+        self.assertFalse(self.subCategory.isFiltered())
 
     def testMakeSubcategoriesNonExclusiveUnchecksAllSubcategories(self):
         self.category.makeSubcategoriesExclusive(True)
         self.subCategory.setFiltered(True)
         self.category.addChild(self.subCategory)
         self.category.makeSubcategoriesExclusive(False)
-        self.failIf(self.subCategory.isFiltered())
+        self.assertFalse(self.subCategory.isFiltered())
 
     # Event types:
 
