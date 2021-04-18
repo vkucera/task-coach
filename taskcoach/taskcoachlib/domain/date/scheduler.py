@@ -25,8 +25,8 @@ import bisect
 
 class ScheduledMethod:
     def __init__(self, method):
-        self.__func = method.im_func
-        self.__self = weakref.ref(method.im_self)
+        self.__func = method.__func__
+        self.__self = weakref.ref(method.__self__)
         self.__id = None
 
     def setId(self, id_):

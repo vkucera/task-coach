@@ -16,54 +16,52 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, time
+import time
+
+import tctest
 from taskcoachlib.domain import date
 
 
-class SchedulerTest(test.TestCase):
+class SchedulerTest(tctest.TestCase):
     def setUp(self):
-        super(SchedulerTest, self).setUp()
+        super().setUp()
         self.scheduler = date.Scheduler()
         self.callCount = 0
 
     def callback(self):
         self.callCount += 1
 
-    @test.skipOnTwistedVersions('12.')
     def testScheduleAtDateTime(self):
         futureDate = date.Now() + date.TimeDelta(seconds=1)
         self.scheduler.schedule(self.callback, futureDate)
-        self.failUnless(self.scheduler.is_scheduled(self.callback))
+        self.assertTrue(self.scheduler.is_scheduled(self.callback))
         t0 = time.time()
         from twisted.internet import reactor
         while time.time() - t0 < 2.1:
             reactor.iterate()
-        self.failIf(self.scheduler.is_scheduled(self.callback))
+        self.assertFalse(self.scheduler.is_scheduled(self.callback))
         self.assertEqual(self.callCount, 1)
 
-    @test.skipOnTwistedVersions('12.')
     def testUnschedule(self):
         futureDate = date.Now() + date.TimeDelta(seconds=1)
         self.scheduler.schedule(self.callback, futureDate)
         self.scheduler.unschedule(self.callback)
-        self.failIf(self.scheduler.is_scheduled(self.callback))
+        self.assertFalse(self.scheduler.is_scheduled(self.callback))
         t0 = time.time()
         from twisted.internet import reactor
         while time.time() - t0 < 1.2:
             reactor.iterate()
         self.assertEqual(self.callCount, 0)
 
-    @test.skipOnTwistedVersions('12.')
     def testScheduleAtPastDateTime(self):
         pastDate = date.Now() - date.TimeDelta(seconds=1)
         self.scheduler.schedule(self.callback, pastDate)
-        self.failIf(self.scheduler.is_scheduled(self.callback))
+        self.assertFalse(self.scheduler.is_scheduled(self.callback))
         from twisted.internet import reactor
         reactor.iterate()
-        self.failIf(self.scheduler.is_scheduled(self.callback))
+        self.assertFalse(self.scheduler.is_scheduled(self.callback))
         self.assertEqual(self.callCount, 1)
 
-    @test.skipOnTwistedVersions('12.')
     def testScheduleInterval(self):
         self.scheduler.schedule_interval(self.callback, seconds=1)
         try:
