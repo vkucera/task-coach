@@ -16,15 +16,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import tctest
 from taskcoachlib import patterns, config
 from taskcoachlib.domain import task, effort, date
-import test
 
 
-class EffortAggregatorTestCase(test.TestCase):
+class EffortAggregatorTestCase(tctest.TestCase):
     aggregation = 'One of: day, week, or month (override in subclass)'
 
     def setUp(self):
+        super().setUp()
         task.Task.settings = config.Settings(load=False)
         self.taskList = task.TaskList()
         self.effortAggregator = effort.EffortAggregator(self.taskList,
@@ -254,7 +255,7 @@ class CommonTestsMixin:
         self.taskList.append(self.task1)
         self.task1.addEffort(self.effort1period1a)
         self.assertEqual(1, len(self.events))
-        self.failUnless(self.events[0].value() in self.effortAggregator)
+        self.assertTrue(self.events[0].value() in self.effortAggregator)
 
     def testNotification_Remove(self):
         self.taskList.append(self.task1)
@@ -279,14 +280,14 @@ class CommonTestsMixin:
         self.task1.addEffort(self.effort1period1a)
         self.effort1period1a.setTask(self.task2)
         self.assertEqual(2, len(self.effortAggregator))
-        self.failUnless(self.task2 in [item.task() for item in self.effortAggregator])
+        self.assertTrue(self.task2 in [item.task() for item in self.effortAggregator])
 
     def testChangeTaskOfChildEffort(self):
         self.taskList.extend([self.task1, self.task2])
         self.task3.addEffort(self.effort3period1a)
         self.effort3period1a.setTask(self.task2)
         self.assertEqual(2, len(self.effortAggregator))
-        self.failUnless(self.task2 in [item.task() for item in self.effortAggregator])
+        self.assertTrue(self.task2 in [item.task() for item in self.effortAggregator])
 
     def testRemoveTaskAfterChangeTaskOfEffort(self):
         self.taskList.extend([self.task1, self.task2])
@@ -294,7 +295,7 @@ class CommonTestsMixin:
         self.effort1period1a.setTask(self.task2)
         self.taskList.remove(self.task1)
         self.assertEqual(2, len(self.effortAggregator))
-        self.failUnless(self.task2 in [item.task() for item in self.effortAggregator])
+        self.assertTrue(self.task2 in [item.task() for item in self.effortAggregator])
 
     def testRemoveAndAddEffortToSamePeriod(self):
         self.taskList.append(self.task1)
@@ -345,8 +346,9 @@ class EffortPerMonthTest(EffortAggregatorTestCase, CommonTestsMixin):
     aggregation = 'month'
 
 
-class MultipleAggregatorsTest(test.TestCase):
+class MultipleAggregatorsTest(tctest.TestCase):
     def setUp(self):
+        super().setUp()
         self.taskList = task.TaskList()
         self.effortPerDay = effort.EffortSorter(effort.EffortAggregator(self.taskList, aggregation='day'))
         self.effortPerWeek = effort.EffortSorter(effort.EffortAggregator(self.taskList, aggregation='week'))
@@ -360,4 +362,4 @@ class MultipleAggregatorsTest(test.TestCase):
                                  date.DateTime(2006, 8, 29))
         aTask.addEffort(anEffort)
         aTask.removeEffort(anEffort)
-        self.failIf(self.effortPerDay)
+        self.assertFalse(self.effortPerDay)
