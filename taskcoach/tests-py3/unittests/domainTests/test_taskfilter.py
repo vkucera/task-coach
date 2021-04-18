@@ -16,13 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import tctest
 from taskcoachlib import config
 from taskcoachlib.domain import task, date
 
 
-class ViewFilterTestCase(test.TestCase):
+class ViewFilterTestCase(tctest.TestCase):
     def setUp(self):
+        super().setUp()
         task.Task.settings = config.Settings(load=False)
         self.list = task.TaskList()
         self.filter = task.filter.ViewFilter(self.list, treeMode=self.treeMode) # pylint: disable=E1101
@@ -37,10 +38,10 @@ class ViewFilterTestCase(test.TestCase):
     def assertFilterShows(self, *tasks):
         self.assertEqual(len(tasks), len(self.filter))
         for eachTask in tasks:
-            self.failUnless(eachTask in self.filter)
+            self.assertTrue(eachTask in self.filter)
         
     def assertFilterIsEmpty(self):
-        self.failIf(self.filter)
+        self.assertFalse(self.filter)
 
 
 class ViewFilterTestsMixin:
@@ -68,7 +69,7 @@ class ViewFilterTestsMixin:
         self.task.setCompletionDateTime()
         self.filter.append(self.task)
         self.filter.hideTaskStatus(task.status.completed)
-        self.failIf(self.filter.rootItems())
+        self.assertFalse(self.filter.rootItems())
 
     def testMarkTaskCompleted(self):
         self.filter.hideTaskStatus(task.status.completed)
