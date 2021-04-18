@@ -1,4 +1,4 @@
-'''
+"""
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2016 Task Coach developers <developers@taskcoach.org>
 
@@ -14,7 +14,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-'''
+"""
 
 from taskcoachlib import patterns
 from taskcoachlib.domain import base
@@ -22,9 +22,9 @@ from taskcoachlib.domain.attribute import font, color
 
 
 class CategorizableCompositeObject(base.CompositeObject):
-    ''' CategorizableCompositeObjects are composite objects that can be
+    """ CategorizableCompositeObjects are composite objects that can be
         categorized by adding them to one or more categories. Examples of
-        categorizable composite objects are tasks and notes. '''
+        categorizable composite objects are tasks and notes. """
 
     def __init__(self, *args, **kwargs):
         self.__categories = base.SetAttribute(kwargs.pop('categories', set()),
@@ -110,13 +110,13 @@ class CategorizableCompositeObject(base.CompositeObject):
 
     @staticmethod
     def categoriesSortFunction(**kwargs):
-        ''' Return a sort key for sorting by categories. Since a categorizable
+        """ Return a sort key for sorting by categories. Since a categorizable
             can have multiple categories we first sort the categories by their
             subjects. If the sorter is in tree mode, we also take the categories
             of the children of the categorizable into account, after the
             categories of the categorizable itself. If the sorter is in list
             mode we also take the categories of the parent (recursively) into
-            account, again after the categories of the categorizable itself. '''
+            account, again after the categories of the categorizable itself. """
         def sortKeyFunction(categorizable):
             def sortedSubjects(items):
                 return sorted([item.subject(recursive=True) for item in items])
@@ -130,7 +130,7 @@ class CategorizableCompositeObject(base.CompositeObject):
 
     @classmethod
     def categoriesSortEventTypes(class_):
-        ''' The event types that influence the categories sort order. '''
+        """ The event types that influence the categories sort order. """
         return (class_.categoryAddedEventType(),
                 class_.categoryRemovedEventType())
 
@@ -155,12 +155,12 @@ class CategorizableCompositeObject(base.CompositeObject):
             return super().backgroundColor(recursive=True)
 
     def _categoryForegroundColor(self):
-        ''' If a categorizable object belongs to a category that has a
+        """ If a categorizable object belongs to a category that has a
             foreground color associated with it, the categorizable object is
             colored accordingly. When a categorizable object belongs to
             multiple categories, the color is mixed. If a categorizable
             composite object has no foreground color of its own, it uses its
-            parent's foreground color. '''
+            parent's foreground color. """
         colors = [category.foregroundColor(recursive=True) \
                   for category in self.categories()]
         if not colors and self.parent():
@@ -169,12 +169,12 @@ class CategorizableCompositeObject(base.CompositeObject):
             return color.ColorMixer.mix(colors)
 
     def _categoryBackgroundColor(self):
-        ''' If a categorizable object belongs to a category that has a
+        """ If a categorizable object belongs to a category that has a
             background color associated with it, the categorizable object is
             colored accordingly. When a categorizable object belongs to
             multiple categories, the color is mixed. If a categorizable
             composite object has no background color of its own, it uses its
-            parent's background color. '''
+            parent's background color. """
         colors = [category.backgroundColor(recursive=True) \
                   for category in self.categories()]
         if not colors and self.parent():
@@ -193,11 +193,11 @@ class CategorizableCompositeObject(base.CompositeObject):
             return super().font(recursive=True)
 
     def _categoryFont(self):
-        ''' If a categorizable object belongs to a category that has a
+        """ If a categorizable object belongs to a category that has a
             font associated with it, the categorizable object uses that font.
             When a categorizable object belongs to multiple categories, the
             font is mixed. If a categorizable composite object has no font of
-            its own, it uses its parent's font. '''
+            its own, it uses its parent's font. """
         fonts = [category.font(recursive=True) \
                  for category in self.categories()]
         if not fonts and self.parent():
