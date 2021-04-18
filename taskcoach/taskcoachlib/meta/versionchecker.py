@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from . import data
 import threading
-import urllib2
+import urllib.request
 import sys
 import traceback
 
@@ -82,7 +82,7 @@ class VersionChecker(threading.Thread):
 
     @staticmethod
     def retrieveVersionFile():
-        return urllib2.urlopen(data.version_url)
+        return urllib.request.urlopen(data.version_url)
 
     @staticmethod
     def tupleVersion(versionString):
