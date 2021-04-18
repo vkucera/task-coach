@@ -16,18 +16,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import tctest
 from taskcoachlib.domain import base
 
 
-class OwnerUnderTest:
-    __metaclass__ = base.DomainObjectOwnerMetaclass
+class OwnerUnderTest(metaclass=base.DomainObjectOwnerMetaclass):
     __ownedType__ = 'foo'
 
 
-class DomainObjectOwnerMetaclassTest(test.TestCase):
+class DomainObjectOwnerMetaclassTest(tctest.TestCase):
     def testModificationEventTypes(self):
         owner = OwnerUnderTest()
         # pylint: disable=E1101
-        self.failUnless(owner.foosChangedEventType() in \
+        self.assertTrue(owner.foosChangedEventType() in \
                         owner.modificationEventTypes())
