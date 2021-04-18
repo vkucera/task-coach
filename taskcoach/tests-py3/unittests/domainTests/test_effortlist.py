@@ -16,13 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import tctest
 from taskcoachlib import patterns, config
 from taskcoachlib.domain import task, effort, date
 
 
-class EffortListTest(test.TestCase):
+class EffortListTest(tctest.TestCase):
     def setUp(self):
+        super().setUp()
         self.events = []
         task.Task.settings = config.Settings(load=False)
         self.task = task.Task()
@@ -51,7 +52,7 @@ class EffortListTest(test.TestCase):
     def testAppend(self):
         self.task.addEffort(self.effort)
         self.assertEqual(1, len(self.effortList))
-        self.failUnless(self.effort in self.effortList)
+        self.assertTrue(self.effort in self.effortList)
 
     def testNotificationAfterRemove(self):
         self.task.addEffort(self.effort)
@@ -121,7 +122,7 @@ class EffortListTest(test.TestCase):
     def testExtend(self):
         self.effortList.extend([self.effort])
         self.assertEqual(1, len(self.effortList))
-        self.failUnless(self.effort in self.effortList)
+        self.assertTrue(self.effort in self.effortList)
         self.assertEqual(1, len(self.task.efforts()))
         self.assertEqual(self.effort, self.task.efforts()[0])
 
