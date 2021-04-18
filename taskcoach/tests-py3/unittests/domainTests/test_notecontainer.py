@@ -16,12 +16,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import tctest
 from taskcoachlib.domain import note, category
 
 
-class NoteContainerTest(test.TestCase):
+class NoteContainerTest(tctest.TestCase):
     def setUp(self):
+        super().setUp()
         self.container = note.NoteContainer()
         self.note = note.Note()
 
@@ -33,11 +34,11 @@ class NoteContainerTest(test.TestCase):
         cat = category.Category(subject='Cat')
         self.note.addCategory(cat)
         self.container.append(self.note)
-        self.failUnless(self.note in cat.categorizables())
+        self.assertTrue(self.note in cat.categorizables())
 
     def testRemoveNoteWithCategory(self):
         cat = category.Category(subject='Cat')
         self.note.addCategory(cat)
         self.container.append(self.note)
         self.container.remove(self.note)
-        self.failIf(self.note in cat.categorizables())
+        self.assertFalse(self.note in cat.categorizables())
