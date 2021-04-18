@@ -16,13 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import tctest
 from taskcoachlib import config
 from taskcoachlib.domain import task, effort, date
 
 
-class TaskListTest(test.TestCase):
+class TaskListTest(tctest.TestCase):
     def setUp(self):
+        super().setUp()
         task.Task.settings = config.Settings(load=False)
         self.taskList = task.TaskList()
         year = date.Now().year
