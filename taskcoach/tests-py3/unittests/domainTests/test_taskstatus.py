@@ -16,13 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import tctest
 from taskcoachlib.domain import task, date
 from taskcoachlib import config
 
 
-class TaskStatusTest(test.TestCase):
+class TaskStatusTest(tctest.TestCase):
     def setUp(self):
+        super().setUp()
         self.settings = task.Task.settings = config.Settings(load=False)
         self.now = date.Now()
         self.yesterday = self.now - date.ONE_DAY
