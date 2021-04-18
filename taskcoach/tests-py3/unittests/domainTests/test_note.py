@@ -16,13 +16,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, wx
+import wx
+
+import tctest
 from taskcoachlib import patterns
 from taskcoachlib.domain import note, date, base
 
 
-class NoteTest(test.TestCase):
+class NoteTest(tctest.TestCase):
     def setUp(self):
+        super().setUp()
         self.note = note.Note()
         self.child = note.Note()
         self.events = []
@@ -109,16 +112,17 @@ class NoteTest(test.TestCase):
             parent=None, children=[], status=42, attachments=[], categories=[],
             fgColor=(1, 1, 1, 1), bgColor=(0, 0, 0, 255), font=wx.SWISS_FONT,
             icon='icon', selectedIcon='selected', creationDateTime=date.Now(),
-            modificationDateTime=date.Now(), ordering=42L))
+            modificationDateTime=date.Now(), ordering=42))
         self.assertEqual('new', self.note.description())
 
 
-class NoteOwnerUnderTest(note.NoteOwner, base.Object):
+class NoteOwnerUnderTest(base.NoteOwner, base.Object):
     pass
 
 
-class NoteOwnerTest(test.TestCase):
+class NoteOwnerTest(tctest.TestCase):
     def setUp(self):
+        super().setUp()
         self.note = note.Note(subject='Note')
         self.noteOwner = NoteOwnerUnderTest()
         self.events = []
@@ -150,12 +154,12 @@ class NoteOwnerTest(test.TestCase):
     def testRemoveNote(self):
         self.noteOwner.addNote(self.note)
         self.noteOwner.removeNote(self.note)
-        self.failIf(self.noteOwner.notes())
+        self.assertFalse(self.noteOwner.notes())
 
     def testRemoveNotes(self):
         self.noteOwner.addNote(self.note)
         self.noteOwner.removeNotes(self.note)
-        self.failIf(self.noteOwner.notes())
+        self.assertFalse(self.noteOwner.notes())
 
     def testRemoveNoteNotification(self):
         self.noteOwner.addNote(self.note)
