@@ -17,13 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 
-import test
+import tctest
 from taskcoachlib.domain import base
 from taskcoachlib import patterns
 
 
-class OwnerUnderTest(base.Object):
-    __metaclass__ = base.DomainObjectOwnerMetaclass
+class OwnerUnderTest(base.Object, metaclass=base.DomainObjectOwnerMetaclass):
     __ownedType__ = 'Foo'
 
 
@@ -31,8 +30,9 @@ class Foo:
     pass
 
 
-class OwnerTest(test.TestCase):
+class OwnerTest(tctest.TestCase):
     def setUp(self):
+        super().setUp()
         self.owner = OwnerUnderTest()
         self.events = []
 
@@ -45,7 +45,7 @@ class OwnerTest(test.TestCase):
         patterns.Publisher().registerObserver(self.onEvent,
             self.owner.foosChangedEventType())
         self.owner.setFoos([])
-        self.failIf(self.events)
+        self.assertFalse(self.events)
 
     def testSetObjects_NotificationWhenCanged(self):
         patterns.Publisher().registerObserver(self.onEvent,
@@ -55,4 +55,4 @@ class OwnerTest(test.TestCase):
 
     def testRemoveNoObjects(self):
         self.owner.removeFoos()
-        self.failIf(self.owner.foos())
+        self.assertFalse(self.owner.foos())
