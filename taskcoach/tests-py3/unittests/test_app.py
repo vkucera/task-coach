@@ -16,8 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
 import wx
+
+import tctest
 from taskcoachlib import meta, application, config
 
 
@@ -34,7 +35,7 @@ class DummyLocale:
         return self.language, None
 
 
-class AppTests(test.TestCase):
+class AppTests(tctest.TestCase):
     def setUp(self):
         super(AppTests, self).setUp()
         self.settings = config.Settings(load=False)
