@@ -32,7 +32,6 @@ from pubsub import pub
 from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_NEXT, \
     wxSCHEDULER_PREV, wxSCHEDULER_TODAY
 from taskcoachlib.tools import anonymize, openfile
-from taskcoachlib.workarounds import ExceptionAsUnicode
 import wx, re, operator
 from . import base_uicommand
 from . import mixin_uicommand
@@ -1567,7 +1566,7 @@ class Mail(mixin_uicommand.NeedsSelectionMixin, ViewerCommand):
             try:
                 mail('recipient@domain.com', subject, body)
             except Exception, reason:  # pylint: disable=W0703
-                showerror(_('Cannot send email:\n%s') % ExceptionAsUnicode(reason),
+                showerror(_('Cannot send email:\n%s') % reason,
                       caption=_('%s mail error') % meta.name,
                       style=wx.ICON_ERROR)
 
@@ -2091,7 +2090,7 @@ class URLCommand(base_uicommand.UICommand):
         try:
             openfile.openFile(self.url)
         except Exception, reason:
-            wx.MessageBox(_('Cannot open URL:\n%s') % ExceptionAsUnicode(reason),
+            wx.MessageBox(_('Cannot open URL:\n%s') % reason,
                       caption=_('%s URL error') % meta.name,
                       style=wx.ICON_ERROR)
 
