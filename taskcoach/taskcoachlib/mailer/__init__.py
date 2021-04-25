@@ -16,7 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, os, re, tempfile, urllib, email, email.header
+import os
+import re
+import tempfile
+import email
+import email.header
+import urllib.parse
+
+import wx
 
 from taskcoachlib.tools import openfile
 from taskcoachlib.mailer.macmail import getSubjectOfMail
@@ -36,7 +43,7 @@ charset_re = re.compile('charset="?([-0-9a-zA-Z]+)"?')
 def getSubject(message):
     subject = message['subject']
     try:
-        return u' '.join((part[0].decode(part[1]) if part[1] else part[0]) for part in email.header.decode_header(subject))
+        return ' '.join((part[0].decode(part[1]) if part[1] else part[0]) for part in email.header.decode_header(subject))
     except UnicodeDecodeError:
         encoding = message.get_content_charset()
         if encoding is None:
@@ -53,7 +60,7 @@ def getContent(message):
         content = []
         for submessage in message.get_payload():
             content.append(getContent(submessage))
-        return u'\n'.join(content)
+        return '\n'.join(content)
     elif message.get_content_type() in ('text/plain', 'message/rfc822'):
         content = message.get_payload()
         transfer_encoding = message['content-transfer-encoding']
@@ -94,12 +101,12 @@ def openMailWithOutlook(filename):
 def openMail(filename):
     if os.name == 'nt':
         # Find out if Outlook is the so-called 'default' mailer.
-        import _winreg # pylint: disable=F0401
-        key = _winreg.OpenKey(_winreg.HKEY_CLASSES_ROOT,
+        import winreg # pylint: disable=F0401
+        key = winreg.OpenKey(winreg.HKEY_CLASSES_ROOT,
                               r'mailto\shell\open\command')
         try:
-            value, type_ = _winreg.QueryValueEx(key, '')
-            if type_ in [_winreg.REG_SZ, _winreg.REG_EXPAND_SZ]:
+            value, type_ = winreg.QueryValueEx(key, '')
+            if type_ in [winreg.REG_SZ, winreg.REG_EXPAND_SZ]:
                 if 'outlook.exe' in value.lower():
                     try:
                         if openMailWithOutlook(filename):
@@ -107,19 +114,13 @@ def openMail(filename):
                     except:
                         pass
         finally:
-            _winreg.CloseKey(key)
+            winreg.CloseKey(key)
 
     openfile.openFile(filename)
 
 def sendMail(to, subject, body, cc=None, openURL=openfile.openFile):
-    def unicode_quote(s):
-        # This is like urllib.quote but leaves out Unicode characters,
-        # which urllib.quote does not support.
-        chars = [c if ord(c) >= 128 else urllib.quote(c) for c in s]
-        return ''.join(chars)
-
     cc = cc or []
-    if isinstance(to, (str, unicode)):
+    if isinstance(to, str):
         to = [to]
 
     # FIXME: Very  strange things happen on  MacOS X. If  there is one
@@ -128,12 +129,12 @@ def sendMail(to, subject, body, cc=None, openURL=openfile.openFile):
     # the user uses something else ?
 
     if not operating_system.isMac():
-        body = unicode_quote(body) # Otherwise newlines disappear
-        cc = map(unicode_quote, cc)
-        to = map(unicode_quote, to)
+        body = urllib.parse.quote(body) # Otherwise newlines disappear
+        cc = list(map(urllib.parse.quote, cc))
+        to = list(map(urllib.parse.quote, to))
 
     components = ['subject=%s' % subject, 'body=%s' % body]
     if cc:
         components.append('cc=%s' % ','.join(cc))
 
-    openURL(u'mailto:%s?%s' % (','.join(to), '&'.join(components)))
+    openURL('mailto:%s?%s' % (','.join(to), '&'.join(components)))
