@@ -18,12 +18,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, sys, os, ConfigParser, StringIO
-from taskcoachlib import config, meta
+import os
+import sys
+import io
+import configparser
+
 from pubsub import pub
 
+import tctest
+from taskcoachlib import config, meta
 
-class SettingsTestCase(test.TestCase):
+
+class SettingsTestCase(tctest.TestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
 
@@ -34,7 +40,7 @@ class SettingsTestCase(test.TestCase):
 
 class SettingsTest(SettingsTestCase):
     def testDefaults(self):
-        self.failUnless(self.settings.has_section('view'))
+        self.assertTrue(self.settings.has_section('view'))
         self.assertEqual(True, self.settings.getboolean('view', 'statusbar'))
 
     def testSet(self):
@@ -49,7 +55,7 @@ class SettingsTest(SettingsTestCase):
         self.assertEqual([], self.settings.getlist('file', 'recentfiles'))
 
     def testSetList_SimpleStrings(self):
-        recentfiles = ['abc', 'C:\Documents And Settings\Whatever']
+        recentfiles = ['abc', r'C:\Documents And Settings\Whatever']
         self.settings.setlist('file', 'recentfiles', recentfiles)
         self.assertEqual(recentfiles,
                          self.settings.getlist('file', 'recentfiles'))
@@ -76,11 +82,11 @@ class SettingsTest(SettingsTestCase):
     def testGetNonExistingSettingFromSection2RaisesException(self):
         self.settings.add_section('effortviewer1')
         self.settings.add_section('effortviewer2')
-        self.assertRaises(ConfigParser.NoOptionError,
+        self.assertRaises(configparser.NoOptionError,
             self.settings.get, 'effortviewer2', 'nonexisting')
 
     def testGetNonExistingSectionRaisesException(self):
-        self.assertRaises(ConfigParser.NoSectionError, self.settings.get, 'bla', 'bla')
+        self.assertRaises(configparser.NoSectionError, self.settings.get, 'bla', 'bla')
 
     def testAddSectionAndSkipOne(self):
         self.settings.set('effortviewer', 'columnwidths', 'dict(subject=10)')
@@ -113,7 +119,7 @@ class SettingsTest(SettingsTestCase):
 class SettingsIOTest(SettingsTestCase):
     def setUp(self):
         super(SettingsIOTest, self).setUp()
-        self.fakeFile = StringIO.StringIO()
+        self.fakeFile = io.StringIO()
 
     def testSave(self):
         self.settings.write(self.fakeFile)
@@ -124,8 +130,8 @@ class SettingsIOTest(SettingsTestCase):
     def testRead(self):
         self.fakeFile.write('[testing]\n')
         self.fakeFile.seek(0)
-        self.settings.readfp(self.fakeFile)
-        self.failUnless(self.settings.has_section('testing'))
+        self.settings.read_file(self.fakeFile)
+        self.assertTrue(self.settings.has_section('testing'))
 
     def testIOErrorWhileSaving(self):
         def file_that_raises_ioerror(*args):  # pylint: disable=W0613,W0622
@@ -136,22 +142,22 @@ class SettingsIOTest(SettingsTestCase):
 
         settings = config.Settings()
         settings.save(showerror=showerror, file=file_that_raises_ioerror)
-        self.failUnless(self.showerror_args)
+        self.assertTrue(self.showerror_args)
 
     def testIOErrorWhileReading(self):
         class SettingsThatThrowsParsingError(config.Settings):
             def read(self, *args, **kwargs):  # pylint: disable=W0613
                 self.remove_section('file')
-                raise ConfigParser.ParsingError('Testing')
+                raise configparser.ParsingError('Testing')
 
-        self.failIf(SettingsThatThrowsParsingError().getboolean('file', 'inifileloaded'))
+        self.assertFalse(SettingsThatThrowsParsingError().getboolean('file', 'inifileloaded'))
 
     def testFixOldColumnValues(self):
         section = 'prerequisiteviewerintaskeditor1'
         self.fakeFile.write("[%s]\ncolumns = ['dueDate']\ncolumnwidths = {'dueDate': 40}\n" % section)
         self.fakeFile.seek(0)
-        self.settings.readfp(self.fakeFile)
-        self.failUnless(['dueDateTime'],
+        self.settings.read_file(self.fakeFile)
+        self.assertTrue(['dueDateTime'],
                         self.settings.getlist(section, 'columns'))
         self.assertEqual(dict(dueDateTime=40),
                          self.settings.getdict(section, 'columnwidths'))
@@ -175,50 +181,7 @@ class SettingsObservableTest(SettingsTestCase):
 
     def testChangingAnotherSettingDoesNotCauseANotification(self):
         self.settings.set('view', 'statusbar', 'True')
-        self.failIf(self.events)
-
-
-class UnicodeAwareConfigParserTest(test.TestCase):
-    ''' The default Python ConfigParser does not deal with unicode. So we
-        build a wrapper around ConfigParser that does. These are the unittests
-        for UnicodeAwareConfigParser. '''
-
-    def setUp(self):
-        self.parser = config.settings.UnicodeAwareConfigParser()
-        self.parser.add_section('section')
-        self.iniFile = StringIO.StringIO()
-        self.asciiValue = 'ascii'
-        self.unicodeValue = u'√ÉÔøΩ√¢‚Ç¨¬¶√É≈Ω√Ç¬Ω√É≈Ω√Ç¬π√É≈Ω√Ç¬≥√É≈Ω√Ç¬ø√É≈Ω√Ç¬¥√É≈Ω√Ç¬∑'
-
-    def testWriteAsciiValue(self):
-        self.parser.set('section', 'setting', self.asciiValue)
-        self.parser.write(self.iniFile)
-        fileContents = self.iniFile.getvalue()
-        self.assertEqual('[section]\nsetting = %s\n\n'%self.asciiValue,
-                         fileContents)
-
-    def testWriteUnicodeValue(self):
-        self.parser.set('section', 'setting', self.unicodeValue)
-        self.parser.write(self.iniFile)
-        fileContents = self.iniFile.getvalue()
-        self.assertEqual('[section]\nsetting = %s\n\n' \
-                         %self.unicodeValue.encode('utf-8'), fileContents)
-
-    def testReadAsciiValue(self):
-        iniFileContents = '[section]\nsetting = %s\n\n'%self.asciiValue
-        self.iniFile.write(iniFileContents)
-        self.iniFile.seek(0)
-        self.parser.readfp(self.iniFile)
-        self.assertEqual(self.asciiValue, self.parser.get('section', 'setting'))
-
-    def testReadUnicodeValue(self):
-        iniFileContents = '[section]\nsetting = %s\n\n' \
-            %self.unicodeValue.encode('utf-8')
-        self.iniFile.write(iniFileContents)
-        self.iniFile.seek(0)
-        self.parser.readfp(self.iniFile)
-        self.assertEqual(self.unicodeValue,
-                         self.parser.get('section', 'setting'))
+        self.assertFalse(self.events)
 
 
 class SpecificSettingsTest(SettingsTestCase):
@@ -256,7 +219,7 @@ class SettingsFileLocationTest(SettingsTestCase):
         settings = SettingsUnderTest(load=False)
         settings.setboolean('file', 'saveinifileinprogramdir', True)
         settings.setboolean('file', 'saveinifileinprogramdir', False)
-        self.failIf(settings.onSettingsFileLocationChangedCalled)
+        self.assertFalse(settings.onSettingsFileLocationChangedCalled)
 
 
 class MinimumSettingsTest(SettingsTestCase):
@@ -264,15 +227,15 @@ class MinimumSettingsTest(SettingsTestCase):
         self.assertEqual(1, self.settings.getint('view', 'taskviewercount'))
 
     def testTwoTaskTreeListViewers(self):
-        self.settings.set('view', 'taskviewercount', u'2')
+        self.settings.set('view', 'taskviewercount', '2')
         self.assertEqual(2, self.settings.getint('view', 'taskviewercount'))
 
     def testAtLeastOneTaskTreeListViewer_EvenWhenSetToZero(self):
-        self.settings.set('view', 'taskviewercount', u'0')
+        self.settings.set('view', 'taskviewercount', '0')
         self.assertEqual(1, self.settings.getint('view', 'taskviewercount'))
 
 
-class ApplicationOptionsTest(test.TestCase):
+class ApplicationOptionsTest(tctest.TestCase):
     def setUp(self):
         super(ApplicationOptionsTest, self).setUp()
         self.parser = config.ApplicationOptionParser()
@@ -301,5 +264,5 @@ class ApplicationOptionsTest(test.TestCase):
 
     def testProfile(self):
         options = self.parse('--profile')
-        self.failUnless(options.profile)
+        self.assertTrue(options.profile)
 

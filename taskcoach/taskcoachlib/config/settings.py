@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import meta, patterns, operating_system
 
 from pubsub import pub
-from taskcoachlib.workarounds import ExceptionAsUnicode
 import configparser
 import os
 import sys
@@ -28,44 +27,30 @@ import shutil
 from . import defaults
 
 
-class UnicodeAwareConfigParser(configparser.RawConfigParser):
-    # XXX FIXME: this is probably not needed any more.
-    def set(self, section, setting, value):  # pylint: disable=W0222
-        if type(value) == type(''):
-            value = value.encode('utf-8')
-        configparser.RawConfigParser.set(self, section, setting, value)
-
-    def get(self, section, setting):  # pylint: disable=W0221
-        value = configparser.RawConfigParser.get(self, section, setting)
-        return value.decode('utf-8')  # pylint: disable=E1103
-
-
-class CachingConfigParser(UnicodeAwareConfigParser):
+class CachingConfigParser(configparser.RawConfigParser):
     ''' ConfigParser is rather slow, so cache its values. '''
     def __init__(self, *args, **kwargs):
         self.__cachedValues = dict()
-        UnicodeAwareConfigParser.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def read(self, *args, **kwargs):
         self.__cachedValues = dict()
-        return UnicodeAwareConfigParser.read(self, *args, **kwargs)
+        return super().read(*args, **kwargs)
 
     def set(self, section, setting, value):
         self.__cachedValues[(section, setting)] = value
-        UnicodeAwareConfigParser.set(self, section, setting, value)
+        super().set(section, setting, value)
 
     def get(self, section, setting):
         cache, key = self.__cachedValues, (section, setting)
         if key not in cache:
-            cache[key] = UnicodeAwareConfigParser.get(self, *key)  # pylint: disable=W0142
+            cache[key] = super().get(*key)
         return cache[key]
 
 
 class Settings(CachingConfigParser):
     def __init__(self, load=True, iniFile=None, *args, **kwargs):
-        # Sigh, ConfigParser.SafeConfigParser is an old-style class, so we
-        # have to call the superclass __init__ explicitly:
-        CachingConfigParser.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.initializeWithDefaults()
         self.__loadAndSave = load
         self.__iniFileSpecifiedOnCommandLine = iniFile
@@ -74,14 +59,15 @@ class Settings(CachingConfigParser):
             # First, try to load the settings file from the program directory,
             # if that fails, load the settings file from the settings directory
             try:
+                errorMessage = ''
                 if not self.read(self.filename(forceProgramDir=True)):
                     self.read(self.filename())
-                errorMessage = ''
-            except configparser.ParsingError as errorMessage:
+            except configparser.ParsingError as exc:
+                errorMessage = str(exc)
                 # Ignore exceptions and simply use default values.
                 # Also record the failure in the settings:
                 self.initializeWithDefaults()
-            self.setLoadStatus(ExceptionAsUnicode(errorMessage))
+            self.setLoadStatus(errorMessage)
         else:
             # Assume that if the settings are not to be loaded, we also
             # should be quiet (i.e. we are probably in test mode):
@@ -151,7 +137,7 @@ class Settings(CachingConfigParser):
         try:
             return defaultSection[option]
         except KeyError:
-            raise configparser.NoOptionError((option, defaultSection))
+            raise configparser.NoOptionError(option, defaultSection)
 
     def _ensureMinimum(self, section, option, result):
         # Some settings may have a minimum value, make sure we return at
@@ -339,7 +325,7 @@ class Settings(CachingConfigParser):
             except ImportError:
                 pass
             else:
-                return unicode(KGlobalSettings.documentPath())
+                return KGlobalSettings.documentPath()
         # Assuming Unix-like
         return os.path.expanduser('~')
 
