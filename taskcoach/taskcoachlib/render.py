@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-'''
+"""
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2016 Task Coach developers <developers@taskcoach.org>
 
@@ -16,10 +16,10 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-'''
+"""
 
-''' render.py - functions to render various objects, like date, time,
-etc. '''  # pylint: disable=W0105
+""" render.py - functions to render various objects, like date, time,
+etc. """  # pylint: disable=W0105
 
 from taskcoachlib.domain import date as datemodule
 import desktop
@@ -34,14 +34,14 @@ import re
 
 
 def priority(priority):
-    ''' Render an (integer) priority '''
+    """ Render an (integer) priority """
     return str(priority)
 
 
 def timeLeft(time_left, completed_task):
-    ''' Render time left as a text string. Returns an empty string for
+    """ Render time left as a text string. Returns an empty string for
         completed tasks and for tasks without planned due date. Otherwise it
-        returns the number of days, hours, and minutes left. '''
+        returns the number of days, hours, and minutes left. """
     if completed_task or time_left == datemodule.TimeDelta.max:
         return ''
     sign = '-' if time_left.days < 0 else ''
@@ -57,8 +57,8 @@ def timeLeft(time_left, completed_task):
 
 
 def timeSpent(timeSpent, showSeconds=True, decimal=False):
-    ''' Render time spent (of type date.TimeDelta) as
-        "<hours>:<minutes>:<seconds>" or "<hours>:<minutes>" '''
+    """ Render time spent (of type date.TimeDelta) as
+        "<hours>:<minutes>:<seconds>" or "<hours>:<minutes>" """
     if decimal:
         return timeSpentDecimal(timeSpent)
 
@@ -72,8 +72,8 @@ def timeSpent(timeSpent, showSeconds=True, decimal=False):
                (':%02d' % seconds if showSeconds else '')
 
 def timeSpentDecimal(timeSpent):
-    ''' Render time spent (of type date.TimeDelta) as
-        "<hours>.<fractional hours> '''
+    """ Render time spent (of type date.TimeDelta) as
+        "<hours>.<fractional hours> """
     zero = datemodule.TimeDelta()
     if timeSpent == zero:
         return ''
@@ -84,8 +84,8 @@ def timeSpentDecimal(timeSpent):
         return sign + '%.2f' % (decimalHours)
 
 def recurrence(recurrence):
-    ''' Render the recurrence as a short string describing the frequency of
-        the recurrence. '''
+    """ Render the recurrence as a short string describing the frequency of
+        the recurrence. """
     if not recurrence:
         return ''
     if recurrence.amount > 2:
@@ -98,13 +98,13 @@ def recurrence(recurrence):
                   _('Every other month'), _('Every other year')]
     else:
         labels = [_('Daily'), _('Weekly'), _('Monthly'), _('Yearly')]
-    mapping = dict(zip(['daily', 'weekly', 'monthly', 'yearly'], labels))
+    mapping = dict(list(zip(['daily', 'weekly', 'monthly', 'yearly'], labels)))
     return mapping.get(recurrence.unit) % dict(frequency=recurrence.amount)
 
 
 def budget(aBudget):
-    ''' Render budget (of type date.TimeDelta) as
-        "<hours>:<minutes>:<seconds>". '''
+    """ Render budget (of type date.TimeDelta) as
+        "<hours>:<minutes>:<seconds>". """
     return timeSpent(aBudget)
 
 
@@ -181,23 +181,23 @@ elif operating_system.isMac():
     # setting alone, so parse the format string instead.
     # See http://www.unicode.org/reports/tr35/tr35-25.html#Date_Format_Patterns
     _state = 0
-    _hourFormat = u''
-    _ampmFormat = u''
+    _hourFormat = ''
+    _ampmFormat = ''
     for c in _mediumFormatter.dateFormat():
         if _state == 0:
-            if c == u"'":
+            if c == "'":
                 _state = 1 # After single quote
-            elif c in [u'h', u'H', u'k', u'K', u'j']:
+            elif c in ['h', 'H', 'k', 'K', 'j']:
                 _hourFormat += c
             elif c == 'a':
                 _ampmFormat = c
         elif _state == 1:
-            if c == u"'":
+            if c == "'":
                 _state = 0
             else:
                 _state = 2 # Escaped string
         elif _state == 2:
-            if c == u"'":
+            if c == "'":
                 _state = 0
     _hourFormatter = Cocoa.NSDateFormatter.alloc().init()
     _hourFormatter.setFormatterBehavior_(Cocoa.NSDateFormatterBehavior10_4)
@@ -237,21 +237,21 @@ elif desktop.get_desktop() == 'KDE4':
         def rawTimeFunc(dt, minutes=True, seconds=False):
             qtdt = QTime(dt.hour, dt.minute, dt.second)
             if minutes:
-                return unicode(KGlobal.locale().formatTime(qtdt, seconds))
-            return unicode(_localeCopy.formatTime(qtdt))
+                return str(KGlobal.locale().formatTime(qtdt, seconds))
+            return str(_localeCopy.formatTime(qtdt))
 
         def rawDateFunc(dt):
             qtdt = QDate(dt.year, dt.month, dt.day)
-            return unicode(KGlobal.locale().formatDate(qtdt, 0))
+            return str(KGlobal.locale().formatDate(qtdt, 0))
 
 
 timeFunc = lambda dt, minutes=True, seconds=False: operating_system.decodeSystemString(rawTimeFunc(dt, minutes=minutes, seconds=seconds))
 
-dateTimeFunc = lambda dt=None, humanReadable=False: u'%s %s' % (dateFunc(dt, humanReadable=humanReadable), timeFunc(dt))
+dateTimeFunc = lambda dt=None, humanReadable=False: '%s %s' % (dateFunc(dt, humanReadable=humanReadable), timeFunc(dt))
 
 
 def date(aDateTime, humanReadable=False):
-    ''' Render a date/time as date. '''
+    """ Render a date/time as date. """
     if str(aDateTime) == '':
         return ''
     year = aDateTime.year
@@ -309,32 +309,16 @@ def weekNumber(dateTime):
 
 
 def monetaryAmount(aFloat):
-    ''' Render a monetary amount, using the user's locale. '''
+    """ Render a monetary amount, using the user's locale. """
     return '' if round(aFloat, 2) == 0 else \
         locale.format('%.2f', aFloat, monetary=True)
 
 
 def percentage(aFloat):
-    ''' Render a percentage. '''
+    """ Render a percentage. """
     return '' if round(aFloat, 0) == 0 else '%.0f%%' % aFloat
 
 
 def exception(exception, instance):
-    ''' Safely render an exception, being prepared for new exceptions. '''
-
-    try:
-        # In this order. Python 2.6 fixed the unicode exception problem.
-        try:
-            return unicode(instance)
-        except UnicodeDecodeError:
-            # On Windows, some exceptions raised by win32all lead to this
-            # Hack around it
-            result = []
-            for val in instance.args:
-                if isinstance(val, unicode):
-                    result.append(val.encode('UTF-8'))
-                else:
-                    result.append(val)
-            return unicode(result)
-    except UnicodeEncodeError:
-        return '<class %s>' % str(exception)
+    """ Safely render an exception, being prepared for new exceptions. """
+    return str(instance)

@@ -18,13 +18,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import tctest
 from taskcoachlib import render
 
 from taskcoachlib.domain import date
 
 
-class RenderDateTime(test.TestCase):
+class RenderDateTime(tctest.TestCase):
     def assertRenderedDateTime(self, expectedDateTime, *dateTimeArgs):
         renderedDateTime = render.dateTime(date.DateTime(*dateTimeArgs))
         if expectedDateTime:
@@ -82,16 +82,16 @@ class RenderDateTime(test.TestCase):
         # Don't check for '1801' since the year may be formatted on only 2
         # digits.
         result = render.dateTime(date.DateTime(1801, 4, 5, 23, 0, 0))
-        self.failUnless('01' in result, result)
+        self.assertTrue('01' in result, result)
 
 
-class RenderDate(test.TestCase):
+class RenderDate(tctest.TestCase):
     def testRenderDateWithDateTime(self):
         self.assertEqual(render.date(date.DateTime(2000, 1, 1)),
                          render.date(date.DateTime(2000, 1, 1, 10, 11, 12)))
 
 
-class RenderTimeLeftTest(test.TestCase):
+class RenderTimeLeftTest(tctest.TestCase):
     def testNoTimeLeftWhenActive(self):
         timeLeft = date.TimeDelta()
         self.assertEqual('0:00', render.timeLeft(timeLeft, False))
@@ -138,7 +138,7 @@ class RenderTimeLeftTest(test.TestCase):
         self.assertEqual('', render.timeLeft(timeLeft, True))
 
 
-class RenderTimeSpentTest(test.TestCase):
+class RenderTimeSpentTest(tctest.TestCase):
     def testZeroTime(self):
         self.assertEqual('', render.timeSpent(date.TimeDelta()))
 
@@ -167,7 +167,7 @@ class RenderTimeSpentTest(test.TestCase):
         self.assertEqual('0.50', render.timeSpent(date.TimeDelta(minutes=30), decimal=True))
 
 
-class RenderWeekNumberTest(test.TestCase):
+class RenderWeekNumberTest(tctest.TestCase):
     def testWeek1(self):
         self.assertEqual('2005-1',
                          render.weekNumber(date.DateTime(2005, 1, 3)))
@@ -177,7 +177,7 @@ class RenderWeekNumberTest(test.TestCase):
                          render.weekNumber(date.DateTime(2004, 12, 31)))
 
 
-class RenderRecurrenceTest(test.TestCase):
+class RenderRecurrenceTest(tctest.TestCase):
     def testNoRecurrence(self):
         self.assertEqual('', render.recurrence(date.Recurrence()))
 
@@ -230,28 +230,15 @@ class RenderRecurrenceTest(test.TestCase):
                          render.recurrence(date.Recurrence('yearly', 3)))
 
 
-class RenderException(test.TestCase):
+class RenderException(tctest.TestCase):
     def testRenderException(self):
         instance = Exception()
-        self.assertEqual(unicode(instance),
+        self.assertEqual(str(instance),
                          render.exception(Exception, instance))
 
     def testRenderUnicodeDecodeError(self):
         try:
             'abc'.encode('utf-16').decode('utf-8')
         except UnicodeDecodeError as instance:
-            self.assertEqual(unicode(instance),
+            self.assertEqual(str(instance),
                              render.exception(UnicodeDecodeError, instance))
-
-    def testExceptionThatCannotBePrinted(self):
-        """win32all exceptions may contain localized error
-        messages. But Exception.__str__ does not handle non-ASCII
-        characters in the args instance variable; calling
-        unicode(instance) is just like calling str(instance) and
-        raises an UnicodeEncodeError."""
-
-        e = Exception(u'é')
-        try:
-            render.exception(Exception, e)
-        except UnicodeEncodeError:  # pragma: no cover
-            self.fail()
