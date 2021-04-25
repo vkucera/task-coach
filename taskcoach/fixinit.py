@@ -19,18 +19,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
 
 
-def visitDir(arg, dirname, names):
-    try:
-        names.remove('.hg')
-    except:
-        pass
-
-    for name in names:
-        if name in ['__init__.py', 'itopicdefnprovider.py']:
-            fname = os.path.join(dirname, name)
-            if os.stat(fname).st_size == 0:
-                file(fname, 'wb').write('# Not empty\n')
-
-
 if __name__ == '__main__':
-    os.path.walk(os.path.join('taskcoachlib', 'thirdparty'), visitDir, None)
+    for root, dirs, files in os.walk(os.path.join('taskcoachlib', 'thirdparty')):
+        for name in files:
+            if name != '.hg':
+                filename = os.path.join(root, name)
+                if name in ['__init__.py', 'itopicdefnprovider.py'] and os.stat(filename).st_size == 0:
+                    with open(filename, 'w') as fileobj:
+                        fileobj.write('# Not empty\n')

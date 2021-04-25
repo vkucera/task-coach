@@ -18,17 +18,19 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib import meta, persistence, patterns, operating_system
-
-from taskcoachlib.thirdparty import lockfile
-from taskcoachlib.widgets import GetPassword
-from taskcoachlib.gui.dialog import BackupManagerDialog
-import wx
 import os
 import gc
 import sys
 import codecs
 import traceback
+
+import wx
+import lockfile
+
+from taskcoachlib import meta, persistence, patterns, operating_system
+
+from taskcoachlib.widgets import GetPassword
+from taskcoachlib.gui.dialog import BackupManagerDialog
 
 try:
     from taskcoachlib.syncml import sync

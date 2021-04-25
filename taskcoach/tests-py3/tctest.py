@@ -80,5 +80,28 @@ class TestCase(unittest.TestCase):
         self.events.append(event)
 
 
+class TestCaseFrame(wx.Frame):
+    def __init__(self):
+        super().__init__(None, wx.ID_ANY, 'Frame')
+        self.toolbarPerspective = ''
+
+    def getToolBarPerspective(self):
+        return self.toolbarPerspective
+
+    def AddBalloonTip(self, *args, **kwargs):
+        pass
+
+
+class wxTestCase(TestCase):
+    # pylint: disable=W0404
+    frame = TestCaseFrame()
+    from taskcoachlib import gui
+    gui.init()
+
+    def tearDown(self):
+        super().tearDown()
+        self.frame.DestroyChildren() # Clean up GDI objects on Windows
+
+
 def main():
     unittest.main()

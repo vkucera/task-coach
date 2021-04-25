@@ -198,10 +198,8 @@ icons: taskcoachlib/gui/icons.py
 templates: taskcoachlib/persistence/xml/templates.py
 
 thirdpartymodules:
-	cd thirdparty; tar xzf chardet-2.1.1.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty chardet-2.1.1/chardet
 	cd thirdparty; tar xzf python-dateutil-1.5.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty python-dateutil-1.5/dateutil
 	cd thirdparty; tar xzf keyring-3.7.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty keyring-3.7/keyring
-	cd thirdparty; tar xzf lockfile-0.12.2.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty lockfile-0.12.2/lockfile
 	cd thirdparty; tar xzf SquareMap-1.0.3.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty SquareMap-1.0.3/squaremap
 	cd thirdparty; tar xzf python-ntlm-40080cff37ab32570f9bb50bad0a46b957409c18.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty python-ntlm/ntlm
 	cd thirdparty; tar xzf wxScheduler-r151.tar.gz --strip-components=1 -C ../taskcoachlib/thirdparty wxScheduler/wxScheduler

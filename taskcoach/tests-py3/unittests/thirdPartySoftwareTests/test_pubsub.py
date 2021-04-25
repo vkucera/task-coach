@@ -17,10 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from pubsub import pub
-import test
+
+import tctest
 
 
-class PubSubTest(test.TestCase):
+class PubSubTest(tctest.TestCase):
     def setUp(self):
         self.calledTestTopic = False
 
@@ -30,5 +31,5 @@ class PubSubTest(test.TestCase):
     def testSubscribe(self):
         pub.subscribe(self.onTestTopic, 'TestTopic')
         pub.sendMessage('TestTopic')
-        self.failUnless(self.calledTestTopic)
+        self.assertTrue(self.calledTestTopic)
 

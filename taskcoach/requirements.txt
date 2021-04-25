@@ -3,3 +3,4 @@ desktop3
 wxPython
 chardet
 twisted
+lockfile

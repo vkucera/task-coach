@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, os, sys, imp, tempfile, locale, gettext
 from taskcoachlib import patterns, operating_system
-import po2dict
+from . import po2dict # XXXFIXME get rid of this later
 
 
 class Translator(metaclass=patterns.Singleton):
@@ -140,5 +140,5 @@ def translate(string):
 _ = translate # This prevents a warning from pygettext.py
 
 # Inject into builtins for 3rdparty packages
-import __builtin__
-__builtin__.__dict__['_'] = _
+##import __builtin__
+##__builtin__.__dict__['_'] = _

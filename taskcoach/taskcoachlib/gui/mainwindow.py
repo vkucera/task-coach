@@ -192,7 +192,7 @@ class MainWindow(PowerStateMixin, BalloonTipManager,
 
         try:
             self.manager.LoadPerspective(perspective)
-        except ValueError, reason:
+        except ValueError as reason:
             # This has been reported to happen. Don't know why. Keep going
             # if it does.
             if self.__splash:

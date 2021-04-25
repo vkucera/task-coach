@@ -21,11 +21,12 @@ not to test all wxPython functions, but rather to document platform
 inconsistencies or surprising behaviour. ''' # pylint: disable=W0105
 
 import wx
-import test
+
+import tctest
 from taskcoachlib import operating_system
 
 
-class TextCtrlTest(test.wxTestCase):
+class TextCtrlTest(tctest.wxTestCase):
     def testClearEmitsNoEventOnMacOSX(self):
         self.clearTextCausesEvent = False # pylint: disable=W0201
         textCtrl = wx.TextCtrl(self.frame)
@@ -34,7 +35,7 @@ class TextCtrlTest(test.wxTestCase):
         if operating_system.isMac(): # pragma: no cover
             self.failIf(self.clearTextCausesEvent)
         else: # pragma: no cover
-            self.failUnless(self.clearTextCausesEvent)
+            self.assertTrue(self.clearTextCausesEvent)
 
     def onTextChanged(self, event): # pylint: disable=W0613
         self.clearTextCausesEvent = True # pragma: no cover pylint: disable=W0201

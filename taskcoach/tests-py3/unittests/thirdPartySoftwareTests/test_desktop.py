@@ -16,3 +16,19 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import tctest
+import desktop
+
+
+class DesktopTest(tctest.TestCase):
+    def testOpenByForcingAnException(self):
+        ''' desktop.open will open a browser or other program and we
+            don't want that during unit testing. So we provide a non-existing
+            desktop, which will cause desktop.open to raise an exception. '''
+
+        try:
+            desktop.open('http://www.taskcoach.org', desktop='Force exception')
+            self.fail('desktop.open() ignored '
+                      'our non-existing desktop?!') # pragma: no cover
+        except OSError:
+            pass

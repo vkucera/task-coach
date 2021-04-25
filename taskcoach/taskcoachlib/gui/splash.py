@@ -17,18 +17,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
+import wx.adv
+
 from taskcoachlib import i18n
+
 try:
     from . import icons
 except ImportError: # pragma: no cover
-    print "ERROR: couldn't import icons.py."
-    print 'You need to generate the icons file.'
-    print 'Run "make prepare" in the Task Coach root folder.'
+    print("ERROR: couldn't import icons.py.")
+    print('You need to generate the icons file.')
+    print('Run "make prepare" in the Task Coach root folder.')
     import sys
     sys.exit(1)
 
 
-class SplashScreen(wx.SplashScreen):
+class SplashScreen(wx.adv.SplashScreen):
     def __init__(self):
         splash = icons.catalog['splash']
         if i18n.currentLanguageIsRightToLeft():
@@ -41,4 +44,3 @@ class SplashScreen(wx.SplashScreen):
             bitmap = splash.getBitmap()
         super().__init__(bitmap,
             wx.SPLASH_CENTRE_ON_SCREEN|wx.SPLASH_TIMEOUT, 4000, None, -1)
-
