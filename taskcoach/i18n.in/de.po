@@ -2491,7 +2491,7 @@ msgstr "Kann %s nicht öffnen, da nicht existent."
 
 #: taskcoachlib/gui/iocontroller.py:165
 msgid "Merge"
-msgstr "Einfügen"
+msgstr "Zusammenführen"
 
 #: taskcoachlib/gui/iocontroller.py:171
 msgid ""
@@ -2986,11 +2986,11 @@ msgstr "%s öffnen"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:113
 msgid "&Merge..."
-msgstr "&Einfügen..."
+msgstr "&Zusammenführen..."
 
 #: taskcoachlib/gui/uicommand/uicommand.py:114
 msgid "Merge tasks from another file with the current file"
-msgstr "Aufgaben einer anderern .tsk-Datei in die aktuelle Liste einfügen"
+msgstr "Aufgaben einer anderern .tsk-Datei in die aktuelle Liste zusammenführen"
 
 #: taskcoachlib/gui/uicommand/uicommand.py:123
 msgid "&Close\tCtrl+W"
