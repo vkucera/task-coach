@@ -63,7 +63,7 @@ class AbstractNotifier:
         else:
             class DummyNotifier(AbstractNotifier):
                 def getName(self):
-                    return u'Dummy'
+                    return 'Dummy'
                 def isAvailable(self):
                     return True
                 def notify(self, title, summary, bitmap, **kwargs):
@@ -76,6 +76,6 @@ class AbstractNotifier:
 
     @classmethod
     def names(klass):
-        names = klass.notifiers.keys()
+        names = list(klass.notifiers.keys())
         names.sort()
         return names

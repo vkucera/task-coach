@@ -299,7 +299,7 @@ class SessionMonitor(ICELoop):
 
     def setProperty(self, name, value):
         if self.isValid():
-            if isinstance(value, unicode):
+            if isinstance(value, str):
                 value = value.encode('UTF-8')
 
             if isinstance(value, str):
@@ -314,7 +314,7 @@ class SessionMonitor(ICELoop):
             elif isinstance(value, list):
                 values = (SmPropValue * len(value))()
                 for idx, val in enumerate(value):
-                    if isinstance(val, unicode):
+                    if isinstance(val, str):
                         val = val.encode('UTF-8')
                     values[idx].length = len(val)
                     values[idx].value = cast(c_char_p(val), c_void_p)
@@ -400,16 +400,16 @@ if __name__ == '__main__':
         def __init__(self):
             super().__init__()
 
-            print 'Version:', self.version
-            print 'Revision:', self.revision
-            print 'Vendor:', self.vendor
-            print 'Release:', self.release
+            print('Version:', self.version)
+            print('Revision:', self.revision)
+            print('Vendor:', self.vendor)
+            print('Release:', self.release)
 
-            print 'Client ID:', self.clientID
+            print('Client ID:', self.clientID)
 
         def log(self, msg):
             file('session.txt', 'a+').write('==== %s\n' % msg)
-            print msg
+            print(msg)
 
         def saveYourself(self, save_type, shutdown, interact_style, fast):
             self.log('Save yourself %d %d %d %d' % (save_type, shutdown, interact_style, fast))
@@ -425,6 +425,6 @@ if __name__ == '__main__':
             self.log('Shutdown cancelled')
 
     monitor = TestMonitor()
-    raw_input('')
+    input('')
     monitor.stop()
     monitor.join()

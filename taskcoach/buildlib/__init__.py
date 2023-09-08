@@ -16,9 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from clean import clean
-from bdist_rpm_fedora import bdist_rpm_fedora
-from bdist_rpm_opensuse import bdist_rpm_opensuse
-from bdist_deb import bdist_deb
-from bdist_winpenpack import bdist_winpenpack
-from bdist_portableapps import bdist_portableapps
+from .clean import clean
+from .bdist_rpm_fedora import bdist_rpm_fedora
+from .bdist_rpm_opensuse import bdist_rpm_opensuse
+from .bdist_deb import bdist_deb
+from .bdist_winpenpack import bdist_winpenpack
+from .bdist_portableapps import bdist_portableapps

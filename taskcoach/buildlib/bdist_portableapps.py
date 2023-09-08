@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 from distutils import errors
-import bdist_portable_base
+from . import bdist_portable_base
 
 
 class bdist_portableapps(bdist_portable_base.bdist_portable_base):
@@ -52,8 +52,7 @@ class bdist_portableapps(bdist_portable_base.bdist_portable_base):
                             ('date', 'the release date')]
         for option, description in mandatoryOptions:
             if not getattr(self, option):
-                raise errors.DistutilsOptionError, \
-                    'you must provide %s (--%s)'%(description, option)
+                raise errors.DistutilsOptionError('you must provide %s (--%s)'%(description, option))
 
     def run(self):
         self.create_portableapps_paths()

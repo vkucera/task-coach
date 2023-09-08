@@ -62,7 +62,7 @@ class TaskBarIconTestCase(test.TestCase):
 class TaskBarIconTest(TaskBarIconTestCase):
     def testIcon_NoTasks(self):
         self.window.ProcessIdle()
-        self.failUnless(self.icon.IsIconInstalled())
+        self.assertTrue(self.icon.IsIconInstalled())
 
     def testStartTracking(self):
         activeTask = task.Task()

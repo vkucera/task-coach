@@ -42,7 +42,7 @@ from twisted.internet._baseprocess import BaseProcess
 
 def debug(msg):
     import sys
-    print msg
+    print(msg)
     sys.stdout.flush()
 
 class _Reaper(_pollingfile._PollableResource):
@@ -183,7 +183,7 @@ class Process(_pollingfile._PollingTimer, BaseProcess):
             win32process.ResumeThread(self.hThread)
         try:
             doCreate()
-        except pywintypes.error, pwte:
+        except pywintypes.error as pwte:
             if not _invalidWin32App(pwte):
                 # This behavior isn't _really_ documented, but let's make it
                 # consistent with the behavior that is documented.
@@ -205,7 +205,7 @@ class Process(_pollingfile._PollingTimer, BaseProcess):
                     try:
                         # Let's try again.
                         doCreate()
-                    except pywintypes.error, pwte2:
+                    except pywintypes.error as pwte2:
                         # d'oh, failed again!
                         if _invalidWin32App(pwte2):
                             raise OSError(

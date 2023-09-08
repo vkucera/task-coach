@@ -259,13 +259,13 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
     def _refreshText(self, item, domain_object, column_index, check=False):
         text = self.__adapter.getItemText(domain_object, column_index)
         if text.count('\n') > 3:
-            text = '\n'.join(text.split('\n')[:4]) + u' ...'
+            text = '\n'.join(text.split('\n')[:4]) + ' ...'
         if not check or (check and text != item.GetText(column_index)):
             item.SetText(column_index, text)
 
     def _refreshImage(self, item, domain_object, column_index, check=False):
         images = self.__adapter.getItemImages(domain_object, column_index)
-        for which, image in images.items():
+        for which, image in list(images.items()):
             image = image if image >= 0 else -1
             if not check or (check and image != item.GetImage(which,
                                                               column_index)):

@@ -72,9 +72,9 @@ def profile_call(func):
 
 def signature(func, args, kwargs, result):
     func = func.__name__
-    result = unicode(result)
+    result = str(result)
     try:
-        return '%s(%s, %s) -> %s'%(func, unicode(args), unicode(kwargs), result)
+        return '%s(%s, %s) -> %s'%(func, str(args), str(kwargs), result)
     except:
         return '%s(...) -> %s'%(func, result) # pylint: disable=W0702
 

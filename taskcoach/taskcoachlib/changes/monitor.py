@@ -129,8 +129,8 @@ class ChangeMonitor(Observer):
         if self.__frozen:
             return
 
-        for type_, valBySource in event.sourcesAndValuesByType().items():
-            for obj in valBySource.keys():
+        for type_, valBySource in list(event.sourcesAndValuesByType().items()):
+            for obj in list(valBySource.keys()):
                 for name in obj.monitoredAttributes():
                     if type_ == getattr(obj, '%sChangedEventType' % name)():
                         if obj.id() in self._changes and self._changes[obj.id()] is not None:
@@ -145,7 +145,7 @@ class ChangeMonitor(Observer):
             self._changes[obj.id()] = None
 
     def _objectsAdded(self, event):
-        for obj in event.values():
+        for obj in list(event.values()):
             self._objectAdded(obj)
 
     def _objectRemoved(self, obj):
@@ -156,7 +156,7 @@ class ChangeMonitor(Observer):
                 self._changes[obj.id()].add('__del__')
 
     def _objectsRemoved(self, event):
-        for obj in event.values():
+        for obj in list(event.values()):
             self._objectRemoved(obj)
 
     def onChildAdded(self, event):
@@ -164,7 +164,7 @@ class ChangeMonitor(Observer):
             return
 
         self._objectsAdded(event)
-        for obj in event.values():
+        for obj in list(event.values()):
             if self._changes[obj.id()] is not None:
                 self._changes[obj.id()].add('__parent__')
 
@@ -173,7 +173,7 @@ class ChangeMonitor(Observer):
             return
 
         self._objectsRemoved(event)
-        for obj in event.values():
+        for obj in list(event.values()):
             if obj in self._changes and self._changes[obj.id()] is not None:
                 self._changes[obj.id()].add('__parent__')
 
@@ -278,7 +278,7 @@ class ChangeMonitor(Observer):
         self._changes[obj.id()] = changes
 
     def resetAllChanges(self):
-        for id_, changes in self._changes.items():
+        for id_, changes in list(self._changes.items()):
             if changes is not None and '__del__' in changes:
                 del self._changes[id_]
             else:
@@ -288,7 +288,7 @@ class ChangeMonitor(Observer):
         self._changes = dict()
 
     def merge(self, monitor):
-        for id_, changes in self._changes.items():
+        for id_, changes in list(self._changes.items()):
             theirChanges = monitor._changes.get(id_, None)
             if theirChanges is not None:
                 changes.update(theirChanges)

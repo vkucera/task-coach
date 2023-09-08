@@ -95,8 +95,8 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,  # pylint: disable=W0223
 
     def __registerForAppearanceChanges(self):
         for appearance in ('font', 'fgcolor', 'bgcolor', 'icon'):
-            appearanceSettings = ['settings.%s.%s' % (appearance, setting) for setting in 'activetasks',\
-                                  'inactivetasks', 'completedtasks', 'duesoontasks', 'overduetasks', 'latetasks']
+            appearanceSettings = ['settings.%s.%s' % (appearance, setting) for setting in ('activetasks',\
+                                  'inactivetasks', 'completedtasks', 'duesoontasks', 'overduetasks', 'latetasks')]
             for appearanceSetting in appearanceSettings:
                 pub.subscribe(self.onAppearanceSettingChange, appearanceSetting)
         self.registerObserver(self.onAttributeChanged_Deprecated,
@@ -267,7 +267,7 @@ class BaseTaskTreeViewer(BaseTaskViewer):  # pylint: disable=W0223
             result.append(('note_icon', sorted([note.subject() for note in task.notes()])))
         if task.attachments():
             result.append(('paperclip_icon',
-                sorted([unicode(attachment) for attachment in task.attachments()])))
+                sorted([str(attachment) for attachment in task.attachments()])))
         return result + super().getItemTooltipData(task)
 
     def label(self, task):  # pylint: disable=W0621
@@ -646,7 +646,7 @@ class HierarchicalCalendarViewer(mixin.AttachmentDropTargetMixin,
         self.widget.SetCalendarFormat(self.settings.getint(self.settingsSection(), 'calendarformat'))
         self.widget.SetHeaderFormat(self.settings.getint(self.settingsSection(), 'headerformat'))
         self.widget.SetDrawNow(self.settings.getboolean(self.settingsSection(), 'drawnow'))
-        self.widget.SetTodayColor(map(int, self.settings.get(self.settingsSection(), 'todaycolor').split(',')))
+        self.widget.SetTodayColor(list(map(int, self.settings.get(self.settingsSection(), 'todaycolor').split(','))))
 
     def configure(self):
         dialog = HierarchicalCalendarConfigDialog(self.settings, self.settingsSection(),
@@ -966,7 +966,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
         kwargs = dict(resizeCallback=self.onResizeColumn)
         # pylint: disable=E1101,W0142
         columns = [
-            widgets.Column('ordering', u'',
+            widgets.Column('ordering', '',
                 task.Task.orderingChangedEventType(),
                 sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                     value='ordering'),
@@ -1380,8 +1380,8 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
 
     def onEverySecond(self, event):
         # Only update when a column is visible that changes every second
-        if any([self.isVisibleColumnByName(column) for column in 'timeSpent',
-               'budgetLeft', 'revenue']):
+        if any([self.isVisibleColumnByName(column) for column in ('timeSpent',
+               'budgetLeft', 'revenue')]):
             super().onEverySecond(event)
 
     def getRootItems(self):

@@ -84,7 +84,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W02
     def _createColumns(self):
         # pylint: disable=W0142,E1101
         kwargs = dict(resizeCallback=self.onResizeColumn)
-        columns = [widgets.Column('ordering', u'',
+        columns = [widgets.Column('ordering', '',
                        category.Category.orderingChangedEventType(),
                        sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                            value='ordering'),

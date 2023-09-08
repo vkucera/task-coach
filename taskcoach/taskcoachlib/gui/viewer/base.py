@@ -189,7 +189,7 @@ class Viewer(patterns.Observer, wx.Panel, metaclass=patterns.NumberedInstances):
             try:
                 imageList.Add(wx.ArtProvider_GetBitmap(image, wx.ART_MENU, size))
             except:
-                print image
+                print(image)
                 raise
             self.imageIndex[image] = index
         return imageList
@@ -221,7 +221,7 @@ class Viewer(patterns.Observer, wx.Panel, metaclass=patterns.NumberedInstances):
         self.refreshItems(*event.sources())
 
     def onNewItem(self, event):
-        self.select([item for item in event.values() if item in self.presentation()])
+        self.select([item for item in list(event.values()) if item in self.presentation()])
 
     def onPresentationChanged(self, event):  # pylint: disable=W0613
         ''' Whenever our presentation is changed (items added, items removed)
@@ -234,7 +234,7 @@ class Viewer(patterns.Observer, wx.Panel, metaclass=patterns.NumberedInstances):
 
         self.refresh()
         if itemsRemoved() and allItemsAreSelected():
-            self.selectNextItemsAfterRemoval(event.values())
+            self.selectNextItemsAfterRemoval(list(event.values()))
         self.updateSelection(sendViewerStatusEvent=False)
         self.sendViewerStatusEvent()
 
@@ -547,13 +547,13 @@ class Viewer(patterns.Observer, wx.Panel, metaclass=patterns.NumberedInstances):
 
 class CategorizableViewerMixin:
     def getItemTooltipData(self, item):
-        return [('folder_blue_arrow_icon', [u', '.join(sorted([cat.subject() for cat in item.categories()]))] if item.categories() else [])] + \
+        return [('folder_blue_arrow_icon', [', '.join(sorted([cat.subject() for cat in item.categories()]))] if item.categories() else [])] + \
             super().getItemTooltipData(item)
 
 
 class WithAttachmentsViewerMixin:
     def getItemTooltipData(self, item):
-        return [('paperclip_icon', sorted([unicode(attachment) for attachment in item.attachments()]))] + \
+        return [('paperclip_icon', sorted([str(attachment) for attachment in item.attachments()]))] + \
           super().getItemTooltipData(item)
 
 

@@ -89,9 +89,9 @@ class Settings(CachingConfigParser):
     def initializeWithDefaults(self):
         for section in self.sections():
             self.remove_section(section)
-        for section, settings in defaults.defaults.items():
+        for section, settings in list(defaults.defaults.items()):
             self.add_section(section)
-            for key, value in settings.items():
+            for key, value in list(settings.items()):
                 # Don't notify observers while we are initializing
                 super().set(section, key, value)
 
@@ -178,7 +178,7 @@ class Settings(CachingConfigParser):
                 columnWidthMap = eval(result)
             except SyntaxError:
                 columnWidthMap = dict()
-            for column, width in columnWidthMap.items():
+            for column, width in list(columnWidthMap.items()):
                 if column in taskDateColumns:
                     column += 'Time'
                 widths[column] = width

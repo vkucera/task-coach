@@ -41,7 +41,7 @@ def extractAndAddIcon(iconZipFile, iconPyFile, pngName, pngZipped, first):
 def extractAndAddIcons(iconZipFile, iconPyFile):
     import iconmap
     first = True
-    for pngName, pngZipped in iconmap.icons.items():
+    for pngName, pngZipped in list(iconmap.icons.items()):
         extractAndAddIcon(iconZipFile, iconPyFile, pngName, pngZipped, first)
         first = False
 

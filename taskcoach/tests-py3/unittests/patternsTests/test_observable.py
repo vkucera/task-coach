@@ -56,7 +56,7 @@ class EventTest(tctest.TestCase):
         self.assertEqual('some value', self.event.value())
 
     def testEventValues(self):
-        self.assertEqual(('some value',), self.event.values())
+        self.assertEqual(('some value',), list(self.event.values()))
 
     def testEventValueForSpecificSource(self):
         self.assertEqual('some value', self.event.value(self))
@@ -208,7 +208,7 @@ class ObservableCollectionTestsMixin:
 
     def testExtend_Notification(self):
         self.collection.extend([1, 2, 3])
-        self.assertEqual((1, 2, 3), self.receivedAddEvents[0].values())
+        self.assertEqual((1, 2, 3), list(self.receivedAddEvents[0].values()))
 
     def testExtend_NoNotificationWhenNoItems(self):
         self.collection.extend([])
@@ -246,7 +246,7 @@ class ObservableCollectionTestsMixin:
     def testRemoveItems_Notification(self):
         self.collection.extend([1, 2, 3])
         self.collection.removeItems([1, 2])
-        self.assertEqual((1, 2), self.receivedRemoveEvents[0].values())
+        self.assertEqual((1, 2), list(self.receivedRemoveEvents[0].values()))
 
     def testRemoveItems_NoNotificationWhenNoItems(self):
         self.collection.extend([1, 2, 3])
@@ -261,7 +261,7 @@ class ObservableCollectionTestsMixin:
     def testClear_Notification(self):
         self.collection.extend([1, 2, 3])
         self.collection.clear()
-        self.assertEqual((1, 2, 3), self.receivedRemoveEvents[0].values())
+        self.assertEqual((1, 2, 3), list(self.receivedRemoveEvents[0].values()))
 
     def testClear_NoNotificationWhenNoItems(self):
         self.collection.clear()
@@ -423,16 +423,16 @@ class ListDecoratorTest_ObserveTheObserver(tctest.TestCase):
 
     def testExtendOriginal(self):
         self.list.extend([1, 2, 3])
-        self.assertEqual((1, 2, 3), self.receivedAddEvents[0].values())
+        self.assertEqual((1, 2, 3), list(self.receivedAddEvents[0].values()))
 
     def testExtendObserver(self):
         self.observer.extend([1, 2, 3])
-        self.assertEqual((1, 2, 3), self.receivedAddEvents[0].values())
+        self.assertEqual((1, 2, 3), list(self.receivedAddEvents[0].values()))
 
     def testRemoveItemsFromOriginal(self):
         self.list.extend([1, 2, 3])
         self.list.removeItems([1, 3])
-        self.assertEqual((1, 3), self.receivedRemoveEvents[0].values())
+        self.assertEqual((1, 3), list(self.receivedRemoveEvents[0].values()))
 
 
 class PublisherTest(tctest.TestCase):

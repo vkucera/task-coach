@@ -3111,28 +3111,28 @@ class TaskSuggestedDateTimeBaseSetupAndTests:
         pass
 
     def testSuggestedPlannedStartDateTime(self):
-        for timeValue, expectedDateTime in self.times.items():
+        for timeValue, expectedDateTime in list(self.times.items()):
             self.settings.set('view', 'defaultplannedstartdatetime',
                               'preset_' + timeValue)
             self.assertEqual(expectedDateTime,
                              task.Task.suggestedPlannedStartDateTime(lambda: self.now))
 
     def testSuggestedActualStartDateTime(self):
-        for timeValue, expectedDateTime in self.times.items():
+        for timeValue, expectedDateTime in list(self.times.items()):
             self.settings.set('view', 'defaultactualstartdatetime',
                               'preset_' + timeValue)
             self.assertEqual(expectedDateTime,
                              task.Task.suggestedActualStartDateTime(lambda: self.now))
 
     def testSuggestedDueDateTime(self):
-        for timeValue, expectedDateTime in self.times.items():
+        for timeValue, expectedDateTime in list(self.times.items()):
             self.settings.set('view', 'defaultduedatetime',
                               'propose_' + timeValue)
             self.assertEqual(expectedDateTime,
                              task.Task.suggestedDueDateTime(lambda: self.now))
 
     def testSuggestedCompletionDateTime(self):
-        for timeValue, expectedDateTime in self.times.items():
+        for timeValue, expectedDateTime in list(self.times.items()):
             self.settings.set('view', 'defaultcompletiondatetime',
                               'preset_' + timeValue)
             self.assertEqual(expectedDateTime,
@@ -3143,7 +3143,7 @@ class TaskSuggestedDateTimeBaseSetupAndTests:
                                'preset_' + timeValue))
 
     def testSuggestedReminderDateTime(self):
-        for timeValue, expectedDateTime in self.times.items():
+        for timeValue, expectedDateTime in list(self.times.items()):
             self.settings.set('view', 'defaultreminderdatetime',
                               'propose_' + timeValue)
             self.assertEqual(expectedDateTime,

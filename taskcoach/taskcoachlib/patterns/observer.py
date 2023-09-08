@@ -254,7 +254,7 @@ class Publisher(metaclass=singleton.Singleton):
         for eventTypeAndSource in eventTypesAndSources:
             for observer in self.__observers.get(eventTypeAndSource, set()):
                 observers.setdefault(observer, set()).add(eventTypeAndSource)
-        for observer, eventTypesAndSources in observers.items():
+        for observer, eventTypesAndSources in list(observers.items()):
             subEvent = event.subEvent(*eventTypesAndSources)
             if subEvent.types():
                 observer(subEvent)
@@ -266,7 +266,7 @@ class Publisher(metaclass=singleton.Singleton):
             return self.__observers.get((eventType, None), set())
         else:
             result = set()
-            for observers in self.__observers.values():
+            for observers in list(self.__observers.values()):
                 result |= observers
             return result
 
@@ -463,13 +463,13 @@ class CollectionDecorator(Decorator, ObservableCollection):
         """ The default behaviour is to simply add the items that are
             added to the original collection to this collection too.
             Extend to add behaviour. """
-        self.extendSelf(event.values())
+        self.extendSelf(list(event.values()))
 
     def onRemoveItem(self, event):
         """ The default behaviour is to simply remove the items that are
             removed from the original collection from this collection too.
             Extend to add behaviour. """
-        self.removeItemsFromSelf(event.values())
+        self.removeItemsFromSelf(list(event.values()))
 
     def extendSelf(self, items, event=None):
         """ Provide a method to extend this collection without delegating to

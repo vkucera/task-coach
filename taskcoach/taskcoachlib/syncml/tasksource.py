@@ -36,11 +36,11 @@ class TaskSource(basesource.BaseSource):
 
     def _parseObject(self, item):
         parser = ical.VCalendarParser()
-        parser.parse(map(lambda x: x.rstrip('\r'), item.data.split('\n')))
+        parser.parse([x.rstrip('\r') for x in item.data.split('\n')])
 
         categories = parser.tasks[0].pop('categories', [])
 
-        kwargs = dict([(k, v) for k, v in parser.tasks[0].items() if k in inspect.getargspec(Task.__init__)[0]])
+        kwargs = dict([(k, v) for k, v in list(parser.tasks[0].items()) if k in inspect.getargspec(Task.__init__)[0]])
         task = Task(**kwargs)
 
         for category in categories:

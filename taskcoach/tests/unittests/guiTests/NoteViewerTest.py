@@ -51,7 +51,7 @@ class NoteViewerTest(test.wxTestCase):
         localViewer = gui.viewer.NoteViewer(self.frame, self.taskFile, 
                                             self.settings, 
                                             notesToShow=note.NoteContainer())
-        self.failIf(localViewer.presentation())
+        self.assertFalse(localViewer.presentation())
         
     def testShowDescriptionColumn(self):
         self.note.setDescription('Description')

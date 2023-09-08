@@ -115,7 +115,7 @@ class EffortAggregator(patterns.SetDecorator,
     def onTaskRemoved(self, event):
         ''' Whenever tasks are removed, find the composites that
             (did) contain effort of those tasks and update them. '''
-        affected_composites = self.__get_composites_for_tasks(event.values())
+        affected_composites = self.__get_composites_for_tasks(list(event.values()))
         for affected_composite in affected_composites:
             affected_composite._invalidateCache()
             affected_composite.notifyObserversOfDurationOrEmpty()

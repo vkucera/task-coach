@@ -34,10 +34,10 @@ class ChangeHistoryTestCase(test.TestCase):
         self.assertEqual(self.latestRelease.date, meta.data.date)
 
     def testLatestReleaseHasDate(self):
-        self.failIf('?' in self.latestRelease.date)
+        self.assertFalse('?' in self.latestRelease.date)
 
     def testLatestReleaseHasBugsFixedOrFeaturesAdded(self):
-        self.failUnless(self.latestRelease.bugsFixed or \
+        self.assertTrue(self.latestRelease.bugsFixed or \
                         self.latestRelease.featuresAdded)
 
     def testLatestReleaseNumberIsHigherThanPreviousReleaseNumber(self):
@@ -45,7 +45,7 @@ class ChangeHistoryTestCase(test.TestCase):
             return tuple([int(number) for number in release_number.split('.')])
         latestRelease = major_minor_patch(self.latestRelease.number)
         latestButOneRelease = major_minor_patch(changes.releases[1].number)
-        self.failUnless(latestRelease > latestButOneRelease)
+        self.assertTrue(latestRelease > latestButOneRelease)
 
     def testLatestReleaseSummaryLength(self):
-        self.failUnless(10 <= len(self.latestRelease.summary) < 600)
+        self.assertTrue(10 <= len(self.latestRelease.summary) < 600)

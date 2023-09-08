@@ -33,7 +33,7 @@ class VersionNumberTest(test.TestCase):
         self.assertEqual(int, type(meta.data.tskversion))
         
     def testReleaseStatus(self):
-        self.failUnless(meta.data.release_status in ['alpha', 'beta', 'stable'])
+        self.assertTrue(meta.data.release_status in ['alpha', 'beta', 'stable'])
         
     def testReleaseDate(self):
         datetime.date(int(meta.data.release_year), 

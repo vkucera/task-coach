@@ -51,14 +51,14 @@ class TreeViewerTest(test.wxTestCase):
 
     def testExpand(self):
         self.widget.Expand(self.firstItem())
-        self.failUnless(self.parent.isExpanded(context=self.expansionContext))
+        self.assertTrue(self.parent.isExpanded(context=self.expansionContext))
 
     def testCollapse(self):
         firstVisibleItem = self.firstItem()
         self.widget.Expand(firstVisibleItem)
         self.widget.Collapse(firstVisibleItem)
-        self.failIf(self.parent.isExpanded(context=self.expansionContext))
+        self.assertFalse(self.parent.isExpanded(context=self.expansionContext))
 
     def testExpandall(self):
         self.viewer.expandAll()
-        self.failUnless(self.parent.isExpanded(context=self.expansionContext))
+        self.assertTrue(self.parent.isExpanded(context=self.expansionContext))

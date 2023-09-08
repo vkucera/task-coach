@@ -32,12 +32,12 @@ def change_copyright_notice(filepath):
     with file(filepath, 'r') as fp:
         contents = fp.read()
     if copyright_notice_last_year in contents:
-        print 'updating', filepath
+        print('updating', filepath)
         contents = contents.replace(copyright_notice_last_year, copyright_notice_this_year, 1)
         with file(filepath, 'w') as fp:
             fp.write(contents)
     else:
-        print 'skipping', filepath
+        print('skipping', filepath)
 
 
 for dirpath, dirnames, filenames in os.walk('..'):

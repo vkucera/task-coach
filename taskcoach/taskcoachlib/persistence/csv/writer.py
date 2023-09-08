@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import csv, cStringIO
+import csv, io
 from . import generator
 
 
@@ -26,7 +26,7 @@ class UnicodeCSVWriter:
     '''
     def __init__(self, fd, *args, **kwargs):
         # Redirect output to a queue
-        self.queue = cStringIO.StringIO()
+        self.queue = io.StringIO()
         self.writer = csv.writer(self.queue, *args, **kwargs)
         self.fd = fd
 

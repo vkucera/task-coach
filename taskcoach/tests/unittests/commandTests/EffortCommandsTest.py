@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from unittests import asserts
-from CommandTestCase import CommandTestCase
+from .CommandTestCase import CommandTestCase
 from taskcoachlib import command, config
 from taskcoachlib.domain import task, effort, date
 
@@ -43,7 +43,7 @@ class NewEffortCommandTest(EffortCommandTestCase):
         newEffortCommand.do()
         newEffort = newEffortCommand.efforts[0]
         self.assertDoUndoRedo(
-            lambda: self.failUnless(newEffort in self.originalTask.efforts()),
+            lambda: self.assertTrue(newEffort in self.originalTask.efforts()),
             lambda: self.assertEqual([self.effort], self.originalTask.efforts()))
 
     def testAddingNewEffortSetsActualStartDateTimeOfTask(self):
@@ -65,9 +65,9 @@ class NewEffortCommandTest(EffortCommandTestCase):
         newEffort.setTask(secondTask)
         newEffortCommand.do()
         self.assertDoUndoRedo(
-            lambda: self.failUnless(newEffort in secondTask.efforts() and \
+            lambda: self.assertTrue(newEffort in secondTask.efforts() and \
                     newEffort not in self.originalTask.efforts()),
-            lambda: self.failUnless(newEffort not in secondTask.efforts() and \
+            lambda: self.assertTrue(newEffort not in secondTask.efforts() and \
                     newEffort not in self.originalTask.efforts()))
 
 
@@ -80,29 +80,29 @@ class StartAndStopEffortCommandTest(EffortCommandTestCase):
 
     def testStart(self):
         self.assertDoUndoRedo(
-            lambda: self.failUnless(self.originalTask.isBeingTracked()),
-            lambda: self.failIf(self.originalTask.isBeingTracked()))
+            lambda: self.assertTrue(self.originalTask.isBeingTracked()),
+            lambda: self.assertFalse(self.originalTask.isBeingTracked()))
 
     def testStop(self):
         stop = command.StopEffortCommand(self.effortList)
         stop.do()
         self.assertDoUndoRedo(
-            lambda: self.failIf(self.originalTask.isBeingTracked()),
-            lambda: self.failUnless(self.originalTask.isBeingTracked()))
+            lambda: self.assertFalse(self.originalTask.isBeingTracked()),
+            lambda: self.assertTrue(self.originalTask.isBeingTracked()))
 
     def testStartStopsPreviousStart(self):
         start = command.StartEffortCommand(self.taskList, [self.task2])
         start.do()
         self.assertDoUndoRedo(
-            lambda: self.failIf(self.originalTask.isBeingTracked()),
-            lambda: self.failUnless(self.originalTask.isBeingTracked()))
+            lambda: self.assertFalse(self.originalTask.isBeingTracked()),
+            lambda: self.assertTrue(self.originalTask.isBeingTracked()))
 
     def testStartTrackingInactiveTaskSetsActualStartDate(self):
         start = command.StartEffortCommand(self.taskList, [self.task2])
         start.do()
         now = date.Now()
         self.assertDoUndoRedo(
-            lambda: self.failUnless(now - date.ONE_SECOND < self.task2.actualStartDateTime() < now + date.ONE_SECOND),
+            lambda: self.assertTrue(now - date.ONE_SECOND < self.task2.actualStartDateTime() < now + date.ONE_SECOND),
             lambda: self.assertEqual(date.DateTime(), self.task2.actualStartDateTime()))
 
     def testStartTrackingInactiveTaskWithFutureActualStartDate(self):
@@ -112,7 +112,7 @@ class StartAndStopEffortCommandTest(EffortCommandTestCase):
         start.do()
         now = date.Now()
         self.assertDoUndoRedo(
-            lambda: self.failUnless(now - date.ONE_SECOND < self.task2.actualStartDateTime() < now + date.ONE_SECOND),
+            lambda: self.assertTrue(now - date.ONE_SECOND < self.task2.actualStartDateTime() < now + date.ONE_SECOND),
             lambda: self.assertEqual(futureStartDateTime, self.task2.actualStartDateTime()))
 
 

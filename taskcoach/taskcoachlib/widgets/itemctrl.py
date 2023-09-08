@@ -239,13 +239,13 @@ class Column:
     def __filterArgs(self, func, kwargs):
         actualKwargs = dict()
         argNames = inspect.getargspec(func).args
-        return dict([(name, value) for name, value in kwargs.items() if name in argNames])
+        return dict([(name, value) for name, value in list(kwargs.items()) if name in argNames])
 
     def render(self, *args, **kwargs):
         return self.__renderCallback(*args, **self.__filterArgs(self.__renderCallback, kwargs))
 
     def defaultRenderer(self, *args, **kwargs): # pylint: disable=W0613
-        return unicode(args[0])
+        return str(args[0])
 
     def alignment(self):
         return self.__alignment
@@ -311,7 +311,7 @@ class _BaseCtrlWithColumnsMixin:
         newMap.append((columnIndex, column))
         self.__indexMap = newMap
 
-        self.InsertColumn(columnIndex, column.header() if column.headerImageIndex() == -1 else u'',
+        self.InsertColumn(columnIndex, column.header() if column.headerImageIndex() == -1 else '',
             format=column.alignment(), width=column.width)
 
         columnInfo = self.GetColumn(columnIndex)

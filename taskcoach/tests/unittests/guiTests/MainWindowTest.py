@@ -80,11 +80,11 @@ class MainWindowTestCase(test.wxTestCase):
 class MainWindowTest(MainWindowTestCase):
     def testStatusBar_Show(self):
         self.settings.setboolean('view', 'statusbar', True)
-        self.failUnless(self.mainwindow.GetStatusBar().IsShown())
+        self.assertTrue(self.mainwindow.GetStatusBar().IsShown())
 
     def testStatusBar_Hide(self):
         self.settings.setboolean('view', 'statusbar', False)
-        self.failIf(self.mainwindow.GetStatusBar().IsShown())
+        self.assertFalse(self.mainwindow.GetStatusBar().IsShown())
 
     def testTitle_Default(self):
         self.assertEqual(meta.name, self.mainwindow.GetTitle())
@@ -124,7 +124,7 @@ class MainWindowNotMaximizedTest(MainWindowMaximizeTestCase):
     maximized = False
 
     def testCreate(self):
-        self.failIf(self.mainwindow.IsMaximized())
+        self.assertFalse(self.mainwindow.IsMaximized())
 
     @test.skipOnPlatform('__WXGTK__')
     def testMaximize(self): # pragma: no cover
@@ -135,7 +135,7 @@ class MainWindowNotMaximizedTest(MainWindowMaximizeTestCase):
         self.mainwindow.Maximize()
         if operating_system.isWindows():
             wx.Yield()
-        self.failUnless(self.settings.getboolean('window', 'maximized'))
+        self.assertTrue(self.settings.getboolean('window', 'maximized'))
 
 
 class MainWindowMaximizedTest(MainWindowMaximizeTestCase):
@@ -143,7 +143,7 @@ class MainWindowMaximizedTest(MainWindowMaximizeTestCase):
 
     @test.skipOnPlatform('__WXMAC__')
     def testCreate(self):
-        self.failUnless(self.mainwindow.IsMaximized()) # pragma: no cover
+        self.assertTrue(self.mainwindow.IsMaximized()) # pragma: no cover
 
 
 class MainWindowIconizedTest(MainWindowTestCase):
@@ -163,7 +163,7 @@ class MainWindowIconizedTest(MainWindowTestCase):
 
     @test.skipOnPlatform('__WXGTK__') # Test fails on Fedora, don't know why nor how to fix it
     def testIsIconized(self):
-        self.failUnless(self.mainwindow.IsIconized()) # pragma: no cover
+        self.assertTrue(self.mainwindow.IsIconized()) # pragma: no cover
 
     def testWindowSize(self):
         self.assertEqual((900, self.expectedHeight()),

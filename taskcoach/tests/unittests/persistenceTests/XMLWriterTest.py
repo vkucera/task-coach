@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, StringIO # We cannot use CStringIO since unicode strings are used below.
+import wx, io # We cannot use CStringIO since unicode strings are used below.
 import test
 from taskcoachlib import persistence, config, meta
 from taskcoachlib.domain import base, task, effort, date, category, note, attachment
@@ -28,7 +28,7 @@ from taskcoachlib.syncml.config import SyncMLConfigNode
 class XMLWriterTest(test.TestCase):
     def setUp(self):
         task.Task.settings = config.Settings(load=False)
-        self.fd = StringIO.StringIO()
+        self.fd = io.StringIO()
         self.fd.name = 'testfile.tsk'
         self.fd.encoding = 'utf-8'
         self.writer = persistence.XMLWriter(self.fd)
@@ -42,17 +42,17 @@ class XMLWriterTest(test.TestCase):
 
     def __writeAndRead(self):
         self.writer.write(self.taskList, self.categoryContainer,
-            self.noteContainer, SyncMLConfigNode('root'), u'GUID')
+            self.noteContainer, SyncMLConfigNode('root'), 'GUID')
         return self.fd.getvalue().decode(self.fd.encoding)
 
     def expectInXML(self, xmlFragment):
         xml = self.__writeAndRead()
-        self.failUnless(xmlFragment in xml or \
+        self.assertTrue(xmlFragment in xml or \
                         xmlFragment in xml.replace('&apos;', "'"), '%s not in %s'%(xmlFragment, xml))
 
     def expectNotInXML(self, xmlFragment):
         xml = self.__writeAndRead()
-        self.failIf(xmlFragment in xml, '%s in %s'%(xmlFragment, xml))
+        self.assertFalse(xmlFragment in xml, '%s in %s'%(xmlFragment, xml))
 
     # tests
 
@@ -71,8 +71,8 @@ class XMLWriterTest(test.TestCase):
         self.expectInXML('status="3"')
 
     def testTaskSubjectWithUnicode(self):
-        self.task.setSubject(u'ï¬Ÿï­Žï­–')
-        self.expectInXML(u'subject="ï¬Ÿï­Žï­–"')
+        self.task.setSubject('ï¬Ÿï­Žï­–')
+        self.expectInXML('subject="ï¬Ÿï­Žï­–"')
 
     def testTaskDescription(self):
         self.task.setDescription('Description')
@@ -230,9 +230,9 @@ class XMLWriterTest(test.TestCase):
                          '</category>' % str(aCategory.creationDateTime()))
 
     def testCategoryWithUnicodeSubject(self):
-        unicodeCategory = category.Category(subject=u'ï¬Ÿï­Žï­–', id='id')
+        unicodeCategory = category.Category(subject='ï¬Ÿï­Žï­–', id='id')
         self.categoryContainer.extend([unicodeCategory])
-        self.expectInXML(u'subject="ï¬Ÿï­Žï­–"')
+        self.expectInXML('subject="ï¬Ÿï­Žï­–"')
 
     def testCategoryWithDeletedTask(self):
         aCategory = category.Category(subject='category',
@@ -651,10 +651,10 @@ class XMLWriterTest(test.TestCase):
     def testNonAsciiFontName(self):
         class FakeFont:
             def GetNativeFontInfoDesc(self):
-                return u'微软雅黑'
+                return '微软雅黑'
         font = FakeFont()
         self.task.setFont(font)
-        self.expectInXML(u'font="微软雅黑"')
+        self.expectInXML('font="微软雅黑"')
 
     def testTaskIcon(self):
         self.task.setIcon('icon')

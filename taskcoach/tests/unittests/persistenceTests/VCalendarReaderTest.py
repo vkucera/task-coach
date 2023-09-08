@@ -29,7 +29,7 @@ class VCalendarParserTest(test.TestCase):
         
     def testEmptyVCalender(self):
         self.parser.parse(['BEGIN:VCALENDAR', 'END:VCALENDAR'])
-        self.failIf(self.parser.tasks)
+        self.assertFalse(self.parser.tasks)
            
     def testEmptyVTodo(self):
         self.parser.parse(['BEGIN:VTODO', 'END:VTODO'])
@@ -78,7 +78,7 @@ class VNoteParserTest(test.TestCase):
         
     def testEmptyVCalendar(self):
         self.parser.parse(['BEGIN:VCALENDAR', 'END:VCALENDAR'])
-        self.failIf(self.parser.notes)
+        self.assertFalse(self.parser.notes)
     
     def testEmptyVNote(self):
         self.parser.parse(['BEGIN:VNOTE', 'END:VNOTE'])

@@ -211,7 +211,7 @@ class UploadBase(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = WithProperties('%s', 'filename')
         kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-packages/branches/%s/%s', 'branch', 'basefilename')
-        kwargs['mode'] = 0644
+        kwargs['mode'] = 0o644
         FileUpload.__init__(self, **kwargs)
 
     def start(self):
@@ -231,7 +231,7 @@ class UploadChangelog(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = 'changelog_content'
         kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-packages/branches/%s/changelog_content', 'branch')
-        kwargs['mode'] = 0644
+        kwargs['mode'] = 0o644
         FileUpload.__init__(self, **kwargs)
 
 
@@ -460,7 +460,7 @@ class PylintUploadStep(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = 'pylint.html'
         kwargs['masterdest'] = WithProperties('/var/www/pylint-%s.html', 'buildername')
-        kwargs['mode'] = 0644
+        kwargs['mode'] = 0o644
         FileUpload.__init__(self, **kwargs)
 
     def start(self):

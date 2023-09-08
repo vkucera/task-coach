@@ -30,7 +30,7 @@ def flatten(elem):
     if len(elem) and not elem.text:
         elem.text = '\n'
     elif elem.text:
-        elem.text = u'\n%s\n' % elem.text
+        elem.text = '\n%s\n' % elem.text
     elem.tail = '\n'
     for child in elem:
         flatten(child)
@@ -231,7 +231,7 @@ class XMLWriter:
         if item.backgroundColor():
             node.attrib['bgColor'] = str(item.backgroundColor())
         if item.font():
-            node.attrib['font'] = unicode(item.font().GetNativeFontInfoDesc())
+            node.attrib['font'] = str(item.font().GetNativeFontInfoDesc())
         if item.icon():
             node.attrib['icon'] = str(item.icon())
         if item.selectedIcon():
@@ -249,7 +249,7 @@ class XMLWriter:
         if item.backgroundColor():
             node.attrib['bgColor'] = str(item.backgroundColor())
         if item.font():
-            node.attrib['font'] = unicode(item.font().GetNativeFontInfoDesc())
+            node.attrib['font'] = str(item.font().GetNativeFontInfoDesc())
         if item.icon():
             node.attrib['icon'] = str(item.icon())
         if item.selectedIcon():
@@ -303,10 +303,10 @@ class ChangesXMLWriter:
     def write(self, allChanges):
         root = ET.Element('changes')
         if allChanges:
-            for devName, monitor in allChanges.items():
+            for devName, monitor in list(allChanges.items()):
                 devNode = ET.SubElement(root, 'device')
                 devNode.attrib['guid'] = monitor.guid()
-                for id_, changes in monitor.allChanges().items():
+                for id_, changes in list(monitor.allChanges().items()):
                     objNode = ET.SubElement(devNode, 'obj')
                     objNode.attrib['id'] = id_
                     if changes:

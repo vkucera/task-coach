@@ -161,7 +161,7 @@ class MultiLineTextCtrl(BaseTextCtrl):
             try:
                 self.__webbrowser.open(url)
             except Exception as message:
-                wx.MessageBox(unicode(message), i18n._('Error opening URL'))
+                wx.MessageBox(str(message), i18n._('Error opening URL'))
 
     def __initializeText(self, text):
         self.AppendText(text)

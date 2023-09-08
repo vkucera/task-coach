@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import render
 from taskcoachlib.domain import date
-import StringIO
+import io
 
 
 def extendedWithAncestors(selection):
@@ -64,7 +64,7 @@ class RowBuilder:
                 row.extend(self.splitDateAndTime(column, item))
             elif column.name() == 'notes':
                 def renderNotes(notes, indent=0):
-                    bf = StringIO.StringIO()
+                    bf = io.StringIO()
                     spaces = '  ' * indent
                     for note in sorted(notes, key=lambda note: note.subject()):
                         bf.write('%s%s\n%s%s\n' % (spaces, note.subject(), spaces, note.description()))
@@ -72,7 +72,7 @@ class RowBuilder:
                     return bf.getvalue()
                 row.append(renderNotes(item.notes()))
             elif column.name() == 'attachments':
-                row.append(u'\n'.join(sorted([attachment.subject() for attachment in item.attachments()])))
+                row.append('\n'.join(sorted([attachment.subject() for attachment in item.attachments()])))
             else:
                 row.append(column.render(item, humanReadable=False))
         row[0] = self.indent(item) + row[0]

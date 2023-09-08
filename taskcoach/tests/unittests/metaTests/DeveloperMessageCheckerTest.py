@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import config, meta
 from unittests import dummy
-import StringIO
+import io
 import test
 
 
@@ -35,7 +35,7 @@ class DeveloperMessageCheckerUnderTest(meta.DeveloperMessageChecker):
         return function(*args, **kwargs)
 
     def urlopen(self, url):  # pylint: disable=W0613
-        return StringIO.StringIO(self.message_file_contents)
+        return io.StringIO(self.message_file_contents)
 
 
 class DeveloperMessageCheckerTest(test.TestCase):

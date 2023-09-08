@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import StringIO
+import io
 import test
 from taskcoachlib import persistence, gui, config, render
 from taskcoachlib.domain import task, effort, date
@@ -28,7 +28,7 @@ class CSVWriterTestCase(test.wxTestCase):
     def setUp(self):
         super(CSVWriterTestCase, self).setUp()
         task.Task.settings = self.settings = config.Settings(load=False)
-        self.fd = StringIO.StringIO()
+        self.fd = io.StringIO()
         self.writer = persistence.CSVWriter(self.fd)
         self.taskFile = persistence.TaskFile()
         self.task = task.Task('Task subject')
@@ -55,13 +55,13 @@ class CSVWriterTestCase(test.wxTestCase):
     def expectInCSV(self, csvFragment, selectionOnly=False, separateDateAndTimeColumns=False,
                     columns=None):
         csv = self.__writeAndRead(selectionOnly, separateDateAndTimeColumns, columns)
-        self.failUnless(csvFragment in csv, 
+        self.assertTrue(csvFragment in csv, 
                         '%s not in %s' % (csvFragment, csv))
     
     def expectNotInCSV(self, csvFragment, selectionOnly=False, separateDateAndTimeColumns=False,
                        columns=None):
         csv = self.__writeAndRead(selectionOnly, separateDateAndTimeColumns, columns)
-        self.failIf(csvFragment in csv, '%s in %s' % (csvFragment, csv))
+        self.assertFalse(csvFragment in csv, '%s in %s' % (csvFragment, csv))
 
     def selectItem(self, items):
         self.viewer.select(items)

@@ -542,7 +542,7 @@ class CommonTestsMixin:
                                                  effortList=self.taskFile.efforts(),
                                                  taskList=self.taskFile.tasks())
         stopUICommand.doCommand()
-        self.failIf(self.task.isBeingTracked())
+        self.assertFalse(self.task.isBeingTracked())
 
 
 class EffortViewerWithoutAggregationTest(CommonTestsMixin,
@@ -571,7 +571,7 @@ class EffortViewerWithAggregationPerMonthTest(CommonTestsMixin,
                                               EffortViewerAggregationTestCase):
     aggregation = 'month'
     expectedNumberOfItems = 3  # 2 month/task combinations in 1 month (== 1 total row)
-    expectedPeriodRendering = render.month(date.DateTime(2008, 07, 01))
+    expectedPeriodRendering = render.month(date.DateTime(2008, 0o7, 0o1))
 
 
 class EffortViewerRenderTestMixin:
@@ -595,21 +595,21 @@ class EffortViewerRenderTestMixin:
         theEffort = effort.Effort(self.task, self.midnight, self.midnight + date.TWO_HOURS)
         self.task.addEffort(theEffort)
         text = self.viewer.widget.GetItemText(0)
-        self.failUnless(text.startswith('Today'), '"Today" not in %s' % text)
+        self.assertTrue(text.startswith('Today'), '"Today" not in %s' % text)
 
     def testTomorrow(self):
         theEffort = effort.Effort(self.task, self.midnight + date.ONE_DAY,
                                   self.midnight + date.TimeDelta(hours=2, days=1))
         self.task.addEffort(theEffort)
         text = self.viewer.widget.GetItemText(0)
-        self.failUnless(text.startswith('Tomorrow'), '"Tomorrow" not in %s' % text)
+        self.assertTrue(text.startswith('Tomorrow'), '"Tomorrow" not in %s' % text)
 
     def testYesterday(self):
         theEffort = effort.Effort(self.task, self.midnight - date.TimeDelta(days=1),
                                   self.midnight - date.TimeDelta(hours=22))
         self.task.addEffort(theEffort)
         text = self.viewer.widget.GetItemText(0)
-        self.failUnless(text.startswith('Yesterday'), '"Yesterday" not in %s' % text)
+        self.assertTrue(text.startswith('Yesterday'), '"Yesterday" not in %s' % text)
 
 
 class EffortViewerRenderDetailsTest(EffortViewerRenderTestMixin, test.wxTestCase):

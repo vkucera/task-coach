@@ -45,7 +45,7 @@ if revision:  # Buildbot sets revision
     # assumes that version components are < 100; 99 will actually mean
     # pre-major release
     # pylint: disable=W0141
-    major, inter, minor = map(int, version.split('.'))
+    major, inter, minor = list(map(int, version.split('.')))
     numversion = major * 10000 + inter * 100 + minor
     numversion -= 1
     major = numversion // 10000
@@ -78,7 +78,7 @@ long_description = '%(name)s is a free open source todo manager. It grew ' \
 keywords = 'task manager, todo list, pim, time registration, track effort'
 author_first, author_last = 'Frank', 'Niessink'  # Needed for PAD file
 author = '%s %s, Jerome Laheurte, and Aaron Wolf' % (author_first, author_last)
-author_unicode = u'%s %s, Jérôme Laheurte, and Aaron Wolf' % (author_first, author_last)
+author_unicode = '%s %s, Jérôme Laheurte, and Aaron Wolf' % (author_first, author_last)
 author_email = 'developers@taskcoach.org'
 
 filename = name.replace(' ', '')
@@ -190,7 +190,7 @@ languages = {
     'Turkish': ('tr', True),
     'Ukranian': ('uk', False),
     'Vietnamese': ('vi', False)}
-languages_list = ','.join(languages.keys())
+languages_list = ','.join(list(languages.keys()))
 
 def __createDict(localsDict):
     ''' Provide the local variables as a dictionary for use in string

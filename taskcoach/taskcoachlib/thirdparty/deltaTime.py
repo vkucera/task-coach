@@ -60,7 +60,7 @@ def convertToAbsTime(toks):
     else:
         day = datetime(now.year, now.month, now.day)
     if "timeOfDay" in toks:
-        if isinstance(toks.timeOfDay,basestring):
+        if isinstance(toks.timeOfDay,str):
             timeOfDay = {
                 "now"      : timedelta(0, (now.hour*60+now.minute)*60+now.second, now.microsecond),
                 "noon"     : timedelta(0,0,0,0,0,12),
@@ -93,11 +93,11 @@ def calculateTime(toks):
  
 # grammar definitions
 CL = CaselessLiteral
-today, tomorrow, yesterday, noon, midnight, now = map( CL,
-    "today tomorrow yesterday noon midnight now".split())
+today, tomorrow, yesterday, noon, midnight, now = list(map( CL,
+    "today tomorrow yesterday noon midnight now".split()))
 plural = lambda s : Combine(CL(s) + Optional(CL("s")))
-week, day, hour, minute, second = map( plural,
-    "week day hour minute second".split())
+week, day, hour, minute, second = list(map( plural,
+    "week day hour minute second".split()))
 am = CL("am")
 pm = CL("pm")
 COLON = Suppress(':')
@@ -193,10 +193,10 @@ if __name__ == '__main__':
     next Sunday at 2pm""".splitlines()
 
     for t in tests:
-        print t, "(relative to %s)" % datetime.now()
+        print(t, "(relative to %s)" % datetime.now())
         res = nlTimeExpression.parseString(t)
         if "calculatedTime" in res:
-            print res.calculatedTime
+            print(res.calculatedTime)
         else:
-            print "???"
-        print
+            print("???")
+        print()

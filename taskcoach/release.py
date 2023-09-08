@@ -55,17 +55,17 @@ Release steps:
 
 import ftplib
 import smtplib
-import httplib
-import urllib
-import urllib2
-import cookielib
+import http.client
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
+import http.cookiejar
 import os
 import glob
 import sys
 import getpass
 import hashlib
 import base64
-import ConfigParser
+import configparser
 import codecs
 import optparse
 import taskcoachlib.meta
@@ -88,13 +88,13 @@ def progress(func):
         a message when the release step is finished. '''
     def inner(*args, **kwargs):
         step = func.__name__.replace('_', ' ')
-        print step[0].upper() + step[1:] + '...'
+        print(step[0].upper() + step[1:] + '...')
         func(*args, **kwargs)
-        print 'Done %s.' % step
+        print('Done %s.' % step)
     return inner
 
 
-class Settings(ConfigParser.SafeConfigParser):
+class Settings(configparser.SafeConfigParser):
     def __init__(self):
         super().__init__()
         self.set_defaults()
@@ -155,7 +155,7 @@ class SourceforgeAPI:
             response, content = self.client.request(url)
             ok = 200
         else:
-            response, content = self.client.request(url, method='POST', body=urllib.urlencode(data))
+            response, content = self.client.request(url, method='POST', body=urllib.parse.urlencode(data))
             ok = 302
         if response.status != ok:
             raise SFAPIError(response.status)
@@ -164,12 +164,12 @@ class SourceforgeAPI:
 
     def fix(self, id_):
         if self.dry_run:
-            print 'Skipping marking #%s fixed' % id_
+            print('Skipping marking #%s fixed' % id_)
         else:
             ticketData = self.__apply('bugs/%s' % id_)['ticket']
             # Status: fixed; priority: 1
             data = [('ticket_form.status', 'fixed')]
-            for name, value in ticketData.get('custom_fields', dict()).items():
+            for name, value in list(ticketData.get('custom_fields', dict()).items()):
                 if name == '_priority':
                     value = '1'
 		if name == '_milestone': # WTF?
@@ -188,11 +188,11 @@ Because a fix has been made for this bug report, the priority of this report has
 Thanks, Task Coach development team''')])
 
             if self.verbose:
-                print 'Bug #%s fixed.' % id_
+                print('Bug #%s fixed.' % id_)
 
     def release(self, id_):
         if self.dry_run:
-            print 'Skipping marking #%s released.' % id_
+            print('Skipping marking #%s released.' % id_)
         else:
             try:
                 ticketData = self.__apply('bugs/%s' % id_)['ticket']
@@ -202,14 +202,14 @@ Thanks, Task Coach development team''')])
 
 Thanks, Task Coach development team''')])
             except SFAPIError:
-                print 'Warning: could not marking fix #%s released.' % id_
+                print('Warning: could not marking fix #%s released.' % id_)
 
 
 class FOSSHubAPI:
     def __init__(self, api_key):
         self.api_key = api_key
         self.baseuri = 'https://api.fosshub.com/rest/'
-        self.connection = httplib.HTTPSConnection('api.fosshub.com')
+        self.connection = http.client.HTTPSConnection('api.fosshub.com')
 
     def get(self, endpoint, **headers):
         headers['X-Auth-Key'] = self.api_key
@@ -253,7 +253,7 @@ def rsync(settings, options, rsync_command):
     location = sourceforge_location(settings)
     rsync_command = rsync_command % location
     if options.dry_run:
-        print 'Skipping %s.' % rsync_command
+        print('Skipping %s.' % rsync_command)
     else:
         os.system(rsync_command)
 
@@ -264,26 +264,26 @@ def building_packages(settings, options):
     metadata = taskcoachlib.meta.data.metaDict
     branch = 'Release%s_Branch' % '_'.join(metadata['version'].split('.')[:2])
     if options.dry_run:
-        print 'Skipping force build on branch "%s"' % branch
+        print('Skipping force build on branch "%s"' % branch)
     else:
-        status = json.load(urllib.urlopen('http://%s:8010/json/builders/Release' % host))
+        status = json.load(urllib.request.urlopen('http://%s:8010/json/builders/Release' % host))
         if status['state'] != 'idle':
             raise RuntimeError('Builder Release is not idle.')
 
-        cj = cookielib.CookieJar()
-        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-        for i in xrange(3): # Retry in case of 500
+        cj = http.cookiejar.CookieJar()
+        opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
+        for i in range(3): # Retry in case of 500
             try:
                 opener.open('http://%s:8010/login' % host,
-                            urllib.urlencode([('username', settings.get('buildbot', 'username')),
+                            urllib.parse.urlencode([('username', settings.get('buildbot', 'username')),
                                               ('passwd', settings.get('buildbot', 'password'))]))
                 opener.open('http://%s:8010/builders/Release/force' % host,
-                            urllib.urlencode([('forcescheduler', 'Force'),
+                            urllib.parse.urlencode([('forcescheduler', 'Force'),
                                               ('branch', branch),
                                               ('username', 'release'),
                                               ('reason', 'release')]))
-            except urllib2.HTTPError as e:
-                print 'Failed to force (%s), retrying' % e
+            except urllib.error.HTTPError as e:
+                print('Failed to force (%s), retrying' % e)
                 time.sleep(5)
             else:
                 break
@@ -291,23 +291,23 @@ def building_packages(settings, options):
             raise RuntimeError('Could not force build')
 
         if options.verbose:
-            print 'Build forced.'
+            print('Build forced.')
 
     if options.verbose:
-        print 'Waiting for completion.'
+        print('Waiting for completion.')
 
     while True:
         time.sleep(60)
-        status = json.load(urllib.urlopen('http://%s:8010/json/builders/Release' % host))
+        status = json.load(urllib.request.urlopen('http://%s:8010/json/builders/Release' % host))
         if status['state'] == 'idle':
             break
 
     if options.verbose:
-        print 'Build finished.'
-        print 'Downloading release.zip'
+        print('Build finished.')
+        print('Downloading release.zip')
 
     buildno = status['cachedBuilds'][-1]
-    status = json.load(urllib.urlopen('http://%s:8010/json/builders/Release/builds/%d' % (host, buildno)))
+    status = json.load(urllib.request.urlopen('http://%s:8010/json/builders/Release/builds/%d' % (host, buildno)))
     try:
         zipurl = status['steps'][-1]['urls']['Download release']
     except:
@@ -317,14 +317,14 @@ def building_packages(settings, options):
         shutil.rmtree('dist')
     os.mkdir('dist')
 
-    shutil.copyfileobj(urllib.urlopen(zipurl), file(os.path.join('dist', 'release.zip'), 'wb'))
+    shutil.copyfileobj(urllib.request.urlopen(zipurl), file(os.path.join('dist', 'release.zip'), 'wb'))
 
     try:
         zipFile = zipfile.ZipFile(os.path.join('dist', 'release.zip'), 'r')
         try:
             for info in zipFile.infolist():
                 if options.verbose:
-                    print 'Extracting "%s"' % info.filename
+                    print('Extracting "%s"' % info.filename)
                 shutil.copyfileobj(zipFile.open(info, 'r'),
                                    file(os.path.join('dist', info.filename), 'wb'))
         finally:
@@ -358,7 +358,7 @@ def uploading_distributions_to_fosshub(settings, options):
 
     for release in api.get('projects/%s/releases' % project_id):
         if release['version'] == taskcoachlib.meta.data.version:
-            print 'Version %s already published' % release['version']
+            print('Version %s already published' % release['version'])
             import pprint
             pprint.pprint(release)
             return
@@ -395,23 +395,23 @@ def marking_default_downloads(settings, options):
 
     for platform, name in defaults:
         if options.dry_run:
-            print 'Skipping marking "%s" as default for %s' % (name, platform)
+            print('Skipping marking "%s" as default for %s' % (name, platform))
         else:
             # httplib does not seem to handle PUT very well
             # See http://stackoverflow.com/questions/111945/is-there-any-way-to-do-http-put-in-python
-            opener = urllib2.build_opener(urllib2.HTTPSHandler)
+            opener = urllib.request.build_opener(urllib.request.HTTPSHandler)
             url = 'https://sourceforge.net/projects/taskcoach/files/taskcoach/Release-%s/%s' % (taskcoachlib.meta.version, name)
-            req = urllib2.Request(url,
-                                  data=urllib.urlencode(dict(default=platform, api_key=settings.get('sourceforge', 'api_key'))))
+            req = urllib.request.Request(url,
+                                  data=urllib.parse.urlencode(dict(default=platform, api_key=settings.get('sourceforge', 'api_key'))))
             req.add_header('Content-Type', 'application/x-www-form-urlencoded')
             req.get_method = lambda: 'PUT'
             try:
                 opener.open(req)
-            except urllib2.HTTPError as e:
-                print 'Warning: could not mark "%s" as default download for %s (%s)' % (name, platform, e)
+            except urllib.error.HTTPError as e:
+                print('Warning: could not mark "%s" as default download for %s (%s)' % (name, platform, e))
             else:
                 if options.verbose:
-                    print 'Marked "%s" as default download for %s' % (name, platform)
+                    print('Marked "%s" as default download for %s' % (name, platform))
 
 
 @progress
@@ -443,7 +443,7 @@ def generating_MD5_digests(settings, options):
         hexdigest = md5digest.hexdigest()
         contents += '''    "%s": "%s",\n''' % (filename, hexdigest)
         if options.verbose:
-            print '%40s -> %s' % (filename, hexdigest)
+            print('%40s -> %s' % (filename, hexdigest))
     contents += '}\n'
 
     md5digests_file = file(os.path.join('website.in', 'md5digests.py'), 'w')
@@ -475,24 +475,24 @@ class SimpleFTP(ftplib.FTP):
     def put(self, folder, *filename_whitelist):
         for root, subfolders, filenames in os.walk(folder):
             if root != folder:
-                print 'Change into %s' % root
+                print('Change into %s' % root)
                 for part in root.split(os.sep):
                     self.cwd(part)
             for subfolder in subfolders:
-                print 'Create %s' % os.path.join(root, subfolder)
+                print('Create %s' % os.path.join(root, subfolder))
                 try:
                     self.mkd(subfolder)
-                except ftplib.error_perm, info:
-                    print info
+                except ftplib.error_perm as info:
+                    print(info)
             for filename in filenames:
                 if filename_whitelist and filename not in filename_whitelist:
-                    print 'Skipping %s' % os.path.join(root, filename)
+                    print('Skipping %s' % os.path.join(root, filename))
                     continue
-                print 'Store %s' % os.path.join(root, filename)
+                print('Store %s' % os.path.join(root, filename))
                 try:
                     self.storbinary('STOR %s' % filename,
                                     file(os.path.join(root, filename), 'rb'))
-                except ftplib.error_perm, info:
+                except ftplib.error_perm as info:
                     if str(info).endswith('Overwrite permission denied'):
                         self.delete(filename)
                         self.storbinary('STOR %s' % filename,
@@ -503,7 +503,7 @@ class SimpleFTP(ftplib.FTP):
             self.cwd(self.remote_root)
 
     def get(self, filename):
-        print 'Retrieve %s' % filename
+        print('Retrieve %s' % filename)
         self.retrbinary('RETR %s' % filename, open(filename, 'wb').write)
 
 
@@ -541,7 +541,7 @@ def registering_with_PyPI(settings, options):
     sys.argv.append('sdist')
     sys.argv.append('upload')
     if options.dry_run:
-        print 'Skipping PyPI registration.'
+        print('Skipping PyPI registration.')
     else:
         setup(**setupOptions)  # pylint: disable=W0142
     os.remove('.pypirc')
@@ -564,14 +564,14 @@ def announcing_via_OAuth_Api(settings, options, section, host):
     client = oauth.Client(consumer, token)
     status = status_message()
     if options.dry_run:
-        print 'Skipping announcing "%s" on %s.' % (status, host)
+        print('Skipping announcing "%s" on %s.' % (status, host))
     else:
         response, content = client.request( \
             'https://api.%s/1.1/statuses/update.json' % host, method='POST',
             body='status=%s' % status, headers=None)
         if response.status != 200:
-            print 'Request failed: %d %s' % (response.status, response.reason)
-            print content
+            print('Request failed: %d %s' % (response.status, response.reason))
+            print(content)
 
 
 @progress
@@ -610,7 +610,7 @@ def updating_Sourceforge_trackers(settings, options):
                 if id_ not in alreadyDone:
                     alreadyDone.add(id_)
                     if options.dry_run:
-                        print 'Skipping mark bug #%s released' % id_
+                        print('Skipping mark bug #%s released' % id_)
                     else:
                         api = SourceforgeAPI(settings, options)
                         api.release(id_)
@@ -699,19 +699,19 @@ Task Coach development team
         session.esmtp_features["auth"] = "LOGIN"  # Needed for Gmail SMTP.
         session.login(username, password)
     if options.dry_run:
-        print 'Skipping sending mail.'
+        print('Skipping sending mail.')
         smtpresult = None
     else:
         smtpresult = session.sendmail(username, recipients, msg)
 
     if smtpresult:
         errstr = ""
-        for recip in smtpresult.keys():
+        for recip in list(smtpresult.keys()):
             errstr = """Could not deliver mail to: %s
 Server said: %s
 %s
 %s""" % (recip, smtpresult[recip][0], smtpresult[recip][1], errstr)
-        raise smtplib.SMTPException, errstr
+        raise smtplib.SMTPException(errstr)
 
 
 @progress
@@ -722,7 +722,7 @@ def tagging_release_in_mercurial(settings, options):
     hg_tag = 'hg tag %s' % release_tag
     commit_message = 'Tag for release %s.' % version
     if options.dry_run:
-        print 'Skipping %s.' % hg_tag
+        print('Skipping %s.' % hg_tag)
     else:
         os.system(hg_tag)
         os.system('hg commit -m "%s"' % commit_message)

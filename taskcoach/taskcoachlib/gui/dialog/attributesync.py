@@ -88,7 +88,7 @@ class AttributeSync:
             try:
                 self.__callback(value)
             except Exception as e:
-                wx.MessageBox(unicode(e), _('Error'), wx.OK)
+                wx.MessageBox(str(e), _('Error'), wx.OK)
 
     def __start_observing_attribute(self, eventType, eventSource):
         if eventType.startswith('pubsub'):

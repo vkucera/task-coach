@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns, command
 from taskcoachlib.domain import task, date
-from CommandTestCase import CommandTestCase
+from .CommandTestCase import CommandTestCase
 
 
 
@@ -42,7 +42,7 @@ class DeleteCommandTest(CommandTestCase):
                               lambda: self.assertEqual([self.item], self.items))
 
     def testItemsAreNotNew(self):
-        self.failIf(command.DeleteCommand(self.items, []).items_are_new())
+        self.assertFalse(command.DeleteCommand(self.items, []).items_are_new())
 
 
 class EditSubjectTestCase(CommandTestCase):
@@ -74,12 +74,12 @@ class EditSubjectTestCase(CommandTestCase):
                                       self.item1.subject() + self.item2.subject()))
 
     def testItemsAreNotNew(self):
-        self.failIf(command.EditSubjectCommand(self.container, [],
+        self.assertFalse(command.EditSubjectCommand(self.container, [],
                     newValue='New subject').items_are_new())
 
     def testModificationDateTime(self):
         self.editSubject('new', self.item1)
-        self.assertDoUndoRedo(lambda: self.failUnless(self.item1.modificationDateTime() > date.DateTime.min),
+        self.assertDoUndoRedo(lambda: self.assertTrue(self.item1.modificationDateTime() > date.DateTime.min),
                               lambda: self.assertEqual(date.DateTime.min, self.item1.modificationDateTime()))
 
 
@@ -111,10 +111,10 @@ class EditDescriptionTestCase(CommandTestCase):
                                       self.item1.description() + self.item2.description()))
 
     def testItemsAreNotNew(self):
-        self.failIf(command.EditDescriptionCommand(self.container, [],
+        self.assertFalse(command.EditDescriptionCommand(self.container, [],
                     newValue='New description').items_are_new())
 
     def testModificationDateTime(self):
         self.edit_description('new', self.item1)
-        self.assertDoUndoRedo(lambda: self.failUnless(self.item1.modificationDateTime() > date.DateTime.min),
+        self.assertDoUndoRedo(lambda: self.assertTrue(self.item1.modificationDateTime() > date.DateTime.min),
                               lambda: self.assertEqual(date.DateTime.min, self.item1.modificationDateTime()))

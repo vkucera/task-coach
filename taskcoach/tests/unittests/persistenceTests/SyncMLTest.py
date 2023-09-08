@@ -33,28 +33,28 @@ class TaskFileTestCase(test.TestCase):
 
     def testTaskIsDirtyAfterEditingSubject(self):
         self.taskFile.tasks().append(self.task)
-        self.failUnless(task.Task.STATUS_NEW, self.task.getStatus())
+        self.assertTrue(task.Task.STATUS_NEW, self.task.getStatus())
         self.task.setSubject('New subject')
-        self.failUnless(task.Task.STATUS_CHANGED, self.task.getStatus())
+        self.assertTrue(task.Task.STATUS_CHANGED, self.task.getStatus())
 
     def testNoteIsDirtyAfterEditingSubject(self):
         aNote = note.Note(subject='Subject')
         self.taskFile.notes().append(aNote)
-        self.failUnless(note.Note.STATUS_NEW, aNote.getStatus())
+        self.assertTrue(note.Note.STATUS_NEW, aNote.getStatus())
         aNote.setSubject('New subject')
-        self.failUnless(note.Note.STATUS_CHANGED, aNote.getStatus())
+        self.assertTrue(note.Note.STATUS_CHANGED, aNote.getStatus())
 
     def testCategoryIsDirtyAfterEditingSubject(self):
         aCategory = category.Category(subject='Subject')
         self.taskFile.categories().append(aCategory)
-        self.failUnless(category.Category.STATUS_NEW, aCategory.getStatus())
+        self.assertTrue(category.Category.STATUS_NEW, aCategory.getStatus())
         aCategory.setSubject('New subject')
-        self.failUnless(category.Category.STATUS_CHANGED, aCategory.getStatus())
+        self.assertTrue(category.Category.STATUS_CHANGED, aCategory.getStatus())
 
     def testEffortIsDirtyAfterEditingStart(self):
         self.taskFile.tasks().append(self.task)
         anEffort = effort.Effort(self.task)
         self.task.addEffort(anEffort)
-        self.failUnless(effort.Effort.STATUS_NEW, anEffort.getStatus())
+        self.assertTrue(effort.Effort.STATUS_NEW, anEffort.getStatus())
         anEffort.setStart(date.DateTime(2000,1,1,10,0,0))
-        self.failUnless(effort.Effort.STATUS_CHANGED, anEffort.getStatus())
+        self.assertTrue(effort.Effort.STATUS_CHANGED, anEffort.getStatus())

@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from __future__ import absolute_import # For xml...
+ # For xml...
 
 import os, shutil, glob, math, re
 from taskcoachlib.domain import date
@@ -54,7 +54,7 @@ class BackupManifest:
 
     def save(self):
         root = ET.Element('backupfiles')
-        for sha, filename in self.__files.items():
+        for sha, filename in list(self.__files.items()):
             node = ET.SubElement(root, 'file')
             node.attrib['sha'] = sha
             node.text = filename
@@ -68,7 +68,7 @@ class BackupManifest:
         backups = list()
         for name in os.listdir(self.backupPath(filename)):
             try:
-                comp = map(int, [name[0:4], name[4:6], name[6:8], name[8:10], name[10:12], name[12:14]])
+                comp = list(map(int, [name[0:4], name[4:6], name[6:8], name[8:10], name[10:12], name[12:14]]))
             except:
                 continue
             backups.append(date.DateTime(*tuple(comp)))

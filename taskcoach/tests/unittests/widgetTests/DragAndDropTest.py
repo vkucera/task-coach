@@ -46,12 +46,12 @@ class TreeCtrlDragAndDropMixinTest(test.wxTestCase):
         self.item = self.treeCtrl.AppendItem(self.rootItem, 'item')
 
     def assertEventIsVetoed(self, event):
-        self.failUnless(event.vetoed)
-        self.failIf(event.allowed)
+        self.assertTrue(event.vetoed)
+        self.assertFalse(event.allowed)
 
     def assertEventIsAllowed(self, event):
-        self.failUnless(event.allowed)
-        self.failIf(event.vetoed)
+        self.assertTrue(event.allowed)
+        self.assertFalse(event.vetoed)
 
     def testEventIsVetoedWhenDragBeginsWithoutItem(self):
         event = DummyEvent()

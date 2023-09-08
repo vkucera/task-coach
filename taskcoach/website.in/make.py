@@ -65,7 +65,7 @@ src="https://pagead2.googlesyndication.com/pagead/show_ads.js">
                     </div>'''
 
 pages = {}
-pages['index'] = u'''
+pages['index'] = '''
             <div class="row">
                 <div class="span10">
                     <p><img src="images/banner.png" alt="Banner image"></p>
@@ -333,7 +333,7 @@ def download_footer(ads=ads):
             </div>'''
 
 def download_table(**kwargs):
-    filename = kwargs['download_urls'].values()[0].split('/')[-1]%meta.metaDict
+    filename = list(kwargs['download_urls'].values())[0].split('/')[-1]%meta.metaDict
     md5 = md5digests.get(filename, '')
     kwargs['rows'] = 5 if md5 else 4
     kwargs['md5'] = '\n            <dt>MD5 digest</dt><dd>%s.</dd>'%md5 if md5 else ''
@@ -350,7 +350,7 @@ def download_table(**kwargs):
         download_url_template = '%(action)s <a href="%(url)s">%(package_type)s</a> from %(source)s'
         kwargs['platform_versions'] = 'Platforms'
     urls = []
-    for source, url in kwargs['download_urls'].items():
+    for source, url in list(kwargs['download_urls'].items()):
         parameters = kwargs.copy()
         parameters['url'] = url
         parameters['source'] = source
@@ -1045,7 +1045,7 @@ def ensureFolderExists(folder):
 def writeFile(folder, filename, contents):
     ensureFolderExists(folder)
     filename = os.path.join(folder, filename)
-    print 'Creating %s'%filename
+    print('Creating %s'%filename)
     fd = file(filename, 'w')
     fd.write(contents.encode('UTF-8'))
     fd.close()
@@ -1059,7 +1059,7 @@ def copyFiles(folder, *patterns):
     ensureFolderExists(folder)
     for source in expandPatterns(*patterns):
         target = os.path.join(folder, os.path.basename(source))
-        print 'Copying %s to %s'%(source, target)
+        print('Copying %s to %s'%(source, target))
         shutil.copyfile(source, target)
 
 def copyDir(targetFolder, subFolder, files='*'):
@@ -1076,7 +1076,7 @@ def createVersionFile(folder, filename='version.txt'):
     writeFile(folder, filename, textTemplate%meta.metaDict)
 
 def createHTMLPages(targetFolder, pages):
-    for title, text in pages.items():
+    for title, text in list(pages.items()):
         footer = style.footer
         contents = style.header + text%meta.metaDict + footer
         writeFile(targetFolder, '%s.html'%title, contents)
@@ -1091,7 +1091,7 @@ def createThumbnail(srcFilename, targetFolder, bitmapType=wx.BITMAP_TYPE_PNG,
     image.Rescale(thumbnailWidth, thumbnailHeight)
     thumbFilename = os.path.join(targetFolder,
                                  'Thumb-' + os.path.basename(srcFilename))
-    print 'Creating %s'%thumbFilename
+    print('Creating %s'%thumbFilename)
     image.SaveFile(thumbFilename, bitmapType)
 
 def createThumbnails(targetFolder):

@@ -87,8 +87,8 @@ class CategoryEditorTest(test.wxTestCase):
 
     def testAddAttachment(self):
         self.editor._interior[2].viewer.onDropFiles(self.category, ['filename'])
-        self.failUnless('filename' in [att.location() for att in self.category.attachments()])
-        self.failUnless('filename' in [att.subject() for att in self.category.attachments()])
+        self.assertTrue('filename' in [att.location() for att in self.category.attachments()])
+        self.assertTrue('filename' in [att.subject() for att in self.category.attachments()])
 
     def testRemoveAttachment(self):
         self.editor._interior[2].viewer.select(self.category.attachments())
@@ -98,7 +98,7 @@ class CategoryEditorTest(test.wxTestCase):
     def testEditMutualExclusiveSubcategories(self):
         self.editor._interior[0]._exclusiveSubcategoriesCheckBox.SetValue(True)
         self.editor._interior[0]._exclusiveSubcategoriesSync.onAttributeEdited(DummyEvent())
-        self.failUnless(self.category.hasExclusiveSubcategories())
+        self.assertTrue(self.category.hasExclusiveSubcategories())
 
     def testAddNote(self):
         viewer = self.editor._interior[1].viewer

@@ -485,7 +485,7 @@ class TaskFile(patterns.Observer):
                     self.__changes = allChanges
 
                     if self.__saving:
-                        for devGUID, changes in self.__changes.items():
+                        for devGUID, changes in list(self.__changes.items()):
                             if devGUID != self.__monitor.guid():
                                 changes.merge(self.__monitor)
 
@@ -557,7 +557,7 @@ class TaskFile(patterns.Observer):
 
     def restoreCategoryLinks(self, categoryMap):
         categories = self.categories()
-        for categoryId, categorizables in categoryMap.items():
+        for categoryId, categorizables in list(categoryMap.items()):
             try:
                 categoryToLink = categories.getObjectById(categoryId)
             except IndexError:

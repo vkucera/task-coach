@@ -36,7 +36,7 @@ class KNotifyNotifier(AbstractNotifier):
                 self.__factory = pydcop.anyAppCalled
 
     def getName(self):
-        return u'KNotify'
+        return 'KNotify'
 
     def isAvailable(self):
         return self.__factory is not None

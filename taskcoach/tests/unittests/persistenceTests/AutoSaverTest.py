@@ -78,25 +78,25 @@ class AutoSaverTestCase(test.TestCase):
         del self.autoSaver # Make sure AutoSaver is not observing task files
 
     def testCreate(self):
-        self.failIf(self.taskFile.saveCalled)
+        self.assertFalse(self.taskFile.saveCalled)
 
     def testFileChanged_ButNoFilenameAndAutoSaveOff(self):
         self.taskFile.tasks().append(task.Task())
         self.autoSaver.on_idle(dummy.Event())
-        self.failIf(self.taskFile.saveCalled)
+        self.assertFalse(self.taskFile.saveCalled)
 
     def testFileChanged_ButAutoSaveOff(self):
         self.settings.set('file', 'autosave', 'False')
         self.taskFile.setFilename('whatever.tsk')
         self.taskFile.tasks().append(task.Task())
         self.autoSaver.on_idle(dummy.Event())
-        self.failIf(self.taskFile.saveCalled)
+        self.assertFalse(self.taskFile.saveCalled)
 
     def testFileChanged_ButNoFilename(self):
         self.settings.set('file', 'autosave', 'True')
         self.taskFile.tasks().append(task.Task())
         self.autoSaver.on_idle(dummy.Event())
-        self.failIf(self.taskFile.saveCalled)
+        self.assertFalse(self.taskFile.saveCalled)
 
     def testFileChanged(self):
         self.settings.set('file', 'autosave', 'True')
@@ -125,7 +125,7 @@ class AutoSaverTestCase(test.TestCase):
         self.taskFile.setFilename('whatever.tsk')
         self.taskFile.load()
         self.autoSaver.on_idle(dummy.Event())
-        self.failIf(self.taskFile.saveCalled)
+        self.assertFalse(self.taskFile.saveCalled)
 
     def testLoadWithExceptionDoesNotTriggerAutoSave(self):
         self.settings.set('file', 'autosave', 'True')
@@ -135,7 +135,7 @@ class AutoSaverTestCase(test.TestCase):
         except IOError:
             pass
         self.autoSaver.on_idle(dummy.Event())
-        self.failIf(self.taskFile.saveCalled)
+        self.assertFalse(self.taskFile.saveCalled)
 
     def testMergeDoesTriggerAutoSave(self):
         self.settings.set('file', 'autosave', 'True')

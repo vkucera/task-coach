@@ -36,6 +36,7 @@ import wx, re, operator
 from . import base_uicommand
 from . import mixin_uicommand
 from . import settings_uicommand
+from functools import reduce
 
 
 class IOCommand(base_uicommand.UICommand):  # pylint: disable=W0223
@@ -1020,7 +1021,7 @@ class ViewerHideTasks(ViewerCommand, settings_uicommand.UICheckCommand):
                                               *args, **kwargs)
 
     def uniqueName(self):
-        return super().uniqueName() + '_' + unicode(self.__taskStatus)
+        return super().uniqueName() + '_' + str(self.__taskStatus)
 
     def isSettingChecked(self):
         return self.viewer.isHidingTaskStatus(self.__taskStatus)
@@ -1565,7 +1566,7 @@ class Mail(mixin_uicommand.NeedsSelectionMixin, ViewerCommand):
             # Try again with a dummy recipient:
             try:
                 mail('recipient@domain.com', subject, body)
-            except Exception, reason:  # pylint: disable=W0703
+            except Exception as reason:  # pylint: disable=W0703
                 showerror(_('Cannot send email:\n%s') % reason,
                       caption=_('%s mail error') % meta.name,
                       style=wx.ICON_ERROR)
@@ -1954,7 +1955,7 @@ def openAttachments(attachments, settings, showerror):
     for eachAttachment in attachments:
         try:
             eachAttachment.open(attachmentBase)
-        except Exception, instance:  # pylint: disable=W0703
+        except Exception as instance:  # pylint: disable=W0703
             showerror(render.exception(Exception, instance),
                       caption=_('Error opening attachment'),
                       style=wx.ICON_ERROR)
@@ -2089,7 +2090,7 @@ class URLCommand(base_uicommand.UICommand):
     def doCommand(self, event):
         try:
             openfile.openFile(self.url)
-        except Exception, reason:
+        except Exception as reason:
             wx.MessageBox(_('Cannot open URL:\n%s') % reason,
                       caption=_('%s URL error') % meta.name,
                       style=wx.ICON_ERROR)

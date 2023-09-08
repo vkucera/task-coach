@@ -66,7 +66,7 @@ class BookPage(wx.Panel):
 
     def __defaultFlags(self, controls):
         ''' Return the default flags for placing a list of controls. '''
-        labelInFirstColumn = type(controls[0]) in [type(''), type(u'')]
+        labelInFirstColumn = type(controls[0]) in [type(''), type('')]
         flags = []
         for columnIndex in range(len(controls)):
             flag = wx.ALL | wx.ALIGN_CENTER_VERTICAL
@@ -129,7 +129,7 @@ class BookPage(wx.Panel):
             span=(1, colspan), flag=flag, border=self._borderWidth)
 
     def __createStaticTextControlIfNeeded(self, control):
-        if type(control) in [type(''), type(u'')]:
+        if type(control) in [type(''), type('')]:
             control = wx.StaticText(self, label=control)
         return control
 

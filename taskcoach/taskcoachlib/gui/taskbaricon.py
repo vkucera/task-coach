@@ -196,8 +196,8 @@ class TaskBarIcon(patterns.Observer, wx.TaskBarIcon):
 
         textPart = ', '.join(textParts)
         filename = os.path.basename(self.__window.taskFile.filename())
-        namePart = u'%s - %s' % (meta.name, filename) if filename else meta.name
-        text = u'%s\n%s' % (namePart, textPart) if textPart else namePart
+        namePart = '%s - %s' % (meta.name, filename) if filename else meta.name
+        text = '%s\n%s' % (namePart, textPart) if textPart else namePart
 
         if text != self.__tooltipText:
             self.__tooltipText = text

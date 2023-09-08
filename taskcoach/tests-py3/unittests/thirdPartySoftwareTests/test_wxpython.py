@@ -33,7 +33,7 @@ class TextCtrlTest(tctest.wxTestCase):
         textCtrl.Bind(wx.EVT_TEXT, self.onTextChanged)
         textCtrl.Clear()
         if operating_system.isMac(): # pragma: no cover
-            self.failIf(self.clearTextCausesEvent)
+            self.assertFalse(self.clearTextCausesEvent)
         else: # pragma: no cover
             self.assertTrue(self.clearTextCausesEvent)
 

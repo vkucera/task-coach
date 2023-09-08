@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, StringIO
+import test, io
 from taskcoachlib import persistence, config
 from taskcoachlib.domain import task, date
 
@@ -24,7 +24,7 @@ from taskcoachlib.domain import task, date
 class TemplateXMLWriterTestCase(test.TestCase):
     def setUp(self):
         task.Task.settings = config.Settings(load=False)
-        self.fd = StringIO.StringIO()
+        self.fd = io.StringIO()
         self.fd.name = 'testfile.tsk'
         self.fd.encoding = 'utf-8'
         self.writer = persistence.TemplateXMLWriter(self.fd)
@@ -36,7 +36,7 @@ class TemplateXMLWriterTestCase(test.TestCase):
     
     def expectInXML(self, xmlFragment):
         xml = self.__writeAndRead()
-        self.failUnless(xmlFragment in xml, '%s not in %s'%(xmlFragment, xml))
+        self.assertTrue(xmlFragment in xml, '%s not in %s'%(xmlFragment, xml))
         
     # tests
     

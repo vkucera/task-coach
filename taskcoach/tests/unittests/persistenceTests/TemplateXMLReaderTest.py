@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import StringIO
+import io
 import test
 from taskcoachlib import persistence, config
 from taskcoachlib.domain import task
@@ -29,7 +29,7 @@ class TemplateXMLReaderTestCase(test.TestCase):
         super(TemplateXMLReaderTestCase, self).setUp()
         task.Task.settings = config.Settings(load=False)
 
-        self.fd = StringIO.StringIO()
+        self.fd = io.StringIO()
         self.fd.name = 'testfile.tsk'
         self.reader = persistence.TemplateXMLReader(self.fd)
         

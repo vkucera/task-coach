@@ -70,15 +70,15 @@ class EffortEditorTest(test.wxTestCase):
     def testInvalidEffort(self):    
         self.editor._interior._stopDateTimeEntry.SetValue(date.DateTime(1900, 1, 1))
         self.editor._interior.onDateTimeChanged(dummy.Event())
-        self.failUnless(self.editor._interior._invalidPeriodMessage.GetLabel())
+        self.assertTrue(self.editor._interior._invalidPeriodMessage.GetLabel())
         
     def testChangeTask(self):
         self.editor._interior._taskEntry.SetValue(self.task2)
         self.editor._interior._taskSync.onAttributeEdited(dummy.Event())
         self.assertEqual(self.task2, self.effort.task())
-        self.failIf(self.effort in self.task.efforts())
+        self.assertFalse(self.effort in self.task.efforts())
         
     def testChangeTaskDoesNotCloseEditor(self):
         self.editor._interior._taskEntry.SetValue(self.task2)
         self.editor._interior._taskSync.onAttributeEdited(dummy.Event())
-        self.failIf(self.editor.editorClosed)
+        self.assertFalse(self.editor.editorClosed)

@@ -23,7 +23,7 @@ from taskcoachlib.thirdparty import snarl
 
 class SnarlNotifier(AbstractNotifier):
     def getName(self):
-        return u'Snarl'
+        return 'Snarl'
 
     def isAvailable(self):
         try:

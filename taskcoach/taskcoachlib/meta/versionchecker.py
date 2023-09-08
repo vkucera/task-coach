@@ -42,7 +42,7 @@ class VersionChecker(threading.Thread):
         except:
             if self.verbose:
                 self.notifyUser(version.NoVersionDialog,
-                                message=''.join(traceback.format_exception_only(sys.exc_type, sys.exc_value)))
+                                message=''.join(traceback.format_exception_only(sys.exc_info()[0], sys.exc_info()[1])))
         else:
             if latestVersion < currentVersion and self.verbose:
                 self.notifyUser(version.PrereleaseVersionDialog, latestVersionString)

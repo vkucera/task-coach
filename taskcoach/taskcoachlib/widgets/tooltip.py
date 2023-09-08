@@ -144,7 +144,7 @@ elif operating_system.isMac():
             # displays...
 
             self.__maxWidth, self.__maxHeight = 0, 0
-            for index in xrange(wx.Display.GetCount()):
+            for index in range(wx.Display.GetCount()):
                 x, y, width, height = wx.Display(index).GetGeometry()
                 self.__maxWidth = max(self.__maxWidth, x + width)
                 self.__maxHeight = max(self.__maxHeight, y + height)

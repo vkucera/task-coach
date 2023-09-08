@@ -49,8 +49,8 @@ class ArtProvider(wx.ArtProvider):
             # Just drawing works fine on OS X but clips to the destination bitmap on
             # other platforms. There doesn't seem to be anything better than this.
             resultAlpha = list()
-            for y in xrange(h):
-                for x in xrange(w):
+            for y in range(h):
+                for x in range(w):
                     alpha = mainAlpha[y * w + x]
                     if x >= w / 2 and y >= h / 2:
                         alpha = max(alpha, overlayAlpha[(y - h / 2) * w / 2 + x - w / 2])
@@ -65,7 +65,7 @@ class ArtProvider(wx.ArtProvider):
         if not artId:
             return wx.EmptyBitmap(*size)
         catalogKey = '%s%dx%d' % (artId, size[0], size[1])
-        if catalogKey in icons.catalog.keys():
+        if catalogKey in list(icons.catalog.keys()):
             bitmap = icons.catalog[catalogKey].getBitmap()
             if artClient == wx.ART_FRAME_ICON:
                 bitmap = self.convertAlphaToMask(bitmap)
@@ -228,7 +228,7 @@ chooseableItemImages = dict( \
     weather_sunny_icon=_('Partly sunny'),
     wrench_icon=_('Wrench'))
 
-itemImages = chooseableItemImages.keys() + ['folder_blue_open_icon',
+itemImages = list(chooseableItemImages.keys()) + ['folder_blue_open_icon',
     'folder_green_open_icon', 'folder_grey_open_icon',
     'folder_orange_open_icon', 'folder_red_open_icon',
     'folder_purple_open_icon', 'folder_yellow_open_icon',

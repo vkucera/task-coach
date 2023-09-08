@@ -53,7 +53,7 @@ def randomFont():
                                                      wx.FONTWEIGHT_NORMAL])))
 
 def randomIcon():
-    return randomThing(lambda: random.choice(artprovider.chooseableItemImages.keys()))
+    return randomThing(lambda: random.choice(list(artprovider.chooseableItemImages.keys())))
 
 def randomDateTime(chanceNone=0.5):
     if random.random() < chanceNone:
@@ -112,7 +112,7 @@ def generateTask(index, categories, children=3, chanceNextLevel=0.2):
                         priority=random.randint(0,100),
                         efforts=efforts,
                         description=randomDescription())
-    print newTask.subject(recursive=True)
+    print(newTask.subject(recursive=True))
     assignCategories(newTask, categories)
     if random.random() < chanceNextLevel:
         for childNr in range(children):

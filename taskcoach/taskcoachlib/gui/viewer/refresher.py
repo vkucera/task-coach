@@ -78,10 +78,10 @@ class SecondRefresher(patterns.Observer, wx.EvtHandler):
         super().removeInstance()
 
     def onItemAdded(self, event):
-        self.addTrackedItems(self.trackedItems(event.values()))
+        self.addTrackedItems(self.trackedItems(list(event.values())))
         
     def onItemRemoved(self, event): 
-        self.removeTrackedItems(self.trackedItems(event.values()))
+        self.removeTrackedItems(self.trackedItems(list(event.values())))
 
     def onTrackingChanged(self, newValue, sender):
         if sender not in self.__presentation:

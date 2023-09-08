@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, StringIO
+import test, io
 from taskcoachlib import persistence, config, gui
 from taskcoachlib.domain import task, category, date
 
@@ -26,7 +26,7 @@ from taskcoachlib.domain import task, category, date
 class TodoTxtWriterTestCase(test.wxTestCase):
     def setUp(self):
         self.settings = task.Task.settings = config.Settings(load=False)
-        self.file = StringIO.StringIO()
+        self.file = io.StringIO()
         self.writer = persistence.TodoTxtWriter(self.file, 'whatever.tsk')
         self.settings.set('taskviewer', 'treemode', 'False')
         self.taskFile = persistence.TaskFile()

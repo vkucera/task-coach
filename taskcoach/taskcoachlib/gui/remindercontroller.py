@@ -50,10 +50,10 @@ class ReminderController:
         self.effortList = effortList
 
     def onAddTask(self, event):
-        self.__registerRemindersForTasks(event.values())
+        self.__registerRemindersForTasks(list(event.values()))
 
     def onRemoveTask(self, event):
-        self.__removeRemindersForTasks(event.values())
+        self.__removeRemindersForTasks(list(event.values()))
 
     def onSetReminder(self, newValue, sender):  # pylint: disable=W0613
         self.__removeRemindersForTasks([sender])

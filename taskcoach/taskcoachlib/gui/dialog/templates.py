@@ -170,16 +170,16 @@ class TemplatesDialog(sized_controls.SizedDialog):
                 task = self._templateList.GetItemData(selection).GetData()
                 if task is None:
                     for ctrl in self._taskControls:
-                        ctrl.SetValue(u'')
+                        ctrl.SetValue('')
                 else:
                     self._subjectCtrl.SetValue(task.subject())
-                    self._plannedStartDateTimeCtrl.SetValue(task.plannedstartdatetmpl or u'')
-                    self._dueDateTimeCtrl.SetValue(task.duedatetmpl or u'')
-                    self._completionDateTimeCtrl.SetValue(task.completiondatetmpl or u'')
-                    self._reminderDateTimeCtrl.SetValue(task.remindertmpl or u'')
+                    self._plannedStartDateTimeCtrl.SetValue(task.plannedstartdatetmpl or '')
+                    self._dueDateTimeCtrl.SetValue(task.duedatetmpl or '')
+                    self._completionDateTimeCtrl.SetValue(task.completiondatetmpl or '')
+                    self._reminderDateTimeCtrl.SetValue(task.remindertmpl or '')
             else:
                 for ctrl in self._taskControls:
-                    ctrl.SetValue(u'')
+                    ctrl.SetValue('')
         finally:
             self._changing = False
 

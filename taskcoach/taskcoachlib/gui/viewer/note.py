@@ -111,7 +111,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,  # pylint: disable=W0223
                 setting='modificationDateTime', viewer=self)]
 
     def _createColumns(self):
-        orderingColumn = widgets.Column('ordering', u'',
+        orderingColumn = widgets.Column('ordering', '',
             width=self.getColumnWidth('ordering'),
             resizeCallback=self.onResizeColumn,
             renderCallback=lambda note: '',

@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-import TreeCtrlTest
+from . import TreeCtrlTest
 from unittests import dummy
 from taskcoachlib import widgets
 

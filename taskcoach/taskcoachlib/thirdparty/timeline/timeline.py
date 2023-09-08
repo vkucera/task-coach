@@ -26,7 +26,7 @@ class HotMap:
 
     def findNodeAtPosition(self, position, parent=None):
         ''' Retrieve the node at the given position. '''
-        for node, rect in self.rects.items():
+        for node, rect in list(self.rects.items()):
             if rect.Contains(position):
                 return self[node].findNodeAtPosition(position, node)
         return parent
@@ -426,12 +426,12 @@ def main():
     size = 3
     if len(sys.argv) > 1:
         if sys.argv[1] in ('-h', '--help'):
-            print usage
+            print(usage)
         else:
             try:
                 size = int(sys.argv[1])
             except ValueError:
-                print usage
+                print(usage)
     else:
         app = TestApp(size)
         app.MainLoop()

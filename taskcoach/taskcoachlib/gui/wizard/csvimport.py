@@ -164,13 +164,13 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
                 reader = csv.reader(fp, dialect=self.dialect)
 
                 if self.hasHeaders.GetValue():
-                    self.headers = [header.decode('UTF-8') for header in reader.next()]
+                    self.headers = [header.decode('UTF-8') for header in next(reader)]
                 else:
                     # In some cases, empty fields are omitted if they're at the end...
                     hsize = 0
                     for line in reader:
                         hsize = max(hsize, len(line))
-                    self.headers = [_('Field #%d') % idx for idx in xrange(hsize)]
+                    self.headers = [_('Field #%d') % idx for idx in range(hsize)]
                     fp.seek(0)
                     reader = csv.reader(fp, dialect=self.dialect)
 
@@ -208,7 +208,7 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
         stopRows = [row for row, dummy_column in self.grid.GetSelectionBlockBottomRight()]
         selectedRows = []
         for startRow, stopRow in zip(startRows, stopRows):
-            selectedRows.extend(range(startRow, stopRow + 1))
+            selectedRows.extend(list(range(startRow, stopRow + 1)))
         return selectedRows
 
     def CanGoNext(self):

@@ -23,7 +23,7 @@ from taskcoachlib.domain.task import Task
 from taskcoachlib.thirdparty.dateutil import parser as dparser
 import csv
 import tempfile
-import StringIO
+import io
 import re
 import math
 
@@ -36,7 +36,7 @@ class CSVReader:
     def createReader(self, fp, dialect, hasHeaders):
         reader = csv.reader(fp, dialect=dialect)
         if hasHeaders:
-            reader.next()
+            next(reader)
         return reader
 
     def read(self, **kwargs):
@@ -57,7 +57,7 @@ class CSVReader:
                 continue
             subject = _('No subject')
             id_ = None
-            description = StringIO.StringIO()
+            description = io.StringIO()
             categories = []
             priority = 0
             actualStartDateTime = None
@@ -77,7 +77,7 @@ class CSVReader:
                     subject = fieldValue.decode('UTF-8')
                 elif kwargs['mappings'][idx] == _('Description'):
                     description.write(fieldValue.decode('UTF-8'))
-                    description.write(u'\n')
+                    description.write('\n')
                 elif kwargs['mappings'][idx] == _('Category') and fieldValue:
                     name = fieldValue.decode('UTF-8')
                     if name.startswith('(') and name.endswith(')'):
@@ -157,7 +157,7 @@ class CSVReader:
 
         if tasksById:
             ids = []
-            for id_, task in tasksById.items():
+            for id_, task in list(tasksById.items()):
                 try:
                     ids.append(tuple(map(int, id_.split('.'))))
                 except ValueError:

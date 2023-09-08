@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import command
 from taskcoachlib.domain import attachment, task, note, category
-from CommandTestCase import CommandTestCase
+from .CommandTestCase import CommandTestCase
 
 
 class AddAttachmentTestsMixin:
@@ -36,9 +36,9 @@ class AddAttachmentTestsMixin:
 
     def testAddOneAttachmentToTwoItems(self):
         self.addAttachment([self.item1, self.item2])
-        self.assertDoUndoRedo(lambda: self.failUnless([self.attachment] == \
+        self.assertDoUndoRedo(lambda: self.assertTrue([self.attachment] == \
             self.item1.attachments() == self.item2.attachments()),
-            lambda: self.failUnless([] == self.item1.attachments() == \
+            lambda: self.assertTrue([] == self.item1.attachments() == \
             self.item2.attachments()))
 
 
