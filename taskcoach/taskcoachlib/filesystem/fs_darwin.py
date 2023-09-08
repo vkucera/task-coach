@@ -89,7 +89,7 @@ class FileMonitor(object):
 
         self.callback = callback
 
-        if isinstance(filename, unicode):
+        if isinstance(filename, str):
             filename = filename.encode('UTF-8') # Not sure...
 
         self._filename = filename

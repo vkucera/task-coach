@@ -349,7 +349,7 @@ class TaskSorterTreeModeTest(test.TestCase):
     def testSortByDueDateTime(self):
         self.sorter.sortBy('dueDateTime')
         self.child2.setDueDateTime(date.Now().endOfDay())
-        self.failUnless(list(self.sorter).index(self.parent2) < \
+        self.assertTrue(list(self.sorter).index(self.parent2) < \
             list(self.sorter).index(self.parent1))
 
     def testSortByPriority(self):
@@ -357,14 +357,14 @@ class TaskSorterTreeModeTest(test.TestCase):
         self.sorter.sortAscending(False)
         self.parent1.setPriority(5)
         self.child2.setPriority(10)
-        self.failUnless(list(self.sorter).index(self.parent2) < \
+        self.assertTrue(list(self.sorter).index(self.parent2) < \
             list(self.sorter).index(self.parent1))
 
     def testSortByCategories_WhenParentsHaveNoCategories(self):
         self.child1.addCategory(category.Category('Category 2'))
         self.child2.addCategory(category.Category('Category 1'))
         self.sorter.sortBy('categories')
-        self.failUnless(list(self.sorter).index(self.parent2) < \
+        self.assertTrue(list(self.sorter).index(self.parent2) < \
             list(self.sorter).index(self.parent1))
 
     def testSortByCategories_WhenParentCategoryEqualsChildCategoryOfAnotherParent(self):
@@ -375,7 +375,7 @@ class TaskSorterTreeModeTest(test.TestCase):
         self.parent1.addCategory(category3)
         self.parent2.addCategory(category2)
         self.sorter.sortBy('categories')
-        self.failUnless(list(self.sorter).index(self.parent2) < \
+        self.assertTrue(list(self.sorter).index(self.parent2) < \
             list(self.sorter).index(self.parent1))
         
     def testSetSorterToListMode(self):

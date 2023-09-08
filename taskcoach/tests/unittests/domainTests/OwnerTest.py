@@ -22,8 +22,7 @@ from taskcoachlib.domain import base
 from taskcoachlib import patterns
 
 
-class OwnerUnderTest(base.Object):
-    __metaclass__ = base.DomainObjectOwnerMetaclass
+class OwnerUnderTest(base.Object, metaclass=base.DomainObjectOwnerMetaclass):
     __ownedType__ = 'Foo'
     
 
@@ -45,7 +44,7 @@ class OwnerTest(test.TestCase):
         patterns.Publisher().registerObserver(self.onEvent, 
             self.owner.foosChangedEventType())
         self.owner.setFoos([])
-        self.failIf(self.events)
+        self.assertFalse(self.events)
         
     def testSetObjects_NotificationWhenCanged(self):
         patterns.Publisher().registerObserver(self.onEvent, 
@@ -55,4 +54,4 @@ class OwnerTest(test.TestCase):
 
     def testRemoveNoObjects(self):
         self.owner.removeFoos()
-        self.failIf(self.owner.foos())
+        self.assertFalse(self.owner.foos())

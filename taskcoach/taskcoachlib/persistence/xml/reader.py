@@ -26,7 +26,7 @@ from taskcoachlib.i18n import translate
 from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
 from taskcoachlib.thirdparty.deltaTime import nlTimeExpression
 from taskcoachlib.thirdparty.guid import generate
-import StringIO
+import io
 import os
 import re
 import stat
@@ -104,7 +104,7 @@ class XMLReader(object):
         guid = self.__parse_guid_node(root.find('guid'))
         syncml_config = self.__parse_syncml_node(root, guid)
         
-        for object, modification_datetime in self.__modification_datetimes.iteritems():
+        for object, modification_datetime in self.__modification_datetimes.items():
             object.setModificationDateTime(modification_datetime)
 
         changesName = self.__fd.name + '.delta'
@@ -124,10 +124,10 @@ class XMLReader(object):
     def __fix_broken_lines(self):
         ''' Remove spurious newlines from element tags. '''
         self.__origFd = self.__fd  # pylint: disable=W0201
-        self.__fd = StringIO.StringIO()
+        self.__fd = io.StringIO()
         self.__fd.name = self.__origFd.name
         lines = self.__origFd.readlines()
-        for index in xrange(len(lines)):
+        for index in range(len(lines)):
             if lines[index].endswith('<TaskCoach-\n') or \
                lines[index].endswith('</TaskCoach-\n'):
                 lines[index] = lines[index][:-1]  # Remove newline
@@ -204,10 +204,10 @@ class XMLReader(object):
             mapCategorizables(theNote, categorizableMap, categoryMap)
 
         event = patterns.Event()
-        for categoryId, categorizableIds in self.__categorizables.items():
+        for categoryId, categorizableIds in list(self.__categorizables.items()):
             theCategory = categoryMap[categoryId]
             for categorizableId in categorizableIds:
-                if categorizableMap.has_key(categorizableId):
+                if categorizableId in categorizableMap:
                     theCategorizable = categorizableMap[categorizableId]
                     theCategory.addCategorizable(theCategorizable)
                     theCategorizable.addCategory(theCategory, event=event)
@@ -248,7 +248,7 @@ class XMLReader(object):
         category_mapping = \
             self.__parse_category_nodes_within_task_nodes(task_nodes)
         subject_category_mapping = {}
-        for task_id, categories in category_mapping.items():
+        for task_id, categories in list(category_mapping.items()):
             for subject in categories:
                 if subject in subject_category_mapping:
                     cat = subject_category_mapping[subject]
@@ -256,7 +256,7 @@ class XMLReader(object):
                     cat = category.Category(subject)
                     subject_category_mapping[subject] = cat
                 self.__categorizables.setdefault(cat.id(), list()).append(task_id)
-        return subject_category_mapping.values()
+        return list(subject_category_mapping.values())
     
     def __parse_category_nodes_within_task_nodes(self, task_nodes):
         ''' In tskversion <=13 category nodes were subnodes of task nodes. '''
@@ -363,7 +363,7 @@ class XMLReader(object):
             font=self.__parse_font_description(node.attrib.get('font', '')),
             icon=self.__parse_icon(node.attrib.get('icon', '')),
             selectedIcon=self.__parse_icon(node.attrib.get('selectedIcon', '')),
-            ordering=long(node.attrib.get('ordering', '0L')))
+            ordering=int(node.attrib.get('ordering', '0L')))
 
         if self.__tskversion <= 20:
             attributes['attachments'] = \
@@ -518,7 +518,7 @@ class XMLReader(object):
     
     def __parse_text(self, node):
         ''' Parse the text from a node. '''
-        text = u'' if node is None else node.text or u''
+        text = '' if node is None else node.text or ''
         if self.__tskversion >= 24:
             # Strip newlines
             if text.startswith('\n'):
@@ -636,7 +636,7 @@ class TemplateXMLReader(XMLReader):
         if 'subject' in task_node.attrib:
             task_node.attrib['subject'] = translate(task_node.attrib['subject'])
         parsed_task = super(TemplateXMLReader, self)._parse_task_node(task_node)
-        for name, value in attrs.items():
+        for name, value in list(attrs.items()):
             setattr(parsed_task, name + 'tmpl', value)
         return parsed_task
 

@@ -31,7 +31,7 @@ class HistoryTest(test.TestCase, asserts.CommandAssertsMixin):
 
     def testSingleton(self):
         another = patterns.CommandHistory()
-        self.failUnless(self.commands is another)
+        self.assertTrue(self.commands is another)
 
     def testClear(self):
         self.command.do()
@@ -69,17 +69,17 @@ class HistoryTest(test.TestCase, asserts.CommandAssertsMixin):
         self.assertEqual('Redo %s'%self.command, self.commands.redostr())
 
     def testHasHistory(self):
-        self.failIf(self.commands.hasHistory())
+        self.assertFalse(self.commands.hasHistory())
         self.command.do()
-        self.failUnless(self.commands.hasHistory())
+        self.assertTrue(self.commands.hasHistory())
         self.commands.undo()
-        self.failIf(self.commands.hasHistory())
+        self.assertFalse(self.commands.hasHistory())
 
     def testHasFuture(self):
         self.command.do()
-        self.failIf(self.commands.hasFuture())
+        self.assertFalse(self.commands.hasFuture())
         self.commands.undo()
-        self.failUnless(self.commands.hasFuture())
+        self.assertTrue(self.commands.hasFuture())
         self.commands.redo()
-        self.failIf(self.commands.hasFuture())
+        self.assertFalse(self.commands.hasFuture())
 

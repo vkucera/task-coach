@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from wxevents import CalendarCanvas, CalendarPrintout, EVT_EVENT_SELECTION_CHANGED, EVT_EVENT_DATES_CHANGED
+from .wxevents import CalendarCanvas, CalendarPrintout, EVT_EVENT_SELECTION_CHANGED, EVT_EVENT_DATES_CHANGED
 from taskcoachlib.domain import date
 from taskcoachlib.widgets import draganddrop
 from taskcoachlib import command, render
@@ -162,7 +162,8 @@ class HierarchicalCalendar(tooltip.ToolTipMixin, CalendarCanvas):
     def DrawNow(self):
         return self.__drawNow
 
-    def SetTodayColor(self, (r, g, b)):
+    def SetTodayColor(self, xxx_todo_changeme):
+        (r, g, b) = xxx_todo_changeme
         super(HierarchicalCalendar, self).SetTodayColor(wx.Colour(r, g, b))
 
     def TodayColor(self):
@@ -215,7 +216,7 @@ class HierarchicalCalendar(tooltip.ToolTipMixin, CalendarCanvas):
             components.append(render.weekNumber(dateTime))
         if self.__hdrFormat & self.HDR_DATE:
             components.append(render.date(dateTime, humanReadable=True))
-        return u' - '.join(components)
+        return ' - '.join(components)
 
     def _DrawNow(self, gc, h):
         if self.__drawNow:

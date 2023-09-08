@@ -113,7 +113,7 @@ class ObjectTest(test.TestCase):
         domainObject = base.Object()
         weak = weakref.ref(domainObject)
         del domainObject # Assuming CPython
-        self.failUnless(weak() is None)
+        self.assertTrue(weak() is None)
 
     # Custom attributes tests:
 
@@ -149,7 +149,7 @@ class ObjectTest(test.TestCase):
         now = date.Now()
         creation_datetime = self.object.creationDateTime()
         minute = date.TimeDelta(seconds=60)
-        self.failUnless(now - minute < creation_datetime < now + minute)
+        self.assertTrue(now - minute < creation_datetime < now + minute)
         
     # Modification date/time tests:
     
@@ -183,16 +183,16 @@ class ObjectTest(test.TestCase):
         
     def testSetSubjectUnchangedDoesNotCauseNotification(self):
         self.object.setSubject('')
-        self.failIf(self.eventsReceived)
+        self.assertFalse(self.eventsReceived)
         
     def testSubjectChangedNotificationIsDifferentForSubclass(self):
         self.subclassObject.setSubject('New')
-        self.failIf(self.eventsReceived)
+        self.assertFalse(self.eventsReceived)
         
     # Description tests:
     
     def testDescriptionIsEmptyByDefault(self):
-        self.failIf(self.object.description())
+        self.assertFalse(self.object.description())
         
     def testSetDescriptionOnCreation(self):
         domainObject = base.Object(description='Hi')
@@ -211,11 +211,11 @@ class ObjectTest(test.TestCase):
 
     def testSetDescriptionUnchangedDoesNotCauseNotification(self):
         self.object.setDescription('')
-        self.failIf(self.eventsReceived)
+        self.assertFalse(self.eventsReceived)
 
     def testDescriptionChangedNotificationIsDifferentForSubclass(self):
         self.subclassObject.setDescription('New')
-        self.failIf(self.eventsReceived)
+        self.assertFalse(self.eventsReceived)
             
     # State tests:
     
@@ -235,7 +235,7 @@ class ObjectTest(test.TestCase):
                         icon='icon', selectedIcon='selectedIcon',
                         creationDateTime=date.DateTime(2012, 12, 12, 12, 0, 0),
                         modificationDateTime=date.DateTime(2012, 12, 12, 12, 1, 0),
-                        ordering=42L)
+                        ordering=42)
         self.object.__setstate__(newState)
         self.assertEqual(newState, self.object.__getstate__())
         
@@ -246,7 +246,7 @@ class ObjectTest(test.TestCase):
                         icon='icon', selectedIcon='selectedIcon',
                         creationDateTime=date.DateTime(2013, 1, 1, 0, 0, 0),
                         modificationDateTime=date.DateTime(2013, 1, 1, 1, 0, 0),
-                        ordering=42L)
+                        ordering=42)
         self.object.__setstate__(newState)
         self.assertEqual(1, len(self.eventsReceived))
         
@@ -259,7 +259,7 @@ class ObjectTest(test.TestCase):
     def testCopy_CreationDateTimeIsNotCopied(self):
         copy = self.object.copy()
         # Use >= to prevent failures on fast computers with low time granularity
-        self.failUnless(copy.creationDateTime() >= self.object.creationDateTime())
+        self.assertTrue(copy.creationDateTime() >= self.object.creationDateTime())
         
     def testCopy_ModificationDateTimeIsNotCopied(self):
         self.object.setModificationDateTime(date.DateTime(2013, 1, 1, 1, 0, 0))
@@ -421,20 +421,20 @@ class CompositeObjectTest(test.TestCase):
         self.compositeObject.removeChild(self.child)
 
     def testIsExpanded(self):
-        self.failIf(self.compositeObject.isExpanded())
+        self.assertFalse(self.compositeObject.isExpanded())
         
     def testExpand(self):
         self.compositeObject.expand()
-        self.failUnless(self.compositeObject.isExpanded())
+        self.assertTrue(self.compositeObject.isExpanded())
         
     def testCollapse(self):
         self.compositeObject.expand()
         self.compositeObject.expand(False)
-        self.failIf(self.compositeObject.isExpanded())
+        self.assertFalse(self.compositeObject.isExpanded())
         
     def testSetExpansionStateViaConstructor(self):
         compositeObject = base.CompositeObject(expandedContexts=['None'])
-        self.failUnless(compositeObject.isExpanded())
+        self.assertTrue(compositeObject.isExpanded())
 
     def testSetExpansionStatesViaConstructor(self):
         compositeObject = base.CompositeObject(expandedContexts=['context1',
@@ -444,14 +444,14 @@ class CompositeObjectTest(test.TestCase):
 
     def testExpandInContext_DoesNotChangeExpansionStateInDefaultContext(self):
         self.compositeObject.expand(context='some_viewer')
-        self.failIf(self.compositeObject.isExpanded())
+        self.assertFalse(self.compositeObject.isExpanded())
 
     def testExpandInContext_DoesChangeExpansionStateInGivenContext(self):
         self.compositeObject.expand(context='some_viewer')
-        self.failUnless(self.compositeObject.isExpanded(context='some_viewer'))
+        self.assertTrue(self.compositeObject.isExpanded(context='some_viewer'))
 
     def testIsExpandedInUnknownContext_ReturnsFalse(self):
-        self.failIf(self.compositeObject.isExpanded(context='whatever'))
+        self.assertFalse(self.compositeObject.isExpanded(context='whatever'))
 
     def testGetContextsWhereExpanded(self):
         self.assertEqual([], self.compositeObject.expandedContexts())
@@ -459,7 +459,7 @@ class CompositeObjectTest(test.TestCase):
     def testRecursiveSubject(self):
         self.compositeObject.setSubject('parent')
         self.addChild(subject='child')
-        self.assertEqual(u'parent -> child', self.child.subject(recursive=True))
+        self.assertEqual('parent -> child', self.child.subject(recursive=True))
         
     def testSubjectNotification(self):
         self.addChild(subject='child')
@@ -621,7 +621,7 @@ class CompositeObjectTest(test.TestCase):
         self.assertEqual(copy.expandedContexts(),
                          self.compositeObject.expandedContexts())
         self.compositeObject.expand(context='another_viewer')
-        self.failIf('another_viewer' in copy.expandedContexts())
+        self.assertFalse('another_viewer' in copy.expandedContexts())
         
     def testMarkDeleted(self):
         self.addChild()

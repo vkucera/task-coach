@@ -54,7 +54,7 @@ class TaskStatus(object):
     def __neq__(self, other):
         return self.statusString != other.statusString
     
-    def __nonzero__(self):
+    def __bool__(self):
         return True
 
 

@@ -32,8 +32,8 @@ class VersionCheckerUnderTest(meta.VersionChecker):
         if self.retrievalException:
             raise self.retrievalException
         else:
-            import StringIO
-            return StringIO.StringIO('%s\n' % self.version)
+            import io
+            return io.StringIO('%s\n' % self.version)
             
     def parseVersionFile(self, versionFile):  # pylint: disable=W0221
         if self.parseException:
@@ -70,8 +70,8 @@ class VersionCheckerTest(test.TestCase):
         self.assertLastVersionNotified(meta.data.version)
         
     def testErrorWhileGettingPadFile(self):
-        import urllib2
-        retrievalException = urllib2.HTTPError(None, None, None, None, None)
+        import urllib.request, urllib.error, urllib.parse
+        retrievalException = urllib.error.HTTPError(None, None, None, None, None)
         self.assertLastVersionNotified(meta.data.version, retrievalException)
         
     def testExpatParsingError(self):
@@ -83,14 +83,14 @@ class VersionCheckerTest(test.TestCase):
     def testDontNotifyWhenCurrentVersionIsNewerThanLastVersionNotified(self):
         self.settings.set('version', 'notified', '0.0')
         checker = self.checkVersion(meta.data.version)
-        self.failIf(checker.userNotified)
+        self.assertFalse(checker.userNotified)
 
     def test9IsNotNewerThan10(self):
         currentVersion = meta.data.version
         meta.data.version = '0.72.10'
         self.settings.set('version', 'notified', '0.72.8')
         checker = self.checkVersion('0.72.9')
-        self.failIf(checker.userNotified)
+        self.assertFalse(checker.userNotified)
         meta.data.version = currentVersion
 
     def testShowDialog(self):
@@ -103,4 +103,4 @@ class VersionCheckerTest(test.TestCase):
                 
         checker = meta.VersionChecker(self.settings)
         dialog = checker.showDialog(DummyDialog, '1.0')
-        self.failUnless(dialog.shown)
+        self.assertTrue(dialog.shown)

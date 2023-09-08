@@ -109,7 +109,7 @@ class NoteTest(test.TestCase):
             parent=None, children=[], status=42, attachments=[], categories=[],
             fgColor=(1, 1, 1, 1), bgColor=(0, 0, 0, 255), font=wx.SWISS_FONT,
             icon='icon', selectedIcon='selected', creationDateTime=date.Now(),
-            modificationDateTime=date.Now(), ordering=42L))
+            modificationDateTime=date.Now(), ordering=42))
         self.assertEqual('new', self.note.description())
 
 
@@ -150,12 +150,12 @@ class NoteOwnerTest(test.TestCase):
     def testRemoveNote(self):
         self.noteOwner.addNote(self.note)
         self.noteOwner.removeNote(self.note)
-        self.failIf(self.noteOwner.notes())
+        self.assertFalse(self.noteOwner.notes())
         
     def testRemoveNotes(self):
         self.noteOwner.addNote(self.note)
         self.noteOwner.removeNotes(self.note)
-        self.failIf(self.noteOwner.notes())
+        self.assertFalse(self.noteOwner.notes())
         
     def testRemoveNoteNotification(self):
         self.noteOwner.addNote(self.note)

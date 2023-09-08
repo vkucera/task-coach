@@ -97,7 +97,7 @@ class CommonRecurrenceTestsMixin(object):
                 
     def testRecurringTaskIsNotCompletedWhenMarkedCompleted(self):
         self.task.setCompletionDateTime()
-        self.failIf(self.task.completed())
+        self.assertFalse(self.task.completed())
 
     def testMarkCompletedDoesNotSetReminderIfItWasNotSetPreviously(self):
         self.task.setCompletionDateTime()
@@ -167,12 +167,12 @@ class TaskWithDailyRecurrenceThatHasMaxRecurrenceCountFixture( \
     def testRecurLessThanMaxRecurrenceCount(self):
         for _ in range(self.maxRecurrenceCount):
             self.task.setCompletionDateTime()
-        self.failIf(self.task.completed())
+        self.assertFalse(self.task.completed())
           
     def testRecurExactlyMaxRecurrenceCount(self):
         for _ in range(self.maxRecurrenceCount + 1):
             self.task.setCompletionDateTime()
-        self.failUnless(self.task.completed())
+        self.assertTrue(self.task.completed())
         
 
 class TaskWithDailyRecurrenceBasedOnCompletionFixture(RecurringTaskTestCase,

@@ -63,7 +63,7 @@ class TranslationIntegrityTestsMixin(object):
         nrEnglishAmpersand = self.englishString.count('&')
         nrTranslatedAmpersand = translatedString.count('&')
         if nrEnglishAmpersand <= 1 and not '\n' in self.englishString:
-            self.failUnless(nrTranslatedAmpersand in [0, 1], 
+            self.assertTrue(nrTranslatedAmpersand in [0, 1], 
                 "'%s' has more than one '&'" % self.translatedString)
         else:
             self.assertEqual(nrEnglishAmpersand, nrTranslatedAmpersand,
@@ -80,7 +80,7 @@ class TranslationIntegrityTestsMixin(object):
             shortcutKey = shortcut, self.language
             timesUsed = self.usedShortcuts.get(shortcutKey, 0)
             timesAllowed = self.maxShortcuts.get(shortcut, 1)
-            self.failIf(timesUsed > timesAllowed, "Shortcut ('%s') used more "
+            self.assertFalse(timesUsed > timesAllowed, "Shortcut ('%s') used more "
                         "than once in language %s." % shortcutKey)
             self.usedShortcuts[shortcutKey] = timesUsed + 1
             
@@ -98,7 +98,7 @@ class TranslationIntegrityTestsMixin(object):
         ''' Test that the translated short cut key is using ASCII only. '''
         if '\t' in self.translatedString:
             shortcut = set(self.translatedString.split('\t')[1])
-            self.failUnless(shortcut & set(string.ascii_letters + string.digits))
+            self.assertTrue(shortcut & set(string.ascii_letters + string.digits))
             
     @staticmethod
     def ellipsisCount(text):
@@ -139,14 +139,14 @@ def installAllTestCaseClasses():
 
 
 def getLanguages():
-    return [(language, enabled) for language, enabled in meta.data.languages.values() \
+    return [(language, enabled) for language, enabled in list(meta.data.languages.values()) \
             if language is not None]
 
 
 def installTestCaseClasses(language, enabled, allStrings):
     translation = __import__('taskcoachlib.i18n.%s' % language, 
                              fromlist=['dict'])
-    for englishString, translatedString in translation.dict.iteritems():        
+    for englishString, translatedString in translation.dict.items():        
         installTranslationTestCaseClass(language, englishString, 
                                               translatedString)
     installLanguageTestCaseClass(language, enabled, translation, allStrings)

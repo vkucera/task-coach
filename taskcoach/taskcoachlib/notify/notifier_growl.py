@@ -32,7 +32,7 @@ class GrowlNotifier(AbstractNotifier):
         super(GrowlNotifier, self).__init__()
         try:
             # pylint: disable=E1101
-            self._notifier = Growl.GrowlNotifier(applicationName=meta.name, notifications=[u'Reminder'])
+            self._notifier = Growl.GrowlNotifier(applicationName=meta.name, notifications=['Reminder'])
             self._notifier.register()
         except:
             self._available = False  # pylint: disable=W0702
@@ -51,7 +51,7 @@ class GrowlNotifier(AbstractNotifier):
         os.close(fd)
         try:
             bitmap.SaveFile(filename, wx.BITMAP_TYPE_PNG)
-            self._notifier.notify(noteType=u'Reminder', icon=file(filename, 'rb').read(), title=title, description=summary,
+            self._notifier.notify(noteType='Reminder', icon=file(filename, 'rb').read(), title=title, description=summary,
                                   sticky=True)
         finally:
             os.remove(filename)

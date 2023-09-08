@@ -40,16 +40,16 @@ class CtrlWithHideableColumnsUnderTest( \
 
 class CtrlWithHideableColumnsTestsMixin(object):
     def testColumnIsVisibleByDefault(self):
-        self.failUnless(self.control.isColumnVisible(self.column1))
+        self.assertTrue(self.control.isColumnVisible(self.column1))
         
     def testHideColumn(self):
         self.control.showColumn(self.column1, show=False)
-        self.failIf(self.control.isColumnVisible(self.column1))
+        self.assertFalse(self.control.isColumnVisible(self.column1))
         
     def testShowColumn(self):
         self.control.showColumn(self.column1, show=False)
         self.control.showColumn(self.column1, show=True)
-        self.failUnless(self.control.isColumnVisible(self.column1))
+        self.assertTrue(self.control.isColumnVisible(self.column1))
         
         
 class CtrlWithHideableColumnsTest(CtrlWithColumnsTestCase, 

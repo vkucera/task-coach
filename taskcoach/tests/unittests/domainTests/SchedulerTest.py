@@ -33,12 +33,12 @@ class SchedulerTest(test.TestCase):
     def testScheduleAtDateTime(self):
         futureDate = date.Now() + date.TimeDelta(seconds=1)
         self.scheduler.schedule(self.callback, futureDate)
-        self.failUnless(self.scheduler.is_scheduled(self.callback))
+        self.assertTrue(self.scheduler.is_scheduled(self.callback))
         t0 = time.time()
         from twisted.internet import reactor
         while time.time() - t0 < 2.1:
             reactor.iterate()
-        self.failIf(self.scheduler.is_scheduled(self.callback))
+        self.assertFalse(self.scheduler.is_scheduled(self.callback))
         self.assertEqual(self.callCount, 1)
 
     @test.skipOnTwistedVersions('12.')
@@ -46,7 +46,7 @@ class SchedulerTest(test.TestCase):
         futureDate = date.Now() + date.TimeDelta(seconds=1)
         self.scheduler.schedule(self.callback, futureDate)
         self.scheduler.unschedule(self.callback)
-        self.failIf(self.scheduler.is_scheduled(self.callback))
+        self.assertFalse(self.scheduler.is_scheduled(self.callback))
         t0 = time.time()
         from twisted.internet import reactor
         while time.time() - t0 < 1.2:
@@ -57,10 +57,10 @@ class SchedulerTest(test.TestCase):
     def testScheduleAtPastDateTime(self):
         pastDate = date.Now() - date.TimeDelta(seconds=1)
         self.scheduler.schedule(self.callback, pastDate)
-        self.failIf(self.scheduler.is_scheduled(self.callback))
+        self.assertFalse(self.scheduler.is_scheduled(self.callback))
         from twisted.internet import reactor
         reactor.iterate()
-        self.failIf(self.scheduler.is_scheduled(self.callback))
+        self.assertFalse(self.scheduler.is_scheduled(self.callback))
         self.assertEqual(self.callCount, 1)
 
     @test.skipOnTwistedVersions('12.')

@@ -110,7 +110,7 @@ class IOControllerTest(test.TestCase):
         originalSaveAs = self.iocontroller.__class__.saveas
         self.iocontroller.__class__.saveas = saveasReplacement
         self.iocontroller.save()
-        self.failUnless(self.saveAsCalled)
+        self.assertTrue(self.saveAsCalled)
         self.iocontroller.__class__.saveas = originalSaveAs
     
     def testIOErrorOnSave(self):
@@ -127,7 +127,7 @@ class IOControllerTest(test.TestCase):
             self.showerrorCalled = True  # pylint: disable=W0201
             
         self.iocontroller.save(showerror=showerror)
-        self.failUnless(self.showerrorCalled and self.saveAsCalled)
+        self.assertTrue(self.showerrorCalled and self.saveAsCalled)
         self.iocontroller.__class__.saveas = originalSaveAs
 
     def testIOErrorOnSaveAs(self):
@@ -144,7 +144,7 @@ class IOControllerTest(test.TestCase):
             self.iocontroller.__class__.saveas = saveasReplacement
             
         self.iocontroller.saveas(filename=self.filename1, showerror=showerror)
-        self.failUnless(self.showerrorCalled and self.saveAsCalled)
+        self.assertTrue(self.showerrorCalled and self.saveAsCalled)
         self.iocontroller.__class__.saveas = originalSaveAs
     
     def testSaveSelectionAddsCategories(self):
@@ -192,7 +192,7 @@ class IOControllerTest(test.TestCase):
             
         self.taskFile.tasks().append(task.Task())
         self.iocontroller._saveSave(self.taskFile, showerror)  # pylint: disable=W0212
-        self.failUnless(self.showerrorCalled)
+        self.assertTrue(self.showerrorCalled)
 
     def testIOErrorOnExport(self):
         self.taskFile.setFilename(self.filename1)
@@ -206,26 +206,26 @@ class IOControllerTest(test.TestCase):
         
         self.iocontroller.exportAsHTML(None, filename="Don't ask", 
                                        openfile=openfile, showerror=showerror)
-        self.failUnless(self.showerrorCalled)
+        self.assertTrue(self.showerrorCalled)
         
     def testNothingDeleted(self):
         self.taskFile.tasks().append(task.Task(subject='Task'))
         self.taskFile.notes().append(note.Note(subject='Note'))
-        self.failIf(self.iocontroller.hasDeletedItems())
+        self.assertFalse(self.iocontroller.hasDeletedItems())
 
     def testNoteDeleted(self):
         self.taskFile.tasks().append(task.Task(subject='Task'))
         myNote = note.Note(subject='Note')
         myNote.markDeleted()
         self.taskFile.notes().append(myNote)
-        self.failUnless(self.iocontroller.hasDeletedItems())
+        self.assertTrue(self.iocontroller.hasDeletedItems())
 
     def testTaskDeleted(self):
         myTask = task.Task(subject='Task')
         myTask.markDeleted()
         self.taskFile.tasks().append(myTask)
         self.taskFile.notes().append(note.Note(subject='Note'))
-        self.failUnless(self.iocontroller.hasDeletedItems())
+        self.assertTrue(self.iocontroller.hasDeletedItems())
 
     def testPurgeNothing(self):
         myTask = task.Task(subject='Task')
@@ -282,7 +282,7 @@ class IOControllerTest(test.TestCase):
             
         self.iocontroller._IOController__askOpenUnlocked = askOpenUnlocked
         self.iocontroller.open(self.filename1, fileExists=lambda filename: True)
-        self.failUnless(self.askOpenUnlockedCalled)
+        self.assertTrue(self.askOpenUnlockedCalled)
 
     def testOpenWhenAlreadyLocked(self):
         self.taskFile.raiseError = lockfile.LockTimeout
@@ -292,7 +292,7 @@ class IOControllerTest(test.TestCase):
             
         self.iocontroller._IOController__askBreakLock = askBreakLock
         self.iocontroller.open(self.filename1, fileExists=lambda filename: True)
-        self.failUnless(self.askBreakLockCalled)
+        self.assertTrue(self.askBreakLockCalled)
 
 
 class IOControllerOverwriteExistingFileTest(test.TestCase):
@@ -321,21 +321,21 @@ class IOControllerOverwriteExistingFileTest(test.TestCase):
         
     def testCancelSaveAsExistingFile(self):
         self.iocontroller.saveas(fileExists=lambda filename: True)
-        self.failUnless(self.userWarned)
+        self.assertTrue(self.userWarned)
         
     def testCancelSaveSelectionToExistingFile(self):
         self.iocontroller.saveselection([], fileExists=lambda filename: True)
-        self.failUnless(self.userWarned)
+        self.assertTrue(self.userWarned)
         
     def testCancelExportAsHTMLToExistingFile(self):
         self.iocontroller.exportAsHTML(None, fileExists=lambda filename: True)
-        self.failUnless(self.userWarned)
+        self.assertTrue(self.userWarned)
         
     def testCancelExportAsCSVToExistingFile(self):
         self.iocontroller.exportAsCSV(None, fileExists=lambda filename: True)
-        self.failUnless(self.userWarned)
+        self.assertTrue(self.userWarned)
         
     def testCancelExportAsICalendarToExistingFile(self):
         self.iocontroller.exportAsICalendar(None, 
                                             fileExists=lambda filename: True)
-        self.failUnless(self.userWarned)
+        self.assertTrue(self.userWarned)

@@ -152,11 +152,11 @@ class EffortListTracker(patterns.Observer, Publisher):
         return self.__trackedEfforts
 
     def onEffortAdded(self, event):
-        self.__trackedEfforts.extend(self.__filterTrackedEfforts(event.values()))
+        self.__trackedEfforts.extend(self.__filterTrackedEfforts(list(event.values())))
         self.sendMessage('effortlisttracker.changed.added', efforts=self.__trackedEfforts)
 
     def onEffortRemoved(self, event):
-        for effort in event.values():
+        for effort in list(event.values()):
             if effort in self.__trackedEfforts:
                 self.__trackedEfforts.remove(effort)
         self.sendMessage('effortlisttracker.changed.removed', efforts=self.__trackedEfforts)

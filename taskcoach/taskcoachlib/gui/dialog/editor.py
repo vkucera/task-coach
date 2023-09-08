@@ -89,7 +89,7 @@ class Page(patterns.Observer, widgets.BookPage):
 
     def close(self):
         self.removeInstance()
-        for entry in self.entries().values():
+        for entry in list(self.entries().values()):
             if isinstance(entry, widgets.DateTimeCtrl):
                 entry.Cleanup()
         
@@ -134,7 +134,7 @@ class SubjectPage(Page):
     def addDescriptionEntry(self):
         # pylint: disable=W0201
         def combined_description(items):
-            return u'[%s]\n\n' % _('Edit to change all descriptions') + \
+            return '[%s]\n\n' % _('Edit to change all descriptions') + \
                 '\n\n'.join(item.description() for item in items)
 
         current_description = self.items[0].description() \
@@ -756,7 +756,7 @@ class CategoriesPage(PageWithViewer):
                                    use_separate_settings_section=False)
         
     def onCategoryChanged(self, event):
-        self.viewer.refreshItems(*event.values())
+        self.viewer.refreshItems(*list(event.values()))
         
     def entries(self):
         if self.__realized and hasattr(self, 'viewer'):
@@ -949,7 +949,7 @@ class EditBook(widgets.Notebook):
         return None
 
     def getPageIndex(self, page_name):
-        for index in xrange(self.GetPageCount()):
+        for index in range(self.GetPageCount()):
             if page_name == self[index].pageName:
                 return index
         return None
@@ -1050,7 +1050,7 @@ class EditBook(widgets.Notebook):
         self.SetSelection(current_page)
         self.GetPage(current_page).SetFocus()
 
-        for idx in xrange(self.GetPageCount()):
+        for idx in range(self.GetPageCount()):
             page = self.GetPage(idx)
             if page.IsShown():
                 page.selected()
@@ -1085,10 +1085,10 @@ class EditBook(widgets.Notebook):
     def __create_settings_section(self, section):
         ''' Create the section and initialize the options in the section. '''
         self.settings.add_section(section)
-        for option, value in dict(perspective='', 
+        for option, value in list(dict(perspective='', 
                                   pages=str(self.__pages_to_create()),
                                   size='(-1, -1)', position='(-1, -1)',
-                                  maximized='False').items():
+                                  maximized='False').items()):
             self.settings.init(section, option, value)
         
     def close_edit_book(self):
@@ -1308,9 +1308,9 @@ class EffortEditBook(Page):
             distinctDescriptions = set(item.description() for item in items)
             if len(distinctDescriptions) == 1 and distinctDescriptions.pop():
                 return items[0].description()
-            lines = [u'[%s]' % _('Edit to change all descriptions')]
+            lines = ['[%s]' % _('Edit to change all descriptions')]
             lines.extend(item.description() for item in items if item.description())
-            return u'\n\n'.join(lines)
+            return '\n\n'.join(lines)
                 
         current_description = self.items[0].description() if len(self.items) == 1 else combined_description(self.items)
         self._descriptionEntry = widgets.MultiLineTextCtrl(self, current_description)
@@ -1456,7 +1456,7 @@ class Editor(BalloonTipManager, widgets.Dialog):
             of the item involved and close the whole editor if there are no 
             tabs left. '''
         if self:  # Prevent _wxPyDeadObject TypeError
-            self.__call_after(self.__close_if_item_is_deleted, event.values())
+            self.__call_after(self.__close_if_item_is_deleted, list(event.values()))
         
     def __close_if_item_is_deleted(self, items):
         for item in items:

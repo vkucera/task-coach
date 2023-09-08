@@ -32,9 +32,9 @@ class TextCtrlTest(test.wxTestCase):
         textCtrl.Bind(wx.EVT_TEXT, self.onTextChanged)
         textCtrl.Clear()
         if operating_system.isMac(): # pragma: no cover
-            self.failIf(self.clearTextCausesEvent)
+            self.assertFalse(self.clearTextCausesEvent)
         else: # pragma: no cover
-            self.failUnless(self.clearTextCausesEvent)
+            self.assertTrue(self.clearTextCausesEvent)
 
     def onTextChanged(self, event): # pylint: disable=W0613
         self.clearTextCausesEvent = True # pragma: no cover pylint: disable=W0201 

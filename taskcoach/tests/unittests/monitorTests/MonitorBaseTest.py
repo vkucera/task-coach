@@ -32,7 +32,7 @@ class MonitorBaseTest(test.TestCase):
 
         self.list = self.listClass()
         self.monitor.monitorCollection(self.list)
-        self.obj = self.klass(subject=u'New object')
+        self.obj = self.klass(subject='New object')
         self.list.append(self.obj)
 
     def tearDown(self):
@@ -100,14 +100,14 @@ class MonitorObjectTest(MonitorBaseTest):
         self.doTestAttributeDidNotChange('appearance', 'foo', 'selectedIcon')
 
     def testNewObject(self):
-        obj = self.klass(subject=u'New')
+        obj = self.klass(subject='New')
         self.list.append(obj)
         self.assertEqual(self.monitor.getChanges(obj), None)
 
     def testDeletedObject(self):
         self.monitor.setChanges(self.obj.id(), set())
         self.list.remove(self.obj)
-        self.failUnless(self.monitor.isRemoved(self.obj))
+        self.assertTrue(self.monitor.isRemoved(self.obj))
 
     def testRemoveAdd(self):
         self.monitor.resetChanges(self.obj)
@@ -116,7 +116,7 @@ class MonitorObjectTest(MonitorBaseTest):
         self.assertEqual(self.monitor.getChanges(self.obj), set(['subject', '__del__']))
         self.list.append(self.obj)
         self.assertEqual(self.monitor.getChanges(self.obj), set(['subject']))
-        self.failIf(self.monitor.isRemoved(self.obj))
+        self.assertFalse(self.monitor.isRemoved(self.obj))
 
 
 class MonitorCompositeObjectTest(MonitorObjectTest):
@@ -125,7 +125,7 @@ class MonitorCompositeObjectTest(MonitorObjectTest):
     def setUp(self):
         super(MonitorCompositeObjectTest, self).setUp()
 
-        self.child = self.klass(subject=u'Child')
+        self.child = self.klass(subject='Child')
         self.obj.addChild(self.child)
 
     def testNewChild(self):

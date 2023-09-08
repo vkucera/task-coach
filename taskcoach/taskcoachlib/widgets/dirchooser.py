@@ -24,7 +24,7 @@ class DirectoryChooser(wx.Panel):
     def __init__(self, *args, **kwargs):
         super(DirectoryChooser, self).__init__(*args, **kwargs)
 
-        self.chooser = wx.DirPickerCtrl(self, wx.ID_ANY, u'')
+        self.chooser = wx.DirPickerCtrl(self, wx.ID_ANY, '')
         self.checkbx = wx.CheckBox(self, wx.ID_ANY, _('None'))
 
         sz = wx.BoxSizer(wx.VERTICAL)
@@ -43,13 +43,13 @@ class DirectoryChooser(wx.Panel):
             self.chooser.SetPath(pth)
         else:
             self.checkbx.SetValue(True)
-            self.chooser.SetPath(u'')
+            self.chooser.SetPath('')
             self.chooser.Enable(False)
 
     def GetPath(self):
         if not self.checkbx.GetValue():
             return self.chooser.GetPath()
-        return u''
+        return ''
 
     def OnCheck(self, evt):
         self.chooser.Enable(not evt.IsChecked())

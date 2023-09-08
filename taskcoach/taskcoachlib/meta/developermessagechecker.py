@@ -18,13 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from . import data
 import threading
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 
 class DeveloperMessageChecker(threading.Thread):
     ''' Check for messages from the developers on the website. '''
     
-    def __init__(self, settings, urlopen=urllib2.urlopen, call_after=None):
+    def __init__(self, settings, urlopen=urllib.request.urlopen, call_after=None):
         self.__settings = settings
         self.__urlopen = urlopen
         self.__call_after = call_after or self.__wx_call_after

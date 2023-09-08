@@ -105,9 +105,7 @@ class wxApp(wx.App):
             event.Skip()
 
 
-class Application(object):
-    __metaclass__ = patterns.Singleton
-    
+class Application(object, metaclass=patterns.Singleton):
     def __init__(self, options=None, args=None, **kwargs):
         self._options = options
         self._args = args
@@ -158,7 +156,7 @@ class Application(object):
 
         # Monkey-patching older versions because of https://twistedmatrix.com/trac/ticket/3948
         import twisted
-        if map(int, twisted.__version__.split('.')) < (11,):
+        if list(map(int, twisted.__version__.split('.'))) < (11,):
             from twisted.internet import reactor
             if wxreactor.WxReactor.callFromThread is not None:
                 oldStop = wxreactor.WxReactor.stop

@@ -18,17 +18,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, StringIO, time
+import test, io, time
 from taskcoachlib import persistence, gui, config, meta
 from taskcoachlib.domain import task, effort, date
 
 
-class UTF8StringIO(StringIO.StringIO):
+class UTF8StringIO(io.StringIO):
     """
     Mimic codecs.open; encodes on the fly in UTF-8
     """
     def write(self, u):
-        StringIO.StringIO.write(self, u.encode('UTF-8'))
+        io.StringIO.write(self, u.encode('UTF-8'))
 
 
 class VCalTestCase(test.wxTestCase):
@@ -79,8 +79,8 @@ class VCalendarCommonTestsMixin(object):
 class VCalEffortWriterTestCase(VCalTestCase):
     def setUp(self):
         super(VCalEffortWriterTestCase, self).setUp()        
-        self.task1 = task.Task(u'Task 1')
-        self.effort1 = effort.Effort(self.task1, description=u'Description',
+        self.task1 = task.Task('Task 1')
+        self.effort1 = effort.Effort(self.task1, description='Description',
                                      start=date.DateTime(2000,1,1,1,1,1),
                                      stop=date.DateTime(2000,2,2,2,2,2))
         self.effort2 = effort.Effort(self.task1)
@@ -104,15 +104,15 @@ class VCalEffortCommonTestsMixin(VCalendarCommonTestsMixin):
                          self.vcalFile.count('END:VEVENT'))
         
     def testEffortSubject(self):
-        self.failUnless(u'SUMMARY:Task 1' in self.vcalFile)
+        self.assertTrue('SUMMARY:Task 1' in self.vcalFile)
 
     def testEffortDescription(self):
-        self.failUnless(u'DESCRIPTION:Description' in self.vcalFile)
+        self.assertTrue('DESCRIPTION:Description' in self.vcalFile)
         
     def testEffortStart(self):
         startLocal = date.DateTime(2000, 1, 1, 1, 1, 1)
         startUTC = startLocal.utcfromtimestamp(time.mktime(startLocal.timetuple()))
-        self.failUnless('DTSTART:%04d%02d%02dT%02d%02d%02dZ' % (startUTC.year,
+        self.assertTrue('DTSTART:%04d%02d%02dT%02d%02d%02dZ' % (startUTC.year,
                                                                 startUTC.month,
                                                                 startUTC.day,
                                                                 startUTC.hour,
@@ -122,7 +122,7 @@ class VCalEffortCommonTestsMixin(VCalendarCommonTestsMixin):
     def testEffortEnd(self):
         endLocal = date.DateTime(2000, 2, 2, 2, 2, 2)
         endUTC = endLocal.utcfromtimestamp(time.mktime(endLocal.timetuple()))
-        self.failUnless('DTEND:%04d%02d%02dT%02d%02d%02dZ' % (endUTC.year,
+        self.assertTrue('DTEND:%04d%02d%02dT%02d%02d%02dZ' % (endUTC.year,
                                                               endUTC.month,
                                                               endUTC.day,
                                                               endUTC.hour,
@@ -130,7 +130,7 @@ class VCalEffortCommonTestsMixin(VCalendarCommonTestsMixin):
                                                               endUTC.second))
         
     def testEffortId(self):
-        self.failUnless('UID:%s'%self.effort1.id() in self.vcalFile)
+        self.assertTrue('UID:%s'%self.effort1.id() in self.vcalFile)
 
     
 class VCalEffortWriterTest(VCalEffortWriterTestCase,
@@ -154,12 +154,12 @@ class VCalTaskWriterTestCase(VCalTestCase):
     
     def setUp(self):
         super(VCalTaskWriterTestCase, self).setUp() 
-        self.task1 = task.Task(u'Task subject 1', 
+        self.task1 = task.Task('Task subject 1', 
                                description='Task description 1',
                                percentageComplete=56,
                                creationDateTime=date.DateTime.min)
-        self.task2 = task.Task(u'Task subject 2黑', 
-                               description=u'Task description 2\nwith newline\n微软雅黑',
+        self.task2 = task.Task('Task subject 2黑', 
+                               description='Task description 2\nwith newline\n微软雅黑',
                                modificationDateTime=date.DateTime(2012, 1, 1))
         self.taskFile.tasks().extend([self.task1, self.task2])
         self.settings.set('taskviewer', 'treemode', self.treeMode)
@@ -171,28 +171,28 @@ class VCalTaskWriterTestCase(VCalTestCase):
         
 class VCalTaskCommonTestsMixin(VCalendarCommonTestsMixin):
     def testTaskSubject(self):
-        self.failUnless(u'SUMMARY:Task subject 2' in self.vcalFile)
+        self.assertTrue('SUMMARY:Task subject 2' in self.vcalFile)
         
     def testTaskDescription(self):
-        self.failUnless(u'DESCRIPTION:Task description 2\r\n with newline\r\n 微软雅黑' in self.vcalFile, self.vcalFile)
+        self.assertTrue('DESCRIPTION:Task description 2\r\n with newline\r\n 微软雅黑' in self.vcalFile, self.vcalFile)
 
     def testNumber(self):
         self.assertEqual(self.expectedNumberOfItems(),
                          self.vcalFile.count('BEGIN:VTODO'))  # pylint: disable=W0511
 
     def testTaskId(self):
-        self.failUnless('UID:%s' % self.task2.id() in self.vcalFile)
+        self.assertTrue('UID:%s' % self.task2.id() in self.vcalFile)
         
     def testCreationDateTime(self):
         creation_datetime = persistence.icalendar.ical.fmtDateTime(self.task2.creationDateTime())
-        self.failUnless('CREATED:%s' % creation_datetime in self.vcalFile)
+        self.assertTrue('CREATED:%s' % creation_datetime in self.vcalFile)
         
     def testMissingCreationDateTime(self):
         self.assertEqual(1, self.vcalFile.count('CREATED:'))
         
     def testModificationDateTime(self):
         modification_datetime = persistence.icalendar.ical.fmtDateTime(date.DateTime(2012, 1, 1))
-        self.failUnless('LAST-MODIFIED:%s' % modification_datetime in self.vcalFile)
+        self.assertTrue('LAST-MODIFIED:%s' % modification_datetime in self.vcalFile)
         
     def testMissingModificationDateTime(self):
         self.assertEqual(1, self.vcalFile.count('LAST-MODIFIED'))
@@ -219,7 +219,7 @@ class TestNotSelectionOnlyMixin(VCalTaskCommonTestsMixin):
         return self.numberOfVisibleItems()
 
     def testPercentageComplete(self):
-        self.failUnless('PERCENT-COMPLETE:56' in self.vcalFile)
+        self.assertTrue('PERCENT-COMPLETE:56' in self.vcalFile)
 
 
 class TestNotSelectionList(TestNotSelectionOnlyMixin, VCalTaskWriterTestCase):

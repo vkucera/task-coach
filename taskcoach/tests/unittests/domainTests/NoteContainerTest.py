@@ -33,11 +33,11 @@ class NoteContainerTest(test.TestCase):
         cat = category.Category(subject='Cat')
         self.note.addCategory(cat)
         self.container.append(self.note)
-        self.failUnless(self.note in cat.categorizables())
+        self.assertTrue(self.note in cat.categorizables())
 
     def testRemoveNoteWithCategory(self):
         cat = category.Category(subject='Cat')
         self.note.addCategory(cat)
         self.container.append(self.note)
         self.container.remove(self.note)
-        self.failIf(self.note in cat.categorizables())
+        self.assertFalse(self.note in cat.categorizables())

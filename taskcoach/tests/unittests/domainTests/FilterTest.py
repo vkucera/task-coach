@@ -35,18 +35,18 @@ class FilterTestsMixin(object):
         self.assertEqual(2, len(self.filter))
 
     def testContents(self):
-        self.failUnless('c' in self.filter and 'd' in self.filter)
+        self.assertTrue('c' in self.filter and 'd' in self.filter)
 
     def testRemoveItem(self):
         self.filter.remove('c')
         self.assertEqual(1, len(self.filter))
-        self.failUnless('d' in self.filter)
+        self.assertTrue('d' in self.filter)
         self.assertEqual(['a', 'b', 'd'], self.observable)
 
     def testNotification(self):
         self.observable.append('e')
         self.assertEqual(3, len(self.filter))
-        self.failUnless('e' in self.filter)
+        self.assertTrue('e' in self.filter)
 
         
 class FilterListTest(FilterTestsMixin, test.TestCase):
@@ -83,18 +83,18 @@ class StackedFilterTest(test.TestCase):
         
     def testSetTreeMode_True(self):
         self.filter2.setTreeMode(True)
-        self.failUnless(self.filter1.treeMode())
+        self.assertTrue(self.filter1.treeMode())
         
     def testSetTreeMode_False(self):
         self.filter2.setTreeMode(False)
-        self.failIf(self.filter1.treeMode())
+        self.assertFalse(self.filter1.treeMode())
 
     def testFiltersAreCollected(self):
         filterRef = weakref.ref(self.filter1)
         self.filter2.detach()
         del self.filter1
         del self.filter2
-        self.failUnless(filterRef() is None)
+        self.assertTrue(filterRef() is None)
 
 
 class SearchFilterTest(test.TestCase):
@@ -165,7 +165,7 @@ class SearchFilterTest(test.TestCase):
     def testRemoveTask(self):
         self.setSearchString('DEF')
         self.list.remove(self.child)
-        self.failIf(self.filter)
+        self.assertFalse(self.filter)
         
     def testIncludeSubItems(self):
         self.setSearchString('ABC', includeSubItems=True)
@@ -244,17 +244,17 @@ class SelectedItemsFilterTest(test.TestCase):
         
     def testAddChild(self):
         self.list.append(self.child)
-        self.failUnless(self.child in self.filter)
+        self.assertTrue(self.child in self.filter)
         
     def testAddChildWithGrandchild(self):
         grandchild = task.Task(parent=self.child)
         self.child.addChild(grandchild)
         self.list.append(self.child)
-        self.failUnless(grandchild in self.filter)
+        self.assertTrue(grandchild in self.filter)
         
     def testRemoveSelectedItem(self):
         self.list.remove(self.task)
-        self.failIf(self.filter)
+        self.assertFalse(self.filter)
         
     def testSelectedItemsFilterShowsAllTasksWhenSelectedItemsRemoved(self):
         otherTask = task.Task()

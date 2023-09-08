@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import command
 from taskcoachlib.domain import category, categorizable
-from CommandTestCase import CommandTestCase
+from .CommandTestCase import CommandTestCase
 
 
 class ToggleCategoryCommandTestCase(CommandTestCase):

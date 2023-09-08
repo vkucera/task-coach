@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import glob, shutil, sys, os, urllib, tarfile, glob
+import glob, shutil, sys, os, urllib.request, urllib.parse, urllib.error, tarfile, glob
 projectRoot = os.path.abspath('..')
 if projectRoot not in sys.path:
     sys.path.insert(0, projectRoot)
@@ -29,7 +29,7 @@ def downloadTranslations(url):
             if os.path.splitext(member.name)[1] == ".po":
                 yield member
 
-    filename, info = urllib.urlretrieve(url)
+    filename, info = urllib.request.urlretrieve(url)
     tarFile = tarfile.open(filename, 'r:gz')
     folder = [member for member in tarFile if member.isdir()][0].name
     tarFile.extractall(members=po_files(tarFile))
@@ -39,19 +39,19 @@ def downloadTranslations(url):
     for poFile in glob.glob('*.po'):
         newPoFile = os.path.join(folder, 'i18n.in-%s'%poFile)
         shutil.copy(newPoFile, poFile) 
-        print 'Updating', poFile
+        print('Updating', poFile)
     shutil.rmtree(folder)
 
 
 def downloadTranslation(url):
     # http://launchpadlibrarian.net/70943850/i18n.in_i18n.in-nl.po
-    filename, info = urllib.urlretrieve(url)
+    filename, info = urllib.request.urlretrieve(url)
     shutil.move(filename, url.split('-')[1])
 
 
 def createPoDicts():
     for poFile in sorted(glob.glob('*.po')):
-        print 'Creating python dictionary from', poFile
+        print('Creating python dictionary from', poFile)
         pyFile = po2dict.make(poFile)
         shutil.move(pyFile, '../taskcoachlib/i18n/%s'%pyFile)
 

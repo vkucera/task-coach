@@ -147,9 +147,9 @@ class VCalendarParser(object):
             name, specs = details[0], details[1:]
             specs = dict([tuple(v.split('=')) for v in specs])
 
-            if specs.has_key('ENCODING'):
+            if 'ENCODING' in specs:
                 value = value.decode(specs['ENCODING'].lower())
-            if specs.has_key('CHARSET'):
+            if 'CHARSET' in specs:
                 value = value.decode(specs['CHARSET'].lower())
             else:
                 # Some  servers only  specify CHARSET  when  there are
@@ -192,7 +192,7 @@ class VCalendarParser(object):
             # Horde escapes the comma, even though it's an actual separator.
             # I didn't found any way to include an actual comma in a Horde
             # "tag".
-            self.kwargs['categories'] = map(lambda x: x.rstrip('\\').lstrip(), value.split(','))
+            self.kwargs['categories'] = [x.rstrip('\\').lstrip() for x in value.split(',')]
         elif name == 'DESCRIPTION':
             self.kwargs['description'] = value.replace('\\n', '\n')
         else:
@@ -203,16 +203,16 @@ class VTodoParser(VCalendarParser):
     ''' This is the state responsible for parsing VTODO objects. ''' # pylint: disable=W0511
 
     def onFinish(self):
-        if not self.kwargs.has_key('plannedStartDateTime'):
+        if 'plannedStartDateTime' not in self.kwargs:
             # This means no planned start date, but the task constructor will
             # take today by default, so force.
             self.kwargs['plannedStartDateTime'] = date.DateTime()
 
-        if self.kwargs.has_key('vcardStatus'):
+        if 'vcardStatus' in self.kwargs:
             if self.kwargs['vcardStatus'] == 'COMPLETED' and \
-                   not self.kwargs.has_key('completionDateTime'):
+                   'completionDateTime' not in self.kwargs:
                 # Some servers only give the status, and not the date (SW)
-                if self.kwargs.has_key('last-modified'):
+                if 'last-modified' in self.kwargs:
                     self.kwargs['completionDateTime'] = parseDateTime(self.kwargs['last-modified'])
                 else:
                     self.kwargs['completionDateTime'] = date.Now()
@@ -247,7 +247,7 @@ class VNoteParser(VCalendarParser):
 
     def onFinish(self):
         # Summary is not mandatory.
-        if not self.kwargs.has_key('subject'):
+        if 'subject' not in self.kwargs:
             if 'description' in self.kwargs:
                 self.kwargs['subject'] = self.kwargs['description'].split('\n')[0]
             else:
@@ -297,7 +297,7 @@ def VCalFromTask(task, encoding=True, doFold=True):
         components.append('COMPLETED:%s' % fmtDateTime(task.completionDateTime()))
 
     if task.categories(recursive=True, upwards=True):
-        categories = ','.join([quote(unicode(c)) for c in task.categories(recursive=True, upwards=True)])
+        categories = ','.join([quote(str(c)) for c in task.categories(recursive=True, upwards=True)])
         components.append('CATEGORIES%s:%s' % (encoding, categories))
 
     if task.completed():
@@ -344,7 +344,7 @@ def VNoteFromNote(note, encoding=True, doFold=True):
     components.append('BODY%s:%s' % (encoding, quote(note.description())))
     components.append('END:VNOTE')
     if note.categories(recursive=True, upwards=True):
-        categories = ','.join([quote(unicode(c)) for c in note.categories(recursive=True, upwards=True)])
+        categories = ','.join([quote(str(c)) for c in note.categories(recursive=True, upwards=True)])
         components.append('CATEGORIES%s:%s'%(encoding, categories))
     if doFold:
         return fold(components)

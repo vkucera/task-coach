@@ -59,7 +59,7 @@ class ChangeSynchronizer(object):
         self.diskMap = dict()
         self.diskOwnerMap = dict()
 
-        for devGUID, changes in self._allChanges.items():
+        for devGUID, changes in list(self._allChanges.items()):
             if devGUID == self._monitor.guid():
                 self.diskChanges = changes
                 break
@@ -75,7 +75,7 @@ class ChangeSynchronizer(object):
                 self._monitor.resetChanges(obj)
 
         # Merge conflict changes
-        for devGUID, changes in self._allChanges.items():
+        for devGUID, changes in list(self._allChanges.items()):
             if devGUID != self._monitor.guid():
                 changes.merge(self.conflictChanges)
 

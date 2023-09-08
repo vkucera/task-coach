@@ -525,7 +525,7 @@ class EffortViewer(base.ListViewer,
         if isinstance(item, effort.CompositeEffort) and len(item):
             details = [_('Details:')]
             for theEffort in item:
-                details.append(u'%s (%s)' % (render.dateTimePeriod(theEffort.getStart(), theEffort.getStop(), humanReadable=True), self.__renderTimeSpent(theEffort)))
+                details.append('%s (%s)' % (render.dateTimePeriod(theEffort.getStart(), theEffort.getStop(), humanReadable=True), self.__renderTimeSpent(theEffort)))
             result.append((None, details))
         return result
 

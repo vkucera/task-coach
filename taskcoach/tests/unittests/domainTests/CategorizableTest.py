@@ -39,7 +39,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
     def testCategorizableDoesNotBelongToAnyCategoryByDefault(self):
         for recursive in False, True:
             for upwards in False, True:
-                self.failIf(self.categorizable.categories(recursive=recursive,
+                self.assertFalse(self.categorizable.categories(recursive=recursive,
                                                           upwards=upwards))
 
     def testCategorizableHasNoForegroundColorByDefault(self):
@@ -77,7 +77,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
         self.categorizable.addCategory(self.category)
         self.registerObserver(self.categoryAddedEventType)
         self.categorizable.addCategory(self.category)
-        self.failIf(self.events)
+        self.assertFalse(self.events)
     
     def testAddCategoryViaConstructor(self):
         categorizableObject = categorizable.CategorizableCompositeObject(categories=[self.category])
@@ -313,28 +313,28 @@ class CategorizableCompositeObjectTest(test.TestCase):
         self.categorizable.setForegroundColor(wx.RED)
         self.registerObserver(self.categorizable.appearanceChangedEventType())
         self.category.setForegroundColor(wx.GREEN)
-        self.failIf(self.events)
+        self.assertFalse(self.events)
                 
     def testCategorizableDoesNotNotifyWhenItHasItsOwnBackgroundColor(self):
         self.categorizable.addCategory(self.category)
         self.categorizable.setBackgroundColor(wx.RED)
         self.registerObserver(self.categorizable.appearanceChangedEventType())
         self.category.setBackgroundColor(wx.GREEN)
-        self.failIf(self.events)
+        self.assertFalse(self.events)
 
     def testCategorizableDoesNotNotifyWhenItHasItsOwnFont(self):
         self.categorizable.addCategory(self.category)
         self.categorizable.setFont(wx.SWISS_FONT)
         self.registerObserver(self.categorizable.appearanceChangedEventType())
         self.category.setFont(wx.NORMAL_FONT)
-        self.failIf(self.events)
+        self.assertFalse(self.events)
 
     def testCategorizableDoesNotNotifyWhenItHasItsOwnIcon(self):
         self.categorizable.addCategory(self.category)
         self.categorizable.setIcon('icon')
         self.registerObserver(self.categorizable.appearanceChangedEventType())
         self.category.setIcon('another icon')
-        self.failIf(self.events)
+        self.assertFalse(self.events)
 
     def testParentForegroundColorChanged(self):
         self.registerObserver(self.appearanceChangedEventType)
@@ -568,7 +568,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
         self.categorizable.addCategory(anotherCategory)
         self.category.setIcon('icon')
         anotherCategory.setIcon('another_icon')
-        self.failUnless(self.categorizable.icon(recursive=True) in ['icon', 'another_icon'])
+        self.assertTrue(self.categorizable.icon(recursive=True) in ['icon', 'another_icon'])
 
     def testUseCategoryIcon(self):
         self.category.setIcon('categoryIcon')
@@ -584,7 +584,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
     def testDontUseCategoryIconWhenNotRecursive(self):
         self.category.setIcon('categoryIcon')
         self.categorizable.addCategory(self.category)
-        self.failIf(self.categorizable.icon(recursive=False))
+        self.assertFalse(self.categorizable.icon(recursive=False))
 
     def testUseCategoryIconEvenWhenCategorizableHasARecursiveIcon(self):
         child = categorizable.CategorizableCompositeObject(subject='child')
@@ -610,7 +610,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
     def testDontUseCategorySelectedIconWhenNotRecursive(self):
         self.category.setSelectedIcon('categoryIcon')
         self.categorizable.addCategory(self.category)
-        self.failIf(self.categorizable.selectedIcon(recursive=False))
+        self.assertFalse(self.categorizable.selectedIcon(recursive=False))
 
     def testUseCategorySelectedIconEvenWhenCategorizableHasARecursiveSelectedIcon(self):
         child = categorizable.CategorizableCompositeObject(subject='child')

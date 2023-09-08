@@ -22,7 +22,7 @@ import os, time, base
 class TestLaunch(base.Win32TestCase):
     def test_launch(self):
         window = self.findWindow(r'^Task Coach$')
-        self.failIf(window is None,
+        self.assertFalse(window is None,
                     'Cannot find main window')
 
 
@@ -32,12 +32,12 @@ class TestWithTaskFile(base.Win32TestCase):
         super(TestWithTaskFile, self).setUp()
 
     def test_launch(self):
-        self.failUnless(self.findWindow(r'^Task Coach file error$') is None,
+        self.assertTrue(self.findWindow(r'^Task Coach file error$') is None,
                         'Error dialog appeared')
         window = self.findWindow(r'^Task Coach', tries=20)
-        self.failIf(window is None,
+        self.assertFalse(window is None,
                     'Cannot find main window')
-        self.failUnless(window.title.endswith('testfile.tsk'),
+        self.assertTrue(window.title.endswith('testfile.tsk'),
                         'Wrong window title')
         
     def test_save(self):
@@ -53,11 +53,11 @@ class TestWithTaskFile(base.Win32TestCase):
             time.sleep(0.1)
 
         editor = self.findWindow(r'\(task\)$')
-        self.failIf(editor is None, 'Task editor not found')
+        self.assertFalse(editor is None, 'Task editor not found')
         editor.waitFocus()
 
         # Change subject so the task is "dirty":
-        editor.sendText(u'New subject')
+        editor.sendText('New subject')
         # Close the task edit dialog:
         editor.close()
 

@@ -107,8 +107,7 @@ class bdist_deb(Command, object):
             ('url', 'the url of the application homepage')]
         for option, description in mandatoryOptions:
             if not getattr(self, option):
-                raise errors.DistutilsOptionError, \
-                    'you must provide %s (--%s)' % (description, option)
+                raise errors.DistutilsOptionError('you must provide %s (--%s)' % (description, option))
         if not self.maintainer:
             self.maintainer = self.author
             self.maintainer_email = self.author_email
@@ -191,7 +190,7 @@ class bdist_deb(Command, object):
         debian_files = dict(rules=rules, compat='9\n', 
             menu=menu, control=control, copyright=self.copyright_contents(),
             changelog=changelog)
-        for filename, contents in debian_files.iteritems():
+        for filename, contents in debian_files.items():
             self.write_debian_file(filename, contents % self.__dict__)
                
     def write_debian_file(self, filename, contents):
@@ -201,7 +200,7 @@ class bdist_deb(Command, object):
         fd = file(filename, 'w')
         fd.write(contents)
         fd.close()
-        os.chmod(filename, 0755)
+        os.chmod(filename, 0o755)
         
     def build_debian_package(self):
         os.system('cd %s; debuild -S; dpkg-buildpackage -rfakeroot; cd ..' % \

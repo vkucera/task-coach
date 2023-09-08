@@ -20,9 +20,7 @@ import os, stat, atexit, tempfile
 from taskcoachlib import patterns
 
 
-class TempFiles(object):
-    __metaclass__ = patterns.Singleton
-    
+class TempFiles(object, metaclass=patterns.Singleton):
     def __init__(self):
         self.__tempFiles = []
         atexit.register(self.cleanup)

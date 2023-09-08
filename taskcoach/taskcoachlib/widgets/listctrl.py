@@ -130,8 +130,9 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
         else:
             self.RefreshAllItems(self.GetItemCount())
             
-    def HitTest(self, (x, y), *args, **kwargs):
+    def HitTest(self, xxx_todo_changeme, *args, **kwargs):
         ''' Always return a three-tuple (item, flag, column). '''
+        (x, y) = xxx_todo_changeme
         index, flags = super(VirtualListCtrl, self).HitTest((x, y), 
                                                             *args, **kwargs)
         column = 0

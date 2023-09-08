@@ -117,7 +117,7 @@ class ViewerContainerTest(test.wxTestCase):
     def testChangePage_NotifiesObserversAboutNewActiveViewer(self):
         pub.subscribe(self.onEvent, 'viewer.status')
         self.container.onPageChanged(DummyChangeEvent(self.viewer2))
-        self.failUnless(self.events > 0)
+        self.assertTrue(self.events > 0)
         
     def testCloseViewer_RemovesViewerFromContainer(self):
         self.container.onPageClosed(DummyCloseEvent(self.viewer1))
@@ -132,5 +132,5 @@ class ViewerContainerTest(test.wxTestCase):
         self.container.activateViewer(self.viewer2)
         pub.subscribe(self.onEvent, 'viewer.status')
         self.container.closeViewer(self.viewer2)
-        self.failUnless(self.events > 0)
+        self.assertTrue(self.events > 0)
 

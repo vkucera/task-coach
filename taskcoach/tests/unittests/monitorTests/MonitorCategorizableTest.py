@@ -27,13 +27,13 @@ class MonitorCategorizableTest(test.TestCase):
         self.monitor = ChangeMonitor()
         self.monitor.monitorClass(CategorizableCompositeObject)
 
-        self.obj = CategorizableCompositeObject(subject=u'Object')
+        self.obj = CategorizableCompositeObject(subject='Object')
         self.list = ObservableList()
         self.monitor.monitorCollection(self.list)
         self.list.append(self.obj)
 
-        self.cat1 = Category(subject=u'Cat #1')
-        self.cat2 = Category(subject=u'Cat #2')
+        self.cat1 = Category(subject='Cat #1')
+        self.cat2 = Category(subject='Cat #2')
         self.catList = ObservableList()
         self.catList.append(self.cat1)
         self.catList.append(self.cat2)

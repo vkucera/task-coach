@@ -29,12 +29,12 @@ class DummyEvent(object):
 class CommonTestsMixin(object):
     def testCreateAndClose(self):
         self.dialog.onClose(DummyEvent())
-        self.failUnless(self.settings.getboolean('version', 'notify'))
+        self.assertTrue(self.settings.getboolean('version', 'notify'))
 
     def testNoMoreNotifications(self):
         self.dialog.check.SetValue(False)
         self.dialog.onClose(DummyEvent())
-        self.failIf(self.settings.getboolean('version', 'notify'))
+        self.assertFalse(self.settings.getboolean('version', 'notify'))
 
 
 class VersionDialogTestCase(test.TestCase):

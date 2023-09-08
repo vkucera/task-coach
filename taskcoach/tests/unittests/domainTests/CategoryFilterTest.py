@@ -47,7 +47,7 @@ class CategoryFilterHelpersMixin(object):
         self.assertEqual(set(self.tasks), set(self.filter))
         
     def assertFilterHidesEverything(self):
-        self.failIf(self.filter)
+        self.assertFalse(self.filter)
         
 
 class Fixture(CategoryFilterHelpersMixin):
@@ -83,13 +83,13 @@ class Fixture(CategoryFilterHelpersMixin):
         self.assertEqual(0, self.filter.originalLength())
 
     def testThatFilterLengthIsSmallerOrEqualThanOriginalLength(self):
-        self.failUnless(len(self.filter) <= self.filter.originalLength())
+        self.assertTrue(len(self.filter) <= self.filter.originalLength())
         
     def testThatFilterIsEmptyWhenFilteringOnACategoryWithoutCategorizables(self):
         emptyCategory = category.Category('empty')
         self.categories.append(emptyCategory)
         emptyCategory.setFiltered()
-        self.failIf(self.filter)
+        self.assertFalse(self.filter)
                
     def testThatFilterContainsAllItemsAfterRemovingFilteredEmptyCategory(self):
         emptyCategory = category.Category('empty')
@@ -123,7 +123,7 @@ class Fixture(CategoryFilterHelpersMixin):
         newTask = task.Task()
         newTask.addCategory(aCategory)
         self.tasks.append(newTask)
-        self.failUnless(newTask in self.filter)
+        self.assertTrue(newTask in self.filter)
         
     def testThatFilterDoesContainNewlyAddedTaskThatBelongsToTheFilteredCategoryAfterRemoval(self):
         aCategory = list(self.categories)[0]
@@ -132,7 +132,7 @@ class Fixture(CategoryFilterHelpersMixin):
         newTask.addCategory(aCategory)
         self.tasks.append(newTask)
         self.tasks.remove(newTask)
-        self.failIf(newTask in self.filter)
+        self.assertFalse(newTask in self.filter)
         
     def testThatFilterContainsNoTasksWhenFilteringAllCategoriesIncludingAnEmptyCategory(self):
         emptyCategory = category.Category('empty')
@@ -530,14 +530,14 @@ class ParentAndChildCategoryAndParentAndGrandChildTaskFixture(Fixture):
     def testThatFilterContainsGrandChildTaskWhenChildTaskIsInChildCategoryAndParentCategoryIsFiltered(self):
         self.link(self.childCategory, self.childTask)
         self.parentCategory.setFiltered()
-        self.failUnless(self.grandChildTask in self.filter)
+        self.assertTrue(self.grandChildTask in self.filter)
 
     def testThatFilterContainsGrandChildTaskWhenChildTaskIsInChildCategoryAndAllCategoriesAreFiltered(self):
         self.setFilterOnAllCategories()
         self.link(self.childCategory, self.childTask)
         self.parentCategory.setFiltered()
         self.childCategory.setFiltered()
-        self.failUnless(self.grandChildTask in self.filter)
+        self.assertTrue(self.grandChildTask in self.filter)
         
     def testThatFilterContainsGrandParentWhenGrandChildIsInChildCategoryAndParentCategoryIsFiltered(self):
         self.link(self.childCategory, self.grandChildTask)
@@ -630,7 +630,7 @@ class TwoCategoriesAndParentWithTwoChildTasksFixture(Fixture):
 
     def testThatFilterHidesUnfilteredChild(self):
         self.category1.setFiltered()
-        self.failIf(self.child2Task in self.filter)
+        self.assertFalse(self.child2Task in self.filter)
 
         
 class TwoCategoriesAndParentWithTwoChildTasksInListModeTest(TwoCategoriesAndParentWithTwoChildTasksFixture, test.TestCase):
@@ -656,7 +656,7 @@ class ParentAndChildCategoryAndOneTaskFixture(Fixture):
     def testThatFilterDoesNotContainTaskIfTaskHasChildCategoryAndParentIsFiltered(self):
         self.link(self.parentCategory, self.task)
         self.childCategory.setFiltered()
-        self.failIf(self.filter)
+        self.assertFalse(self.filter)
 
     def testThatFilterContainsTaskIfTaskIfTaskHasParentCategoryAndChildIsFiltered(self):
         self.link(self.childCategory, self.task)

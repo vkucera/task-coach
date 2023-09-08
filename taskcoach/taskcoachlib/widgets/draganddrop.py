@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from taskcoachlib.mailer import thunderbird, outlook
 from taskcoachlib.i18n import _
 
@@ -104,11 +104,11 @@ class DropTarget(wx.DropTarget):
                 if url.startswith('#'):
                     continue
                 if self.__tmp_mail_file_url(url) and self.__onDropMailCallback:
-                    filename = urllib.unquote(url[len('file://'):])
+                    filename = urllib.parse.unquote(url[len('file://'):])
                     self.__onDropMailCallback(x, y, filename)
                 elif self.__onDropURLCallback:
                     if url.startswith('file://'):
-                        url = urllib.url2pathname(url[7:])
+                        url = urllib.request.url2pathname(url[7:])
                     self.__onDropURLCallback(x, y, url)
         elif formatId == 'Object Descriptor':
             self.onOutlookDrop(x, y)
@@ -120,7 +120,7 @@ class DropTarget(wx.DropTarget):
                 except thunderbird.ThunderbirdCancelled:
                     pass
                 except thunderbird.ThunderbirdError as e:
-                    wx.MessageBox(unicode(e), _('Error'), wx.OK)
+                    wx.MessageBox(str(e), _('Error'), wx.OK)
             elif self.__onDropURLCallback:
                 self.__onDropURLCallback(x, y, url)
         elif formatType in (wx.DF_TEXT, wx.DF_UNICODETEXT):
@@ -267,7 +267,7 @@ class TreeCtrlDragAndDropMixin(TreeHelperMixin):
         # Aaaand HitTest() returns -1 too often...
         hwin = self.GetHeaderWindow()
         x = 0
-        for j in xrange(self.GetColumnCount()):
+        for j in range(self.GetColumnCount()):
             if not hwin.IsColumnShown(j):
                 continue
             w = hwin.GetColumnWidth(j)

@@ -30,6 +30,6 @@ class PubSubTest(test.TestCase):
     def testSubscribe(self):
         pub.subscribe(self.onTestTopic, 'TestTopic')
         pub.sendMessage('TestTopic')
-        self.failUnless(self.calledTestTopic)
+        self.assertTrue(self.calledTestTopic)
         
  

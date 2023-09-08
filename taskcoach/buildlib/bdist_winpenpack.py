@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os, zipfile
 from distutils import errors
-import bdist_portable_base
+from . import bdist_portable_base
 
 
 class bdist_winpenpack(bdist_portable_base.bdist_portable_base):
@@ -51,8 +51,7 @@ class bdist_winpenpack(bdist_portable_base.bdist_portable_base):
                             ('date', 'the release date')]
         for option, description in mandatoryOptions:
             if not getattr(self, option):
-                raise errors.DistutilsOptionError, \
-                    'you must provide %s (--%s)'%(description, option)
+                raise errors.DistutilsOptionError('you must provide %s (--%s)'%(description, option))
 
     def run(self):
         self.create_winpenpack_paths()
@@ -94,4 +93,4 @@ class bdist_winpenpack(bdist_portable_base.bdist_portable_base):
                 archive.write(filepath, arcname)
         archive.close()
         # For the buildbot
-        print 'Generated %s' % archive_filename
+        print('Generated %s' % archive_filename)

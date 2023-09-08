@@ -217,6 +217,6 @@ class BaseSource(SyncSource):
 
             return 200
 
-        print 'UNHANDLED ITEM STATUS %s %d' % (key, status)
+        print('UNHANDLED ITEM STATUS %s %d' % (key, status))
 
         return 501

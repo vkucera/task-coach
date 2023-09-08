@@ -254,7 +254,7 @@ class CommonTestsMixin(object):
         self.taskList.append(self.task1)
         self.task1.addEffort(self.effort1period1a)
         self.assertEqual(1, len(self.events))
-        self.failUnless(self.events[0].value() in self.effortAggregator)
+        self.assertTrue(self.events[0].value() in self.effortAggregator)
 
     def testNotification_Remove(self):
         self.taskList.append(self.task1)
@@ -279,14 +279,14 @@ class CommonTestsMixin(object):
         self.task1.addEffort(self.effort1period1a)
         self.effort1period1a.setTask(self.task2)
         self.assertEqual(2, len(self.effortAggregator))
-        self.failUnless(self.task2 in [item.task() for item in self.effortAggregator])
+        self.assertTrue(self.task2 in [item.task() for item in self.effortAggregator])
 
     def testChangeTaskOfChildEffort(self):
         self.taskList.extend([self.task1, self.task2])
         self.task3.addEffort(self.effort3period1a)
         self.effort3period1a.setTask(self.task2)
         self.assertEqual(2, len(self.effortAggregator))
-        self.failUnless(self.task2 in [item.task() for item in self.effortAggregator])
+        self.assertTrue(self.task2 in [item.task() for item in self.effortAggregator])
 
     def testRemoveTaskAfterChangeTaskOfEffort(self):
         self.taskList.extend([self.task1, self.task2])
@@ -294,7 +294,7 @@ class CommonTestsMixin(object):
         self.effort1period1a.setTask(self.task2)
         self.taskList.remove(self.task1)
         self.assertEqual(2, len(self.effortAggregator))
-        self.failUnless(self.task2 in [item.task() for item in self.effortAggregator])
+        self.assertTrue(self.task2 in [item.task() for item in self.effortAggregator])
 
     def testRemoveAndAddEffortToSamePeriod(self):
         self.taskList.append(self.task1)
@@ -360,4 +360,4 @@ class MultipleAggregatorsTest(test.TestCase):
                                  date.DateTime(2006, 8, 29))
         aTask.addEffort(anEffort)
         aTask.removeEffort(anEffort)
-        self.failIf(self.effortPerDay)
+        self.assertFalse(self.effortPerDay)

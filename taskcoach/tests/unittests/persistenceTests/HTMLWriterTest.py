@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, StringIO, os
+import wx, io, os
 import test
 from taskcoachlib import persistence, gui, config, render
 from taskcoachlib.domain import task, category, effort, date
@@ -29,7 +29,7 @@ class HTMLWriterTestCase(test.wxTestCase):
     def setUp(self):
         super(HTMLWriterTestCase, self).setUp()
         task.Task.settings = self.settings = config.Settings(load=False)
-        self.fd = StringIO.StringIO()
+        self.fd = io.StringIO()
         self.writer = persistence.HTMLWriter(self.fd, self.filename)
         self.taskFile = persistence.TaskFile()
         self.task = task.Task('Task subject')
@@ -55,14 +55,14 @@ class HTMLWriterTestCase(test.wxTestCase):
         selectionOnly = kwargs.pop('selectionOnly', False)
         html = self.__writeAndRead(selectionOnly)
         for htmlFragment in htmlFragments:
-            self.failUnless(htmlFragment in html, 
+            self.assertTrue(htmlFragment in html, 
                             '%s not in %s'%(htmlFragment, html))
     
     def expectNotInHTML(self, *htmlFragments, **kwargs):
         selectionOnly = kwargs.pop('selectionOnly', False)
         html = self.__writeAndRead(selectionOnly)
         for htmlFragment in htmlFragments:
-            self.failIf(htmlFragment in html, '%s in %s'%(htmlFragment, html))
+            self.assertFalse(htmlFragment in html, '%s in %s'%(htmlFragment, html))
 
     def selectItem(self, items):
         self.viewer.widget.select(items)

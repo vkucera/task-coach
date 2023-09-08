@@ -21,9 +21,9 @@ from taskcoachlib import i18n
 try:
     from . import icons
 except ImportError: # pragma: no cover   
-    print "ERROR: couldn't import icons.py."
-    print 'You need to generate the icons file.'
-    print 'Run "make prepare" in the Task Coach root folder.'
+    print("ERROR: couldn't import icons.py.")
+    print('You need to generate the icons file.')
+    print('Run "make prepare" in the Task Coach root folder.')
     import sys
     sys.exit(1)
 

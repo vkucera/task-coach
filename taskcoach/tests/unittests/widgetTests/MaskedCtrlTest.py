@@ -74,11 +74,11 @@ class AmountCtrlTest(test.wxTestCase):
 
     def testNonAsciiDecimalPoint(self):
         masked.AmountCtrl(self.frame, 
-                          locale_conventions=LocalConv(decimal_point=u'�'))
+                          locale_conventions=LocalConv(decimal_point='�'))
         
     def testNonAsciiThousandsSeparator(self):
         masked.AmountCtrl(self.frame, 
-                          locale_conventions=LocalConv(thousands_sep=u'�', 
+                          locale_conventions=LocalConv(thousands_sep='�', 
                                                        grouping=[3,3,3]))
 
     def testMultiCharThousandsSeparator(self):

@@ -85,7 +85,7 @@ class MixFontsTest(test.TestCase):
                          self.mixFonts(self.font, self.italicFont).GetStyle())
         
     def testFontUnderline_NormalAndUnderlined(self):
-        self.failUnless(self.mixFonts(self.font, self.underlinedFont).GetUnderlined())
+        self.assertTrue(self.mixFonts(self.font, self.underlinedFont).GetUnderlined())
        
     def testFontFamily_DefaultAndSwiss(self):
         self.assertEqual(wx.FONTFAMILY_SWISS, 

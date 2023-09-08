@@ -56,7 +56,7 @@ class TestCase(unittest.TestCase, object):
     def assertEqualLists(self, expectedList, actualList):
         self.assertEqual(len(expectedList), len(actualList))
         for item in expectedList:
-            self.failUnless(item in actualList)
+            self.assertTrue(item in actualList)
             
     def registerObserver(self, eventType, eventSource=None):
         if not hasattr(self, 'events'):
@@ -142,11 +142,11 @@ class TextTestRunnerWithTimings(unittest.TextTestRunner):
     def run(self, *args, **kwargs): # pylint: disable=W0221
         result = super(TextTestRunnerWithTimings, self).run(*args, **kwargs)
         if self._timeTests:
-            sortableTimings = [(timing, test) for test, timing in result._timings.items()] # pylint: disable=W0212
+            sortableTimings = [(timing, test) for test, timing in list(result._timings.items())] # pylint: disable=W0212
             sortableTimings.sort(reverse=True)
-            print '\n%d slowest tests:'%self._nrTestsToReport
+            print('\n%d slowest tests:'%self._nrTestsToReport)
             for timing, test in sortableTimings[:self._nrTestsToReport]:
-                print '%s (%.2f)'%(test, timing)
+                print('%s (%.2f)'%(test, timing))
         return result
 
 
@@ -180,7 +180,7 @@ class AllTests(unittest.TestSuite):
                 if os.path.exists(path):
                     testFiles.extend(self.getTestFilesFromDir(path))
                 else:
-                    print 'WARNING: no disttest for your platform (%s)' % sys.platform
+                    print('WARNING: no disttest for your platform (%s)' % sys.platform)
         for filename in testFiles:
             moduleName = self.filenameToModuleName(filename)
             # Importing the module is not strictly necessary because

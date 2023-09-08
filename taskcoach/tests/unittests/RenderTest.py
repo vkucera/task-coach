@@ -82,7 +82,7 @@ class RenderDateTime(test.TestCase):
         # Don't check for '1801' since the year may be formatted on only 2
         # digits.
         result = render.dateTime(date.DateTime(1801, 4, 5, 23, 0, 0))
-        self.failUnless('01' in result, result)
+        self.assertTrue('01' in result, result)
                          
                          
 class RenderDate(test.TestCase):
@@ -233,14 +233,14 @@ class RenderRecurrenceTest(test.TestCase):
 class RenderException(test.TestCase):
     def testRenderException(self):
         instance = Exception()
-        self.assertEqual(unicode(instance), 
+        self.assertEqual(str(instance), 
                          render.exception(Exception, instance))
 
     def testRenderUnicodeDecodeError(self):
         try:
             'abc'.encode('utf-16').decode('utf-8')
         except UnicodeDecodeError as instance:
-            self.assertEqual(unicode(instance), 
+            self.assertEqual(str(instance), 
                              render.exception(UnicodeDecodeError, instance))
             
     def testExceptionThatCannotBePrinted(self):
@@ -250,7 +250,7 @@ class RenderException(test.TestCase):
         unicode(instance) is just like calling str(instance) and
         raises an UnicodeEncodeError."""
 
-        e = Exception(u'é')
+        e = Exception('é')
         try:
             render.exception(Exception, e)
         except UnicodeEncodeError:  # pragma: no cover

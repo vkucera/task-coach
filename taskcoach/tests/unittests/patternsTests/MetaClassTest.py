@@ -20,9 +20,7 @@ import test
 from taskcoachlib import patterns
 
 
-class Numbered(object):
-    __metaclass__ = patterns.NumberedInstances
-    
+class Numbered(object, metaclass=patterns.NumberedInstances):
     def __init__(self, instanceNumber=-1):
         self.instanceNumber = instanceNumber
     

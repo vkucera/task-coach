@@ -35,9 +35,7 @@ import wx
 ##         pass
 
 
-class PrinterSettings(object):
-    __metaclass__ = patterns.Singleton
-
+class PrinterSettings(object, metaclass=patterns.Singleton):
     edges = ('top', 'left', 'bottom', 'right')
 
     def __init__(self, settings):

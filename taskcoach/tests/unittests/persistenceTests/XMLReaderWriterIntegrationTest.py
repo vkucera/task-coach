@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import StringIO, wx
+import io, wx
 import test
 from taskcoachlib import persistence
 from taskcoachlib import config
@@ -29,7 +29,7 @@ from taskcoachlib.syncml.config import SyncMLConfigNode
 class IntegrationTestCase(test.TestCase):
     def setUp(self):
         task.Task.settings = config.Settings(load=False)
-        self.fd = StringIO.StringIO()
+        self.fd = io.StringIO()
         self.fd.name = 'testfile.tsk'
         self.fd.encoding = 'utf-8'
         self.reader = persistence.XMLReader(self.fd)
@@ -39,7 +39,7 @@ class IntegrationTestCase(test.TestCase):
         self.notes = note.NoteContainer()
         self.syncMLConfig = SyncMLConfigNode('root')
         self.changes = dict()
-        self.guid = u'GUID'
+        self.guid = 'GUID'
         self.fillContainers()
         tasks, categories, notes, syncMLConfig, changes, guid = self.readAndWrite()
         self.tasksWrittenAndRead = task.TaskList(tasks)
@@ -190,10 +190,10 @@ class IntegrationTest(IntegrationTestCase):
                          categorizableIds)
 
     def testFilteredCategory(self):
-        self.failUnless(list(self.categoriesWrittenAndRead)[0].isFiltered())
+        self.assertTrue(list(self.categoriesWrittenAndRead)[0].isFiltered())
 
     def testExclusiveSubcategories(self):
-        self.failUnless(list(self.categoriesWrittenAndRead)[0].hasExclusiveSubcategories())
+        self.assertTrue(list(self.categoriesWrittenAndRead)[0].hasExclusiveSubcategories())
         
     def testPriority(self):
         self.assertAttributeWrittenAndRead(self.task, 'priority')
@@ -251,7 +251,7 @@ class IntegrationTest(IntegrationTestCase):
                          list(self.categoriesWrittenAndRead)[0].id())
         
     def testNoteWithCategory(self):
-        self.failUnless(self.notesWrittenAndRead.rootItems()[0] in \
+        self.assertTrue(self.notesWrittenAndRead.rootItems()[0] in \
                         list(self.categoriesWrittenAndRead)[0].categorizables())
         
     def testTaskNote(self):

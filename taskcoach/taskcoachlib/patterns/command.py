@@ -36,9 +36,7 @@ class Command(object):
         return 'command'
 
 
-class CommandHistory(object):
-    __metaclass__ = patterns.Singleton
-
+class CommandHistory(object, metaclass=patterns.Singleton):
     def __init__(self):
         self.__history = []
         self.__future = []
@@ -77,7 +75,7 @@ class CommandHistory(object):
         
     def _extendLabel(self, label, commandList):
         if commandList:
-            commandName = u' %s'%commandList[-1]
+            commandName = ' %s'%commandList[-1]
             label += commandName.lower()
         return label
 

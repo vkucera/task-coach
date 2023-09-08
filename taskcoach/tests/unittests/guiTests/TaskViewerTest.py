@@ -627,7 +627,7 @@ class CommonTestsMixin(object):
         dialog._interior[4].selected()
         tree = dialog._interior[4].viewer.widget  # pylint: disable=W0212
         firstChild = tree.GetFirstChild(tree.GetRootItem())[0]
-        self.failUnless(firstChild.IsChecked())
+        self.assertTrue(firstChild.IsChecked())
         
     def testFont(self):
         self.taskList.append(task.Task(font=wx.SWISS_FONT))
@@ -729,11 +729,11 @@ class CommonTestsMixin(object):
         types = []
         for event in self.viewer.events_deprecated:
             types.extend(event.types())
-        self.failUnless(type_ in types,
+        self.assertTrue(type_ in types,
                         '"%s" not in %s' % (type_, self.viewer.events_deprecated))
         
     def assertEventFired(self, newValue, sender):
-        self.failUnless((newValue, sender) in self.viewer.events)
+        self.assertTrue((newValue, sender) in self.viewer.events)
 
     def testGetTimeSpent(self):
         self.taskList.append(self.task)
@@ -788,7 +788,7 @@ class CommonTestsMixin(object):
     def testStartTracking(self):
         self.taskList.append(self.task)
         self.task.addEffort(effort.Effort(self.task))
-        self.failUnless((True, self.task) in self.viewer.events)
+        self.assertTrue((True, self.task) in self.viewer.events)
 
     def testChangePlannedStartDateTimeWhileColumnNotShown(self):
         self.taskList.append(self.task)
@@ -800,37 +800,37 @@ class CommonTestsMixin(object):
         self.taskList.append(self.task)
         newValue = date.Now().endOfDay()
         self.task.setDueDateTime(newValue)
-        self.failUnless((newValue, self.task) in self.viewer.events)
+        self.assertTrue((newValue, self.task) in self.viewer.events)
 
     def testChangeCompletionDateWhileColumnNotShown(self):
         self.taskList.append(self.task)
         now = date.Now()
         self.task.setCompletionDateTime(now)
         # We still get an event for the subject column:
-        self.failUnless((now, self.task) in self.viewer.events)
+        self.assertTrue((now, self.task) in self.viewer.events)
 
     def testChangeCompletionDateWhileColumnShown(self):
         self.taskList.append(self.task)
         self.showColumn('completionDate')
         now = date.Now()
         self.task.setCompletionDateTime(now)
-        self.failUnless((now, self.task) in self.viewer.events)
+        self.assertTrue((now, self.task) in self.viewer.events)
 
     def testChangePercentageCompleteWhileColumnNotShown(self):
         self.taskList.append(self.task)
         self.task.setPercentageComplete(50)
-        self.failIf((50, self.task) in self.viewer.events)
+        self.assertFalse((50, self.task) in self.viewer.events)
 
     def testChangePercentageCompleteWhileColumnShown(self):
         self.taskList.append(self.task)
         self.showColumn('percentageComplete')
         self.task.setPercentageComplete(50)
-        self.failUnless((50, self.task) in self.viewer.events)
+        self.assertTrue((50, self.task) in self.viewer.events)
 
     def testChangePriorityWhileColumnNotShown(self):
         self.taskList.append(self.task)
         self.task.setPriority(10)
-        self.failIf(self.viewer.events)
+        self.assertFalse(self.viewer.events)
 
     def testChangePriorityWhileColumnShown(self):
         self.taskList.append(self.task)

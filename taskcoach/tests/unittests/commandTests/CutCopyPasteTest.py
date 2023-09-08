@@ -17,8 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from unittests import asserts
-from CommandTestCase import CommandTestCase
-from TaskCommandsTest import TaskCommandTestCase, CommandWithChildrenTestCase, \
+from .CommandTestCase import CommandTestCase
+from .TaskCommandsTest import TaskCommandTestCase, CommandWithChildrenTestCase, \
     CommandWithEffortTestCase
 from taskcoachlib import command
 from taskcoachlib.domain import note
@@ -35,7 +35,7 @@ class CutCommandWithTasksTest(TaskCommandTestCase):
         self.assertDoUndoRedo(lambda: (self.assertTaskList([self.task2]),
             self.assertEqual([self.task1], command.Clipboard().get()[0])),
             lambda: (self.assertTaskList([self.task1, self.task2]),
-            self.failIf(command.Clipboard())))
+            self.assertFalse(command.Clipboard())))
 
     def testCutTasks_All(self):
         self.cut('all')
@@ -46,7 +46,7 @@ class CutCommandWithTasksTest(TaskCommandTestCase):
         self.category.addCategorizable(self.task1)
         self.task1.addCategory(self.category)
         self.cut('all')
-        self.assertDoUndoRedo(lambda: self.failIf(self.category.categorizables()),
+        self.assertDoUndoRedo(lambda: self.assertFalse(self.category.categorizables()),
                               lambda: self.assertEqual(set([self.task1]), 
                                                        self.category.categorizables()))
 
@@ -211,16 +211,16 @@ class PasteIntoTaskCommandTest(CommandWithChildrenTestCase):
         self.cut([self.task1])
         self.paste([self.parent])
         self.assertDoUndoRedo(
-            lambda: self.failIf(self.parent.completed()),
-            lambda: self.failUnless(self.parent.completed()))
+            lambda: self.assertFalse(self.parent.completed()),
+            lambda: self.assertTrue(self.parent.completed()))
 
     def testPasteCompletedChild_DoesNotMarkParentAsNotCompleted(self):
         self.markCompleted([self.task1, self.parent])
         self.cut([self.task1])
         self.paste([self.parent])
         self.assertDoUndoRedo(
-            lambda: self.failUnless(self.parent.completed()),
-            lambda: self.failUnless(self.parent.completed()))
+            lambda: self.assertTrue(self.parent.completed()),
+            lambda: self.assertTrue(self.parent.completed()))
 
 
 class PasteIntoTaskCommandWithEffortTest(CommandWithEffortTestCase):
@@ -275,7 +275,7 @@ class CutAndPasteWithChildrenIntegrationTest(CommandWithChildrenTestCase):
         self.redo()
         self.redo()
         self.assertEqual(5, len(self.taskList))
-        self.failIf(self.child.children())
+        self.assertFalse(self.child.children())
         
 
 class CopyCommandWithTasksTest(TaskCommandTestCase):
@@ -291,7 +291,7 @@ class CopyCommandWithTasksTest(TaskCommandTestCase):
         self.assertDoUndoRedo(lambda: (self.assertTaskCopy(self.task1, copiedTask),
             self.assertTaskList(self.originalList)),
             lambda: (self.assertTaskList(self.originalList),
-            self.failIf(command.Clipboard())))
+            self.assertFalse(command.Clipboard())))
 
 
 class CopyCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):
@@ -301,7 +301,7 @@ class CopyCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):
         self.assertDoUndoRedo(
             lambda: self.assertTaskCopy(self.parent, copiedTask),
             lambda: (self.assertTaskList(self.originalList),
-            self.failIf(command.Clipboard())))
+            self.assertFalse(command.Clipboard())))
 
 
 class CopyCommandWithEffortTest(CommandWithEffortTestCase):
@@ -317,7 +317,7 @@ class CopyCommandWithEffortTest(CommandWithEffortTestCase):
         self.assertDoUndoRedo(
             lambda: self.assertEqualEfforts(self.effort1, copiedEffort),
             lambda: (self.assertEffortList(self.originalEffortList),
-            self.failIf(command.Clipboard())))
+            self.assertFalse(command.Clipboard())))
             
     def testCopyMultipleEfforts(self):
         self.copy([self.effort1, self.effort2])
@@ -326,7 +326,7 @@ class CopyCommandWithEffortTest(CommandWithEffortTestCase):
             lambda: (self.assertEqualEfforts(self.effort1, copiedEfforts[0]), 
                     self.assertEqualEfforts(self.effort2, copiedEfforts[1])),
             lambda: (self.assertEffortList(self.originalEffortList),
-            self.failIf(command.Clipboard())))
+            self.assertFalse(command.Clipboard())))
      
         
 class DragAndDropWithTasksTest(CommandWithChildrenTestCase):
@@ -337,31 +337,31 @@ class DragAndDropWithTasksTest(CommandWithChildrenTestCase):
         self.taskList.append(self.task2)
         self.dragAndDrop([self.task2], self.task1)
         self.assertDoUndoRedo(
-            lambda: self.failUnless(self.task2 in self.task1.children()),
-            lambda: self.failIf(self.task2 in self.task1.children()))
+            lambda: self.assertTrue(self.task2 in self.task1.children()),
+            lambda: self.assertFalse(self.task2 in self.task1.children()))
             
     def testDontAllowDropOnSelf(self):
         self.dragAndDrop([self.task1], self.task1)
-        self.assertDoUndoRedo(lambda: self.failIf(self.task1 in self.task1.children()))
+        self.assertDoUndoRedo(lambda: self.assertFalse(self.task1 in self.task1.children()))
         
     def testDragChildTaskAndDropOnOtherRootTask(self):
         self.dragAndDrop([self.child2], self.task1)
         self.assertDoUndoRedo(
-             lambda: (self.failUnless(self.child2 in self.task1.children()),
-                     self.failIf(self.child2 in self.parent.children())),
-             lambda: (self.failIf(self.child2 in self.task1.children()), 
-                     self.failUnless(self.child2 in self.parent.children())))
+             lambda: (self.assertTrue(self.child2 in self.task1.children()),
+                     self.assertFalse(self.child2 in self.parent.children())),
+             lambda: (self.assertFalse(self.child2 in self.task1.children()), 
+                     self.assertTrue(self.child2 in self.parent.children())))
                      
     def testDragChildAndDropOnOwnParent(self):
         self.dragAndDrop([self.child2], self.parent)
         self.assertDoUndoRedo(
-            lambda: self.failUnless(self.child2 in self.parent.children()))
+            lambda: self.assertTrue(self.child2 in self.parent.children()))
             
     def testDragParentAndDropOnOwnChild(self):
         self.dragAndDrop([self.parent], self.child2) 
         self.assertDoUndoRedo(
-            lambda: (self.failUnless(self.child2 in self.parent.children()),
-                    self.failIf(self.parent in self.child2.children())))
+            lambda: (self.assertTrue(self.child2 in self.parent.children()),
+                    self.assertFalse(self.parent in self.child2.children())))
                     
 
         

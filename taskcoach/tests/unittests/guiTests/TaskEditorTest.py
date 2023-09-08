@@ -255,7 +255,7 @@ class EditTaskTestMixin(object):
         
     def testSetRecurrenceSameWeekday(self):
         self.setRecurrence(date.Recurrence('monthly', sameWeekday=True))
-        self.failUnless(self.task.recurrence().sameWeekday)
+        self.assertTrue(self.task.recurrence().sameWeekday)
         
     def testPriority(self):
         self.editor._interior[0]._priorityEntry.SetValue(45)
@@ -286,8 +286,8 @@ class EditTaskTestMixin(object):
     def testAddAttachment(self):
         self.editor._interior[8].viewer.onDropFiles(self.task, ['filename'])
         # pylint: disable=E1101
-        self.failUnless('filename' in [att.location() for att in self.task.attachments()])
-        self.failUnless('filename' in [att.subject() for att in self.task.attachments()])
+        self.assertTrue('filename' in [att.location() for att in self.task.attachments()])
+        self.assertTrue('filename' in [att.subject() for att in self.task.attachments()])
         
     def testRemoveAttachment(self):
         self.editor._interior[8].viewer.select(self.task.attachments())
@@ -300,13 +300,13 @@ class EditTaskTestMixin(object):
         def onError(*args, **kwargs):  # pylint: disable=W0613
             self.errorMessage = args[0]  # pragma: no cover
             
-        att = attachment.FileAttachment(u'tÃƒÂ©st.ÃƒÂ©')
+        att = attachment.FileAttachment('tÃƒÂ©st.ÃƒÂ©')
         openAttachment = uicommand.AttachmentOpen(\
             viewer=self.editor._interior[6].viewer,
             attachments=attachment.AttachmentList([att]),
             settings=self.settings)
         openAttachment.doCommand(None, showerror=onError)
-        self.failIf(self.errorMessage)
+        self.assertFalse(self.errorMessage)
 
     def testAddNote(self):
         viewer = self.editor._interior[7].viewer
@@ -412,7 +412,7 @@ class FocusTestWithGTKSetting(TaskEditorTestCase):
 
     def testSelection(self):
         # pylint: disable=W0212
-        self.assertEqual(self.editor._interior[0]._subjectEntry.GetStringSelection(), u'')
+        self.assertEqual(self.editor._interior[0]._subjectEntry.GetStringSelection(), '')
 
 
 class FocusTestWithPerspective(FocusTest):

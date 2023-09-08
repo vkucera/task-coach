@@ -37,6 +37,7 @@ import wx, re, operator
 from . import base_uicommand
 from . import mixin_uicommand
 from . import settings_uicommand
+from functools import reduce
 
 
 class IOCommand(base_uicommand.UICommand):  # pylint: disable=W0223
@@ -1021,7 +1022,7 @@ class ViewerHideTasks(ViewerCommand, settings_uicommand.UICheckCommand):
                                               *args, **kwargs)
 
     def uniqueName(self):
-        return super(ViewerHideTasks, self).uniqueName() + '_' + unicode(self.__taskStatus)
+        return super(ViewerHideTasks, self).uniqueName() + '_' + str(self.__taskStatus)
 
     def isSettingChecked(self):
         return self.viewer.isHidingTaskStatus(self.__taskStatus)

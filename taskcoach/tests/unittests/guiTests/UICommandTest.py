@@ -60,12 +60,12 @@ class UICommandTest(test.wxTestCase):
     def testActivationFromMenu(self):
         menuId = self.uicommand.addToMenu(self.menu, self.frame)
         self.activate(self.frame, menuId)
-        self.failUnless(self.uicommand.activated)
+        self.assertTrue(self.uicommand.activated)
 
     def testActivationFromToolBar(self):
         menuId = self.uicommand.appendToToolBar(self.frame.GetToolBar())
         self.activate(self.frame.GetToolBar(), menuId)
-        self.failUnless(self.uicommand.activated)
+        self.assertTrue(self.uicommand.activated)
 
 
 class wxTestCaseWithFrameAsTopLevelWindow(test.wxTestCase):
@@ -93,7 +93,7 @@ class NewTaskWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
             taskList=self.taskFile.tasks(), viewer=self.viewer, 
             categories=self.categories, settings=self.settings)
         dialog = taskNew.doCommand(None, show=False)
-        self.failUnless(isinstance(dialog, TaskEditor), dialog)
+        self.assertTrue(isinstance(dialog, TaskEditor), dialog)
         dialog._interior[4].selected()
         tree = dialog._interior[4].viewer.widget
         return tree.GetFirstChild(tree.GetRootItem())[0]
@@ -104,11 +104,11 @@ class NewTaskWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
     def testNewTaskWithSelectedCategory(self):
         self.selectFirstCategory()
         firstCategoryInTaskDialog = self.createNewTask()
-        self.failUnless(firstCategoryInTaskDialog.IsChecked())
+        self.assertTrue(firstCategoryInTaskDialog.IsChecked())
         
     def testNewTaskWithoutSelectedCategory(self):
         firstCategoryInTaskDialog = self.createNewTask()
-        self.failIf(firstCategoryInTaskDialog.IsChecked())
+        self.assertFalse(firstCategoryInTaskDialog.IsChecked())
 
 
 class NewNoteWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
@@ -124,7 +124,7 @@ class NewNoteWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
             notes=self.taskFile.notes(), viewer=self.viewer, 
             categories=self.categories, settings=self.settings)
         dialog = noteNew.doCommand(None, show=False)
-        self.failUnless(isinstance(dialog, NoteEditor), dialog)
+        self.assertTrue(isinstance(dialog, NoteEditor), dialog)
         dialog._interior[1].selected()
         tree = dialog._interior[1].viewer.widget
         return tree.GetFirstChild(tree.GetRootItem())[0]
@@ -135,11 +135,11 @@ class NewNoteWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
     def testNewNoteWithSelectedCategory(self):
         self.selectFirstCategory()
         firstCategoryInNoteDialog = self.createNewNote()
-        self.failUnless(firstCategoryInNoteDialog.IsChecked())
+        self.assertTrue(firstCategoryInNoteDialog.IsChecked())
         
     def testNewNoteWithoutSelectedCategory(self):
         firstCategoryInNoteDialog = self.createNewNote()
-        self.failIf(firstCategoryInNoteDialog.IsChecked())
+        self.assertFalse(firstCategoryInNoteDialog.IsChecked())
 
 
 class DummyTask(object):
@@ -200,9 +200,9 @@ class MarkActiveTest(test.TestCase):
         markActive = gui.uicommand.TaskMarkActive(viewer=viewer, settings=config.Settings(load=False))
         isEnabled = markActive.enabled(None)
         if shouldBeEnabled:
-            self.failUnless(isEnabled)
+            self.assertTrue(isEnabled)
         else:
-            self.failIf(isEnabled)
+            self.assertFalse(isEnabled)
             
     def testNotEnabledWhenSelectionIsEmpty(self):
         self.assertMarkActiveIsEnabled(selection=[], shouldBeEnabled=False)
@@ -226,9 +226,9 @@ class MarkInactiveTest(test.TestCase):
         markInactive = gui.uicommand.TaskMarkInactive(viewer=viewer, settings=config.Settings(load=False))
         isEnabled = markInactive.enabled(None)
         if shouldBeEnabled:
-            self.failUnless(isEnabled)
+            self.assertTrue(isEnabled)
         else:
-            self.failIf(isEnabled)
+            self.assertFalse(isEnabled)
             
     def testNotEnabledWhenSelectionIsEmpty(self):
         self.assertMarkInactiveIsEnabled(selection=[], shouldBeEnabled=False)
@@ -252,9 +252,9 @@ class MarkCompletedTest(test.TestCase):
         markCompleted = gui.uicommand.TaskMarkCompleted(viewer=viewer, settings=config.Settings(load=False))
         isEnabled = markCompleted.enabled(None)
         if shouldBeEnabled:
-            self.failUnless(isEnabled)
+            self.assertTrue(isEnabled)
         else:
-            self.failIf(isEnabled)
+            self.assertFalse(isEnabled)
             
     def testNotEnabledWhenSelectionIsEmpty(self):
         self.assertMarkCompletedIsEnabled(selection=[], shouldBeEnabled=False)
@@ -282,14 +282,14 @@ class TaskNewTest(wxTestCaseWithFrameAsTopLevelWindow):
         dialog._interior[4].selected()
         tree = dialog._interior[4].viewer.widget
         firstChild = tree.GetFirstChild(tree.GetRootItem())[0]
-        self.failUnless(firstChild.IsChecked())
+        self.assertTrue(firstChild.IsChecked())
         
     def testNewTaskWithPresetPlannedStartDateTime(self):
         self.settings.set('view', 'defaultplannedstartdatetime', 'preset_tomorrow_endofworkingday')
         taskNew = gui.uicommand.TaskNew(taskList=self.taskFile.tasks(),
                                         settings=self.settings)
         taskNew.doCommand(None, show=False)
-        self.failIf(date.DateTime() == list(self.taskFile.tasks())[0].plannedStartDateTime())
+        self.assertFalse(date.DateTime() == list(self.taskFile.tasks())[0].plannedStartDateTime())
 
     def testNewTaskWithProposedPlannedStartDateTime(self):
         self.settings.set('view', 'defaultplannedstartdatetime', 'propose_tomorrow_endofworkingday')
@@ -303,21 +303,21 @@ class TaskNewTest(wxTestCaseWithFrameAsTopLevelWindow):
         taskNew = gui.uicommand.TaskNew(taskList=self.taskFile.tasks(),
                                         settings=self.settings)
         taskNew.doCommand(None, show=False)
-        self.failIf(date.DateTime() == list(self.taskFile.tasks())[0].dueDateTime())
+        self.assertFalse(date.DateTime() == list(self.taskFile.tasks())[0].dueDateTime())
 
     def testNewTaskWithPresetCompletionDateTime(self):
         self.settings.set('view', 'defaultcompletiondatetime', 'preset_tomorrow_endofworkingday')
         taskNew = gui.uicommand.TaskNew(taskList=self.taskFile.tasks(),
                                         settings=self.settings)
         taskNew.doCommand(None, show=False)
-        self.failIf(date.DateTime() == list(self.taskFile.tasks())[0].completionDateTime())
+        self.assertFalse(date.DateTime() == list(self.taskFile.tasks())[0].completionDateTime())
 
     def testNewTaskWithPresetReminderDateTime(self):
         self.settings.set('view', 'defaultreminderdatetime', 'preset_tomorrow_endofworkingday')
         taskNew = gui.uicommand.TaskNew(taskList=self.taskFile.tasks(),
                                         settings=self.settings)
         taskNew.doCommand(None, show=False)
-        self.failIf(date.DateTime() == list(self.taskFile.tasks())[0].reminder())
+        self.assertFalse(date.DateTime() == list(self.taskFile.tasks())[0].reminder())
 
 
 class NoteNewTest(wxTestCaseWithFrameAsTopLevelWindow):
@@ -330,7 +330,7 @@ class NoteNewTest(wxTestCaseWithFrameAsTopLevelWindow):
         dialog._interior[1].selected()
         tree = dialog._interior[1].viewer.widget
         firstChild = tree.GetFirstChild(tree.GetRootItem())[0]
-        self.failUnless(firstChild.IsChecked())
+        self.assertTrue(firstChild.IsChecked())
 
 
 class EffortNewTest(wxTestCaseWithFrameAsTopLevelWindow):
@@ -441,7 +441,7 @@ class OpenAllAttachmentsTest(test.TestCase):
         self.viewer.selection[0].addAttachment(dummyAttachment1)
         self.viewer.selection[0].addAttachment(dummyAttachment2)
         self.openAll.doCommand(None)
-        self.failUnless(dummyAttachment1.openCalled and dummyAttachment2.openCalled)
+        self.assertTrue(dummyAttachment1.openCalled and dummyAttachment2.openCalled)
 
 
 class ToggleCategoryTest(test.TestCase):
@@ -452,19 +452,19 @@ class ToggleCategoryTest(test.TestCase):
         viewer = DummyViewer(selection=[task.Task('Task')])
         uiCommand = gui.uicommand.ToggleCategory(viewer=viewer,
                                                  category=self.category)
-        self.failUnless(uiCommand.enabled(None))
+        self.assertTrue(uiCommand.enabled(None))
         
     def testDisableWhenViewerIsShowingCategories(self):
         viewer = DummyViewer(selection=[self.category])
         uiCommand = gui.uicommand.ToggleCategory(viewer=viewer,
                                                  category=self.category)
-        self.failIf(uiCommand.enabled(None))
+        self.assertFalse(uiCommand.enabled(None))
         
     def testDisableWhenSelectionIsEmpty(self):
         viewer = DummyViewer(selection=[])
         uiCommand = gui.uicommand.ToggleCategory(viewer=viewer,
                                                  category=self.category)
-        self.failIf(uiCommand.enabled(None))
+        self.assertFalse(uiCommand.enabled(None))
         
     def testDisableWhenCategoryHasMutualExclusiveAncestorThatIsNotChecked(self):
         parent_category = category.Category('Parent of mutual exclusive categories', 
@@ -480,7 +480,7 @@ class ToggleCategoryTest(test.TestCase):
         viewer = DummyViewer(selection=[task_with_category])
         uiCommand = gui.uicommand.ToggleCategory(viewer=viewer,
                                                  category=self.category)
-        self.failIf(uiCommand.enabled(None))
+        self.assertFalse(uiCommand.enabled(None))
 
 
 class EffortStopTest(test.TestCase):
@@ -502,93 +502,93 @@ class EffortStopTest(test.TestCase):
     # Tests of EffortStop.enabled()
         
     def testStopIsNotEnabledByDefault(self):
-        self.failIf(self.effortStop.enabled())
+        self.assertFalse(self.effortStop.enabled())
         
     def testStopIsEnabledWhenEffortIsTracked(self):
         self.task.addEffort(self.effort1)
-        self.failUnless(self.effortStop.enabled())
+        self.assertTrue(self.effortStop.enabled())
 
     def testStopResumeIsEnabledWhenEffortIsTracked(self):
         self.task.addEffort(self.effort1)
         self.effort1.setStop(date.Now())
-        self.failUnless(self.effortStop.enabled())
+        self.assertTrue(self.effortStop.enabled())
 
     def testStopIsDisabledWhenEffortsIsDeleted(self):
         self.task.addEffort(self.effort1)
         self.task.removeEffort(self.effort1)
-        self.failIf(self.effortStop.enabled())
+        self.assertFalse(self.effortStop.enabled())
         
     def testStopIsEnabledWhenTwoEffortsAreTracked(self):
         self.task.addEffort(self.effort1)
         self.task.addEffort(self.effort2)
-        self.failUnless(self.effortStop.enabled())
+        self.assertTrue(self.effortStop.enabled())
         
     def testStopIsEnabledWhenOneOfTwoEffortsIsStopped(self):
         self.task.addEffort(self.effort1)
         self.task.addEffort(self.effort2)
         self.effort1.setStop(date.Now())
-        self.failUnless(self.effortStop.enabled())
+        self.assertTrue(self.effortStop.enabled())
 
     def testStopIsEnabledWhenOneOfTwoEffortsIsDeleted(self):
         self.task.addEffort(self.effort1)
         self.task.addEffort(self.effort2)
         self.task.removeEffort(self.effort1)
-        self.failUnless(self.effortStop.enabled())
+        self.assertTrue(self.effortStop.enabled())
         
     def testPauseIsEnabledWhenBothEffortsAreStopped(self):
         self.task.addEffort(self.effort1)
         self.task.addEffort(self.effort2)
         self.effort1.setStop(date.Now())
         self.effort2.setStop(date.Now())
-        self.failUnless(self.effortStop.enabled())
+        self.assertTrue(self.effortStop.enabled())
 
     def testStopIsDisabledWhenBothEffortsAreDeleted(self):
         self.task.addEffort(self.effort1)
         self.task.addEffort(self.effort2)
         self.task.removeEffort(self.effort1)
         self.task.removeEffort(self.effort2)
-        self.failIf(self.effortStop.enabled())
+        self.assertFalse(self.effortStop.enabled())
         
     def testStopIsDisabledWhenTaskIsDeleted(self):
         self.task.addEffort(self.effort1)
         self.taskList.remove(self.task)
-        self.failIf(self.effortStop.enabled())
+        self.assertFalse(self.effortStop.enabled())
 
     def testStopIsEnabledWhenOneOfTwoTasksWithTrackedEffortIsDeleted(self):
         self.task.addEffort(self.effort1)
         self.task2.addEffort(effort.Effort(self.task2))
         self.taskList.append(self.task2)
         self.taskList.remove(self.task)
-        self.failUnless(self.effortStop.enabled())
+        self.assertTrue(self.effortStop.enabled())
         
     def testStopIsEnabledWhenATaskWithTrackedEffortIsAdded(self):
         self.task2.addEffort(effort.Effort(self.task2))
         self.taskList.append(self.task2)
-        self.failUnless(self.effortStop.enabled())
+        self.assertTrue(self.effortStop.enabled())
         
     def testStopIsEnabledWhenATrackedEffortIsMoved(self):
         self.task.addEffort(self.effort1)
         self.taskList.append(self.task2)
         self.effort1.setTask(self.task2)
-        self.failUnless(self.effortStop.enabled())
+        self.assertTrue(self.effortStop.enabled())
         
     def testIgnoreCompositeEfforts(self):
         effort.reducer.EffortAggregator(self.taskList, aggregation='day')
         self.task.addEffort(self.effort1)
-        self.failIf('multiple tasks' in self.effortStop.getMenuText())
+        self.assertFalse('multiple tasks' in self.effortStop.getMenuText())
         
     # Tests of EffortStop.doCommand()
 
     def testDoCommandStopsTrackedEffort(self):
         self.task.addEffort(self.effort1)
         self.effortStop.doCommand()
-        self.failIf(self.effort1.isBeingTracked())
+        self.assertFalse(self.effort1.isBeingTracked())
         
     def testDoCommandStopsAllTrackedEffort(self):
         self.task.addEffort(self.effort1)
         self.task.addEffort(self.effort2)
         self.effortStop.doCommand()
-        self.failIf(self.task.isBeingTracked())
+        self.assertFalse(self.task.isBeingTracked())
 
 
 class AttachmentTest(test.wxTestCase):

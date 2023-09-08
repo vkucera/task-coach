@@ -154,7 +154,7 @@ class SortableViewerTest(test.TestCase):
         return viewer
         
     def testIsSortable(self):
-        self.failUnless(self.viewer.isSortable())
+        self.assertTrue(self.viewer.isSortable())
 
     def testSortBy(self):
         self.viewer.sortBy('subject')
@@ -165,27 +165,27 @@ class SortableViewerTest(test.TestCase):
         self.viewer.sortBy('subject')
         self.viewer.setSortOrderAscending(True)
         self.viewer.sortBy('subject')
-        self.failIf(self.viewer.isSortOrderAscending())
+        self.assertFalse(self.viewer.isSortOrderAscending())
 
     def testIsSortedBy(self):
         self.viewer.sortBy('description')
-        self.failUnless(self.viewer.isSortedBy('description'))
+        self.assertTrue(self.viewer.isSortedBy('description'))
         
     def testSortOrderAscending(self):
         self.viewer.setSortOrderAscending(True)
-        self.failUnless(self.viewer.isSortOrderAscending())
+        self.assertTrue(self.viewer.isSortOrderAscending())
 
     def testSortOrderDescending(self):
         self.viewer.setSortOrderAscending(False)
-        self.failIf(self.viewer.isSortOrderAscending())
+        self.assertFalse(self.viewer.isSortOrderAscending())
                 
     def testSetSortCaseSensitive(self):
         self.viewer.setSortCaseSensitive(True)
-        self.failUnless(self.viewer.isSortCaseSensitive())
+        self.assertTrue(self.viewer.isSortCaseSensitive())
         
     def testSetSortCaseInsensitive(self):
         self.viewer.setSortCaseSensitive(False)
-        self.failIf(self.viewer.isSortCaseSensitive())
+        self.assertFalse(self.viewer.isSortCaseSensitive())
         
     def testApplySettingsWhenCreatingViewer(self):
         self.settings.set(self.viewer.settingsSection(), 'sortby', '["description"]')
@@ -208,11 +208,11 @@ class SortableViewerForTasksTest(test.TestCase):
 
     def testSetSortByTaskStatusFirst(self):
         self.viewer.setSortByTaskStatusFirst(True)
-        self.failUnless(self.viewer.isSortByTaskStatusFirst())
+        self.assertTrue(self.viewer.isSortByTaskStatusFirst())
         
     def testSetNoSortByTaskStatusFirst(self):
         self.viewer.setSortByTaskStatusFirst(False)
-        self.failIf(self.viewer.isSortByTaskStatusFirst())
+        self.assertFalse(self.viewer.isSortByTaskStatusFirst())
 
       
 class DummyViewer(object):
@@ -243,7 +243,7 @@ class SearchableViewerTest(test.TestCase):
         return viewer
         
     def testIsSearchable(self):
-        self.failUnless(self.viewer.isSearchable())
+        self.assertTrue(self.viewer.isSearchable())
         
     def testDefaultSearchFilter(self):
         self.assertEqual(('', False, False, False, False), self.viewer.getSearchFilter())
@@ -256,7 +256,7 @@ class SearchableViewerTest(test.TestCase):
     def testSetSearchFilterString_AffectsPresentation(self):
         self.viewer.presentation().append(task.Task())
         self.viewer.setSearchFilter('bla')
-        self.failIf(self.viewer.presentation())
+        self.assertFalse(self.viewer.presentation())
         
     def testSearchMatchCase(self):
         self.viewer.setSearchFilter('bla', matchCase=True)
@@ -267,7 +267,7 @@ class SearchableViewerTest(test.TestCase):
     def testSearchMatchCase_AffectsPresenation(self):
         self.viewer.presentation().append(task.Task('BLA'))
         self.viewer.setSearchFilter('bla', matchCase=True)
-        self.failIf(self.viewer.presentation())
+        self.assertFalse(self.viewer.presentation())
         
     def testSearchIncludesSubItems(self):
         self.viewer.setSearchFilter('bla', includeSubItems=True)
@@ -297,7 +297,7 @@ class SearchableViewerTest(test.TestCase):
         self.settings.set(self.viewer.settingsSection(), 'searchfilterstring', 'whatever')
         anotherViewer = self.createViewer()
         anotherViewer.presentation().append(task.Task())
-        self.failIf(anotherViewer.presentation())
+        self.assertFalse(anotherViewer.presentation())
 
 
 class FilterableViewerTest(test.TestCase):
@@ -305,7 +305,7 @@ class FilterableViewerTest(test.TestCase):
         self.viewer = gui.viewer.mixin.FilterableViewerMixin()
         
     def testIsFilterable(self):
-        self.failUnless(self.viewer.isFilterable())
+        self.assertTrue(self.viewer.isFilterable())
 
 
 class FilterableViewerForTasksUnderTest(gui.viewer.mixin.FilterableViewerForTasksMixin, 
@@ -335,130 +335,130 @@ class FilterableViewerForTasks(test.TestCase):
         return viewer
 
     def testIsNotHidingInactiveTasksByDefault(self):
-        self.failIf(self.viewer.isHidingTaskStatus(task.status.inactive))
+        self.assertFalse(self.viewer.isHidingTaskStatus(task.status.inactive))
 
     def testHideInactiveTasks(self):
         self.viewer.hideTaskStatus(task.status.inactive)
-        self.failUnless(self.viewer.isHidingTaskStatus(task.status.inactive))
+        self.assertTrue(self.viewer.isHidingTaskStatus(task.status.inactive))
         
     def testHideInactiveTasks_SetsSetting(self):
         self.viewer.hideTaskStatus(task.status.inactive)
-        self.failUnless(self.settings.getboolean(self.viewer.settingsSection(), 
+        self.assertTrue(self.settings.getboolean(self.viewer.settingsSection(), 
                                                  'hideinactivetasks'))
 
     def testHideInactiveTasks_AffectsPresentation(self):
         self.viewer.presentation().append(task.Task(plannedStartDateTime=date.Tomorrow()))
         self.viewer.hideTaskStatus(task.status.inactive)
-        self.failIf(self.viewer.presentation())
+        self.assertFalse(self.viewer.presentation())
     
     def testUnhideInactiveTasks(self):
         self.viewer.presentation().append(task.Task(plannedStartDateTime=date.Tomorrow()))
         self.viewer.hideTaskStatus(task.status.inactive)
         self.viewer.hideTaskStatus(task.status.inactive, False)
-        self.failUnless(self.viewer.presentation())
+        self.assertTrue(self.viewer.presentation())
 
     def testIsNotHidingLateTasksByDefault(self):
-        self.failIf(self.viewer.isHidingTaskStatus(task.status.late))
+        self.assertFalse(self.viewer.isHidingTaskStatus(task.status.late))
 
     def testHideLateTasks(self):
         self.viewer.hideTaskStatus(task.status.late)
-        self.failUnless(self.viewer.isHidingTaskStatus(task.status.late))
+        self.assertTrue(self.viewer.isHidingTaskStatus(task.status.late))
         
     def testHideLateTasks_SetsSetting(self):
         self.viewer.hideTaskStatus(task.status.late)
-        self.failUnless(self.settings.getboolean(self.viewer.settingsSection(), 
+        self.assertTrue(self.settings.getboolean(self.viewer.settingsSection(), 
                                                  'hidelatetasks'))
 
     def testHideLateTasks_AffectsPresentation(self):
         self.viewer.presentation().append(task.Task(plannedStartDateTime=date.Yesterday()))
         self.viewer.hideTaskStatus(task.status.late)
-        self.failIf(self.viewer.presentation())
+        self.assertFalse(self.viewer.presentation())
     
     def testUnhideLateTasks(self):
         self.viewer.presentation().append(task.Task(plannedStartDateTime=date.Yesterday()))
         self.viewer.hideTaskStatus(task.status.late)
         self.viewer.hideTaskStatus(task.status.late, False)
-        self.failUnless(self.viewer.presentation())
+        self.assertTrue(self.viewer.presentation())
  
     def testIsNotHidingDueSoonTasksByDefault(self):
-        self.failIf(self.viewer.isHidingTaskStatus(task.status.duesoon))
+        self.assertFalse(self.viewer.isHidingTaskStatus(task.status.duesoon))
 
     def testHideDueSoonTasks(self):
         self.viewer.hideTaskStatus(task.status.duesoon)
-        self.failUnless(self.viewer.isHidingTaskStatus(task.status.duesoon))
+        self.assertTrue(self.viewer.isHidingTaskStatus(task.status.duesoon))
         
     def testHideDueSoonTasks_SetsSetting(self):
         self.viewer.hideTaskStatus(task.status.duesoon)
-        self.failUnless(self.settings.getboolean(self.viewer.settingsSection(), 
+        self.assertTrue(self.settings.getboolean(self.viewer.settingsSection(), 
                                                  'hideduesoontasks'))
 
     def testHideDueSoonTasks_AffectsPresentation(self):
         self.viewer.presentation().append(task.Task(dueDateTime=date.Now() + date.ONE_HOUR))
         self.viewer.hideTaskStatus(task.status.duesoon)
-        self.failIf(self.viewer.presentation())
+        self.assertFalse(self.viewer.presentation())
     
     def testUnhideDueSoonTasks(self):
         self.viewer.presentation().append(task.Task(dueDateTime=date.Now() + date.ONE_HOUR))
         self.viewer.hideTaskStatus(task.status.duesoon)
         self.viewer.hideTaskStatus(task.status.duesoon, False)
-        self.failUnless(self.viewer.presentation())
+        self.assertTrue(self.viewer.presentation())
 
     def testIsNotHidingOverDueTasksByDefault(self):
-        self.failIf(self.viewer.isHidingTaskStatus(task.status.overdue))
+        self.assertFalse(self.viewer.isHidingTaskStatus(task.status.overdue))
 
     def testHideOverDueTasks(self):
         self.viewer.hideTaskStatus(task.status.overdue)
-        self.failUnless(self.viewer.isHidingTaskStatus(task.status.overdue))
+        self.assertTrue(self.viewer.isHidingTaskStatus(task.status.overdue))
         
     def testHideOverDueTasks_SetsSetting(self):
         self.viewer.hideTaskStatus(task.status.overdue)
-        self.failUnless(self.settings.getboolean(self.viewer.settingsSection(), 
+        self.assertTrue(self.settings.getboolean(self.viewer.settingsSection(), 
                                                  'hideoverduetasks'))
 
     def testHideOverDueTasks_AffectsPresentation(self):
         self.viewer.presentation().append(task.Task(dueDateTime=date.Yesterday()))
         self.viewer.hideTaskStatus(task.status.overdue)
-        self.failIf(self.viewer.presentation())
+        self.assertFalse(self.viewer.presentation())
     
     def testUnhideOverDueTasks(self):
         self.viewer.presentation().append(task.Task(dueDateTime=date.Yesterday()))
         self.viewer.hideTaskStatus(task.status.overdue)
         self.viewer.hideTaskStatus(task.status.overdue, False)
-        self.failUnless(self.viewer.presentation())
+        self.assertTrue(self.viewer.presentation())
        
     def testIsNotHidingCompletedTasksByDefault(self):
-        self.failIf(self.viewer.isHidingTaskStatus(task.status.completed))
+        self.assertFalse(self.viewer.isHidingTaskStatus(task.status.completed))
         
     def testHideCompletedTasks(self):
         self.viewer.hideTaskStatus(task.status.completed)
-        self.failUnless(self.viewer.isHidingTaskStatus(task.status.completed))
+        self.assertTrue(self.viewer.isHidingTaskStatus(task.status.completed))
     
     def testHideCompletedTasks_SetsSetting(self):
         self.viewer.hideTaskStatus(task.status.completed)
-        self.failUnless(self.settings.getboolean(self.viewer.settingsSection(),
+        self.assertTrue(self.settings.getboolean(self.viewer.settingsSection(),
                                                  'hidecompletedtasks'))
     
     def testHideCompletedTasks_AffectsPresentation(self):
         self.viewer.presentation().append(task.Task(completionDateTime=date.Now()))
         self.viewer.hideTaskStatus(task.status.completed)
-        self.failIf(self.viewer.presentation())
+        self.assertFalse(self.viewer.presentation())
         
     def testUnhideCompletedTasks(self):    
         self.viewer.presentation().append(task.Task(completionDateTime=date.Now()))
         self.viewer.hideTaskStatus(task.status.completed)
         self.viewer.hideTaskStatus(task.status.completed, False)
-        self.failUnless(self.viewer.presentation())
+        self.assertTrue(self.viewer.presentation())
 
     def testIsNotHidingCompositeTasksByDefault(self):
-        self.failIf(self.viewer.isHidingCompositeTasks())
+        self.assertFalse(self.viewer.isHidingCompositeTasks())
         
     def testHideCompositeTasks(self):
         self.viewer.hideCompositeTasks()
-        self.failUnless(self.viewer.isHidingCompositeTasks())
+        self.assertTrue(self.viewer.isHidingCompositeTasks())
         
     def testHideCompositeTasks_SetsSettings(self):
         self.viewer.hideCompositeTasks()
-        self.failUnless(self.settings.getboolean(self.viewer.settingsSection(),
+        self.assertTrue(self.settings.getboolean(self.viewer.settingsSection(),
                                                  'hidecompositetasks'))
 
     def testHideCompositeTasks_AffectsPresentation(self):
@@ -483,15 +483,15 @@ class FilterableViewerForTasks(test.TestCase):
         for status in task.Task.possibleStatuses():
             self.viewer.hideTaskStatus(status)
         self.viewer.resetFilter()
-        self.failIf(self.viewer.isHidingCompositeTasks())
+        self.assertFalse(self.viewer.isHidingCompositeTasks())
         for status in task.Task.possibleStatuses():
-            self.failIf(self.viewer.isHidingTaskStatus(status))
+            self.assertFalse(self.viewer.isHidingTaskStatus(status))
         
     def testApplySettingsWhenCreatingViewer(self):
         self.settings.set(self.viewer.settingsSection(), 'hidecompletedtasks', 'True')
         anotherViewer = self.createViewer()
         anotherViewer.presentation().append(task.Task(completionDateTime=date.Now()))
-        self.failIf(anotherViewer.presentation())   
+        self.assertFalse(anotherViewer.presentation())   
 
 
 class ViewerBaseClassTest(test.wxTestCase):

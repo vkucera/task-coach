@@ -82,8 +82,8 @@ def _GetCachedPassword(domain, username, reset):
     global _PASSWORDCACHE
 
     if _PASSWORDCACHE is None:
-        import StringIO, traceback
-        bf = StringIO.StringIO()
+        import io, traceback
+        bf = io.StringIO()
         traceback.print_exc(file=bf)
         wx.MessageBox(_('There was a problem trying to find out your system\'s keychain.\nPlease file a bug report (see the Help menu) and attach a screenshot of this message.\nError was:\n\n%s') % bf.getvalue(), _('Error'), wx.OK)
         _PASSWORDCACHE = dict()

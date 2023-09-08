@@ -142,7 +142,7 @@ class NotificationFrameBase(_NotifyBase):
         self.title = title
         self.icon = icon
         style = self.Style() | (wx.STAY_ON_TOP if parent is None else wx.FRAME_FLOAT_ON_PARENT)
-        super(NotificationFrameBase, self).__init__(parent, wx.ID_ANY, u'', style=style)
+        super(NotificationFrameBase, self).__init__(parent, wx.ID_ANY, '', style=style)
         self.Populate()
 
     def Populate(self):
@@ -428,8 +428,8 @@ if __name__ == '__main__':
             sizer.Add(choice, 0, wx.ALL|wx.EXPAND, 5)
 
             hsz = wx.BoxSizer(wx.HORIZONTAL)
-            hsz.Add(wx.Button(panel, wx.ID_ANY, u'OK'), 1, wx.ALL, 2)
-            hsz.Add(wx.Button(panel, wx.ID_ANY, u'Cancel'), 1, wx.ALL, 2)
+            hsz.Add(wx.Button(panel, wx.ID_ANY, 'OK'), 1, wx.ALL, 2)
+            hsz.Add(wx.Button(panel, wx.ID_ANY, 'Cancel'), 1, wx.ALL, 2)
             sizer.Add(hsz, 0, wx.EXPAND|wx.ALL, 5)
 
         def CloseButton(self, panel):

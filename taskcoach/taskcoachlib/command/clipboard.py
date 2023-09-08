@@ -19,9 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import patterns
 
 
-class Clipboard:
-    __metaclass__ = patterns.Singleton
-
+class Clipboard(metaclass=patterns.Singleton):
     def __init__(self):
         self.clear()
 
@@ -42,6 +40,6 @@ class Clipboard:
         self._contents = []
         self._source = None
 
-    def __nonzero__(self):
+    def __bool__(self):
         return len(self._contents)
 

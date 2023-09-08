@@ -51,7 +51,7 @@ def make(filename, outfile=None):
     try:
         lines = open(infile).readlines()
     except IOError as msg:
-        print >> sys.stderr, msg
+        print(msg, file=sys.stderr)
         sys.exit(1)
 
     section = None
@@ -94,9 +94,9 @@ def make(filename, outfile=None):
         elif section == STR:
             msgstr += l
         else:
-            print >> sys.stderr, 'Syntax error on %s:%d' % (infile, lno), \
-                  'before:'
-            print >> sys.stderr, l
+            print('Syntax error on %s:%d' % (infile, lno), \
+                  'before:', file=sys.stderr)
+            print(l, file=sys.stderr)
             sys.exit(1)
     # Add last entry
     if section == STR:
@@ -108,6 +108,6 @@ def make(filename, outfile=None):
     try:
         open(outfile,"wb").write(output)
     except IOError as msg:
-        print >> sys.stderr, msg
+        print(msg, file=sys.stderr)
 
     return outfile

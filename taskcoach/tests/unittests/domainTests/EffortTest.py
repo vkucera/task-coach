@@ -37,7 +37,7 @@ class EffortTest(test.TestCase, asserts.Mixin):
         self.events.append(event)
         
     def testId(self):
-        self.assert_(self.effort.id() is not None)
+        self.assertTrue(self.effort.id() is not None)
 
     def testStatus(self):
         self.assertEqual(self.effort.getStatus(), self.effort.STATUS_NEW)
@@ -95,7 +95,7 @@ class EffortTest(test.TestCase, asserts.Mixin):
             
         pub.subscribe(onEvent, effort.Effort.stopChangedEventType())
         self.effort.setStop(self.effort.getStop())
-        self.failIf(events)
+        self.assertFalse(events)
 
     def testDurationNotificationForSetStart(self):
         events = []
@@ -228,7 +228,7 @@ class EffortTest(test.TestCase, asserts.Mixin):
     def testSetStop_None(self):
         self.effort.setStop()
         now = date.Now()
-        self.failUnless(now - date.ONE_SECOND < self.effort.getStop() < now + date.ONE_SECOND)
+        self.assertTrue(now - date.ONE_SECOND < self.effort.getStop() < now + date.ONE_SECOND)
         
     def testSetStop_Infinite(self):
         self.effort.setStop(date.DateTime.max)
@@ -239,11 +239,11 @@ class EffortTest(test.TestCase, asserts.Mixin):
         self.assertEqual(date.DateTime(2005, 1, 1), self.effort.getStop())
         
     def testIsNotBeingTracked_(self): 
-        self.failIf(self.effort.isBeingTracked())
+        self.assertFalse(self.effort.isBeingTracked())
 
     def testIsBeingTracked(self): 
         self.effort.setStop(date.DateTime.max)
-        self.failUnless(self.effort.isBeingTracked())
+        self.assertTrue(self.effort.isBeingTracked())
         
     def testSetTaskToNewTaskWillAddItToNewTask(self):
         task2 = task.Task()
@@ -255,7 +255,7 @@ class EffortTest(test.TestCase, asserts.Mixin):
         task2 = task.Task()
         self.effort.setTask(task2)
         self.assertEqual([self.effort], task2.efforts())
-        self.failIf(self.effort in self.task.efforts())
+        self.assertFalse(self.effort in self.task.efforts())
 
     def testSetTaskToOldTaskTwice(self):
         self.task.addEffort(self.effort)
@@ -328,4 +328,4 @@ class EffortWithoutTaskTest(test.TestCase):
         patterns.Publisher().registerObserver(self.onEvent, 
                                               self.effort.taskChangedEventType())
         self.effort.setTask(self.task)
-        self.failIf(self.events)
+        self.assertFalse(self.events)

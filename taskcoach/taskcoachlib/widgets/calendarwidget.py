@@ -225,7 +225,7 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
                 doShow = True
 
             if doShow:
-                if self.taskMap.has_key(task.id()):
+                if task.id() in self.taskMap:
                     schedule = self.taskMap[task.id()]
                     schedule.update()
                 else:
@@ -237,7 +237,7 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
                     self.__selection = [task]
                     schedule.SetSelected(True)
             else:
-                if self.taskMap.has_key(task.id()):
+                if task.id() in self.taskMap:
                     self.Delete(self.taskMap[task.id()])
                     del self.taskMap[task.id()]
                     if self.__selection and self.__selection[0].id() == task.id():

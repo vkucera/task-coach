@@ -24,7 +24,7 @@ import os
 import stat
 import re
 import imaplib
-import ConfigParser
+import configparser
 import wx
 import socket
 import mailbox
@@ -70,7 +70,7 @@ def loadPreferences():
     for line in file(os.path.join(getDefaultProfileDir(), 'prefs.js'), 'r'):
         if line.startswith('user_pref('):
             # pylint: disable=W0122
-            exec line in {'user_pref': user_pref, 'true': True, 'false': False}
+            exec(line, {'user_pref': user_pref, 'true': True, 'false': False})
 
     return config
 
@@ -85,9 +85,9 @@ def getThunderbirdDir():
         if not os.path.exists(path):
             path = os.path.join(os.environ['HOME'], '.mozilla-thunderbird')
     elif os.name == 'nt':
-        if os.environ.has_key('APPDATA'):
+        if 'APPDATA' in os.environ:
             path = os.path.join(os.environ['APPDATA'], 'Thunderbird')
-        elif os.environ.has_key('USERPROFILE'):
+        elif 'USERPROFILE' in os.environ:
             path = os.path.join(os.environ['USERPROFILE'], 'Application Data', 'Thunderbird')
     else:
         raise EnvironmentError('Unsupported platform: %s' % os.name)
@@ -126,7 +126,7 @@ def getDefaultProfileDir():
 
         return _PORTABLECACHE
 
-    parser = ConfigParser.RawConfigParser()
+    parser = configparser.RawConfigParser()
     parser.read([os.path.join(path, 'profiles.ini')])
 
     for section in parser.sections():
@@ -167,14 +167,14 @@ class ThunderbirdMailboxReader(object):
         self.user = unquote(mt.group(1))
         self.server = unquote(mt.group(2))
         self.path = unquote(mt.group(3)).split('/')
-        self.offset = long(mt.group(4))
+        self.offset = int(mt.group(4))
 
-        for i in xrange(200):
+        for i in range(200):
             base = 'mail.server.server%d' % i
-            if config.has_key('%s.userName' % base):
+            if '%s.userName' % base in config:
                 if config['%s.userName' % base] == self.user and config['%s.hostname' % base] == self.server:
                     # First try the relative path.
-                    if config.has_key('%s.directory-rel' % base):
+                    if '%s.directory-rel' % base in config:
                         path = config['%s.directory-rel' % base]
                         if path.startswith('[ProfD]'):
                             path = os.path.join(getDefaultProfileDir(), path[7:])
@@ -227,7 +227,7 @@ class ThunderbirdMailboxReader(object):
             def __iter__(self):
                 return self
 
-            def next(self):
+            def __next__(self):
                 line = self.fp.readline()
                 if line.strip() == '.':
                     raise StopIteration
@@ -267,12 +267,12 @@ class ThunderbirdImapReader(object):
         # serverX does not exist, serverX+1 won't either. 
         for serverIndex in range(100): 
             name = 'mail.server.server%d' % serverIndex
-            if config.has_key(name + '.hostname') and \
+            if name + '.hostname' in config and \
                 self.__equal_servers(config[name + '.hostname'], self.server) \
                 and config[name + '.type'] == 'imap':
-                if config.has_key(name + '.port'):
+                if name + '.port' in config:
                     port = int(config[name + '.port'])
-                if config.has_key(name + '.socketType'):
+                if name + '.socketType' in config:
                     stype = config[name + '.socketType']
                 break
         self.ssl = (stype == 3)
@@ -282,7 +282,7 @@ class ThunderbirdImapReader(object):
             # server reported is imap.google.com, but for a direct connection we
             # need to connect with imap.gmail.com:
             self.server = 'imap.gmail.com'
-        elif config.has_key(name + '.realhostname'):
+        elif name + '.realhostname' in config:
             self.server = config[name + '.realhostname']
         self.port = port or {True: 993, False: 143}[self.ssl]
         

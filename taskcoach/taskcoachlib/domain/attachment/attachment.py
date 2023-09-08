@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import os
-import urlparse
+import urllib.parse
 from taskcoachlib import patterns, mailer
 from taskcoachlib.domain import base
 from taskcoachlib.tools import openfile
@@ -152,7 +152,7 @@ class FileAttachment(Attachment):
         return location
 
     def isLocalFile(self):
-        return urlparse.urlparse(self.location())[0] == ''
+        return urllib.parse.urlparse(self.location())[0] == ''
 
 
 class URIAttachment(Attachment):

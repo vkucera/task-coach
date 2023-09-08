@@ -45,10 +45,10 @@ class DateTest(test.TestCase):
     def testCreateInfiniteDateWithMaxValues(self):
         maxDate = datetime.date.max
         infinite = date.Date(maxDate.year, maxDate.month, maxDate.day)
-        self.failUnless(infinite is date.Date())
+        self.assertTrue(infinite is date.Date())
 
     def testInfiniteDateIsSingleton(self):
-        self.failUnless(date.Date() is date.Date())
+        self.assertTrue(date.Date() is date.Date())
         
     def testAddTimeDeltaToInfiniteDate(self):
         self.assertEqual(date.Date(), date.Date() + date.TimeDelta(days=2))
@@ -56,25 +56,25 @@ class DateTest(test.TestCase):
     def testCompare_TwoInfiniteDates(self):
         date1 = date.Date()
         date2 = date.Date()
-        self.assertEquals(date1, date2)
+        self.assertEqual(date1, date2)
 
     def testCompare_TwoNormalDates(self):
         date1 = date.Date(2003,1,1)
         date2 = date.Date(2003,4,5)
-        self.failUnless(date1 < date2)
-        self.failUnless(date2 > date1)
-        self.failIf(date1 == date2)
+        self.assertTrue(date1 < date2)
+        self.assertTrue(date2 > date1)
+        self.assertFalse(date1 == date2)
 
     def testCompare_OneNormalDate(self):
         date1 = date.Date(2003,1,1)
         date2 = date.Date(2003,1,1)
-        self.assertEquals(date1, date2)
+        self.assertEqual(date1, date2)
 
     def testCompare_NormalDateWithInfiniteDate(self):
         date1 = date.Date()
         date2 = date.Date(2003,1,1)
-        self.failUnless(date2 < date1)
-        self.failUnless(date1 > date2)
+        self.assertTrue(date2 < date1)
+        self.assertTrue(date1 > date2)
 
     def testAddManyDays(self):
         self.assertEqual(date.Date(2003,1,1), 

@@ -37,7 +37,7 @@ class OptionParser(optparse.OptionParser, object):
             addOption(getOption(self))
 
     def __methodsEndingWith(self, suffix):
-        return [method for name, method in vars(self.__class__).items() if
+        return [method for name, method in list(vars(self.__class__).items()) if
                 name.endswith(suffix)]
 
                 
@@ -66,7 +66,7 @@ class ApplicationOptionParser(OptionParser):
     def languageOption(self):
         return optparse.Option('-l', '--language', dest='language', 
             type='choice', choices=sorted([lang for (lang, enabled) in \
-                meta.data.languages.values() if lang is not None] + ['en']),
+                list(meta.data.languages.values()) if lang is not None] + ['en']),
             help='use the specified LANGUAGE for the GUI (e.g. "nl" or "fr"')
 
     def poOption(self):

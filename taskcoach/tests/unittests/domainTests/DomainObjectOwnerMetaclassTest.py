@@ -20,8 +20,7 @@ import test
 from taskcoachlib.domain import base
 
 
-class OwnerUnderTest(object):
-    __metaclass__ = base.DomainObjectOwnerMetaclass
+class OwnerUnderTest(object, metaclass=base.DomainObjectOwnerMetaclass):
     __ownedType__ = 'foo'
 
 
@@ -29,5 +28,5 @@ class DomainObjectOwnerMetaclassTest(test.TestCase):
     def testModificationEventTypes(self):
         owner = OwnerUnderTest()
         # pylint: disable=E1101
-        self.failUnless(owner.foosChangedEventType() in \
+        self.assertTrue(owner.foosChangedEventType() in \
                         owner.modificationEventTypes())    

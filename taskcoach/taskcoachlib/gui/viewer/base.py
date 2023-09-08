@@ -30,11 +30,9 @@ from taskcoachlib.widgets import ToolTipMixin
 from . import mixin
 
 
-class Viewer(patterns.Observer, wx.Panel):
+class Viewer(patterns.Observer, wx.Panel, metaclass=patterns.NumberedInstances):
     ''' A Viewer shows domain objects (e.g. tasks or efforts) by means of a 
         widget (e.g. a ListCtrl or a TreeListCtrl).'''
-    
-    __metaclass__ = patterns.NumberedInstances
     defaultTitle = 'Subclass responsibility'
     defaultBitmap = 'Subclass responsibility'
     viewerImages = artprovider.itemImages
@@ -190,7 +188,7 @@ class Viewer(patterns.Observer, wx.Panel):
             try:
                 imageList.Add(wx.ArtProvider_GetBitmap(image, wx.ART_MENU, size))
             except:
-                print image
+                print(image)
                 raise
             self.imageIndex[image] = index
         return imageList
@@ -222,7 +220,7 @@ class Viewer(patterns.Observer, wx.Panel):
         self.refreshItems(*event.sources())
         
     def onNewItem(self, event):
-        self.select([item for item in event.values() if item in self.presentation()]) 
+        self.select([item for item in list(event.values()) if item in self.presentation()]) 
         
     def onPresentationChanged(self, event):  # pylint: disable=W0613
         ''' Whenever our presentation is changed (items added, items removed) 
@@ -235,7 +233,7 @@ class Viewer(patterns.Observer, wx.Panel):
         
         self.refresh()
         if itemsRemoved() and allItemsAreSelected(): 
-            self.selectNextItemsAfterRemoval(event.values())
+            self.selectNextItemsAfterRemoval(list(event.values()))
         self.updateSelection(sendViewerStatusEvent=False)
         self.sendViewerStatusEvent()
         
@@ -548,13 +546,13 @@ class Viewer(patterns.Observer, wx.Panel):
 
 class CategorizableViewerMixin(object):
     def getItemTooltipData(self, item):
-        return [('folder_blue_arrow_icon', [u', '.join(sorted([cat.subject() for cat in item.categories()]))] if item.categories() else [])] + \
+        return [('folder_blue_arrow_icon', [', '.join(sorted([cat.subject() for cat in item.categories()]))] if item.categories() else [])] + \
             super(CategorizableViewerMixin, self).getItemTooltipData(item)
 
 
 class WithAttachmentsViewerMixin(object):
     def getItemTooltipData(self, item):
-        return [('paperclip_icon', sorted([unicode(attachment) for attachment in item.attachments()]))] + \
+        return [('paperclip_icon', sorted([str(attachment) for attachment in item.attachments()]))] + \
           super(WithAttachmentsViewerMixin, self).getItemTooltipData(item)
 
 

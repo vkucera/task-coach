@@ -29,7 +29,7 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
         self.__searchDescription = kwargs.pop('searchDescription', False)
         self.__regularExpression = kwargs.pop('regularExpression', False)
         self.__bitmapSize = kwargs.pop('size', (16, 16))
-        value = kwargs.pop('value', u'')
+        value = kwargs.pop('value', '')
         super(SearchCtrl, self).__init__(*args, **kwargs)
         self.SetSearchMenuBitmap(self.getBitmap('magnifier_glass_dropdown_icon'))
         self.SetSearchBitmap(self.getBitmap('magnifier_glass_icon'))

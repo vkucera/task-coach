@@ -37,10 +37,10 @@ class ViewFilterTestCase(test.TestCase):
     def assertFilterShows(self, *tasks):
         self.assertEqual(len(tasks), len(self.filter))
         for eachTask in tasks:
-            self.failUnless(eachTask in self.filter)
+            self.assertTrue(eachTask in self.filter)
         
     def assertFilterIsEmpty(self):
-        self.failIf(self.filter)
+        self.assertFalse(self.filter)
 
 
 class ViewFilterTestsMixin(object):
@@ -68,7 +68,7 @@ class ViewFilterTestsMixin(object):
         self.task.setCompletionDateTime()
         self.filter.append(self.task)
         self.filter.hideTaskStatus(task.status.completed)
-        self.failIf(self.filter.rootItems())
+        self.assertFalse(self.filter.rootItems())
 
     def testMarkTaskCompleted(self):
         self.filter.hideTaskStatus(task.status.completed)

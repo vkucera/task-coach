@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, cgi, StringIO
+import wx, cgi, io
 from taskcoachlib.domain import task
 
 # pylint: disable=W0142
@@ -256,7 +256,7 @@ class Viewer2HTMLConverter(object):
         ''' Wrap one or more lines with <tagName [optional attributes]> and 
             </tagName>. '''
         if attributes:
-            attributes = ' ' + ' '.join(sorted('%s="%s"'%(key, value) for key, value in attributes.iteritems()))
+            attributes = ' ' + ' '.join(sorted('%s="%s"'%(key, value) for key, value in attributes.items()))
         else:
             attributes = ''
         openTag = '<%s%s>'%(tagName, attributes)
@@ -290,21 +290,21 @@ class Viewer2HTMLConverter(object):
         # Escape the rendered item and then replace newlines with <br>.
         if column.name() == 'notes':
             def renderNotes(notes):
-                bf = StringIO.StringIO()
+                bf = io.StringIO()
                 for note in sorted(notes, key=lambda note: note.subject()):
                     bf.write('<p>\n')
                     bf.write(cgi.escape(note.subject()))
-                    bf.write(u'<br />\n')
+                    bf.write('<br />\n')
                     bf.write(cgi.escape(note.description()))
                     bf.write('</p>\n')
                     if note.children():
-                        bf.write(u'<div style="padding-left: 20px;">\n')
+                        bf.write('<div style="padding-left: 20px;">\n')
                         bf.write(renderNotes(note.children()))
-                        bf.write(u'</div>\n')
+                        bf.write('</div>\n')
                 return bf.getvalue()
             return renderNotes(item.notes())
         elif column.name() == 'attachments':
-            return u'<br />'.join(map(cgi.escape, sorted([attachment.subject() for attachment in item.attachments()])))
+            return '<br />'.join(map(cgi.escape, sorted([attachment.subject() for attachment in item.attachments()])))
             
         renderedItem = cgi.escape(column.render(item, 
                                   humanReadable=False)).replace('\n', '<br>')

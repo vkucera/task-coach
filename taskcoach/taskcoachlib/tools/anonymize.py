@@ -27,7 +27,7 @@ def anonymize(filename):
     
     def anonymize_string(string):
         ''' Return an anonymized version of the string. '''
-        return u'X' * len(string)
+        return 'X' * len(string)
     
     def anonymize_text(text):
         ''' Return an anonymized version of the text, keeping the line 

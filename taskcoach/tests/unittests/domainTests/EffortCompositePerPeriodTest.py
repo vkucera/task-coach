@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import config
 from taskcoachlib.domain import task, effort, date
 from taskcoachlib.thirdparty.pubsub import pub
-import EffortCompositeTest
+from . import EffortCompositeTest
 import test
 
 
@@ -53,14 +53,14 @@ class CompositeEffortPerPeriodTest(test.TestCase):
         self.assertEqual(date.TimeDelta(), self.composite.duration())
 
     def testInitialTrackingState(self):
-        self.failIf(self.composite.isBeingTracked())
+        self.assertFalse(self.composite.isBeingTracked())
 
     def testInitialTrackingStateWhenTaskIsTracked(self):
         self.task.addEffort(self.trackedEffort)
         composite = effort.CompositeEffortPerPeriod( 
             self.composite.getStart(), self.composite.getStop(),
             self.taskList, self.trackedEffort)
-        self.failUnless(composite.isBeingTracked())
+        self.assertTrue(composite.isBeingTracked())
 
     def testDurationForSingleEffort(self):
         self.task.addEffort(self.effort1)
@@ -104,7 +104,7 @@ class CompositeEffortPerPeriodTest(test.TestCase):
         self.task.addEffort(self.effort1)
         self.task.addEffort(self.effort2)
         self.task.setEfforts([])
-        self.failUnless(events)
+        self.assertTrue(events)
         
     def testRemoveMultipleEffortsFromDifferentPeriodsFromTask(self):
         events = []
@@ -116,4 +116,4 @@ class CompositeEffortPerPeriodTest(test.TestCase):
         self.task.addEffort(self.effort3)
         self.task.addEffort(self.effort1)
         self.task.setEfforts([])
-        self.failUnless(events)
+        self.assertTrue(events)

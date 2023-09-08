@@ -51,7 +51,7 @@ class EffortListTest(test.TestCase):
     def testAppend(self):
         self.task.addEffort(self.effort)
         self.assertEqual(1, len(self.effortList))
-        self.failUnless(self.effort in self.effortList)
+        self.assertTrue(self.effort in self.effortList)
 
     def testNotificationAfterRemove(self):
         self.task.addEffort(self.effort)
@@ -121,7 +121,7 @@ class EffortListTest(test.TestCase):
     def testExtend(self):
         self.effortList.extend([self.effort])
         self.assertEqual(1, len(self.effortList))
-        self.failUnless(self.effort in self.effortList)
+        self.assertTrue(self.effort in self.effortList)
         self.assertEqual(1, len(self.task.efforts()))
         self.assertEqual(self.effort, self.task.efforts()[0])
 

@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, StringIO
+import test, io
 from taskcoachlib import persistence, config
 from taskcoachlib.domain import task, category, date
 
@@ -29,7 +29,7 @@ class TodoTxtReaderTestCase(test.TestCase):
         self.reader = persistence.TodoTxtReader(self.tasks, self.categories)
         
     def read(self, text, **kwargs):
-        self.reader.readFile(StringIO.StringIO(text), **kwargs)
+        self.reader.readFile(io.StringIO(text), **kwargs)
         
     def assertTaskSubject(self, *subjects):
         self.assertEqual(set(subjects), set(t.subject() for t in self.tasks))
@@ -53,11 +53,11 @@ class TodoTxtReaderTestCase(test.TestCase):
                          list(self.tasks)[0].dueDateTime())
         
     def assertTaskIsCompleted(self):
-        self.failUnless(list(self.tasks)[0].completed())
+        self.assertTrue(list(self.tasks)[0].completed())
         
     def testEmptyFile(self):
-        self.reader.readFile(StringIO.StringIO())
-        self.failIf(self.tasks)
+        self.reader.readFile(io.StringIO())
+        self.assertFalse(self.tasks)
         
     def testReadOneTask(self):
         self.read('Get milk\n')
@@ -121,12 +121,12 @@ class TodoTxtReaderTestCase(test.TestCase):
     def testTaskWithPlusSign(self):
         self.read('Order pizza + drink\n')
         self.assertTaskSubject('Order pizza + drink')
-        self.failIf(self.categories)
+        self.assertFalse(self.categories)
         
     def testTaskWithAtSign(self):
         self.read('Mail frank@niessink.com\n')
         self.assertTaskSubject('Mail frank@niessink.com')
-        self.failIf(self.categories)
+        self.assertFalse(self.categories)
         
     def testTwoTasksWithTheSameContext(self):
         self.read('Order pizza @phone\nCall mom @phone\n')
@@ -206,7 +206,7 @@ class TodoTxtReaderTestCase(test.TestCase):
         
     def testIgnoreEmptyLine(self):
         self.read('\n')
-        self.failIf(self.tasks)
+        self.assertFalse(self.tasks)
         
     def testDueDate(self):
         self.read('Import due date due:2011-03-05\n')

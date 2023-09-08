@@ -19,8 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib.domain import base
 
 
-class AttachmentOwner(object):
+class AttachmentOwner(object, metaclass=base.DomainObjectOwnerMetaclass):
     """Mixin class for other domain objects that may have attachments"""
-
-    __metaclass__ = base.DomainObjectOwnerMetaclass
     __ownedType__ = 'Attachment'

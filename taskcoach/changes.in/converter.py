@@ -157,7 +157,7 @@ class ReleaseConverter(object):
         return 'Release %s - %s'%(release.number, release.date)
 
     def summary(self, release, greeting=''):
-        return ' '.join([text for text in greeting, release.summary if text])
+        return ' '.join([text for text in (greeting, release.summary) if text])
     
     def sectionHeader(self, section, list):
         return '\n%s:'%(section%self._addS(list))

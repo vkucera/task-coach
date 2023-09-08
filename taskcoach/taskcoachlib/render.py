@@ -98,7 +98,7 @@ def recurrence(recurrence):
                   _('Every other month'), _('Every other year')]
     else:
         labels = [_('Daily'), _('Weekly'), _('Monthly'), _('Yearly')] 
-    mapping = dict(zip(['daily', 'weekly', 'monthly', 'yearly'], labels))
+    mapping = dict(list(zip(['daily', 'weekly', 'monthly', 'yearly'], labels)))
     return mapping.get(recurrence.unit) % dict(frequency=recurrence.amount)
 
 
@@ -181,23 +181,23 @@ elif operating_system.isMac():
     # setting alone, so parse the format string instead.
     # See http://www.unicode.org/reports/tr35/tr35-25.html#Date_Format_Patterns
     _state = 0
-    _hourFormat = u''
-    _ampmFormat = u''
+    _hourFormat = ''
+    _ampmFormat = ''
     for c in _mediumFormatter.dateFormat():
         if _state == 0:
-            if c == u"'":
+            if c == "'":
                 _state = 1 # After single quote
-            elif c in [u'h', u'H', u'k', u'K', u'j']:
+            elif c in ['h', 'H', 'k', 'K', 'j']:
                 _hourFormat += c
             elif c == 'a':
                 _ampmFormat = c
         elif _state == 1:
-            if c == u"'":
+            if c == "'":
                 _state = 0
             else:
                 _state = 2 # Escaped string
         elif _state == 2:
-            if c == u"'":
+            if c == "'":
                 _state = 0
     _hourFormatter = Cocoa.NSDateFormatter.alloc().init()
     _hourFormatter.setFormatterBehavior_(Cocoa.NSDateFormatterBehavior10_4)
@@ -237,17 +237,17 @@ elif desktop.get_desktop() == 'KDE4':
         def rawTimeFunc(dt, minutes=True, seconds=False):
             qtdt = QTime(dt.hour, dt.minute, dt.second)
             if minutes:
-                return unicode(KGlobal.locale().formatTime(qtdt, seconds))
-            return unicode(_localeCopy.formatTime(qtdt))
+                return str(KGlobal.locale().formatTime(qtdt, seconds))
+            return str(_localeCopy.formatTime(qtdt))
 
         def rawDateFunc(dt):
             qtdt = QDate(dt.year, dt.month, dt.day)
-            return unicode(KGlobal.locale().formatDate(qtdt, 0))
+            return str(KGlobal.locale().formatDate(qtdt, 0))
 
 
 timeFunc = lambda dt, minutes=True, seconds=False: operating_system.decodeSystemString(rawTimeFunc(dt, minutes=minutes, seconds=seconds))
 
-dateTimeFunc = lambda dt=None, humanReadable=False: u'%s %s' % (dateFunc(dt, humanReadable=humanReadable), timeFunc(dt))
+dateTimeFunc = lambda dt=None, humanReadable=False: '%s %s' % (dateFunc(dt, humanReadable=humanReadable), timeFunc(dt))
 
 
 def date(aDateTime, humanReadable=False):
@@ -325,16 +325,16 @@ def exception(exception, instance):
     try:
         # In this order. Python 2.6 fixed the unicode exception problem.
         try:
-            return unicode(instance)
+            return str(instance)
         except UnicodeDecodeError:
             # On Windows, some exceptions raised by win32all lead to this
             # Hack around it
             result = []
             for val in instance.args:
-                if isinstance(val, unicode):
+                if isinstance(val, str):
                     result.append(val.encode('UTF-8'))
                 else:
                     result.append(val)
-            return unicode(result)
+            return str(result)
     except UnicodeEncodeError:
         return '<class %s>' % str(exception)

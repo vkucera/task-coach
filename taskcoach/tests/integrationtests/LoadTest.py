@@ -49,7 +49,7 @@ class LoadTest(test.TestCase):
     def testLoadInvalidFileDoesNotAffectFile(self):
         self.mockApp.iocontroller.open(self.filename, showerror=self.mockErrorDialog)
         lines = file(self.filename, 'r').readlines()
-        self.failUnless(self.errorDialogCalled)
+        self.assertTrue(self.errorDialogCalled)
         self.assertEqual(2, len(lines)) 
         self.assertEqual('Line 1\n', lines[0])
         self.assertEqual('Line 2\n', lines[1])
@@ -59,4 +59,4 @@ class LoadTest(test.TestCase):
                              showerror=self.mockErrorDialog,
                              fileExists=lambda filename: False)
         wx.GetApp().Yield() # io.open uses wx.CallAfter
-        self.failUnless(self.errorDialogCalled)
+        self.assertTrue(self.errorDialogCalled)

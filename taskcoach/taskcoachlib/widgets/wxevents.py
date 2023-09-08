@@ -71,8 +71,8 @@ def shortenText(gc, text, maxW):
             return shortText
         idx -= 1
         if idx == 0:
-            return u'\u2026'
-        shortText = text[:idx] + u'\u2026' + text[-idx:]
+            return '\u2026'
+        shortText = text[:idx] + '\u2026' + text[-idx:]
 
 
 class CalendarCanvas(wx.Panel):
@@ -266,7 +266,7 @@ class CalendarCanvas(wx.Panel):
         yIndex = int((y - self._marginTop) / (self._eventHeight + self._margin))
         dateTime = self._start + datetime.timedelta(minutes=self._precision * xIndex)
 
-        for event, (startIndex, endIndex, startIndexRecursive, endIndexRecursive, yMin, yMax) in self._coords.items():
+        for event, (startIndex, endIndex, startIndexRecursive, endIndexRecursive, yMin, yMax) in list(self._coords.items()):
             if xIndex >= startIndexRecursive and xIndex < endIndexRecursive and yIndex >= yMin and yIndex < yMax:
                 # May be a child
                 children = []
@@ -426,7 +426,7 @@ class CalendarCanvas(wx.Panel):
                 gc.DrawRoundedRectangle(x0, y0, x1 - x0, y1 - y0, 5.0)
 
                 gc.SetFont(wx.NORMAL_FONT, wx.RED)
-                text = u'%s -> %s' % (self._mouseDragPos.strftime('%c'), (self._mouseDragPos + (self.GetEnd(self._mouseOrigin.event) - self.GetStart(self._mouseOrigin.event))).strftime('%c'))
+                text = '%s -> %s' % (self._mouseDragPos.strftime('%c'), (self._mouseDragPos + (self.GetEnd(self._mouseOrigin.event) - self.GetStart(self._mouseOrigin.event))).strftime('%c'))
                 tw, th = gc.GetTextExtent(text)
                 gc.DrawText(text, x0 + (x1 - x0 - tw) / 2, y0 + (y1 - y0 - th) / 2)
 
@@ -810,7 +810,7 @@ class CalendarCanvas(wx.Panel):
             currentFmt = self.FormatDateTime(self._start)
             currentDay = self._start.date()
             headerWidth = gc.GetTextExtent(currentFmt)[0]
-            for idx in xrange(1, self._maxIndex):
+            for idx in range(1, self._maxIndex):
                 dateTime = self._start + datetime.timedelta(minutes=self._precision * idx)
                 fmt = self.FormatDateTime(dateTime)
                 if fmt != currentFmt:

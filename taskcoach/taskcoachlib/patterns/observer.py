@@ -134,7 +134,7 @@ class Event(object):
             the values of an arbitrary source. This latter option is useful if
             the caller is sure there is only one source. '''
         type = type or self.type()
-        source = source or self.__sourcesAndValuesByType[type].keys()[0]
+        source = source or list(self.__sourcesAndValuesByType[type].keys())[0]
         return self.__sourcesAndValuesByType.get(type, {}).get(source, [])
     
     def subEvent(self, *typesAndSources):
@@ -226,7 +226,7 @@ def unwrapObservers(decoratedMethod):
     return decorator
 
 
-class Publisher(object):
+class Publisher(object, metaclass=singleton.Singleton):
     ''' Publisher is used to register for event notifications. It supports
         the publisher/subscribe pattern, also known as the observer pattern.
         Objects (Observers) interested in change notifications register a 
@@ -239,8 +239,6 @@ class Publisher(object):
         - Publisher is a Singleton class since all observables and all
         observers have to use exactly one registry to be sure that all
         observables can reach all observers. '''
-        
-    __metaclass__ = singleton.Singleton
     
     def __init__(self, *args, **kwargs):
         super(Publisher, self).__init__(*args, **kwargs)
@@ -310,7 +308,7 @@ class Publisher(object):
         for eventTypeAndSource in eventTypesAndSources:
             for observer in self.__observers.get(eventTypeAndSource, set()):
                 observers.setdefault(observer, set()).add(eventTypeAndSource)
-        for observer, eventTypesAndSources in observers.iteritems():
+        for observer, eventTypesAndSources in observers.items():
             subEvent = event.subEvent(*eventTypesAndSources)
             if subEvent.types():
                 observer(subEvent)
@@ -323,7 +321,7 @@ class Publisher(object):
             return self.__observers.get((eventType, None), set())
         else:
             result = set()
-            for observers in self.__observers.values():
+            for observers in list(self.__observers.values()):
                 result |= observers
             return result
     
@@ -516,13 +514,13 @@ class CollectionDecorator(Decorator, ObservableCollection):
         ''' The default behaviour is to simply add the items that are
             added to the original collection to this collection too. 
             Extend to add behaviour. '''
-        self.extendSelf(event.values())
+        self.extendSelf(list(event.values()))
 
     def onRemoveItem(self, event):
         ''' The default behaviour is to simply remove the items that are
             removed from the original collection from this collection too.
             Extend to add behaviour. '''
-        self.removeItemsFromSelf(event.values())
+        self.removeItemsFromSelf(list(event.values()))
 
     def extendSelf(self, items, event=None):
         ''' Provide a method to extend this collection without delegating to

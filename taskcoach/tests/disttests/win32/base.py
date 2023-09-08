@@ -24,7 +24,7 @@ import sys, os, time, re, shutil, unittest
 import win32process, win32event, win32gui, win32con
 
 sys.path.insert(0, os.path.join(os.path.split(__file__)[0], 'sendinput'))
-import sendinput as si
+from . import sendinput as si
 
 class Window(object):
     def __init__(self, hwnd):
@@ -58,7 +58,7 @@ class Window(object):
                             doc="Whether the window is the foreground")
 
     def waitFocus(self):
-        for _ in xrange(10):
+        for _ in range(10):
             time.sleep(1)
             if self.isForeground:
                 return True
@@ -108,7 +108,7 @@ class Window(object):
 
     def dump(self, level=0):
         """ Dumps the window and its children, recursively, to stdout. """
-        print (' ' * level) + str(self)
+        print((' ' * level) + str(self))
         for child in self.children:
             child.dump(level + 1)
 
@@ -188,7 +188,7 @@ class Win32TestCase(unittest.TestCase):
 
         titleRegex = re.compile(title)
 
-        for _ in xrange(tries):
+        for _ in range(tries):
             windows = []
 
             def enumCb(hwnd, lparam): # pylint: disable=W0613

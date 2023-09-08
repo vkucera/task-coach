@@ -34,17 +34,17 @@ class CommonRecurrenceTestsMixin(object):
     def testSetMaxRecurrenceCount(self):
         self.recur.max = 1
         self.recur(date.Now())
-        self.failIf(self.recur)
+        self.assertFalse(self.recur)
         
     def testSetMaxRecurrenceCount_GetMultipleDates(self):
         self.recur.max = 1
         self.recur(date.Now(), next=False)
-        self.failUnless(self.recur)
+        self.assertTrue(self.recur)
 
     def testSetStopDateTime(self):
         self.recur.stop_datetime = date.Yesterday()
         self.recur(date.Now())
-        self.failIf(self.recur)
+        self.assertFalse(self.recur)
 
     def testCount(self):
         self.assertEqual(0, self.recur.count)
@@ -52,70 +52,70 @@ class CommonRecurrenceTestsMixin(object):
 
 class DailyRecurrenceCompareTestsMixin(object):
     def testCompareWithNone(self):
-        self.failUnless(self.recur < None)
+        self.assertTrue(self.recur < None)
         
     def testCompareWithNoRecurrence(self):
-        self.failUnless(self.recur < date.Recurrence())
+        self.assertTrue(self.recur < date.Recurrence())
       
     def testCompareWithWeeklyRecurrence(self):
-        self.failUnless(self.recur < date.Recurrence('weekly'))
+        self.assertTrue(self.recur < date.Recurrence('weekly'))
 
     def testCompareWithMonthlyRecurrence(self):
-        self.failUnless(self.recur < date.Recurrence('monthly'))
+        self.assertTrue(self.recur < date.Recurrence('monthly'))
 
     def testCompareWithYearlyRecurrence(self):
-        self.failUnless(self.recur < date.Recurrence('yearly'))
+        self.assertTrue(self.recur < date.Recurrence('yearly'))
 
 
 class WeeklyRecurrenceCompareTestsMixin(object):
     def testCompareWithNone(self):
-        self.failUnless(self.recur < None)
+        self.assertTrue(self.recur < None)
 
     def testCompareWithNoRecurrence(self):
-        self.failUnless(self.recur < date.Recurrence())
+        self.assertTrue(self.recur < date.Recurrence())
       
     def testCompareWithDailyRecurrence(self):
-        self.failUnless(self.recur > date.Recurrence('daily'))
+        self.assertTrue(self.recur > date.Recurrence('daily'))
 
     def testCompareWithMonthlyRecurrence(self):
-        self.failUnless(self.recur < date.Recurrence('monthly'))
+        self.assertTrue(self.recur < date.Recurrence('monthly'))
 
     def testCompareWithYearlyRecurrence(self):
-        self.failUnless(self.recur < date.Recurrence('yearly'))
+        self.assertTrue(self.recur < date.Recurrence('yearly'))
 
 
 class MonthlyRecurrenceCompareTestsMixin(object):
     def testCompareWithNone(self):
-        self.failUnless(self.recur < None)
+        self.assertTrue(self.recur < None)
 
     def testCompareWithNoRecurrence(self):
-        self.failUnless(self.recur < date.Recurrence())
+        self.assertTrue(self.recur < date.Recurrence())
       
     def testCompareWithDailyRecurrence(self):
-        self.failUnless(self.recur > date.Recurrence('daily'))
+        self.assertTrue(self.recur > date.Recurrence('daily'))
 
     def testCompareWithWeeklyRecurrence(self):
-        self.failUnless(self.recur > date.Recurrence('weekly'))
+        self.assertTrue(self.recur > date.Recurrence('weekly'))
 
     def testCompareWithYearlyRecurrence(self):
-        self.failUnless(self.recur < date.Recurrence('yearly'))
+        self.assertTrue(self.recur < date.Recurrence('yearly'))
 
 
 class YearlyRecurrenceCompareTestsMixin(object):
     def testCompareWithNone(self):
-        self.failUnless(self.recur < None)
+        self.assertTrue(self.recur < None)
 
     def testCompareWithNoRecurrence(self):
-        self.failUnless(self.recur < date.Recurrence())
+        self.assertTrue(self.recur < date.Recurrence())
       
     def testCompareWithDailyRecurrence(self):
-        self.failUnless(self.recur > date.Recurrence('daily'))
+        self.assertTrue(self.recur > date.Recurrence('daily'))
 
     def testCompareWithWeeklyRecurrence(self):
-        self.failUnless(self.recur > date.Recurrence('weekly'))
+        self.assertTrue(self.recur > date.Recurrence('weekly'))
 
     def testCompareWithMonthlyRecurrence(self):
-        self.failUnless(self.recur > date.Recurrence('monthly'))
+        self.assertTrue(self.recur > date.Recurrence('monthly'))
 
 
 class NoRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin):
@@ -127,7 +127,7 @@ class NoRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin):
         self.assertEqual(now, self.recur(now))
         
     def testBool(self):
-        self.failIf(self.recur)
+        self.assertFalse(self.recur)
 
     def testSetMaxRecurrenceCount_GetMultipleDates(self):
         pass
@@ -151,7 +151,7 @@ class DailyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
         self.assertEqual(self.now + date.ONE_DAY, self.recur(now))
         
     def testCompareWithBiDailyRecurrence(self):
-        self.failUnless(self.recur < date.Recurrence('daily', amount=2))
+        self.assertTrue(self.recur < date.Recurrence('daily', amount=2))
         
 
 class BiDailyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
@@ -191,7 +191,7 @@ class WeeklyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
         self.assertEqual(self.January15, self.recur(January8))
 
     def testCompareWithBiWeeklyRecurrence(self):
-        self.failUnless(self.recur < date.Recurrence('weekly', amount=2))
+        self.assertTrue(self.recur < date.Recurrence('weekly', amount=2))
 
 
 class BiWeeklyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,

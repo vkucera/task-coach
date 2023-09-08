@@ -35,7 +35,7 @@ class SyncMLConfigNode(object):
         return self.__children
 
     def properties(self):
-        return self.__properties.items()
+        return list(self.__properties.items())
 
     def addChild(self, child):
         self.__children.append(child)

@@ -82,15 +82,15 @@ objects = """ problems of scope and lead time.
     the strong generative capacity of the schedule."""
 
 import textwrap, random
-from itertools import chain, islice, izip
+from itertools import chain, islice
 
 def composeText(partsToUse, line_length=72, times=1):
     parts = []
     for part in partsToUse:
-        phraselist = map(str.strip, part.splitlines())
+        phraselist = list(map(str.strip, part.splitlines()))
         random.shuffle(phraselist)
         parts.append(phraselist)
-    output = chain(*islice(izip(*parts), 0, times))
+    output = chain(*islice(zip(*parts), 0, times))
     return textwrap.fill(' '.join(output), line_length)
 
 def text(times=1, line_length=72):

@@ -136,7 +136,7 @@ class Object(SynchronizedObject):
     rx_attributes = re.compile(r'\[(\w+):(.+)\]')
 
     if sys.version_info.major == 2:
-        _long_zero = long(0)
+        _long_zero = int(0)
     else:
         _long_zero = 0
 
@@ -428,7 +428,7 @@ class CompositeObject(Object, patterns.ObservableComposite):
     def subject(self, recursive=False): # pylint: disable=W0221
         subject = super(CompositeObject, self).subject()
         if recursive and self.parent():
-            subject = u'%s -> %s'%(self.parent().subject(recursive=True), subject)
+            subject = '%s -> %s'%(self.parent().subject(recursive=True), subject)
         return subject
 
     def subjectChangedEvent(self, event):

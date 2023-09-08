@@ -23,8 +23,8 @@ from taskcoachlib import widgets
 class BaseTextCtrlTest(test.wxTestCase):
     def testRemoveAnyControlCharactersEnteredByUser(self):
         textctrl = widgets.textctrl.BaseTextCtrl(self.frame, 
-                                                 u'T\x02\x01est\x09')
-        self.assertEqual(u'Test\t', textctrl.GetValue())    
+                                                 'T\x02\x01est\x09')
+        self.assertEqual('Test\t', textctrl.GetValue())    
     
     
 class MultiLineTextCtrlTest(test.wxTestCase):

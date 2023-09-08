@@ -42,7 +42,7 @@ def getImageOpen(name):
 
 
 itemImageSingular = dict()
-for key, value in itemImagePlural.iteritems():
+for key, value in itemImagePlural.items():
     itemImageSingular[value] = key
 
 

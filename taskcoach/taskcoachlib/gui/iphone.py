@@ -37,7 +37,7 @@ class IPhoneSyncFrame(NotificationFrameBase):
         sizer.Add(self.gauge, 0, wx.EXPAND|wx.ALL, 3)
 
         if self.settings.getboolean('iphone', 'showlog'):
-            self.log = wx.TextCtrl(panel, wx.ID_ANY, u'', style=wx.TE_MULTILINE|wx.TE_READONLY)
+            self.log = wx.TextCtrl(panel, wx.ID_ANY, '', style=wx.TE_MULTILINE|wx.TE_READONLY)
             sizer.Add(self.log, 1, wx.EXPAND|wx.ALL, 3)
 
             self.btn = wx.Button(panel, wx.ID_ANY, _('OK'))
@@ -56,7 +56,7 @@ class IPhoneSyncFrame(NotificationFrameBase):
 
     def AddLogLine(self, line):
         if self.settings.getboolean('iphone', 'showlog'):
-            self.log.AppendText(line + u'\n')
+            self.log.AppendText(line + '\n')
 
     def Started(self):
         NotificationCenter().NotifyFrame(self)

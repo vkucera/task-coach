@@ -203,7 +203,7 @@ class CSVReaderTestCase(test.TestCase):
                          **self.defaultReaderKwArgs)
         newTask = list(self.taskList)[0]
         self.assertEqual(100, newTask.percentageComplete())
-        self.failUnless(newTask.completed())
+        self.assertTrue(newTask.completed())
         
     def testTwoTasksWithPriority(self):
         filename = self.createCSVFile('Subject 1,123\nSubject 2,-3')

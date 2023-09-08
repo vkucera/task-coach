@@ -26,13 +26,13 @@ class CompositeTest(test.TestCase):
         self.child = patterns.Composite()
         
     def testNoParentByDefault(self):
-        self.failIf(self.composite.parent())
+        self.assertFalse(self.composite.parent())
         
     def testNoChildrenByDefault(self):
-        self.failIf(self.composite.children())
+        self.assertFalse(self.composite.children())
         
     def testNoRecursiveChildrenByDefault(self):
-        self.failIf(self.composite.children(recursive=True))
+        self.assertFalse(self.composite.children(recursive=True))
     
     def testNoAncestorsByDefault(self):
         self.assertEqual([], self.composite.ancestors())
@@ -65,7 +65,7 @@ class CompositeTest(test.TestCase):
         
     def testCreateWithParentDoesNotAddObjectToParent(self):
         patterns.Composite(parent=self.composite)
-        self.failIf(self.composite.children())
+        self.assertFalse(self.composite.children())
         
     def testChildrenRecursive_WithoutGrandChildren(self):
         self.composite.addChild(self.child)
@@ -101,11 +101,11 @@ class CompositeTest(test.TestCase):
         self.assertEqual([self.composite, self.child], self.composite.family())
         
     def testSiblingsWithoutParentIsEmpty(self):
-        self.failIf(self.composite.siblings())
+        self.assertFalse(self.composite.siblings())
         
     def testSiblingsWithoutSiblings(self):
         self.composite.addChild(self.child)
-        self.failIf(self.child.siblings())
+        self.assertFalse(self.child.siblings())
         
     def testSiblingsWithOneSibling(self):
         self.composite.addChild(self.child)
@@ -119,7 +119,7 @@ class CompositeTest(test.TestCase):
         
     def testNewChild_NotInParentsChildren(self):
         child = self.composite.newChild()
-        self.failIf(child in self.composite.children())
+        self.assertFalse(child in self.composite.children())
         
     def testGetState(self):
         self.assertEqual(dict(children=[], parent=None), 
@@ -155,7 +155,7 @@ class CompositeTest(test.TestCase):
     def testCopy_AddChildrenAfterCopy(self):
         copy = self.composite.copy()
         self.composite.addChild(self.child)
-        self.failIf(self.child in copy.children())
+        self.assertFalse(self.child in copy.children())
         
     def testCopy_WithChildren(self):
         self.composite.addChild(self.child)
@@ -283,7 +283,7 @@ class CompositeCollectionTest(test.TestCase):
         self.collection.extend([self.composite, self.composite2])
         self.composite.addChild(self.composite2)
         self.collection.remove(self.composite2)
-        self.failIf(self.composite.children())
+        self.assertFalse(self.composite.children())
         
     def testRemoveChildFromCollectionTriggersNotificationByParent(self):
         self.registerObserver(self.composite.removeChildEventType())

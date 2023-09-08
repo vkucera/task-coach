@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, operator
 from taskcoachlib.thirdparty.timeline import timeline
 from . import tooltip
+from functools import reduce
 
 
 class Timeline(tooltip.ToolTipMixin, timeline.TimeLine):
@@ -61,7 +62,7 @@ class Timeline(tooltip.ToolTipMixin, timeline.TimeLine):
             return None
         tooltipData = self.getItemTooltipData(item)
         doShow = reduce(operator.__or__,
-                        map(bool, [data[1] for data in tooltipData]),
+                        list(map(bool, [data[1] for data in tooltipData])),
                         False)
         if doShow:
             self.__tip.SetData(tooltipData)

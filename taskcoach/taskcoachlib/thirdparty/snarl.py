@@ -151,7 +151,7 @@ if __name__=='__main__':
     parser.add_option("-S", "--sound", dest="sound",
                       help="Sound to use for the show.")
     if snGetVersion == False:
-        print "Snarl not running!"
+        print("Snarl not running!")
         sys.exit(1)
     (options, args) = parser.parse_args(sys.argv[1:])
     if options.cmd is None:
@@ -163,5 +163,5 @@ if __name__=='__main__':
             del d[key]
         elif d[key] is None:
             del d[key]
-    print cmd(**d)
+    print(cmd(**d))
     sys.exit(0)

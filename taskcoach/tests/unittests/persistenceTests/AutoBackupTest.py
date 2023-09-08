@@ -121,10 +121,10 @@ class AutoBackupTest(test.TestCase):
         with file('test.20140715-010203.tsk.bak', 'wb') as fp:
             fp.write('Hello, world')
         self.backup.onTaskFileRead(self.taskFile)
-        self.failIf(os.path.exists('test.20140715-010203.tsk.bak'))
+        self.assertFalse(os.path.exists('test.20140715-010203.tsk.bak'))
 
         backupName = os.path.join(self.settings.pathToBackupsDir(), '13cf6835565aaf4ab1f78e922b9917f9a4c7a856', '20140715010203.bak')
-        self.failUnless(os.path.exists(backupName))
+        self.assertTrue(os.path.exists(backupName))
         self.assertEqual(bz2.BZ2File(backupName).read(), 'Hello, world')
 
     def testNoBackupFiles(self):
@@ -162,15 +162,15 @@ class AutoBackupTest(test.TestCase):
         self.copyCalled = False
         self.taskFile.tasks().append(task.Task())
         self.taskFile.save()
-        self.failUnless(self.copyCalled)
+        self.assertTrue(self.copyCalled)
 
     def testDontCreateBackupOnOpen(self):
         self.taskFile.load()
-        self.failIf(self.copyCalled)
+        self.assertFalse(self.copyCalled)
         
     def testDontCreateBackupWhenSettingFilename(self):
         self.taskFile.setFilename('newname.tsk')
-        self.failIf(self.copyCalled)
+        self.assertFalse(self.copyCalled)
                         
     def testLeastUniqueBackupFile_FourBackupFiles(self):  
         self.assertEqual(self.backup.backupFilename(self.taskFile, now=lambda: date.DateTime(2001,1,1,1,1,1)), 

@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from unittests import asserts
-from CommandTestCase import CommandTestCase
+from .CommandTestCase import CommandTestCase
 from taskcoachlib import patterns, command, config
 from taskcoachlib.domain import category, task
 
@@ -82,15 +82,15 @@ class DragAndDropCategoryCommandTest(CategoryCommandTestCase):
                                        
     def testCannotDropOnParent(self):
         self.dragAndDrop([self.parent], [self.child])
-        self.failIf(patterns.CommandHistory().hasHistory())
+        self.assertFalse(patterns.CommandHistory().hasHistory())
         
     def testCannotDropOnChild(self):
         self.dragAndDrop([self.child], [self.parent])
-        self.failIf(patterns.CommandHistory().hasHistory())
+        self.assertFalse(patterns.CommandHistory().hasHistory())
         
     def testCannotDropOnGrandchild(self):
         self.dragAndDrop([self.grandchild], [self.parent])
-        self.failIf(patterns.CommandHistory().hasHistory())
+        self.assertFalse(patterns.CommandHistory().hasHistory())
 
     def testDropAsRootTask(self):
         self.dragAndDrop([], [self.grandchild])
@@ -162,5 +162,5 @@ class EditExclusiveSubcategoriesCommandTest(CategoryCommandTestCase):
                                                          newValue=True)
         edit.do()
         self.assertDoUndoRedo(
-            lambda: self.failUnless(self.category.hasExclusiveSubcategories()),
-            lambda: self.failIf(self.category.hasExclusiveSubcategories()))
+            lambda: self.assertTrue(self.category.hasExclusiveSubcategories()),
+            lambda: self.assertFalse(self.category.hasExclusiveSubcategories()))

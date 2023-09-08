@@ -136,7 +136,7 @@ class DeleteTaskCommand(base.DeleteCommand, EffortCommand):
             eachTask.setDependencies([])
 
     def __restorePrerequisites(self):
-        for eachTask, (prerequisites, dependencies) in self.__relationsToRestore.items():
+        for eachTask, (prerequisites, dependencies) in list(self.__relationsToRestore.items()):
             eachTask.addTaskAsDependencyOf(prerequisites)
             eachTask.addTaskAsPrerequisiteOf(dependencies)
             eachTask.setPrerequisites(prerequisites)

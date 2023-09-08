@@ -53,11 +53,11 @@ class EditorTestCase(test.wxTestCase):
 
     def testCloseEditorWhenItemIsDeleted(self):
         self.items.remove(self.item)
-        self.failUnless(self.editor.editorClosed)
+        self.assertTrue(self.editor.editorClosed)
         
     def testDontCloseEditorWhenItemIsFiltered(self):
         self.items.setSearchFilter('abc')
-        self.failIf(self.editor.editorClosed)
+        self.assertFalse(self.editor.editorClosed)
         
     def testVeryLongSubject(self):
         longSubject = 'Subject' * 1000

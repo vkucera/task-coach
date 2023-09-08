@@ -26,7 +26,7 @@ if os.name == 'nt':
     def getCurrentSelection():
         selection = GetActiveObject('Outlook.Application').ActiveExplorer().Selection
         filenames = []
-        for n in xrange(1, selection.Count + 1):
+        for n in range(1, selection.Count + 1):
             filename = persistence.get_temp_file(suffix='.eml')
             saveItem(selection.Item(n), filename)
             filenames.append(filename)
@@ -46,10 +46,10 @@ if os.name == 'nt':
             mailFile.close()
             os.chmod(filename, stat.S_IREAD)
 
-    def emailHeaders(item, encoding, lineSep=u'\r\n'):
+    def emailHeaders(item, encoding, lineSep='\r\n'):
         headers = []
-        headers.append(u'subject: %s'%item.Subject)
-        headers.append(u'X-Outlook-ID: %s'%item.EntryID)
-        headers.append(u'Content-Transfer-Encoding: %s'%encoding)
+        headers.append('subject: %s'%item.Subject)
+        headers.append('X-Outlook-ID: %s'%item.EntryID)
+        headers.append('Content-Transfer-Encoding: %s'%encoding)
         headers.append(lineSep)
         return lineSep.join(headers)

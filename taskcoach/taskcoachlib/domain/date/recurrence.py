@@ -148,5 +148,5 @@ class Recurrence(object):
         except AttributeError:
             return True
  
-    def __nonzero__(self):
+    def __bool__(self):
         return bool(self.unit)

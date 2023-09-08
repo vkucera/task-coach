@@ -497,7 +497,7 @@ Break the lock?''') % filename,
                     limitedException
         man = persistence.BackupManifest(self.__settings)
         if showBackups and man.hasBackups(filename):
-            message += u'\n' + _('The backup manager will now open to allow you to restore\nan older version of this file.')
+            message += '\n' + _('The backup manager will now open to allow you to restore\nan older version of this file.')
         showerror(message, **self.__errorMessageOptions)
 
         if showBackups and man.hasBackups(filename):

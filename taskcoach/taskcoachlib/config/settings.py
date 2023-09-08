@@ -20,7 +20,7 @@ from taskcoachlib import meta, patterns, operating_system
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty.pubsub import pub
 from taskcoachlib.workarounds import ExceptionAsUnicode
-import ConfigParser
+import configparser
 import os
 import sys
 import wx
@@ -28,14 +28,14 @@ import shutil
 from . import defaults
 
 
-class UnicodeAwareConfigParser(ConfigParser.RawConfigParser):
+class UnicodeAwareConfigParser(configparser.RawConfigParser):
     def set(self, section, setting, value):  # pylint: disable=W0222
-        if type(value) == type(u''):
+        if type(value) == type(''):
             value = value.encode('utf-8')
-        ConfigParser.RawConfigParser.set(self, section, setting, value)
+        configparser.RawConfigParser.set(self, section, setting, value)
 
     def get(self, section, setting):  # pylint: disable=W0221
-        value = ConfigParser.RawConfigParser.get(self, section, setting)
+        value = configparser.RawConfigParser.get(self, section, setting)
         return value.decode('utf-8')  # pylint: disable=E1103
 
 
@@ -76,7 +76,7 @@ class Settings(object, CachingConfigParser):
                 if not self.read(self.filename(forceProgramDir=True)):
                     self.read(self.filename())
                 errorMessage = ''
-            except ConfigParser.ParsingError as errorMessage:
+            except configparser.ParsingError as errorMessage:
                 # Ignore exceptions and simply use default values. 
                 # Also record the failure in the settings:
                 self.initializeWithDefaults()
@@ -99,9 +99,9 @@ class Settings(object, CachingConfigParser):
     def initializeWithDefaults(self):
         for section in self.sections():
             self.remove_section(section)
-        for section, settings in defaults.defaults.items():
+        for section, settings in list(defaults.defaults.items()):
             self.add_section(section)
-            for key, value in settings.items():
+            for key, value in list(settings.items()):
                 # Don't notify observers while we are initializing
                 super(Settings, self).set(section, key, value)
                 
@@ -132,7 +132,7 @@ class Settings(object, CachingConfigParser):
     def get(self, section, option):
         try:
             result = super(Settings, self).get(section, option)
-        except (ConfigParser.NoOptionError, ConfigParser.NoSectionError):
+        except (configparser.NoOptionError, configparser.NoSectionError):
             return self.getDefault(section, option)
         result = self._fixValuesFromOldIniFiles(section, option, result)
         result = self._ensureMinimum(section, option, result)
@@ -143,11 +143,11 @@ class Settings(object, CachingConfigParser):
         try:
             defaultSection = defaults.defaults[defaultSectionKey]
         except KeyError:
-            raise ConfigParser.NoSectionError(defaultSectionKey)
+            raise configparser.NoSectionError(defaultSectionKey)
         try:
             return defaultSection[option]
         except KeyError:
-            raise ConfigParser.NoOptionError((option, defaultSection))
+            raise configparser.NoOptionError((option, defaultSection))
             
     def _ensureMinimum(self, section, option, result):
         # Some settings may have a minimum value, make sure we return at 
@@ -188,7 +188,7 @@ class Settings(object, CachingConfigParser):
                 columnWidthMap = eval(result)
             except SyntaxError:
                 columnWidthMap = dict()
-            for column, width in columnWidthMap.items():
+            for column, width in list(columnWidthMap.items()):
                 if column in taskDateColumns:
                     column += 'Time'
                 widths[column] = width
@@ -335,7 +335,7 @@ class Settings(object, CachingConfigParser):
             except ImportError:
                 pass
             else:
-                return unicode(KGlobalSettings.documentPath())
+                return str(KGlobalSettings.documentPath())
         # Assuming Unix-like
         return os.path.expanduser('~')
 

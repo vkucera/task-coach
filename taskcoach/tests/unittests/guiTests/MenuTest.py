@@ -109,9 +109,9 @@ class MenuWithBooleanMenuItemsTestCase(MenuTestCase):
         for index, shouldBeChecked in enumerate(expectedStates):
             isChecked = self.menu.FindItemByPosition(index).IsChecked()
             if shouldBeChecked:
-                self.failUnless(isChecked)
+                self.assertTrue(isChecked)
             else:
-                self.failIf(isChecked)
+                self.assertFalse(isChecked)
 
 
 class MenuWithCheckItemsTest(MenuWithBooleanMenuItemsTestCase):
@@ -184,7 +184,7 @@ class RecentFilesMenuTest(test.wxTestCase):
         for index, expectedFilename in enumerate(expectedFilenames):
             menuItem = self.menu.FindItemByPosition(self.initialFileMenuLength-1 + index)
             # Apparently the '&' can also be a '_' (seen on Ubuntu)
-            expectedLabel = u'&%d %s' % (index + 1, expectedFilename)
+            expectedLabel = '&%d %s' % (index + 1, expectedFilename)
             self.assertEqual(expectedLabel[1:], menuItem.GetText()[1:])
     
     def openMenu(self):
@@ -217,7 +217,7 @@ class RecentFilesMenuTest(test.wxTestCase):
         self.openMenu()
         menuItem = self.menu.FindItemByPosition(self.initialFileMenuLength - 1)
         self.menu.invokeMenuItem(menuItem)
-        self.failUnless(self.ioController.openCalled)
+        self.assertTrue(self.ioController.openCalled)
         
     def testNeverShowMoreThanTheMaximumNumberAllowed(self):
         self.setRecentFilesAndCreateMenu(self.filename1, self.filename2)
@@ -247,27 +247,27 @@ class ViewMenuTestCase(test.wxTestCase):
         self.viewerContainer.setSortOrderAscending(True)
         self.menu.UpdateUI()
         self.menu.openMenu()
-        self.failUnless(self.menu.FindItemByPosition(0).IsChecked())
+        self.assertTrue(self.menu.FindItemByPosition(0).IsChecked())
         
     def testSortOrderDescending(self):
         self.viewerContainer.setSortOrderAscending(False)
         self.menu.UpdateUI()
         self.menu.openMenu()
-        self.failIf(self.menu.FindItemByPosition(0).IsChecked())
+        self.assertFalse(self.menu.FindItemByPosition(0).IsChecked())
 
     def testSortBySubject(self):
         self.viewerContainer.sortBy('subject')
         self.menu.UpdateUI()
         self.menu.openMenu()
-        self.failUnless(self.menu.FindItemByPosition(4).IsChecked())
-        self.failIf(self.menu.FindItemByPosition(5).IsChecked())
+        self.assertTrue(self.menu.FindItemByPosition(4).IsChecked())
+        self.assertFalse(self.menu.FindItemByPosition(5).IsChecked())
 
     def testSortByDescription(self):
         self.viewerContainer.sortBy('description')
         self.menu.UpdateUI()
         self.menu.openMenu()
-        self.failIf(self.menu.FindItemByPosition(4).IsChecked())
-        self.failUnless(self.menu.FindItemByPosition(5).IsChecked())
+        self.assertFalse(self.menu.FindItemByPosition(4).IsChecked())
+        self.assertTrue(self.menu.FindItemByPosition(5).IsChecked())
 
 
 class StartEffortForTaskMenuTest(test.wxTestCase):
@@ -310,7 +310,7 @@ class StartEffortForTaskMenuTest(test.wxTestCase):
         self.assertEqual(1, len(self.menu))
         
     def testTaskWithNonAsciiSubject(self):
-        self.addParentAndChild(u'Jérôme', u'Jîrôme')
+        self.addParentAndChild('Jérôme', 'Jîrôme')
         self.menu.updateMenuItems()
         self.assertEqual(2, len(self.menu))
 
@@ -370,7 +370,7 @@ class ToggleCategoryMenuTest(test.wxTestCase):
         self.category1.addChild(category3)
         subMenuItems = self.menu.GetMenuItems()[2].GetSubMenu().GetMenuItems()
         checkedItems = [item for item in subMenuItems if item.IsChecked()]
-        self.failIf(checkedItems)
+        self.assertFalse(checkedItems)
         
     def testMutualExclusiveSubcategoriesWithSubcategories(self):
         self.category1.makeSubcategoriesExclusive()
@@ -381,7 +381,7 @@ class ToggleCategoryMenuTest(test.wxTestCase):
         category3.addChild(category4)
         subMenuItems = self.menu.GetMenuItems()[2].GetSubMenu().GetMenuItems()
         checkedItems = [item for item in subMenuItems if item.IsChecked()]
-        self.failIf(checkedItems)
+        self.assertFalse(checkedItems)
 
 
 class TaskTemplateMenuTest(test.wxTestCase):

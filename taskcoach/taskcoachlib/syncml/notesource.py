@@ -37,20 +37,20 @@ class NoteSource(BaseSource):
         if self._dataType == 'text/x-vnote':
             item.data = ical.VNoteFromNote(note, doFold=False).encode('UTF-8')
         else:
-            item.data = (u'%s\n%s' % (note.subject(), note.description())).encode('UTF-8')
+            item.data = ('%s\n%s' % (note.subject(), note.description())).encode('UTF-8')
 
     def _parseObject(self, item):
         # Horde doesn't seem to give a fuck about the supported types we send it.
         if item.dataType == 'text/plain':
-            lines = map(lambda x: x.rstrip('\r'), item.data.split('\n'))
+            lines = [x.rstrip('\r') for x in item.data.split('\n')]
             kwargs = dict(subject=lines[0], description='\n'.join(lines[1:])) if lines else dict()
             categories = list()
         else:
             parser = ical.VCalendarParser()
-            parser.parse(map(lambda x: x.rstrip('\r'), item.data.strip().split('\n')))
+            parser.parse([x.rstrip('\r') for x in item.data.strip().split('\n')])
             categories = parser.notes[0].pop('categories', [])
 
-            kwargs = dict([(k, v) for k, v in parser.notes[0].items() if k in ['subject', 'description', 'id']])
+            kwargs = dict([(k, v) for k, v in list(parser.notes[0].items()) if k in ['subject', 'description', 'id']])
 
         note = Note(**kwargs)
         for category in categories:

@@ -56,7 +56,7 @@ class BoxWithFlexGridSizer(wx.Panel):
         
     def add(self, control, *args, **kwargs):
         ''' Add controls to the FlexGridSizer. '''
-        if type(control) in (type(''), type(u'')):
+        if type(control) in (type(''), type('')):
             control = wx.StaticText(self, label=control)
             if 'flag' not in kwargs:
                 kwargs['flag'] = wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL
