@@ -18,8 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from . import data
 import threading
-import urllib2
-
+# selon le site https://diveintopython3.net/porting-code-to-python-3-with-2to3.html
+try:
+    import urllib2
+except ImportError:
+    import urllib.request as urllib2
+# mais il y a des conditions pour macOS
+# voir : https://docs.python.org/fr/3.11/library/urllib.request.html?highlight=urllib%20request#module-urllib.request
+    
 
 class DeveloperMessageChecker(threading.Thread):
     ''' Check for messages from the developers on the website. '''
