@@ -17,6 +17,7 @@ STRINGS = set()
 
 # pylint: disable=W0602,W0603
 
+
 def add(id_, string, fuzzy):
     "Add a non-fuzzy translation to the dictionary."
     global MESSAGES
@@ -28,10 +29,13 @@ def add(id_, string, fuzzy):
 def generateDict():
     "Return the generated dictionary"
     global MESSAGES
-    metadata = MESSAGES['']
-    del MESSAGES['']
-    encoding = re.search(r'charset=(\S*)\n', metadata).group(1)
-    return "# -*- coding: %s -*-\n#This is generated code - do not edit\nencoding = '%s'\ndict = %s"%(encoding, encoding, MESSAGES)
+    metadata = MESSAGES[""]
+    del MESSAGES[""]
+    encoding = re.search(r"charset=(\S*)\n", metadata).group(1)
+    return (
+        "# -*- coding: %s -*-\n#This is generated code - do not edit\nencoding = '%s'\ndict = %s"
+        % (encoding, encoding, MESSAGES)
+    )
 
 
 def make(filename, outfile=None):
@@ -41,17 +45,17 @@ def make(filename, outfile=None):
     MESSAGES = {}
 
     # Compute .py name from .po name and arguments
-    if filename.endswith('.po'):
+    if filename.endswith(".po"):
         infile = filename
     else:
-        infile = filename + '.po'
+        infile = filename + ".po"
     if outfile is None:
-        outfile = os.path.splitext(infile)[0] + '.py'
+        outfile = os.path.splitext(infile)[0] + ".py"
 
     try:
         lines = open(infile).readlines()
     except IOError as msg:
-        print >> sys.stderr, msg
+        print(msg, file=sys.stderr)
         sys.exit(1)
 
     section = None
@@ -62,25 +66,25 @@ def make(filename, outfile=None):
     for l in lines:
         lno += 1
         # If we get a comment line after a msgstr, this is a new entry
-        if l[0] == '#' and section == STR:
-            add(msgid, msgstr, fuzzy) # pylint: disable=E0601
+        if l[0] == "#" and section == STR:
+            add(msgid, msgstr, fuzzy)  # pylint: disable=E0601
             section = None
             fuzzy = 0
         # Record a fuzzy mark
-        if l[:2] == '#,' and l.find('fuzzy'):
+        if l[:2] == "#," and l.find("fuzzy"):
             fuzzy = 1
         # Skip comments
-        if l[0] == '#':
+        if l[0] == "#":
             continue
         # Now we are in a msgid section, output previous section
-        if l.startswith('msgid'):
+        if l.startswith("msgid"):
             if section == STR:
                 add(msgid, msgstr, fuzzy)
             section = ID
             l = l[5:]
-            msgid = msgstr = ''
+            msgid = msgstr = ""
         # Now we are in a msgstr section
-        elif l.startswith('msgstr'):
+        elif l.startswith("msgstr"):
             section = STR
             l = l[6:]
         # Skip empty lines
@@ -94,9 +98,12 @@ def make(filename, outfile=None):
         elif section == STR:
             msgstr += l
         else:
-            print >> sys.stderr, 'Syntax error on %s:%d' % (infile, lno), \
-                  'before:'
-            print >> sys.stderr, l
+            print(
+                "Syntax error on %s:%d" % (infile, lno),
+                "before:",
+                file=sys.stderr,
+            )
+            print(l, file=sys.stderr)
             sys.exit(1)
     # Add last entry
     if section == STR:
@@ -105,9 +112,14 @@ def make(filename, outfile=None):
     # Compute output
     output = generateDict()
 
+    # TODO: This is a hack to get the encoding from the output
+    encoding = re.search(r"\-\*\-\s*coding\:\s*(.*)\s*\-\*\-\n", output).group(
+        1
+    )
+
     try:
-        open(outfile,"wb").write(output)
+        open(outfile, "w", encoding=encoding).write(output)
     except IOError as msg:
-        print >> sys.stderr, msg
+        print(msg, file=sys.stderr)
 
     return outfile

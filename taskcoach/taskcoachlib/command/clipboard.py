@@ -1,4 +1,4 @@
-'''
+"""
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2016 Task Coach developers <developers@taskcoach.org>
 
@@ -14,14 +14,12 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-'''
+"""
 
 from taskcoachlib import patterns
 
 
-class Clipboard:
-    __metaclass__ = patterns.Singleton
-
+class Clipboard(metaclass=patterns.Singleton):
     def __init__(self):
         self.clear()
 
@@ -34,7 +32,7 @@ class Clipboard:
         currentContents = self._contents
         currentSource = self._source
         return currentContents, currentSource
-    
+
     def peek(self):
         return self._contents
 
@@ -42,6 +40,5 @@ class Clipboard:
         self._contents = []
         self._source = None
 
-    def __nonzero__(self):
-        return len(self._contents)
-
+    def __bool__(self):
+        return len(self._contents) > 0

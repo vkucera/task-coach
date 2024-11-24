@@ -1,4 +1,4 @@
-'''
+"""
 Task Coach - Your friendly task manager
 Copyright (C) 2019 Task Coach developers <developers@taskcoach.org>
 
@@ -14,19 +14,24 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-'''
+"""
 
 import wx
 
 
 class IdProvider(set):
+    """
+    """
     def get(self):
         if self:
             return self.pop()
-        return wx.NewId()
+        # return wx.NewId
+        # return wx.NewIdRef()
+        return wx.ID_ANY()
 
     def put(self, id_):
         if id_ > 0:
             self.add(id_)
+
 
 IdProvider = IdProvider()

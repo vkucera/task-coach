@@ -1,0 +1,67 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyCompatibilityInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ourVersions">
+        <value>
+          <list size="2">
+            <item index="0" class="java.lang.String" itemvalue="3.12" />
+            <item index="1" class="java.lang.String" itemvalue="3.13" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <value>
+          <list size="13">
+            <item index="0" class="java.lang.String" itemvalue="wxPython" />
+            <item index="1" class="java.lang.String" itemvalue="mx" />
+            <item index="2" class="java.lang.String" itemvalue="file" />
+            <item index="3" class="java.lang.String" itemvalue="desktop3" />
+            <item index="4" class="java.lang.String" itemvalue="twisted" />
+            <item index="5" class="java.lang.String" itemvalue="setuptools" />
+            <item index="6" class="java.lang.String" itemvalue="PyGObject" />
+            <item index="7" class="java.lang.String" itemvalue="pip" />
+            <item index="8" class="java.lang.String" itemvalue="desktop" />
+            <item index="9" class="java.lang.String" itemvalue="lockfile" />
+            <item index="10" class="java.lang.String" itemvalue="hyperlink" />
+            <item index="11" class="java.lang.String" itemvalue="future" />
+            <item index="12" class="java.lang.String" itemvalue="PyPubSub" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyPep8Inspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="E402" />
+          <option value="E722" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyPep8NamingInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="N806" />
+          <option value="N802" />
+          <option value="N803" />
+          <option value="N801" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="_" />
+          <option value="wx" />
+          <option value="io.io" />
+          <option value="_dict_keys.sort" />
+          <option value="taskcoachlib.config.settings.win32com" />
+          <option value="dict.iteritems" />
+          <option value="taskcoachlib.persistence.*" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

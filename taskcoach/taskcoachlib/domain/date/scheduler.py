@@ -1,4 +1,4 @@
-'''
+"""
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2016 Task Coach developers <developers@taskcoach.org>
 
@@ -14,7 +14,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-'''
+"""
 
 from taskcoachlib import patterns
 from . import dateandtime, timedelta
@@ -33,10 +33,19 @@ class ScheduledMethod(object):
         self.__id = id_
 
     def __eq__(self, other):
-        return self.__func is other.__func and self.__self() is other.__self() and self.__id == other.__id
+        return (
+            self.__func is other.__func
+            and self.__self() is other.__self()
+            and self.__id == other.__id
+        )
+
+    def __lt__(self, other):
+        lvalue = 0 if self.__id is None else self.__id
+        rvalue = 0 if other.__id is None else other.__id
+        return lvalue < rvalue
 
     def __hash__(self):
-        return hash((self.__dict__['_ScheduledMethod__func'], self.__id))
+        return hash((self.__dict__["_ScheduledMethod__func"], self.__id))
 
     def __call__(self, *args, **kwargs):
         obj = self.__self()
@@ -51,6 +60,7 @@ class TwistedScheduler(object):
     A class to schedule jobs at specified date/time. Unlike apscheduler, this
     uses Twisted instead of threading, in order to avoid busy waits.
     """
+
     def __init__(self):
         super(TwistedScheduler, self).__init__()
         self.__jobs = []
@@ -73,7 +83,9 @@ class TwistedScheduler(object):
         self.__schedule(job, dateTime, None)
 
     def scheduleInterval(self, job, interval, startDateTime=None):
-        self.__schedule(job, startDateTime or dateandtime.Now() + interval, interval)
+        self.__schedule(
+            job, startDateTime or dateandtime.Now() + interval, interval
+        )
 
     def unschedule(self, theJob):
         for idx, (ts, job, interval) in enumerate(self.__jobs):
@@ -106,6 +118,7 @@ class TwistedScheduler(object):
                 except:
                     # Hum.
                     import traceback
+
                     traceback.print_exc()
                 if interval is not None:
                     self.__schedule(job, ts + interval, interval)
@@ -114,20 +127,24 @@ class TwistedScheduler(object):
 
         if self.__jobs and self.__nextCall is None:
             dt = self.__jobs[0][0] - dateandtime.Now()
-            nextDuration = int((dt.microseconds + (dt.seconds + dt.days * 24 * 3600) * 10**6) / 10**3)
+            nextDuration = int(
+                (dt.microseconds + (dt.seconds + dt.days * 24 * 3600) * 10**6)
+                / 10**3
+            )
             nextDuration = max(nextDuration, 1)
-            nextDuration = min(nextDuration, 2**31-1)
+            nextDuration = min(nextDuration, 2**31 - 1)
             from twisted.internet import reactor
-            self.__nextCall = reactor.callLater(1.0 * nextDuration / 1000, self.__callback)
+
+            self.__nextCall = reactor.callLater(
+                1.0 * nextDuration / 1000, self.__callback
+            )
 
     def __callback(self):
         self.__nextCall = None
         self.__fire()
 
 
-class Scheduler(object):
-    __metaclass__ = patterns.Singleton
-
+class Scheduler(object, metaclass=patterns.Singleton):
     def __init__(self, *args, **kwargs):
         super(Scheduler, self).__init__(*args, **kwargs)
         self.__scheduler = TwistedScheduler()
@@ -144,11 +161,21 @@ class Scheduler(object):
         job = ScheduledMethod(function)
         if not self.__scheduler.isScheduled(job):
             startDate = dateandtime.Now().endOfDay() if days > 0 else None
-            self.__scheduler.scheduleInterval(job, timedelta.TimeDelta(days=days, minutes=minutes, seconds=seconds), startDateTime=startDate)
+            self.__scheduler.scheduleInterval(
+                job,
+                timedelta.TimeDelta(
+                    days=days, minutes=minutes, seconds=seconds
+                ),
+                startDateTime=startDate,
+            )
             return job
 
     def unschedule(self, function):
-        job = function if isinstance(function, ScheduledMethod) else ScheduledMethod(function)
+        job = (
+            function
+            if isinstance(function, ScheduledMethod)
+            else ScheduledMethod(function)
+        )
         self.__scheduler.unschedule(job)
 
     def is_scheduled(self, function):
