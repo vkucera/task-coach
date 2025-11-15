@@ -1,21 +1,21 @@
 # Task Coach - Your friendly task manager
 # Copyright (C) 2004-2016 Task Coach developers <developers@taskcoach.org>
-# 
+#
 # Task Coach is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # Task Coach is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# Makefile to create binary and source distributions and generate the 
+# Makefile to create binary and source distributions and generate the
 # simple website (intermediate files are in ./build, distributions are
 # put in ./dist, the files for the website end up in ./website.out)
 
@@ -26,26 +26,26 @@ DOT="dot"       # dot should be on the path
 # make it the default does not seem to work on Lion).
 
 ifeq "$(shell uname -s)" "Darwin"
-BITS=$(shell python -c "import struct; print len(struct.pack('L', 0))")
+BITS=$(shell python3 -c "import struct; print len(struct.pack('L', 0))")
 ifeq "$(BITS)" "8"
     PYTHON?="python-32"
 else
-    PYTHON?="python"
+    PYTHON?="python3"
 endif
 else
-    PYTHON?="python"
+    PYTHON?="python3"
 endif
 
 ifeq (CYGWIN_NT,$(findstring CYGWIN_NT,$(shell uname)))
     INNOSETUP="/cygdrive/c/Program Files/Inno Setup 5/ISCC.exe"
     PORTABLEAPPSINSTALLER="/cygdrive/c/Program Files/PortableApps.comInstaller/PortableApps.comInstaller.exe"
-    EPYDOC=$(PYTHON) $(shell python -c "import os, sys; print(\"'\" + os.path.join(os.path.split(sys.executable)[0], 'Scripts', 'epydoc.py') + \"'\")")
+    EPYDOC=$(PYTHON) $(shell python3 -c "import os, sys; print(\"'\" + os.path.join(os.path.split(sys.executable)[0], 'Scripts', 'epydoc.py') + \"'\")")
 else
     EPYDOC="epydoc"
 endif
 
-TCVERSION=$(shell python -c "import taskcoachlib.meta.data as data; print(data.version)")
-TCPORTABLE=$(shell python -c "import os; print \"'\" + os.path.join(os.getcwd(), 'build', 'TaskCoachPortable') + \"'\"")
+TCVERSION=$(shell python3 -c "import taskcoachlib.meta.data as data; print(data.version)")
+TCPORTABLE=$(shell python3 -c "import os; print \"'\" + os.path.join(os.getcwd(), 'build', 'TaskCoachPortable') + \"'\"")
 
 ifeq ($(PGPID)x,x)
 PGPID=a3e41706
@@ -101,7 +101,7 @@ fedora: prepare changes templates
 
 opensuse: sdist_linux
 	cp build.in/debian/MANIFEST.in .
-	$(PYTHON) pymake.py bdist_rpm_opensuse 
+	$(PYTHON) pymake.py bdist_rpm_opensuse
 	mv dist/taskcoach-$(TCVERSION)-1.noarch.rpm dist/taskcoach-$(TCVERSION)-1.opensuse.i386.rpm
 	mv dist/taskcoach-$(TCVERSION)-1.src.rpm dist/taskcoach-$(TCVERSION)-1.opensuse.src.rpm
 
@@ -185,7 +185,7 @@ dmg-signed: dmg-goodies
 	done
 	make dmgbase
 
-winpenpack: py2exe 
+winpenpack: py2exe
 	$(PYTHON) pymake.py bdist_winpenpack
 
 portableapps: py2exe
@@ -196,7 +196,7 @@ portableapps: py2exe
 icons: icons.in/iconmap.py icons.in/nuvola.zip icons.in/splash.png
 	cd icons.in; $(PYTHON) make.py
 
-templates: 
+templates:
 	cd templates.in; $(PYTHON) make.py
 
 thirdpartymodules:

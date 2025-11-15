@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-""" Base classes for controls with items, such as ListCtrl, TreeCtrl, 
+""" Base classes for controls with items, such as ListCtrl, TreeCtrl,
     and TreeListCtrl. """  # pylint: disable=W0105
 
 
@@ -261,7 +261,7 @@ class Column(object):
 
     def __filterArgs(self, func, kwargs):
         actualKwargs = dict()
-        argNames = inspect.getargspec(func).args
+        argNames = inspect.signature(func).parameters
         return dict(
             [
                 (name, value)
